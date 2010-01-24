@@ -1045,8 +1045,7 @@ def confirmchangepw(request):
                 confirm_key__exact=confirm_key
         )
     except:
-        msg = _("Could not change password. Confirmation key '%s'\
-                is not registered." % confirm_key) 
+        msg = _("Could not change password. Confirmation key '%s' is not registered." % confirm_key) 
         redirect = "%s?msg=%s" % (
                 reverse('user_sendpw'), urlquote_plus(msg))
         return HttpResponseRedirect(redirect)
@@ -1054,8 +1053,7 @@ def confirmchangepw(request):
     try:
         user_ = User.objects.get(id=uqueue.user.id)
     except:
-        msg = _("Can not change password. User don't exist anymore \
-                in our database.") 
+        msg = _("Can not change password. User don't exist anymore in our database.") 
         redirect = "%s?msg=%s" % (reverse('user_sendpw'), 
                 urlquote_plus(msg))
         return HttpResponseRedirect(redirect)
