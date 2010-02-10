@@ -32,8 +32,7 @@
 
 from django.http import HttpResponseRedirect, get_host, Http404, \
                          HttpResponseServerError
-from django.shortcuts import render_to_response
-from django.template import RequestContext, loader, Context
+from django.template import RequestContext, Context
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -68,6 +67,8 @@ from django_authopenid.forms import OpenidSigninForm, ClassicLoginForm, OpenidRe
         ChangeopenidForm, DeleteForm, EmailPasswordForm
 import logging
 from utils.forms import get_next_url
+from utils import skins
+from utils.skins import render_to_response
 
 EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
 
@@ -591,7 +592,7 @@ def signup(request):
             
             # send email
             subject = _("Welcome email subject line")
-            message_template = loader.get_template(
+            message_template = skins.get_template(
                     'authopenid/confirm_email.txt'
             )
             message_context = Context({ 
@@ -736,7 +737,7 @@ def _send_email_key(user):
     to user's email address
     """
     subject = _("Email verification subject line")
-    message_template = loader.get_template('authopenid/email_validation.txt')
+    message_template = skins.get_template('authopenid/email_validation.txt')
     import settings
     message_context = Context({
     'validation_link': settings.APP_URL + reverse('user_verifyemail', kwargs={'id':user.id,'key':user.email_key})
@@ -1095,7 +1096,7 @@ def sendpw(request):
             uqueue.save()
             # send email 
             subject = _("Request for new password")
-            message_template = loader.get_template(
+            message_template = skins.get_template(
                     'authopenid/sendpw_email.txt')
             key_link = settings.APP_URL + reverse('user_confirmchangepw') + '?key=' + confirm_key
             logging.debug('emailing new password for %s' % form.user_cache.username)

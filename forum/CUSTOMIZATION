@@ -1,0 +1,11 @@
+This branch contains first experimental run on skinning
+
+To create a new skin (say 'myskin') add new directory to forum/skins
+and set OSQA_SKIN='myskin'
+
+Your skin does not need to have all the files that 'default' skin has - at once.
+It is possible to start customizing OSQA gradually - file-by-file.
+
+Resources are resolved in this order:
+templates: yourskin --> default
+media (css and scripts): yourskin --> default --> common

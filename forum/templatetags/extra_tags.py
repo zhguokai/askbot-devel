@@ -13,8 +13,9 @@ from forum.models import Question, Answer, QuestionRevision, AnswerRevision
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings
+from utils import skins
 
-register = template.Library()
+register = skins.TemplateLibrary()
 
 GRAVATAR_TEMPLATE = ('<img class="gravatar" width="%(size)s" height="%(size)s" '
                      'src="http://www.gravatar.com/avatar/%(gravatar_hash)s'
@@ -275,9 +276,44 @@ def get_latest_changed_timestamp():
         timestr = ''
     return timestr
 
+def resolve_media_url(url):
+    while url[0] == '/':
+        url = url[1:]
+    d = os.path.dirname
+    n = os.path.normpath
+    j = os.path.join
+    f = os.path.isfile
+    skins = n(j(d(__file__),'..','skins'))
+    print d(__file__)
+    print skins
+    try:
+        media = os.path.join(skins, settings.OSQA_SKIN, url)
+        print url
+        print settings.OSQA_SKIN
+        print media
+        assert(f(media))
+        use_skin = settings.OSQA_SKIN
+    except:
+        try:
+            media = j(skins, 'default', url)
+            print media
+            assert(f(media))
+            use_skin = 'default'
+        except:
+            media = j(skins, 'common', url)
+            print media
+            try:
+                assert(f(media))
+                use_skin = 'common'
+            except:
+                logging.error('could not find media for %s' % url)
+                use_skin = ''
+    return use_skin + '/' + url
+
 @register.simple_tag
 def media(url):
-    url = '///' + settings.FORUM_SCRIPT_ALIAS + '/' + url
+    url = resolve_media_url(url)
+    url = '///' + settings.FORUM_SCRIPT_ALIAS + '/m/' + url
     return posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
 
 class ItemSeparatorNode(template.Node):
@@ -327,13 +363,16 @@ class BlockMediaUrlNode(template.Node):
     def __init__(self,nodelist):
         self.items = nodelist 
     def render(self,context):
-        out = '///' + settings.FORUM_SCRIPT_ALIAS
+        prefix = '///' + settings.FORUM_SCRIPT_ALIAS + '/m/'
+        url = ''
         if self.items:
-            out += '/'     
+            url += '/'     
         for item in self.items:
-            bit = item.render(context)
-            out += bit
-        out = os.path.normpath(out) + '?v=%d' % settings.RESOURCE_REVISION
+            url += item.render(context)
+
+        url = resolve_media_url(url)
+        url += prefix + url
+        out = posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
         return out.replace(' ','')
 
 @register.tag(name='blockmedia')

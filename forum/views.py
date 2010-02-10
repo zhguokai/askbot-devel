@@ -5,11 +5,11 @@ import logging
 from urllib import quote, unquote
 from django.conf import settings
 from django.core.files.storage import default_storage
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.template import RequestContext, loader
+from django.template import RequestContext
 from django.utils.html import *
 from django.utils import simplejson
 from django.core import serializers
@@ -24,6 +24,7 @@ from django.core.exceptions import PermissionDenied
 
 from utils.html import sanitize_html
 from utils.decorators import ajax_method, ajax_login_required
+from utils.skins import render_to_response
 from markdown2 import Markdown
 #from lxml.html.diff import htmldiff
 from forum.diff import textDiff as htmldiff

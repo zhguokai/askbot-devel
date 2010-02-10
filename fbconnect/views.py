@@ -1,4 +1,3 @@
-from django.shortcuts import render_to_response as render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.utils.safestring import mark_safe
@@ -8,6 +7,7 @@ from django.contrib.auth import login,  logout
 from models import FBAssociation
 from forum.forms import SimpleEmailSubscribeForm
 from django.conf import settings
+from utils.skins import render_to_response as render
 
 import fb
 import forms

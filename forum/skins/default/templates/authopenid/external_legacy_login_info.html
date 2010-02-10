@@ -1,0 +1,16 @@
+{% load osqa_loader_tags %}
+{% extends_skin "base_content.html" %}
+<!--customize this template-->
+{% load i18n %}
+{% block_skin title %}{% spaceless %}{% trans "Traditional login information" %}{% endspaceless %}{% endblock %}
+{% block_skin content %}
+<div class="headNormal">
+    {% trans "Traditional login information" %}
+</div>
+{% spaceless %}
+<div class="message">
+<!--add info about your external login site here-->
+{% blocktrans %}how to login with password through external login website or use {{feedback_url}}{% endblocktrans %}
+</div>
+{% endspaceless %}
+{% endblock %}

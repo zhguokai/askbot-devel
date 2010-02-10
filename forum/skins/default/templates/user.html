@@ -1,0 +1,40 @@
+{% load osqa_loader_tags %}
+{% extends_skin "base_content.html" %}
+<!-- user.html -->
+{% load extra_tags %}
+{% load extra_filters %}
+{% load humanize %}
+{% block_skin title %}{% spaceless %}{{ page_title }}{% endspaceless %}{% endblock %}
+{% block_skin forestyle%}
+    <style type="text/css">
+ 		.history-table td { padding: 5px; }
+ 		.user-stats-table { margin-left:50px; }
+	</style>
+{% endblock %}
+{% block_skin forejs %}
+    {% if request.user|can_moderate_users %}
+        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.admin.js" %}'></script>
+        <script type='text/javascript' src='{% media  "/media/js/jquery.form.js" %}'></script>
+    {% endif %}
+    <script type="text/javascript">
+        var viewUserID = {{view_user.id}};
+        $().ready(function(){
+            {% ifequal view_user request.user%}
+                $("#nav_profile").attr('className',"on");
+            {% else %}
+                $("#nav_users").attr('className',"on");
+            {% endifequal %}
+        }); 
+    </script>
+    {% block_skin userjs %}
+    {% endblock %}
+{% endblock %}
+{% block_skin content %}
+    <div id="mainbar-full">
+        {% include_skin "user_info.html" %}
+        {% include_skin "user_tabs.html" %}
+        {% block_skin usercontent %}
+        {% endblock %}
+        {%comment%}{% include_skin "user_footer.html" %}{%endcomment%}
+	</div>
+{% endblock %}<!-- end user.html -->
