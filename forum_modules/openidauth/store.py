@@ -1,4 +1,11 @@
-import time, base64, md5
+import time, base64
+
+#thanks to alexlavr
+#see: http://meta.osqa.net/question/25/installation-issue-importerror-cannot-import-name-auth_providers#43
+try:
+    from hashlib import md5 as md
+except ImportError:
+    from md5 import new as md
 
 from openid.store import nonce as oid_nonce
 from openid.store.interface import OpenIDStore
@@ -76,4 +83,4 @@ class OsqaOpenIDStore(OpenIDStore):
 
     def getAuthKey(self):
         # Use first AUTH_KEY_LEN characters of md5 hash of SECRET_KEY
-        return md5.new(settings.SECRET_KEY).hexdigest()[:self.AUTH_KEY_LEN]
+        return md(settings.SECRET_KEY).hexdigest()[:self.AUTH_KEY_LEN]
