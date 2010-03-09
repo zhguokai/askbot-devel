@@ -6,7 +6,7 @@
 
 <div id="listA">
     {% for question in questions.object_list %}
-    {% cache 60 question_in_list question.id %}
+    {% cache 60 question_in_list settings.APP_URL question.id %}
 	<div class="short-summary">
 		<div class="counts">
 			<div class="votes">

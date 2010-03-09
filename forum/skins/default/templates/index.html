@@ -52,7 +52,7 @@
 	<h3>{% trans "Recent tags" %}</h3>
 	<div class="body">
          <div class="tags">
-        {% cache 60 recent_tags %}
+        {% cache 60 recent_tags settings.APP_URL %}
         {% for tag in tags %}
             <a rel="tag"
 				title="{% blocktrans with tag.name as tagname %}see questions tagged '{{tagname}}'{% endblocktrans %}" href="{% url tag_questions tag.name|urlencode %}">{{ tag.name }}</a>
@@ -67,7 +67,7 @@
     <h3>{% trans "Recent awards" %}</h3>
         <div class="body">
              <ul class="badge-list">
-             {% cache 60 recent_awards %}
+             {% cache 60 recent_awards settings.APP_URL %}
              {% for award in awards %}
                 <li>
                 <a href="{% url badges %}{{award.badge_id}}/{{award.badge_name}}" title="{{ award.badge_description }}" class="medal">
