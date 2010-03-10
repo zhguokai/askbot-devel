@@ -173,7 +173,7 @@ def _retag_question(request, question):#non-url subview of edit question - just 
                     last_activity_by = request.user
                 )
                 # Update the Question's tag associations
-                tags_updated = Question.objects.update_tags(question,
+                Question.objects.update_tags(question,
                     form.cleaned_data['tags'], request.user)
                 # Create a new revision
                 QuestionRevision.objects.create(
@@ -220,7 +220,7 @@ def _edit_question(request, question):#non-url subview of edit_question - just e
                     edited_at = datetime.datetime.now()
                     tags_changed = (latest_revision.tagnames !=
                                     form.cleaned_data['tags'])
-                    tags_updated = False
+
                     # Update the Question itself
                     updated_fields = {
                         'title': form.cleaned_data['title'],
@@ -245,8 +245,8 @@ def _edit_question(request, question):#non-url subview of edit_question - just e
                         id=question.id).update(**updated_fields)
                     # Update the Question's tag associations
                     if tags_changed:
-                        tags_updated = Question.objects.update_tags(
-                            question, form.cleaned_data['tags'], request.user)
+                        Question.objects.update_tags(question, form.cleaned_data['tags'], request.user)
+                        tags_updated.send(sender=question.__class__, question=question)
                     # Create a new revision
                     revision = QuestionRevision(
                         question   = question,

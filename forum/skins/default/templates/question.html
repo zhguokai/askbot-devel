@@ -135,7 +135,7 @@
                                     {% endfor %}
                                 </div>
                                 {% joinitems using '<span class="action-link-separator">|</span>' %}    
-                                    {% if request.user|can_edit_post:question %}
+                                    {% if request.user|can_edit_post:question or request.user|can_retag_questions %}
                                     <span class="action-link"><a href="{% url edit_question question.id %}">{% trans 'edit' %}</a></span>
                                     {% endif %}
                                 {% separator %}
