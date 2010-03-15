@@ -1,4 +1,5 @@
 from base import *
+from forum import const
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from hashlib import md5
@@ -6,6 +7,8 @@ import string
 from random import Random
 
 from django.utils.translation import ugettext as _
+import django.dispatch
+
 
 class Activity(models.Model):
     """
@@ -22,9 +25,15 @@ class Activity(models.Model):
     def __unicode__(self):
         return u'[%s] was active at %s' % (self.user.username, self.active_at)
 
+    def save(self):
+        super(Activity, self).save()
+        activity_record.send(sender=self.activity_type, instance=self)
+
     class Meta:
         app_label = 'forum'
         db_table = u'activity'
+
+activity_record = django.dispatch.Signal(providing_args=['instance'])
 
 class EmailFeedSetting(models.Model):
     DELTA_TABLE = {
