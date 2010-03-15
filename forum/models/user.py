@@ -116,7 +116,7 @@ class ValidationHashManager(models.Manager):
         return False
 
 class ValidationHash(models.Model):
-    hash_code = models.CharField(max_length=256,unique=True)
+    hash_code = models.CharField(max_length=255,unique=True)
     seed = models.CharField(max_length=12)
     expiration = models.DateTimeField(default=one_day_from_now)
     type = models.CharField(max_length=12)
