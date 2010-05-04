@@ -1,0 +1,11 @@
+{% load localeurl_tags %}
+<div id="languages">
+    <span style="padding:3px;"><b>Select your language:</b></span>
+    {% for lang in LANGUAGES %}
+        {% ifequal lang.0 LANGUAGE_CODE %}
+            <span class="language"><b>{{ lang.1 }}</b></span>
+        {% else %}
+            <span class="language"><a href="{{ request.path|chlocale:lang.0 }}">{{ lang.1 }}</a></span>
+        {% endifequal %}
+    {% endfor %}
+</div>

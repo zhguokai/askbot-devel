@@ -1,0 +1,44 @@
+{% extends "user.html" %}
+<!-- user_reputation.html -->
+{% load extra_tags %}
+{% load extra_filters %}
+{% load humanize %}
+{% load i18n %}
+{% load smart_if %}
+{% block userjs %}
+       <script type='text/javascript' src='{% media  "/media/js/excanvas.min.js" %}'></script>
+       <script type='text/javascript' src='{% media  "/media/js/jquery.flot.min.js" %}'></script>
+       
+       <script type="text/javascript">
+        $().ready(function(){
+            var d = {{ reps }};
+            var placeholder = $("#diagram");
+            var plot = $.plot(placeholder, [d], {
+                xaxis: { mode: "time" },
+                points: { show: true },
+                lines: { show: true }
+            });
+        });
+
+        </script>
+{% endblock %}
+{% block usercontent %}
+        <div class="karma-summary">
+            <div id="diagram" class="karma-diagram"></div>
+            {% if view_user.id == user.id %}
+            <h3>{% trans "Your karma change log." %}</h3>
+            {% else %}
+            <h3>{% blocktrans with view_user.username as user_name %}{{user_name}}'s karma change log{% endblocktrans %}</h3>
+            {% endif %}
+            <div class="karma-details">
+                {% for rep in reputation %}
+                <p>
+                    <span class="karma-gained">{{ rep.positive }}</span>
+                    <span class="karma-lost">{{ rep.negative }}</span>
+                    <a href="{% url question rep.question_id %}{{ rep.title|slugify }}">{{ rep.title }}</a> 
+                    <span class="small">({% diff_date rep.reputed_at %})</span>                    
+                </p>
+                {% endfor %}
+            </div>
+        </div>
+{% endblock %}<!-- end user_reputation.html -->

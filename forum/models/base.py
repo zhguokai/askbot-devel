@@ -4,7 +4,8 @@ from urllib import quote_plus, urlencode
 from django.db import models, IntegrityError, connection, transaction
 from django.utils.http import urlquote  as django_urlquote
 from django.utils.html import strip_tags
-from django.core.urlresolvers import reverse
+#from django.core.urlresolvers import reverse
+from localeurl.models import reverse
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType

@@ -54,7 +54,7 @@ POST_SCOPE_LIST = (
                     ('favorite', _('favorite')),
                    )
 DEFAULT_POST_SCOPE = 'all'
-DEFAULT_QUESTIONS_PAGE_SIZE = 30
+DEFAULT_QUESTIONS_PAGE_SIZE = 10
 PAGE_SIZE_CHOICES = (('10','10',),('30','30',),('50','50',),)
 
 UNANSWERED_MEANING_LIST = ('NO_ANSWERS','NO_UPVOTED_ANSWERS','NO_ACCEPTED_ANSWERS')

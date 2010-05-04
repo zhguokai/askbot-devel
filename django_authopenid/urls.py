@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import patterns, url
-from django.utils.translation import ugettext as _
+#from django.utils.translation import ugettext as _
 from django.conf import settings
+def _(input_str):
+    return input_str
 
 #print 'stuff to import %s' % settings.EXTERNAL_LOGIN_APP.__name__ + '.views'
 #try:
@@ -20,7 +22,7 @@ urlpatterns = patterns('django_authopenid.views',
     # yadis rdf
     url(r'^yadis.xrdf$', 'xrdf', name='yadis_xrdf'),
      # manage account registration
-    url(r'^%s$' % _('signin/'), 'signin', name='user_signin'),
+    url(r'^%s$' % 'signin/', 'signin', name='user_signin'),#hack here
     url(r'^%s%s$' % (_('signin/'),_('newquestion/')), 'signin', kwargs = {'newquestion':True}, name='user_signin_new_question'),
     url(r'^%s%s$' % (_('signin/'),_('newanswer/')), 'signin', kwargs = {'newanswer':True}, name='user_signin_new_answer'),
     url(r'^%s$' % _('signout/'), 'signout', name='user_signout'),

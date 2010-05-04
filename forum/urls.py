@@ -4,8 +4,11 @@ from django.contrib import admin
 from forum import views as app
 from forum.feed import RssLastestQuestionsFeed
 from forum.sitemap import QuestionsSitemap
-from django.utils.translation import ugettext as _
+#from django.utils.translation import ugettext as _
 import logging
+
+def _(input_str):
+    return input_str
 
 admin.autodiscover()
 feeds = {
@@ -42,7 +45,7 @@ urlpatterns = patterns('',
     url(r'^%s%s$' % (_('questions/'), _('unanswered/')), app.readers.unanswered, name='unanswered'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')), app.writers.edit_question, name='edit_question'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')), app.commands.close, name='close'),
-    url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')), app.commands.reopen, name='reopen'),
+    url(r'^%s(?P<id>\d+)/%s/$' % (_('questions/'), _('reopen/')), app.commands.reopen, name='reopen'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')), app.writers.answer, name='answer'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')), app.commands.vote, name='vote'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')), app.readers.question_revisions, name='question_revisions'),
@@ -74,21 +77,20 @@ urlpatterns = patterns('',
                                 name='mark_ignored_tag'),
 
     url(r'^%s$' % _('users/'),app.users.users, name='users'),
-    url(r'^%s(?P<id>\d+)/$' % _('moderate-user/'), app.users.moderate_user, name='moderate_user'),
+    url(r'^%s(?P<id>\d+)$' % _('moderate-user/'), app.users.moderate_user, name='moderate_user'),
     url(r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')), app.users.edit_user, name='edit_user'),
     url(r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'), app.users.user, name='user_profile'),
     url(r'^%s$' % _('badges/'),app.meta.badges, name='badges'),
     url(r'^%s(?P<id>\d+)//*' % _('badges/'), app.meta.badge, name='badge'),
     url(r'^%s%s$' % (_('messages/'), _('markread/')),app.commands.read_message, name='read_message'),
     # (r'^admin/doc/' % _('admin/doc'), include('django.contrib.admindocs.urls')),
-    url(r'^%s(.*)' % _('nimda/'), admin.site.root, name='askbot_admin'),
     url(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}, name='feeds'),
     url(r'^%s$' % _('upload/'), app.writers.upload, name='upload'),
     url(r'^%s$' % _('search/'), app.readers.search, name='search'),
     url(r'^%s$' % _('feedback/'), app.meta.feedback, name='feedback'),
-    (r'^%sfb/' % _('account/'),  include('fbconnect.urls')), 
-    (r'^%s' % _('account/'), include('django_authopenid.urls')),
-    (r'^i18n/', include('django.conf.urls.i18n')),
+    #(r'^%sfb/' % _('account/'),  include('fbconnect.urls')), 
+    (r'^%s' % 'account/', include('django_authopenid.urls')),#hack here
+    #(r'^i18n/', include('django.conf.urls.i18n')),
 
     url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
 )

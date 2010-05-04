@@ -216,8 +216,11 @@ def _edit_question(request, question):#non-url subview of edit_question - just e
                         tags = form.cleaned_data['tags'],
                         wiki = form.cleaned_data.get('wiki',False),
                     )
-
-                return HttpResponseRedirect(question.get_absolute_url())
+                question_url = question.get_absolute_url()
+                import django.utils.translation as t
+                print 'language in question is %s' % t.get_language()
+                print 'question url is %s' % question_url
+                return HttpResponseRedirect(question_url)
     else:
         revision_form = RevisionForm(question, latest_revision)
         form = EditQuestionForm(question, latest_revision)

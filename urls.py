@@ -7,5 +7,11 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^%s' % settings.FORUM_SCRIPT_ALIAS, include('forum.urls')),
-    (r'^admin/', include(admin.site.urls)),
+    #admin urls are disabled for this site
+    #(r'^admin/', include(admin.site.urls)),
 )
+
+if 'rosetta' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+        (r'^rosetta/', include('rosetta.urls')),
+        )

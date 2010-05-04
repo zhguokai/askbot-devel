@@ -796,7 +796,7 @@ blockquote {
 }
 
 /*标签*/
-.tag {
+/*.tag {
     font-size: 13px;
     font-weight: normal;
     color: #333;
@@ -807,7 +807,7 @@ blockquote {
     border-bottom: 1px solid #CCC;
     border-right: 1px solid #CCC;
     padding: 1px 8px 1px 8px;
-}
+}*/
 
 .tags {
     font-family: sans-serif;

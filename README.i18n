@@ -1,0 +1,5 @@
+this is a hacked version to make forum multilingual
+
+I had to replace import or django.core.urlresolvers.reverse
+
+to localeurl.models.reverse in forum/models/base.py

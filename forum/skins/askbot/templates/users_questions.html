@@ -1,0 +1,47 @@
+<!-- users_questions.html -->
+{% load extra_tags %}
+{% load extra_filters %}
+{% load humanize %}
+{% load i18n %}
+<div class="user-stats-table">
+    {% for question in questions %}
+        {% if question.favourite_count %}
+            {% if question.favorited_myself %}
+                <div class="favorites-count">
+                    <img title="{% trans "this questions was selected as favorite" %} {{question.favourite_count}} {% trans "number of times" %}" 
+                        alt="{% trans "thumb-up on" %}"
+						src="{% media  "/media/images/vote-favorite-on.png" %}"/>
+                    <div><b>{{question.favourite_count|intcomma}}</b></div>
+                </div>
+            {% else %}
+                <div class="favorites-count-off">
+                    <img title="{% trans "this question was selected as favorite" %}{{question.favourite_count}} {% trans "number of times" %}" 
+                        alt="{% trans "thumb-up off" %}"
+						src="{% media  "/media/images/vote-favorite-off.png" %}"/>
+                    <div><b>{{question.favourite_count|intcomma}}</b></div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="favorites-empty"> </div>
+        {% endif %}
+    <div id="question-summary-{{question.id}}" class="short-summary narrow">
+        {% question_counter_widget question %}
+        <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>
+        <div class="tags">
+            {% convert2tagname_list question %}
+            {% for tag in question.tagnames %}
+                <!--todo - move trans below to blocktrans -->
+                <a href="{% url questions %}?tags={{tag|urlencode}}" title="{% blocktrans %}see questions tagged '{{ tag }}'{% endblocktrans %}" rel="tag">{{ tag }}</a>
+            {% endfor %}
+        </div>
+        <div class="started">
+            <span class="relativetime" title="{{question.last_activity_at}}">{% diff_date question.last_activity_at %}</span>
+            {% if question.la_username %}
+                <a href="{% url users %}{{question.la_user_id}}/{{question.la_username}}">{{question.la_username}}</a> {% get_score_badge_by_details question.la_user_reputation question.la_user_gold question.la_user_silver question.la_user_bronze%}
+            {% endif %}
+        </div>
+    </div>
+    <br clear="all"/>
+    {% endfor %}
+</div>
+<!-- end users_questions.html -->

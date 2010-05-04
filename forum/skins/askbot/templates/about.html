@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+<!-- template about.html -->
+{% load i18n %}
+{% load extra_tags %}
+{% load humanize %}
+{% block title %}{% spaceless %}{% trans "About" %}{% endspaceless %}{% endblock %}
+{% block forejs %}
+{% endblock %}
+{% block content %}
+<div class="headNormal">
+{% trans "About" %}
+</div>
+
+<div class="content">
+    <p>Askbot is a free open source Question and Answer (Q&amp;A) forum software 
+    written in Django and Python.</p>
+    <p>The goal of this project is to build a high quality Q&amp;A application (a.k.a.
+    web-forum reloaded) that will easily work on its own or as a part of your larger project.</p>
+    <p>Code of Askbot is a fork of <a href="http://cnprog.com">CNPROG</a> 
+    and contains some some work made for <a href="http://osqa.net">OSQA</a>.</p>
+    <p>There is no secret that design of CNPROG and initially - of this project has
+    been borrowed from the one and only <a href="http://stackoverflow.com">stackoverflow</a></p>
+</div>
+{% endblock %}
+<!-- end template about.html -->

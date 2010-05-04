@@ -19,8 +19,9 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     #'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    #'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware',
+    'localeurl.middleware.LocaleURLMiddleware',
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.cache.FetchFromCacheMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -37,7 +38,7 @@ MIDDLEWARE_CLASSES = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'forum.context.application_settings',
-    #'django.core.context_processors.i18n',
+    'django.core.context_processors.i18n',
     'forum.user_messages.context_processors.user_messages',#must be before auth
     'django.core.context_processors.auth', #this is required for admin
 )
@@ -60,6 +61,14 @@ ALLOW_MAX_FILE_SIZE = 1024 * 1024
 
 # User settings
 from settings_local import *
+import re
+LOCALE_INDEPENDENT_PATHS = (
+    re.compile(r'^/m/'),
+    re.compile(r'^/rosetta'),
+    re.compile(r'^/admin'),
+    re.compile(r'^/account/signin'),
+    re.compile(r'^/sitemap\.xml'),
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -76,6 +85,8 @@ INSTALLED_APPS = (
     'debug_toolbar' ,
     #'forum.importers.stackexchange', #se loader
     'south',
+    'rosetta',
+    'localeurl',
 )
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
