@@ -1,0 +1,54 @@
+8
+
+dir
+90
+http://django-localeurl.googlecode.com/svn/trunk/localeurl/templatetags
+http://django-localeurl.googlecode.com/svn
+
+
+
+2009-12-20T21:51:29.700737Z
+90
+joost@cassee.net
+has-props
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ed756015-4e4f-0410-aee6-ab3afed57ee0
+
+__init__.py
+file
+
+
+
+
+2010-04-28T23:41:30.000000Z
+d41d8cd98f00b204e9800998ecf8427e
+2009-12-20T21:51:29.700737Z
+90
+joost@cassee.net
+has-props
+
+localeurl_tags.py
+file
+
+
+
+
+2010-04-28T23:41:30.000000Z
+46ac9238d8164a1e9d0dcecebb9a2b3f
+2009-12-20T21:51:29.700737Z
+90
+joost@cassee.net
+has-props
+

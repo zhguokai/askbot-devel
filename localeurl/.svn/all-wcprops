@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/svn/!svn/ver/90/trunk/localeurl
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/86/trunk/localeurl/views.py
+END
+middleware.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/90/trunk/localeurl/middleware.py
+END
+test_settings.py
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/89/trunk/localeurl/test_settings.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/90/trunk/localeurl/__init__.py
+END
+test_utils.py
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/89/trunk/localeurl/test_utils.py
+END
+utils.py
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/90/trunk/localeurl/utils.py
+END
+tests.py
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/89/trunk/localeurl/tests.py
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/90/trunk/localeurl/models.py
+END
+test_urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/89/trunk/localeurl/test_urls.py
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/86/trunk/localeurl/urls.py
+END

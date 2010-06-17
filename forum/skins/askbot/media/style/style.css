@@ -353,6 +353,7 @@ blockquote {
 #searchBar {
     display:inline-block;
     background-color: #cccccc;/*888a85; /*#e9b96e;*/
+    width:700px;
     border: 1px solid #aaaaaa;
     padding: 4px 7px 5px 5px;
 }
@@ -361,7 +362,7 @@ blockquote {
     font-size: 24px;
     line-height: 24px;
     height: 36px;
-    width: 598px;
+    width: 605px;
     margin: 0px;
     padding: 5px 0 0 5px;
 }
@@ -370,7 +371,7 @@ blockquote {
     font-size: 24px;
     line-height: 24px;
     height: 36px;
-    width: 552px;
+    width: 561px;
     padding: 5px 0 0 5px;
     margin: 0px;
 }
@@ -381,6 +382,7 @@ blockquote {
     height: 40px;
     line-height: 22px;
     text-align: center;
+    width: 80px;
     margin-top:1px;
     padding-bottom: 4px;
 }

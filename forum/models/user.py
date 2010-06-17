@@ -57,6 +57,22 @@ class EmailFeedSetting(models.Model):
             raise IntegrityError('email feed setting already exists')
         super(EmailFeedSetting,self).save(*args,**kwargs)
 
+    def get_previous_report_cutoff_time(self):
+        now = datetime.datetime.now()
+        return now - self.DELTA_TABLE[self.frequency]
+
+    def should_send_now(self):
+        now = datetime.datetime.now()
+        cutoff_time = self.get_previous_report_cutoff_time()
+        if self.reported_at == None or self.reported_at <= cutoff_time:
+            return True
+        else:
+            return False
+
+    def mark_reported_now(self):
+        self.reported_at = datetime.datetime.now()
+        self.save()
+
     class Meta:
         app_label = 'forum'
 

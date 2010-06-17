@@ -5,6 +5,7 @@ from urllib import unquote
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
+from django.http import urlencode
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import RequestContext
 from django.utils.html import *

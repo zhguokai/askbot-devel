@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-05-04 18:42-0400\n"
-"PO-Revision-Date: 2010-05-04 16:22\n"
+"PO-Revision-Date: 2010-05-06 02:23\n"
 "Last-Translator: <post@pekkagaiser.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr "i-names werden nicht unterstützt."
 
 #: django_authopenid/forms.py:134
 msgid "Account with this name already exists on the forum"
-msgstr "Ein Zugang diesen Namens existiert bereits!"
+msgstr "Ein Zugang dieses Namens existiert bereits!"
 
 #: django_authopenid/forms.py:135
 msgid "can't have two logins to the same account yet, sorry."
@@ -30,9 +30,7 @@ msgstr "Zwei Logins für den selben Zugang sind leider noch nicht möglich."
 
 #: django_authopenid/forms.py:157
 msgid "Please enter valid username and password (both are case-sensitive)."
-msgstr ""
-"Bitte geben Sie einen gültigen Benutzernamen und ein Passwort ein. Es wird "
-"zwischen Groß- und Kleinschreibung unterschieden."
+msgstr "Bitte geben Sie einen gültigen Benutzernamen und ein Passwort ein. Es wird zwischen Groß- und Kleinschreibung unterschieden."
 
 #: django_authopenid/forms.py:160 django_authopenid/forms.py:210
 msgid "This account is inactive."
@@ -55,23 +53,16 @@ msgid "Please enter user name"
 msgstr "Bitte geben Sie Ihren Benutzernamen ein."
 
 #: django_authopenid/forms.py:206
-msgid ""
-"Please enter a valid                     username and password. Note that "
-"both fields are                     case-sensitive."
-msgstr ""
-"Bitte geben Sie einen gültigen Benutzernamen und ein Passwort ein. Es wird "
-"zwischen Groß- und Kleinschreibung unterschieden."
+msgid "Please enter a valid                     username and password. Note that both fields are                     case-sensitive."
+msgstr "Bitte geben Sie einen gültigen Benutzernamen und ein Passwort ein. Es wird zwischen Groß- und Kleinschreibung unterschieden."
 
 #: django_authopenid/forms.py:229
 msgid "Current password"
 msgstr "Momentanes Passwort"
 
 #: django_authopenid/forms.py:240
-msgid ""
-"Old password is incorrect.                     Please enter the correct "
-"password."
-msgstr ""
-"Das alte Passwort ist falsch. Bitte geben Sie das richtige Passwort ein."
+msgid "Old password is incorrect.                     Please enter the correct password."
+msgstr "Das alte Passwort ist falsch. Bitte geben Sie das richtige Passwort ein."
 
 #: django_authopenid/forms.py:305
 msgid "Your user name (<i>required</i>)"
@@ -177,9 +168,7 @@ msgstr "Passwort geändert."
 #: django_authopenid/views.py:732 django_authopenid/views.py:738
 #, python-format
 msgid "your email needs to be validated see %(details_url)s"
-msgstr ""
-"Sie müssen Ihre E-Mail-Adresse bestätigen. Mehr Informationen<a "
-"id='validate_email_alert' href='%(details_url)s'>hier</a>."
+msgstr "Sie müssen Ihre E-Mail-Adresse bestätigen. Mehr Informationen<a id='validate_email_alert' href='%(details_url)s'>hier</a>."
 
 #: django_authopenid/views.py:759
 msgid "Email verification subject line"
@@ -197,8 +186,7 @@ msgstr "Keine Verknüpfung für OpenID %s in der Datenbank gefunden."
 #: django_authopenid/views.py:902 django_authopenid/views.py:1063
 #, python-format
 msgid "The OpenID %s isn't associated to current user logged in"
-msgstr ""
-"Die OpenID %s ist nicht mit dem momentan eingeloggten Benutzer vernknüpft."
+msgstr "Die OpenID %s ist nicht mit dem momentan eingeloggten Benutzer vernknüpft."
 
 #: django_authopenid/views.py:910
 msgid "Email Changed."
@@ -223,24 +211,16 @@ msgstr "Anfordern eines neuen Passworts"
 
 #: django_authopenid/views.py:1132
 msgid "A new password and the activation link were sent to your email address."
-msgstr ""
-"Ein neues Passwort und ein Aktivierungslink wurden an Ihre E-Mail-Adresse "
-"gesandt."
+msgstr "Ein neues Passwort und ein Aktivierungslink wurden an Ihre E-Mail-Adresse gesandt."
 
 #: django_authopenid/views.py:1164
 #, python-format
-msgid ""
-"Could not change password. Confirmation key '%s'                is not "
-"registered."
-msgstr ""
-"Passwort konnte nicht geändert werden. Bestätigungscode '%s' nicht gefunden. "
+msgid "Could not change password. Confirmation key '%s'                is not registered."
+msgstr "Passwort konnte nicht geändert werden. Bestätigungscode '%s' nicht gefunden. "
 
 #: django_authopenid/views.py:1174
-msgid ""
-"Can not change password. User don't exist anymore                 in our "
-"database."
-msgstr ""
-"Passwort konnte nicht geändert werden. Der Benutzer existiert nicht mehr."
+msgid "Can not change password. User don't exist anymore                 in our database."
+msgstr "Passwort konnte nicht geändert werden. Der Benutzer existiert nicht mehr."
 
 #: django_authopenid/views.py:1184
 #, python-format
@@ -281,9 +261,7 @@ msgstr "Keine echte Frage"
 
 #: forum/const.py:12
 msgid "the question is answered, right answer was accepted"
-msgstr ""
-"The Frage wurde beantwortet, die korrekte Antwort als \"Akzeptiert\" "
-"markiert."
+msgstr "The Frage wurde beantwortet, die korrekte Antwort als \"Akzeptiert\" markiert."
 
 #: forum/const.py:13
 msgid "question is not relevant or outdated"
@@ -516,11 +494,8 @@ msgid "tags"
 msgstr "Tags"
 
 #: forum/forms.py:55
-msgid ""
-"Tags are short keywords, with no spaces within. Up to five tags can be used."
-msgstr ""
-"Tags sind kurze Stichwörter. Sie dürfen keine Leerzeichen enthalten. Bis zu "
-"fünf Tags können vergeben werden."
+msgid "Tags are short keywords, with no spaces within. Up to five tags can be used."
+msgstr "Tags sind kurze Stichwörter. Sie dürfen keine Leerzeichen enthalten. Bis zu fünf Tags können vergeben werden."
 
 #: forum/forms.py:62 forum/skins/askbot/templates/question_retag.html:39
 #: forum/skins/default/templates/question_retag.html:39
@@ -555,26 +530,16 @@ msgid "community wiki"
 msgstr "Community Wiki"
 
 #: forum/forms.py:98
-msgid ""
-"if you choose community wiki option, the question and answer do not generate "
-"points and name of author will not be shown"
-msgstr ""
-"Wenn Sie \"Community Wiki\" auswählen, werden auf die Frage und die "
-"Antworten keine Bewertungspunkte vergeben, und der Name des Autors wird "
-"nicht angezeigt."
+msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
+msgstr "Wenn Sie \"Community Wiki\" auswählen, werden auf die Frage und die Antworten keine Bewertungspunkte vergeben, und der Name des Autors wird nicht angezeigt."
 
 #: forum/forms.py:114
 msgid "update summary:"
 msgstr "Zusammenfassung der Überarbeitung:"
 
 #: forum/forms.py:115
-msgid ""
-"enter a brief summary of your revision (e.g. fixed spelling, grammar, "
-"improved style, this field is optional)"
-msgstr ""
-"Bitte geben Sie eine kurze Beschreibung Ihrer Überarbeitung ein (z.B. "
-"Rechtschreibung, Tippfehler korrigiert, Grammatik, Stil verbessert) "
-"Freiwillige Angabe."
+msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
+msgstr "Bitte geben Sie eine kurze Beschreibung Ihrer Überarbeitung ein (z.B. Rechtschreibung, Tippfehler korrigiert, Grammatik, Stil verbessert) Freiwillige Angabe."
 
 #: forum/forms.py:118
 msgid "Automatically accept user's contributions for the email updates"
@@ -618,9 +583,7 @@ msgstr "Geburtsdatum"
 
 #: forum/forms.py:300
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr ""
-"wird nicht angezeigt, aber für die Altersberechnung verwendet. Format: JJJJ-"
-"MM-TT, Beispiel: 1980-05-27 für den 27. Mai 1980"
+msgstr "wird nicht angezeigt, aber für die Altersberechnung verwendet. Format: JJJJ-MM-TT, Beispiel: 1980-05-27 für den 27. Mai 1980"
 
 #: forum/forms.py:301 forum/skins/askbot/templates/account_settings.html:21
 #: forum/skins/askbot/templates/authopenid/settings.html:21
@@ -631,9 +594,7 @@ msgstr "Profil"
 
 #: forum/forms.py:332 forum/forms.py:333
 msgid "this email has already been registered, please use another one"
-msgstr ""
-"Ein Zugang mit dieser E-Mail-Adresse existiert bereits. Bitte verwenden Sie "
-"eine andere E-Mail-Adresse."
+msgstr "Ein Zugang mit dieser E-Mail-Adresse existiert bereits. Bitte verwenden Sie eine andere E-Mail-Adresse."
 
 #: forum/forms.py:339
 msgid "Choose email tag filter"
@@ -827,52 +788,25 @@ msgid "new question"
 msgstr "Neue Frage"
 
 #: forum/management/commands/send_email_alerts.py:272
-msgid ""
-"Please visit the forum and see what's new! Could you spread the word about "
-"it - can somebody you know help answering those questions or benefit from "
-"posting one?"
-msgstr ""
-"Schauen Sie rein und entdecken Sie neue Fragen und Antworten. Empfehlen Sie "
-"uns gern auch an Freunde und Bekannte weiter!"
+msgid "Please visit the forum and see what's new! Could you spread the word about it - can somebody you know help answering those questions or benefit from posting one?"
+msgstr "Schauen Sie rein und entdecken Sie neue Fragen und Antworten. Empfehlen Sie uns gern auch an Freunde und Bekannte weiter!"
 
 #: forum/management/commands/send_email_alerts.py:284
-msgid ""
-"Your most frequent subscription setting is 'daily' on selected questions. If "
-"you are receiving more than one email per dayplease tell about this issue to "
-"the forum administrator."
-msgstr ""
-"Die Einstellung, mit der Sie am häufigsten benachrichtigt werden, ist "
-"\"täglich\". Sollten Sie mehr als eine E-Mail pro Tag bekommen, "
-"benachrichtigen Sie uns bitte."
+msgid "Your most frequent subscription setting is 'daily' on selected questions. If you are receiving more than one email per dayplease tell about this issue to the forum administrator."
+msgstr "Die Einstellung, mit der Sie am häufigsten benachrichtigt werden, ist \"täglich\". Sollten Sie mehr als eine E-Mail pro Tag bekommen, benachrichtigen Sie uns bitte."
 
 #: forum/management/commands/send_email_alerts.py:290
-msgid ""
-"Your most frequent subscription setting is 'weekly' if you are receiving "
-"this email more than once a week please report this issue to the forum "
-"administrator."
-msgstr ""
-"Die Einstellung, mit der Sie am häufigsten benachrichtigt werden, ist "
-"\"wöchentlich\". Sollten Sie mehr als eine E-Mail pro Woche bekommen, "
-"benachrichtigen Sie uns bitte."
+msgid "Your most frequent subscription setting is 'weekly' if you are receiving this email more than once a week please report this issue to the forum administrator."
+msgstr "Die Einstellung, mit der Sie am häufigsten benachrichtigt werden, ist \"wöchentlich\". Sollten Sie mehr als eine E-Mail pro Woche bekommen, benachrichtigen Sie uns bitte."
 
 #: forum/management/commands/send_email_alerts.py:296
-msgid ""
-"There is a chance that you may be receiving links seen before - due to a "
-"technicality that will eventually go away. "
-msgstr ""
-"Aus technischen Gründen kann es manchmal vorkommen, daß Sie Links empfangen, "
-"die Sie bereits gesehen haben. "
+msgid "There is a chance that you may be receiving links seen before - due to a technicality that will eventually go away. "
+msgstr "Aus technischen Gründen kann es manchmal vorkommen, daß Sie Links empfangen, die Sie bereits gesehen haben. "
 
 #: forum/management/commands/send_email_alerts.py:311
 #, python-format
-msgid ""
-"go to %(link)s to change frequency of email updates or %(email)s "
-"administrator"
-msgstr ""
-"<p>Sie können die Häufigkeit, mit der Sie Benachrichtigungen erhalten, "
-"jederzeit <a href='%(link)s'>hier</a> einstellen oder sie gänzlich "
-"abschalten.<br/>Falls Sie diese Nachricht irrtümlich erhalten haben, "
-"informieren Sie uns bitte unter %(email)s.</p>"
+msgid "go to %(link)s to change frequency of email updates or %(email)s administrator"
+msgstr "<p>Sie können die Häufigkeit, mit der Sie Benachrichtigungen erhalten, jederzeit <a href='%(link)s'>hier</a> einstellen oder sie gänzlich abschalten.<br/>Falls Sie diese Nachricht irrtümlich erhalten haben, informieren Sie uns bitte unter %(email)s.</p>"
 
 #: forum/middleware/anon_user.py:34
 #, python-format
@@ -881,490 +815,435 @@ msgstr "Zum ersten Mal hier? <a href=\"%s\">Häufige Fragen</a> lesen!"
 
 #: forum/migrations/0005_install_badges.py:10
 msgid "Disciplined"
-msgstr ""
+msgstr "Diszipliniert"
 
 #: forum/migrations/0005_install_badges.py:10
 msgid "disciplined"
-msgstr ""
+msgstr "diszipliniert"
 
 #: forum/migrations/0005_install_badges.py:10
 msgid "Deleted own post with score of 3 or higher"
-msgstr ""
+msgstr "Eigenen Beitrag mit 3 oder mehr positiven Bewertungen gelöscht"
 
 #: forum/migrations/0005_install_badges.py:11
 msgid "Peer Pressure"
-msgstr ""
+msgstr "Gruppenzwang"
 
 #: forum/migrations/0005_install_badges.py:11
 msgid "peer-pressure"
-msgstr ""
+msgstr "gruppenzwang"
 
 #: forum/migrations/0005_install_badges.py:11
 msgid "Deleted own post with score of -3 or lower"
-msgstr ""
+msgstr "Eigenen Beitrag mit mehr als 3 negativen Bewertungen gelöscht"
 
 #: forum/migrations/0005_install_badges.py:12
-#, fuzzy
 msgid "Nice answer"
-msgstr "überarbeitete Antwort"
+msgstr "Nette Antwort"
 
 #: forum/migrations/0005_install_badges.py:12
-#, fuzzy
 msgid "nice-answer"
-msgstr "antworten/"
+msgstr "nette-antwort/"
 
 #: forum/migrations/0005_install_badges.py:12
-#, fuzzy
 msgid "Answer voted up 10 times"
-msgstr "Benutzer hat positiv bewertet"
+msgstr "Benutzer hat positive Bewertungen abgegeben"
 
 #: forum/migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "Nice Question"
 msgstr "Fragen"
 
 #: forum/migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "nice-question"
-msgstr "frage_stellen/"
+msgstr "nette-frage/"
 
 #: forum/migrations/0005_install_badges.py:13
-#, fuzzy
 msgid "Question voted up 10 times"
-msgstr "Benutzer hat positiv bewertet"
+msgstr "Benutzer hat positive Bewertungen abgegeben"
 
 #: forum/migrations/0005_install_badges.py:14
-#, fuzzy
 msgid "Pundit"
-msgstr "bearbeiten"
+msgstr "Experte"
 
 #: forum/migrations/0005_install_badges.py:14
-#, fuzzy
 msgid "pundit"
-msgstr "bearbeiten"
+msgstr "experte"
 
 #: forum/migrations/0005_install_badges.py:14
 msgid "Left 10 comments with score of 10 or more"
-msgstr ""
+msgstr "Hat 10 Kommentare mit einer Bewertung von 10 oder mehr hinterlassen"
 
 #: forum/migrations/0005_install_badges.py:15
-#, fuzzy
 msgid "Popular Question"
-msgstr "Stellen Sie Ihre Frage"
+msgstr "populäre Frage"
 
 #: forum/migrations/0005_install_badges.py:15
-#, fuzzy
 msgid "popular-question"
-msgstr "Frage"
+msgstr "populaere-frage"
 
 #: forum/migrations/0005_install_badges.py:15
 msgid "Asked a question with 1,000 views"
-msgstr ""
+msgstr "Hat Frage mit mindestens 1.000 Einblendungen gestellt"
 
 #: forum/migrations/0005_install_badges.py:16
 msgid "Citizen patrol"
-msgstr ""
+msgstr "Engagierter Bürger"
 
 #: forum/migrations/0005_install_badges.py:16
 msgid "citizen-patrol"
-msgstr ""
+msgstr "engagierter-buerger"
 
 #: forum/migrations/0005_install_badges.py:16
 msgid "First flagged post"
-msgstr ""
+msgstr "Erster gemeldeter Beitrag"
 
 #: forum/migrations/0005_install_badges.py:17
 msgid "Cleanup"
-msgstr ""
+msgstr "Putzaktion"
 
 #: forum/migrations/0005_install_badges.py:17
 msgid "cleanup"
-msgstr ""
+msgstr "putzaktion"
 
 #: forum/migrations/0005_install_badges.py:17
 msgid "First rollback"
-msgstr ""
+msgstr "Erster Rollback (Rückkehr zur Vorversion eines Beitrags)"
 
 #: forum/migrations/0005_install_badges.py:18
 msgid "Critic"
-msgstr ""
+msgstr "Kritiker"
 
 #: forum/migrations/0005_install_badges.py:18
 msgid "critic"
-msgstr ""
+msgstr "kritiker"
 
 #: forum/migrations/0005_install_badges.py:18
-#, fuzzy
 msgid "First down vote"
-msgstr "Negativ bewerten"
+msgstr "Erste negative Bewertung"
 
 #: forum/migrations/0005_install_badges.py:19
-#, fuzzy
 msgid "Editor"
-msgstr "bearbeiten"
+msgstr "Redakteur"
 
 #: forum/migrations/0005_install_badges.py:19
-#, fuzzy
 msgid "editor"
-msgstr "bearbeiten"
+msgstr "redakteur"
 
 #: forum/migrations/0005_install_badges.py:19
 msgid "First edit"
-msgstr ""
+msgstr "Erste Bearbeitung eines Beitrags"
 
 #: forum/migrations/0005_install_badges.py:20
 msgid "Organizer"
-msgstr ""
+msgstr "Organisierer"
 
 #: forum/migrations/0005_install_badges.py:20
-#, fuzzy
 msgid "organizer"
-msgstr "Ihre Antwort"
+msgstr "Organisator"
 
 #: forum/migrations/0005_install_badges.py:20
-#, fuzzy
 msgid "First retag"
-msgstr "Tags zurücksetzen"
+msgstr "Erste Tag-Bearbeitung"
 
 #: forum/migrations/0005_install_badges.py:21
 msgid "Scholar"
-msgstr ""
+msgstr "Lernender"
 
 #: forum/migrations/0005_install_badges.py:21
 msgid "scholar"
-msgstr ""
+msgstr "lernender"
 
 #: forum/migrations/0005_install_badges.py:21
-#, fuzzy
 msgid "First accepted answer on your own question"
-msgstr "Kommentare und Antworten"
+msgstr "Erste Antwort auf eine eigene Frage akzeptiert"
 
 #: forum/migrations/0005_install_badges.py:22
 msgid "Student"
-msgstr ""
+msgstr "Schüler"
 
 #: forum/migrations/0005_install_badges.py:22
 msgid "student"
-msgstr ""
+msgstr "schueler"
 
 #: forum/migrations/0005_install_badges.py:22
 msgid "Asked first question with at least one up vote"
-msgstr ""
+msgstr "Hat erste Frage mit mindestens einer positiven Bewertung gestellt"
 
 #: forum/migrations/0005_install_badges.py:23
-#, fuzzy
 msgid "Supporter"
-msgstr "Positiv bewerten"
+msgstr "Unterstützer"
 
 #: forum/migrations/0005_install_badges.py:23
-#, fuzzy
 msgid "supporter"
-msgstr "Positiv bewerten"
+msgstr "unterstuetzer"
 
 #: forum/migrations/0005_install_badges.py:23
-#, fuzzy
 msgid "First up vote"
-msgstr "Positiv bewerten"
+msgstr "Erste positive Bewertung"
 
 #: forum/migrations/0005_install_badges.py:24
-#, fuzzy
 msgid "Teacher"
-msgstr "Suche"
+msgstr "Lehrer"
 
 #: forum/migrations/0005_install_badges.py:24
-#, fuzzy
 msgid "teacher"
 msgstr "Suche"
 
 #: forum/migrations/0005_install_badges.py:24
 msgid "Answered first question with at least one up vote"
-msgstr ""
+msgstr "Hat erste Frage mit mindestens einer positiven Bewertung beantwortet"
 
 #: forum/migrations/0005_install_badges.py:25
 msgid "Autobiographer"
-msgstr ""
+msgstr "Autobiograph"
 
 #: forum/migrations/0005_install_badges.py:25
 msgid "autobiographer"
-msgstr ""
+msgstr "autobiograph"
 
 #: forum/migrations/0005_install_badges.py:25
-#, fuzzy
 msgid "Completed all user profile fields"
 msgstr "Benutzerprofil komplettiert"
 
 #: forum/migrations/0005_install_badges.py:26
 msgid "Self-Learner"
-msgstr ""
+msgstr "Eigenständig lernender"
 
 #: forum/migrations/0005_install_badges.py:26
 msgid "self-learner"
-msgstr ""
+msgstr "eigenstaendig-lernender"
 
 #: forum/migrations/0005_install_badges.py:26
-#, fuzzy
 msgid "Answered your own question with at least 3 up votes"
-msgstr ""
-"<span class='big strong'>Die eigene Frage zu beantworten ist ausdrücklich "
-"erlaubt</span>, aber es muß eine echte <strong>Antwort</strong> sein! "
-"Vergessen Sie nicht, daß Sie Ihre ursprüngliche Frage <strong>jederzeit "
-"verändern oder bei Bedarf auch wieder löschen können</strong>. Bitte "
-"verwenden Sie die  <strong>Kommentarfunktion</strong> für Diskussionen und "
-"Rückfragen, und bitte vergessen Sie nicht, die eingehenden Antworten mit "
-"Ihrer Stimme zu bewerten!"
+msgstr "Eigene Frage beantwortet und mindestens 3 positive Bewertungen dafür erhalten"
 
 #: forum/migrations/0005_install_badges.py:27
-#, fuzzy
 msgid "Great Answer"
-msgstr "Antwort"
+msgstr "Sehr gute Antwort"
 
 #: forum/migrations/0005_install_badges.py:27
-#, fuzzy
 msgid "great-answer"
-msgstr "Antwort"
+msgstr "sehr-gute-antwort"
 
 #: forum/migrations/0005_install_badges.py:27
-#, fuzzy
 msgid "Answer voted up 100 times"
-msgstr "Benutzer hat positiv bewertet"
+msgstr "Antwort wurde 100 Mal positiv bewertet"
 
 #: forum/migrations/0005_install_badges.py:28
-#, fuzzy
 msgid "Great Question"
-msgstr "Vergebene Tags bearbeiten"
+msgstr "Sehr gute Frage"
 
 #: forum/migrations/0005_install_badges.py:28
-#, fuzzy
 msgid "great-question"
-msgstr "Vergebene Tags bearbeiten"
+msgstr "sehr-gute-frage"
 
 #: forum/migrations/0005_install_badges.py:28
-#, fuzzy
 msgid "Question voted up 100 times"
-msgstr "Benutzer hat positiv bewertet"
+msgstr "Frage wurde 100 Mal positiv bewertet"
 
 #: forum/migrations/0005_install_badges.py:29
-#, fuzzy
 msgid "Stellar Question"
-msgstr "Sie haben noch Fragen?"
+msgstr "Exzellente Frage"
 
 #: forum/migrations/0005_install_badges.py:29
-#, fuzzy
 msgid "stellar-question"
-msgstr "Alle Fragen zeigen"
+msgstr "exzellente-frage"
 
 #: forum/migrations/0005_install_badges.py:29
 msgid "Question favorited by 100 users"
-msgstr ""
+msgstr "Frage von 100 Benutzern in Favoritenliste aufgenommen"
 
 #: forum/migrations/0005_install_badges.py:30
-#, fuzzy
 msgid "Famous question"
-msgstr "Frage schließen"
+msgstr "Berühmte Frage"
 
 #: forum/migrations/0005_install_badges.py:30
-#, fuzzy
 msgid "famous-question"
-msgstr "Frage"
+msgstr "beruehmte-frage"
 
 #: forum/migrations/0005_install_badges.py:30
 msgid "Asked a question with 10,000 views"
-msgstr ""
+msgstr "Hat Frage mit 10.000 Einblendungen gestellt"
 
 #: forum/migrations/0005_install_badges.py:31
 msgid "Alpha"
-msgstr ""
+msgstr "Alpha"
 
 #: forum/migrations/0005_install_badges.py:31
 msgid "alpha"
-msgstr ""
+msgstr "alpha"
 
 #: forum/migrations/0005_install_badges.py:31
 msgid "Actively participated in the private alpha"
-msgstr ""
+msgstr "Hat aktiv an der privaten Alphaphase des Forums teilgenommen"
 
 #: forum/migrations/0005_install_badges.py:32
-#, fuzzy
 msgid "Good Answer"
-msgstr "älteste"
+msgstr "Gute Antwort"
 
 #: forum/migrations/0005_install_badges.py:32
-#, fuzzy
 msgid "good-answer"
-msgstr "Antwort"
+msgstr "gute-antwort"
 
 #: forum/migrations/0005_install_badges.py:32
-#, fuzzy
 msgid "Answer voted up 25 times"
-msgstr "Benutzer hat positiv bewertet"
+msgstr "Antwort wurde 25 Mal positiv bewertet"
 
 #: forum/migrations/0005_install_badges.py:33
-#, fuzzy
 msgid "Good Question"
-msgstr "Fragen"
+msgstr "Gute Frage"
 
 #: forum/migrations/0005_install_badges.py:33
-#, fuzzy
 msgid "good-question"
-msgstr "Frage"
+msgstr "gute-frage"
 
 #: forum/migrations/0005_install_badges.py:33
-#, fuzzy
 msgid "Question voted up 25 times"
-msgstr "Benutzer hat positiv bewertet"
+msgstr "Frage wurde 25 Mal positiv bewertet"
 
 #: forum/migrations/0005_install_badges.py:34
-#, fuzzy
 msgid "Favorite Question"
-msgstr "Fragen in der Favoritenliste"
+msgstr "Favoritenfrage"
 
 #: forum/migrations/0005_install_badges.py:34
-#, fuzzy
 msgid "favorite-question"
-msgstr "Fragen in der Favoritenliste"
+msgstr "favoriten-frage"
 
 #: forum/migrations/0005_install_badges.py:34
 msgid "Question favorited by 25 users"
-msgstr ""
+msgstr "Frage von 25 Benutzern in Favoritenliste aufgenommen"
 
 #: forum/migrations/0005_install_badges.py:35
 msgid "Civic duty"
-msgstr ""
+msgstr "Bürgerpflicht"
 
 #: forum/migrations/0005_install_badges.py:35
 msgid "civic-duty"
-msgstr ""
+msgstr "buergerpflicht"
 
 #: forum/migrations/0005_install_badges.py:35
 msgid "Voted 300 times"
-msgstr ""
+msgstr "300 Mal abgestimmt"
 
 #: forum/migrations/0005_install_badges.py:36
 msgid "Strunk & White"
-msgstr ""
+msgstr "Form und Grammatik"
 
 #: forum/migrations/0005_install_badges.py:36
 msgid "strunk-and-white"
-msgstr ""
+msgstr "form-und-grammatik"
 
 #: forum/migrations/0005_install_badges.py:36
 msgid "Edited 100 entries"
-msgstr ""
+msgstr "100 Beiträge überarbeitet"
 
 #: forum/migrations/0005_install_badges.py:37
-#, fuzzy
 msgid "Generalist"
-msgstr "Der Absender ist"
+msgstr "Generalist"
 
 #: forum/migrations/0005_install_badges.py:37
-#, fuzzy
 msgid "generalist"
-msgstr "Der Absender ist"
+msgstr "generalist"
 
 #: forum/migrations/0005_install_badges.py:37
 msgid "Active in many different tags"
-msgstr ""
+msgstr "In vielen verschiedenen Tags aktiv"
 
 #: forum/migrations/0005_install_badges.py:38
 msgid "Expert"
-msgstr ""
+msgstr "Experte"
 
 #: forum/migrations/0005_install_badges.py:38
-#, fuzzy
 msgid "expert"
-msgstr "Text"
+msgstr "Experte"
 
 #: forum/migrations/0005_install_badges.py:38
 msgid "Very active in one tag"
-msgstr ""
+msgstr "Sehr aktiv in einem bestimmten Tag"
 
 #: forum/migrations/0005_install_badges.py:39
 msgid "Yearling"
-msgstr ""
+msgstr "Jahresring"
 
 #: forum/migrations/0005_install_badges.py:39
 msgid "yearling"
-msgstr ""
+msgstr "jahresring"
 
 #: forum/migrations/0005_install_badges.py:39
 msgid "Active member for a year"
-msgstr ""
+msgstr "Aktives Mitglied für ein Jahr"
 
 #: forum/migrations/0005_install_badges.py:40
-#, fuzzy
 msgid "Notable Question"
-msgstr "Keine echte Frage"
+msgstr "Bemerkenswerte Frage"
 
 #: forum/migrations/0005_install_badges.py:40
-#, fuzzy
 msgid "notable-question"
-msgstr "Keine echte Frage"
+msgstr "bemerkenswerte-frage"
 
 #: forum/migrations/0005_install_badges.py:40
 msgid "Asked a question with 2,500 views"
-msgstr ""
+msgstr "Hat eine Frage mit 2.500 Einblendungen gestellt"
 
 #: forum/migrations/0005_install_badges.py:41
 msgid "Enlightened"
-msgstr ""
+msgstr "Hat Ahnung"
 
 #: forum/migrations/0005_install_badges.py:41
 msgid "enlightened"
-msgstr ""
+msgstr "hat-ahnung"
 
 #: forum/migrations/0005_install_badges.py:41
 msgid "First answer was accepted with at least 10 up votes"
-msgstr ""
+msgstr "Erste Antwort verfaßt, diese wurde akzeptiert und mindestens 10 Mal positiv bewertet"
 
 #: forum/migrations/0005_install_badges.py:42
 msgid "Beta"
-msgstr ""
+msgstr "Beta"
 
 #: forum/migrations/0005_install_badges.py:42
 msgid "beta"
-msgstr ""
+msgstr "beta"
 
 #: forum/migrations/0005_install_badges.py:42
 msgid "Actively participated in the private beta"
-msgstr ""
+msgstr "Hat aktiv in der nichtöffentlichen Beta-Phase des Forums teilgenommen"
 
 #: forum/migrations/0005_install_badges.py:43
 msgid "Guru"
-msgstr ""
+msgstr "Guru"
 
 #: forum/migrations/0005_install_badges.py:43
 msgid "guru"
-msgstr ""
+msgstr "guru"
 
 #: forum/migrations/0005_install_badges.py:43
-#, fuzzy
 msgid "Accepted answer and voted up 40 times"
-msgstr "Benutzer hat positiv bewertet"
+msgstr "Antwort akzeptiert und 40 Mal positiv bewertet"
 
 #: forum/migrations/0005_install_badges.py:44
 msgid "Necromancer"
-msgstr ""
+msgstr "Totenbeschwörer"
 
 #: forum/migrations/0005_install_badges.py:44
 msgid "necromancer"
-msgstr ""
+msgstr "totenbeschwoerer"
 
 #: forum/migrations/0005_install_badges.py:44
 msgid "Answered a question more than 60 days later with at least 5 votes"
-msgstr ""
+msgstr "Hat eine Frage mehr als 2 Monate später beantwortet und mindestens 5 positive Bewertungen dafür erhalten"
 
 #: forum/migrations/0005_install_badges.py:45
 msgid "Taxonomist"
-msgstr ""
+msgstr "Tag-Schöpfer"
 
 #: forum/migrations/0005_install_badges.py:45
 msgid "taxonomist"
-msgstr ""
+msgstr "tag-schoepfer"
 
 #: forum/migrations/0005_install_badges.py:45
-#, fuzzy
 msgid "Created a tag used by 50 questions"
-msgstr "Vergebene Tags bearbeiten"
+msgstr "Tag formuliert, das in 50 Fragen verwendet wurde"
 
 #: forum/models/question.py:500
 #, python-format
@@ -1461,12 +1340,8 @@ msgstr "Die eingegebene Adresse ist fehlerhaft - bitte überprüfen;"
 
 #: forum/skins/askbot/templates/404.html:30
 #: forum/skins/default/templates/404.html:30
-msgid ""
-"the page you tried to visit is protected or you don't have sufficient "
-"points, see"
-msgstr ""
-"Die angeforderte Seite ist geschützt oder Sie haben nicht genug Punkte, um "
-"sie anzuschauen, siehe"
+msgid "the page you tried to visit is protected or you don't have sufficient points, see"
+msgstr "Die angeforderte Seite ist geschützt oder Sie haben nicht genug Punkte, um sie anzuschauen, siehe"
 
 #: forum/skins/askbot/templates/404.html:31
 #: forum/skins/default/templates/404.html:31
@@ -1505,9 +1380,7 @@ msgstr "Interner Fehler"
 #: forum/skins/askbot/templates/500.html:24
 #: forum/skins/default/templates/500.html:24
 msgid "system error log is recorded, error will be fixed as soon as possible"
-msgstr ""
-"Der Fehler wurde aufgezeichnet, und wir werden ihn so bald wie möglich "
-"beheben."
+msgstr "Der Fehler wurde aufgezeichnet, und wir werden ihn so bald wie möglich beheben."
 
 #: forum/skins/askbot/templates/500.html:25
 #: forum/skins/default/templates/500.html:25
@@ -1729,15 +1602,12 @@ msgstr "Tipps"
 #: forum/skins/askbot/templates/answer_edit_tips.html:7
 #: forum/skins/default/templates/answer_edit_tips.html:7
 msgid "please make your answer relevant to this community"
-msgstr ""
-"Bitte formulieren Sie Ihre Frage so, daß sie für dieses Forum relevant ist."
+msgstr "Bitte formulieren Sie Ihre Frage so, daß sie für dieses Forum relevant ist."
 
 #: forum/skins/askbot/templates/answer_edit_tips.html:10
 #: forum/skins/default/templates/answer_edit_tips.html:10
 msgid "try to give an answer, rather than engage into a discussion"
-msgstr ""
-"Bitte versuchen Sie, eine konkrete Antwort zu geben, und nicht in eine "
-"Diskussion einzusteigen."
+msgstr "Bitte versuchen Sie, eine konkrete Antwort zu geben, und nicht in eine Diskussion einzusteigen."
 
 #: forum/skins/askbot/templates/answer_edit_tips.html:13
 #: forum/skins/default/templates/answer_edit_tips.html:13
@@ -1837,12 +1707,7 @@ msgstr "Frage stellen"
 #: forum/skins/default/templates/ask.html:69
 #: forum/skins/default/templates/ask_form.html:11
 msgid "login to post question info"
-msgstr ""
-"<span class=\"strong big\">Sie können Ihre Frage formulieren, ohne sich "
-"vorher anmelden zu müssen</span>. Wenn Sie Ihre Frage speichern, werden Sie "
-"zum Anmeldeformular weitergeleitet. Einen neuen Zugang zu erstellen geht "
-"ganz schnell. Ihre Frage wird für die Dauer des Anmeldevorgangs im "
-"Hintergrund gespeichert und geht nicht verloren."
+msgstr "<span class=\"strong big\">Sie können Ihre Frage formulieren, ohne sich vorher anmelden zu müssen</span>. Wenn Sie Ihre Frage speichern, werden Sie zum Anmeldeformular weitergeleitet. Einen neuen Zugang zu erstellen geht ganz schnell. Ihre Frage wird für die Dauer des Anmeldevorgangs im Hintergrund gespeichert und geht nicht verloren."
 
 #: forum/skins/askbot/templates/ask.html:75
 #: forum/skins/default/templates/ask.html:75
@@ -1851,12 +1716,7 @@ msgid ""
 "must have valid %(email)s to post, \n"
 "                            see %(email_validation_faq_url)s\n"
 "                            "
-msgstr ""
-"<span class='strong big'>Ihre E-Mail-Adresse %(email)s wurde noch nicht "
-"bestätigt.</span> Um Beiträge veröffentlichen zu können, müssen Sie Ihre E-"
-"Mail-Adresse bestätigen. <a href='%(email_validation_faq_url)s'>Mehr infos "
-"hier</a>.<br>Sie können Ihren Beitrag speichern und die Bestätigung danach "
-"durchführen - Ihr Beitrag wird bis dahin gespeichert."
+msgstr "<span class='strong big'>Ihre E-Mail-Adresse %(email)s wurde noch nicht bestätigt.</span> Um Beiträge veröffentlichen zu können, müssen Sie Ihre E-Mail-Adresse bestätigen. <a href='%(email_validation_faq_url)s'>Mehr infos hier</a>.<br>Sie können Ihren Beitrag speichern und die Bestätigung danach durchführen - Ihr Beitrag wird bis dahin gespeichert."
 
 #: forum/skins/askbot/templates/ask.html:113
 #: forum/skins/askbot/templates/ask_form.html:54
@@ -1886,12 +1746,7 @@ msgid ""
 "must have valid %(email)s to post, \n"
 "                                see %(email_validation_faq_url)s\n"
 "                                "
-msgstr ""
-"<span class='strong big'>Ihre E-Mail-Adresse %(email)s wurde noch nicht "
-"bestätigt.</span> Um Beiträge veröffentlichen zu können, müssen Sie Ihre E-"
-"Mail-Adresse bestätigen. <a href='%(email_validation_faq_url)s'>Mehr infos "
-"hier</a>.<br>Sie können Ihren Beitrag speichern und die Bestätigung danach "
-"durchführen - Ihr Beitrag wird bis dahin gespeichert."
+msgstr "<span class='strong big'>Ihre E-Mail-Adresse %(email)s wurde noch nicht bestätigt.</span> Um Beiträge veröffentlichen zu können, müssen Sie Ihre E-Mail-Adresse bestätigen. <a href='%(email_validation_faq_url)s'>Mehr infos hier</a>.<br>Sie können Ihren Beitrag speichern und die Bestätigung danach durchführen - Ihr Beitrag wird bis dahin gespeichert."
 
 #: forum/skins/askbot/templates/book.html:7
 #: forum/skins/default/templates/book.html:7
@@ -2066,21 +1921,13 @@ msgstr "Was für Fragen kann ich hier stellen?"
 
 #: forum/skins/askbot/templates/faq.html:17
 #: forum/skins/default/templates/faq.html:17
-msgid ""
-"Most importanly - questions should be <strong>relevant</strong> to this "
-"community."
-msgstr ""
-"Das allerwichtigste - Fragen sollten für dieses Forum <strong>relevant</"
-"strong> und <strong>themenbezogen</strong> sein."
+msgid "Most importanly - questions should be <strong>relevant</strong> to this community."
+msgstr "Das allerwichtigste - Fragen sollten für dieses Forum <strong>relevant</strong> und <strong>themenbezogen</strong> sein."
 
 #: forum/skins/askbot/templates/faq.html:18
 #: forum/skins/default/templates/faq.html:18
-msgid ""
-"Before asking the question - please make sure to use search to see whether "
-"your question has alredy been answered."
-msgstr ""
-"Bevor Sie fragen: Bitte benutzen Sie die Suchfunktion, um sicherzustellen, "
-"daß die Frage nicht bereits gestellt wurde."
+msgid "Before asking the question - please make sure to use search to see whether your question has alredy been answered."
+msgstr "Bevor Sie fragen: Bitte benutzen Sie die Suchfunktion, um sicherzustellen, daß die Frage nicht bereits gestellt wurde."
 
 #: forum/skins/askbot/templates/faq.html:21
 #: forum/skins/default/templates/faq.html:21
@@ -2089,12 +1936,8 @@ msgstr "Was für Fragen sollten nicht gestellt werden?"
 
 #: forum/skins/askbot/templates/faq.html:22
 #: forum/skins/default/templates/faq.html:22
-msgid ""
-"Please avoid asking questions that are not relevant to this community, too "
-"subjective and argumentative."
-msgstr ""
-"Bitte verzichten Sie auf Fragen, die für dieses Forum nicht relevant sind, "
-"oder die zu subjektiv sind und zu Diskussionen verleiten."
+msgid "Please avoid asking questions that are not relevant to this community, too subjective and argumentative."
+msgstr "Bitte verzichten Sie auf Fragen, die für dieses Forum nicht relevant sind, oder die zu subjektiv sind und zu Diskussionen verleiten."
 
 #: forum/skins/askbot/templates/faq.html:27
 #: forum/skins/default/templates/faq.html:27
@@ -2103,15 +1946,8 @@ msgstr "Was sollte ich in meinen Antworten vermeiden?"
 
 #: forum/skins/askbot/templates/faq.html:28
 #: forum/skins/default/templates/faq.html:28
-msgid ""
-"is a Q&A site, not a discussion group. Therefore - please avoid having "
-"discussions in your answers, comment facility allows some space for brief "
-"discussions."
-msgstr ""
-"Wir sind ein Forum zum Stellen und Beantworten von Fragen - <strong>kein "
-"Diskussionsforum</strong>.  Bitte verzichten Sie in Ihren Antworten auf "
-"Diskussionen. Kurze Gespräche, Kritik und Klärungen sind über die "
-"Kommentarfunktion möglich. "
+msgid "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions."
+msgstr "Wir sind ein Forum zum Stellen und Beantworten von Fragen - <strong>kein Diskussionsforum</strong>.  Bitte verzichten Sie in Ihren Antworten auf Diskussionen. Kurze Gespräche, Kritik und Klärungen sind über die Kommentarfunktion möglich. "
 
 #: forum/skins/askbot/templates/faq.html:32
 #: forum/skins/default/templates/faq.html:32
@@ -2130,12 +1966,8 @@ msgstr "Dieses Forum wird von seinen Benutzern moderiert."
 
 #: forum/skins/askbot/templates/faq.html:35
 #: forum/skins/default/templates/faq.html:35
-msgid ""
-"The reputation system allows users earn the authorization to perform a "
-"variety of moderation tasks."
-msgstr ""
-"Je höher der Punktestand eines Benutzers, desto mehr Funktionen stehen ihm "
-"zur Verfügung, z.B. das Bearbeiten und später auch Löschen anderer Beiträge."
+msgid "The reputation system allows users earn the authorization to perform a variety of moderation tasks."
+msgstr "Je höher der Punktestand eines Benutzers, desto mehr Funktionen stehen ihm zur Verfügung, z.B. das Bearbeiten und später auch Löschen anderer Beiträge."
 
 #: forum/skins/askbot/templates/faq.html:40
 #: forum/skins/default/templates/faq.html:40
@@ -2145,31 +1977,15 @@ msgstr "Wie funktioniert das Punktesystem?"
 #: forum/skins/askbot/templates/faq.html:41
 #: forum/skins/default/templates/faq.html:41
 msgid "Rep system summary"
-msgstr ""
-"Wenn eine Frage oder Antwort positiv bewertet wird, erhält der Autor Punkte. "
-"Diese Punkte sind ein ungefähres Abbild von dem Grad, in dem dem Benutzer "
-"von der Gemeinschaft vertraut wird. Mit wachsendem Punktestand werden immer "
-"mehr Möglichkeiten freigeschaltet."
+msgstr "Wenn eine Frage oder Antwort positiv bewertet wird, erhält der Autor Punkte. Diese Punkte sind ein ungefähres Abbild von dem Grad, in dem dem Benutzer von der Gemeinschaft vertraut wird. Mit wachsendem Punktestand werden immer mehr Möglichkeiten freigeschaltet."
 
 #: forum/skins/askbot/templates/faq.html:42
 #: forum/skins/default/templates/faq.html:42
-msgid ""
-"For example, if you ask an interesting question or give a helpful answer, "
-"your input will be upvoted. On the other hand if the answer is misleading - "
-"it will be downvoted. Each vote in favor will generate <strong>10</strong> "
-"points, each vote against will subtract <strong>2</strong> points. There is "
-"a limit of <strong>200</strong> points that can be accumulated per question "
-"or answer. The table below explains reputation point requirements for each "
-"type of moderation task."
+msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points. There is a limit of <strong>200</strong> points that can be accumulated per question or answer. The table below explains reputation point requirements for each type of moderation task."
 msgstr ""
-"Wenn Sie zum Beispiel eine interessante Frage stellen oder eine hilfreiche "
-"Antwort geben, wird Ihr Beitrag von anderen Benutzern positiv bewertet. Wenn "
-"die Frage schlecht gestellt oder eine Antwort falsch ist, kann er auch "
-"negativ bewertet werden. Eine positive Bewertung bringt <strong>10</strong> "
-"Punkte, eine negative zieht <strong>2</strong> Punkte ab. \n"
+"Wenn Sie zum Beispiel eine interessante Frage stellen oder eine hilfreiche Antwort geben, wird Ihr Beitrag von anderen Benutzern positiv bewertet. Wenn die Frage schlecht gestellt oder eine Antwort falsch ist, kann er auch negativ bewertet werden. Eine positive Bewertung bringt <strong>10</strong> Punkte, eine negative zieht <strong>2</strong> Punkte ab. \n"
 "\n"
-"Für jede gestellte Frage oder verfaßte Antwort können maximal 200 Punkte "
-"erzielt werden."
+"Für jede gestellte Frage oder verfaßte Antwort können maximal 200 Punkte erzielt werden."
 
 #: forum/skins/askbot/templates/faq.html:53
 #: forum/skins/askbot/templates/user_votes.html:15
@@ -2228,8 +2044,7 @@ msgstr "Kommentare löschen"
 #: forum/skins/askbot/templates/faq.html:95
 #: forum/skins/default/templates/faq.html:95
 msgid "delete any questions and answers and perform other moderation tasks"
-msgstr ""
-"Beliebige Fragen und Antworten löschen und weitere Moderationsfunktionen"
+msgstr "Beliebige Fragen und Antworten löschen und weitere Moderationsfunktionen"
 
 #: forum/skins/askbot/templates/faq.html:103
 #: forum/skins/default/templates/faq.html:103
@@ -2239,24 +2054,8 @@ msgstr "Wie bestätigt man seine E-Mail-Adresse und warum?"
 #: forum/skins/askbot/templates/faq.html:105
 #: forum/skins/default/templates/faq.html:105
 #, python-format
-msgid ""
-"how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
-msgstr ""
-"<form style='margin:0;padding:0;' action='%(send_email_key_url)s'><p><span "
-"class=\"bigger strong\">Wie?</span> Falls Sie soeben eine neue E-Mail-"
-"Adresse eingegeben haben oder Ihre bestehende verändert - <strong>prüfen Sie "
-"Ihr E-Mail-Postfach und klicken Sie auf den in der Bestätigungsmail "
-"enthaltenen Link</strong>.<br>Der Link enthält einen Schlüssel, der extra "
-"für Sie erzeugt wurde. Sie können auch <button style='display:inline' "
-"type='submit'><strong>einen neuen Schlüssel anfordern</strong></button>. "
-"Bitte rufen Sie Ihre E-Mails dann erneut ab.</p></form><span class=\"bigger "
-"strong\">Warum?</span> Mit der E-Mail-Bestätigung wird sichergestellt, daß "
-"<strong>nur Sie  </strong> in Ihrem Namen Beiträge verfassen können, und "
-"<strong>Spam</strong> minimiert wird.<br>Sie können per E-Mail auch "
-"<strong>Benachrichtigungen</strong> für die Fragen abonnieren, die Sie am "
-"meisten interessieren. Mit einer E-Mail-Adresse können Sie über den <a "
-"href='%(gravatar_faq_url)s'><strong>Gravatar</strong></a>-Dienst auch ein "
-"persönliches Profilbild einstellen, das neben Ihrem Namen erscheint.</p>"
+msgid "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
+msgstr "<form style='margin:0;padding:0;' action='%(send_email_key_url)s'><p><span class=\"bigger strong\">Wie?</span> Falls Sie soeben eine neue E-Mail-Adresse eingegeben haben oder Ihre bestehende verändert - <strong>prüfen Sie Ihr E-Mail-Postfach und klicken Sie auf den in der Bestätigungsmail enthaltenen Link</strong>.<br>Der Link enthält einen Schlüssel, der extra für Sie erzeugt wurde. Sie können auch <button style='display:inline' type='submit'><strong>einen neuen Schlüssel anfordern</strong></button>. Bitte rufen Sie Ihre E-Mails dann erneut ab.</p></form><span class=\"bigger strong\">Warum?</span> Mit der E-Mail-Bestätigung wird sichergestellt, daß <strong>nur Sie  </strong> in Ihrem Namen Beiträge verfassen können, und <strong>Spam</strong> minimiert wird.<br>Sie können per E-Mail auch <strong>Benachrichtigungen</strong> für die Fragen abonnieren, die Sie am meisten interessieren. Mit einer E-Mail-Adresse können Sie über den <a href='%(gravatar_faq_url)s'><strong>Gravatar</strong></a>-Dienst auch ein persönliches Profilbild einstellen, das neben Ihrem Namen erscheint.</p>"
 
 #: forum/skins/askbot/templates/faq.html:110
 #: forum/skins/default/templates/faq.html:110
@@ -2266,21 +2065,7 @@ msgstr "Wie verändert man sein Profilbild (Avatar) und was ist Gravatar?"
 #: forum/skins/askbot/templates/faq.html:111
 #: forum/skins/default/templates/faq.html:111
 msgid "gravatar faq info"
-msgstr ""
-"<p>Das Bild, das überall im Forum neben dem Benutzernamen angezeigt wird, "
-"heißt <strong>Gravatar</strong> (\"<strong>G</strong>lobally <strong>R</"
-"strong>ecognized <strong>Avatar</strong>).</p><p>So funktioniert es: Ein "
-"<strong>kryptographischer Schlüssel</strong> - ein nicht knackbarer code - "
-"wird aus Ihrer E-Mail-Adresse berechnet. Sie laden Ihr gewünschtes "
-"Profilbild auf der Website <a href='http://gravatar.com'><strong>gravatar."
-"com</strong></a> hoch.</p><p>Alle Foren, Blogs und andere Webseiten, die "
-"Gravatar nutzen, können so Ihr Profilbild darstellen, ohne daß Ihre E-Mail-"
-"Adresse öffentlich wird.</p><p>Um ein Profilbild hochzuladen,  "
-"<strong>registrieren Sie sich</strong> auf <a href='http://gravatar."
-"com'><strong>gravatar.com</strong></a> mit der selben E-Mail-Adresse, die "
-"Sie hier bei uns angegeben haben und folgen Sie den dort angegebenen "
-"Schritten. Laden Sie kein Profilbild hoch, wird ein neutrales Standard-"
-"Symbol angezeigt.</p>"
+msgstr "<p>Das Bild, das überall im Forum neben dem Benutzernamen angezeigt wird, heißt <strong>Gravatar</strong> (\"<strong>G</strong>lobally <strong>R</strong>ecognized <strong>Avatar</strong>).</p><p>So funktioniert es: Ein <strong>kryptographischer Schlüssel</strong> - ein nicht knackbarer code - wird aus Ihrer E-Mail-Adresse berechnet. Sie laden Ihr gewünschtes Profilbild auf der Website <a href='http://gravatar.com'><strong>gravatar.com</strong></a> hoch.</p><p>Alle Foren, Blogs und andere Webseiten, die Gravatar nutzen, können so Ihr Profilbild darstellen, ohne daß Ihre E-Mail-Adresse öffentlich wird.</p><p>Um ein Profilbild hochzuladen,  <strong>registrieren Sie sich</strong> auf <a href='http://gravatar.com'><strong>gravatar.com</strong></a> mit der selben E-Mail-Adresse, die Sie hier bei uns angegeben haben und folgen Sie den dort angegebenen Schritten. Laden Sie kein Profilbild hoch, wird ein neutrales Standard-Symbol angezeigt.</p>"
 
 #: forum/skins/askbot/templates/faq.html:114
 #: forum/skins/default/templates/faq.html:114
@@ -2289,12 +2074,8 @@ msgstr "Muß ich ein neues Passwort anlegen, um mich zu registrieren?"
 
 #: forum/skins/askbot/templates/faq.html:115
 #: forum/skins/default/templates/faq.html:115
-msgid ""
-"No, you don't have to. You can login through any service that supports "
-"OpenID, e.g. Google, Yahoo, AOL, etc."
-msgstr ""
-"Nein. Sie können sich über jeden Dienst einloggen, der OpenID unterstützt, "
-"zum Beispiel Google, Yahoo, AOL usw."
+msgid "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."
+msgstr "Nein. Sie können sich über jeden Dienst einloggen, der OpenID unterstützt, zum Beispiel Google, Yahoo, AOL usw."
 
 #: forum/skins/askbot/templates/faq.html:116
 #: forum/skins/default/templates/faq.html:116
@@ -2313,20 +2094,13 @@ msgstr "Das Ziel dieser Seite ist:"
 
 #: forum/skins/askbot/templates/faq.html:122
 #: forum/skins/default/templates/faq.html:122
-msgid ""
-"So questions and answers can be edited like wiki pages by experienced users "
-"of this site and this improves the overall quality of the knowledge base "
-"content."
-msgstr ""
-"Fragen und Antworten nach dem Wiki-Prinzip für alle bearbeitbar zu machen, "
-"sodaß jeder die Qualität der Beiträge verbessern kann."
+msgid "So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content."
+msgstr "Fragen und Antworten nach dem Wiki-Prinzip für alle bearbeitbar zu machen, sodaß jeder die Qualität der Beiträge verbessern kann."
 
 #: forum/skins/askbot/templates/faq.html:123
 #: forum/skins/default/templates/faq.html:123
 msgid "If this approach is not for you, we respect your choice."
-msgstr ""
-"Falls Ihnen dies nicht gefällt, ist unser Forum vielleicht nicht das "
-"richtige für Sie."
+msgstr "Falls Ihnen dies nicht gefällt, ist unser Forum vielleicht nicht das richtige für Sie."
 
 #: forum/skins/askbot/templates/faq.html:127
 #: forum/skins/default/templates/faq.html:127
@@ -2336,12 +2110,8 @@ msgstr "Sie haben noch Fragen?"
 #: forum/skins/askbot/templates/faq.html:128
 #: forum/skins/default/templates/faq.html:128
 #, python-format
-msgid ""
-"Please ask your question at %(ask_question_url)s, help make our community "
-"better!"
-msgstr ""
-"Bitte <a href='%(ask_question_url)s'>stellen</a> Sie Ihre Frage und helfen "
-"Sie uns, das Forum stetig zu verbessern!"
+msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
+msgstr "Bitte <a href='%(ask_question_url)s'>stellen</a> Sie Ihre Frage und helfen Sie uns, das Forum stetig zu verbessern!"
 
 #: forum/skins/askbot/templates/faq.html:130
 #: forum/skins/askbot/templates/header.html:31
@@ -2370,28 +2140,24 @@ msgstr "Senden Sie uns Ihr Feedback!"
 #, python-format
 msgid ""
 "\n"
-"            <span class='big strong'>Dear %(user_name)s</span>, we look "
-"forward to hearing your feedback. \n"
+"            <span class='big strong'>Dear %(user_name)s</span>, we look forward to hearing your feedback. \n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
 "\n"
-"<span class='big strong'>Hallo %(user_name)s</span>, wir freuen uns darauf, "
-"von Ihnen zu hören.\n"
+"<span class='big strong'>Hallo %(user_name)s</span>, wir freuen uns darauf, von Ihnen zu hören.\n"
 "Bitte geben Sie hier Ihre Nachricht ein."
 
 #: forum/skins/askbot/templates/feedback.html:24
 #: forum/skins/default/templates/feedback.html:24
 msgid ""
 "\n"
-"            <span class='big strong'>Dear visitor</span>, we look forward to "
-"hearing your feedback.\n"
+"            <span class='big strong'>Dear visitor</span>, we look forward to hearing your feedback.\n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
 "\n"
-"<span class='big strong'>Hallo</span>, wir freuen uns darauf, von Ihnen zu "
-"hören.\n"
+"<span class='big strong'>Hallo</span>, wir freuen uns darauf, von Ihnen zu hören.\n"
 "Bitte geben Sie hier Ihre Nachricht ein."
 
 #: forum/skins/askbot/templates/feedback.html:41
@@ -2467,9 +2233,8 @@ msgid "logout"
 msgstr "Ausloggen"
 
 #: forum/skins/askbot/templates/header.html:12
-#, fuzzy
 msgid "please login"
-msgstr "Benutzerlogin"
+msgstr "Bitte einloggen"
 
 #: forum/skins/askbot/templates/header.html:26
 #: forum/skins/default/templates/header.html:22
@@ -2518,14 +2283,8 @@ msgstr "Logout"
 
 #: forum/skins/askbot/templates/logout.html:19
 #: forum/skins/default/templates/logout.html:19
-msgid ""
-"As a registered user you can login with your OpenID, log out of the site or "
-"permanently remove your account."
-msgstr ""
-"Der Klick auf <strong>Logout</strong> beendet Ihre Sitzung hier im Forum, "
-"aber nicht bei Ihrem OpenID-Anbietet.</p><p> Vergessen Sie nicht, sich auch "
-"bei Ihrem Anbieter auszuloggen, falls Sie sich an diesem Computer komplett "
-"ausloggen möchten."
+msgid "As a registered user you can login with your OpenID, log out of the site or permanently remove your account."
+msgstr "Der Klick auf <strong>Logout</strong> beendet Ihre Sitzung hier im Forum, aber nicht bei Ihrem OpenID-Anbietet.</p><p> Vergessen Sie nicht, sich auch bei Ihrem Anbieter auszuloggen, falls Sie sich an diesem Computer komplett ausloggen möchten."
 
 #: forum/skins/askbot/templates/logout.html:20
 #: forum/skins/default/templates/logout.html:20
@@ -2535,9 +2294,7 @@ msgstr "Jetzt ausloggen"
 #: forum/skins/askbot/templates/notarobot.html:3
 #: forum/skins/default/templates/notarobot.html:3
 msgid "Please prove that you are a Human Being"
-msgstr ""
-"Bitte bestätigen Sie kurz, daß Sie ein Mensch und kein automatisches "
-"Programm sind."
+msgstr "Bitte bestätigen Sie kurz, daß Sie ein Mensch und kein automatisches Programm sind."
 
 #: forum/skins/askbot/templates/notarobot.html:10
 #: forum/skins/default/templates/notarobot.html:10
@@ -2584,9 +2341,7 @@ msgstr "Datenschutzrichtlinien"
 #: forum/skins/askbot/templates/privacy.html:15
 #: forum/skins/default/templates/privacy.html:15
 msgid "general message about privacy"
-msgstr ""
-"Datenschutz und die Privatsphäre unserer Nutzer sind uns wichtig. Auf dieser "
-"Seite wird erklärt, wie wir mit Ihren Daten umgehen."
+msgstr "Datenschutz und die Privatsphäre unserer Nutzer sind uns wichtig. Auf dieser Seite wird erklärt, wie wir mit Ihren Daten umgehen."
 
 #: forum/skins/askbot/templates/privacy.html:18
 #: forum/skins/default/templates/privacy.html:18
@@ -2596,12 +2351,7 @@ msgstr "Seitenbesucher"
 #: forum/skins/askbot/templates/privacy.html:20
 #: forum/skins/default/templates/privacy.html:20
 msgid "what technical information is collected about visitors"
-msgstr ""
-"Information über das Anschauen von Fragen, Fragen-Versionen und Antworten: "
-"Sowohl Zugriffszeitpunkt als auch -Inhalt werden für jeden Nutzer "
-"aufgezeichnet, um eine korrekte Zählung der Zugriffe sowie einen intakten "
-"Datenbestand zu gewährleisten und um zuvor angeforderte "
-"Benachrichtigungsmails an die Nutzer zu versenden."
+msgstr "Information über das Anschauen von Fragen, Fragen-Versionen und Antworten: Sowohl Zugriffszeitpunkt als auch -Inhalt werden für jeden Nutzer aufgezeichnet, um eine korrekte Zählung der Zugriffe sowie einen intakten Datenbestand zu gewährleisten und um zuvor angeforderte Benachrichtigungsmails an die Nutzer zu versenden."
 
 #: forum/skins/askbot/templates/privacy.html:23
 #: forum/skins/default/templates/privacy.html:23
@@ -2611,10 +2361,7 @@ msgstr "Persönliche Informationen"
 #: forum/skins/askbot/templates/privacy.html:25
 #: forum/skins/default/templates/privacy.html:25
 msgid "details on personal information policies"
-msgstr ""
-"Benutzer können auf freiwilliger Basis Informationen über sich in ihrem "
-"Benutzerprofil ablegen. Diese Daten werden nicht ohne die ausdrückliche "
-"Zustimmung des Nutzers öffentlich angezeigt."
+msgstr "Benutzer können auf freiwilliger Basis Informationen über sich in ihrem Benutzerprofil ablegen. Diese Daten werden nicht ohne die ausdrückliche Zustimmung des Nutzers öffentlich angezeigt."
 
 #: forum/skins/askbot/templates/privacy.html:28
 #: forum/skins/default/templates/privacy.html:28
@@ -2624,15 +2371,12 @@ msgstr "Andere Dienste"
 #: forum/skins/askbot/templates/privacy.html:30
 #: forum/skins/default/templates/privacy.html:30
 msgid "details on sharing data with third parties"
-msgstr ""
-"Keine Daten, die nicht mit Zustimmung des Benutzers öffentlich auf der "
-"Internetseite angezeigt werden, werden mit Dritten geteilt. "
+msgstr "Keine Daten, die nicht mit Zustimmung des Benutzers öffentlich auf der Internetseite angezeigt werden, werden mit Dritten geteilt. "
 
 #: forum/skins/askbot/templates/privacy.html:35
 #: forum/skins/default/templates/privacy.html:35
 msgid "cookie policy details"
-msgstr ""
-"Unsere Website benötigt Cookies, um technisch einwandfrei zu funktionieren."
+msgstr "Unsere Website benötigt Cookies, um technisch einwandfrei zu funktionieren."
 
 #: forum/skins/askbot/templates/privacy.html:37
 #: forum/skins/default/templates/privacy.html:37
@@ -2642,16 +2386,12 @@ msgstr "Veränderungen der Datenschutzrichtlinien"
 #: forum/skins/askbot/templates/privacy.html:38
 #: forum/skins/default/templates/privacy.html:38
 msgid "how privacy policies can be changed"
-msgstr ""
-"Unsere Datenschutzrichtlinien können sich im Laufe der Zeit verfeinern und "
-"verändern. Registrierte Benutzer werden in diesen Fällen automatisch "
-"benachrichtigt."
+msgstr "Unsere Datenschutzrichtlinien können sich im Laufe der Zeit verfeinern und verändern. Registrierte Benutzer werden in diesen Fällen automatisch benachrichtigt."
 
 #: forum/skins/askbot/templates/question_counter_widget.html:6
 #: forum/skins/default/templates/question_counter_widget.html:6
 msgid "Please decide if you like this question or not by voting"
-msgstr ""
-"Bitte entscheiden Sie durch Abstimmen, ob Sie diese Frage für gut halten."
+msgstr "Bitte entscheiden Sie durch Abstimmen, ob Sie diese Frage für gut halten."
 
 #: forum/skins/askbot/templates/question_counter_widget.html:12
 #: forum/skins/default/templates/question_counter_widget.html:12
@@ -2756,8 +2496,7 @@ msgstr "Tags helfen uns, Fragen zu organisieren und zu kategorisieren."
 #: forum/skins/askbot/templates/question_retag.html:94
 #: forum/skins/default/templates/question_retag.html:94
 msgid "tag editors receive special awards from the community"
-msgstr ""
-"Benutzer, die Tags bearbeiten, bekommen spezielle Auszeichnungen verliehen."
+msgstr "Benutzer, die Tags bearbeiten, bekommen spezielle Auszeichnungen verliehen."
 
 #: forum/skins/askbot/templates/question_summary_list_roll.html:13
 #: forum/skins/default/templates/question_summary_list_roll.html:13
@@ -2938,9 +2677,7 @@ msgstr "Von vorn beginnen"
 #: forum/skins/askbot/templates/questions.html:175
 #: forum/skins/default/templates/questions.html:175
 msgid " - to expand, or dig in by adding more tags and revising the query."
-msgstr ""
-"- um den Kontext zu erweitern, oder graben Sie sich ein, indem Sie weitere "
-"Tags hinzufügen und die Suchabfrage überarbeiten."
+msgstr "- um den Kontext zu erweitern, oder graben Sie sich ein, indem Sie weitere Tags hinzufügen und die Suchabfrage überarbeiten."
 
 #: forum/skins/askbot/templates/questions.html:178
 #: forum/skins/default/templates/questions.html:178
@@ -2950,8 +2687,7 @@ msgstr "Suchtipp:"
 #: forum/skins/askbot/templates/questions.html:178
 #: forum/skins/default/templates/questions.html:178
 msgid "add tags and a query to focus your search"
-msgstr ""
-"Tags und eine Suchabfrage hinzufügen, um genauere Suchergebnisse zu erzielen"
+msgstr "Tags und eine Suchabfrage hinzufügen, um genauere Suchergebnisse zu erzielen"
 
 #: forum/skins/askbot/templates/questions.html:190
 #: forum/skins/default/templates/questions.html:190
@@ -2966,9 +2702,7 @@ msgstr "Keine Favoriten-Fragen."
 #: forum/skins/askbot/templates/questions.html:194
 #: forum/skins/default/templates/questions.html:194
 msgid "Please start (bookmark) some questions when you visit them"
-msgstr ""
-"Bitte fügen Sie Fragen, die Ihnen besonders gut gefallen, zu Ihrer "
-"Favoritenliste hinzu."
+msgstr "Bitte fügen Sie Fragen, die Ihnen besonders gut gefallen, zu Ihrer Favoritenliste hinzu."
 
 #: forum/skins/askbot/templates/questions.html:199
 #: forum/skins/default/templates/questions.html:199
@@ -3101,8 +2835,7 @@ msgstr "Tags, die mich interessieren"
 #: forum/skins/default/templates/tag_selector.html:15
 #, python-format
 msgid "remove '%(tag_name)s' from the list of interesting tags"
-msgstr ""
-"'%(tag_name)s' von der Liste der Tags, die mich interessieren, entfernen"
+msgstr "'%(tag_name)s' von der Liste der Tags, die mich interessieren, entfernen"
 
 #: forum/skins/askbot/templates/tag_selector.html:21
 #: forum/skins/askbot/templates/tag_selector.html:38
@@ -3157,11 +2890,8 @@ msgstr "nach Popularität"
 #: forum/skins/askbot/templates/tags.html:39
 #: forum/skins/default/templates/tags.html:39
 #, python-format
-msgid ""
-"All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
-msgstr ""
-"Alle Tags, die '<span class=\"darkred\"><strong>%(stag)s</strong></span>' "
-"enthalten"
+msgid "All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+msgstr "Alle Tags, die '<span class=\"darkred\"><strong>%(stag)s</strong></span>' enthalten"
 
 #: forum/skins/askbot/templates/tags.html:42
 #: forum/skins/default/templates/tags.html:42
@@ -3205,12 +2935,7 @@ msgstr "E-Mail-Abonnementeinstellungen"
 #: forum/skins/askbot/templates/user_email_subscriptions.html:9
 #: forum/skins/default/templates/user_email_subscriptions.html:9
 msgid "email subscription settings info"
-msgstr ""
-"<span class='big strong'>Häufigkeit von E-Mail-Benachrichtigungen "
-"einstellen</span> Abonnieren Sie Benachrichtigungen über Neuigkeiten in "
-"Fragen, die Sie interessieren. Falls Sie keine E-Mails erhalten möchten - "
-"wählen Sie \"Keine E-Mail\".<br/>Benachrichtigungen werden nur versandt, "
-"wenn es neues in der betreffenden Frage gibt."
+msgstr "<span class='big strong'>Häufigkeit von E-Mail-Benachrichtigungen einstellen</span> Abonnieren Sie Benachrichtigungen über Neuigkeiten in Fragen, die Sie interessieren. Falls Sie keine E-Mails erhalten möchten - wählen Sie \"Keine E-Mail\".<br/>Benachrichtigungen werden nur versandt, wenn es neues in der betreffenden Frage gibt."
 
 #: forum/skins/askbot/templates/user_email_subscriptions.html:21
 #: forum/skins/default/templates/user_email_subscriptions.html:21
@@ -3421,37 +3146,23 @@ msgstr "E-Mail-Adresse speichern"
 #: forum/skins/default/templates/authopenid/changeemail.html:16
 #, python-format
 msgid "change %(email)s info"
-msgstr ""
-"<span class=\"strong big\">Geben Sie Ihre E-Mail-Adresse in untenstehende "
-"Box ein</span> falls Sie sie für Ihre Benachrichtigungs-E-Mails ändern "
-"möchten.<br>Im Moment verwenden Sie <strong>%(email)s</strong>"
+msgstr "<span class=\"strong big\">Geben Sie Ihre E-Mail-Adresse in untenstehende Box ein</span> falls Sie sie für Ihre Benachrichtigungs-E-Mails ändern möchten.<br>Im Moment verwenden Sie <strong>%(email)s</strong>"
 
 #: forum/skins/askbot/templates/authopenid/changeemail.html:18
 #: forum/skins/default/templates/authopenid/changeemail.html:18
 #, python-format
 msgid "here is why email is required, see %(gravatar_faq_url)s"
-msgstr ""
-"<span class='strong big'>Bitte geben Sie unten Ihre E-Mail-Adresse ein.</"
-"span> Eine gültige E-Mail-Adresse wird für dieses Forum benötigt. Falls Sie "
-"möchten, können Sie <strong>Benachrichtigungsmails</strong> zu Sie besonders "
-"interessierenden Fragen, oder Neuzugängen abonnieren. Ihre E-Mail-Adresse "
-"wird auch benutzt, um ein individuelles sogenanntes <a href='%"
-"(gravatar_faq_url)s'><strong>Gravatar</strong></a>-Bild für Ihr Konto "
-"anzuzeigen. E-Mail-Adressen werden niemals öffentlich angezeigt."
+msgstr "<span class='strong big'>Bitte geben Sie unten Ihre E-Mail-Adresse ein.</span> Eine gültige E-Mail-Adresse wird für dieses Forum benötigt. Falls Sie möchten, können Sie <strong>Benachrichtigungsmails</strong> zu Sie besonders interessierenden Fragen, oder Neuzugängen abonnieren. Ihre E-Mail-Adresse wird auch benutzt, um ein individuelles sogenanntes <a href='%(gravatar_faq_url)s'><strong>Gravatar</strong></a>-Bild für Ihr Konto anzuzeigen. E-Mail-Adressen werden niemals öffentlich angezeigt."
 
 #: forum/skins/askbot/templates/authopenid/changeemail.html:31
 #: forum/skins/default/templates/authopenid/changeemail.html:31
 msgid "Your new Email"
-msgstr ""
-"<strong>Ihre neue E-Mail-Adresse:</strong> (wird<strong>nicht</strong> "
-"öffentlich angezeigt; muß eine gültige Adresse sein)"
+msgstr "<strong>Ihre neue E-Mail-Adresse:</strong> (wird<strong>nicht</strong> öffentlich angezeigt; muß eine gültige Adresse sein)"
 
 #: forum/skins/askbot/templates/authopenid/changeemail.html:31
 #: forum/skins/default/templates/authopenid/changeemail.html:31
 msgid "Your Email"
-msgstr ""
-"<strong>Ihre E-Mail-Adresse</strong> (wird<strong>nicht</strong> öffentlich "
-"angezeigt; muß eine gültige Adresse sein)"
+msgstr "<strong>Ihre E-Mail-Adresse</strong> (wird<strong>nicht</strong> öffentlich angezeigt; muß eine gültige Adresse sein)"
 
 #: forum/skins/askbot/templates/authopenid/changeemail.html:38
 #: forum/skins/default/templates/authopenid/changeemail.html:38
@@ -3467,14 +3178,7 @@ msgstr "E-Mail-Adresse überprüfen"
 #: forum/skins/default/templates/authopenid/changeemail.html:52
 #, python-format
 msgid "validate %(email)s info or go to %(change_email_url)s"
-msgstr ""
-"<span class=\"strong big\">Eine E-Mail mit einem Bestätigungslink wurde an %"
-"(email)s versandt.</span> Bitte <strong>klicken Sie auf den Link in der E-"
-"Mail</strong> oder geben Sie ihn via Kopieren+Einfügen in Ihren Internet-"
-"Browser ein. Die E-Mail-Überprüfung dient Ihrem und unserem Schutz vor Spam. "
-"Falls Sie eine <strong>andere E-Mail-Adresse</strong> verwenden möchten, "
-"können Sie sie <a href='%(change_email_url)s'><strong>erneut ändern</"
-"strong></a>."
+msgstr "<span class=\"strong big\">Eine E-Mail mit einem Bestätigungslink wurde an %(email)s versandt.</span> Bitte <strong>klicken Sie auf den Link in der E-Mail</strong> oder geben Sie ihn via Kopieren+Einfügen in Ihren Internet-Browser ein. Die E-Mail-Überprüfung dient Ihrem und unserem Schutz vor Spam. Falls Sie eine <strong>andere E-Mail-Adresse</strong> verwenden möchten, können Sie sie <a href='%(change_email_url)s'><strong>erneut ändern</strong></a>."
 
 #: forum/skins/askbot/templates/authopenid/changeemail.html:57
 #: forum/skins/default/templates/authopenid/changeemail.html:57
@@ -3485,11 +3189,7 @@ msgstr "E-Mail-Adresse nicht geändert"
 #: forum/skins/default/templates/authopenid/changeemail.html:60
 #, python-format
 msgid "old %(email)s kept, if you like go to %(change_email_url)s"
-msgstr ""
-"<span class=\"strong big\">Ihre E-Mail-Adresse %(email)s wurde nicht "
-"geändert.</span> Falls Sie sie später ändern möchten, können Sie dieses "
-"jederzeit in Ihrem Benutzerprofil oder im <a href='%(change_email_url)"
-"s'><strong>vorigen Formular</strong></a> tun."
+msgstr "<span class=\"strong big\">Ihre E-Mail-Adresse %(email)s wurde nicht geändert.</span> Falls Sie sie später ändern möchten, können Sie dieses jederzeit in Ihrem Benutzerprofil oder im <a href='%(change_email_url)s'><strong>vorigen Formular</strong></a> tun."
 
 #: forum/skins/askbot/templates/authopenid/changeemail.html:65
 #: forum/skins/default/templates/authopenid/changeemail.html:65
@@ -3500,10 +3200,7 @@ msgstr "E-Mail-Adresse geändert"
 #: forum/skins/default/templates/authopenid/changeemail.html:68
 #, python-format
 msgid "your current %(email)s can be used for this"
-msgstr ""
-"<span class='big strong'>Ihre E-Mail-Adresse wurde auf %(email)s verändert.</"
-"span> Sie erhalten alle eventuell abonnierten E-Mail-Benachrichtigungen nun "
-"an diese Adresse."
+msgstr "<span class='big strong'>Ihre E-Mail-Adresse wurde auf %(email)s verändert.</span> Sie erhalten alle eventuell abonnierten E-Mail-Benachrichtigungen nun an diese Adresse."
 
 #: forum/skins/askbot/templates/authopenid/changeemail.html:73
 #: forum/skins/default/templates/authopenid/changeemail.html:73
@@ -3513,13 +3210,7 @@ msgstr "E-Mail-Adresse bestätigt"
 #: forum/skins/askbot/templates/authopenid/changeemail.html:76
 #: forum/skins/default/templates/authopenid/changeemail.html:76
 msgid "thanks for verifying email"
-msgstr ""
-"<span class=\"big strong\">Vielen Dank für die Bestätigung Ihrer E-Mail-"
-"Adresse!</span> Sie können jetzt <strong>Fragen stellen</strong> und "
-"<strong>beantworten</strong>. Sie können bei interessanten Fragen auch "
-"<strong>eine E-Mail-Benachrichtigung abonnieren</strong>, die Sie einmal "
-"täglich oder seltener über neue Entwicklungen wie Antworten und Kommentare "
-"informiert."
+msgstr "<span class=\"big strong\">Vielen Dank für die Bestätigung Ihrer E-Mail-Adresse!</span> Sie können jetzt <strong>Fragen stellen</strong> und <strong>beantworten</strong>. Sie können bei interessanten Fragen auch <strong>eine E-Mail-Benachrichtigung abonnieren</strong>, die Sie einmal täglich oder seltener über neue Entwicklungen wie Antworten und Kommentare informiert."
 
 #: forum/skins/askbot/templates/authopenid/changeemail.html:81
 #: forum/skins/default/templates/authopenid/changeemail.html:81
@@ -3530,10 +3221,7 @@ msgstr "Bestätigungs-E-Mail nicht versandt"
 #: forum/skins/default/templates/authopenid/changeemail.html:84
 #, python-format
 msgid "email key not sent %(email)s change email here %(change_link)s"
-msgstr ""
-"<span class='big strong'>Ihre momentane E-Mail-Adresse %(email)s wurde "
-"bereits bestätigt</span>. Es wurde keine neue Bestätigungsmail versandt. Sie "
-"können Ihre E-Mail-Adresse bei Bedarf <a href='%(change_link)s'>ändern</a>."
+msgstr "<span class='big strong'>Ihre momentane E-Mail-Adresse %(email)s wurde bereits bestätigt</span>. Es wurde keine neue Bestätigungsmail versandt. Sie können Ihre E-Mail-Adresse bei Bedarf <a href='%(change_link)s'>ändern</a>."
 
 #: forum/skins/askbot/templates/authopenid/changeopenid.html:8
 #: forum/skins/default/templates/authopenid/changeopenid.html:8
@@ -3542,8 +3230,7 @@ msgstr "Zugang: OpenID-URL ändern"
 
 #: forum/skins/askbot/templates/authopenid/changeopenid.html:12
 #: forum/skins/default/templates/authopenid/changeopenid.html:12
-msgid ""
-"This is where you can change your OpenID URL. Make sure you remember it!"
+msgid "This is where you can change your OpenID URL. Make sure you remember it!"
 msgstr "Hier können Sie Ihre OpenID-URL ändern. Merken Sie sie sich gut!"
 
 #: forum/skins/askbot/templates/authopenid/changeopenid.html:14
@@ -3568,9 +3255,7 @@ msgstr "Passwort ändern"
 #: forum/skins/askbot/templates/authopenid/changepw.html:8
 #: forum/skins/default/templates/authopenid/changepw.html:8
 msgid "This is where you can change your password. Make sure you remember it!"
-msgstr ""
-"<span class='strong'>Um Ihr Passwort zu ändern,</span> füllen Sie bitte "
-"dieses Formular aus und senden Sie es ab."
+msgstr "<span class='strong'>Um Ihr Passwort zu ändern,</span> füllen Sie bitte dieses Formular aus und senden Sie es ab."
 
 #: forum/skins/askbot/templates/authopenid/complete.html:19
 #: forum/skins/default/templates/authopenid/complete.html:19
@@ -3586,63 +3271,33 @@ msgstr "Neue OpenID mit einem bestehenden Benutzerzugang verknüpfen"
 #: forum/skins/default/templates/authopenid/complete.html:27
 #, python-format
 msgid "register new %(provider)s account info, see %(gravatar_faq_url)s"
-msgstr ""
-"<p><span class=\"big strong\">Sie sind zum ersten Mal mit Ihrem OpenID-"
-"Zugang von %(provider)s eingeloggt.</span> Bitte geben Sie einen "
-"<strong>Benutzernamen</strong> ein und hinterlegen Sie Ihre <strong>E-Mail-"
-"Adresse</strong>. Die E-Mail-Adresse ermöglicht <strong>Benachrichtigungen "
-"bei besonders interessanten Fragen</strong> und wird als Grundlage für Ihr "
-"Individuelles Benutzerbild, den <a href='%(gravatar_faq_url)"
-"s'><strong>Gravatar</strong></a>, benutzt.</p>"
+msgstr "<p><span class=\"big strong\">Sie sind zum ersten Mal mit Ihrem OpenID-Zugang von %(provider)s eingeloggt.</span> Bitte geben Sie einen <strong>Benutzernamen</strong> ein und hinterlegen Sie Ihre <strong>E-Mail-Adresse</strong>. Die E-Mail-Adresse ermöglicht <strong>Benachrichtigungen bei besonders interessanten Fragen</strong> und wird als Grundlage für Ihr Individuelles Benutzerbild, den <a href='%(gravatar_faq_url)s'><strong>Gravatar</strong></a>, benutzt.</p>"
 
 #: forum/skins/askbot/templates/authopenid/complete.html:31
 #: forum/skins/default/templates/authopenid/complete.html:31
 #, fuzzy, python-format
 msgid ""
 "%(username)s already exists, choose another name for \n"
-"                            %(provider)s. Email is required too, see %"
-"(gravatar_faq_url)s\n"
+"                            %(provider)s. Email is required too, see %(gravatar_faq_url)s\n"
 "                        "
-msgstr ""
-"<p><span class='strong big'>Der Benutzername %(username)s ist leider nicht "
-"mehr frei.</span></p><p> Eine gültige E-Mail-Adresse ist ebenfalls "
-"erforderlich - an sie senden wir (optionale) Benachrichtigungsmails, und mit "
-"ihr zeigen wir Ihr Benutzerbild (Gravatar) an. E-Mail-Adressen werden nicht "
-"öffentlich angezeigt und auch nicht an Dritte weitergegeben.</p>"
+msgstr "<p><span class='strong big'>Der Benutzername %(username)s ist leider nicht mehr frei.</span></p><p> Eine gültige E-Mail-Adresse ist ebenfalls erforderlich - an sie senden wir (optionale) Benachrichtigungsmails, und mit ihr zeigen wir Ihr Benutzerbild (Gravatar) an. E-Mail-Adressen werden nicht öffentlich angezeigt und auch nicht an Dritte weitergegeben.</p>"
 
 #: forum/skins/askbot/templates/authopenid/complete.html:35
 #: forum/skins/default/templates/authopenid/complete.html:35
 #, python-format
-msgid ""
-"register new external %(provider)s account info, see %(gravatar_faq_url)s"
-msgstr ""
-"<p><span class=\"big strong\">Sie sind zum ersten Mal mit Ihrem OpenID-"
-"Zugang von %(provider)s eingeloggt.</span> Sie können einen "
-"<strong>Benutzernamen</strong> eingeben oder Ihren Benutzernamen bei %"
-"(provider)s verwenden. Bitte hinterlegen Sie auch Ihre <strong>E-Mail-"
-"Adresse</strong>. Die E-Mail-Adresse ermöglicht <strong>Benachrichtigungen "
-"bei besonders interessanten Fragen</strong> und wird als Grundlage für Ihr "
-"Individuelles Benutzerbild, den <a href='%(gravatar_faq_url)"
-"s'><strong>Gravatar</strong></a>, benutzt.</p>"
+msgid "register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgstr "<p><span class=\"big strong\">Sie sind zum ersten Mal mit Ihrem OpenID-Zugang von %(provider)s eingeloggt.</span> Sie können einen <strong>Benutzernamen</strong> eingeben oder Ihren Benutzernamen bei %(provider)s verwenden. Bitte hinterlegen Sie auch Ihre <strong>E-Mail-Adresse</strong>. Die E-Mail-Adresse ermöglicht <strong>Benachrichtigungen bei besonders interessanten Fragen</strong> und wird als Grundlage für Ihr Individuelles Benutzerbild, den <a href='%(gravatar_faq_url)s'><strong>Gravatar</strong></a>, benutzt.</p>"
 
 #: forum/skins/askbot/templates/authopenid/complete.html:38
 #: forum/skins/default/templates/authopenid/complete.html:38
 #, python-format
 msgid "register new Facebook connect account info, see %(gravatar_faq_url)s"
-msgstr ""
-"<p><span class=\"big strong\">Sie sind hier zum ersten Mal mit Ihrem "
-"Facebook-Login.</span> Bitte legen Sie einen <strong>Benutzernamen</strong> "
-"fest und hinterlegen Sie Ihre <strong>E-Mail-Adresse</strong>. Die E-Mail-"
-"Adresse ermöglicht <strong>Benachrichtigungen bei besonders interessanten "
-"Fragen</strong> und wird als Grundlage für Ihr Individuelles Benutzerbild, "
-"den <a href='%(gravatar_faq_url)s'><strong>Gravatar</strong></a>, benutzt.</"
-"p>"
+msgstr "<p><span class=\"big strong\">Sie sind hier zum ersten Mal mit Ihrem Facebook-Login.</span> Bitte legen Sie einen <strong>Benutzernamen</strong> fest und hinterlegen Sie Ihre <strong>E-Mail-Adresse</strong>. Die E-Mail-Adresse ermöglicht <strong>Benachrichtigungen bei besonders interessanten Fragen</strong> und wird als Grundlage für Ihr Individuelles Benutzerbild, den <a href='%(gravatar_faq_url)s'><strong>Gravatar</strong></a>, benutzt.</p>"
 
 #: forum/skins/askbot/templates/authopenid/complete.html:42
 #: forum/skins/default/templates/authopenid/complete.html:42
 msgid "This account already exists, please use another."
-msgstr ""
-"Dieser Benutzername existiert leider bereits, bitte wählen Sie einen anderen."
+msgstr "Dieser Benutzername existiert leider bereits, bitte wählen Sie einen anderen."
 
 #: forum/skins/askbot/templates/authopenid/complete.html:57
 #: forum/skins/default/templates/authopenid/complete.html:57
@@ -3657,21 +3312,14 @@ msgstr "<strong>Benutzername</strong> (<i>wird öffentlich angezeigt</i>)"
 #: forum/skins/askbot/templates/authopenid/complete.html:89
 #: forum/skins/default/templates/authopenid/complete.html:89
 msgid "Email address label"
-msgstr ""
-"<strong>E-Mail-Adresse</strong> (<i>wird <strong>nicht</strong> öffentlich "
-"angezeigt; muß gültig sein</i>)"
+msgstr "<strong>E-Mail-Adresse</strong> (<i>wird <strong>nicht</strong> öffentlich angezeigt; muß gültig sein</i>)"
 
 #: forum/skins/askbot/templates/authopenid/complete.html:95
 #: forum/skins/askbot/templates/authopenid/signup.html:18
 #: forum/skins/default/templates/authopenid/complete.html:95
 #: forum/skins/default/templates/authopenid/signup.html:18
 msgid "receive updates motivational blurb"
-msgstr ""
-"<strong>Benachrichtigungen per E-Mail abonnieren</strong> Das Abonnieren von "
-"E-Mail-Benachrichtigungen ist freiwillig. <br/>Das Forum versenden bis zu  "
-"<strong>einer Benachrichtigung pro Woche</strong>  - nur wenn es auch "
-"wirklich Neues gibt.<br/>Sie können die Benachrichtigungshäufigkeit "
-"jederzeit in Ihrem Benutzerprofil anpassen."
+msgstr "<strong>Benachrichtigungen per E-Mail abonnieren</strong> Das Abonnieren von E-Mail-Benachrichtigungen ist freiwillig. <br/>Das Forum versenden bis zu  <strong>einer Benachrichtigung pro Woche</strong>  - nur wenn es auch wirklich Neues gibt.<br/>Sie können die Benachrichtigungshäufigkeit jederzeit in Ihrem Benutzerprofil anpassen."
 
 #: forum/skins/askbot/templates/authopenid/complete.html:99
 #: forum/skins/askbot/templates/authopenid/signup.html:22
@@ -3683,8 +3331,7 @@ msgstr "Bitte wählen Sie eine der oben genannten Optionen"
 #: forum/skins/askbot/templates/authopenid/complete.html:102
 #: forum/skins/default/templates/authopenid/complete.html:102
 msgid "Tag filter tool will be your right panel, once you log in."
-msgstr ""
-"Das Tag-Filterwerkzeug finden Sie nach dem Einloggen in der rechten Spalte."
+msgstr "Das Tag-Filterwerkzeug finden Sie nach dem Einloggen in der rechten Spalte."
 
 #: forum/skins/askbot/templates/authopenid/complete.html:103
 #: forum/skins/default/templates/authopenid/complete.html:103
@@ -3763,12 +3410,8 @@ msgstr "Zugang löschen"
 
 #: forum/skins/askbot/templates/authopenid/delete.html:12
 #: forum/skins/default/templates/authopenid/delete.html:12
-msgid ""
-"Note: After deleting your account, anyone will be able to register this "
-"username."
-msgstr ""
-"Achtung: Nach einer Löschung kann Ihr Benutzername von Jedermann registriert "
-"werden."
+msgid "Note: After deleting your account, anyone will be able to register this username."
+msgstr "Achtung: Nach einer Löschung kann Ihr Benutzername von Jedermann registriert werden."
 
 #: forum/skins/askbot/templates/authopenid/delete.html:16
 #: forum/skins/default/templates/authopenid/delete.html:16
@@ -3808,9 +3451,7 @@ msgstr "Um das Forum zu benutzen, klicken Sie auf untenstehenden Link:"
 #: forum/skins/askbot/templates/authopenid/email_validation.txt:8
 #: forum/skins/default/templates/authopenid/email_validation.txt:8
 msgid "Following the link above will help us verify your email address."
-msgstr ""
-"Die Bestätigung der E-Mail-Adresse durch den Link hilft uns, Spam zu "
-"vermeiden."
+msgstr "Die Bestätigung der E-Mail-Adresse durch den Link hilft uns, Spam zu vermeiden."
 
 #: forum/skins/askbot/templates/authopenid/email_validation.txt:10
 #: forum/skins/default/templates/authopenid/email_validation.txt:10
@@ -3818,10 +3459,7 @@ msgid ""
 "If you beleive that this message was sent in mistake - \n"
 "no further action is needed. Just ingore this email, we apologize\n"
 "for any inconvenience"
-msgstr ""
-"Falls Sie diese Nachricht irrtümlich erhalten haben, brauchen Sie nichts zu "
-"unternehmen. Bitte ignorieren Sie diese E-Mail einfach - wir entschuldigen "
-"uns für die Unannehmlichkeiten."
+msgstr "Falls Sie diese Nachricht irrtümlich erhalten haben, brauchen Sie nichts zu unternehmen. Bitte ignorieren Sie diese E-Mail einfach - wir entschuldigen uns für die Unannehmlichkeiten."
 
 #: forum/skins/askbot/templates/authopenid/external_legacy_login_info.html:4
 #: forum/skins/askbot/templates/authopenid/external_legacy_login_info.html:7
@@ -3833,10 +3471,8 @@ msgstr "Klassische Login-Information"
 #: forum/skins/askbot/templates/authopenid/external_legacy_login_info.html:12
 #: forum/skins/default/templates/authopenid/external_legacy_login_info.html:12
 #, python-format
-msgid ""
-"how to login with password through external login website or use %"
-"(feedback_url)s"
-msgstr ""
+msgid "how to login with password through external login website or use %(feedback_url)s"
+msgstr "Mit Passwort durch externen Login einloggen oder %(feedback_url)s benutzen"
 
 #: forum/skins/askbot/templates/authopenid/sendpw.html:4
 #: forum/skins/askbot/templates/authopenid/sendpw.html:7
@@ -3848,13 +3484,7 @@ msgstr "Neues Passwort versenden"
 #: forum/skins/askbot/templates/authopenid/sendpw.html:10
 #: forum/skins/default/templates/authopenid/sendpw.html:10
 msgid "password recovery information"
-msgstr ""
-"<span class='big strong'>Passwort vergessen? Kein Problem - einfach ein "
-"neues anfordern!</span><br/>Bitte tun Sie folgendes:<br/>&bull; geben Sie "
-"Ihren Benutzernamen unten ein und überprüfen Sie Ihren Posteingang<br/"
-">&bull; <strong>Folgen Sie dem Aktivierungslink</strong> um ein neues "
-"Passwort zu erhalten<br/>&bull; bitte ändern Sie das erhaltene Passwort "
-"möglichst in ein Passwort Ihrer Wahl."
+msgstr "<span class='big strong'>Passwort vergessen? Kein Problem - einfach ein neues anfordern!</span><br/>Bitte tun Sie folgendes:<br/>&bull; geben Sie Ihren Benutzernamen unten ein und überprüfen Sie Ihren Posteingang<br/>&bull; <strong>Folgen Sie dem Aktivierungslink</strong> um ein neues Passwort zu erhalten<br/>&bull; bitte ändern Sie das erhaltene Passwort möglichst in ein Passwort Ihrer Wahl."
 
 #: forum/skins/askbot/templates/authopenid/sendpw.html:21
 #: forum/skins/default/templates/authopenid/sendpw.html:21
@@ -3873,10 +3503,8 @@ msgid ""
 "Someone has requested to reset your password on %(site_url)s.\n"
 "If it were not you, it is safe to ignore this email."
 msgstr ""
-"Jemand hat für Ihren Zugang auf %(site_url)s ein neues Passwort an dieses E-"
-"Mail-Postfach angefordert.\n"
-"Falls die Anforderung nicht von Ihnen kam, gibt es nichts zu tun: Das "
-"Passwort wird nicht geändert; die Person erfährt Ihr Passwort nicht."
+"Jemand hat für Ihren Zugang auf %(site_url)s ein neues Passwort an dieses E-Mail-Postfach angefordert.\n"
+"Falls die Anforderung nicht von Ihnen kam, gibt es nichts zu tun: Das Passwort wird nicht geändert; die Person erfährt Ihr Passwort nicht."
 
 #: forum/skins/askbot/templates/authopenid/sendpw_email.txt:5
 #: forum/skins/default/templates/authopenid/sendpw_email.txt:5
@@ -3888,8 +3516,7 @@ msgstr ""
 "Um Ihr Passwort zu ändern, tun Sie bitte folgendes:\n"
 "\n"
 "* Öffnen Sie diesen Link: %(key_link)s\n"
-"* Loggen Sie sich mit dem Benutzernamen %(username)s und dem Passwort %"
-"(password)s ein\n"
+"* Loggen Sie sich mit dem Benutzernamen %(username)s und dem Passwort %(password)s ein\n"
 "* Öffnen Sie Ihr Benutzerprofil und ändern Sie Ihr Passwort"
 
 #: forum/skins/askbot/templates/authopenid/signin.html:5
@@ -3904,14 +3531,11 @@ msgstr "Benutzerlogin"
 #, python-format
 msgid ""
 "\n"
-"                Your answer to %(title)s %(summary)s will be posted once you "
-"log in\n"
+"                Your answer to %(title)s %(summary)s will be posted once you log in\n"
 "                "
 msgstr ""
 "\n"
-"<span class=\"strong big\">Ihre Antwort auf </span> <i>\"<strong>%(title)s</"
-"strong> %(summary)s...\"</i> <span class=\"strong big\">wurde gespeichert "
-"und wird veröffentlicht, sobald Sie sich einloggen.</span>"
+"<span class=\"strong big\">Ihre Antwort auf </span> <i>\"<strong>%(title)s</strong> %(summary)s...\"</i> <span class=\"strong big\">wurde gespeichert und wird veröffentlicht, sobald Sie sich einloggen.</span>"
 
 #: forum/skins/askbot/templates/authopenid/signin.html:35
 #: forum/skins/default/templates/authopenid/signin.html:35
@@ -3920,20 +3544,12 @@ msgid ""
 "Your question \n"
 "                %(title)s %(summary)s will be posted once you log in\n"
 "                "
-msgstr ""
-"<span class=\"strong big\">Ihre Frage</span> <i>\"<strong>%(title)s</strong> "
-"%(summary)s...\"</i> <span class=\"strong big\"> wurde gespeichert und wird "
-"veröffentlicht, sobald Sie sich einloggen.</span>"
+msgstr "<span class=\"strong big\">Ihre Frage</span> <i>\"<strong>%(title)s</strong> %(summary)s...\"</i> <span class=\"strong big\"> wurde gespeichert und wird veröffentlicht, sobald Sie sich einloggen.</span>"
 
 #: forum/skins/askbot/templates/authopenid/signin.html:42
 #: forum/skins/default/templates/authopenid/signin.html:42
 msgid "Click to sign in through any of these services."
-msgstr ""
-"<p><span class=\"big strong\">Bitte wählen Sie Ihre bevorzugte Login-Methode."
-"</span></p><p><font color=\"gray\">Externe Login-Anbieter nutzen die <a href="
-"\"http://openid.net\"><b>OpenID</b></a>-Technologie, bei der Sie sich nur "
-"einen Benutzernamen und ein Passwort merken müssen, und mit der Sie sich auf "
-"dutzenden Internetseiten einloggen können.</font></p>"
+msgstr "<p><span class=\"big strong\">Bitte wählen Sie Ihre bevorzugte Login-Methode.</span></p><p><font color=\"gray\">Externe Login-Anbieter nutzen die <a href=\"http://openid.net\"><b>OpenID</b></a>-Technologie, bei der Sie sich nur einen Benutzernamen und ein Passwort merken müssen, und mit der Sie sich auf dutzenden Internetseiten einloggen können.</font></p>"
 
 # msgid "Click to sign in through any of these services."
 # msgstr ""
@@ -3949,20 +3565,12 @@ msgstr ""
 #: forum/skins/askbot/templates/authopenid/signin.html:144
 #: forum/skins/default/templates/authopenid/signin.html:144
 msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
-msgstr ""
-"<span class=\"big strong\">Geben Sie Ihren </span><span id=\"enter_your_what"
-"\" class='big strong'>Benutzernamen beim Provider</span> ein<br/><span "
-"class='grey'>(oder wählen Sie oben eine andere Login-Methode)</span>"
+msgstr "<span class=\"big strong\">Geben Sie Ihren </span><span id=\"enter_your_what\" class='big strong'>Benutzernamen beim Provider</span> ein<br/><span class='grey'>(oder wählen Sie oben eine andere Login-Methode)</span>"
 
 #: forum/skins/askbot/templates/authopenid/signin.html:151
 #: forum/skins/default/templates/authopenid/signin.html:151
-msgid ""
-"Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> "
-"web address"
-msgstr ""
-"<span class=\"big strong\">Geben Sie Ihre<a class=\"openid_logo\" href="
-"\"http://openid.net\">OpenID</a>-Internetadresse an</span><br/><span "
-"class='grey'>(oder wählen Sie oben eine andere Login-Methode)</span>"
+msgid "Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> web address"
+msgstr "<span class=\"big strong\">Geben Sie Ihre<a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a>-Internetadresse an</span><br/><span class='grey'>(oder wählen Sie oben eine andere Login-Methode)</span>"
 
 #: forum/skins/askbot/templates/authopenid/signin.html:153
 #: forum/skins/askbot/templates/authopenid/signin.html:166
@@ -3974,10 +3582,7 @@ msgstr "Login"
 #: forum/skins/askbot/templates/authopenid/signin.html:157
 #: forum/skins/default/templates/authopenid/signin.html:157
 msgid "Enter your login name and password"
-msgstr ""
-"<span class='big strong'>Geben Sie Ihren Askbot-Benutzernamen und Ihr "
-"Passwort ein</span><br/><span class='grey'>(oder wählen Sie oben den OpenID-"
-"Login aus)</span>"
+msgstr "<span class='big strong'>Geben Sie Ihren Askbot-Benutzernamen und Ihr Passwort ein</span><br/><span class='grey'>(oder wählen Sie oben den OpenID-Login aus)</span>"
 
 #: forum/skins/askbot/templates/authopenid/signin.html:161
 #: forum/skins/default/templates/authopenid/signin.html:161
@@ -4007,23 +3612,17 @@ msgstr "Mit OpenID müssen Sie keinen neuen Account anlegen."
 #: forum/skins/askbot/templates/authopenid/signin.html:184
 #: forum/skins/default/templates/authopenid/signin.html:184
 msgid "reuse openid"
-msgstr ""
-"Sie können sich ohne Bedenken mit dem selben OpenID-Zugang auf unbegrenzt "
-"vielen Webseiten einloggen."
+msgstr "Sie können sich ohne Bedenken mit dem selben OpenID-Zugang auf unbegrenzt vielen Webseiten einloggen."
 
 #: forum/skins/askbot/templates/authopenid/signin.html:187
 #: forum/skins/default/templates/authopenid/signin.html:187
 msgid "openid is widely adopted"
-msgstr ""
-"Es gibt mehr als 160 Millionen OpenID-Zugänge und mehr als 10.000 Seiten, "
-"die OpenID akzeptieren."
+msgstr "Es gibt mehr als 160 Millionen OpenID-Zugänge und mehr als 10.000 Seiten, die OpenID akzeptieren."
 
 #: forum/skins/askbot/templates/authopenid/signin.html:190
 #: forum/skins/default/templates/authopenid/signin.html:190
 msgid "openid is supported open standard"
-msgstr ""
-"OpenID basiert auf einem international anerkannten Standard und wird von "
-"zahlreichen großen Firmen unterstützt."
+msgstr "OpenID basiert auf einem international anerkannten Standard und wird von zahlreichen großen Firmen unterstützt."
 
 #: forum/skins/askbot/templates/authopenid/signin.html:195
 #: forum/skins/default/templates/authopenid/signin.html:195
@@ -4048,21 +3647,12 @@ msgstr "Benutzernamen und Passwort anlegen"
 #: forum/skins/askbot/templates/authopenid/signup.html:10
 #: forum/skins/default/templates/authopenid/signup.html:10
 msgid "Traditional signup info"
-msgstr ""
-"<span class='strong big'>Falls Sie möchten, können Sie auch einen "
-"Benutzernamen und ein Passwort hier im Forum anmelden. Wir unterstützen aber "
-"auch <strong>OpenID</strong>, eine Technik, mit der Sie sich nur einmal z.B. "
-"bei Ihrem Internet-Provider registrieren müssen. Mit der bei Ihrem Provider "
-"angelegten OpenID können Sie sich dann hier einloggen. Wenn Sie z.B. einen "
-"Zugang bei Google haben, haben Sie bereits auch einen OpenID-Zugang."
+msgstr "<span class='strong big'>Falls Sie möchten, können Sie auch einen Benutzernamen und ein Passwort hier im Forum anmelden. Wir unterstützen aber auch <strong>OpenID</strong>, eine Technik, mit der Sie sich nur einmal z.B. bei Ihrem Internet-Provider registrieren müssen. Mit der bei Ihrem Provider angelegten OpenID können Sie sich dann hier einloggen. Wenn Sie z.B. einen Zugang bei Google haben, haben Sie bereits auch einen OpenID-Zugang."
 
 #: forum/skins/askbot/templates/authopenid/signup.html:25
 #: forum/skins/default/templates/authopenid/signup.html:25
-msgid ""
-"Please read and type in the two words below to help us prevent automated "
-"account creation."
-msgstr ""
-"Bitte geben Sie zum Schutz vor Spam die untenstehenden zwei Wörter ein."
+msgid "Please read and type in the two words below to help us prevent automated account creation."
+msgstr "Bitte geben Sie zum Schutz vor Spam die untenstehenden zwei Wörter ein."
 
 #: forum/skins/askbot/templates/authopenid/signup.html:27
 #: forum/skins/default/templates/authopenid/signup.html:27
@@ -4093,8 +3683,8 @@ msgstr "Auszeichnung"
 #: forum/skins/default/templates/badge.html:26
 msgid "user received this badge:"
 msgid_plural "users received this badge:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Benutzer hat dieses Abzeichen:"
+msgstr[1] "Benutzer haben dieses Abzeichen:"
 
 #: forum/skins/default/templates/badges.html:6
 msgid "Badges summary"
@@ -4106,23 +3696,18 @@ msgstr "Auszeichnungen"
 
 #: forum/skins/default/templates/badges.html:21
 msgid "Community gives you awards for your questions, answers and votes."
-msgstr ""
-"Rege Teilnahme mit qualitativ hochwertigen Fragen und Antworten führt zum "
-"Erhalt von Auszeichnungen."
+msgstr "Rege Teilnahme mit qualitativ hochwertigen Fragen und Antworten führt zum Erhalt von Auszeichnungen."
 
 #: forum/skins/default/templates/badges.html:22
 #, python-format
 msgid ""
 "Below is the list of available badges and number \n"
-"    of times each type of badge has been awarded. Give us feedback at %"
-"(feedback_faq_url)s.\n"
+"    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
 "    "
 msgstr ""
-"Es gibt im Moment drei Stufen von Auszeichnungen: <strong>Gild</strong>, "
-"<strong>Silber</strong> und <strong>Bronze</strong>.\n"
+"Es gibt im Moment drei Stufen von Auszeichnungen: <strong>Gild</strong>, <strong>Silber</strong> und <strong>Bronze</strong>.\n"
 "\n"
-"Falls Sie Ideen für neue Auszeichnungen haben, senden Sie uns diese über die "
-"<a href='%(feedback_faq_url)s'>Feedback</a></strong>-Seite."
+"Falls Sie Ideen für neue Auszeichnungen haben, senden Sie uns diese über die <a href='%(feedback_faq_url)s'>Feedback</a></strong>-Seite."
 
 #: forum/skins/default/templates/badges.html:51
 msgid "Community badges"
@@ -4130,22 +3715,15 @@ msgstr "Auszeichnungs-Stufen"
 
 #: forum/skins/default/templates/badges.html:57
 msgid "gold badge description"
-msgstr ""
-"Goldene Auszeichnungen erreicht man mit regelmäßiger, überdurchschnittlicher "
-"Beteiligung."
+msgstr "Goldene Auszeichnungen erreicht man mit regelmäßiger, überdurchschnittlicher Beteiligung."
 
 #: forum/skins/default/templates/badges.html:65
 msgid "silver badge description"
-msgstr ""
-"Silberne Auszeichnungen erzielt man durch regelmäßige, geduldige Teilnahme "
-"am Forum."
+msgstr "Silberne Auszeichnungen erzielt man durch regelmäßige, geduldige Teilnahme am Forum."
 
 #: forum/skins/default/templates/badges.html:68
 msgid "bronze badge: often given as a special honor"
-msgstr ""
-"Bronzene Auszeichnungen sind die einfachste Auszeichnungsstufe. Man erhält "
-"einige von ihnen durch einigermaßen aktive Teilnahme. Sie werden oft als "
-"Ehrenauszeichnung verliehen."
+msgstr "Bronzene Auszeichnungen sind die einfachste Auszeichnungsstufe. Man erhält einige von ihnen durch einigermaßen aktive Teilnahme. Sie werden oft als Ehrenauszeichnung verliehen."
 
 #: forum/skins/default/templates/badges.html:72
 msgid "bronze badge description"
@@ -4156,11 +3734,11 @@ msgid "login"
 msgstr "Einloggen"
 
 #: forum/skins/default/templates/post_contributor_info.html:9
-#, fuzzy, python-format
+#, python-format
 msgid "one revision"
 msgid_plural "%(rev_count)s revisions"
-msgstr[0] "Version"
-msgstr[1] "Version"
+msgstr[0] "1 Version"
+msgstr[1] "%(rev_count)s Versionen"
 
 #: forum/skins/default/templates/post_contributor_info.html:15
 msgid "asked"
@@ -4201,14 +3779,12 @@ msgstr "Ich halte nichts von diesem Beitrag  (Zum Abbrechen erneut klicken)"
 #: forum/skins/default/templates/question.html:109
 #: forum/skins/default/templates/question.html:110
 msgid "mark this question as favorite (click again to cancel)"
-msgstr ""
-"Diese Frage in die Favoritenliste aufnehmen (Zum Abbrechen erneut klicken)"
+msgstr "Diese Frage in die Favoritenliste aufnehmen (Zum Abbrechen erneut klicken)"
 
 #: forum/skins/default/templates/question.html:116
 #: forum/skins/default/templates/question.html:117
 msgid "remove favorite mark from this question (click again to restore mark)"
-msgstr ""
-"Diese Frage aus der Favoritenliste entfernen (Zum Abbrechen erneut klicken)"
+msgstr "Diese Frage aus der Favoritenliste entfernen (Zum Abbrechen erneut klicken)"
 
 #: forum/skins/default/templates/question.html:146
 msgid "reopen"
@@ -4220,11 +3796,8 @@ msgstr "schließen"
 
 #: forum/skins/default/templates/question.html:156
 #: forum/skins/default/templates/question.html:293
-msgid ""
-"report as offensive (i.e containing spam, advertising, malicious text, etc.)"
-msgstr ""
-"Beitrag melden (z.B. Spam, unerwünschte Werbung, Beleidigungen, illegale "
-"Inhalte usw.)"
+msgid "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
+msgstr "Beitrag melden (z.B. Spam, unerwünschte Werbung, Beleidigungen, illegale Inhalte usw.)"
 
 #: forum/skins/default/templates/question.html:157
 #: forum/skins/default/templates/question.html:294
@@ -4251,8 +3824,8 @@ msgstr "Kommentar hinzufügen"
 #, python-format
 msgid "see <strong>one</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>1</strong> mehr"
+msgstr[1] "<strong>%(counter)s</strong> mehr"
 
 #: forum/skins/default/templates/question.html:200
 #: forum/skins/default/templates/question.html:342
@@ -4261,16 +3834,13 @@ msgid "see <strong>one</strong> more comment"
 msgid_plural ""
 "see <strong>%(counter)s</strong> more comments\n"
 "                                            "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>1</strong> weiterer Kommentar"
+msgstr[1] "<strong>%(counter)s</strong> weitere Kommentare"
 
 #: forum/skins/default/templates/question.html:213
 #, python-format
-msgid ""
-"The question has been closed for the following reason \"%(close_reason)s\" by"
-msgstr ""
-"Die Frage wurde aus den folgenden Gründen: \"%(close_reason)s\" geschlossen "
-"von"
+msgid "The question has been closed for the following reason \"%(close_reason)s\" by"
+msgstr "Die Frage wurde aus den folgenden Gründen: \"%(close_reason)s\" geschlossen von"
 
 #: forum/skins/default/templates/question.html:215
 #, python-format
@@ -4326,8 +3896,7 @@ msgstr "Ich halte diese Antwort für hilfreich (zum Abbrechen erneut klicken)"
 #: forum/skins/default/templates/question.html:256
 #: forum/skins/default/templates/question.html:257
 msgid "i dont like this answer (click again to cancel)"
-msgstr ""
-"Ich halte diese Antwort für nicht hilfreich (zum Abbrechen erneut klicken)"
+msgstr "Ich halte diese Antwort für nicht hilfreich (zum Abbrechen erneut klicken)"
 
 #: forum/skins/default/templates/question.html:262
 #: forum/skins/default/templates/question.html:263
@@ -4354,30 +3923,20 @@ msgstr "Wiederherstellen"
 #: forum/skins/default/templates/question.html:364
 #: forum/skins/default/templates/question.html:367
 msgid "Notify me once a day when there are any new answers"
-msgstr ""
-"<strong>Benachrichtigung bei neuen Antworten</strong> einmal täglich per E-"
-"Mail"
+msgstr "<strong>Benachrichtigung bei neuen Antworten</strong> einmal täglich per E-Mail"
 
 #: forum/skins/default/templates/question.html:370
 msgid "Notify me weekly when there are any new answers"
-msgstr ""
-"<strong>Benachrichtigung bei neuen Antworten</strong> einmal wöchentlich per "
-"E-Mail"
+msgstr "<strong>Benachrichtigung bei neuen Antworten</strong> einmal wöchentlich per E-Mail"
 
 #: forum/skins/default/templates/question.html:375
 #, python-format
-msgid ""
-"You can always adjust frequency of email updates from your %(profile_url)s"
-msgstr ""
-"(Sie können die Frequenz der Benachrichtigungen jederzeit in Ihrem "
-"<strong><a href='%(profile_url)s?sort=email_subscriptions'>Profil</a></"
-"strong> ändern)"
+msgid "You can always adjust frequency of email updates from your %(profile_url)s"
+msgstr "(Sie können die Frequenz der Benachrichtigungen jederzeit in Ihrem <strong><a href='%(profile_url)s?sort=email_subscriptions'>Profil</a></strong> ändern)"
 
 #: forum/skins/default/templates/question.html:380
 msgid "once you sign in you will be able to subscribe for any updates here"
-msgstr ""
-"<span class='strong'>Hier</span> können Sie regelmäßige Benachrichtigungen "
-"für diese Frage abonnieren, sobald Sie sich eingeloggt haben."
+msgstr "<span class='strong'>Hier</span> können Sie regelmäßige Benachrichtigungen für diese Frage abonnieren, sobald Sie sich eingeloggt haben."
 
 #: forum/skins/default/templates/question.html:391
 msgid "Your answer"
@@ -4389,42 +3948,19 @@ msgstr "Verfassen Sie die erste Antwort auf diese Frage!"
 
 #: forum/skins/default/templates/question.html:399
 msgid "you can answer anonymously and then login"
-msgstr ""
-"<span class='strong big'>Beginnen Sie Ihre Antwort als anonymer Gast</span> "
-"- Ihre Antwort wird gespeichert, während Sie sich danach einloggen oder "
-"einen neuen Zugang anlegen. Bitte versuchen Sie, eine <strong>sachliche "
-"Antwort mit Substanz</strong> zu verfassen. Für Rückfragen oder "
-"Klarstellungen nutzen Sie bitte die Kommentarfunktion unter der Frage. "
-"Nachdem Sie sich angemeldet und/oder eingeloggt haben, können Sie auch über "
-"die Qualität der Frage abstimmen, vergessen Sie das nicht!"
+msgstr "<span class='strong big'>Beginnen Sie Ihre Antwort als anonymer Gast</span> - Ihre Antwort wird gespeichert, während Sie sich danach einloggen oder einen neuen Zugang anlegen. Bitte versuchen Sie, eine <strong>sachliche Antwort mit Substanz</strong> zu verfassen. Für Rückfragen oder Klarstellungen nutzen Sie bitte die Kommentarfunktion unter der Frage. Nachdem Sie sich angemeldet und/oder eingeloggt haben, können Sie auch über die Qualität der Frage abstimmen, vergessen Sie das nicht!"
 
 #: forum/skins/default/templates/question.html:403
 msgid "answer your own question only to give an answer"
-msgstr ""
-"<span class='big strong'>Die eigene Frage zu beantworten ist ausdrücklich "
-"erlaubt</span>, aber es muß eine echte <strong>Antwort</strong> sein! "
-"Vergessen Sie nicht, daß Sie Ihre ursprüngliche Frage <strong>jederzeit "
-"verändern oder bei Bedarf auch wieder löschen können</strong>. Bitte "
-"verwenden Sie die  <strong>Kommentarfunktion</strong> für Diskussionen und "
-"Rückfragen, und bitte vergessen Sie nicht, die eingehenden Antworten mit "
-"Ihrer Stimme zu bewerten!"
+msgstr "<span class='big strong'>Die eigene Frage zu beantworten ist ausdrücklich erlaubt</span>, aber es muß eine echte <strong>Antwort</strong> sein! Vergessen Sie nicht, daß Sie Ihre ursprüngliche Frage <strong>jederzeit verändern oder bei Bedarf auch wieder löschen können</strong>. Bitte verwenden Sie die  <strong>Kommentarfunktion</strong> für Diskussionen und Rückfragen, und bitte vergessen Sie nicht, die eingehenden Antworten mit Ihrer Stimme zu bewerten!"
 
 #: forum/skins/default/templates/question.html:405
 msgid "please only give an answer, no discussions"
-msgstr ""
-"Bitte verfassen Sie eine <strong>sachliche Antwort mit Substanz</strong>. Um "
-"einen <strong>Kommentar</strong> zu verfassen, nutzen Sie bitte die "
-"Kommentarfunktion unter jeder Frage und Antwort. Sie können Ihre Antwort "
-"jederzeit <strong>bearbeiten</strong> - es ist normalerweise nicht nötig, "
-"eine Frage doppelt zu beantworten. Vergessen Sie auch nicht, über die Frage "
-"und andere Antworten <strong>abzustimmen</strong> - dies hilft, die besten "
-"Fragen und Antworten herauszufinden!"
+msgstr "Bitte verfassen Sie eine <strong>sachliche Antwort mit Substanz</strong>. Um einen <strong>Kommentar</strong> zu verfassen, nutzen Sie bitte die Kommentarfunktion unter jeder Frage und Antwort. Sie können Ihre Antwort jederzeit <strong>bearbeiten</strong> - es ist normalerweise nicht nötig, eine Frage doppelt zu beantworten. Vergessen Sie auch nicht, über die Frage und andere Antworten <strong>abzustimmen</strong> - dies hilft, die besten Fragen und Antworten herauszufinden!"
 
 #: forum/skins/default/templates/question.html:441
 msgid "Login/Signup to Post Your Answer"
-msgstr ""
-"Bitte loggen Sie sich ein oder registrieren Sie sich, um die Antwort "
-"endgültig zu speichern."
+msgstr "Bitte loggen Sie sich ein oder registrieren Sie sich, um die Antwort endgültig zu speichern."
 
 #: forum/skins/default/templates/question.html:444
 msgid "Answer Your Own Question"
@@ -4459,26 +3995,18 @@ msgid "Related questions"
 msgstr "Verwandte / ähnliche Fragen"
 
 #: forum/skins/default/templates/user_stats.html:11
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">1</span> Question"
 msgid_plural "<span class=\"count\">%(counter)s</span> Questions"
-msgstr[0] ""
-"\n"
-"<span class=\"count\">1</span> Frage"
-msgstr[1] ""
-"\n"
-"<span class=\"count\">%(counter)s</span>  Fragen"
+msgstr[0] "<span class=\"count\">1</span> Frage"
+msgstr[1] "<span class=\"count\">%(counter)s</span>  Fragen"
 
 #: forum/skins/default/templates/user_stats.html:16
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">1</span> Answer"
 msgid_plural "<span class=\"count\">%(counter)s</span> Answers"
-msgstr[0] ""
-"\n"
-"<span class=\"count\">1</span> Antwort"
-msgstr[1] ""
-"\n"
-"<span class=\"count\">%(counter)s</span>  Antworten"
+msgstr[0] "<span class=\"count\">1</span> Antwort"
+msgstr[1] "<span class=\"count\">%(counter)s</span>  Antworten"
 
 #: forum/skins/default/templates/user_stats.html:24
 #, python-format
@@ -4490,22 +4018,18 @@ msgid "this answer has been selected as correct"
 msgstr "Diese Antwort ist als korrekt ausgewählt worden"
 
 #: forum/skins/default/templates/user_stats.html:34
-#, fuzzy, python-format
+#, python-format
 msgid "(one comment)"
 msgid_plural "the answer has been commented %(comment_count)s times"
-msgstr[0] "Kommentar hinzufügen"
-msgstr[1] "Kommentar hinzufügen"
+msgstr[0] "1 Kommentar"
+msgstr[1] "%(comment_count)s mal kommentiert"
 
 #: forum/skins/default/templates/user_stats.html:44
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">1</span> Vote"
 msgid_plural "<span class=\"count\">%(cnt)s</span> Votes "
-msgstr[0] ""
-"\n"
-"<span class=\"count\">1</span> Auszeichnung"
-msgstr[1] ""
-"\n"
-"<span class=\"count\">%(counter)s</span>  Auszeichnungen"
+msgstr[0] "<span class=\"count\">1</span> Bewertung"
+msgstr[1] "<span class=\"count\">%(cnt)s</span>  Bewertungen"
 
 #: forum/skins/default/templates/user_stats.html:50
 msgid "thumb up"
@@ -4524,32 +4048,23 @@ msgid "user voted down this many times"
 msgstr "Benutzer hat negativ bewertet"
 
 #: forum/skins/default/templates/user_stats.html:64
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">1</span> Tag"
 msgid_plural "<span class=\"count\">%(counter)s</span> Tags"
-msgstr[0] ""
-"\n"
-"<span class=\"count\">1</span> Auszeichnung"
-msgstr[1] ""
-"\n"
-"<span class=\"count\">%(counter)s</span>  Auszeichnungen"
+msgstr[0] "<span class=\"count\">1</span> Tag"
+msgstr[1] "<span class=\"count\">%(counter)s</span>  Tags"
 
 #: forum/skins/default/templates/user_stats.html:72
 #, python-format
-msgid ""
-"see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
+msgid "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr "Andere Fragen von %(view_user)s mit Tag '%(tag_name)s'"
 
 #: forum/skins/default/templates/user_stats.html:86
-#, fuzzy, python-format
+#, python-format
 msgid "<span class=\"count\">1</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
-msgstr[0] ""
-"\n"
-"<span class=\"count\">1</span> Auszeichnung"
-msgstr[1] ""
-"\n"
-"<span class=\"count\">%(counter)s</span>  Auszeichnungen"
+msgstr[0] "<span class=\"count\">1</span> Auszeichnung"
+msgstr[1] "<span class=\"count\">%(counter)s</span>  Auszeichnungen"
 
 #: forum/templatetags/extra_filters.py:100
 msgid "no items in counter"
@@ -4600,8 +4115,7 @@ msgstr "Der Benutzername wird benötigt"
 
 #: forum/utils/forms.py:51
 msgid "sorry, this name is taken, please choose another"
-msgstr ""
-"Dieser Benutzername ist bereits vergeben. Bitte wählen Sie einen anderen"
+msgstr "Dieser Benutzername ist bereits vergeben. Bitte wählen Sie einen anderen"
 
 #: forum/utils/forms.py:52
 msgid "sorry, this name is not allowed, please choose another"
@@ -4613,14 +4127,11 @@ msgstr "Es gibt keinen Benutzer dieses Namens"
 
 #: forum/utils/forms.py:54
 msgid "sorry, we have a serious error - user name is taken by several users"
-msgstr ""
-"Interner Fehler: Derselbe Benutzername ist von mehreren Benutzern "
-"registriert. Bitte melden Sie diesen Fehler dem Administrator. Vielen Dank."
+msgstr "Interner Fehler: Derselbe Benutzername ist von mehreren Benutzern registriert. Bitte melden Sie diesen Fehler dem Administrator. Vielen Dank."
 
 #: forum/utils/forms.py:55
 msgid "user name can only consist of letters, empty space and underscore"
-msgstr ""
-"Der Benutzername kann aus Buchstaben, Leerzeichen und Unterstrichen bestehen"
+msgstr "Der Benutzername kann aus Buchstaben, Leerzeichen und Unterstrichen bestehen"
 
 #: forum/utils/forms.py:109
 msgid "your email address"
@@ -4636,9 +4147,7 @@ msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein"
 
 #: forum/utils/forms.py:112
 msgid "this email is already used by someone else, please choose another"
-msgstr ""
-"Diese E-Mail-Adresse ist bereits in Benutzung, bitte geben Sie eine andere "
-"ein"
+msgstr "Diese E-Mail-Adresse ist bereits in Benutzung, bitte geben Sie eine andere ein"
 
 #: forum/utils/forms.py:140
 msgid "choose password"
@@ -4658,16 +4167,12 @@ msgstr "Bitte geben Sie Ihr Passwort erneut ein"
 
 #: forum/utils/forms.py:146
 msgid "sorry, entered passwords did not match, please try again"
-msgstr ""
-"Die beiden eingegebenen Passwörter stimmen nicht überein, bitte erneut "
-"versuchen"
+msgstr "Die beiden eingegebenen Passwörter stimmen nicht überein, bitte erneut versuchen"
 
 #: forum/views/commands.py:209
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
-msgstr ""
-"Ihre Abonnementeinstellungen wurden gespeichert, aber %(email)s muß noch "
-"bestätigt werden. <a href='%(details_url)s'>Details hier</a>."
+msgstr "Ihre Abonnementeinstellungen wurden gespeichert, aber %(email)s muß noch bestätigt werden. <a href='%(details_url)s'>Details hier</a>."
 
 #: forum/views/commands.py:217
 msgid "email update frequency has been set to daily"
@@ -4756,11 +4261,8 @@ msgstr "Die Maximalgröße beim Hochladen beträgt %s Kilobyte."
 
 #: forum/views/writers.py:76
 #, python-format
-msgid ""
-"Error uploading file. Please contact the site administrator. Thank you. %s"
-msgstr ""
-"Fehler beim Hochladen der Datei. Bitte nehmen Sie Kontakt mit dem "
-"Administrator auf. %s"
+msgid "Error uploading file. Please contact the site administrator. Thank you. %s"
+msgstr "Fehler beim Hochladen der Datei. Bitte nehmen Sie Kontakt mit dem Administrator auf. %s"
 
 #: forum_modules/authentication/auth.py:27
 msgid "Email Validation"
@@ -4817,13 +4319,11 @@ msgstr "buecher/"
 
 #~ msgid ""
 #~ "\n"
-#~ "                                            see <strong>one</strong> "
-#~ "more \n"
+#~ "                                            see <strong>one</strong> more \n"
 #~ "                                            "
 #~ msgid_plural ""
 #~ "\n"
-#~ "                                            see <strong>%(counter)s</"
-#~ "strong> more\n"
+#~ "                                            see <strong>%(counter)s</strong> more\n"
 #~ "                                            "
 #~ msgstr[0] ""
 #~ "\n"
@@ -4834,13 +4334,11 @@ msgstr "buecher/"
 
 #~ msgid ""
 #~ "\n"
-#~ "                                            see <strong>one</strong> more "
-#~ "comment\n"
+#~ "                                            see <strong>one</strong> more comment\n"
 #~ "                                            "
 #~ msgid_plural ""
 #~ "\n"
-#~ "                                            see <strong>%(counter)s</"
-#~ "strong> more comments\n"
+#~ "                                            see <strong>%(counter)s</strong> more comments\n"
 #~ "                                            "
 #~ msgstr[0] ""
 #~ "\n"
@@ -4851,13 +4349,11 @@ msgstr "buecher/"
 
 #~ msgid ""
 #~ "\n"
-#~ "                                                        see <strong>one</"
-#~ "strong> more \n"
+#~ "                                                        see <strong>one</strong> more \n"
 #~ "                                                        "
 #~ msgid_plural ""
 #~ "\n"
-#~ "                                                        see <strong>%"
-#~ "(counter)s</strong> more\n"
+#~ "                                                        see <strong>%(counter)s</strong> more\n"
 #~ "                                                        "
 #~ msgstr[0] ""
 #~ "\n"
@@ -4868,13 +4364,11 @@ msgstr "buecher/"
 
 #~ msgid ""
 #~ "\n"
-#~ "                                                        see <strong>one</"
-#~ "strong> more comment\n"
+#~ "                                                        see <strong>one</strong> more comment\n"
 #~ "                                                        "
 #~ msgid_plural ""
 #~ "\n"
-#~ "                                                        see <strong>%"
-#~ "(counter)s</strong> more comments\n"
+#~ "                                                        see <strong>%(counter)s</strong> more comments\n"
 #~ "                                                        "
 #~ msgstr[0] ""
 #~ "\n"
@@ -4889,8 +4383,7 @@ msgstr "buecher/"
 #~ "                    "
 #~ msgid_plural ""
 #~ "\n"
-#~ "                    the answer has been commented %(comment_count)s "
-#~ "times\n"
+#~ "                    the answer has been commented %(comment_count)s times\n"
 #~ "                    "
 #~ msgstr[0] ""
 #~ "\n"
@@ -4947,36 +4440,20 @@ msgstr "buecher/"
 #~ msgid "list of unanswered questions"
 #~ msgstr "unanswered questions"
 
-#~ msgid ""
-#~ " have total %(q_num)s questions containing %(searchtitle)s in full text "
-#~ msgid_plural ""
-#~ " have total %(q_num)s questions containing %(searchtitle)s in full text "
-#~ msgstr[0] ""
-#~ "<div class=\"questions-count\">%(q_num)s</div><p>question containing "
-#~ "<strong><span class=\"darkred\">%(searchtitle)s</span></strong></p>"
-#~ msgstr[1] ""
-#~ "<div class=\"questions-count\">%(q_num)s</div><p>questions containing "
-#~ "<strong><span class=\"darkred\">%(searchtitle)s</span></strong></p>"
+#~ msgid " have total %(q_num)s questions containing %(searchtitle)s in full text "
+#~ msgid_plural " have total %(q_num)s questions containing %(searchtitle)s in full text "
+#~ msgstr[0] "<div class=\"questions-count\">%(q_num)s</div><p>question containing <strong><span class=\"darkred\">%(searchtitle)s</span></strong></p>"
+#~ msgstr[1] "<div class=\"questions-count\">%(q_num)s</div><p>questions containing <strong><span class=\"darkred\">%(searchtitle)s</span></strong></p>"
 
 #~ msgid " have total %(q_num)s questions containing %(searchtitle)s "
 #~ msgid_plural " have total %(q_num)s questions containing %(searchtitle)s "
-#~ msgstr[0] ""
-#~ "<div class=\"questions-count\">%(q_num)s</div><p>question with title "
-#~ "containing <strong><span class=\"darkred\">%(searchtitle)s</span></"
-#~ "strong></p>"
-#~ msgstr[1] ""
-#~ "<div class=\"questions-count\">%(q_num)s</div><p>questions with title "
-#~ "containing <strong><span class=\"darkred\">%(searchtitle)s</span></"
-#~ "strong></p>"
+#~ msgstr[0] "<div class=\"questions-count\">%(q_num)s</div><p>question with title containing <strong><span class=\"darkred\">%(searchtitle)s</span></strong></p>"
+#~ msgstr[1] "<div class=\"questions-count\">%(q_num)s</div><p>questions with title containing <strong><span class=\"darkred\">%(searchtitle)s</span></strong></p>"
 
 #~ msgid " have total %(q_num)s unanswered questions "
 #~ msgid_plural " have total %(q_num)s unanswered questions "
-#~ msgstr[0] ""
-#~ "<div class=\"questions-count\">%(q_num)s</div>questions <strong>without "
-#~ "accepted answers</strong>"
-#~ msgstr[1] ""
-#~ "<div class=\"questions-count\">%(q_num)s</div>questions <strong>without "
-#~ "accepted answers</strong>"
+#~ msgstr[0] "<div class=\"questions-count\">%(q_num)s</div>questions <strong>without accepted answers</strong>"
+#~ msgstr[1] "<div class=\"questions-count\">%(q_num)s</div>questions <strong>without accepted answers</strong>"
 
 #~ msgid "Most recently answered ones are shown first."
 #~ msgstr "<strong>Most recently answered</strong> questions are shown first."
@@ -5007,12 +4484,10 @@ msgstr "buecher/"
 #~ "                    "
 #~ msgstr[0] ""
 #~ "\n"
-#~ "<div class=\"questions-count\">%(q_num)s</div><p>question without an "
-#~ "accepted answer</p>"
+#~ "<div class=\"questions-count\">%(q_num)s</div><p>question without an accepted answer</p>"
 #~ msgstr[1] ""
 #~ "\n"
-#~ "<div class=\"questions-count\">%(q_num)s</div><p>questions without an "
-#~ "accepted answer</p>"
+#~ "<div class=\"questions-count\">%(q_num)s</div><p>questions without an accepted answer</p>"
 
 #~ msgid ""
 #~ "\n"

@@ -424,7 +424,6 @@ class Question(Content, DeletableContent):
         return u','.join([unicode(tag) for tag in self.tagname_list()])
 
     def get_absolute_url(self):
-        print 'reversing question url'
         return '%s%s' % (reverse('question', args=[self.id]), django_urlquote(slugify(self.title)))
 
     def has_favorite_by_user(self, user):
