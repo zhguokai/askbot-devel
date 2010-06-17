@@ -7,9 +7,11 @@
 {% load i18n %}
 {% load cache %}
 {% block title %}{% spaceless %}{{ question.get_question_title }}{% endspaceless %}{% endblock %}
-{% block forejs %}
+{% block meta_description %}
         <meta name="description" content="{{question.summary}}" />
-        <meta name="keywords" content="{{question.tagname_meta_generator}}" />
+{% endblock %}
+{% block keywords %}{{question.tagname_meta_generator}}{% endblock %}
+{% block forejs %}
         <link rel="canonical" href="{{settings.APP_URL}}{{question.get_absolute_url}}" />
         {% if not question.closed %}
         <script type='text/javascript' src='{% media  "/media/js/com.cnprog.editor.js" %}'></script>
@@ -173,7 +175,7 @@
                             <div class="comments-container" id="comments-container-question-{{question.id}}">
                             {% for comment in question.get_comments|slice:":5" %}
                                 <p class="comment" id="comment-{{comment.id}}">
-                                    {{comment.comment}} 
+                                    {{comment.html|safe}} 
                                     - <a class="comment-user" href="{{comment.user.get_profile_url}}">{{comment.user}}</a>
                                     {% spaceless %}
                                     <span class="comment-age">({% diff_date comment.added_at %})</span>
@@ -195,9 +197,9 @@
                                     {% endif %}
                                     {% if question.comment_count > 5 %}
                                         {% if request.user|can_add_comments:question %}/
-                                            {% blocktrans count question.get_comments|slice:"5:"|length as counter %}see <strong>one</strong> more{% plural %}see <strong>{{counter}}</strong> more{% endblocktrans %}
+                                            {% blocktrans count question.get_comments|slice:"5:"|length as counter %}see <strong>{{counter}}</strong> more{% plural %}see <strong>{{counter}}</strong> more{% endblocktrans %}
                                         {% else %}
-                                            {% blocktrans count question.get_comments|slice:"5:"|length as counter %}see <strong>one</strong> more comment{% plural %}see <strong>{{counter}}</strong> more comments
+                                            {% blocktrans count question.get_comments|slice:"5:"|length as counter %}see <strong>{{counter}}</strong> more comment{% plural %}see <strong>{{counter}}</strong> more comments
                                             {% endblocktrans %}
                                         {% endif %}
                                     {% endif %}</a>
@@ -221,7 +223,7 @@
                     <a name="sort-top"></a>
                     <div class="headUsers">
                     {% blocktrans count answers|length as counter %}
-                    One Answer:
+                    {{counter}} Answer:
                     {% plural %}
                     {{counter}} Answers:
                     {% endblocktrans %}
@@ -315,7 +317,7 @@
                                         <div class="comments-container" id="comments-container-answer-{{answer.id}}">
                                         {% for comment in answer.get_comments|slice:":5" %}
                                             <p id="comment-{{comment.id}}" class="comment">
-                                                {{comment.comment}} 
+                                                {{comment.html|safe}} 
                                                 - <a class="comment-user" href="{{comment.user.get_profile_url}}">{{comment.user}}</a>
                                                 {% spaceless %}
                                                 <span class="comment-age">({% diff_date comment.added_at %})</span>
@@ -337,9 +339,9 @@
                                                 {% endif %}
                                                 {% if answer.comment_count > 5 %}
                                                     {% if request.user|can_add_comments:answer %}/
-                                                        {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}see <strong>one</strong> more{% plural %}see <strong>{{counter}}</strong> more{% endblocktrans %}
+                                                        {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}see <strong>{{counter}}</strong> more{% plural %}see <strong>{{counter}}</strong> more{% endblocktrans %}
                                                     {% else %}
-                                                        {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}see <strong>one</strong> more comment{% plural %} see <strong>{{counter}}</strong> more comments{% endblocktrans %}
+                                                        {% blocktrans count answer.get_comments|slice:"5:"|length as counter %}see <strong>{{counter}}</strong> more comment{% plural %} see <strong>{{counter}}</strong> more comments{% endblocktrans %}
                                                     {% endif %}
                                                 {% endif %}</a>
                                             {% endif %}

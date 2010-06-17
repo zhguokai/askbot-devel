@@ -50,7 +50,7 @@
     <div class="tabsC">
         <span class="label">{% trans "In:" %}</span>
         <a id="all" class="off" href="?scope=all" title="{% trans "see all questions" %}">{% trans "all" %}</a>
-        <a id="unanswered" class="off" href="?scope=unanswered&sort=coldest" title="{% trans "see unanswered questions" %}">{% trans "unanswered" %}</a>
+        <a id="unanswered" class="off" href="?scope=unanswered&amp;sort=coldest" title="{% trans "see unanswered questions" %}">{% trans "unanswered" %}</a>
         {% if request.user.is_authenticated %} 
         <a id="favorite" class="off" href="?scope=favorite" title="{% trans "see your favorite questions" %}">{% trans "favorite" %}</a>
         {% endif %}
@@ -138,9 +138,13 @@
     <div style="clear:both">
         <p class="search-result-summary">
         {% if author_name or search_tags or query %}
-            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %} One question found{% plural %}{{q_num}} questions found{% endblocktrans %}
+            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}
+                {{q_num}} question found
+            {% plural %}
+                {{q_num}} questions found
+            {% endblocktrans %}
         {% else %}
-            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %} {{q_num}} question{% plural %}{{q_num}} questions{% endblocktrans %}
+            {% blocktrans count questions_count as cnt with questions_count|intcomma as q_num %}{{q_num}} question{% plural %}{{q_num}} questions{% endblocktrans %}
         {% endif %}
         {% joinitems using ', ' %}
             {% if author_name %}

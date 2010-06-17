@@ -3,8 +3,10 @@ import re
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.conf import settings
+from forum.conf import settings as forum_settings
 from django.http import str_to_unicode
 from django.contrib.auth.models import User
+from forum import const
 import logging
 import urllib
 
@@ -37,7 +39,6 @@ class NextUrlField(forms.CharField):
         return clean_next(value)
 
 login_form_widget_attrs = { 'class': 'required login' }
-username_re = re.compile(r'^[\w ]+$')
 
 class UserNameField(StrippedNonEmptyCharField):
     RESERVED_NAMES = (u'fuck', u'shit', u'ass', u'sex', u'add',
@@ -47,6 +48,7 @@ class UserNameField(StrippedNonEmptyCharField):
         self.skip_clean = skip_clean
         self.db_model = db_model 
         self.db_field = db_field
+        self.user_instance = None
         error_messages={'required':_('user name is required'),
                         'taken':_('sorry, this name is taken, please choose another'),
                         'forbidden':_('sorry, this name is not allowed, please choose another'),
@@ -69,15 +71,22 @@ class UserNameField(StrippedNonEmptyCharField):
         if self.skip_clean == True:
             logging.debug('username accepted with no validation')
             return username
-        if hasattr(self, 'user_instance') and isinstance(self.user_instance, User):
+        if self.user_instance is None:
+            pass
+        elif isinstance(self.user_instance, User):
             if username == self.user_instance.username:
                 logging.debug('username valid')
                 return username
+        else:
+            raise TypeError('user instance must be of type User')
+
         try:
             username = super(UserNameField, self).clean(username)
         except forms.ValidationError:
             raise forms.ValidationError(self.error_messages['required'])
-        if self.required and not username_re.search(username):
+
+        username_regex = re.compile(const.USERNAME_REGEX_STRING)
+        if self.required and not username_regex.search(username):
             raise forms.ValidationError(self.error_messages['invalid'])
         if username in self.RESERVED_NAMES:
             raise forms.ValidationError(self.error_messages['forbidden'])
@@ -121,7 +130,7 @@ class UserEmailField(forms.EmailField):
         email = super(UserEmailField,self).clean(email.strip())
         if self.skip_clean:
             return email
-        if settings.EMAIL_UNIQUE == True:
+        if forum_settings.EMAIL_UNIQUE == True:
             try:
                 user = User.objects.get(email = email)
                 logging.debug('email taken')

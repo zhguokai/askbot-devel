@@ -2,6 +2,7 @@
 *.swp
 *.log
 cache/??
+run
 *.wsgi
 nbproject
 settings_local.py
@@ -15,3 +16,4 @@ tmp/*
 load
 forum/skins/default/media/js/flot
 forum/skins/common/media/js/closure/google-closure
+forum/fixtures

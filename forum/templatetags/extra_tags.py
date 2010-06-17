@@ -1,6 +1,5 @@
 import time
 import os
-import posixpath
 import datetime
 import math
 import re
@@ -10,9 +9,11 @@ from django.utils.encoding import smart_unicode
 from django.utils.safestring import mark_safe
 from forum.const import *
 from forum.models import Question, Answer, QuestionRevision, AnswerRevision
+from forum.models import Badge
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings
+from forum.conf import settings as forum_settings
 from django.template.defaulttags import url as default_url
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
@@ -146,66 +147,117 @@ def post_contributor_info(post,contributor_type='original_author'):
     return {
         'post':post,
         'post_type':post_type,
-        'wiki_on':settings.WIKI_ON,
+        'wiki_on':forum_settings.WIKI_ON,
         'contributor_type':contributor_type
     }
-        
+
+
+BADGE_TEMPLATE = '<span title="%(pluralized_badge_count)s">' \
+                + '<span class="%(badge_css_class)s">%(badge_symbol)s</span>' \
+                + '<span class="badgecount">%(badge_count)s</span>' \
+                + '</span>'
+BADGE_LEVELS = dict(Badge.TYPE_CHOICES)
+
+def render_badge_counter(badge_level = None, badge_count = None):
+
+    pluralized_badge_count = ungettext(
+                    '%(badge_count)d %(badge_level)s badge',
+                    '%(badge_count)d %(badge_level)s badges',
+                    badge_count
+                ) % {
+                        'badge_count': badge_count, 
+                        'badge_level': BADGE_LEVELS[badge_level]
+                    }
+
+    output = BADGE_TEMPLATE % \
+                        {
+                            'pluralized_badge_count': pluralized_badge_count,
+                            'badge_css_class': Badge.CSS_CLASSES[badge_level],
+                            'badge_symbol': Badge.DISPLAY_SYMBOL,
+                            'badge_count': badge_count,
+                        }
+    return output
+
+
+REP_TEMPLATE = '<span class="reputation-score" ' \
+                + 'title="%(reputation)s %(repword)s">%(reputation)s</span>'
+@register.simple_tag
+def render_reputation_counter(rep):
+    return REP_TEMPLATE % {
+        'repword': _('reputation points'),
+        'reputation': rep
+    }
+
+
+@register.simple_tag
+def render_badge_counters(gold_count, silver_count, bronze_count):
+    output = ''
+    if gold_count > 0 :
+        output += render_badge_counter(
+                                badge_level = Badge.GOLD,
+                                badge_count = gold_count
+                            )
+    if silver_count > 0:
+        output += render_badge_counter(
+                                badge_level = Badge.SILVER,
+                                badge_count = silver_count
+                            )
+    if bronze_count > 0:
+        output += render_badge_counter(
+                                badge_level = Badge.BRONZE,
+                                badge_count = bronze_count
+                            )
+    return output
+
+
+@register.simple_tag
+def get_score_badge_by_details(rep, gold_count, silver_count, bronze_count):
+    output = render_reputation_counter(rep)
+    output += render_badge_counters(gold_count, silver_count, bronze_count)
+    return output
+
+
+#this one is used for the header next to user profile and logout links
+REP_TEMPLATE2 = '<a class="ab-nav-karma" href="%(karma_graph_url)s" ' \
+                + ' title="%(karma_phrase)s">' \
+                + '%(rep_word)s: %(reputation)s</a>'
+BADGE_TEMPLATE2 = '<a class="ab-nav-badges" href="%(user_badges_url)s">' \
+                + '%(badge_counters)s</a>'
+@register.simple_tag
+def get_long_score_and_badge_report(user):
+    profile_url = user.get_absolute_url()
+    karma_graph_url = profile_url + '?sort=reputation'
+    karma_phrase = _('your karma is %(reputation)s') \
+                        % { 'reputation': user.reputation }
+
+    output = REP_TEMPLATE2 % {
+        'repword': _('reputation points'),
+        'karma_graph_url': karma_graph_url,
+        'reputation': user.reputation,
+        'karma_phrase': karma_phrase,
+        'rep_word': _('reputation points'),
+    }
+
+    badge_counters = render_badge_counters(user.gold, user.silver, user.bronze)
+
+    if badge_counters != '':
+        output += ' ' + BADGE_TEMPLATE2 % {
+                        'user_badges_url': profile_url + '#badges',
+                        'badge_counters': _('badges: ') + badge_counters
+                    }
+    return output
+
+
 @register.simple_tag
 def get_score_badge(user):
-    BADGE_TEMPLATE = '<span class="score" title="%(reputation)s %(reputationword)s">%(reputation)s</span>'
-    if user.gold > 0 :
-        BADGE_TEMPLATE = '%s%s' % (BADGE_TEMPLATE, '<span title="%(gold)s %(badgesword)s">'
-        '<span class="badge1">&#9679;</span>'
-        '<span class="badgecount">%(gold)s</span>'
-        '</span>')
-    if user.silver > 0:
-        BADGE_TEMPLATE = '%s%s' % (BADGE_TEMPLATE, '<span title="%(silver)s %(badgesword)s">'
-        '<span class="silver">&#9679;</span>'
-        '<span class="badgecount">%(silver)s</span>'
-        '</span>')
-    if user.bronze > 0:
-        BADGE_TEMPLATE = '%s%s' % (BADGE_TEMPLATE, '<span title="%(bronze)s %(badgesword)s">'
-        '<span class="bronze">&#9679;</span>'
-        '<span class="badgecount">%(bronze)s</span>'
-        '</span>')
-    BADGE_TEMPLATE = smart_unicode(BADGE_TEMPLATE, encoding='utf-8', strings_only=False, errors='strict')
-    return mark_safe(BADGE_TEMPLATE % {
-        'reputation' : user.reputation,
-        'gold' : user.gold,
-        'silver' : user.silver,
-        'bronze' : user.bronze,
-		'badgesword' : _('badges'),
-		'reputationword' : _('reputation points'),
-    })
-    
-@register.simple_tag
-def get_score_badge_by_details(rep, gold, silver, bronze):
-    BADGE_TEMPLATE = '<span class="reputation-score" title="%(reputation)s %(repword)s">%(reputation)s</span>'
-    if gold > 0 :
-        BADGE_TEMPLATE = '%s%s' % (BADGE_TEMPLATE, '<span title="%(gold)s %(badgeword)s">'
-        '<span class="badge1">&#9679;</span>'
-        '<span class="badgecount">%(gold)s</span>'
-        '</span>')
-    if silver > 0:
-        BADGE_TEMPLATE = '%s%s' % (BADGE_TEMPLATE, '<span title="%(silver)s %(badgeword)s">'
-        '<span class="badge2">&#9679;</span>'
-        '<span class="badgecount">%(silver)s</span>'
-        '</span>')
-    if bronze > 0:
-        BADGE_TEMPLATE = '%s%s' % (BADGE_TEMPLATE, '<span title="%(bronze)s %(badgeword)s">'
-        '<span class="badge3">&#9679;</span>'
-        '<span class="badgecount">%(bronze)s</span>'
-        '</span>')
-    BADGE_TEMPLATE = smart_unicode(BADGE_TEMPLATE, encoding='utf-8', strings_only=False, errors='strict')
-    return mark_safe(BADGE_TEMPLATE % {
-        'reputation' : rep,
-        'gold' : gold,
-        'silver' : silver,
-        'bronze' : bronze,
-		'repword' : _('reputation points'),
-		'badgeword' : _('badges'),
-    })      
-    
+    return get_score_badge_by_details(
+                        user.reputation,
+                        user.gold,
+                        user.silver,
+                        user.bronze
+                    )
+
+
 @register.simple_tag
 def get_user_vote_image(dic, key, arrow):
     if dic.has_key(key):
@@ -249,7 +301,7 @@ def convert2tagname_list(question):
     return ''
 
 @register.simple_tag
-def diff_date(date, limen=2):
+def diff_date(date, limen=2, use_on_prefix = False):
     now = datetime.datetime.now()#datetime(*time.localtime()[0:6])#???
     diff = now - date
     days = diff.days
@@ -258,9 +310,13 @@ def diff_date(date, limen=2):
 
     if days > 2:
         if date.year == now.year:
-            return date.strftime("%b %d")# at %H:%M")
+            date_token = date.strftime("%b %d")
         else:
-            return date.strftime("%b %d '%y")# at %H:%M")
+            date_token = date.strftime("%b %d '%y")
+        if use_on_prefix:
+            return _('on %(date)s') % { 'date': date_token }
+        else:
+            return date_token
     elif days == 2:
         return _('2 days ago')
     elif days == 1:
@@ -290,10 +346,13 @@ def get_latest_changed_timestamp():
 
 @register.simple_tag
 def media(url):
-    url = skins.find_media_source(url)
+    url = skins.loaders.find_media_source(url)
     if url:
         url = '///' + settings.FORUM_SCRIPT_ALIAS + '/m/' + url
-        return posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
+        return os.path.normpath(url) + '?v=%d' \
+                % forum_settings.MEDIA_RESOURCE_REVISION
+    else:
+        return '' #todo: raise exception here?
 
 class ItemSeparatorNode(template.Node):
     def __init__(self,separator):
@@ -371,9 +430,9 @@ class BlockMediaUrlNode(template.Node):
         for item in self.items:
             url += item.render(context)
 
-        url = skins.find_media_source(url)
+        url = skins.loaders.find_media_source(url)
         url = prefix + url
-        out = posixpath.normpath(url) + '?v=%d' % settings.RESOURCE_REVISION
+        out = os.path.normpath(url) + '?v=%d' % forum_settings.MEDIA_RESOURCE_REVISION
         return out.replace(' ','')
 
 @register.tag(name='blockmedia')
@@ -395,7 +454,7 @@ class FullUrlNode(template.Node):
         self.default_node = default_node
 
     def render(self, context):
-        domain = settings.APP_URL
+        domain = forum_settings.APP_URL
         #protocol = getattr(settings, "PROTOCOL", "http")
         path = self.default_node.render(context)
         return "%s%s" % (domain, path)
@@ -407,7 +466,7 @@ def fullurl(parser, token):
 
 @register.simple_tag
 def fullmedia(url):
-    domain = settings.APP_URL
+    domain = forum_settings.APP_URL
     #protocol = getattr(settings, "PROTOCOL", "http")
     path = media(url)
     return "%s%s" % (domain, path)
@@ -422,41 +481,41 @@ def question_counter_widget(question):
 
     #background and foreground colors for each item
     (views_fg, views_bg) = colors.get_counter_colors(
-                                view_count,
-                                max = settings.VIEW_COUNTER_EXPECTED_MAXIMUM,
-                                zero_bg = settings.COLORS_VIEW_COUNTER_EMPTY_BG,
-                                zero_fg = settings.COLORS_VIEW_COUNTER_EMPTY_FG,
-                                min_bg = settings.COLORS_VIEW_COUNTER_MIN_BG,
-                                min_fg = settings.COLORS_VIEW_COUNTER_MIN_FG,
-                                max_bg = settings.COLORS_VIEW_COUNTER_MAX_BG,
-                                max_fg = settings.COLORS_VIEW_COUNTER_MAX_FG,
-                            )
+                view_count,
+                counter_max = forum_settings.VIEW_COUNTER_EXPECTED_MAXIMUM,
+                zero_bg = forum_settings.COLORS_VIEW_COUNTER_EMPTY_BG,
+                zero_fg = forum_settings.COLORS_VIEW_COUNTER_EMPTY_FG,
+                min_bg = forum_settings.COLORS_VIEW_COUNTER_MIN_BG,
+                min_fg = forum_settings.COLORS_VIEW_COUNTER_MIN_FG,
+                max_bg = forum_settings.COLORS_VIEW_COUNTER_MAX_BG,
+                max_fg = forum_settings.COLORS_VIEW_COUNTER_MAX_FG,
+            )
 
     (answers_fg, answers_bg) = colors.get_counter_colors(
-                                answer_count,
-                                max = settings.ANSWER_COUNTER_EXPECTED_MAXIMUM,
-                                zero_bg = settings.COLORS_ANSWER_COUNTER_EMPTY_BG,
-                                zero_fg = settings.COLORS_ANSWER_COUNTER_EMPTY_FG,
-                                min_bg = settings.COLORS_ANSWER_COUNTER_MIN_BG,
-                                min_fg = settings.COLORS_ANSWER_COUNTER_MIN_FG,
-                                max_bg = settings.COLORS_ANSWER_COUNTER_MAX_BG,
-                                max_fg = settings.COLORS_ANSWER_COUNTER_MAX_FG,
-                            )
+                answer_count,
+                counter_max = forum_settings.ANSWER_COUNTER_EXPECTED_MAXIMUM,
+                zero_bg = forum_settings.COLORS_ANSWER_COUNTER_EMPTY_BG,
+                zero_fg = forum_settings.COLORS_ANSWER_COUNTER_EMPTY_FG,
+                min_bg = forum_settings.COLORS_ANSWER_COUNTER_MIN_BG,
+                min_fg = forum_settings.COLORS_ANSWER_COUNTER_MIN_FG,
+                max_bg = forum_settings.COLORS_ANSWER_COUNTER_MAX_BG,
+                max_fg = forum_settings.COLORS_ANSWER_COUNTER_MAX_FG,
+            )
     if answer_accepted:
         #todo: maybe recalculate the foreground color too
-        answers_bg = settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
-        answers_fg = settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
+        answers_bg = forum_settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG
+        answers_fg = forum_settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG
 
     (votes_fg, votes_bg) = colors.get_counter_colors(
-                                vote_count,
-                                max = settings.VOTE_COUNTER_EXPECTED_MAXIMUM,
-                                zero_bg = settings.COLORS_VOTE_COUNTER_EMPTY_BG,
-                                zero_fg = settings.COLORS_VOTE_COUNTER_EMPTY_FG,
-                                min_bg = settings.COLORS_VOTE_COUNTER_MIN_BG,
-                                min_fg = settings.COLORS_VOTE_COUNTER_MIN_FG,
-                                max_bg = settings.COLORS_VOTE_COUNTER_MAX_BG,
-                                max_fg = settings.COLORS_VOTE_COUNTER_MAX_FG,
-                            )
+                vote_count,
+                counter_max = forum_settings.VOTE_COUNTER_EXPECTED_MAXIMUM,
+                zero_bg = forum_settings.COLORS_VOTE_COUNTER_EMPTY_BG,
+                zero_fg = forum_settings.COLORS_VOTE_COUNTER_EMPTY_FG,
+                min_bg = forum_settings.COLORS_VOTE_COUNTER_MIN_BG,
+                min_fg = forum_settings.COLORS_VOTE_COUNTER_MIN_FG,
+                max_bg = forum_settings.COLORS_VOTE_COUNTER_MAX_BG,
+                max_fg = forum_settings.COLORS_VOTE_COUNTER_MAX_FG,
+            )
 
     #returns a dictionary with keys like 'votes_bg', etc
     return locals()
@@ -501,6 +560,5 @@ def ifmany(parser,token):
         token = parser.next_token()
     else:
         false_nodelist = template.NodeList()
-
 
     return IsManyNode(test_items, true_nodelist, false_nodelist)

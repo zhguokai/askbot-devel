@@ -1,26 +1,155 @@
 import datetime
-import hashlib
-from urllib import quote_plus, urlencode
-from django.db import models, IntegrityError, connection, transaction
-from django.utils.http import urlquote  as django_urlquote
+from django.db import models
 from django.utils.html import strip_tags
 #from django.core.urlresolvers import reverse
 from localeurl.models import reverse
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.template.defaultfilters import slugify
-from django.db.models.signals import post_delete, post_save, pre_save
-from django.utils.translation import ugettext as _
-from django.utils.safestring import mark_safe
-from django.contrib.sitemaps import ping_google
-import django.dispatch
-from django.conf import settings
+#todo: maybe merge forum.utils.markup and forum.utils.html
+from forum.utils import markup
+from forum.utils.html import sanitize_html
+from django.utils import html
 import logging
+from markdown2 import Markdown
 
-#todo: sphinx search import used to be here
+markdowner = Markdown(html4tags=True)
 
-from forum.const import *
+#todo: following methods belong to a future common post class
+def parse_post_text(post):
+    """typically post has a field to store raw source text
+    in comment it is called .comment, in Question and Answer it is 
+    called .text
+    also there is another field called .html (consistent across models)
+    so the goal of this function is to render raw text into .html
+    and extract any metadata given stored in source (currently
+    this metadata is limited by twitter style @mentions
+    but there may be more in the future
+
+    function returns a dictionary with the following keys
+    html
+    newly_mentioned_users - list of <User> objects
+    removed_mentions - list of mention <Activity> objects - for removed ones
+    """
+
+    text = post.get_text()
+
+    if post._urlize:
+        text = html.urlize(text)
+
+    if post._use_markdown:
+        text = sanitize_html(markdowner.convert(text))
+
+    #todo, add markdown parser call conditional on
+    #post.use_markdown flag
+    post_html = text
+    mentioned_authors = list()
+    removed_mentions = list()
+    if '@' in text:
+        from forum.models.user import Activity
+
+        op = post.get_origin_post()
+        anticipated_authors = op.get_author_list(
+                                    include_comments = True,
+                                    recursive = True 
+                                )
+
+        extra_name_seeds = markup.extract_mentioned_name_seeds(text)
+
+        extra_authors = set()
+        for name_seed in extra_name_seeds:
+            extra_authors.update(User.objects.filter(
+                                        username__startswith = name_seed
+                                    )
+                            )
+
+        #it is important to preserve order here so that authors of post 
+        #get mentioned first
+        anticipated_authors += list(extra_authors)
+
+        mentioned_authors, post_html = markup.mentionize_text(
+                                                text, 
+                                                anticipated_authors
+                                            )
+
+        #find mentions that were removed and identify any previously
+        #entered mentions so that we can send alerts on only new ones
+        if post.pk is not None:
+            #only look for previous mentions if post was already saved before
+            prev_mention_qs = Activity.objects.get_mentions(
+                                        mentioned_in = post
+                                    )
+            new_set = set(mentioned_authors)
+            for prev_mention in prev_mention_qs:
+
+                user = prev_mention.get_mentioned_user()
+                if user in new_set:
+                    #don't report mention twice
+                    new_set.remove(user)
+                else:
+                    removed_mentions.append(prev_mention)
+            mentioned_authors = list(new_set)
+
+    data = {
+        'html': post_html,
+        'newly_mentioned_users': mentioned_authors,
+        'removed_mentions': removed_mentions,
+    }
+    return data
+
+#todo: when models are merged, it would be great to remove author parameter
+def parse_and_save_post(post, author = None, **kwargs):
+    """generic method to use with posts to be used prior to saving
+    post edit or addition
+    """
+
+    assert(author is not None)
+
+    data = post.parse()
+
+    post.html = data['html']
+    newly_mentioned_users = set(data['newly_mentioned_users']) - set([author]) 
+    removed_mentions = data['removed_mentions']
+
+    #a hack allowing to save denormalized .summary field for questions
+    if hasattr(post, 'summary'):
+        post.summary = strip_tags(post.html)[:120]
+
+    #delete removed mentions
+    for rm in removed_mentions:
+        rm.delete()
+
+    created = post.pk is None
+
+    #this save must precede saving the mention activity
+    #because generic relation needs primary key of the related object
+    super(post.__class__, post).save(**kwargs)
+
+    #create new mentions
+    for u in newly_mentioned_users:
+        from forum.models.user import Activity
+        Activity.objects.create_new_mention(
+                                mentioned_whom = u,
+                                mentioned_in = post,
+                                mentioned_by = author 
+                            )
+
+    #todo: this is handled in signal because models for posts
+    #are too spread out
+    from forum.models import signals
+    signals.post_updated.send(
+                    post = post, 
+                    updated_by = author,
+                    newly_mentioned_users = newly_mentioned_users,
+                    timestamp = post.get_time_of_last_edit(),
+                    created = created,
+                    sender = post.__class__
+                )
+
+    try:
+        ping_google()
+    except Exception:
+        logging.debug('cannot ping google - did you register with them?')
 
 class UserContent(models.Model):
     user = models.ForeignKey(User, related_name='%(class)ss')
@@ -28,6 +157,7 @@ class UserContent(models.Model):
     class Meta:
         abstract = True
         app_label = 'forum'
+
 
 class MetaContent(models.Model):
     """
@@ -40,7 +170,6 @@ class MetaContent(models.Model):
     class Meta:
         abstract = True
         app_label = 'forum'
-
 
 class DeletableContent(models.Model):
     deleted     = models.BooleanField(default=False)
@@ -82,80 +211,3 @@ class AnonymousContent(models.Model):
     class Meta:
         abstract = True
         app_label = 'forum'
-
-
-from meta import Comment, Vote, FlaggedItem
-
-class Content(models.Model):
-    """
-        Base class for Question and Answer
-    """
-    author = models.ForeignKey(User, related_name='%(class)ss')
-    added_at = models.DateTimeField(default=datetime.datetime.now)
-
-    wiki = models.BooleanField(default=False)
-    wikified_at = models.DateTimeField(null=True, blank=True)
-
-    locked = models.BooleanField(default=False)
-    locked_by = models.ForeignKey(User, null=True, blank=True, related_name='locked_%(class)ss')
-    locked_at = models.DateTimeField(null=True, blank=True)
-
-    score = models.IntegerField(default=0)
-    vote_up_count = models.IntegerField(default=0)
-    vote_down_count = models.IntegerField(default=0)
-
-    comment_count = models.PositiveIntegerField(default=0)
-    offensive_flag_count = models.SmallIntegerField(default=0)
-
-    last_edited_at = models.DateTimeField(null=True, blank=True)
-    last_edited_by = models.ForeignKey(User, null=True, blank=True, related_name='last_edited_%(class)ss')
-
-    html = models.TextField(null=True)
-    text = models.TextField(null=True) #denormalized copy of latest revision
-    comments = generic.GenericRelation(Comment)
-    votes = generic.GenericRelation(Vote)
-    flagged_items = generic.GenericRelation(FlaggedItem)
-
-    class Meta:
-        abstract = True
-        app_label = 'forum'
-
-    def save(self,**kwargs):
-        super(Content,self).save(**kwargs)
-        try:
-            ping_google()
-        except Exception:
-            logging.debug('problem pinging google did you register you sitemap with google?')
-
-    def get_comments(self):
-        comments = self.comments.all().order_by('id')
-        return comments
-
-    def add_comment(self, comment=None, user=None, added_at=None):
-        if added_at is None:
-            added_at = datetime.datetime.now()
-        if None in (comment ,user):
-            raise Exception('arguments comment and user are required')
-
-        Comment = models.get_model('forum','Comment')#todo: forum hardcoded
-        comment = Comment(content_object=self, comment=comment, user=user, added_at=added_at)
-        comment.save()
-        self.comment_count = self.comment_count + 1
-        self.save()
-
-    def get_latest_revision(self):
-        return self.revisions.all()[0]
-
-    def post_get_last_update_info(self):#todo: rename this subroutine
-            when = self.added_at
-            who = self.author
-            if self.last_edited_at and self.last_edited_at > when:
-                when = self.last_edited_at
-                who = self.last_edited_by
-            comments = self.comments.all()
-            if len(comments) > 0:
-                for c in comments:
-                    if c.added_at > when:
-                        when = c.added_at
-                        who = c.user
-            return when, who

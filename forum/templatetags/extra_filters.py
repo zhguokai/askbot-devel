@@ -1,6 +1,6 @@
 from django import template
 from forum import auth
-from forum_modules.grapefruit import Color
+from forum.deps.grapefruit import Color
 from django.utils.translation import ugettext as _
 import logging
 
@@ -107,3 +107,7 @@ def humanize_counter(number):
             return s + 'k'
     else:
         return str(number)
+
+@register.filter
+def absolute_value(number):
+    return abs(number)

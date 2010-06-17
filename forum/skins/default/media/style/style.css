@@ -229,7 +229,7 @@ blockquote {
 }
 
 #CARight {
-    width: 240px;
+    width: 235px;
     float: right;
 }
 
@@ -271,6 +271,14 @@ blockquote {
     color: #555555;
 }
 
+#top a.ab-responses-envelope {
+    margin-left: 3px;
+}
+#top a img {
+    vertical-align:middle;
+    margin-bottom:2px;
+}
+
 #logo {
     padding: 0px 0px 0px 10px;
     height: 90px;
@@ -280,7 +288,7 @@ blockquote {
 #logoContainer {
 }
 #navTabContainer {
-    width: 600px;
+    width: 610px;
     padding-left: 10px;
     text-align: left;
 }
@@ -353,6 +361,7 @@ blockquote {
 #searchBar {
     display:inline-block;
     background-color: #cccccc;/*888a85; /*#e9b96e;*/
+    width:700px;
     border: 1px solid #aaaaaa;
     padding: 4px 7px 5px 5px;
 }
@@ -361,8 +370,8 @@ blockquote {
     font-size: 24px;
     line-height: 24px;
     height: 36px;
-    width: 598px;
-    margin: 0px;
+    width: 605px;
+    margin: 0px 3px 0px 0px;
     padding: 5px 0 0 5px;
 }
 
@@ -370,18 +379,21 @@ blockquote {
     font-size: 24px;
     line-height: 24px;
     height: 36px;
-    width: 552px;
+    width: 561px;
     padding: 5px 0 0 5px;
-    margin: 0px;
+    margin: 0px 3px 0px 0px;
 }
 
 #searchBar .searchBtn {
     font-size: 20px;
     color: #666666;
     height: 40px;
+    width: 80px;
+    width: 80px;
+    width: 80px;
     line-height: 22px;
+    margin: 0px;
     text-align: center;
-    margin-top:1px;
     padding-bottom: 4px;
 }
 
@@ -391,8 +403,8 @@ blockquote {
     height: 40px;
     width: 40px;
     line-height: 22px;
+    margin: 0px 3px 0px 0px;
     padding-bottom: 4px;
-    margin-top:1px;
     text-align: center;
 }
 
@@ -682,7 +694,6 @@ blockquote {
     background: white /*#cacdc6; /*f9f7ed;*/
     padding: 10px;
     margin-bottom: 8px;
-    margin-left: 10px;
     /*
     border-top: 1px solid #eeeeec;
     border-left: 1px solid #eeeeec;
@@ -818,7 +829,7 @@ blockquote {
 
 .tags a {
     white-space: nowrap;
-    font-size: 13px;
+    font-size: 10px;
     font-weight: normal;
     color: #333;
     text-decoration: none;
@@ -828,6 +839,7 @@ blockquote {
     border-bottom: 1px solid #CCC;
     border-right: 1px solid #CCC;
     padding: 1px 8px 1px 8px;
+    margin-right:3px;
 }
 
 .tags a:hover {
@@ -1328,6 +1340,12 @@ a.comments-link, a.comments-link-accepted, a.comments-link-owner, a.comments-lin
     background-color: #777777;
     color: white;
     text-decoration: none;
+}
+
+.comment a {
+    background-color: inherit;
+    color: blue;
+    padding: 0;
 }
 
 a.comment-user, a.comment-user:hover {
@@ -2626,4 +2644,14 @@ p.signup_p {
 }
 .search-tips a {
     text-decoration: underline;
+}
+
+.faq-rep-item { 
+    text-align:right;
+    padding-right:5px; 
+}
+
+#top a.ab-nav-karma, #top a.ab-nav-badges {
+    margin: 0;
+    text-decoration: none;
 }

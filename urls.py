@@ -1,5 +1,7 @@
-from django.conf.urls.defaults import *
-from django.utils.translation import ugettext as _
+"""
+main url configuration file for the askbot site
+"""
+from django.conf.urls.defaults import patterns, include, handler404, handler500
 from django.conf import settings
 
 from django.contrib import admin
@@ -9,6 +11,8 @@ urlpatterns = patterns('',
     (r'^%s' % settings.FORUM_SCRIPT_ALIAS, include('forum.urls')),
     #admin urls are disabled for this site
     #(r'^admin/', include(admin.site.urls)),
+    #(r'^settings/', include('livesettings.urls')),
+    (r'^cache/', include('keyedcache.urls')),
 )
 
 if 'rosetta' in settings.INSTALLED_APPS:

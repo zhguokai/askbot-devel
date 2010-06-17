@@ -1,13 +1,15 @@
-from base import *
-#todo: take care of copy-paste markdowner stuff maybe make html automatic field?
-from forum.const import CONST
-from markdown2 import Markdown
-from django.utils.html import strip_tags 
-from forum.utils.html import sanitize_html
 import datetime
-markdowner = Markdown(html4tags=True)
+from django.db import models
+from django.utils.http import urlquote  as django_urlquote
+from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
+from forum.models.base import AnonymousContent, DeletableContent
+from forum.models.base import ContentRevision
+from forum.models.base import parse_post_text, parse_and_save_post
+from forum.models import content
+from forum.models.question import Question
+from forum import const
 
-from question import Question
 
 class AnswerManager(models.Manager):
     def create_new(self, question=None, author=None, added_at=None, wiki=False, text='', email_notify=False):
@@ -17,20 +19,20 @@ class AnswerManager(models.Manager):
             added_at = added_at,
             wiki = wiki,
             text = text,
-            html = sanitize_html(markdowner.convert(text)),
+            #.html field is denormalized by the save() call
         )
         if answer.wiki:
             answer.last_edited_by = answer.author
             answer.last_edited_at = added_at
             answer.wikified_at = added_at
 
-        answer.save()
+        answer.parse_and_save(author = author)
 
         answer.add_revision(
-            revised_by=author,
-            revised_at=added_at,
-            text=text,
-            comment=CONST['default_version'],
+            revised_by = author,
+            revised_at = added_at,
+            text = text,
+            comment = const.POST_STATUS['default_version'],
         )
 
         #update question data
@@ -50,6 +52,12 @@ class AnswerManager(models.Manager):
             except:
                 pass
         return answer
+
+    def get_author_list(self, **kwargs):
+        authors = set()
+        for answer in self:
+            authors.update(answer.get_author_list(**kwargs))
+        return list(authors)
 
     #GET_ANSWERS_FROM_USER_QUESTIONS = u'SELECT answer.* FROM answer INNER JOIN question ON answer.question_id = question.id WHERE question.author_id =%s AND answer.author_id <> %s'
     def get_answers_from_question(self, question, user=None):
@@ -73,15 +81,27 @@ class AnswerManager(models.Manager):
     #    cursor.execute(self.GET_ANSWERS_FROM_USER_QUESTIONS, [user_id, user_id])
     #    return cursor.fetchall()
 
-class Answer(Content, DeletableContent):
+class Answer(content.Content, DeletableContent):
     question = models.ForeignKey('Question', related_name='answers')
     accepted    = models.BooleanField(default=False)
     accepted_at = models.DateTimeField(null=True, blank=True)
 
     objects = AnswerManager()
 
-    class Meta(Content.Meta):
+    class Meta(content.Content.Meta):
         db_table = u'answer'
+
+    parse = parse_post_text
+    parse_and_save = parse_and_save_post
+
+    def get_updated_activity_data(self, created = False):
+        #todo: simplify this to always return latest revision for the second
+        #part
+        if created:
+            return const.TYPE_ACTIVITY_ANSWER, self
+        else:
+            latest_revision = self.get_latest_revision()
+            return const.TYPE_ACTIVITY_UPDATE_ANSWER, latest_revision
 
     def apply_edit(self, edited_at=None, edited_by=None, text=None, comment=None, wiki=False):
 
@@ -94,10 +114,10 @@ class Answer(Content, DeletableContent):
 
         self.last_edited_at = edited_at
         self.last_edited_by = edited_by
-        self.html = sanitize_html(markdowner.convert(text))
+        #self.html is denormalized in save()
         self.text = text
         #todo: bug wiki has no effect here
-        self.save()
+        self.parse_and_save(author = edited_by)
 
         self.add_revision(
             revised_by=edited_by,
@@ -116,7 +136,7 @@ class Answer(Content, DeletableContent):
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):
             if rev_no == 1:
-                comment = CONST['default_version']
+                comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
         return AnswerRevision.objects.create(
@@ -127,6 +147,37 @@ class Answer(Content, DeletableContent):
                                   summary=comment,
                                   revision=rev_no
                                   )
+
+    def get_origin_post(self):
+        return self.question
+
+    def get_response_receivers(self, exclude_list = None):
+        """get list of users interested in this response
+        update based on their participation in the question
+        activity
+
+        exclude_list is required and normally should contain
+        author of the updated so that he/she is not notified of
+        the response
+        """
+        assert(exclude_list is not None)
+        receiving_users = set()
+        receiving_users.update(
+                            self.get_author_list(
+                                include_comments = True 
+                            )
+                        )
+        receiving_users.update(
+                            self.question.get_author_list(
+                                    include_comments = True
+                                )
+                        )
+        for answer in self.question.answers.all():
+            receiving_users.update(answer.get_author_list())
+
+        receiving_users -= set(exclude_list)
+
+        return list(receiving_users)
 
     def get_user_vote(self, user):
         if user.__class__.__name__ == "AnonymousUser":

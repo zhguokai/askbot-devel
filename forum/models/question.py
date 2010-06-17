@@ -1,19 +1,20 @@
-from base import * #todo maybe remove *
-from tag import Tag
-#todo: make uniform import for consts
-from forum.const import CONST
-from forum import const
-from forum.utils.html import sanitize_html
-from markdown2 import Markdown
-from django.utils.html import strip_tags
+import logging
 import datetime
 from django.conf import settings
 from django.utils.datastructures import SortedDict
-from forum.models.tag import MarkedTag
-from django.db.models import Q
-
-markdowner = Markdown(html4tags=True)
-
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils.http import urlquote as django_urlquote
+from django.template.defaultfilters import slugify
+from django.core.urlresolvers import reverse
+from django.contrib.sitemaps import ping_google
+from django.utils.translation import ugettext as _
+from forum.models.tag import Tag, MarkedTag
+from forum.models import signals
+from forum.models.base import AnonymousContent, DeletableContent, ContentRevision
+from forum.models.base import parse_post_text, parse_and_save_post
+from forum.models import content
+from forum import const
 from forum.utils.lists import LazyList
 
 #todo: too bad keys are duplicated see const sort methods
@@ -31,8 +32,7 @@ QUESTION_ORDER_BY_MAP = {
 
 class QuestionManager(models.Manager):
     def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
-        html = sanitize_html(markdowner.convert(text))
-        summary = strip_tags(html)[:120]
+
         question = Question(
             title = title,
             author = author,
@@ -41,21 +41,25 @@ class QuestionManager(models.Manager):
             last_activity_by = author,
             wiki = wiki,
             tagnames = tagnames,
-            html = html,
+            #html field is denormalized in .save() call
             text = text,
-            summary = summary
+            #summary field is denormalized in .save() call
         )
         if question.wiki:
+            #todo: this is confusing - last_edited_at field
+            #is used as an indicator whether question has been edited
+            #in template forum/skins/default/templates/post_contributor_info.html
+            #but in principle, post creation should count as edit as well
             question.last_edited_by = question.author
             question.last_edited_at = added_at
             question.wikified_at = added_at
 
-        question.save()
+        question.parse_and_save(author = author)
 
         question.add_revision(
             author=author,
             text=text,
-            comment=CONST['default_version'],
+            comment=const.POST_STATUS['default_version'],
             revised_at=added_at,
         )
         return question
@@ -84,11 +88,12 @@ class QuestionManager(models.Manager):
 
         if search_query:
             try:
-                qs = qs.filter( Q(title__search = search_query) \
-                                | Q(text__search = search_query) \
-                                | Q(tagnames__search = search_query) \
-                                | Q(answers__text__search = search_query)
-                                )
+                qs = qs.filter( 
+                            models.Q(title__search = search_query) \
+                           | models.Q(text__search = search_query) \
+                           | models.Q(tagnames__search = search_query) \
+                           | models.Q(answers__text__search = search_query)
+                        )
             except:
                 #fallback to dumb title match search
                 qs = qs.extra(
@@ -96,16 +101,19 @@ class QuestionManager(models.Manager):
                                 params=['%' + search_query + '%']
                             )
 
+        #have to import this at run time, otherwise there
+        #a circular import dependency...
+        from forum.conf import settings as forum_settings
         if scope_selector:
             if scope_selector == 'unanswered':
-                if const.UNANSWERED_MEANING == 'NO_ANSWERS':
+                if forum_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
                     qs = qs.filter(answer_count=0)#todo: expand for different meanings of this
-                elif const.UNANSWERED_MEANING == 'NO_ACCEPTED_ANSWERS':
+                elif forum_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
                     qs = qs.filter(answer_accepted=False)
-                elif const.UNANSWERED_MEANING == 'NO_UPVOTED_ANSWERS':
+                elif forum_settings.UNANSWERED_QUESTION_MEANING == 'NO_UPVOTED_ANSWERS':
                     raise NotImplementedError()
                 else:
-                    raise Exception('UNANSWERED_MEANING setting is wrong')
+                    raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
             elif scope_selector == 'favorite':
                 qs = qs.filter(favorited_by = request_user)
             
@@ -113,7 +121,10 @@ class QuestionManager(models.Manager):
         if author_selector:
             try:
                 u = User.objects.get(id=int(author_selector))
-                qs = qs.filter(Q(author=u, deleted=False) | Q(answers__author=u, answers__deleted=False))
+                qs = qs.filter(
+                            models.Q(author=u, deleted=False) \
+                            | models.Q(answers__author=u, answers__deleted=False)
+                        )
                 meta_data['author_name'] = u.username
             except User.DoesNotExist:
                 meta_data['author_name'] = None
@@ -123,18 +134,18 @@ class QuestionManager(models.Manager):
             uid_str = str(request_user.id)
             #mark questions tagged with interesting tags
             qs = qs.extra(
-                            select = SortedDict([
-                                (
-                                    'interesting_score', 
-                                    'SELECT COUNT(1) FROM forum_markedtag, question_tags '
-                                      + 'WHERE forum_markedtag.user_id = %s '
-                                      + 'AND forum_markedtag.tag_id = question_tags.tag_id '
-                                      + 'AND forum_markedtag.reason = \'good\' '
-                                      + 'AND question_tags.question_id = question.id'
-                                ),
-                                    ]),
-                            select_params = (uid_str,),
-                         )
+                select = SortedDict([
+                    (
+                        'interesting_score', 
+                        'SELECT COUNT(1) FROM forum_markedtag, question_tags '
+                         + 'WHERE forum_markedtag.user_id = %s '
+                         + 'AND forum_markedtag.tag_id = question_tags.tag_id '
+                         + 'AND forum_markedtag.reason = \'good\' '
+                         + 'AND question_tags.question_id = question.id'
+                    ),
+                        ]),
+                select_params = (uid_str,),
+             )
             if request_user.hide_ignored_questions:
                 #exclude ignored tags if the user wants to
                 ignored_tags = Tag.objects.filter(user_selections__reason='bad',
@@ -169,6 +180,9 @@ class QuestionManager(models.Manager):
         qs = qs.distinct()
         return qs, meta_data
 
+    #todo: this function is similar to get_response_receivers
+    #profile this function against the other one
+    #todo: maybe this must be a query set method, not manager method
     def get_question_and_answer_contributors(self, question_list):
         answer_list = []
         question_list = list(question_list)#important for MySQL, b/c it does not support
@@ -176,9 +190,18 @@ class QuestionManager(models.Manager):
         for q in question_list:
             answer_list.extend(list(q.answers.all()))
         return User.objects.filter(
-                                    Q(questions__in=question_list) \
-                                    | Q(answers__in=answer_list)
+                                    models.Q(questions__in=question_list) \
+                                    | models.Q(answers__in=answer_list)
                                    ).distinct().order_by('?')
+
+    def get_author_list(self, **kwargs):
+        #todo: - this is duplication - answer manager also has this method
+        #will be gone when models are consolidated
+        #note that method get_question_and_answer_contributors is similar in function
+        authors = set()
+        for question in self:
+            authors.update(question.get_author_list(**kwargs))
+        return list(authors)
 
     def update_tags(self, question, tagnames, user):
         """
@@ -213,7 +236,7 @@ class QuestionManager(models.Manager):
 
         return False
 
-    #todo: why not make this into a method of class Question?
+    #todo: why not make this into a method of Question class?
     #      also it is actually strange - why do we need the answer_count
     #      field if the count depends on who is requesting this?
     def update_answer_count(self, question):
@@ -224,7 +247,7 @@ class QuestionManager(models.Manager):
 
         # for some reasons, this Answer class failed to be imported,
         # although we have imported all classes from models on top.
-        from answer import Answer
+        from forum.models.answer import Answer
         self.filter(id=question.id).update(
             answer_count=Answer.objects.get_answers_from_question(question).filter(deleted=False).count())
 
@@ -265,14 +288,18 @@ class QuestionManager(models.Manager):
 
         return LazyList(get_data)
 
-class Question(Content, DeletableContent):
+class Question(content.Content, DeletableContent):
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
     answer_accepted = models.BooleanField(default=False)
     closed          = models.BooleanField(default=False)
     closed_by       = models.ForeignKey(User, null=True, blank=True, related_name='closed_questions')
     closed_at       = models.DateTimeField(null=True, blank=True)
-    close_reason    = models.SmallIntegerField(choices=CLOSE_REASONS, null=True, blank=True)
+    close_reason    = models.SmallIntegerField(
+                                            choices=const.CLOSE_REASONS, 
+                                            null=True, 
+                                            blank=True
+                                        )
     followed_by     = models.ManyToManyField(User, related_name='followed_questions')
 
     # Denormalised data
@@ -288,8 +315,11 @@ class Question(Content, DeletableContent):
 
     objects = QuestionManager()
 
-    class Meta(Content.Meta):
+    class Meta(content.Content.Meta):
         db_table = u'question'
+
+    parse = parse_post_text
+    parse_and_save = parse_and_save_post
 
     def delete(self):
         super(Question, self).delete()
@@ -297,6 +327,35 @@ class Question(Content, DeletableContent):
             ping_google()
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
+
+    def get_updated_activity_data(self, created = False):
+        if created:
+            return const.TYPE_ACTIVITY_ASK_QUESTION, self
+        else:
+            latest_revision = self.get_latest_revision()
+            return const.TYPE_ACTIVITY_UPDATE_QUESTION, latest_revision
+
+    def get_response_receivers(self, exclude_list = None):
+        """returns list of users who might be interested
+        in the question update based on their participation 
+        in the question activity
+
+        exclude_list is mandatory - it normally should have the
+        author of the update so the he/she is not notified about the update
+        """
+        assert(exclude_list != None)
+        receiving_users = set()
+        receiving_users.update(
+                            self.get_author_list(
+                                    include_comments = True
+                                )
+                        )
+        #do not include answer commenters here
+        for a in self.answers.all():
+            receiving_users.update(a.get_author_list())
+
+        receiving_users -= set(exclude_list)
+        return receiving_users
 
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None):
         if None in (retagged_by, retagged_at, tagnames):
@@ -309,8 +368,11 @@ class Question(Content, DeletableContent):
         self.last_activity_by = retagged_by
 
         # Update the Question's tag associations
-        tags_updated = self.objects.update_tags(self,
-            form.cleaned_data['tags'], request.user)
+        signals.tags_updated = self.objects.update_tags(
+                                        self,
+                                        tagnames,
+                                        retagged_by
+                                    )
 
         # Create a new revision
         latest_revision = self.get_latest_revision()
@@ -320,11 +382,14 @@ class Question(Content, DeletableContent):
             author     = retagged_by,
             revised_at = retagged_at,
             tagnames   = tagnames,
-            summary    = CONST['retagged'],
+            summary    = const.POST_STATUS['retagged'],
             text       = latest_revision.text
         )
         # send tags updated singal
-        tags_updated.send(sender=question.__class__, question=self)
+        signals.tags_updated.send(sender=Question, question=self)
+
+    def get_origin_post(self):
+        return self
 
     def apply_edit(self, edited_at=None, edited_by=None, title=None,\
                     text=None, comment=None, tags=None, wiki=False):
@@ -344,10 +409,6 @@ class Question(Content, DeletableContent):
         if edited_at is None:
             edited_at = datetime.datetime.now()
 
-        #todo: have this copy-paste in few places
-        html = sanitize_html(markdowner.convert(text))
-        question_summary = strip_tags(html)[:120]
-
         # Update the Question itself
         self.title = title
         self.last_edited_at = edited_at
@@ -355,15 +416,13 @@ class Question(Content, DeletableContent):
         self.last_edited_by = edited_by
         self.last_activity_by = edited_by
         self.tagnames = tags
-        self.summary = question_summary
-        self.html = html
         self.text = text
 
         #wiki is an eternal trap whence there is no exit
         if self.wiki == False and wiki == True:
             self.wiki = True
 
-        self.save()
+        self.parse_and_save(author = edited_by)
 
         # Update the Question tag associations
         if latest_revision.tagnames != tags:
@@ -379,11 +438,11 @@ class Question(Content, DeletableContent):
 
     def add_revision(self,author=None, text=None, comment=None, revised_at=None):
         if None in (author, text, comment):
-            raise Exception('author, text and revised_at are required arguments')
+            raise Exception('author, text and comment are required arguments')
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):
             if rev_no == 1:
-                comment = CONST['default_version']
+                comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
             
@@ -406,13 +465,15 @@ class Question(Content, DeletableContent):
         This is required as we're using ``tagnames`` as the sole means of
         adding and editing tags.
         """
-        initial_addition = (self.id is None)
-        
+        initial_addition = (self.pk is None)
+
         super(Question, self).save(**kwargs)
 
         if initial_addition:
-            tags = Tag.objects.get_or_create_multiple(self.tagname_list(),
-                                                      self.author)
+            tags = Tag.objects.get_or_create_multiple(
+                                       self.tagname_list(),
+                                       self.author
+                                    )
             self.tags.add(*tags)
             Tag.objects.update_use_counts(tags)
 
@@ -424,7 +485,10 @@ class Question(Content, DeletableContent):
         return u','.join([unicode(tag) for tag in self.tagname_list()])
 
     def get_absolute_url(self):
-        return '%s%s' % (reverse('question', args=[self.id]), django_urlquote(slugify(self.title)))
+        return '%s%s' % (
+                    reverse('question', args=[self.id]), 
+                    django_urlquote(slugify(self.title))
+                )
 
     def has_favorite_by_user(self, user):
         if not user.is_authenticated():
@@ -433,15 +497,15 @@ class Question(Content, DeletableContent):
         return FavoriteQuestion.objects.filter(question=self, user=user).count() > 0
 
     def get_answer_count_by_user(self, user_id):
-        from answer import Answer
+        from forum.models.answer import Answer
         query_set = Answer.objects.filter(author__id=user_id)
         return query_set.filter(question=self).count()
 
     def get_question_title(self):
         if self.closed:
-            attr = CONST['closed']
+            attr = const.POST_STATUS['closed']
         elif self.deleted:
-            attr = CONST['deleted']
+            attr = const.POST_STATUS['deleted']
         else:
             attr = None
         if attr is not None:
@@ -493,6 +557,7 @@ class Question(Content, DeletableContent):
                     answer_comments.append(comment)
 
         #create the report
+        from forum.conf import settings as forum_settings
         if edited or new_answers or modified_answers or answer_comments:
             out = []
             if edited:
@@ -513,7 +578,7 @@ class Question(Content, DeletableContent):
                     out.append(_('%(people)s commented answers') % {'people':people})
                 else:
                     out.append(_('%(people)s commented an answer') % {'people':people})
-            url = settings.APP_URL + self.get_absolute_url()
+            url = forum_settings.APP_URL + self.get_absolute_url()
             retval = '<a href="%s">%s</a>:<br>\n' % (url,self.title)
             out = map(lambda x: '<li>' + x + '</li>',out)
             retval += '<ul>' + '\n'.join(out) + '</ul><br>\n'
@@ -588,5 +653,3 @@ class AnonymousQuestion(AnonymousContent):
                                 text=self.text,
                                 )
         self.delete()
-
-from answer import Answer, AnswerManager

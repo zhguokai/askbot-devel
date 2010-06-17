@@ -1,23 +1,10 @@
 from django.conf import settings
+from forum.conf import settings as forum_settings
 def application_settings(context):
-    my_settings = {
-        'APP_TITLE' : settings.APP_TITLE,
-        'APP_SHORT_NAME' : settings.APP_SHORT_NAME,
-        'APP_URL'   : settings.APP_URL,
-        'APP_KEYWORDS' : settings.APP_KEYWORDS,
-        'APP_DESCRIPTION' : settings.APP_DESCRIPTION,
-        'APP_INTRO' : settings.APP_INTRO,
-        'EMAIL_VALIDATION': settings.EMAIL_VALIDATION,
-        'FEEDBACK_SITE_URL': settings.FEEDBACK_SITE_URL,
-        'FORUM_SCRIPT_ALIAS': settings.FORUM_SCRIPT_ALIAS,
-        'LANGUAGE_CODE': settings.LANGUAGE_CODE,
-        'GOOGLE_SITEMAP_CODE':settings.GOOGLE_SITEMAP_CODE,
-        'GOOGLE_ANALYTICS_KEY':settings.GOOGLE_ANALYTICS_KEY,
-        'WIKI_ON':settings.WIKI_ON,
-        'RESOURCE_REVISION':settings.RESOURCE_REVISION,
-        'ASKBOT_SKIN':settings.ASKBOT_DEFAULT_SKIN,
-        'EDITABLE_SCREEN_NAME':settings.EDITABLE_SCREEN_NAME,
-        }
+    my_settings = forum_settings.as_dict()
+    my_settings['LANGUAGE_CODE'] = settings.LANGUAGE_CODE
+    my_settings['FORUM_SCRIPT_ALIAS'] = settings.FORUM_SCRIPT_ALIAS
+    #print '\n'.join(sorted(my_settings.keys()))
     return {'settings':my_settings}
 
 def auth_processor(request):

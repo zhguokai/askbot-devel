@@ -1,16 +1,14 @@
 import re
-from datetime import date
 from django import forms
-from models import *
-from const import * #todo: clean out import * thing
+from forum import models
 from forum import const
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from forum.utils.forms import NextUrlField, UserNameField, SetPasswordForm
+from forum.utils.forms import NextUrlField, UserNameField
 from recaptcha_django import ReCaptchaField
-from django.conf import settings
+from forum.conf import settings as forum_settings
 import logging
 
 
@@ -18,7 +16,9 @@ class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super(TitleField, self).__init__(*args, **kwargs)
         self.required = True
-        self.widget = forms.TextInput(attrs={'size' : 70, 'autocomplete' : 'off'})
+        self.widget = forms.TextInput(
+                                attrs={'size' : 70, 'autocomplete' : 'off'}
+                            )
         self.max_length = 255
         self.label  = _('title')
         self.help_text = _('please enter a descriptive title for your question')
@@ -65,15 +65,16 @@ class TagNamesField(forms.CharField):
         tag_strings = split_re.split(data)
         out_tag_list = []
         tag_count = len(tag_strings)
-        if tag_count > const.MAX_TAGS_PER_POST:
+        if tag_count > forum_settings.MAX_TAGS_PER_POST:
+            max_tags = forum_settings.MAX_TAGS_PER_POST
             msg = ungettext(
-                        'please use %(tag_count)d tag or less',#odd but have to use to pluralize
+                        'please use %(tag_count)d tag or less',
                         'please use %(tag_count)d tags or less',
-                        tag_count) % {'tag_count':tag_count}
+                        tag_count) % {'tag_count':max_tags}
             raise forms.ValidationError(msg)
         for tag in tag_strings:
             tag_length = len(tag)
-            if tag_length > const.MAX_TAG_LENGTH:
+            if tag_length > forum_settings.MAX_TAG_LENGTH:
                 #singular form is odd in english, but required for pluralization
                 #in other languages
                 msg = ungettext('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
@@ -96,8 +97,8 @@ class WikiField(forms.BooleanField):
         self.required = False
         self.label  = _('community wiki')
         self.help_text = _('if you choose community wiki option, the question and answer do not generate points and name of author will not be shown')
-    def clean(self,value):
-        return value and settings.WIKI_ON
+    def clean(self, value):
+        return value and forum_settings.WIKI_ON
 
 class EmailNotifyField(forms.BooleanField):
     def __init__(self, *args, **kwargs):
@@ -137,7 +138,7 @@ class AdvancedSearchForm(forms.Form):
     reset_author = forms.BooleanField(required=False)
     reset_query = forms.BooleanField(required=False)
     start_over = forms.BooleanField(required=False)
-    tags = forms.CharField(max_length=256,required=False)
+    tags = forms.CharField(max_length=256, required=False)
     author = forms.IntegerField(required=False)
     page_size = forms.ChoiceField(choices=const.PAGE_SIZE_CHOICES, required=False)
     page = forms.IntegerField(required=False)
@@ -145,7 +146,7 @@ class AdvancedSearchForm(forms.Form):
     def clean_tags(self):
         if 'tags' in self.cleaned_data:
             tags_input = self.cleaned_data['tags'].strip()
-            split_re = re.compile(TAG_SPLIT_REGEX)
+            split_re = re.compile(const.TAG_SPLIT_REGEX)
             tag_strings = split_re.split(tags_input)
             tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
             out = set()
@@ -230,8 +231,8 @@ class AnswerForm(forms.Form):
     email_notify = EmailNotifyField()
     def __init__(self, question, user, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
-        self.fields['email_notify'].widget.attrs['id'] = 'question-subscribe-updates';
-        if question.wiki and settings.WIKI_ON:
+        self.fields['email_notify'].widget.attrs['id'] = 'question-subscribe-updates'
+        if question.wiki and forum_settings.WIKI_ON:
             self.fields['wiki'].initial = True
         if user.is_authenticated():
             if user in question.followed_by.all():
@@ -241,7 +242,7 @@ class AnswerForm(forms.Form):
 
 
 class CloseForm(forms.Form):
-    reason = forms.ChoiceField(choices=CLOSE_REASONS)
+    reason = forms.ChoiceField(choices=const.CLOSE_REASONS)
 
 class RetagQuestionForm(forms.Form):
     tags   = TagNamesField()
@@ -292,7 +293,7 @@ class EditAnswerForm(forms.Form):
 
 class EditUserForm(forms.Form):
     email = forms.EmailField(label=u'Email', help_text=_('this email does not have to be linked to gravatar'), required=True, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    if settings.EDITABLE_SCREEN_NAME:
+    if forum_settings.EDITABLE_SCREEN_NAME:
         username = UserNameField(label=_('Screen name'))
     realname = forms.CharField(label=_('Real name'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     website = forms.URLField(label=_('Website'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
@@ -303,7 +304,7 @@ class EditUserForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
         logging.debug('initializing the form')
-        if settings.EDITABLE_SCREEN_NAME:
+        if forum_settings.EDITABLE_SCREEN_NAME:
             self.fields['username'].initial = user.username
             self.fields['username'].user_instance = user
         self.fields['email'].initial = user.email
@@ -322,10 +323,10 @@ class EditUserForm(forms.Form):
         """For security reason one unique email in database"""
         if self.user.email != self.cleaned_data['email']:
             #todo dry it, there is a similar thing in openidauth
-            if settings.EMAIL_UNIQUE == True:
+            if forum_settings.EMAIL_UNIQUE == True:
                 if 'email' in self.cleaned_data:
                     try:
-                        user = User.objects.get(email = self.cleaned_data['email'])
+                        User.objects.get(email = self.cleaned_data['email'])
                     except User.DoesNotExist:
                         return self.cleaned_data['email']
                     except User.MultipleObjectsReturned:
@@ -334,7 +335,7 @@ class EditUserForm(forms.Form):
         return self.cleaned_data['email']
 
 class TagFilterSelectionForm(forms.ModelForm):
-    tag_filter_setting = forms.ChoiceField(choices=TAG_EMAIL_FILTER_CHOICES, #imported from forum/const.py
+    tag_filter_setting = forms.ChoiceField(choices=const.TAG_EMAIL_FILTER_CHOICES,
                                             initial='ignored',
                                             label=_('Choose email tag filter'),
                                             widget=forms.RadioSelect)
@@ -351,38 +352,50 @@ class TagFilterSelectionForm(forms.ModelForm):
         return False
         
 
+class EmailFeedSettingField(forms.ChoiceField):
+    def __init__(self, *arg, **kwarg):
+        kwarg['choices'] = const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES
+        kwarg['initial'] = forum_settings.DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE
+        kwarg['widget'] = forms.RadioSelect
+        super(EmailFeedSettingField, self).__init__(*arg, **kwarg)
+
 class EditUserEmailFeedsForm(forms.Form):
-    WN = (('w',_('weekly')),('n',_('no email')))
-    DWN = (('d',_('daily')),('w',_('weekly')),('n',_('no email')))
     FORM_TO_MODEL_MAP = {
-                'all_questions':'q_all',
-                'asked_by_me':'q_ask',
-                'answered_by_me':'q_ans',
-                'individually_selected':'q_sel',
+                    'all_questions':'q_all',
+                    'asked_by_me':'q_ask',
+                    'answered_by_me':'q_ans',
+                    'individually_selected':'q_sel',
+                    'mentions_and_comments':'m_and_c',
                 }
     NO_EMAIL_INITIAL = {
-                'all_questions':'n',
-                'asked_by_me':'n',
-                'answered_by_me':'n',
-                'individually_selected':'n',
+                    'all_questions':'n',
+                    'asked_by_me':'n',
+                    'answered_by_me':'n',
+                    'individually_selected':'n',
+                    'mentions_and_comments':'n',
                 }
-    asked_by_me = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Asked by me'))
-    answered_by_me = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Answered by me'))
-    individually_selected = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Individually selected'))
-    all_questions = forms.ChoiceField(choices=DWN,initial='w',
-                            widget=forms.RadioSelect,
-                            label=_('Entire forum (tag filtered)'),)
 
-    def set_initial_values(self,user=None):
-        KEY_MAP = dict([(v,k) for k,v in self.FORM_TO_MODEL_MAP.iteritems()])
+    asked_by_me = EmailFeedSettingField(
+                            label=_('Asked by me')
+                        )
+    answered_by_me = EmailFeedSettingField(
+                            label=_('Answered by me')
+                        )
+    individually_selected = EmailFeedSettingField(
+                            label=_('Individually selected')
+                        )
+    all_questions = EmailFeedSettingField(
+                            label=_('Entire forum (tag filtered)'),
+                        )
+
+    mentions_and_comments = EmailFeedSettingField(
+                            label=_('Comments and posts mentioning me'),
+                        )
+
+    def set_initial_values(self, user=None):
+        KEY_MAP = dict([(v, k) for k, v in self.FORM_TO_MODEL_MAP.iteritems()])
         if user != None:
-            settings = EmailFeedSetting.objects.filter(subscriber=user)
+            settings = models.EmailFeedSetting.objects.filter(subscriber=user)
             initial_values = {}
             for setting in settings:
                 feed_type = setting.feed_type
@@ -398,6 +411,7 @@ class EditUserEmailFeedsForm(forms.Form):
             self.cleaned_data['asked_by_me'] = 'n'
             self.cleaned_data['answered_by_me'] = 'n'
             self.cleaned_data['individually_selected'] = 'n'
+            self.cleaned_data['mentions_and_comments'] = 'n'
         self.initial = self.NO_EMAIL_INITIAL
         return self
 
@@ -407,8 +421,10 @@ class EditUserEmailFeedsForm(forms.Form):
         """
         changed = False
         for form_field, feed_type in self.FORM_TO_MODEL_MAP.items():
-            s, created = EmailFeedSetting.objects.get_or_create(subscriber=user,\
-                                                    feed_type=feed_type)
+            s, created = models.EmailFeedSetting.objects.get_or_create(
+                                                    subscriber=user,
+                                                    feed_type=feed_type
+                                                )
             if save_unbound:
                 #just save initial values instead
                 if form_field in self.initial:
@@ -425,7 +441,7 @@ class EditUserEmailFeedsForm(forms.Form):
                 if created:
                     s.save()
             if form_field == 'individually_selected':
-                feed_type = ContentType.objects.get_for_model(Question)
+                feed_type = ContentType.objects.get_for_model(models.Question)
                 user.followed_questions.clear()
         return changed
 
@@ -434,15 +450,17 @@ class SimpleEmailSubscribeForm(forms.Form):
         ('y',_('okay, let\'s try!')),
         ('n',_('no community email please, thanks'))
     )
-    subscribe = forms.ChoiceField(widget=forms.widgets.RadioSelect(), \
-                                error_messages={'required':_('please choose one of the options above')},
-                                choices=SIMPLE_SUBSCRIBE_CHOICES)
+    subscribe = forms.ChoiceField(
+            widget=forms.widgets.RadioSelect, 
+            error_messages={'required':_('please choose one of the options above')},
+            choices=SIMPLE_SUBSCRIBE_CHOICES
+        )
 
-    def save(self,user=None):
+    def save(self, user=None):
         EFF = EditUserEmailFeedsForm
         if self.cleaned_data['subscribe'] == 'y':
             email_settings_form = EFF()
             logging.debug('%s wants to subscribe' % user.username)
         else:
             email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
-        email_settings_form.save(user,save_unbound=True)
+        email_settings_form.save(user, save_unbound=True)

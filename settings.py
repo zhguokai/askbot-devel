@@ -11,8 +11,9 @@ SECRET_KEY = '$oo^&_m&qwbib=(_4m_n*zn-d=g#s0he5fx9xonnym#8p6yigm'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-    'forum.modules.module_templates_loader',#todo: remove this
-    'forum.skins.load_template_source',
+
+    #below is forum stuff for this tuple
+    'forum.skins.loaders.load_template_source',#forum stuff
 #     'django.template.loaders.eggs.load_template_source',
 )
 
@@ -26,6 +27,8 @@ MIDDLEWARE_CLASSES = (
     #'django.middleware.cache.FetchFromCacheMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'django.middleware.sqlprint.SqlPrintingMiddleware',
+
+    #below is forum stuff for this tuple
     'forum.middleware.anon_user.ConnectToSessionMessagesMiddleware',
     'forum.middleware.pagesize.QuestionsPageSizeMiddleware',
     'forum.middleware.cancel.CancelActionMiddleware',
@@ -33,8 +36,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'forum.middleware.view_log.ViewLogMiddleware',
+    'forum.middleware.spaceless.SpacelessMiddleware',
 )
 
+#all of these are necessary for the forum and absend in default settings.py
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'forum.context.application_settings',
@@ -46,6 +51,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
+    #specific to forum
     os.path.join(os.path.dirname(__file__),'forum','skins').replace('\\','/'),
 )
 
@@ -54,10 +60,6 @@ FILE_UPLOAD_TEMP_DIR = os.path.join(os.path.dirname(__file__), 'tmp').replace('\
 FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.MemoryFileUploadHandler",
  "django.core.files.uploadhandler.TemporaryFileUploadHandler",)
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-# for user upload
-ALLOW_FILE_TYPES = ('.jpg', '.jpeg', '.gif', '.bmp', '.png', '.tiff')
-# unit byte
-ALLOW_MAX_FILE_SIZE = 1024 * 1024
 
 # User settings
 from settings_local import *
@@ -75,25 +77,25 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+
+    #all of these are needed for the forum
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'debug_toolbar',
     'forum',
-    'django_authopenid',
-    'debug_toolbar' ,
+    'forum.deps.django_authopenid',
     #'forum.importers.stackexchange', #se loader
     'south',
     'rosetta',
     'localeurl',
+    'forum.deps.livesettings',
+    'keyedcache',
 )
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
-if USE_FB_CONNECT:
-    INSTALLED_APPS += ('fbconnect',)
-
-#load optional plugin module for external password login
+#this needs to go
 if 'USE_EXTERNAL_LEGACY_LOGIN' in locals() and USE_EXTERNAL_LEGACY_LOGIN:
     INSTALLED_APPS += (EXTERNAL_LEGACY_LOGIN_MODULE,)
 

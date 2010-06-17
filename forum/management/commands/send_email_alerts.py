@@ -3,20 +3,28 @@ from django.db import connection
 from django.db.models import Q, F
 from forum.models import User, Question, Answer, Tag, QuestionRevision
 from forum.models import AnswerRevision, Activity, EmailFeedSetting
+from forum.models import Comment
 from django.core.mail import EmailMessage
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 import datetime
 from django.conf import settings
-from forum import const
-import logging
+from forum.conf import settings as forum_settings
 from django.utils.datastructures import SortedDict 
 from django.contrib.contenttypes.models import ContentType
 from forum import const
 
 DEBUG_THIS_COMMAND = False
 
-def extend_question_list(src, dst, limit=False):
+def get_all_origin_posts(mentions):
+    origin_posts = set()
+    for mention in mentions:
+        post = mention.content_object
+        origin_posts.add(post.get_origin_post())
+    return list(origin_posts)
+
+#todo: refactor this as class
+def extend_question_list(src, dst, limit=False, add_mention=False):
     """src is a query set with questions
        or None
        dst - is an ordered dictionary
@@ -25,23 +33,31 @@ def extend_question_list(src, dst, limit=False):
     """
     if src is None:#is not QuerySet
         return #will not do anything if subscription of this type is not used
-    if limit and len(dst.keys()) >= const.MAX_ALERTS_PER_EMAIL:
+    if limit and len(dst.keys()) >= forum_settings.MAX_ALERTS_PER_EMAIL:
         return
-    cutoff_time = src.cutoff_time
+    cutoff_time = src.cutoff_time#todo: this limits use of function to query sets
+    #but sometimes we have a list on the input (like in the case of comment)
     for q in src:
         if q in dst:
+            meta_data = dst[q]
+        else:
+            meta_data = {'cutoff_time': cutoff_time}
+            dst[q] = meta_data
+
+        if cutoff_time > meta_data['cutoff_time']:
             #the latest cutoff time wins for a given question
             #if the question falls into several subscription groups
-            if cutoff_time > dst[q]['cutoff_time']:
-                dst[q]['cutoff_time'] = cutoff_time
-        else:
-            #initialise a questions metadata dictionary to use for email reporting
-            dst[q] = {'cutoff_time':cutoff_time}
+            #this makes mailer more eager in sending email
+            meta_data['cutoff_time'] = cutoff_time
+        if add_mention:
+            if 'mentions' in meta_data:
+                meta_data['mentions'] += 1
+            else:
+                meta_data['mentions'] = 1
 
 def format_action_count(string, number, output):
     if number > 0:
         output.append(_(string) % {'num':number})
-
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -88,6 +104,9 @@ class Command(NoArgsCommand):
 
         q_all_A = None
         q_all_B = None
+
+        q_m_and_c_A = None#mentions and post comments
+        q_m_and_c_B = None
 
         #base question query set for this user
         #basic things - not deleted, not closed, not too old
@@ -151,11 +170,11 @@ class Command(NoArgsCommand):
 
                 elif feed.feed_type == 'q_ans':
                     q_ans_A = Q_set_A.filter(answers__author=user)
-                    q_ans_A = q_ans_A[:const.MAX_ALERTS_PER_EMAIL]
+                    q_ans_A = q_ans_A[:forum_settings.MAX_ALERTS_PER_EMAIL]
                     q_ans_A.cutoff_time = cutoff_time
 
                     q_ans_B = Q_set_B.filter(answers__author=user)
-                    q_ans_B = q_ans_B[:const.MAX_ALERTS_PER_EMAIL]
+                    q_ans_B = q_ans_B[:forum_settings.MAX_ALERTS_PER_EMAIL]
                     q_ans_B.cutoff_time = cutoff_time
 
                 elif feed.feed_type == 'q_all':
@@ -177,16 +196,71 @@ class Command(NoArgsCommand):
                         q_all_A = Q_set_A.filter( tags__in=selected_tags )
                         q_all_B = Q_set_B.filter( tags__in=selected_tags )
 
-                    q_all_A = q_all_A[:const.MAX_ALERTS_PER_EMAIL]
-                    q_all_B = q_all_B[:const.MAX_ALERTS_PER_EMAIL]
+                    q_all_A = q_all_A[:forum_settings.MAX_ALERTS_PER_EMAIL]
+                    q_all_B = q_all_B[:forum_settings.MAX_ALERTS_PER_EMAIL]
                     q_all_A.cutoff_time = cutoff_time
                     q_all_B.cutoff_time = cutoff_time
 
         #build ordered list questions for the email report
         q_list = SortedDict()
 
+        #todo: refactor q_list into a separate class
         extend_question_list(q_sel_A, q_list)
         extend_question_list(q_sel_B, q_list)
+
+        #build list of comment and mention responses here
+        #it is separate because posts are not marked as changed
+        #when people add comments
+        #mention responses could be collected in the loop above, but
+        #it is inconvenient, because feed_type m_and_c bundles the two
+        #also we collect metadata for these here
+        if user_feeds.exists(feed_type='m_and_c'):
+            feed = user_feeds.get(feed_type='m_and_c')
+            if feed.should_report_now():
+                cutoff_time = feed.get_previous_report_cutoff_time()
+                comments = Comment.objects.filter(
+                                            added_at__gt = cutoff_time,
+                                            user__ne = user,
+                                        )
+                q_commented = list() 
+                for c in comments:
+                    post = c.content_object
+                    if post.author != user:
+                        continue
+
+                    #skip is post was seen by the user after
+                    #the comment posting time
+
+                    if isinstance(post, Question):
+                        q_commented.append(post)
+                    elif isinstance(post, Answer):
+                        q_commented.append(post.question)
+
+                for q in q_commented:
+                    if q in q_list:
+                        meta_data = q_list[q]
+                        if meta_data['cutoff_time'] < cutoff_time:
+                            meta_data['cutoff_time'] = cutoff_time
+                        if 'comments' in meta_data:
+                            meta_data['comments'] += 1
+                        else:
+                            meta_data['comments'] = 1
+
+                mentions = Activity.objects.get_mentions(
+                                                    mentioned_at__gt = cutoff_time,
+                                                    mentioned_whom = user
+                                                )
+
+                mention_posts = get_all_origin_posts(mentions)
+                q_mentions_id = [q.id for q in mention_posts]
+
+                q_mentions_A = Q_set_A.filter(id__in = q_mentions_id)
+                q_mentions_A.cutoff_time = cutoff_time
+                extend_question_list(q_mentions_A, q_list, add_mention=True)
+
+                q_mentions_B = Q_set_B.filter(id__in = q_mentions_id)
+                q_mentions_B.cutoff_time = cutoff_time
+                extend_question_list(q_mentions_B, q_list, add_mention=True)
 
         if user.tag_filter_setting == 'interesting':
             extend_question_list(q_all_A, q_list)
@@ -203,7 +277,7 @@ class Command(NoArgsCommand):
             extend_question_list(q_all_B, q_list, limit=True)
 
         ctype = ContentType.objects.get_for_model(Question)
-        EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_QUESTION_EMAIL_UPDATE_SENT
+        EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
 
         #up to this point we still don't know if emails about
         #collected questions were sent recently
@@ -234,7 +308,7 @@ class Command(NoArgsCommand):
                                         content_object=q, 
                                         activity_type=EMAIL_UPDATE_ACTIVITY
                                     )
-                emailed_at = datetime.datetime(1970,1,1)#long time ago
+                emailed_at = datetime.datetime(1970, 1, 1)#long time ago
             except Activity.MultipleObjectsReturned:
                 raise Exception(
                                 'server error - multiple question email activities '
@@ -274,8 +348,10 @@ class Command(NoArgsCommand):
 
             new_ans = new_ans.exclude(author=user)
             meta_data['new_ans'] = len(new_ans)
-            ans_rev = AnswerRevision.objects.filter(answer__question=q,\
-                                            revised_at__gt=emailed_at)
+            ans_rev = AnswerRevision.objects.filter(
+                                            answer__question=q,
+                                            revised_at__gt=emailed_at
+                                        )
             ans_rev = ans_rev.exclude(author=user)
             meta_data['ans_rev'] = len(ans_rev)
 
@@ -308,7 +384,7 @@ class Command(NoArgsCommand):
                 else:
                     num_q += 1
             if num_q > 0:
-                url_prefix = settings.APP_URL
+                url_prefix = forum_settings.APP_URL
                 subject = _('email update message subject')
                 print 'have %d updated questions for %s' % (num_q, user.username)
                 text = ungettext('%(name)s, this is an update message header for %(num)d question', 
@@ -322,7 +398,7 @@ class Command(NoArgsCommand):
                     act_list = []
                     if meta_data['skip']:
                         continue
-                    if items_added >= const.MAX_ALERTS_PER_EMAIL:
+                    if items_added >= forum_settings.MAX_ALERTS_PER_EMAIL:
                         items_unreported = num_q - items_added #may be inaccurate actually, but it's ok
                         
                     else:
@@ -337,7 +413,7 @@ class Command(NoArgsCommand):
                                     % (url_prefix + q.get_absolute_url(), q.title, act_token)
                 text += '</ul>'
                 text += '<p></p>'
-                #if len(q_list.keys()) >= const.MAX_ALERTS_PER_EMAIL:
+                #if len(q_list.keys()) >= forum_settings.MAX_ALERTS_PER_EMAIL:
                 #    text += _('There may be more questions updated since '
                 #                'you have logged in last time as this list is '
                 #                'abridged for your convinience. Please visit '
@@ -384,13 +460,18 @@ class Command(NoArgsCommand):
                 #    text += '</p>'
 
                 link = url_prefix + user.get_profile_url() + '?sort=email_subscriptions'
-                text += _('go to %(link)s to change frequency of email updates or %(email)s administrator') \
-                                % {'link':link, 'email':settings.ADMINS[0][1]}
-                msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [user.email])
-                msg.content_subtype = 'html'
+                text += _('go to %(email_settings_link)s to change frequency of email updates or %(admin_email)s administrator') \
+                                % {'email_settings_link':link, 'admin_email':settings.ADMINS[0][1]}
                 if DEBUG_THIS_COMMAND == False:
+                    msg = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, [user.email])
+                    msg.content_subtype = 'html'
                     msg.send()
                 else:
-                    msg2 = EmailMessage(subject, text, settings.DEFAULT_FROM_EMAIL, ['evgeny.fadeev@gmail.com'])
+                    msg2 = EmailMessage(
+                                subject, 
+                                text, 
+                                settings.DEFAULT_FROM_EMAIL, 
+                                ['your@email.com']
+                            )
                     msg2.content_subtype = 'html'
                     msg2.send()
