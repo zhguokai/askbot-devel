@@ -1,0 +1,12 @@
+{% load localeurl_tags %}
+<div id="languages">
+    <span style="padding:3px;"><b>Translate askbot: (<a href="/en/question/47/how-to-translate-askbot-into-my-language">how?</a> and <a href="/en/about">what is it anyway?</a>)</b></span>
+    {% for lang in LANGUAGES %}
+        {% ifequal lang.0 LANGUAGE_CODE %}
+            <span class="language"><b>{{ lang.1 }}</b></span>&nbsp;
+        {% else %}
+            <span class="language"><a href="{{ request.path|chlocale:lang.0 }}">{{ lang.1 }}</a></span>&nbsp;
+        {% endifequal %}
+    {% endfor %}
+    <span style="padding:3px"><b>German - 99.99%, Russian - 99%, Turkish - 77%, Spanish - 63%, Serbian - 59%, Chinese 36%, Vietnamese 1% (<a href="/wiki/index.php/Credits">credits</a>) <a href="/en/question/47/how-to-translate-askbot-into-my-language">Help out!</a></b></span>
+</div>
