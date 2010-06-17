@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Deleting model 'AuthKeyUserAssociation'
-        db.delete_table('forum_authkeyuserassociation')
+        #db.delete_table('forum_authkeyuserassociation')
 
         # Deleting model 'BookAuthorInfo'
         db.delete_table(u'book_author_info')
