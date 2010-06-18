@@ -71,6 +71,8 @@ def questions(request):
     matching search query or user selection
     """
 
+    start_view_time = datetime.datetime.now()
+
     #don't allow to post to this view
     if request.method == 'POST':
         raise Http404
@@ -129,8 +131,14 @@ def questions(request):
 
     contributors = Question.objects.get_question_and_answer_contributors(questions.object_list)
 
+    end_view_time = datetime.datetime.now()
+
+    logging.debug('time to process view' + str(end_view_time - start_view_time))
+
+    start_template_time = datetime.datetime.now()
+
     #todo: organize variables by type
-    return render_to_response('questions.html', {
+    output = render_to_response('questions.html', {
         'view_name': 'questions',
         'active_tab': 'questions',
         'questions' : questions,
@@ -158,6 +166,9 @@ def questions(request):
             'base_url' : request.path + '?sort=%s&' % search_state.sort,#todo in T sort=>sort_method
             'page_size' : search_state.page_size,#todo in T pagesize -> page_size
         }}, context_instance=RequestContext(request))
+    end_template_time = datetime.datetime.now()
+    logging.debug('time to print output' + str(end_template_time - start_template_time))
+    return output
 
 def search(request): #generates listing of questions matching a search query - including tags and just words
     """redirects to people and tag search pages

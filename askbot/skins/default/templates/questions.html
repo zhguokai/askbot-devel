@@ -5,6 +5,7 @@
 {% load humanize %}
 {% load extra_filters %}
 {% load smart_if %}
+{% load cache %}
 {% block title %}{% spaceless %}{% trans "Questions" %}{% endspaceless %}{% endblock %}
 {% block forejs %}
        <script type="text/javascript">
@@ -26,27 +27,6 @@
 {% endblock %}
 {% block content %}
 <div class="tabBar">
-    {% comment %}
-    <div class="headUsers">
-        {% if searchtag %}
-            {% trans "Found by tags" %}
-        {% else %}
-            {% if searchtitle %}
-                {% if settings.USE_SPHINX_SEARCH %}
-                    {% trans "Search results" %}
-                {% else %}
-                    {% trans "Found by title" %}
-                {% endif %}
-            {% else %}
-                {% if is_unanswered %}
-                    {% trans "Unanswered questions" %}
-                {% else %}
-                    {% trans "All questions" %}
-                {% endif %}
-            {% endif %}
-        {% endif %}
-    </div><br/>
-    {% endcomment %}
     <div class="tabsC">
         <span class="label">{% trans "In:" %}</span>
         <a id="all" class="off" href="?scope=all" title="{% trans "see all questions" %}">{% trans "all" %}</a>
@@ -184,8 +164,11 @@
 
         </div>
 {% endif %}
+{% get_current_language as LANGUAGE_CODE %}
 <div id="listA">
+{% cache 600 questions search_tags scope sort query LANGUAGE_CODE %}
     {% include "question_list.html" %}
+{% endcache %}
         {% comment %}todo: fix css here{% endcomment %}
         {% if questions_count == 0 %}
             {% comment %}todo: add tips to widen selection{% endcomment%}
@@ -254,6 +237,7 @@
     {% endif %}
 
     {% if tags %}
+    {% cache 600 tags %}
     <div class="boxC">
         <h3 class="subtitle">{% trans "Related tags" %}</h3>
         <div class="tags">
@@ -264,6 +248,7 @@
             {% endfor %}
         </div>
     </div>
+    {% endcache %}
     {% endif %}
 {% endblock %}
 <!-- end questions.html -->
