@@ -164,8 +164,8 @@
 
         </div>
 {% endif %}
-{% get_current_language as LANGUAGE_CODE %}
 <div id="listA">
+{% get_current_language as LANGUAGE_CODE %}
 {% cache 600 questions search_tags scope sort query LANGUAGE_CODE %}
     {% include "question_list.html" %}
 {% endcache %}
@@ -237,7 +237,6 @@
     {% endif %}
 
     {% if tags %}
-    {% cache 600 tags %}
     <div class="boxC">
         <h3 class="subtitle">{% trans "Related tags" %}</h3>
         <div class="tags">
@@ -248,7 +247,6 @@
             {% endfor %}
         </div>
     </div>
-    {% endcache %}
     {% endif %}
 {% endblock %}
 <!-- end questions.html -->
