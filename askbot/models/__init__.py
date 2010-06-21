@@ -390,11 +390,11 @@ def record_post_update_activity(
                                     exclude_list = [updated_by, ]
                                 )
 
-    send_instant_notifications_about_activity_in_post(
-                            update_activity = update_activity,
-                            post = post,
-                            receiving_users = notification_subscribers,
-                        )
+    #send_instant_notifications_about_activity_in_post(
+    #                        update_activity = update_activity,
+    #                       post = post,
+    #                       receiving_users = notification_subscribers,
+    #                   )
 
 
 def record_award_event(instance, created, **kwargs):

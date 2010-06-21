@@ -26,6 +26,7 @@
        <script type='text/javascript' src='{% media  "/media/js/com.cnprog.tag_selector.js" %}'></script>
 {% endblock %}
 {% block content %}
+{% cache 600 "scope_sort_tabs" search_tags scope sort query LANGUAGE_CODE context.page context.page_size %}
 <div class="tabBar">
     <div class="tabsC">
         <span class="label">{% trans "In:" %}</span>
@@ -114,6 +115,7 @@
         {% endif %}
     </div>
 </div>
+{% endcache %}
 {% if questions_count > 0 %}
     <div style="clear:both">
         <p class="search-result-summary">
@@ -166,7 +168,7 @@
 {% endif %}
 <div id="listA">
 {% get_current_language as LANGUAGE_CODE %}
-{% cache 600 questions search_tags scope sort query LANGUAGE_CODE %}
+{% cache 600 questions search_tags scope sort query LANGUAGE_CODE context.page context.page_size %}
     {% include "question_list.html" %}
 {% endcache %}
         {% comment %}todo: fix css here{% endcomment %}
@@ -216,20 +218,22 @@
 {% endblock %}
 
     {% block tail %}
-        {% if questions_count > 10 %}{%comment%}todo: remove magic number{%endcomment%}
-            <div class="pager">{% cnprog_paginator context %}</div>
-            <div class="pagesize">{% cnprog_pagesize context %}</div>
-        {% endif %}
+            {% if questions_count > 10 %}{%comment%}todo: remove magic number{%endcomment%}
+                <div class="pager">{% cnprog_paginator context %}</div>
+                <div class="pagesize">{% cnprog_pagesize context %}</div>
+            {% endif %}
     {% endblock %}
 
 {% block sidebar %}
     {% if contributors %}
+        {% cache 600 contributors search_tags scope sort query LANGUAGE_CODE context.page context.page_size %}
         <div class="boxC">
         <h3 class="subtitle">{% trans "Contributors" %}</h3>
         {% for person in contributors %}
             {% gravatar person 48 %}
         {% endfor %}
         </div>
+        {% endcache %}
     {% endif %}
 
     {% if request.user.is_authenticated %} 
@@ -237,16 +241,21 @@
     {% endif %}
 
     {% if tags %}
-    <div class="boxC">
-        <h3 class="subtitle">{% trans "Related tags" %}</h3>
-        <div class="tags">
-            {% for tag in tags %}
-                <a rel="tag" title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"  href="{% url questions %}?tags={{tag.name|urlencode}}">{{ tag.name }}</a>
-                <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
-                <br />
-            {% endfor %}
+        {% cache 600 tags search_tags scope sort query LANGUAGE_CODE context.page context.page_size %}
+        <div class="boxC">
+            <h3 class="subtitle">{% trans "Related tags" %}</h3>
+            <div class="tags">
+                {% for tag in tags %}
+                    <a 
+                        rel="tag" 
+                        title="{% blocktrans with tag.name as tag_name %}see questions tagged '{{ tag_name }}'{% endblocktrans %}"  
+                        href="{% url questions %}?tags={{tag.name|urlencode}}">{{ tag.name }}</a>
+                    <span class="tag-number">&#215; {{ tag.used_count|intcomma }}</span>
+                    <br />
+                {% endfor %}
+            </div>
         </div>
-    </div>
+        {% endcache %}
     {% endif %}
 {% endblock %}
 <!-- end questions.html -->
