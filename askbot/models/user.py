@@ -24,6 +24,7 @@ class ResponseAndMentionActivityManager(models.Manager):
                     activity_type__in = response_types
                 )
 
+#todo: cleanup all this
 class ActivityManager(models.Manager):
     def get_all_origin_posts(self):
         #todo: redo this with query sets
