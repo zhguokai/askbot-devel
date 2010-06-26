@@ -645,7 +645,7 @@ def user_responses(request, user_id, user_view):
 
     user_id - id of the profile owner
     user_view - id of the user who is looking at the
-                page
+    page
     """
     user = get_object_or_404(models.User, id=user_id)
     if request.user != user:
@@ -968,10 +968,11 @@ def user(request, id, slug=None):
 def account_settings(request):#todo: is this actually used?
     """
     index pages to changes some basic account settings :
-     - change password
-     - change email
-     - associate a new openid
-     - delete account
+
+    * change password
+    * change email
+    * associate a new openid
+    * delete account
 
     url : /
 

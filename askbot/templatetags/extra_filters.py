@@ -111,3 +111,22 @@ def humanize_counter(number):
 @register.filter
 def absolute_value(number):
     return abs(number)
+
+@register.filter
+def get_dict_value(input_dictionary, key):
+    """template filter that returns value
+    from a dictionary by key, use it like so
+
+    {{ some_dict|get_dict_value:the_key }}
+    """
+    if isinstance(input_dictionary, dict):
+        if key in input_dictionary:
+            return input_dictionary[key]
+        else:
+            logging.critical('key %s is absent in dictionary')
+    else:
+        logging.critical(
+            'template filter get_dict_value does not work with %s' \
+            % (type(input_dictionary))
+        )
+    return input_dictionary[key]

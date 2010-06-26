@@ -30,6 +30,21 @@
         <script type='text/javascript' src='{% media  "/media/js/com.cnprog.i18n.js" %}'></script>
         <script type='text/javascript' src='{% media  "/media/js/jquery.i18n.js" %}'></script>
         <script type='text/javascript' src='{% media  "/media/js/com.cnprog.utils.js" %}'></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#lang_selector').change(
+                    function(){
+                        var new_lang = $(this).find('option:selected').attr('name');
+                        var url_bits = window.location.pathname.split('/');
+                        var cur_lang = url_bits.shift();
+                        if (new_lang != cur_lang){
+                            url_bits.splice(0, 1, new_lang);
+                            window.location.pathname = url_bits.join('/');
+                        }
+                    }
+                );
+            });
+        </script>
         {% if user_messages %}
         <style type="text/css">
             body { margin-top:2.4em; }

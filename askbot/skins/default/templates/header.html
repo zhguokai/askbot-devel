@@ -1,13 +1,16 @@
 <!-- template header.html -->
 {% load extra_tags %}
+{% load extra_filters %}
 {% load smart_if %}
 {% load i18n %}
-{% include "language_selector.html" %}
+{% load localeurl_tags %}
 <div id="roof">
     <div id="navBar">
         <div id="top">
             {% if request.user.is_authenticated %}
-                <a href="{% url user_profile id=request.user.id,slug=request.user.username|slugify %}">Hi, {{ request.user.username }}</a> 
+                <a href="{% url user_profile id=request.user.id,slug=request.user.username|slugify %}"
+                    title="{% trans "see your user profile" %}"
+                >Hi, {{ request.user.username }}</a> 
                 {% spaceless %}
                 <a class='ab-responses-envelope' href="{{request.user.get_absolute_url}}?sort=responses">
                     <img 
@@ -23,15 +26,33 @@
                 </a>
                 {% endspaceless %}
                 ({% get_long_score_and_badge_report user %})
-                <a href="{% url logout %}">{% trans "logout" %}</a>
+                <a href="{% url logout %}"
+                    title="{% trans "sign out from askbot" %}"
+                >{% trans "logout" %}</a>
             {% else %}
-                <a href="{% url user_signin %}">{% trans "login" %}</a>
+                <a href="{% url user_signin %}"
+                    title="{% trans "Please, sign in or Join askbot!" %}"
+                >{% trans "login" %}</a>
             {% endif %}
-            <a href="/doc/index.html"><b>install/docs</b></a>
-            <a href="http://twitter.com/askbot7"><b>twitter</b></a>
-            <a href="http://github.com/ASKBOT/askbot-devel"><b>develop</b></a>
-            <a href="/wiki">wiki</a>
-            <a href="{% url faq %}">{% trans "faq" %}</a>
+            <a href="/doc/index.html" title="it's real easy(ish) to install askbot, there is also some developer documentation">install/docs</a>
+            <!--a href="/doc/index.html" title="read documentation">docs</a-->
+            <a href="http://twitter.com/askbot7" title="follow @askbot7 on twitter!">@twitter</a>
+            <a href="http://github.com/ASKBOT/askbot-devel" title="fork us on github!">github</a>
+            <select id="lang_selector" name="language" title="pick language (number in the parentheses is translation progress)">
+            {% for lang in LANGUAGES %}
+                <option name="{{lang.0}}"
+                {% ifequal lang.0 LANGUAGE_CODE %}
+                    selected="selected"
+                {% endifequal %}
+                >
+                    {{lang.1}} ({{ settings.LANGUAGE_PROGRESS|get_dict_value:lang.0}}%)
+                </option>
+            {% endfor %}
+                <!--option name="thanks">hey, thanks for looking down here</option-->
+            </select>
+            <br/>
+            (<a style="text-decoration:none; margin:0; padding:0;" href="/en/question/47/how-to-translate-askbot-into-my-language"
+            >{% trans "please help translate! see credits" %}</a>)
         </div>
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
