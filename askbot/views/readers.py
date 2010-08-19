@@ -178,7 +178,7 @@ def questions(request):
             'page_size' : search_state.page_size,#todo in T pagesize -> page_size
         }}, context_instance=RequestContext(request))
     end_template_time = datetime.datetime.now()
-    logging.debug('time to print output' + str(end_template_time - start_template_time))
+    logging.debug('time render questions view' + str(end_template_time - start_template_time))
     return output
 
 def search(request): #generates listing of questions matching a search query - including tags and just words

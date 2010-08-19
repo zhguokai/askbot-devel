@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-06-19 07:05+0300\n"
+"POT-Creation-Date: 2010-06-28 22:38-0500\n"
 "PO-Revision-Date: 2010-06-17 05:57+0200\n"
 "Last-Translator: Pekka Järvinen <pekka.jarvinen@gmail.com>\n"
 "Language-Team: Finnish <finnish@askbot.org>\n"
@@ -65,7 +65,7 @@ msgstr "sisältö"
 msgid "question content must be > 10 characters"
 msgstr "kysymyksen sisällön tulee olla vähintään kymmenen merkkiä pitkä"
 
-#: forms.py:53 skins/default/templates/header.html:43
+#: forms.py:53 skins/default/templates/header.html:68
 msgid "tags"
 msgstr "tagit"
 
@@ -76,7 +76,7 @@ msgstr ""
 "Tagit ovat lyhyitä apusanoja, joissa ei ole välilyöntejä. Viisi tagia voi "
 "syöttää maksimissaan."
 
-#: forms.py:62 skins/default/templates/question_retag.html:39
+#: forms.py:62 skins/default/templates/question_retag.html:38
 msgid "tags are required"
 msgstr "tagit ovat pakollisia"
 
@@ -213,132 +213,132 @@ msgstr "ei sähköpostipäivityksiä"
 msgid "please choose one of the options above"
 msgstr "valitse yksi valinta seuraavista"
 
-#: urls.py:38
+#: urls.py:41
 msgid "upfiles/"
 msgstr "laheta-tiedostoja/"
 
-#: urls.py:43
+#: urls.py:46
 msgid "about/"
 msgstr "sivusta/"
 
-#: urls.py:44 conf/site_settings.py:75
+#: urls.py:47 conf/site_settings.py:75
 msgid "faq/"
 msgstr "ukk/"
 
-#: urls.py:45
+#: urls.py:48
 msgid "privacy/"
 msgstr "yksityisyys/"
 
-#: urls.py:46
+#: urls.py:49
 msgid "logout/"
 msgstr "kirjaudu-ulos/"
 
-#: urls.py:48 urls.py:53 urls.py:58 urls.py:121
+#: urls.py:51 urls.py:56 urls.py:61 urls.py:124
 msgid "answers/"
 msgstr "vastaukset/"
 
-#: urls.py:48 urls.py:103 urls.py:114 urls.py:121
+#: urls.py:51 urls.py:106 urls.py:117 urls.py:124
 msgid "comments/"
 msgstr "kommentit/"
 
-#: urls.py:53 urls.py:73 urls.py:167 skins/default/templates/user_info.html:44
+#: urls.py:56 urls.py:76 urls.py:170 skins/default/templates/user_info.html:44
 msgid "edit/"
 msgstr "muokkaa/"
 
-#: urls.py:58 urls.py:98
+#: urls.py:61 urls.py:101
 msgid "revisions/"
 msgstr "revisiot/"
 
-#: urls.py:63 urls.py:68 urls.py:73 urls.py:78 urls.py:83 urls.py:88
-#: urls.py:93 urls.py:98 urls.py:103 urls.py:114
+#: urls.py:66 urls.py:71 urls.py:76 urls.py:81 urls.py:86 urls.py:91
+#: urls.py:96 urls.py:101 urls.py:106 urls.py:117
 msgid "questions/"
 msgstr "kysymykset/"
 
-#: urls.py:68
+#: urls.py:71
 msgid "ask/"
 msgstr "kysy/"
 
-#: urls.py:78
+#: urls.py:81
 msgid "close/"
 msgstr "sulje/"
 
-#: urls.py:83
+#: urls.py:86
 msgid "reopen/"
 msgstr "avaa-uudelleen/"
 
-#: urls.py:88
+#: urls.py:91
 msgid "answer/"
 msgstr "vastaa/"
 
-#: urls.py:93
+#: urls.py:96
 msgid "vote/"
 msgstr "aanesta/"
 
-#: urls.py:108
+#: urls.py:111
 msgid "command/"
 msgstr "komento/"
 
-#: urls.py:114 urls.py:121 deps/django_authopenid/urls.py:43
+#: urls.py:117 urls.py:124 deps/django_authopenid/urls.py:45
 msgid "delete/"
 msgstr "poista/"
 
-#: urls.py:128 views/readers.py:257
+#: urls.py:131 views/readers.py:280
 msgid "question/"
 msgstr "kysymys/"
 
-#: urls.py:133
+#: urls.py:136
 msgid "tags/"
 msgstr "tagit/"
 
-#: urls.py:138 urls.py:144
+#: urls.py:141 urls.py:147
 msgid "mark-tag/"
 msgstr "merkitse-tagi/"
 
-#: urls.py:138
+#: urls.py:141
 msgid "interesting/"
 msgstr "mielenkiintoista/"
 
-#: urls.py:144
+#: urls.py:147
 msgid "ignored/"
 msgstr "hylatyt/"
 
-#: urls.py:150
+#: urls.py:153
 msgid "unmark-tag/"
 msgstr "poista-tagi/"
 
-#: urls.py:156 urls.py:167 urls.py:172
+#: urls.py:159 urls.py:170 urls.py:175
 msgid "users/"
 msgstr "kayttajat/"
 
-#: urls.py:161
+#: urls.py:164
 msgid "moderate-user/"
 msgstr "hallitse-kayttajaa/"
 
-#: urls.py:177 urls.py:182
+#: urls.py:180 urls.py:185
 msgid "badges/"
 msgstr "kunniamerkit/"
 
-#: urls.py:187
+#: urls.py:190
 msgid "messages/"
 msgstr "viestit/"
 
-#: urls.py:187
+#: urls.py:190
 msgid "markread/"
 msgstr "merkkaa-luetuksi/"
 
-#: urls.py:197
+#: urls.py:200
 msgid "upload/"
 msgstr "laheta/"
 
-#: urls.py:198
+#: urls.py:201
 msgid "search/"
 msgstr "haku"
 
-#: urls.py:199
+#: urls.py:202
 msgid "feedback/"
 msgstr "palaute/"
 
-#: urls.py:200 setup_templates/settings.py:197
+#: urls.py:203 setup_templates/settings.py:203
 msgid "account/"
 msgstr "tunnus/"
 
@@ -677,104 +677,110 @@ msgstr ""
 msgid "Vote counter value to give \"full color\""
 msgstr ""
 
-#: conf/skin_counter_settings.py:28
+#: conf/skin_counter_settings.py:29
 msgid "Background color for votes = 0"
 msgstr ""
 
-#: conf/skin_counter_settings.py:29 conf/skin_counter_settings.py:39
-#: conf/skin_counter_settings.py:49 conf/skin_counter_settings.py:59
-#: conf/skin_counter_settings.py:69 conf/skin_counter_settings.py:81
-#: conf/skin_counter_settings.py:100 conf/skin_counter_settings.py:110
-#: conf/skin_counter_settings.py:120 conf/skin_counter_settings.py:132
-#: conf/skin_counter_settings.py:142 conf/skin_counter_settings.py:154
-#: conf/skin_counter_settings.py:175 conf/skin_counter_settings.py:185
-#: conf/skin_counter_settings.py:195 conf/skin_counter_settings.py:205
-#: conf/skin_counter_settings.py:217 conf/skin_counter_settings.py:227
-#: conf/skin_counter_settings.py:239 conf/skin_counter_settings.py:249
+#: conf/skin_counter_settings.py:30 conf/skin_counter_settings.py:41
+#: conf/skin_counter_settings.py:52 conf/skin_counter_settings.py:62
+#: conf/skin_counter_settings.py:72 conf/skin_counter_settings.py:85
+#: conf/skin_counter_settings.py:106 conf/skin_counter_settings.py:117
+#: conf/skin_counter_settings.py:128 conf/skin_counter_settings.py:138
+#: conf/skin_counter_settings.py:148 conf/skin_counter_settings.py:161
+#: conf/skin_counter_settings.py:184 conf/skin_counter_settings.py:195
+#: conf/skin_counter_settings.py:206 conf/skin_counter_settings.py:216
+#: conf/skin_counter_settings.py:228 conf/skin_counter_settings.py:239
+#: conf/skin_counter_settings.py:252 conf/skin_counter_settings.py:262
 msgid "HTML color name of hex value"
 msgstr ""
 
-#: conf/skin_counter_settings.py:38
+#: conf/skin_counter_settings.py:40
 msgid "Foreground color for votes = 0"
 msgstr ""
 
-#: conf/skin_counter_settings.py:48
-msgid "Background color for votes = 1"
+#: conf/skin_counter_settings.py:51
+#, fuzzy
+msgid "Background color for votes"
 msgstr "Taustakuvan väri äänille, kun ääniä on yksi"
 
-#: conf/skin_counter_settings.py:58
-msgid "Foreground color for votes = 1"
-msgstr ""
+#: conf/skin_counter_settings.py:61
+#, fuzzy
+msgid "Foreground color for votes"
+msgstr "Taustakuvan väri äänille, kun ääniä on yksi"
 
-#: conf/skin_counter_settings.py:68
+#: conf/skin_counter_settings.py:71
 msgid "Background color for votes = MAX"
 msgstr "Taustakuvan väri äänille, kun ääniä on maksimimäärä"
 
-#: conf/skin_counter_settings.py:80
+#: conf/skin_counter_settings.py:84
 msgid "Foreground color for votes = MAX"
 msgstr ""
 
-#: conf/skin_counter_settings.py:90
+#: conf/skin_counter_settings.py:95
 msgid "View counter value to give \"full color\""
 msgstr ""
 
-#: conf/skin_counter_settings.py:99
+#: conf/skin_counter_settings.py:105
 msgid "Background color for views = 0"
 msgstr ""
 
-#: conf/skin_counter_settings.py:109
+#: conf/skin_counter_settings.py:116
 msgid "Foreground color for views = 0"
 msgstr ""
 
-#: conf/skin_counter_settings.py:119
-msgid "Background color for views = 1"
-msgstr ""
+#: conf/skin_counter_settings.py:127
+#, fuzzy
+msgid "Background color for views"
+msgstr "Taustakuvan väri äänille, kun ääniä on yksi"
 
-#: conf/skin_counter_settings.py:131
-msgid "Foreground color for views = 1"
-msgstr ""
+#: conf/skin_counter_settings.py:137
+#, fuzzy
+msgid "Foreground color for views"
+msgstr "Taustakuvan väri äänille, kun ääniä on yksi"
 
-#: conf/skin_counter_settings.py:141
+#: conf/skin_counter_settings.py:147
 msgid "Background color for views = MAX"
 msgstr ""
 
-#: conf/skin_counter_settings.py:153
+#: conf/skin_counter_settings.py:160
 msgid "Foreground color for views = MAX"
 msgstr ""
 
-#: conf/skin_counter_settings.py:163
+#: conf/skin_counter_settings.py:171
 msgid "Answer counter value to give \"full color\""
 msgstr ""
 
-#: conf/skin_counter_settings.py:174
+#: conf/skin_counter_settings.py:183
 msgid "Background color for answers = 0"
 msgstr ""
 
-#: conf/skin_counter_settings.py:184
+#: conf/skin_counter_settings.py:194
 msgid "Foreground color for answers = 0"
 msgstr ""
 
-#: conf/skin_counter_settings.py:194
-msgid "Background color for answers = 1"
-msgstr ""
+#: conf/skin_counter_settings.py:205
+#, fuzzy
+msgid "Background color for answers"
+msgstr "Taustakuvan väri äänille, kun ääniä on yksi"
 
-#: conf/skin_counter_settings.py:204
-msgid "Foreground color for answers = 1"
-msgstr ""
+#: conf/skin_counter_settings.py:215
+#, fuzzy
+msgid "Foreground color for answers"
+msgstr "Taustakuvan väri äänille, kun ääniä on yksi"
 
-#: conf/skin_counter_settings.py:216
+#: conf/skin_counter_settings.py:227
 msgid "Background color for answers = MAX"
 msgstr ""
 
-#: conf/skin_counter_settings.py:226
+#: conf/skin_counter_settings.py:238
 msgid "Foreground color for answers = MAX"
 msgstr ""
 
-#: conf/skin_counter_settings.py:238
+#: conf/skin_counter_settings.py:251
 msgid "Background color for accepted"
 msgstr ""
 
-#: conf/skin_counter_settings.py:248
+#: conf/skin_counter_settings.py:261
 msgid "Foreground color for accepted answer"
 msgstr ""
 
@@ -875,22 +881,22 @@ msgstr "roskapostia tai mainostusta"
 msgid "too localized"
 msgstr "liian paikallinen"
 
-#: const/__init__.py:38 skins/default/templates/questions.html:71
-#: skins/default/templates/questions.html:76
+#: const/__init__.py:38 skins/default/templates/questions.html:52
+#: skins/default/templates/questions.html:57
 msgid "newest"
 msgstr "uusin"
 
-#: const/__init__.py:39 skins/default/templates/questions.html:65
+#: const/__init__.py:39 skins/default/templates/questions.html:46
 #: skins/default/templates/users.html:28
 msgid "oldest"
 msgstr "vanhin"
 
-#: const/__init__.py:40 skins/default/templates/questions.html:90
-#: skins/default/templates/questions.html:95
+#: const/__init__.py:40 skins/default/templates/questions.html:71
+#: skins/default/templates/questions.html:76
 msgid "active"
 msgstr "aktiivinen"
 
-#: const/__init__.py:41 skins/default/templates/questions.html:84
+#: const/__init__.py:41 skins/default/templates/questions.html:65
 msgid "inactive"
 msgstr "inaktiivinen"
 
@@ -914,15 +920,15 @@ msgstr "vähiten äänestetetyin"
 msgid "relevance"
 msgstr "merkitys"
 
-#: const/__init__.py:53 skins/default/templates/questions.html:53
+#: const/__init__.py:53 skins/default/templates/questions.html:34
 msgid "all"
 msgstr "kaikki"
 
-#: const/__init__.py:54 skins/default/templates/questions.html:54
+#: const/__init__.py:54 skins/default/templates/questions.html:35
 msgid "unanswered"
 msgstr "vastaamaton"
 
-#: const/__init__.py:55 skins/default/templates/questions.html:56
+#: const/__init__.py:55 skins/default/templates/questions.html:37
 msgid "favorite"
 msgstr "suosikki"
 
@@ -1034,7 +1040,7 @@ msgstr "[suljettu]"
 msgid "[deleted]"
 msgstr "[poistettu]"
 
-#: const/__init__.py:185 views/readers.py:443 views/readers.py:464
+#: const/__init__.py:185 views/readers.py:446 views/readers.py:467
 msgid "initial version"
 msgstr "ensimmäinen versio"
 
@@ -1134,78 +1140,77 @@ msgstr "Käyttäjätunnuksesi (<i>pakollinen</i>)"
 msgid "Incorrect username."
 msgstr "Virheellinen tunnus"
 
-#: deps/django_authopenid/urls.py:23 deps/django_authopenid/urls.py:24
-#: deps/django_authopenid/urls.py:25 deps/django_authopenid/urls.py:27
-#: setup_templates/settings.py:197
+#: deps/django_authopenid/urls.py:26 deps/django_authopenid/urls.py:27
+#: deps/django_authopenid/urls.py:29 setup_templates/settings.py:203
 msgid "signin/"
 msgstr "kirjautuminen/"
 
-#: deps/django_authopenid/urls.py:24
+#: deps/django_authopenid/urls.py:26
 msgid "newquestion/"
 msgstr "uusi-kysymys/"
 
-#: deps/django_authopenid/urls.py:25
+#: deps/django_authopenid/urls.py:27
 msgid "newanswer/"
 msgstr "uusi-vastaus/"
 
-#: deps/django_authopenid/urls.py:26
+#: deps/django_authopenid/urls.py:28
 msgid "signout/"
 msgstr "poistu/"
 
-#: deps/django_authopenid/urls.py:27
+#: deps/django_authopenid/urls.py:29
 msgid "complete/"
 msgstr "valmis/"
 
-#: deps/django_authopenid/urls.py:29
+#: deps/django_authopenid/urls.py:31
 msgid "register/"
 msgstr "rekisteroidy/"
 
-#: deps/django_authopenid/urls.py:30
+#: deps/django_authopenid/urls.py:32
 msgid "signup/"
 msgstr "luo-tunnus/"
 
-#: deps/django_authopenid/urls.py:32
+#: deps/django_authopenid/urls.py:34
 msgid "sendpw/"
 msgstr "nollaa-salasana/"
 
-#: deps/django_authopenid/urls.py:33 deps/django_authopenid/urls.py:37
+#: deps/django_authopenid/urls.py:35 deps/django_authopenid/urls.py:39
 msgid "password/"
 msgstr "salasana/"
 
-#: deps/django_authopenid/urls.py:33
+#: deps/django_authopenid/urls.py:35
 msgid "confirm/"
 msgstr "hyvaksy/"
 
-#: deps/django_authopenid/urls.py:38 deps/django_authopenid/urls.py:39
 #: deps/django_authopenid/urls.py:40 deps/django_authopenid/urls.py:41
+#: deps/django_authopenid/urls.py:42 deps/django_authopenid/urls.py:43
 msgid "email/"
 msgstr "sahkoposti/"
 
-#: deps/django_authopenid/urls.py:38
+#: deps/django_authopenid/urls.py:40
 msgid "validate/"
 msgstr "vahvista/"
 
-#: deps/django_authopenid/urls.py:39
+#: deps/django_authopenid/urls.py:41
 msgid "change/"
 msgstr "muuta/"
 
-#: deps/django_authopenid/urls.py:40
+#: deps/django_authopenid/urls.py:42
 msgid "sendkey/"
 msgstr "laheta-avain/"
 
-#: deps/django_authopenid/urls.py:41
+#: deps/django_authopenid/urls.py:43
 msgid "verify/"
 msgstr "todenna/"
 
-#: deps/django_authopenid/urls.py:42
+#: deps/django_authopenid/urls.py:44
 msgid "openid/"
 msgstr "openid-palvelu/"
 
-#: deps/django_authopenid/urls.py:51
+#: deps/django_authopenid/urls.py:53
 msgid "external-login/forgot-password/"
 msgstr "ulkoinen-kirjautuminen/nollaa-salasana/"
 
-#: deps/django_authopenid/urls.py:54
+#: deps/django_authopenid/urls.py:56
 msgid "external-login/signup/"
 msgstr ""
 
@@ -1312,17 +1317,22 @@ msgid "Default value: %s"
 msgstr ""
 
 #: deps/livesettings/templates/livesettings/_admin_site_views.html:4
+#: skins/default/templates/askbot.deps.livesettings/_admin_site_views.html:4
 msgid "Sites"
 msgstr "Sivustot"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
+#: skins/default/templates/askbot.deps.livesettings/group_settings.html:11
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:23
 msgid "Documentation"
 msgstr "Dokumentaatio"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
 #: skins/default/templates/account_settings.html:29
+#: skins/default/templates/askbot.deps.livesettings/group_settings.html:11
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:23
 #: skins/default/templates/authopenid/changepw.html:5
 #: skins/default/templates/authopenid/changepw.html:14
 #: skins/default/templates/authopenid/settings.html:29
@@ -1331,57 +1341,73 @@ msgstr "Vaihda salasana"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:11
 #: deps/livesettings/templates/livesettings/site_settings.html:23
+#: skins/default/templates/askbot.deps.livesettings/group_settings.html:11
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:23
 msgid "Log out"
 msgstr "Kirjaudu ulos"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:14
 #: deps/livesettings/templates/livesettings/site_settings.html:26
+#: skins/default/templates/askbot.deps.livesettings/group_settings.html:14
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:26
 msgid "Home"
 msgstr "Koti"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:15
+#: skins/default/templates/askbot.deps.livesettings/group_settings.html:15
 msgid "Edit Group Settings"
 msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:22
 #: deps/livesettings/templates/livesettings/site_settings.html:50
+#: skins/default/templates/askbot.deps.livesettings/group_settings.html:22
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:50
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
 msgstr[0] "Korjaa allaoleva virheet:"
 msgstr[1] "Korjaa allaolevat virhe:"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:28
+#: skins/default/templates/askbot.deps.livesettings/group_settings.html:28
 #, python-format
 msgid "Settings included in %(name)s."
 msgstr ""
 
 #: deps/livesettings/templates/livesettings/group_settings.html:62
 #: deps/livesettings/templates/livesettings/site_settings.html:97
+#: skins/default/templates/askbot.deps.livesettings/group_settings.html:62
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:97
 msgid "You don't have permission to edit values."
 msgstr "Ei oikeuksia"
 
 #: deps/livesettings/templates/livesettings/group_settings.html:68
+#: skins/default/templates/askbot.deps.livesettings/group_settings.html:68
 msgid "Setting groups"
 msgstr ""
 
 #: deps/livesettings/templates/livesettings/site_settings.html:27
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:27
 msgid "Edit Site Settings"
 msgstr "Muokkaa sivuston asetuksia"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:43
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:43
 msgid "Livesettings are disabled for this site."
 msgstr ""
 
 #: deps/livesettings/templates/livesettings/site_settings.html:44
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:44
 msgid "All configuration options must be edited in the site settings.py file"
 msgstr ""
 
 #: deps/livesettings/templates/livesettings/site_settings.html:66
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:66
 #, python-format
 msgid "Group settings: %(name)s"
 msgstr "Ryhmäasetukset: %(name)s"
 
 #: deps/livesettings/templates/livesettings/site_settings.html:93
+#: skins/default/templates/askbot.deps.livesettings/site_settings.html:93
 msgid "Uncollapse all"
 msgstr "Luhista kaikki"
 
@@ -1421,7 +1447,7 @@ msgstr "Tuntematon pyyntö"
 msgid "Congratulations, you are now an Administrator"
 msgstr "Onnittelut, olet nyt pääkäyttäjä"
 
-#: management/commands/send_email_alerts.py:388 models/__init__.py:309
+#: management/commands/send_email_alerts.py:388 models/__init__.py:329
 msgid "email update message subject"
 msgstr "news from Q&A forum"
 
@@ -1907,27 +1933,27 @@ msgstr "taksonomi"
 msgid "Created a tag used by 50 questions"
 msgstr "Loi tagin, jota käytetään yli viidessäkymmenessä kysymyksessä"
 
-#: models/question.py:568
+#: models/question.py:567
 #, python-format
 msgid "%(author)s modified the question"
 msgstr "%(author)s muokkasi kysymystä"
 
-#: models/question.py:572
+#: models/question.py:571
 #, python-format
 msgid "%(people)s posted %(new_answer_count)s new answers"
 msgstr ""
 
-#: models/question.py:577
+#: models/question.py:576
 #, python-format
 msgid "%(people)s commented the question"
 msgstr "%(people)s kommentoi kysymystä"
 
-#: models/question.py:582
+#: models/question.py:581
 #, python-format
 msgid "%(people)s commented answers"
 msgstr "%(people)s kommentoi vastauksia"
 
-#: models/question.py:584
+#: models/question.py:583
 #, python-format
 msgid "%(people)s commented an answer"
 msgstr "%(people)s kommentoi vastausta"
@@ -1944,11 +1970,11 @@ msgstr "hopea"
 msgid "bronze"
 msgstr "bronssi"
 
-#: models/tag.py:84
+#: models/tag.py:75
 msgid "interesting"
 msgstr "kiinnostava"
 
-#: models/tag.py:84
+#: models/tag.py:75
 msgid "ignored"
 msgstr "jätetty huomioitta"
 
@@ -2025,7 +2051,7 @@ msgid "back to previous page"
 msgstr "takaisin edelliselle sivulle"
 
 #: skins/default/templates/404.html:42
-#: skins/default/templates/questions.html:53
+#: skins/default/templates/questions.html:34
 msgid "see all questions"
 msgstr "näytä kaikki kysymykset"
 
@@ -2125,7 +2151,7 @@ msgstr "näytä esikatselu"
 
 #: skins/default/templates/answer_edit.html:48
 #: skins/default/templates/question_edit.html:66
-#: skins/default/templates/question_retag.html:53
+#: skins/default/templates/question_retag.html:52
 #: skins/default/templates/revisions_answer.html:38
 #: skins/default/templates/revisions_question.html:38
 msgid "back"
@@ -2139,7 +2165,7 @@ msgid "revision"
 msgstr "revisio"
 
 #: skins/default/templates/answer_edit.html:56
-#: skins/default/templates/question_edit.html:75
+#: skins/default/templates/question_edit.html:76
 msgid "select revision"
 msgstr "valitse revisio"
 
@@ -2147,7 +2173,7 @@ msgstr "valitse revisio"
 #: skins/default/templates/ask.html:98
 #: skins/default/templates/ask_form.html:39
 #: skins/default/templates/question.html:420
-#: skins/default/templates/question_edit.html:92
+#: skins/default/templates/question_edit.html:93
 msgid "Toggle the real time Markdown editor preview"
 msgstr "Reaaliaikainen Markdown-muokkain päälle/pois"
 
@@ -2155,23 +2181,23 @@ msgstr "Reaaliaikainen Markdown-muokkain päälle/pois"
 #: skins/default/templates/ask.html:98
 #: skins/default/templates/ask_form.html:39
 #: skins/default/templates/question.html:421
-#: skins/default/templates/question_edit.html:92
+#: skins/default/templates/question_edit.html:93
 msgid "toggle preview"
 msgstr "esikatselu päälle/pois"
 
 #: skins/default/templates/answer_edit.html:72
-#: skins/default/templates/question_edit.html:118
-#: skins/default/templates/question_retag.html:74
+#: skins/default/templates/question_edit.html:119
+#: skins/default/templates/question_retag.html:73
 msgid "Save edit"
 msgstr "Tallenna muokkaus"
 
 #: skins/default/templates/answer_edit.html:73
 #: skins/default/templates/close.html:29
 #: skins/default/templates/feedback.html:50
-#: skins/default/templates/question_edit.html:119
-#: skins/default/templates/question_retag.html:75
+#: skins/default/templates/question_edit.html:120
+#: skins/default/templates/question_retag.html:74
 #: skins/default/templates/reopen.html:30
-#: skins/default/templates/user_edit.html:90
+#: skins/default/templates/user_edit.html:89
 #: skins/default/templates/authopenid/changeemail.html:40
 msgid "Cancel"
 msgstr "Peruuta"
@@ -2451,10 +2477,11 @@ msgstr "katselut"
 
 #: skins/default/templates/book.html:125
 #: skins/default/templates/question.html:138
-#: skins/default/templates/question_list.html:19
+#: skins/default/templates/question_list.html:64
 #: skins/default/templates/question_summary_list_roll.html:52
+#: skins/default/templates/questions.html:239
 #: skins/default/templates/tags.html:50
-#: skins/default/templates/users_questions.html:34
+#: skins/default/templates/users_questions.html:80
 #, python-format
 msgid "see questions tagged '%(tag)s'"
 msgstr "katso kysymyksiä, joilla on tagi '%(tag)s'"
@@ -2464,6 +2491,8 @@ msgid "subscribe to book RSS feed"
 msgstr ""
 
 #: skins/default/templates/book.html:147
+#: skins/default/templates/questions.html:125
+#: skins/default/templates/questions.html:128
 msgid "subscribe to the questions feed"
 msgstr ""
 
@@ -2711,7 +2740,7 @@ msgstr ""
 "<a href='%(ask_question_url)s'>Kysy kysymyksesi</a> ja tee sivustamme "
 "entistäkin parempi!"
 
-#: skins/default/templates/faq.html:122 skins/default/templates/header.html:42
+#: skins/default/templates/faq.html:122 skins/default/templates/header.html:67
 msgid "questions"
 msgstr "kysymykset"
 
@@ -2779,12 +2808,10 @@ msgid "Message body:"
 msgstr "Viestin sisältö:"
 
 #: skins/default/templates/footer.html:8
-#: skins/default/templates/header.html:29
 msgid "about"
 msgstr "sivusta"
 
 #: skins/default/templates/footer.html:9
-#: skins/default/templates/header.html:30
 #: skins/default/templates/question_edit_tips.html:17
 msgid "faq"
 msgstr "ukk"
@@ -2797,43 +2824,62 @@ msgstr "yksityisyydensuoja"
 msgid "give feedback"
 msgstr "anna palautetta"
 
-#: skins/default/templates/header.html:13
+#: skins/default/templates/header.html:12
+#, fuzzy
+msgid "see your user profile"
+msgstr "käyttäjäprofiili"
+
+#: skins/default/templates/header.html:17
 #, python-format
 msgid "responses for %(username)s"
 msgstr "vastauksia käyttäjälle %(username)s"
 
-#: skins/default/templates/header.html:16
+#: skins/default/templates/header.html:20
 #, python-format
 msgid "you have a new response"
 msgid_plural "you nave %(response_count)s new responses"
 msgstr[0] "sinulla on %(response_count)s uutta vastausta"
 msgstr[1] "sinulla on yksi uusi vastaus"
 
-#: skins/default/templates/header.html:19
+#: skins/default/templates/header.html:23
 msgid "no new responses yet"
 msgstr "ei vastauksia"
 
-#: skins/default/templates/header.html:25
+#: skins/default/templates/header.html:30
+#, fuzzy
+msgid "sign out from askbot"
+msgstr "Koko askbot"
+
+#: skins/default/templates/header.html:31
 msgid "logout"
 msgstr "poistu"
 
-#: skins/default/templates/header.html:27
+#: skins/default/templates/header.html:34
+#, fuzzy
+msgid "Please, sign in or Join askbot!"
+msgstr "Kirjaudu täällä:"
+
+#: skins/default/templates/header.html:35
 msgid "login"
 msgstr "kirjaudu"
 
-#: skins/default/templates/header.html:37
+#: skins/default/templates/header.html:55
+msgid "please help translate! see credits"
+msgstr ""
+
+#: skins/default/templates/header.html:62
 msgid "back to home page"
 msgstr "takaisin kotisivulle"
 
-#: skins/default/templates/header.html:44
+#: skins/default/templates/header.html:69
 msgid "users"
 msgstr "käyttäjät"
 
-#: skins/default/templates/header.html:45
+#: skins/default/templates/header.html:70
 msgid "badges"
 msgstr "kunniamerkit"
 
-#: skins/default/templates/header.html:46
+#: skins/default/templates/header.html:71
 msgid "ask a question"
 msgstr "kysy kysymys"
 
@@ -3097,15 +3143,7 @@ msgid_plural ""
 "                    %(counter)s Answers:\n"
 "                    "
 msgstr[0] ""
-"\n"
-"<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</"
-"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be "
-"posted once you log in.</span>"
 msgstr[1] ""
-"\n"
-"<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</"
-"strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be "
-"posted once you log in.</span>"
 
 #: skins/default/templates/question.html:233
 msgid "oldest answers will be shown first"
@@ -3238,35 +3276,35 @@ msgstr "Vastaa omaan kysymykseesi"
 msgid "Answer the question"
 msgstr "Post Your Answer"
 
-#: skins/default/templates/question.html:462
+#: skins/default/templates/question.html:463
 msgid "Question tags"
 msgstr "Tagit"
 
-#: skins/default/templates/question.html:467
-#: skins/default/templates/questions.html:265
+#: skins/default/templates/question.html:468
+#: skins/default/templates/questions.html:324
 #: skins/default/templates/tag_selector.html:11
 #: skins/default/templates/tag_selector.html:28
 #, python-format
 msgid "see questions tagged '%(tag_name)s'"
 msgstr "näytä kysymykset, joilla on tagi '%(tag_name)s'"
 
-#: skins/default/templates/question.html:473
+#: skins/default/templates/question.html:474
 msgid "question asked"
 msgstr "Kysytty"
 
-#: skins/default/templates/question.html:476
+#: skins/default/templates/question.html:477
 msgid "question was seen"
 msgstr "Nähty"
 
-#: skins/default/templates/question.html:476
+#: skins/default/templates/question.html:477
 msgid "times"
 msgstr "kertaa"
 
-#: skins/default/templates/question.html:479
+#: skins/default/templates/question.html:480
 msgid "last updated"
 msgstr "viimeksi päivitetty"
 
-#: skins/default/templates/question.html:485
+#: skins/default/templates/question.html:486
 msgid "Related questions"
 msgstr "Liittyvät kysymykset"
 
@@ -3291,6 +3329,9 @@ msgstr[1] ""
 "ääni"
 
 #: skins/default/templates/question_counter_widget.html:21
+#: skins/default/templates/question_list.html:23
+#: skins/default/templates/questions.html:198
+#: skins/default/templates/users_questions.html:43
 msgid "this answer has been accepted to be correct"
 msgstr "tämä vastaus on valittu oikeaksi"
 
@@ -3343,25 +3384,79 @@ msgstr "kysy kysymys mikä koskee aiheitamme"
 msgid "please try provide enough details"
 msgstr "kirjoita mahdollisimman paljon yksityiskohtia"
 
+#: skins/default/templates/question_list.html:15
+#: skins/default/templates/questions.html:190
+#: skins/default/templates/users_questions.html:35
+msgid ""
+"\n"
+"            vote\n"
+"            "
+msgid_plural ""
+"\n"
+"            votes\n"
+"            "
+msgstr[0] ""
+"\n"
+"ääntä"
+msgstr[1] ""
+"\n"
+"ääni"
+
+#: skins/default/templates/question_list.html:35
+#: skins/default/templates/questions.html:210
+#: skins/default/templates/users_questions.html:55
+msgid ""
+"\n"
+"            answer \n"
+"            "
+msgid_plural ""
+"\n"
+"            answers \n"
+"            "
+msgstr[0] ""
+"\n"
+"vastausta"
+msgstr[1] ""
+"\n"
+"vastaus"
+
+#: skins/default/templates/question_list.html:47
+#: skins/default/templates/questions.html:222
+#: skins/default/templates/users_questions.html:67
+msgid ""
+"\n"
+"            view\n"
+"            "
+msgid_plural ""
+"\n"
+"            views\n"
+"            "
+msgstr[0] ""
+"\n"
+"katsojaa"
+msgstr[1] ""
+"\n"
+"katsoja"
+
 #: skins/default/templates/question_retag.html:4
-#: skins/default/templates/question_retag.html:53
+#: skins/default/templates/question_retag.html:52
 msgid "Change tags"
 msgstr "Vaihda tageja"
 
-#: skins/default/templates/question_retag.html:40
+#: skins/default/templates/question_retag.html:39
 msgid "up to 5 tags, less than 20 characters each"
 msgstr ""
 
-#: skins/default/templates/question_retag.html:83
+#: skins/default/templates/question_retag.html:82
 msgid "Why use and modify tags?"
 msgstr "Miksi käyttää ja muokata tageja?"
 
-#: skins/default/templates/question_retag.html:86
+#: skins/default/templates/question_retag.html:85
 msgid "tags help us keep Questions organized"
 msgstr ""
 "tagit auttavat kysymysten pitämistä järjestyksessä ja helpottavat hakua"
 
-#: skins/default/templates/question_retag.html:94
+#: skins/default/templates/question_retag.html:93
 msgid "tag editors receive special awards from the community"
 msgstr "tagien muokkaajat saavat erikoispalkintoja yhteisöltä"
 
@@ -3374,96 +3469,80 @@ msgid "Questions"
 msgstr "Kysymykset"
 
 #: skins/default/templates/questions.html:33
-msgid "Found by tags"
-msgstr "Tagged questions"
-
-#: skins/default/templates/questions.html:37
-msgid "Search results"
-msgstr "Hakutulokset"
-
-#: skins/default/templates/questions.html:39
-msgid "Found by title"
-msgstr "Löytyi otsikon mukaan"
-
-#: skins/default/templates/questions.html:43
-msgid "Unanswered questions"
-msgstr "Vastaamattomat"
-
-#: skins/default/templates/questions.html:45
-msgid "All questions"
-msgstr "Kaikki kysymykset"
-
-#: skins/default/templates/questions.html:52
 msgid "In:"
 msgstr "Näytä:"
 
-#: skins/default/templates/questions.html:54
+#: skins/default/templates/questions.html:35
 msgid "see unanswered questions"
 msgstr "näytä vastaamattomat kysymykset"
 
-#: skins/default/templates/questions.html:56
+#: skins/default/templates/questions.html:37
 msgid "see your favorite questions"
 msgstr "näytä suosikit"
 
-#: skins/default/templates/questions.html:60
+#: skins/default/templates/questions.html:41
 msgid "Sort by:"
 msgstr "Järjestys:"
 
-#: skins/default/templates/questions.html:65
-#: skins/default/templates/questions.html:76
+#: skins/default/templates/questions.html:46
+#: skins/default/templates/questions.html:57
 msgid "click to see the newest questions"
 msgstr "klikkaa nähdäksesi uusimmat kysymykset"
 
-#: skins/default/templates/questions.html:71
+#: skins/default/templates/questions.html:52
 msgid "click to see the oldest questions"
 msgstr "klikkaa nähdäksesi vanhimmat kysymykset"
 
-#: skins/default/templates/questions.html:84
-#: skins/default/templates/questions.html:95
+#: skins/default/templates/questions.html:65
+#: skins/default/templates/questions.html:76
 msgid "click to see the most recently updated questions"
 msgstr "klikkaa nähdäksesi viimeksi päivitetyt kysymykset"
 
-#: skins/default/templates/questions.html:90
+#: skins/default/templates/questions.html:71
 msgid "click to see the least recently updated questions"
 msgstr "klikkaa nähdäksesi vanhimmat päivitetyt kysymykset"
 
-#: skins/default/templates/questions.html:103
-#: skins/default/templates/questions.html:114
+#: skins/default/templates/questions.html:84
+#: skins/default/templates/questions.html:95
 msgid "click to see hottest questions"
 msgstr "questions with most answers"
 
-#: skins/default/templates/questions.html:103
+#: skins/default/templates/questions.html:84
 msgid "less answers"
 msgstr "vähemmän vastauksia"
 
-#: skins/default/templates/questions.html:109
+#: skins/default/templates/questions.html:90
 msgid "click to see coldest questions"
 msgstr "questions with fewest answers"
 
-#: skins/default/templates/questions.html:109
-#: skins/default/templates/questions.html:114
+#: skins/default/templates/questions.html:90
+#: skins/default/templates/questions.html:95
 msgid "more answers"
 msgstr "eniten vastauksia"
 
-#: skins/default/templates/questions.html:122
-#: skins/default/templates/questions.html:133
+#: skins/default/templates/questions.html:103
+#: skins/default/templates/questions.html:114
 msgid "click to see most voted questions"
 msgstr "klikkaa nähdäksesi äänestetyimmät kysymykset"
 
-#: skins/default/templates/questions.html:122
+#: skins/default/templates/questions.html:103
 msgid "unpopular"
 msgstr "epäsuosittu"
 
-#: skins/default/templates/questions.html:128
+#: skins/default/templates/questions.html:109
 msgid "click to see least voted questions"
 msgstr "least voted questions"
 
-#: skins/default/templates/questions.html:128
-#: skins/default/templates/questions.html:133
+#: skins/default/templates/questions.html:109
+#: skins/default/templates/questions.html:114
 msgid "popular"
 msgstr "suosittu"
 
-#: skins/default/templates/questions.html:142
+#: skins/default/templates/questions.html:129
+msgid "rss feed"
+msgstr ""
+
+#: skins/default/templates/questions.html:133
 #, python-format
 msgid ""
 "\n"
@@ -3480,97 +3559,97 @@ msgstr[1] ""
 "\n"
 "yksi kysymys löytyi"
 
-#: skins/default/templates/questions.html:148
+#: skins/default/templates/questions.html:139
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
 msgstr[0] "%(q_num)s kysymystä"
 msgstr[1] "kysymys"
 
-#: skins/default/templates/questions.html:152
+#: skins/default/templates/questions.html:143
 #, python-format
 msgid "with %(author_name)s's contributions"
 msgstr ""
 
-#: skins/default/templates/questions.html:156
+#: skins/default/templates/questions.html:147
 msgid "tagged"
 msgstr "tagattu"
 
-#: skins/default/templates/questions.html:162
+#: skins/default/templates/questions.html:153
 msgid "Search tips:"
 msgstr "Hakuvinkkejä:"
 
-#: skins/default/templates/questions.html:166
+#: skins/default/templates/questions.html:157
 msgid "reset author"
 msgstr "nollaa tekijä"
 
-#: skins/default/templates/questions.html:170
+#: skins/default/templates/questions.html:161
 msgid "reset tags"
 msgstr "nollaa tagit"
 
-#: skins/default/templates/questions.html:174
-#: skins/default/templates/questions.html:178
+#: skins/default/templates/questions.html:165
+#: skins/default/templates/questions.html:169
 msgid "start over"
 msgstr "aloita alusta"
 
-#: skins/default/templates/questions.html:180
+#: skins/default/templates/questions.html:171
 msgid " - to expand, or dig in by adding more tags and revising the query."
 msgstr " laajentaaksesi tai lisää enemmän tageja hakuusi."
 
-#: skins/default/templates/questions.html:183
+#: skins/default/templates/questions.html:174
 msgid "Search tip:"
 msgstr "Hakuvinkki:"
 
-#: skins/default/templates/questions.html:183
+#: skins/default/templates/questions.html:174
 msgid "add tags and a query to focus your search"
 msgstr "lisää tageja ja hakusanoja täsmentääksesi hakuasi"
 
-#: skins/default/templates/questions.html:198
+#: skins/default/templates/questions.html:250
 msgid "There are no unanswered questions here"
 msgstr "Ei vastaamattomia kysymyksiä"
 
-#: skins/default/templates/questions.html:201
+#: skins/default/templates/questions.html:253
 msgid "No favorite questions here. "
 msgstr "Ei suosikkeja."
 
-#: skins/default/templates/questions.html:202
+#: skins/default/templates/questions.html:254
 msgid "Please start (bookmark) some questions when you visit them"
 msgstr ""
 
-#: skins/default/templates/questions.html:207
+#: skins/default/templates/questions.html:259
 msgid "You can expand your search by "
 msgstr "Voit laajentaa hakuasi seuraavasti"
 
-#: skins/default/templates/questions.html:211
+#: skins/default/templates/questions.html:263
 msgid "resetting author"
 msgstr "nollataan"
 
-#: skins/default/templates/questions.html:215
+#: skins/default/templates/questions.html:267
 msgid "resetting tags"
 msgstr "nollataan tagit"
 
-#: skins/default/templates/questions.html:219
-#: skins/default/templates/questions.html:223
+#: skins/default/templates/questions.html:271
+#: skins/default/templates/questions.html:275
 msgid "starting over"
 msgstr "aloitetaan alusta"
 
-#: skins/default/templates/questions.html:228
+#: skins/default/templates/questions.html:280
 msgid "Please always feel free to ask your question!"
 msgstr "Olet aina tervetullut kysymään!"
 
-#: skins/default/templates/questions.html:232
+#: skins/default/templates/questions.html:284
 msgid "Did not find what you were looking for?"
 msgstr "Et löytänyt etsimääsi?"
 
-#: skins/default/templates/questions.html:233
+#: skins/default/templates/questions.html:285
 msgid "Please, post your question!"
 msgstr "Ole hyvä ja kysy kysymyksesi!"
 
-#: skins/default/templates/questions.html:249
+#: skins/default/templates/questions.html:303
 msgid "Contributors"
 msgstr "Ihmiset"
 
-#: skins/default/templates/questions.html:262
+#: skins/default/templates/questions.html:319
 msgid "Related tags"
 msgstr "Tagit"
 
@@ -3694,7 +3773,7 @@ msgstr "Rekisteröity käyttäjä"
 msgid "Screen Name"
 msgstr "Tunnus"
 
-#: skins/default/templates/user_edit.html:89
+#: skins/default/templates/user_edit.html:88
 #: skins/default/templates/user_email_subscriptions.html:20
 msgid "Update"
 msgstr "Päivitä"
@@ -3721,7 +3800,7 @@ msgid "change picture"
 msgstr "vaihda kuva"
 
 #: skins/default/templates/user_info.html:22
-#: skins/default/templates/users.html:26 views/users.py:911
+#: skins/default/templates/users.html:26 views/users.py:919
 msgid "reputation"
 msgstr "maine"
 
@@ -3855,19 +3934,19 @@ msgstr[1] "yksi arvomerkki"
 msgid "User profile"
 msgstr "Profiili"
 
-#: skins/default/templates/user_tabs.html:7 views/users.py:885
+#: skins/default/templates/user_tabs.html:7 views/users.py:893
 msgid "overview"
 msgstr "yhteenveto"
 
-#: skins/default/templates/user_tabs.html:9 views/users.py:893
+#: skins/default/templates/user_tabs.html:9 views/users.py:901
 msgid "recent activity"
 msgstr "uusimmat"
 
-#: skins/default/templates/user_tabs.html:12 views/users.py:903
+#: skins/default/templates/user_tabs.html:12 views/users.py:911
 msgid "comments and answers to others questions"
 msgstr "kommentteja ja vastauksia muihin kysymyksiin"
 
-#: skins/default/templates/user_tabs.html:13 views/users.py:902
+#: skins/default/templates/user_tabs.html:13 views/users.py:910
 msgid "responses"
 msgstr "vastaukset"
 
@@ -3879,11 +3958,11 @@ msgstr "Graph of user karma"
 msgid "reputation history"
 msgstr "karma history"
 
-#: skins/default/templates/user_tabs.html:20 views/users.py:929
+#: skins/default/templates/user_tabs.html:20 views/users.py:937
 msgid "user vote record"
 msgstr "äänihistoria"
 
-#: skins/default/templates/user_tabs.html:20 views/users.py:928
+#: skins/default/templates/user_tabs.html:20 views/users.py:936
 msgid "casted votes"
 msgstr "votes"
 
@@ -3895,11 +3974,11 @@ msgstr "kysymyksiä, joita tämä käyttäjä on valinnut suosikikseen"
 msgid "favorites"
 msgstr "suosikit"
 
-#: skins/default/templates/user_tabs.html:27 views/users.py:938
+#: skins/default/templates/user_tabs.html:27 views/users.py:946
 msgid "email subscription settings"
 msgstr ""
 
-#: skins/default/templates/user_tabs.html:28 views/users.py:937
+#: skins/default/templates/user_tabs.html:28 views/users.py:945
 msgid "email subscriptions"
 msgstr ""
 
@@ -4486,53 +4565,53 @@ msgstr "Yhdistä %(settings.APP_SHORT_NAME)s -sivustoon Facebookin avulla!"
 msgid "no items in counter"
 msgstr "no"
 
-#: templatetags/extra_tags.py:54
+#: templatetags/extra_tags.py:55
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr "käyttäjän %(username)s gravatar-kuva"
 
-#: templatetags/extra_tags.py:164
+#: templatetags/extra_tags.py:165
 #, python-format
 msgid "%(badge_count)d %(badge_level)s badge"
 msgid_plural "%(badge_count)d %(badge_level)s badges"
 msgstr[0] "%(badge_count)d %(badge_level)s kunniamerkkiä"
 msgstr[1] "%(badge_count)d %(badge_level)s kunniamerkki"
 
-#: templatetags/extra_tags.py:187 templatetags/extra_tags.py:234
-#: templatetags/extra_tags.py:238
+#: templatetags/extra_tags.py:188 templatetags/extra_tags.py:235
+#: templatetags/extra_tags.py:239
 msgid "reputation points"
 msgstr "maine"
 
-#: templatetags/extra_tags.py:230
+#: templatetags/extra_tags.py:231
 #, python-format
 msgid "your karma is %(reputation)s"
 msgstr "maineesi on %(reputation)s"
 
-#: templatetags/extra_tags.py:246
+#: templatetags/extra_tags.py:247
 msgid "badges: "
 msgstr "kunniamerkit:"
 
-#: templatetags/extra_tags.py:317
+#: templatetags/extra_tags.py:318
 #, python-format
 msgid "on %(date)s"
 msgstr "%(date)s"
 
-#: templatetags/extra_tags.py:321
+#: templatetags/extra_tags.py:322
 msgid "2 days ago"
 msgstr "kaksi päivää sitten"
 
-#: templatetags/extra_tags.py:323
+#: templatetags/extra_tags.py:324
 msgid "yesterday"
 msgstr "eilen"
 
-#: templatetags/extra_tags.py:325
+#: templatetags/extra_tags.py:326
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
 msgstr[0] "%(hr)d tuntia sitten"
 msgstr[1] "tunti sitten"
 
-#: templatetags/extra_tags.py:327
+#: templatetags/extra_tags.py:328
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
@@ -4609,106 +4688,121 @@ msgstr "anna salasana uudestaan"
 msgid "sorry, entered passwords did not match, please try again"
 msgstr ""
 
-#: views/commands.py:218
+#: views/commands.py:225
 #, python-format
 msgid "subscription saved, %(email)s needs validation, see %(details_url)s"
 msgstr ""
 "Your subscription is saved, but email address %(email)s needs to be "
 "validated, please see <a href='%(details_url)s'>more details here</a>"
 
-#: views/commands.py:226
+#: views/commands.py:233
 msgid "email update frequency has been set to daily"
 msgstr "sähköpostien päivitysväli on vaihdettu päivittäiseksi"
 
-#: views/meta.py:35
+#: views/meta.py:40
 msgid "Q&A forum feedback"
 msgstr "kysymys ja vastaus -keskustelupalstan palaute"
 
-#: views/meta.py:36
+#: views/meta.py:41
 msgid "Thanks for the feedback!"
 msgstr "Kiitos palautteestasi!"
 
-#: views/meta.py:44
+#: views/meta.py:49
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr ""
 
-#: views/users.py:845 views/users.py:849
+#: views/users.py:853 views/users.py:857
 msgid "changes saved"
 msgstr "muutokset talletettu"
 
-#: views/users.py:855
+#: views/users.py:863
 msgid "email updates canceled"
 msgstr "sähköpostipäivitykset peruttu"
 
-#: views/users.py:886
+#: views/users.py:894
 msgid "user profile"
 msgstr "käyttäjäprofiili"
 
-#: views/users.py:887
+#: views/users.py:895
 msgid "user profile overview"
 msgstr "käyttäjäprofiilin yhteenveto"
 
-#: views/users.py:894
+#: views/users.py:902
 msgid "recent user activity"
 msgstr "viimeisimmät"
 
-#: views/users.py:895
+#: views/users.py:903
 msgid "profile - recent activity"
 msgstr "profiili - viimeisimmät"
 
-#: views/users.py:904
+#: views/users.py:912
 msgid "profile - responses"
 msgstr "profiili - vastaukset"
 
-#: views/users.py:912
+#: views/users.py:920
 msgid "user reputation in the community"
 msgstr "user karma"
 
-#: views/users.py:913
+#: views/users.py:921
 msgid "profile - user reputation"
 msgstr "Profiili - äänet"
 
-#: views/users.py:919
+#: views/users.py:927
 msgid "favorite questions"
 msgstr "suosikkikysymykset"
 
-#: views/users.py:920
+#: views/users.py:928
 msgid "users favorite questions"
 msgstr "käyttäjien suosikit"
 
-#: views/users.py:921
+#: views/users.py:929
 msgid "profile - favorite questions"
 msgstr "profiili - suosikkikysymykset"
 
-#: views/users.py:930
+#: views/users.py:938
 msgid "profile - votes"
 msgstr "profiili - äänet"
 
-#: views/users.py:939
+#: views/users.py:947
 msgid "profile - email subscriptions"
 msgstr "profiili - sähköpostitilaukset"
 
-#: views/writers.py:67
+#: views/writers.py:72
 msgid "uploading images is limited to users with >60 reputation points"
 msgstr "sorry, file uploading requires karma >60"
 
-#: views/writers.py:69
+#: views/writers.py:74
 msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
 msgstr ""
 "hyväksytyt tiedostotyypit ovat 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
 
-#: views/writers.py:71
+#: views/writers.py:76
 #, python-format
 msgid "maximum upload file size is %sK"
 msgstr "maksimi tiedostonkoko on %s kilotavua"
 
-#: views/writers.py:73
+#: views/writers.py:78
 #, python-format
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you. %s"
 msgstr ""
 "Tiedoston lähetyksessä tapahtui virhe. Ota yhteyttä sivuston ylläpitäjiin. "
 "Kiitos. %s"
+
+#~ msgid "Found by tags"
+#~ msgstr "Tagged questions"
+
+#~ msgid "Search results"
+#~ msgstr "Hakutulokset"
+
+#~ msgid "Found by title"
+#~ msgstr "Löytyi otsikon mukaan"
+
+#~ msgid "Unanswered questions"
+#~ msgstr "Vastaamattomat"
+
+#~ msgid "All questions"
+#~ msgstr "Kaikki kysymykset"
 
 #~ msgid "question"
 #~ msgstr "kysymys"
