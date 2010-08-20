@@ -38,7 +38,7 @@ urlpatterns = patterns('',
         name='askbot_media',
     ),
     url(
-        r'^%s(?P<path>.*)$' % _('upfiles/'), 
+        r'^%s(?P<path>.*)$' % settings.ASKBOT_UPLOADED_FILES_URL, 
         'django.views.static.serve',
         {'document_root': os.path.join(settings.PROJECT_ROOT, 'askbot', 'upfiles').replace('\\','/')},
         name='uploaded_file',
@@ -76,6 +76,11 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')), 
         app.writers.edit_question, 
         name='edit_question'
+    ),
+    url(
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')), 
+        app.writers.retag_question, 
+        name='retag_question'
     ),
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')), 
@@ -160,11 +165,6 @@ urlpatterns = patterns('',
         app.users.users, 
         name='users'
     ),
-    url(
-        r'^%s(?P<id>\d+)/$' % _('moderate-user/'), 
-        app.users.moderate_user, 
-        name='moderate_user'
-    ),
     #todo: rename as user_edit, b/c that's how template is named
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')),
@@ -207,6 +207,6 @@ urlpatterns = patterns('',
         r'^doc/(?P<path>.*)$', 
         'django.views.static.serve',
         {'document_root': os.path.join(APP_PATH,'doc','build','html').replace('\\','/')},
-        name='askbot_media',
+        name='askbot_docs',
     ),
 )

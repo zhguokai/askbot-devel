@@ -60,6 +60,15 @@ settings.register(
 settings.register(
                 IntegerValue(
                     MIN_REP,
+                    'MIN_REP_TO_DELETE_OTHERS_POSTS',
+                    default=5000,
+                    description=_('Delete questions and answers posted by others')
+                )
+            )
+
+settings.register(
+                IntegerValue(
+                    MIN_REP,
                     'MIN_REP_TO_UPLOAD_FILES',
                     default=60,
                     description=_('Upload files')
@@ -117,15 +126,6 @@ settings.register(
                     'MIN_REP_TO_VIEW_OFFENSIVE_FLAGS',
                     default=2000,
                     description=_('View offensive flags')
-                )
-            )
-
-settings.register(
-                IntegerValue(
-                    MIN_REP,
-                    'MIN_REP_TO_DISABLE_URL_NOFOLLOW',
-                    default=2000,
-                    description=_('Disable nofollow directive on links')
                 )
             )
 

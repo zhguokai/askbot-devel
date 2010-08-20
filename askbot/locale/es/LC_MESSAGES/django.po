@@ -384,109 +384,41 @@ msgstr "tu dirección de email"
 msgid "Fake email for anonymous user"
 msgstr ""
 
-#: conf/email.py:67
-msgid "Use this setting to control gravatar for email-less user"
+#, fuzzy
+msgid "blocked users cannot post"
+msgstr "Sorry, your account appears to be blocked and you " 
+"cannot make new posts until this issue is resolved. "
+"Please contact the forum administrator to reach a "
+"resolution."
+
+#, fuzzy
+msgid "suspended users cannot post"
+msgstr "Sorry, your account appears to be suspended and you "
+"cannot make new posts until this issue is resolved. "
+"You can, however edit your existing posts. "
+"Please contact the forum administrator to "
+"reach a resolution."
+
+#: django_authopenid/forms.py:135
+msgid "can't have two logins to the same account yet, sorry."
 msgstr ""
 
-#: conf/external_keys.py:11
-msgid "Keys to connect the site with external services like Facebook, etc."
-msgstr ""
+msgid "anonymous users cannot vote"
+msgstr "usuarios anónimos no pueden votar"
 
-#: conf/external_keys.py:18
-msgid "Google site verification key"
-msgstr ""
-
-#: conf/external_keys.py:20
 #, python-format
-msgid ""
-"This key helps google index your site please obtain is at <a href=\"%"
-"(google_webmasters_tools_url)s\">google webmasters tools site</a>"
-msgstr ""
+msgid ">%(points)s points required to upvote"
+msgstr ">%(points)s puntos requeridos para votar positivamente "
 
-#: conf/external_keys.py:34
-msgid "Google Analytics key"
-msgstr ""
-
-#: conf/external_keys.py:36
 #, python-format
-msgid ""
-"Obtain is at <a href=\"%(ga_site)s\">Google Analytics</a> site, if you wish "
-"to use Google Analytics to monitor your site"
-msgstr ""
+msgid ">%(points)s points required to downvote"
+msgstr ">%(points)s puntos requeridos para votar negativamente"
 
-#: conf/external_keys.py:49
-msgid "Recaptcha private key"
-msgstr ""
+msgid "cannot vote for own posts"
+msgstr "no se puede votar por sus propias publicaciones"
 
-#: conf/external_keys.py:52
-msgid ""
-"Recaptcha is a tool that helps distinguish real people from annoying spam "
-"robots. Please get this and a public key at the <a href=\"http://recaptcha."
-"net\">recaptcha.net</a>"
-msgstr ""
-
-#: conf/external_keys.py:65
-msgid "Recaptcha public key"
-msgstr ""
-
-#: conf/external_keys.py:73
-msgid "Facebook public API key"
-msgstr ""
-
-#: conf/external_keys.py:76
-msgid ""
-"Facebook API key and Facebook secret allow to use Facebook Connect login "
-"method at your site. Please obtain these keys at <a href=\"http://www."
-"facebook.com/developers/createapp.php\">facebook create app</a> site"
-msgstr ""
-
-#: conf/external_keys.py:91
-msgid "Facebook secret key"
-msgstr ""
-
-#: conf/flatpages.py:10
-msgid "Flatpages - about, privacy policy, etc."
-msgstr ""
-
-#: conf/flatpages.py:17
-msgid "Text of the Q&A forum About page (html format)"
-msgstr ""
-
-#: conf/flatpages.py:20
-msgid ""
-"Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
-"the \"about\" page to check your input."
-msgstr ""
-
-#: conf/flatpages.py:30
-msgid "Text of the Q&A forum Privacy Policy (html format)"
-msgstr ""
-
-#: conf/flatpages.py:33
-msgid ""
-"Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
-"the \"privacy\" page to check your input."
-msgstr ""
-
-#: conf/forum_data_rules.py:12
-msgid "Settings for askbot data entry and display"
-msgstr ""
-
-#: conf/forum_data_rules.py:20
-msgid "Check to enable community wiki feature"
-msgstr ""
-
-#: conf/forum_data_rules.py:29
-msgid "Maximum length of tag (number of characters)"
-msgstr ""
-
-#: conf/forum_data_rules.py:38
-msgid "Maximum number of tags per question"
-msgstr ""
-
-#: conf/forum_data_rules.py:50
-msgid "Number of questions to list by default"
-msgstr ""
+msgid "cannot revoke old vote"
+msgstr "no puede revocar un voto viejo"
 
 #: conf/forum_data_rules.py:60
 #, fuzzy
@@ -1101,10 +1033,6 @@ msgstr "HTML básico es soportado"
 
 #: deps/django_authopenid/forms.py:135
 msgid "Account with this name already exists on the forum"
-msgstr ""
-
-#: deps/django_authopenid/forms.py:136
-msgid "can't have two logins to the same account yet, sorry."
 msgstr ""
 
 #: deps/django_authopenid/forms.py:158
@@ -4776,12 +4704,14 @@ msgstr "pefil - votos"
 msgid "profile - email subscriptions"
 msgstr "perfil - notificación por email"
 
-#: views/writers.py:72
-msgid "uploading images is limited to users with >60 reputation points"
+#: forum/views/writers.py:70
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
 msgstr ""
 
-#: views/writers.py:74
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+#: forum/views/writers.py:72
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
 msgstr ""
 
 #: views/writers.py:76

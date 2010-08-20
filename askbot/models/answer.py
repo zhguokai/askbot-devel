@@ -12,7 +12,16 @@ from askbot import const
 
 
 class AnswerManager(models.Manager):
-    def create_new(self, question=None, author=None, added_at=None, wiki=False, text='', email_notify=False):
+    def create_new(
+                self, 
+                question=None, 
+                author=None, 
+                added_at=None, 
+                wiki=False, 
+                text='', 
+                email_notify=False
+            ):
+
         answer = Answer(
             question = question,
             author = author,
@@ -38,8 +47,8 @@ class AnswerManager(models.Manager):
         #update question data
         question.last_activity_at = added_at
         question.last_activity_by = author
+        question.answer_count +=1
         question.save()
-        Question.objects.update_answer_count(question)
 
         #set notification/delete
         if email_notify:
@@ -58,19 +67,6 @@ class AnswerManager(models.Manager):
         for answer in self:
             authors.update(answer.get_author_list(**kwargs))
         return list(authors)
-
-    #GET_ANSWERS_FROM_USER_QUESTIONS = u'SELECT answer.* FROM answer INNER JOIN question ON answer.question_id = question.id WHERE question.author_id =%s AND answer.author_id <> %s'
-    def get_answers_from_question(self, question, user=None):
-        """
-        Retrieves visibile answers for the given question. Delete answers
-        are only visibile to the person who deleted them.
-        """
-
-        if user is None or not user.is_authenticated():
-            return self.filter(question=question, deleted=False)
-        else:
-            return self.filter(models.Q(question=question),
-                               models.Q(deleted=False) | models.Q(deleted_by=user))
 
     #todo: I think this method is not being used anymore, I'll just comment it for now
     #def get_answers_from_questions(self, user_id):

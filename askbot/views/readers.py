@@ -22,6 +22,7 @@ from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import cache_page
+from django.core import exceptions as django_exceptions
 
 from askbot.utils.html import sanitize_html
 from markdown2 import Markdown
@@ -273,11 +274,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
             view_id = "votes"
             orderby = "-score"
 
-    logging.debug('view_id=' + str(view_id))
+    logging.debug('view_id=' + unicode(view_id))
 
     question = get_object_or_404(Question, id=id)
     try:
-        pattern = r'/%s%s%d/([\w-]+)' % (settings.FORUM_SCRIPT_ALIAS,_('question/'), question.id)
+        pattern = r'/%s%s%d/([\w-]+)' % (settings.ASKBOT_URL,_('question/'), question.id)
         path_re = re.compile(pattern)
         logging.debug(pattern)
         logging.debug(request.path)
@@ -291,10 +292,21 @@ def question(request, id):#refactor - long subroutine. display question body, an
     except:
         return HttpResponseRedirect(question.get_absolute_url())
 
-    if question.deleted and not auth.can_view_deleted_post(request.user, question):
-        raise Http404
+    if question.deleted:
+        try:
+            if request.user.is_anonymous():
+                msg = _(
+                        'Sorry, this question has been '
+                        'deleted and is no longer accessible'
+                    )
+                raise django_exceptions.PermissionDenied(msg)
+            request.user.assert_can_see_deleted_post(question)
+        except django_exceptions.PermissionDenied, e:
+            request.user.message_set.create(message = unicode(e))
+            return HttpResponseRedirect(reverse('index'))
+
     answer_form = AnswerForm(question,request.user)
-    answers = Answer.objects.get_answers_from_question(question, request.user)
+    answers = question.get_answers(user = request.user)
     answers = answers.select_related(depth=1)
 
     favorited = question.has_favorite_by_user(request.user)
@@ -352,47 +364,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
             question.view_count += 1
             question.save()
 
-        #2) question view count per user
+        #2) question view count per user and clear response displays
         if request.user.is_authenticated():
-
             #get response notifications
-            ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-            ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
-            response_activities = Activity.objects.filter(
-                                        receiving_users = request.user,
-                                        activity_type__in = ACTIVITY_TYPES,
-                                    )
-            try:
-                question_view = QuestionView.objects.get(
-                                                who=request.user,
-                                                question=question
-                                            )
-                response_activities = response_activities.filter(
-                                            active_at__gt = question_view.when
-                                        )
-            except QuestionView.DoesNotExist:
-                question_view = QuestionView(
-                                        who=request.user, 
-                                        question=question
-                                    )
-            question_view.when = datetime.datetime.now()
-            question_view.save()
-
-            #filter response activities (already directed to the qurrent user
-            #as per the query in the beginning of this if branch)
-            #that refer to the children of the currently
-            #viewed question and clear them for the current user
-            for activity in response_activities:
-                post = activity.content_object
-                if hasattr(post, 'get_origin_post'):
-                    if question == post.get_origin_post():
-                        activity.receiving_users.remove(request.user)
-                        request.user.decrement_response_count()
-                        request.user.save()
-                else:
-                    logging.critical(
-                        'activity content object has no get_origin_post method'
-                    )
+            request.user.visit_question(question)
 
     return render_to_response('question.html', {
         'view_name': 'question',

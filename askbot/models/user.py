@@ -91,7 +91,7 @@ class ActivityManager(models.Manager):
                 mentioned_at = None,
                 mentioned_in = None,
                 reported = None,
-                mentioned_at__gt = None,
+                mentioned_at__lt = None,
             ):
         """extract mention-type activity objects
         todo: implement better rich field lookups
@@ -102,10 +102,10 @@ class ActivityManager(models.Manager):
         kwargs['activity_type'] = const.TYPE_ACTIVITY_MENTION
 
         if mentioned_at:
-            #todo: handle cases with rich lookups here like __lt
+            #todo: handle cases with rich lookups here like __lt, __gt and others
             kwargs['active_at'] = mentioned_at
-        elif mentioned_at__gt:
-            kwargs['active_at__gt'] = mentioned_at__gt
+        elif mentioned_at__lt:
+            kwargs['active_at__lt'] = mentioned_at__lt
 
         if mentioned_by:
             kwargs['user'] = mentioned_by
@@ -166,14 +166,31 @@ class Activity(models.Model):
         return self.content_object.get_absolute_url()
 
 class EmailFeedSetting(models.Model):
+    #definitions of delays before notification for each type of notification frequency
     DELTA_TABLE = {
         'i':datetime.timedelta(-1),#instant emails are processed separately
         'd':datetime.timedelta(1),
         'w':datetime.timedelta(7),
         'n':datetime.timedelta(-1),
     }
+    #definitions of feed schedule types
     FEED_TYPES = (
-                    ('q_all',_('Entire askbot')),
+            'q_ask', #questions that user asks
+            'q_all', #enture forum, tag filtered
+            'q_ans', #questions that user answers
+            'q_sel', #questions that user decides to follow
+            'm_and_c' #comments and mentions of user anywhere
+    )
+    #email delivery schedule when no email is sent at all
+    NO_EMAIL_SCHEDULE = {
+        'q_ask': 'n',
+        'q_ans': 'n',
+        'q_all': 'n',
+        'q_sel': 'n',
+        'm_and_c': 'n'
+    }
+    FEED_TYPE_CHOICES = (
+                    ('q_all',_('Entire forum')),
                     ('q_ask',_('Questions that I asked')),
                     ('q_ans',_('Questions that I answered')),
                     ('q_sel',_('Individually selected questions')),
@@ -188,7 +205,7 @@ class EmailFeedSetting(models.Model):
 
 
     subscriber = models.ForeignKey(User, related_name='notification_subscriptions')
-    feed_type = models.CharField(max_length=16,choices=FEED_TYPES)
+    feed_type = models.CharField(max_length=16, choices=FEED_TYPE_CHOICES)
     frequency = models.CharField(
                                     max_length=8,
                                     choices=const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES,
@@ -197,31 +214,17 @@ class EmailFeedSetting(models.Model):
     added_at = models.DateTimeField(auto_now_add=True)
     reported_at = models.DateTimeField(null=True)
 
-    #functions for rich comparison
-    #PRECEDENCE = ('i','d','w','n')#the greater ones are first
-    #def __eq__(self, other):
-    #    return self.id == other.id
-
-#    def __eq__(self, other):
-#        return self.id != other.id
-
-#    def __gt__(self, other):
-#        return PRECEDENCE.index(self.frequency) < PRECEDENCE.index(other.frequency) 
-
-#    def __lt__(self, other):
-#        return PRECEDENCE.index(self.frequency) > PRECEDENCE.index(other.frequency) 
-
-#    def __gte__(self, other):
-#        if self.__eq__(other):
-#            return True
-#        else:
-#            return self.__gt__(other)
-
-#    def __lte__(self, other):
-#        if self.__eq__(other):
-#            return True
-#        else:
-#            return self.__lt__(other)
+    def __str__(self):
+        if self.reported_at is None:
+            reported_at = "'not yet'"
+        else:
+            reported_at = '%s' % self.reported_at.strftime('%d/%m/%y %H:%M')
+        return 'Email feed for %s type=%s, frequency=%s, reported_at=%s' % (
+                                                     self.subscriber, 
+                                                     self.feed_type, 
+                                                     self.frequency,
+                                                     reported_at
+                                                 )
 
     def save(self,*args,**kwargs):
         type = self.feed_type
@@ -233,6 +236,37 @@ class EmailFeedSetting(models.Model):
         if len(similar) > 0:
             raise IntegrityError('email feed setting already exists')
         super(EmailFeedSetting,self).save(*args,**kwargs)
+
+    @classmethod
+    def filter_subscribers(
+                        cls,
+                        potential_subscribers = None,
+                        feed_type = None,
+                        frequency = None
+                    ):
+        """returns set of users who have matching subscriptions
+        and if potential_subscribers is not none, search will
+        be limited to only potential subscribers,
+
+        otherwise search is unrestricted
+
+        todo: when EmailFeedSetting is merged into user table
+        this method may become unnecessary
+        """
+        matching_feeds = cls.objects.filter(
+                                        feed_type = feed_type,
+                                        frequency = frequency
+                                    )
+        if potential_subscribers is not None:
+            matching_feeds.filter(
+                            subscriber__in = potential_subscribers
+                        )
+        subscriber_set = set()
+        for feed in matching_feeds:
+            subscriber_set.add(feed.subscriber)
+
+        return subscriber_set
+
 
     def get_previous_report_cutoff_time(self):
         now = datetime.datetime.now()

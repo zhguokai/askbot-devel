@@ -11,6 +11,30 @@ from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
 
+def filter_choices(remove_choices = None, from_choices = None):
+    """a utility function that will remove choice tuples
+    usable for the forms.ChoicesField from
+    ``from_choices``, the removed ones will be those given
+    by the ``remove_choice`` list
+
+    there is no error checking, ``from_choices`` tuple must be as expected
+    to work with the forms.ChoicesField
+    """
+
+    if not isinstance(remove_choices, list):
+        raise TypeError('remove_choices must be a list')
+
+    filtered_choices = tuple()
+    for choice_to_test in from_choices:
+        remove = False
+        for choice in remove_choices:
+            if choice == choice_to_test[0]:
+                remove = True
+                break
+        if remove == False:
+            filtered_choices += ( choice_to_test, )
+
+    return filtered_choices
 
 class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -115,18 +139,146 @@ class SummaryField(forms.CharField):
         self.label  = _('update summary:')
         self.help_text = _('enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)')
 
-class ModerateUserForm(forms.ModelForm):
-    is_approved = forms.BooleanField(label=_("Automatically accept user's contributions for the email updates"),
-                                     required=False)
 
-    def clean_is_approved(self):
-        if 'is_approved' not in self.cleaned_data:
-            self.cleaned_data['is_approved'] = False
-        return self.cleaned_data['is_approved']
+class ChangeUserReputationForm(forms.Form):
+    """Form that allows moderators and site administrators
+    to adjust reputation of users.
 
-    class Meta:
-        model = User
-        fields = ('is_approved',)
+    this form internally verifies that user who claims to
+    be a moderator acually is
+    """
+
+    user_reputation_delta = forms.IntegerField(
+                                    min_value = 1,
+                                    label = _('Enter number of points to add or subtract')
+                                )
+    comment = forms.CharField(max_length = 128)
+
+    def clean_comment(self):
+        if 'comment' in  self.cleaned_data:
+            comment = self.cleaned_data['comment'].strip()
+            if comment == '':
+                del self.cleaned_data['comment']
+                raise forms.ValidationError('Please enter non-empty comment')
+            self.cleaned_data['comment'] = comment
+            return comment
+
+MODERATOR_STATUS_CHOICES = (
+                                ('a', _('approved')),
+                                ('w', _('watched')),
+                                ('s', _('suspended')),
+                                ('b', _('blocked')),
+                           )
+ADMINISTRATOR_STATUS_CHOICES = (('m', _('moderator')), ) \
+                               + MODERATOR_STATUS_CHOICES
+
+
+class ChangeUserStatusForm(forms.Form):
+    """form that allows moderators to change user's status
+
+    the type of options displayed depend on whether user
+    is a moderator or a site administrator as well as
+    what is the current status of the moderated user
+
+    for example moderators cannot moderate other moderators
+    and admins. Admins can take away admin status, but cannot
+    add it (that can be done through the Django Admin interface
+
+    this form is to be displayed in the user profile under
+    "moderation" tab
+    """
+
+    user_status = forms.ChoiceField(
+                            label = _('Change status to'),
+                        )
+
+    def __init__(self, *arg, **kwarg):
+
+        moderator = kwarg.pop('moderator')
+        subject = kwarg.pop('subject')
+
+        super(ChangeUserStatusForm, self).__init__(*arg, **kwarg)
+
+        #select user_status_choices depending on status of the moderator
+        if moderator.is_administrator():
+            user_status_choices = ADMINISTRATOR_STATUS_CHOICES
+        elif moderator.is_moderator():
+            user_status_choices = MODERATOR_STATUS_CHOICES
+            if subject.is_moderator() and subject != moderator:
+                raise ValueError('moderator cannot moderate another moderator')
+        else:
+            raise ValueError('moderator or admin expected from "moderator"')
+
+        #remove current status of the "subject" user from choices
+        user_status_choices = filter_choices(
+                                        remove_choices = [subject.status, ],
+                                        from_choices = user_status_choices
+                                    )
+
+        #add prompt option
+        user_status_choices = ( ('select', _('which one?')), ) \
+                                + user_status_choices
+
+        self.fields['user_status'].choices = user_status_choices
+
+        #set prompt option as default
+        self.fields['user_status'].default = 'select' 
+        self.moderator = moderator
+        self.subject = subject
+
+    def clean(self):
+        #if moderator is looking at own profile - do not
+        #let change status
+        if 'user_status' in self.cleaned_data:
+
+            user_status = self.cleaned_data['user_status']
+
+            #does not make sense to change own user status
+            #if necessary, this can be done from the Django admin interface
+            if self.moderator == self.subject:
+                del self.cleaned_data['user_status']
+                raise forms.ValidationError(_('Cannot change own status'))
+
+            #do not let moderators turn other users into moderators
+            if self.moderator.is_moderator() and user_status == 'moderator':
+                del self.cleanded_data['user_status']
+                raise forms.ValidationError(
+                                _('Cannot turn other user to moderator')
+                            )
+
+            #do not allow moderator to change status of other moderators
+            if self.moderator.is_moderator() and self.subject.is_moderator():
+                del self.cleaned_data['user_status']
+                raise forms.ValidationError(
+                                _('Cannot change status of another moderator')
+                            )
+
+            if user_status == 'select':
+                del self.cleaned_data['user_status']
+                msg = _(
+                        'If you wish to change %(username)s\'s status, ' \
+                        + 'please make a meaningful selection.'
+                    ) % {'username': self.subject.username }
+                raise forms.ValidationError(msg)
+
+        return self.cleaned_data
+
+class SendMessageForm(forms.Form):
+    subject_line = forms.CharField(
+                            label = _('Subject line'),
+                            max_length = 64,
+                            widget = forms.TextInput(
+                                            attrs = {'size':64},
+                                        )
+                        )
+    body_text = forms.CharField(
+                            label = _('Message text'),
+                            max_length = 1600,
+                            widget = forms.Textarea(
+                                            attrs = {'cols':64}
+                                        )
+                        )
+
 
 class AdvancedSearchForm(forms.Form):
     #nothing must be required in this form
@@ -292,14 +444,49 @@ class EditAnswerForm(forms.Form):
         self.fields['text'].initial = revision.text
 
 class EditUserForm(forms.Form):
-    email = forms.EmailField(label=u'Email', help_text=_('this email does not have to be linked to gravatar'), required=True, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
+    email = forms.EmailField(
+                    label=u'Email',
+                    help_text=_('this email does not have to be linked to gravatar'),
+                    required=True,
+                    max_length=255,
+                    widget=forms.TextInput(attrs={'size' : 35})
+                )
+
     if askbot_settings.EDITABLE_SCREEN_NAME:
         username = UserNameField(label=_('Screen name'))
-    realname = forms.CharField(label=_('Real name'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    website = forms.URLField(label=_('Website'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    city = forms.CharField(label=_('Location'), required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
-    birthday = forms.DateField(label=_('Date of birth'), help_text=_('will not be shown, used to calculate age, format: YYYY-MM-DD'), required=False, widget=forms.TextInput(attrs={'size' : 35}))
-    about = forms.CharField(label=_('Profile'), required=False, widget=forms.Textarea(attrs={'cols' : 60}))
+    realname = forms.CharField(
+                        label=_('Real name'), 
+                        required=False, 
+                        max_length=255, 
+                        widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    website = forms.URLField(
+                        label=_('Website'), 
+                        required=False, 
+                        max_length=255, 
+                        widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    city = forms.CharField(
+                        label=_('Location'),
+                        required=False,
+                        max_length=255,
+                        widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    birthday = forms.DateField(
+                        label=_('Date of birth'),
+                        help_text=_('will not be shown, used to calculate age, format: YYYY-MM-DD'),
+                        required=False,
+                        widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    about = forms.CharField(
+                        label=_('Profile'),
+                        required=False,
+                        widget=forms.Textarea(attrs={'cols' : 60})
+                    )
 
     def __init__(self, user, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
@@ -314,8 +501,7 @@ class EditUserForm(forms.Form):
 
         if user.date_of_birth is not None:
             self.fields['birthday'].initial = user.date_of_birth
-        else:
-            self.fields['birthday'].initial = '1990-01-01'
+
         self.fields['about'].initial = user.about
         self.user = user
 

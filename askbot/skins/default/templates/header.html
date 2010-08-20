@@ -16,10 +16,10 @@
                     <img 
                         alt="{%blocktrans with request.user.username as username %}responses for {{username}}{% endblocktrans %}"
                         {% if request.user.response_count > 0 %}
-                        src="{% media "/media/images/mail-envelope-full.png" %}"
+                        src="{% media "/images/mail-envelope-full.png" %}"
                         title="{% blocktrans count request.user.response_count as response_count %}you have a new response{% plural %}you nave {{response_count}} new responses{% endblocktrans %}"
                         {% else %}
-                        src="{% media "/media/images/mail-envelope-empty.png" %}"
+                        src="{% media "/images/mail-envelope-empty.png" %}"
                         title="{% trans "no new responses yet" %}"
                         {% endif %}
                     />
@@ -56,13 +56,16 @@
             <br/>
             <a style="text-decoration:none; margin:0; padding:0;" href="/en/question/47/how-to-translate-askbot-into-my-language"
             >({% trans "please help translate! see credits" %})</a>
+            {% if request.user.is_administrator %}
+            <a href="{% url site_settings %}">{% trans "settings" %}</a>
+            {% endif %}
         </div>
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
     <td id="logoContainer">
         <div id="logo">
             <a href="{% url questions %}?start_over=true"><img 
-                src="{% media  "/media/images/logo.gif" %}" title="{% trans "back to home page" %}" alt="{{settings.APP_TITLE}} logo"/></a>
+                src="{% media settings.SITE_LOGO_URL %}" title="{% trans "back to home page" %}" alt="{{settings.APP_TITLE}} logo"/></a>
         </div>
     </td>
     <td id="navTabContainer" valign="bottom" align="left">

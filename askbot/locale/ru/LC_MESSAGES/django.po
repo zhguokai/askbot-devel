@@ -34,6 +34,46 @@ msgstr "Вопрос и все оветы на него были удалены"
 msgid "The question has been deleted"
 msgstr "Вопрос был удалён"
 
+#, fuzzy
+msgid "blocked users cannot post"
+msgstr "Sorry, your account appears to be blocked and you " 
+"cannot make new posts until this issue is resolved. "
+"Please contact the forum administrator to reach a "
+"resolution."
+
+#, fuzzy
+msgid "suspended users cannot post"
+msgstr "Sorry, your account appears to be suspended and you "
+"cannot make new posts until this issue is resolved. "
+"You can, however edit your existing posts. "
+"Please contact the forum administrator to "
+"reach a resolution."
+
+#: django_authopenid/forms.py:136
+msgid "can't have two logins to the same account yet, sorry."
+msgstr "извините, но пока нельзя входить в аккаунт больше чем одним методом"
+
+msgid "anonymous users cannot vote"
+msgstr "неавторизированные пользователи не могут голосовать "
+
+#, python-format
+msgid ">%(points)s points required to upvote"
+msgstr "для повышения рейтинга требуется минимум %(points)s баллов "
+
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr "для понижения рейтинга требуется минимум %(points)s баллов"
+
+msgid "cannot vote for own posts"
+msgstr "нельзя голосовать за собственные сообщения"
+
+msgid "cannot revoke old vote"
+msgstr "голос не может быть отозван"
+
+#: django_authopenid/forms.py:158
+msgid "Please enter valid username and password (both are case-sensitive)."
+msgstr "Пожалуйста введите имя пользователя и пароль (с учетом регистра букв)"
+
 #: feed.py:22
 msgid " - "
 msgstr "-"
@@ -1100,15 +1140,6 @@ msgstr "извините, но i-names не поддерживаются"
 msgid "Account with this name already exists on the forum"
 msgstr "аккаунт с таким именем уже существует на форуме"
 
-#: deps/django_authopenid/forms.py:136
-msgid "can't have two logins to the same account yet, sorry."
-msgstr "извините, но пока нельзя входить в аккаунт больше чем одним методом"
-
-#: deps/django_authopenid/forms.py:158
-msgid "Please enter valid username and password (both are case-sensitive)."
-msgstr "Пожалуйста введите имя пользователя и пароль (с учетом регистра букв)"
-
-#: deps/django_authopenid/forms.py:161 deps/django_authopenid/forms.py:211
 msgid "This account is inactive."
 msgstr "Этот аккаунт деактивирован"
 
@@ -4737,21 +4768,17 @@ msgid "profile - favorite questions"
 msgstr "профиль - избранные вопросы"
 
 #: views/users.py:938
-msgid "profile - votes"
-msgstr "профиль - голоса"
 
-#: views/users.py:947
-msgid "profile - email subscriptions"
-msgstr "профиль - email подписки"
 
-#: views/writers.py:72
-msgid "uploading images is limited to users with >60 reputation points"
-msgstr "загрузка изображений доступна только пользователям с репутацией > 60"
+#: forum/views/writers.py:69
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
+msgstr "загрузка изображений доступна только пользователям с репутацией > %(min_rep)s"
 
-#: views/writers.py:74
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
-msgstr ""
-"допустимые типы файлов: 'JPG ',' JPEG ',' GIF ',' BMP ',' PNG ',' TIFF'"
+#: forum/views/writers.py:71
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
+msgstr "допустимые типы файлов: '%(file_types)s'"
 
 #: views/writers.py:76
 #, python-format

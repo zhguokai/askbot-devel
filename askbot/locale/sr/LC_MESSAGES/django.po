@@ -118,7 +118,22 @@ msgstr "унесите кратко објашњење Ваше измене (н
 msgid "Automatically accept user's contributions for the email updates"
 msgstr ""
 
-#: forms.py:210
+#, fuzzy
+msgid "blocked users cannot post"
+msgstr "Sorry, your account appears to be blocked and you " 
+"cannot make new posts until this issue is resolved. "
+"Please contact the forum administrator to reach a "
+"resolution."
+
+#, fuzzy
+msgid "suspended users cannot post"
+msgstr "Sorry, your account appears to be suspended and you "
+"cannot make new posts until this issue is resolved. "
+"You can, however edit your existing posts. "
+"Please contact the forum administrator to "
+"reach a resolution."
+
+#: django_authopenid/forms.py:157
 msgid "Your name:"
 msgstr "Ваше име:"
 
@@ -3193,7 +3208,11 @@ msgid_plural ""
 msgstr[0] ""
 "\n"
 "преглед\n"
-msgstr[1] "прегледа"
+" "
+msgstr[1] ""
+"\n"
+"прегледа"
+" "
 
 #: skins/default/templates/question_edit.html:5
 #: skins/default/templates/question_edit.html:66
@@ -3264,7 +3283,10 @@ msgid_plural ""
 msgstr[0] ""
 "\n"
 "преглед\n"
-msgstr[1] "прегледа"
+" "
+msgstr[1] ""
+"\n"
+"прегледа"
 
 #: skins/default/templates/question_retag.html:4
 #: skins/default/templates/question_retag.html:52
@@ -4490,14 +4512,16 @@ msgstr "профил - гласови"
 #: views/users.py:947
 msgid "profile - email subscriptions"
 msgstr "профил - претплата е-поштом"
+#: forum/views/writers.py:70
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
+msgstr "нажалост, слање датотека на сервер захтева да имате карму >%(min_rep)s"
 
-#: views/writers.py:72
-msgid "uploading images is limited to users with >60 reputation points"
-msgstr "нажалост, слање датотека на сервер захтева да имате карму >60"
-
-#: views/writers.py:74
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
-msgstr "дозвољени типови датотека су 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+#: forum/views/writers.py:72
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
+msgstr ""
+"дозвољени типови датотека су '%(file_types)s'"
 
 #: views/writers.py:76
 #, python-format

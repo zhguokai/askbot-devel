@@ -55,26 +55,20 @@ var Vote = function(){
     var acceptAnonymousMessage = $.i18n._('insufficient privilege');
     var acceptOwnAnswerMessage = $.i18n._('cannot pick own answer as best');
 
-    var pleaseLogin = "<a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
+    var pleaseLogin = " <a href='" + scriptUrl + $.i18n._("account/") + $.i18n._("signin/")
                     + "?next=" + scriptUrl + $.i18n._("question/") + "{{QuestionID}}/{{questionSlug}}'>"
-					+ $.i18n._('please login') + "</a>";
+                    + $.i18n._('please login') + "</a>";
 
     var pleaseSeeFAQ = $.i18n._('please see') + "<a href='" + scriptUrl + $.i18n._("faq/") + "'>faq</a>";
 
-    var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions');
+    var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions') + pleaseLogin;
     var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
-    var upVoteRequiredScoreMessage = $.i18n._('>15 points requried to upvote') + pleaseSeeFAQ;
-    var downVoteRequiredScoreMessage = $.i18n._('>100 points required to downvote') + pleaseSeeFAQ;
-    var voteOwnDeniedMessage = $.i18n._('cannot vote for own posts');
-    var voteRequiredMoreVotes = $.i18n._('daily vote cap exhausted') + pleaseSeeFAQ;
+    //there were a couple of more messages...
     var voteDenyCancelMessage = $.i18n._('cannot revoke old vote') + pleaseSeeFAQ;
     var offensiveConfirmation = $.i18n._('please confirm offensive');
     var offensiveAnonymousMessage = $.i18n._('anonymous users cannot flag offensive posts') + pleaseLogin;
-    var offensiveTwiceMessage = $.i18n._('cannot flag message as offensive twice') + pleaseSeeFAQ;
-    var offensiveNoFlagsLeftMessage = $.i18n._('flag offensive cap exhausted') + pleaseSeeFAQ;
-    var offensiveNoPermissionMessage = $.i18n._('need >15 points to report spam') + pleaseSeeFAQ;
     var removeConfirmation = $.i18n._('confirm delete');
-    var removeAnonymousMessage = $.i18n._('anonymous users cannot delete/undelete');
+    var removeAnonymousMessage = $.i18n._('anonymous users cannot delete/undelete') + pleaseLogin;
     var recoveredMessage = $.i18n._('post recovered');
     var deletedMessage = $.i18n._('post deleted');
     
@@ -235,6 +229,7 @@ var Vote = function(){
     };
     
     var submit = function(object, voteType, callback) {
+        //this function submits votes
         $.ajax({
             type: "POST",
             cache: false,
@@ -282,7 +277,15 @@ var Vote = function(){
 
     var callback_favorite = function(object, voteType, data){
         if(data.allowed == "0" && data.success == "0"){
-            showMessage(object, favoriteAnonymousMessage.replace("{{QuestionID}}", questionId));
+            showMessage(
+                object, 
+                favoriteAnonymousMessage.replace(
+                        '{{QuestionID}}', 
+                        questionId).replace(
+                        '{{questionSlug}}',
+                        '' 
+                    )
+            );
         }
         else if(data.status == "1"){
             object.attr("src", mediaUrl("media/images/vote-favorite-off.png"));
@@ -305,27 +308,25 @@ var Vote = function(){
     };
         
     var callback_vote = function(object, voteType, data){
-        if(data.allowed == "0" && data.success == "0"){
-            showMessage(object, voteAnonymousMessage.replace("{{QuestionID}}", questionId));
+        if (data.success == '0'){
+            showMessage(object, data.message);
+            return;
         }
-        else if (data.allowed == "-3"){
-            showMessage(object, voteRequiredMoreVotes);
-        }
-        else if (data.allowed == "-2"){
-            if (voteType == VoteType.questionUpVote || voteType == VoteType.answerUpVote){
-                showMessage(object, upVoteRequiredScoreMessage);
+        else {
+            if (data.status == '1'){
+                setVoteImage(voteType, true, object);
             }
-            else if (voteType == VoteType.questionDownVote || voteType == VoteType.answerDownVote){
-                showMessage(object, downVoteRequiredScoreMessage);
+            else {
+                setVoteImage(voteType, false, object);
             }
+            setVoteNumber(object, data.count);
+            if (data.message.length > 0){
+                showMessage(object, data.message);
+            }
+            return;
         }
-        else if (data.allowed == "-1"){
-            showMessage(object, voteOwnDeniedMessage);
-        }
-        else if (data.status == "2"){
-            showMessage(object, voteDenyCancelMessage);
-        }
-        else if (data.status == "1"){
+        //may need to take a look at this again
+        if (data.status == "1"){
             setVoteImage(voteType, true, object);
             setVoteNumber(object, data.count);
         }     
@@ -339,45 +340,37 @@ var Vote = function(){
     };
         
     var callback_offensive = function(object, voteType, data){
-        object = $(object);
-        if (data.allowed == "0" && data.success == "0"){
-            showMessage(object, offensiveAnonymousMessage.replace("{{QuestionID}}", questionId));
-        }
-        else if (data.allowed == "-3"){
-            showMessage(object, offensiveNoFlagsLeftMessage);
-        }  
-        else if (data.allowed == "-2"){
-            showMessage(object, offensiveNoPermissionMessage);
-        }  
-        else if (data.status == "1"){
-            showMessage(object, offensiveTwiceMessage);
-        }  
-        else if (data.success == "1"){
+        //todo: transfer proper translations of these from i18n.js
+        //to django.po files
+        //_('anonymous users cannot flag offensive posts') + pleaseLogin;
+        //_('flag offensive cap exhausted') + pleaseSeeFAQ;
+        //_('need >15 points to report spam') + pleaseSeeFAQ;
+        //_('cannot flag message as offensive twice') + pleaseSeeFAQ;
+        if (data.success == "1"){
             $(object).children('span[class=darkred]').text("("+ data.count +")");
+        }
+        else {
+            object = $(object);
+            showMessage(object, data.message)
         }
     };
         
     var callback_remove = function(object, voteType, data){
-        if (data.allowed == "0" && data.success == "0"){
-            showMessage(object, removeAnonymousMessage.replace("{{QuestionID}}", questionId));
+        if (data.success == "1"){
+            if (removeActionType == 'delete'){
+                postNode.addClass('deleted');
+                postRemoveLink.innerHTML = $.i18n._('undelete');
+                showMessage(object, deletedMessage);
+            }
+            else if (removeActionType == 'undelete') {
+                postNode.removeClass('deleted');
+                postRemoveLink.innerHTML = $.i18n._('delete');
+                showMessage(object, recoveredMessage);
+            }
         }
-        else if (data.success == "1"){
-            if (voteType == VoteType.removeQuestion){
-                window.location.href = scriptUrl + $.i18n._("questions/");
-            }
-            else {
-                if (removeActionType == 'delete'){
-                    postNode.addClass('deleted');
-                    postRemoveLink.innerHTML = $.i18n._('undelete');
-                    showMessage(object, deletedMessage);
-                }
-                else if (removeActionType == 'undelete') {
-                    postNode.removeClass('deleted');
-                    postRemoveLink.innerHTML = $.i18n._('delete');
-                    showMessage(object, recoveredMessage);
-                }
-            }
-		}
+        else {
+            showMessage(object, data.message)
+        }
     };
         
     return {
@@ -389,15 +382,24 @@ var Vote = function(){
             bindEvents();
         },
         
-        // Accept answer public function
+        //accept answer
         accept: function(object){
             postId = object.attr("id").substring(imgIdPrefixAccept.length);
             submit(object, VoteType.acceptAnswer, callback_accept);
         },
-        
+        //mark question as favorite
         favorite: function(object){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
-                showMessage(object, favoriteAnonymousMessage.replace("{{QuestionID}}", questionId));
+                showMessage(
+                    object, 
+                    favoriteAnonymousMessage.replace(
+                            "{{QuestionID}}",
+                            questionId
+                        ).replace(
+                            '{{questionSlug}}',
+                            questionSlug
+                        )
+                );
                 return false;
             }
             submit(object, VoteType.favorite, callback_favorite);
@@ -405,9 +407,19 @@ var Vote = function(){
             
         vote: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
-                showMessage(object, voteAnonymousMessage.replace("{{QuestionID}}", questionId).replace("{{questionSlug}}", questionSlug));
-                return false;   
+                showMessage(
+                    $(object),
+                    voteAnonymousMessage.replace(
+                            "{{QuestionID}}",
+                            questionId
+                        ).replace(
+                            '{{questionSlug}}',
+                            questionSlug
+                        )
+                );
+                return false;
             }
+            // up and downvote processor
             if (voteType == VoteType.answerUpVote){
                 postId = object.attr("id").substring(imgIdPrefixAnswerVoteup.length);
             }
@@ -417,10 +429,19 @@ var Vote = function(){
             
             submit(object, voteType, callback_vote);
         },
-        
+        //flag offensive
         offensive: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
-                showMessage($(object), offensiveAnonymousMessage.replace("{{QuestionID}}", questionId));
+                showMessage(
+                    $(object),
+                    offensiveAnonymousMessage.replace(
+                            "{{QuestionID}}",
+                            questionId
+                        ).replace(
+                            '{{questionSlug}}',
+                            questionSlug
+                        )
+                );
                 return false;   
             }
             if (confirm(offensiveConfirmation)){
@@ -428,10 +449,19 @@ var Vote = function(){
                 submit(object, voteType, callback_offensive);
             }
         },
-            
+        //delete question or answer (comments are deleted separately)
         remove: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
-                showMessage($(object), removeAnonymousMessage.replace("{{QuestionID}}", questionId));
+                showMessage(
+                    $(object),
+                    removeAnonymousMessage.replace(
+                            '{{QuestionID}}',
+                            questionId
+                        ).replace(
+                            '{{questionSlug}}',
+                            questionSlug
+                        )
+                    );
                 return false;   
             }
             bits = object.id.split('-');
@@ -441,17 +471,17 @@ var Vote = function(){
             var do_proceed = false; 
             if (postType == 'answer'){
                 postNode = $('#answer-container-' + postId);
-                postRemoveLink = object;
-                if (postNode.hasClass('deleted')){
-                    removeActionType = 'undelete';
-                    do_proceed = true;
-                }
-                else {
-                    removeActionType = 'delete';
-                    do_proceed = confirm(removeConfirmation);
-                }
+            }
+            else if (postType == 'question'){
+                postNode = $('#question-table');
+            }
+            postRemoveLink = object;
+            if (postNode.hasClass('deleted')){
+                removeActionType = 'undelete';
+                do_proceed = true;
             }
             else {
+                removeActionType = 'delete';
                 do_proceed = confirm(removeConfirmation);
             }
             if (do_proceed) {
@@ -594,9 +624,9 @@ function createComments(type) {
                 commentsFactory[objectType].updateTextCounter(textarea);
                 enableSubmitButton(formSelector);
             },
-            error: function(res, textStatus, errorThrown) {
+            error: function(xhr, textStatus, errorThrown) {
                 removeLoader();
-                showMessage(formSelector, res.responseText);
+                showMessage($(formSelector), xhr.responseText);
                 enableSubmitButton(formSelector);
             }
         });
@@ -614,6 +644,7 @@ function createComments(type) {
             var cBox = $("[id^='comments-container-" + objectType + "']");
             cBox.each( function(i){
                 var post_id = $(this).attr('id').replace('comments-container-' + objectType + '-', '');
+
                 $(this).children().each(
                     function(i){
                         var comment_id = $(this).attr('id').replace('comment-','');
@@ -668,10 +699,20 @@ function createComments(type) {
         deleteComment: function(jImg, id, deleteUrl) {
             if (confirm($.i18n._('confirm delete comment'))) {
                 jImg.hide();
-                $.post(deleteUrl, { dataNeeded: "forIIS7" }, function(json) {
-                    var par = jImg.parent();
-                    par.remove();
-                }, "json");
+                $.ajax({
+                    type: 'POST',
+                    url: deleteUrl, 
+                    data: { dataNeeded: "forIIS7" }, 
+                    success: function(json, textStatus, xhr) {
+                        var par = jImg.parent();
+                        par.remove();
+                    }, 
+                    error: function(xhr, textStatus, exception) {
+                        jImg.show();
+                        showMessage(jImg, xhr.responseText);
+                    },
+                    dataType: "json"
+                });
             }
         },
 
@@ -680,8 +721,8 @@ function createComments(type) {
             var color = length > 270 ? "#f00" : length > 200 ? "#f60" : "#999";
             var jSpan = $(textarea).siblings("span.text-counter");
             jSpan.html($.i18n._('can write') +
-					(300 - length) + ' ' +
-					$.i18n._('characters')).css("color", color);
+                        (300 - length) + ' ' +
+                        $.i18n._('characters')).css("color", color);
         }
     };
 }

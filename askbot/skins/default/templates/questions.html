@@ -22,8 +22,8 @@
                Hilite.debug_referrer = location.href;
            });
        </script>
-       <script type='text/javascript' src='{% media  "/media/js/com.cnprog.editor.js" %}'></script>
-       <script type='text/javascript' src='{% media  "/media/js/com.cnprog.tag_selector.js" %}'></script>
+       <script type='text/javascript' src='{% media  "/js/com.cnprog.editor.js" %}'></script>
+       <script type='text/javascript' src='{% media  "/js/com.cnprog.tag_selector.js" %}'></script>
 {% endblock %}
 {% block content %}
 {% get_current_language as LANGUAGE_CODE %}
@@ -126,7 +126,7 @@
                 ><img 
                     style="vertical-align:middle;"
                     alt="{% trans "subscribe to the questions feed" %}"
-                src="{% media "/media/images/feed-icon-small.png" %}"/> {% trans "rss feed" %}</a>)
+                src="{% media "/images/feed-icon-small.png" %}"/> {% trans "rss feed" %}</a>)
         </p>
         <p class="search-result-summary">
         {% if author_name or search_tags or query %}
@@ -182,61 +182,49 @@
     <div class="short-summary">
         <div class="counts">
             <div class="votes">
-            <span 
-                class="item-count"
-                {% if question.score == 0 %}
-                style="background:white; color:#555555"
-                {% else %}
-                style="background:{{settings.COLORS_VOTE_COUNTER_MIN_BG}};color:{{settings.COLORS_VOTE_COUNTER_MIN_FG}}"
-                {% endif %}
-            >{{question.score|humanize_counter}}</span>
-            <div>
-            {% blocktrans count question.score as cnt %}
-            vote
-            {% plural %}
-            votes
-            {% endblocktrans %}
-            </div>
+                <span 
+                    class="item-count"
+                    {% if question.score == 0 %}
+                    style="background:{{settings.COLORS_VOTE_COUNTER_EMPTY_BG}};color:{{settings.COLORS_VOTE_COUNTER_EMPTY_FG}}"
+                    {% else %}
+                    style="background:{{settings.COLORS_VOTE_COUNTER_MIN_BG}};color:{{settings.COLORS_VOTE_COUNTER_MIN_FG}}"
+                    {% endif %}
+                >{{question.score|humanize_counter}}</span>
+                <div>
+                {% blocktrans count question.score as cnt %}vote{% plural %}votes{% endblocktrans %}
+                </div>
             </div >
             {% comment %}
             <div {% if question.answer_accepted %}title="{% trans "this answer has been accepted to be correct" %}"{% endif %} class="status {% if question.answer_accepted %}answered-accepted{% endif %} {% ifequal question.answer_count 0 %}unanswered{% endifequal %}{% ifnotequal question.answer_count 0 %}answered{% endifnotequal %}">
             {% endcomment %}
             <div class="votes"> 
-            <span 
-                class="item-count"
-                {% if question.answer_count == 0 %}
-                    style="background:white; color:#555555"
-                {% else %}
-                    {% if question.answer_accepted %}
-                    style="background:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG}};color:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG}}"
+                <span 
+                    class="item-count"
+                    {% if question.answer_count == 0 %}
+                        style="background:{{settings.COLORS_ANSWER_COUNTER_EMPTY_BG}};color:{{settings.COLORS_ANSWER_COUNTER_EMPTY_FG}}"
                     {% else %}
-                    style="background:{{settings.COLORS_ANSWER_COUNTER_MIN_BG}};color:{{settings.COLORS_ANSWER_COUNTER_MIN_FG}}"
+                        {% if question.answer_accepted %}
+                        style="background:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_BG}};color:{{settings.COLORS_ANSWER_COUNTER_ACCEPTED_FG}}"
+                        {% else %}
+                        style="background:{{settings.COLORS_ANSWER_COUNTER_MIN_BG}};color:{{settings.COLORS_ANSWER_COUNTER_MIN_FG}}"
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-            >{{question.answer_count|humanize_counter}}</span>
-            <div>
-            {% blocktrans count question.answer_count as cnt %}
-            answer 
-            {% plural %}
-            answers 
-            {% endblocktrans %}
-            </div>
+                >{{question.answer_count|humanize_counter}}</span>
+                <div>
+                {% blocktrans count question.answer_count as cnt %}answer{% plural %}answers{% endblocktrans %}
+                </div>
             </div>
             <div class="votes">
-             <span class="item-count"
-                {% if question.view_count == 0 %}
-                    style="background:white; color:#555555"
-                {% else %}
+                 <span class="item-count"
+                 {% if question.view_count == 0 %}
+                    style="background:{{settings.COLORS_VIEW_COUNTER_EMPTY_BG}};color:{{settings.COLORS_VIEW_COUNTER_EMPTY_FG}}"
+                 {% else %}
                     style="background:{{settings.COLORS_VIEW_COUNTER_MIN_BG}};color:{{settings.COLORS_VIEW_COUNTER_MIN_FG}}"
-                {% endif %}
-             >{{question.view_count|humanize_counter}}</span>
-            <div>
-            {% blocktrans count question.view_count as cnt %}
-            view
-            {% plural %}
-            views
-            {% endblocktrans %}
-            </div>
+                 {% endif %}
+                 >{{question.view_count|humanize_counter}}</span>
+                <div>
+                {% blocktrans count question.view_count as cnt %}view{% plural %}views{% endblocktrans %}
+                </div>
             </div>
         </div>
         <h2><a title="{{question.summary}}" href="{% url question id=question.id %}{{question.title|slugify}}">{{question.title}}</a></h2>

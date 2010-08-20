@@ -1,42 +1,36 @@
 """
-.. _tests:
+.. _on_screen_notification_tests:
 
-:mod:`tests` -- Module for testing Askbot 
-==========================================
+:mod:`on_screen_notification_tests` -- Module for testing on-screen notifications
+=================================================================================
 
-.. automodule:: tests 
+.. automodule:: on_screen_notification_tests 
   .. moduleauthor:: Evgeny Fadeev <evgeny.fadeev@gmail.com>
 """
 import datetime
 import time
 from django.test import TestCase
-from django.template import defaultfilters
-from django.core.urlresolvers import reverse
-from askbot.models import User, Question, Answer, Activity
-from askbot.models import EmailFeedSetting
+from askbot import models
 from askbot import const
+from askbot.tests.utils import create_user
 
-def create_user(username = None, email = None):
-    """Creates a user and sets default update subscription
-    settings"""
-    user = User.objects.create_user(username, email)
-    for feed_type in EmailFeedSetting.FEED_TYPES:
-        feed = EmailFeedSetting(
-                        feed_type = feed_type[0],
-                        frequency = 'n',
-                        subscriber = user
-                    )
-        feed.save()
-    return user
 
 def get_re_notif_after(timestamp):
-    notifications = Activity.objects.filter(
+    """returns query set with response notifications
+    posted after the ``timestamp`` - a ``datetime.datetime`` instance
+    """
+    notifications = models.Activity.objects.filter(
             activity_type__in = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY,
             active_at__gte = timestamp
         )
     return notifications
 
-class UpdateNotificationTests(TestCase):
+
+class OnScreenUpdateNotificationTests(TestCase):
+    """Test update notifications that are displayed on
+    screen in the user profile responses view
+    and "the red envelope"
+    """
 
     def reset_response_counts(self):
         self.reload_users()
@@ -45,18 +39,18 @@ class UpdateNotificationTests(TestCase):
             user.save()
 
     def reload_users(self):
-        self.u11 = User.objects.get(id=self.u11.id)
-        self.u12 = User.objects.get(id=self.u12.id)
-        self.u13 = User.objects.get(id=self.u13.id)
-        self.u14 = User.objects.get(id=self.u14.id)
-        self.u21 = User.objects.get(id=self.u21.id)
-        self.u22 = User.objects.get(id=self.u22.id)
-        self.u23 = User.objects.get(id=self.u23.id)
-        self.u24 = User.objects.get(id=self.u24.id)
-        self.u31 = User.objects.get(id=self.u31.id)
-        self.u32 = User.objects.get(id=self.u32.id)
-        self.u33 = User.objects.get(id=self.u33.id)
-        self.u34 = User.objects.get(id=self.u34.id)
+        self.u11 = models.User.objects.get(id=self.u11.id)
+        self.u12 = models.User.objects.get(id=self.u12.id)
+        self.u13 = models.User.objects.get(id=self.u13.id)
+        self.u14 = models.User.objects.get(id=self.u14.id)
+        self.u21 = models.User.objects.get(id=self.u21.id)
+        self.u22 = models.User.objects.get(id=self.u22.id)
+        self.u23 = models.User.objects.get(id=self.u23.id)
+        self.u24 = models.User.objects.get(id=self.u24.id)
+        self.u31 = models.User.objects.get(id=self.u31.id)
+        self.u32 = models.User.objects.get(id=self.u32.id)
+        self.u33 = models.User.objects.get(id=self.u33.id)
+        self.u34 = models.User.objects.get(id=self.u34.id)
         self.users = [
             self.u11,
             self.u12,
@@ -74,28 +68,28 @@ class UpdateNotificationTests(TestCase):
 
     def setUp(self):
         #users for the question
-        self.u11 = create_user('user11', 'user11@example.com')
-        self.u12 = create_user('user12', 'user12@example.com')
-        self.u13 = create_user('user13', 'user13@example.com')
-        self.u14 = create_user('user14', 'user14@example.com')
+        self.u11 = create_user('user11', 'user11@example.com', status='m')
+        self.u12 = create_user('user12', 'user12@example.com', status='m')
+        self.u13 = create_user('user13', 'user13@example.com', status='m')
+        self.u14 = create_user('user14', 'user14@example.com', status='m')
 
         #users for first answer
-        self.u21 = create_user('user21', 'user21@example.com')#post answer
-        self.u22 = create_user('user22', 'user22@example.com')#edit answer
-        self.u23 = create_user('user23', 'user23@example.com')
-        self.u24 = create_user('user24', 'user24@example.com')
+        self.u21 = create_user('user21', 'user21@example.com', status='m')#post answer
+        self.u22 = create_user('user22', 'user22@example.com', status='m')#edit answer
+        self.u23 = create_user('user23', 'user23@example.com', status='m')
+        self.u24 = create_user('user24', 'user24@example.com', status='m')
 
         #users for second answer
-        self.u31 = create_user('user31', 'user31@example.com')#post answer
-        self.u32 = create_user('user32', 'user32@example.com')#edit answer
-        self.u33 = create_user('user33', 'user33@example.com')
-        self.u34 = create_user('user34', 'user34@example.com')
+        self.u31 = create_user('user31', 'user31@example.com', status='m')#post answer
+        self.u32 = create_user('user32', 'user32@example.com', status='m')#edit answer
+        self.u33 = create_user('user33', 'user33@example.com', status='m')
+        self.u34 = create_user('user34', 'user34@example.com', status='m')
 
         #a hack to initialize .users list
         self.reload_users()
 
         #pre-populate askbot with some content
-        self.question = Question.objects.create_new(
+        self.question = models.Question.objects.create_new(
                             title = 'test question',
                             author = self.u11,
                             added_at = datetime.datetime.now(),
@@ -111,7 +105,7 @@ class UpdateNotificationTests(TestCase):
                             user = self.u13,
                             comment = 'comment13'
                         )
-        self.answer1 = Answer.objects.create_new(
+        self.answer1 = models.Answer.objects.create_new(
                             question = self.question,
                             author = self.u21,
                             added_at = datetime.datetime.now(),
@@ -125,7 +119,7 @@ class UpdateNotificationTests(TestCase):
                             user = self.u23,
                             comment = 'comment23'
                         )
-        self.answer2 = Answer.objects.create_new(
+        self.answer2 = models.Answer.objects.create_new(
                             question = self.question,
                             author = self.u31,
                             added_at = datetime.datetime.now(),
@@ -629,7 +623,7 @@ class UpdateNotificationTests(TestCase):
         self.reset_response_counts()
         time.sleep(1)
         timestamp = datetime.datetime.now()
-        self.answer3 = Answer.objects.create_new(
+        self.answer3 = models.Answer.objects.create_new(
                             question = self.question,
                             author = self.u11,
                             added_at = timestamp,
@@ -672,7 +666,7 @@ class UpdateNotificationTests(TestCase):
         self.reset_response_counts()
         time.sleep(1)
         timestamp = datetime.datetime.now()
-        self.answer3 = Answer.objects.create_new(
+        self.answer3 = models.Answer.objects.create_new(
                             question = self.question,
                             author = self.u31,
                             added_at = timestamp,
@@ -713,259 +707,3 @@ class UpdateNotificationTests(TestCase):
         )
 
 
-class AnonymousVisitorTests(TestCase):
-    fixtures = ['tmp/fixture1.json', ]
-
-    def test_index(self):
-        #todo: merge this with all reader url tests
-        print 'trying to reverse index'
-        response = self.client.get(reverse('index'), follow=True)
-        self.assertEqual(response.status_code, 200)
-        self.failUnless(len(response.redirect_chain) == 1)
-        self.failUnless(response.redirect_chain[0][0].endswith('/questions/'))
-        c = response.context[0]
-        t = response.template[0]
-        self.assertEqual(t.name, 'questions.html')
-        print 'index works'
-
-    def test_reader_urls(self):
-        """test all reader views thoroughly
-        on non-crashiness (no correcteness tests here)
-        """
-
-        def try_url(
-                url_name, status_code=200, template=None, 
-                kwargs={}, redirect_url=None, follow=False,
-                data = {},
-            ):
-            url = reverse(url_name, kwargs = kwargs)
-            url_info = 'getting url %s' % url
-            if data:
-                url_info += '?' + '&'.join(['%s=%s' % (k, v) for k, v in data.iteritems()])
-            print url_info
-
-            r = self.client.get(url, data=data, follow=follow)
-            if hasattr(self.client, 'redirect_chain'):
-                print 'redirect chain: %s' % ','.join(self.client.redirect_chain)
-
-            self.assertEqual(r.status_code, status_code)
-
-            if template:
-                #asuming that there is more than one template
-                print 'templates are %s' % ','.join([t.name for t in r.template])
-                self.assertEqual(r.template[0].name, template)
-
-        try_url('sitemap')
-        try_url('feeds', kwargs={'url':'rss'})
-        try_url('about', template='about.html')
-        try_url('privacy', template='privacy.html')
-        try_url('logout', template='logout.html')
-        try_url('user_signin', template='authopenid/signin.html')
-        #todo: test different tabs
-        try_url('tags', template='tags.html')
-        try_url('tags', data={'sort':'name'}, template='tags.html')
-        try_url('tags', data={'sort':'used'}, template='tags.html')
-        try_url('badges', template='badges.html')
-        try_url(
-                'answer_revisions', 
-                template='revisions_answer.html',
-                kwargs={'id':38}
-            )
-        #todo: test different sort methods and scopes
-        try_url(
-                'questions',
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'start_over':'true'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'scope':'unanswered'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'scope':'all'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'scope':'favorite'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'scope':'unanswered', 'sort':'latest'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'scope':'unanswered', 'sort':'oldest'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'scope':'unanswered', 'sort':'active'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'scope':'unanswered', 'sort':'inactive'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'sort':'hottest'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'sort':'coldest'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'sort':'mostvoted'},
-                template='questions.html'
-            )
-        try_url(
-                'questions',
-                data={'sort':'leastvoted'},
-                template='questions.html'
-            )
-        try_url(
-                'question',
-                kwargs={'id':1},
-            )
-        try_url(
-                'question',
-                kwargs={'id':2},
-            )
-        try_url(
-                'question',
-                kwargs={'id':3},
-            )
-        try_url(
-                'question_revisions',
-                kwargs={'id':17},
-                template='revisions_question.html'
-            )
-        try_url('users', template='users.html')
-        #todo: really odd naming conventions for sort methods
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'reputation'},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'newest'},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'last'},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'user'},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'reputation', 'page':2},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'newest', 'page':2},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'last', 'page':2},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'user', 'page':2},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'reputation', 'page':1},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'newest', 'page':1},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'last', 'page':1},
-            )
-        try_url(
-                'users',
-                template='users.html',
-                data={'sort':'user', 'page':1},
-            )
-        try_url(
-                'edit_user',
-                template='authopenid/signin.html',
-                kwargs={'id':4},
-                status_code=200,
-                follow=True,
-            )
-        user = User.objects.get(id=2)
-        name_slug = defaultfilters.slugify(user.username)
-        try_url(
-            'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'stats'}, 
-            template='user_stats.html'
-        )
-        try_url(
-            'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'recent'}, 
-            template='user_recent.html'
-        )
-        try_url(
-            'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'responses'}, 
-            status_code=404,
-            template='404.html'
-        )
-        try_url(
-            'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'reputation'}, 
-            template='user_reputation.html'
-        )
-        try_url(
-            'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'votes'}, 
-            status_code=404,
-            template='404.html'
-        )
-        try_url(
-            'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'favorites'}, 
-            template='user_favorites.html'
-        )
-        try_url(
-            'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'email_subscriptions'}, 
-            status_code=404,
-            template='404.html'
-        )

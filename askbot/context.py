@@ -3,8 +3,8 @@ from askbot.conf import settings as askbot_settings
 def application_settings(context):
     my_settings = askbot_settings.as_dict()
     my_settings['LANGUAGE_CODE'] = settings.LANGUAGE_CODE
-    my_settings['FORUM_SCRIPT_ALIAS'] = settings.FORUM_SCRIPT_ALIAS
     my_settings['LANGUAGE_PROGRESS'] = settings.LANGUAGE_PROGRESS
+    my_settings['ASKBOT_URL'] = settings.ASKBOT_URL
     #print '\n'.join(sorted(my_settings.keys()))
     return {'settings':my_settings}
 

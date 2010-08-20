@@ -26,6 +26,21 @@ msgstr "Kysymyksesi ja kaikki sen vastaukset on poistettu"
 msgid "Your question has been deleted"
 msgstr "Kysymyksesi on poistettu"
 
+#, fuzzy
+msgid "blocked users cannot post"
+msgstr "Sorry, your account appears to be blocked and you " 
+"cannot make new posts until this issue is resolved. "
+"Please contact the forum administrator to reach a "
+"resolution."
+
+#, fuzzy
+msgid "suspended users cannot post"
+msgstr "Sorry, your account appears to be suspended and you "
+"cannot make new posts until this issue is resolved. "
+"You can, however edit your existing posts. "
+"Please contact the forum administrator to "
+"reach a resolution."
+
 #: auth.py:535
 msgid "The question and all of it's answers have been deleted"
 msgstr "Kysymys ja kaikki sen vastaukset on poistettu"
@@ -33,6 +48,23 @@ msgstr "Kysymys ja kaikki sen vastaukset on poistettu"
 #: auth.py:538
 msgid "The question has been deleted"
 msgstr "Kysymys on poistettu"
+
+msgid "anonymous users cannot vote"
+msgstr "kirjaudu sisään, jotta voit käyttää tätä ominaisuutta"
+
+#, python-format
+msgid ">%(points)s points required to upvote"
+msgstr "tarvitset >%(points)s points äänestämiseen "
+
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr ">%(points)s mainetta tarvitaan"
+
+msgid "cannot vote for own posts"
+msgstr "et voi äänestää omia postauksia"
+
+msgid "cannot revoke old vote"
+msgstr "vanhoja ääniä ei voi muuttaa"
 
 #: feed.py:22
 msgid " - "
@@ -4767,14 +4799,16 @@ msgstr "profiili - äänet"
 msgid "profile - email subscriptions"
 msgstr "profiili - sähköpostitilaukset"
 
-#: views/writers.py:72
-msgid "uploading images is limited to users with >60 reputation points"
-msgstr "sorry, file uploading requires karma >60"
+#: views/writers.py:67
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
+msgstr "sorry, file uploading requires karma >%(min_rep)s"
 
-#: views/writers.py:74
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+#: views/writers.py:69
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
 msgstr ""
-"hyväksytyt tiedostotyypit ovat 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
+"hyväksytyt tiedostotyypit ovat '%(file_types)s'"
 
 #: views/writers.py:76
 #, python-format

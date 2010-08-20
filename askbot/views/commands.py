@@ -10,18 +10,75 @@ import datetime
 from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from django.utils import simplejson
+from django.core import exceptions
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render_to_response
 from django.utils.translation import ugettext as _
 from django.template import RequestContext
-from askbot.models import *
+from askbot.models import * #todo: clean this up
 from askbot.forms import CloseForm
 from askbot import auth
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from askbot.utils.decorators import ajax_method, ajax_login_required
+from askbot.templatetags import extra_filters as template_filters
 import logging
+
+def process_vote(user = None, vote_direction = None, post = None):
+    """function (non-view) that actually processes user votes
+    - i.e. up- or down- votes
+
+    in the future this needs to be converted into a real view function
+    for that url and javascript will need to be adjusted
+
+    also in the future make keys in response data be more meaningful
+    right now they are kind of cryptic - "status", "count"
+    """
+
+    if user.is_anonymous():
+        raise exceptions.PermissionDenied(_('anonymous users cannot vote'))
+
+    user.assert_can_vote_for_post(
+                                    post = post, 
+                                    direction = vote_direction
+                                )
+
+    vote = user.get_old_vote_for_post(post)
+    response_data = {}
+    if vote != None:
+        user.assert_can_revoke_old_vote(vote)
+        score_delta = vote.cancel()
+        response_data['count'] = post.score + score_delta
+        response_data['status'] = 1 #this means "cancel"
+
+    else:
+        #this is a new vote
+        votes_left = user.get_unused_votes_today()
+        if votes_left <= 0:
+            raise exceptions.PermissionDenied(
+                            _('Sorry you ran out of votes for today')
+                        )
+
+        votes_left -= 1
+        if votes_left <= \
+            askbot_settings.VOTES_LEFT_WARNING_THRESHOLD:
+            msg = _('You have %(votes_left)s votes left for today') \
+                    % {'votes_left': votes_left }
+            response_data['message'] = msg
+
+        if vote_direction == 'up':
+            vote = user.upvote(post = post)
+        else:
+            vote = user.downvote(post = post)
+
+        response_data['count'] = post.score 
+        response_data['status'] = 0 #this means "not cancel", normal operation
+
+    response_data['success'] = 1
+
+    return response_data
+
 
 def vote(request, id):
     """
@@ -44,7 +101,7 @@ def vote(request, id):
     accept answer code:
         response_data['allowed'] = -1, Accept his own answer   0, no allowed - Anonymous    1, Allowed - by default
         response_data['success'] =  0, failed                                               1, Success - by default
-        response_data['status']  =  0, By default                                           1, Answer has been accepted already(Cancel)
+        response_data['status']  =  0, By default                       1, Answer has been accepted already(Cancel)
 
     vote code:
         allowed = -3, Don't have enough votes left
@@ -72,49 +129,89 @@ def vote(request, id):
         "message" : ''
     }
 
-    def __can_vote(vote_score, user):#refactor - belongs to auth.py
-        if vote_score == 1:#refactor magic number
-            return auth.can_vote_up(request.user)
-        else:
-            return auth.can_vote_down(request.user)
-
     try:
-        if not request.user.is_authenticated():
-            response_data['allowed'] = 0
-            response_data['success'] = 0
+        if request.is_ajax() and request.method == 'POST':
+            vote_type = request.POST.get('type')
+        else:
+            raise Exception(_('Sorry, something is not right here...'))
+
+        if vote_type == '0':
+            if request.user.is_authenticated():
+                answer_id = request.POST.get('postId')
+                answer = get_object_or_404(Answer, id = answer_id)
+                question = answer.question
+                # make sure question author is current user
+                if answer.accepted:
+                    request.user.unaccept_best_answer(answer)
+                    response_data['status'] = 1 #cancelation
+                else:
+                    request.user.accept_best_answer(answer)
+            else:
+                raise exceptions.PermissionDenied(
+                        _('Sorry, but anonymous users cannot accept answers')
+                    )
+
+        elif vote_type in ('1', '2', '5', '6'):#Q&A up/down votes
+
+            ###############################
+            # all this can be avoided with
+            # better query parameters
+            vote_direction = 'up'
+            if vote_type in ('2','6'):
+                vote_direction = 'down'
+
+            if vote_type in ('5', '6'):
+                #todo: fix this weirdness - why postId here 
+                #and not with question?
+                id = request.POST.get('postId')
+                post = get_object_or_404(Answer, id=id)
+            else:
+                post = get_object_or_404(Question, id=id)
+            #
+            ######################
+
+            response_data = process_vote(
+                                        user = request.user,
+                                        vote_direction = vote_direction,
+                                        post = post
+                                    )
+
+        elif vote_type in ['7', '8']:
+            #flag question or answer
+            if vote_type == '7':
+                post = get_object_or_404(Question, id=id)
+            if vote_type == '8':
+                id = request.POST.get('postId')
+                post = get_object_or_404(Answer, id=id)
+
+            request.user.flag_post(post)
+
+            response_data['count'] = post.offensive_flag_count
+            response_data['success'] = 1
+
+        elif vote_type in ['9', '10']:
+            #delete question or answer
+            post = get_object_or_404(Question, id = id) 
+            if vote_type == '10':
+                id = request.POST.get('postId')
+                post = get_object_or_404(Answer, id = id)
+
+            if post.deleted == True:
+                request.user.restore_post(post = post)
+            else:
+                request.user.delete_post(post = post)
 
         elif request.is_ajax() and request.method == 'POST':
+
+            if not request.user.is_authenticated():
+                response_data['allowed'] = 0
+                response_data['success'] = 0
+
             question = get_object_or_404(Question, id=id)
             vote_type = request.POST.get('type')
 
             #accept answer
-            if vote_type == '0':
-                answer_id = request.POST.get('postId')
-                answer = get_object_or_404(Answer, id=answer_id)
-                # make sure question author is current user
-                if question.author == request.user:
-                    # answer user who is also question author is not allow to accept answer
-                    if answer.author == question.author:
-                        response_data['success'] = 0
-                        response_data['allowed'] = -1
-                    # check if answer has been accepted already
-                    elif answer.accepted:
-                        auth.onAnswerAcceptCanceled(answer, request.user)
-                        response_data['status'] = 1
-                    else:
-                        # set other answers in this question not accepted first
-                        for answer_of_question in Answer.objects.get_answers_from_question(question, request.user):
-                            if answer_of_question != answer and answer_of_question.accepted:
-                                auth.onAnswerAcceptCanceled(answer_of_question, request.user)
-
-                        #make sure retrieve data again after above author changes, they may have related data
-                        answer = get_object_or_404(Answer, id=answer_id)
-                        auth.onAnswerAccept(answer, request.user)
-                else:
-                    response_data['allowed'] = 0
-                    response_data['success'] = 0
-            # favorite
-            elif vote_type == '4':
+            if vote_type == '4':
                 has_favorited = False
                 fave = request.user.toggle_favorite_question(question)
                 response_data['count'] = FavoriteQuestion.objects.filter(
@@ -123,101 +220,11 @@ def vote(request, id):
                 if fave == False:
                     response_data['status'] = 1
 
-            elif vote_type in ['1', '2', '5', '6']:
-                post_id = id
-                post = question
-                vote_score = 1
-                if vote_type in ['5', '6']:
-                    answer_id = request.POST.get('postId')
-                    answer = get_object_or_404(Answer, id=answer_id)
-                    post_id = answer_id
-                    post = answer
-                if vote_type in ['2', '6']:
-                    vote_score = -1
-
-                if post.author == request.user:
-                    response_data['allowed'] = -1
-                elif not __can_vote(vote_score, request.user):
-                    response_data['allowed'] = -2
-                elif post.votes.filter(user=request.user).count() > 0:
-                    #todo: I think we have a bug here
-                    #we need to instead select vote on that particular post
-                    #not just the latest vote, although it is a good shortcut.
-                    #The problem is that this vote is deleted in one of
-                    #the on...Canceled() functions
-                    vote = post.votes.filter(user=request.user)[0]
-                    # get latest vote by the current user
-                    # unvote should be less than certain time
-                    if (datetime.datetime.now().day - vote.voted_at.day) \
-                        >= askbot_settings.MAX_DAYS_TO_CANCEL_VOTE:
-                        response_data['status'] = 2
-                    else:
-                        voted = vote.vote
-                        if voted > 0:
-                            # cancel upvote
-                            auth.onUpVotedCanceled(vote, post, request.user)
-
-                        else:
-                            # cancel downvote
-                            auth.onDownVotedCanceled(vote, post, request.user)
-
-                        response_data['status'] = 1
-                        response_data['count'] = post.score
-                elif Vote.objects.get_votes_count_today_from_user(request.user)\
-                >= askbot_settings.MAX_VOTES_PER_USER_PER_DAY:
-                    response_data['allowed'] = -3
-                else:
-                    vote = Vote(user=request.user, content_object=post, vote=vote_score, voted_at=datetime.datetime.now())
-                    if vote_score > 0:
-                        # upvote
-                        auth.onUpVoted(vote, post, request.user)
-                    else:
-                        # downvote
-                        auth.onDownVoted(vote, post, request.user)
-
-                    votes_left = askbot_settings.MAX_VOTES_PER_USER_PER_DAY \
-                    - Vote.objects.get_votes_count_today_from_user(request.user)
-                    if votes_left <= \
-                            askbot_settings.VOTES_LEFT_WARNING_THRESHOLD:
-                        response_data['message'] = u'%s votes left' % votes_left
-                    response_data['count'] = post.score
-            elif vote_type in ['7', '8']:
-                post = question
-                post_id = id
-                if vote_type == '8':
-                    post_id = request.POST.get('postId')
-                    post = get_object_or_404(Answer, id=post_id)
-
-                if FlaggedItem.objects.get_flagged_items_count_today(request.user) >= askbot_settings.MAX_FLAGS_PER_USER_PER_DAY:
-                    response_data['allowed'] = -3
-                elif not auth.can_flag_offensive(request.user):
-                    response_data['allowed'] = -2
-                elif post.flagged_items.filter(user=request.user).count() > 0:
-                    response_data['status'] = 1
-                else:
-                    item = FlaggedItem(user=request.user, content_object=post, flagged_at=datetime.datetime.now())
-                    auth.onFlaggedItem(item, post, request.user)
-                    response_data['count'] = post.offensive_flag_count
-            elif vote_type in ['9', '10']:
-                post = question
-                post_id = id
-                if vote_type == '10':
-                    post_id = request.POST.get('postId')
-                    post = get_object_or_404(Answer, id=post_id)
-
-                if not auth.can_delete_post(request.user, post):
-                    response_data['allowed'] = -2
-                elif post.deleted == True:
-                    logging.debug('debug restoring post in view')
-                    auth.onDeleteCanceled(post, request.user)
-                    response_data['status'] = 1
-                else:
-                    auth.onDeleted(post, request.user)
             elif vote_type == '11':#subscribe q updates
                 user = request.user
                 if user.is_authenticated():
                     if user not in question.followed_by.all():
-                        question.followed_by.add(user)
+                        user.follow_question(question)
                         if askbot_settings.EMAIL_VALIDATION == True \
                             and user.email_isvalid == False:
 
@@ -240,8 +247,7 @@ def vote(request, id):
             elif vote_type == '12':#unsubscribe q updates
                 user = request.user
                 if user.is_authenticated():
-                    if user in question.followed_by.all():
-                        question.followed_by.remove(user)
+                    user.unfollow_question(question)
         else:
             response_data['success'] = 0
             response_data['message'] = u'Request mode is not supported. Please try again.'
@@ -249,7 +255,8 @@ def vote(request, id):
         data = simplejson.dumps(response_data)
 
     except Exception, e:
-        response_data['message'] = str(e)
+        response_data['message'] = unicode(e)
+        response_data['success'] = 0
         data = simplejson.dumps(response_data)
     return HttpResponse(data, mimetype="application/json")
 
@@ -298,42 +305,63 @@ def close(request, id):#close question
     question close
     """
     question = get_object_or_404(Question, id=id)
-    if not auth.can_close_question(request.user, question):
-        return HttpResponse('Permission denied.')
-    if request.method == 'POST':
-        form = CloseForm(request.POST)
-        if form.is_valid():
-            reason = form.cleaned_data['reason']
-            question.closed = True
-            question.closed_by = request.user
-            question.closed_at = datetime.datetime.now()
-            question.close_reason = reason
-            question.save()
+    try:
+        if request.method == 'POST':
+            form = CloseForm(request.POST)
+            if form.is_valid():
+                reason = form.cleaned_data['reason']
+
+                request.user.close_question(
+                                        question = question,
+                                        reason = reason
+                                    )
+            return HttpResponseRedirect(question.get_absolute_url())
+        else:
+            request.user.assert_can_close_question(question)
+            form = CloseForm()
+            response = render_to_response(
+                            'close.html', 
+                            {
+                                'form' : form,
+                                'question' : question,
+                            }, 
+                            context_instance=RequestContext(request)
+                        )
+            return response
+    except exceptions.PermissionDenied, e:
+        request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
-    else:
-        form = CloseForm()
-        return render_to_response('close.html', {
-            'form' : form,
-            'question' : question,
-            }, context_instance=RequestContext(request))
 
 @login_required
 def reopen(request, id):#re-open question
     """view to initiate and process 
     question close
+
+    this is not an ajax view
     """
+
     question = get_object_or_404(Question, id=id)
     # open question
-    if not auth.can_reopen_question(request.user, question):
-        return HttpResponse('Permission denied.')
-    if request.method == 'POST' :
-        Question.objects.filter(id=question.id).update(closed=False,
-            closed_by=None, closed_at=None, close_reason=None)
+    try:
+        if request.method == 'POST' :
+            request.user.reopen_question(question)
+            return HttpResponseRedirect(question.get_absolute_url())
+        else:
+            request.user.assert_can_reopen_question(question)
+            closed_by_profile_url = question.closed_by.get_profile_url()
+            closed_by_username = question.closed_by.username
+            return render_to_response(
+                            'reopen.html', 
+                            {
+                                'question' : question,
+                                'closed_by_profile_url': closed_by_profile_url,
+                                'closed_by_username': closed_by_username,
+                            },
+                            context_instance=RequestContext(request)
+                        )
+    except exceptions.PermissionDenied, e:
+        request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
-    else:
-        return render_to_response('reopen.html', {
-            'question' : question,
-            }, context_instance=RequestContext(request))
 
 #askbot-user communication system
 def read_message(request):#marks message a read

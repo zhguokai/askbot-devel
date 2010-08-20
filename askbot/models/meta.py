@@ -56,6 +56,27 @@ class Vote(base.MetaContent, base.UserContent):
         assert(vote_type in (self.VOTE_UP, self.VOTE_DOWN))
         return self.vote != vote_type
 
+    def cancel(self):
+        """cancel the vote
+        while taking into account whether vote was up
+        or down
+
+        return change in score on the post
+        """
+        #importing locally because of circular dependency
+        from askbot import auth
+        score_before = self.content_object.score
+        if self.vote > 0:
+            # cancel upvote
+            auth.onUpVotedCanceled(self, self.content_object, self.user)
+
+        else:
+            # cancel downvote
+            auth.onDownVotedCanceled(self, self.content_object, self.user)
+        score_after = self.content_object.score
+
+        return score_after - score_before
+
 
 class FlaggedItemManager(models.Manager):
     def get_flagged_items_count_today(self, user):
@@ -104,6 +125,9 @@ class Comment(base.MetaContent, base.UserContent):
     def set_text(self, text):
         self.comment = text
 
+    def get_owner(self):
+        return self.user
+
     def get_updated_activity_data(self, created = False):
         if self.content_object.__class__.__name__ == 'Question':
             return const.TYPE_ACTIVITY_COMMENT_QUESTION, self
@@ -136,6 +160,8 @@ class Comment(base.MetaContent, base.UserContent):
 
         argument potential_subscribers is required as it saves on db hits
         """
+        #print 'in meta function'
+        #print 'potential subscribers: ', potential_subscribers
 
         subscriber_set = set()
 
@@ -148,44 +174,42 @@ class Comment(base.MetaContent, base.UserContent):
             potential_subscribers.update(mentioned_users)
 
         if potential_subscribers:
-            comment_subscribers = EmailFeedSetting.objects.filter(
-                                            subscriber__in = potential_subscribers,
-                                            feed_type = 'm_and_c',
-                                            frequency = 'i'
-                                        ).values_list(
-                                                'subscriber', 
-                                                flat=True
-                                        )
+            comment_subscribers = EmailFeedSetting.filter_subscribers(
+                                        potential_subscribers = potential_subscribers,
+                                        feed_type = 'm_and_c',
+                                        frequency = 'i'
+                                    )
             subscriber_set.update(comment_subscribers)
+            #print 'comment subscribers: ', comment_subscribers
 
         origin_post = self.get_origin_post()
         selective_subscribers = origin_post.followed_by.all()
         if selective_subscribers:
-            selective_subscribers = EmailFeedSetting.objects.filter(
-                                                subscriber__in = selective_subscribers,
-                                                feed_type = 'q_sel',
-                                                frequency = 'i'
-                                            ).values_list(
-                                                    'subscriber', 
-                                                    flat=True
-                                            )
+            selective_subscribers = EmailFeedSetting.filter_subscribers(
+                                    potential_subscribers = selective_subscribers,
+                                    feed_type = 'q_sel',
+                                    frequency = 'i'
+                                )
             for subscriber in selective_subscribers:
                 if origin_post.passes_tag_filter_for_user(subscriber):
                     subscriber_set.add(subscriber)
 
             subscriber_set.update(selective_subscribers)
+            #print 'selective subscribers: ', selective_subscribers
 
-        global_subscribers = EmailFeedSetting.objects.filter(
+        global_subscribers = EmailFeedSetting.filter_subscribers(
                                             feed_type = 'q_all',
                                             frequency = 'i'
-                                        ).values_list(
-                                                'subscriber', 
-                                                flat=True
                                         )
+        #print 'global subscribers: ', global_subscribers
 
         subscriber_set.update(global_subscribers)
+
+        #print 'exclude list is: ', exclude_list
         if exclude_list:
             subscriber_set -= set(exclude_list)
+
+        #print 'final list of subscribers:', subscriber_set
 
         return list(subscriber_set)
 

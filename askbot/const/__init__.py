@@ -31,6 +31,8 @@ TYPE_REPUTATION = (
     (-6, 'lose_by_flagged_lastrevision_3_times'),
     (-7, 'lose_by_flagged_lastrevision_5_times'),
     (-8, 'lose_by_upvote_canceled'),
+    #for reputation type 10 Repute.comment field is required
+    (10, 'assigned_by_moderator'),
 )
 
 #do not translate these!!!
@@ -206,6 +208,21 @@ USERNAME_REGEX_STRING = r'^[\w ]+$'
 TWITTER_STYLE_MENTION_TERMINATION_CHARS = '\n ;,.!?<>'
 
 COMMENT_HARD_MAX_LENGTH = 2048
+
+#user status ch
+USER_STATUS_CHOICES = (
+        #in addition to these there is administrator
+        #admin status is determined by the User.is_superuser() call
+        ('m', _('moderator')), #user with moderation privilege
+        ('a', _('approved')), #regular user
+        ('w', _('watched')), #regular user placed on the moderation watch
+        ('s', _('suspended')), #suspended user who cannot post new stuff
+        ('b', _('blocked')), #blocked
+)
+DEFAULT_USER_STATUS = 'w'
+
+#number of items to show in user views
+USER_VIEW_DATA_SIZE = 50
 
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *

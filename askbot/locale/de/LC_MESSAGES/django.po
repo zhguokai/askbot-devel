@@ -24,52 +24,44 @@ msgstr "Ihre Frage und alle Antworten wurden gelöscht."
 msgid "Your question has been deleted"
 msgstr "Ihre Frage wurde gelöscht."
 
-#: auth.py:535
-msgid "The question and all of it's answers have been deleted"
-msgstr "Die Frage und alle Antworten wurden gelöscht."
+#, fuzzy
+msgid "blocked users cannot post"
+msgstr "Sorry, your account appears to be blocked and you " 
+"cannot make new posts until this issue is resolved. "
+"Please contact the forum administrator to reach a "
+"resolution."
 
-#: auth.py:538
-msgid "The question has been deleted"
-msgstr "Die Frage wurde gelöscht."
+#, fuzzy
+msgid "suspended users cannot post"
+msgstr "Sorry, your account appears to be suspended and you "
+"cannot make new posts until this issue is resolved. "
+"You can, however edit your existing posts. "
+"Please contact the forum administrator to "
+"reach a resolution."
 
-#: feed.py:22
-msgid " - "
-msgstr "-"
+#: django_authopenid/forms.py:135
+msgid "can't have two logins to the same account yet, sorry."
+msgstr "Zwei Logins für den selben Zugang sind leider noch nicht möglich."
 
-#: feed.py:22
-msgid "latest questions"
-msgstr "Neueste Fragen"
+msgid "anonymous users cannot vote"
+msgstr "Gastbenutzer können nicht abstimmen"
 
-#: forms.py:23 skins/default/templates/answer_edit_tips.html:35
-#: skins/default/templates/answer_edit_tips.html:39
-#: skins/default/templates/question_edit_tips.html:32
-#: skins/default/templates/question_edit_tips.html:37
-msgid "title"
-msgstr "Titel"
+#, python-format
+msgid ">%(points)s points required to upvote"
+msgstr "Positiv bewerten benötigt mindestens %(points)s Punkte "
 
-#: forms.py:24
-msgid "please enter a descriptive title for your question"
-msgstr "Bitte geben Sie einen Aussagekräftigen Titel für Ihre Frage ein."
+#, python-format
+msgid ">%(points)s points required to downvote"
+msgstr "Negativ bewerten benötigt mindestens %(points)s Punkte"
 
-#: forms.py:29
-msgid "title must be > 10 characters"
-msgstr "Der Titel muß länger als 10 Zeichen sein."
+msgid "cannot vote for own posts"
+msgstr "Über selbst verfaßte Beiträge kann nicht abgestimmt werden"
 
-#: forms.py:38
-msgid "content"
-msgstr "Inhalt"
+msgid "cannot revoke old vote"
+msgstr "Bewertung kann nicht mehr zurückgenommen werden"
 
-#: forms.py:44
-msgid "question content must be > 10 characters"
-msgstr "Der Fragentext muß länger als 10 Buchstaben sein."
-
-#: forms.py:53 skins/default/templates/header.html:68
-msgid "tags"
-msgstr "Tags"
-
-#: forms.py:55
-msgid ""
-"Tags are short keywords, with no spaces within. Up to five tags can be used."
+#: django_authopenid/forms.py:157
+msgid "Please enter valid username and password (both are case-sensitive)."
 msgstr ""
 "Tags sind kurze Stichwörter. Sie dürfen keine Leerzeichen enthalten. Bis zu "
 "fünf Tags können vergeben werden."
@@ -1090,16 +1082,6 @@ msgstr "i-names werden nicht unterstützt."
 #: deps/django_authopenid/forms.py:135
 msgid "Account with this name already exists on the forum"
 msgstr "Ein Zugang dieses Namens existiert bereits!"
-
-#: deps/django_authopenid/forms.py:136
-msgid "can't have two logins to the same account yet, sorry."
-msgstr "Zwei Logins für den selben Zugang sind leider noch nicht möglich."
-
-#: deps/django_authopenid/forms.py:158
-msgid "Please enter valid username and password (both are case-sensitive)."
-msgstr ""
-"Bitte geben Sie einen gültigen Benutzernamen und ein Passwort ein. Es wird "
-"zwischen Groß- und Kleinschreibung unterschieden."
 
 #: deps/django_authopenid/forms.py:161 deps/django_authopenid/forms.py:211
 msgid "This account is inactive."
@@ -4912,13 +4894,15 @@ msgstr "Abgegebene Bewertungen"
 msgid "profile - email subscriptions"
 msgstr "E-Mail-Abonnements"
 
-#: views/writers.py:72
-msgid "uploading images is limited to users with >60 reputation points"
-msgstr "Das Hochladen von Dateien benötigt 60 Punkte oder mehr"
+#: forum/views/writers.py:70
+#, python-format
+msgid "uploading images is limited to users with >%(min_rep)s reputation points"
+msgstr "Das Hochladen von Dateien benötigt %(min_rep)s Punkte oder mehr"
 
-#: views/writers.py:74
-msgid "allowed file types are 'jpg', 'jpeg', 'gif', 'bmp', 'png', 'tiff'"
-msgstr "Erlaubte Dateitypen: 'jpg', 'jpeg', 'gif', 'bmp', 'png' und 'tiff'"
+#: forum/views/writers.py:72
+#, python-format
+msgid "allowed file types are '%(file_types)s'"
+msgstr "Erlaubte Dateitypen: '%(file_types)s'"
 
 #: views/writers.py:76
 #, python-format
