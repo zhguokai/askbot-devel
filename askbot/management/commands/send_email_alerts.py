@@ -14,7 +14,7 @@ from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from askbot import const
 
-DEBUG_THIS_COMMAND = True
+DEBUG_THIS_COMMAND = False
 
 def get_all_origin_posts(mentions):
     origin_posts = set()
