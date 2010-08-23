@@ -2,17 +2,18 @@
 # Copyright (C) 2009 Gang Chen
 # This file is distributed under the same license as the CNPROG package.
 # Evgeny Fadeev <evgeny.fadeev@gmail.com>, 2009.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-05-09 19:43-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-08-23 14:13\n"
+"Last-Translator: <evgenyfadeev@aol.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+"X-Translated-Using: django-rosetta 0.5.6\n"
 
 #: django_authopenid/forms.py:71 django_authopenid/views.py:132
 #, fuzzy
@@ -32,19 +33,11 @@ msgstr "匿名用户不能投票"
 
 #, fuzzy
 msgid "blocked users cannot post"
-msgstr "Sorry, your account appears to be blocked and you " 
-"cannot make new posts until this issue is resolved. "
-"Please contact the forum administrator to reach a "
-"resolution."
+msgstr "Sorry, your account appears to be blocked and you cannot make new posts until this issue is resolved. Please contact the forum administrator to reach a resolution."
 
 #, fuzzy
 msgid "suspended users cannot post"
-msgstr "Sorry, your account appears to be suspended and you "
-"cannot make new posts until this issue is resolved. "
-"You can, however edit your existing posts. "
-"Please contact the forum administrator to "
-"reach a resolution."
-
+msgstr "Sorry, your account appears to be suspended and you cannot make new posts until this issue is resolved. You can, however edit your existing posts. Please contact the forum administrator to reach a resolution."
 
 #, python-format
 msgid ">%(points)s points required to downvote"
@@ -89,9 +82,7 @@ msgid "Please enter user name"
 msgstr "请帮助我们回答"
 
 #: django_authopenid/forms.py:206
-msgid ""
-"Please enter a valid                     username and password. Note that "
-"both fields are                     case-sensitive."
+msgid "Please enter a valid                     username and password. Note that both fields are                     case-sensitive."
 msgstr ""
 
 #: django_authopenid/forms.py:229
@@ -100,9 +91,7 @@ msgid "Current password"
 msgstr "确认密码"
 
 #: django_authopenid/forms.py:240
-msgid ""
-"Old password is incorrect.                     Please enter the correct "
-"password."
+msgid "Old password is incorrect.                     Please enter the correct password."
 msgstr ""
 
 #: django_authopenid/forms.py:305
@@ -170,7 +159,7 @@ msgstr ""
 msgid "validate/"
 msgstr ""
 
-# user_info.html 
+# user_info.html
 #: django_authopenid/urls.py:39
 #, fuzzy
 msgid "change/"
@@ -269,15 +258,11 @@ msgstr "和您的邮件地址是绑定的"
 
 #: django_authopenid/views.py:1164
 #, python-format
-msgid ""
-"Could not change password. Confirmation key '%s'                is not "
-"registered."
+msgid "Could not change password. Confirmation key '%s'                is not registered."
 msgstr ""
 
 #: django_authopenid/views.py:1174
-msgid ""
-"Can not change password. User don't exist anymore                 in our "
-"database."
+msgid "Can not change password. User don't exist anymore                 in our database."
 msgstr ""
 
 #: django_authopenid/views.py:1184
@@ -540,8 +525,7 @@ msgstr "标题"
 
 #: forum/forms.py:24
 msgid "please enter a descriptive title for your question"
-msgstr ""
-"请输入对问题具有描述性质的标题 - “帮忙！紧急求助！”不是建议的提问方式。"
+msgstr "请输入对问题具有描述性质的标题 - “帮忙！紧急求助！”不是建议的提问方式。"
 
 #: forum/forms.py:29
 msgid "title must be > 10 characters"
@@ -560,8 +544,7 @@ msgid "tags"
 msgstr "标签"
 
 #: forum/forms.py:55
-msgid ""
-"Tags are short keywords, with no spaces within. Up to five tags can be used."
+msgid "Tags are short keywords, with no spaces within. Up to five tags can be used."
 msgstr ""
 
 #: forum/forms.py:62 forum/skins/default/templates/question_retag.html:39
@@ -595,9 +578,7 @@ msgid "community wiki"
 msgstr "社区Wiki"
 
 #: forum/forms.py:98
-msgid ""
-"if you choose community wiki option, the question and answer do not generate "
-"points and name of author will not be shown"
+msgid "if you choose community wiki option, the question and answer do not generate points and name of author will not be shown"
 msgstr "选择社区wiki模式，问答不计算积分，签名也不显示作者信息"
 
 #: forum/forms.py:114
@@ -605,12 +586,8 @@ msgid "update summary:"
 msgstr "更新概要："
 
 #: forum/forms.py:115
-msgid ""
-"enter a brief summary of your revision (e.g. fixed spelling, grammar, "
-"improved style, this field is optional)"
-msgstr ""
-"输入本次修改的简单概述（如：修改了别字，修正了语法，改进了样式等。非必填"
-"项。）"
+msgid "enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)"
+msgstr "输入本次修改的简单概述（如：修改了别字，修正了语法，改进了样式等。非必填项。）"
 
 #: forum/forms.py:118
 msgid "Automatically accept user's contributions for the email updates"
@@ -897,37 +874,24 @@ msgid "new question"
 msgstr "提问"
 
 #: forum/management/commands/send_email_alerts.py:272
-msgid ""
-"Please visit the forum and see what's new! Could you spread the word about "
-"it - can somebody you know help answering those questions or benefit from "
-"posting one?"
+msgid "Please visit the forum and see what's new! Could you spread the word about it - can somebody you know help answering those questions or benefit from posting one?"
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:284
-msgid ""
-"Your most frequent subscription setting is 'daily' on selected questions. If "
-"you are receiving more than one email per dayplease tell about this issue to "
-"the forum administrator."
+msgid "Your most frequent subscription setting is 'daily' on selected questions. If you are receiving more than one email per dayplease tell about this issue to the forum administrator."
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:290
-msgid ""
-"Your most frequent subscription setting is 'weekly' if you are receiving "
-"this email more than once a week please report this issue to the forum "
-"administrator."
+msgid "Your most frequent subscription setting is 'weekly' if you are receiving this email more than once a week please report this issue to the forum administrator."
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:296
-msgid ""
-"There is a chance that you may be receiving links seen before - due to a "
-"technicality that will eventually go away. "
+msgid "There is a chance that you may be receiving links seen before - due to a technicality that will eventually go away. "
 msgstr ""
 
 #: forum/management/commands/send_email_alerts.py:311
 #, python-format
-msgid ""
-"go to %(link)s to change frequency of email updates or %(email)s "
-"administrator"
+msgid "go to %(link)s to change frequency of email updates or %(email)s administrator"
 msgstr ""
 
 #: forum/middleware/anon_user.py:34
@@ -1507,9 +1471,7 @@ msgid "url has error - please check it;"
 msgstr "请求的地址有误 - 请核实原始URL地址；"
 
 #: forum/skins/default/templates/404.html:30
-msgid ""
-"the page you tried to visit is protected or you don't have sufficient "
-"points, see"
+msgid "the page you tried to visit is protected or you don't have sufficient points, see"
 msgstr "访问的页面被保护或你的积分不够，参见"
 
 #: forum/skins/default/templates/404.html:31
@@ -1829,16 +1791,13 @@ msgstr "枚奖牌"
 
 #: forum/skins/default/templates/badges.html:21
 msgid "Community gives you awards for your questions, answers and votes."
-msgstr ""
-"提出问题，给予回答，投出你的票 - CNProg 会针对你在社区的表现，授予你各类奖"
-"牌。"
+msgstr "提出问题，给予回答，投出你的票 - CNProg 会针对你在社区的表现，授予你各类奖牌。"
 
 #: forum/skins/default/templates/badges.html:22
 #, fuzzy, python-format
 msgid ""
 "Below is the list of available badges and number \n"
-"    of times each type of badge has been awarded. Give us feedback at %"
-"(feedback_faq_url)s.\n"
+"    of times each type of badge has been awarded. Give us feedback at %(feedback_faq_url)s.\n"
 "    "
 msgstr "这里列出社区所有的奖牌，以及到目前为此，每个奖牌被授予的用户人数。"
 
@@ -1998,47 +1957,28 @@ msgid "What kinds of questions can I ask here?"
 msgstr "我可以在这里提问什么样的问题？"
 
 #: forum/skins/default/templates/faq.html:17
-msgid ""
-"Most importanly - questions should be <strong>relevant</strong> to this "
-"community."
+msgid "Most importanly - questions should be <strong>relevant</strong> to this community."
 msgstr "毫无疑问，首先必须是<span class=\"yellowbg\">技术编程问题！</span>"
 
 #: forum/skins/default/templates/faq.html:18
-msgid ""
-"Before asking the question - please make sure to use search to see whether "
-"your question has alredy been answered."
-msgstr ""
-"提问之前，充分利用系统的自动查找、标签和搜索，看看是否已经有一样的问题并有了"
-"答案。"
+msgid "Before asking the question - please make sure to use search to see whether your question has alredy been answered."
+msgstr "提问之前，充分利用系统的自动查找、标签和搜索，看看是否已经有一样的问题并有了答案。"
 
 #: forum/skins/default/templates/faq.html:21
 msgid "What questions should I avoid asking?"
 msgstr "什么样的问题我不该在这里提问？"
 
 #: forum/skins/default/templates/faq.html:22
-msgid ""
-"Please avoid asking questions that are not relevant to this community, too "
-"subjective and argumentative."
-msgstr ""
-"<span class=\"yellowbg\">与程序员或技术无关的，引起争吵或太过于主观性等违背社"
-"区宗旨的内容。</span>本站建立是为了帮助大众程序员解决实际技术问题，我们需要实"
-"际的问题！"
+msgid "Please avoid asking questions that are not relevant to this community, too subjective and argumentative."
+msgstr "<span class=\"yellowbg\">与程序员或技术无关的，引起争吵或太过于主观性等违背社区宗旨的内容。</span>本站建立是为了帮助大众程序员解决实际技术问题，我们需要实际的问题！"
 
 #: forum/skins/default/templates/faq.html:27
 msgid "What should I avoid in my answers?"
 msgstr "什么样的回答是不受欢迎的？"
 
 #: forum/skins/default/templates/faq.html:28
-msgid ""
-"is a Q&A site, not a discussion group. Therefore - please avoid having "
-"discussions in your answers, comment facility allows some space for brief "
-"discussions."
-msgstr ""
-"希望用户提供针对提问的技术回答，可以是进一步了解问题实质，给予参考方案，或完"
-"全解决问题的回答。我们希望通过问答的形式解决用户的实际问题。因此，<span "
-"class=\"yellowbg\">我们不>欢迎在回答中出现不是回答问题的内容，包括针对他人回"
-"答的讨论，和其他无意义的浪费网络资源行为</span>。CNProg建议您使用<span class="
-"\"yellowbg\">评论</span>功能来讨论你的意见和想法。"
+msgid "is a Q&A site, not a discussion group. Therefore - please avoid having discussions in your answers, comment facility allows some space for brief discussions."
+msgstr "希望用户提供针对提问的技术回答，可以是进一步了解问题实质，给予参考方案，或完全解决问题的回答。我们希望通过问答的形式解决用户的实际问题。因此，<span class=\"yellowbg\">我们不>欢迎在回答中出现不是回答问题的内容，包括针对他人回答的讨论，和其他无意义的浪费网络资源行为</span>。CNProg建议您使用<span class=\"yellowbg\">评论</span>功能来讨论你的意见和想法。"
 
 #: forum/skins/default/templates/faq.html:32
 msgid "Who moderates this community?"
@@ -2053,12 +1993,8 @@ msgid "This website is moderated by the users."
 msgstr "社区没有严格意义上的管理员身份"
 
 #: forum/skins/default/templates/faq.html:35
-msgid ""
-"The reputation system allows users earn the authorization to perform a "
-"variety of moderation tasks."
-msgstr ""
-"通过积分运作，<span class=\"yellowbg\">每个用户都有权限创建标签，进行对所有问"
-"题、回答的投票、编辑、关闭等操作。</span>"
+msgid "The reputation system allows users earn the authorization to perform a variety of moderation tasks."
+msgstr "通过积分运作，<span class=\"yellowbg\">每个用户都有权限创建标签，进行对所有问题、回答的投票、编辑、关闭等操作。</span>"
 
 #: forum/skins/default/templates/faq.html:40
 msgid "How does reputation system work?"
@@ -2070,14 +2006,7 @@ msgid "Rep system summary"
 msgstr "更新概要："
 
 #: forum/skins/default/templates/faq.html:42
-msgid ""
-"For example, if you ask an interesting question or give a helpful answer, "
-"your input will be upvoted. On the other hand if the answer is misleading - "
-"it will be downvoted. Each vote in favor will generate <strong>10</strong> "
-"points, each vote against will subtract <strong>2</strong> points. There is "
-"a limit of <strong>200</strong> points that can be accumulated per question "
-"or answer. The table below explains reputation point requirements for each "
-"type of moderation task."
+msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points. There is a limit of <strong>200</strong> points that can be accumulated per question or answer. The table below explains reputation point requirements for each type of moderation task."
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:53
@@ -2136,8 +2065,7 @@ msgstr ""
 
 #: forum/skins/default/templates/faq.html:105
 #, python-format
-msgid ""
-"how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
+msgid "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
 msgstr ""
 
 #: forum/skins/default/templates/faq.html:110
@@ -2153,12 +2081,8 @@ msgid "To register, do I need to create new password?"
 msgstr "我需要注册一个新用户吗？"
 
 #: forum/skins/default/templates/faq.html:115
-msgid ""
-"No, you don't have to. You can login through any service that supports "
-"OpenID, e.g. Google, Yahoo, AOL, etc."
-msgstr ""
-"不需要。社区提供了OpenID的登录支持，你要用Google、Yahoo等任何支持OpenID登录的"
-"帐号就可以使用系统。"
+msgid "No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."
+msgstr "不需要。社区提供了OpenID的登录支持，你要用Google、Yahoo等任何支持OpenID登录的帐号就可以使用系统。"
 
 #: forum/skins/default/templates/faq.html:116
 msgid "Login now!"
@@ -2173,13 +2097,8 @@ msgid "Goal of this site is..."
 msgstr "CNProg 是为了帮助程序员解决更多问题，更加方便的解决问题。"
 
 #: forum/skins/default/templates/faq.html:122
-msgid ""
-"So questions and answers can be edited like wiki pages by experienced users "
-"of this site and this improves the overall quality of the knowledge base "
-"content."
-msgstr ""
-"所以问题和答案都是如Wiki一样可编辑的，我们希望社区能帮助用户沉淀、积累更多有"
-"用的知识和经验。"
+msgid "So questions and answers can be edited like wiki pages by experienced users of this site and this improves the overall quality of the knowledge base content."
+msgstr "所以问题和答案都是如Wiki一样可编辑的，我们希望社区能帮助用户沉淀、积累更多有用的知识和经验。"
 
 #: forum/skins/default/templates/faq.html:123
 msgid "If this approach is not for you, we respect your choice."
@@ -2191,9 +2110,7 @@ msgstr "还有其他问题？"
 
 #: forum/skins/default/templates/faq.html:128
 #, fuzzy, python-format
-msgid ""
-"Please ask your question at %(ask_question_url)s, help make our community "
-"better!"
+msgid "Please ask your question at %(ask_question_url)s, help make our community better!"
 msgstr "如果您对社区还有其他疑问，请一起来完善我们的"
 
 #: forum/skins/default/templates/faq.html:130
@@ -2218,8 +2135,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"            <span class='big strong'>Dear %(user_name)s</span>, we look "
-"forward to hearing your feedback. \n"
+"            <span class='big strong'>Dear %(user_name)s</span>, we look forward to hearing your feedback. \n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
@@ -2227,8 +2143,7 @@ msgstr ""
 #: forum/skins/default/templates/feedback.html:24
 msgid ""
 "\n"
-"            <span class='big strong'>Dear visitor</span>, we look forward to "
-"hearing your feedback.\n"
+"            <span class='big strong'>Dear visitor</span>, we look forward to hearing your feedback.\n"
 "            Please type and send us your message below.\n"
 "            "
 msgstr ""
@@ -2333,12 +2248,8 @@ msgid "Logout"
 msgstr "退出登录"
 
 #: forum/skins/default/templates/logout.html:19
-msgid ""
-"As a registered user you can login with your OpenID, log out of the site or "
-"permanently remove your account."
-msgstr ""
-"您是系统的<strong class=\"darkred\">注册</strong>用户，可以随时使用OpenID帐号"
-"登录系统或者注销登录。"
+msgid "As a registered user you can login with your OpenID, log out of the site or permanently remove your account."
+msgstr "您是系统的<strong class=\"darkred\">注册</strong>用户，可以随时使用OpenID帐号登录系统或者注销登录。"
 
 #: forum/skins/default/templates/logout.html:20
 msgid "Logout now"
@@ -2407,10 +2318,7 @@ msgstr "隐私政策"
 
 #: forum/skins/default/templates/privacy.html:15
 msgid "general message about privacy"
-msgstr ""
-"CNProg承认用户隐私的重要性。本文件概述在您浏览CNProg过程中所接收和收集的个人"
-"信息的种类，以及CNProg所采取的保护信息的一些措施。CNProg希望这将有助于您在知"
-"情的情况下，就和我们 共享个人信息的问题作出决定。"
+msgstr "CNProg承认用户隐私的重要性。本文件概述在您浏览CNProg过程中所接收和收集的个人信息的种类，以及CNProg所采取的保护信息的一些措施。CNProg希望这将有助于您在知情的情况下，就和我们 共享个人信息的问题作出决定。"
 
 #: forum/skins/default/templates/privacy.html:18
 msgid "Site Visitors"
@@ -2418,10 +2326,7 @@ msgstr "网站访问者"
 
 #: forum/skins/default/templates/privacy.html:20
 msgid "what technical information is collected about visitors"
-msgstr ""
-"当您访问本网站或使用我们的某些在线服务时，服务器会自动记录信息，包括但不限于"
-"URL、IP地址、浏览器的类型、屏幕分辨率、系统类型和使用的语言以及访问日期和时"
-"间。我们的目的是为了向您>提供更好的用户服务，包括可能为您提供定制的在线服务。"
+msgstr "当您访问本网站或使用我们的某些在线服务时，服务器会自动记录信息，包括但不限于URL、IP地址、浏览器的类型、屏幕分辨率、系统类型和使用的语言以及访问日期和时间。我们的目的是为了向您>提供更好的用户服务，包括可能为您提供定制的在线服务。"
 
 #: forum/skins/default/templates/privacy.html:23
 msgid "Personal Information"
@@ -2429,12 +2334,7 @@ msgstr "个人身份信息"
 
 #: forum/skins/default/templates/privacy.html:25
 msgid "details on personal information policies"
-msgstr ""
-"在登录使用CNProg的提问和回答功能时，我们要求使用者提供用户名、密码、电子邮件"
-"等信息。CNProg收集这类关于个人身份的信息只是为了登录系统获得使用功能的目的。"
-"我们不会向任何其他社区用 户、个人或第三方透露您的密码或者电子邮件信息。用户可"
-"以选择性地填写用户资料、个人网站、年龄、城市等信息，我们收集这些内容为了使用"
-"户能够更容易和更满意地使用CNProg提供的网页和服务。"
+msgstr "在登录使用CNProg的提问和回答功能时，我们要求使用者提供用户名、密码、电子邮件等信息。CNProg收集这类关于个人身份的信息只是为了登录系统获得使用功能的目的。我们不会向任何其他社区用 户、个人或第三方透露您的密码或者电子邮件信息。用户可以选择性地填写用户资料、个人网站、年龄、城市等信息，我们收集这些内容为了使用户能够更容易和更满意地使用CNProg提供的网页和服务。"
 
 #: forum/skins/default/templates/privacy.html:28
 msgid "Other Services"
@@ -2442,19 +2342,11 @@ msgstr "其他服务"
 
 #: forum/skins/default/templates/privacy.html:30
 msgid "details on sharing data with third parties"
-msgstr ""
-"CNProg可能会收集和统计用户访问本站的概况数据。例如，CNProg可能会检测网站最流"
-"行的部分功能。CNProg可能会公开显示或者提供给第三方使用该数据。但是，CNProg不"
-"会公开您的身份信息。"
+msgstr "CNProg可能会收集和统计用户访问本站的概况数据。例如，CNProg可能会检测网站最流行的部分功能。CNProg可能会公开显示或者提供给第三方使用该数据。但是，CNProg不会公开您的身份信息。"
 
 #: forum/skins/default/templates/privacy.html:35
 msgid "cookie policy details"
-msgstr ""
-"访问CNProg时，我们会向您的计算机发送一个或多个专门用于识别您的浏览器的Cookie"
-"（包含一个字符串的小文件）。 使用 Cookie 的目的是通过储存用户偏好、跟踪用户倾"
-"向（例如搜索方法）来提高我们的服务质量。大多数浏览器的初始设置均为接受 "
-"Cookie，但也可以将其重置为拒绝所有 Cookie 或在收到 Cookie 时提示。不过，如果"
-"禁用 Cookie，某些功能和服务可能无法正常运行。"
+msgstr "访问CNProg时，我们会向您的计算机发送一个或多个专门用于识别您的浏览器的Cookie（包含一个字符串的小文件）。 使用 Cookie 的目的是通过储存用户偏好、跟踪用户倾向（例如搜索方法）来提高我们的服务质量。大多数浏览器的初始设置均为接受 Cookie，但也可以将其重置为拒绝所有 Cookie 或在收到 Cookie 时提示。不过，如果禁用 Cookie，某些功能和服务可能无法正常运行。"
 
 #: forum/skins/default/templates/privacy.html:37
 msgid "Policy Changes"
@@ -2463,10 +2355,7 @@ msgstr "政策更改"
 #: forum/skins/default/templates/privacy.html:38
 #, fuzzy
 msgid "how privacy policies can be changed"
-msgstr ""
-"我们可能在事先通知或不通知的情况下随时更改此'隐私政策'，我们建议用户时常查看"
-"CNProg隐私政策的改动，在任何改动生效后您的继续访问和使用本站，我们假设您已同"
-"意了CNProg以上的所有条款。"
+msgstr "我们可能在事先通知或不通知的情况下随时更改此'隐私政策'，我们建议用户时常查看CNProg隐私政策的改动，在任何改动生效后您的继续访问和使用本站，我们假设您已同意了CNProg以上的所有条款。"
 
 #: forum/skins/default/templates/question.html:78
 #: forum/skins/default/templates/question.html:79
@@ -2515,8 +2404,7 @@ msgstr "关闭"
 
 #: forum/skins/default/templates/question.html:156
 #: forum/skins/default/templates/question.html:293
-msgid ""
-"report as offensive (i.e containing spam, advertising, malicious text, etc.)"
+msgid "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr "检举该帖为垃“水帖”（含广告、人身攻击、恶意言论等）"
 
 #: forum/skins/default/templates/question.html:157
@@ -2545,10 +2433,8 @@ msgstr "添加评论"
 #, fuzzy, python-format
 msgid "see <strong>%(counter)s</strong> more"
 msgid_plural "see <strong>%(counter)s</strong> more"
-msgstr[0] ""
-"个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
-msgstr[1] ""
-"个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
+msgstr[0] "个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
+msgstr[1] "个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
 
 #: forum/skins/default/templates/question.html:200
 #: forum/skins/default/templates/question.html:342
@@ -2557,15 +2443,12 @@ msgid "see <strong>%(counter)s</strong> more comment"
 msgid_plural ""
 "see <strong>%(counter)s</strong> more comments\n"
 "                                            "
-msgstr[0] ""
-"个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
-msgstr[1] ""
-"个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
+msgstr[0] "个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
+msgstr[1] "个 <span class=\"darkred\"><strong>没有回答的</strong></span> 问题。"
 
 #: forum/skins/default/templates/question.html:213
 #, fuzzy, python-format
-msgid ""
-"The question has been closed for the following reason \"%(close_reason)s\" by"
+msgid "The question has been closed for the following reason \"%(close_reason)s\" by"
 msgstr "问题以“%s”的原因已被"
 
 #: forum/skins/default/templates/question.html:215
@@ -2654,8 +2537,7 @@ msgstr ""
 
 #: forum/skins/default/templates/question.html:375
 #, python-format
-msgid ""
-"You can always adjust frequency of email updates from your %(profile_url)s"
+msgid "You can always adjust frequency of email updates from your %(profile_url)s"
 msgstr ""
 
 #: forum/skins/default/templates/question.html:380
@@ -2991,9 +2873,7 @@ msgstr ""
 #: forum/skins/default/templates/questions.html:190
 #, fuzzy
 msgid "There are no unanswered questions here"
-msgstr ""
-"您正在浏览所有<br><div class=\"questions-count\">%(num_q)s</div>个<p>问题按 "
-"<strong>问题创建时间</strong> 排序。最新加入的问题将显示在最前面。</p>"
+msgstr "您正在浏览所有<br><div class=\"questions-count\">%(num_q)s</div>个<p>问题按 <strong>问题创建时间</strong> 排序。最新加入的问题将显示在最前面。</p>"
 
 #: forum/skins/default/templates/questions.html:193
 #, fuzzy
@@ -3146,8 +3026,7 @@ msgstr "按流行程度排序"
 
 #: forum/skins/default/templates/tags.html:39
 #, python-format
-msgid ""
-"All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
+msgid "All tags matching '<span class=\"darkred\"><strong>%(stag)s</strong></span>'"
 msgstr ""
 
 #: forum/skins/default/templates/tags.html:42
@@ -3227,7 +3106,7 @@ msgstr "个人网站"
 msgid "location"
 msgstr "城市"
 
-# user_info.html 
+# user_info.html
 #: forum/skins/default/templates/user_info.html:86
 msgid "age"
 msgstr "年龄"
@@ -3316,8 +3195,7 @@ msgstr[1] ""
 
 #: forum/skins/default/templates/user_stats.html:72
 #, fuzzy, python-format
-msgid ""
-"see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
+msgid "see other questions with %(view_user)s's contributions tagged '%(tag_name)s' "
 msgstr "查看有关'%s'的问题"
 
 #: forum/skins/default/templates/user_stats.html:86
@@ -3396,8 +3274,7 @@ msgstr "用户名"
 #: forum/skins/default/templates/users.html:35
 #, fuzzy, python-format
 msgid "users matching query %(suser)s:"
-msgstr ""
-"匹配查询 '<span class=\"darkred\"><strong>%s</strong></span>' 的所有用户名："
+msgstr "匹配查询 '<span class=\"darkred\"><strong>%s</strong></span>' 的所有用户名："
 
 #: forum/skins/default/templates/users.html:39
 msgid "Nothing found."
@@ -3502,8 +3379,7 @@ msgid "Account: change OpenID URL"
 msgstr "更换OpenID地址"
 
 #: forum/skins/default/templates/authopenid/changeopenid.html:12
-msgid ""
-"This is where you can change your OpenID URL. Make sure you remember it!"
+msgid "This is where you can change your OpenID URL. Make sure you remember it!"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/changeopenid.html:14
@@ -3542,15 +3418,13 @@ msgstr ""
 #, python-format
 msgid ""
 "%(username)s already exists, choose another name for \n"
-"                            %(provider)s. Email is required too, see %"
-"(gravatar_faq_url)s\n"
+"                            %(provider)s. Email is required too, see %(gravatar_faq_url)s\n"
 "                        "
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/complete.html:35
 #, python-format
-msgid ""
-"register new external %(provider)s account info, see %(gravatar_faq_url)s"
+msgid "register new external %(provider)s account info, see %(gravatar_faq_url)s"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/complete.html:38
@@ -3652,9 +3526,7 @@ msgid "Account: delete account"
 msgstr "删除帐号"
 
 #: forum/skins/default/templates/authopenid/delete.html:12
-msgid ""
-"Note: After deleting your account, anyone will be able to register this "
-"username."
+msgid "Note: After deleting your account, anyone will be able to register this username."
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/delete.html:16
@@ -3705,9 +3577,7 @@ msgstr "个人身份信息"
 
 #: forum/skins/default/templates/authopenid/external_legacy_login_info.html:12
 #, python-format
-msgid ""
-"how to login with password through external login website or use %"
-"(feedback_url)s"
+msgid "how to login with password through external login website or use %(feedback_url)s"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/sendpw.html:4
@@ -3750,8 +3620,7 @@ msgstr "用户登录"
 #, python-format
 msgid ""
 "\n"
-"                Your answer to %(title)s %(summary)s will be posted once you "
-"log in\n"
+"                Your answer to %(title)s %(summary)s will be posted once you log in\n"
 "                "
 msgstr ""
 
@@ -3772,9 +3641,7 @@ msgid "Enter your <span id=\"enter_your_what\">Provider user name</span>"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/signin.html:151
-msgid ""
-"Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> "
-"web address"
+msgid "Enter your <a class=\"openid_logo\" href=\"http://openid.net\">OpenID</a> web address"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/signin.html:153
@@ -3806,9 +3673,7 @@ msgstr "为什么需要OpenID登录？"
 
 #: forum/skins/default/templates/authopenid/signin.html:181
 msgid "with openid it is easier"
-msgstr ""
-"构建在OpenID网络认证上的本系统，不需要你注册新的帐号，即可使用我们系统的所有"
-"功能"
+msgstr "构建在OpenID网络认证上的本系统，不需要你注册新的帐号，即可使用我们系统的所有功能"
 
 #: forum/skins/default/templates/authopenid/signin.html:184
 msgid "reuse openid"
@@ -3844,9 +3709,7 @@ msgid "Traditional signup info"
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/signup.html:25
-msgid ""
-"Please read and type in the two words below to help us prevent automated "
-"account creation."
+msgid "Please read and type in the two words below to help us prevent automated account creation."
 msgstr ""
 
 #: forum/skins/default/templates/authopenid/signup.html:27
@@ -4083,8 +3946,7 @@ msgstr "只允许上传%sK大小的文件！"
 
 #: forum/views/writers.py:76
 #, fuzzy, python-format
-msgid ""
-"Error uploading file. Please contact the site administrator. Thank you. %s"
+msgid "Error uploading file. Please contact the site administrator. Thank you. %s"
 msgstr "在文件上传过程中产生了错误，请联系管理员，谢谢^_^"
 
 #: forum_modules/authentication/auth.py:27
@@ -4116,41 +3978,32 @@ msgstr ""
 msgid "books/"
 msgstr "读书"
 
-#, fuzzy
 #~ msgid "account_settings"
 #~ msgstr "设置"
 
 #~ msgid "The users have been awarded with badges:"
 #~ msgstr "用户已被授予该奖牌："
 
-#, fuzzy
 #~ msgid "one revision"
 #~ msgid_plural "%(rev_count)s revisions"
 #~ msgstr[0] "版本"
 #~ msgstr[1] "版本"
 
-#, fuzzy
 #~ msgid " One question found"
 #~ msgid_plural "%(q_num)s questions found"
-#~ msgstr[0] ""
-#~ "问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
-#~ msgstr[1] ""
-#~ "问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
+#~ msgstr[0] "问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
+#~ msgstr[1] "问题按<strong>提问时间</strong>显示排序。新加入的问题将显示在最前面。"
 
-# translation and user name validation are language-specific
 #~ msgid "invalid user name"
 #~ msgstr "用户名只能包含英文字母、数字和下划线"
 
-# minimal length of user name may be language specific
 #~ msgid "username too short"
 #~ msgstr "用户名太短，请使用三个或三个以上字符"
 
 #~ msgid "this name is already in use - please try anoter"
 #~ msgstr "该用户名已被注册，请换一个试试"
 
-#~ msgid ""
-#~ "This email is already                 registered in our database. Please "
-#~ "choose another."
+#~ msgid "This email is already                 registered in our database. Please choose another."
 #~ msgstr "该电子邮件已被注册，请选择另一个再试。"
 
 #~ msgid "site title"
@@ -4160,16 +4013,12 @@ msgstr "读书"
 #~ msgstr "程序员问答社区"
 
 #~ msgid "meta site content"
-#~ msgstr ""
-#~ "中国程序员的编程技术问答社区。我们做专业的、可协作编辑的技术问答社区。"
+#~ msgstr "中国程序员的编程技术问答社区。我们做专业的、可协作编辑的技术问答社区。"
 
-#~ msgid ""
-#~ "please use space to separate tags (this enables autocomplete feature)"
+#~ msgid "please use space to separate tags (this enables autocomplete feature)"
 #~ msgstr "多个标签请用空格间隔-最多5个标签。（优先使用自动匹配的英文标签。）"
 
-#~ msgid ""
-#~ "please use following characters in tags: letters 'a-z', numbers, and "
-#~ "characters '.-_#'"
+#~ msgid "please use following characters in tags: letters 'a-z', numbers, and characters '.-_#'"
 #~ msgstr "标签请使用英文字母，中文或者数字字符串（. - _ # 也可以）"
 
 #~ msgid "user preference settings"
@@ -4178,7 +4027,6 @@ msgstr "读书"
 #~ msgid "profile - user preferences"
 #~ msgstr "设置 - 用户资料"
 
-#, fuzzy
 #~ msgid " ago"
 #~ msgstr "前"
 
@@ -4191,25 +4039,16 @@ msgstr "读书"
 #~ msgid "learn more about OpenID"
 #~ msgstr "了解更多有关OpenID的信息"
 
-#, fuzzy
 #~ msgid "Get your own "
 #~ msgstr "获取您自己的"
 
 #~ msgid "Email: (won't be shown to anyone)"
 #~ msgstr "电子邮件:（不会公开显示）"
 
-#~ msgid ""
-#~ "gold badge descriptionGold badge is very rare. To obtain it you have to "
-#~ "show profound knowledge and ability in addition to actively participating "
-#~ "in the community. Gold badge is the highest award in this community."
-#~ msgstr ""
-#~ "金牌是十分罕见的。你不仅要参与社区的提问、回答、投票等活动，而且需要有高深"
-#~ "的知识和能力才能获得。"
+#~ msgid "gold badge descriptionGold badge is very rare. To obtain it you have to show profound knowledge and ability in addition to actively participating in the community. Gold badge is the highest award in this community."
+#~ msgstr "金牌是十分罕见的。你不仅要参与社区的提问、回答、投票等活动，而且需要有高深的知识和能力才能获得。"
 
-#~ msgid ""
-#~ "silver badge descriptionObtaining silver badge requires significant "
-#~ "patience. If you got one, you've very significantly contributed to this "
-#~ "community"
+#~ msgid "silver badge descriptionObtaining silver badge requires significant patience. If you got one, you've very significantly contributed to this community"
 #~ msgstr "它是不同寻常的荣誉，只要你付出足够的努力就会得到。"
 
 #~ msgid "Connect with Twitter"
@@ -4227,20 +4066,15 @@ msgstr "读书"
 #~ msgid "Send my Answers to Twitter"
 #~ msgstr "发布我的回答到我的Twitter"
 
-#, fuzzy
-#~ msgid ""
-#~ "bronze badge descriptionIf you are active in this community, you will get "
-#~ "this medal - still it is a special honor."
+#~ msgid "bronze badge descriptionIf you are active in this community, you will get this medal - still it is a special honor."
 #~ msgstr "铜牌会在你活跃于社区时产生，它相对容易获得，但也是一种特殊的荣誉。"
 
 #~ msgid "see"
 #~ msgstr "查看"
 
-#, fuzzy
 #~ msgid "About us"
 #~ msgstr "关于本站"
 
-#, fuzzy
 #~ msgid "Contact"
 #~ msgstr "联系我们"
 
@@ -4250,7 +4084,6 @@ msgstr "读书"
 #~ msgid "last updated questions"
 #~ msgstr "最新更新的问题"
 
-# must have extra space after in english
 #~ msgid "see questions tagged"
 #~ msgstr "查看有关"
 
@@ -4275,14 +4108,12 @@ msgstr "读书"
 #~ msgid "Still looking for more? See"
 #~ msgstr "在寻找更多问题吗？请查阅"
 
-#, fuzzy
 #~ msgid "complete list of quesionts"
 #~ msgstr "全部问题列表"
 
 #~ msgid "Account: change email"
 #~ msgstr "修改电子邮件"
 
-#, fuzzy
 #~ msgid "Size per page:"
 #~ msgstr "每页显示"
 
@@ -4292,12 +4123,9 @@ msgstr "读书"
 #~ msgid "ago"
 #~ msgstr "前"
 
-# index.html
 #~ msgid "Community wiki"
 #~ msgstr "社区Wiki"
 
-# must have extra space after in english
-#, fuzzy
 #~ msgid "Browse questions with tag of "
 #~ msgstr "查看有关"
 
@@ -4310,7 +4138,6 @@ msgstr "读书"
 #~ msgid "most recently asked questions"
 #~ msgstr "最新加入系统的问题"
 
-# in unanswered.html and somewhere else
 #~ msgid "Have a total of"
 #~ msgstr "您正在浏览所有"
 
@@ -4320,9 +4147,7 @@ msgstr "读书"
 #~ msgid "avatar"
 #~ msgstr "修改头像"
 
-#, fuzzy
-#~ msgid ""
-#~ "the answer has been commented %(answered_question.comment_count)s times"
+#~ msgid "the answer has been commented %(answered_question.comment_count)s times"
 #~ msgstr "该回答有%d条评论"
 
 #~ msgid "votes total"
@@ -4331,13 +4156,10 @@ msgstr "读书"
 #~ msgid "Tags"
 #~ msgstr "个标签"
 
-#, fuzzy
 #~ msgid "New password again"
 #~ msgstr "发送新密码"
 
-#, fuzzy
-#~ msgid ""
-#~ "Your OpenID is accepted. Please complete this to finish registration."
+#~ msgid "Your OpenID is accepted. Please complete this to finish registration."
 #~ msgstr "您的OpenID帐号已经验证通过! 请完成最后一步 - 绑定OpenID到您的帐号。"
 
 #~ msgid "New account"
@@ -4349,21 +4171,14 @@ msgstr "读书"
 #~ msgid "Lost your password? No problem - here you can reset it."
 #~ msgstr "丢失了您的密码？ 你可以在这里重设密码。"
 
-#~ msgid ""
-#~ "Please enter your username below and new password will be sent to your "
-#~ "registered e-mail"
+#~ msgid "Please enter your username below and new password will be sent to your registered e-mail"
 #~ msgstr "请输入用户名，新的密码会发送到你注册时候填写的电子邮件。"
 
-# todo - check translation or see if it's indeed true
-#~ msgid ""
-#~ "Note: your new password will be activated only after you click the "
-#~ "activation link in the email message"
+#~ msgid "Note: your new password will be activated only after you click the activation link in the email message"
 #~ msgstr "注意: 新的密码只有您在激活邮件中的链接后才会被激活。"
 
 #~ msgid "we support two login modes"
-#~ msgstr ""
-#~ "CNProg支持<b>两种</b>登录模式。您可以使用帐号、密码登录，或者使用OpenID登"
-#~ "录。"
+#~ msgstr "CNProg支持<b>两种</b>登录模式。您可以使用帐号、密码登录，或者使用OpenID登录。"
 
 #~ msgid "Login with your OpenID"
 #~ msgstr "使用OpenID登录"
@@ -4374,19 +4189,15 @@ msgstr "读书"
 #~ msgid "verify openid link and login"
 #~ msgstr "2)型并完成正确的OpenID地址（如：替换“{username}”为您的对应帐号）："
 
-#, fuzzy
 #~ msgid "Create new acccount"
 #~ msgstr "注册新帐号"
 
-#~ msgid ""
-#~ "We support two types of user registration: conventional username/"
-#~ "password, and"
+#~ msgid "We support two types of user registration: conventional username/password, and"
 #~ msgstr "我们支持两种注册方式，你可以使用常规的用户名、密码方式注册，或者"
 
 #~ msgid "the OpenID method"
 #~ msgstr "使用OpenID帐号注册"
 
-#, fuzzy
 #~ msgid "Sorry, looks like we have some errors"
 #~ msgstr "请注意以下错误："
 
@@ -4403,19 +4214,13 @@ msgstr "读书"
 #~ msgstr "使用OpenID注册"
 
 #~ msgid "meta site keywords, comma separated"
-#~ msgstr ""
-#~ "技术问答社区，中国程序员，编程技术社区，程序员社区，程序员论坛，程序员"
-#~ "wiki，程序员博客"
+#~ msgstr "技术问答社区，中国程序员，编程技术社区，程序员社区，程序员论坛，程序员wiki，程序员博客"
 
 #~ msgid "what is this website"
-#~ msgstr ""
-#~ "CNProg是一个<strong>面向程序员</strong>的可协作编辑的<strong>开放源代码问"
-#~ "答社区</strong>。"
+#~ msgstr "CNProg是一个<strong>面向程序员</strong>的可协作编辑的<strong>开放源代码问答社区</strong>。"
 
 #~ msgid "what can one do on this website"
-#~ msgstr ""
-#~ "您可以在这里提问各类<strong>程序技术问题</strong> - 问题不分语言和平台。 "
-#~ "同时也希望您对力所能及的问题，给予您的宝贵答案。"
+#~ msgstr "您可以在这里提问各类<strong>程序技术问题</strong> - 问题不分语言和平台。 同时也希望您对力所能及的问题，给予您的宝贵答案。"
 
 #~ msgid "book technical Q&A"
 #~ msgstr "图书相关的技术答疑"
@@ -4448,12 +4253,10 @@ msgstr "读书"
 #~ "\t\t\t"
 #~ msgstr[0] ""
 #~ "\n"
-#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标记为<span "
-#~ "class=\"tag\">%(tagname)s</span></p>"
+#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标记为<span class=\"tag\">%(tagname)s</span></p>"
 #~ msgstr[1] ""
 #~ "\n"
-#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标记为<span "
-#~ "class=\"tag\">%(tagname)s</span></p>"
+#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标记为<span class=\"tag\">%(tagname)s</span></p>"
 
 #~ msgid ""
 #~ "\n"
@@ -4465,12 +4268,10 @@ msgstr "读书"
 #~ "\t\t\t"
 #~ msgstr[0] ""
 #~ "\n"
-#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标题含有"
-#~ "<span class=\"tag\">%(searchtitle)s</span></p>"
+#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标题含有<span class=\"tag\">%(searchtitle)s</span></p>"
 #~ msgstr[1] ""
 #~ "\n"
-#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标题含有"
-#~ "<span class=\"tag\">%(searchtitle)s</span></p>"
+#~ "您正在浏览所有<div class=\"questions-count\">%(q_num)s</div>个标题含有<span class=\"tag\">%(searchtitle)s</span></p>"
 
 #~ msgid "tagged with"
 #~ msgstr "标记为"
@@ -4499,52 +4300,26 @@ msgstr "读书"
 #~ msgid "Most voted questions are shown first"
 #~ msgstr "投票最多的问题将显示在最前面。"
 
-#~ msgid ""
-#~ "Anyone can ask questions and give answers, points are not necessary for "
-#~ "that."
+#~ msgid "Anyone can ask questions and give answers, points are not necessary for that."
 #~ msgstr "对于正常使用社区进行提问、回答而言，积分不是必须的。"
 
-#~ msgid ""
-#~ "As we've said before, users help running this site. Point system helps "
-#~ "select users who can administer this community."
-#~ msgstr ""
-#~ "我们一再声明，CNProg由你来运行和维护。如果你想帮助我们来运作CNProg，你需要"
-#~ "一定的积分等级。"
+#~ msgid "As we've said before, users help running this site. Point system helps select users who can administer this community."
+#~ msgstr "我们一再声明，CNProg由你来运行和维护。如果你想帮助我们来运作CNProg，你需要一定的积分等级。"
 
-#~ msgid ""
-#~ "Reputation points roughly measure how community trusts you. These points "
-#~ "are given to you directly by other members of the community."
-#~ msgstr ""
-#~ "<span class=\"yellowbg\">积分是一种用来粗略衡量社区对你有多信任的数据。</"
-#~ "span>积分不是有谁来支付或直接给予你的，而是你通过获得其他用户的支持和信"
-#~ "任“赚得”的。"
+#~ msgid "Reputation points roughly measure how community trusts you. These points are given to you directly by other members of the community."
+#~ msgstr "<span class=\"yellowbg\">积分是一种用来粗略衡量社区对你有多信任的数据。</span>积分不是有谁来支付或直接给予你的，而是你通过获得其他用户的支持和信任“赚得”的。"
 
-#~ msgid ""
-#~ "For example, if you ask an interesting question or give a helpful answer, "
-#~ "your input will be upvoted and you will gain more trust in the community."
-#~ msgstr ""
-#~ "举例来说，如果你提了一个非常有帮助的问题或者做了很有用的回答，你将会被其他"
-#~ "用户投赞成票。"
+#~ msgid "For example, if you ask an interesting question or give a helpful answer, your input will be upvoted and you will gain more trust in the community."
+#~ msgstr "举例来说，如果你提了一个非常有帮助的问题或者做了很有用的回答，你将会被其他用户投赞成票。"
 
-#~ msgid ""
-#~ "If on the other hand someone gives a misleading answer, the answer will "
-#~ "be voted down and he/she loses some points."
-#~ msgstr ""
-#~ "相反，你提了不受欢迎的问题，或者误导用户的回答，你将可能被其他用户投反对"
-#~ "票。每个赞成"
+#~ msgid "If on the other hand someone gives a misleading answer, the answer will be voted down and he/she loses some points."
+#~ msgstr "相反，你提了不受欢迎的问题，或者误导用户的回答，你将可能被其他用户投反对票。每个赞成"
 
-#~ msgid ""
-#~ "Each vote in favor will generate <strong>10</strong> points, each vote "
-#~ "against will subtract <strong>2</strong> points."
-#~ msgstr ""
-#~ "票会帮你产生<strong>10</strong>个社区积分，每个反对票会相应扣除你"
-#~ "<strong>2</strong>个积分。"
+#~ msgid "Each vote in favor will generate <strong>10</strong> points, each vote against will subtract <strong>2</strong> points."
+#~ msgstr "票会帮你产生<strong>10</strong>个社区积分，每个反对票会相应扣除你<strong>2</strong>个积分。"
 
-#~ msgid ""
-#~ "Through the votes of other people you can accumulate a maximum of "
-#~ "<strong>200</strong> points."
-#~ msgstr ""
-#~ "每天通过别人投赞成票，你最多只能产生<strong>200</strong>个积分，这是上限。"
+#~ msgid "Through the votes of other people you can accumulate a maximum of <strong>200</strong> points."
+#~ msgstr "每天通过别人投赞成票，你最多只能产生<strong>200</strong>个积分，这是上限。"
 
 #~ msgid "After accumulating certain number of points, you can do more:"
 #~ msgstr "当你累计到一定>积分，你可以在社区做更多的事情："
@@ -4552,8 +4327,7 @@ msgstr "读书"
 #~ msgid "gold badge: the highest honor and is very rare"
 #~ msgstr "金牌:十分罕见之最高荣耀"
 
-#~ msgid ""
-#~ "silver badge: occasionally awarded for the very high quality contributions"
+#~ msgid "silver badge: occasionally awarded for the very high quality contributions"
 #~ msgstr "银牌:偶尔颁发之优质奖章"
 
 #~ msgid "Gold badge is very rare."
