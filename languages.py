@@ -19,5 +19,5 @@ LANGUAGE_PROGRESS = {
     'sr': 59,
     'tr': 77,
     'zh-cn': 36,
-    'it': 1,
+    'it': 70,
 }

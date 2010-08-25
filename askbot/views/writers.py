@@ -238,7 +238,7 @@ def edit_question(request, id):
                                             body_text = form.cleaned_data['text'],
                                             revision_comment = form.cleaned_data['summary'],
                                             tags = form.cleaned_data['tags'],
-                                            wiki = form.cleaned_data['wiki']
+                                            wiki = form.cleaned_data.get('wiki', False)
                                         )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
