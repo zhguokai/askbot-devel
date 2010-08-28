@@ -79,7 +79,6 @@ def questions(request):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
-
     start_view_time = datetime.datetime.now()
 
     #don't allow to post to this view
@@ -381,7 +380,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'tags' : question.tags.all(),
         'tab_id' : view_id,
         'favorited' : favorited,
-        'similar_questions' : Question.objects.get_similar_questions(question),
+        'similar_questions' : question.get_similar_questions(),
         'context' : {
             'is_paginated' : True,
             'pages': objects_list.num_pages,

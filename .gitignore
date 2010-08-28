@@ -27,3 +27,4 @@ dist
 *.egg-info
 build
 askbot/upfiles/*
+askbot/skins/common/media/mathjax/

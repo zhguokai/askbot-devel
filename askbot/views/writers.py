@@ -216,7 +216,6 @@ def edit_question(request, id):
     try:
         request.user.assert_can_edit_question(question)
         if request.method == 'POST':
-            print request.POST
             if 'select_revision' in request.POST:#revert-type edit
                 # user has changed revistion number
                 revision_form = forms.RevisionForm(question, latest_revision, request.POST)
@@ -238,7 +237,7 @@ def edit_question(request, id):
                                             body_text = form.cleaned_data['text'],
                                             revision_comment = form.cleaned_data['summary'],
                                             tags = form.cleaned_data['tags'],
-                                            wiki = form.cleaned_data.get('wiki', False)
+                                            wiki = form.cleaned_data.get('wiki', question.wiki)
                                         )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
@@ -293,7 +292,8 @@ def edit_answer(request, id):
                                 answer = answer,
                                 body_text = form.cleaned_data['text'],
                                 revision_comment = form.cleaned_data['summary'],
-                                wiki = False,#todo: add wiki field to form
+                                wiki = form.cleaned_data.get('wiki', answer.wiki),
+                                #todo: add wiki field to form
                             )
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:

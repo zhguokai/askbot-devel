@@ -3,7 +3,6 @@ import re
 import hashlib
 import datetime
 from django.core.urlresolvers import reverse
-from django.core.mail import EmailMessage
 from askbot.search.indexer import create_fulltext_indexes
 from django.db.models import signals as django_signals
 from django.template import loader, Context
@@ -16,6 +15,7 @@ from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions as django_exceptions
+import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -353,14 +353,14 @@ def user_assert_can_edit_post(self, post = None):
             )
     if post.wiki == True:
         low_rep_error_message = _(
-                    'Sorry, to edit wiki\' posts, a minimum '
+                    'Sorry, to edit wiki posts, a minimum '
                     'reputation of %(min_rep)s is required'
                 ) % \
                 {'min_rep': askbot_settings.MIN_REP_TO_EDIT_WIKI}
         min_rep_setting = askbot_settings.MIN_REP_TO_EDIT_WIKI
     else:
         low_rep_error_message = _(
-                    'Sorry, to edit other people\' posts, a minimum '
+                    'Sorry, to edit other people\'s posts, a minimum '
                     'reputation of %(min_rep)s is required'
                 ) % \
                 {'min_rep': askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS}
@@ -684,9 +684,6 @@ def user_post_comment(
                     comment = body_text,
                     added_at = timestamp,
                 )
-    #print comment
-    #print 'comment id is %s' % comment.id
-    #print len(Comment.objects.all())
     return comment
 
 @auto_now_timestamp
@@ -743,7 +740,7 @@ def user_delete_answer(
     answer.deleted_at = timestamp
     answer.save()
 
-    Question.objects.update_answer_count(answer.question)
+    answer.question.update_answer_count()
     logging.debug('updated answer count to %d' % answer.question.answer_count)
 
     signals.delete_question_or_answer.send(
@@ -838,7 +835,7 @@ def user_restore_post(
         post.deleted_at = None 
         post.save()
         if isinstance(post, Answer):
-            Question.objects.update_answer_count(post.question)
+            post.question.update_answer_count()
         elif isinstance(post, Question):
             #todo: make sure that these tags actually exist
             #some may have since been deleted for good 
@@ -1132,7 +1129,6 @@ def user_get_status_display(self, soft = False):
     elif self.is_approved():
         return _('Approved User')
     else:
-        print 'vot blin'
         raise ValueError('Unknown user status')
 
 
@@ -1149,16 +1145,13 @@ def user_can_moderate_user(self, other):
 
 
 def user_get_q_sel_email_feed_frequency(self):
-    #print 'looking for frequency for user %s' % self
     try:
         feed_setting = EmailFeedSetting.objects.get(
                                         subscriber=self,
                                         feed_type='q_sel'
                                     )
     except Exception, e:
-        #print 'have error %s' % e.message
         raise e
-    #print 'have freq=%s' % feed_setting.frequency
     return feed_setting.frequency
 
 def get_messages(self):
@@ -1415,7 +1408,7 @@ User.add_to_class(
     )
 
 #todo: move this to askbot/utils ??
-def format_instant_notification_body(
+def format_instant_notification_email(
                                         to_user = None,
                                         from_user = None,
                                         post = None,
@@ -1424,6 +1417,8 @@ def format_instant_notification_body(
                                     ):
     """
     returns text of the instant notification body
+    and subject line
+
     that is built when post is updated
     only update_types in const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     are supported
@@ -1438,13 +1433,37 @@ def format_instant_notification_body(
     if update_type == 'question_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Question))
+        subject_line = _(
+                    'new question comment about: "%(title)s"'
+                ) % {'title': origin_post.title}
     elif update_type == 'answer_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Answer))
-    elif update_type in ('answer_update', 'new_answer'):
+        subject_line = _(
+                    'new answer comment about: "%(title)s"'
+                ) % {'title': origin_post.title}
+    elif update_type == 'answer_update':
         assert(isinstance(post, Answer))
-    elif update_type in ('question_update', 'new_question'):
+        subject_line = _(
+                    'answer modified for: "%(title)s"'
+                ) % {'title': origin_post.title}
+    elif update_type == 'new_answer':
+        assert(isinstance(post, Answer))
+        subject_line = _(
+                    'new answer for: "%(title)s"'
+                ) % {'title': origin_post.title}
+    elif update_type == 'question_update':
         assert(isinstance(post, Question))
+        subject_line = _(
+                    'question modified: "%(title)s"'
+                ) % {'title': origin_post.title}
+    elif update_type == 'new_question':
+        assert(isinstance(post, Question))
+        subject_line = _(
+                    'new question: "%(title)s"'
+                ) % {'title': origin_post.title}
+    else:
+        raise ValueError('unexpected update_type %s' % update_type)
 
     update_data = {
         'update_author_name': from_user.username,
@@ -1454,9 +1473,7 @@ def format_instant_notification_body(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
-    output = template.render(Context(update_data))
-    #print output
-    return output
+    return subject_line, template.render(Context(update_data))
 
 #todo: action
 def send_instant_notifications_about_activity_in_post(
@@ -1485,8 +1502,7 @@ def send_instant_notifications_about_activity_in_post(
 
     for user in receiving_users:
 
-            subject = _('email update message subject')
-            text = format_instant_notification_body(
+            subject_line, body_text = format_instant_notification_email(
                             to_user = user,
                             from_user = update_activity.user,
                             post = post,
@@ -1495,22 +1511,13 @@ def send_instant_notifications_about_activity_in_post(
                         )
             #todo: this could be packaged as an "action" - a bundle
             #of executive function with the activity log recording
-            msg = EmailMessage(
-                        subject,
-                        text,
-                        django_settings.DEFAULT_FROM_EMAIL,
-                        [user.email]
-                    )
-            msg.content_subtype = 'html'
-            msg.send()
-            #print text
-            EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
-            email_activity = Activity(
-                                    user = user,
-                                    content_object = post.get_origin_post(),
-                                    activity_type = EMAIL_UPDATE_ACTIVITY
-                                )
-            email_activity.save()
+            askbot.send_mail(
+                    subject_line = subject_line,
+                    body_text = body_text,
+                    recipient_list = [user.email],
+                    related_object = post.get_origin_post(),
+                    activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+                )
 
 
 #todo: move to utils
@@ -1651,7 +1658,7 @@ def update_last_seen(instance, created, **kwargs):
     if instance.activity_type == const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT:
         return
     user = instance.user
-    user.last_seen = datetime.datetime.now()
+    user.last_seen = instance.active_at
     user.save()
 
 
