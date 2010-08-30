@@ -15,7 +15,7 @@ from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from askbot import const
 
-DEBUG_THIS_COMMAND = False
+DEBUG_THIS_COMMAND = True
 
 def get_all_origin_posts(mentions):
     origin_posts = set()
@@ -108,9 +108,12 @@ def get_update_subject_line(question_dict):
 
     topics = '"' + '", "'.join(tag_list) + last_topic
 
+    if question_count > askbot_settings.MAX_ALERTS_PER_EMAIL:
+        question_count = askbot_settings.MAX_ALERTS_PER_EMAIL 
+
     subject_line = ungettext(
-                    '%(question_count)d updated question about %(topics)s',
-                    '%(question_count)d updated questions about %(topics)s',
+                    '%(question_count)d updated question tagged %(topics)s',
+                    '%(question_count)d updated questions tagged %(topics)s',
                     question_count
                 ) % {
                         'question_count': question_count,
@@ -458,9 +461,11 @@ class Command(NoArgsCommand):
                     del q_list[question]
                 else:
                     num_q += 1
+            if num_q > askbot_settings.MAX_ALERTS_PER_EMAIL:
+                num_q = askbot_settings.MAX_ALERTS_PER_EMAIL
             if num_q > 0:
                 url_prefix = askbot_settings.APP_URL
-                subject_line = get_update_subject_line(q_list)
+                subject_line = '[askbot]: ' + get_update_subject_line(q_list)
                 #todo: send this to special log
                 #print 'have %d updated questions for %s' % (num_q, user.username)
                 text = ungettext('%(name)s, this is an update message header for %(num)d question', 
@@ -497,10 +502,7 @@ class Command(NoArgsCommand):
                 #              )
 
                 text += _(
-                            'Please visit the askbot and see what\'s new! '
-                            'Could you spread the word about it - '
-                            'can somebody you know help answering those questions or '
-                            'benefit from posting one?'
+                            'Please visit askbot forum and see what\'s new! '
                         )
 
                 feeds = EmailFeedSetting.objects.filter(

@@ -6,13 +6,15 @@
 #
 # if you prefer, you can split this file into several
 
-PROJECT_PARENT_DIR=/path/to/dir_containing_askbot_site
-PROJECT_DIR_NAME=askbot_site
+PROJECT_PARENT_DIR=/var/www/vhosts/askbot_site1
+PROJECT_DIR_NAME=node2
 
-export PYTHONPATH=$PROJECT_PARENT_DIR:$PYTHONPATH
-PROJECT_ROOT=$PYTHONPATH/$PROJECT_NAME
+export PYTHONPATH=$PROJECT_PARENT_DIR
+PROJECT_ROOT="$PYTHONPATH/$PROJECT_DIR_NAME"
+
+echo $PROJECT_ROOT
 
 #these are actual commands that are to be run
 python $PROJECT_ROOT/manage.py send_email_alerts
-python $PROJECT_ROOT/manage.py once_award_badges 
-python $PROJECT_ROOT/manage.py multi_award_badges
+#python $PROJECT_ROOT/manage.py once_award_badges 
+#python $PROJECT_ROOT/manage.py multi_award_badges
