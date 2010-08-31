@@ -37,7 +37,7 @@
             $(document).ready(function() {
                 $('#lang_selector').change(
                     function(){
-                        var new_lang = $(this).find('option:selected').attr('name');
+                        var new_lang = $(this).find('option:selected').attr('value');
                         var url_bits = window.location.pathname.split('/');
                         url_bits.shift();
                         var cur_lang = url_bits.shift();

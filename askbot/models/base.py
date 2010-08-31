@@ -13,7 +13,7 @@ from django.utils import html
 import logging
 from markdown2 import Markdown
 
-markdowner = Markdown(html4tags=True)
+markdowner = Markdown(html4tags=True, extras=['code-color','code-friendly'])
 
 #todo: following methods belong to a future common post class
 def parse_post_text(post):

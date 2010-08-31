@@ -48,7 +48,7 @@ DEFAULT_PAGE_SIZE = 60
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
-markdowner = Markdown(html4tags=True)
+markdowner = Markdown(html4tags=True, extras=['code-color','code-friendly'])
 
 #system to display main content
 def _get_tags_cache_json():#service routine used by views requiring tag list in the javascript space

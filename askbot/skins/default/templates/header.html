@@ -41,7 +41,7 @@
             <a href="http://github.com/ASKBOT/askbot-devel" title="fork us on github!">github</a>
             <select id="lang_selector" name="language" title="pick language (number in the parentheses is translation progress)">
             {% for lang in LANGUAGES %}
-                <option name="{{lang.0}}"
+                <option value="{{lang.0}}"
                 {% ifequal lang.0 LANGUAGE_CODE %}
                     selected="selected"
                 {% endifequal %}
