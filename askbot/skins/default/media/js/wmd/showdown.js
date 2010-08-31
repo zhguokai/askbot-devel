@@ -92,8 +92,7 @@ var g_html_blocks;
 // (see _ProcessListItems() for details):
 var g_list_level = 0;
 
-
-this.makeHtml = function(text) {
+var makeHtmlBase = function(text) {
 //
 // Main function. The order in which other subs are called here is
 // essential. Link and image substitutions need to happen before
@@ -154,6 +153,22 @@ this.makeHtml = function(text) {
 
 	return text;
 }
+
+this.makeHtml = function(text){
+    if (enableMathJax === false){
+        return makeHtmlBase(text);
+    } 
+    else {
+        MathJax.Hub.queue.Push(
+            function(){
+                $('#previewer').html(makeHtmlBase(text));
+            }
+        );
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, 'previewer']);
+        return $('#previewer').html();
+    }
+}
+
 
 var _StripLinkDefinitions = function(text) {
 //
@@ -396,7 +411,6 @@ var _RunSpanGamut = function(text) {
 
 	// Do hard breaks:
 	text = text.replace(/  +\n/g," <br />\n");
-
 	return text;
 }
 
@@ -980,14 +994,23 @@ var _EncodeCode = function(text) {
 
 var _DoItalicsAndBold = function(text) {
 
-	// <strong> must go first:
-	text = text.replace(/(\*\*|__)(?=\S)([^\r]*?\S[\*_]*)\1/g,
-		"<strong>$2</strong>");
+    // <strong> must go first:
+    if (codeFriendlyMarkdown === true){
+        text = text.replace(/(\*\*)(?=\S)([^\r]*?\S[\*]*)\1/g,
+            "<strong>$2</strong>");
 
-	text = text.replace(/(\*|_)(?=\S)([^\r]*?\S)\1/g,
-		"<em>$2</em>");
+        text = text.replace(/(\*)(?=\S)([^\r]*?\S)\1/g,
+            "<em>$2</em>");
+    }
+    else {
+        text = text.replace(/(\*\*|__)(?=\S)([^\r]*?\S[\*_]*)\1/g,
+            "<strong>$2</strong>");
 
-	return text;
+        text = text.replace(/(\*|_)(?=\S)([^\r]*?\S)\1/g,
+            "<em>$2</em>");
+    }
+
+    return text;
 }
 
 

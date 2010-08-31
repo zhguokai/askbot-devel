@@ -11,9 +11,6 @@ from askbot.utils import markup
 from askbot.utils.html import sanitize_html
 from django.utils import html
 import logging
-from markdown2 import Markdown
-
-markdowner = Markdown(html4tags=True, extras=['code-color','code-friendly'])
 
 #todo: following methods belong to a future common post class
 def parse_post_text(post):
@@ -38,7 +35,7 @@ def parse_post_text(post):
         text = html.urlize(text)
 
     if post._use_markdown:
-        text = sanitize_html(markdowner.convert(text))
+        text = sanitize_html(markup.get_parser().convert(text))
 
     #todo, add markdown parser call conditional on
     #post.use_markdown flag
