@@ -51,17 +51,19 @@ class ViewLogMiddleware(object):
 
         if settings.DEBUG == True:
             #todo: dependency!
-            from debug_toolbar.views import debug_media as debug_media_view
-            if view_func == debug_media_view:
-                return
-            else:
-                view_str = view_func.__name__
+            try:
+                from debug_toolbar.views import debug_media as debug_media_view
+                if view_func == debug_media_view:
+                    return
+            except ImportError:
+                pass
 
         if request.user.is_authenticated():
             user_name = request.user.username
         else:
             user_name = request.META['REMOTE_ADDR']
         logging.debug('user %s, view %s' % (request.user.username, view_str))
+        logging.debug('next url is %s' % request.REQUEST.get('next','nothing'))
 
         if 'view_log' in request.session:
             view_log = request.session['view_log']

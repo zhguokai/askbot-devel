@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from django.template.defaultfilters import slugify #todo: adopt unicode-aware slugify
 #todo: http://stackoverflow.com/questions/837828/how-to-use-a-slug-in-django 
 import os
 import re
@@ -14,6 +13,7 @@ from askbot.forms import EditUserEmailFeedsForm
 from askbot.conf import settings as askbot_settings
 from django.contrib.auth.models import Message as DjangoMessage
 from django.utils.translation import ugettext as _
+from askbot.utils.slug import slugify
 #from markdown2 import Markdown
 #markdowner = Markdown(html4tags=True)
 
@@ -742,7 +742,10 @@ class Command(BaseCommand):
                     assert(se_u.open_id)#everybody must have open_id
                     u_openid = askbot_openid.UserAssociation()
                     u_openid.openid_url = se_u.open_id
+                    u.save()
                     u_openid.user = u
+                    u_openid.last_used_timestamp = se_u.last_login_date
+                    u_openid.save()
                 except AssertionError:
                     print 'User %s (id=%d) does not have openid' % \
                             (se_u.display_name, se_u.id)

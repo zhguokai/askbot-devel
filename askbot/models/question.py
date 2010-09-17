@@ -6,7 +6,6 @@ from django.utils.datastructures import SortedDict
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.http import urlquote as django_urlquote
-from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from django.contrib.sitemaps import ping_google
 from django.utils.translation import ugettext as _
@@ -17,6 +16,7 @@ from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content
 from askbot import const
 from askbot.utils.lists import LazyList
+from askbot.utils.slug import slugify
 
 #todo: too bad keys are duplicated see const sort methods
 QUESTION_ORDER_BY_MAP = {
@@ -89,14 +89,14 @@ class QuestionManager(models.Manager):
                 qs = qs.filter(tags__name = tag)
 
         if search_query:
-            try:
+            if settings.DATABASE_ENGINE == 'mysql':
                 qs = qs.filter( 
                             models.Q(title__search = search_query) \
                            | models.Q(text__search = search_query) \
                            | models.Q(tagnames__search = search_query) \
                            | models.Q(answers__text__search = search_query)
                         )
-            except:
+            else:
                 #fallback to dumb title match search
                 qs = qs.extra(
                                 where=['title like %s'], 
@@ -187,15 +187,22 @@ class QuestionManager(models.Manager):
     #todo: maybe this must be a query set method, not manager method
     def get_question_and_answer_contributors(self, question_list):
         answer_list = []
-        question_list = list(question_list)#important for MySQL, b/c it does not support
+        #question_list = list(question_list)#important for MySQL, b/c it does not support
         from askbot.models.answer import Answer
-        answer_list = Answer.objects.filter(question__in = question_list)
-        contributors = User.objects.filter(
-                                    models.Q(questions__in=question_list) \
-                                    | models.Q(answers__in=answer_list)
-                                   ).distinct()
-        contributors = list(contributors)
-        random.shuffle(contributors)
+        q_id = list(question_list.values_list('id', flat=True))
+        a_id = list(Answer.objects.filter(question__in=q_id).values_list('id', flat=True))
+        u_id = set(self.filter(id__in=q_id).values_list('author', flat=True))
+        u_id = u_id.union(
+                    set(Answer.objects.filter(id__in=a_id).values_list('author', flat=True))
+                )
+        contributors = User.objects.filter(id__in=u_id).order_by('?')
+        #print contributors
+        #could not optimize this query with indices so it was split into what's now above
+        #contributors = User.objects.filter(
+        #                            models.Q(questions__in=question_list) \
+        #                            | models.Q(answers__in=answer_list)
+        #                           ).distinct()
+        #contributors = list(contributors)
         return contributors
 
     def get_author_list(self, **kwargs):

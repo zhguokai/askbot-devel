@@ -34,8 +34,21 @@ class UserAssociation(models.Model):
     """ 
     model to manage association between openid and user 
     """
+    #todo: rename this field so that it sounds good for other methods
+    #for exaple, for password provider this will hold password
     openid_url = models.CharField(blank=False, max_length=255)
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User)
+    #in the future this must be turned into an 
+    #association with a Provider record
+    #to hold things like login badge, etc
+    provider_name = models.CharField(max_length=64, default='unknown')
+    last_used_timestamp = models.DateTimeField(null=True)
+
+    class Meta(object):
+        unique_together = (
+                                ('user','provider_name'),
+                                ('openid_url', 'provider_name')
+                            )
     
     def __unicode__(self):
         return "Openid %s with user %s" % (self.openid_url, self.user)
