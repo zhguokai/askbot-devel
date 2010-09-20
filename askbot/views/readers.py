@@ -19,6 +19,7 @@ from django.utils.html import *
 from django.utils import simplejson
 from django.db.models import Q
 from django.utils.translation import ugettext as _
+from django.utils.translation import get_language
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
@@ -275,9 +276,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     question = get_object_or_404(Question, id=id)
     try:
-        path_prefix = r'/%s%s%d/' % (settings.ASKBOT_URL,_('question/'), question.id)
+	lang = get_language()
+        path_prefix = r'/%s/%s%s%d/' % (lang, settings.ASKBOT_URL,_('question/'), question.id)
         if not request.path.startswith(path_prefix):
-            logging.critical('bad request path %s' % request_path)
+            logging.critical('bad request path %s' % request.path)
+            logging.critical('expected path prefix is %s' % path_prefix)
             raise Http404
         slug = request.path.replace(path_prefix, '', 1)
         logging.debug('have slug %s' % slug)

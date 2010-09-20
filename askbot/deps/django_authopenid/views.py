@@ -1066,6 +1066,7 @@ def account_recover(request, key = None):
 
     url name 'user_account_recover'
     """
+    logging.debug('have key %s' % str(key))
     if request.method == 'POST':
         form = forms.AccountRecoveryForm(request.POST)
         if form.is_valid():

@@ -85,12 +85,14 @@ class AuthBackend(object):
             try:
                 #todo: add email_key_timestamp field
                 #and check key age
+                logging.debug('trying to auth user with key %s' % email_key)
                 user = User.objects.get(email_key = email_key)
                 user.email_key = None #one time key so delete it
                 user.email_isvalid = True
                 user.save()
                 return user
             except User.DoesNotExist:
+                logging.debug('no such user')
                 return None
 
         elif method == 'oauth':
