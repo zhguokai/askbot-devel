@@ -23,12 +23,11 @@
                 name="query" 
                 id="keywords"/>
             {% if query %}{% comment %}query is only defined by questions view{% endcomment %}
-            <input type="button" 
-                value="x" 
-                name="reset_query" 
+            <input type="button"
+                value="x"
+                name="reset_query"
                 {% comment %}todo - make sure it works on Enter keypress{% endcomment %}
-                onclick="window.location.href='{% url questions %}?reset_query=true'" 
-                value="true" 
+                onclick="window.location.href='{% url questions %}?reset_query=true'"
                 class="cancelSearchBtn"/>
             {% endif %}
             <input type="submit" value="{% trans "search" %}" name="search" class="searchBtn" />
