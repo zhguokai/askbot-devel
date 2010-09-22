@@ -351,12 +351,13 @@ def questions(request):
         question_snippet = template.render(template_context)
         output = {'question_snippet': question_snippet}
         #print simplejson.dumps(output)
-        return HttpResponse(simplejson.dumps(output), mimetype='application/json')
+        response = HttpResponse(simplejson.dumps(output), mimetype='application/json')
     else:
         template = loader.get_template('questions.html')
-        return HttpResponse(template.render(template_context))
-    #after = datetime.datetime.now()
-    #print 'time to render %s' % (after - before)
+        response = HttpResponse(template.render(template_context))
+    after = datetime.datetime.now()
+    logging.critical('time to render %s' % (after - start_template_time))
+    return response
 
 def search(request): #generates listing of questions matching a search query - including tags and just words
     """redirects to people and tag search pages
@@ -454,18 +455,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     question = get_object_or_404(Question, id=id)
     try:
-        lang = get_language()
-        path_prefix = r'/%s/%s%s%d/' % (lang, settings.ASKBOT_URL,_('question/'), question.id)
-        if not request.path.startswith(path_prefix):
-            logging.critical('bad request path %s' % request.path)
-            logging.critical('expected path prefix is %s' % path_prefix)
-            raise Http404
-        slug = request.path.replace(path_prefix, '', 1)
-        logging.debug('have slug %s' % slug)
-        logging.debug('requestion path is %s' % request.path)
-        assert(slug == slugify(question.title))
+        assert(request.path == question.get_absolute_url())
     except AssertionError:
-        logging.debug('no slug match!')
+        logging.critical('no slug match!')
         return HttpResponseRedirect(question.get_absolute_url())
 
     if question.deleted:

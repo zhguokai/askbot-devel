@@ -14,7 +14,7 @@ def slugify(input_text, max_length=50):
     """custom slugify function that
     removes diacritic modifiers from the characters
     """
-    if askbot_settings.USE_ASCII_ONLY_SLUGS == True:
+    if True:#askbot_settings.USE_ASCII_ONLY_SLUGS == True:
         if input_text == '':
             return input_text
         slug = defaultfilters.slugify(unidecode(input_text))
