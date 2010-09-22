@@ -27,7 +27,6 @@ from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
 
-from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff

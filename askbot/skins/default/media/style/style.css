@@ -2364,7 +2364,7 @@ p.space-above {
     vertical-align: top;
 }
 
-p.comment {
+.comment {
     border-top: 1px dotted #ccccce;
     margin: 0;
     font-size: 11px;
