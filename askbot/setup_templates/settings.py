@@ -44,10 +44,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # system time zone.
 TIME_ZONE = 'America/Chicago'
 
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
-
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -163,7 +159,10 @@ CACHE_PREFIX = 'askbot' #make this unique
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
 #SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
 
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'askbot.deps.django_authopenid.backends.AuthBackend',
+)
 
 #this needs to go
 USE_EXTERNAL_LEGACY_LOGIN = False #DO NOT USE, and do not delete this line, will be removed later

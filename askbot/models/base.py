@@ -1,4 +1,5 @@
 import datetime
+import cgi
 from django.db import models
 from django.utils.html import strip_tags
 #from django.core.urlresolvers import reverse
@@ -30,6 +31,9 @@ def parse_post_text(post):
     """
 
     text = post.get_text()
+
+    if post._escape_html:
+        text = cgi.escape(text)
 
     if post._urlize:
         text = html.urlize(text)
