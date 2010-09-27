@@ -1,5 +1,5 @@
 import logging
-from django import template
+from coffin import template as coffin_template
 from django.core import exceptions as django_exceptions
 from django.utils.translation import ugettext as _
 from django.contrib.humanize.templatetags import humanize
@@ -13,14 +13,47 @@ from askbot.skins import utils as skin_utils
 from askbot.utils import functions
 from askbot.utils.slug import slugify
 
-register = template.Library()
+register = coffin_template.Library()
 
 @register.filter
 def collapse(input):
     input = str(input)
     return ' '.join(input.split())
 
+@register.filter
+def media(url):
+    """media filter - same as media tag, but
+    to be used as a filter in jinja templates
+    like so {{'/some/url.gif'|media}}
+    """
+    if url:
+        return skin_utils.get_media_url(url)
+    else:
+        return ''
+
+diff_date = register.filter(functions.diff_date)
+
+setup_paginator = register.filter(functions.setup_paginator)
+
 slugify = register.filter(slugify)
+
+register.filter(
+            name = 'intcomma',
+            filter_func = humanize.intcomma,
+            jinja2_only = True
+        )
+
+register.filter(
+            name = 'urlencode',
+            filter_func = defaultfilters.urlencode,
+            jinja2_only = True
+        )
+
+register.filter(
+            name = 'default_if_none',
+            filter_func = defaultfilters.default_if_none,
+            jinja2_only = True
+        )
 
 def make_template_filter_from_permission_assertion(
                                 assertion_name = None,
@@ -179,22 +212,3 @@ def humanize_counter(number):
 @register.filter
 def absolute_value(number):
     return abs(number)
-
-@register.filter
-def get_dict_value(input_dictionary, key):
-    """template filter that returns value
-    from a dictionary by key, use it like so
-
-    {{ some_dict|get_dict_value:the_key }}
-    """
-    if isinstance(input_dictionary, dict):
-        if key in input_dictionary:
-            return input_dictionary[key]
-        else:
-            logging.critical('key %s is absent in dictionary')
-    else:
-        logging.critical(
-            'template filter get_dict_value does not work with %s' \
-            % (type(input_dictionary))
-        )
-    return input_dictionary[key]
