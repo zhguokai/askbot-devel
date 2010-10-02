@@ -19,7 +19,6 @@ from django.template import loader
 from django.template import defaultfilters
 from django.utils.html import *
 from django.utils import simplejson
-from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.utils import translation
 from django.core.urlresolvers import reverse
@@ -155,14 +154,14 @@ def questions(request):
     contributors = Question.objects.get_question_and_answer_contributors(questions.object_list)
 
     paginator_context = {
-        'is_paginated' : True,
+        'is_paginated' : (objects_list.count > search_state.page_size),
         'pages': objects_list.num_pages,
         'page': search_state.page,
         'has_previous': questions.has_previous(),
         'has_next': questions.has_next(),
         'previous': questions.previous_page_number(),
         'next': questions.next_page_number(),
-        'base_url' : request.path + '?sort=%s&' % search_state.sort,#todo in T sort=>sort_method
+        'base_url' : request.path + '?sort=%s&amp;' % search_state.sort,#todo in T sort=>sort_method
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
     }
 
@@ -178,6 +177,8 @@ def questions(request):
                             }
 
         paginator_tpl = loader.get_template('paginator.html')
+        #todo: remove this patch on context after all templates are moved to jinja
+        paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
         paginator_html = paginator_tpl.render(
                                     Context(
                                         extra_tags.cnprog_paginator(
@@ -334,6 +335,7 @@ def questions(request):
     #todo: organize variables by type
     template_context = RequestContext(request, {
         'language_code': translation.get_language(),
+        'reset_method_count': reset_method_count,
         'view_name': 'questions',
         'reset_method_count': reset_method_count,
         'active_tab': 'questions',
@@ -364,7 +366,7 @@ def questions(request):
         #print simplejson.dumps(output)
         response = HttpResponse(simplejson.dumps(output), mimetype='application/json')
     else:
-        template = ENV.get_template('questions.jinja.html')
+        template = ENV.get_template('questions.html')
         response = HttpResponse(template.render(template_context))
     after = datetime.datetime.now()
     logging.critical('time to render %s' % (after - start_template_time))
@@ -416,24 +418,29 @@ def tags(request):#view showing a listing of available tags - plain list
     except (EmptyPage, InvalidPage):
         tags = objects_list.page(objects_list.num_pages)
 
-    return render_to_response('tags.html', {
-                                            "view_name":"tags",
-                                            "active_tab": "tags",
-                                            "tags" : tags,
-                                            "stag" : stag,
-                                            "tab_id" : sortby,
-                                            "keywords" : stag,
-                                            "context" : {
-                                                'is_paginated' : is_paginated,
-                                                'pages': objects_list.num_pages,
-                                                'page': page,
-                                                'has_previous': tags.has_previous(),
-                                                'has_next': tags.has_next(),
-                                                'previous': tags.previous_page_number(),
-                                                'next': tags.next_page_number(),
-                                                'base_url' : reverse('tags') + '?sort=%s&' % sortby
-                                            }
-                                }, context_instance=RequestContext(request))
+    paginator_data = {
+        'is_paginated' : is_paginated,
+        'pages': objects_list.num_pages,
+        'page': page,
+        'has_previous': tags.has_previous(),
+        'has_next': tags.has_next(),
+        'previous': tags.previous_page_number(),
+        'next': tags.next_page_number(),
+        'base_url' : reverse('tags') + '?sort=%s&amp;' % sortby
+    }
+    paginator_context = extra_tags.cnprog_paginator(paginator_data)
+    data = {
+        'view_name':'tags',
+        'active_tab': 'tags',
+        'tags' : tags,
+        'stag' : stag,
+        'tab_id' : sortby,
+        'keywords' : stag,
+        'paginator_context' : paginator_context
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('tags.html')
+    return HttpResponse(template.render(context))
 
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and 
@@ -548,7 +555,20 @@ def question(request, id):#refactor - long subroutine. display question body, an
             #get response notifications
             request.user.visit_question(question)
 
-    return render_to_response('question.html', {
+    paginator_data = {
+        'is_paginated' : (objects_list.count > ANSWERS_PAGE_SIZE),
+        'pages': objects_list.num_pages,
+        'page': page,
+        'has_previous': page_objects.has_previous(),
+        'has_next': page_objects.has_next(),
+        'previous': page_objects.previous_page_number(),
+        'next': page_objects.next_page_number(),
+        'base_url' : request.path + '?sort=%s&amp;' % view_id,
+        'extend_url' : "#sort-top"
+    }
+    paginator_context = extra_tags.cnprog_paginator(paginator_data)
+
+    data = {
         'view_name': 'question',
         'active_tab': 'questions',
         'question' : question,
@@ -561,70 +581,31 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'tab_id' : view_id,
         'favorited' : favorited,
         'similar_questions' : question.get_similar_questions(),
-        'context' : {
-            'is_paginated' : True,
-            'pages': objects_list.num_pages,
-            'page': page,
-            'has_previous': page_objects.has_previous(),
-            'has_next': page_objects.has_next(),
-            'previous': page_objects.previous_page_number(),
-            'next': page_objects.next_page_number(),
-            'base_url' : request.path + '?sort=%s&' % view_id,
-            'extend_url' : "#sort-top"
-        }
-        }, context_instance=RequestContext(request))
+        'language_code': translation.get_language(),
+        'paginator_context' : paginator_context
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('question.html')
+    return HttpResponse(template.render(context))
 
-QUESTION_REVISION_TEMPLATE = ('<h1>%(title)s</h1>\n'
-                              '<div class="text">%(html)s</div>\n'
-                              '<div class="tags">%(tags)s</div>')
-def question_revisions(request, id):
-    post = get_object_or_404(Question, id=id)
+def revisions(request, id, object_name=None):
+    assert(object_name in ('Question', 'Answer'))
+    post = get_object_or_404(get_model(object_name), id=id)
     revisions = list(post.revisions.all())
     revisions.reverse()
-    markdowner = markup.get_parser()
     for i, revision in enumerate(revisions):
-        revision.html = QUESTION_REVISION_TEMPLATE % {
-            'title': revision.title,
-            'html': sanitize_html(markdowner.convert(revision.text)),
-            'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
-                              for tag in revision.tagnames.split(' ')]),
-        }
-        if i > 0:
-            revisions[i].diff = htmldiff(revisions[i-1].html, revision.html)
+        revision.html = revision.as_html()
+        if i == 0:
+            revision.diff = revisions[i].html
+            revision.summary = _('initial version')
         else:
-            revisions[i].diff = QUESTION_REVISION_TEMPLATE % {
-                'title': revisions[0].title,
-                'html': sanitize_html(markdowner.convert(revisions[0].text)),
-                'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
-                                 for tag in revisions[0].tagnames.split(' ')]),
-            }
-            revisions[i].summary = _('initial version') 
-    return render_to_response('revisions_question.html', {
-                              'view_name':'question_revisions',
-                              'active_tab':'questions',
-                              'post': post,
-                              'revisions': revisions,
-                              }, context_instance=RequestContext(request))
-
-ANSWER_REVISION_TEMPLATE = ('<div class="text">%(html)s</div>')
-def answer_revisions(request, id):
-    post = get_object_or_404(Answer, id=id)
-    revisions = list(post.revisions.all())
-    revisions.reverse()
-    markdowner = markup.get_parser()
-    for i, revision in enumerate(revisions):
-        revision.html = ANSWER_REVISION_TEMPLATE % {
-            'html': sanitize_html(markdowner.convert(revision.text))
-        }
-        if i > 0:
-            revisions[i].diff = htmldiff(revisions[i-1].html, revision.html)
-        else:
-            revisions[i].diff = revisions[i].text
-            revisions[i].summary = _('initial version')
-    return render_to_response('revisions_answer.html', {
-                              'view_name':'answer_revisions',
-                              'active_tab':'questions',
-                              'post': post,
-                              'revisions': revisions,
-                              }, context_instance=RequestContext(request))
-
+            revision.diff = htmldiff(revisions[i-1].html, revision.html)
+    data = {
+        'view_name':'answer_revisions',
+        'active_tab':'questions',
+        'post': post,
+        'revisions': revisions,
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('revisions.html')
+    return HttpResponse(template.render(context))

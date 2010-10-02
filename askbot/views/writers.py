@@ -25,6 +25,7 @@ from askbot import auth
 from askbot.views.readers import _get_tags_cache_json
 from askbot import forms
 from askbot import models
+from askbot.skins.loaders import ENV
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -170,12 +171,15 @@ def ask(request):#view used to ask a new question
                 form.initial['title'] = query
 
     tags = _get_tags_cache_json()
-    return render_to_response('ask.html', {
+    template = ENV.get_template('ask.html')
+    data = {
         'active_tab': 'ask',
         'form' : form,
         'tags' : tags,
         'email_validation_faq_url':reverse('faq') + '#validate',
-        }, context_instance=RequestContext(request))
+    }
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 
 @login_required
 def retag_question(request, id):
@@ -196,12 +200,15 @@ def retag_question(request, id):
                 return HttpResponseRedirect(question.get_absolute_url())
         else:
             form = forms.RetagQuestionForm(question)
-        return render_to_response('question_retag.html', {
+        data = {
             'active_tab': 'questions',
             'question': question,
             'form' : form,
             'tags' : _get_tags_cache_json(),
-        }, context_instance=RequestContext(request))
+        }
+        context = RequestContext(request, data)
+        template = ENV.get_template('question_retag.html')
+        return HttpResponse(template.render(context))
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
@@ -244,13 +251,16 @@ def edit_question(request, id):
             revision_form = forms.RevisionForm(question, latest_revision)
             form = forms.EditQuestionForm(question, latest_revision)
 
-        return render_to_response('question_edit.html', {
+        data = {
             'active_tab': 'questions',
             'question': question,
             'revision_form': revision_form,
             'form' : form,
             'tags' : _get_tags_cache_json()
-        }, context_instance=RequestContext(request))
+        }
+        context = RequestContext(request, data)
+        template = ENV.get_template('question_edit.html')
+        return HttpResponse(template.render(context))
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
@@ -299,16 +309,16 @@ def edit_answer(request, id):
         else:
             revision_form = forms.RevisionForm(answer, latest_revision)
             form = forms.EditAnswerForm(answer, latest_revision)
-        return render_to_response(
-                            'answer_edit.html',
-                            {
-                                'active_tab': 'questions',
-                                'answer': answer,
-                                'revision_form': revision_form,
-                                'form': form,
-                            },
-                            context_instance=RequestContext(request)
-                        )
+        template = ENV.get_template('answer_edit.html')
+        data = {
+            'active_tab': 'questions',
+            'answer': answer,
+            'revision_form': revision_form,
+            'form': form,
+        }
+        context = RequestContext(request, data)
+        return HttpResponse(template.render(context))
+
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(answer.get_absolute_url())

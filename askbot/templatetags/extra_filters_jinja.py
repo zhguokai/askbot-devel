@@ -1,4 +1,6 @@
 import logging
+import datetime
+import time
 from coffin import template as coffin_template
 from django.core import exceptions as django_exceptions
 from django.utils.translation import ugettext as _
@@ -21,6 +23,19 @@ def collapse(input):
     return ' '.join(input.split())
 
 @register.filter
+def split(string, separator):
+    return string.split(separator)
+
+@register.filter
+def get_age(birthday):
+    current_time = datetime.datetime(*time.localtime()[0:6])
+    year = birthday.year
+    month = birthday.month
+    day = birthday.day
+    diff = current_time - datetime.datetime(year,month,day,0,0,0)
+    return diff.days / 365
+
+@register.filter
 def media(url):
     """media filter - same as media tag, but
     to be used as a filter in jinja templates
@@ -30,6 +45,13 @@ def media(url):
         return skin_utils.get_media_url(url)
     else:
         return ''
+
+@register.filter
+def fullmedia(url):
+    domain = askbot_settings.APP_URL
+    #protocol = getattr(settings, "PROTOCOL", "http")
+    path = media(url)
+    return "%s%s" % (domain, path)
 
 diff_date = register.filter(functions.diff_date)
 
@@ -46,6 +68,12 @@ register.filter(
 register.filter(
             name = 'urlencode',
             filter_func = defaultfilters.urlencode,
+            jinja2_only = True
+        )
+
+register.filter(
+            name = 'linebreaks',
+            filter_func = defaultfilters.linebreaks,
             jinja2_only = True
         )
 

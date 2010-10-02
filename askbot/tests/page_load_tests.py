@@ -1,8 +1,24 @@
-from django.test import TestCase
+from django.test import TestCase, signals
+from jinja2.environment import Template as Jinja2Template
 from django.template import defaultfilters
+from django.core.management import call_command
 from django.core.urlresolvers import reverse
+import coffin.template
 from askbot import models
 from askbot.utils.slug import slugify
+import sys
+
+#note - this code can be run only once
+ORIG_JINJA2_RENDERER = Jinja2Template.render
+def instrumented_render(template_object, *args, **kwargs):
+    context = dict(*args, **kwargs)
+    signals.template_rendered.send(
+                            sender=template_object,
+                            template=template_object,
+                            context=context
+                        )
+    return ORIG_JINJA2_RENDERER(template_object, *args, **kwargs)
+Jinja2Template.render = instrumented_render
 
 class PageLoadTestCase(TestCase):
     def try_url(
@@ -24,9 +40,13 @@ class PageLoadTestCase(TestCase):
         self.assertEqual(r.status_code, status_code)
 
         if template:
-            #asuming that there is more than one template
-            print 'templates are %s' % ','.join([t.name for t in r.template])
-            self.assertEqual(r.template[0].name, template)
+            if isinstance(r.template, coffin.template.Template):
+                self.assertEqual(r.template.name, template)
+            else:
+                #asuming that there is more than one template
+                template_names = ','.join([t.name for t in r.template])
+                print 'templates are %s' % template_names
+                self.assertEqual(r.template[0].name, template)
 
 class PageLoadTests(PageLoadTestCase):
     fixtures = ['/home/fadeev/askbot-try2/tmp/fixture1.json', ]
@@ -37,9 +57,7 @@ class PageLoadTests(PageLoadTestCase):
         self.assertEqual(response.status_code, 200)
         self.failUnless(len(response.redirect_chain) == 1)
         self.failUnless(response.redirect_chain[0][0].endswith('/questions/'))
-        c = response.context[0]
-        t = response.template[0]
-        self.assertEqual(t.name, 'questions.html')
+        self.assertEquals(response.template.name, 'questions.html')
 
     def proto_test_non_user_urls(self):
         """test all reader views thoroughly
@@ -48,7 +66,7 @@ class PageLoadTests(PageLoadTestCase):
 
         self.try_url('sitemap')
         self.try_url('feeds', kwargs={'url':'rss'})
-        self.try_url('about', template='about.html')
+        self.try_url('about', template='about.jinja.html')
         self.try_url('privacy', template='privacy.html')
         self.try_url('logout', template='logout.html')
         self.try_url('user_signin', template='authopenid/signin.html')
@@ -59,7 +77,7 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url('badges', template='badges.html')
         self.try_url(
                 'answer_revisions', 
-                template='revisions_answer.html',
+                template='revisions.html',
                 kwargs={'id':38}
             )
         #todo: test different sort methods and scopes
@@ -148,7 +166,7 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url(
                 'question_revisions',
                 kwargs={'id':17},
-                template='revisions_question.html'
+                template='revisions.html'
             )
         self.try_url('users', template='users.html')
         #todo: really odd naming conventions for sort methods

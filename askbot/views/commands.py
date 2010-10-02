@@ -23,6 +23,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from askbot.utils.decorators import ajax_method, ajax_login_required
 from askbot.templatetags import extra_filters as template_filters
+from askbot.skins.loaders import ENV
 import logging
 
 def process_vote(user = None, vote_direction = None, post = None):
@@ -319,15 +320,10 @@ def close(request, id):#close question
         else:
             request.user.assert_can_close_question(question)
             form = CloseForm()
-            response = render_to_response(
-                            'close.html', 
-                            {
-                                'form' : form,
-                                'question' : question,
-                            }, 
-                            context_instance=RequestContext(request)
-                        )
-            return response
+            template = ENV.get_template('close.html')
+            data = {'form': form, 'question': question}
+            context = RequestContext(request, data)
+            return HttpResponse(template.render(context))
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
@@ -350,15 +346,15 @@ def reopen(request, id):#re-open question
             request.user.assert_can_reopen_question(question)
             closed_by_profile_url = question.closed_by.get_profile_url()
             closed_by_username = question.closed_by.username
-            return render_to_response(
-                            'reopen.html', 
-                            {
-                                'question' : question,
-                                'closed_by_profile_url': closed_by_profile_url,
-                                'closed_by_username': closed_by_username,
-                            },
-                            context_instance=RequestContext(request)
-                        )
+            data = {
+                'question' : question,
+                'closed_by_profile_url': closed_by_profile_url,
+                'closed_by_username': closed_by_username,
+            }
+            context = RequestContext(request, data)
+            template = ENV.get_template('reopen.html')
+            return HttpResponse(template.render(context))
+            
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())

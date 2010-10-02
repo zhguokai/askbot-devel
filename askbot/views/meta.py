@@ -12,19 +12,24 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from askbot.utils.forms import get_next_url
 from askbot.models import Badge, Award
+from askbot.skins.loaders import ENV
 import askbot
 
 def about(request):
-    return render_to_response('about.html', context_instance=RequestContext(request))
+    template = ENV.get_template('about.jinja.html')
+    context = RequestContext(request)
+    return HttpResponse(template.render(context))
 
 def faq(request):
+    template = ENV.get_template('faq.html')
     data = {
         'view_name':'faq',
         'gravatar_faq_url': reverse('faq') + '#gravatar',
         #'send_email_key_url': reverse('send_email_key'),
         'ask_question_url': reverse('ask'),
     }
-    return render_to_response('faq.html', data, context_instance=RequestContext(request))
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 
 def feedback(request):
     data = {'view_name':'feedback'}
@@ -45,11 +50,15 @@ def feedback(request):
         form = FeedbackForm(initial={'next':get_next_url(request)})
 
     data['form'] = form
-    return render_to_response('feedback.html', data, context_instance=RequestContext(request))
+    context = RequestContext(request, data)
+    template = ENV.get_template('feedback.html')
+    return HttpResponse(template.render(context))
 feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, give it next time :)')
 
 def privacy(request):
-    return render_to_response('privacy.html', {'view_name':'privacy'}, context_instance=RequestContext(request))
+    context = RequestContext(request, {'view_name':'privacy'})
+    template = ENV.get_template('privacy.html')
+    return HttpResponse(template.render(context)) 
 
 def logout(request):#refactor/change behavior?
 #currently you click logout and you get
@@ -59,10 +68,13 @@ def logout(request):#refactor/change behavior?
 #however it might be a little annoying
 #why not just show a message: you are logged out of forum, but
 #if you really want to log out -> go to your openid provider
-    return render_to_response('logout.html', {
+    data = {
         'view_name':'logout',
         'next' : get_next_url(request),
-    }, context_instance=RequestContext(request))
+    }
+    context = RequestContext(request, data)
+    template = ENV.get_template('logout.html')
+    return HttpResponse(template.render(context))
 
 def badges(request):#user status/reputation system
     badges = Badge.objects.all().order_by('name')
@@ -71,12 +83,15 @@ def badges(request):#user status/reputation system
         my_badges = Award.objects.filter(user=request.user).values('badge_id')
         #my_badges.query.group_by = ['badge_id']
 
-    return render_to_response('badges.html', {
+    template = ENV.get_template('badges.html')
+    data = {
         'badges' : badges,
         'view_name': 'badges',
         'mybadges' : my_badges,
         'feedback_faq_url' : reverse('feedback'),
-    }, context_instance=RequestContext(request))
+    }
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 
 def badge(request, id):
     badge = get_object_or_404(Badge, id=id)
@@ -92,9 +107,12 @@ def badge(request, id):
         params=[id]
     ).distinct('id')
 
-    return render_to_response('badge.html', {
+    template = ENV.get_template('badge.html')
+    data = {
         'view_name': badge,
         'awards' : awards,
         'badge' : badge,
-    }, context_instance=RequestContext(request))
+    }
+    context = RequestContext(request, data)
+    return HttpResponse(template.render(context))
 

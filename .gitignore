@@ -28,3 +28,4 @@ dist
 build
 askbot/upfiles/*
 askbot/skins/common/media/mathjax/
+/jinja2
