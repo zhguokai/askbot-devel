@@ -2,6 +2,7 @@
 {% import "macros.html" as macros %}
 <div id="roof">
     <div id="navBar">
+    <a style="position:absolute;top:10px;right:30px;" href='http://www.pledgie.com/campaigns/12608'><img alt='Click here to lend your support to: askbot-devel and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/12608.png?skin_name=chrome' border='0' /></a>
         <div id="top">
             {% if request.user.is_authenticated() %}
                 <a href="{{ request.user.get_absolute_url() }}">{{ request.user.username }}</a> 
