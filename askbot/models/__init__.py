@@ -1672,7 +1672,7 @@ def notify_award_message(instance, created, **kwargs):
                     'badge_name':instance.badge.name, 
                     'user_profile':user.get_profile_url()
                 } 
-
+        #print unicode(user.username) + u' | ' + msg
         user.message_set.create(message=msg)
 
 def record_answer_accepted(instance, created, **kwargs):

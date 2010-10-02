@@ -4,6 +4,7 @@ from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
 from coffin.common import CoffinEnvironment
 from jinja2 import loaders as jinja_loaders
+from django.utils import translation
 
 #module for skinning askbot
 #via ASKBOT_DEFAULT_SKIN configureation variable (not django setting)
@@ -23,11 +24,15 @@ def load_template_source(name, dirs=None):
 
     try:
         #todo: move this to top after splitting out get_skin_dirs()
-        tname = os.path.join(askbot_settings.ASKBOT_DEFAULT_SKIN,'templates',name)
-        return filesystem.load_template_source(tname,dirs)
+        tname = os.path.join(
+                    askbot_settings.ASKBOT_DEFAULT_SKIN,
+                    'templates',
+                    name
+                )
+        return filesystem.load_template_source(tname, dirs)
     except:
-        tname = os.path.join('default','templates',name)
-        return filesystem.load_template_source(tname,dirs)
+        tname = os.path.join('default', 'templates', name)
+        return filesystem.load_template_source(tname, dirs)
 load_template_source.is_usable = True
 
 class SkinEnvironment(CoffinEnvironment):
@@ -41,7 +46,8 @@ class SkinEnvironment(CoffinEnvironment):
         """
         loaders = list()
         skin_name = askbot_settings.ASKBOT_DEFAULT_SKIN
-        skin_dirs = django_settings.TEMPLATE_DIRS + (ASKBOT_SKIN_COLLECTION_DIR,)
+        skin_dirs = django_settings.TEMPLATE_DIRS + \
+                            (ASKBOT_SKIN_COLLECTION_DIR,)
 
         template_dirs = list()
         for dir in skin_dirs:
@@ -52,5 +58,13 @@ class SkinEnvironment(CoffinEnvironment):
         loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
         return loaders
 
+    def set_language(self, language_code):
+        """hooks up translation objects from django to jinja2
+        environment.
+        note: not so sure about thread safety here
+        """
+        trans = translation.trans_real.translation(language_code)
+        self.install_gettext_translations(trans)
+
 ENV = SkinEnvironment(autoescape=False, extensions=['jinja2.ext.i18n'])
-ENV.install_null_translations()
+ENV.set_language(django_settings.LANGUAGE_CODE)

@@ -32,6 +32,23 @@
             var enableMathJax = false;
             {% endif %}
         </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#lang_selector').change(
+                    function(){
+                        var new_lang = $(this).find('option:selected').attr('value');
+                        var url_bits = window.location.pathname.split('/');
+                        url_bits.shift();
+                        var cur_lang = url_bits.shift();
+                        if (new_lang != cur_lang){
+                            url_bits.splice(0, 0, new_lang);
+                            var new_url = '/' + url_bits.join('/');
+                            window.location.pathname = new_url;
+                        }
+                    }
+                );
+            });
+        </script>
         <script type='text/javascript' src='{{"/js/com.cnprog.i18n.js"|media }}'></script>
         <script type='text/javascript' src='{{"/js/jquery.i18n.js"|media }}'></script>
         <script type='text/javascript' src='{{"/js/com.cnprog.utils.js"|media }}'></script>

@@ -24,9 +24,26 @@
             {% else %}
                 <a href="{% url user_signin %}">{% trans %}login{% endtrans %}</a>
             {% endif %}
-            <a href="{% url about %}">{% trans %}about{% endtrans %}</a>
-            <a href="{% url faq %}">{% trans %}faq{% endtrans %}</a>
-            {% if request.user.is_administrator %}
+            <a href="/doc/index.html" title="it's real easy(ish) to install askbot, there is also some developer documentation">install/docs</a>
+            <!--a href="/doc/index.html" title="read documentation">docs</a-->
+            <a href="http://twitter.com/askbot7" title="follow @askbot7 on twitter!">@twitter</a>
+            <a href="http://github.com/ASKBOT/askbot-devel" title="fork us on github!">github</a>
+            <select id="lang_selector" name="language" title="pick language (number in the parentheses is translation progress)">
+            {% for lang in LANGUAGES %}
+                <option value="{{lang.0}}"
+                {% if lang.0 == LANGUAGE_CODE %}
+                    selected="selected"
+                {% endif %}
+                >
+                    {{lang.1}} ({{ settings.LANGUAGE_PROGRESS[lang.0]}}%)
+                </option>
+            {% endfor %}
+                <!--option name="thanks">hey, thanks for looking down here</option-->
+            </select>
+            <br/>
+            <a style="text-decoration:none; margin:0; padding:0;" href="/en/question/47/how-to-translate-askbot-into-my-language"
+            >({% trans %}please help translate! see credits{% endtrans %})</a>
+            {% if request.user.is_authenticated() and request.user.is_administrator() %}
             <a href="{% url site_settings %}">{% trans %}settings{% endtrans %}</a>
             {% endif %}
         </div>
