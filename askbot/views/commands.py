@@ -131,9 +131,11 @@ def vote(request, id):
     }
 
     try:
-        if request.is_ajax() and request.method == 'POST':
+        if request.is_ajax():# and request.method == 'POST':
             vote_type = request.POST.get('type')
         else:
+            logging.critical(request.method)
+            logging.critical(request.is_ajax())
             raise Exception(_('Sorry, something is not right here...'))
 
         if vote_type == '0':

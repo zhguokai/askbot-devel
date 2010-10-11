@@ -540,3 +540,4 @@ class Command(NoArgsCommand):
                             body_text = text,
                             recipient_list = [recipient_email]
                         )
+                print 'seding email to %s' % recipient_email
