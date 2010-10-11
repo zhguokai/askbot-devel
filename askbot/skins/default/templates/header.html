@@ -48,7 +48,7 @@
             <br/>
             <a style="text-decoration:none; margin:0; padding:0;" href="/en/question/47/how-to-translate-askbot-into-my-language"
             >({% trans %}please help translate! see credits{% endtrans %})</a>
-            {% if request.user.is_administrator() %}
+            {% if request.user.is_authenticated() and request.user.is_administrator() %}
             <a href="{% url site_settings %}">{% trans %}settings{% endtrans %}</a>
             {% endif %}
         </div>
