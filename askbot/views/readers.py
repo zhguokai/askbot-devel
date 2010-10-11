@@ -15,7 +15,6 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidde
 from django.http import urlencode
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import RequestContext, Context
-from django.template import loader
 from django.template import defaultfilters
 from django.utils.html import *
 from django.utils import simplejson
@@ -107,9 +106,9 @@ def questions(request):
     #todo: form is used only for validation...
     if form.is_valid():
         search_state.update_from_user_input(
-                                                form.cleaned_data, 
-                                                request.GET, 
-                                            )
+                                    form.cleaned_data,
+                                    request.GET,
+                                )
         #todo: better put these in separately then analyze
         #what neesd to be done, otherwise there are two routines
         #that take request.GET I don't like this use of parameters
@@ -123,19 +122,15 @@ def questions(request):
     #search_state.reset()
     #request.session.modified = True
 
-    #have this call implemented for sphinx, mysql and pgsql
-    (qs, meta_data) = Question.objects.run_advanced_search(
-                            request_user = request.user,
-                            scope_selector = search_state.scope,#unanswered/all/favorite (for logged in)
-                            search_query = search_state.query,
-                            tag_selector = search_state.tags,
-                            author_selector = search_state.author,
-                            sort_method = search_state.sort
-                        )
+    #todo: have this call implemented for sphinx, mysql and pgsql
+    (qs, meta_data, related_tags) = Question.objects.run_advanced_search(
+                                            request_user = request.user,
+                                            search_state = search_state,
+                                        )
 
-    objects_list = Paginator(qs, search_state.page_size)
+    paginator = Paginator(qs, search_state.page_size)
 
-    if objects_list.num_pages < search_state.page:
+    if paginator.num_pages < search_state.page:
         raise Http404
 
     if search_state.query != None and search_state.query != '':
@@ -147,27 +142,25 @@ def questions(request):
         else:
             logging.debug('it is Evgeny playing')
 
-    questions = objects_list.page(search_state.page)
+    page = paginator.page(search_state.page)
 
-    #todo maybe do this search on query the set instead
-    related_tags = Tag.objects.get_tags_by_questions(questions.object_list)
-    contributors = Question.objects.get_question_and_answer_contributors(questions.object_list)
+    contributors = Question.objects.get_question_and_answer_contributors(page.object_list)
 
     paginator_context = {
-        'is_paginated' : (objects_list.count > search_state.page_size),
-        'pages': objects_list.num_pages,
+        'is_paginated' : (paginator.count > search_state.page_size),
+        'pages': paginator.num_pages,
         'page': search_state.page,
-        'has_previous': questions.has_previous(),
-        'has_next': questions.has_next(),
-        'previous': questions.previous_page_number(),
-        'next': questions.next_page_number(),
+        'has_previous': page.has_previous(),
+        'has_next': page.has_next(),
+        'previous': page.previous_page_number(),
+        'next': page.next_page_number(),
         'base_url' : request.path + '?sort=%s&amp;' % search_state.sort,#todo in T sort=>sort_method
         'page_size' : search_state.page_size,#todo in T pagesize -> page_size
     }
 
     if request.is_ajax():
 
-        q_count = objects_list.count
+        q_count = paginator.count
         question_counter = ungettext(
                                 '%(q_num)s question',
                                 '%(q_num)s questions',
@@ -176,16 +169,13 @@ def questions(request):
                                 'q_num': humanize.intcomma(q_count),
                             }
 
-        paginator_tpl = loader.get_template('paginator.html')
+        paginator_tpl = ENV.get_template('paginator.html')
         #todo: remove this patch on context after all templates are moved to jinja
         paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
-        paginator_html = paginator_tpl.render(
-                                    Context(
-                                        extra_tags.cnprog_paginator(
-                                                        paginator_context
-                                                    )
-                                    )
-                                )
+        data = {
+            'paginator_context': extra_tags.cnprog_paginator(paginator_context)
+        }
+        paginator_html = paginator_tpl.render(Context(data))
         ajax_data = {
             #current page is 1 by default now
             #because ajax is only called by update in the search button
@@ -214,7 +204,7 @@ def questions(request):
         for tag in related_tags:
             tag_data = {
                 'name': tag.name,
-                'used_count': humanize.intcomma(tag.used_count)
+                'used_count': humanize.intcomma(tag.local_used_count)
             }
             ajax_data['related_tags'].append(tag_data)
 
@@ -236,7 +226,7 @@ def questions(request):
         views_color_min_fg = askbot_settings.COLORS_VIEW_COUNTER_MIN_FG
         views_bgcolor_min = askbot_settings.COLORS_VIEW_COUNTER_MIN_BG
 
-        for question in questions.object_list:
+        for question in page.object_list:
             timestamp = question.last_activity_at
             author = question.last_activity_by
 
@@ -339,11 +329,11 @@ def questions(request):
         'view_name': 'questions',
         'reset_method_count': reset_method_count,
         'active_tab': 'questions',
-        'questions' : questions,
+        'questions' : page,
         'contributors' : contributors,
         'author_name' : meta_data.get('author_name',None),
         'tab_id' : search_state.sort,
-        'questions_count' : objects_list.count,
+        'questions_count' : paginator.count,
         'tags' : related_tags,
         'query': search_state.query,
         'search_tags' : search_state.tags,
@@ -356,20 +346,14 @@ def questions(request):
         'context' : paginator_context,
         })
 
-    #todo: organize variables by type
-    if request.is_ajax():
-        #this branch should be dead now
-        raise NotImplementedError()
-        template = loader.get_template('questions_ajax.html')
-        question_snippet = template.render(template_context)
-        output = {'question_snippet': question_snippet}
-        #print simplejson.dumps(output)
-        response = HttpResponse(simplejson.dumps(output), mimetype='application/json')
-    else:
-        template = ENV.get_template('questions.html')
-        response = HttpResponse(template.render(template_context))
-    after = datetime.datetime.now()
-    logging.critical('time to render %s' % (after - start_template_time))
+    assert(request.is_ajax() == False)
+    #ajax request is handled in a separate branch above
+
+    #before = datetime.datetime.now()
+    template = ENV.get_template('questions.html')
+    response = HttpResponse(template.render(template_context))
+    #after = datetime.datetime.now()
+    #print after - before
     return response
 
 def search(request): #generates listing of questions matching a search query - including tags and just words

@@ -43,7 +43,6 @@ from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
 from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
-EXTERNAL_LOGIN_APP = settings.LOAD_EXTERNAL_LOGIN_APP()
 
 # needed for some linux distributions like debian
 try:
@@ -324,6 +323,11 @@ class ClassicRegisterForm(SetPasswordForm):
     email = UserEmailField()
     login_provider = PasswordLoginProviderField()
     #fields password1 and password2 are inherited
+
+class SafeClassicRegisterForm(ClassicRegisterForm):
+    """this form uses recaptcha in addition
+    to the base register form
+    """
     recaptcha = ReCaptchaField()
 
 class ChangePasswordForm(SetPasswordForm):
