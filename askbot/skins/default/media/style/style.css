@@ -605,6 +605,35 @@ blockquote {
     padding-top:1px;
 }
 
+.no-votes {
+    background: white;
+    color: gray;
+}
+.some-votes {
+    background: #a3d0ff;
+    color: #4a4a4a;
+}
+.no-answers {
+    background: #b63333;
+    color: yellow;
+}
+.some-answers {
+    background: #ffed9c;
+    color: #a4a4a4;
+}
+.accepted {
+    background:#338333;
+    color:#d0f5a9;
+}
+.no-views {
+    background: gray;
+    color: white;
+}
+.some-views {
+    background: #ff8c8c;
+    color: #4a4a4a;
+}
+
 .short-summary .votes,
 .short-summary .status,
 .short-summary .views {
@@ -1902,6 +1931,11 @@ div.started .reputation-score {
     margin-left: 1px;
 }
 
+#top a.user-micro-info {
+    margin-left:0px;
+    text-decoration:none;
+}
+
 .narrow  .tags {
     float: left;
 }
@@ -2517,12 +2551,15 @@ ul.form-horizontal-rows li input {
 
 .post-update-info img {
     float: left;
-    width: 32px;
     margin: 4px 8px 0 0;
 }
 
 .comments-container {
     clear: both;
+}
+
+.post-update-info p.tip {
+    color: #444;
 }
 
 .admin {
