@@ -6,7 +6,8 @@ from django.utils.datastructures import SortedDict
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.http import urlquote as django_urlquote
-from django.core.urlresolvers import reverse
+#from django.core.urlresolvers import reverse
+from localeurl.models import reverse
 from django.contrib.sitemaps import ping_google
 from django.utils.translation import ugettext as _
 from askbot.models.tag import Tag, MarkedTag

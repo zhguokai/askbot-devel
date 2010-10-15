@@ -457,6 +457,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     question = get_object_or_404(Question, id=id)
     try:
+        print request.path
+        print question.get_absolute_url()
         assert(request.path == question.get_absolute_url())
     except AssertionError:
         logging.critical('no slug match!')
