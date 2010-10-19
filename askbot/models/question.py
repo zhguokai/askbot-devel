@@ -280,6 +280,7 @@ class QuestionManager(models.Manager):
         self.filter(id=question.id).update(favourite_count = FavoriteQuestion.objects.filter(question=question).count())
 
 class Question(content.Content, DeletableContent):
+    post_type = 'question'
     title    = models.CharField(max_length=300)
     tags     = models.ManyToManyField('Tag', related_name='questions')
     answer_accepted = models.BooleanField(default=False)
@@ -405,7 +406,9 @@ class Question(content.Content, DeletableContent):
     def delete(self):
         super(Question, self).delete()
         try:
-            ping_google()
+            from askbot.conf import settings as askbot_settings
+            if askbot_settings.GOOGLE_SITEMAP_CODE != '':
+                ping_google()
         except Exception:
             logging.debug('problem pinging google did you register you sitemap with google?')
 
