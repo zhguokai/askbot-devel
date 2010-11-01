@@ -4,7 +4,7 @@
 {% block forejs %}
     <script type='text/javascript' src='{{"/js/com.cnprog.editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/com.cnprog.post.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/jquery.validate.pack.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
     <script type="text/javascript">
 
     $().ready(function(){
@@ -41,7 +41,6 @@
             
         });
         lanai.highlightSyntax();
-
     });
     </script>
 {% endblock %}
@@ -59,8 +58,6 @@
             <div id="description" class="edit-content-html">
                 {{ question.html }}
             </div>
-           
-            
             <div class="form-item">
                 <strong>{{ form.tags.label_tag() }}:</strong> <span class="form-error"></span><br/>
                 {{ form.tags }}  {{ form.tags.errors }}

@@ -1283,19 +1283,21 @@ a:hover.medal {
     color: #fff;
 }
 
-.action-link a {
+.post-controls a {
     color: #777;
     padding: 3px;
     cursor: pointer;
+    border: none;
+    background: none;
+    text-decoration: none;
 }
 
-.action-link: a hover {
+.post-controls a:hover {
     background-color: #777;
-    text-decoration: none;
     color: #fff;
 }
 
-.action-link-separator {
+.post-controls .sep {
     color: #ccc;
 }
 
@@ -1546,6 +1548,12 @@ table.ab-tag-filter-form {
     font-size: 10px;
 }
 
+label.retag-error {
+    color: darkred;
+    padding-left: 5px;
+    font-size: 10px;
+}
+
 .error-list li {
     padding: 5px;
 }
@@ -1622,7 +1630,7 @@ span.form-error {
 }
 
 .wmd-preview {
-    margin: 10px 0 0 0;
+    margin: 0;
     padding: 6px;
     width: 691px;
     background-color: #F5F5F5;
@@ -1643,14 +1651,17 @@ span.form-error {
 }
 
 .preview-toggle {
-    font-weight: 600;
     width: 100%;
-    color: #aaa; /*letter-spacing:1px;*/
+    color: #666; /*letter-spacing:1px;*/
     text-align: left;
 }
 
 .preview-toggle span:hover {
     cursor: pointer;
+}
+
+.after-editor {
+    margin-top: 10px;
 }
 
 .edit-content-html {
@@ -2518,12 +2529,21 @@ ul.form-horizontal-rows li input {
     font-weight: bold;
 }
 
-.post-controls {
+.post-controls, .post-tags {
+    clear: left;
     float: left;
     font-size: 11px;
     line-height: 12px;
     min-width: 200px;
     margin-bottom: 5px;
+}
+
+.post-tags {
+    margin-bottom:8px;
+}
+
+.post-retag {
+    margin-bottom:0px;
 }
 
 #question-controls .tags {
