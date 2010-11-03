@@ -4,6 +4,7 @@ LANGUAGES = (
     ('fi', 'Finnish'),
     ('fr', 'French'),
     ('id', 'Indonesian'),
+    ('ja', 'Japanese'),
     ('it', 'Italian'),
     ('ru', 'Russian'),
     ('sr', 'Serbian'),
@@ -23,5 +24,6 @@ LANGUAGE_PROGRESS = {
     'tr': 77,
     'zh-cn': 36,
     'it': 70,
+    'ja': 21,
     'id': 1,
 }
