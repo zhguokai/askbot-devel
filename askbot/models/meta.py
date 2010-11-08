@@ -79,27 +79,6 @@ class Vote(base.MetaContent, base.UserContent):
         return score_after - score_before
 
 
-class FlaggedItemManager(models.Manager):
-    def get_flagged_items_count_today(self, user):
-        if user is not None:
-            today = datetime.date.today()
-            return self.filter(user=user, flagged_at__range=(today, today + datetime.timedelta(1))).count()
-        else:
-            return 0
-
-class FlaggedItem(base.MetaContent, base.UserContent):
-    """A flag on a Question or Answer indicating offensive content."""
-    flagged_at     = models.DateTimeField(default=datetime.datetime.now)
-
-    objects = FlaggedItemManager()
-
-    class Meta(base.MetaContent.Meta):
-        unique_together = ('content_type', 'object_id', 'user')
-        db_table = u'flagged_item'
-
-    def __unicode__(self):
-        return '[%s] flagged at %s' %(self.user, self.flagged_at)
-
 #todo: move this class to content
 class Comment(base.MetaContent, base.UserContent):
     post_type = 'comment'
@@ -241,11 +220,12 @@ class Comment(base.MetaContent, base.UserContent):
         #on these activities decrement response counter
         #todo: implement a custom delete method on these
         #all this should pack into Activity.responses.filter( somehow ).delete()
-        response_activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+        activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+        activity_types += (const.TYPE_ACTIVITY_MENTION,)
         activities = Activity.objects.filter(
                             content_type = comment_content_type,
                             object_id = comment_id,
-                            activity_type__in = response_activity_types
+                            activity_type__in = activity_types
                         )
         for activity in activities:
             for user in activity.recipients.all():

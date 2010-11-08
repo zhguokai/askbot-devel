@@ -9,6 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+from django.utils.html import strip_tags
 from askbot import const
 from askbot.utils import functions
 
@@ -80,6 +81,8 @@ class ActivityManager(models.Manager):
         if mentioned_whom:
             assert(isinstance(mentioned_whom, User))
             mention_activity.add_recipients([mentioned_whom])
+            mentioned_whom.increment_response_count()
+            mentioned_whom.save()
 
         return mention_activity
 
@@ -149,6 +152,9 @@ class ActivityAuditStatus(models.Model):
         app_label = 'askbot'
         db_table = 'askbot_activityauditstatus'
 
+    def is_new(self):
+        return (self.status == self.STATUS_NEW)
+
 
 class Activity(models.Model):
     """
@@ -193,6 +199,9 @@ class Activity(models.Model):
             return None
         assert(user_count == 1)
         return user_qs[0]
+
+    def get_preview(self):
+        return strip_tags(self.content_object.html)[:300]
 
     def get_absolute_url(self):
         return self.content_object.get_absolute_url()

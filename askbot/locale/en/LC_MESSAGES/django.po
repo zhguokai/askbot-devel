@@ -2472,7 +2472,7 @@ msgid "back to previous page"
 msgstr ""
 
 #: skins/default/templates/404.jinja.html:41
-#: skins/default/templates/questions.html:15
+#: skins/default/templates/questions.html:30
 msgid "see all questions"
 msgstr ""
 

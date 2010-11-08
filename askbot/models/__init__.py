@@ -23,7 +23,7 @@ from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.answer import Answer, AnonymousAnswer, AnswerRevision
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.meta import Vote, Comment, FlaggedItem
+from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models import signals
 #from user import AuthKeyUserAssociation
@@ -76,7 +76,9 @@ User.add_to_class('tag_filter_setting',
                                         default='ignored'
                                      )
                  )
-User.add_to_class('response_count', models.IntegerField(default=0))
+User.add_to_class('new_response_count', models.IntegerField(default=0))
+User.add_to_class('seen_response_count', models.IntegerField(default=0))
+
 
 def user_get_old_vote_for_post(self, post):
     """returns previous vote for this post
@@ -539,7 +541,7 @@ def user_assert_can_flag_offensive(self, post = None):
 
     double_flagging_error_message = _('cannot flag message as offensive twice')
 
-    if post.flagged_items.filter(user = self).count() > 0:
+    if self.get_flags_for_post(post).count() > 0:
         raise askbot_exceptions.DuplicateCommand(double_flagging_error_message)
 
     blocked_error_message = _('blocked users cannot flag posts')
@@ -562,9 +564,7 @@ def user_assert_can_flag_offensive(self, post = None):
     if self.is_administrator() or self.is_moderator():
         return
     else:
-        flag_count_today = FlaggedItem.objects.get_flagged_items_count_today(
-                                                                            self
-                                                                        )
+        flag_count_today = self.get_flag_count_posted_today()
         if flag_count_today >= askbot_settings.MAX_FLAGS_PER_USER_PER_DAY:
             flags_exceeded_error_message = _(
                                 '%(max_flags_per_day)s exceeded'
@@ -977,13 +977,6 @@ def user_visit_question(self, question = None, timestamp = None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
-    ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-    ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
-    response_activities = Activity.objects.filter(
-                                recipients = self,
-                                activity_type__in = ACTIVITY_TYPES,
-                                question = question
-                            )
     try:
         question_view = QuestionView.objects.get(
                                         who = self,
@@ -997,21 +990,36 @@ def user_visit_question(self, question = None, timestamp = None):
     question_view.when = timestamp
     question_view.save()
 
-    #filter response activities (already directed to the qurrent user
-    #as per the query in the beginning of this if branch)
+    #filter memo objects on response activities directed to the qurrent user
     #that refer to the children of the currently
     #viewed question and clear them for the current user
-    need_to_save_user = False
+    ACTIVITY_TYPES = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+    ACTIVITY_TYPES += (const.TYPE_ACTIVITY_MENTION,)
 
     audit_records = ActivityAuditStatus.objects.filter(
-                                        activity__in = response_activities,
-                                        user = self
-                                    )
-    if len(audit_records) > 0:
-        self.decrement_response_count(len(audit_records))
+                        user = self,
+                        status = ActivityAuditStatus.STATUS_NEW,
+                        activity__question = question
+                    )
+
+    cleared_record_count = audit_records.filter(
+                                activity__activity_type__in = ACTIVITY_TYPES
+                            ).update(
+                                status=ActivityAuditStatus.STATUS_SEEN
+                            )
+    if cleared_record_count > 0:
+        self.decrement_response_count(cleared_record_count)
         self.save()
-        #todo: set status to seen and call update
-        audit_records.delete()
+
+    #finally, mark admin memo objects if applicable
+    #the admin response counts are not denormalized b/c they are easy to obtain
+    if self.is_moderator() or self.is_administrator():
+        audit_records.filter(
+                activity__activity_type = const.TYPE_ACTIVITY_MARK_OFFENSIVE
+        ).update(
+            status=ActivityAuditStatus.STATUS_SEEN
+        )
+
 
 def user_is_username_taken(cls,username):
     try:
@@ -1351,18 +1359,37 @@ def flag_post(user, post, timestamp=None, cancel=False):
         return
 
     user.assert_can_flag_offensive(post = post)
-    flag = FlaggedItem(
-            user = user,
-            content_object = post,
-            flagged_at = timestamp,
-        )
-    auth.onFlaggedItem(flag, post, user, timestamp=timestamp)
+    auth.onFlaggedItem(post, user, timestamp=timestamp)
+
+def user_get_flags(self):
+    """return flag Activity query set
+    for all flags set by te user"""
+    return Activity.objects.filter(
+                        user = self,
+                        activity_type = const.TYPE_ACTIVITY_MARK_OFFENSIVE
+                    )
+
+def user_get_flag_count_posted_today(self):
+    """return number of flags the user has posted
+    within last 24 hours"""
+    today = datetime.date.today()
+    time_frame = (today, today + datetime.timedelta(1))
+    flags = self.get_flags()
+    return flags.filter(active_at__range = time_frame).count()
+
+def user_get_flags_for_post(self, post):
+    """return query set for flag Activity items
+    posted by users for a given post obeject
+    """
+    post_content_type = ContentType.objects.get_for_model(post)
+    flags = self.get_flags()
+    return flags.filter(content_type = post_content_type, object_id=post.id)
 
 def user_increment_response_count(user):
     """increment response counter for user
     by one
     """
-    user.response_count += 1
+    user.new_response_count += 1
 
 def user_decrement_response_count(user, amount=1):
     """decrement response count for the user 
@@ -1370,12 +1397,22 @@ def user_decrement_response_count(user, amount=1):
     but limit decrementation at zero exactly
     """
     assert(amount > 0)
-    if user.response_count >= amount:
-        user.response_count -= amount
-    else:
-        user.response_count = 0
+    user.seen_response_count += amount
+    if user.new_response_count >= amount:
+        user.new_response_count -= amount
+    user.clean_response_counts()
+
+def user_clean_response_counts(user):
+    ""
+    if user.new_response_count < 0:
+        user.new_response_count = 0
         logging.critical(
-                'response count wanted to go below zero'
+                'new response count wanted to go below zero for %s' % user.username
+            )
+    if user.seen_response_count < 0:
+        user.seen_response_count = 0
+        logging.critical(
+                'seen response count wanted to go below zero form %s' % user.username
             )
 
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
@@ -1396,6 +1433,9 @@ User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
 User.add_to_class('accept_answer', accept_answer)
 User.add_to_class('flag_post', flag_post)
+User.add_to_class('get_flags', user_get_flags)
+User.add_to_class('get_flag_count_posted_today', user_get_flag_count_posted_today)
+User.add_to_class('get_flags_for_post', user_get_flags_for_post)
 User.add_to_class('get_profile_url', get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_messages', get_messages)
@@ -1406,6 +1446,7 @@ User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('is_following', user_is_following)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
+User.add_to_class('clean_response_counts', user_clean_response_counts)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_moderator', user_is_moderator)
 User.add_to_class('is_approved', user_is_approved)
@@ -1796,9 +1837,13 @@ def record_flag_offensive(instance, mark_by, **kwargs):
                     question=instance.get_origin_post()
                 )
     activity.save()
-    recipients = instance.get_author_list(
-                                        exclude_list = [mark_by]
-                                    )
+#   todo: report authors that their post is flagged offensive
+#    recipients = instance.get_author_list(
+#                                        exclude_list = [mark_by]
+#                                    )
+    recipients = User.objects.filter(
+                    models.Q(is_superuser=True) | models.Q(status='m')
+                )
     activity.add_recipients(recipients)
 
 def record_update_tags(question, **kwargs):
@@ -1924,7 +1969,6 @@ AnonymousAnswer = AnonymousAnswer
 Tag = Tag
 Comment = Comment
 Vote = Vote
-FlaggedItem = FlaggedItem
 MarkedTag = MarkedTag
 
 Badge = Badge
@@ -1952,7 +1996,6 @@ __all__ = [
         'Tag',
         'Comment',
         'Vote',
-        'FlaggedItem',
         'MarkedTag',
 
         'Badge',
