@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import urlparse
+import cgi
 import urllib
-from openid.store.interface import OpenIDStore
-from openid.association import Association as OIDAssociation
-from openid.extensions import sreg
-import openid.store
+from askbot.deps.openid.store.interface import OpenIDStore
+from askbot.deps.openid.association import Association as OIDAssociation
+from askbot.deps.openid.extensions import sreg
+from askbot.deps.openid import store as openid_store
 import oauth2 as oauth
 
 from django.db.models.query import Q
@@ -23,7 +23,7 @@ from askbot.conf import settings as askbot_settings
 
 # needed for some linux distributions like debian
 try:
-    from openid.yadis import xri
+    from askbot.deps.openid.yadis import xri
 except:
     from yadis import xri
 
@@ -100,7 +100,7 @@ class DjangoOpenIDStore(OpenIDStore):
         return assocs_exist
 
     def useNonce(self, server_url, timestamp, salt):
-        if abs(timestamp - time.time()) > openid.store.nonce.SKEW:
+        if abs(timestamp - time.time()) > openid_store.nonce.SKEW:
             return False
         
         query = [
@@ -350,7 +350,7 @@ def get_minor_login_providers():
         'type': 'openid-username',
         'extra_token_name': _('ClaimID user name'),
         'icon_media_path': '/jquery-openid/images/claimid-0.png',
-        'openid_endpoint': 'http://%(username)s.livejournal.com'
+        'openid_endpoint': 'http://claimid.com/%(username)s/'
     }
     data['vidoop'] = {
         'name': 'vidoop',
@@ -505,7 +505,7 @@ class OAuthConnection(object):
 
         response, content = client.request(url, method, **kwargs)
         if response['status'] == '200':
-            return dict(urlparse.parse_qsl(content))
+            return dict(cgi.parse_qsl(content))
         else:
             raise OAuthError('response is %s' % response)
 
@@ -569,7 +569,7 @@ def get_facebook_user_id(request):
         secret = askbot_settings.FACEBOOK_SECRET
 
         fb_cookie = request.COOKIES['fbs_%s' % key]
-        fb_response = dict(urlparse.parse_qsl(fb_cookie))
+        fb_response = dict(cgi.parse_qsl(fb_cookie))
 
         signature = None
         payload = ''
