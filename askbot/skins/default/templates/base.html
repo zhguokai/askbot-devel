@@ -1,35 +1,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- template base.html -->
-{% load extra_filters %}
-{% load extra_tags %}
-{% load smart_if %}
-{% load i18n %}
 <html xmlns="http://www.w3.org/1999/xhtml">
+    {% spaceless %}
     <head>
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE|escape }}</title>
-        {% spaceless %}
-        {% block meta %}{% endblock %}
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         {% block meta_description %}
         <meta name="description" content="{{settings.APP_DESCRIPTION|escape}}" />
         {% endblock %}
-        {% endspaceless %}
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="keywords" content="{%block keywords%}{%endblock%},{{settings.APP_KEYWORDS|escape}}" />
         {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="google-site-verification" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
         {% endif %}
         <link rel="shortcut icon" href="{{ "/images/favicon.gif"|media }}" />
         <link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
-        {% if settings.ENABLE_MATHJAX %}
-            <script type='text/javascript' src='{{settings.MATHJAX_BASE_URL}}/MathJax.js'>
-                MathJax.Hub.Config({
-                    extensions: ["tex2jax.js"],
-                    jax: ["input/TeX","output/HTML-CSS"],
-                    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
-                });
-            </script>
-        {% endif %}
+        {% block forestyle %}{% endblock %}
         {% if user_messages %}
         <style type="text/css">
             body { margin-top:2.4em; }
@@ -38,49 +23,26 @@
         {% block forejs %}
         {% endblock %}
     </head>
-    {% if page_class %}
-    <body class="{{page_class}}">
-    {% else %}
-    <body>
-    {% endif %}
+    {% endspaceless %}
+    <body{% if page_class %} class="{{page_class}}"{% endif %}>
         <div class="notify" style="display:none">
-                {% if user_messages %}
-                    {% for message in user_messages %}
-                          <p class="darkred">{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
+            {% if user_messages %}
+                {% for message in user_messages %}
+                      <p class="darkred">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
             <a id="close-notify" onclick="notify.close(true)">&times;</a>
         </div>
         {% include "header.html" %}
-        <div id="wrapper">
-            <div id="room">
-                <div id="CALeft">
-                    {% include "input_bar.html" %}
-                    {% block content%}
-                    {% endblock%}
-
-                </div>
-                <div id="CARight">
-                    {% block sidebar%}
-                    {% endblock%}
-                </div>
-                <div id="tail" style="clear:both;">
-                    {% block tail %}
-                    {% endblock %}
-                </div>
-            </div>
-            <div class="spacer3"></div>
-        </div>
+        {% block body %}
+        {% endblock %}
         {% include "footer.html" %}
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
         <script type="text/javascript">
             var i18nLang = '{{settings.LANGUAGE_CODE}}';
             var scriptUrl = '/{{settings.LANGUAGE_CODE}}/{{settings.ASKBOT_URL}}'
             var askbotSkin = '{{settings.ASKBOT_DEFAULT_SKIN}}';
-            {% if settings.ENABLE_MATHJAX %}
-            var enableMathJax = true;
-            {% else %}
-            var enableMathJax = false;
-            {% endif %}
+            var enableMathJax = {% if settings.ENABLE_MATHJAX %}true{% else %}false{% endif %};
         </script>
         <script type='text/javascript' src='{{"/js/com.cnprog.i18n.js"|media }}'></script>
         <script type='text/javascript' src='{{"/js/jquery.i18n.js"|media }}'></script>
@@ -127,6 +89,27 @@
                 notify.show();
             {% endif %}
         </script>
+        {% if settings.ENABLE_MATHJAX %}
+            <script type='text/javascript' src='{{settings.MATHJAX_BASE_URL}}/MathJax.js'>
+                MathJax.Hub.Config({
+                    extensions: ["tex2jax.js"],
+                    jax: ["input/TeX","output/HTML-CSS"],
+                    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+                });
+            </script>
+        {% endif %}
+        {% if settings.GOOGLE_ANALYTICS_KEY %}
+        <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <script type="text/javascript">
+            try {
+            var pageTracker = _gat._getTracker('{{ settings.GOOGLE_ANALYTICS_KEY }}');
+            pageTracker._trackPageview();
+            } catch(err) {}
+        </script>
+        {% endif %}
     </body>
 </html>
 <!-- end template base.html -->
