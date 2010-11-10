@@ -220,7 +220,6 @@ blockquote {
 #room {
     padding: 0 0 10px 0;
     background-color: #FFF;
-    border-bottom: 1px solid #777;
 }
 
 #CALeft {
@@ -761,7 +760,7 @@ blockquote {
 .pager {
     margin-top: 10px;
     margin-bottom: 16px;
-    float: left;
+    border-top: 1px solid #777;
 }
 
 .pagesize {
