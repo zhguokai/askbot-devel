@@ -4,7 +4,6 @@
 {% block forestyle%}
 <style type="text/css">
     .history-table td { padding: 5px; }
-    .user-stats-table { margin-left:50px; }
 </style>
 {% endblock %}
 {% block content %}
@@ -29,9 +28,6 @@
     {% endif %}
     <script type="text/javascript">
         var viewUserID = {{view_user.id}};
-        $().ready(function(){
-            $("#nav_users").attr('className',"on");
-        }); 
     </script>
     {% block userjs %}
     {% endblock %}
