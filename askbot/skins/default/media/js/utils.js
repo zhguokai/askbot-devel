@@ -7,7 +7,7 @@ var copyAltToTitle = function(sel){
     sel.attr('title', sel.attr('alt'));
 };
 
-var showMessage = function(object, msg) {
+var showMessage = function(element, msg, where) {
     var div = $('<div class="vote-notification"><h3>' + msg + '</h3>(' +
     $.i18n._('click to close') + ')</div>');
 
@@ -15,18 +15,45 @@ var showMessage = function(object, msg) {
         $(".vote-notification").fadeOut("fast", function() { $(this).remove(); });
     });
 
-    object.parent().append(div);
+    var where = where || 'parent';
+
+    if (where == 'parent'){
+        element.parent().append(div);
+    }
+    else {
+        element.after(div);
+    }
+
     div.fadeIn("fast");
 };
 
-var setupButtonEventHandlers = function(button, callback){
-    button.keydown(function(e){
-        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)){
+
+var makeKeyHandler = function(key, callback){
+    return function(e){
+        if ((e.which && e.which == key) || (e.keyCode && e.keyCode == key)){
             callback();
             return false;
         }
-    });
+    };
+};
+
+
+var setupButtonEventHandlers = function(button, callback){
+    button.keydown(makeKeyHandler(13, callback));
     button.click(callback);
+};
+
+
+var putCursorAtEnd = function(element){
+    var el = element.get()[0];
+    if (el.setSelectionRange){
+        var len = element.val().length * 2;
+        el.setSelectionRange(len, len);
+    }
+    else{
+        element.val(element.val());
+    }
+    element.scrollTop = 999999;
 };
 
 var setCheckBoxesIn = function(selector, value){

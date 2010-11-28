@@ -20,6 +20,7 @@ from django.utils.html import *
 from django.utils.http import urlencode
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.utils import translation
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import cache_page
@@ -30,17 +31,18 @@ import askbot
 from askbot.utils.html import sanitize_html
 #from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.forms import *
+from askbot.forms import AdvancedSearchForm, AnswerForm
 from askbot.models import *
 from askbot import const
 from askbot import auth
 from askbot.utils import markup
 from askbot.utils.forms import get_next_url
 from askbot.utils.functions import not_a_robot_request
-from askbot.utils.decorators import profile
+from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.templatetags import extra_filters
+import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import ENV #jinja2 template loading enviroment
 
@@ -322,10 +324,10 @@ def questions(request):
         'interesting_tag_names': meta_data.get('interesting_tag_names',None),
         'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
         'sort': search_state.sort,
-        'show_sort_by_relevance': askbot.should_show_sort_by_relevance(),
+        'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
         'scope': search_state.scope,
         'context' : paginator_context,
-        })
+    })
 
     assert(request.is_ajax() == False)
     #ajax request is handled in a separate branch above
@@ -578,3 +580,16 @@ def revisions(request, id, object_name=None):
     context = RequestContext(request, data)
     template = ENV.get_template('revisions.html')
     return HttpResponse(template.render(context))
+
+@ajax_only
+@anonymous_forbidden
+@get_only
+def get_comment(request):
+    """returns text of a comment by id
+    via ajax response requires request method get
+    and request must be ajax
+    """
+    id = int(request.GET['id'])
+    comment = Comment.objects.get(id = id)
+    request.user.assert_can_edit_comment(comment)
+    return {'text': comment.comment}

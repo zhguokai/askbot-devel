@@ -32,6 +32,7 @@ from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
+from askbot.utils.mail import send_mail
 from askbot.startup_tests import run_startup_tests
 
 run_startup_tests()
@@ -276,6 +277,33 @@ def user_assert_can_post_answer(self):
     """same as user_can_post_question
     """
     self.assert_can_post_question()
+
+
+def user_assert_can_edit_comment(self, comment = None):
+    """raises exceptions.PermissionDenied if user
+    cannot edit comment with the reason given as message
+
+    only owners, moderators or admins can edit comments
+    """
+    if self.is_administrator() or self.is_moderator():
+        return
+    else:
+        if comment.user == self:
+            now = datetime.datetime.now()
+            if now - comment.added_at > datetime.timedelta(0, 600):
+                if comment.is_last():
+                    return
+                error_message = _(
+                    'Sorry, comments (except the last one) are editable only within 10 minutes from posting'
+                )
+                raise django_exceptions.PermissionDenied(error_message)
+            return
+
+    error_message = _(
+        'Sorry, but only post owners or moderators can edit comments'
+    )
+    raise django_exceptions.PermissionDenied(error_message)
+
 
 
 def user_assert_can_post_comment(self, parent_post = None):
@@ -696,12 +724,14 @@ def user_retag_question(
                     question = None,
                     tags = None,
                     timestamp = None,
+                    silent = False
                 ):
     self.assert_can_retag_question(question)
     question.retag(
         retagged_by = self,
         retagged_at = timestamp,
         tagnames = tags,
+        silent = silent
     )
 
 @auto_now_timestamp
@@ -882,6 +912,14 @@ def user_post_question(
                                     wiki = wiki
                                 )
     return question
+
+def user_edit_comment(self, comment = None, body_text = None):
+    """apply edit to a comment, the method does not
+    change the comments timestamp and no signals are sent
+    """
+    self.assert_can_edit_comment(comment)
+    comment.comment = body_text
+    comment.parse_and_save(author = self)
 
 @auto_now_timestamp
 def user_edit_question(
@@ -1427,6 +1465,7 @@ User.add_to_class('retag_question', user_retag_question)
 User.add_to_class('post_answer', user_post_answer)
 User.add_to_class('edit_answer', user_edit_answer)
 User.add_to_class('post_comment', user_post_comment)
+User.add_to_class('edit_comment', user_edit_comment)
 User.add_to_class('delete_post', user_delete_post)
 User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
@@ -1488,6 +1527,7 @@ User.add_to_class('assert_can_retag_question', user_assert_can_retag_question)
 User.add_to_class('assert_can_delete_post', user_assert_can_delete_post)
 User.add_to_class('assert_can_restore_post', user_assert_can_restore_post)
 User.add_to_class('assert_can_delete_comment', user_assert_can_delete_comment)
+User.add_to_class('assert_can_edit_comment', user_assert_can_edit_comment)
 User.add_to_class('assert_can_delete_answer', user_assert_can_delete_answer)
 User.add_to_class('assert_can_delete_question', user_assert_can_delete_question)
 User.add_to_class('assert_can_accept_best_answer', user_assert_can_accept_best_answer)
@@ -1619,13 +1659,13 @@ def send_instant_notifications_about_activity_in_post(
                         )
             #todo: this could be packaged as an "action" - a bundle
             #of executive function with the activity log recording
-            askbot.send_mail(
-                    subject_line = subject_line,
-                    body_text = body_text,
-                    recipient_list = [user.email],
-                    related_object = origin_post,
-                    activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
-                )
+            send_mail(
+                subject_line = subject_line,
+                body_text = body_text,
+                recipient_list = [user.email],
+                related_object = origin_post,
+                activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+            )
 
 
 #todo: move to utils

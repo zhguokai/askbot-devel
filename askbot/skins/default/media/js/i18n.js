@@ -127,12 +127,17 @@ var i18nEn = {
     'post recovered':'your post is now restored!',
     'post deleted':'your post has been deleted',
     'confirm delete comment':'do you really want to delete this comment?',
-    'can write':'have ',
+    'can write':' ',
     'tablimits info':'up to 5 tags, no more than 20 characters each',
     'content minchars': 'please enter more than {0} characters',
     'title minchars':"please enter at least {0} characters",
     'characters':'characters left',
     'cannot flag message as offensive twice':'cannot flag message as offensive twice ',
+    'edit':'edit',
+    'click to edit this comment':'click to edit this comment',
+    'confirm abandon comment':'Are you sure you do not want to post this comment?',
+    'save comment': 'save comment',
+    'enter more characters': 'please enter at least {0} more characters'
 };
 
 var i18nFi = {

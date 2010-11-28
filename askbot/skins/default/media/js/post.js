@@ -28,8 +28,8 @@ var getUniqueWords = function(value){
     return $.unique($.trim(value).split(/\s+/));
 };
 
-function appendLoader(containerSelector) {
-    $(containerSelector).append('<img class="ajax-loader" ' +
+function appendLoader(element) {
+    element.append('<img class="ajax-loader" ' +
         'src="' + mediaUrl("media/images/indicator.gif") + '" title="' +
         $.i18n._('loading...') +
         '" alt="' +
@@ -41,21 +41,21 @@ function removeLoader() {
     $("img.ajax-loader").remove();
 }
 
-function setSubmitButtonDisabled(formSelector, isDisabled) { 
-    $(formSelector).find("input[type='submit']").attr("disabled", isDisabled ? "true" : "");    
+function setSubmitButtonDisabled(form, isDisabled) { 
+    form.find("input[type='submit']").attr("disabled", isDisabled ? "true" : "");    
 }
 
-function enableSubmitButton(formSelector) {
-    setSubmitButtonDisabled(formSelector, false);
+function enableSubmitButton(form) {
+    setSubmitButtonDisabled(form, false);
 }
 
-function disableSubmitButton(formSelector) {
-    setSubmitButtonDisabled(formSelector, true);
+function disableSubmitButton(form) {
+    setSubmitButtonDisabled(form, true);
 }
 
-function setupFormValidation(formSelector, validationRules, validationMessages, onSubmitCallback) {
-    enableSubmitButton(formSelector);
-    $(formSelector).validate({
+function setupFormValidation(form, validationRules, validationMessages, onSubmitCallback) {
+    enableSubmitButton(form);
+    form.validate({
         debug: true,
         rules: (validationRules ? validationRules : {}),
         messages: (validationMessages ? validationMessages : {}),
@@ -73,14 +73,14 @@ function setupFormValidation(formSelector, validationRules, validationMessages, 
             }
             span.replaceWith(error);
         },
-        submitHandler: function(form) {
-            disableSubmitButton(formSelector);
+        submitHandler: function(form_dom) {
+            disableSubmitButton($(form_dom));
             
             if (onSubmitCallback){
                 onSubmitCallback();
             } 
             else{
-                form.submit();
+                form_dom.submit();
             }
         }
     });
@@ -144,6 +144,7 @@ var CPValidator = function(){
         }
     };
 }();
+
 
 var Vote = function(){
     // All actions are related to a question
@@ -812,254 +813,657 @@ var questionRetagger = function(){
     };
 }();
 
-var questionComments = createComments('question');
-var answerComments = createComments('answer');
-var commentsFactory = {'question' : questionComments, 'answer' : answerComments};
+inherits = function(childCtor, parentCtor) {
+  /** @constructor taken from google closure */
+    function tempCtor() {};
+    tempCtor.prototype = parentCtor.prototype;
+    childCtor.superClass_ = parentCtor.prototype;
+    childCtor.prototype = new tempCtor();
+    childCtor.prototype.constructor = childCtor;
+};
 
-// site comments
-function createComments(type) {
-    var objectType = type;
-    var jDivInit = function(id) {
-        return $("#comments-container-" + objectType + '-' + id);
-    };
+/* wrapper around jQuery object */
+var WrappedElement = function(){
+    this._element = null;
+};
+WrappedElement.prototype.setElement = function(element){
+    this._element = element;
+};
+WrappedElement.prototype.createDom = function(){
+    this._element = $('<div></div>');
+};
+WrappedElement.prototype.getElement = function(){
+    if (this._element === null){
+        this.createDom();
+    }
+    return this._element;
+};
+WrappedElement.prototype.dispose = function(){
+    this._element.remove();
+};
 
-    var appendLoaderImg = function(id) {
-        appendLoader("#comments-container-" + objectType + '-' + id);
-    };
+var SimpleControl = function(){
+    WrappedElement.call(this);
+    this._handler = null;
+};
+inherits(SimpleControl, WrappedElement);
 
-    var canPostComments = function(id) {
-        var jHidden = $("#can-post-comments-" + objectType + '-' + id);
-        return jHidden.val().toLowerCase() == "true";
-    };
+SimpleControl.prototype.setHandler = function(handler){
+    this._handler = handler;
+};
 
-    var renderForm = function(id) {
-        var formId = "form-comments-" + objectType + "-" + id;
-        var jDiv = $('#comments-link-' + objectType + "-" + id).parent();
-        $(jDiv).css('background','none');
-        $(jDiv).css('padding-left',0);
-        if (canPostComments(id)) {
-            if (jDiv.find("#" + formId).length === 0) {
-                var form = '<form id="' + formId + '" class="post-comments"><div>';
-                form += '<textarea name="comment" cols="60" rows="5" ' +
-                        'maxlength="' + maxCommentLength + '" onblur="' +
-                        objectType +'Comments.updateTextCounter(this)" ';
-                form += 'onfocus="' + objectType +
-                        'Comments.updateTextCounter(this)" onkeyup="' + objectType +
-                        'Comments.updateTextCounter(this)"></textarea>';
-                form += '<input type="submit" value="' +
-                        $.i18n._('add comment') + '" /><br><span class="text-counter"></span>';
-                form += '<span class="form-error"></span></div></form>';
+var EditLink = function(){
+    SimpleControl.call(this)
+};
+inherits(EditLink, SimpleControl);
 
-                jDiv.append(form);
+EditLink.prototype.createDom = function(){
+    var element = $('<a></a>');
+    element.addClass('edit');
+    this.decorate(element);
+};
 
-                setupFormValidation("#" + formId,
-                    { comment: { required: true, minlength: 10} }, '',
-                    function() { postComment(id, formId); })
-                ;
-            }
+EditLink.prototype.decorate = function(element){
+    this._element = element;
+    this._element.attr('title', $.i18n._('click to edit this comment'));
+    this._element.html($.i18n._('edit'));
+    setupButtonEventHandlers(this._element, this._handler);
+};
+
+var DeleteIcon = function(title){
+    SimpleControl.call(this);
+    this._title = title;
+};
+inherits(DeleteIcon, SimpleControl);
+
+DeleteIcon.prototype.decorate = function(element){
+    this._element = element;
+    var img = mediaUrl("media/images/close-small.png");
+    var imgHover = mediaUrl("media/images/close-small-hover.png");
+    this._element.attr('class', 'delete-icon');
+    this._element.attr('src', img);
+    this._element.attr('title', this._title);
+    setupButtonEventHandlers(this._element, this._handler);
+    this._element.mouseover(function(e){
+        $(this).attr('src', imgHover);
+    });
+    this._element.mouseout(function(e){
+        $(this).attr('src', img);
+    });
+};
+
+DeleteIcon.prototype.createDom = function(){
+    this.decorate($('<img />'));
+};
+
+
+//constructor for the form
+var EditCommentForm = function(){
+    WrappedElement.call(this);
+    this._comment = null;
+    this._comment_widget = null;
+    this._element = null;
+    this._text = '';
+    this._id = 'edit-comment-form';
+};
+inherits(EditCommentForm, WrappedElement);
+
+EditCommentForm.prototype.getElement = function(){
+    EditCommentForm.superClass_.getElement.call(this);
+    this._textarea.val(this._text);
+    return this._element;
+};
+
+EditCommentForm.prototype.attachTo = function(comment, mode){
+    this._comment = comment;
+    this._type = mode;
+    this._comment_widget = comment.getContainerWidget();
+    this._text = comment.getText();
+    comment.getElement().after(this.getElement());
+    comment.getElement().hide();
+    this._comment_widget.hideButton();
+    if (this._type == 'add'){
+        this._submit_btn.html($.i18n._('add comment'));
+    }
+    else {
+        this._submit_btn.html($.i18n._('save comment'));
+    }
+    this.getElement().show();
+    this.focus();
+    putCursorAtEnd(this._textarea);
+};
+
+EditCommentForm.prototype.getCounterUpdater = function(){
+    //returns event handler
+    var counter = this._text_counter;
+    var handler = function(){
+        var textarea = $(this);
+        var length = textarea.val() ? textarea.val().length : 0;
+        var length1 = maxCommentLength - 100;
+        if (length1 < 0){
+            length1 = Math.round(0.7*maxCommentLength);
+        }
+        var length2 = maxCommentLength - 30;
+        if (length2 < 0){
+            length2 = Math.round(0.9*maxCommentLength);
+        }
+        
+        var color = 'maroon';
+        if (length === 0){
+            var feedback = $.i18n._('title minchars').replace('{0}', 10);
+        }
+        else if (length < 10){
+            var feedback = $.i18n._('enter more characters').replace('{0}', 10 - length);
         }
         else {
-            var divId = "comments-rep-needed-" + objectType + '-' + id;
-            if (jDiv.find("#" + divId).length === 0) {
-                jDiv.append(
-                        '<p id="' + divId + '" class="comment">' + 
-                        $.i18n._('to comment, need') + ' ' +
-                        repNeededForComments + ' ' + $.i18n._('community karma points') + 
-                        '<a href="' + scriptUrl + $.i18n._('faq/') + '" class="comment-user">' +
-                        $.i18n._('please see') + 'faq</a></span></p>'
-                    );
-            }
+            color = length > length2 ? "#f00" : length > length1 ? "#f60" : "#999";
+            var feedback = $.i18n._('can write') + ' ' + 
+                    (maxCommentLength - length) + ' ' +
+                    $.i18n._('characters');
         }
+        counter.html(feedback).css('color', color);
     };
+    return handler;
+};
 
-    var getComments = function(id, jDiv) {
-        //appendLoaderImg(id);
-        $.getJSON(scriptUrl + $.i18n._(objectType + "s/") + id + "/" + $.i18n._("comments/"),
-                function(json) { showComments(id, json); });
+EditCommentForm.prototype.canCancel = function(){
+    if (this._element === null){
+        return true;
+    }
+    var ctext = $.trim(this._textarea.val());
+    if ($.trim(ctext) == $.trim(this._text)){
+        return true;
+    }
+    else if (this.confirmAbandon()){
+        return true;
+    }
+    this.focus();
+    return false;
+};
+
+EditCommentForm.prototype.getCancelHandler = function(){
+    var form = this;
+    return function(){
+        if (form.canCancel()){
+            form.detach();
+        } 
+        return false;
     };
+};
 
-    var showComments = function(id, json) {
-        var jDiv = jDivInit(id);
+EditCommentForm.prototype.detach = function(){
+    if (this._comment === null){
+        return;
+    }
+    this._comment.getContainerWidget().showButton();
+    if (this._comment.isBlank()){
+        this._comment.dispose();
+    }
+    else {
+        this._comment.getElement().show();
+    }
+    this.reset();
+    this._element = this._element.detach();
+};
 
-        //jDiv = jDiv.find("div.comments");   // this div should contain any fetched comments..
-        //jDiv.find("div[id^='comment-" + objectType + "-'" + "]").remove();  // clean previous calls..
-        jDiv.children().remove();
-        removeLoader();
-        if (json && json.length > 0) {
-            for (var i = 0; i < json.length; i++){
-                renderComment(jDiv, json[i]);
-            }
-            jDiv.children().show();
+EditCommentForm.prototype.createDom = function(){
+    this._element = $('<form></form>');
+    this._element.attr('class', 'post-comments');
+
+    var div = $('<div></div>');
+    this._textarea = $('<textarea></textarea>');
+    this._textarea.attr('id', this._id);
+
+
+    this._element.append(div);
+    div.append(this._textarea);
+    this._text_counter = $('<span></span>').attr('class', 'counter');
+    div.append(this._text_counter);
+    this._submit_btn = $('<button class="submit small"></button>');
+    div.append(this._submit_btn);
+    this._cancel_btn = $('<button class="submit small"></button>');
+    this._cancel_btn.html($.i18n._('cancel'));
+    div.append(this._cancel_btn);
+
+    setupButtonEventHandlers(this._submit_btn, this.getSaveHandler());
+    setupButtonEventHandlers(this._cancel_btn, this.getCancelHandler());
+
+    var update_counter = this.getCounterUpdater();
+    var escape_handler = makeKeyHandler(27, this.getCancelHandler());
+    var save_handler = makeKeyHandler(13, this.getSaveHandler());
+    this._textarea.attr('name', 'comment')
+            .attr('cols', 60)
+            .attr('rows', 5)
+            .attr('maxlength', maxCommentLength)
+            .blur(update_counter)
+            .focus(update_counter)
+            .keyup(update_counter)
+            .keyup(escape_handler)
+            .keydown(save_handler);
+    this._textarea.val(this._text);
+};
+
+EditCommentForm.prototype.enableButtons = function(){
+    this._submit_btn.attr('disabled', '');
+    this._cancel_btn.attr('disabled', '');
+};
+
+EditCommentForm.prototype.disableButtons = function(){
+    this._submit_btn.attr('disabled', 'disabled');
+    this._cancel_btn.attr('disabled', 'disabled');
+};
+
+EditCommentForm.prototype.reset = function(){
+    this._comment = null;
+    this._text = '';
+    this._textarea.val('');
+    this.enableButtons();
+};
+
+EditCommentForm.prototype.confirmAbandon = function(){
+    this.focus(true);
+    this._textarea.addClass('highlight');
+    var answer = confirm($.i18n._('confirm abandon comment'));
+    this._textarea.removeClass('highlight');
+    return answer;
+};
+
+EditCommentForm.prototype.focus = function(hard){
+    this._textarea.focus();
+    if (hard === true){
+        $(this._textarea).scrollTop();
+    }
+};
+
+EditCommentForm.prototype.getSaveHandler = function(){
+
+    var me = this;
+    return function(){
+        var text = me._textarea.val();
+        if (text.length <= 10){
+            me.focus();
+            return;
         }
-        if (enableMathJax === true){
-            MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
-        }
-    };
 
-    var renderDeleteCommentIcon = function(post_id, delete_url){
-        if (canPostComments(post_id)){
-            var html = '';
-            var img = mediaUrl("media/images/close-small.png");
-            var imgHover = mediaUrl("media/images/close-small-hover.png");
-            html += '<img class="delete-icon" onclick="' + objectType + 
-                    'Comments.deleteComment($(this), ' + post_id + ', \'' + 
-                    delete_url + '\')" src="' + img;
-            html += '" onmouseover="$(this).attr(\'src\', \'' + imgHover + 
-                    '\')" onmouseout="$(this).attr(\'src\', \'' + img;
-            html += '\')" title="' + $.i18n._('delete this comment') + '" />';
-            return html;
-        }
-        else{
-            return '';
-        }
-    };
+        var post_data = {
+            comment: text
+        };
 
-    // {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
-    var renderComment = function(jDiv, json) {
-        var html = '<div id="comment-' + json.id + '" class="comment" style="display:none">' + json.text;
-        html += json.user_url ? ' - <a href="' + json.user_url + '"' : '<span';
-        html += ' class="comment-user">' + json.user_display_name + (json.user_url ? '</a>' : '</span>');
-        html += ' (' + json.comment_age + ')';
-
-        if (json.delete_url){
-            html += renderDeleteCommentIcon(json.object_id, json.delete_url);
+        if (me._type == 'edit'){
+            post_data['comment_id'] = me._comment.getId();
+            post_url = askbot['urls']['editComment'];
+        }
+        else {
+            post_data['post_type'] = me._comment.getParentType();
+            post_data['post_id'] = me._comment.getParentId();
+            post_url = askbot['urls']['postComments'];
         }
 
-        if (json.delete_url) {
-        }
-
-        html += '</div>';
-
-        jDiv.append(html);
-    };
-
-    var postComment = function(id, formId) {
-        //appendLoaderImg(id);
-
-        var formSelector = "#" + formId;
-        var textarea = $(formSelector + " textarea");
+        me.disableButtons();
 
         $.ajax({
             type: "POST",
-            url: scriptUrl + $.i18n._(objectType + "s/") + id + "/" + $.i18n._("comments/"),
+            url: post_url,
             dataType: "json",
-            data: { comment: textarea.val() },
+            data: post_data,
             success: function(json) {
-                showComments(id, json);
-                textarea.val("");
-                commentsFactory[objectType].updateTextCounter(textarea);
-                enableSubmitButton(formSelector);
+                if (me._type == 'add'){
+                    me._comment.dispose();
+                    me._comment.getContainerWidget().reRenderComments(json);
+                }
+                else {
+                    me._comment.setContent(json);
+                    me._comment.getElement().show();
+                }
+                me.detach();
             },
             error: function(xhr, textStatus, errorThrown) {
-                removeLoader();
-                showMessage($(formSelector), xhr.responseText);
-                enableSubmitButton(formSelector);
+                me._comment.getElement().show();
+                showMessage(me._comment.getElement(), xhr.responseText, 'after');
+                me.detach();
+                me.enableButtons();
             }
         });
     };
+};
 
-    // public methods..
-    return {
+//a single instance to reuse
+var editCommentForm = new EditCommentForm();
 
-        init: function() {
-            // Setup "show comments" clicks..
-            $("a[id^='comments-link-" + objectType + "-" + "']").unbind("click").click(function() { 
-                commentsFactory[objectType].show($(this).attr("id").substr(("comments-link-" + objectType + "-").length)); 
-                });
+var Comment = function(widget, data){
+    WrappedElement.call(this);
+    this._container_widget = widget;
+    this._data = data || {};
+    this._blank = true;//set to false by setContent
+    this._element = null;
+    this._delete_prompt = $.i18n._('delete this comment');
+    if (data && data['is_deletable']){
+        this._deletable = data['is_deletable'];
+    }
+    else {
+        this._deletable = false;
+    }
+    if (data && data['is_editable']){
+        this._editable = data['is_deletable'];
+    }
+    else {
+        this._editable = false;
+    }
+};
+inherits(Comment, WrappedElement);
 
-            var cBox = $("[id^='comments-container-" + objectType + "']");
-            cBox.each( function(i){
-                var post_id = $(this).attr('id').replace('comments-container-' + objectType + '-', '');
+Comment.prototype.decorate = function(element){
+    this._element = $(element);
+    var parent_type = this._element.parent().parent().attr('id').split('-')[2];
+    var comment_id = this._element.attr('id').replace('comment-','');
+    this._data = {id: comment_id};
+    var delete_img = this._element.find('img.delete-icon');
+    if (delete_img.length > 0){
+        this._deletable = true;
+        this._delete_icon = new DeleteIcon(this.deletePrompt);
+        this._delete_icon.setHandler(this.getDeleteHandler());
+        this._delete_icon.decorate(delete_img);
+    }
+    var edit_link = this._element.find('a.edit');
+    if (edit_link.length > 0){
+        this._editable = true;
+        this._edit_link = new EditLink();
+        this._edit_link.setHandler(this.getEditHandler());
+        this._edit_link.decorate(edit_link);
+    }
 
-                $(this).children().each(
-                    function(i){
-                        var comment_id = $(this).attr('id').replace('comment-','');
-                        var delete_url = scriptUrl + $.i18n._(objectType + 's/') + post_id + '/' +
-                                        $.i18n._('comments/') + comment_id + '/' + $.i18n._('delete/');
-                        var html = $(this).html();
-                        var CommentsClass;
-                        if (objectType == 'question'){
-                            CommentsClass = questionComments;
-                        }
-                        else if (objectType == 'answer') {
-                            CommentsClass = answerComments;
-                        }
-                        var delete_icon = $(this).find('img.delete-icon');
-                        delete_icon.click(function(){CommentsClass.deleteComment($(this),comment_id,delete_url);});
-                        delete_icon.unbind('mouseover').bind('mouseover',
-                            function(){
-                                $(this).attr('src',mediaUrl('media/images/close-small-hover.png'));
-                            }
-                        );
-                        delete_icon.unbind('mouseout').bind('mouseout',
-                            function(){
-                                $(this).attr('src',mediaUrl('media/images/close-small.png'));
-                            }
-                        );
+    this._blank = false;
+};
+
+Comment.prototype.isBlank = function(){
+    return this._blank;
+};
+
+Comment.prototype.getId = function(){
+    return this._data['id'];
+};
+
+Comment.prototype.hasContent = function(){
+    return ('id' in this._data);
+    //shortcut for 'user_url' 'html' 'user_display_name' 'comment_age'
+};
+
+Comment.prototype.hasText = function(){
+    return ('text' in this._data);
+}
+
+Comment.prototype.getContainerWidget = function(){
+    return this._container_widget;
+};
+
+Comment.prototype.getParentType = function(){
+    return this._container_widget.getPostType();
+};
+
+Comment.prototype.getParentId = function(){
+    return this._container_widget.getPostId();
+};
+
+Comment.prototype.setContent = function(data){
+    this._data = data || this._data;
+    this._element.html('');
+    this._element.attr('class', 'comment');
+    this._element.attr('id', 'comment-' + this._data['id']);
+
+    this._element.append(this._data['html']);
+    this._element.append(' - ');
+
+    this._user_link = $('<a></a>').attr('class', 'author');
+    this._user_link.attr('href', this._data['user_url']);
+    this._user_link.html(this._data['user_display_name']);
+    this._element.append(this._user_link);
+
+    this._element.append(' (');
+    this._comment_age = $('<span class="age"></span>');
+    this._comment_age.html(this._data['comment_age']);
+    this._element.append(this._comment_age);
+    this._element.append(')');
+
+    if (this._editable){
+        this._edit_link = new EditLink();
+        this._edit_link.setHandler(this.getEditHandler())
+        this._element.append(this._edit_link.getElement());
+    }
+
+    if (this._deletable){
+        this._delete_icon = new DeleteIcon(this._delete_prompt);
+        this._delete_icon.setHandler(this.getDeleteHandler());
+        this._element.append(this._delete_icon.getElement());
+    }
+    this._blank = false;
+};
+
+Comment.prototype.dispose = function(){
+    if (this._user_link){
+        this._user_link.remove();
+    }
+    if (this._comment_age){
+        this._comment_age.remove();
+    }
+    if (this._delete_icon){
+        this._delete_icon.dispose();
+    }
+    if (this._edit_link){
+        this._edit_link.dispose();
+    }
+    this._data = null;
+    Comment.superClass_.dispose.call(this);
+};
+
+Comment.prototype.getElement = function(){
+    Comment.superClass_.getElement.call(this);
+    if (this.isBlank() && this.hasContent()){
+        this.setContent();
+        if (enableMathJax === true){
+            MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+        }
+    }
+    return this._element;
+};
+
+Comment.prototype.loadText = function(on_load_handler){
+    var me = this;
+    $.ajax({
+        type: "GET",
+        url: askbot['urls']['getComment'],
+        data: {id: this._data['id']},
+        success: function(json){
+            me._data['text'] = json['text'];
+            on_load_handler()
+        },
+        error: function(xhr, textStatus, exception) {
+            showMessage(me.getElement(), xhr.responseText, 'after');
+        },
+    });
+};
+
+Comment.prototype.getText = function(){
+    if (!this.isBlank()){
+        if ('text' in this._data){
+            return this._data['text'];
+        }
+    }
+    return '';
+}
+
+Comment.prototype.getEditHandler = function(){
+    var comment = this;
+    return function(){
+        if (editCommentForm.canCancel()){
+            editCommentForm.detach();
+            if (comment.hasText()){
+                editCommentForm.attachTo(comment, 'edit');
+            }
+            else {
+                comment.loadText(
+                    function(){
+                        editCommentForm.attachTo(comment, 'edit');
                     }
                 );
-            });
-        },
-
-        show: function(id) {
-            var jDiv = jDivInit(id);
-            getComments(id, jDiv);
-            renderForm(id);
-            jDiv.show();
-
-            var link = $('#comments-link-' + objectType + '-' + id);
-            if (canPostComments(id)) { link.parent().find("textarea").get(0).focus(); }
-            link.remove();
-        },
-
-        hide: function(id) {
-            var jDiv = jDivInit(id);
-            var len = jDiv.children("div.comments").children().length;
-            var anchorText = len === 0 ? $.i18n._('add a comment') : $.i18n._('comments') + ' (<b>' + len + "</b>)";
-
-            jDiv.hide();
-            jDiv.siblings("a").unbind("click").click(function() { commentsFactory[objectType].show(id); }).html(anchorText);
-            jDiv.children("div.comments").children().hide();
-        },
-
-        deleteComment: function(jImg, id, deleteUrl) {
-            if (confirm($.i18n._('confirm delete comment'))) {
-                jImg.hide();
-                $.ajax({
-                    type: 'POST',
-                    url: deleteUrl, 
-                    data: { dataNeeded: "forIIS7" }, 
-                    success: function(json, textStatus, xhr) {
-                        var par = jImg.parent();
-                        par.remove();
-                    }, 
-                    error: function(xhr, textStatus, exception) {
-                        jImg.show();
-                        showMessage(jImg, xhr.responseText);
-                    },
-                    dataType: "json"
-                });
             }
-        },
-
-        updateTextCounter: function(textarea) {
-            var length = textarea.value ? textarea.value.length : 0;
-            var length1 = maxCommentLength - 100;
-            if (length1 < 0){
-                length1 = Math.round(0.7*maxCommentLength);
-            }
-            var length2 = maxCommentLength - 30;
-            if (length2 < 0){
-                length2 = Math.round(0.9*maxCommentLength);
-            }
-            var color = length > length2 ? "#f00" : length > length1 ? "#f60" : "#999";
-            var jSpan = $(textarea).siblings("span.text-counter");
-            jSpan.html($.i18n._('can write') + ' ' + 
-                        (maxCommentLength - length) + ' ' +
-                        $.i18n._('characters')).css("color", color);
         }
     };
+};
+
+Comment.prototype.getDeleteHandler = function(){
+    var comment = this;
+    var del_icon = this._delete_icon;
+    return function(){
+        if (confirm($.i18n._('confirm delete comment'))){
+            comment.getElement().hide();
+            $.ajax({
+                type: 'POST',
+                url: askbot['urls']['deleteComment'], 
+                data: { comment_id: comment.getId() }, 
+                success: function(json, textStatus, xhr) {
+                    comment.dispose();
+                }, 
+                error: function(xhr, textStatus, exception) {
+                    comment.getElement().show()
+                    showMessage(del_icon.getElement(), xhr.responseText);
+                },
+                dataType: "json"
+            });
+        }
+    };
+};
+
+var PostCommentsWidget = function(){
+    WrappedElement.call(this);
+    this._denied = false;
+};
+inherits(PostCommentsWidget, WrappedElement);
+
+PostCommentsWidget.prototype.decorate = function(element){
+    var element = $(element);
+    this._element = element;
+
+    var widget_id = element.attr('id');
+    var id_bits = widget_id.split('-');
+    this._post_id = id_bits[3];
+    this._post_type = id_bits[2];
+    this._is_truncated = askbot['data'][widget_id]['truncated'];
+    this._user_can_post = askbot['data'][widget_id]['can_post'];
+
+    //see if user can comment here
+    var controls = element.find('.controls');
+    this._activate_button = controls.find('.button');
+
+    if (this._user_can_post == false){
+        setupButtonEventHandlers(
+            this._activate_button,
+            this.getReadOnlyLoadHandler()
+        );
+    }
+    else {
+        setupButtonEventHandlers(
+            this._activate_button,
+            this.getActivateHandler()
+        );
+    }
+
+    this._cbox = element.find('.content');
+    var comments = new Array();
+    var me = this;
+    this._cbox.children().each(function(index, element){
+        var comment = new Comment(me);
+        comments.push(comment)
+        comment.decorate(element);
+    });
+    this._comments = comments;
+};
+
+PostCommentsWidget.prototype.getPostType = function(){
+    return this._post_type;
+};
+
+PostCommentsWidget.prototype.getPostId = function(){
+    return this._post_id;
+};
+
+PostCommentsWidget.prototype.hideButton = function(){
+    this._activate_button.hide();
+};
+
+PostCommentsWidget.prototype.showButton = function(){
+    if (this._is_truncated === false){
+        this._activate_button.html(askbot['messages']['addComment']);
+    }
+    this._activate_button.show();
 }
+
+PostCommentsWidget.prototype.startNewComment = function(){
+    var comment = new Comment(this);
+    this._cbox.append(comment.getElement());
+    editCommentForm.attachTo(comment, 'add');
+};
+
+PostCommentsWidget.prototype.needToReload = function(){
+    return this._is_truncated;
+};
+
+PostCommentsWidget.prototype.getActivateHandler = function(){
+    var me = this;
+    return function() {
+        if (editCommentForm.canCancel()){
+            editCommentForm.detach();
+            if (me.needToReload()){
+                me.reloadAllComments(function(json){
+                    me.reRenderComments(json);
+                    me.startNewComment();
+                });
+            }
+            else {
+                me.startNewComment();
+            }
+        }
+    };
+};
+
+PostCommentsWidget.prototype.getReadOnlyLoadHandler = function(){
+    var me = this;
+    return function(){
+        me.reloadAllComments(function(json){
+            me.reRenderComments(json);
+            me._activate_button.remove();
+        });
+    };
+};
+
+
+PostCommentsWidget.prototype.reloadAllComments = function(callback){
+    var post_data = {post_id: this._post_id, post_type: this._post_type};
+    var me = this;
+    $.ajax({
+        type: "GET",
+        url: askbot['urls']['postComments'],
+        data: post_data,
+        success: function(json){
+            callback(json);
+            me._is_truncated = false;
+        },
+        dataType: "json"
+    });
+};
+
+PostCommentsWidget.prototype.reRenderComments = function(json){
+    $.each(this._comments, function(i, item){
+        item.dispose();
+    });
+    this._comments = new Array();
+    var me = this;
+    $.each(json, function(i, item){
+        var comment = new Comment(me, item);
+        me._cbox.append(comment.getElement());
+        me._comments.push(comment);
+    });
+};
+
 
 var socialSharing = function(){
 
@@ -1104,9 +1508,11 @@ var socialSharing = function(){
 }(); 
 
 $(document).ready(function() {
-    questionComments.init();
+    $('[id^="comments-for-"]').each(function(index, element){
+        var comments = new PostCommentsWidget();
+        comments.decorate(element);
+    });
     questionRetagger.init();
-    answerComments.init();
     socialSharing.init();
 });
 

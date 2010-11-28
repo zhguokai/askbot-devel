@@ -3,6 +3,7 @@ import time
 import os
 import datetime
 import functools
+import logging
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.utils import simplejson
@@ -35,25 +36,66 @@ def ajax_login_required(view_func):
     return wrap
 
 
-def ajax_method(view_func):
+def anonymous_forbidden(view_func):
     @functools.wraps(view_func)
-    def wrap(request,*args,**kwargs):
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_anonymous():
+            raise askbot_exceptions.LoginRequired()
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+def get_only(view_func):
+    @functools.wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if request.method != 'GET':
+            raise django_exceptions.PermissionDenied(
+                'request method %s is not supported for this function' % \
+                request.method
+            )
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+def post_only(view_func):
+    @functools.wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if request.method != 'POST':
+            raise django_exceptions.PermissionDenied(
+                'request method %s is not supported for this function' % \
+                request.method
+            )
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+def ajax_only(view_func):
+    @functools.wraps(view_func)
+    def wrapper(request,*args,**kwargs):
         if not request.is_ajax():
             raise Http404
-        retval = view_func(request,*args,**kwargs)
-        if isinstance(retval, HttpResponse):
-            retval.mimetype = 'application/json'
-            return retval
+        try:
+            data = view_func(request,*args,**kwargs)
+        except Exception, e:
+            message = unicode(e)
+            if message == '':
+                message = _('Oops, apologies - there was some error')
+            logging.debug(message)
+            return HttpResponse(message, status = 404, mimetype='application/json')
+
+        if isinstance(data, HttpResponse):#is this used?
+            data.mimetype = 'application/json'
+            return data
         else:
-            json = simplejson.dumps(retval)
+            json = simplejson.dumps(data)
             return HttpResponse(json,mimetype='application/json')
-    return wrap
+    return wrapper
+
 
 try:
     PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE
 except:
     PROFILE_LOG_BASE = "/tmp"
-
 
 def profile(log_file):
     """Profile some callable.
