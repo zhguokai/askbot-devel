@@ -283,7 +283,7 @@ $.fn.authenticator = function() {
         if (typeof FB != 'undefined'){
             FB.getLoginStatus(function(response){
                 if (response.session){
-                    $('#signin-form').submit();
+                    signin_form.submit();
                 }
                 else {
                     FB.login();
