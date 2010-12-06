@@ -26,16 +26,17 @@ from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models import signals
+from askbot.models.badges import award_badges_signal, get_badge, init_badges
 #from user import AuthKeyUserAssociation
-from askbot.models.repute import Badge, Award, Repute
+from askbot.models.repute import BadgeData, Award, Repute
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.mail import send_mail
-from askbot.startup_tests import run_startup_tests
+from askbot import startup_procedures
 
-run_startup_tests()
+startup_procedures.run()
 
 def get_model(model_name):
     return models.get_model('askbot', model_name)
@@ -733,9 +734,18 @@ def user_retag_question(
         tagnames = tags,
         silent = silent
     )
+    award_badges_signal.send(None,
+        event = 'retag_question',
+        actor = self,
+        context_object = question,
+        timestamp = timestamp
+    )
 
 @auto_now_timestamp
-def user_accept_best_answer(self, answer = None, timestamp = None):
+def user_accept_best_answer(self, answer = None,
+                            timestamp = None, cancel = False):
+    if cancel:
+        return self.unaccept_best_answer(answer = answer, timestamp = timestamp)
     self.assert_can_accept_best_answer(answer)
     if answer.accepted == True:
         return
@@ -744,7 +754,13 @@ def user_accept_best_answer(self, answer = None, timestamp = None):
     for prev_answer in prev_accepted_answers:
         auth.onAnswerAcceptCanceled(prev_answer, self)
 
-    auth.onAnswerAccept(answer, self)
+    auth.onAnswerAccept(answer, self, timestamp = timestamp)
+    award_badges_signal.send(None,
+        event = 'accept_best_answer',
+        actor = self,
+        context_object = answer,
+        timestamp = timestamp
+    )
 
 @auto_now_timestamp
 def user_unaccept_best_answer(self, answer = None, timestamp = None):
@@ -782,6 +798,13 @@ def user_delete_answer(
         instance = answer,
         delete_by = self
     )
+    award_badges_signal.send(None,
+                event = 'delete_post',
+                actor = self,
+                context_object = answer,
+                timestamp = timestamp
+            )
+
 
 @auto_now_timestamp
 def user_delete_question(
@@ -810,6 +833,13 @@ def user_delete_question(
         instance = question,
         delete_by = self
     )
+    award_badges_signal.send(None,
+                event = 'delete_post',
+                actor = self,
+                context_object = question,
+                timestamp = timestamp
+            )
+
 
 @auto_now_timestamp
 def user_close_question(
@@ -943,6 +973,12 @@ def user_edit_question(
         tags = tags,
         wiki = wiki,
     )
+    award_badges_signal.send(None,
+        event = 'edit_question',
+        actor = self,
+        context_object = question,
+        timestamp = timestamp
+    )
 
 @auto_now_timestamp
 def user_edit_answer(
@@ -960,6 +996,12 @@ def user_edit_answer(
         text = body_text,
         comment = revision_comment,
         wiki = wiki,
+    )
+    award_badges_signal.send(None,
+        event = 'edit_answer',
+        actor = self,
+        context_object = answer,
+        timestamp = timestamp
     )
 
 def user_is_following(self, followed_item):
@@ -1000,6 +1042,11 @@ def user_post_answer(
                                     email_notify = follow,
                                     wiki = wiki
                                 )
+    award_badges_signal.send(None,
+        event = 'post_answer',
+        actor = self,
+        context_object = answer
+    )
     return answer
 
 def user_visit_question(self, question = None, timestamp = None):
@@ -1292,6 +1339,7 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
         fave = FavoriteQuestion.objects.get(question=question, user=self)
         fave.delete()
         result = False
+        question.update_favorite_count()
     except FavoriteQuestion.DoesNotExist:
         if timestamp is None:
             timestamp = datetime.datetime.now()
@@ -1302,9 +1350,21 @@ def toggle_favorite_question(self, question, timestamp=None, cancel=False):
         )
         fave.save()
         result = True
-    Question.objects.update_favorite_count(question)
+        question.update_favorite_count()
+        award_badges_signal.send(None,
+            event = 'select_favorite_question',
+            actor = self,
+            context_object = question,
+            timestamp = timestamp
+        )
     return result
 
+VOTES_TO_EVENTS = {
+    (Vote.VOTE_UP, 'answer'): 'upvote_answer',
+    (Vote.VOTE_UP, 'question'): 'upvote_question',
+    (Vote.VOTE_DOWN, 'question'): 'downvote',
+    (Vote.VOTE_DOWN, 'answer'): 'downvote'
+}
 @auto_now_timestamp
 def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
     """"private" wrapper function that applies post upvotes/downvotes
@@ -1352,14 +1412,22 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
             return None
         else:
             auth.onUpVoted(vote, post, user, timestamp)
-            return vote
     elif vote_type == Vote.VOTE_DOWN:
         if cancel:
             auth.onDownVotedCanceled(vote, post, user, timestamp)
             return None
         else:
             auth.onDownVoted(vote, post, user, timestamp)
-            return vote
+
+    event = VOTES_TO_EVENTS.get((vote_type, post.post_type), None)
+    if event:
+        award_badges_signal.send(None,
+                    event = event,
+                    actor = user,
+                    context_object = post,
+                    timestamp = timestamp
+                )
+    return vote
 
 def user_unfollow_question(self, question = None):
     if self in question.followed_by.all():
@@ -1385,12 +1453,6 @@ def downvote(self, post, timestamp=None, cancel=False):
         vote_type=Vote.VOTE_DOWN
     )
 
-def accept_answer(self, answer, timestamp=None, cancel=False):
-    if cancel:
-        auth.onAnswerAcceptCanceled(answer, self, timestamp=timestamp)
-    else:
-        auth.onAnswerAccept(answer, self, timestamp=timestamp)
-
 @auto_now_timestamp
 def flag_post(user, post, timestamp=None, cancel=False):
     if cancel:#todo: can't unflag?
@@ -1398,6 +1460,12 @@ def flag_post(user, post, timestamp=None, cancel=False):
 
     user.assert_can_flag_offensive(post = post)
     auth.onFlaggedItem(post, user, timestamp=timestamp)
+    award_badges_signal.send(None,
+        event = 'flag_post',
+        actor = user,
+        context_object = post,
+        timestamp = timestamp
+    )
 
 def user_get_flags(self):
     """return flag Activity query set
@@ -1470,7 +1538,6 @@ User.add_to_class('delete_post', user_delete_post)
 User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
-User.add_to_class('accept_answer', accept_answer)
 User.add_to_class('flag_post', flag_post)
 User.add_to_class('get_flags', user_get_flags)
 User.add_to_class('get_flag_count_posted_today', user_get_flag_count_posted_today)
@@ -1755,11 +1822,13 @@ def record_award_event(instance, created, **kwargs):
         instance.badge.awarded_count += 1
         instance.badge.save()
 
-        if instance.badge.type == Badge.GOLD:
+        badge = get_badge(instance.badge.slug)
+
+        if badge.level == const.GOLD_BADGE:
             instance.user.gold += 1
-        if instance.badge.type == Badge.SILVER:
+        if badge.level == const.SILVER_BADGE:
             instance.user.silver += 1
-        if instance.badge.type == Badge.BRONZE:
+        if badge.level == const.BRONZE_BADGE:
             instance.user.bronze += 1
         instance.user.save()
 
@@ -1770,10 +1839,12 @@ def notify_award_message(instance, created, **kwargs):
     if created:
         user = instance.user
 
+        badge = get_badge(instance.badge.slug)
+
         msg = _(u"Congratulations, you have received a badge '%(badge_name)s'. "
                 u"Check out <a href=\"%(user_profile)s\">your profile</a>.") \
                 % {
-                    'badge_name':instance.badge.name, 
+                    'badge_name':badge.name, 
                     'user_profile':user.get_profile_url()
                 } 
         #print unicode(user.username) + u' | ' + msg
@@ -2011,7 +2082,7 @@ Comment = Comment
 Vote = Vote
 MarkedTag = MarkedTag
 
-Badge = Badge
+BadgeData = BadgeData
 Award = Award
 Repute = Repute
 
@@ -2038,7 +2109,7 @@ __all__ = [
         'Vote',
         'MarkedTag',
 
-        'Badge',
+        'BadgeData',
         'Award',
         'Repute',
 

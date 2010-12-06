@@ -10,7 +10,7 @@ import calendar
 import functools
 import datetime
 import logging
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
@@ -32,7 +32,7 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
-from askbot.models import signals
+from askbot.models.badges import award_badges_signal
 from askbot.skins.loaders import ENV
 from askbot.templatetags import extra_tags
 
@@ -262,14 +262,12 @@ def edit_user(request, id):
             user.about = sanitize_html(form.cleaned_data['about'])
 
             user.save()
-            # send user updated singal if full fields have been updated
-            if user.email and user.real_name and user.website \
-                and user.location and  user.date_of_birth and user.about:
-                signals.user_updated.send(
-                                sender=user.__class__, 
-                                instance=user, 
-                                updated_by=user
-                            )
+            # send user updated signal if full fields have been updated
+            award_badges_signal.send(None,
+                            event = 'update_user_profile',
+                            actor = user,
+                            context_object = user
+                        )
             return HttpResponseRedirect(user.get_profile_url())
     else:
         form = forms.EditUserForm(user)
@@ -338,51 +336,14 @@ def user_stats(request, user):
     question_id_set.update([q.id for q in questions])
     question_id_set.update([q['id'] for q in answered_questions])
     user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
-    try:
-        from django.db.models import Count
-        #todo - rewrite template to do the table joins within standard ORM
-        #awards = models.Award.objects.filter(user=user).order_by('-awarded_at')
-        awards = models.Award.objects.extra(
-                        select={'id': 'badge.id', 
-                                'name':'badge.name', 
-                                'description': 'badge.description', 
-                                'type': 'badge.type'},
-                        tables=['award', 'badge'],
-                        order_by=['-awarded_at'],
-                        where=['user_id=%s AND badge_id=badge.id'],
-                        params=[user.id]
-                    ).values('id', 'name', 'description', 'type')
-
-        total_awards = awards.count()
-        awards = awards.annotate(count = Count('badge__id'))
-        user_tags = user_tags.annotate(
-                                user_tag_usage_count=Count('name')
-                            ).order_by(
-                                '-user_tag_usage_count'
-                            )
-
-    except ImportError:
-        #todo: remove all old django stuff, e.g. with '.group_by = ' pattern
-        awards = models.Award.objects.extra(
-                        select={'id': 'badge.id', 
-                                'count': 'count(badge_id)', 
-                                'name':'badge.name', 
-                                'description': 'badge.description', 
-                                'type': 'badge.type'},
-                        tables=['award', 'badge'],
-                        order_by=['-awarded_at'],
-                        where=['user_id=%s AND badge_id=badge.id'],
-                        params=[user.id]
-                    ).values('id', 'count', 'name', 'description', 'type')
-
-        total_awards = awards.count()
-        awards.query.group_by = ['badge_id']
-
-        user_tags = user_tags.extra(
-            select={'user_tag_usage_count': 'COUNT(1)',},
-            order_by=['-user_tag_usage_count'],
-        )
-        user_tags.query.group_by = ['name']
+    awards = models.Award.objects.filter(user=user).order_by('-awarded_at')
+    total_awards = awards.count()
+    awards = awards.annotate(count = Count('badge__id'))
+    user_tags = user_tags.annotate(
+                            user_tag_usage_count=Count('name')
+                        ).order_by(
+                            '-user_tag_usage_count'
+                        )
 
     if user.is_administrator():
         user_status = _('Site Adminstrator')
@@ -445,7 +406,7 @@ def user_recent(request, user):
             self.time = time
             self.type = get_type_name(type)
             self.type_id = type
-            self.badge = get_object_or_404(models.Badge, id=id)
+            self.badge = get_object_or_404(models.BadgeData, id=id)
 
     activities = []
     # ask questions
@@ -659,13 +620,13 @@ def user_recent(request, user):
     #award history
     awards = models.Activity.objects.extra(
         select={
-            'badge_id' : 'badge.id',
+            'badge_id' : 'askbot_badgedata.id',
             'awarded_at': 'award.awarded_at',
             'activity_type' : 'activity.activity_type'
             },
-        tables=['activity', 'award', 'badge'],
+        tables=['activity', 'award', 'askbot_badgedata'],
         where=['activity.user_id = award.user_id AND activity.user_id = %s AND '+
-            'award.badge_id=badge.id AND activity.object_id=award.id AND activity.activity_type=%s'],
+            'award.badge_id=askbot_badgedata.id AND activity.object_id=award.id AND activity.activity_type=%s'],
         params=[user.id, const.TYPE_ACTIVITY_PRIZE],
         order_by=['-activity.active_at']
     ).values(

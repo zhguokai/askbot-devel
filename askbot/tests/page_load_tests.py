@@ -49,7 +49,7 @@ class PageLoadTestCase(TestCase):
                 self.assertEqual(r.template[0].name, template)
 
 class PageLoadTests(PageLoadTestCase):
-    fixtures = ['/home/fadeev/askbot-try2/tmp/fixture1.json', ]
+    fixtures = ['/home/fadeev/askbot-try2/tmp/fixture2.json', ]
 
     def test_index(self):
         #todo: merge this with all reader url tests

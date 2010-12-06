@@ -7,46 +7,38 @@ import datetime
 from askbot import const
 from django.core.urlresolvers import reverse
 
-class Badge(models.Model):
+class BadgeData(models.Model):
     """Awarded for notable actions performed on the site by Users."""
-    GOLD = 1
-    SILVER = 2
-    BRONZE = 3
-    TYPE_CHOICES = (
-        (GOLD,   _('gold')),
-        (SILVER, _('silver')),
-        (BRONZE, _('bronze')),
-    )
-    CSS_CLASSES = {
-        GOLD: 'badge1',
-        SILVER: 'badge2',
-        BRONZE: 'badge3',
-    }
-    DISPLAY_SYMBOL = '&#9679;'
-
-    name        = models.CharField(max_length=50)
-    type        = models.SmallIntegerField(choices=TYPE_CHOICES)
-    slug        = models.SlugField(max_length=50, blank=True)
-    description = models.CharField(max_length=300)
-    multiple    = models.BooleanField(default=False)
-    # Denormalised data
+    slug = models.SlugField(max_length=50, unique=True)
     awarded_count = models.PositiveIntegerField(default=0)
-
     awarded_to    = models.ManyToManyField(User, through='Award', related_name='badges')
+
+    @property
+    def name(self):
+        from askbot.models import badges
+        return badges.get_badge(self.slug).name
+
+    @property
+    def description(self):
+        from askbot.models import badges
+        return badges.get_badge(self.slug).description
+
+    @property
+    def css_class(self):
+        from askbot.models import badges
+        return badges.get_badge(self.slug).css_class
+
+    def get_type_display(self):
+        from askbot.models import badges
+        #todo - rename "type" -> "level" in this model
+        return badges.get_badge(self.slug).get_level_display()
 
     class Meta:
         app_label = 'askbot'
-        db_table = u'badge'
-        ordering = ('name',)
-        unique_together = ('name', 'type')
+        ordering = ('slug',)
 
     def __unicode__(self):
-        return u'%s: %s' % (self.get_type_display(), self.name)
-
-    def save(self, **kwargs):
-        if not self.slug:
-            self.slug = self.name#slugify(self.name)
-        super(Badge, self).save(**kwargs)
+        return u'%s: %s' % (self.get_type_display(), self.slug)
 
     def get_absolute_url(self):
         return '%s%s/' % (reverse('badge', args=[self.id]), self.slug)
@@ -67,7 +59,7 @@ class AwardManager(models.Manager):
 class Award(models.Model):
     """The awarding of a Badge to a User."""
     user       = models.ForeignKey(User, related_name='award_user')
-    badge      = models.ForeignKey('Badge', related_name='award_badge')
+    badge      = models.ForeignKey(BadgeData, related_name='award_badge')
     content_type   = models.ForeignKey(ContentType)
     object_id      = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
