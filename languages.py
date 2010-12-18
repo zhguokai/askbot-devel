@@ -1,5 +1,6 @@
 LANGUAGES = (
     ('en', 'English'),
+    ('zh_CN', 'Chinese'),
     ('de', 'German'),
     ('fi', 'Finnish'),
     ('fr', 'French'),
@@ -11,19 +12,18 @@ LANGUAGES = (
     ('sr', 'Serbian'),
     ('es', 'Spanish'),
     ('tr', 'Turkish'),
-    ('zh-cn', 'Chinese'),
 )
 
 LANGUAGE_PROGRESS = {
     'de': 99.99,
     'en': 100,
+    'zh_CN': 99,
     'es': 63,
     'fi': 83,
     'fr': 99,
     'ru': 99,
     'sr': 59,
     'tr': 77,
-    'zh-cn': 36,
     'it': 70,
     'ja': 21,
     'id': 1,

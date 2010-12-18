@@ -1,7 +1,9 @@
 import re
+import logging
 from django.conf import settings
 
 SUPPORTED_LOCALES = dict(settings.LANGUAGES)
+logging.debug(SUPPORTED_LOCALES)
 LOCALES_RE = '|'.join(SUPPORTED_LOCALES)
 PATH_RE = re.compile(r'^/(?P<locale>%s)(?P<path>.*)$' % LOCALES_RE)
 

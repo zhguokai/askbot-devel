@@ -67,6 +67,8 @@
                 <option value="{{lang[0]}}"
                 {% if lang[0]==LANGUAGE_CODE %}
                     selected="selected"
+                {% elif LANGUAGE_CODE == 'zh-cn' and lang[0] == 'zh_CN' %}
+                    selected="selected"
                 {% endif %}
                 >
                     {{lang[1]}} ({{ settings.LANGUAGE_PROGRESS[lang[0]]}}%)

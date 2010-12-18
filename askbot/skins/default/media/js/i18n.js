@@ -581,7 +581,7 @@ var i18nIt = {
 
 var i18n = {
     'en':i18nEn,
-    'zh-cn':i18nZh,
+    'zh_CN':i18nZh,
     'es':i18nEs,
     'tr':i18nTr,
     'de':i18nDe,
