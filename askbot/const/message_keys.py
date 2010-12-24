@@ -17,3 +17,20 @@ __all__ = ['GREETING_FOR_ANONYMOUS_USER', ]
 #message translation too
 GREETING_FOR_ANONYMOUS_USER = \
     _('First time here? Check out the <a href="%s">FAQ</a>!')
+
+#messages loaded in the templates via direct _ calls
+_('most relevant questions')
+_('click to see most relevant questions')
+_('by relevance')
+_('click to see the oldest questions')
+_('by date')
+_('click to see the newest questions')
+_('click to see the least recently updated questions')
+_('by activity')
+_('click to see the most recently updated questions')
+_('click to see the least answered questions')
+_('by answers')
+_('click to see the most answered questions')
+_('click to see least voted questions')
+_('by votes')
+_('click to see most voted questions')

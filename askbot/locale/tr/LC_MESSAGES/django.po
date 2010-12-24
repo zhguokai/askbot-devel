@@ -1454,9 +1454,9 @@ msgid "Connect your %(provider)s account to %(site_name)s"
 msgstr "Bu siteye OpenID hesabınızla giriş yapın"
 
 #: deps/django_authopenid/util.py:419
-#, python-format
+#, fuzzy, python-format
 msgid "Signin with %(provider)s user name and password"
-msgstr "Lütfen kullanıcı adınızı ve şifrenizi girin"
+msgstr "Lütfen kullanıcı %(provider)s adınızı ve şifrenizi girin"
 
 #: deps/django_authopenid/util.py:426
 #, python-format

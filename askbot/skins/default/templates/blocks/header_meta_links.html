@@ -1,0 +1,78 @@
+{% if request.user.is_authenticated() %}
+    <a href="{{ request.user.get_absolute_url() }}">{{ request.user.username }}</a> 
+    {% spaceless %}
+    {% if request.user.new_response_count > 0 or request.user.seen_response_count > 0 %}
+    <a class='ab-responses-envelope' href="{{request.user.get_absolute_url()}}?sort=inbox&section=forum">
+        <img 
+            alt="{% trans username=request.user.username %}responses for {{username}}{% endtrans %}"
+            {% if request.user.new_response_count > 0 %}
+                src="{{ "/images/mail-envelope-full.png"|media }}"
+                title="{% trans response_count=request.user.new_response_count %}you have a new response{% pluralize %}you nave {{response_count}} new responses{% endtrans %}"
+            {% elif request.user.seen_response_count > 0 %}
+                src="{{ "/images/mail-envelope-empty.png"|media }}"
+                title="{% trans %}no new responses yet{% endtrans %}"
+            {% endif %}
+        />
+    </a>
+    {% endif %}
+    {% if moderation_items %}
+        <a class="ab-responses-envelope"
+            href="{{request.user.get_absolute_url()}}?sort=inbox&section=flags"
+        >
+        {% if moderation_items['new_count'] > 0 %}
+            <img src="{{'/images/dialog-warning.png'|media}}"
+            {% if moderation_items['seen_count'] > 0 %}
+                alt="{% trans new=moderation_items['new_count'], seen=moderation_items['seen_count']%}{{new}} new flagged posts and {{seen}} previous{% endtrans %}"
+                title="{% trans new=moderation_items['new_count'], seen=moderation_items['seen_count']%}{{new}} new flagged posts and {{seen}} previous{% endtrans %}"
+            {% else %}
+                alt="{% trans new=moderation_items['new_count'] %}{{new}} new flagged posts{% endtrans %}"
+                title="{% trans new=moderation_items['new_count'] %}{{new}} new flagged posts{% endtrans %}"
+            {% endif %}
+            />
+        {% elif moderation_items['seen_count'] > 0 %}
+            <img src={{'/images/dialog-warning-off.png'|media}} 
+                alt="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
+                title="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
+            />
+        {% endif %}
+        </a>
+    {% endif %}
+    {#
+                {% endif %}
+        {% else if moderation_items['seen_count'] > 0 %}
+        {% endif %}
+    {% endif %#}
+    {% endspaceless %}
+    ({{ macros.user_long_score_and_badge_summary(user) }})
+    <a href="{% url logout %}"
+        title="{% trans %}sign out from askbot{% endtrans %}"
+    >{% trans %}logout{% endtrans %}</a>
+{% else %}
+    <a href="{% url user_signin %}"
+        title="{% trans %}Please, sign in or Join askbot!{% endtrans %}"
+    >{% trans %}login{% endtrans %}</a>
+{% endif %}
+<a href="/doc/index.html" title="it's real easy(ish) to install askbot, there is also some developer documentation">install/docs</a>
+<!--a href="/doc/index.html" title="read documentation">docs</a-->
+<a href="http://twitter.com/askbot7" title="follow @askbot7 on twitter!">@twitter</a>
+<a href="http://github.com/ASKBOT/askbot-devel" title="fork us on github!">github</a>
+<select id="lang_selector" name="language" title="pick language (number in the parentheses is translation progress)">
+{% for lang in LANGUAGES %}
+    <option value="{{lang[0]}}"
+    {% if lang[0]==LANGUAGE_CODE %}
+        selected="selected"
+    {% elif LANGUAGE_CODE == 'zh-cn' and lang[0] == 'zh_CN' %}
+        selected="selected"
+    {% endif %}
+    >
+        {{lang[1]}} ({{ settings.LANGUAGE_PROGRESS[lang[0]]}}%)
+    </option>
+{% endfor %}
+    <!--option name="thanks">hey, thanks for looking down here</option-->
+</select>
+<br/>
+<a style="text-decoration:none; margin:0; padding:0;" href="/en/question/47/how-to-translate-askbot-into-my-language"
+>({% trans %}please help translate! see credits{% endtrans %})</a>
+{% if request.user.is_authenticated() and request.user.is_administrator() %}
+<a href="{% url site_settings %}">{% trans %}settings{% endtrans %}</a>
+{% endif %}
