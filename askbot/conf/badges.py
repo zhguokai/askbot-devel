@@ -144,7 +144,7 @@ settings.register(
         BADGES,
         'ENLIGHTENED_BADGE_MIN_UPVOTES',
         default=3,
-        description=_('Enlightened Duty: minimum upvotes')
+        description=_('Enlightened: minimum upvotes')
     )
 )
 
