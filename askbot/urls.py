@@ -10,6 +10,7 @@ from askbot.feed import RssLastestQuestionsFeed
 from askbot.sitemap import QuestionsSitemap
 from django.utils.translation import ugettext as _
 from django.conf import settings
+from askbot.conf import settings as askbot_settings
 
 def _(input_str):
     return input_str
@@ -204,12 +205,29 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('search/'), views.readers.search, name='search'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
     (r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
-    (r'^i18n/', include('django.conf.urls.i18n')),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
         r'^doc/(?P<path>.*)$', 
         'django.views.static.serve',
         {'document_root': os.path.join(APP_PATH,'doc','build','html').replace('\\','/')},
         name='askbot_docs',
+    ),
+    url(
+        '^custom\.css$',
+        views.meta.config_variable,
+        kwargs = {
+            'variable_name': 'CUSTOM_CSS',
+            'mimetype': 'text/css'
+        },
+        name = 'custom_css'
+    ),
+    url(
+        '^custom\.js$',
+        views.meta.config_variable,
+        kwargs = {
+            'variable_name': 'CUSTOM_JS',
+            'mimetype': 'text/javascript'
+        },
+        name = 'custom_js'
     ),
 )
