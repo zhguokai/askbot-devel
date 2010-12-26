@@ -4,7 +4,7 @@
 #}
 <script type="text/javascript">
     var i18nLang = '{{settings.LANGUAGE_CODE}}';
-    var scriptUrl = '/{{settings.LANGUAGE_CODE}}/{{settings.ASKBOT_URL}}/';
+    var scriptUrl = '/{{settings.LANGUAGE_CODE}}/{{settings.ASKBOT_URL}}';
     var askbotSkin = '{{settings.ASKBOT_DEFAULT_SKIN}}';
     var enableMathJax = {% if settings.ENABLE_MATHJAX %}true{% else %}false{% endif %};
     {% if request.user.is_authenticated() %}
