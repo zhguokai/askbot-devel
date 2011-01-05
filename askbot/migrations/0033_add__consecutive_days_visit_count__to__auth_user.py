@@ -1,55 +1,30 @@
 # encoding: utf-8
-#from south.db import db
-from south.v2 import DataMigration
-from askbot.migrations_api.version1 import API
-from askbot import const
+import datetime
+from south.db import db
+from south.v2 import SchemaMigration
+from django.db import models
 
-OFFENSIVE = const.TYPE_ACTIVITY_MARK_OFFENSIVE
-
-class Migration(DataMigration):
+class Migration(SchemaMigration):
     
     def forwards(self, orm):
-        """find all FlaggedItems and the corresponding Activity
-        transfer content object to Activity
-        add moderators and admins to the activity recipients
-        and set the denormalized value of question to the origin post
-        of the flagged item
-        """
-        api = API(orm)
-        moderators = api.get_moderators_and_admins()
-        for flag in orm.FlaggedItem.objects.all():
-            activity_items = api.get_activity_items_for_object(flag)
-            if len(activity_items) == 0:#fix a glitch
-                activity = orm.Activity()
-            elif len(activity_items) == 1:
-                activity = activity_items[0]
-            else:
-                raise ValueError('cannot have >1 flagged items per activity')
-
-            activity.user = flag.user
-            activity.active_at = flag.flagged_at
-            activity.activity_type = OFFENSIVE
-            activity.content_type = flag.content_type
-            activity.object_id = flag.object_id
-            activity.question = api.get_origin_post_from_content_object(flag)
-
-            activity.save()
-            api.add_recipients_to_activity(moderators, activity)
-            flag.delete()
+        
+        # Adding field 'User.consecutive_days_visit_count'
+        try:
+            db.add_column(
+                    u'auth_user',
+                    'consecutive_days_visit_count',
+                    self.gf('django.db.models.fields.IntegerField')(default = 0, max_length = 2),
+                    keep_default=False
+                )
+        except:
+            pass
+    
     
     def backwards(self, orm):
-        """there is a side-effect that activity recipients are not removed
-        question reference is not deleted either
-        """
-        activity_items = orm.Activity.objects.filter(activity_type=OFFENSIVE)
-        for activity in activity_items:
-            flag = orm.FlaggedItem(
-                user = activity.user,
-                flagged_at = activity.active_at,
-                object_id = activity.object_id,
-                content_type = activity.content_type
-            )
-            flag.save()
+        
+        # Deleting field 'User.consecutive_days_visit_count'
+        db.delete_column(u'auth_user', 'consecutive_days_visit_count')
+    
     
     models = {
         'askbot.activity': {
@@ -136,23 +111,19 @@ class Migration(DataMigration):
         'askbot.award': {
             'Meta': {'object_name': 'Award', 'db_table': "u'award'"},
             'awarded_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'badge': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'award_badge'", 'to': "orm['askbot.Badge']"}),
+            'badge': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'award_badge'", 'to': "orm['askbot.BadgeData']"}),
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'notified': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'award_user'", 'to': "orm['auth.User']"})
         },
-        'askbot.badge': {
-            'Meta': {'unique_together': "(('name', 'type'),)", 'object_name': 'Badge', 'db_table': "u'badge'"},
+        'askbot.badgedata': {
+            'Meta': {'object_name': 'BadgeData'},
             'awarded_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'awarded_to': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'badges'", 'through': "'Award'", 'to': "orm['auth.User']"}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'multiple': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'db_index': 'True', 'max_length': '50', 'blank': 'True'}),
-            'type': ('django.db.models.fields.SmallIntegerField', [], {})
+            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'})
         },
         'askbot.comment': {
             'Meta': {'object_name': 'Comment', 'db_table': "u'comment'"},
@@ -180,14 +151,6 @@ class Migration(DataMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'question': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Question']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_favorite_questions'", 'to': "orm['auth.User']"})
-        },
-        'askbot.flaggeditem': {
-            'Meta': {'unique_together': "(('content_type', 'object_id', 'user'),)", 'object_name': 'FlaggedItem', 'db_table': "u'flagged_item'"},
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
-            'flagged_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'flaggeditems'", 'to': "orm['auth.User']"})
         },
         'askbot.markedtag': {
             'Meta': {'object_name': 'MarkedTag'},
@@ -302,6 +265,7 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'User'},
             'about': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'bronze': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'consecutive_days_visit_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'date_of_birth': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
@@ -320,11 +284,12 @@ class Migration(DataMigration):
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'last_seen': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'location': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'new_response_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'questions_per_page': ('django.db.models.fields.SmallIntegerField', [], {'default': '10'}),
             'real_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'reputation': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1'}),
-            'response_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'seen_response_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'silver': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'w'", 'max_length': '2'}),
             'tag_filter_setting': ('django.db.models.fields.CharField', [], {'default': "'ignored'", 'max_length': '16'}),

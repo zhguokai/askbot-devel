@@ -201,3 +201,30 @@ settings.register(
         description=_('Stellar Question: minimum stars')
     )
 )
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'COMMENTATOR_BADGE_MIN_COMMENTS',
+        default=10,
+        description=_('Commentator: minimum comments')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'TAXONOMIST_BADGE_MIN_USE_COUNT',
+        default = 10,
+        description = _('Taxonomist: minimum tag use count')
+    )
+)
+
+settings.register(
+    IntegerValue(
+        BADGES,
+        'ENTHUSIAST_BADGE_MIN_DAYS',
+        default = 30,
+        description = _('Enthusiast: minimum days')
+    )
+)

@@ -1,6 +1,10 @@
+"""Custom django signals defined for the askbot forum application.
+"""
 import django.dispatch
 
-tags_updated = django.dispatch.Signal(providing_args=['question'])
+tags_updated = django.dispatch.Signal(
+                        providing_args=['tags', 'user', 'timestamp']
+                    )
 
 #todo: this one seems to be unused
 edit_question_or_answer = django.dispatch.Signal(
@@ -21,3 +25,4 @@ post_updated = django.dispatch.Signal(
                                             'newly_mentioned_users'
                                         ]
                             )
+site_visited = django.dispatch.Signal(providing_args=['user', 'timestamp'])
