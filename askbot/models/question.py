@@ -1,4 +1,3 @@
-import random
 import logging
 import datetime
 from django.conf import settings
@@ -14,7 +13,7 @@ from django.utils.translation import ugettext as _
 import askbot
 import askbot.conf
 from askbot import exceptions
-from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import Tag
 from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content
@@ -57,7 +56,6 @@ class QuestionManager(models.Manager):
             #DATED COMMENT
             #todo: this is confusing - last_edited_at field
             #is used as an indicator whether question has been edited
-            #in template askbot/skins/default/templates/post_contributor_info.html
             #but in principle, post creation should count as edit as well
             question.last_edited_by = question.author
             question.last_edited_at = added_at

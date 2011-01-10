@@ -39,6 +39,7 @@ p {
     margin-bottom: 13px;
     font-size: 13px;
     line-height: 140%;
+    padding-left: 5px;
 }
 
 a {
@@ -56,106 +57,23 @@ a:hover {
     text-decoration: underline;
 }
 
-.block {
-    width: 960px;
-    height: auto;
-}
-
-.fleft {
-    float: left;
-}
-
-.fright {
-    float: right;
-}
-
-.tleft {
-    text-align: left;
-}
-
-.tcenter {
-    text-align: center;
-}
-
-.tright {
-    text-align: right;
-}
-
-.dis {
-    display: block;
-}
-
-.inline {
-    display: inline;
-}
-
-.none {
-    display: none;
-}
-
-.red {
-    color: #CC0000;
-}
-
-.b {
-    font-weight: bold;
-}
-
-.f10 {
-    font-size: 10px;
-}
-
-.f11 {
-    font-size: 11px;
-}
-
-.f12 {
-    font-size: 12px;
-}
-
-.f13 {
-    font-size: 13px;
-}
-
-.f14 {
-    font-size: 14px;
-}
-
-.white {
-    color: #FFFFFF;
-}
-
-.u {
-    text-decoration: underline;
-}
-
-.spacer1 {
-    height: 6px;
-    line-height: 6px;
-    clear: both;
-    visibility: hidden;
-}
-
-.spacer3 {
-    height: 30px;
-    line-height: 30px;
-    clear: both;
-    visibility: hidden;
-}
-
 h1 {
     font-size: 160%;
-    padding: 5px 0 5px 0;
+    padding: 10px 0 5px 5px;
+}
+
+.users h1, .tags-page h1 {
+    float: left;
 }
 
 h2 {
     font-size: 140%;
-    padding: 3px 0 3px 0;
+    padding: 3px 0 3px 5px;
 }
 
 h3 {
     font-size: 120%;
-    padding: 3px 0 3px 0;
+    padding: 3px 0 3px 5px;
 }
 
 ul {
@@ -205,10 +123,9 @@ blockquote {
     background-color: #F5F5F5;
 }
 
-#wrapper {
+#askbot-content {
     width: 960px;
     margin: auto;
-    padding: 0;
 }
 
 #roof {
@@ -217,23 +134,17 @@ blockquote {
     background: #FFF;
 }
 
-#room {
-    padding: 0 0 10px 0;
-    background-color: #FFF;
-}
-
 #CALeft {
     width: 710px;
     float: left;
     position: relative;
-    padding-left: 0 5px;
-
+    padding: 0 5px 10px 5px;
 }
 
 #CARight {
-    width: 235px;
+    width: 230px;
     float: right;
-    padding-right: 5px;
+    padding: 0 5px 10px 5px;
 }
 
 #CAFull {
@@ -244,14 +155,12 @@ blockquote {
 
 #ground {
     width: 100%;
+    clear: both;
     border-top: 1px solid #000;
-    padding-top: 6px;
-    padding-bottom: 0px;
+    padding: 6px 0 0 0;
     text-align: center;
     background: #777;
 }
-
-/*#licenseLogo {position:absolute;top:10px;right:10px;}*/
 
 /* why is this called top? - this contains links like login, faq, etc */
 #top {
@@ -316,9 +225,6 @@ blockquote {
 #navBar .nav a {
     color: #333333;
     background-color: #fff0e0;
-    /*border-left: 1px solid #eeeeec;
-                 border-right: 1px solid #babdb6;
-                 border-top: 1px solid #eeeeec;*/
     border: 1px solid #888888;
     border-bottom: none;
     padding: 0px 12px 3px 12px;
@@ -371,49 +277,44 @@ blockquote {
     background-color: #dddddd;/*888a85; /*#e9b96e;*/
     width:700px;
     border: 1px solid #aaaaaa;
-    padding: 3px 4px 3px 3px;
+    padding: 4px 5px 4px 4px;
 }
 
-#searchBar .searchInput {
+#searchBar .searchInput, #searchBar .searchInputCancelable {
     font-size: 24px;
     line-height: 24px;
-    height: 36px;
-    width: 605px;
-    margin: 0px 3px 0px 0px;
+    height: 31px;
+    margin: 0px 4px 0px 0px;
     padding: 5px 0 0 5px;
+}
+
+#searchBar .searchInput, #searchBar .searchInputCancelable {
+    width: 607px;
 }
 
 #searchBar .searchInputCancelable {
-    font-size: 24px;
-    line-height: 24px;
-    height: 36px;
-    width: 561px;
-    padding: 5px 0 0 5px;
-    margin: 0px 3px 0px 0px;
+    width: 564px;
+}
+
+#searchBar .searchBtn, #searchBar .cancelSearchBtn {
+    font-size: 20px;
+    color: #666;
+    background-color: #eee;
+    height: 40px;
+    border: 1px solid #aaa;
+    line-height: 22px;
+    text-align: center;
+    padding-bottom: 4px;
 }
 
 #searchBar .searchBtn {
-    font-size: 20px;
-    color: #666666;
-    height: 40px;
-    width: 80px;
-    width: 80px;
-    width: 80px;
-    line-height: 22px;
     margin: 0px;
-    text-align: center;
-    padding-bottom: 4px;
+    width: 80px;
 }
 
 #searchBar .cancelSearchBtn {
-    font-size: 20px;
-    color: #666666;
-    height: 40px;
     width: 40px;
-    line-height: 22px;
     margin: 0px 3px 0px 0px;
-    padding-bottom: 4px;
-    text-align: center;
 }
 
 #askFormBar {
@@ -435,137 +336,11 @@ blockquote {
     padding: 5px 0 0 5px;
 }
 
-
-#searchBar .options {
-    padding: 3px 0 3px 0;
-    font-size: 100%;
-    color: #EEE; /*letter-spacing:1px;*/
-}
-
-#searchBar .options INPUT {
-    margin: 0 3px 0 15px;
-}
-
-#searchBar .options INPUT:hover {
-    cursor: pointer
-}
-
-/*问题列表*/
 #listA {
     float: left;
     background-color: #FFF;
     padding: 0;
     width: 100%;
-}
-
-#listA .qstA {
-    position: relative;
-    padding: 3px 5px 5px 10px;
-    border-top: 1px dashed #ccccce;
-    /*border-left:1px solid #ebebbe;
-    border-right:1px solid #b4b48e;
-    border-bottom:1px solid #b4b48e;*/
-    background: white; /* #f9f7ed;*/
-/*margin:10px 0 10px 0;*/
-/*background:url(../images/quest-bg.gif) repeat-x top;*/
-}
-
-#listA .qstA thumb {
-    float: left;
-}
-
-#listA .qstA H2 {
-    font-size: 14px;
-    font-weight: 800;
-    margin: 8px auto;
-    padding: 0px;
-}
-
-#listA .qstA H2 a {
-    color: 333333 /*#2e3436*/;
-    font-size: 15px;
-}
-
-#listA .qstA .stat {
-    position: absolute;
-    right: 0px;
-    bottom: 5px;
-    font-size: 12px; /*letter-spacing:1px;*/
-    float: right;
-}
-
-#listA .qstA .stat span {
-    margin-right: 5px;
-}
-
-#listA .qstA .stat td {
-    min-width: 40px;
-    text-align: center;
-}
-
-#listA .qstA .stat .num {
-    font-family: sans-serif;
-    color: #a40000;
-    /*background:#eeeeec;
- border: 1px solid #babdb6;*/
-    margin: 0px;
-    font-size: 17px;
-    font-weight: 800;
-}
-
-#listA .qstA table {
-    border-spacing: 0px;
-}
-
-#listA .qstA table td {
-    padding: 0px;
-    width: 60px;
-    text-align: center;
-}
-
-#listA .qstA .stat .unit {
-    color: #777777;
-    margin: 0px
-}
-
-#listA .qstA .from {
-    margin-top: 5px;
-    font-size: 13px;
-    color: #777777;
-}
-
-#listA .qstA .from .score {
-    font-family: sans-serif;
-    color: #555555;
-}
-
-#listA .qstA .date {
-    margin-left: 10px;
-    color: #777777;
-}
-
-#listA .qstA .wiki {
-    color: #763333;
-    font-size: 12px;
-}
-
-#listA .qstA .from a {
-}
-
-#listA .qstA .from IMG {
-    vertical-align: middle;
-}
-
-#listA .qstA .author {
-    font-weight: 400;
-}
-
-#listA .qstA .author a {
-    color: #444444;
-}
-
-#listA .qstA .summary {
-    margin-right: 5px;
 }
 
 .short-summary {
@@ -664,94 +439,14 @@ blockquote {
     text-decoration: underline;
 }
 
-.questions-count {
-    font-size: 32px;
-    font-family: sans-serif;
-    font-weight: 600;
-    padding: 0 0 5px 0px;
-    color: #a40000;
-    margin-top: 3px;
-}
-
-/*内容块*/
-.boxA {
-    background: #888a85;
-    padding: 6px;
-    margin-bottom: 8px;
-    border 1px solid #babdb6;
-}
-
-.boxA H3 {
-    font-size: 13px;
-    font-weight: 800;
-    color: #FFF;
-    margin: 0;
-    padding: 0;
-    margin-bottom: 4px;
-}
-
-.boxA .body {
-    border: 1px solid #999;
-    padding: 8px;
-    background: #FFF;
-    font-size: 13px;
-}
-
-.boxA .more {
-    padding: 2px;
-    text-align: right;
-    font-weight: 800;
-}
-
-.boxB {
-    background: #F9F7ED;
-    padding: 6px;
-    margin-bottom: 8px;
-    border: solid 1px #aaaaaa;
-}
-
-.boxB H3 {
-    font-size: 13px;
-    font-weight: 800;
-    color: #000;
-    margin: 0;
-    padding: 0 0 0 15px;
-    margin-bottom: 4px;
-    background: url(../images/dot-g.gif) no-repeat left center;
-}
-
-.boxB .body {
-    border: 1px solid #aaaaaa;
-    padding: 8px;
-    background: #FFF;
-    font-size: 13px;
-    line-height: 160%;
-}
-
-.boxB .more {
-    padding: 1px;
-    text-align: right;
-    font-weight: 800;
-}
-
 .boxC {
     background: white /*#cacdc6; /*f9f7ed;*/
     padding: 10px 10px 10px 15px;
-    margin-bottom: 8px;
-    /*
-    border-top: 1px solid #eeeeec;
-    border-left: 1px solid #eeeeec;
-    border-right: 1px solid #a9aca5;
-    border-bottom: 1px solid #babdb6;
-    */
+    margin-bottom: 12px;
 }
 
 .boxC p {
     margin-bottom: 8px;
-}
-
-.boxC p.nomargin {
-    margin: 0px;
 }
 
 .boxC p.info-box-follow-up-links {
@@ -778,20 +473,6 @@ blockquote {
     font: normal 12px sans-serif;
 }
 
-.paginator .prev-na,
-.paginator .next-na {
-    padding: .3em;
-    font: bold .875em sans-serif;
-}
-
-.paginator .prev-na,
-.paginator .next-na {
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    color: #aaa;
-    font-weight: normal;
-}
-
 .paginator .prev a, .paginator .prev a:visited,
 .paginator .next a, .paginator .next a:visited {
     border: 1px solid #fff;
@@ -801,11 +482,11 @@ blockquote {
     font: bold 100% sans-serif;
 }
 
-.paginator .prev, .paginator .prev-na {
+.paginator .prev {
     margin-right: .5em;
 }
 
-.paginator .next, .paginator .next-na {
+.paginator .next {
     margin-left: .5em;
 }
 
@@ -841,28 +522,9 @@ blockquote {
     font: bold 100% sans-serif;
 }
 
-.paginator-container {
-    float: right;
-    padding: 10px 0 10px 0;
-}
-
 .paginator-container-left {
     padding: 5px 0 10px 0;
 }
-
-/*标签*/
-/*.tag {
-    font-size: 13px;
-    font-weight: normal;
-    color: #333;
-    text-decoration: none;
-    background-color: #EEE;
-    border-left: 3px solid #777;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 1px 8px 1px 8px;
-}*/
 
 .tags {
     font-family: sans-serif;
@@ -891,36 +553,13 @@ blockquote {
     color: #333;
 }
 
-.tagsbox {
-    line-height: 200%;
-}
-
-.tagsbox a {
-    font-size: 13px;
-    font-weight: normal;
-    color: #333;
-    text-decoration: none;
-    background-color: #EEE;
-    border-left: 3px solid #777;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 1px 8px 1px 8px;
-}
-
-.tagsbox a:hover {
-    background-color: #fFF;
-    color: #333;
-}
-
 .tag-number {
     font-weight: 700;
     font-family: sans-serif;
 }
 
 .marked-tags {
-    margin-top: 0px;
-    margin-bottom: 5px;
+    margin: 5px 0;
 }
 
 .deletable-tag {
@@ -928,7 +567,7 @@ blockquote {
     white-space: nowrap;
 }
 
-/*奖牌*/
+/* badges */
 a.medal {
     font-size: 14px;
     line-height: 250%;
@@ -962,6 +601,10 @@ a:hover.medal {
     clear: both;
     margin-bottom: 3px;
     margin-top: 3px;
+}
+
+.tabBar h2 {
+    float: left;
 }
 
 .tabsA, .tabsC {
@@ -1005,7 +648,7 @@ a:hover.medal {
     float: left;
     height: 20px;
     line-height: 22px;
-    margin: 5px 4px 0 0;
+    margin: 5px 0 0 4px;
     padding: 0 11px 0 11px;
     text-decoration: none;
 }
@@ -1014,7 +657,7 @@ a:hover.medal {
     float: left;
     font-weight: bold; 
     color: #777;
-    margin: 8px 4px 0 4px;
+    margin: 8px 0 0 4px;
 }
 
 .tabsB a {
@@ -1028,142 +671,6 @@ a:hover.medal {
     margin: 5px 0px 0 4px;
     padding: 0 11px 0 11px;
     text-decoration: none;
-}
-
-.headlineA {
-    font-size: 13px;
-    border-bottom: 1px solid #777;
-    padding-bottom: 2px;
-    font-weight: 800;
-    margin-bottom: 12px;
-    text-align: right;
-    height: 30px;
-}
-
-.headQuestions {
-    height: 23px;
-    line-height: 23px;
-    margin: 5px 0 0 5px;
-    padding: 0px 6px 0px 15px;
-    font-size: 15px;
-    font-weight: 700;
-    border-bottom: 0px solid #777;
-    border-left: 0px solid #darkred;
-    background-color: #FFF;
-    background: url(../images/dot-list.gif) no-repeat left center;
-}
-
-.headAnswers {
-    float: left;
-    padding: 3px;
-    font-size: 18px;
-    font-weight: 800;
-    background: url(../images/ico_answers.gif) left 2px no-repeat;
-    padding-left: 24px;
-}
-
-.headTags {
-    float: left;
-    padding: 3px;
-    font-size: 18px;
-    font-weight: 800;
-    background: url(../images/ico_tags.gif) no-repeat;
-    padding-left: 24px;
-}
-
-/* todo: make this class applicable to all headers it is actually uses in tags.html too */
-.headUsers {
-    float: left;
-    height: 23px;
-    line-height: 23px;
-    margin: 5px 0 0 5px;
-    padding: 0px 6px 0px 15px;
-    font-size: 15px;
-    font-weight: 700;
-    border-bottom: 0px solid #777;
-    border-left: 0px solid #darkred;
-    background-color: #FFF;
-    background: url(../images/dot-list.gif) no-repeat left center;
-}
-
-.headMedals {
-    float: left;
-    height: 23px;
-    line-height: 23px;
-    margin: 5px 0 0 5px;
-    padding: 0px 6px 0px 15px;
-    font-size: 15px;
-    font-weight: 700;
-    border-bottom: 0px solid #777;
-    border-left: 0px solid #darkred;
-    background-color: #FFF;
-    background: url(../images/dot-list.gif) no-repeat left center;
-}
-
-.headLogin {
-    float: left;
-    padding: 3px;
-    font-size: 15px;
-    font-weight: 800;
-    background: url(../images/ico_login.gif) no-repeat;
-    padding-left: 24px;
-}
-
-.headNormal {
-    text-align: left;
-    padding: 3px;
-    font-size: 15px;
-    margin-bottom: 12px;
-    font-weight: bold;
-    border-bottom: 1px solid #777;
-}
-
-.headUser {
-    text-align: left;
-    padding: 5px;
-    font-size: 20px; /*letter-spacing:1px;*/
-    margin-bottom: 12px;
-    font-weight: 800;
-    border-bottom: 1px solid #777;
-}
-
-/*RSS订阅*/
-#feeds {
-    margin: 10px 0;
-}
-
-#feeds a {
-    background: url(../images/feed-icon-small.png) no-repeat 0;
-    padding-left: 18px;
-    font-weight: 700;
-    font-size: 13px;
-}
-
-/*问题*/
-#question {
-    margin-bottom: 30px;
-}
-
-#question h1 {
-    font-size: 15px;
-    background: #CCC;
-    padding: 6px 8px;;
-}
-
-#question .body {
-    background: #F7F7F7;
-    padding: 20px 10px;
-}
-
-.starter {
-    padding: 10px;
-    background: #E0EAF1;
-}
-
-.vote {
-    font-size: 20px;
-    color: #666;
-    font-weight: 800;
 }
 
 .questions-related {
@@ -1196,22 +703,6 @@ a:hover.medal {
 
 .question-body IMG {
     max-width: 600px;
-}
-
-.question-mark {
-    /*background-color:#fff5e0;
-    border-top: 1px solid #eeeeec;
-    border-right: 1px solid #babdb6;
-    border-bottom: 1px solid #babdb6;
-    border-left: 1px solid #eeeeec;*/
-    text-align: left;
-    padding: 5px;
-    overflow: hidden;
-}
-
-.question-edit {
-    text-align: left;
-    overflow: hidden;
 }
 
 .vote-buttons {
@@ -1291,12 +782,6 @@ a:hover.medal {
 
 .post-controls .sep {
     color: #ccc;
-}
-
-.wiki-category {
-    margin-left: 5px;
-    color: #999;
-    font-size: 90%;
 }
 
 .comments {
@@ -1391,15 +876,6 @@ div.comments {
 }
 
 /*回答*/
-#answers {
-}
-
-.answer {
-    padding-top: 10px;
-    width: 100%;
-    border-bottom: 1px solid #ccccce;
-}
-
 .answer-body {
     min-height: 80px;
     font-size: 13px;
@@ -1433,11 +909,6 @@ div.comments {
     color: #763333;
 }
 
-.unanswered {
-    background: #777;
-    color: white;
-}
-
 .answered-by-owner {
     background: #E9E9FF;
 }
@@ -1462,15 +933,12 @@ div.comments {
     background: #F4E7E7 none repeat scroll 0 0;
 }
 
-/*标签列表*/
-/*
-.tagsbox {}
-.tagsbox a {color:#000;line-height:30px;margin-right:10px;font-size:100%;background-color:#F9F7ED;padding:3px;border:1px solid #aaaaaa;}
-.tagsbox a:hover {text-decoration:none;background-color:#F9F7ED;color:#B02B2C;} */
+/* tags */
 .tagsList {
     margin: 0;
     list-style-type: none;
     padding: 0px;
+    padding-left: 5px;
 }
 
 .tagsList li {
@@ -1478,17 +946,11 @@ div.comments {
     float: left;
 }
 
-.badge-list {
-    margin: 0;
-    list-style-type: none;
-}
-
-/*登录*/
-.list-item {
+.boxC ul {
     margin-left: 15px;
 }
 
-.list-item LI {
+.boxC li {
     list-style-type: disc;
     font-size: 13px;
     line-height: 20px;
@@ -1530,9 +992,6 @@ table.ab-tag-filter-form {
     width: 45em;
 }
 
-/*.form-row li label {
-    display: inline
-}*/
 .submit-row {
     line-height: 30px;
     padding-top: 10px;
@@ -1557,12 +1016,7 @@ label.retag-error {
     font-size: 10px;
 }
 
-.error-list li {
-    padding: 5px;
-}
-
 .fieldset {
-/*	border:solid 1px #777;*/
     border: none;
     margin-top: 10px;
     padding: 10px;
@@ -1595,18 +1049,6 @@ label.retag-error {
     font-size: 120%;
 }
 
-.openid-samples {
-
-}
-
-.openid-samples .list, .list li {
-    font-family: Trebuchet MS, "segoe ui", Helvetica, "Microsoft YaHei", 宋 体, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
-    list-style: none !important;
-    margin-left: -30px !important;
-    line-height: 20px !important;
-}
-
-/*表单相关*/
 span.form-error {
     color: #990000;
     font-size: 90%;
@@ -1673,8 +1115,6 @@ span.form-error {
     margin: 5px 0 5px 0;
 }
 
-/*修订记录*/
-
 .revision {
     margin: 10px 0 10px 0;
     width: 100%;
@@ -1720,11 +1160,6 @@ span.form-error {
     font-size: 300%;
     font-weight: bold;
     font-family: sans-serif;
-}
-
-.revision .body {
-    padding-left: 10px;
-    margin-bottom: 50px;
 }
 
 .revision .answerbody {
@@ -1777,11 +1212,6 @@ ins .post-tag {
     width: 90%;
 }
 
-.user-edit-link {
-    background: url(../images/edit.png) no-repeat;
-    padding-left: 20px;
-}
-
 .favorites-count-off {
     color: #919191;
     float: left;
@@ -1798,36 +1228,16 @@ ins .post-tag {
     text-align: center;
 }
 
+/* todo: get rid of this in html */
 .favorites-empty {
     width: 32px;
     height: 45px;
     float: left;
 }
 
-.question-summary {
-    border-bottom: 1px dotted #999999;
-    float: left;
-    overflow: hidden;
-    padding: 11px 0;
-    width: 670px;
-}
-
 .user-info-table {
-    width: 950;
     margin-bottom: 10px;
-}
-
-.user-stats-table .question-summary {
-    width: 800px;
-}
-
-.narrow .stats {
-    float: left;
-    height: 48px;
-    margin: 0 0 0 7px;
-    padding: 0;
-    width: auto;
-    font-family: Arial;
+    border-spacing: 0;
 }
 
 /* todo: remove this hack? */
@@ -1835,114 +1245,14 @@ ins .post-tag {
     width: 660px;
 }
 
-.stats div {
-    font-size: 11px;
-    text-align: center;
-}
-
-/*
-.narrow .votes {
-    background: #EEEEEE none repeat scroll 0 0;
-    float: left;
-    height: 42px;
-    margin: 0 3px 0 0;
-    padding: 5px;
-    width: 46px;
-    text-align: center;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-}
-*/
-
-/*
-.narrow .summary {
-    width: 600px;
-    display: inline-block;
-}
-*/
-
 .narrow .summary h3 {
     padding: 0px;
     margin: 0px;
 }
 
-/* todo: delete commented out stuff */
-/*
-.narrow .views {
-    height: 42px;
-    float: left;
-    margin: 0 7px 0 0; *//*padding:5px 0 5px 4px;*//*
-    padding: 5px;
-    width: 46px;
-    text-align: center;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    color: #777;
-}
-*/
-
-.narrow .status {
-    float: left;
-    height: 42px;
-    margin: 0 3px 0 0;
-    padding: 5px;
-    width: 46px;
-    text-align: center;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-}
-
-.narrow .vote-count-post {
-    font-weight: 800;
-    display: block;
-    margin: 0;
-    font-size: 190%;
-    color: #555;
-    line-height: 20px;
-}
-
-.narrow .answer-count-post {
-    font-weight: 800;
-    display: block;
-    margin: 0;
-    font-size: 190%;
-}
-
-.narrow .views-count-post {
-    font-weight: 800;
-    display: block;
-    margin: 0;
-    font-size: 190%;
-}
-
-div.started {
-    color: #999999;
-    float: right;
-    line-height: 18px;
-
-}
-
-.narrow div.started {
-    line-height: inherit;
-    padding-top: 4px;
-    white-space: nowrap;
-    width: auto;
-}
-
 .relativetime {
     font-weight: bold;
     text-decoration: none;
-}
-
-div.started a {
-    font-weight: bold;
-}
-
-div.started .reputation-score {
-    margin-left: 1px;
 }
 
 #top a.user-micro-info {
@@ -1982,10 +1292,7 @@ div.started .reputation-score {
     color: #777;
 }
 
-.user-action {
-
-}
-
+/* todo: make these more semantic */
 .user-action-1 {
     font-weight: bold;
     color: #333;
@@ -2037,6 +1344,7 @@ div.started .reputation-score {
     color: #333;
 }
 
+/* todo: make these more semantic */
 .post-type-1 a {
     font-weight: bold;
 
@@ -2067,66 +1375,6 @@ div.started .reputation-score {
     color: #333;
 }
 
-/*读书频道*/
-.bookInfo {
-    float: left;
-    width: 940px;
-    padding: 5px;
-}
-
-.bookCover {
-    float: left;
-    width: 200px;
-}
-
-.bookCover img {
-    border: 1px solid #ccc;
-    max-width: 200px;
-}
-
-.bookSummary {
-    float: left;
-    font-size: 13px;
-}
-
-.blogRss {
-    float: right;
-    margin: 0 10px 0 0;
-    width: 460px;
-    height: 240px;
-    background-color: #EEE;
-    padding: 5px;
-}
-
-.bookQuestions {
-    margin-bottom: 10px;
-}
-
-.bookFeed {
-    float: right;
-}
-
-.bookAsk {
-/*letter-spacing:1px; */
-    float: right;
-    margin: -30px 10px 0 0;
-    padding: 3px 5px 3px 5px;
-}
-
-.bookAsk a {
-    font-size: 15px;
-    color: #FFF;
-    font-weight: bold;
-    text-decoration: none;
-    background-color: #EC7000;
-    padding: 3px 6px 3px 6px;
-}
-
-.bookAsk a:hover {
-    text-decoration: underline;
-}
-
-/*其他全局样式*/
 .hilite {
     background-color: #ff0;
 }
@@ -2141,16 +1389,6 @@ div.started .reputation-score {
 
 .hilite3 {
     background-color: #0ff;
-}
-
-.userStatus {
-    margin-left: 12px;
-    color: #FFF;
-    float: right;
-}
-
-.userStatus a {
-    color: #FFF;
 }
 
 .gold, .badge1 {
@@ -2180,29 +1418,14 @@ div.started .reputation-score {
     font-size: 13px;
 }
 
-.subSearch {
-    margin-bottom: 12px;
-    padding: 4px;
-}
-
 a.comment {
     background: #EEE;
     color: #993300;
     padding: 5px;
 }
 
-a.permLink {
-    padding: 2px;
-}
-
 a.offensive {
     color: #999;
-}
-
-ul.bulleta li {
-    background: url(../images/bullet_green.gif) no-repeat 0px 2px;
-    padding-left: 16px;
-    margin-bottom: 4px;
 }
 
 .user {
@@ -2221,10 +1444,6 @@ ul.bulleta li {
     float: left;
     margin-right: 4px;
     display: inline;
-}
-
-.yellowbg {
-    background: yellow;
 }
 
 .message {
@@ -2288,10 +1507,6 @@ button::-moz-focus-inner {
     padding-right: 10px;
 }
 
-.thousand {
-    color: orange;
-}
-
 .notify {
     position: fixed;
     top: 0px;
@@ -2333,15 +1548,11 @@ button::-moz-focus-inner {
     font-size: 15px;
 }
 
-.bigger {
-    font-size: 14px;
-}
-
 .strong {
     font-weight: bold;
 }
 
-.orange {
+.orange {/* used in django.po */
     color: #d64000;
     font-weight: bold;
 }
@@ -2353,27 +1564,6 @@ button::-moz-focus-inner {
 .about div {
     padding: 10px 5px 10px 5px;
     border-top: 1px dashed #aaaaaa;
-}
-
-.about div.first {
-    padding-top: 0;
-    border-top: none;
-}
-
-.about p {
-    margin-bottom: 10px;
-}
-
-.about a {
-    color: #d64000;
-    text-decoration: underline;
-}
-
-.about h3 {
-    line-height: 30px;
-    font-size: 15px;
-    font-weight: 700;
-    padding-top: 0px;
 }
 
 .highlight {
@@ -2412,11 +1602,6 @@ button::-moz-focus-inner {
     -moz-border-radius: 5px;
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;
-}
-
-.tight {
-    margin: 0;
-    padding: 0;
 }
 
 .list-table td {
@@ -2517,29 +1702,8 @@ ul.form-horizontal-rows li input {
     margin: 0px;
 }
 
-#emailpw-form li input {
-    left: 170px;
-}
-
-#emailpw-form ul.errorlist {
-    left: 170px;
-}
-
-#changepw-form li input {
-    left: 150px;
-}
-
-#changepw-form ul.errorlist {
-    left: 150px;
-}
-
 .narrow .summary {
     float: left;
-}
-
-.narrow .summary .question-title {
-    font-weight: bold;
-    font-size: 120%;
 }
 
 .user-profile-tool-links {
@@ -2597,23 +1761,13 @@ ul.form-horizontal-rows li input {
     color: #444;
 }
 
-.admin {
-    background-color: #fff380; /* nice yellow */
-    border: 1px solid darkred;
-    padding: 0 5px 0 5px;
-}
-
-.admin p {
-    margin-bottom: 3px;
-}
-
-.admin #action_status {
-    text-align: center;
-    font-weight: bold;
-}
-
 #tagSelector {
     padding-bottom: 2px;
+    margin-bottom: 0;
+}
+
+#related-tags {
+    padding-left: 3px;
 }
 
 #hideIgnoredTagsControl {
@@ -2732,6 +1886,7 @@ p.signup_p {
 img.gravatar {
     margin:2px;
 }
+
 #languages {
     width: 960px;
     margin: auto;
@@ -2742,6 +1897,9 @@ img.gravatar {
 }
 .language:hover {
     background: yellow;
+
+.user-info-table .gravatar {
+    margin:0;
 }
 
 .vote-notification {
