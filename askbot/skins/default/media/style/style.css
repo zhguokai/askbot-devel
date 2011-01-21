@@ -433,7 +433,8 @@ blockquote {
 }
 
 #question-table {
-    margin-bottom: 10px; /*border-bottom:1px solid #888a85;*/
+    margin: 2px 0 10px 0;
+    border-spacing: 0px;
 }
 
 .evenMore {
@@ -702,7 +703,7 @@ a:hover.medal {
 }
 
 .question-body {
-    min-height: 100px;
+    min-height: 39px;
     font-size: 13px;
     line-height: 20px;
 }
@@ -713,6 +714,7 @@ a:hover.medal {
 
 .vote-buttons {
     float: left;
+    padding-top: 3px;
     text-align: center;
 }
 
@@ -801,7 +803,7 @@ a:hover.medal {
     background: url(../images/gray-up-arrow-h18px.png) no-repeat;
     width: 100%;
     padding-left: 12px;
-    margin: 3px 0 20px 0;
+    margin: 3px 0 20px 5px;
 }
 
 .comments textarea {
@@ -883,7 +885,7 @@ div.comments {
 
 /*回答*/
 .answer-body {
-    min-height: 80px;
+    min-height: 39px;
     font-size: 13px;
     line-height: 20px;
 }
@@ -1724,6 +1726,7 @@ ul.form-horizontal-rows li input {
     line-height: 12px;
     min-width: 200px;
     margin-bottom: 5px;
+    padding-left: 5px;
 }
 
 .post-tags {

@@ -92,7 +92,7 @@ def users(request):
         sortby = "reputation"
         objects_list = Paginator(
                             models.User.objects.extra(
-                                                where=['username ilike %s'],
+                                                where=['username like %s'],
                                                 params=['%' + suser + '%']
                                             ).order_by(
                                                 '-reputation'
