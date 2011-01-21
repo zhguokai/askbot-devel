@@ -432,7 +432,8 @@ blockquote {
     padding-left: 0;
 }
 
-#question-table {
+#question-table,
+.answer-table {
     margin: 2px 0 10px 0;
     border-spacing: 0px;
 }
@@ -540,7 +541,22 @@ blockquote {
     margin-top: 5px;
 }
 
-.tags a {
+#search-tags .tag {
+    margin-left: 7px;
+}
+
+p.rss {
+    float: right;
+    margin-right: 2px;
+}
+
+p.rss a {
+    padding-left: 16px;
+    background: url(../images/feed-icon-small.png) no-repeat;
+}
+
+.tags a,
+.tags span.tag {
     white-space: nowrap;
     font-size: 11px;
     font-weight: normal;
@@ -558,6 +574,19 @@ blockquote {
 .tags a:hover {
     background-color: #fFF;
     color: #333;
+}
+
+#listA .tag {
+    margin-right: 6px;
+}
+
+span.delete-icon {
+    padding-left: 13px;
+    margin-left: -2px;
+    background: url(../images/close-small-dark.png) no-repeat;
+}
+span.delete-icon:hover {
+    background: url(../images/close-small-hover.png) no-repeat;
 }
 
 .tag-number {
@@ -716,6 +745,7 @@ a:hover.medal {
     float: left;
     padding-top: 3px;
     text-align: center;
+    padding-top: 2px;
 }
 
 .vote-buttons IMG {
@@ -1725,6 +1755,7 @@ ul.form-horizontal-rows li input {
     font-size: 11px;
     line-height: 12px;
     min-width: 200px;
+    padding-left: 5px;
     margin-bottom: 5px;
     padding-left: 5px;
 }
@@ -1870,13 +1901,15 @@ p.signup_p {
     font-size:18px;
     line-height:22px;
     margin:0px 0px 0px 0px;
-    padding:0px;
+    padding:2px 0 0 0;
+    float: left;
 }
 .search-tips {
     font-size:12px;
     line-height:12px;
     margin:0 0 5px 0;
     padding:0px;
+    clear:both;
 }
 .search-tips a {
     text-decoration: underline;
