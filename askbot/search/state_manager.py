@@ -175,12 +175,16 @@ class SearchState(object):
             if self.sort == 'relevance-desc':
                 self.reset_sort()
 
-    def update(self, input_dict, view_log):
+    def update(self, input_dict, view_log, user):
         """update the search state according to the
         user input and the queue of the page hits that
         user made"""
         if view_log.should_reset_search_state():
             self.reset()
+
+        if user.is_authenticated():
+            search_state.set_logged_in()
+
         self.update_from_user_input(input_dict)
         self.relax_stickiness(input_dict, view_log)
 
@@ -230,6 +234,7 @@ class ViewLog(object):
     def should_reset_search_state(self):
         """return True if user stepped too far from the home page
         and False otherwise"""
+        return False
         if self.get_previous(1) != 'questions':
             if self.get_previous(2) != 'questions':
                 return True
