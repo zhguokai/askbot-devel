@@ -52,10 +52,6 @@
         title="{% trans %}Please, sign in or Join askbot!{% endtrans %}"
     >{% trans %}login{% endtrans %}</a>
 {% endif %}
-<a href="/doc/index.html" title="it's real easy(ish) to install askbot, there is also some developer documentation">install/docs</a>
-<!--a href="/doc/index.html" title="read documentation">docs</a-->
-<a href="http://twitter.com/askbot7" title="follow @askbot7 on twitter!">@twitter</a>
-<a href="http://github.com/ASKBOT/askbot-devel" title="fork us on github!">github</a>
 <select id="lang_selector" name="language" title="pick language (number in the parentheses is translation progress)">
 {% for lang in LANGUAGES %}
     <option value="{{lang[0]}}"

@@ -2038,3 +2038,31 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
   .atn { color: #404; }
   .atv { color: #060; }
 }
+div.ab-proj-header {
+    width: 960px;
+    margin: auto;
+    margin-bottom: 5px;
+    font-size: 16px;
+    padding-left: 15px;
+    font-family: "Lucida Grande",Tahoma,"Bitstream Vera Sans",Arial,sans-serif;
+}
+div.ab-proj-header li {
+    display: inline;
+    padding: 0 10px 0 10px;
+}
+div.ab-proj-header li.first {
+    padding-left: 0;
+}
+div.ab-proj-header a,
+div.ab-proj-header a:visited,
+{
+    text-decoration: none;
+}
+div.ab-proj-header ul {
+    margin: 0;
+    padding: 5px 0 0 0;
+    list-style: none;
+}
+div.ab-proj-header .sep {
+    color: #aaa;
+}
