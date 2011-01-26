@@ -1,8 +1,9 @@
-from django.core.management.base import BaseCommand
 #todo: http://stackoverflow.com/questions/837828/how-to-use-a-slug-in-django 
 import os
 import re
 import sys
+import zipfile
+from django.core.management.base import BaseCommand, CommandError
 import askbot.importers.stackexchange.parse_models as se_parser
 from xml.etree import ElementTree as et
 from django.db import models, transaction
@@ -15,6 +16,7 @@ from django.contrib.auth.models import Message as DjangoMessage
 from django.utils.translation import ugettext as _
 from askbot.utils.slug import slugify
 from askbot.models.badges import award_badges_signal, award_badges
+from askbot.importers.stackexchange.management import is_ready as importer_is_ready
 #from markdown2 import Markdown
 #markdowner = Markdown(html4tags=True)
 
@@ -252,6 +254,7 @@ class X(object):#
             if len(badge_summary) > 3:
                 print 'warning: guessing that badge summary is comma separated'
                 print 'have %s' % badge_summary
+                sys.stdout.flush()
                 bits = badge_summary.split(',')
             else:
                 bits = [badge_summary]
@@ -275,18 +278,23 @@ class Command(BaseCommand):
     @transaction.commit_manually
     def handle(self, *arg, **kwarg):
 
+        if not importer_is_ready():
+            raise CommandError(
+                "Looks like stackexchange tables are not yet initialized in the database.\n"
+                "Please, run command: \npython manage.py syncdb\n"
+                "then import the data."
+            )
+
+
         award_badges_signal.disconnect(award_badges)
 
-        if len(arg) < 1 or not os.path.isdir(arg[0]):
-            print 'Error: first argument must be a directory with all the SE *.xml files'
-            sys.exit(1)
+        if len(arg) < 1 or not os.path.isfile(arg[0]):
+            raise CommandError('Error: first argument must be a zip file with the SE forum data')
 
-        self.dump_path = arg[0]
+        self.zipfile = self.open_dump(arg[0]) 
         #read the data into SE tables
-        for xml in xml_read_order:
-            xml_path = self.get_xml_path(xml)
-            table_name = self.get_table_name(xml)
-            self.load_xml_file(xml_path, table_name)
+        for item in xml_read_order:
+            self.load_xml_file(item)
             transaction.commit()
 
         #this is important so that when we clean up messages
@@ -304,6 +312,7 @@ class Command(BaseCommand):
         self.transfer_users()
         transaction.commit()
         print 'done.'
+        sys.stdout.flush()
         print 'Transferring content edits...',
         sys.stdout.flush()
         self.transfer_question_and_answer_activity()
@@ -342,6 +351,19 @@ class Command(BaseCommand):
         transaction.commit()
         self.transfer_meta_pages()
         transaction.commit()
+
+    def open_dump(self, path):
+        """open the zipfile, raise error if it
+        does not exist or does not contain files with expected names"""
+        if not zipfile.is_zipfile(path):
+            raise CommandError('%s is not a zip file' % path)
+        dump = zipfile.ZipFile(path)
+        filenames = [item.filename for item in dump.infolist()]
+        for component in xml_read_order:
+            expected_file = component + '.xml'
+            if expected_file not in filenames:
+                raise CommandError('file %s not found in the archive' % expected_file)
+        return dump
 
     def save_askbot_message_id_list(self):
         id_list = list(DjangoMessage.objects.all().values('id'))
@@ -612,6 +634,7 @@ class Command(BaseCommand):
         for se_c in se.PostComment.objects.all():
             if se_c.deletion_date:
                 print 'Warning deleted comment %d dropped' % se_c.id
+                sys.stdout.flush()
                 continue
             se_post = se_c.post
             askbot_post = X.get_post(se_post)
@@ -636,6 +659,7 @@ class Command(BaseCommand):
                 self._missing_badges[name] = 0
                 if len(se_b.description) > 300:
                     print 'Warning truncated description for badge %d' % se_b.id
+                    sys.stdout.flush()
 
     def _award_badges(self):
         #note: SE does not keep information on
@@ -670,6 +694,7 @@ class Command(BaseCommand):
         dropped = [name for name in d.keys() if d[name] > 0]
         print 'Warning - following unsupported badges were dropped:'
         print ', '.join(dropped)
+        sys.stdout.flush()
 
     def transfer_badges(self):
         #note: badge level is neglected
@@ -712,8 +737,15 @@ class Command(BaseCommand):
         #so we can't do this
         pass
 
-    def load_xml_file(self, xml_path, table_name):
-        tree = et.parse(xml_path)
+    def load_xml_file(self, item):
+        """read data from the zip file for the item
+        """
+        xml_path = self.get_xml_path(item)
+        table_name = self.get_table_name(item)
+
+        xml_data = self.zipfile.read(xml_path)
+
+        tree = et.fromstring(xml_data)
         print 'loading from %s to %s' % (xml_path, table_name) ,
         model = models.get_model('stackexchange', table_name)
         i = 0
@@ -727,16 +759,13 @@ class Command(BaseCommand):
                 setattr(model_entry, field_name, field_value)
             model_entry.save()
         print '... %d objects saved' % i
+        sys.stdout.flush()
 
-    def get_table_name(self,xml):
-        return se_parser.get_table_name(xml)
+    def get_table_name(self, xml_file_basename):
+        return se_parser.get_table_name(xml_file_basename)
 
-    def get_xml_path(self, xml):
-        xml_path = os.path.join(self.dump_path, xml + '.xml') 
-        if not os.path.isfile(xml_path):
-            print 'Error: file %s not found' % xml_path
-            sys.exit(1)
-        return xml_path
+    def get_xml_path(self, xml_file_basename):
+        return xml_file_basename + '.xml'
 
     def transfer_users(self):
         for se_u in se.User.objects.all():
@@ -745,7 +774,7 @@ class Command(BaseCommand):
             u = askbot.User()
             u_type = se_u.user_type.name
             if u_type == 'Administrator':
-                u.is_superuser = True
+                u.set_admin_status()
             elif u_type == 'Moderator':
                 u.set_status('m')
             elif u_type not in ('Unregistered', 'Registered'):
@@ -766,9 +795,11 @@ class Command(BaseCommand):
                 except AssertionError:
                     print 'User %s (id=%d) does not have openid' % \
                             (se_u.display_name, se_u.id)
+                    sys.stdout.flush()
 
             if se_u.open_id is None and se_u.email is None:
                 print 'Warning: SE user %d is not recoverable (no email or openid)'
+                sys.stdout.flush()
 
             u.reputation = 1#se_u.reputation, it's actually re-computed
             u.last_seen = se_u.last_access_date
@@ -815,6 +846,7 @@ class Command(BaseCommand):
             try:
                 other = askbot.User.objects.get(username = u.username)
                 print 'alert - have a second user with name %s' % u.username
+                sys.sdtout.flush()
             except askbot.User.DoesNotExist:
                 pass
             u.save()
