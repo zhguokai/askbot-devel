@@ -13,7 +13,7 @@ from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.template import RequestContext, Context
+from django.template import Context
 from django.utils.http import urlencode
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
@@ -36,7 +36,7 @@ from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.templatetags import extra_filters
 import askbot.conf
-from askbot.skins.loaders import ENV #jinja2 template loading enviroment
+from askbot.skins.loaders import render_into_skin, get_template#jinja2 template loading enviroment
 
 # used in index page
 #todo: - take these out of const or settings
@@ -156,7 +156,7 @@ def questions(request):
                                 }
 
         if q_count > search_state.page_size:
-            paginator_tpl = ENV.get_template('blocks/paginator.html')
+            paginator_tpl = get_template('blocks/paginator.html', request)
             #todo: remove this patch on context after all templates are moved to jinja
             paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
             data = {
@@ -295,7 +295,7 @@ def questions(request):
     start_template_time = datetime.datetime.now()
 
     #todo: organize variables by type
-    template_context = RequestContext(request, {
+    template_data = {
         'language_code': translation.get_language(),
         'reset_method_count': reset_method_count,
         'page_class': 'main-page',
@@ -316,16 +316,18 @@ def questions(request):
         'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
         'scope': search_state.scope,
         'context' : paginator_context,
-    })
+    }
 
     assert(request.is_ajax() == False)
     #ajax request is handled in a separate branch above
 
     #before = datetime.datetime.now()
-    template = ENV.get_template('questions.html')
-    response = HttpResponse(template.render(template_context))
-    #after = datetime.datetime.now()
-    #print after - before
+    response = render_into_skin('main_page.html', template_data, request)
+    end_template_time = datetime.datetime.now()
+    logging.critical(
+        'time to render template ' + \
+        str(end_template_time - start_template_time)
+    )
     return response
 
 def tags(request):#view showing a listing of available tags - plain list
@@ -380,9 +382,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'keywords' : stag,
         'paginator_context' : paginator_context
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('tags.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('tags.html', data, request)
 
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and 
@@ -579,9 +579,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     }
     if request.user.is_authenticated():
         data['tags_autocomplete'] = _get_tags_cache_json()
-    context = RequestContext(request, data)
-    template = ENV.get_template('question.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('question.html', data, request)
 
 def revisions(request, id, object_name=None):
     assert(object_name in ('Question', 'Answer'))
@@ -601,9 +599,7 @@ def revisions(request, id, object_name=None):
         'post': post,
         'revisions': revisions,
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('revisions.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('revisions.html', data, request)
 
 @ajax_only
 @anonymous_forbidden

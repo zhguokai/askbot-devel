@@ -1,25 +1,18 @@
 <!-- template header.html -->
 {% import "macros.html" as macros %}
-<div id="roof">
-    <div id="navBar">
-    <a style="position:absolute;top:10px;right:30px;" href='http://www.pledgie.com/campaigns/12608'><img alt='Click here to lend your support to: askbot-devel and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/12608.png?skin_name=chrome' border='0' /></a>
-        <div id="top">
+<div id="ab-header">
+    <div class="content-wrapper">
+        {% if settings.SHOW_LOGO %}
+        <a id="ab-logo" href="{% url questions %}?start_over=true"><img 
+            src="{{ settings.SITE_LOGO_URL|media }}" 
+            title="{% trans %}back to home page{% endtrans %}"
+            alt="{% trans site=settings.APP_SHORT_NAME %}{{site}} logo{% endtrans %}"/></a>
+        {% endif %}
+        <div id="ab-meta-nav">
             {% include "blocks/header_meta_links.html" %}
         </div>
-        <table border="0" cellspacing="0" cellpadding="0">
-          <tr>
-    {% if settings.SHOW_LOGO %}
-    <td id="logoContainer">
-        <div id="logo">
-            <a href="{% url questions %}?start_over=true"><img 
-                src="{{ settings.SITE_LOGO_URL|media }}" 
-                title="{% trans %}back to home page{% endtrans %}"
-                alt="{% trans site=settings.APP_SHORT_NAME %}{{site}} logo{% endtrans %}"/></a>
-        </div>
-    </td>
-    {% endif %}
-    <td id="navTabContainer" valign="bottom" align="left">
-        <div class="nav">
+        <a style="position:absolute;top:10px;right:30px;" href='http://www.pledgie.com/campaigns/12608'><img alt='Click here to lend your support to: askbot-devel and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/12608.png?skin_name=chrome' border='0' /></a>
+        <div id="ab-main-nav">
             <a 
                 id="nav_questions"
                 href="{% url questions %}"
@@ -46,9 +39,6 @@
                 class="{% if active_tab == 'ask' %}on{% else %}special{% endif %}"
             >{% trans %}ask a question{% endtrans %}</a>
         </div>
-    </td>
-          </tr>
-        </table>
     </div>
 </div>
 <!-- end template header.html -->

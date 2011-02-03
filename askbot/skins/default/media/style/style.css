@@ -103,10 +103,10 @@ pre {
     font-size: 100%;
     margin-bottom: 10px;
     overflow: auto;
-    width: 580px;
     background-color: #F5F5F5;
     padding-left: 5px;
     padding-top: 5px;
+    width: 671px;
     padding-bottom: 20px ! ie7;
 }
 
@@ -123,15 +123,19 @@ blockquote {
     background-color: #F5F5F5;
 }
 
-#askbot-content {
+.content-wrapper {/* wrapper positioning class */
     width: 960px;
     margin: auto;
+    position:relative;
 }
 
-#roof {
-    position: relative;
+#ab-header {
     margin-top: 0px;
     background: #FFF;
+}
+
+#ab-header .content-wrapper {
+    height: 90px;/* same as logo height */
 }
 
 #CALeft {
@@ -162,66 +166,63 @@ blockquote {
     background: #777;
 }
 
-/* why is this called top? - this contains links like login, faq, etc */
-#top {
-    position: absolute;
-    top: 0px;
-    left: 85px;
-    height: 20px;
-    text-align: right;
-    padding: 3px;
-    background-color: #ffffff;
-}
-
-/*#header {width:960px;}*/
-#top a {
-    height: 35px;
-    text-align: right; /*letter-spacing:1px; */
-    margin-left: 15px;
-    text-decoration: underline;
-    color: #555555;
-}
-
-#top a.ab-responses-envelope {
-    margin-left: 3px;
-}
-#top a img {
-    vertical-align:middle;
-    margin-bottom:2px;
-}
-
-#top select {
-    margin-left:15px;
-    margin-right:2.5em;
-}
-
-#logo {
+#ab-logo {
     padding: 0px 0px 0px 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     height: 90px;
     width: 70px;
 }
 
-#logoContainer {
-}
-#navTabContainer {
-    width: 610px;
-    padding-left: 10px;
-    text-align: left;
+#ab-meta-nav,
+#ab-main-nav {
+    position: absolute;
+    left: 100px;
 }
 
-/* navBar includes logo, main tabs and links like logout, about, faq */
-#navBar {
-    float: clear;
-    position: relative;
-    display: block;
-    width: 960px;
+#ab-meta-nav {
+    top: 0px;
+    left: 100px;
+    height: 20px;
+    padding: 3px;
+    margin: 0;
 }
 
-#navBar .nav {
-    margin: 20px 0px 0px 0px; /*letter-spacing:1px; */
+#ab-meta-nav a {
+    height: 35px;
+    text-align: right;
+    margin-left: 20px;
+    text-decoration: underline;
+    color: #555555;
 }
 
-#navBar .nav a {
+#lang_selector {
+    margin-left: 20px;
+}
+
+#ab-meta-nav a:first-child {
+    margin-left: 0;
+}
+
+#ab-meta-nav a#ab-responses {
+    margin-left: 3px;
+}
+#ab-meta-nav a img {
+    vertical-align:middle;
+    margin-bottom:2px;
+}
+
+#ab-meta-nav .user-info a {
+    margin: 0;
+    text-decoration: none;
+}
+
+#ab-main-nav {
+    bottom: 0;
+}
+
+#ab-main-nav a {
     color: #333333;
     background-color: #fff0e0;
     border: 1px solid #888888;
@@ -229,7 +230,7 @@ blockquote {
     padding: 0px 12px 3px 12px;
     height: 25px;
     line-height: 30px;
-    margin-left: 10px;
+    margin-right: 10px;
     font-size: 18px;
     font-weight: 100;
     text-decoration: none;
@@ -237,11 +238,11 @@ blockquote {
     float: left;
 }
 
-#navBar .nav a:hover {
-    text-decoration: underline
+#ab-main-nav a:hover {
+    text-decoration: underline;
 }
 
-#navBar .nav a.on {
+#ab-main-nav a.on {
     height: 24px;
     line-height: 28px;
     border-bottom: 1px solid #a40000;
@@ -254,21 +255,15 @@ blockquote {
     text-decoration: none
 }
 
-#navBar .nav a.special {
+#ab-main-nav a.special {
     font-size: 18px;
     color: #B02B2C;
     font-weight: bold;
     text-decoration: none;
 }
 
-#navBar .nav a.special:hover {
+#ab-main-nav a.special:hover {
     text-decoration: underline;
-}
-
-/* todo: this is probably not used any more */
-#navBar .nav div.focus {
-    float: right;
-    padding-right: 0px;
 }
 
 #searchBar {
@@ -554,6 +549,9 @@ blockquote {
     padding: 5px 0 10px 0;
 }
 
+/* tag formatting is also copy-pasted in template
+   askbot/models/__init__.py:format_instant_notification_email()
+*/
 .tags {
     font-family: sans-serif;
     line-height: 170%;
@@ -1303,11 +1301,6 @@ ins .post-tag {
     text-decoration: none;
 }
 
-#top a.user-micro-info {
-    margin-left:0px;
-    text-decoration:none;
-}
-
 .narrow  .tags {
     float: left;
 }
@@ -1935,11 +1928,6 @@ p.signup_p {
 .faq-rep-item { 
     text-align:right;
     padding-right:5px; 
-}
-
-#top a.ab-nav-karma, #top a.ab-nav-badges {
-    margin: 0;
-    text-decoration: none;
 }
 
 img.gravatar {
