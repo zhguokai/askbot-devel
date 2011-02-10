@@ -2,7 +2,8 @@ import logging
 import re
 import hashlib
 import datetime
-from django.core.urlresolvers import reverse
+import urllib
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
 from django.template import Context
 from django.utils.translation import ugettext as _
@@ -56,6 +57,7 @@ User.add_to_class('reputation',
     models.PositiveIntegerField(default=const.MIN_REPUTATION)
 )
 User.add_to_class('gravatar', models.CharField(max_length=32))
+User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
@@ -70,6 +72,7 @@ User.add_to_class('last_seen',
                   models.DateTimeField(default=datetime.datetime.now))
 User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
 User.add_to_class('website', models.URLField(max_length=200, blank=True))
+#denormed user avatar url
 User.add_to_class('location', models.CharField(max_length=100, blank=True))
 User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
 User.add_to_class('about', models.TextField(blank=True))
@@ -84,6 +87,57 @@ User.add_to_class('tag_filter_setting',
 User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
 User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
+
+GRAVATAR_TEMPLATE = "http://www.gravatar.com/avatar/%(gravatar)s?" + \
+    "s=%(size)d&amp;d=%(type)s&amp;r=PG"
+
+def user_get_gravatar_url(self, size):
+    """returns gravatar url
+    currently identicon is the only supported type
+    """
+    return GRAVATAR_TEMPLATE % {
+                'gravatar': self.gravatar,
+                'size': size,
+                'type': 'identicon'
+            }
+
+def user_get_avatar_url(self, size):
+    """returns avatar url - by default - gravatar,
+    but if application django-avatar is installed
+    it will use avatar provided through that app
+    """
+    if 'avatar' in django_settings.INSTALLED_APPS:
+        if self.has_custom_avatar == False:
+            import avatar
+            if avatar.settings.AVATAR_GRAVATAR_BACKUP:
+                return self.get_gravatar_url(size)
+            else:
+                return avatar.utils.get_default_avatar_url()
+        kwargs = {'user': urllib.quote_plus(self.username), 'size': size}
+        try:
+            return reverse('avatar_render_primary', kwargs = kwargs)
+        except NoReverseMatch:
+            message = 'Please, make sure that avatar urls are in the urls.py '\
+                      'or update your django-avatar app, '\
+                      'currently it is impossible to serve avatars.'
+            logging.critical(message)
+            raise django_exceptions.ImproperlyConfigured(message)
+    else:
+        return self.get_gravatar_url(size)
+
+
+def user_update_has_custom_avatar(self):
+    """counts number of custom avatars
+    and if zero, sets has_custom_avatar to False,
+    True otherwise. The method is called only if
+    avatar application is installed.
+    Saves the object.
+    """
+    if self.avatar_set.count() > 0:
+        self.has_custom_avatar = True
+    else:
+        self.has_custom_avatar = False
+    self.save()
 
 
 def user_get_old_vote_for_post(self, post):
@@ -106,6 +160,10 @@ def user_get_old_vote_for_post(self, post):
 
     return old_votes[0]
 
+def user_can_have_strong_url(self):
+    """True if user's homepage url can be 
+    followed by the search engine crawlers"""
+    return (self.reputation >= askbot_settings.MIN_REP_TO_HAVE_STRONG_URL)
 
 def _assert_user_can(
                         user = None,
@@ -294,21 +352,28 @@ def user_assert_can_edit_comment(self, comment = None):
         return
     else:
         if comment.user == self:
-            now = datetime.datetime.now()
-            if now - comment.added_at > datetime.timedelta(0, 600):
-                if comment.is_last():
-                    return
-                error_message = _(
-                    'Sorry, comments (except the last one) are editable only within 10 minutes from posting'
-                )
-                raise django_exceptions.PermissionDenied(error_message)
-            return
+            if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
+                now = datetime.datetime.now()
+                delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
+                if now - comment.added_at > datetime.timedelta(0, delta_seconds):
+                    if comment.is_last():
+                        return
+                    error_message = ungettext(
+                        'Sorry, comments (except the last one) are editable only '
+                        'within %(minutes)s minute from posting',
+                        'Sorry, comments (except the last one) are editable only '
+                        'within %(minutes)s minutes from posting',
+                        askbot_settings.MINUTES_TO_EDIT_COMMENT
+                    ) % {'minutes': askbot_settings.MINUTES_TO_EDIT_COMMENT}
+                    raise django_exceptions.PermissionDenied(error_message)
+                return
+            else:
+                return
 
     error_message = _(
         'Sorry, but only post owners or moderators can edit comments'
     )
     raise django_exceptions.PermissionDenied(error_message)
-
 
 
 def user_assert_can_post_comment(self, parent_post = None):
@@ -1556,6 +1621,9 @@ User.add_to_class(
             user_get_q_sel_email_feed_frequency
         )
 User.add_to_class('get_absolute_url', user_get_absolute_url)
+User.add_to_class('get_avatar_url', user_get_avatar_url)
+User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('update_has_custom_avatar', user_update_has_custom_avatar)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
@@ -1583,6 +1651,7 @@ User.add_to_class('is_following', user_is_following)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
 User.add_to_class('clean_response_counts', user_clean_response_counts)
+User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
@@ -1840,7 +1909,12 @@ def record_post_update_activity(
                                     mentioned_users = newly_mentioned_users,
                                     exclude_list = [updated_by, ]
                                 )
-
+    #todo: fix this temporary spam protection plug
+    if created:
+        if not (updated_by.is_administrator() or updated_by.is_moderator()):
+            if updated_by.reputation < 15:
+                notification_subscribers = \
+                    [u for u in notification_subscribers if u.is_administrator()]
     send_instant_notifications_about_activity_in_post(
                             update_activity = update_activity,
                             post = post,
@@ -2087,6 +2161,12 @@ def post_stored_anonymous_content(
             for aa in aa_list:
                 aa.publish(user)
 
+def set_user_has_custom_avatar_flag(instance, created, **kwargs):
+    instance.user.update_has_custom_avatar()
+
+def update_user_has_custom_avatar_flag(instance, **kwargs):
+    instance.user.update_has_custom_avatar()
+
 #signal for User model save changes
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
@@ -2097,6 +2177,17 @@ django_signals.post_save.connect(
                             record_favorite_question,
                             sender=FavoriteQuestion
                         )
+if 'avatar' in django_settings.INSTALLED_APPS:
+    from avatar.models import Avatar
+    django_signals.post_save.connect(
+                        set_user_has_custom_avatar_flag,
+                        sender=Avatar
+                    )
+    django_signals.post_delete.connect(
+                        update_user_has_custom_avatar_flag,
+                        sender=Avatar
+                    )
+
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2

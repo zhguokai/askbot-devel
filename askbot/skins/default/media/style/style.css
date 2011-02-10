@@ -449,6 +449,10 @@ blockquote {
     border-spacing: 0px;
 }
 
+.answer-table {
+    border-bottom: 1px solid #bbb;
+}
+
 .evenMore {
     font-size: 14px;
     font-weight: 800;
@@ -1753,14 +1757,16 @@ ul.form-horizontal-rows li input {
 }
 
 .post-controls, .post-tags {
-    clear: left;
-    float: left;
     font-size: 11px;
     line-height: 12px;
     min-width: 200px;
     padding-left: 5px;
     margin-bottom: 5px;
     padding-left: 5px;
+}
+
+.post-controls {
+    float: left;
 }
 
 .post-tags {
@@ -1777,26 +1783,28 @@ ul.form-horizontal-rows li input {
 
 .post-update-info-container {
     float: right;
-    min-width: 190px;
+    min-width: 85px;
 }
 
 .post-update-info {
     display: inline-block;
     float: right;
+    font-size: 11px;
     width: 190px;
     margin-bottom: 5px;
+    line-height: 14px
 }
 
 .post-update-info p {
+    line-height: 13px;
     font-size: 11px;
-    line-height: 15px;
-    margin: 0 0 4px 0;
+    margin: 0 0 2px 1px;
     padding: 0;
 }
 
-.post-update-info img {
+.post-update-info .gravatar {
     float: left;
-    margin: 4px 8px 0 0;
+    margin-right: 4px;
 }
 
 
@@ -1995,6 +2003,16 @@ img.gravatar {
 }
 #re_sections .on {
     font-weight:bold;
+}
+
+.avatar-page ul {
+    list-style: none;
+}
+.avatar-page li {
+    display: inline;
+}
+.user-profile-page .avatar p {
+    margin-bottom: 0px;
 }
 
 .fb-share, .twitter-share {
