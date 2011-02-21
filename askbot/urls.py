@@ -10,7 +10,6 @@ from askbot.feed import RssLastestQuestionsFeed
 from askbot.sitemap import QuestionsSitemap
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from askbot.conf import settings as askbot_settings
 
 admin.autodiscover()
 feeds = {
@@ -40,6 +39,8 @@ urlpatterns = patterns('',
         {'document_root': os.path.join(settings.PROJECT_ROOT, 'askbot', 'upfiles').replace('\\','/')},
         name='uploaded_file',
     ),
+    #no translation for this url!!
+    url(r'import-data/$', views.writers.import_data, name='import_data'),
     url(r'^%s$' % _('about/'), views.meta.about, name='about'),
     url(r'^%s$' % _('faq/'), views.meta.faq, name='faq'),
     url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
@@ -138,19 +139,19 @@ urlpatterns = patterns('',
         name='tags'
     ),
     url(#ajax only
-        r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('interesting/')),
+        r'^%s%s$' % ('mark-tag/', 'interesting/'),
         views.commands.mark_tag,
         kwargs={'reason':'good','action':'add'},
         name='mark_interesting_tag'
     ),
     url(#ajax only
-        r'^%s%s(?P<tag>[^/]+)/$' % (_('mark-tag/'),_('ignored/')),
+        r'^%s%s$' % ('mark-tag/', 'ignored/'),
         views.commands.mark_tag,
         kwargs={'reason':'bad','action':'add'},
         name='mark_ignored_tag'
     ),
     url(#ajax only
-        r'^%s(?P<tag>[^/]+)/$' % _('unmark-tag/'),
+        'unmark-tag/',
         views.commands.mark_tag,
         kwargs={'action':'remove'},
         name='unmark_tag'
@@ -199,7 +200,6 @@ urlpatterns = patterns('',
     ),
     #upload url is ajax only
     url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
-    url(r'^%s$' % _('search/'), views.readers.search, name='search'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
     (r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
@@ -227,4 +227,25 @@ urlpatterns = patterns('',
         },
         name = 'custom_js'
     ),
+    url(
+        r'^jsi18n/$',
+        'django.views.i18n.javascript_catalog',
+        {'packages': ('askbot',)},
+        name = 'askbot_jsi18n'
+    ),
 )
+
+if 'avatar' in settings.INSTALLED_APPS:
+    #unforturately we have to wire avatar urls here,
+    #because views add and change are adapted to
+    #use jinja2 templates
+    urlpatterns += (
+        url('^avatar/add/$', views.avatar_views.add, name='avatar_add'),
+        url('^avatar/change/$', views.avatar_views.change, name='avatar_change'),
+        url('^avatar/delete/$', views.avatar_views.delete, name='avatar_delete'),
+        url(#this urs we inherit from the original avatar app
+            '^avatar/render_primary/(?P<user>[\+\w]+)/(?P<size>[\d]+)/$',
+            'avatar.views.render_primary',
+            name='avatar_render_primary'
+        ),    
+    )

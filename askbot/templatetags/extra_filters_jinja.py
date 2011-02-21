@@ -1,4 +1,3 @@
-import logging
 import datetime
 import time
 from coffin import template as coffin_template
@@ -8,14 +7,24 @@ from django.contrib.humanize.templatetags import humanize
 from django.template import defaultfilters
 from askbot import exceptions as askbot_exceptions
 from askbot import auth
-from askbot import models
-from askbot.deps.grapefruit import Color
 from askbot.conf import settings as askbot_settings
 from askbot.skins import utils as skin_utils
 from askbot.utils import functions
 from askbot.utils.slug import slugify
 
+from django_countries import countries
+from django_countries import settings as countries_settings
+
 register = coffin_template.Library()
+
+@register.filter
+def country_display_name(country_code):
+    country_dict = dict(countries.COUNTRIES)
+    return country_dict[country_code]
+
+@register.filter
+def country_flag_url(country_code):
+    return countries_settings.FLAG_URL % country_code
 
 @register.filter
 def collapse(input):
@@ -201,22 +210,6 @@ def can_see_offensive_flags(user, post):
     else:
         return False
 
-@register.filter
-def can_view_user_edit(request_user, target_user):
-    return auth.can_view_user_edit(request_user, target_user)
-    
-@register.filter
-def can_view_user_votes(request_user, target_user):
-    return auth.can_view_user_votes(request_user, target_user)
-    
-@register.filter
-def can_view_user_preferences(request_user, target_user):
-    return auth.can_view_user_preferences(request_user, target_user)
-    
-@register.filter
-def is_user_self(request_user, target_user):
-    return auth.is_user_self(request_user, target_user)
-    
 @register.filter
 def cnprog_intword(number):
     try:

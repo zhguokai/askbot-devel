@@ -12,7 +12,7 @@
 """
 #!/usr/bin/env python
 #encoding:utf-8
-from django.contrib.syndication.feeds import Feed, FeedDoesNotExist
+from django.contrib.syndication.feeds import Feed
 from django.utils.translation import ugettext as _
 from askbot.models import Question
 from askbot.conf import settings as askbot_settings
@@ -44,6 +44,12 @@ class RssLastestQuestionsFeed(Feed):
         """get date of creation for the item
         """
         return item.added_at
+
+    def item_guid(self, item):
+        """returns url without the slug
+        because the slug can change
+        """
+        return self.link + item.get_absolute_url(no_slug = True)
 
     def items(self, item):
         """get questions for the feed

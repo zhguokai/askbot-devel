@@ -10,30 +10,27 @@ import calendar
 import functools
 import datetime
 import logging
-from django.db.models import Sum, Count
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
-from django.utils import simplejson
 from django.conf import settings as django_settings
-import askbot
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.utils.mail import send_mail
-from askbot import auth
+from askbot.utils.http import get_request_info
 from askbot import forms
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
-from askbot.skins.loaders import ENV
+from askbot.skins.loaders import render_into_skin
 from askbot.templatetags import extra_tags
 
 question_type = ContentType.objects.get_for_model(models.Question)
@@ -69,7 +66,7 @@ def owner_or_moderator_required(f):
 def users(request):
     is_paginated = True
     sortby = request.GET.get('sort', 'reputation')
-    suser = request.REQUEST.get('q',  "")
+    suser = request.REQUEST.get('query',  "")
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -96,9 +93,8 @@ def users(request):
     else:
         sortby = "reputation"
         objects_list = Paginator(
-                            models.User.objects.extra(
-                                                where=['username like %s'],
-                                                params=['%' + suser + '%']
+                            models.User.objects.filter(
+                                                username__icontains = suser
                                             ).order_by(
                                                 '-reputation'
                                             ), 
@@ -124,15 +120,14 @@ def users(request):
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
     data = {
         'active_tab': 'users',
+        'page_class': 'users-page',
         'users' : users_page,
         'suser' : suser,
         'keywords' : suser,
         'tab_id' : sortby,
         'paginator_context' : paginator_context
     }
-    template = ENV.get_template('users.html')
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('users.html', data, request)
 
 def user_moderate(request, subject):
     """user subview for moderation 
@@ -212,6 +207,7 @@ def user_moderate(request, subject):
                                     )
     data = {
         'active_tab': 'users',
+        'page_class': 'user-profile-page',
         'tab_name': 'moderation',
         'tab_description': _('moderate this user'),
         'page_title': _('moderate user'),
@@ -224,9 +220,7 @@ def user_moderate(request, subject):
         'user_rep_changed': user_rep_changed,
         'user_status_changed': user_status_changed
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('user_moderate.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('user_profile/user_moderate.html', data, request)
 
 #non-view function
 def set_new_email(user, new_email, nomessage=False):
@@ -260,6 +254,8 @@ def edit_user(request, id):
             user.location = sanitize_html(form.cleaned_data['city'])
             user.date_of_birth = form.cleaned_data.get('birthday', None)
             user.about = sanitize_html(form.cleaned_data['about'])
+            user.country = form.cleaned_data['country']
+            user.show_country = form.cleaned_data['show_country']
 
             user.save()
             # send user updated signal if full fields have been updated
@@ -273,17 +269,20 @@ def edit_user(request, id):
         form = forms.EditUserForm(user)
     data = {
         'active_tab': 'users',
+        'page_class': 'user-profile-edit-page',
         'form' : form,
         'gravatar_faq_url' : reverse('faq') + '#gravatar',
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('user_edit.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('user_profile/user_edit.html', data, request)
 
 def user_stats(request, user):
 
+    question_filter = {'author': user}
+    if request.user != user:
+        question_filter['is_anonymous'] = False
+
     questions = models.Question.objects.filter(
-                                    author = user
+                                    **question_filter
                                 ).order_by(
                                     '-score', '-last_activity_at'
                                 ).select_related(
@@ -372,6 +371,8 @@ def user_stats(request, user):
 
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
+        'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'tab_name' : 'stats',
         'tab_description' : _('user profile'),
         'page_title' : _('user profile overview'),
@@ -390,9 +391,7 @@ def user_stats(request, user):
         'awarded_badge_counts': dict(awarded_badge_counts),
         'total_awards' : total_awards,
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('user_stats.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('user_profile/user_stats.html', data, request)
 
 def user_recent(request, user):
 
@@ -657,15 +656,14 @@ def user_recent(request, user):
 
     data = {
         'active_tab': 'users',
+        'page_class': 'user-profile-page',
         'tab_name' : 'recent',
         'tab_description' : _('recent user activity'),
         'page_title' : _('profile - recent activity'),
         'view_user' : user,
         'activities' : activities[:const.USER_VIEW_DATA_SIZE]
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('user_recent.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('user_profile/user_recent.html', data, request)
 
 @owner_or_moderator_required
 def user_responses(request, user):
@@ -724,6 +722,7 @@ def user_responses(request, user):
 
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
         'tab_name' : 'inbox',
         'inbox_section':section,
         'tab_description' : _('comments and answers to others questions'),
@@ -731,9 +730,7 @@ def user_responses(request, user):
         'view_user' : user,
         'responses' : response_list,
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('user_inbox.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('user_profile/user_inbox.html', data, request)
 
 @owner_or_moderator_required
 def user_votes(request, user):
@@ -790,15 +787,14 @@ def user_votes(request, user):
 
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
         'tab_name' : 'votes',
         'tab_description' : _('user vote record'),
         'page_title' : _('profile - votes'),
         'view_user' : user,
         'votes' : votes[:const.USER_VIEW_DATA_SIZE]
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('user_votes.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('user_profile/user_votes.html', data, request)
 
 def user_reputation(request, user):
     reputes = models.Repute.objects.filter(user=user).order_by('-reputed_at')
@@ -808,8 +804,6 @@ def user_reputation(request, user):
                             'question__id', 
                             'user__username'
                         )
-    #reputes = reputates.annotate(positive=Sum("positive"), negative=Sum("negative"))
-
     #prepare data for the graph
     rep_list = []
     #last values go in first
@@ -829,6 +823,7 @@ def user_reputation(request, user):
 
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
         'tab_name': 'reputation',
         'tab_description': _('user reputation in the community'),
         'page_title': _('profile - user reputation'),
@@ -836,9 +831,7 @@ def user_reputation(request, user):
         'reputation': reputes,
         'reps': reps
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('user_reputation.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('user_profile/user_reputation.html', data, request)
 
 def user_favorites(request, user):
     favorited_q_id_list= models.FavoriteQuestion.objects.filter(
@@ -858,6 +851,7 @@ def user_favorites(request, user):
                                 )[:const.USER_VIEW_DATA_SIZE]
     data = {
         'active_tab':'users',
+        'page_class': 'user-profile-page',
         'tab_name' : 'favorites',
         'tab_description' : _('users favorite questions'),
         'page_title' : _('profile - favorite questions'),
@@ -865,13 +859,12 @@ def user_favorites(request, user):
         'favorited_myself': favorited_q_id_list,
         'view_user' : user
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('user_favorites.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('user_profile/user_favorites.html', data, request)
 
 @owner_or_moderator_required
 def user_email_subscriptions(request, user):
 
+    logging.debug(get_request_info(request))
     if request.method == 'POST':
         email_feeds_form = forms.EditUserEmailFeedsForm(request.POST)
         tag_filter_form = forms.TagFilterSelectionForm(request.POST, instance=user)
@@ -897,9 +890,9 @@ def user_email_subscriptions(request, user):
         tag_filter_form = forms.TagFilterSelectionForm(instance=user)
         action_status = None
 
-    template = ENV.get_template('user_email_subscriptions.html')
     data = {
         'active_tab': 'users',
+        'page_class': 'user-profile-page',
         'tab_name': 'email_subscriptions',
         'tab_description': _('email subscription settings'),
         'page_title': _('profile - email subscriptions'),
@@ -908,8 +901,11 @@ def user_email_subscriptions(request, user):
         'tag_filter_selection_form': tag_filter_form,
         'action_status': action_status,
     }
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin(
+        'user_profile/user_email_subscriptions.html',
+        data,
+        request
+    )
 
 user_view_call_table = {
     'stats': user_stats,

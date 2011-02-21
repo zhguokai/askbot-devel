@@ -9,43 +9,33 @@ allow adding new comments via Ajax form post.
 import datetime
 import logging
 import urllib
-from django.conf import settings
-from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.template import RequestContext, Context
-from django.template import defaultfilters
-from django.utils.html import *
+from django.template import Context
 from django.utils.http import urlencode
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils import translation
 from django.core.urlresolvers import reverse
-from django.views.decorators.cache import cache_page
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
 
 import askbot
 from askbot import exceptions
-from askbot.utils.html import sanitize_html
-#from lxml.html.diff import htmldiff
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AdvancedSearchForm, AnswerForm, ShowQuestionForm
 from askbot import models
 from askbot.models.badges import award_badges_signal
 from askbot import const
-from askbot import auth
-from askbot.utils import markup
-from askbot.utils.forms import get_next_url
 from askbot.utils import functions
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.templatetags import extra_filters
 import askbot.conf
-from askbot.conf import settings as askbot_settings
-from askbot.skins.loaders import ENV #jinja2 template loading enviroment
+from askbot.skins.loaders import render_into_skin, get_template#jinja2 template loading enviroment
 
 # used in index page
 #todo: - take these out of const or settings
@@ -90,35 +80,17 @@ def questions(request):
     if request.method == 'POST':
         raise Http404
 
-    #todo: redo SearchState to accept input from
-    #view_log, session and request parameters
-    search_state = request.session.get('search_state', SearchState())
-
-    view_log = request.session['view_log']
-
-    if view_log.get_previous(1) != 'questions':
-        if view_log.get_previous(2) != 'questions':
-            #print 'user stepped too far, resetting search state'
-            search_state.reset()
-
-    if request.user.is_authenticated():
-        search_state.set_logged_in()
-
+    #update search state
     form = AdvancedSearchForm(request.GET)
-    #todo: form is used only for validation...
     if form.is_valid():
-        search_state.update_from_user_input(
-                                    form.cleaned_data,
-                                    request.GET,
-                                )
-        #todo: better put these in separately then analyze
-        #what neesd to be done, otherwise there are two routines
-        #that take request.GET I don't like this use of parameters
-        #another weakness is that order of routine calls matters here
-        search_state.relax_stickiness( request.GET, view_log )
-
-        request.session['search_state'] = search_state
-        request.session.modified = True
+        user_input = form.cleaned_data
+    else:
+        user_input = None
+    search_state = request.session.get('search_state', SearchState())
+    view_log = request.session['view_log']
+    search_state.update(user_input, view_log, request.user)
+    request.session['search_state'] = search_state
+    request.session.modified = True
 
     #force reset for debugging
     #search_state.reset()
@@ -154,16 +126,25 @@ def questions(request):
     if request.is_ajax():
 
         q_count = paginator.count
-        question_counter = ungettext(
-                                '%(q_num)s question',
-                                '%(q_num)s questions',
-                                q_count
-                            ) % {
-                                'q_num': humanize.intcomma(q_count),
-                            }
+        if search_state.tags:
+            question_counter = ungettext(
+                                    '%(q_num)s question, tagged',
+                                    '%(q_num)s questions, tagged',
+                                    q_count
+                                ) % {
+                                    'q_num': humanize.intcomma(q_count),
+                                }
+        else:
+            question_counter = ungettext(
+                                    '%(q_num)s question',
+                                    '%(q_num)s questions',
+                                    q_count
+                                ) % {
+                                    'q_num': humanize.intcomma(q_count),
+                                }
 
         if q_count > search_state.page_size:
-            paginator_tpl = ENV.get_template('paginator.html')
+            paginator_tpl = get_template('blocks/paginator.html', request)
             #todo: remove this patch on context after all templates are moved to jinja
             paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
             data = {
@@ -172,9 +153,17 @@ def questions(request):
             paginator_html = paginator_tpl.render(Context(data))
         else:
             paginator_html = ''
+        search_tags = list()
+        if search_state.tags:
+            search_tags = list(search_state.tags)
+        query_data = {
+            'tags': search_tags,
+            'sort_order': search_state.sort
+        }
         ajax_data = {
             #current page is 1 by default now
             #because ajax is only called by update in the search button
+            'query_data': query_data,
             'paginator': paginator_html,
             'question_counter': question_counter,
             'questions': list(),
@@ -228,6 +217,10 @@ def questions(request):
             else:
                 views_class = 'some-views'
 
+            country_code = None
+            if author.country and author.show_country:
+                country_code = author.country.code
+
             question_data = {
                 'title': question.title,
                 'summary': question.summary,
@@ -268,6 +261,8 @@ def questions(request):
                                         ),
                 'u_bronze_badge_symbol': const.BADGE_DISPLAY_SYMBOL,
                 'u_bronze_css_class': bronze_badge_css_class,
+                'u_country_code': country_code,
+                'u_is_anonymous': question.is_anonymous,
             }
             ajax_data['questions'].append(question_data)
 
@@ -286,10 +281,10 @@ def questions(request):
     if meta_data.get('author_name',None):
         reset_method_count += 1
 
-    template_context = RequestContext(request, {
+    template_data = {
         'language_code': translation.get_language(),
         'reset_method_count': reset_method_count,
-        'view_name': 'questions',
+        'page_class': 'main-page',
         'active_tab': 'questions',
         'questions' : page,
         'contributors' : contributors,
@@ -307,39 +302,17 @@ def questions(request):
         'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
         'scope': search_state.scope,
         'context' : paginator_context,
-    })
+        'name_of_anonymous_user' : models.get_name_of_anonymous_user()
+    }
 
     assert(request.is_ajax() == False)
     #ajax request is handled in a separate branch above
 
     #before = datetime.datetime.now()
-    template = ENV.get_template('questions.html')
-    response = HttpResponse(template.render(template_context))
+    response = render_into_skin('main_page.html', template_data, request)
     #after = datetime.datetime.now()
     #print after - before
     return response
-
-def search(request): #generates listing of questions matching a search query - including tags and just words
-    """redirects to people and tag search pages
-    todo: eliminate this altogether and instead make
-    search "tab" sensitive automatically - the radio-buttons
-    are useless under the search bar
-    """
-    if request.method == "GET":
-        search_type = request.GET.get('t')
-        query = request.GET.get('query')
-        try:
-            page = int(request.GET.get('page', '1'))
-        except ValueError:
-            page = 1
-        if search_type == 'tag':
-            return HttpResponseRedirect(reverse('tags') + '?' + urlencode({'q':query.strip(),'page': page}))
-        elif search_type == 'user':
-            return HttpResponseRedirect(reverse('users') + '?' + urlencode({'q':query.strip(),'page': page}))
-        else:
-            raise Http404
-    else:
-        raise Http404
 
 def tags(request):#view showing a listing of available tags - plain list
     stag = ""
@@ -351,9 +324,17 @@ def tags(request):#view showing a listing of available tags - plain list
         page = 1
 
     if request.method == "GET":
-        stag = request.GET.get("q", "").strip()
+        stag = request.GET.get("query", "").strip()
         if stag != '':
-            objects_list = Paginator(models.Tag.objects.filter(deleted=False).exclude(used_count=0).extra(where=['name like %s'], params=['%' + stag + '%']), DEFAULT_PAGE_SIZE)
+            objects_list = Paginator(
+                            models.Tag.objects.filter(
+                                                deleted=False,
+                                                name__icontains=stag
+                                            ).exclude(
+                                                used_count=0
+                                            ),
+                            DEFAULT_PAGE_SIZE
+                        )
         else:
             if sortby == "name":
                 objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name"), DEFAULT_PAGE_SIZE)
@@ -377,17 +358,15 @@ def tags(request):#view showing a listing of available tags - plain list
     }
     paginator_context = extra_tags.cnprog_paginator(paginator_data)
     data = {
-        'view_name':'tags',
         'active_tab': 'tags',
+        'page_class': 'tags-page',
         'tags' : tags,
         'stag' : stag,
         'tab_id' : sortby,
         'keywords' : stag,
         'paginator_context' : paginator_context
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('tags.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('tags.html', data, request)
 
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and 
@@ -410,8 +389,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #in the case if the permalinked items or their parents are gone - redirect
     #redirect also happens if id of the object's origin post != requested id
     show_post = None #used for permalinks
-    #import pdb
-    #pdb.set_trace()
     if show_comment is not None:
         #comments
         try:
@@ -501,7 +478,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     objects_list = Paginator(filtered_answers, const.ANSWERS_PAGE_SIZE)
     if show_page > objects_list.num_pages:
-        return HttpResponseRediect(question.get_absolute_url())
+        return HttpResponseRedirect(question.get_absolute_url())
     page_objects = objects_list.page(show_page)
 
     #count visits
@@ -566,7 +543,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
 
     data = {
-        'view_name': 'question',
+        'page_class': 'question-page',
         'active_tab': 'questions',
         'question' : question,
         'question_vote' : question_vote,
@@ -586,9 +563,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     }
     if request.user.is_authenticated():
         data['tags_autocomplete'] = _get_tags_cache_json()
-    context = RequestContext(request, data)
-    template = ENV.get_template('question.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('question.html', data, request)
 
 def revisions(request, id, object_name=None):
     assert(object_name in ('Question', 'Answer'))
@@ -603,14 +578,12 @@ def revisions(request, id, object_name=None):
         else:
             revision.diff = htmldiff(revisions[i-1].html, revision.html)
     data = {
-        'view_name':'answer_revisions',
+        'page_class':'revisions-page',
         'active_tab':'questions',
         'post': post,
         'revisions': revisions,
     }
-    context = RequestContext(request, data)
-    template = ENV.get_template('revisions.html')
-    return HttpResponse(template.render(context))
+    return render_into_skin('revisions.html', data, request)
 
 @ajax_only
 @anonymous_forbidden

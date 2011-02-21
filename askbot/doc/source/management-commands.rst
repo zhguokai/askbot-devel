@@ -37,10 +37,24 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | any of the external login providers.                        |
 +---------------------------------+-------------------------------------------------------------+
 | `dump_forum [--dump-name        | Save forum contents into a file. `--dump-name` parameter is |
-| some_name`]                     | optional                                                    |
+| some_name]`                     | optional                                                    |
++---------------------------------+-------------------------------------------------------------+
+| `get_tag_stats [-u|-t] [-e]`    | Print tag subscription statistics, per tag (option -t)      |
+|                                 | or per user (option -u), if option -e is given, empty       |
+|                                 | records will be shown too (longer versions of the options   |
+|                                 | are: --per-tag-subscription-counts for -t,                  |
+|                                 | --per-user-tag-subscription-counts for -u, and --print-empty|
+|                                 | for -e).                                                    |
 +---------------------------------+-------------------------------------------------------------+
 | `load_forum <file_name>`        | Load forum data from a file saved by the `dump_forum`       |
 |                                 | command                                                     |
++---------------------------------+-------------------------------------------------------------+
+| `load_stackexchange <file.zip>` | Load SackExchange dump into Askbot. It is best to run this  |
+|                                 | command on empty database. Also - before running, make sure |
+|                                 | that `askbot.importers.stackexchange` is in the list of     |
+|                                 | installed apps within your settings.py file (it might also  |
+|                                 | be necessary to run `syncdb` command to initiate the        |
+|                                 | SE importer tables).                                        |
 +---------------------------------+-------------------------------------------------------------+
 | `rename_tags --from <from_tags> | Rename, merge or split tags. User ID is the id of the user  |
 | --to <to_tags> --user-id        | who will be assigned as the performer of the retag action.  |
@@ -98,7 +112,15 @@ The commands from this section will help fix those issues.
 +--------------------------------+-------------------------------------------------------------+
 | `fix_answer_counts`            | recalculates answer counts for all questions                |
 +--------------------------------+-------------------------------------------------------------+
+| `fix_inbox_counts`             | recalculates response counts in the user inboxes            |
++--------------------------------+-------------------------------------------------------------+
 | `fix_revisionless_posts`       | adds a revision record to posts that lack them              |
++--------------------------------+-------------------------------------------------------------+
+| `fix_question_tags`            | takes tag names from the record on the question table       |
+|                                | and stores them in the tag table. This defect may show when |
+|                                | the server process is interrupted after the question was    |
+|                                | saved, but tags were not updated, and the symptom is that   |
+|                                | the question cannot be found via the tag search.            |
 +--------------------------------+-------------------------------------------------------------+
 
 The above commands are safe to run at any time, also they do not require 

@@ -1,6 +1,6 @@
 from django.core.management.base import NoArgsCommand
-from django.contrib.auth.models import User, Group
-from django.db.models.signals import pre_save, post_save, pre_delete, post_delete
+from django.contrib.auth.models import User
+from django.db.models.signals import pre_save, post_save
 import sys
 
 class Command(NoArgsCommand):
@@ -41,6 +41,5 @@ class Command(NoArgsCommand):
         self.confirm_action()
         self.remove_signals()
 
-        self.user.is_superuser = False
-        self.user.is_staff = False
+        self.user.remove_admin_status()
         self.user.save()

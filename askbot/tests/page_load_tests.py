@@ -56,7 +56,7 @@ class PageLoadTests(PageLoadTestCase):
         self.assertEqual(response.status_code, 200)
         self.failUnless(len(response.redirect_chain) == 1)
         self.failUnless(response.redirect_chain[0][0].endswith('/questions/'))
-        self.assertEquals(response.template.name, 'questions.html')
+        self.assertEquals(response.template.name, 'main_page.html')
 
     def proto_test_non_user_urls(self):
         """test all reader views thoroughly
@@ -82,67 +82,62 @@ class PageLoadTests(PageLoadTestCase):
         #todo: test different sort methods and scopes
         self.try_url(
                 'questions',
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'start_over':'true'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'unanswered'},
-                template='questions.html'
-            )
-        self.try_url(
-                'questions',
-                data={'scope':'all'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
                 data={'scope':'favorite'},
-                template='questions.html'
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
-                data={'scope':'unanswered', 'sort':'latest'},
-                template='questions.html'
+                data={'scope':'unanswered', 'sort':'age-desc'},
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
-                data={'scope':'unanswered', 'sort':'oldest'},
-                template='questions.html'
+                data={'scope':'unanswered', 'sort':'age-asc'},
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
-                data={'scope':'unanswered', 'sort':'active'},
-                template='questions.html'
+                data={'scope':'unanswered', 'sort':'activity-desc'},
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
-                data={'scope':'unanswered', 'sort':'inactive'},
-                template='questions.html'
+                data={'scope':'unanswered', 'sort':'activity-asc'},
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
-                data={'sort':'hottest'},
-                template='questions.html'
+                data={'sort':'answers-desc'},
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
-                data={'sort':'coldest'},
-                template='questions.html'
+                data={'sort':'answers-asc'},
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
-                data={'sort':'mostvoted'},
-                template='questions.html'
+                data={'sort':'votes-desc'},
+                template='main_page.html'
             )
         self.try_url(
                 'questions',
-                data={'sort':'leastvoted'},
-                template='questions.html'
+                data={'sort':'votes-asc'},
+                template='main_page.html'
             )
         self.try_url(
                 'question',
@@ -236,6 +231,11 @@ class PageLoadTests(PageLoadTestCase):
                 status_code=200,
                 follow=True,
             )
+        self.try_url(
+                'faq',
+                template='faq.html',
+                status_code=200,
+            )
 
     def test_non_user_urls(self):
         self.proto_test_non_user_urls()
@@ -252,13 +252,13 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'stats'}, 
-            template='user_stats.html'
+            template='user_profile/user_stats.html'
         )
         self.try_url(
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'recent'}, 
-            template='user_recent.html'
+            template='user_profile/user_recent.html'
         )
         self.try_url(
             'user_profile', 
@@ -271,7 +271,7 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'reputation'}, 
-            template='user_reputation.html'
+            template='user_profile/user_reputation.html'
         )
         self.try_url(
             'user_profile', 
@@ -284,7 +284,7 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'favorites'}, 
-            template='user_favorites.html'
+            template='user_profile/user_favorites.html'
         )
         self.try_url(
             'user_profile', 

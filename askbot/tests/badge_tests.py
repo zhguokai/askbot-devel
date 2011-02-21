@@ -469,3 +469,36 @@ class BadgeTests(AskbotTestCase):
         self.u3.toggle_favorite_question(question)
         #dont reaward
         self.assert_have_badge('stellar-question', self.u1, 1)
+
+    def test_commentator_badge(self):
+        question = self.post_question(user = self.u1)
+        min_comments = settings.COMMENTATOR_BADGE_MIN_COMMENTS
+        for i in xrange(min_comments - 1):
+            self.post_comment(user = self.u1, parent_post = question)
+
+        self.assert_have_badge('commentator', self.u1, 0)
+        self.post_comment(user = self.u1, parent_post = question) 
+        self.assert_have_badge('commentator', self.u1, 1)
+        self.post_comment(user = self.u1, parent_post = question) 
+        self.assert_have_badge('commentator', self.u1, 1)
+
+    def test_taxonomist_badge(self):
+        self.post_question(user = self.u1, tags = 'test')
+        min_use = settings.TAXONOMIST_BADGE_MIN_USE_COUNT
+        for i in xrange(min_use - 2):
+            self.post_question(user = self.u2, tags = 'test')
+        self.assert_have_badge('taxonomist', self.u1, 0)
+        self.post_question(user = self.u2, tags = 'test')
+        self.assert_have_badge('taxonomist', self.u1, 1)
+
+    def test_enthusiast_badge(self):
+        yesterday = datetime.datetime.now() - datetime.timedelta(1)
+        self.u1.last_seen = yesterday
+        prev_visit_count = settings.ENTHUSIAST_BADGE_MIN_DAYS - 1
+        self.u1.consecutive_days_visit_count = prev_visit_count
+        self.u1.save()
+        self.assert_have_badge('enthusiast', self.u1, 0)
+        self.client.login(method = 'force', user_id = self.u1.id)
+        self.client.get('/')
+        self.assert_have_badge('enthusiast', self.u1, 1)
+

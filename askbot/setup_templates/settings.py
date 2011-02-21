@@ -1,4 +1,4 @@
-# Django settings for ASKBOT enabled project.
+## Django settings for ASKBOT enabled project.
 import os.path
 import logging
 import sys
@@ -115,7 +115,7 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 
 #TEMPLATE_DIRS = (,) #template have no effect in askbot, use the variable below
-#ASKBOT_EXTRA_SKIN_DIRS = (,)#path to your skin collection
+#ASKBOT_EXTRA_SKIN_DIR = #path to your private skin collection
 #take a look here http://askbot.org/en/question/207/
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -145,6 +145,10 @@ INSTALLED_APPS = (
     'askbot.deps.livesettings',
     'keyedcache',
     'robots',
+    'django_countries',
+    'staticfiles',
+    #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
+    #requires setting of MEDIA_ROOT and MEDIA_URL
 )
 
 

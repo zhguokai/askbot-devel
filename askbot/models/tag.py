@@ -6,7 +6,7 @@ from askbot.models.base import DeletableContent
 
 
 class TagManager(models.Manager):
-    UPDATE_USED_COUNTS_QUERY ="""
+    UPDATE_USED_COUNTS_QUERY = """
         UPDATE tag 
         SET used_count = (
             SELECT COUNT(*) FROM question_tags 
@@ -27,8 +27,8 @@ class TagManager(models.Manager):
         cursor = connection.cursor()
         query = self.UPDATE_USED_COUNTS_QUERY % ','.join(['%s'] * len(tags))
         cursor.execute(query, [tag.id for tag in tags])
-        transaction.commit_unless_managed()
 
+        transaction.commit_unless_managed() 
     def get_related_to_search(
                             self,
                             questions=None,
@@ -88,7 +88,7 @@ class Tag(DeletableContent):
         return self.name
 
 class MarkedTag(models.Model):
-    TAG_MARK_REASONS = (('good',_('interesting')),('bad',_('ignored')))
+    TAG_MARK_REASONS = (('good', _('interesting')), ('bad', _('ignored')))
     tag = models.ForeignKey('Tag', related_name='user_selections')
     user = models.ForeignKey(User, related_name='tag_selections')
     reason = models.CharField(max_length=16, choices=TAG_MARK_REASONS)

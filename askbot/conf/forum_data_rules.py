@@ -2,18 +2,17 @@
 Settings for askbot data display and entry
 """
 from askbot.conf.settings_wrapper import settings
-from askbot.deps.livesettings import ConfigurationGroup, BooleanValue, IntegerValue
-from askbot.deps.livesettings import StringValue
+from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
 from askbot import const
 
-FORUM_DATA_RULES = ConfigurationGroup(
+FORUM_DATA_RULES = livesettings.ConfigurationGroup(
                         'FORUM_DATA_RULES',
                         _('Settings for askbot data entry and display')
                     )
 
 settings.register(
-    BooleanValue(
+    livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'WIKI_ON',
         default=True,
@@ -22,7 +21,21 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ALLOW_ASK_ANONYMOUSLY',
+        default=True,
+        description=_('Allow asking questions anonymously'),
+        help_text=_(
+            'Users do not accrue reputation for anonymous questions '
+            'and their identity is not revealed until they change their '
+            'mind'
+        )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_TAG_LENGTH',
         default=20,
@@ -31,7 +44,22 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'FORCE_LOWERCASE_TAGS',
+        default = False,
+        description = _('Force lowercase the tags'),
+        help_text = _(
+                        'Attention: after checking this, please back up the database, '
+                        'and run a management command: '
+                        '<code>python manage.py fix_question_tags</code> to globally '
+                        'rename the tags'
+                     )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_COMMENTS_TO_SHOW',
         default=5,
@@ -42,7 +70,7 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_COMMENT_LENGTH',
         default=300,
@@ -53,7 +81,39 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'USE_TIME_LIMIT_TO_EDIT_COMMENT',
+        default = True,
+        description = _('Limit time to edit comments'),
+        help_text = _(
+                        'If unchecked, there will be no time '
+                        'limit to edit the comments'
+                    )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MINUTES_TO_EDIT_COMMENT',
+        default = 10,
+        description = _('Minutes allowed to edit a comment'),
+        help_text = _('To enable this setting, check the previous one')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'SAVE_COMMENT_ON_ENTER',
+        default = True,
+        description = _('Save comment by pressing <Enter> key')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MIN_SEARCH_WORD_LENGTH',
         default=4,
@@ -63,7 +123,22 @@ settings.register(
 )
 
 settings.register(
-    IntegerValue(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'DECOUPLE_TEXT_QUERY_FROM_SEARCH_STATE',
+        default=False,
+        description=_('Do not make text query sticky in search'),
+        help_text=_(
+            'Check to disable the "sticky" behavior of the search query. '
+            'This may be useful if you want to move the search bar away '
+            'from the default position or do not like the default '
+            'sticky behavior of the text search query.'
+        )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_TAGS_PER_POST',
         default=5,
@@ -74,7 +149,7 @@ settings.register(
 #todo: looks like there is a bug in askbot.deps.livesettings 
 #that does not allow Integer values with defaults and choices
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         FORUM_DATA_RULES,
         'DEFAULT_QUESTIONS_PAGE_SIZE',
         choices=const.PAGE_SIZE_CHOICES,
@@ -84,7 +159,7 @@ settings.register(
 )
 
 settings.register(
-    StringValue(
+    livesettings.StringValue(
         FORUM_DATA_RULES,
         'UNANSWERED_QUESTION_MEANING',
         choices=const.UNANSWERED_QUESTION_MEANING_CHOICES,

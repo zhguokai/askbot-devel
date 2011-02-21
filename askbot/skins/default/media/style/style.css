@@ -2,7 +2,7 @@
 
 body {
     background: #FFF;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 150%;
     margin: 0;
     padding: 0;
@@ -37,8 +37,9 @@ input, select {
 
 p {
     margin-bottom: 13px;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 140%;
+    padding-left: 5px;
 }
 
 a {
@@ -56,106 +57,27 @@ a:hover {
     text-decoration: underline;
 }
 
-.block {
-    width: 960px;
-    height: auto;
+h1 {
+    font-size: 160%;
+    padding: 10px 0 5px 5px;
 }
 
-.fleft {
+.users-page h1, .tags-page h1 {
     float: left;
 }
 
-.fright {
-    float: right;
-}
-
-.tleft {
-    text-align: left;
-}
-
-.tcenter {
-    text-align: center;
-}
-
-.tright {
-    text-align: right;
-}
-
-.dis {
-    display: block;
-}
-
-.inline {
-    display: inline;
-}
-
-.none {
-    display: none;
-}
-
-.red {
-    color: #CC0000;
-}
-
-.b {
-    font-weight: bold;
-}
-
-.f10 {
-    font-size: 10px;
-}
-
-.f11 {
-    font-size: 11px;
-}
-
-.f12 {
-    font-size: 12px;
-}
-
-.f13 {
-    font-size: 13px;
-}
-
-.f14 {
-    font-size: 14px;
-}
-
-.white {
-    color: #FFFFFF;
-}
-
-.u {
-    text-decoration: underline;
-}
-
-.spacer1 {
-    height: 6px;
-    line-height: 6px;
-    clear: both;
-    visibility: hidden;
-}
-
-.spacer3 {
-    height: 30px;
-    line-height: 30px;
-    clear: both;
-    visibility: hidden;
-}
-
-h1 {
-    font-size: 160%;
-    padding: 5px 0 5px 0;
+.main-page h1 {
+    margin-right: 5px;
 }
 
 h2 {
     font-size: 140%;
-    padding: 3px 0 3px 0;
+    padding: 3px 0 3px 5px;
 }
 
 h3 {
     font-size: 120%;
-    padding: 3px 0 3px 0;
+    padding: 3px 0 3px 5px;
 }
 
 ul {
@@ -185,10 +107,10 @@ pre {
     font-size: 100%;
     margin-bottom: 10px;
     overflow: auto;
-    width: 580px;
     background-color: #F5F5F5;
     padding-left: 5px;
     padding-top: 5px;
+    width: 671px;
     padding-bottom: 20px ! ie7;
 }
 
@@ -205,121 +127,109 @@ blockquote {
     background-color: #F5F5F5;
 }
 
-#wrapper {
+.content-wrapper {/* wrapper positioning class */
     width: 960px;
     margin: auto;
-    padding: 0;
+    position:relative;
 }
 
-#roof {
-    position: relative;
+#ab-header {
     margin-top: 0px;
     background: #FFF;
 }
 
-#room {
-    padding: 0 0 10px 0;
-    background-color: #FFF;
+#ab-header .content-wrapper {
+    height: 90px;/* same as logo height */
 }
 
 #CALeft {
     width: 710px;
     float: left;
     position: relative;
-    padding-left: 0 5px;
-
+    padding: 0 5px 10px 5px;
 }
 
 #CARight {
-    width: 235px;
+    width: 230px;
     float: right;
-    padding-right: 5px;
+    padding: 0 5px 10px 5px;
 }
 
 #CAFull {
     float: left;
-    padding: 0 5px;
+    padding: 0 5px 10px 5px;
     width: 950px;
 }
 
 #ground {
     width: 100%;
+    clear: both;
     border-top: 1px solid #000;
-    padding-top: 6px;
-    padding-bottom: 0px;
+    padding: 6px 0 0 0;
     text-align: center;
     background: #777;
 }
 
-/*#licenseLogo {position:absolute;top:10px;right:10px;}*/
-
-/* why is this called top? - this contains links like login, faq, etc */
-#top {
-    position: absolute;
-    top: 0px;
-    right: 250px;
-    height: 20px;
-    text-align: right;
-    padding: 3px;
-    background-color: #ffffff;
-}
-
-/*#header {width:960px;}*/
-#top a {
-    height: 35px;
-    text-align: right; /*letter-spacing:1px; */
-    margin-left: 20px;
-    text-decoration: underline;
-    font-size: 12px;
-    color: #555555;
-}
-
-#top a.ab-responses-envelope {
-    margin-left: 3px;
-}
-#top a img {
-    vertical-align:middle;
-    margin-bottom:2px;
-}
-
-#logo {
+#ab-logo {
     padding: 0px 0px 0px 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     height: 90px;
     width: 70px;
 }
 
-#logoContainer {
-}
-#navTabContainer {
-    width: 610px;
-    padding-left: 10px;
-    text-align: left;
+#ab-meta-nav,
+#ab-main-nav {
+    position: absolute;
+    left: 100px;
 }
 
-/* navBar includes logo, main tabs and links like logout, about, faq */
-#navBar {
-    float: clear;
-    position: relative;
-    display: block;
-    width: 960px;
+#ab-meta-nav {
+    top: 0px;
+    height: 20px;
+    padding: 3px;
+    margin: 0;
 }
 
-#navBar .nav {
-    margin: 20px 0px 0px 0px; /*letter-spacing:1px; */
+#ab-meta-nav a {
+    height: 35px;
+    text-align: right;
+    margin-left: 20px;
+    text-decoration: underline;
+    color: #555555;
 }
 
-#navBar .nav a {
+#ab-meta-nav a:first-child {
+    margin-left: 0;
+}
+
+#ab-meta-nav a#ab-responses {
+    margin-left: 3px;
+}
+#ab-meta-nav a img {
+    vertical-align:middle;
+    margin-bottom:2px;
+}
+
+#ab-meta-nav .user-info a {
+    margin: 0;
+    text-decoration: none;
+}
+
+#ab-main-nav {
+    bottom: 0;
+}
+
+#ab-main-nav a {
     color: #333333;
     background-color: #fff0e0;
-    /*border-left: 1px solid #eeeeec;
-                 border-right: 1px solid #babdb6;
-                 border-top: 1px solid #eeeeec;*/
     border: 1px solid #888888;
     border-bottom: none;
     padding: 0px 12px 3px 12px;
     height: 25px;
     line-height: 30px;
-    margin-left: 10px;
+    margin-right: 10px;
     font-size: 18px;
     font-weight: 100;
     text-decoration: none;
@@ -327,11 +237,11 @@ blockquote {
     float: left;
 }
 
-#navBar .nav a:hover {
-    text-decoration: underline
+#ab-main-nav a:hover {
+    text-decoration: underline;
 }
 
-#navBar .nav a.on {
+#ab-main-nav a.on {
     height: 24px;
     line-height: 28px;
     border-bottom: 1px solid #a40000;
@@ -344,21 +254,15 @@ blockquote {
     text-decoration: none
 }
 
-#navBar .nav a.special {
+#ab-main-nav a.special {
     font-size: 18px;
     color: #B02B2C;
     font-weight: bold;
     text-decoration: none;
 }
 
-#navBar .nav a.special:hover {
+#ab-main-nav a.special:hover {
     text-decoration: underline;
-}
-
-/* todo: this is probably not used any more */
-#navBar .nav div.focus {
-    float: right;
-    padding-right: 0px;
 }
 
 #searchBar {
@@ -366,49 +270,44 @@ blockquote {
     background-color: #cccccc;/*888a85; /*#e9b96e;*/
     width:700px;
     border: 1px solid #aaaaaa;
-    padding: 4px 7px 5px 5px;
+    padding: 4px 5px 4px 4px;
 }
 
-#searchBar .searchInput {
+#searchBar .searchInput, #searchBar .searchInputCancelable {
     font-size: 24px;
     line-height: 24px;
-    height: 36px;
-    width: 605px;
-    margin: 0px 3px 0px 0px;
+    height: 31px;
+    margin: 0px 4px 0px 0px;
     padding: 5px 0 0 5px;
+}
+
+#searchBar .searchInput, #searchBar .searchInputCancelable {
+    width: 607px;
 }
 
 #searchBar .searchInputCancelable {
-    font-size: 24px;
-    line-height: 24px;
-    height: 36px;
-    width: 561px;
-    padding: 5px 0 0 5px;
-    margin: 0px 3px 0px 0px;
+    width: 564px;
+}
+
+#searchBar .searchBtn, #searchBar .cancelSearchBtn {
+    font-size: 20px;
+    color: #666;
+    background-color: #eee;
+    height: 40px;
+    border: 1px solid #aaa;
+    line-height: 22px;
+    text-align: center;
+    padding-bottom: 4px;
 }
 
 #searchBar .searchBtn {
-    font-size: 20px;
-    color: #666666;
-    height: 40px;
-    width: 80px;
-    width: 80px;
-    width: 80px;
-    line-height: 22px;
     margin: 0px;
-    text-align: center;
-    padding-bottom: 4px;
+    width: 78px;
 }
 
 #searchBar .cancelSearchBtn {
-    font-size: 20px;
-    color: #666666;
-    height: 40px;
     width: 40px;
-    line-height: 22px;
     margin: 0px 3px 0px 0px;
-    padding-bottom: 4px;
-    text-align: center;
 }
 
 #askFormBar {
@@ -430,145 +329,134 @@ blockquote {
     padding: 5px 0 0 5px;
 }
 
-
-#searchBar .options {
-    padding: 3px 0 3px 0;
-    font-size: 100%;
-    color: #EEE; /*letter-spacing:1px;*/
-}
-
-#searchBar .options INPUT {
-    margin: 0 3px 0 15px;
-}
-
-#searchBar .options INPUT:hover {
-    cursor: pointer
-}
-
-/*问题列表*/
-#listA {
+#question-list {
     float: left;
     background-color: #FFF;
     padding: 0;
     width: 100%;
 }
 
-#listA .qstA {
-    position: relative;
-    padding: 3px 5px 5px 10px;
-    border-top: 1px dashed #ccccce;
-    /*border-left:1px solid #ebebbe;
-    border-right:1px solid #b4b48e;
-    border-bottom:1px solid #b4b48e;*/
-    background: white; /* #f9f7ed;*/
-/*margin:10px 0 10px 0;*/
-/*background:url(../images/quest-bg.gif) repeat-x top;*/
+/* tag formatting is also copy-pasted in template
+   because it must be the same in the emails
+   askbot/models/__init__.py:format_instant_notification_email()
+*/
+ul.tags,
+ul.tags.marked-tags,
+ul#related-tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: 170%;
+    display: block;
 }
 
-#listA .qstA thumb {
+ul.tags li {
+    float:left;
+    display: block;
+    margin: 0 5px 0 0;
+    padding: 0;
+}
+
+ul.tags.marked-tags li {
+    margin-bottom: 5px;
+}
+
+#tagSelector div.inputs {
+    clear: both;
+    float: none;
+}
+
+.tags-page ul.tags li,
+ul#ab-user-tags li {
+    width: 160px;
+}
+
+ul#related-tags li {
+    margin: 0 5px 3px 0;
     float: left;
+    clear: left;
 }
 
-#listA .qstA H2 {
-    font-size: 14px;
-    font-weight: 800;
-    margin: 8px auto;
-    padding: 0px;
+/* .tag-left and .tag-right are for the sliding doors decoration of tags */
+.tag-left {
+    background: url(../images/tag-right.png) no-repeat right center;
+    border: none;
+    display: block;
+    float: left;
+    height: 18px;
+    margin: 0 5px 0 0;
+    overflow-x: hidden;
+    padding: 0;
 }
 
-#listA .qstA H2 a {
-    color: 333333 /*#2e3436*/;
-    font-size: 15px;
-}
-
-#listA .qstA .stat {
-    position: absolute;
-    right: 0px;
-    bottom: 5px;
-    font-size: 12px; /*letter-spacing:1px;*/
-    float: right;
-}
-
-#listA .qstA .stat span {
-    margin-right: 5px;
-}
-
-#listA .qstA .stat td {
-    min-width: 40px;
+.tag-right {
+    background: url(../images/tag-left.png) no-repeat left center;
+    border: none;
+    display: block;
+    float: left;
+    height: 18px;
+    line-height: 20px;
+    font-weight: normal;
+    font-size: 11px;
+    padding: 0px 7px 0px 15px;
+    text-decoration: none;
     text-align: center;
-}
-
-#listA .qstA .stat .num {
-    font-family: sans-serif;
-    color: #a40000;
-    /*background:#eeeeec;
- border: 1px solid #babdb6;*/
-    margin: 0px;
-    font-size: 17px;
-    font-weight: 800;
-}
-
-#listA .qstA table {
-    border-spacing: 0px;
-}
-
-#listA .qstA table td {
-    padding: 0px;
-    width: 60px;
-    text-align: center;
-}
-
-#listA .qstA .stat .unit {
-    color: #777777;
-    margin: 0px
-}
-
-#listA .qstA .from {
-    margin-top: 5px;
-    font-size: 13px;
-    color: #777777;
-}
-
-#listA .qstA .from .score {
-    font-family: sans-serif;
-    color: #555555;
-}
-
-#listA .qstA .date {
-    margin-left: 10px;
-    color: #777777;
-}
-
-#listA .qstA .wiki {
-    color: #763333;
-    font-size: 12px;
-}
-
-#listA .qstA .from a {
-}
-
-#listA .qstA .from IMG {
+    white-space: nowrap;
     vertical-align: middle;
 }
 
-#listA .qstA .author {
-    font-weight: 400;
+.deletable-tag {
+    margin-right: 3px;
+    white-space: nowrap;
 }
 
-#listA .qstA .author a {
-    color: #444444;
+.deletable-tag .tag-right {
+    padding-right: 0px;
+    float: left;
+}
+.deletable-tag.tag-left {
+    padding-right: 3px;
 }
 
-#listA .qstA .summary {
-    margin-right: 5px;
+.tags a.tag-right,
+.tags span.tag-right {
+    color: #333;
+    text-decoration: none;
+}
+
+span.delete-icon {
+    padding-left: 13px;
+    vertical-align: bottom;
+    background: url(../images/close-small-dark.png) no-repeat;
+}
+span.delete-icon:hover {
+    background: url(../images/close-small-hover.png) no-repeat;
+}
+
+.tags span.delete-icon {
+    float: left;
+    height: 15px;
+    margin: 2px 0 0 1px;
+    display: block;
+}
+
+.tag-number {
+    font-weight: 700;
+    display: block;
+    float: left;
+    font-family: sans-serif;
+}
+
+ul#search-tags {
+    padding-top: 3px;
 }
 
 .short-summary {
     position: relative;
-    padding: 3px 5px 5px 10px;
+    padding: 5px 2px 5px 2px;
     border-top: 1px dashed #ccccce;
     overflow: hidden;
-    width: 700px;
+    width: 702px;
     float: left;
 }
 
@@ -577,16 +465,24 @@ blockquote {
     font-family: "Trebuchet MS", "segoe ui", arial, sans-serif;
 }
 
+.short-summary .userinfo .relativetime,
+.short-summary .userinfo a,
+.short-summary span.anonymous {
+    font-size: 11px;
+    clear:both;
+    font-weight: normal;
+    color: #555;
+}
+
+
 .short-summary .userinfo {
-    float: right;
-    margin-top: 8px;
+    text-align:center;
+    line-height:16px;
 }
 
 .short-summary .counts {
     float: right;
-    margin-top: 4px;
-    margin-right: 10px;
-    margin-left: 5px;
+    margin: 2px 0 0 5px;
 }
 
 .short-summary .counts .item-count {
@@ -598,56 +494,78 @@ blockquote {
     font-weight: 800;
 }
 
-.short-summary .counts .votes div {
-    padding-top:1px;
+.short-summary .counts .votes div,
+.short-summary .counts .views div,
+.short-summary .counts .answers div
+{
+    font-size: 12px;
+    line-height:14px;
+    color: #555;
 }
 
-.no-votes {
+.short-summary .tags {
+    margin-top: 0;
+}
+
+.no-votes .item-count {
     background: white;
     color: gray;
 }
-.some-votes {
+.some-votes .item-count {
     background: #a3d0ff;
     color: #4a4a4a;
 }
-.no-answers {
+.no-answers .item-count {
     background: #b63333;
     color: yellow;
 }
-.some-answers {
+.some-answers .item-count {
     background: #ffed9c;
     color: #a4a4a4;
 }
-.accepted {
+.accepted .item-count {
     background:#338333;
     color:#d0f5a9;
 }
-.no-views {
+.no-views .item-count {
     background: gray;
     color: white;
 }
-.some-views {
+.some-views .item-count {
     background: #ff8c8c;
     color: #4a4a4a;
 }
 
 .short-summary .votes,
-.short-summary .status,
+.short-summary .answers,
 .short-summary .views {
-    font-size: 12px;
     text-align: center;
-    margin: 0 0 0 7px;
+    margin: 0 3px;
     padding: 4px 2px 0px 2px;
     width: 46px;
-    height: 48px;
     float: left;
     -moz-border-radius: 5px;
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;
 }
 
-#question-table {
-    margin-bottom: 10px; /*border-bottom:1px solid #888a85;*/
+.short-summary .views {
+    width: 36px;
+    padding-right: 0;
+}
+
+.short-summary h2 {
+    padding-left: 0;
+}
+
+#question-table,
+.answer-table {
+    margin: 2px 0 10px 0;
+    border-spacing: 0px;
+}
+
+.answer-table {
+    border-bottom: 1px solid #bbb;
 }
 
 .evenMore {
@@ -659,99 +577,23 @@ blockquote {
     text-decoration: underline;
 }
 
-.questions-count {
-    font-size: 32px;
-    font-family: sans-serif;
-    font-weight: 600;
-    padding: 0 0 5px 0px;
-    color: #a40000;
-    margin-top: 3px;
-}
-
-/*内容块*/
-.boxA {
-    background: #888a85;
-    padding: 6px;
-    margin-bottom: 8px;
-    border 1px solid #babdb6;
-}
-
-.boxA H3 {
-    font-size: 13px;
-    font-weight: 800;
-    color: #FFF;
-    margin: 0;
-    padding: 0;
-    margin-bottom: 4px;
-}
-
-.boxA .body {
-    border: 1px solid #999;
-    padding: 8px;
-    background: #FFF;
-    font-size: 13px;
-}
-
-.boxA .more {
-    padding: 2px;
-    text-align: right;
-    font-weight: 800;
-}
-
-.boxB {
-    background: #F9F7ED;
-    padding: 6px;
-    margin-bottom: 8px;
-    border: solid 1px #aaaaaa;
-}
-
-.boxB H3 {
-    font-size: 13px;
-    font-weight: 800;
-    color: #000;
-    margin: 0;
-    padding: 0 0 0 15px;
-    margin-bottom: 4px;
-    background: url(../images/dot-g.gif) no-repeat left center;
-}
-
-.boxB .body {
-    border: 1px solid #aaaaaa;
-    padding: 8px;
-    background: #FFF;
-    font-size: 13px;
-    line-height: 160%;
-}
-
-.boxB .more {
-    padding: 1px;
-    text-align: right;
-    font-weight: 800;
-}
-
 .boxC {
     background: white /*#cacdc6; /*f9f7ed;*/
     padding: 10px 10px 10px 15px;
-    margin-bottom: 8px;
-    /*
-    border-top: 1px solid #eeeeec;
-    border-left: 1px solid #eeeeec;
-    border-right: 1px solid #a9aca5;
-    border-bottom: 1px solid #babdb6;
-    */
+    margin-bottom: 12px;
 }
 
 .boxC p {
-    margin-bottom: 8px;
-}
-
-.boxC p.nomargin {
-    margin: 0px;
+    margin-bottom: 4px;
 }
 
 .boxC p.info-box-follow-up-links {
     text-align: right;
     margin: 0;
+}
+
+.boxC h2 {
+    padding-left: 0;
 }
 
 .pager {
@@ -773,20 +615,6 @@ blockquote {
     font: normal 12px sans-serif;
 }
 
-.paginator .prev-na,
-.paginator .next-na {
-    padding: .3em;
-    font: bold .875em sans-serif;
-}
-
-.paginator .prev-na,
-.paginator .next-na {
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    color: #aaa;
-    font-weight: normal;
-}
-
 .paginator .prev a, .paginator .prev a:visited,
 .paginator .next a, .paginator .next a:visited {
     border: 1px solid #fff;
@@ -796,11 +624,11 @@ blockquote {
     font: bold 100% sans-serif;
 }
 
-.paginator .prev, .paginator .prev-na {
+.paginator .prev {
     margin-right: .5em;
 }
 
-.paginator .next, .paginator .next-na {
+.paginator .next {
     margin-left: .5em;
 }
 
@@ -836,97 +664,23 @@ blockquote {
     font: bold 100% sans-serif;
 }
 
-.paginator-container {
-    float: right;
-    padding: 10px 0 10px 0;
-}
-
 .paginator-container-left {
     padding: 5px 0 10px 0;
 }
 
-/*标签*/
-/* todo: probably needs to be removed
-conflicts with WMD!
-.tag {
-    font-size: 13px;
-    font-weight: normal;
-    color: #333;
-    text-decoration: none;
-    background-color: #EEE;
-    border-left: 3px solid #777;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 1px 8px 1px 8px;
-}
-*/
-
-.tags {
-    font-family: sans-serif;
-    line-height: 200%;
-    display: block;
-    margin-top: 5px;
+p.rss {
+    float: right;
+    font-size: 12px;
+    color: #666;
+    margin: 0 2px 0 0;
 }
 
-.tags a {
-    white-space: nowrap;
-    font-size: 11px;
-    font-weight: normal;
-    color: #333;
-    text-decoration: none;
-    background-color: #EEE;
-    border-left: 3px solid #777;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 1px 8px 1px 8px;
-    margin-right:3px;
+p.rss a {
+    padding-left: 16px;
+    background: url(../images/feed-icon-small.png) no-repeat;
 }
 
-.tags a:hover {
-    background-color: #fFF;
-    color: #333;
-}
-
-.tagsbox {
-    line-height: 200%;
-}
-
-.tagsbox a {
-    font-size: 13px;
-    font-weight: normal;
-    color: #333;
-    text-decoration: none;
-    background-color: #EEE;
-    border-left: 3px solid #777;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 1px 8px 1px 8px;
-}
-
-.tagsbox a:hover {
-    background-color: #fFF;
-    color: #333;
-}
-
-.tag-number {
-    font-weight: 700;
-    font-family: sans-serif;
-}
-
-.marked-tags {
-    margin-top: 0px;
-    margin-bottom: 5px;
-}
-
-.deletable-tag {
-    margin-right: 3px;
-    white-space: nowrap;
-}
-
-/*奖牌*/
+/* badges */
 a.medal {
     font-size: 14px;
     line-height: 250%;
@@ -960,6 +714,10 @@ a:hover.medal {
     clear: both;
     margin-bottom: 3px;
     margin-top: 3px;
+}
+
+.tabBar h2 {
+    float: left;
 }
 
 .tabsA, .tabsC {
@@ -1003,7 +761,7 @@ a:hover.medal {
     float: left;
     height: 20px;
     line-height: 22px;
-    margin: 5px 4px 0 0;
+    margin: 5px 0 0 4px;
     padding: 0 11px 0 11px;
     text-decoration: none;
 }
@@ -1012,7 +770,7 @@ a:hover.medal {
     float: left;
     font-weight: bold; 
     color: #777;
-    margin: 8px 4px 0 4px;
+    margin: 8px 0 0 0px;
 }
 
 .tabsB a {
@@ -1026,142 +784,6 @@ a:hover.medal {
     margin: 5px 0px 0 4px;
     padding: 0 11px 0 11px;
     text-decoration: none;
-}
-
-.headlineA {
-    font-size: 13px;
-    border-bottom: 1px solid #777;
-    padding-bottom: 2px;
-    font-weight: 800;
-    margin-bottom: 12px;
-    text-align: right;
-    height: 30px;
-}
-
-.headQuestions {
-    height: 23px;
-    line-height: 23px;
-    margin: 5px 0 0 5px;
-    padding: 0px 6px 0px 15px;
-    font-size: 15px;
-    font-weight: 700;
-    border-bottom: 0px solid #777;
-    border-left: 0px solid #darkred;
-    background-color: #FFF;
-    background: url(../images/dot-list.gif) no-repeat left center;
-}
-
-.headAnswers {
-    float: left;
-    padding: 3px;
-    font-size: 18px;
-    font-weight: 800;
-    background: url(../images/ico_answers.gif) left 2px no-repeat;
-    padding-left: 24px;
-}
-
-.headTags {
-    float: left;
-    padding: 3px;
-    font-size: 18px;
-    font-weight: 800;
-    background: url(../images/ico_tags.gif) no-repeat;
-    padding-left: 24px;
-}
-
-/* todo: make this class applicable to all headers it is actually uses in tags.html too */
-.headUsers {
-    float: left;
-    height: 23px;
-    line-height: 23px;
-    margin: 5px 0 0 5px;
-    padding: 0px 6px 0px 15px;
-    font-size: 15px;
-    font-weight: 700;
-    border-bottom: 0px solid #777;
-    border-left: 0px solid #darkred;
-    background-color: #FFF;
-    background: url(../images/dot-list.gif) no-repeat left center;
-}
-
-.headMedals {
-    float: left;
-    height: 23px;
-    line-height: 23px;
-    margin: 5px 0 0 5px;
-    padding: 0px 6px 0px 15px;
-    font-size: 15px;
-    font-weight: 700;
-    border-bottom: 0px solid #777;
-    border-left: 0px solid #darkred;
-    background-color: #FFF;
-    background: url(../images/dot-list.gif) no-repeat left center;
-}
-
-.headLogin {
-    float: left;
-    padding: 3px;
-    font-size: 15px;
-    font-weight: 800;
-    background: url(../images/ico_login.gif) no-repeat;
-    padding-left: 24px;
-}
-
-.headNormal {
-    text-align: left;
-    padding: 3px;
-    font-size: 15px;
-    margin-bottom: 12px;
-    font-weight: bold;
-    border-bottom: 1px solid #777;
-}
-
-.headUser {
-    text-align: left;
-    padding: 5px;
-    font-size: 20px; /*letter-spacing:1px;*/
-    margin-bottom: 12px;
-    font-weight: 800;
-    border-bottom: 1px solid #777;
-}
-
-/*RSS订阅*/
-#feeds {
-    margin: 10px 0;
-}
-
-#feeds a {
-    background: url(../images/feed-icon-small.png) no-repeat 0;
-    padding-left: 18px;
-    font-weight: 700;
-    font-size: 13px;
-}
-
-/*问题*/
-#question {
-    margin-bottom: 30px;
-}
-
-#question h1 {
-    font-size: 15px;
-    background: #CCC;
-    padding: 6px 8px;;
-}
-
-#question .body {
-    background: #F7F7F7;
-    padding: 20px 10px;
-}
-
-.starter {
-    padding: 10px;
-    background: #E0EAF1;
-}
-
-.vote {
-    font-size: 20px;
-    color: #666;
-    font-weight: 800;
 }
 
 .questions-related {
@@ -1186,35 +808,19 @@ a:hover.medal {
     font-size: 125%;
 }
 
-.question-body {
-    min-height: 100px;
-    font-size: 13px;
+.question-body, .answer-body {
+    min-height: 39px;
     line-height: 20px;
 }
 
-.question-body IMG {
+.question-body IMG, .answer-body IMG {
     max-width: 600px;
-}
-
-.question-mark {
-    /*background-color:#fff5e0;
-    border-top: 1px solid #eeeeec;
-    border-right: 1px solid #babdb6;
-    border-bottom: 1px solid #babdb6;
-    border-left: 1px solid #eeeeec;*/
-    text-align: left;
-    padding: 5px;
-    overflow: hidden;
-}
-
-.question-edit {
-    text-align: left;
-    overflow: hidden;
 }
 
 .vote-buttons {
     float: left;
     text-align: center;
+    padding-top: 2px;
 }
 
 .vote-buttons IMG {
@@ -1291,14 +897,8 @@ a:hover.medal {
     color: #ccc;
 }
 
-.wiki-category {
-    margin-left: 5px;
-    color: #999;
-    font-size: 90%;
-}
-
 .comments {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 15px;
     clear: both;
 }
@@ -1308,7 +908,7 @@ a:hover.medal {
     background: url(../images/gray-up-arrow-h18px.png) no-repeat;
     width: 100%;
     padding-left: 12px;
-    margin: 3px 0 20px 0;
+    margin: 3px 0 20px 5px;
 }
 
 .comments textarea {
@@ -1317,7 +917,7 @@ a:hover.medal {
     width: 664px;
     margin: 0 0 4px 0;
     font-family: sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 15px;
     padding: 2px 0 0 2px;
 }
@@ -1388,26 +988,6 @@ div.comments {
     text-decoration: underline;
 }
 
-/*回答*/
-#answers {
-}
-
-.answer {
-    padding-top: 10px;
-    width: 100%;
-    border-bottom: 1px solid #ccccce;
-}
-
-.answer-body {
-    min-height: 80px;
-    font-size: 13px;
-    line-height: 20px;
-}
-
-.answer-body IMG {
-    max-width: 600px;
-}
-
 .accepted-answer {
     background-color: #EBFFE6;
     border-bottom-color: #9BD59B;
@@ -1429,11 +1009,6 @@ div.comments {
 .answered-accepted {
     background: #CCC;
     color: #763333;
-}
-
-.unanswered {
-    background: #777;
-    color: white;
 }
 
 .answered-by-owner {
@@ -1460,33 +1035,12 @@ div.comments {
     background: #F4E7E7 none repeat scroll 0 0;
 }
 
-/*标签列表*/
-/*
-.tagsbox {}
-.tagsbox a {color:#000;line-height:30px;margin-right:10px;font-size:100%;background-color:#F9F7ED;padding:3px;border:1px solid #aaaaaa;}
-.tagsbox a:hover {text-decoration:none;background-color:#F9F7ED;color:#B02B2C;} */
-.tagsList {
-    margin: 0;
-    list-style-type: none;
-    padding: 0px;
-}
 
-.tagsList li {
-    width: 235px;
-    float: left;
-}
-
-.badge-list {
-    margin: 0;
-    list-style-type: none;
-}
-
-/*登录*/
-.list-item {
+.boxC ul {
     margin-left: 15px;
 }
 
-.list-item LI {
+.boxC li {
     list-style-type: disc;
     font-size: 13px;
     line-height: 20px;
@@ -1528,9 +1082,6 @@ table.ab-tag-filter-form {
     width: 45em;
 }
 
-/*.form-row li label {
-    display: inline
-}*/
 .submit-row {
     line-height: 30px;
     padding-top: 10px;
@@ -1555,12 +1106,7 @@ label.retag-error {
     font-size: 10px;
 }
 
-.error-list li {
-    padding: 5px;
-}
-
 .fieldset {
-/*	border:solid 1px #777;*/
     border: none;
     margin-top: 10px;
     padding: 10px;
@@ -1593,18 +1139,6 @@ label.retag-error {
     font-size: 120%;
 }
 
-.openid-samples {
-
-}
-
-.openid-samples .list, .list li {
-    font-family: Trebuchet MS, "segoe ui", Helvetica, "Microsoft YaHei", 宋 体, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
-    list-style: none !important;
-    margin-left: -30px !important;
-    line-height: 20px !important;
-}
-
-/*表单相关*/
 span.form-error {
     color: #990000;
     font-size: 90%;
@@ -1631,7 +1165,7 @@ span.form-error {
 }
 
 .wmd-preview {
-    margin: 0;
+    margin: 3px 0 5px 0;
     padding: 6px;
     width: 691px;
     background-color: #F5F5F5;
@@ -1665,13 +1199,32 @@ span.form-error {
     margin-top: 10px;
 }
 
+.checkbox {
+    margin-left:5px;
+    font-weight:normal;
+    cursor:help
+}
+
+.question-options {
+    margin-top: 1px;
+    float: left;
+    color: #666;
+    line-height: 13px;
+}
+.question-options label {
+    vertical-align: text-bottom;
+}
+
+.ask-page input.submit,
+.edit-question-page input.submit {
+    float: left;
+}
+
 .edit-content-html {
     border-top: 1px dotted #D8D2A9;
     border-bottom: 1px dotted #D8D2A9;
     margin: 5px 0 5px 0;
 }
-
-/*修订记录*/
 
 .revision {
     margin: 10px 0 10px 0;
@@ -1720,11 +1273,6 @@ span.form-error {
     font-family: sans-serif;
 }
 
-.revision .body {
-    padding-left: 10px;
-    margin-bottom: 50px;
-}
-
 .revision .answerbody {
     padding: 10px 0 5px 10px;
 }
@@ -1760,6 +1308,7 @@ ins .post-tag {
     font-weight: 800;
     color: #777;
     line-height: 40px; /*letter-spacing:0px*/
+    margin-top: 3px;
 }
 
 .user-details {
@@ -1773,11 +1322,6 @@ ins .post-tag {
     overflow: auto;
     padding: 10px;
     width: 90%;
-}
-
-.user-edit-link {
-    background: url(../images/edit.png) no-repeat;
-    padding-left: 20px;
 }
 
 .favorites-count-off {
@@ -1796,36 +1340,16 @@ ins .post-tag {
     text-align: center;
 }
 
+/* todo: get rid of this in html */
 .favorites-empty {
     width: 32px;
     height: 45px;
     float: left;
 }
 
-.question-summary {
-    border-bottom: 1px dotted #999999;
-    float: left;
-    overflow: hidden;
-    padding: 11px 0;
-    width: 670px;
-}
-
 .user-info-table {
-    width: 950;
     margin-bottom: 10px;
-}
-
-.user-stats-table .question-summary {
-    width: 800px;
-}
-
-.narrow .stats {
-    float: left;
-    height: 48px;
-    margin: 0 0 0 7px;
-    padding: 0;
-    width: auto;
-    font-family: Arial;
+    border-spacing: 0;
 }
 
 /* todo: remove this hack? */
@@ -1833,101 +1357,9 @@ ins .post-tag {
     width: 660px;
 }
 
-.stats div {
-    font-size: 11px;
-    text-align: center;
-}
-
-/*
-.narrow .votes {
-    background: #EEEEEE none repeat scroll 0 0;
-    float: left;
-    height: 42px;
-    margin: 0 3px 0 0;
-    padding: 5px;
-    width: 46px;
-    text-align: center;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-}
-*/
-
-/*
-.narrow .summary {
-    width: 600px;
-    display: inline-block;
-}
-*/
-
 .narrow .summary h3 {
     padding: 0px;
     margin: 0px;
-}
-
-/* todo: delete commented out stuff */
-/*
-.narrow .views {
-    height: 42px;
-    float: left;
-    margin: 0 7px 0 0; *//*padding:5px 0 5px 4px;*//*
-    padding: 5px;
-    width: 46px;
-    text-align: center;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    color: #777;
-}
-*/
-
-.narrow .status {
-    float: left;
-    height: 42px;
-    margin: 0 3px 0 0;
-    padding: 5px;
-    width: 46px;
-    text-align: center;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-}
-
-.narrow .vote-count-post {
-    font-weight: 800;
-    display: block;
-    margin: 0;
-    font-size: 190%;
-    color: #555;
-    line-height: 20px;
-}
-
-.narrow .answer-count-post {
-    font-weight: 800;
-    display: block;
-    margin: 0;
-    font-size: 190%;
-}
-
-.narrow .views-count-post {
-    font-weight: 800;
-    display: block;
-    margin: 0;
-    font-size: 190%;
-}
-
-div.started {
-    color: #999999;
-    float: right;
-    line-height: 18px;
-
-}
-
-.narrow div.started {
-    line-height: inherit;
-    padding-top: 4px;
-    white-space: nowrap;
-    width: auto;
 }
 
 .relativetime {
@@ -1935,20 +1367,7 @@ div.started {
     text-decoration: none;
 }
 
-div.started a {
-    font-weight: bold;
-}
-
-div.started .reputation-score {
-    margin-left: 1px;
-}
-
-#top a.user-micro-info {
-    margin-left:0px;
-    text-decoration:none;
-}
-
-.narrow  .tags {
+.narrow .tags {
     float: left;
 }
 
@@ -1980,10 +1399,7 @@ div.started .reputation-score {
     color: #777;
 }
 
-.user-action {
-
-}
-
+/* todo: make these more semantic */
 .user-action-1 {
     font-weight: bold;
     color: #333;
@@ -2035,6 +1451,7 @@ div.started .reputation-score {
     color: #333;
 }
 
+/* todo: make these more semantic */
 .post-type-1 a {
     font-weight: bold;
 
@@ -2065,66 +1482,6 @@ div.started .reputation-score {
     color: #333;
 }
 
-/*读书频道*/
-.bookInfo {
-    float: left;
-    width: 940px;
-    padding: 5px;
-}
-
-.bookCover {
-    float: left;
-    width: 200px;
-}
-
-.bookCover img {
-    border: 1px solid #ccc;
-    max-width: 200px;
-}
-
-.bookSummary {
-    float: left;
-    font-size: 13px;
-}
-
-.blogRss {
-    float: right;
-    margin: 0 10px 0 0;
-    width: 460px;
-    height: 240px;
-    background-color: #EEE;
-    padding: 5px;
-}
-
-.bookQuestions {
-    margin-bottom: 10px;
-}
-
-.bookFeed {
-    float: right;
-}
-
-.bookAsk {
-/*letter-spacing:1px; */
-    float: right;
-    margin: -30px 10px 0 0;
-    padding: 3px 5px 3px 5px;
-}
-
-.bookAsk a {
-    font-size: 15px;
-    color: #FFF;
-    font-weight: bold;
-    text-decoration: none;
-    background-color: #EC7000;
-    padding: 3px 6px 3px 6px;
-}
-
-.bookAsk a:hover {
-    text-decoration: underline;
-}
-
-/*其他全局样式*/
 .hilite {
     background-color: #ff0;
 }
@@ -2139,16 +1496,6 @@ div.started .reputation-score {
 
 .hilite3 {
     background-color: #0ff;
-}
-
-.userStatus {
-    margin-left: 12px;
-    color: #FFF;
-    float: right;
-}
-
-.userStatus a {
-    color: #FFF;
 }
 
 .gold, .badge1 {
@@ -2178,29 +1525,14 @@ div.started .reputation-score {
     font-size: 13px;
 }
 
-.subSearch {
-    margin-bottom: 12px;
-    padding: 4px;
-}
-
 a.comment {
     background: #EEE;
     color: #993300;
     padding: 5px;
 }
 
-a.permLink {
-    padding: 2px;
-}
-
 a.offensive {
     color: #999;
-}
-
-ul.bulleta li {
-    background: url(../images/bullet_green.gif) no-repeat 0px 2px;
-    padding-left: 16px;
-    margin-bottom: 4px;
 }
 
 .user {
@@ -2219,10 +1551,6 @@ ul.bulleta li {
     float: left;
     margin-right: 4px;
     display: inline;
-}
-
-.yellowbg {
-    background: yellow;
 }
 
 .message {
@@ -2286,10 +1614,6 @@ button::-moz-focus-inner {
     padding-right: 10px;
 }
 
-.thousand {
-    color: orange;
-}
-
 .notify {
     position: fixed;
     top: 0px;
@@ -2331,15 +1655,11 @@ button::-moz-focus-inner {
     font-size: 15px;
 }
 
-.bigger {
-    font-size: 14px;
-}
-
 .strong {
     font-weight: bold;
 }
 
-.orange {
+.orange {/* used in django.po */
     color: #d64000;
     font-weight: bold;
 }
@@ -2351,27 +1671,6 @@ button::-moz-focus-inner {
 .about div {
     padding: 10px 5px 10px 5px;
     border-top: 1px dashed #aaaaaa;
-}
-
-.about div.first {
-    padding-top: 0;
-    border-top: none;
-}
-
-.about p {
-    margin-bottom: 10px;
-}
-
-.about a {
-    color: #d64000;
-    text-decoration: underline;
-}
-
-.about h3 {
-    line-height: 30px;
-    font-size: 15px;
-    font-weight: 700;
-    padding-top: 0px;
 }
 
 .highlight {
@@ -2412,11 +1711,6 @@ button::-moz-focus-inner {
     -webkit-border-radius: 5px;
 }
 
-.tight {
-    margin: 0;
-    padding: 0;
-}
-
 .list-table td {
     vertical-align: top;
 }
@@ -2426,12 +1720,6 @@ button::-moz-focus-inner {
     margin: 0;
     color: #444;
     padding: 2px 3px 5px 3px;
-}
-
-.delete-icon {
-    vertical-align: middle;
-    padding-left: 1px;
-    margin-bottom:3px;
 }
 
 /* these need to go */
@@ -2515,51 +1803,39 @@ ul.form-horizontal-rows li input {
     margin: 0px;
 }
 
-#emailpw-form li input {
-    left: 170px;
-}
-
-#emailpw-form ul.errorlist {
-    left: 170px;
-}
-
-#changepw-form li input {
-    left: 150px;
-}
-
-#changepw-form ul.errorlist {
-    left: 150px;
-}
-
 .narrow .summary {
     float: left;
 }
 
-.narrow .summary .question-title {
-    font-weight: bold;
-    font-size: 120%;
-}
-
 .user-profile-tool-links {
-    padding-bottom: 10px;
     font-weight: bold;
+    vertical-align: top;
 }
 
 .post-controls, .post-tags {
-    clear: left;
-    float: left;
     font-size: 11px;
     line-height: 12px;
     min-width: 200px;
+    padding-left: 5px;
     margin-bottom: 5px;
 }
 
-.post-tags {
-    margin-bottom:8px;
+.post-controls {
+    clear: left;
+    float: left;
 }
 
-.post-retag {
+ul.post-tags {
+    margin-left: 7px;
+}
+ul.post-tags li {
+    margin-top: 4px;
+    margin-bottom: 3px;
+}
+
+ul.post-retag {
     margin-bottom:0px;
+    margin-left:5px;
 }
 
 #question-controls .tags {
@@ -2568,26 +1844,28 @@ ul.form-horizontal-rows li input {
 
 .post-update-info-container {
     float: right;
-    min-width: 190px;
+    min-width: 85px;
 }
 
 .post-update-info {
     display: inline-block;
     float: right;
+    font-size: 11px;
     width: 190px;
     margin-bottom: 5px;
+    line-height: 14px
 }
 
 .post-update-info p {
+    line-height: 13px;
     font-size: 11px;
-    line-height: 15px;
-    margin: 0 0 4px 0;
+    margin: 0 0 2px 1px;
     padding: 0;
 }
 
-.post-update-info img {
+.post-update-info .gravatar {
     float: left;
-    margin: 4px 8px 0 0;
+    margin-right: 4px;
 }
 
 
@@ -2595,27 +1873,22 @@ ul.form-horizontal-rows li input {
     color: #444;
 }
 
-.admin {
-    background-color: #fff380; /* nice yellow */
-    border: 1px solid darkred;
-    padding: 0 5px 0 5px;
-}
-
-.admin p {
-    margin-bottom: 3px;
-}
-
-.admin #action_status {
-    text-align: center;
-    font-weight: bold;
-}
-
 #tagSelector {
     padding-bottom: 2px;
+    margin-bottom: 0;
+}
+
+#related-tags {
+    padding-left: 3px;
 }
 
 #hideIgnoredTagsControl {
     margin: 5px 0 0 0;
+}
+
+#hideIgnoredTagsControl label {
+    font-size: 12px;
+    color: #666;
 }
 
 #hideIgnoredTagsCb {
@@ -2670,7 +1943,7 @@ p.signup_p {
 }
 
 .karma-diagram {
-    width:390px;
+    width:377px;
     height:300px;
     float:left;
     margin-right:10px;
@@ -2703,18 +1976,22 @@ p.signup_p {
 .search-result-summary {
     font-weight: bold;
     font-size:18px;
-    line-height:30px;
-    margin:0px 0px 0px 5px;
-    padding:0px;
+    line-height:22px;
+    margin:0px 0px 0px 0px;
+    padding:2px 0 0 0;
+    float: left;
 }
 .search-tips {
     font-size:12px;
     line-height:12px;
-    margin:0 0 5px 5px;
+    color: #555;
+    margin:0 0 5px 0;
     padding:0px;
+    clear:both;
 }
 .search-tips a {
     text-decoration: underline;
+    color: #555;
 }
 
 .faq-rep-item { 
@@ -2722,13 +1999,11 @@ p.signup_p {
     padding-right:5px; 
 }
 
-#top a.ab-nav-karma, #top a.ab-nav-badges {
-    margin: 0;
-    text-decoration: none;
-}
-
 img.gravatar {
     margin:2px;
+}
+.user-info-table .gravatar {
+    margin:0;
 }
 
 .vote-notification {
@@ -2779,6 +2054,38 @@ img.gravatar {
     font-weight:bold;
 }
 
+.avatar-page ul {
+    list-style: none;
+}
+.avatar-page li {
+    display: inline;
+}
+.user-profile-page .avatar p {
+    margin-bottom: 0px;
+}
+.user-profile-page .tabBar a#stats {
+    margin-left: 0;
+}
+.user-profile-page img.gravatar {
+    margin: 2px 0 3px 0;
+}
+.user-profile-page h3 {
+    padding: 0;
+    margin-top: -3px;
+}
+.userList {
+    font-size: 13px;
+}
+
+img.flag {
+    border: 1px solid #eee;
+    vertical-align: text-top;
+}
+
+.main-page img.flag {
+    vertical-align: text-bottom;
+}
+
 .fb-share, .twitter-share {
     background: url(../images/sprite.png) no-repeat;
     text-indent:-100em;
@@ -2807,7 +2114,7 @@ a.edit {
 .lit { color: #066; }
 .pun { color: #660; }
 .pln { color: #000; }
-.tag { color: #008; }
+.tag { color: #008; }/* name conflict here */
 .atn { color: #606; }
 .atv { color: #080; }
 .dec { color: #606; }

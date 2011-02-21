@@ -31,9 +31,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import datetime
-from django.utils import simplejson
-from django.http import HttpResponseRedirect, get_host, Http404, \
-                         HttpResponseServerError
+from django.http import HttpResponseRedirect, get_host, Http404
 from django.http import HttpResponse
 from django.template import RequestContext, Context
 from django.conf import settings
@@ -45,11 +43,8 @@ from django.core.urlresolvers import reverse
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
-from django.utils.http import urlquote_plus
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
-from django.views.defaults import server_error
-
 from askbot.skins.loaders import ENV
 
 from askbot.deps.openid.consumer.consumer import Consumer, \
@@ -62,18 +57,16 @@ try:
 except ImportError:
     from yadis import xri
 
-import re
 import urllib
-
 from askbot import forms as askbot_forms
 from askbot.deps.django_authopenid import util
 from askbot.deps.django_authopenid import decorators
-from askbot.deps.django_authopenid.models import UserAssociation, UserPasswordQueue, ExternalLoginData
+from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
-from django import forms as django_forms
 import logging
 from askbot.utils.forms import get_next_url
+from askbot.utils.http import get_request_info
 
 #todo: decouple from askbot
 def login(request,user):
@@ -125,7 +118,6 @@ def ask_openid(
             sreg_request=None
         ):
     """ basic function to ask openid and return response """
-    request.encoding = 'UTF-8'
     on_failure = on_failure or signin_failure
     
     trust_root = getattr(
@@ -275,7 +267,6 @@ def signin(
     template : authopenid/signin.htm
     """
     logging.debug('in signin view')
-    request.encoding = 'UTF-8'
     on_failure = signin_failure
     email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
 
@@ -843,7 +834,7 @@ def signup_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
     """
-
+    logging.debug(get_request_info(request))
     next = get_next_url(request)
     #this is safe because second decorator cleans this field
     provider_name = request.REQUEST['login_provider']
@@ -997,7 +988,7 @@ def _send_email_key(user):
     """private function. sends email containing validation key
     to user's email address
     """
-    subject = _("Email verification subject line")
+    subject = _("Recover your %(site)s account") % {'site': askbot_settings.APP_SHORT_NAME}
     message_template = ENV.get_template('authopenid/email_validation.txt')
     import settings
     message_context = Context({
@@ -1082,7 +1073,7 @@ def account_recover(request, key = None):
         if user:
             if request.user.is_authenticated():
                 if user != request.user:
-                    logout(request.user)
+                    logout(request)
                     login(request, user)
             else:
                 login(request, user)

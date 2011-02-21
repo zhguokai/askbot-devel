@@ -1,4 +1,3 @@
-import random
 import logging
 import datetime
 from django.conf import settings
@@ -13,10 +12,11 @@ from django.utils.translation import ugettext as _
 import askbot
 import askbot.conf
 from askbot import exceptions
-from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import Tag
 from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
 from askbot.models.base import parse_post_text, parse_and_save_post
 from askbot.models import content
+from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.utils.slug import slugify
@@ -37,7 +37,16 @@ QUESTION_ORDER_BY_MAP = {
 }
 
 class QuestionManager(models.Manager):
-    def create_new(self, title=None,author=None,added_at=None, wiki=False,tagnames=None, text=None):
+    def create_new(
+                self,
+                title = None,
+                author = None,
+                added_at = None,
+                wiki = False,
+                is_anonymous = False,
+                tagnames = None,
+                text = None
+            ):
 
         question = Question(
             title = title,
@@ -46,6 +55,7 @@ class QuestionManager(models.Manager):
             last_activity_at = added_at,
             last_activity_by = author,
             wiki = wiki,
+            is_anonymous = is_anonymous,
             tagnames = tagnames,
             #html field is denormalized in .save() call
             text = text,
@@ -55,7 +65,6 @@ class QuestionManager(models.Manager):
             #DATED COMMENT
             #todo: this is confusing - last_edited_at field
             #is used as an indicator whether question has been edited
-            #in template askbot/skins/default/templates/post_contributor_info.html
             #but in principle, post creation should count as edit as well
             question.last_edited_by = question.author
             question.last_edited_at = added_at
@@ -65,10 +74,11 @@ class QuestionManager(models.Manager):
         question.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
 
         question.add_revision(
-            author=author,
-            text=text,
-            comment=const.POST_STATUS['default_version'],
-            revised_at=added_at,
+            author = author,
+            is_anonymous = is_anonymous,
+            text = text,
+            comment = const.POST_STATUS['default_version'],
+            revised_at = added_at,
         )
         return question
 
@@ -115,12 +125,14 @@ class QuestionManager(models.Manager):
                            | models.Q(answers__text__search = search_query)
                         )
             elif settings.DATABASE_ENGINE == 'postgresql_psycopg2':
-                rank_clause = "ts_rank(question.text_search_vector, to_tsquery('%s'))";
+                rank_clause = "ts_rank(question.text_search_vector, to_tsquery(%s))";
                 search_query = '&'.join(search_query.split())
+                extra_params = ("'" + search_query + "'",)
                 extra_kwargs = {
-                    'select': {'relevance': rank_clause % search_query},
+                    'select': {'relevance': rank_clause},
                     'where': ['text_search_vector @@ to_tsquery(%s)'],
-                    'params': ["'" + search_query + "'"]
+                    'params': extra_params,
+                    'select_params': extra_params,
                 }
                 if askbot.conf.should_show_sort_by_relevance():
                     if sort_method == 'relevance-desc':
@@ -235,7 +247,9 @@ class QuestionManager(models.Manager):
                         'last_activity_by__reputation',
                         'last_activity_by__gold',
                         'last_activity_by__silver',
-                        'last_activity_by__bronze'
+                        'last_activity_by__bronze',
+                        'last_activity_by__country',
+                        'last_activity_by__show_country',
                     )
 
         related_tags = Tag.objects.get_related_to_search(
@@ -309,6 +323,7 @@ class Question(content.Content, DeletableContent):
     summary              = models.CharField(max_length=180)
 
     favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions') 
+    is_anonymous = models.BooleanField(default=False) 
 
     objects = QuestionManager()
 
@@ -331,6 +346,17 @@ class Question(content.Content, DeletableContent):
                 user.assert_can_see_deleted_post(self)
             except django_exceptions.PermissionDenied:
                 raise exceptions.QuestionHidden(message)
+
+    def remove_author_anonymity(self):
+        """removes anonymous flag from the question
+        and all its revisions
+        the function calls update method to make sure that
+        signals are not called
+        """
+        #it is important that update method is called - not save,
+        #because we do not want the signals to fire here
+        Question.objects.filter(id = self.id).update(is_anonymous = False)
+        self.revisions.all().update(is_anonymous = False)
 
     def update_answer_count(self, save = True):
         """updates the denormalized field 'answer_count'
@@ -428,6 +454,7 @@ class Question(content.Content, DeletableContent):
                 if tag.used_count == 1:
                     #we won't modify used count b/c it's done below anyway
                     removed_tags.remove(tag)
+                    #todo - do we need to use fields deleted_by and deleted_at?
                     tag.delete()#auto-delete tags whose use count dwindled
 
             #remember modified tags, we'll need to update use counts on them
@@ -466,6 +493,12 @@ class Question(content.Content, DeletableContent):
         #if there are any modified tags, update their use counts
         if modified_tags:
             Tag.objects.update_use_counts(modified_tags)
+            signals.tags_updated.send(None,
+                                question = self,
+                                tags = modified_tags,
+                                user = user,
+                                timestamp = timestamp
+                            )
             return True
 
         return False
@@ -531,9 +564,9 @@ class Question(content.Content, DeletableContent):
         self.tagnames = tagnames
         if silent == False:
             self.last_edited_at = retagged_at
-            self.last_activity_at = retagged_at
+            #self.last_activity_at = retagged_at
             self.last_edited_by = retagged_by
-            self.last_activity_by = retagged_by
+            #self.last_activity_by = retagged_by
         self.save()
 
         # Update the Question's tag associations
@@ -555,7 +588,8 @@ class Question(content.Content, DeletableContent):
         return self
 
     def apply_edit(self, edited_at=None, edited_by=None, title=None,\
-                    text=None, comment=None, tags=None, wiki=False):
+                    text=None, comment=None, tags=None, wiki=False, \
+                    edit_anonymously = False):
 
         latest_revision = self.get_latest_revision()
         #a hack to allow partial edits - important for SE loader
@@ -580,6 +614,7 @@ class Question(content.Content, DeletableContent):
         self.last_activity_by = edited_by
         self.tagnames = tags
         self.text = text
+        self.is_anonymous = edit_anonymously
 
         #wiki is an eternal trap whence there is no exit
         if self.wiki == False and wiki == True:
@@ -594,12 +629,20 @@ class Question(content.Content, DeletableContent):
             author = edited_by,
             text = text,
             revised_at = edited_at,
+            is_anonymous = edit_anonymously,
             comment = comment,
         )
 
         self.parse_and_save(author = edited_by)
 
-    def add_revision(self,author=None, text=None, comment=None, revised_at=None):
+    def add_revision(
+                self,
+                author = None,
+                is_anonymous = False,
+                text = None,
+                comment = None,
+                revised_at = None
+            ):
         if None in (author, text, comment):
             raise Exception('author, text and comment are required arguments')
         rev_no = self.revisions.all().count() + 1
@@ -614,6 +657,7 @@ class Question(content.Content, DeletableContent):
             revision   = rev_no,
             title      = self.title,
             author     = author,
+            is_anonymous = is_anonymous,
             revised_at = revised_at,
             tagnames   = self.tagnames,
             summary    = comment,
@@ -634,11 +678,12 @@ class Question(content.Content, DeletableContent):
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
 
-    def get_absolute_url(self):
-        return '%s%s' % (
-                    reverse('question', args=[self.id]), 
-                    django_urlquote(slugify(self.title))
-                )
+    def get_absolute_url(self, no_slug = False):
+        url = reverse('question', args=[self.id])
+        if no_slug == True:
+            return url
+        else:
+            return url + django_urlquote(slugify(self.title))
 
     def has_favorite_by_user(self, user):
         if not user.is_authenticated():
@@ -768,6 +813,7 @@ class QuestionRevision(ContentRevision):
     question   = models.ForeignKey(Question, related_name='revisions')
     title      = models.CharField(max_length=300)
     tagnames   = models.CharField(max_length=125)
+    is_anonymous = models.BooleanField(default=False)
 
     class Meta(ContentRevision.Meta):
         db_table = u'question_revision'
@@ -801,17 +847,24 @@ class QuestionRevision(ContentRevision):
         return u'revision %s of %s' % (self.revision, self.title)
 
 class AnonymousQuestion(AnonymousContent):
+    """question that was asked before logging in
+    maybe the name is a little misleading, the user still
+    may or may not want to stay anonymous after the question
+    is published
+    """
     title = models.CharField(max_length=300)
     tagnames = models.CharField(max_length=125)
+    is_anonymous = models.BooleanField(default=False)
 
     def publish(self,user):
         added_at = datetime.datetime.now()
         Question.objects.create_new(
-                                title=self.title,
-                                author=user,
-                                added_at=added_at,
-                                wiki=self.wiki,
-                                tagnames=self.tagnames,
-                                text=self.text,
+                                title = self.title,
+                                added_at = added_at,
+                                author = user,
+                                wiki = self.wiki,
+                                is_anonymous = self.is_anonymous,
+                                tagnames = self.tagnames,
+                                text = self.text,
                                 )
         self.delete()

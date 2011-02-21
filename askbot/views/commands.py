@@ -5,25 +5,18 @@ This module contains most (but not all) processors for Ajax requests.
 Not so clear if this subdivision was necessary as separation of Ajax and non-ajax views
 is not always very clean.
 """
-import datetime
-#todo: maybe eliminate usage of django.settings
-from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from django.utils import simplejson
 from django.core import exceptions
 from django.http import HttpResponse, HttpResponseRedirect
-from django.http import HttpResponseForbidden
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
-from django.template import RequestContext
 from askbot import models
 from askbot.forms import CloseForm
-from askbot import auth
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from askbot.utils.decorators import ajax_only, ajax_login_required
-from askbot.templatetags import extra_filters as template_filters
-from askbot.skins.loaders import ENV
+from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
 
@@ -335,23 +328,34 @@ def vote(request, id):
 
 #internally grouped views - used by the tagging system
 @ajax_login_required
-def mark_tag(request, tag=None, **kwargs):#tagging system
+def mark_tag(request, **kwargs):#tagging system
     action = kwargs['action']
-    ts = models.MarkedTag.objects.filter(user=request.user, tag__name=tag)
+    post_data = simplejson.loads(request.raw_post_data)
+    tagnames = post_data['tagnames']
+    marked_ts = models.MarkedTag.objects.filter(
+                                    user=request.user,
+                                    tag__name__in=tagnames
+                                )
+    #todo: use the user api methods here instead of the straight ORM
     if action == 'remove':
-        logging.debug('deleting tag %s' % tag)
-        ts.delete()
+        logging.debug('deleting tag marks: %s' % ','.join(tagnames))
+        marked_ts.delete()
     else:
         reason = kwargs['reason']
-        if len(ts) == 0:
+        if len(marked_ts) == 0:
             try:
-                t = models.Tag.objects.get(name=tag)
-                mt = models.MarkedTag(user=request.user, reason=reason, tag=t)
-                mt.save()
+                ts = models.Tag.objects.filter(name__in=tagnames)
+                for tag in ts:
+                    mt = models.MarkedTag(
+                                user=request.user,
+                                reason=reason,
+                                tag=tag
+                            )
+                    mt.save()
             except:
                 pass
         else:
-            ts.update(reason=reason)
+            marked_ts.update(reason=reason)
     return HttpResponse(simplejson.dumps(''), mimetype="application/json")
 
 @ajax_login_required
@@ -392,10 +396,11 @@ def close(request, id):#close question
         else:
             request.user.assert_can_close_question(question)
             form = CloseForm()
-            template = ENV.get_template('close.html')
-            data = {'form': form, 'question': question}
-            context = RequestContext(request, data)
-            return HttpResponse(template.render(context))
+            data = {
+                'question': question,
+                'form': form,
+            }
+            return render_into_skin('close.html', data, request)
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
@@ -423,9 +428,7 @@ def reopen(request, id):#re-open question
                 'closed_by_profile_url': closed_by_profile_url,
                 'closed_by_username': closed_by_username,
             }
-            context = RequestContext(request, data)
-            template = ENV.get_template('reopen.html')
-            return HttpResponse(template.render(context))
+            return render_into_skin('reopen.html', data, request)
             
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))

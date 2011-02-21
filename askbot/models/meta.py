@@ -92,6 +92,7 @@ class Comment(base.MetaContent, base.UserContent):
     _urlize = True
     _use_markdown = False
     _escape_html = True
+    is_anonymous = False #comments are never anonymous - may change
 
     class Meta(base.MetaContent.Meta):
         ordering = ('-added_at',)
@@ -245,9 +246,6 @@ class Comment(base.MetaContent, base.UserContent):
         records, as well as mention records, while preserving
         integrity or response counts for the users
         """
-        #todo: not very good import in models of other models
-        #todo: potentially a circular import
-        from askbot.models.user import Activity
         comment_content_type = ContentType.objects.get_for_model(self)
         comment_id = self.id
 
@@ -256,6 +254,9 @@ class Comment(base.MetaContent, base.UserContent):
         #all this should pack into Activity.responses.filter( somehow ).delete()
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
         activity_types += (const.TYPE_ACTIVITY_MENTION,)
+        #todo: not very good import in models of other models
+        #todo: potentially a circular import
+        from askbot.models.user import Activity
         activities = Activity.objects.filter(
                             content_type = comment_content_type,
                             object_id = comment_id,

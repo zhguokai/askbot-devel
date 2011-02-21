@@ -4,16 +4,18 @@
 
 This module contains views that allow adding, editing, and deleting main textual content.
 """
-import os.path
-import time
 import datetime
-import random
 import logging
+import os
+import os.path
+import random
+import sys
+import tempfile
+import time
 from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
-from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
@@ -21,14 +23,14 @@ from django.core.urlresolvers import reverse
 from django.core import exceptions
 from django.conf import settings
 
-from askbot import auth
 from askbot.views.readers import _get_tags_cache_json
 from askbot import forms
 from askbot import models
-from askbot.skins.loaders import ENV
+from askbot.skins.loaders import render_into_skin
 from askbot.utils.decorators import ajax_only
 from askbot.utils.functions import diff_date
 from askbot.templatetags import extra_filters_jinja as template_filters
+from askbot.importers.stackexchange import management as stackexchange#todo: may change
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -45,7 +47,6 @@ def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
 
-    f = request.FILES['file-upload']
     # check upload permission
     result = ''
     error = ''
@@ -59,6 +60,7 @@ def upload(request):#ajax upload file to a question or answer
         request.user.assert_can_upload_file()
 
         # check file type
+        f = request.FILES['file-upload']
         file_extension = os.path.splitext(f.name)[1].lower()
         if not file_extension in settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES:
             file_types = "', '".join(settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES)
@@ -108,6 +110,81 @@ def upload(request):#ajax upload file to a question or answer
 
     return HttpResponse(xml, mimetype="application/xml")
 
+def __import_se_data(dump_file):
+    """non-view function that imports the SE data
+    in the future may import other formats as well
+
+    In this function stdout is temporarily 
+    redirected, so that the underlying importer management
+    command could stream the output to the browser
+
+    todo: maybe need to add try/except clauses to restore
+    the redirects in the exceptional situations
+    """
+    
+    fake_stdout = tempfile.NamedTemporaryFile()
+    real_stdout = sys.stdout
+    sys.stdout = fake_stdout
+
+    importer = stackexchange.ImporterThread(dump_file = dump_file.name)
+    importer.start()
+
+    #run a loop where we'll be reading output of the
+    #importer tread and yielding it to the caller
+    read_stdout = open(fake_stdout.name, 'r')
+    file_pos = 0
+    fd = read_stdout.fileno()
+    yield '<html><body><style>* {font-family: sans;} p {font-size: 12px; line-height: 16px; margin: 0; padding: 0;}</style><h1>Importing your data. This may take a few minutes...</h1>'
+    while importer.isAlive():
+        c_size = os.fstat(fd).st_size
+        if c_size > file_pos:
+            line = read_stdout.readline()
+            yield '<p>' + line + '</p>'
+            file_pos = read_stdout.tell()
+
+    fake_stdout.close()
+    read_stdout.close()
+    dump_file.close()
+    sys.stdout = real_stdout
+    yield '<p>Done. Please, <a href="%s">Visit Your Forum</a></p></body></html>' % reverse('index')
+
+
+def import_data(request):
+    """a view allowing the site administrator
+    upload stackexchange data
+    """
+    #allow to use this view to site admins
+    #or when the forum in completely empty
+    if request.user.is_anonymous() or (not request.user.is_administrator()):
+        if models.Question.objects.count() > 0:
+            raise Http404
+
+    if request.method == 'POST':
+        #if not request.is_ajax():
+        #    raise Http404
+
+        form = forms.DumpUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            dump_file = form.cleaned_data['dump_file']
+            dump_storage = tempfile.NamedTemporaryFile()
+
+            #save the temp file
+            for chunk in dump_file.chunks():
+                dump_storage.write(chunk)
+            dump_storage.flush()
+
+            return HttpResponse(__import_se_data(dump_storage))
+            #yield HttpResponse(_('StackExchange import complete.'), mimetype='text/plain')
+            #dump_storage.close()
+    else:
+        form = forms.DumpUploadForm()
+
+    data = {
+        'dump_upload_form': form,
+        'need_configuration': (not stackexchange.is_ready())
+    }
+    return render_into_skin('import_data.html', data, request)
+
 #@login_required #actually you can post anonymously, but then must register
 def ask(request):#view used to ask a new question
     """a view to ask a new question
@@ -120,7 +197,6 @@ def ask(request):#view used to ask a new question
     if request.method == "POST":
         form = forms.AskForm(request.POST)
         if form.is_valid():
-
             timestamp = datetime.datetime.now()
             #todo: move this to clean_title
             title = form.cleaned_data['title'].strip()
@@ -128,17 +204,18 @@ def ask(request):#view used to ask a new question
             #todo: move this to clean_tagnames
             tagnames = form.cleaned_data['tags'].strip()
             text = form.cleaned_data['text']
+            ask_anonymously = form.cleaned_data['ask_anonymously']
 
             if request.user.is_authenticated():
-
                 try:
                     question = request.user.post_question(
-                                                    title = title,
-                                                    body_text = text,
-                                                    tags = tagnames,
-                                                    wiki = wiki,
-                                                    timestamp = timestamp
-                                                )
+                                                title = title,
+                                                body_text = text,
+                                                tags = tagnames,
+                                                wiki = wiki,
+                                                is_anonymous = ask_anonymously,
+                                                timestamp = timestamp
+                                            )
                     return HttpResponseRedirect(question.get_absolute_url())
                 except exceptions.PermissionDenied, e:
                     request.user.message_set.create(message = unicode(e))
@@ -153,6 +230,7 @@ def ask(request):#view used to ask a new question
                     title       = title,
                     tagnames = tagnames,
                     wiki = wiki,
+                    is_anonymous = ask_anonymously,
                     text = text,
                     summary = summary,
                     added_at = timestamp,
@@ -175,15 +253,14 @@ def ask(request):#view used to ask a new question
                 form.initial['title'] = query
 
     tags = _get_tags_cache_json()
-    template = ENV.get_template('ask.html')
     data = {
         'active_tab': 'ask',
+        'page_class': 'ask-page',
         'form' : form,
         'tags' : tags,
         'email_validation_faq_url':reverse('faq') + '#validate',
     }
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('ask.html', data, request)
 
 @login_required
 def retag_question(request, id):
@@ -202,7 +279,10 @@ def retag_question(request, id):
                                         tags = form.cleaned_data['tags']
                                     )
                 if request.is_ajax():
-                    response_data = {'success': True}
+                    response_data = {
+                        'success': True,
+                        'new_tags': question.tagnames
+                    }
                     data = simplejson.dumps(response_data)
                     return HttpResponse(data, mimetype="application/json")
                 else:
@@ -223,9 +303,7 @@ def retag_question(request, id):
             'form' : form,
             'tags' : _get_tags_cache_json(),
         }
-        context = RequestContext(request, data)
-        template = ENV.get_template('question_retag.html')
-        return HttpResponse(template.render(context))
+        return render_into_skin('question_retag.html', data, request)
     except exceptions.PermissionDenied, e:
         if request.is_ajax():
             response_data = {
@@ -248,44 +326,76 @@ def edit_question(request, id):
     try:
         request.user.assert_can_edit_question(question)
         if request.method == 'POST':
-            if 'select_revision' in request.POST:#revert-type edit
-                # user has changed revistion number
-                revision_form = forms.RevisionForm(question, latest_revision, request.POST)
+            if 'select_revision' in request.POST:
+                #revert-type edit - user selected previous revision
+                revision_form = forms.RevisionForm(
+                                                question,
+                                                latest_revision,
+                                                request.POST
+                                            )
                 if revision_form.is_valid():
                     # Replace with those from the selected revision
-                    form = forms.EditQuestionForm(question,
-                        models.QuestionRevision.objects.get(question=question,
-                            revision=revision_form.cleaned_data['revision']))
+                    rev_id = revision_form.cleaned_data['revision']
+                    selected_revision = models.QuestionRevision.objects.get(
+                                                        question = question,
+                                                        revision = rev_id
+                                                    )
+                    form = forms.EditQuestionForm(
+                                            question = question,
+                                            user = request.user,
+                                            revision = selected_revision
+                                        )
                 else:
-                    form = forms.EditQuestionForm(question, latest_revision, request.POST)
+                    form = forms.EditQuestionForm(
+                                            request.POST,
+                                            question = question,
+                                            user = request.user,
+                                            revision = latest_revision
+                                        )
             else:#new content edit
                 # Always check modifications against the latest revision
-                form = forms.EditQuestionForm(question, latest_revision, request.POST)
+                form = forms.EditQuestionForm(
+                                        request.POST,
+                                        question = question,
+                                        revision = latest_revision,
+                                        user = request.user,
+                                    )
                 if form.is_valid():
                     if form.has_changed():
+
+                        if form.cleaned_data['reveal_identity']:
+                            question.remove_author_anonymity()
+
+                        is_anon_edit = form.cleaned_data['stay_anonymous']
+                        is_wiki = form.cleaned_data.get('wiki', question.wiki)
                         request.user.edit_question(
-                                            question = question,
-                                            title = form.cleaned_data['title'],
-                                            body_text = form.cleaned_data['text'],
-                                            revision_comment = form.cleaned_data['summary'],
-                                            tags = form.cleaned_data['tags'],
-                                            wiki = form.cleaned_data.get('wiki', question.wiki)
-                                        )
+                            question = question,
+                            title = form.cleaned_data['title'],
+                            body_text = form.cleaned_data['text'],
+                            revision_comment = form.cleaned_data['summary'],
+                            tags = form.cleaned_data['tags'],
+                            wiki = is_wiki, 
+                            edit_anonymously = is_anon_edit,
+                        )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
+            #request type was "GET"
             revision_form = forms.RevisionForm(question, latest_revision)
-            form = forms.EditQuestionForm(question, latest_revision)
+            form = forms.EditQuestionForm(
+                                    question = question,
+                                    revision = latest_revision,
+                                    user = request.user
+                                )
 
         data = {
+            'page_class': 'edit-question-page',
             'active_tab': 'questions',
             'question': question,
             'revision_form': revision_form,
             'form' : form,
             'tags' : _get_tags_cache_json()
         }
-        context = RequestContext(request, data)
-        template = ENV.get_template('question_edit.html')
-        return HttpResponse(template.render(context))
+        return render_into_skin('question_edit.html', data, request)
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
@@ -334,15 +444,13 @@ def edit_answer(request, id):
         else:
             revision_form = forms.RevisionForm(answer, latest_revision)
             form = forms.EditAnswerForm(answer, latest_revision)
-        template = ENV.get_template('answer_edit.html')
         data = {
             'active_tab': 'questions',
             'answer': answer,
             'revision_form': revision_form,
             'form': form,
         }
-        context = RequestContext(request, data)
-        return HttpResponse(template.render(context))
+        return render_into_skin('answer_edit.html', data, request)
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))

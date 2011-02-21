@@ -24,6 +24,7 @@ from django.utils.translation import ugettext as _
 from django.dispatch import Signal
 from askbot.models.repute import BadgeData, Award
 from askbot.models.user import Activity
+from askbot.models.meta import Comment
 from askbot.models.question import FavoriteQuestion as Fave#name collision
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -700,25 +701,82 @@ class FavoriteQuestion(FavoriteTypeBadge):
         return self
 
 class Enthusiast(Badge):
-    """Unimplemented stub badge"""
+    """Awarded to a user who visits the site
+    for a certain number of days in a row
+    """
     def __init__(self):
         super(Enthusiast, self).__init__(
             key = 'enthusiast',
             name = _('Enthusiast'),
             level = const.SILVER_BADGE,
             multiple = False,
-            description = _('Visited site every day for 30 days in a row')
+            description = _(
+                'Visited site every day for %(num)s days in a row'
+            ) % {'num': askbot_settings.ENTHUSIAST_BADGE_MIN_DAYS}
         )
 
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        min_days = askbot_settings.ENTHUSIAST_BADGE_MIN_DAYS
+        if actor.consecutive_days_visit_count == min_days:
+            return self.award(actor, context_object, timestamp)
+        return False
+
 class Commentator(Badge):
-    """Unimplemented stub badge"""
+    """Commentator is a bronze badge that is 
+    awarded once when user posts a certain number of
+    comments"""
     def __init__(self):
         super(Commentator, self).__init__(
             key = 'commentator',
             name = _('Commentator'),
             level = const.BRONZE_BADGE,
             multiple = False,
-            description = _('Posted 10 comments')
+            description = _(
+                'Posted %(num_comments)s comments'
+            ) % {'num_comments': askbot_settings.COMMENTATOR_BADGE_MIN_COMMENTS}
+        )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+        num_comments = Comment.objects.filter(user = actor).count()
+        if num_comments >= askbot_settings.COMMENTATOR_BADGE_MIN_COMMENTS:
+            return self.award(actor, context_object, timestamp)
+        return False
+
+class Taxonomist(Badge):
+    """Stub badge"""
+    def __init__(self):
+        super(Taxonomist, self).__init__(
+            key = 'taxonomist',
+            name = _('Taxonomist'),
+            level = const.SILVER_BADGE,
+            multiple = False,
+            description = _(
+                'Created a tag used by %(num)s questions'
+            ) % {'num': askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT}
+        )
+
+    def consider_award(self, actor = None,
+            context_object = None, timestamp = None):
+
+        tag = context_object
+        taxonomist_threshold = askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT
+        #the "-1" is used because tag counts are updated in a bulk query
+        #that does not update the value in the python object
+        if tag.used_count == taxonomist_threshold - 1:
+            return self.award(tag.created_by, tag, timestamp)
+        return False
+
+class Expert(Badge):
+    """Stub badge"""
+    def __init__(self):
+        super(Expert, self).__init__(
+            key = 'expert',
+            name = _('Expert'),
+            level = const.SILVER_BADGE,
+            multiple = False,
+            description = _('Very active in one tag')
         )
 
 ORIGINAL_DATA = """
@@ -730,12 +788,10 @@ extra badges from stackexchange
 * mortarboard - hit the daily reputation cap for the first time (s)
 * populist - provided an answer that outscored an accepted answer two-fold or by n points, whichever is higher (m)
 * reversal - provided an answer with +n points to a question of -m points
-    (_('Taxonomist'), 2, _('taxonomist'), _('Created a tag used by 50 questions'), True, 0)
     (_('Yearling'), 2, _('yearling'), _('Active member for a year'), False, 0),
 
 
     (_('Generalist'), 2, _('generalist'), _('Active in many different tags'), False, 0),
-    (_('Expert'), 2, _('expert'), _('Very active in one tag'), False, 0),
     (_('Beta'), 2, _('beta'), _('Actively participated in the private beta'), False, 0),
     (_('Alpha'), 2, _('alpha'), _('Actively participated in the private alpha'), False, 0),
 """
@@ -752,6 +808,7 @@ BADGES = {
     'editor': Editor,
     'enlightened': Enlightened,
     'enthusiast': Enthusiast,
+    'expert': Expert,
     'famous-question': FamousQuestion,
     'favorite-question': FavoriteQuestion,
     'good-answer': GoodAnswer,
@@ -773,6 +830,7 @@ BADGES = {
     'student': Student,
     'supporter': Supporter,
     'teacher': Teacher,
+    'taxonomist': Taxonomist,
 }
 
 #events are sent as a parameter via signal award_badges_signal
@@ -786,8 +844,11 @@ EVENTS_TO_BADGES = {
     'edit_question': (Editor, AssociateEditor),
     'flag_post': (CitizenPatrol,),
     'post_answer': (Necromancer,),
+    'post_comment': (Commentator,),
     'retag_question': (Organizer,),
     'select_favorite_question': (FavoriteQuestion, StellarQuestion,),
+    'site_visit': (Enthusiast,),
+    'update_tag': (Taxonomist,),
     'update_user_profile': (Autobiographer,),
     'upvote_answer': (
                     Teacher, NiceAnswer, GoodAnswer,
@@ -802,7 +863,7 @@ EVENTS_TO_BADGES = {
 }
 
 def get_badge(name = None):
-    """Get badge object by name, if none mathes the name
+    """Get badge object by name, if none matches the name
     raise KeyError
     """
     key = slugify(name)

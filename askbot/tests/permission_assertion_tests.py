@@ -1,3 +1,4 @@
+import datetime
 from django.test import TestCase
 from django.core import exceptions
 from askbot.tests import utils
@@ -28,13 +29,14 @@ class PermissionAssertionTestCase(TestCase):
                         email = 'other@test.com'
                     )
 
-    def post_question(self, author = None):
+    def post_question(self, author = None, timestamp = None):
         if author is None:
             author = self.user
         return author.post_question(
                             title = 'test question title',
                             body_text = 'test question body',
-                            tags = 'test'
+                            tags = 'test',
+                            timestamp = timestamp
                         )
 
     def post_answer(self, question = None, author = None):
@@ -90,7 +92,8 @@ class SeeOffensiveFlagsPermissionAssertionTests(utils.AskbotTestCase):
 
     def test_admin_can_see_flags(self):
         question = self.post_question()
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         assert(self.other_user.reputation < self.min_rep)
         self.assertTrue(
             template_filters.can_see_offensive_flags(
@@ -222,7 +225,8 @@ class DeleteAnswerPermissionAssertionTests(utils.AskbotTestCase):
 
     def test_low_rep_admin_can_delete(self):
         self.post_answer(user = self.other_user)
-        self.user.is_superuser = True
+        self.user.set_admin_status()
+        self.user.save()
         assert(self.user.reputation < self.min_rep)
         self.assert_can_delete()
 
@@ -337,7 +341,8 @@ class CloseQuestionPermissionAssertionTests(utils.AskbotTestCase):
         )
 
     def test_low_rep_admin_can_close(self):
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         assert(self.other_user.reputation < self.min_rep)
         self.assert_can_close(user = self.other_user)
 
@@ -442,7 +447,7 @@ class ReopenQuestionPermissionAssertionTests(utils.AskbotTestCase):
         self.assert_cannot_reopen(user = self.other_user)
 
     def test_low_rep_admin_can_reopen(self):
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
         self.assert_can_reopen(user = self.other_user)
 
     def test_low_rep_moderator_can_reopen(self):
@@ -515,12 +520,14 @@ class EditQuestionPermissionAssertionTests(utils.AskbotTestCase):
         self.assert_user_cannot(user = self.other_user)
 
     def test_admin_can_edit(self):
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         self.assert_other_can()
 
     def test_admin_can_edit_deleted(self):
         self.post.deleted = True
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         self.assert_other_can()
 
     def test_mod_can_edit(self):
@@ -773,7 +780,8 @@ class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
     def test_admin_has_no_limit_for_flags_per_day(self):
         max_flags = askbot_settings.MAX_FLAGS_PER_USER_PER_DAY
         other_user = self.create_other_user()
-        other_user.is_superuser = True
+        other_user.set_admin_status()
+        other_user.save()
         for i in range(max_flags + 1):
             question = self.post_question()
             other_user.flag_post(question)
@@ -808,11 +816,12 @@ class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
 
     def low_rep_administrator_can_flag(self):
         assert(self.user.reputation < self.min_rep)
-        self.user.is_superuser = True
+        self.user.set_admin_status()
         self.assert_user_can_flag()
 
     def test_superuser_cannot_flag_question_twice(self):
-        self.user.is_superuser = True
+        self.user.set_admin_status()
+        self.user.save()
         self.user.flag_post(post = self.question)
         self.assertRaises(
             exceptions.PermissionDenied,
@@ -829,7 +838,8 @@ class FlagOffensivePermissionAssertionTests(PermissionAssertionTestCase):
         )
 
     def test_superuser_cannot_flag_answer_twice(self):
-        self.user.is_superuser = True
+        self.user.set_admin_status()
+        self.user.save()
         self.user.flag_post(post = self.answer)
         self.assertRaises(
             exceptions.PermissionDenied,
@@ -1017,7 +1027,8 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                         parent_post = question,
                         body_text = 'test comment'
                     )
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         self.other_user.delete_comment(comment)
         self.assertTrue(
             template_filters.can_delete_comment(
@@ -1149,7 +1160,8 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
 
     def test_low_rep_admin_can_comment_others_question(self):
         question = self.post_question()
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         assert(self.other_user.is_administrator())
         assert(self.other_user.reputation < self.min_rep)
         comment = self.other_user.post_comment(
@@ -1180,6 +1192,104 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                 question
             )
         )
+
+    def assert_user_can_edit_previous_comment(
+                                            self,
+                                            old_timestamp = None,
+                                            original_poster = None
+                                        ):
+        """oriposts a question and a comment at
+        an old timestamp, then posts another comment now
+        then user tries to edit the first comment
+        """
+        self.other_user.set_admin_status()
+        self.other_user.save()
+
+        if original_poster is None:
+            original_poster = self.user
+
+        question = self.post_question(
+                            author = original_poster,
+                            timestamp = old_timestamp
+                        )
+        comment1 = original_poster.post_comment(
+                                    parent_post = question,
+                                    timestamp = old_timestamp,
+                                    body_text = 'blah'
+                                )
+        comment2 = self.other_user.post_comment(#post this one with the current timestamp
+                                    parent_post = question,
+                                    body_text = 'blah'
+                                )
+        self.user.assert_can_edit_comment(comment1)
+
+    def assert_user_can_edit_very_old_comment(self, original_poster = None):
+        """tries to edit comment in the most restictive situation
+        """
+        askbot_settings.update('USE_TIME_LIMIT_TO_EDIT_COMMENT', True)
+        askbot_settings.update('MINUTES_TO_EDIT_COMMENT', 0)
+        old_timestamp = datetime.datetime.now() - datetime.timedelta(1)
+        self.assert_user_can_edit_previous_comment(
+                                    old_timestamp = old_timestamp,
+                                    original_poster = original_poster
+                                )
+
+
+    def test_admin_can_edit_very_old_comment(self):
+        self.user.set_admin_status()
+        self.user.save()
+        self.assert_user_can_edit_very_old_comment(original_poster = self.other_user)
+
+    def test_moderator_can_edit_very_old_comment(self):
+        self.user.set_status('m')
+        self.user.save()
+        self.assert_user_can_edit_very_old_comment(original_poster = self.other_user)
+
+    def test_regular_user_cannot_edit_very_old_comment(self):
+        self.assertRaises(
+            exceptions.PermissionDenied,
+            self.assert_user_can_edit_very_old_comment,
+            original_poster = self.user
+        )
+
+    def test_regular_user_can_edit_reasonably_old_comment(self):
+        self.user.set_status('a')
+        self.user.save()
+        askbot_settings.update('USE_TIME_LIMIT_TO_EDIT_COMMENT', True)
+        askbot_settings.update('MINUTES_TO_EDIT_COMMENT', 10)
+        #about 3 min ago
+        old_timestamp = datetime.datetime.now() - datetime.timedelta(0, 200)
+        self.assert_user_can_edit_previous_comment(
+                                old_timestamp = old_timestamp,
+                                original_poster = self.user
+                            )
+
+    def test_disable_comment_edit_time_limit(self):
+        self.user.set_status('a')
+        self.user.save()
+        askbot_settings.update('USE_TIME_LIMIT_TO_EDIT_COMMENT', False)
+        askbot_settings.update('MINUTES_TO_EDIT_COMMENT', 10)
+        old_timestamp = datetime.datetime.now() - datetime.timedelta(365)#a year ago
+        self.assert_user_can_edit_previous_comment(
+                                old_timestamp = old_timestamp,
+                                original_poster = self.user
+                            )
+
+
+    def test_regular_user_can_edit_last_comment(self):
+        """and a very old last comment"""
+        self.user.set_status('a')
+        self.user.save()
+        askbot_settings.update('USE_TIME_LIMIT_TO_EDIT_COMMENT', True)
+        askbot_settings.update('MINUTES_TO_EDIT_COMMENT', 10)
+        old_timestamp = datetime.datetime.now() - datetime.timedelta(1)
+        question = self.post_question(author = self.user, timestamp = old_timestamp)
+        comment = self.user.post_comment(
+                                    parent_post = question,
+                                    body_text = 'blah',
+                                    timestamp = old_timestamp
+                                )
+        self.user.assert_can_edit_comment(comment)
 
 #def user_assert_can_post_comment(self, parent_post):
 #def user_assert_can_delete_comment(self, comment = None):
@@ -1272,12 +1382,14 @@ class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
     def test_admin_cannot_accept_others_answer(self):
         self.other_post_answer()
         self.create_user(username = 'third_user')
-        self.third_user.is_superuser = True
+        self.third_user.set_admin_status()
+        self.third_user.save()
         self.assert_user_cannot(user = self.third_user)
 
     def test_admin_cannot_accept_own_answer(self):
         self.other_post_answer()
-        self.other_user.is_superuser = True
+        self.other_user.set_admin_status()
+        self.other_user.save()
         self.assert_user_cannot(user = self.other_user)
 
 class VotePermissionAssertionTests(PermissionAssertionTestCase):
@@ -1433,7 +1545,8 @@ class UploadPermissionAssertionTests(PermissionAssertionTestCase):
 
     def test_low_rep_administrator_can_upload(self):
         assert(self.user.reputation < self.min_rep)
-        self.user.is_superuser = True
+        self.user.set_admin_status()
+        self.user.save()
         try:
             self.user.assert_can_upload_file()
         except exceptions.PermissionDenied:

@@ -2,8 +2,8 @@ import logging
 import re
 import hashlib
 import datetime
-from django.core.urlresolvers import reverse
-from askbot.search.indexer import create_fulltext_indexes
+import urllib
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
 from django.template import Context
 from django.utils.translation import ugettext as _
@@ -14,6 +14,7 @@ from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core import exceptions as django_exceptions
+from django_countries.fields import CountryField
 import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
@@ -33,7 +34,7 @@ from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.utils.mail import send_mail
+from askbot.utils import mail
 from askbot import startup_procedures
 
 startup_procedures.run()
@@ -53,21 +54,30 @@ User.add_to_class(
 User.add_to_class('email_isvalid', models.BooleanField(default=False))
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 #hardcoded initial reputaion of 1, no setting for this one
-User.add_to_class('reputation', models.PositiveIntegerField(default=1))
+User.add_to_class('reputation', 
+    models.PositiveIntegerField(default=const.MIN_REPUTATION)
+)
 User.add_to_class('gravatar', models.CharField(max_length=32))
+User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
-User.add_to_class('questions_per_page',
-              models.SmallIntegerField(
-                            choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
-                            default=10)
-            )
+User.add_to_class(
+    'questions_per_page',
+    models.SmallIntegerField(
+        choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
+        default=10
+    )
+)
 User.add_to_class('last_seen',
                   models.DateTimeField(default=datetime.datetime.now))
 User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
 User.add_to_class('website', models.URLField(max_length=200, blank=True))
+#location field is actually city
 User.add_to_class('location', models.CharField(max_length=100, blank=True))
+User.add_to_class('country', CountryField(blank = True))
+User.add_to_class('show_country', models.BooleanField(default = False))
+
 User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
 User.add_to_class('about', models.TextField(blank=True))
 User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
@@ -80,6 +90,58 @@ User.add_to_class('tag_filter_setting',
                  )
 User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
+User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
+
+GRAVATAR_TEMPLATE = "http://www.gravatar.com/avatar/%(gravatar)s?" + \
+    "s=%(size)d&amp;d=%(type)s&amp;r=PG"
+
+def user_get_gravatar_url(self, size):
+    """returns gravatar url
+    currently identicon is the only supported type
+    """
+    return GRAVATAR_TEMPLATE % {
+                'gravatar': self.gravatar,
+                'size': size,
+                'type': 'identicon'
+            }
+
+def user_get_avatar_url(self, size):
+    """returns avatar url - by default - gravatar,
+    but if application django-avatar is installed
+    it will use avatar provided through that app
+    """
+    if 'avatar' in django_settings.INSTALLED_APPS:
+        if self.has_custom_avatar == False:
+            import avatar
+            if avatar.settings.AVATAR_GRAVATAR_BACKUP:
+                return self.get_gravatar_url(size)
+            else:
+                return avatar.utils.get_default_avatar_url()
+        kwargs = {'user': urllib.quote_plus(self.username), 'size': size}
+        try:
+            return reverse('avatar_render_primary', kwargs = kwargs)
+        except NoReverseMatch:
+            message = 'Please, make sure that avatar urls are in the urls.py '\
+                      'or update your django-avatar app, '\
+                      'currently it is impossible to serve avatars.'
+            logging.critical(message)
+            raise django_exceptions.ImproperlyConfigured(message)
+    else:
+        return self.get_gravatar_url(size)
+
+
+def user_update_has_custom_avatar(self):
+    """counts number of custom avatars
+    and if zero, sets has_custom_avatar to False,
+    True otherwise. The method is called only if
+    avatar application is installed.
+    Saves the object.
+    """
+    if self.avatar_set.count() > 0:
+        self.has_custom_avatar = True
+    else:
+        self.has_custom_avatar = False
+    self.save()
 
 
 def user_get_old_vote_for_post(self, post):
@@ -102,6 +164,10 @@ def user_get_old_vote_for_post(self, post):
 
     return old_votes[0]
 
+def user_can_have_strong_url(self):
+    """True if user's homepage url can be 
+    followed by the search engine crawlers"""
+    return (self.reputation >= askbot_settings.MIN_REP_TO_HAVE_STRONG_URL)
 
 def _assert_user_can(
                         user = None,
@@ -290,21 +356,28 @@ def user_assert_can_edit_comment(self, comment = None):
         return
     else:
         if comment.user == self:
-            now = datetime.datetime.now()
-            if now - comment.added_at > datetime.timedelta(0, 600):
-                if comment.is_last():
-                    return
-                error_message = _(
-                    'Sorry, comments (except the last one) are editable only within 10 minutes from posting'
-                )
-                raise django_exceptions.PermissionDenied(error_message)
-            return
+            if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
+                now = datetime.datetime.now()
+                delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
+                if now - comment.added_at > datetime.timedelta(0, delta_seconds):
+                    if comment.is_last():
+                        return
+                    error_message = ungettext(
+                        'Sorry, comments (except the last one) are editable only '
+                        'within %(minutes)s minute from posting',
+                        'Sorry, comments (except the last one) are editable only '
+                        'within %(minutes)s minutes from posting',
+                        askbot_settings.MINUTES_TO_EDIT_COMMENT
+                    ) % {'minutes': askbot_settings.MINUTES_TO_EDIT_COMMENT}
+                    raise django_exceptions.PermissionDenied(error_message)
+                return
+            else:
+                return
 
     error_message = _(
         'Sorry, but only post owners or moderators can edit comments'
     )
     raise django_exceptions.PermissionDenied(error_message)
-
 
 
 def user_assert_can_post_comment(self, parent_post = None):
@@ -717,6 +790,12 @@ def user_post_comment(
                     comment = body_text,
                     added_at = timestamp,
                 )
+    award_badges_signal.send(None,
+        event = 'post_comment',
+        actor = self,
+        context_object = comment,
+        timestamp = timestamp
+    )
     return comment
 
 @auto_now_timestamp
@@ -919,6 +998,7 @@ def user_post_question(
                     body_text = None,
                     tags = None,
                     wiki = False,
+                    is_anonymous = False,
                     timestamp = None
                 ):
 
@@ -939,7 +1019,8 @@ def user_post_question(
                                     text = body_text,
                                     tagnames = tags,
                                     added_at = timestamp,
-                                    wiki = wiki
+                                    wiki = wiki,
+                                    is_anonymous = is_anonymous,
                                 )
     return question
 
@@ -960,7 +1041,8 @@ def user_edit_question(
                     revision_comment = None,
                     tags = None,
                     wiki = False,
-                    timestamp = None
+                    edit_anonymously = False,
+                    timestamp = None,
                 ):
     self.assert_can_edit_question(question)
     question.apply_edit(
@@ -972,6 +1054,7 @@ def user_edit_question(
         comment = revision_comment,
         tags = tags,
         wiki = wiki,
+        edit_anonymously = edit_anonymously,
     )
     award_badges_signal.send(None,
         event = 'edit_question',
@@ -1116,8 +1199,20 @@ def user_is_username_taken(cls,username):
         return False
 
 def user_is_administrator(self):
-    return (self.is_superuser or self.is_staff)
+    """checks whether user in the forum site administrator
+    the admin must be both superuser and staff member
+    the latter is because staff membership is required
+    to access the live settings"""
+    return (self.is_superuser and self.is_staff)
 
+def user_remove_admin_status(self):
+    self.is_staff = False
+    self.is_superuser = False
+
+def user_set_admin_status(self):
+    self.is_staff = True
+    self.is_superuser = True
+    
 def user_is_moderator(self):
     return (self.status == 'm' and self.is_administrator() == False)
 
@@ -1132,6 +1227,34 @@ def user_is_watched(self):
 
 def user_is_approved(self):
     return (self.status == 'a')
+
+def user_is_owner_of(self, obj):
+    """True if user owns object
+    False otherwise
+    """
+    if isinstance(obj, Question):
+        return self == obj.author
+    else:
+        raise NotImplementedError()
+
+def get_name_of_anonymous_user():
+    """Returns name of the anonymous user
+    either comes from the live settyngs or the language
+    translation
+
+    very possible that this function does not belong here
+    """
+    if askbot_settings.NAME_OF_ANONYMOUS_USER:
+        return askbot_settings.NAME_OF_ANONYMOUS_USER
+    else:
+        return _('Anonymous')
+
+def user_get_anonymous_name(self):
+    """Returns name of anonymous user
+    - convinience method for use in the template 
+    macros that accept user as parameter
+    """
+    return get_name_of_anonymous_user()
 
 def user_set_status(self, new_status):
     """sets new status to user
@@ -1156,9 +1279,9 @@ def user_set_status(self, new_status):
         return
 
     #clear admin status if user was an administrator
-    if self.is_administrator:
-        self.is_superuser = False
-        self.is_staff = False
+    #because this function is not dealing with the site admins
+    if self.is_administrator():
+        self.remove_admin_status()
 
     self.status = new_status
     self.save()
@@ -1521,12 +1644,23 @@ def user_clean_response_counts(user):
                 'seen response count wanted to go below zero form %s' % user.username
             )
 
+def user_receive_reputation(self, num_points):
+    new_points = self.reputation + num_points
+    if new_points > 0:
+        self.reputation = new_points
+    else:
+        self.reputation = const.MIN_REPUTATION
+
 User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
 User.add_to_class(
             'get_q_sel_email_feed_frequency',
             user_get_q_sel_email_feed_frequency
         )
 User.add_to_class('get_absolute_url', user_get_absolute_url)
+User.add_to_class('get_avatar_url', user_get_avatar_url)
+User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_anonymous_name', user_get_anonymous_name)
+User.add_to_class('update_has_custom_avatar', user_update_has_custom_avatar)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
@@ -1539,6 +1673,7 @@ User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)
 User.add_to_class('flag_post', flag_post)
+User.add_to_class('receive_reputation', user_receive_reputation)
 User.add_to_class('get_flags', user_get_flags)
 User.add_to_class('get_flag_count_posted_today', user_get_flag_count_posted_today)
 User.add_to_class('get_flags_for_post', user_get_flags_for_post)
@@ -1553,12 +1688,16 @@ User.add_to_class('is_following', user_is_following)
 User.add_to_class('decrement_response_count', user_decrement_response_count)
 User.add_to_class('increment_response_count', user_increment_response_count)
 User.add_to_class('clean_response_counts', user_clean_response_counts)
+User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('is_administrator', user_is_administrator)
+User.add_to_class('set_admin_status', user_set_admin_status)
+User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
 User.add_to_class('is_approved', user_is_approved)
 User.add_to_class('is_watched', user_is_watched)
 User.add_to_class('is_suspended', user_is_suspended)
 User.add_to_class('is_blocked', user_is_blocked)
+User.add_to_class('is_owner_of', user_is_owner_of)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)
@@ -1676,6 +1815,20 @@ def format_instant_notification_email(
         #todo: remove hardcoded style
     else:
         content_preview = post.html
+        tag_style = "white-space: nowrap; " \
+                    + "font-size: 11px; color: #333;" \
+                    + "background-color: #EEE;" \
+                    + "border-left: 3px solid #777;" \
+                    + "border-top: 1px solid #EEE;" \
+                    + "border-bottom: 1px solid #CCC;" \
+                    + "border-right: 1px solid #CCC;" \
+                    + "padding: 1px 8px 1px 8px;" \
+                    + "margin-right:3px;"
+        if post.post_type == 'question':#add tags to the question
+            content_preview += '<div>'
+            for tag_name in post.get_tag_names():
+                content_preview += '<span style="%s">%s</span>' % (tag_style, tag_name)
+            content_preview += '</div>'
 
     update_data = {
         'update_author_name': from_user.username,
@@ -1686,6 +1839,7 @@ def format_instant_notification_email(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
+    subject_line = mail.prefix_the_subject_line(subject_line)
     return subject_line, template.render(Context(update_data))
 
 #todo: action
@@ -1717,22 +1871,22 @@ def send_instant_notifications_about_activity_in_post(
     origin_post = post.get_origin_post()
     for user in recipients:
 
-            subject_line, body_text = format_instant_notification_email(
-                            to_user = user,
-                            from_user = update_activity.user,
-                            post = post,
-                            update_type = update_type,
-                            template = template,
-                        )
-            #todo: this could be packaged as an "action" - a bundle
-            #of executive function with the activity log recording
-            send_mail(
-                subject_line = subject_line,
-                body_text = body_text,
-                recipient_list = [user.email],
-                related_object = origin_post,
-                activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
-            )
+        subject_line, body_text = format_instant_notification_email(
+                        to_user = user,
+                        from_user = update_activity.user,
+                        post = post,
+                        update_type = update_type,
+                        template = template,
+                    )
+        #todo: this could be packaged as an "action" - a bundle
+        #of executive function with the activity log recording
+        mail.send_mail(
+            subject_line = subject_line,
+            body_text = body_text,
+            recipient_list = [user.email],
+            related_object = origin_post,
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+        )
 
 
 #todo: move to utils
@@ -1794,7 +1948,12 @@ def record_post_update_activity(
                                     mentioned_users = newly_mentioned_users,
                                     exclude_list = [updated_by, ]
                                 )
-
+    #todo: fix this temporary spam protection plug
+    if created:
+        if not (updated_by.is_administrator() or updated_by.is_moderator()):
+            if updated_by.reputation < 15:
+                notification_subscribers = \
+                    [u for u in notification_subscribers if u.is_administrator()]
     send_instant_notifications_about_activity_in_post(
                             update_activity = update_activity,
                             post = post,
@@ -1869,18 +2028,21 @@ def record_answer_accepted(instance, created, **kwargs):
                                 )
         activity.add_recipients(recipients)
 
-
-def update_last_seen(instance, created, **kwargs):
+def record_user_visit(user, timestamp, **kwargs):
     """
-    when user has activities, we update 'last_seen' time stamp for him
+    when user visits any pages, we update the last_seen and
+    consecutive_days_visit_count
     """
-    #todo: in reality author of this activity must not be the receiving user
-    #but for now just have this plug, so that last seen timestamp is not 
-    #perturbed by the email update sender
-    if instance.activity_type == const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT:
-        return
-    user = instance.user
-    user.last_seen = instance.active_at
+    prev_last_seen = user.last_seen
+    user.last_seen = timestamp
+    if (user.last_seen - prev_last_seen).days == 1:
+        user.consecutive_days_visit_count += 1
+        award_badges_signal.send(None,
+            event = 'site_visit',
+            actor = user,
+            context_object = user,
+            timestamp = timestamp
+        )
     user.save()
 
 
@@ -1957,12 +2119,21 @@ def record_flag_offensive(instance, mark_by, **kwargs):
                 )
     activity.add_recipients(recipients)
 
-def record_update_tags(question, **kwargs):
+def record_update_tags(question, tags, user, timestamp, **kwargs):
     """
-    when user updated tags of the question
+    This function sends award badges signal on each updated tag
+    the badges that respond to the 'ta
     """
+    for tag in tags:
+        award_badges_signal.send(None,
+            event = 'update_tag',
+            actor = user,
+            context_object = tag,
+            timestamp = timestamp
+        )
+
     activity = Activity(
-                    user=question.author,
+                    user=user,
                     active_at=datetime.datetime.now(),
                     content_object=question,
                     activity_type=const.TYPE_ACTIVITY_UPDATE_TAGS,
@@ -2029,17 +2200,33 @@ def post_stored_anonymous_content(
             for aa in aa_list:
                 aa.publish(user)
 
+def set_user_has_custom_avatar_flag(instance, created, **kwargs):
+    instance.user.update_has_custom_avatar()
+
+def update_user_has_custom_avatar_flag(instance, **kwargs):
+    instance.user.update_has_custom_avatar()
+
 #signal for User model save changes
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Answer)
-django_signals.post_save.connect(update_last_seen, sender=Activity)
 django_signals.post_save.connect(record_vote, sender=Vote)
 django_signals.post_save.connect(
                             record_favorite_question,
                             sender=FavoriteQuestion
                         )
+if 'avatar' in django_settings.INSTALLED_APPS:
+    from avatar.models import Avatar
+    django_signals.post_save.connect(
+                        set_user_has_custom_avatar_flag,
+                        sender=Avatar
+                    )
+    django_signals.post_delete.connect(
+                        update_user_has_custom_avatar_flag,
+                        sender=Avatar
+                    )
+
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2
@@ -2047,7 +2234,7 @@ signals.delete_question_or_answer.connect(record_delete_question, sender=Questio
 signals.delete_question_or_answer.connect(record_delete_question, sender=Answer)
 signals.flag_offensive.connect(record_flag_offensive, sender=Question)
 signals.flag_offensive.connect(record_flag_offensive, sender=Answer)
-signals.tags_updated.connect(record_update_tags, sender=Question)
+signals.tags_updated.connect(record_update_tags)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(post_stored_anonymous_content)
 signals.post_updated.connect(
@@ -2062,7 +2249,7 @@ signals.post_updated.connect(
                            record_post_update_activity,
                            sender=Question
                        )
-#post_syncdb.connect(create_fulltext_indexes)
+signals.site_visited.connect(record_user_visit)
 
 #todo: wtf??? what is x=x about?
 signals = signals

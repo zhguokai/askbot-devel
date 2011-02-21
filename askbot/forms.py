@@ -2,10 +2,11 @@ import re
 from django import forms
 from askbot import models
 from askbot import const
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.conf import settings as askbot_settings
@@ -42,6 +43,28 @@ def filter_choices(remove_choices = None, from_choices = None):
             filtered_choices += ( choice_to_test, )
 
     return filtered_choices
+
+COUNTRY_CHOICES = (('unknown',_('select country')),) + countries.COUNTRIES
+
+class CountryField(forms.ChoiceField):
+    """this is better placed into the django_coutries app"""
+    
+    def __init__(self, *args, **kwargs):
+        """sets label and the country choices
+        """
+        kwargs['choices'] = kwargs.pop('choices', COUNTRY_CHOICES)
+        kwargs['label'] = kwargs.pop('label', _('Country'))
+        super(CountryField, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        """Handles case of 'unknown' country selection
+        """
+        if self.required:
+            if value == 'unknown':
+                raise forms.ValidationError(_('Country field is required'))
+        if value == 'unknown':
+            return None
+        return value
 
 class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -94,11 +117,11 @@ class TagNamesField(forms.CharField):
 
         split_re = re.compile(const.TAG_SPLIT_REGEX)
         tag_strings = split_re.split(data)
-        out_tag_list = []
+        entered_tags = []
         tag_count = len(tag_strings)
         if tag_count > askbot_settings.MAX_TAGS_PER_POST:
             max_tags = askbot_settings.MAX_TAGS_PER_POST
-            msg = ungettext(
+            msg = ungettext_lazy(
                         'please use %(tag_count)d tag or less',
                         'please use %(tag_count)d tags or less',
                         tag_count) % {'tag_count':max_tags}
@@ -108,7 +131,7 @@ class TagNamesField(forms.CharField):
             if tag_length > askbot_settings.MAX_TAG_LENGTH:
                 #singular form is odd in english, but required for pluralization
                 #in other languages
-                msg = ungettext('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
+                msg = ungettext_lazy('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
                                 'each tag must be shorter than %(max_chars)d characters',
                                 tag_length) % {'max_chars':tag_length}
                 raise forms.ValidationError(msg)
@@ -118,16 +141,35 @@ class TagNamesField(forms.CharField):
             if not tagname_re.search(tag):
                 raise forms.ValidationError(_('use-these-chars-in-tags'))
             #only keep unique tags
-            if tag not in out_tag_list:
-                out_tag_list.append(tag)
-        return u' '.join(out_tag_list)
+            if tag not in entered_tags:
+                entered_tags.append(tag)
+
+        #normalize character case of tags
+        if askbot_settings.FORCE_LOWERCASE_TAGS:
+            entered_tags = set([name.lower() for name in entered_tags])
+        else:
+            #make names of tags in the input to agree with the database
+
+            cleaned_entered_tags = set()
+            for entered_tag in entered_tags:
+                try:
+                    #looks like we have to load tags one-by one
+                    stored_tag = models.Tag.objects.get(
+                                            name__iexact = entered_tag
+                                        )
+                    cleaned_entered_tags.add(stored_tag.name)
+                except models.Tag.DoesNotExist:
+                    cleaned_entered_tags.add(entered_tag)
+            entered_tags = list(cleaned_entered_tags)
+
+        return u' '.join(entered_tags)
 
 class WikiField(forms.BooleanField):
     def __init__(self, *args, **kwargs):
         super(WikiField, self).__init__(*args, **kwargs)
         self.required = False
         self.initial = False
-        self.label  = _('community wiki')
+        self.label  = _('community wiki (karma is not awarded & many others can edit wiki post)')
         self.help_text = _('if you choose community wiki option, the question and answer do not generate points and name of author will not be shown')
     def clean(self, value):
         return value and askbot_settings.WIKI_ON
@@ -147,6 +189,13 @@ class SummaryField(forms.CharField):
         self.label  = _('update summary:')
         self.help_text = _('enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)')
 
+
+class DumpUploadForm(forms.Form):
+    """This form handles importing
+    data into the forum. At the moment it only 
+    supports stackexchange import.
+    """
+    dump_file = forms.FileField()
 
 class ShowQuestionForm(forms.Form):
     answer = forms.IntegerField(required = False)
@@ -332,16 +381,20 @@ class SendMessageForm(forms.Form):
 
 
 class AdvancedSearchForm(forms.Form):
-    #nothing must be required in this form
-    #it is used by the main questions view
+    """nothing must be required in this form
+    it is used by the main questions view for input validation only
+    """
     scope = forms.ChoiceField(choices=const.POST_SCOPE_LIST, required=False)
     sort = forms.ChoiceField(choices=const.POST_SORT_METHODS, required=False)
     query = forms.CharField(max_length=256, required=False)
+    #search field is actually a button, used to detect manual button click
+    search = forms.CharField(max_length=16, required=False)
     reset_tags = forms.BooleanField(required=False)
     reset_author = forms.BooleanField(required=False)
     reset_query = forms.BooleanField(required=False)
     start_over = forms.BooleanField(required=False)
     tags = forms.CharField(max_length=256, required=False)
+    remove_tag = forms.CharField(max_length=256, required=False)
     author = forms.IntegerField(required=False)
     page_size = forms.ChoiceField(choices=const.PAGE_SIZE_CHOICES, required=False)
     page = forms.IntegerField(required=False)
@@ -387,9 +440,11 @@ class AdvancedSearchForm(forms.Form):
         cleanup_dict(data, 'tags', None)
         cleanup_dict(data, 'sort', '')
         cleanup_dict(data, 'query', None)
+        cleanup_dict(data, 'search', '')
         cleanup_dict(data, 'reset_tags', False)
         cleanup_dict(data, 'reset_author', False)
         cleanup_dict(data, 'reset_query', False)
+        cleanup_dict(data, 'remove_tag', '')
         cleanup_dict(data, 'start_over', False)
         cleanup_dict(data, 'author', None)
         cleanup_dict(data, 'page', None)
@@ -405,15 +460,63 @@ class FeedbackForm(forms.Form):
     message = forms.CharField(label=_('Your message:'), max_length=800,widget=forms.Textarea(attrs={'cols':60}))
     next = NextUrlField()
 
-class AskForm(forms.Form):
+class FormWithHideableFields(object):
+    """allows to swap a field widget to HiddenInput() and back"""
+
+    def hide_field(self, name):
+        """replace widget with HiddenInput()
+        and save the original in the __hidden_fields dictionary
+        """
+        if not hasattr(self, '__hidden_fields'):
+            self.__hidden_fields = dict()
+        if name in self.__hidden_fields:
+            return
+        self.__hidden_fields[name] = self.fields[name].widget
+        self.fields[name].widget = forms.HiddenInput()
+
+    def show_field(self, name):
+        """restore the original widget on the field
+        if it was previously hidden
+        """
+        if name in self.__hidden_fields:
+            self.fields[name] = self.__hidden_fields.pop(name)
+
+class AskForm(forms.Form, FormWithHideableFields):
+    """the form used to askbot questions
+    field ask_anonymously is shown to the user if the 
+    if ALLOW_ASK_ANONYMOUSLY live setting is True
+    however, for simplicity, the value will always be present
+    in the cleaned data, and will evaluate to False if the
+    settings forbids anonymous asking
+    """
     title  = TitleField()
     text   = EditorField()
     tags   = TagNamesField()
     wiki = WikiField()
-
+    ask_anonymously = forms.BooleanField(
+        label = _('ask anonymously'),
+        help_text = _(
+            'Check if you do not want to reveal your name '
+            'when asking this question'
+        ),
+        required = False,
+    )
     openid = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 40, 'class':'openid-input'}))
     user   = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     email  = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
+
+    def __init__(self, *args, **kwargs):
+        super(AskForm, self).__init__(*args, **kwargs)
+        #hide ask_anonymously field
+        if askbot_settings.ALLOW_ASK_ANONYMOUSLY == False:
+            self.hide_field('ask_anonymously')
+
+    def clean_ask_anonymously(self):
+        """returns false if anonymous asking is not allowed
+        """
+        if askbot_settings.ALLOW_ASK_ANONYMOUSLY == False:
+            self.cleaned_data['ask_anonymously'] = False
+        return self.cleaned_data['ask_anonymously'] 
 
 class AnswerForm(forms.Form):
     text   = EditorField()
@@ -460,21 +563,113 @@ class RevisionForm(forms.Form):
             for r in revisions]
         self.fields['revision'].initial = latest_revision.revision
 
-class EditQuestionForm(forms.Form):
+class EditQuestionForm(forms.Form, FormWithHideableFields):
     title  = TitleField()
     text   = EditorField()
     tags   = TagNamesField()
     summary = SummaryField()
     wiki = WikiField()
+    reveal_identity = forms.BooleanField(
+        help_text = _(
+            'You have asked this question anonymously, '
+            'if you decide to reveal your identity, please check '
+            'this box.'
+        ),
+        label = _('reveal identity'),
+        required = False,
+    )
 
     #todo: this is odd that this form takes question as an argument
-    def __init__(self, question, revision, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """populate EditQuestionForm with initial data"""
+        self.question = kwargs.pop('question')
+        self.user = kwargs.pop('user')
+        revision = kwargs.pop('revision')
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         self.fields['title'].initial = revision.title
         self.fields['text'].initial = revision.text
         self.fields['tags'].initial = revision.tagnames
-        self.fields['wiki'].initial = question.wiki
+        self.fields['wiki'].initial = self.question.wiki
+        #hide the reveal identity field
+        if not self.can_stay_anonymous():
+            self.hide_field('reveal_identity')
+
+    def can_stay_anonymous(self):
+        """determines if the user cat keep editing the question
+        anonymously"""
+        return (askbot_settings.ALLOW_ASK_ANONYMOUSLY \
+            and self.question.is_anonymous \
+            and self.user.is_owner_of(self.question)
+        )
+
+    def clean_reveal_identity(self):
+        """cleans the reveal_identity field
+        which determines whether previous anonymous
+        edits must be rewritten as not anonymous
+        this does not necessarily mean that the edit will be anonymous
+
+        only does real work when question is anonymous
+        based on the following truth table:
+
+        is_anon  can  owner  checked  cleaned data
+        -        *     *        *        False (ignore choice in checkbox)
+        +        +     +        +        True
+        +        +     +        -        False
+        +        +     -        +        Raise(Not owner)
+        +        +     -        -        False
+        +        -     +        +        True (setting "can" changed, say yes)
+        +        -     +        -        False, warn (but prev edits stay anon)
+        +        -     -        +        Raise(Not owner)
+        +        -     -        -        False
+        """
+        value = self.cleaned_data['reveal_identity']
+        if self.question.is_anonymous:
+            if value == True:
+                if self.user.is_owner_of(self.question):
+                    #regardless of the ALLOW_ASK_ANONYMOUSLY
+                    return True
+                else:
+                    self.show_field('reveal_identity')
+                    del self.cleaned_data['reveal_identity']
+                    raise forms.ValidationError(
+                                _(
+                                    'Sorry, only owner of the anonymous '
+                                    'question can reveal his or her '
+                                    'identity, please uncheck the '
+                                    'box'
+                                 )
+                             )
+            else:
+                can_ask_anon = askbot_settings.ALLOW_ASK_ANONYMOUSLY
+                is_owner = self.user.is_owner_of(self.question)
+                if can_ask_anon == False and is_owner:
+                    self.show_field('reveal_identity')
+                    raise forms.ValidationError(
+                        _(
+                            'Sorry, apparently rules have just changed - '
+                            'it is no longer possible to ask anonymously. '
+                            'Please either check the "reveal identity" box '
+                            'or reload this page and try editing the question '
+                            'again.'
+                        )
+                    )
+                return False
+        else:
+            #takes care of 8 possibilities - first row of the table
+            return False
+
+    def clean(self):
+        """Purpose of this function is to determine whether
+        it is ok to apply edit anonymously in the synthetic
+        field edit_anonymously. It relies on correct cleaning
+        if the "reveal_identity" field
+        """
+        reveal_identity = self.cleaned_data.get('reveal_identity', False)
+        stay_anonymous = False
+        if reveal_identity == False and self.can_stay_anonymous():
+            stay_anonymous = True
+        self.cleaned_data['stay_anonymous'] = stay_anonymous
+        return self.cleaned_data
 
 class EditAnswerForm(forms.Form):
     text = EditorField()
@@ -489,7 +684,7 @@ class EditAnswerForm(forms.Form):
 class EditUserForm(forms.Form):
     email = forms.EmailField(
                     label=u'Email',
-                    help_text=_('this email does not have to be linked to gravatar'),
+                    help_text=_('this email will be linked to gravatar'),
                     required=True,
                     max_length=255,
                     widget=forms.TextInput(attrs={'size' : 35})
@@ -510,10 +705,17 @@ class EditUserForm(forms.Form):
                     )
 
     city = forms.CharField(
-                        label=_('Location'),
+                        label=_('City'),
                         required=False,
                         max_length=255,
                         widget=forms.TextInput(attrs={'size' : 35})
+                    )
+
+    country = CountryField(required = False)
+
+    show_country = forms.BooleanField(
+                        label=_('Show country'),
+                        required=False
                     )
 
     birthday = forms.DateField(
@@ -540,6 +742,12 @@ class EditUserForm(forms.Form):
         self.fields['realname'].initial = user.real_name
         self.fields['website'].initial = user.website
         self.fields['city'].initial = user.location
+        if user.country == None:
+            country = 'unknown'
+        else:
+            country = user.country
+        self.fields['country'].initial = country
+        self.fields['show_country'].initial = user.show_country
 
         if user.date_of_birth is not None:
             self.fields['birthday'].initial = user.date_of_birth

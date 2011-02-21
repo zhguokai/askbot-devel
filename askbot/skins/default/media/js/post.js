@@ -24,10 +24,6 @@ var lanai =
     }
 };
 
-var getUniqueWords = function(value){
-    return $.unique($.trim(value).split(/\s+/));
-};
-
 function appendLoader(element) {
     element.append('<img class="ajax-loader" ' +
         'src="' + mediaUrl("media/images/indicator.gif") + '" title="' +
@@ -638,22 +634,20 @@ var questionRetagger = function(){
                             '{tag}',
                             tag_name
                         );
-        return '<a ' +
-                    'href="' + url + '" ' + 
-                    'title="' + tag_title + '" rel="tag"' +
-                '>' + tag_name + '</a>';
+        return '<li class="tag-left">' +
+                    '<a ' +
+                        'class="tag tag-right" ' +
+                        'href="' + url + '" ' + 
+                        'title="' + tag_title + '" rel="tag"' +
+                    '>' + tag_name + '</a>' +
+               '</li>';
     };
 
     var drawNewTags = function(new_tags){
         new_tags = new_tags.split(/\s+/);
         var tags_html = ''
         $.each(new_tags, function(index, name){
-            if (index === 0){
-                tags_html = render_tag(name);
-            }
-            else {
-                tags_html += ' ' + render_tag(name);
-            }
+            tags_html += render_tag(name);
         });
         tagsDiv.html(tags_html);
     };
@@ -666,7 +660,7 @@ var questionRetagger = function(){
             data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function(json) {
                 if (json['success'] === true){
-                    new_tags = getUniqueWords(tagInput.val());
+                    new_tags = getUniqueWords(json['new_tags']);
                     oldTagsHtml = '';
                     cancelRetag();
                     drawNewTags(new_tags.join(' '));
@@ -872,22 +866,13 @@ inherits(DeleteIcon, SimpleControl);
 
 DeleteIcon.prototype.decorate = function(element){
     this._element = element;
-    var img = mediaUrl("media/images/close-small.png");
-    var imgHover = mediaUrl("media/images/close-small-hover.png");
     this._element.attr('class', 'delete-icon');
-    this._element.attr('src', img);
     this._element.attr('title', this._title);
     setupButtonEventHandlers(this._element, this._handler);
-    this._element.mouseover(function(e){
-        $(this).attr('src', imgHover);
-    });
-    this._element.mouseout(function(e){
-        $(this).attr('src', img);
-    });
 };
 
 DeleteIcon.prototype.createDom = function(){
-    this.decorate($('<img />'));
+    this.decorate($('<span />'));
 };
 
 
@@ -1023,7 +1008,6 @@ EditCommentForm.prototype.createDom = function(){
 
     var update_counter = this.getCounterUpdater();
     var escape_handler = makeKeyHandler(27, this.getCancelHandler());
-    var save_handler = makeKeyHandler(13, this.getSaveHandler());
     this._textarea.attr('name', 'comment')
             .attr('cols', 60)
             .attr('rows', 5)
@@ -1031,8 +1015,11 @@ EditCommentForm.prototype.createDom = function(){
             .blur(update_counter)
             .focus(update_counter)
             .keyup(update_counter)
-            .keyup(escape_handler)
-            .keydown(save_handler);
+            .keyup(escape_handler);
+    if (askbot['settings']['saveCommentOnEnter']){
+        var save_handler = makeKeyHandler(13, this.getSaveHandler());
+        this._textarea.keydown(save_handler);
+    }
     this._textarea.val(this._text);
 };
 
@@ -1151,7 +1138,7 @@ Comment.prototype.decorate = function(element){
     var parent_type = this._element.parent().parent().attr('id').split('-')[2];
     var comment_id = this._element.attr('id').replace('comment-','');
     this._data = {id: comment_id};
-    var delete_img = this._element.find('img.delete-icon');
+    var delete_img = this._element.find('span.delete-icon');
     if (delete_img.length > 0){
         this._deletable = true;
         this._delete_icon = new DeleteIcon(this.deletePrompt);
@@ -1490,7 +1477,7 @@ var socialSharing = function(){
     return {
         init: function(page_url, text_to_share){
             URL = window.location.href;
-            TEXT = escape($('div.headNormal > a').html());
+            TEXT = escape($('h1 > a').html());
             var fb = $('a.fb-share')
             var tw = $('a.twitter-share');
             copyAltToTitle(fb);
