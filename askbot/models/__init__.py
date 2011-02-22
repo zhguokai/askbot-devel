@@ -34,7 +34,7 @@ from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.utils.mail import send_mail
+from askbot.utils import mail
 from askbot import startup_procedures
 
 startup_procedures.run()
@@ -998,6 +998,7 @@ def user_post_question(
                     body_text = None,
                     tags = None,
                     wiki = False,
+                    is_anonymous = False,
                     timestamp = None
                 ):
 
@@ -1018,7 +1019,8 @@ def user_post_question(
                                     text = body_text,
                                     tagnames = tags,
                                     added_at = timestamp,
-                                    wiki = wiki
+                                    wiki = wiki,
+                                    is_anonymous = is_anonymous,
                                 )
     return question
 
@@ -1039,7 +1041,8 @@ def user_edit_question(
                     revision_comment = None,
                     tags = None,
                     wiki = False,
-                    timestamp = None
+                    edit_anonymously = False,
+                    timestamp = None,
                 ):
     self.assert_can_edit_question(question)
     question.apply_edit(
@@ -1051,6 +1054,7 @@ def user_edit_question(
         comment = revision_comment,
         tags = tags,
         wiki = wiki,
+        edit_anonymously = edit_anonymously,
     )
     award_badges_signal.send(None,
         event = 'edit_question',
@@ -1223,6 +1227,34 @@ def user_is_watched(self):
 
 def user_is_approved(self):
     return (self.status == 'a')
+
+def user_is_owner_of(self, obj):
+    """True if user owns object
+    False otherwise
+    """
+    if isinstance(obj, Question):
+        return self == obj.author
+    else:
+        raise NotImplementedError()
+
+def get_name_of_anonymous_user():
+    """Returns name of the anonymous user
+    either comes from the live settyngs or the language
+    translation
+
+    very possible that this function does not belong here
+    """
+    if askbot_settings.NAME_OF_ANONYMOUS_USER:
+        return askbot_settings.NAME_OF_ANONYMOUS_USER
+    else:
+        return _('Anonymous')
+
+def user_get_anonymous_name(self):
+    """Returns name of anonymous user
+    - convinience method for use in the template 
+    macros that accept user as parameter
+    """
+    return get_name_of_anonymous_user()
 
 def user_set_status(self, new_status):
     """sets new status to user
@@ -1627,6 +1659,7 @@ User.add_to_class(
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_anonymous_name', user_get_anonymous_name)
 User.add_to_class('update_has_custom_avatar', user_update_has_custom_avatar)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
@@ -1664,6 +1697,7 @@ User.add_to_class('is_approved', user_is_approved)
 User.add_to_class('is_watched', user_is_watched)
 User.add_to_class('is_suspended', user_is_suspended)
 User.add_to_class('is_blocked', user_is_blocked)
+User.add_to_class('is_owner_of', user_is_owner_of)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)
@@ -1805,6 +1839,7 @@ def format_instant_notification_email(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
+    subject_line = mail.prefix_the_subject_line(subject_line)
     return subject_line, template.render(Context(update_data))
 
 #todo: action
@@ -1845,7 +1880,7 @@ def send_instant_notifications_about_activity_in_post(
                     )
         #todo: this could be packaged as an "action" - a bundle
         #of executive function with the activity log recording
-        send_mail(
+        mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
             recipient_list = [user.email],

@@ -8,19 +8,26 @@ class Migration(SchemaMigration):
     
     def forwards(self, orm):
         
-        # Adding model country fields to the model auth_user
-        try:
-            db.add_column(u'auth_user', 'country', self.gf('django_countries.fields.CountryField')(max_length=2, blank=True, null=True))
-            db.add_column(u'auth_user', 'show_country', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True))
-        except:
-            pass
+        # Adding field 'AnonymousQuestion.is_anonymous'
+        db.add_column('askbot_anonymousquestion', 'is_anonymous', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default=False)
+
+        # Adding field 'QuestionRevision.is_anonymous'
+        db.add_column(u'question_revision', 'is_anonymous', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default=False)
+
+        # Adding field 'Question.is_anonymous'
+        db.add_column(u'question', 'is_anonymous', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default=False)
     
     
     def backwards(self, orm):
         
-        # Deleting country fields
-        db.delete_column(u'auth_user', 'country')
-        db.delete_column(u'auth_user', 'show_country')
+        # Deleting field 'AnonymousQuestion.is_anonymous'
+        db.delete_column('askbot_anonymousquestion', 'is_anonymous')
+
+        # Deleting field 'QuestionRevision.is_anonymous'
+        db.delete_column(u'question_revision', 'is_anonymous')
+
+        # Deleting field 'Question.is_anonymous'
+        db.delete_column(u'question', 'is_anonymous')
     
     
     models = {
@@ -62,6 +69,7 @@ class Migration(SchemaMigration):
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ip_addr': ('django.db.models.fields.IPAddressField', [], {'max_length': '15'}),
+            'is_anonymous': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'session_key': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'summary': ('django.db.models.fields.CharField', [], {'max_length': '180'}),
             'tagnames': ('django.db.models.fields.CharField', [], {'max_length': '125'}),
@@ -175,6 +183,7 @@ class Migration(SchemaMigration):
             'followed_by': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'followed_questions'", 'to': "orm['auth.User']"}),
             'html': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_anonymous': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'last_activity_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_activity_by': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'last_active_in_questions'", 'to': "orm['auth.User']"}),
             'last_edited_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
@@ -199,6 +208,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'QuestionRevision', 'db_table': "u'question_revision'"},
             'author': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'questionrevisions'", 'to': "orm['auth.User']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_anonymous': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'question': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'revisions'", 'to': "orm['askbot.Question']"}),
             'revised_at': ('django.db.models.fields.DateTimeField', [], {}),
             'revision': ('django.db.models.fields.PositiveIntegerField', [], {}),
@@ -263,7 +273,7 @@ class Migration(SchemaMigration):
             'about': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'bronze': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'consecutive_days_visit_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'country': ('django_countries.fields.CountryField', [], {'max_length': '2', 'blank': 'True', 'null': 'True'}),
+            'country': ('django_countries.fields.CountryField', [], {'max_length': '2', 'blank': 'True'}),
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'date_of_birth': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
@@ -289,9 +299,9 @@ class Migration(SchemaMigration):
             'real_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'reputation': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1'}),
             'seen_response_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'show_country': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'silver': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'w'", 'max_length': '2'}),
-            'show_country': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'tag_filter_setting': ('django.db.models.fields.CharField', [], {'default': "'ignored'", 'max_length': '16'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'}),

@@ -46,7 +46,17 @@
 
 {%- macro user_country_flag(user) -%}
     {% if user.country and user.show_country %}
-        <img class="flag" src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"/>
+        <img class="flag" 
+            src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"
+            alt="{% trans 
+                    country=user.country.name 
+                    %}flag of {{country}}{% 
+                endtrans %}"
+            title="{% trans 
+                    country=user.country.name, 
+                    person=user.username %}{{person}} is from {{country}}{%
+                 endtrans %}"
+        />
     {% endif %}
 {%- endmacro -%}
 
@@ -156,6 +166,18 @@
     {% endif %}
 {%- endmacro -%}
 
+{%- macro post_contributor_avatar_and_credentials(post, user) -%}
+    {% if post.is_anonymous %}
+        <img alt="{% trans %}anonymous user{% endtrans %}" src="{{ '/images/anon.png'|media }} " class="gravatar" width="32" height="32" />
+        <p>{{ user.get_anonymous_name() }}</p>
+    {% else %}
+        {{ gravatar(user, 32) }}
+        {{ user.get_profile_link()}}{{ user_country_flag(user) }}{% if not user.website %}<br/>{% endif %}
+        {{ user_score_and_badge_summary(user) }}<br/>
+        {{ user_website_link(user) }}
+    {% endif %}
+{%- endmacro -%}
+
 {%- macro post_contributor_info(post, contributor_type, is_wiki, wiki_min_rep) -%}
 {# there is a whole bunch of trickery here, probably indicative of 
 poor design of the data or methods on data objects #}
@@ -195,10 +217,7 @@ poor design of the data or methods on data objects #}
                 <strong>{{post.added_at|diff_date}}</strong>
             {% endif %}
         </p>
-        {{ gravatar(post.author, 32) }}
-            {{post.author.get_profile_link()}}{{ user_country_flag(post.author)}}{% if not post.author.website %}<br/>{% endif %}
-            {{ user_score_and_badge_summary(post.author) }}<br/>
-            {{ user_website_link(post.author) }}
+        {{ post_contributor_avatar_and_credentials(post, post.author) }}
     {% endif %}
     </div>
 {% elif contributor_type=="last_updater" %}
@@ -223,14 +242,81 @@ poor design of the data or methods on data objects #}
             >{% trans %}updated{% endtrans %} <strong>{{ last_edited_at|diff_date }}</strong></a>
         </p>
         {% if original_author != update_author or is_wiki %}
-            {{ gravatar(update_author, 32) }}
-            {{update_author.get_profile_link()}}{{ user_country_flag(update_author) }}{% if not update_author.website %}<br/>{% endif %}
-            {{ user_score_and_badge_summary(update_author) }}<br/>
-            {{ user_website_link(update_author) }}
+            {{ post_contributor_avatar_and_credentials(post, update_author) }}
         {% endif %}
     </div>
     {% endif %}
 {% endif %}
+{%- endmacro -%}
+
+{%- macro if_else(condition, if_true, if_false) -%}
+    {%- if condition == True -%}
+        {{if_true}}
+    {%- else -%}
+        {{if_false}}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro tag_list_widget(
+            tags,
+            id = None,
+            deletable = False,
+            make_links = True,
+            url_params = None,
+            css_class = None
+        )
+-%}
+<ul {% if id %}id={{ id }}{% endif %}
+    class="tags{% if css_class %} {{css_class}}{% endif %}"
+>
+    {% if tags %}
+        {% for tag in tags %}
+            {{ tag_widget(
+                tag,
+                deletable = deletable,
+                is_link = make_links,
+                url_params = url_params,
+                html_tag = 'li'
+            )}}
+        {% endfor %}
+    {% endif %}
+</ul>
+{%- endmacro -%}
+
+{# todo: remove css_class argument because it is redundant #}
+{%- macro tag_widget(
+            tag,
+            deletable = False,
+            is_link = True,
+            delete_link_title = None,
+            url_params = None,
+            html_tag = 'div',
+            css_class = None,
+            extra_content = ''
+        )
+-%}
+    {% spaceless %}
+    <{{ html_tag }} class="tag-left{% if deletable %} deletable-tag{% endif %}">
+        <{{ if_else(is_link, 'a', 'span') }}
+            class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
+            href="{% url questions %}?tags={{tag|urlencode}}{{ 
+                                                        if_else(
+                                                            url_params != None,
+                                                            '&' ~ url_params,
+                                                            ''
+                                                        )|escape
+                                                    }}"
+            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</{{ if_else(is_link, 'a', 'span') }}>
+        {% if deletable %}
+            <span class="delete-icon"
+                {% if delete_link_title %}
+                    title="{{ delete_link_title }}"
+                {% endif %}
+            ></span>
+        {% endif %}
+    </{{ html_tag }}>
+    {{ extra_content }}
+    {% endspaceless %}
 {%- endmacro -%}
 
 {%- macro question_summary(question, extra_class=None) -%}
@@ -278,18 +364,16 @@ poor design of the data or methods on data objects #}
             <div style="clear:both"></div>
             <div class="userinfo">
                 <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
-                <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>{{ user_country_flag(question.last_activity_by) }}
+                {% if question.is_anonymous %}
+                    <span class="anonymous">{{ question.last_activity_by.get_anonymous_name() }}</span>
+                {% else %}
+                    <a href="{% url user_profile question.last_activity_by.id, question.last_activity_by.username|slugify %}">{{question.last_activity_by.username}}</a>{{ user_country_flag(question.last_activity_by) }}
                 {#{user_score_and_badge_summary(question.last_activity_by)}#}
+                {% endif %}
             </div>
         </div>
         <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url() }}">{{question.get_question_title()|escape}}</a></h2>
-        {% spaceless %}
-        <div class="tags">
-            {% for tag in question.get_tag_names() %}
-            <a class="tag" href="{% url questions %}?tags={{tag|urlencode}}" title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</a>
-            {% endfor %}
-        </div>
-        {% endspaceless %}
+        {{ tag_list_widget(question.get_tag_names()) }}
     </div>
 {%- endmacro -%}
 
@@ -306,10 +390,9 @@ poor design of the data or methods on data objects #}
             <a class="edit">{% trans %}edit{% endtrans %}</a>
         {% endif %}
         {% if user|can_delete_comment(comment) %}
-            <img class="delete-icon" 
-                src="{{"/images/close-small.png"|media}}"
+            <span class="delete-icon" 
                 title="{% trans %}delete this comment{% endtrans %}"
-            />
+            ></span>
         {% endif %}
     </div>
     {% endfor %}
@@ -431,7 +514,21 @@ poor design of the data or methods on data objects #}
     </script>
 {%- endmacro %}
 
-{%- macro edit_post(post_form, wiki_on, post_type=None, edit_title=False) -%}
+{%- macro checkbox_in_div(checkbox_field, class = 'checkbox') -%}
+    <div{% if class %} class="{{class}}"{% endif %}
+        title="{{checkbox_field.help_text}}">
+        {{ checkbox_field }} 
+        {{ checkbox_field.label_tag() }} 
+        {{ checkbox_field.errors }}
+    </div>
+{%- endmacro -%}
+
+{%- macro edit_post(
+                post_form,
+                post_type=None,
+                edit_title=False
+            )
+-%}
     {% if edit_title %}
         <div class="form-item">
             <label for="id_title" ><strong>{{ post_form.title.label_tag() }}:</strong></label> <span class="form-error"></span><br/>
@@ -444,13 +541,6 @@ poor design of the data or methods on data objects #}
     <div id="wmd-button-bar" class="wmd-panel"></div>
     <div class="form-item">
         {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
-        {% if wiki_on %}
-            <div style="margin-right:5px;float:right;font-weight:normal;cursor:help" 
-                title="{{post_form.wiki.help_text}}">
-                {{ post_form.wiki }} 
-                {{ post_form.wiki.label_tag() }} 
-            </div>
-        {% endif %}
         <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
     </div>
     {# need label element for resizable input, b/c form validation won't find span #}

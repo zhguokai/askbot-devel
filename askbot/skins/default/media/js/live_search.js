@@ -102,15 +102,21 @@ $(document).ready(function(){
 
     var render_user_link = function(result){
         if (result['u_id'] !== false){
-            var u_slug = result['u_name'].toLowerCase().replace(/ +/g, '-');
-            return '<a ' +
-                        'href="' + 
-                            askbot['urls']['user_url_template']
-                            .replace('{{user_id}}', result['u_id'])
-                            .replace('{{slug}}', u_slug) +
-                    '">' +
-                        result['u_name'] +
-                    '</a> ';
+            if (result['u_is_anonymous'] === true){
+                return '<span class="anonymous">' + 
+                            askbot['messages']['name_of_anonymous_user'] +
+                       '</span>';
+            } else {
+                var u_slug = result['u_name'].toLowerCase().replace(/ +/g, '-');
+                return '<a ' +
+                            'href="' + 
+                                askbot['urls']['user_url_template']
+                                .replace('{{user_id}}', result['u_id'])
+                                .replace('{{slug}}', u_slug) +
+                        '">' +
+                            result['u_name'] +
+                        '</a> ';
+            }
         }
         else {
             return '';
@@ -168,10 +174,12 @@ $(document).ready(function(){
             '>' +
             result['timesince'] +
             '</span> ' +
-            render_user_link(result) +
-            render_user_flag(result) +
+            render_user_link(result);
+        if (result['u_is_anonymous'] === false){
+            user_html += render_user_flag(result);
             //render_user_badge_and_karma(result) +
-        '</div>';
+        }
+        user_html += '</div>';
         return user_html;
     };
 
@@ -191,22 +199,26 @@ $(document).ready(function(){
             tag_url = ' href="' + url + '" ';
         }
         html = '<' + tag_element +
-                    ' class="tag" ' +
+                    ' class="tag tag-right" ' +
                     tag_url +
                     ' title="' + tag_title + '" rel="tag"' +
                 '>' + tag_name + '</' + tag_element + '>';
         if (deletable){
             html += '<span class="delete-icon"></span>';
         }
-        return html;
+        var tag_class = 'tag-left';
+        if (deletable){
+            tag_class += ' deletable-tag';
+        }
+        return '<li class="' + tag_class + '">' + html + '</li>';
     };
 
     var render_tags = function(tags, linkable, deletable){
-        var tags_html = '<div class="tags">';
+        var tags_html = '<ul class="tags">';
         $.each(tags, function(idx, item){
             tags_html += render_tag(item, linkable, deletable);
         });
-        tags_html += '</div>';
+        tags_html += '</ul>';
         return tags_html;
     };
 
