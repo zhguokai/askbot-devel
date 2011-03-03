@@ -283,21 +283,21 @@ poor design of the data or methods on data objects #}
 </ul>
 {%- endmacro -%}
 
-{# todo: remove css_class argument because it is redundant #}
+{# todo: remove the extra content argument to make its usage more explicit #}
 {%- macro tag_widget(
             tag,
             deletable = False,
             is_link = True,
             delete_link_title = None,
+            css_class = None,
             url_params = None,
             html_tag = 'div',
-            css_class = None,
             extra_content = ''
         )
 -%}
     {% spaceless %}
     <{{ html_tag }} class="tag-left{% if deletable %} deletable-tag{% endif %}">
-        <{{ if_else(is_link, 'a', 'span') }}
+    <{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
             href="{% url questions %}?tags={{tag|urlencode}}{{ 
                                                         if_else(
@@ -306,7 +306,8 @@ poor design of the data or methods on data objects #}
                                                             ''
                                                         )|escape
                                                     }}"
-            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag">{{ tag }}</{{ if_else(is_link, 'a', 'span') }}>
+            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag"
+        >{{ tag|replace('*', '&#10045;') }}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
             <span class="delete-icon"
                 {% if delete_link_title %}
@@ -492,17 +493,17 @@ poor design of the data or methods on data objects #}
     <a id="by_{{key_name}}" 
         href="?sort={{key_name}}-desc" 
         class="on" 
-        title="{{desc_tooltip}}">{{label}} &#9650;</a>
+        title="{{desc_tooltip}}"><span>{{label}} &#9650;</span></a>
     {% elif sort == key_name + "-desc" %}{# "best first" #}
     <a id="by_{{key_name}}"
         href="?sort={{key_name}}-asc" 
         class="on"
-        title="{{asc_tooltip}}">{{label}} &#9660;</a>
+        title="{{asc_tooltip}}"><span>{{label}} &#9660;</span></a>
     {% else %}{# default, when other button is active #}
     <a id="by_{{key_name}}"
         href="?sort={{key_name}}-desc" 
         class="off"
-        title="{{desc_tooltip}}">{{label}}</a>
+        title="{{desc_tooltip}}"><span>{{label}}</span></a>
     {% endif %}
     <script type="text/javascript">{# need to pass on text translations to js #}
         var sortButtonData = sortButtonData || {};

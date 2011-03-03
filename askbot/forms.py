@@ -19,6 +19,31 @@ def cleanup_dict(dictionary, key, empty_value):
     if key in dictionary and dictionary[key] == empty_value:
         del dictionary[key]
 
+def clean_marked_tagnames(tagnames):
+    """return two strings - one containing tagnames
+    that are straight names of tags, and the second one
+    containing names of wildcard tags,
+    wildcard tags are those that have an asterisk at the end
+    the function does not verify that the tag names are valid
+    """
+    if askbot_settings.USE_WILDCARD_TAGS == False:
+        return tagnames, list()
+
+    pure_tags = list()
+    wildcards = list()
+    for tagname in tagnames:
+        if tagname == '':
+            continue
+        if tagname.endswith('*'):
+            if tagname.count('*') > 1:
+                continue
+            else:
+                wildcards.append(tagname)
+        else:
+            pure_tags.append(tagname)
+    
+    return pure_tags, wildcards
+
 def filter_choices(remove_choices = None, from_choices = None):
     """a utility function that will remove choice tuples
     usable for the forms.ChoicesField from
@@ -149,7 +174,6 @@ class TagNamesField(forms.CharField):
             entered_tags = set([name.lower() for name in entered_tags])
         else:
             #make names of tags in the input to agree with the database
-
             cleaned_entered_tags = set()
             for entered_tag in entered_tags:
                 try:

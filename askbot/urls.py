@@ -65,6 +65,11 @@ urlpatterns = patterns('',
         name='questions'
     ),
     url(
+        r'^api/get_questions/',
+        views.commands.api_get_questions,
+        name = 'api_get_questions'
+    ),
+    url(
         r'^%s%s$' % (_('questions/'), _('ask/')), 
         views.writers.ask, 
         name='ask'
@@ -154,10 +159,20 @@ urlpatterns = patterns('',
         name='mark_ignored_tag'
     ),
     url(#ajax only
-        'unmark-tag/',
+        r'^unmark-tag/',
         views.commands.mark_tag,
         kwargs={'action':'remove'},
         name='unmark_tag'
+    ),
+    url(
+        r'^get-tags-by-wildcard/',
+        views.commands.get_tags_by_wildcard,
+        name = 'get_tags_by_wildcard'
+    ),
+    url(
+        r'^%s$' % _('subscribe-for-tags/'),
+        views.commands.subscribe_for_tags,
+        name = 'subscribe_for_tags'
     ),
     url(
         r'^%s$' % _('users/'),

@@ -5,17 +5,20 @@ This module contains most (but not all) processors for Ajax requests.
 Not so clear if this subdivision was necessary as separation of Ajax and non-ajax views
 is not always very clean.
 """
-from askbot.conf import settings as askbot_settings
-from django.utils import simplejson
+from django.conf import settings as django_settings
 from django.core import exceptions
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.utils.translation import ugettext as _
-from askbot import models
-from askbot.forms import CloseForm
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from askbot.utils.decorators import ajax_only, ajax_login_required
+from django.http import HttpResponse, HttpResponseRedirect
+from django.forms import ValidationError
+from django.shortcuts import get_object_or_404
+from django.utils import simplejson
+from django.utils.translation import ugettext as _
+from askbot import models
+from askbot import forms
+from askbot.conf import should_show_sort_by_relevance
+from askbot.conf import settings as askbot_settings
+from askbot.utils import decorators
 from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
@@ -329,38 +332,119 @@ def vote(request, id):
     return HttpResponse(data, mimetype="application/json")
 
 #internally grouped views - used by the tagging system
-@ajax_login_required
+@decorators.ajax_login_required
 def mark_tag(request, **kwargs):#tagging system
     action = kwargs['action']
     post_data = simplejson.loads(request.raw_post_data)
-    tagnames = post_data['tagnames']
-    marked_ts = models.MarkedTag.objects.filter(
-                                    user=request.user,
-                                    tag__name__in=tagnames
-                                )
-    #todo: use the user api methods here instead of the straight ORM
-    if action == 'remove':
-        logging.debug('deleting tag marks: %s' % ','.join(tagnames))
-        marked_ts.delete()
-    else:
-        reason = kwargs['reason']
-        if len(marked_ts) == 0:
-            try:
-                ts = models.Tag.objects.filter(name__in=tagnames)
-                for tag in ts:
-                    mt = models.MarkedTag(
-                                user=request.user,
-                                reason=reason,
-                                tag=tag
-                            )
-                    mt.save()
-            except:
-                pass
-        else:
-            marked_ts.update(reason=reason)
-    return HttpResponse(simplejson.dumps(''), mimetype="application/json")
+    raw_tagnames = post_data['tagnames']
+    reason = kwargs.get('reason', None)
+    #separate plain tag names and wildcard tags
 
-@ajax_login_required
+    tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
+    cleaned_tagnames, cleaned_wildcards = request.user.mark_tags(
+                                                            tagnames,
+                                                            wildcards,
+                                                            reason = reason,
+                                                            action = action
+                                                        )
+
+    #lastly - calculate tag usage counts
+    tag_usage_counts = dict()
+    for name in tagnames:
+        if name in cleaned_tagnames:
+            tag_usage_counts[name] = 1
+        else:
+            tag_usage_counts[name] = 0
+
+    for name in wildcards:
+        if name in cleaned_wildcards:
+            tag_usage_counts[name] = models.Tag.objects.filter(
+                                        name__startswith = name[:-1]
+                                    ).count()
+        else:
+            tag_usage_counts[name] = 0
+
+    return HttpResponse(simplejson.dumps(tag_usage_counts), mimetype="application/json")
+
+#@decorators.ajax_only
+@decorators.get_only
+def get_tags_by_wildcard(request):
+    """returns an json encoded array of tag names
+    in the response to a wildcard tag name
+    """
+    matching_tags = models.Tag.objects.get_by_wildcards(
+                        [request.GET['wildcard'],]
+                    )
+    count = matching_tags.count()
+    names = matching_tags.values_list('name', flat = True)[:20]
+    re_data = simplejson.dumps({'tag_count': count, 'tag_names': list(names)})
+    return HttpResponse(re_data, mimetype = 'application/json')
+
+
+def subscribe_for_tags(request):
+    """process subscription of users by tags"""
+    tag_names = request.REQUEST.get('tags','').strip().split()
+    pure_tag_names, wildcards = forms.clean_marked_tagnames(tag_names)
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            if 'ok' in request.POST:
+                request.user.mark_tags(
+                            pure_tag_names,
+                            wildcards,
+                            reason = 'good',
+                            action = 'add'
+                        )
+                request.user.message_set.create(
+                    message = _('Your tag subscription was saved, thanks!')
+                )
+            else:
+                message = _(
+                    'Tag subscription was canceled (<a href="%(url)s">undo</a>).'
+                ) % {'url': request.path + '?tags=' + request.REQUEST['tags']}
+                request.user.message_set.create(message = message)
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            data = {'tags': tag_names}
+            return render_into_skin('subscribe_for_tags.html', data, request)
+    else:
+        all_tag_names = pure_tag_names + wildcards
+        message = _('Please sign in to subscribe for: %(tags)s') \
+                    % {'tags': ', '.join(all_tag_names)}
+        request.user.message_set.create(message = message)
+        request.session['subscribe_for_tags'] = (pure_tag_names, wildcards)
+        return HttpResponseRedirect(reverse('user_signin'))
+
+
+@decorators.get_only
+def api_get_questions(request):
+    """json api for retrieving questions
+    todo - see if it is possible to integrate this with the
+    questions view
+    """
+    form = forms.AdvancedSearchForm(request.GET)
+    if form.is_valid():
+        query = form.cleaned_data['query']
+        questions = models.Question.objects.get_by_text_query(query)
+        if should_show_sort_by_relevance():
+            questions = questions.extra(order_by = ['-relevance'])
+        page_size = form.cleaned_data.get('page_size', 30)
+        questions = questions[:page_size]
+
+
+        question_list = list()
+        for question in questions:
+            question_list.append({
+                'url': question.get_absolute_url(),
+                'title': question.title,
+                'answer_count': question.answer_count
+            })
+        json_data = simplejson.dumps(question_list)
+        return HttpResponse(json_data, mimetype = "application/json")
+    else:
+        raise ValidationError('InvalidInput')
+
+
+@decorators.ajax_login_required
 def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering system
     if request.user.hide_ignored_questions:
         new_hide_setting = False
@@ -369,7 +453,7 @@ def ajax_toggle_ignored_questions(request):#ajax tagging and tag-filtering syste
     request.user.hide_ignored_questions = new_hide_setting
     request.user.save()
 
-@ajax_only
+@decorators.ajax_only
 def ajax_command(request):
     """view processing ajax commands - note "vote" and view others do it too
     """
@@ -386,7 +470,7 @@ def close(request, id):#close question
     question = get_object_or_404(models.Question, id=id)
     try:
         if request.method == 'POST':
-            form = CloseForm(request.POST)
+            form = forms.CloseForm(request.POST)
             if form.is_valid():
                 reason = form.cleaned_data['reason']
 
@@ -397,7 +481,7 @@ def close(request, id):#close question
             return HttpResponseRedirect(question.get_absolute_url())
         else:
             request.user.assert_can_close_question(question)
-            form = CloseForm()
+            form = forms.CloseForm()
             data = {
                 'question': question,
                 'form': form,
