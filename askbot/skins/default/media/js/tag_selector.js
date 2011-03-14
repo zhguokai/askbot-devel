@@ -317,7 +317,7 @@ function pickedTags(){
             collectPickedTags('interesting');
             collectPickedTags('ignored');
             setupHideIgnoredQuestionsControl();
-            $("#interestingTagInput, #ignoredTagInput").autocomplete(tags, {
+            $("#interestingTagInput, #ignoredTagInput, #ab-tag-search").autocomplete(tags, {
                 minChars: 1,
                 matchContains: true,
                 max: 20,
@@ -333,6 +333,7 @@ function pickedTags(){
             });
             $("#interestingTagAdd").click(function(){handlePickedTag(this,'good');});
             $("#ignoredTagAdd").click(function(){handlePickedTag(this,'bad');});
+            //tag search is handled in live_search.js
         }
     };
 }

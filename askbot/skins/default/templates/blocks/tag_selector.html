@@ -1,6 +1,11 @@
 {# todo - maybe disable navigation from ignored tags here when "hide" is on - with js? #}
 {% import "macros.html" as macros %}
 <div id="tagSelector" class="boxC">
+    <h2>{% trans %}Tag search{% endtrans %}</h2>
+    <div class="inputs">
+        <input id="ab-tag-search" autocomplete="off" type="text"/>
+        <input id="ab-tag-search-add" type="submit" value="{% trans %}Search{% endtrans %}"/>
+    </div>
     <h2>{% trans %}Interesting tags{% endtrans %}</h2>
     {{ 
         macros.tag_list_widget(

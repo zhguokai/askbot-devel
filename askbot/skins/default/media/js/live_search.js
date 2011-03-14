@@ -395,6 +395,30 @@ var liveSearch = function(){
         });
     };
 
+    var run_tag_search = function(){
+        var search_tags = $('#ab-tag-search').val();
+        $.ajax({
+            url: search_url,
+            data: {tags: search_tags},
+            dataType: 'json',
+            success: function(data, text_status, xhr){
+                render_result(data, text_status, xhr);
+                $('#ab-tag-search').val('');
+            },
+            complete: try_again
+        });
+    };
+
+    var activate_tag_search_input = function(){
+        //the autocomplete is set up in tag_selector.js
+        var tag_search_input = $('#ab-tag-search');
+        tag_search_input.keydown(
+            makeKeyHandler(13, run_tag_search)
+        );
+        var button = $('#ab-tag-search-add');
+        setupButtonEventHandlers(button, run_tag_search);
+    };
+
     var render_ask_page_result = function(data, text_status, xhr){
         var container = $('#' + q_list_sel);
         container.children().remove();
@@ -498,8 +522,10 @@ var liveSearch = function(){
                 };
 
                 activate_search_tags();
+                activate_tag_search_input();
                 main_page_search_listen();
             } else {
+                //branch for question pre-search
                 query = $('input#id_title.questionTitleInput');
                 search_url = askbot['urls']['api_get_questions'];
                 render_result = render_ask_page_result;
