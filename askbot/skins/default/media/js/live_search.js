@@ -402,7 +402,7 @@ var liveSearch = function(){
             data: {tags: search_tags},
             dataType: 'json',
             success: function(data, text_status, xhr){
-                render_result(data, text_status, xhr);
+                render_result(data, text_status, xhr, true);
                 $('#ab-tag-search').val('');
             },
             complete: try_again
@@ -447,10 +447,11 @@ var liveSearch = function(){
         });
     };
 
-    var render_main_page_result = function(data, text_status, xhr){
+    var render_main_page_result = function(data, text_status, xhr, show_blank){
         var old_list = $('#' + q_list_sel);
         var new_list = $('<div></div>');
-        if (data['questions'].length > 0){
+        var strict = show_blank || false;
+        if (strict === true || data['questions'].length > 0){
             new_list.html(render_question_list(data['questions']));
             old_list.hide();
             old_list.after(new_list);
