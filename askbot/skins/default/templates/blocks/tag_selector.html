@@ -14,10 +14,6 @@
             css_class = 'interesting marked-tags'
         )
     }}
-    {# todo - add this via js
-        "remove '%(tag_name)s' from the list of interesting tags"|
-        format(tag_name = tag_name)
-    #}
     <div class="inputs">
         <input id="interestingTagInput" autocomplete="off" type="text"/>&nbsp;
         <input id="interestingTagAdd" type="submit" value="{% trans %}Add{% endtrans %}"/>
@@ -30,13 +26,21 @@
             css_class = 'ignored marked-tags'
         )
     }}
-    {# todo: add this via javascript 
-        "remove '%(tag_name)s' from the list of ignored tags"|
-        format(tag_name = tag_name)
-    #}
     <div class="inputs">
         <input id="ignoredTagInput" autocomplete="off" type="text"/>&nbsp;
         <input id="ignoredTagAdd" type="submit" value="{% trans %}Add{% endtrans%}"/>
+    </div>
+    <h2>{% trans %}Subscribed tags{% endtrans %}</h2>
+    {{
+        macros.tag_list_widget(
+            subscribed_tag_names,
+            deletable = True,
+            css_class = 'subscribed marked-tags'
+        )
+    }}
+    <div class="inputs">
+        <input id="subscribedTagInput" autocomplete="off" type="text"/>&nbsp;
+        <input id="subscribedTagAdd" type="submit" value="{% trans %}Add{% endtrans%}"/>
     </div>
     <p id="hideIgnoredTagsControl">
     <input id="hideIgnoredTagsCb" type="checkbox" {% if request.user.hide_ignored_questions %}checked="checked"{% endif %} />

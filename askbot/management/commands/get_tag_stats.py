@@ -95,11 +95,10 @@ class Command(BaseCommand):
             #add names of explicitly followed tags
             followed_tags = list()
             followed_tags.extend(   
-                tag_marks.filter(
-                            reason='good'
-                        ).values_list(
-                            'tag__name', flat = True
-                        )
+                tag_marks.subscribed().values_list(
+                                            'tag__name',
+                                            flat = True
+                                        )
             )
 
             #add wildcards to the list of interesting tags
@@ -110,11 +109,10 @@ class Command(BaseCommand):
 
             ignored_tags = list()
             ignored_tags.extend(
-                tag_marks.filter(
-                    reason='bad'
-                ).values_list(
-                    'tag__name', flat = True
-                )
+                tag_marks.ignored().values_list(
+                                        'tag__name',
+                                        flat = True
+                                    )
             )
 
             for bad_tag in user.ignored_tags.split():
@@ -189,9 +187,9 @@ class Command(BaseCommand):
                 (wild_follow, wild_ignore) = wild_tags[tag.name]
 
             tag_marks = tag.user_selections
-            follow_count = tag_marks.filter(reason='good').count() \
+            follow_count = tag_marks.filter(reason__contains='S').count() \
                                                         + wild_follow
-            ignore_count = tag_marks.filter(reason='bad').count() \
+            ignore_count = tag_marks.filter(reason__contains='I').count() \
                                                         + wild_ignore
             follow_str = '%d (%d)' % (follow_count, wild_follow)
             ignore_str = '%d (%d)' % (ignore_count, wild_ignore)

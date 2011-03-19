@@ -188,16 +188,21 @@ class QuestionQuerySet(models.query.QuerySet):
             uid_str = str(request_user.id)
             #mark questions tagged with interesting tags
             #a kind of fancy annotation, would be nice to avoid it
+            subscribed_tags = Tag.objects.filter(
+                user_selections__user=request_user,
+                user_selections__reason__contains = 'S'#subcr
+            )
             interesting_tags = Tag.objects.filter(
-                                    user_selections__user=request_user,
-                                    user_selections__reason='good'
-                                )
+                user_selections__user=request_user,
+                user_selections__reason__contains = 'F'#followed
+            )
             ignored_tags = Tag.objects.filter(
-                                    user_selections__user=request_user,
-                                    user_selections__reason='bad'
-                                )
+                user_selections__user=request_user,
+                user_selections__reason__contains = 'I'
+            )
 
             meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
+            meta_data['subscribed_tag_names'] = [tag.name for tag in subscribed_tags]
 
             ignored_tag_names = [tag.name for tag in ignored_tags]
             meta_data['ignored_tag_names'] = ignored_tag_names
@@ -211,11 +216,11 @@ class QuestionQuerySet(models.query.QuerySet):
                             'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
                              + 'WHERE askbot_markedtag.user_id = %s '
                              + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-                             + 'AND askbot_markedtag.reason = \'good\' '
+                             + 'AND askbot_markedtag.reason LIKE \'%%S%%\' '
                              + 'AND question_tags.question_id = question.id'
                         ),
                             ]),
-                    select_params = (uid_str,),
+                    select_params = (uid_str,)
                  )
             # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
 
@@ -240,16 +245,16 @@ class QuestionQuerySet(models.query.QuerySet):
                     qs = qs.extra(
                         select = SortedDict([
                             (
-                                'ignored_score', 
+                                'ignored_score',
                                 'SELECT COUNT(1) '
                                   + 'FROM askbot_markedtag, question_tags '
                                   + 'WHERE askbot_markedtag.user_id = %s '
                                   + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-                                  + 'AND askbot_markedtag.reason = \'bad\' '
+                                  + "AND askbot_markedtag.reason LIKE '%%I%%' "
                                   + 'AND question_tags.question_id = question.id'
                             )
                                 ]),
-                        select_params = (uid_str, )
+                        select_params = (uid_str,)
                      )
 
         if sort_method != 'relevance-desc':
@@ -277,6 +282,8 @@ class QuestionQuerySet(models.query.QuerySet):
                                     )
         if askbot_settings.USE_WILDCARD_TAGS == True \
             and request_user.is_authenticated() == True:
+            tagnames = request_user.subscribed_tags
+            meta_data['subscribed_tag_names'].extend(tagnames.split())
             tagnames = request_user.interesting_tags
             meta_data['interesting_tag_names'].extend(tagnames.split())
             tagnames = request_user.ignored_tags

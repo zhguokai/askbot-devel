@@ -103,10 +103,9 @@ class Tag(DeletableContent):
         return self.name
 
 class MarkedTag(models.Model):
-    TAG_MARK_REASONS = (('good', _('interesting')), ('bad', _('ignored')))
     tag = models.ForeignKey('Tag', related_name='user_selections')
     user = models.ForeignKey(User, related_name='tag_selections')
-    reason = models.CharField(max_length=16, choices=TAG_MARK_REASONS)
+    reason = models.CharField(max_length=16)
 
     class Meta:
         app_label = 'askbot'

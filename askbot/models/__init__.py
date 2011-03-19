@@ -174,10 +174,10 @@ def user_has_affinity_to_question(self, question = None, affinity_type = None):
     affinity_type can be either "like" or "dislike"
     """
     if affinity_type == 'like':
-        tag_selection_type = 'good'
-        wildcards = self.interesting_tags.split()
+        tag_selection_type = 'S'#subscribed
+        wildcards = self.subscribed_tags.split()
     elif affinity_type == 'dislike':
-        tag_selection_type = 'bad'
+        tag_selection_type = 'I'#ignored
         wildcards = self.ignored_tags.split()
     else:
         raise ValueError('unexpected affinity type %s' % str(affinity_type))
@@ -185,7 +185,7 @@ def user_has_affinity_to_question(self, question = None, affinity_type = None):
     question_tags = question.tags.all()
     intersecting_tag_selections = self.tag_selections.filter(
                                                 tag__in = question_tags,
-                                                reason = tag_selection_type
+                                                reason__contains = tag_selection_type
                                             )
     #count number of overlapping tags
     if intersecting_tag_selections.count() > 0:
@@ -837,13 +837,14 @@ def user_post_comment(
 
 def user_mark_tags(self, tagnames, wildcards, reason = None, action = None):
     """subscribe for or ignore a list of tags"""
-    cleaned_wildcards = list()
     if wildcards:
         cleaned_wildcards = self.update_wildcard_tag_selections(
             action = action,
             reason = reason,
             wildcards = wildcards
         )
+    else:
+        cleaned_wildcards = list()
 
     #below we update normal tag selections
     marked_ts = MarkedTag.objects.filter(
@@ -854,7 +855,12 @@ def user_mark_tags(self, tagnames, wildcards, reason = None, action = None):
     cleaned_tagnames = list() #those that were actually updated
     if action == 'remove':
         logging.debug('deleting tag marks: %s' % ','.join(tagnames))
-        marked_ts.delete()
+        for mark in marked_ts:
+            mark.reason = mark.reason.replace(reason, '')
+            if mark.reason == '':
+                mark.delete()
+            else:
+                mark.save()
     else:
         marked_names = marked_ts.values_list('tag__name', flat = True)
         if len(marked_names) < len(tagnames):
@@ -871,7 +877,10 @@ def user_mark_tags(self, tagnames, wildcards, reason = None, action = None):
             cleaned_tagnames.extend(marked_names)
             cleaned_tagnames.extend(new_marks)
         else:
-            marked_ts.update(reason=reason)
+            for mark in marked_ts:
+                if reason not in mark.reason:
+                    mark.reason += reason
+                mark.save()
             cleaned_tagnames = tagnames
 
     return cleaned_tagnames, cleaned_wildcards
@@ -1739,28 +1748,28 @@ def user_update_wildcard_tag_selections(
     and saves the user object to the database
     """
     new_tags = set(wildcards)
+    subscribed = set(self.subscribed_tags.split())
     interesting = set(self.interesting_tags.split())
     ignored = set(self.ignored_tags.split())
 
-    target_set = interesting
-    other_set = ignored
-    if reason == 'good':
-        pass
-    elif reason == 'bad':
+    if reason == 'S':#subscribed
+        target_set = subscribed
+    elif reason == 'I':#ignored
         target_set = ignored
-        other_set = interesting
+    elif reason == 'F':#followod/interesting
+        target_set = interesting
     else:
-        assert(action == 'remove')
+        raise NotImplementedError('unknown tag subscription bucket')
 
     if action == 'add':
         target_set.update(new_tags)
-        other_set.difference_update(new_tags)
     else:
+        assert(action == 'remove')
         target_set.difference_update(new_tags)
-        other_set.difference_update(new_tags)
 
     self.interesting_tags = ' '.join(interesting)
     self.ignored_tags = ' '.join(ignored)
+    self.subscribed_tags = ' '.join(subscribed)
     self.save()
     return new_tags
 
@@ -2295,7 +2304,7 @@ def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
         request.user.mark_tags(
                     pure_tag_names,
                     wildcards,
-                    reason = 'good',
+                    reason = 'S',#subscribed
                     action = 'add'
                 )
         request.user.message_set.create(

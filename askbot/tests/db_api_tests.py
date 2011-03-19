@@ -149,10 +149,10 @@ class UserLikeTests(AskbotTestCase):
 
     def test_user_likes_question_via_tags(self):
         truth_table = (
-            ('good', 'like', True),
-            ('good', 'dislike', False),
-            ('bad', 'like', False),
-            ('bad', 'dislike', True),
+            ('S', 'like', True),
+            ('S', 'dislike', False),
+            ('I', 'like', False),
+            ('I', 'dislike', True),
         )
         tag = models.Tag.objects.get(name = 'one')
         for item in truth_table:
@@ -172,7 +172,7 @@ class UserLikeTests(AskbotTestCase):
         askbot_settings.update('USE_WILDCARD_TAGS', False)
         tag = models.Tag(name = 'five', created_by = self.user)
         tag.save()
-        mt = models.MarkedTag(user = self.user, tag = tag, reason = 'good')
+        mt = models.MarkedTag(user = self.user, tag = tag, reason = 'S')
         mt.save()
         self.assertFalse(
             self.user.has_affinity_to_question(
@@ -183,12 +183,12 @@ class UserLikeTests(AskbotTestCase):
 
 
     def setup_wildcard(self, wildcard = None, reason = None):
-        if reason == 'good':
-            self.user.interesting_tags = wildcard
+        if reason == 'S':
+            self.user.subscribed_tags = wildcard
             self.user.ignored_tags = ''
         else:
             self.user.ignored_tags = wildcard
-            self.user.interesting_tags = ''
+            self.user.subscribed_tags = ''
         self.user.save()
         askbot_settings.update('USE_WILDCARD_TAGS', True)
 
@@ -202,27 +202,27 @@ class UserLikeTests(AskbotTestCase):
         )
 
     def test_user_likes_question_via_wildcards(self):
-        self.setup_wildcard('on*', 'good')
+        self.setup_wildcard('on*', 'S')
         self.assert_affinity_is('like', True)
         self.assert_affinity_is('dislike', False)
 
-        self.setup_wildcard('aouaou* o* on* oeu*', 'good')
+        self.setup_wildcard('aouaou* o* on* oeu*', 'S')
         self.assert_affinity_is('like', True)
         self.assert_affinity_is('dislike', False)
 
-        self.setup_wildcard('on*', 'bad')
+        self.setup_wildcard('on*', 'I')
         self.assert_affinity_is('like', False)
         self.assert_affinity_is('dislike', True)
 
-        self.setup_wildcard('aouaou* o* on* oeu*', 'bad')
+        self.setup_wildcard('aouaou* o* on* oeu*', 'I')
         self.assert_affinity_is('like', False)
         self.assert_affinity_is('dislike', True)
         
-        self.setup_wildcard('one*', 'good')
+        self.setup_wildcard('one*', 'S')
         self.assert_affinity_is('like', True)
         self.assert_affinity_is('dislike', False)
 
-        self.setup_wildcard('oneone*', 'good')
+        self.setup_wildcard('oneone*', 'S')
         self.assert_affinity_is('like', False)
         self.assert_affinity_is('dislike', False)
 

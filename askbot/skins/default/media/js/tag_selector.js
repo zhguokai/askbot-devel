@@ -101,27 +101,21 @@ function pickedTags(){
     
     var interestingTags = {};
     var ignoredTags = {};
+    var subscribedTags = {};
+    var subscribedTagDetailBox = new TagDetailBox('subscribed')
     var interestingTagDetailBox = new TagDetailBox('interesting');
     var ignoredTagDetailBox = new TagDetailBox('ignored');
 
     var sendAjax = function(tagnames, reason, action, callback){
-        var url = '';
-        if (action == 'add'){
-            if (reason == 'good'){
-                url = askbot['urls']['mark_interesting_tag'];
-            }
-            else {
-                url = askbot['urls']['mark_ignored_tag'];
-            }
-        }
-        else {
-            url = askbot['urls']['unmark_tag'];
-        }
-
+        var data = {
+            tagnames: tagnames,
+            reason: reason,
+            action: action
+        };
         var call_settings = {
             type:'POST',
-            url:url,
-            data: JSON.stringify({tagnames: tagnames}),
+            url: askbot['urls']['mark_tag'],
+            data: JSON.stringify(data),
             dataType: 'json'
         };
         if (callback !== false){
@@ -146,16 +140,20 @@ function pickedTags(){
 
     var getTagList = function(reason){
         var base_selector = '.marked-tags';
-        if (reason === 'good'){
-            var extra_selector = '.interesting';
-        } else {
+        if (reason === 'S'){
+            var extra_selector = '.subscribed';
+        } else if (reason === 'I') {
             var extra_selector = '.ignored';
+        } else {
+            var extra_selector = '.interesting';
         }
         return $(base_selector + extra_selector);
     };
 
     var getWildcardTagDetailBox = function(reason){
-        if (reason === 'good'){
+        if (reason === 'S'){
+            return subscribedTagDetailBox;
+        } else if (reason === 'F'){
             return interestingTagDetailBox;
         } else {
             return ignoredTagDetailBox;
@@ -210,7 +208,7 @@ function pickedTags(){
                     unpickTag(to_target, tag_name, reason, true);
                 }
             }
-            
+
             tag.setDeleteHandler(delete_handler);
             var tag_element = tag.getElement();
             to_tag_container.append(tag_element);
@@ -220,26 +218,23 @@ function pickedTags(){
 
     var handlePickedTag = function(obj,reason){
         var tagnames = getUniqueWords($(obj).prev().attr('value'));
-        var to_target = interestingTags;
-        var from_target = ignoredTags;
-        var to_tag_container;
-        if (reason == 'bad'){
+        var to_target = null;
+        var to_tag_container = null;
+        if (reason === 'I'){//ignore
             to_target = ignoredTags;
-            from_target = interestingTags;
             to_tag_container = $('div .tags.ignored');
         }
-        else if (reason == 'good'){
+        else if (reason === 'F'){//follow
+            to_target = interestingTags;
             to_tag_container = $('div .tags.interesting');
+        }
+        else if (reason === 'S'){//subscribe
+            to_target = subscribedTags;
+            to_tag_container = $('div .tags.subscribed');
         }
         else {
             return;
         }
-
-        $.each(tagnames, function(idx, tagname){
-            if (tagname in from_target){
-                unpickTag(from_target,tagname,reason,false);
-            }
-        });
 
         var clean_tagnames = [];
         $.each(tagnames, function(idx, tagname){
@@ -268,13 +263,17 @@ function pickedTags(){
     };
 
     var collectPickedTags = function(section){
-        if (section === 'interesting'){
-            var reason = 'good';
+        if (section === 'interesting'){//followed
+            var reason = 'F';
             var tag_store = interestingTags;
         }
         else if (section === 'ignored'){
-            var reason = 'bad';
+            var reason = 'I';
             var tag_store = ignoredTags;
+        }
+        else if (section === 'subscribed'){
+            var reason = 'S';
+            var tag_store = subscribedTags;
         }
         else {
             return;
@@ -316,8 +315,14 @@ function pickedTags(){
         init: function(){
             collectPickedTags('interesting');
             collectPickedTags('ignored');
+            collectPickedTags('subscribed');
             setupHideIgnoredQuestionsControl();
-            $("#interestingTagInput, #ignoredTagInput, #ab-tag-search").autocomplete(tags, {
+            $( 
+                "#interestingTagInput, " +
+                "#ignoredTagInput, " +
+                "#subscribedTagInput, " +
+                "#ab-tag-search"
+            ).autocomplete(tags, {
                 minChars: 1,
                 matchContains: true,
                 max: 20,
@@ -331,8 +336,9 @@ function pickedTags(){
                 }
 
             });
-            $("#interestingTagAdd").click(function(){handlePickedTag(this,'good');});
-            $("#ignoredTagAdd").click(function(){handlePickedTag(this,'bad');});
+            $("#interestingTagAdd").click(function(){handlePickedTag(this,'F');});
+            $("#subscribedTagAdd").click(function(){handlePickedTag(this,'S');});
+            $("#ignoredTagAdd").click(function(){handlePickedTag(this,'I');});
             //tag search is handled in live_search.js
         }
     };

@@ -296,8 +296,9 @@ def questions(request):
         'search_tags' : search_state.tags,
         'tags_autocomplete' : tags_autocomplete,
         'is_unanswered' : False,#remove this from template
-        'interesting_tag_names': meta_data.get('interesting_tag_names',None),
-        'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
+        'interesting_tag_names': meta_data.get('interesting_tag_names', None),
+        'ignored_tag_names': meta_data.get('ignored_tag_names', None), 
+        'subscribed_tag_names': meta_data.get('subscribed_tag_names', None),
         'sort': search_state.sort,
         'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
         'scope': search_state.scope,

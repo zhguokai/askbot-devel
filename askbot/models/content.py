@@ -107,7 +107,7 @@ class Content(models.Model):
                                                 )
         interesting_tag_selections = MarkedTag.objects.filter(
                                                     tag__in = tags,
-                                                    reason = 'good'
+                                                    reason__contains = 'S'#subscribed
                                                 )
         global_interested_subscribers = User.objects.filter(
             tag_selections__in = interesting_tag_selections
@@ -119,9 +119,9 @@ class Content(models.Model):
         subscriber_set.update(global_interested_subscribers)
 
         ignored_tag_selections = MarkedTag.objects.filter(
-                                                    tag__in = tags,
-                                                    reason = 'bad'
-                                                )
+                                                tag__in = tags,
+                                                reason__contains = 'I'#ignored
+                                            )
 
         global_non_ignoring_subscribers = User.objects.exclude(
             tag_selections__in = ignored_tag_selections

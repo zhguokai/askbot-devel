@@ -13,9 +13,7 @@
         Hilite.elementid = "question-list";
         Hilite.debug_referrer = location.href;
     });
-    askbot['urls']['mark_interesting_tag'] = scriptUrl + '{% trans %}mark-tag/{% endtrans %}{% trans %}interesting/{% endtrans %}';
-    askbot['urls']['mark_ignored_tag'] = scriptUrl + '{% trans %}mark-tag/{% endtrans %}{% trans %}ignored/{% endtrans %}';
-    askbot['urls']['unmark_tag'] = scriptUrl + '{% trans %}unmark-tag/{% endtrans %}';
+    askbot['urls']['mark_tag'] = '{% url mark_tag %}';
     askbot['urls']['command'] = '{% url "call_ajax" %}';
     askbot['urls']['questions'] = '{% url "questions" %}';
     askbot['urls']['question_url_template'] = scriptUrl + '{% trans %}question/{% endtrans %}{{ "{{QuestionID}}/" }}';

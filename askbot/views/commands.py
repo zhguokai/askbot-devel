@@ -331,11 +331,12 @@ def vote(request, id):
 
 #internally grouped views - used by the tagging system
 @decorators.ajax_login_required
-def mark_tag(request, **kwargs):#tagging system
-    action = kwargs['action']
+def mark_tag(request):#tagging system
     post_data = simplejson.loads(request.raw_post_data)
     raw_tagnames = post_data['tagnames']
-    reason = kwargs.get('reason', None)
+    reason = post_data['reason']
+    action = post_data['action']
+    assert(reason in 'SFI')
     #separate plain tag names and wildcard tags
 
     tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
@@ -389,7 +390,7 @@ def subscribe_for_tags(request):
                 request.user.mark_tags(
                             pure_tag_names,
                             wildcards,
-                            reason = 'good',
+                            reason = 'S',
                             action = 'add'
                         )
                 request.user.message_set.create(

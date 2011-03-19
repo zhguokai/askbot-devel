@@ -247,7 +247,7 @@ class Command(NoArgsCommand):
                     if user.tag_filter_setting == 'ignored':
 
                         ignored_tags = Tag.objects.filter(
-                                                user_selections__reason='bad',
+                                                user_selections__reason__contains='I',#ignored
                                                 user_selections__user=user
                                             )
 
@@ -267,11 +267,11 @@ class Command(NoArgsCommand):
                                     )
                     else:
                         selected_tags = Tag.objects.filter(
-                                                user_selections__reason='good',
+                                                user_selections__reason__contains ='S',#subscribed
                                                 user_selections__user=user
                                             )
 
-                        wk = user.interesting_tags.strip().split()
+                        wk = user.subscribed_tags.strip().split()
                         selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
 
                         tag_filter = Q(tags__in = list(selected_tags)) \
