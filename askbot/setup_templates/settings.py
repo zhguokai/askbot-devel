@@ -141,11 +141,15 @@ INSTALLED_APPS = (
     'askbot',
     'askbot.deps.django_authopenid',
     #'askbot.importers.stackexchange', #se loader
+    'djcelery',
+    'djkombu',
     'south',
     'askbot.deps.livesettings',
     'keyedcache',
     'robots',
     'django_countries',
+    'djcelery',
+    'djkombu',
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
     #requires setting of MEDIA_ROOT and MEDIA_URL
 )
@@ -186,3 +190,10 @@ LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
 #also, this url must not have the leading slash
 ASKBOT_UPLOADED_FILES_URL = '%s%s' % (ASKBOT_URL, 'upfiles/')
 ALLOW_UNICODE_SLUGS = False
+
+#Celery Settings
+BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+CELERY_ALWAYS_EAGER = True
+
+import djcelery
+djcelery.setup_loader()
