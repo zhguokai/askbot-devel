@@ -12,6 +12,7 @@ LANGUAGES = (
     ('sr', 'Serbian'),
     ('es', 'Spanish'),
     ('tr', 'Turkish'),
+    ('pt', 'Brazilian Portugese'),
 )
 
 LANGUAGE_PROGRESS = {
@@ -28,4 +29,5 @@ LANGUAGE_PROGRESS = {
     'ja': 21,
     'id': 1,
     'kr': 0,
+    'pt': 0,
 }
