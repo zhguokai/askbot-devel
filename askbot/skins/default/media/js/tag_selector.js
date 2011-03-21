@@ -131,7 +131,15 @@ function pickedTags(){
             delete from_target[tagname];
         };
         if (send_ajax){
-            sendAjax([tagname], reason, 'remove', deleteTagLocally);
+            sendAjax(
+                [tagname],
+                reason,
+                'remove',
+                function(){
+                    deleteTagLocally();
+                    liveSearch().refresh();
+                }
+            );
         }
         else {
             deleteTagLocally();
@@ -257,6 +265,7 @@ function pickedTags(){
                         to_target,
                         to_tag_container
                     );
+                    liveSearch().refresh();
                 }
             );
         }
@@ -300,15 +309,23 @@ function pickedTags(){
         );
     };
 
-    var setupHideIgnoredQuestionsControl = function(){
-        $('#hideIgnoredTagsCb').unbind('click').click(function(){
+    var setupTagFilterControl = function(control_type){
+        $('#' + control_type + 'TagFilterControl input')
+        .unbind('click')
+        .click(function(){
             $.ajax({
-                        type: 'POST',
-                        dataType: 'json',
-                        cache: false,
-                        url: askbot['urls']['command'],
-                        data: {command:'toggle-ignored-questions'}
-                    });
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                url: askbot['urls']['set_tag_filter_strategy'],
+                data: {
+                    filter_type: control_type,
+                    filter_value: $(this).val()
+                },
+                success: function(){
+                    liveSearch().refresh();
+                }
+            });
         });
     };
     return {
@@ -316,7 +333,7 @@ function pickedTags(){
             collectPickedTags('interesting');
             collectPickedTags('ignored');
             collectPickedTags('subscribed');
-            setupHideIgnoredQuestionsControl();
+            setupTagFilterControl('display');
             $( 
                 "#interestingTagInput, " +
                 "#ignoredTagInput, " +

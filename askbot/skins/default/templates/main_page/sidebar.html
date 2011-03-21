@@ -12,6 +12,11 @@
     {% endcache %}
 {% endif %}
 
+<h2>{% trans %}Tag search{% endtrans %}</h2>
+<div class="inputs">
+    <input id="ab-tag-search" autocomplete="off" type="text"/>
+    <input id="ab-tag-search-add" type="submit" value="{% trans %}Search{% endtrans %}"/>
+</div>
 {% if request.user.is_authenticated() %} 
    {% include "blocks/tag_selector.html" %}
 {% endif %}

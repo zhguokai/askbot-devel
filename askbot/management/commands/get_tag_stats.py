@@ -1,6 +1,7 @@
 import sys
 import optparse
 from django.core.management.base import BaseCommand, CommandError
+from askbot import const
 from askbot import models
 
 def get_tag_lines(tag_marks, width = 25):
@@ -95,10 +96,12 @@ class Command(BaseCommand):
             #add names of explicitly followed tags
             followed_tags = list()
             followed_tags.extend(   
-                tag_marks.subscribed().values_list(
-                                            'tag__name',
-                                            flat = True
-                                        )
+                tag_marks.filter(
+                    reason__contains = 'S'
+                ).values_list(
+                    'tag__name',
+                    flat = True
+                )
             )
 
             #add wildcards to the list of interesting tags
@@ -109,10 +112,12 @@ class Command(BaseCommand):
 
             ignored_tags = list()
             ignored_tags.extend(
-                tag_marks.ignored().values_list(
-                                        'tag__name',
-                                        flat = True
-                                    )
+                tag_marks.ignored(
+                    reason__contains = 'I'
+                ).values_list(
+                    'tag__name',
+                    flat = True
+                )
             )
 
             for bad_tag in user.ignored_tags.split():
@@ -129,7 +134,7 @@ class Command(BaseCommand):
             ignored_lines = get_tag_lines(ignored_tags, width = 25)
 
             follow = '*'
-            if user.tag_filter_setting == "interesting":
+            if user.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
                 follow = ''
             user_string = '%s (%d)%s' % (user.username, user.id, follow)
             output_lines = format_table_row(

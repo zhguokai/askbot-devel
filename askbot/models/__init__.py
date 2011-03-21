@@ -83,14 +83,21 @@ User.add_to_class('about', models.TextField(blank=True))
 #interesting tags and ignored tags are to store wildcard tag selections only
 User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
-User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
-User.add_to_class('tag_filter_setting',
-                    models.CharField(
-                                        max_length=16,
-                                        choices=const.TAG_EMAIL_FILTER_CHOICES,
-                                        default='ignored'
-                                     )
-                 )
+User.add_to_class(
+    'email_tag_filter_strategy', 
+    models.SmallIntegerField(
+        choices=const.TAG_FILTER_STRATEGY_CHOICES,
+        default=const.EXCLUDE_IGNORED
+    )
+)
+User.add_to_class(
+    'display_tag_filter_strategy',
+    models.SmallIntegerField(
+        choices=const.TAG_FILTER_STRATEGY_CHOICES,
+        default=const.INCLUDE_ALL
+    )
+)
+
 User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
 User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
@@ -199,6 +206,25 @@ def user_has_affinity_to_question(self, question = None, affinity_type = None):
             if tag.name.startswith(wildcard[:-1]):
                 return True
     return False
+
+
+def user_has_ignored_wildcard_tags(self):
+    """True if wildcard tags are on and 
+    user has some"""
+    return (
+        askbot_settings.USE_WILDCARD_TAGS \
+        and self.ignored_tags != ''
+    )
+
+
+def user_has_interesting_wildcard_tags(self):
+    """True in wildcard tags aro on and
+    user has nome interesting wildcard tags selected
+    """
+    return (
+        askbot_settings.USE_WILDCARD_TAGS \
+        and self.interesting_tags != ''
+    )
 
 
 def user_can_have_strong_url(self):
@@ -1822,6 +1848,8 @@ User.add_to_class('is_watched', user_is_watched)
 User.add_to_class('is_suspended', user_is_suspended)
 User.add_to_class('is_blocked', user_is_blocked)
 User.add_to_class('is_owner_of', user_is_owner_of)
+User.add_to_class('has_interesting_wildcard_tags', user_has_interesting_wildcard_tags)
+User.add_to_class('has_ignored_wildcard_tags', user_has_ignored_wildcard_tags)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
 User.add_to_class('has_affinity_to_question', user_has_affinity_to_question)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
@@ -2029,7 +2057,7 @@ def calculate_gravatar_hash(instance, **kwargs):
 
 def record_post_update_activity(
         post,
-        newly_mentioned_users = list(), 
+        newly_mentioned_users = None, 
         updated_by = None,
         timestamp = None,
         created = False,
@@ -2040,54 +2068,19 @@ def record_post_update_activity(
     """
     assert(timestamp != None)
     assert(updated_by != None)
+    if newly_mentioned_users is None:
+        newly_mentioned_users = list()
 
-    #todo: take into account created == True case
-    (activity_type, update_object) = post.get_updated_activity_data(created)
+    from askbot.tasks import record_post_update_task
 
-    update_activity = Activity(
-                    user = updated_by,
-                    active_at = timestamp, 
-                    content_object = post, 
-                    activity_type = activity_type,
-                    question = post.get_origin_post()
-                )
-    update_activity.save()
-
-    #what users are included depends on the post type
-    #for example for question - all Q&A contributors
-    #are included, for comments only authors of comments and parent 
-    #post are included
-    recipients = post.get_response_receivers(
-                                exclude_list = [updated_by, ]
-                            )
-
-    update_activity.add_recipients(recipients)
-
-    assert(updated_by not in recipients)
-
-    for user in set(recipients) | set(newly_mentioned_users):
-        user.increment_response_count()
-        user.save()
-
-    #todo: weird thing is that only comments need the recipients
-    #todo: debug these calls and then uncomment in the repo
-    #argument to this call
-    notification_subscribers = post.get_instant_notification_subscribers(
-                                    potential_subscribers = recipients,
-                                    mentioned_users = newly_mentioned_users,
-                                    exclude_list = [updated_by, ]
-                                )
-    #todo: fix this temporary spam protection plug
-    if created:
-        if not (updated_by.is_administrator() or updated_by.is_moderator()):
-            if updated_by.reputation < 15:
-                notification_subscribers = \
-                    [u for u in notification_subscribers if u.is_administrator()]
-    send_instant_notifications_about_activity_in_post(
-                            update_activity = update_activity,
-                            post = post,
-                            recipients = notification_subscribers,
-                        )
+    record_post_update_task.delay(
+        post_id = post.id,
+        post_content_type_id = ContentType.objects.get_for_model(post).id,
+        newly_mentioned_user_id_list = [u.id for u in newly_mentioned_users],
+        updated_by_id = updated_by.id,
+        timestamp = timestamp,
+        created = created,
+    )
 
 
 def record_award_event(instance, created, **kwargs):
@@ -2397,7 +2390,6 @@ signals.post_updated.connect(
 signals.site_visited.connect(record_user_visit)
 
 #todo: wtf??? what is x=x about?
-signals = signals
 
 Question = Question
 QuestionRevision = QuestionRevision
@@ -2409,10 +2401,6 @@ Answer = Answer
 AnswerRevision = AnswerRevision
 AnonymousAnswer = AnonymousAnswer
 
-Tag = Tag
-Comment = Comment
-Vote = Vote
-MarkedTag = MarkedTag
 
 BadgeData = BadgeData
 Award = Award

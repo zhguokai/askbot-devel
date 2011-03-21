@@ -5,6 +5,10 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
+
+    depends_on = (
+        ('askbot', '0037_add_marked_tags_to_user_profile'),
+    )
     
     def forwards(self, orm):
         try:
