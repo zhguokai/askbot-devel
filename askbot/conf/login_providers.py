@@ -44,7 +44,7 @@ providers = (
     'Technorati',
     'Wordpress',
     'Vidoop',
-    'Verisign'
+    'Verisign',
     'Yahoo',
 )
 
