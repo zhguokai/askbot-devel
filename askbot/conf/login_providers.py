@@ -30,7 +30,7 @@ settings.register(
 )
 
 providers = (
-    'Local',
+    'local',
     'AOL',
     'Blogger',
     'ClaimID',
