@@ -217,6 +217,7 @@ urlpatterns = patterns('',
     url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
     (r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
+    (r'^%s' % _('messages/'), include('askbot.deps.postman.urls')),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
         r'^doc/(?P<path>.*)$', 
