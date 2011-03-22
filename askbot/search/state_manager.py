@@ -124,8 +124,8 @@ class SearchState(object):
                 self.tags = input_dict['tags']
 
         if 'remove_tag' in input_dict and self.tags:
-            rm_set = set([input_dict['remove_tag']])
-            self.tags -= rm_set
+            remove_set = set([ input_dict['remove_tag'] ])
+            self.remove_tags(remove_set)
             return
 
         #all resets just return
@@ -190,6 +190,12 @@ class SearchState(object):
 
         self.update_from_user_input(input_dict)
         self.relax_stickiness(input_dict, view_log)
+
+    def remove_tags(self, tag_set):
+        """removes tags from the search tag set
+        """
+        if self.tags:
+            self.tags -= tag_set
 
     def reset_page(self):
         self.page = 1

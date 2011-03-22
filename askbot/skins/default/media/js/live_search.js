@@ -1,4 +1,55 @@
 var prevSortMethod = sortMethod;
+
+var TagWarningBox = function(){
+    WrappedElement.call(this);
+    this._tags = [];
+};
+inherits(TagWarningBox, WrappedElement);
+
+TagWarningBox.prototype.createDom = function(){
+    this._element = this.makeElement('div');
+    this._element.css('display', 'block');
+    this._element.addClass('non-existing-tags');
+    this._warning = this.makeElement('p');
+    this._element.append(this._warning);
+    this._tag_container = this.makeElement('ul');
+    this._tag_container.addClass('tags');
+    this._element.append(this._tag_container);
+    this._element.hide();
+};
+
+TagWarningBox.prototype.clear = function(){
+    this._tags = [];
+    if (this._tag_container){
+        this._tag_container.empty();
+    }
+    this._warning.hide();
+    this._element.hide();
+};
+
+TagWarningBox.prototype.addTag = function(tag_name){
+   var tag = new Tag();
+   tag.setName(tag_name);
+   tag.setLinkable(false);
+   tag.setDeletable(false);
+   var elem = this.getElement();
+   this._tag_container.append(tag.getElement());
+   this._tag_container.css('display', 'block');
+   this._tags.push(tag);
+   elem.show();
+};
+
+TagWarningBox.prototype.showWarning = function(){
+    this._warning.html(
+        ngettext(
+            'Sorry, this tag does not exist',
+            'Sorry, these tags do not exist',
+            this._tags.length
+        )
+    );
+    this._warning.show();
+};
+
 var liveSearch = function(){
     var query = undefined;
     var prev_text = undefined;
@@ -8,7 +59,11 @@ var liveSearch = function(){
     var restart_query = function(){};
     var process_query = function(){};
     var render_result = function(){};
+    var tag_warning_box = new TagWarningBox();
 
+    $('#ab-tag-search').parent().before(
+        tag_warning_box.getElement()
+    );
 
     var refresh_x_button = function(){
         if ($.trim(query.val()).length > 0){
@@ -411,12 +466,12 @@ var liveSearch = function(){
 
     var activate_tag_search_input = function(){
         //the autocomplete is set up in tag_selector.js
-        var tag_search_input = $('#ab-tag-search');
-        tag_search_input.keydown(
-            makeKeyHandler(13, run_tag_search)
-        );
         var button = $('#ab-tag-search-add');
         setupButtonEventHandlers(button, run_tag_search);
+        //var tag_search_input = $('#ab-tag-search');
+        //tag_search_input.keydown(
+        //    makeKeyHandler(13, run_tag_search)
+        //);
     };
 
     var render_ask_page_result = function(data, text_status, xhr){
@@ -447,6 +502,14 @@ var liveSearch = function(){
         });
     };
 
+    var render_tag_warning = function(tag_list){
+        tag_warning_box.clear();
+        $.each(tag_list, function(idx, tag_name){
+            tag_warning_box.addTag(tag_name);
+        });
+        tag_warning_box.showWarning();
+    }
+
     var render_main_page_result = function(data, text_status, xhr, show_blank){
         var old_list = $('#' + q_list_sel);
         var new_list = $('<div></div>');
@@ -467,7 +530,7 @@ var liveSearch = function(){
             set_active_sort_tab(sortMethod);
             query.focus();
         }
-        //show new div
+        render_tag_warning(data['non_existing_tags']);
     }
 
     var try_again = function(){

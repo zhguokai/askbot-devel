@@ -377,11 +377,13 @@ ul.tags li {
 }
 
 ul.tags.marked-tags li,
-.wildcard-tags ul.tags li {
+.wildcard-tags ul.tags li,
+.non-existing-tags ul.tags li {
     margin-bottom: 5px;
 }
 
-#tagSelector div.inputs {
+#tagSelector div.inputs,
+#tagSearch div.inputs {
     clear: both;
     float: none;
 }

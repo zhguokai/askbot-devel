@@ -338,7 +338,7 @@ function pickedTags(){
                 "#interestingTagInput, " +
                 "#ignoredTagInput, " +
                 "#subscribedTagInput, " +
-                "#ab-tag-search"
+                "#ab-tag-search"//tag search code is in live_search.js
             ).autocomplete(tags, {
                 minChars: 1,
                 matchContains: true,

@@ -1,7 +1,5 @@
 <script type="text/javascript">
-    {% if request.user.is_authenticated() %}
     var tags = {{ tags_autocomplete|safe }};
-    {% endif %}
     var sortMethod = '{{sort}}';
     var showSortByRelevance = {% if show_sort_by_relevance %}true{% else %}false{% endif %};
     var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
@@ -21,7 +19,5 @@
     askbot['messages']['name_of_anonymous_user'] = '{{ name_of_anonymous_user }}';
 </script>
 <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
-{% if request.user.is_authenticated() %}
 <script type='text/javascript' src='{{"/js/tag_selector.js"|media}}'></script>
-{% endif %}
 <script type="text/javascript" src="{{"/js/live_search.js"|media}}"></script>
