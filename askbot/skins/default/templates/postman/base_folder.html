@@ -3,28 +3,28 @@
 <div id="postman">
 <h1>{% block pm_folder_title %}{% endblock %}</h1>
 {% if pm_messages %}
-{% autopaginate pm_messages %}
+{{ pm_messages | autopaginate }}
 {% if invalid_page %}
-<p>{% trans "Sorry, this page number is invalid." %}</p>
+<p>{% trans %}Sorry, this page number is invalid.{% endtrans %}</p>
 {% else %}
 {% block pm_by_modes %}<div id="pm_by_modes">
-<span class="pm_by_mode">{% if by_message %}<a href="{{ by_conversation_url }}">{% endif %}{% trans "by conversation" %}{% if by_message %}</a>{% endif %}</span>
-<span class="pm_by_mode">{% if by_conversation %}<a href="{{ by_message_url }}">{% endif %}{% trans "by message" %}{% if by_conversation %}</a>{% endif %}</span>
+  <span class="pm_by_mode">{% if by_message %}<a href="{{ by_conversation_url }}">{% endif %}{% trans %}by conversation{% endtrans %}{% if by_message %}</a>{% endif %}</span>
+<span class="pm_by_mode">{% if by_conversation %}<a href="{{ by_message_url }}">{% endif %}{% trans  %}by message{% endtrans %}{% if by_conversation %}</a>{% endif %}</span>
 </div>{% endblock pm_by_modes %}
-<form action="{% block pm_form_action %}{% endblock %}" method="post">{% csrf_token %}
+<form action="{% block pm_form_action %}{% endblock %}" method="post">
 {% block pm_form_buttons %}<span id="pm_buttons">
-{% block pm_delete_button %}<button type="submit" onclick="this.form.action='{% url postman_delete %}'">{% trans "Delete" %}</button>{% endblock %}
-{% block pm_archive_button %}<button type="submit" onclick="this.form.action='{% url postman_archive %}'">{% trans "Archive" %}</button>{% endblock %}
-{% block pm_undelete_button %}<button type="submit" onclick="this.form.action='{% url postman_undelete %}'">{% trans "Undelete" %}</button>{% endblock %}
+{% block pm_delete_button %}<button type="submit" onclick="this.form.action='{% url postman_delete %}'">{% trans %}Delete{% endtrans %}</button>{% endblock %}
+{% block pm_archive_button %}<button type="submit" onclick="this.form.action='{% url postman_archive %}'">{% trans %}Archive{% endtrans %}</button>{% endblock %}
+{% block pm_undelete_button %}<button type="submit" onclick="this.form.action='{% url postman_undelete %}'">{% trans %}Undelete{% endtrans %}</button>{% endblock %}
 </span>{% endblock %}
 <table id="pm_messages">
  <thead>
   <tr>
-   <th>{% trans "Action" %}</th>
-{% block pm_sender_header %}   <th><a href="{% postman_order_by sender %}">{% trans "Sender" %}</a></th>{% endblock %}
-{% block pm_recipient_header %}   <th><a href="{% postman_order_by recipient %}">{% trans "Recipient" %}</a></th>{% endblock %}
-   <th><a href="{% postman_order_by subject %}">{% trans "Subject" %}</a></th>
-   <th><a href="{% postman_order_by date %}">{% block pm_date %}{% trans "Date" %}{% endblock %}</a></th>
+   <th>{% trans %}Action{% endtrans %}</th>
+   {% block pm_sender_header %}   <th><a href="{% postman_order_by sender %}">{% trans %}Sender{% endtrans %}</a></th>{% endblock %}
+{% block pm_recipient_header %}   <th><a href="{% postman_order_by recipient %}">{% trans %}Recipient{% endtrans %}</a></th>{% endblock %}
+  <th><a href="{% postman_order_by subject %}">{% trans %}Subject{% endtrans %}</a></th>
+   <th><a href="{% postman_order_by date %}">{% block pm_date %}{% trans %}Date{% endtrans %}{% endblock %}</a></th>
   </tr>
  </thead>
  <tbody>{% for message in pm_messages %}
@@ -47,7 +47,7 @@
 {% paginate %}
 {% endif %}
 {% else %}
-<p>{% trans "No messages." %}</p>
+<p>{% trans %}No messages.{% endtrans %}</p>
 {% endif %}
 {% block pm_footer_info %}{% endblock %}
 </div>

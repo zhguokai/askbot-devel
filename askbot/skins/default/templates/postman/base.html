@@ -1,12 +1,12 @@
-{% extends "base.html" %}
-{% load i18n %}{% load postman_tags %}
+{% extends "two_column_body.html" %}
 {% block title %}{% trans %}Messaging{% endtrans %}{% endblock %}
+{% block sidebar%}
 {% block postman_menu %}
-<ul id="postman_menu">{% postman_unread as unread_count %}
- <li><a href="{% url postman_inbox %} ">&raquo;&nbsp;{% trans "Inbox" %}{% if unread_count %} <strong>({{ unread_count }})</strong>{% endif %}</a></li>
- <li><a href="{% url postman_sent %} ">&raquo;&nbsp;{% trans "Sent Messages" %}</a></li>
- <li><a href="{% url postman_write %} ">&raquo;&nbsp;{% trans "Write" %}</a></li>
- <li><a href="{% url postman_archives %} ">&raquo;&nbsp;{% trans "Archives" %}</a></li>
- <li><a href="{% url postman_trash %} ">&raquo;&nbsp;{% trans "Trash" %}</a></li>
+<li><a href="{% url postman_inbox %} ">&raquo;&nbsp;{% trans  %}Inbox{% endtrans%}{% if user|unread_count %} <strong>({{ user|unread_count }})</strong>{% endif %}</a></li>
+ <li><a href="{% url postman_sent %} ">&raquo;&nbsp;{% trans  %}Sent Messages{% endtrans%}</a></li>
+ <li><a href="{% url postman_write %} ">&raquo;&nbsp;{% trans %}Write{% endtrans%}</a></li>
+ <li><a href="{% url postman_archives %} ">&raquo;&nbsp;{% trans %}Archives{% endtrans%}</a></li>
+ <li><a href="{% url postman_trash %} ">&raquo;&nbsp;{% trans  %}Trash{% endtrans%}</a></li>
 </ul>
+{% endblock %}
 {% endblock %}

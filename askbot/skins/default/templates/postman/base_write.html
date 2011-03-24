@@ -15,7 +15,7 @@
 <form action="{% if next_url %}?next={{ next_url|urlencode }}{% endif %}" method="post">
 <table>
 {% block pm_write_recipient %}{% endblock %}
-{{ form.as_table }}
+{{ form.as_table() }}
 </table>
 <button type="submit">{% trans%}Send{% endtrans %}</button>
 </form>
