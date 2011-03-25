@@ -7,10 +7,6 @@ from askbot import const
 
 class Migration(SchemaMigration):
 
-    depends_on = (
-        ('wrs_askbot_patch', '0002_patch_tag_data'),
-    )
-    
     def forwards(self, orm):
         
         # Adding model country fields to the model auth_user

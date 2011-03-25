@@ -7,7 +7,11 @@ from django.db import models
 TRANS = {'good': 'S', 'bad': 'I'}
 
 class Migration(DataMigration):
-
+    depends_on = (
+        ('askbot', '0038_add_tag_filter_strategies'),
+    )
+		     
+    
     def forwards(self, orm):
         """
         Todo: use frozen orm here
