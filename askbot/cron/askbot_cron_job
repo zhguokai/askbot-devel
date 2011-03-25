@@ -7,10 +7,10 @@
 # if you prefer, you can split this file into several
 
 PROJECT_PARENT_DIR=/path/to/dir_containing_askbot_site
-PROJECT_DIR_NAME=askbot_site
+PROJECT_DIR_NAME=askbot
 
 export PYTHONPATH=$PROJECT_PARENT_DIR:$PYTHONPATH
-PROJECT_ROOT=$PYTHONPATH/$PROJECT_NAME
+PROJECT_ROOT=$PROJECT_PARENT_DIR
 
 #these are actual commands that are to be run
 python $PROJECT_ROOT/manage.py send_email_alerts
