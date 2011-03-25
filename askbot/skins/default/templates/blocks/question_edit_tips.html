@@ -1,22 +1,5 @@
 <!-- question_edit_tips.html -->
 <div class="boxC">
-    <h2>{% trans %}question tips{% endtrans %}</h2>
-    <ul>
-        <li> <b>{% trans %}please ask a relevant question{% endtrans %}</b>
-        </li>
-        <li>
-            {% trans %}please try provide enough details{% endtrans %}
-        </li>
-        <li>
-            {% trans %}be clear and concise{% endtrans %}
-        </li>
-    </ul>
-    <p class='info-box-follow-up-links'>
-        <a href="{% url faq %}" target="_blank" title="{% trans %}see frequently asked questions{% endtrans %}">{% trans %}faq{% endtrans %} »</a>
-    </p>
-</div>
-
-<div class="boxC">
     <h2>{% trans %}Markdown tips{% endtrans %}</h2>
     <ul>
         {% if settings.MARKDUP_CODE_FRIENDLY or settings.ENABLE_MATHJAX %}
@@ -34,6 +17,13 @@
             {% trans %}**bold** or __bold__{% endtrans %}
         </li>
         {% endif %}
+	<li>#H1 Header<br>##H2 Header<br>###H3 Header<br>####H4 Header</li>
+	<li><b>force a line-break</b>: Terminate line with 2 spaces</li>
+	<li>
+	    code block or WYSIWYG display:<br> &lt;pre&gt;
+	    <pre>This is fixed
+     in width and spacing.</pre>&lt;/pre&gt;
+	</li>
         <li>
             <b>{% trans %}link{% endtrans %}</b>:[{% trans %}text{% endtrans %}](http://url.com/ "{% trans %}title{% endtrans %}")
 
@@ -43,6 +33,9 @@
             <b>{% trans %}image{% endtrans %}</b>:![alt {% trans %}text{% endtrans %}](/path/img.jpg "{% trans %}title{% endtrans %}")
 
         </li>
+	<li>
+	   <b>file</b>: Use paperclip icon on toolbar of editor box
+	</li>
         <li>
             {% trans %}numbered list:{% endtrans %}
             1.  Foo
