@@ -64,6 +64,10 @@ def record_post_update_task(
             if updated_by.reputation < 15:
                 notification_subscribers = \
                     [u for u in notification_subscribers if u.is_administrator()]
+
+    #Updater always gets an email
+    notification_subscribers.append(updated_by)
+
     send_instant_notifications_about_activity_in_post(
                             update_activity = update_activity,
                             post = post,

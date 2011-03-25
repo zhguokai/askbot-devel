@@ -324,7 +324,6 @@ poor design of the data or methods on data objects #}
     {% for choice in choices %}
         <p class="choice">
             {% set id = "id_" ~ name ~ "_" ~ choice[0] %}
-            <label for="{{ id }}">{{ choice[1] }}</label>
             <input 
                 id="{{ id }}"
                 name="{{ name }}"
@@ -334,6 +333,7 @@ poor design of the data or methods on data objects #}
                 checked="checked"
                 {% endif %}
             />
+            <label for="{{ id }}">{{ choice[1] }}</label>
         </p>
     {% endfor %}
 {%- endmacro -%}
