@@ -86,8 +86,8 @@ User.add_to_class('ignored_tags', models.TextField(blank = True))
 User.add_to_class(
     'email_tag_filter_strategy', 
     models.SmallIntegerField(
-        choices=const.TAG_FILTER_STRATEGY_CHOICES,
-        default=const.EXCLUDE_IGNORED
+        choices=const.TAG_EMAIL_FILTER_STRATEGY_CHOICES,
+        default=const.INCLUDE_INTERESTING
     )
 )
 User.add_to_class(
