@@ -514,11 +514,7 @@ class Command(NoArgsCommand):
                 #                'the askbot and see what\'s new!<br>'
                 #              )
 
-                text += _(
-                            'Please visit the askbot and see what\'s new! '
-                            'Could you spread the word about it - '
-                            'can somebody you know help answering those questions or '
-                            'benefit from posting one?'
+                text += _( ' '
                         )
 
                 feeds = EmailFeedSetting.objects.filter(

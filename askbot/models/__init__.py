@@ -1922,41 +1922,53 @@ def format_instant_notification_email(
     user_subscriptions_url = site_url + to_user.get_absolute_url() + \
                             '?sort=email_subscriptions'
 
+    subject_tag = post.get_tag_names()[0]
+
     if update_type == 'question_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Question))
         subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
+                    'Re: [%(tag)s] "%(title)s"'
+                ) % {'title': origin_post.title, 'tag': subject_tag}
     elif update_type == 'answer_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Answer))
         subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
+                    'Re: [%(tag)s] "%(title)s"'
+                ) % {'title': origin_post.title, 'tag': subject_tag}
     elif update_type == 'answer_update':
         assert(isinstance(post, Answer))
         subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
+                    'Re: [%(tag)s] "%(title)s"'
+                ) % {'title': origin_post.title, 'tag': subject_tag}
     elif update_type == 'new_answer':
         assert(isinstance(post, Answer))
         subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
+                    'Re: [%(tag)s] "%(title)s"'
+                ) % {'title': origin_post.title, 'tag': subject_tag}
     elif update_type == 'question_update':
         assert(isinstance(post, Question))
         subject_line = _(
-                    'Question: "%(title)s"'
-                ) % {'title': origin_post.title}
+                    'Re: [%(tag)s] "%(title)s"'
+                ) % {'title': origin_post.title, 'tag': subject_tag}
     elif update_type == 'new_question':
         assert(isinstance(post, Question))
         subject_line = _(
-                    'Question: "%(title)s"'
-                ) % {'title': origin_post.title}
+                    '[%(tag)s] "%(title)s"'
+                ) % {'title': origin_post.title, 'tag': subject_tag}
     else:
         raise ValueError('unexpected update_type %s' % update_type)
 
+    tag_text = ''
+    tag_style = "white-space: nowrap; " \
+                    + "font-size: 11px; color: #333;" \
+                    + "background-color: #EEE;" \
+                    + "border-left: 3px solid #777;" \
+                    + "border-top: 1px solid #EEE;" \
+                    + "border-bottom: 1px solid #CCC;" \
+                    + "border-right: 1px solid #CCC;" \
+                    + "padding: 1px 8px 1px 8px;" \
+                    + "margin-right:3px;"
     if update_type.endswith('update'):
         assert('comment' not in update_type)
         revisions = post.revisions.all()[:2]
@@ -1969,23 +1981,20 @@ def format_instant_notification_email(
                             del_start = '<del style="color:#600;background-color:#fcc">',
                             del_end = '</del>'
                         )
-        #todo: remove hardcoded style
-    else:
-        content_preview = post.html
-        tag_style = "white-space: nowrap; " \
-                    + "font-size: 11px; color: #333;" \
-                    + "background-color: #EEE;" \
-                    + "border-left: 3px solid #777;" \
-                    + "border-top: 1px solid #EEE;" \
-                    + "border-bottom: 1px solid #CCC;" \
-                    + "border-right: 1px solid #CCC;" \
-                    + "padding: 1px 8px 1px 8px;" \
-                    + "margin-right:3px;"
-        if post.post_type == 'question':#add tags to the question
-            content_preview += '<div>'
+        if update_type == 'answer_update':
+            tag_text += '<div>Tags: ['
             for tag_name in post.get_tag_names():
-                content_preview += '<span style="%s">%s</span>' % (tag_style, tag_name)
-            content_preview += '</div>'
+                tag_text += '<span style="%s">%s</span> ' % (tag_style, tag_name)
+            tag_text += ']</div>'
+        content_preview = tag_text + content_preview + tag_text
+    else:
+	if True:
+        #if post.post_type == 'question':#add tags to the question
+            tag_text += '<div>Tags: ['
+            for tag_name in post.get_tag_names():
+                tag_text += '<span style="%s">%s</span> ' % (tag_style, tag_name)
+            tag_text += ']</div>'
+        content_preview = tag_text + post.html + tag_text
 
     update_data = {
         'update_author_name': from_user.username,
