@@ -334,6 +334,7 @@ function pickedTags(){
             collectPickedTags('ignored');
             collectPickedTags('subscribed');
             setupTagFilterControl('display');
+            setupTagFilterControl('email');
             $( 
                 "#interestingTagInput, " +
                 "#ignoredTagInput, " +

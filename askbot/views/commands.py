@@ -451,9 +451,12 @@ def set_tag_filter_strategy(request):
     """
     filter_type = request.POST['filter_type']
     filter_value = int(request.POST['filter_value'])
-    assert(filter_type == 'display')
+    assert(filter_type in ('display', 'email'))
     assert(filter_value in dict(const.TAG_FILTER_STRATEGY_CHOICES))
-    request.user.display_tag_filter_strategy = filter_value
+    if filter_type == 'display':
+        request.user.display_tag_filter_strategy = filter_value
+    else:
+        request.user.email_tag_filter_strategy = filter_value
     request.user.save()
     return HttpResponse('', mimetype = "application/json")
 

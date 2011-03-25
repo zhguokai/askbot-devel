@@ -112,7 +112,7 @@ class Command(BaseCommand):
 
             ignored_tags = list()
             ignored_tags.extend(
-                tag_marks.ignored(
+                tag_marks.filter(
                     reason__contains = 'I'
                 ).values_list(
                     'tag__name',
