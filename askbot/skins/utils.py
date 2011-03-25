@@ -81,7 +81,7 @@ def resolve_skin_for_media(media=None, preferred_skin = None):
             return skin_name
     raise MediaNotFound(media)
 
-def get_media_url(url):
+def get_media_url(url, ignore=False):
     """returns url prefixed with the skin name
     of the first skin that contains the file 
     directories are searched in this order:
@@ -142,7 +142,7 @@ def get_media_url(url):
     except MediaNotFound, e:
         log_message = 'missing media resource %s in skin %s' \
                         % (url, use_skin)
-        logging.critical(log_message)
+        if not ignore: logging.critical(log_message)
         return None
 
     url = use_skin + '/media/' + url
