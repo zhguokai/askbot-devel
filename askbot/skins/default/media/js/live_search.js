@@ -467,6 +467,17 @@ var liveSearch = function(){
     var activate_tag_search_input = function(){
         //the autocomplete is set up in tag_selector.js
         var button = $('#ab-tag-search-add');
+        var ac = new AutoCompleter({
+            url: askbot['urls']['get_tag_list'],
+            preloadData: true,
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            onItemSelect: run_tag_search,
+            delay: 10,
+        });
+        ac.decorate($('#ab-tag-search'));
         setupButtonEventHandlers(button, run_tag_search);
         //var tag_search_input = $('#ab-tag-search');
         //tag_search_input.keydown(
