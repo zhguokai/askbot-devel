@@ -1,22 +1,12 @@
 {% import "macros.html" as macros %}
-{% if contributors %}
-    {% cache 600 "contributors" contributors search_tags scope sort query context.page context.page_size language_code %}
-    <div id="contrib-users" class="boxC">
-        <h2>{% trans %}Contributors{% endtrans %}</h2>
-        {% spaceless %}
-            {% for person in contributors %}
-                {{ macros.gravatar(person,48) }}
-            {% endfor %}
-        {% endspaceless %}
-        </div>
-    {% endcache %}
-{% endif %}
 <div id="tagSearch" class="boxC">
+  <div style="background:#DAD7D7;padding-left:5px">
     <h2>{% trans %}Tag search{% endtrans %}</h2>
     <div class="inputs">
         <input id="ab-tag-search" autocomplete="off" type="text"/>
         <input id="ab-tag-search-add" type="submit" value="{% trans %}Search{% endtrans %}"/>
     </div>
+  </div><hr>
 </div>
 {% if request.user.is_authenticated() %} 
    {% include "blocks/tag_selector.html" %}

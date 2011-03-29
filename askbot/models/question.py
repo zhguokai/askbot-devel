@@ -889,7 +889,7 @@ class FavoriteQuestion(models.Model):
 
 QUESTION_REVISION_TEMPLATE = ('<h3>%(title)s</h3>\n'
                               '<div class="text">%(html)s</div>\n'
-                              '<div class="tags">%(tags)s</div>')
+                              '<div class="tags">Tags: [%(tags)s]</div>')
 class QuestionRevision(ContentRevision):
     """A revision of a Question."""
     question   = models.ForeignKey(Question, related_name='revisions')

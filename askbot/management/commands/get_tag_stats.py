@@ -93,11 +93,11 @@ class Command(BaseCommand):
         for user in users:
             tag_marks = user.tag_selections
 
-            #add names of explicitly followed tags
+            #add names of explicitly followed/interesting (favorite) tags
             followed_tags = list()
             followed_tags.extend(   
                 tag_marks.filter(
-                    reason__contains = 'S'
+                    reason__contains = 'F'
                 ).values_list(
                     'tag__name',
                     flat = True
@@ -108,6 +108,23 @@ class Command(BaseCommand):
             followed_tags.extend(user.interesting_tags.split())
 
             for good_tag in user.interesting_tags.split():
+                followed_tags.append(good_tag)
+
+            #add names of subscribed tags
+            subscribed_tags = list()
+            subscribed_tags.extend(   
+                tag_marks.filter(
+                    reason__contains = 'S'
+                ).values_list(
+                    'tag__name',
+                    flat = True
+                )
+            )
+
+            #add wildcards to the list of subscribed tags
+            subscribed_tags.extend(user.subscribed_tags.split())
+
+            for good_tag in user.subscribed_tags.split():
                 followed_tags.append(good_tag)
 
             ignored_tags = list()
@@ -124,12 +141,14 @@ class Command(BaseCommand):
                 ignored_tags.append(bad_tag)
 
             followed_count = len(followed_tags)
+            subscribed_count = len(subscribed_tags)
             ignored_count = len(ignored_tags)
-            if followed_count == 0 and ignored_count == 0 and print_empty == False:
+            if followed_count == 0 and ignored_count == 0 and subscribed_count == 0 and print_empty == False:
                 continue
             if item_count == 0:
-                print '%-28s %25s %25s' % ('User (id)', 'Interesting tags', 'Ignored tags')
-                print '%-28s %25s %25s' % ('=========', '================', '============')
+                print '%-18s %25s %25s %25s' % ('User (id)', 'Subscribed tags', 'Ignored tags', 'Favorite Tags')
+                print '%-18s %25s %25s %25s' % ('=========', '===============', '============', '=============')
+            subscribed_lines = get_tag_lines(subscribed_tags, width = 25)
             followed_lines = get_tag_lines(followed_tags, width = 25)
             ignored_lines = get_tag_lines(ignored_tags, width = 25)
 
@@ -139,9 +158,10 @@ class Command(BaseCommand):
             user_string = '%s (%d)%s' % (user.username, user.id, follow)
             output_lines = format_table_row(
                                 [user_string,], 
-                                followed_lines,
+                                subscribed_lines,
                                 ignored_lines,
-                                format_string = '%-28s %25s %25s'
+                                followed_lines,
+                                format_string = '%-18s %25s %25s %25s'
                             )
             item_count += 1
             for line in output_lines:
@@ -166,15 +186,22 @@ class Command(BaseCommand):
             interesting_tags = models.Tag.objects.get_by_wildcards(wk)
             for tag in interesting_tags:
                 if tag.name not in wild:
-                    wild[tag.name] = [0, 0]
+                    wild[tag.name] = [0, 0, 0]
                 wild[tag.name][0] += 1
 
             wk = user.ignored_tags.strip().split()
             ignored_tags = models.Tag.objects.get_by_wildcards(wk)
             for tag in ignored_tags:
                 if tag.name not in wild:
-                    wild[tag.name] = [0, 0]
+                    wild[tag.name] = [0, 0, 0]
                 wild[tag.name][1] += 1
+
+            wk = user.subscribed_tags.strip().split()
+            subscribed_tags = models.Tag.objects.get_by_wildcards(wk)
+            for tag in subscribed_tags:
+                if tag.name not in wild:
+                    wild[tag.name] = [0, 0, 0]
+                wild[tag.name][2] += 1
 
         return wild
 
@@ -188,25 +215,30 @@ class Command(BaseCommand):
         for tag in tags:
             wild_follow = 0
             wild_ignore = 0
+            wild_sub = 0
             if tag.name in wild_tags:
-                (wild_follow, wild_ignore) = wild_tags[tag.name]
+                (wild_follow, wild_ignore, wild_sub) = wild_tags[tag.name]
 
             tag_marks = tag.user_selections
-            follow_count = tag_marks.filter(reason__contains='S').count() \
+            subscribe_count = tag_marks.filter(reason__contains='S').count() \
+                                                        + wild_sub
+            follow_count = tag_marks.filter(reason__contains='F').count() \
                                                         + wild_follow
             ignore_count = tag_marks.filter(reason__contains='I').count() \
                                                         + wild_ignore
             follow_str = '%d (%d)' % (follow_count, wild_follow)
             ignore_str = '%d (%d)' % (ignore_count, wild_ignore)
-            counts = (11-len(follow_str)) * ' ' + follow_str + '  ' 
-            counts += (11-len(ignore_str)) * ' ' + ignore_str
+            subscribe_str = '%d (%d)' % (subscribe_count, wild_sub)
+            counts = (11-len(subscribe_str)) * ' ' + subscribe_str + '  ' 
+            counts += (11-len(ignore_str)) * ' ' + ignore_str + '  '
+            counts += (11-len(follow_str)) * ' ' + follow_str 
 
-            if follow_count + ignore_count == 0 and print_empty == False:
+            if follow_count + ignore_count + subscribe_count == 0 and print_empty == False:
                 continue
             if item_count == 0:
-                print '%-32s %12s %12s' % ('', 'Interesting', 'Ignored  ')
-                print '%-32s %12s %12s' % ('Tag name', 'Total(wild)', 'Total(wild)')
-                print '%-32s %12s %12s' % ('========', '===========', '===========')
+                print '%-32s %12s %12s %12s' % ('', 'Subscribed', 'Ignored  ', 'Interesting')
+                print '%-32s %12s %12s %12s' % ('Tag name', 'Total(wild)', 'Total(wild)', 'Total(wild)')
+                print '%-32s %12s %12s %12s' % ('========', '===========', '===========', '===========')
             print '%-32s %s' % (tag.name, counts)
             item_count += 1
 

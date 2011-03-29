@@ -305,7 +305,8 @@ def questions(request):
         'tab_id' : search_state.sort,
         'tags' : related_tags,
         'tags_autocomplete' : tags_autocomplete,
-        'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
+        'tag_filter_strategy_choices': const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
+        'email_tag_filter_strategy_choices': const.TAG_EMAIL_FILTER_STRATEGY_CHOICES,
     }
 
     assert(request.is_ajax() == False)

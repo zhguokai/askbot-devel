@@ -35,3 +35,5 @@ askbot/upfiles/*.png
 askbot/skins/common/media/mathjax/
 /jinja2
 *.tar.tz
+askbot/cron/backups
+askbot/cron/*stats

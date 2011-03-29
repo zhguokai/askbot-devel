@@ -58,28 +58,18 @@ def upload(request):#ajax upload file to a question or answer
             raise exceptions.PermissionDenied(msg)
 
         request.user.assert_can_upload_file()
-
         # check file type
         f = request.FILES['file-upload']
+        logging.info("Upload %s" % f.name)
         file_extension = os.path.splitext(f.name)[1].lower()
-        if not file_extension in settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES:
-            file_types = "', '".join(settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES)
-            msg = _("allowed file types are '%(file_types)s'") % \
-                    {'file_types': file_types}
-            raise exceptions.PermissionDenied(msg)
-
         # generate new file name
-        new_file_name = str(
-                            time.time()
-                        ).replace(
-                            '.', 
-                            str(random.randint(0,100000))
-                        ) + file_extension
+        new_file_name = datetime.date.today().strftime("%y%m%d") + f.name.replace(' ','_').lower()
 
+        logging.info("Save as %s" % new_file_name)
         file_storage = FileSystemStorage(
-                    location = settings.ASKBOT_FILE_UPLOAD_DIR,
-                    base_url = reverse('uploaded_file', kwargs = {'path':''}),
-                )
+                                location = settings.ASKBOT_FILE_UPLOAD_DIR,
+                                base_url = reverse('uploaded_file', kwargs = {'path':''}),
+                            )
         # use default storage to store file
         file_storage.save(new_file_name, f)
         # check file size

@@ -1,6 +1,7 @@
 {# todo - maybe disable navigation from ignored tags here when "hide" is on - with js? #}
 {% import "macros.html" as macros %}
 <div id="tagSelector" class="boxC">
+   <div style="background:#E6E4E4;padding-left:5px">
     <h2>{% trans %}Interesting tags{% endtrans %}</h2>
     {{ 
         macros.tag_list_widget(
@@ -12,7 +13,7 @@
     <div class="inputs">
         <input id="interestingTagInput" autocomplete="off" type="text"/>&nbsp;
         <input id="interestingTagAdd" type="submit" value="{% trans %}Add{% endtrans %}"/>
-    </div>
+    </div><br>
     <h2>{% trans %}Ignored tags{% endtrans %}</h2>
     {{
         macros.tag_list_widget(
@@ -24,17 +25,7 @@
     <div class="inputs">
         <input id="ignoredTagInput" autocomplete="off" type="text"/>&nbsp;
         <input id="ignoredTagAdd" type="submit" value="{% trans %}Add{% endtrans%}"/>
-    </div>
-    <h3>{% trans %}Display tag filter{% endtrans%}</h3>
-    <div id="displayTagFilterControl">
-        {{
-            macros.radio_select(
-                name = "display_tag_filter_strategy",
-                value = request.user.display_tag_filter_strategy,
-                choices = tag_filter_strategy_choices
-            )
-        }}
-    </div>
+    </div><br>
     <h2>{% trans %}Subscribed tags{% endtrans %}</h2>
     {{
         macros.tag_list_widget(
@@ -47,14 +38,28 @@
         <input id="subscribedTagInput" autocomplete="off" type="text"/>&nbsp;
         <input id="subscribedTagAdd" type="submit" value="{% trans %}Add{% endtrans%}"/>
     </div>
-    <h3>{% trans %}Email tag filter{% endtrans%}</h3>
+   </div>
+   <hr>
+   <div style="background:#E6E4E4;padding-left:5px">
+    <h3>{% trans %}Display tag filter{% endtrans %}</h3>
+    <div id="displayTagFilterControl">
+        {{
+            macros.radio_select(
+                name = "display_tag_filter_strategy",
+                value = request.user.display_tag_filter_strategy,
+                choices = tag_filter_strategy_choices
+            )
+        }}
+    </div><br>
+    <h3>{% trans %}Email tag filter{% endtrans %}</h3>
     <div id="emailTagFilterControl">
         {{
             macros.radio_select(
                 name = "email_tag_filter_strategy",
                 value = request.user.email_tag_filter_strategy,
-                choices = tag_filter_strategy_choices
+                choices = email_tag_filter_strategy_choices
             )
         }}
     </div>
+   </div>
 </div>

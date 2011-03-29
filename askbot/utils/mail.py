@@ -39,10 +39,8 @@ def send_mail(
 
     if raise_on_failure is True, exceptions.EmailNotSent is raised
     """
-    prefix = askbot_settings.EMAIL_SUBJECT_PREFIX.strip() + ' '
     try:
         assert(subject_line is not None)
-        subject_line = prefix + subject_line
         msg = mail.EmailMessage(
                         subject_line, 
                         body_text, 

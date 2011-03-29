@@ -452,7 +452,7 @@ def set_tag_filter_strategy(request):
     filter_type = request.POST['filter_type']
     filter_value = int(request.POST['filter_value'])
     assert(filter_type in ('display', 'email'))
-    assert(filter_value in dict(const.TAG_FILTER_STRATEGY_CHOICES))
+    assert(filter_value in dict(const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES))
     if filter_type == 'display':
         request.user.display_tag_filter_strategy = filter_value
     else:

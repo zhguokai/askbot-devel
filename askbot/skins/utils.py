@@ -81,13 +81,16 @@ def resolve_skin_for_media(media=None, preferred_skin = None):
             return skin_name
     raise MediaNotFound(media)
 
-def get_media_url(url):
+def get_media_url(url, ignore_missing = False):
     """returns url prefixed with the skin name
     of the first skin that contains the file 
     directories are searched in this order:
     askbot_settings.ASKBOT_DEFAULT_SKIN, then 'default', then 'commmon'
     if file is not found - returns None
     and logs an error message
+
+    if ``ignore_missing`` is ``True``, then
+    there will be no critical logging message
 
     todo: move this to the skin environment class
     """
@@ -118,7 +121,7 @@ def get_media_url(url):
                                     '///', '/'
                                 )
             return url_copy
-        else:
+        elif ignore_missing == False:
             logging.critical('missing media resource %s' % url)
 
     #2) if it does not exist in uploaded files directory - look in skins
@@ -142,7 +145,8 @@ def get_media_url(url):
     except MediaNotFound, e:
         log_message = 'missing media resource %s in skin %s' \
                         % (url, use_skin)
-        logging.critical(log_message)
+        if ignore_missing == False:
+            logging.critical(log_message)
         return None
 
     url = use_skin + '/media/' + url
