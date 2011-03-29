@@ -154,6 +154,11 @@ urlpatterns = patterns('',
         name = 'get_tags_by_wildcard'
     ),
     url(
+        r'^get-tag-list/',
+        views.commands.get_tag_list,
+        name = 'get_tag_list'
+    ),
+    url(
         r'^%s$' % _('subscribe-for-tags/'),
         views.commands.subscribe_for_tags,
         name = 'subscribe_for_tags'

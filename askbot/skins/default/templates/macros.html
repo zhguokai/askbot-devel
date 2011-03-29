@@ -266,7 +266,7 @@ poor design of the data or methods on data objects #}
             css_class = None
         )
 -%}
-<ul {% if id %}id={{ id }}{% endif %}
+<ul {% if id %}id="{{ id }}"{% endif %}
     class="tags{% if css_class %} {{css_class}}{% endif %}"
 >
     {% if tags %}
@@ -602,7 +602,7 @@ poor design of the data or methods on data objects #}
             alt="{% trans username=user.username %}responses for {{username}}{% endtrans %}"
             {% if user.new_response_count > 0 %}
                 src="{{ "/images/mail-envelope-full.png"|media }}"
-                title="{% trans response_count=user.new_response_count %}you have a new response{% pluralize %}you nave {{response_count}} new responses{% endtrans %}"
+                title="{% trans response_count=user.new_response_count %}you have a new response{% pluralize %}you have {{response_count}} new responses{% endtrans %}"
             {% elif user.seen_response_count > 0 %}
                 src="{{ "/images/mail-envelope-empty.png"|media }}"
                 title="{% trans %}no new responses yet{% endtrans %}"
@@ -635,4 +635,17 @@ poor design of the data or methods on data objects #}
         {% endif %}
         </a>
     {% endif %}
+{%- endmacro -%}
+
+{%- macro tag_autocomplete_js(id = '#id_tags') -%}
+    var tagAc = new AutoCompleter({
+            url: '{% url "get_tag_list" %}',
+            preloadData: true,
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10,
+    });
+    tagAc.decorate($("{{ id }}"));
 {%- endmacro -%}

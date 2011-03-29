@@ -1,4 +1,4 @@
-//var interestingTags, ignoredTags, tags, $;
+
 var TagDetailBox = function(box_type){
     WrappedElement.call(this);
     this.box_type = box_type;
@@ -224,25 +224,29 @@ function pickedTags(){
         });
     };
 
-    var handlePickedTag = function(obj,reason){
-        var tagnames = getUniqueWords($(obj).prev().attr('value'));
-        var to_target = null;
-        var to_tag_container = null;
+    var handlePickedTag = function(reason){
+        var to_target = interestingTags;
+        var to_tag_container;
         if (reason === 'I'){//ignore
+            var input_sel = '#ignoredTagInput';
             to_target = ignoredTags;
             to_tag_container = $('div .tags.ignored');
         }
         else if (reason === 'F'){//follow
             to_target = interestingTags;
+            var input_sel = '#interestingTagInput';
             to_tag_container = $('div .tags.interesting');
         }
         else if (reason === 'S'){//subscribe
             to_target = subscribedTags;
+            var input_sel = '#subscribedTagInput';
             to_tag_container = $('div .tags.subscribed');
         }
         else {
             return;
         }
+
+        var tagnames = getUniqueWords($(input_sel).attr('value'));
 
         var clean_tagnames = [];
         $.each(tagnames, function(idx, tagname){
@@ -265,6 +269,7 @@ function pickedTags(){
                         to_target,
                         to_tag_container
                     );
+                    $(input_sel).val('');
                     liveSearch().refresh();
                 }
             );
@@ -328,6 +333,13 @@ function pickedTags(){
             });
         });
     };
+
+    var getResultCallback = function(reason){
+        return function(){ 
+            handlePickedTag(reason);
+        };
+    };
+
     return {
         init: function(){
             collectPickedTags('interesting');
@@ -335,29 +347,32 @@ function pickedTags(){
             collectPickedTags('subscribed');
             setupTagFilterControl('display');
             setupTagFilterControl('email');
-            $( 
-                "#interestingTagInput, " +
-                "#ignoredTagInput, " +
-                "#subscribedTagInput, " +
-                "#ab-tag-search"//tag search code is in live_search.js
-            ).autocomplete(tags, {
-                minChars: 1,
-                matchContains: true,
-                max: 20,
-                multiple: true,
-                multipleSeparator: " ",
-                formatItem: function(row, i, max) {
-                    return row.n + " ("+ row.c +")";
-                },
-                formatResult: function(row, i, max){
-                    return row.n;
-                }
 
+            var ac = new AutoCompleter({
+                url: askbot['urls']['get_tag_list'],
+                preloadData: true,
+                minChars: 1,
+                useCache: true,
+                matchInside: true,
+                maxCacheLength: 100,
+                delay: 10,
             });
-            $("#interestingTagAdd").click(function(){handlePickedTag(this,'F');});
-            $("#subscribedTagAdd").click(function(){handlePickedTag(this,'S');});
-            $("#ignoredTagAdd").click(function(){handlePickedTag(this,'I');});
-            //tag search is handled in live_search.js
+
+            var interestingTagAc = $.extend(true, {}, ac);
+            interestingTagAc.decorate($('#interestingTagInput'));
+            interestingTagAc.setOption('onItemSelect', getResultCallback('F'));
+
+            var ignoredTagAc = $.extend(true, {}, ac);
+            ignoredTagAc.decorate($('#ignoredTagInput'));
+            ignoredTagAc.setOption('onItemSelect', getResultCallback('I'));
+
+            var subscribedTagAc = $.extend(true, {}, ac);
+            subscribedTagAc.decorate($('#subscribedTagInput'));
+            subscribedTagAc.setOption('onItemSelect', getResultCallback('S'));
+
+            $("#interestingTagAdd").click(getResultCallback('F'));
+            $("#ignoredTagAdd").click(getResultCallback('I'));
+            $("#subscribedTagAdd").click(getResultCallback('S'));
         }
     };
 }
