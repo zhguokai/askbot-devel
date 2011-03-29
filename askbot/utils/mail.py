@@ -13,11 +13,14 @@ def prefix_the_subject_line(subject):
     """prefixes the subject line with the
     EMAIL_SUBJECT_LINE_PREFIX either from
     from live settings, which take default from django
+
+    NOTE: the function is a noop currently
     """
-    prefix = askbot_settings.EMAIL_SUBJECT_PREFIX.strip()
-    if prefix != '':
-        subject = prefix + ' ' + subject
     return subject
+    #prefix = askbot_settings.EMAIL_SUBJECT_PREFIX.strip()
+    #if prefix != '':
+    #    subject = prefix + ' ' + subject
+    #return subject
 
 def send_mail(
             subject_line = None,
