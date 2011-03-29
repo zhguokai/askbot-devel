@@ -8,6 +8,7 @@ for the time of the test session.
 """
 from django.template import Node, Library
 from coffin import template as coffin_template
+from jinja2.ext import Extension
 
 register = coffin_template.Library()
 
@@ -23,6 +24,14 @@ class PaginateNode(Node):
     def render(self, context):
         return u''
 
-@register.simple_tag
 def paginate(parser, token):
     return PaginateNode()
+
+@register.tag
+class PaginateExtention(Extension):
+    tags = ['paginate']
+    def __init__(self, enviroment):
+        pass
+
+    def parse(self, parser):
+        return u''

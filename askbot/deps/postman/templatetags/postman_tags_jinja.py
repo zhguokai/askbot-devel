@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from coffin import template as coffin_template
 
 from jinja2.ext import Extension
-
+from jinja2 import nodes
 
 from postman.models import ORDER_BY_MAPPER, ORDER_BY_KEY, Message
 
@@ -161,3 +161,58 @@ def postman_unread(parser, token):
         return InboxCountNode(bits[2])
     else:
         return InboxCountNode()
+
+@register.tag
+class OrderByExtension(Extension):
+    tags = set(['postman_order_by'])
+
+    def __init__(self, environment):
+        super(OrderByExtension, self).__init__(environment)
+        #environment.extend(
+        #markdowner=markdown2.Markdown()
+        #)   
+
+    def parse(self, parser):
+        parser.parse_expression()
+        try:
+            token = parser.stream.next()
+            tag_name, field_name = token.type, token.value
+            field_code = ORDER_BY_MAPPER[field_name.lower()]
+        except ValueError:
+            raise TemplateSyntaxError("'{0}' tag requires a single argument".format(token.contents.split()[0]))
+        except KeyError:
+            raise TemplateSyntaxError(
+            "'{0}' is not a valid argument to '{1}' tag."
+            " Must be one of: {2}".format(field_name, tag_name, ORDER_BY_MAPPER.keys()))
+
+        return nodes.Output([
+                self.call_method('_render', [nodes.Name(field_name, {'gets': ''})]),
+                ]).set_lineno(token.lineno)
+
+    def _render(self, field_code, context):
+        return jinja2.Markup(OrderByNode(field_code).render(context))
+        
+
+class InboxCountExtention(Extension):
+    '''substitute for the postman_unread tag'''
+
+    def __init__(self, enviroment):
+        pass
+
+    def _render(self, context):
+        """
+        Return the count of unread messages for the user found in context,
+        (may be 0) or an empty string.
+        """
+        try:
+            user = context['user']
+            if user.is_anonymous():
+                count = ''
+            else:
+                count = Message.objects.inbox_unread_count(user)
+        except (KeyError, AttributeError):
+            count = ''
+        if self.asvar:
+            context[self.asvar] = count
+            return ''
+        return count 
