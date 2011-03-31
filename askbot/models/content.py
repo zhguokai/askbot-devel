@@ -1,3 +1,4 @@
+import logging
 import datetime
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
@@ -98,6 +99,7 @@ class Content(models.Model):
         both - subscribers who ignore tags or who follow only
         specific tags
         """
+	debug_str = "Global Instant Notification Subs\n"
         tags = self.tags.all()
 
         subscriber_set = set()
@@ -112,6 +114,7 @@ class Content(models.Model):
             email_tag_filter_strategy = const.INCLUDE_ALL
         )
         subscriber_set.update(global_subscribers)
+	debug_str += "Global Subscribers(All): %s\n"% global_subscribers
 
         #segment of users who want emails on selected questions only
         interesting_tag_selections = MarkedTag.objects.filter(
@@ -126,6 +129,7 @@ class Content(models.Model):
             email_tag_filter_strategy = const.INCLUDE_INTERESTING 
         )
         subscriber_set.update(global_interested_subscribers)
+	debug_str += "Subscribed: %s\n"% global_interested_subscribers
 
         #segment of users who want to exclude ignored tags
         ignored_tag_selections = MarkedTag.objects.filter(
@@ -141,6 +145,9 @@ class Content(models.Model):
             email_tag_filter_strategy = const.EXCLUDE_IGNORED
         )
         subscriber_set.update(global_non_ignoring_subscribers)
+	debug_str += "Not Ignored: %s" % global_non_ignoring_subscribers
+
+	#print debug_str
         return subscriber_set
 
 
@@ -161,9 +168,9 @@ class Content(models.Model):
         of duplicated code at the moment
         """
         #print '------------------'
-        #print 'in content function'
+        debug_subs = 'content get_instant_notification_subscribers function\n'
         subscriber_set = set()
-        #print 'potential subscribers: ', potential_subscribers
+	debug_subs += 'potential subscribers: %s\n' % potential_subscribers
 
         #1) mention subscribers - common to questions and answers
         if mentioned_users:
@@ -181,7 +188,9 @@ class Content(models.Model):
         #2) individually selected - make sure that users
         #are individual subscribers to this question
         selective_subscribers = origin_post.followed_by.all()
-        #print 'question followers are ', [s for s in selective_subscribers]
+        x = 'question followers are ', [s for s in selective_subscribers]
+	debug_subs += str(x) + "\n"
+
         if selective_subscribers:
             selective_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                 potential_subscribers = selective_subscribers,
@@ -189,11 +198,12 @@ class Content(models.Model):
                                 frequency = 'i'
                             )
             subscriber_set.update(selective_subscribers)
-            #print 'selective subscribers: ', selective_subscribers
+            debug_subs += 'selective subscribers: %s\n'% selective_subscribers
 
         #3) whole forum subscribers
         global_subscribers = origin_post.get_global_instant_notification_subscribers()
         subscriber_set.update(global_subscribers)
+	debug_subs +=  "Global Subscribers: %s\n"% global_subscribers
 
         #4) question asked by me (todo: not "edited_by_me" ???)
         question_author = origin_post.author
@@ -203,8 +213,9 @@ class Content(models.Model):
                                             feed_type = 'q_ask'
                                         ):
             subscriber_set.add(question_author)
+	    debug_subs += "Question Author: %s\n" % question_author
 
-        #4) questions answered by me -make sure is that people 
+        #5) questions answered by me -make sure is that people 
         #are authors of the answers to this question
         #todo: replace this with a query set method
         answer_authors = set()
@@ -219,12 +230,13 @@ class Content(models.Model):
                                     feed_type = 'q_ans',
                                 )
             subscriber_set.update(answer_subscribers)
-            #print 'answer subscribers: ', answer_subscribers
+            debug_subs += 'answer subscribers: %s\n'% answer_subscribers
 
-        #print 'exclude_list is ', exclude_list
+        debug_subs += 'exclude_list is %s\n'% exclude_list
         subscriber_set -= set(exclude_list)
 
-        #print 'final subscriber set is ', subscriber_set
+        debug_subs += 'final subscriber set is %s'% subscriber_set
+        #logging.critical(debug_subs)
         return list(subscriber_set)
 
     def get_latest_revision(self):

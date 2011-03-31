@@ -2035,6 +2035,9 @@ def send_instant_notifications_about_activity_in_post(
     update_type = update_type_map[update_activity.activity_type]
 
     origin_post = post.get_origin_post()
+    debug_list = ""
+    debug_title = ""
+
     for user in recipients:
 
         subject_line, body_text = format_instant_notification_email(
@@ -2054,6 +2057,12 @@ def send_instant_notifications_about_activity_in_post(
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
         )
 
+	debug_list += "%s(%s) "%(user, user.email)
+	debug_title = subject_line
+
+    
+    debug_list = "Email for %s: %s" %(debug_title,debug_list)
+    #logging.critical (debug_list)
 
 #todo: move to utils
 def calculate_gravatar_hash(instance, **kwargs):
