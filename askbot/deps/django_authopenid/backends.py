@@ -8,6 +8,7 @@ from django.core.exceptions import ImproperlyConfigured
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
 from askbot import models
+import logging
 import crypt
 import pwd
 import string
@@ -62,30 +63,35 @@ class AuthBackend(object):
                     #logging.info( "   Password Mismatch -  %s, %s" %(p.pw_passwd, crypt.crypt(password,p.pw_passwd)))
                     return None
 
+		print username
                 # If user is not in Askbot, create it.
                 try:
                     user = User.objects.get(username=username)
+		    print user
                 except User.DoesNotExist:
+		    print "new user"
                     s = string.split(p.pw_gecos, ' ')
                     if(len(s) < 2):
                         s.append('')
+
+                    em = ""
+                    try:
+                        em = nis.match(username, 'mail.aliases').partition('@')[0] + "@windriver.com"
+                    except KeyError:
                         em = ""
-                        try:
-                            em = nis.match(username, 'mail.aliases').partition('@')[0] + "@windriver.com"
-                        except KeyError:
-                            em = ""
-                            #logging.info("   New User: %s = %s %s (%s)"  %(username, s[0], s[1], em))
-                            user, created = User.objects.get_or_create(
-                                                          username=username,
-                                                          first_name=s[0],
-                                                          last_name=s[1],
-                                                          email=em
-                                                      )
-                            feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_all', frequency='i')
-                            feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_ask', frequency='n')
-                            feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_ans', frequency='n')
-                            feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_sel', frequency='n')
-                            feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='m_and_c', frequency='n')
+
+                    logging.info("   New User: %s = %s %s (%s)"  %(username, s[0], s[1], em))
+                    user, created = User.objects.get_or_create(
+                                                      username=username,
+                                                      first_name=s[0],
+                                                      last_name=s[1],
+                                                      email=em
+                                                  )
+                    feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_all', frequency='i')
+                    feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_ask', frequency='n')
+                    feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_ans', frequency='n')
+                    feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_sel', frequency='n')
+                    feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='m_and_c', frequency='n')
 
             #this is a catch - make login token a little more unique
             #for the cases when passwords are the same for two users
