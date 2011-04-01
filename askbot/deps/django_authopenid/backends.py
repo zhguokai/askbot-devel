@@ -63,13 +63,10 @@ class AuthBackend(object):
                     #logging.info( "   Password Mismatch -  %s, %s" %(p.pw_passwd, crypt.crypt(password,p.pw_passwd)))
                     return None
 
-		print username
                 # If user is not in Askbot, create it.
                 try:
                     user = User.objects.get(username=username)
-		    print user
                 except User.DoesNotExist:
-		    print "new user"
                     s = string.split(p.pw_gecos, ' ')
                     if(len(s) < 2):
                         s.append('')
