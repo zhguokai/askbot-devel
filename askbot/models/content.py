@@ -94,6 +94,16 @@ class Content(models.Model):
 
         return comment
 
+    def match_wildcard_tags(self, wildcards, tags):
+       print wildcards        
+       #Match question tags
+       for tag in tags:
+           for wildcard in wildcards:
+               if tag.name.startswith(wildcard[:-1]):
+                   return True
+       return False
+
+
     def get_global_instant_notification_subscribers(self):
         """returns a set of subscribers to post according to tag filters
         both - subscribers who ignore tags or who follow only
@@ -130,6 +140,27 @@ class Content(models.Model):
         )
         subscriber_set.update(global_interested_subscribers)
 	debug_str += "Subscribed: %s\n"% global_interested_subscribers
+
+	#Wildcard Subscribers
+	wild_subscribers = []
+        wild_potential_subscribers = User.objects.filter(
+            notification_subscriptions__in = global_subscriptions
+        ).filter(
+            email_tag_filter_strategy = const.INCLUDE_INTERESTING 
+        )
+
+	# Add filter to only get non-empty subscribed_tags
+        for subscriber in wild_potential_subscribers:
+            # Skip users without wildcards
+            if subscriber.subscribed_tags == '':
+	       continue
+        
+	    wildcards = subscriber.subscribed_tags.split()
+            if self.match_wildcard_tags(wildcards, tags):
+	        wild_subscribers.append(subscriber)
+
+        subscriber_set.update(wild_subscribers)
+        debug_str += "Wildcard Subs: %s\n" % wild_subscribers
 
         #segment of users who want to exclude ignored tags
         ignored_tag_selections = MarkedTag.objects.filter(
