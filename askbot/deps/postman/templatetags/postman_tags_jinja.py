@@ -10,6 +10,7 @@ from coffin import template as coffin_template
 
 from jinja2.ext import Extension
 from jinja2 import nodes
+import jinja2
 
 from postman.models import ORDER_BY_MAPPER, ORDER_BY_KEY, Message
 
@@ -119,58 +120,12 @@ class InboxCountNode(Node):
             return ''
         return count
 
-def postman_order_by(parser, token):
-    """
-    Compose a query string to ask for a specific ordering in messages list.
-
-    The unique argument must be one of the keywords of a set defined in the model.
-    Example::
-
-        <a href="{% postman_order_by subject %}">...</a>
-    """
-    try:
-        tag_name, field_name = token.split_contents()
-        field_code = ORDER_BY_MAPPER[field_name.lower()]
-    except ValueError:
-        raise TemplateSyntaxError("'{0}' tag requires a single argument".format(token.contents.split()[0]))
-    except KeyError:
-        raise TemplateSyntaxError(
-            "'{0}' is not a valid argument to '{1}' tag."
-            " Must be one of: {2}".format(field_name, tag_name, ORDER_BY_MAPPER.keys()))
-    return OrderByNode(field_code)
-
-def postman_unread(parser, token):
-    """
-    Give the number of unread messages for a user,
-    or nothing (an empty string) for an anonymous user.
-
-    Storing the count in a variable for further processing is advised, such as::
-
-        {% postman_unread as unread_count %}
-        ...
-        {% if unread_count %}
-            You have <strong>{{ unread_count }}</strong> unread messages.
-        {% endif %}
-    """
-    bits = token.split_contents()
-    if len(bits) > 1:
-        if len(bits) != 3:
-            raise TemplateSyntaxError("'{0}' tag takes no argument or exactly two arguments".format(bits[0]))
-        if bits[1] != 'as':
-            raise TemplateSyntaxError("First argument to '{0}' tag must be 'as'".format(bits[0]))
-        return InboxCountNode(bits[2])
-    else:
-        return InboxCountNode()
-
 @register.tag
 class OrderByExtension(Extension):
     tags = set(['postman_order_by'])
 
     def __init__(self, environment):
         super(OrderByExtension, self).__init__(environment)
-        #environment.extend(
-        #markdowner=markdown2.Markdown()
-        #)   
 
     def parse(self, parser):
         parser.parse_expression()
@@ -184,13 +139,13 @@ class OrderByExtension(Extension):
             raise TemplateSyntaxError(
             "'{0}' is not a valid argument to '{1}' tag."
             " Must be one of: {2}".format(field_name, tag_name, ORDER_BY_MAPPER.keys()))
-
+        
         return nodes.Output([
-                self.call_method('_render', [nodes.Name(field_name, {'gets': ''})]),
-                ]).set_lineno(token.lineno)
+                self.call_method('_render', [nodes.Const(field_name), nodes.Dict({})]),
+                ])
 
-    def _render(self, field_code, context):
-        return jinja2.Markup(OrderByNode(field_code).render(context))
+    def _render(self, name, ctx):
+        return jinja2.Markup(OrderByNode(name).render(ctx))
         
 
 class InboxCountExtention(Extension):

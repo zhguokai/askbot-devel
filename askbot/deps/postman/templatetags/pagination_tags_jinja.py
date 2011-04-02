@@ -17,7 +17,7 @@ class AutoPaginateNode(Node):
         return u''
 
 @register.filter
-def autopaginate(parser, token):
+def autopaginate(token):
     return u'' 
 
 class PaginateNode(Node):
