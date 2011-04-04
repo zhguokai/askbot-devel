@@ -1,5 +1,4 @@
 {% extends "postman/base.html" %}
-{% load i18n %}{% load postman_tags_jinja%}
 {% block content %}
 <div id="postman">
   <h1>{% if pm_messages|length > 1 %}{% trans %}Conversation{%endtrans%}{% else %}{% trans %}Message{% endtrans %}{% endif %}</h1>
@@ -8,7 +7,7 @@
  <div class="pm_header">
   <span class="pm_sender">{{ message.obfuscated_sender|or_me(user) }}</span> &raquo;
   <span class="pm_recipient">{{ message.obfuscated_recipient|or_me(user) }}</span> |
-  <span class="pm_date">{{ message.sent_at|date("DATETIME_FORMAT")}}</span> |
+  <span class="pm_date">{{ message.sent_at}}</span> |
   <span class="pm_subject">{{ message.subject }}</span>
   {% if message.is_rejected %}  <div class="pm_status">{% trans %}Rejected{% endtrans %}{% if message.moderation_reason %}{% trans %}:{%endtrans%} {{ message.moderation_reason }}{% endif %}</div>{% endif %}
  </div>

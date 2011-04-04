@@ -30,10 +30,11 @@
  <tbody>{% for message in pm_messages %}
   <tr>
     <td><input type="checkbox" {% if by_conversation and message.thread_id %}name="tpks" value="{{ message.thread_id }}"{% else %}name="pks" value="{{ message.pk }}"{% endif %} /></td>
-    {% block pm_recipient_cell %}   <td>{{ message.obfuscated_recipient|or_me(user) }} {% if message.count %} ({{ message.count }}){% endif %}</td>{% endblock %}
+    <td>{{ message.obfuscated_recipient|or_me(user) }} {% if message.count %} ({{ message.count }}){% endif %}</td>
    <td>{% if message.is_new %}<strong>{% endif %}{% if message.is_replied %}<em>{% endif %}
     <a href="{% if by_conversation and message.thread_id %}{% url postman_view_conversation message.thread_id %}{% else %}{{message.get_absolute_url() }}{% endif %}?next={{ current_url|urlencode }}">
-         {% include "postman/inc_subject_ex.html" %}
+{% with message.subject|truncatewords(5) as truncated_subject %}{{ truncated_subject }}
+{% with truncated_subject|wordcount as subject_wc %}{% with 12|sub(subject_wc) as wc %}{% if message.body and wc > 0 %} - <span style="color: grey">{{ message.body|truncatewords(wc) }}</span>{% endif %}{% endwith %}{% endwith %}{% endwith %}
     </a>
    {% if message.is_replied %}</em>{% endif %}{% if message.is_new %}</strong>{% endif %}</td>
    <td>{{ message.sent_at|compact_date(_("g:i A,M j,n/j/y")) }}</td>

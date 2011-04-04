@@ -1,9 +1,6 @@
 import datetime
 
 from django.http import QueryDict
-from django.template import Node
-from django.template import TemplateSyntaxError
-from django.template import Library
 from django.template.defaultfilters import date
 from django.utils.translation import ugettext_lazy as _
 from coffin import template as coffin_template
@@ -36,7 +33,10 @@ def or_me(value, arg):
     Typical usage: sender|or_me:user
 
     """
-    return _('<me>') if str(value) == str(arg) else value
+    if str(value) == str(arg):
+        return _('<me>')
+    else:
+        return value
 
 @register.filter
 def compact_date(value, arg):
@@ -71,60 +71,12 @@ def unread_count(value, arg=None):
 #######
 # tags
 #######
-
-class OrderByNode(Node):
-    "For use in the postman_order_by tag"
-    def __init__(self, code):
-        self.code = code
-
-    def render(self, context):
-        """
-        Return a formatted GET query string, as "?order_key=order_val".
-
-        Preserves existing GET's keys, if any, such as a page number.
-        For that, the view has to provide request.GET in a 'gets' entry of the context.
-
-        """
-        if 'gets' in context:
-            gets = context['gets'].copy()
-        else:
-            gets = QueryDict('').copy()
-        if ORDER_BY_KEY in gets:
-            code = gets.pop(ORDER_BY_KEY)[0]
-        else:
-            code = None
-        if self.code:
-            gets[ORDER_BY_KEY] = self.code if self.code <> code else self.code.upper()
-        return '?'+gets.urlencode() if gets else ''
-
-class InboxCountNode(Node):
-    "For use in the postman_unread tag"
-    def __init__(self, asvar=None):
-        self.asvar = asvar
-
-    def render(self, context):
-        """
-        Return the count of unread messages for the user found in context,
-        (may be 0) or an empty string.
-        """
-        try:
-            user = context['user']
-            if user.is_anonymous():
-                count = ''
-            else:
-                count = Message.objects.inbox_unread_count(user)
-        except (KeyError, AttributeError):
-            count = ''
-        if self.asvar:
-            context[self.asvar] = count
-            return ''
-        return count
-
 @register.tag
 class OrderByExtension(Extension):
     tags = set(['postman_order_by'])
 
     def __init__(self, environment):
+        self.code = None
         super(OrderByExtension, self).__init__(environment)
 
     def parse(self, parser):
@@ -144,8 +96,21 @@ class OrderByExtension(Extension):
                 self.call_method('_render', [nodes.Const(field_name), nodes.Dict({})]),
                 ])
 
-    def _render(self, name, ctx):
-        return jinja2.Markup(OrderByNode(name).render(ctx))
+    def _render(self, name, context):
+        self.code = name
+
+        if 'gets' in context:
+            gets = context['gets'].copy()
+        else:
+            gets = QueryDict('').copy()
+        if ORDER_BY_KEY in gets:
+            code = gets.pop(ORDER_BY_KEY)[0]
+        else:
+            code = None
+        if self.code:
+            gets[ORDER_BY_KEY] = self.code if self.code <> code else self.code.upper()
+        result = '?'+gets.urlencode() if gets else ''
+        return jinja2.Markup(result)
         
 
 class InboxCountExtention(Extension):
