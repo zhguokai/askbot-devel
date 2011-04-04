@@ -861,8 +861,22 @@ def user_post_comment(
     )
     return comment
 
-def user_mark_tags(self, tagnames, wildcards, reason = None, action = None):
-    """subscribe for or ignore a list of tags"""
+def user_mark_tags(
+            self,
+            tagnames = None,
+            wildcards = None,
+            reason = None,
+            action = None
+        ):
+    """subscribe for or ignore a list of tags
+
+    * ``tagnames`` and ``wildcards`` are lists of 
+      pure tags and wildcard tags, respectively
+    * ``reason`` - either "good" or "bad"
+    * ``action`` - eitrer "add" or "remove"
+    """
+    assert(reason in 'SFI')
+    assert(action in ('add', 'remove'))
     if wildcards:
         cleaned_wildcards = self.update_wildcard_tag_selections(
             action = action,
@@ -871,6 +885,9 @@ def user_mark_tags(self, tagnames, wildcards, reason = None, action = None):
         )
     else:
         cleaned_wildcards = list()
+
+    if tagnames is None:
+        tagnames = list()
 
     #below we update normal tag selections
     marked_ts = MarkedTag.objects.filter(
