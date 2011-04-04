@@ -1,3 +1,4 @@
+import categories
 from django.db import models
 from django.db import connection, transaction
 from django.contrib.auth.models import User
@@ -7,12 +8,12 @@ from askbot.models.base import DeletableContent
 
 class TagManager(models.Manager):
     UPDATE_USED_COUNTS_QUERY = """
-        UPDATE tag 
+        UPDATE tag
         SET used_count = (
-            SELECT COUNT(*) FROM question_tags 
+            SELECT COUNT(*) FROM question_tags
             INNER JOIN question ON question_id=question.id
             WHERE tag_id = tag.id AND NOT question.deleted
-        ) 
+        )
         WHERE id IN (%s);
     """
 
@@ -28,7 +29,7 @@ class TagManager(models.Manager):
         query = self.UPDATE_USED_COUNTS_QUERY % ','.join(['%s'] * len(tags))
         cursor.execute(query, [tag.id for tag in tags])
 
-        transaction.commit_unless_managed() 
+        transaction.commit_unless_managed()
 
     def get_by_wildcards(self, wildcards = None):
         """returns query set of tags that match the wildcard tags
@@ -55,7 +56,7 @@ class TagManager(models.Manager):
         """
 
         if questions.count() > search_state.page_size * 3:
-            """if we have too many questions or 
+            """if we have too many questions or
             search query is the most common - just return a list
             of top tags"""
             cheating = True
@@ -100,6 +101,8 @@ class Tag(DeletableContent):
 
     def __unicode__(self):
         return self.name
+
+categories.register_m2m(Tag, 'categories', {'related_name': 'tags'})
 
 class MarkedTag(models.Model):
     TAG_MARK_REASONS = (('good', _('interesting')), ('bad', _('ignored')))
