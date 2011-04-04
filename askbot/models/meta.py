@@ -1,4 +1,3 @@
-import logging
 import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -191,8 +190,8 @@ class Comment(base.MetaContent, base.UserContent):
         argument potential_subscribers is required as it saves on db hits
         """
         #print 'in meta function'
-        debug_subs = 'meta instant notification subscribers\n'
-	debug_subs += 'potential subscribers: %s\n' % potential_subscribers
+        #print 'potential subscribers: ', potential_subscribers
+
         subscriber_set = set()
 
         if potential_subscribers:
@@ -200,11 +199,8 @@ class Comment(base.MetaContent, base.UserContent):
         else:
             potential_subscribers = set()
 
-        debug_subs += "Potential Subs: %s\n"% potential_subscribers
-
         if mentioned_users:
             potential_subscribers.update(mentioned_users)
-	    debug_subs += "Mentioned Users: %s\n"% mentioned_users
 
         if potential_subscribers:
             comment_subscribers = EmailFeedSetting.objects.filter_subscribers(
@@ -213,7 +209,7 @@ class Comment(base.MetaContent, base.UserContent):
                                         frequency = 'i'
                                     )
             subscriber_set.update(comment_subscribers)
-            debug_subs += 'comment subscribers: %s\n'% comment_subscribers
+            #print 'comment subscribers: ', comment_subscribers
 
         origin_post = self.get_origin_post()
         selective_subscribers = origin_post.followed_by.all()
@@ -223,27 +219,24 @@ class Comment(base.MetaContent, base.UserContent):
                                     feed_type = 'q_sel',
                                     frequency = 'i'
                                 )
-
-	    debug_subs += "Prelim Selective: %s\n"% selective_subscribers
             for subscriber in selective_subscribers:
                 if origin_post.passes_tag_filter_for_user(subscriber):
                     subscriber_set.add(subscriber)
 
             subscriber_set.update(selective_subscribers)
-            debug_subs += 'selective subscribers: %s\n'% selective_subscribers
+            #print 'selective subscribers: ', selective_subscribers
 
         global_subscribers = origin_post.get_global_instant_notification_subscribers()
-        debug_subs += 'global subscribers: %s\n' % global_subscribers
+        #print 'global subscribers: ', global_subscribers
 
         subscriber_set.update(global_subscribers)
 
-        debug_subs += 'exclude list is: %s\n'% exclude_list
+        #print 'exclude list is: ', exclude_list
         if exclude_list:
             subscriber_set -= set(exclude_list)
 
-        debug_subs += 'final list of subscribers: %s'% subscriber_set
+        #print 'final list of subscribers:', subscriber_set
 
-        #logging.critical(debug_subs)
         return list(subscriber_set)
 
     def get_time_of_last_edit(self):
