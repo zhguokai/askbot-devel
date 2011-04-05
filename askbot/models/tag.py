@@ -1,10 +1,16 @@
 import categories
+from south.modelsinspector import add_introspection_rules
+
 from django.db import models
 from django.db import connection, transaction
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+
 from askbot.models.base import DeletableContent
 
+
+# So South can introspect the custom m2m field shipped with django-categories
+add_introspection_rules([], ["^categories\.fields\.CategoryM2MField"])
 
 class TagManager(models.Manager):
     UPDATE_USED_COUNTS_QUERY = """
