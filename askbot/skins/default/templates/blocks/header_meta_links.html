@@ -5,6 +5,7 @@
     {{ macros.moderation_items_link(request.user, moderation_items) }}
     ({{ macros.user_long_score_and_badge_summary(user) }})
     </span>
+    <a href="{% url postman_inbox%}">{% trans %}messages{% endtrans %} ({{user|unread_count}})</a>
     <a href="{% url logout %}">{% trans %}logout{% endtrans %}</a>
 {% else %}
     <a href="{% url user_signin %}">{% trans %}login{% endtrans %}</a>

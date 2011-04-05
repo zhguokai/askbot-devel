@@ -11,7 +11,9 @@ from django.http import Http404
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from askbot.skins.loaders import render_into_skin
+from askbot.search.state_manager import SearchState
 
 from postman.fields import is_autocompleted
 from postman.forms import WriteForm, AnonymousWriteForm, QuickReplyForm, FullReplyForm
@@ -40,6 +42,27 @@ def _folder(request, folder_name, view_name, option, template_name):
     if order_by:
         kwargs.update(order_by=order_by)
     msgs = getattr(Message.objects, folder_name)(request.user, **kwargs)
+
+    search_state = request.session.get('search_state', SearchState())
+    paginator = Paginator(msgs, search_state.page_size)
+
+    if paginator.num_pages < search_state.page:
+        raise Http404
+
+    page = paginator.page(search_state.page)
+
+
+    paginator_context = {
+        'is_paginated' : (paginator.count > search_state.page_size),
+        'pages': paginator.num_pages,
+        'page': search_state.page,
+        'has_previous': page.has_previous(),
+        'has_next': page.has_next(),
+        'previous': page.previous_page_number(),
+        'next': page.next_page_number(),
+        'base_url' : request.path + '?sort=%s&amp;' % search_state.sort,#todo in T sort=>sort_method
+        'page_size' : search_state.page_size,#todo in T pagesize -> page_size
+    }
     return render_into_skin(template_name, {
         'pm_messages': msgs,    # avoid 'messages', already used by contrib.messages
         'by_conversation': option is None,
@@ -48,6 +71,7 @@ def _folder(request, folder_name, view_name, option, template_name):
         'by_message_url': reverse(view_name, args=[OPTION_MESSAGES]),
         'current_url': request.get_full_path(),
         'gets': request.GET, # useful to postman_order_by template tag
+        'paginator_context': paginator_context,
         }, request)
 
 @login_required

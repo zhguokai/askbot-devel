@@ -1,9 +1,9 @@
 {% extends "postman/base.html" %}
+{% import "macros.html" as macros %}
 {% block content %}
 <div id="postman">
 <h1>{% block pm_folder_title %}{% endblock %}</h1>
 {% if pm_messages %}
-{{ pm_messages | autopaginate }}
 {% if invalid_page %}
 <p>{% trans %}Sorry, this page number is invalid.{% endtrans %}</p>
 {% else %}
@@ -42,7 +42,9 @@
  </tbody>
 </table>
 </form>
-{#{% paginate %}#}
+<div class="pager">
+    {{macros.paginator(paginator_context)}}
+</div>
 {% endif %}
 {% else %}
 <p>{% trans %}No messages.{% endtrans %}</p>
