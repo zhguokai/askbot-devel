@@ -141,18 +141,22 @@ class Content(models.Model):
                 empty_wildcard_filter = {'subscribed_tags__exact': ''}
                 wildcard_tags_attribute = 'subscribed_tags'
                 update_subscribers = lambda the_set, item: the_set.add(item)
+                exclude_wildcards = lambda sub_set, wild_set: wild_set.difference_update(sub_set)
             elif tag_mark_reason == 'I':
                 empty_wildcard_filter = {'ignored_tags__exact': ''}
                 wildcard_tags_attribute = 'ignored_tags'
-                update_subscribers = lambda the_set, item: the_set.remove(item)
+                update_subscribers = lambda the_set, item: the_set.discard(item)
+                exclude_wildcards = lambda sub_set, wild_set: wild_set.intersection_update(sub_set)
 
-            potential_wildcard_subscribers = User.objects.filter(
+            potential_wildcard_subscribers = set(User.objects.filter(
                 notification_subscriptions__in = subscription_records
             ).filter(
                 email_tag_filter_strategy = email_tag_filter_strategy
             ).exclude(
                 **empty_wildcard_filter #need this to limit size of the loop
-            )
+            ))
+
+            exclude_wildcards(subscribers, potential_wildcard_subscribers)
             for potential_subscriber in potential_wildcard_subscribers:
                 wildcard_tags = getattr(
                                     potential_subscriber,
