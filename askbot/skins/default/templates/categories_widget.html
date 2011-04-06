@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--<link type="text/css" href="/m/default/media/style/menu_theme/jquery-ui-1.8.11.custom.css" rel="Stylesheet" />-->
+<link type="text/css" href="/m/default/media/style/menu_theme/jquery.ui.all.css" rel="Stylesheet" />
+<script type="text/javascript" src="/m/default/media/js/jquery-1.4.3.js"></script>
+<script type="text/javascript" src="/m/default/media/js/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/m/default/media/js/jquery.ui.position.js"></script>
+<script type="text/javascript" src="/m/default/media/js/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="/m/default/media/js/jquery.ui.menu.js"></script>
+<!--<script type="text/javascript" src="/m/default/media/js/jquery.ui.mouse.js"></script>-->
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("ul.target").menu();
+  });
+</script>
+
+<style>
+  .ui-menu { width: 200px; position: absolute; }
+</style>
+</head>
+<body>
+<p>Categories tree widget -- Step #12.</p>
+<ul class="target">
+  <li><a href="#">Everything</a>
+    <ul>
+      <li><a href="#">Health</a>
+        <ul>
+          <li><a href="#">Fitness</a>
+            <ul>
+              <li><a href="#">Bodybuilding</a></li>
+              <li><a href="#">Sports</a>
+                <ul>
+                  <li><a href="#">Martial arts</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#">Relationships</a></li>
+      <li><a href="#">Career</a></li>
+      <li><a href="#">Family</a></li>
+    </ul>
+  </li>
+</ul>
+</body>
+</html>
