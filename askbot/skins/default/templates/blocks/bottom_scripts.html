@@ -10,7 +10,7 @@
     {% if request.user.is_authenticated() %}
         askbot['data']['userIsAuthenticated'] = true;
         askbot['data']['userId'] = {{request.user.id}};
-        askbot['data']['userIsAdminOrMod'] = {% if 
+        askbot['data']['userIsAdminOrMod'] = {% if
                                                 request.user.is_administrator()
                                                 or request.user.is_moderator()
                                             %}true{% else %}false{% endif %};
@@ -21,7 +21,7 @@
     askbot['urls']['get_tags_by_wildcard'] = '{% url "get_tags_by_wildcard" %}';
     askbot['urls']['get_tag_list'] = '{% url "get_tag_list" %}';
 </script>
-<script 
+<script
     type="text/javascript"
     {% if settings.DEBUG %}
         src="{{"/js/jquery-1.4.3.js"|media}}"
@@ -41,6 +41,18 @@
             tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
         });
     </script>
+{% endif %}
+{% if settings.ENABLE_CATEGORIES %}
+<script type="text/javascript" src="{{ "/js/jquery.ui.core.js"|media }}"></script>
+<script type="text/javascript" src="{{ "/js/jquery.ui.position.js"|media }}"></script>
+<script type="text/javascript" src="{{ "/js/jquery.ui.widget.js"|media }}"></script>
+<script type="text/javascript" src="{{ "/js/jquery.ui.menu.js"|media }}"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("ul.target").menu();
+  });
+</script>
 {% endif %}
 <script type="text/javascript">
 {% if active_tab != "tags" and active_tab != "users" %}
@@ -68,7 +80,7 @@
 {% endif %}
 </script>
 {% if settings.USE_CUSTOM_JS %}
-<script 
+<script
     src="{% url "custom_js"%}?{{ settings.MEDIA_RESOURCE_REVISION }}"
     type="text/javascript"
 ></script>

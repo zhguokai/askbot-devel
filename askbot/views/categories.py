@@ -1,7 +1,4 @@
-from django.http import HttpResponse
-from django.views.generic.simple import direct_to_template
-
+from askbot.skins.loaders import render_into_skin
 
 def widget(request):
-    #return HttpResponse(u'Hello world from the widget view.')
-    return direct_to_template(request, template='categories_widget.html')
+    return render_into_skin('categories_widget.html', {}, request)

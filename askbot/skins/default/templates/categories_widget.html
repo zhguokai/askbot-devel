@@ -1,27 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-<!--<link type="text/css" href="/m/default/media/style/menu_theme/jquery-ui-1.8.11.custom.css" rel="Stylesheet" />-->
-<link type="text/css" href="/m/default/media/style/menu_theme/jquery.ui.all.css" rel="Stylesheet" />
-<script type="text/javascript" src="/m/default/media/js/jquery-1.4.3.js"></script>
-<script type="text/javascript" src="/m/default/media/js/jquery.ui.core.js"></script>
-<script type="text/javascript" src="/m/default/media/js/jquery.ui.position.js"></script>
-<script type="text/javascript" src="/m/default/media/js/jquery.ui.widget.js"></script>
-<script type="text/javascript" src="/m/default/media/js/jquery.ui.menu.js"></script>
-<!--<script type="text/javascript" src="/m/default/media/js/jquery.ui.mouse.js"></script>-->
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    $("ul.target").menu();
-  });
-</script>
-
+{% extends "base.html" %}
+{% block forestyle %}
 <style>
-  .ui-menu { width: 200px; position: absolute; }
+  .ui-menu { width: 200px; }
 </style>
-</head>
-<body>
-<p>Categories tree widget -- Step #12.</p>
+{% endblock %}
+{% block body %}
+<p>Categories tree widget -- Step #13.</p>
 <ul class="target">
   <li><a href="#">Everything</a>
     <ul>
@@ -45,5 +29,4 @@
     </ul>
   </li>
 </ul>
-</body>
-</html>
+{% endblock %}

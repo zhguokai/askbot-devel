@@ -23,18 +23,18 @@ APP_PATH = os.path.dirname(__file__)
 urlpatterns = patterns('',
     url(r'^$', views.readers.index, name='index'),
     url(
-        r'^sitemap.xml$', 
-        'django.contrib.sitemaps.views.sitemap', 
-        {'sitemaps': sitemaps}, 
+        r'^sitemap.xml$',
+        'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps},
         name='sitemap'
     ),
     url(
-        r'^m/(?P<skin>[^/]+)/media/(?P<resource>.*)$', 
+        r'^m/(?P<skin>[^/]+)/media/(?P<resource>.*)$',
         views.meta.media,
         name='askbot_media',
     ),
     url(
-        r'^%s(?P<path>.*)$' % settings.ASKBOT_UPLOADED_FILES_URL, 
+        r'^%s(?P<path>.*)$' % settings.ASKBOT_UPLOADED_FILES_URL,
         'django.views.static.serve',
         {'document_root': os.path.join(settings.PROJECT_ROOT, 'askbot', 'upfiles').replace('\\','/')},
         name='uploaded_file',
@@ -46,19 +46,19 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
     url(r'^%s$' % _('logout/'), views.meta.logout, name='logout'),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')), 
-        views.writers.edit_answer, 
+        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')),
+        views.writers.edit_answer,
         name='edit_answer'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')), 
-        views.readers.revisions, 
+        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')),
+        views.readers.revisions,
         kwargs = {'object_name': 'Answer'},
         name='answer_revisions'
     ),
     url(#this url works both normally and through ajax
-        r'^%s$' % _('questions/'), 
-        views.readers.questions, 
+        r'^%s$' % _('questions/'),
+        views.readers.questions,
         name='questions'
     ),
     url(
@@ -67,49 +67,49 @@ urlpatterns = patterns('',
         name = 'api_get_questions'
     ),
     url(
-        r'^%s%s$' % (_('questions/'), _('ask/')), 
-        views.writers.ask, 
+        r'^%s%s$' % (_('questions/'), _('ask/')),
+        views.writers.ask,
         name='ask'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')), 
-        views.writers.edit_question, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')),
+        views.writers.edit_question,
         name='edit_question'
     ),
     url(#this url is both regular and ajax
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')), 
-        views.writers.retag_question, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')),
+        views.writers.retag_question,
         name='retag_question'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')), 
-        views.commands.close, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')),
+        views.commands.close,
         name='close'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')), 
-        views.commands.reopen, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')),
+        views.commands.reopen,
         name='reopen'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')), 
-        views.writers.answer, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')),
+        views.writers.answer,
         name='answer'
     ),
     url(#ajax only
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')), 
-        views.commands.vote, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')),
+        views.commands.vote,
         name='vote'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')), 
-        views.readers.revisions, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')),
+        views.readers.revisions,
         kwargs = {'object_name': 'Question'},
         name='question_revisions'
     ),
     url(#ajax only
         r'^post_comments/$',
-        views.writers.post_comments, 
+        views.writers.post_comments,
         name='post_comments'
     ),
     url(#ajax only
@@ -119,23 +119,23 @@ urlpatterns = patterns('',
     ),
     url(#ajax only
         r'^comment/delete/$',
-        views.writers.delete_comment, 
+        views.writers.delete_comment,
         name='delete_comment'
     ),
     url(#ajax only
         r'^comment/get_text/$',
-        views.readers.get_comment, 
+        views.readers.get_comment,
         name='get_comment'
     ),
     #place general question item in the end of other operations
     url(
-        r'^%s(?P<id>\d+)/' % _('question/'), 
-        views.readers.question, 
+        r'^%s(?P<id>\d+)/' % _('question/'),
+        views.readers.question,
         name='question'
     ),
     url(
-        r'^%s$' % _('tags/'), 
-        views.readers.tags, 
+        r'^%s$' % _('tags/'),
+        views.readers.tags,
         name='tags'
     ),
     url(#ajax only
@@ -178,7 +178,7 @@ urlpatterns = patterns('',
     ),
     url(
         r'^%s$' % _('users/'),
-        views.users.users, 
+        views.users.users,
         name='users'
     ),
     #todo: rename as user_edit, b/c that's how template is named
@@ -213,7 +213,7 @@ urlpatterns = patterns('',
         name='manage_inbox'
     ),
     url(
-        r'^feeds/(?P<url>.*)/$', 
+        r'^feeds/(?P<url>.*)/$',
         'django.contrib.syndication.views.feed',
         {'feed_dict': feeds},
         name='feeds'
@@ -224,7 +224,7 @@ urlpatterns = patterns('',
     (r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
-        r'^doc/(?P<path>.*)$', 
+        r'^doc/(?P<path>.*)$',
         'django.views.static.serve',
         {'document_root': os.path.join(APP_PATH,'doc','build','html').replace('\\','/')},
         name='askbot_docs',
@@ -253,6 +253,9 @@ urlpatterns = patterns('',
         {'packages': ('askbot',)},
         name = 'askbot_jsi18n'
     ),
+
+    # For categories widget -- temporary
+    (r'^categories/$', 'askbot.views.categories.widget'),
 )
 
 if 'avatar' in settings.INSTALLED_APPS:
@@ -267,5 +270,5 @@ if 'avatar' in settings.INSTALLED_APPS:
             '^avatar/render_primary/(?P<user>[\+\w]+)/(?P<size>[\d]+)/$',
             'avatar.views.render_primary',
             name='avatar_render_primary'
-        ),    
+        ),
     )
