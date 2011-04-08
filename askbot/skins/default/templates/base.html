@@ -29,7 +29,7 @@
         </style>
         {% endif %}
         {% if settings.ENABLE_CATEGORIES %}
-            <link href="/m/default/media/style/menu_theme/jquery.ui.all.css" rel="stylesheet" type="text/css" />
+            <link href="{{ "/style/menu_theme/jquery.ui.all.css"|media }}" rel="stylesheet" type="text/css" />
         {% endif %}
         {% if settings.USE_CUSTOM_HTML_HEAD %}
             {{ settings.CUSTOM_HTML_HEAD }}

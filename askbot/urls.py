@@ -255,7 +255,7 @@ urlpatterns = patterns('',
     ),
 
     # For categories widget -- temporary
-    (r'^categories/$', 'askbot.views.categories.widget'),
+    (r'^categories/$', 'askbot.views.cats.cats'),
 )
 
 if 'avatar' in settings.INSTALLED_APPS:
