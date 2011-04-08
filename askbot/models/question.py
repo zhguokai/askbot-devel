@@ -41,6 +41,8 @@ QUESTION_ORDER_BY_MAP = {
 }
 
 class QuestionQuerySet(models.query.QuerySet):
+    """Custom query set subclass for :class:`~askbot.models.Question`
+    """
     def create_new(
                 self,
                 title = None,
@@ -253,7 +255,7 @@ class QuestionQuerySet(models.query.QuerySet):
                                 'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
                                  + 'WHERE askbot_markedtag.user_id = %s '
                                  + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-                                 + 'AND askbot_markedtag.reason = \'good\' '
+                                 + 'AND askbot_markedtag.reason LIKE \'%%F%%\' '
                                  + 'AND question_tags.question_id = question.id'
                             ),
                                 ]),

@@ -260,7 +260,6 @@ class GlobalTagSubscriberGetterTests(AskbotTestCase):
                                                     frequency = 'i'
                                                 )
         actual_subscribers = self.question.get_global_tag_based_subscribers(
-            tags = self.question.tags.all(),
             tag_mark_reason = reason,
             subscription_records = subscriptions
         )
@@ -318,6 +317,22 @@ class GlobalTagSubscriberGetterTests(AskbotTestCase):
         self.set_email_tag_filter_strategy(const.EXCLUDE_IGNORED)
         askbot_settings.update('USE_WILDCARD_TAGS', True)
         self.u1.mark_tags(wildcards = ('da*',), reason = 'I', action = 'add')
+        self.assert_subscribers_are(
+            expected_subscribers = set([self.u2,]),
+            reason = 'I'
+        )
+
+    def test_user_dislikes_wildcard_and_matching_tag(self):
+        """user ignores tag "day" and ignores a wildcard "da*"
+        """
+        self.set_email_tag_filter_strategy(const.EXCLUDE_IGNORED)
+        askbot_settings.update('USE_WILDCARD_TAGS', True)
+        self.u1.mark_tags(
+            tagnames = ('day',),
+            wildcards = ('da*',),
+            reason = 'I',
+            action = 'add'
+        )
         self.assert_subscribers_are(
             expected_subscribers = set([self.u2,]),
             reason = 'I'
