@@ -389,6 +389,40 @@ var CategoryTree = function(){
 };
 inherits(CategoryTree, WrappedElement);
 
+CategoryTree.prototype.setData = function(data){
+    this._data = data;
+};
+
+function recurse(data){
+    c = '<li>';
+    $.each(data, function(index, value){
+      if (index == 'name'){
+        c += '<a href="#">' + value + '</a>';
+      } else {
+        if (index == 'children'){
+          if (value.length){
+            c += '<ul>';
+            $.each(value, function(ndx, val){
+              c += recurse(val);
+            });
+            c += '</ul>';
+          }
+        }
+      }
+    });
+    c += '</li>';
+    return c;
+};
+
 CategoryTree.prototype.decorate = function(element){
-    this._element = element;
+    var me = $('<ul></ul>');
+    this._element = me;
+    me.html(recurse(this._data));
+    element.html(me);
+};
+
+CategoryTree.prototype.createDom = function(){
+    var element = $('<div></div>');
+    element.addClass('category-tree-menu');
+    this.decorate(element);
 };
