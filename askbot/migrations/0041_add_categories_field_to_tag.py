@@ -231,7 +231,7 @@ class Migration(SchemaMigration):
         },
         'askbot.tag': {
             'Meta': {'ordering': "('-used_count', 'name')", 'object_name': 'Tag', 'db_table': "u'tag'"},
-            'categories': ('categories.fields.CategoryM2MField', [], {'related_name': "'tags'", 'symmetrical': 'False', 'to': "orm['categories.Category']"}),
+            'categories': ('categories.fields.CategoryM2MField', [], {'related_name': "'tags'", 'symmetrical': 'False'}),
             'created_by': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'created_tags'", 'to': "orm['auth.User']"}),
             'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'deleted_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
