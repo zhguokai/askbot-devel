@@ -19,6 +19,13 @@
     askbot['urls']['user_url_template'] = scriptUrl + '{% trans %}users/{% endtrans %}{{ "{{user_id}}" }}/{{ "{{slug}}" }}/';
     askbot['messages']['name_of_anonymous_user'] = '{{ name_of_anonymous_user }}';
 </script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var str = new EditableString();
+        var test_text = $('#test-text');
+        str.decorate(test_text);
+    });
+</script>
 <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
 {% if request.user.is_authenticated() %}
 <script type='text/javascript' src='{{"/js/tag_selector.js"|media}}'></script>

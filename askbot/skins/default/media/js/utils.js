@@ -399,20 +399,97 @@ inherits(EditableString, WrappedElement);
 
 EditableString.prototype.setState = function(state){
     //hide and show things
+    if (state == 'EDIT'){
+        this._edit_block.show();
+        this._display_block.hide();
+    } else if (state == 'DISPLAY'){
+        this._edit_block.hide();
+        this._display_block.show();
+    }
 };
 
-EditableString.prototype.decorate = function(element){
-    //takes an element containing a single text node
-    //and replaces the text node with
-    //<div><span>text</span><a>edit</a><div>
-    //<div><input /></div>
-    //enters state DISPLAY
-    //adds event handers
-};
-
-EditableString.prototype.setText(text){
-    this._text = text;
+/**
+ * @param {string} text - string text
+ */
+EditableString.prototype.setText = function(text){
     this._text_element.html(text);
+};
+
+/**
+ * @return {string} text of the string
+ */
+EditableString.prototype.getText = function(){
+    this._text_element.html();
+};
+
+EditableString.prototype.getSaveEditHandler = function(){
+    var me = this;
+    return function(){
+        var raw_text = me._input_box.val();
+        me._text_element.html(escape(raw_text));
+        me.setState('DISPLAY');
+    };
+};
+
+EditableString.prototype.getStartEditHandler = function(){
+    var me = this;
+    return function(){
+        me.setState('EDIT');
+        me._input_box.val(me._text_element.html());
+        me._input_box.focus();
+    };
+};
+
+/**
+ * takes an jQuery element, assumes (no error checking)
+ * that the element
+ * has a single text node and replaces its content with
+ * <div><span>text</span><a>edit</a><div>
+ * <div><input /></div>
+ * and enters the DISPLAY state
+ */
+EditableString.prototype.decorate = function(element){
+    this._element = element;
+    var text = element.html();
+    this._element.empty();
+    //build dom for the display block
+    this._display_block = this.makeElement('div');
+    this._element.append(this._display_block);
+    this._edit_block = this.makeElement('div');
+    this._element.append(this._edit_block);
+
+    this._input_box = this.makeElement('input');
+    this._input_box.attr('type', 'text');
+    this._edit_block.append(this._input_box);
+
+    this._text_element = this.makeElement('span');
+    var edit_link = new EditLink();
+    edit_link.setHandler(
+        this.getStartEditHandler()
+    );
+    this._display_block.append(this._text_element);
+    var edit_element = edit_link.getElement();
+    this._display_block.append(edit_element);
+    //build dom for the edit block
+
+    //set the value of text
+    this._text_element.html(text);
+
+    //replace content with the new dom
+
+    //set the display state
+    this.setState('DISPLAY');
+
+    //set event handlers
+    var text_elem = this._text_element;
+    this._input_box.keydown(
+        makeKeyHandler(13, this.getSaveEditHandler())
+    );
+};
+
+EditableString.prototype.createDom = function(){
+    var div = this.makeElement('dom');
+    this.decorate(div);
 };
 
 /**
