@@ -14,21 +14,29 @@ def cats(request):
     It uses JSON to send tree data in the context to the client.
     """
     if askbot_settings.ENABLE_CATEGORIES:
-        roots = cache_tree_children(Category.tree.all())
-        root_node = roots[0]
-        data =  simplejson.dumps(_recurse_tree(root_node))
         return render_into_skin(
-                'categories.html',
-                {'cats_tree': data},
-                request
+            'categories.html',
+            {'cats_tree':simplejson.dumps(generate_tree())},
+            request
         )
     else:
         raise Http404
 
+def generate_tree():
+    """
+    Traverses a node tree and builds a structure easily serializable as JSON.
+    """
+    roots = cache_tree_children(Category.tree.all())
+    if roots:
+        # Assume we have one tree for now, this could change if we decide
+        # against storing the root node in the DB
+        return _recurse_tree(roots[0])
+    return {}
+
 def _recurse_tree(node):
     """
-    Traverses recursively a node tree and builds a Python structure easily
-    serializable as JSON.
+    Helper recursive function for generate_tree().
+    Traverses recursively the node tree.
     """
     output = {'name': node.name}
     children = []
