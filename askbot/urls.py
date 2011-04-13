@@ -257,6 +257,11 @@ urlpatterns = patterns('',
     # For categories widget -- temporary
     (r'^categories/$', 'askbot.views.cats.cats'),
     (r'^categories_dump/$', 'askbot.views.cats.cats_dump'),
+    url(#ajax only
+        r'^add_category/$',
+        views.cats.add_category,
+        name='add_category'
+    ),
 )
 
 if 'avatar' in settings.INSTALLED_APPS:

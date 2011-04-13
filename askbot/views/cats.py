@@ -1,8 +1,12 @@
 from categories.models import Category
 from mptt.templatetags.mptt_tags import cache_tree_children
 
-from django.http import Http404, HttpResponse
+#from django.db import IntegrityError
+from django.core import exceptions
+from django.core.urlresolvers import reverse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.utils import simplejson
+from django.utils.translation import ugettext as _
 
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import render_into_skin
@@ -45,6 +49,58 @@ def _recurse_tree(node):
             children.append(_recurse_tree(child))
     output['children'] = children
     return output
+
+def add_category(request):
+    """
+    Adds a category. Meant to be called by the site administrator using ajax
+    and POST HTTP method.
+    The expected json request is an object with the following keys:
+      'new_cat': Name of the new category to be created.
+      'parent':  Name of the parent category for the category to be created.
+    The response is also a json object with keys:
+      'success': boolean
+      'message': text description in case of failure (not always present)
+    """
+    response_data = dict()
+    try:
+        #if not askbot_settings.ENABLE_CATEGORIES:
+        #    raise Http404
+        if request.is_ajax():
+            if request.method == 'POST':
+                post_data = simplejson.loads(request.raw_post_data)
+                if request.user.is_authenticated():
+                    if request.user.is_administrator():
+                        cat, created = Category.objects.get_or_create(name=post_data['new_cat'])
+                        if not created:
+                            #raise IntegrityError
+                            raise exceptions.ValidationError(
+                                _('There is already a category with that name')
+                                )
+                        response_data['success'] = True
+                        data = simplejson.dumps(response_data)
+                        return HttpResponse(data, mimetype="application/json")
+                    else:
+                        raise exceptions.PermissionDenied(
+                            _('Sorry, but you cannot access this view')
+                        )
+                else:
+                    raise exceptions.PermissionDenied(
+                            _('Sorry, but anonymous users cannot access the inbox')
+                        )
+            else:
+                raise exceptions.PermissionDenied('must use POST request')
+        else:
+            #todo: show error page but no-one is likely to get here
+            return HttpResponseRedirect(reverse('index'))
+    except Exception, e:
+        message = unicode(e)
+        if message == '':
+            message = _('Oops, apologies - there was some error')
+        response_data['message'] = message
+        response_data['success'] = False
+        data = simplejson.dumps(response_data)
+        return HttpResponse(data, mimetype="application/json")
+
 
 # Old code follows
 
