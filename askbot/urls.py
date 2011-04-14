@@ -262,6 +262,11 @@ urlpatterns = patterns('',
         views.cats.add_category,
         name='add_category'
     ),
+    url(#ajax only
+        r'^rename_category/$',
+        views.cats.rename_category,
+        name='rename_category'
+    ),
 )
 
 if 'avatar' in settings.INSTALLED_APPS:

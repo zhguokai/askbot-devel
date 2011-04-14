@@ -85,20 +85,23 @@ class ViewsTests(AjaxTests):
         # A normal user
         User.objects.create_user(username='user1', email='user1@example.com', password='123')
         # Setup a small category tree
-        root = Category.objects.create(name='Root')
-        self.c1 = Category.objects.create(name='Child1', parent=root)
+        root = Category.objects.create(name=u'Root')
+        self.c1 = Category.objects.create(name=u'Child1', parent=root)
         askbot_settings.update('ENABLE_CATEGORIES', True)
 
-    def test_categories_off(self):
-        """AJAX add category view shouldn't exist when master switch is off."""
-        askbot_settings.update('ENABLE_CATEGORIES', False)
-        r = self.ajax_post_json('/add_category/', {'name': 'Entertainment', 'parent': (1, 1)})
-        self.assertEqual(r.status_code, 404)
+    #def test_categories_off(self):
+    #    """AJAX category-related views shouldn't exist when master switch is off."""
+    #    askbot_settings.update('ENABLE_CATEGORIES', False)
+    #    r = self.ajax_post_json('/add_category/', {'name': u'Entertainment', 'parent': (1, 1)})
+    #    self.assertEqual(r.status_code, 404)
+    #    askbot_settings.update('ENABLE_CATEGORIES', True)
+    #    r = self.ajax_post_json('/add_category/', {'name': u'Family', 'parent': (1, 1)})
+    #    self.assertEqual(r.status_code, 404)
 
     def test_add_category_no_permission(self):
         """Only administrator users should be able to add a category via the view."""
         self.client.login(username='user1', password='123')
-        r = self.ajax_post_json('/add_category/', {'name': 'Health', 'parent': (1, 1)})
+        r = self.ajax_post_json('/add_category/', {'name': u'Health', 'parent': (1, 1)})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, 'Sorry, but you cannot access this view')
@@ -106,7 +109,7 @@ class ViewsTests(AjaxTests):
     def test_add_category_exists(self):
         """Two categories with the same name shouldn't be allowed."""
         self.client.login(username='owner', password='secret')
-        r = self.ajax_post_json('/add_category/', {'name': 'Child1', 'parent': (1, 1)})
+        r = self.ajax_post_json('/add_category/', {'name': u'Child1', 'parent': (1, 1)})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, 'There is already a category with that name')
@@ -128,15 +131,15 @@ class ViewsTests(AjaxTests):
         """Valid new categories should be added to the database."""
         self.client.login(username='owner', password='secret')
         # A child of the root node
-        self.add_category_success({'name': 'Child2', 'parent': (1, 1)})
+        self.add_category_success({'name': u'Child2', 'parent': (1, 1)})
         # A child of a non-root node
-        self.add_category_success({'name': 'Child1', 'parent': (self.c1.tree_id, self.c1.lft)})
+        self.add_category_success({'name': u'Child1', 'parent': (self.c1.tree_id, self.c1.lft)})
 
     def test_add_new_tree(self):
         """Test insertion of a new root-of-tree node."""
         self.client.login(username='owner', password='secret')
         category_objects = Category.objects.count()
-        r = self.ajax_post_json('/add_category/', {'name': 'AnotherRoot', 'parent': None})
+        r = self.ajax_post_json('/add_category/', {'name': u'AnotherRoot', 'parent': None})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         try:
@@ -145,12 +148,44 @@ class ViewsTests(AjaxTests):
             self.Fail(str(e))
         self.assertTrue(data['success'])
         self.assertEqual(category_objects + 1, Category.objects.count())
-        self.assertEqual(Category.tree.root_nodes().filter(name='AnotherRoot').count(), 1)
+        self.assertEqual(Category.tree.root_nodes().filter(name=u'AnotherRoot').count(), 1)
 
     def test_add_invalid_parent(self):
-        """Attempted insertion of a new category with an invalid parent should fail."""
+        """Attempts to insert a new category with an invalid parent should fail."""
         self.client.login(username='owner', password='secret')
-        r = self.ajax_post_json('/add_category/', {'name': 'Foo', 'parent': (100, 20)})
+        r = self.ajax_post_json('/add_category/', {'name': u'Foo', 'parent': (100, 20)})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, "Requested parent node doesn't exist")
+
+    def test_rename_success(self):
+        self.client.login(username='owner', password='secret')
+        obj = Category.objects.get(name=u'Child1')
+        obj_id = (obj.tree_id, obj.lft)
+        r = self.ajax_post_json('/rename_category/', {'id': obj_id, 'name': u'NewName'})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        try:
+            data = simplejson.loads(r.content)
+        except Exception, e:
+            self.Fail(str(e))
+        self.assertTrue(data['success'])
+        # Re-fech the object from the DB
+        obj = Category.objects.get(tree_id=obj_id[0], lft=obj_id[1])
+        self.assertEqual(obj.name, u'NewName')
+
+    def test_rename_exists(self):
+        """Renaming to a name that already exists shouldn't be allowed."""
+        self.client.login(username='owner', password='secret')
+        r = self.ajax_post_json('/rename_category/', {'id': (1, 1), 'name': u'Child1'})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        self.assertContains(r, 'There is already a category with that name')
+
+    def test_rename_invalid_id(self):
+        """Attempts to rename a category with an invalid ID should fail."""
+        self.client.login(username='owner', password='secret')
+        r = self.ajax_post_json('/rename_category/', {'id': (100, 20), 'name': u'NewName'})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        self.assertContains(r, "Requested node doesn't exist")

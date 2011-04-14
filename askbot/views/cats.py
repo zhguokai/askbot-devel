@@ -73,7 +73,7 @@ def add_category(request):
                 if request.user.is_authenticated():
                     if request.user.is_administrator():
                         parent = None
-                        if post_data['parent']:
+                        if post_data.get('parent'):
                             try:
                                 parent = Category.objects.get(
                                         tree_id=post_data['parent'][0],
@@ -97,8 +97,8 @@ def add_category(request):
                         )
                 else:
                     raise exceptions.PermissionDenied(
-                            _('Sorry, but anonymous users cannot access the inbox')
-                        )
+                        _('Sorry, but anonymous users cannot access this view')
+                    )
             else:
                 raise exceptions.PermissionDenied('must use POST request')
         else:
@@ -113,35 +113,73 @@ def add_category(request):
         data = simplejson.dumps(response_data)
         return HttpResponse(data, mimetype="application/json")
 
-
-# Old code follows
-
-def _build_ul(node):
-    """Helper recursive function for render_ul()."""
-    output = []
-    output.append(u'<li>%s' % node.name)
-    if not node.is_leaf_node():
-        output.append(u'<ul>')
-        for child in node.get_children():
-            output.append(_build_ul(child))
-        output.append(u'</ul>')
-    output.append(u'</li>')
-    return u'\n'.join(output)
-
-def render_ul(node):
+def rename_category(request):
     """
-    Renders a django-category Category (actually, a django-mptt node)
-    hierarchy as a tree of nested HTML ul/li tags.
-    """
-    return u'<ul>\n%s\n</ul>' % _build_ul(node)
+    Change the name of a category. Meant to be called by the site administrator
+    using ajax and POST HTTP method.
+    The expected json request is an object with the following keys:
+      'id':   ID of the parent category for the category to be created.
+      'name': New name of the category.
+    The response is also a json object with keys:
+      'success': boolean
+      'message': text description in case of failure (not always present)
 
-def cats_dump(request):
+    Node IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
     """
-    View that renders a simple page showing the categories tree.
-    """
-    if askbot_settings.ENABLE_CATEGORIES:
-        roots = cache_tree_children(Category.tree.all())
-        root_node = roots[0]
-        return HttpResponse(u'<html><body>%s</body></html>' % render_ul(root_node))
-    else:
+    if not askbot_settings.ENABLE_CATEGORIES:
         raise Http404
+    response_data = dict()
+    try:
+        if request.is_ajax():
+            if request.method == 'POST':
+                post_data = simplejson.loads(request.raw_post_data)
+                if request.user.is_authenticated():
+                    if request.user.is_administrator():
+                        try:
+                            node = Category.objects.get(
+                                    tree_id=post_data['id'][0],
+                                    lft=post_data['id'][1]
+                                )
+                        except Category.DoesNotExist:
+                            raise exceptions.ValidationError(
+                                _("Requested node doesn't exist")
+                                )
+                        new_name = post_data['name']
+                        try:
+                            node = Category.objects.get(
+                                    name=new_name
+                                )
+                        except Category.DoesNotExist:
+                            pass
+                        else:
+                            raise exceptions.ValidationError(
+                                _('There is already a category with that name')
+                                )
+                        node.name=new_name
+                        # Let any exception that happens during save bubble up,
+                        # for now
+                        node.save()
+                        response_data['success'] = True
+                        data = simplejson.dumps(response_data)
+                        return HttpResponse(data, mimetype="application/json")
+                    else:
+                        raise exceptions.PermissionDenied(
+                            _('Sorry, but you cannot access this view')
+                        )
+                else:
+                    raise exceptions.PermissionDenied(
+                        _('Sorry, but anonymous users cannot access this view')
+                    )
+            else:
+                raise exceptions.PermissionDenied('must use POST request')
+        else:
+            #todo: show error page but no-one is likely to get here
+            return HttpResponseRedirect(reverse('index'))
+    except Exception, e:
+        message = unicode(e)
+        if message == '':
+            message = _('Oops, apologies - there was some error')
+        response_data['message'] = message
+        response_data['success'] = False
+        data = simplejson.dumps(response_data)
+        return HttpResponse(data, mimetype="application/json")
