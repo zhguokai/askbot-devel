@@ -85,8 +85,8 @@ class AuthBackend(object):
                                                       email=em
                                                   )
                     feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_all', frequency='i')
-                    feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_ask', frequency='n')
-                    feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_ans', frequency='n')
+                    feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_ask', frequency='i')
+                    feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_ans', frequency='i')
                     feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='q_sel', frequency='n')
                     feed, c = models.EmailFeedSetting.objects.get_or_create(subscriber=user, feed_type='m_and_c', frequency='n')
 
