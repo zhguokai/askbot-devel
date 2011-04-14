@@ -1,3 +1,4 @@
+import logging
 import datetime
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
@@ -94,6 +95,13 @@ class Content(models.Model):
 
         return comment
 
+    def get_user_id_string(self, user_list):
+        users = " (%d):" % len(user_list)
+        for user in user_list:
+           users += " %s" % user.username
+
+        return users 
+
     def get_global_tag_based_subscribers(
                                     self,
                                     tag_mark_reason = None,
@@ -105,17 +113,22 @@ class Content(models.Model):
         ``subscription_records`` - query set of ``~askbot.models.EmailFeedSetting``
         this argument is used to reduce number of database queries
         """
+        debug_str = "\n  "
         if tag_mark_reason == 'S':
             email_tag_filter_strategy = const.INCLUDE_INTERESTING
             user_set_getter = User.objects.filter
+            debug_str += "Subscribed Tags"
         elif tag_mark_reason == 'I':
             email_tag_filter_strategy = const.EXCLUDE_IGNORED
             user_set_getter = User.objects.exclude
+            debug_str += "Not Ignored Tags"
         else:
             raise ValueError('Uknown value of tag mark reason %s' % tag_mark_reason)
 
         #part 1 - find users who follow or not ignore the set of tags
         tag_names = self.get_tag_names()
+        debug_str += " (%s)\n" % tag_names
+
         tag_selections = MarkedTag.objects.filter(
                                             tag__name__in = tag_names,
                                             reason__contains = tag_mark_reason
@@ -129,6 +142,8 @@ class Content(models.Model):
                 email_tag_filter_strategy = email_tag_filter_strategy
             )
         )
+
+        debug_str += "    Match%s\n" % self.get_user_id_string(subscribers)
 
         #part 2 - find users who follow or not ignore tags via wildcard selections
         #inside there is a potentially time consuming loop
@@ -156,7 +171,11 @@ class Content(models.Model):
                 **empty_wildcard_filter #need this to limit size of the loop
             ))
 
+            debug_str += "    Total Wildcard Cnt %d" % (len(potential_wildcard_subscribers))
             exclude_wildcards(subscribers, potential_wildcard_subscribers)
+            debug_str += "    Filtered Wildcard Cnt %d\n" % len(potential_wildcard_subscribers)
+
+            wild_users = []
             for potential_subscriber in potential_wildcard_subscribers:
                 wildcard_tags = getattr(
                                     potential_subscriber,
@@ -165,7 +184,11 @@ class Content(models.Model):
 
                 if tags_match_some_wildcard(tag_names, wildcard_tags):
                     update_subscribers(subscribers, potential_subscriber)
+                    wild_users.append(potential_subscriber)
 
+            debug_str += "    Wildcard%s\n" %  self.get_user_id_string(wild_users)
+
+        #logging.info(debug_str)
         return subscribers
 
     def get_global_instant_notification_subscribers(self):
@@ -192,20 +215,25 @@ class Content(models.Model):
         subscriber_set.update(global_subscribers)
 
         #segment of users who want emails on selected questions only
-        subscriber_set.update(
-            self.get_global_tag_based_subscribers(
+        tag_subscriptions= self.get_global_tag_based_subscribers(
                                     subscription_records = global_subscriptions,
                                     tag_mark_reason = 'S'
                                 )
-        )
+        subscriber_set.update(tag_subscriptions)
 
         #segment of users who want to exclude ignored tags
-        subscriber_set.update(
-            self.get_global_tag_based_subscribers(
+        not_ignored = self.get_global_tag_based_subscribers(
                                     subscription_records = global_subscriptions,
                                     tag_mark_reason = 'I'
                                 )
+        subscriber_set.update(not_ignored)
+
+        debug_str = "\nInstant Subscribers\n  All%s\n  Subs%s\n  Not Ignored%s\n" % (
+           self.get_user_id_string(global_subscribers), 
+           self.get_user_id_string(tag_subscriptions), self.get_user_id_string(not_ignored)
         )
+        #logging.info(debug_str)
+
         return subscriber_set
 
 
@@ -225,10 +253,7 @@ class Content(models.Model):
         comment class has it's own variant which does have quite a bit
         of duplicated code at the moment
         """
-        #print '------------------'
-        #print 'in content function'
         subscriber_set = set()
-        #print 'potential subscribers: ', potential_subscribers
 
         #1) mention subscribers - common to questions and answers
         if mentioned_users:
@@ -241,7 +266,7 @@ class Content(models.Model):
 
         origin_post = self.get_origin_post()
 
-        #print origin_post
+        debug_str = "\nInstant Subscribers to: %s\n" % origin_post.title
 
         #2) individually selected - make sure that users
         #are individual subscribers to this question
@@ -268,6 +293,7 @@ class Content(models.Model):
                                             feed_type = 'q_ask'
                                         ):
             subscriber_set.add(question_author)
+            debug_str += "  Author: %s\n" % question_author.username
 
         #4) questions answered by me -make sure is that people 
         #are authors of the answers to this question
@@ -284,12 +310,12 @@ class Content(models.Model):
                                     feed_type = 'q_ans',
                                 )
             subscriber_set.update(answer_subscribers)
-            #print 'answer subscribers: ', answer_subscribers
+            debug_str += "  Answer Authors%s" %  self.get_user_id_string(answer_subscribers)
 
-        #print 'exclude_list is ', exclude_list
+        debug_str += "  exclude list%s" %  self.get_user_id_string(exclude_list)
         subscriber_set -= set(exclude_list)
 
-        #print 'final subscriber set is ', subscriber_set
+        #logging.info(debug_str)
         return list(subscriber_set)
 
     def get_latest_revision(self):
