@@ -102,7 +102,6 @@ def parse_message(msg):
     if msg.is_multipart():
         # BL: Wind always sends 2 payloads: 1 plain-text, the other html
         msg = msg.get_payload()[0]
-        print msg
         if isinstance(msg, list):
             raise CannotParseEmail(sender, subject)
 
@@ -148,9 +147,9 @@ class Command(NoArgsCommand):
         #get message ids
         status, ids = imap.search(None, 'ALL')
 
+        #for each id - read a message, parse it and post a question
         if len(ids[0]) > 0:
-         #for each id - read a message, parse it and post a question
-         for id in ids[0].split(' '):
+          for id in ids[0].split(' '):
             t, data = imap.fetch(id, '(RFC822)')
             message_body = data[0][1]
             msg = email.message_from_string(data[0][1])

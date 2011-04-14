@@ -168,23 +168,44 @@ def use_password_login():
         return True
 
 def get_major_login_providers():
-    """returns a tuple with data about login providers
+    """returns a dictionary with data about login providers
     whose icons are to be shown in large format
     
-    items of tuple are dictionaries with keys:
+    items of the dictionary are dictionaries with keys:
 
     * name
     * display_name
     * icon_media_path (relative to /media directory)
     * type (oauth|openid-direct|openid-generic|openid-username|password)
 
-    Fields dependent on type:
+    Fields dependent on type of the login provider type
+    ---------------------------------------------------
+
+    Password (type = password) - login provider using login name and password:
+
+    * extra_token_name - a phrase describing what the login name and the
+      password are from
+    * create_password_prompt - a phrase prompting to create an account
+    * change_password_prompt - a phrase prompting to change password
+
+    OpenID (type = openid) - Provider of login using the OpenID protocol
 
     * openid_endpoint (required for type=openid|openid-username)
       for type openid-username - the string must have %(username)s
       format variable, plain string url otherwise
     * extra_token_name - required for type=openid-username
       describes name of required extra token - e.g. "XYZ user name"
+
+    OAuth2 (type = oauth)
+
+    * request_token_url - url to initiate OAuth2 protocol with the resource
+    * access_token_url - url to access users data on the resource via OAuth2
+    * authorize_url - url at which user can authorize the app to access a resource
+    * authenticate_url - url to authenticate user (lower privilege than authorize)
+    * get_user_id_function - a function that returns user id from data dictionary
+      containing: response to the access token url & consumer_key
+      and consumer secret. The purpose of this function is to hide the differences
+      between the ways user id is accessed from the different OAuth providers
     """
     data = SortedDict()
 
@@ -319,6 +340,8 @@ class OAuthConnection(object):
                         )
 
     def start(self, callback_url = None):
+        """starts the OAuth protocol communication and
+        saves request token as :attr:`request_token`"""
 
         if callback_url is None:
             callback_url = self.callback_url
@@ -355,6 +378,9 @@ class OAuthConnection(object):
         return self.request_token
 
     def get_user_id(self, oauth_token = None, oauth_verifier = None):
+        """Returns user ID within the OAuth provider system,
+        based on ``oauth_token`` and ``oauth_verifier``
+        """
 
         token = oauth.Token(
                     oauth_token['oauth_token'],
@@ -371,8 +397,7 @@ class OAuthConnection(object):
 
     def get_auth_url(self, login_only = False):
         """returns OAuth redirect url.
-        callback_url is the redirect that will be used by the
-        provider server, if login_only is True, authentication
+        if ``login_only`` is True, authentication
         endpoint will be used, if available, otherwise authorization
         url (potentially granting full access to the server) will
         be used.
