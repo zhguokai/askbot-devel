@@ -100,7 +100,9 @@ def parse_message(msg):
     sender = msg.get('From')
     subject = msg.get('Subject')
     if msg.is_multipart():
-        msg = msg.get_payload()
+        # BL: Wind always sends 2 payloads: 1 plain-text, the other html
+        msg = msg.get_payload()[0]
+        print msg
         if isinstance(msg, list):
             raise CannotParseEmail(sender, subject)
 
@@ -125,7 +127,7 @@ class Command(NoArgsCommand):
 
         all messages are deleted thereafter
         """
-        if askbot_settings.ALLOW_ASKING_BY_EMAIL:
+        if not askbot_settings.ALLOW_ASKING_BY_EMAIL:
             raise CommandError('Asking by email is not enabled')
 
         #open imap server and select the inbox
@@ -146,8 +148,9 @@ class Command(NoArgsCommand):
         #get message ids
         status, ids = imap.search(None, 'ALL')
 
-        #for each id - read a message, parse it and post a question
-        for id in ids[0].split(' '):
+        if len(ids[0]) > 0:
+         #for each id - read a message, parse it and post a question
+         for id in ids[0].split(' '):
             t, data = imap.fetch(id, '(RFC822)')
             message_body = data[0][1]
             msg = email.message_from_string(data[0][1])
@@ -155,6 +158,7 @@ class Command(NoArgsCommand):
             try:
                 (sender, subject, body) = parse_message(msg)
             except CannotParseEmail, e:
+                print "Could not parse ", msg
                 continue
             data = {
                 'sender': sender,
@@ -167,7 +171,7 @@ class Command(NoArgsCommand):
                 email_address = form.cleaned_data['email']
                 try:
                     print 'looking for ' + email_address
-                    user = models.User.objects.get(email = email_address)
+                    user = models.User.objects.get(email = email_address.lower())
                 except models.User.DoesNotExist:
                     bounce_email(email_address, subject, reason = 'unknown_user')
                 except models.User.MultipleObjectsReturned:
