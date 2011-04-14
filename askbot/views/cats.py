@@ -42,7 +42,7 @@ def _recurse_tree(node):
     Helper recursive function for generate_tree().
     Traverses recursively the node tree.
     """
-    output = {'name': node.name}
+    output = {'name': node.name, 'id': (node.tree_id, node.lft)}
     children = []
     if not node.is_leaf_node():
         for child in node.get_children():
@@ -55,24 +55,36 @@ def add_category(request):
     Adds a category. Meant to be called by the site administrator using ajax
     and POST HTTP method.
     The expected json request is an object with the following keys:
-      'new_cat': Name of the new category to be created.
-      'parent':  Name of the parent category for the category to be created.
+      'name':   Name of the new category to be created.
+      'parent': ID of the parent category for the category to be created.
     The response is also a json object with keys:
       'success': boolean
       'message': text description in case of failure (not always present)
+
+    Node IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
     """
+    if not askbot_settings.ENABLE_CATEGORIES:
+        raise Http404
     response_data = dict()
     try:
-        #if not askbot_settings.ENABLE_CATEGORIES:
-        #    raise Http404
         if request.is_ajax():
             if request.method == 'POST':
                 post_data = simplejson.loads(request.raw_post_data)
                 if request.user.is_authenticated():
                     if request.user.is_administrator():
-                        cat, created = Category.objects.get_or_create(name=post_data['new_cat'])
+                        parent = None
+                        if post_data['parent']:
+                            try:
+                                parent = Category.objects.get(
+                                        tree_id=post_data['parent'][0],
+                                        lft=post_data['parent'][1]
+                                    )
+                            except Category.DoesNotExist:
+                                raise exceptions.ValidationError(
+                                    _("Requested parent node doesn't exist")
+                                    )
+                        cat, created = Category.objects.get_or_create(name=post_data['name'], parent=parent)
                         if not created:
-                            #raise IntegrityError
                             raise exceptions.ValidationError(
                                 _('There is already a category with that name')
                                 )

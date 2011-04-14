@@ -4,47 +4,48 @@ from django.utils import simplejson
 
 from categories.models import Category
 
+from askbot.conf import settings as askbot_settings
 from askbot.views.cats import generate_tree
 
 
 class TreeTests(TestCase):
     def setUp(self):
-        # TODO: Actually there is no need to build the tree using the mptt API.
-        # The failure was in django-mptt, change this back to normal Django
-        # model instatiations
-        root = Category(name='Root')
-        root.insert_at(target=None, save=True)
-        n1 = Category(name='N1')
-        n1.insert_at(target=root, position='last-child', save=True)
-        Category(name='N2').insert_at(target=root, position='last-child', save=True)
-        Category(name='Child1').insert_at(target=n1, position='last-child', save=True)
-        Category(name='Child2').insert_at(target=n1, position='last-child', save=True)
+        root = Category.objects.create(name='Root')
+        n1 = Category.objects.create(name='N1', parent=root)
+        Category.objects.create(name='N2', parent=root)
+        Category.objects.create(name='Child1', parent=n1)
+        Category.objects.create(name='Child2', parent=n1)
 
     def test_python_tree(self):
         """
-        Test that django-mptt build the tree correctly. version 0.4.2 hasa bug
-        when populating the tree, it incorrectly grafts the Child1 and Child2
-        nodes under N2.
+        Test that django-mptt builds the tree correctly. version 0.4.2 has a
+        bug when populating the tree, it incorrectly grafts the Child1 and
+        Child2 nodes under N2.
         """
         self.assertEqual(
             {
-                "name": "Root",
+                "name": u"Root",
+                "id": (1, 1),
                 "children": [
                     {
-                        "name": "N1",
+                        "name": u"N1",
+                        "id": (1, 2),
                         "children": [
                             {
-                                "name": "Child1",
+                                "name": u"Child1",
+                                "id": (1, 3),
                                 "children": []
                             },
                             {
-                                "name": "Child2",
+                                "name": u"Child2",
+                                "id": (1, 5),
                                 "children": []
                             }
                         ]
                     },
                     {
-                        "name": "N2",
+                        "name": u"N2",
+                        "id": (1, 8),
                         "children": []
                     }
 
@@ -70,10 +71,13 @@ class AjaxTests(TestCase):
         extra.update({'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'})
         return self.client.post(path, data, content_type, follow, **extra)
 
+    def ajax_post_json(self, path, data):
+        return self.ajax_post(path, simplejson.dumps(data))
+
 
 class ViewsTests(AjaxTests):
     def setUp(self):
-        # A administrator user
+        # An administrator user
         owner = User.objects.create_user(username='owner', email='owner@example.com', password='secret')
         owner.is_staff = True
         owner.is_superuser = True
@@ -82,12 +86,19 @@ class ViewsTests(AjaxTests):
         User.objects.create_user(username='user1', email='user1@example.com', password='123')
         # Setup a small category tree
         root = Category.objects.create(name='Root')
-        Category.objects.create(name='Child1', parent=root)
+        self.c1 = Category.objects.create(name='Child1', parent=root)
+        askbot_settings.update('ENABLE_CATEGORIES', True)
+
+    def test_categories_off(self):
+        """AJAX add category view shouldn't exist when master switch is off."""
+        askbot_settings.update('ENABLE_CATEGORIES', False)
+        r = self.ajax_post_json('/add_category/', {'name': 'Entertainment', 'parent': (1, 1)})
+        self.assertEqual(r.status_code, 404)
 
     def test_add_category_no_permission(self):
         """Only administrator users should be able to add a category via the view."""
         self.client.login(username='user1', password='123')
-        r = self.ajax_post('/add_category/', simplejson.dumps({'new_cat': 'Health', 'parent': 'Root'}))
+        r = self.ajax_post_json('/add_category/', {'name': 'Health', 'parent': (1, 1)})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, 'Sorry, but you cannot access this view')
@@ -95,16 +106,15 @@ class ViewsTests(AjaxTests):
     def test_add_category_exists(self):
         """Two categories with the same name shouldn't be allowed."""
         self.client.login(username='owner', password='secret')
-        r = self.ajax_post('/add_category/', simplejson.dumps({'new_cat': 'Child1', 'parent': 'Root'}))
+        r = self.ajax_post_json('/add_category/', {'name': 'Child1', 'parent': (1, 1)})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, 'There is already a category with that name')
 
-    def test_add_category_success(self):
-        """Valid new category should be added to the database."""
-        self.client.login(username='owner', password='secret')
+    def add_category_success(self, post_data):
+        """Helper method"""
         category_objects = Category.objects.count()
-        r = self.ajax_post('/add_category/', simplejson.dumps({'new_cat': 'Child2', 'parent': 'Root'}))
+        r = self.ajax_post_json('/add_category/', post_data)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         try:
@@ -113,3 +123,34 @@ class ViewsTests(AjaxTests):
             self.Fail(str(e))
         self.assertTrue(data['success'])
         self.assertEqual(category_objects + 1, Category.objects.count())
+
+    def test_add_category_success(self):
+        """Valid new categories should be added to the database."""
+        self.client.login(username='owner', password='secret')
+        # A child of the root node
+        self.add_category_success({'name': 'Child2', 'parent': (1, 1)})
+        # A child of a non-root node
+        self.add_category_success({'name': 'Child1', 'parent': (self.c1.tree_id, self.c1.lft)})
+
+    def test_add_new_tree(self):
+        """Test insertion of a new root-of-tree node."""
+        self.client.login(username='owner', password='secret')
+        category_objects = Category.objects.count()
+        r = self.ajax_post_json('/add_category/', {'name': 'AnotherRoot', 'parent': None})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        try:
+            data = simplejson.loads(r.content)
+        except Exception, e:
+            self.Fail(str(e))
+        self.assertTrue(data['success'])
+        self.assertEqual(category_objects + 1, Category.objects.count())
+        self.assertEqual(Category.tree.root_nodes().filter(name='AnotherRoot').count(), 1)
+
+    def test_add_invalid_parent(self):
+        """Attempted insertion of a new category with an invalid parent should fail."""
+        self.client.login(username='owner', password='secret')
+        r = self.ajax_post_json('/add_category/', {'name': 'Foo', 'parent': (100, 20)})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        self.assertContains(r, "Requested parent node doesn't exist")
