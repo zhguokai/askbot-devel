@@ -254,9 +254,8 @@ urlpatterns = patterns('',
         name = 'askbot_jsi18n'
     ),
 
-    # For categories widget -- temporary
+    # For categories
     (r'^categories/$', 'askbot.views.cats.cats'),
-    (r'^categories_dump/$', 'askbot.views.cats.cats_dump'),
     url(#ajax only
         r'^add_category/$',
         views.cats.add_category,
@@ -266,6 +265,21 @@ urlpatterns = patterns('',
         r'^rename_category/$',
         views.cats.rename_category,
         name='rename_category'
+    ),
+    url(#ajax only
+        r'^add_tag_to_category/$',
+        views.cats.add_tag_to_category,
+        name='add_tag_to_category'
+    ),
+    url(#ajax only
+        r'^get_tag_categories/$',
+        views.cats.get_tag_categories,
+        name='get_tag_categories'
+    ),
+    url(#ajax only
+        r'^remove_tag_from_category/$',
+        views.cats.remove_tag_from_category,
+        name='remove_tag_from_category'
     ),
 )
 
