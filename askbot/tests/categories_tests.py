@@ -80,7 +80,7 @@ class AjaxTests(TestCase):
         try:
             data = simplejson.loads(response.content)
         except Exception, e:
-            self.Fail(str(e))
+            self.fail(str(e))
         self.assertTrue(data['success'])
 
 
@@ -142,11 +142,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(reverse('add_category'), post_data)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
-        try:
-            data = simplejson.loads(r.content)
-        except Exception, e:
-            self.Fail(str(e))
-        self.assertTrue(data['success'])
+        self.assertAjaxSuccess(r)
         self.assertEqual(category_objects + 1, Category.objects.count())
 
     def test_add_category_success(self):
@@ -164,11 +160,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(reverse('add_category'), {'name': u'AnotherRoot', 'parent': None})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
-        try:
-            data = simplejson.loads(r.content)
-        except Exception, e:
-            self.Fail(str(e))
-        self.assertTrue(data['success'])
+        self.assertAjaxSuccess(r)
         self.assertEqual(category_objects + 1, Category.objects.count())
         self.assertEqual(Category.tree.root_nodes().filter(name=u'AnotherRoot').count(), 1)
 
@@ -203,11 +195,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(reverse('rename_category'), {'id': obj_id, 'name': u'NewName'})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
-        try:
-            data = simplejson.loads(r.content)
-        except Exception, e:
-            self.Fail(str(e))
-        self.assertTrue(data['success'])
+        self.assertAjaxSuccess(r)
         # Re-fech the object from the DB
         obj = Category.objects.get(tree_id=obj_id[0], lft=obj_id[1])
         self.assertEqual(obj.name, u'NewName')
@@ -267,11 +255,7 @@ class ViewsTests(AjaxTests):
                 {'cat_id': (1, 1), 'tag_id': self.tag1.id})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
-        try:
-            data = simplejson.loads(r.content)
-        except Exception, e:
-            self.Fail(str(e))
-        self.assertTrue(data['success'])
+        self.assertAjaxSuccess(r)
         self.assertEqual(associated_cats + 1, self.tag1.categories.filter(tree_id=1, lft=1).count())
 
     def test_tag_categories_missing_param(self):
@@ -297,7 +281,7 @@ class ViewsTests(AjaxTests):
         try:
             data = simplejson.loads(r.content)
         except Exception, e:
-            self.Fail(str(e))
+            self.fail(str(e))
         self.assertTrue(data['success'])
         self.assertEqual(len(data['cats']), 0)
 
@@ -308,7 +292,7 @@ class ViewsTests(AjaxTests):
         try:
             data = simplejson.loads(r.content)
         except Exception, e:
-            self.Fail(str(e))
+            self.fail(str(e))
         self.assertTrue(data['success'])
         self.assertEqual(data['cats'], [{'id': self.c1.id, 'name': self.c1.name}])
 
@@ -358,11 +342,7 @@ class ViewsTests(AjaxTests):
         )
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
-        try:
-            data = simplejson.loads(r.content)
-        except Exception, e:
-            self.Fail(str(e))
-        self.assertTrue(data['success'])
+        self.assertAjaxSuccess(r)
 
     def test_remove_tag_category_invalid_params(self):
         """Remove tag from category: should fail when invalid IDs are passed."""
