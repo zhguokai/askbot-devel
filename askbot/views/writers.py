@@ -346,6 +346,7 @@ def edit_question(request, id):
                                         revision = latest_revision,
                                         user = request.user,
                                     )
+                revision_form = forms.RevisionForm(question, latest_revision)
                 if form.is_valid():
                     if form.has_changed():
 
@@ -416,6 +417,8 @@ def edit_answer(request, id):
                                         )
             else:
                 form = forms.EditAnswerForm(answer, latest_revision, request.POST)
+                revision_form = forms.RevisionForm(answer, latest_revision)
+
                 if form.is_valid():
                     if form.has_changed():
                         request.user.edit_answer(

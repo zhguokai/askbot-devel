@@ -147,9 +147,14 @@ class Command(NoArgsCommand):
         #get message ids
         status, ids = imap.search(None, 'ALL')
 
+        if len(ids[0].strip()) == 0:
+            #with empty inbox - close and exit
+            imap.close()
+            imap.logout()
+            return
+
         #for each id - read a message, parse it and post a question
-        if len(ids[0]) > 0:
-          for id in ids[0].split(' '):
+        for id in ids[0].split(' '):
             t, data = imap.fetch(id, '(RFC822)')
             message_body = data[0][1]
             msg = email.message_from_string(data[0][1])
@@ -157,54 +162,51 @@ class Command(NoArgsCommand):
             try:
                 (sender, subject, body) = parse_message(msg)
             except CannotParseEmail, e:
-                print "Could not parse ", msg
+                #print "Could not parse ", msg
                 continue
-            data = {
-                'sender': sender,
-                'subject': subject,
-                'body_text': body
-            }
-            form = AskByEmailForm(data)
-            print data
-            if form.is_valid():
-                email_address = form.cleaned_data['email']
-                try:
-                    print 'looking for ' + email_address
-                    user = models.User.objects.get(email = email_address.lower())
-                except models.User.DoesNotExist:
-                    bounce_email(email_address, subject, reason = 'unknown_user')
-                except models.User.MultipleObjectsReturned:
-                    bounce_email(email_address, subject, reason = 'problem_posting')
+        data = {
+            'sender': sender,
+            'subject': subject,
+            'body_text': body
+        }
+        form = AskByEmailForm(data)
+        #print data
+        if form.is_valid():
+            email_address = form.cleaned_data['email']
+            try:
+                user = models.User.objects.get(
+                            email__iexact = email_address
+                        )
+            except models.User.DoesNotExist:
+                bounce_email(email_address, subject, reason = 'unknown_user')
+            except models.User.MultipleObjectsReturned:
+                bounce_email(email_address, subject, reason = 'problem_posting')
 
-                tagnames = form.cleaned_data['tagnames']
-                title = form.cleaned_data['title']
-                body_text = form.cleaned_data['body_text']
+            tagnames = form.cleaned_data['tagnames']
+            title = form.cleaned_data['title']
+            body_text = form.cleaned_data['body_text']
 
-                try:
-                    print 'posting question'
-                    print title
-                    print tagnames
-                    print body_text
-                    user.post_question(
-                        title = title,
-                        tags = tagnames,
-                        body_text = body_text
-                    )
-                except exceptions.PermissionDenied, e:
-                    bounce_email(
-                        email_address,
-                        subject,
-                        reason = 'permission_denied',
-                        body_text = unicode(e)
-                    )
-            else:
-                email_address = mail.extract_first_email_address(sender)
-                if email_address:
-                    bounce_email(
-                        email_address,
-                        subject,
-                        reason = 'problem_posting'
-                    )
+            try:
+                user.post_question(
+                    title = title,
+                    tags = tagnames,
+                    body_text = body_text
+                )
+            except exceptions.PermissionDenied, e:
+                bounce_email(
+                    email_address,
+                    subject,
+                    reason = 'permission_denied',
+                    body_text = unicode(e)
+                )
+        else:
+            email_address = mail.extract_first_email_address(sender)
+            if email_address:
+                bounce_email(
+                    email_address,
+                    subject,
+                    reason = 'problem_posting'
+                )
         imap.expunge()
         imap.close()
         imap.logout()
