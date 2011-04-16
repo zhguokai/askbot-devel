@@ -111,8 +111,7 @@ class ViewsTests(AjaxTests):
         askbot_settings.update('ENABLE_CATEGORIES', True)
 
     def test_categories_off(self):
-        """AJAX category-related views shouldn't be published when master
-        switch is off."""
+        """AJAX category-related views shouldn't be published when master switch is off."""
         askbot_settings.update('ENABLE_CATEGORIES', False)
         r = self.ajax_post_json(reverse('add_category'), {'name': u'Entertainment', 'parent': (1, 1)})
         self.assertEqual(r.status_code, 404)
@@ -162,7 +161,7 @@ class ViewsTests(AjaxTests):
         self.add_category_success({'name': u'Child1', 'parent': (self.c1.tree_id, self.c1.lft)})
 
     def test_add_new_tree(self):
-        """Insertion of a new root-of-tree node should."""
+        """Insertion of a new root-of-tree node should work."""
         self.client.login(username='owner', password='secret')
         category_objects = Category.objects.count()
         r = self.ajax_post_json(reverse('add_category'), {'name': u'AnotherRoot', 'parent': None})

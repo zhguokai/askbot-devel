@@ -56,9 +56,15 @@ def _recurse_tree(node):
     output['children'] = children
     return output
 
-def admin_ajax_post(f):
-    def inner(request):
-        """Boilerplate code common to several category ajax views."""
+def admin_ajax_post(view_func):
+    """
+    Decorator for Django views that checks that the request is:
+    * Sent via ajax
+    * Uses POST
+    * by an authenticated Askbot administrator user
+    """
+    @wraps(view_func)
+    def inner(request, *args, **kwargs):
         if not askbot_settings.ENABLE_CATEGORIES:
             raise Http404
         try:
@@ -75,7 +81,7 @@ def admin_ajax_post(f):
                 raise exceptions.PermissionDenied(
                     _('Sorry, but you cannot access this view')
                 )
-            return f(request)
+            return view_func(request, *args, **kwargs)
         except Exception, e:
             response_data = dict()
             message = unicode(e)
@@ -87,76 +93,8 @@ def admin_ajax_post(f):
             return HttpResponse(data, mimetype="application/json")
     return inner
 
-def add_category(request):
-    """
-    Adds a category. Meant to be called by the site administrator using ajax
-    and POST HTTP method.
-    The expected json request is an object with the following keys:
-      'name':   Name of the new category to be created.
-      'parent': ID of the parent category for the category to be created.
-    The response is also a json object with keys:
-      'success': boolean
-      'message': text description in case of failure (not always present)
-
-    Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
-    """
-    if not askbot_settings.ENABLE_CATEGORIES:
-        raise Http404
-    response_data = dict()
-    try:
-        if request.is_ajax():
-            if request.method == 'POST':
-                if request.user.is_authenticated():
-                    if request.user.is_administrator():
-                        post_data = simplejson.loads(request.raw_post_data)
-                        parent = post_data.get('parent')
-                        new_name = post_data.get('name')
-                        if not new_name:
-                            raise exceptions.ValidationError(
-                                _("Missing or invalid new category name parameter")
-                                )
-                        if parent:
-                            try:
-                                parent = Category.objects.get(
-                                        tree_id=parent[0],
-                                        lft=parent[1]
-                                    )
-                            except Category.DoesNotExist:
-                                raise exceptions.ValidationError(
-                                    _("Requested parent category doesn't exist")
-                                    )
-                        cat, created = Category.objects.get_or_create(name=new_name, parent=parent)
-                        if not created:
-                            raise exceptions.ValidationError(
-                                _('There is already a category with that name')
-                                )
-                        response_data['success'] = True
-                        data = simplejson.dumps(response_data)
-                        return HttpResponse(data, mimetype="application/json")
-                    else:
-                        raise exceptions.PermissionDenied(
-                            _('Sorry, but you cannot access this view')
-                        )
-                else:
-                    raise exceptions.PermissionDenied(
-                        _('Sorry, but anonymous users cannot access this view')
-                    )
-            else:
-                raise exceptions.PermissionDenied('must use POST request')
-        else:
-            #todo: show error page but no-one is likely to get here
-            return HttpResponseRedirect(reverse('index'))
-    except Exception, e:
-        message = unicode(e)
-        if message == '':
-            message = _('Oops, apologies - there was some error')
-        response_data['message'] = message
-        response_data['success'] = False
-        data = simplejson.dumps(response_data)
-        return HttpResponse(data, mimetype="application/json")
-
 @admin_ajax_post
-def add_category_new(request):
+def add_category(request):
     """
     Adds a category. Meant to be called by the site administrator using ajax
     and POST HTTP method.
@@ -191,10 +129,11 @@ def add_category_new(request):
         raise exceptions.ValidationError(
             _('There is already a category with that name')
             )
-    response_data = dict()
-    response_data['success'] = True
+    response_data = {'success': True}
     data = simplejson.dumps(response_data)
+    return HttpResponse(data, mimetype="application/json")
 
+@admin_ajax_post
 def rename_category(request):
     """
     Change the name of a category. Meant to be called by the site administrator
@@ -208,70 +147,40 @@ def rename_category(request):
 
     Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
     """
-    if not askbot_settings.ENABLE_CATEGORIES:
-        raise Http404
-    response_data = dict()
+    post_data = simplejson.loads(request.raw_post_data)
+    new_name = post_data.get('name')
+    cat_id = post_data.get('id')
+    if not new_name or not cat_id:
+        raise exceptions.ValidationError(
+            _("Missing or invalid required parameter")
+            )
     try:
-        if request.is_ajax():
-            if request.method == 'POST':
-                if request.user.is_authenticated():
-                    if request.user.is_administrator():
-                        post_data = simplejson.loads(request.raw_post_data)
-                        new_name = post_data.get('name')
-                        cat_id = post_data.get('id')
-                        if not new_name or not cat_id:
-                            raise exceptions.ValidationError(
-                                _("Missing or invalid required parameter")
-                                )
-                        try:
-                            node = Category.objects.get(
-                                    tree_id=cat_id[0],
-                                    lft=cat_id[1]
-                                )
-                        except Category.DoesNotExist:
-                            raise exceptions.ValidationError(
-                                _("Requested category doesn't exist")
-                                )
-                        if new_name != node.name:
-                            # TODO: return a third 'noop' status?
-                            try:
-                                node = Category.objects.get(name=new_name)
-                            except Category.DoesNotExist:
-                                pass
-                            else:
-                                raise exceptions.ValidationError(
-                                    _('There is already a category with that name')
-                                    )
-                            node.name=new_name
-                            # Let any exception that happens during save bubble up,
-                            # for now
-                            node.save()
-                        response_data['success'] = True
-                        data = simplejson.dumps(response_data)
-                        return HttpResponse(data, mimetype="application/json")
-                    else:
-                        raise exceptions.PermissionDenied(
-                            _('Sorry, but you cannot access this view')
-                        )
-                else:
-                    raise exceptions.PermissionDenied(
-                        _('Sorry, but anonymous users cannot access this view')
-                    )
-            else:
-                raise exceptions.PermissionDenied('must use POST request')
+        node = Category.objects.get(
+                tree_id=cat_id[0],
+                lft=cat_id[1]
+            )
+    except Category.DoesNotExist:
+        raise exceptions.ValidationError(
+            _("Requested category doesn't exist")
+            )
+    if new_name != node.name:
+        # TODO: return a third 'noop' status?
+        try:
+            node = Category.objects.get(name=new_name)
+        except Category.DoesNotExist:
+            pass
         else:
-            #todo: show error page but no-one is likely to get here
-            return HttpResponseRedirect(reverse('index'))
-    except Exception, e:
-        message = unicode(e)
-        if message == '':
-            message = _('Oops, apologies - there was some error')
-        response_data['message'] = message
-        response_data['success'] = False
-        data = simplejson.dumps(response_data)
-        return HttpResponse(data, mimetype="application/json")
+            raise exceptions.ValidationError(
+                _('There is already a category with that name')
+                )
+        node.name=new_name
+        # Let any exception that happens during save bubble up, for now
+        node.save()
+    response_data = {'success': True}
+    data = simplejson.dumps(response_data)
+    return HttpResponse(data, mimetype="application/json")
 
-def add_tag_to_category(request):
+def add_tag_to_category_old(request):
     """
     Adds a tag to a category. Meant to be called by the site administrator using ajax
     and POST HTTP method.
@@ -342,6 +251,50 @@ def add_tag_to_category(request):
         response_data['success'] = False
         data = simplejson.dumps(response_data)
         return HttpResponse(data, mimetype="application/json")
+
+@admin_ajax_post
+def add_tag_to_category(request):
+    """
+    Adds a tag to a category. Meant to be called by the site administrator using ajax
+    and POST HTTP method.
+    Both the tag and the category must exist and their IDs are provided to
+    the view.
+    The expected json request is an object with the following keys:
+      'tag_id': ID of the tag.
+      'cat_id': ID of the category.
+    The response is also a json object with keys:
+      'success': boolean
+      'message': text description in case of failure (not always present)
+
+    Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
+    """
+    post_data = simplejson.loads(request.raw_post_data)
+    tag_id = post_data.get('tag_id')
+    cat_id = post_data.get('cat_id')
+    if not tag_id or cat_id is None:
+        raise exceptions.ValidationError(
+            _("Missing required parameter")
+            )
+    try:
+        cat = Category.objects.get(
+                tree_id=cat_id[0],
+                lft=cat_id[1]
+            )
+    except Category.DoesNotExist:
+        raise exceptions.ValidationError(
+            _("Requested category doesn't exist")
+            )
+    try:
+        tag = Tag.objects.get(id=tag_id)
+    except Tag.DoesNotExist:
+        raise exceptions.ValidationError(
+            _("Requested tag doesn't exist")
+            )
+    # Let any exception that could happen during save bubble up
+    tag.categories.add(cat)
+    response_data = {'success': True}
+    data = simplejson.dumps(response_data)
+    return HttpResponse(data, mimetype="application/json")
 
 def get_tag_categories(request):
     """
