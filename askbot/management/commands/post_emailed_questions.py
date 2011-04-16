@@ -164,49 +164,49 @@ class Command(NoArgsCommand):
             except CannotParseEmail, e:
                 #print "Could not parse ", msg
                 continue
-        data = {
-            'sender': sender,
-            'subject': subject,
-            'body_text': body
-        }
-        form = AskByEmailForm(data)
-        #print data
-        if form.is_valid():
-            email_address = form.cleaned_data['email']
-            try:
-                user = models.User.objects.get(
-                            email__iexact = email_address
-                        )
-            except models.User.DoesNotExist:
-                bounce_email(email_address, subject, reason = 'unknown_user')
-            except models.User.MultipleObjectsReturned:
-                bounce_email(email_address, subject, reason = 'problem_posting')
+            data = {
+                'sender': sender,
+                'subject': subject,
+                'body_text': body
+            }
+            form = AskByEmailForm(data)
+            #print data
+            if form.is_valid():
+                email_address = form.cleaned_data['email']
+                try:
+                    user = models.User.objects.get(
+                                email__iexact = email_address
+                            )
+                except models.User.DoesNotExist:
+                    bounce_email(email_address, subject, reason = 'unknown_user')
+                except models.User.MultipleObjectsReturned:
+                    bounce_email(email_address, subject, reason = 'problem_posting')
 
-            tagnames = form.cleaned_data['tagnames']
-            title = form.cleaned_data['title']
-            body_text = form.cleaned_data['body_text']
+                tagnames = form.cleaned_data['tagnames']
+                title = form.cleaned_data['title']
+                body_text = form.cleaned_data['body_text']
 
-            try:
-                user.post_question(
-                    title = title,
-                    tags = tagnames,
-                    body_text = body_text
-                )
-            except exceptions.PermissionDenied, e:
-                bounce_email(
-                    email_address,
-                    subject,
-                    reason = 'permission_denied',
-                    body_text = unicode(e)
-                )
-        else:
-            email_address = mail.extract_first_email_address(sender)
-            if email_address:
-                bounce_email(
-                    email_address,
-                    subject,
-                    reason = 'problem_posting'
-                )
+                try:
+                    user.post_question(
+                        title = title,
+                        tags = tagnames,
+                        body_text = body_text
+                    )
+                except exceptions.PermissionDenied, e:
+                    bounce_email(
+                        email_address,
+                        subject,
+                        reason = 'permission_denied',
+                        body_text = unicode(e)
+                    )
+            else:
+                email_address = mail.extract_first_email_address(sender)
+                if email_address:
+                    bounce_email(
+                        email_address,
+                        subject,
+                        reason = 'problem_posting'
+                    )
         imap.expunge()
         imap.close()
         imap.logout()
