@@ -57,37 +57,35 @@ def _recurse_tree(node):
     return output
 
 def admin_ajax_post(f):
-    def decorator(f):
-        def inner(request):
-            """Boilerplate code common to several category ajax views."""
-            if not askbot_settings.ENABLE_CATEGORIES:
-                raise Http404
-            try:
-                if not request.is_ajax():
-                    #todo: show error page but no-one is likely to get here
-                    return HttpResponseRedirect(reverse('index'))
-                if request.method != 'POST':
-                    raise exceptions.PermissionDenied('must use POST request')
-                if not request.user.is_authenticated():
-                    raise exceptions.PermissionDenied(
-                        _('Sorry, but anonymous users cannot access this view')
-                    )
-                if not request.user.is_administrator():
-                    raise exceptions.PermissionDenied(
-                        _('Sorry, but you cannot access this view')
-                    )
-                return f(request)
-            except Exception, e:
-                response_data = dict()
-                message = unicode(e)
-                if message == '':
-                    message = _('Oops, apologies - there was some error')
-                response_data['message'] = message
-                response_data['success'] = False
-                data = simplejson.dumps(response_data)
-                return HttpResponse(data, mimetype="application/json")
-        return wraps(f)(inner)
-    return decorator
+    def inner(request):
+        """Boilerplate code common to several category ajax views."""
+        if not askbot_settings.ENABLE_CATEGORIES:
+            raise Http404
+        try:
+            if not request.is_ajax():
+                #todo: show error page but no-one is likely to get here
+                return HttpResponseRedirect(reverse('index'))
+            if request.method != 'POST':
+                raise exceptions.PermissionDenied('must use POST request')
+            if not request.user.is_authenticated():
+                raise exceptions.PermissionDenied(
+                    _('Sorry, but anonymous users cannot access this view')
+                )
+            if not request.user.is_administrator():
+                raise exceptions.PermissionDenied(
+                    _('Sorry, but you cannot access this view')
+                )
+            return f(request)
+        except Exception, e:
+            response_data = dict()
+            message = unicode(e)
+            if message == '':
+                message = _('Oops, apologies - there was some error')
+            response_data['message'] = message
+            response_data['success'] = False
+            data = simplejson.dumps(response_data)
+            return HttpResponse(data, mimetype="application/json")
+    return inner
 
 def add_category(request):
     """
@@ -156,6 +154,46 @@ def add_category(request):
         response_data['success'] = False
         data = simplejson.dumps(response_data)
         return HttpResponse(data, mimetype="application/json")
+
+@admin_ajax_post
+def add_category_new(request):
+    """
+    Adds a category. Meant to be called by the site administrator using ajax
+    and POST HTTP method.
+    The expected json request is an object with the following keys:
+      'name':   Name of the new category to be created.
+      'parent': ID of the parent category for the category to be created.
+    The response is also a json object with keys:
+      'success': boolean
+      'message': text description in case of failure (not always present)
+
+    Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
+    """
+    post_data = simplejson.loads(request.raw_post_data)
+    parent = post_data.get('parent')
+    new_name = post_data.get('name')
+    if not new_name:
+        raise exceptions.ValidationError(
+            _("Missing or invalid new category name parameter")
+            )
+    if parent:
+        try:
+            parent = Category.objects.get(
+                    tree_id=parent[0],
+                    lft=parent[1]
+                )
+        except Category.DoesNotExist:
+            raise exceptions.ValidationError(
+                _("Requested parent category doesn't exist")
+                )
+    cat, created = Category.objects.get_or_create(name=new_name, parent=parent)
+    if not created:
+        raise exceptions.ValidationError(
+            _('There is already a category with that name')
+            )
+    response_data = dict()
+    response_data['success'] = True
+    data = simplejson.dumps(response_data)
 
 def rename_category(request):
     """

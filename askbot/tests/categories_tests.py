@@ -78,6 +78,8 @@ class AjaxTests(TestCase):
         return self.ajax_post(path, simplejson.dumps(data))
 
     def assertAjaxSuccess(self, response):
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
         try:
             data = simplejson.loads(response.content)
         except Exception, e:
@@ -109,13 +111,16 @@ class ViewsTests(AjaxTests):
         askbot_settings.update('ENABLE_CATEGORIES', True)
 
     def test_categories_off(self):
-        """AJAX category-related views shouldn't exist when master switch is off."""
+        """AJAX category-related views shouldn't be published when master
+        switch is off."""
         askbot_settings.update('ENABLE_CATEGORIES', False)
         r = self.ajax_post_json(reverse('add_category'), {'name': u'Entertainment', 'parent': (1, 1)})
         self.assertEqual(r.status_code, 404)
         askbot_settings.update('ENABLE_CATEGORIES', True)
         r = self.ajax_post_json(reverse('add_category'), {'name': u'Family', 'parent': (1, 1)})
         self.assertEqual(r.status_code, 200)
+
+    # `add_category` view tests
 
     def test_add_category_no_permission(self):
         """Only administrator users should be able to add a category via the view."""
@@ -125,7 +130,7 @@ class ViewsTests(AjaxTests):
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, 'Sorry, but you cannot access this view')
 
-    def test_add_missing_param(self):
+    def test_add_category_missing_param(self):
         """Add new category: should fail when no name parameter is provided."""
         self.client.login(username='owner', password='secret')
         r = self.ajax_post_json(reverse('add_category'), {})
@@ -145,8 +150,6 @@ class ViewsTests(AjaxTests):
         """Helper method"""
         category_objects = Category.objects.count()
         r = self.ajax_post_json(reverse('add_category'), post_data)
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(r['Content-Type'], 'application/json')
         self.assertAjaxSuccess(r)
         self.assertEqual(category_objects + 1, Category.objects.count())
 
@@ -159,23 +162,23 @@ class ViewsTests(AjaxTests):
         self.add_category_success({'name': u'Child1', 'parent': (self.c1.tree_id, self.c1.lft)})
 
     def test_add_new_tree(self):
-        """Test insertion of a new root-of-tree node."""
+        """Insertion of a new root-of-tree node should."""
         self.client.login(username='owner', password='secret')
         category_objects = Category.objects.count()
         r = self.ajax_post_json(reverse('add_category'), {'name': u'AnotherRoot', 'parent': None})
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(r['Content-Type'], 'application/json')
         self.assertAjaxSuccess(r)
         self.assertEqual(category_objects + 1, Category.objects.count())
         self.assertEqual(Category.tree.root_nodes().filter(name=u'AnotherRoot').count(), 1)
 
-    def test_add_invalid_parent(self):
+    def test_add_category_invalid_parent(self):
         """Attempts to insert a new category with an invalid parent should fail."""
         self.client.login(username='owner', password='secret')
         r = self.ajax_post_json(reverse('add_category'), {'name': u'Foo', 'parent': (100, 20)})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, "Requested parent category doesn't exist")
+
+    # `rename_category` view tests
 
     def test_rename_missing_params(self):
         """Rename category: should fail when no IDs are passed."""
@@ -198,8 +201,6 @@ class ViewsTests(AjaxTests):
         obj = Category.objects.get(name=u'Child1')
         obj_id = (obj.tree_id, obj.lft)
         r = self.ajax_post_json(reverse('rename_category'), {'id': obj_id, 'name': u'NewName'})
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(r['Content-Type'], 'application/json')
         self.assertAjaxSuccess(r)
         # Re-fech the object from the DB
         obj = Category.objects.get(tree_id=obj_id[0], lft=obj_id[1])
@@ -220,6 +221,8 @@ class ViewsTests(AjaxTests):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, "Requested category doesn't exist")
+
+    # `add_tag_to_category` view tests
 
     def test_tag_missing_params(self):
         """Add tag to category: should fail when no IDs are passed."""
@@ -258,10 +261,11 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(
                 reverse('add_tag_to_category'),
                 {'cat_id': (1, 1), 'tag_id': self.tag1.id})
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(r['Content-Type'], 'application/json')
         self.assertAjaxSuccess(r)
         self.assertEqual(associated_cats + 1, self.tag1.categories.filter(tree_id=1, lft=1).count())
+
+    # `get_tag_categories` view tests
+    # TODO: Test explicitly with anonymous user for get_tag_categories
 
     def test_tag_categories_missing_param(self):
         """Get categories for tag: should fail when no tag ID is passed."""
@@ -301,7 +305,7 @@ class ViewsTests(AjaxTests):
         self.assertTrue(data['success'])
         self.assertEqual(data['cats'], [{'id': self.c1.id, 'name': self.c1.name}])
 
-    # TODO: Test explicitly with anonymous user for get_tag_categories
+    # `remove_tag_from_category` view tests
 
     def test_remove_tag_category__no_permission(self):
         """Only administrator and moderator users should be able to remove a
@@ -328,8 +332,6 @@ class ViewsTests(AjaxTests):
                 'tag_id': self.tag2.id
             }
         )
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(r['Content-Type'], 'application/json')
         self.assertAjaxSuccess(r)
         self.client.logout()
 
@@ -358,8 +360,6 @@ class ViewsTests(AjaxTests):
                 'tag_id': self.tag2.id
             }
         )
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(r['Content-Type'], 'application/json')
         self.assertAjaxSuccess(r)
 
     def test_remove_tag_category_invalid_params(self):
