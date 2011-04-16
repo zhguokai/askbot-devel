@@ -1,3 +1,8 @@
+try:
+    from functools import wraps
+except ImportError:
+    from django.utils.functional import wraps  # Python 2.4 fallback.
+
 from categories.models import Category
 from mptt.templatetags.mptt_tags import cache_tree_children
 
@@ -50,6 +55,39 @@ def _recurse_tree(node):
             children.append(_recurse_tree(child))
     output['children'] = children
     return output
+
+def admin_ajax_post(f):
+    def decorator(f):
+        def inner(request):
+            """Boilerplate code common to several category ajax views."""
+            if not askbot_settings.ENABLE_CATEGORIES:
+                raise Http404
+            try:
+                if not request.is_ajax():
+                    #todo: show error page but no-one is likely to get here
+                    return HttpResponseRedirect(reverse('index'))
+                if request.method != 'POST':
+                    raise exceptions.PermissionDenied('must use POST request')
+                if not request.user.is_authenticated():
+                    raise exceptions.PermissionDenied(
+                        _('Sorry, but anonymous users cannot access this view')
+                    )
+                if not request.user.is_administrator():
+                    raise exceptions.PermissionDenied(
+                        _('Sorry, but you cannot access this view')
+                    )
+                return f(request)
+            except Exception, e:
+                response_data = dict()
+                message = unicode(e)
+                if message == '':
+                    message = _('Oops, apologies - there was some error')
+                response_data['message'] = message
+                response_data['success'] = False
+                data = simplejson.dumps(response_data)
+                return HttpResponse(data, mimetype="application/json")
+        return wraps(f)(inner)
+    return decorator
 
 def add_category(request):
     """

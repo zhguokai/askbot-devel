@@ -7,6 +7,7 @@ from categories.models import Category
 
 from askbot.conf import settings as askbot_settings
 from askbot.models import Tag
+from askbot.tests.utils import create_user
 from askbot.views.cats import generate_tree
 
 
@@ -91,6 +92,10 @@ class ViewsTests(AjaxTests):
         self.owner.is_staff = True
         self.owner.is_superuser = True
         self.owner.save()
+        # A moderator
+        self.mod1 = create_user(username='mod1', email='mod1@example.com', status='m')
+        self.mod1.set_password('modpw')
+        self.mod1.save()
         # A normal user
         User.objects.create_user(username='user1', email='user1@example.com', password='123')
         # Setup a small category tree
@@ -103,14 +108,14 @@ class ViewsTests(AjaxTests):
 
         askbot_settings.update('ENABLE_CATEGORIES', True)
 
-    #def test_categories_off(self):
-    #    """AJAX category-related views shouldn't exist when master switch is off."""
-    #    askbot_settings.update('ENABLE_CATEGORIES', False)
-    #    r = self.ajax_post_json(reverse('add_category'), {'name': u'Entertainment', 'parent': (1, 1)})
-    #    self.assertEqual(r.status_code, 404)
-    #    askbot_settings.update('ENABLE_CATEGORIES', True)
-    #    r = self.ajax_post_json(reverse('add_category'), {'name': u'Family', 'parent': (1, 1)})
-    #    self.assertEqual(r.status_code, 404)
+    def test_categories_off(self):
+        """AJAX category-related views shouldn't exist when master switch is off."""
+        askbot_settings.update('ENABLE_CATEGORIES', False)
+        r = self.ajax_post_json(reverse('add_category'), {'name': u'Entertainment', 'parent': (1, 1)})
+        self.assertEqual(r.status_code, 404)
+        askbot_settings.update('ENABLE_CATEGORIES', True)
+        r = self.ajax_post_json(reverse('add_category'), {'name': u'Family', 'parent': (1, 1)})
+        self.assertEqual(r.status_code, 200)
 
     def test_add_category_no_permission(self):
         """Only administrator users should be able to add a category via the view."""
@@ -313,7 +318,20 @@ class ViewsTests(AjaxTests):
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, 'Sorry, but you cannot access this view')
         self.client.logout()
-        # TODO: test with a moderator user
+
+        # a moderator user
+        self.client.login(username='mod1', password='modpw')
+        r = self.ajax_post_json(
+            reverse('remove_tag_from_category'),
+            {
+                'cat_id': (self.c1.tree_id, self.c1.lft),
+                'tag_id': self.tag2.id
+            }
+        )
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        self.assertAjaxSuccess(r)
+        self.client.logout()
 
     def test_remove_tag_category_missing_params(self):
         """Remove tag from category: should fail when no IDs are passed."""
