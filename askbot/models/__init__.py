@@ -1517,7 +1517,7 @@ def user_get_tag_filtered_questions(self, questions = None):
                                 user_selections__user = self
                             )
 
-        wk = user.ignored_tags.strip().split()
+        wk = self.ignored_tags.strip().split()
         ignored_by_wildcards = Tag.objects.get_by_wildcards(wk)
 
         return questions.exclude(
@@ -1531,11 +1531,11 @@ def user_get_tag_filtered_questions(self, questions = None):
                                 user_selections__user = self
                             )
 
-        wk = user.interesting_tags.strip().split()
+        wk = self.interesting_tags.strip().split()
         selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
 
-        tag_filter = Q(tags__in = list(selected_tags)) \
-                    | Q(tags__in = list(selected_by_wildcards))
+        tag_filter = models.Q(tags__in = list(selected_tags)) \
+                    | models.Q(tags__in = list(selected_by_wildcards))
 
         return questions.filter( tag_filter )
 
