@@ -1510,7 +1510,7 @@ def user_get_tag_filtered_questions(self, questions = None):
     if questions == None:
         questions = Question.objects.all()
 
-    if self.email_tag_filter_strategy == 'ignored':
+    if self.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
 
         ignored_tags = Tag.objects.filter(
                                 user_selections__reason__contains = 'I',
@@ -1525,7 +1525,7 @@ def user_get_tag_filtered_questions(self, questions = None):
                     ).exclude(
                         tags__in = ignored_by_wildcards
                     )
-    else:
+    elif self.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
         selected_tags = Tag.objects.filter(
                                 user_selections__reason__contains = 'S',
                                 user_selections__user = self
@@ -1538,6 +1538,8 @@ def user_get_tag_filtered_questions(self, questions = None):
                     | models.Q(tags__in = list(selected_by_wildcards))
 
         return questions.filter( tag_filter )
+    else:
+        return questions
 
 def get_messages(self):
     messages = []
