@@ -83,14 +83,21 @@ User.add_to_class('about', models.TextField(blank=True))
 #interesting tags and ignored tags are to store wildcard tag selections only
 User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
-User.add_to_class('hide_ignored_questions', models.BooleanField(default=False))
-User.add_to_class('tag_filter_setting',
-                    models.CharField(
-                                        max_length=16,
-                                        choices=const.TAG_EMAIL_FILTER_CHOICES,
-                                        default='ignored'
-                                     )
-                 )
+User.add_to_class(
+    'email_tag_filter_strategy', 
+    models.SmallIntegerField(
+        choices=const.TAG_FILTER_STRATEGY_CHOICES,
+        default=const.EXCLUDE_IGNORED
+    )
+)
+User.add_to_class(
+    'display_tag_filter_strategy',
+    models.SmallIntegerField(
+        choices=const.TAG_FILTER_STRATEGY_CHOICES,
+        default=const.INCLUDE_ALL
+    )
+)
+
 User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
 User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
@@ -199,6 +206,25 @@ def user_has_affinity_to_question(self, question = None, affinity_type = None):
             if tag.name.startswith(wildcard[:-1]):
                 return True
     return False
+
+
+def user_has_ignored_wildcard_tags(self):
+    """True if wildcard tags are on and 
+    user has some"""
+    return (
+        askbot_settings.USE_WILDCARD_TAGS \
+        and self.ignored_tags != ''
+    )
+
+
+def user_has_interesting_wildcard_tags(self):
+    """True in wildcard tags aro on and
+    user has nome interesting wildcard tags selected
+    """
+    return (
+        askbot_settings.USE_WILDCARD_TAGS \
+        and self.interesting_tags != ''
+    )
 
 
 def user_can_have_strong_url(self):
@@ -835,15 +861,31 @@ def user_post_comment(
     )
     return comment
 
-def user_mark_tags(self, tagnames, wildcards, reason = None, action = None):
-    """subscribe for or ignore a list of tags"""
+def user_mark_tags(
+            self,
+            tagnames = None,
+            wildcards = None,
+            reason = None,
+            action = None
+        ):
+    """subscribe for or ignore a list of tags
+
+    * ``tagnames`` and ``wildcards`` are lists of 
+      pure tags and wildcard tags, respectively
+    * ``reason`` - either "good" or "bad"
+    * ``action`` - eitrer "add" or "remove"
+    """
     cleaned_wildcards = list()
+    assert(reason in ('good', 'bad'))
+    assert(action in ('add', 'remove'))
     if wildcards:
         cleaned_wildcards = self.update_wildcard_tag_selections(
             action = action,
             reason = reason,
             wildcards = wildcards
         )
+    if tagnames is None:
+        tagnames = list()
 
     #below we update normal tag selections
     marked_ts = MarkedTag.objects.filter(
@@ -1450,6 +1492,45 @@ def user_get_q_sel_email_feed_frequency(self):
         raise e
     return feed_setting.frequency
 
+def user_get_tag_filtered_questions(self, questions = None):
+    """Returns a query set of questions, tag filtered according
+    to the user choices. Parameter ``questions`` can be either ``None``
+    or a starting query set.
+    """
+    if questions == None:
+        questions = Question.objects.all()
+
+    if self.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
+
+        ignored_tags = Tag.objects.filter(
+                                user_selections__reason = 'bad',
+                                user_selections__user = self
+                            )
+
+        wk = self.ignored_tags.strip().split()
+        ignored_by_wildcards = Tag.objects.get_by_wildcards(wk)
+
+        return questions.exclude(
+                        tags__in = ignored_tags
+                    ).exclude(
+                        tags__in = ignored_by_wildcards
+                    )
+    elif self.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
+        selected_tags = Tag.objects.filter(
+                                user_selections__reason = 'good',
+                                user_selections__user = self
+                            )
+
+        wk = self.interesting_tags.strip().split()
+        selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
+
+        tag_filter = models.Q(tags__in = list(selected_tags)) \
+                    | models.Q(tags__in = list(selected_by_wildcards))
+
+        return questions.filter( tag_filter )
+    else:
+        return questions
+
 def get_messages(self):
     messages = []
     for m in self.message_set.all():
@@ -1789,10 +1870,14 @@ User.add_to_class('downvote', downvote)
 User.add_to_class('flag_post', flag_post)
 User.add_to_class('receive_reputation', user_receive_reputation)
 User.add_to_class('get_flags', user_get_flags)
-User.add_to_class('get_flag_count_posted_today', user_get_flag_count_posted_today)
+User.add_to_class(
+    'get_flag_count_posted_today',
+    user_get_flag_count_posted_today
+)
 User.add_to_class('get_flags_for_post', user_get_flags_for_post)
 User.add_to_class('get_profile_url', get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
+User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
@@ -1813,6 +1898,8 @@ User.add_to_class('is_watched', user_is_watched)
 User.add_to_class('is_suspended', user_is_suspended)
 User.add_to_class('is_blocked', user_is_blocked)
 User.add_to_class('is_owner_of', user_is_owner_of)
+User.add_to_class('has_interesting_wildcard_tags', user_has_interesting_wildcard_tags)
+User.add_to_class('has_ignored_wildcard_tags', user_has_ignored_wildcard_tags)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
 User.add_to_class('has_affinity_to_question', user_has_affinity_to_question)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
@@ -1982,8 +2069,8 @@ def send_instant_notifications_about_activity_in_post(
     if update_activity.activity_type not in acceptable_types:
         return
 
-    from askbot.skins.loaders import ENV
-    template = ENV.get_template('instant_notification.html')
+    from askbot.skins.loaders import get_template
+    template = get_template('instant_notification.html')
 
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]
@@ -2034,9 +2121,9 @@ def record_post_update_activity(
     if newly_mentioned_users is None:
         newly_mentioned_users = list()
 
-    from askbot.tasks import record_post_update_task
+    from askbot import tasks
 
-    record_post_update_task.delay(
+    tasks.record_post_update_celery_task.delay(
         post_id = post.id,
         post_content_type_id = ContentType.objects.get_for_model(post).id,
         newly_mentioned_user_id_list = [u.id for u in newly_mentioned_users],
@@ -2044,6 +2131,14 @@ def record_post_update_activity(
         timestamp = timestamp,
         created = created,
     )
+    #non-celery version
+    #tasks.record_post_update(
+    #    post = post,
+    #    newly_mentioned_users = newly_mentioned_users,
+    #    updated_by = updated_by,
+    #    timestamp = timestamp,
+    #    created = created,
+    #)
 
 
 def record_award_event(instance, created, **kwargs):

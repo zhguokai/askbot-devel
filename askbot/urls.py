@@ -121,11 +121,6 @@ urlpatterns = patterns('',
         name='edit_comment'
     ),
     url(#ajax only
-        r'^%s$' % _('command/'), 
-        views.commands.ajax_command, 
-        name='call_ajax'
-    ),
-    url(#ajax only
         r'^comment/delete/$',
         views.writers.delete_comment, 
         name='delete_comment'
@@ -164,10 +159,20 @@ urlpatterns = patterns('',
         kwargs={'action':'remove'},
         name='unmark_tag'
     ),
+    url(#ajax only
+        r'^set-tag-filter-strategy/',
+        views.commands.set_tag_filter_strategy,
+        name = 'set_tag_filter_strategy'
+    ),
     url(
         r'^get-tags-by-wildcard/',
         views.commands.get_tags_by_wildcard,
         name = 'get_tags_by_wildcard'
+    ),
+    url(
+        r'^get-tag-list/',
+        views.commands.get_tag_list,
+        name = 'get_tag_list'
     ),
     url(
         r'^%s$' % _('subscribe-for-tags/'),

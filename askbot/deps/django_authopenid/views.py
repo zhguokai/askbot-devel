@@ -45,7 +45,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
-from askbot.skins.loaders import ENV
+from askbot.skins.loaders import render_into_skin, get_template
 
 from askbot.deps.openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
@@ -317,6 +317,8 @@ def signin(
                                     login_provider_name = ldap_provider_name,
                                     redirect_url = next_url
                                 )
+                    else:
+                        login_form.set_password_login_error() 
                 else:
                     if password_action == 'login':
                         user = authenticate(
@@ -554,9 +556,7 @@ def show_signin_view(
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
 
-    template = ENV.get_template('authopenid/signin.html')
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('authopenid/signin.html', data, request)
 
 @login_required
 def delete_login_method(request):
@@ -813,7 +813,6 @@ def register(request, login_provider_name=None, user_identifier=None):
         provider_logo = providers[login_provider_name]
     
     logging.debug('printing authopenid/complete.html output')
-    template = ENV.get_template('authopenid/complete.html')
     data = {
         'openid_register_form': register_form,
         'email_feeds_form': email_feeds_form,
@@ -823,8 +822,7 @@ def register(request, login_provider_name=None, user_identifier=None):
         'login_type':'openid',
         'gravatar_faq_url':reverse('faq') + '#gravatar',
     }
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('authopenid/complete.html', data, request)
 
 def signin_failure(request, message):
     """
@@ -895,7 +893,7 @@ def signup_with_password(request):
             
             # send email
             #subject = _("Welcome email subject line")
-            #message_template = ENV.get_template(
+            #message_template = get_emplate(
             #        'authopenid/confirm_email.txt'
             #)
             #message_context = Context({ 
@@ -933,9 +931,11 @@ def signup_with_password(request):
                 'minor_login_providers': minor_login_providers.values(),
                 'login_form': login_form
             }
-    template = ENV.get_template('authopenid/signup_with_password.html')
-    context = RequestContext(request, context_data)
-    return HttpResponse(template.render(context))
+    return render_into_skin(
+                'authopenid/signup_with_password.html',
+                context_data,
+                request
+            )
     #what if request is not posted?
 
 @login_required
@@ -1003,15 +1003,15 @@ def _send_email_key(user):
     to user's email address
     """
     subject = _("Recover your %(site)s account") % {'site': askbot_settings.APP_SHORT_NAME}
-    message_template = ENV.get_template('authopenid/email_validation.txt')
-    import settings
-    message_context = Context({
-    'validation_link': askbot_settings.APP_URL + reverse(
-                                                    'user_account_recover',
-                                                    kwargs={'key':user.email_key}
-                                                )
-    })
-    message = message_template.render(message_context)
+    data = {
+        'validation_link': askbot_settings.APP_URL + \
+                            reverse(
+                                    'user_account_recover',
+                                    kwargs={'key':user.email_key}
+                            )
+    }
+    template = get_template('authopenid/email_validation.txt')
+    message = template.render(data)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
 def send_new_email_key(user,nomessage=False):
@@ -1037,14 +1037,16 @@ def send_email_key(request):
     """
     if askbot_settings.EMAIL_VALIDATION == True:
         if request.user.email_isvalid:
-            template = ENV.get_template('authopenid/changeemail.html')
             data = {
                 'email': request.user.email, 
                 'action_type': 'key_not_sent', 
                 'change_link': reverse('user_changeemail')
             }
-            context = RequestContext(request, data)
-            return HttpResponse(template.render(context))
+            return render_into_skin(
+                        'authopenid/changeemail.html',
+                        data,
+                        request
+                    )
         else:
             send_new_email_key(request.user)
             return validation_email_sent(request)
@@ -1108,14 +1110,12 @@ def validation_email_sent(request):
     set to True bolean value, basically dead now"""
     assert(askbot_settings.EMAIL_VALIDATION == True)
     logging.debug('')
-    template = ENV.get_template('authopenid/changeemail.html')
     data = {
         'email': request.user.email,
         'change_email_url': reverse('user_changeemail'),
         'action_type': 'validate'
     }
-    context = RequestContext(request, data)
-    return HttpResponse(template.render(context))
+    return render_into_skin('authopenid/changeemail.html', data, request)
 
 def verifyemail(request,id=None,key=None):
     """
@@ -1130,10 +1130,12 @@ def verifyemail(request,id=None,key=None):
                 user.email_isvalid = True
                 clear_email_validation_message(user)
                 user.save()
-                template = ENV.get_template('authopenid/changeemail.html')
                 data = {'action_type': 'validation_complete'}
-                context = RequestContext(request, data)
-                return HttpResponse(template.render(context))
+                return render_into_skin(
+                            'authopenid/changeemail.html',
+                            data,
+                            request
+                        )
             else:
                 logging.error('hmm, no user found for email validation message - foul play?')
     raise Http404

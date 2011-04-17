@@ -84,6 +84,7 @@ UNANSWERED_QUESTION_MEANING_CHOICES = (
 TAG_CHARS = '\w\+\.\-#'
 TAG_REGEX = r'^[%s]+$' % TAG_CHARS
 TAG_SPLIT_REGEX = r'[ ,]+'
+EMAIL_REGEX = re.compile(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b', re.I)
 
 TYPE_ACTIVITY_ASK_QUESTION=1
 TYPE_ACTIVITY_ANSWER=2
@@ -104,6 +105,7 @@ TYPE_ACTIVITY_FAVORITE=16
 TYPE_ACTIVITY_USER_FULL_UPDATED = 17
 TYPE_ACTIVITY_EMAIL_UPDATE_SENT = 18
 TYPE_ACTIVITY_MENTION = 19
+TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT = 20
 #TYPE_ACTIVITY_EDIT_QUESTION=17
 #TYPE_ACTIVITY_EDIT_ANSWER=18
 
@@ -127,6 +129,10 @@ TYPE_ACTIVITY = (
     (TYPE_ACTIVITY_FAVORITE, _('selected favorite')),
     (TYPE_ACTIVITY_USER_FULL_UPDATED, _('completed user profile')),
     (TYPE_ACTIVITY_EMAIL_UPDATE_SENT, _('email update sent to user')),
+    (
+        TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT,
+        _('reminder about unanswered questions sent'),
+    ),
     (TYPE_ACTIVITY_MENTION, _('mentioned in the post')),
 )
 
@@ -191,10 +197,14 @@ POST_STATUS = {
     'retagged'          : _('retagged'),
 }
 
-#how to filter questions by tags in email digests?
-TAG_EMAIL_FILTER_CHOICES = (
-    ('ignored', _('exclude ignored tags')),
-    ('interesting',_('allow only selected tags'))
+#choices used in email and display filters
+INCLUDE_ALL = 0
+EXCLUDE_IGNORED = 1
+INCLUDE_INTERESTING = 2
+TAG_FILTER_STRATEGY_CHOICES = (
+    (INCLUDE_ALL, _('off')),
+    (EXCLUDE_IGNORED, _('exclude ignored')),
+    (INCLUDE_INTERESTING, _('only selected')),
 )
 
 NOTIFICATION_DELIVERY_SCHEDULE_CHOICES= (

@@ -14,8 +14,12 @@ import askbot
 import askbot.conf
 from askbot import exceptions
 from askbot.models.tag import Tag
-from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
-from askbot.models.base import parse_post_text, parse_and_save_post
+from askbot.models.base import AnonymousContent
+from askbot.models.base import DeletableContent
+from askbot.models.base import ContentRevision
+from askbot.models.base import BaseQuerySetManager
+from askbot.models.base import parse_post_text
+from askbot.models.base import parse_and_save_post
 from askbot.models import content
 from askbot.models import signals
 from askbot import const
@@ -37,7 +41,45 @@ QUESTION_ORDER_BY_MAP = {
     'relevance-desc': None#this is a special case for postges only
 }
 
+def get_tag_summary_from_questions(questions):
+    """returns a humanized string containing up to 
+    five most frequently used
+    unique tags coming from the ``questions``.
+    Variable ``questions`` is an iterable of 
+    :class:`~askbot.models.Question` model objects.
+
+    This is not implemented yet as a query set method,
+    because it is used on a list.
+    """
+    #todo: in python 2.6 there is collections.Counter() thing
+    #which would be very useful here
+    tag_counts = dict()
+    for question in questions:
+        tag_names = question.get_tag_names()
+        for tag_name in tag_names:
+            if tag_name in tag_counts:
+                tag_counts[tag_name] += 1
+            else:
+                tag_counts[tag_name] = 1
+    tag_list = tag_counts.keys()
+    #sort in descending order
+    tag_list.sort(lambda x, y: cmp(tag_counts[y], tag_counts[x]))
+
+    #note that double quote placement is important here
+    if len(tag_list) == 1:
+        last_topic = '"'
+    elif len(tag_list) <= 5:
+        last_topic = _('" and "%s"') % tag_list.pop()
+    else:
+        tag_list = tag_list[:5]
+        last_topic = _('" and more')
+
+    return '"' + '", "'.join(tag_list) + last_topic
+
+
 class QuestionQuerySet(models.query.QuerySet):
+    """Custom query set subclass for :class:`~askbot.models.Question`
+    """
     def create_new(
                 self,
                 title = None,
@@ -107,7 +149,7 @@ class QuestionQuerySet(models.query.QuerySet):
             return self.extra(**extra_kwargs)
         else:
             #fallback to dumb title match search
-            return extra(
+            return self.extra(
                         where=['title like %s'], 
                         params=['%' + search_query + '%']
                     )
@@ -203,33 +245,42 @@ class QuestionQuerySet(models.query.QuerySet):
             ignored_tag_names = [tag.name for tag in ignored_tags]
             meta_data['ignored_tag_names'] = ignored_tag_names
 
-            if interesting_tags:
+            if interesting_tags or request_user.has_interesting_wildcard_tags():
                 #expensive query
-                qs = qs.extra(
-                    select = SortedDict([
-                        (
-                            'interesting_score', 
-                            'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
-                             + 'WHERE askbot_markedtag.user_id = %s '
-                             + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
-                             + 'AND askbot_markedtag.reason = \'good\' '
-                             + 'AND question_tags.question_id = question.id'
-                        ),
-                            ]),
-                    select_params = (uid_str,),
-                 )
+                if request_user.display_tag_filter_strategy == \
+                        const.INCLUDE_INTERESTING:
+                    #filter by interesting tags only
+                    interesting_tag_filter = models.Q(tags__in = interesting_tags)
+                    if request_user.has_interesting_wildcard_tags():
+                        interesting_wildcards = request_user.interesting_tags.split() 
+                        extra_interesting_tags = Tag.objects.get_by_wildcards(
+                                                            interesting_wildcards
+                                                        )
+                        interesting_tag_filter |= models.Q(tags__in = extra_interesting_tags)
+
+                    qs = qs.filter(interesting_tag_filter)
+                else:
+                    #simply annotate interesting questions
+                    qs = qs.extra(
+                        select = SortedDict([
+                            (
+                                'interesting_score', 
+                                'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
+                                 + 'WHERE askbot_markedtag.user_id = %s '
+                                 + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
+                                 + 'AND askbot_markedtag.reason = \'good\' '
+                                 + 'AND question_tags.question_id = question.id'
+                            ),
+                                ]),
+                        select_params = (uid_str,),
+                     )
             # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
 
-            have_ignored_wildcards = (
-                askbot_settings.USE_WILDCARD_TAGS \
-                and request_user.ignored_tags != ''
-            )
-
-            if ignored_tags or have_ignored_wildcards:
-                if request_user.hide_ignored_questions:
+            if ignored_tags or request_user.has_ignored_wildcard_tags():
+                if request_user.display_tag_filter_strategy == const.EXCLUDE_IGNORED:
                     #exclude ignored tags if the user wants to
                     qs = qs.exclude(tags__in=ignored_tags)
-                    if have_ignored_wildcards:
+                    if request_user.has_ignored_wildcard_tags():
                         ignored_wildcards = request_user.ignored_tags.split() 
                         extra_ignored_tags = Tag.objects.get_by_wildcards(
                                                             ignored_wildcards
@@ -323,18 +374,12 @@ class QuestionQuerySet(models.query.QuerySet):
         self.filter(id=question.id).update(view_count = question.view_count + 1)
 
 
-class QuestionManager(models.Manager):
-    """pattern from http://djangosnippets.org/snippets/562/
-    todo: turn this into a generic manager
+class QuestionManager(BaseQuerySetManager):
+    """chainable custom query set manager for 
+    questions
     """
     def get_query_set(self):
         return QuestionQuerySet(self.model)
-
-    def __getattr__(self, attr, *args):
-        try:
-            return getattr(self.__class__, attr, *args)
-        except AttributeError:
-            return getattr(self.get_query_set(), attr, *args)
 
 
 class Question(content.Content, DeletableContent):

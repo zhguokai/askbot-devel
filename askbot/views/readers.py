@@ -48,19 +48,6 @@ DEFAULT_PAGE_SIZE = 60
 # used in questions
 # used in answers
 
-#system to display main content
-def _get_tags_cache_json():#service routine used by views requiring tag list in the javascript space
-    """returns list of all tags in json format
-    no caching yet, actually
-    """
-    tags = models.Tag.objects.filter(deleted=False).all()
-    tags_list = []
-    for tag in tags:
-        dic = {'n': tag.name, 'c': tag.used_count}
-        tags_list.append(dic)
-    tags = simplejson.dumps(tags_list)
-    return tags
-
 #refactor? - we have these
 #views that generate a listing of questions in one way or another:
 #index, unanswered, questions, search, tag
@@ -285,8 +272,6 @@ def questions(request):
                     mimetype = 'application/json'
                 )
 
-    tags_autocomplete = _get_tags_cache_json()
-
     end_view_time = datetime.datetime.now()
     reset_method_count = 0
     if search_state.query:
@@ -302,27 +287,27 @@ def questions(request):
 
     #todo: organize variables by type
     template_data = {
-        'language_code': translation.get_language(),
-        'reset_method_count': reset_method_count,
-        'page_class': 'main-page',
         'active_tab': 'questions',
-        'questions' : page,
-        'contributors' : contributors,
         'author_name' : meta_data.get('author_name',None),
-        'tab_id' : search_state.sort,
-        'questions_count' : paginator.count,
-        'tags' : related_tags,
-        'query': search_state.query,
-        'search_tags' : search_state.tags,
-        'tags_autocomplete' : tags_autocomplete,
+        'contributors' : contributors,
+        'context' : paginator_context,
         'is_unanswered' : False,#remove this from template
         'interesting_tag_names': meta_data.get('interesting_tag_names',None),
         'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
-        'sort': search_state.sort,
-        'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
+        'language_code': translation.get_language(),
+        'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
+        'page_class': 'main-page',
+        'query': search_state.query,
+        'questions' : page,
+        'questions_count' : paginator.count,
+        'reset_method_count': reset_method_count,
         'scope': search_state.scope,
-        'context' : paginator_context,
-        'name_of_anonymous_user' : models.get_name_of_anonymous_user()
+        'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
+        'search_tags' : search_state.tags,
+        'sort': search_state.sort,
+        'tab_id' : search_state.sort,
+        'tags' : related_tags,
+        'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
     }
 
     assert(request.is_ajax() == False)
@@ -584,8 +569,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment': show_comment,
         'comment_order_number': comment_order_number
     }
-    if request.user.is_authenticated():
-        data['tags_autocomplete'] = _get_tags_cache_json()
     return render_into_skin('question.html', data, request)
 
 def revisions(request, id, object_name=None):

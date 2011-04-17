@@ -19,8 +19,8 @@ class JinjaDjangoLocaleUrlMiddleware(LocaleURLMiddleware):
         if response is not None:
             return response
 
-        from askbot.skins.loaders import ENV
-        ENV.set_language(request.LANGUAGE_CODE)
+        from askbot.skins.loaders import get_skin
+        get_skin(request).set_language(request.LANGUAGE_CODE)
 
     def process_response(self, request, response):
         response = super(
@@ -28,6 +28,6 @@ class JinjaDjangoLocaleUrlMiddleware(LocaleURLMiddleware):
                     self
                 ).process_response(request, response)
 
-        from askbot.skins.loaders import ENV
-        ENV.set_language(settings.LANGUAGE_CODE)
+        from askbot.skins.loaders import get_skin
+        get_skin(request).set_language(settings.LANGUAGE_CODE)
         return response

@@ -336,6 +336,7 @@ blockquote {
 
 #question-list {
     float: left;
+    position: relative;
     background-color: #FFF;
     padding: 0;
     width: 100%;
@@ -479,6 +480,7 @@ ul#search-tags {
 
 .short-summary {
     position: relative;
+    filter: inherit;
     padding: 5px 2px 5px 2px;
     border-top: 1px dashed #ccccce;
     overflow: hidden;
@@ -618,8 +620,13 @@ ul#search-tags {
     margin: 0;
 }
 
-.boxC h2 {
+.boxC h2,
+.boxC h3 {
     padding-left: 0;
+}
+
+.boxC label {
+    color: #333;
 }
 
 .pager {
