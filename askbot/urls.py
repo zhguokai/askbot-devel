@@ -281,6 +281,11 @@ urlpatterns = patterns('',
         views.cats.remove_tag_from_category,
         name='remove_tag_from_category'
     ),
+    url(#ajax only
+        r'^delete_category/$',
+        views.cats.delete_category,
+        name='delete_category'
+    ),
 )
 
 if 'avatar' in settings.INSTALLED_APPS:

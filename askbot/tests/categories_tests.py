@@ -103,10 +103,14 @@ class ViewsTests(AjaxTests):
         # Setup a small category tree
         root = Category.objects.create(name=u'Root')
         self.c1 = Category.objects.create(name=u'Child1', parent=root)
+        Category.objects.create(name=u'Child2', parent=self.c1)
+        c3 = Category.objects.create(name=u'Child3', parent=root)
 
         self.tag1 = Tag.objects.create(name=u'Tag1', created_by=self.owner)
         self.tag2 = Tag.objects.create(name=u'Tag2', created_by=self.owner)
         self.tag2.categories.add(self.c1)
+        self.tag3 = Tag.objects.create(name=u'Tag3', created_by=self.owner)
+        self.tag3.categories.add(c3)
 
         askbot_settings.update('ENABLE_CATEGORIES', True)
 
@@ -156,9 +160,9 @@ class ViewsTests(AjaxTests):
         """Valid new categories should be added to the database."""
         self.client.login(username='owner', password='secret')
         # A child of the root node
-        self.add_category_success({'name': u'Child2', 'parent': (1, 1)})
+        self.add_category_success({'name': u'ANewCategory1', 'parent': (1, 1)})
         # A child of a non-root node
-        self.add_category_success({'name': u'Child1', 'parent': (self.c1.tree_id, self.c1.lft)})
+        self.add_category_success({'name': u'ANewCategory2', 'parent': (self.c1.tree_id, self.c1.lft)})
 
     def test_add_new_tree(self):
         """Insertion of a new root-of-tree node should work."""
@@ -202,7 +206,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(reverse('rename_category'), {'id': obj_id, 'name': u'NewName'})
         self.assertAjaxSuccess(r)
         # Re-fech the object from the DB
-        obj = Category.objects.get(tree_id=obj_id[0], lft=obj_id[1])
+        obj = Category.objects.get(id=obj.id)
         self.assertEqual(obj.name, u'NewName')
 
     def test_rename_exists(self):
@@ -284,24 +288,12 @@ class ViewsTests(AjaxTests):
         """Get categories for tag."""
         # Empty category set
         r = self.ajax_post_json(reverse('get_tag_categories'), {'tag_id': self.tag1.id})
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(r['Content-Type'], 'application/json')
-        try:
-            data = simplejson.loads(r.content)
-        except Exception, e:
-            self.fail(str(e))
-        self.assertTrue(data['success'])
+        self.assertAjaxSuccess(r)
         self.assertEqual(len(data['cats']), 0)
 
         # Non-empty category set
         r = self.ajax_post_json(reverse('get_tag_categories'), {'tag_id': self.tag2.id})
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(r['Content-Type'], 'application/json')
-        try:
-            data = simplejson.loads(r.content)
-        except Exception, e:
-            self.fail(str(e))
-        self.assertTrue(data['success'])
+        self.assertAjaxSuccess(r)
         self.assertEqual(data['cats'], [{'id': self.c1.id, 'name': self.c1.name}])
 
     # `remove_tag_from_category` view tests
@@ -385,3 +377,86 @@ class ViewsTests(AjaxTests):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, "Requested tag doesn't exist")
+
+    # `delete_category` view tests
+
+    def test_delete_category_missing_id(self):
+        """Error is reported if the views is called without an id for the category to delete."""
+        self.client.login(username='owner', password='secret')
+        r = self.ajax_post_json(reverse('delete_category'), {})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        self.assertContains(r, "Missing or invalid required parameter")
+
+    def test_delete_category_invalid_id(self):
+        """Error is reported if the views is called with an invalid id for the category to delete."""
+        self.client.login(username='owner', password='secret')
+        r = self.ajax_post_json(
+            reverse('delete_category'),
+            {
+                'id': (100, 20)
+            }
+        )
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        self.assertContains(r, "Requested category doesn't exist")
+
+    def test_delete_category_success(self):
+        """Succesful deletion of a category without child categories nor associated tags."""
+        self.client.login(username='owner', password='secret')
+        obj = Category.objects.get(name=u'Child2')
+        obj_id = (obj.tree_id, obj.lft)
+        r = self.ajax_post_json(
+            reverse('delete_category'),
+            {
+                'id': obj_id
+            }
+        )
+        self.assertAjaxSuccess(r)
+
+    def test_delete_category_no_leaf(self):
+        """Error is reported if deletion of a the category with child categories is attempted."""
+        self.client.login(username='owner', password='secret')
+        obj = Category.objects.get(name=u'Child1')
+        obj_id = (obj.tree_id, obj.lft)
+        r = self.ajax_post_json(
+            reverse('delete_category'),
+            {
+                'id': obj_id
+            }
+        )
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        self.assertContains(r, "cannot_delete_subcategories")
+
+    def test_delete_category_with_tags(self):
+        """Deletion of a the category with associated tags."""
+        self.client.login(username='owner', password='secret')
+        obj = Category.objects.get(name=u'Child3')
+        obj_id = (obj.tree_id, obj.lft)
+        r = self.ajax_post_json(
+            reverse('delete_category'),
+            {
+                'id': obj_id
+            }
+        )
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        self.assertContains(r, "need_confirmation")
+        try:
+            data = simplejson.loads(r.content)
+        except Exception, e:
+            self.fail(str(e))
+        self.assertTrue('token' in data)
+        print data['tags']
+
+        # Resubmit using the provided token
+        r = self.ajax_post_json(
+            reverse('delete_category'),
+            {
+                'id': obj_id,
+                'token': data['token']
+            }
+        )
+        self.assertAjaxSuccess(r)
+        self.assertFalse('token' in r.content)
