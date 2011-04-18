@@ -161,7 +161,15 @@ class ViewsTests(AjaxTests):
     def test_add_category_exists(self):
         """Two categories with the same name shouldn't be allowed."""
         self.client.login(username='owner', password='secret')
+        # A new category when other with the same name exists at the same level
         r = self.ajax_post_json(reverse('add_category'), {'name': u'Child1', 'parent': (1, 1)})
+        data = self.assertAjaxFailure(r)
+        self.assertTrue('There is already a category with that name' in data['message'])
+
+        # A new category when other with the same name exists at another level
+        obj = Category.objects.get(name=u'Child2')
+        obj_id = (obj.tree_id, obj.lft)
+        r = self.ajax_post_json(reverse('add_category'), {'name': u'Child1', 'parent': obj_id})
         data = self.assertAjaxFailure(r)
         self.assertTrue('There is already a category with that name' in data['message'])
 
@@ -276,7 +284,6 @@ class ViewsTests(AjaxTests):
         self.assertEqual(associated_cats + 1, self.tag1.categories.filter(tree_id=1, lft=1).count())
 
     # `get_tag_categories` view tests
-    # TODO: Test explicitly with anonymous user for get_tag_categories
 
     def test_tag_categories_missing_param(self):
         """Get categories for tag: should fail when no tag ID is passed."""
@@ -300,13 +307,13 @@ class ViewsTests(AjaxTests):
         # Non-empty category set
         r = self.ajax_post_json(reverse('get_tag_categories'), {'tag_id': self.tag2.id})
         data = self.assertAjaxSuccess(r)
-        self.assertEqual(data['cats'], [{'id': self.c1.id, 'name': self.c1.name}])
+        self.assertEqual(data['cats'], [{'id': [self.c1.tree_id,self.c1.lft], 'name': self.c1.name}])
 
     # `remove_tag_from_category` view tests
 
     def test_remove_tag_category__no_permission(self):
         """Only administrator and moderator users should be able to remove a
-        tag form a category via the view."""
+        tag from a category via the view."""
         self.client.login(username='user1', password='123')
         r = self.ajax_post_json(
             reverse('remove_tag_from_category'),
