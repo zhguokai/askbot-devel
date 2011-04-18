@@ -78,6 +78,10 @@ class AjaxTests(TestCase):
         return self.ajax_post(path, simplejson.dumps(data))
 
     def assertAjaxSuccess(self, response):
+        """
+        Helper method that checks the akjax call was succesful. Returns the
+        data decoded from the JSON response.
+        """
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
         try:
@@ -85,6 +89,21 @@ class AjaxTests(TestCase):
         except Exception, e:
             self.fail(str(e))
         self.assertTrue(data['success'])
+        return data
+
+    def assertAjaxFailure(self, response):
+        """
+        Helper method that checks the akjax call failed. Returns the
+        data decoded from the JSON response.
+        """
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+        try:
+            data = simplejson.loads(response.content)
+        except Exception, e:
+            self.fail(str(e))
+        self.assertFalse(data['success'])
+        return data
 
 
 class ViewsTests(AjaxTests):
@@ -288,12 +307,12 @@ class ViewsTests(AjaxTests):
         """Get categories for tag."""
         # Empty category set
         r = self.ajax_post_json(reverse('get_tag_categories'), {'tag_id': self.tag1.id})
-        self.assertAjaxSuccess(r)
+        data = self.assertAjaxSuccess(r)
         self.assertEqual(len(data['cats']), 0)
 
         # Non-empty category set
         r = self.ajax_post_json(reverse('get_tag_categories'), {'tag_id': self.tag2.id})
-        self.assertAjaxSuccess(r)
+        data = self.assertAjaxSuccess(r)
         self.assertEqual(data['cats'], [{'id': self.c1.id, 'name': self.c1.name}])
 
     # `remove_tag_from_category` view tests
@@ -434,12 +453,7 @@ class ViewsTests(AjaxTests):
         self.client.login(username='owner', password='secret')
         obj = Category.objects.get(name=u'Child3')
         obj_id = (obj.tree_id, obj.lft)
-        r = self.ajax_post_json(
-            reverse('delete_category'),
-            {
-                'id': obj_id
-            }
-        )
+        r = self.ajax_post_json(reverse('delete_category'), {'id': obj_id})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, "need_confirmation")
@@ -448,7 +462,6 @@ class ViewsTests(AjaxTests):
         except Exception, e:
             self.fail(str(e))
         self.assertTrue('token' in data)
-        print data['tags']
 
         # Resubmit using the provided token
         r = self.ajax_post_json(
@@ -460,3 +473,30 @@ class ViewsTests(AjaxTests):
         )
         self.assertAjaxSuccess(r)
         self.assertFalse('token' in r.content)
+
+    def test_delete_category_with_tags_invalid_token(self):
+        """Deletion of a the category with associated tags."""
+        self.client.login(username='owner', password='secret')
+        obj = Category.objects.get(name=u'Child3')
+        obj_id = (obj.tree_id, obj.lft)
+        r = self.ajax_post_json(reverse('delete_category'), {'id': obj_id})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r['Content-Type'], 'application/json')
+        self.assertContains(r, "need_confirmation")
+        try:
+            data = simplejson.loads(r.content)
+        except Exception, e:
+            self.fail(str(e))
+        self.assertTrue('token' in data)
+
+        # Resubmit using a corrupt token
+        r = self.ajax_post_json(
+            reverse('delete_category'),
+            {
+                'id': obj_id,
+                'token': 'this is a fake token'
+            }
+        )
+        data = self.assertAjaxFailure(r)
+        self.assertFalse('token' in data)
+        self.assertTrue("Invalid token provided" in data['message'])
