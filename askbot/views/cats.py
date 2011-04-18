@@ -89,8 +89,7 @@ def admin_ajax_post(view_func):
             if message == '':
                 message = _('Oops, apologies - there was some error')
             response_data['message'] = message
-            response_data['success'] = False
-            response_data['result'] = 'error'
+            response_data['status'] = 'error'
             data = simplejson.dumps(response_data)
             return HttpResponse(data, mimetype="application/json")
     return inner
@@ -101,11 +100,11 @@ def add_category(request):
     Adds a category. Meant to be called by the site administrator using ajax
     and POST HTTP method.
     The expected json request is an object with the following keys:
-      'name':   Name of the new category to be created.
+      'name': Name of the new category to be created.
       'parent': ID of the parent category for the category to be created.
     The response is also a json object with keys:
-      'success': boolean
-      'message': text description in case of failure (not always present)
+      'status': Can be either 'success' or 'error'
+      'message': Text description in case of failure (not always present)
 
     Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
     """
@@ -132,8 +131,7 @@ def add_category(request):
         raise exceptions.ValidationError(
             _('There is already a category with that name')
             )
-    response_data = {'success': True}
-    response_data['result'] = 'success'
+    response_data = {'status': 'success'}
     data = simplejson.dumps(response_data)
     return HttpResponse(data, mimetype="application/json")
 
@@ -143,11 +141,11 @@ def rename_category(request):
     Change the name of a category. Meant to be called by the site administrator
     using ajax and POST HTTP method.
     The expected json request is an object with the following keys:
-      'id':   ID of the category to be renamed.
+      'id': ID of the category to be renamed.
       'name': New name of the category.
     The response is also a json object with keys:
-      'success': boolean
-      'message': text description in case of failure (not always present)
+      'status': Can be 'success', 'noop' or 'error'
+      'message': Text description in case of failure (not always present)
 
     Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
     """
@@ -181,10 +179,9 @@ def rename_category(request):
         node.name=new_name
         # Let any exception that happens during save bubble up, for now
         node.save()
-        response_data['success'] = True
-        response_data['result'] = 'success'
+        response_data['status'] = 'success'
     else:
-        response_data = {'result': 'noop'}
+        response_data['status'] = 'noop'
     data = simplejson.dumps(response_data)
     return HttpResponse(data, mimetype="application/json")
 
@@ -199,8 +196,8 @@ def add_tag_to_category(request):
       'tag_id': ID of the tag.
       'cat_id': ID of the category.
     The response is also a json object with keys:
-      'success': boolean
-      'message': text description in case of failure (not always present)
+      'status': Can be either 'success' or 'error'
+      'message': Text description in case of failure (not always present)
 
     Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
     """
@@ -229,8 +226,7 @@ def add_tag_to_category(request):
             )
     # Let any exception that could happen during save bubble up
     tag.categories.add(cat)
-    response_data = { 'success': True }
-    response_data['result'] = 'success'
+    response_data = {'status': 'success'}
     data = simplejson.dumps(response_data)
     return HttpResponse(data, mimetype="application/json")
 
@@ -241,10 +237,10 @@ def get_tag_categories(request):
     The expected json request is an object with the following key:
       'tag_id': ID of the tag. (required)
     The response is also a json object with keys:
-      'success': boolean
-      'cats':    a list of two-elements lists containing category ID
-         (integer) name (string) for each category
-      'message': text description in case of failure (not always present)
+      'status': Can be either 'success' or 'error'
+      'cats': A list of two-elements lists containing category ID (integer) and
+        name (string) for each category
+      'message': Text description in case of failure (not always present)
     """
     if not askbot_settings.ENABLE_CATEGORIES:
         raise Http404
@@ -265,8 +261,7 @@ def get_tag_categories(request):
                         _("Requested tag doesn't exist")
                         )
                 response_data['cats'] = list(tag.categories.values('id', 'name'))
-                response_data['success'] = True
-                response_data['result'] = 'success'
+                response_data['status'] = 'success'
                 data = simplejson.dumps(response_data)
                 return HttpResponse(data, mimetype="application/json")
             else:
@@ -279,8 +274,7 @@ def get_tag_categories(request):
         if message == '':
             message = _('Oops, apologies - there was some error')
         response_data['message'] = message
-        response_data['success'] = False
-        response_data['result'] = 'success'
+        response_data['status'] = 'error'
         data = simplejson.dumps(response_data)
         return HttpResponse(data, mimetype="application/json")
 
@@ -292,10 +286,8 @@ def remove_tag_from_category(request):
       'tag_id': ID of the tag.
       'cat_id': ID of the category.
     The response is also a json object with keys:
-      'success': boolean
-      'cats':    a list of two-elements lists containing category ID
-         (integer) name (string) for each category
-      'message': text description in case of failure (not always present)
+      'status': Can be either 'success', 'noop' or 'error'
+      'message': Text description in case of failure (not always present)
 
     Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
     """
@@ -333,10 +325,9 @@ def remove_tag_from_category(request):
                         if cat.tags.filter(id=tag.id).count():
                             # Let any exception that happens during save bubble up
                             cat.tags.remove(tag)
-                            response_data['success'] = True
-                            response_data['result'] = 'error'
+                            response_data['status'] = 'success'
                         else:
-                            response_data['result'] = 'noop'
+                            response_data['status'] = 'noop'
                         data = simplejson.dumps(response_data)
                         return HttpResponse(data, mimetype="application/json")
                     else:
@@ -357,8 +348,7 @@ def remove_tag_from_category(request):
         if message == '':
             message = _('Oops, apologies - there was some error')
         response_data['message'] = message
-        response_data['success'] = False
-        response_data['result'] = 'error'
+        response_data['status'] = 'error'
         data = simplejson.dumps(response_data)
         return HttpResponse(data, mimetype="application/json")
 
@@ -368,11 +358,12 @@ def delete_category(request):
     Remove a category. Meant to be called by the site administrator using ajax
     and POST HTTP method.
     The expected json request is an object with the following key:
-      'id':   ID of the category to be renamed.
+      'id': ID of the category to be renamed.
       'token': A category deletion token obtained form a previous call (optional)
     The response is also a json object with keys:
-      'success': boolean
-      'message': text description in case of failure (not always present)
+      'status': Can be either 'success', 'need_confirmation',
+                'cannot_delete_subcategories' or 'error'
+      'message': Text description in case of failure (not always present)
       'token': A category deletion token that should be used to confirm the
                operation (not always present)
 
@@ -415,21 +406,18 @@ def delete_category(request):
     if not tag_count and not has_children:
         # Let any exception that happens during deletion bubble up
         node.delete()
-        response_data['success'] = True
-        response_data['result'] = 'success'
+        response_data['status'] = 'success'
     elif has_children:
-        response_data['success'] = False
-        response_data['result'] = 'cannot_delete_subcategories'
+        response_data['status'] = 'cannot_delete_subcategories'
     elif tag_count:
         if token is None:
-            response_data['result'] = 'need_confirmation'
+            response_data['status'] = 'need_confirmation'
             response_data['token'] = CategoriesApiTokenGenerator().make_token(node)
             response_data['tags'] = [t[0] for t in node.tags.values_list('name')]
         else:
             # Let any exception that happens during deletion bubble up
             node.tags.clear()
             node.delete()
-            response_data['success'] = True
-            response_data['result'] = 'success'
+            response_data['status'] = 'success'
     data = simplejson.dumps(response_data)
     return HttpResponse(data, mimetype="application/json")
