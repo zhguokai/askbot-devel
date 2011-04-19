@@ -3,6 +3,7 @@
    main template "base.html"
 #}
 <script type="text/javascript">
+    askbot['var']['current_category'] = {{ current_category }};
     var i18nLang = '{{settings.LANGUAGE_CODE}}';
     var scriptUrl = '/{{settings.ASKBOT_URL}}'
     var askbotSkin = '{{settings.ASKBOT_DEFAULT_SKIN}}';

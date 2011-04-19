@@ -21,7 +21,7 @@
 {%- endmacro -%}
 
 {%- macro user_long_score_and_badge_summary(user) -%}
-    <a class="user-micro-info" 
+    <a class="user-micro-info"
        href="{{user.get_absolute_url()}}?sort=reputation"
     >{% trans %}karma:{% endtrans %} {{user.reputation}}</a>
     {%- if user.gold or user.silver or user.bronze %}
@@ -46,14 +46,14 @@
 
 {%- macro user_country_flag(user) -%}
     {% if user.country and user.show_country %}
-        <img class="flag" 
+        <img class="flag"
             src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"
-            alt="{% trans 
-                    country=user.country.name 
-                    %}flag of {{country}}{% 
+            alt="{% trans
+                    country=user.country.name
+                    %}flag of {{country}}{%
                 endtrans %}"
-            title="{% trans 
-                    country=user.country.name, 
+            title="{% trans
+                    country=user.country.name,
                     person=user.username %}{{person}} is from {{country}}{%
                  endtrans %}"
         />
@@ -88,7 +88,7 @@
             {% endfor %}
         ...
         {% endif %}
-         
+
         {% for num in p.page_numbers %}
           {% if num == p.page and p.pages != 1%}
             <span class="curr" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
@@ -96,7 +96,7 @@
             <span class="page"><a href="{{p.base_url}}page={{ num }}{{ p.extend_url }}" title="{% trans %}page number {{num}}{% endtrans %}">{{ num }}</a></span>
           {% endif %}
         {% endfor %}
-         
+
         {% if not p.in_trailing_range %}
             ...
             {% for num in p.pages_outside_leading_range|reverse %}
@@ -106,7 +106,7 @@
         {% if p.has_next %}
             <span class="next"><a href="{{p.base_url}}page={{ p.next }}{{ p.extend_url }}" title="{% trans %}next page{% endtrans %}">{% trans %}next page{% endtrans %} &raquo;</a></span>
         {% endif %}
-        </div> 
+        </div>
     {% endif %}
 {% endspaceless %}
 {%- endmacro -%}
@@ -121,19 +121,19 @@
         {% else %}
             <span class="page"><a href="{{p.base_url}}page_size=10">10</a></span>
         {% endif %}
-        
+
         {% if p.page_size == 30 %}
             <span class="curr">30</span>
         {% else %}
             <span class="page"><a href="{{p.base_url}}page_size=30">30</a></span>
         {% endif %}
-        
+
         {% if p.page_size == 50 %}
             <span class="curr">50</span>
         {% else %}
             <span class="page"><a href="{{p.base_url}}page_size=50">50</a></span>
         {% endif %}
-    </div> 
+    </div>
 {% endif %}
 {% endspaceless %}
 {%- endmacro -%}
@@ -143,18 +143,18 @@
 {% spaceless %}
 <a style="text-decoration:none"
     href="{{ user.get_absolute_url() }}"
-><img class="gravatar" 
+><img class="gravatar"
     width="{{size}}" height="{{size}}"
     src="{{ user.get_avatar_url(size) }}"
-    title="{{user.username}}" 
-    alt="{% trans username=user.username %}{{username}} gravatar image{% endtrans %}" 
+    title="{{user.username}}"
+    alt="{% trans username=user.username %}{{username}} gravatar image{% endtrans %}"
 /></a>
 {% endspaceless %}
 {%- endmacro -%}
 
 {%- macro user_website_link(user, max_display_length=25) -%}
     {% if user.website %}
-        <a 
+        <a
             href="{{user.website}}"
             title="{% trans username=user.username|escape, url=user.website %}{{username}}'s website is {{url}}{% endtrans %}"
             {% if user.can_have_strong_url() == False %}
@@ -179,7 +179,7 @@
 {%- endmacro -%}
 
 {%- macro post_contributor_info(post, contributor_type, is_wiki, wiki_min_rep) -%}
-{# there is a whole bunch of trickery here, probably indicative of 
+{# there is a whole bunch of trickery here, probably indicative of
 poor design of the data or methods on data objects #}
 {% if contributor_type=="original_author" %}
     <div class='post-update-info'>
@@ -194,7 +194,7 @@ poor design of the data or methods on data objects #}
            {% endif %}
            <strong>{{post.added_at|diff_date}}</strong>
         </p>
-        <img 
+        <img
             src="{{'/images/wiki.png'|media}}"
             alt="{% trans %}this post is marked as community wiki{% endtrans %}"
             style="float:left"
@@ -233,7 +233,7 @@ poor design of the data or methods on data objects #}
     {% if last_edited_at %}
     <div class='post-update-info'>
         <p style="line-height:12px;">
-            <a 
+            <a
         {% if post.__class__.__name__ == 'Question' %}
             href="{% url question_revisions post.id %}"
         {% else %}
@@ -299,7 +299,7 @@ poor design of the data or methods on data objects #}
     <{{ html_tag }} class="tag-left{% if deletable %} deletable-tag{% endif %}">
     <{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
-            href="{% url questions %}?tags={{tag|urlencode}}{{ 
+            href="{% url questions current_category %}?tags={{tag|urlencode}}{{
                                                         if_else(
                                                             url_params != None,
                                                             '&' ~ url_params,
@@ -324,7 +324,7 @@ poor design of the data or methods on data objects #}
     {% for choice in choices %}
         <p class="choice">
             {% set id = "id_" ~ name ~ "_" ~ choice[0] %}
-            <input 
+            <input
                 id="{{ id }}"
                 name="{{ name }}"
                 value="{{ choice[0] }}"
@@ -341,7 +341,7 @@ poor design of the data or methods on data objects #}
 {%- macro question_summary(question, extra_class=None) -%}
     <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}">
         <div class="counts">
-            <div class="votes 
+            <div class="votes
                         {% if question.score == 0 -%}
                             no-votes
                         {% else -%}
@@ -361,8 +361,8 @@ poor design of the data or methods on data objects #}
                         {%- else -%}
                             some-answers
                         {%- endif -%}
-                    {%- endif -%}"> 
-                <span 
+                    {%- endif -%}">
+                <span
                     class="item-count"
                 >{{question.answer_count|humanize_counter}}{% if question.answer_accepted%}&#10003;{% endif %}</span>
                 <div>
@@ -400,8 +400,8 @@ poor design of the data or methods on data objects #}
     {% for comment in comments %}
     <div class="comment" id="comment-{{comment.id}}">
         {{comment.html}} -
-        <a 
-            class="author" 
+        <a
+            class="author"
             href="{{comment.user.get_profile_url()}}"
         >{{comment.user.username}}</a>
         <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
@@ -409,7 +409,7 @@ poor design of the data or methods on data objects #}
             <a class="edit">{% trans %}edit{% endtrans %}</a>
         {% endif %}
         {% if user|can_delete_comment(comment) %}
-            <span class="delete-icon" 
+            <span class="delete-icon"
                 title="{% trans %}delete this comment{% endtrans %}"
             ></span>
         {% endif %}
@@ -497,9 +497,9 @@ poor design of the data or methods on data objects #}
 
 {%- macro reversible_sort_button(button_sort_criterium=None, asc_tooltip=None,
             desc_tooltip=None, label=None, current_sort_method=None) -%}
-{# 
+{#
     sort button where descending sort is default
-    and the search method is togglable between ascending and descending 
+    and the search method is togglable between ascending and descending
     buttons are rendered as links with id constructed as
     "by_" + button_sort_criterium
     class "on" is added when current_sort_method is one of
@@ -508,18 +508,18 @@ poor design of the data or methods on data objects #}
     {% set key_name = button_sort_criterium %}
     {% set sort = current_sort_method %}
     {% if sort == key_name + "-asc" %}{# "worst" first #}
-    <a id="by_{{key_name}}" 
-        href="?sort={{key_name}}-desc" 
-        class="on" 
+    <a id="by_{{key_name}}"
+        href="?sort={{key_name}}-desc"
+        class="on"
         title="{{desc_tooltip}}"><span>{{label}} &#9650;</span></a>
     {% elif sort == key_name + "-desc" %}{# "best first" #}
     <a id="by_{{key_name}}"
-        href="?sort={{key_name}}-asc" 
+        href="?sort={{key_name}}-asc"
         class="on"
         title="{{asc_tooltip}}"><span>{{label}} &#9660;</span></a>
     {% else %}{# default, when other button is active #}
     <a id="by_{{key_name}}"
-        href="?sort={{key_name}}-desc" 
+        href="?sort={{key_name}}-desc"
         class="off"
         title="{{desc_tooltip}}"><span>{{label}}</span></a>
     {% endif %}
@@ -536,8 +536,8 @@ poor design of the data or methods on data objects #}
 {%- macro checkbox_in_div(checkbox_field, class = 'checkbox') -%}
     <div{% if class %} class="{{class}}"{% endif %}
         title="{{checkbox_field.help_text}}">
-        {{ checkbox_field }} 
-        {{ checkbox_field.label_tag() }} 
+        {{ checkbox_field }}
+        {{ checkbox_field.label_tag() }}
         {{ checkbox_field.errors }}
     </div>
 {%- endmacro -%}
@@ -585,8 +585,8 @@ poor design of the data or methods on data objects #}
         </div>
     {% endif %}
     <div class="preview-toggle">
-        <span 
-            id="pre-collapse" 
+        <span
+            id="pre-collapse"
             title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}"
         >
             [{% trans %}hide preview{% endtrans %}]
@@ -598,7 +598,7 @@ poor design of the data or methods on data objects #}
 {%- macro inbox_link(user) -%}
     {% if user.new_response_count > 0 or user.seen_response_count > 0 %}
     <a id='ab-responses' href="{{user.get_absolute_url()}}?sort=inbox&section=forum">
-        <img 
+        <img
             alt="{% trans username=user.username %}responses for {{username}}{% endtrans %}"
             {% if user.new_response_count > 0 %}
                 src="{{ "/images/mail-envelope-full.png"|media }}"
@@ -628,9 +628,9 @@ poor design of the data or methods on data objects #}
             {% endif %}
             />
         {% elif moderation_items['seen_count'] > 0 %}
-            <img src={{'/images/dialog-warning-off.png'|media}} 
-                alt="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
-                title="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}" 
+            <img src={{'/images/dialog-warning-off.png'|media}}
+                alt="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}"
+                title="{% trans seen=moderation_items['seen_count'] %}{{seen}} flagged posts{% endtrans %}"
             />
         {% endif %}
         </a>

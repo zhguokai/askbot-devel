@@ -83,11 +83,11 @@ class QuestionQuerySet(models.query.QuerySet):
         return question
 
     def get_by_text_query(self, search_query):
-        """returns a query set of questions, 
+        """returns a query set of questions,
         matching the full text query
         """
         if settings.DATABASE_ENGINE == 'mysql':
-            return self.filter( 
+            return self.filter(
                         models.Q(title__search = search_query) \
                        | models.Q(text__search = search_query) \
                        | models.Q(tagnames__search = search_query) \
@@ -106,19 +106,20 @@ class QuestionQuerySet(models.query.QuerySet):
             return self.extra(**extra_kwargs)
         else:
             #fallback to dumb title match search
-            return extra(
-                        where=['title like %s'], 
+            return self.extra(
+                        where=['title like %s'],
                         params=['%' + search_query + '%']
                     )
 
     def run_advanced_search(
                         self,
                         request_user = None,
-                        search_state = None
+                        search_state = None,
+                        category = None
                     ):
         """all parameters are guaranteed to be clean
         however may not relate to database - in that case
-        a relvant filter will be silently dropped
+        a relevant filter will be silently dropped
         """
 
         scope_selector = getattr(
@@ -132,7 +133,7 @@ class QuestionQuerySet(models.query.QuerySet):
         author_selector = search_state.author
 
         sort_method = getattr(
-                            search_state, 
+                            search_state,
                             'sort',
                             const.DEFAULT_POST_SORT_METHOD
                         )
@@ -141,8 +142,17 @@ class QuestionQuerySet(models.query.QuerySet):
 
         #return metadata
         meta_data = {}
-        if tag_selector: 
+        if tag_selector:
             for tag in tag_selector:
+                qs = qs.filter(tags__name = tag)
+
+        #have to import this at run time, otherwise there
+        #a circular import dependency...
+        from askbot.conf import settings as askbot_settings
+        # Filter out tags not associated with the requested category
+        if category is not None and askbot_settings.ENABLE_CATEGORIES:
+            category_tags = category.tags.all()
+            for tag in category_tags:
                 qs = qs.filter(tags__name = tag)
 
         if search_query:
@@ -153,9 +163,6 @@ class QuestionQuerySet(models.query.QuerySet):
                     qs= qs.extra(order_by = ['-relevance',])
 
 
-        #have to import this at run time, otherwise there
-        #a circular import dependency...
-        from askbot.conf import settings as askbot_settings
         if scope_selector:
             if scope_selector == 'unanswered':
                 if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
@@ -168,7 +175,7 @@ class QuestionQuerySet(models.query.QuerySet):
                     raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
             elif scope_selector == 'favorite':
                 qs = qs.filter(favorited_by = request_user)
-            
+
         #user contributed questions & answers
         if author_selector:
             try:
@@ -209,7 +216,7 @@ class QuestionQuerySet(models.query.QuerySet):
                     #filter by interesting tags only
                     interesting_tag_filter = models.Q(tags__in = interesting_tags)
                     if request_user.has_interesting_wildcard_tags():
-                        interesting_wildcards = request_user.interesting_tags.split() 
+                        interesting_wildcards = request_user.interesting_tags.split()
                         extra_interesting_tags = Tag.objects.get_by_wildcards(
                                                             interesting_wildcards
                                                         )
@@ -221,7 +228,7 @@ class QuestionQuerySet(models.query.QuerySet):
                     qs = qs.extra(
                         select = SortedDict([
                             (
-                                'interesting_score', 
+                                'interesting_score',
                                 'SELECT COUNT(1) FROM askbot_markedtag, question_tags '
                                  + 'WHERE askbot_markedtag.user_id = %s '
                                  + 'AND askbot_markedtag.tag_id = question_tags.tag_id '
@@ -238,7 +245,7 @@ class QuestionQuerySet(models.query.QuerySet):
                     #exclude ignored tags if the user wants to
                     qs = qs.exclude(tags__in=ignored_tags)
                     if request_user.has_ignored_wildcard_tags():
-                        ignored_wildcards = request_user.ignored_tags.split() 
+                        ignored_wildcards = request_user.ignored_tags.split()
                         extra_ignored_tags = Tag.objects.get_by_wildcards(
                                                             ignored_wildcards
                                                         )
@@ -249,7 +256,7 @@ class QuestionQuerySet(models.query.QuerySet):
                     qs = qs.extra(
                         select = SortedDict([
                             (
-                                'ignored_score', 
+                                'ignored_score',
                                 'SELECT COUNT(1) '
                                   + 'FROM askbot_markedtag, question_tags '
                                   + 'WHERE askbot_markedtag.user_id = %s '
@@ -354,8 +361,8 @@ class Question(content.Content, DeletableContent):
     closed_by       = models.ForeignKey(User, null=True, blank=True, related_name='closed_questions')
     closed_at       = models.DateTimeField(null=True, blank=True)
     close_reason    = models.SmallIntegerField(
-                                            choices=const.CLOSE_REASONS, 
-                                            null=True, 
+                                            choices=const.CLOSE_REASONS,
+                                            null=True,
                                             blank=True
                                         )
     followed_by     = models.ManyToManyField(User, related_name='followed_questions')
@@ -369,8 +376,8 @@ class Question(content.Content, DeletableContent):
     tagnames             = models.CharField(max_length=125)
     summary              = models.CharField(max_length=180)
 
-    favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions') 
-    is_anonymous = models.BooleanField(default=False) 
+    favorited_by         = models.ManyToManyField(User, through='FavoriteQuestion', related_name='favorite_questions')
+    is_anonymous = models.BooleanField(default=False)
 
     objects = QuestionManager()
 
@@ -410,9 +417,9 @@ class Question(content.Content, DeletableContent):
         on the question
         """
         self.answer_count = self.get_answers().count()
-        if save: 
+        if save:
             self.save()
-   
+
     def update_favorite_count(self):
         """
         update favourite_count for given question
@@ -463,7 +470,7 @@ class Question(content.Content, DeletableContent):
 
     def get_page_number(self, answers = None):
         """question always appears on its own
-        first page by definition. The answers 
+        first page by definition. The answers
         parameter is not used here. The extra parameter is necessary
         to maintain generality of the function call signature"""
         return 1
@@ -481,7 +488,7 @@ class Question(content.Content, DeletableContent):
         Updates Tag associations for a question to match the given
         tagname string.
 
-        When tags are removed and their use count hits 0 - the tag is 
+        When tags are removed and their use count hits 0 - the tag is
         automatically deleted.
 
         When an added tag does not exist - it is created
@@ -593,7 +600,7 @@ class Question(content.Content, DeletableContent):
 
     def get_response_receivers(self, exclude_list = None):
         """returns list of users who might be interested
-        in the question update based on their participation 
+        in the question update based on their participation
         in the question activity
 
         exclude_list is mandatory - it normally should have the
@@ -707,7 +714,7 @@ class Question(content.Content, DeletableContent):
                 comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
-            
+
         return QuestionRevision.objects.create(
             question   = self,
             revision   = rev_no,
@@ -840,7 +847,7 @@ class Question(content.Content, DeletableContent):
     def __unicode__(self):
         return self.title
 
-        
+
 class QuestionView(models.Model):
     question = models.ForeignKey(Question, related_name='viewed')
     who = models.ForeignKey(User, related_name='question_views')

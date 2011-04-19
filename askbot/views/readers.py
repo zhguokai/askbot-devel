@@ -58,7 +58,7 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """
     return HttpResponseRedirect(reverse('questions'))
 
-def questions(request):
+def questions(request, category_name=None):
     """
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
@@ -66,6 +66,18 @@ def questions(request):
     #before = datetime.datetime.now()
     #don't allow to post to this view
     if request.method == 'POST':
+        raise Http404
+
+    if askbot.conf.settings.ENABLE_CATEGORIES:
+        if category_name is not None:
+            try:
+                category = models.Category.objects.get(name=category_name)
+            except models.Category.DoesNotExist:
+                raise Http404
+        else:
+            category = None
+    else:
+        # Maybe we can redirect to the bare /questions/ URL instead
         raise Http404
 
     #update search state
@@ -88,6 +100,7 @@ def questions(request):
     (qs, meta_data, related_tags) = models.Question.objects.run_advanced_search(
                                             request_user = request.user,
                                             search_state = search_state,
+                                            category = category,
                                         )
 
     paginator = Paginator(qs, search_state.page_size)
@@ -166,7 +179,7 @@ def questions(request):
                 '%(badge_count)d %(badge_level)s badges',
                 count
             ) % {
-                'badge_count': count, 
+                'badge_count': count,
                 'badge_level': badge_levels[level]
             }
 
@@ -274,7 +287,7 @@ def questions(request):
         'context' : paginator_context,
         'is_unanswered' : False,#remove this from template
         'interesting_tag_names': meta_data.get('interesting_tag_names',None),
-        'ignored_tag_names': meta_data.get('ignored_tag_names',None), 
+        'ignored_tag_names': meta_data.get('ignored_tag_names',None),
         'language_code': translation.get_language(),
         'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
         'page_class': 'main-page',
@@ -289,6 +302,7 @@ def questions(request):
         'tab_id' : search_state.sort,
         'tags' : related_tags,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
+        'current_category': category,
     }
 
     assert(request.is_ajax() == False)
@@ -355,7 +369,7 @@ def tags(request):#view showing a listing of available tags - plain list
     return render_into_skin('tags.html', data, request)
 
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
-    """view that displays body of the question and 
+    """view that displays body of the question and
     all answers to it
     """
     #todo: fix inheritance of sort method from questions
@@ -482,7 +496,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if updated_who != request.user:
             if last_seen:
                 if last_seen < updated_when:
-                    update_view_count = True 
+                    update_view_count = True
             else:
                 update_view_count = True
 
@@ -499,7 +513,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
             request.user.visit_question(question)
 
         #3) send award badges signal for any badges
-        #that are awarded for question views 
+        #that are awarded for question views
         award_badges_signal.send(None,
                         event = 'view_question',
                         actor = request.user,

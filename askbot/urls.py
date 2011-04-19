@@ -57,7 +57,7 @@ urlpatterns = patterns('',
         name='answer_revisions'
     ),
     url(#this url works both normally and through ajax
-        r'^%s$' % _('questions/'),
+        r'^%s(?P<question_name>.*)$' % _('questions/'),
         views.readers.questions,
         name='questions'
     ),

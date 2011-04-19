@@ -2,33 +2,33 @@
 {% spaceless %}
 <div id="searchBar">
     {# url action depends on which tab is active #}
-    <form 
+    <form
         {% if active_tab == "tags" %}
-            action="{% url tags %}" 
+            action="{% url tags %}"
         {% elif active_tab == "users" %}
-            action="{% url users %}" 
+            action="{% url users %}"
         {% else %}
-            action="{% url questions %}" 
+            action="{% url questions current_category %}"
         {% endif %}
         method="get">
             {# class was searchInput #}
-            <input 
+            <input
                 {% if query %}
                 class="searchInputCancelable"
                 {% else %}
-                class="searchInput" 
+                class="searchInput"
                 {% endif %}
-                type="text" 
+                type="text"
                 autocomplete="off"
-                value="{{ query|default_if_none('') }}" 
-                name="query" 
+                value="{{ query|default_if_none('') }}"
+                name="query"
                 id="keywords"/>
             {% if query %}{# query is only defined by questions view #}
             <input type="button"
                 value="x"
                 name="reset_query"
                 {# todo - make sure it works on Enter keypress #}
-                onclick="window.location.href='{% url questions %}?reset_query=true'"
+                onclick="window.location.href='{% url questions current_category %}?reset_query=true'"
                 class="cancelSearchBtn"/>
             {% endif %}
             <input type="submit" value="{% trans %}search{% endtrans %}" name="search" class="searchBtn" />
