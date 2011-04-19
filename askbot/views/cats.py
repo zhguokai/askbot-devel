@@ -106,7 +106,7 @@ def add_category(request):
       'status': Can be either 'success' or 'error'
       'message': Text description in case of failure (not always present)
 
-    Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
+    Category IDs are the Django integer PKs of the respective model instances.
     """
     post_data = simplejson.loads(request.raw_post_data)
     parent = post_data.get('parent')
@@ -119,8 +119,7 @@ def add_category(request):
     if parent:
         try:
             parent = Category.objects.get(
-                    tree_id=parent[0],
-                    lft=parent[1]
+                    id=parent
                 )
         except Category.DoesNotExist:
             raise exceptions.ValidationError(
@@ -147,7 +146,7 @@ def rename_category(request):
       'status': Can be 'success', 'noop' or 'error'
       'message': Text description in case of failure (not always present)
 
-    Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
+    Category IDs are the Django integer PKs of the respective model instances.
     """
     post_data = simplejson.loads(request.raw_post_data)
     new_name = post_data.get('name')
@@ -160,8 +159,7 @@ def rename_category(request):
     # TODO: there is a chance of a race condition here
     try:
         node = Category.objects.get(
-                tree_id=cat_id[0],
-                lft=cat_id[1]
+                id=cat_id,
             )
     except Category.DoesNotExist:
         raise exceptions.ValidationError(
@@ -199,7 +197,7 @@ def add_tag_to_category(request):
       'status': Can be either 'success' or 'error'
       'message': Text description in case of failure (not always present)
 
-    Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
+    Category IDs are the Django integer PKs of the respective model instances.
     """
     post_data = simplejson.loads(request.raw_post_data)
     tag_id = post_data.get('tag_id')
@@ -211,8 +209,7 @@ def add_tag_to_category(request):
     # TODO: there is a chance of a race condition here
     try:
         cat = Category.objects.get(
-                tree_id=cat_id[0],
-                lft=cat_id[1]
+                id=cat_id
             )
     except Category.DoesNotExist:
         raise exceptions.ValidationError(
@@ -238,11 +235,9 @@ def get_tag_categories(request):
       'tag_id': ID of the tag. (required)
     The response is also a json object with keys:
       'status': Can be either 'success' or 'error'
-      'cats': A list of two-elements lists containing category IDs (see note
-        below) and name (string) for each category
+      'cats': A list of dicts with keys 'id' (value is a integer category ID)
+         and 'name' (value is a string) for each category
       'message': Text description in case of failure (not always present)
-
-    Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
     """
     if not askbot_settings.ENABLE_CATEGORIES:
         raise Http404
@@ -262,8 +257,7 @@ def get_tag_categories(request):
                     raise exceptions.ValidationError(
                         _("Requested tag doesn't exist")
                         )
-                #response_data['cats'] = list(tag.categories.values('id', 'name'))
-                response_data['cats'] = [{'id': (c.tree_id, c.lft), 'name': c.name} for c in tag.categories.all()]
+                response_data['cats'] = list(tag.categories.values('id', 'name'))
                 response_data['status'] = 'success'
                 data = simplejson.dumps(response_data)
                 return HttpResponse(data, mimetype="application/json")
@@ -292,7 +286,7 @@ def remove_tag_from_category(request):
       'status': Can be either 'success', 'noop' or 'error'
       'message': Text description in case of failure (not always present)
 
-    Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
+    Category IDs are the Django integer PKs of the respective model instances.
     """
     if not askbot_settings.ENABLE_CATEGORIES:
         raise Http404
@@ -311,10 +305,7 @@ def remove_tag_from_category(request):
                                 )
                         # TODO: there is a chance of a race condition here
                         try:
-                            cat = Category.objects.get(
-                                    tree_id=cat_id[0],
-                                    lft=cat_id[1]
-                                )
+                            cat = Category.objects.get(id=cat_id)
                         except Category.DoesNotExist:
                             raise exceptions.ValidationError(
                                 _("Requested category doesn't exist")
@@ -370,7 +361,7 @@ def delete_category(request):
       'token': A category deletion token that should be used to confirm the
                operation (not always present)
 
-    Category IDs are two-elements [tree_id, left id] JS arrays (Python tuples)
+    Category IDs are the Django integer PKs of the respective model instances.
 
     When a category that is associated with one or more tags the view returns
     a 'status' of 'need_confirmation' and provides a 'tags' response key with
@@ -388,10 +379,7 @@ def delete_category(request):
             _("Missing or invalid required parameter")
             )
     try:
-        node = Category.objects.get(
-                tree_id=cat_id[0],
-                lft=cat_id[1]
-            )
+        node = Category.objects.get(id=cat_id)
     except Category.DoesNotExist:
         raise exceptions.ValidationError(
             _("Requested category doesn't exist")

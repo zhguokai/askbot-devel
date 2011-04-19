@@ -120,10 +120,10 @@ class ViewsTests(AjaxTests):
         # A normal user
         User.objects.create_user(username='user1', email='user1@example.com', password='123')
         # Setup a small category tree
-        root = Category.objects.create(name=u'Root')
-        self.c1 = Category.objects.create(name=u'Child1', parent=root)
+        self.root = Category.objects.create(name=u'Root')
+        self.c1 = Category.objects.create(name=u'Child1', parent=self.root)
         Category.objects.create(name=u'Child2', parent=self.c1)
-        c3 = Category.objects.create(name=u'Child3', parent=root)
+        c3 = Category.objects.create(name=u'Child3', parent=self.root)
 
         self.tag1 = Tag.objects.create(name=u'Tag1', created_by=self.owner)
         self.tag2 = Tag.objects.create(name=u'Tag2', created_by=self.owner)
@@ -147,7 +147,7 @@ class ViewsTests(AjaxTests):
     def test_add_category_no_permission(self):
         """Only administrator users should be able to add a category via the view."""
         self.client.login(username='user1', password='123')
-        r = self.ajax_post_json(reverse('add_category'), {'name': u'Health', 'parent': (1, 1)})
+        r = self.ajax_post_json(reverse('add_category'), {'name': u'Health', 'parent': self.root.id})
         data = self.assertAjaxFailure(r)
         self.assertTrue('Sorry, but you cannot access this view' in data['message'])
 
@@ -162,14 +162,13 @@ class ViewsTests(AjaxTests):
         """Two categories with the same name shouldn't be allowed."""
         self.client.login(username='owner', password='secret')
         # A new category when other with the same name exists at the same level
-        r = self.ajax_post_json(reverse('add_category'), {'name': u'Child1', 'parent': (1, 1)})
+        r = self.ajax_post_json(reverse('add_category'), {'name': u'Child1', 'parent': self.root.id})
         data = self.assertAjaxFailure(r)
         self.assertTrue('There is already a category with that name' in data['message'])
 
         # A new category when other with the same name exists at another level
         obj = Category.objects.get(name=u'Child2')
-        obj_id = (obj.tree_id, obj.lft)
-        r = self.ajax_post_json(reverse('add_category'), {'name': u'Child1', 'parent': obj_id})
+        r = self.ajax_post_json(reverse('add_category'), {'name': u'Child1', 'parent': obj.id})
         data = self.assertAjaxFailure(r)
         self.assertTrue('There is already a category with that name' in data['message'])
 
@@ -184,9 +183,9 @@ class ViewsTests(AjaxTests):
         """Valid new categories should be added to the database."""
         self.client.login(username='owner', password='secret')
         # A child of the root node
-        self.add_category_success({'name': u'ANewCategory1', 'parent': (1, 1)})
+        self.add_category_success({'name': u'ANewCategory1', 'parent': self.root.id})
         # A child of a non-root node
-        self.add_category_success({'name': u'ANewCategory2', 'parent': (self.c1.tree_id, self.c1.lft)})
+        self.add_category_success({'name': u'ANewCategory2', 'parent': self.c1.id})
 
     def test_add_new_tree(self):
         """Insertion of a new root-of-tree node should work."""
@@ -200,7 +199,7 @@ class ViewsTests(AjaxTests):
     def test_add_category_invalid_parent(self):
         """Attempts to insert a new category with an invalid parent should fail."""
         self.client.login(username='owner', password='secret')
-        r = self.ajax_post_json(reverse('add_category'), {'name': u'Foo', 'parent': (100, 20)})
+        r = self.ajax_post_json(reverse('add_category'), {'name': u'Foo', 'parent': 123456})
         data = self.assertAjaxFailure(r)
         self.assertTrue("Requested parent category doesn't exist" in data['message'])
 
@@ -210,8 +209,7 @@ class ViewsTests(AjaxTests):
         """Rename category: should fail when no IDs are passed."""
         self.client.login(username='owner', password='secret')
         obj = Category.objects.get(name=u'Child1')
-        obj_id = (obj.tree_id, obj.lft)
-        r = self.ajax_post_json(reverse('rename_category'), {'id': obj_id})
+        r = self.ajax_post_json(reverse('rename_category'), {'id': obj.id})
         data = self.assertAjaxFailure(r)
         self.assertTrue("Missing or invalid required parameter" in data['message'])
 
@@ -223,8 +221,7 @@ class ViewsTests(AjaxTests):
         """Rename a category"""
         self.client.login(username='owner', password='secret')
         obj = Category.objects.get(name=u'Child1')
-        obj_id = (obj.tree_id, obj.lft)
-        r = self.ajax_post_json(reverse('rename_category'), {'id': obj_id, 'name': u'NewName'})
+        r = self.ajax_post_json(reverse('rename_category'), {'id': obj.id, 'name': u'NewName'})
         self.assertAjaxSuccess(r)
         # Re-fech the object from the DB
         obj = Category.objects.get(id=obj.id)
@@ -233,14 +230,14 @@ class ViewsTests(AjaxTests):
     def test_rename_exists(self):
         """Renaming to a name that already exists shouldn't be allowed."""
         self.client.login(username='owner', password='secret')
-        r = self.ajax_post_json(reverse('rename_category'), {'id': (1, 1), 'name': u'Child1'})
+        r = self.ajax_post_json(reverse('rename_category'), {'id': self.root.id, 'name': u'Child1'})
         data = self.assertAjaxFailure(r)
         self.assertTrue('There is already a category with that name' in data['message'])
 
     def test_rename_invalid_id(self):
         """Attempts to rename a category with an invalid ID should fail."""
         self.client.login(username='owner', password='secret')
-        r = self.ajax_post_json(reverse('rename_category'), {'id': (100, 20), 'name': u'NewName'})
+        r = self.ajax_post_json(reverse('rename_category'), {'id': 12345, 'name': u'NewName'})
         data = self.assertAjaxFailure(r)
         self.assertTrue("Requested category doesn't exist" in data['message'])
 
@@ -249,7 +246,7 @@ class ViewsTests(AjaxTests):
     def test_tag_missing_params(self):
         """Add tag to category: should fail when no IDs are passed."""
         self.client.login(username='owner', password='secret')
-        r = self.ajax_post_json(reverse('add_tag_to_category'), {'cat_id': (1, 1)})
+        r = self.ajax_post_json(reverse('add_tag_to_category'), {'cat_id': self.root.id})
         data = self.assertAjaxFailure(r)
         self.assertTrue("Missing required parameter" in data['message'])
 
@@ -262,25 +259,25 @@ class ViewsTests(AjaxTests):
         self.client.login(username='owner', password='secret')
         r = self.ajax_post_json(
                 reverse('add_tag_to_category'),
-                {'cat_id': (1, 1), 'tag_id': 100})
+                {'cat_id': self.root.id, 'tag_id': 100})
         data = self.assertAjaxFailure(r)
         self.assertTrue("Requested tag doesn't exist" in data['message'])
 
         r = self.ajax_post_json(
                 reverse('add_tag_to_category'),
-                {'cat_id': (100, 20), 'tag_id': self.tag1.id})
+                {'cat_id': 54321, 'tag_id': self.tag1.id})
         data = self.assertAjaxFailure(r)
         self.assertTrue("Requested category doesn't exist" in data['message'])
 
     def test_tag_success(self):
         """Adding a tag to a category."""
         self.client.login(username='owner', password='secret')
-        associated_cats = self.tag1.categories.filter(tree_id=1, lft=1).count()
+        associated_cats = self.tag1.categories.filter(id=self.root.id).count()
         r = self.ajax_post_json(
                 reverse('add_tag_to_category'),
-                {'cat_id': (1, 1), 'tag_id': self.tag1.id})
+                {'cat_id': self.root.id, 'tag_id': self.tag1.id})
         self.assertAjaxSuccess(r)
-        self.assertEqual(associated_cats + 1, self.tag1.categories.filter(tree_id=1, lft=1).count())
+        self.assertEqual(associated_cats + 1, self.tag1.categories.filter(id=self.root.id).count())
 
     # `get_tag_categories` view tests
 
@@ -306,7 +303,7 @@ class ViewsTests(AjaxTests):
         # Non-empty category set
         r = self.ajax_post_json(reverse('get_tag_categories'), {'tag_id': self.tag2.id})
         data = self.assertAjaxSuccess(r)
-        self.assertEqual(data['cats'], [{'id': [self.c1.tree_id,self.c1.lft], 'name': self.c1.name}])
+        self.assertEqual(data['cats'], [{'id': self.c1.id, 'name': self.c1.name}])
 
     # `remove_tag_from_category` view tests
 
@@ -317,7 +314,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(
             reverse('remove_tag_from_category'),
             {
-                'cat_id': (self.c1.tree_id, self.c1.lft),
+                'cat_id': self.c1.id,
                 'tag_id': self.tag2.id
             }
         )
@@ -330,7 +327,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(
             reverse('remove_tag_from_category'),
             {
-                'cat_id': (self.c1.tree_id, self.c1.lft),
+                'cat_id': self.c1.id,
                 'tag_id': self.tag2.id
             }
         )
@@ -346,7 +343,7 @@ class ViewsTests(AjaxTests):
         self.assertTrue("Missing required parameter" in data['message'])
 
         r = self.ajax_post_json(reverse('remove_tag_from_category'),
-                {'cat_id': (self.c1.tree_id, self.c1.lft)})
+                {'cat_id': self.c1.id})
         data = self.assertAjaxFailure(r)
         self.assertTrue("Missing required parameter" in data['message'])
 
@@ -356,7 +353,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(
             reverse('remove_tag_from_category'),
             {
-                'cat_id': (self.c1.tree_id, self.c1.lft),
+                'cat_id': self.c1.id,
                 'tag_id': self.tag2.id
             }
         )
@@ -368,7 +365,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(
             reverse('remove_tag_from_category'),
             {
-                'cat_id': (100, 20),
+                'cat_id': 13524,
                 'tag_id': self.tag2.id
             }
         )
@@ -378,7 +375,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(
             reverse('remove_tag_from_category'),
             {
-                'cat_id': (self.c1.tree_id, self.c1.lft),
+                'cat_id': self.c1.id,
                 'tag_id': 1000
             }
         )
@@ -400,7 +397,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(
             reverse('delete_category'),
             {
-                'id': (100, 20)
+                'id': 223344
             }
         )
         data = self.assertAjaxFailure(r)
@@ -410,11 +407,10 @@ class ViewsTests(AjaxTests):
         """Succesful deletion of a category without child categories nor associated tags."""
         self.client.login(username='owner', password='secret')
         obj = Category.objects.get(name=u'Child2')
-        obj_id = (obj.tree_id, obj.lft)
         r = self.ajax_post_json(
             reverse('delete_category'),
             {
-                'id': obj_id
+                'id': obj.id
             }
         )
         self.assertAjaxSuccess(r)
@@ -423,11 +419,10 @@ class ViewsTests(AjaxTests):
         """Error is reported if deletion of a the category with child categories is attempted."""
         self.client.login(username='owner', password='secret')
         obj = Category.objects.get(name=u'Child1')
-        obj_id = (obj.tree_id, obj.lft)
         r = self.ajax_post_json(
             reverse('delete_category'),
             {
-                'id': obj_id
+                'id': obj.id
             }
         )
         self.assertEqual(r.status_code, 200)
@@ -442,8 +437,7 @@ class ViewsTests(AjaxTests):
         """Deletion of a the category with associated tags."""
         self.client.login(username='owner', password='secret')
         obj = Category.objects.get(name=u'Child3')
-        obj_id = (obj.tree_id, obj.lft)
-        r = self.ajax_post_json(reverse('delete_category'), {'id': obj_id})
+        r = self.ajax_post_json(reverse('delete_category'), {'id': obj.id})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         try:
@@ -457,7 +451,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(
             reverse('delete_category'),
             {
-                'id': obj_id,
+                'id': obj.id,
                 'token': data['token']
             }
         )
@@ -468,8 +462,7 @@ class ViewsTests(AjaxTests):
         """Deletion of a the category with associated tags."""
         self.client.login(username='owner', password='secret')
         obj = Category.objects.get(name=u'Child3')
-        obj_id = (obj.tree_id, obj.lft)
-        r = self.ajax_post_json(reverse('delete_category'), {'id': obj_id})
+        r = self.ajax_post_json(reverse('delete_category'), {'id': obj.id})
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/json')
         self.assertContains(r, "need_confirmation")
@@ -483,7 +476,7 @@ class ViewsTests(AjaxTests):
         r = self.ajax_post_json(
             reverse('delete_category'),
             {
-                'id': obj_id,
+                'id': obj.id,
                 'token': 'this is a fake token'
             }
         )
