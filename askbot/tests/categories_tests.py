@@ -250,9 +250,8 @@ class ViewsTests(AjaxTests):
         """Add tag to category: should fail when no IDs are passed."""
         self.client.login(username='owner', password='secret')
         r = self.ajax_post_json(reverse('add_tag_to_category'), {'cat_id': (1, 1)})
-        self.assertEqual(r.status_code, 200)
-        self.assertEqual(r['Content-Type'], 'application/json')
-        self.assertContains(r, "Missing required parameter")
+        data = self.assertAjaxFailure(r)
+        self.assertTrue("Missing required parameter" in data['message'])
 
         r = self.ajax_post_json(reverse('add_tag_to_category'), {'tag_id': self.tag1.id})
         data = self.assertAjaxFailure(r)
