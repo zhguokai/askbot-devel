@@ -58,8 +58,10 @@ DEFAULT_PAGE_SIZE = 60
 def index(request):#generates front page - shows listing of questions sorted in various ways
     """index view mapped to the root url of the Q&A site
     """
-    return HttpResponseRedirect(reverse('questions'))
+    #return HttpResponseRedirect(reverse('questions', kwargs={'category_name':''}))
+    return HttpResponseRedirect(reverse('questions', kwargs=dict(category_name='')))
 
+#def questions(request, category_name):
 def questions(request, category_name):
     """
     List of Questions, Tagged questions, and Unanswered questions.
@@ -304,7 +306,7 @@ def questions(request, category_name):
         'tab_id' : search_state.sort,
         'tags' : related_tags,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
-        'current_category': category.name,
+        'current_category': category_name,
     }
 
     assert(request.is_ajax() == False)
