@@ -9,7 +9,8 @@ from mptt.templatetags.mptt_tags import cache_tree_children
 #from django.db import IntegrityError
 from django.core import exceptions
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import (Http404, HttpResponse, HttpResponseRedirect,
+        HttpResponseForbidden, HttpResponseNotAllowed)
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 
@@ -412,3 +413,34 @@ def delete_category(request):
             response_data['status'] = 'success'
     data = simplejson.dumps(response_data)
     return HttpResponse(data, mimetype="application/json")
+
+def get_categories(request):
+    """
+    Client-side autocomplete helper view.
+    Get a listing of all categories. Meant to be called using ajax and GET HTTP
+    method. Available to the admin user only.
+    JSON request: N/A
+    response: 'text/plain' list of lines with format '<cat name>|<cat_id>'
+    """
+    # TODO: How should we report errors to the client? using text? JSON?
+    if not askbot_settings.ENABLE_CATEGORIES:
+        raise Http404
+    if request.method != 'GET':
+        return HttpResponseNotAllowed(['GET'])
+    if not request.user.is_authenticated():
+        return HttpResponseForbidden(
+            _('Sorry, but anonymous users cannot access this view')
+        )
+    if not request.user.is_administrator():
+        return HttpResponseForbidden(
+            _('Sorry, but you cannot access this view')
+        )
+    if not request.is_ajax():
+        return HttpResponseForbidden(
+            _('Sorry, but you cannot access this view')
+        )
+    response = HttpResponse(mimetype="text/plain")
+    vqs = Category.objects.order_by('name').values('name', 'id')
+    for vdict in vqs:
+        response.write('%(name)s|%(id)d\n' % vdict)
+    return response

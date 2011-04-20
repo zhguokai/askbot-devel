@@ -68,7 +68,7 @@ class EmptyTreeTests(TestCase):
 class AjaxTests(TestCase):
     def ajax_get(self, path, data={}, follow=False, **extra):
         extra.update({'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'})
-        return self.client(path, data, follow, **extra)
+        return self.client.get(path, data, follow, **extra)
 
     def ajax_post(self, path, data={}, content_type='application/x-www-form-urlencoded', follow=False,
             **extra):
@@ -311,6 +311,7 @@ class ViewsTests(AjaxTests):
     def test_remove_tag_category__no_permission(self):
         """Only administrator and moderator users should be able to remove a
         tag from a category via the view."""
+        # a normal user
         self.client.login(username='user1', password='123')
         r = self.ajax_post_json(
             reverse('remove_tag_from_category'),
@@ -485,6 +486,38 @@ class ViewsTests(AjaxTests):
         self.assertFalse('token' in data)
         self.assertTrue("Invalid token provided" in data['message'])
 
+    # `get_categories` view tests
+
+    def test_category_autocomplete_helper(self):
+        # No GET HTTP method
+        r = self.client.post(reverse('categories_list'))
+        self.assertEqual(r.status_code, 405)
+
+        # No ajax
+        r = self.client.get(reverse('categories_list'))
+        self.assertEqual(r.status_code, 403)
+
+        # anonymous user
+        r = self.ajax_get(reverse('categories_list'))
+        self.assertEqual(r.status_code, 403)
+
+        # a normal user
+        self.client.login(username='user1', password='123')
+        r = self.ajax_get(reverse('categories_list'))
+        self.assertEqual(r.status_code, 403)
+        self.client.logout()
+
+        # a moderator user
+        self.client.login(username='mod1', password='modpw')
+        r = self.ajax_get(reverse('categories_list'))
+        self.assertEqual(r.status_code, 403)
+        self.client.logout()
+
+        # an admin user
+        self.client.login(username='owner', password='secret')
+        r = self.ajax_get(reverse('categories_list'))
+        self.assertEqual(r.status_code, 200)
+
 
 class QuestionFilteringTests(TestCase):
     def setUp(self):
@@ -619,7 +652,7 @@ class QuestionFilteringTests(TestCase):
         self.assertContains(r, u"Question #5")
 
     def test_filter_manycat_1tag_1q(self):
-        """One questions associated to several categories via one several tags. Filter by each of the categories"""
+        """One question associated to several categories via one several tags. Filter by each of the categories"""
         for cat in (5, 6):
             r = self.client.get('/%scategory%d' % (_('questions/'), cat))
             self.assertEqual(200, r.status_code)
