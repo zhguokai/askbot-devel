@@ -304,7 +304,7 @@ def questions(request, category_name):
         'tab_id' : search_state.sort,
         'tags' : related_tags,
         'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
-        'current_category': category,
+        'current_category': category.name,
     }
 
     assert(request.is_ajax() == False)
