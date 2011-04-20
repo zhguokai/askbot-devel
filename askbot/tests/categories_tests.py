@@ -2,11 +2,12 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import simplejson
+from django.utils.translation import ugettext as _
 
 from categories.models import Category
 
 from askbot.conf import settings as askbot_settings
-from askbot.models import Tag
+from askbot.models import Tag, Question
 from askbot.tests.utils import create_user
 from askbot.views.cats import generate_tree
 
@@ -483,3 +484,145 @@ class ViewsTests(AjaxTests):
         data = self.assertAjaxFailure(r)
         self.assertFalse('token' in data)
         self.assertTrue("Invalid token provided" in data['message'])
+
+
+class QuestionFilteringTests(TestCase):
+    def setUp(self):
+        # An administrator user
+        owner = User.objects.create_user(username='owner', email='owner@example.com', password='secret')
+        owner.is_staff = True
+        owner.is_superuser = True
+        owner.save()
+        # A moderator
+        #mod1 = create_user(username='mod1', email='mod1@example.com', status='m')
+        #mod1.set_password('modpw')
+        #mod1.save()
+        # A normal user
+        user1 = User.objects.create_user(username='user1', email='user1@example.com', password='123')
+        # Setup a small category tree
+        root = Category.objects.create(name=u'Root')
+        c1 = Category.objects.create(name=u'category1', parent=root)
+        Category.objects.create(name=u'category2', parent=c1)
+        c3 = Category.objects.create(name=u'category3', parent=root)
+        c4 = Category.objects.create(name=u'category4', parent=root)
+        c5 = Category.objects.create(name=u'category5', parent=root)
+        c6 = Category.objects.create(name=u'category6', parent=root)
+
+        tag1 = Tag.objects.create(name=u'tag1', created_by=owner)
+        tag2 = Tag.objects.create(name=u'tag2', created_by=owner)
+        tag2.categories.add(c1)
+        tag3 = Tag.objects.create(name=u'tag3', created_by=owner)
+        tag3.categories.add(c3)
+        tag4 = Tag.objects.create(name=u'tag4', created_by=owner)
+        # TODO: Why doesn't ``c4.tags.add(tag5, tag6)`` work?
+        tag5 = Tag.objects.create(name=u'tag5', created_by=owner)
+        tag5.categories.add(c4)
+        tag6 = Tag.objects.create(name=u'tag6', created_by=owner)
+        tag6.categories.add(c4)
+        tag7 = Tag.objects.create(name=u'tag7', created_by=owner)
+        tag7.categories.add(c5, c6)
+
+        q1 = Question.objects.create(title=u'Question #1', author=user1, last_activity_by=user1)
+        q1.tags.add(tag1)
+        q2 = Question.objects.create(title=u'Question #2', author=user1, last_activity_by=user1)
+        q2.tags.add(tag1)
+        q3 = Question.objects.create(title=u'Question #3', author=user1, last_activity_by=user1)
+        q4 = Question.objects.create(title=u'Question #4', author=user1, last_activity_by=user1)
+        tag3.questions.add(q3, q4)
+        q5 = Question.objects.create(title=u'Question #5', author=user1, last_activity_by=user1)
+        q5.tags.add(tag5, tag6)
+        q6 = Question.objects.create(title=u'Question #6', author=user1, last_activity_by=user1)
+        q6.tags.add(tag5, tag6)
+
+        #
+        #                              tag1 <=*====*=> question q1
+        #
+        # category1         <=*====*=> tag2 <=*====*=> question q2
+        #     |
+        #      -- category2
+        #
+        # category3         <=*====*=> tag3 <=*==*===> question q3
+        #                                         \==> question q4
+        #
+        # category4         <=*==*===> tag5 <===*==*=> question q5
+        #                         \==> tag6 <==/
+        #
+        # category5         <===*==*=> tag7 <=*====*=> question q6
+        # category6         <==/
+        #
+
+        askbot_settings.update('ENABLE_CATEGORIES', True)
+
+    def test_root_url_redirect_success(self):
+        """Home page should redirect to the questions page without errors"""
+        r = self.client.get('/', follow=True)
+        self.assertRedirects(r, '/%s' % _('questions/'))
+
+    def test_no_category_simple_success(self):
+        """Questions page should work without errors when no category is specified"""
+        r = self.client.get('/%s' % _('questions/'))
+        self.assertEqual(200, r.status_code)
+
+        # Same thing when master categories switch is off
+        askbot_settings.update('ENABLE_CATEGORIES', False)
+        r = self.client.get('/%s' % _('questions/'))
+        self.assertEqual(200, r.status_code)
+
+    def test_categories_feature_off(self):
+        """Categories filtering shouldn't work when categories features is turned off"""
+        # Master categories switch -> off
+        askbot_settings.update('ENABLE_CATEGORIES', False)
+        r = self.client.get('/%scategory1' % _('questions/'))
+        self.assertEqual(404, r.status_code)
+
+    def test_categories_success(self):
+        """Basic question filtering by category works"""
+        # Category exists
+        r = self.client.get('/%scategory2' % _('questions/'))
+        self.assertEqual(200, r.status_code)
+
+        # Category doesn't exist
+        r = self.client.get('/%sIDontExist' % _('questions/'))
+        self.assertEqual(404, r.status_code)
+
+    def test_no_filtering(self):
+        """All questions should be shown when no category filtering is in effect"""
+        r = self.client.get('/%s' % _('questions/'))
+        self.assertEqual(200, r.status_code)
+        for q in range(1, 6):
+            self.assertContains(r, u"Question #%d" % q)
+
+    def test_filtering(self):
+        """Question filtering by category"""
+        # Empty category
+        r = self.client.get('/%scategory5' % _('questions/'))
+        self.assertEqual(200, r.status_code)
+        for q in range(1, 6):
+            self.assertNotContains(r, u"Question #%d" % q)
+
+    def test_filter_1tag_manyq(self):
+        """Filter several questions associated to a category via one tag."""
+        r = self.client.get('/%scategory3' % _('questions/'))
+        self.assertEqual(200, r.status_code)
+        self.assertNotContains(r, u"Question #1")
+        self.assertNotContains(r, u"Question #2")
+        self.assertNotContains(r, u"Question #5")
+        self.assertContains(r, u"Question #3")
+        self.assertContains(r, u"Question #4")
+
+    def test_filter_manytag_1q(self):
+        """Filter one question associated to a category via several tags."""
+        r = self.client.get('/%scategory4' % _('questions/'))
+        self.assertEqual(200, r.status_code)
+        for q in range(1, 5):
+            self.assertNotContains(r, u"Question #%d" % q)
+        self.assertContains(r, u"Question #5")
+
+    def test_filter_manycat_1tag_1q(self):
+        """One questions associated to several categories via one several tags. Filter by each of the categories"""
+        for cat in (5, 6):
+            r = self.client.get('/%scategory%d' % (_('questions/'), cat))
+            self.assertEqual(200, r.status_code)
+            for q in range(1, 6):
+                self.assertNotContains(r, u"Question #%d" % q)
+            self.assertContains(r, u"Question #6")

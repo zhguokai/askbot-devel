@@ -58,10 +58,8 @@ DEFAULT_PAGE_SIZE = 60
 def index(request):#generates front page - shows listing of questions sorted in various ways
     """index view mapped to the root url of the Q&A site
     """
-    #return HttpResponseRedirect(reverse('questions', kwargs={'category_name':''}))
     return HttpResponseRedirect(reverse('questions', kwargs=dict(category_name='')))
 
-#def questions(request, category_name):
 def questions(request, category_name):
     """
     List of Questions, Tagged questions, and Unanswered questions.
@@ -72,17 +70,17 @@ def questions(request, category_name):
     if request.method == 'POST':
         raise Http404
 
-    if askbot.conf.settings.ENABLE_CATEGORIES:
-        if category_name:
+    if category_name:
+        if askbot.conf.settings.ENABLE_CATEGORIES:
             try:
                 category = Category.objects.get(name=category_name)
             except Category.DoesNotExist:
                 raise Http404
         else:
-            category = None
+            # Maybe we can redirect to the bare /questions/ URL instead
+            raise Http404
     else:
-        # Maybe we can redirect to the bare /questions/ URL instead
-        raise Http404
+        category = None
 
     #update search state
     form = AdvancedSearchForm(request.GET)
