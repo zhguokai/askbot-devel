@@ -22,6 +22,8 @@ from django.core.urlresolvers import reverse
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
 
+from categories.models import Category
+
 import askbot
 from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
@@ -58,7 +60,7 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """
     return HttpResponseRedirect(reverse('questions'))
 
-def questions(request, category_name=None):
+def questions(request, category_name):
     """
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
@@ -69,10 +71,10 @@ def questions(request, category_name=None):
         raise Http404
 
     if askbot.conf.settings.ENABLE_CATEGORIES:
-        if category_name is not None:
+        if category_name:
             try:
-                category = models.Category.objects.get(name=category_name)
-            except models.Category.DoesNotExist:
+                category = Category.objects.get(name=category_name)
+            except Category.DoesNotExist:
                 raise Http404
         else:
             category = None

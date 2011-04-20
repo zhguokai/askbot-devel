@@ -150,7 +150,7 @@ class QuestionQuerySet(models.query.QuerySet):
         #a circular import dependency...
         from askbot.conf import settings as askbot_settings
         # Filter out tags not associated with the requested category
-        if category is not None and askbot_settings.ENABLE_CATEGORIES:
+        if category and askbot_settings.ENABLE_CATEGORIES:
             category_tags = category.tags.all()
             for tag in category_tags:
                 qs = qs.filter(tags__name = tag)
