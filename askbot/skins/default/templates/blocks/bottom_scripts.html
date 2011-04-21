@@ -50,19 +50,11 @@
 <script type="text/javascript" src="{{ "/js/jquery.ui.menu.js"|media }}"></script>
 
 <script type="text/javascript">
-  function isEmpty(x){
-    for (i in x){return false;}
-    return true;
-  }
-  askbot['data']['categories'] = {{ cats_tree }};
-  if (!isEmpty(askbot['data']['categories'])){
+    askbot['data']['categories'] = {% if cats_tree %}[{{ cats_tree }}]{% else %}null{% endif %};
     var cats = new CategoryTree();
     cats.setData(askbot['data']['categories']);
     cats.decorate($('#ab-cats'));
     $(cats.getElement()).menu();
-  } else {
-    $('#ab-cats').hide();
-  }
 </script>
 {% endif %}
 <script type="text/javascript">

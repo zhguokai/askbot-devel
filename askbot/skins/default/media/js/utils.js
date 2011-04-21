@@ -494,18 +494,60 @@ EditableString.prototype.createDom = function(){
 
 /**
  * Category widget
+ * @constructor
  * @inherits EditableString
  */
-var Category = function(){
+var Category = function(node_data){
+    EditableString.call(this);
+    /** 
+     * Category id
+     * @type {integer}
+     */
+    this.id = node_data['id'];
+    /**
+     * Category name
+     * @type {string}
+     */
+    this.name = node_data['name'];
+    /**
+     * source data for the children
+     * @private
+     * @type {Object} 
+     */
+    this._children = node_data['children'];
+
 };
 inherits(Category, EditableString);
 
-Category.prototype.addSubCategory = function(child){
+/** creates dom for a single category
+ * does not build subcategories
+ */
+Category.prototype.createDom = function(){
+    //create the text element for Category
+    var text_class = Category.superClass_;
+    text_class.setText.call(this, this.name);
+    text_class.setState.call(this, 'DISPLAY');
+    //set editable - if user has privilege to edit category
+    var text_element = text_class.getElement.call(this);
+
+    //add delete handler and button - if user has privilege to delete
+    
+    //create the actual element and append others to it
+    this.element = this.makeElement('li');
+    this.element.append(text_element);
+};
+
+/**
+ * Initializes subtrees and treir DOM's
+ */
+Category.prototype.buildSubtree = function(){
+    var subtree = new CategoryTree();
+    subtree.setData(this._children);
+    this._element.append(subtree.getElement());
 };
 
 var CategoryTree = function(){
     WrappedElement.call(this);
-    this._handler = null;
 };
 inherits(CategoryTree, WrappedElement);
 
@@ -513,51 +555,31 @@ CategoryTree.prototype.setData = function(data){
     this._data = data;
 };
 
-function recurse(data){
-    var c = '<li>';
-    $.each(data, function(index, value){
-      if (index == 'name'){
-        c += '<a href="#">' + value + '</a>';
-      } else {
-        if (index == 'children'){
-          if (value.length){
-            c += '<ul>';
-            $.each(value, function(ndx, val){
-              c += recurse(val);
-            });
-            c += '</ul>';
-          }
-        }
-      }
-    });
-    c += '</li>';
-    return c;
-};
-
+/**
+ * decorates any element by replacing its content
+ * with the nested <ul> HTML code representing the 
+ * category tree
+ */
 CategoryTree.prototype.decorate = function(element){
-    //decorate should take an existing element and 
-    //change it and possibly, add to it
-
-    //for example - the original div contains string
-    //"everything" and nothing else.
-    //you can inside that same div insert another one to
-    //hold "everything" and after, to the same 
-    //top level div add the <ul>
-    var me = this.makeElement('ul');//WrappedElement has this method
-    this._element = me;//should be this._element = element
-    //the "me" can be made a separate var on "this"
-
-    //todo: we need dom of these built via
-    //the jQuery api, the innerHTML assignment
-    //will not work, since we will have to elaborate
-    //more on what is inside the tree, and add event listeners
-    //to the categories and the levels of the tree
-    me.html(recurse(this._data));
-    element.html(me);
+    if (this._data === null){
+        return;
+    }
+    var tree_element = this.getElement();//calls this.createDom()
+    this._element = element;//need to replace element
+    this._element.empty();
+    this._element.append(tree_element);
 };
 
+/**
+ * creates the nested HTML <ul> which represents
+ * the category tree. 
+ */
 CategoryTree.prototype.createDom = function(){
-    var element = $('<div></div>');
-    element.addClass('category-tree-menu');
-    this.decorate(element);
+    this._element = this.makeElement('ul');
+    var my_element = this._element;
+    $.each(this._data, function(idx, child_node){
+        var category = new Category(child_node);
+        my_element.append(category.getElement());
+        category.buildSubtree();
+    });
 };
