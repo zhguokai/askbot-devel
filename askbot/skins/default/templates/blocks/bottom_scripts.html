@@ -55,6 +55,10 @@
     cats.setData(askbot['data']['categories']);
     ($('#ab-cats')).append(cats.getElement());
     cats.getElement().menu();
+    cats.getElement().menu('closeAll');
+    $('#ab-cats').hover(function(){
+        cats.getElement().menu('showFirst');
+    });
     cats.setStateTransitionEventHandler(
         'EDIT',
         function(){

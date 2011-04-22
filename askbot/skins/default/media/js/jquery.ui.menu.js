@@ -279,11 +279,24 @@ $.widget("ui.menu", {
     },
     
     closeAll: function() {
+        this.element.hide();
         this.element
          .find("ul").hide().end()
          .find("a.ui-state-active").removeClass("ui-state-active");
         this.blur();
         this.activeMenu = this.element;
+    },
+
+    toggleAll: function() {
+        if (this.element.css('display') === 'none'){
+            this.showFirst();
+        } else {
+            this.closeAll();
+        }
+    },
+
+    showFirst: function() {
+        this.element.show();
     },
     
     _close: function() {
