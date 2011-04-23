@@ -1,0 +1,74 @@
+{%- macro post_controls(post = None, user = None) -%}
+ 
+{% if post.post_type == 'question' %}
+
+                <div id="question-controls" class="post-controls">
+                    {% set pipe=joiner('<span class="sep">|</span>') %}
+                    {% if user|can_edit_post(post) %}{{ pipe() }}
+                        <a href="{% url edit_question post.id %}">{% trans %}edit{% endtrans %}</a>
+                    {% endif %}
+                    {% if user|can_retag_question(post) %}{{ pipe() }}
+                        <a id="retag" href="{% url retag_question post.id %}">{% trans %}retag{% endtrans %}</a>
+                        <script type="text/javascript">
+                            var retagUrl = "{% url retag_question post.id %}";
+                        </script>
+                    {% endif %}
+                    {% if post.closed %}
+                        {% if user|can_reopen_question(post) %}{{ pipe() }}
+                        <a href="{% url reopen post.id %}">{% trans %}reopen{% endtrans %}</a>
+                        {% endif %}
+                    {% else %}
+                        {% if user|can_close_question(post) %}{{ pipe() }}
+                        <a href="{% url close post.id %}">{% trans %}close{% endtrans %}</a>
+                        {% endif %}
+                    {% endif %}
+                    {% if user|can_flag_offensive(post) %}{{ pipe() }}
+                    <span id="question-offensive-flag-{{ post.id }}" class="offensive-flag" 
+                        title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
+                        <a>{% trans %}flag offensive{% endtrans %}</a>
+                        {% if user|can_see_offensive_flags(post) %}
+                            <span class="darkred">{% if post.offensive_flag_count > 0 %}({{ post.offensive_flag_count }}){% endif %}</span>
+                        {% endif %}
+                    </span>
+                    {% endif %}
+                    {% if user|can_delete_post(question) %}{{ pipe() }}
+                        <a id="question-delete-link-{{question.id}}">{% if post.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
+                    {% endif %} 
+
+                </div>
+{% else %}
+
+  <div class="answer-controls post-controls">
+                                    {% set pipe=joiner('<span class="sep">|</span>') %}
+                                    <span class="linksopt">{{ pipe() }}
+                                        <a 
+                                            href="{{ answer.get_absolute_url() }}" 
+                                            title="{% trans %}answer permanent link{% endtrans %}">
+                                            {% trans %}permanent link{% endtrans %}
+                                        </a>
+                                    </span>
+                                    {% if user|can_edit_post(answer) %}{{ pipe() }}
+                                    <span class="action-link"><a href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a></span>
+                                    {% endif %}
+                                    {% if user|can_flag_offensive(answer) %}{{ pipe() }}
+                                    <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag" 
+                                        title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
+                                        <a>{% trans %}flag offensive{% endtrans %}</a>
+                                        {% if user|can_see_offensive_flags(answer) %}
+                                            <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
+                                        {% endif %}
+                                    </span>
+                                    {% endif %}
+                                    {% if user|can_delete_post(answer) %}{{ pipe() }}
+                                        {% spaceless %}
+                                        <span class="action-link">
+                                            <a id="answer-delete-link-{{answer.id}}">
+                                            {% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
+                                        </span>
+                                        {% endspaceless %}
+                                    {% endif %}  
+
+                                </div>
+
+{% endif %}
+{%- endmacro -%}
