@@ -13,7 +13,8 @@
  */
 (function($) {
     
-var idIncrement = 0;
+var idIncrement = 0;//id fragment
+var menuStack = [];//stack of open menues
 
 $.widget("ui.menu", {
     defaultElement: "<ul>",
@@ -65,10 +66,11 @@ $.widget("ui.menu", {
                 if ( self.isInactive() ) {
                     return;
                 }
-                var target = $( event.target ).closest( ".ui-menu-item" );
-                if ( target.length ) {
-                    self.blur( event );
-                }
+                self.blur( event );
+                //var target = $( event.target ).closest( ".ui-menu-item" );
+                //if ( target.length ) {
+                //    self.blur( event );
+                //}
             });
         this.refresh();
         
@@ -202,8 +204,13 @@ $.widget("ui.menu", {
             .addClass( "ui-menu-item" )
             .attr( "role", "menuitem" );
 
-        items.bind('mouseover',
-        
+        var self = this;
+        /* 
+         * clear the timer that is set to close the menues on mouseout
+         * when the mouseout event happens upon mousing over the menu item
+         * basically removing the false alarm
+         */
+        items.bind('mouseover', function(){ clearTimer(self.blur_timer) });
         items.children( this.options.item_selector )
             .addClass( "ui-corner-all" )
             .attr( "tabIndex", -1 );
@@ -258,6 +265,12 @@ $.widget("ui.menu", {
         
         clearTimeout(this.timer);
         this.blur_timer = setTimeout(
+            /*
+             * need to prevent spurious mouseout from the menu when
+             * mouse moves over the menu item, so set the timer
+             * and on the menu item we'll clear the timer and
+             * this handler will not fire
+             */
             function(){
                 this.active.children( this.options.item_selector ).removeClass( "ui-state-focus" );
                 this.active.hide();
@@ -267,7 +280,7 @@ $.widget("ui.menu", {
                 this._trigger( "blur", event );
                 this.active = null;
             },
-            200
+            50
         );
     },
 
@@ -279,7 +292,10 @@ $.widget("ui.menu", {
             self._open(submenu);
         }, self.delay);
     },
-    
+    /** 
+     * opens a submenu after determining its position
+     * on the screen
+     */
     _open: function(submenu) {
         this.element.find(".ui-menu").not(submenu.parents()).hide();
             
@@ -297,6 +313,8 @@ $.widget("ui.menu", {
         ).addClass(
             "ui-state-active"
         );
+
+        menuStack.push(submenu);
     },
     
     closeAll: function() {
@@ -326,6 +344,7 @@ $.widget("ui.menu", {
          .find("ul").hide().end()
          .find(this.options.item_selector + ".ui-state-active")
          .removeClass("ui-state-active");
+        menuStack.pop();
     },
 
     left: function(event) {
