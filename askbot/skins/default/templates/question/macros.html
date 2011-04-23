@@ -1,5 +1,5 @@
 {%- macro post_controls(post = None, user = None) -%}
-    <div id="{{ post.post_type }}-controls" class="post-controls">
+<div id="{{ post.post_type }}-controls" class="post-controls">
     {% if post.post_type == 'question' %}
         {% set pipe=joiner('<span class="sep">|</span>') %}
         {% if user|can_edit_post(post) %}{{ pipe() }}
