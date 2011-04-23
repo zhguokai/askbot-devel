@@ -45,7 +45,7 @@
     {% endif %}
 
 {% if user|can_flag_offensive(post) %}{{ pipe() }}
-                    <span id="question-offensive-flag-{{ post.id }}" class="offensive-flag" 
+                    <span id="{{post.post_type}}-offensive-flag-{{ post.id }}" class="offensive-flag" 
                         title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
                         <a>{% trans %}flag offensive{% endtrans %}</a>
                         {% if user|can_see_offensive_flags(post) %}
