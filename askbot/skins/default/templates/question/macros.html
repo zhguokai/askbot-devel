@@ -39,25 +39,23 @@
                                     {% if user|can_edit_post(post) %}{{ pipe() }}
                                    <a href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a>
                                     {% endif %}
-                                    {% if user|can_flag_offensive(post) %}{{ pipe() }}
-                                    <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag" 
-                                        title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
-                                        <a>{% trans %}flag offensive{% endtrans %}</a>
-                                        {% if user|can_see_offensive_flags(post) %}
-                                            <span class="darkred">{% if post.offensive_flag_count > 0 %}({{ post.offensive_flag_count }}){% endif %}</span>
-                                        {% endif %}
-                                    </span>
-
-                                    {% endif %}
-                                    {% if user|can_delete_post(post) %}{{ pipe() }}
-                                        {% spaceless %}
-                                            <a id="{{post.post_type}}-delete-link-{{post.id}}">
-                                            {% if post.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
-
-                                        {% endspaceless %}
-                                    {% endif %}  
-
+                                   
                                 </div>
 
     {% endif %}
+
+{% if user|can_flag_offensive(post) %}{{ pipe() }}
+                    <span id="question-offensive-flag-{{ post.id }}" class="offensive-flag" 
+                        title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
+                        <a>{% trans %}flag offensive{% endtrans %}</a>
+                        {% if user|can_see_offensive_flags(post) %}
+                            <span class="darkred">{% if post.offensive_flag_count > 0 %}({{ post.offensive_flag_count }}){% endif %}</span>
+                        {% endif %}
+                    </span>
+                    {% endif %}
+                    {% if user|can_delete_post(post) %}{{ pipe() }}
+                        <a id="{{post.post_type}}-delete-link-{{post.id}}">{% if post.deleted %}{% trans %}undelete{% endtrans %}{% else %}
+	{% trans %}delete{% endtrans %}{% endif %}</a>
+                    {% endif %} 
+
 {%- endmacro -%}
