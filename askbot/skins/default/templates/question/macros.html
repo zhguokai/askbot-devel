@@ -1,6 +1,6 @@
 {%- macro post_controls(post = None, user = None) -%}
  
-{% if post.post_type == 'question' %}
+    {% if post.post_type == 'question' %}
 
                 <div id="question-controls" class="post-controls">
                     {% set pipe=joiner('<span class="sep">|</span>') %}
@@ -31,44 +31,43 @@
                         {% endif %}
                     </span>
                     {% endif %}
-                    {% if user|can_delete_post(question) %}{{ pipe() }}
-                        <a id="question-delete-link-{{question.id}}">{% if post.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
+                    {% if user|can_delete_post(post) %}{{ pipe() }}
+                        <a id="{{post.post_type}}-delete-link-{{post.id}}">{% if post.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
                     {% endif %} 
 
                 </div>
-                    {% else %}
+    {% else %}
 
   <div class="answer-controls post-controls">
                                     {% set pipe=joiner('<span class="sep">|</span>') %}
                                     <span class="linksopt">{{ pipe() }}
                                         <a 
-                                            href="{{ answer.get_absolute_url() }}" 
+                                            href="{{ post.get_absolute_url() }}" 
                                             title="{% trans %}answer permanent link{% endtrans %}">
                                             {% trans %}permanent link{% endtrans %}
                                         </a>
                                     </span>
-                                    {% if user|can_edit_post(answer) %}{{ pipe() }}
-                                    <span class="action-link"><a href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a></span>
+                                    {% if user|can_edit_post(post) %}{{ pipe() }}
+                                   <a href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a>
                                     {% endif %}
-                                    {% if user|can_flag_offensive(answer) %}{{ pipe() }}
+                                    {% if user|can_flag_offensive(post) %}{{ pipe() }}
                                     <span id="answer-offensive-flag-{{ answer.id }}" class="offensive-flag" 
                                         title="{% trans %}report as offensive (i.e containing spam, advertising, malicious text, etc.){% endtrans %}">
                                         <a>{% trans %}flag offensive{% endtrans %}</a>
-                                        {% if user|can_see_offensive_flags(answer) %}
-                                            <span class="darkred">{% if answer.offensive_flag_count > 0 %}({{ answer.offensive_flag_count }}){% endif %}</span>
+                                        {% if user|can_see_offensive_flags(post) %}
+                                            <span class="darkred">{% if post.offensive_flag_count > 0 %}({{ post.offensive_flag_count }}){% endif %}</span>
                                         {% endif %}
                                     </span>
                                     {% endif %}
-                                    {% if user|can_delete_post(answer) %}{{ pipe() }}
+                                    {% if user|can_delete_post(post) %}{{ pipe() }}
                                         {% spaceless %}
-                                        <span class="action-link">
-                                            <a id="answer-delete-link-{{answer.id}}">
-                                            {% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
-                                        </span>
+                                            <a id="{{post.post_type}}-delete-link-{{post.id}}">
+                                            {% if post.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
+
                                         {% endspaceless %}
                                     {% endif %}  
 
                                 </div>
 
-                    {% endif %}
+    {% endif %}
 {%- endmacro -%}
