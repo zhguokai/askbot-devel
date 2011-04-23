@@ -126,6 +126,10 @@ var inherits = function(childCtor, parentCtor) {
 /* wrapper around jQuery object */
 var WrappedElement = function(){
     this._element = null;
+    /**
+     * @private
+     * @type {boolean}
+     */
     this._in_document = false;
 };
 WrappedElement.prototype.setElement = function(element){
@@ -133,6 +137,9 @@ WrappedElement.prototype.setElement = function(element){
 };
 WrappedElement.prototype.createDom = function(){
     this._element = $('<div></div>');
+    if (this._css_class){
+        this.addClass(this._css_class);
+    }
 };
 WrappedElement.prototype.getElement = function(){
     if (this._element === null){
@@ -539,7 +546,7 @@ EditableString.prototype.decorate = function(element){
 
 EditableString.prototype.createDom = function(){
 
-    this._element = this.makeElement('dom');
+    this._element = this.makeElement('div');
 
     this._display_block = this.makeElement('div');
     this._element.append(this._display_block);
@@ -618,6 +625,7 @@ inherits(Category, WrappedElement);
 Category.prototype.createDom = function(){
     //create the text element for Category
     this._element = this.makeElement('li');
+    this._element.addClass('ab-category');
 
     var category_text = new EditableString();
     category_text.setText(this.name);

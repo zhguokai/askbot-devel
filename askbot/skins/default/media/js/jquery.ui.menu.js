@@ -19,6 +19,7 @@ $.widget("ui.menu", {
     defaultElement: "<ul>",
     delay: 150,
     options: {
+        item_selector: 'a',
         position: {
             my: "left top",
             at: "right top"
@@ -35,7 +36,8 @@ $.widget("ui.menu", {
                 role: "listbox"
             })
             .bind( "click.menu", function( event ) {
-                var item = $( event.target ).closest( ".ui-menu-item:has(a)" );
+                var item = $( event.target )
+                    .closest( ".ui-menu-item:has(" + this.options.item_selector + ")" );
                 if ( self.isInactive() ) {
                     return false;
                 }
@@ -70,6 +72,7 @@ $.widget("ui.menu", {
             });
         this.refresh();
         
+        //handling keys
         this.element.attr( "tabIndex", 0 ).bind( "keydown.menu", function( event ) {
             if ( self.isInactive() ) {
                 return;
@@ -133,13 +136,19 @@ $.widget("ui.menu", {
                     return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
                 }
                 var match = self.widget().children(".ui-menu-item").filter(function() {
-                    return new RegExp("^" + escape(character), "i").test($(this).children("a").text());
+                    return new RegExp("^" + escape(character), "i")
+                        .test(
+                            $(this).children(self.options.item_selector).text()
+                        );
                 });
                 var match = skip && match.index(self.active.next()) != -1 ? self.active.nextAll(".ui-menu-item") : match;
                 if (!match.length) {
                     character = String.fromCharCode(event.keyCode);
                     match = self.widget().children(".ui-menu-item").filter(function() {
-                        return new RegExp("^" + escape(character), "i").test($(this).children("a").text());
+                        return new RegExp("^" + escape(character), "i")
+                            .test(
+                                $(this).children(self.options.item_selector).text()
+                            );
                     });
                 }
                 if (match.length) {
@@ -169,7 +178,7 @@ $.widget("ui.menu", {
         this.element.children( ".ui-menu-item" )
             .removeClass( "ui-menu-item" )
             .removeAttr( "role" )
-            .children( "a" )
+            .children( this.options.item_selector )
             .removeClass( "ui-corner-all ui-state-hover" )
             .removeAttr( "tabIndex" )
             .unbind( ".menu" );
@@ -183,16 +192,19 @@ $.widget("ui.menu", {
             .hide()
         
         submenus
-            .prev("a")
+            .prev(this.options.item_selector)
             .prepend('<span class="ui-icon ui-icon-carat-1-e"></span>');
         
         
         // don't refresh list items that are already adapted
-        var items = submenus.add(this.element).children( "li:not(.ui-menu-item):has(a)" )
+        var items = submenus.add(this.element)
+            .children( "li:not(.ui-menu-item):has(" + this.options.item_selector + ")" )
             .addClass( "ui-menu-item" )
             .attr( "role", "menuitem" );
+
+        items.bind('mouseover',
         
-        items.children( "a" )
+        items.children( this.options.item_selector )
             .addClass( "ui-corner-all" )
             .attr( "tabIndex", -1 );
     },
@@ -217,7 +229,7 @@ $.widget("ui.menu", {
         }
         
         this.active = item.first()
-            .children( "a" )
+            .children( this.options.item_selector )
                 .addClass( "ui-state-focus" )
                 .attr( "id", function(index, id) {
                     return (self.itemId = id || self.menuId + "-activedescendant");
@@ -245,13 +257,18 @@ $.widget("ui.menu", {
         }
         
         clearTimeout(this.timer);
-        
-        this.active.children( "a" ).removeClass( "ui-state-focus" );
-        // remove only generated id
-        $( "#" + this.menuId + "-activedescendant" ).removeAttr( "id" );
-        this.element.removeAttr( "aria-activedescenant" );
-        this._trigger( "blur", event );
-        this.active = null;
+        this.blur_timer = setTimeout(
+            function(){
+                this.active.children( this.options.item_selector ).removeClass( "ui-state-focus" );
+                this.active.hide();
+                // remove only generated id
+                $( "#" + this.menuId + "-activedescendant" ).removeAttr( "id" );
+                this.element.removeAttr( "aria-activedescenant" );
+                this._trigger( "blur", event );
+                this.active = null;
+            },
+            200
+        );
     },
 
     _startOpening: function(submenu) {
@@ -275,14 +292,19 @@ $.widget("ui.menu", {
 
         submenu.show().position(position);
         
-        this.active.find(">a:first").addClass("ui-state-active");
+        this.active.find(
+            ">" + this.options.item_selector + ":first"
+        ).addClass(
+            "ui-state-active"
+        );
     },
     
     closeAll: function() {
         this.element.hide();
         this.element
          .find("ul").hide().end()
-         .find("a.ui-state-active").removeClass("ui-state-active");
+         .find(this.options.item_selector + ".ui-state-active")
+         .removeClass("ui-state-active");
         this.blur();
         this.activeMenu = this.element;
     },
@@ -302,7 +324,8 @@ $.widget("ui.menu", {
     _close: function() {
         this.active.parent()
          .find("ul").hide().end()
-         .find("a.ui-state-active").removeClass("ui-state-active");
+         .find(this.options.item_selector + ".ui-state-active")
+         .removeClass("ui-state-active");
     },
 
     left: function(event) {
