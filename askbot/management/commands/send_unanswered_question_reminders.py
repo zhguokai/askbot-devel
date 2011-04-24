@@ -36,7 +36,10 @@ class Command(NoArgsCommand):
         #format the email reminder and send it
         for user in models.User.objects.exclude(status = 'b'):
             user_questions = questions.exclude(author = user)
-            user_questions = user.get_tag_filtered_questions(user_questions)
+            user_questions = user.get_tag_filtered_questions(
+                                                questions = user_questions,
+                                                context = 'email'
+                                            )
 
             final_question_list = list()
             #todo: rewrite using query set filter

@@ -199,8 +199,14 @@ class Command(NoArgsCommand):
                     q_ans_B.cutoff_time = cutoff_time
 
                 elif feed.feed_type == 'q_all':
-                    q_all_A = user.get_tag_filtered_questions(Q_set_A)
-                    q_all_B = user.get_tag_filtered_questions(Q_set_B)
+                    q_all_A = user.get_tag_filtered_questions(
+                                                        questions = Q_set_A,
+                                                        context = 'email'
+                                                    )
+                    q_all_B = user.get_tag_filtered_questions(
+                                                        questions = Q_set_B,
+                                                        context = 'email'
+                                                    )
 
                     q_all_A = q_all_A[:askbot_settings.MAX_ALERTS_PER_EMAIL]
                     q_all_B = q_all_B[:askbot_settings.MAX_ALERTS_PER_EMAIL]
