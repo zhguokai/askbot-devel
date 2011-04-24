@@ -15,6 +15,7 @@
     
 var idIncrement = 0;//id fragment
 var menuStack = [];//stack of open menues
+var blurTimers = [];//a similarly ordered stack of blur timers
 
 $.widget("ui.menu", {
     defaultElement: "<ul>",
@@ -57,6 +58,10 @@ $.widget("ui.menu", {
                 if ( self.isInactive() ) {
                     return;
                 }
+                //clear blur timer for the current menu and all ancestors
+
+
+                //focus on the closest item
                 var target = $( event.target ).closest( ".ui-menu-item" );
                 if ( target.length ) {
                     self.focus( event, target );
@@ -189,6 +194,7 @@ $.widget("ui.menu", {
     refresh: function() {
         // initialize nested menus
         // TODO add role=listbox to these, too? or just the top level menu?
+        this.element.hide();
         var submenus = this.element.find("ul:not(.ui-menu)")
             .addClass( "ui-menu ui-widget ui-widget-content ui-corner-all" )
             .hide()
@@ -210,7 +216,9 @@ $.widget("ui.menu", {
          * when the mouseout event happens upon mousing over the menu item
          * basically removing the false alarm
          */
-        items.bind('mouseover', function(){ clearTimer(self.blur_timer) });
+        items.bind('mouseover', function(){
+            self._clear_blur_timers();
+        });
         items.children( this.options.item_selector )
             .addClass( "ui-corner-all" )
             .attr( "tabIndex", -1 );
@@ -218,8 +226,6 @@ $.widget("ui.menu", {
 
     focus: function( event, item ) {
         var self = this;
-        
-        this.blur();
         
         if ( this._hasScroll() ) {
             var borderTop = parseFloat( $.curCSS( this.element[0], "borderTopWidth", true) ) || 0,
@@ -258,30 +264,61 @@ $.widget("ui.menu", {
         this._trigger( "focus", event, { item: item } );
     },
 
+    /**
+     * handler of the menu blur event
+     * it's function is to start closing all open
+     * menues with a short timeout
+     * sometimes this event will "misfire" - notably when
+     * mouse moves over any menu items
+     */
     blur: function(event) {
         if (!this.active) {
             return;
         }
         
         clearTimeout(this.timer);
-        this.blur_timer = setTimeout(
-            /*
-             * need to prevent spurious mouseout from the menu when
-             * mouse moves over the menu item, so set the timer
-             * and on the menu item we'll clear the timer and
-             * this handler will not fire
-             */
-            function(){
-                this.active.children( this.options.item_selector ).removeClass( "ui-state-focus" );
-                this.active.hide();
-                // remove only generated id
-                $( "#" + this.menuId + "-activedescendant" ).removeAttr( "id" );
-                this.element.removeAttr( "aria-activedescenant" );
-                this._trigger( "blur", event );
-                this.active = null;
-            },
-            50
-        );
+
+        this._clear_blur_timers();//clear previous timers
+
+        /* 
+         * populate new blur timers, 
+         * that schedule closing of all menues
+         * when mouseout event fires on any of the 
+         * menues
+         */
+        var self = this;
+        $.each(menuStack, function(idx, menu){
+            var new_timer = setTimeout(
+                function(){
+                    self._close();
+                    self._trigger( "blur", event );
+                },
+                200
+            );
+            blurTimers.push(new_timer);
+        });
+    },
+
+    /**
+     * cancels all pending menu closings
+     * for ``menu`` and all its ancestors
+     * if parameter ``menu`` is absent, cancels all closings
+     */
+    _clear_blur_timers: function(menu){
+        if (menu === undefined){
+            $.each(blurTimers, function(idx, timer){
+                clearTimeout(timer);
+            });
+            blurTimers = [];
+        } else {
+            for (i = 0; i < menuStack.length; i++){
+                var timer = blurTimers.shift();
+                clearTimeout(timer);
+                if (menuStack[i] == menu){
+                    break;
+                }
+            }
+        }
     },
 
     _startOpening: function(submenu) {
@@ -318,13 +355,17 @@ $.widget("ui.menu", {
     },
     
     closeAll: function() {
-        this.element.hide();
-        this.element
-         .find("ul").hide().end()
-         .find(this.options.item_selector + ".ui-state-active")
-         .removeClass("ui-state-active");
-        this.blur();
-        this.activeMenu = this.element;
+        //close all open menues one-by one
+        var open_depth = menuStack.length;
+        for (i = 0; i < open_depth; i++){
+            this._close();
+        }
+        this.element.find('.ui-state-focus').removeClass('ui-state-focus');
+        this.activeMenu = null;
+        // remove only generated id
+        $( "#" + this.menuId + "-activedescendant" ).removeAttr( "id" );
+        this.element.removeAttr( "aria-activedescenant" );
+        this.active = null;
     },
 
     toggleAll: function() {
@@ -336,12 +377,13 @@ $.widget("ui.menu", {
     },
 
     showFirst: function() {
-        this.element.show();
+        this._open(this.element);
     },
     
+    //closes the leaf menu
     _close: function() {
-        this.active.parent()
-         .find("ul").hide().end()
+        this.active.parent().find('ul')
+         .hide().end()
          .find(this.options.item_selector + ".ui-state-active")
          .removeClass("ui-state-active");
         menuStack.pop();
