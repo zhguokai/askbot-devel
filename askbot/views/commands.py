@@ -438,6 +438,15 @@ def api_get_questions(request):
     if form.is_valid():
         query = form.cleaned_data['query']
         questions = models.Question.objects.get_by_text_query(query)
+
+        if askbot_settings.TAG_FILTER_QUESTIONS_FOR_ASK_PRESEARCH:
+            if request.user.is_authenticated():
+                questions = request.user.get_tag_filtered_questions(
+                                                    questions = questions,
+                                                    context = 'display'
+                                                )
+                print 'hahah'
+
         if should_show_sort_by_relevance():
             questions = questions.extra(order_by = ['-relevance'])
         questions = questions.distinct()

@@ -130,9 +130,21 @@ settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MIN_SEARCH_WORD_LENGTH',
-        default=4,
-        description=_('Minimum length of search term for Ajax search'),
-        help_text=_('Must match the corresponding database backend setting'),
+        default = 4,
+        description = _('Minimum length of search term for Ajax search'),
+        help_text = _('Must match the corresponding database backend setting'),
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'TAG_FILTER_QUESTIONS_FOR_ASK_PRESEARCH',
+        default = False,
+        description = _(
+            'Tag filter questions for "pre-search" on the ask page when '
+            'showing previously asked similar questions'
+        ),
     )
 )
 

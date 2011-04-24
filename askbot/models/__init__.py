@@ -1492,15 +1492,21 @@ def user_get_q_sel_email_feed_frequency(self):
         raise e
     return feed_setting.frequency
 
-def user_get_tag_filtered_questions(self, questions = None):
+def user_get_tag_filtered_questions(self, questions = None, context = None):
     """Returns a query set of questions, tag filtered according
-    to the user choices. Parameter ``questions`` can be either ``None``
-    or a starting query set.
+    to the user choices. Parameters:
+
+    * ``questions`` - either ``None`` or a starting query set
+    * ``context`` - either "email" or "display" - determine which of 
+      the tag filter strategy settings to use - email of display
     """
+    assert(context in ('email', 'display'))
     if questions == None:
         questions = Question.objects.all()
 
-    if self.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
+    tag_filter_strategy = getattr(self, context + '_tag_filter_strategy')
+
+    if tag_filter_strategy == const.EXCLUDE_IGNORED:
 
         ignored_tags = Tag.objects.filter(
                                 user_selections__reason = 'bad',
@@ -1515,7 +1521,7 @@ def user_get_tag_filtered_questions(self, questions = None):
                     ).exclude(
                         tags__in = ignored_by_wildcards
                     )
-    elif self.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
+    elif tag_filter_strategy == const.INCLUDE_INTERESTING:
         selected_tags = Tag.objects.filter(
                                 user_selections__reason = 'good',
                                 user_selections__user = self
