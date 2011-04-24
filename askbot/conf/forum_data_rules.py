@@ -140,7 +140,7 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'TAG_FILTER_QUESTIONS_FOR_ASK_PRESEARCH',
-        default = False,
+        default = True,
         description = _(
             'Tag filter questions for "pre-search" on the ask page when '
             'showing previously asked similar questions'
