@@ -446,7 +446,6 @@ def api_get_questions(request):
                                                     questions = questions,
                                                     context = 'display'
                                                 )
-                print 'hahah'
 
         if should_show_sort_by_relevance():
             questions = questions.extra(order_by = ['-relevance'])
