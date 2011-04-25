@@ -740,6 +740,7 @@ a:hover.medal {
     background-color: #FFF;
     border-bottom: 1px solid white;
     height: 30px;
+    font-size: 90%;
     width: 100%;
     clear: both;
     margin-bottom: 3px;
