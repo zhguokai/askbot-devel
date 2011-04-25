@@ -1171,8 +1171,8 @@ label.retag-error {
 
 span.form-error {
     color: #990000;
-    font-size: 90%;
-    font-weight: normal;
+    font-size: 190%;
+    font-weight: bold;
     margin-left: 5px;
 }
 
