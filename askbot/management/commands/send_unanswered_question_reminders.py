@@ -9,7 +9,7 @@ from django.utils.translation import ungettext
 from askbot.utils import mail
 from askbot.models.question import get_tag_summary_from_questions
 
-DEBUG_THIS_COMMAND = False
+DEBUG_THIS_COMMAND = True
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -35,6 +35,10 @@ class Command(NoArgsCommand):
         #for each user, select a tag filtered subset
         #format the email reminder and send it
         for user in models.User.objects.exclude(status = 'b'):
+            # Sanity check to catch invalid email
+            if len(user.email) < 5:
+                continue
+
             user_questions = questions.exclude(author = user)
             user_questions = user.get_tag_filtered_questions(
                                                 questions = user_questions,
@@ -57,7 +61,8 @@ class Command(NoArgsCommand):
                         askbot_settings.UNANSWERED_REMINDER_FREQUENCY
                     )
                     if now < activity.active_at + recurrence_delay:
-                        continue
+                        if not DEBUG_THIS_COMMAND:
+                            continue
                 except models.Activity.DoesNotExist:
                     activity = models.Activity(
                         user = user,
@@ -71,7 +76,8 @@ class Command(NoArgsCommand):
 
             question_count = len(final_question_list)
             if question_count == 0:
-                continue
+                if not DEBUG_THIS_COMMAND:
+                    continue
 
             tag_summary = get_tag_summary_from_questions(user_questions)
             subject_line = ungettext(
