@@ -76,7 +76,8 @@ class Command(NoArgsCommand):
 
             question_count = len(final_question_list)
             if question_count == 0:
-                continue
+                if not DEBUG_THIS_COMMAND:
+                    continue
 
             tag_summary = get_tag_summary_from_questions(user_questions)
             subject_line = ungettext(
@@ -99,7 +100,8 @@ class Command(NoArgsCommand):
             body_text += '</ul>'
 
             if DEBUG_THIS_COMMAND:
-                print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % (user.email, subject_line, body_text)
+                print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \
+                    (user.email, subject_line, body_text)
             else:
                 mail.send_mail(
                     subject_line = subject_line,

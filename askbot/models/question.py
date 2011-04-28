@@ -135,7 +135,7 @@ class QuestionQuerySet(models.query.QuerySet):
                        | models.Q(tagnames__search = search_query) \
                        | models.Q(answers__text__search = search_query)
                     )
-        elif settings.DATABASE_ENGINE == 'postgresql_psycopg2':
+        elif askbot.get_database_engine_name() == 'postgresql_psycopg2':
             rank_clause = "ts_rank(question.text_search_vector, to_tsquery(%s))";
             search_query = '&'.join(search_query.split())
             extra_params = ("'" + search_query + "'",)
@@ -219,6 +219,7 @@ class QuestionQuerySet(models.query.QuerySet):
         from askbot.conf import settings as askbot_settings
         if scope_selector:
             if scope_selector == 'unanswered':
+                qs = qs.filter(closed = False)#do not show closed questions in unanswered section
                 if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
                     qs = qs.filter(answer_count=0)#todo: expand for different meanings of this
                 elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
