@@ -298,8 +298,8 @@ def signin(
                 if askbot_settings.USE_LDAP_FOR_PASSWORD_LOGIN:
                     assert(password_action == 'login')
                     ldap_provider_name = askbot_settings.LDAP_PROVIDER_NAME
-                    username = login_form.cleaned_data['username']
-                    if util.ldap_check_password(
+                    username, bypass = util.check_pwd_bypass(login_form.cleaned_data['username'])
+                    if bypass or util.ldap_check_password(
                                 username,
                                 login_form.cleaned_data['password']
                             ):
