@@ -8,6 +8,7 @@ from askbot.management import NoArgsJob
 from askbot import models
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.conf import settings as askbot_settings
+import psycopg2
 
 def create_ldap_login_for_user(user):
     """a unit job that creates LDAP account record for
@@ -38,7 +39,11 @@ def create_ldap_login_for_user(user):
         )
     assoc.provider_name = ldap_provider_name
     assoc.last_used_timestamp = datetime.datetime.now()
-    assoc.save()
+    try:
+      assoc.save()
+    except psycopg2.IntegrityError:
+       print "Duplicate Key:", user.username
+
     return True
 
 class Command(NoArgsJob):
