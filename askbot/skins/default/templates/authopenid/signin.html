@@ -155,40 +155,6 @@
         {% endif %}
     </form>
     {% endif %}
-    {% if view_subtype != 'email_sent' or view_subtype == 'bad_key' %}
-        {% if user.is_anonymous() %}
-        <form id="account-recovery-form" action="{% url user_account_recover %}" method="post">{% csrf_token %}
-            {% if view_subtype != 'bad_key' %}
-                <h2 id='account-recovery-heading'>{% trans %}Still have trouble signing in?{% endtrans %}</h2>
-            {% endif %}
-            <p class="hint">
-                <span class="text">
-                {% if view_subtype == 'bad_key' %}
-                    {% trans %}Please, enter your email address below and obtain a new key{% endtrans %}
-                {% else %}
-                    {% trans %}Please, enter your email address below to recover your account{% endtrans %}
-                {% endif %}
-                </span>
-                <span style="display:none" class="link"> - <a href="#">{% trans %}recover your account via email{% endtrans %}</a></span>
-            </p>
-            <fieldset id='email-input-fs'>
-                {% if account_recovery_form.email.errors %}
-                <p class="error">{{account_recovery_form.email.errors[0]}}</p>
-                {% endif %}
-                {{ account_recovery_form.email }}
-                <input
-                    class="submit-b"
-                    type="submit"
-                    {% if view_subtype == 'bad_key' %}
-                    value="{% trans %}Send a new recovery key{% endtrans %}"
-                    {% else %}
-                    value="{% trans %}Recover your account via email{% endtrans %}"
-                    {% endif %}
-                />
-            </fieldset>
-        </form>
-        {% endif %}
-    {% endif %}
 {% endblock %}
 
 {% block sidebar %}
