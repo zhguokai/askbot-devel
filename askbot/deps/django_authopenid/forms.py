@@ -69,6 +69,9 @@ class LoginProviderField(forms.CharField):
         """makes sure that login provider name
         exists is in the list of accepted providers
         """
+        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN:
+           value = 'local'
+
         providers = util.get_login_providers()
         if value in providers:
             return value
@@ -249,6 +252,9 @@ class LoginForm(forms.Form):
         "login" or "change_password"
         new password is checked for minimum length and match to initial entry
         """
+        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN:
+           self.cleaned_data['password_action']='login'
+
         password_action = self.cleaned_data.get('password_action', None)
         if password_action == 'login':
             #if it's login with password - password and user name are required
