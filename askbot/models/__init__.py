@@ -1972,6 +1972,7 @@ def format_instant_notification_email(
 
     site_url = askbot_settings.APP_URL
     origin_post = post.get_origin_post()
+    include_origin = False
     #todo: create a better method to access "sub-urls" in user views
     user_subscriptions_url = site_url + to_user.get_absolute_url() + \
                             '?sort=email_subscriptions'
@@ -1981,22 +1982,26 @@ def format_instant_notification_email(
     if update_type == 'question_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Question))
+        include_origin = True
         subject_line = _(
                     'Re: [%(tag)s] "%(title)s"'
                 ) % {'title': origin_post.title, 'tag': subject_tag}
     elif update_type == 'answer_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Answer))
+        include_origin = True
         subject_line = _(
                     'Re: [%(tag)s] "%(title)s"'
                 ) % {'title': origin_post.title, 'tag': subject_tag}
     elif update_type == 'answer_update':
         assert(isinstance(post, Answer))
+        include_origin = True
         subject_line = _(
                     'Re: [%(tag)s] "%(title)s"'
                 ) % {'title': origin_post.title, 'tag': subject_tag}
     elif update_type == 'new_answer':
         assert(isinstance(post, Answer))
+        include_origin = True
         subject_line = _(
                     'Re: [%(tag)s] "%(title)s"'
                 ) % {'title': origin_post.title, 'tag': subject_tag}
@@ -2040,7 +2045,10 @@ def format_instant_notification_email(
             for tag_name in post.get_tag_names():
                 tag_text += '<span style="%s">%s</span> ' % (tag_style, tag_name)
             tag_text += ']</div>'
-        content_preview = tag_text + content_preview + tag_text
+        content_preview = tag_text + content_preview
+        if include_origin:
+           content_preview += "<hr><p>Original Post:</p>\n" + origin_post.html
+        content_preview += tag_text
     else:
 	if True:
         #if post.post_type == 'question':#add tags to the question
@@ -2048,7 +2056,10 @@ def format_instant_notification_email(
             for tag_name in post.get_tag_names():
                 tag_text += '<span style="%s">%s</span> ' % (tag_style, tag_name)
             tag_text += ']</div>'
-        content_preview = tag_text + post.html + tag_text
+        content_preview = tag_text + post.html
+        if include_origin:
+           content_preview += "<hr><p>Original Post:</p>\n" + origin_post.html
+        content_preview += tag_text
 
     update_data = {
         'update_author_name': from_user.username,
@@ -2103,13 +2114,14 @@ def send_instant_notifications_about_activity_in_post(
                     )
         #todo: this could be packaged as an "action" - a bundle
         #of executive function with the activity log recording
+        #print body_text
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
             recipient_list = [user.email],
             related_object = origin_post,
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
-        )
+          )
 
     debug_list += "%s(%s) "%(user, user.email)
     debug_title = subject_line
