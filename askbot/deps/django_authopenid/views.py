@@ -312,13 +312,7 @@ def signin(
                             login(request, user)
                             return HttpResponseRedirect(next_url)
                         else:
-                            return finalize_generic_signin(
-                                    request = request,
-                                    user = user,
-                                    user_identifier = username,
-                                    login_provider_name = ldap_provider_name,
-                                    redirect_url = next_url
-                                )
+                            login_form.set_password_login_error() 
                     else:
                         login_form.set_password_login_error() 
                 else:

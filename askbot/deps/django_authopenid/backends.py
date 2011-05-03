@@ -60,6 +60,8 @@ class AuthBackend(object):
                     user = User.objects.get(username=username)
                 except User.DoesNotExist:
                     first, last, email = util.get_user_info(method, username)
+                    if first == None:
+                       return None
                     user = util.setup_new_user(username, first, last, email)
 
             #this is a catch - make login token a little more unique
@@ -134,6 +136,9 @@ class AuthBackend(object):
                 user = assoc.user
             except UserAssociation.DoesNotExist:
                 first, last, email = util.get_user_info(method, ldap_user_id)
+                if(first == None):
+                   return None
+
                 user = util.setup_new_user(ldap_user_id, first, last, email)
 
                 assoc = UserAssociation(
