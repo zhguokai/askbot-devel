@@ -9,7 +9,7 @@ from django.utils.translation import ungettext
 from askbot.utils import mail
 from askbot.models.question import get_tag_summary_from_questions
 
-DEBUG_THIS_COMMAND = True
+DEBUG_THIS_COMMAND = False
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -84,7 +84,7 @@ class Command(NoArgsCommand):
                 if not DEBUG_THIS_COMMAND:
                     continue
 
-            tag_summary = get_tag_summary_from_questions(user_questions)
+            tag_summary = get_tag_summary_from_questions(final_question_list)
             subject_line = ungettext(
                 '%(question_count)d unanswered question about %(topics)s',
                 '%(question_count)d unanswered questions about %(topics)s',
