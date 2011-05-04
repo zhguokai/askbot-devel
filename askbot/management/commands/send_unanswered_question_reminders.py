@@ -9,7 +9,7 @@ from django.utils.translation import ungettext
 from askbot.utils import mail
 from askbot.models.question import get_tag_summary_from_questions
 
-DEBUG_THIS_COMMAND = False
+DEBUG_THIS_COMMAND = True
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -108,7 +108,7 @@ class Command(NoArgsCommand):
 
             body_text = '<p>This email is sent as a reminder that the following questions do not have ' \
                         'an answer. If you can provide an answer, please click on the link and share ' \
-                        'your knowlege.</p<hr>'
+                        'your knowlege.</p><hr>'
 
             for tag in tag_keys:
                 body_text += '<p><b>' + tag + '</b></p><ul>'
