@@ -502,7 +502,11 @@ def setup_new_user(username, first, last, email):
     return user
 
 def get_nis_info(username):
-        p = pwd.getpwnam(username)
+        try:
+            p = pwd.getpwnam(username)
+        except KeyError:
+           return (None, None, None)
+
         s = string.split(p.pw_gecos, ' ')
         if(len(s) < 2):
             s.append('')

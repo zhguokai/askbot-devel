@@ -81,10 +81,22 @@ class Command(NoArgsCommand):
 
             question_count = len(final_question_list)
             if question_count == 0:
-                if not DEBUG_THIS_COMMAND:
                     continue
 
             tag_summary = get_tag_summary_from_questions(final_question_list)
+            tag_list = {}
+            now = datetime.datetime.now()
+            # Build list of Tags
+            for question in final_question_list:
+               tag_names = question.get_tag_names()
+               for tag in tag_names:
+                 if tag in tag_list:
+                    tag_list[tag].append((question, now - question.added_at))
+                 else:
+                    tag_list[tag] = [(question, now - question.added_at)]
+
+            tag_keys = tag_list.keys()
+            tag_keys.sort()
             subject_line = ungettext(
                 '%(question_count)d unanswered question about %(topics)s',
                 '%(question_count)d unanswered questions about %(topics)s',
@@ -94,15 +106,21 @@ class Command(NoArgsCommand):
                 'topics': tag_summary
             }
 
-            body_text = '<ul>'
-            for question in final_question_list:
-                body_text += '<li><a href="%s%s?sort=latest">%s</a></li>' \
+            body_text = '<p>This email is sent as a reminder that the following questions do not have ' \
+                        'an answer. If you can provide an answer, please click on the link and share ' \
+                        'your knowlege.</p<hr>'
+
+            for tag in tag_keys:
+                body_text += '<p><b>' + tag + '</b></p><ul>'
+                for question in tag_list[tag]:
+                    body_text += '<li><a href="%s%s?sort=latest">(%02d days old) %s</a></li>' \
                             % (
                                 askbot_settings.APP_URL,
-                                question.get_absolute_url(),
-                                question.title
+                                question[0].get_absolute_url(),
+                                question[1].days,
+                                question[0].title
                             )
-            body_text += '</ul>'
+                body_text += '</ul>\n'
 
             if DEBUG_THIS_COMMAND:
                 print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \

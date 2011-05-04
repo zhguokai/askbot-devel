@@ -476,7 +476,7 @@ var liveSearch = function(){
             matchInside: true,
             maxCacheLength: 100,
             onItemSelect: run_tag_search,
-            delay: 10,
+            delay: 10
         });
         ac.decorate($('#ab-tag-search'));
         setupButtonEventHandlers(button, run_tag_search);
