@@ -28,17 +28,17 @@ class Command(BaseCommand):
         """
         users = models.User.objects.all().order_by('username')
         item_count = 0
-        print '%-20s %6s %6s %6s %6s %6s %6s %6s' % (
-       'User (id)', '# Q', '# A', 'Votes', 'Karma','Gold','Silver','Bronze')
-        print '%-20s %6s %6s %6s %6s %6s %6s %6s' % (
-        '===================', '===', '===', '=====', '=====', '====', '======', '======')
+        print '%-25s %4s %6s %6s %6s %6s %6s %6s %6s' % (
+       'User', 'id', '# Q', '# A', 'Votes', 'Karma','Gold','Silver','Bronze')
+        print '%-25s %4s %6s %6s %6s %6s %6s %6s %6s' % (
+        '=========================', '====', '===', '===', '=====', '=====', '====', '======', '======')
         for user in users:
-            user_string = '%s (%d)' % (user.username, user.id)
+            user_string = '%-25s %4s' % (user.username, user.id)
             line = format_table_row(
                                 user_string, user.questions.count(), user.answers.count(),
                                 user.votes.count(), 
                                 user.reputation, user.gold, user.silver, user.bronze,
-                                format_string = '%-20s %6s %6s %6s %6s %6s %6s %6s'
+                                format_string = '%-30s %6s %6s %6s %6s %6s %6s %6s'
                             )
             print line
 
