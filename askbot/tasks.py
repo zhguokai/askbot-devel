@@ -141,9 +141,10 @@ def record_post_update(
                             post = post,
                             recipients = notification_subscribers,
                         )
-    debug_str = "\nEmailed%s\n" % get_subs_email(notification_subscribers)
-    debug_str += "  Pre-notif Time: %8.3f\n" % float(pre_notif_time - start_time)
-    debug_str += "  Sub Search Time: %8.3f\n" % float(pre_email_time - pre_notif_time)
-    debug_str += "  Email Time: %8.3f\n" % float(time.time() - pre_email_time)
+    debug_str = "\nTitle: %s" % post.get_origin_post().title
+    debug_str += "\nEmailed%s\n" % get_subs_email(notification_subscribers)
+    #debug_str += "  Pre-notif Time: %8.3f\n" % float(pre_notif_time - start_time)
+    #debug_str += "  Sub Search Time: %8.3f\n" % float(pre_email_time - pre_notif_time)
+    #debug_str += "  Email Time: %8.3f\n" % float(time.time() - pre_email_time)
     debug_str += "Total Elapsed Time: %8.3f" % float(time.time() - start_time)
     logging.critical(debug_str)
