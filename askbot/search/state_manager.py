@@ -10,7 +10,7 @@ import logging
 ACTIVE_COMMANDS = (
     'sort', 'search', 'query',
     'reset_query', 'reset_author', 'reset_tags', 'remove_tag',
-    'tags', 'scope', 'page_size', 'start_over',
+    'set_tags', 'tags', 'scope', 'page_size', 'start_over',
     'page'
 )
 
@@ -92,6 +92,7 @@ class SearchState(object):
         #todo also relax if 'all' scope was clicked twice
 
     def update_from_user_input(self, input_dict):
+        print input_dict
         #todo: this function will probably not 
         #fit the case of multiple parameters entered at the same tiem
         if 'start_over' in input_dict:
@@ -114,6 +115,11 @@ class SearchState(object):
             else:
                 self.update_value('scope', input_dict)
 
+        if 'set_tags' in input_dict and input_dict['set_tags']:
+                self.tags = input_dict['set_tags']
+                print self.tags
+                return
+
         if 'tags' in input_dict:
             if self.tags:
                 old_tags = self.tags.copy()
@@ -122,6 +128,7 @@ class SearchState(object):
                     self.reset_page()
             else:
                 self.tags = input_dict['tags']
+            print self.tags
 
         if 'remove_tag' in input_dict and self.tags:
             remove_set = set([ input_dict['remove_tag'] ])

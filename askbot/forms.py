@@ -425,14 +425,13 @@ class AdvancedSearchForm(forms.Form):
     reset_query = forms.BooleanField(required=False)
     start_over = forms.BooleanField(required=False)
     tags = forms.CharField(max_length=256, required=False)
+    set_tags = forms.CharField(max_length=256, required=False)
     remove_tag = forms.CharField(max_length=256, required=False)
     author = forms.IntegerField(required=False)
     page_size = forms.ChoiceField(choices=const.PAGE_SIZE_CHOICES, required=False)
     page = forms.IntegerField(required=False)
-
-    def clean_tags(self):
-        if 'tags' in self.cleaned_data:
-            tags_input = self.cleaned_data['tags'].strip()
+    def common_tag_clean(self, tag_type):
+            tags_input = self.cleaned_data[tag_type].strip()
             split_re = re.compile(const.TAG_SPLIT_REGEX)
             tag_strings = split_re.split(tags_input)
             tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
@@ -441,10 +440,18 @@ class AdvancedSearchForm(forms.Form):
                 if tagname_re.search(s):
                     out.add(s)
             if len(out) > 0:
-                self.cleaned_data['tags'] = out
+                self.cleaned_data[tag_type] = out
             else:
-                self.cleaned_data['tags'] = None
-            return self.cleaned_data['tags']
+                self.cleaned_data[tag_type] = None
+            return self.cleaned_data[tag_type]
+
+    def clean_set_tags(self):
+        if 'set_tags' in self.cleaned_data:
+          return self.common_tag_clean('set_tags')
+
+    def clean_tags(self):
+        if 'tags' in self.cleaned_data:
+            return self.common_tag_clean('tags')
 
     def clean_query(self):
         if 'query' in self.cleaned_data:
@@ -476,6 +483,7 @@ class AdvancedSearchForm(forms.Form):
         cleanup_dict(data, 'reset_author', False)
         cleanup_dict(data, 'reset_query', False)
         cleanup_dict(data, 'remove_tag', '')
+        cleanup_dict(data, 'set_tags', None)
         cleanup_dict(data, 'start_over', False)
         cleanup_dict(data, 'author', None)
         cleanup_dict(data, 'page', None)
