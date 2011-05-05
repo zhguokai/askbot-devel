@@ -20,14 +20,22 @@ class Command(NoArgsCommand):
         wait_period = datetime.timedelta(
             askbot_settings.DAYS_BEFORE_SENDING_UNANSWERED_REMINDER
         )
-        cutoff_date = datetime.datetime.now() - wait_period
+        start_cutoff_date = datetime.datetime.now() - wait_period
+
+        recurrence_delay = datetime.timedelta(
+            askbot_settings.UNANSWERED_REMINDER_FREQUENCY
+        )
+        max_emails = askbot_settings.MAX_UNANSWERED_REMINDERS
+        end_cutoff_date = start_cutoff_date - (max_emails - 1)*recurrence_delay
 
         questions = models.Question.objects.exclude(
                                         closed = True
                                     ).exclude(
                                         deleted = True
                                     ).filter(
-                                        added_at__lt = cutoff_date
+                                        added_at__lt = start_cutoff_date
+                                    ).exclude(
+                                        added_at__lt = end_cutoff_date
                                     ).filter(
                                         answer_count = 0
                                     ).order_by('-added_at')
@@ -57,9 +65,6 @@ class Command(NoArgsCommand):
                         activity_type = activity_type
                     )
                     now = datetime.datetime.now()
-                    recurrence_delay = datetime.timedelta(
-                        askbot_settings.UNANSWERED_REMINDER_FREQUENCY
-                    )
                     if now < activity.active_at + recurrence_delay:
                         if not DEBUG_THIS_COMMAND:
                             continue
@@ -103,7 +108,7 @@ class Command(NoArgsCommand):
 
             body_text = '<p>This email is sent as a reminder that the following questions do not have ' \
                         'an answer. If you can provide an answer, please click on the link and share ' \
-                        'your knowlege.</p<hr>'
+                        'your knowlege.</p><hr>'
 
             for tag in tag_keys:
                 body_text += '<p><b>' + tag + '</b></p><ul>'
