@@ -5,7 +5,7 @@ from html5lib import sanitizer, serializer, tokenizer, treebuilders, treewalkers
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
     acceptable_elements = ('a', 'abbr', 'acronym', 'address', 'b', 'big',
         'blockquote', 'br', 'caption', 'center', 'cite', 'code', 'col',
-        'colgroup', 'dd', 'del', 'dfn', 'dir', 'div', 'dl', 'dt', 'em', 'font',
+        'colgroup', 'dd', 'del', 'dfn', 'dir', 'div', 'dl', 'dt', 'em', 'embed', 'font',
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd',
         'li', 'ol', 'p', 'pre', 'q', 's', 'samp', 'small', 'span', 'strike',
         'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead',
@@ -17,7 +17,7 @@ class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
         'href', 'hreflang', 'hspace', 'lang', 'longdesc', 'name', 'nohref',
         'noshade', 'nowrap', 'rel', 'rev', 'rows', 'rowspan', 'rules', 'scope',
         'span', 'src', 'start', 'summary', 'title', 'type', 'valign', 'vspace',
-        'width')
+        'width', 'quality', 'bgcolor', 'id', 'allowscriptaccess', 'allowfullscreen')
 
     allowed_elements = acceptable_elements
     allowed_attributes = acceptable_attributes
