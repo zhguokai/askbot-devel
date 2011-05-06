@@ -53,12 +53,14 @@
     askbot['data']['categories'] = {% if cats_tree %}[{{ cats_tree }}]{% else %}null{% endif %};
     var cats = new CategoryTree();//tree of editable categories
     cats.setData(askbot['data']['categories']);
-    ($('#ab-cats')).append(cats.getElement());
+    ($('#ab-cats')).after(cats.getElement());
     cats.getElement().menu({'item_selector': '.ab-category'});
+    cats.getElement().menu('setRoot', $('#ab-cats'));
     cats.getElement().menu('closeAll');
     $('#ab-cats').hover(function(){
         cats.getElement().menu('showFirst');
     });
+    //freeze and unfreeze the menu's ability to collapse and open
     cats.setStateTransitionEventHandler(
         'EDIT',
         function(){

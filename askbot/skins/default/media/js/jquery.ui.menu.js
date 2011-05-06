@@ -22,7 +22,11 @@ $.widget("ui.menu", {
     delay: 150,
     options: {
         item_selector: 'a',
-        position: {
+        root_position: {//position of the first element
+            my: "left top",
+            at: "left bottom",
+        },
+        position: {//position of other elements
             my: "left top",
             at: "right top"
         }
@@ -38,11 +42,11 @@ $.widget("ui.menu", {
                 role: "listbox"
             })
             .bind( "click.menu", function( event ) {
-                var item = $( event.target )
-                    .closest( ".ui-menu-item:has(" + this.options.item_selector + ")" );
                 if ( self.isInactive() ) {
                     return false;
                 }
+                var item = $( event.target )
+                    .closest( ".ui-menu-item:has(" + this.options.item_selector + ")" );
                 if ( !item.length ) {
                     return;
                 }
@@ -58,9 +62,6 @@ $.widget("ui.menu", {
                 if ( self.isInactive() ) {
                     return;
                 }
-                //clear blur timer for the current menu and all ancestors
-
-
                 //focus on the closest item
                 var target = $( event.target ).closest( ".ui-menu-item" );
                 if ( target.length ) {
@@ -253,8 +254,9 @@ $.widget("ui.menu", {
         this.element.removeAttr("aria-activedescendant").attr("aria-activedescendant", self.itemId)
         
         self.timer = setTimeout(function() {
-            self._close();
+            self._close_leaves();
         }, self.delay)
+
         var nested = $(">ul", item);
         if (nested.length && /^mouse/.test(event.type)) {
             self._startOpening(nested);
@@ -290,7 +292,7 @@ $.widget("ui.menu", {
         $.each(menuStack, function(idx, menu){
             var new_timer = setTimeout(
                 function(){
-                    self._close();
+                    self.closeAll();
                     self._trigger( "blur", event );
                 },
                 200
@@ -325,7 +327,7 @@ $.widget("ui.menu", {
         clearTimeout(this.timer);
         var self = this;
         self.timer = setTimeout(function() {
-            self._close();
+            self._close_leaves();
             self._open(submenu);
         }, self.delay);
     },
@@ -334,14 +336,25 @@ $.widget("ui.menu", {
      * on the screen
      */
     _open: function(submenu) {
+        //hide all menues excluding parents of the submenu
         this.element.find(".ui-menu").not(submenu.parents()).hide();
-            
-        var position = $.extend({}, {
-            of: this.active
-        }, $.type(this.options.position) == "function"
-            ? this.options.position(this.active)
-            : this.options.position
-        );
+
+        //for first element position is relative to root
+        if (this.active === null){
+            var position = $.extend({}, {
+                    of: this.options.root
+                }, 
+                this.options.root_position
+            );
+        //for others, it is relative to ``this.active``
+        } else {
+            var position = $.extend({}, {
+                of: this.active
+            }, $.type(this.options.position) == "function"
+                ? this.options.position(this.active)
+                : this.options.position
+            );
+        }
 
         submenu.show().position(position);
         
@@ -358,7 +371,7 @@ $.widget("ui.menu", {
         //close all open menues one-by one
         var open_depth = menuStack.length;
         for (i = 0; i < open_depth; i++){
-            this._close();
+            this._close_leaves();
         }
         this.element.find('.ui-state-focus').removeClass('ui-state-focus');
         this.activeMenu = null;
@@ -380,13 +393,23 @@ $.widget("ui.menu", {
         this._open(this.element);
     },
     
-    //closes the leaf menu
-    _close: function() {
+    /** 
+     * closes all leaves of the currently active menu
+     * but the current menu stays open
+     */
+    _close_leaves: function() {
+        //hide the leaves and remove ui-state-active class
         this.active.parent().find('ul')
-         .hide().end()
-         .find(this.options.item_selector + ".ui-state-active")
-         .removeClass("ui-state-active");
-        menuStack.pop();
+        .hide().end()
+        .find(this.options.item_selector + ".ui-state-active")
+        .removeClass("ui-state-active");
+        //clear the menuStack just above the active element
+        for (i = menuStack.length-1; i>=0; i--){
+            if (menuStack[i] === this.active){
+                break;
+            }
+            menuStack.pop();
+        }
     },
 
     left: function(event) {
@@ -499,6 +522,10 @@ $.widget("ui.menu", {
         };
         this.closeAll();
         this._trigger( "select", event, ui );
+    },
+
+    setRoot: function(root_element){
+        this.options.root = root_element;
     },
 
     unfreeze: function() {
