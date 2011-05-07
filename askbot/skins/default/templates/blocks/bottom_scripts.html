@@ -46,35 +46,15 @@
 {% if settings.ENABLE_CATEGORIES %}
 <script type="text/javascript" src="{{ "/js/jquery.ui.core.js"|media }}"></script>
 <script type="text/javascript" src="{{ "/js/jquery.ui.position.js"|media }}"></script>
-<script type="text/javascript" src="{{ "/js/jquery.ui.widget.js"|media }}"></script>
-<script type="text/javascript" src="{{ "/js/jquery.ui.menu.js"|media }}"></script>
-
 <script type="text/javascript">
     askbot['data']['categories'] = {% if cats_tree %}[{{ cats_tree }}]{% else %}null{% endif %};
     var cats = new CategoryTree();//tree of editable categories
     cats.setData(askbot['data']['categories']);
-    ($('#ab-cats')).after(cats.getElement());
-    cats.getElement().menu({'item_selector': '.ab-category'});
-    cats.getElement().menu('setRoot', $('#ab-cats'));
-    cats.getElement().menu('closeAll');
-    $('#ab-cats').hover(function(){
-        cats.getElement().menu('showFirst');
-    });
-    //freeze and unfreeze the menu's ability to collapse and open
-    cats.setStateTransitionEventHandler(
-        'EDIT',
-        function(){
-            cats.getElement().menu('freeze');
-        },
-        true
-    );
-    cats.setStateTransitionEventHandler(
-        'DISPLAY',
-        function(){
-            cats.getElement().menu('unfreeze');
-        },
-        true
-    )
+    var menu_root = $('#ab-cats');
+    cats.decorate(menu_root);
+    //cats.getElement().menu({'item_selector': '.ab-category'});
+    menu_root.mouseover(function(){ cats.open() });
+    menu_root.mouseout(function(){ cats.startClosing() };
 </script>
 {% endif %}
 <script type="text/javascript">

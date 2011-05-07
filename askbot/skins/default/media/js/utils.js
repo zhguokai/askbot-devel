@@ -640,8 +640,10 @@ Category.prototype.createDom = function(){
 
 /**
  * Initializes subtrees and treir DOM's
+ * @param {CategoryTree} parent_tree
  */
-Category.prototype.buildSubtree = function(){
+Category.prototype.buildSubtree = function(parent_tree){
+    this._parent_tree = parent_tree;
     if (this._children_data.length > 0){
         var subtree = new CategoryTree();
         subtree.setData(this._children_data);
@@ -678,6 +680,11 @@ var CategoryTree = function(){
     WrappedElement.call(this);
     /**
      * @private
+     * @type {Array.<Category>} child categories
+     */
+    this._children = [];
+    /**
+     * @private
      * @type {Object.<string, Function>}
      * "dictionary" of transition state event handlers
      * where keys are names of the states to which 
@@ -689,6 +696,9 @@ var CategoryTree = function(){
 };
 inherits(CategoryTree, WrappedElement);
 
+/**
+ * @param {Object} data the category tree data
+ */
 CategoryTree.prototype.setData = function(data){
     this._data = data;
 };
@@ -697,15 +707,16 @@ CategoryTree.prototype.setData = function(data){
  * decorates any element by replacing its content
  * with the nested <ul> HTML code representing the 
  * category tree
+ * @param {Object} element - parent jQuery object
+ * @param {boolean?} is_root - true if it must be root menu
+ * root menu opens right below the element, others - to the right
  */
-CategoryTree.prototype.decorate = function(element){
+CategoryTree.prototype.decorate = function(element, is_root){
     if (this._data === null){
         return;
     }
-    var tree_element = this.getElement();//calls this.createDom()
-    this._element = element;//need to replace element
-    //this._element.empty();
-    this._element.append(tree_element);
+    this._root_element = element;//the button which opens the menu
+    this._root_element.after(this.getElement());//calls this.createDom()
 };
 
 /**
@@ -714,20 +725,35 @@ CategoryTree.prototype.decorate = function(element){
  */
 CategoryTree.prototype.createDom = function(){
     this._element = this.makeElement('ul');
-    var my_element = this._element;
-    this._children = [];
-    var tree_children = this._children;
+    this._element.css('position', 'absolute').hide();
+
     var me = this;
     $.each(this._data, function(idx, child_node){
         //create the category and add it to the tree
         var category = new Category(child_node);
-        my_element.append(category.getElement());
-        tree_children.push(category);
+        me._element.append(category.getElement());
+        me._children.push(category);
         //build any subcategories recursively
-        category.buildSubtree();
+        category.buildSubtree(me);
         //copy any state transition events
         me.copyStateTransitionEventHandlersToObjects(me._children);
     });
+};
+
+/**
+ * Opens the menu and closes all submenues
+ */
+CategoryTree.prototype.open = function(){
+    var position = {
+        my: 'left top',
+        of: this._root_element
+    };
+    if (this.isRoot()){
+        position['at'] = 'left bottom';
+    } else {
+        position['at'] = 'right top';
+    }
+    this._element.show().position();
 };
 
 /**
