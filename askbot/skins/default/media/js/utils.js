@@ -583,106 +583,222 @@ EditableString.prototype.createDom = function(){
 };
 
 /**
- * Category widget
  * @constructor
+ * @inherits {EditableString}
  */
-var Category = function(node_data){
+var Category = function(){
+    EditableString.call(this);
+    /** 
+     * @private
+     * @type {?number}
+     */
+    this._category_id = null;
+}
+inherits(Category, EditableString);
+
+/**
+ * @param {number} id
+ * set caterory id
+ */
+Category.prototype.setId = function(id){
+    this._category_id = id;
+};
+
+/**
+ * @param {string} name
+ * set category name
+ */
+Category.prototype.setName = function(name){
+    this.setText(name);
+};
+
+/**
+ * @return {?string}
+ */
+Category.prototype.getName = function(){
+    return this.getText();
+};
+
+/** 
+ * the data structure used to construct the MenuItem
+ * @typedef {{id: number, name: string, children: Array.<MenuData>}}
+ */
+var MenuItemData;
+
+/**
+ * the data structure for the entire menu
+ * @typedef {{Array.<MenuItemData>}}
+ */
+var MenuData;
+
+
+/**
+ * MenuItem widget
+ * @constructor
+ * @param {Menu} parent_menu - the parent menu
+ * @param {MenuItemData} data
+ */
+var MenuItem = function(parent_menu, data){
     WrappedElement.call(this);
     /** 
-     * Category id
+     * MenuItem id
      * @type {integer}
      */
-    this.id = node_data['id'];
+    this.id = data['id'];
     /**
-     * Category name
+     * MenuItem name
      * @type {string}
      */
-    this.name = node_data['name'];
+    this.name = data['name'];
     /**
      * source data for the children
      * @private
      * @type {Object} 
      */
-    this._children_data = node_data['children'];
+    this._children_data = data['children'];
     /**
-     * subtree with child categories
      * @private
-     * @type {CategoryTree}
+     * @type {Menu}
      */
-    this._subtree = null;
+    this._parent_menu = parent_menu;
+    /**
+     * child menu item
+     * @private
+     * @type {Menu}
+     */
+    this._child_menu = null;
     /**
      * @private
      * @type {Object.<string, Function>}
      */
     this._state_transition_event_handlers = {};
+    /**
+     * content element of the menu
+     * @private
+     * @type {Object} any class,
+     * but method getText() is required
+     */
+    this._content = null;
 
 };
-inherits(Category, WrappedElement);
+inherits(MenuItem, WrappedElement);
 
-/** creates dom for a single category
- * does not build subcategories
+/**
+ * @param {Object} content - content object
+ * any object with a method getText()
  */
-Category.prototype.createDom = function(){
-    //create the text element for Category
-    this._element = this.makeElement('li');
-    this._element.addClass('ab-category');
-
-    var category_text = new EditableString();
-    category_text.setText(this.name);
-    this._text_subwidget = category_text;
-
-    var text_element = category_text.getElement();
-    this._element.append(text_element);
-    //todo: copy state transition event handlers to the EditableText
-
-    //add delete handler and button - if user has privilege to delete
+MenuItem.prototype.setContent = function(content){
+    this._content = content;
 };
 
 /**
- * Initializes subtrees and treir DOM's
- * @param {CategoryTree} parent_tree
+ * creates dom for a single MenuItem
+ * does not build subcategories
  */
-Category.prototype.buildSubtree = function(parent_tree){
-    this._parent_tree = parent_tree;
-    if (this._children_data.length > 0){
-        var subtree = new CategoryTree();
-        subtree.setData(this._children_data);
-        this._element.append(subtree.getElement());
-        this._subtree = subtree;
-        this.copyStateTransitionEventHandlersToObjects([subtree], true);
+MenuItem.prototype.createDom = function(){
+    //create the text element for MenuItem
+    this._element = this.makeElement('li');
+    this._element.addClass('ab-menu-item');
+    this._element.append(this._content.getElement());
+    //todo: copy state transition event handlers to the EditableText
+
+    //add delete handler and button - if user has privilege to delete
+    var me = this;
+    this._element.mouseover(me.focusOnMe);
+    this._element.mouseout(me.startLosingFocusOnMe);
+    this._content.getElement().mouseover(me.stopLosingFocusOnMe);
+};
+
+/**
+ * stops closing of the parent menu, if closure is scheduled
+ * closes all child menues of the parent menu
+ * opens own child menu, if exists
+ */
+MenuItem.prototype.focusOnMe = function(){
+    var parent_menu = this._parent_menu;
+    parent_menu.stopClosingAll();
+    parent_menu.closeChildren();
+    this.openChildMenu();
+};
+
+/** sets the timer to close child menues */
+MenuItem.prototype.startLosingFocusOnMe = function(){
+    this._close_timer = setTimeout(this.closeChildMenu, this._close_delay)
+};
+
+/** cancels the timer for closing the child menues */
+MenuItem.prototype.stopLosingFocusOnMe = function(){
+    clearTimeout(this._close_timer);
+    return false;
+};
+
+
+
+/** opens the child menu if it is there */
+MenuItem.prototype.openChildMenu = function(){
+    if (this._child_menu){
+        this._child_menu.open();
     }
+};
+
+/** closes child menu, if exists */
+MenuItem.prototype.closeChildMenu = function(){
+    if (this._child_menu){
+        this._child_menu.close();
+    }
+}
+
+/**
+ * Initializes child_menus and treir DOM's
+ * @return {?Menu}
+ */
+MenuItem.prototype.buildSubtree = function(){
+    if (this._children_data.length > 0){
+        var child_menu = this._parent_menu.createChild();
+        child_menu.setData(this._children_data);
+        this._element.append(child_menu.getElement());
+        this._child_menu = child_menu;
+        this.copyStateTransitionEventHandlersToObjects([child_menu], true);
+        return child_menu;
+    }
+    return null;
 };
 
 /**
  * interface is the same as in ``setStateTransitionEventHandlers``
- * but it sets the handler to ``Category``, ``EditableText`` element
- * and the ``_subtree``
+ * but it sets the handler to ``MenuItem``, ``EditableText`` element
+ * and the ``_child_menu``
  */
-Category.prototype.setStateTransitionEventHandler = function(event_name, handler){
+MenuItem.prototype.setStateTransitionEventHandler = function(event_name, handler){
     setStateTransitionEventHandler.call(this, event_name, handler);
     if (this._text_subwidget){
         var tsw = this._text_subwidget;
         tsw.setStateTransitionEventHandler(event_name, handler);
     }
-    if (this._subtree){
+    if (this._child_menu){
         //run this recursively
-        this._subtree.setStateTransitionEventHandler(event_name, handler, true);
+        this._child_menu.setStateTransitionEventHandler(event_name, handler, true);
     }
 };
 
 /**
  * @inheritDoc
  */
-Category.prototype.copyStateTransitionEventHandlersToObjects =
+MenuItem.prototype.copyStateTransitionEventHandlersToObjects =
     copyStateTransitionEventHandlersToObjects;
 
-var CategoryTree = function(){
+var Menu = function(){
     WrappedElement.call(this);
     /**
      * @private
-     * @type {Array.<Category>} child categories
+     * @type {MenuData} menu items
      */
     this._children = [];
+    /**
+     * @private
+     * @type {Function}
+     */
+    this._content_item_constructor = null;
     /**
      * @private
      * @type {Object.<string, Function>}
@@ -693,14 +809,88 @@ var CategoryTree = function(){
      * the transitions
      */
     this._state_transition_event_handlers = {};
+    /**
+     * @private
+     * @type {number}
+     */
+    this._close_delay = 50;//ms before the menues close
+    /**
+     * @private
+     * @type {?Menu}
+     */
+    this._parent_menu = null;
+    /** 
+     * @private
+     * @type {Array.<Menu>}
+     */
+    this._menu_stack = [];
 };
-inherits(CategoryTree, WrappedElement);
+inherits(Menu, WrappedElement);
 
 /**
- * @param {Object} data the category tree data
+ * @private
+ * @return {boolean}
  */
-CategoryTree.prototype.setData = function(data){
+Menu.prototype.isRoot = function(){
+    return (this._parent_menu === null);
+};
+
+/**
+ * @param {MenuData} data the category tree data
+ */
+Menu.prototype.setData = function(data){
+    /**
+     * @private
+     * @type {MenuData}
+     */
     this._data = data;
+};
+
+/**
+ * @param {Function} creator
+ */
+Menu.prototype.setContentItemCreator = function(creator){
+    this._content_item_creator = creator;
+};
+
+/**
+ * @param {MenuData}
+ * @return {Object} menu item content object
+ */
+Menu.prototype.createContentItem = function(data){
+    return this._content_item_creator(data);
+};
+
+/**
+ * creates the menu item,
+ * sets its content and builds the child_menu
+ * if there any child elements 
+ * in the data
+ * @param {MenuItemData} data
+ * @return {MenuItem}
+ */
+Menu.prototype.createMenuItem = function(data){
+    var menu_item = new MenuItem(this, data);
+
+    //set menu item content
+    var item_content = this.createContentItem(data);
+    menu_item.setContent(item_content);
+
+    this._element.append(menu_item.getElement());
+
+    //build child menu
+    if (data['children'].length > 0){
+        var child_menu = menu_item.buildSubtree();
+        child_menu.setParent(this._parent_menu);
+    }
+    return menu_item;
+};
+
+/**
+ * @param {Menu} parent_menu
+ */
+Menu.prototype.setParent = function(parent_menu){
+    this._parent_menu = parent_menu;
 };
 
 /**
@@ -711,30 +901,37 @@ CategoryTree.prototype.setData = function(data){
  * @param {boolean?} is_root - true if it must be root menu
  * root menu opens right below the element, others - to the right
  */
-CategoryTree.prototype.decorate = function(element, is_root){
+Menu.prototype.decorate = function(element, is_root){
     if (this._data === null){
         return;
     }
+    this._is_root = is_root;
     this._root_element = element;//the button which opens the menu
     this._root_element.after(this.getElement());//calls this.createDom()
+    var me = this;
+    this._root_element.mouseover(function(){
+        me.open()
+    });
+    this._root_element.mouseout(function(){
+        me.startClosing();
+    });
 };
+
 
 /**
  * creates the nested HTML <ul> which represents
  * the category tree. 
  */
-CategoryTree.prototype.createDom = function(){
+Menu.prototype.createDom = function(){
     this._element = this.makeElement('ul');
     this._element.css('position', 'absolute').hide();
 
     var me = this;
     $.each(this._data, function(idx, child_node){
         //create the category and add it to the tree
-        var category = new Category(child_node);
-        me._element.append(category.getElement());
-        me._children.push(category);
+        var menu_item = me.createMenuItem(child_node);
+        me._children.push(menu_item.getElement());
         //build any subcategories recursively
-        category.buildSubtree(me);
         //copy any state transition events
         me.copyStateTransitionEventHandlersToObjects(me._children);
     });
@@ -743,26 +940,127 @@ CategoryTree.prototype.createDom = function(){
 /**
  * Opens the menu and closes all submenues
  */
-CategoryTree.prototype.open = function(){
-    var position = {
-        my: 'left top',
-        of: this._root_element
-    };
+Menu.prototype.open = function(){
+    var position = {my: 'left top'};
     if (this.isRoot()){
         position['at'] = 'left bottom';
+        position['of'] = this._root_element;
     } else {
         position['at'] = 'right top';
+        position['of'] = this._parent_menu;
     }
-    this._element.show().position();
+    this._element.show().position(position);
+    var menu_stack = this.getMenuStack();
+    menu_stack.push(this);
+
+};
+/**
+ * starts a timer to close all the menues
+ * in the tree
+ */
+Menu.prototype.startClosing = function(){
+    var timer = setTimeout(this.closeAll(), this._close_delay);
+    this.setGlobalCloseTimer(timer);
+};
+
+/**
+ * @return {Array.<Menu>}
+ * returns the stack of open menues
+ */
+Menu.prototype.getMenuStack = function(){
+    var root = this.getRootMenu();
+    return root._menu_stack;
+};
+
+/**
+ * @private
+ * @param {number} timer
+ * sets the global menu close timer
+ */
+Menu.prototype.setGlobalCloseTimer = function(timer){
+    var root = this.getRootMenu();
+    root.setCloseTimer(timer);
+};
+
+/**
+ * @private
+ * @return {Menu}
+ * returns the top level menu
+ */
+Menu.prototype.getRootMenu = function(){
+    if (this.isRoot()){
+        return this;
+    } else {
+        return this.getParentMenu().getRootMenu();
+    }
+};
+
+/**
+ * @private
+ * @param {number} timer
+ */
+Menu.prototype.setCloseTimer = function(timer){
+    this._close_timer = timer;
+};
+
+/**
+ * closes all menues immediately
+ */
+Menu.prototype.closeAll = function(){
+    var menu_stack = this.getMenuStack();
+    for (var i = menu_stack.length - 1; i >= 0; i--){
+        menu_stack[i].close();
+        menu_stack.pop();
+    }
+};
+
+/**
+ * cancels closure of all menues
+ */
+Menu.prototype.stopClosingAll = function(){
+    var timer = this.getGlobalCloseTimer();
+    clearTimeout(timer);
+};
+
+/**
+ * closes any open child menues
+ */
+Menu.prototype.closeChildren = function(){
+    var menu_stack = this.getMenuStack();
+    for (var i = menu_stack.length - 1; i >= 0; i--){
+        if (menu_stack[i] === this){
+            break;
+        }
+        menu_stack[i].close();
+        menu_stack.pop();
+    }
+};
+
+/**
+ * @return {Menu}
+ * "bear a child to its own likeness"
+ */
+Menu.prototype.createChild = function(){
+    var child = new Menu();
+    child.setContentItemCreator(this._content_item_creator);
+    child._parent_menu = this;
+    return child;
+};
+
+/**
+ * closes current menu
+ */
+Menu.prototype.close = function(){
+    this.getElement().hide();
 };
 
 /**
  * @inheritDoc
  */
-CategoryTree.prototype.setStateTransitionEventHandler = setStateTransitionEventHandler;
+Menu.prototype.setStateTransitionEventHandler = setStateTransitionEventHandler;
 
 /**
  * @inheritDoc
  */
-CategoryTree.prototype.copyStateTransitionEventHandlersToObjects = 
+Menu.prototype.copyStateTransitionEventHandlersToObjects = 
     copyStateTransitionEventHandlersToObjects;

@@ -48,13 +48,18 @@
 <script type="text/javascript" src="{{ "/js/jquery.ui.position.js"|media }}"></script>
 <script type="text/javascript">
     askbot['data']['categories'] = {% if cats_tree %}[{{ cats_tree }}]{% else %}null{% endif %};
-    var cats = new CategoryTree();//tree of editable categories
+    //set up category menu
+    var cats = new Menu();
     cats.setData(askbot['data']['categories']);
-    var menu_root = $('#ab-cats');
-    cats.decorate(menu_root);
-    //cats.getElement().menu({'item_selector': '.ab-category'});
-    menu_root.mouseover(function(){ cats.open() });
-    menu_root.mouseout(function(){ cats.startClosing() };
+    cats.setContentItemCreator(function(item_data){
+        var category = new Category();
+        if ('name' in item_data && 'id' in item_data){
+            category.setName(item_data['name']);
+            category.setId(item_data['id']);
+        }
+        return category;
+    });
+    cats.decorate($('#ab-cats'), true);
 </script>
 {% endif %}
 <script type="text/javascript">
