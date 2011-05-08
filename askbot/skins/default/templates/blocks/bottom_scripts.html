@@ -15,8 +15,11 @@
                                                 request.user.is_administrator()
                                                 or request.user.is_moderator()
                                             %}true{% else %}false{% endif %};
+        askbot['data']['userIsAdmin'] = {% if request.user.is_administrator() %}true{% else %}false{% endif %};
     {% else %}
         askbot['data']['userIsAuthenticated'] = false;
+        askbot['data']['userIsAdmin'] = false;
+        askbot['data']['userIsAdminOrMod'] = false;
     {% endif %}
     askbot['urls']['mark_read_message'] = '{% url "read_message" %}';
     askbot['urls']['get_tags_by_wildcard'] = '{% url "get_tags_by_wildcard" %}';
@@ -51,6 +54,7 @@
     //set up category menu
     var cats = new Menu();
     cats.setData(askbot['data']['categories']);
+    cats.setEditable(askbot['data']['userIsAdmin']);
     cats.setContentItemCreator(function(item_data){
         var category = new Category();
         if ('name' in item_data && 'id' in item_data){

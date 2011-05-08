@@ -165,6 +165,46 @@ WrappedElement.prototype.dispose = function(){
     this._in_document = false;
 };
 
+
+/**
+ * @constructor
+ * a wrapped jquery element that has state
+ */
+var Widget = function(){
+    WrappedElement.call(this);
+    /**
+     * @private
+     * @type {Object.<string, Function>}
+     * "dictionary" of transition state event handlers
+     * where keys are names of the states to which 
+     * the widget is transitioning
+     * and the values are functions are to be called upon
+     * the transitions
+     */
+    this._state_transition_event_handlers = {};
+};
+inherits(Widget, WrappedElement);
+
+Widget.prototype.getStateTransitionEventHandlers = function(){
+    return this._state_transition_event_handlers;
+};
+
+/**
+ * @param {Widget} other_widget
+ * not a careful method, will overwrite all
+ */
+Widget.prototype.copyStateTransitionEventHandlersFrom = function(other_widget){
+    this._state_transition_event_handlers =
+        other_widget.getStateTransitionEventHandlers();
+};
+
+/**
+ * @param {Object}
+ */
+Widget.prototype.setStateTransitionEventHandlers = function(handlers){
+    this._state_transition_event_handlers = handlers;
+};
+
 var SimpleControl = function(){
     WrappedElement.call(this);
     this._handler = null;
@@ -394,48 +434,6 @@ if(!this.JSON){this.JSON={}}(function(){function f(n){return n<10?"0"+n:n}if(typ
 var AutoCompleter=function(a){var b={autocompleteMultiple:true,multipleSeparator:" ",inputClass:"acInput",loadingClass:"acLoading",resultsClass:"acResults",selectClass:"acSelect",queryParamName:"q",limitParamName:"limit",extraParams:{},lineSeparator:"\n",cellSeparator:"|",minChars:2,maxItemsToShow:10,delay:400,useCache:true,maxCacheLength:10,matchSubset:true,matchCase:false,matchInside:true,mustMatch:false,preloadData:false,selectFirst:false,stopCharRegex:/\s+/,selectOnly:false,formatItem:null,onItemSelect:false,autoFill:false,filterResults:true,sortResults:true,sortFunction:false,onNoMatch:false};this.options=$.extend({},b,a);this.cacheData_={};this.cacheLength_=0;this.selectClass_="jquery-autocomplete-selected-item";this.keyTimeout_=null;this.lastKeyPressed_=null;this.lastProcessedValue_=null;this.lastSelectedValue_=null;this.active_=false;this.finishOnBlur_=true;this.options.minChars=parseInt(this.options.minChars,10);if(isNaN(this.options.minChars)||this.options.minChars<1){this.options.minChars=2}this.options.maxItemsToShow=parseInt(this.options.maxItemsToShow,10);if(isNaN(this.options.maxItemsToShow)||this.options.maxItemsToShow<1){this.options.maxItemsToShow=10}this.options.maxCacheLength=parseInt(this.options.maxCacheLength,10);if(isNaN(this.options.maxCacheLength)||this.options.maxCacheLength<1){this.options.maxCacheLength=10}if(this.options.preloadData===true){this.fetchRemoteData("",function(){})}};inherits(AutoCompleter,WrappedElement);AutoCompleter.prototype.decorate=function(a){this._element=a;this._element.attr("autocomplete","off");this._results=$("<div></div>").hide();if(this.options.resultsClass){this._results.addClass(this.options.resultsClass)}this._results.css({position:"absolute"});$("body").append(this._results);this.setEventHandlers()};AutoCompleter.prototype.setEventHandlers=function(){var a=this;a._element.keydown(function(b){a.lastKeyPressed_=b.keyCode;switch(a.lastKeyPressed_){case 38:b.preventDefault();if(a.active_){a.focusPrev()}else{a.activate()}return false;break;case 40:b.preventDefault();if(a.active_){a.focusNext()}else{a.activate()}return false;break;case 9:case 13:if(a.active_){b.preventDefault();a.selectCurrent();return false}break;case 27:if(a.active_){b.preventDefault();a.finish();return false}break;default:a.activate()}});a._element.blur(function(){if(a.finishOnBlur_){setTimeout(function(){a.finish()},200)}})};AutoCompleter.prototype.position=function(){var a=this._element.offset();this._results.css({top:a.top+this._element.outerHeight(),left:a.left})};AutoCompleter.prototype.cacheRead=function(d){var f,c,b,a,e;if(this.options.useCache){d=String(d);f=d.length;if(this.options.matchSubset){c=1}else{c=f}while(c<=f){if(this.options.matchInside){a=f-c}else{a=0}e=0;while(e<=a){b=d.substr(0,c);if(this.cacheData_[b]!==undefined){return this.cacheData_[b]}e++}c++}}return false};AutoCompleter.prototype.cacheWrite=function(a,b){if(this.options.useCache){if(this.cacheLength_>=this.options.maxCacheLength){this.cacheFlush()}a=String(a);if(this.cacheData_[a]!==undefined){this.cacheLength_++}return this.cacheData_[a]=b}return false};AutoCompleter.prototype.cacheFlush=function(){this.cacheData_={};this.cacheLength_=0};AutoCompleter.prototype.callHook=function(c,b){var a=this.options[c];if(a&&$.isFunction(a)){return a(b,this)}return false};AutoCompleter.prototype.activate=function(){var b=this;var a=function(){b.activateNow()};var c=parseInt(this.options.delay,10);if(isNaN(c)||c<=0){c=250}if(this.keyTimeout_){clearTimeout(this.keyTimeout_)}this.keyTimeout_=setTimeout(a,c)};AutoCompleter.prototype.activateNow=function(){var a=this.getValue();if(a!==this.lastProcessedValue_&&a!==this.lastSelectedValue_){if(a.length>=this.options.minChars){this.active_=true;this.lastProcessedValue_=a;this.fetchData(a)}}};AutoCompleter.prototype.fetchData=function(b){if(this.options.data){this.filterAndShowResults(this.options.data,b)}else{var a=this;this.fetchRemoteData(b,function(c){a.filterAndShowResults(c,b)})}};AutoCompleter.prototype.fetchRemoteData=function(c,e){var d=this.cacheRead(c);if(d){e(d)}else{var a=this;if(this._element){this._element.addClass(this.options.loadingClass)}var b=function(g){var f=false;if(g!==false){f=a.parseRemoteData(g);a.options.data=f;a.cacheWrite(c,f)}if(a._element){a._element.removeClass(a.options.loadingClass)}e(f)};$.ajax({url:this.makeUrl(c),success:b,error:function(){b(false)}})}};AutoCompleter.prototype.setOption=function(a,b){this.options[a]=b};AutoCompleter.prototype.setExtraParam=function(b,c){var a=$.trim(String(b));if(a){if(!this.options.extraParams){this.options.extraParams={}}if(this.options.extraParams[a]!==c){this.options.extraParams[a]=c;this.cacheFlush()}}};AutoCompleter.prototype.makeUrl=function(e){var a=this;var b=this.options.url;var d=$.extend({},this.options.extraParams);if(this.options.queryParamName===false){b+=encodeURIComponent(e)}else{d[this.options.queryParamName]=e}if(this.options.limitParamName&&this.options.maxItemsToShow){d[this.options.limitParamName]=this.options.maxItemsToShow}var c=[];$.each(d,function(f,g){c.push(a.makeUrlParam(f,g))});if(c.length){b+=b.indexOf("?")==-1?"?":"&";b+=c.join("&")}return b};AutoCompleter.prototype.makeUrlParam=function(a,b){return String(a)+"="+encodeURIComponent(b)};AutoCompleter.prototype.splitText=function(a){return String(a).replace(/(\r\n|\r|\n)/g,"\n").split(this.options.lineSeparator)};AutoCompleter.prototype.parseRemoteData=function(c){var h,b,f,d,g;var e=[];var b=this.splitText(c);for(f=0;f<b.length;f++){var a=b[f].split(this.options.cellSeparator);g=[];for(d=0;d<a.length;d++){g.push(unescape(a[d]))}h=g.shift();e.push({value:unescape(h),data:g})}return e};AutoCompleter.prototype.filterAndShowResults=function(a,b){this.showResults(this.filterResults(a,b),b)};AutoCompleter.prototype.filterResults=function(d,b){var f=[];var l,c,e,m,j,a;var k,h,g;for(e=0;e<d.length;e++){m=d[e];j=typeof m;if(j==="string"){l=m;c={}}else{if($.isArray(m)){l=m[0];c=m.slice(1)}else{if(j==="object"){l=m.value;c=m.data}}}l=String(l);if(l>""){if(typeof c!=="object"){c={}}if(this.options.filterResults){h=String(b);g=String(l);if(!this.options.matchCase){h=h.toLowerCase();g=g.toLowerCase()}a=g.indexOf(h);if(this.options.matchInside){a=a>-1}else{a=a===0}}else{a=true}if(a){f.push({value:l,data:c})}}}if(this.options.sortResults){f=this.sortResults(f,b)}if(this.options.maxItemsToShow>0&&this.options.maxItemsToShow<f.length){f.length=this.options.maxItemsToShow}return f};AutoCompleter.prototype.sortResults=function(c,d){var b=this;var a=this.options.sortFunction;if(!$.isFunction(a)){a=function(g,e,h){return b.sortValueAlpha(g,e,h)}}c.sort(function(f,e){return a(f,e,d)});return c};AutoCompleter.prototype.sortValueAlpha=function(d,c,e){d=String(d.value);c=String(c.value);if(!this.options.matchCase){d=d.toLowerCase();c=c.toLowerCase()}if(d>c){return 1}if(d<c){return -1}return 0};AutoCompleter.prototype.showResults=function(e,b){var k=this;var g=$("<ul></ul>");var f,l,j,a,h=false,d=false;var c=e.length;for(f=0;f<c;f++){l=e[f];j=$("<li>"+this.showResult(l.value,l.data)+"</li>");j.data("value",l.value);j.data("data",l.data);j.click(function(){var i=$(this);k.selectItem(i)}).mousedown(function(){k.finishOnBlur_=false}).mouseup(function(){k.finishOnBlur_=true});g.append(j);if(h===false){h=String(l.value);d=j;j.addClass(this.options.firstItemClass)}if(f==c-1){j.addClass(this.options.lastItemClass)}}this.position();this._results.html(g).show();a=this._results.outerWidth()-this._results.width();this._results.width(this._element.outerWidth()-a);$("li",this._results).hover(function(){k.focusItem(this)},function(){});if(this.autoFill(h,b)){this.focusItem(d)}};AutoCompleter.prototype.showResult=function(b,a){if($.isFunction(this.options.showResult)){return this.options.showResult(b,a)}else{return b}};AutoCompleter.prototype.autoFill=function(e,c){var b,a,d,f;if(this.options.autoFill&&this.lastKeyPressed_!=8){b=String(e).toLowerCase();a=String(c).toLowerCase();d=e.length;f=c.length;if(b.substr(0,f)===a){this._element.val(e);this.selectRange(f,d);return true}}return false};AutoCompleter.prototype.focusNext=function(){this.focusMove(+1)};AutoCompleter.prototype.focusPrev=function(){this.focusMove(-1)};AutoCompleter.prototype.focusMove=function(a){var b,c=$("li",this._results);a=parseInt(a,10);for(var b=0;b<c.length;b++){if($(c[b]).hasClass(this.selectClass_)){this.focusItem(b+a);return}}this.focusItem(0)};AutoCompleter.prototype.focusItem=function(b){var a,c=$("li",this._results);if(c.length){c.removeClass(this.selectClass_).removeClass(this.options.selectClass);if(typeof b==="number"){b=parseInt(b,10);if(b<0){b=0}else{if(b>=c.length){b=c.length-1}}a=$(c[b])}else{a=$(b)}if(a){a.addClass(this.selectClass_).addClass(this.options.selectClass)}}};AutoCompleter.prototype.selectCurrent=function(){var a=$("li."+this.selectClass_,this._results);if(a.length==1){this.selectItem(a)}else{this.finish()}};AutoCompleter.prototype.selectItem=function(d){var c=d.data("value");var b=d.data("data");var a=this.displayValue(c,b);this.lastProcessedValue_=a;this.lastSelectedValue_=a;this.setValue(a);this.setCaret(a.length);this.callHook("onItemSelect",{value:c,data:b});this.finish()};AutoCompleter.prototype.isContentChar=function(a){if(a.match(this.options.stopCharRegex)){return false}else{if(a===this.options.multipleSeparator){return false}else{return true}}};AutoCompleter.prototype.getValue=function(){var c=this._element.getSelection();var d=this._element.val();var f=c.start;var e=f;for(cpos=f;cpos>=0;cpos=cpos-1){if(cpos===d.length){continue}var b=d.charAt(cpos);if(!this.isContentChar(b)){break}e=cpos}var a=f;for(cpos=f;cpos<d.length;cpos=cpos+1){if(cpos===0){continue}var b=d.charAt(cpos);if(!this.isContentChar(b)){break}a=cpos}this._selection_start=e;this._selection_end=a;return d.substring(e,a)};AutoCompleter.prototype.setValue=function(b){var a=this._element.val().substring(0,this._selection_start);var c=this._element.val().substring(this._selection_end+1);this._element.val(a+b+c)};AutoCompleter.prototype.displayValue=function(b,a){if($.isFunction(this.options.displayValue)){return this.options.displayValue(b,a)}else{return b}};AutoCompleter.prototype.finish=function(){if(this.keyTimeout_){clearTimeout(this.keyTimeout_)}if(this._element.val()!==this.lastSelectedValue_){if(this.options.mustMatch){this._element.val("")}this.callHook("onNoMatch")}this._results.hide();this.lastKeyPressed_=null;this.lastProcessedValue_=null;if(this.active_){this.callHook("onFinish")}this.active_=false};AutoCompleter.prototype.selectRange=function(d,a){var c=this._element.get(0);if(c.setSelectionRange){c.focus();c.setSelectionRange(d,a)}else{if(this.createTextRange){var b=this.createTextRange();b.collapse(true);b.moveEnd("character",a);b.moveStart("character",d);b.select()}}};AutoCompleter.prototype.setCaret=function(a){this.selectRange(a,a)};
 
 /**
- * sets transition event handler to the object
- * and (optionally) - to all its children recursively
- * @param {string} event_name - name of state transition event
- * @param {Function} handler - function that will be called upon transition
- * @param {boolean} recursive - if true - apply to children as well
- * requirements are that ``this`` object has private property
- * ``_state_transition_event_handlers``
- * also - if ``recursive === true``, the ``this`` object must
- * have property ``_children`` and all children must have method
- * ``setStateTransitionEventHandler``, then the handlers will
- * be copied onto the children
- */
-function setStateTransitionEventHandler(event_name, handler, recursive){
-    this._state_transition_event_handlers[event_name] = handler;
-    if (recursive === true) {
-        $.each(this._children, function(idx, child){
-            child.setStateTransitionEventHandler(event_name, handler, recursive);
-        });
-    }
-};
-
-/**
- * @param {Array.<Object>} objects
- * @param {boolean} recursive
- * just like ``setStateTransitionEventHandler``
- * but copies all such handlers from ``this`` object to ``objects``
- * the requirement on ``objects`` is that they all
- * have method ``setStateTransitionEventHandler`` and
- * ``this`` satisfies all the requirements of the previous function
- * if ``recursive === true``, the copying is recurzively applied 
- * to the ``_children`` of all objects
- */
-function copyStateTransitionEventHandlersToObjects(objects, recursive){
-    for (event_name in this._state_transition_event_handlers){
-        var handler = this._state_transition_event_handlers[event_name];
-        $.each(objects, function(idx, obj){
-            obj.setStateTransitionEventHandler(event_name, handler, recursive);
-        });
-    }
-};
-
-/**
  * A text element with an "edit" prompt
  * showing on mouseover
  * the widget has two states: DISPLAY and "EDIT"
@@ -446,7 +444,7 @@ function copyStateTransitionEventHandlersToObjects(objects, recursive){
  * when user hits "enter", 
  */
 var EditableString = function(){
-    WrappedElement.call(this);
+    Widget.call(this);
     /**
      * @private
      * @type {string}
@@ -454,17 +452,25 @@ var EditableString = function(){
      * to the user
      */
     this._text = '';
+
     /**
      * @private
-     * @type {Object.<string, Function>}
+     * @type {boolean}
      */
-    this._state_transition_event_handlers = {};
+    this._is_editable = true;
 };
-inherits(EditableString, WrappedElement);
+inherits(EditableString, Widget);
+
+/**
+ * @param {boolean} is_editable
+ */
+EditableString.prototype.setEditable = function(is_editable){
+    this._is_editable = is_editable;
+};
 
 EditableString.prototype.setState = function(state){
     //run transition event handler, if exists
-    var handlers = this._state_transition_event_handlers;
+    var handlers = this.getStateTransitionEventHandlers();
     if (handlers.hasOwnProperty(state)){
         handlers[state].call();
     }
@@ -477,14 +483,6 @@ EditableString.prototype.setState = function(state){
         this._display_block.show();
     }
 };
-
-/**
- * @inheritDoc
- * should always be called with ``recursive = false``
- * or better - just with two parameters
- */
-EditableString.prototype.setStateTransitionEventHandler = 
-    setStateTransitionEventHandler;
 
 /**
  * @param {string} text - string text
@@ -550,36 +548,35 @@ EditableString.prototype.createDom = function(){
 
     this._display_block = this.makeElement('div');
     this._element.append(this._display_block);
-    this._edit_block = this.makeElement('div');
-    this._element.append(this._edit_block);
-
-    this._input_box = this.makeElement('input');
-    this._input_box.attr('type', 'text');
-    this._edit_block.append(this._input_box);
-
     this._text_element = this.makeElement('span');
-    var edit_link = new EditLink();
-    edit_link.setHandler(
-        this.getStartEditHandler()
-    );
     this._display_block.append(this._text_element);
-    var edit_element = edit_link.getElement();
-    this._display_block.append(edit_element);
-    //build dom for the edit block
-
     //set the value of text
     this._text_element.html(this.getText());
-
-    //replace content with the new dom
-
     //set the display state
-    this.setState('DISPLAY');
 
-    //set event handlers
-    var text_elem = this._text_element;
-    this._input_box.keydown(
-        makeKeyHandler(13, this.getSaveEditHandler())
-    );
+    //it is assumed that _is_editable is set once at the beginning
+    if (this._is_editable){
+        this._edit_block = this.makeElement('div');
+        this._element.append(this._edit_block);
+
+        this._input_box = this.makeElement('input');
+        this._input_box.attr('type', 'text');
+        this._edit_block.append(this._input_box);
+
+        var edit_link = new EditLink();
+        edit_link.setHandler(
+            this.getStartEditHandler()
+        );
+
+        var edit_element = edit_link.getElement();
+        this._display_block.append(edit_element);
+        //build dom for the edit block
+
+        this._input_box.keydown(
+            makeKeyHandler(13, this.getSaveEditHandler())
+        );
+        this.setState('DISPLAY');
+    }
 };
 
 /**
@@ -639,7 +636,7 @@ var MenuData;
  * @param {MenuItemData} data
  */
 var MenuItem = function(parent_menu, data){
-    WrappedElement.call(this);
+    Widget.call(this);
     /** 
      * MenuItem id
      * @type {integer}
@@ -668,11 +665,6 @@ var MenuItem = function(parent_menu, data){
      */
     this._child_menu = null;
     /**
-     * @private
-     * @type {Object.<string, Function>}
-     */
-    this._state_transition_event_handlers = {};
-    /**
      * content element of the menu
      * @private
      * @type {Object} any class,
@@ -690,6 +682,15 @@ inherits(MenuItem, WrappedElement);
 MenuItem.prototype.setContent = function(content){
     this._content = content;
 };
+
+/**
+ * @private
+ * @param {state} string
+ * supported states are DISPLAY and EDIT
+ */
+MenuItem.prototype.setState = function(state){
+    this._content.setState(state);
+}
 
 /**
  * creates dom for a single MenuItem
@@ -767,37 +768,20 @@ MenuItem.prototype.buildSubtree = function(){
         child_menu.setData(this._children_data);
         this._element.append(child_menu.getElement());
         this._child_menu = child_menu;
-        this.copyStateTransitionEventHandlersToObjects([child_menu], true);
         return child_menu;
     }
     return null;
 };
 
 /**
- * interface is the same as in ``setStateTransitionEventHandlers``
- * but it sets the handler to ``MenuItem``, ``EditableText`` element
- * and the ``_child_menu``
+ * @constructor
+ * a menu widget, which may be nested
+ * elements of the menu are instances of
+ * ``MenuItem``
+ * the menu may be editable in place
  */
-MenuItem.prototype.setStateTransitionEventHandler = function(event_name, handler){
-    setStateTransitionEventHandler.call(this, event_name, handler);
-    if (this._text_subwidget){
-        var tsw = this._text_subwidget;
-        tsw.setStateTransitionEventHandler(event_name, handler);
-    }
-    if (this._child_menu){
-        //run this recursively
-        this._child_menu.setStateTransitionEventHandler(event_name, handler, true);
-    }
-};
-
-/**
- * @inheritDoc
- */
-MenuItem.prototype.copyStateTransitionEventHandlersToObjects =
-    copyStateTransitionEventHandlersToObjects;
-
 var Menu = function(){
-    WrappedElement.call(this);
+    Widget.call(this);
     /**
      * @private
      * @type {?MenuItem}
@@ -815,19 +799,9 @@ var Menu = function(){
     this._content_item_constructor = null;
     /**
      * @private
-     * @type {Object.<string, Function>}
-     * "dictionary" of transition state event handlers
-     * where keys are names of the states to which 
-     * the widget is transitioning
-     * and the values are functions are to be called upon
-     * the transitions
-     */
-    this._state_transition_event_handlers = {};
-    /**
-     * @private
      * @type {number}
      */
-    this._close_delay = 250;//ms before the menues close
+    this._close_delay = 350;//ms before the menues close
     /**
      * @private
      * @type {?Menu}
@@ -840,8 +814,20 @@ var Menu = function(){
      * and root - the first item
      */
     this._menu_stack = [];
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    this._is_editable = true;
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    this._is_frozen = false;
 };
-inherits(Menu, WrappedElement);
+inherits(Menu, Widget);
 
 /**
  * @private
@@ -849,6 +835,13 @@ inherits(Menu, WrappedElement);
  */
 Menu.prototype.isRoot = function(){
     return (this._parent_menu === null);
+};
+
+/**
+ * @param {boolean} is_editable
+ */
+Menu.prototype.setEditable = function(is_editable){
+    this._is_editable = is_editable;
 };
 
 /**
@@ -890,6 +883,9 @@ Menu.prototype.createMenuItem = function(data){
 
     //set menu item content
     var item_content = this.createContentItem(data);
+    item_content.setEditable(this._is_editable);
+    item_content.copyStateTransitionEventHandlersFrom(this);
+
     menu_item.setContent(item_content);
 
     this._element.append(menu_item.getElement());
@@ -925,6 +921,56 @@ Menu.prototype.decorate = function(element, is_root){
     });
 };
 
+/**
+ * @private
+ * called before an item starts to become edited
+ */
+Menu.prototype.stopEditingAllItems = function(){
+    var menu_stack = this.getMenuStack();
+    $.each(menu_stack, function(idx, open_menu){
+        $.each(open_menu._children, function(idx, menu_item){
+            menu_item.setState('DISPLAY');
+        });
+    });
+};
+
+/**
+ * @private
+ * sets transition event handlers to the menu
+ * supported states are EDIT, DISPLAY and ADD
+ */
+Menu.prototype.initStateTransitionEventHandlers = function(){
+    var me = this;
+    //need to prevent editing more than one entry at a time
+    this.setStateTransitionEventHandlers({
+        EDIT: function(){
+            me.stopEditingAllItems();
+            me.freeze();
+        },
+        DISPLAY: function(){
+            me.unfreeze();
+        }
+    });
+};
+
+/**
+ * freezes the menu - so it does not collapse
+ * until "unfrozen"
+ */
+Menu.prototype.freeze = function(){
+    //use a private attribute...
+    this.getRootMenu()._is_frozen = true;
+};
+Menu.prototype.unfreeze = function(){
+    this.getRootMenu()._is_frozen = false;
+};
+
+/**
+ * @return {boolean}
+ */
+Menu.prototype.isFrozen = function(){
+    return this.getRootMenu()._is_frozen;
+};
 
 /**
  * creates the nested HTML <ul> which represents
@@ -934,14 +980,15 @@ Menu.prototype.createDom = function(){
     this._element = this.makeElement('ul');
     this._element.css('position', 'absolute').hide();
 
+    this.initStateTransitionEventHandlers();
+
     var me = this;
     $.each(this._data, function(idx, child_node){
-        //create the category and add it to the tree
+        //create the category (and any children within) and add it to the tree
         var menu_item = me.createMenuItem(child_node);
         me._children.push(menu_item);
         //build any subcategories recursively
         //copy any state transition events
-        me.copyStateTransitionEventHandlersToObjects(me._children);
     });
 };
 
@@ -949,6 +996,9 @@ Menu.prototype.createDom = function(){
  * Opens the menu
  */
 Menu.prototype.open = function(){
+    if (this.isFrozen()){
+        return;
+    }
     var position = {my: 'left top'};
     if (this.isRoot()){
         position['at'] = 'left bottom';
@@ -1061,6 +1111,9 @@ Menu.prototype.getCloseTimer = function(){
  * closes all menues immediately
  */
 Menu.prototype.closeAll = function(){
+    if (this.isFrozen()){
+        return;
+    }
     var menu_stack = this.getMenuStack();
     for (var i = menu_stack.length - 1; i >= 0; i--){
         menu_stack[i].close();
@@ -1091,30 +1144,37 @@ Menu.prototype.closeChildren = function(){
 };
 
 /**
+ * @param {Menu} parent_menu
+ */
+Menu.prototype.setParent = function(parent_menu){
+    this._parent_menu = parent_menu;
+};
+
+/**
  * @return {Menu}
  * "bear a child to its own likeness"
  */
 Menu.prototype.createChild = function(){
     var child = new Menu();
     child.setContentItemCreator(this._content_item_creator);
-    child._parent_menu = this;
+    child.setParent(this);
+    child.setEditable(this._is_editable);
     return child;
 };
 
 /**
  * closes current menu
+ * and if menu is editable, sets the state to DISPLAY
+ * on all child items
  */
 Menu.prototype.close = function(){
+    if (this.isFrozen()){
+        return;
+    }
     this.getElement().hide();
+    if (this._is_editable){
+        $.each(this._children, function(idx, menu_item){
+            menu_item.setState('DISPLAY');
+        });
+    }
 };
-
-/**
- * @inheritDoc
- */
-Menu.prototype.setStateTransitionEventHandler = setStateTransitionEventHandler;
-
-/**
- * @inheritDoc
- */
-Menu.prototype.copyStateTransitionEventHandlersToObjects = 
-    copyStateTransitionEventHandlersToObjects;
