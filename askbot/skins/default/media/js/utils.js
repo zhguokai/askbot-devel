@@ -704,9 +704,9 @@ MenuItem.prototype.createDom = function(){
 
     //add delete handler and button - if user has privilege to delete
     var me = this;
-    this._element.mouseover(me.focusOnMe);
-    this._element.mouseout(me.startLosingFocusOnMe);
-    this._content.getElement().mouseover(me.stopLosingFocusOnMe);
+    this._element.mouseover(function(e){me.focusOnMe(e)});
+    this._element.mouseout(function(e){me.startLosingFocusOnMe(e)});
+    this._content.getElement().mouseover(function(e){me.stopLosingFocusOnMe(e)});
 };
 
 /**
@@ -714,25 +714,26 @@ MenuItem.prototype.createDom = function(){
  * closes all child menues of the parent menu
  * opens own child menu, if exists
  */
-MenuItem.prototype.focusOnMe = function(){
+MenuItem.prototype.focusOnMe = function(e){
     var parent_menu = this._parent_menu;
     parent_menu.stopClosingAll();
     parent_menu.closeChildren();
+    parent_menu.setActiveItem(this);
     this.openChildMenu();
+    e.stopImmediatePropagation();
 };
 
 /** sets the timer to close child menues */
-MenuItem.prototype.startLosingFocusOnMe = function(){
-    this._close_timer = setTimeout(this.closeChildMenu, this._close_delay)
+MenuItem.prototype.startLosingFocusOnMe = function(e){
+    this._parent_menu.startClosing();
+    this.deactivate();
+    e.stopImmediatePropagation();
 };
 
 /** cancels the timer for closing the child menues */
-MenuItem.prototype.stopLosingFocusOnMe = function(){
-    clearTimeout(this._close_timer);
-    return false;
+MenuItem.prototype.stopLosingFocusOnMe = function(e){
+    this._parent_menu.stopClosingAll();
 };
-
-
 
 /** opens the child menu if it is there */
 MenuItem.prototype.openChildMenu = function(){
@@ -747,6 +748,14 @@ MenuItem.prototype.closeChildMenu = function(){
         this._child_menu.close();
     }
 }
+
+MenuItem.prototype.activate = function(){
+    this._element.addClass('ab-active-menu-item');
+};
+
+MenuItem.prototype.deactivate = function(){
+    this._element.removeClass('ab-active-menu-item');
+};
 
 /**
  * Initializes child_menus and treir DOM's
@@ -791,6 +800,11 @@ var Menu = function(){
     WrappedElement.call(this);
     /**
      * @private
+     * @type {?MenuItem}
+     */
+    this._active_item = null;
+    /**
+     * @private
      * @type {MenuData} menu items
      */
     this._children = [];
@@ -813,7 +827,7 @@ var Menu = function(){
      * @private
      * @type {number}
      */
-    this._close_delay = 50;//ms before the menues close
+    this._close_delay = 250;//ms before the menues close
     /**
      * @private
      * @type {?Menu}
@@ -822,6 +836,8 @@ var Menu = function(){
     /** 
      * @private
      * @type {Array.<Menu>}
+     * stack of open menues, with leaf being the last item
+     * and root - the first item
      */
     this._menu_stack = [];
 };
@@ -881,16 +897,8 @@ Menu.prototype.createMenuItem = function(data){
     //build child menu
     if (data['children'].length > 0){
         var child_menu = menu_item.buildSubtree();
-        child_menu.setParent(this._parent_menu);
     }
     return menu_item;
-};
-
-/**
- * @param {Menu} parent_menu
- */
-Menu.prototype.setParent = function(parent_menu){
-    this._parent_menu = parent_menu;
 };
 
 /**
@@ -930,7 +938,7 @@ Menu.prototype.createDom = function(){
     $.each(this._data, function(idx, child_node){
         //create the category and add it to the tree
         var menu_item = me.createMenuItem(child_node);
-        me._children.push(menu_item.getElement());
+        me._children.push(menu_item);
         //build any subcategories recursively
         //copy any state transition events
         me.copyStateTransitionEventHandlersToObjects(me._children);
@@ -938,7 +946,7 @@ Menu.prototype.createDom = function(){
 };
 
 /**
- * Opens the menu and closes all submenues
+ * Opens the menu
  */
 Menu.prototype.open = function(){
     var position = {my: 'left top'};
@@ -947,19 +955,41 @@ Menu.prototype.open = function(){
         position['of'] = this._root_element;
     } else {
         position['at'] = 'right top';
-        position['of'] = this._parent_menu;
+        position['of'] = this._parent_menu.getActiveItem().getElement();
     }
-    this._element.show().position(position);
+    this._element.show();
+    this._element.position(position);
     var menu_stack = this.getMenuStack();
     menu_stack.push(this);
 
 };
+
+/**
+ * @return {MenuItem} 
+ * currently active menu item
+ */
+Menu.prototype.getActiveItem = function(){
+    return this._active_item;
+};
+
+/**
+ * @param {MenuItem} menu_item
+ */
+Menu.prototype.setActiveItem = function(menu_item){
+    this._active_item = menu_item;
+    menu_item.activate();
+};
+
 /**
  * starts a timer to close all the menues
  * in the tree
  */
 Menu.prototype.startClosing = function(){
-    var timer = setTimeout(this.closeAll(), this._close_delay);
+    var me = this;
+    var timer = setTimeout(
+                    function(){me.closeAll()},
+                    me._close_delay
+                );
     this.setGlobalCloseTimer(timer);
 };
 
@@ -984,6 +1014,14 @@ Menu.prototype.setGlobalCloseTimer = function(timer){
 
 /**
  * @private
+ * @return {number} the timer
+ */
+Menu.prototype.getGlobalCloseTimer = function(){
+    return this.getRootMenu().getCloseTimer();
+};
+
+/**
+ * @private
  * @return {Menu}
  * returns the top level menu
  */
@@ -997,10 +1035,26 @@ Menu.prototype.getRootMenu = function(){
 
 /**
  * @private
+ * @return {Menu}
+ */
+Menu.prototype.getParentMenu = function(){
+    return this._parent_menu;
+};
+
+/**
+ * @private
  * @param {number} timer
  */
 Menu.prototype.setCloseTimer = function(timer){
     this._close_timer = timer;
+};
+
+/**
+ * @private
+ * @return {number} timer
+ */
+Menu.prototype.getCloseTimer = function(){
+    return this._close_timer;
 };
 
 /**
