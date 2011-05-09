@@ -1,5 +1,6 @@
 import datetime
-from django.core.management.base import NoArgsCommand
+import optparse
+from django.core.management.base import BaseCommand
 from django.conf import settings as django_settings
 from askbot import models
 from askbot import const
@@ -9,12 +10,52 @@ from django.utils.translation import ungettext
 from askbot.utils import mail
 from askbot.models.question import get_tag_summary_from_questions
 
-DEBUG_THIS_COMMAND = True
 
-class Command(NoArgsCommand):
-    def handle_noargs(self, **options):
+class Command(BaseCommand):
+    help = 'Send Email reminder for unanswered emails'
+
+    option_list = BaseCommand.option_list + (
+       optparse.make_option(
+          '-d',
+          '--debug',
+          action = 'store_true',
+          default = False,
+          dest = 'debug',
+          help = 'Do NOT sent emails, but print what they would be'
+       ),
+       optparse.make_option(
+          '-f',
+          '--force-email',
+          action = 'store_true',
+          default = False,
+          dest = 'force_email',
+          help = 'Send emails even if emails were sent recently'
+       ),
+       optparse.make_option(
+          '-i',
+          '--ignore-dates',
+          action = 'store_true',
+          default = False,
+          dest = 'ignore_dates',
+          help = 'Select questions even if they are outside the date exclusion range'
+       ),
+    )
+    def handle(self, *args, **options):
+        DEBUG_THIS_COMMAND = False
+        FORCE_EMAIL = False
+        IGNORE_DATES = False
+
         if askbot_settings.ENABLE_UNANSWERED_REMINDERS == False:
             return
+
+        if options['ignore_dates']:
+           IGNORE_DATES = True
+           FORCE_EMAIL = True
+        if options['debug']:
+           DEBUG_THIS_COMMAND = True
+        if options['force_email']:
+           FORCE_EMAIL = True
+
         #get questions without answers, excluding closed and deleted
         #order it by descending added_at date
         wait_period = datetime.timedelta(
@@ -28,7 +69,18 @@ class Command(NoArgsCommand):
         max_emails = askbot_settings.MAX_UNANSWERED_REMINDERS
         end_cutoff_date = start_cutoff_date - (max_emails - 1)*recurrence_delay
 
-        questions = models.Question.objects.exclude(
+        if IGNORE_DATES:
+            questions = models.Question.objects.exclude(
+                                        closed = True
+                                    ).exclude(
+                                        deleted = True
+                                    ).filter(
+                                        added_at__lt = start_cutoff_date
+                                    ).filter(
+                                        answer_count = 0
+                                    ).order_by('-added_at')
+        else: 
+            questions = models.Question.objects.exclude(
                                         closed = True
                                     ).exclude(
                                         deleted = True
@@ -66,7 +118,8 @@ class Command(NoArgsCommand):
                     )
                     now = datetime.datetime.now()
                     if now < activity.active_at + recurrence_delay:
-                        if not DEBUG_THIS_COMMAND:
+                        # Only send email if minimum delay between emails has been met
+                        if not DEBUG_THIS_COMMAND and not FORCE_EMAIL:
                             continue
                 except models.Activity.DoesNotExist:
                     activity = models.Activity(
@@ -126,6 +179,7 @@ class Command(NoArgsCommand):
                 print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \
                     (user.email, subject_line, body_text)
             else:
+                print "User: %s - %s" % (user.email, subject_line)
                 mail.send_mail(
                     subject_line = subject_line,
                     body_text = body_text,
