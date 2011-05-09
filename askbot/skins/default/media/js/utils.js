@@ -1026,6 +1026,9 @@ Menu.prototype.getActiveItem = function(){
  * @param {MenuItem} menu_item
  */
 Menu.prototype.setActiveItem = function(menu_item){
+    if (this.isFrozen()){
+        return;
+    }
     this._active_item = menu_item;
     menu_item.activate();
 };
@@ -1035,6 +1038,9 @@ Menu.prototype.setActiveItem = function(menu_item){
  * in the tree
  */
 Menu.prototype.startClosing = function(){
+    if (this.isFrozen()){
+        return;
+    }
     var me = this;
     var timer = setTimeout(
                     function(){me.closeAll()},
@@ -1133,6 +1139,9 @@ Menu.prototype.stopClosingAll = function(){
  * closes any open child menues
  */
 Menu.prototype.closeChildren = function(){
+    if (this.isFrozen()){
+        return;
+    }
     var menu_stack = this.getMenuStack();
     for (var i = menu_stack.length - 1; i >= 0; i--){
         if (menu_stack[i] === this){
