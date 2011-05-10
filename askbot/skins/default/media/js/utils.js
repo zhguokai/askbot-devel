@@ -40,6 +40,20 @@ var showMessage = function(element, msg, where) {
     div.fadeIn("fast");
 };
 
+/**
+ * kind of like Python's builtin getattr
+ * @param {Object} obj
+ * @param {string} key
+ * @param {*} default_value
+ */
+var getattr = function(obj, key, default_value){
+    if (obj){
+        return (key in obj) ? obj[key] : default_value;
+    } else {
+        return default_value;
+    }
+};
+
 //outer html hack - https://github.com/brandonaaron/jquery-outerhtml/
 (function($){
     var div;
@@ -182,6 +196,12 @@ var Widget = function(){
      * the transitions
      */
     this._state_transition_event_handlers = {};
+    /** 
+     * @private
+     * @type {string}
+     * internal state of the widget
+     */
+    this._state = null;
 };
 inherits(Widget, WrappedElement);
 
@@ -196,6 +216,18 @@ Widget.prototype.getStateTransitionEventHandlers = function(){
 Widget.prototype.copyStateTransitionEventHandlersFrom = function(other_widget){
     this._state_transition_event_handlers =
         other_widget.getStateTransitionEventHandlers();
+};
+/**
+ * @param {string} state
+ */
+Widget.prototype.setState = function(state){
+    this._state = state;
+};
+/**
+ * @return {sting} state
+ */
+Widget.prototype.getState = function(){
+    return this._state;
 };
 
 /**
@@ -458,6 +490,13 @@ var EditableString = function(){
      * @type {boolean}
      */
     this._is_editable = true;
+    /**
+     * @private
+     * @type {string}
+     * supported states are 'DISPLAY' and 'EDIT'
+     * 'DISPLAY' is default
+     */
+    this._state = 'DISPLAY';
 };
 inherits(EditableString, Widget);
 
@@ -468,19 +507,41 @@ EditableString.prototype.setEditable = function(is_editable){
     this._is_editable = is_editable;
 };
 
+/**
+ * @param {boolean}
+ */
+EditableString.prototype.isEditable = function(){
+    return this._is_editable;
+};
+
 EditableString.prototype.setState = function(state){
+    if (state === 'EDIT' && this.isEditable() === false){
+        throw 'cannot edit this instance of EditableString';
+    }
+
+    this._state = state;
+
     //run transition event handler, if exists
     var handlers = this.getStateTransitionEventHandlers();
     if (handlers.hasOwnProperty(state)){
         handlers[state].call();
     }
+
+    if (! (this._display_block && this._edit_block) ){
+        //a case when createDom has not yet been called
+        return;
+    }
+
     //hide and show things
-    if (state == 'EDIT'){
+    if (state === 'EDIT'){
         this._edit_block.show();
         this._display_block.hide();
-    } else if (state == 'DISPLAY'){
+    } else if (state === 'DISPLAY'){
         this._edit_block.hide();
         this._display_block.show();
+        if (this.isEditable()){
+            this._edit_link.show();
+        }
     }
 };
 
@@ -555,28 +616,31 @@ EditableString.prototype.createDom = function(){
     //set the display state
 
     //it is assumed that _is_editable is set once at the beginning
-    if (this._is_editable){
-        this._edit_block = this.makeElement('div');
-        this._element.append(this._edit_block);
+    this._edit_block = this.makeElement('div');
+    this._element.append(this._edit_block);
 
-        this._input_box = this.makeElement('input');
-        this._input_box.attr('type', 'text');
-        this._edit_block.append(this._input_box);
+    this._input_box = this.makeElement('input');
+    this._input_box.attr('type', 'text');
+    this._edit_block.append(this._input_box);
 
-        var edit_link = new EditLink();
-        edit_link.setHandler(
-            this.getStartEditHandler()
-        );
+    var edit_link = new EditLink();
+    edit_link.setHandler(
+        this.getStartEditHandler()
+    );
 
-        var edit_element = edit_link.getElement();
-        this._display_block.append(edit_element);
-        //build dom for the edit block
-
-        this._input_box.keydown(
-            makeKeyHandler(13, this.getSaveEditHandler())
-        );
-        this.setState('DISPLAY');
+    var edit_element = edit_link.getElement();
+    if (!this.isEditable()){
+        edit_element.hide();
     }
+    this._display_block.append(edit_element);
+    //build dom for the edit block
+
+    this._edit_link = edit_link.getElement();
+
+    this._input_box.keydown(
+        makeKeyHandler(13, this.getSaveEditHandler())
+    );
+    this.setState(this.getState());
 };
 
 /**
@@ -616,6 +680,37 @@ Category.prototype.getName = function(){
     return this.getText();
 };
 
+/**
+ * override of the parent classes getter
+ * @return {Function}
+ */
+Category.prototype.getSaveEditHandler = function(){
+    var me = this;
+    return function(){
+        me.startSaving();
+    };
+};
+
+Category.prototype.startAddingToDatabase = function(){
+    var data = {
+        'parent': this._parent_category.getId(),
+        name: tihs.getName()
+    };
+    var me = this;
+    var success_handler = function(){
+        me.superClass_.getSaveEditHandler.call(me);
+        me.restoreStandardStateTransitionEventHandlers();
+    };
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: askbot['urls']['add_category'],
+        data: data,
+        success: function(){ success_handler() }
+    });
+};
+
 /** 
  * the data structure used to construct the MenuItem
  * @typedef {{id: number, name: string, children: Array.<MenuData>}}
@@ -641,18 +736,18 @@ var MenuItem = function(parent_menu, data){
      * MenuItem id
      * @type {integer}
      */
-    this.id = data['id'];
+    this.id = getattr(data, 'id', null);
     /**
      * MenuItem name
      * @type {string}
      */
-    this.name = data['name'];
+    this.name = getattr(data, 'id', null);
     /**
      * source data for the children
      * @private
      * @type {Object} 
      */
-    this._children_data = data['children'];
+    this._children_data = getattr(data, 'children', null);
     /**
      * @private
      * @type {Menu}
@@ -766,11 +861,104 @@ MenuItem.prototype.buildSubtree = function(){
     if (this._children_data.length > 0){
         var child_menu = this._parent_menu.createChild();
         child_menu.setData(this._children_data);
-        this._element.append(child_menu.getElement());
+        this.getElement().append(child_menu.getElement());
         this._child_menu = child_menu;
         return child_menu;
     }
     return null;
+};
+
+/**
+ * @constructor
+ * @param {Menu} parent_menu - owner of the adder instance
+ * creates a menu item widget
+ */
+var MenuItemAdder = function(parent_menu){
+    Widget.call(this);
+    /**
+     * @private
+     * @type {string}
+     * the link message
+     */
+    this._text = gettext('Add new item');
+    /**
+     * @private
+     * @type {Menu}
+     */
+    this._parent_menu = parent_menu;
+};
+inherits(MenuItemAdder, Widget);
+
+/**
+ * @param {Function} func the content item creator function
+ */
+MenuItemAdder.prototype.setContentItemCreator = function(func){
+    this._content_item_creator = func;
+};
+
+/**
+ * @param {string} text - link text
+ */
+MenuItemAdder.prototype.setText = function(text){
+    this._text = text;
+};
+
+/** @private */
+MenuItemAdder.prototype.createDom = function(){
+    var li = this.makeElement('li');
+    var link = this.makeElement('a');
+    link.html(this._text);
+
+    var me = this;
+    setupButtonEventHandlers(link, function(){ me.startAddingItem() });
+
+    li.append(link);
+    this._element = li;
+
+    /* similar event handlers to MenuItem - to prevent
+    premature closing of the menu */
+    this._element.mouseover(function(e){ me.focusOnMe(e) });
+    this._element.mouseout(function(e){ me.startLosingFocusOnMe(e) });
+    link.mouseover(function(e){ me.stopLosingFocusOnMe(e) });
+};
+/**
+ * stops closing of the parent menu, if closure is scheduled
+ * closes all child menues of the parent menu
+ * opens own child menu, if exists
+ */
+MenuItemAdder.prototype.focusOnMe = function(e){
+    var parent_menu = this._parent_menu;
+    parent_menu.stopClosingAll();
+    //parent_menu.setActiveItem(this);//should be null
+    e.stopImmediatePropagation();
+};
+
+/** sets the timer to close child menues */
+MenuItemAdder.prototype.startLosingFocusOnMe = function(e){
+    this._parent_menu.startClosing();
+    e.stopImmediatePropagation();
+};
+
+/** cancels the timer for closing the child menues */
+MenuItemAdder.prototype.stopLosingFocusOnMe = function(e){
+    this._parent_menu.stopClosingAll();
+};
+
+/**
+ * @private
+ */
+MenuItemAdder.prototype.startAddingItem = function(){
+    if (this.getState() === 'WORKING'){
+        return;
+    }
+    //create the item
+    var menu_item = new MenuItem(this._parent_menu);
+    var content = this._content_item_creator();
+    menu_item.setContent(content);
+
+    this._parent_menu.addMenuItem(menu_item);
+
+    this.setState('WORKING');
 };
 
 /**
@@ -792,6 +980,11 @@ var Menu = function(){
      * @type {MenuData} menu items
      */
     this._children = [];
+    /**
+     * @private
+     * @type {?MenuItemAdder}
+     */
+    this._menu_item_adder = null;
     /**
      * @private
      * @type {Function}
@@ -843,6 +1036,12 @@ Menu.prototype.isRoot = function(){
 Menu.prototype.setEditable = function(is_editable){
     this._is_editable = is_editable;
 };
+/**
+ * @return {boolean}
+ */
+Menu.prototype.isEditable = function(){
+    return this._is_editable;
+};
 
 /**
  * @param {MenuData} data the category tree data
@@ -883,18 +1082,42 @@ Menu.prototype.createMenuItem = function(data){
 
     //set menu item content
     var item_content = this.createContentItem(data);
-    item_content.setEditable(this._is_editable);
+    item_content.setEditable(this.isEditable());
     item_content.copyStateTransitionEventHandlersFrom(this);
 
     menu_item.setContent(item_content);
-
-    this._element.append(menu_item.getElement());
 
     //build child menu
     if (data['children'].length > 0){
         var child_menu = menu_item.buildSubtree();
     }
     return menu_item;
+};
+
+/**
+ * adds "content" item to the menu
+ * @param {MenuItem} menu_item
+ */
+Menu.prototype.addMenuItem = function(menu_item){
+    var item_element = menu_item.getElement();
+    if (this._menu_item_adder){
+        this._menu_item_adder.getElement().before(item_element);
+    } else {
+        this._element.append(item_element);
+    }
+    this._children.push(menu_item);
+};
+
+Menu.prototype.createMenuItemAdder = function(){
+    var item_adder = new MenuItemAdder(this);
+    var me = this;
+    item_adder.setContentItemCreator(function(){
+        var item = me.createContentItem();
+        item.setEditable(true);//we do not call this otherwise
+        item.setState('EDIT')
+        return item;
+    });
+    return item_adder;
 };
 
 /**
@@ -986,10 +1209,13 @@ Menu.prototype.createDom = function(){
     $.each(this._data, function(idx, child_node){
         //create the category (and any children within) and add it to the tree
         var menu_item = me.createMenuItem(child_node);
-        me._children.push(menu_item);
-        //build any subcategories recursively
-        //copy any state transition events
+        me.addMenuItem(menu_item);
     });
+    if (this.isEditable()){
+        var item_adder = this.createMenuItemAdder();
+        this._element.append(item_adder.getElement());
+        this._menu_item_adder = item_adder;
+    }
 };
 
 /**
@@ -1167,7 +1393,7 @@ Menu.prototype.createChild = function(){
     var child = new Menu();
     child.setContentItemCreator(this._content_item_creator);
     child.setParent(this);
-    child.setEditable(this._is_editable);
+    child.setEditable(this.isEditable());
     return child;
 };
 
@@ -1181,9 +1407,7 @@ Menu.prototype.close = function(){
         return;
     }
     this.getElement().hide();
-    if (this._is_editable){
-        $.each(this._children, function(idx, menu_item){
-            menu_item.setState('DISPLAY');
-        });
-    }
+    $.each(this._children, function(idx, menu_item){
+        menu_item.setState('DISPLAY');
+    });
 };

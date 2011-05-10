@@ -57,7 +57,7 @@
     cats.setEditable(askbot['data']['userIsAdmin']);
     cats.setContentItemCreator(function(item_data){
         var category = new Category();
-        if ('name' in item_data && 'id' in item_data){
+        if (item_data && 'name' in item_data && 'id' in item_data){
             category.setName(item_data['name']);
             category.setId(item_data['id']);
         }
