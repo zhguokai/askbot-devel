@@ -24,6 +24,7 @@
     askbot['urls']['mark_read_message'] = '{% url "read_message" %}';
     askbot['urls']['get_tags_by_wildcard'] = '{% url "get_tags_by_wildcard" %}';
     askbot['urls']['get_tag_list'] = '{% url "get_tag_list" %}';
+    askbot['urls']['add_category'] = '{% url "add_category" %}';
 </script>
 <script
     type="text/javascript"
@@ -53,7 +54,8 @@
     askbot['data']['categories'] = {% if cats_tree %}[{{ cats_tree }}]{% else %}null{% endif %};
     //set up category menu
     var cats = new Menu();
-    cats.setData(askbot['data']['categories']);
+    //do not show the topmost level
+    cats.setData(askbot['data']['categories'][0]['children']);
     cats.setEditable(askbot['data']['userIsAdmin']);
     cats.setContentItemCreator(function(item_data){
         var category = new Category();
@@ -64,6 +66,13 @@
         return category;
     });
     cats.decorate($('#ab-cats'), true);
+
+    /* set the off-limits root category as parent to the first level categories */
+    var root_cat = new Category();
+    root_cat.setName(askbot['data']['categories'][0]['name']);
+    root_cat.setId(askbot['data']['categories'][0]['id']);
+    cats.setParentContentItem(root_cat);
+
 </script>
 {% endif %}
 <script type="text/javascript">

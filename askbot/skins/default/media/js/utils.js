@@ -218,6 +218,18 @@ Widget.prototype.copyStateTransitionEventHandlersFrom = function(other_widget){
         other_widget.getStateTransitionEventHandlers();
 };
 /**
+ * @private
+ */
+Widget.prototype.backupStateTransitionEventHandlers = function(){
+    this._steh_backup = this._state_transition_event_handlers;
+};
+/**
+ * @private
+ */
+Widget.prototype.restoreStateTransitionEventHandlers = function(){
+    this._state_transition_event_handlers = this._steh_backup;
+};
+/**
  * @param {string} state
  */
 Widget.prototype.setState = function(state){
@@ -559,7 +571,7 @@ EditableString.prototype.setText = function(text){
  * @return {string} text of the string
  */
 EditableString.prototype.getText = function(){
-    if (this.inDocument()){
+    if (this._text_element){
         var text = this._text_element.html();
         this._text = text;
         return text;
@@ -568,11 +580,17 @@ EditableString.prototype.getText = function(){
     }
 };
 
+/**
+ * @return {string}
+ */
+EditableString.prototype.getInputBoxText = function(){
+    return this._input_box.val();
+};
+
 EditableString.prototype.getSaveEditHandler = function(){
     var me = this;
     return function(){
-        var raw_text = me._input_box.val();
-        me.setText(raw_text);
+        me.setText(me.getInputBoxText());
         me.setState('DISPLAY');
     };
 };
@@ -612,7 +630,7 @@ EditableString.prototype.createDom = function(){
     this._text_element = this.makeElement('span');
     this._display_block.append(this._text_element);
     //set the value of text
-    this._text_element.html(this.getText());
+    this._text_element.html(this._text);
     //set the display state
 
     //it is assumed that _is_editable is set once at the beginning
@@ -654,6 +672,12 @@ var Category = function(){
      * @type {?number}
      */
     this._category_id = null;
+    /**
+     * @private
+     * @type {?Category}
+     * parent category, if any
+     */
+    this._parent = null;
 }
 inherits(Category, EditableString);
 
@@ -664,6 +688,31 @@ inherits(Category, EditableString);
 Category.prototype.setId = function(id){
     this._category_id = id;
 };
+/**
+ * @return {number}
+ */
+Category.prototype.getId = function(){
+    return this._category_id;
+};
+/**
+ * @return boolean
+ */
+Category.prototype.hasId = function(){
+    return (this._category_id !== null);
+};
+/**
+ * @param {Category} parent_category
+ */
+Category.prototype.setParent = function(parent_category){
+    this._parent = parent_category;
+};
+/**
+ * @returns {?Category}
+ */
+Category.prototype.getParent = function(){
+    return this._parent;
+};
+
 
 /**
  * @param {string} name
@@ -686,20 +735,29 @@ Category.prototype.getName = function(){
  */
 Category.prototype.getSaveEditHandler = function(){
     var me = this;
-    return function(){
-        me.startSaving();
-    };
+    if (this.hasId()){
+        return function(){
+            //me.startRenaming();
+            return;
+        }
+    } else {
+        return function(){
+            me.startAddingToDatabase();
+        };
+    }
 };
 
 Category.prototype.startAddingToDatabase = function(){
+    var new_category_name = this.getInputBoxText();
     var data = {
-        'parent': this._parent_category.getId(),
-        name: tihs.getName()
+        'parent': this.getParent().getId(),
+        name: new_category_name 
     };
     var me = this;
     var success_handler = function(){
-        me.superClass_.getSaveEditHandler.call(me);
-        me.restoreStandardStateTransitionEventHandlers();
+        me.setText(new_category_name);
+        me.setState('DISPLAY');
+        me.becomeBonaFide();
     };
     $.ajax({
         type: 'POST',
@@ -709,6 +767,15 @@ Category.prototype.startAddingToDatabase = function(){
         data: data,
         success: function(){ success_handler() }
     });
+};
+
+/**
+ * @private
+ * called when category becomes "real" after saving
+ * in the database
+ */
+Category.prototype.becomeBonaFide = function(){
+    this.restoreStateTransitionEventHandlers();
 };
 
 /** 
@@ -776,6 +843,13 @@ inherits(MenuItem, WrappedElement);
  */
 MenuItem.prototype.setContent = function(content){
     this._content = content;
+};
+
+/**
+ * @returns {Object}
+ */
+MenuItem.prototype.getContent = function(){
+    return this._content;
 };
 
 /**
@@ -862,6 +936,9 @@ MenuItem.prototype.buildSubtree = function(){
         var child_menu = this._parent_menu.createChild();
         child_menu.setData(this._children_data);
         this.getElement().append(child_menu.getElement());
+
+        child_menu.setParentContentItem(this.getContent());
+
         this._child_menu = child_menu;
         return child_menu;
     }
@@ -954,6 +1031,11 @@ MenuItemAdder.prototype.startAddingItem = function(){
     //create the item
     var menu_item = new MenuItem(this._parent_menu);
     var content = this._content_item_creator();
+    var me = this;
+    content.backupStateTransitionEventHandlers();
+    content.setStateTransitionEventHandlers({
+        DISPLAY: function(){ me.setState('IDLE'); }
+    });
     menu_item.setContent(content);
 
     this._parent_menu.addMenuItem(menu_item);
@@ -1095,6 +1177,22 @@ Menu.prototype.createMenuItem = function(data){
 };
 
 /**
+ * @param {Object} parent_content
+ */
+Menu.prototype.setParentContentItem = function(parent_content){
+    this._parent_content_item = parent_content;
+    $.each(this._children, function(idx, menu_item){
+        menu_item.getContent().setParent(parent_content);
+    });
+};
+/**
+ * @param {Object}
+ */
+Menu.prototype.getParentContentItem = function(){
+    return this._parent_content_item;
+};
+
+/**
  * adds "content" item to the menu
  * @param {MenuItem} menu_item
  */
@@ -1115,6 +1213,7 @@ Menu.prototype.createMenuItemAdder = function(){
         var item = me.createContentItem();
         item.setEditable(true);//we do not call this otherwise
         item.setState('EDIT')
+        item.setParent(me.getParentContentItem());
         return item;
     });
     return item_adder;
@@ -1189,6 +1288,14 @@ Menu.prototype.unfreeze = function(){
 };
 
 /**
+ * @private
+ * a hack allowing top level content elements
+ * have parent
+ */
+Menu.prototype.createRootContentElement = function(){
+}
+
+/**
  * @return {boolean}
  */
 Menu.prototype.isFrozen = function(){
@@ -1216,6 +1323,7 @@ Menu.prototype.createDom = function(){
         this._element.append(item_adder.getElement());
         this._menu_item_adder = item_adder;
     }
+    this.createRootContentElement();
 };
 
 /**

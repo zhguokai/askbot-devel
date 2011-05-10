@@ -109,9 +109,8 @@ def add_category(request):
 
     Category IDs are the Django integer PKs of the respective model instances.
     """
-    post_data = simplejson.loads(request.raw_post_data)
-    parent = post_data.get('parent')
-    new_name = post_data.get('name')
+    parent = request.POST.get('parent')
+    new_name = request.POST.get('name')
     if not new_name:
         raise exceptions.ValidationError(
             _("Missing or invalid new category name parameter")
