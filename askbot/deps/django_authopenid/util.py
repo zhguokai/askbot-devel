@@ -537,5 +537,8 @@ def get_user_info(method, username):
            # Record not found...use NIS info
            return get_nis_info(username)
 
+        if not ('sn' in record[0][1].keys()):
+           record[0][1]['sn'] = ['x']
+
         return (record[0][1]['givenName'][0], record[0][1]['sn'][0], record[0][1]['mail'][0])
     return None
