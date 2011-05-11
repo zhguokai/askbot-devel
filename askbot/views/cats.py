@@ -148,9 +148,8 @@ def rename_category(request):
 
     Category IDs are the Django integer PKs of the respective model instances.
     """
-    post_data = simplejson.loads(request.raw_post_data)
-    new_name = post_data.get('name')
-    cat_id = post_data.get('id')
+    new_name = request.POST.get('name')
+    cat_id = request.POST.get('id')
     if not new_name or not cat_id:
         raise exceptions.ValidationError(
             _("Missing or invalid required parameter")
@@ -372,8 +371,7 @@ def delete_category(request):
     lifetime of ten minutes.
     """
     response_data = dict()
-    post_data = simplejson.loads(request.raw_post_data)
-    cat_id = post_data.get('id')
+    cat_id = request.POST.get('id')
     if not cat_id:
         raise exceptions.ValidationError(
             _("Missing or invalid required parameter")

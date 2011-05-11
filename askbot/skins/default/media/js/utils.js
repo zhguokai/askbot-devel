@@ -272,6 +272,43 @@ SimpleControl.prototype.setTitle = function(title){
     this._title = title;
 };
 
+/**
+ * A clickable icon
+ * @constructor
+ * @param {string} icon_class - class name for the icon
+ * @param {string} title - to become "title" attribute
+ */
+var ActionIcon = function(icon_class, title){
+    SimpleControl.call(this);
+    this._class = icon_class;
+    this._title = title
+};
+inherits(ActionIcon, SimpleControl);
+/**
+ * @private
+ */
+ActionIcon.prototype.createDom = function(){
+    this._element = this.makeElement('span');
+    this.decorate(this._element);
+};
+/**
+ * @param {Object} element
+ */
+ActionIcon.prototype.decorate = function(element){
+    this._element = element;
+    this._element.addClass(this._class);
+    this._element.attr('title', this._title);
+    if (this._handler !== null){
+        this.setHandlerInternal();
+    }
+};
+/**
+ * destroys the icon thing
+ */
+ActionIcon.prototype.dispose = function(){
+    this._element.remove();
+};
+
 var EditLink = function(){
     SimpleControl.call(this)
 };
@@ -290,29 +327,19 @@ EditLink.prototype.decorate = function(element){
     this.setHandlerInternal();
 };
 
+/**
+ * @constructor
+ * @param {string} title
+ */
 var DeleteIcon = function(title){
-    SimpleControl.call(this);
-    this._title = title;
+    ActionIcon.call(this, 'delete-icon', title);
 };
-inherits(DeleteIcon, SimpleControl);
+inherits(DeleteIcon, ActionIcon);
 
-DeleteIcon.prototype.decorate = function(element){
-    this._element = element;
-    this._element.attr('class', 'delete-icon');
-    this._element.attr('title', this._title);
-    if (this._handler !== null){
-        this.setHandlerInternal();
-    }
+var AdderIcon = function(title){
+    ActionIcon.call(this, 'adder-icon', title);
 };
-
-DeleteIcon.prototype.setHandlerInternal = function(){
-    setupButtonEventHandlers(this._element, this._handler);
-};
-
-DeleteIcon.prototype.createDom = function(){
-    this._element = this.makeElement('span');
-    this.decorate(this._element);
-};
+inherits(AdderIcon, ActionIcon);
 
 var Tag = function(){
     SimpleControl.call(this);
@@ -526,6 +553,19 @@ EditableString.prototype.isEditable = function(){
     return this._is_editable;
 };
 
+/**
+ * @return {Object}
+ */
+EditableString.prototype.getDisplayBlock = function(){
+    return this._display_block;
+};
+/**
+ * @return {Object}
+ */
+EditableString.prototype.getEditBlock = function(){
+    return this._edit_block;
+};
+
 EditableString.prototype.setState = function(state){
     if (state === 'EDIT' && this.isEditable() === false){
         throw 'cannot edit this instance of EditableString';
@@ -547,6 +587,7 @@ EditableString.prototype.setState = function(state){
     //hide and show things
     if (state === 'EDIT'){
         this._edit_block.show();
+        this._input_box.focus();
         this._display_block.hide();
     } else if (state === 'DISPLAY'){
         this._edit_block.hide();
@@ -572,11 +613,11 @@ EditableString.prototype.setText = function(text){
  */
 EditableString.prototype.getText = function(){
     if (this._text_element){
-        var text = this._text_element.html();
+        var text = $.trim(this._text_element.html());
         this._text = text;
         return text;
     } else {
-        return this._text;
+        return $.trim(this._text);
     }
 };
 
@@ -584,7 +625,7 @@ EditableString.prototype.getText = function(){
  * @return {string}
  */
 EditableString.prototype.getInputBoxText = function(){
-    return this._input_box.val();
+    return $.trim(this._input_box.val());
 };
 
 EditableString.prototype.getSaveEditHandler = function(){
@@ -713,7 +754,6 @@ Category.prototype.getParent = function(){
     return this._parent;
 };
 
-
 /**
  * @param {string} name
  * set category name
@@ -737,8 +777,7 @@ Category.prototype.getSaveEditHandler = function(){
     var me = this;
     if (this.hasId()){
         return function(){
-            //me.startRenaming();
-            return;
+            me.startRenaming();
         }
     } else {
         return function(){
@@ -747,6 +786,45 @@ Category.prototype.getSaveEditHandler = function(){
     }
 };
 
+/**
+ * @private
+ */
+Category.prototype.startRenaming = function(){
+    var new_name = this.getInputBoxText();
+    var old_name = this.getText();
+    if (new_name !== '' && new_name !== old_name){
+        var me = this;
+        var success_handler = function(){
+            me.setText(new_name);
+            me.setState('DISPLAY');
+        };
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: askbot['urls']['rename_category'],
+            data: {id: me.getId(), name: new_name},
+            success: success_handler
+        });
+    }
+};
+/**
+ * starts deleting a category from the database
+ * @param {Function} on_delete - to be called after delete succeeds
+ */
+Category.prototype.startDeleting = function(on_delete){
+    $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: 'json',
+        url: askbot['urls']['delete_category'],
+        data: {id: this.getId()},
+    });
+};
+
+/**
+ * @private
+ */
 Category.prototype.startAddingToDatabase = function(){
     var new_category_name = this.getInputBoxText();
     var data = {
@@ -765,7 +843,7 @@ Category.prototype.startAddingToDatabase = function(){
         dataType: 'json',
         url: askbot['urls']['add_category'],
         data: data,
-        success: function(){ success_handler() }
+        success: success_handler
     });
 };
 
@@ -776,6 +854,39 @@ Category.prototype.startAddingToDatabase = function(){
  */
 Category.prototype.becomeBonaFide = function(){
     this.restoreStateTransitionEventHandlers();
+};
+
+/**
+ * @constructor
+ * @param {MenuItem} parent_item
+ */
+var MenuAdder = function(parent_item){
+    AdderIcon.call(this, gettext('Add subcategory'));
+    /**
+     * @private
+     * @type {MenuItem}
+     */
+    this._parent_menu_item = parent_item;
+};
+inherits(MenuAdder, AdderIcon);
+/**
+ * @return {MenuItem}
+ */
+MenuAdder.prototype.getParentMenuItem = function(){
+    return this._parent_menu_item;
+};
+/**
+ * @private
+ */
+MenuAdder.prototype.setHanderInternal = function(){
+    var me = this;
+    this._handler = function(){
+        //build an empty subtree on the current menu item
+        var new_menu = me.getParentMenuItem().buildSubtree();
+        //activate the menu item adder on the new menu
+        new_menu.getMenuItemAdder().activate();
+    }
+    MenuAdder.superClass_.setHandlerInternal.call(this);
 };
 
 /** 
@@ -853,6 +964,13 @@ MenuItem.prototype.getContent = function(){
 };
 
 /**
+ * @returns {Menu}
+ */
+MenuItem.prototype.getParentMenu = function(){
+    return this._parent_menu;
+}
+
+/**
  * @private
  * @param {state} string
  * supported states are DISPLAY and EDIT
@@ -862,6 +980,58 @@ MenuItem.prototype.setState = function(state){
 }
 
 /**
+ * @type {boolean}
+ */
+MenuItem.prototype.isEditable = function(){
+    return this._parent_menu.isEditable();
+};
+
+/**
+ * @return {boolean}
+ */
+MenuItem.prototype.hasChildren = function(){
+    return (this._children_data.length > 0);
+};
+
+/**
+ * @param {boolean} is_childless
+ * changes the display in accordance with the new status
+ */
+MenuItem.prototype.setChildless = function(is_childless){
+    var more_icon = this._more_icon;
+    var menu_adder = this._menu_adder.getElement();
+    if (is_childless){
+        more_icon.hide();
+        menu_adder.show();
+    } else {
+        more_icon.show();
+        menu_adder.hide();
+    }
+};
+
+/**
+ * @param {boolean} is_deletable
+ * changes the display
+ */
+MenuItem.prototype.setDeletable = function(is_deletable){
+    if (is_deletable){
+        this._delete_icon.getElement().show();
+    } else {
+        this._delete_icon.getElement().hide();
+    }
+};
+
+/**
+ * @private
+ */
+MenuItem.prototype.hideControls = function(){
+    this._more_icon.hide();
+    this._delete_icon.getElement().hide();
+    this._menu_adder.getElement().hide();
+};
+
+
+/**
  * creates dom for a single MenuItem
  * does not build subcategories
  */
@@ -869,14 +1039,98 @@ MenuItem.prototype.createDom = function(){
     //create the text element for MenuItem
     this._element = this.makeElement('li');
     this._element.addClass('ab-menu-item');
-    this._element.append(this._content.getElement());
-    //todo: copy state transition event handlers to the EditableText
+    this._element.append(this.getContent().getElement());
 
+    var disp_block = this.getContent().getDisplayBlock();
+
+    //todo: may become a widget
+    var more_icon = this.makeElement('span');
+    more_icon.addClass('ab-more-icon');
+    disp_block.append(more_icon);
+    this._more_icon = more_icon;
+    var deleter = new DeleteIcon();
+    this._delete_icon = deleter;
+    var me = this;
+    var on_delete = function(){
+        me.finishDeleting();
+    }
+    deleter.setHandler(function(){
+        me.startDeleting(on_delete);
+    });
+    disp_block.append(deleter.getElement());
+
+    /* todo: add check on the current menu level
+     * if it is maxed out - do not add the MenuAdder
+     */
+    var menu_adder = new MenuAdder(this);
+    this._menu_adder = menu_adder;
+    disp_block.append(menu_adder.getElement());
+
+    this.hideControls();
+
+    if (this.hasChildren()){
+        this.setChildless(false);
+    } else {
+        if (this.isEditable()){
+            this.setDeletable(true);
+            this.setChildless(true);
+        }
+    }
+
+    //todo: copy state transition event handlers to the EditableText
     //add delete handler and button - if user has privilege to delete
     var me = this;
     this._element.mouseover(function(e){me.focusOnMe(e)});
     this._element.mouseout(function(e){me.startLosingFocusOnMe(e)});
-    this._content.getElement().mouseover(function(e){me.stopLosingFocusOnMe(e)});
+    this.getContent().getElement().mouseover(function(e){me.stopLosingFocusOnMe(e)});
+};
+
+/**
+ * @private
+ * @param {Function} on_delete callback
+ * starts deleting the menu item with attempting to
+ * remove content - potentially entailing an ajax request
+ */
+MenuItem.prototype.startDeleting = function(on_delete){
+    this.getContent().startDeleting(on_delete);
+};
+
+/**
+ * @private
+ * finalizes deletion of the menu item
+ * if the item was last on the menu and the menu is not top-level
+ * the parent menu item will need to be adjusted to allow
+ * creation of a subtree and the parent menu is destroyed
+ */
+MenuItem.prototype.finishDeleting = function(){
+    var menu = this._parent_menu;
+    parent_menu.removeMenuItem(me);
+    if (menu.isEmpty() && menu.getLevel() > 0){
+        var parent_item = this.getParentItem();
+        parent_item.setChildless(true);
+        menu.dispose();
+    }
+    me.dispose();
+};
+
+/**
+ * destroys the menu item
+ */
+MenuItem.prototype.dispose = function(){
+    this.getContent().dispose();
+    this._element.remove();
+    if (this._more_icon){
+        this._more_icon.remove();
+    }
+    if (this._delete_icon){
+        this._delete_icon.dispose();
+    }
+    if (this._menu_adder){
+        this._menu_adder.dispose();
+    }
+    if (this._child_menu){
+        this._child_menu.dispose();
+    }
 };
 
 /**
@@ -932,17 +1186,14 @@ MenuItem.prototype.deactivate = function(){
  * @return {?Menu}
  */
 MenuItem.prototype.buildSubtree = function(){
-    if (this._children_data.length > 0){
-        var child_menu = this._parent_menu.createChild();
-        child_menu.setData(this._children_data);
-        this.getElement().append(child_menu.getElement());
+    var child_menu = this._parent_menu.createChild();
+    child_menu.setData(this._children_data);
+    this.getElement().append(child_menu.getElement());
 
-        child_menu.setParentContentItem(this.getContent());
+    child_menu.setParentContentItem(this.getContent());
 
-        this._child_menu = child_menu;
-        return child_menu;
-    }
-    return null;
+    this._child_menu = child_menu;
+    return child_menu;
 };
 
 /**
@@ -965,26 +1216,24 @@ var MenuItemAdder = function(parent_menu){
     this._parent_menu = parent_menu;
 };
 inherits(MenuItemAdder, Widget);
-
 /**
  * @param {Function} func the content item creator function
  */
 MenuItemAdder.prototype.setContentItemCreator = function(func){
     this._content_item_creator = func;
 };
-
 /**
  * @param {string} text - link text
  */
 MenuItemAdder.prototype.setText = function(text){
     this._text = text;
 };
-
 /** @private */
 MenuItemAdder.prototype.createDom = function(){
     var li = this.makeElement('li');
     var link = this.makeElement('a');
     link.html(this._text);
+    this._button = link;
 
     var me = this;
     setupButtonEventHandlers(link, function(){ me.startAddingItem() });
@@ -1021,6 +1270,9 @@ MenuItemAdder.prototype.stopLosingFocusOnMe = function(e){
     this._parent_menu.stopClosingAll();
 };
 
+MenuItemAdder.prototype.activate = function(){
+    this._link.click();
+};
 /**
  * @private
  */
@@ -1186,10 +1438,17 @@ Menu.prototype.setParentContentItem = function(parent_content){
     });
 };
 /**
- * @param {Object}
+ * @return {Object}
  */
 Menu.prototype.getParentContentItem = function(){
     return this._parent_content_item;
+};
+
+/**
+ * @return {MenuItemAdder}
+ */
+Menu.prototype.getMenuItemAdder = function(){
+    return this._menu_item_adder;
 };
 
 /**
@@ -1204,6 +1463,19 @@ Menu.prototype.addMenuItem = function(menu_item){
         this._element.append(item_element);
     }
     this._children.push(menu_item);
+};
+
+/**
+ * @param {MenuItem} menu_item
+ * removes menu item from the menu
+ */
+Menu.prototype.removeMenuItem = function(menu_item){
+    for (var i = 0; i<this._children_length; i--){
+        if (menu_item === this._children[i]){
+            this._children.splice(i, 1);
+            return;
+        }
+    }
 };
 
 Menu.prototype.createMenuItemAdder = function(){
