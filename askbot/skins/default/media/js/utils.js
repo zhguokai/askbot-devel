@@ -1122,7 +1122,7 @@ MenuItem.prototype.startDeleting = function(on_delete){
  */
 MenuItem.prototype.finishDeleting = function(){
     var menu = this._parent_menu;
-    parent_menu.removeMenuItem(me);
+    menu.removeMenuItem(this);
     if (menu.isEmpty() && menu.getLevel() > 0){
         var parent_item = this.getParentItem();
         parent_item.setChildless(true);
@@ -1393,6 +1393,13 @@ Menu.prototype.setEditable = function(is_editable){
  */
 Menu.prototype.isEditable = function(){
     return this._is_editable;
+};
+
+/**
+ * @return {boolean}
+ */
+Menu.prototype.isEmpty = function(){
+    return (this._children.length > 0);
 };
 
 /**
