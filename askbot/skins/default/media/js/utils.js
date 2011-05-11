@@ -850,8 +850,9 @@ Category.prototype.startAddingToDatabase = function(){
         name: new_category_name 
     };
     var me = this;
-    var success_handler = function(){
+    var success_handler = function(data, text_status, xhr){
         me.setText(new_category_name);
+        me.setId(data['id']);
         me.setState('DISPLAY');
         me.becomeBonaFide();
     };
@@ -989,6 +990,13 @@ MenuItem.prototype.getParentMenu = function(){
 }
 
 /**
+ * @return {MenuItem}
+ */
+MenuItem.prototype.getParentMenuItem = function(){
+    return this._parent_menu.getParentMenuItem();
+};
+
+/**
  * @private
  * @param {state} string
  * supported states are DISPLAY and EDIT
@@ -1008,7 +1016,7 @@ MenuItem.prototype.isEditable = function(){
  * @return {boolean}
  */
 MenuItem.prototype.hasChildren = function(){
-    return (this._children_data.length > 0);
+    return (this._children_data && this._children_data.length > 0);
 };
 
 /**
@@ -1123,12 +1131,12 @@ MenuItem.prototype.startDeleting = function(on_delete){
 MenuItem.prototype.finishDeleting = function(){
     var menu = this._parent_menu;
     menu.removeMenuItem(this);
-    if (menu.isEmpty() && menu.getLevel() > 0){
-        var parent_item = this.getParentItem();
+    if (menu.isEmpty() && (!menu.isRoot())){
+        var parent_item = this.getParentMenuItem();
         parent_item.setChildless(true);
         menu.dispose();
     }
-    me.dispose();
+    this.dispose();
 };
 
 /**
@@ -1209,6 +1217,7 @@ MenuItem.prototype.buildSubtree = function(){
     this.getElement().append(child_menu.getElement());
 
     child_menu.setParentContentItem(this.getContent());
+    child_menu.setParentMenuItem(this);
 
     this._child_menu = child_menu;
     return child_menu;
@@ -1232,6 +1241,7 @@ var MenuItemAdder = function(parent_menu){
      * @type {Menu}
      */
     this._parent_menu = parent_menu;
+
 };
 inherits(MenuItemAdder, Widget);
 /**
@@ -1352,6 +1362,16 @@ var Menu = function(){
      * @type {?Menu}
      */
     this._parent_menu = null;
+    /**
+     * @private
+     * @type {?Object}
+     */
+    this._parent_content_item = null;
+    /**
+     * @private
+     * @type {?MenuItem}
+     */
+    this._parent_menu_item = null;
     /** 
      * @private
      * @type {Array.<Menu>}
@@ -1399,8 +1419,39 @@ Menu.prototype.isEditable = function(){
  * @return {boolean}
  */
 Menu.prototype.isEmpty = function(){
-    return (this._children.length > 0);
+    return (this._children.length === 0);
 };
+
+/**
+ * @param {Object} parent_content
+ */
+Menu.prototype.setParentContentItem = function(parent_content){
+    this._parent_content_item = parent_content;
+    $.each(this._children, function(idx, menu_item){
+        menu_item.getContent().setParent(parent_content);
+    });
+};
+/**
+ * @return {Object}
+ */
+Menu.prototype.getParentContentItem = function(){
+    return this._parent_content_item;
+};
+
+/**
+ * @param {MenuItem} menu_item
+ */
+Menu.prototype.setParentMenuItem = function(menu_item){
+    this._parent_menu_item = menu_item;
+};
+
+/**
+ * @return {MenuItem}
+ */
+Menu.prototype.getParentMenuItem = function(){
+    return this._parent_menu_item;
+};
+
 
 /**
  * @param {MenuData} data the category tree data
@@ -1454,22 +1505,6 @@ Menu.prototype.createMenuItem = function(data){
 };
 
 /**
- * @param {Object} parent_content
- */
-Menu.prototype.setParentContentItem = function(parent_content){
-    this._parent_content_item = parent_content;
-    $.each(this._children, function(idx, menu_item){
-        menu_item.getContent().setParent(parent_content);
-    });
-};
-/**
- * @return {Object}
- */
-Menu.prototype.getParentContentItem = function(){
-    return this._parent_content_item;
-};
-
-/**
  * @return {MenuItemAdder}
  */
 Menu.prototype.getMenuItemAdder = function(){
@@ -1495,7 +1530,7 @@ Menu.prototype.addMenuItem = function(menu_item){
  * removes menu item from the menu
  */
 Menu.prototype.removeMenuItem = function(menu_item){
-    for (var i = 0; i<this._children_length; i--){
+    for (var i = 0; i<this._children.length; i++){
         if (menu_item === this._children[i]){
             this._children.splice(i, 1);
             return;

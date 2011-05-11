@@ -130,7 +130,7 @@ def add_category(request):
         raise exceptions.ValidationError(
             _('There is already a category with that name')
             )
-    response_data = {'status': 'success'}
+    response_data = {'status': 'success', 'id': cat.id}
     data = simplejson.dumps(response_data)
     return HttpResponse(data, mimetype="application/json")
 
