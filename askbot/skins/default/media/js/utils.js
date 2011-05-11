@@ -811,14 +811,32 @@ Category.prototype.startRenaming = function(){
 /**
  * starts deleting a category from the database
  * @param {Function} on_delete - to be called after delete succeeds
+ * @param {*=} token - confirmation token - do not use directly
+ *
+ * This function first retreives a token, asks user permission, then 
+ * attempts to delete the category
  */
-Category.prototype.startDeleting = function(on_delete){
+Category.prototype.startDeleting = function(on_delete, token){
+    var data = {id: this.getId()};
+    if (token){
+        data['token'] = token;
+    }
+    var me = this;
     $.ajax({
         type: 'POST',
         cache: false,
         dataType: 'json',
         url: askbot['urls']['delete_category'],
-        data: {id: this.getId()},
+        data: data,
+        success: function(data, text_status, xhr){
+            if (data['status'] === 'need_confirmation'){
+                if (confirm(gettext('Sure you want to delete this category?'))){
+                    me.startDeleting(on_delete, data['token']);//this time delete for sure
+                }
+            } else if (data['status'] === 'success'){
+                on_delete();
+            }
+        }
     });
 };
 

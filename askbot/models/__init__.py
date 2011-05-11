@@ -2380,28 +2380,6 @@ signals.post_updated.connect(
                        )
 signals.site_visited.connect(record_user_visit)
 
-#todo: wtf??? what is x=x about?
-
-Question = Question
-QuestionRevision = QuestionRevision
-QuestionView = QuestionView
-FavoriteQuestion = FavoriteQuestion
-AnonymousQuestion = AnonymousQuestion
-
-Answer = Answer
-AnswerRevision = AnswerRevision
-AnonymousAnswer = AnonymousAnswer
-
-
-BadgeData = BadgeData
-Award = Award
-Repute = Repute
-
-Activity = Activity
-ActivityAuditStatus = ActivityAuditStatus
-EmailFeedSetting = EmailFeedSetting
-#AuthKeyUserAssociation = AuthKeyUserAssociation
-
 __all__ = [
         'signals',
 

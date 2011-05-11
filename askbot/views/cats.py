@@ -370,6 +370,8 @@ def delete_category(request):
     Tokens are opaque strings with a maximum length of 20 and with a validity
     lifetime of ten minutes.
     """
+    import pdb
+    pdb.set_trace()
     response_data = dict()
     cat_id = request.POST.get('id')
     if not cat_id:
@@ -382,7 +384,7 @@ def delete_category(request):
         raise exceptions.ValidationError(
             _("Requested category doesn't exist")
             )
-    token = post_data.get('token')
+    token = request.POST.get('token')
     if token is not None:
         # verify token + Category instance combination
         if not CategoriesApiTokenGenerator().check_token(node, token):
