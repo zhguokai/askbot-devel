@@ -2158,3 +2158,17 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
   .atn { color: #404; }
   .atv { color: #060; }
 }
+
+span.adder-icon {
+    padding-left: 13px;
+    vertical-align: bottom;
+    background: url(../images/list-add-14-gray.png) no-repeat;
+}
+span.adder-icon:hover {
+    background: url(../images/list-add-14-blue.png) no-repeat;
+}
+span.go-right-icon {
+    padding-left: 13px;
+    background: url(../images/go-right.png) no-repeat;
+
+}

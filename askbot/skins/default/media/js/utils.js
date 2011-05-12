@@ -894,19 +894,6 @@ inherits(MenuAdder, AdderIcon);
 MenuAdder.prototype.getParentMenuItem = function(){
     return this._parent_menu_item;
 };
-/**
- * @private
- */
-MenuAdder.prototype.setHanderInternal = function(){
-    var me = this;
-    this._handler = function(){
-        //build an empty subtree on the current menu item
-        var new_menu = me.getParentMenuItem().buildSubtree();
-        //activate the menu item adder on the new menu
-        new_menu.getMenuItemAdder().activate();
-    }
-    MenuAdder.superClass_.setHandlerInternal.call(this);
-};
 
 /** 
  * the data structure used to construct the MenuItem
@@ -1064,14 +1051,14 @@ MenuItem.prototype.hideControls = function(){
 MenuItem.prototype.createDom = function(){
     //create the text element for MenuItem
     this._element = this.makeElement('li');
-    this._element.addClass('ab-menu-item');
+    this._element.addClass('menu-item');
     this._element.append(this.getContent().getElement());
 
     var disp_block = this.getContent().getDisplayBlock();
 
     //todo: may become a widget
     var more_icon = this.makeElement('span');
-    more_icon.addClass('ab-more-icon');
+    more_icon.addClass('go-right-icon');
     disp_block.append(more_icon);
     this._more_icon = more_icon;
     var deleter = new DeleteIcon();
@@ -1089,6 +1076,8 @@ MenuItem.prototype.createDom = function(){
      * if it is maxed out - do not add the MenuAdder
      */
     var menu_adder = new MenuAdder(this);
+    menu_adder.setHandler(function(){ me.startAddingSubmenu() });
+
     this._menu_adder = menu_adder;
     disp_block.append(menu_adder.getElement());
 
@@ -1109,6 +1098,14 @@ MenuItem.prototype.createDom = function(){
     this._element.mouseover(function(e){me.focusOnMe(e)});
     this._element.mouseout(function(e){me.startLosingFocusOnMe(e)});
     this.getContent().getElement().mouseover(function(e){me.stopLosingFocusOnMe(e)});
+};
+
+MenuItem.prototype.startAddingSubmenu = function(){
+    //build an empty subtree on the current menu item
+    var new_menu = this.buildSubtree();
+    new_menu.open();
+    //activate the menu item adder on the new menu
+    new_menu.getMenuItemAdder().activate();
 };
 
 /**
@@ -1200,11 +1197,11 @@ MenuItem.prototype.closeChildMenu = function(){
 }
 
 MenuItem.prototype.activate = function(){
-    this._element.addClass('ab-active-menu-item');
+    this._element.addClass('active-menu-item');
 };
 
 MenuItem.prototype.deactivate = function(){
-    this._element.removeClass('ab-active-menu-item');
+    this._element.removeClass('active-menu-item');
 };
 
 /**
@@ -1299,7 +1296,7 @@ MenuItemAdder.prototype.stopLosingFocusOnMe = function(e){
 };
 
 MenuItemAdder.prototype.activate = function(){
-    this._link.click();
+    this._button.click();
 };
 /**
  * @private
@@ -1308,13 +1305,18 @@ MenuItemAdder.prototype.startAddingItem = function(){
     if (this.getState() === 'WORKING'){
         return;
     }
+    var parent_menu = this._parent_menu;
+    parent_menu.freeze();
     //create the item
-    var menu_item = new MenuItem(this._parent_menu);
+    var menu_item = new MenuItem(parent_menu);
     var content = this._content_item_creator();
     var me = this;
     content.backupStateTransitionEventHandlers();
     content.setStateTransitionEventHandlers({
-        DISPLAY: function(){ me.setState('IDLE'); }
+        DISPLAY: function(){
+            me.setState('IDLE');
+            parent_menu.unfreeze();
+        }
     });
     menu_item.setContent(content);
 
