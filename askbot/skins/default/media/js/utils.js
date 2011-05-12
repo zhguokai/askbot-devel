@@ -918,12 +918,12 @@ var MenuItem = function(parent_menu, data){
     Widget.call(this);
     /** 
      * MenuItem id
-     * @type {integer}
+     * @type {?integer}
      */
     this.id = getattr(data, 'id', null);
     /**
      * MenuItem name
-     * @type {string}
+     * @type {?string}
      */
     this.name = getattr(data, 'id', null);
     /**
@@ -931,7 +931,7 @@ var MenuItem = function(parent_menu, data){
      * @private
      * @type {Object} 
      */
-    this._children_data = getattr(data, 'children', null);
+    this._children_data = getattr(data, 'children', []);
     /**
      * @private
      * @type {Menu}
@@ -1131,9 +1131,24 @@ MenuItem.prototype.finishDeleting = function(){
     if (menu.isEmpty() && (!menu.isRoot())){
         var parent_item = this.getParentMenuItem();
         parent_item.setChildless(true);
+        parent_item.setDeletable(true);
         menu.dispose();
     }
     this.dispose();
+};
+
+/**
+ * @param {MenuItem} child_item
+ * this is called from Menu.removeMenuItem
+ * due to double data storage about children
+ */
+MenuItem.prototype.removeChildMenuItem = function(child_item){
+    for (var i = 0; i < this._children_data; i++){
+        if (this._children_data[i]['name'] === childItem.getContent().getName()){
+            this._children_data.splice(i, 1);
+            return;
+        }
+    }
 };
 
 /**
@@ -1211,7 +1226,8 @@ MenuItem.prototype.deactivate = function(){
 MenuItem.prototype.buildSubtree = function(){
     var child_menu = this._parent_menu.createChild();
     child_menu.setData(this._children_data);
-    this.getElement().append(child_menu.getElement());
+    var child_menu_element = child_menu.getElement();
+    this.getElement().append(child_menu_element);
 
     child_menu.setParentContentItem(this.getContent());
     child_menu.setParentMenuItem(this);
@@ -1308,7 +1324,7 @@ MenuItemAdder.prototype.startAddingItem = function(){
     var parent_menu = this._parent_menu;
     parent_menu.freeze();
     //create the item
-    var menu_item = new MenuItem(parent_menu);
+    var menu_item = new MenuItem(parent_menu, []);
     var content = this._content_item_creator();
     var me = this;
     content.backupStateTransitionEventHandlers();
@@ -1319,6 +1335,12 @@ MenuItemAdder.prototype.startAddingItem = function(){
         }
     });
     menu_item.setContent(content);
+
+    var parent_item = menu_item.getParentMenuItem();
+    if (parent_item){
+        parent_item.setChildless(false);
+        parent_item.setDeletable(false);
+    }
 
     this._parent_menu.addMenuItem(menu_item);
 
@@ -1532,6 +1554,12 @@ Menu.prototype.addMenuItem = function(menu_item){
  * removes menu item from the menu
  */
 Menu.prototype.removeMenuItem = function(menu_item){
+    //a problem - we have references to children in Menu and MenuItem
+    var parent_item = menu_item.getParentMenuItem();
+    if (parent_item){
+        parent_item.removeChildMenuItem(menu_item);
+    }
+    //now clean refs from the menu:
     for (var i = 0; i<this._children.length; i++){
         if (menu_item === this._children[i]){
             this._children.splice(i, 1);
