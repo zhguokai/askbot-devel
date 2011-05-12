@@ -19,6 +19,8 @@ That is the reason for having two types of methods here:
 """
 import logging
 import time
+import sys
+import traceback
 from django.contrib.contenttypes.models import ContentType
 from celery.decorators import task
 from askbot.models import Activity
@@ -51,22 +53,28 @@ def record_post_update_celery_task(
         timestamp = None,
         created = False,
     ):
-    #reconstitute objects from the database
-    updated_by = User.objects.get(id = updated_by_id)
-    post_content_type = ContentType.objects.get(id = post_content_type_id)
-    post = post_content_type.get_object_for_this_type(id = post_id)
-    newly_mentioned_users = User.objects.filter(
+    try:
+        #reconstitute objects from the database
+        updated_by = User.objects.get(id = updated_by_id)
+        post_content_type = ContentType.objects.get(id = post_content_type_id)
+        post = post_content_type.get_object_for_this_type(id = post_id)
+        newly_mentioned_users = User.objects.filter(
                                 id__in = newly_mentioned_user_id_list
                             )
 
-
-    record_post_update(
-        post = post,
-        updated_by = updated_by,
-        newly_mentioned_users = newly_mentioned_users,
-        timestamp = timestamp,
-        created = created,
-    )
+        record_post_update(
+            post = post,
+            updated_by = updated_by,
+            newly_mentioned_users = newly_mentioned_users,
+            timestamp = timestamp,
+            created = created,
+        )
+    except:
+       etype, eval, etb = sys.exc_info()
+       txt = "=============================================\n"
+       for line in traceback.format_exception(etype,eval,etb):
+         txt += line
+       logging.critical("Exception in Mail Task:\n%s" % txt)
 
 def record_post_update(
         post = None,
