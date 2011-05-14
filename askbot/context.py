@@ -15,8 +15,14 @@ def application_settings(request):
     my_settings['ASKBOT_URL'] = settings.ASKBOT_URL
     my_settings['DEBUG'] = settings.DEBUG
     my_settings['ASKBOT_VERSION'] = askbot.get_version()
-    return {
+    context = {
         'settings': my_settings,
         'skin': get_skin(request),
         'moderation_items': api.get_info_on_moderation_items(request.user)
     }
+    if askbot_settings.ENABLE_CATEGORIES:
+        from django.utils import simplejson
+        from askbot.models.cats import generate_tree
+        context['cats_tree'] = simplejson.dumps(generate_tree())
+
+    return context

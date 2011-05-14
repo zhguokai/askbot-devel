@@ -4,7 +4,6 @@ except ImportError:
     from django.utils.functional import wraps  # Python 2.4 fallback.
 
 from categories.models import Category
-from mptt.templatetags.mptt_tags import cache_tree_children
 
 #from django.db import IntegrityError
 from django.core import exceptions
@@ -18,6 +17,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.models import Tag
 from askbot.skins.loaders import render_into_skin
 from askbot.utils.tokens import CategoriesApiTokenGenerator
+from askbot.models.cats import generate_tree
 
 
 def cats(request):
@@ -33,30 +33,6 @@ def cats(request):
         )
     else:
         raise Http404
-
-def generate_tree():
-    """
-    Traverses a node tree and builds a structure easily serializable as JSON.
-    """
-    roots = cache_tree_children(Category.tree.all())
-    if roots:
-        # Assume we have one tree for now, this could change if we decide
-        # against storing the root node in the DB
-        return _recurse_tree(roots[0])
-    return {}
-
-def _recurse_tree(node):
-    """
-    Helper recursive function for generate_tree().
-    Traverses recursively the node tree.
-    """
-    output = {'name': node.name, 'id': node.id}
-    children = []
-    if not node.is_leaf_node():
-        for child in node.get_children():
-            children.append(_recurse_tree(child))
-    output['children'] = children
-    return output
 
 def admin_ajax_post(view_func):
     """
@@ -190,7 +166,7 @@ def add_tag_to_category(request):
     Both the tag and the category must exist and their IDs are provided to
     the view.
     The expected json request is an object with the following keys:
-      'tag_id': ID of the tag.
+      'tag_name': name of the tag.
       'cat_id': ID of the category.
     The response is also a json object with keys:
       'status': Can be either 'success' or 'error'
@@ -198,10 +174,9 @@ def add_tag_to_category(request):
 
     Category IDs are the Django integer PKs of the respective model instances.
     """
-    post_data = simplejson.loads(request.raw_post_data)
-    tag_id = post_data.get('tag_id')
-    cat_id = post_data.get('cat_id')
-    if not tag_id or cat_id is None:
+    tag_name = request.POST.get('tag_name')
+    cat_id = request.POST.get('cat_id')
+    if not tag_name or cat_id is None:
         raise exceptions.ValidationError(
             _("Missing required parameter")
             )
@@ -215,7 +190,7 @@ def add_tag_to_category(request):
             _("Requested category doesn't exist")
             )
     try:
-        tag = Tag.objects.get(id=tag_id)
+        tag = Tag.objects.get(name=tag_name)
     except Tag.DoesNotExist:
         raise exceptions.ValidationError(
             _("Requested tag doesn't exist")
@@ -231,7 +206,7 @@ def get_tag_categories(request):
     Get the categories a tag belongs to. Meant to be called using ajax
     and POST HTTP method. Available to everyone including anonymous users.
     The expected json request is an object with the following key:
-      'tag_id': ID of the tag. (required)
+      'tag_name': name of the tag. (required)
     The response is also a json object with keys:
       'status': Can be either 'success' or 'error'
       'cats': A list of dicts with keys 'id' (value is a integer category ID)
@@ -244,14 +219,13 @@ def get_tag_categories(request):
     try:
         if request.is_ajax():
             if request.method == 'POST':
-                post_data = simplejson.loads(request.raw_post_data)
-                tag_id = post_data.get('tag_id')
-                if not tag_id:
+                tag_name = request.POST.get('tag_name')
+                if not tag_name:
                     raise exceptions.ValidationError(
-                        _("Missing tag_id parameter")
+                        _("Missing tag_name parameter")
                         )
                 try:
-                    tag = Tag.objects.get(id=tag_id)
+                    tag = Tag.objects.get(name=tag_name)
                 except Tag.DoesNotExist:
                     raise exceptions.ValidationError(
                         _("Requested tag doesn't exist")
@@ -279,7 +253,7 @@ def remove_tag_from_category(request):
     Remove a tag from a category it tag belongs to. Meant to be called using ajax
     and POST HTTP method. Available to admin and moderators users.
     The expected json request is an object with the following keys:
-      'tag_id': ID of the tag.
+      'tag_name': name of the tag.
       'cat_id': ID of the category.
     The response is also a json object with keys:
       'status': Can be either 'success', 'noop' or 'error'
@@ -295,10 +269,9 @@ def remove_tag_from_category(request):
             if request.method == 'POST':
                 if request.user.is_authenticated():
                     if request.user.is_administrator() or request.user.is_moderator():
-                        post_data = simplejson.loads(request.raw_post_data)
-                        tag_id = post_data.get('tag_id')
-                        cat_id = post_data.get('cat_id')
-                        if not tag_id or cat_id is None:
+                        tag_name = request.POST.get('tag_name')
+                        cat_id = request.POST.get('cat_id')
+                        if not tag_name or cat_id is None:
                             raise exceptions.ValidationError(
                                 _("Missing required parameter")
                                 )
@@ -310,7 +283,7 @@ def remove_tag_from_category(request):
                                 _("Requested category doesn't exist")
                                 )
                         try:
-                            tag = Tag.objects.get(id=tag_id)
+                            tag = Tag.objects.get(name=tag_name)
                         except Tag.DoesNotExist:
                             raise exceptions.ValidationError(
                                 _("Requested tag doesn't exist")

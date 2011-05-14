@@ -27,6 +27,9 @@
     askbot['urls']['add_category'] = '{% url "add_category" %}';
     askbot['urls']['rename_category'] = '{% url "rename_category" %}';
     askbot['urls']['delete_category'] = '{% url "delete_category" %}';
+    askbot['urls']['get_tag_categories'] = '{% url "get_tag_categories" %}';
+    askbot['urls']['add_tag_to_category'] = '{% url "add_tag_to_category" %}';
+    askbot['urls']['remove_tag_from_category'] =  '{% url "remove_tag_from_category" %}';
 </script>
 <script
     type="text/javascript"
@@ -40,6 +43,8 @@
 <script type='text/javascript' src="{{"/js/jquery.i18n.js"|media }}"></script>
 <script type='text/javascript' src="{% url "askbot_jsi18n" %}"></script>
 <script type='text/javascript' src="{{"/js/utils.js"|media }}"></script>
+<!-- autocompleter is after utils -->
+<script type='text/javascript' src="{{"/js/autocompleter.js"|media }}"></script>
 {% if settings.ENABLE_MATHJAX %}
     <script type='text/javascript' src="{{settings.MATHJAX_BASE_URL}}/MathJax.js">
         MathJax.Hub.Config({
@@ -52,6 +57,14 @@
 {% if settings.ENABLE_CATEGORIES %}
 <script type="text/javascript" src="{{ "/js/jquery.ui.core.js"|media }}"></script>
 <script type="text/javascript" src="{{ "/js/jquery.ui.position.js"|media }}"></script>
+<style type="text/css">
+    .ab-menu, .tag-categorizer { background: #fff; border: 1px solid #aaa; }
+    .ab-menu input { width: auto; }
+    ul.ab-menu { list-style: none; }
+    li.menu-item, .tag-category { white-space: nowrap; padding: 0 5px 0 5px; }
+    .tag-categorizer span.delete-icon { display: inline; float: none; vertical-align: middle; }
+    .go-right-icon { vertical-align: middle; }
+</style>
 <script type="text/javascript">
     askbot['data']['categories'] = {% if cats_tree %}[{{ cats_tree }}]{% else %}null{% endif %};
     //set up category menu
@@ -74,6 +87,21 @@
     root_cat.setName(askbot['data']['categories'][0]['name']);
     root_cat.setId(askbot['data']['categories'][0]['id']);
     cats.setParentContentItem(root_cat);
+
+    //save category autocompleter for the future reuse
+    askbot['var']['category_ac'] = new AutoCompleter({
+        data: flattenCategoryData(askbot['data']['categories'][0]['children']),
+        minChars: 1,
+        useCache: true,
+        matchInside: true,
+        maxCacheLength: 100,
+        delay: 10,
+    });
+
+    $.each($('.tag'), function(idx, elem){
+        var tdd = new TagDropDown($(elem).html());
+        tdd.decorate($(elem));
+    });
 
 </script>
 {% endif %}

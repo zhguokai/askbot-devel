@@ -5,7 +5,7 @@
  * @constructor
  */
 var AutoCompleter = function(options) {
-
+    WrappedElement.call(this);
     /**
      * Default options for autocomplete plugin
      */
@@ -30,7 +30,8 @@ var AutoCompleter = function(options) {
         matchCase: false,
         matchInside: true,
         mustMatch: false,
-        preloadData: false,
+        preloadData: false,//preloadData and data are mutually excusive
+        data: null,//may set data - then no need to load
         selectFirst: false,
         stopCharRegex: /\s+/,
         selectOnly: false,
@@ -130,6 +131,8 @@ var AutoCompleter = function(options) {
 
     if (this.options['preloadData'] === true){
         this.fetchRemoteData('', function(){});
+    } else if (this.options['data']){
+        this.setData(this.options.data);
     }
 };
 inherits(AutoCompleter, WrappedElement);
@@ -425,6 +428,13 @@ AutoCompleter.prototype.parseRemoteData = function(remoteData) {
         results.push({ value: unescape(value), data: data });
     }
     return results;
+};
+
+/**
+ * data is array of objects with keys "value" and "data"
+ */
+AutoCompleter.prototype.setData = function(data){
+    this.options.data = data;
 };
 
 AutoCompleter.prototype.filterAndShowResults = function(results, filter) {
