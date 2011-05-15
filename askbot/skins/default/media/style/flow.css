@@ -7,10 +7,11 @@ pre {
 .content-wrapper {/* wrapper positioning class */
     width: 95%;
     margin-left: 20px;
+    min-width: 1000px;
 }
 
 #CALeft {
-    width: 80%;
+    width: 75%;
 }
 
 #CAFull {
