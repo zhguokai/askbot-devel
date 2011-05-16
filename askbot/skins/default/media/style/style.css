@@ -8,7 +8,6 @@ body {
     padding: 0;
     color: #000;
     font-family: sans-serif;
-    min-width:1000px;
 }
 
 div {
@@ -76,6 +75,11 @@ h2 {
     padding: 3px 0 3px 5px;
 }
 
+.user-tags-page h2 {
+    clear: both;
+    margin-top: 10px;
+}
+
 h3 {
     font-size: 120%;
     padding: 3px 0 3px 5px;
@@ -107,11 +111,11 @@ pre {
     font-family: Consolas, Monaco, Liberation Mono, Lucida Console, Monospace;
     font-size: 100%;
     margin-bottom: 10px;
-    overflow: auto;
+    /*overflow: auto;*/
     background-color: #F5F5F5;
     padding-left: 5px;
     padding-top: 5px;
-    width: 95%;
+    /*width: 671px;*/
     padding-bottom: 20px ! ie7;
 }
 
@@ -128,10 +132,13 @@ blockquote {
     background-color: #F5F5F5;
 }
 
+.clear {
+    clear: both;
+}
+
 .content-wrapper {/* wrapper positioning class */
-    width: 95%;
+    width: 960px;
     margin: auto;
-    margin-left: 20px;
     position:relative;
 }
 
@@ -145,7 +152,7 @@ blockquote {
 }
 
 #CALeft {
-    width: 80%;
+    width: 710px;
     float: left;
     position: relative;
     padding: 0 5px 10px 5px;
@@ -160,7 +167,7 @@ blockquote {
 #CAFull {
     float: left;
     padding: 0 5px 10px 5px;
-    width: 98%;
+    width: 950px;
 }
 
 #ground {
@@ -341,7 +348,7 @@ blockquote {
 
 .ask-page div#question-list {
     float: none;
-    width: 90%;
+    width: 706px;
 }
 .ask-page div#question-list h2 {
     font-size: 14px;
@@ -394,6 +401,10 @@ ul.tags.marked-tags li,
 .tags-page ul.tags li,
 ul#ab-user-tags li {
     width: 160px;
+}
+
+.user-tags-page ul.tags li {
+    width: 140px;
 }
 
 ul#related-tags li {
@@ -489,7 +500,7 @@ ul#search-tags {
     padding: 5px 2px 5px 2px;
     border-top: 1px dashed #ccccce;
     overflow: hidden;
-    width: 100%;
+    width: 702px;
     float: left;
 }
 
@@ -591,17 +602,15 @@ ul#search-tags {
     padding-left: 0;
 }
 
-#question-table {
+#question-table,
+.answer-table {
     margin: 2px 0 10px 0;
     border-spacing: 0px;
 }
 
 .answer-table {
-    margin: 2px 0 10px 0;
-    border-spacing: 0px;
-}
-.answer-table {
     border-bottom: 1px solid #bbb;
+    clear: both;
 }
 
 .evenMore {
@@ -850,20 +859,15 @@ a:hover.medal {
     font-size: 125%;
 }
 
-.answer-body {
+.question-body, .answer-body {
     min-height: 39px;
     line-height: 20px;
-    width: 99%;
-}
-.question-body {
-    min-height: 39px;
-    line-height: 20px;
-    margin-left: 0;
-    width: 99%;
+    overflow: auto;
+    width: 660px;
 }
 
 .question-body IMG, .answer-body IMG {
-    max-width: 1500px;
+    max-width: 600px;
 }
 
 .vote-buttons {
@@ -963,7 +967,7 @@ a:hover.medal {
 .comments textarea {
     display: block;
     height: 48px;
-    width: 90%;
+    width: 664px;
     margin: 0 0 4px 0;
     font-family: sans-serif;
     font-size: 12px;
@@ -1216,7 +1220,7 @@ span.form-error {
 .wmd-preview {
     margin: 3px 0 5px 0;
     padding: 6px;
-    width: 95%;
+    width: 691px;
     background-color: #F5F5F5;
     min-height: 20px;
     overflow: auto;

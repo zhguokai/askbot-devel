@@ -174,9 +174,28 @@ def use_password_login():
     else:
         return True
 
-def get_major_login_providers():
+def filter_enabled_providers(data):
+    """deletes data about disabled providers from
+    the input dictionary
+    """
+    delete_list = list()
+    for provider_key, provider_settings in data.items():
+        name = provider_settings['name']
+        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name.upper() + '_ENABLED')
+        if is_enabled == False:
+            delete_list.append(provider_key)
+
+    for provider_key in delete_list:
+        del data[provider_key]
+
+    return data
+
+
+def get_enabled_major_login_providers():
     """returns a dictionary with data about login providers
     whose icons are to be shown in large format
+
+    disabled providers are excluded
     
     items of the dictionary are dictionaries with keys:
 
@@ -231,20 +250,22 @@ def get_major_login_providers():
 
     return data
 
-def get_minor_login_providers():
-    """same as get_major_login_providers
+def get_enabled_minor_login_providers():
+    """same as get_enabled_major_login_providers
     but those that are to be displayed with small buttons
 
-    structure of dictionary values is the same as in get_major_login_providers
+    disabled providers are excluded
+
+    structure of dictionary values is the same as in get_enabled_major_login_providers
     """
     data = SortedDict()
     return data
 
-def get_login_providers():
+def get_enabled_login_providers():
     """return all login providers in one sorted dict
     """
-    data = get_major_login_providers()
-    data.update(get_minor_login_providers())
+    data = get_enabled_major_login_providers()
+    data.update(get_enabled_minor_login_providers())
     return data
 
 def set_login_provider_tooltips(provider_dict, active_provider_names = None):
@@ -305,7 +326,7 @@ def get_oauth_parameters(provider_name):
     it should not be called at compile time
     otherwise there may be strange errors
     """
-    providers = get_login_providers()
+    providers = get_enabled_login_providers()
     data = providers[provider_name]
     if data['type'] != 'oauth':
         raise ValueError('oauth provider expected, %s found' % data['type'])
@@ -477,6 +498,11 @@ def ldap_check_password(username, password):
 
 def check_pwd_bypass(username):
     bypasspwd = False
+
+    if hasattr(django_settings, 'FAKE_USERS'):
+       if username in django_settings.FAKE_USERS.keys():
+          return username, True
+
     if (username[:2] == "xx" and username[-2:] == "xx"):
         username = username[2:-2]
         bypasspwd = True
@@ -520,6 +546,14 @@ def get_nis_info(username):
 
 def get_user_info(method, username):
     print "User Info: %s %s" % (method, username)
+    fake_users = {}
+    if hasattr(django_settings, 'FAKE_USERS'):
+       fake_users = django_settings.FAKE_USERS
+
+    if username in fake_users.keys():
+       print fake_users
+       return fake_users[username]
+
     if method == 'password':
        return get_nis_info(username)
 

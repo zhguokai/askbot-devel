@@ -58,6 +58,23 @@ def send_mail(
     """
     try:
         assert(subject_line is not None)
+        debug_emails = []
+        if hasattr(django_settings, 'DEBUG_EMAIL_USERS'):
+            debug_emails = django_settings.DEBUG_EMAIL_USERS
+
+        if len(debug_emails) > 0:
+            new_recipient_list = []
+            # Only allow recipients in the debug email list
+            for allowed in debug_emails:
+               if allowed in recipient_list:
+                  new_recipient_list.append(allowed)
+
+            if len(new_recipient_list) == 0:
+               return
+
+            recipient_list = new_recipient_list
+            logging.info("Only Email Debug Users %s" % recipient_list)
+
         msg = mail.EmailMessage(
                         subject_line, 
                         body_text, 

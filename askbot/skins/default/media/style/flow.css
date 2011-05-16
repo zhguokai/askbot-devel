@@ -1,0 +1,50 @@
+body {
+    min-width:1000px;
+}
+pre {
+    overflow: auto;
+}
+.content-wrapper {/* wrapper positioning class */
+    width: 95%;
+    margin-left: 20px;
+    min-width: 1000px;
+}
+
+#CALeft {
+    width: 75%;
+}
+
+#CAFull {
+    width: 98%;
+}
+.ask-page div#question-list {
+    width: 90%;
+}
+.short-summary {
+    width: 100%;
+}
+
+#question-table {
+    width: 99%;
+}
+.answer-body {
+    width: 99%;
+    overflow: off;
+}
+.question-body {
+    width: 99%;
+    float: left;
+    overflow:off;
+}
+
+.question-body IMG, .answer-body IMG {
+    max-width: 1500px;
+}
+
+.comments textarea {
+    width: 90%;
+}
+
+.wmd-preview {
+    width: 95%;
+}

@@ -60,6 +60,8 @@ class TagQuerySet(models.query.QuerySet):
         wildcard tag is guaranteed to end with an asterisk and has
         at least one character preceding the the asterisk. and there
         is only one asterisk in the entire name
+
+        ``wildcards`` - a list of wildcard tag names
         """
         if wildcards is None or len(wildcards) == 0:
             return self.none()
