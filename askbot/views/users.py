@@ -867,13 +867,16 @@ def user_favorites(request, user):
 def user_tags(request, user):
     """a view showing users subscribed and ignored tags"""
     subscribed_tags = models.Tag.objects.filter(
-                            user_selections__reason__contains = 'S'
+                            user_selections__reason__contains = 'S',
+                            user_selections__user = user
                         )
     ignored_tags = models.Tag.objects.filter(
-                            user_selections__reason__contains = 'I'
+                            user_selections__reason__contains = 'I',
+                            user_selections__user = user
                         )
     favorite_tags = models.Tag.objects.filter(
-                            user_selections__reason__contains = 'F'
+                            user_selections__reason__contains = 'F',
+                            user_selections__user = user
                         )
     data = {
         'subscribed_tags': subscribed_tags,
@@ -881,7 +884,7 @@ def user_tags(request, user):
         'ignored_tags': ignored_tags,
         'ignored_wildcards': user.get_selected_wildcard_tags('ignored'),
         'favorite_tags': favorite_tags,
-        'favorite_wildcards': user.get_selected_wildcard_tags('favorite'),
+        'favorite_wildcards': user.get_selected_wildcard_tags('followed'),
         'use_wildcards': askbot_settings.USE_WILDCARD_TAGS,
         'view_user': user
     }
