@@ -34,6 +34,7 @@ def parse_post_text(post):
     if post._escape_html:
         text = cgi.escape(text)
 
+    #_urlize and _use_markdown must be exclusive
     if post._urlize:
         text = html.urlize(text)
 

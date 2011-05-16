@@ -1790,6 +1790,19 @@ def user_get_flags_for_post(self, post):
     flags = self.get_flags()
     return flags.filter(content_type = post_content_type, object_id=post.id)
 
+def user_get_selected_wildcard_tags(self, selection = None):
+    """returns list of wildcard tag names for the user
+    """
+    assert(selection in ('subscribed', 'ignored', 'followed'))
+    if selection == 'subscribed':
+        raw_tags = self.subscribed_tags
+    elif selection == 'ignored':
+        raw_tags = self.ignored_tags
+    else:
+        raw_tags = self.interesting_tags
+    return raw_tags.split()
+
+
 def user_update_response_counts(user):
     """Recount number of responses to the user.
     """
@@ -1884,6 +1897,7 @@ User.add_to_class('get_flags_for_post', user_get_flags_for_post)
 User.add_to_class('get_profile_url', get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
+User.add_to_class('get_selected_wildcard_tags', user_get_selected_wildcard_tags)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
