@@ -2115,14 +2115,13 @@ def send_instant_notifications_about_activity_in_post(
         #todo: this could be packaged as an "action" - a bundle
         #of executive function with the activity log recording
         #print body_text
-        if True:
-         mail.send_mail(
+        mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
             recipient_list = [user.email],
             related_object = origin_post,
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
-          )
+        )
 
     debug_list += "%s(%s) "%(user, user.email)
     debug_title = subject_line
