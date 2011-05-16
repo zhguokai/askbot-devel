@@ -4237,6 +4237,8 @@ msgid ""
 "similar technology. Your external service password always stays confidential "
 "and you don't have to rememeber or create another one."
 msgstr ""
+"Enter your Windows ID and password to login. You are already in the system. "
+"No need to register."
 
 #: skins/default/templates/authopenid/signin.html:28
 msgid ""
@@ -4276,7 +4278,7 @@ msgstr ""
 #: skins/default/templates/authopenid/signin.html:87
 #: skins/default/templates/authopenid/signin.html:109
 msgid "(or select another login method above)"
-msgstr ""
+msgstr "(Remember: Windows ID and password)"
 
 #: skins/default/templates/authopenid/signin.html:89
 msgid "Sign in"
