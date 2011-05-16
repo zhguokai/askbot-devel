@@ -864,6 +864,30 @@ def user_favorites(request, user):
     }
     return render_into_skin('user_profile/user_favorites.html', data, request)
 
+def user_tags(request, user):
+    """a view showing users subscribed and ignored tags"""
+    subscribed_tags = models.Tag.objects.filter(
+                            user_selections__reason__contains = 'S'
+                        )
+    ignored_tags = models.Tag.objects.filter(
+                            user_selections__reason__contains = 'I'
+                        )
+    favorite_tags = models.Tag.objects.filter(
+                            user_selections__reason__contains = 'F'
+                        )
+    data = {
+        'subscribed_tags': subscribed_tags,
+        'subscribed_wildcards': user.get_selected_wildcard_tags('subscribed'),
+        'ignored_tags': ignored_tags,
+        'ignored_wildcards': user.get_selected_wildcard_tags('ignored'),
+        'favorite_tags': favorite_tags,
+        'favorite_wildcards': user.get_selected_wildcard_tags('favorite'),
+        'use_wildcards': askbot_settings.USE_WILDCARD_TAGS,
+        'view_user': user
+    }
+    return render_into_skin('user_profile/user_tags.html', data, request)
+
+
 @owner_or_moderator_required
 @csrf.csrf_protect
 def user_email_subscriptions(request, user):
@@ -918,6 +942,7 @@ user_view_call_table = {
     'reputation': user_reputation,
     'favorites': user_favorites,
     'votes': user_votes,
+    'tags': user_tags,
     'email_subscriptions': user_email_subscriptions,
     'moderation': user_moderate,
 }

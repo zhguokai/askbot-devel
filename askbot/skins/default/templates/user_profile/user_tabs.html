@@ -29,6 +29,10 @@
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=votes"
         ><span>{% trans %}casted votes{% endtrans %}</span></a>
         {% endif %}
+        <a id="tags" {% if tab_name=="tags" %}class="on"{% endif %} 
+            title="{% trans %}followed and ignored tags{% endtrans %}"
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=tags"
+        ><span>{% trans %}tags{% endtrans %}</span></a>
         {% if request.user == view_user or request.user|can_moderate_user(view_user) %}
         <a id="email_subscriptions" {% if tab_name=="email_subscriptions" %}class="on"{% endif %} 
             title="{% trans %}email subscription settings{% endtrans %}" 
