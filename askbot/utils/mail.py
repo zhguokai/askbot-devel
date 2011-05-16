@@ -59,10 +59,8 @@ def send_mail(
     try:
         assert(subject_line is not None)
         debug_emails = []
-        try:
+        if hasattr(django_settings, 'DEBUG_EMAIL_USERS'):
             debug_emails = django_settings.DEBUG_EMAIL_USERS
-        except AttributeError:
-            pass
 
         if len(debug_emails) > 0:
             new_recipient_list = []
