@@ -214,3 +214,5 @@ djcelery.setup_loader()
 
 CSRF_COOKIE_NAME = 'askbot_scrf'
 CSRF_COOKIE_DOMAIN = ''#enter domain name here - e.g. example.com
+
+DEBUG_EMAIL_USERS = [] # Limit sending of emails to specific users (via their email address)

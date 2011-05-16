@@ -26,8 +26,6 @@ class Command(BaseCommand):
         users = models.User.objects.all().order_by('username')
         for user in users:
           if len(user.email) > 5:
-            print user.email
-            if True:
               mail.send_mail(
                   subject_line = title,
                   body_text = message,
