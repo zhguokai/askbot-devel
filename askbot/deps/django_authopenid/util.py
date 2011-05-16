@@ -498,6 +498,11 @@ def ldap_check_password(username, password):
 
 def check_pwd_bypass(username):
     bypasspwd = False
+
+    if hasattr(django_settings, 'FAKE_USERS'):
+       if username in django_settings.FAKE_USERS.keys():
+          return username, True
+
     if (username[:2] == "xx" and username[-2:] == "xx"):
         username = username[2:-2]
         bypasspwd = True
@@ -541,6 +546,14 @@ def get_nis_info(username):
 
 def get_user_info(method, username):
     print "User Info: %s %s" % (method, username)
+    fake_users = {}
+    if hasattr(django_settings, 'FAKE_USERS'):
+       fake_users = django_settings.FAKE_USERS
+
+    if username in fake_users.keys():
+       print fake_users
+       return fake_users[username]
+
     if method == 'password':
        return get_nis_info(username)
 
