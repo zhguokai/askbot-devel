@@ -1,16 +1,17 @@
 import re
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from django.conf import settings as django_settings
 from markdown2 import Markdown
 
 #url taken from http://regexlib.com/REDetails.aspx?regexp_id=501 by Brian Bothwell
 URL_RE = re.compile("((?<!(href|.src|data)=['\"])((http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*))")
 
-BUG_RE = re.compile(r'\bWIND(\d+)\b')
+BUG_RE = re.compile(r'(?<![[/])WIND(\d\d\d\d\d\d\d\d)\b')
 
 LINK_PATTERNS = [
     (URL_RE, r'\1'),
-    (BUG_RE, r'http://bugs.askbot.org/issues/\1'),
+    (BUG_RE, django_settings.BUG_DB_LINK + r'\1'),
 ]
 
 def get_parser():
