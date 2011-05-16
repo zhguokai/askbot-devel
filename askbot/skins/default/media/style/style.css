@@ -75,6 +75,11 @@ h2 {
     padding: 3px 0 3px 5px;
 }
 
+.user-tags-page h2 {
+    clear: both;
+    margin-top: 10px;
+}
+
 h3 {
     font-size: 120%;
     padding: 3px 0 3px 5px;
@@ -125,6 +130,10 @@ blockquote {
     margin-right: 15px;
     padding: 10px 0px 1px 10px;
     background-color: #F5F5F5;
+}
+
+.clear {
+    clear: both;
 }
 
 .content-wrapper {/* wrapper positioning class */
@@ -390,6 +399,10 @@ ul.tags.marked-tags li,
 .tags-page ul.tags li,
 ul#ab-user-tags li {
     width: 160px;
+}
+
+.user-tags-page ul.tags li {
+    width: 140px;
 }
 
 ul#related-tags li {
