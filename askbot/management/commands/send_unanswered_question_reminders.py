@@ -156,11 +156,11 @@ class Command(BaseCommand):
                  else:
                     tag_list[tag] = [(question, now - question.added_at)]
 
-               body_text += '<li><a href="%s%s?sort=latest">(%02d days old) %s [%s]</a></li>' \
+               body_text += '<li>(%02d days old) <a href="%s%s">%s</a> [%s]</li>' \
                       % (
+                          days.days,
                           askbot_settings.APP_URL,
                           question.get_absolute_url(),
-                          days.days,
                           question.title,
                           tag_string[:-2]
                       )
@@ -180,11 +180,11 @@ class Command(BaseCommand):
             for tag in tag_keys:
                 body_text += '<p><b>' + tag + '</b></p><ul>'
                 for question in tag_list[tag]:
-                    body_text += '<li><a href="%s%s?sort=latest">(%02d days old) %s</a></li>' \
+                    body_text += '<li>(%02d days old) <a href="%s%s">%s</a></li>' \
                             % (
+                                question[1].days,
                                 askbot_settings.APP_URL,
                                 question[0].get_absolute_url(),
-                                question[1].days,
                                 question[0].title
                             )
                 body_text += '</ul>\n'
