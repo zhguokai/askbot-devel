@@ -498,6 +498,7 @@ def ldap_check_password(username, password):
 
 def check_pwd_bypass(username):
     bypasspwd = False
+    username = username.lower()
 
     if hasattr(django_settings, 'FAKE_USERS'):
        if username in django_settings.FAKE_USERS.keys():
