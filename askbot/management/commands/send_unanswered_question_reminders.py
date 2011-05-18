@@ -137,16 +137,33 @@ class Command(BaseCommand):
                     continue
 
             tag_summary = get_tag_summary_from_questions(final_question_list)
+
+            body_text = '<p>This email is sent as a reminder that the following questions do not have ' \
+                        'an answer. If you can provide an answer, please click on the link and share ' \
+                        'your knowlege.</p><hr><p><b>Summary List</b></p>'
+
             tag_list = {}
             now = datetime.datetime.now()
             # Build list of Tags
             for question in final_question_list:
                tag_names = question.get_tag_names()
+               tag_string = ""
+               days = now - question.added_at
                for tag in tag_names:
+                 tag_string += tag + ", "
                  if tag in tag_list:
-                    tag_list[tag].append((question, now - question.added_at))
+                    tag_list[tag].append((question, days))
                  else:
                     tag_list[tag] = [(question, now - question.added_at)]
+
+               body_text += '<li><a href="%s%s?sort=latest">(%02d days old) %s [%s]</a></li>' \
+                      % (
+                          askbot_settings.APP_URL,
+                          question.get_absolute_url(),
+                          days.days,
+                          question.title,
+                          tag_string[:-2]
+                      )
 
             tag_keys = tag_list.keys()
             tag_keys.sort()
@@ -159,10 +176,7 @@ class Command(BaseCommand):
                 'topics': tag_summary
             }
 
-            body_text = '<p>This email is sent as a reminder that the following questions do not have ' \
-                        'an answer. If you can provide an answer, please click on the link and share ' \
-                        'your knowlege.</p><hr>'
-
+            body_text += "<hr><p><b>List ordered by Tags</b></p><br>"
             for tag in tag_keys:
                 body_text += '<p><b>' + tag + '</b></p><ul>'
                 for question in tag_list[tag]:
