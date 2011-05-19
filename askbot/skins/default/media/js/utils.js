@@ -3,6 +3,18 @@ var mediaUrl = function(resource){
     return scriptUrl + 'm/' + askbotSkin + '/' + resource;
 };
 
+/**
+ * @param {string} name of url pattern
+ * @data {Object} data for url pattern
+ */
+var getUrl = function(name, data){
+    if (name === 'user_profile'){
+        var id = data['id'];
+        var name = data['name'];
+        return scriptUrl + $.i18n('users/') + '/' + id + '/' + slug + '/';
+    }
+}
+
 var copyAltToTitle = function(sel){
     sel.attr('title', sel.attr('alt'));
 };
@@ -218,6 +230,13 @@ inherits(Container, WrappedElement);
 Container.prototype.isEmpty = function(){
     return this._children.length === 0;
 };
+Container.prototype.empty = function(){
+    $.each(this._children, function(idx, child){
+        child.dispose();
+    });
+    this._element.empty();
+    this._children = [];
+};
 /**
  * @param {WrappedElement} content
  * no check that the element is not in children already
@@ -250,6 +269,36 @@ Container.prototype.createDom = function(){
     });
 };
 
+/**
+ * @constructor
+ * @extends {WrappedElement}
+ */
+var UserLink = function(id, name, slug){
+    WrappedElement.call(this);
+    /**
+     * @private
+     * @type {number}
+     */
+    this._id = id;
+    /**
+     * @private
+     * @type {string}
+     */
+    this._name = name;
+    /**
+     * @private
+     * @type {string}
+     */
+    this._slug = slug;
+};
+inherits(UserLink, WrappedElement);
+
+UserLink.prototype.createDom = function(){
+    var link = this.makeElement('a');
+    link.html(this._name);
+    link.attr('href', getUrl('user_profile', {id: this._id, slug: this._slug}));
+    this._element = link;
+};
 
 /**
  * @constructor
@@ -1066,6 +1115,11 @@ var TagDropDown = function(){
      * @type {?string}
      */
     this._tag_name = null;
+    /**
+     * @private
+     * @type {?TagFollowerCounts}
+     */
+    this._tag_follower_counts;
 };
 inherits(TagDropDown, DropDown);
 
@@ -1083,12 +1137,20 @@ TagDropDown.prototype.getContent = function(){
     return this._content;
 };
 
+/**
+ * @private
+ * @param {TagFollowerCounts} data
+ */
+TagDropDown.prototype.setTagFollowerCounts = function(data){
+    this._tag_follower_counts = data;
+};
+
 TagDropDown.prototype.onOpen = function(){
     var loader = this._loader;
     loader.run();
     var me = this;
     var on_load = function(){
-        loader.stop();
+        me.getContent().removeContent(loader);
         me.renderTagFollowerCounts();
     };
     this.loadTagFollowerCounts(on_load);
@@ -1103,5 +1165,225 @@ TagDropDown.prototype.decorate = function(element){
     TagDropDown.superClass_.decorate.call(this, element);
 };
 
-//todo: renderTagFollowerCounts
-//loadTagFollowerCounts
+/**
+ * @private
+ * @param {Function} on_load
+ */
+TagDropDown.prototype.loadTagFollowerCounts = function(on_load){
+    $.ajax({
+        type: 'GET',
+        cache: true,
+        data: {tag_name: tag_name},
+        dataType: 'json',
+        url: askbot['urls']['get_tag_follower_counts'],
+        success: function(data, text_status, xhr){
+            me.setTagFollowerCounts(data['count']);
+            on_load();
+        }
+    });
+};
+/**
+ * @private
+ */
+TagDropDown.prototype.renderTagFollowerCounts = function(){
+    var detail_box = new Container();
+    var count = this._tag_follower_counts['followers'];
+    var followers = new TagFollowerExpando();
+    followers.setTagName(this._tag_name);
+    followers.setFollowerCount(count);
+    followers.setDetailContainer(detail_box);
+    var fmt_str = ngettext('%(count)s followers', count);
+    followers.setPromptText( interpolate(fmt_str, {count: count}, true) );
+};
+
+    this._follower_expando = followers;
+    this._element.append(followers.getElement());
+
+    this._detail_box = detail_box;
+    this._element.append(detail_box.getElement());
+};
+
+/**
+ * supports states OPEN, LOADING and CLOSED
+ * interface class, requires overriding methods expand
+ * and startExpanding
+ * @constructor
+ * @extends {Widget}
+ */
+DelayedExpando = function(){
+    Widget.call(this);
+    /**
+     * @private
+     * @type {?Widget}
+     */
+    this._detail_container = null;
+    /**
+     * @private
+     * @type {?string}
+     */
+    this._prompt_text = null;
+};
+inherits(DelayedExpando, Widget);
+/**
+ * A method that loads necessary data and once
+ * that is done, calls on_finish() function
+ * @param {Function} on_finish
+ * @interface
+ */
+DelayedExpando.prototype.startExpanding = function(on_finish){};
+
+/**
+ * A method that expands the contents
+ * @interface
+ */
+DelayedExpando.prototype.expand = function(){};
+/**
+ * @param {Container} container
+ */
+DelayedExpando.prototype.setDetailContainer = function(container){
+    this._detail_container = container;
+};
+/**
+ * @param {Container}
+ */
+DelayedExpando.prototype.getDetailContainer = function(){
+    this._detail_container;
+};
+/**
+ * @param {string} text
+ */
+DelayedExpando.prototype.setPromptText = function(text){
+    this._prompt_text = text;
+}
+
+/**
+ * @return {Function}
+ */
+DelayedExpando.prototype.getHandler = function(){
+    var me = this;
+    return function(){
+        var state = me.getState();
+        if (state === 'CLOSED'){
+            me.startLoader();
+            var on_finish = function(){
+                me.removeLoader();
+                me.expand();
+                me.setState('OPEN');
+            }
+            me.startExpanding(on_finish);
+            me.setState('LOADING');
+        } else if (state === 'OPEN'){
+            me.collapse();
+            me.setState('CLOSED');
+        }//nothing for LOADING
+    };
+}
+
+DelayedExpando.prototype.createDom = function(){
+    this._element = this.makeElement('div');
+    var link = this.makeElement('a');
+    link.html(this._prompt_text);
+    this._element.append(link);
+
+    setupButtonEventHandlers(link, this.getHandler());
+
+    this.setState('CLOSED');
+};
+
+DelayedExpando.prototype.startLoader = function(){
+    this._detail_container.empty();
+    var loader = new Loader();
+    this._detail_container.addContent(loader);
+    this._loader = loader;
+    loader.run();
+};
+
+DelayedExpando.prototype.removeLoader = function(){
+    this._detail_container.removeContent(this._loader);
+    this._loader.dispose();
+};
+
+DelayedExpando.prototype.collapse = function(){
+    this._detail_container.empty();
+};
+
+/**
+ * @constructor
+ * @extends {DelayedExpando}
+ */
+TagFollowerExpando = function(){
+    DelayedExpando.call(this);
+    /**
+     * @private
+     * @type {?string}
+     */
+    this._tag_name = null;
+    /**
+     * @private
+     * @type {?number}
+     */
+    this._follower_count = null;
+    /**
+     * @private
+     * @type {?Object}
+     */
+    this._followers = null;
+    /**
+     * @private
+     * @type {?Widget}
+     */
+    this._detail_container = null;
+};
+inherits(TagFollowerExpando, DelayedExpando);
+
+/**
+ * @param {string} tag_name
+ */
+TagFollowerExpando.prototype.setTagName = function(tag_name){
+    this._tag_name = tag_name;
+};
+/**
+ * @param {number} count
+ */
+TagFollowerExpando.prototype.setFollowerCount = function(count){
+    this._follower_count = count;
+};
+/**
+ * @param {Object} data
+ */
+TagFollowerExpando.prototype.setFollowerData = function(data){
+    this._followers = data;
+};
+
+/**
+ * @private
+ * @param {Function} on_finish
+ */
+TagFollowerExpando.prototype.startExpanding = function(on_finish){
+    var me = this;
+    var tag_name = this._tag_name;
+    $.ajax({
+        type: 'GET',
+        cache: true,
+        data: {tag_name: tag_name},
+        dataType: 'json',
+        url: askbot['urls']['get_tag_followers'],
+        success: function(data, text_status, xhr){
+            me.setFollowerData(data['followers']);
+            on_finish();
+        }
+    });
+};
+
+/**
+ * adds user names to the container with links to 
+ * their profiles
+ */
+TagFollowerExpando.prototype.expand = function(){
+    var container = this.getDetailContainer();
+    var data = this.getFollowerData();
+    $.each(data, function(idx, user_data){
+        var user_link = new UserLink(user_data['id'], user_data['name']);
+        container.addContent(user_link);
+    });
+};
