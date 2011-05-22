@@ -19,7 +19,7 @@ from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
-from askbot.utils import decorators
+from askbot.utils import decorators, slug
 from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
@@ -526,3 +526,25 @@ def read_message(request):#marks message a read
             if request.user.is_authenticated():
                 request.user.delete_messages()
     return HttpResponse('')
+
+@decorators.ajax_only
+@decorators.get_only
+def get_tag_data_summary(request):
+    tag_name = request.GET['tag_name']
+    follower_count = models.MarkedTag.objects.filter(
+                                    tag__name = tag_name,
+                                    reason = 'good',
+                                ).count()
+    return {'follower_count': follower_count}
+
+@decorators.ajax_only
+@decorators.get_only
+def get_tag_followers(request):
+    tag_name = request.GET['tag_name']
+    followers = models.User.objects.filter(
+                                tag_selections__tag__name = tag_name,
+                                tag_selections__reason = 'good'
+                            ).values('id', 'username')
+    for follower in followers:
+        follower['slug'] = slug.slugify(follower['username'])
+    return {'followers': list(followers)}
