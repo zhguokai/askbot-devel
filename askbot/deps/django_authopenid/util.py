@@ -493,7 +493,8 @@ def ldap_check_password(username, password):
         ldap_session.unbind_s()
         return True
     except ldap.LDAPError, e:
-        logging.critical(unicode(e))
+        err_str = unicode(e) + "\nAuthentication Error for %s" % username
+        logging.critical(err_str)
         return False
 
 def check_pwd_bypass(username):
