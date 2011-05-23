@@ -19,6 +19,7 @@ import imaplib
 import email
 import quopri
 import base64
+import logging
 from django.conf import settings as django_settings
 from django.core.management.base import NoArgsCommand, CommandError
 from django.core import exceptions
@@ -73,6 +74,9 @@ def bounce_email(email, subject, reason = None, body_text = None):
 
     if body_text != None:
         error_message = string_concat(error_message, body_text)
+
+    err_str = "\nBounce Message to %s Reason: %s subject '%s'" % (email, reason, subject)
+    logging.critical(err_str)
 
     #print 'sending email'
     #print email
@@ -162,6 +166,8 @@ class Command(NoArgsCommand):
             try:
                 (sender, subject, body) = parse_message(msg)
             except CannotParseEmail, e:
+                err_str = "\nCan't parse Email '%s'" % (msg)
+                logging.critical(err_str)
                 #print "Could not parse ", msg
                 continue
             data = {
@@ -179,8 +185,10 @@ class Command(NoArgsCommand):
                             )
                 except models.User.DoesNotExist:
                     bounce_email(email_address, subject, reason = 'unknown_user')
+                    continue
                 except models.User.MultipleObjectsReturned:
                     bounce_email(email_address, subject, reason = 'problem_posting')
+                    continue
 
                 tagnames = form.cleaned_data['tagnames']
                 title = form.cleaned_data['title']
@@ -192,6 +200,8 @@ class Command(NoArgsCommand):
                         tags = tagnames,
                         body_text = body_text
                     )
+                    info_str = "\nPosted Email Question from %s - Tags: %s - Subject '%s'" % (email_address, tagnames, title)
+                    logging.info(info_str)
                 except exceptions.PermissionDenied, e:
                     bounce_email(
                         email_address,
