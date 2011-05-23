@@ -442,6 +442,22 @@ ul#related-tags li {
     vertical-align: middle;
 }
 
+.tag-menu {
+    max-width: 600px;
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+
+.tag-menu .user-link {
+    display: block;
+    float: left;
+    width: 100px;
+    overflow: hidden;
+}
+
 .deletable-tag {
     margin-right: 3px;
     white-space: nowrap;

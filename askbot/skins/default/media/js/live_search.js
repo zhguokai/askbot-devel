@@ -552,6 +552,7 @@ var liveSearch = function(){
             });
         }
         render_tag_warning(data['non_existing_tags']);
+        init_tag_menu();
     }
 
     var try_again = function(){
