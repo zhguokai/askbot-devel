@@ -47,10 +47,7 @@
     </script>
 {% endif %}
 <script type="text/javascript">
-    $.each($('.tags .tag'), function(idx, item){
-        var dd = new TagDropDown();
-        dd.decorate($(item));
-    });
+    init_tag_menu();
     {% if active_tab != "tags" and active_tab != "users" %}
     {# start asking question with title from search query #}
         $(document).ready(function(){

@@ -15,6 +15,18 @@ var getUrl = function(name, data){
     }
 }
 
+/**
+ * removes first occurance of item in array
+ */
+var arrayRemove = function(arr, item){
+    for (var i = 0; i < arr.length; i++){
+        if (arr[i] === item){
+            arr.splice(i, 1);
+            return;
+        }
+    }
+};
+
 var copyAltToTitle = function(sel){
     sel.attr('title', sel.attr('alt'));
 };
@@ -157,14 +169,62 @@ var WrappedElement = function(){
      * @type {boolean}
      */
     this._in_document = false;
+    /**
+     * @private
+     * @type {Array.<string>}
+     */
+    this._css_classes = [];
+    /**
+     * @private
+     * @type {string}
+     */
+    this._html_tag = 'div';
 };
 WrappedElement.prototype.setElement = function(element){
     this._element = element;
 };
+WrappedElement.prototype.setHtmlTag = function(html_tag){
+    this._html_tag = html_tag;
+};
+/**
+ * @param {string} css_class
+ */
+WrappedElement.prototype.addClass = function(css_class){
+    if ($.inArray(css_class, this._css_classes) > -1){
+        return;
+    } else {
+        this._css_classes.push(css_class);
+        if (this._element){
+            this._element.addClass(css_class);
+        }
+    }
+};
+/**
+ * @param {css_class}
+ */
+WrappedElement.prototype.removeClass = function(css_class){
+    if ($.inArray(css_class, this._css_classes) > 1){
+        arrayRemove(this._css_classes, css_class);
+        if (this._element){
+            this._element.removeClass(css_class);
+        }
+    }
+};
+WrappedElement.prototype.setCssClasses = function(){
+    if (this._css_classes){
+        var element = this.getElement();
+        $.each(this._css_classes, function(idx, css_class){
+            element.addClass(css_class);
+        });
+    }
+};
 WrappedElement.prototype.createDom = function(){
-    this._element = $('<div></div>');
-    if (this._css_class){
-        this.addClass(this._css_class);
+    this._element = this.makeElement(this._html_tag);
+    if (this._css_classes){
+        var element = this._element;
+        $.each(this._css_classes, function(idx, css_class){
+            element.addClass(css_class);
+        });
     }
 };
 WrappedElement.prototype.getElement = function(){
@@ -199,8 +259,20 @@ WrappedElement.prototype.makeElement = function(html_tag){
     return $('<' + html_tag + '></' + html_tag + '>');
 };
 WrappedElement.prototype.dispose = function(){
-    this._element.remove();
+    if (this._element){
+        this._element.remove();
+    }
     this._in_document = false;
+};
+
+var ClearDiv = function(){
+    WrappedElement.call(this);
+};
+inherits(ClearDiv, WrappedElement);
+ClearDiv.prototype.createDom = function(){
+    ClearDiv.superClass_.createDom.call(this);
+    this._element.css('clear', 'both');
+    this._element.css('height', 0);
 };
 
 /**
@@ -234,8 +306,15 @@ Container.prototype.empty = function(){
     $.each(this._children, function(idx, child){
         child.dispose();
     });
-    this._element.empty();
+    if (this._element){
+        this._element.empty();
+    }
     this._children = [];
+};
+Container.prototype.dispose = function(){
+    this.empty();
+    Container.superClass_.dispose.call(this);
+
 };
 /**
  * @param {WrappedElement} content
@@ -249,24 +328,38 @@ Container.prototype.addContent = function(content){
 };
 /**
  * @param {WrappedElement} content
+ * @param {boolean} dispose
  */
 Container.prototype.removeContent = function(content){
     for (var i = 0; i < this._children.length; i++){
         if (this._children[i] === content){
             this._children.splice(i, 1);
-            if (this._element){
-                content.getElement().remove();
-            }
+            content.dispose();
             return;
         }
     }
 };
 Container.prototype.createDom = function(){
-    this._element = this.makeElement(this._html_tag);
+    Container.superClass_.createDom.call(this);
     var me = this;
     $.each(this._children, function(idx, child){
         me.getElement().append(child.getElement());
     });
+};
+
+/**
+ * @constructor
+ */
+var Span = function(text){
+    WrappedElement.call(this);
+    this._text = text;
+    this._html_tag = 'span';
+};
+inherits(Span, WrappedElement);
+
+Span.prototype.createDom = function(){
+    Span.superClass_.createDom.call(this);
+    this._element.html(this._text);
 };
 
 /**
@@ -295,6 +388,7 @@ inherits(UserLink, WrappedElement);
 
 UserLink.prototype.createDom = function(){
     var link = this.makeElement('a');
+    link.addClass('user-link');
     link.html(this._name);
     link.attr('href', getUrl('user_profile', {id: this._id, slug: this._slug}));
     this._element = link;
@@ -421,7 +515,7 @@ Loader.prototype.createDom = function(){
 
 Loader.prototype.dispose = function(){
     this.stop();
-    this._element.remove();
+    Loader.superClass_.dispose.call(this);
 };
 
 Loader.prototype.run = function(){
@@ -429,6 +523,7 @@ Loader.prototype.run = function(){
         return;
     }
     var me = this;
+    this.getElement().html(this._text);
     this._interval = setInterval(
         function(){ me.tic(); },
         this._tic_delay
@@ -452,6 +547,7 @@ Loader.prototype.tic = function(){
     var text = this._text;
     for (var i = 0; i < this._tic_counter; i++){
         text += this._tic_symbol;
+        console.log(text);
     }
     this.getElement().html(text);
     this._tic_counter += 1;
@@ -509,12 +605,6 @@ ActionIcon.prototype.decorate = function(element){
     if (this._handler !== null){
         this.setHandlerInternal();
     }
-};
-/**
- * destroys the icon thing
- */
-ActionIcon.prototype.dispose = function(){
-    this._element.remove();
 };
 
 var EditLink = function(){
@@ -673,17 +763,6 @@ Tag.prototype.createDom = function(){
     }
     this._inner_element.addClass('tag tag-right');
     this._inner_element.attr('rel', 'tag');
-    if (this._title === null){
-        this.setTitle(
-            $.i18n._(
-                "see questions tagged '{tag}'"
-            ).replace(
-                '{tag}',
-                this.getName()
-            )
-        );
-    }
-    this._inner_element.attr('title', this._title);
     this._inner_element.html(this.getDisplayTagName());
 
     this._element.append(this._inner_element);
@@ -949,11 +1028,24 @@ var DropDown = function(){
 
     /**
      * @private
+     * @type {number}
+     */
+    this._pre_open_delay = 300;
+
+    /**
+     * @private
+     * @type {number}
+     */
+    this._open_think_delay = 300;
+
+    /**
+     * @private
      * @type {boolean}
      */
     this._is_frozen = false;
     /**
      * @private
+     * extra css class
      */
     this._css_class;
 };
@@ -993,6 +1085,13 @@ DropDown.prototype.onOpen = function(){
 /** override me */
 DropDown.prototype.onClose = function(){
 };
+/** override if it is necessary to
+ * do something before opening the menu
+ * @param {Function} on_open
+ */
+DropDown.prototype.beforeOpen = function(on_open){
+    on_open();
+}
 
 /**
  * @param {Object} parent_element jQuery object
@@ -1001,8 +1100,9 @@ DropDown.prototype.onClose = function(){
 DropDown.prototype.decorate = function(parent_element){
     this.setParentElement(parent_element);
     var me = this;
-    this._parent_element.mouseover(function(){ me.open() });
-    this._parent_element.mouseout(function(){ me.startClosing() });
+    var parent_element = this._parent_element;
+    parent_element.mouseover(function(){ me.scheduleOpening() });
+    parent_element.mouseout(function(){ me.scheduleClosing() });
 };
 
 /**
@@ -1030,7 +1130,6 @@ DropDown.prototype.createDom = function(){
     var me = this;
     this._element.mouseleave(function(){ me.close(); });
     this._element.mouseenter(function(){ me.stopClosing() });
-    this.stopEventPropagation(['click']);
 
     $(document).click(function(){
         me.unfreeze();
@@ -1052,29 +1151,79 @@ DropDown.prototype.unfreeze = function(){
  * opens the dropdown
  */
 DropDown.prototype.open = function(){
-    this.createDom();
-    var parent_element = this._parent_element;
-    this._element.show();
-    this._element.position({
-        my: 'left top',
-        at: 'left center',
-        of: parent_element,
-    });
-    //this.getContent().getElement().show();
+    if (this.getState() !== 'OPEN'){
+        this.createDom();
+        var parent_element = this._parent_element;
+        this._element.show();
+        this._element.position({
+            my: 'left top',
+            at: 'left bottom',
+            of: parent_element,
+        });
+        //this.getContent().getElement().show();
+        this.setState('OPEN');
+    }
     this.onOpen();
+};
+/**
+ * sets timeout to open the menu
+ */
+DropDown.prototype.scheduleOpening = function(){
+    if (this._is_frozen){
+        return;
+    }
+    if (this._pre_open_delay > 0){
+        var me = this;
+        var delay = this._pre_open_delay;
+        var start = function(){ me.startOpening(); };
+        this._start_opening_timeout = setTimeout(start, delay);
+    } else {
+        this.open();
+    }
 };
 /**
  * sets the timeout to close the dropdown
  */
-DropDown.prototype.startClosing = function(){
+DropDown.prototype.scheduleClosing = function(){
     if (this._is_frozen){
         return;
     }
+    clearTimeout(this._start_opening_timeout);//stop opening too
     var me = this;
     this._close_timeout = setTimeout(
         function(){ me.close() },
         me._close_delay
     );
+};
+DropDown.prototype.startLoader = function(){
+    var content = this.getContent();
+
+    var loader = new Loader();
+    content.addContent(loader);
+    loader.run();
+
+    this._loader = loader;
+};
+DropDown.prototype.stopLoader = function(){
+    if (this._loader){
+        var content = this.getContent();
+        content.removeContent(this._loader);
+    }
+};
+DropDown.prototype.startOpening = function(){
+    var me = this;
+    var check = function(){
+        if (me.getState() !== 'OPEN'){
+            me.open();
+            me.startLoader();
+        }
+    };
+    setTimeout(check, this._open_think_delay);
+    var on_open = function(){
+        me.open();
+        me.stopLoader();
+    };
+    this.beforeOpen(on_open);
 };
 /**
  * clears the close timeout
@@ -1106,6 +1255,7 @@ DropDown.prototype.close = function(){
     }
     this.onClose();
     this.reset();
+    this.setState('CLOSED');
 };
 /**
  * @constructor
@@ -1133,8 +1283,7 @@ inherits(TagDropDown, DropDown);
 TagDropDown.prototype.getContent = function(){
     if (!this._content){
         var content = new Container();
-        this._loader = new Loader();
-        content.addContent(this._loader);
+        content.addClass('tag-menu');
         this._content = content;
     }
     return this._content;
@@ -1148,12 +1297,14 @@ TagDropDown.prototype.setTagData = function(data){
     this._tag_data = data;
 };
 
-TagDropDown.prototype.onOpen = function(){
-    var loader = this._loader;
-    loader.run();
+/**
+ * @param {Function} on_done
+ */
+TagDropDown.prototype.beforeOpen = function(on_done){
     var me = this;
+    var content = this.getContent();
     var on_load = function(){
-        me.getContent().removeContent(loader);
+        on_done();
         me.renderTagData();
     };
     this.loadTagData(on_load);
@@ -1164,7 +1315,6 @@ TagDropDown.prototype.onOpen = function(){
  */
 TagDropDown.prototype.decorate = function(element){
     this._tag_name = element.html();
-    this.setCssClass('tag-drop-down');
     TagDropDown.superClass_.decorate.call(this, element);
 };
 
@@ -1193,19 +1343,20 @@ TagDropDown.prototype.loadTagData = function(on_load){
 TagDropDown.prototype.renderTagData = function(){
     var detail_box = new Container();
     var count = this._tag_data['follower_count'];
-    var followers = new TagFollowerExpando();
-    followers.setTagName(this._tag_name);
-    followers.setFollowerCount(count);
-    followers.setDetailContainer(detail_box);
-    if (count === 0){
-        var prompt_text = gettext('No followers')
-    } else {
+    if (count > 0){
+        var followers = new TagFollowerExpando();
+        followers.setTagName(this._tag_name);
+        followers.setFollowerCount(count);
+        followers.setDetailContainer(detail_box);
         var fmt_str = ngettext('%(count)s follower', '%(count)s followers', count);
         var prompt_text = interpolate(fmt_str, {count: count}, true);
+        followers.setPromptText(prompt_text);
+        var content = this.getContent();
+        content.addContent(followers);
+    } else {
+        var span = new Span(gettext('No followers'));
+        this.getContent().addContent(span);
     }
-    followers.setPromptText(prompt_text);
-    var content = this.getContent();
-    content.addContent(followers);
 };
 
 /**
@@ -1227,6 +1378,12 @@ DelayedExpando = function(){
      * @type {?string}
      */
     this._prompt_text = null;
+
+    /**
+     * @private
+     * @type {number}
+     */
+    this._expand_think_delay = 1000;
 };
 inherits(DelayedExpando, Widget);
 /**
@@ -1266,10 +1423,16 @@ DelayedExpando.prototype.setPromptText = function(text){
  */
 DelayedExpando.prototype.getHandler = function(){
     var me = this;
+    var expand_think_delay = this._expand_think_delay;
     return function(){
         var state = me.getState();
         if (state === 'CLOSED'){
-            me.startLoader();
+            var on_check = function(){
+                if (me.getState() !== 'OPEN'){
+                    me.startLoader();
+                }
+            };
+            setTimeout(on_check, expand_think_delay);
             var on_finish = function(){
                 me.removeLoader();
                 me.expand();
@@ -1307,8 +1470,9 @@ DelayedExpando.prototype.startLoader = function(){
 };
 
 DelayedExpando.prototype.removeLoader = function(){
-    this._detail_container.removeContent(this._loader);
-    this._loader.dispose();
+    if (this._loader){
+        this._detail_container.removeContent(this._loader);
+    }
 };
 
 DelayedExpando.prototype.collapse = function(){
@@ -1403,5 +1567,16 @@ TagFollowerExpando.prototype.expand = function(){
                                 user_data['slug']
                             );
         container.addContent(user_link);
+    });
+    container.addContent(new ClearDiv());
+};
+
+var init_tag_menu = function(){
+    $.each($('.tags .tag'), function(idx, item){
+        if (! item.has_tag_menu ){
+            var dd = new TagDropDown();
+            dd.decorate($(item));
+            item.has_tag_menu = true;
+        }
     });
 };

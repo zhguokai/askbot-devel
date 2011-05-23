@@ -449,9 +449,10 @@ var liveSearch = function(){
             //show new div with a fadeIn effect
             old_list.fadeOut(200, function() {
                 old_list.remove();
-			            new_list.fadeIn(400);            
+                new_list.fadeIn(400);
             });
         }
+        init_tag_menu();
     }
 
     var try_again = function(){
