@@ -306,7 +306,8 @@ poor design of the data or methods on data objects #}
                                                             ''
                                                         )|escape
                                                     }}"
-            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}" rel="tag"
+            {#title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}"#}
+            rel="tag"
         >{{ tag|replace('*', '&#10045;') }}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
             <span class="delete-icon"
@@ -528,7 +529,7 @@ poor design of the data or methods on data objects #}
         sortButtonData["{{key_name}}"] = {
             label: "{{label}}",
             asc_tooltip: "{{asc_tooltip}}",
-            desc_tooltip: "{{desc_tooltip}}",
+            desc_tooltip: "{{desc_tooltip}}"
         };
     </script>
 {%- endmacro %}
@@ -645,7 +646,7 @@ poor design of the data or methods on data objects #}
             useCache: true,
             matchInside: true,
             maxCacheLength: 100,
-            delay: 10,
+            delay: 10
     });
     tagAc.decorate($("{{ id }}"));
 {%- endmacro -%}

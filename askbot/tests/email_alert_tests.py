@@ -1,6 +1,7 @@
 import datetime
 import functools
 import copy
+import time
 from django.conf import settings as django_settings
 from django.core import management
 import django.core.mail
@@ -11,9 +12,12 @@ from askbot.tests import utils
 from askbot import models
 from askbot.utils import mail
 from askbot.conf import settings as askbot_settings
+from askbot import const
+from askbot.models.question import get_tag_summary_from_questions
 
 def email_alert_test(test_func):
-    """decorator for test methods in EmailAlertTests
+    """decorator for test methods in
+    :class:`~askbot.tests.email_alert_tests.EmailAlertTests`
     wraps tests with a generic sequence of testing
     email alerts on updates to anything relating to
     given question
@@ -23,7 +27,10 @@ def email_alert_test(test_func):
         func_name = test_func.__name__
         if func_name.startswith('test_'):
             test_name = func_name.replace('test_', '', 1)
+            #run the main codo of the test function
             test_func(test_object)
+            #if visit_timestamp is set,
+            #target user will visit the question at that time
             test_object.maybe_visit_question()
             test_object.send_alerts()
             test_object.check_results(test_name)
@@ -279,11 +286,14 @@ class EmailAlertTests(TestCase):
                                                     self.__class__.__name__,
                                                     test_key,
                                                 )
+        #compares number of emails in the outbox and
+        #the expected message count for the current test
         self.assertEqual(len(outbox), expected['message_count'], error_message)
         if expected['message_count'] > 0:
             if len(outbox) > 0:
                 error_message = 'expected recipient %s found %s' % \
                     (self.target_user.email, outbox[0].recipients()[0])
+                #verify that target user receives the email
                 self.assertEqual(
                             outbox[0].recipients()[0], 
                             self.target_user.email,
@@ -612,6 +622,7 @@ class LiveInstantSelectedQuestionsEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
     def setUp(self):
         self.notification_schedule['q_sel'] = 'i'
+        #first posts yesterday
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
         self.follow_question = True
 
@@ -681,8 +692,7 @@ class DelayedAlertSubjectLineTests(TestCase):
                     q1:'', q2:'', q3:'', q4:'', q5:'', q6:'', q7:'',
                     q8:'', q9:'', q10:'', q11:'',
                 }
-        from askbot.management.commands import send_email_alerts as cmd
-        subject = cmd.get_update_subject_line(q_dict)
+        subject = get_tag_summary_from_questions(q_dict.keys())
 
         self.assertTrue('one' not in subject)
         self.assertTrue('two' in subject)
@@ -697,9 +707,9 @@ class DelayedAlertSubjectLineTests(TestCase):
         i6 = subject.index('six')
         order = [i6, i5, i4, i3, i2]
         self.assertEquals(
-                order,
-                sorted(order)
-            )
+            order,
+            sorted(order)
+        )
 
 class FeedbackTests(utils.AskbotTestCase):
     def setUp(self):
@@ -730,4 +740,129 @@ class FeedbackTests(utils.AskbotTestCase):
         """
         mail.mail_moderators('subject', 'text')
         self.assert_feedback_works()
+
+
+class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
+    def setUp(self):
+        self.create_user(
+            username = 'user1',
+            notification_schedule = {'q_all': 'i'},
+            status = 'm'
+        )
+        self.create_user(
+            username = 'user2',
+            status = 'm'
+        )
+
+    def test_wildcard_catches_new_tag(self):
+        """users asks a question with a brand new tag
+        and other user subscribes to it by wildcard
+        """
+        askbot_settings.update('USE_WILDCARD_TAGS', True)
+        self.user1.email_tag_filter_strategy = const.INCLUDE_INTERESTING
+        self.user1.save()
+        self.user1.mark_tags(
+            wildcards = ('some*',),
+            reason = 'good',
+            action = 'add'
+        )
+        self.user2.post_question(
+            title = 'some title',
+            body_text = 'some text for the question',
+            tags = 'something'
+        )
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox[0].recipients()), 1)
+        self.assertTrue(
+            self.user1.email in outbox[0].recipients()
+        )
+
+    def test_tag_based_subscription_on_new_question_works(self):
+        """someone subscribes for an pre-existing tag
+        then another user asks a question with that tag
+        and the subcriber receives an alert
+        """
+        models.Tag(
+            name = 'something',
+            created_by = self.user1
+        ).save()
+
+        self.user1.email_tag_filter_strategy = const.INCLUDE_INTERESTING
+        self.user1.save()
+        self.user1.mark_tags(
+            tagnames = ('something',),
+            reason = 'good',
+            action = 'add'
+        )
+        self.user2.post_question(
+            title = 'some title',
+            body_text = 'some text for the question',
+            tags = 'something'
+        )
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox[0].recipients()), 1)
+        self.assertTrue(
+            self.user1.email in outbox[0].recipients()
+        )
+
+class UnansweredReminderTests(utils.AskbotTestCase):
+    def setUp(self):
+        self.u1 = self.create_user(username = 'user1')
+        self.u2 = self.create_user(username = 'user2')
+        askbot_settings.update('ENABLE_UNANSWERED_REMINDERS', True)
+        askbot_settings.update('MAX_UNANSWERED_REMINDERS', 5)
+        askbot_settings.update('UNANSWERED_REMINDER_FREQUENCY', 1)
+        askbot_settings.update('DAYS_BEFORE_SENDING_UNANSWERED_REMINDER', 2)
+
+        self.wait_days = askbot_settings.DAYS_BEFORE_SENDING_UNANSWERED_REMINDER
+        self.recurrence_days = askbot_settings.UNANSWERED_REMINDER_FREQUENCY
+        self.max_emails = askbot_settings.MAX_UNANSWERED_REMINDERS
+
+
+    def assert_have_emails(self, email_count = None):
+        management.call_command('send_unanswered_question_reminders')
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), email_count)
+
+    def do_post(self, timestamp):
+        self.post_question(
+            user = self.u1,
+            timestamp = timestamp
+        )
+
+    def test_reminder_positive_wait(self):
+        """a positive test - user must receive a reminder
+        """
+        days_ago = self.wait_days
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.assert_have_emails(1)
+
+    def test_reminder_negative_wait(self):
+        """a positive test - user must receive a reminder
+        """
+        days_ago = self.wait_days - 1
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.assert_have_emails(0)
+
+    def test_reminder_cutoff_positive(self):
+        """send a reminder a slightly before the last reminder
+        date passes"""
+        days_ago = self.wait_days + (self.max_emails - 1)*self.recurrence_days - 1
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.assert_have_emails(1)
+
+
+    def test_reminder_cutoff_negative(self):
+        """no reminder after the time for the last reminder passes
+        """
+        days_ago = self.wait_days + (self.max_emails - 1)*self.recurrence_days
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.assert_have_emails(0)
+
 

@@ -6,7 +6,9 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{{"/jquery-openid/openid.css"|media}}"/>
 {% endblock %}
 {% block content %}
-<h1>{{page_title}}</h1>
+{% if have_buttons or view_subtype == 'email_sent' %}
+    <h1>{{page_title}}</h1>
+{% endif %}
     {% if answer %}
         <div class="message">
         {% trans title=answer.question.title, summary=answer.summary %}
@@ -22,15 +24,15 @@
         </div>
     {% endif %}
     <p id='login-intro'>
-    {% if view_subtype == 'default' %}
+    {% if view_subtype == 'default' and have_buttons %}
         {% trans %}Take a pick of your favorite service below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one.{% endtrans %}
-    {% elif view_subtype == 'add_openid' %}
+    {% elif view_subtype == 'add_openid' and have_buttons %}
         {% if existing_login_methods %}
             {% trans %}It's a good idea to make sure that your existing login methods still work, or add a new one. Please click any of the icons below to check/change or add new login methods.{% endtrans %}
         {% else %}
             {% trans %}Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time.{% endtrans %}
         {% endif %}
-    {% elif view_subtype == 'change_openid' %}
+    {% elif view_subtype == 'change_openid' and have_buttons %}
         {% if existing_login_methods %}
             {% trans %}Click on one of the icons below to add a new login method or re-validate an existing one.{% endtrans %}
         {% else %}
@@ -44,12 +46,14 @@
         <p class="warning">{{ openid_error_message }}</p>
     {% endif %}
     {% if view_subtype != 'email_sent' and view_subtype != 'bad_key' %}
-    <form id="signin-form" method="post" action="{% url user_signin %}">
+    <form id="signin-form" method="post" action="{% url user_signin %}">{% csrf_token %}
         {# in this branch - the real signin view we display the login icons
             here we hide the local login button only if admin
             wants to always show the password login form - then
             the button is useless.
         #}
+        {{ login_form.login_provider_name }}
+        {{ login_form.next }}
         {{ 
             login_macros.provider_buttons(
                 login_form = login_form,
@@ -81,7 +85,9 @@
                 <h2 id="password-heading">
                     {% trans %}Please enter your <span>user name and password</span>, then sign in{% endtrans %}
                 </h2>
-                <p class="hint">{% trans %}(or select another login method above){% endtrans %}</p>
+                {% if have_buttons %}
+                    <p class="hint">{% trans %}(or select another login method above){% endtrans %}</p>
+                {% endif %}
                 {% if login_form.password_login_failed %}
                     <p class="error">{% trans %}Login failed, please try again{% endtrans %}</p>
                 {% endif %}
@@ -156,8 +162,8 @@
     </form>
     {% endif %}
     {% if view_subtype != 'email_sent' or view_subtype == 'bad_key' %}
-        {% if user.is_anonymous() %}
-        <form id="account-recovery-form" action="{% url user_account_recover %}" method="post">
+        {% if user.is_anonymous() and settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL %}
+        <form id="account-recovery-form" action="{% url user_account_recover %}" method="post">{% csrf_token %}
             {% if view_subtype != 'bad_key' %}
                 <h2 id='account-recovery-heading'>{% trans %}Still have trouble signing in?{% endtrans %}</h2>
             {% endif %}
@@ -192,27 +198,29 @@
 {% endblock %}
 
 {% block sidebar %}
-<div class="boxC">
-    <h2>{% trans %}Why use OpenID?{% endtrans %}</h2>
-    <ul>
-        <li>
-            {% trans %}with openid it is easier{% endtrans %}
-        </li>
-        <li>
-            {% trans %}reuse openid{% endtrans %}
-        </li>
-        <li>
-            {% trans %}openid is widely adopted{% endtrans %}
-        </li>
-        <li>
-            {% trans %}openid is supported open standard{% endtrans %}
-        </li>
-    </ul>
-    <p class="info-box-follow-up-links">
-        <a href="http://openid.net/what/" target="_blank">{% trans %}Find out more{% endtrans %} »</a><br/>
-        <a href="http://openid.net/get/" target="_blank">{% trans %}Get OpenID{% endtrans %} »</a>
-    </p>
-</div>
+    {% if have_buttons %}
+        <div class="boxC">
+            <h2>{% trans %}Why use OpenID?{% endtrans %}</h2>
+            <ul>
+                <li>
+                    {% trans %}with openid it is easier{% endtrans %}
+                </li>
+                <li>
+                    {% trans %}reuse openid{% endtrans %}
+                </li>
+                <li>
+                    {% trans %}openid is widely adopted{% endtrans %}
+                </li>
+                <li>
+                    {% trans %}openid is supported open standard{% endtrans %}
+                </li>
+            </ul>
+            <p class="info-box-follow-up-links">
+                <a href="http://openid.net/what/" target="_blank">{% trans %}Find out more{% endtrans %} »</a><br/>
+                <a href="http://openid.net/get/" target="_blank">{% trans %}Get OpenID{% endtrans %} »</a>
+            </p>
+        </div>
+    {% endif %}
 {% endblock%}
 {%block endjs%}
 {%include "authopenid/providers_javascript.html" %}

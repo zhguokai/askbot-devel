@@ -13,8 +13,12 @@ import askbot
 import askbot.conf
 from askbot import exceptions
 from askbot.models.tag import Tag
-from askbot.models.base import AnonymousContent, DeletableContent, ContentRevision
-from askbot.models.base import parse_post_text, parse_and_save_post
+from askbot.models.base import AnonymousContent
+from askbot.models.base import DeletableContent
+from askbot.models.base import ContentRevision
+from askbot.models.base import BaseQuerySetManager
+from askbot.models.base import parse_post_text
+from askbot.models.base import parse_and_save_post
 from askbot.models import content
 from askbot.models import signals
 from askbot import const
@@ -22,6 +26,7 @@ from askbot.utils.lists import LazyList
 from askbot.utils.slug import slugify
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html
+from askbot.utils import mysql
 
 #todo: too bad keys are duplicated see const sort methods
 QUESTION_ORDER_BY_MAP = {
@@ -36,7 +41,45 @@ QUESTION_ORDER_BY_MAP = {
     'relevance-desc': None#this is a special case for postges only
 }
 
+def get_tag_summary_from_questions(questions):
+    """returns a humanized string containing up to 
+    five most frequently used
+    unique tags coming from the ``questions``.
+    Variable ``questions`` is an iterable of 
+    :class:`~askbot.models.Question` model objects.
+
+    This is not implemented yet as a query set method,
+    because it is used on a list.
+    """
+    #todo: in python 2.6 there is collections.Counter() thing
+    #which would be very useful here
+    tag_counts = dict()
+    for question in questions:
+        tag_names = question.get_tag_names()
+        for tag_name in tag_names:
+            if tag_name in tag_counts:
+                tag_counts[tag_name] += 1
+            else:
+                tag_counts[tag_name] = 1
+    tag_list = tag_counts.keys()
+    #sort in descending order
+    tag_list.sort(lambda x, y: cmp(tag_counts[y], tag_counts[x]))
+
+    #note that double quote placement is important here
+    if len(tag_list) == 1:
+        last_topic = '"'
+    elif len(tag_list) <= 5:
+        last_topic = _('" and "%s"') % tag_list.pop()
+    else:
+        tag_list = tag_list[:5]
+        last_topic = _('" and more')
+
+    return '"' + '", "'.join(tag_list) + last_topic
+
+
 class QuestionQuerySet(models.query.QuerySet):
+    """Custom query set subclass for :class:`~askbot.models.Question`
+    """
     def create_new(
                 self,
                 title = None,
@@ -86,14 +129,14 @@ class QuestionQuerySet(models.query.QuerySet):
         """returns a query set of questions,
         matching the full text query
         """
-        if settings.DATABASE_ENGINE == 'mysql':
-            return self.filter(
+        if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
+            return self.filter( 
                         models.Q(title__search = search_query) \
                        | models.Q(text__search = search_query) \
                        | models.Q(tagnames__search = search_query) \
                        | models.Q(answers__text__search = search_query)
                     )
-        elif settings.DATABASE_ENGINE == 'postgresql_psycopg2':
+        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
             rank_clause = "ts_rank(question.text_search_vector, to_tsquery(%s))";
             search_query = '&'.join(search_query.split())
             extra_params = ("'" + search_query + "'",)
@@ -165,6 +208,7 @@ class QuestionQuerySet(models.query.QuerySet):
 
         if scope_selector:
             if scope_selector == 'unanswered':
+                qs = qs.filter(closed = False)#do not show closed questions in unanswered section
                 if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
                     qs = qs.filter(answer_count=0)#todo: expand for different meanings of this
                 elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
@@ -338,18 +382,12 @@ class QuestionQuerySet(models.query.QuerySet):
         self.filter(id=question.id).update(view_count = question.view_count + 1)
 
 
-class QuestionManager(models.Manager):
-    """pattern from http://djangosnippets.org/snippets/562/
-    todo: turn this into a generic manager
+class QuestionManager(BaseQuerySetManager):
+    """chainable custom query set manager for 
+    questions
     """
     def get_query_set(self):
         return QuestionQuerySet(self.model)
-
-    def __getattr__(self, attr, *args):
-        try:
-            return getattr(self.__class__, attr, *args)
-        except AttributeError:
-            return getattr(self.get_query_set(), attr, *args)
 
 
 class Question(content.Content, DeletableContent):

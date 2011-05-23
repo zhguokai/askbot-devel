@@ -22,6 +22,7 @@ install_requires = [
     'django-countries==1.0.5',
     'django-celery==2.2.3',
     'django-kombu==0.9.2',
+    'django-follow==0.2',
 ]
 
 #todo: have a dirty version retriever that 
@@ -32,9 +33,11 @@ WIN_PLATFORMS = ('win32', 'cygwin',)
 if sys.platform not in WIN_PLATFORMS:
     install_requires.append('mysql-python')
 
+import askbot
+
 setup(
     name = "askbot",
-    version = '0.6.75',#remember to manually set this correctly
+    version = askbot.get_version(),#remember to manually set this correctly
     description = 'Question and Answer forum, like StackOverflow, written in python and Django',
     packages = find_packages(),
     author = 'Evgeny.Fadeev',
@@ -62,9 +65,9 @@ setup(
         'Natural Language :: Serbian',
         'Natural Language :: Turkish',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.4',
         'Programming Language :: Python :: 2.5',
         'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: JavaScript',
         'Topic :: Communications :: Usenet News',
         'Topic :: Communications :: Email :: Mailing List Servers',

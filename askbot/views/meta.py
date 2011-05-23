@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.views import static
+from django.views.decorators import csrf
 from django.db.models import Max, Count
 from askbot.forms import FeedbackForm
 from askbot.utils.forms import get_next_url
@@ -49,6 +50,7 @@ def faq(request):
     }
     return render_into_skin('faq.html', data, request)
 
+@csrf.csrf_protect
 def feedback(request):
     data = {'page_class': 'meta'}
     form = None
@@ -74,16 +76,8 @@ feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, giv
 def privacy(request):
     return render_into_skin('privacy.html', {'page_class': 'meta'}, request)
 
-def logout(request):#refactor/change behavior?
-#currently you click logout and you get
-#to this view which actually asks you again - do you really want to log out?
-#I guess rationale was to tell the user that s/he may be still logged in
-#through their external login sytem and we'd want to remind them about it
-#however it might be a little annoying
-#why not just show a message: you are logged out of forum, but
-#if you really want to log out -> go to your openid provider
+def logout(request):
     data = {
-        'next' : get_next_url(request),
         'page_class': 'meta',
     }
     return render_into_skin('logout.html', data, request)

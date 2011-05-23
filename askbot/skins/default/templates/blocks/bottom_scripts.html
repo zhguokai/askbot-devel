@@ -30,6 +30,8 @@
     askbot['urls']['get_tag_categories'] = '{% url "get_tag_categories" %}';
     askbot['urls']['add_tag_to_category'] = '{% url "add_tag_to_category" %}';
     askbot['urls']['remove_tag_from_category'] =  '{% url "remove_tag_from_category" %}';
+    askbot['urls']['get_tag_data_summary'] = '{% url "get_tag_data_summary" %}';
+    askbot['urls']['get_tag_followers'] = '{% url "get_tag_followers" %}';
 </script>
 <script
     type="text/javascript"
@@ -39,6 +41,8 @@
         src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"
     {% endif %}
 ></script>
+<script type="text/javascript" src="{{ "/js/jquery.ui.core.js"|media }}"></script>
+<script type="text/javascript" src="{{ "/js/jquery.ui.position.js"|media }}"></script>
 <script type='text/javascript' src="{{"/js/i18n.js"|media }}"></script>
 <script type='text/javascript' src="{{"/js/jquery.i18n.js"|media }}"></script>
 <script type='text/javascript' src="{% url "askbot_jsi18n" %}"></script>
@@ -106,29 +110,30 @@
 </script>
 {% endif %}
 <script type="text/javascript">
-{% if active_tab != "tags" and active_tab != "users" %}
-{# start asking question with title from search query #}
-    $(document).ready(function(){
-        $('#nav_ask').click(
-            function(){
-                var starting_title = $('#keywords').attr('value');
-                var new_url = $(this).attr('href') + '?title=' + encodeURIComponent(starting_title);
-                window.location.href = new_url;
-                return false;
-            }
-        );
-        //{# focus input on the search bar endcomment #}
-        {% if active_tab != "ask" %}
-            $('#keywords').focus();
-        {% else %}
-            $('#id_title').focus();
-        {% endif %}
-    });
-{% endif %}
-{% if user_messages %}
-    $('#validate_email_alert').click(function(){notify.close(true)})
-    notify.show();
-{% endif %}
+    init_tag_menu();
+    {% if active_tab != "tags" and active_tab != "users" %}
+    {# start asking question with title from search query #}
+        $(document).ready(function(){
+            $('#nav_ask').click(
+                function(){
+                    var starting_title = $('#keywords').attr('value');
+                    var new_url = $(this).attr('href') + '?title=' + encodeURIComponent(starting_title);
+                    window.location.href = new_url;
+                    return false;
+                }
+            );
+            //{# focus input on the search bar endcomment #}
+            {% if active_tab != "ask" %}
+                $('#keywords').focus();
+            {% else %}
+                $('#id_title').focus();
+            {% endif %}
+        });
+    {% endif %}
+    {% if user_messages %}
+        $('#validate_email_alert').click(function(){notify.close(true)})
+        notify.show();
+    {% endif %}
 </script>
 {% if settings.USE_CUSTOM_JS %}
 <script

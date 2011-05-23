@@ -40,12 +40,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.core.urlresolvers import reverse
+from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
-from askbot.skins.loaders import render_into_skin
+from askbot.skins.loaders import render_into_skin, get_template
 
 from askbot.deps.openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
@@ -258,6 +259,7 @@ def complete_oauth_signin(request):
         return HttpResponseRedirect(next_url)
 
 #@not_authenticated
+@csrf.csrf_protect
 def signin(
         request,
         newquestion = False,#todo: not needed
@@ -317,6 +319,8 @@ def signin(
                                     login_provider_name = ldap_provider_name,
                                     redirect_url = next_url
                                 )
+                    else:
+                        login_form.set_password_login_error() 
                 else:
                     if password_action == 'login':
                         user = authenticate(
@@ -445,6 +449,7 @@ def signin(
                         view_subtype = view_subtype
                     )
 
+@csrf.csrf_protect
 def show_signin_view(
                 request,
                 login_form = None,
@@ -532,10 +537,27 @@ def show_signin_view(
         'use_password_login': util.use_password_login(),
     }
 
-    major_login_providers = util.get_major_login_providers()
-    minor_login_providers = util.get_minor_login_providers()
+    major_login_providers = util.get_enabled_major_login_providers()
+    minor_login_providers = util.get_enabled_minor_login_providers()
 
-    active_provider_names = None
+    #determine if we are only using password login
+    active_provider_names = [p['name'] for p in major_login_providers.values()]
+    active_provider_names.extend([p['name'] for p in minor_login_providers.values()])
+
+    have_buttons = True
+    if (len(active_provider_names) == 1 and active_provider_names[0] == 'local'):
+        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN == True:
+            #in this case the form is not using javascript, so set initial values
+            #here
+            have_buttons = False
+            login_form.initial['login_provider_name'] = 'local'
+            if request.user.is_authenticated():
+                login_form.initial['password_action'] = 'change_password'
+            else:
+                login_form.initial['password_action'] = 'login'
+
+    data['have_buttons'] = have_buttons
+
     if request.user.is_authenticated():
         data['existing_login_methods'] = existing_login_methods
         active_provider_names = [
@@ -616,7 +638,7 @@ def signin_success(request, identity_url, openid_response):
     provider_name = util.get_provider_name(openid_url)
 
     request.session['email'] = openid_data.sreg.get('email', '')
-    request.session['username'] = openid_data.sreg.get('username', '')
+    request.session['username'] = openid_data.sreg.get('nickname', '')
 
     return finalize_generic_signin(
                         request = request,
@@ -688,6 +710,7 @@ def finalize_generic_signin(
             return HttpResponseRedirect(redirect_url)
 
 @not_authenticated
+@csrf.csrf_protect
 def register(request, login_provider_name=None, user_identifier=None):
     """
     this function is used via it's own url with request.method=POST
@@ -831,6 +854,7 @@ def signin_failure(request, message):
 
 @not_authenticated
 @decorators.valid_password_login_provider_required
+@csrf.csrf_protect
 def signup_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
@@ -919,8 +943,9 @@ def signup_with_password(request):
         email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
     logging.debug('printing legacy signup form')
 
-    major_login_providers = util.get_major_login_providers()
-    minor_login_providers = util.get_minor_login_providers()
+    major_login_providers = util.get_enabled_major_login_providers()
+    minor_login_providers = util.get_enabled_minor_login_providers()
+
     context_data = {
                 'form': form, 
                 'page_class': 'openid-signin',
@@ -1008,7 +1033,8 @@ def _send_email_key(user):
                                     kwargs={'key':user.email_key}
                             )
     }
-    message = render_into_skin('authopenid/email_validation.txt', data)
+    template = get_template('authopenid/email_validation.txt')
+    message = template.render(data)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
 def send_new_email_key(user,nomessage=False):
@@ -1021,6 +1047,7 @@ def send_new_email_key(user,nomessage=False):
         set_email_validation_message(user)
 
 @login_required
+@csrf.csrf_protect
 def send_email_key(request):
     """
     url = /email/sendkey/
@@ -1060,6 +1087,8 @@ def account_recover(request, key = None):
 
     url name 'user_account_recover'
     """
+    if not askbot_settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL:
+        raise Http404
     if request.method == 'POST':
         form = forms.AccountRecoveryForm(request.POST)
         if form.is_valid():

@@ -167,24 +167,64 @@ def use_password_login():
     else:
         return True
 
-def get_major_login_providers():
-    """returns a tuple with data about login providers
+def filter_enabled_providers(data):
+    """deletes data about disabled providers from
+    the input dictionary
+    """
+    delete_list = list()
+    for provider_key, provider_settings in data.items():
+        name = provider_settings['name']
+        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name.upper() + '_ENABLED')
+        if is_enabled == False:
+            delete_list.append(provider_key)
+
+    for provider_key in delete_list:
+        del data[provider_key]
+
+    return data
+
+
+def get_enabled_major_login_providers():
+    """returns a dictionary with data about login providers
     whose icons are to be shown in large format
+
+    disabled providers are excluded
     
-    items of tuple are dictionaries with keys:
+    items of the dictionary are dictionaries with keys:
 
     * name
     * display_name
     * icon_media_path (relative to /media directory)
     * type (oauth|openid-direct|openid-generic|openid-username|password)
 
-    Fields dependent on type:
+    Fields dependent on type of the login provider type
+    ---------------------------------------------------
+
+    Password (type = password) - login provider using login name and password:
+
+    * extra_token_name - a phrase describing what the login name and the
+      password are from
+    * create_password_prompt - a phrase prompting to create an account
+    * change_password_prompt - a phrase prompting to change password
+
+    OpenID (type = openid) - Provider of login using the OpenID protocol
 
     * openid_endpoint (required for type=openid|openid-username)
       for type openid-username - the string must have %(username)s
       format variable, plain string url otherwise
     * extra_token_name - required for type=openid-username
       describes name of required extra token - e.g. "XYZ user name"
+
+    OAuth2 (type = oauth)
+
+    * request_token_url - url to initiate OAuth2 protocol with the resource
+    * access_token_url - url to access users data on the resource via OAuth2
+    * authorize_url - url at which user can authorize the app to access a resource
+    * authenticate_url - url to authenticate user (lower privilege than authorize)
+    * get_user_id_function - a function that returns user id from data dictionary
+      containing: response to the access token url & consumer_key
+      and consumer secret. The purpose of this function is to hide the differences
+      between the ways user id is accessed from the different OAuth providers
     """
     data = SortedDict()
 
@@ -201,13 +241,13 @@ def get_major_login_providers():
             'icon_media_path': askbot_settings.LOCAL_LOGIN_ICON,
         }
 
-    if askbot_settings.FACEBOOK_KEY and askbot_settings.FACEBOOK_SECRET:
-        data['facebook'] = {
-            'name': 'facebook',
-            'display_name': 'Facebook',
-            'type': 'facebook',
-            'icon_media_path': '/jquery-openid/images/facebook.gif',
-        }
+    #if askbot_settings.FACEBOOK_KEY and askbot_settings.FACEBOOK_SECRET:
+    #    data['facebook'] = {
+    #        'name': 'facebook',
+    #        'display_name': 'Facebook',
+    #        'type': 'facebook',
+    #        'icon_media_path': '/jquery-openid/images/facebook.gif',
+    #    }
     if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
         data['twitter'] = {
             'name': 'twitter',
@@ -278,23 +318,25 @@ def get_major_login_providers():
         'icon_media_path': '/jquery-openid/images/openid.gif',
         'openid_endpoint': None,
     }
-    return data
+    return filter_enabled_providers(data)
 
-def get_minor_login_providers():
-    """same as get_major_login_providers
+def get_enabled_minor_login_providers():
+    """same as get_enabled_major_login_providers
     but those that are to be displayed with small buttons
 
-    structure of dictionary values is the same as in get_major_login_providers
+    disabled providers are excluded
+
+    structure of dictionary values is the same as in get_enabled_major_login_providers
     """
     data = SortedDict()
-    data['myopenid'] = {
-        'name': 'myopenid',
-        'display_name': 'MyOpenid',
-        'type': 'openid-username',
-        'extra_token_name': _('MyOpenid user name'),
-        'icon_media_path': '/jquery-openid/images/myopenid-2.png',
-        'openid_endpoint': 'http://%(username)s.myopenid.com'
-    }
+    #data['myopenid'] = {
+    #    'name': 'myopenid',
+    #    'display_name': 'MyOpenid',
+    #    'type': 'openid-username',
+    #    'extra_token_name': _('MyOpenid user name'),
+    #    'icon_media_path': '/jquery-openid/images/myopenid-2.png',
+    #    'openid_endpoint': 'http://%(username)s.myopenid.com'
+    #}
     data['flickr'] = {
         'name': 'flickr',
         'display_name': 'Flickr',
@@ -359,13 +401,13 @@ def get_minor_login_providers():
         'icon_media_path': '/jquery-openid/images/verisign-2.png',
         'openid_endpoint': 'http://%(username)s.pip.verisignlabs.com/'
     }
-    return data
+    return filter_enabled_providers(data)
 
-def get_login_providers():
+def get_enabled_login_providers():
     """return all login providers in one sorted dict
     """
-    data = get_major_login_providers()
-    data.update(get_minor_login_providers())
+    data = get_enabled_major_login_providers()
+    data.update(get_enabled_minor_login_providers())
     return data
 
 def set_login_provider_tooltips(provider_dict, active_provider_names = None):
@@ -426,7 +468,7 @@ def get_oauth_parameters(provider_name):
     it should not be called at compile time
     otherwise there may be strange errors
     """
-    providers = get_login_providers()
+    providers = get_enabled_login_providers()
     data = providers[provider_name]
     if data['type'] != 'oauth':
         raise ValueError('oauth provider expected, %s found' % data['type'])
@@ -468,6 +510,8 @@ class OAuthConnection(object):
                         )
 
     def start(self, callback_url = None):
+        """starts the OAuth protocol communication and
+        saves request token as :attr:`request_token`"""
 
         if callback_url is None:
             callback_url = self.callback_url
@@ -504,6 +548,9 @@ class OAuthConnection(object):
         return self.request_token
 
     def get_user_id(self, oauth_token = None, oauth_verifier = None):
+        """Returns user ID within the OAuth provider system,
+        based on ``oauth_token`` and ``oauth_verifier``
+        """
 
         token = oauth.Token(
                     oauth_token['oauth_token'],
@@ -520,8 +567,7 @@ class OAuthConnection(object):
 
     def get_auth_url(self, login_only = False):
         """returns OAuth redirect url.
-        callback_url is the redirect that will be used by the
-        provider server, if login_only is True, authentication
+        if ``login_only`` is True, authentication
         endpoint will be used, if available, otherwise authorization
         url (potentially granting full access to the server) will
         be used.

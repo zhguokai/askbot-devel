@@ -3,6 +3,30 @@ var mediaUrl = function(resource){
     return scriptUrl + 'm/' + askbotSkin + '/' + resource;
 };
 
+/**
+ * @param {string} name of url pattern
+ * @data {Object} data for url pattern
+ */
+var getUrl = function(name, data){
+    if (name === 'user_profile'){
+        var id = data['id'];
+        var slug = data['slug'];
+        return scriptUrl + $.i18n._('users/') + id + '/' + slug + '/';
+    }
+}
+
+/**
+ * removes first occurance of item in array
+ */
+var arrayRemove = function(arr, item){
+    for (var i = 0; i < arr.length; i++){
+        if (arr[i] === item){
+            arr.splice(i, 1);
+            return;
+        }
+    }
+};
+
 var copyAltToTitle = function(sel){
     sel.attr('title', sel.attr('alt'));
 };
@@ -145,14 +169,62 @@ var WrappedElement = function(){
      * @type {boolean}
      */
     this._in_document = false;
+    /**
+     * @private
+     * @type {Array.<string>}
+     */
+    this._css_classes = [];
+    /**
+     * @private
+     * @type {string}
+     */
+    this._html_tag = 'div';
 };
 WrappedElement.prototype.setElement = function(element){
     this._element = element;
 };
+WrappedElement.prototype.setHtmlTag = function(html_tag){
+    this._html_tag = html_tag;
+};
+/**
+ * @param {string} css_class
+ */
+WrappedElement.prototype.addClass = function(css_class){
+    if ($.inArray(css_class, this._css_classes) > -1){
+        return;
+    } else {
+        this._css_classes.push(css_class);
+        if (this._element){
+            this._element.addClass(css_class);
+        }
+    }
+};
+/**
+ * @param {css_class}
+ */
+WrappedElement.prototype.removeClass = function(css_class){
+    if ($.inArray(css_class, this._css_classes) > 1){
+        arrayRemove(this._css_classes, css_class);
+        if (this._element){
+            this._element.removeClass(css_class);
+        }
+    }
+};
+WrappedElement.prototype.setCssClasses = function(){
+    if (this._css_classes){
+        var element = this.getElement();
+        $.each(this._css_classes, function(idx, css_class){
+            element.addClass(css_class);
+        });
+    }
+};
 WrappedElement.prototype.createDom = function(){
-    this._element = $('<div></div>');
-    if (this._css_class){
-        this.addClass(this._css_class);
+    this._element = this.makeElement(this._html_tag);
+    if (this._css_classes.leng > 0){
+        var element = this._element;
+        $.each(this._css_classes, function(idx, css_class){
+            element.addClass(css_class);
+        });
     }
 };
 WrappedElement.prototype.getElement = function(){
@@ -187,8 +259,20 @@ WrappedElement.prototype.makeElement = function(html_tag){
     return $('<' + html_tag + '></' + html_tag + '>');
 };
 WrappedElement.prototype.dispose = function(){
-    this._element.remove();
+    if (this._element){
+        this._element.remove();
+    }
     this._in_document = false;
+};
+
+var ClearDiv = function(){
+    WrappedElement.call(this);
+};
+inherits(ClearDiv, WrappedElement);
+ClearDiv.prototype.createDom = function(){
+    ClearDiv.superClass_.createDom.call(this);
+    this._element.css('clear', 'both');
+    this._element.css('height', 0);
 };
 
 /**
@@ -218,6 +302,20 @@ inherits(Container, WrappedElement);
 Container.prototype.isEmpty = function(){
     return this._children.length === 0;
 };
+Container.prototype.empty = function(){
+    $.each(this._children, function(idx, child){
+        child.dispose();
+    });
+    if (this._element){
+        this._element.empty();
+    }
+    this._children = [];
+};
+Container.prototype.dispose = function(){
+    this.empty();
+    Container.superClass_.dispose.call(this);
+
+};
 /**
  * @param {WrappedElement} content
  * no check that the element is not in children already
@@ -230,26 +328,71 @@ Container.prototype.addContent = function(content){
 };
 /**
  * @param {WrappedElement} content
+ * @param {boolean} dispose
  */
 Container.prototype.removeContent = function(content){
     for (var i = 0; i < this._children.length; i++){
         if (this._children[i] === content){
             this._children.splice(i, 1);
-            if (this._element){
-                content.getElement().remove();
-            }
+            content.dispose();
             return;
         }
     }
 };
 Container.prototype.createDom = function(){
-    this._element = this.makeElement(this._html_tag);
+    Container.superClass_.createDom.call(this);
     var me = this;
     $.each(this._children, function(idx, child){
         me.getElement().append(child.getElement());
     });
 };
 
+/**
+ * @constructor
+ */
+var Span = function(text){
+    WrappedElement.call(this);
+    this._text = text;
+    this._html_tag = 'span';
+};
+inherits(Span, WrappedElement);
+
+Span.prototype.createDom = function(){
+    Span.superClass_.createDom.call(this);
+    this._element.html(this._text);
+};
+
+/**
+ * @constructor
+ * @extends {WrappedElement}
+ */
+var UserLink = function(id, name, slug){
+    WrappedElement.call(this);
+    /**
+     * @private
+     * @type {number}
+     */
+    this._id = id;
+    /**
+     * @private
+     * @type {string}
+     */
+    this._name = name;
+    /**
+     * @private
+     * @type {string}
+     */
+    this._slug = slug;
+};
+inherits(UserLink, WrappedElement);
+
+UserLink.prototype.createDom = function(){
+    var link = this.makeElement('a');
+    link.addClass('user-link');
+    link.html(this._name);
+    link.attr('href', getUrl('user_profile', {id: this._id, slug: this._slug}));
+    this._element = link;
+};
 
 /**
  * @constructor
@@ -372,7 +515,7 @@ Loader.prototype.createDom = function(){
 
 Loader.prototype.dispose = function(){
     this.stop();
-    this._element.remove();
+    Loader.superClass_.dispose.call(this);
 };
 
 Loader.prototype.run = function(){
@@ -380,6 +523,7 @@ Loader.prototype.run = function(){
         return;
     }
     var me = this;
+    this.getElement().html(this._text);
     this._interval = setInterval(
         function(){ me.tic(); },
         this._tic_delay
@@ -460,12 +604,6 @@ ActionIcon.prototype.decorate = function(element){
     if (this._handler !== null){
         this.setHandlerInternal();
     }
-};
-/**
- * destroys the icon thing
- */
-ActionIcon.prototype.dispose = function(){
-    this._element.remove();
 };
 
 var EditLink = function(){
@@ -624,17 +762,6 @@ Tag.prototype.createDom = function(){
     }
     this._inner_element.addClass('tag tag-right');
     this._inner_element.attr('rel', 'tag');
-    if (this._title === null){
-        this.setTitle(
-            $.i18n._(
-                "see questions tagged '{tag}'"
-            ).replace(
-                '{tag}',
-                this.getName()
-            )
-        );
-    }
-    this._inner_element.attr('title', this._title);
     this._inner_element.html(this.getDisplayTagName());
 
     this._element.append(this._inner_element);
@@ -652,6 +779,9 @@ Tag.prototype.createDom = function(){
         this._element.append(this._delete_icon.getElement());
     }
 };
+
+//custom autocompleter
+var AutoCompleter=function(a){var b={autocompleteMultiple:true,multipleSeparator:" ",inputClass:"acInput",loadingClass:"acLoading",resultsClass:"acResults",selectClass:"acSelect",queryParamName:"q",limitParamName:"limit",extraParams:{},lineSeparator:"\n",cellSeparator:"|",minChars:2,maxItemsToShow:10,delay:400,useCache:true,maxCacheLength:10,matchSubset:true,matchCase:false,matchInside:true,mustMatch:false,preloadData:false,selectFirst:false,stopCharRegex:/\s+/,selectOnly:false,formatItem:null,onItemSelect:false,autoFill:false,filterResults:true,sortResults:true,sortFunction:false,onNoMatch:false};this.options=$.extend({},b,a);this.cacheData_={};this.cacheLength_=0;this.selectClass_="jquery-autocomplete-selected-item";this.keyTimeout_=null;this.lastKeyPressed_=null;this.lastProcessedValue_=null;this.lastSelectedValue_=null;this.active_=false;this.finishOnBlur_=true;this.options.minChars=parseInt(this.options.minChars,10);if(isNaN(this.options.minChars)||this.options.minChars<1){this.options.minChars=2}this.options.maxItemsToShow=parseInt(this.options.maxItemsToShow,10);if(isNaN(this.options.maxItemsToShow)||this.options.maxItemsToShow<1){this.options.maxItemsToShow=10}this.options.maxCacheLength=parseInt(this.options.maxCacheLength,10);if(isNaN(this.options.maxCacheLength)||this.options.maxCacheLength<1){this.options.maxCacheLength=10}if(this.options.preloadData===true){this.fetchRemoteData("",function(){})}};inherits(AutoCompleter,WrappedElement);AutoCompleter.prototype.decorate=function(a){this._element=a;this._element.attr("autocomplete","off");this._results=$("<div></div>").hide();if(this.options.resultsClass){this._results.addClass(this.options.resultsClass)}this._results.css({position:"absolute"});$("body").append(this._results);this.setEventHandlers()};AutoCompleter.prototype.setEventHandlers=function(){var a=this;a._element.keydown(function(b){a.lastKeyPressed_=b.keyCode;switch(a.lastKeyPressed_){case 38:b.preventDefault();if(a.active_){a.focusPrev()}else{a.activate()}return false;break;case 40:b.preventDefault();if(a.active_){a.focusNext()}else{a.activate()}return false;break;case 9:case 13:if(a.active_){b.preventDefault();a.selectCurrent();return false}break;case 27:if(a.active_){b.preventDefault();a.finish();return false}break;default:a.activate()}});a._element.blur(function(){if(a.finishOnBlur_){setTimeout(function(){a.finish()},200)}})};AutoCompleter.prototype.position=function(){var a=this._element.offset();this._results.css({top:a.top+this._element.outerHeight(),left:a.left})};AutoCompleter.prototype.cacheRead=function(d){var f,c,b,a,e;if(this.options.useCache){d=String(d);f=d.length;if(this.options.matchSubset){c=1}else{c=f}while(c<=f){if(this.options.matchInside){a=f-c}else{a=0}e=0;while(e<=a){b=d.substr(0,c);if(this.cacheData_[b]!==undefined){return this.cacheData_[b]}e++}c++}}return false};AutoCompleter.prototype.cacheWrite=function(a,b){if(this.options.useCache){if(this.cacheLength_>=this.options.maxCacheLength){this.cacheFlush()}a=String(a);if(this.cacheData_[a]!==undefined){this.cacheLength_++}return this.cacheData_[a]=b}return false};AutoCompleter.prototype.cacheFlush=function(){this.cacheData_={};this.cacheLength_=0};AutoCompleter.prototype.callHook=function(c,b){var a=this.options[c];if(a&&$.isFunction(a)){return a(b,this)}return false};AutoCompleter.prototype.activate=function(){var b=this;var a=function(){b.activateNow()};var c=parseInt(this.options.delay,10);if(isNaN(c)||c<=0){c=250}if(this.keyTimeout_){clearTimeout(this.keyTimeout_)}this.keyTimeout_=setTimeout(a,c)};AutoCompleter.prototype.activateNow=function(){var a=this.getValue();if(a!==this.lastProcessedValue_&&a!==this.lastSelectedValue_){if(a.length>=this.options.minChars){this.active_=true;this.lastProcessedValue_=a;this.fetchData(a)}}};AutoCompleter.prototype.fetchData=function(b){if(this.options.data){this.filterAndShowResults(this.options.data,b)}else{var a=this;this.fetchRemoteData(b,function(c){a.filterAndShowResults(c,b)})}};AutoCompleter.prototype.fetchRemoteData=function(c,e){var d=this.cacheRead(c);if(d){e(d)}else{var a=this;if(this._element){this._element.addClass(this.options.loadingClass)}var b=function(g){var f=false;if(g!==false){f=a.parseRemoteData(g);a.options.data=f;a.cacheWrite(c,f)}if(a._element){a._element.removeClass(a.options.loadingClass)}e(f)};$.ajax({url:this.makeUrl(c),success:b,error:function(){b(false)}})}};AutoCompleter.prototype.setOption=function(a,b){this.options[a]=b};AutoCompleter.prototype.setExtraParam=function(b,c){var a=$.trim(String(b));if(a){if(!this.options.extraParams){this.options.extraParams={}}if(this.options.extraParams[a]!==c){this.options.extraParams[a]=c;this.cacheFlush()}}};AutoCompleter.prototype.makeUrl=function(e){var a=this;var b=this.options.url;var d=$.extend({},this.options.extraParams);if(this.options.queryParamName===false){b+=encodeURIComponent(e)}else{d[this.options.queryParamName]=e}if(this.options.limitParamName&&this.options.maxItemsToShow){d[this.options.limitParamName]=this.options.maxItemsToShow}var c=[];$.each(d,function(f,g){c.push(a.makeUrlParam(f,g))});if(c.length){b+=b.indexOf("?")==-1?"?":"&";b+=c.join("&")}return b};AutoCompleter.prototype.makeUrlParam=function(a,b){return String(a)+"="+encodeURIComponent(b)};AutoCompleter.prototype.splitText=function(a){return String(a).replace(/(\r\n|\r|\n)/g,"\n").split(this.options.lineSeparator)};AutoCompleter.prototype.parseRemoteData=function(c){var h,b,f,d,g;var e=[];var b=this.splitText(c);for(f=0;f<b.length;f++){var a=b[f].split(this.options.cellSeparator);g=[];for(d=0;d<a.length;d++){g.push(unescape(a[d]))}h=g.shift();e.push({value:unescape(h),data:g})}return e};AutoCompleter.prototype.filterAndShowResults=function(a,b){this.showResults(this.filterResults(a,b),b)};AutoCompleter.prototype.filterResults=function(d,b){var f=[];var l,c,e,m,j,a;var k,h,g;for(e=0;e<d.length;e++){m=d[e];j=typeof m;if(j==="string"){l=m;c={}}else{if($.isArray(m)){l=m[0];c=m.slice(1)}else{if(j==="object"){l=m.value;c=m.data}}}l=String(l);if(l>""){if(typeof c!=="object"){c={}}if(this.options.filterResults){h=String(b);g=String(l);if(!this.options.matchCase){h=h.toLowerCase();g=g.toLowerCase()}a=g.indexOf(h);if(this.options.matchInside){a=a>-1}else{a=a===0}}else{a=true}if(a){f.push({value:l,data:c})}}}if(this.options.sortResults){f=this.sortResults(f,b)}if(this.options.maxItemsToShow>0&&this.options.maxItemsToShow<f.length){f.length=this.options.maxItemsToShow}return f};AutoCompleter.prototype.sortResults=function(c,d){var b=this;var a=this.options.sortFunction;if(!$.isFunction(a)){a=function(g,e,h){return b.sortValueAlpha(g,e,h)}}c.sort(function(f,e){return a(f,e,d)});return c};AutoCompleter.prototype.sortValueAlpha=function(d,c,e){d=String(d.value);c=String(c.value);if(!this.options.matchCase){d=d.toLowerCase();c=c.toLowerCase()}if(d>c){return 1}if(d<c){return -1}return 0};AutoCompleter.prototype.showResults=function(e,b){var k=this;var g=$("<ul></ul>");var f,l,j,a,h=false,d=false;var c=e.length;for(f=0;f<c;f++){l=e[f];j=$("<li>"+this.showResult(l.value,l.data)+"</li>");j.data("value",l.value);j.data("data",l.data);j.click(function(){var i=$(this);k.selectItem(i)}).mousedown(function(){k.finishOnBlur_=false}).mouseup(function(){k.finishOnBlur_=true});g.append(j);if(h===false){h=String(l.value);d=j;j.addClass(this.options.firstItemClass)}if(f==c-1){j.addClass(this.options.lastItemClass)}}this.position();this._results.html(g).show();a=this._results.outerWidth()-this._results.width();this._results.width(this._element.outerWidth()-a);$("li",this._results).hover(function(){k.focusItem(this)},function(){});if(this.autoFill(h,b)){this.focusItem(d)}};AutoCompleter.prototype.showResult=function(b,a){if($.isFunction(this.options.showResult)){return this.options.showResult(b,a)}else{return b}};AutoCompleter.prototype.autoFill=function(e,c){var b,a,d,f;if(this.options.autoFill&&this.lastKeyPressed_!=8){b=String(e).toLowerCase();a=String(c).toLowerCase();d=e.length;f=c.length;if(b.substr(0,f)===a){this._element.val(e);this.selectRange(f,d);return true}}return false};AutoCompleter.prototype.focusNext=function(){this.focusMove(+1)};AutoCompleter.prototype.focusPrev=function(){this.focusMove(-1)};AutoCompleter.prototype.focusMove=function(a){var b,c=$("li",this._results);a=parseInt(a,10);for(var b=0;b<c.length;b++){if($(c[b]).hasClass(this.selectClass_)){this.focusItem(b+a);return}}this.focusItem(0)};AutoCompleter.prototype.focusItem=function(b){var a,c=$("li",this._results);if(c.length){c.removeClass(this.selectClass_).removeClass(this.options.selectClass);if(typeof b==="number"){b=parseInt(b,10);if(b<0){b=0}else{if(b>=c.length){b=c.length-1}}a=$(c[b])}else{a=$(b)}if(a){a.addClass(this.selectClass_).addClass(this.options.selectClass)}}};AutoCompleter.prototype.selectCurrent=function(){var a=$("li."+this.selectClass_,this._results);if(a.length==1){this.selectItem(a)}else{this.finish()}};AutoCompleter.prototype.selectItem=function(d){var c=d.data("value");var b=d.data("data");var a=this.displayValue(c,b);this.lastProcessedValue_=a;this.lastSelectedValue_=a;this.setValue(a);this.setCaret(a.length);this.callHook("onItemSelect",{value:c,data:b});this.finish()};AutoCompleter.prototype.isContentChar=function(a){if(a.match(this.options.stopCharRegex)){return false}else{if(a===this.options.multipleSeparator){return false}else{return true}}};AutoCompleter.prototype.getValue=function(){var c=this._element.getSelection();var d=this._element.val();var f=c.start;var e=f;for(cpos=f;cpos>=0;cpos=cpos-1){if(cpos===d.length){continue}var b=d.charAt(cpos);if(!this.isContentChar(b)){break}e=cpos}var a=f;for(cpos=f;cpos<d.length;cpos=cpos+1){if(cpos===0){continue}var b=d.charAt(cpos);if(!this.isContentChar(b)){break}a=cpos}this._selection_start=e;this._selection_end=a;return d.substring(e,a)};AutoCompleter.prototype.setValue=function(b){var a=this._element.val().substring(0,this._selection_start);var c=this._element.val().substring(this._selection_end+1);this._element.val(a+b+c)};AutoCompleter.prototype.displayValue=function(b,a){if($.isFunction(this.options.displayValue)){return this.options.displayValue(b,a)}else{return b}};AutoCompleter.prototype.finish=function(){if(this.keyTimeout_){clearTimeout(this.keyTimeout_)}if(this._element.val()!==this.lastSelectedValue_){if(this.options.mustMatch){this._element.val("")}this.callHook("onNoMatch")}this._results.hide();this.lastKeyPressed_=null;this.lastProcessedValue_=null;if(this.active_){this.callHook("onFinish")}this.active_=false};AutoCompleter.prototype.selectRange=function(d,a){var c=this._element.get(0);if(c.setSelectionRange){c.focus();c.setSelectionRange(d,a)}else{if(this.createTextRange){var b=this.createTextRange();b.collapse(true);b.moveEnd("character",a);b.moveStart("character",d);b.select()}}};AutoCompleter.prototype.setCaret=function(a){this.selectRange(a,a)};
 
 //Search Engine Keyword Highlight with Javascript
 //http://scott.yang.id.au/code/se-hilite/
@@ -860,6 +990,9 @@ EditableString.prototype.createDom = function(){
 };
 
 /**
+ * Dropdown widget that creates itself on hover
+ * over some element
+ * a special behavior is that this dropdown is a singleton in dom
  * @constructor
  * @extends {Widget}
  */
@@ -894,9 +1027,26 @@ var DropDown = function(){
 
     /**
      * @private
+     * @type {number}
+     */
+    this._pre_open_delay = 300;
+
+    /**
+     * @private
+     * @type {number}
+     */
+    this._open_think_delay = 300;
+
+    /**
+     * @private
      * @type {boolean}
      */
     this._is_frozen = false;
+    /**
+     * @private
+     * extra css class
+     */
+    this._css_class;
 };
 inherits(DropDown, Widget);
 
@@ -905,6 +1055,13 @@ inherits(DropDown, Widget);
  */
 DropDown.prototype.setParentElement = function(parent_element){
     this._parent_element = parent_element;
+};
+
+/**
+ * @param {string} css_class
+ */
+DropDown.prototype.setCssClass = function(css_class){
+    this._css_class = css_class;
 };
 
 /**
@@ -927,6 +1084,13 @@ DropDown.prototype.onOpen = function(){
 /** override me */
 DropDown.prototype.onClose = function(){
 };
+/** override if it is necessary to
+ * do something before opening the menu
+ * @param {Function} on_open
+ */
+DropDown.prototype.beforeOpen = function(on_open){
+    on_open();
+}
 
 /**
  * @param {Object} parent_element jQuery object
@@ -934,33 +1098,37 @@ DropDown.prototype.onClose = function(){
  */
 DropDown.prototype.decorate = function(parent_element){
     this.setParentElement(parent_element);
-    this.createDom();
+    var me = this;
+    var parent_element = this._parent_element;
+    parent_element.mouseover(function(){ me.scheduleOpening() });
+    parent_element.mouseout(function(){ me.scheduleClosing() });
 };
 
 /**
  * @private
  */
 DropDown.prototype.createDom = function(){
-    this._element = this.makeElement('div');
+    //try getting an element from dom
+    var element = $('#ab-drop-down');
+    if (element.length === 0){
+        element = this.makeElement('div');
+        element.attr('id', 'ab-drop-down');
+        $('body').append(element);
+    } else {
+        this.reset();
+    }
+    if (this._css_class){
+        element.addClass(this._css_class);
+    }
+    this._element = element;
+    this._element.css('position', 'absolute').hide();
 
     var content = this.getContent();
     this._element.append(content.getElement());
 
-    //do we have to add it after?
-    this._parent_element.after(this._element);
-    this._element
-        .css('position', 'absolute')
-        .css('z-index', 7777)
-        .hide();
-
     var me = this;
-    var start_closing = function(){ me.startClosing() };
-    this._parent_element.mouseover(function(){ me.open() });
-    this._parent_element.mouseout(start_closing);
-
     this._element.mouseleave(function(){ me.close(); });
     this._element.mouseenter(function(){ me.stopClosing() });
-    this.stopEventPropagation(['click']);
 
     $(document).click(function(){
         me.unfreeze();
@@ -982,27 +1150,79 @@ DropDown.prototype.unfreeze = function(){
  * opens the dropdown
  */
 DropDown.prototype.open = function(){
-    var parent_element = this._parent_element;
-    this._element.show().position({
-        my: 'left top',
-        at: 'left bottom',
-        of: parent_element,
-    });
-    //this.getContent().getElement().show();
+    if (this.getState() !== 'OPEN'){
+        this.createDom();
+        var parent_element = this._parent_element;
+        this._element.show();
+        this._element.position({
+            my: 'left top',
+            at: 'left bottom',
+            of: parent_element,
+        });
+        //this.getContent().getElement().show();
+        this.setState('OPEN');
+    }
     this.onOpen();
+};
+/**
+ * sets timeout to open the menu
+ */
+DropDown.prototype.scheduleOpening = function(){
+    if (this._is_frozen){
+        return;
+    }
+    if (this._pre_open_delay > 0){
+        var me = this;
+        var delay = this._pre_open_delay;
+        var start = function(){ me.startOpening(); };
+        this._start_opening_timeout = setTimeout(start, delay);
+    } else {
+        this.open();
+    }
 };
 /**
  * sets the timeout to close the dropdown
  */
-DropDown.prototype.startClosing = function(){
+DropDown.prototype.scheduleClosing = function(){
     if (this._is_frozen){
         return;
     }
+    clearTimeout(this._start_opening_timeout);//stop opening too
     var me = this;
     this._close_timeout = setTimeout(
         function(){ me.close() },
         me._close_delay
     );
+};
+DropDown.prototype.startLoader = function(){
+    var content = this.getContent();
+
+    var loader = new Loader();
+    content.addContent(loader);
+    loader.run();
+
+    this._loader = loader;
+};
+DropDown.prototype.stopLoader = function(){
+    if (this._loader){
+        var content = this.getContent();
+        content.removeContent(this._loader);
+    }
+};
+DropDown.prototype.startOpening = function(){
+    var me = this;
+    var check = function(){
+        if (me.getState() !== 'OPEN'){
+            me.open();
+            me.startLoader();
+        }
+    };
+    setTimeout(check, this._open_think_delay);
+    var on_open = function(){
+        me.open();
+        me.stopLoader();
+    };
+    this.beforeOpen(on_open);
 };
 /**
  * clears the close timeout
@@ -1012,14 +1232,29 @@ DropDown.prototype.stopClosing = function(){
     this._close_timeout = null;
 };
 /**
+ * empties contents of the menu
+ * and hides the element
+ */
+DropDown.prototype.reset = function(){
+    if (this._element){
+        this._element.hide();
+        if (this._content){
+            this.getContent().dispose();
+        }
+        this._content = null;
+        this._element.empty();
+    }
+};
+/**
  * closes the menu
  */
 DropDown.prototype.close = function(){
     if (this._is_frozen){
         return;
     }
-    this.getElement().hide();
     this.onClose();
+    this.reset();
+    this.setState('CLOSED');
 };
 
 /**
@@ -2594,17 +2829,28 @@ TagCategorizer.prototype.renderData = function(){
 /**
  * @constructor
  * @extends {DropDown}
- * @param {string} tag_name
  */
-var TagDropDown = function(tag_name){
+var TagDropDown = function(){
     DropDown.call(this);
     /**
      * @private
-     * @type {string}
+     * @type {?string}
      */
-    this._tag_name = tag_name;
+    this._tag_name = null;
+    /**
+     * @private
+     * @type {?TagData}
+     */
+    this._tag_data;
 };
 inherits(TagDropDown, DropDown);
+/**
+ * @param {Object}
+ */
+TagDropDown.prototype.decorate = function(element){
+    this._tag_name = element.html();
+    TagDropDown.superClass_.decorate.call(this, element);
+};
 
 /**
  * over riding the parents getContent
@@ -2612,22 +2858,338 @@ inherits(TagDropDown, DropDown);
  */
 TagDropDown.prototype.getContent = function(){
     if (!this._content){
-        var categorizer = new TagCategorizer(this._tag_name);
-        var me = this;
-        categorizer.setOnFocusHandler(function(){ me.freeze() });
-        categorizer.setOnBlurHandler(function(){ me.unfreeze() });
-
-        this._tag_categorizer = categorizer;
-        this._content = new Container('div');
-        this._content.addContent(categorizer);
+        var content = new Container();
+        content.addClass('tag-menu');
+        this._content = content;
     }
     return this._content;
 };
 
-TagDropDown.prototype.onOpen = function(){
-    this._tag_categorizer.startLoading();
+/**
+ * @private
+ * @param {TagData} data
+ */
+TagDropDown.prototype.setTagData = function(data){
+    this._tag_data = data;
 };
 
-TagDropDown.prototype.onClose = function(){
-    this._tag_categorizer.blur();
+/**
+ * @param {Function} on_done
+ */
+TagDropDown.prototype.beforeOpen = function(on_done){
+    var me = this;
+    var content = this.getContent();
+    var on_load = function(){
+        on_done();
+        me.renderTagData();
+    };
+    this.loadTagData(on_load);
+};
+
+/**
+ * @param {Function} on_load
+ */
+TagDropDown.prototype.loadTagData = function(on_load){
+    var tag_name = this._tag_name;
+    var me = this;
+    $.ajax({
+        type: 'GET',
+        cache: true,
+        data: {tag_name: tag_name},
+        dataType: 'json',
+        url: askbot['urls']['get_tag_data_summary'],
+        success: function(data, text_status, xhr){
+            me.setTagData(data);
+            on_load();
+        }
+    });
+};
+/**
+ * @private
+ */
+TagDropDown.prototype.renderTagData = function(){
+    this._detail_box = new Container();
+    this.renderTagFollowers();
+    this.renderTagCategorizer();
+};
+
+TagDropDown.prototype.renderTagFollowers = function(){
+    var count = this._tag_data['follower_count'];
+    if (count > 0){
+        var followers = new TagFollowerExpando(this._tag_name);
+        followers.setFollowerCount(count);
+        followers.setDetailContainer(this._detail_box);
+
+        var fmt_str = ngettext('%(count)s follower', '%(count)s followers', count);
+        var prompt_text = interpolate(fmt_str, {count: count}, true);
+        followers.setPromptText(prompt_text);
+        var content = this.getContent();
+        content.addContent(followers);
+    } else {
+        var span = new Span(gettext('No followers'));
+        this.getContent().addContent(span);
+    }
+};
+
+TagDropDown.prototype.renderCategorizer = function(){
+    var categorizer = new TagCategorizerExpando(this._tag_name);
+    categorizer.setPromptText(gettext('Categories'));
+    var me = this;
+    categorizer.setOnFocusHandler(function(){ me.freeze() });
+    categorizer.setOnBlurHandler(function(){ me.unfreeze() });
+
+    var content = this.getContent();
+    content.addContent(categorizer);
+};
+
+/**
+ * supports states OPEN, LOADING and CLOSED
+ * interface class, requires overriding methods expand
+ * and startExpanding
+ * @constructor
+ * @extends {Widget}
+ */
+DelayedExpando = function(){
+    Widget.call(this);
+    /**
+     * @private
+     * @type {?Widget}
+     */
+    this._detail_container = null;
+    /**
+     * @private
+     * @type {?string}
+     */
+    this._prompt_text = null;
+
+    /**
+     * @private
+     * @type {number}
+     */
+    this._expand_think_delay = 1000;
+};
+inherits(DelayedExpando, Widget);
+/**
+ * A method that loads necessary data and once
+ * that is done, calls on_finish() function
+ * @param {Function} on_finish
+ * @interface
+ */
+DelayedExpando.prototype.startExpanding = function(on_finish){};
+
+/**
+ * A method that expands the contents
+ * @interface
+ */
+DelayedExpando.prototype.expand = function(){};
+/**
+ * @param {Container} container
+ */
+DelayedExpando.prototype.setDetailContainer = function(container){
+    this._detail_container = container;
+};
+/**
+ * @param {Container}
+ */
+DelayedExpando.prototype.getDetailContainer = function(){
+    return this._detail_container;
+};
+/**
+ * @param {string} text
+ */
+DelayedExpando.prototype.setPromptText = function(text){
+    this._prompt_text = text;
+}
+
+/**
+ * @return {Function}
+ */
+DelayedExpando.prototype.getHandler = function(){
+    var me = this;
+    var expand_think_delay = this._expand_think_delay;
+    return function(){
+        var state = me.getState();
+        if (state === 'CLOSED'){
+            var on_check = function(){
+                if (me.getState() !== 'OPEN'){
+                    me.startLoader();
+                }
+            };
+            setTimeout(on_check, expand_think_delay);
+            var on_finish = function(){
+                me.removeLoader();
+                me.expand();
+                me.setState('OPEN');
+            }
+            me.startExpanding(on_finish);
+            me.setState('LOADING');
+        } else if (state === 'OPEN'){
+            me.collapse();
+            me.setState('CLOSED');
+        }//nothing for LOADING
+    };
+}
+
+DelayedExpando.prototype.createDom = function(){
+    this._element = this.makeElement('div');
+    var link = this.makeElement('a');
+    link.html(this._prompt_text);
+    this._element.append(link);
+
+    var details = this.getDetailContainer();
+    this._element.append(details.getElement());
+
+    setupButtonEventHandlers(link, this.getHandler());
+
+    this.setState('CLOSED');
+};
+
+DelayedExpando.prototype.startLoader = function(){
+    this._detail_container.empty();
+    var loader = new Loader();
+    this._detail_container.addContent(loader);
+    this._loader = loader;
+    loader.run();
+};
+
+DelayedExpando.prototype.removeLoader = function(){
+    if (this._loader){
+        this._detail_container.removeContent(this._loader);
+    }
+};
+
+DelayedExpando.prototype.collapse = function(){
+    this._detail_container.empty();
+};
+
+/**
+ * @constructor
+ * @extends {DelayedExpando}
+ * @param {string} tag_name
+ */
+TagFollowerExpando = function(tag_name){
+    DelayedExpando.call(this);
+    /**
+     * @private
+     * @type {?string}
+     */
+    this._tag_name = tag_name;
+    /**
+     * @private
+     * @type {?number}
+     */
+    this._follower_count = null;
+    /**
+     * @private
+     * @type {?Object}
+     */
+    this._followers = null;
+};
+inherits(TagFollowerExpando, DelayedExpando);
+
+/**
+ * @param {number} count
+ */
+TagFollowerExpando.prototype.setFollowerCount = function(count){
+    this._follower_count = count;
+};
+/**
+ * @param {Object} data
+ */
+TagFollowerExpando.prototype.setFollowerData = function(data){
+    this._followers = data;
+};
+/**
+ * @return {Object}
+ */
+TagFollowerExpando.prototype.getFollowerData = function(){
+    return this._followers;
+};
+
+/**
+ * @private
+ * @param {Function} on_finish
+ */
+TagFollowerExpando.prototype.startExpanding = function(on_finish){
+    var me = this;
+    var tag_name = this._tag_name;
+    $.ajax({
+        type: 'GET',
+        cache: true,
+        data: {tag_name: tag_name},
+        dataType: 'json',
+        url: askbot['urls']['get_tag_followers'],
+        success: function(data, text_status, xhr){
+            me.setFollowerData(data['followers']);
+            on_finish();
+        }
+    });
+};
+
+/**
+ * adds user names to the container with links to 
+ * their profiles
+ */
+TagFollowerExpando.prototype.expand = function(){
+    var container = this.getDetailContainer();
+    var data = this.getFollowerData();
+    $.each(data, function(idx, user_data){
+        var user_link = new UserLink(
+                                user_data['id'],
+                                user_data['username'],
+                                user_data['slug']
+                            );
+        container.addContent(user_link);
+    });
+    container.addContent(new ClearDiv());
+};
+
+/**
+ * @constructor
+ * @extends {DelayedExpando}
+ * @param {string} tag_name
+ */
+TagCategorizerExpando = function(tag_name){
+    DelayedExpando.call(this);
+    /**
+     * @private
+     * @type {string}
+     */
+    this._tag_name = tag_name;
+};
+inherits(TagCategorizerExpando, DelayedExpando);
+/**
+ * @param {Function} handler
+ * focus and blur from the category input box
+ */
+TagCategorizerExpando.prototype.setOnFocusHandler = function(handler){
+    this._on_focus_handler = handler;
+};
+/**
+ * @param {Function} handler
+ */
+TagCategorizerExpando.prototype.setOnBlurHandler = function(handler){
+    this._on_blur_handler = handler;
+};
+/**
+ * @private
+ * @param {Function} on_finish
+ */
+TagCategorizerExpando.prototype.startExpanding = function(on_finish){
+    var container = this.getDetailContainer();
+    var categorizer = new TagCategorizer(this._tag_name);
+    categorizer.setOnFocusHandler(this._on_focus_handler);
+    categorizer.setOnBlurHandler(this._on_blur_handler);
+    container.addContent(categorizer);
+    categorizer.startLoading();
+};
+
+var init_tag_menu = function(){
+    $.each($('.tags .tag'), function(idx, item){
+        if (! item.has_tag_menu ){
+            var dd = new TagDropDown();
+            dd.decorate($(item));
+            item.has_tag_menu = true;
+        }
+    });
 };

@@ -12,13 +12,14 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
+from django.views.decorators import csrf
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
-from askbot.utils import decorators
+from askbot.utils import decorators, slug
 from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
@@ -98,35 +99,21 @@ def manage_inbox(request):
                                     activity__activity_type__in = activity_types,
                                     user = user
                                 )
+
                     action_type = post_data['action_type']
-                    seen_memos = memo_set.filter(
-                                    status=models.ActivityAuditStatus.STATUS_SEEN
-                                )
-                    new_memos = memo_set.filter(
-                                    status=models.ActivityAuditStatus.STATUS_NEW
-                                )
                     if action_type == 'delete':
-                        user.new_response_count -= new_memos.count()
-                        user.seen_response_count -= seen_memos.count()
-                        user.clean_response_counts()
-                        user.save()
                         memo_set.delete()
                     elif action_type == 'mark_new':
-                        user.new_response_count += seen_memos.count()
-                        user.seen_response_count -= seen_memos.count()
-                        user.clean_response_counts()
-                        user.save()
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_NEW)
                     elif action_type == 'mark_seen':
-                        user.new_response_count -= new_memos.count()
-                        user.seen_response_count += new_memos.count()
-                        user.clean_response_counts()
-                        user.save()
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
                     else:
                         raise exceptions.PermissionDenied(
                                     _('Oops, apologies - there was some error')
                                 )
+
+                    user.update_response_counts()
+
                     response_data['success'] = True
                     data = simplejson.dumps(response_data)
                     return HttpResponse(data, mimetype="application/json")
@@ -391,8 +378,10 @@ def get_tag_list(request):
     output = '\n'.join(tag_names)
     return HttpResponse(output, mimetype = "text/plain")
 
+@csrf.csrf_protect
 def subscribe_for_tags(request):
     """process subscription of users by tags"""
+    #todo - use special separator to split tags
     tag_names = request.REQUEST.get('tags','').strip().split()
     pure_tag_names, wildcards = forms.clean_marked_tagnames(tag_names)
     if request.user.is_authenticated():
@@ -470,6 +459,7 @@ def set_tag_filter_strategy(request):
 
 
 @login_required
+@csrf.csrf_protect
 def close(request, id):#close question
     """view to initiate and process 
     question close
@@ -499,6 +489,7 @@ def close(request, id):#close question
         return HttpResponseRedirect(question.get_absolute_url())
 
 @login_required
+@csrf.csrf_protect
 def reopen(request, id):#re-open question
     """view to initiate and process 
     question close
@@ -535,3 +526,25 @@ def read_message(request):#marks message a read
             if request.user.is_authenticated():
                 request.user.delete_messages()
     return HttpResponse('')
+
+@decorators.ajax_only
+@decorators.get_only
+def get_tag_data_summary(request):
+    tag_name = request.GET['tag_name']
+    follower_count = models.MarkedTag.objects.filter(
+                                    tag__name = tag_name,
+                                    reason = 'good',
+                                ).count()
+    return {'follower_count': follower_count}
+
+@decorators.ajax_only
+@decorators.get_only
+def get_tag_followers(request):
+    tag_name = request.GET['tag_name']
+    followers = models.User.objects.filter(
+                                tag_selections__tag__name = tag_name,
+                                tag_selections__reason = 'good'
+                            ).values('id', 'username')
+    for follower in followers:
+        follower['slug'] = slug.slugify(follower['username'])
+    return {'followers': list(followers)}
