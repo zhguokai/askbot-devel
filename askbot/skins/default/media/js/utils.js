@@ -2931,9 +2931,10 @@ TagDropDown.prototype.renderTagFollowers = function(){
     }
 };
 
-TagDropDown.prototype.renderCategorizer = function(){
+TagDropDown.prototype.renderTagCategorizer = function(){
     var categorizer = new TagCategorizerExpando(this._tag_name);
     categorizer.setPromptText(gettext('Categories'));
+    categorizer.setDetailContainer(this._detail_box);
     var me = this;
     categorizer.setOnFocusHandler(function(){ me.freeze() });
     categorizer.setOnBlurHandler(function(){ me.unfreeze() });
