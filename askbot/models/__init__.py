@@ -1538,7 +1538,7 @@ def user_get_tag_filtered_questions(self, questions = None, context = None):
                                 user_selections__user = self
                             )
 
-        wk = self.interesting_tags.strip().split()
+        wk = self.subscribed_tags.strip().split()
         selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
 
         tag_filter = models.Q(tags__in = list(selected_tags)) \
