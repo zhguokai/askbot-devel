@@ -102,7 +102,7 @@ def parse_message(msg):
     not supported - emails using language - specific encodings
     """
     sender = msg.get('From')
-    subject = msg.get('Subject')
+    subject = msg.get('Subject').replace('\r','').replace('\n','')
     if msg.is_multipart():
         # BL: Wind always sends 2 payloads: 1 plain-text, the other html
         msg = msg.get_payload()[0]
