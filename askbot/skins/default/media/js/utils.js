@@ -1251,8 +1251,10 @@ DropDown.prototype.reset = function(){
  */
 DropDown.prototype.close = function(){
     if (this._is_frozen){
+        console.log('frozen');
         return;
     }
+    console.log('not frozen');
     this.onClose();
     this.reset();
     this.setState('CLOSED');
@@ -2756,7 +2758,7 @@ TagCategorizer.prototype.createDom = function(){
 /**
  * @param {Function} on_finish
  */
-TagCategorizer.prototype.startLoading = function(on_finish){
+TagCategorizer.prototype.startLoading = function(){
     if (this._category_data){
         return;
     }
@@ -2767,7 +2769,6 @@ TagCategorizer.prototype.startLoading = function(on_finish){
     var on_load = function(){ 
         loader.dispose();
         me.renderData();
-        on_finish();
     };
 
     this.fetchData(on_load);
@@ -2869,413 +2870,19 @@ TagDropDown.prototype.getContent = function(){
     if (!this._content){
         var content = new Container();
         content.addClass('tag-menu');
+
+        var categorizer = new TagCategorizer(this._tag_name);
+        var me = this;
+        categorizer.setOnBlurHandler(function(){ me.unfreeze() });
+        categorizer.setOnFocusHandler(function(){ me.freeze() });
+        this.getElement().append(categorizer.getElement());
+        categorizer.startLoading();
+
+        content.addContent(categorizer);
+
         this._content = content;
     }
     return this._content;
-};
-
-/**
- * @private
- * @param {TagData} data
- */
-TagDropDown.prototype.setTagData = function(data){
-    this._tag_data = data;
-};
-
-/**
- * @param {Function} on_done
- */
-TagDropDown.prototype.beforeOpen = function(on_done){
-    var me = this;
-    var on_load = function(){
-        on_done();
-        me.renderTagData();
-    };
-    this.loadTagData(on_load);
-};
-
-/**
- * @param {Function} on_load
- */
-TagDropDown.prototype.loadTagData = function(on_load){
-    on_load();
-    return;
-    //short this for categorizer
-    var tag_name = this._tag_name;
-    var me = this;
-    $.ajax({
-        type: 'GET',
-        cache: true,
-        data: {tag_name: tag_name},
-        dataType: 'json',
-        url: askbot['urls']['get_tag_data_summary'],
-        success: function(data, text_status, xhr){
-            me.setTagData(data);
-            on_load();
-        }
-    });
-};
-/**
- * @private
- */
-TagDropDown.prototype.renderTagData = function(){
-    this._detail_box = new Container();
-    //short cirquit run categorizer
-    //var followers = this.renderTagFollowers();
-    var categorizer = this.renderTagCategorizer();
-    //short cirquit run categorizer
-    //this.makeTabs(followers, categorizer);
-};
-
-/**
- * connects sections into a tabbed menu
- * @param {...} items - all the items
- */
-TagDropDown.prototype.makeTabs = function(){
-    for (var i = 0; i < arguments.length; i++){
-        var arg = arguments[i];
-        if (arg){
-            arg.setSiblings(arguments);
-        }
-    }
-};
-
-TagDropDown.prototype.renderTagFollowers = function(){
-    var count = this._tag_data['follower_count'];
-    if (count > 0){
-        var followers = new TagFollowerExpando(this._tag_name);
-        followers.setFollowerCount(count);
-        followers.setDetailContainer(this._detail_box);
-
-        this._followers = followers;
-
-        var fmt_str = ngettext('%(count)s follower', '%(count)s followers', count);
-        var prompt_text = interpolate(fmt_str, {count: count}, true);
-        followers.setPromptText(prompt_text);
-        var content = this.getContent();
-        content.addContent(followers);
-        return followers;
-    } else {
-        var span = new Span(gettext('No followers'));
-        this.getContent().addContent(span);
-        return null;
-    }
-};
-
-TagDropDown.prototype.renderTagCategorizer = function(){
-    var categorizer = new TagCategorizerExpando(this._tag_name);
-    categorizer.setPromptText(gettext('Categories'));
-    categorizer.setDetailContainer(this._detail_box);
-    var me = this;
-    categorizer.setOnFocusHandler(function(){ me.freeze() });
-    categorizer.setOnBlurHandler(function(){ me.unfreeze() });
-
-    var content = this.getContent();
-    content.addContent(categorizer);
-
-    categorizer.activate();//short this for categorizer
-    categorizer.freeze();//short this for categorizer
-
-    return categorizer;
-};
-
-/**
- * supports states OPEN, LOADING and CLOSED
- * interface class, requires overriding methods expand
- * and startExpanding
- * @constructor
- * @extends {Widget}
- */
-DelayedExpando = function(){
-    Widget.call(this);
-    /**
-     * @private
-     * @type {?Widget}
-     */
-    this._detail_container = null;
-    /**
-     * @private
-     * @type {?string}
-     */
-    this._prompt_text = null;
-
-    /**
-     * @private
-     * @type {number}
-     */
-    this._expand_think_delay = 1000;
-
-    /**
-     * @private
-     * if there are any siblings the expando
-     * becomes part of tabbed menu
-     */
-    this._siblings = [];
-    /**
-     * @private
-     * @type {boolean}
-     */
-    this._is_frozen = false;
-};
-inherits(DelayedExpando, Widget);
-
-DelayedExpando.prototype.isFrozen = function(){
-    return this._is_frozen;
-};
-DelayedExpando.prototype.freeze = function(){
-    this._is_frozen = true;
-};
-DelayedExpando.prototype.unfreeze = function(){
-    this._is_frozen = false;
-};
-
-/**
- * @param {Array.<DelayedExpando>} siblings
- * if siblings are set, the expando's together
- * make a tabbed panel
- */
-DelayedExpando.prototype.setSiblings = function(siblings){
-    this._siblings = siblings;
-};
-
-DelayedExpando.prototype.collapseSiblings = function(){
-    var me = this;
-    $.each(this._siblings, function(idx, sibling){
-        if (sibling !== me){
-            if (sibling){
-                sibling.collapse();
-            }
-        }
-    });
-};
-
-DelayedExpando.prototype.activate = function(){
-    this._link.click();
-};
-/**
- * A method that loads necessary data and once
- * that is done, calls on_finish() function
- * @param {Function} on_finish
- * @interface
- */
-DelayedExpando.prototype.startExpanding = function(on_finish){};
-
-/**
- * A method that expands the contents
- * @interface
- */
-DelayedExpando.prototype.expand = function(){};
-/**
- * @param {Container} container
- */
-DelayedExpando.prototype.setDetailContainer = function(container){
-    this._detail_container = container;
-};
-/**
- * @param {Container}
- */
-DelayedExpando.prototype.getDetailContainer = function(){
-    return this._detail_container;
-};
-/**
- * @param {string} text
- */
-DelayedExpando.prototype.setPromptText = function(text){
-    this._prompt_text = text;
-}
-
-/**
- * @return {Function}
- */
-DelayedExpando.prototype.getHandler = function(){
-    var me = this;
-    var expand_think_delay = this._expand_think_delay;
-    var link = this._link;
-    return function(){
-        if (me.isFrozen()){
-            return;
-        }
-        var state = me.getState();
-        if (state === 'CLOSED'){
-            me.collapseSiblings();
-            var on_check = function(){
-                if (me.getState() !== 'OPEN'){
-                    me.startLoader();
-                }
-            };
-            setTimeout(on_check, expand_think_delay);
-            var on_finish = function(){
-                me.removeLoader();
-                me.expand();
-                me.setState('OPEN');
-            }
-            me.startExpanding(on_finish);
-            me.setState('LOADING');
-            link.addClass('active');
-        } else if (state === 'OPEN'){
-            me.collapse();
-        }//nothing for LOADING
-    };
-}
-
-DelayedExpando.prototype.createDom = function(){
-    this._element = this.makeElement('div');
-    this._element.addClass('expando');
-    this._link = this.makeElement('a');
-
-    var link = this._link;
-    link.html(this._prompt_text);
-    this._element.append(link);
-
-    var details = this.getDetailContainer();
-    this._element.append(details.getElement());
-
-    setupButtonEventHandlers(link, this.getHandler());
-
-    this.setState('CLOSED');
-};
-
-DelayedExpando.prototype.startLoader = function(){
-    this._detail_container.empty();
-    var loader = new Loader();
-    this._detail_container.addContent(loader);
-    this._loader = loader;
-    loader.run();
-};
-
-DelayedExpando.prototype.removeLoader = function(){
-    if (this._loader){
-        this._detail_container.removeContent(this._loader);
-    }
-};
-
-DelayedExpando.prototype.collapse = function(){
-    this.removeLoader();
-    this._detail_container.empty();
-    this._link.removeClass('active')
-    this.setState('CLOSED');
-};
-
-/**
- * @constructor
- * @extends {DelayedExpando}
- * @param {string} tag_name
- */
-TagFollowerExpando = function(tag_name){
-    DelayedExpando.call(this);
-    /**
-     * @private
-     * @type {?string}
-     */
-    this._tag_name = tag_name;
-    /**
-     * @private
-     * @type {?number}
-     */
-    this._follower_count = null;
-    /**
-     * @private
-     * @type {?Object}
-     */
-    this._followers = null;
-};
-inherits(TagFollowerExpando, DelayedExpando);
-
-/**
- * @param {number} count
- */
-TagFollowerExpando.prototype.setFollowerCount = function(count){
-    this._follower_count = count;
-};
-/**
- * @param {Object} data
- */
-TagFollowerExpando.prototype.setFollowerData = function(data){
-    this._followers = data;
-};
-/**
- * @return {Object}
- */
-TagFollowerExpando.prototype.getFollowerData = function(){
-    return this._followers;
-};
-
-/**
- * @private
- * @param {Function} on_finish
- */
-TagFollowerExpando.prototype.startExpanding = function(on_finish){
-    var me = this;
-    var tag_name = this._tag_name;
-    $.ajax({
-        type: 'GET',
-        cache: true,
-        data: {tag_name: tag_name},
-        dataType: 'json',
-        url: askbot['urls']['get_tag_followers'],
-        success: function(data, text_status, xhr){
-            me.setFollowerData(data['followers']);
-            on_finish();
-        }
-    });
-};
-
-/**
- * adds user names to the container with links to 
- * their profiles
- */
-TagFollowerExpando.prototype.expand = function(){
-    var container = this.getDetailContainer();
-    var data = this.getFollowerData();
-    $.each(data, function(idx, user_data){
-        var user_link = new UserLink(
-                                user_data['id'],
-                                user_data['username'],
-                                user_data['slug']
-                            );
-        container.addContent(user_link);
-    });
-    container.addContent(new ClearDiv());
-};
-
-/**
- * @constructor
- * @extends {DelayedExpando}
- * @param {string} tag_name
- */
-TagCategorizerExpando = function(tag_name){
-    DelayedExpando.call(this);
-    /**
-     * @private
-     * @type {string}
-     */
-    this._tag_name = tag_name;
-};
-inherits(TagCategorizerExpando, DelayedExpando);
-/**
- * @param {Function} handler
- * focus and blur from the category input box
- */
-TagCategorizerExpando.prototype.setOnFocusHandler = function(handler){
-    this._on_focus_handler = handler;
-};
-/**
- * @param {Function} handler
- */
-TagCategorizerExpando.prototype.setOnBlurHandler = function(handler){
-    this._on_blur_handler = handler;
-};
-/**
- * @private
- * @param {Function} on_finish
- */
-TagCategorizerExpando.prototype.startExpanding = function(on_finish){
-    var categorizer = new TagCategorizer(this._tag_name);
-    categorizer.setOnFocusHandler(this._on_focus_handler);
-    categorizer.setOnBlurHandler(this._on_blur_handler);
-
-    this.getDetailContainer().addContent(categorizer);
-    categorizer.startLoading(on_finish);
 };
 
 var init_tag_menu = function(){
