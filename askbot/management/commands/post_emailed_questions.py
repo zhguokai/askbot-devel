@@ -30,6 +30,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils import mail
 from askbot import models
 from askbot.forms import AskByEmailForm
+import re
 
 USAGE = _(
 """<p>To ask by email, please:</p>
@@ -120,6 +121,12 @@ def parse_message(msg):
         body = raw_body
     return (sender, subject, body)
 
+invalid_sub_re = re.compile("automatic reply|out of office", re.I)
+def check_for_invalid_subject(subject):
+    if invalid_sub_re.match(subject):
+       return true
+
+    return false
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -170,6 +177,9 @@ class Command(NoArgsCommand):
                 logging.critical(err_str)
                 #print "Could not parse ", msg
                 continue
+            if check_for_invalid_subject(subject):
+                continue
+
             data = {
                 'sender': sender,
                 'subject': subject,
