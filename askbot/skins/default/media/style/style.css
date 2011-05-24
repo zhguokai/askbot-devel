@@ -443,6 +443,14 @@ ul#related-tags li {
     overflow: hidden;
 }
 
+.tag-menu .expando a {
+    text-decoration: none;
+}
+
+.tag-menu .expando a.active {
+    background: #fff;
+}
+
 .deletable-tag {
     margin-right: 3px;
     white-space: nowrap;

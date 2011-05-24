@@ -220,7 +220,7 @@ WrappedElement.prototype.setCssClasses = function(){
 };
 WrappedElement.prototype.createDom = function(){
     this._element = this.makeElement(this._html_tag);
-    if (this._css_classes.leng > 0){
+    if (this._css_classes.length > 0){
         var element = this._element;
         $.each(this._css_classes, function(idx, css_class){
             element.addClass(css_class);
@@ -1129,6 +1129,7 @@ DropDown.prototype.createDom = function(){
     var me = this;
     this._element.mouseleave(function(){ me.close(); });
     this._element.mouseenter(function(){ me.stopClosing() });
+    this.stopEventPropagation(['click']);
 
     $(document).click(function(){
         me.unfreeze();
@@ -2660,11 +2661,15 @@ TagCategoryAdder.prototype.createDom = function(){
 
     var categorizer = this._categorizer;
     var tag_name = categorizer.getTagName();
+    var input_element = this._input_element;
     var on_item_select = function(ac_data){//ac_data - from autocompleter
         var cat_data = {name: ac_data['value'], id: ac_data['data'][0]};
         var tag_cat = new TagCategory(tag_name, cat_data);
 
-        var on_complete = function(){ categorizer.addTagCategory(tag_cat) };
+        var on_complete = function(){
+            categorizer.addTagCategory(tag_cat)
+            input_element.val('');
+        };
         tag_cat.startAddingToDatabase(on_complete);
     };
 
@@ -2748,7 +2753,10 @@ TagCategorizer.prototype.createDom = function(){
     this._element.append(this._loader.getElement());
 };
 
-TagCategorizer.prototype.startLoading = function(){
+/**
+ * @param {Function} on_finish
+ */
+TagCategorizer.prototype.startLoading = function(on_finish){
     if (this._category_data){
         return;
     }
@@ -2758,7 +2766,8 @@ TagCategorizer.prototype.startLoading = function(){
 
     var on_load = function(){ 
         loader.dispose();
-        me.renderData()
+        me.renderData();
+        on_finish();
     };
 
     this.fetchData(on_load);
@@ -2878,7 +2887,6 @@ TagDropDown.prototype.setTagData = function(data){
  */
 TagDropDown.prototype.beforeOpen = function(on_done){
     var me = this;
-    var content = this.getContent();
     var on_load = function(){
         on_done();
         me.renderTagData();
@@ -2890,6 +2898,9 @@ TagDropDown.prototype.beforeOpen = function(on_done){
  * @param {Function} on_load
  */
 TagDropDown.prototype.loadTagData = function(on_load){
+    on_load();
+    return;
+    //short this for categorizer
     var tag_name = this._tag_name;
     var me = this;
     $.ajax({
@@ -2909,8 +2920,24 @@ TagDropDown.prototype.loadTagData = function(on_load){
  */
 TagDropDown.prototype.renderTagData = function(){
     this._detail_box = new Container();
-    this.renderTagFollowers();
-    this.renderTagCategorizer();
+    //short cirquit run categorizer
+    //var followers = this.renderTagFollowers();
+    var categorizer = this.renderTagCategorizer();
+    //short cirquit run categorizer
+    //this.makeTabs(followers, categorizer);
+};
+
+/**
+ * connects sections into a tabbed menu
+ * @param {...} items - all the items
+ */
+TagDropDown.prototype.makeTabs = function(){
+    for (var i = 0; i < arguments.length; i++){
+        var arg = arguments[i];
+        if (arg){
+            arg.setSiblings(arguments);
+        }
+    }
 };
 
 TagDropDown.prototype.renderTagFollowers = function(){
@@ -2920,14 +2947,18 @@ TagDropDown.prototype.renderTagFollowers = function(){
         followers.setFollowerCount(count);
         followers.setDetailContainer(this._detail_box);
 
+        this._followers = followers;
+
         var fmt_str = ngettext('%(count)s follower', '%(count)s followers', count);
         var prompt_text = interpolate(fmt_str, {count: count}, true);
         followers.setPromptText(prompt_text);
         var content = this.getContent();
         content.addContent(followers);
+        return followers;
     } else {
         var span = new Span(gettext('No followers'));
         this.getContent().addContent(span);
+        return null;
     }
 };
 
@@ -2941,6 +2972,11 @@ TagDropDown.prototype.renderTagCategorizer = function(){
 
     var content = this.getContent();
     content.addContent(categorizer);
+
+    categorizer.activate();//short this for categorizer
+    categorizer.freeze();//short this for categorizer
+
+    return categorizer;
 };
 
 /**
@@ -2968,8 +3004,54 @@ DelayedExpando = function(){
      * @type {number}
      */
     this._expand_think_delay = 1000;
+
+    /**
+     * @private
+     * if there are any siblings the expando
+     * becomes part of tabbed menu
+     */
+    this._siblings = [];
+    /**
+     * @private
+     * @type {boolean}
+     */
+    this._is_frozen = false;
 };
 inherits(DelayedExpando, Widget);
+
+DelayedExpando.prototype.isFrozen = function(){
+    return this._is_frozen;
+};
+DelayedExpando.prototype.freeze = function(){
+    this._is_frozen = true;
+};
+DelayedExpando.prototype.unfreeze = function(){
+    this._is_frozen = false;
+};
+
+/**
+ * @param {Array.<DelayedExpando>} siblings
+ * if siblings are set, the expando's together
+ * make a tabbed panel
+ */
+DelayedExpando.prototype.setSiblings = function(siblings){
+    this._siblings = siblings;
+};
+
+DelayedExpando.prototype.collapseSiblings = function(){
+    var me = this;
+    $.each(this._siblings, function(idx, sibling){
+        if (sibling !== me){
+            if (sibling){
+                sibling.collapse();
+            }
+        }
+    });
+};
+
+DelayedExpando.prototype.activate = function(){
+    this._link.click();
+};
 /**
  * A method that loads necessary data and once
  * that is done, calls on_finish() function
@@ -3008,9 +3090,14 @@ DelayedExpando.prototype.setPromptText = function(text){
 DelayedExpando.prototype.getHandler = function(){
     var me = this;
     var expand_think_delay = this._expand_think_delay;
+    var link = this._link;
     return function(){
+        if (me.isFrozen()){
+            return;
+        }
         var state = me.getState();
         if (state === 'CLOSED'){
+            me.collapseSiblings();
             var on_check = function(){
                 if (me.getState() !== 'OPEN'){
                     me.startLoader();
@@ -3024,16 +3111,19 @@ DelayedExpando.prototype.getHandler = function(){
             }
             me.startExpanding(on_finish);
             me.setState('LOADING');
+            link.addClass('active');
         } else if (state === 'OPEN'){
             me.collapse();
-            me.setState('CLOSED');
         }//nothing for LOADING
     };
 }
 
 DelayedExpando.prototype.createDom = function(){
     this._element = this.makeElement('div');
-    var link = this.makeElement('a');
+    this._element.addClass('expando');
+    this._link = this.makeElement('a');
+
+    var link = this._link;
     link.html(this._prompt_text);
     this._element.append(link);
 
@@ -3060,7 +3150,10 @@ DelayedExpando.prototype.removeLoader = function(){
 };
 
 DelayedExpando.prototype.collapse = function(){
+    this.removeLoader();
     this._detail_container.empty();
+    this._link.removeClass('active')
+    this.setState('CLOSED');
 };
 
 /**
@@ -3177,12 +3270,12 @@ TagCategorizerExpando.prototype.setOnBlurHandler = function(handler){
  * @param {Function} on_finish
  */
 TagCategorizerExpando.prototype.startExpanding = function(on_finish){
-    var container = this.getDetailContainer();
     var categorizer = new TagCategorizer(this._tag_name);
     categorizer.setOnFocusHandler(this._on_focus_handler);
     categorizer.setOnBlurHandler(this._on_blur_handler);
-    container.addContent(categorizer);
-    categorizer.startLoading();
+
+    this.getDetailContainer().addContent(categorizer);
+    categorizer.startLoading(on_finish);
 };
 
 var init_tag_menu = function(){

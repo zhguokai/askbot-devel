@@ -62,10 +62,11 @@
 <script type="text/javascript" src="{{ "/js/jquery.ui.core.js"|media }}"></script>
 <script type="text/javascript" src="{{ "/js/jquery.ui.position.js"|media }}"></script>
 <style type="text/css">
-    .ab-menu, .tag-categorizer { background: #fff; border: 1px solid #aaa; }
-    .ab-menu input { width: auto; }
+    .ab-menu { background: #fff; border: 1px solid #aaa; }
+    .ab-menu input { width: auto;}
+    .tag-menu input, .tag-menu p { margin: 0; padding: 0}
     ul.ab-menu { list-style: none; }
-    li.menu-item, .tag-category { white-space: nowrap; padding: 0 5px 0 5px; }
+    li.menu-item, .tag-category { white-space: nowrap; padding: 0 5px 0 0; }
     .tag-categorizer span.delete-icon { display: inline; float: none; vertical-align: middle; }
     .go-right-icon { vertical-align: middle; }
 </style>
@@ -101,12 +102,6 @@
         maxCacheLength: 100,
         delay: 10,
     });
-
-    $.each($('.tag'), function(idx, elem){
-        var tdd = new TagDropDown($(elem).html());
-        tdd.decorate($(elem));
-    });
-
 </script>
 {% endif %}
 <script type="text/javascript">
