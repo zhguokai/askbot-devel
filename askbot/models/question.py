@@ -139,7 +139,7 @@ class QuestionQuerySet(models.query.QuerySet):
         elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
             rank_clause = "ts_rank(question.text_search_vector, to_tsquery(%s))";
             search_query = '&'.join(search_query.split())
-            extra_params = ("'" + search_query + "'",)
+            extra_params = (search_query,)
             extra_kwargs = {
                 'select': {'relevance': rank_clause},
                 'where': ['text_search_vector @@ to_tsquery(%s)'],
@@ -230,7 +230,12 @@ class QuestionQuerySet(models.query.QuerySet):
                 else:
                     raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
             elif scope_selector == 'favorite':
-                qs = qs.filter(favorited_by = request_user)
+                favorite_filter = models.Q(favorited_by = request_user)
+                if 'followit' in settings.INSTALLED_APPS:
+                    followed_users = request_user.get_followed_users()
+                    favorite_filter |= models.Q(author__in = followed_users)
+                    favorite_filter |= models.Q(answers__author__in = followed_users)
+                qs = qs.filter(favorite_filter)
             
         #user contributed questions & answers
         if author_selector:

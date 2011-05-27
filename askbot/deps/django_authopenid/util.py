@@ -493,11 +493,13 @@ def ldap_check_password(username, password):
         ldap_session.unbind_s()
         return True
     except ldap.LDAPError, e:
-        logging.critical(unicode(e))
+        err_str = unicode(e) + "\nAuthentication Error for %s" % username
+        logging.critical(err_str)
         return False
 
 def check_pwd_bypass(username):
     bypasspwd = False
+    username = username.lower()
 
     if hasattr(django_settings, 'FAKE_USERS'):
        if username in django_settings.FAKE_USERS.keys():

@@ -158,6 +158,16 @@ urlpatterns = patterns('',
         views.commands.get_tag_list,
         name = 'get_tag_list'
     ),
+    url(#ajax get only
+        r'^get-tag-data-summary/',
+        views.commands.get_tag_data_summary,
+        name = 'get_tag_data_summary'
+    ),
+    url(#ajax get only
+        r'^get-tag-subscribers/',
+        views.commands.get_tag_subscribers,
+        name = 'get_tag_subscribers'
+    ),
     url(
         r'^%s$' % _('subscribe-for-tags/'),
         views.commands.subscribe_for_tags,

@@ -485,12 +485,11 @@ class Command(NoArgsCommand):
                     'email_settings_link': link,
                     'admin_email': django_settings.ADMINS[0][1]
                 }
+                recipient_email = user.email
                 if DEBUG_THIS_COMMAND == True:
                     recipient_email = django_settings.ADMINS[0][1]
-                else:
-                    recipient_email = user.email
               
-                print "%s: %s" % (recipient_mail, subject_line)
+                print "%s: %s" % (recipient_email, subject_line)
                 mail.send_mail(
                     subject_line = subject_line,
                     body_text = text,
