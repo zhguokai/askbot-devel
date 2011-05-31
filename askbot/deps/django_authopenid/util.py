@@ -547,9 +547,7 @@ def get_nis_info(username):
 
 def get_user_info(method, username):
     print "User Info: %s %s" % (method, username)
-    fake_users = {}
-    if hasattr(django_settings, 'FAKE_USERS'):
-       fake_users = django_settings.FAKE_USERS
+    fake_users = getattr(django_settings, 'FAKE_USERS', {})
 
     if username in fake_users.keys():
        print fake_users

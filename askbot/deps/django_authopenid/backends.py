@@ -47,13 +47,15 @@ class AuthBackend(object):
                 #logging.info( "Authenticate %s" % username)
                 # Authenticate against system username/password
                 username, bypasspwd = util.check_pwd_bypass(username)
-                try:
-                    p = pwd.getpwnam(username)
-                except KeyError:
-                    return None
 
-                if(bypasspwd == False and crypt.crypt(password, p.pw_passwd) != p.pw_passwd):
-                    return None
+                if bypasspwd == False:
+                    try:
+                        p = pwd.getpwnam(username)
+                    except KeyError:
+                        return None
+
+                    if(crypt.crypt(password, p.pw_passwd) != p.pw_passwd):
+                        return None
 
                 # If user is not in Askbot, create it.
                 try:
