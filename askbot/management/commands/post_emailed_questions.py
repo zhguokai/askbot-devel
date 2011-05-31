@@ -19,6 +19,7 @@ import imaplib
 import email
 import quopri
 import base64
+import logging
 from django.conf import settings as django_settings
 from django.core.management.base import NoArgsCommand, CommandError
 from django.core import exceptions
@@ -29,6 +30,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils import mail
 from askbot import models
 from askbot.forms import AskByEmailForm
+import re
 
 USAGE = _(
 """<p>To ask by email, please:</p>
@@ -74,6 +76,9 @@ def bounce_email(email, subject, reason = None, body_text = None):
     if body_text != None:
         error_message = string_concat(error_message, body_text)
 
+    err_str = "\nBounce Message to %s Reason: %s subject '%s'" % (email, reason, subject)
+    logging.critical(err_str)
+
     #print 'sending email'
     #print email
     #print subject
@@ -98,7 +103,7 @@ def parse_message(msg):
     not supported - emails using language - specific encodings
     """
     sender = msg.get('From')
-    subject = msg.get('Subject')
+    subject = msg.get('Subject').replace('\r','').replace('\n','')
     if msg.is_multipart():
         # BL: Wind always sends 2 payloads: 1 plain-text, the other html
         msg = msg.get_payload()[0]
@@ -116,6 +121,12 @@ def parse_message(msg):
         body = raw_body
     return (sender, subject, body)
 
+invalid_sub_re = re.compile("automatic reply|out of office", re.I)
+def check_for_invalid_subject(subject):
+    if invalid_sub_re.match(subject):
+       return true
+
+    return false
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -162,8 +173,13 @@ class Command(NoArgsCommand):
             try:
                 (sender, subject, body) = parse_message(msg)
             except CannotParseEmail, e:
+                err_str = "\nCan't parse Email '%s'" % (msg)
+                logging.critical(err_str)
                 #print "Could not parse ", msg
                 continue
+            if check_for_invalid_subject(subject):
+                continue
+
             data = {
                 'sender': sender,
                 'subject': subject,
@@ -179,8 +195,10 @@ class Command(NoArgsCommand):
                             )
                 except models.User.DoesNotExist:
                     bounce_email(email_address, subject, reason = 'unknown_user')
+                    continue
                 except models.User.MultipleObjectsReturned:
                     bounce_email(email_address, subject, reason = 'problem_posting')
+                    continue
 
                 tagnames = form.cleaned_data['tagnames']
                 title = form.cleaned_data['title']
@@ -192,6 +210,8 @@ class Command(NoArgsCommand):
                         tags = tagnames,
                         body_text = body_text
                     )
+                    info_str = "\nPosted Email Question from %s - Tags: %s - Subject '%s'" % (email_address, tagnames, title)
+                    logging.info(info_str)
                 except exceptions.PermissionDenied, e:
                     bounce_email(
                         email_address,

@@ -22,6 +22,9 @@
     askbot['urls']['get_tag_list'] = '{% url "get_tag_list" %}';
     askbot['urls']['get_tag_data_summary'] = '{% url "get_tag_data_summary" %}';
     askbot['urls']['get_tag_subscribers'] = '{% url "get_tag_subscribers" %}';
+    askbot['urls']['follow_user'] = scriptUrl + 'followit/follow/user/{{'{{'}}userId{{'}}'}}/';
+    askbot['urls']['unfollow_user'] = scriptUrl + 'followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
+    askbot['urls']['user_signin'] = '{% url "user_signin" %}';
 </script>
 <script 
     type="text/javascript"
