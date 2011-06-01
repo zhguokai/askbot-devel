@@ -1158,7 +1158,7 @@ DropDown.prototype.open = function(){
         this._element.position({
             my: 'left top',
             at: 'left bottom',
-            of: parent_element,
+            of: parent_element
         });
         //this.getContent().getElement().show();
         this.setState('OPEN');
