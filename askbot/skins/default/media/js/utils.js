@@ -100,13 +100,17 @@ var makeKeyHandler = function(key, callback){
 };
 
 
-var setupButtonEventHandlers = function(button, callback){
-    var wrapped_callback = function(e){
-        callback();
-        e.stopImmediatePropagation();
-    };
-    button.keydown(makeKeyHandler(13, wrapped_callback));
-    button.click(wrapped_callback);
+var setupButtonEventHandlers = function(button, callback, stop_propagation){
+    if (stop_propagation){
+        var the_callback = function(e){
+            callback();
+            e.stopImmediatePropagation();
+        };
+    } else {
+        var the_callback = callback;
+    }
+    button.keydown(makeKeyHandler(13, the_callback));
+    button.click(the_callback);
 };
 
 var putCursorAtEnd = function(element){
@@ -1458,7 +1462,7 @@ DelayedExpando.prototype.createDom = function(){
     var details = this.getDetailContainer();
     this._element.append(details.getElement());
 
-    setupButtonEventHandlers(link, this.getHandler());
+    setupButtonEventHandlers(link, this.getHandler(), true);
 
     this.setState('CLOSED');
 };
