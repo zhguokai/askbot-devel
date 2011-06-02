@@ -475,6 +475,7 @@ var liveSearch = function(){
             useCache: true,
             matchInside: true,
             maxCacheLength: 100,
+            maxItemsToShow: 20,
             onItemSelect: run_tag_search,
             delay: 10
         });
