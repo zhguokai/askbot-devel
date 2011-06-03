@@ -16,6 +16,14 @@ class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
        optparse.make_option(
+          '-t',
+          '--text',
+          action = 'store_true',
+          default = False,
+          dest = 'text',
+          help = 'Format Emails as Text only (no hyperlink)'
+       ),
+       optparse.make_option(
           '-d',
           '--debug',
           action = 'store_true',
@@ -44,6 +52,7 @@ class Command(BaseCommand):
         DEBUG_THIS_COMMAND = False
         FORCE_EMAIL = False
         IGNORE_DATES = False
+        TEXT_FORMAT = False
 
         if askbot_settings.ENABLE_UNANSWERED_REMINDERS == False:
             return
@@ -55,6 +64,8 @@ class Command(BaseCommand):
            DEBUG_THIS_COMMAND = True
         if options['force_email']:
            FORCE_EMAIL = True
+        if options['text']:
+           TEXT_FORMAT = True
 
         #get questions without answers, excluding closed and deleted
         #order it by descending added_at date
@@ -70,6 +81,7 @@ class Command(BaseCommand):
         end_cutoff_date = start_cutoff_date - (max_emails - 1)*recurrence_delay
 
         if IGNORE_DATES:
+            print "Email Reminders: Questions Asked BEFORE %s" % (start_cutoff_date)
             questions = models.Question.objects.exclude(
                                         closed = True
                                     ).exclude(
@@ -80,6 +92,9 @@ class Command(BaseCommand):
                                         answer_count = 0
                                     ).order_by('-added_at')
         else: 
+            print "Email Reminders: Wait Period: %s - Email Every: %s - Max Emails: %d" % (
+                      wait_period, recurrence_delay, max_emails)
+            print "From %s to %s" % (end_cutoff_date, start_cutoff_date)
             questions = models.Question.objects.exclude(
                                         closed = True
                                     ).exclude(
@@ -142,6 +157,11 @@ class Command(BaseCommand):
                         'an answer. If you can provide an answer, please click on the link and share ' \
                         'your knowlege.</p><hr><p><b>Summary List</b></p>'
 
+            if TEXT_FORMAT:
+                body_text = 'This email is sent as a reminder that the following questions do not have\n' \
+                        'an answer. If you can provide an answer, please share ' \
+                        'your knowlege.\nSummary List\n'
+
             tag_list = {}
             now = datetime.datetime.now()
             # Build list of Tags
@@ -156,7 +176,16 @@ class Command(BaseCommand):
                  else:
                     tag_list[tag] = [(question, now - question.added_at)]
 
-               body_text += '<li>(%02d days old) <a href="%s%s">%s</a> [%s]</li>' \
+
+               if TEXT_FORMAT:
+                   body_text += '  - (%02d days old) %s [%s]\n' \
+                      % (
+                          days.days,
+                          question.title,
+                          tag_string[:-2]
+                      )
+               else:
+                   body_text += '<li>(%02d days old) <a href="%s%s">%s</a> [%s]</li>' \
                       % (
                           days.days,
                           askbot_settings.APP_URL,
@@ -176,18 +205,33 @@ class Command(BaseCommand):
                 'topics': tag_summary
             }
 
-            body_text += "<hr><p><b>List ordered by Tags</b></p><br>"
+            if TEXT_FORMAT:
+              body_text += "\nList ordered by Tags\n\n"
+            else:
+              body_text += "<hr><p><b>List ordered by Tags</b></p><br>"
             for tag in tag_keys:
-                body_text += '<p><b>' + tag + '</b></p><ul>'
+                if TEXT_FORMAT:
+                    body_text += tag + '\n'
+                else:
+                    body_text += '<p><b>' + tag + '</b></p><ul>'
                 for question in tag_list[tag]:
-                    body_text += '<li>(%02d days old) <a href="%s%s">%s</a></li>' \
+                    if TEXT_FORMAT:
+                        body_text += '  - (%02d days old) %s\n' \
+                            % (
+                                question[1].days,
+                                question[0].title
+                            )
+                    else:
+                        body_text += '<li>(%02d days old) <a href="%s%s">%s</a></li>' \
                             % (
                                 question[1].days,
                                 askbot_settings.APP_URL,
                                 question[0].get_absolute_url(),
                                 question[0].title
                             )
-                body_text += '</ul>\n'
+                if not TEXT_FORMAT:
+                    body_text += '</ul>'
+                body_text += '\n'
 
             if DEBUG_THIS_COMMAND:
                 print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \
