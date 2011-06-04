@@ -133,6 +133,7 @@ class Command(BaseCommand):
                     )
                     now = datetime.datetime.now()
                     if now < activity.active_at + recurrence_delay:
+                        #print "Time Reject: %s < %s" % (now, activity.active_at + recurrence_delay)
                         # Only send email if minimum delay between emails has been met
                         if not DEBUG_THIS_COMMAND and not FORCE_EMAIL:
                             continue
@@ -143,8 +144,9 @@ class Command(BaseCommand):
                         activity_type = activity_type,
                         content_object = question,
                     )
-                activity.active_at = datetime.datetime.now()
-                activity.save()
+                if not DEBUG_THIS_COMMAND:
+                    activity.active_at = datetime.datetime.now()
+                    activity.save()
                 final_question_list.append(question)
 
             question_count = len(final_question_list)
