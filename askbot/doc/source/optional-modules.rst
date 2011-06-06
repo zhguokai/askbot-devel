@@ -14,7 +14,11 @@ Install ``django-followit`` app::
 
     pip install -e git+git://github.com/ASKBOT/django-followit.git#egg=followit
 
-Then add ``followit`` to the ``INSTALLED_APPS`` and run ``syncdb`` management command.
+Then:
+
+* add ``followit`` to the ``INSTALLED_APPS``
+* add ``(r'^followit/', include('followit.urls')),`` to urlpatterns in ``urls.py``
+* run ``python manage.py syncdb`` management command.
 
 .. _embedding-video:
 
