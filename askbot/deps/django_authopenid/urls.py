@@ -9,9 +9,7 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     # yadis rdf
     url(r'^yadis.xrdf$', 'xrdf', name='yadis_xrdf'),
      # manage account registration
-    url(r'^%s$' % 'signin/', 'signin', name='user_signin'),#hack here
-    url(r'^%s%s$' % (_('signin/'),_('newquestion/')), 'signin', kwargs = {'newquestion':True}, name='user_signin_new_question'),
-    url(r'^%s%s$' % (_('signin/'),_('newanswer/')), 'signin', kwargs = {'newanswer':True}, name='user_signin_new_answer'),
+    url(r'^%s$' % _('signin/'), 'signin', name='user_signin'),
     url(r'^%s$' % _('signout/'), 'signout', name='user_signout'),
     #this view is "complete-openid" signin
     url(r'^%s%s$' % (_('signin/'), _('complete/')), 'complete_signin', 
@@ -27,6 +25,7 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
         'signup_with_password',
         name='user_signup_with_password'
     ),
+    url(r'^%s$' % _('logout/'), 'logout_page', name='logout'),
     #these two commeted out urls should work only with EMAIL_VALIDATION=True
     #but the setting is disabled right now
     #url(r'^%s%s$' % (_('email/'), _('sendkey/')), 'send_email_key', name='send_email_key'),

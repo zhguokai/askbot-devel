@@ -229,6 +229,12 @@ class DumpUploadForm(forms.Form):
     dump_file = forms.FileField()
 
 class ShowQuestionForm(forms.Form):
+    """Cleans data necessary to access answers and comments
+    by the respective comment or answer id - necessary
+    when comments would be normally wrapped and/or displayed
+    on the page other than the first page of answers to a question.
+    Same for the answers that are shown on the later pages.
+    """
     answer = forms.IntegerField(required = False)
     comment = forms.IntegerField(required = False)
     page = forms.IntegerField(required = False)
@@ -241,16 +247,23 @@ class ShowQuestionForm(forms.Form):
     def get_pruned_data(self):
         nones = ('answer', 'comment', 'page')
         for key in nones:
-            if self.cleaned_data[key] is None:
-                del self.cleaned_data[key]
-        if self.cleaned_data['sort'] == '':
-            del self.cleaned_data['sort']
+            if key in self.cleaned_data:
+                if self.cleaned_data[key] is None:
+                    del self.cleaned_data[key]
+        if 'sort' in self.cleaned_data:
+            if self.cleaned_data['sort'] == '':
+                del self.cleaned_data['sort']
         return self.cleaned_data
 
     def clean(self):
         """this form must always be valid
         should use defaults if the data is incomplete
         or invalid"""
+        if self._errors:
+            #since the form is always valid, clear the errors
+            logging.error(str(self._errors))
+            self._errors = {}
+
         in_data = self.get_pruned_data()
         out_data = dict()
         if ('answer' in in_data) ^ ('comment' in in_data):
@@ -950,6 +963,15 @@ class EditUserEmailFeedsForm(forms.Form):
             self.cleaned_data = self.NO_EMAIL_INITIAL
         self.initial = self.NO_EMAIL_INITIAL
         return self
+
+    def get_db_model_subscription_type_names(self):
+        """todo: refactor this - too hacky
+        should probably use model form instead
+
+        returns list of values acceptable in
+        ``attr::models.user.EmailFeedSetting.feed_type``
+        """
+        return self.FORM_TO_MODEL_MAP.values()
 
     def set_frequency(self, frequency = 'n'):
         data = {
