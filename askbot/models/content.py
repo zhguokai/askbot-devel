@@ -211,6 +211,8 @@ class Content(models.Model):
         #segment of users who have tag filter turned off
         global_subscribers = User.objects.filter(
             email_tag_filter_strategy = const.INCLUDE_ALL
+        ).filter(
+            notification_subscriptions__in = global_subscriptions
         )
         subscriber_set.update(global_subscribers)
 
