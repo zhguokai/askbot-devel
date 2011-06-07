@@ -20,6 +20,7 @@ from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators, slug
+from askbot.utils import url_utils
 from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
@@ -287,13 +288,12 @@ def vote(request, id):
                             response_data['message'] = \
                                     _('subscription saved, %(email)s needs validation, see %(details_url)s') \
                                     % {'email':user.email,'details_url':reverse('faq') + '#validate'}
-                    feed_setting = models.EmailFeedSetting.objects.get(subscriber=user,feed_type='q_sel')
-                    if feed_setting.frequency == 'n':
-                        feed_setting.frequency = 'd'
-                        feed_setting.save()
+
+                    subscribed = user.subscribe_for_followed_question_alerts()
+                    if subscribed:
                         if 'message' in response_data:
                             response_data['message'] += '<br/>'
-                        response_data['message'] = _('email update frequency has been set to daily')
+                        response_data['message'] += _('email update frequency has been set to daily')
                     #response_data['status'] = 1
                     #responst_data['allowed'] = 1
                 else:
@@ -412,7 +412,7 @@ def subscribe_for_tags(request):
                     % {'tags': ', '.join(all_tag_names)}
         request.user.message_set.create(message = message)
         request.session['subscribe_for_tags'] = (pure_tag_names, wildcards)
-        return HttpResponseRedirect(reverse('user_signin'))
+        return HttpResponseRedirect(url_utils.get_login_url())
 
 
 @decorators.get_only
