@@ -2,14 +2,14 @@
 askbot askbot url configuraion file
 """
 import os.path
+from django.conf import settings
 from django.conf.urls.defaults import url, patterns, include
 from django.conf.urls.defaults import handler500, handler404
 from django.contrib import admin
+from django.utils.translation import ugettext as _
 from askbot import views
 from askbot.feed import RssLastestQuestionsFeed
 from askbot.sitemap import QuestionsSitemap
-from django.utils.translation import ugettext as _
-from django.conf import settings
 
 admin.autodiscover()
 feeds = {
@@ -44,7 +44,6 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('help/'), views.meta.about, name='about'),
     url(r'^%s$' % _('faq/'), views.meta.faq, name='faq'),
     url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
-    url(r'^%s$' % _('logout/'), views.meta.logout, name='logout'),
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')), 
         views.writers.edit_answer, 
@@ -218,7 +217,6 @@ urlpatterns = patterns('',
     #upload url is ajax only
     url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
-    (r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
         r'^doc/(?P<path>.*)$', 
@@ -251,6 +249,11 @@ urlpatterns = patterns('',
         name = 'askbot_jsi18n'
     ),
 )
+
+if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
+    urlpatterns += (
+        url(r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
+    )
 
 if 'avatar' in settings.INSTALLED_APPS:
     #unforturately we have to wire avatar urls here,

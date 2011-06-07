@@ -16,7 +16,7 @@
     </p>
     <h2>{% trans %}Subscribed tags{% endtrans %}</h2>
     {% if subscribed_tags or (use_wildcards and subscribed_wildcards) %}
-        <ul id="ab-user-tags" class="tags">
+        <ul id="ab-user-tags" class="tags clearfix">
         {% for tag in subscribed_tags %}
             <li>
             {{ macros.tag_widget(
@@ -50,7 +50,7 @@
     <div class="clear"></div>
     <h2>{% trans %}Ignored tags{% endtrans %}</h2>
     {% if ignored_tags or (use_wildcards and ignored_wildcards) %}
-        <ul id="ab-user-tags" class="tags">
+        <ul id="ab-user-tags" class="tags clearfix">
         {% for tag in ignored_tags %}
             <li>
             {{ macros.tag_widget(
@@ -84,7 +84,7 @@
     <div class="clear"></div>
     <h2>{% trans %}Favorite tags{% endtrans %}</h2>
     {% if favorite_tags or (use_wildcards and favorite_wildcards) %}
-        <ul id="ab-user-tags" class="tags">
+        <ul id="ab-user-tags" class="tags clearfix">
         {% for tag in favorite_tags %}
             <li>
             {{ macros.tag_widget(

@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 
 USER_SETTINGS = livesettings.ConfigurationGroup(
                     'USER_SETTINGS',
-                    _('User policy settings')
+                    _('User settings')
                 )
 
 settings.register(
@@ -25,6 +25,15 @@ settings.register(
         'ALLOW_ACCOUNT_RECOVERY_BY_EMAIL',
         default = True,
         description = _('Allow account recovery by email')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
+        'ALLOW_ADD_REMOVE_LOGIN_METHODS',
+        default = True,
+        description = _('Allow adding and removing login methods')
     )
 )
 

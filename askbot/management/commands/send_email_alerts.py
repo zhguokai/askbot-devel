@@ -102,7 +102,7 @@ class Command(NoArgsCommand):
                 should_proceed = True
                 break
 
-        #shortcirquit - if there is no ripe feed to work on for this user
+        #shortcircuit - if there is no ripe feed to work on for this user
         if should_proceed == False:
             return {}
 
@@ -394,6 +394,7 @@ class Command(NoArgsCommand):
         #does not change the database, only sends the email
         #todo: move this to template
         for user in User.objects.all():
+            user.add_missing_askbot_subscriptions()
             #todo: q_list is a dictionary, not a list
             q_list = self.get_updated_questions_for_user(user)
             if len(q_list.keys()) == 0:
