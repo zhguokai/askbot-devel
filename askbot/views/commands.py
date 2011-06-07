@@ -547,16 +547,25 @@ def get_tag_data_summary(request):
                                     tag__name = tag_name,
                                     reason__contains = 'S',
                                 ).count()
+    subscriber_count += models.User.objects.filter(
+                 email_tag_filter_strategy = const.INCLUDE_ALL
+                       ).count()
     return {'subscriber_count': subscriber_count}
 
 @decorators.ajax_only
 @decorators.get_only
 def get_tag_subscribers(request):
     tag_name = request.GET['tag_name']
-    subscribers = models.User.objects.filter(
+    subscribers = list(models.User.objects.filter(
                                 tag_selections__tag__name = tag_name,
                                 tag_selections__reason__contains = 'S'
-                            ).values('id', 'username')
+                            ).values('id', 'username'))
+                           
+    subscribers.extend(list(models.User.objects.filter(
+                 email_tag_filter_strategy = const.INCLUDE_ALL
+                          ).values('id','username')))
+
     for subscriber in subscribers:
         subscriber['slug'] = slug.slugify(subscriber['username'])
-    return {'subscribers': list(subscribers)}
+
+    return {'subscribers': subscribers}
