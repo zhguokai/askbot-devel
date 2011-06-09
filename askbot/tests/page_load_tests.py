@@ -54,7 +54,9 @@ class PageLoadTestCase(TestCase):
                 print 'templates are %s' % template_names
                 self.assertEqual(r.template[0].name, template)
 
-class PageLoadTests(PageLoadTestCase):
+#these test cases are disabled because the fixture contains private data
+#need to clean up the fixture and publish it
+class PageLoadTests(object):#PageLoadTestCase):
     fixtures = ['tmp/fixture2.json', ]
 
     def test_index(self):

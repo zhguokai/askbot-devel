@@ -875,7 +875,7 @@ def user_favorites(request, user, context):
     context.update(data)
     return render_into_skin('user_profile/user_favorites.html', context, request)
 
-def user_tags(request, user):
+def user_tags(request, user, context):
     """a view showing users subscribed and ignored tags"""
     subscribed_tags = models.Tag.objects.filter(
                             user_selections__reason__contains = 'S',
@@ -889,7 +889,10 @@ def user_tags(request, user):
                             user_selections__reason__contains = 'F',
                             user_selections__user = user
                         )
+    strategy = user.email_tag_filter_strategy
+    tag_subscription_status = dict(const.TAG_EMAIL_FILTER_STRATEGY_CHOICES)[strategy]
     data = {
+        'tag_subscription_status': tag_subscription_status,
         'subscribed_tags': subscribed_tags,
         'subscribed_wildcards': user.get_selected_wildcard_tags('subscribed'),
         'ignored_tags': ignored_tags,
@@ -899,6 +902,7 @@ def user_tags(request, user):
         'use_wildcards': askbot_settings.USE_WILDCARD_TAGS,
         'view_user': user
     }
+    context.update(data)
     return render_into_skin('user_profile/user_tags.html', data, request)
 
 

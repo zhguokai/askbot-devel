@@ -1554,7 +1554,7 @@ def user_subscribe_for_followed_question_alerts(self):
         return True
     return False
 
-def user_get_tag_filtered_questions(self, questions = None):
+def user_get_tag_filtered_questions(self, questions = None, context = None):
     """Returns a query set of questions, tag filtered according
     to the user choices. Parameters:
 
