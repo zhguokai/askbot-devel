@@ -2137,15 +2137,16 @@ def format_instant_notification_email(
            content_preview += "<hr><p>Original Post:</p>\n" + quoted_post.html
         content_preview += tag_text
     else:
-	if True:
+        if True:
         #if post.post_type == 'question':#add tags to the question
             tag_text += '<div>Tags: ['
             for tag_name in post.get_tag_names():
                 tag_text += '<span style="%s">%s</span> ' % (tag_style, tag_name)
             tag_text += ']</div>'
-        content_preview = tag_text + post.html
+        from askbot.templatetags.extra_filters_jinja import absolutize_urls_func
+        content_preview = tag_text + absolutize_urls_func(post.html)
         if include_origin:
-           content_preview += "<hr><p>Original Post:</p>\n" + quoted_post.html
+           content_preview += "<hr><p>Original Post:</p>\n" + absolutize_urls_func(quoted_post.html)
         content_preview += tag_text
 
     update_data = {
