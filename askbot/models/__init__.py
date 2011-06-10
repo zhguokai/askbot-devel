@@ -1582,7 +1582,7 @@ def user_get_tag_filtered_questions(self, questions = None, context = None):
                         tags__in = ignored_tags
                     ).exclude(
                         tags__in = ignored_by_wildcards
-                    )
+                    ).distinct()
     elif tag_filter_strategy == const.INCLUDE_INTERESTING:
         selected_tags = Tag.objects.filter(
                                 user_selections__reason__contains = 'S',
@@ -1595,7 +1595,7 @@ def user_get_tag_filtered_questions(self, questions = None, context = None):
         tag_filter = models.Q(tags__in = list(selected_tags)) \
                     | models.Q(tags__in = list(selected_by_wildcards))
 
-        return questions.filter( tag_filter )
+        return questions.filter( tag_filter ).distinct()
     else:
         return questions
 
