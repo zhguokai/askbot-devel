@@ -18,9 +18,8 @@ class Command(NoArgsCommand):
                 tag.delete()
             transaction.commit()
             count += 1
-            progress = 100*float(count)/float(total)
-            console.print_progress('%6.2f%%', progress)
-        print '%6.2f%%' % 100
+            console.print_progress(count, total)
+        console.print_progress(total, total, nowipe = True)
 
         if deleted_tags:
             found_count = len(deleted_tags)
