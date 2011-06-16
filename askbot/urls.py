@@ -129,12 +129,6 @@ urlpatterns = patterns('',
         views.readers.get_comment, 
         name='get_comment'
     ),
-    #place general question item in the end of other operations
-    url(
-        r'^%s(?P<id>\d+)/' % _('question/'), 
-        views.readers.question, 
-        name='question'
-    ),
     url(
         r'^%s$' % _('tags/'), 
         views.readers.tags, 
@@ -188,6 +182,15 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')),
         views.users.edit_user,
         name='edit_user'
+    ),
+    url(
+        r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
+            _('users/'),
+            _('subscriptions/'),
+        ),
+        views.users.user,
+        kwargs = {'tab_name': 'email_subscriptions'},
+        name = 'user_subscriptions'
     ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
@@ -255,6 +258,19 @@ urlpatterns = patterns('',
         name = 'askbot_jsi18n'
     ),
 )
+
+if getattr(settings, 'ASKBOT_USE_STACKEXCHANGE_URLS', False):
+    urlpatterns += (url(
+        r'^%s(?P<id>\d+)/' % _('questions/'), 
+        views.readers.question, 
+        name='question'
+    ),)
+else:
+    urlpatterns += (url(
+        r'^%s(?P<id>\d+)/' % _('question/'), 
+        views.readers.question, 
+        name='question'
+    ),)
 
 if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
     urlpatterns += (

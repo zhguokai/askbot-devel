@@ -60,7 +60,8 @@ def owner_or_moderator_required(f):
         elif request.user.is_authenticated() and request.user.can_moderate_user(profile_owner):
             pass
         else:
-            raise Http404 #todo: change to access forbidden?
+            params = '?next=%s' % request.path
+            return HttpResponseRedirect(reverse('user_signin') + params)
         return f(request, profile_owner, context)
     return wrapped_func 
 
@@ -941,7 +942,7 @@ user_view_call_table = {
     'moderation': user_moderate,
 }
 #todo: rename this function - variable named user is everywhere
-def user(request, id, slug=None):
+def user(request, id, slug=None, tab_name=None):
     """Main user view function that works as a switchboard
 
     id - id of the profile owner
@@ -949,12 +950,12 @@ def user(request, id, slug=None):
     todo: decide what to do with slug - it is not used
     in the code in any way
     """
-
     profile_owner = get_object_or_404(models.User, id = id)
 
-    #sort CGI parameter tells us which tab in the user
-    #profile to show, the default one is 'stats'
-    tab_name = request.GET.get('sort', 'stats')
+    if tab_name is None:
+        #sort CGI parameter tells us which tab in the user
+        #profile to show, the default one is 'stats'
+        tab_name = request.GET.get('sort', 'stats')
 
     if tab_name in user_view_call_table:
         #get the actual view function
@@ -966,5 +967,4 @@ def user(request, id, slug=None):
         'view_user': profile_owner,
         'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
     }
-
     return user_view_func(request, profile_owner, context)
