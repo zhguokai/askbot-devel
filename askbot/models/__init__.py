@@ -1582,7 +1582,7 @@ def user_get_tag_filtered_questions(self, questions = None, context = None):
                         tags__in = ignored_tags
                     ).exclude(
                         tags__in = ignored_by_wildcards
-                    )
+                    ).distinct()
     elif tag_filter_strategy == const.INCLUDE_INTERESTING:
         selected_tags = Tag.objects.filter(
                                 user_selections__reason__contains = 'S',
@@ -1595,7 +1595,7 @@ def user_get_tag_filtered_questions(self, questions = None, context = None):
         tag_filter = models.Q(tags__in = list(selected_tags)) \
                     | models.Q(tags__in = list(selected_by_wildcards))
 
-        return questions.filter( tag_filter )
+        return questions.filter( tag_filter ).distinct()
     else:
         return questions
 
@@ -2137,15 +2137,16 @@ def format_instant_notification_email(
            content_preview += "<hr><p>Original Post:</p>\n" + quoted_post.html
         content_preview += tag_text
     else:
-	if True:
+        if True:
         #if post.post_type == 'question':#add tags to the question
             tag_text += '<div>Tags: ['
             for tag_name in post.get_tag_names():
                 tag_text += '<span style="%s">%s</span> ' % (tag_style, tag_name)
             tag_text += ']</div>'
-        content_preview = tag_text + post.html
+        from askbot.templatetags.extra_filters_jinja import absolutize_urls_func
+        content_preview = tag_text + absolutize_urls_func(post.html)
         if include_origin:
-           content_preview += "<hr><p>Original Post:</p>\n" + quoted_post.html
+           content_preview += "<hr><p>Original Post:</p>\n" + absolutize_urls_func(quoted_post.html)
         content_preview += tag_text
 
     update_data = {
