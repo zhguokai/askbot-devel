@@ -521,20 +521,25 @@ def check_pwd_bypass(username):
     return username, bypasspwd
 
 def setup_new_user(username, first, last, email):
-    print "setup new user: %s" % username
-    logging.info("   New User: %s = %s %s (%s)"  %(username, first, last, email))
+    dbg_str="   New User: %s = %s %s (%s)"  %(username, first, last, email)
+    print dbg_str
+    logging.info(dbg_str)
     user, created = User.objects.get_or_create(
-          username=first + ' ' + last,
+          username=first + last,
           first_name=first,
           last_name=last,
-          real_name=first + ' ' + last,
+          real_name=first + last,
           email=email
        )
     feed_setting = [('q_all','i'),('q_ask','i'),('q_ans','i'),('q_sel','n'),('m_and_c','n')]
 
+
+
     for arg in feed_setting:
-        feed, c = models.EmailFeedSetting.objects.get_or_create(
+        feed = models.EmailFeedSetting(
             subscriber=user, feed_type=arg[0], frequency=arg[1])
+
+        feed.save()
 
     return user
 
