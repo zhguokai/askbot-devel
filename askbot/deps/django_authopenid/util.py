@@ -536,10 +536,13 @@ def setup_new_user(username, first, last, email):
 
 
     for arg in feed_setting:
-        feed = models.EmailFeedSetting(
-            subscriber=user, feed_type=arg[0], frequency=arg[1])
-
-        feed.save()
+        feed, created = models.EmailFeedSetting.objects.get_or_create(
+            subscriber=user, feed_type=arg[0])
+        if feed.frequency != arg[1]:
+            feed.frequency=arg[1]
+            feed.save()
+        elif created:
+            feed.save()
 
     return user
 

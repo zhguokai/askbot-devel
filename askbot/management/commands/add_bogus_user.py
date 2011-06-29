@@ -3,6 +3,7 @@ it to another, all corresponding questions are automatically
 retagged
 """
 import sys
+import datetime
 from optparse import make_option
 from django.core import management
 from django.core.management.base import BaseCommand, CommandError
