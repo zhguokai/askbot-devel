@@ -26,6 +26,10 @@ MOBILE_REGEX = re.compile(
     r'(BlackBerry|HTC|LG|MOT|Nokia|NOKIAN|PLAYSTATION|PSP|SAMSUNG|SonyEricsson)'
 )
 
+def strip_plus(text):
+    """returns text with redundant spaces replaced with just one,
+    and stripped leading and the trailing spaces"""
+    return re.sub('\s+', ' ', text).strip()
 
 def not_a_robot_request(request):
 
