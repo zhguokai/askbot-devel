@@ -272,8 +272,8 @@ class PageLoadTests(object):#PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'inbox'}, 
-            status_code=404,
-            template='404.html'
+            template='authopenid/signin.html',
+            follow=True
         )
         self.try_url(
             'user_profile', 
@@ -285,8 +285,8 @@ class PageLoadTests(object):#PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'votes'}, 
-            status_code=404,
-            template='404.html'
+            template='authopenid/signin.html',
+            follow = True
         )
         self.try_url(
             'user_profile', 
@@ -298,6 +298,18 @@ class PageLoadTests(object):#PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'email_subscriptions'}, 
-            status_code=404,
-            template='404.html'
+            template='authopenid/signin.html',
+            follow = True
         )
+
+    def test_user_urls_logged_in(self):
+        user = models.User.objects.get(id=2)
+        name_slug = slugify(user.username)
+        #works only with builtin django_authopenid
+        self.client.login(method = 'force', user_id = 2)
+        self.try_url(
+            'user_subscriptions',
+            kwargs = {'id': 2, 'slug': name_slug},
+            template = 'user_profile/user_email_subscriptions.html'
+        )
+        self.client.logout()

@@ -88,6 +88,7 @@ class Comment(base.MetaContent, base.UserContent):
     added_at = models.DateTimeField(default = datetime.datetime.now)
     html = models.CharField(max_length = const.COMMENT_HARD_MAX_LENGTH, default='')
     score = models.IntegerField(default = 0)
+    offensive_flag_count = models.IntegerField(default = 0)
 
     _urlize = True
     _use_markdown = False
@@ -294,6 +295,15 @@ class Comment(base.MetaContent, base.UserContent):
 
     def get_latest_revision_number(self):
         return 1
+
+    def is_upvoted_by(self, user):
+        content_type = ContentType.objects.get_for_model(self)
+        what_to_count = {
+            'user': user,
+            'object_id': self.id,
+            'content_type': content_type
+        }
+        return Vote.objects.filter(**what_to_count).count() > 0
 
     def is_last(self):
         """True if there are no newer comments on 

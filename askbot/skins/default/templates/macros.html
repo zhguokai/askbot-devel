@@ -396,15 +396,15 @@ poor design of the data or methods on data objects #}
 {%- macro question_summary(question, extra_class=None) -%}
     <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}">
         <div class="counts">
-            <div class="votes 
-                        {% if question.score == 0 -%}
-                            no-votes
-                        {% else -%}
-                            some-votes
-                        {%- endif -%}">
-                <span class="item-count">{{question.score|humanize_counter}}</span>
+            <div class="views
+                 {% if question.view_count == 0 -%}
+                    no-views
+                 {% else -%}
+                    some-views
+                 {%- endif -%}">
+                 <span class="item-count">{{question.view_count|humanize_counter}}</span>
                 <div>
-                {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
+                {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
                 </div>
             </div>
             <div class="answers
@@ -424,15 +424,15 @@ poor design of the data or methods on data objects #}
                 {% trans cnt=question.answer_count %}answer{% pluralize %}answers{% endtrans %}
                 </div>
             </div>
-            <div class="views
-                 {% if question.view_count == 0 -%}
-                    no-views
-                 {% else -%}
-                    some-views
-                 {%- endif -%}">
-                 <span class="item-count">{{question.view_count|humanize_counter}}</span>
+            <div class="votes 
+                        {% if question.score == 0 -%}
+                            no-votes
+                        {% else -%}
+                            some-votes
+                        {%- endif -%}">
+                <span class="item-count">{{question.score|humanize_counter}}</span>
                 <div>
-                {% trans cnt=question.view_count %}view{% pluralize %}views{% endtrans %}
+                {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
                 </div>
             </div>
             <div style="clear:both"></div>
@@ -451,9 +451,23 @@ poor design of the data or methods on data objects #}
     </div>
 {%- endmacro -%}
 
+{%- macro comment_votes(comment = None) -%}
+    <div class="comment-votes">
+        {% if comment.score > 0 %}
+        <div class="upvote{% if comment.upvoted_by_user %} upvoted{% endif %}">
+            {{comment.score}}
+        </div>
+        {% else %}
+        <div class="upvote">
+        </div>
+        {% endif %}
+    </div>
+{%- endmacro -%}
+
 {%- macro comment_list(comments = None, user = None) -%}
     {% for comment in comments %}
     <div class="comment" id="comment-{{comment.id}}">
+        {{ comment_votes(comment = comment) }}
         {{comment.html}} -
         <a 
             class="author" 
@@ -502,14 +516,14 @@ poor design of the data or methods on data objects #}
         <div class="content">
             {% if show_post == post and show_comment %}
                 {% if comment_order_number > max_comments %}
-                    {% set comments = post.get_comments()[:comment_order_number] %}
+                    {% set comments = post.get_comments(visitor = user)[:comment_order_number] %}
                     {{ comment_list(comments = comments, user = user) }}
                 {% else %}
-                    {% set comments = post.get_comments()[:max_comments] %}
+                    {% set comments = post.get_comments(visitor = user)[:max_comments] %}
                     {{ comment_list(comments = comments, user = user) }}
                 {% endif %}
             {% else %}
-                {% set comments = post.get_comments()[:max_comments] %}
+                {% set comments = post.get_comments(visitor = user)[:max_comments] %}
                 {{ comment_list(comments = comments, user = user) }}
             {% endif %}
         </div>
