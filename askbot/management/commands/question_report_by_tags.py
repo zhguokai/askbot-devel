@@ -48,7 +48,7 @@ class Command(BaseCommand):
             downvote_count = question_votes.filter(vote = models.Vote.VOTE_DOWN).count()
             upvote_count = question_votes.filter(vote = models.Vote.VOTE_UP).count()
             data = {
-                'title': question.title,
+                'title': question.title[:30],
                 'upvotes': upvote_count,
                 'downvotes': downvote_count,
                 'answers': question.answer_count,
@@ -57,13 +57,14 @@ class Command(BaseCommand):
             if kwargs['show_details'] == False:
                 print '%(title)-32s %(upvotes)7d %(downvotes)9d %(answers)7d %(comments)8s' % data
             else:
-                print '%(title)-32s - upvotes: %(upvotes)3d, downvotes: %(downvotes)3d' % data
+                print 60*"="
+                print '%(title)-32s - upvotes: %(upvotes)3d, downvotes: %(downvotes)3d\n' % data
                 print question.text, '\n'
                 for comment in question.comments.all():
                     print 'Comment by %s' % comment.user.username
                     print comment.comment
                 for answer in question.answers.all():
-                    print ''
+                    print '------------------'
                     answer_votes = models.Vote.objects.filter(
                                                     content_type = answer_content_type,
                                                     object_id = answer.id
@@ -74,6 +75,7 @@ class Command(BaseCommand):
                         'upvotes': answer_votes.filter(vote = models.Vote.VOTE_UP).count(),
                     }
                     print 'Answer by %(author)s - upvotes %(upvotes)d downvotes %(downvotes)d' % data
+                    print answer.text, '\n'
                     for comment in answer.comments.all():
                         print 'Comment by %s' % comment.user.username
                         print comment.comment
