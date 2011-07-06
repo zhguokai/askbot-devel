@@ -336,7 +336,12 @@ def user_assert_can_vote_for_post(
     :param:post can be instance of question or answer
     """
 
-    if self == post.author:
+    #todo: after unifying models this if else will go away
+    if isinstance(post, Comment):
+        post_author = post.user
+    else:
+        post_author = post.author
+    if self == post_author:
         raise django_exceptions.PermissionDenied(_('cannot vote for own posts'))
 
     blocked_error_message = _(
@@ -984,11 +989,20 @@ def user_retag_question(
     )
 
 @auto_now_timestamp
-def user_accept_best_answer(self, answer = None,
-                            timestamp = None, cancel = False):
+def user_accept_best_answer(
+                self, answer = None,
+                timestamp = None,
+                cancel = False,
+                force = False
+            ):
     if cancel:
-        return self.unaccept_best_answer(answer = answer, timestamp = timestamp)
-    self.assert_can_accept_best_answer(answer)
+        return self.unaccept_best_answer(
+                                answer = answer,
+                                timestamp = timestamp,
+                                force = force
+                            )
+    if force == False:
+        self.assert_can_accept_best_answer(answer)
     if answer.accepted == True:
         return
 
@@ -1005,8 +1019,13 @@ def user_accept_best_answer(self, answer = None,
     )
 
 @auto_now_timestamp
-def user_unaccept_best_answer(self, answer = None, timestamp = None):
-    self.assert_can_unaccept_best_answer(answer)
+def user_unaccept_best_answer(
+                self, answer = None,
+                timestamp = None,
+                force = False
+            ):
+    if force == False:
+        self.assert_can_unaccept_best_answer(answer)
     if answer.accepted == False:
         return
     auth.onAnswerAcceptCanceled(answer, self)
@@ -1206,8 +1225,10 @@ def user_edit_question(
                     wiki = False,
                     edit_anonymously = False,
                     timestamp = None,
+                    force = False,#if True - bypass the assert
                 ):
-    self.assert_can_edit_question(question)
+    if force == False:
+        self.assert_can_edit_question(question)
     question.apply_edit(
         edited_at = timestamp,
         edited_by = self,
@@ -1233,9 +1254,11 @@ def user_edit_answer(
                     body_text = None,
                     revision_comment = None,
                     wiki = False,
-                    timestamp = None
+                    timestamp = None,
+                    force = False#if True - bypass the assert
                 ):
-    self.assert_can_edit_answer(answer)
+    if force == False:
+        self.assert_can_edit_answer(answer)
     answer.apply_edit(
         edited_at = timestamp,
         edited_by = self,
@@ -1383,6 +1406,9 @@ def user_add_missing_askbot_subscriptions(self):
 
 def user_is_moderator(self):
     return (self.status == 'm' and self.is_administrator() == False)
+
+def user_is_administrator_or_moderator(self):
+    return (self.is_administrator() or self.is_moderator())
 
 def user_is_suspended(self):
     return (self.status == 's')
@@ -1677,7 +1703,12 @@ def user_get_badge_summary(self):
 #may be different
 #maybe if we do use business rule checks here - we should add
 #some flag allowing to bypass them for things like the data importers
-def toggle_favorite_question(self, question, timestamp=None, cancel=False):
+def toggle_favorite_question(
+                        self, question,
+                        timestamp = None,
+                        cancel = False,
+                        force = False#this parameter is not used yet
+                    ):
     """cancel has no effect here, but is important for the SE loader
     it is hoped that toggle will work and data will be consistent
     but there is no guarantee, maybe it's better to be more strict 
@@ -1713,7 +1744,8 @@ VOTES_TO_EVENTS = {
     (Vote.VOTE_UP, 'answer'): 'upvote_answer',
     (Vote.VOTE_UP, 'question'): 'upvote_question',
     (Vote.VOTE_DOWN, 'question'): 'downvote',
-    (Vote.VOTE_DOWN, 'answer'): 'downvote'
+    (Vote.VOTE_DOWN, 'answer'): 'downvote',
+    (Vote.VOTE_UP, 'comment'): 'upvote_comment',
 }
 @auto_now_timestamp
 def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
@@ -1749,7 +1781,7 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
                     content_object = post,
                     vote = vote_type,
                     voted_at = timestamp,
-                    )
+                )
         elif vote.is_opposite(vote_type):
             vote.vote = vote_type
         else:
@@ -1797,28 +1829,33 @@ def user_is_following_question(user, question):
         return False
 
 
-def upvote(self, post, timestamp=None, cancel=False):
+def upvote(self, post, timestamp=None, cancel=False, force = False):
+    #force parameter not used yet
     return _process_vote(
-        self,post,
+        self,
+        post,
         timestamp=timestamp,
         cancel=cancel,
         vote_type=Vote.VOTE_UP
     )
 
-def downvote(self, post, timestamp=None, cancel=False):
+def downvote(self, post, timestamp=None, cancel=False, force = False):
+    #force not used yet
     return _process_vote(
-        self,post,
+        self,
+        post,
         timestamp=timestamp,
         cancel=cancel,
         vote_type=Vote.VOTE_DOWN
     )
 
 @auto_now_timestamp
-def flag_post(user, post, timestamp=None, cancel=False):
+def flag_post(user, post, timestamp=None, cancel=False, force = False):
     if cancel:#todo: can't unflag?
         return
 
-    user.assert_can_flag_offensive(post = post)
+    if force == False:
+        user.assert_can_flag_offensive(post = post)
     auth.onFlaggedItem(post, user, timestamp=timestamp)
     award_badges_signal.send(None,
         event = 'flag_post',
@@ -1981,6 +2018,7 @@ User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('is_administrator', user_is_administrator)
+User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
@@ -2062,8 +2100,14 @@ def format_instant_notification_email(
     include_origin = True
     quoted_post = origin_post
     #todo: create a better method to access "sub-urls" in user views
-    user_subscriptions_url = site_url + to_user.get_absolute_url() + \
-                            '?sort=email_subscriptions'
+    user_subscriptions_url = site_url + \
+                                reverse(
+                                    'user_subscriptions',
+                                    kwargs = {
+                                        'id': to_user.id,
+                                        'slug': slugify(to_user.username)
+                                    }
+                                )
 
     subject_tag = post.get_tag_names()[0]
 

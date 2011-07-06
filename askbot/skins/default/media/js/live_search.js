@@ -268,10 +268,10 @@ var liveSearch = function(){
         '<div class="short-summary">' + 
             '<div class="counts">' +
                 render_counter(
-                    question['votes'],
-                    question['votes_word'],
-                    'votes',
-                    question['votes_class']
+                    question['views'],
+                    question['views_word'],
+                    'views',
+                    question['views_class']
                 ) +
                 render_counter(
                     question['answers'],
@@ -280,11 +280,12 @@ var liveSearch = function(){
                     question['answers_class']
                 ) +
                 render_counter(
-                    question['views'],
-                    question['views_word'],
-                    'views',
-                    question['views_class']
+                    question['votes'],
+                    question['votes_word'],
+                    'votes',
+                    question['votes_class']
                 ) +
+                '<div style="clear:both"></div>' +
                 render_user_info(question) +
             '</div>' + 
             render_title(question) +

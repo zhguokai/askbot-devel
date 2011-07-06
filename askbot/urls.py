@@ -107,6 +107,11 @@ urlpatterns = patterns('',
         name='question_revisions'
     ),
     url(#ajax only
+        r'^comment/upvote/$',
+        views.commands.upvote_comment,
+        name = 'upvote_comment'
+    ),
+    url(#ajax only
         r'^post_comments/$',
         views.writers.post_comments, 
         name='post_comments'
@@ -125,12 +130,6 @@ urlpatterns = patterns('',
         r'^comment/get_text/$',
         views.readers.get_comment, 
         name='get_comment'
-    ),
-    #place general question item in the end of other operations
-    url(
-        r'^%s(?P<id>\d+)/' % _('question/'), 
-        views.readers.question, 
-        name='question'
     ),
     url(
         r'^%s$' % _('tags/'), 
@@ -168,6 +167,11 @@ urlpatterns = patterns('',
         name = 'get_tag_subscribers'
     ),
     url(
+        r'^swap-question-with-answer/',
+        views.commands.swap_question_with_answer,
+        name = 'swap_question_with_answer'
+    ),
+    url(
         r'^%s$' % _('subscribe-for-tags/'),
         views.commands.subscribe_for_tags,
         name = 'subscribe_for_tags'
@@ -182,6 +186,15 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')),
         views.users.edit_user,
         name='edit_user'
+    ),
+    url(
+        r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
+            _('users/'),
+            _('subscriptions/'),
+        ),
+        views.users.user,
+        kwargs = {'tab_name': 'email_subscriptions'},
+        name = 'user_subscriptions'
     ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
@@ -249,6 +262,19 @@ urlpatterns = patterns('',
         name = 'askbot_jsi18n'
     ),
 )
+
+if getattr(settings, 'ASKBOT_USE_STACKEXCHANGE_URLS', False):
+    urlpatterns += (url(
+        r'^%s(?P<id>\d+)/' % _('questions/'), 
+        views.readers.question, 
+        name='question'
+    ),)
+else:
+    urlpatterns += (url(
+        r'^%s(?P<id>\d+)/' % _('question/'), 
+        views.readers.question, 
+        name='question'
+    ),)
 
 if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
     urlpatterns += (
