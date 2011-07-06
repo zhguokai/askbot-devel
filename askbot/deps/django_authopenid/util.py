@@ -695,6 +695,9 @@ def get_nis_info(username):
         except KeyError:
            return (None, None, None)
 
+        if p.pw_passwd == "*GONE*":
+           return (None, None, None)
+
         s = string.split(p.pw_gecos, ' ')
         if(len(s) < 2):
             s.append('')
