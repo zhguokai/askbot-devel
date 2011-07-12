@@ -54,7 +54,9 @@ class PageLoadTestCase(TestCase):
                 print 'templates are %s' % template_names
                 self.assertEqual(r.template[0].name, template)
 
-class PageLoadTests(PageLoadTestCase):
+#these test cases are disabled because the fixture contains private data
+#need to clean up the fixture and publish it
+class PageLoadTests(object):#PageLoadTestCase):
     fixtures = ['tmp/fixture2.json', ]
 
     def test_index(self):
@@ -74,8 +76,7 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url('feeds', kwargs={'url':'rss'})
         self.try_url('about', template='about.html')
         self.try_url('privacy', template='privacy.html')
-        self.try_url('logout', template='logout.html')
-        self.try_url('user_signin', template='authopenid/signin.html')
+        self.try_url('logout', template='authopenid/logout.html')
         #todo: test different tabs
         self.try_url('tags', template='tags.html')
         self.try_url('tags', data={'sort':'name'}, template='tags.html')
@@ -271,8 +272,8 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'inbox'}, 
-            status_code=404,
-            template='404.html'
+            template='authopenid/signin.html',
+            follow=True
         )
         self.try_url(
             'user_profile', 
@@ -284,8 +285,8 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'votes'}, 
-            status_code=404,
-            template='404.html'
+            template='authopenid/signin.html',
+            follow = True
         )
         self.try_url(
             'user_profile', 
@@ -297,6 +298,18 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'email_subscriptions'}, 
-            status_code=404,
-            template='404.html'
+            template='authopenid/signin.html',
+            follow = True
         )
+
+    def test_user_urls_logged_in(self):
+        user = models.User.objects.get(id=2)
+        name_slug = slugify(user.username)
+        #works only with builtin django_authopenid
+        self.client.login(method = 'force', user_id = 2)
+        self.try_url(
+            'user_subscriptions',
+            kwargs = {'id': 2, 'slug': name_slug},
+            template = 'user_profile/user_email_subscriptions.html'
+        )
+        self.client.logout()

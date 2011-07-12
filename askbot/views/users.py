@@ -60,7 +60,8 @@ def owner_or_moderator_required(f):
         elif request.user.is_authenticated() and request.user.can_moderate_user(profile_owner):
             pass
         else:
-            raise Http404 #todo: change to access forbidden?
+            params = '?next=%s' % request.path
+            return HttpResponseRedirect(reverse('user_signin') + params)
         return f(request, profile_owner, context)
     return wrapped_func 
 
@@ -875,7 +876,7 @@ def user_favorites(request, user, context):
     context.update(data)
     return render_into_skin('user_profile/user_favorites.html', context, request)
 
-def user_tags(request, user):
+def user_tags(request, user, context):
     """a view showing users subscribed and ignored tags"""
     subscribed_tags = models.Tag.objects.filter(
                             user_selections__reason__contains = 'S',
@@ -889,7 +890,10 @@ def user_tags(request, user):
                             user_selections__reason__contains = 'F',
                             user_selections__user = user
                         )
+    strategy = user.email_tag_filter_strategy
+    tag_subscription_status = dict(const.TAG_EMAIL_FILTER_STRATEGY_CHOICES)[strategy]
     data = {
+        'tag_subscription_status': tag_subscription_status,
         'subscribed_tags': subscribed_tags,
         'subscribed_wildcards': user.get_selected_wildcard_tags('subscribed'),
         'ignored_tags': ignored_tags,
@@ -899,6 +903,7 @@ def user_tags(request, user):
         'use_wildcards': askbot_settings.USE_WILDCARD_TAGS,
         'view_user': user
     }
+    context.update(data)
     return render_into_skin('user_profile/user_tags.html', data, request)
 
 
@@ -927,6 +932,13 @@ def user_email_subscriptions(request, user, context):
                 if email_stopped:
                     action_status = _('email updates canceled')
     else:
+        #user may have been created by some app that does not know
+        #about the email subscriptions, in that case the call below
+        #will add any subscription settings that are missing
+        #using the default frequencies
+        user.add_missing_askbot_subscriptions()
+
+        #initialize the form
         email_feeds_form = forms.EditUserEmailFeedsForm()
         email_feeds_form.set_initial_values(user)
         tag_filter_form = forms.TagFilterSelectionForm(instance=user)
@@ -962,7 +974,7 @@ user_view_call_table = {
     'moderation': user_moderate,
 }
 #todo: rename this function - variable named user is everywhere
-def user(request, id, slug=None):
+def user(request, id, slug=None, tab_name=None):
     """Main user view function that works as a switchboard
 
     id - id of the profile owner
@@ -970,12 +982,12 @@ def user(request, id, slug=None):
     todo: decide what to do with slug - it is not used
     in the code in any way
     """
-
     profile_owner = get_object_or_404(models.User, id = id)
 
-    #sort CGI parameter tells us which tab in the user
-    #profile to show, the default one is 'stats'
-    tab_name = request.GET.get('sort', 'stats')
+    if tab_name is None:
+        #sort CGI parameter tells us which tab in the user
+        #profile to show, the default one is 'stats'
+        tab_name = request.GET.get('sort', 'stats')
 
     if tab_name in user_view_call_table:
         #get the actual view function
@@ -987,5 +999,4 @@ def user(request, id, slug=None):
         'view_user': profile_owner,
         'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
     }
-
     return user_view_func(request, profile_owner, context)

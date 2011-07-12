@@ -105,6 +105,13 @@ def logout(request):
         request.session.modified = True
     _logout(request)
 
+def logout_page(request):
+    data = {
+        'page_class': 'meta',
+        'have_federated_login_methods': util.have_enabled_federated_login_methods()
+    }
+    return render_into_skin('authopenid/logout.html', data, request)
+
 def get_url_host(request):
     if request.is_secure():
         protocol = 'https'
@@ -260,11 +267,7 @@ def complete_oauth_signin(request):
 
 #@not_authenticated
 @csrf.csrf_protect
-def signin(
-        request,
-        newquestion = False,#todo: not needed
-        newanswer = False,#todo: not needed
-    ):
+def signin(request):
     """
     signin page. It manages the legacy authentification (user/password) 
     and openid authentification
@@ -279,6 +282,10 @@ def signin(
 
     next_url = get_next_url(request)
     logging.debug('next url is %s' % next_url)
+
+    if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
+        and request.user.is_authenticated():
+        return HttpResponseRedirect(next_url)
 
     if next_url == reverse('user_signin'):
         next_url = '%(next)s?next=%(next)s' % {'next': next_url}
@@ -501,6 +508,17 @@ def show_signin_view(
 
     if request.user.is_authenticated():
         existing_login_methods = UserAssociation.objects.filter(user = request.user)
+        #annotate objects with extra data
+        providers = util.get_enabled_login_providers()
+        for login_method in existing_login_methods:
+            provider_data = providers[login_method.provider_name]
+            if provider_data['type'] == 'password':
+                #only external password logins will not be deletable
+                #this is because users with those can lose access to their accounts permanently
+                login_method.is_deletable = provider_data.get('password_changeable', False)
+            else:
+                login_method.is_deletable = True
+
 
     if view_subtype == 'default':
         page_title = _('Please click any of the icons below to sign in')
@@ -574,6 +592,8 @@ def show_signin_view(
 
 @login_required
 def delete_login_method(request):
+    if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False:
+        raise Http404
     if request.is_ajax() and request.method == 'POST':
         provider_name = request.POST['provider_name']
         try:

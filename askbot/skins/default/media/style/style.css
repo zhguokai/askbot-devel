@@ -48,6 +48,25 @@ a {
     cursor: pointer;
 }
 
+/* http://pathfindersoftware.com/2007/09/developers-note-2/ */
+* html .clearfix,
+* html .paginator {
+    height: 1;
+    overflow: visible;
+}
++ html .clearfix,
++ html .paginator {
+    min-height: 1%;
+}
+.clearfix:after,
+.paginator:after {
+    clear: both;
+    content:".";
+    display:block;
+    height: 0;
+    visibility: hidden;
+}
+
 .badges a {
     color: #763333;
     text-decoration: underline;
@@ -603,7 +622,7 @@ ul#search-tags {
     margin: 0 3px;
     padding: 4px 2px 0px 2px;
     width: 46px;
-    float: left;
+    float: right;
     -moz-border-radius: 5px;
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -971,6 +990,40 @@ a:hover.medal {
     clear: both;
 }
 
+.comments .content {
+    float: right;
+}
+
+.comments div.comment {
+    min-height: 25px;
+}
+
+div.comment .comment-votes {
+    position: absolute;
+    width: 20px;
+    margin: -2px 0 0 -20px;
+}
+
+div.comment .upvote {
+    width: 20px;
+    height: 20px;
+    padding: 3px 0 0 3px;
+    font-weight: bold;
+    color: #777;
+}
+
+div.comment .upvote.upvoted {
+    color: #d64000;
+}
+
+div.comment .upvote.hover {
+    background: url(../images/go-up-grey.png) no-repeat;
+}
+
+div.comment .upvote:hover {
+    background: url(../images/go-up-orange.png) no-repeat;
+}
+
 .comments div.controls {
     clear: both;
     background: url(../images/gray-up-arrow-h18px.png) no-repeat;
@@ -982,8 +1035,8 @@ a:hover.medal {
 .comments textarea {
     display: block;
     height: 48px;
-    width: 664px;
-    margin: 0 0 4px 0;
+    width: 644px;
+    margin: 3px 0 4px 0;
     font-family: sans-serif;
     font-size: 12px;
     line-height: 15px;
@@ -1657,10 +1710,9 @@ button::-moz-focus-inner {
 .submit {
     cursor: pointer; /*letter-spacing:1px;*/
     background-color: #D4D0C8;
-    height: 40px;
+    height: 30px;
     border: 1px solid #777777; /*	width:100px; */
     font-weight: bold;
-    padding-bottom: 4px;
     font-size: 120%;
 }
 
@@ -1677,6 +1729,13 @@ button::-moz-focus-inner {
 }
 .submit.small:hover {
     text-decoration:none;
+}
+.question-page a.submit {
+    display: -moz-inline-stack;
+    display: inline-block;
+    line-height: 30px;
+    padding: 0 5px;
+    *display: inline;
 }
 
 .ask-body {
@@ -1788,8 +1847,7 @@ button::-moz-focus-inner {
     border-top: 1px dotted #ccccce;
     margin: 0;
     color: #444;
-    padding: 2px 3px 5px 3px;
-    width: 670px;
+    padding: 5px 3px 5px 3px;
     overflow: auto;
 }
 

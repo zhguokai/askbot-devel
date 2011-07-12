@@ -27,8 +27,9 @@ from django.views.decorators import csrf
 from askbot import forms
 from askbot import models
 from askbot.skins.loaders import render_into_skin
-from askbot.utils.decorators import ajax_only
+from askbot.utils import decorators
 from askbot.utils.functions import diff_date
+from askbot.utils import url_utils
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
 
@@ -177,6 +178,7 @@ def import_data(request):
 
 #@login_required #actually you can post anonymously, but then must register
 @csrf.csrf_protect
+@decorators.check_authorization_to_post(_('Please log in to ask questions'))
 def ask(request):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
@@ -184,7 +186,6 @@ def ask(request):#view used to ask a new question
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
-
     if request.method == "POST":
         form = forms.AskForm(request.POST)
         if form.is_valid():
@@ -228,7 +229,7 @@ def ask(request):#view used to ask a new question
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
                 question.save()
-                return HttpResponseRedirect(reverse('user_signin_new_question'))
+                return HttpResponseRedirect(url_utils.get_login_url())
     else:
         #this branch is for the initial load of ask form
         form = forms.AskForm()
@@ -450,6 +451,7 @@ def edit_answer(request, id):
         return HttpResponseRedirect(answer.get_absolute_url())
 
 #todo: rename this function to post_new_answer
+@decorators.check_authorization_to_post(_('Please log in to answer questions'))
 def answer(request, id):#process a new answer
     """view that posts new answer
 
@@ -490,14 +492,14 @@ def answer(request, id):#process a new answer
                                        ip_addr=request.META['REMOTE_ADDR'],
                                        )
                 anon.save()
-                return HttpResponseRedirect(reverse('user_signin_new_answer'))
+                return HttpResponseRedirect(url_utils.get_login_url())
 
     return HttpResponseRedirect(question.get_absolute_url())
 
 def __generate_comments_json(obj, user):#non-view generates json data for the post comments
     """non-view generates json data for the post comments
     """
-    comments = obj.comments.all().order_by('id')
+    comments = obj.get_comments(visitor = user)
     # {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
     json_comments = []
     for comment in comments:
@@ -517,7 +519,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
 
 
         comment_owner = comment.get_owner()
-        json_comments.append({'id' : comment.id,
+        comment_data = {'id' : comment.id,
             'object_id': obj.id,
             'comment_age': diff_date(comment.added_at),
             'html': comment.html,
@@ -526,12 +528,15 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
             'user_id': comment_owner.id,
             'is_deletable': is_deletable,
             'is_editable': is_editable,
-        })
+            'score': comment.score,
+            'upvoted_by_user': getattr(comment, 'upvoted_by_user', False)
+        }
+        json_comments.append(comment_data)
 
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, mimetype="application/json")
 
-def post_comments(request):#non-view generic ajax handler to load comments to an object
+def post_comments(request):#generic ajax handler to load comments to an object
     # only support get post comments by ajax now
     user = request.user
     if request.is_ajax():
@@ -553,7 +558,7 @@ def post_comments(request):#non-view generic ajax handler to load comments to an
                     msg = _('Sorry, you appear to be logged out and '
                             'cannot post comments. Please '
                             '<a href="%(sign_in_url)s">sign in</a>.') % \
-                            {'sign_in_url': reverse('user_signin')}
+                            {'sign_in_url': url_utils.get_login_url()}
                     raise exceptions.PermissionDenied(msg)
                 user.post_comment(
                             parent_post = obj,
@@ -569,7 +574,7 @@ def post_comments(request):#non-view generic ajax handler to load comments to an
     else:
         raise Http404
 
-@ajax_only
+@decorators.ajax_only
 def edit_comment(request):
     if request.user.is_authenticated():
         comment_id = int(request.POST['comment_id'])
@@ -592,6 +597,7 @@ def edit_comment(request):
             'user_id': comment.user.id,
             'is_deletable': is_deletable,
             'is_editable': is_editable,
+            'voted': comment.is_upvoted_by(request.user),
         }
     else:
         raise exceptions.PermissionDenied(
@@ -606,7 +612,7 @@ def delete_comment(request):
             msg = _('Sorry, you appear to be logged out and '
                     'cannot delete comments. Please '
                     '<a href="%(sign_in_url)s">sign in</a>.') % \
-                    {'sign_in_url': reverse('user_signin')}
+                    {'sign_in_url': url_utils.get_login_url()}
             raise exceptions.PermissionDenied(msg)
         if request.is_ajax():
 

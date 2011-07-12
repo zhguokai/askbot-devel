@@ -1,5 +1,6 @@
 import datetime
 from django.core.management.base import NoArgsCommand
+from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Q, F
 from askbot.models import User, Question, Answer, Tag, QuestionRevision
@@ -14,6 +15,7 @@ from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from askbot import const
 from askbot.utils import mail
+from askbot.utils.slug import slugify
 
 DEBUG_THIS_COMMAND = False
 
@@ -102,7 +104,7 @@ class Command(NoArgsCommand):
                 should_proceed = True
                 break
 
-        #shortcirquit - if there is no ripe feed to work on for this user
+        #shortcircuit - if there is no ripe feed to work on for this user
         if should_proceed == False:
             return {}
 
@@ -394,6 +396,7 @@ class Command(NoArgsCommand):
         #does not change the database, only sends the email
         #todo: move this to template
         for user in User.objects.all():
+            user.add_missing_askbot_subscriptions()
             #todo: q_list is a dictionary, not a list
             q_list = self.get_updated_questions_for_user(user)
             if len(q_list.keys()) == 0:
@@ -454,9 +457,7 @@ class Command(NoArgsCommand):
                 #                'the askbot and see what\'s new!<br>'
                 #              )
                 text += ' '
-                feeds = EmailFeedSetting.objects.filter(
-                                                        subscriber=user,
-                                                    )
+                feeds = EmailFeedSetting.objects.filter(subscriber=user)
                 feed_freq = [feed.frequency for feed in feeds]
                 text += '<p></p>'
                 if 'd' in feed_freq:
@@ -476,7 +477,14 @@ class Command(NoArgsCommand):
                             'before - due to a technicality that will eventually go away. '
                         )
 
-                link = url_prefix + user.get_profile_url() + '?sort=email_subscriptions'
+                link = url_prefix + reverse(
+                                        'user_subscriptions', 
+                                        kwargs = {
+                                            'id': user.id,
+                                            'slug': slugify(user.username)
+                                        }
+                                    )
+
                 text += _(
                     'go to %(email_settings_link)s to change '
                     'frequency of email updates or '

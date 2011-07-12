@@ -302,7 +302,8 @@ class EmailFeedSetting(models.Model):
                                             subscriber=subscriber
                                         ).exclude(pk=self.id)
         if len(similar) > 0:
-            raise IntegrityError('email feed setting already exists')
+            return
+            #raise IntegrityError('email feed setting already exists')
         super(EmailFeedSetting,self).save(*args,**kwargs)
 
     def get_previous_report_cutoff_time(self):

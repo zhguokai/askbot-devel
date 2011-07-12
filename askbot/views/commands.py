@@ -9,7 +9,7 @@ from django.conf import settings as django_settings
 from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
@@ -20,6 +20,7 @@ from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators, slug
+from askbot.utils import url_utils
 from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
@@ -34,7 +35,6 @@ def process_vote(user = None, vote_direction = None, post = None):
     also in the future make keys in response data be more meaningful
     right now they are kind of cryptic - "status", "count"
     """
-
     if user.is_anonymous():
         raise exceptions.PermissionDenied(_('anonymous users cannot vote'))
 
@@ -287,13 +287,12 @@ def vote(request, id):
                             response_data['message'] = \
                                     _('subscription saved, %(email)s needs validation, see %(details_url)s') \
                                     % {'email':user.email,'details_url':reverse('faq') + '#validate'}
-                    feed_setting = models.EmailFeedSetting.objects.get(subscriber=user,feed_type='q_sel')
-                    if feed_setting.frequency == 'n':
-                        feed_setting.frequency = 'd'
-                        feed_setting.save()
+
+                    subscribed = user.subscribe_for_followed_question_alerts()
+                    if subscribed:
                         if 'message' in response_data:
                             response_data['message'] += '<br/>'
-                        response_data['message'] = _('email update frequency has been set to daily')
+                        response_data['message'] += _('email update frequency has been set to daily')
                     #response_data['status'] = 1
                     #responst_data['allowed'] = 1
                 else:
@@ -412,7 +411,7 @@ def subscribe_for_tags(request):
                     % {'tags': ', '.join(all_tag_names)}
         request.user.message_set.create(message = message)
         request.session['subscribe_for_tags'] = (pure_tag_names, wildcards)
-        return HttpResponseRedirect(reverse('user_signin'))
+        return HttpResponseRedirect(url_utils.get_login_url())
 
 
 @decorators.get_only
@@ -530,6 +529,43 @@ def reopen(request, id):#re-open question
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
 
+
+@decorators.ajax_only
+def swap_question_with_answer(request):
+    """receives two json parameters - answer id
+    and new question title
+    the view is made to be used only by the site administrator
+    or moderators
+    """
+    if request.user.is_authenticated():
+        if request.user.is_administrator() or request.user.is_moderator():
+            answer = models.Answer.objects.get(id = request.POST['answer_id'])
+            new_question = answer.swap_with_question(new_title = request.POST['new_title'])
+            return {
+                'id': new_question.id,
+                'slug': new_question.slug
+            }
+    raise Http404
+
+@decorators.ajax_only
+@decorators.post_only
+def upvote_comment(request):
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied(_('Please sign in to vote'))
+    form = forms.VoteForm(request.POST)
+    if form.is_valid():
+        comment_id = form.cleaned_data['post_id']
+        cancel_vote = form.cleaned_data['cancel_vote']
+        comment = models.Comment.objects.get(id = comment_id)
+        process_vote(
+            post = comment,
+            vote_direction = 'up',
+            user = request.user
+        )
+    else:
+        raise ValueError
+    return {'score': comment.score}
+
 #askbot-user communication system
 def read_message(request):#marks message a read
     if request.method == "POST":
@@ -547,16 +583,25 @@ def get_tag_data_summary(request):
                                     tag__name = tag_name,
                                     reason__contains = 'S',
                                 ).count()
+    subscriber_count += models.User.objects.filter(
+                 email_tag_filter_strategy = const.INCLUDE_ALL
+                       ).count()
     return {'subscriber_count': subscriber_count}
 
 @decorators.ajax_only
 @decorators.get_only
 def get_tag_subscribers(request):
     tag_name = request.GET['tag_name']
-    subscribers = models.User.objects.filter(
+    subscribers = list(models.User.objects.filter(
                                 tag_selections__tag__name = tag_name,
                                 tag_selections__reason__contains = 'S'
-                            ).values('id', 'username')
+                            ).values('id', 'username'))
+                           
+    subscribers.extend(list(models.User.objects.filter(
+                 email_tag_filter_strategy = const.INCLUDE_ALL
+                          ).values('id','username')))
+
     for subscriber in subscribers:
         subscriber['slug'] = slug.slugify(subscriber['username'])
-    return {'subscribers': list(subscribers)}
+
+    return {'subscribers': subscribers}

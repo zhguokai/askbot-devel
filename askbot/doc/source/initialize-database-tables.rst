@@ -8,7 +8,7 @@ When you install Askbot the first time and any time you upgrade the software, ru
 
     python manage.py syncdb
 
-When you will be suggested to create a superuser, answer **no**.
+When the script asks you if you want to create a superuser, answer **no**.
 
 Then run::
 
@@ -33,7 +33,12 @@ Now run the Django development server and check that everything works::
     the IP manually or replace it with word `localhost` if you are installing askbot 
     on a local machine.
 
-Finally, register at the site and turn yourself into a superuser by running::
+Connect to the Django development server with your Web browser. The address is the name
+(or IP address) of your site followed by ":8000" (or whatever port number you chose above).
+Once the fresh copy of Askbot appears in your browser, create a new account at the site.
+This will be your administrator account.
+
+Finally, turn the newly added user into a superuser by running::
 
     python manage.py add_admin 1
 

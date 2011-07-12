@@ -10,11 +10,23 @@ from django.utils.translation import ungettext
 from askbot.utils import mail
 from askbot.models.question import get_tag_summary_from_questions
 
+def print_question_list(questions):
+    now = datetime.datetime.now()
+    for q in questions:
+        print "%04d - %03d - %s" %(q.id, (now - q.added_at).days, q.title[:60])
 
 class Command(BaseCommand):
     help = 'Send Email reminder for unanswered emails'
 
     option_list = BaseCommand.option_list + (
+       optparse.make_option(
+          '-t',
+          '--text',
+          action = 'store_true',
+          default = False,
+          dest = 'text',
+          help = 'Format Emails as Text only (no hyperlink)'
+       ),
        optparse.make_option(
           '-d',
           '--debug',
@@ -44,6 +56,7 @@ class Command(BaseCommand):
         DEBUG_THIS_COMMAND = False
         FORCE_EMAIL = False
         IGNORE_DATES = False
+        TEXT_FORMAT = False
 
         if askbot_settings.ENABLE_UNANSWERED_REMINDERS == False:
             return
@@ -55,6 +68,8 @@ class Command(BaseCommand):
            DEBUG_THIS_COMMAND = True
         if options['force_email']:
            FORCE_EMAIL = True
+        if options['text']:
+           TEXT_FORMAT = True
 
         #get questions without answers, excluding closed and deleted
         #order it by descending added_at date
@@ -70,6 +85,7 @@ class Command(BaseCommand):
         end_cutoff_date = start_cutoff_date - (max_emails - 1)*recurrence_delay
 
         if IGNORE_DATES:
+            print "Email Reminders: Questions Asked BEFORE %s" % (start_cutoff_date)
             questions = models.Question.objects.exclude(
                                         closed = True
                                     ).exclude(
@@ -80,6 +96,9 @@ class Command(BaseCommand):
                                         answer_count = 0
                                     ).order_by('-added_at')
         else: 
+            print "Email Reminders: Wait Period: %s - Email Every: %s - Max Emails: %d" % (
+                      wait_period, recurrence_delay, max_emails)
+            print "From %s to %s" % (end_cutoff_date, start_cutoff_date)
             questions = models.Question.objects.exclude(
                                         closed = True
                                     ).exclude(
@@ -94,16 +113,29 @@ class Command(BaseCommand):
         #for all users, excluding blocked
         #for each user, select a tag filtered subset
         #format the email reminder and send it
+        now = datetime.datetime.now()
+        print "Unanswered Question Set:"
+        print_question_list(questions)
+
         for user in models.User.objects.exclude(status = 'b'):
             # Sanity check to catch invalid email
             if len(user.email) < 5:
                 continue
 
-            user_questions = questions.exclude(author = user)
+            #user_questions = questions.exclude(author = user)
             user_questions = user.get_tag_filtered_questions(
-                                                questions = user_questions,
+                                                questions = questions,
                                                 context = 'email'
                                             )
+
+            user_questions = list(user_questions)
+            if user_questions:
+                last = user_questions[-1]
+                for i in range(len(user_questions)-2,-1,-1):
+                    if last == user_questions[i]:
+                       del user_questions[i]
+                    else:
+                       last=user_questions[i]
 
             final_question_list = list()
             #todo: rewrite using query set filter
@@ -118,6 +150,7 @@ class Command(BaseCommand):
                     )
                     now = datetime.datetime.now()
                     if now < activity.active_at + recurrence_delay:
+                        #print "Time Reject: %s < %s" % (now, activity.active_at + recurrence_delay)
                         # Only send email if minimum delay between emails has been met
                         if not DEBUG_THIS_COMMAND and not FORCE_EMAIL:
                             continue
@@ -128,8 +161,9 @@ class Command(BaseCommand):
                         activity_type = activity_type,
                         content_object = question,
                     )
-                activity.active_at = datetime.datetime.now()
-                activity.save()
+                if not DEBUG_THIS_COMMAND:
+                    activity.active_at = datetime.datetime.now()
+                    activity.save()
                 final_question_list.append(question)
 
             question_count = len(final_question_list)
@@ -142,8 +176,12 @@ class Command(BaseCommand):
                         'an answer. If you can provide an answer, please click on the link and share ' \
                         'your knowlege.</p><hr><p><b>Summary List</b></p>'
 
+            if TEXT_FORMAT:
+                body_text = 'This email is sent as a reminder that the following questions do not have\n' \
+                        'an answer. If you can provide an answer, please share ' \
+                        'your knowlege.\nSummary List\n'
+
             tag_list = {}
-            now = datetime.datetime.now()
             # Build list of Tags
             for question in final_question_list:
                tag_names = question.get_tag_names()
@@ -156,7 +194,16 @@ class Command(BaseCommand):
                  else:
                     tag_list[tag] = [(question, now - question.added_at)]
 
-               body_text += '<li>(%02d days old) <a href="%s%s">%s</a> [%s]</li>' \
+
+               if TEXT_FORMAT:
+                   body_text += '  - (%02d days old) %s [%s]\n' \
+                      % (
+                          days.days,
+                          question.title,
+                          tag_string[:-2]
+                      )
+               else:
+                   body_text += '<li>(%02d days old) <a href="%s%s">%s</a> [%s]</li>' \
                       % (
                           days.days,
                           askbot_settings.APP_URL,
@@ -176,18 +223,33 @@ class Command(BaseCommand):
                 'topics': tag_summary
             }
 
-            body_text += "<hr><p><b>List ordered by Tags</b></p><br>"
+            if TEXT_FORMAT:
+              body_text += "\nList ordered by Tags\n\n"
+            else:
+              body_text += "<hr><p><b>List ordered by Tags</b></p><br>"
             for tag in tag_keys:
-                body_text += '<p><b>' + tag + '</b></p><ul>'
+                if TEXT_FORMAT:
+                    body_text += tag + '\n'
+                else:
+                    body_text += '<p><b>' + tag + '</b></p><ul>'
                 for question in tag_list[tag]:
-                    body_text += '<li>(%02d days old) <a href="%s%s">%s</a></li>' \
+                    if TEXT_FORMAT:
+                        body_text += '  - (%02d days old) %s\n' \
+                            % (
+                                question[1].days,
+                                question[0].title
+                            )
+                    else:
+                        body_text += '<li>(%02d days old) <a href="%s%s">%s</a></li>' \
                             % (
                                 question[1].days,
                                 askbot_settings.APP_URL,
                                 question[0].get_absolute_url(),
                                 question[0].title
                             )
-                body_text += '</ul>\n'
+                if not TEXT_FORMAT:
+                    body_text += '</ul>'
+                body_text += '\n'
 
             if DEBUG_THIS_COMMAND:
                 print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \

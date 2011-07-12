@@ -2,14 +2,14 @@
 askbot askbot url configuraion file
 """
 import os.path
+from django.conf import settings
 from django.conf.urls.defaults import url, patterns, include
 from django.conf.urls.defaults import handler500, handler404
 from django.contrib import admin
+from django.utils.translation import ugettext as _
 from askbot import views
 from askbot.feed import RssLastestQuestionsFeed
 from askbot.sitemap import QuestionsSitemap
-from django.utils.translation import ugettext as _
-from django.conf import settings
 
 admin.autodiscover()
 feeds = {
@@ -44,7 +44,6 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('help/'), views.meta.about, name='about'),
     url(r'^%s$' % _('faq/'), views.meta.faq, name='faq'),
     url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
-    url(r'^%s$' % _('logout/'), views.meta.logout, name='logout'),
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')), 
         views.writers.edit_answer, 
@@ -108,6 +107,11 @@ urlpatterns = patterns('',
         name='question_revisions'
     ),
     url(#ajax only
+        r'^comment/upvote/$',
+        views.commands.upvote_comment,
+        name = 'upvote_comment'
+    ),
+    url(#ajax only
         r'^post_comments/$',
         views.writers.post_comments, 
         name='post_comments'
@@ -126,12 +130,6 @@ urlpatterns = patterns('',
         r'^comment/get_text/$',
         views.readers.get_comment, 
         name='get_comment'
-    ),
-    #place general question item in the end of other operations
-    url(
-        r'^%s(?P<id>\d+)/' % _('question/'), 
-        views.readers.question, 
-        name='question'
     ),
     url(
         r'^%s$' % _('tags/'), 
@@ -169,6 +167,11 @@ urlpatterns = patterns('',
         name = 'get_tag_subscribers'
     ),
     url(
+        r'^swap-question-with-answer/',
+        views.commands.swap_question_with_answer,
+        name = 'swap_question_with_answer'
+    ),
+    url(
         r'^%s$' % _('subscribe-for-tags/'),
         views.commands.subscribe_for_tags,
         name = 'subscribe_for_tags'
@@ -183,6 +186,15 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')),
         views.users.edit_user,
         name='edit_user'
+    ),
+    url(
+        r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
+            _('users/'),
+            _('subscriptions/'),
+        ),
+        views.users.user,
+        kwargs = {'tab_name': 'email_subscriptions'},
+        name = 'user_subscriptions'
     ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
@@ -218,7 +230,6 @@ urlpatterns = patterns('',
     #upload url is ajax only
     url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
-    (r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
         r'^doc/(?P<path>.*)$', 
@@ -251,6 +262,24 @@ urlpatterns = patterns('',
         name = 'askbot_jsi18n'
     ),
 )
+
+if getattr(settings, 'ASKBOT_USE_STACKEXCHANGE_URLS', False):
+    urlpatterns += (url(
+        r'^%s(?P<id>\d+)/' % _('questions/'), 
+        views.readers.question, 
+        name='question'
+    ),)
+else:
+    urlpatterns += (url(
+        r'^%s(?P<id>\d+)/' % _('question/'), 
+        views.readers.question, 
+        name='question'
+    ),)
+
+if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
+    urlpatterns += (
+        url(r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
+    )
 
 if 'avatar' in settings.INSTALLED_APPS:
     #unforturately we have to wire avatar urls here,

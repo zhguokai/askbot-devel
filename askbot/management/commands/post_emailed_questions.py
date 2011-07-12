@@ -28,6 +28,7 @@ from django.utils.translation import string_concat
 from django.core.urlresolvers import reverse
 from askbot.conf import settings as askbot_settings
 from askbot.utils import mail
+from askbot.utils import url_utils
 from askbot import models
 from askbot.forms import AskByEmailForm
 import re
@@ -63,7 +64,7 @@ def bounce_email(email, subject, reason = None, body_text = None):
             'by email, please <a href="%(url)s">register first</a></p>'
         ) % {
             'site': askbot_settings.APP_SHORT_NAME,
-            'url': askbot_settings.APP_URL + reverse('user_signin')
+            'url': url_utils.get_login_url()
         }
     elif reason == 'permission_denied':
         error_message = _(
@@ -124,9 +125,9 @@ def parse_message(msg):
 invalid_sub_re = re.compile("automatic reply|out of office", re.I)
 def check_for_invalid_subject(subject):
     if invalid_sub_re.match(subject):
-       return true
+       return True
 
-    return false
+    return False
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -172,6 +173,8 @@ class Command(NoArgsCommand):
             imap.store(id, '+FLAGS', '\\Deleted')
             try:
                 (sender, subject, body) = parse_message(msg)
+                err_str = "\nEMAIL SUBMIT from %s: '%s'" % (sender, subject)
+                logging.info(err_str)
             except CannotParseEmail, e:
                 err_str = "\nCan't parse Email '%s'" % (msg)
                 logging.critical(err_str)

@@ -17,7 +17,7 @@ from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
 from askbot.models import BadgeData, Award, User
 from askbot.models import badges as badge_data
-from askbot.skins.loaders import render_into_skin
+from askbot.skins.loaders import get_template, render_into_skin
 from askbot.conf import settings as askbot_settings
 from askbot import skins
 
@@ -61,7 +61,8 @@ def feedback(request):
                 data['email'] = form.cleaned_data.get('email',None)
             data['message'] = form.cleaned_data['message']
             data['name'] = form.cleaned_data.get('name',None)
-            message = render_to_response('feedback_email.txt',data,context_instance=RequestContext(request))
+            template = get_template('feedback_email.txt', request)
+            message = template.render(RequestContext(request, data))
             mail_moderators(_('Q&A forum feedback'), message)
             msg = _('Thanks for the feedback!')
             request.user.message_set.create(message=msg)
@@ -75,12 +76,6 @@ feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, giv
 
 def privacy(request):
     return render_into_skin('privacy.html', {'page_class': 'meta'}, request)
-
-def logout(request):
-    data = {
-        'page_class': 'meta',
-    }
-    return render_into_skin('logout.html', data, request)
 
 def badges(request):#user status/reputation system
     #todo: supplement database data with the stuff from badges.py

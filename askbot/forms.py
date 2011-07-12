@@ -246,6 +246,7 @@ class ShowQuestionForm(forms.Form):
 
     def get_pruned_data(self):
         nones = ('answer', 'comment', 'page')
+
         for key in nones:
             if key in self.cleaned_data:
                 if self.cleaned_data[key] is None:
@@ -259,6 +260,11 @@ class ShowQuestionForm(forms.Form):
         """this form must always be valid
         should use defaults if the data is incomplete
         or invalid"""
+        if self._errors:
+            #since the form is always valid, clear the errors
+            logging.error(str(self._errors))
+            self._errors = {}
+
         in_data = self.get_pruned_data()
         out_data = dict()
         if ('answer' in in_data) ^ ('comment' in in_data):
@@ -650,6 +656,24 @@ class AnswerForm(forms.Form):
                 return
         self.fields['email_notify'].initial = False
 
+class VoteForm(forms.Form):
+    """form used in ajax vote view (only comment_upvote so far)
+    """
+    post_id = forms.IntegerField()
+    cancel_vote = forms.CharField()#char because it is 'true' or 'false' as string
+
+    def clean_cancel_vote(self):
+        val = self.cleaned_data['cancel_vote']
+        if val == 'true':
+            result = True
+        elif val == 'false':
+            result = False
+        else:
+            del self.cleaned_data['cancel_vote']
+            raise forms.ValidationError('either "true" or "false" strings expected')
+        self.cleaned_data['cancel_vote'] = result
+        return self.cleaned_data['cancel_vote']
+
 
 class CloseForm(forms.Form):
     reason = forms.ChoiceField(choices=const.CLOSE_REASONS)
@@ -966,6 +990,15 @@ class EditUserEmailFeedsForm(forms.Form):
             self.cleaned_data = self.NO_EMAIL_INITIAL
         self.initial = self.NO_EMAIL_INITIAL
         return self
+
+    def get_db_model_subscription_type_names(self):
+        """todo: refactor this - too hacky
+        should probably use model form instead
+
+        returns list of values acceptable in
+        ``attr::models.user.EmailFeedSetting.feed_type``
+        """
+        return self.FORM_TO_MODEL_MAP.values()
 
     def set_frequency(self, frequency = 'n'):
         data = {
