@@ -174,12 +174,12 @@ class Command(BaseCommand):
 
             body_text = '<p>This email is sent as a reminder that the following questions do not have ' \
                         'an answer. If you can provide an answer, please click on the link and share ' \
-                        'your knowlege.</p><hr><p><b>Summary List</b></p>'
+                        'your knowledge.</p><hr><p><b>Summary List</b></p>'
 
             if TEXT_FORMAT:
                 body_text = 'This email is sent as a reminder that the following questions do not have\n' \
                         'an answer. If you can provide an answer, please share ' \
-                        'your knowlege.\nSummary List\n'
+                        'your knowledge.\nSummary List\n'
 
             tag_list = {}
             # Build list of Tags
