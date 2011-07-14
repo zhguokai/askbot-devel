@@ -10,6 +10,10 @@ from django.utils.translation import ungettext
 from askbot.utils import mail
 from askbot.models.question import get_tag_summary_from_questions
 
+def print_question_list(questions):
+    now = datetime.datetime.now()
+    for q in questions:
+        print "%04d - %03d - %s" %(q.id, (now - q.added_at).days, q.title[:60])
 
 class Command(BaseCommand):
     help = 'Send Email reminder for unanswered emails'
@@ -109,16 +113,29 @@ class Command(BaseCommand):
         #for all users, excluding blocked
         #for each user, select a tag filtered subset
         #format the email reminder and send it
+        now = datetime.datetime.now()
+        print "Unanswered Question Set:"
+        print_question_list(questions)
+
         for user in models.User.objects.exclude(status = 'b'):
             # Sanity check to catch invalid email
             if len(user.email) < 5:
                 continue
 
-            user_questions = questions.exclude(author = user)
+            #user_questions = questions.exclude(author = user)
             user_questions = user.get_tag_filtered_questions(
-                                                questions = user_questions,
+                                                questions = questions,
                                                 context = 'email'
                                             )
+
+            user_questions = list(user_questions)
+            if user_questions:
+                last = user_questions[-1]
+                for i in range(len(user_questions)-2,-1,-1):
+                    if last == user_questions[i]:
+                       del user_questions[i]
+                    else:
+                       last=user_questions[i]
 
             final_question_list = list()
             #todo: rewrite using query set filter
@@ -165,7 +182,6 @@ class Command(BaseCommand):
                         'your knowlege.\nSummary List\n'
 
             tag_list = {}
-            now = datetime.datetime.now()
             # Build list of Tags
             for question in final_question_list:
                tag_names = question.get_tag_names()

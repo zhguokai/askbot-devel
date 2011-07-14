@@ -12,6 +12,12 @@ class Command(BaseCommand):
             default = False,
             help = 'Show details for each question.'
         ),
+        make_option('--file',
+            action = 'store_true',
+            dest = 'save_file',
+            default = False,
+            help = 'Save results to file.'
+        ),
     )
     help = 'Print report about questions labeled with any of the provided tags'
 
@@ -30,16 +36,17 @@ class Command(BaseCommand):
         questions = models.Question.objects.filter(tags__in = wk_tags | tags).distinct()
         question_content_type = ContentType.objects.get_for_model(models.Question)
         answer_content_type = ContentType.objects.get_for_model(models.Answer)
-        print ''
-        if kwargs['show_details'] == False:
-            data = {
+        summary_str = 'Report: %s %s\n\n' % (wk_tags, tags)
+        print summary_str
+        detail_str = ''
+        data = {
                 'title': 'Title',
                 'upvotes': 'Up Votes',
                 'downvotes': 'Down Votes',
                 'answers': 'Answers',
                 'comments': 'Comments'
             }
-            print '%(title)-32s %(upvotes)7s %(downvotes)9s %(answers)7s %(comments)8s' % data
+        summary_str += '%(title)-32s %(upvotes)7s %(downvotes)9s %(answers)7s %(comments)8s\n' % data
         for question in questions:
             question_votes = models.Vote.objects.filter(
                                         object_id = question.id,
@@ -48,22 +55,23 @@ class Command(BaseCommand):
             downvote_count = question_votes.filter(vote = models.Vote.VOTE_DOWN).count()
             upvote_count = question_votes.filter(vote = models.Vote.VOTE_UP).count()
             data = {
-                'title': question.title,
+                'title': question.title[:30],
+                'full_title': question.title,
                 'upvotes': upvote_count,
                 'downvotes': downvote_count,
                 'answers': question.answer_count,
                 'comments': question.comments.all().count()
             }
-            if kwargs['show_details'] == False:
-                print '%(title)-32s %(upvotes)7d %(downvotes)9d %(answers)7d %(comments)8s' % data
-            else:
-                print '%(title)-32s - upvotes: %(upvotes)3d, downvotes: %(downvotes)3d' % data
-                print question.text, '\n'
+            summary_str += '%(title)-32s %(upvotes)7d %(downvotes)9d %(answers)7d %(comments)8s\n' % data
+            detail_str += 60*"=" + '\n'
+            detail_str += '%(full_title)s - upvotes: %(upvotes)3d, downvotes: %(downvotes)3d\n\n' % data
+            detail_str += question.text + '\n'
+            if True:
                 for comment in question.comments.all():
-                    print 'Comment by %s' % comment.user.username
-                    print comment.comment
+                    detail_str += 'Comment by %s\n' % comment.user.username
+                    detail_str += comment.comment + '\n'
                 for answer in question.answers.all():
-                    print ''
+                    detail_str += '------------------\n'
                     answer_votes = models.Vote.objects.filter(
                                                     content_type = answer_content_type,
                                                     object_id = answer.id
@@ -73,7 +81,19 @@ class Command(BaseCommand):
                         'downvotes': answer_votes.filter(vote = models.Vote.VOTE_DOWN).count(),
                         'upvotes': answer_votes.filter(vote = models.Vote.VOTE_UP).count(),
                     }
-                    print 'Answer by %(author)s - upvotes %(upvotes)d downvotes %(downvotes)d' % data
+                    detail_str +=  'Answer by %(author)s - upvotes %(upvotes)d downvotes %(downvotes)d\n' % data
+                    detail_str += answer.text + '\n'
                     for comment in answer.comments.all():
-                        print 'Comment by %s' % comment.user.username
-                        print comment.comment
+                        detail_str += 'Comment by %s\n' % comment.user.username
+                        detail_str += comment.comment + '\n'
+        if kwargs['save_file'] == True:
+           fd = open("tag-data.txt", 'w')
+           fd.write(summary_str.encode("iso-8859-15", "replace"))
+           if kwargs['show_details'] == True:
+               fd.write(detail_str.encode("iso-8859-15","replace"))
+           fd.close()
+        else:
+           print summary_str
+           if kwargs['show_details'] == True:
+               print detail_str
+

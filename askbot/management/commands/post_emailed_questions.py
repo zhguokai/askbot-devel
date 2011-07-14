@@ -125,9 +125,9 @@ def parse_message(msg):
 invalid_sub_re = re.compile("automatic reply|out of office", re.I)
 def check_for_invalid_subject(subject):
     if invalid_sub_re.match(subject):
-       return true
+       return True
 
-    return false
+    return False
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -173,6 +173,8 @@ class Command(NoArgsCommand):
             imap.store(id, '+FLAGS', '\\Deleted')
             try:
                 (sender, subject, body) = parse_message(msg)
+                err_str = "\nEMAIL SUBMIT from %s: '%s'" % (sender, subject)
+                logging.info(err_str)
             except CannotParseEmail, e:
                 err_str = "\nCan't parse Email '%s'" % (msg)
                 logging.critical(err_str)

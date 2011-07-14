@@ -457,9 +457,7 @@ class Command(NoArgsCommand):
                 #                'the askbot and see what\'s new!<br>'
                 #              )
                 text += ' '
-                feeds = EmailFeedSetting.objects.filter(
-                                                        subscriber=user,
-                                                    )
+                feeds = EmailFeedSetting.objects.filter(subscriber=user)
                 feed_freq = [feed.frequency for feed in feeds]
                 text += '<p></p>'
                 if 'd' in feed_freq:
