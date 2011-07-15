@@ -248,6 +248,7 @@ def ask(request):#view used to ask a new question
         'active_tab': 'ask',
         'page_class': 'ask-page',
         'form' : form,
+        'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
     }
     return render_into_skin('ask.html', data, request)
@@ -384,6 +385,7 @@ def edit_question(request, id):
             'active_tab': 'questions',
             'question': question,
             'revision_form': revision_form,
+            'mandatory_tags': models.tag.get_mandatory_tags(),
             'form' : form,
         }
         return render_into_skin('question_edit.html', data, request)

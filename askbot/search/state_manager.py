@@ -94,11 +94,11 @@ def parse_query(query):
 class SearchState(object):
     def __init__(self):
         self.scope = const.DEFAULT_POST_SCOPE
-        self.query = None# used for the original query
-        self.stripped_query = None# used for the query that is actually searched
-        self.query_tags = None#list of tag names entered in the query text
-        self.query_users = None#list of query users entered in the query text
-        self.query_title = None#title entered in the query
+        self.query = None
+        self.stripped_query = None
+        self.query_tags = []
+        self.query_users = []
+        self.query_title = None
         self.search = None
         self.tags = None
         self.author = None
