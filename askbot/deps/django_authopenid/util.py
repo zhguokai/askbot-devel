@@ -667,6 +667,8 @@ def setup_new_user(username, first, last, email):
     dbg_str="   New User: %s = %s %s (%s)"  %(username, first, last, email)
     print dbg_str
     logging.info(dbg_str)
+    first = first.capitalize()
+    last = last.capitalize()
     user, created = User.objects.get_or_create(
           username=first + last,
           first_name=first,
