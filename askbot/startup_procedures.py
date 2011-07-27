@@ -97,6 +97,12 @@ def run_startup_tests():
     test_askbot_url()
     test_i18n()
     test_middleware()
+    if getattr(django_settings, 'EXTRA_SETTINGS_MODULE', None) != \
+        'askbot.conf.settings':
+        raise ImproperlyConfigured(
+            "Please add EXTRA_SETTINGS_MODULE = 'askbot.conf.settings' "
+            "to your settings.py file"
+        )
 
 @transaction.commit_manually
 def run():
