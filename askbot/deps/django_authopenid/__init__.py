@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2007, 2008, Benoît Chesneau
+# Copyright (c) 2011 Evgeny Fadeev
 # 
 # All rights reserved.
 # 
@@ -30,11 +31,14 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
-Django authentification application to *with openid using django auth contrib/.
+Django authentication application, forked from
+django_authopenid https://bitbucket.org/benoitc/django-authopenid/overview
 
 This application allow a user to connect to you website with :
  * legacy account : username/password
  * openid url
+ * twitter, linked in
+ * allows to create a custom authentication plugin
 """
 
-__version__ = "0.9.4"
+__version__ = "0.1.0"

@@ -243,8 +243,6 @@ DEPENDENCY_URLS = {
     'embedding-video': 'http://askbot.org/doc/optional-modules.html#embedding-video'
 }
 
-PASSWORD_MIN_LENGTH = 8
-
 GOLD_BADGE = 1
 SILVER_BADGE = 2
 BRONZE_BADGE = 3

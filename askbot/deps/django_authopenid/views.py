@@ -35,7 +35,6 @@ from django.http import HttpResponseRedirect, get_host, Http404
 from django.http import HttpResponse
 from django.template import RequestContext, Context
 from django.conf import settings
-from askbot.conf import settings as askbot_settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
@@ -68,6 +67,7 @@ from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
 from askbot.utils.forms import get_next_url
 from askbot.utils.http import get_request_info
+from askbot.utils.settings import get_setting
 
 #todo: decouple from askbot
 def login(request,user):
@@ -283,7 +283,7 @@ def signin(request):
     next_url = get_next_url(request)
     logging.debug('next url is %s' % next_url)
 
-    if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
+    if get_setting('ALLOW_ADD_REMOVE_LOGIN_METHODS') == False \
         and request.user.is_authenticated():
         return HttpResponseRedirect(next_url)
 
@@ -302,9 +302,9 @@ def signin(request):
             if login_form.cleaned_data['login_type'] == 'password':
 
                 password_action = login_form.cleaned_data['password_action']
-                if askbot_settings.USE_LDAP_FOR_PASSWORD_LOGIN:
+                if get_setting('USE_LDAP_FOR_PASSWORD_LOGIN'):
                     assert(password_action == 'login')
-                    ldap_provider_name = askbot_settings.LDAP_PROVIDER_NAME
+                    ldap_provider_name = get_setting('LDAP_PROVIDER_NAME')
                     username = login_form.cleaned_data['username']
                     if util.ldap_check_password(
                                 username,
@@ -566,7 +566,7 @@ def show_signin_view(
 
     have_buttons = True
     if (len(active_provider_names) == 1 and active_provider_names[0] == 'local'):
-        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN == True:
+        if get_setting('SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN') == True:
             #in this case the form is not using javascript, so set initial values
             #here
             have_buttons = False
@@ -600,7 +600,7 @@ def show_signin_view(
 
 @login_required
 def delete_login_method(request):
-    if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False:
+    if get_setting('ALLOW_ADD_REMOVE_LOGIN_METHODS') == False:
         raise Http404
     if request.is_ajax() and request.method == 'POST':
         provider_name = request.POST['provider_name']
@@ -829,7 +829,7 @@ def register(request, login_provider_name=None, user_identifier=None):
         #if user just logged in and did not need to create the new account
         
         if user != None:
-            if askbot_settings.EMAIL_VALIDATION == True:
+            if get_setting('EMAIL_VALIDATION') == True:
                 logging.debug('sending email validation')
                 send_new_email_key(user, nomessage=True)
                 output = validation_email_sent(request)
@@ -888,7 +888,7 @@ def signup_with_password(request):
     #this is safe because second decorator cleans this field
     provider_name = request.REQUEST['login_provider']
 
-    if askbot_settings.USE_RECAPTCHA:
+    if get_setting('USE_RECAPTCHA'):
         RegisterForm = forms.SafeClassicRegisterForm
     else:
         RegisterForm = forms.ClassicRegisterForm
@@ -941,7 +941,7 @@ def signup_with_password(request):
             #        'authopenid/confirm_email.txt'
             #)
             #message_context = Context({ 
-            #    'signup_url': askbot_settings.APP_URL + reverse('user_signin'),
+            #    'signup_url': get_setting('APP_URL') + reverse('user_signin'),
             #    'username': username,
             #    'password': password,
             #})
@@ -1040,16 +1040,16 @@ def set_new_email(user, new_email, nomessage=False):
         user.email = new_email
         user.email_isvalid = False
         user.save()
-        if askbot_settings.EMAIL_VALIDATION == True:
+        if get_setting('EMAIL_VALIDATION') == True:
             send_new_email_key(user,nomessage=nomessage)
 
 def _send_email_key(user):
     """private function. sends email containing validation key
     to user's email address
     """
-    subject = _("Recover your %(site)s account") % {'site': askbot_settings.APP_SHORT_NAME}
+    subject = _("Recover your %(site)s account") % {'site': get_setting('APP_SHORT_NAME')}
     data = {
-        'validation_link': askbot_settings.APP_URL + \
+        'validation_link': get_setting('APP_URL') + \
                             reverse(
                                     'user_account_recover',
                                     kwargs={'key':user.email_key}
@@ -1081,7 +1081,7 @@ def send_email_key(request):
     if current email is valid shows 'key_not_sent' view of 
     authopenid/changeemail.html template
     """
-    if askbot_settings.EMAIL_VALIDATION == True:
+    if get_setting('EMAIL_VALIDATION') == True:
         if request.user.email_isvalid:
             data = {
                 'email': request.user.email, 
@@ -1109,7 +1109,7 @@ def account_recover(request, key = None):
 
     url name 'user_account_recover'
     """
-    if not askbot_settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL:
+    if not get_setting('ALLOW_ACCOUNT_RECOVERY_BY_EMAIL'):
         raise Http404
     if request.method == 'POST':
         form = forms.AccountRecoveryForm(request.POST)
@@ -1155,7 +1155,7 @@ def account_recover(request, key = None):
 def validation_email_sent(request):
     """this function is called only if EMAIL_VALIDATION setting is
     set to True bolean value, basically dead now"""
-    assert(askbot_settings.EMAIL_VALIDATION == True)
+    assert(get_setting('EMAIL_VALIDATION') == True)
     logging.debug('')
     data = {
         'email': request.user.email,
@@ -1170,7 +1170,7 @@ def verifyemail(request,id=None,key=None):
     url = /email/verify/{{user.id}}/{{user.email_key}}/
     """
     logging.debug('')
-    if askbot_settings.EMAIL_VALIDATION == True:
+    if get_setting('EMAIL_VALIDATION') == True:
         user = User.objects.get(id=id)
         if user:
             if user.email_key == key:

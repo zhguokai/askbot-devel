@@ -20,7 +20,7 @@ try:
 except:
     from md5 import md5
 
-from askbot.conf import settings as askbot_settings
+from askbot.utils.settings import get_setting
 
 # needed for some linux distributions like debian
 try:
@@ -162,8 +162,8 @@ def use_password_login():
     either if USE_RECAPTCHA is false
     of if recaptcha keys are set correctly
     """
-    if askbot_settings.USE_RECAPTCHA:
-        if askbot_settings.RECAPTCHA_KEY and askbot_settings.RECAPTCHA_SECRET:
+    if get_setting('USE_RECAPTCHA'):
+        if get_setting('RECAPTCHA_KEY') and get_setting('RECAPTCHA_SECRET'):
             return True
         else:
             logging.critical('if USE_RECAPTCHA == True, set recaptcha keys!!!')
@@ -178,7 +178,7 @@ def filter_enabled_providers(data):
     delete_list = list()
     for provider_key, provider_settings in data.items():
         name = provider_settings['name']
-        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name.upper() + '_ENABLED')
+        is_enabled = get_setting('SIGNIN_' + name.upper() + '_ENABLED')
         if is_enabled == False:
             delete_list.append(provider_key)
 
@@ -371,7 +371,7 @@ def get_enabled_major_login_providers():
     data = SortedDict()
 
     if use_password_login():
-        site_name = askbot_settings.APP_SHORT_NAME
+        site_name = get_setting('APP_SHORT_NAME')
         prompt = _('%(site)s user name and password') % {'site': site_name}
         data['local'] = {
             'name': 'local',
@@ -380,18 +380,18 @@ def get_enabled_major_login_providers():
             'type': 'password',
             'create_password_prompt': _('Create a password-protected account'),
             'change_password_prompt': _('Change your password'),
-            'icon_media_path': askbot_settings.LOCAL_LOGIN_ICON,
+            'icon_media_path': get_setting('LOCAL_LOGIN_ICON'),
             'password_changeable': True
         }
 
-    #if askbot_settings.FACEBOOK_KEY and askbot_settings.FACEBOOK_SECRET:
+    #if get_setting('FACEBOOK_KEY') and get_setting('FACEBOOK_SECRET'):
     #    data['facebook'] = {
     #        'name': 'facebook',
     #        'display_name': 'Facebook',
     #        'type': 'facebook',
     #        'icon_media_path': '/jquery-openid/images/facebook.gif',
     #    }
-    if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
+    if get_setting('TWITTER_KEY') and get_setting('TWITTER_SECRET'):
         data['twitter'] = {
             'name': 'twitter',
             'display_name': 'Twitter',
@@ -417,7 +417,7 @@ def get_enabled_major_login_providers():
                 return matches.group(1)
         raise OAuthError()
         
-    if askbot_settings.LINKEDIN_KEY and askbot_settings.LINKEDIN_SECRET:
+    if get_setting('LINKEDIN_KEY') and get_setting('LINKEDIN_SECRET'):
         data['linkedin'] = {
             'name': 'linkedin',
             'display_name': 'LinkedIn',
@@ -584,7 +584,7 @@ def set_login_provider_tooltips(provider_dict, active_provider_names = None):
                         'signin still works for %(site_name)s'
                     ) % {
                         'provider': provider['display_name'],
-                        'site_name': askbot_settings.APP_SHORT_NAME
+                        'site_name': get_setting('APP_SHORT_NAME')
                     }
             else:
                 if provider['type'] == 'password':
@@ -597,7 +597,7 @@ def set_login_provider_tooltips(provider_dict, active_provider_names = None):
                         'to %(site_name)s'
                     ) % {
                         'provider': provider['display_name'],
-                        'site_name': askbot_settings.APP_SHORT_NAME
+                        'site_name': get_setting('APP_SHORT_NAME')
                     }
         else:
             if provider['type'] == 'password':
@@ -605,7 +605,7 @@ def set_login_provider_tooltips(provider_dict, active_provider_names = None):
                         'Signin with %(provider)s user name and password'
                     ) % {
                         'provider': provider['display_name'],
-                        'site_name': askbot_settings.APP_SHORT_NAME
+                        'site_name': get_setting('APP_SHORT_NAME')
                     }
             else:
                 tooltip = _(
@@ -629,11 +629,11 @@ def get_oauth_parameters(provider_name):
         raise ValueError('oauth provider expected, %s found' % data['type'])
 
     if provider_name == 'twitter':
-        consumer_key = askbot_settings.TWITTER_KEY
-        consumer_secret = askbot_settings.TWITTER_SECRET
+        consumer_key = get_setting('TWITTER_KEY')
+        consumer_secret = get_setting('TWITTER_SECRET')
     elif provider_name == 'linkedin':
-        consumer_key = askbot_settings.LINKEDIN_KEY
-        consumer_secret = askbot_settings.LINKEDIN_SECRET
+        consumer_key = get_setting('LINKEDIN_KEY')
+        consumer_secret = get_setting('LINKEDIN_SECRET')
     else:
         raise ValueError('sorry, only linkedin and twitter oauth for now')
 
@@ -675,7 +675,7 @@ class OAuthConnection(object):
         request_url = self.parameters['request_token_url']
 
         if callback_url:
-            callback_url = '%s%s' % (askbot_settings.APP_URL, callback_url)
+            callback_url = '%s%s' % (get_setting('APP_URL'), callback_url)
             request_body = urllib.urlencode(dict(oauth_callback=callback_url))
 
             self.request_token = self.send_request(
@@ -757,8 +757,8 @@ class FacebookError(Exception):
 
 def get_facebook_user_id(request):
     try:
-        key = askbot_settings.FACEBOOK_KEY
-        secret = askbot_settings.FACEBOOK_SECRET
+        key = get_setting('FACEBOOK_KEY')
+        secret = get_setting('FACEBOOK_SECRET')
 
         fb_cookie = request.COOKIES['fbs_%s' % key]
         fb_response = dict(cgi.parse_qsl(fb_cookie))
@@ -785,7 +785,7 @@ def get_facebook_user_id(request):
 def ldap_check_password(username, password):
     import ldap
     try:
-        ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
+        ldap_session = ldap.initialize(get_setting('LDAP_URL'))
         ldap_session.simple_bind_s(username, password)
         ldap_session.unbind_s()
         return True

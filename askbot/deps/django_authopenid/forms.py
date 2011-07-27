@@ -34,11 +34,11 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.conf import settings
-from askbot.conf import settings as askbot_settings
-from askbot import const as askbot_const
+from askbot.deps.django_authopenid import const
 from django.utils.safestring import mark_safe
 from askbot.deps.recaptcha_django import ReCaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
+from askbot.utils.settings import get_setting
 
 # needed for some linux distributions like debian
 try:
@@ -288,12 +288,12 @@ class LoginForm(forms.Form):
                     del self.cleaned_data['new_password_retyped']
                 else:
                     #validate password
-                    if len(new_password) < askbot_const.PASSWORD_MIN_LENGTH:
+                    if len(new_password) < const.PASSWORD_MIN_LENGTH:
                         del self.cleaned_data['new_password']
                         del self.cleaned_data['new_password_retyped']
                         error_message = _(
                                     'Please choose password > %(len)s characters'
-                                ) % {'len': askbot_const.PASSWORD_MIN_LENGTH}
+                                ) % {'len': const.PASSWORD_MIN_LENGTH}
                         error = self.error_class([error_message])
                         self._errors['new_password'] = error
                         self.set_password_change_error()
@@ -323,8 +323,8 @@ class SafeClassicRegisterForm(ClassicRegisterForm):
     to the base register form
     """
     recaptcha = ReCaptchaField(
-                    private_key = askbot_settings.RECAPTCHA_SECRET,
-                    public_key = askbot_settings.RECAPTCHA_KEY
+                    private_key = get_setting('RECAPTCHA_SECRET'),
+                    public_key = get_setting('RECAPTCHA_KEY'),
                 )
 
 class ChangePasswordForm(SetPasswordForm):
@@ -358,7 +358,7 @@ class ChangeEmailForm(forms.Form):
     def clean_email(self):
         """ check if email don't exist """
         if 'email' in self.cleaned_data:
-            if askbot_settings.EMAIL_UNIQUE == True:
+            if get_setting('EMAIL_UNIQUE') == True:
                 try:
                     user = User.objects.get(email = self.cleaned_data['email'])
                     if self.user and self.user == user:   

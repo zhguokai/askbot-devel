@@ -1,6 +1,6 @@
 from unittest import TestCase
 from askbot.deps.django_authopenid.forms import LoginForm
-from askbot import const
+from askbot.deps.django_authopenid import const
 
 class LoginFormTests(TestCase):
 

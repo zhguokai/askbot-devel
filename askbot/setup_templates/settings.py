@@ -216,3 +216,5 @@ djcelery.setup_loader()
 
 CSRF_COOKIE_NAME = 'askbot_scrf'
 CSRF_COOKIE_DOMAIN = ''#enter domain name here - e.g. example.com
+
+EXTRA_SETTINGS_MODULE = 'askbot.conf.settings'#where live settings are stored this setting may be used by other apps
