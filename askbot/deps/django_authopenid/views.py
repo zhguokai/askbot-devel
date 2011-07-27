@@ -45,7 +45,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
-from askbot.skins.loaders import render_into_skin, get_template
+from askbot.utils.template import render_template, get_template
 
 from openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
@@ -110,7 +110,7 @@ def logout_page(request):
         'page_class': 'meta',
         'have_federated_login_methods': util.have_enabled_federated_login_methods()
     }
-    return render_into_skin('authopenid/logout.html', data, request)
+    return render_template('authopenid/logout.html', data, request)
 
 def get_url_host(request):
     if request.is_secure():
@@ -596,7 +596,7 @@ def show_signin_view(
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
 
-    return render_into_skin('authopenid/signin.html', data, request)
+    return render_template('authopenid/signin.html', data, request)
 
 @login_required
 def delete_login_method(request):
@@ -865,7 +865,7 @@ def register(request, login_provider_name=None, user_identifier=None):
         'login_type':'openid',
         'gravatar_faq_url':reverse('faq') + '#gravatar',
     }
-    return render_into_skin('authopenid/complete.html', data, request)
+    return render_template('authopenid/complete.html', data, request)
 
 def signin_failure(request, message):
     """
@@ -976,7 +976,7 @@ def signup_with_password(request):
                 'minor_login_providers': minor_login_providers.values(),
                 'login_form': login_form
             }
-    return render_into_skin(
+    return render_template(
                 'authopenid/signup_with_password.html',
                 context_data,
                 request
@@ -1088,7 +1088,7 @@ def send_email_key(request):
                 'action_type': 'key_not_sent', 
                 'change_link': reverse('user_changeemail')
             }
-            return render_into_skin(
+            return render_template(
                         'authopenid/changeemail.html',
                         data,
                         request
@@ -1162,7 +1162,7 @@ def validation_email_sent(request):
         'change_email_url': reverse('user_changeemail'),
         'action_type': 'validate'
     }
-    return render_into_skin('authopenid/changeemail.html', data, request)
+    return render_template('authopenid/changeemail.html', data, request)
 
 def verifyemail(request,id=None,key=None):
     """
@@ -1178,7 +1178,7 @@ def verifyemail(request,id=None,key=None):
                 clear_email_validation_message(user)
                 user.save()
                 data = {'action_type': 'validation_complete'}
-                return render_into_skin(
+                return render_template(
                             'authopenid/changeemail.html',
                             data,
                             request
