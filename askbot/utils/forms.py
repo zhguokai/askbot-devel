@@ -143,34 +143,3 @@ class UserEmailField(forms.EmailField):
                 raise forms.ValidationError(self.error_messages['taken'])
         else:
             return email 
-
-class SetPasswordForm(forms.Form):
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
-                                label=_('choose password'),
-                                error_messages={'required':_('password is required')},
-                                )
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
-                                label=mark_safe(_('retype password')),
-                                error_messages={'required':_('please, retype your password'),
-                                                'nomatch':_('sorry, entered passwords did not match, please try again')},
-                                )
-
-    def __init__(self, data=None, user=None, *args, **kwargs):
-        super(SetPasswordForm, self).__init__(data, *args, **kwargs)
-
-    def clean_password2(self):
-        """
-        Validates that the two password inputs match.
-        
-        """
-        if 'password1' in self.cleaned_data:
-            if self.cleaned_data['password1'] == self.cleaned_data['password2']:
-                self.password = self.cleaned_data['password2']
-                self.cleaned_data['password'] = self.cleaned_data['password2']
-                return self.cleaned_data['password2']
-            else:
-                del self.cleaned_data['password2']
-                raise forms.ValidationError(self.fields['password2'].error_messages['nomatch'])
-        else:
-            return self.cleaned_data['password2']
-

@@ -279,7 +279,6 @@ def signin(request):
     """
     logging.debug('in signin view')
     on_failure = signin_failure
-    email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
 
     next_url = get_next_url(request)
     logging.debug('next url is %s' % next_url)
@@ -891,13 +890,13 @@ def signup_with_password(request):
     provider_name = request.REQUEST['login_provider']
 
     if askbot_settings.USE_RECAPTCHA:
-        RegisterForm = forms.SafeClassicRegisterForm
+        register_form = forms.SafeClassicRegisterForm
     else:
-        RegisterForm = forms.ClassicRegisterForm
+        register_form = forms.ClassicRegisterForm
 
     logging.debug('request method was %s' % request.method)
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = register_form(request.POST)
         email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
         
         #validation outside if to remember form values
@@ -958,7 +957,7 @@ def signup_with_password(request):
             logging.debug('create classic account forms were invalid')
     else:
         #todo: here we have duplication of get_password_login_provider...
-        form = RegisterForm(
+        form = register_form(
                         initial={
                             'next':next,
                             'login_provider': provider_name

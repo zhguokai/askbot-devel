@@ -6,9 +6,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
+from askbot.utils.forms import UserEmailField
 from askbot.utils.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
@@ -72,7 +74,6 @@ def filter_choices(remove_choices = None, from_choices = None):
     return filtered_choices
 
 COUNTRY_CHOICES = (('unknown',_('select country')),) + countries.COUNTRIES
-
 class CountryField(forms.ChoiceField):
     """this is better placed into the django_coutries app"""
     
@@ -250,6 +251,73 @@ class SummaryField(forms.CharField):
         self.label  = _('update summary:')
         self.help_text = _('enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)')
 
+NO_EMAIL_MSG = _('no %(site_name)s email please') % askbot_settings.APP_SHORT_NAME
+class SimpleEmailSubscribeField(forms.ChoiceField):
+    def __init__(self, **kwargs):
+        kwargs.setdefault(
+            'choices',
+            (
+                ('y', _('okay, let\'s try!')),
+                ('n', NO_EMAIL_MSG)
+            )
+        )
+        kwargs.setdefault('widget', forms.widgets.RadioSelect)
+        kwargs.setdefault(
+            'error_messages',
+            {'required':_('please choose one of the options above')},
+        )
+        super(SimpleEmailSubscribeForm, self).__init__(**kwargs)
+
+class SimpleEmailSubscribeForm(forms.Form):
+    subscribe = SimpleEmailSubscribeField()
+
+    def __init__(self, *args, **kwargs):
+        self.frequency = kwargs.pop('frequency', 'w') 
+        super(SimpleEmailSubscribeForm, self).__init__(*args, **kwargs)
+
+    def save(self, user=None):
+        EFF = EditUserEmailFeedsForm
+        #here we have kind of an anomaly - the value 'y' is redundant
+        #with the frequency variable - needs to be fixed
+        if self.is_bound and self.cleaned_data['subscribe'] == 'y':
+            email_settings_form = EFF()
+            email_settings_form.set_frequency(self.frequency)
+            logging.debug('%s wants to subscribe' % user.username)
+        else:
+            email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
+        email_settings_form.save(user, save_unbound=True)
+
+class OpenidRegisterForm(forms.Form):
+    """Base registration form - can be used directly
+    with the passwordless registrations - like federated systems:
+    openid, oauth, etc.
+    """
+    reg_form_type = 'without-password'
+    username = UserNameField()
+    email = UserEmailField()
+    subscribe = SimpleEmailSubscribeField()
+
+    def clean(self):
+        """saves registration type into the cleaned data
+        as needed by the askbot's registration backend
+        """
+        self.cleaned_data['reg_type'] = self.reg_form_type
+        return self.cleaned_data
+
+class ClassicRegisterForm(OpenidRegisterForm, SetPasswordForm):
+    """ legacy registration form """
+    reg_form_type = 'with-password'
+    pass
+
+class SafeClassicRegisterForm(ClassicRegisterForm):
+    """this form uses recaptcha in addition
+    to the base register form
+    """
+    reg_form_type = 'with-password-and-recaptcha'
+    recaptcha = RecaptchaField(
+                    private_key = askbot_settings.RECAPTCHA_SECRET,
+                    public_key = askbot_settings.RECAPTCHA_KEY
+                )
 
 class DumpUploadForm(forms.Form):
     """This form handles importing
@@ -1066,29 +1134,3 @@ class EditUserEmailFeedsForm(forms.Form):
                 user.followed_questions.clear()
         return changed
 
-class SimpleEmailSubscribeForm(forms.Form):
-    SIMPLE_SUBSCRIBE_CHOICES = (
-        ('y',_('okay, let\'s try!')),
-        ('n',_('no community email please, thanks'))
-    )
-    subscribe = forms.ChoiceField(
-            widget=forms.widgets.RadioSelect, 
-            error_messages={'required':_('please choose one of the options above')},
-            choices=SIMPLE_SUBSCRIBE_CHOICES
-        )
-
-    def __init__(self, *args, **kwargs):
-        self.frequency = kwargs.pop('frequency', 'w') 
-        super(SimpleEmailSubscribeForm, self).__init__(*args, **kwargs)
-
-    def save(self, user=None):
-        EFF = EditUserEmailFeedsForm
-        #here we have kind of an anomaly - the value 'y' is redundant
-        #with the frequency variable - needs to be fixed
-        if self.is_bound and self.cleaned_data['subscribe'] == 'y':
-            email_settings_form = EFF()
-            email_settings_form.set_frequency(self.frequency)
-            logging.debug('%s wants to subscribe' % user.username)
-        else:
-            email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
-        email_settings_form.save(user, save_unbound=True)

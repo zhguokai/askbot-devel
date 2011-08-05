@@ -280,6 +280,9 @@ else:
     ),)
 
 if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
+    #if we use the askbot authentication system,
+    #then we also need to use askbot authentication backend
+    #or it's subclass
     urlpatterns += (
         url(r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
     )

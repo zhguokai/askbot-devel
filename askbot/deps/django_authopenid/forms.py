@@ -37,8 +37,7 @@ from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
-from recaptcha_works.fields import RecaptchaField
-from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
+from askbot.utils.forms import NextUrlField, UserNameField
 
 # needed for some linux distributions like debian
 try:
@@ -49,9 +48,8 @@ except ImportError:
 from askbot.deps.django_authopenid import util
 
 __all__ = [
-    'OpenidSigninForm','OpenidRegisterForm',
-    'ClassicRegisterForm', 'ChangePasswordForm',
-    'ChangeEmailForm', 'EmailPasswordForm', 'DeleteForm',
+    'OpenidSigninForm',
+    'EmailPasswordForm', 'DeleteForm',
     'ChangeOpenidForm'
 ]
 
@@ -93,7 +91,6 @@ class PasswordLoginProviderField(LoginProviderField):
                     'provider %s must accept password' % value
                 )
         return value
-
 
 class OpenidSigninForm(forms.Form):
     """ signin form """
@@ -302,77 +299,6 @@ class LoginForm(forms.Form):
             logging.critical(error_message)
             self._errors['password_action'] = self.error_class([error_message])
             raise forms.ValidationError(error_message)
-
-class OpenidRegisterForm(forms.Form):
-    """ openid signin form """
-    next = NextUrlField()
-    username = UserNameField()
-    email = UserEmailField()
-
-class ClassicRegisterForm(SetPasswordForm):
-    """ legacy registration form """
-
-    next = NextUrlField()
-    username = UserNameField()
-    email = UserEmailField()
-    login_provider = PasswordLoginProviderField()
-    #fields password1 and password2 are inherited
-
-class SafeClassicRegisterForm(ClassicRegisterForm):
-    """this form uses recaptcha in addition
-    to the base register form
-    """
-    recaptcha = RecaptchaField(
-                    private_key = askbot_settings.RECAPTCHA_SECRET,
-                    public_key = askbot_settings.RECAPTCHA_KEY
-                )
-
-class ChangePasswordForm(SetPasswordForm):
-    """ change password form """
-    oldpw = forms.CharField(widget=forms.PasswordInput(attrs={'class':'required'}),
-                label=mark_safe(_('Current password')))
-
-    def __init__(self, data=None, user=None, *args, **kwargs):
-        if user is None:
-            raise TypeError("Keyword argument 'user' must be supplied")
-        super(ChangePasswordForm, self).__init__(data, *args, **kwargs)
-        self.user = user
-
-    def clean_oldpw(self):
-        """ test old password """
-        if not self.user.check_password(self.cleaned_data['oldpw']):
-            raise forms.ValidationError(_("Old password is incorrect. \
-                    Please enter the correct password."))
-        return self.cleaned_data['oldpw']
-
-class ChangeEmailForm(forms.Form):
-    """ change email form """
-    email = UserEmailField(skip_clean=True)
-
-    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, \
-            initial=None, user=None):
-        super(ChangeEmailForm, self).__init__(data, files, auto_id, 
-                prefix, initial)
-        self.user = user
-
-    def clean_email(self):
-        """ check if email don't exist """
-        if 'email' in self.cleaned_data:
-            if askbot_settings.EMAIL_UNIQUE == True:
-                try:
-                    user = User.objects.get(email = self.cleaned_data['email'])
-                    if self.user and self.user == user:   
-                        return self.cleaned_data['email']
-                except User.DoesNotExist:
-                    return self.cleaned_data['email']
-                except User.MultipleObjectsReturned:
-                    raise forms.ValidationError(u'There is already more than one \
-                        account registered with that e-mail address. Please try \
-                        another.')
-                raise forms.ValidationError(u'This email is already registered \
-                    in our database. Please choose another.')
-            else:
-                return self.cleaned_data['email']
 
 class AccountRecoveryForm(forms.Form):
     """with this form user enters email address and
