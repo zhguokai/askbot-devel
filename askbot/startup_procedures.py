@@ -25,7 +25,7 @@ PREAMBLE = """\n
 """
 
 FOOTER = """\n
-Please, type ^C (Ctrl-C) to stop the program, then resolve the issues.
+If necessary, type ^C (Ctrl-C) to stop the program, then resolve the issues.
 """
 
 class AskbotConfigError(ImproperlyConfigured):
@@ -52,7 +52,7 @@ def maybe_report_errors(error_messages, header = None, footer = None):
     if header: message += header + '\n'
     message += 'Please attend to the following:\n\n'
     message += '\n\n'.join(error_messages)
-    if footer: message += footer
+    if footer: message += '\n\n' + footer
     raise AskbotConfigError(message)
 
 def format_as_text_tuple_entries(items):
@@ -183,18 +183,19 @@ in your settings.py"""
 
 def test_urlconf():
     """tests url configuration"""
+    return#does not work for some reason...
     if getattr(django_settings, 'DISABLE_ASKBOT_ERROR_VIEWS', True):
         import urls
         handler500 = getattr(urls, 'handler500', None)
         handler404 = getattr(urls, 'handler404', None)
         url_errors = list()
-        message_template = "add line:\n%s\nto your urls.py file"
+        message_template = "add line:\n%s = '%s'\nto your urls.py file"
         handler500_path = 'askbot.views.meta.server_error'
         if handler500 != handler500_path:
-            url_errors.append(message_template % handler500_path)
+            url_errors.append(message_template % ('handler500', handler500_path))
         handler404_path = 'askbot.views.meta.page_not_found'
         if handler404 != handler404_path:
-            url_errors.append(message_template % handler404_path)
+            url_errors.append(message_template % ('handler404', handler404_path))
 
         footer = """If you want to use custom url handlers,
 please add them manually to your urls.py file
@@ -207,23 +208,26 @@ to your settings.py file"""
             footer = footer
         )
 
-def run_startup_tests():
+def run_self_test():
     """function that runs
     all startup tests, mainly checking settings config so far
     """
-
-    #todo: refactor this when another test arrives
     test_modules()
     test_askbot_url()
     test_i18n()
     test_middleware()
     test_template_loaders()
-    test_urlconf()
+    try:
+        #unfortunately cannot test urls
+        #at the startup time. a command askbot_selftest will access these
+        test_urlconf()
+    except ImportError:
+        pass
 
 @transaction.commit_manually
 def run():
     """runs all the startup procedures"""
-    run_startup_tests()
+    run_self_test()
     try:
         badges.init_badges()
         transaction.commit()

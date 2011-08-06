@@ -23,6 +23,12 @@ Then run::
     and the second one - for testing the upgrade. When you are sure that
     your upgrade works, just switch the testing installation for the former production one.
 
+When everything is set up, you could run a self-test command::
+
+    python manage.py askbot_selftest
+
+If you find some issue later that this test did not catch - please report it at the askbot support forum.
+
 Now run the Django development server and check that everything works::
 
     python manage.py runserver `hostname -i`:8000 #or use some other port number > 1024

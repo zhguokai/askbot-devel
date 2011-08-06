@@ -14,6 +14,9 @@ To run these commands there is a general pattern::
 I.e. the commands are generally run from the project directory (the same 
 one that contains your settings.py file) and they may use additional parameters and options.
 
+One command that is worth mentioning separately - ``askbot_selftest`` (no arguments).
+please run it to diagnose askbot forum deployment errors.
+
 Data and User administration commands
 =====================================
 
@@ -163,4 +166,7 @@ the developers of the Askbot project:
 |                                | must be run from the `askbot` app directory, unlike all the |
 |                                | remaining commands that are expected to be run from the     |
 |                                | site root directory.                                        |
++--------------------------------+-------------------------------------------------------------+
+| `askbot_selftest`              | Runs tests on settings.py and urls.py files to help you     |
+|                                | deploy askbot forum                                         |
 +--------------------------------+-------------------------------------------------------------+

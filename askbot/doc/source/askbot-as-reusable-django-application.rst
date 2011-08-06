@@ -9,6 +9,15 @@ a truly reusable app, but some are already solved.
 This page is a guide for using askbot as an independent app and it is 
 somewhat technical.
 
+Before going into the detail, please remember that there is a self-test
+management command::
+
+    python manage.py askbot_selftest
+
+It is designed to help you make askbot run smoothly. If you notice some
+issue that the ``askbot_selftest`` command did not catch -
+please report it on the askbot support forum.
+
 .. _adding-askbot-to-pre-existing-site:
 Adding askbot to a pre-existing site
 ====================================
