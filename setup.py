@@ -24,6 +24,7 @@ install_requires = [
     'django-followit',
     'django-recaptcha-works',
     'python-openid',
+    'django-registration',
 ]
 
 #todo: have a dirty version retriever that 
