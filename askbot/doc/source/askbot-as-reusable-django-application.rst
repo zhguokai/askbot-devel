@@ -2,12 +2,14 @@
 Askbot as reusable django application
 =====================================
 
+url_errors = list()
+if handler500 != 'askbot.views.meta.server_error':
+    url_errors
 Askbot can be used both as as dedicated site and as an application
 within a larger site. There are still issues to resolve to make askbot
 a truly reusable app, but some are already solved.
 
-This page is a guide for using askbot as an independent app and it is 
-somewhat technical.
+This page is a guide for using askbot alongside other django applications.
 
 Before going into the detail, please remember that there is a self-test
 management command::
@@ -21,6 +23,17 @@ please report it on the askbot support forum.
 .. _adding-askbot-to-pre-existing-site:
 Adding askbot to a pre-existing site
 ====================================
+
+If you have a running django site, you aleready have files
+``settings.py`` and ``urls.py``. Askbot has templates for those files,
+with the same names, but located in the directory ``askbot/setup_templates``
+of the askbot distribution.
+
+Please add contents of those two files into yours manually and
+use management command ``askbot_selftest`` to diagnose your setup
+and report any problems you find. It is not possible to just
+copy-paste contents of those files into yours at this point, as
+many of the entries need to be merged separately.
 
 If you already have a django site with users, after adding askbot
 to your project, run a management command just once::
