@@ -3,27 +3,27 @@
 
 This module contains a collection of views displaying all sorts of secondary and mostly static content.
 """
-from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
-from django.template import RequestContext, Template
+from django.db.models import Max, Count
 from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext as _
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext, Template
 from django.views import static
 from django.views.decorators import csrf
-from django.db.models import Max, Count
+from django.utils.translation import ugettext as _
 from askbot.forms import FeedbackForm
 from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
 from askbot.models import BadgeData, Award, User
 from askbot.models import badges as badge_data
-from askbot.skins.loaders import get_template, render_into_skin, render_text_into_skin
+from askbot.skins.loaders import get_template, render_text_into_skin
 from askbot.conf import settings as askbot_settings
 from askbot import skins
 
 def generic_view(request, template = None, page_class = None):
-    """this may be not necessary, since it is just a rewrite of render_into_skin"""
-    return render_into_skin(template, {'page_class': page_class}, request)
+    """this may be not necessary"""
+    #todo - is this used anywhere besides this file?
+    return render_to_response(template, RequestContext(request, {'page_class': page_class}))
 
 def config_variable(request, variable_name = None, mimetype = None):
     """Print value from the configuration settings
@@ -58,14 +58,14 @@ def faq(request):
             'page_class': 'meta',
             'forum_faq' : forum_faq,
         }
-        return render_into_skin('faq.html', data_out, request)
+        return render_to_response('faq.html', RequestContext(request, data_out))
     data = {
         'gravatar_faq_url': reverse('faq') + '#gravatar',
         #'send_email_key_url': reverse('send_email_key'),
         'ask_question_url': reverse('ask'),
         'page_class': 'meta',
     }   
-    return render_into_skin('faq_static.html', data, request)
+    return render_to_response('faq_static.html', RequestContext(request, data))
 
 @csrf.csrf_protect
 def feedback(request):
@@ -88,11 +88,11 @@ def feedback(request):
         form = FeedbackForm(initial={'next':get_next_url(request)})
 
     data['form'] = form
-    return render_into_skin('feedback.html', data, request)
+    return render_to_response('feedback.html', RequestContext(request, data))
 feedback.CANCEL_MESSAGE=_('We look forward to hearing your feedback! Please, give it next time :)')
 
 def privacy(request):
-    return render_into_skin('privacy.html', {'page_class': 'meta'}, request)
+    return render_to_response('privacy.html', RequestContext(request, {'page_class': 'meta'}))
 
 def badges(request):#user status/reputation system
     #todo: supplement database data with the stuff from badges.py
@@ -114,7 +114,7 @@ def badges(request):#user status/reputation system
         'mybadges' : my_badges,
         'feedback_faq_url' : reverse('feedback'),
     }
-    return render_into_skin('badges.html', data, request)
+    return render_to_response('badges.html', RequestContext(request, data))
 
 def badge(request, id):
     #todo: supplement database data with the stuff from badges.py
@@ -134,7 +134,7 @@ def badge(request, id):
         'badge' : badge,
         'page_class': 'meta',
     }
-    return render_into_skin('badge.html', data, request)
+    return render_to_response('badge.html', RequestContext(request, data))
 
 def media(request, skin, resource):
     """view that serves static media from any skin

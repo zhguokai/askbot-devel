@@ -8,16 +8,14 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from django.views.decorators import csrf
 from django.conf import settings
-
 from django.contrib.auth.decorators import login_required
-
+from django.shortcuts import render_to_response
 from avatar.forms import PrimaryAvatarForm, DeleteAvatarForm, UploadAvatarForm
 from avatar.models import Avatar
 from avatar.settings import AVATAR_MAX_AVATARS_PER_USER, AVATAR_DEFAULT_SIZE
 from avatar.util import get_primary_avatar, get_default_avatar_url
 from avatar.views import render_primary as django_avatar_render_primary
 
-from askbot.skins.loaders import render_into_skin
 from askbot import models
 
 notification = False
@@ -111,7 +109,7 @@ def add(request, extra_context=None, next_override=None,
     if extra_context:
         data.update(extra_context)
 
-    return render_into_skin('avatar/add.html', data, request)
+    return render_to_response('avatar/add.html', RequestContext(request, data))
 
 @login_required
 @csrf.csrf_protect
@@ -153,7 +151,7 @@ def change(request, extra_context=None, next_override=None,
     if extra_context:
         data.update(extra_context)
 
-    return render_into_skin('avatar/change.html', data, request)
+    return render_to_response('avatar/change.html', RequestContext(request, data))
 
 @login_required
 @csrf.csrf_protect
@@ -190,7 +188,7 @@ def delete(request, extra_context=None, next_override=None, *args, **kwargs):
     if extra_context:
         data.update(extra_context)
 
-    return render_into_skin('avatar/confirm_delete.html', data, request)
+    return render_to_response('avatar/confirm_delete.html', RequestContext(request, data))
 
 def render_primary(request, user_id = None, *args, **kwargs):
     user = models.User.objects.get(id = user_id)

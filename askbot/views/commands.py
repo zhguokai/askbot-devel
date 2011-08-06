@@ -11,7 +11,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.forms import ValidationError
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render_to_response
+from django.template import RequestContext
 from django.views.decorators import csrf
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
@@ -21,7 +22,6 @@ from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot.utils import url_utils
-from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
 
@@ -403,7 +403,7 @@ def subscribe_for_tags(request):
             return HttpResponseRedirect(reverse('index'))
         else:
             data = {'tags': tag_names}
-            return render_into_skin('subscribe_for_tags.html', data, request)
+            return render_to_response('subscribe_for_tags.html', RequestContext(request, data))
     else:
         all_tag_names = pure_tag_names + wildcards
         message = _('Please sign in to subscribe for: %(tags)s') \
@@ -482,7 +482,7 @@ def close(request, id):#close question
                 'question': question,
                 'form': form,
             }
-            return render_into_skin('close.html', data, request)
+            return render_to_response('close.html', RequestContext(request, data))
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
@@ -511,7 +511,7 @@ def reopen(request, id):#re-open question
                 'closed_by_profile_url': closed_by_profile_url,
                 'closed_by_username': closed_by_username,
             }
-            return render_into_skin('reopen.html', data, request)
+            return render_to_response('reopen.html', RequestContext(request, data))
             
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))

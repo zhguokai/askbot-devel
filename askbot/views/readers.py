@@ -10,19 +10,19 @@ import datetime
 import logging
 import urllib
 import operator
-from django.shortcuts import get_object_or_404
+from django.core.urlresolvers import reverse
+from django.core import exceptions as django_exceptions
+from django.contrib.humanize.templatetags import humanize
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.template import Context
+from django.shortcuts import get_object_or_404, render_to_response
+from django.template import Context, RequestContext
 from django.utils.http import urlencode
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils import translation
 from django.views.decorators import csrf
-from django.core.urlresolvers import reverse
-from django.core import exceptions as django_exceptions
-from django.contrib.humanize.templatetags import humanize
 
 import askbot
 from askbot import exceptions
@@ -38,7 +38,7 @@ from askbot.templatetags import extra_tags
 from askbot.templatetags import extra_filters
 import askbot.conf
 from askbot.conf import settings as askbot_settings
-from askbot.skins.loaders import render_into_skin, get_template#jinja2 template loading enviroment
+from askbot.skins.loaders import get_template#jinja2 template loading enviroment
 
 # used in index page
 #todo: - take these out of const or settings
@@ -310,7 +310,7 @@ def questions(request):
     #ajax request is handled in a separate branch above
 
     #before = datetime.datetime.now()
-    response = render_into_skin('main_page.html', template_data, request)
+    response = render_to_response('main_page.html', RequestContext(request, template_data))
     #after = datetime.datetime.now()
     #print after - before
     return response
@@ -402,7 +402,7 @@ def tags(request):#view showing a listing of available tags - plain list
             'keywords' : stag,
         }
     
-    return render_into_skin('tags.html', data, request)
+    return render_to_response('tags.html', RequestContext(request, data))
 
 @csrf.csrf_protect
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
@@ -598,7 +598,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment': show_comment,
         'comment_order_number': comment_order_number
     }
-    return render_into_skin('question.html', data, request)
+    return render_to_response('question.html', RequestContext(request, data))
 
 def revisions(request, id, object_name=None):
     assert(object_name in ('Question', 'Answer'))
@@ -618,7 +618,7 @@ def revisions(request, id, object_name=None):
         'post': post,
         'revisions': revisions,
     }
-    return render_into_skin('revisions.html', data, request)
+    return render_to_response('revisions.html', RequestContext(request, data))
 
 @ajax_only
 @anonymous_forbidden

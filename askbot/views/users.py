@@ -16,22 +16,22 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import get_object_or_404, render_to_response
+from django.template import RequestContext
 from django.utils.translation import ugettext as _
-from django.views.decorators import csrf
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.utils.mail import send_mail
 from askbot.utils.http import get_request_info
+from django.views.decorators import csrf
 from askbot import forms
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
-from askbot.skins.loaders import render_into_skin
 from askbot.templatetags import extra_tags
 
 question_type = ContentType.objects.get_for_model(models.Question)
@@ -137,7 +137,7 @@ def users(request):
         'tab_id' : sortby,
         'paginator_context' : paginator_context
     }
-    return render_into_skin('users.html', data, request)
+    return render_to_response('users.html', RequestContext(request, data))
 
 @csrf.csrf_protect
 def user_moderate(request, subject, context):
@@ -231,7 +231,7 @@ def user_moderate(request, subject, context):
         'user_status_changed': user_status_changed
     }
     context.update(data)
-    return render_into_skin('user_profile/user_moderate.html', context, request)
+    return render_to_response('user_profile/user_moderate.html', RequestContext(request, data))
 
 #non-view function
 def set_new_email(user, new_email, nomessage=False):
@@ -285,7 +285,7 @@ def edit_user(request, id):
         'form' : form,
         'gravatar_faq_url' : reverse('faq') + '#gravatar',
     }
-    return render_into_skin('user_profile/user_edit.html', data, request)
+    return render_to_response('user_profile/user_edit.html', RequestContext(request, data))
 
 def user_stats(request, user, context):
 
@@ -394,7 +394,7 @@ def user_stats(request, user, context):
         'total_awards' : total_awards,
     }
     context.update(data)
-    return render_into_skin('user_profile/user_stats.html', context, request)
+    return render_to_response('user_profile/user_stats.html', RequestContext(request, data))
 
 def user_recent(request, user, context):
 
@@ -686,7 +686,7 @@ def user_recent(request, user, context):
         'activities' : activities[:const.USER_VIEW_DATA_SIZE]
     }
     context.update(data)
-    return render_into_skin('user_profile/user_recent.html', context, request)
+    return render_to_response('user_profile/user_recent.html', RequestContext(request, data))
 
 @owner_or_moderator_required
 def user_responses(request, user, context):
@@ -753,7 +753,7 @@ def user_responses(request, user, context):
         'responses' : response_list,
     }
     context.update(data)
-    return render_into_skin('user_profile/user_inbox.html', context, request)
+    return render_to_response('user_profile/user_inbox.html', RequestContext(request, data))
 
 def user_network(request, user, context):
     if 'followit' not in django_settings.INSTALLED_APPS:
@@ -764,7 +764,7 @@ def user_network(request, user, context):
         'followers': user.get_followers(),
     }
     context.update(data)
-    return render_into_skin('user_profile/user_network.html', context, request)
+    return render_to_response('user_profile/user_network.html', RequestContext(request, data))
 
 @owner_or_moderator_required
 def user_votes(request, user, context):
@@ -828,7 +828,7 @@ def user_votes(request, user, context):
         'votes' : votes[:const.USER_VIEW_DATA_SIZE]
     }
     context.update(data)
-    return render_into_skin('user_profile/user_votes.html', context, request)
+    return render_to_response('user_profile/user_votes.html', RequestContext(request, data))
 
 def user_reputation(request, user, context):
     reputes = models.Repute.objects.filter(user=user).order_by('-reputed_at')
@@ -865,7 +865,7 @@ def user_reputation(request, user, context):
         'reps': reps
     }
     context.update(data)
-    return render_into_skin('user_profile/user_reputation.html', context, request)
+    return render_to_response('user_profile/user_reputation.html', RequestContext(request, data))
 
 def user_favorites(request, user, context):
     favorited_q_id_list= models.FavoriteQuestion.objects.filter(
@@ -893,7 +893,7 @@ def user_favorites(request, user, context):
         'favorited_myself': favorited_q_id_list,
     }
     context.update(data)
-    return render_into_skin('user_profile/user_favorites.html', context, request)
+    return render_to_response('user_profile/user_favorites.html', RequestContext(request, data))
 
 @owner_or_moderator_required
 @csrf.csrf_protect
@@ -943,10 +943,9 @@ def user_email_subscriptions(request, user, context):
         'action_status': action_status,
     }
     context.update(data)
-    return render_into_skin(
+    return render_to_response(
         'user_profile/user_email_subscriptions.html',
-        context,
-        request
+        RequestContext(request, data)
     )
 
 user_view_call_table = {

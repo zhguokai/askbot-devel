@@ -1,5 +1,6 @@
 import os.path
 from django.template.loaders import filesystem
+from django.template.loader import BaseLoader
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.utils import translation
@@ -38,32 +39,6 @@ def load_template_source(name, dirs=None):
         tname = os.path.join('default','templates',name)
         return filesystem.load_template_source(tname,dirs)
 load_template_source.is_usable = True
-
-class SkinLoader(jinja_loaders.BaseLoader):
-    """loads template from the skin directory
-    code largely copy-pasted from the jinja2 internals
-    """
-    def get_source(self, environment, template):
-        pieces = jinja_loaders.split_template_path(template)
-        skin = askbot_settings.ASKBOT_DEFAULT_SKIN
-        skin_path = utils.get_path_to_skin(skin)
-        filename = os.path.join(skin_path, 'templates', *pieces)
-        print 'want file %s' % filename
-        f = open_if_exists(filename)
-        if f is None:
-            raise TemplateNotFound(template)
-        try:
-            contents = f.read().decode('utf-8')
-        finally:
-            f.close()
-
-        mtime = os.path.getmtime(filename)
-        def uptodate():
-            try:
-                return os.path.getmtime(filename) == mtime
-            except OSError:
-                return False
-        return contents, filename, uptodate
 
 class SkinEnvironment(CoffinEnvironment):
     """Jinja template environment
@@ -135,18 +110,15 @@ def get_template(template, request = None):
     skin = get_skin(request)
     return skin.get_template(template)
 
-def render_into_skin(template, data, request, mimetype = 'text/html'):
-    """in the future this function will be able to
-    switch skin depending on the site administrator/user selection
-    right now only admins can switch
-    """
-    context = RequestContext(request, data)
-    template = get_template(template, request)
-    return HttpResponse(template.render(context), mimetype = mimetype)
-
 def render_text_into_skin(text, data, request):
+    #todo: remove this
     context = RequestContext(request, data)
     skin = get_skin(request)
     template = skin.from_string(text)
     return template.render(context)
 
+class Loader(BaseLoader):
+    """skins template loader for Django > 1.2"""
+    is_usable = True
+    def load_template(self, template_name, template_dirs = None):
+        return get_template(template_name), template_name

@@ -12,21 +12,21 @@ import random
 import sys
 import tempfile
 import time
-from django.core.files.storage import FileSystemStorage
-from django.shortcuts import get_object_or_404
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
+from django.core.urlresolvers import reverse
+from django.core import exceptions
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
+from django.shortcuts import get_object_or_404, render_to_response
+from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
-from django.core import exceptions
-from django.conf import settings
 from django.views.decorators import csrf
 
 from askbot import forms
 from askbot import models
-from askbot.skins.loaders import render_into_skin
 from askbot.utils import decorators
 from askbot.utils.functions import diff_date
 from askbot.utils import url_utils
@@ -184,7 +184,7 @@ def import_data(request):
         'dump_upload_form': form,
         'need_configuration': (not stackexchange.is_ready())
     }
-    return render_into_skin('import_data.html', data, request)
+    return render_to_response('import_data.html', RequestContext(request, data))
 
 #@login_required #actually you can post anonymously, but then must register
 @csrf.csrf_protect
@@ -261,7 +261,7 @@ def ask(request):#view used to ask a new question
         'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
     }
-    return render_into_skin('ask.html', data, request)
+    return render_to_response('ask.html', RequestContext(request, data))
 
 @login_required
 #@csrf.csrf_protect remove for ajax
@@ -304,7 +304,7 @@ def retag_question(request, id):
             'question': question,
             'form' : form,
         }
-        return render_into_skin('question_retag.html', data, request)
+        return render_to_response('question_retag.html', RequestContext(request, data))
     except exceptions.PermissionDenied, e:
         if request.is_ajax():
             response_data = {
@@ -398,7 +398,7 @@ def edit_question(request, id):
             'mandatory_tags': models.tag.get_mandatory_tags(),
             'form' : form,
         }
-        return render_into_skin('question_edit.html', data, request)
+        return render_to_response('question_edit.html', RequestContext(request, data))
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
@@ -456,7 +456,7 @@ def edit_answer(request, id):
             'revision_form': revision_form,
             'form': form,
         }
-        return render_into_skin('answer_edit.html', data, request)
+        return render_to_response('answer_edit.html', RequestContext(request, data))
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
