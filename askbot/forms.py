@@ -251,7 +251,8 @@ class SummaryField(forms.CharField):
         self.label  = _('update summary:')
         self.help_text = _('enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)')
 
-NO_EMAIL_MSG = _('no %(site_name)s email please') % askbot_settings.APP_SHORT_NAME
+NO_EMAIL_MSG = _('no %(site_name)s email please') \
+% {'site_name': askbot_settings.APP_SHORT_NAME}
 class SimpleEmailSubscribeField(forms.ChoiceField):
     def __init__(self, **kwargs):
         kwargs.setdefault(
@@ -266,7 +267,7 @@ class SimpleEmailSubscribeField(forms.ChoiceField):
             'error_messages',
             {'required':_('please choose one of the options above')},
         )
-        super(SimpleEmailSubscribeForm, self).__init__(**kwargs)
+        super(SimpleEmailSubscribeField, self).__init__(**kwargs)
 
 class SimpleEmailSubscribeForm(forms.Form):
     subscribe = SimpleEmailSubscribeField()
