@@ -24,7 +24,7 @@ template.add_to_builtins('askbot.templatetags.extra_filters_jinja')
 ASKBOT_SKIN_COLLECTION_DIR = os.path.dirname(__file__)
 
 def load_template_source(name, dirs=None):
-    """Django template loader
+    """Django template loader for askbot - 
     """
     if dirs is None:
         dirs = (ASKBOT_SKIN_COLLECTION_DIR, )

@@ -1,11 +1,14 @@
 """
 main url configuration file for the askbot site
 """
-from django.conf.urls.defaults import patterns, include, handler404, handler500, url
+from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 
 from django.contrib import admin
 admin.autodiscover()
+
+handler500 = 'askbot.views.meta.server_error'
+handler404 = 'askbot.views.meta.page_not_found'
 
 urlpatterns = patterns('',
     (r'%s' % settings.ASKBOT_URL, include('askbot.urls')),

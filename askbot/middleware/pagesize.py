@@ -53,5 +53,5 @@ class QuestionsPageSizeMiddleware(object):
             #need to log some more details about the request
             logging.critical(utils.http.get_request_info(request))
             from askbot.skins.loaders import get_template
-            template = get_template('500.jinja.html', request)
+            template = get_template('500.html', request)
             return HttpResponse(template.render(RequestContext(request)))
