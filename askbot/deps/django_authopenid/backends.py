@@ -9,6 +9,28 @@ from django.utils.translation import ugettext as _
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
 
+def get_or_create_unique_user(preferred_username = None):
+    """retrieves a user by name and returns the user object
+    if such user does not exist, create a new user and make
+    username unique throughout the system
+
+    this function monkey patches user object with a new
+    boolean attribute - ``name_is_automatic``, which is set
+    to True, when user name is automatically created
+    """
+    user, created = User.objects.get_or_create(username = preferred_username)
+    if created:
+        user.set_password(password)
+        user.save()
+        user.name_is_automatic = False
+    else:
+        #have username collision - so make up a more unique user name
+        #bug: - if user already exists with the new username - we are in trouble
+        new_username = '%s@%s' % (preferred_username, provider_name)
+        user = User.objects.create_user(new_username, '', password)
+        user.name_is_automatic = True
+    return user
+
 class AuthBackend(object):
     """Authenticator's authentication backend class
     for more info, see django doc page:
@@ -35,6 +57,8 @@ class AuthBackend(object):
         """this authentication function supports many login methods
         just which method it is going to use it determined
         from the signature of the function call
+
+        returns authenticated user object or ``None``
         """
         login_providers = util.get_enabled_login_providers()
         if method == 'password':
@@ -47,7 +71,10 @@ class AuthBackend(object):
                         return None
                 except User.DoesNotExist:
                     return None
+                #fall out of this branch if the user is authenticated successfully
             else:
+                #password login provider other than local,
+                #we are calling check password function configured with the provider
                 if login_providers[provider_name]['check_password'](username, password):
                     try:
                         #if have user associated with this username and provider,
@@ -58,16 +85,15 @@ class AuthBackend(object):
                                     )
                         return assoc.user
                     except UserAssociation.DoesNotExist:
-                        #race condition here a user with this name may exist
-                        user, created = User.objects.get_or_create(username = username)
-                        if created:
-                            user.set_password(password)
-                            user.save()
-                        else:
-                            #have username collision - so make up a more unique user name
-                            #bug: - if user already exists with the new username - we are in trouble
-                            new_username = '%s@%s' % (username, provider_name)
-                            user = User.objects.create_user(new_username, '', password)
+                        #if the association does not exist yet, that means
+                        #that there is no user yet in the system for this remote user
+                        #so we create a user and make sure that the name is unique systemwide
+                        user = get_or_create_unique_user(preferred_username = username)
+                        user.set_unusable_password()
+                        user.save()
+
+                        if user.name_is_automatic:
+                            #warn about their name being automatically created
                             message = _(
                                 'Welcome! Please set email address (important!) in your '
                                 'profile and adjust screen name, if necessary.'
@@ -76,9 +102,6 @@ class AuthBackend(object):
                 else:
                     return None
 
-            #this is a catch - make login token a little more unique
-            #for the cases when passwords are the same for two users
-            #from the same provider
             try:
                 assoc = UserAssociation.objects.get(
                                             user = user,
@@ -89,7 +112,8 @@ class AuthBackend(object):
                                     user = user,
                                     provider_name = provider_name
                                 )
-            assoc.openid_url = username + '@' + provider_name#has to be this way for external pw logins
+            #has to be this way for external pw logins
+            assoc.openid_url = username + '@' + provider_name
 
         elif method == 'openid':
             provider_name = util.get_provider_name(openid_url)
