@@ -66,6 +66,7 @@ def questions(request):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
+    reverse('index')
     #before = datetime.datetime.now()
     #don't allow to post to this view
     if request.method == 'POST':

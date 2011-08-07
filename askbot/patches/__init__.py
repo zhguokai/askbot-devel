@@ -15,6 +15,7 @@ def patch_django():
     if major == 1 and minor < 2:
         django_patches.add_import_library_function()
         django_patches.add_csrf_protection()
+        django_patches.add_class_based_template_loaders()
 
 def patch_coffin():
     """coffin before version 0.3.4
