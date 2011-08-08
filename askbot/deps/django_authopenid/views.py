@@ -127,13 +127,13 @@ def get_full_url(request):
 
 def ask_openid(
             request,
-            openid_url,
-            redirect_to,
-            on_failure=None,
-            sreg_request=None
+            openid_url = None,
+            next_url = None,
+            on_failure=None
         ):
     """ basic function to ask openid and return response """
     on_failure = on_failure or signin_failure
+    sreg_request = sreg.SRegRequest(optional=['nickname', 'email'])
     
     trust_root = getattr(
         settings, 'OPENID_TRUST_ROOT', get_url_host(request) + '/'
@@ -156,6 +156,12 @@ def ask_openid(
     if sreg_request:
         logging.debug('adding sreg_request - wtf it is?')
         auth_request.addExtension(sreg_request)
+
+    redirect_to = "%s%s?%s" % (
+            get_url_host(request),
+            reverse('user_complete_signin'), 
+            urllib.urlencode({'next':next_url})
+    )
     redirect_url = auth_request.redirectURL(trust_root, redirect_to)
     logging.debug('redirecting to %s' % redirect_url)
     return HttpResponseRedirect(redirect_url)
@@ -240,7 +246,7 @@ def complete_oauth_signin(request):
         logging.debug('have %s user id=%s' % (oauth_provider_name, user_id))
 
         user = authenticate(
-                    oauth_user_id = user_id,
+                    identifier = unicode(user_id),
                     provider_name = oauth_provider_name,
                     method = 'oauth'
                 )
@@ -312,11 +318,11 @@ def signin(request):
                                 login_form.cleaned_data['password']
                             ):
                         user = authenticate(
-                                        ldap_user_id = username,
+                                        identifier = username,
                                         provider_name = ldap_provider_name,
                                         method = 'ldap'
                                     )
-                        if user is not None:
+                        if user:
                             login(request, user)
                             return HttpResponseRedirect(next_url)
                         else:
@@ -331,8 +337,10 @@ def signin(request):
                         login_form.set_password_login_error() 
                 else:
                     if password_action == 'login':
+                        username = login_form.cleaned_data['username']
                         user = authenticate(
-                                username = login_form.cleaned_data['username'],
+                                identifier = '%s@%s' % (username, provider_name),
+                                username = username,
                                 password = login_form.cleaned_data['password'],
                                 provider_name = provider_name,
                                 method = 'password'
@@ -369,18 +377,11 @@ def signin(request):
 
                 #todo: make a simple-use wrapper for openid protocol
 
-                sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
-                redirect_to = "%s%s?%s" % (
-                        get_url_host(request),
-                        reverse('user_complete_signin'), 
-                        urllib.urlencode({'next':next_url})
-                )
                 return ask_openid(
                             request, 
-                            login_form.cleaned_data['openid_url'],
-                            redirect_to,
-                            on_failure=signin_failure,
-                            sreg_request=sreg_req
+                            openid_url = login_form.cleaned_data['openid_url'],
+                            next_url = next_url,
+                            on_failure=signin_failure
                         )
 
             elif login_form.cleaned_data['login_type'] == 'oauth':
@@ -418,8 +419,9 @@ def signin(request):
                     user_id = util.get_facebook_user_id(request)
 
                     user = authenticate(
+                                identifier = user_id,
                                 method = 'facebook',
-                                facebook_user_id = user_id
+                                provider_name = 'facebook'
                             )
 
                     return finalize_generic_signin(
@@ -653,7 +655,8 @@ def signin_success(request, identity_url, openid_response):
 
     openid_url = str(openid_data)
     user = authenticate(
-                    openid_url = openid_url,
+                    identifier = openid_url,
+                    provider_name = util.get_provider_name(openid_url),
                     method = 'openid'
                 )
 
@@ -813,7 +816,10 @@ def register(request, login_provider_name=None, user_identifier=None):
             
             logging.debug('logging the user in')
 
-            user = authenticate(method = 'force', user_id = user.id)
+            user = authenticate(
+                method = 'force',
+                identifier = str(user.id2)
+            )
             if user is None:
                 error_message = 'please make sure that ' + \
                                 'askbot.deps.django_authopenid.backends.AuthBackend' + \
@@ -928,6 +934,7 @@ def signup_with_password(request):
             user = authenticate(
                         username = username,
                         password = password,
+                        identifier = '%s@%s' % (username, provider_name),
                         provider_name = provider_name,
                         method = 'password'
                     )
@@ -1133,7 +1140,7 @@ def account_recover(request, key = None):
         if key is None:
             return HttpResponseRedirect(reverse('user_signin'))
 
-        user = authenticate(email_key = key, method = 'email')
+        user = authenticate(identifier = key, method = 'email')
         if user:
             if request.user.is_authenticated():
                 if user != request.user:

@@ -4,32 +4,31 @@ application
 """
 import datetime
 from django.contrib.auth.models import User
+from django.contrib.auth.backends import ModelBackend as AuthModelBackend
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext as _
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
 
-def get_or_create_unique_user(preferred_username = None):
-    """retrieves a user by name and returns the user object
-    if such user does not exist, create a new user and make
-    username unique throughout the system
+def authenticate_by_association(identifier = None, provider_name = None):
+    """returns user stored in the matching instance of the
+    user association
 
-    this function monkey patches user object with a new
-    boolean attribute - ``name_is_automatic``, which is set
-    to True, when user name is automatically created
+    Format of identifier is described in the doc string of
+    :meth:`AuthBackend.authenticate`
     """
-    user, created = User.objects.get_or_create(username = preferred_username)
-    if created:
-        user.set_password(password)
-        user.save()
-        user.name_is_automatic = False
-    else:
-        #have username collision - so make up a more unique user name
-        #bug: - if user already exists with the new username - we are in trouble
-        new_username = '%s@%s' % (preferred_username, provider_name)
-        user = User.objects.create_user(new_username, '', password)
-        user.name_is_automatic = True
-    return user
+    assoc = UserAssociation.objects.get(
+                    openid_url = identifier,#parameter name is bad
+                    provider_name = provider_name
+                )
+    assoc.last_used_timestamp = datetime.datetime.now()
+    assoc.save()
+    return assoc.user
+
+THIRD_PARTY_PROVIDER_TYPES = (
+    'openid', 'password' 'oauth', 'ldap', 'facebook',
+    'password-external'
+)
 
 class AuthBackend(object):
     """Authenticator's authentication backend class
@@ -43,145 +42,59 @@ class AuthBackend(object):
 
     def authenticate(
                 self,
+                identifier = None,# -
                 username = None,#for 'password'
                 password = None,#for 'password'
-                user_id = None,#for 'force'
                 provider_name = None,#required with all except email_key
-                openid_url = None,
-                email_key = None,
-                oauth_user_id = None,#used with oauth
-                facebook_user_id = None,#user with facebook
-                ldap_user_id = None,#for ldap
                 method = None,#requried parameter
             ):
         """this authentication function supports many login methods
         just which method it is going to use it determined
-        from the signature of the function call
+        by the value of ``method``
 
-        returns authenticated user object or ``None``
+        returns a user object or ``None``
+
+        Format for the ``identifier`` by type of authentication provider:
+
+        * openid - openid url as is
+        * password - username@local - for local pw based login
+        * password-external - username@provider_name - for external pw login provider
+        * facebook - facebook_user_id
+        * oauth - oauth_provider_user id in the form of string
+        * ldap - user id in the ldap system
+
+        In all cases - the identifier parameter is a string
         """
         login_providers = util.get_enabled_login_providers()
+        if method not in ('email', 'force', 'ldap'):
+            assert(login_providers[provider_name]['type'] == method)
+
         if method == 'password':
-            if login_providers[provider_name]['type'] != 'password':
-                raise ImproperlyConfigured('login provider must use password')
-            if provider_name == 'local':
-                try:
-                    user = User.objects.get(username=username)
-                    if not user.check_password(password):
-                        return None
-                except User.DoesNotExist:
-                    return None
-                #fall out of this branch if the user is authenticated successfully
-            else:
-                #password login provider other than local,
-                #we are calling check password function configured with the provider
-                if login_providers[provider_name]['check_password'](username, password):
-                    try:
-                        #if have user associated with this username and provider,
-                        #return the user
-                        assoc = UserAssociation.objects.get(
-                                        openid_url = username + '@' + provider_name,#a hack - par name is bad
-                                        provider_name = provider_name
-                                    )
-                        return assoc.user
-                    except UserAssociation.DoesNotExist:
-                        #if the association does not exist yet, that means
-                        #that there is no user yet in the system for this remote user
-                        #so we create a user and make sure that the name is unique systemwide
-                        user = get_or_create_unique_user(preferred_username = username)
-                        user.set_unusable_password()
-                        user.save()
-
-                        if user.name_is_automatic:
-                            #warn about their name being automatically created
-                            message = _(
-                                'Welcome! Please set email address (important!) in your '
-                                'profile and adjust screen name, if necessary.'
-                            )
-                            user.message_set.create(message = message)
-                else:
-                    return None
-
-            try:
-                assoc = UserAssociation.objects.get(
-                                            user = user,
-                                            provider_name = provider_name
-                                        )
-            except UserAssociation.DoesNotExist:
-                assoc = UserAssociation(
-                                    user = user,
-                                    provider_name = provider_name
-                                )
-            #has to be this way for external pw logins
-            assoc.openid_url = username + '@' + provider_name
-
-        elif method == 'openid':
-            provider_name = util.get_provider_name(openid_url)
-            try:
-                assoc = UserAssociation.objects.get(
-                                            openid_url = openid_url,
-                                            provider_name = provider_name
-                                        )
-                user = assoc.user
-            except UserAssociation.DoesNotExist:
-                return None
-
+            #reuse standard backend from django.contrib.auth
+            backend = AuthModelBackend()
+            return backend.authenticate(username, password)
+        elif method in THIRD_PARTY_PROVIDER_TYPES:
+            #any third party logins. here we guarantee that
+            #user already passed external authentication
+            return authenticate_by_association(
+                identifier = identifier,
+                provider_name = provider_name
+            )
         elif method == 'email':
-            #with this method we do no use user association
             try:
                 #todo: add email_key_timestamp field
                 #and check key age
-                user = User.objects.get(email_key = email_key)
+                user = User.objects.get(email_key = identifier)
                 user.email_key = None #one time key so delete it
                 user.email_isvalid = True
                 user.save()
                 return user
             except User.DoesNotExist:
                 return None
-
-        elif method == 'oauth':
-            if login_providers[provider_name]['type'] == 'oauth':
-                try:
-                    assoc = UserAssociation.objects.get(
-                                                openid_url = oauth_user_id,
-                                                provider_name = provider_name
-                                            )
-                    user = assoc.user
-                except UserAssociation.DoesNotExist:
-                    return None
-            else:
-                return None
-
-        elif method == 'facebook':
-            try:
-                #assert(provider_name == 'facebook')
-                assoc = UserAssociation.objects.get(
-                                            openid_url = facebook_user_id,
-                                            provider_name = 'facebook'
-                                        )
-                user = assoc.user
-            except UserAssociation.DoesNotExist:
-                return None
-
-        elif method == 'ldap':
-            try:
-                assoc = UserAssociation.objects.get(
-                                            openid_url = ldap_user_id,
-                                            provider_name = provider_name
-                                        )
-                user = assoc.user
-            except UserAssociation.DoesNotExist:
-                return None
-
         elif method == 'force':
-            return self.get_user(user_id)
+            return self.get_user(identifier)
         else:
-            raise TypeError('only openid and password supported')
-
-        #update last used time
-        assoc.last_used_timestamp = datetime.datetime.now()
-        assoc.save()
-        return user
+            raise NotImplementedError('unknown provider type %s' % method)
 
     def get_user(self, user_id):
         try:

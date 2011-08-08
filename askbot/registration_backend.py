@@ -36,6 +36,17 @@ class RegistrationBackend(object):
         username = form_data['username']
         email = form_data['email']
 
+        """
+        if user.name_is_automatic:
+            #warn about their name being automatically created
+            message = _(
+                'Welcome! Please set email address (important!) in your '
+                'profile and adjust screen name, if necessary.'
+            )
+            user.message_set.create(message = message)
+        """
+
+        #here, depending on the registration type, we might 
         user = User.objects.create_user(username, email = email)
         if form_data['reg_type'].startswith('with-password'):
             user.set_password(form_data['new_password1'])

@@ -11,10 +11,11 @@ import oauth2 as oauth
 
 from django.db.models.query import Q
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+from django.contrib.auth.models import User
 from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
-from django.core.exceptions import ImproperlyConfigured
 
 try:
     from hashlib import md5
@@ -125,11 +126,14 @@ class DjangoOpenIDStore(OpenIDStore):
 
         return False
    
-    def cleanupNonce(self):
-        Nonce.objects.filter(timestamp<int(time.time()) - nonce.SKEW).delete()
+    def cleanupNonce(self, nonce):
+        """this method does not seem to be used anywhere"""
+        Nonce.objects.filter(timestamp__lt = int(time.time()) - nonce.SKEW).delete()
 
     def cleanupAssociations(self):
-        Association.objects.extra(where=['issued + lifetimeint<(%s)' % time.time()]).delete()
+        Association.objects.extra(
+            where=['issued + lifetimeint<(%s)' % time.time()]
+        ).delete()
 
     def getAuthKey(self):
         # Use first AUTH_KEY_LEN characters of md5 hash of SECRET_KEY
@@ -256,7 +260,7 @@ class LoginMethod(object):
         self.create_password_prompt = getattr(self.mod, 'CREATE_PASSWORD_PROMPT', None)
         self.change_password_prompt = getattr(self.mod, 'CHANGE_PASSWORD_PROMPT', None)
 
-        if self.login_type == 'password':
+        if self.login_type == 'password-custom':
             self.check_password_function = self.get_required_attr(
                                                         'check_password',
                                                         'custom password login'
@@ -309,7 +313,7 @@ class LoginMethod(object):
         for param in params:
             attr_name = parameter_map.get(param, param)
             data[param] = getattr(self, attr_name, None)
-        if self.login_type == 'password':
+        if self.login_type == 'password-custom':
             #passwords in external login systems are not changeable
             data['password_changeable'] = False
         return data
@@ -349,6 +353,7 @@ def get_enabled_major_login_providers():
       password are from
     * create_password_prompt - a phrase prompting to create an account
     * change_password_prompt - a phrase prompting to change password
+    * check_password - a function checking login name and password
 
     OpenID (type = openid) - Provider of login using the OpenID protocol
 
@@ -374,6 +379,7 @@ def get_enabled_major_login_providers():
     if use_password_login():
         site_name = askbot_settings.APP_SHORT_NAME
         prompt = _('%(site)s user name and password') % {'site': site_name}
+
         data['local'] = {
             'name': 'local',
             'display_name': site_name,
@@ -410,8 +416,11 @@ def get_enabled_major_login_providers():
         token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
         client = oauth.Client(consumer, token=token)
         url = 'https://identi.ca/api/account/verify_credentials.json'
-        json = simplejson.loads(content)
-        return json['id']
+        response, content = client.request(url, 'GET')
+        if response.status == '200':
+            json = simplejson.loads(content)
+            return json['id']
+        raise OAuthError()
     if askbot_settings.IDENTICA_KEY and askbot_settings.IDENTICA_SECRET:
         data['identi.ca'] = {
             'name': 'identi.ca',

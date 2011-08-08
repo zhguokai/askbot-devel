@@ -1,12 +1,48 @@
 # -*- coding: utf-8 -*-
+import hashlib, random, sys, os, time
+from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 
-import hashlib, random, sys, os, time
-
 __all__ = ['Nonce', 'Association', 'UserAssociation', 
         'UserPasswordQueueManager', 'UserPasswordQueue']
+
+def get_or_create_unique_user(
+    preferred_username = None,
+    password = None,
+    login_provider_name = None
+):
+    """retrieves a user by name and returns the user object
+    if such user does not exist, create a new user and make
+    username unique throughout the system
+
+    this function monkey patches user object with a new
+    boolean attribute - ``name_is_automatic``, which is set
+    to True, when user name is automatically created
+    """
+    user, created = User.objects.get_or_create(username = preferred_username)
+    if created:
+        user.set_password(password)
+        user.save()
+        user.name_is_automatic = False
+    else:
+        #have username collision - so make up a more unique user name
+        #bug: - if user already exists with the new username - we are in trouble
+        new_username = '%s@%s' % (preferred_username, login_provider_name)
+        user = User.objects.create_user(new_username, '', password)
+        user.name_is_automatic = True
+    return user
+
+def create_user_association(sender = None, request = None, user = None):
+    """creates user association"""
+    assoc = UserAssociation(
+                        user = user,
+                        provider_name = request.session['provider_name']
+                    )
+    #assoc.openid_url = username + '@' + provider_name
+    assoc.last_used_timestamp = datetime.now()
+    assoc.save()
 
 class Nonce(models.Model):
     """ openid nonce """
