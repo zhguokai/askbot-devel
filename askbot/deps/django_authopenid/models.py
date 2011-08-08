@@ -10,29 +10,30 @@ __all__ = ['Nonce', 'Association', 'UserAssociation',
 
 def get_or_create_unique_user(
     preferred_username = None,
-    password = None,
     login_provider_name = None
 ):
-    """retrieves a user by name and returns the user object
+    """retrieves a user by name 
     if such user does not exist, create a new user and make
     username unique throughout the system
 
     this function monkey patches user object with a new
     boolean attribute - ``name_is_automatic``, which is set
     to True, when user name is automatically created
+
+    return value is a tuple - user object and a boolean
+    the second return value is ``True`` if the user is created
     """
     user, created = User.objects.get_or_create(username = preferred_username)
     if created:
-        user.set_password(password)
-        user.save()
         user.name_is_automatic = False
     else:
+        #this is a very basic solution and needs more attention
         #have username collision - so make up a more unique user name
         #bug: - if user already exists with the new username - we are in trouble
         new_username = '%s@%s' % (preferred_username, login_provider_name)
         user = User.objects.create_user(new_username, '', password)
         user.name_is_automatic = True
-    return user
+    return user, created
 
 def create_user_association(sender = None, request = None, user = None):
     """creates user association"""
@@ -40,9 +41,13 @@ def create_user_association(sender = None, request = None, user = None):
                         user = user,
                         provider_name = request.session['provider_name']
                     )
-    #assoc.openid_url = username + '@' + provider_name
+    assoc.openid_url = request.session['identifier']
     assoc.last_used_timestamp = datetime.now()
     assoc.save()
+    #won't be able to re-enter the same view again
+    del request.session['provider_name']
+    del request.session['identifier']
+    return assoc
 
 class Nonce(models.Model):
     """ openid nonce """
@@ -118,3 +123,6 @@ class UserPasswordQueue(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+from registration import signals
+signals.user_registered.connect(create_user_association)

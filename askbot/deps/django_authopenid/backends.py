@@ -63,7 +63,7 @@ class AuthBackend(object):
         * oauth - oauth_provider_user id in the form of string
         * ldap - user id in the ldap system
 
-        In all cases - the identifier parameter is a string
+        In all cases - the identifier parameter is a string.
         """
         login_providers = util.get_enabled_login_providers()
         if method not in ('email', 'force', 'ldap'):
@@ -73,6 +73,16 @@ class AuthBackend(object):
             #reuse standard backend from django.contrib.auth
             backend = AuthModelBackend()
             return backend.authenticate(username, password)
+        elif method == 'password-external':
+            check_pw_func = login_providers[provider_name]['check_password']
+            if check_pw_func(username, password):
+                user, created = get_or_create_unique_user(
+                    preferred_username = username,
+                    login_provider_name = provider_name
+                )
+                return user, created
+            else:
+                return None
         elif method in THIRD_PARTY_PROVIDER_TYPES:
             #any third party logins. here we guarantee that
             #user already passed external authentication

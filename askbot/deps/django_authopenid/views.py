@@ -345,13 +345,14 @@ def signin(request):
                                 provider_name = provider_name,
                                 method = 'password'
                             )
-                        if user is None:
-                            login_form.set_password_login_error()
-                        else:
+                        if user:
                             login(request, user)
                             #todo: here we might need to set cookies
                             #for external login sites
                             return HttpResponseRedirect(next_url)
+                        else:
+                            login_form.set_password_login_error()
+
                     elif password_action == 'change_password':
                         if request.user.is_authenticated():
                             new_password = \
@@ -720,15 +721,11 @@ def finalize_generic_signin(
             return HttpResponseRedirect(redirect_url)
     else:
         if user is None:
-            #need to register
-            request.method = 'GET'#this is not a good thing to do
-            #but necessary at the moment to reuse the register()
-            #method
-            return register(
-                        request,
-                        login_provider_name=login_provider_name,
-                        user_identifier=user_identifier
-                    )
+            #need to register here
+            request.method = 'GET'#this is not a good thing to do, but necessary
+            request.session['login_provider_name'] = login_provider_name
+            request.session['user_identifier'] = user_identifier
+            return reverse('registration_register')(request)
         else:
             #login branch
             login(request, user)
