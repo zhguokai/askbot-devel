@@ -1,0 +1,68 @@
+{% extends "one_column_body.html" %}
+<!-- complete.html -->
+{#
+purpose of this template is to allow user enter his/her name
+email and sign up for email alerts at the initial registration
+
+parameters:
+* provider 
+* form
+#}
+{% import registration/macros.html as macros %}
+{% block head %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Registration{% endtrans %}{% endspaceless %}{% endblock %}
+{% block content %}
+    <h1>{% trans %}Registration{% endtrans %}</h1>
+    <div id="completetxt" >
+        <div class="message">
+            {# there used to be fancy icons here calculated this way in the caller view function
+                'yahoo':'<font color="purple">Yahoo!</font>',
+                'flickr':'<font color="#0063dc">flick</font><font color="#ff0084">r</font>&trade;',
+                'google':'Google&trade;',
+                'aol':'<font color="#31658e">AOL</font>',
+                'myopenid':'MyOpenID',
+            basically kind of styled logos using inline html
+            but they were removed for simplicity for now #}
+            {% set provider = request.session['login_provider_name'] %}
+            {% set gravatar_faq_url = "faq"|url() + '#gravatar' %}
+            {% trans %}register new {{provider}} account info, see {{gravatar_faq_url}}{% endtrans %}
+        </div>
+        <p style="display:none">{% trans %}This account already exists, please use another.{% endtrans %}</p>
+    </div>
+    {% if form.errors %}
+        <ul class="errorlist">
+        {% for error in form.non_field_errors() %}
+            <li>{{error}}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="login">
+        <form name="fregister" action="{% url registration_register %}" method="POST">{% csrf_token %}
+            {{ form.next }}
+            <div class="form-row-vertical">
+                <label for="id_username">{% trans %}Screen name label{% endtrans %}</label>
+                {% if form.username.errors %} 
+                    <p class="error">{{ form.username.errors|join(", ") }}</p>
+                {% endif %}
+                {{ form.username }}
+            </div>
+            <div class="form-row-vertical margin-bottom">
+                <label for="id_email">{% trans %}Email address label{% endtrans %}</label>
+                {% if form.email.errors %} 
+                    <p class="error">{{ form.email.errors|join(", ") }}</p>
+                {% endif %}
+                {{ form.email }}
+            </div>
+            <p>{% trans %}receive updates motivational blurb{% endtrans %}</p>
+            <div class='simple-subscribe-options'>
+                {{ form.subscribe }}
+                {% if form.subscribe.errors %}
+                    <p class="error">{% trans %}please select one of the options above{% endtrans %}</p>
+                {% endif %}
+            </div>
+            <p class='space-above'>{% trans %}Tag filter tool will be your right panel, once you log in.{% endtrans %}</p>
+            <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans %}create account{% endtrans %}"/></div>
+        </form>
+    </div>
+{% endblock %}
+<!-- end complete.html -->

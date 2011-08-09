@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.forms import SetPasswordForm as DjangoSetPwForm
 from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
@@ -293,28 +293,25 @@ class OpenidRegisterForm(forms.Form):
     with the passwordless registrations - like federated systems:
     openid, oauth, etc.
     """
-    reg_form_type = 'without-password'
     username = UserNameField()
     email = UserEmailField()
     subscribe = SimpleEmailSubscribeField()
 
-    def clean(self):
-        """saves registration type into the cleaned data
-        as needed by the askbot's registration backend
-        """
-        self.cleaned_data['reg_type'] = self.reg_form_type
-        return self.cleaned_data
+class SetPasswordForm(DjangoSetPwForm):
+    def __init__(self, *args, **kwargs):
+        """reset the __init__ method to default
+        we do not want to accept ``user`` argument
+        as Django's form does"""
+        super(forms.Form, self).__init__(*args, **kwargs)
 
 class ClassicRegisterForm(OpenidRegisterForm, SetPasswordForm):
     """ legacy registration form """
-    reg_form_type = 'with-password'
     pass
 
 class SafeClassicRegisterForm(ClassicRegisterForm):
     """this form uses recaptcha in addition
     to the base register form
     """
-    reg_form_type = 'with-password-and-recaptcha'
     recaptcha = RecaptchaField(
                     private_key = askbot_settings.RECAPTCHA_SECRET,
                     public_key = askbot_settings.RECAPTCHA_KEY

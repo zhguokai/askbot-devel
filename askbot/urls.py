@@ -283,7 +283,14 @@ if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
     #then we also need to use askbot authentication backend
     #or it's subclass
     urlpatterns += (
-        url(r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
+        url(r'^%s' % _('authentication/'), include('askbot.deps.django_authopenid.urls')),
+    )
+    #registration urls are customized
+    urlpatterns += (
+        url(
+            r'^%s' % _('registration/'),
+            include('askbot.registration_backend.urls')
+        ),
     )
 
 if 'avatar' in settings.INSTALLED_APPS:

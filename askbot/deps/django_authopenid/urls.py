@@ -9,18 +9,12 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     url(r'^%s$' % _('signin/'), 'signin', name='user_signin'),
     url(r'^%s$' % _('signout/'), 'signout', name='user_signout'),
     #this view is "complete-openid" signin
-    url(r'^%s%s$' % (_('signin/'), _('complete/')), 'complete_signin', 
-        name='user_complete_signin'),
+    url(r'^%s%s$' % (_('signin/'), _('complete-openid/')), 'complete_openid_signin', 
+        name='user_complete_openid_signin'),
     url(
         r'^%s%s$' % (_('signin/'), _('complete-oauth/')),
         'complete_oauth_signin', 
         name='user_complete_oauth_signin'
-    ),
-    url(r'^%s$' % _('register/'), 'register', name='user_register'),
-    url(
-        r'^%s$' % _('signup/'),
-        'signup_with_password',
-        name='user_signup_with_password'
     ),
     url(r'^%s$' % _('logout/'), 'logout_page', name='logout'),
     #these two commeted out urls should work only with EMAIL_VALIDATION=True

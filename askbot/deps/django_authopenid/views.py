@@ -71,6 +71,12 @@ import logging
 from askbot.utils.forms import get_next_url
 from askbot.utils.http import get_request_info
 
+def reverse_with_next(url_name, next_url):
+    """reverses url and adds urlencoded 
+    next=next_url parameter
+    """
+    return reverse(url_name) + '?' + urllib.urlencode({'next': next_url})
+
 #todo: decouple from askbot
 def login(request,user):
     from django.contrib.auth import login as _login
@@ -159,23 +165,22 @@ def ask_openid(
 
     redirect_to = "%s%s?%s" % (
             get_url_host(request),
-            reverse('user_complete_signin'), 
+            reverse('user_complete_openid_signin'), 
             urllib.urlencode({'next':next_url})
     )
     redirect_url = auth_request.redirectURL(trust_root, redirect_to)
     logging.debug('redirecting to %s' % redirect_url)
     return HttpResponseRedirect(redirect_url)
 
-def complete(request, on_success=None, on_failure=None, return_to=None):
+def complete_openid_signin(request):
     """ complete openid signin """
-    assert(on_success is not None)
-    assert(on_failure is not None)
-    
     logging.debug('in askbot.deps.django_authopenid.complete')
     
     consumer = Consumer(request.session, util.DjangoOpenIDStore())
     # make sure params are encoded in utf8
-    params = dict((k,smart_unicode(v)) for k, v in request.GET.items())
+    params = dict((k, smart_unicode(v)) for k, v in request.GET.items())
+    return_to = get_url_host(request) + reverse('user_complete_openid_signin')
+
     openid_response = consumer.complete(params, return_to)
 
     try:
@@ -185,14 +190,14 @@ def complete(request, on_success=None, on_failure=None, return_to=None):
     
     if openid_response.status == SUCCESS:
         logging.debug('openid response status is SUCCESS')
-        return on_success(
+        return signin_success(
                     request,
                     openid_response.identity_url,
                     openid_response
                 )
     elif openid_response.status == CANCEL:
         logging.debug('CANCEL')
-        return on_failure(request, 'The request was canceled')
+        return signin_failure(request, 'The request was canceled')
     elif openid_response.status == FAILURE:
         logging.debug('FAILURE')
         return on_failure(request, openid_response.message)
@@ -349,6 +354,12 @@ def signin(request):
                             login(request, user)
                             #todo: here we might need to set cookies
                             #for external login sites
+                            if user.email.strip() == '':
+                                redirect_url = reverse_with_next(
+                                    'user_changeemail',
+                                    next_url
+                                )
+                                return HttpResponseRedirect(redirect_url)
                             return HttpResponseRedirect(next_url)
                         else:
                             login_form.set_password_login_error()
@@ -628,16 +639,6 @@ def delete_login_method(request):
     else:
         raise Http404
 
-def complete_signin(request):
-    """ in case of complete signin with openid """
-    logging.debug('')#blank log just for the trace
-    return complete(
-                request, 
-                on_success = signin_success, 
-                on_failure = signin_failure,
-                return_to = get_url_host(request) + reverse('user_complete_signin')
-            )
-
 def signin_success(request, identity_url, openid_response):
     """
     this is not a view, has no url pointing to this
@@ -815,7 +816,7 @@ def register(request, login_provider_name=None, user_identifier=None):
 
             user = authenticate(
                 method = 'force',
-                identifier = str(user.id2)
+                identifier = str(user.id)
             )
             if user is None:
                 error_message = 'please make sure that ' + \
@@ -866,7 +867,6 @@ def register(request, login_provider_name=None, user_identifier=None):
         'provider':mark_safe(provider_logo),
         'username': username,
         'email': email,
-        'login_type':'openid',
         'gravatar_faq_url':reverse('faq') + '#gravatar',
     }
     return render_to_response('authopenid/complete.html', RequestContext(request, data))
@@ -1021,7 +1021,7 @@ XRDF_TEMPLATE = """<?xml version='1.0' encoding='UTF-8'?>
     
 def xrdf(request):
     url_host = get_url_host(request)
-    return_to = "%s%s" % (url_host, reverse('user_complete_signin'))
+    return_to = "%s%s" % (url_host, reverse('user_complete_openid_signin'))
     return HttpResponse(XRDF_TEMPLATE % {'return_to': return_to})
 
 def find_email_validation_messages(user):
@@ -1189,3 +1189,61 @@ def verifyemail(request,id=None,key=None):
             else:
                 logging.error('hmm, no user found for email validation message - foul play?')
     raise Http404
+@login_required
+def changeemail(request, action='change'):
+    """ 
+    changeemail view. requires openid with request type GET
+
+    todo: rewrite this view to not require openid signin
+    just to enter email address when the external provider
+    does not give email, because this application requires
+    an email address to allow users recover lost logins to 
+    their accounts
+
+    url: /email/*
+
+    template : authopenid/changeemail.html
+    """
+    logging.debug('')
+    msg = request.GET.get('msg', None)
+    extension_args = {}
+    user_ = request.user
+
+    if request.POST:
+        if 'cancel' in request.POST:
+            msg = _('your email was not changed')
+            request.user.message_set.create(message=msg)
+            return HttpResponseRedirect(get_next_url(request))
+        form = ChangeEmailForm(request.POST, user=user_)
+        if form.is_valid():
+            new_email = form.cleaned_data['email']
+            if new_email != user_.email:
+                if askbot_settings.EMAIL_VALIDATION == True:
+                    action = 'validate'
+                else:
+                    action = 'done_novalidate'
+                set_new_email(user_, new_email,nomessage=True)
+            else:
+                action = 'keep'
+
+    elif not request.POST and 'openid.mode' in request.GET:
+        redirect_to = get_url_host(request) + reverse('user_changeemail')
+        return complete(request, emailopenid_success, 
+                emailopenid_failure, redirect_to) 
+    else:
+        form = forms.ChangeEmailForm(initial={'email': user_.email},
+                user=user_)
+    
+    output = render_to_response('authopenid/changeemail.html', {
+        'form': form,
+        'email': user_.email,
+        'action_type': action,
+        'gravatar_faq_url': reverse('faq') + '#gravatar',
+        'change_email_url': reverse('user_changeemail'),
+        'msg': msg 
+        }, context_instance=RequestContext(request))
+
+    if action == 'validate':
+        set_email_validation_message(user_)
+
+    return output

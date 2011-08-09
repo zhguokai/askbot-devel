@@ -31,11 +31,11 @@ def get_or_create_unique_user(
         #have username collision - so make up a more unique user name
         #bug: - if user already exists with the new username - we are in trouble
         new_username = '%s@%s' % (preferred_username, login_provider_name)
-        user = User.objects.create_user(new_username, '', password)
+        user = User.objects.create_user(new_username, '')
         user.name_is_automatic = True
     return user, created
 
-def create_user_association(sender = None, request = None, user = None):
+def create_user_association(sender = None, request = None, user = None, **kwargs):
     """creates user association"""
     assoc = UserAssociation(
                         user = user,
