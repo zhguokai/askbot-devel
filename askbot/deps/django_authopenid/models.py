@@ -4,6 +4,7 @@ from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth import login, authenticate
 
 __all__ = ['Nonce', 'Association', 'UserAssociation', 
         'UserPasswordQueueManager', 'UserPasswordQueue']
@@ -39,15 +40,19 @@ def create_user_association(sender = None, request = None, user = None, **kwargs
     """creates user association"""
     assoc = UserAssociation(
                         user = user,
-                        provider_name = request.session['provider_name']
+                        provider_name = request.session['login_provider_name']
                     )
-    assoc.openid_url = request.session['identifier']
+    assoc.openid_url = request.session['user_identifier']
     assoc.last_used_timestamp = datetime.now()
     assoc.save()
     #won't be able to re-enter the same view again
-    del request.session['provider_name']
-    del request.session['identifier']
+    del request.session['login_provider_name']
+    del request.session['user_identifier']
     return assoc
+
+def login_the_user(sender = None, request = None, user = None, **kwargs):
+    user = authenticate(identifier = user.id, method = 'force')
+    login(request, user)
 
 class Nonce(models.Model):
     """ openid nonce """
@@ -126,3 +131,4 @@ class UserPasswordQueue(models.Model):
 
 from registration import signals
 signals.user_registered.connect(create_user_association)
+signals.user_registered.connect(login_the_user)

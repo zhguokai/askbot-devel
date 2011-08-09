@@ -1,0 +1,10 @@
+{% extends "two_column_body.html" %}
+{% block title %}{% trans %}Registration failed{% endtrans %}{% endblock %}
+{% block content %}
+    <h1>{% trans %}Registration failed{% endtrans %}</h1>
+    <p>{% trans -%}
+        The registration could not continue because your session is invalid
+        or has expired.
+        Please try again or contact the site administrator.
+    {%- endtrans %}</p>
+{% endblock %}

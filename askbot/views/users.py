@@ -230,7 +230,7 @@ def user_moderate(request, subject, context):
         'user_rep_changed': user_rep_changed,
         'user_status_changed': user_status_changed
     }
-    context.update(data)
+    data.update(context)
     return render_to_response('user_profile/user_moderate.html', RequestContext(request, data))
 
 #non-view function
@@ -393,7 +393,7 @@ def user_stats(request, user, context):
         'badges': badges,
         'total_awards' : total_awards,
     }
-    context.update(data)
+    data.update(context)
     return render_to_response('user_profile/user_stats.html', RequestContext(request, data))
 
 def user_recent(request, user, context):
@@ -685,7 +685,7 @@ def user_recent(request, user, context):
         'page_title' : _('profile - recent activity'),
         'activities' : activities[:const.USER_VIEW_DATA_SIZE]
     }
-    context.update(data)
+    data.update(context)
     return render_to_response('user_profile/user_recent.html', RequestContext(request, data))
 
 @owner_or_moderator_required
@@ -752,7 +752,7 @@ def user_responses(request, user, context):
         'page_title' : _('profile - responses'),
         'responses' : response_list,
     }
-    context.update(data)
+    data.update(context)
     return render_to_response('user_profile/user_inbox.html', RequestContext(request, data))
 
 def user_network(request, user, context):
@@ -763,7 +763,7 @@ def user_network(request, user, context):
         'followed_users': user.get_followed_users(),
         'followers': user.get_followers(),
     }
-    context.update(data)
+    data.update(context)
     return render_to_response('user_profile/user_network.html', RequestContext(request, data))
 
 @owner_or_moderator_required
@@ -827,7 +827,7 @@ def user_votes(request, user, context):
         'page_title' : _('profile - votes'),
         'votes' : votes[:const.USER_VIEW_DATA_SIZE]
     }
-    context.update(data)
+    data.update(context)
     return render_to_response('user_profile/user_votes.html', RequestContext(request, data))
 
 def user_reputation(request, user, context):
@@ -864,7 +864,7 @@ def user_reputation(request, user, context):
         'reputation': reputes,
         'reps': reps
     }
-    context.update(data)
+    data.update(context)
     return render_to_response('user_profile/user_reputation.html', RequestContext(request, data))
 
 def user_favorites(request, user, context):
@@ -892,7 +892,7 @@ def user_favorites(request, user, context):
         'questions' : questions,
         'favorited_myself': favorited_q_id_list,
     }
-    context.update(data)
+    data.update(context)
     return render_to_response('user_profile/user_favorites.html', RequestContext(request, data))
 
 @owner_or_moderator_required
@@ -942,7 +942,7 @@ def user_email_subscriptions(request, user, context):
         'tag_filter_selection_form': tag_filter_form,
         'action_status': action_status,
     }
-    context.update(data)
+    data.update(context)
     return render_to_response(
         'user_profile/user_email_subscriptions.html',
         RequestContext(request, data)

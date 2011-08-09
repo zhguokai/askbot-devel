@@ -733,6 +733,11 @@ def finalize_generic_signin(
             request.method = 'GET'#this is not a good thing to do, but necessary
             request.session['login_provider_name'] = login_provider_name
             request.session['user_identifier'] = user_identifier
+            token = {
+                'remote_addr': request.META['REMOTE_ADDR'],
+                'timestamp': datetime.datetime.now()
+            }
+            request.session['authenticator_registration_token'] = token
             return HttpResponseRedirect(reverse('registration_register'))
             #return call_view_func('registration_register', request)
         else:
