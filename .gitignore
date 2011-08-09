@@ -2,6 +2,7 @@
 *.swp
 *.log
 cache/??
+db
 run
 *.wsgi
 nbproject
@@ -12,6 +13,7 @@ settings.py
 lint
 env
 django
+registration
 django/*
 nbproject
 pip-log.txt

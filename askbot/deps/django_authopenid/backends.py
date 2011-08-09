@@ -17,13 +17,16 @@ def authenticate_by_association(identifier = None, provider_name = None):
     Format of identifier is described in the doc string of
     :meth:`AuthBackend.authenticate`
     """
-    assoc = UserAssociation.objects.get(
-                    openid_url = identifier,#parameter name is bad
-                    provider_name = provider_name
-                )
-    assoc.last_used_timestamp = datetime.datetime.now()
-    assoc.save()
-    return assoc.user
+    try:
+        assoc = UserAssociation.objects.get(
+                        openid_url = identifier,#parameter name is bad
+                        provider_name = provider_name
+                    )
+        assoc.last_used_timestamp = datetime.datetime.now()
+        assoc.save()
+        return assoc.user
+    except UserAssociation.DoesNotExist:
+        return None
 
 THIRD_PARTY_PROVIDER_TYPES = (
     'openid', 'password' 'oauth', 'ldap', 'facebook',
@@ -65,15 +68,12 @@ class AuthBackend(object):
 
         In all cases - the identifier parameter is a string.
         """
-        login_providers = util.get_enabled_login_providers()
-        if method not in ('email', 'force', 'ldap'):
-            assert(login_providers[provider_name]['type'] == method)
-
         if method == 'password':
             #reuse standard backend from django.contrib.auth
             backend = AuthModelBackend()
             return backend.authenticate(username, password)
         elif method == 'password-external':
+            login_providers = util.get_enabled_login_providers()
             check_pw_func = login_providers[provider_name]['check_password']
             if check_pw_func(username, password):
                 user, created = get_or_create_unique_user(

@@ -39,7 +39,7 @@ from askbot.conf import settings as askbot_settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, resolve
 from django.shortcuts import render_to_response
 from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
@@ -70,6 +70,13 @@ from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
 from askbot.utils.forms import get_next_url
 from askbot.utils.http import get_request_info
+
+def call_view_func(view_name, *args, **kwargs):
+    m = resolve(reverse(view_name))
+    new_args = m[1] or args or list()
+    new_kwargs = m[2]
+    new_kwargs.update(kwargs)
+    return m[0](*new_args, **new_kwargs)
 
 def reverse_with_next(url_name, next_url):
     """reverses url and adds urlencoded 
@@ -726,7 +733,8 @@ def finalize_generic_signin(
             request.method = 'GET'#this is not a good thing to do, but necessary
             request.session['login_provider_name'] = login_provider_name
             request.session['user_identifier'] = user_identifier
-            return reverse('registration_register')(request)
+            return HttpResponseRedirect(reverse('registration_register'))
+            #return call_view_func('registration_register', request)
         else:
             #login branch
             login(request, user)
