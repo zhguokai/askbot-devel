@@ -13,7 +13,6 @@ from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.models import badges
 from askbot.utils.loading import load_module
-from askbot.utils.sys import isatty
 from askbot.utils.functions import enumerate_string_list
 
 PREAMBLE = """\n
