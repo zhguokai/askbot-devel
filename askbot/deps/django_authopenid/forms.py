@@ -37,7 +37,7 @@ from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
-from askbot.utils.forms import NextUrlField, UserNameField
+from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField
 
 # needed for some linux distributions like debian
 try:
@@ -91,6 +91,9 @@ class PasswordLoginProviderField(LoginProviderField):
                     'provider %s must accept password' % value
                 )
         return value
+
+class ChangeEmailForm(forms.Form):
+    email = UserEmailField()
 
 class OpenidSigninForm(forms.Form):
     """ signin form """

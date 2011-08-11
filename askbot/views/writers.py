@@ -239,6 +239,10 @@ def ask(request):#view used to ask a new question
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
                 question.save()
+                
+                request.user.message_set.create(
+                    message = _('Your question will be posted once you log in')
+                )
                 return HttpResponseRedirect(url_utils.get_login_url())
     else:
         #this branch is for the initial load of ask form
@@ -504,6 +508,9 @@ def answer(request, id):#process a new answer
                                        ip_addr=request.META['REMOTE_ADDR'],
                                        )
                 anon.save()
+                request.user.message_set.create(
+                    message = _('Your answer will be posted once you log in')
+                )
                 return HttpResponseRedirect(url_utils.get_login_url())
 
     return HttpResponseRedirect(question.get_absolute_url())
