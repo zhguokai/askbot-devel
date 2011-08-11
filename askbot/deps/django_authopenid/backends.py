@@ -6,7 +6,6 @@ import datetime
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend as AuthModelBackend
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.translation import ugettext as _
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
 
@@ -29,7 +28,7 @@ def authenticate_by_association(identifier = None, provider_name = None):
         return None
 
 THIRD_PARTY_PROVIDER_TYPES = (
-    'openid', 'password' 'oauth', 'ldap', 'facebook',
+    'openid', 'password', 'oauth', 'ldap', 'facebook',
     'password-external'
 )
 
