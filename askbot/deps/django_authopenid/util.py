@@ -10,7 +10,6 @@ from openid import store as openid_store
 import oauth2 as oauth
 
 from django.db.models.query import Q
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.auth.models import User
 from django.utils import simplejson
@@ -21,8 +20,6 @@ try:
     from hashlib import md5
 except:
     from md5 import md5
-
-from askbot.conf import settings as askbot_settings
 
 # needed for some linux distributions like debian
 try:
@@ -163,8 +160,9 @@ def use_password_login():
     either if USE_RECAPTCHA is false
     of if recaptcha keys are set correctly
     """
-    if askbot_settings.USE_RECAPTCHA:
-        if askbot_settings.RECAPTCHA_KEY and askbot_settings.RECAPTCHA_SECRET:
+    from askbot.deps.django_authopenid.conf import settings
+    if settings.USE_RECAPTCHA:
+        if settings.RECAPTCHA_KEY and settings.RECAPTCHA_SECRET:
             return True
         else:
             logging.critical('if USE_RECAPTCHA == True, set recaptcha keys!!!')
@@ -177,10 +175,11 @@ def filter_enabled_providers(data):
     the input dictionary
     """
     delete_list = list()
+    from askbot.deps.django_authopenid.conf import settings
     for provider_key, provider_settings in data.items():
         name = provider_settings['name']
         name_token = get_provider_name_token(name)
-        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name_token + '_ENABLED')
+        is_enabled = getattr(settings, 'SIGNIN_' + name_token + '_ENABLED')
         if is_enabled == False:
             delete_list.append(provider_key)
 
@@ -319,6 +318,7 @@ def add_custom_provider(func):
     @functools.wraps(func)
     def wrapper():
         providers = func()
+        from askbot.deps.django_authopenid.conf import settings
         login_module_path = getattr(settings, 'ASKBOT_CUSTOM_AUTH_MODULE', None)
         if login_module_path:
             mod = LoginMethod(login_module_path)
@@ -372,9 +372,10 @@ def get_enabled_major_login_providers():
       between the ways user id is accessed from the different OAuth providers
     """
     data = SortedDict()
+    from askbot.deps.django_authopenid.conf import settings
 
     if use_password_login():
-        site_name = askbot_settings.APP_SHORT_NAME
+        site_name = settings.APP_SHORT_NAME
         prompt = _('%(site)s user name and password') % {'site': site_name}
 
         data['local'] = {
@@ -384,18 +385,18 @@ def get_enabled_major_login_providers():
             'type': 'password',
             'create_password_prompt': _('Create a password-protected account'),
             'change_password_prompt': _('Change your password'),
-            'icon_media_path': askbot_settings.LOCAL_LOGIN_ICON,
+            'icon_media_path': settings.LOCAL_LOGIN_ICON,
             'password_changeable': True
         }
 
-    #if askbot_settings.FACEBOOK_KEY and askbot_settings.FACEBOOK_SECRET:
+    #if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET:
     #    data['facebook'] = {
     #        'name': 'facebook',
     #        'display_name': 'Facebook',
     #        'type': 'facebook',
     #        'icon_media_path': '/jquery-openid/images/facebook.gif',
     #    }
-    if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
+    if settings.TWITTER_KEY and settings.TWITTER_SECRET:
         data['twitter'] = {
             'name': 'twitter',
             'display_name': 'Twitter',
@@ -418,7 +419,7 @@ def get_enabled_major_login_providers():
             json = simplejson.loads(content)
             return json['id']
         raise OAuthError()
-    if askbot_settings.IDENTICA_KEY and askbot_settings.IDENTICA_SECRET:
+    if settings.IDENTICA_KEY and settings.IDENTICA_SECRET:
         data['identi.ca'] = {
             'name': 'identi.ca',
             'display_name': 'identi.ca',
@@ -443,7 +444,7 @@ def get_enabled_major_login_providers():
                 return matches.group(1)
         raise OAuthError()
         
-    if askbot_settings.LINKEDIN_KEY and askbot_settings.LINKEDIN_SECRET:
+    if settings.LINKEDIN_KEY and settings.LINKEDIN_SECRET:
         data['linkedin'] = {
             'name': 'linkedin',
             'display_name': 'LinkedIn',
@@ -598,6 +599,7 @@ def set_login_provider_tooltips(provider_dict, active_provider_names = None):
     depending on the type of provider and whether or not it's one of 
     currently used
     """
+    from askbot.deps.django_authopenid.conf import settings
     for provider in provider_dict.values():
         if active_provider_names:
             if provider['name'] in active_provider_names:
@@ -610,7 +612,7 @@ def set_login_provider_tooltips(provider_dict, active_provider_names = None):
                         'signin still works for %(site_name)s'
                     ) % {
                         'provider': provider['display_name'],
-                        'site_name': askbot_settings.APP_SHORT_NAME
+                        'site_name': settings.APP_SHORT_NAME
                     }
             else:
                 if provider['type'] == 'password':
@@ -623,7 +625,7 @@ def set_login_provider_tooltips(provider_dict, active_provider_names = None):
                         'to %(site_name)s'
                     ) % {
                         'provider': provider['display_name'],
-                        'site_name': askbot_settings.APP_SHORT_NAME
+                        'site_name': settings.APP_SHORT_NAME
                     }
         else:
             if provider['type'] == 'password':
@@ -631,7 +633,7 @@ def set_login_provider_tooltips(provider_dict, active_provider_names = None):
                         'Signin with %(provider)s user name and password'
                     ) % {
                         'provider': provider['display_name'],
-                        'site_name': askbot_settings.APP_SHORT_NAME
+                        'site_name': settings.APP_SHORT_NAME
                     }
             else:
                 tooltip = _(
@@ -649,20 +651,21 @@ def get_oauth_parameters(provider_name):
     it should not be called at compile time
     otherwise there may be strange errors
     """
+    from askbot.deps.django_authopenid.conf import settings
     providers = get_enabled_login_providers()
     data = providers[provider_name]
     if data['type'] != 'oauth':
         raise ValueError('oauth provider expected, %s found' % data['type'])
 
     if provider_name == 'twitter':
-        consumer_key = askbot_settings.TWITTER_KEY
-        consumer_secret = askbot_settings.TWITTER_SECRET
+        consumer_key = settings.TWITTER_KEY
+        consumer_secret = settings.TWITTER_SECRET
     elif provider_name == 'linkedin':
-        consumer_key = askbot_settings.LINKEDIN_KEY
-        consumer_secret = askbot_settings.LINKEDIN_SECRET
+        consumer_key = settings.LINKEDIN_KEY
+        consumer_secret = settings.LINKEDIN_SECRET
     elif provider_name == 'identi.ca':
-        consumer_key = askbot_settings.IDENTICA_KEY
-        consumer_secret = askbot_settings.IDENTICA_SECRET
+        consumer_key = settings.IDENTICA_KEY
+        consumer_secret = settings.IDENTICA_SECRET
     else:
         raise ValueError('sorry, only linkedin and twitter oauth for now')
 
@@ -696,6 +699,7 @@ class OAuthConnection(object):
     def start(self, callback_url = None):
         """starts the OAuth protocol communication and
         saves request token as :attr:`request_token`"""
+        from askbot.deps.django_authopenid.conf import settings
 
         if callback_url is None:
             callback_url = self.callback_url
@@ -704,7 +708,7 @@ class OAuthConnection(object):
         request_url = self.parameters['request_token_url']
 
         if callback_url:
-            callback_url = '%s%s' % (askbot_settings.APP_URL, callback_url)
+            callback_url = '%s%s' % (settings.APP_URL, callback_url)
             request_body = urllib.urlencode(dict(oauth_callback=callback_url))
 
             self.request_token = self.send_request(
@@ -786,8 +790,9 @@ class FacebookError(Exception):
 
 def get_facebook_user_id(request):
     try:
-        key = askbot_settings.FACEBOOK_KEY
-        secret = askbot_settings.FACEBOOK_SECRET
+        from askbot.deps.django_authopenid.conf import settings
+        key = settings.FACEBOOK_KEY
+        secret = settings.FACEBOOK_SECRET
 
         fb_cookie = request.COOKIES['fbs_%s' % key]
         fb_response = dict(cgi.parse_qsl(fb_cookie))
@@ -813,8 +818,9 @@ def get_facebook_user_id(request):
 
 def ldap_check_password(username, password):
     import ldap
+    from askbot.deps.django_authopenid.conf import settings
     try:
-        ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
+        ldap_session = ldap.initialize(settings.LDAP_URL)
         ldap_session.simple_bind_s(username, password)
         ldap_session.unbind_s()
         return True

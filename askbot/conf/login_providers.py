@@ -5,8 +5,6 @@ from django.utils.translation import ugettext as _
 from django.conf import settings as django_settings
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
-import pdb
-pdb.set_trace()
 from askbot.deps.django_authopenid import PROVIDERS
 from askbot.deps.django_authopenid.util import get_provider_name_token
 

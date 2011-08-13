@@ -34,8 +34,7 @@ import datetime
 from django.http import HttpResponseRedirect, get_host, Http404
 from django.http import HttpResponse
 from django.template import RequestContext, Context
-from django.conf import settings
-from askbot.conf import settings as askbot_settings
+from askbot.deps.django_authopenid.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
@@ -307,7 +306,7 @@ def signin(request):
     next_url = get_next_url(request)
     logging.debug('next url is %s' % next_url)
 
-    if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
+    if settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
         and request.user.is_authenticated():
         return HttpResponseRedirect(next_url)
 
@@ -326,9 +325,9 @@ def signin(request):
             if login_form.cleaned_data['login_type'] == 'password':
 
                 password_action = login_form.cleaned_data['password_action']
-                if askbot_settings.USE_LDAP_FOR_PASSWORD_LOGIN:
+                if settings.USE_LDAP_FOR_PASSWORD_LOGIN:
                     assert(password_action == 'login')
-                    ldap_provider_name = askbot_settings.LDAP_PROVIDER_NAME
+                    ldap_provider_name = settings.LDAP_PROVIDER_NAME
                     username = login_form.cleaned_data['username']
                     if util.ldap_check_password(
                                 username,
@@ -571,7 +570,7 @@ def show_signin_view(
 
     have_buttons = True
     if (len(active_provider_names) == 1 and active_provider_names[0] == 'local'):
-        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN == True:
+        if settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN == True:
             #in this case the form is not using javascript, so set initial values
             #here
             have_buttons = False
@@ -605,7 +604,7 @@ def show_signin_view(
 
 @login_required
 def delete_login_method(request):
-    if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False:
+    if settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False:
         raise Http404
     if request.is_ajax() and request.method == 'POST':
         provider_name = request.POST['provider_name']
@@ -792,16 +791,16 @@ def set_new_email(user, new_email, nomessage=False):
         user.email = new_email
         user.email_isvalid = False
         user.save()
-        if askbot_settings.EMAIL_VALIDATION == True:
+        if settings.EMAIL_VALIDATION == True:
             send_new_email_key(user,nomessage=nomessage)
 
 def _send_email_key(user):
     """private function. sends email containing validation key
     to user's email address
     """
-    subject = _("Recover your %(site)s account") % {'site': askbot_settings.APP_SHORT_NAME}
+    subject = _("Recover your %(site)s account") % {'site': settings.APP_SHORT_NAME}
     data = {
-        'validation_link': askbot_settings.APP_URL + \
+        'validation_link': settings.APP_URL + \
                             reverse(
                                     'user_account_recover',
                                     kwargs={'key':user.email_key}
@@ -833,7 +832,7 @@ def send_email_key(request):
     if current email is valid shows 'key_not_sent' view of 
     authopenid/changeemail.html template
     """
-    if askbot_settings.EMAIL_VALIDATION == True:
+    if settings.EMAIL_VALIDATION == True:
         if request.user.email_isvalid:
             data = {
                 'email': request.user.email, 
@@ -860,7 +859,7 @@ def account_recover(request, key = None):
 
     url name 'user_account_recover'
     """
-    if not askbot_settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL:
+    if not settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL:
         raise Http404
     if request.method == 'POST':
         form = forms.AccountRecoveryForm(request.POST)
@@ -906,7 +905,7 @@ def account_recover(request, key = None):
 def validation_email_sent(request):
     """this function is called only if EMAIL_VALIDATION setting is
     set to True bolean value, basically dead now"""
-    assert(askbot_settings.EMAIL_VALIDATION == True)
+    assert(settings.EMAIL_VALIDATION == True)
     logging.debug('')
     data = {
         'email': request.user.email,
@@ -921,7 +920,7 @@ def verifyemail(request,id=None,key=None):
     url = /email/verify/{{user.id}}/{{user.email_key}}/
     """
     logging.debug('')
-    if askbot_settings.EMAIL_VALIDATION == True:
+    if settings.EMAIL_VALIDATION == True:
         user = User.objects.get(id=id)
         if user:
             if user.email_key == key:
@@ -965,7 +964,7 @@ def changeemail(request, action='change'):
         if form.is_valid():
             new_email = form.cleaned_data['email']
             if new_email != user_.email:
-                if askbot_settings.EMAIL_VALIDATION == True:
+                if settings.EMAIL_VALIDATION == True:
                     action = 'validate'
                 else:
                     action = 'done_novalidate'
