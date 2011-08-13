@@ -37,7 +37,12 @@ __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
 
 ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username')
 
-class OpenID:
+def get_provider_name_token(name):
+    """determines name in upper case, without dots"""
+    return name.upper().replace('.', '')
+
+class OpenID(object):
+    """Data class storing information about openid"""
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
         logging.debug('init janrain openid object')
         self.openid = openid_
@@ -45,7 +50,7 @@ class OpenID:
         self.attrs = attrs or {}
         self.sreg = sreg_ or {}
         self.is_iname = (xri.identifierScheme(openid_) == 'XRI')
-    
+
     def __repr__(self):
         return '<OpenID: %s>' % self.openid
     
@@ -153,15 +158,6 @@ def from_openid_response(openid_response):
          dict(sreg_resp)
     )
 
-def get_provider_name(openid_url):
-    """returns provider name from the openid_url
-    """
-    openid_str = openid_url
-    bits = openid_str.split('/')
-    base_url = bits[2] #assume this is base url
-    url_bits = base_url.split('.')
-    return url_bits[-2].lower()
-
 def use_password_login():
     """password login is activated
     either if USE_RECAPTCHA is false
@@ -183,7 +179,8 @@ def filter_enabled_providers(data):
     delete_list = list()
     for provider_key, provider_settings in data.items():
         name = provider_settings['name']
-        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name.upper() + '_ENABLED')
+        name_token = get_provider_name_token(name)
+        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name_token + '_ENABLED')
         if is_enabled == False:
             delete_list.append(provider_key)
 

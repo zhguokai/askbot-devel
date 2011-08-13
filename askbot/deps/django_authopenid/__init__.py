@@ -38,3 +38,26 @@ This application allow a user to connect to you website with :
 """
 
 __version__ = "0.9.4"
+
+#list of providers supported by this app
+#this list is duplicated in the default_settings.py
+PROVIDERS = (
+    'local',#standard django
+    'AOL',
+    'Blogger',
+    'ClaimID',
+    'Facebook',
+    'Flickr',
+    'Google',
+    'Twitter',
+    'LinkedIn',
+    'LiveJournal',
+    #'myOpenID',
+    'OpenID',
+    'Technorati',
+    'Wordpress',#wordpress does not work at the moment
+    'Vidoop',
+    'Verisign',
+    'Yahoo',
+    'identi.ca',
+)

@@ -49,6 +49,7 @@ from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from django.template.loader import get_template
+from openid_utils import get_provider_name as get_openid_provider_name
 
 from openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
@@ -644,15 +645,14 @@ def signin_success(request, identity_url, openid_response):
     openid_data = util.from_openid_response(openid_response) #create janrain OpenID object
     request.session['openid'] = openid_data
 
-    openid_url = str(openid_data)
+    provider_name = get_openid_provider_name(openid_data.openid),
     user = authenticate(
-                    identifier = openid_url,
-                    provider_name = util.get_provider_name(openid_url),
+                    identifier = openid_data.openid,
+                    provider_name = provider_name,
                     method = 'openid'
                 )
 
     next_url = get_next_url(request)
-    provider_name = util.get_provider_name(openid_url)
 
     request.session['email'] = openid_data.sreg.get('email', '')
     request.session['username'] = openid_data.sreg.get('nickname', '')
@@ -660,7 +660,7 @@ def signin_success(request, identity_url, openid_response):
     return finalize_generic_signin(
                         request = request,
                         user = user,
-                        user_identifier = openid_url,
+                        user_identifier = openid_data.openid,
                         login_provider_name = provider_name,
                         redirect_url = next_url
                     )

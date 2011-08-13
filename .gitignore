@@ -1,4 +1,5 @@
 *.pyc
+django
 *.swp
 *.log
 cache/??

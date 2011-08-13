@@ -207,6 +207,16 @@ to your settings.py file"""
             footer = footer
         )
 
+def test_misc_settings():
+    """tests various settings"""
+    if 'askbot.deps.django_authopenid' in django_settings.INSTALLED_APPS:
+        mod_path = getattr(django_settings, 'EXTRA_SETTINGS_MODULE', '')
+        if mod_path != 'askbot.conf.settings':
+            raise AskbotConfigError(
+                'If you are using askbot.deps.django_authopenid, '
+                'please also add the following line to your settings: '
+            )
+
 def run_self_test():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -216,6 +226,7 @@ def run_self_test():
     test_i18n()
     test_middleware()
     test_template_loaders()
+    test_misc_settings()
     try:
         #unfortunately cannot test urls
         #at the startup time. a command askbot_selftest will access these

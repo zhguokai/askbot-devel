@@ -33,10 +33,8 @@ import logging
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
-from django.conf import settings
-from askbot.conf import settings as askbot_settings
-from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
+from askbot.deps.django_authopenid.conf import settings
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField
 
 # needed for some linux distributions like debian
@@ -288,12 +286,12 @@ class LoginForm(forms.Form):
                     del self.cleaned_data['new_password_retyped']
                 else:
                     #validate password
-                    if len(new_password) < askbot_const.PASSWORD_MIN_LENGTH:
+                    if len(new_password) < settings.PASSWORD_MIN_LENGTH:
                         del self.cleaned_data['new_password']
                         del self.cleaned_data['new_password_retyped']
                         error_message = _(
                                     'Please choose password > %(len)s characters'
-                                ) % {'len': askbot_const.PASSWORD_MIN_LENGTH}
+                                ) % {'len': settings.PASSWORD_MIN_LENGTH}
                         error = self.error_class([error_message])
                         self._errors['new_password'] = error
                         self.set_password_change_error()

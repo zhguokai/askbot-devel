@@ -1,10 +1,14 @@
 """
 External service key settings
 """
-from askbot.conf.settings_wrapper import settings
-from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
 from django.conf import settings as django_settings
+from askbot.conf.settings_wrapper import settings
+from askbot.deps import livesettings
+import pdb
+pdb.set_trace()
+from askbot.deps.django_authopenid import PROVIDERS
+from askbot.deps.django_authopenid.util import get_provider_name_token
 
 LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
                     'LOGIN_PROVIDERS',
@@ -29,30 +33,9 @@ settings.register(
     )
 )
 
-providers = (
-    'local',
-    'AOL',
-    'Blogger',
-    'ClaimID',
-    'Facebook',
-    'Flickr',
-    'Google',
-    'Twitter',
-    'LinkedIn',
-    'LiveJournal',
-    #'myOpenID',
-    'OpenID',
-    'Technorati',
-    'Wordpress',
-    'Vidoop',
-    'Verisign',
-    'Yahoo',
-    'identi.ca',
-)
-
 need_extra_setup = ('Twitter', 'Facebook', 'LinkedIn', 'identi.ca',)
 
-for provider in providers:
+for provider in PROVIDERS:
     kwargs = {
         'description': _('Activate %(provider)s login') % {'provider': provider},
         'default': True,
@@ -64,7 +47,7 @@ for provider in providers:
             'in the "External keys" section'
         ) % {'provider': provider}
 
-    setting_name = 'SIGNIN_%s_ENABLED' % provider.upper()
+    setting_name = 'SIGNIN_%s_ENABLED' % get_provider_name_token(provider)
     settings.register(
         livesettings.BooleanValue(
             LOGIN_PROVIDERS,
