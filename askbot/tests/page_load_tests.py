@@ -40,20 +40,20 @@ class PageLoadTestCase(TestCase):
             url_info += '?' + '&'.join(['%s=%s' % (k, v) for k, v in data.iteritems()])
         print url_info
 
-        r = self.client.get(url, data=data, follow=follow)
+        response = self.client.get(url, data=data, follow=follow)
         if hasattr(self.client, 'redirect_chain'):
             print 'redirect chain: %s' % ','.join(self.client.redirect_chain)
 
-        self.assertEqual(r.status_code, status_code)
+        self.assertEqual(response.status_code, status_code)
 
         if template:
-            if isinstance(r.template, coffin.template.Template):
-                self.assertEqual(r.template.name, template)
+            if isinstance(response.template, coffin.template.Template):
+                self.assertEqual(response.template.name, template)
             else:
                 #asuming that there is more than one template
-                template_names = ','.join([t.name for t in r.template])
+                template_names = ','.join([t.name for t in response.template])
                 print 'templates are %s' % template_names
-                self.assertEqual(r.template[0].name, template)
+                self.assertEqual(response.template[0].name, template)
 
 class PageLoadTests(PageLoadTestCase):
     fixtures = ['tmp/fixture2.json', ]
@@ -305,7 +305,7 @@ class PageLoadTests(PageLoadTestCase):
         user = models.User.objects.get(id=2)
         name_slug = slugify(user.username)
         #works only with builtin django_authopenid
-        self.client.login(method = 'force', user_id = 2)
+        self.client.login(method = 'force', identifier = 2)
         self.try_url(
             'user_subscriptions',
             kwargs = {'id': 2, 'slug': name_slug},
