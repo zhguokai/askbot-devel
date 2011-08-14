@@ -319,7 +319,10 @@ def add_custom_provider(func):
     def wrapper():
         providers = func()
         from askbot.deps.django_authopenid.conf import settings
-        login_module_path = getattr(settings, 'ASKBOT_CUSTOM_AUTH_MODULE', None)
+        try:
+            login_module_path = getattr(settings, 'ASKBOT_CUSTOM_AUTH_MODULE')
+        except KeyError:
+            login_module_path = None
         if login_module_path:
             mod = LoginMethod(login_module_path)
             if mod.is_major != func.is_major:
