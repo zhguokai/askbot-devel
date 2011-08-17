@@ -2252,7 +2252,8 @@ def send_instant_notifications_about_activity_in_post(
             body_text = body_text,
             recipient_list = [user.email],
             related_object = origin_post,
-            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+            headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
         )
 
     debug_list += "%s(%s) "%(user, user.email)
