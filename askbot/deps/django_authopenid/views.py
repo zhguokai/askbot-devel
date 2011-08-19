@@ -644,7 +644,7 @@ def signin_success(request, identity_url, openid_response):
     openid_data = util.from_openid_response(openid_response) #create janrain OpenID object
     request.session['openid'] = openid_data
 
-    provider_name = get_openid_provider_name(openid_data.openid),
+    provider_name = get_openid_provider_name(openid_data.openid)
     user = authenticate(
                     identifier = openid_data.openid,
                     provider_name = provider_name,

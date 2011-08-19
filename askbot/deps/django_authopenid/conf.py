@@ -26,7 +26,7 @@ class ExtendableSettings(object):
         if have_default:
             return args[0]
         else:
-            raise KeyError('setting %s not found' % attr_name)
+            raise AttributeError('setting %s not found' % attr_name)
 
 settings = ExtendableSettings()
 settings.append(django_settings)
