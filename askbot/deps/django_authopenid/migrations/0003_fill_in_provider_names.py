@@ -1,6 +1,5 @@
 # encoding: utf-8
 import datetime
-from openid_utils import get_provider_name as get_openid_provider_name
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
@@ -11,7 +10,7 @@ class Migration(DataMigration):
     def forwards(self, orm):
         "determines openid provider from url"
         for assoc in orm.UserAssociation.objects.all():
-            assoc.provider_name = get_openid_provider_name(assoc.openid_url)
+            assoc.provider_name = util.get_openid_provider_name(assoc.openid_url)
             print '%s -> %s' % (assoc.user.username, assoc.provider_name)
             assoc.save()
     

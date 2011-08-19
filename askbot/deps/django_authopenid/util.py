@@ -34,6 +34,15 @@ __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
 
 ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username')
 
+def get_openid_provider_name(openid_url):
+    """returns provider name from the openid_url
+    """
+    openid_str = openid_url
+    bits = openid_str.split('/')
+    base_url = bits[2] #assume this is base url
+    url_bits = base_url.split('.')
+    return url_bits[-2].lower()
+
 def get_provider_name_token(name):
     """determines name in upper case, without dots"""
     return name.upper().replace('.', '')
