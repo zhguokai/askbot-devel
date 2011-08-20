@@ -17,6 +17,8 @@ from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
 
+LOGIN_WIDGET_ATTRS = {'class': 'required login'}
+
 def cleanup_dict(dictionary, key, empty_value):
     """deletes key from dictionary if it exists
     and the corresponding value equals the empty_value
@@ -294,8 +296,8 @@ class OpenidRegisterForm(forms.Form):
     with the passwordless registrations - like federated systems:
     openid, oauth, etc.
     """
-    username = UserNameField()
-    email = UserEmailField()
+    username = UserNameField(widget_attrs = LOGIN_WIDGET_ATTRS)
+    email = UserEmailField(widget_attrs = LOGIN_WIDGET_ATTRS)
     subscribe = SimpleEmailSubscribeField()
 
 class SetPasswordForm(DjangoSetPwForm):
@@ -964,9 +966,12 @@ class EditUserForm(forms.Form):
         super(EditUserForm, self).__init__(*args, **kwargs)
         logging.debug('initializing the form')
         if askbot_settings.EDITABLE_SCREEN_NAME:
-            self.fields['username'] = UserNameField(label=_('Screen name'))
-            self.fields['username'].initial = user.username
-            self.fields['username'].user_instance = user
+            username_field = UserNameField(
+                label = _('Screen name'),
+                initial = user.username,
+                user_instance = user,
+                widget_attrs = LOGIN_WIDGET_ATTRS
+            )
         self.fields['email'].initial = user.email
         self.fields['realname'].initial = user.real_name
         self.fields['website'].initial = user.website

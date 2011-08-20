@@ -68,7 +68,6 @@ from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
 from askbot.utils.forms import get_next_url
-from askbot.utils.http import get_request_info
 
 def call_view_func(view_name, *args, **kwargs):
     m = resolve(reverse(view_name))

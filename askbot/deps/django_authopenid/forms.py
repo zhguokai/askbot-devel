@@ -37,6 +37,8 @@ from django.utils.safestring import mark_safe
 from askbot.deps.django_authopenid.conf import settings
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField
 
+LOGIN_WIDGET_ATTRS = {'class': 'required login'}
+
 # needed for some linux distributions like debian
 try:
     from openid.yadis import xri
@@ -91,11 +93,19 @@ class PasswordLoginProviderField(LoginProviderField):
         return value
 
 class ChangeEmailForm(forms.Form):
-    email = UserEmailField()
+    email = UserEmailField(widget_attrs = LOGIN_WIDGET_ATTRS)
 
 class OpenidSigninForm(forms.Form):
     """ signin form """
-    openid_url = forms.CharField(max_length=255, widget=forms.widgets.TextInput(attrs={'class': 'openid-login-input', 'size':80}))
+    openid_url = forms.CharField(
+        max_length=255, 
+        widget=forms.widgets.TextInput(
+            attrs={
+                'class': 'openid-login-input',
+                'size': 80
+            }
+        )
+    )
     next = NextUrlField()
 
     def clean_openid_url(self):
@@ -122,10 +132,15 @@ class LoginForm(forms.Form):
     next = NextUrlField()
     login_provider_name = LoginProviderField()
     openid_login_token = forms.CharField(
-                            max_length=256,
+                            max_length = 256,
                             required = False,
                         )
-    username = UserNameField(required=False, skip_clean=True)
+    username = UserNameField(
+        required = False,
+        skip_clean = True,
+        widget_attrs = LOGIN_WIDGET_ATTRS
+    )
+
     password = forms.CharField(
                     max_length=128, 
                     widget=forms.widgets.PasswordInput(
@@ -357,7 +372,11 @@ class DeleteForm(forms.Form):
 
 class EmailPasswordForm(forms.Form):
     """ send new password form """
-    username = UserNameField(skip_clean=True,label=mark_safe(_('Your user name (<i>required</i>)')))
+    username = UserNameField(
+        skip_clean = True,
+        label = mark_safe(_('Your user name (<i>required</i>)')),
+        widget_attrs = LOGIN_WIDGET_ATTRS
+    )
 
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, 
             initial=None):
