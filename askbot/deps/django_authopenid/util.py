@@ -30,7 +30,7 @@ except:
 import time, base64, hashlib, operator, logging
 from models import Association, Nonce
 
-__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
+__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response']
 
 ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username')
 

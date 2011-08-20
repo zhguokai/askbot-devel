@@ -2,28 +2,13 @@ from django import forms
 import re
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
-from django.conf import settings
+from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from django.http import str_to_unicode
 from django.contrib.auth.models import User
 from askbot import const
 import logging
 import urllib
-
-DEFAULT_NEXT = '/' + getattr(settings, 'ASKBOT_URL')
-def clean_next(next):
-    if next is None:
-        return DEFAULT_NEXT
-    next = str_to_unicode(urllib.unquote(next), 'utf-8')
-    next = next.strip()
-    if next.startswith('/'):
-        logging.debug('next url is %s' % next)
-        return next
-    logging.debug('next url is %s' % DEFAULT_NEXT)
-    return DEFAULT_NEXT
-
-def get_next_url(request):
-    return clean_next(request.REQUEST.get('next'))
 
 class StrippedNonEmptyCharField(forms.CharField):
     def clean(self,value):
@@ -33,10 +18,40 @@ class StrippedNonEmptyCharField(forms.CharField):
         return value
 
 class NextUrlField(forms.CharField):
-    def __init__(self):
-        super(NextUrlField,self).__init__(max_length = 255,widget = forms.HiddenInput(),required = False)
-    def clean(self,value):
-        return clean_next(value)
+    """Field allowing to add parameter "next_url"
+    so that user could be redirected to specific url
+    after the form is submitted.
+
+    the next url defaults to the value of
+    parameter ``default_next_url``, if given 
+    at the initialization, or by the django setting
+    ``LOGIN_REDIRECT_URL``.
+    """
+    def __init__(self, **kwargs):
+        kwargs.setdefault('max_length', 255)
+        kwargs.setdefault('widget', forms.HiddenInput())
+        kwargs.setdefault('required', False)
+        self.default_next_url = kwargs.pop(
+            'default_next_url',
+            django_settings.LOGIN_REDIRECT_URL
+        )
+        super(NextUrlField, self).__init__(**kwargs)
+
+    def clean(self, value):
+        if value is None:
+            return self.default_next_url
+        value = str_to_unicode(urllib.unquote(value), 'utf-8').strip()
+        assert(value.startswith('/'))
+        return value
+
+
+def get_next_url(request, field_name = 'next'):
+    """extracts value of field from request - 
+    either POST or GET dictionaries and cleans the value
+    via the ``NextUrlField`` form field"""
+    field = NextUrlField()
+    return field.clean(request.REQUEST.get(field_name))
+
 
 login_form_widget_attrs = { 'class': 'required login' }
 
@@ -112,24 +127,25 @@ class UserNameField(StrippedNonEmptyCharField):
             raise forms.ValidationError(self.error_messages['multiple-taken'])
 
 class UserEmailField(forms.EmailField):
-    def __init__(self,skip_clean=False,**kw):
-        self.skip_clean = skip_clean
-        super(UserEmailField,self).__init__(widget=forms.TextInput(attrs=dict(login_form_widget_attrs,
-            maxlength=200)), label=mark_safe(_('your email address')),
-            error_messages={'required':_('email address is required'),
-                            'invalid':_('please enter a valid email address'),
-                            'taken':_('this email is already used by someone else, please choose another'),
-                            },
+    def __init__(self, **kw):
+        super(UserEmailField,self).__init__(
+            widget = forms.TextInput(
+                attrs=dict(login_form_widget_attrs, maxlength=200)
+            ),
+            label = mark_safe(_('your email address')),
+            error_messages = {
+                'required':_('email address is required'),
+                'invalid':_('please enter a valid email address'),
+                'taken':_('this email is already used by someone else, please choose another'),
+            },
             **kw
-            )
+        )
 
-    def clean(self,email):
+    def clean(self, email):
         """ validate if email exist in database
         from legacy register
         return: raise error if it exist """
-        email = super(UserEmailField,self).clean(email.strip())
-        if self.skip_clean:
-            return email
+        email = super(UserEmailField, self).clean(email.strip())
         if askbot_settings.EMAIL_UNIQUE == True:
             try:
                 user = User.objects.get(email = email)

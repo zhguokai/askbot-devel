@@ -216,6 +216,16 @@ def test_misc_settings():
                 'If you are using askbot.deps.django_authopenid, '
                 'please also add the following line to your settings: '
             )
+         
+    if django_settings.LOGIN_REDIRECT_URL != '/' + django_settings.ASKBOT_URL:
+        print """Warning:
+For askbot, add line to settings.py:
+
+LOGIN_REDIRECT_URL = '/' + ASKBOT_URL
+
+This warning can be ignored, if you indeed need to
+customize the LOGIN_REDIRECT_URL setting
+"""
 
 def run_self_test():
     """function that runs

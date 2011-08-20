@@ -5,6 +5,7 @@ from askbot import const
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 from django.utils.text import get_text_list
+from django.conf import settings as django_settings
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import SetPasswordForm as DjangoSetPwForm
 from django.contrib.contenttypes.models import ContentType
@@ -601,7 +602,7 @@ class FeedbackForm(forms.Form):
     name = forms.CharField(label=_('Your name:'), required=False)
     email = forms.EmailField(label=_('Email (not shared with anyone):'), required=False)
     message = forms.CharField(label=_('Your message:'), max_length=800,widget=forms.Textarea(attrs={'cols':60}))
-    next = NextUrlField()
+    next = NextUrlField(default_next_url = '/' + django_settings.ASKBOT_URL)
 
 class FormWithHideableFields(object):
     """allows to swap a field widget to HiddenInput() and back"""
