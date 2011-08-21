@@ -56,7 +56,7 @@ def get_next_url(request, field_name = 'next'):
 
 
 class UserNameField(StrippedNonEmptyCharField):
-    RESERVED_NAMES = (
+    RESERVED_USER_NAMES = (
         u'fuck', u'shit', u'ass', u'sex', u'add',
         u'edit', u'save', u'delete', u'manage',
         u'update', 'remove', 'new'
@@ -113,7 +113,7 @@ class UserNameField(StrippedNonEmptyCharField):
         username_regex = re.compile(const.USERNAME_REGEX_STRING, re.UNICODE)
         if self.required and not username_regex.search(username):
             raise forms.ValidationError(self.error_messages['invalid'])
-        if username in self.RESERVED_NAMES:
+        if username in self.RESERVED_USER_NAMES:
             raise forms.ValidationError(self.error_messages['forbidden'])
         try:
             User.objects.get(username = username)
@@ -126,6 +126,10 @@ class UserNameField(StrippedNonEmptyCharField):
 
 class UserEmailField(forms.EmailField):
     def __init__(self, **kwargs):
+        """optional keyword arguments:
+        * widget - form widget
+        * widget_attrs - attributes for the field widget
+        """
         kwargs.setdefault('label', mark_safe(_('your email address')))
 
         error_messages = {

@@ -9,6 +9,8 @@ from openid.extensions import sreg
 from openid import store as openid_store
 import oauth2 as oauth
 
+from import_utils import import_module_from
+
 from django.db.models.query import Q
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.auth.models import User
@@ -202,8 +204,7 @@ class LoginMethod(object):
     as plugins for the askbot's version of django_authopenid
     """
     def __init__(self, login_module_path):
-        from askbot.utils.loading import load_module
-        self.mod = load_module(login_module_path)
+        self.mod = import_module_from(login_module_path)
         self.mod_path = login_module_path
         self.read_params()
 

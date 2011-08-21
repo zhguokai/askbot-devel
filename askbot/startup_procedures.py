@@ -8,11 +8,11 @@ question: why not run these from askbot/__init__.py?
 the main function is run_startup_tests
 """
 import sys
+from import_utils import import_module_from
 from django.db import transaction
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.models import badges
-from askbot.utils.loading import load_module
 from askbot.utils.functions import enumerate_string_list
 
 PREAMBLE = """\n
@@ -151,7 +151,7 @@ def test_i18n():
 
 def try_import(module_name, pypi_package_name):
     try:
-        load_module(module_name)
+        import_module_from(module_name)
     except ImportError, e:
         message = unicode(e) + ' run\npip install %s' % pypi_package_name
         message += '\nTo install all the dependencies at once, type:'
