@@ -75,7 +75,7 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url('feeds', kwargs={'url':'rss'})
         self.try_url('about', template='about.html')
         self.try_url('privacy', template='privacy.html')
-        self.try_url('logout', template='authopenid/logout.html')
+        self.try_url('logout', template='authenticator/logout.html')
         #todo: test different tabs
         self.try_url('tags', template='tags.html')
         self.try_url('tags', data={'sort':'name'}, template='tags.html')
@@ -233,7 +233,7 @@ class PageLoadTests(PageLoadTestCase):
             )
         self.try_url(
                 'edit_user',
-                template='authopenid/signin.html',
+                template='authenticator/signin.html',
                 kwargs={'id':4},
                 status_code=200,
                 follow=True,
@@ -271,7 +271,7 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'inbox'}, 
-            template='authopenid/signin.html',
+            template='authenticator/signin.html',
             follow=True
         )
         self.try_url(
@@ -284,7 +284,7 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'votes'}, 
-            template='authopenid/signin.html',
+            template='authenticator/signin.html',
             follow = True
         )
         self.try_url(
@@ -297,7 +297,7 @@ class PageLoadTests(PageLoadTestCase):
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'email_subscriptions'}, 
-            template='authopenid/signin.html',
+            template='authenticator/signin.html',
             follow = True
         )
 

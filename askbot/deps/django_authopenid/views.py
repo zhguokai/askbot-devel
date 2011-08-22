@@ -127,7 +127,7 @@ def logout_page(request):
         'page_class': 'meta',
         'have_federated_login_methods': util.have_enabled_federated_login_methods()
     }
-    return render_to_response('authopenid/logout.html', RequestContext(request, data))
+    return render_to_response('authenticator/logout.html', RequestContext(request, data))
 
 def get_url_host(request):
     if request.is_secure():
@@ -296,7 +296,7 @@ def signin(request):
     
     url: /signin/
     
-    template : authopenid/signin.htm
+    template : authenticator/signin.htm
     """
     logging.debug('in signin view')
     on_failure = signin_failure
@@ -490,7 +490,7 @@ def show_signin_view(
                 view_subtype = 'default'
             ):
     """url-less utility function that populates
-    context of template 'authopenid/signin.html'
+    context of template 'authenticator/signin.html'
     and returns its rendered output
     """
 
@@ -598,7 +598,7 @@ def show_signin_view(
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
 
-    return render_to_response('authopenid/signin.html', RequestContext(request, data))
+    return render_to_response('authenticator/signin.html', RequestContext(request, data))
 
 @login_required
 def delete_login_method(request):
@@ -804,7 +804,7 @@ def _send_email_key(user):
                                     kwargs={'key':user.email_key}
                             )
     }
-    template = get_template('authopenid/email_validation.txt')
+    template = get_template('authenticator/email_validation.txt')
     message = template.render(data)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
@@ -828,7 +828,7 @@ def send_email_key(request):
 
     raises 404 if email validation is off
     if current email is valid shows 'key_not_sent' view of 
-    authopenid/changeemail.html template
+    authenticator/changeemail.html template
     """
     if settings.EMAIL_VALIDATION == True:
         if request.user.email_isvalid:
@@ -838,7 +838,7 @@ def send_email_key(request):
                 'change_link': reverse('user_changeemail')
             }
             return render_to_response(
-                        'authopenid/changeemail.html',
+                        'authenticator/changeemail.html',
                         RequestContext(request, data)
                     )
         else:
@@ -910,7 +910,7 @@ def validation_email_sent(request):
         'change_email_url': reverse('user_changeemail'),
         'action_type': 'validate'
     }
-    return render_to_response('authopenid/changeemail.html', RequestContext(request, data))
+    return render_to_response('authenticator/changeemail.html', RequestContext(request, data))
 
 def verifyemail(request,id=None,key=None):
     """
@@ -927,7 +927,7 @@ def verifyemail(request,id=None,key=None):
                 user.save()
                 data = {'action_type': 'validation_complete'}
                 return render_to_response(
-                            'authopenid/changeemail.html',
+                            'authenticator/changeemail.html',
                             RequestContext(request, data)
                         )
             else:
@@ -946,7 +946,7 @@ def changeemail(request, action='change'):
 
     url: /email/*
 
-    template : authopenid/changeemail.html
+    template : authenticator/changeemail.html
     """
     logging.debug('')
     msg = request.GET.get('msg', None)
@@ -974,7 +974,7 @@ def changeemail(request, action='change'):
                 user=user_)
     
     output = render_to_response(
-        'authopenid/changeemail.html',
+        'authenticator/changeemail.html',
         {
             'form': form,
             'email': user_.email,

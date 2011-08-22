@@ -1,5 +1,5 @@
 {% extends "two_column_body.html" %}
-{% import "authopenid/macros.html" as login_macros %}
+{% import "authenticator/macros.html" as login_macros %}
 <!-- signin.html -->
 {% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forestyle %}
@@ -222,6 +222,6 @@
     {% endif %}
 {% endblock%}
 {%block endjs%}
-{%include "authopenid/providers_javascript.html" %}
+{%include "authenticator/providers_javascript.html" %}
 {%endblock%}
 <!-- end signin.html -->
