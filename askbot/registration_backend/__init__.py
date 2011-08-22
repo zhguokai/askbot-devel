@@ -17,7 +17,7 @@ from registration.models import RegistrationProfile
 from registration import signals
 from askbot.conf import settings as askbot_settings
 from askbot import forms
-from askbot.utils.forms import get_next_url
+from django_extra_form_fields import get_next_url
 
 def redirect_to_next_url(self, request, user):
     next_url = get_next_url(request)

@@ -10,8 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import SetPasswordForm as DjangoSetPwForm
 from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
-from askbot.utils.forms import NextUrlField, UserNameField
-from askbot.utils.forms import UserEmailField
+from django_extra_form_fields import NextUrlField, UserNameField, UserEmailField
 from askbot.utils.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
