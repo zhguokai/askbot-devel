@@ -973,14 +973,18 @@ def changeemail(request, action='change'):
         form = forms.ChangeEmailForm(initial={'email': user_.email},
                 user=user_)
     
-    output = render_to_response('authopenid/changeemail.html', {
-        'form': form,
-        'email': user_.email,
-        'action_type': action,
-        'gravatar_faq_url': reverse('faq') + '#gravatar',
-        'change_email_url': reverse('user_changeemail'),
-        'msg': msg 
-        }, context_instance=RequestContext(request))
+    output = render_to_response(
+        'authopenid/changeemail.html',
+        {
+            'form': form,
+            'email': user_.email,
+            'action_type': action,
+            'gravatar_faq_url': reverse('faq') + '#gravatar',
+            'change_email_url': reverse('user_changeemail'),
+            'msg': msg 
+        },
+        context_instance=RequestContext(request)
+    )
 
     if action == 'validate':
         set_email_validation_message(user_)
