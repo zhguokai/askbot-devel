@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import signals
 from django.template import defaultfilters
 from django.core.urlresolvers import reverse
+from django.conf import settings as django_settings
 import coffin
 import coffin.template
 from askbot import models
@@ -75,7 +76,6 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url('feeds', kwargs={'url':'rss'})
         self.try_url('about', template='about.html')
         self.try_url('privacy', template='privacy.html')
-        self.try_url('logout', template='authenticator/logout.html')
         #todo: test different tabs
         self.try_url('tags', template='tags.html')
         self.try_url('tags', data={'sort':'name'}, template='tags.html')
@@ -232,16 +232,28 @@ class PageLoadTests(PageLoadTestCase):
                 data={'sort':'user', 'page':1},
             )
         self.try_url(
-                'edit_user',
-                template='authenticator/signin.html',
-                kwargs={'id':4},
-                status_code=200,
-                follow=True,
-            )
-        self.try_url(
                 'faq',
                 template='faq_static.html',
                 status_code=200,
+            )
+        if 'askbot.deps.django_authopenid' in django_settings.INSTALLED_APPS:
+            self.try_url(
+                    'edit_user',
+                    template='authenticator/signin.html',
+                    kwargs={'id':4},
+                    status_code=200,
+                    follow=True,
+                )
+            self.try_url('logout', template='authenticator/logout.html')
+            self.try_url(
+                'registration_register_with_password',
+                template = 'registration/password_registration_form.html'
+            )
+            self.try_url(
+                'registration_register',
+                template = 'registration/registration_closed.html',
+                status_code = 200,
+                follow = True
             )
 
     def test_non_user_urls(self):
@@ -270,22 +282,8 @@ class PageLoadTests(PageLoadTestCase):
         self.try_url(
             'user_profile', 
             kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'inbox'}, 
-            template='authenticator/signin.html',
-            follow=True
-        )
-        self.try_url(
-            'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
             data={'sort':'reputation'}, 
             template='user_profile/user_reputation.html'
-        )
-        self.try_url(
-            'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
-            data={'sort':'votes'}, 
-            template='authenticator/signin.html',
-            follow = True
         )
         self.try_url(
             'user_profile', 
@@ -293,12 +291,28 @@ class PageLoadTests(PageLoadTestCase):
             data={'sort':'favorites'}, 
             template='user_profile/user_favorites.html'
         )
+
+        kwargs = {
+            'kwargs': {'id': 2, 'slug': name_slug},
+            'follow': True
+        }
+        if 'askbot.deps.django_authopenid' in django_settings.INSTALLED_APPS:
+            kwargs['template'] = 'authenticator/signin.html'
+            
+        self.try_url(
+            'user_profile',
+            data={'sort':'votes'}, 
+            **kwargs
+        )
         self.try_url(
             'user_profile', 
-            kwargs={'id': 2, 'slug': name_slug},
+            data={'sort':'inbox'}, 
+            **kwargs
+        )
+        self.try_url(
+            'user_profile', 
             data={'sort':'email_subscriptions'}, 
-            template='authenticator/signin.html',
-            follow = True
+            **kwargs
         )
 
     def test_user_urls_logged_in(self):

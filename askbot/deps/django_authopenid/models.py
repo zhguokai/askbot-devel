@@ -59,6 +59,9 @@ class Nonce(models.Model):
     server_url = models.CharField(max_length=255)
     timestamp = models.IntegerField()
     salt = models.CharField(max_length=40)
+
+    class Meta:
+        db_table = 'django_authopenid_nonce'
     
     def __unicode__(self):
         return u"Nonce: %s" % self.id
@@ -72,6 +75,9 @@ class Association(models.Model):
     issued = models.IntegerField()
     lifetime = models.IntegerField()
     assoc_type = models.TextField(max_length=64)
+
+    class Meta:
+        db_table = 'django_authopenid_association'
     
     def __unicode__(self):
         return u"Association: %s, %s" % (self.server_url, self.handle)
@@ -91,6 +97,7 @@ class UserAssociation(models.Model):
     last_used_timestamp = models.DateTimeField(null=True)
 
     class Meta(object):
+        db_table = 'django_authopenid_userassociation'
         unique_together = (
                                 ('user','provider_name'),
                                 ('openid_url', 'provider_name')
@@ -125,6 +132,9 @@ class UserPasswordQueue(models.Model):
     confirm_key = models.CharField(max_length=40)
 
     objects = UserPasswordQueueManager()
+
+    class Meta:
+        db_table = 'django_authopenid_userpasswordqueue'
 
     def __unicode__(self):
         return self.user.username
