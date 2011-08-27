@@ -304,7 +304,7 @@ class SetPasswordForm(DjangoSetPwForm):
         """reset the __init__ method to default
         we do not want to accept ``user`` argument
         as Django's form does"""
-        super(forms.Form, self).__init__(*args, **kwargs)
+        super(SetPasswordForm, self).__init__(*args, **kwargs)
 
 class ClassicRegisterForm(OpenidRegisterForm, SetPasswordForm):
     """ legacy registration form """
@@ -968,7 +968,6 @@ class EditUserForm(forms.Form):
             username_field = UserNameField(
                 label = _('Screen name'),
                 initial = user.username,
-                user_instance = user,
                 widget_attrs = LOGIN_WIDGET_ATTRS
             )
         self.fields['email'].initial = user.email
