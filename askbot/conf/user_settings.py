@@ -21,6 +21,27 @@ settings.register(
 )
 
 settings.register(
+    livesettings.StringValue(
+        USER_SETTINGS,
+        'USERNAME_REGEX_STRING',
+        default = r'^[\w \-.@+\']+$',#this unfortunately breaks django admin
+        hidden = True
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        USER_SETTINGS,
+        'USERNAME_INVALID_MESSAGE',
+        default = _(#modify this message to reflect the above regex
+            'User name may consist of letters, numbers, '
+            'empty space and _+-@\' characters'
+        ),
+        hidden = True
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         USER_SETTINGS,
         'ALLOW_ACCOUNT_RECOVERY_BY_EMAIL',

@@ -17,6 +17,12 @@ from askbot.conf import settings as askbot_settings
 import logging
 
 LOGIN_WIDGET_ATTRS = {'class': 'required login'}
+USERNAME_FIELD_PARAMS = {
+    'widget_attrs': LOGIN_WIDGET_ATTRS,
+    'error_messages': {
+        'invalid': askbot_settings.USERNAME_INVALID_MESSAGE
+    }
+}
 
 def cleanup_dict(dictionary, key, empty_value):
     """deletes key from dictionary if it exists
@@ -295,7 +301,7 @@ class OpenidRegisterForm(forms.Form):
     with the passwordless registrations - like federated systems:
     openid, oauth, etc.
     """
-    username = UserNameField(widget_attrs = LOGIN_WIDGET_ATTRS)
+    username = UserNameField(**USERNAME_FIELD_PARAMS)
     email = UserEmailField(widget_attrs = LOGIN_WIDGET_ATTRS)
     subscribe = SimpleEmailSubscribeField()
 
@@ -968,7 +974,7 @@ class EditUserForm(forms.Form):
             username_field = UserNameField(
                 label = _('Screen name'),
                 initial = user.username,
-                widget_attrs = LOGIN_WIDGET_ATTRS
+                **USERNAME_FIELD_PARAMS
             )
         self.fields['email'].initial = user.email
         self.fields['realname'].initial = user.real_name

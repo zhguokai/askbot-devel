@@ -220,7 +220,6 @@ NOTIFICATION_DELIVERY_SCHEDULE_CHOICES = (
                         )
 
 USERS_PAGE_SIZE = 28#todo: move it to settings?
-USERNAME_REGEX_STRING = r'^[\w \-.@+\']+$'
 
 GRAVATAR_TYPE_CHOICES = (
                             ('identicon',_('identicon')),
@@ -274,7 +273,6 @@ BADGE_CSS_CLASSES = {
 BADGE_DISPLAY_SYMBOL = '&#9679;'
 
 MIN_REPUTATION = 1
-
 
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *
