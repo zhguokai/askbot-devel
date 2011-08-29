@@ -3,14 +3,15 @@ import cgi
 import urllib
 import functools
 import re
-from askbot.deps.openid.store.interface import OpenIDStore
-from askbot.deps.openid.association import Association as OIDAssociation
-from askbot.deps.openid.extensions import sreg
-from askbot.deps.openid import store as openid_store
+from openid.store.interface import OpenIDStore
+from openid.association import Association as OIDAssociation
+from openid.extensions import sreg
+from openid import store as openid_store
 import oauth2 as oauth
 
 from django.db.models.query import Q
 from django.conf import settings
+from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
@@ -31,7 +32,7 @@ from askbot.conf import settings as askbot_settings
 
 # needed for some linux distributions like debian
 try:
-    from askbot.deps.openid.yadis import xri
+    from openid.yadis import xri
 except:
     from yadis import xri
 
@@ -40,7 +41,7 @@ from models import Association, Nonce
 
 __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
 
-ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username')
+ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username', 'wordpress')
 
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
@@ -169,6 +170,8 @@ def use_password_login():
     either if USE_RECAPTCHA is false
     of if recaptcha keys are set correctly
     """
+    if askbot_settings.SIGNIN_WORDPRESS_SITE_ENABLED:
+        return True
     if askbot_settings.USE_RECAPTCHA:
         if askbot_settings.RECAPTCHA_KEY and askbot_settings.RECAPTCHA_SECRET:
             return True
@@ -489,6 +492,9 @@ def get_oauth_parameters(provider_name):
     elif provider_name == 'linkedin':
         consumer_key = askbot_settings.LINKEDIN_KEY
         consumer_secret = askbot_settings.LINKEDIN_SECRET
+    elif provider_name == 'identi.ca':
+        consumer_key = askbot_settings.IDENTICA_KEY
+        consumer_secret = askbot_settings.IDENTICA_SECRET
     else:
         raise ValueError('sorry, only linkedin and twitter oauth for now')
 

@@ -221,8 +221,8 @@ CommentVoteButton.prototype.decorate = function(element){
      */
     comment._element.mouseenter(function(){
         //outside height may not be known
-        var height = comment.getElement().height();
-        element.height(height);
+        //var height = comment.getElement().height();
+        //element.height(height);
         element.addClass('hover');
     });
     comment._element.mouseleave(function(){
@@ -259,7 +259,8 @@ var Vote = function(){
     var answerContainerIdPrefix = 'answer-container-';
     var voteContainerId = 'vote-buttons';
     var imgIdPrefixAccept = 'answer-img-accept-';
-    var imgClassPrefixFavorite = 'question-img-favorite';
+    var classPrefixFollow= 'button follow';
+    var classPrefixFollowed= 'button followed';
     var imgIdPrefixQuestionVoteup = 'question-img-upvote-';
     var imgIdPrefixQuestionVotedown = 'question-img-downvote-';
     var imgIdPrefixAnswerVoteup = 'answer-img-upvote-';
@@ -274,6 +275,7 @@ var Vote = function(){
     var removeQuestionLinkIdPrefix = 'question-delete-link-';
     var removeAnswerLinkIdPrefix = 'answer-delete-link-';
     var questionSubscribeUpdates = 'question-subscribe-updates';
+    var questionSubscribeSidebar= 'question-subscribe-sidebar';
     
     var acceptAnonymousMessage = $.i18n._('insufficient privilege');
     var acceptOwnAnswerMessage = $.i18n._('cannot pick own answer as best');
@@ -283,7 +285,8 @@ var Vote = function(){
                     + "'>"
                     + $.i18n._('please login') + "</a>";
 
-    var favoriteAnonymousMessage = $.i18n._('anonymous users cannot select favorite questions') + pleaseLogin;
+    var favoriteAnonymousMessage = $.i18n._('anonymous users cannot follow questions') + pleaseLogin;
+    var subscribeAnonymousMessage = $.i18n._('anonymous users cannot subscribe to questions') + pleaseLogin;
     var voteAnonymousMessage = $.i18n._('anonymous users cannot vote') + pleaseLogin;
     //there were a couple of more messages...
     var offensiveConfirmation = $.i18n._('please confirm offensive');
@@ -309,7 +312,8 @@ var Vote = function(){
     };
 
     var getFavoriteButton = function(){
-        var favoriteButton = 'div.'+ voteContainerId +' img[class='+ imgClassPrefixFavorite +']';
+        var favoriteButton = 'div.'+ voteContainerId +' a[class='+ classPrefixFollow +']';
+        favoriteButton += ', div.'+ voteContainerId +' a[class='+ classPrefixFollowed +']';
         return $(favoriteButton);
     };
     var getFavoriteNumber = function(){
@@ -359,6 +363,10 @@ var Vote = function(){
     var getquestionSubscribeUpdatesCheckbox = function(){
         return $('#' + questionSubscribeUpdates);
     };
+
+    var getquestionSubscribeSidebarCheckbox= function(){
+        return $('#' + questionSubscribeSidebar);
+    };
     
     var getremoveAnswersLinks = function(){
         var removeAnswerLinks = 'div.answer-controls a[id^='+ removeAnswerLinkIdPrefix +']';
@@ -399,7 +407,8 @@ var Vote = function(){
         // set favorite question
         var favoriteButton = getFavoriteButton();
         favoriteButton.unbind('click').click(function(event){
-           Vote.favorite($(event.target));
+           //Vote.favorite($(event.target));
+           Vote.favorite(favoriteButton);
         });
     
         // question vote up
@@ -436,14 +445,28 @@ var Vote = function(){
         });
 
         getquestionSubscribeUpdatesCheckbox().unbind('click').click(function(event){
+            //despeluchar esto
             if (this.checked){
+                getquestionSubscribeSidebarCheckbox().attr({'checked': true});
                 Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
             }
             else {
+                getquestionSubscribeSidebarCheckbox().attr({'checked': false});
                 Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
             }
         });
-    
+
+        getquestionSubscribeSidebarCheckbox().unbind('click').click(function(event){
+            if (this.checked){
+                getquestionSubscribeUpdatesCheckbox().attr({'checked': true});
+                Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
+            }
+            else {
+                getquestionSubscribeUpdatesCheckbox().attr({'checked': false});
+                Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
+            }
+        });
+
         getremoveAnswersLinks().unbind('click').click(function(event){
             Vote.remove(this, VoteType.removeAnswer);
         });
@@ -509,18 +532,26 @@ var Vote = function(){
             );
         }
         else if(data.status == "1"){
-            object.attr("src", mediaUrl("media/images/vote-favorite-off.png"));
+            var follow_html = gettext('Follow');
+            object.attr("class", 'button follow');
+            object.html(follow_html);
             var fav = getFavoriteNumber();
             fav.removeClass("my-favorite-number");
             if(data.count === 0){
                 data.count = '';
+                fav.text('');
+            }else{
+                var fmts = ngettext('%s follower', '%s followers', data.count);
+                fav.text(interpolate(fmts, [data.count]));
             }
-            fav.text(data.count);
         }
         else if(data.success == "1"){
-            object.attr("src", mediaUrl("media/images/vote-favorite-on.png"));
+            var followed_html = gettext('<div>Following</div><div class="unfollow">Unfollow</div>');
+            object.html(followed_html);
+            object.attr("class", 'button followed');
             var fav = getFavoriteNumber();
-            fav.text(data.count);
+            var fmts = ngettext('%s follower', '%s followers', data.count);
+            fav.text(interpolate(fmts, [data.count]));
             fav.addClass("my-favorite-number");
         }
         else{
@@ -625,16 +656,22 @@ var Vote = function(){
             
         vote: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
-                showMessage(
-                    $(object),
-                    voteAnonymousMessage.replace(
-                            "{{QuestionID}}",
-                            questionId
-                        ).replace(
-                            '{{questionSlug}}',
-                            questionSlug
-                        )
-                );
+                if (voteType == VoteType.questionSubscribeUpdates || voteType == VoteType.questionUnsubscribeUpdates){
+                    getquestionSubscribeSidebarCheckbox().removeAttr('checked');
+                    getquestionSubscribeUpdatesCheckbox().removeAttr('checked');
+                    showMessage(object, subscribeAnonymousMessage);
+                }else {
+                    showMessage(
+                        $(object),
+                        voteAnonymousMessage.replace(
+                                "{{QuestionID}}",
+                                questionId
+                            ).replace(
+                                '{{questionSlug}}',
+                                questionSlug
+                            )
+                    );
+                }
                 return false;
             }
             // up and downvote processor
@@ -1004,6 +1041,12 @@ EditCommentForm.prototype.createDom = function(){
     this._textarea = $('<textarea></textarea>');
     this._textarea.attr('id', this._id);
 
+    this._help_text = $('<span></span>').attr('class', 'help-text');
+    this._help_text.html(gettext('Markdown is allowed in the comments')); 
+    div.append(this._help_text);
+
+    this._help_text = $('<div></div>').attr('class', 'clearfix');
+    div.append(this._help_text);
 
     this._element.append(div);
     div.append(this._textarea);
@@ -1072,7 +1115,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
     var me = this;
     return function(){
         var text = me._textarea.val();
-        if (text.length <= 10){
+        if (text.length < 10){
             me.focus();
             return false;
         }
@@ -1218,35 +1261,46 @@ Comment.prototype.setContent = function(data){
 
     this._element.append(votes);
 
-    this._element.append(this._data['html']);
-    this._element.append(' - ');
+    this._comment_delete = $('<div class="comment-delete"></div>');
+    if (this._deletable){
+        this._delete_icon = new DeleteIcon(this._delete_prompt);
+        this._delete_icon.setHandler(this.getDeleteHandler());
+        this._comment_delete.append(this._delete_icon.getElement());
+    }
+    this._element.append(this._comment_delete);
+    
+    this._comment_body = $('<div class="comment-body"></div>');
+    this._comment_body.html(this._data['html']);
+    this._comment_body.append(' &ndash; ');
 
     this._user_link = $('<a></a>').attr('class', 'author');
     this._user_link.attr('href', this._data['user_url']);
     this._user_link.html(this._data['user_display_name']);
-    this._element.append(this._user_link);
+    this._comment_body.append(this._user_link);
 
-    this._element.append(' (');
+    this._comment_body.append(' (');
     this._comment_age = $('<span class="age"></span>');
     this._comment_age.html(this._data['comment_age']);
-    this._element.append(this._comment_age);
-    this._element.append(')');
+    this._comment_body.append(this._comment_age);
+    this._comment_body.append(')');
 
     if (this._editable){
         this._edit_link = new EditLink();
         this._edit_link.setHandler(this.getEditHandler())
-        this._element.append(this._edit_link.getElement());
+        this._comment_body.append(this._edit_link.getElement());
     }
-
-    if (this._deletable){
-        this._delete_icon = new DeleteIcon(this._delete_prompt);
-        this._delete_icon.setHandler(this.getDeleteHandler());
-        this._element.append(this._delete_icon.getElement());
-    }
+    this._element.append(this._comment_body);
+    
     this._blank = false;
 };
 
 Comment.prototype.dispose = function(){
+    if (this._comment_body){
+        this._comment_body.remove();
+    }
+    if (this._comment_delete){
+        this._comment_delete.remove();
+    }    
     if (this._user_link){
         this._user_link.remove();
     }
@@ -1477,12 +1531,20 @@ var socialSharing = function(){
 
     var SERVICE_DATA = {
         //url - template for the sharing service url, params are for the popup
+        identica: {
+            url: "http://identi.ca/index.php?action=newnotice&status_textarea={TEXT}",
+            params: "width=820, height=526,toolbar=1,status=1,resizable=1,scrollbars=1"
+        },
         twitter: {
             url: "http://twitter.com/share?url={URL}&ref=twitbtn&text={TEXT}",
             params: "width=820,height=526,toolbar=1,status=1,resizable=1,scrollbars=1"
         },
         facebook: {
             url: "http://www.facebook.com/sharer.php?u={URL}&ref=fbshare&t={TEXT}",
+            params: "width=630,height=436,toolbar=1,status=1,resizable=1,scrollbars=1"
+        },
+        linkedin: {
+            url: "http://www.linkedin.com/shareArticle?mini=true&amp;url={URL}&amp;source={TEXT}",
             params: "width=630,height=436,toolbar=1,status=1,resizable=1,scrollbars=1"
         }
     };
@@ -1502,15 +1564,19 @@ var socialSharing = function(){
     }
 
     return {
-        init: function(page_url, text_to_share){
+        init: function(){
             URL = window.location.href;
             TEXT = escape($('h1 > a').html());
-            var fb = $('a.fb-share')
+            var fb = $('a.facebook-share')
             var tw = $('a.twitter-share');
+            var ln = $('a.linkedin-share');
+            var ica = $('a.identica-share');
             copyAltToTitle(fb);
             copyAltToTitle(tw);
             setupButtonEventHandlers(fb, function(){share_page("facebook")});
             setupButtonEventHandlers(tw, function(){share_page("twitter")});
+            setupButtonEventHandlers(ln, function(){share_page("linkedin")});
+            setupButtonEventHandlers(ica, function(){share_page("identica")});
         }
     }
 }(); 

@@ -4,6 +4,7 @@ User policy settings
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
+from askbot import const
 
 USER_SETTINGS = livesettings.ConfigurationGroup(
                     'USER_SETTINGS',
@@ -44,6 +45,19 @@ settings.register(
         hidden=True,
         default=1,
         description=_('Minimum allowed length for screen name')
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        USER_SETTINGS,
+        'GRAVATAR_TYPE',
+        default='identicon',
+        choices=const.GRAVATAR_TYPE_CHOICES,
+        description=_('Default Gravatar icon type'),
+        help_text=_(
+                    'This option allows you to set the default avatar type for email addresses without associated gravatar images.  For more information, please visit <a href="http://en.gravatar.com/site/implement/images/">this page</a>.'
+                    ) 
     )
 )
 

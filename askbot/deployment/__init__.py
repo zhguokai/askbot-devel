@@ -6,7 +6,7 @@ from askbot.utils import console
 from askbot.deployment import messages
 from askbot.deployment import path_utils
 
-def startforum():
+def askbot_setup():
     """basic deployment procedure
     asks user several questions, then either creates
     new deployment (in the case of new installation)
@@ -93,7 +93,7 @@ def startforum():
             directory = None
             continue
 
-    help_file = os.path.join(directory, 'askbot', 'doc', 'INSTALL')
+    help_file = path_utils.get_path_to_help_file()
     if create_new:
         path_utils.create_path(directory)
         path_utils.deploy_into(directory, new_project = True)

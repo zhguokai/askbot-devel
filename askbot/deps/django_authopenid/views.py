@@ -46,17 +46,26 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
+from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.skins.loaders import render_into_skin, get_template
 
-from askbot.deps.openid.consumer.consumer import Consumer, \
+from openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
-from askbot.deps.openid.consumer.discover import DiscoveryFailure
-from askbot.deps.openid.extensions import sreg
+from openid.consumer.discover import DiscoveryFailure
+from openid.extensions import sreg
 # needed for some linux distributions like debian
 try:
-    from askbot.deps.openid.yadis import xri
+    from openid.yadis import xri
 except ImportError:
     from yadis import xri
+
+try:
+    from xmlrpclib import Fault as WpFault
+    from wordpress_xmlrpc import Client
+    from wordpress_xmlrpc.methods.users import GetUserInfo
+except ImportError:
+    pass
+
 
 import urllib
 from askbot import forms as askbot_forms
@@ -431,6 +440,28 @@ def signin(request):
                         ) % {'provider': 'Facebook'}
                     request.user.message_set.create(message = msg)
 
+            elif login_form.cleaned_data['login_type'] == 'wordpress_site':
+                #here wordpress_site means for a self hosted wordpress blog not a wordpress.com blog
+                wp = Client(askbot_settings.WORDPRESS_SITE_URL, login_form.cleaned_data['username'], login_form.cleaned_data['password'])
+                try:
+                    wp_user = wp.call(GetUserInfo())
+                    custom_wp_openid_url = '%s?user_id=%s' % (wp.url, wp_user.user_id)
+                    user = authenticate(
+                            method = 'wordpress_site',
+                            wordpress_url = wp.url,
+                            wp_user_id = wp_user.user_id 
+                           )
+                    return finalize_generic_signin(
+                                    request = request,
+                                    user = user,
+                                    user_identifier = custom_wp_openid_url,
+                                    login_provider_name = provider_name,
+                                    redirect_url = next_url
+                                    )
+                except WpFault, e:
+                    logging.critical(unicode(e))
+                    msg = _('The login password combination was not correct')
+                    request.user.message_set.create(message = msg)
             else:
                 #raise 500 error - unknown login type
                 pass
@@ -511,6 +542,8 @@ def show_signin_view(
         #annotate objects with extra data
         providers = util.get_enabled_login_providers()
         for login_method in existing_login_methods:
+            if login_method.provider_name == 'facebook':
+                continue#it is disabled
             provider_data = providers[login_method.provider_name]
             if provider_data['type'] == 'password':
                 #only external password logins will not be deletable
@@ -869,6 +902,7 @@ def signin_failure(request, message):
 @not_authenticated
 @decorators.valid_password_login_provider_required
 @csrf.csrf_protect
+@fix_recaptcha_remote_ip
 def signup_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html

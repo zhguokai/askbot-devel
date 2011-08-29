@@ -12,7 +12,6 @@ install_requires = [
     'Coffin>=0.3',
     'South>=0.7.1',
     'oauth2',
-    'recaptcha-client',
     'markdown2',
     'html5lib',
     'django-keyedcache',
@@ -20,17 +19,12 @@ install_requires = [
     'django-robots',
     'unidecode',
     'django-countries==1.0.5',
-    'django-celery==2.2.3',
+    'django-celery==2.2.7',
     'django-kombu==0.9.2',
+    'django-followit',
+    'django-recaptcha-works',
+    'python-openid',
 ]
-
-#todo: have a dirty version retriever that 
-#parses it out from askbot/__init__.py but does not
-#import it as there are issues
-
-WIN_PLATFORMS = ('win32', 'cygwin',)
-if sys.platform not in WIN_PLATFORMS:
-    install_requires.append('mysql-python')
 
 import askbot
 
@@ -45,7 +39,7 @@ setup(
     keywords = 'forum, community, wiki, Q&A',
     entry_points = {
         'console_scripts' : [
-            'startforum = askbot.deployment:startforum',
+            'askbot-setup = askbot.deployment:askbot_setup',
         ]
     },
     url = 'http://askbot.org',
@@ -108,7 +102,7 @@ Methods to install code
 Create/configure django site
 ----------------------------
 
-Either run command **startforum** or merge contents of directory **askbot/setup_templates** in the source code into your project directory.
+Either run command **askbot-setup** or merge contents of directory **askbot/setup_templates** in the source code into your project directory.
 
 
 Create/update database tables
@@ -145,16 +139,13 @@ Footnotes
 (**) - With MySQL you have to use MyISAM data backend, because it's the only one that supports Full Text Search."""
 )
 
-if 'WIN_PLATFORM' in locals() and sys.platform in WIN_PLATFORMS:
-    print 'ATTENTION!! please install windows binary mysql-python package'
-    print 'at http://www.codegood.com/archives/4'
-
-print '**************************************************************'
-print '*                                                            *'
-print '*  Thanks for installing Askbot.                             *'
-print '*  To start deploying type: >python startforum               *'
-print '*  Please take a look at the manual askbot/doc/INSTALL       *'
-print '*  And please do not hesitate to ask your questions at       *'
-print '*  at http://askbot.org                                      *'
-print '*                                                            *'
-print '**************************************************************'
+print """**************************************************************
+*                                                            *
+*  Thanks for installing Askbot.                             *
+*                                                            *
+*  To start deploying type: >askbot-setup                    *
+*  Please take a look at the manual askbot/doc/INSTALL       *
+*  And please do not hesitate to ask your questions at       *
+*  at http://askbot.org                                      *
+*                                                            *
+**************************************************************"""

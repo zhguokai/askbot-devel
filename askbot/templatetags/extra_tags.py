@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from askbot.utils import functions
 from askbot.utils.slug import slugify
 from askbot.skins.loaders import get_template
+from askbot.conf import settings as askbot_settings
 
 register = template.Library()
 
@@ -14,7 +15,7 @@ GRAVATAR_TEMPLATE = (
                      'href="%(user_profile_url)s"><img class="gravatar" '
                      'width="%(size)s" height="%(size)s" '
                      'src="http://www.gravatar.com/avatar/%(gravatar_hash)s'
-                     '?s=%(size)s&amp;d=identicon&amp;r=PG" '
+                     '?s=%(size)s&amp;d=%(gravatar_type)s&amp;r=PG" '
                      'title="%(username)s" '
                      'alt="%(alt_text)s" /></a>')
 
@@ -27,10 +28,8 @@ def gravatar(user, size):
     appropriate values.
     """
     #todo: rewrite using get_from_dict_or_object
-    gravatar_hash = functions.get_from_dict_or_object(user, 'gravatar')
-    username = functions.get_from_dict_or_object(user, 'username')
     user_id = functions.get_from_dict_or_object(user, 'id')
-    slug = slugify(username)
+    slug = slugify(user.username)
     user_profile_url = reverse(
                         'user_profile',
                         kwargs={'id':user_id, 'slug':slug}
@@ -39,13 +38,30 @@ def gravatar(user, size):
     return mark_safe(GRAVATAR_TEMPLATE % {
         'user_profile_url': user_profile_url,
         'size': size,
-        'gravatar_hash': gravatar_hash,
-        'alt_text': _('%(username)s gravatar image') % {'username': username},
-        'username': username,
+        'gravatar_hash': functions.get_from_dict_or_object(user, 'gravatar'),
+        'gravatar_type': askbot_settings.GRAVATAR_TYPE,
+        'alt_text': _('%(username)s gravatar image') % {'username': user.username},
+        'username': functions.get_from_dict_or_object(user, 'username'),
     })
+    
+@register.simple_tag
+def get_tag_font_size(tags):
+    max_tag = 0
+    for tag in tags:
+        if tag.used_count > max_tag:
+            max_tag = tag.used_count
 
-MAX_FONTSIZE = 18
-MIN_FONTSIZE = 12
+    min_tag = max_tag
+    for tag in tags:
+        if tag.used_count < min_tag:
+            min_tag = tag.used_count
+
+    font_size = {}
+    for tag in tags:
+        font_size[tag.name] = tag_font_size(max_tag,min_tag,tag.used_count)
+    
+    return font_size
+
 @register.simple_tag
 def tag_font_size(max_size, min_size, current_size):
     """
@@ -53,16 +69,18 @@ def tag_font_size(max_size, min_size, current_size):
     Algorithm from http://blogs.dekoh.com/dev/2007/10/29/choosing-a-good-
     font-size-variation-algorithm-for-your-tag-cloud/
     """
+    MAX_FONTSIZE = 10
+    MIN_FONTSIZE = 1
+
     #avoid invalid calculation
     if current_size == 0:
-        current_size = 1
+        current_size = 1    
     try:
-        weight = (math.log10(current_size) - math.log10(min_size)) / \
-                (math.log10(max_size) - math.log10(min_size))
+        weight = (math.log10(current_size) - math.log10(min_size)) / (math.log10(max_size) - math.log10(min_size))
     except Exception:
         weight = 0
-    return MIN_FONTSIZE + round((MAX_FONTSIZE - MIN_FONTSIZE) * weight)
-
+        
+    return int(MIN_FONTSIZE + round((MAX_FONTSIZE - MIN_FONTSIZE) * weight))
 
 #todo: this function may need to be removed to simplify the paginator functionality
 LEADING_PAGE_RANGE_DISPLAYED = TRAILING_PAGE_RANGE_DISPLAYED = 5

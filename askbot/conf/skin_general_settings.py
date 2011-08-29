@@ -57,6 +57,7 @@ settings.register(
                         'at <a href="%(favicon_info_url)s">this page</a>.'
                     ) % {'favicon_info_url': const.DEPENDENCY_URLS['favicon']},
         upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
+        allowed_file_extensions = ('ico',),#only allow .ico files
         upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
         default = '/images/favicon.gif',
         url_resolver = skin_utils.get_media_url
@@ -154,6 +155,25 @@ settings.register(
 )
 
 settings.register(
+    values.LongStringValue(
+        GENERAL_SKIN_SETTINGS,
+        'CUSTOM_HEADER',
+        default = '',
+        description = _('Custom header additions'),
+        help_text = _(
+                    'Header is the bar at the top of the content '
+                    'that contains user info and site links, '
+                    'and is common to all pages. '
+                    'Use this area to enter contents of the header'
+                    'in the HTML format.   When customizing the site header '
+                    '(as well as footer and the HTML &lt;HEAD&gt;), '
+                    'use the HTML validation service to make sure that '
+                    'your input is valid and works well in all browsers.'
+                    )
+    )
+)
+
+settings.register(
     values.StringValue( GENERAL_SKIN_SETTINGS,
         'FOOTER_MODE',
         description = _('Site footer mode'),
@@ -181,7 +201,7 @@ settings.register(
                     'option \'customize\' in the "Site footer mode" above. '
                     'Use this area to enter contents of the footer '
                     'in the HTML format. When customizing the site footer '
-                    '(as well as the HTML &lt;HEAD&gt;), '
+                    '(as well as the header and HTML &lt;HEAD&gt;), '
                     'use the HTML validation service to make sure that '
                     'your input is valid and works well in all browsers.'
                     )
