@@ -33,8 +33,12 @@ askbot/upfiles/*.jpg
 askbot/upfiles/*.jpeg
 askbot/upfiles/*.gif
 askbot/upfiles/*.png
+askbot/upfiles/*.ico
+askbot/upfiles/avatars/
 askbot/skins/common/media/mathjax/
 /jinja2
 *.tar.tz
 askbot/cron/backups
 askbot/cron/*stats
+run
+recaptcha

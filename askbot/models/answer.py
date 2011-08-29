@@ -289,7 +289,7 @@ class Answer(content.Content, DeletableContent):
         return self.question.title
 
     def get_absolute_url(self):
-        return '%(base)s%(slug)s?answer=%(id)d#%(id)d' % \
+        return u'%(base)s%(slug)s?answer=%(id)d#%(id)d' % \
                 {
                     'base': reverse('question', args=[self.question.id]),
                     'slug': django_urlquote(slugify(self.question.title)),
@@ -310,7 +310,7 @@ class AnswerRevision(ContentRevision):
     def get_question_title(self):
         return self.answer.question.title
 
-    def as_html(self):
+    def as_html(self, **kwargs):
         markdowner = markup.get_parser()
         return sanitize_html(markdowner.convert(self.text))
 

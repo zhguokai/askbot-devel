@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.utils.mail import extract_first_email_address
-from askbot.deps.recaptcha_django import ReCaptchaField
+from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
 
@@ -292,7 +292,7 @@ class ShowQuestionForm(forms.Form):
         or invalid"""
         if self._errors:
             #since the form is always valid, clear the errors
-            logging.error(str(self._errors))
+            logging.error(unicode(self._errors))
             self._errors = {}
 
         in_data = self.get_pruned_data()
@@ -344,7 +344,8 @@ MODERATOR_STATUS_CHOICES = (
                                 ('s', _('suspended')),
                                 ('b', _('blocked')),
                            )
-ADMINISTRATOR_STATUS_CHOICES = (('m', _('moderator')), ) \
+ADMINISTRATOR_STATUS_CHOICES = (('d', _('administrator')),
+                               ('m', _('moderator')), ) \
                                + MODERATOR_STATUS_CHOICES
 
 
@@ -427,6 +428,12 @@ class ChangeUserStatusForm(forms.Form):
                 raise forms.ValidationError(
                                 _('Cannot change status of another moderator')
                             )
+
+            #do not allow moderator to change to admin
+            if self.moderator.is_moderator() and user_status == 'd':
+                raise forms.ValidationError(
+                                _("Cannot change status to admin")
+                                )
 
             if user_status == 'select':
                 del self.cleaned_data['user_status']
@@ -535,7 +542,10 @@ class AdvancedSearchForm(forms.Form):
         return data
 
 class NotARobotForm(forms.Form):
-    recaptcha = ReCaptchaField()
+    recaptcha = RecaptchaField(
+                    private_key = askbot_settings.RECAPTCHA_SECRET,
+                    public_key = askbot_settings.RECAPTCHA_KEY
+                )
 
 class FeedbackForm(forms.Form):
     name = forms.CharField(label=_('Your name:'), required=False)

@@ -5,7 +5,7 @@ This module contains a collection of views displaying all sorts of secondary and
 """
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
-from django.template import RequestContext
+from django.template import RequestContext, Template
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
@@ -17,7 +17,7 @@ from askbot.utils.forms import get_next_url
 from askbot.utils.mail import mail_moderators
 from askbot.models import BadgeData, Award, User
 from askbot.models import badges as badge_data
-from askbot.skins.loaders import get_template, render_into_skin
+from askbot.skins.loaders import get_template, render_into_skin, render_text_into_skin
 from askbot.conf import settings as askbot_settings
 from askbot import skins
 
@@ -42,13 +42,30 @@ def server_error(request, template='500.html'):
     return generic_view(request, template) 
 
 def faq(request):
+    if getattr(askbot_settings, 'FORUM_FAQ',''):
+        text = _(getattr(askbot_settings, 'FORUM_FAQ',''))
+        data = {
+            'gravatar_faq_url': reverse('faq') + '#gravatar',
+            #'send_email_key_url': reverse('send_email_key'),
+            'ask_question_url': reverse('ask'),
+            'page_class': 'meta',
+        }
+        forum_faq = render_text_into_skin(text, data, request)
+        data_out = {
+            'gravatar_faq_url': reverse('faq') + '#gravatar',
+            #'send_email_key_url': reverse('send_email_key'),
+            'ask_question_url': reverse('ask'),
+            'page_class': 'meta',
+            'forum_faq' : forum_faq,
+        }
+        return render_into_skin('faq.html', data_out, request)
     data = {
         'gravatar_faq_url': reverse('faq') + '#gravatar',
         #'send_email_key_url': reverse('send_email_key'),
         'ask_question_url': reverse('ask'),
         'page_class': 'meta',
-    }
-    return render_into_skin('faq.html', data, request)
+    }   
+    return render_into_skin('faq_static.html', data, request)
 
 @csrf.csrf_protect
 def feedback(request):

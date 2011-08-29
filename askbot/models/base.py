@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sitemaps import ping_google
 #todo: maybe merge askbot.utils.markup and forum.utils.html
 from askbot.utils import markup
+from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.html import sanitize_html
 from django.utils import html
 import logging
@@ -58,7 +59,7 @@ def parse_post_text(post):
         extra_authors = set()
         for name_seed in extra_name_seeds:
             extra_authors.update(User.objects.filter(
-                                        username__startswith = name_seed
+                                        username__istartswith = name_seed
                                     )
                             )
 
@@ -67,7 +68,7 @@ def parse_post_text(post):
         anticipated_authors += list(extra_authors)
 
         mentioned_authors, post_html = markup.mentionize_text(
-                                                text, 
+                                                text,
                                                 anticipated_authors
                                             )
 
@@ -107,6 +108,7 @@ def parse_and_save_post(post, author = None, **kwargs):
 
     assert(author is not None)
 
+    last_revision = post.html
     data = post.parse()
 
     post.html = data['html']
@@ -126,6 +128,10 @@ def parse_and_save_post(post, author = None, **kwargs):
     #this save must precede saving the mention activity
     #because generic relation needs primary key of the related object
     super(post.__class__, post).save(**kwargs)
+    if last_revision:
+        diff = htmldiff(last_revision, post.html)
+    else:
+        diff = post.get_snippet()
 
     timestamp = post.get_time_of_last_edit()
 
@@ -148,6 +154,7 @@ def parse_and_save_post(post, author = None, **kwargs):
                     newly_mentioned_users = newly_mentioned_users,
                     timestamp = timestamp,
                     created = created,
+                    diff = diff,
                     sender = post.__class__
                 )
 
@@ -233,11 +240,14 @@ class ContentRevision(models.Model):
         abstract = True
         app_label = 'askbot'
 
-    def as_html(self):
+    def as_html(self, **kwargs):
         """should return html representation of
         the revision
         """
         raise NotImplementedError()
+
+    def get_snipet(self):
+        pass
 
 
 class AnonymousContent(models.Model):

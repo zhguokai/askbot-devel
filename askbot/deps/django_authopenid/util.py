@@ -3,14 +3,15 @@ import cgi
 import urllib
 import functools
 import re
-from askbot.deps.openid.store.interface import OpenIDStore
-from askbot.deps.openid.association import Association as OIDAssociation
-from askbot.deps.openid.extensions import sreg
-from askbot.deps.openid import store as openid_store
+from openid.store.interface import OpenIDStore
+from openid.association import Association as OIDAssociation
+from openid.extensions import sreg
+from openid import store as openid_store
 import oauth2 as oauth
 
 from django.db.models.query import Q
 from django.conf import settings
+from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
@@ -31,7 +32,7 @@ from askbot.conf import settings as askbot_settings
 
 # needed for some linux distributions like debian
 try:
-    from askbot.deps.openid.yadis import xri
+    from openid.yadis import xri
 except:
     from yadis import xri
 
@@ -40,7 +41,7 @@ from models import Association, Nonce
 
 __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
 
-ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username')
+ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username', 'wordpress')
 
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
@@ -169,6 +170,8 @@ def use_password_login():
     either if USE_RECAPTCHA is false
     of if recaptcha keys are set correctly
     """
+    if askbot_settings.SIGNIN_WORDPRESS_SITE_ENABLED:
+        return True
     if askbot_settings.USE_RECAPTCHA:
         if askbot_settings.RECAPTCHA_KEY and askbot_settings.RECAPTCHA_SECRET:
             return True
@@ -391,7 +394,111 @@ def get_enabled_major_login_providers():
             'password_changeable': True
         }
 
-    return data
+    if askbot_settings.FACEBOOK_KEY and askbot_settings.FACEBOOK_SECRET:
+        data['facebook'] = {
+            'name': 'facebook',
+            'display_name': 'Facebook',
+            'type': 'facebook',
+            'icon_media_path': '/jquery-openid/images/facebook.gif',
+        }
+    if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
+        data['twitter'] = {
+            'name': 'twitter',
+            'display_name': 'Twitter',
+            'type': 'oauth',
+            'request_token_url': 'https://api.twitter.com/oauth/request_token',
+            'access_token_url': 'https://api.twitter.com/oauth/access_token',
+            'authorize_url': 'https://api.twitter.com/oauth/authorize',
+            'authenticate_url': 'https://api.twitter.com/oauth/authenticate',
+            'get_user_id_url': 'https://twitter.com/account/verify_credentials.json',
+            'icon_media_path': '/jquery-openid/images/twitter.gif',
+            'get_user_id_function': lambda data: data['user_id'],
+        }
+    def get_identica_user_id(data):
+        consumer = oauth.Consumer(data['consumer_key'], data['consumer_secret'])
+        token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
+        client = oauth.Client(consumer, token=token)
+        url = 'https://identi.ca/api/account/verify_credentials.json'
+        json = simplejson.loads(content)
+        return json['id']
+    if askbot_settings.IDENTICA_KEY and askbot_settings.IDENTICA_SECRET:
+        data['identi.ca'] = {
+            'name': 'identi.ca',
+            'display_name': 'identi.ca',
+            'type': 'oauth',
+            'request_token_url': 'https://identi.ca/api/oauth/request_token',
+            'access_token_url': 'https://identi.ca/api/oauth/access_token',
+            'authorize_url': 'https://identi.ca/api/oauth/authorize',
+            'authenticate_url': 'https://identi.ca/api/oauth/authorize',
+            'icon_media_path': '/jquery-openid/images/identica.png',
+            'get_user_id_function': get_identica_user_id,
+        }
+    def get_linked_in_user_id(data):
+        consumer = oauth.Consumer(data['consumer_key'], data['consumer_secret'])
+        token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
+        client = oauth.Client(consumer, token=token)
+        url = 'https://api.linkedin.com/v1/people/~:(first-name,last-name,id)'
+        response, content = client.request(url, 'GET')
+        if response['status'] == '200':
+            id_re = re.compile(r'<id>([^<]+)</id>')
+            matches = id_re.search(content)
+            if matches:
+                return matches.group(1)
+        raise OAuthError()
+
+    if askbot_settings.SIGNIN_WORDPRESS_SITE_ENABLED and askbot_settings.WORDPRESS_SITE_URL:
+        data['wordpress_site'] = {
+            'name': 'wordpress_site',
+            'display_name': 'Self hosted wordpress blog', #need to be added as setting.
+            'icon_media_path': askbot_settings.WORDPRESS_SITE_ICON,
+            'type': 'wordpress_site',
+        }
+    if askbot_settings.LINKEDIN_KEY and askbot_settings.LINKEDIN_SECRET:
+        data['linkedin'] = {
+            'name': 'linkedin',
+            'display_name': 'LinkedIn',
+            'type': 'oauth',
+            'request_token_url': 'https://api.linkedin.com/uas/oauth/requestToken',
+            'access_token_url': 'https://api.linkedin.com/uas/oauth/accessToken',
+            'authorize_url': 'https://www.linkedin.com/uas/oauth/authorize',
+            'authenticate_url': 'https://www.linkedin.com/uas/oauth/authenticate',
+            'icon_media_path': '/jquery-openid/images/linkedin.gif',
+            'get_user_id_function': get_linked_in_user_id
+        }
+    data['google'] = {
+        'name': 'google',
+        'display_name': 'Google',
+        'type': 'openid-direct',
+        'icon_media_path': '/jquery-openid/images/google.gif',
+        'openid_endpoint': 'https://www.google.com/accounts/o8/id',
+    }
+    data['yahoo'] = {
+        'name': 'yahoo',
+        'display_name': 'Yahoo',
+        'type': 'openid-direct',
+        'icon_media_path': '/jquery-openid/images/yahoo.gif',
+        'tooltip_text': _('Sign in with Yahoo'),
+        'openid_endpoint': 'http://yahoo.com',
+    }
+    data['aol'] = {
+        'name': 'aol',
+        'display_name': 'AOL',
+        'type': 'openid-username',
+        'extra_token_name': _('AOL screen name'),
+        'icon_media_path': '/jquery-openid/images/aol.gif',
+        'openid_endpoint': 'http://openid.aol.com/%(username)s'
+    }
+    data['openid'] = {
+        'name': 'openid',
+        'display_name': 'OpenID',
+        'type': 'openid-generic',
+        'extra_token_name': _('OpenID url'),
+        'icon_media_path': '/jquery-openid/images/openid.gif',
+        'openid_endpoint': None,
+    }
+    return filter_enabled_providers(data)
+get_enabled_major_login_providers.is_major = True
+get_enabled_major_login_providers = add_custom_provider(get_enabled_major_login_providers)
 
 def get_enabled_minor_login_providers():
     """same as get_enabled_major_login_providers
@@ -489,6 +596,9 @@ def get_oauth_parameters(provider_name):
     elif provider_name == 'linkedin':
         consumer_key = askbot_settings.LINKEDIN_KEY
         consumer_secret = askbot_settings.LINKEDIN_SECRET
+    elif provider_name == 'identi.ca':
+        consumer_key = askbot_settings.IDENTICA_KEY
+        consumer_secret = askbot_settings.IDENTICA_SECRET
     else:
         raise ValueError('sorry, only linkedin and twitter oauth for now')
 

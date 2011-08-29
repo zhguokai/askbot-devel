@@ -20,16 +20,25 @@
     {% endif %}
 {%- endmacro -%}
 
+{%- macro share(site = None, site_label = None, icon = False) -%}
+    <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"
+        alt="{% trans %}Share this question on {{site}}{% endtrans %}"
+    >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
+{%- endmacro -%}
+
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
-        class="follow-toggle follow-{{name}} {% if follow %}follow{% else %}unfollow{% endif %}" 
+        class="follow-toggle" 
         id="follow-{{ name }}-{{ id }}"
     >
         {% if follow %}
-            {% trans %}follow {{alias}}{% endtrans %}
+        <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
         {% else %}
-            {% trans %}unfollow {{alias}}{% endtrans %}
+        <div class="unfollow">
+          <div class="unfollow-red">{% trans %}unfollow {{alias}}{% endtrans %}</div>
+          <div class="unfollow-green">{% trans %}following {{alias}}{% endtrans %}</div>
+        </div>
         {% endif %}
     </div>
 {%- endmacro -%}
@@ -226,7 +235,7 @@
         <p>{{ user.get_anonymous_name() }}</p>
     {% else %}
         {{ gravatar(user, 32) }}
-        {{ user.get_profile_link()}}{{ user_country_flag(user) }}{% if not user.website %}<br/>{% endif %}
+        {{ user.get_profile_link()}}{{ user_country_flag(user) }}<br/>
         {{ user_score_and_badge_summary(user) }}<br/>
         {{ user_website_link(user) }}
     {% endif %}
@@ -309,6 +318,14 @@ poor design of the data or methods on data objects #}
     {%- else -%}
         {{if_false}}
     {%- endif -%}
+{%- endmacro -%}
+
+{%- macro tag_cloud(tags = None, font_sizes = None) -%}
+    {% for tag in tags %}
+    <span class="tag-size-{{ font_sizes[tag.name] }}">
+        <a class="link-typeA" title="Number of entries: {{ tag.used_count }}" href="{% url questions %}?tags={{ tag.name }}">{{ tag.name }}</a>
+    </span>
+    {% endfor %}
 {%- endmacro -%}
 
 {%- macro tag_list_widget(
@@ -437,6 +454,7 @@ poor design of the data or methods on data objects #}
                 {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
                 </div>
             </div>
+            
             <div style="clear:both"></div>
             <div class="userinfo">
                 <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
@@ -456,34 +474,36 @@ poor design of the data or methods on data objects #}
 {%- macro comment_votes(comment = None) -%}
     <div class="comment-votes">
         {% if comment.score > 0 %}
-        <div class="upvote{% if comment.upvoted_by_user %} upvoted{% endif %}">
-            {{comment.score}}
-        </div>
+        <div class="upvote{% if comment.upvoted_by_user %} upvoted{% endif %}">{{comment.score}}</div>
         {% else %}
-        <div class="upvote">
-        </div>
+        <div class="upvote"></div>
         {% endif %}
     </div>
 {%- endmacro -%}
+
+{# Warning! Any changes to the comment markup here must be duplicated in post.js
+for the purposes of the AJAX comment editor #}
 
 {%- macro comment_list(comments = None, user = None) -%}
     {% for comment in comments %}
     <div class="comment" id="comment-{{comment.id}}">
         {{ comment_votes(comment = comment) }}
-        {{comment.html}} -
-        <a 
-            class="author" 
-            href="{{comment.user.get_profile_url()}}"
-        >{{comment.user.username}}</a>
-        <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
-        {% if user|can_edit_comment(comment) %}
-            <a class="edit">{% trans %}edit{% endtrans %}</a>
-        {% endif %}
-        {% if user|can_delete_comment(comment) %}
-            <span class="delete-icon" 
-                title="{% trans %}delete this comment{% endtrans %}"
-            ></span>
-        {% endif %}
+        <div class="comment-delete">
+            {% if user|can_delete_comment(comment) %}
+                <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
+            {% endif %}
+        </div>
+        <div class="comment-body">
+            {{comment.html}} &ndash;
+            <a 
+                class="author" 
+                href="{{comment.user.get_profile_url()}}"
+            >{{comment.user.username}}</a>
+            <span class="age">&nbsp;({{comment.added_at|diff_date}})</span>
+            {% if user|can_edit_comment(comment) %}
+                <a class="edit">{% trans %}edit{% endtrans %}</a>
+            {% endif %}
+        </div>
     </div>
     {% endfor %}
 {%- endmacro -%}
