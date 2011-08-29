@@ -1097,7 +1097,6 @@ a:hover.medal {
 .comments {
     font-size: 14px;
     line-height: 15px;
-    width: 650px;    
     clear: both;
 }
 
@@ -1108,11 +1107,8 @@ a:hover.medal {
 }
 
 .comments .content {
-<<<<<<< HEAD
     float: right;
-=======
     margin-bottom: 7px;    
->>>>>>> askbot/master
 }
 
 .comments div.comment {
