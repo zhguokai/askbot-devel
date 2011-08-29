@@ -188,6 +188,29 @@ class QuestionQuerySet(models.query.QuerySet):
 
         #return metadata
         meta_data = {}
+
+        if search_state.tags: 
+
+            existing_tags = set(
+                Tag.objects.filter(
+                    name__in = search_state.tags
+                ).values_list(
+                    'name',
+                    flat = True
+                )
+            )
+
+            non_existing_tags = search_state.tags - existing_tags
+            meta_data['non_existing_tags'] = non_existing_tags
+            search_state.remove_tags(non_existing_tags)
+
+            #construct filter for the tag search
+            if search_state.tags:
+                for tag in existing_tags:
+                    qs = qs.filter(tags__name = tag)
+        else:
+            meta_data['non_existing_tags'] = set()
+
         if search_query:
             if search_state.stripped_query:
                 qs = qs.get_by_text_query(search_state.stripped_query)
