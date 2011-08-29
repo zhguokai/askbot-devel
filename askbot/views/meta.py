@@ -12,7 +12,7 @@ from django.views import static
 from django.views.decorators import csrf
 from django.utils.translation import ugettext as _
 from askbot.forms import FeedbackForm
-from django_extra_form_fields import get_next_url
+from django_extra_form_fields.fields import get_next_url
 from askbot.utils.mail import mail_moderators
 from askbot.models import BadgeData, Award, User
 from askbot.models import badges as badge_data

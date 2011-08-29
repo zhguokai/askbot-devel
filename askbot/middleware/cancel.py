@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django_extra_form_fields import get_next_url
+from django_extra_form_fields.fields import get_next_url
 class CancelActionMiddleware(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
         if 'cancel' in request.REQUEST:

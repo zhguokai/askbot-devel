@@ -3,7 +3,7 @@ from django.forms import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from askbot.deps.django_authopenid import forms
-from django_extra_form_fields import get_next_url
+from django_extra_form_fields.fields import get_next_url
 
 def valid_password_login_provider_required(view_func):
     """decorator for a view function which will

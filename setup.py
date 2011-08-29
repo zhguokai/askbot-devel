@@ -19,7 +19,7 @@ install_requires = [
     'django-robots',
     'unidecode',
     'django-countries==1.0.5',
-    'django-celery==2.2.3',
+    'django-celery==2.2.7',
     'django-kombu==0.9.2',
     'django-followit',
     'django-recaptcha-works',
@@ -30,10 +30,6 @@ install_requires = [
 #todo: have a dirty version retriever that 
 #parses it out from askbot/__init__.py but does not
 #import it as there are issues
-
-WIN_PLATFORMS = ('win32', 'cygwin',)
-if sys.platform not in WIN_PLATFORMS:
-    install_requires.append('mysql-python')
 
 import askbot
 
@@ -147,10 +143,6 @@ Footnotes
 
 (**) - With MySQL you have to use MyISAM data backend, because it's the only one that supports Full Text Search."""
 )
-
-if 'WIN_PLATFORM' in locals() and sys.platform in WIN_PLATFORMS:
-    print 'ATTENTION!! please install windows binary mysql-python package'
-    print 'at http://www.codegood.com/archives/4'
 
 print '**************************************************************'
 print '*                                                            *'

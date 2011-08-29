@@ -1,12 +1,4 @@
 """default registration backend for askbot
-
-Use of this backend requires a session variable:
-``registration_type``, that can take one of the values:
-* 'without-password' - for federated auth systems
-* 'with-password' - traditional password
-* 'with-password-and-recaptcha' - ... + recaptcha
-
-After registration is completed, the session variable is deleted
 """
 import datetime
 import logging
@@ -17,7 +9,7 @@ from registration.models import RegistrationProfile
 from registration import signals
 from askbot.conf import settings as askbot_settings
 from askbot import forms
-from django_extra_form_fields import get_next_url
+from django_extra_form_fields.fields import get_next_url
 
 def redirect_to_next_url(self, request, user):
     next_url = get_next_url(request)

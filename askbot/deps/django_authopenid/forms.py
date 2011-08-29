@@ -35,7 +35,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot.deps.django_authopenid.conf import settings
-from django_extra_form_fields import NextUrlField, UserNameField, UserEmailField
+from django_extra_form_fields.fields import NextUrlField, UserNameField, UserEmailField
 
 LOGIN_WIDGET_ATTRS = {'class': 'required login'}
 

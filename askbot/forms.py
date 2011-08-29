@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import SetPasswordForm as DjangoSetPwForm
 from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
-from django_extra_form_fields import NextUrlField, UserNameField, UserEmailField
+from django_extra_form_fields.fields import NextUrlField, UserNameField, UserEmailField
 from askbot.utils.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
@@ -310,7 +310,10 @@ class SetPasswordForm(DjangoSetPwForm):
         """reset the __init__ method to default
         we do not want to accept ``user`` argument
         as Django's form does"""
-        super(SetPasswordForm, self).__init__(*args, **kwargs)
+        #first argument ``None`` is a placeholder for the ``user``
+        #parameter. Here we do not call function ``save()`` on
+        #the :class:`SetPasswordForm``
+        super(SetPasswordForm, self).__init__(None, *args, **kwargs)
 
 class ClassicRegisterForm(OpenidRegisterForm, SetPasswordForm):
     """ legacy registration form """

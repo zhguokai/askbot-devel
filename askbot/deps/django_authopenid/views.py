@@ -67,7 +67,7 @@ from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
-from django_extra_form_fields import get_next_url
+from django_extra_form_fields.fields import get_next_url
 
 def call_view_func(view_name, *args, **kwargs):
     m = resolve(reverse(view_name))
