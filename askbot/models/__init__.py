@@ -83,7 +83,7 @@ User.add_to_class('about', models.TextField(blank=True))
 #interesting tags and ignored tags are to store wildcard tag selections only
 User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
-User.add_to_class('subscribed_tags', models.TextField(blank = True))
+#User.add_to_class('subscribed_tags', models.TextField(blank = True))
 User.add_to_class(
     'email_tag_filter_strategy', 
     models.SmallIntegerField(
