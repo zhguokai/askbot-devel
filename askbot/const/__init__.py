@@ -1,10 +1,9 @@
+"""Various constants that are used throughout 
+askbot code.
+"""
 # encoding:utf-8
 from django.utils.translation import ugettext as _
 import re
-"""
-All constants could be used in other modules
-For reasons that models, views can't have unicode text in this project, all unicode text go here.
-"""
 CLOSE_REASONS = (
     (1, _('duplicate question')),
     (2, _('question is off-topic or not relevant')),
@@ -48,7 +47,8 @@ POST_SORT_METHODS = (
     ('relevance-desc', _('relevance')),
 )
 #todo: add assertion here that all sort methods are unique
-#because they are keys to the hash used in implementations of Q.run_advanced_search
+#because they are keys to the hash used in
+#implementations of Q.run_advanced_search
 
 DEFAULT_POST_SORT_METHOD = 'activity-desc'
 POST_SCOPE_LIST = (
@@ -91,28 +91,28 @@ TAG_REGEX = r'^[%s]+$' % TAG_CHARS
 TAG_SPLIT_REGEX = r'[ ,]+'
 EMAIL_REGEX = re.compile(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b', re.I)
 
-TYPE_ACTIVITY_ASK_QUESTION=1
-TYPE_ACTIVITY_ANSWER=2
-TYPE_ACTIVITY_COMMENT_QUESTION=3
-TYPE_ACTIVITY_COMMENT_ANSWER=4
-TYPE_ACTIVITY_UPDATE_QUESTION=5
-TYPE_ACTIVITY_UPDATE_ANSWER=6
-TYPE_ACTIVITY_PRIZE=7
-TYPE_ACTIVITY_MARK_ANSWER=8
-TYPE_ACTIVITY_VOTE_UP=9
-TYPE_ACTIVITY_VOTE_DOWN=10
-TYPE_ACTIVITY_CANCEL_VOTE=11
-TYPE_ACTIVITY_DELETE_QUESTION=12
-TYPE_ACTIVITY_DELETE_ANSWER=13
-TYPE_ACTIVITY_MARK_OFFENSIVE=14
-TYPE_ACTIVITY_UPDATE_TAGS=15
-TYPE_ACTIVITY_FAVORITE=16
-TYPE_ACTIVITY_USER_FULL_UPDATED = 17
-TYPE_ACTIVITY_EMAIL_UPDATE_SENT = 18
-TYPE_ACTIVITY_MENTION = 19
-TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT = 20
-#TYPE_ACTIVITY_EDIT_QUESTION=17
-#TYPE_ACTIVITY_EDIT_ANSWER=18
+TYPE_ACTIVITY_ASK_QUESTION = 1
+TYPE_ACTIVITY_ANSWER = 2
+TYPE_ACTIVITY_COMMENT_QUESTION = 3
+TYPE_ACTIVITY_COMMENT_ANSWER = 4
+TYPE_ACTIVITY_UPDATE_QUESTION = 5
+TYPE_ACTIVITY_UPDATE_ANSWER = 6
+TYPE_ACTIVITY_PRIZE = 7
+TYPE_ACTIVITY_MARK_ANSWER = 8
+TYPE_ACTIVITY_VOTE_UP = 9
+TYPE_ACTIVITY_VOTE_DOWN = 10
+TYPE_ACTIVITY_CANCEL_VOTE = 11
+TYPE_ACTIVITY_DELETE_QUESTION = 12
+TYPE_ACTIVITY_DELETE_ANSWER = 13
+TYPE_ACTIVITY_MARK_OFFENSIVE = 14
+TYPE_ACTIVITY_UPDATE_TAGS = 15
+TYPE_ACTIVITY_FAVORITE = 16
+TYPE_ACTIVITY_USER_FULL_UPDATED  =  17
+TYPE_ACTIVITY_EMAIL_UPDATE_SENT  =  18
+TYPE_ACTIVITY_MENTION  =  19
+TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT  =  20
+#TYPE_ACTIVITY_EDIT_QUESTION = 17
+#TYPE_ACTIVITY_EDIT_ANSWER = 18
 
 #todo: rename this to TYPE_ACTIVITY_CHOICES
 TYPE_ACTIVITY = (
@@ -249,6 +249,7 @@ DEFAULT_USER_STATUS = 'w'
 #number of items to show in user views
 USER_VIEW_DATA_SIZE = 50
 
+#urls to external sites.
 DEPENDENCY_URLS = {
     'mathjax': 'http://www.mathjax.org/resources/docs/?installation.html',
     'favicon': 'http://en.wikipedia.org/wiki/Favicon',
@@ -273,6 +274,12 @@ BADGE_CSS_CLASSES = {
 BADGE_DISPLAY_SYMBOL = '&#9679;'
 
 MIN_REPUTATION = 1
+
+AVATAR_STATUS_CHOICE = (
+    ('n', _('None')),
+    ('g', _('Gravatar')),
+    ('a', _('Uploaded Avatar')),
+)
 
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *

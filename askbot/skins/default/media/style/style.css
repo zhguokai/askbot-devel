@@ -584,7 +584,8 @@ ul#search-tags {
 
 .short-summary .counts .votes div,
 .short-summary .counts .views div,
-.short-summary .counts .answers div
+.short-summary .counts .answers div,
+.short-summary .counts .favorites div
 {
     font-size: 12px;
     line-height:14px;
@@ -607,9 +608,17 @@ ul#search-tags {
     background: #b63333;
     color: yellow;
 }
+.no-favorites .item-count {
+    background: #b63333;
+    color: yellow;
+}
 .some-answers .item-count {
     background: #ffed9c;
     color: #a4a4a4;
+}
+.some-favorites .item-count {
+    background:#338333;
+    color:#d0f5a9;
 }
 .accepted .item-count {
     background:#338333;
@@ -626,6 +635,7 @@ ul#search-tags {
 
 .short-summary .votes,
 .short-summary .answers,
+.short-summary .favorites,
 .short-summary .views {
     text-align: center;
     margin: 0 3px;
@@ -855,7 +865,7 @@ a:hover.medal {
     height: 20px;
     line-height: 22px;
     margin: 5px 0 0 4px;
-    padding: 0 7px;
+    padding: 0 2px;
     text-decoration: none;
 }
 
@@ -920,12 +930,69 @@ a:hover.medal {
     cursor: pointer;
 }
 
+.vote-buttons .button{
+    -moz-border-radius: 10px;
+    margin-top: 20px;
+    border-radius: 10px;
+    height: 20px;
+    width: 80px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 8px;
+    float:left;
+}
+
+.vote-buttons .followed{
+    font-color: #000;
+    font-style:normal;
+    background: #cccccc;
+}
+
+.vote-buttons .followed div{
+    font-weight: normal;
+}
+
+.vote-buttons .followed div.unfollow{
+    display:none;
+}
+
+.vote-buttons .followed:hover{
+    color: #fff;
+    background: #8b0000;
+}
+
+.vote-buttons .followed:hover div{
+    display:none;
+}
+
+.vote-buttons .followed:hover div.unfollow{
+    display:inline;
+    font-weight: bold;
+}
+
+.vote-buttons .follow{
+    background: #cccccc;
+}
+
+.vote-buttons .follow:hover{
+    background: #234f32;
+    color: #fff;
+    font-weight: bold;
+}
+
 .vote-number {
     font-family: Arial;
     padding: 0px 0 3px 0;
     font-size: 140%;
     font-weight: bold;
     color: #777;
+}
+
+.vote-buttons .notify-sidebar {
+    text-align: left;
+}
+.vote-buttons .notify-sidebar label {
+    vertical-align: top;
 }
 
 .question-img-upvote:hover {
@@ -941,11 +1008,16 @@ a:hover.medal {
 }
 
 .favorite-number {
-    padding: 0px;
+    padding: 5px 0 0 10px;
     font-size: 100%;
     font-family: Arial;
     font-weight: bold;
     color: #777;
+    text-align: left;
+}
+
+.notify-me {
+    float: left;
 }
 
 .offensive-flag a {
@@ -1028,6 +1100,12 @@ div.comment .comment-body {
     color: #666;
 }
 
+div.comment .comment-body p{
+    font-size:inherit;
+    margin-bottom: 3px;
+    padding: 0;
+}
+
 div.comment .comment-delete {
     float: right;
     width: 14px;
@@ -1075,13 +1153,15 @@ div.comment .upvote:hover {
 
 .comments textarea {
     display: block;
-    height: 48px;
-    width: 560px;
-    margin: 3px 0px;
+    height: 42px;
+    width: 572px;
+    margin: 6px 0 5px 1px;
     font-family: sans-serif;
+    outline: none;
+    overflow:auto;
     font-size: 12px;
-    line-height: 130%;
-    padding: 4px;
+    line-height: 140%;
+    padding-left:2px;
 }
 
 .comments input {
@@ -1106,6 +1186,15 @@ div.comment .upvote:hover {
     background-color: #777777;
     color: white;
     text-decoration: none;
+}
+
+.comments .help-text{
+    float: right;
+    text-align:right;
+    color: gray;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    line-height: 50%;
 }
 
 span.text-counter {
@@ -1453,6 +1542,10 @@ ins {
     background-color: #97ff97;
 }
 
+ins p{
+    background-color: #97ff97;
+}
+
 ins .post-tag {
     background-color: #97ff97;
 }
@@ -1487,21 +1580,19 @@ ins .post-tag {
     width: 90%;
 }
 
+/*
 .favorites-count-off {
     color: #919191;
     float: left;
-    padding: 3px;
-    margin: 10px 0 0 0;
     text-align: center;
 }
 
 .favorites-count {
     color: #D4A849;
     float: left;
-    padding: 3px;
-    margin: 10px 0 0 0;
     text-align: center;
 }
+*/
 
 /* todo: get rid of this in html */
 .favorites-empty {
@@ -1818,6 +1909,21 @@ button::-moz-focus-inner {
 
 #close-notify:hover {
     text-decoration: none;
+}
+
+.noscript {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    z-index: 100;
+    padding: 5px 0;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 120%;
+    font-weight: Bold;
+    color: #FFFFFF;
+    background-color: #AE0000;
 }
 
 .big {
@@ -2198,9 +2304,18 @@ img.gravatar {
     overflow:hidden;
 }
 
+.response-parent {
+    margin-top: 18px;
+}
+
+.response-parent strong{
+    font-size: 20px;
+}
+
 .re {
     min-height: 57px;
     clear: both;
+    margin-top: 10px;
 }
 
 #responses input {
@@ -2248,7 +2363,7 @@ img.flag {
     vertical-align: text-bottom;
 }
 
-.facebook-share.icon, .twitter-share.icon, .linkedin-share.icon {
+.facebook-share.icon, .twitter-share.icon, .linkedin-share.icon, .identica-share.icon {
     background: url(../images/sprite.png) no-repeat;
     display:block;
     text-indent:-100em;
@@ -2257,6 +2372,9 @@ img.flag {
 }
 .facebook-share.icon {
     background-position: -25px 0px;
+}
+.identica-share.icon {
+    background-position: -85px 0px;
 }
 .twitter-share.icon {
     margin-top:10px;
@@ -2299,17 +2417,50 @@ pre.prettyprint { padding: 3px; border: 0px solid #888; }
 }
 
 .follow-toggle {
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    background: #fff0e0;
-    color: #777;
-    font-weight: bolder;
-    border: 1px solid #aaa;
-    cursor: pointer;
+    border: 2px solid;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius: 5px;
+    height: auto;
+    width: 200px;
+    float:left;
+    padding: 0;
+    margin-right:100%;
+    margin-bottom: 10px;
 }
 
-.follow-toggle.unfollow:hover {
-    background: #a40000;
-    color: #fff;
-    border: 1px solid #d40000;
+.follow-toggle .follow{
+    font-color: #000;
+    font-style:normal;
+    background: #4cd46f;
+}
+
+.follow-toggle .follow:hover{
+    font-weight: bold;
+}
+
+.follow-toggle .unfollow{
+    background: #4cd46f;
+}
+
+.follow-toggle .unfollow:hover{
+    background: #d94849;
+}
+
+.follow-toggle .unfollow div.unfollow-red{
+    display:none;
+}
+
+.follow-toggle .unfollow div.unfollow-green{
+    background: #4cd46f;
+}
+
+.follow-toggle .unfollow:hover div.unfollow-red{
+    display:inline;
+    color:#fff;
+    font-weight:bold;
+}
+
+.follow-toggle .unfollow:hover div.unfollow-green{
+    display:none;
 }

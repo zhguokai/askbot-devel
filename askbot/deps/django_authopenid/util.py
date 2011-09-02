@@ -34,7 +34,7 @@ from models import Association, Nonce
 
 __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response']
 
-ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username')
+ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username', 'wordpress')
 
 def get_openid_provider_name(openid_url):
     """returns provider name from the openid_url
@@ -172,6 +172,8 @@ def use_password_login():
     of if recaptcha keys are set correctly
     """
     from askbot.deps.django_authopenid.conf import settings
+    if settings.SIGNIN_WORDPRESS_SITE_ENABLED:
+        return True
     if settings.USE_RECAPTCHA:
         if settings.RECAPTCHA_KEY and settings.RECAPTCHA_SECRET:
             return True
@@ -399,13 +401,14 @@ def get_enabled_major_login_providers():
             'password_changeable': True
         }
 
-    #if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET:
-    #    data['facebook'] = {
-    #        'name': 'facebook',
-    #        'display_name': 'Facebook',
-    #        'type': 'facebook',
-    #        'icon_media_path': '/jquery-openid/images/facebook.gif',
-    #    }
+    if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET:
+        data['facebook'] = {
+            'name': 'facebook',
+            'display_name': 'Facebook',
+            'type': 'facebook',
+            'icon_media_path': '/jquery-openid/images/facebook.gif',
+        }
+
     if settings.TWITTER_KEY and settings.TWITTER_SECRET:
         data['twitter'] = {
             'name': 'twitter',
@@ -419,6 +422,7 @@ def get_enabled_major_login_providers():
             'icon_media_path': '/jquery-openid/images/twitter.gif',
             'get_user_id_function': lambda data: data['user_id'],
         }
+
     def get_identica_user_id(data):
         consumer = oauth.Consumer(data['consumer_key'], data['consumer_secret'])
         token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
@@ -453,7 +457,15 @@ def get_enabled_major_login_providers():
             if matches:
                 return matches.group(1)
         raise OAuthError()
-        
+
+    if settings.SIGNIN_WORDPRESS_SITE_ENABLED and settings.WORDPRESS_SITE_URL:
+        data['wordpress_site'] = {
+            'name': 'wordpress_site',
+            'display_name': 'Self hosted wordpress blog', #need to be added as setting.
+            'icon_media_path': settings.WORDPRESS_SITE_ICON,
+            'type': 'wordpress_site',
+        }
+
     if settings.LINKEDIN_KEY and settings.LINKEDIN_SECRET:
         data['linkedin'] = {
             'name': 'linkedin',

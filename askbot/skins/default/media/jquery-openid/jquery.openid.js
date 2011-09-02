@@ -283,10 +283,13 @@ $.fn.authenticator = function() {
         set_provider_name($(this));
         if (typeof FB != 'undefined'){
             FB.getLoginStatus(function(response){
-                if (response.session){
+                if (response.authResponse){
                     signin_form.submit();
                 }
                 else {
+                    if (FB.getSession()){
+                      signin_form.submit();
+                    }
                     FB.login();
                 }
             });
@@ -408,6 +411,10 @@ $.fn.authenticator = function() {
 
         setup_event_handlers( 
             signin_page.find('input.password'),
+            start_password_login_or_change
+        );
+        setup_event_handlers( 
+            signin_page.find('input.wordpress_site'),
             start_password_login_or_change
         );
 

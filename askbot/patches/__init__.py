@@ -16,6 +16,7 @@ def patch_django():
         django_patches.add_import_library_function()
         django_patches.add_csrf_protection()
         django_patches.add_class_based_template_loaders()
+        django_patches.add_available_attrs_decorator()
 
 def patch_coffin():
     """coffin before version 0.3.4

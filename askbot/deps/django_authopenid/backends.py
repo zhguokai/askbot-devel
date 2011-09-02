@@ -1,4 +1,4 @@
-"""authentication backend that takes care of the
+"""backend that takes care of the
 multiple login methods supported by the authenticator
 application
 """
@@ -99,6 +99,17 @@ class AuthBackend(object):
                 user.save()
                 return user
             except User.DoesNotExist:
+                return None
+        elif method == 'wordpress_site':
+            #todo: needs to be fixed, right now this method won't work
+            try:
+                custom_wp_openid_url = '%s?user_id=%s' % (wordpress_url, wp_user_id)
+                assoc = UserAssociation.objects.get(
+                                            openid_url = custom_wp_openid_url,
+                                            provider_name = 'wordpress_site'
+                                            )
+                user = assoc.user
+            except UserAssociation.DoesNotExist:
                 return None
         elif method == 'force':
             return self.get_user(identifier)

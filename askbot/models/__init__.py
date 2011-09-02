@@ -58,7 +58,13 @@ User.add_to_class('reputation',
     models.PositiveIntegerField(default=const.MIN_REPUTATION)
 )
 User.add_to_class('gravatar', models.CharField(max_length=32))
-User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
+#User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
+User.add_to_class(
+    'avatar_type', 
+    models.CharField(max_length=1, 
+        choices=const.AVATAR_STATUS_CHOICE,
+        default='n')
+)
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
 User.add_to_class('bronze', models.SmallIntegerField(default=0))
@@ -120,38 +126,51 @@ def user_get_avatar_url(self, size):
     it will use avatar provided through that app
     """
     if 'avatar' in django_settings.INSTALLED_APPS:
-        if self.has_custom_avatar == False:
+        if self.avatar_type == 'n':
             import avatar
             if avatar.settings.AVATAR_GRAVATAR_BACKUP:
                 return self.get_gravatar_url(size)
             else:
                 return avatar.utils.get_default_avatar_url()
-        kwargs = {'user_id': self.id, 'size': size}
-        try:
-            return reverse('avatar_render_primary', kwargs = kwargs)
-        except NoReverseMatch:
-            message = 'Please, make sure that avatar urls are in the urls.py '\
-                      'or update your django-avatar app, '\
-                      'currently it is impossible to serve avatars.'
-            logging.critical(message)
-            raise django_exceptions.ImproperlyConfigured(message)
+        elif self.avatar_type == 'a':
+            kwargs = {'user_id': self.id, 'size': size}
+            try:
+                return reverse('avatar_render_primary', kwargs = kwargs)
+            except NoReverseMatch:
+                message = 'Please, make sure that avatar urls are in the urls.py '\
+                          'or update your django-avatar app, '\
+                          'currently it is impossible to serve avatars.'
+                logging.critical(message)
+                raise django_exceptions.ImproperlyConfigured(message)
+        else:
+            return self.get_gravatar_url(size)
     else:
         return self.get_gravatar_url(size)
 
-
-def user_update_has_custom_avatar(self):
+def user_update_avatar_type(self):
     """counts number of custom avatars
-    and if zero, sets has_custom_avatar to False,
+    and if zero, sets avatar_type to False,
     True otherwise. The method is called only if
     avatar application is installed.
     Saves the object.
     """
-    if self.avatar_set.count() > 0:
-        self.has_custom_avatar = True
+
+    if 'avatar' in django_settings.INSTALLED_APPS:
+        if self.avatar_set.count() > 0:
+            self.avatar_type = 'a' 
+        else:
+            self.avatar_type = _check_gravatar(self.gravatar)
     else:
-        self.has_custom_avatar = False
+            self.avatar_type = _check_gravatar(self.gravatar)
     self.save()
 
+def _check_gravatar(gravatar):
+    gravatar_url = "http://www.gravatar.com/avatar/%s?d=404" % gravatar
+    code = urllib.urlopen(gravatar_url).getcode()
+    if urllib.urlopen(gravatar_url).getcode() != 404:
+        return 'g' #gravatar
+    else:
+        return 'n' #none
 
 def user_get_old_vote_for_post(self, post):
     """returns previous vote for this post
@@ -1297,14 +1316,11 @@ def user_post_answer(
             minutes = int(diff.seconds/60)
 
             if days > 2:
-                if date.year == now.year:
-                    date_token = date.strftime("%b %d")
+                if asked.year == now.year:
+                    date_token = asked.strftime("%b %d")
                 else:
-                    date_token = date.strftime("%b %d '%y")
-                if use_on_prefix:
-                    left = _('on %(date)s') % { 'date': date_token }
-                else:
-                    left = date_token
+                    date_token = asked.strftime("%b %d '%y")
+                left = _('on %(date)s') % { 'date': date_token }
             elif days == 2:
                 left = _('in two days')
             elif days == 1:
@@ -1502,19 +1518,29 @@ def user_set_status(self, new_status):
     if new status is applied to user, then the record is 
     committed to the database
     """
+    #d - administrator 
     #m - moderator
     #s - suspended
     #b - blocked
     #w - watched
     #a - approved (regular user)
-    assert(new_status in ('m', 's', 'b', 'w', 'a'))
+    assert(new_status in ('d', 'm', 's', 'b', 'w', 'a'))
     if new_status == self.status:
         return
 
     #clear admin status if user was an administrator
     #because this function is not dealing with the site admins
-    if self.is_administrator():
-        self.remove_admin_status()
+
+    if new_status == 'd':
+        #create a new admin
+        self.set_admin_status()
+    else:
+        #This was the old method, kept in the else clause when changing
+        #to admin, so if you change the status to another thing that 
+        #is not Administrator it will simply remove admin if the user have 
+        #that permission, it will mostly be false.
+        if self.is_administrator():
+            self.remove_admin_status()
 
     self.status = new_status
     self.save()
@@ -1987,7 +2013,10 @@ User.add_to_class(
     'add_missing_askbot_subscriptions',
     user_add_missing_askbot_subscriptions
 )
-User.add_to_class('is_username_taken',classmethod(user_is_username_taken))
+User.add_to_class(
+    'is_username_taken',
+    classmethod(user_is_username_taken)
+)
 User.add_to_class(
     'get_followed_question_alert_frequency',
     user_get_followed_question_alert_frequency
@@ -2000,7 +2029,7 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
-User.add_to_class('update_has_custom_avatar', user_update_has_custom_avatar)
+User.add_to_class('update_avatar_type', user_update_avatar_type)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
@@ -2247,7 +2276,8 @@ def send_instant_notifications_about_activity_in_post(
             body_text = body_text,
             recipient_list = [user.email],
             related_object = origin_post,
-            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+            headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
         )
 
 
@@ -2266,6 +2296,7 @@ def record_post_update_activity(
         updated_by = None,
         timestamp = None,
         created = False,
+        diff = None,
         **kwargs
     ):
     """called upon signal askbot.models.signals.post_updated
@@ -2285,6 +2316,7 @@ def record_post_update_activity(
         updated_by_id = updated_by.id,
         timestamp = timestamp,
         created = created,
+        diff = diff,
     )
     #non-celery version
     #tasks.record_post_update(
@@ -2537,13 +2569,20 @@ def post_anonymous_askbot_content(
     they are not used in this function"""
     user.post_anonymous_askbot_content(session_key)
 
-def set_user_has_custom_avatar_flag(instance, created, **kwargs):
-    instance.user.update_has_custom_avatar()
+def set_user_avatar_type_flag(instance, created, **kwargs):
+    instance.user.update_avatar_type()
 
-def update_user_has_custom_avatar_flag(instance, **kwargs):
-    instance.user.update_has_custom_avatar()
+def update_user_avatar_type_flag(instance, **kwargs):
+    instance.user.update_avatar_type()
+
+
+def make_admin_if_first_user(instance, **kwargs):
+    user_count = User.objects.all().count()
+    if user_count == 0:
+        instance.set_admin_status()
 
 #signal for User model save changes
+django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
@@ -2554,14 +2593,15 @@ django_signals.post_save.connect(
                             record_favorite_question,
                             sender=FavoriteQuestion
                         )
+
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
     django_signals.post_save.connect(
-                        set_user_has_custom_avatar_flag,
+                        set_user_avatar_type_flag,
                         sender=Avatar
                     )
     django_signals.post_delete.connect(
-                        update_user_has_custom_avatar_flag,
+                        update_user_avatar_type_flag,
                         sender=Avatar
                     )
 
@@ -2628,5 +2668,3 @@ __all__ = [
 
         'get_model'
 ]
-
-

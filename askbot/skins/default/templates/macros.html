@@ -22,20 +22,23 @@
 
 {%- macro share(site = None, site_label = None, icon = False) -%}
     <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"
-        alt="{% trans %}Share this question on {{site}}{% endtrans %}"
+        title="{% trans %}Share this question on {{site}}{% endtrans %}"
     >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
 {%- endmacro -%}
 
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
-        class="follow-toggle follow-{{name}} {% if follow %}follow{% else %}unfollow{% endif %}" 
+        class="follow-toggle" 
         id="follow-{{ name }}-{{ id }}"
     >
         {% if follow %}
-            {% trans %}follow {{alias}}{% endtrans %}
+        <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
         {% else %}
-            {% trans %}unfollow {{alias}}{% endtrans %}
+        <div class="unfollow">
+          <div class="unfollow-red">{% trans %}unfollow {{alias}}{% endtrans %}</div>
+          <div class="unfollow-green">{% trans %}following {{alias}}{% endtrans %}</div>
+        </div>
         {% endif %}
     </div>
 {%- endmacro -%}
@@ -451,6 +454,7 @@ poor design of the data or methods on data objects #}
                 {% trans cnt=question.score %}vote{% pluralize %}votes{% endtrans %}
                 </div>
             </div>
+            
             <div style="clear:both"></div>
             <div class="userinfo">
                 <span class="relativetime" title="{{question.last_activity_at}}">{{ question.last_activity_at|diff_date }}</span>
@@ -490,7 +494,7 @@ for the purposes of the AJAX comment editor #}
             {% endif %}
         </div>
         <div class="comment-body">
-            {{comment.html}} &ndash;
+            {{comment.html}}
             <a 
                 class="author" 
                 href="{{comment.user.get_profile_url()}}"

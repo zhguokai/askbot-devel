@@ -373,7 +373,10 @@ class QuestionQuerySet(models.query.QuerySet):
         u_id = u_id.union(
                     set(Answer.objects.filter(id__in=a_id).values_list('author', flat=True))
                 )
-        contributors = User.objects.filter(id__in=u_id).order_by('?')
+
+        from askbot.conf import settings as askbot_settings
+        avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
+        contributors = User.objects.filter(id__in=u_id).order_by('avatar_type', '?')[:avatar_limit]
         #print contributors
         #could not optimize this query with indices so it was split into what's now above
         #contributors = User.objects.filter(
@@ -965,6 +968,8 @@ class FavoriteQuestion(models.Model):
 QUESTION_REVISION_TEMPLATE = ('<h3>%(title)s</h3>\n'
                               '<div class="text">%(html)s</div>\n'
                               '<div class="tags">%(tags)s</div>')
+QUESTION_REVISION_TEMPLATE_NO_TAGS = ('<h3>%(title)s</h3>\n'
+                              '<div class="text">%(html)s</div>\n')
 class QuestionRevision(ContentRevision):
     """A revision of a Question."""
     question   = models.ForeignKey(Question, related_name='revisions')
@@ -983,14 +988,20 @@ class QuestionRevision(ContentRevision):
         #print 'in QuestionRevision.get_absolute_url()'
         return reverse('question_revisions', args=[self.question.id])
 
-    def as_html(self):
+    def as_html(self, include_tags=True):
         markdowner = markup.get_parser()
-        return QUESTION_REVISION_TEMPLATE % {
-            'title': self.title,
-            'html': sanitize_html(markdowner.convert(self.text)),
-            'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
-                              for tag in self.tagnames.split(' ')]),
-        }
+        if include_tags:
+            return QUESTION_REVISION_TEMPLATE % {
+                'title': self.title,
+                'html': sanitize_html(markdowner.convert(self.text)),
+                'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
+                                  for tag in self.tagnames.split(' ')]),
+            }
+        else:
+            return QUESTION_REVISION_TEMPLATE_NO_TAGS % {
+                'title': self.title,
+                'html': sanitize_html(markdowner.convert(self.text))
+            }
 
     def save(self, **kwargs):
         """Looks up the next available revision number."""

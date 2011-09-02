@@ -4,7 +4,13 @@ import os
 import sys
 from django.utils.safestring import mark_safe
 from django.utils.functional import lazy
-from django.template import Node
+from django.template import Node, TemplateDoesNotExist
+from django.template.loader import get_template_from_string
+from django.template.loader import make_origin
+try:
+    from functools import WRAPPER_ASSIGNMENTS
+except ImportError:
+    from django.utils.functional import WRAPPER_ASSIGNMENTS
 
 def module_has_submodule(package, module_name):
     """See if 'module' is in 'package'."""
@@ -340,7 +346,12 @@ def add_class_based_template_loaders():
 
         def load_template(self, template_name, template_dirs=None):
             source, display_name = self.load_template_source(template_name, template_dirs)
-            origin = make_origin(display_name, self.load_template_source, template_name, template_dirs)
+            origin = make_origin(
+                        display_name,
+                        self.load_template_source,
+                        template_name,
+                        template_dirs
+                    )
             try:
                 template = get_template_from_string(source, origin, template_name)
                 return template, None
@@ -368,3 +379,13 @@ def add_class_based_template_loaders():
             pass
     import django.template.loader
     django.template.loader.BaseLoader = BaseLoader
+
+def add_available_attrs_decorator():
+    def available_attrs(fn):
+        """
+        Return the list of functools-wrappable attributes on a callable.
+        This is required as a workaround for http://bugs.python.org/issue3445.
+        """
+        return tuple(a for a in WRAPPER_ASSIGNMENTS if hasattr(fn, a))
+    import django.utils.decorators
+    django.utils.decorators.available_attrs = available_attrs

@@ -16,11 +16,12 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from django.utils import simplejson
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.utils.mail import send_mail
@@ -738,10 +739,30 @@ def user_responses(request, user, context):
             'response_snippet': memo.activity.get_preview(),
             'response_title': memo.activity.question.title,
             'response_type': memo.activity.get_activity_type_display(),
+            'response_id': memo.activity.question.id,
+            'nested_responses': [],
         }
         response_list.append(response)
 
+    response_list.sort(lambda x,y: cmp(y['response_id'], x['response_id']))
+    last_response_id = None #flag to know if the response id is different
+    last_response_index = None #flag to know if the response index in the list is different
+    filtered_response_list = list()
+
+    for i, response in enumerate(response_list):
+        #todo: agrupate users
+        if response['response_id'] == last_response_id:
+            original_response = dict.copy(filtered_response_list[len(filtered_response_list)-1])
+            original_response['nested_responses'].append(response) 
+            filtered_response_list[len(filtered_response_list)-1] = original_response
+        else:
+            filtered_response_list.append(response)
+            last_response_id = response['response_id']
+            last_response_index = i
+
+    response_list = filtered_response_list
     response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
+    filtered_response_list = list()
 
     data = {
         'active_tab':'users',
@@ -986,3 +1007,13 @@ def user(request, id, slug=None, tab_name=None):
         'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
     }
     return user_view_func(request, profile_owner, context)
+
+def update_has_custom_avatar(request):
+    """updates current avatar type data for the user
+    """
+    if request.is_ajax() and request.user.is_authenticated():
+        if request.user.avatar_type in ('n', 'g'):
+            request.user.update_avatar_type()
+            request.session['avatar_data_updated_at'] = datetime.datetime.now()
+            return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
+    return HttpResponseForbidden()

@@ -1,12 +1,12 @@
+"""Setup script for askbot Q&A forum package"""
 import ez_setup
 ez_setup.use_setuptools()
 from setuptools import setup, find_packages
-import sys
 
 #NOTE: if you want to develop askbot
 #you might want to install django-debug-toolbar as well
 
-install_requires = [
+INSTALL_REQUIRES = [
     'django>=1.1.2',
     'Jinja2',
     'Coffin>=0.3',
@@ -27,16 +27,12 @@ install_requires = [
     'django-registration',
 ]
 
-#todo: have a dirty version retriever that 
-#parses it out from askbot/__init__.py but does not
-#import it as there are issues
-
 import askbot
 
 setup(
     name = "askbot",
     version = askbot.get_version(),#remember to manually set this correctly
-    description = 'Question and Answer forum, like StackOverflow, written in python and Django',
+    description = 'Question and Answer forum, like StackOverflow, in Python and Django',
     packages = find_packages(),
     author = 'Evgeny.Fadeev',
     author_email = 'evgeny.fadeev@gmail.com',
@@ -49,7 +45,7 @@ setup(
     },
     url = 'http://askbot.org',
     include_package_data = True,
-    install_requires = install_requires,
+    install_requires = INSTALL_REQUIRES,
     classifiers = [
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
@@ -72,7 +68,9 @@ setup(
         'Topic :: Communications',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
     ],
-    long_description = """Askbot will work alone or with other django apps (with some limitations, please see below), Django 1.1.1 - 1.2.3(*), MySQL(**) and PostgresQL(recommended) (>=8.3).
+    long_description = """Askbot will work alone or with other django apps 
+(with some limitations, please see below),
+Django 1.1.1 - 1.2.3(*), MySQL(**) and PostgresQL(recommended) (>=8.3).
 
 Questions? Suggestions? Found a bug? -> please post at http://askbot.org/
 
@@ -144,12 +142,13 @@ Footnotes
 (**) - With MySQL you have to use MyISAM data backend, because it's the only one that supports Full Text Search."""
 )
 
-print '**************************************************************'
-print '*                                                            *'
-print '*  Thanks for installing Askbot.                             *'
-print '*  To start deploying type: >python askbot-setup             *'
-print '*  Please take a look at the manual askbot/doc/INSTALL       *'
-print '*  And please do not hesitate to ask your questions at       *'
-print '*  at http://askbot.org                                      *'
-print '*                                                            *'
-print '**************************************************************'
+print """**************************************************************
+*                                                            *
+*  Thanks for installing Askbot.                             *
+*                                                            *
+*  To start deploying type: >askbot-setup                    *
+*  Please take a look at the manual askbot/doc/INSTALL       *
+*  And please do not hesitate to ask your questions at       *
+*  at http://askbot.org                                      *
+*                                                            *
+**************************************************************"""
