@@ -127,7 +127,7 @@ Also, settings ``MEDIA_ROOT`` and ``MEDIA_URL`` will need to be added to your ``
 Wordpress Integration 
 =====================
 
-To enable authentication for self hosted wordpress sites(wordpress.com blogs will work with openid login). To enable it follow the following steps:
+To enable authentication for self hosted wordpress sites(wordpress.com blogs will work with openid login). To enable it follow these steps:
 
 * Check if you have the package `"python_wordpress_xmlrpc <http://pypi.python.org/pypi/python-wordpress-xmlrpc/1.4>`_ from pypi.
 * Go to your wordpress blog admin panel and serch for: Settings->Writing->Remote Publishing then check the box for XML-RPC.
