@@ -3,6 +3,7 @@ multiple login methods supported by the authenticator
 application
 """
 import datetime
+import logging
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend as AuthModelBackend
 from django.core.exceptions import ImproperlyConfigured
@@ -67,22 +68,29 @@ class AuthBackend(object):
 
         In all cases - the identifier parameter is a string.
         """
-        if method == 'password':
-            #reuse standard backend from django.contrib.auth
-            backend = AuthModelBackend()
-            return backend.authenticate(username, password)
-        elif method == 'password-external':
-            login_providers = util.get_enabled_login_providers()
-            check_pw_func = login_providers[provider_name]['check_password']
-            if check_pw_func(username, password):
-                user, created = get_or_create_unique_user(
-                    preferred_username = username,
-                    login_provider_name = provider_name
-                )
-                return user, created
-            else:
-                return None
-        elif method in THIRD_PARTY_PROVIDER_TYPES:
+        if method == 'password' and provider_name == 'local':
+            try:
+                user = User.objects.get(username=username)
+                if not user.check_password(password):
+                    return None
+            except User.DoesNotExist:
+                try:
+                    email_address = username
+                    user = User.objects.get(email = email_address)
+                    if not user.check_password(password):
+                        return None
+                except User.DoesNotExist:
+                    return None
+                except User.MultipleObjectsReturned:
+                    logging.critical(
+                        ('have more than one user with email %s ' +
+                        'he/she will not be able to authenticate with ' +
+                        'the email address in the place of user name') % email_address
+                    )
+                    return None
+            identifier = u'%s@%s' % (user.username, 'local')
+
+        if method in THIRD_PARTY_PROVIDER_TYPES:
             #any third party logins. here we guarantee that
             #user already passed external authentication
             return authenticate_by_association(

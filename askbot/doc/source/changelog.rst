@@ -4,6 +4,8 @@ Changes in Askbot
 Development version
 -------------------
 * Added noscript message (Arun SAG)
+* Support for url shortening with TinyUrl on link sharing (Rtnpro)
+* Allowed logging in with password and email in the place of login name (Evgeny)
 
 0.7.22 (Current Version)
 ------------------------
