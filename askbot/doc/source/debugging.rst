@@ -32,9 +32,9 @@ in Askbot logging is currently set up in settings.py
 please update it if you need - in older revs logging strings have less info
 
 messages of interest can be grepped out of the log file by module/file/function name
-e.g. to take out all django_authopenid logs run::
+e.g. to take out all ``django_authenticator`` logs run::
 
-    >grep 'askbot\/django_authopenid' log/django.askbot.log | sed 's/^.*MSG: //'
+    >grep 'django_authenticator' log/django.askbot.log | sed 's/^.*MSG: //'
 
 in the example above `sed` call truncates out a long prefix
 and makes output look more meaningful

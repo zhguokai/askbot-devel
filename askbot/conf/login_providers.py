@@ -5,8 +5,8 @@ from django.utils.translation import ugettext as _
 from django.conf import settings as django_settings
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
-from askbot.deps.django_authopenid import PROVIDERS
-from askbot.deps.django_authopenid.util import get_provider_name_token
+from django_authenticator import PROVIDERS
+from django_authenticator.util import get_provider_name_token
 from askbot.skins import utils as skin_utils
 
 LOGIN_PROVIDERS = livesettings.ConfigurationGroup(

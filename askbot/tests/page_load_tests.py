@@ -236,7 +236,7 @@ class PageLoadTests(PageLoadTestCase):
                 template='faq_static.html',
                 status_code=200,
             )
-        if 'askbot.deps.django_authopenid' in django_settings.INSTALLED_APPS:
+        if 'django_authenticator' in django_settings.INSTALLED_APPS:
             self.try_url(
                     'edit_user',
                     template='authenticator/signin.html',
@@ -296,7 +296,7 @@ class PageLoadTests(PageLoadTestCase):
             'kwargs': {'id': 2, 'slug': name_slug},
             'follow': True
         }
-        if 'askbot.deps.django_authopenid' in django_settings.INSTALLED_APPS:
+        if 'django_authenticator' in django_settings.INSTALLED_APPS:
             kwargs['template'] = 'authenticator/signin.html'
             
         self.try_url(
@@ -318,7 +318,7 @@ class PageLoadTests(PageLoadTestCase):
     def test_user_urls_logged_in(self):
         user = models.User.objects.get(id=2)
         name_slug = slugify(user.username)
-        #works only with builtin django_authopenid
+        #works only with django_authenticator
         self.client.login(method = 'force', identifier = 2)
         self.try_url(
             'user_subscriptions',

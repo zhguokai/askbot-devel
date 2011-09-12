@@ -6,7 +6,7 @@ from django.core.management.base import CommandError
 from django.utils.translation import ugettext as _
 from askbot.management import NoArgsJob
 from askbot import models
-from askbot.deps.django_authopenid.models import UserAssociation
+from django_authenticator.models import UserAssociation
 from askbot.conf import settings as askbot_settings
 
 def create_ldap_login_for_user(user):

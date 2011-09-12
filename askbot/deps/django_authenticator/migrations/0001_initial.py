@@ -1,22 +1,80 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
-from askbot.deps.django_authopenid import util
 
-class Migration(DataMigration):
+APP_NAME = os.path.basename(os.path.dirname(os.path.dirname(__file__)))
+
+class Migration(SchemaMigration):
     
     def forwards(self, orm):
-        "determines openid provider from url"
-        for assoc in orm.UserAssociation.objects.all():
-            assoc.provider_name = util.get_openid_provider_name(assoc.openid_url)
-            print '%s -> %s' % (assoc.user.username, assoc.provider_name)
-            assoc.save()
+        
+        # Adding model 'Nonce'
+        db.create_table('django_authopenid_nonce', (
+            ('timestamp', self.gf('django.db.models.fields.IntegerField')()),
+            ('salt', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('server_url', self.gf('django.db.models.fields.CharField')(max_length=255)),
+        ))
+        db.send_create_signal(APP_NAME, ['Nonce'])
+
+        # Adding model 'Association'
+        db.create_table('django_authopenid_association', (
+            ('handle', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('issued', self.gf('django.db.models.fields.IntegerField')()),
+            ('server_url', self.gf('django.db.models.fields.TextField')(max_length=2047)),
+            ('assoc_type', self.gf('django.db.models.fields.TextField')(max_length=64)),
+            ('secret', self.gf('django.db.models.fields.TextField')(max_length=255)),
+            ('lifetime', self.gf('django.db.models.fields.IntegerField')()),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+        ))
+        db.send_create_signal(APP_NAME, ['Association'])
+
+        # Adding model 'UserAssociation'
+        db.create_table('django_authopenid_userassociation', (
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], unique=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('openid_url', self.gf('django.db.models.fields.CharField')(max_length=255)),
+        ))
+        db.send_create_signal(APP_NAME, ['UserAssociation'])
+
+        # Adding model 'UserPasswordQueue'
+        db.create_table('django_authopenid_userpasswordqueue', (
+            ('new_password', self.gf('django.db.models.fields.CharField')(max_length=30)),
+            ('confirm_key', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], unique=True)),
+        ))
+        db.send_create_signal(APP_NAME, ['UserPasswordQueue'])
+
+        # Adding model 'ExternalLoginData'
+        db.create_table('django_authopenid_externallogindata', (
+            ('external_username', self.gf('django.db.models.fields.CharField')(unique=True, max_length=40)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('external_session_data', self.gf('django.db.models.fields.TextField')()),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True)),
+        ))
+        db.send_create_signal(APP_NAME, ['ExternalLoginData'])
+    
     
     def backwards(self, orm):
-        "Backwards migration is irrelevant here"
-        pass
+        
+        # Deleting model 'Nonce'
+        db.delete_table('django_authopenid_nonce')
+
+        # Deleting model 'Association'
+        db.delete_table('django_authopenid_association')
+
+        # Deleting model 'UserAssociation'
+        db.delete_table('django_authopenid_userassociation')
+
+        # Deleting model 'UserPasswordQueue'
+        db.delete_table('django_authopenid_userpasswordqueue')
+
+        # Deleting model 'ExternalLoginData'
+        db.delete_table('django_authopenid_externallogindata')
+    
     
     models = {
         'auth.group': {
@@ -98,11 +156,10 @@ class Migration(DataMigration):
             'timestamp': ('django.db.models.fields.IntegerField', [], {})
         },
         'django_authopenid.userassociation': {
-            'Meta': {'unique_together': "(('user', 'provider_name'),)", 'object_name': 'UserAssociation'},
+            'Meta': {'object_name': 'UserAssociation'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'openid_url': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'provider_name': ('django.db.models.fields.CharField', [], {'default': "'unknown'", 'max_length': '64'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'unique': 'True'})
         },
         'django_authopenid.userpasswordqueue': {
             'Meta': {'object_name': 'UserPasswordQueue'},

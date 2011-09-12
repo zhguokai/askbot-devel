@@ -286,12 +286,12 @@ else:
         name='question'
     ),)
 
-if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
+if 'django_authenticator' in settings.INSTALLED_APPS:
     #if we use the askbot authentication system,
     #then we also need to use askbot authentication backend
     #or it's subclass
     urlpatterns += (
-        url(r'^%s' % _('authentication/'), include('askbot.deps.django_authopenid.urls')),
+        url(r'^%s' % _('authentication/'), include('django_authenticator.urls')),
     )
     #registration urls are customized
     urlpatterns += (

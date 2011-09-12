@@ -203,7 +203,7 @@ def filter_enabled_providers(data):
 
 class LoginMethod(object):
     """Helper class to add custom authentication modules
-    as plugins for the askbot's version of django_authopenid
+    to django_authenticator
     """
     def __init__(self, login_module_path):
         self.mod = import_module_from(login_module_path)

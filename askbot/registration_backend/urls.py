@@ -6,7 +6,7 @@ attached the askbot's registration backend instead of
 the default backend
 
 Besides django-registration, this backend needs app
-askbot.deps.django_authopenid authentication app
+django_authenticator authentication app
 """
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template

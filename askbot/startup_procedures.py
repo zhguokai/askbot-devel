@@ -226,13 +226,42 @@ to your settings.py file"""
             footer = footer
         )
 
+def explain_replacement_of_django_authopenid():
+    """.. versionadded: 0.7.23"""
+    raise AskbotConfigError(
+        """ATTENTION! Askbot now uses application "django_authenticator" 
+in place of "askbot.deps.django_authopenid, therefore you will 
+need to do the following :
+1) install "django_authenticator" by typing:
+
+    pip install -r askbot_requirements.txt
+
+2) Edit settings.py file.
+
+(a) In INSTALLED_APPS replace
+
+    'askbot.deps.django_authopenid',
+with
+    'django_authenticator',
+
+(b) in AUTHENTICATION_BACKENDS replace
+
+    'askbot.deps.django_authopenid.backends.AuthBackend',
+with
+    'django_authenticator.backends.AuthBackend',"""
+    )
+
 def test_misc_settings():
     """tests various settings"""
-    if 'askbot.deps.django_authopenid' in django_settings.INSTALLED_APPS:
+    if 'askbot.deps.django_authopenid' in django_settings.INSTALLED_APPS or \
+       'askbot.deps.django_authopenid.backends.AuthBackend' in \
+       django_settings.AUTHENTICATION_BACKENDS:
+        explain_replacement_of_django_authopenid()
+    if 'django_authenticator' in django_settings.INSTALLED_APPS:
         mod_path = getattr(django_settings, 'EXTRA_SETTINGS_MODULE', '')
         if mod_path != 'askbot.conf.settings':
             raise AskbotConfigError(
-                'If you are using askbot.deps.django_authopenid, '
+                'If you are using django_authenticator, '
                 'please also add the following line to your settings: '
             )
          

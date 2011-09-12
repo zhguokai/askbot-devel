@@ -17,7 +17,18 @@ When you install Askbot the first time and any time you upgrade the software, ru
 Then run::
 
     python manage.py migrate askbot
-    python manage.py migrate django_authopenid #embedded login application
+
+There may be other apps to migrate as well - you can see which ones by typing::
+
+    python manage.py migrate --list
+
+and then apply the migrations.
+All migrations at once can by applied by simply typing::
+
+    python manage.py migrate
+
+(for example, with askbot you might be using an application called
+``django_authenticator``, which also uses the database migrations system).
 
 .. note::
 

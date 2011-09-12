@@ -180,7 +180,7 @@ def ask_openid(
 
 def complete_openid_signin(request):
     """ complete openid signin """
-    logging.debug('in askbot.deps.django_authopenid.complete')
+    logging.debug('in django_authenticator.complete')
     
     consumer = Consumer(request.session, util.DjangoOpenIDStore())
     # make sure params are encoded in utf8

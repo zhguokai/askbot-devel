@@ -4,6 +4,7 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+APP_NAME = os.path.basename(os.path.dirname(os.path.dirname(__file__)))
 class Migration(SchemaMigration):
     
     def forwards(self, orm):
@@ -21,7 +22,7 @@ class Migration(SchemaMigration):
             ('external_session_data', self.gf('django.db.models.fields.TextField')()),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True)),
         ))
-        db.send_create_signal('django_authopenid', ['ExternalLoginData'])
+        db.send_create_signal(APP_NAME, ['ExternalLoginData'])
     
     
     models = {

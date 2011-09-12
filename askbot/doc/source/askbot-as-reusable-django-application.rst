@@ -56,9 +56,9 @@ Using alternative login system
 
 Askbot has a bundled application for user login and registration,
 but it can be replaced with any other.
-Just remove ``'askbot.deps.django_authopenid'``
+Just remove ``'django_authenticator'``
 from the ``INSTALLED_APPS``,
-remove ``'askbot.deps.django_authopenid.backends.AuthBackend'``
+remove ``'django_authenticator.AuthBackend'``
 from the ``AUTHENTICATION_BACKENDS``,
 install another registration app
 and modify ``LOGIN_URL`` and ``LOGOUT_URL`` accordingly.

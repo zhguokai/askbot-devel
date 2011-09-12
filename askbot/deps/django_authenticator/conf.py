@@ -5,7 +5,7 @@ from multi_registry import MultiRegistry
 
 settings = MultiRegistry(
     'django.conf.settings',
-    'askbot.deps.django_authopenid.default_settings'
+    'django_authenticator.default_settings'
 )
 
 extra_settings_path = getattr(django_settings, 'EXTRA_SETTINGS_MODULE', None)

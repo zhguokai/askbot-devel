@@ -18,7 +18,7 @@ import askbot.conf.user_settings
 import askbot.conf.markup
 import askbot.conf.social_sharing
 import askbot.conf.badges
-if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
+if 'django_authenticator' in settings.INSTALLED_APPS:
     import askbot.conf.login_providers
 
 #import main settings object

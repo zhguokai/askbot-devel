@@ -154,7 +154,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     #'debug_toolbar',
     'askbot',
-    'askbot.deps.django_authopenid',
+    'django_authenticator',
     #'askbot.importers.stackexchange', #se loader
     'south',
     'askbot.deps.livesettings',
@@ -181,7 +181,7 @@ CACHE_PREFIX = 'askbot' #make this unique
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'askbot.deps.django_authopenid.backends.AuthBackend',
+    'django_authenticator.backends.AuthBackend',
 )
 
 #logging settings

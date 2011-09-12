@@ -10,7 +10,6 @@ def hide_passwords(data):
 
     #names of the fields are taken from forms
     #askbot.utils.forms.SetPasswordForm
-    #askbat.deps.django_authopenid.forms.LoginForm
     #todo: forms need to be consolidated and names of the fields normalized
     fields = (
         'password',

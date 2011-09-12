@@ -2,7 +2,7 @@
 from django.conf.urls.defaults import patterns, url
 from django.utils.translation import ugettext as _
 
-urlpatterns = patterns('askbot.deps.django_authopenid.views',
+urlpatterns = patterns('django_authenticator.views',
     # yadis rdf
     url(r'^yadis.xrdf$', 'xrdf', name='yadis_xrdf'),
      # manage account registration
