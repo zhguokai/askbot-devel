@@ -171,7 +171,7 @@ def use_password_login():
     either if USE_RECAPTCHA is false
     of if recaptcha keys are set correctly
     """
-    from askbot.deps.django_authopenid.conf import settings
+    from django_authenticator.conf import settings
     if settings.SIGNIN_WORDPRESS_SITE_ENABLED:
         return True
     if settings.USE_RECAPTCHA:
@@ -188,7 +188,7 @@ def filter_enabled_providers(data):
     the input dictionary
     """
     delete_list = list()
-    from askbot.deps.django_authopenid.conf import settings
+    from django_authenticator.conf import settings
     for provider_key, provider_settings in data.items():
         name = provider_settings['name']
         name_token = get_provider_name_token(name)
@@ -330,7 +330,7 @@ def add_custom_provider(func):
     @functools.wraps(func)
     def wrapper():
         providers = func()
-        from askbot.deps.django_authopenid.conf import settings
+        from django_authenticator.conf import settings
         login_module_path = getattr(settings, 'ASKBOT_CUSTOM_AUTH_MODULE', None)
         if login_module_path:
             mod = LoginMethod(login_module_path)
@@ -384,7 +384,7 @@ def get_enabled_major_login_providers():
       between the ways user id is accessed from the different OAuth providers
     """
     data = SortedDict()
-    from askbot.deps.django_authopenid.conf import settings
+    from django_authenticator.conf import settings
 
     if use_password_login():
         site_name = settings.APP_SHORT_NAME
@@ -622,7 +622,7 @@ def set_login_provider_tooltips(provider_dict, active_provider_names = None):
     depending on the type of provider and whether or not it's one of 
     currently used
     """
-    from askbot.deps.django_authopenid.conf import settings
+    from django_authenticator.conf import settings
     for provider in provider_dict.values():
         if active_provider_names:
             if provider['name'] in active_provider_names:
@@ -674,7 +674,7 @@ def get_oauth_parameters(provider_name):
     it should not be called at compile time
     otherwise there may be strange errors
     """
-    from askbot.deps.django_authopenid.conf import settings
+    from django_authenticator.conf import settings
     providers = get_enabled_login_providers()
     data = providers[provider_name]
     if data['type'] != 'oauth':
@@ -722,7 +722,7 @@ class OAuthConnection(object):
     def start(self, callback_url = None):
         """starts the OAuth protocol communication and
         saves request token as :attr:`request_token`"""
-        from askbot.deps.django_authopenid.conf import settings
+        from django_authenticator.conf import settings
 
         if callback_url is None:
             callback_url = self.callback_url
@@ -813,7 +813,7 @@ class FacebookError(Exception):
 
 def get_facebook_user_id(request):
     try:
-        from askbot.deps.django_authopenid.conf import settings
+        from django_authenticator.conf import settings
         key = settings.FACEBOOK_KEY
         secret = settings.FACEBOOK_SECRET
 
@@ -841,7 +841,7 @@ def get_facebook_user_id(request):
 
 def ldap_check_password(username, password):
     import ldap
-    from askbot.deps.django_authopenid.conf import settings
+    from django_authenticator.conf import settings
     try:
         ldap_session = ldap.initialize(settings.LDAP_URL)
         ldap_session.simple_bind_s(username, password)

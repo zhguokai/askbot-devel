@@ -1,4 +1,4 @@
-from askbot.deps.django_authopenid import PROVIDERS
+from django_authenticator import PROVIDERS
 
 ALLOW_ACCOUNT_RECOVERY_BY_EMAIL = True
 ALLOW_ADD_REMOVE_LOGIN_METHODS = True

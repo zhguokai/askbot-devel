@@ -34,7 +34,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
-from askbot.deps.django_authopenid.conf import settings
+from django_authenticator.conf import settings
 from django_extra_form_fields.fields import NextUrlField, UserNameField, UserEmailField
 
 LOGIN_WIDGET_ATTRS = {'class': 'required login'}
@@ -45,7 +45,7 @@ try:
 except ImportError:
     from yadis import xri
     
-from askbot.deps.django_authopenid import util
+from django_authenticator import util
 
 __all__ = [
     'OpenidSigninForm',

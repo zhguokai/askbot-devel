@@ -6,9 +6,9 @@ import datetime
 import logging
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
-from askbot.deps.django_authopenid.models import UserAssociation
-from askbot.deps.django_authopenid import util
-from askbot.deps.django_authopenid.conf import settings
+from django_authenticator.models import UserAssociation
+from django_authenticator import util
+from django_authenticator.conf import settings
 from wordpress_xmlrpc import Client as WordPressClient
 from wordpress_xmlrpc.methods.users import GetUserInfo as WordPressGetUserInfo
 from wordpress_xmlrpc.exceptions import InvalidCredentialsError

@@ -34,8 +34,8 @@ import datetime
 from django.http import HttpResponseRedirect, get_host, Http404
 from django.http import HttpResponse
 from django.template import RequestContext
-from askbot.deps.django_authopenid.conf import settings
-from askbot.deps.django_authopenid import backends
+from django_authenticator.conf import settings
+from django_authenticator import backends
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
@@ -59,10 +59,10 @@ except ImportError:
     from yadis import xri
 
 import urllib
-from askbot.deps.django_authopenid import util
-from askbot.deps.django_authopenid.models import UserAssociation
-from askbot.deps.django_authopenid import forms
-from askbot.deps.django_authopenid.backends import AuthBackend
+from django_authenticator import util
+from django_authenticator.models import UserAssociation
+from django_authenticator import forms
+from django_authenticator.backends import AuthBackend
 import logging
 from django_extra_form_fields.fields import get_next_url
 
