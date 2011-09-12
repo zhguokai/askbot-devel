@@ -16,6 +16,7 @@ django-followit
 django-recaptcha-works
 python-openid
 django-registration
+python-wordpress-xmlrpc
 -e git+git://github.com/ASKBOT/python-multi-registry.git#egg=multi_registry
 -e git+git://github.com/ASKBOT/python-import-utils.git#egg=import_utils
 -e git+git://github.com/ASKBOT/django-extra-form-fields.git#egg=django_extra_form_fields
