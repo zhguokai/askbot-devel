@@ -169,10 +169,18 @@ def try_import(module_name, pypi_package_name):
         raise AskbotConfigError(message)
 
 def test_modules():
-    """tests presence of required modules"""
+    """tests presence of required modules
+    when any of the modules are absent, prints
+    a recommendation on how to install a module
+    """
     try_import('recaptcha_works', 'django-recaptcha-works')
+    try_import('wordpress_xmlrpc', 'python-wordpress-xmlrpc')
+    try_import('multi_registry', 'python-multi-registry')
+    try_import('django_extra_form_fields', 'django-extra-form-fields')
 
 def test_template_loaders():
+    """reports recommendations about TEMPLATE_LOADERS
+    setting, when appropriate"""
     loader_errors = list()
     if 'askbot.skins.loaders.load_template_source' in \
         django_settings.TEMPLATE_LOADERS:        

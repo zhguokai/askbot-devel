@@ -464,6 +464,7 @@ def get_enabled_major_login_providers():
             'display_name': 'Self hosted wordpress blog', #need to be added as setting.
             'icon_media_path': settings.WORDPRESS_SITE_ICON,
             'type': 'wordpress_site',
+            'password_changeable': False,
         }
 
     if settings.LINKEDIN_KEY and settings.LINKEDIN_SECRET:

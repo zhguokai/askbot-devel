@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Copiright (c) 2011, Askbot
 # Copyright (c) 2007, 2008, Benoît Chesneau
 # Copyright (c) 2007 Simon Willison, original work on django-openid
 # 
@@ -29,12 +30,12 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 import datetime
 from django.http import HttpResponseRedirect, get_host, Http404
 from django.http import HttpResponse
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from askbot.deps.django_authopenid.conf import settings
+from askbot.deps.django_authopenid import backends
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
@@ -44,9 +45,7 @@ from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
-from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
-from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from django.template.loader import get_template
 
 from openid.consumer.consumer import Consumer, \
@@ -59,18 +58,8 @@ try:
 except ImportError:
     from yadis import xri
 
-try:
-    from xmlrpclib import Fault as WpFault
-    from wordpress_xmlrpc import Client
-    from wordpress_xmlrpc.methods.users import GetUserInfo
-except ImportError:
-    pass
-
-
 import urllib
-from askbot import forms as askbot_forms
 from askbot.deps.django_authopenid import util
-from askbot.deps.django_authopenid import decorators
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
@@ -471,25 +460,32 @@ def signin(request):
 
             elif login_form.cleaned_data['login_type'] == 'wordpress_site':
                 #here wordpress_site means for a self hosted wordpress blog not a wordpress.com blog
-                wp = Client(askbot_settings.WORDPRESS_SITE_URL, login_form.cleaned_data['username'], login_form.cleaned_data['password'])
                 try:
-                    wp_user = wp.call(GetUserInfo())
-                    custom_wp_openid_url = '%s?user_id=%s' % (wp.url, wp_user.user_id)
-                    user = authenticate(
-                            method = 'wordpress_site',
-                            wordpress_url = wp.url,
-                            wp_user_id = wp_user.user_id 
-                           )
-                    return finalize_generic_signin(
-                                    request = request,
-                                    user = user,
-                                    user_identifier = custom_wp_openid_url,
-                                    login_provider_name = provider_name,
-                                    redirect_url = next_url
+                    wp_user_identifier = backends.authenticate_by_wordpress_site(
+                                        username = login_form.cleaned_data['username'],
+                                        password = login_form.cleaned_data['password']
                                     )
-                except WpFault, e:
+                    if wp_user_identifier:
+                        user = authenticate(
+                            method = 'wordpress_site',
+                            identifier = wp_user_identifier,
+                            provider_name = u'wordpress_site'
+                        )
+                        return finalize_generic_signin(
+                                        request = request,
+                                        user = user,
+                                        user_identifier = wp_user_identifier,
+                                        login_provider_name = provider_name,
+                                        redirect_url = next_url
+                                    )
+                    else:
+                        login_form.set_password_login_error()
+                except Exception, e:
                     logging.critical(unicode(e))
-                    msg = _('The login password combination was not correct')
+                    msg = _(
+                        'Unfortunately there was some problem connecting '
+                        'to the wordpress blog'
+                    )
                     request.user.message_set.create(message = msg)
             else:
                 #raise 500 error - unknown login type

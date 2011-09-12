@@ -5,10 +5,13 @@ application
 import datetime
 import logging
 from django.contrib.auth.models import User
-from django.contrib.auth.backends import ModelBackend as AuthModelBackend
 from django.core.exceptions import ImproperlyConfigured
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
+from askbot.deps.django_authopenid.conf import settings
+from wordpress_xmlrpc import Client as WordPressClient
+from wordpress_xmlrpc.methods.users import GetUserInfo as WordPressGetUserInfo
+from wordpress_xmlrpc.exceptions import InvalidCredentialsError
 
 def authenticate_by_association(identifier = None, provider_name = None):
     """returns user stored in the matching instance of the
@@ -28,9 +31,50 @@ def authenticate_by_association(identifier = None, provider_name = None):
     except UserAssociation.DoesNotExist:
         return None
 
+def authenticate_by_local_password(username, password):
+    """returns properly formatted user identifier, if
+    user name and password match, or None otherwise
+    email address will be checked in place of the username too.
+    """
+    try:
+        user = User.objects.get(username=username)
+        if not user.check_password(password):
+            return None
+    except User.DoesNotExist:
+        try:
+            email_address = username
+            user = User.objects.get(email = email_address)
+            if not user.check_password(password):
+                return None
+        except User.DoesNotExist:
+            return None
+        except User.MultipleObjectsReturned:
+            logging.critical(
+                'have more than one user with email %s ' +
+                'he/she will not be able to authenticate with ' +
+                'the email address in the place of user name',
+                email_address
+            )
+            return None
+    return u'%s@%s' % (user.username, 'local')
+
+def authenticate_by_wordpress_site(username, password):
+    """test password against external wordpress site
+    via XML RPC call"""
+    try:
+        wp_client = WordPressClient(
+            settings.WORDPRESS_SITE_URL,
+            username,
+            password
+        )
+        wp_user = wp_client.call(WordPressGetUserInfo())
+        return '%s?user_id=%s' % (wp_client.url, wp_user.user_id)
+    except InvalidCredentialsError:
+        return None
+
 THIRD_PARTY_PROVIDER_TYPES = (
     'openid', 'password', 'oauth', 'ldap', 'facebook',
-    'password-external'
+    'password-external', 'wordpress_site',
 )
 
 class AuthBackend(object):
@@ -45,7 +89,7 @@ class AuthBackend(object):
 
     def authenticate(
                 self,
-                identifier = None,# -
+                identifier = None,# - takes various forms, depending on method
                 username = None,#for 'password'
                 password = None,#for 'password'
                 provider_name = None,#required with all except email_key
@@ -69,26 +113,10 @@ class AuthBackend(object):
         In all cases - the identifier parameter is a string.
         """
         if method == 'password' and provider_name == 'local':
-            try:
-                user = User.objects.get(username=username)
-                if not user.check_password(password):
-                    return None
-            except User.DoesNotExist:
-                try:
-                    email_address = username
-                    user = User.objects.get(email = email_address)
-                    if not user.check_password(password):
-                        return None
-                except User.DoesNotExist:
-                    return None
-                except User.MultipleObjectsReturned:
-                    logging.critical(
-                        ('have more than one user with email %s ' +
-                        'he/she will not be able to authenticate with ' +
-                        'the email address in the place of user name') % email_address
-                    )
-                    return None
-            identifier = u'%s@%s' % (user.username, 'local')
+            identifier = authenticate_by_local_password(username, password)
+
+        if identifier is None:
+            return None
 
         if method in THIRD_PARTY_PROVIDER_TYPES:
             #any third party logins. here we guarantee that
@@ -107,17 +135,6 @@ class AuthBackend(object):
                 user.save()
                 return user
             except User.DoesNotExist:
-                return None
-        elif method == 'wordpress_site':
-            #todo: needs to be fixed, right now this method won't work
-            try:
-                custom_wp_openid_url = '%s?user_id=%s' % (wordpress_url, wp_user_id)
-                assoc = UserAssociation.objects.get(
-                                            openid_url = custom_wp_openid_url,
-                                            provider_name = 'wordpress_site'
-                                            )
-                user = assoc.user
-            except UserAssociation.DoesNotExist:
                 return None
         elif method == 'force':
             return self.get_user(identifier)
