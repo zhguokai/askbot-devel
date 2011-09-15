@@ -2,7 +2,6 @@ django>=1.1.2
 Jinja2
 Coffin>=0.3
 South>=0.7.1
-oauth2
 markdown2
 html5lib
 django-keyedcache
@@ -17,6 +16,6 @@ django-recaptcha-works
 python-openid
 django-registration
 python-wordpress-xmlrpc
--e git+git://github.com/ASKBOT/python-multi-registry.git#egg=multi_registry
--e git+git://github.com/ASKBOT/python-import-utils.git#egg=import_utils
--e git+git://github.com/ASKBOT/django-extra-form-fields.git#egg=django_extra_form_fields
+multi-registry
+import-utils
+django-extra-form-fields

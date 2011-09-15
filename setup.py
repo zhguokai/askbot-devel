@@ -11,7 +11,6 @@ INSTALL_REQUIRES = [
     'Jinja2',
     'Coffin>=0.3',
     'South>=0.7.1',
-    'oauth2',
     'markdown2',
     'html5lib',
     'django-keyedcache',
@@ -25,6 +24,10 @@ INSTALL_REQUIRES = [
     'django-recaptcha-works',
     'python-openid',
     'django-registration',
+    'django-extra-form-fields',
+    'multi-registry',
+    'import-utils',
+    'django-authenticator',
 ]
 
 import askbot
