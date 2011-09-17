@@ -173,6 +173,7 @@ def test_modules():
     when any of the modules are absent, prints
     a recommendation on how to install a module
     """
+    try_import('akismet', 'akismet')
     try_import('recaptcha_works', 'django-recaptcha-works')
     try_import('wordpress_xmlrpc', 'python-wordpress-xmlrpc')
     try_import('multi_registry', 'python-multi-registry')

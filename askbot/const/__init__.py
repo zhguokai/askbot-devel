@@ -47,8 +47,8 @@ POST_SORT_METHODS = (
     ('relevance-desc', _('relevance')),
 )
 #todo: add assertion here that all sort methods are unique
-#because they are keys to the hash used in
-#implementations of Q.run_advanced_search
+#because they are keys to the hash used in implementations
+#of Q.run_advanced_search
 
 DEFAULT_POST_SORT_METHOD = 'activity-desc'
 POST_SCOPE_LIST = (
@@ -107,10 +107,10 @@ TYPE_ACTIVITY_DELETE_ANSWER = 13
 TYPE_ACTIVITY_MARK_OFFENSIVE = 14
 TYPE_ACTIVITY_UPDATE_TAGS = 15
 TYPE_ACTIVITY_FAVORITE = 16
-TYPE_ACTIVITY_USER_FULL_UPDATED  =  17
-TYPE_ACTIVITY_EMAIL_UPDATE_SENT  =  18
-TYPE_ACTIVITY_MENTION  =  19
-TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT  =  20
+TYPE_ACTIVITY_USER_FULL_UPDATED = 17
+TYPE_ACTIVITY_EMAIL_UPDATE_SENT = 18
+TYPE_ACTIVITY_MENTION = 19
+TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT = 20
 #TYPE_ACTIVITY_EDIT_QUESTION = 17
 #TYPE_ACTIVITY_EDIT_ANSWER = 18
 
@@ -249,11 +249,21 @@ DEFAULT_USER_STATUS = 'w'
 #number of items to show in user views
 USER_VIEW_DATA_SIZE = 50
 
-#urls to external sites.
+#not really dependency, but external links, which it would 
+#be nice to test for correctness from time to time
 DEPENDENCY_URLS = {
-    'mathjax': 'http://www.mathjax.org/resources/docs/?installation.html',
+    'akismet': 'https://akismet.com/signup/',
+    'cc-by-sa': 'http://creativecommons.org/licenses/by-sa/3.0/legalcode',
+    'embedding-video': \
+        'http://askbot.org/doc/optional-modules.html#embedding-video',
     'favicon': 'http://en.wikipedia.org/wiki/Favicon',
-    'embedding-video': 'http://askbot.org/doc/optional-modules.html#embedding-video'
+    'facebook-apps': 'http://www.facebook.com/developers/createapp.php',
+    'google-webmaster-tools': 'https://www.google.com/webmasters/tools/home',
+    'identica-apps': 'http://identi.ca/settings/oauthapps',
+    'linkedin-apps': 'https://www.linkedin.com/secure/developer',
+    'mathjax': 'http://www.mathjax.org/resources/docs/?installation.html',
+    'recaptcha': 'http://google.com/recaptcha',
+    'twitter-apps': 'http://dev.twitter.com/apps/',
 }
 
 PASSWORD_MIN_LENGTH = 8
