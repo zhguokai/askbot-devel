@@ -253,8 +253,8 @@ with
     'django_authenticator.backends.AuthBackend',"""
     )
 
-def test_misc_settings():
-    """tests various settings"""
+def test_authenticator_app():
+    """tests configuration of ``django_authenticator`` app"""
     if 'askbot.deps.django_authopenid' in django_settings.INSTALLED_APPS or \
        'askbot.deps.django_authopenid.backends.AuthBackend' in \
        django_settings.AUTHENTICATION_BACKENDS:
@@ -266,6 +266,10 @@ def test_misc_settings():
                 'If you are using django_authenticator, '
                 'please also add the following line to your settings: '
             )
+
+def test_misc_settings():
+    """tests various settings"""
+    test_authenticator_app()
          
     if django_settings.LOGIN_REDIRECT_URL != '/' + django_settings.ASKBOT_URL:
         print """Warning:

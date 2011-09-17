@@ -4,6 +4,8 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 from django.contrib.sessions.models import Session
+from django.conf import settings
+from askbot.startup_procedures import test_authenticator_app
 
 class Migration(DataMigration):
 
@@ -13,6 +15,7 @@ class Migration(DataMigration):
         the authentication backend - the one
         from the former deps/django_authopenid app
         """
+        test_authenticator_app()
         Session.objects.all().delete()
 
 
