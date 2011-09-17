@@ -8,7 +8,7 @@ question: why not run these from askbot/__init__.py?
 the main function is run_startup_tests
 """
 import sys
-from import_utils import import_module_from
+from import_utils import import_module
 from django.db import transaction
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
@@ -161,7 +161,7 @@ def try_import(module_name, pypi_package_name):
     """tries importing a module and advises to install 
     A corresponding Python package in the case import fails"""
     try:
-        import_module_from(module_name)
+        import_module(module_name)
     except ImportError, error:
         message = unicode(error) + ' run\npip install %s' % pypi_package_name
         message += '\nTo install all the dependencies at once, type:'
@@ -177,6 +177,8 @@ def test_modules():
     try_import('wordpress_xmlrpc', 'python-wordpress-xmlrpc')
     try_import('multi_registry', 'python-multi-registry')
     try_import('django_extra_form_fields', 'django-extra-form-fields')
+    try_import('import_utils', 'import-utils')
+    try_import('django_authenticator', 'django-authenticator')
 
 def test_template_loaders():
     """reports recommendations about TEMPLATE_LOADERS

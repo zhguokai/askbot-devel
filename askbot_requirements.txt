@@ -19,3 +19,4 @@ python-wordpress-xmlrpc
 multi-registry
 import-utils
 django-extra-form-fields
+django-authenticator==0.1.3

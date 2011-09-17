@@ -27,7 +27,7 @@ INSTALL_REQUIRES = [
     'django-extra-form-fields',
     'multi-registry',
     'import-utils',
-    'django-authenticator',
+    'django-authenticator==0.1.3',
 ]
 
 import askbot
