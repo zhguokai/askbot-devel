@@ -266,6 +266,7 @@ def test_authenticator_app():
             raise AskbotConfigError(
                 'If you are using django_authenticator, '
                 'please also add the following line to your settings: '
+                'EXTRA_SETTINGS_MODULE = \'askbot.conf.settings\''
             )
 
 def test_misc_settings():
