@@ -531,11 +531,11 @@
                 askbot['settings']['saveCommentOnEnter'] = false;
             {% endif %}
             askbot['urls']['moderate_ip'] = '{% url moderate_ip %}';
-            var ip_addr = '{{request.META['REMOTE_ADDR']}}';
+            askbot['data']['ip_addr'] = '{{request.META['REMOTE_ADDR']}}';
             {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
-                var is_moderator = true;
+                askbot['data']['is_moderator'] = true;
             {% else %}
-                var is_moderator = false;
+                askbot['data']['is_moderator'] = false;
             {% endif %}
         </script>
         <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
