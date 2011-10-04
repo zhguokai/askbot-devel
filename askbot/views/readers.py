@@ -10,7 +10,6 @@ import datetime
 import logging
 import urllib
 import operator
-from sets import Set
 from django.shortcuts import get_object_or_404
 from django.http import (HttpResponseRedirect, HttpResponse, Http404,
                     HttpResponseBadRequest, HttpResponseForbidden)
@@ -584,14 +583,19 @@ def question(request, id):#refactor - long subroutine. display question body, an
     if question_vote is not None and question_vote.count() > 0:
         question_vote = question_vote[0]
 
-    ips = Set([question.ip_addr])
+    ips = set([question.ip_addr])
     for comment in question.comments.all():
         ips.add(comment.ip_addr)
     for answer in page_objects.object_list:
         ips.add(answer.ip_addr)
         for comment in answer.comments.all():
             ips.add(comment.ip_addr)
-    bannedIPs = [i[0] for i in BannedIP.objects.filter(ip_address__in = ips).values_list('ip_address')]
+    bannedIPs = BannedIP.objects.filter(
+                        ip_address__in = ips
+                    ).values_list(
+                        'ip_address',
+                        flat = True
+                    )
 
     data = {
         'page_class': 'question-page',
@@ -648,6 +652,7 @@ def get_comment(request):
     request.user.assert_can_edit_comment(comment)
     return {'text': comment.comment}
 
+#todo: this view must be moved to writers where POST handlers belong
 @anonymous_forbidden
 def moderate_ip(request):
     """

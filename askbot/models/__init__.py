@@ -1316,6 +1316,8 @@ def user_post_answer(
         
         now = datetime.datetime.now()
         asked = question.added_at
+        #todo: this needs to be factored out as separate assertion,
+        #and probably added to the body of user.assert_can_answer_question()
         if (now - asked  < delta and self.reputation < askbot_settings.MIN_REP_TO_ANSWER_OWN_QUESTION):
             diff = asked + delta - now
             days = diff.days

@@ -172,6 +172,25 @@ def test_encoding():
                 'to the terminal or log files'
             )
 
+def test_tracking():
+    """tests whether the necessary peices of the
+    `django-tracking` app are registered in the `settings.py`
+    """
+    if 'askbot.deps.tracking.middleware.BannedIPMiddleware' not in \
+            django_settings.MIDDLEWARE_CLASSES:
+        raise ImproperlyConfigured(PREAMBLE + 
+                "\nplease add line\n"
+                "'askbot.deps.tracking.middleware.BannedIPMiddleware',\n"
+                "to the beginning of MIDDLEWARE_CLASSES in your "
+                "settings.py file"
+            )
+    if 'askbot.deps.tracking' not in django_settings.INSTALLED_APPS:
+        raise ImproperlyConfigured(PREAMBLE +
+                "\nplease add line\n"
+                "'askbot.deps.tracking',\n"
+                "to your settings.py file"
+            )
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -184,6 +203,7 @@ def run_startup_tests():
     test_i18n()
     test_postgres()
     test_middleware()
+    test_tracking()
 
 @transaction.commit_manually
 def run():
