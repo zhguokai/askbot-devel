@@ -11,6 +11,8 @@ from askbot.models.user import EmailFeedSetting
 from askbot.models.tag import Tag, MarkedTag, tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 
+   
+
 class Content(models.Model):
     """
         Base class for Question and Answer

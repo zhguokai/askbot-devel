@@ -39,6 +39,15 @@ from askbot import startup_procedures
 
 startup_procedures.run()
 
+class DraftPost(models.Model):
+    """
+	remember the last question
+    """
+    title = models.CharField(blank = True, max_length = 256)
+    body = models.TextField(blank = True)
+    tags = models.CharField(blank = True, max_length = 256)
+    user = models.ForeignKey(User)
+
 def get_model(model_name):
     return models.get_model('askbot', model_name)
 

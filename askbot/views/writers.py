@@ -44,11 +44,21 @@ QUESTIONS_PAGE_SIZE = 10
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
+@decorators.ajax_only
+@decorators.post_only
+def save_draft_post(request):
+    if request.user.is_anonymous():
+	 raise permissionDenied()
+    form = forms.DraftPostForm(request.POST)
+    if form.is_valid():
+	form.save()
+	return httpResponse('',mimetype = 'application/json')
+	raise http404()
+
 def upload(request):#ajax upload file to a question or answer 
     """view that handles file upload via Ajax
     """
-
-    # check upload permission
+    w check upload permission
     result = ''
     error = ''
     new_file_name = ''
