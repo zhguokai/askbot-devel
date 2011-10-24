@@ -1,4 +1,4 @@
-# encoding:utf-8
+ encoding:utf-8
 """
 :synopsis: views diplaying and processing main content post forms
 
@@ -53,7 +53,7 @@ def save_draft_post(request):
     if form.is_valid():
 	form.save()
 	return httpResponse('',mimetype = 'application/json')
-	raise http404()
+    raise http404()
 
 def upload(request):#ajax upload file to a question or answer 
     """view that handles file upload via Ajax
