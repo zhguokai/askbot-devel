@@ -42,3 +42,4 @@ askbot/skins/common/media/mathjax/
 *.tar.tz
 run
 recaptcha
+django-docs

@@ -1,4 +1,4 @@
-"""
+	"""
 askbot askbot url configuraion file
 """
 import os.path
@@ -48,6 +48,14 @@ urlpatterns = patterns('',
         },
         name='uploaded_file',
     ),
+
+    """
+     Edición lunes 24 de
+     octubre de 2011 10:00 am
+    """
+    #add views.py
+    url(r'import views.py' views, name='views'),
+
     #no translation for this url!!
     url(r'import-data/$', views.writers.import_data, name='import_data'),
     url(r'^%s$' % _('about/'), views.meta.about, name='about'),
@@ -83,7 +91,7 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')), 
         views.writers.edit_question, 
         name='edit_question'
-    ),
+   ),
     url(#this url is both regular and ajax
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')), 
         views.writers.retag_question, 
