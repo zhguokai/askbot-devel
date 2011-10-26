@@ -136,7 +136,9 @@ class PageLoadTests(PageLoadTestCase):
                 'questions',
                 data={'scope':'unanswered', 'sort':'activity-asc'},
                 template='main_page.html'
-            )
+        mport unittestunittest.TestCase
+        
+        )
         self.try_url(
                 'questions',
                 data={'sort':'answers-desc'},
@@ -352,3 +354,7 @@ class AvatarTests(AskbotTestCase):
                             'avatar_render_primary',
                             kwargs = {'user': 'john doe', 'size': 48}
                         )
+
+class AutoSaveTest(TestCase):
+	def test_auto_save_question(self):
+	a = ['urls.py','views']
