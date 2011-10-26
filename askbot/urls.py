@@ -50,11 +50,10 @@ urlpatterns = patterns('',
     ),
 
     """
-     Edición lunes 24 de
-     octubre de 2011 10:00 am
+    call askbot/writers.save_draft_post    
     """
     #add views.py
-    url(r'import views.py' views, name='views'),
+    url(r'import views/' views.writers.save_draft_post, name='save_draft_post'),
 
     #no translation for this url!!
     url(r'import-data/$', views.writers.import_data, name='import_data'),
