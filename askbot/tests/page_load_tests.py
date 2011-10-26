@@ -9,6 +9,7 @@ from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
 from askbot.tests.utils import AskbotTestCase
 import sys
+from askbot import .urls.py
 
 def patch_jinja2():
     from jinja2 import Template
