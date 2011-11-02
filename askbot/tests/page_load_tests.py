@@ -356,8 +356,10 @@ class AvatarTests(AskbotTestCase):
                         )
 
 
-class AutoSavePost(AskbotTestCase):
-    def save_draft_post(self):
-         a = ['urls', 'views']
-         
-                 
+class AutoSavePostTests(AskbotTestCase):
+    def test_save_draft_post(self):
+        response = self.client.post(
+            'save_draft_post',
+            {'title': 'Answer Title'},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )

@@ -515,7 +515,7 @@ def answer(request, id):#process a new answer
             text = form.cleaned_data['text']
             update_time = datetime.datetime.now()
 
-            if r aplicación y se usa django.test, un módulo muy similar a unitest (visto antes)equest.user.is_authenticated():
+            if request.user.is_authenticated():
                 try:
                     follow = form.cleaned_data['email_notify']
                     answer = request.user.post_answer(
