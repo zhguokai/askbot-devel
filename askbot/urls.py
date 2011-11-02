@@ -50,7 +50,7 @@ urlpatterns = patterns('',
     ),
     
     #add views.py
-    url(r'import-views/$', views.writers.save_draft_post, name='save_draft_post'),
+    url(r'save_draft_post/$', views.writers.save_draft_post, name='save_draft_post'),
 
     #no translation for this url!!
     url(r'import-data/$', views.writers.import_data, name='import_data'),

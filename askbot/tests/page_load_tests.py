@@ -1,4 +1,3 @@
-import unittestunittest.TestCase
 from django.test import TestCase
 from django.test import signals
 from django.template import defaultfilters
@@ -357,4 +356,8 @@ class AvatarTests(AskbotTestCase):
                         )
 
 
-
+class AutoSavePost(AskbotTestCase):
+    def save_draft_post(self):
+         a = ['urls', 'views']
+         
+                 
