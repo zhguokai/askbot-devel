@@ -1,4 +1,3 @@
- encoding:utf-8
 """
 :synopsis: views diplaying and processing main content post forms
 
@@ -48,7 +47,7 @@ ANSWERS_PAGE_SIZE = 10
 @decorators.post_only
 def save_draft_post(request):
     if request.user.is_anonymous():
-	 raise permissionDenied()
+        raise permissionDenied()
     form = forms.DraftPostForm(request.POST)
     if form.is_valid():
 	form.save()
@@ -58,7 +57,6 @@ def save_draft_post(request):
 def upload(request):#ajax upload file to a question or answer 
     """view that handles file upload via Ajax
     """
-    w check upload permission
     result = ''
     error = ''
     new_file_name = ''

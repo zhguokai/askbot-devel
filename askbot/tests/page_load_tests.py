@@ -1,3 +1,4 @@
+import unittestunittest.TestCase
 from django.test import TestCase
 from django.test import signals
 from django.template import defaultfilters
@@ -9,7 +10,6 @@ from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
 from askbot.tests.utils import AskbotTestCase
 import sys
-from askbot import .urls.py
 
 def patch_jinja2():
     from jinja2 import Template
@@ -137,7 +137,7 @@ class PageLoadTests(PageLoadTestCase):
                 'questions',
                 data={'scope':'unanswered', 'sort':'activity-asc'},
                 template='main_page.html'
-        mport unittestunittest.TestCase
+
         
         )
         self.try_url(
@@ -356,6 +356,5 @@ class AvatarTests(AskbotTestCase):
                             kwargs = {'user': 'john doe', 'size': 48}
                         )
 
-class AutoSaveTest(TestCase):
-	def test_auto_save_question(self):
-	a = ['urls.py','views']
+
+

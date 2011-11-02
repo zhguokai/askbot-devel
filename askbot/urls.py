@@ -1,4 +1,4 @@
-	"""
+"""
 askbot askbot url configuraion file
 """
 import os.path
@@ -48,12 +48,9 @@ urlpatterns = patterns('',
         },
         name='uploaded_file',
     ),
-
-    """
-    call askbot/writers.save_draft_post    
-    """
+    
     #add views.py
-    url(r'import views/' views.writers.save_draft_post, name='save_draft_post'),
+    url(r'import-views/$', views.writers.save_draft_post, name='save_draft_post'),
 
     #no translation for this url!!
     url(r'import-data/$', views.writers.import_data, name='import_data'),
