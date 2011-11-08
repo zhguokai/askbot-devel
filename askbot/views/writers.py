@@ -42,16 +42,26 @@ QUESTIONS_PAGE_SIZE = 10
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
-@decorators.ajax_only
-@decorators.post_only
+#@decorators.ajax_only
+#@decorators.post_only
 def save_draft_post(request):
+    import pdb
+    pdb.set_trace()
     if request.user.is_anonymous():
-        raise permissionDenied()
-    form = forms.DraftPostForm(request.POST)
+        raise exceptions.PermissionDenied()
+    form = forms.DraftQuestionForm(request.POST)
     if form.is_valid():
-	form.save()
-	return httpResponse('',mimetype = 'application/json')
-    raise http404()
+        title = form.cleaned_data['title']
+        text = form.cleaned_data['text']
+        tags = form.cleaned_data['tags']
+        draft = models.DraftPost(
+            title = title,
+            body = text,
+            tags = tags,
+            user = request.user
+        )
+        draft.save()
+	return HttpResponse('', mimetype = 'application/json')
 
 def upload(request):#ajax upload file to a question or answer 
     """view that handles file upload via Ajax

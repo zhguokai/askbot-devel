@@ -357,9 +357,15 @@ class AvatarTests(AskbotTestCase):
 
 
 class AutoSavePostTests(AskbotTestCase):
+    def setUp(self):
+        self.user = self.create_user('test_user')
+        
     def test_save_draft_post(self):
+        self.assertEqual(models.DraftPost.objects.count(), 0)
+        self.client.login(method = 'force', user_id = self.user.id)
         response = self.client.post(
-            'save_draft_post',
+            reverse('save_draft_post'),
             {'title': 'Answer Title'},
             HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
+        self.assertEqual(models.DraftPost.objects.count(), 1)

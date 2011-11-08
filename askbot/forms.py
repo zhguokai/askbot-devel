@@ -250,7 +250,6 @@ class SummaryField(forms.CharField):
         self.label  = _('update summary:')
         self.help_text = _('enter a brief summary of your revision (e.g. fixed spelling, grammar, improved style, this field is optional)')
 
-
 class DumpUploadForm(forms.Form):
     """This form handles importing
     data into the forum. At the moment it only 
@@ -564,6 +563,12 @@ class FormWithHideableFields(object):
         """
         if name in self.__hidden_fields:
             self.fields[name] = self.__hidden_fields.pop(name)
+
+class DraftQuestionForm(forms.Form):
+    """A form to save draft of the question"""
+    title = TitleField(required = False)
+    text = EditorField(required = False)
+    tags = TagNamesField(required = False)
 
 class AskForm(forms.Form, FormWithHideableFields):
     """the form used to askbot questions
