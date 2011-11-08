@@ -22,7 +22,6 @@ from django.core.urlresolvers import reverse
 from django.core import exceptions
 from django.conf import settings
 from django.views.decorators import csrf
-
 from askbot import forms
 from askbot import models
 from askbot.skins.loaders import render_into_skin
