@@ -3,8 +3,13 @@ Changes in Askbot
 
 Development version (not yet published)
 ---------------------------------------
+* Implemented new version of skin (Byron Corrales)
 * Show unused vote count (Tomasz Zielinski)
 * Categorized live settings (Evgeny)
+* Added management command ``send_accept_answer_reminders`` (Evgeny)
+* Improved the ``askbot-setup`` script (Adolfo, Evgeny)
+* Merge users management command (Daniel Mican)
+* Anonymous caching of the question page (Vlad Bokov)
 
 0.7.26 (Current Version)
 ------------------------
