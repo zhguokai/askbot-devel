@@ -13,6 +13,8 @@
     {% include "main_page/tab_bar.html" %}
     {% include "main_page/headline.html" %}
     {% include "main_page/content.html" %}
+    <div id="chart"></div>
+    {{ insert_chart(1,"chart") }}
     {% include "main_page/paginator.html" %}
 {% endblock %}
 {% block sidebar %}
