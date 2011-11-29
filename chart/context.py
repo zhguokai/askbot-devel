@@ -9,16 +9,17 @@ def charts(request):
 			return '<!-- Error: requested chart not found! -->'
 		path = chart.data_provider.rsplit('.', 1)
 		data = None
-		try:
-			__import__(path[0])
-			view = getattr(sys.modules[path[0]], path[1])
-			data = view(request).content
-		except:
-			return '<!-- Error: requested chart\'s data provider not found! -->'
+		#try:
+		__import__(path[0])
+		view = getattr(sys.modules[path[0]], path[1])
+		data = view(request).content
+		#except:
+		#	return '<!-- Error: requested chart\'s data provider not found! -->'
 		
-		return '<script type="text/javascript" language="JavaScript">//<![CDATA[\n$.jqplot("%(id)s", %(data)s);\n//]]></script>' % {
+		return '<script type="text/javascript" language="JavaScript">//<![CDATA[\n$.jqplot("%(id)s", %(data)s, %(options)s);\n//]]></script>' % {
 			'id': str(el_id),
 			'data': data,
+			'options': any(chart.options) and chart.options or 'null',
 		}
 	return {
 		'insert_chart': insert_chart,
