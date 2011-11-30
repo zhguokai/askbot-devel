@@ -345,8 +345,11 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
         return # success
 
     elif self.is_administrator() or self.is_moderator():
-        will_be_able_at = (answer.added_at + 
-            datetime.timedelta(days=askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER))
+        will_be_able_at = (
+            answer.added_at + 
+            datetime.timedelta(
+                days=askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER)
+        )
 
         if datetime.datetime.now() < will_be_able_at:
             error_message = _(
@@ -2183,35 +2186,17 @@ def format_instant_notification_email(
     if update_type == 'question_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Question))
-        subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'answer_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Answer))
-        subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'answer_update':
         assert(isinstance(post, Answer))
-        subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'new_answer':
         assert(isinstance(post, Answer))
-        subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'question_update':
         assert(isinstance(post, Question))
-        subject_line = _(
-                    'Question: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'new_question':
         assert(isinstance(post, Question))
-        subject_line = _(
-                    'Question: "%(title)s"'
-                ) % {'title': origin_post.title}
     else:
         raise ValueError('unexpected update_type %s' % update_type)
 
@@ -2255,6 +2240,7 @@ def format_instant_notification_email(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
+    subject_line = _('"%(title)s"') % {'title': origin_post.title}
     return subject_line, template.render(Context(update_data))
 
 #todo: action

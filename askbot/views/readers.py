@@ -10,7 +10,6 @@ import datetime
 import logging
 import urllib
 import operator
-from sets import Set
 from django.shortcuts import get_object_or_404
 from django.http import (HttpResponseRedirect, HttpResponse, Http404,
                     HttpResponseBadRequest, HttpResponseForbidden)
@@ -601,7 +600,7 @@ def revisions(request, id, object_name=None):
     post = get_object_or_404(models.get_model(object_name), id=id)
     revisions = list(post.revisions.all())
     revisions.reverse()
-n   for i, revision in enumerate(revisions):
+    for i, revision in enumerate(revisions):
         revision.html = revision.as_html()
         if i == 0:
             revision.diff = revisions[i].html
@@ -675,3 +674,20 @@ def get_question_body(request):
 
     return {'questions-titles': questions_dict}
     return {'questions-titles': questions_dict}
+
+def widget_questions(request):
+    """Returns the first x questions based on certain tags.
+    @returns template with those questions listed."""
+    # make sure this is a GET request with the correct parameters.
+    if request.method != 'GET':
+        raise Http404
+    questions = models.Question.objects.all()
+    tags_input = request.GET.get('tags','').strip()
+    if len(tags_input) > 0:
+        tags = [tag.strip() for tag in tags_input.split(',')]
+        questions = questions.filter(tags__name__in = tags)
+    data = {
+        'questions': questions[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
+    }
+    return render_into_skin('question_widget.html', data, request) 
+    

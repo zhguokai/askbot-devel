@@ -129,6 +129,8 @@ def test_modules():
     """tests presence of required modules"""
     try_import('akismet', 'akismet')
     try_import('recaptcha_works', 'django-recaptcha-works')
+    try_import('tracking', 'django-tracking')
+    try_import('pystache', 'pystache==0.3.1')
 
 def test_postgres():
     """Checks for the postgres buggy driver, version 2.4.2"""
@@ -167,19 +169,25 @@ def test_tracking():
     """tests whether the necessary peices of the
     `django-tracking` app are registered in the `settings.py`
     """
-    if 'tracking.middleware.BannedIPMiddleware' not in \
-            django_settings.MIDDLEWARE_CLASSES:
+    middleware_name = 'tracking.middleware.BannedIPMiddleware'
+    if middleware_name not in django_settings.MIDDLEWARE_CLASSES:
         raise ImproperlyConfigured(PREAMBLE +
-                "\nplease add line\n"
-                "'tracking.middleware.BannedIPMiddleware',\n"
-                "to the beginning of MIDDLEWARE_CLASSES in your "
-                "settings.py file"
-            )
+            "\nplease add line\n"
+            "'" + middleware_name + "',\n"
+            "to the *beginning* of MIDDLEWARE_CLASSES in your "
+            "settings.py file"
+        )
+    elif django_settings.MIDDLEWARE_CLASSES[0] != middleware_name:
+        raise ImproperlyConfigured(PREAMBLE + 
+            "\n'" + middleware_name + "',\n"
+            "must be the first item in the MIDDLEWARE_CLASSES "
+            "of your settings.py file"
+        )
     if 'tracking' not in django_settings.INSTALLED_APPS:
         raise ImproperlyConfigured(PREAMBLE +
                 "\nplease add line\n"
                 "'tracking',\n"
-                "to your settings.py file"
+                "to the INSTALLED_APPS section of your settings.py file"
             )
 
 
@@ -278,7 +286,7 @@ def run_startup_tests():
     test_encoding()
     test_modules()
     test_askbot_url()
-    test_postgres()
+    #test_postgres()
     test_middleware()
     test_tracking()
     test_celery()
