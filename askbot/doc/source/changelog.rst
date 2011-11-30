@@ -1,8 +1,51 @@
 Changes in Askbot
 =================
 
-0.7.23 (Current Version)
--------------------
+Development version (not yet published)
+---------------------------------------
+* Context-sensitive RSS url (`Dejan Noveski <http://www.atomidata.com/>`_)
+* Implemented new version of skin (Byron Corrales)
+* Show unused vote count (Tomasz Zielinski)
+* Categorized live settings (Evgeny)
+* Merge users management command (Daniel Mican)
+* Added management command ``send_accept_answer_reminders`` (Evgeny)
+* Improved the ``askbot-setup`` script (Adolfo, Evgeny)
+* Merge users management command (Daniel Mican)
+* Anonymous caching of the question page (Vlad Bokov)
+* Fixed sharing button bug, css fixes for new template (Alexander Werner)
+* Added ASKBOT_TRANSLATE_URL setting for url localization(Alexander Werner)
+* Changed javascript translation model, moved from jqueryi18n to django (Rosandra Cuello Suñol)
+* Private forum mode (Vlad Bokov)
+* Improved text search query in Postgresql (Alexander Werner)
+* Take LANGUAGE_CODE from request (Alexander Werner)
+* Added support for LOGIN_REDIRECT_URL to the login app (hjwp, Evgeny)
+* Updated Italian localization (Luca Ferroni)
+* Added Catalan localization (Jordi Bofill)
+* Added management command ``askbot_add_test_content`` (Dejan Noveski)
+
+0.7.26 (Current Version)
+------------------------
+* Added settings for email subscription defaults (Adolfo)
+* Resolved `bug #102<http://bugs.askbot.org/issues/102>`_ - duplicate notifications on posts with mentions (Evegeny)
+* Added color-animated transitions when urls with hash tags are visited (Adolfo)
+* Repository tags will be `automatically added <http://askbot.org/en/question/345/can-git-tags-be-created-for-each-of-the-releases>`_ to new releases (Evgeny, suggsted by ajmirsky)
+
+0.7.25
+------
+* RSS feed for individual question (Sayan Chowdhury)
+* Allow pre-population of tags via ask a questions link (Adolfo)
+* Make answering own question one click harder (Adolfo)
+* Bootstrap mode (Adolfo, Evgeny)
+* Color-animated urls with the hash fragments (Adolfo)
+
+0.7.24
+------
+* Made it possible to disable the anonymous user greeting alltogether (Raghu Udiyar)
+* Added annotations for the meanings of user levels on the "moderation" page. (Jishnu)
+* Auto-link patterns - e.g. to bug databases - are configurable from settings. (Arun SAG)
+
+0.7.23
+------
 * Greeting for anonymuos users can be changed from live settings (Hrishi)
 * Greeting for anonymous users is shown only once (Rag Sagar)
 * Added support for Akismet spam detection service (Adolfo Fitoria)

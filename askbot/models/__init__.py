@@ -19,13 +19,14 @@ import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot.models.question import Question, QuestionRevision
+from askbot.models.question import Question
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
-from askbot.models.answer import Answer, AnonymousAnswer, AnswerRevision
+from askbot.models.answer import Answer, AnonymousAnswer
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.meta import Vote, Comment
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
+from askbot.models.post import PostRevision
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, init_badges
 #from user import AuthKeyUserAssociation
@@ -342,9 +343,22 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
                     low_rep_error_message = low_rep_error_message
                 )
         return # success
+
+    elif self.is_administrator() or self.is_moderator():
+        will_be_able_at = (answer.added_at + 
+            datetime.timedelta(days=askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER))
+
+        if datetime.datetime.now() < will_be_able_at:
+            error_message = _(
+                'Sorry, you will be able to accept this answer '
+                'only after %(will_be_able_at)s'
+                ) % {'will_be_able_at': will_be_able_at.strftime('%d/%m/%Y')}
+        else:
+            return
+
     else:
         error_message = _(
-            'Sorry, only original author of the question '
+            'Sorry, only moderators or original author of the question '
             ' - %(username)s - can accept or unaccept the best answer'
             ) % {'username': answer.get_owner().username}
 
@@ -1227,7 +1241,7 @@ def user_post_question(
                                     added_at = timestamp,
                                     wiki = wiki,
                                     is_anonymous = is_anonymous,
-                                    ip_addr = ip_addr,
+                                    ip_addr = ip_addr
                                 )
     return question
 
@@ -1305,7 +1319,7 @@ def user_post_answer(
                     follow = False,
                     wiki = False,
                     timestamp = None,
-                    ip_addr = None,
+                    ip_addr = None
                 ):
 
     if self == question.author and not self.is_administrator():
@@ -1361,7 +1375,7 @@ def user_post_answer(
                                     added_at = timestamp,
                                     email_notify = follow,
                                     wiki = wiki,
-                                    ip_addr = ip_addr,
+                                    ip_addr=ip_addr
                                 )
     award_badges_signal.send(None,
         event = 'post_answer',
@@ -1460,12 +1474,13 @@ def user_add_missing_askbot_subscriptions(self):
                                             'feed_type', flat = True
                                         )
     missing_feed_types = set(need_feed_types) - set(have_feed_types)
-    frequency = askbot_settings.DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE
     for missing_feed_type in missing_feed_types:
+        attr_key = 'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_%s' % missing_feed_type.upper()
+        freq = getattr(askbot_settings, attr_key)
         feed_setting = EmailFeedSetting(
                             subscriber = self,
                             feed_type = missing_feed_type,
-                            frequency = frequency
+                            frequency = freq
                         )
         feed_setting.save()
 
@@ -2650,14 +2665,14 @@ __all__ = [
         'signals',
 
         'Question',
-        'QuestionRevision',
         'QuestionView',
         'FavoriteQuestion',
         'AnonymousQuestion',
 
         'Answer',
-        'AnswerRevision',
         'AnonymousAnswer',
+
+        'PostRevision',
 
         'Tag',
         'Comment',
