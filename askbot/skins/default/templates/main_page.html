@@ -14,7 +14,7 @@
     {% include "main_page/headline.html" %}
     {% include "main_page/content.html" %}
     <div id="chart"></div>
-    {{ insert_chart(1,"chart") }}
+    {{ insert_chart(1, "chart", True) }}
     {% include "main_page/paginator.html" %}
 {% endblock %}
 {% block sidebar %}
