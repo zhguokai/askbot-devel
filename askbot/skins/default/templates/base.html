@@ -7,15 +7,7 @@
         {% include "meta/html_head_meta.html" %}
         <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />
         <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ "/js/excanvas.js"|media }}"></script><![endif]-->
-		<script language="javascript" type="text/javascript" src="{{ "/js/jquery.min.js"|media }}"></script>
-		<script language="javascript" type="text/javascript" src="{{ "/js/jqplot/jquery.jqplot.min.js"|media }}"></script>
-		<script type="text/javascript" src="{{ "/js/jqplot/plugins/jqplot.dateAxisRenderer.min.js"|media }}"></script>
-		<script type="text/javascript" src="{{ "/js/jqplot/plugins/jqplot.canvasTextRenderer.min.js"|media }}"></script>
-		<script type="text/javascript" src="{{ "/js/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"|media }}"></script>
-		<script type="text/javascript" src="{{ "/js/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"|media }}"></script>
-		<script type="text/javascript" src="{{ "/js/jqplot/plugins/jqplot.barRenderer.min.js"|media }}"></script>
-		<script type="text/javascript" language="javascript" src="{{ "/js/chart.js"|media }}"></script>
-		<link rel="stylesheet" type="text/css" href="{{ "/style/jqplot/jquery.jqplot.min.css"|media }}" />
+        <script language="javascript" type="text/javascript" src="{{ "/js/jquery.min.js"|media }}"></script>
         {% include "meta/html_head_stylesheets.html" %}
         {% block forestyle %}{% endblock %}
         {% include "meta/html_head_javascript.html" %}

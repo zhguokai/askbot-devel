@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render_to_response
 from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, date, timedelta
@@ -8,6 +8,9 @@ import json
 from django.contrib.auth.models import User
 from django.http import HttpResponseNotFound
 
+@login_required
+def site_analytics(request):
+    return render_to_response('chart/site_analytics.html')
 
 def user_registrations(request):
     DATE_FORMAT = '%d.%m'
@@ -32,10 +35,7 @@ def user_registrations(request):
     return HttpResponse(json.dumps([values]), mimetype='text/json')
 
 def chart_data(request, chart_pk):
-    try:
-        chart = Chart.objects.get(pk=chart_pk)
-    except:
-        return HttpResponseNotFound()
+    chart = get_object_or_404(Chart, pk=chart_pk)
     if chart.auth_required:
         if not hasattr(request, 'user') or not request.user.is_authenticated():
             return HttpResponseForbidden()
