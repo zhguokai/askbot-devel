@@ -11,5 +11,15 @@
 {% endif %}
 
 {% if request.user.is_authenticated() and request.user.is_administrator() %}
-    <a href="{% url site_settings %}">{% trans %}settings{% endtrans %}</a>
+	<span class="dropDownMenu">
+		<a href="javascript:$('#settingsDropDownMenu').toggle()">{% trans %}settings{% endtrans %} &darr;</a>
+		<ul id="settingsDropDownMenu">
+			<li><a href="{% url site_settings %}">{% trans %}settings{% endtrans %}</a></li>
+			<li><a href="{% url site_analytics %}">{% trans %}analytics{% endtrans %}</a></li>
+		</ul>
+		<script type="text/javascript" language="javascript">//<![CDATA[
+			$('#settingsDropDownMenu').hide();
+		//]]></script>
+	</span>
 {% endif %}
+
