@@ -14,7 +14,7 @@ def site_analytics(request):
 
 def user_registrations(request):
     DATE_FORMAT = '%d.%m'
-    users = User.objects.filter(date_joined__gte=datetime.now() - timedelta(30)) \
+    users = User.objects.filter(date_joined__gte=datetime.now() - timedelta(31)) \
         .only('date_joined')[:]
     regs_by_date = {}
     for user in users:
