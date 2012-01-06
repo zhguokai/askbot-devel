@@ -124,9 +124,6 @@ blockquote {
   height: 0;
   visibility: hidden;
 }
-body.user-messages {
-    margin-top: 2.4em;
-}
 .badges a {
   color: #763333;
   text-decoration: underline;
@@ -141,6 +138,10 @@ a:hover {
 h1 {
   font-size: 24px;
   padding: 10px 0 5px 0px;
+}
+/* ----- Extra space above for messages ----- */
+body.user-messages {
+  margin-top: 2.4em;
 }
 /* ----- Custom positions ----- */
 .left {
@@ -242,6 +243,22 @@ h1 {
 #userToolsNav .user-info a {
   margin: 0;
   text-decoration: none;
+}
+#userToolsNav span.dropDownMenu {
+  margin-left: 20px;
+}
+#userToolsNav span.dropDownMenu ul {
+  right: 0;
+  position: absolute;
+  z-index: 3;
+  background-color: #000;
+  padding: 8px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+#userToolsNav span.dropDownMenu ul li {
+  list-style-type: none;
 }
 #metaNav {
   /* Top Navigation bar containing links for tags, people and badges, check widgets/header.html */
@@ -453,6 +470,8 @@ h1 {
   width: 200px;
   /* widgets for question template */
 
+  /* notify by email box */
+
 }
 .box p {
   margin-bottom: 4px;
@@ -595,6 +614,9 @@ h1 {
   font-weight: bold;
   color: #777;
   text-align: center;
+}
+.box .notify-sidebar #question-subscribe-sidebar {
+  margin: 7px 0 0 3px;
 }
 .statsWidget p {
   color: #707070;
