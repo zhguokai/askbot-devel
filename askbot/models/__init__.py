@@ -1,3 +1,6 @@
+from askbot import startup_procedures
+startup_procedures.run()
+
 import logging
 import re
 import hashlib
@@ -19,6 +22,7 @@ import askbot
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot.skins import utils as skin_utils
 from askbot.models.question import Question
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
@@ -36,15 +40,12 @@ from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils import mail
-from askbot import startup_procedures
-
-startup_procedures.run()
 
 def get_model(model_name):
     return models.get_model('askbot', model_name)
 
 User.add_to_class(
-            'status', 
+            'status',
             models.CharField(
                         max_length = 2,
                         default = const.DEFAULT_USER_STATUS,
@@ -55,14 +56,14 @@ User.add_to_class(
 User.add_to_class('email_isvalid', models.BooleanField(default=False))
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 #hardcoded initial reputaion of 1, no setting for this one
-User.add_to_class('reputation', 
+User.add_to_class('reputation',
     models.PositiveIntegerField(default=const.MIN_REPUTATION)
 )
 User.add_to_class('gravatar', models.CharField(max_length=32))
 #User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
 User.add_to_class(
-    'avatar_type', 
-    models.CharField(max_length=1, 
+    'avatar_type',
+    models.CharField(max_length=1,
         choices=const.AVATAR_STATUS_CHOICE,
         default='n')
 )
@@ -91,7 +92,7 @@ User.add_to_class('about', models.TextField(blank=True))
 User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
 User.add_to_class(
-    'email_tag_filter_strategy', 
+    'email_tag_filter_strategy',
     models.SmallIntegerField(
         choices=const.TAG_FILTER_STRATEGY_CHOICES,
         default=const.EXCLUDE_IGNORED
@@ -121,6 +122,11 @@ def user_get_gravatar_url(self, size):
                 'size': size,
             }
 
+def user_get_default_avatar_url(self, size):
+    """returns default avatar url
+    """
+    return skin_utils.get_media_url(askbot_settings.DEFAULT_AVATAR_URL)
+
 def user_get_avatar_url(self, size):
     """returns avatar url - by default - gravatar,
     but if application django-avatar is installed
@@ -129,10 +135,10 @@ def user_get_avatar_url(self, size):
     if 'avatar' in django_settings.INSTALLED_APPS:
         if self.avatar_type == 'n':
             import avatar
-            if avatar.settings.AVATAR_GRAVATAR_BACKUP:
+            if askbot_settings.ENABLE_GRAVATAR: #avatar.settings.AVATAR_GRAVATAR_BACKUP:
                 return self.get_gravatar_url(size)
             else:
-                return avatar.utils.get_default_avatar_url()
+                return self.get_default_avatar_url(size)
         elif self.avatar_type == 'a':
             kwargs = {'user_id': self.id, 'size': size}
             try:
@@ -146,7 +152,10 @@ def user_get_avatar_url(self, size):
         else:
             return self.get_gravatar_url(size)
     else:
-        return self.get_gravatar_url(size)
+        if askbot_settings.ENABLE_GRAVATAR:
+            return self.get_gravatar_url(size)
+        else:
+            return self.get_default_avatar_url(size)
 
 def user_update_avatar_type(self):
     """counts number of custom avatars
@@ -158,7 +167,7 @@ def user_update_avatar_type(self):
 
     if 'avatar' in django_settings.INSTALLED_APPS:
         if self.avatar_set.count() > 0:
-            self.avatar_type = 'a' 
+            self.avatar_type = 'a'
         else:
             self.avatar_type = _check_gravatar(self.gravatar)
     else:
@@ -195,7 +204,7 @@ def user_get_old_vote_for_post(self, post):
 
 
 def user_has_affinity_to_question(self, question = None, affinity_type = None):
-    """returns True if number of tag overlap of the user tag 
+    """returns True if number of tag overlap of the user tag
     selection with the question is 0 and False otherwise
     affinity_type can be either "like" or "dislike"
     """
@@ -228,7 +237,7 @@ def user_has_affinity_to_question(self, question = None, affinity_type = None):
 
 
 def user_has_ignored_wildcard_tags(self):
-    """True if wildcard tags are on and 
+    """True if wildcard tags are on and
     user has some"""
     return (
         askbot_settings.USE_WILDCARD_TAGS \
@@ -247,7 +256,7 @@ def user_has_interesting_wildcard_tags(self):
 
 
 def user_can_have_strong_url(self):
-    """True if user's homepage url can be 
+    """True if user's homepage url can be
     followed by the search engine crawlers"""
     return (self.reputation >= askbot_settings.MIN_REP_TO_HAVE_STRONG_URL)
 
@@ -327,14 +336,14 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
         error_message = suspended_error_message
     elif self == answer.question.get_owner():
         if self == answer.get_owner():
-            if not self.is_administrator(): 
+            if not self.is_administrator():
                 #check rep
                 min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
                 low_rep_error_message = _(
                             ">%(points)s points required to accept or unaccept "
                             " your own answer to your own question"
                         ) % {'points': min_rep_setting}
-    
+
                 _assert_user_can(
                     user = self,
                     blocked_error_message = blocked_error_message,
@@ -345,8 +354,11 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
         return # success
 
     elif self.is_administrator() or self.is_moderator():
-        will_be_able_at = (answer.added_at + 
-            datetime.timedelta(days=askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER))
+        will_be_able_at = (
+            answer.added_at +
+            datetime.timedelta(
+                days=askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER)
+        )
 
         if datetime.datetime.now() < will_be_able_at:
             error_message = _(
@@ -369,7 +381,7 @@ def user_assert_can_accept_best_answer(self, answer = None):
     self.assert_can_unaccept_best_answer(answer)
 
 def user_assert_can_vote_for_post(
-                                self, 
+                                self,
                                 post = None,
                                 direction = None,
                             ):
@@ -654,7 +666,7 @@ def user_assert_can_delete_question(self, question = None):
 
 def user_assert_can_delete_answer(self, answer = None):
     """intentionally use "post" word in the messages
-    instead of "answer", because this logic also applies to 
+    instead of "answer", because this logic also applies to
     assert on deleting question (in addition to some special rules)
     """
     blocked_error_message = _(
@@ -788,6 +800,57 @@ def user_assert_can_flag_offensive(self, post = None):
                                 }
             raise django_exceptions.PermissionDenied(flags_exceeded_error_message)
 
+def user_assert_can_remove_flag_offensive(self, post = None):
+
+    assert(post is not None)
+
+    non_existing_flagging_error_message = _('cannot remove non-existing flag')
+
+    if self.get_flags_for_post(post).count() < 1:
+        raise django_exceptions.PermissionDenied(non_existing_flagging_error_message)
+
+    blocked_error_message = _('blocked users cannot remove flags')
+
+    suspended_error_message = _('suspended users cannot remove flags')
+
+    min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
+    low_rep_error_message = ungettext(
+        'need > %(min_rep)d point to remove flag',
+        'need > %(min_rep)d points to remove flag',
+        min_rep_setting
+    ) % {'min_rep': min_rep_setting}
+
+    _assert_user_can(
+        user = self,
+        post = post,
+        blocked_error_message = blocked_error_message,
+        suspended_error_message = suspended_error_message,
+        low_rep_error_message = low_rep_error_message,
+        min_rep_setting = min_rep_setting
+    )
+    #one extra assertion
+    if self.is_administrator() or self.is_moderator():
+        return
+
+def user_assert_can_remove_all_flags_offensive(self, post = None):
+    assert(post is not None)
+    permission_denied_message = _("you don't have the permission to remove all flags")
+    non_existing_flagging_error_message = _('no flags for this entry')
+
+    # Check if the post is flagged by anyone
+    post_content_type = ContentType.objects.get_for_model(post)
+    all_flags = Activity.objects.filter(
+                        activity_type = const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+                        content_type = post_content_type, object_id=post.id
+                    )
+    if all_flags.count() < 1:
+        raise django_exceptions.PermissionDenied(non_existing_flagging_error_message)
+    #one extra assertion
+    if self.is_administrator() or self.is_moderator():
+        return
+    else:
+        raise django_exceptions.PermissionDenied(permission_denied_message)
+
 
 def user_assert_can_retag_question(self, question = None):
 
@@ -856,7 +919,7 @@ def user_assert_can_delete_comment(self, comment = None):
 
 
 def user_assert_can_revoke_old_vote(self, vote):
-    """raises exceptions.PermissionDenied if old vote 
+    """raises exceptions.PermissionDenied if old vote
     cannot be revoked due to age of the vote
     """
     if (datetime.datetime.now().day - vote.voted_at.day) \
@@ -871,7 +934,7 @@ def user_get_unused_votes_today(self):
     one_day_interval = (today, today + datetime.timedelta(1))
 
     used_votes = Vote.objects.filter(
-                                user = self, 
+                                user = self,
                                 voted_at__range = one_day_interval
                             ).count()
 
@@ -911,7 +974,7 @@ def user_post_comment(
     return comment
 
 def user_post_anonymous_askbot_content(user, session_key):
-    """posts any posts added just before logging in 
+    """posts any posts added just before logging in
     the posts are identified by the session key, thus the second argument
 
     this function is used by the signal handler with a similar name
@@ -950,7 +1013,7 @@ def user_mark_tags(
         ):
     """subscribe for or ignore a list of tags
 
-    * ``tagnames`` and ``wildcards`` are lists of 
+    * ``tagnames`` and ``wildcards`` are lists of
       pure tags and wildcard tags, respectively
     * ``reason`` - either "good" or "bad"
     * ``action`` - eitrer "add" or "remove"
@@ -1080,7 +1143,7 @@ def user_delete_answer(
                 ):
     self.assert_can_delete_answer(answer = answer)
     answer.deleted = True
-    answer.deleted_by = self 
+    answer.deleted_by = self
     answer.deleted_at = timestamp
     answer.save()
 
@@ -1109,17 +1172,17 @@ def user_delete_question(
     self.assert_can_delete_question(question = question)
 
     question.deleted = True
-    question.deleted_by = self 
+    question.deleted_by = self
     question.deleted_at = timestamp
     question.save()
 
     for tag in list(question.tags.all()):
         if tag.used_count == 1:
             tag.deleted = True
-            tag.deleted_by = self 
+            tag.deleted_by = self
             tag.deleted_at = timestamp
         else:
-            tag.used_count = tag.used_count - 1 
+            tag.used_count = tag.used_count - 1
         tag.save()
 
     signals.delete_question_or_answer.send(
@@ -1189,20 +1252,20 @@ def user_restore_post(
     self.assert_can_restore_post(post)
     if isinstance(post, Question) or isinstance(post, Answer):
         post.deleted = False
-        post.deleted_by = None 
-        post.deleted_at = None 
+        post.deleted_by = None
+        post.deleted_at = None
         post.save()
         if isinstance(post, Answer):
             post.question.update_answer_count()
         elif isinstance(post, Question):
             #todo: make sure that these tags actually exist
-            #some may have since been deleted for good 
+            #some may have since been deleted for good
             #or merged into others
             for tag in list(post.tags.all()):
                 if tag.used_count == 1 and tag.deleted:
                     tag.deleted = False
                     tag.deleted_by = None
-                    tag.deleted_at = None 
+                    tag.deleted_at = None
                     tag.save()
     else:
         raise NotImplementedError()
@@ -1210,7 +1273,7 @@ def user_restore_post(
 def user_post_question(
                     self,
                     title = None,
-                    body_text = None,
+                    body_text = '',
                     tags = None,
                     wiki = False,
                     is_anonymous = False,
@@ -1221,10 +1284,11 @@ def user_post_question(
 
     self.assert_can_post_question()
 
+    if body_text == '':#a hack to allow bodyless question
+        body_text = ' '
+
     if title is None:
         raise ValueError('Title is required to post question')
-    if  body_text is None:
-        raise ValueError('Text body is required to post question')
     if tags is None:
         raise ValueError('Tags are required to post question')
     if timestamp is None:
@@ -1317,12 +1381,13 @@ def user_post_answer(
                     timestamp = None
                 ):
 
+    #todo: move this to assertion - user_assert_can_post_answer
     if self == question.author and not self.is_administrator():
 
         # check date and rep required to post answer to own question
-        
+
         delta = datetime.timedelta(askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION)
-        
+
         now = datetime.datetime.now()
         asked = question.added_at
         if (now - asked  < delta and self.reputation < askbot_settings.MIN_REP_TO_ANSWER_OWN_QUESTION):
@@ -1345,7 +1410,7 @@ def user_post_answer(
                 left = ungettext('in %(hr)d hour','in %(hr)d hours',hours) % {'hr':hours}
             else:
                 left = ungettext('in %(min)d min','in %(min)d mins',minutes) % {'min':minutes}
-            day = ungettext('%(days)d day','%(days)d days',askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION) % {'days':askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION}    
+            day = ungettext('%(days)d day','%(days)d days',askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION) % {'days':askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION}
             error_message = _(
                 'New users must wait %(days)s before answering their own question. '
                 ' You can post an answer %(left)s'
@@ -1381,7 +1446,7 @@ def user_visit_question(self, question = None, timestamp = None):
     on behalf of the user represented by the self object
     and mark it as taking place at timestamp time
 
-    and remove pending on-screen notifications about anything in 
+    and remove pending on-screen notifications about anything in
     the post - question, answer or comments
     """
     if not isinstance(question, Question):
@@ -1396,7 +1461,7 @@ def user_visit_question(self, question = None, timestamp = None):
                                     )
     except QuestionView.DoesNotExist:
         question_view = QuestionView(
-                                who = self, 
+                                who = self,
                                 question = question
                             )
     question_view.when = timestamp
@@ -1517,7 +1582,7 @@ def get_name_of_anonymous_user():
 
 def user_get_anonymous_name(self):
     """Returns name of anonymous user
-    - convinience method for use in the template 
+    - convinience method for use in the template
     macros that accept user as parameter
     """
     return get_name_of_anonymous_user()
@@ -1532,10 +1597,10 @@ def user_set_status(self, new_status):
     there is a slight aberration - administrator status
     can be removed, but not added yet
 
-    if new status is applied to user, then the record is 
+    if new status is applied to user, then the record is
     committed to the database
     """
-    #d - administrator 
+    #d - administrator
     #m - moderator
     #s - suspended
     #b - blocked
@@ -1553,8 +1618,8 @@ def user_set_status(self, new_status):
         self.set_admin_status()
     else:
         #This was the old method, kept in the else clause when changing
-        #to admin, so if you change the status to another thing that 
-        #is not Administrator it will simply remove admin if the user have 
+        #to admin, so if you change the status to another thing that
+        #is not Administrator it will simply remove admin if the user have
         #that permission, it will mostly be false.
         if self.is_administrator():
             self.remove_admin_status()
@@ -1586,7 +1651,7 @@ def user_moderate_user_reputation(
     user.save()
 
     #any question. This is necessary because reputes are read in the
-    #user_reputation view with select_related('question__title') and it fails if 
+    #user_reputation view with select_related('question__title') and it fails if
     #ForeignKey is nullable even though it should work (according to the manual)
     #probably a bug in the Django ORM
     #fake_question = Question.objects.all()[:1][0]
@@ -1714,7 +1779,7 @@ def delete_messages(self):
 def get_profile_url(self):
     """Returns the URL for this User's profile."""
     return reverse(
-                'user_profile', 
+                'user_profile',
                 kwargs={'id':self.id, 'slug':slugify(self.username)}
             )
 
@@ -1787,7 +1852,7 @@ def toggle_favorite_question(
                     ):
     """cancel has no effect here, but is important for the SE loader
     it is hoped that toggle will work and data will be consistent
-    but there is no guarantee, maybe it's better to be more strict 
+    but there is no guarantee, maybe it's better to be more strict
     about processing the "cancel" option
     another strange thing is that this function unlike others below
     returns a value
@@ -1926,19 +1991,34 @@ def downvote(self, post, timestamp=None, cancel=False, force = False):
     )
 
 @auto_now_timestamp
-def flag_post(user, post, timestamp=None, cancel=False, force = False):
-    if cancel:#todo: can't unflag?
-        return
+def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, force = False):
+    if cancel_all:
+        # remove all flags
+        if force == False:
+            user.assert_can_remove_all_flags_offensive(post = post)
+        post_content_type = ContentType.objects.get_for_model(post)
+        all_flags = Activity.objects.filter(
+                        activity_type = const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+                        content_type = post_content_type, object_id=post.id
+                    )
+        for flag in all_flags:
+            auth.onUnFlaggedItem(post, flag.user, timestamp=timestamp)            
 
-    if force == False:
-        user.assert_can_flag_offensive(post = post)
-    auth.onFlaggedItem(post, user, timestamp=timestamp)
-    award_badges_signal.send(None,
-        event = 'flag_post',
-        actor = user,
-        context_object = post,
-        timestamp = timestamp
-    )
+    elif cancel:#todo: can't unflag?
+        if force == False:
+            user.assert_can_remove_flag_offensive(post = post)
+        auth.onUnFlaggedItem(post, user, timestamp=timestamp)        
+
+    else:
+        if force == False:
+            user.assert_can_flag_offensive(post = post)
+        auth.onFlaggedItem(post, user, timestamp=timestamp)
+        award_badges_signal.send(None,
+            event = 'flag_post',
+            actor = user,
+            context_object = post,
+            timestamp = timestamp
+        )
 
 def user_get_flags(self):
     """return flag Activity query set
@@ -2039,11 +2119,12 @@ User.add_to_class(
     user_get_followed_question_alert_frequency
 )
 User.add_to_class(
-    'subscribe_for_followed_question_alerts', 
+    'subscribe_for_followed_question_alerts',
     user_subscribe_for_followed_question_alerts
 )
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
+User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
 User.add_to_class('update_avatar_type', user_update_avatar_type)
@@ -2129,6 +2210,8 @@ User.add_to_class('assert_can_edit_answer', user_assert_can_edit_answer)
 User.add_to_class('assert_can_close_question', user_assert_can_close_question)
 User.add_to_class('assert_can_reopen_question', user_assert_can_reopen_question)
 User.add_to_class('assert_can_flag_offensive', user_assert_can_flag_offensive)
+User.add_to_class('assert_can_remove_flag_offensive', user_assert_can_remove_flag_offensive)
+User.add_to_class('assert_can_remove_all_flags_offensive', user_assert_can_remove_all_flags_offensive)
 User.add_to_class('assert_can_retag_question', user_assert_can_retag_question)
 #todo: do we need assert_can_delete_post
 User.add_to_class('assert_can_delete_post', user_assert_can_delete_post)
@@ -2175,35 +2258,17 @@ def format_instant_notification_email(
     if update_type == 'question_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Question))
-        subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'answer_comment':
         assert(isinstance(post, Comment))
         assert(isinstance(post.content_object, Answer))
-        subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'answer_update':
         assert(isinstance(post, Answer))
-        subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'new_answer':
         assert(isinstance(post, Answer))
-        subject_line = _(
-                    'Re: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'question_update':
         assert(isinstance(post, Question))
-        subject_line = _(
-                    'Question: "%(title)s"'
-                ) % {'title': origin_post.title}
     elif update_type == 'new_question':
         assert(isinstance(post, Question))
-        subject_line = _(
-                    'Question: "%(title)s"'
-                ) % {'title': origin_post.title}
     else:
         raise ValueError('unexpected update_type %s' % update_type)
 
@@ -2247,6 +2312,7 @@ def format_instant_notification_email(
         'origin_post_title': origin_post.title,
         'user_subscriptions_url': user_subscriptions_url,
     }
+    subject_line = _('"%(title)s"') % {'title': origin_post.title}
     return subject_line, template.render(Context(update_data))
 
 #todo: action
@@ -2308,7 +2374,7 @@ def calculate_gravatar_hash(instance, **kwargs):
 
 def record_post_update_activity(
         post,
-        newly_mentioned_users = None, 
+        newly_mentioned_users = None,
         updated_by = None,
         timestamp = None,
         created = False,
@@ -2346,7 +2412,7 @@ def record_post_update_activity(
 
 def record_award_event(instance, created, **kwargs):
     """
-    After we awarded a badge to user, we need to 
+    After we awarded a badge to user, we need to
     record this activity and notify user.
     We also recaculate awarded_count of this badge and user information.
     """
@@ -2386,15 +2452,15 @@ def notify_award_message(instance, created, **kwargs):
         msg = _(u"Congratulations, you have received a badge '%(badge_name)s'. "
                 u"Check out <a href=\"%(user_profile)s\">your profile</a>.") \
                 % {
-                    'badge_name':badge.name, 
+                    'badge_name':badge.name,
                     'user_profile':user.get_profile_url()
-                } 
+                }
 
         user.message_set.create(message=msg)
 
 def record_answer_accepted(instance, created, **kwargs):
     """
-    when answer is accepted, we record this for question author 
+    when answer is accepted, we record this for question author
     - who accepted it.
     """
     if not created and instance.accepted:
@@ -2454,9 +2520,9 @@ def record_cancel_vote(instance, **kwargs):
     when user canceled vote, the vote will be deleted.
     """
     activity = Activity(
-                    user=instance.user, 
-                    active_at=datetime.datetime.now(), 
-                    content_object=instance, 
+                    user=instance.user,
+                    active_at=datetime.datetime.now(),
+                    content_object=instance,
                     activity_type=const.TYPE_ACTIVITY_CANCEL_VOTE
                 )
     #todo: same problem - cannot access receiving user here
@@ -2475,9 +2541,9 @@ def record_delete_question(instance, delete_by, **kwargs):
         activity_type = const.TYPE_ACTIVITY_DELETE_ANSWER
 
     activity = Activity(
-                    user=delete_by, 
-                    active_at=datetime.datetime.now(), 
-                    content_object=instance, 
+                    user=delete_by,
+                    active_at=datetime.datetime.now(),
+                    content_object=instance,
                     activity_type=activity_type,
                     question = instance.get_origin_post()
                 )
@@ -2486,9 +2552,9 @@ def record_delete_question(instance, delete_by, **kwargs):
 
 def record_flag_offensive(instance, mark_by, **kwargs):
     activity = Activity(
-                    user=mark_by, 
-                    active_at=datetime.datetime.now(), 
-                    content_object=instance, 
+                    user=mark_by,
+                    active_at=datetime.datetime.now(),
+                    content_object=instance,
                     activity_type=const.TYPE_ACTIVITY_MARK_OFFENSIVE,
                     question=instance.get_origin_post()
                 )
@@ -2501,6 +2567,20 @@ def record_flag_offensive(instance, mark_by, **kwargs):
                     models.Q(is_superuser=True) | models.Q(status='m')
                 )
     activity.add_recipients(recipients)
+
+def remove_flag_offensive(instance, mark_by, **kwargs):
+    "Remove flagging activity"
+    content_type = ContentType.objects.get_for_model(instance)
+
+    activity = Activity.objects.filter(
+                    user=mark_by,
+                    content_type = content_type,
+                    object_id = instance.id,
+                    activity_type=const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+                    question=instance.get_origin_post()
+                )
+    activity.delete()
+
 
 def record_update_tags(question, tags, user, timestamp, **kwargs):
     """
@@ -2530,9 +2610,9 @@ def record_favorite_question(instance, created, **kwargs):
     """
     if created:
         activity = Activity(
-                        user=instance.user, 
-                        active_at=datetime.datetime.now(), 
-                        content_object=instance, 
+                        user=instance.user,
+                        active_at=datetime.datetime.now(),
+                        content_object=instance,
                         activity_type=const.TYPE_ACTIVITY_FAVORITE,
                         question=instance.question
                     )
@@ -2544,9 +2624,9 @@ def record_favorite_question(instance, created, **kwargs):
 
 def record_user_full_updated(instance, **kwargs):
     activity = Activity(
-                    user=instance, 
-                    active_at=datetime.datetime.now(), 
-                    content_object=instance, 
+                    user=instance,
+                    active_at=datetime.datetime.now(),
+                    content_object=instance,
                     activity_type=const.TYPE_ACTIVITY_USER_FULL_UPDATED
                 )
     activity.save()
@@ -2628,6 +2708,8 @@ signals.delete_question_or_answer.connect(record_delete_question, sender=Questio
 signals.delete_question_or_answer.connect(record_delete_question, sender=Answer)
 signals.flag_offensive.connect(record_flag_offensive, sender=Question)
 signals.flag_offensive.connect(record_flag_offensive, sender=Answer)
+signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Question)
+signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Answer)
 signals.tags_updated.connect(record_update_tags)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware

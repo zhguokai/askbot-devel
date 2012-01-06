@@ -43,7 +43,7 @@ def clean_marked_tagnames(tagnames):
                 wildcards.append(tagname)
         else:
             pure_tags.append(tagname)
-    
+
     return pure_tags, wildcards
 
 def filter_choices(remove_choices = None, from_choices = None):
@@ -75,7 +75,7 @@ COUNTRY_CHOICES = (('unknown',_('select country')),) + countries.COUNTRIES
 
 class CountryField(forms.ChoiceField):
     """this is better placed into the django_coutries app"""
-    
+
     def __init__(self, *args, **kwargs):
         """sets label and the country choices
         """
@@ -106,12 +106,24 @@ class TitleField(forms.CharField):
         self.initial = ''
 
     def clean(self, value):
-        if len(value) < 10:
-            raise forms.ValidationError(_('title must be > 10 characters'))
+        if len(value) < askbot_settings.MIN_TITLE_LENGTH:
+            msg = ungettext_lazy(
+                'title must be > %d character',
+                'title must be > %d characters',
+                askbot_settings.MIN_TITLE_LENGTH
+            ) % askbot_settings.MIN_TITLE_LENGTH
+            raise forms.ValidationError(msg)
 
         return value
 
 class EditorField(forms.CharField):
+    """EditorField is subclassed by the 
+    :class:`QuestionEditorField` and :class:`AnswerEditorField`
+    """
+    length_error_template_singular = 'post content must be > %d character',
+    length_error_template_plural = 'post content must be > %d characters',
+    min_length = 10#sentinel default value
+
     def __init__(self, *args, **kwargs):
         super(EditorField, self).__init__(*args, **kwargs)
         self.required = True
@@ -121,9 +133,28 @@ class EditorField(forms.CharField):
         self.initial = ''
 
     def clean(self, value):
-        if len(value) < 10:
-            raise forms.ValidationError(_('question content must be > 10 characters'))
+        if len(value) < self.min_length:
+            msg = ungettext_lazy(
+                self.length_error_template_singular,
+                self.length_error_template_plural,
+                self.min_length
+            ) % self.min_length 
+            raise forms.ValidationError(msg)
         return value
+
+class QuestionEditorField(EditorField):
+    def __init__(self, *args, **kwargs):
+        super(QuestionEditorField, self).__init__(*args, **kwargs)
+        self.length_error_template_singular = 'question body must be > %d character'
+        self.length_error_template_plural = 'question body must be > %d characters'
+        self.min_length = askbot_settings.MIN_QUESTION_BODY_LENGTH
+
+class AnswerEditorField(EditorField):
+    def __init__(self, *args, **kwargs):
+        super(AnswerEditorField, self).__init__(*args, **kwargs)
+        self.length_error_template_singular = 'answer must be > %d character'
+        self.length_error_template_plural = 'answer must be > %d characters'
+        self.min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
 
 class TagNamesField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -133,7 +164,13 @@ class TagNamesField(forms.CharField):
         self.max_length = 255
         self.label  = _('tags')
         #self.help_text = _('please use space to separate tags (this enables autocomplete feature)')
-        self.help_text = _('Tags are short keywords, with no spaces within. Up to five tags can be used.')
+        self.help_text = ungettext_lazy(
+            'Tags are short keywords, with no spaces within. '
+            'Up to %(max_tags)d tag can be used.',
+            'Tags are short keywords, with no spaces within. '
+            'Up to %(max_tags)d tags can be used.',
+            askbot_settings.MAX_TAGS_PER_POST
+        ) % {'max_tags': askbot_settings.MAX_TAGS_PER_POST}
         self.initial = ''
 
     def need_mandatory_tags(self):
@@ -253,7 +290,7 @@ class SummaryField(forms.CharField):
 
 class DumpUploadForm(forms.Form):
     """This form handles importing
-    data into the forum. At the moment it only 
+    data into the forum. At the moment it only
     supports stackexchange import.
     """
     dump_file = forms.FileField()
@@ -397,7 +434,7 @@ class ChangeUserStatusForm(forms.Form):
         self.fields['user_status'].choices = user_status_choices
 
         #set prompt option as default
-        self.fields['user_status'].default = 'select' 
+        self.fields['user_status'].default = 'select'
         self.moderator = moderator
         self.subject = subject
 
@@ -539,10 +576,40 @@ class NotARobotForm(forms.Form):
                 )
 
 class FeedbackForm(forms.Form):
-    name = forms.CharField(label=_('Your name:'), required=False)
-    email = forms.EmailField(label=_('Email (not shared with anyone):'), required=False)
-    message = forms.CharField(label=_('Your message:'), max_length=800,widget=forms.Textarea(attrs={'cols':60}))
+    name = forms.CharField(label=_('Your name (optional):'), required=False)
+    email = forms.EmailField(label=_('Email:'), required=False)
+    message = forms.CharField(
+        label=_('Your message:'),
+        max_length=800,
+        widget=forms.Textarea(attrs={'cols':60})
+    )
+    no_email = forms.BooleanField(
+        label=_("I don't want to give my email or receive a response:"),
+        required=False
+    )
     next = NextUrlField()
+
+    def __init__(self, is_auth=False, *args, **kwargs):
+        super(FeedbackForm, self).__init__(*args, **kwargs)
+        self.is_auth = is_auth
+        if not is_auth:
+            if askbot_settings.USE_RECAPTCHA:
+                self._add_recaptcha_field()
+
+    def _add_recaptcha_field(self):
+        self.fields['recaptcha'] = RecaptchaField(
+                                private_key = askbot_settings.RECAPTCHA_SECRET,
+                                public_key = askbot_settings.RECAPTCHA_KEY
+                                )
+
+    def clean(self):
+        super(FeedbackForm, self).clean()
+        if not self.is_auth:
+            if not self.cleaned_data['no_email'] and not self.cleaned_data['email']:
+                msg = _('Please mark "I dont want to give my mail" field.')
+                self._errors['email'] = self.error_class([msg])
+
+        return self.cleaned_data
 
 class FormWithHideableFields(object):
     """allows to swap a field widget to HiddenInput() and back"""
@@ -567,14 +634,14 @@ class FormWithHideableFields(object):
 
 class AskForm(forms.Form, FormWithHideableFields):
     """the form used to askbot questions
-    field ask_anonymously is shown to the user if the 
+    field ask_anonymously is shown to the user if the
     if ALLOW_ASK_ANONYMOUSLY live setting is True
     however, for simplicity, the value will always be present
     in the cleaned data, and will evaluate to False if the
     settings forbids anonymous asking
     """
     title  = TitleField()
-    text   = EditorField()
+    text   = QuestionEditorField()
     tags   = TagNamesField()
     wiki = WikiField()
     ask_anonymously = forms.BooleanField(
@@ -600,7 +667,7 @@ class AskForm(forms.Form, FormWithHideableFields):
         """
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY == False:
             self.cleaned_data['ask_anonymously'] = False
-        return self.cleaned_data['ask_anonymously'] 
+        return self.cleaned_data['ask_anonymously']
 
 
 class AskByEmailForm(forms.Form):
@@ -625,7 +692,7 @@ class AskByEmailForm(forms.Form):
     """
     sender = forms.CharField(max_length = 255)
     subject = forms.CharField(max_length = 255)
-    body_text = EditorField()
+    body_text = QuestionEditorField()
 
     def clean_sender(self):
         """Cleans the :attr:`~askbot.forms.AskByEmail.sender` attribute
@@ -670,7 +737,7 @@ class AskByEmailForm(forms.Form):
         return self.cleaned_data['subject']
 
 class AnswerForm(forms.Form):
-    text   = EditorField()
+    text   = AnswerEditorField()
     wiki   = WikiField()
     openid = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 40, 'class':'openid-input'}))
     user   = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
@@ -734,7 +801,7 @@ class RevisionForm(forms.Form):
 
 class EditQuestionForm(forms.Form, FormWithHideableFields):
     title  = TitleField()
-    text   = EditorField()
+    text   = QuestionEditorField()
     tags   = TagNamesField()
     summary = SummaryField()
     wiki = WikiField()
@@ -841,7 +908,7 @@ class EditQuestionForm(forms.Form, FormWithHideableFields):
         return self.cleaned_data
 
 class EditAnswerForm(forms.Form):
-    text = EditorField()
+    text = AnswerEditorField()
     summary = SummaryField()
     wiki = WikiField()
 
@@ -860,16 +927,16 @@ class EditUserForm(forms.Form):
                 )
 
     realname = forms.CharField(
-                        label=_('Real name'), 
-                        required=False, 
-                        max_length=255, 
+                        label=_('Real name'),
+                        required=False,
+                        max_length=255,
                         widget=forms.TextInput(attrs={'size' : 35})
                     )
 
     website = forms.URLField(
-                        label=_('Website'), 
-                        required=False, 
-                        max_length=255, 
+                        label=_('Website'),
+                        required=False,
+                        max_length=255,
                         widget=forms.TextInput(attrs={'size' : 35})
                     )
 
@@ -957,7 +1024,7 @@ class TagFilterSelectionForm(forms.ModelForm):
         if before != after:
             return True
         return False
-        
+
 
 class EmailFeedSettingField(forms.ChoiceField):
     def __init__(self, *arg, **kwarg):
@@ -1086,7 +1153,7 @@ class SimpleEmailSubscribeForm(forms.Form):
         ('n',_('no community email please, thanks'))
     )
     subscribe = forms.ChoiceField(
-            widget=forms.widgets.RadioSelect, 
+            widget=forms.widgets.RadioSelect,
             error_messages={'required':_('please choose one of the options above')},
             choices=SIMPLE_SUBSCRIBE_CHOICES
         )

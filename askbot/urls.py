@@ -41,15 +41,10 @@ urlpatterns = patterns('',
         views.meta.media,
         name='askbot_media',
     ),
-    url(
+    url( # TODO: replace with django.conf.urls.static ?
         r'^%s(?P<path>.*)$' % settings.ASKBOT_UPLOADED_FILES_URL, 
         'django.views.static.serve',
-        {'document_root': os.path.join(
-                settings.PROJECT_ROOT,
-                'askbot',
-                'upfiles'
-            ).replace('\\','/')
-        },
+        {'document_root': settings.ASKBOT_FILE_UPLOAD_DIR.replace('\\','/')},
         name='uploaded_file',
     ),
     #no translation for this url!!
@@ -118,6 +113,11 @@ urlpatterns = patterns('',
         views.readers.revisions, 
         kwargs = {'object_name': 'Question'},
         name='question_revisions'
+    ),
+    url(
+        r'^%s%s$' % (_('widgets/'), _('questions/')),
+        views.readers.widget_questions, 
+        name='widget_questions'
     ),
     url(#ajax only
         r'^comment/upvote/$',
