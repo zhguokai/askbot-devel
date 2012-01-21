@@ -14,9 +14,17 @@ urlpatterns = patterns('',
     (r'^settings/', include('askbot.deps.livesettings.urls')),
     (r'^followit/', include('followit.urls')),
     (r'^robots.txt$', include('robots.urls')),
+<<<<<<< HEAD
     url(r'^analytics/', 'chart.views.site_analytics', name='site_analytics'),
     url(r'^chart/(?P<chart_pk>\d+)/data.json', 'chart.views.chart_data',
 		name='chart_data'),
+=======
+    url( # TODO: replace with django.conf.urls.static ?
+        r'^%s(?P<path>.*)$' % settings.MEDIA_URL[1:], 
+        'django.views.static.serve',
+        {'document_root': settings.MEDIA_ROOT.replace('\\','/')},
+    ),
+>>>>>>> master
 )
 
 if 'rosetta' in settings.INSTALLED_APPS:
