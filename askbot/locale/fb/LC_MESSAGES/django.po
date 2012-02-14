@@ -1908,10 +1908,10 @@ msgstr[1] ""
 msgid "%(name)s, this is an update message header for %(num)d question"
 msgid_plural "%(name)s, this is an update message header for %(num)d questions"
 msgstr[0] ""
-"<p>Dear %(name)s,</p></p>The following question has been updated on the Q&A "
+"<p>Dear %(name)s,</p></p>The following feedback has been updated on the Q&A "
 "forum:</p>"
 msgstr[1] ""
-"<p>Dear %(name)s,</p><p>The following %(num)d questions have been updated on "
+"<p>Dear %(name)s,</p><p>The following %(num)d feedback items have been updated on "
 "the Q&A forum:</p>"
 
 #: management/commands/send_email_alerts.py:484
