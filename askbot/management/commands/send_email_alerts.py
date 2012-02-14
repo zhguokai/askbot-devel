@@ -414,8 +414,8 @@ class Command(NoArgsCommand):
                 question_count = len(q_list.keys())
 
                 subject_line = ungettext(
-                    '%(question_count)d updated question about %(topics)s',
-                    '%(question_count)d updated questions about %(topics)s',
+                    '%(question_count)d updated item about %(topics)s',
+                    '%(question_count)d updated items about %(topics)s',
                     question_count
                 ) % {
                     'question_count': question_count,
