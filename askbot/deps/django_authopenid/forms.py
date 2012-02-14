@@ -37,12 +37,12 @@ from django.conf import settings
 from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
-from askbot.deps.recaptcha_django import ReCaptchaField
+from recaptcha_works.fields import RecaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
 
 # needed for some linux distributions like debian
 try:
-    from askbot.deps.openid.yadis import xri
+    from openid.yadis import xri
 except ImportError:
     from yadis import xri
     
@@ -218,6 +218,8 @@ class LoginForm(forms.Form):
         elif provider_type == 'facebook':
             self.cleaned_data['login_type'] = 'facebook'
             #self.do_clean_oauth_fields()
+        elif provider_type == 'wordpress_site':
+            self.cleaned_data['login_type'] = 'wordpress_site'
 
         return self.cleaned_data
 
@@ -328,7 +330,10 @@ class SafeClassicRegisterForm(ClassicRegisterForm):
     """this form uses recaptcha in addition
     to the base register form
     """
-    recaptcha = ReCaptchaField()
+    recaptcha = RecaptchaField(
+                    private_key = askbot_settings.RECAPTCHA_SECRET,
+                    public_key = askbot_settings.RECAPTCHA_KEY
+                )
 
 class ChangePasswordForm(SetPasswordForm):
     """ change password form """

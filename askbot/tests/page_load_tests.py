@@ -7,6 +7,7 @@ import coffin.template
 from askbot import models
 from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
+from askbot.tests.utils import AskbotTestCase
 import sys
 
 def patch_jinja2():
@@ -241,7 +242,7 @@ class PageLoadTests(object):#PageLoadTestCase):
             )
         self.try_url(
                 'faq',
-                template='faq.html',
+                template='faq_static.html',
                 status_code=200,
             )
 
@@ -313,3 +314,12 @@ class PageLoadTests(object):#PageLoadTestCase):
             template = 'user_profile/user_email_subscriptions.html'
         )
         self.client.logout()
+
+class AvatarTests(AskbotTestCase):
+
+    def test_avatar_for_two_word_user_works(self):
+        self.user = self.create_user('john doe')
+        response = self.client.get(
+                            'avatar_render_primary',
+                            kwargs = {'user': 'john doe', 'size': 48}
+                        )

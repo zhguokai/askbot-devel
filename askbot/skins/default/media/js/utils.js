@@ -93,8 +93,10 @@ var getattr = function(obj, key, default_value){
 var makeKeyHandler = function(key, callback){
     return function(e){
         if ((e.which && e.which == key) || (e.keyCode && e.keyCode == key)){
-            callback(e);
-            e.stopImmediatePropagation();
+            if(!e.shiftKey){
+                callback();
+                return false;
+            }
         }
     };
 };

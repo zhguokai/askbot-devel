@@ -52,6 +52,14 @@ question_revision_type_id = question_revision_type.id
 answer_revision_type_id = answer_revision_type.id
 repute_type_id = repute_type.id
 
+#todo: queries in the user activity summary view must be redone
+def get_related_object_type_name(content_type_id):
+    if content_type_id in (question_type_id, question_revision_type_id,):
+        return 'question'
+    elif content_type_id in (answer_type_id, answer_revision_type_id,):
+        return 'answer'
+    return None
+
 def owner_or_moderator_required(f):
     @functools.wraps(f)
     def wrapped_func(request, profile_owner, context):
@@ -339,22 +347,12 @@ def user_stats(request, user, context):
     question_id_set.update([q.id for q in questions])
     question_id_set.update([q['id'] for q in answered_questions])
     user_tags = models.Tag.objects.filter(questions__id__in = question_id_set)
+
     badges = models.BadgeData.objects.filter(
                             award_badge__user=user
                         )
     total_awards = badges.count()
-    badges = badges.order_by(
-        '-slug'
-    ).distinct()
-    awarded_badge_counts = models.Award.objects.filter(
-                                user = user
-                            ).values(
-                                'badge'
-                            ).annotate(
-                                count = Count('badge__id')
-                            ).values_list(
-                                'badge', 'count'
-                            )
+    badges = badges.order_by('-slug').distinct()
 
     user_tags = user_tags.annotate(
                             user_tag_usage_count=Count('name')
@@ -382,6 +380,8 @@ def user_stats(request, user, context):
         'page_title' : _('user profile overview'),
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
+        'question_type' : question_type,
+        'answer_type' : answer_type,
         'favorited_myself': favorited_myself,
         'answered_questions' : answered_questions,
         'up_votes' : up_votes,
@@ -391,7 +391,6 @@ def user_stats(request, user, context):
         'votes_total_per_day': votes_total,
         'user_tags' : user_tags[:const.USER_VIEW_DATA_SIZE],
         'badges': badges,
-        'awarded_badge_counts': dict(awarded_badge_counts),
         'total_awards' : total_awards,
     }
     context.update(data)
@@ -405,6 +404,7 @@ def user_recent(request, user, context):
                 return item[1]
 
     class Event:
+        is_badge = False
         def __init__(self, time, type, title, summary, answer_id, question_id):
             self.time = time
             self.type = get_type_name(type)
@@ -420,11 +420,15 @@ def user_recent(request, user, context):
                 self.title_link += '#%s' % answer_id
 
     class AwardEvent:
-        def __init__(self, time, type, id):
+        is_badge = True
+        def __init__(self, time, obj, cont, type, id, related_object_type = None):
             self.time = time
+            self.obj = obj
+            self.cont = cont
             self.type = get_type_name(type)
             self.type_id = type
             self.badge = get_object_or_404(models.BadgeData, id=id)
+            self.related_object_type = related_object_type
 
     activities = []
     # ask questions
@@ -432,6 +436,7 @@ def user_recent(request, user, context):
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
+            'summary' : 'question.summary',
             'active_at' : 'activity.active_at',
             'activity_type' : 'activity.activity_type'
             },
@@ -443,30 +448,28 @@ def user_recent(request, user, context):
     ).values(
             'title',
             'question_id',
+            'summary',
             'active_at',
             'activity_type'
             )
-    if len(questions) > 0:
 
-        question_activities = []
-        for q in questions:
-            q_event = Event(
-                        q['active_at'], 
-                        q['activity_type'], 
-                        q['title'], 
-                        '', 
-                        '0', 
-                        q['question_id']
-                    )
-            question_activities.append(q_event)
-
-        activities.extend(question_activities)
+    for q in questions:
+        q_event = Event(
+                    q['active_at'], 
+                    q['activity_type'], 
+                    q['title'], 
+                    '', 
+                    '0', 
+                    q['question_id']
+                )
+        activities.append(q_event)
 
     # answers
     answers = models.Activity.objects.extra(
         select={
             'title' : 'question.title',
             'question_id' : 'question.id',
+            'summary' : 'question.summary',
             'answer_id' : 'answer.id',
             'active_at' : 'activity.active_at',
             'activity_type' : 'activity.activity_type'
@@ -480,14 +483,15 @@ def user_recent(request, user, context):
     ).values(
             'title',
             'question_id',
+            'summary',
             'answer_id',
             'active_at',
             'activity_type'
             )
     if len(answers) > 0:
-        answers = [(Event(q['active_at'], q['activity_type'], q['title'], '', q['answer_id'], \
+        answer_activities = [(Event(q['active_at'], q['activity_type'], q['title'], '', q['answer_id'], \
                     q['question_id'])) for q in answers]
-        activities.extend(answers)
+        activities.extend(answer_activities)
 
     # question comments
     comments = models.Activity.objects.extra(
@@ -640,6 +644,8 @@ def user_recent(request, user, context):
         select={
             'badge_id' : 'askbot_badgedata.id',
             'awarded_at': 'award.awarded_at',
+            'object_id': 'award.object_id',
+            'content_type_id': 'award.content_type_id',
             'activity_type' : 'activity.activity_type'
             },
         tables=['activity', 'award', 'askbot_badgedata'],
@@ -650,15 +656,28 @@ def user_recent(request, user, context):
     ).values(
             'badge_id',
             'awarded_at',
+            'object_id',
+            'content_type_id',
             'activity_type'
             )
-    if len(awards) > 0:
-        awards = [(AwardEvent(q['awarded_at'], q['activity_type'], q['badge_id'])) for q in awards]
-        activities.extend(awards)
+    for award in awards:
+        related_object_type = get_related_object_type_name(award['content_type_id'])
+        activities.append(
+            AwardEvent(
+                award['awarded_at'],
+                award['object_id'],
+                award['content_type_id'],
+                award['activity_type'],
+                award['badge_id'],
+                related_object_type = related_object_type
+            )
+        )
 
     activities.sort(lambda x,y: cmp(y.time, x.time))
 
     data = {
+        'answers': answers,
+        'questions': questions,
         'active_tab': 'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'recent',
@@ -719,10 +738,30 @@ def user_responses(request, user, context):
             'response_snippet': memo.activity.get_preview(),
             'response_title': memo.activity.question.title,
             'response_type': memo.activity.get_activity_type_display(),
+            'response_id': memo.activity.question.id,
+            'nested_responses': [],
         }
         response_list.append(response)
 
+    response_list.sort(lambda x,y: cmp(y['response_id'], x['response_id']))
+    last_response_id = None #flag to know if the response id is different
+    last_response_index = None #flag to know if the response index in the list is different
+    filtered_response_list = list()
+
+    for i, response in enumerate(response_list):
+        #todo: agrupate users
+        if response['response_id'] == last_response_id:
+            original_response = dict.copy(filtered_response_list[len(filtered_response_list)-1])
+            original_response['nested_responses'].append(response) 
+            filtered_response_list[len(filtered_response_list)-1] = original_response
+        else:
+            filtered_response_list.append(response)
+            last_response_id = response['response_id']
+            last_response_index = i
+
+    response_list = filtered_response_list
     response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
+    filtered_response_list = list()
 
     data = {
         'active_tab':'users',

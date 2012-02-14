@@ -83,6 +83,7 @@ User.add_to_class('about', models.TextField(blank=True))
 #interesting tags and ignored tags are to store wildcard tag selections only
 User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
+#User.add_to_class('subscribed_tags', models.TextField(blank = True))
 User.add_to_class(
     'email_tag_filter_strategy', 
     models.SmallIntegerField(
@@ -107,12 +108,11 @@ GRAVATAR_TEMPLATE = "http://www.gravatar.com/avatar/%(gravatar)s?" + \
 
 def user_get_gravatar_url(self, size):
     """returns gravatar url
-    currently identicon is the only supported type
     """
     return GRAVATAR_TEMPLATE % {
                 'gravatar': self.gravatar,
+                'type': askbot_settings.GRAVATAR_TYPE,
                 'size': size,
-                'type': 'identicon'
             }
 
 def user_get_avatar_url(self, size):
@@ -127,7 +127,7 @@ def user_get_avatar_url(self, size):
                 return self.get_gravatar_url(size)
             else:
                 return avatar.utils.get_default_avatar_url()
-        kwargs = {'user': urllib.quote_plus(self.username), 'size': size}
+        kwargs = {'user_id': self.id, 'size': size}
         try:
             return reverse('avatar_render_primary', kwargs = kwargs)
         except NoReverseMatch:
@@ -294,29 +294,41 @@ def _assert_user_can(
 
 def user_assert_can_unaccept_best_answer(self, answer = None):
     assert(isinstance(answer, Answer))
+    blocked_error_message = _(
+            'Sorry, you cannot accept or unaccept best answers '
+            'because your account is blocked'
+        )
+    suspended_error_message = _(
+            'Sorry, you cannot accept or unaccept best answers '
+            'because your account is suspended'
+        )
     if self.is_blocked():
-        error_message = _(
-                'Sorry, you cannot accept or unaccept best answers '
-                'because your account is blocked'
-            )
+        error_message = blocked_error_message
     elif self.is_suspended():
-        error_message = _(
-                'Sorry, you cannot accept or unaccept best answers '
-                'because your account is suspended'
-            )
+        error_message = suspended_error_message
     elif self == answer.question.get_owner():
         if self == answer.get_owner():
-            error_message = _(
-                'Sorry, you cannot accept or unaccept your own answer '
-                'to your own question'
+            if not self.is_administrator(): 
+                #check rep
+                min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
+                low_rep_error_message = _(
+                            ">%(points)s points required to accept or unaccept "
+                            " your own answer to your own question"
+                        ) % {'points': min_rep_setting}
+    
+                _assert_user_can(
+                    user = self,
+                    blocked_error_message = blocked_error_message,
+                    suspended_error_message = suspended_error_message,
+                    min_rep_setting = min_rep_setting,
+                    low_rep_error_message = low_rep_error_message
                 )
-        else:
-            return #assertion success
+        return # success
     else:
         error_message = _(
-                'Sorry, only original author of the question '
-                ' - %(username)s - can accept the best answer'
-                ) % {'username': answer.get_owner().username}
+            'Sorry, only original author of the question '
+            ' - %(username)s - can accept or unaccept the best answer'
+            ) % {'username': answer.get_owner().username}
 
     raise django_exceptions.PermissionDenied(error_message)
 
@@ -1282,6 +1294,42 @@ def user_post_answer(
                     timestamp = None
                 ):
 
+    if self == question.author and not self.is_administrator():
+
+        # check date and rep required to post answer to own question
+        
+        delta = datetime.timedelta(askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION)
+        
+        now = datetime.datetime.now()
+        asked = question.added_at
+        if (now - asked  < delta and self.reputation < askbot_settings.MIN_REP_TO_ANSWER_OWN_QUESTION):
+            diff = asked + delta - now
+            days = diff.days
+            hours = int(diff.seconds/3600)
+            minutes = int(diff.seconds/60)
+
+            if days > 2:
+                if asked.year == now.year:
+                    date_token = asked.strftime("%b %d")
+                else:
+                    date_token = asked.strftime("%b %d '%y")
+                left = _('on %(date)s') % { 'date': date_token }
+            elif days == 2:
+                left = _('in two days')
+            elif days == 1:
+                left = _('tomorrow')
+            elif minutes >= 60:
+                left = ungettext('in %(hr)d hour','in %(hr)d hours',hours) % {'hr':hours}
+            else:
+                left = ungettext('in %(min)d min','in %(min)d mins',minutes) % {'min':minutes}
+            day = ungettext('%(days)d day','%(days)d days',askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION) % {'days':askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION}    
+            error_message = _(
+                'New users must wait %(days)s before answering their own question. '
+                ' You can post an answer %(left)s'
+                ) % {'days': day,'left': left}
+            assert(error_message is not None)
+            raise django_exceptions.PermissionDenied(error_message)
+
     self.assert_can_post_answer()
 
     if not isinstance(question, Question):
@@ -1463,19 +1511,29 @@ def user_set_status(self, new_status):
     if new status is applied to user, then the record is 
     committed to the database
     """
+    #d - administrator 
     #m - moderator
     #s - suspended
     #b - blocked
     #w - watched
     #a - approved (regular user)
-    assert(new_status in ('m', 's', 'b', 'w', 'a'))
+    assert(new_status in ('d', 'm', 's', 'b', 'w', 'a'))
     if new_status == self.status:
         return
 
     #clear admin status if user was an administrator
     #because this function is not dealing with the site admins
-    if self.is_administrator():
-        self.remove_admin_status()
+
+    if new_status == 'd':
+        #create a new admin
+        self.set_admin_status()
+    else:
+        #This was the old method, kept in the else clause when changing
+        #to admin, so if you change the status to another thing that 
+        #is not Administrator it will simply remove admin if the user have 
+        #that permission, it will mostly be false.
+        if self.is_administrator():
+            self.remove_admin_status()
 
     self.status = new_status
     self.save()
@@ -2252,7 +2310,8 @@ def send_instant_notifications_about_activity_in_post(
             body_text = body_text,
             recipient_list = [user.email],
             related_object = origin_post,
-            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+            headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
         )
 
     debug_list += "%s(%s) "%(user, user.email)
@@ -2275,6 +2334,7 @@ def record_post_update_activity(
         updated_by = None,
         timestamp = None,
         created = False,
+        diff = None,
         **kwargs
     ):
     """called upon signal askbot.models.signals.post_updated
@@ -2294,6 +2354,7 @@ def record_post_update_activity(
         updated_by_id = updated_by.id,
         timestamp = timestamp,
         created = created,
+        diff = diff,
     )
     #non-celery version
     #tasks.record_post_update(
@@ -2552,7 +2613,13 @@ def set_user_has_custom_avatar_flag(instance, created, **kwargs):
 def update_user_has_custom_avatar_flag(instance, **kwargs):
     instance.user.update_has_custom_avatar()
 
+def make_admin_if_first_user(instance, **kwargs):
+    user_count = User.objects.all().count()
+    if user_count == 0:
+        instance.set_admin_status()
+
 #signal for User model save changes
+django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
@@ -2637,4 +2704,5 @@ __all__ = [
 
         'get_model'
 ]
+
 

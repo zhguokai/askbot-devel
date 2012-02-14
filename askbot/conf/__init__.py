@@ -8,8 +8,10 @@ import askbot.conf.forum_data_rules
 import askbot.conf.flatpages
 import askbot.conf.site_settings
 import askbot.conf.external_keys
-#import askbot.conf.skin_counter_settings
 import askbot.conf.skin_general_settings
+import askbot.conf.sidebar_main
+import askbot.conf.sidebar_question
+import askbot.conf.sidebar_profile
 import askbot.conf.user_settings
 import askbot.conf.markup
 import askbot.conf.social_sharing

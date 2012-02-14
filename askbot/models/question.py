@@ -129,6 +129,10 @@ class QuestionQuerySet(models.query.QuerySet):
         """returns a query set of questions, 
         matching the full text query
         """
+        if getattr(settings, 'USE_SPHINX_SEARCH', False):
+            matching_questions = Question.sphinx_search.query(search_query)
+            question_ids = [q.id for q in matching_questions] 
+            return Question.objects.filter(deleted = False, id__in = question_ids)
         if settings.DATABASE_ENGINE == 'mysql' and mysql.supports_full_text_search():
             return self.filter( 
                         models.Q(title__search = search_query) \
@@ -228,6 +232,11 @@ class QuestionQuerySet(models.query.QuerySet):
                         pass
                 if len(query_users) > 0:
                     qs = qs.filter(author__in = query_users)
+
+        if tag_selector: 
+            for tag in tag_selector:
+                qs = qs.filter(tags__name = tag)
+
 
         #have to import this at run time, otherwise there
         #a circular import dependency...
@@ -951,6 +960,17 @@ class Question(content.Content, DeletableContent):
     def __unicode__(self):
         return self.title
 
+if getattr(settings, 'USE_SPHINX_SEARCH', False):
+    from djangosphinx.models import SphinxSearch
+    Question.add_to_class(
+        'sphinx_search',
+        SphinxSearch(
+            index = settings.ASKBOT_SPHINX_SEARCH_INDEX,
+            mode = 'SPH_MATCH_ALL'
+        )
+    )
+
+
         
 class QuestionView(models.Model):
     question = models.ForeignKey(Question, related_name='viewed')
@@ -975,6 +995,8 @@ class FavoriteQuestion(models.Model):
 QUESTION_REVISION_TEMPLATE = ('<h3>%(title)s</h3>\n'
                               '<div class="text">%(html)s</div>\n'
                               '<div class="tags">Tags: [%(tags)s]</div>')
+QUESTION_REVISION_TEMPLATE_NO_TAGS = ('<h3>%(title)s</h3>\n'
+                              '<div class="text">%(html)s</div>\n')
 class QuestionRevision(ContentRevision):
     """A revision of a Question."""
     question   = models.ForeignKey(Question, related_name='revisions')
@@ -993,14 +1015,20 @@ class QuestionRevision(ContentRevision):
         #print 'in QuestionRevision.get_absolute_url()'
         return reverse('question_revisions', args=[self.question.id])
 
-    def as_html(self):
+    def as_html(self, include_tags=True):
         markdowner = markup.get_parser()
-        return QUESTION_REVISION_TEMPLATE % {
-            'title': self.title,
-            'html': sanitize_html(markdowner.convert(self.text)),
-            'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
-                              for tag in self.tagnames.split(' ')]),
-        }
+        if include_tags:
+            return QUESTION_REVISION_TEMPLATE % {
+                'title': self.title,
+                'html': sanitize_html(markdowner.convert(self.text)),
+                'tags': ' '.join(['<a class="post-tag">%s</a>' % tag
+                                  for tag in self.tagnames.split(' ')]),
+            }
+        else:
+            return QUESTION_REVISION_TEMPLATE_NO_TAGS % {
+                'title': self.title,
+                'html': sanitize_html(markdowner.convert(self.text))
+            }
 
     def save(self, **kwargs):
         """Looks up the next available revision number."""

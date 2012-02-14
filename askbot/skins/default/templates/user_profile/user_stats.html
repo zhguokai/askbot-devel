@@ -103,7 +103,27 @@
                 <tr>
                     <td style="line-height:35px">
                         {% for badge in badges %}{# todo: translate badge name properly #}
-                            <a href="{{badge.get_absolute_url()}}" title="{% trans description=badge.description %}{{description}}{% endtrans %}" class="medal"><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}</a><span class="tag-number"> &#215; {{ awarded_badge_counts[badge.id]|intcomma }}</span>
+                            <a 
+                                href="{{badge.get_absolute_url()}}"
+                                title="{% trans description=badge.description %}{{description}}{% endtrans %}"
+                                class="medal"
+                            ><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}
+                            </a>&nbsp;
+                            <span class="tag-number">&#215;
+                                <span class="badge-context-toggle">{{ badge.award_badge.count()|intcomma }}</span>
+                            </span>
+                            <ul id="badge-context-{{ badge.id }}" class="badge-context-list" style="display:none">
+                                {% for award in badge.award_badge.filter(user = view_user) %}
+                                    {% if award.content_type in (question_type, answer_type) %}
+                                    <li>
+                                        <a 
+                                            title="{{ award.content_object.get_snippet()|collapse }}"
+                                            href="{{ award.content_object.get_absolute_url() }}"
+                                        >{% if award.content_type == answer_type %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.get_origin_post().title }}</a>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
                             {% if loop.index is divisibleby 3 %}
                                 </td></tr>
                                 <tr><td style="line-height:35px">
@@ -113,5 +133,27 @@
                 </tr>
             </table>
         </div>
+{% endblock %}
+{% block endjs %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.badge-context-toggle').each(function(idx, elem){
+                var context_list = $(elem).parent().next('ul');
+                if (context_list.children().length > 0){
+                    $(elem).addClass('active');
+                    var toggle_display = function(){
+                        if (context_list.css('display') == 'none'){
+                            $('.badge-context-list').hide();{# hide all context lists #}
+                            context_list.show();
+                        } else {
+                            context_list.hide();
+                        }
+                    };
+                    $(elem).click(toggle_display);
+                }
+            });
+        });
+    </script>
 {% endblock %}
 <!-- end user_stats.html -->
