@@ -6,8 +6,9 @@ from django.template import Context
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
-from django.template.loader import get_template
 from django.utils.translation import ugettext_lazy as _
+
+from askbot.skins.loaders import get_template
 
 class InviteRequest(models.Model):
     email = models.EmailField(_('Email address'), unique=True)

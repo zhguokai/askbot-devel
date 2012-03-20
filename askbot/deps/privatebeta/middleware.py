@@ -45,7 +45,8 @@ class PrivateBetaMiddleware(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
         if request.user.is_authenticated()  or \
                 not askbot_settings.ENABLE_PRIVATEBETA or\
-                request.session.get('invite_code', None):
+                request.session.get('invite_code', None) or\
+                request.GET.get('invite_code', None):
             return
 
         whitelisted_modules = ['django.contrib.auth.views',
