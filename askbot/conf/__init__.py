@@ -24,6 +24,7 @@ import askbot.conf.login_providers
 import askbot.conf.access_control
 import askbot.conf.site_modes
 import askbot.conf.widgets
+import askbot.conf.private_beta
 
 #import main settings object
 from askbot.conf.settings_wrapper import settings

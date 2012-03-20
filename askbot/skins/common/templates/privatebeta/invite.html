@@ -1,0 +1,13 @@
+{%extends 'one_column_body.html' %}
+{%block title%}Get an invite{%endblock%}
+{%block content%}
+<h1>Currently we're not accepting new registrations leave your email and we'll let you know when we are back in action.</h1>
+<form action="{%url privatebeta_invite %}" method="post" accept-charset="utf-8">
+  {%csrf_token%}
+  <div class="clearfix">
+    <label>Email:</label> 
+    <div class="input">{{form.email}}
+    <input type="submit" class='btn' value="Continue &rarr;"></div> 
+  </div> 
+</form>
+{%endblock%}

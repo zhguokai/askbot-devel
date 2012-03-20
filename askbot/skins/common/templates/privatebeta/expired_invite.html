@@ -1,0 +1,12 @@
+{%extends 'base.html' %}
+{%block title%}Your invite is expired{%endblock%}
+{%block content%}
+<h1>Your invite is expired.</h1>
+<p>Sadly you checked your inbox too late and your invite is expired. Press the button to be in first line for another invite:</p>
+
+<form action="{%url privatebeta_resend_invite %}" method="post" accept-charset="utf-8">
+  {%csrf_token%}
+    <input id="id_email" type="text" name="email" maxlength="75" value='{{invite.email}}' style="display:none">
+    <input type="submit" class='btn small' value="Resend invite"></div> 
+</form>
+{%endblock%}
