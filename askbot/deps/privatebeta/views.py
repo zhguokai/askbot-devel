@@ -8,6 +8,7 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 
 from askbot.skins.loaders import render_into_skin
+from askbot.views.users import owner_or_moderator_required
 
 from privatebeta.forms import InviteRequestForm
 from privatebeta.models import InviteRequest
@@ -126,3 +127,15 @@ def resend_invite(request, form_class=InviteRequestForm,
         return render_into_skin(template_name, context, request)
     else:
         return redirect(settings.ASKBOT_URL)
+
+@owner_or_moderator_required
+def invites_list(request):
+    '''displays a list of invites and the option of inviting people'''
+    if request.method == 'POST':
+        pass
+    else:
+        pass
+
+    invites = InviteRequest.objects.filter(invited=False)
+    context = {'invites': invites}
+    return render_into_skin('privatebeta/invite_list.html', context, request)
