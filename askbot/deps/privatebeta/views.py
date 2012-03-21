@@ -1,4 +1,5 @@
 from datetime import datetime
+import functools
 
 from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
@@ -10,8 +11,19 @@ from django.template import RequestContext
 from askbot.skins.loaders import render_into_skin
 from askbot.views.users import owner_or_moderator_required
 
-from privatebeta.forms import InviteRequestForm
+from privatebeta.forms import InviteRequestForm, InviteApprovalForm
 from privatebeta.models import InviteRequest
+
+def owner_or_moderator_required(f):
+    @functools.wraps(f)
+    def wrapped_func(request, *args, **kwargs):
+        if request.user.is_authenticated() and (request.user.is_moderator() or request.user.is_superuser):
+            pass
+        else:
+            params = '?next=%s' % request.path
+            return HttpResponseRedirect(reverse('user_signin') + params)
+        return f(request, *args, **kwargs)
+    return wrapped_func
 
 def invite(request, form_class=InviteRequestForm,
         template_name="privatebeta/invite.html",
@@ -129,13 +141,24 @@ def resend_invite(request, form_class=InviteRequestForm,
         return redirect(settings.ASKBOT_URL)
 
 @owner_or_moderator_required
-def invites_list(request):
+def invite_list(request):
     '''displays a list of invites and the option of inviting people'''
-    if request.method == 'POST':
-        pass
-    else:
-        pass
 
-    invites = InviteRequest.objects.filter(invited=False)
-    context = {'invites': invites}
+    if request.method == 'POST':
+        form = InviteApprovalForm(None, data=request.POST)
+        if form.is_valid():
+            cleaned_data = dict.copy(form.fields)
+            del cleaned_data['select_all']
+            for field in cleaned_data.values():
+                field.invite.send_invite()
+        else:
+            context = {'form': form}
+            return render_into_skin('privatebeta/invite_list.html', context, request)
+        invites = InviteRequest.objects.filter(invited=False)
+        form = InviteApprovalForm(invites)
+    else:
+        invites = InviteRequest.objects.filter(invited=False)
+        form = InviteApprovalForm(invites)
+
+    context = {'form': form}
     return render_into_skin('privatebeta/invite_list.html', context, request)

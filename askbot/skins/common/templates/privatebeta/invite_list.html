@@ -1,0 +1,26 @@
+{%extends 'one_column_body.html' %}
+{%block title%}{% trans%}Invite request lists{%endtrans%}{%endblock%}
+{%block content%}
+<h1>{% trans%}Invite request {%endtrans%}</h1>
+<form action="." method="post" accept-charset="utf-8">
+  {%csrf_token%}
+  <div class="clearfix">
+    {% for field in form%}
+      <p>{{field}} {{field.label_tag()}}</p>
+    {%endfor%}
+    <input type="submit" class='btn' value="Continue &rarr;"></div> 
+  </div> 
+</form>
+{%endblock%}
+{%block endjs%}
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+        $("#id_select_all").click(function() {
+          var value = $("#id_select_all")[0].checked;
+          $.each($(":checkbox"), function(i, l){
+            l.checked = value; 
+          });
+        });
+    });
+  </script>
+{%endblock%}
