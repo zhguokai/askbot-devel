@@ -21,7 +21,6 @@ settings.register(
     )
 )
 
-
 settings.register(
     livesettings.IntegerValue(
         PRIVATE_BETA,
@@ -31,3 +30,35 @@ settings.register(
     )
 )
 
+settings.register(
+    livesettings.BooleanValue(
+        PRIVATE_BETA,
+        'PRIVATEBETA_ENABLE_CUSTOM_MESSAGE',
+        description=_('Enable Custom invite email message.'),
+        default=False,
+        help_text = _("Please fill out the <b>Private beta custom message</b> setting")
+        )
+    )
+
+settings.register(
+    livesettings.StringValue(
+        PRIVATE_BETA,
+        'PRIVATEBETA_CUSTOM_SUBJECT',
+        description=_('Custom invite email message subject.'),
+        default= _('Your invitation for Q&A site')
+    )
+)
+
+settings.register(
+    livesettings.LongStringValue(
+        PRIVATE_BETA,
+        'PRIVATEBETA_CUSTOM_MESSAGE',
+        description=_('Custom invite email message.'),
+        default= _('Howdy!!!'
+                   'You are invited to start your Q&A community at Askbot.'
+                   'This link will get you started:  http://{{ domain_name }}/{{code}}'),
+        help_text = _('You can add your text here do not forget to include'
+                      'the variables http://{{domain_name}}/{{code}}'
+                      )
+    )
+)

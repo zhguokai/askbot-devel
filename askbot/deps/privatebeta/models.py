@@ -8,7 +8,10 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from jinja2 import Template
+
 from askbot.skins.loaders import get_template
+from askbot.conf import settings as askbot_settings
 
 class InviteRequest(models.Model):
     email = models.EmailField(_('Email address'), unique=True)
@@ -35,13 +38,22 @@ class InviteRequest(models.Model):
         data = {
                 'code': reverse('privatebeta_activate_invite',
                                 args=[self.invitation_code]),
-                'site': Site.objects.get_current()
+                'domain_name': askbot_settings.APP_URL
                }
         context = Context(data)
-        email_template = get_template('privatebeta/invitation_email.html')
-        email_message = email_template.render(context)
-        send_mail('Your invitation for askbot.com',
-                email_message, 'admin@askbot.com', [self.email])
+
+        if askbot_settings.PRIVATEBETA_ENABLE_CUSTOM_MESSAGE:
+            email_template = Template(askbot_settings.PRIVATEBETA_CUSTOM_MESSAGE)
+            email_message = email_template.render(context)
+            subject = askbot_settings.PRIVATEBETA_CUSTOM_SUBJECT
+        else:
+            email_template = get_template('privatebeta/invitation_email.html')
+            email_message = email_template.render(context)
+            subject = _('Your invitation for s' % data['domain_name'])
+
+        send_mail(subject, email_message,
+                'noreply@%s' % data['domain_name'],
+                [self.email])
         self.save()
 
     def invite_used(self):
