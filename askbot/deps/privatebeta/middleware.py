@@ -51,7 +51,12 @@ class PrivateBetaMiddleware(object):
 
         whitelisted_modules = ['django.contrib.auth.views',
                                'django.views.static',
-                               'privatebeta.views']
+                               'privatebeta.views',
+                               'askbot.views.readers',
+                               'askbot.views.meta',
+                               'askbot.views.avatar_views',
+                               'askbot.views.users',
+                               'askbot.views.command', ]
         if self.always_allow_modules:
             whitelisted_modules += self.always_allow_modules
         full_view_name = '%s.%s' % (view_func.__module__, view_func.__name__)

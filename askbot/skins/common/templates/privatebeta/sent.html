@@ -1,5 +1,5 @@
-{%extends 'one_column_body.html' %}
-{%block title%}Invitation sent.{%endblock%}
-{%block content%}
-<h1>Thanks, we'll be in touch soon!</h1>
-{%endblock%}
+{% extends 'one_column_body.html' %}
+{% block title%}{% trans %}Invitation sent.{% endtrans %}{% endblock %}
+{% block content %}
+<h1>{% trans %}Thanks, we'll be in touch soon!{% endtrans %}</h1>
+{% endblock %}
