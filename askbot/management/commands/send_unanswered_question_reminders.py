@@ -172,12 +172,12 @@ class Command(BaseCommand):
 
             tag_summary = get_tag_summary_from_questions(final_question_list)
 
-            body_text = '<p>This email is sent as a reminder that the following questions do not have ' \
+            body_text = '<p>This email is sent as a reminder that the following items do not have ' \
                         'an answer. If you can provide an answer, please click on the link and share ' \
                         'your knowledge.</p><hr><p><b>Summary List</b></p>'
 
             if TEXT_FORMAT:
-                body_text = 'This email is sent as a reminder that the following questions do not have\n' \
+                body_text = 'This email is sent as a reminder that the following items do not have\n' \
                         'an answer. If you can provide an answer, please share ' \
                         'your knowledge.\nSummary List\n'
 
@@ -215,8 +215,8 @@ class Command(BaseCommand):
             tag_keys = tag_list.keys()
             tag_keys.sort()
             subject_line = ungettext(
-                '%(question_count)d unanswered question about %(topics)s',
-                '%(question_count)d unanswered questions about %(topics)s',
+                '%(question_count)d unanswered item about %(topics)s',
+                '%(question_count)d unanswered items about %(topics)s',
                 question_count
             ) % {
                 'question_count': question_count,

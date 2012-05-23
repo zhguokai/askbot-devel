@@ -5441,3 +5441,21 @@ msgstr ""
 
 #~ msgid "reputation points"
 #~ msgstr "karma"
+
+msgid "{{count}} followers"
+msgstr "{{count}} Bookmarks"
+
+msgid "{{count}} follower"
+msgstr "{{count}} Bookmark"
+
+msgid "followed questions"
+msgstr "Bookmarks"
+
+msgid "Follow"
+msgstr "Bookmark"
+
+msgid "Following"
+msgstr "Bookmarked"
+
+msgid "Unfollow"
+msgstr "Unbookmark"

@@ -17,6 +17,7 @@ from askbot import const
 from askbot.utils import mail
 from askbot.utils.slug import slugify
 
+from django.utils.translation import get_language, activate
 DEBUG_THIS_COMMAND = False
 
 def get_all_origin_posts(mentions):
@@ -395,6 +396,7 @@ class Command(NoArgsCommand):
     def send_email_alerts(self):
         #does not change the database, only sends the email
         #todo: move this to template
+        activate(django_settings.LANGUAGE_CODE)
         for user in User.objects.all():
             user.add_missing_askbot_subscriptions()
             #todo: q_list is a dictionary, not a list
@@ -414,8 +416,8 @@ class Command(NoArgsCommand):
                 question_count = len(q_list.keys())
 
                 subject_line = ungettext(
-                    '%(question_count)d updated question about %(topics)s',
-                    '%(question_count)d updated questions about %(topics)s',
+                    '%(question_count)d updated item about %(topics)s',
+                    '%(question_count)d updated items about %(topics)s',
                     question_count
                 ) % {
                     'question_count': question_count,
@@ -498,8 +500,9 @@ class Command(NoArgsCommand):
                     recipient_email = django_settings.ADMINS[0][1]
               
                 print "%s: %s" % (recipient_email, subject_line)
-                mail.send_mail(
+                if DEBUG_THIS_COMMAND == False:
+                  mail.send_mail(
                     subject_line = subject_line,
                     body_text = text,
                     recipient_list = [recipient_email]
-                )
+                  )

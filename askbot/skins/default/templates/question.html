@@ -403,7 +403,7 @@
     <div id="favorite-number" class="favorite-number{% if favorited %} my-favorite-number{% endif %}">
         {% set follower_count = question.favourite_count %}
         {% if follower_count > 0 %}
-            {% trans count=follower_count %}{{count}} follower{% pluralize %}{{count}} followers{% endtrans %}
+            {% trans count=follower_count %}{{count}} bookmark{% pluralize %}{{count}} bookmarks{% endtrans %}
         {% endif %}
     </div>
 <div class="notify-sidebar">
