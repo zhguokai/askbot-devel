@@ -3,6 +3,9 @@ import optparse
 import datetime
 from django.core.management.base import BaseCommand, CommandError
 from askbot import models
+from django.conf import settings as django_settings
+
+base_report_dir = django_settings.REPORT_BASE
 
 
 def format_table_row(*cols, **kwargs):
@@ -17,20 +20,35 @@ def format_table_row(*cols, **kwargs):
 class Command(BaseCommand):
     help = """Dump user reputation statistics."""
 
-    option_list = BaseCommand.option_list 
+    option_list = BaseCommand.option_list + (
+        optparse.make_option('--file',
+            action = 'store_true',
+            dest = 'save_file',
+            default = False,
+            help = 'Save results to file.'
+        ),
+    )
+     
     def handle(self, *args, **options):
-        print 'User Stats for %s\n' % datetime.date.today()
-        self.print_user_sub_counts()
-        print ''
+        out = 'User Stats for %s\n' % datetime.date.today()
+        out += self.print_user_sub_counts()
+
+        if options['save_file'] == True:
+           fd = open("%s/%s" % (base_report_dir, 'user_stats.txt') , 'w')
+           fd.write(out.encode("iso-8859-15", "replace"))
+           fd.close()
+        else:
+           print out
+
 
     def print_user_sub_counts(self):
         """prints list of users and their stats
         """
         users = models.User.objects.all().order_by('username')
         item_count = 0
-        print '%-25s %4s %6s %6s %6s %6s %6s %6s %6s' % (
+        out = '%-25s %4s %6s %6s %6s %6s %6s %6s %6s\n' % (
        'User', 'id', '# Q', '# A', 'Votes', 'Karma','Gold','Silver','Bronze')
-        print '%-25s %4s %6s %6s %6s %6s %6s %6s %6s' % (
+        out +='%-25s %4s %6s %6s %6s %6s %6s %6s %6s\n' % (
         '=========================', '====', '===', '===', '=====', '=====', '====', '======', '======')
         for user in users:
             user_string = '%-25s %4s' % (user.username, user.id)
@@ -40,5 +58,6 @@ class Command(BaseCommand):
                                 user.reputation, user.gold, user.silver, user.bronze,
                                 format_string = '%-30s %6s %6s %6s %6s %6s %6s %6s'
                             )
-            print line
+            out +=line + '\n'
 
+        return out
