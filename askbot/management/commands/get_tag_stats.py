@@ -3,6 +3,9 @@ import optparse
 from django.core.management.base import BaseCommand, CommandError
 from askbot import const
 from askbot import models
+from django.conf import settings as django_settings
+
+base_report_dir = django_settings.REPORT_BASE 
 
 def get_tag_lines(tag_marks, width = 25):
     output = list()
@@ -72,24 +75,41 @@ class Command(BaseCommand):
                 dest = 'print_empty',
                 help = 'Print empty records too (with zero counts)'
             ),
+            optparse.make_option('--file',
+                action = 'store_true',
+                dest = 'save_file',
+                default = False,
+                help = 'Save results to file.'
+            ),
         )
     def handle(self, *args, **options):
         if not(options['sub_counts'] ^ options['user_sub_counts']):
             raise CommandError('Please use either -u or -t (but not both)')
 
-        print ''
+        out='\n'
+        fname="tag_stats.txt"
         if options['sub_counts']:
-            self.print_sub_counts(options['print_empty'])
+            out += self.print_sub_counts(options['print_empty'])
 
         if options['user_sub_counts']:
-            self.print_user_sub_counts(options['print_empty'])
-        print ''
+            out += self.print_user_sub_counts(options['print_empty'])
+            fname = "tag_user_stats.txt"
+        out += '\n'
+
+        if options['save_file'] == True:
+           fd = open("%s/%s" % (base_report_dir, fname) , 'w')
+           fd.write(out.encode("iso-8859-15", "replace"))
+           fd.close()
+        else:
+           print out
+                                                                                       
 
     def print_user_sub_counts(self, print_empty):
         """prints list of users and what tags they follow/ignore
         """
         users = models.User.objects.all().order_by('username')
         item_count = 0
+        out = ""
         for user in users:
             tag_marks = user.tag_selections
 
@@ -146,8 +166,8 @@ class Command(BaseCommand):
             if followed_count == 0 and ignored_count == 0 and subscribed_count == 0 and print_empty == False:
                 continue
             if item_count == 0:
-                print '%-18s %25s %25s %25s' % ('User (id)', 'Subscribed tags', 'Ignored tags', 'Favorite Tags')
-                print '%-18s %25s %25s %25s' % ('=========', '===============', '============', '=============')
+                out += '%-18s %25s %25s %25s\n' % ('User (id)', 'Subscribed tags', 'Ignored tags', 'Favorite Tags')
+                out += '%-18s %25s %25s %25s\n' % ('=========', '===============', '============', '=============')
             subscribed_lines = get_tag_lines(subscribed_tags, width = 25)
             followed_lines = get_tag_lines(followed_tags, width = 25)
             ignored_lines = get_tag_lines(ignored_tags, width = 25)
@@ -165,10 +185,11 @@ class Command(BaseCommand):
                             )
             item_count += 1
             for line in output_lines:
-                print line
-            print ''
+                out += line + '\n'
+            out += '\n'
 
-        self.print_postamble(item_count)
+        out += self.print_postamble(item_count)
+        return out
 
     def get_wildcard_tag_stats(self):
         """This method collects statistics on all tags
@@ -212,6 +233,7 @@ class Command(BaseCommand):
         wild_tags = self.get_wildcard_tag_stats()
         tags = models.Tag.objects.all().order_by('name')
         item_count = 0
+        out = ''
         for tag in tags:
             wild_follow = 0
             wild_ignore = 0
@@ -236,18 +258,21 @@ class Command(BaseCommand):
             if follow_count + ignore_count + subscribe_count == 0 and print_empty == False:
                 continue
             if item_count == 0:
-                print '%-32s %12s %12s %12s' % ('', 'Subscribed', 'Ignored  ', 'Interesting')
-                print '%-32s %12s %12s %12s' % ('Tag name', 'Total(wild)', 'Total(wild)', 'Total(wild)')
-                print '%-32s %12s %12s %12s' % ('========', '===========', '===========', '===========')
-            print '%-32s %s' % (tag.name, counts)
+                out +='%-32s %12s %12s %12s\n' % ('', 'Subscribed', 'Ignored  ', 'Interesting')
+                out +='%-32s %12s %12s %12s\n' % ('Tag name', 'Total(wild)', 'Total(wild)', 'Total(wild)')
+                out +='%-32s %12s %12s %12s\n' % ('========', '===========', '===========', '===========')
+            out +='%-32s %s\n' % (tag.name, counts)
             item_count += 1
 
-        self.print_postamble(item_count)
+        out += self.print_postamble(item_count)
+        return out
 
     def print_postamble(self, item_count):
-        print ''
+        out = "\n"
         if item_count == 0:
-            print 'Did not find anything'
+            out +='Did not find anything\n'
         else:
-            print '%d records shown' % item_count
-        print 'Since -e option was not selected, empty records were hidden'
+            out +='%d records shown\n' % item_count
+        out +='Since -e option was not selected, empty records were hidden\n'
+
+        return out
