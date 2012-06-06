@@ -263,6 +263,7 @@ class Command(BaseCommand):
                 (wild_follow, wild_ignore, wild_sub) = wild_tags[tag.name]
 
             tag_marks = tag.user_selections
+            tag_count_str = '%d' % tag.used_count
             subscribe_count = tag_marks.filter(reason__contains='S').count() \
                                                         + wild_sub
             follow_count = tag_marks.filter(reason__contains='F').count() \
@@ -273,7 +274,8 @@ class Command(BaseCommand):
             ignore_str = '%d (%d)' % (ignore_count, wild_ignore)
             subscribe_str = '%d (%d)' % (subscribe_count, wild_sub)
             total_str = '%d   ' % (subscribe_count + wild_sub + all_count + ign_count - ignore_count - wild_ignore)
-            counts = (11-len(subscribe_str)) * ' ' + subscribe_str + '  ' 
+            counts = (11-len(tag_count_str)) * ' ' + tag_count_str + '  ' 
+            counts += (11-len(subscribe_str)) * ' ' + subscribe_str + '  ' 
             counts += (11-len(ignore_str)) * ' ' + ignore_str + '  '
             counts += (11-len(total_str)) * ' ' + total_str + '  '
             counts += (11-len(follow_str)) * ' ' + follow_str 
@@ -281,9 +283,9 @@ class Command(BaseCommand):
             if follow_count + ignore_count + subscribe_count == 0 and print_empty == False:
                 continue
             if item_count == 0:
-                out +='%-32s %12s %12s %12s %12s\n' % ('', 'Subscribed', 'Ignored  ', 'TOTAL  ', 'Interesting')
-                out +='%-32s %12s %12s %12s %12s\n' % ('Tag name', 'Total(wild)', 'Total(wild)', 'SUBSCRIBERS', 'Total(wild)')
-                out +='%-32s %12s %12s %12s %12s\n' % ('========', '============', '===========', '===========', '===========')
+                out +='%-32s %12s %12s %12s %12s %12s\n' % ('', '', 'Subscribed', 'Ignored  ', 'TOTAL  ', 'Interesting')
+                out +='%-32s %12s %12s %12s %12s %12s\n' % ('Tag name', '# Question', 'Total(wild)', 'Total(wild)', 'SUBSCRIBERS', 'Total(wild)')
+                out +='%-32s %12s %12s %12s %12s %12s\n' % ('========', '============', '============', '===========', '===========', '===========')
             out +='%-32s %s\n' % (tag.name, counts)
             item_count += 1
 
