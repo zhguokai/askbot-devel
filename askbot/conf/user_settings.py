@@ -2,14 +2,27 @@
 User policy settings
 """
 from askbot.conf.settings_wrapper import settings
+from askbot.conf.super_groups import LOGIN_USERS_COMMUNICATION
 from askbot.deps import livesettings
+from django.conf import settings as django_settings
+from askbot.skins import utils as skin_utils
 from django.utils.translation import ugettext as _
 from askbot import const
 
 USER_SETTINGS = livesettings.ConfigurationGroup(
                     'USER_SETTINGS',
-                    _('User settings')
+                    _('User settings'),
+                    super_group = LOGIN_USERS_COMMUNICATION
                 )
+
+settings.register(
+    livesettings.StringValue(
+        USER_SETTINGS,
+        'NEW_USER_GREETING',
+        default = '',
+        description = _('On-screen greeting shown to the new users')
+    )
+)
 
 settings.register(
     livesettings.BooleanValue(
@@ -17,6 +30,34 @@ settings.register(
         'EDITABLE_SCREEN_NAME',
         default = True,
         description = _('Allow editing user screen name')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
+        'AUTOFILL_USER_DATA',
+        default = True,
+        description = _('Auto-fill user name, email, etc on registration'),
+        help_text = _('Implemented only for LDAP logins at this point')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
+        'EDITABLE_EMAIL',
+        default = True,
+        description = _('Allow users change own email addresses')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
+        'ALLOW_EMAIL_ADDRESS_IN_USERNAME',
+        default=True,
+        description=_('Allow email address in user name')
     )
 )
 
@@ -47,6 +88,33 @@ settings.register(
         description=_('Minimum allowed length for screen name')
     )
 )
+
+settings.register(
+    livesettings.ImageValue(
+        USER_SETTINGS,
+        'DEFAULT_AVATAR_URL',
+        description = _('Default avatar for users'),
+        help_text = _(
+                        'To change the avatar image, select new file, '
+                        'then submit this whole form.'
+                    ),
+        default = '/images/nophoto.png',
+        url_resolver = skin_utils.get_media_url
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
+        'ENABLE_GRAVATAR',
+        default = True,
+        description = _('Use automatic avatars from gravatar.com'),
+        help_text=_(
+            'Check this option if you want to allow the use of gravatar.com for avatars. Please, note that this feature might take about 10 minutes to become fully effective. You will have to enable uploaded avatars as well. For more information, please visit <a href="http://askbot.org/doc/optional-modules.html#uploaded-avatars">this page</a>.'
+        ) 
+    )
+)
+
 
 settings.register(
     livesettings.StringValue(

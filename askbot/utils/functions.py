@@ -2,13 +2,41 @@ import re
 import datetime
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
+from django.contrib.auth.models import User
 
 def get_from_dict_or_object(source, key):
     try:
         return source[key]
     except:
-        return getattr(source,key)
+        return getattr(source, key)
 
+
+def enumerate_string_list(strings):
+    """for a list or a tuple ('one', 'two',) return
+    a list formatted as ['1) one', '2) two',]
+    """
+    numbered_strings = enumerate(strings, start = 1)
+    return [ '%d) %s' % item for item in numbered_strings ]
+
+def pad_string(text):
+    """Inserts one space between words,
+    including one space before the first word
+    and after the last word.
+    String without words is collapsed to ''
+    """
+    words = text.strip().split()
+    if len(words) > 0:
+        return ' ' + ' '.join(words) + ' '
+    else:
+        return ''
+
+def split_list(text):
+    """Takes text, representing a loosely formatted
+    list (comma, semicolon, empty space separated
+    words) and returns a list() of words.
+    """
+    text = text.replace(',', ' ').replace(';', ' ')
+    return text.strip().split()
 
 def is_iterable(thing):
     if hasattr(thing, '__iter__'):
@@ -26,10 +54,6 @@ MOBILE_REGEX = re.compile(
     r'(BlackBerry|HTC|LG|MOT|Nokia|NOKIAN|PLAYSTATION|PSP|SAMSUNG|SonyEricsson)'
 )
 
-def strip_plus(text):
-    """returns text with redundant spaces replaced with just one,
-    and stripped leading and the trailing spaces"""
-    return re.sub('\s+', ' ', text).strip()
 
 def strip_plus(text):
     """returns text with redundant spaces replaced with just one,
@@ -57,7 +81,7 @@ def not_a_robot_request(request):
 
     return False
 
-def diff_date(date, limen=2, use_on_prefix = False):
+def diff_date(date, use_on_prefix = False):
     now = datetime.datetime.now()#datetime(*time.localtime()[0:6])#???
     diff = now - date
     days = diff.days
@@ -78,9 +102,17 @@ def diff_date(date, limen=2, use_on_prefix = False):
     elif days == 1:
         return _('yesterday')
     elif minutes >= 60:
-        return ungettext('%(hr)d hour ago','%(hr)d hours ago',hours) % {'hr':hours}
+        return ungettext(
+            '%(hr)d hour ago',
+            '%(hr)d hours ago',
+            hours
+        ) % {'hr':hours}
     else:
-        return ungettext('%(min)d min ago','%(min)d mins ago',minutes) % {'min':minutes}
+        return ungettext(
+            '%(min)d min ago',
+            '%(min)d mins ago',
+            minutes
+        ) % {'min':minutes}
 
 #todo: this function may need to be removed to simplify the paginator functionality
 LEADING_PAGE_RANGE_DISPLAYED = TRAILING_PAGE_RANGE_DISPLAYED = 5
@@ -113,7 +145,6 @@ def setup_paginator(context):
             pages_outside_leading_range = [n + context["pages"] for n in range(0, -NUM_PAGES_OUTSIDE_RANGE, -1)]
             pages_outside_trailing_range = [n + 1 for n in range(0, NUM_PAGES_OUTSIDE_RANGE)]
 
-        extend_url = context.get('extend_url', '')
         return {
             "base_url": context["base_url"],
             "is_paginated": context["is_paginated"],
@@ -128,5 +159,11 @@ def setup_paginator(context):
             "in_trailing_range" : in_trailing_range,
             "pages_outside_leading_range": pages_outside_leading_range,
             "pages_outside_trailing_range": pages_outside_trailing_range,
-            "extend_url" : extend_url
         }
+
+def get_admin():
+    '''Returns an admin users, usefull for raising flags'''
+    try:
+        return User.objects.filter(is_superuser=True)[0]
+    except:
+        raise Exception('there is no admin users')

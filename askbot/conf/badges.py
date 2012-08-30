@@ -4,13 +4,15 @@ user in response to various actions by the same
 users or others
 """
 from askbot.conf.settings_wrapper import settings
+from askbot.conf.super_groups import REP_AND_BADGES
 from askbot.deps.livesettings import ConfigurationGroup, IntegerValue
 from django.utils.translation import ugettext as _
 
 BADGES = ConfigurationGroup(
                     'BADGES',
                     _('Badge settings'),
-                    ordering=2
+                    ordering=2,
+                    super_group = REP_AND_BADGES
                 )
 
 settings.register(
@@ -98,7 +100,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'POPULAR_QUESTION_BADGE_MIN_VIEWS',
-        default=150,
+        default=15,
         description=_('Popular Question: minimum views')
     )
 )
@@ -107,7 +109,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'NOTABLE_QUESTION_BADGE_MIN_VIEWS',
-        default=250,
+        default=25,
         description=_('Notable Question: minimum views')
     )
 )
@@ -116,7 +118,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'FAMOUS_QUESTION_BADGE_MIN_VIEWS',
-        default=500,
+        default=50,
         description=_('Famous Question: minimum views')
     )
 )
@@ -215,7 +217,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'TAXONOMIST_BADGE_MIN_USE_COUNT',
-        default = 10,
+        default = 5,
         description = _('Taxonomist: minimum tag use count')
     )
 )
@@ -224,7 +226,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'ENTHUSIAST_BADGE_MIN_DAYS',
-        default = 30,
+        default = 5,
         description = _('Enthusiast: minimum days')
     )
 )

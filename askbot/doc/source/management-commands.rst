@@ -29,12 +29,12 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | the `add_admin` command                                     |
 +---------------------------------+-------------------------------------------------------------+
 | `add_askbot_user --user-name    | Create a user account. If password is not given, an         |
-| --email [--password]            | unusable password will be set. Possible values for the      |
-| [--email-frequency]`            | --email-frequency are: **i**, **d**, **w**, **n**           |
-|                                 | that stand for                                              |
-|                                 | instant, daily, weekly and never - respectively. The default|
-|                                 | value is w. The command does not create associations with   |
+| --email [--password]`           | unusable password will be set.                              |
+|                                 | The command does not create associations with               |
 |                                 | any of the external login providers.                        |
++---------------------------------+-------------------------------------------------------------+
+| `merge_users <from_id>          | Merges user accounts and all related data from one user     |
+| <to_id>`                        | to another, the "from user" account is deleted.             |
 +---------------------------------+-------------------------------------------------------------+
 | `dump_forum [--dump-name        | Save forum contents into a file. `--dump-name` parameter is |
 | some_name]`                     | optional                                                    |
@@ -72,6 +72,24 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | , including the questions that are themselves               |
 |                                 | marked as deleted.                                          |
 +---------------------------------+-------------------------------------------------------------+
+| `update_avatar_data`            | Set values of avatar types for all users;                   |
+|                                 | this command may take up to 2s per user, because it makes   |
+|                                 | up to one http request per user to gravatar.com.            |
+|                                 | This data is used to display preferentially real faces      |
+|                                 | on the main page.                                           |
++---------------------------------+-------------------------------------------------------------+
+| `build_thread_summary_cache`    | Rebuilds cache for the question summary snippet.            |
++---------------------------------+-------------------------------------------------------------+
+| `build_livesettings_cache`      | Rebuilds cache for the live settings.                       |
++---------------------------------+-------------------------------------------------------------+
+| `delete_contextless_...`        | `delete_contextless_badge_award_activities`                 |
+|                                 | Deletes Activity objects of type badge award where the      |
+|                                 | related context object is lost.                             |
++---------------------------------+-------------------------------------------------------------+
+| `delete_contextless_activities` | Same as above, but works in a broader sense - when the      |
+|                                 | related context object does not exist, but the generic      |
+|                                 | foreign key to that object is still present.                |
++---------------------------------+-------------------------------------------------------------+
 
 .. _email-related-commands:
 
@@ -88,6 +106,14 @@ Any configurable options, related to these commands are accessible via "Email" s
 +-------------------------------------+-------------------------------------------------------------+
 | command                             | purpose                                                     |
 +=====================================+=============================================================+
+| `send_respondable_welcome_email`    | Will send a respondable welcome email to **all** registered |
+|                                     | users whose email address was not validated.                |
+|                                     | This feature requires "reply by email" enabled and "lamson" |
+|                                     | email processor installed on the system.                    |
+|                                     | The email will be respondable. When the user responds,      |
+|                                     | askbot will validate the email and capture the signature in |
+|                                     | the end of the message.                                     |
++-------------------------------------+-------------------------------------------------------------+
 | `send_email_alerts`                 | Dispatches email alerts to the users according to           |
 |                                     | their subscription settings. This command does not          |
 |                                     | send instant" alerts because those are sent automatically   |
@@ -107,6 +133,11 @@ Any configurable options, related to these commands are accessible via "Email" s
 |                                     | This command may be disabled from the "email" section       |
 |                                     | of :ref:`live settings <live-settings>`, as well as         |
 |                                     | an initial wait period and the recurrence delay may be set. |
++-------------------------------------+-------------------------------------------------------------+
+| `send_accept_answer_reminders`      | Sends periodic reminders about accepting best answers.      |
+|                                     | This command may be disabled from the "email" section       |
+|                                     | of the live settings, as well as the appropriate delay      |
+|                                     | parameters may be set.                                      |
 +-------------------------------------+-------------------------------------------------------------+
 
 Data repair commands
@@ -163,4 +194,8 @@ the developers of the Askbot project:
 |                                | must be run from the `askbot` app directory, unlike all the |
 |                                | remaining commands that are expected to be run from the     |
 |                                | site root directory.                                        |
++--------------------------------+-------------------------------------------------------------+
+| `askbot_add_test_content`      | Creates content with dummy data for testing                 |
++--------------------------------+-------------------------------------------------------------+
+| `askbot_create_test_fixture`   | Creates a test fixture at `askbot/tests/test_data.json`     |
 +--------------------------------+-------------------------------------------------------------+

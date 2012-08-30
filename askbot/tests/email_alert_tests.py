@@ -11,12 +11,11 @@ from django.test import TestCase
 from django.test.client import Client
 from askbot.tests import utils
 from askbot import models
-from askbot.utils import mail
+from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot import const
-from askbot.models.question import get_tag_summary_from_questions
+from askbot.models.question import Thread
 
-#TestCase = object #disable all test cases in this file
 TO_JSON = functools.partial(serializers.serialize, 'json')
 
 def email_alert_test(test_func):
@@ -69,19 +68,19 @@ def setup_email_alert_tests(setup_func):
         test_object.follow_question = False
 
         #fill out expected result for each test
-        test_object.expected_results['q_ask'] = {'message_count': 2, }
-        test_object.expected_results['q_ask_delete_answer'] = {'message_count': 2, }
-        test_object.expected_results['question_comment'] = {'message_count': 2, }
-        test_object.expected_results['question_comment_delete'] = {'message_count': 2, }
-        test_object.expected_results['answer_comment'] = {'message_count': 3, }
-        test_object.expected_results['answer_delete_comment'] = {'message_count': 3, }
-        test_object.expected_results['mention_in_question'] = {'message_count': 1, }
-        test_object.expected_results['mention_in_answer'] = {'message_count': 2, }
-        test_object.expected_results['question_edit'] = {'message_count': 2, }
-        test_object.expected_results['answer_edit'] = {'message_count': 3, }
-        test_object.expected_results['question_and_answer_by_target'] = {'message_count': 2, }
-        test_object.expected_results['q_ans'] = {'message_count': 2, }
-        test_object.expected_results['q_ans_new_answer'] = {'message_count': 3, }
+        test_object.expected_results['q_ask'] = {'message_count': 0, }
+        test_object.expected_results['q_ask_delete_answer'] = {'message_count': 0, }
+        test_object.expected_results['question_comment'] = {'message_count': 0, }
+        test_object.expected_results['question_comment_delete'] = {'message_count': 0, }
+        test_object.expected_results['answer_comment'] = {'message_count': 0, }
+        test_object.expected_results['answer_delete_comment'] = {'message_count': 0, }
+        test_object.expected_results['mention_in_question'] = {'message_count': 0, }
+        test_object.expected_results['mention_in_answer'] = {'message_count': 0, }
+        test_object.expected_results['question_edit'] = {'message_count': 0, }
+        test_object.expected_results['answer_edit'] = {'message_count': 0, }
+        test_object.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        test_object.expected_results['q_ans'] = {'message_count': 0, }
+        test_object.expected_results['q_ans_new_answer'] = {'message_count': 0, }
 
         #this function is expected to contain a difference between this
         #one and the desired setup within the concrete test
@@ -91,7 +90,7 @@ def setup_email_alert_tests(setup_func):
         test_object.setUpUsers()
     return wrapped_setup
 
-class SubjectLineTests(object):#TestCase):
+class SubjectLineTests(TestCase):
     """Tests for the email subject line"""
     def test_set_prefix(self):
         """set prefix and see if it is there
@@ -293,15 +292,16 @@ class EmailAlertTests(TestCase):
         #compares number of emails in the outbox and
         #the expected message count for the current test
         self.assertEqual(len(outbox), expected['message_count'], error_message)
-        #if expected['message_count'] > 0:
-        #    if len(outbox) > 0:
-        #        error_message = 'expected recipient %s found %s' % \
-        #            (self.target_user.email, outbox[0].recipients()[0])
+        if expected['message_count'] > 0:
+            if len(outbox) > 0:
+                error_message = 'expected recipient %s found %s' % \
+                    (self.target_user.email, outbox[0].recipients()[0])
                 #verify that target user receives the email
-                #self.assertTrue(
-                #            self.target_user.email in outbox[0].recipients(), 
-                #            error_message
-                #        )
+                self.assertEqual(
+                            outbox[0].recipients()[0], 
+                            self.target_user.email,
+                            error_message
+                        )
 
     def proto_post_answer_comment(self):
         """base method for use in some tests
@@ -485,33 +485,14 @@ class WeeklyQAskEmailAlertTests(EmailAlertTests):
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
         self.expected_results['q_ask'] = {'message_count': 1}
         self.expected_results['q_ask_delete_answer'] = {'message_count': 0}
-        self.expected_results['question_edit'] = {'message_count': 3, }
+        self.expected_results['question_edit'] = {'message_count': 1, }
         self.expected_results['answer_edit'] = {'message_count': 1, }
-        self.expected_results['question_comment_delete'] = \
-                                                    {'message_count': 2}
-        self.expected_results['question_comment'] = \
-                                                    {'message_count': 2}
-        self.expected_results['question_and_answer_by_target'] = \
-                                                    {'message_count': 2}
-        self.expected_results['q_ask_delete_answer'] = \
-                                                    {'message_count': 2}
-        self.expected_results['q_ask'] = {'message_count': 3}
-        self.expected_results['q_ans_new_answer'] = {'message_count': 3}
-        self.expected_results['q_ans'] = {'message_count': 2}
-        self.expected_results['mention_in_question'] = {'message_count': 1}
-        self.expected_results['mention_in_answer'] = {'message_count': 2}
-        self.expected_results['answer_edit_reedited_recently'] = {'message_count': 4}
-        self.expected_results['answer_edit'] = {'message_count': 4}
-        self.expected_results['answer_edit_reedited_recently'] = {'message_count': 4}
-        self.expected_results['answer_delete_comment'] = {'message_count': 3}
-        self.expected_results['answer_comment'] = {'message_count': 3}
-        self.expected_results['question_edit'] = {'message_count': 3}
-        self.expected_results['question_comment_delete'] = {'message_count': 2}
+
         #local tests
         self.expected_results['question_edit_reedited_recently'] = \
-                                                    {'message_count': 4}
+                                                    {'message_count': 1}
         self.expected_results['answer_edit_reedited_recently'] = \
-                                                    {'message_count': 4}
+                                                    {'message_count': 1}
 
     @email_alert_test
     def test_question_edit_reedited_recently(self):
@@ -548,35 +529,30 @@ class WeeklyMentionsAndCommentsEmailAlertTests(EmailAlertTests):
     def setUp(self):
         self.notification_schedule['m_and_c'] = 'w'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
-        self.expected_results['question_comment'] = {'message_count': 3, }
-        self.expected_results['question_comment_delete'] = {'message_count': 2, }
-        self.expected_results['answer_comment'] = {'message_count': 4, }
-        self.expected_results['answer_delete_comment'] = {'message_count': 3, }
-        self.expected_results['mention_in_question'] = {'message_count': 2, }
-        self.expected_results['mention_in_answer'] = {'message_count': 3, }
-        self.expected_results['q_ans_new_answer'] = {'message_count': 3, }
-        self.expected_results['answer_edit'] = {'message_count': 3, }
+        self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['question_comment_delete'] = {'message_count': 0, }
+        self.expected_results['answer_comment'] = {'message_count': 1, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 0, }
+        self.expected_results['mention_in_question'] = {'message_count': 1, }
+        self.expected_results['mention_in_answer'] = {'message_count': 1, }
 
 class WeeklyQAnsEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
     def setUp(self):
         self.notification_schedule['q_ans'] = 'w'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
-        self.expected_results['q_ans_new_answer'] = {'message_count': 4, }
-        self.expected_results['answer_edit'] = {'message_count': 4, }
-
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
 
 class InstantQAskEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
     def setUp(self):
         self.notification_schedule['q_ask'] = 'i'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
-        self.expected_results['q_ask'] = {'message_count': 3}
-        self.expected_results['q_ask_delete_answer'] = {'message_count': 3}
-        self.expected_results['question_edit'] = {'message_count': 3, }
-        self.expected_results['answer_edit'] = {'message_count': 4, }
-        self.expected_results['q_ask_new_answer'] = {'message_count': 3}
-        self.expected_results['q_ans_new_answer'] = {'message_count': 3}
+        self.expected_results['q_ask'] = {'message_count': 1}
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 1}
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
 
 class InstantWholeForumEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
@@ -584,19 +560,19 @@ class InstantWholeForumEmailAlertTests(EmailAlertTests):
         self.notification_schedule['q_all'] = 'i'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
 
-        self.expected_results['q_ask'] = {'message_count': 2 }
-        self.expected_results['q_ask_delete_answer'] = {'message_count': 2}
-        self.expected_results['question_comment'] = {'message_count': 2, }
-        self.expected_results['question_comment_delete'] = {'message_count': 2, }
-        self.expected_results['answer_comment'] = {'message_count': 3, }
-        self.expected_results['answer_delete_comment'] = {'message_count': 3, }
+        self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 1}
+        self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['question_comment_delete'] = {'message_count': 1, }
+        self.expected_results['answer_comment'] = {'message_count': 2, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 2, }
         self.expected_results['mention_in_question'] = {'message_count': 1, }
         self.expected_results['mention_in_answer'] = {'message_count': 2, }
-        self.expected_results['question_edit'] = {'message_count': 2, }
-        self.expected_results['answer_edit'] = {'message_count': 3, }
-        self.expected_results['question_and_answer_by_target'] = {'message_count': 2, }
-        self.expected_results['q_ans'] = {'message_count': 2, }
-        self.expected_results['q_ans_new_answer'] = {'message_count': 3, }
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        self.expected_results['q_ans'] = {'message_count': 1, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 2, }
 
 class BlankWeeklySelectedQuestionsEmailAlertTests(EmailAlertTests):
     """blank means that this is testing for the absence of email
@@ -628,19 +604,19 @@ class LiveWeeklySelectedQuestionsEmailAlertTests(EmailAlertTests):
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
         self.follow_question = True
 
-        self.expected_results['q_ask'] = {'message_count': 3, }
-        self.expected_results['q_ask_delete_answer'] = {'message_count': 2}
-        self.expected_results['question_comment'] = {'message_count': 2, }
-        self.expected_results['question_comment_delete'] = {'message_count': 2, }
-        self.expected_results['answer_comment'] = {'message_count': 3, }
-        self.expected_results['answer_delete_comment'] = {'message_count': 3, }
-        self.expected_results['mention_in_question'] = {'message_count': 2, }
-        self.expected_results['mention_in_answer'] = {'message_count': 3, }
-        self.expected_results['question_edit'] = {'message_count': 3, }
-        self.expected_results['answer_edit'] = {'message_count': 4, }
-        self.expected_results['question_and_answer_by_target'] = {'message_count': 2, }
-        self.expected_results['q_ans'] = {'message_count': 2, }
-        self.expected_results['q_ans_new_answer'] = {'message_count': 4, }
+        self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 0}
+        self.expected_results['question_comment'] = {'message_count': 0, }
+        self.expected_results['question_comment_delete'] = {'message_count': 0, }
+        self.expected_results['answer_comment'] = {'message_count': 0, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 0, }
+        self.expected_results['mention_in_question'] = {'message_count': 1, }
+        self.expected_results['mention_in_answer'] = {'message_count': 1, }
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        self.expected_results['q_ans'] = {'message_count': 0, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
 
 class LiveInstantSelectedQuestionsEmailAlertTests(EmailAlertTests):
     """live means that this is testing for the presence of email
@@ -653,36 +629,34 @@ class LiveInstantSelectedQuestionsEmailAlertTests(EmailAlertTests):
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
         self.follow_question = True
 
-        self.expected_results['q_ask'] = {'message_count': 3, }
-        self.expected_results['q_ask_delete_answer'] = {'message_count': 3}
-        self.expected_results['question_comment'] = {'message_count': 3, }
-        self.expected_results['question_comment_delete'] = {'message_count': 3, }
-        self.expected_results['answer_comment'] = {'message_count': 4, }
-        self.expected_results['answer_delete_comment'] = {'message_count': 4, }
-        self.expected_results['mention_in_question'] = {'message_count': 1, }
-        self.expected_results['mention_in_answer'] = {'message_count': 3, }
-        self.expected_results['question_edit'] = {'message_count': 3, }
-        self.expected_results['answer_edit'] = {'message_count': 4, }
-        self.expected_results['question_and_answer_by_target'] = {'message_count': 2, }
-        self.expected_results['q_ans'] = {'message_count': 2, }
-        self.expected_results['q_ans_new_answer'] = {'message_count': 4, }
+        self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 1}
+        self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['question_comment_delete'] = {'message_count': 1, }
+        self.expected_results['answer_comment'] = {'message_count': 1, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 1, }
+        self.expected_results['mention_in_question'] = {'message_count': 0, }
+        self.expected_results['mention_in_answer'] = {'message_count': 1, }
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        self.expected_results['q_ans'] = {'message_count': 0, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
 
 class InstantMentionsAndCommentsEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
     def setUp(self):
         self.notification_schedule['m_and_c'] = 'i'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
-        self.expected_results['question_comment'] = {'message_count': 3, }
-        self.expected_results['question_comment_delete'] = {'message_count': 3, }
-        self.expected_results['answer_comment'] = {'message_count': 4, }
-        self.expected_results['q_ans_new_answer'] = {'message_count': 3, }
-        self.expected_results['answer_edit'] = {'message_count': 3, }
-        self.expected_results['answer_delete_comment'] = {'message_count': 4, }
-        self.expected_results['mention_in_question'] = {'message_count': 2, }
-        self.expected_results['mention_in_answer'] = {'message_count': 3, }
+        self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['question_comment_delete'] = {'message_count': 1, }
+        self.expected_results['answer_comment'] = {'message_count': 1, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 1, }
+        self.expected_results['mention_in_question'] = {'message_count': 1, }
+        self.expected_results['mention_in_answer'] = {'message_count': 1, }
 
         #specialized local test case
-        self.expected_results['question_edited_mention_stays'] = {'message_count': 3}
+        self.expected_results['question_edited_mention_stays'] = {'message_count': 1}
 
     @email_alert_test
     def test_question_edited_mention_stays(self):
@@ -696,49 +670,37 @@ class InstantMentionsAndCommentsEmailAlertTests(EmailAlertTests):
                     body_text = 'yoyo @target do look here'
                 )
 
+
 class InstantQAnsEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
     def setUp(self):
         self.notification_schedule['q_ans'] = 'i'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
-        self.expected_results['answer_edit'] = {'message_count': 4, }
-        self.expected_results['q_ans_new_answer'] = {'message_count': 4, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 1, }
 
 class DelayedAlertSubjectLineTests(TestCase):
     def test_topics_in_subject_line(self):
-        q1 = models.Question(id=1, tagnames='one two three four five')
-        q2 = models.Question(id=2, tagnames='two three four five')
-        q3 = models.Question(id=3, tagnames='three four five')
-        q4 = models.Question(id=4, tagnames='four five')
-        q5 = models.Question(id=5, tagnames='five')
-        q6 = models.Question(id=6, tagnames='six')
-        q7 = models.Question(id=7, tagnames='six')
-        q8 = models.Question(id=8, tagnames='six')
-        q9 = models.Question(id=9, tagnames='six')
-        q10 = models.Question(id=10, tagnames='six')
-        q11 = models.Question(id=11, tagnames='six')
-        q_dict = {
-                    q1:'', q2:'', q3:'', q4:'', q5:'', q6:'', q7:'',
-                    q8:'', q9:'', q10:'', q11:'',
-                }
-        subject = get_tag_summary_from_questions(q_dict.keys())
+        threads = [
+            models.Thread(tagnames='one two three four five'),
+            models.Thread(tagnames='two three four five'),
+            models.Thread(tagnames='three four five'),
+            models.Thread(tagnames='four five'),
+            models.Thread(tagnames='five'),
+        ]
+        subject = Thread.objects.get_tag_summary_from_threads(threads)
+        self.assertEqual('"five", "four", "three", "two" and "one"', subject)
 
-        self.assertTrue('one' not in subject)
-        self.assertTrue('two' in subject)
-        self.assertTrue('three' in subject)
-        self.assertTrue('four' in subject)
-        self.assertTrue('five' in subject)
-        self.assertTrue('six' in subject)
-        i2 = subject.index('two')
-        i3 = subject.index('three')
-        i4 = subject.index('four')
-        i5 = subject.index('five')
-        i6 = subject.index('six')
-        order = [i6, i5, i4, i3, i2]
-        self.assertEquals(
-            order,
-            sorted(order)
-        )
+        threads += [
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+        ]
+        subject = Thread.objects.get_tag_summary_from_threads(threads)
+        self.assertEqual('"six", "five", "four", "three", "two" and more', subject)
 
 class FeedbackTests(utils.AskbotTestCase):
     def setUp(self):
@@ -751,6 +713,8 @@ class FeedbackTests(utils.AskbotTestCase):
     def assert_feedback_works(self):
         outbox = django.core.mail.outbox
         self.assertEqual(len(outbox), 1)
+        #todo: change groups to django groups
+        #then replace to 4 back to 3 in the line below
         self.assertEqual(len(outbox[0].recipients()), 3)
 
     def test_feedback_post_form(self):
@@ -792,7 +756,7 @@ class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
         self.user1.save()
         self.user1.mark_tags(
             wildcards = ('some*',),
-            reason = 'S',
+            reason = 'good',
             action = 'add'
         )
         self.user2.post_question(
@@ -801,11 +765,11 @@ class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
             tags = 'something'
         )
         outbox = django.core.mail.outbox
-        self.assertEqual(len(outbox), 2)
-        #self.assertEqual(len(outbox[0].recipients()), 1)
-        #self.assertTrue(
-        #    self.user1.email in outbox[0].recipients()
-        #)
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox[0].recipients()), 1)
+        self.assertTrue(
+            self.user1.email in outbox[0].recipients()
+        )
 
     def test_tag_based_subscription_on_new_question_works(self):
         """someone subscribes for an pre-existing tag
@@ -821,7 +785,7 @@ class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
         self.user1.save()
         self.user1.mark_tags(
             tagnames = ('something',),
-            reason = 'S',
+            reason = 'good',
             action = 'add'
         )
         self.user2.post_question(
@@ -830,36 +794,89 @@ class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
             tags = 'something'
         )
         outbox = django.core.mail.outbox
-        self.assertEqual(len(outbox), 2)
-        #self.assertEqual(len(outbox[0].recipients()), 1)
-        #self.assertTrue(
-        #    self.user1.email in outbox[0].recipients()
-        #)
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox[0].recipients()), 1)
+        self.assertTrue(
+            self.user1.email in outbox[0].recipients()
+        )
 
-class UnansweredReminderTests(utils.AskbotTestCase):
+class EmailReminderTestCase(utils.AskbotTestCase):
+    #subclass must define these (example below)
+    #enable_setting_name = 'ENABLE_UNANSWERED_REMINDERS'
+    #frequency_setting_name = 'UNANSWERED_REMINDER_FREQUENCY'
+    #days_before_setting_name = 'DAYS_BEFORE_SENDING_UNANSWERED_REMINDER'
+    #max_reminder_setting_name = 'MAX_UNANSWERED_REMINDERS'
+    
     def setUp(self):
         self.u1 = self.create_user(username = 'user1')
         self.u2 = self.create_user(username = 'user2')
-        askbot_settings.update('ENABLE_UNANSWERED_REMINDERS', True)
-        askbot_settings.update('MAX_UNANSWERED_REMINDERS', 5)
-        askbot_settings.update('UNANSWERED_REMINDER_FREQUENCY', 1)
-        askbot_settings.update('DAYS_BEFORE_SENDING_UNANSWERED_REMINDER', 2)
+        askbot_settings.update(self.enable_setting_name, True)
+        askbot_settings.update(self.max_reminder_setting_name, 5)
+        askbot_settings.update(self.frequency_setting_name, 1)
+        askbot_settings.update(self.days_before_setting_name, 2)
 
-        self.wait_days = askbot_settings.DAYS_BEFORE_SENDING_UNANSWERED_REMINDER
-        self.recurrence_days = askbot_settings.UNANSWERED_REMINDER_FREQUENCY
-        self.max_emails = askbot_settings.MAX_UNANSWERED_REMINDERS
-
+        self.wait_days = getattr(askbot_settings, self.days_before_setting_name)
+        self.recurrence_days = getattr(askbot_settings, self.frequency_setting_name)
+        self.max_emails = getattr(askbot_settings, self.max_reminder_setting_name)
 
     def assert_have_emails(self, email_count = None):
-        management.call_command('send_unanswered_question_reminders')
+        management.call_command(self.command_name)
         outbox = django.core.mail.outbox
         self.assertEqual(len(outbox), email_count)
 
     def do_post(self, timestamp):
-        self.post_question(
+        self.question = self.post_question(
             user = self.u1,
             timestamp = timestamp
         )
+
+
+class AcceptAnswerReminderTests(EmailReminderTestCase):
+    """only two test cases here, because the algorithm here
+    is the same as for unanswered questons,
+    except here we are dealing with the questions that have
+    or do not have an accepted answer
+    """
+    enable_setting_name = 'ENABLE_ACCEPT_ANSWER_REMINDERS'
+    frequency_setting_name = 'ACCEPT_ANSWER_REMINDER_FREQUENCY'
+    days_before_setting_name = 'DAYS_BEFORE_SENDING_ACCEPT_ANSWER_REMINDER'
+    max_reminder_setting_name = 'MAX_ACCEPT_ANSWER_REMINDERS'
+    command_name = 'send_accept_answer_reminders'
+
+    def do_post(self, timestamp):
+        super(AcceptAnswerReminderTests, self).do_post(timestamp)
+        self.answer = self.post_answer(
+            question = self.question,
+            user = self.u2,
+            timestamp = timestamp
+        )
+
+    def test_reminder_positive_wait(self):
+        """a positive test - user must receive a reminder
+        """
+        days_ago = self.wait_days
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.assert_have_emails(1)
+
+    def test_reminder_negative_wait(self):
+        """negative test - the answer is accepted already"""
+        days_ago = self.wait_days
+        timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
+        self.do_post(timestamp)
+        self.u1.accept_best_answer(
+            answer = self.answer,
+        )
+        self.assert_have_emails(0)
+
+
+class UnansweredReminderTests(EmailReminderTestCase):
+    
+    enable_setting_name = 'ENABLE_UNANSWERED_REMINDERS'
+    frequency_setting_name = 'UNANSWERED_REMINDER_FREQUENCY'
+    days_before_setting_name = 'DAYS_BEFORE_SENDING_UNANSWERED_REMINDER'
+    max_reminder_setting_name = 'MAX_UNANSWERED_REMINDERS'
+    command_name = 'send_unanswered_question_reminders'
 
     def test_reminder_positive_wait(self):
         """a positive test - user must receive a reminder
@@ -883,6 +900,8 @@ class UnansweredReminderTests(utils.AskbotTestCase):
         days_ago = self.wait_days + (self.max_emails - 1)*self.recurrence_days - 1
         timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
         self.do_post(timestamp)
+        #todo: change groups to django groups
+        #then replace to 2 back to 1 in the line below
         self.assert_have_emails(1)
 
 
@@ -919,7 +938,7 @@ class EmailFeedSettingTests(utils.AskbotTestCase):
 
         self.assertEquals(
             feed.frequency,
-            askbot_settings.DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE
+            askbot_settings.DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_ALL
         )
 
     def test_missing_subscriptions_added_automatically(self):
@@ -934,3 +953,67 @@ class EmailFeedSettingTests(utils.AskbotTestCase):
         new_user.add_missing_askbot_subscriptions()
         data_after = TO_JSON(self.get_user_feeds())
         self.assertEquals(data_before, data_after)
+
+class PostApprovalTests(utils.AskbotTestCase):
+    """test notifications sent to authors when their posts
+    are approved or published"""
+    def setUp(self):
+        self.reply_by_email = askbot_settings.REPLY_BY_EMAIL
+        askbot_settings.update('REPLY_BY_EMAIL', True)
+        self.enable_content_moderation = \
+            askbot_settings.ENABLE_CONTENT_MODERATION
+        askbot_settings.update('ENABLE_CONTENT_MODERATION', True)
+        self.self_notify_when = \
+            askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
+        when = const.FOR_FIRST_REVISION
+        askbot_settings.update('SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN', when)
+        assert(
+            django_settings.EMAIL_BACKEND == 'django.core.mail.backends.locmem.EmailBackend'
+        )
+
+    def tearDown(self):
+        askbot_settings.update(
+            'REPLY_BY_EMAIL', self.reply_by_email
+        )
+        askbot_settings.update(
+            'ENABLE_CONTENT_MODERATION',
+            self.enable_content_moderation
+        )
+        askbot_settings.update(
+            'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN', 
+            self.self_notify_when
+        )
+
+    def test_emailed_question_answerable_approval_notification(self):
+        self.u1 = self.create_user('user1', status = 'a')#regular user
+        question = self.post_question(user = self.u1, by_email = True)
+        outbox = django.core.mail.outbox
+        #here we should get just the notification of the post
+        #being placed on the moderation queue
+        self.assertEquals(len(outbox), 1)
+        self.assertEquals(outbox[0].recipients(), [self.u1.email])
+
+    def test_moderated_question_answerable_approval_notification(self):
+        u1 = self.create_user('user1', status = 'a')
+        question = self.post_question(user = u1, by_email = True)
+
+        self.assertEquals(question.approved, False)
+
+        u2 = self.create_user('admin', status = 'd')
+
+        self.assertEquals(question.revisions.count(), 1)
+        u2.approve_post_revision(question.get_latest_revision())
+
+        outbox = django.core.mail.outbox
+        self.assertEquals(len(outbox), 2)
+        #moderation notification
+        self.assertEquals(outbox[0].recipients(), [u1.email,])
+        self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
+
+
+class MailMessagesTests(utils.AskbotTestCase):
+    def test_ask_for_signature(self):
+        from askbot.mail import messages
+        user = self.create_user('user')
+        message = messages.ask_for_signature(user, footer_code = 'nothing')
+        self.assertTrue(user.username in message)

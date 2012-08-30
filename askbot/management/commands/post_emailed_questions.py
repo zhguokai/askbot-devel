@@ -19,82 +19,16 @@ import imaplib
 import email
 import quopri
 import base64
-import logging
 from django.conf import settings as django_settings
 from django.core.management.base import NoArgsCommand, CommandError
-from django.core import exceptions
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import string_concat
-from django.core.urlresolvers import reverse
 from askbot.conf import settings as askbot_settings
-from askbot.utils import mail
-from askbot.utils import url_utils
-from askbot import models
-from askbot.forms import AskByEmailForm
-import re
-
-USAGE = _(
-"""<p>To ask by email, please:</p>
-<ul>
-    <li>Format the subject line as: [Tag1; Tag2] Question title</li>
-    <li>Type details of your question into the email body</li>
-</ul>
-<p>Note that tags may consist of more than one word, and tags
-may be separated by a semicolon or a comma</p>
-"""
-)
-
-def bounce_email(email, subject, reason = None, body_text = None):
-    """sends a bounce email at address ``email``, with the subject
-    line ``subject``, accepts several reasons for the bounce:
-
-    * ``'problem_posting'``, ``unknown_user`` and ``permission_denied``
-    * ``body_text`` in an optional parameter that allows to append
-      extra text to the message
-    """
-    if reason == 'problem_posting':
-        error_message = _(
-            '<p>Sorry, there was an error posting your question '
-            'please contact the %(site)s administrator</p>'
-        ) % {'site': askbot_settings.APP_SHORT_NAME}
-        error_message = string_concat(error_message, USAGE)
-    elif reason == 'unknown_user':
-        error_message = _(
-            '<p>Sorry, in order to post questions on %(site)s '
-            'by email, please <a href="%(url)s">register first</a></p>'
-        ) % {
-            'site': askbot_settings.APP_SHORT_NAME,
-            'url': url_utils.get_login_url()
-        }
-    elif reason == 'permission_denied':
-        error_message = _(
-            '<p>Sorry, your question could not be posted '
-            'due to insufficient privileges of your user account</p>'
-        )
-    else:
-        raise ValueError('unknown reason to bounce an email: "%s"' % reason)
-
-    if body_text != None:
-        error_message = string_concat(error_message, body_text)
-
-    err_str = "\nBounce Message to %s Reason: %s subject '%s'" % (email, reason, subject)
-    logging.critical(err_str)
-
-    #print 'sending email'
-    #print email
-    #print subject
-    #print error_message
-    mail.send_mail(
-        recipient_list = (email,),
-        subject_line = 'Re: ' + subject,
-        body_text = error_message
-    )
+from askbot import mail
 
 class CannotParseEmail(Exception):
     """This exception will bounce the email"""
-    def __init__(self, email, subject):
+    def __init__(self, email_address, subject):
         super(CannotParseEmail, self).__init__()
-        bounce_email(email, subject, reason = 'problem_posting')
+        mail.bounce_email(email_address, subject, reason = 'problem_posting')
 
 def parse_message(msg):
     """returns a tuple
@@ -104,14 +38,13 @@ def parse_message(msg):
     not supported - emails using language - specific encodings
     """
     sender = msg.get('From')
-    subject = msg.get('Subject').replace('\r','').replace('\n','')
+    subject = msg.get('Subject')
     if msg.is_multipart():
-        # BL: Wind always sends 2 payloads: 1 plain-text, the other html
-        msg = msg.get_payload()[0]
+        msg = msg.get_payload()
         if isinstance(msg, list):
             raise CannotParseEmail(sender, subject)
 
-    ctype = msg.get_content_type()#text/plain only
+    #ctype = msg.get_content_type()#text/plain only
     raw_body = msg.get_payload()#text/plain only
     encoding = msg.get('Content-Transfer-Encoding')
     if encoding == 'base64':
@@ -122,14 +55,9 @@ def parse_message(msg):
         body = raw_body
     return (sender, subject, body)
 
-invalid_sub_re = re.compile("automatic reply|out of office", re.I)
-def check_for_invalid_subject(subject):
-    if invalid_sub_re.match(subject):
-       return True
-
-    return False
 
 class Command(NoArgsCommand):
+    """the django management command class"""
     def handle_noargs(self, **options):
         """reads all emails from the INBOX of
         imap server and posts questions based on
@@ -157,7 +85,7 @@ class Command(NoArgsCommand):
         imap.select('INBOX')
 
         #get message ids
-        status, ids = imap.search(None, 'ALL')
+        junk, ids = imap.search(None, 'ALL')
 
         if len(ids[0].strip()) == 0:
             #with empty inbox - close and exit
@@ -166,70 +94,19 @@ class Command(NoArgsCommand):
             return
 
         #for each id - read a message, parse it and post a question
-        for id in ids[0].split(' '):
-            t, data = imap.fetch(id, '(RFC822)')
-            message_body = data[0][1]
+        for msg_id in ids[0].split(' '):
+            junk, data = imap.fetch(msg_id, '(RFC822)')
+            #message_body = data[0][1]
             msg = email.message_from_string(data[0][1])
-            imap.store(id, '+FLAGS', '\\Deleted')
+            imap.store(msg_id, '+FLAGS', '\\Deleted')
             try:
                 (sender, subject, body) = parse_message(msg)
-                err_str = "\nEMAIL SUBMIT from %s: '%s'" % (sender, subject)
-                logging.info(err_str)
-            except CannotParseEmail, e:
-                err_str = "\nCan't parse Email '%s'" % (msg)
-                logging.critical(err_str)
-                #print "Could not parse ", msg
-                continue
-            if check_for_invalid_subject(subject):
+            except CannotParseEmail:
                 continue
 
-            data = {
-                'sender': sender,
-                'subject': subject,
-                'body_text': body
-            }
-            form = AskByEmailForm(data)
-            #print data
-            if form.is_valid():
-                email_address = form.cleaned_data['email']
-                try:
-                    user = models.User.objects.get(
-                                email__iexact = email_address
-                            )
-                except models.User.DoesNotExist:
-                    bounce_email(email_address, subject, reason = 'unknown_user')
-                    continue
-                except models.User.MultipleObjectsReturned:
-                    bounce_email(email_address, subject, reason = 'problem_posting')
-                    continue
+            sender = mail.extract_first_email_address(sender)
+            mail.process_emailed_question(sender, subject, body)
 
-                tagnames = form.cleaned_data['tagnames']
-                title = form.cleaned_data['title']
-                body_text = form.cleaned_data['body_text']
-
-                try:
-                    user.post_question(
-                        title = title,
-                        tags = tagnames,
-                        body_text = body_text
-                    )
-                    info_str = "\nPosted Email Question from %s - Tags: %s - Subject '%s'" % (email_address, tagnames, title)
-                    logging.info(info_str)
-                except exceptions.PermissionDenied, e:
-                    bounce_email(
-                        email_address,
-                        subject,
-                        reason = 'permission_denied',
-                        body_text = unicode(e)
-                    )
-            else:
-                email_address = mail.extract_first_email_address(sender)
-                if email_address:
-                    bounce_email(
-                        email_address,
-                        subject,
-                        reason = 'problem_posting'
-                    )
         imap.expunge()
         imap.close()
         imap.logout()

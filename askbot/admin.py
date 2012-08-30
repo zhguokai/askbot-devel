@@ -13,17 +13,8 @@ from askbot import models
 class AnonymousQuestionAdmin(admin.ModelAdmin):
     """AnonymousQuestion admin class"""
 
-class QuestionAdmin(admin.ModelAdmin):
-    """Question admin class"""
-
 class TagAdmin(admin.ModelAdmin):
     """Tag admin class"""
-
-class AnswerAdmin(admin.ModelAdmin):
-    """Answer admin class"""
-
-class CommentAdmin(admin.ModelAdmin):
-    """  admin class"""
 
 class VoteAdmin(admin.ModelAdmin):
     """  admin class"""
@@ -31,10 +22,7 @@ class VoteAdmin(admin.ModelAdmin):
 class FavoriteQuestionAdmin(admin.ModelAdmin):
     """  admin class"""
 
-class QuestionRevisionAdmin(admin.ModelAdmin):
-    """  admin class"""
-
-class AnswerRevisionAdmin(admin.ModelAdmin):
+class PostRevisionAdmin(admin.ModelAdmin):
     """  admin class"""
 
 class AwardAdmin(admin.ModelAdmin):
@@ -46,17 +34,11 @@ class ReputeAdmin(admin.ModelAdmin):
 class ActivityAdmin(admin.ModelAdmin):
     """  admin class"""
     
-admin.site.register(models.Question, QuestionAdmin)
+admin.site.register(models.Post)
 admin.site.register(models.Tag, TagAdmin)
-admin.site.register(models.Answer, AnswerAdmin)
-admin.site.register(models.Comment, CommentAdmin)
 admin.site.register(models.Vote, VoteAdmin)
 admin.site.register(models.FavoriteQuestion, FavoriteQuestionAdmin)
-admin.site.register(models.QuestionRevision, QuestionRevisionAdmin)
-admin.site.register(models.AnswerRevision, AnswerRevisionAdmin)
+admin.site.register(models.PostRevision, PostRevisionAdmin)
 admin.site.register(models.Award, AwardAdmin)
 admin.site.register(models.Repute, ReputeAdmin)
 admin.site.register(models.Activity, ActivityAdmin)
-#admin.site.register(Book, BookAdmin)
-#admin.site.register(BookAuthorInfo, BookAuthorInfoAdmin)
-#admin.site.register(BookAuthorRss, BookAuthorRssAdmin)

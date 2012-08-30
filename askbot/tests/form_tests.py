@@ -47,9 +47,12 @@ class AskByEmailFormTests(AskbotTestCase):
             'subject': '[tag-one] where is titanic?',
             'body_text': 'where is titanic?'
         }
+
     def test_subject_line(self):
         """loops through various forms of the subject line
         and makes sure that tags and title are parsed out"""
+        setting_backup = askbot_settings.TAGS_ARE_REQUIRED
+        askbot_settings.update('TAGS_ARE_REQUIRED', True)
         for test_case in SUBJECT_LINE_CASES:
             self.data['subject'] = test_case[0]
             form = forms.AskByEmailForm(self.data)
@@ -66,10 +69,11 @@ class AskByEmailFormTests(AskbotTestCase):
                     form.cleaned_data['title'],
                     output[1]
                 )
+        askbot_settings.update('TAGS_ARE_REQUIRED', setting_backup)
 
     def test_email(self):
-        """loops through variants of the from field 
-        in the emails and tests the email address 
+        """loops through variants of the from field
+        in the emails and tests the email address
         extractor"""
         for test_case in EMAIL_CASES:
             self.data['sender'] = test_case[0]
@@ -174,7 +178,7 @@ class EditQuestionAnonymouslyFormTests(AskbotTestCase):
     def setup_data(self, is_anon, can_be_anon, is_owner, box_checked):
         """sets up data in the same order as shown in the
         truth table above
-        
+
         the four positional arguments are in the same order
         """
         askbot_settings.update('ALLOW_ASK_ANONYMOUSLY', can_be_anon)
@@ -260,7 +264,7 @@ class UserStatusFormTest(AskbotTestCase):
         self.moderator.set_status('m')
         self.subject = self.create_user('normal_user')
         self.subject.set_status('a')
-        self.form = forms.ChangeUserStatusForm(data, moderator = self.moderator, 
+        self.form = forms.ChangeUserStatusForm(data, moderator = self.moderator,
                                                subject = self.subject)
     def test_moderator_can_suspend_user(self):
         self.setup_data('s')
@@ -288,7 +292,7 @@ class UserNameFieldTest(AskbotTestCase):
         self.username_field.skip_clean = True
         self.assertEquals(self.username_field.clean('bar'), 'bar')#will pass anything
 
-        self.username_field.skip_clean = False 
+        self.username_field.skip_clean = False
 
         #will not pass b/c instance is not User model
         self.username_field.user_instance = dict(foo=1)
@@ -303,5 +307,78 @@ class UserNameFieldTest(AskbotTestCase):
         #invalid username and username in reserved words
         self.assertRaises(django_forms.ValidationError, self.username_field.clean, '  ')
         self.assertRaises(django_forms.ValidationError, self.username_field.clean, 'fuck')
+        self.assertRaises(django_forms.ValidationError, self.username_field.clean, '......')
 
         #TODO: test more things
+
+class AnswerEditorFieldTests(AskbotTestCase):
+    """don't need to test the QuestionEditorFieldTests, b/c the
+    class is identical"""
+    def setUp(self):
+        self.old_min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
+        askbot_settings.update('MIN_ANSWER_BODY_LENGTH', 10)
+        self.field = forms.AnswerEditorField()
+
+    def tearDown(self):
+        askbot_settings.update('MIN_ANSWER_BODY_LENGTH', self.old_min_length)
+
+    def test_fail_short_body(self):
+        self.assertRaises(
+            django_forms.ValidationError,
+            self.field.clean,
+            'a'
+        )
+
+    def test_pass_long_body(self):
+        self.assertEquals(
+            self.field.clean(10*'a'),
+            10*'a'
+        )
+
+
+class PostAsSomeoneFormTests(AskbotTestCase):
+
+    form = forms.PostAsSomeoneForm
+
+    def setUp(self):
+        self.good_data = {
+            'username': 'me',
+            'email': 'me@example.com'
+        }
+
+    def test_blank_form_validates(self):
+        form = forms.PostAsSomeoneForm({})
+        self.assertEqual(form.is_valid(), True)
+
+    def test_complete_form_validates(self):
+        form = forms.PostAsSomeoneForm(self.good_data)
+        self.assertEqual(form.is_valid(), True)
+
+    def test_missing_email_fails(self):
+        form = forms.PostAsSomeoneForm({'post_author_username': 'me'})
+        self.assertEqual(form.is_valid(), False)
+
+    def test_missing_username_fails(self):
+        form = forms.PostAsSomeoneForm({'post_author_email': 'me@example.com'})
+        self.assertEqual(form.is_valid(), False)
+
+class AskWidgetFormTests(AskbotTestCase):
+
+    form = forms.AskWidgetForm
+
+    def setUp(self):
+        self.good_data = {'title': "What's the price of a house in london?"}
+        self.good_data_anon = {'title': "What's the price of a house in london?",
+                                'ask_anonymously': True}
+
+        self.bad_data = {'title': ''}
+
+    def test_valid_input(self):
+        form_object = self.form(self.good_data)
+        self.assertTrue(form_object.is_valid())
+        form_object = self.form(self.good_data_anon)
+        self.assertTrue(form_object.is_valid())
+
+    def test_invalid_input(self):
+        form_object = self.form(self.bad_data)
+        self.assertFalse(form_object.is_valid())

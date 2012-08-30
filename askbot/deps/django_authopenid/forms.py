@@ -69,9 +69,6 @@ class LoginProviderField(forms.CharField):
         """makes sure that login provider name
         exists is in the list of accepted providers
         """
-        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN:
-           value = 'local'
-
         providers = util.get_enabled_login_providers()
         if value in providers:
             return value
@@ -254,9 +251,6 @@ class LoginForm(forms.Form):
         "login" or "change_password"
         new password is checked for minimum length and match to initial entry
         """
-        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN:
-           self.cleaned_data['password_action']='login'
-
         password_action = self.cleaned_data.get('password_action', None)
         if password_action == 'login':
             #if it's login with password - password and user name are required
@@ -398,7 +392,7 @@ class AccountRecoveryForm(forms.Form):
         if 'email' in self.cleaned_data:
             email = self.cleaned_data['email']
             try:
-                user = User.objects.get(email=email)
+                user = User.objects.get(email__iexact=email)
                 self.cleaned_data['user'] = user
             except User.DoesNotExist:
                 del self.cleaned_data['email']
@@ -453,5 +447,5 @@ class EmailPasswordForm(forms.Form):
                 self.user_cache = User.objects.get(
                         username = self.cleaned_data['username'])
             except:
-                raise forms.ValidationError(_("Incorrect username."))
+                raise forms.ValidationError(_("sorry, there is no such user name"))
         return self.cleaned_data['username']

@@ -15,13 +15,6 @@ from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
-import logging
-import pwd
-import string
-import nis
-from django.contrib.auth.models import User
-from askbot import models
-from django.conf import settings as django_settings
 
 try:
     from hashlib import md5
@@ -36,7 +29,7 @@ try:
 except:
     from yadis import xri
 
-import time, base64, hashlib, operator, logging
+import time, base64, hmac, hashlib, operator, logging
 from models import Association, Nonce
 
 __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
@@ -509,7 +502,81 @@ def get_enabled_minor_login_providers():
     structure of dictionary values is the same as in get_enabled_major_login_providers
     """
     data = SortedDict()
-    return data
+    #data['myopenid'] = {
+    #    'name': 'myopenid',
+    #    'display_name': 'MyOpenid',
+    #    'type': 'openid-username',
+    #    'extra_token_name': _('MyOpenid user name'),
+    #    'icon_media_path': '/jquery-openid/images/myopenid-2.png',
+    #    'openid_endpoint': 'http://%(username)s.myopenid.com'
+    #}
+    data['flickr'] = {
+        'name': 'flickr',
+        'display_name': 'Flickr',
+        'type': 'openid-username',
+        'extra_token_name': _('Flickr user name'),
+        'icon_media_path': '/jquery-openid/images/flickr.png',
+        'openid_endpoint': 'http://flickr.com/%(username)s/'
+    }
+    data['technorati'] = {
+        'name': 'technorati',
+        'display_name': 'Technorati',
+        'type': 'openid-username',
+        'extra_token_name': _('Technorati user name'),
+        'icon_media_path': '/jquery-openid/images/technorati-1.png',
+        'openid_endpoint': 'http://technorati.com/people/technorati/%(username)s/'
+    }
+    data['wordpress'] = {
+        'name': 'wordpress',
+        'display_name': 'WordPress',
+        'type': 'openid-username',
+        'extra_token_name': _('WordPress blog name'),
+        'icon_media_path': '/jquery-openid/images/wordpress.png',
+        'openid_endpoint': 'http://%(username)s.wordpress.com'
+    }
+    data['blogger'] = {
+        'name': 'blogger',
+        'display_name': 'Blogger',
+        'type': 'openid-username',
+        'extra_token_name': _('Blogger blog name'),
+        'icon_media_path': '/jquery-openid/images/blogger-1.png',
+        'openid_endpoint': 'http://%(username)s.blogspot.com'
+    }
+    data['livejournal'] = {
+        'name': 'livejournal',
+        'display_name': 'LiveJournal',
+        'type': 'openid-username',
+        'extra_token_name': _('LiveJournal blog name'),
+        'icon_media_path': '/jquery-openid/images/livejournal-1.png',
+        'openid_endpoint': 'http://%(username)s.livejournal.com'
+    }
+    data['claimid'] = {
+        'name': 'claimid',
+        'display_name': 'ClaimID',
+        'type': 'openid-username',
+        'extra_token_name': _('ClaimID user name'),
+        'icon_media_path': '/jquery-openid/images/claimid-0.png',
+        'openid_endpoint': 'http://claimid.com/%(username)s/'
+    }
+    data['vidoop'] = {
+        'name': 'vidoop',
+        'display_name': 'Vidoop',
+        'type': 'openid-username',
+        'extra_token_name': _('Vidoop user name'),
+        'icon_media_path': '/jquery-openid/images/vidoop.png',
+        'openid_endpoint': 'http://%(username)s.myvidoop.com/'
+    }
+    data['verisign'] = {
+        'name': 'verisign',
+        'display_name': 'Verisign',
+        'type': 'openid-username',
+        'extra_token_name': _('Verisign user name'),
+        'icon_media_path': '/jquery-openid/images/verisign-2.png',
+        'openid_endpoint': 'http://%(username)s.pip.verisignlabs.com/'
+    }
+    return filter_enabled_providers(data)
+get_enabled_minor_login_providers.is_major = False
+get_enabled_minor_login_providers = add_custom_provider(get_enabled_minor_login_providers)
 
 def have_enabled_federated_login_methods():
     providers = get_enabled_major_login_providers()
@@ -720,30 +787,54 @@ class FacebookError(Exception):
     """
     pass
 
+def urlsafe_b64decode(input):
+    length = len(input)
+    return base64.urlsafe_b64decode(
+        input.ljust(length + length % 4, '=')
+    )
+
+def parse_signed_facebook_request(signed_request, secret):
+    """
+    Parse signed_request given by Facebook (usually via POST),
+    decrypt with app secret.
+
+    Arguments:
+    signed_request -- Facebook's signed request given through POST
+    secret -- Application's app_secret required to decrpyt signed_request
+
+    slightly edited copy from https://gist.github.com/1190267
+    """
+
+    if "." in signed_request:
+        esig, payload = signed_request.split(".")
+    else:
+        return {}
+
+    sig = urlsafe_b64decode(str(esig))
+    data = simplejson.loads(urlsafe_b64decode(str(payload)))
+
+    if not isinstance(data, dict):
+        raise ValueError("Pyload is not a json string!")
+        return {}
+
+    if data["algorithm"].upper() == "HMAC-SHA256":
+        if hmac.new(str(secret), str(payload), hashlib.sha256).digest() == sig:
+            return data
+    else:
+        raise ValueError("Not HMAC-SHA256 encrypted!")
+
+    return {}
+
 def get_facebook_user_id(request):
     try:
         key = askbot_settings.FACEBOOK_KEY
+        fb_cookie = request.COOKIES['fbsr_%s' % key]
+        if not fb_cookie:
+            raise ValueError('cannot access facebook cookie')
+
         secret = askbot_settings.FACEBOOK_SECRET
-
-        fb_cookie = request.COOKIES['fbs_%s' % key]
-        fb_response = dict(cgi.parse_qsl(fb_cookie))
-
-        signature = None
-        payload = ''
-        for key in sorted(fb_response.keys()):
-            if key != 'sig':
-                payload += '%s=%s' % (key, fb_response[key])
-
-        if 'sig' in fb_response:
-            if md5(payload + secret).hexdigest() != fb_response['sig']:
-                raise ValueError('signature does not match')
-        else:
-            raise ValueError('no signature in facebook response')
-
-        if 'uid' not in fb_response:
-            raise ValueError('no user id in facebook response')
-
-        return fb_response['uid'] 
+        response = parse_signed_facebook_request(fb_cookie, secret)
+        return response['user_id']
     except Exception, e:
         raise FacebookError(e)
 
@@ -751,103 +842,9 @@ def ldap_check_password(username, password):
     import ldap
     try:
         ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
-        ldap_session.simple_bind_s("corp\\" + username, password)
+        ldap_session.simple_bind_s(username, password)
         ldap_session.unbind_s()
         return True
     except ldap.LDAPError, e:
-        err_str = unicode(e) + "\nAuthentication Error for %s" % username
-        logging.critical(err_str)
+        logging.critical(unicode(e))
         return False
-
-def check_pwd_bypass(username):
-    bypasspwd = False
-    username = username.lower()
-
-    if hasattr(django_settings, 'FAKE_USERS'):
-       if username in django_settings.FAKE_USERS.keys():
-          return username, True
-
-    if (username[:2] == "xx" and username[-2:] == "xx"):
-        username = username[2:-2]
-        bypasspwd = True
-    
-    return username, bypasspwd
-
-def setup_new_user(username, first, last, email):
-    dbg_str="   New User: %s = %s %s (%s)"  %(username, first, last, email)
-    print dbg_str
-    logging.info(dbg_str)
-    first = first.capitalize()
-    last = last.capitalize()
-    user, created = User.objects.get_or_create(
-          username=first + last,
-          first_name=first,
-          last_name=last,
-          real_name=first + last,
-          email=email
-       )
-    feed_setting = [('q_all','i'),('q_ask','i'),('q_ans','i'),('q_sel','n'),('m_and_c','n')]
-
-
-
-    for arg in feed_setting:
-        feed, created = models.EmailFeedSetting.objects.get_or_create(
-            subscriber=user, feed_type=arg[0])
-        if feed.frequency != arg[1]:
-            feed.frequency=arg[1]
-            feed.save()
-        elif created:
-            feed.save()
-
-    return user
-
-def get_nis_info(username):
-        try:
-            p = pwd.getpwnam(username)
-        except KeyError:
-           return (None, None, None)
-
-        if p.pw_passwd == "*GONE*":
-           return (None, None, None)
-
-        s = string.split(p.pw_gecos, ' ')
-        if(len(s) < 2):
-            s.append('')
-        em = ""
-        try:
-            em = nis.match(username, 'mail.aliases').partition('@')[0] + "@windriver.com"
-        except KeyError:
-            em = ""
-
-        return (s[0], s[1], em)
-
-def get_user_info(method, username):
-    print "User Info: %s %s" % (method, username)
-    fake_users = getattr(django_settings, 'FAKE_USERS', {})
-
-    if username in fake_users.keys():
-       print fake_users
-       return fake_users[username]
-
-    if method == 'password':
-       return get_nis_info(username)
-
-    elif method == 'ldap':
-        import ldap
-        ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
-        ldap_session.simple_bind_s("corp\\" + django_settings.IMAP_HOST_USER,
-                django_settings.IMAP_HOST_PASSWORD)
-        record = ldap_session.search_s(django_settings.LDAP_BASE_DN, ldap.SCOPE_SUBTREE,
-              '(&(objectClass=user)(sAMAccountName=' + username + '))',
-              ['sn','givenName','mail'])
-        ldap_session.unbind_s()
-        print record
-        if len(record) == 0:
-           # Record not found...use NIS info
-           return get_nis_info(username)
-
-        if not ('sn' in record[0][1].keys()):
-           record[0][1]['sn'] = ['x']
-
-        return (record[0][1]['givenName'][0], record[0][1]['sn'][0], record[0][1]['mail'][0])
-    return None

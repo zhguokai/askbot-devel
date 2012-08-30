@@ -3,11 +3,13 @@ import os.path
 import logging
 import sys
 import askbot
+import site
 
 #this line is added so that we can import pre-packaged askbot dependencies
-sys.path.append(os.path.join(os.path.dirname(askbot.__file__), 'deps'))
+ASKBOT_ROOT = os.path.abspath(os.path.dirname(askbot.__file__))
+site.addsitedir(os.path.join(ASKBOT_ROOT, 'deps'))
 
-DEBUG = False#set to True to enable debugging
+DEBUG = True#set to True to enable debugging
 TEMPLATE_DEBUG = False#keep false when debugging jinja2 templates
 INTERNAL_IPS = ('127.0.0.1',)
 
@@ -40,7 +42,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #go to the site's live settings and enable the feature
 #"Email settings" -> "allow asking by email"
 #
-#   WARNING: command post_emailed_questions DELETES all 
+#   WARNING: command post_emailed_questions DELETES all
 #            emails from the mailbox each time
 #            do not use your personal mail box here!!!
 #
@@ -68,30 +70,35 @@ LANGUAGE_CODE = 'en'
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-ASKBOT_FILE_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'askbot', 'upfiles')
+MEDIA_URL = '/upfiles/'#url to uploaded media
+STATIC_URL = '/m/'#url to project static files
 
 PROJECT_ROOT = os.path.dirname(__file__)
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')#path to files collected by collectstatic
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/admin/media/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'#must be this value
 
 # Make up some unique string, and don't share it with anybody.
-SECRET_KEY = 'sdljdfjkldsflsdjkhsjkldgjlsdgfs s ' 
+SECRET_KEY = 'sdljdfjkldsflsdjkhsjkldgjlsdgfs s '
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
     #below is askbot stuff for this tuple
-    'askbot.skins.loaders.load_template_source',
+    #'askbot.skins.loaders.load_template_source', #changed due to bug 97
+    'askbot.skins.loaders.filesystem_load_template_source',
     #'django.template.loaders.eggs.load_template_source',
 )
 
 
 MIDDLEWARE_CLASSES = (
     #'django.middleware.gzip.GZipMiddleware',
+    #'askbot.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -101,7 +108,7 @@ MIDDLEWARE_CLASSES = (
 
     #below is askbot stuff for this tuple
     'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
-    'askbot.middleware.pagesize.QuestionsPageSizeMiddleware',
+    'askbot.middleware.forum_mode.ForumModeMiddleware',
     'askbot.middleware.cancel.CancelActionMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -115,7 +122,7 @@ ROOT_URLCONF = os.path.basename(os.path.dirname(__file__)) + '.urls'
 
 #UPLOAD SETTINGS
 FILE_UPLOAD_TEMP_DIR = os.path.join(
-                                os.path.dirname(__file__), 
+                                os.path.dirname(__file__),
                                 'tmp'
                             ).replace('\\','/')
 
@@ -129,7 +136,7 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 
 #TEMPLATE_DIRS = (,) #template have no effect in askbot, use the variable below
-#ASKBOT_EXTRA_SKIN_DIR = #path to your private skin collection
+#ASKBOT_EXTRA_SKINS_DIR = #path to your private skin collection
 #take a look here http://askbot.org/en/question/207/
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -147,6 +154,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.staticfiles',
 
     #all of these are needed for the askbot
     'django.contrib.admin',
@@ -165,7 +173,6 @@ INSTALLED_APPS = (
     'djkombu',
     'followit',
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
-    #requires setting of MEDIA_ROOT and MEDIA_URL
 )
 
 
@@ -174,9 +181,12 @@ INSTALLED_APPS = (
 CACHE_BACKEND = 'locmem://'
 #needed for django-keyedcache
 CACHE_TIMEOUT = 6000
+#sets a special timeout for livesettings if you want to make them different
+LIVESETTINGS_CACHE_TIMEOUT = CACHE_TIMEOUT
 CACHE_PREFIX = 'askbot' #make this unique
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
-#SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
+#SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -198,22 +208,53 @@ logging.basicConfig(
 #   ASKBOT_URL = 'forum/'
 #
 ASKBOT_URL = '' #no leading slash, default = '' empty string
+ASKBOT_TRANSLATE_URL = True #translate specific URLs
 _ = lambda v:v #fake translation function for the login url
 LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
+LOGIN_REDIRECT_URL = ASKBOT_URL #adjust if needed
 #note - it is important that upload dir url is NOT translated!!!
 #also, this url must not have the leading slash
-ASKBOT_UPLOADED_FILES_URL = '%s%s' % (ASKBOT_URL, 'upfiles/')
 ALLOW_UNICODE_SLUGS = False
 ASKBOT_USE_STACKEXCHANGE_URLS = False #mimic url scheme of stackexchange
 
 #Celery Settings
-BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+BROKER_TRANSPORT = "djkombu.transport.DatabaseTransport"
 CELERY_ALWAYS_EAGER = True
 
 import djcelery
 djcelery.setup_loader()
 
-CSRF_COOKIE_NAME = 'askbot_scrf'
-CSRF_COOKIE_DOMAIN = ''#enter domain name here - e.g. example.com
+CSRF_COOKIE_NAME = 'askbot_csrf'
+#enter domain name here - e.g. example.com
+#CSRF_COOKIE_DOMAIN = ''
 
-DEBUG_EMAIL_USERS = [] # Limit sending of emails to specific users (via their email address)
+STATICFILES_DIRS = ( os.path.join(ASKBOT_ROOT, 'skins'),)
+
+RECAPTCHA_USE_SSL = True
+
+TINYMCE_COMPRESSOR = True
+TINYMCE_SPELLCHECKER = False
+TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'common/media/js/tinymce/')
+TINYMCE_URL = STATIC_URL + 'common/media/js/tinymce/'
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': 'askbot_imageuploader,askbot_attachment',
+    'theme': 'advanced',
+    'content_css': STATIC_URL + 'default/media/style/tinymce/content.css',
+    'force_br_newlines': True,
+    'force_p_newlines': False,
+    'forced_root_block': '',
+    'mode' : 'textareas',
+    'oninit': "function(){ tinyMCE.activeEditor.setContent(askbot['data']['editorContent'] || ''); }",
+    'plugins': 'askbot_imageuploader,askbot_attachment',
+    'theme_advanced_toolbar_location' : 'top',
+    'theme_advanced_toolbar_align': 'left',
+    'theme_advanced_buttons1': 'bold,italic,underline,|,bullist,numlist,|,undo,redo,|,link,unlink,askbot_imageuploader,askbot_attachment'
+    'theme_advanced_buttons2': '',
+    'theme_advanced_buttons3' : '',
+    'theme_advanced_path': False,
+    'theme_advanced_resizing': True,
+    'theme_advanced_resize_horizontal': False,
+    'theme_advanced_statusbar_location': 'bottom',
+    'width': '723',
+    'height': '250'
+}

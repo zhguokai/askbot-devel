@@ -1,12 +1,16 @@
 """Utilities for working with HTML."""
 import html5lib
 from html5lib import sanitizer, serializer, tokenizer, treebuilders, treewalkers
-import re, htmlentitydefs
+import re
+import htmlentitydefs
+from urlparse import urlparse
+from django.core.urlresolvers import reverse
+from django.utils.html import escape
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
     acceptable_elements = ('a', 'abbr', 'acronym', 'address', 'b', 'big',
         'blockquote', 'br', 'caption', 'center', 'cite', 'code', 'col',
-        'colgroup', 'dd', 'del', 'dfn', 'dir', 'div', 'dl', 'dt', 'em', 'embed', 'font',
+        'colgroup', 'dd', 'del', 'dfn', 'dir', 'div', 'dl', 'dt', 'em', 'font',
         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd',
         'li', 'ol', 'p', 'pre', 'q', 's', 'samp', 'small', 'span', 'strike',
         'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead',
@@ -18,7 +22,7 @@ class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
         'href', 'hreflang', 'hspace', 'lang', 'longdesc', 'name', 'nohref',
         'noshade', 'nowrap', 'rel', 'rev', 'rows', 'rowspan', 'rules', 'scope',
         'span', 'src', 'start', 'summary', 'title', 'type', 'valign', 'vspace',
-        'width', 'quality', 'bgcolor', 'id', 'allowscriptaccess', 'allowfullscreen')
+        'width')
 
     allowed_elements = acceptable_elements
     allowed_attributes = acceptable_attributes
@@ -28,10 +32,10 @@ class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
 
 class HTMLSanitizer(tokenizer.HTMLTokenizer, HTMLSanitizerMixin):
     def __init__(self, stream, encoding=None, parseMeta=True, useChardet=True,
-                 lowercaseElementName=True, lowercaseAttrName=True):
+                 lowercaseElementName=True, lowercaseAttrName=True, **kwargs):
         tokenizer.HTMLTokenizer.__init__(self, stream, encoding, parseMeta,
                                          useChardet, lowercaseElementName,
-                                         lowercaseAttrName)
+                                         lowercaseAttrName, **kwargs)
 
     def __iter__(self):
         for token in tokenizer.HTMLTokenizer.__iter__(self):
@@ -50,6 +54,21 @@ def sanitize_html(html):
                                   quote_attr_values=True)
     output_generator = s.serialize(stream)
     return u''.join(output_generator)
+
+def site_url(url):
+    from askbot.conf import settings
+    base_url = urlparse(settings.APP_URL)
+    return base_url.scheme + '://' + base_url.netloc + url
+
+def site_link(url_name, title):
+    """returns html for the link to the given url
+    todo: may be improved to process url parameters, keyword
+    and other arguments
+    """
+    from askbot.conf import settings
+    base_url = urlparse(settings.APP_URL)
+    url = site_url(reverse(url_name))
+    return '<a href="%s">%s</a>' % (url, title)
 
 def unescape(text):
     """source: http://effbot.org/zone/re-sub.htm#unescape-html

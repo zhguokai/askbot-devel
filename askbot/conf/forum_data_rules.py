@@ -3,22 +3,39 @@ Settings for askbot data display and entry
 """
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
-from django.utils.translation import ugettext as _
 from askbot import const
+from askbot.conf.super_groups import DATA_AND_FORMATTING
+from django.utils.translation import ugettext as _
 
 FORUM_DATA_RULES = livesettings.ConfigurationGroup(
                         'FORUM_DATA_RULES',
-                        _('Data entry and display')
+                        _('Data entry and display rules'),
+                        super_group = DATA_AND_FORMATTING
                     )
+
+EDITOR_CHOICES = (
+    ('markdown', 'markdown'),
+    ('tinymce', 'WISYWIG (tinymce)')
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'EDITOR_TYPE',
+        default = 'markdown',
+        choices = EDITOR_CHOICES,
+        description = _('Editor for the posts')
+    )
+)
 
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'ENABLE_VIDEO_EMBEDDING',
         default = False,
-        description = _(
-            'Enable embedding videos. '
-            '<em>Note: please read <a href="%(url)s>read this</a> first.</em>'
+        description = _('Enable embedding videos. '),
+        help_text = _(
+            '<em>Note: please read <a href="%(url)s">read this</a> first.</em>'
         ) % {'url': const.DEPENDENCY_URLS['embedding-video']}
     )
 )
@@ -87,6 +104,87 @@ settings.register(
 )
 
 settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MIN_TITLE_LENGTH',
+        default=10,
+        description=_('Minimum length of title (number of characters)')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MIN_QUESTION_BODY_LENGTH',
+        default=10,
+        description=_(
+            'Minimum length of question body (number of characters)'
+        )
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MIN_ANSWER_BODY_LENGTH',
+        default=10,
+        description=_(
+            'Minimum length of answer body (number of characters)'
+        )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'LIMIT_ONE_ANSWER_PER_USER',
+        default = True,
+        description = _(
+            'Limit one answer per question per user'
+        )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'TAGS_ARE_REQUIRED',
+        description = _('Are tags required?'),
+        default = False,
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ENABLE_TAG_MODERATION',
+        default = False,
+        description = _('Enable tag moderation'),
+        help_text = _(
+            'If enabled, any new tags will not be applied '
+            'to the questions, but emailed to the moderators. '
+            'To use this feature, tags must be optional.'
+        )
+    )
+)
+
+TAG_SOURCE_CHOICES = (
+    ('category-tree', _('category tree')),
+    ('user-input', _('user input')),
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'TAG_SOURCE',
+        description = _('Source of tags'),
+        #hidden = True,
+        choices = TAG_SOURCE_CHOICES,
+        default = 'user-input'
+    )
+)
+
+settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'MANDATORY_TAGS',
@@ -107,11 +205,11 @@ settings.register(
         default = False,
         description = _('Force lowercase the tags'),
         help_text = _(
-                        'Attention: after checking this, please back up the database, '
-                        'and run a management command: '
-                        '<code>python manage.py fix_question_tags</code> to globally '
-                        'rename the tags'
-                     )
+            'Attention: after checking this, please back up the database, '
+            'and run a management command: '
+            '<code>python manage.py fix_question_tags</code> to globally '
+            'rename the tags'
+         )
     )
 )
 
@@ -141,6 +239,44 @@ settings.register(
                         'many tags at once, a valid wildcard tag has a single '
                         'wildcard at the very end'
                     )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'SUBSCRIBED_TAG_SELECTOR_ENABLED',
+        default = False,
+        description = _('Use separate set for subscribed tags'),
+        help_text = _(
+            'If enabled, users will have a third set of tag selections '
+            '- "subscribed" (by email) in additon to "interesting" '
+            'and "ignored"'
+        )
+    )
+)
+
+MARKED_TAG_DISPLAY_CHOICES = (
+    ('always', _('Always, for all users')),
+    ('never', _('Never, for all users')),
+    ('when-user-wants', _('Let users decide'))
+)
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'MARKED_TAGS_ARE_PUBLIC_WHEN',
+        default = 'always',
+        choices = MARKED_TAG_DISPLAY_CHOICES,
+        description = _('Publicly show user tag selections')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'TAG_SEARCH_INPUT_ENABLED',
+        default = False,
+        description = _('Enable separate tag search box on main page')
     )
 )
 
@@ -202,21 +338,9 @@ settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MIN_SEARCH_WORD_LENGTH',
-        default = 4,
-        description = _('Minimum length of search term for Ajax search'),
-        help_text = _('Must match the corresponding database backend setting'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        FORUM_DATA_RULES,
-        'TAG_FILTER_QUESTIONS_FOR_ASK_PRESEARCH',
-        default = True,
-        description = _(
-            'Tag filter questions for "pre-search" on the ask page when '
-            'showing previously asked similar questions'
-        ),
+        default=4,
+        description=_('Minimum length of search term for Ajax search'),
+        help_text=_('Must match the corresponding database backend setting'),
     )
 )
 

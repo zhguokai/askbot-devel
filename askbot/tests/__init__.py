@@ -1,3 +1,4 @@
+from askbot.tests.cache_tests import *
 from askbot.tests.email_alert_tests import *
 from askbot.tests.on_screen_notification_tests import *
 from askbot.tests.page_load_tests import *
@@ -11,3 +12,9 @@ from askbot.tests.form_tests import *
 from askbot.tests.follow_tests import *
 from askbot.tests.templatefilter_tests import *
 from askbot.tests.markup_test import *
+from askbot.tests.post_model_tests import *
+from askbot.tests.thread_model_tests import *
+from askbot.tests.reply_by_email_tests import *
+from askbot.tests.widget_tests import *
+from askbot.tests.category_tree_tests import CategoryTreeTests
+from askbot.tests.user_model_tests import UserModelTests

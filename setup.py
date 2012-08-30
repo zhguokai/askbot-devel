@@ -6,26 +6,6 @@ import sys
 #NOTE: if you want to develop askbot
 #you might want to install django-debug-toolbar as well
 
-install_requires = [
-    'django>=1.1.2',
-    'Jinja2',
-    'Coffin>=0.3',
-    'South>=0.7.1',
-    'oauth2',
-    'markdown2',
-    'html5lib',
-    'django-keyedcache',
-    'django-threaded-multihost',
-    'django-robots',
-    'unidecode',
-    'django-countries==1.0.5',
-    'django-celery==2.2.7',
-    'django-kombu==0.9.2',
-    'django-followit',
-    'django-recaptcha-works',
-    'python-openid',
-]
-
 import askbot
 
 setup(
@@ -44,7 +24,7 @@ setup(
     },
     url = 'http://askbot.org',
     include_package_data = True,
-    install_requires = install_requires,
+    install_requires = askbot.REQUIREMENTS.values(),
     classifiers = [
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
@@ -143,7 +123,7 @@ print """**************************************************************
 *                                                            *
 *  Thanks for installing Askbot.                             *
 *                                                            *
-*  To start deploying type: >askbot-setup                    *
+*  To start deploying type: askbot-setup                     *
 *  Please take a look at the manual askbot/doc/INSTALL       *
 *  And please do not hesitate to ask your questions at       *
 *  at http://askbot.org                                      *

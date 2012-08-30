@@ -1,7 +1,7 @@
 <!-- user_tabs.html -->
-<div class="tabBar">
+<div class="tabBar tabBar-profile">
     <div class="tabsC">
-        <a id="stats" {% if tab_name=="stats" %}class="on"{% endif %} 
+        <a id="stats" {% if tab_name=="stats" %}class="on first"{%else%}class="first"{% endif %} 
             title="{% trans %}User profile{% endtrans %}" 
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=stats"
         ><span>{% trans %}overview{% endtrans %}</span></a>
@@ -17,28 +17,26 @@
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=network"
         ><span>{% trans %}network{% endtrans %}</span></a>
         {% endif %}
+        {% if can_show_karma %}
         <a id="reputation" {% if tab_name=="reputation" %}class="on"{% endif %} 
-            title="{% trans %}graph of user reputation{% endtrans %}" 
+            title="{% trans %}Graph of user karma{% endtrans %}" 
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=reputation"
-        ><span>{% trans %}reputation history{% endtrans %}</span></a>
+        ><span>{% trans %}karma{% endtrans %}</span></a>
+        {% endif %}
         <a id="favorites" {% if tab_name=="favorites" %}class="on"{% endif %} 
             title="{% trans %}questions that user is following{% endtrans %}"
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=favorites"
         ><span>{% trans %}followed questions{% endtrans %}</span></a>
         <a id="recent" {% if tab_name=="recent" %}class="on"{% endif %} 
-            title="{% trans %}recent activity{% endtrans %}" 
+            title="{% trans %}activity{% endtrans %}" 
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=recent"
         ><span>{% trans %}activity{% endtrans %}</span></a>
         {% if request.user == view_user or request.user|can_moderate_user(view_user) %}
         <a id="votes" {% if tab_name=="votes" %}class="on"{% endif %} 
             title="{% trans %}user vote record{% endtrans %}"
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=votes"
-        ><span>{% trans %}casted votes{% endtrans %}</span></a>
+        ><span>{% trans %}votes{% endtrans %}</span></a>
         {% endif %}
-        <a id="tags" {% if tab_name=="tags" %}class="on"{% endif %} 
-            title="{% trans %}followed and ignored tags{% endtrans %}"
-            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=tags"
-        ><span>{% trans %}tags{% endtrans %}</span></a>
         {% if request.user == view_user or request.user|can_moderate_user(view_user) %}
         <a id="email_subscriptions" {% if tab_name=="email_subscriptions" %}class="on"{% endif %} 
             title="{% trans %}email subscription settings{% endtrans %}" 
@@ -51,6 +49,12 @@
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=moderation"
         ><span>{% trans %}moderation{% endtrans %}</span></a>
         {% endif %}
+        {% if custom_tab_slug %}
+        <a id="{{ custom_tab_slug }}" {% if tab_name == custom_tab_slug %}class="on"{% endif %} 
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort={{ custom_tab_slug }}"
+        ><span>{{ custom_tab_name }}</span></a>
+        {% endif %}
     </div>
 </div>
+<div class="clean"></div>
 <!-- end user_tabs.html -->

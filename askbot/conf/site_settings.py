@@ -3,21 +3,21 @@ Q&A website settings - title, desctiption, basic urls
 keywords
 """
 from askbot.conf.settings_wrapper import settings
+from askbot.conf.super_groups import CONTENT_AND_UI
 from askbot.deps import livesettings
 from django.utils.translation import ugettext as _
-from django.utils.html import escape
-from askbot import const
 
 QA_SITE_SETTINGS = livesettings.ConfigurationGroup(
                     'QA_SITE_SETTINGS',
-                    _('Q&A forum website parameters and urls')
+                    _('URLS, keywords & greetings'),
+                    super_group = CONTENT_AND_UI
                 )
 
 settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_TITLE',
-        default=u'ASKBOT: Open Source Q&A Forum',
+        default=u'Askbot: Open Source Q&A Forum',
         description=_('Site title for the Q&A forum')
     )
 )
@@ -26,7 +26,7 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_KEYWORDS',
-        default=u'ASKBOT,CNPROG,forum,community',
+        default=u'Askbot,CNPROG,forum,community',
         description=_('Comma separated list of Q&A site keywords')
     )
 )
@@ -35,8 +35,7 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_COPYRIGHT',
-        default='Copyright ASKBOT, 2010. Some rights reserved ' + \
-                'under creative commons license.',
+        default='Copyright Askbot, 2010-2011.',
         description=_('Copyright message to show in the footer')
     )
 )
@@ -64,7 +63,6 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_URL',
-        default='http://askbot.org',
         description=_(
                 'Base URL for your Q&A forum, must start with '
                 'http or https'
@@ -73,21 +71,27 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        QA_SITE_SETTINGS,
+        'ENABLE_GREETING_FOR_ANON_USER',
+        default = True,
+        description = _('Check to enable greeting for anonymous user')
+   )
+)
+
+settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
-        'GREETING_URL',
-        default='/' + _('faq/'),#cannot reverse url here, must be absolute also
-        hidden=True,
+        'GREETING_FOR_ANONYMOUS_USER',
+        default='First time here? Check out the FAQ!',
+        hidden=False,
         description=_(
-                'Link shown in the greeting message '
+                'Text shown in the greeting message '
                 'shown to the anonymous user'
             ),
-        help_text=_('If you change this url from the default - '
-                    'then you will also probably want to adjust translation of '
-                    'the following string: ') + '"' 
-                    + escape(const.GREETING_FOR_ANONYMOUS_USER + '"'
-                    ' You can find this string in your locale django.po file'
-                    )
+        help_text=_(
+                'Use HTML to format the message '
+            )
     )
 )
 

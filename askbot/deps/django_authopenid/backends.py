@@ -3,15 +3,19 @@ multiple login methods supported by the authenticator
 application
 """
 import datetime
+import logging
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
+from django.conf import settings as django_settings
 from django.utils.translation import ugettext as _
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
-from askbot import models
-import logging
-import crypt
-import pwd
+from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
+from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
+from askbot.conf import settings as askbot_settings
+from askbot.models.signals import user_registered
+
+LOG = logging.getLogger(__name__)
 
 class AuthBackend(object):
     """Authenticator's authentication backend class
@@ -21,19 +25,20 @@ class AuthBackend(object):
     the reason there is only one class - for simplicity of
     adding this application to a django project - users only need
     to extend the AUTHENTICATION_BACKENDS with a single line
+
+    todo: it is not good to have one giant do all 'authenticate' function
     """
 
     def authenticate(
                 self,
-                username = None,#for 'password'
-                password = None,#for 'password'
+                username = None,#for 'password' and 'ldap'
+                password = None,#for 'password' and 'ldap'
                 user_id = None,#for 'force'
                 provider_name = None,#required with all except email_key
                 openid_url = None,
                 email_key = None,
                 oauth_user_id = None,#used with oauth
                 facebook_user_id = None,#user with facebook
-                ldap_user_id = None,#for ldap
                 wordpress_url = None, # required for self hosted wordpress
                 wp_user_id = None, # required for self hosted wordpress
                 method = None,#requried parameter
@@ -43,31 +48,30 @@ class AuthBackend(object):
         from the signature of the function call
         """
         login_providers = util.get_enabled_login_providers()
+        assoc = None # UserAssociation not needed for ldap
         if method == 'password':
             if login_providers[provider_name]['type'] != 'password':
                 raise ImproperlyConfigured('login provider must use password')
             if provider_name == 'local':
-                #logging.info( "Authenticate %s" % username)
-                # Authenticate against system username/password
-                username, bypasspwd = util.check_pwd_bypass(username)
-
-                if bypasspwd == False:
-                    try:
-                        p = pwd.getpwnam(username)
-                    except KeyError:
-                        return None
-
-                    if(crypt.crypt(password, p.pw_passwd) != p.pw_passwd):
-                        return None
-
-                # If user is not in Askbot, create it.
                 try:
                     user = User.objects.get(username=username)
+                    if not user.check_password(password):
+                        return None
                 except User.DoesNotExist:
-                    first, last, email = util.get_user_info(method, username)
-                    if first == None:
-                       return None
-                    user = util.setup_new_user(username, first, last, email)
+                    try:
+                        email_address = username
+                        user = User.objects.get(email = email_address)
+                        if not user.check_password(password):
+                            return None
+                    except User.DoesNotExist:
+                        return None
+                    except User.MultipleObjectsReturned:
+                        LOG.critical(
+                            ('have more than one user with email %s ' +
+                            'he/she will not be able to authenticate with ' +
+                            'the email address in the place of user name') % email_address
+                        )
+                        return None
             else:
                 if login_providers[provider_name]['check_password'](username, password):
                     try:
@@ -84,11 +88,13 @@ class AuthBackend(object):
                         if created:
                             user.set_password(password)
                             user.save()
+                            user_registered.send(None, user = user)
                         else:
                             #have username collision - so make up a more unique user name
                             #bug: - if user already exists with the new username - we are in trouble
                             new_username = '%s@%s' % (username, provider_name)
                             user = User.objects.create_user(new_username, '', password)
+                            user_registered.send(None, user = user)
                             message = _(
                                 'Welcome! Please set email address (important!) in your '
                                 'profile and adjust screen name, if necessary.'
@@ -161,24 +167,34 @@ class AuthBackend(object):
                 return None
 
         elif method == 'ldap':
-            try:
-                assoc = UserAssociation.objects.get(
-                                            openid_url = ldap_user_id,
-                                            provider_name = provider_name
+            user_info = ldap_authenticate(username, password)
+            if user_info['success'] == False:
+                # Maybe a user created internally (django admin user)
+                try:
+                    user = User.objects.get(username__exact=username)
+                    if user.check_password(password):
+                        return user
+                    else:
+                        return None
+                except User.DoesNotExist:
+                    return None 
+            else:
+                #load user by association or maybe auto-create one
+                ldap_username = user_info['ldap_username']
+                try:
+                    #todo: provider_name is hardcoded - possible conflict
+                    assoc = UserAssociation.objects.get(
+                                            openid_url = ldap_username + '@ldap',
+                                            provider_name = 'ldap'
                                         )
-                user = assoc.user
-            except UserAssociation.DoesNotExist:
-                first, last, email = util.get_user_info(method, ldap_user_id)
-                if(first == None):
-                   return None
-
-                user = util.setup_new_user(ldap_user_id, first, last, email)
-
-                assoc = UserAssociation(
-                                    openid_url = ldap_user_id,
-                                    user = user,
-                                    provider_name = provider_name
-                                )
+                    user = assoc.user
+                except UserAssociation.DoesNotExist:
+                    #email address is required
+                    if 'email' in user_info and askbot_settings.LDAP_AUTOCREATE_USERS:
+                        assoc = ldap_create_user(user_info)
+                        user = assoc.user
+                    else:
+                        return None
 
         elif method == 'wordpress_site':
             try:
@@ -195,9 +211,10 @@ class AuthBackend(object):
         else:
             raise TypeError('only openid and password supported')
 
-        #update last used time
-        assoc.last_used_timestamp = datetime.datetime.now()
-        assoc.save()
+        if assoc:
+            #update last used time
+            assoc.last_used_timestamp = datetime.datetime.now()
+            assoc.save()
         return user
 
     def get_user(self, user_id):

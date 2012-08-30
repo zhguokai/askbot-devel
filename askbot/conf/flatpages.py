@@ -3,11 +3,13 @@ Q&A forum flatpages (about, etc.)
 """
 from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup, LongStringValue
+from askbot.conf.super_groups import CONTENT_AND_UI
 from django.utils.translation import ugettext as _
 
 FLATPAGES = ConfigurationGroup(
                 'FLATPAGES',
-                _('Flatpages - about, privacy policy, etc.')
+                _('Flatpages - about, privacy policy, etc.'),
+                super_group = CONTENT_AND_UI
             )
 
 settings.register(
@@ -47,5 +49,16 @@ settings.register(
             'Save, then <a href="http://validator.w3.org/">'
             'use HTML validator</a> on the "privacy" page to check your input.'
         )
+    )
+)
+
+#todo: merge this with mandatory tags
+settings.register(#this field is not editable manually
+    LongStringValue(
+        FLATPAGES,
+        'CATEGORY_TREE',
+        description = 'Category tree',#no need to translate
+        default = '',#empty array of arrays in json
+        #hidden = True
     )
 )
