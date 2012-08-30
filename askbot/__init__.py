@@ -14,7 +14,7 @@ REQUIREMENTS = {
     'akismet': 'akismet',
     'django': 'django==1.3.1',
     'jinja2': 'Jinja2',
-    'coffin': 'Coffin>=0.3',
+    'coffin': 'Coffin>=0.3.3',
     'south': 'South>=0.7.1',
     'oauth2': 'oauth2',
     'markdown2': 'markdown2',

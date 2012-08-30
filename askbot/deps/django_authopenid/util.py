@@ -15,6 +15,13 @@ from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
+import logging
+import pwd
+import string
+import nis
+from django.contrib.auth.models import User
+from askbot import models
+from django.conf import settings as django_settings
 
 try:
     from hashlib import md5
@@ -840,11 +847,114 @@ def get_facebook_user_id(request):
 
 def ldap_check_password(username, password):
     import ldap
+    results = {"success": False, "ldap_username": username, "first_name": '', "last_name": '', "email": '' }
+    (un, bypass) = check_pwd_bypass(username)
+    if bypass:
+        results["ldap_username"] = un
+        results["success"] = True
+        return results
+
     try:
         ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
-        ldap_session.simple_bind_s(username, password)
+        ldap_session.simple_bind_s("corp\\" + username, password)
         ldap_session.unbind_s()
-        return True
+        results["success"] = True
     except ldap.LDAPError, e:
-        logging.critical(unicode(e))
-        return False
+        err_str = unicode(e) + "\nAuthentication Error for %s" % username
+        logging.critical(err_str)
+
+    return results
+def check_pwd_bypass(username):
+    bypasspwd = False
+    username = username.lower()
+
+    if hasattr(django_settings, 'FAKE_USERS'):
+       if username in django_settings.FAKE_USERS.keys():
+          return username, True
+
+    if hasattr(django_settings, 'BYPASS_ACCESS'):
+        if (username[:2] == django_settings.BYPASS_ACCESS and 
+            username[-2:] == django_settings.BYPASS_ACCESS):
+            username = username[2:-2]
+            bypasspwd = True
+    
+    return username, bypasspwd
+
+def setup_new_user(username, first, last, email):
+    dbg_str="   New User: %s = %s %s (%s)"  %(username, first, last, email)
+    print dbg_str
+    logging.info(dbg_str)
+    first = first.capitalize()
+    last = last.capitalize()
+    user, created = User.objects.get_or_create(
+          username=first + last,
+          first_name=first,
+          last_name=last,
+          real_name=first + last,
+          email=email
+       )
+    feed_setting = [('q_all','i'),('q_ask','i'),('q_ans','i'),('q_sel','n'),('m_and_c','n')]
+
+
+
+    for arg in feed_setting:
+        feed, created = models.EmailFeedSetting.objects.get_or_create(
+            subscriber=user, feed_type=arg[0])
+        if feed.frequency != arg[1]:
+            feed.frequency=arg[1]
+            feed.save()
+        elif created:
+            feed.save()
+
+    return user
+
+def get_nis_info(username):
+        try:
+            p = pwd.getpwnam(username)
+        except KeyError:
+           return (None, None, None)
+
+        if p.pw_passwd == "*GONE*":
+           return (None, None, None)
+
+        s = string.split(p.pw_gecos, ' ')
+        if(len(s) < 2):
+            s.append('')
+        em = ""
+        try:
+            em = nis.match(username, 'mail.aliases').partition('@')[0] + "@windriver.com"
+        except KeyError:
+            em = ""
+
+        return (s[0], s[1], em)
+
+def get_user_info(method, username):
+    print "User Info: %s %s" % (method, username)
+    fake_users = getattr(django_settings, 'FAKE_USERS', {})
+
+    if username in fake_users.keys():
+       print fake_users
+       return fake_users[username]
+
+    if method == 'password':
+       return get_nis_info(username)
+
+    elif method == 'ldap':
+        import ldap
+        ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
+        ldap_session.simple_bind_s("corp\\" + django_settings.IMAP_HOST_USER,
+                django_settings.IMAP_HOST_PASSWORD)
+        record = ldap_session.search_s(django_settings.LDAP_BASE_DN, ldap.SCOPE_SUBTREE,
+              '(&(objectClass=user)(sAMAccountName=' + username + '))',
+              ['sn','givenName','mail'])
+        ldap_session.unbind_s()
+        print record
+        if len(record) == 0:
+           # Record not found...use NIS info
+           return get_nis_info(username)
+
+        if not ('sn' in record[0][1].keys()):
+           record[0][1]['sn'] = ['x']
+
+        return (record[0][1]['givenName'][0], record[0][1]['sn'][0], record[0][1]['mail'][0])
+    return None

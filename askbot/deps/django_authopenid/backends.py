@@ -167,7 +167,8 @@ class AuthBackend(object):
                 return None
 
         elif method == 'ldap':
-            user_info = ldap_authenticate(username, password)
+            #user_info = ldap_authenticate(username, password)
+            user_info = util.ldap_check_password(username, password)
             if user_info['success'] == False:
                 # Maybe a user created internally (django admin user)
                 try:
@@ -184,8 +185,8 @@ class AuthBackend(object):
                 try:
                     #todo: provider_name is hardcoded - possible conflict
                     assoc = UserAssociation.objects.get(
-                                            openid_url = ldap_username + '@ldap',
-                                            provider_name = 'ldap'
+                                            openid_url = ldap_username,
+                                            provider_name = 'Wind River LDAP'
                                         )
                     user = assoc.user
                 except UserAssociation.DoesNotExist:

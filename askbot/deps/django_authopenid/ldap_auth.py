@@ -169,7 +169,7 @@ def ldap_authenticate_default(username, password):
     return user_info
 
 
-def ldap_create_user_default(user_info):
+def ldap_create_user(user_info):
     """takes the result returned by the :func:`ldap_authenticate`
 
     and returns a :class:`UserAssociation` object
@@ -190,8 +190,8 @@ def ldap_create_user_default(user_info):
 
     assoc = UserAssociation()
     assoc.user = user
-    assoc.openid_url = user_info['ldap_username'] + '@ldap'
-    assoc.provider_name = 'ldap'
+    assoc.openid_url = user_info['ldap_username']
+    assoc.provider_name = 'Wind River LDAP'
     assoc.save()
     return assoc
 
@@ -200,9 +200,3 @@ if LDAP_AUTH_FUNC_PATH:
     ldap_authenticate = load_module(LDAP_AUTH_FUNC_PATH)
 else:
     ldap_authenticate = ldap_authenticate_default
-
-LDAP_CREATE_FUNC_PATH = getattr(django_settings, 'LDAP_CREATE_USER_FUNCTION', None)
-if LDAP_CREATE_FUNC_PATH:
-    ldap_create_user = load_module(LDAP_CREATE_FUNC_PATH)
-else:
-    ldap_create_user = ldap_create_user_default
