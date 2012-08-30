@@ -211,7 +211,7 @@ class Command(BaseCommand):
             wild_ignore = 0
             wild_sub = 0
             if tag.name in wild_tags:
-                (wild_follow, wild_ignore) = wild_tags[tag.name]
+                (wild_follow, wild_ignore,wild_sub) = wild_tags[tag.name]
 
             tag_marks = tag.user_selections
             follow_count = tag_marks.filter(reason='good').count() \
