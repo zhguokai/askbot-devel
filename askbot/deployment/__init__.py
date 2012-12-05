@@ -202,6 +202,8 @@ def deploy_askbot(options):
 def collect_missing_options(options_dict):
     options_dict['secret_key'] = generate_random_key()
     if options_dict['database_engine'] == '2':#sqlite
+        if 'database_name' in options_dict:
+            return options_dict
         while True:
             value = console.simple_dialog(
                             'Please enter database file name'
@@ -217,6 +219,8 @@ def collect_missing_options(options_dict):
                 print 'name %s cannot be used for the database name' % value
             elif value == path_utils.LOG_DIR_NAME:
                 print 'name %s cannot be used for the database name' % value
+            else:
+                database_file_name = value
 
             if database_file_name:
                 options_dict['database_name'] = database_file_name
