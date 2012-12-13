@@ -13,6 +13,11 @@ class LoginRequired(exceptions.PermissionDenied):
             msg = _('Sorry, but anonymous visitors cannot access this function')
         super(LoginRequired, self).__init__(msg)
 
+class AuthProviderError(exceptions.ImproperlyConfigured):
+    """raised when authentication provider did not return
+    expected results"""
+    pass
+
 class InsufficientReputation(exceptions.PermissionDenied):
     """exception class to indicate that permission
     was denied due to insufficient reputation

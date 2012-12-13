@@ -29,6 +29,15 @@ var animateHashes = function(){
     }
 };
 
+/**
+ * logs a message, if console is available
+ */
+var debug = function(message) {
+    if (window.console) {
+        console.log(message)
+    }
+};
+
 var getUniqueValues = function(values) {
     var uniques = new Object();
     var out = new Array();
@@ -778,6 +787,11 @@ SimpleControl.prototype.setTitle = function(title){
     this._title = title;
 };
 
+SimpleControl.prototype.decorate = function(element) {
+    this._element = element;
+    this.setHandlerInternal();
+};
+
 var EditLink = function(){
     SimpleControl.call(this)
 };
@@ -932,6 +946,36 @@ ModalDialog.prototype.setMessage = function(text, message_type) {
     this.prependContent(box.getElement());
 };
 
+/**
+ * this function is to be used to activate a pre-rendered
+ * modal menu
+ * @param {object} jQuery object of the modal menu
+ */
+ModalDialog.prototype.decorate = function(element) {
+    
+    if (element.length > 1) {
+        element = element[0];
+        debug('strange too many modal menues found!!!');
+    } else if (element.length === 0) {
+        debug('no modal menues found, instead check for length of this selector outside');
+        return;
+    }
+
+    this._element = element;
+    this._content_element = element.find('.modal-body');
+
+    var accept_btn = element.find('.btn.btn-primary');
+    setupButtonEventHandlers(accept_btn, this._accept_handler);
+
+    var cancel_btn = element.find('.btn.cancel');
+    if (cancel_btn.length) {
+        setupButtonEventHandlers(cancel_btn, this._reject_handler);
+    }
+};
+
+/** 
+ * creates a modal menu DOM programmatically
+ */
 ModalDialog.prototype.createDom = function() {
     this._element = this.makeElement('div')
     var element = this._element;
@@ -1139,6 +1183,87 @@ FileUploadDialog.prototype.createDom = function() {
 
     upload_input.change(this.getStartUploadHandler());
 };
+
+
+/**
+ * @constructor
+ * a modal dialog that loads display content via pjax
+ */
+var PjaxDialog = function() {
+    ModalDialog.call(this);
+    //url at which html can be loaded
+    this._loadUrl = undefined;
+};
+inherits(PjaxDialog, ModalDialog);
+
+PjaxDialog.prototype.startOpening = function() {
+    var me = this;
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: this._loadUrl,
+        cache: false,
+        success: function(data) {
+            me.setContent(data['html']);
+            var element = me.getElement();
+            $(document).append(element);
+            me.show();
+        }
+    });
+};
+
+/**
+ * @constructor
+ */
+var LoginDialog = function() {
+    PjaxDialog.call(this);
+    this._loadUrl = askbot['urls']['userSignin'];
+};
+inherits(LoginDialog, PjaxDialog);
+
+/**
+ * @constructor
+ */
+var PjaxDialogTrigger = function() {
+    SimpleControl.call(this);
+    this._handler = this.getOpenDialogHandler();
+    this._dialog = undefined;
+    this._dialogClass = undefined;//assign this in the subclass's constructor
+};
+inherits(PjaxDialogTrigger, SimpleControl);
+
+PjaxDialogTrigger.prototype.setDialog = function(dialog) {
+    this._dialog = dialog;
+};
+
+PjaxDialogTrigger.prototype.getDialog = function() {
+    return this._dialog;
+};
+
+PjaxDialogTrigger.prototype.getDialogClass = function() {
+    return this._dialogClass;
+};
+
+PjaxDialogTrigger.prototype.getOpenDialogHandler = function() {
+    var me = this;
+    return function() {
+        var dialog = me.getDialog();
+        if (dialog) {
+            dialog.show();
+        } else {
+            var dialogClass = me.getDialogClass();
+            dialog = new dialogClass();
+            me.setDialog(dialog);
+            dialog.startOpening();
+        }
+    };
+};
+
+var LoginLink = function() {
+    PjaxDialogTrigger.call(this);
+    this._dialogClass = LoginDialog;
+};
+inherits(LoginLink, PjaxDialogTrigger);
 
 /**
  * attaches a modal menu with a text editor
@@ -1837,43 +1962,43 @@ GroupDropdown.prototype.createDom =  function(){
 };
 
 GroupDropdown.prototype.decorate = function(element){
-  this._element = element; 
-  this._element.attr('class', 'dropdown-menu');
-  this._element.attr('id', 'groups-dropdown');
-  this._element.attr('role', 'menu');
-  this._element.attr('aria-labelledby', 'navGroups');
+    this._element = element; 
+    this._element.attr('class', 'dropdown-menu');
+    this._element.attr('id', 'groups-dropdown');
+    this._element.attr('role', 'menu');
+    this._element.attr('aria-labelledby', 'navGroups');
 
-  for (i=0; i<this._group_list.length; i++){
-    li_element = this.makeElement('li');
-    a_element = this.makeElement('a');
-    a_element.text(this._group_list[i].name);
-    a_element.attr('href', this._group_list[i].link);
-    a_element.attr('class', 'group-name');
-    li_element.append(a_element);
-    this._element.append(li_element);
-  }
+    for (i=0; i<this._group_list.length; i++){
+        var li_element = this.makeElement('li');
+        var a_element = this.makeElement('a');
+        a_element.text(this._group_list[i].name);
+        a_element.attr('href', this._group_list[i].link);
+        a_element.attr('class', 'group-name');
+        li_element.append(a_element);
+        this._element.append(li_element);
+    }
 };
 
 GroupDropdown.prototype.insertGroup = function(group_name, url){
     var new_group_li = this.makeElement('li');
-    new_group_a = this.makeElement('a');
+    var new_group_a = this.makeElement('a');
     new_group_a.attr('href', url);
     new_group_a.attr('class', 'group-name');
     new_group_a.text(group_name);
     new_group_li.append(new_group_a);
-    links_array = this._element.find('a')
+    var links_array = this._element.find('a');
     for (i=1; i < links_array.length; i++){
         var listedName = links_array[i].text;
         var cleanedListedName = listedName.toLowerCase();
-        var cleanedNewName = group_name.toLowerCase()
-        if (listedName < newName) {
+        var cleanedNewName = group_name.toLowerCase();
+        if (cleanedListedName < cleanedNewName) {
             if (i == links_array.length - 1){
-                new_group_li.insertAfter(this._element.find('li')[i-1])
+                new_group_li.insertAfter(this._element.find('li')[i-1]);
                 break;
             } else {
                 continue;
             }
-        } else if (cleanedNewName === cleanedNewName) {
+        } else if (cleanedListedName === cleanedNewName) {
             var message = interpolate(gettext(
                     'Group %(name)s already exists. Group names are case-insensitive.'
                 ), {'name': listedName}, true
@@ -1881,49 +2006,48 @@ GroupDropdown.prototype.insertGroup = function(group_name, url){
             notify.show(message);
             return;
         } else {
-            new_group_li.insertAfter(this._element.find('li')[i-1])
+            new_group_li.insertAfter(this._element.find('li')[i-1]);
             break;
         }
     }
 };
 
 GroupDropdown.prototype._add_group_handler = function(group_name){
-  var group_name = this._input_box_element.val();
-  self = this;
-  if (!group_name){
-    return;
-  }
-
-  $.ajax({
-    type: 'POST',
-    url: askbot['urls']['add_group'],
-    data: {group: group_name},
-    success: function(data){
-       if (data.success){
-         self.insertGroup(data.group_name, data.url);
-         self._input_box_element.hide();
-         self._add_link.show();
-         return true; 
-       } else{
-         return false;
-       }
-     },
-     error: function(){console.log('error');}
-  });
+    var group_name = this._input_box_element.val();
+    var self = this;
+    if (!group_name){
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: askbot['urls']['add_group'],
+        data: {group: group_name},
+        success: function(data){
+            if (data.success){
+                self.insertGroup(data.group_name, data.url);
+                self._input_box_element.hide();
+                self._add_link.show();
+                return true; 
+            } else{
+                return false;
+            }
+        },
+        error: function(){console.log('error');}
+    });
 };
 
 GroupDropdown.prototype.enableAddGroups = function(){
     var self = this;
     this._add_link.click(function(){ 
-      self._add_link.hide();
-      self._input_box_element.show(); 
-      self._input_box_element.focus(); 
+        self._add_link.hide();
+        self._input_box_element.show(); 
+        self._input_box_element.focus(); 
     });
     this._input_box_element.keydown(function(event){
-      if (event.which == 13 || event.keyCode==13){
-        self._add_group_handler(); 
-        self._input_box_element.val('');
-      }
+        if (event.which == 13 || event.keyCode==13){
+            self._add_group_handler(); 
+            self._input_box_element.val('');
+        }
     });
 
     var divider = this.makeElement('li');

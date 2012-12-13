@@ -548,7 +548,7 @@ var Vote = function(){
     var acceptAnonymousMessage = gettext('insufficient privilege');
     var acceptOwnAnswerMessage = gettext('cannot pick own answer as best');
 
-    var pleaseLogin = " <a href='" + askbot['urls']['user_signin']
+    var pleaseLogin = " <a href='" + askbot['urls']['userSignin']
                     + "?next=" + askbot['urls']['question_url_template']
                     + "'>"
                     + gettext('please login') + "</a>";

@@ -707,7 +707,7 @@ FollowUser.prototype.go = function(){
     if (askbot['data']['userIsAuthenticated'] === false){
         var message = gettext('Please <a href="%(signin_url)s">signin</a> to follow %(username)s');
         var message_data = {
-            signin_url: askbot['urls']['user_signin'] + '?next=' + window.location.href,
+            signin_url: askbot['urls']['userSignin'] + '?next=' + window.location.href,
             username: this._user_name
         }
         message = interpolate(message, message_data, true);

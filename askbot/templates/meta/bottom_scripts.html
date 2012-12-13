@@ -23,7 +23,7 @@
     askbot['urls']['get_tag_list'] = '{% url "get_tag_list" %}';
     askbot['urls']['follow_user'] = '/followit/follow/user/{{'{{'}}userId{{'}}'}}/';
     askbot['urls']['unfollow_user'] = '/followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
-    askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
+    askbot['urls']['userSignin'] = '{{ settings.LOGIN_URL }}';
     askbot['urls']['getEditor'] = '{% url "get_editor" %}';
     askbot['urls']['titleSearch'] = '{% url "title_search" %}';
     askbot['urls']['ask'] = '{% url "ask" %}';
@@ -99,6 +99,11 @@
         group_dropdown.enableAddGroups();
         {%endif%}
         {% endif %}
+        var loginLink = $('a.login');
+        if (loginLink.length === 1) {
+            var loginBtn = new LoginLink();
+            loginBtn.decorate(loginLink);
+        }
     });
 {% if user_messages %}
     $('#validate_email_alert').click(function(){notify.close(true)})

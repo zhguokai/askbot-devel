@@ -34,12 +34,13 @@ from askbot import conf
 from askbot import const
 from askbot import mail
 from askbot.conf import settings as askbot_settings
+from askbot.utils import html as html_utils
 from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot.utils.forms import get_db_object_or_404
 from django.template import RequestContext
-from askbot.skins.loaders import render_into_skin_as_string
+from askbot.skins.loaders import render_to_string
 from askbot.skins.loaders import render_text_into_skin
 
 
@@ -490,7 +491,7 @@ def get_thread_shared_users(request):
     data = {
         'users': users,
     }
-    html = render_into_skin_as_string('widgets/user_list.html', data, request)
+    html = render_to_string(request, 'widgets/user_list.html', data)
     re_data = simplejson.dumps({
         'html': html,
         'users_count': users.count(),
@@ -506,7 +507,7 @@ def get_thread_shared_groups(request):
     thread = models.Thread.objects.get(id=thread_id)
     groups = thread.get_groups_shared_with()
     data = {'groups': groups}
-    html = render_into_skin_as_string('widgets/groups_list.html', data, request)
+    html = render_to_string(request, 'widgets/groups_list.html', data)
     re_data = simplejson.dumps({
         'html': html,
         'groups_count': groups.count(),
@@ -1363,18 +1364,11 @@ def get_editor(request):
     )
     #parse out javascript and dom, and return them separately
     #we need that, because js needs to be added in a special way
-    html_soup = BeautifulSoup(editor_html)
-
-    parsed_scripts = list()
-    for script in html_soup.find_all('script'):
-        parsed_scripts.append({
-            'contents': script.string,
-            'src': script.get('src', None)
-        })
+    html_contents, scripts = html_utils.split_contents_and_scripts(editor_html)
 
     data = {
-        'html': str(html_soup.textarea),
-        'scripts': parsed_scripts,
+        'html': html_contents,
+        'scripts': scripts,
         'success': True
     }
     return HttpResponse(simplejson.dumps(data), mimetype='application/json')
