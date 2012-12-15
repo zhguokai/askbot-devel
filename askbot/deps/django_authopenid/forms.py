@@ -308,7 +308,6 @@ class LoginForm(forms.Form):
 
 class OpenidRegisterForm(forms.Form):
     """ openid signin form """
-    next = NextUrlField()
     username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
 

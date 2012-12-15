@@ -2275,15 +2275,8 @@ TinyMCE.prototype.loadEditor = function() {
                 editorBox.html(data['html']);
                 editorBox.find('textarea').val(me._text);//@todo: fixme
                 $.each(data['scripts'], function(idx, scriptData) {
-                    var scriptElement = me.makeElement('script');
-                    scriptElement.attr('type', 'text/javascript');
-                    if (scriptData['src']) {
-                        scriptElement.attr('src', scriptData['src']);
-                    }
-                    if (scriptData['contents']) {
-                        scriptElement.html(scriptData['contents']);
-                    }
-                    $('head').append(scriptElement);
+                    var script = new ScriptElement(scriptData);
+                    script.activate();
                 });
             }
         }

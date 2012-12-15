@@ -17,6 +17,7 @@ from django.utils.encoding import smart_str
 from askbot import exceptions as askbot_exceptions
 from askbot.conf import settings as askbot_settings
 from askbot.utils import url_utils
+from askbot.utils.http import render_to_json_response
 from askbot import get_version
 
 def auto_now_timestamp(func):
@@ -108,13 +109,8 @@ def ajax_only(view_func):
             }
             return HttpResponse(simplejson.dumps(data), mimetype='application/json')
 
-        if isinstance(data, HttpResponse):#is this used?
-            data.mimetype = 'application/json'
-            return data
-        else:
-            data['success'] = 1
-            json = simplejson.dumps(data)
-            return HttpResponse(json, mimetype='application/json')
+        return render_to_json_response(data)
+
     return wrapper
 
 def check_authorization_to_post(func_or_message):

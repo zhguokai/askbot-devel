@@ -66,10 +66,12 @@
             animateHashes();
         {% endif %}
 
+        {% if 'modal_menu' not in request.session %}
         if (searchInput) {
             searchInput.focus();
             putCursorAtEnd(searchInput);
         }
+        {% endif %}
         
         {% if active_tab in ('questions', 'badges', 'ask') %}
         if (searchInput) {

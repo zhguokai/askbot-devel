@@ -391,6 +391,37 @@ WrappedElement.prototype.dispose = function(){
     this._in_document = false;
 };
 
+
+/**
+ * @constructor
+ * @param {object} data (keys: src, contents)
+ */
+var ScriptElement = function(data) {
+    WrappedElement.call(this);
+    this._src = data['src'] || undefined;
+    this._contents = data['contents'] || undefined;
+    if (this._src === undefined && this._contents === undefined) {
+        debug('Error! either contents or src must be defined');
+    }
+};
+inherits(ScriptElement, WrappedElement);
+
+ScriptElement.prototype.activate = function() {
+    var element = this.getElement();
+    $('head').append(element);
+};
+
+ScriptElement.prototype.createDom = function() {
+    this._element = this.makeElement('script');
+    this._element.attr('type', 'text/javascript');
+    if (this._src) {
+        this._element.attr('src', this._src);
+    }
+    if (this._contents) {
+        this._element.html(this._contents);
+    }
+};
+
 /** 
  * @constructor
  * a loader
@@ -1208,6 +1239,10 @@ PjaxDialog.prototype.startOpening = function() {
             var element = me.getElement();
             $(document).append(element);
             me.show();
+            $.each(data['scripts'], function(idx, scriptData) {
+                var script = new ScriptElement(scriptData);
+                script.activate();
+            });
         }
     });
 };

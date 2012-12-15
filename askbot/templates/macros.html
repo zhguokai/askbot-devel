@@ -790,3 +790,16 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
         })();
     </script>
 {% endmacro %}
+
+{% macro modal_menu(body, context) %}
+    <div class="modal-backdrop"></div>
+    <div class="modal on">
+        <div class="modal-header">
+            <div class="close" data-dismiss="modal">x</div>
+            <h3>Register your account</h3>
+        </div>
+        <div class="modal-body">
+            {{ body|safe }}
+        </div>
+    </div>
+{% endmacro %}

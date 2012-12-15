@@ -9,6 +9,7 @@ $.fn.authenticator = function() {
     var account_recovery_hint = $('#account-recovery-form>.hint');
     var account_recovery_link = $('#account-recovery-form>.hint>span.link'); 
     var account_recovery_text_span = $('#account-recovery-form>.hint>span.text');
+    var accountRecoveryForm = $('#account-recovery-form');
     var password_input_fields = $('#password-fs');
     var existing_login_methods_div = $('#existing-login-methods');
     var openid_submit_button = $('input[name=openid_login_with_extra_token]');
@@ -438,3 +439,4 @@ $.fn.authenticator = function() {
     clear_password_fields();
     return this;
 };
+//@ sourceURL=jquery.openid.js

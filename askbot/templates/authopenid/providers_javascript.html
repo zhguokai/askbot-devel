@@ -36,6 +36,7 @@
     {% endif %}
     askbot['settings']['signin_always_show_local_login'] = {% if settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}true{% else %}false{% endif %};
     $("body").authenticator();
+    //@ sourceURL=init_login_methods
 </script>
 {% if settings.FACEBOOK_KEY and settings.FACEBOOK_SECRET %}
 <div id="fb-root"></div>
