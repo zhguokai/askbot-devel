@@ -1504,7 +1504,8 @@ ul#related-tags li {
 
 /* ----- Ask and Edit Question Form template----- */
 
-.section-title{
+.section-title,
+.modal-header h3 {
     color:@section-title;
     font-family:@main-font;
     font-weight:bold;
@@ -2585,7 +2586,6 @@ ul#related-tags li {
 
 /* -----Content pages, Login, About, FAQ, Users----- */
 
-.openid-signin,
 .meta,
 .user-profile-edit-page,
 {
@@ -2607,7 +2607,6 @@ ul#related-tags li {
     }
 }
 
-.openid-signin,
 .meta,
 .users-page,
 .user-profile-edit-page,
@@ -2675,62 +2674,6 @@ ul#related-tags li {
             display: block;
         }
     }
-}
-
-.openid-signin form {
-    margin-bottom: 5px;
-}
-
-#email-input-fs,#local_login_buttons,#password-fs,#openid-fs{
-    margin-top:10px;
-    #id_email,#id_username,#id_password{
-        font-size: 12px;
-        line-height: 20px;
-        height: 20px;
-        margin: 0px;
-        padding: 0px 0 0 5px;
-        border:#cce6ec 3px solid;
-        width:200px;
-    }
-    .submit-b{
-        .button-style(24px,15px);
-        font-family:@body-font;
-        font-weight:bold;
-        padding-right:10px;
-        border:0;
-    }
-
-    .submit-b:hover{
-        .button-style-hover;
-    }
-}
-
-
-.openid-input {
-    background: url(../images/openid.gif) no-repeat;
-    padding-left: 15px;
-    cursor: pointer;
-}
-
-.openid-login-input {
-    background-position: center left;
-    background: url(../images/openid.gif) no-repeat 0% 50%;
-    padding: 5px 5px 5px 15px;
-    cursor: pointer;
-    font-family: Trebuchet MS;
-    font-weight: 300;
-    font-size: 150%;
-    width: 500px;
-}
-
-.openid-login-submit {
-    height: 40px;
-    width: 80px;
-    line-height: 40px;
-    cursor: pointer;
-    border: 1px solid #777;
-    font-weight: bold;
-    font-size: 120%;
 }
 
 /* People page */
@@ -3203,10 +3146,6 @@ table.form-as-table th {
     font-weight: normal;
 }
 
-table.ab-subscr-form {
-    width: 45em;
-}
-
 .submit-row {
     line-height: 30px;
     padding-top: 10px;
@@ -3219,17 +3158,12 @@ table.ab-subscr-form {
     color: #990000;
 }
 
-.error,
-.openid-signin p.error {
+.error {
     color: darkred;
     margin: 0;
     font-size: 12px;
     font-weight: bold;
     text-align: left;
-}
-
-.openid-signin p.error {
-    text-align: center;
 }
 
 label.retag-error {
@@ -4274,43 +4208,160 @@ textarea.tipped-input {
     }
 }
 
-/* stuff for the authentication pages */
-div#login-icons {padding: 0;}
-ul.login-icons {width: 450px; margin:0;padding:0;text-align:left; list-style-type:none; display:block;}
-ul.login-icons li {display:inline;} 
-ul.large input {height: 40px; width: 90px;border:1px solid #ccc;margin:0 5px 5px 0;}
-.openid-signin h1 {padding-bottom: 10px;}
-.openid-signin h2#account-recovery-heading {margin-bottom:2px;}
-#account-recovery-form p.hint a {color:#1b79bd; text-decoration: none;}
-#account-recovery-form p.hint a:hover {text-decoration: underline;}
-.openid-signin fieldset { border-style:none;margin:0;padding:0;}
-.openid-signin p {margin:0;padding:0;}
-.openid-signin p.hint {color: #555;}
-.openid-signin #password-fs label {width:100px;margin-top:5px;text-align:left;}
-.openid-signin #password-fs .hint {margin-bottom:5px}
-#password-fs a {padding-left:5px;}
-/*#signin-form #account-recovery-form input {cursor:pointer;}
-#signin-form #account-recovery-form input.text {cursor:default;}*/
-
-table.login { text-align: right;}
-
-.openid-signin .submit-b {
-    cursor: pointer; /*letter-spacing:1px;*/
-    margin: 0 0 2px 0;
-    vertical-align: middle;
+/* signin form styles */
+.federated-login-methods {
+    margin-bottom: 4em;
+    button {
+        background: 0 0 url(../jquery-openid/images/login-provider-logos-small.png) no-repeat;
+        border: none;
+        height: 45px;
+        text-indent: -10000px;
+        width: 48px;
+    }
+    li {
+        float: left;
+        margin: 0 10px 0 0;
+    }
+    li label {
+        text-align: center;
+    }
+    p {
+        margin-bottom: 1.5em;
+    }
+    ul {
+        padding: 0;
+        list-style: none;
+        margin: 0;
+    }
+    .aol {
+        background-position: -40px 0;
+    }
+    .aol:hover {
+        background-position: -40px 0;
+    }
+    .facebook {
+        background-position: -237px 0;
+        margin-left: 10px;
+    }
+    .facebook:hover {
+        background-position: -237px 0;
+    }
+    .google {
+        background-position: 5px 0;
+        width: 40px;
+    }
+    .google:hover {
+        background-position: 5px 0;
+    }
+    .identi-ca {
+        background-position: -333px 0;
+        margin-left: 2px;
+    }
+    .identi-ca:hover {
+        background-position: -333px 0;
+    }
+    .linkedin {
+        background-position: -183px 0;
+    }
+    .linkedin:hover {
+        background-position: -183px 0;
+    }
+    .livejournal {
+        background-position: -379px 0;
+        margin-left: 10px;
+    }
+    .livejournal:hover {
+        background-position: -379px 0;
+    }
+    .openid {
+        background-position: -287px 0;
+    }
+    .openid:hover {
+        background-position: -287px 0;
+    }
+    .twitter {
+        background-position: -138px 0;
+    }
+    .twitter:hover {
+        background-position: -138px 0;
+    }
+    .yahoo {
+        background-position: -87px 0;
+        margin: 0 5px;
+    }
+    .yahoo:hover {
+        background-position: -87px 0;
+    }
 }
-
-.openid-signin .highlight { -moz-border-radius:4px; -webkit-border-radius:4px; background-color: #FD6}
-
-ul.providers {
-    display: block;
+.extra-openid-info,
+.account-recovery form {
+    display: none;
 }
-
-.openid-signin th {
-    color: #555;
-    font-weight: normal;
+.account-recovery {
+    width: 88.5%;
+    margin: 1.9em 0 0 0;
 }
+.auth-menu {
+    margin: 0 .4em;
 
-.openid-signin .ab-provider-name {
-    font-weight: bold;
+    form {
+        margin: 0 0 8px;
+    }
+
+    button,
+    input,
+    label,
+    li {
+        display: block;
+    }
+    label {
+        line-height: 1em;
+        height: 1em;
+        margin-bottom: -1.5em;
+        padding-left: .5em;
+    }
+    .federated-login-methods label {
+        padding-left: 0;
+    }
+    .submit {
+        margin: -9px 0 0 0
+    }
+}
+.auth-menu .col1,
+.auth-menu .col2 {
+    box-sizing: border-box;
+    width: 50%;
+    float: left;
+}
+.auth-menu .col2 {
+    padding-left: 4.8%;
+    border-left: 1px solid #aaa;
+}
+.auth-menu .col1.single-column {
+    width: 100%;
+}
+.modal {
+    .password-login-method,
+    .password-registration {
+        input[type="text"],
+        input[type="password"] {
+            height: 2em;
+            line-height: 2em;
+            width: 88.5%;
+            margin-bottom: 2.5em;
+        }
+        p {
+            color:@section-title;
+            font-family:@main-font;
+            font-size: 16px;
+            line-height: 1em;
+            margin-bottom: 2em;
+        }
+    }
+    .password-registration {
+        input[type="text"],
+        input[type="password"] {
+            width: 96.5%;
+        }
+    }
 }

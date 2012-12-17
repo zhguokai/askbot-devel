@@ -912,11 +912,16 @@ DeleteIcon.prototype.setContent = function(content){
  * @contstructor
  * Simple modal dialog with Ok/Cancel buttons by default
  */
-var ModalDialog = function() {
+var ModalDialog = function(customOptions) {
     WrappedElement.call(this);
+    this._options = {//@todo: move other vars below to options
+        useFooter: true,
+        headingText: 'Add heading via option headingText or setHeadingText()'
+    };
+    $.extend(this._options, customOptions);
+    this._useFooter = true;
     this._accept_button_text = gettext('Ok');
     this._reject_button_text = gettext('Cancel');
-    this._heading_text = 'Add heading by setHeadingText()';
     this._initial_content = undefined;
     this._accept_handler = function(){};
     var me = this;
@@ -945,7 +950,7 @@ ModalDialog.prototype.prependContent = function(content) {
 };
 
 ModalDialog.prototype.setHeadingText = function(text) {
-    this._heading_text = text;
+    this._options.headingText = text;
 };
 
 ModalDialog.prototype.setAcceptButtonText = function(text) {
@@ -995,12 +1000,14 @@ ModalDialog.prototype.decorate = function(element) {
     this._element = element;
     this._content_element = element.find('.modal-body');
 
-    var accept_btn = element.find('.btn.btn-primary');
-    setupButtonEventHandlers(accept_btn, this._accept_handler);
+    if (this._options.useFooter) {
+        var accept_btn = element.find('.btn.btn-primary');
+        setupButtonEventHandlers(accept_btn, this._accept_handler);
 
-    var cancel_btn = element.find('.btn.cancel');
-    if (cancel_btn.length) {
-        setupButtonEventHandlers(cancel_btn, this._reject_handler);
+        var cancel_btn = element.find('.btn.cancel');
+        if (cancel_btn.length) {
+            setupButtonEventHandlers(cancel_btn, this._reject_handler);
+        }
     }
 };
 
@@ -1025,7 +1032,7 @@ ModalDialog.prototype.createDom = function() {
     header.append(close_link);
 
     var title = this.makeElement('h3');
-    title.html(this._heading_text);
+    title.html(this._options.headingText);
     header.append(title);
 
     //2) create content
@@ -1037,29 +1044,31 @@ ModalDialog.prototype.createDom = function() {
         this._content_element.append(this._initial_content);
     }
 
-    //3) create footer with accept and reject buttons (ok/cancel).
-    var footer = this.makeElement('div');
-    footer.addClass('modal-footer');
-    element.append(footer);
+    if (this._options.useFooter) {
+        //3) create footer with accept and reject buttons (ok/cancel).
+        var footer = this.makeElement('div');
+        footer.addClass('modal-footer');
+        element.append(footer);
 
-    var accept_btn = this.makeElement('button');
-    accept_btn.addClass('btn btn-primary');
-    accept_btn.html(this._accept_button_text);
-    footer.append(accept_btn);
+        var accept_btn = this.makeElement('button');
+        accept_btn.addClass('btn btn-primary');
+        accept_btn.html(this._accept_button_text);
+        footer.append(accept_btn);
 
-    if (this._reject_button_text) {
-        var reject_btn = this.makeElement('button');
-        reject_btn.addClass('btn cancel');
-        reject_btn.html(this._reject_button_text);
-        footer.append(reject_btn);
+        if (this._reject_button_text) {
+            var reject_btn = this.makeElement('button');
+            reject_btn.addClass('btn cancel');
+            reject_btn.html(this._reject_button_text);
+            footer.append(reject_btn);
+        }
+
+        //4) attach event handlers to the buttons
+        setupButtonEventHandlers(accept_btn, this._accept_handler);
+        if (this._reject_button_text) {
+            setupButtonEventHandlers(reject_btn, this._reject_handler);
+        }
+        setupButtonEventHandlers(close_link, this._reject_handler);
     }
-
-    //4) attach event handlers to the buttons
-    setupButtonEventHandlers(accept_btn, this._accept_handler);
-    if (this._reject_button_text) {
-        setupButtonEventHandlers(reject_btn, this._reject_handler);
-    }
-    setupButtonEventHandlers(close_link, this._reject_handler);
 
     this.hide();
 };
@@ -1220,8 +1229,8 @@ FileUploadDialog.prototype.createDom = function() {
  * @constructor
  * a modal dialog that loads display content via pjax
  */
-var PjaxDialog = function() {
-    ModalDialog.call(this);
+var PjaxDialog = function(opts) {
+    ModalDialog.call(this, opts);
     //url at which html can be loaded
     this._loadUrl = undefined;
 };
@@ -1251,7 +1260,11 @@ PjaxDialog.prototype.startOpening = function() {
  * @constructor
  */
 var LoginDialog = function() {
-    PjaxDialog.call(this);
+    var opts = {
+        useFooter: false,
+        headingText: gettext('Login or Register')
+    }
+    PjaxDialog.call(this, opts);
     this._loadUrl = askbot['urls']['userSignin'];
 };
 inherits(LoginDialog, PjaxDialog);

@@ -38,7 +38,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
 from recaptcha_works.fields import RecaptchaField
-from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
+from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField
 from askbot.utils.loading import load_module
 
 # needed for some linux distributions like debian
@@ -113,6 +113,10 @@ class OpenidSigninForm(forms.Form):
 
 class LoginForm(forms.Form):
     """All-inclusive login form.
+
+    todo: leave only federated login methods here
+    and remove anything releated to password login
+    right now "password" branches are simply not used.
 
     handles the following:
 
@@ -306,10 +310,52 @@ class LoginForm(forms.Form):
             self._errors['password_action'] = self.error_class([error_message])
             raise forms.ValidationError(error_message)
 
+
 class OpenidRegisterForm(forms.Form):
     """ openid signin form """
     username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
+
+
+class ClassicLoginForm(forms.Form):
+    """login form for user name and password"""
+    next = NextUrlField()
+    username = UserNameField()
+    password = forms.CharField(widget=forms.PasswordInput())
+
+
+class SetPasswordForm(forms.Form):
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(),
+        label=_('Password'),
+        error_messages={'required':_('password is required')},
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(),
+        label=mark_safe(_('Password <i>(please retype)</i>')),
+        error_messages={'required':_('please, retype your password'),
+        'nomatch':_('sorry, entered passwords did not match, please try again')},
+    )
+
+    def __init__(self, data=None, user=None, *args, **kwargs):
+        super(SetPasswordForm, self).__init__(data, *args, **kwargs)
+
+    def clean_password2(self):
+        """
+        Validates that the two password inputs match.
+        
+        """
+        if 'password1' in self.cleaned_data:
+            if self.cleaned_data['password1'] == self.cleaned_data['password2']:
+                self.password = self.cleaned_data['password2']
+                self.cleaned_data['password'] = self.cleaned_data['password2']
+                return self.cleaned_data['password2']
+            else:
+                del self.cleaned_data['password2']
+                raise forms.ValidationError(self.fields['password2'].error_messages['nomatch'])
+        else:
+            return self.cleaned_data['password2']
+
 
 class ClassicRegisterForm(SetPasswordForm):
     """ legacy registration form """

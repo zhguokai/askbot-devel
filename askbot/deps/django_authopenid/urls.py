@@ -7,6 +7,7 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     url(r'^yadis.xrdf$', 'xrdf', name='yadis_xrdf'),
      # manage account registration
     url(r'^%s$' % _('signin/'), 'signin', name='user_signin'),
+    url(r'^%s$' % _('password-signin/'), 'password_signin', name='user_password_signin'),
     url(r'^%s$' % _('widget/signin/'), 'signin',
         {'template_name': 'authopenid/widget_signin.html'},
         name='widget_signin'),
@@ -22,8 +23,8 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     url(r'^%s$' % _('register/'), 'register', name='user_register'),
     url(
         r'^%s$' % _('signup/'),
-        'signup_with_password',
-        name='user_signup_with_password'
+        'register_with_password',
+        name='user_register_with_password'
     ),
     url(r'^%s$' % _('logout/'), 'logout_page', name='logout'),
     #these two commeted out urls should work only with EMAIL_VALIDATION=True

@@ -79,8 +79,6 @@ class NextUrlField(forms.CharField):
     def clean(self,value):
         return clean_next(value)
 
-login_form_widget_attrs = { 'class': 'required login' }
-
 class UserNameField(StrippedNonEmptyCharField):
     RESERVED_NAMES = (u'fuck', u'shit', u'ass', u'sex', u'add',
                        u'edit', u'save', u'delete', u'manage', u'update', 'remove', 'new')
@@ -112,11 +110,6 @@ class UserNameField(StrippedNonEmptyCharField):
         if 'error_messages' in kw:
             error_messages.update(kw['error_messages'])
             del kw['error_messages']
-
-        if widget_attrs:
-            widget_attrs.update(login_form_widget_attrs)
-        else:
-            widget_attrs = login_form_widget_attrs
 
         max_length = MAX_USERNAME_LENGTH()
         super(UserNameField,self).__init__(
@@ -217,7 +210,7 @@ class UserEmailField(forms.EmailField):
 
         super(UserEmailField,self).__init__(
             widget=widget_class(
-                    attrs=dict(login_form_widget_attrs, maxlength=200)
+                    attrs=dict(maxlength=200)
                 ),
             label=mark_safe(_('Your email <i>(never shared)</i>')),
             error_messages={
@@ -260,34 +253,3 @@ class UserEmailField(forms.EmailField):
                 raise forms.ValidationError(self.error_messages['taken'])
         else:
             return email 
-
-class SetPasswordForm(forms.Form):
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
-                                label=_('Password'),
-                                error_messages={'required':_('password is required')},
-                                )
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
-                                label=mark_safe(_('Password <i>(please retype)</i>')),
-                                error_messages={'required':_('please, retype your password'),
-                                                'nomatch':_('sorry, entered passwords did not match, please try again')},
-                                )
-
-    def __init__(self, data=None, user=None, *args, **kwargs):
-        super(SetPasswordForm, self).__init__(data, *args, **kwargs)
-
-    def clean_password2(self):
-        """
-        Validates that the two password inputs match.
-        
-        """
-        if 'password1' in self.cleaned_data:
-            if self.cleaned_data['password1'] == self.cleaned_data['password2']:
-                self.password = self.cleaned_data['password2']
-                self.cleaned_data['password'] = self.cleaned_data['password2']
-                return self.cleaned_data['password2']
-            else:
-                del self.cleaned_data['password2']
-                raise forms.ValidationError(self.fields['password2'].error_messages['nomatch'])
-        else:
-            return self.cleaned_data['password2']
-

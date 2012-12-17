@@ -58,6 +58,7 @@ from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
 from askbot.skins.loaders import render_to_string
 from askbot.utils.decorators import ajax_only
+from askbot.utils.decorators import post_only
 from askbot.utils.html import split_contents_and_scripts
 from askbot.utils.http import render_to_json_response
 from askbot.utils.loading import load_module
@@ -360,6 +361,102 @@ def complete_oauth_signin(request):
         }
         return HttpResponseRedirect(next_url)
 
+
+@csrf.csrf_protect
+@post_only
+def change_password(request):
+    if request.user.is_authenticated():
+        new_password = \
+            login_form.cleaned_data['new_password']
+        AuthBackend.set_password(
+                        user=request.user,
+                        password=new_password,
+                        provider_name=provider_name
+                    )
+        return {'message': _('Your new password saved')}
+
+
+@csrf.csrf_protect
+@post_only
+def ldap_signin(request):
+    """sign in or create an account with LDAP"""
+
+    login_form = forms.ClassicLoginForm(request.POST)
+    #todo: clean the form
+    username = login_form.cleaned_data['username']
+    password = login_form.cleaned_data['password']
+
+    user = authenticate(
+                    username=username,
+                    password=password,
+                    method = 'ldap'
+                )
+
+    if user:
+        login(request, user)
+        return get_signin_user_data(user)
+    else:
+        #try to login again via LDAP
+        user_info = ldap_authenticate(username, password)
+        if user_info['success']:
+            if askbot_settings.LDAP_AUTOCREATE_USERS:
+                #create new user or
+                user = ldap_create_user(user_info).user
+                user = authenticate(method='force', user_id=user.id)
+                assert(user is not None)
+                login(request, user)
+                return get_signin_user_data(user)
+            else:
+                #continue with proper registration
+                ldap_username = user_info['ldap_username']
+                request.session['email'] = user_info['email']
+                request.session['ldap_user_info'] = user_info
+                if askbot_settings.AUTOFILL_USER_DATA:
+                    request.session['username'] = ldap_username
+                    request.session['first_name'] = \
+                        user_info['first_name']
+                    request.session['last_name'] = \
+                        user_info['last_name']
+                return finalize_generic_signin(
+                    request,
+                    login_provider_name = 'ldap',
+                    user_identifier = ldap_username + '@ldap',
+                    redirect_url = next_url
+                )
+        else:
+            auth_fail_func_path = getattr(
+                                django_settings,
+                                'LDAP_AUTHENTICATE_FAILURE_FUNCTION',
+                                None
+                            )
+
+            if auth_fail_func_path:
+                auth_fail_func = load_module(auth_fail_func_path)
+                auth_fail_func(user_info, login_form)
+            else:
+                login_form.set_password_login_error()
+
+
+@csrf.csrf_protect
+@post_only
+def password_signin(request):
+    #password_action = login_form.cleaned_data['password_action']
+    login_form = forms.ClassicLoginForm(request.POST)
+    if login_form.is_valid():
+        user = authenticate(
+                username = login_form.cleaned_data['username'],
+                password = login_form.cleaned_data['password'],
+                provider_name = provider_name,
+                method = 'password'
+            )
+        if user is None:
+            login_form.set_password_login_error()
+        else:
+            login(request, user)
+            #todo: here we might need to set cookies
+            #for external login sites
+            return HttpResponseRedirect(get_next_url(request))
+
 #@not_authenticated
 @csrf.csrf_protect
 def signin(request, template_name='authopenid/signin.html'):
@@ -405,95 +502,7 @@ def signin(request, template_name='authopenid/signin.html'):
         if login_form.is_valid():
 
             provider_name = login_form.cleaned_data['login_provider_name']
-            if login_form.cleaned_data['login_type'] == 'password':
-
-                password_action = login_form.cleaned_data['password_action']
-                if askbot_settings.USE_LDAP_FOR_PASSWORD_LOGIN:
-                    assert(password_action == 'login')
-                    username = login_form.cleaned_data['username']
-                    password = login_form.cleaned_data['password']
-
-                    user = authenticate(
-                                    username=username,
-                                    password=password,
-                                    method = 'ldap'
-                                )
-
-                    if user:
-                        login(request, user)
-                        return get_signin_user_data(user)
-                    else:
-                        #try to login again via LDAP
-                        user_info = ldap_authenticate(username, password)
-                        if user_info['success']:
-                            if askbot_settings.LDAP_AUTOCREATE_USERS:
-                                #create new user or
-                                user = ldap_create_user(user_info).user
-                                user = authenticate(method='force', user_id=user.id)
-                                assert(user is not None)
-                                login(request, user)
-                                return get_signin_user_data(user)
-                            else:
-                                #continue with proper registration
-                                ldap_username = user_info['ldap_username']
-                                request.session['email'] = user_info['email']
-                                request.session['ldap_user_info'] = user_info
-                                if askbot_settings.AUTOFILL_USER_DATA:
-                                    request.session['username'] = ldap_username
-                                    request.session['first_name'] = \
-                                        user_info['first_name']
-                                    request.session['last_name'] = \
-                                        user_info['last_name']
-                                return finalize_generic_signin(
-                                    request,
-                                    login_provider_name = 'ldap',
-                                    user_identifier = ldap_username + '@ldap',
-                                    redirect_url = next_url
-                                )
-                        else:
-                            auth_fail_func_path = getattr(
-                                                django_settings,
-                                                'LDAP_AUTHENTICATE_FAILURE_FUNCTION',
-                                                None
-                                            )
-
-                            if auth_fail_func_path:
-                                auth_fail_func = load_module(auth_fail_func_path)
-                                auth_fail_func(user_info, login_form)
-                            else:
-                                login_form.set_password_login_error()
-                else:
-                    if password_action == 'login':
-                        user = authenticate(
-                                username = login_form.cleaned_data['username'],
-                                password = login_form.cleaned_data['password'],
-                                provider_name = provider_name,
-                                method = 'password'
-                            )
-                        if user is None:
-                            login_form.set_password_login_error()
-                        else:
-                            login(request, user)
-                            #todo: here we might need to set cookies
-                            #for external login sites
-                            return HttpResponseRedirect(next_url)
-                    elif password_action == 'change_password':
-                        if request.user.is_authenticated():
-                            new_password = \
-                                login_form.cleaned_data['new_password']
-                            AuthBackend.set_password(
-                                            user=request.user,
-                                            password=new_password,
-                                            provider_name=provider_name
-                                        )
-                            return {'message': _('Your new password saved')}
-                    else:
-                        logging.critical(
-                            'unknown password action %s' % password_action
-                        )
-                        raise Http404
-
-            elif login_form.cleaned_data['login_type'] == 'openid':
+            if login_form.cleaned_data['login_type'] == 'openid':
                 #initiate communication process
                 logging.debug('processing signin with openid submission')
 
@@ -623,6 +632,7 @@ def get_signin_view_data(
     context of template 'authopenid/signin.html'
     and returns its rendered output
     """
+
     allowed_subtypes = (
                     'default', 'add_openid',
                     'email_sent', 'change_openid',
@@ -666,10 +676,10 @@ def get_signin_view_data(
         answer = None
 
     if request.user.is_authenticated():
-        existing_login_methods = UserAssociation.objects.filter(user = request.user)
+        users_login_methods = UserAssociation.objects.filter(user = request.user)
         #annotate objects with extra data
         providers = util.get_enabled_login_providers()
-        for login_method in existing_login_methods:
+        for login_method in users_login_methods:
             try:
                 provider_data = providers[login_method.provider_name]
                 if provider_data['type'] == 'password':
@@ -686,13 +696,15 @@ def get_signin_view_data(
                     login_method.provider_name
                 )
                 continue
+    else:
+        users_login_methods = list()
 
     if view_subtype == 'default':
         page_title = _('Please click any of the icons below to sign in')
     elif view_subtype == 'email_sent':
         page_title = _('Account recovery email sent')
     elif view_subtype == 'change_openid':
-        if len(existing_login_methods) == 0:
+        if len(users_login_methods) == 0:
             page_title = _('Please add one or more login methods.')
         else:
             page_title = _('If you wish, please add, remove or re-validate your login methods')
@@ -703,64 +715,39 @@ def get_signin_view_data(
 
     logging.debug('showing signin view')
     data = {
-        'page_class': 'openid-signin',
-        'view_subtype': view_subtype, #add_openid|default
-        'page_title': page_title,
-        'question':question,
+        'account_recovery_form': account_recovery_form,
         'answer':answer,
         'login_form': login_form,
-        'use_password_login': util.use_password_login(),
-        'account_recovery_form': account_recovery_form,
         'openid_error_message':  request.REQUEST.get('msg',''),
-        'account_recovery_message': account_recovery_message,
+        'page_class': 'openid-signin',
+        'page_title': page_title,
+        'password_register_form': forms.ClassicRegisterForm(),
+        'question':question,
         'use_password_login': util.use_password_login(),
+        'view_subtype': view_subtype, #add_openid|default
     }
 
-    major_login_providers = util.get_enabled_major_login_providers()
-    minor_login_providers = util.get_enabled_minor_login_providers()
+    login_providers = util.get_enabled_login_providers()
 
     #determine if we are only using password login
-    active_provider_names = [p['name'] for p in major_login_providers.values()]
-    active_provider_names.extend([p['name'] for p in minor_login_providers.values()])
+    active_provider_names = [p['name'] for p in login_providers.values()]
 
-    have_buttons = True
-    if (len(active_provider_names) == 1 and active_provider_names[0] == 'local'):
-        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN == True:
-            #in this case the form is not using javascript, so set initial values
-            #here
-            have_buttons = False
-            login_form.initial['login_provider_name'] = 'local'
-            if request.user.is_authenticated():
-                login_form.initial['password_action'] = 'change_password'
-            else:
-                login_form.initial['password_action'] = 'login'
-
-    data['have_buttons'] = have_buttons
+    data['have_buttons'] = len(active_provider_names)
 
     if request.user.is_authenticated():
-        data['existing_login_methods'] = existing_login_methods
-        active_provider_names = [item.provider_name for item in existing_login_methods]
+        data['existing_login_methods'] = users_login_methods
+        active_provider_names = [item.provider_name for item in users_login_methods]
+    else:
+        active_provider_names = list()
+        
+    util.set_login_provider_tooltips(login_providers, active_provider_names)
 
-    util.set_login_provider_tooltips(
-                        major_login_providers,
-                        active_provider_names = active_provider_names
-                    )
-    util.set_login_provider_tooltips(
-                        minor_login_providers,
-                        active_provider_names = active_provider_names
-                    )
-
-    data['major_login_providers'] = major_login_providers.values()
-    data['minor_login_providers'] = minor_login_providers.values()
+    data['login_providers'] = login_providers.values()
     data.update(csrf_context(request))
 
     signin_view_html = render_to_string(request, template_name, data)
     contents_html, scripts = split_contents_and_scripts(signin_view_html)
-
-    return {
-        'html': signin_view_html,
-        'scripts': scripts
-    }
+    return {'html': signin_view_html, 'scripts': scripts}
 
 @login_required
 def delete_login_method(request):
@@ -1075,7 +1062,7 @@ def verify_email_and_register(request):
 @decorators.valid_password_login_provider_required
 @csrf.csrf_protect
 @fix_recaptcha_remote_ip
-def signup_with_password(request):
+def register_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
     """
@@ -1145,14 +1132,12 @@ def signup_with_password(request):
                     )
     logging.debug('printing legacy signup form')
 
-    major_login_providers = util.get_enabled_major_login_providers()
-    minor_login_providers = util.get_enabled_minor_login_providers()
+    login_providers = util.get_enabled_login_providers()
 
     context_data = {
                 'form': form,
                 'page_class': 'openid-signin',
-                'major_login_providers': major_login_providers.values(),
-                'minor_login_providers': minor_login_providers.values(),
+                'login_providers': login_providers.values(),
                 'login_form': login_form
             }
     return render(
