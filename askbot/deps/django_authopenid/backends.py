@@ -50,8 +50,6 @@ class AuthBackend(object):
         login_providers = util.get_enabled_login_providers()
         assoc = None # UserAssociation not needed for ldap
         if method == 'password':
-            if login_providers[provider_name]['type'] != 'password':
-                raise ImproperlyConfigured('login provider must use password')
             if provider_name == 'local':
                 try:
                     user = User.objects.get(username=username)

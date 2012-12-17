@@ -552,6 +552,42 @@ Widget.prototype.makeButton = function(label, handler) {
 };
 
 /**
+ * @constructor
+ * similar to TippedInput, but the label
+ * is the actual label element immediately preceding the
+ * input and placed over the input by css.
+ * When user has something typed,
+ * label goes above the input
+ */
+var LabeledInput = function() {
+    WrappedElement.call(this);
+};
+inherits(LabeledInput, WrappedElement);
+
+LabeledInput.prototype.putLabelOutside = function() {
+    var coor = this._element.offset();
+    this._label.addClass('active');
+    coor.top = coor.top - this._label.outerHeight();
+    this._label.offset(coor);
+};
+
+LabeledInput.prototype.decorate = function(element) {
+    var label = $('label[for="' + element.attr('id') + '"]');
+    if (label.length !== 1) {
+        debug('could not find label!!!');
+        return;
+    }
+    this._element = element;
+    this._label = label;
+
+    var me = this;
+    element.keydown(function() {
+        me.putLabelOutside();//could be more complex
+    });
+};
+
+/**
+ * @todo: probably decommission tis in favor of LabeledInput
  * Can be used for an input box or textarea.
  * The original value will be treated as an instruction.
  * When user focuses on the field, the tip will be gone,

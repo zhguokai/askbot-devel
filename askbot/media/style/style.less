@@ -4320,6 +4320,10 @@ textarea.tipped-input {
         margin-bottom: -1.5em;
         padding-left: .5em;
     }
+    label.active {
+        padding-left: 0;
+        font-size: 12px;
+    }
     .federated-login-methods label {
         padding-left: 0;
     }
@@ -4345,10 +4349,13 @@ textarea.tipped-input {
     .password-registration {
         input[type="text"],
         input[type="password"] {
-            height: 2em;
-            line-height: 2em;
-            width: 88.5%;
+            color: @info-text;
+            font-size: 14px;
+            height: 1.5em;
+            line-height: 1.5em;
             margin-bottom: 2.5em;
+            padding-left: .3em;
+            width: 88.5%;
         }
         p {
             color:@section-title;

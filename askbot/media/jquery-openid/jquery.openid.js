@@ -1,3 +1,53 @@
+var FederatedLoginMenu = function() {
+    WrappedElement.call(this);
+};
+inherits(FederatedLoginMenu, WrappedElement);
+
+FederatedLoginMenu.prototype.getLoginHandler = function() {
+    var providerInput = this._providerNameElement;
+    return function(providerName) {
+        providerInput.val(providerName);
+    };
+};
+
+FederatedLoginMenu.prototype.decorate = function(element) {
+    this._element = element;
+    this._providerNameElement = element.find('input[name="login_provider_name"]');
+    this._form = element.find('form');
+    var buttons = element.find('li > button');
+    var me = this;
+    var loginWith = this.getLoginHandler();
+    $.each(buttons, function(idx, item) {
+        var button = $(item);
+        var providerName = button.attr('name');
+        setupButtonEventHandlers(button, function() { loginWith(providerName) });
+    });
+};
+
+/**
+ * @constructor
+ */
+var AuthMenu = function() {
+    WrappedElement.call(this);
+};
+inherits(AuthMenu, WrappedElement);
+
+AuthMenu.prototype.decorate = function(element) {
+    this._element = element;
+
+    var federatedLogins = new FederatedLoginMenu();
+    federatedLogins.decorate($('.federated-login-methods'));
+
+    //@todo: make sure to include account recovery field, hidden by default
+    var inputs = element.find('input[type="text"], input[type="password"]');
+    $.each(inputs, function(idx, item) {
+        var inputElement = $(item);
+        var input = new LabeledInput();
+        input.decorate(inputElement);
+    });
+};
+
+
 $.fn.authenticator = function() {
     var signin_page = $(this);
     var signin_form = $('#signin-form');

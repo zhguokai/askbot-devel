@@ -320,7 +320,7 @@ class OpenidRegisterForm(forms.Form):
 class ClassicLoginForm(forms.Form):
     """login form for user name and password"""
     next = NextUrlField()
-    username = UserNameField()
+    username = UserNameField(must_exist=True)
     password = forms.CharField(widget=forms.PasswordInput())
 
 
@@ -363,7 +363,6 @@ class ClassicRegisterForm(SetPasswordForm):
     next = NextUrlField()
     username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
-    login_provider = PasswordLoginProviderField()
     #fields password1 and password2 are inherited
 
 class SafeClassicRegisterForm(ClassicRegisterForm):

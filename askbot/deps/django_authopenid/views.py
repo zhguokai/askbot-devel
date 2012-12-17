@@ -441,21 +441,20 @@ def ldap_signin(request):
 @post_only
 def password_signin(request):
     #password_action = login_form.cleaned_data['password_action']
-    login_form = forms.ClassicLoginForm(request.POST)
+    login_form = forms.ClassicLoginForm(request.POST, prefix='login')
+    import pdb
+    pdb.set_trace()
     if login_form.is_valid():
         user = authenticate(
                 username = login_form.cleaned_data['username'],
                 password = login_form.cleaned_data['password'],
-                provider_name = provider_name,
+                provider_name = 'local',
                 method = 'password'
             )
-        if user is None:
-            login_form.set_password_login_error()
-        else:
-            login(request, user)
-            #todo: here we might need to set cookies
-            #for external login sites
-            return HttpResponseRedirect(get_next_url(request))
+        login(request, user)
+        #todo: here we might need to set cookies
+        #for external login sites
+        return HttpResponseRedirect(get_next_url(request))
 
 #@not_authenticated
 @csrf.csrf_protect
@@ -647,9 +646,12 @@ def get_signin_view_data(
         next_url = get_next_url(request)
 
     if login_form is None:
-        login_form = forms.LoginForm(initial = {'next': next_url})
+        login_form = forms.LoginForm(
+                        initial={'next': next_url},
+                        prefix='login'
+                    )
     if account_recovery_form is None:
-        account_recovery_form = forms.AccountRecoveryForm()#initial = initial_data)
+        account_recovery_form = forms.AccountRecoveryForm(prefix='recover')
 
     #if request is GET
     if request.method == 'GET':
@@ -721,7 +723,8 @@ def get_signin_view_data(
         'openid_error_message':  request.REQUEST.get('msg',''),
         'page_class': 'openid-signin',
         'page_title': page_title,
-        'password_register_form': forms.ClassicRegisterForm(),
+        'password_register_form': forms.ClassicRegisterForm(prefix='register'),
+        'password_login_form': forms.ClassicLoginForm(prefix='login'),
         'question':question,
         'use_password_login': util.use_password_login(),
         'view_subtype': view_subtype, #add_openid|default
@@ -930,7 +933,6 @@ def register(request, login_provider_name=None, user_identifier=None):
 
     template : authopenid/complete.html
     """
-
     logging.debug('request method is %s' % request.method)
 
     assert(request.method == 'POST')
@@ -1059,93 +1061,43 @@ def verify_email_and_register(request):
         return render(request, 'authopenid/verify_email.html', data)
 
 @not_authenticated
-@decorators.valid_password_login_provider_required
 @csrf.csrf_protect
-@fix_recaptcha_remote_ip
 def register_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
     """
+    assert(request.method == 'POST')
+    form = forms.ClassicRegisterForm(request.POST, prefix='register')
+    if form.is_valid():
+        next = form.cleaned_data['next']
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password1']
+        email = form.cleaned_data['email']
 
-    logging.debug(get_request_info(request))
-    login_form = forms.LoginForm(initial = {'next': get_next_url(request)})
-    #this is safe because second decorator cleans this field
-    provider_name = request.REQUEST['login_provider']
-
-    if askbot_settings.USE_RECAPTCHA:
-        RegisterForm = forms.SafeClassicRegisterForm
-    else:
-        RegisterForm = forms.ClassicRegisterForm
-
-    logging.debug('request method was %s' % request.method)
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-
-        #validation outside if to remember form values
-        logging.debug('validating classic register form')
-        form1_is_valid = form.is_valid()
-        if form1_is_valid:
-            logging.debug('classic register form validated')
-        else:
-            logging.debug('classic register form is not valid')
-
-        if form1_is_valid:
-            logging.debug('both forms are valid')
-            next = form.cleaned_data['next']
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            email = form.cleaned_data['email']
-
-            if askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
-                user = create_authenticated_user_account(
-                    username=username,
-                    email=email,
-                    password=password,
-                )
-                login(request, user)
-                cleanup_post_register_session(request)
-                return HttpResponseRedirect(get_next_url(request))
-            else:
-                request.session['username'] = username
-                request.session['email'] = email
-                request.session['password'] = password
-                #todo: generate a key and save it in the session
-                key = generate_random_key()
-                email = request.session['email']
-                send_email_key(email, key, handler_url_name='verify_email_and_register')
-                request.session['validation_code'] = key
-                redirect_url = reverse('verify_email_and_register') + \
-                                '?next=' + get_next_url(request)
-                return HttpResponseRedirect(redirect_url)
-
-        else:
-            #todo: this can be solved with a decorator, maybe
-            form.initial['login_provider'] = provider_name
-            logging.debug('create classic account forms were invalid')
-    else:
-        #todo: here we have duplication of get_password_login_provider...
-        form = RegisterForm(
-                        initial={
-                            'next': get_next_url(request),
-                            'login_provider': provider_name
-                        }
-                    )
-    logging.debug('printing legacy signup form')
-
-    login_providers = util.get_enabled_login_providers()
-
-    context_data = {
-                'form': form,
-                'page_class': 'openid-signin',
-                'login_providers': login_providers.values(),
-                'login_form': login_form
-            }
-    return render(
-                request,
-                'authopenid/signup_with_password.html',
-                context_data
+        if askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
+            user = create_authenticated_user_account(
+                username=username,
+                email=email,
+                password=password,
             )
-    #what if request is not posted?
+            login(request, user)
+            cleanup_post_register_session(request)
+            return HttpResponseRedirect(get_next_url(request))
+        else:
+            request.session['username'] = username
+            request.session['email'] = email
+            request.session['password'] = password
+            #todo: generate a key and save it in the session
+            key = generate_random_key()
+            email = request.session['email']
+            send_email_key(email, key, handler_url_name='verify_email_and_register')
+            request.session['validation_code'] = key
+            redirect_url = reverse('verify_email_and_register') + \
+                            '?next=' + get_next_url(request)
+            return HttpResponseRedirect(redirect_url)
+    else:
+        #todo return data via ajax
+        pass
 
 @login_required
 def signout(request):
