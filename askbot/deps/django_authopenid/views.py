@@ -1073,8 +1073,6 @@ def register_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
     """
-    import pdb
-    pdb.set_trace()
     post_data = simplejson.loads(request.raw_post_data)
     form = forms.ClassicRegisterForm(post_data, prefix='register')
 
