@@ -1067,14 +1067,17 @@ def verify_email_and_register(request):
         data = {'page_class': 'validate-email-page'}
         return render(request, 'authopenid/verify_email.html', data)
 
-@not_authenticated
-@csrf.csrf_protect
+@ajax_only
+@post_only
 def register_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
     """
-    assert(request.method == 'POST')
-    form = forms.ClassicRegisterForm(request.POST, prefix='register')
+    import pdb
+    pdb.set_trace()
+    post_data = simplejson.loads(request.raw_post_data)
+    form = forms.ClassicRegisterForm(post_data, prefix='register')
+
     if form.is_valid():
         next = form.cleaned_data['next']
         username = form.cleaned_data['username']
@@ -1089,7 +1092,9 @@ def register_with_password(request):
             )
             login(request, user)
             cleanup_post_register_session(request)
-            return HttpResponseRedirect(get_next_url(request))
+            #get user tools nav login snippet
+            html = render_to_string(request, 'widgets/user_navigation.html')
+            return {'userToolsNavHTML': html}
         else:
             request.session['username'] = username
             request.session['email'] = email
@@ -1104,7 +1109,7 @@ def register_with_password(request):
             return HttpResponseRedirect(redirect_url)
     else:
         #todo return data via ajax
-        pass
+        return {'errors': form.errors}
 
 @login_required
 def signout(request):

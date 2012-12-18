@@ -91,6 +91,105 @@ PasswordLoginForm.prototype.decorate = function(element) {
 };
 
 /**
+ * @contstructor
+ */
+var PasswordRegisterForm = function() {
+    WrappedElement.call(this);
+};
+inherits(PasswordRegisterForm, WrappedElement);
+
+PasswordRegisterForm.prototype.setErrors = function(errors) {
+    if (errors['username']) {
+        this._usernameLabel.html(errors['username'][0]);
+        this._usernameLabel.addClass('error');
+    } else {
+        this._usernameLabel.html(this._usernameLabelDefaultText);
+        this._usernameLabel.removeClass('error');
+    }
+    if (errors['password1']) {
+        this._passwordLabel1.html(errors['password1'][0]);
+        this._passwordLabel1.addClass('error');
+    } else {
+        this._passwordLabel1.html(this._passwordLabel1DefaultText);
+        this._passwordLabel1.removeClass('error');
+    }
+    if (errors['password2']) {
+        this._passwordLabel2.html(errors['password2'][0]);
+        this._passwordLabel2.addClass('error');
+    } else {
+        this._passwordLabel2.html(this._passwordLabel2DefaultText);
+        this._passwordLabel2.removeClass('error');
+    }
+    if (errors['email']) {
+        this._emailLabel.html(errors['email'][0]);
+        this._emailLabel.addClass('error');
+    } else {
+        this._emailLabel.html(this._emailLabelDefaultText);
+        this._emailLabel.removeClass('error');
+    }
+};
+
+PasswordRegisterForm.prototype.getSubmitHandler = function() {
+    var me = this;
+    var usernameInput = this._usernameInput;
+    var passwordInput1 = this._passwordInput1;
+    var passwordInput2 = this._passwordInput2;
+    var emailInput = this._emailInput;
+    var url = this._url;
+    var userNav = this._userToolsNav;
+    return function () {
+        var data = {
+            'register-username': usernameInput.val() || '',
+            'register-password1': passwordInput1.val() || '',
+            'register-password2': passwordInput2.val() || '',
+            'register-email': emailInput.val() || ''
+        };
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function(data) {
+                if (data['success']) {
+                    if (data['errors']) {
+                        me.setErrors(data['errors']);
+                    } else {
+                        userNav.html(data['userToolsNavHTML']);
+                        askbot['vars']['modalDialog'].hide();//@todo: awful!
+                    }
+                }
+            }
+        });
+    };
+};
+
+
+PasswordRegisterForm.prototype.decorate = function(element) {
+    this._element = element;
+    this._button = element.find('input[type="submit"]');
+    this._url = this._button.data('url');
+
+    this._usernameInput = element.find('input[name="register-username"]');
+    this._usernameLabel = $('label[for="' + this._usernameInput.attr('id') + '"]');
+    this._usernameLabelDefaultText = this._usernameLabel.html();
+
+    this._passwordInput1 = element.find('input[name="register-password1"]');
+    this._passwordLabel1 = $('label[for="' + this._passwordInput1.attr('id') + '"]');
+    this._passwordLabel1DefaultText = this._passwordLabel1.html();
+
+    this._passwordInput2 = element.find('input[name="register-password2"]');
+    this._passwordLabel2 = $('label[for="' + this._passwordInput2.attr('id') + '"]');
+    this._passwordLabel2DefaultText = this._passwordLabel2.html();
+
+    this._emailInput = element.find('input[name="register-email"]');
+    this._emailLabel = $('label[for="' + this._emailInput.attr('id') + '"]');
+    this._emailInputLabelDefaultText = this._emailLabel.html();
+
+    this._userToolsNav = $('#userToolsNav');
+    setupButtonEventHandlers(this._button, this.getSubmitHandler());
+};
+
+/**
  * @constructor
  */
 var AuthMenu = function() {
@@ -108,6 +207,10 @@ AuthMenu.prototype.decorate = function(element) {
     var passwordLogin = new PasswordLoginForm();
     passwordLogin.decorate($('.password-login'));
     this._passwordLogin = passwordLogin;
+
+    var passwordRegister = new PasswordRegisterForm();
+    passwordRegister.decorate($('.password-registration'));
+    this._passwordRegister = passwordRegister;
 
     //@todo: make sure to include account recovery field, hidden by default
     var inputs = element.find('input[type="text"], input[type="password"]');
