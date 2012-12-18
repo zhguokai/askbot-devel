@@ -17,18 +17,18 @@
     {% if use_password_login or settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL %}
     <div class="col1{% if settings.USE_LDAP_FOR_PASSWORD_LOGIN %} single-column{% endif %}">
         {% if use_password_login %}
-        <div class="password-login-method">
+        <div class="password-login">
             <p>{% trans %}Login with username/password{% endtrans %}</p>
-            <form 
-                method="post"
-                action='{% url "user_password_signin" %}'
-            >{% csrf_token %}
                 <label for="id_login-username">{% trans %}enter username or email{% endtrans %}</label>
                 {{password_login_form.username}}
                 <label for="id_login-password">{% trans %}enter password{% endtrans %}</label>
                 {{password_login_form.password}}
-                <input class="submit" type="submit" value="{% trans %}Login{% endtrans %}" />
-            </form>
+                <input 
+                    class="submit"
+                    type="submit"
+                    value="{% trans %}Login{% endtrans %}"
+                    data-url='{% url "user_password_signin" %}'
+                />
         </div>
         {% endif %}
         {% if settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL %}

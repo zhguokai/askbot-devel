@@ -47,6 +47,7 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
+from django.utils import simplejson
 from askbot.utils.functions import generate_random_key
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
@@ -437,24 +438,30 @@ def ldap_signin(request):
                 login_form.set_password_login_error()
 
 
-@csrf.csrf_protect
+#@csrf.csrf_protect
+@ajax_only
 @post_only
 def password_signin(request):
     #password_action = login_form.cleaned_data['password_action']
-    login_form = forms.ClassicLoginForm(request.POST, prefix='login')
-    import pdb
-    pdb.set_trace()
-    if login_form.is_valid():
+    post_data = simplejson.loads(request.raw_post_data)
+    form = forms.ClassicLoginForm(post_data, prefix='login')
+    if form.is_valid():
         user = authenticate(
-                username = login_form.cleaned_data['username'],
-                password = login_form.cleaned_data['password'],
+                username = form.cleaned_data['username'],
+                password = form.cleaned_data['password'],
                 provider_name = 'local',
                 method = 'password'
             )
-        login(request, user)
-        #todo: here we might need to set cookies
-        #for external login sites
-        return HttpResponseRedirect(get_next_url(request))
+        if user:
+            login(request, user)
+            #todo: here we might need to set cookies
+            #for external login sites
+            #get user tools nav login snippet
+            html = render_to_string(request, 'widgets/user_navigation.html')
+            return {'userToolsNavHTML': html}
+        return {'errors': {'username': [_('Login failed, please try again')]}}
+    else:
+        return {'errors': form.errors}
 
 #@not_authenticated
 @csrf.csrf_protect

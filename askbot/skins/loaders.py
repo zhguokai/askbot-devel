@@ -96,9 +96,11 @@ def get_askbot_template(template, request = None):
         skin.set_language(request.LANGUAGE_CODE)
     return skin.get_template(template)
 
-def render_to_string(request, template, data):
+def render_to_string(request, template, data=None):
     """same as django's `render` shortcut, but instead
     of response, returns rendered template as plain string"""
+    if data is None:
+        data = {}
     context = RequestContext(request, data)
     template = get_askbot_template(template, request)
     return template.render(context)

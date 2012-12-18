@@ -24,6 +24,72 @@ FederatedLoginMenu.prototype.decorate = function(element) {
     });
 };
 
+var PasswordLoginForm = function() {
+    WrappedElement.call(this);
+};
+inherits(PasswordLoginForm, WrappedElement);
+
+PasswordLoginForm.prototype.setErrors = function(errors) {
+    if (errors['username']) {
+        this._usernameLabel.html(errors['username'][0]);
+        this._usernameLabel.addClass('error');
+    } else {
+        this._usernameLabel.html(this._usernameLabelDefaultText);
+        this._usernameLabel.removeClass('error');
+    }
+    if (errors['password']) {
+        this._passwordLabel.html(errors['password'][0]);
+        this._passwordLabel.addClass('error');
+    } else {
+        this._passwordLabel.html(this._passwordLabelDefaultText);
+        this._passwordLabel.removeClass('error');
+    }
+};
+
+PasswordLoginForm.prototype.getSubmitHandler = function() {
+    var me = this;
+    var usernameInput = this._usernameInput;
+    var passwordInput = this._passwordInput;
+    var url = this._url;
+    var userNav = this._userToolsNav;
+    return function () {
+        var data = {
+            'login-username': usernameInput.val() || '',
+            'login-password': passwordInput.val() || ''
+        };
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function(data) {
+                if (data['success']) {
+                    if (data['errors']) {
+                        me.setErrors(data['errors']);
+                    } else {
+                        userNav.html(data['userToolsNavHTML']);
+                        askbot['vars']['modalDialog'].hide();//@todo: awful!
+                    }
+                }
+            }
+        });
+    };
+};
+
+PasswordLoginForm.prototype.decorate = function(element) {
+    this._element = element;
+    this._button = element.find('input[type="submit"]');
+    this._url = this._button.data('url');
+    this._usernameInput = element.find('input[name="login-username"]');
+    this._usernameLabel = $('label[for="' + this._usernameInput.attr('id') + '"]');
+    this._usernameLabelDefaultText = this._usernameLabel.html();
+    this._passwordInput = element.find('input[name="login-password"]');
+    this._passwordLabel = $('label[for="' + this._passwordInput.attr('id') + '"]');
+    this._passwordLabelDefaultText = this._passwordLabel.html();
+    this._userToolsNav = $('#userToolsNav');
+    setupButtonEventHandlers(this._button, this.getSubmitHandler());
+};
+
 /**
  * @constructor
  */
@@ -37,6 +103,11 @@ AuthMenu.prototype.decorate = function(element) {
 
     var federatedLogins = new FederatedLoginMenu();
     federatedLogins.decorate($('.federated-login-methods'));
+    this._federatedLogins = federatedLogins;
+
+    var passwordLogin = new PasswordLoginForm();
+    passwordLogin.decorate($('.password-login'));
+    this._passwordLogin = passwordLogin;
 
     //@todo: make sure to include account recovery field, hidden by default
     var inputs = element.find('input[type="text"], input[type="password"]');

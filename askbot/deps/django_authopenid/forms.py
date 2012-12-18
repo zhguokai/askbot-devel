@@ -319,8 +319,7 @@ class OpenidRegisterForm(forms.Form):
 
 class ClassicLoginForm(forms.Form):
     """login form for user name and password"""
-    next = NextUrlField()
-    username = UserNameField(must_exist=True)
+    username = forms.CharField()#UserNameField(must_exist=True)
     password = forms.CharField(widget=forms.PasswordInput())
 
 

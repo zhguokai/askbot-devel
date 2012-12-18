@@ -963,6 +963,8 @@ var ModalDialog = function(customOptions) {
     var me = this;
     this._reject_handler = function() { me.hide(); };
     this._content_element = undefined;
+    askbot['vars'] = {} || askbot['vars'];
+    askbot['vars']['modalDialog'] = this;
 };
 inherits(ModalDialog, WrappedElement);
 

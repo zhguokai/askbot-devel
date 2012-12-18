@@ -1,3 +1,4 @@
+{% import "macros.html" as macros %}
 {%- if request.user.is_authenticated() -%}
     <a href="{{ request.user.get_absolute_url() }}">{{ request.user.username|escape }}</a> 
     <span class="user-info">
