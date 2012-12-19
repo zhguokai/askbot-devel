@@ -1185,7 +1185,8 @@ def account_recover(request):
     if not askbot_settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL:
         raise Http404
     if request.method == 'POST':
-        form = forms.AccountRecoveryForm(request.POST)
+        post_data = simplejson.loads(request.raw_post_data)
+        form = forms.AccountRecoveryForm(post_data)
         if form.is_valid():
             user = form.cleaned_data['user']
             send_user_new_email_key(user)

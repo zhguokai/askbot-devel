@@ -1510,6 +1510,7 @@ ul#related-tags li {
     font-family:@main-font;
     font-weight:bold;
     font-size:24px;
+    padding: 0;
 }
 
 #fmask{
@@ -4298,17 +4299,10 @@ textarea.tipped-input {
     display: none;
 }
 .account-recovery {
-    width: 88.5%;
-    margin: 1.9em 0 0 0;
+    margin: 2.5em 0 0 0;
 }
 .auth-menu,
 .complete-registration {
-    margin: 0 .4em;
-
-    form {
-        margin: 0 0 8px;
-    }
-
     button,
     input,
     label,
@@ -4337,18 +4331,24 @@ textarea.tipped-input {
         margin: -9px 0 0 0
     }
 }
-.auth-menu .col1,
-.auth-menu .col2 {
-    box-sizing: border-box;
-    width: 50%;
-    float: left;
-}
-.auth-menu .col2 {
-    padding-left: 4.8%;
-    border-left: 1px solid #aaa;
-}
-.auth-menu .col1.single-column {
-    width: 100%;
+.auth-menu {
+    min-width: 430px;
+    .col1, .col2 {
+        box-sizing: border-box;
+        width: 50%;
+        float: left;
+    }
+    .col1 {
+        padding-right: 20px;
+    }
+    .col2 {
+        padding-left: 20px;
+        border-left: 1px solid #aaa;
+    }
+    .col1.single-column {
+        width: 100%;
+        padding: 0;
+    }
 }
 .modal {
     .password-login, /* todo: apply to all ajax forms */
@@ -4358,12 +4358,13 @@ textarea.tipped-input {
         input[type="text"],
         input[type="password"] {
             color: @info-text;
+            box-sizing: border-box;
             font-size: 14px;
-            height: 1.5em;
+            height: 2em;
             line-height: 1.5em;
             margin-bottom: 2.5em;
             padding-left: .3em;
-            width: 88.5%;
+            width: 100%;
         }
         p {
             color:@section-title;
@@ -4377,7 +4378,7 @@ textarea.tipped-input {
     .account-recovery {
         input[type="text"],
         input[type="password"] {
-            width: 96.5%;
+            width: 100%;
         }
     }
     .complete-registration {

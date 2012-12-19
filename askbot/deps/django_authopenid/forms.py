@@ -445,7 +445,11 @@ class AccountRecoveryForm(forms.Form):
 
     this form merely checks that entered email
     """
-    email = forms.EmailField()
+    email = forms.EmailField(
+                error_messages={
+                    'required': _('enter email')
+                }
+            )
 
     def clean_email(self):
         """check if email exists in the database

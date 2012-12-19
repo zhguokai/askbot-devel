@@ -3511,7 +3511,7 @@ a.thumbnail:hover {
   top: 50%;
 }
 .modal-header {
-  padding: 12px 15px 0;
+  padding: 12px 20px 0;
   /*border-bottom: 1px solid #eee;*/
 }
 .modal-header .close {
@@ -3520,7 +3520,7 @@ a.thumbnail:hover {
 .modal-body {
   overflow-y: auto;
   max-height: 600px;
-  padding: 15px;
+  padding: 20px;
 }
 .modal-form {
   margin-bottom: 0;

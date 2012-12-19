@@ -18,7 +18,7 @@
     <div class="col1{% if settings.USE_LDAP_FOR_PASSWORD_LOGIN %} single-column{% endif %}">
         {% if use_password_login %}
         <div class="password-login">
-            <p>{% trans %}Login with username/password{% endtrans %}</p>
+            <p>{% trans %}Login with password{% endtrans %}</p>
                 <label for="id_login-username">{% trans %}enter username or email{% endtrans %}</label>
                 {{password_login_form.username}}
                 <label for="id_login-password">{% trans %}enter password{% endtrans %}</label>
