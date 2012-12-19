@@ -53,7 +53,7 @@
     {% if use_password_login and settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
     <div class="col2 password-registration">
         <p>{% trans %}Register with password{% endtrans %}</p>
-        <label for="id_register-username">{% trans %}Enter a username{% endtrans %}</label>
+        <label for="id_register-username">{% trans %}enter a username{% endtrans %}</label>
         {{ password_register_form.username }}
         <label for="id_register-email">{% trans %}Your email{% endtrans %}</label>
         {{ password_register_form.email }}

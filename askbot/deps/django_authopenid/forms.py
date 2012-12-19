@@ -319,8 +319,17 @@ class OpenidRegisterForm(forms.Form):
 
 class ClassicLoginForm(forms.Form):
     """login form for user name and password"""
-    username = forms.CharField()#UserNameField(must_exist=True)
-    password = forms.CharField(widget=forms.PasswordInput())
+    username = forms.CharField(
+                        error_messages={
+                            'required': _('enter username/email')
+                        }
+                    )#UserNameField(must_exist=True)
+    password = forms.CharField(
+                        widget=forms.PasswordInput(),
+                        error_messages={
+                            'required': _('enter password')
+                        }
+                    )
 
 
 class SetPasswordForm(forms.Form):
@@ -332,8 +341,8 @@ class SetPasswordForm(forms.Form):
     password2 = forms.CharField(
         widget=forms.PasswordInput(),
         label=mark_safe(_('Password <i>(please retype)</i>')),
-        error_messages={'required':_('please, retype your password'),
-        'nomatch':_('sorry, entered passwords did not match, please try again')},
+        error_messages={'required':_('retype password'),
+        'nomatch':_('passwords did not match')},
     )
 
     def __init__(self, data=None, user=None, *args, **kwargs):
@@ -358,11 +367,21 @@ class SetPasswordForm(forms.Form):
 
 class ClassicRegisterForm(SetPasswordForm):
     """ legacy registration form """
-
-    next = NextUrlField()
-    username = UserNameField(widget_attrs={'tabindex': 0})
-    email = UserEmailField()
+    username = UserNameField(
+                error_messages={
+                    'required': 'enter a username'
+                }
+            )
+    email = UserEmailField(
+                error_messages={
+                    'required': _('Your email')
+                }
+            )
     #fields password1 and password2 are inherited
+    def __init__(self, *args, **kwargs):
+        super(ClassicRegisterForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].error_messages['required'] = \
+                                            _('choose a password')
 
 class SafeClassicRegisterForm(ClassicRegisterForm):
     """this form uses recaptcha in addition

@@ -24,39 +24,26 @@ FederatedLoginMenu.prototype.decorate = function(element) {
     });
 };
 
-var PasswordLoginForm = function() {
+var AjaxForm = function() {
     WrappedElement.call(this);
+    this._fieldNames = [];//define fields in subclasses
+    this._inputs = {};//all keyed by field name
+    this._labels = {};
+    this._labelDefaultTexts = {};
+    this._formPrefix = undefined;//set to string (folowed by dash in django)
 };
-inherits(PasswordLoginForm, WrappedElement);
+inherits(AjaxForm, WrappedElement);
 
-PasswordLoginForm.prototype.setErrors = function(errors) {
-    if (errors['username']) {
-        this._usernameLabel.html(errors['username'][0]);
-        this._usernameLabel.addClass('error');
-    } else {
-        this._usernameLabel.html(this._usernameLabelDefaultText);
-        this._usernameLabel.removeClass('error');
-    }
-    if (errors['password']) {
-        this._passwordLabel.html(errors['password'][0]);
-        this._passwordLabel.addClass('error');
-    } else {
-        this._passwordLabel.html(this._passwordLabelDefaultText);
-        this._passwordLabel.removeClass('error');
-    }
-};
-
-PasswordLoginForm.prototype.getSubmitHandler = function() {
+AjaxForm.prototype.getSubmitHandler = function() {
     var me = this;
-    var usernameInput = this._usernameInput;
-    var passwordInput = this._passwordInput;
+    var inputs = this._inputs;
+    var fieldNames = this._fieldNames;
     var url = this._url;
-    var userNav = this._userToolsNav;
     return function () {
-        var data = {
-            'login-username': usernameInput.val() || '',
-            'login-password': passwordInput.val() || ''
-        };
+        var data = {};
+        $.each(fieldNames, function(idx, fieldName) {
+            data[fieldName] = inputs[fieldName].val() || '';
+        });
         $.ajax({
             type: 'POST',
             url: url,
@@ -67,8 +54,7 @@ PasswordLoginForm.prototype.getSubmitHandler = function() {
                     if (data['errors']) {
                         me.setErrors(data['errors']);
                     } else {
-                        userNav.html(data['userToolsNavHTML']);
-                        askbot['vars']['modalDialog'].hide();//@todo: awful!
+                        me.handleSuccess(data);
                     }
                 }
             }
@@ -76,118 +62,83 @@ PasswordLoginForm.prototype.getSubmitHandler = function() {
     };
 };
 
-PasswordLoginForm.prototype.decorate = function(element) {
+AjaxForm.prototype.setErrors = function(errors) {
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+
+        var label = this._labels[fieldName];
+        if (errors[fieldName]) {
+            label.html(errors[fieldName][0]);
+            label.addClass('error');
+        } else {
+            var defaultText = this._labelDefaultTexts[fieldName];
+            label.html(defaultText);
+            label.removeClass('error');
+        }
+    };
+};
+
+AjaxForm.prototype.decorate = function(element) {
     this._element = element;
+
+    //init labels, inputs and default texts
+    var formPrefix = this._formPrefix;
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+        var domFieldName = fieldName;
+        if (formPrefix) {
+            domFieldName = formPrefix + fieldName;
+        }
+        var input = element.find('input[name="' + domFieldName + '"]');
+        var label = element.find('label[for="' + input.attr('id') + '"]');
+        this._inputs[fieldName] = input;
+        this._labels[fieldName] = label;
+        this._labelDefaultTexts[fieldName] = label.html();
+    }
+
     this._button = element.find('input[type="submit"]');
     this._url = this._button.data('url');
-    this._usernameInput = element.find('input[name="login-username"]');
-    this._usernameLabel = $('label[for="' + this._usernameInput.attr('id') + '"]');
-    this._usernameLabelDefaultText = this._usernameLabel.html();
-    this._passwordInput = element.find('input[name="login-password"]');
-    this._passwordLabel = $('label[for="' + this._passwordInput.attr('id') + '"]');
-    this._passwordLabelDefaultText = this._passwordLabel.html();
-    this._userToolsNav = $('#userToolsNav');
     setupButtonEventHandlers(this._button, this.getSubmitHandler());
 };
+
+/**
+ * @constructor
+ * expects a specific response from the server
+ */
+var LoginOrRegisterForm = function() {
+    AjaxForm.call(this);
+};
+inherits(LoginOrRegisterForm, AjaxForm);
+
+LoginOrRegisterForm.prototype.handleSuccess = function(data) {
+    this._userToolsNav.html(data['userToolsNavHTML']);
+    askbot['vars']['modalDialog'].hide();//@note: using global variable
+};
+
+LoginOrRegisterForm.prototype.decorate = function(element) {
+    LoginOrRegisterForm.superClass_.decorate.call(this, element);
+    this._userToolsNav = $('#userToolsNav');
+};
+
+/**
+ * @constructor
+ */
+var PasswordLoginForm = function() {
+    LoginOrRegisterForm.call(this);
+    this._fieldNames = ['username', 'password'];
+    this._formPrefix = 'login-'
+};
+inherits(PasswordLoginForm, LoginOrRegisterForm);
 
 /**
  * @contstructor
  */
 var PasswordRegisterForm = function() {
-    WrappedElement.call(this);
+    LoginOrRegisterForm.call(this);
+    this._fieldNames = ['username', 'email', 'password1', 'password2'];
+    this._formPrefix = 'register-';
 };
-inherits(PasswordRegisterForm, WrappedElement);
-
-PasswordRegisterForm.prototype.setErrors = function(errors) {
-    if (errors['username']) {
-        this._usernameLabel.html(errors['username'][0]);
-        this._usernameLabel.addClass('error');
-    } else {
-        this._usernameLabel.html(this._usernameLabelDefaultText);
-        this._usernameLabel.removeClass('error');
-    }
-    if (errors['password1']) {
-        this._passwordLabel1.html(errors['password1'][0]);
-        this._passwordLabel1.addClass('error');
-    } else {
-        this._passwordLabel1.html(this._passwordLabel1DefaultText);
-        this._passwordLabel1.removeClass('error');
-    }
-    if (errors['password2']) {
-        this._passwordLabel2.html(errors['password2'][0]);
-        this._passwordLabel2.addClass('error');
-    } else {
-        this._passwordLabel2.html(this._passwordLabel2DefaultText);
-        this._passwordLabel2.removeClass('error');
-    }
-    if (errors['email']) {
-        this._emailLabel.html(errors['email'][0]);
-        this._emailLabel.addClass('error');
-    } else {
-        this._emailLabel.html(this._emailLabelDefaultText);
-        this._emailLabel.removeClass('error');
-    }
-};
-
-PasswordRegisterForm.prototype.getSubmitHandler = function() {
-    var me = this;
-    var usernameInput = this._usernameInput;
-    var passwordInput1 = this._passwordInput1;
-    var passwordInput2 = this._passwordInput2;
-    var emailInput = this._emailInput;
-    var url = this._url;
-    var userNav = this._userToolsNav;
-    return function () {
-        var data = {
-            'register-username': usernameInput.val() || '',
-            'register-password1': passwordInput1.val() || '',
-            'register-password2': passwordInput2.val() || '',
-            'register-email': emailInput.val() || ''
-        };
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: JSON.stringify(data),
-            dataType: 'json',
-            success: function(data) {
-                if (data['success']) {
-                    if (data['errors']) {
-                        me.setErrors(data['errors']);
-                    } else {
-                        userNav.html(data['userToolsNavHTML']);
-                        askbot['vars']['modalDialog'].hide();//@todo: awful!
-                    }
-                }
-            }
-        });
-    };
-};
-
-
-PasswordRegisterForm.prototype.decorate = function(element) {
-    this._element = element;
-    this._button = element.find('input[type="submit"]');
-    this._url = this._button.data('url');
-
-    this._usernameInput = element.find('input[name="register-username"]');
-    this._usernameLabel = $('label[for="' + this._usernameInput.attr('id') + '"]');
-    this._usernameLabelDefaultText = this._usernameLabel.html();
-
-    this._passwordInput1 = element.find('input[name="register-password1"]');
-    this._passwordLabel1 = $('label[for="' + this._passwordInput1.attr('id') + '"]');
-    this._passwordLabel1DefaultText = this._passwordLabel1.html();
-
-    this._passwordInput2 = element.find('input[name="register-password2"]');
-    this._passwordLabel2 = $('label[for="' + this._passwordInput2.attr('id') + '"]');
-    this._passwordLabel2DefaultText = this._passwordLabel2.html();
-
-    this._emailInput = element.find('input[name="register-email"]');
-    this._emailLabel = $('label[for="' + this._emailInput.attr('id') + '"]');
-    this._emailInputLabelDefaultText = this._emailLabel.html();
-
-    this._userToolsNav = $('#userToolsNav');
-    setupButtonEventHandlers(this._button, this.getSubmitHandler());
-};
+inherits(PasswordRegisterForm, LoginOrRegisterForm);
 
 /**
  * @constructor

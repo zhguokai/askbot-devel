@@ -444,7 +444,7 @@ def ldap_signin(request):
 def password_signin(request):
     #password_action = login_form.cleaned_data['password_action']
     post_data = simplejson.loads(request.raw_post_data)
-    form = forms.ClassicLoginForm(post_data, prefix='login')
+    form = forms.ClassicLoginForm(post_data)
     if form.is_valid():
         user = authenticate(
                 username = form.cleaned_data['username'],
@@ -1074,7 +1074,7 @@ def register_with_password(request):
     template: authopenid/signup_with_password.html
     """
     post_data = simplejson.loads(request.raw_post_data)
-    form = forms.ClassicRegisterForm(post_data, prefix='register')
+    form = forms.ClassicRegisterForm(post_data)
 
     if form.is_valid():
         next = form.cleaned_data['next']

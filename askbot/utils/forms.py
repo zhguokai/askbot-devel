@@ -208,17 +208,21 @@ class UserEmailField(forms.EmailField):
         else:
             widget_class = forms.TextInput
 
+        error_messages={
+            'required':_('email address is required'),
+            'invalid':_('enter a valid email address'),
+            'taken':_('this email is already used'),
+            'unauthorized':_('this email is unauthorized')
+        }
+        custom_error_messages = kw.pop('error_messages', {})
+        error_messages.update(custom_error_messages)
+
         super(UserEmailField,self).__init__(
             widget=widget_class(
                     attrs=dict(maxlength=200)
                 ),
             label=mark_safe(_('Your email <i>(never shared)</i>')),
-            error_messages={
-                'required':_('email address is required'),
-                'invalid':_('please enter a valid email address'),
-                'taken':_('this email is already used by someone else, please choose another'),
-                'unauthorized':_('this email address is not authorized')
-            },
+            error_messages=error_messages,
             **kw
         )
 
