@@ -60,5 +60,17 @@
                 askbot['urls'][url_name] = cleanUrl(askbot['urls'][url_name]);
             }
         </script>
-    </body>
+        {% if 'modal_menu' in request.session %}
+            {% include "authopenid/providers_javascript.html" %}
+            <script type="text/javascript">
+                (function() {
+                    var completeRegistrationForm = $('.complete-registration');
+                    if (completeRegistrationForm.length === 1) {
+                        var form = new CompleteRegistrationForm();
+                        form.decorate(completeRegistrationForm);
+                    }
+                })();
+            </script>
+        {% endif %}
+        </body>
 </html>

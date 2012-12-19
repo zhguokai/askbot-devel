@@ -4301,7 +4301,8 @@ textarea.tipped-input {
     width: 88.5%;
     margin: 1.9em 0 0 0;
 }
-.auth-menu {
+.auth-menu,
+.complete-registration {
     margin: 0 .4em;
 
     form {
@@ -4350,8 +4351,10 @@ textarea.tipped-input {
     width: 100%;
 }
 .modal {
-    .password-login,
-    .password-registration {
+    .password-login, /* todo: apply to all ajax forms */
+    .password-registration,
+    .complete-registration,
+    .account-recovery {
         input[type="text"],
         input[type="password"] {
             color: @info-text;
@@ -4370,10 +4373,19 @@ textarea.tipped-input {
             margin-bottom: 2em;
         }
     }
-    .password-registration {
+    .password-registration,
+    .account-recovery {
         input[type="text"],
         input[type="password"] {
             width: 96.5%;
+        }
+    }
+    .complete-registration {
+        margin-top: 1em;
+        width: 250px;
+        input[type="text"],
+        input[type="password"] {
+            width: 80%;
         }
     }
 }

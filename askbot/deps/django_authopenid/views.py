@@ -926,6 +926,8 @@ def render_register_form_to_string(request):
     }
     return render_to_string(request, 'authopenid/complete.html', data)
 
+@ajax_only
+@post_only
 def register(request, login_provider_name=None, user_identifier=None):
     """
     this function is used via it's own url with request.method=POST
@@ -955,10 +957,11 @@ def register(request, login_provider_name=None, user_identifier=None):
 
     logging.debug('trying to create new account associated with openid')
     form_class = forms.get_registration_form_class()
-    register_form = form_class(request.POST)
+    post_data = simplejson.loads(request.raw_post_data)
+    register_form = form_class(post_data)
 
     if not register_form.is_valid():
-        logging.debug('registration form is INVALID')
+        return {'errors': register_form.errors}
     else:
         username = register_form.cleaned_data['username']
         email = register_form.cleaned_data['email']
@@ -975,7 +978,8 @@ def register(request, login_provider_name=None, user_identifier=None):
             login(request, user)
             cleanup_post_register_session(request)
             close_modal_menu()
-            return HttpResponseRedirect(get_next_url(request))
+            html = render_to_string(request, 'widgets/user_navigation.html')
+            return {'userToolsNavHTML': html}
 
         elif askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
 
@@ -988,8 +992,10 @@ def register(request, login_provider_name=None, user_identifier=None):
             login(request, user)
             cleanup_post_register_session(request)
             close_modal_menu(request)
-            return HttpResponseRedirect(get_next_url(request))
+            html = render_to_string(request, 'widgets/user_navigation.html')
+            return {'userToolsNavHTML': html}
         else:
+            #todo: broken branch
             request.session['username'] = username
             request.session['email'] = email
             key = generate_random_key()
@@ -1000,13 +1006,7 @@ def register(request, login_provider_name=None, user_identifier=None):
                             + '?next=' + get_next_url(request)
             close_modal_menu()
             return HttpResponseRedirect(redirect_url)
-
-    data = {
-        'openid_register_form': register_form,
-    }
-    modal_menu = render_to_string(request, 'authopenid/complete.html', data)
-    request.session['modal_menu'] = modal_menu
-    return HttpResponseRedirect(get_next_url(request))
+    raise NotImplementedError('should never fall through here')
 
 def signin_failure(request, message):
     """
@@ -1077,7 +1077,6 @@ def register_with_password(request):
     form = forms.ClassicRegisterForm(post_data)
 
     if form.is_valid():
-        next = form.cleaned_data['next']
         username = form.cleaned_data['username']
         password = form.cleaned_data['password1']
         email = form.cleaned_data['email']
@@ -1190,25 +1189,16 @@ def account_recover(request):
         if form.is_valid():
             user = form.cleaned_data['user']
             send_user_new_email_key(user)
-            message = _(
-                    'Please check your email and visit the enclosed link.'
-                )
-            return get_signin_view_data(
-                            request,
-                            account_recovery_message = message,
-                            view_subtype = 'email_sent'
-                        )
+            response = simplejson.dumps({'success': True})
         else:
-            return get_signin_view_data(
-                            request,
-                            account_recovery_form = form
-                        )
+            response = simplejson.dumps({'errors': form.errors, 'success': True})
+        return HttpResponse(response, mimetype='application/json')
     else:
         key = request.GET.get('validation_code', None)
         if key is None:
-            return HttpResponseRedirect(reverse('user_signin'))
+            return HttpResponseRedirect(get_next_url(request))
 
-        user = authenticate(email_key = key, method = 'email')
+        user = authenticate(email_key=key, method='email')
         if user:
             if request.user.is_authenticated():
                 if user != request.user:
@@ -1216,14 +1206,7 @@ def account_recover(request):
                     login(request, user)
             else:
                 login(request, user)
-            #need to show "sticky" signin view here
-            return get_signin_view_data(
-                                request,
-                                view_subtype = 'add_openid',
-                                sticky = True
-                            )
-        else:
-            return get_signin_view_data(request, view_subtype = 'bad_key')
+        return HttpResponseRedirect(get_next_url(request))
 
 
 #internal server view used as return value by other views

@@ -94,11 +94,21 @@ AjaxForm.prototype.decorate = function(element) {
         this._inputs[fieldName] = input;
         this._labels[fieldName] = label;
         this._labelDefaultTexts[fieldName] = label.html();
+        var activeLabel = new LabeledInput();
+        activeLabel.decorate(input);
     }
 
     this._button = element.find('input[type="submit"]');
     this._url = this._button.data('url');
-    setupButtonEventHandlers(this._button, this.getSubmitHandler());
+
+    var submitHandler = this.getSubmitHandler();
+    var enterKeyHandler = makeKeyHandler(13, submitHandler);
+
+    $.each(this._inputs, function(idx, inputItem) {
+        $(inputItem).keyup(enterKeyHandler);
+    });
+
+    setupButtonEventHandlers(this._button, submitHandler);
 };
 
 /**
@@ -112,7 +122,9 @@ inherits(LoginOrRegisterForm, AjaxForm);
 
 LoginOrRegisterForm.prototype.handleSuccess = function(data) {
     this._userToolsNav.html(data['userToolsNavHTML']);
-    askbot['vars']['modalDialog'].hide();//@note: using global variable
+    //askbot['vars']['modalDialog'].hide();//@note: using global variable
+    $('.modal').hide();
+    $('.modal-backdrop').hide();
 };
 
 LoginOrRegisterForm.prototype.decorate = function(element) {
@@ -143,6 +155,52 @@ inherits(PasswordRegisterForm, LoginOrRegisterForm);
 /**
  * @constructor
  */
+var CompleteRegistrationForm = function() {
+    LoginOrRegisterForm.call(this);
+    this._fieldNames = ['username', 'email'];
+};
+inherits(CompleteRegistrationForm, LoginOrRegisterForm);
+
+/**
+ * @constructor
+ */
+var AccountRecoveryForm = function() {
+    AjaxForm.call(this);
+    this._fieldNames = ['email'];
+    this._formPrefix = 'recover-';
+};
+inherits(AccountRecoveryForm, AjaxForm);
+
+AccountRecoveryForm.prototype.show = function() {
+    this._prompt.hide();
+    this._form.show();
+    this._inputs['email'].focus();
+};
+
+AccountRecoveryForm.prototype.hide = function() {
+    this._prompt.show();
+    this._form.hide();
+    this._inputs['email'].blur();
+};
+
+AccountRecoveryForm.prototype.handleSuccess = function() {
+    this._prompt.html(gettext('Email sent. Please follow the enclosed recovery link'));
+    this.hide();
+};
+
+AccountRecoveryForm.prototype.decorate = function(element) {
+    this._prompt = element.find('.prompt');
+    this._form = element.find('.form');
+    //this.show();
+    AccountRecoveryForm.superClass_.decorate.call(this, element);
+    this.hide();
+    var me = this;
+    setupButtonEventHandlers(this._prompt, function() { me.show() });
+};
+
+/**
+ * @constructor
+ */
 var AuthMenu = function() {
     WrappedElement.call(this);
 };
@@ -163,13 +221,11 @@ AuthMenu.prototype.decorate = function(element) {
     passwordRegister.decorate($('.password-registration'));
     this._passwordRegister = passwordRegister;
 
+    var recoveryForm = new AccountRecoveryForm();
+    recoveryForm.decorate($('.account-recovery'));
+    this._accountRecoveryForm = recoveryForm;
+
     //@todo: make sure to include account recovery field, hidden by default
-    var inputs = element.find('input[type="text"], input[type="password"]');
-    $.each(inputs, function(idx, item) {
-        var inputElement = $(item);
-        var input = new LabeledInput();
-        input.decorate(inputElement);
-    });
 };
 
 

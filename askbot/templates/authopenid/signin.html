@@ -33,19 +33,21 @@
         {% endif %}
         {% if settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL %}
         <div class="account-recovery">
-            <p>
+            <p class="prompt">
                 {% trans %}Problems signing in?{% endtrans %}
                 <a>{% trans %}recover your account{% endtrans %}</a>
             </p>
-            <form 
-                action='{% url "user_account_recover" %}'
-                method="post"
-            >{% csrf_token %}
+            <div class="form">
                 <label for="id_recover-email">{% trans %}enter email{% endtrans %}</label>
                 {{ account_recovery_form.email }}
-                <input type="submit" class="submit" value="{% trans %}Recover account{% endtrans %}" />
-                <a>{% trans %}cancel{% endtrans %}</a>
-            </form>
+                <input 
+                    type="submit"
+                    class="submit"
+                    value="{% trans %}Recover account{% endtrans %}"
+                    data-url='{% url "user_account_recover" %}'
+                />
+                <!--a class="cancel">{% trans %}cancel{% endtrans %}</a-->
+            </div>
         </div>
         {% endif %}
     </div>
