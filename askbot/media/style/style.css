@@ -198,7 +198,7 @@ body.user-messages {
   top: 0px;
   left: 0px;
   width: 100%;
-  z-index: 100;
+  z-index: 10000;
   padding: 0;
   text-align: center;
   background-color: #f5dd69;
@@ -210,6 +210,9 @@ body.user-messages {
 
   font-size: 16px;
   color: #424242;
+}
+.notify ul {
+  list-style: none;
 }
 .wait-icon-box {
   text-align: center;
@@ -421,7 +424,6 @@ body.user-messages {
 }
 .validate-email-page #validation-code {
   padding-left: 5px;
-  border: #cce6ec 3px solid;
   height: 25px;
   font-size: 14px;
   width: 200px;
@@ -1502,11 +1504,13 @@ ul#related-tags li {
   padding-right: 15px;
 }
 /* ----- Ask and Edit Question Form template----- */
-.section-title {
+.section-title,
+.modal-header h3 {
   color: #7ea9b3;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
   font-weight: bold;
   font-size: 24px;
+  padding: 0;
 }
 #fmask {
   margin-bottom: 30px;
@@ -2699,60 +2703,37 @@ ul#related-tags li {
   background-position: -52px 0px;
 }
 /* -----Content pages, Login, About, FAQ, Users----- */
-.openid-signin,
-.meta,
-.user-profile-edit-page {
-  font-size: 13px;
-  line-height: 1.3;
-  color: #525252;
-}
-.openid-signin p,
-.meta p,
-.user-profile-edit-page p {
-  font-size: 13px;
-  color: #707070;
-  line-height: 1.3;
-  font-family: Arial;
-  color: #525252;
-  margin-bottom: 12px;
-}
-.openid-signin h2,
 .meta h2,
 .user-profile-edit-page h2 {
-  color: #525252;
-  padding-left: 0px;
+  padding-left: 0;
   font-size: 16px;
 }
-.openid-signin form,
 .meta form,
 .users-page form,
 .user-profile-edit-page form,
 .user-profile-page form {
   margin-bottom: 15px;
 }
-.openid-signin input[type="text"],
 .meta input[type="text"],
 .users-page input[type="text"],
 .user-profile-edit-page input[type="text"],
 .user-profile-page input[type="text"],
-.openid-signin input[type="password"],
 .meta input[type="password"],
 .users-page input[type="password"],
 .user-profile-edit-page input[type="password"],
 .user-profile-page input[type="password"],
-.openid-signin select,
 .meta select,
 .users-page select,
 .user-profile-edit-page select,
 .user-profile-page select {
-  border: #cce6ec 3px solid;
+  /*border:#cce6ec 3px solid;*/
+
   height: 25px;
   line-height: 25px;
   padding-left: 5px;
   width: 395px;
   font-size: 14px;
 }
-.openid-signin select,
 .meta select,
 .users-page select,
 .user-profile-edit-page select,
@@ -2760,72 +2741,17 @@ ul#related-tags li {
   width: 405px;
   height: 30px;
 }
-.openid-signin textarea,
 .meta textarea,
 .users-page textarea,
 .user-profile-edit-page textarea,
 .user-profile-page textarea {
-  border: #cce6ec 3px solid;
+  /*border:#cce6ec 3px solid;*/
+
   padding-left: 5px;
   padding-top: 5px;
   width: 395px;
   font-size: 14px;
 }
-.openid-signin input.submit,
-.meta input.submit,
-.users-page input.submit,
-.user-profile-edit-page input.submit,
-.user-profile-page input.submit {
-  font-weight: normal;
-  margin: 5px 0px;
-  height: 26px;
-  font-size: 15px;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  color: #4a757f;
-  font-family: 'Open Sans Condensed', Arial, sans-serif;
-  text-shadow: 0px 1px 0px #c6d9dd;
-  -moz-text-shadow: 0px 1px 0px #c6d9dd;
-  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
-  border-top: #eaf2f3 1px solid;
-  background-color: #d1e2e5;
-  background-repeat: no-repeat;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
-  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
-  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
-  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
-  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
-  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
-  border-radius: 4px;
-  -ms-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  -khtml-border-radius: 4px;
-  -webkit-box-shadow: 1px 1px 2px #636363;
-  -moz-box-shadow: 1px 1px 2px #636363;
-  box-shadow: 1px 1px 2px #636363;
-  font-family: Arial;
-}
-.openid-signin input.submit:hover,
-.meta input.submit:hover,
-.users-page input.submit:hover,
-.user-profile-edit-page input.submit:hover,
-.user-profile-page input.submit:hover {
-  background-color: #cde5e9;
-  background-repeat: no-repeat;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
-  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
-  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
-  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
-  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
-  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
-  text-decoration: none;
-  text-shadow: 0px 1px 0px #c6d9dd;
-  -moz-text-shadow: 0px 1px 0px #c6d9dd;
-  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
-}
-.openid-signin .cancel,
 .meta .cancel,
 .users-page .cancel,
 .user-profile-edit-page .cancel,
@@ -2833,14 +2759,12 @@ ul#related-tags li {
   background: url(../images/small-button-cancel.png) repeat-x top !important;
   color: #525252 !important;
 }
-.openid-signin .cancel:hover,
 .meta .cancel:hover,
 .users-page .cancel:hover,
 .user-profile-edit-page .cancel:hover,
 .user-profile-page .cancel:hover {
   background: url(../images/small-button-cancel.png) repeat-x bottom !important;
 }
-.openid-signin .re,
 .meta .re,
 .users-page .re,
 .user-profile-edit-page .re,
@@ -2859,112 +2783,6 @@ ul#related-tags li {
 }
 .inbox-flags.user-profile-page .dropdown:hover ul.dropdown-menu {
   display: block;
-}
-.openid-signin form {
-  margin-bottom: 5px;
-}
-#email-input-fs,
-#local_login_buttons,
-#password-fs,
-#openid-fs {
-  margin-top: 10px;
-}
-#email-input-fs #id_email,
-#local_login_buttons #id_email,
-#password-fs #id_email,
-#openid-fs #id_email,
-#email-input-fs #id_username,
-#local_login_buttons #id_username,
-#password-fs #id_username,
-#openid-fs #id_username,
-#email-input-fs #id_password,
-#local_login_buttons #id_password,
-#password-fs #id_password,
-#openid-fs #id_password {
-  font-size: 12px;
-  line-height: 20px;
-  height: 20px;
-  margin: 0px;
-  padding: 0px 0 0 5px;
-  border: #cce6ec 3px solid;
-  width: 200px;
-}
-#email-input-fs .submit-b,
-#local_login_buttons .submit-b,
-#password-fs .submit-b,
-#openid-fs .submit-b {
-  height: 24px;
-  font-size: 15px;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  color: #4a757f;
-  font-family: 'Open Sans Condensed', Arial, sans-serif;
-  text-shadow: 0px 1px 0px #c6d9dd;
-  -moz-text-shadow: 0px 1px 0px #c6d9dd;
-  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
-  border-top: #eaf2f3 1px solid;
-  background-color: #d1e2e5;
-  background-repeat: no-repeat;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
-  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
-  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
-  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
-  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
-  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
-  border-radius: 4px;
-  -ms-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  -khtml-border-radius: 4px;
-  -webkit-box-shadow: 1px 1px 2px #636363;
-  -moz-box-shadow: 1px 1px 2px #636363;
-  box-shadow: 1px 1px 2px #636363;
-  font-family: Arial;
-  font-weight: bold;
-  padding-right: 10px;
-  border: 0;
-}
-#email-input-fs .submit-b:hover,
-#local_login_buttons .submit-b:hover,
-#password-fs .submit-b:hover,
-#openid-fs .submit-b:hover {
-  background-color: #cde5e9;
-  background-repeat: no-repeat;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
-  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
-  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
-  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
-  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
-  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
-  text-decoration: none;
-  text-shadow: 0px 1px 0px #c6d9dd;
-  -moz-text-shadow: 0px 1px 0px #c6d9dd;
-  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
-}
-.openid-input {
-  background: url(../images/openid.gif) no-repeat;
-  padding-left: 15px;
-  cursor: pointer;
-}
-.openid-login-input {
-  background-position: center left;
-  background: url(../images/openid.gif) no-repeat 0% 50%;
-  padding: 5px 5px 5px 15px;
-  cursor: pointer;
-  font-family: Trebuchet MS;
-  font-weight: 300;
-  font-size: 150%;
-  width: 500px;
-}
-.openid-login-submit {
-  height: 40px;
-  width: 80px;
-  line-height: 40px;
-  cursor: pointer;
-  border: 1px solid #777;
-  font-weight: bold;
-  font-size: 120%;
 }
 /* People page */
 /*.users-page .tabBar{
@@ -3430,9 +3248,6 @@ table.form-as-table th {
   text-align: left;
   font-weight: normal;
 }
-table.ab-subscr-form {
-  width: 45em;
-}
 .submit-row {
   line-height: 30px;
   padding-top: 10px;
@@ -3443,16 +3258,12 @@ table.ab-subscr-form {
   line-height: 20px;
   color: #990000;
 }
-.error,
-.openid-signin p.error {
+.error {
   color: darkred;
   margin: 0;
   font-size: 12px;
   font-weight: bold;
   text-align: left;
-}
-.openid-signin p.error {
-  text-align: center;
 }
 label.retag-error {
   color: darkred;
@@ -4401,87 +4212,203 @@ textarea.tipped-input {
     width: 100%;
   }
 }
-/* stuff for the authentication pages */
-div#login-icons {
-  padding: 0;
+/* signin form styles */
+.federated-login-methods {
+  margin-bottom: 4em;
 }
-ul.login-icons {
-  width: 450px;
-  margin: 0;
+.federated-login-methods button {
+  background: 0 0 url(../jquery-openid/images/login-provider-logos-small.png) no-repeat;
+  border: none;
+  height: 45px;
+  text-indent: -10000px;
+  width: 48px;
+}
+.federated-login-methods li {
+  float: left;
+  margin: 0 10px 0 0;
+}
+.federated-login-methods li label {
+  text-align: center;
+}
+.federated-login-methods p {
+  margin-bottom: 1.5em;
+}
+.federated-login-methods ul {
   padding: 0;
-  text-align: left;
-  list-style-type: none;
+  list-style: none;
+  margin: 0;
+}
+.federated-login-methods .aol {
+  background-position: -40px 0;
+}
+.federated-login-methods .aol:hover {
+  background-position: -40px 0;
+}
+.federated-login-methods .facebook {
+  background-position: -237px 0;
+  margin-left: 10px;
+}
+.federated-login-methods .facebook:hover {
+  background-position: -237px 0;
+}
+.federated-login-methods .google {
+  background-position: 5px 0;
+  width: 40px;
+}
+.federated-login-methods .google:hover {
+  background-position: 5px 0;
+}
+.federated-login-methods .identi-ca {
+  background-position: -333px 0;
+  margin-left: 2px;
+}
+.federated-login-methods .identi-ca:hover {
+  background-position: -333px 0;
+}
+.federated-login-methods .linkedin {
+  background-position: -183px 0;
+}
+.federated-login-methods .linkedin:hover {
+  background-position: -183px 0;
+}
+.federated-login-methods .livejournal {
+  background-position: -379px 0;
+  margin-left: 10px;
+}
+.federated-login-methods .livejournal:hover {
+  background-position: -379px 0;
+}
+.federated-login-methods .openid {
+  background-position: -287px 0;
+}
+.federated-login-methods .openid:hover {
+  background-position: -287px 0;
+}
+.federated-login-methods .twitter {
+  background-position: -138px 0;
+}
+.federated-login-methods .twitter:hover {
+  background-position: -138px 0;
+}
+.federated-login-methods .yahoo {
+  background-position: -87px 0;
+  margin: 0 5px;
+}
+.federated-login-methods .yahoo:hover {
+  background-position: -87px 0;
+}
+.extra-openid-info {
+  display: none;
+}
+.account-recovery {
+  margin: 2.5em 0 0 0;
+}
+.auth-menu button,
+.complete-registration button,
+.auth-menu input,
+.complete-registration input,
+.auth-menu label,
+.complete-registration label,
+.auth-menu li,
+.complete-registration li {
   display: block;
 }
-ul.login-icons li {
-  display: inline;
+.auth-menu label,
+.complete-registration label {
+  line-height: 1em;
+  height: 1em;
+  margin-bottom: -1.5em;
+  padding-left: .5em;
 }
-ul.large input {
-  height: 40px;
-  width: 90px;
-  border: 1px solid #ccc;
-  margin: 0 5px 5px 0;
+.auth-menu label.error,
+.complete-registration label.error {
+  font-size: inherit;
+  color: #e6661f;
 }
-.openid-signin h1 {
-  padding-bottom: 10px;
+.auth-menu label.active,
+.complete-registration label.active,
+.auth-menu label.active.error,
+.complete-registration label.active.error {
+  padding-left: 0;
+  font-size: 12px;
 }
-.openid-signin h2#account-recovery-heading {
-  margin-bottom: 2px;
+.auth-menu .federated-login-methods label,
+.complete-registration .federated-login-methods label {
+  padding-left: 0;
 }
-#account-recovery-form p.hint a {
-  color: #1b79bd;
-  text-decoration: none;
+.auth-menu .submit,
+.complete-registration .submit {
+  margin: -9px 0 0 0;
 }
-#account-recovery-form p.hint a:hover {
-  text-decoration: underline;
+.auth-menu {
+  min-width: 430px;
 }
-.openid-signin fieldset {
-  border-style: none;
-  margin: 0;
+.auth-menu .col1,
+.auth-menu .col2 {
+  box-sizing: border-box;
+  width: 50%;
+  float: left;
+}
+.auth-menu .col1 {
+  padding-right: 19px;
+}
+.auth-menu .col2 {
+  padding-left: 20px;
+  border-left: 1px solid #aaa;
+}
+.auth-menu .col1.single-column {
+  width: 100%;
   padding: 0;
 }
-.openid-signin p {
-  margin: 0;
-  padding: 0;
+.extra-openid-info {
+  padding: 20px;
+  border: 1px solid #aaa;
+  border-top: 1px dashed #ccc;
+  -moz-box-shadow: -1px 3px 5px 2px #cccccc;
+  -webkit-box-shadow: -1px 3px 5px 2px #cccccc;
+  box-shadow: -1px 3px 5px 2px #cccccc;
 }
-.openid-signin p.hint {
-  color: #555;
+.modal .password-login input[type="text"],
+.modal .password-registration input[type="text"],
+.modal .complete-registration input[type="text"],
+.modal .extra-openid-info input[type="text"],
+.modal .account-recovery input[type="text"],
+.modal .password-login input[type="password"],
+.modal .password-registration input[type="password"],
+.modal .complete-registration input[type="password"],
+.modal .extra-openid-info input[type="password"],
+.modal .account-recovery input[type="password"] {
+  color: #707070;
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 2em;
+  line-height: 1.5em;
+  margin-bottom: 2.5em;
+  padding-left: .3em;
+  width: 100%;
 }
-.openid-signin #password-fs label {
-  width: 100px;
-  margin-top: 5px;
-  text-align: left;
+.modal .password-login p,
+.modal .password-registration p,
+.modal .complete-registration p,
+.modal .extra-openid-info p,
+.modal .account-recovery p {
+  color: #7ea9b3;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1em;
+  margin-bottom: 2em;
 }
-.openid-signin #password-fs .hint {
-  margin-bottom: 5px;
+.modal .password-registration input[type="text"],
+.modal .account-recovery input[type="text"],
+.modal .password-registration input[type="password"],
+.modal .account-recovery input[type="password"] {
+  width: 100%;
 }
-#password-fs a {
-  padding-left: 5px;
+.modal .complete-registration {
+  margin-top: 1em;
+  width: 250px;
 }
-/*#signin-form #account-recovery-form input {cursor:pointer;}
-#signin-form #account-recovery-form input.text {cursor:default;}*/
-table.login {
-  text-align: right;
-}
-.openid-signin .submit-b {
-  cursor: pointer;
-  /*letter-spacing:1px;*/
-
-  margin: 0 0 2px 0;
-  vertical-align: middle;
-}
-.openid-signin .highlight {
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  background-color: #ffdd66;
-}
-ul.providers {
-  display: block;
-}
-.openid-signin th {
-  color: #555;
-  font-weight: normal;
-}
-.openid-signin .ab-provider-name {
-  font-weight: bold;
+.modal .complete-registration input[type="text"],
+.modal .complete-registration input[type="password"] {
+  width: 80%;
 }
