@@ -503,10 +503,9 @@ def signin(request, template_name='authopenid/signin.html'):
 
     #todo: get next url make it sticky if next is 'user_signin'
     if request.method == 'POST':
-
         login_form = forms.LoginForm(request.POST)
-        if login_form.is_valid():
 
+        if login_form.is_valid():
             provider_name = login_form.cleaned_data['login_provider_name']
             if login_form.cleaned_data['login_type'] == 'openid':
                 #initiate communication process

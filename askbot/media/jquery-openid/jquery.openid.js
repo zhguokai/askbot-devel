@@ -10,6 +10,28 @@ FederatedLoginMenu.prototype.getLoginHandler = function() {
     };
 };
 
+/**
+ * displays a field where user can enter username
+ * and a button activating the signing with the openid provier
+ */
+FederatedLoginMenu.prototype.getOpenidUsernameLoginHandler = function() {
+    var providerInput = this._providerNameElement;
+    return function(providerName) {
+        providerInput.val(providerName);
+        //@todo: move selectors to the decorator function
+        var extraInfo = $('.extra-openid-info');
+        var button = $('button[name="' + providerName + '"]')
+        var position = button.position();
+        extraInfo.css('position', 'absolute');
+        var offsetLeft = position.left - 20;
+        extraInfo.css('margin-left', offsetLeft + 'px');
+        extraInfo.css('margin-top', '25px');
+        extraInfo.css('background', 'white');
+        extraInfo.show();
+        $('input[name="openid_login_token"]').focus();
+    };
+};
+
 FederatedLoginMenu.prototype.decorate = function(element) {
     this._element = element;
     this._providerNameElement = element.find('input[name="login_provider_name"]');
@@ -17,10 +39,21 @@ FederatedLoginMenu.prototype.decorate = function(element) {
     var buttons = element.find('li > button');
     var me = this;
     var loginWith = this.getLoginHandler();
+    var loginWithOpenidUsername = this.getOpenidUsernameLoginHandler();
     $.each(buttons, function(idx, item) {
         var button = $(item);
         var providerName = button.attr('name');
-        setupButtonEventHandlers(button, function() { loginWith(providerName) });
+        if (button.hasClass('openid-username')) {
+            setupButtonEventHandlers(
+                button,
+                function() { 
+                    loginWithOpenidUsername(providerName);
+                    return false;
+                }
+            );
+        } else {
+            setupButtonEventHandlers(button, function() { loginWith(providerName) });
+        }
     });
 };
 

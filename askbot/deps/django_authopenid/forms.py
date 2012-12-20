@@ -132,57 +132,14 @@ class LoginForm(forms.Form):
                             max_length=256,
                             required = False,
                         )
-    username = UserNameField(required=False, skip_clean=True)
-    password = forms.CharField(
-                    max_length=128, 
-                    widget=forms.widgets.PasswordInput(
-                                            attrs={'class':'required login'}
-                                        ), 
-                    required=False
-                )
-    password_action = forms.CharField(
-                            max_length=32,
-                            required=False,
-                            widget=forms.widgets.HiddenInput()
-                        )
-    new_password = forms.CharField(
-                    max_length=128, 
-                    widget=forms.widgets.PasswordInput(
-                                            attrs={'class':'required login'}
-                                        ), 
-                    required=False
-                )
-    new_password_retyped = forms.CharField(
-                    max_length=128, 
-                    widget=forms.widgets.PasswordInput(
-                                            attrs={'class':'required login'}
-                                        ), 
-                    required=False
-                )
 
-    def set_error_if_missing(self, field_name, error_message):
+    def set_error_if_missing_or_blank(self, field_name, error_message):
         """set's error message on a field
         if the field is not present in the cleaned_data dictionary
         """
-        if field_name not in self.cleaned_data:
+        value = self.cleaned_data.get(field_name, '')
+        if value.strip() == '':
             self._errors[field_name] = self.error_class([error_message])
-
-    def set_password_login_error(self):
-        """sets a parameter flagging that login with
-        password had failed
-        """
-        #add monkey-patch parameter
-        #this is used in the signin.html template
-        self.password_login_failed = True
-
-    def set_password_change_error(self):
-        """sets a parameter flagging that
-        password change failed
-        """
-        #add monkey-patch parameter
-        #this is used in the signin.html template
-        self.password_change_failed = True
-
 
     def clean(self):
         """besides input data takes data from the
@@ -208,10 +165,7 @@ class LoginForm(forms.Form):
 
         provider_type = provider_data['type']
 
-        if provider_type == 'password':
-            self.do_clean_password_fields()
-            self.cleaned_data['login_type'] = 'password'
-        elif provider_type.startswith('openid'):
+        if provider_type.startswith('openid'):
             self.do_clean_openid_fields(provider_data)
             self.cleaned_data['login_type'] = 'openid'
         elif provider_type == 'oauth':
@@ -219,7 +173,6 @@ class LoginForm(forms.Form):
             pass
         elif provider_type == 'facebook':
             self.cleaned_data['login_type'] = 'facebook'
-            #self.do_clean_oauth_fields()
         elif provider_type == 'wordpress_site':
             self.cleaned_data['login_type'] = 'wordpress_site'
 
@@ -237,7 +190,7 @@ class LoginForm(forms.Form):
         else:
             error_message = _('Please enter your %(username_token)s') % \
                     {'username_token': provider_data['extra_token_name']}
-            self.set_error_if_missing('openid_login_token', error_message)
+            self.set_error_if_missing_or_blank('openid_login_token', error_message)
             if 'openid_login_token' in self.cleaned_data:
                 openid_login_token = self.cleaned_data['openid_login_token']
 
@@ -249,67 +202,6 @@ class LoginForm(forms.Form):
                     raise ValueError('unknown openid type %s' % openid_type)
 
         self.cleaned_data['openid_url'] = openid_url
-
-    def do_clean_password_fields(self):
-        """cleans password fields appropriate for
-        the selected password_action, which can be either
-        "login" or "change_password"
-        new password is checked for minimum length and match to initial entry
-        """
-        password_action = self.cleaned_data.get('password_action', None)
-        if password_action == 'login':
-            #if it's login with password - password and user name are required
-            self.set_error_if_missing(
-                'username',
-                _('Please, enter your user name')
-            )
-            self.set_error_if_missing(
-                'password',
-                _('Please, enter your password')
-            )
-
-        elif password_action == 'change_password':
-            #if it's change password - new_password and new_password_retyped
-            self.set_error_if_missing(
-                'new_password',
-                 _('Please, enter your new password')
-            ) 
-            self.set_error_if_missing(
-                'new_password_retyped',
-                _('Please, enter your new password')
-            )
-            field_set = set(('new_password', 'new_password_retyped'))
-            if field_set.issubset(self.cleaned_data.keys()):
-                new_password = self.cleaned_data[
-                                                'new_password'
-                                            ].strip()
-                new_password_retyped = self.cleaned_data[
-                                                'new_password_retyped'
-                                            ].strip()
-                if new_password != new_password_retyped:
-                    error_message = _('Passwords did not match')
-                    error = self.error_class([error_message])
-                    self._errors['new_password_retyped'] = error
-                    self.set_password_change_error()
-                    del self.cleaned_data['new_password']
-                    del self.cleaned_data['new_password_retyped']
-                else:
-                    #validate password
-                    if len(new_password) < askbot_const.PASSWORD_MIN_LENGTH:
-                        del self.cleaned_data['new_password']
-                        del self.cleaned_data['new_password_retyped']
-                        error_message = _(
-                                    'Please choose password > %(len)s characters'
-                                ) % {'len': askbot_const.PASSWORD_MIN_LENGTH}
-                        error = self.error_class([error_message])
-                        self._errors['new_password'] = error
-                        self.set_password_change_error()
-        else:
-            error_message = 'unknown password action'
-            logging.critical(error_message)
-            self._errors['password_action'] = self.error_class([error_message])
-            raise forms.ValidationError(error_message)
-
 
 class OpenidRegisterForm(forms.Form):
     """ openid signin form """
@@ -348,10 +240,18 @@ class SetPasswordForm(forms.Form):
     def __init__(self, data=None, user=None, *args, **kwargs):
         super(SetPasswordForm, self).__init__(data, *args, **kwargs)
 
+    def clean_password1(self):
+        """validates that password is long enough"""
+        password1 = self.cleaned_data['password1']
+        if len(password1) < askbot_const.PASSWORD_MIN_LENGTH:
+            del self.cleaned_data['password1']
+            message = _('choose password > %(len)s characters') % \
+                                {'len': askbot_const.PASSWORD_MIN_LENGTH}
+            raise forms.ValidationError(message)
+
+
     def clean_password2(self):
-        """
-        Validates that the two password inputs match.
-        
+        """Validates that the two password inputs match.
         """
         if 'password1' in self.cleaned_data:
             if self.cleaned_data['password1'] == self.cleaned_data['password2']:

@@ -4271,8 +4271,7 @@ textarea.tipped-input {
         background-position: -87px 0;
     }
 }
-.extra-openid-info,
-.account-recovery form {
+.extra-openid-info {
     display: none;
 }
 .account-recovery {
@@ -4327,10 +4326,19 @@ textarea.tipped-input {
         padding: 0;
     }
 }
+.extra-openid-info {
+    padding: 20px;
+    border: 1px solid #aaa;
+    border-top: 1px dashed #ccc;
+    -moz-box-shadow:    -1px 3px 5px 2px #ccc;
+    -webkit-box-shadow: -1px 3px 5px 2px #ccc;
+    box-shadow:         -1px 3px 5px 2px #ccc;
+}
 .modal {
     .password-login, /* todo: apply to all ajax forms */
     .password-registration,
     .complete-registration,
+    .extra-openid-info,
     .account-recovery {
         input[type="text"],
         input[type="password"] {

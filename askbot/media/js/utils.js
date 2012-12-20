@@ -16,6 +16,10 @@ var copyAltToTitle = function(sel){
     sel.attr('title', sel.attr('alt'));
 };
 
+var pxToInt = function(pixels) {
+    return parseInt(pixels.replace('px', ''));
+};
+
 var animateHashes = function(){
     var id_value = window.location.hash;
     if (id_value != ""){
