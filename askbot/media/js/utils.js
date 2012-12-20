@@ -1301,10 +1301,14 @@ PjaxDialog.prototype.startOpening = function() {
 /**
  * @constructor
  */
-var LoginDialog = function() {
+var LoginDialog = function(customOpts) {
     var opts = {
         useFooter: false,
-        headingText: gettext('Login or Register')
+        headingText: gettext('Login or Register'),
+        infoText: undefined
+    }
+    if (customOpts) {
+        $.extend(opts, customOpts);
     }
     PjaxDialog.call(this, opts);
     this._loadUrl = askbot['urls']['userSignin'];
@@ -1319,6 +1323,7 @@ var PjaxDialogTrigger = function() {
     this._handler = this.getOpenDialogHandler();
     this._dialog = undefined;
     this._dialogClass = undefined;//assign this in the subclass's constructor
+    this._dialogOpts = {};
 };
 inherits(PjaxDialogTrigger, SimpleControl);
 
@@ -1336,8 +1341,9 @@ PjaxDialogTrigger.prototype.getDialogClass = function() {
 
 PjaxDialogTrigger.prototype.getOpenDialogHandler = function() {
     var me = this;
+    var dialogOpts = this._dialogOpts;
     return function() {
-        var dialog = me.getDialog();
+        var dialog = me.getDialog(dialogOpts);
         if (dialog) {
             dialog.show();
         } else {
@@ -1354,6 +1360,71 @@ var LoginLink = function() {
     this._dialogClass = LoginDialog;
 };
 inherits(LoginLink, PjaxDialogTrigger);
+
+var AskAnonBtn = function() {
+    LoginLink.call(this);
+    this._dialogOpts = {
+        'infoText': gettext('Your question will be posted after you log in')
+    };
+    this._openDialogHandler = this._handler;
+    this._handler = this.getAskAnonHandler();
+};
+inherits(AskAnonBtn, LoginLink);
+
+/**
+ * @todo: move to ask form
+ */
+AskAnonBtn.prototype.setEditorErrors = function(errors) {
+    var html = '<ul>';
+    $.each(errors, function(idx, error) {
+        html += '<li>' + error + '</li>';
+    });
+    html += '</ul>';
+    notify.show(html);
+};
+
+AskAnonBtn.prototype.askQuestion = function(callback) {
+    //@todo: create js class for the question form
+    var data = {
+        title: $('#id_title').val(),
+        text: $('#editor').val(),
+        tags: $('#id_tags').val(),
+        wiki: $('#id_wiki').is(':checked'),
+        ask_anonymously: $('#id_ask_anonymously').is(':checked'),
+    };
+    var me = this;
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: this._url,
+        data: JSON.stringify(data),
+        cache: false,
+        success: function(data) {
+            if (data['errors']) {
+                me.setEditorErrors(data['errors']);
+            } else {
+                callback();
+            }
+        }
+    });
+    //when successful, opens the login/register dialog
+    //when user logs in, the questios is supposed to post
+};
+
+AskAnonBtn.prototype.getAskAnonHandler = function() {
+    var handleDialog = this._openDialogHandler;
+    var me = this;
+    return function() {
+        me.askQuestion(function() { 
+            handleDialog()
+        });
+    };
+};
+
+AskAnonBtn.prototype.decorate = function(element) {
+    AskAnonBtn.superClass_.decorate.call(this, element);
+    this._url = element.data('url');
+};
 
 /**
  * attaches a modal menu with a text editor

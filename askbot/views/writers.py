@@ -195,7 +195,7 @@ def import_data(request):
     return render(request, 'import_data.html', data)
 
 #@login_required #actually you can post anonymously, but then must register
-@csrf.csrf_protect
+#@csrf.csrf_protect
 @decorators.check_authorization_to_post(_(
     "<span class=\"strong big\">You are welcome to start submitting your question "
     "anonymously</span>. When you submit the post, you will be redirected to the "
@@ -211,7 +211,12 @@ def ask(request):#view used to ask a new question
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
-    form = forms.AskForm(request.REQUEST, user=request.user)
+    if request.is_ajax():
+        post_data = simplejson.loads(request.raw_post_data)
+    else:
+        post_data = request.REQUEST
+
+    form = forms.AskForm(post_data, user=request.user)
     if request.method == 'POST':
         if form.is_valid():
             timestamp = datetime.datetime.now()
@@ -245,7 +250,6 @@ def ask(request):#view used to ask a new question
                 except exceptions.PermissionDenied, e:
                     request.user.message_set.create(message = unicode(e))
                     return HttpResponseRedirect(reverse('index'))
-
             else:
                 request.session.flush()
                 session_key = request.session.session_key
@@ -259,7 +263,13 @@ def ask(request):#view used to ask a new question
                     added_at = timestamp,
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
-                return HttpResponseRedirect(url_utils.get_login_url())
+                response = simplejson.dumps({'success': True})
+                return HttpResponse(response, mimetype='application/json')
+        else:
+            if request.is_ajax():
+                errors  = form.errors.values()
+                response = simplejson.dumps({'errors': errors, 'success': True})
+                return HttpResponse(response, mimetype='application/json')
 
     if request.method == 'GET':
         form = forms.AskForm(user=request.user)

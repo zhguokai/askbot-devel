@@ -10,7 +10,7 @@
 {% include "widgets/question_edit_tips.html" %}
 {% endblock %}
 {% block content %}
-        {% include "widgets/ask_form.html" %}
+    {% include "widgets/ask_form.html" %}
 {% endblock %}
 {% block endjs %}
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
@@ -68,6 +68,11 @@
                     //var msg = gettext("%s, we've saved your draft, but...");
                     //return interpolate(msg, [askbot['data']['userName']]);
                 };
+            }
+            var askAnonBtn = $('input[name="post_anon"]');
+            if (askAnonBtn.length === 1) {
+                var btn = new AskAnonBtn();
+                btn.decorate(askAnonBtn);
             }
         });
     </script>

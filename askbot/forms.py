@@ -915,10 +915,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         ),
         required=False,
     )
-    openid = forms.CharField(
-        required=False, max_length=255,
-        widget=forms.TextInput(attrs={'size': 40, 'class': 'openid-input'})
-    )
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
