@@ -1319,6 +1319,9 @@ def user_post_anonymous_askbot_content(user, session_key):
                 aq.publish(user)
             for aa in aa_list:
                 aa.publish(user)
+            from askbot.skins.loaders import get_askbot_template
+            message = get_askbot_template('tutorials/new_post.html').render()
+            user.message_set.create(message=message)
 
 
 def user_mark_tags(
