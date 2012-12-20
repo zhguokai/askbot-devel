@@ -446,7 +446,6 @@ body.user-messages {
     }
     #validation-code {
         padding-left:5px;
-        border:#cce6ec 3px solid;
         height:25px;
         font-size: 14px;
         width: 200px;
@@ -2588,22 +2587,9 @@ ul#related-tags li {
 /* -----Content pages, Login, About, FAQ, Users----- */
 
 .meta,
-.user-profile-edit-page,
-{
-    font-size:13px;
-    line-height:1.3;
-    color:@info-text-dark;
-    p{
-        font-size:13px;
-        color:@info-text;
-        line-height:1.3;
-        font-family:@body-font;
-        color:@info-text-dark;
-        margin-bottom:12px;
-    }
-    h2{
-        color:@info-text-dark;
-        padding-left:0px;
+.user-profile-edit-page {
+    h2 {
+        padding-left: 0;
         font-size:16px;
     }
 }
@@ -2620,7 +2606,7 @@ ul#related-tags li {
     input[type="text"],
     input[type="password"],
     select{
-        border:#cce6ec 3px solid;
+        /*border:#cce6ec 3px solid;*/
         height:25px;
         line-height: 25px;
         padding-left:5px;
@@ -2632,20 +2618,11 @@ ul#related-tags li {
         height:30px;
     }
     textarea{
-        border:#cce6ec 3px solid;
+        /*border:#cce6ec 3px solid;*/
         padding-left:5px;
         padding-top:5px;
         width:395px;
         font-size:14px;
-    }
-    input.submit{
-        font-weight:normal;
-        margin:5px 0px;
-        .button-style(26px,15px);
-        font-family:@body-font;
-    }
-    input.submit:hover{
-        .button-style-hover;
     }
     .cancel{
         background:url(../images/small-button-cancel.png) repeat-x top !important;
