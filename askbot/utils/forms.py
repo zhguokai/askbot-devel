@@ -99,8 +99,8 @@ class UserNameField(StrippedNonEmptyCharField):
         self.user_instance = None
         error_messages={
             'required': _('user name is required'),
-            'taken': _('sorry, this name is taken, please choose another'),
-            'forbidden': _('sorry, this name is not allowed, please choose another'),
+            'taken': _('this name is not available'),
+            'forbidden': _('this name is not allowed'),
             'missing': _('sorry, there is no user with this name'),
             'multiple-taken': _('sorry, we have a serious error - user name is taken by several users'),
             'invalid': _('user name can only consist of letters, empty space and underscore'),

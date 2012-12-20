@@ -456,15 +456,17 @@ class AccountRecoveryForm(forms.Form):
         and if so, populate 'user' field in the cleaned data
         with the user object
         """
-        if 'email' in self.cleaned_data:
-            email = self.cleaned_data['email']
-            try:
-                user = User.objects.get(email__iexact=email)
-                self.cleaned_data['user'] = user
-            except User.DoesNotExist:
-                del self.cleaned_data['email']
-                message = _('Sorry, we don\'t have this email address in the database')
-                raise forms.ValidationError(message)
+        email = self.cleaned_data['email']
+        users = User.objects.filter(email__iexact=email)
+        if len(users) == 0:
+            del self.cleaned_data['email']
+            message = _('we don\'t have this email')
+            raise forms.ValidationError(message)
+        elif len(users) > 0:
+            logging.critical('have > 1 user with email %s' % email)
+        self.cleaned_data['user'] = users[0]
+
+                
         
 class ChangeopenidForm(forms.Form):
     """ change openid form """
