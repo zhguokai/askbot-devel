@@ -1315,17 +1315,17 @@ def user_post_anonymous_askbot_content(user, session_key):
             msg = get_i18n_message('SUSPENDED_USERS_CANNOT_POST')
             user.message_set.create(message = msg)
         else:
+            new_post = None
             for aq in aq_list:
-                post = aq.publish(user)
+                new_post = aq.publish(user)
             for aa in aa_list:
-                post = aa.publish(user)
-
+                new_post = aa.publish(user)
             #monkeypatching with a variable to pass this url in response
-            user._askbot_new_post_url = post.get_absolute_url()
-
-            from askbot.skins.loaders import get_askbot_template
-            message = get_askbot_template('tutorials/new_post.html').render()
-            user.message_set.create(message=message)
+            if new_post:
+                user._askbot_new_post_url = post.get_absolute_url()
+                from askbot.skins.loaders import get_askbot_template
+                message = get_askbot_template('tutorials/new_post.html').render()
+                user.message_set.create(message=message)
 
 
 def user_mark_tags(

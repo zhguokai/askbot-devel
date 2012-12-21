@@ -9,11 +9,15 @@ from django.utils.encoding import StrAndUnicode
 
 from askbot.user_messages import get_and_delete_messages
 
-def user_messages (request):
+def user_messages(request):
     """
     Returns session messages for the current session.
 
     """
+    #don't delete messages on ajax requests b/c we can't show
+    #them the same way as in the server side generated html
+    if request.is_ajax():
+        return {}
     if not request.path.startswith('/' + django_settings.ASKBOT_URL):
         #todo: a hack, for real we need to remove this middleware
         #and switch to the new-style session messages
@@ -27,7 +31,7 @@ def user_messages (request):
     #print messages
     return { 'user_messages': messages }
 
-class LazyMessages (StrAndUnicode):
+class LazyMessages(StrAndUnicode):
     """
     Lazy message container, so messages aren't actually retrieved from
     session and deleted until the template asks for them.

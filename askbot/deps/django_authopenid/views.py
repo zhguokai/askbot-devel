@@ -168,11 +168,8 @@ def login(request, user):
     logging.debug('logged in user %s with session key %s' % (user.username, session_key))
     #todo: move to auth app
     user_logged_in.send(
-                        request = request,
-                        user = user,
-                        session_key=session_key,
-                        sender=None
-                    )
+        request = request, user = user, session_key=session_key, sender=None
+    )
 
 #todo: uncouple this from askbot
 def logout(request):
@@ -237,11 +234,8 @@ def ask_openid(
     logging.debug('redirecting to %s' % redirect_url)
     return HttpResponseRedirect(redirect_url)
 
-def complete(request, on_success=None, on_failure=None, return_to=None):
+def complete(request, return_to=None):
     """ complete openid signin """
-    assert(on_success is not None)
-    assert(on_failure is not None)
-
     logging.debug('in askbot.deps.django_authopenid.complete')
 
     consumer = Consumer(request.session, util.DjangoOpenIDStore())
@@ -256,20 +250,20 @@ def complete(request, on_success=None, on_failure=None, return_to=None):
 
     if openid_response.status == SUCCESS:
         logging.debug('openid response status is SUCCESS')
-        return on_success(
+        return signin_success(
                     request,
                     openid_response.identity_url,
                     openid_response
                 )
     elif openid_response.status == CANCEL:
         logging.debug('CANCEL')
-        return on_failure(request, 'The request was canceled')
+        return signin_failure(request, 'The request was canceled')
     elif openid_response.status == FAILURE:
         logging.debug('FAILURE')
-        return on_failure(request, openid_response.message)
+        return signin_failure(request, openid_response.message)
     elif openid_response.status == SETUP_NEEDED:
         logging.debug('SETUP NEEDED')
-        return on_failure(request, 'Setup needed')
+        return signin_failure(request, 'Setup needed')
     else:
         logging.debug('BAD OPENID STATUS')
         assert False, "Bad openid status: %s" % openid_response.status
@@ -340,8 +334,7 @@ def complete_oauth_signin(request):
                             request = request,
                             user = user,
                             user_identifier = user_id,
-                            login_provider_name = oauth_provider_name,
-                            redirect_url = next_url
+                            login_provider_name = oauth_provider_name
                         )
 
     except Exception, e:
@@ -416,8 +409,7 @@ def ldap_signin(request):
                 return finalize_generic_signin(
                     request,
                     login_provider_name = 'ldap',
-                    user_identifier = ldap_username + '@ldap',
-                    redirect_url = next_url
+                    user_identifier = ldap_username + '@ldap'
                 )
         else:
             auth_fail_func_path = getattr(
@@ -475,13 +467,13 @@ def signin(request, template_name='authopenid/signin.html'):
     * user data: id, username, reputation, xxx_badges_count (xxx in (gold, silver, bronze))
     """
     logging.debug('in signin view')
-    on_failure = signin_failure
-
     #we need a special priority on where to redirect on successful login
     #here:
     #1) url parameter "next" - if explicitly set
     #2) url from django setting LOGIN_REDIRECT_URL
     #3) home page of the forum
+
+    #todo: decide how to set next_url
     login_redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
     next_url = get_next_url(request, default = login_redirect_url)
     logging.debug('next url is %s' % next_url)
@@ -490,8 +482,12 @@ def signin(request, template_name='authopenid/signin.html'):
         and request.user.is_authenticated():
         raise django_exceptions.PermissionDenied()
 
+    #todo: what should we do with this???
     if next_url == reverse('user_signin'):
         next_url = '%(next)s?next=%(next)s' % {'next': next_url}
+
+    #need this to keep users on the same page after third party registration
+    request.session['next_url'] = request.META['HTTP_REFERER']
 
     login_form = forms.LoginForm(initial = {'next': next_url})
 
@@ -563,8 +559,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                     request = request,
                                     user = user,
                                     user_identifier = user_id,
-                                    login_provider_name = provider_name,
-                                    redirect_url = next_url
+                                    login_provider_name = provider_name
                                 )
 
                 except util.FacebookError, e:
@@ -591,8 +586,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                     user = user,
                                     user_identifier = custom_wp_openid_url,
                                     login_provider_name = provider_name,
-                                    redirect_url = next_url
-                                    )
+                                )
                 except WpFault, e:
                     logging.critical(unicode(e))
                     msg = _('The login password combination was not correct')
@@ -783,8 +777,6 @@ def complete_signin(request):
     logging.debug('')#blank log just for the trace
     return complete(
                 request,
-                on_success = signin_success,
-                on_failure = signin_failure,
                 return_to = get_url_host(request) + reverse('user_complete_signin')
             )
 
@@ -820,22 +812,17 @@ def signin_success(request, identity_url, openid_response):
                         request = request,
                         user = user,
                         user_identifier = openid_url,
-                        login_provider_name = provider_name,
-                        redirect_url = next_url
+                        login_provider_name = provider_name
                     )
 
 def finalize_generic_signin(
-                    request = None,
-                    user = None,
-                    login_provider_name = None,
-                    user_identifier = None,
-                    redirect_url = None
-                ):
+        request=None, user=None, login_provider_name=None, user_identifier=None,
+    ):
     """non-view function
     generic signin, run after all protocol-dependent details
     have been resolved
     """
-    assert(redirect_url is not None)
+    redirect_url = request.session.pop('next_url', get_next_url(request))
 
     if request.user.is_authenticated():
         #this branch is for adding a new association
