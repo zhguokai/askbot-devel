@@ -885,6 +885,8 @@ def finalize_generic_signin(
         login(request, user)
         logging.debug('login success')
         close_modal_menu(request)
+        if hasattr(user, '_askbot_new_post_url'):
+            redirect_url = user._askbot_new_post_url
         return HttpResponseRedirect(redirect_url)
     else:
         assert(None not in (login_provider_name, user_identifier))
