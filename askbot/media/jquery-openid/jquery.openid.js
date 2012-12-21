@@ -158,6 +158,9 @@ LoginOrRegisterForm.prototype.handleSuccess = function(data) {
     //askbot['vars']['modalDialog'].hide();//@note: using global variable
     $('.modal').hide();
     $('.modal-backdrop').hide();
+    if (data['redirectUrl']) {
+        window.location.href = data['redirectUrl'];
+    }
 };
 
 LoginOrRegisterForm.prototype.decorate = function(element) {

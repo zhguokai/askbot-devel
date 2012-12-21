@@ -1442,7 +1442,7 @@ class AnonymousQuestion(DraftContent):
         #todo: wrong - use User.post_question() instead
         try:
             user.assert_can_post_text(self.text)
-            Thread.objects.create_new(
+            thread = Thread.objects.create_new(
                 title = self.title,
                 added_at = added_at,
                 author = user,
@@ -1452,6 +1452,7 @@ class AnonymousQuestion(DraftContent):
                 text = self.text,
             )
             self.delete()
+            return thread
         except django_exceptions.PermissionDenied, error:
             #delete previous draft questions (only one is allowed anyway)
             prev_drafts = DraftQuestion.objects.filter(author=user)

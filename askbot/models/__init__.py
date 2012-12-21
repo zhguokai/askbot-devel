@@ -1316,9 +1316,13 @@ def user_post_anonymous_askbot_content(user, session_key):
             user.message_set.create(message = msg)
         else:
             for aq in aq_list:
-                aq.publish(user)
+                post = aq.publish(user)
             for aa in aa_list:
-                aa.publish(user)
+                post = aa.publish(user)
+
+            #monkeypatching with a variable to pass this url in response
+            user._askbot_new_post_url = post.get_absolute_url()
+
             from askbot.skins.loaders import get_askbot_template
             message = get_askbot_template('tutorials/new_post.html').render()
             user.message_set.create(message=message)
@@ -3541,13 +3545,7 @@ def add_missing_subscriptions(sender, instance, created, **kwargs):
         instance.add_missing_askbot_subscriptions()
 
 def post_anonymous_askbot_content(
-                                sender,
-                                request,
-                                user,
-                                session_key,
-                                signal,
-                                *args,
-                                **kwargs):
+                                sender, request, user, session_key, signal, *args, **kwargs):
     """signal handler, unfortunately extra parameters
     are necessary for the signal machinery, even though
     they are not used in this function"""

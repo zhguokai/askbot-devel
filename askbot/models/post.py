@@ -2209,7 +2209,7 @@ class AnonymousAnswer(DraftContent):
 
     def publish(self, user):
         added_at = datetime.datetime.now()
-        Post.objects.create_new_answer(
+        answer = Post.objects.create_new_answer(
             thread=self.question.thread,
             author=user,
             added_at=added_at,
@@ -2218,3 +2218,4 @@ class AnonymousAnswer(DraftContent):
         )
         self.question.thread.invalidate_cached_data()
         self.delete()
+        return answer

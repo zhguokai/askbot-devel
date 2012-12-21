@@ -186,18 +186,13 @@ def logout_page(request):
     }
     return render(request, 'authopenid/logout.html', data)
 
-def get_signin_user_data(user):
-    """returns a dictionary with a limited subset of
-    user data, to show in the header once user logs in"""
-    return {
-        'id': user.id,
-        'username': user.username,
-        'reputation': user.reputation,
-        'gold_badges_count': user.gold,
-        'silver_badges_count': user.silver,
-        'bronze_badges_count': user.bronze,
-        'profile_url': user.get_profile_url()
-    }
+def get_logged_in_user_data(request, user):
+    """returns a dictionary with the user data html snippet
+    for the header"""
+    html = render_to_string(request, 'widgets/user_navigation.html')
+    #using a patched variable for the url of a post entered before login
+    url = getattr(user, '_askbot_new_post_url', None)
+    return {'userToolsNavHTML': html, 'redirectUrl': url}
 
 def get_url_host(request):
     if request.is_secure():
@@ -395,7 +390,7 @@ def ldap_signin(request):
 
     if user:
         login(request, user)
-        return get_signin_user_data(user)
+        return get_logged_in_user_data(request, user)
     else:
         #try to login again via LDAP
         user_info = ldap_authenticate(username, password)
@@ -406,7 +401,7 @@ def ldap_signin(request):
                 user = authenticate(method='force', user_id=user.id)
                 assert(user is not None)
                 login(request, user)
-                return get_signin_user_data(user)
+                return get_logged_in_user_data(request, user)
             else:
                 #continue with proper registration
                 ldap_username = user_info['ldap_username']
@@ -457,14 +452,13 @@ def password_signin(request):
             #todo: here we might need to set cookies
             #for external login sites
             #get user tools nav login snippet
-            html = render_to_string(request, 'widgets/user_navigation.html')
-            return {'userToolsNavHTML': html}
+            return get_logged_in_user_data(request, user)
         return {'errors': {'username': [_('Login failed, please try again')]}}
     else:
         return {'errors': form.errors}
 
 #@not_authenticated
-@csrf.csrf_protect
+@csrf.csrf_exempt
 def signin(request, template_name='authopenid/signin.html'):
     """
     signin page. It manages the legacy authentification (user/password)
@@ -977,8 +971,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             login(request, user)
             cleanup_post_register_session(request)
             close_modal_menu()
-            html = render_to_string(request, 'widgets/user_navigation.html')
-            return {'userToolsNavHTML': html}
+            return get_logged_in_user_data(request, user)
 
         elif askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
 
@@ -991,8 +984,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             login(request, user)
             cleanup_post_register_session(request)
             close_modal_menu(request)
-            html = render_to_string(request, 'widgets/user_navigation.html')
-            return {'userToolsNavHTML': html}
+            return get_logged_in_user_data(request, user)
         else:
             #todo: broken branch
             request.session['username'] = username
@@ -1089,8 +1081,7 @@ def register_with_password(request):
             login(request, user)
             cleanup_post_register_session(request)
             #get user tools nav login snippet
-            html = render_to_string(request, 'widgets/user_navigation.html')
-            return {'userToolsNavHTML': html}
+            return get_logged_in_user_data(request, user)
         else:
             request.session['username'] = username
             request.session['email'] = email

@@ -248,6 +248,7 @@ class SetPasswordForm(forms.Form):
             message = _('choose password > %(len)s characters') % \
                                 {'len': askbot_const.PASSWORD_MIN_LENGTH}
             raise forms.ValidationError(message)
+        return password1
 
 
     def clean_password2(self):
