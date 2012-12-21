@@ -487,7 +487,8 @@ def signin(request, template_name='authopenid/signin.html'):
         next_url = '%(next)s?next=%(next)s' % {'next': next_url}
 
     #need this to keep users on the same page after third party registration
-    request.session['next_url'] = request.META['HTTP_REFERER']
+    if 'HTTP_REFERER' in request.META:
+        request.session['next_url'] = request.META['HTTP_REFERER']
 
     login_form = forms.LoginForm(initial = {'next': next_url})
 
@@ -959,7 +960,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             del request.session['ldap_user_info']
             login(request, user)
             cleanup_post_register_session(request)
-            close_modal_menu()
+            close_modal_menu(request)
             return get_logged_in_user_data(request, user)
 
         elif askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
@@ -984,7 +985,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             request.session['validation_code'] = key
             redirect_url = reverse('verify_email_and_register') \
                             + '?next=' + get_next_url(request)
-            close_modal_menu()
+            close_modal_menu(request)
             return HttpResponseRedirect(redirect_url)
     raise NotImplementedError('should never fall through here')
 
