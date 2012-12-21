@@ -1361,6 +1361,55 @@ var LoginLink = function() {
 };
 inherits(LoginLink, PjaxDialogTrigger);
 
+/**
+ * @constructor
+ */
+var AskBtn = function() {
+    SimpleControl.call(this);
+    var me = this;
+    this._handler = function() {
+        me.askQuestion(); 
+    };
+};
+inherits(AskBtn, SimpleControl);
+
+AskBtn.prototype.setEditorErrors = function(errors) {
+    var html = '<ul>';
+    $.each(errors, function(idx, error) {
+        html += '<li>' + error + '</li>';
+    });
+    html += '</ul>';
+    notify.show(html);
+};
+
+AskBtn.prototype.askQuestion = function() {
+    //@todo: create js class for the question form
+    var data = {
+        title: $('#id_title').val(),
+        text: $('#editor').val(),
+        tags: $('#id_tags').val(),
+        wiki: $('#id_wiki').is(':checked'),
+        ask_anonymously: $('#id_ask_anonymously').is(':checked'),
+    };
+    var me = this;
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: this._url,
+        data: JSON.stringify(data),
+        cache: false,
+        success: function(data) {
+            if (data['errors']) {
+                me.setEditorErrors(data['errors']);
+            } else {
+                window.location.href = data['redirectUrl'];
+            }
+        }
+    });
+    //when successful, opens the login/register dialog
+    //when user logs in, the questios is supposed to post
+};
+
 var AskAnonBtn = function() {
     LoginLink.call(this);
     this._dialogOpts = {
@@ -1416,7 +1465,7 @@ AskAnonBtn.prototype.getAskAnonHandler = function() {
     var me = this;
     return function() {
         me.askQuestion(function() { 
-            handleDialog()
+            handleDialog();
         });
     };
 };

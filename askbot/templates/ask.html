@@ -73,6 +73,9 @@
             if (askAnonBtn.length === 1) {
                 var btn = new AskAnonBtn();
                 btn.decorate(askAnonBtn);
+            } else {
+                var btn = new AskBtn();
+                btn.decorate($('input[name="post"]'));
             }
         });
     </script>

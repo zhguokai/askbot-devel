@@ -246,10 +246,13 @@ def ask(request):#view used to ask a new question
                         timestamp = timestamp,
                         group_id = group_id
                     )
-                    return HttpResponseRedirect(question.get_absolute_url())
+                    response = simplejson.dumps({
+                        'success': True,
+                        'redirectUrl': question.get_absolute_url()
+                    })
                 except exceptions.PermissionDenied, e:
-                    request.user.message_set.create(message = unicode(e))
-                    return HttpResponseRedirect(reverse('index'))
+                    response = simplejson.dumps({'success': True, 'errors': unicode(e)})
+                return HttpResponse(response, mimetype='application/json')
             else:
                 request.session.flush()
                 session_key = request.session.session_key

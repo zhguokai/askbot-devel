@@ -1322,7 +1322,7 @@ def user_post_anonymous_askbot_content(user, session_key):
                 new_post = aa.publish(user)
             #monkeypatching with a variable to pass this url in response
             if new_post:
-                user._askbot_new_post_url = post.get_absolute_url()
+                user._askbot_new_post_url = new_post.get_absolute_url()
                 from askbot.skins.loaders import get_askbot_template
                 message = get_askbot_template('tutorials/new_post.html').render()
                 user.message_set.create(message=message)
