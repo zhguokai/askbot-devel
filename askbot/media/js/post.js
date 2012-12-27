@@ -1788,13 +1788,17 @@ Comment.prototype.setContent = function(data){
     this._user_link.html(this._data['user_display_name']);
     this._comment_body.append(this._user_link);
 
-    this._comment_body.append(' (');
+    var span = this.makeElement('span');
+    span.addClass('age');
+    this._comment_body.append(span);
+
+    span.append('(');
     this._comment_added_at = $('<abbr class="timeago"></abbr>');
     this._comment_added_at.html(this._data['comment_added_at']);
     this._comment_added_at.attr('title', this._data['comment_added_at']);
     this._comment_added_at.timeago();
-    this._comment_body.append(this._comment_added_at);
-    this._comment_body.append(')');
+    span.append(this._comment_added_at);
+    span.append(')');
 
     if (this._editable){
         this._edit_link = new EditLink();

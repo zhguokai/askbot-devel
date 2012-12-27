@@ -901,6 +901,7 @@ CommentConvertLink.prototype.createDom = function(){
 
     var submit = this.makeElement('input');
     submit.attr('type', 'submit');
+    submit.addClass('convert-comment');
     submit.attr('value', gettext('convert to answer'));
     element.append(submit);
     this.decorate(element);

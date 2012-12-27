@@ -49,8 +49,7 @@
 
 {%- macro post_contributor_avatar_and_credentials(post, user, karma_mode = None, badges_mode = None) -%}
     {% if post.is_anonymous %}
-        <img alt="{% trans %}anonymous user{% endtrans %}" src="{{ '/images/anon.png'|media }} " class="gravatar" width="32" height="32" />
-        <p>{{ user.get_anonymous_name() }}</p>
+        {{ gravatar(user, 32, anonymous=True) }}
     {% else %}
         {{ gravatar(user, 32) }}
         {{ user.get_profile_link()}}{{ user_country_flag(user) }}<br/>
@@ -421,13 +420,13 @@ for the purposes of the AJAX comment editor #}
                     <div class="comment-body">
                         {{comment.html}}
                         <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username|escape}}</a>
-                        <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
+                        <span class="age">({{ timeago(comment.added_at) }})</span>
                         <a id="post-{{comment.id}}-edit"
                             class="edit">{% trans %}edit{% endtrans %}</a>
                         <form action="{% url comment_to_answer %}" method="POST" accept-charset="utf-8" class='convert-comment'>
                           {% csrf_token %}
                           <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
-                          <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
+                          <input class="convert-comment" type="submit" value="{% trans %}convert to answer{% endtrans %}">
                         </form>
                     </div>
                 </div>
@@ -629,16 +628,26 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- endmacro -%}
 
 {#todo: rename this to avatar #}
-{%- macro gravatar(user, size) -%}
+{%- macro gravatar(user, size, anonymous=False) -%}
 {% spaceless %}
-<a class="avatar-box"
-    href="{{ user.get_absolute_url() }}"
-><img class="gravatar" 
-    width="{{size}}" height="{{size}}"
-    src="{{ user.get_avatar_url(size) }}"
-    title="{{user.username|escape}}" 
-    alt="{% trans username=user.username|escape %}{{username}} gravatar image{% endtrans %}" 
-/></a>
+    {% if anonymous == True %}
+        <img 
+            alt="{{ user.get_anonymous_name() }}"
+            src="{{ '/images/anon.png'|media }} "
+            class="gravatar"
+            width="{{ size }}"
+            height="{{ size }}"
+        />
+    {% else %}
+        <a class="avatar-box"
+            href="{{ user.get_absolute_url() }}"
+        ><img class="gravatar" 
+            width="{{ size }}" height="{{ size }}"
+            src="{{ user.get_avatar_url(size) }}"
+            title="{{ user.username|escape }}" 
+            alt="{% trans username=user.username|escape %}{{username}} gravatar image{% endtrans %}" 
+        /></a>
+    {% endif %}
 {% endspaceless %}
 {%- endmacro -%}
 
