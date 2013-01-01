@@ -8,12 +8,13 @@
     {% include "question/question_tags.html" %}
 
     <div id="question-table">
+        <div class="post-update-info-container">
+            {% include "question/question_author_info.html" %}
+        </div>
         <div class="question-body">
-            <div class="post-update-info-container">
-                {% include "question/question_author_info.html" %}
-            </div>
             {{ question.html }}
         </div>
+        <div class="clearfix"></div>
         <div id="question-controls" class="post-controls">
             {% include "question/question_controls.html" %}
         </div>

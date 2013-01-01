@@ -824,16 +824,10 @@ class DraftAnswerForm(forms.Form):
 
 class PostAsSomeoneForm(forms.Form):
     post_author_username = forms.CharField(
-        initial=_('User name:'),
-        help_text=_(
-            'Enter name to post on behalf of someone else. '
-            'Can create new accounts.'
-        ),
         required=False,
         widget=forms.TextInput()
     )
     post_author_email = forms.CharField(
-        initial=_('Email address:'),
         required=False,
         widget=forms.TextInput(attrs={'class': 'tipped-input'})
     )
@@ -850,30 +844,6 @@ class PostAsSomeoneForm(forms.Form):
             post_user = user
         return post_user
 
-    def clean_post_author_username(self):
-        """if value is the same as initial, it is reset to
-        empty string
-        todo: maybe better to have field where initial value is invalid,
-        then we would not have to have two almost identical clean functions?
-        """
-        username = self.cleaned_data.get('post_author_username', '')
-        initial_username = unicode(self.fields['post_author_username'].initial)
-        if username == initial_username:
-            self.cleaned_data['post_author_username'] = ''
-        return self.cleaned_data['post_author_username']
-
-    def clean_post_author_email(self):
-        """if value is the same as initial, it is reset to
-        empty string"""
-        email = self.cleaned_data.get('post_author_email', '')
-        initial_email = unicode(self.fields['post_author_email'].initial)
-        if email == initial_email:
-            email = ''
-        if email != '':
-            email = forms.EmailField().clean(email)
-        self.cleaned_data['post_author_email'] = email
-        return email
-
     def clean(self):
         """requires email address if user name is given"""
         username = self.cleaned_data.get('post_author_username', '')
@@ -883,12 +853,12 @@ class PostAsSomeoneForm(forms.Form):
                                     'post_author_username',
                                     ErrorList()
                                 )
-            username_errors.append(_('User name is required with the email'))
+            username_errors.append(_('required with the email'))
             self._errors['post_author_username'] = username_errors
             raise forms.ValidationError('missing user name')
         elif email == '' and username:
             email_errors = self._errors.get('post_author_email', ErrorList())
-            email_errors.append(_('Email is required if user name is added'))
+            email_errors.append(_('required with user name'))
             self._errors['post_author_email'] = email_errors
             raise forms.ValidationError('missing email')
 

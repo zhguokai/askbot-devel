@@ -588,6 +588,11 @@ LabeledInput.prototype.decorate = function(element) {
     element.keydown(function() {
         me.putLabelOutside();//could be more complex
     });
+    element.change(function() {
+        if (element.val().length > 0) {
+            me.putLabelOutside();
+        }
+    });
 };
 
 /**
@@ -1390,6 +1395,8 @@ AskBtn.prototype.askQuestion = function() {
         text: $('#editor').val(),
         tags: $('#id_tags').val(),
         wiki: $('#id_wiki').is(':checked'),
+        post_privately: $('#id_post_privately').is(':checked'),
+        group_id: $('#id_group_id').val(),
         ask_anonymously: $('#id_ask_anonymously').is(':checked'),
     };
     var me = this;
@@ -1440,6 +1447,8 @@ AskAnonBtn.prototype.askQuestion = function(callback) {
         text: $('#editor').val(),
         tags: $('#id_tags').val(),
         wiki: $('#id_wiki').is(':checked'),
+        group_id: $('#id_group_id').val(),
+        post_privately: $('#id_post_privately').is(':checked'),
         ask_anonymously: $('#id_ask_anonymously').is(':checked'),
     };
     var me = this;
@@ -2438,14 +2447,16 @@ if(!this.JSON){this.JSON={}}(function(){function f(n){return n<10?"0"+n:n}if(typ
  * jQuery autocomplete plugin
  * @param {Object=} options Settings
  * @constructor
+ * @inherits LabeledInput
  */
 var AutoCompleter = function(options) {
+
+    LabeledInput.call(this);
 
     /**
      * Default options for autocomplete plugin
      */
     var defaults = {
-        promptText: '',
         autocompleteMultiple: true,
         multipleSeparator: ' ',//a single character
         inputClass: 'acInput',
@@ -2568,9 +2579,11 @@ var AutoCompleter = function(options) {
         this.fetchRemoteData('', function(){});
     }
 };
-inherits(AutoCompleter, WrappedElement);
+inherits(AutoCompleter, LabeledInput);
 
 AutoCompleter.prototype.decorate = function(element){
+
+    AutoCompleter.superClass_.decorate.call(this, element);
 
     /**
      * Init DOM elements repository
@@ -2581,13 +2594,6 @@ AutoCompleter.prototype.decorate = function(element){
      * Switch off the native autocomplete
      */
     this._element.attr('autocomplete', 'off');
-
-    /**
-     * Set prompt text
-     */
-    if (this.options['promptText']) {
-        this.setPrompt();
-    }
 
     /**
      * Create DOM element to hold results
@@ -2604,21 +2610,6 @@ AutoCompleter.prototype.decorate = function(element){
     this.setEventHandlers();
 };
 
-AutoCompleter.prototype.setPrompt = function() {
-    this._element.val(this.options['promptText']);
-    this._element.addClass('prompt');
-};
-
-AutoCompleter.prototype.removePrompt = function() {
-    if (this._element.hasClass('prompt')) {
-        this._element.removeClass('prompt');
-        var val = this._element.val();
-        if (val === this.options['promptText']) {
-            this._element.val('');
-        }
-    }
-};
-
 AutoCompleter.prototype.setEventHandlers = function(){
     /**
      * Shortcut to self
@@ -2629,8 +2620,6 @@ AutoCompleter.prototype.setEventHandlers = function(){
      * Attach keyboard monitoring to $elem
      */
     self._element.keydown(function(e) {
-
-        self.removePrompt();
 
         self.lastKeyPressed_ = e.keyCode;
         switch(self.lastKeyPressed_) {
@@ -2681,12 +2670,8 @@ AutoCompleter.prototype.setEventHandlers = function(){
 
         }
     });
-    self._element.focus(function() {
-        self.removePrompt();
-    });
     self._element.blur(function() {
         if ($.trim(self._element.val()) === '') {
-            self.setPrompt();
             self._results.hide();
             return true;
         }

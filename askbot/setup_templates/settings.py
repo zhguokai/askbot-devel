@@ -268,7 +268,8 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme_advanced_resizing': True,
     'theme_advanced_resize_horizontal': False,
     'theme_advanced_statusbar_location': 'bottom',
-    'height': '250'
+    'height': '250',
+    'width': '100%'
 }
 
 #delayed notifications, time in seconds, 15 mins by default

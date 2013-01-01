@@ -440,6 +440,36 @@ body.user-messages {
     font-size:24px;
 }
 
+.labeled-input {
+    label {
+        display: block;
+        line-height: 1em;
+        height: 1em;
+        margin-bottom: -1.5em;
+        padding-left: .5em;
+    }
+    input {
+        display: block;
+    }
+    label.error {
+        font-size: inherit;
+        color: rgb(230, 102, 31);
+    }
+    label.active,
+    label.active.error {
+        padding-left: 0;
+        font-size: 12px;
+    }
+}
+
+.box .labeled-input {
+    margin: 24px 0 10px 0;
+    label,
+    input {
+        display: block;
+    }
+}
+
 .validate-email-page {
     label {
         color: @info-text;
@@ -1593,12 +1623,21 @@ ul#related-tags li {
     }
 }
 
-.ask-page,
-.question-page,
-.edit-question-page,
-.edit-answer-page {
-    #id_post_author_username,
-    #id_post_author_email {
+.post-opts {
+    margin: 18px 0;
+    .labeled-input {
+        float: left;
+        margin: 12px 10px 0 0;
+    }
+    label,
+    input {
+        display: block;
+    }
+    label {
+        margin-bottom: -1.8em;
+    }
+    input[type="text"] {
+        color: @info-text;
         border: #cce6ec 3px solid;
         height: 25px;
         line-height: 25px;
@@ -1606,22 +1645,11 @@ ul#related-tags li {
         font-size: 14px;
         width: 186px;
     }
-    #id_post_author_email {
-        margin-left: 10px;
-    }
-    table.proxy-user-info {
-        border-spacing: 0px;
-        width: 100%;
-
-        .form-item {
-            float: left;
-        }
-    }
 }
 
 .groups-input,
 .users-input {
-    width:152px;
+    width:142px;
     padding-left:5px;
     border:#c9c9b5 1px solid;
     height:25px;
@@ -1630,9 +1658,10 @@ ul#related-tags li {
 
 .add-groups,
 .add-users {
-    border:0;
-    font-weight:bold;
-    margin-top:-2px;
+    border: 0;
+    font-weight: bold;
+    float: right;
+    margin-top: -40px;
     .button-style(27px, 14px);
     .rounded-corners(4px);
 }
@@ -1648,44 +1677,6 @@ ul#related-tags li {
     display: block;
     padding: 0 10px;
     height: 25px;
-}
-
-.add-groups:hover {
-    .button-style-hover;
-}
-
-#id_user,
-#id_user_author {
-    border:#cce6ec 3px solid;
-    height:25px;
-    padding-left:5px;
-    width:395px;
-    font-size:14px;
-}
-
-.groups-input,
-.users-input {
-    width:152px;
-    padding-left:5px;
-    border:#c9c9b5 1px solid;
-    height:25px;
-    font-size: 14px;
-}
-
-.add-groups,
-.add-users {
-    border:0;
-    font-weight:bold;
-    margin-top:-2px;
-    .button-style(27px, 14px);
-    .rounded-corners(4px);
-}
-
-.add-everyone-group {
-    text-align: center;
-    margin: auto;
-    display: block;
-    padding: 0 10px;
 }
 
 .add-groups:hover {
@@ -1983,7 +1974,6 @@ ul#related-tags li {
         vertical-align:top;
     }
     .question-body, .answer-body {
-        overflow: auto;
         margin-top:10px;
         font-family:@body-font;
         color:#4b4b4b;
@@ -2021,7 +2011,7 @@ ul#related-tags li {
         font-family:@secondary-font;
         width: 158px;
         padding:4px;
-        margin:0px 0px 5px 5px;
+        margin: 5px 0px 0px 5px;
         line-height: 14px;
         .rounded-corners(4px);
         .box-shadow (0px, 2px,1px,#bfbfbf);
@@ -4064,7 +4054,6 @@ textarea.tipped-input {
     .edit-answer-page,
     .edit-question-page {
         .preview-toggle,
-        .proxy-user-info,
         .answer-options,
         .question-options,
         .revision-comment,
@@ -4287,21 +4276,6 @@ textarea.tipped-input {
     label,
     li {
         display: block;
-    }
-    label {
-        line-height: 1em;
-        height: 1em;
-        margin-bottom: -1.5em;
-        padding-left: .5em;
-    }
-    label.error {
-        font-size: inherit;
-        color: rgb(230, 102, 31);
-    }
-    label.active,
-    label.active.error {
-        padding-left: 0;
-        font-size: 12px;
     }
     .federated-login-methods label {
         padding-left: 0;

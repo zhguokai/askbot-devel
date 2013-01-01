@@ -416,6 +416,21 @@ body.user-messages {
 .scope-selector.ask-message {
   font-size: 24px;
 }
+.labeled-input label {
+  line-height: 1em;
+  height: 1em;
+  margin-bottom: -1.5em;
+  padding-left: .5em;
+}
+.labeled-input label.error {
+  font-size: inherit;
+  color: #e6661f;
+}
+.labeled-input label.active,
+.labeled-input label.active.error {
+  padding-left: 0;
+  font-size: 12px;
+}
 .validate-email-page label {
   color: #707070;
   line-height: 1.35;
@@ -2446,7 +2461,7 @@ ul#related-tags li {
 .question-page .comments a.author {
   background-color: inherit;
   color: #1b79bd;
-  padding: 0 6px 0 0;
+  padding: 0 4px 0 0;
 }
 .question-page .comments a.author:hover {
   text-decoration: underline;
@@ -4312,25 +4327,6 @@ textarea.tipped-input {
 .auth-menu li,
 .complete-registration li {
   display: block;
-}
-.auth-menu label,
-.complete-registration label {
-  line-height: 1em;
-  height: 1em;
-  margin-bottom: -1.5em;
-  padding-left: .5em;
-}
-.auth-menu label.error,
-.complete-registration label.error {
-  font-size: inherit;
-  color: #e6661f;
-}
-.auth-menu label.active,
-.complete-registration label.active,
-.auth-menu label.active.error,
-.complete-registration label.active.error {
-  padding-left: 0;
-  font-size: 12px;
 }
 .auth-menu .federated-login-methods label,
 .complete-registration .federated-login-methods label {

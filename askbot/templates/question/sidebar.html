@@ -54,19 +54,33 @@
 {% if settings.GROUPS_ENABLED %}
 <div class="box sharing-widget">
     {% if thread.is_private() %}
-        <h2>{% trans %}Invite{% endtrans %}</h2>
-        <p style="margin: 16px 0"
-        >Invite others to help answer this question</p>
+        <h2>{% trans %}Share with others{% endtrans %}</h2>
         <form action="{% url share_question_with_user %}" method="post">{% csrf_token %}
-            <input id="share_user_name" type="text" class="groups-input" name="recipient_name" />
+            <div class="labeled-input">
+                <label for="share_user_name">{% trans %}Enter user name{% endtrans %}</label>
+                <input
+                    id="share_user_name"
+                    type="text"
+                    class="groups-input"
+                    name="recipient_name"
+                />
+            </div>
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
-            <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
+            <input type="submit" class="add-groups" value="{% trans %}share{% endtrans %}"/>
         </form>
         <p class="share-input-col">{% trans %}- or -{% endtrans %}</p>
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
-            <input id="share_group_name" type="text" class="groups-input" name="recipient_name" />
+            <div class="labeled-input">
+                <label for="share_group_name">{% trans %}Enter group name{% endtrans %}</label>
+                <input 
+                    id="share_group_name"
+                    type="text"
+                    class="groups-input"
+                    name="recipient_name"
+                />
+            </div>
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
-            <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
+            <input type="submit" class="add-groups" value="{% trans %}share{% endtrans %}"/>
         </form>
         <p class="share-input-col">{% trans %}- or -{% endtrans %}</p>
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
@@ -77,12 +91,13 @@
             />
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
             <p class="share-input-col">
-            <input 
-                type="submit"
-                class="add-groups add-everyone-group"
-                value="{% trans %}share with everyone{% endtrans %}"
-            />
+                <input 
+                    type="submit"
+                    class="add-groups add-everyone-group"
+                    value="{% trans %}share with everyone{% endtrans %}"
+                />
             </p>
+            <div class="clearfix"></div>
         </form>
 
         {% set shared_users_count = sharing_info['users'].count() %}
@@ -91,7 +106,7 @@
         {% if shared_users_count or shared_groups_count %}
             <p 
                 style="margin:16px 0 4px 0"
-            >{% trans %}This question is currently shared only with:{% endtrans %}</p>
+            >{% trans %}This question is shared with:{% endtrans %}</p>
         {% endif %}
         <h3>{% trans %}Individual users{% endtrans %}</h3>
             {% set comma = joiner(',') %}

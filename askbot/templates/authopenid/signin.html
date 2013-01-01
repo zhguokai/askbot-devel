@@ -19,10 +19,14 @@
         {% if use_password_login %}
         <div class="password-login">
             <p>{% trans %}Login with password{% endtrans %}</p>
+            <div class="labeled-input">
                 <label for="id_login-username">{% trans %}enter username or email{% endtrans %}</label>
                 {{password_login_form.username}}
+            </div>
+            <div class="labeled-input">
                 <label for="id_login-password">{% trans %}enter password{% endtrans %}</label>
                 {{password_login_form.password}}
+            </div>
                 <input 
                     class="submit"
                     type="submit"
@@ -37,7 +41,7 @@
                 {% trans %}Problems signing in?{% endtrans %}
                 <a>{% trans %}recover your account{% endtrans %}</a>
             </p>
-            <div class="form">
+            <div class="form labeled-input">
                 <label for="id_recover-email">{% trans %}enter email{% endtrans %}</label>
                 {{ account_recovery_form.email }}
                 <input 
@@ -55,14 +59,22 @@
     {% if use_password_login and settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
     <div class="col2 password-registration">
         <p>{% trans %}Register with password{% endtrans %}</p>
-        <label for="id_register-username">{% trans %}enter a username{% endtrans %}</label>
-        {{ password_register_form.username }}
-        <label for="id_register-email">{% trans %}Your email{% endtrans %}</label>
-        {{ password_register_form.email }}
-        <label for="id_register-password1">{% trans %}choose a password{% endtrans %}</label>
-        {{ password_register_form.password1 }}
-        <label for="id_register-password2">{% trans %}repeat password{% endtrans %}</label>
-        {{ password_register_form.password2 }}
+        <div class="labeled-input">
+            <label for="id_register-username">{% trans %}enter a username{% endtrans %}</label>
+            {{ password_register_form.username }}
+        </div>
+        <div class="labeled-input">
+            <label for="id_register-email">{% trans %}Your email{% endtrans %}</label>
+            {{ password_register_form.email }}
+        </div>
+        <div class="labeled-input">
+            <label for="id_register-password1">{% trans %}choose a password{% endtrans %}</label>
+            {{ password_register_form.password1 }}
+        </div>
+        <div class="labeled-input">
+            <label for="id_register-password2">{% trans %}repeat password{% endtrans %}</label>
+            {{ password_register_form.password2 }}
+        </div>
         <input 
             type="submit"
             class="submit"

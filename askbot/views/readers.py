@@ -456,6 +456,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
                                 sort_method = answer_sort_method,
                                 user = request.user
                             )
+
     question_post.set_cached_comments(
         updated_question_post.get_cached_comments()
     )

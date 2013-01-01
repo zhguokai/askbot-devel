@@ -4022,12 +4022,12 @@ $(document).ready(function() {
 
         var userSelectHandler = function(data) {
             proxyUserEmailInput.val(data['data'][0]);
+            proxyUserEmailInput.change();
         };
 
         var fakeUserAc = new AutoCompleter({
             url: '/get-users-info/',//askbot['urls']['get_users_info'],
             preloadData: true,
-            promptText: gettext('User name:'),
             minChars: 1,
             useCache: true,
             matchInside: true,
@@ -4037,8 +4037,9 @@ $(document).ready(function() {
         });
 
         fakeUserAc.decorate(proxyUserNameInput);
+
         if (proxyUserEmailInput.length === 1) {
-            var tip = new TippedInput();
+            var tip = new LabeledInput();
             tip.decorate(proxyUserEmailInput);
         }
         
@@ -4049,7 +4050,6 @@ $(document).ready(function() {
         var groupsAc = new AutoCompleter({
             url: askbot['urls']['getGroupsList'],
             preloadData: true,
-            promptText: gettext('Group name:'),
             minChars: 1,
             useCache: false,
             matchInside: true,
@@ -4063,7 +4063,6 @@ $(document).ready(function() {
         var usersAc = new AutoCompleter({
             url: '/get-users-info/',
             preloadData: true,
-            promptText: gettext('User name:'),
             minChars: 1,
             useCache: false,
             matchInside: true,

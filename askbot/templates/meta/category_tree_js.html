@@ -4,7 +4,10 @@
         var sel_elems = $('.category-selector');
         if (sel_elems.length > 0) {
             var selector = new CategorySelector();
-            selector.setData(JSON.parse("{{category_tree_data|escapejs}}"));
+            var categoryTreeData = "{{category_tree_data|escapejs}}";
+            if (categoryTreeData !== '') {
+                selector.setData(JSON.parse("{{category_tree_data|escapejs}}"));
+            }
             selector.decorate(sel_elems);
             selector.setState('select');
 
@@ -12,7 +15,7 @@
             tag_editor.decorate($('.tag-editor'));
             {% if page_class == 'question-page' %}
                 {% for tag_name in question.get_tag_names() %}
-                    tag_editor.addTag('{{ tag_name }}');
+                    tag_editor.addTag('{{ tag_name|escape }}');
                 {% endfor %}
             {% endif %}
             selector.setSelectHandler(tag_editor.getAddTagHandler());
