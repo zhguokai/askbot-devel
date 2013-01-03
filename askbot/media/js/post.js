@@ -4044,6 +4044,11 @@ $(document).ready(function() {
         }
         
     }
+    var editSummaryInput = $('#id_summary');
+    if (editSummaryInput.length > 0) {
+        var summary = new LabeledInput();
+        summary.decorate(editSummaryInput);
+    }
     //if groups are enabled - activate share functions
     var groupsInput = $('#share_group_name');
     if (groupsInput.length === 1) {

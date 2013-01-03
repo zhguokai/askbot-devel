@@ -1369,17 +1369,19 @@ inherits(LoginLink, PjaxDialogTrigger);
 
 /**
  * @constructor
+ * base class for logged in and anonymous ask buttons
+ * todo: factor out the editor and consider merging
+ * with the editor class defined elsewhere
  */
-var AskBtn = function() {
+var BaseAskBtn = function() {
     SimpleControl.call(this);
-    var me = this;
-    this._handler = function() {
-        me.askQuestion(); 
-    };
 };
-inherits(AskBtn, SimpleControl);
+inherits(BaseAskBtn, SimpleControl);
 
-AskBtn.prototype.setEditorErrors = function(errors) {
+/**
+ * @todo: display errors properly
+ */
+BaseAskBtn.prototype.setEditorErrors = function(errors) {
     var html = '<ul>';
     $.each(errors, function(idx, error) {
         html += '<li>' + error + '</li>';
@@ -1388,11 +1390,19 @@ AskBtn.prototype.setEditorErrors = function(errors) {
     notify.show(html);
 };
 
-AskBtn.prototype.askQuestion = function() {
+BaseAskBtn.prototype.getEditorText = function() {
+    if (askbot['settings']['editorType'] == 'markdown') {
+        return $('#editor').val();
+    } else {
+        return tinyMCE.activeEditor.getContent();
+    }
+};
+
+BaseAskBtn.prototype.askQuestion = function(callback) {
     //@todo: create js class for the question form
     var data = {
         title: $('#id_title').val(),
-        text: $('#editor').val(),
+        text: this.getEditorText(),
         tags: $('#id_tags').val(),
         wiki: $('#id_wiki').is(':checked'),
         post_privately: $('#id_post_privately').is(':checked'),
@@ -1410,65 +1420,40 @@ AskBtn.prototype.askQuestion = function() {
             if (data['errors']) {
                 me.setEditorErrors(data['errors']);
             } else {
-                window.location.href = data['redirectUrl'];
+                callback(data);
             }
         }
     });
-    //when successful, opens the login/register dialog
-    //when user logs in, the questios is supposed to post
 };
 
+BaseAskBtn.prototype.decorate = function(element) {
+    BaseAskBtn.superClass_.decorate.call(this, element);
+    this._url = element.data('url');
+};
+
+/**
+ * @constructor
+ */
+var AskBtn = function() {
+    BaseAskBtn.call(this);
+    var me = this;
+    this._handler = function() {
+        me.askQuestion(function(data) {
+            window.location.href = data['redirectUrl'];
+        });
+    };
+};
+inherits(AskBtn, BaseAskBtn);
+
 var AskAnonBtn = function() {
-    LoginLink.call(this);
+    BaseAskBtn.call(this);
     this._dialogOpts = {
         'infoText': gettext('Your question will be posted after you log in')
     };
     this._openDialogHandler = this._handler;
     this._handler = this.getAskAnonHandler();
 };
-inherits(AskAnonBtn, LoginLink);
-
-/**
- * @todo: move to ask form
- */
-AskAnonBtn.prototype.setEditorErrors = function(errors) {
-    var html = '<ul>';
-    $.each(errors, function(idx, error) {
-        html += '<li>' + error + '</li>';
-    });
-    html += '</ul>';
-    notify.show(html);
-};
-
-AskAnonBtn.prototype.askQuestion = function(callback) {
-    //@todo: create js class for the question form
-    var data = {
-        title: $('#id_title').val(),
-        text: $('#editor').val(),
-        tags: $('#id_tags').val(),
-        wiki: $('#id_wiki').is(':checked'),
-        group_id: $('#id_group_id').val(),
-        post_privately: $('#id_post_privately').is(':checked'),
-        ask_anonymously: $('#id_ask_anonymously').is(':checked'),
-    };
-    var me = this;
-    $.ajax({
-        type: 'POST',
-        dataType: 'json',
-        url: this._url,
-        data: JSON.stringify(data),
-        cache: false,
-        success: function(data) {
-            if (data['errors']) {
-                me.setEditorErrors(data['errors']);
-            } else {
-                callback();
-            }
-        }
-    });
-    //when successful, opens the login/register dialog
-    //when user logs in, the questios is supposed to post
-};
+inherits(AskAnonBtn, BaseAskBtn);
 
 AskAnonBtn.prototype.getAskAnonHandler = function() {
     var handleDialog = this._openDialogHandler;
@@ -1478,11 +1463,6 @@ AskAnonBtn.prototype.getAskAnonHandler = function() {
             handleDialog();
         });
     };
-};
-
-AskAnonBtn.prototype.decorate = function(element) {
-    AskAnonBtn.superClass_.decorate.call(this, element);
-    this._url = element.data('url');
 };
 
 /**

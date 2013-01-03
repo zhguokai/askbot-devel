@@ -228,9 +228,6 @@ class TitleField(forms.CharField):
                         )
         self.max_length = 255
         self.label = _('title')
-        self.help_text = _(
-            'please enter a descriptive title for your question'
-        )
         self.initial = ''
 
     def clean(self, value):
@@ -484,12 +481,7 @@ class SummaryField(forms.CharField):
             attrs={'size': 50, 'autocomplete': 'off'}
         )
         self.max_length = 300
-        self.label = _('update summary:')
-        self.help_text = _(
-            'enter a brief summary of your revision (e.g. '
-            'fixed spelling, grammar, improved style, this '
-            'field is optional)'
-        )
+        self.help_text = _('enter a brief description of your revision')
 
 
 class EditorForm(forms.Form):

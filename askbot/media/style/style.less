@@ -1624,26 +1624,29 @@ ul#related-tags li {
 }
 
 .post-opts {
-    margin: 18px 0;
+    margin-top: 12px;
+    .checkbox {
+        margin-left: 0;
+    }
     .labeled-input {
         float: left;
-        margin: 12px 10px 0 0;
-    }
-    label,
-    input {
-        display: block;
-    }
-    label {
-        margin-bottom: -1.8em;
-    }
-    input[type="text"] {
-        color: @info-text;
-        border: #cce6ec 3px solid;
-        height: 25px;
-        line-height: 25px;
-        padding-left: 5px;
-        font-size: 14px;
-        width: 186px;
+        margin: 20px 10px 10px 0;
+        label,
+        input {
+            display: block;
+        }
+        label {
+            margin-bottom: -1.8em;
+        }
+        input[type="text"] {
+            color: @info-text;
+            border: #cce6ec 3px solid;
+            height: 25px;
+            line-height: 25px;
+            padding-left: 5px;
+            font-size: 14px;
+            width: 186px;
+        }
     }
 }
 
@@ -1738,6 +1741,7 @@ ul#related-tags li {
 .edit-question-page,
 .edit-answer-page {
     .wmd-container {
+        margin: 14px 0;
         width: 723px;
         width: 100%;
     }
@@ -4054,7 +4058,6 @@ textarea.tipped-input {
     .edit-answer-page,
     .edit-question-page {
         .preview-toggle,
-        .answer-options,
         .question-options,
         .revision-comment,
         .wmd-preview,
