@@ -34,6 +34,9 @@
             {{ macros.modal_menu(request.session['modal_menu']) }}
         {% endif %}
         {% include "debug_header.html" %}
+        {% if settings.MULTILINGUAL %}
+            {% include "widgets/language_nav.html" %}
+        {% endif %}
         {% include "custom_header.html" ignore missing %}
         {% if settings.CUSTOM_HEADER|trim != '' %}
         <div id="custom-header">
