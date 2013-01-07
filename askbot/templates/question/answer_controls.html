@@ -59,7 +59,7 @@
   <form class="answer-convert" action="{% url answer_to_comment %}" method="POST">
     {% csrf_token %}
     <input type="hidden" name="answer_id" id="id_answer_id" value="{{answer.id}}"/>
-    <input type="submit" name="" value="{% trans %}convert to comment{% endtrans %}"/>
+    <input class="convert-comment" type="submit" name="" value="{% trans %}convert to comment{% endtrans %}"/>
   </form>
 </span>
 <script type="text/javascript">
