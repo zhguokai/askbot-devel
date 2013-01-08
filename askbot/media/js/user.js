@@ -989,7 +989,7 @@ UserGroupsEditor.prototype.decorate = function(element){
     adder.decorate(add_link);
 
     var groups_container = new GroupsContainer();
-    groups_container.decorate(element.find('#groups-list'));
+    groups_container.decorate(element.find('.groups-list'));
     adder.setGroupsContainer(groups_container);
     //todo - add group deleters
 };

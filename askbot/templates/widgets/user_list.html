@@ -1,5 +1,5 @@
 {% import "macros.html" as macros %}
-<div class="userList">
+<div class="user-list">
     <table class="list-table">
         <tr>
             <td class="list-td">
@@ -7,7 +7,7 @@
                 <div class="user">
                     <ul>
                             <li class="thumb">{{ macros.gravatar(user, 32) }}</li>
-                            <li><a href="{% url user_profile user.id, user.username|slugify %}{% if profile_section %}?sort={{profile_section}}{% endif %}">{{user.username|escape}}</a>{{ macros.user_country_flag(user) }}</li>
+                            <li class="userlink"><a href="{% url user_profile user.id, user.username|slugify %}{% if profile_section %}?sort={{profile_section}}{% endif %}">{{user.username|escape}}</a>{{ macros.user_country_flag(user) }}</li>
                             <li>{{ 
                                     macros.user_score_and_badge_summary(
                                         user, 
