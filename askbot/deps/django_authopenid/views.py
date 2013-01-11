@@ -51,7 +51,7 @@ from django.utils.encoding import smart_unicode
 from django.utils import simplejson
 from askbot.utils.functions import generate_random_key
 from django.utils.html import escape
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot import exceptions as askbot_exceptions
 from askbot.mail import send_mail
