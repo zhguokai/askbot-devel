@@ -47,6 +47,7 @@ from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership
 from askbot.models.user import Group
+from askbot.models.user import BulkTagSubscription
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostFlagReason, AnonymousAnswer
 from askbot.models.post import PostToGroup
@@ -66,9 +67,12 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
 from askbot import mail
 
-from django import get_version as django_version
+from django import VERSION
 
-if django_version() > '1.3.1':
+#stores the 1.X version not the security release numbers
+DJANGO_VERSION = VERSION[:2]
+
+if DJANGO_VERSION > (1, 3):
     from askbot.models.message import Message
 
 def get_model(model_name):
@@ -154,7 +158,7 @@ def user_get_and_delete_messages(self):
         message.delete()
     return messages
 
-if django_version() > '1.3.1':
+if DJANGO_VERSION > (1, 3):
     User.add_to_class('message_set', user_message_set)
     User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
 
@@ -3548,6 +3552,20 @@ def add_missing_subscriptions(sender, instance, created, **kwargs):
     if created:
         instance.add_missing_askbot_subscriptions()
 
+def add_missing_tag_subscriptions(sender, instance, created, **kwargs):
+    '''``sender` is instance of `User``. When the user is created
+    it add the tag subscriptions to the user via BulkTagSubscription
+    and MarkedTags.
+    '''
+    if created:
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED and \
+                askbot_settings.GROUPS_ENABLED:
+            user_groups = instance.get_groups()
+            for subscription in BulkTagSubscription.objects.filter(groups__in = user_groups):
+                tag_list = subscription.tag_list()
+                instance.mark_tags(tagnames = tag_list,
+                                reason='subscribed', action='add')
+
 def post_anonymous_askbot_content(
                                 sender, request, user, session_key, signal, *args, **kwargs):
     """signal handler, unfortunately extra parameters
@@ -3594,6 +3612,7 @@ django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(add_user_to_global_group, sender=User)
 django_signals.post_save.connect(add_user_to_personal_group, sender=User)
+django_signals.post_save.connect(add_missing_tag_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Post)

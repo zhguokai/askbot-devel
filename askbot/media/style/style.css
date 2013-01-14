@@ -252,6 +252,16 @@ body.user-messages {
   width: auto;
   float: left;
 }
+.lang-nav ul {
+  list-style: none;
+}
+.lang-nav li {
+  display: inline;
+  padding-right: 16px;
+}
+.lang-nav li.current {
+  font-weight: bold;
+}
 #userToolsNav {
   /* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
 
@@ -366,6 +376,7 @@ body.user-messages {
 #metaNav .dropdown-menu {
   border-top: none;
   left: 7%;
+  z-index: 10100;
 }
 #metaNav .dropdown-menu a {
   color: #666;
@@ -1620,20 +1631,23 @@ ul#related-tags li {
   max-width: 395px;
 }
 .post-opts {
-  margin: 18px 0;
+  margin-top: 12px;
+}
+.post-opts .checkbox {
+  margin-left: 0;
 }
 .post-opts .labeled-input {
   float: left;
-  margin: 12px 10px 0 0;
+  margin: 20px 10px 10px 0;
 }
-.post-opts label,
-.post-opts input {
+.post-opts .labeled-input label,
+.post-opts .labeled-input input {
   display: block;
 }
-.post-opts label {
+.post-opts .labeled-input label {
   margin-bottom: -1.8em;
 }
-.post-opts input[type="text"] {
+.post-opts .labeled-input input[type="text"] {
   color: #707070;
   border: #cce6ec 3px solid;
   height: 25px;
@@ -1803,6 +1817,7 @@ ul#related-tags li {
 .question-page .wmd-container,
 .edit-question-page .wmd-container,
 .edit-answer-page .wmd-container {
+  margin: 14px 0;
   width: 723px;
   width: 100%;
 }
@@ -2805,6 +2820,39 @@ a:hover.medal {
   padding: 10px 0px 10px 0px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
+.user-profile-page .inputs {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.user-profile-page .inputs input[type='submit'] {
+  height: 26px;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  color: #4a757f;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  border-radius: 4px;
+  -ms-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  -webkit-box-shadow: 1px 1px 2px #636363;
+  -moz-box-shadow: 1px 1px 2px #636363;
+  box-shadow: 1px 1px 2px #636363;
+}
 .user-details {
   font-size: 13px;
 }
@@ -3679,7 +3727,7 @@ p.signup_p {
 .user-profile-page ul.tags {
   margin-left: 5px;
 }
-.userList {
+.user-list {
   font-size: 13px;
 }
 img.flag {
@@ -3831,24 +3879,24 @@ img.group-logo {
   /* important to align with the line spacing */
 
 }
-#groups-list {
+.groups-list {
   margin-left: 0px;
 }
-#groups-list .group-name {
+.groups-list .group-name {
   padding-right: 20px;
 }
-#groups-list td {
+.groups-list td {
   padding-bottom: 5px;
 }
-.groups-page #groups-list th,
-.groups-page #groups-list td {
+.groups-page .groups-list th,
+.groups-page .groups-list td {
   padding-right: 20px;
 }
-.groups-page #groups-list th {
+.groups-page .groups-list th {
   font-weight: bold;
 }
-.groups-page #groups-list th:nth-child(2),
-.groups-page #groups-list td:nth-child(2) {
+.groups-page .groups-list th:nth-child(2),
+.groups-page .groups-list td:nth-child(2) {
   text-align: center;
 }
 #reject-edit-modal input,
@@ -4095,11 +4143,11 @@ textarea.tipped-input {
   .question-page #question-table {
     width: 85%;
   }
-  .users-page .userList td {
+  .users-page .user-list td {
     display: block;
     width: 100%;
   }
-  .users-page .userList td .user {
+  .users-page .user-list td .user {
     width: 100%;
   }
   .user-profile-page td {
@@ -4327,4 +4375,53 @@ textarea.tipped-input {
 .modal .complete-registration input[type="text"],
 .modal .complete-registration input[type="password"] {
   width: 80%;
+}
+.tag-subscriptions {
+  border-spacing: 10px;
+  border-collapse: separate;
+}
+.tag-subscriptions button {
+  height: 27px;
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  color: #4a757f;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  border-radius: 4px;
+  -ms-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  -webkit-box-shadow: 1px 1px 2px #636363;
+  -moz-box-shadow: 1px 1px 2px #636363;
+  box-shadow: 1px 1px 2px #636363;
+}
+.tag-subscriptions form {
+  display: inline-block;
+  margin-bottom: 0;
+}
+.tag-subscriptions td {
+  vertical-align: middle;
+}
+.tag-subscriptions .action {
+  cursor: pointer;
+  color: #4A757F;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  text-decoration: none;
+}
+.tag-subscriptions ul.tags li {
+  margin: 2px 5px;
 }

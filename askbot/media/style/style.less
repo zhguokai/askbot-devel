@@ -393,6 +393,7 @@ body.user-messages {
     .dropdown-menu{
         border-top: none;
         left: 7%;
+        z-index: 10100;
         a{
             color: #666;
             height: 25px;
@@ -2761,6 +2762,14 @@ a:hover.medal {
         padding:10px 0px 10px 0px;
         font-family:@main-font;
     }
+
+    .inputs{
+        margin-top: 10px; 
+        margin-bottom: 10px; 
+        input[type='submit']{
+          .button-style(26px,15px);
+        }
+    }
 }
 
 .user-details {
@@ -4366,5 +4375,34 @@ textarea.tipped-input {
         input[type="password"] {
             width: 80%;
         }
+    }
+}
+
+.tag-subscriptions {
+    border-spacing: 10px; 
+    border-collapse: separate;
+
+    button {
+        .button-style(27px, 14px);
+    }
+
+    form {
+        display: inline-block;
+        margin-bottom: 0;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    .action {
+        cursor: pointer;
+        color: #4A757F;
+        font-family: 'Open Sans Condensed', Arial, sans-serif;
+        text-decoration: none;
+    }
+
+    ul.tags li {
+        margin: 2px 5px;
     }
 }
