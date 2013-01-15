@@ -42,6 +42,17 @@
             <label for="id_summary">{{ form.summary.help_text }}</label>
             {{ form.summary }}
         </div>
+        {% if settings.MULTILINGUAL %}
+            <label for="language">{% trans %}Change language{% endtrans %}</label>
+            <select name="language">
+            {% for lang in settings.LANGUAGES %}
+                <option 
+                    value="{{ lang[0] }}"
+                    {% if lang[0] == question.get_origin_post().language_code %}selected="selected"{% endif %}
+                >{{ lang[1] }}</option>
+            {% endfor %}
+            </select>
+        {% endif %}
     </div>
 </form>
 {% endblock %}

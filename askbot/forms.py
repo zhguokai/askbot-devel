@@ -877,6 +877,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         ),
         required=False,
     )
+    language = forms.CharField(required=False, max_length=16)
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
