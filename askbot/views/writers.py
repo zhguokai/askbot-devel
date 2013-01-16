@@ -196,7 +196,7 @@ def import_data(request):
     return render(request, 'import_data.html', data)
 
 #@login_required #actually you can post anonymously, but then must register
-@csrf.csrf_protect
+#@csrf.csrf_protect
 @decorators.check_authorization_to_post(ugettext_lazy(
     "<span class=\"strong big\">You are welcome to start submitting your question "
     "anonymously</span>. When you submit the post, you will be redirected to the "
