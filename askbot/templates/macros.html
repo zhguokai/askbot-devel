@@ -591,6 +591,14 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
   {%- include "widgets/user_long_score_and_badge_summary.html" -%}
 {%- endmacro -%}
 
+{%- macro country_flag(country_code, flag_label) -%}
+    <img 
+        class="flag"
+        src="{{ ('/images/flags/' ~ country_code|lower ~ '.gif')|media }}"
+        alt="{{ flag_label }}"
+    />
+{%- endmacro -%}
+
 {%- macro user_country_flag(user) -%}
     {% if user.country and user.show_country %}
         <img class="flag" 
