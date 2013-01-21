@@ -142,6 +142,9 @@ var setupButtonEventHandlers = function(button, callback){
 
 var putCursorAtEnd = function(element){
     var el = $(element).get()[0];
+    if (el === undefined) {
+        return;
+    }
     var jEl = $(el);
     if (el.setSelectionRange){
         var len = jEl.val().length * 2;
@@ -1940,7 +1943,7 @@ var SelectBox = function(){
     this._items = [];
     this._select_handler = function(){};//empty default
     this._is_editable = false;
-    this._item_class = this.setItemClass(SelectBoxItem);
+    this._item_class = SelectBoxItem;
 };
 inherits(SelectBox, Widget);
 
