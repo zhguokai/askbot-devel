@@ -266,10 +266,7 @@ def ask(request):#view used to ask a new question
                 return HttpResponseRedirect(url_utils.get_login_url())
 
     if request.method == 'GET':
-        form = forms.AskForm(
-                    user=request.user,
-                    initial={'language': get_language()}
-                )
+        form = forms.AskForm(user=request.user)
 
     draft_title = ''
     draft_text = ''
@@ -283,12 +280,13 @@ def ask(request):#view used to ask a new question
             draft_tagnames = draft.tagnames
 
     form.initial = {
-        'title': request.REQUEST.get('title', draft_title),
-        'text': request.REQUEST.get('text', draft_text),
-        'tags': request.REQUEST.get('tags', draft_tagnames),
-        'wiki': request.REQUEST.get('wiki', False),
         'ask_anonymously': request.REQUEST.get('ask_anonymousy', False),
-        'post_privately': request.REQUEST.get('post_privately', False)
+        'tags': request.REQUEST.get('tags', draft_tagnames),
+        'text': request.REQUEST.get('text', draft_text),
+        'title': request.REQUEST.get('title', draft_title),
+        'post_privately': request.REQUEST.get('post_privately', False),
+        'language': get_language(),
+        'wiki': request.REQUEST.get('wiki', False),
     }
     if 'group_id' in request.REQUEST:
         try:
