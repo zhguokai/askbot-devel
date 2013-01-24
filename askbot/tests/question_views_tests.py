@@ -1,9 +1,10 @@
-from bs4 import BeautifulSoup
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
+from bs4 import BeautifulSoup
 from django.core.urlresolvers import reverse
+from django.utils import simplejson
 
 
 class PrivateQuestionViewsTests(AskbotTestCase):
@@ -29,7 +30,8 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         data = self.qdata
         data['post_privately'] = 'checked'
         response1 = self.client.post(reverse('ask'), data=data)
-        response2 = self.client.get(response1['location'])
+        data1 = simplejson.loads(response1.content)
+        response2 = self.client.get(data1['redirectUrl'])
         dom = BeautifulSoup(response2.content)
         title = dom.find('h1').text
         self.assertTrue(unicode(const.POST_STATUS['private']) in title)

@@ -105,10 +105,7 @@ class PageLoadTestCase(AskbotTestCase):
         if hasattr(self.client, 'redirect_chain'):
             print 'redirect chain: %s' % ','.join(self.client.redirect_chain)
 
-        if r.status_code != status_code:
-            print 'Error in status code for url: %s' % url
-            
-        self.assertEqual(r.status_code, status_code)
+        self.assertEqual(r.status_code, status_code, url)
 
         if template and status_code != 302:
             if isinstance(r.template, coffin.template.Template):

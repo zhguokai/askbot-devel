@@ -568,18 +568,18 @@ for the purposes of the AJAX comment editor #}
             </label>
             {{ post_form.post_author_email }}
         </div>
-        <div class="clearfix"></div>
-        {# 2 - some checkbox options #}
+    {% endif %}
+    <div class="clearfix"></div>
+    {# 2 - some checkbox options #}
 
-        {% if settings.WIKI_ON and post_form.wiki == False %}
-            {{ checkbox_in_div(post_form.wiki) }}
-        {% endif %}
-        {% if settings.GROUPS_ENABLED and 
-            user.is_authenticated() and
-            user.can_make_group_private_posts()
-        %}
-            {{ checkbox_in_div(post_form.post_privately) }}
-        {% endif %}
+    {% if settings.WIKI_ON and post_form.wiki == False %}
+        {{ checkbox_in_div(post_form.wiki) }}
+    {% endif %}
+    {% if settings.GROUPS_ENABLED and 
+        user.is_authenticated() and
+        user.can_make_group_private_posts()
+    %}
+        {{ checkbox_in_div(post_form.post_privately) }}
     {% endif %}
 {%- endmacro -%}
 
