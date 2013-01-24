@@ -161,7 +161,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
         )
         self.assertEqual(checkbox['checked'], 'checked')
 
-    def test_privaet_checkbox_is_off_when_editing_public_answer(self):
+    def test_private_checkbox_is_off_when_editing_public_answer(self):
         answer = self.post_answer(question=self.question, user=self.user)
         response = self.client.get(
             reverse('edit_answer', kwargs={'id': answer.id})

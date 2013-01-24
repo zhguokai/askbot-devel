@@ -252,15 +252,23 @@ body.user-messages {
 }
 
 .lang-nav {
+    position: relative;
     ul {
+        display: none;
         list-style: none;
+        z-index: 10000;
+        margin: 0;
+    }
+    &:hover ul,
+    ul:hover {
+        display: block;
+        position: absolute;
+        width: 100px;
     }
     li {
-        display: inline;
-        padding-right: 16px;
-    }
-    li.current {
-        font-weight: bold;
+        color: @info-text;
+        background: white;
+        display: block;
     }
 }
 
@@ -551,7 +559,7 @@ body.user-messages {
         list-style: none;
         overflow: auto;
         padding: 0 0 10px 0;
-        margin: 0 0 20px 0;
+        margin: 0;
         position: relative;
         li {
             padding: 5px 10px;
@@ -1476,16 +1484,18 @@ ul#related-tags li {
         padding-right: 20px;
     }
     td.per-thread-controls {
-        width: 120px;/* 20px more to compensate for the padding */
+        width: 160px;/* 20px more to compensate for the padding */
         height: 30px;
         button {
             display: none;
         }
     }
-    th.decision-col,
     th.tags-col,
     th.users-col {
         width: 100px;
+    }
+    th.decision-col {
+        width: 140px;
     }
     tr.per-tag-controls {
         height: 30px;
@@ -1635,6 +1645,9 @@ ul#related-tags li {
         width: 100%;
         max-width: 395px;
     }
+    .lang-selector {
+        margin: 1px 0 0 5px;
+    }
 }
 
 .post-opts {
@@ -1742,7 +1755,6 @@ ul#related-tags li {
 
 .wmd-container {
     border:#cce6ec 3px solid;
-    min-height: 250px;
     textarea {
         border: none;
     }
@@ -3679,6 +3691,10 @@ p.signup_p {
     clear:both;
     line-height:18px;
     margin-bottom:15px;
+    h2 {
+        margin: 0;
+        padding: 0;
+    }
 }
 
 #responses div.face {
@@ -3690,7 +3706,7 @@ p.signup_p {
 }
 
 .response-parent {
-    margin-top: 18px;
+    margin-top: 8px;
 }
 
 .response-parent strong{
@@ -3705,9 +3721,6 @@ p.signup_p {
 
 #responses input {
     float:left;
-}
-#re_tools {
-    margin-bottom:10px;
 }
 #re_sections {
     margin-bottom:6px;

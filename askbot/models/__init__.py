@@ -134,6 +134,9 @@ class RelatedObjectSimulator(object):
         self.user = user
         self.model_class = model_class
 
+    def all(self):
+        return self.model_class.objects.all()
+
     def count(self, **kwargs):
         kwargs['user'] = self.user
         return self.model_class.objects.filter(**kwargs).count()

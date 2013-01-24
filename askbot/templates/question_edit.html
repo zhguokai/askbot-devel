@@ -38,20 +38,17 @@
         {% if form.can_stay_anonymous() %}
                 {{ macros.checkbox_in_div(form.reveal_identity) }}
         {% endif %}
-        <div class="labeled-input">
-            <label for="id_summary">{{ form.summary.help_text }}</label>
-            {{ form.summary }}
-        </div>
+        {% if settings.GROUPS_ENABLED and 
+            request.user.is_authenticated() and 
+            request.user.can_make_group_private_posts()
+        %}
+            {{ macros.checkbox_in_div(form.post_privately) }}
+        {% endif %}
         {% if settings.MULTILINGUAL %}
-            <label for="language">{% trans %}Change language{% endtrans %}</label>
-            <select name="language">
-            {% for lang in settings.LANGUAGES %}
-                <option 
-                    value="{{ lang[0] }}"
-                    {% if lang[0] == question.get_origin_post().language_code %}selected="selected"{% endif %}
-                >{{ lang[1] }}</option>
-            {% endfor %}
-            </select>
+        <div class="lang-selector">
+            <label for="id_language">{% trans %}Change language{% endtrans %}</label>
+            {{ form.language }}
+        </div>
         {% endif %}
     </div>
 </form>

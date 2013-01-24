@@ -43,6 +43,9 @@ def run_full_text_search(query_set, query_text, text_search_vector_name):
                     text_search_vector_name + \
                     ' @@ plainto_tsquery(%s)'
 
+    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', True):
+        where_clause += " AND language_code='" + get_language() + "'"
+
     search_query = '&'.join(query_text.split())#apply "AND" operator
     extra_params = (search_query,)
     extra_kwargs = {
@@ -51,8 +54,6 @@ def run_full_text_search(query_set, query_text, text_search_vector_name):
         'params': extra_params,
         'select_params': extra_params,
     }
-    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', True):
-        extra_kwargs['select']['language_code'] = get_language()
 
     return query_set.extra(**extra_kwargs)
 

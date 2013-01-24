@@ -35,7 +35,9 @@
         {% endif %}
         {% include "debug_header.html" %}
         {% if settings.MULTILINGUAL %}
-            {% include "widgets/language_nav.html" %}
+            <div class="content-wrapper">
+                {% include "widgets/language_nav.html" %}
+            </div>
         {% endif %}
         {% include "custom_header.html" ignore missing %}
         {% if settings.CUSTOM_HEADER|trim != '' %}
