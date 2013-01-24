@@ -1453,17 +1453,17 @@ var AskAnonBtn = function() {
     this._dialogOpts = {
         'infoText': gettext('Your question will be posted after you log in')
     };
-    this._openDialogHandler = this._handler;
     this._handler = this.getAskAnonHandler();
 };
 inherits(AskAnonBtn, BaseAskBtn);
 
 AskAnonBtn.prototype.getAskAnonHandler = function() {
-    var handleDialog = this._openDialogHandler;
+    var loginDialog = new LoginDialog();
+    $(document).append(loginDialog.getElement());
     var me = this;
     return function() {
         me.askQuestion(function() { 
-            handleDialog();
+            loginDialog.startOpening();
         });
     };
 };
