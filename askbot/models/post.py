@@ -2176,7 +2176,7 @@ class PostRevision(models.Model):
 
         if is_multilingual:
             request_language = get_language()
-            activate_language(self.thread.language_code)
+            activate_language(self.post.thread.language_code)
 
         if self.post.is_question():
             url = reverse('question_revisions', args = (self.post.id,))
