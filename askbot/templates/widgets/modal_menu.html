@@ -1,0 +1,10 @@
+<div class="modal-backdrop"></div>
+<div class="modal on">
+    <div class="modal-header">
+        <div class="close" data-dismiss="modal">x</div>
+        <h3>Register your account</h3>
+    </div>
+    <div class="modal-body">
+        {{ request.session['modal_menu']|safe }}
+    </div>
+</div>

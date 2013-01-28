@@ -109,7 +109,11 @@ class PageLoadTestCase(AskbotTestCase):
 
         if template and status_code != 302:
             if isinstance(r.template, coffin.template.Template):
-                self.assertEqual(r.template.name, template)
+                self.assertEqual(
+                    r.template.name,
+                    template,
+                    url
+                )
             elif isinstance(r.template, list):
                 #asuming that there is more than one template
                 template_names = ','.join([t.name for t in r.template])
@@ -428,7 +432,7 @@ class PageLoadTestCase(AskbotTestCase):
             )
         self.try_url(
                 'edit_user',
-                template='authopenid/signin.html',
+                template='authopenid/signin_full.html',
                 kwargs={'id':4},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 status_code=status_code,
                 follow=True,
@@ -476,7 +480,7 @@ class PageLoadTestCase(AskbotTestCase):
             kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'inbox'},
-            template='authopenid/signin.html',
+            template='authopenid/signin_full.html',
             follow=True
         )
         self.try_url(
@@ -491,7 +495,7 @@ class PageLoadTestCase(AskbotTestCase):
             kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'votes'},
-            template='authopenid/signin.html',
+            template='authopenid/signin_full.html',
             follow = True
         )
         self.try_url(
@@ -506,7 +510,7 @@ class PageLoadTestCase(AskbotTestCase):
             kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'email_subscriptions'},
-            template='authopenid/signin.html',
+            template='authopenid/signin_full.html',
             follow = True
         )
 

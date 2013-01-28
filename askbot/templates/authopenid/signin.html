@@ -3,7 +3,6 @@
 <div class="auth-menu">
     {% if have_buttons %}
     <div class="federated-login-methods">
-        <p>{% trans %}Sign in with one of these applications:{% endtrans %}</p>
         <form 
             method="post"
             action="{{ settings.LOGIN_URL }}"
@@ -83,6 +82,6 @@
         />
     </div>
     {% endif %}
+    <div class="clearfix"></div>
 </div>
-{% include "authopenid/providers_javascript.html" %}
 <!-- end signin.html -->

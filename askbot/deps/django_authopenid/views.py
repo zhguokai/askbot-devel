@@ -339,8 +339,7 @@ def complete_oauth2_signin(request):
                         request = request,
                         user = user,
                         user_identifier = user_id,
-                        login_provider_name = provider_name,
-                        redirect_url = next_url
+                        login_provider_name = provider_name
                     )
 
 
@@ -358,12 +357,14 @@ def complete_oauth_signin(request):
 
     #todo: make modal menues work here
     if 'denied' in request.GET:
-        request.session['modal_menu_template'] = 'authopenid/signin.html'
-        request.session['modal_menu_context'] = {'title': _('OAuth login canceled')}
+        #todo: populate
+        #request.session['modal_menu']
+        #context = {'title': _('OAuth login canceled')}
         return HttpResponseRedirect(next_url)
     if 'oauth_problem' in request.GET:
-        request.session['modal_menu_template'] = 'authopenid/signin.html'
-        request.session['modal_menu_context'] = {'title': _('OAuth login canceled')}
+        #todo: populate
+        #request.session['modal_menu']
+        #context = {'title': _('OAuth login canceled')}
         return HttpResponseRedirect(next_url)
 
     try:
@@ -407,15 +408,13 @@ def complete_oauth_signin(request):
 
     except Exception, e:
         logging.critical(e)
-        message = _('Unfortunately, there was some problem when '
-                'connecting to %(provider)s, please try again '
-                'or use another provider'
-            ) % {'provider': oauth_provider_name}
-        request.session['modal_menu_template'] = 'authopenid/signin.html'
-        request.session['modal_menu_context'] = {
-            'title': _('OAuth login falied'),
-            'message': message
-        }
+        #message = _('Unfortunately, there was some problem when '
+        #        'connecting to %(provider)s, please try again '
+        #        'or use another provider'
+        #    ) % {'provider': oauth_provider_name}
+        #todo: populate
+        #request.session['modal_menu']
+        #context = {'title': _('OAuth login falied'), 'message': message}
         return HttpResponseRedirect(next_url)
 
 
@@ -519,7 +518,7 @@ def password_signin(request):
 
 #@not_authenticated
 @csrf.csrf_exempt
-def signin(request, template_name='authopenid/signin.html'):
+def signin(request, template_name='authopenid/signin_full.html'):
     """
     signin page. It manages the legacy authentification (user/password)
     and openid authentification
@@ -558,12 +557,15 @@ def signin(request, template_name='authopenid/signin.html'):
     if 'HTTP_REFERER' in request.META:
         request.session['next_url'] = request.META['HTTP_REFERER']
 
-    login_form = forms.LoginForm(initial = {'next': next_url})
-
     #todo: get next url make it sticky if next is 'user_signin'
-    if request.method == 'POST':
-        login_form = forms.LoginForm(request.POST)
-
+    if request.method == 'GET':
+        #render full page signin view
+        if request.is_ajax():
+            return get_signin_view_data(request, 'authopenid/signin.html')
+        else:
+            return get_signin_view(request)
+    else:
+        login_form = forms.LoginForm(request.POST, prefix='login')
         if login_form.is_valid():
             provider_name = login_form.cleaned_data['login_provider_name']
             if login_form.cleaned_data['login_type'] == 'openid':
@@ -654,61 +656,16 @@ def signin(request, template_name='authopenid/signin.html'):
                 #raise 500 error - unknown login type
                 pass
         else:
+            #invalid form branch, should not normally get here
             logging.debug('login form is not valid')
             logging.debug(login_form.errors)
             logging.debug(request.REQUEST)
 
-    if request.method == 'GET' and request.user.is_authenticated():
-        view_subtype = 'change_openid'
-    else:
-        view_subtype = 'default'
-
-    return get_signin_view_data(
-                        request,
-                        login_form = login_form,
-                        view_subtype = view_subtype,
-                        template_name=template_name
-                    )
-
-@ajax_only
-def get_signin_view_data(
-                request,
-                login_form = None,
-                account_recovery_form = None,
-                account_recovery_message = None,
-                sticky = False,
-                view_subtype = 'default',
-                template_name='authopenid/signin.html'
-            ):
+def get_signin_view_context(request):
     """url-less utility function that populates
     context of template 'authopenid/signin.html'
     and returns its rendered output
     """
-
-    allowed_subtypes = (
-                    'default', 'add_openid',
-                    'email_sent', 'change_openid',
-                    'bad_key'
-                )
-
-    assert(view_subtype in allowed_subtypes)
-
-    if sticky:
-        next_url = reverse('user_signin')
-    else:
-        next_url = get_next_url(request)
-
-    if login_form is None:
-        login_form = forms.LoginForm(
-                        initial={'next': next_url},
-                        prefix='login'
-                    )
-    if account_recovery_form is None:
-        account_recovery_form = forms.AccountRecoveryForm(prefix='recover')
-
-    #if request is GET
-    if request.method == 'GET':
-        logging.debug('request method was GET')
 
     #todo: this stuff should be injected by js when the modal menu is open
     #because askbot should have nothing to do with the login app
@@ -754,33 +711,18 @@ def get_signin_view_data(
     else:
         users_login_methods = list()
 
-    if view_subtype == 'default':
-        page_title = _('Please click any of the icons below to sign in')
-    elif view_subtype == 'email_sent':
-        page_title = _('Account recovery email sent')
-    elif view_subtype == 'change_openid':
-        if len(users_login_methods) == 0:
-            page_title = _('Please add one or more login methods.')
-        else:
-            page_title = _('If you wish, please add, remove or re-validate your login methods')
-    elif view_subtype == 'add_openid':
-        page_title = _('Please wait a second! Your account is recovered, but ...')
-    elif view_subtype == 'bad_key':
-        page_title = _('Sorry, this account recovery key has expired or is invalid')
-
-    logging.debug('showing signin view')
+    next_url = get_next_url(request)
+    login_form = forms.LoginForm(initial={'next': next_url}, prefix='login')
     data = {
-        'account_recovery_form': account_recovery_form,
-        'answer':answer,
+        'account_recovery_form': forms.AccountRecoveryForm(prefix='recover'),
+        'answer': answer,
         'login_form': login_form,
-        'openid_error_message':  request.REQUEST.get('msg',''),
+        'openid_error_message': request.REQUEST.get('msg',''),
         'page_class': 'openid-signin',
-        'page_title': page_title,
         'password_register_form': forms.ClassicRegisterForm(prefix='register'),
         'password_login_form': forms.ClassicLoginForm(prefix='login'),
-        'question':question,
-        'use_password_login': util.use_password_login(),
-        'view_subtype': view_subtype, #add_openid|default
+        'question': question,
+        'use_password_login': util.use_password_login()
     }
 
     login_providers = util.get_enabled_login_providers()
@@ -801,8 +743,21 @@ def get_signin_view_data(
     data['login_providers'] = login_providers.values()
     data.update(csrf_context(request))
 
+    return data
+
+def get_signin_view(request):
+    data = get_signin_view_context(request)
+    close_modal_menu(request)#don't allow modal menues on this page
+    return render(request, 'authopenid/signin_full.html', data)
+
+@ajax_only
+def get_signin_view_data(request, template_name='authopenid/signin.html'):
+    data = get_signin_view_context(request)
     signin_view_html = render_to_string(request, template_name, data)
-    contents_html, scripts = split_contents_and_scripts(signin_view_html)
+    scripts_html = render_to_string(
+                request, 'authopenid/providers_javascript.html', data
+            )
+    junk, scripts = split_contents_and_scripts(scripts_html)
     return {'html': signin_view_html, 'scripts': scripts}
 
 @login_required
@@ -893,17 +848,20 @@ def finalize_generic_signin(
                                     provider_name=login_provider_name
                                 )
                 logging.critical('switching account or open id changed???')
-                #did openid url change? or we are dealing with a brand new open id?
-                request.session['modal_menu_template'] = 'authopenid/signin.html'
-                request.session['modal_menu_context'] = {
-                    'title': _('Login failed'),
-                    'message': _(
-                        'If you are trying to sign in to another account, '
-                        'please sign out first. '
-                        'Otherwise, please report the incident '
-                        'to the site administrator.'
-                    )
-                }
+                #did openid url change? or we are dealing
+                #with a brand new open id?
+                #todo: populate
+                #context = {
+                #    'title': _('Login failed'),
+                #    'message': _(
+                #        'If you are trying to sign in to another account, '
+                #        'please sign out first. '
+                #        'Otherwise, please report the incident '
+                #        'to the site administrator.'
+                #    )
+                #}
+                #request.session['modal_menu']
+                #context = {'title': _('OAuth login falied'), 'message': message}
                 return HttpResponseRedirect(redirect_url)
 
             except UserAssociation.DoesNotExist:
@@ -934,10 +892,11 @@ def finalize_generic_signin(
             return HttpResponseRedirect(redirect_url)
         else:
             #user just checks if another login still works
-            message = _('Your %(provider)s login works fine') % \
-                    {'provider': login_provider_name}
-            request.session['modal_menu_template'] = 'authopenid/signin.html'
-            request.session['modal_menu_context'] = {'message': message}
+            #todo: populate request.session['modal_menu']
+            #context = {
+            #    'message': _('Your %(provider)s login works fine') % \
+            #        {'provider': login_provider_name}
+            #}
             return HttpResponseRedirect(redirect_url)
     elif user:
         #login branch

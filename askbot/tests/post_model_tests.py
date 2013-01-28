@@ -460,7 +460,13 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         })
         self.assertEqual(1, Post.objects.count())
         question = Post.objects.all()[0]
-        self.assertRedirects(response=response, expected_url=question.get_absolute_url())
+
+        response_data = simplejson.loads(response.content)
+
+        self.assertEqual(
+            response_data['redirectUrl'],
+            question.get_absolute_url()
+        )
 
         self.assertEqual('test title', question.thread.title)
         self.assertEqual('test body text', question.text)

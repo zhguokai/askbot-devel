@@ -4221,7 +4221,7 @@ textarea.tipped-input {
 
 /* signin form styles */
 .federated-login-methods {
-    margin-bottom: 4em;
+    margin-bottom: 30px;
     button {
         background: 0 0 url(../jquery-openid/images/login-provider-logos-small.png) no-repeat;
         border: none;
@@ -4352,6 +4352,7 @@ textarea.tipped-input {
     -webkit-box-shadow: -1px 3px 5px 2px #ccc;
     box-shadow:         -1px 3px 5px 2px #ccc;
 }
+.openid-signin,
 .modal {
     .password-login, /* todo: apply to all ajax forms */
     .password-registration,
@@ -4391,6 +4392,12 @@ textarea.tipped-input {
         input[type="password"] {
             width: 80%;
         }
+    }
+}
+.openid-signin {
+    .auth-menu {
+        margin: 20px 0;
+        width: 280px;
     }
 }
 

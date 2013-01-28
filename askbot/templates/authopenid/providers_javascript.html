@@ -35,7 +35,6 @@
         var userIsAuthenticated = false;
     {% endif %}
     askbot['settings']['signin_always_show_local_login'] = {% if settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}true{% else %}false{% endif %};
-    $("body").authenticator();
     (function() {
         var menuElement = $('.auth-menu');
         if (menuElement.length) {
