@@ -1,8 +1,8 @@
 Changes in Askbot
 =================
 
-Development version
--------------------
+0.7.48 (Jan 28, 2013)
+---------------------
 * made "how to ask the question" instructions editable
 * added RSS auto-discovery link
 * added support for multilingual site (experimental)
