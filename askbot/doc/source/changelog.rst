@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* made "how to ask the question" instructions editable
 * added RSS auto-discovery link
 * added support for multilingual site (experimental)
 * tag subscription manager on the tags page (Adolfo)
