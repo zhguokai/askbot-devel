@@ -108,6 +108,11 @@
             var loginBtn = new LoginLink();
             loginBtn.decorate(loginLink);
         }
+        var logoutLink = $('a.logout');
+        if (logoutLink.length === 1) {
+            var logoutBtn = new LogoutLink();
+            logoutBtn.decorate(logoutLink);
+        };
     });
 {% if user_messages %}
     $('#validate_email_alert').click(function(){notify.close(true)})

@@ -1361,6 +1361,7 @@ PjaxDialogTrigger.prototype.getOpenDialogHandler = function() {
             me.setDialog(dialog);
             dialog.startOpening();
         }
+        return false;
     };
 };
 
@@ -1466,6 +1467,54 @@ AskAnonBtn.prototype.getAskAnonHandler = function() {
             loginDialog.startOpening();
         });
     };
+};
+
+var LogoutLink = function() {
+    SimpleControl.call(this);
+    this._handler = this.getLogoutHandler();
+};
+inherits(LogoutLink, SimpleControl);
+
+LogoutLink.prototype.getUrl = function() {
+    return this._url;
+};
+
+LogoutLink.prototype.setUserToolsNavHTML = function(html) {
+    var nav = $('#userToolsNav');
+    nav.empty();
+    nav.html(html);
+};
+
+LogoutLink.prototype.activateLoginLink = function() {
+    var nav = $('#userToolsNav');
+    var loginLink = new LoginLink();
+    loginLink.decorate(nav.find('.login'));
+};
+
+LogoutLink.prototype.getLogoutHandler = function() {
+    var me = this;
+    var url = this._url;
+    return function() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: me.getUrl(),
+            success: function(data) {
+                if (data['success']) {
+                    var html = data['userToolsNavHTML'];
+                    me.setUserToolsNavHTML(html);
+                    me.activateLoginLink();
+                }
+            }
+        });
+        return false;
+    };
+};
+
+LogoutLink.prototype.decorate = function(element) {
+    this._element = element;
+    this._url = element.data('url');
+    this.setHandlerInternal();
 };
 
 /**

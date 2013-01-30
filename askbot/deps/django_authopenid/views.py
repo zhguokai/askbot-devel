@@ -176,6 +176,8 @@ def login(request, user):
 #todo: uncouple this from askbot
 def logout(request):
     from django.contrib.auth import logout as _logout#for login I've added wrapper below - called login
+    if 'openid' in request.session:
+        del request.session['openid']
     _logout(request)
 
 def logout_page(request):
@@ -1105,23 +1107,25 @@ def register_with_password(request):
         #todo return data via ajax
         return {'errors': form.errors}
 
+
+@ajax_only
+def ajax_signout(request):
+    """sign out view specifically for the ajax use"""
+    if request.user.is_anonymous():
+        raise django_exceptions.PermissionDenied()
+    logout(request)
+    html = render_to_string(request, 'widgets/user_navigation.html')
+    return {'userToolsNavHTML': html}
+
+
 @login_required
 def signout(request):
-    """
-    signout from the website. Remove openid from session and kill it.
-
-    url : /signout/"
-    """
-    logging.debug('')
-    try:
-        logging.debug('deleting openid session var')
-        del request.session['openid']
-    except KeyError:
-        logging.debug('failed')
-        pass
+    """signout from the website. Remove openid from session and kill it.
+    url : /signout/"""
     logout(request)
     logging.debug('user logged out')
     return HttpResponseRedirect(get_next_url(request))
+
 
 XRDF_TEMPLATE = """<?xml version='1.0' encoding='UTF-8'?>
 <xrds:XRDS

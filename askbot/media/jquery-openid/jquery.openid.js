@@ -161,6 +161,11 @@ LoginOrRegisterForm.prototype.handleSuccess = function(data) {
     if (data['redirectUrl']) {
         window.location.href = data['redirectUrl'];
     }
+    var logoutBtn = $('a.logout');
+    if (logoutBtn.length === 1) {
+        var logoutLink = new LogoutLink();
+        logoutLink.decorate(logoutBtn);
+    }
 };
 
 LoginOrRegisterForm.prototype.decorate = function(element) {

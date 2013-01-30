@@ -19,6 +19,7 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
         name='widget_signin'
     ),
     url(r'^%s$' % _('signout/'), 'signout', name='user_signout'),
+    url(r'^%s$' % _('ajax-signout/'), 'ajax_signout', name='user_ajax_signout'),
     #this view is "complete-openid" signin
     url(r'^%s%s$' % (_('signin/'), _('complete/')), 'complete_signin',
         name='user_complete_signin'),
