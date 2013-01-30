@@ -1,22 +1,15 @@
 {% import "macros.html" as macros %}
-<div class="form-item">
-    {% if not request.user.is_authenticated() == False %}
-        {% if settings.EMAIL_VALIDATION %}
-            {% if not request.user.email_isvalid %}
-                    <p>{% trans email=request.user.email %}<span class='strong big'>Looks like your email address, %(email)s has not yet been validated.</span> To post messages you must verify your email, please see <a href='%(email_validation_faq_url)s'>more details here</a>.<br>You can submit your question now and validate email after that. Your question will saved as pending meanwhile.{% endtrans %}</p>
-            {% endif %}
-        {% endif %}
-    {% endif %}
-</div>
 <div class="form-item ask-form-bar">
     <div id="askFormBar">
-        <input id="id_title" class="questionTitleInput" name="title" autocomplete="off"
+        <input
+            id="id_title"
+            class="questionTitleInput"
+            name="title"
+            autocomplete="off"
             value="{% if form.initial.title %}{{form.initial.title|escape}}{% endif %}"/>
         <span class="form-error">{{ form.title.errors }}</span>
     </div>
-    <div class="title-desc">
-        {{ form.title.help_text }}
-    </div>
+    <div class="title-desc">{{ form.title.help_text }}</div>
     {{
         macros.edit_post(
             form,

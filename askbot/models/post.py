@@ -582,6 +582,11 @@ class Post(models.Model):
             user_filter = user_filter & models.Q(groups__in=self.groups.all())
         return User.objects.filter(user_filter)
 
+    def get_last_edited_date(self):
+        """returns date of last edit or date of creation
+        if there were no edits"""
+        return self.last_edited_at or self.added_at
+
     def has_group(self, group):
         """true if post belongs to the group"""
         return self.groups.filter(id=group.id).exists()
