@@ -798,7 +798,7 @@ def answer_to_comment(request):
             message = _(
                 'Cannot convert, because text has more characters than '
                 '%(max_chars)s - maximum allowed for comments'
-            ) % askbot_settings.MAX_COMMENT_LENGTH
+            ) % {'max_chars': askbot_settings.MAX_COMMENT_LENGTH}
             request.user.message_set.create(message=message)
 
         return HttpResponseRedirect(answer.get_absolute_url())
