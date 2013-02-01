@@ -214,6 +214,7 @@ class PostManager(BaseQuerySetManager):
             added_at = added_at,
             wiki = wiki,
             text = text,
+            language_code = thread.language_code
             #.html field is denormalized by the save() call
         )
 
@@ -371,6 +372,7 @@ class Post(models.Model):
 
     html = models.TextField(null=True)#html rendition of the latest revision
     text = models.TextField(null=True)#denormalized copy of latest revision
+    language_code = models.CharField(max_length=16, default=django_settings.LANGUAGE_CODE)
 
     # Denormalised data
     summary = models.TextField(null=True)
