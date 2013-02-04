@@ -9,9 +9,12 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Thread.language_code'
-        db.add_column('auth_user', 'languages',
-                      self.gf('django.db.models.fields.CharField')(default='en', max_length=128),
-                      keep_default=False)
+        try:
+            db.add_column('auth_user', 'languages',
+                        self.gf('django.db.models.fields.CharField')(default='en', max_length=128),
+                        keep_default=False)
+        except:
+            pass
 
     def backwards(self, orm):
         # Deleting field 'Thread.junk'
