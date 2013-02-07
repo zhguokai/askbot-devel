@@ -2080,7 +2080,6 @@ var socialSharing = function(){
             url = url.replace('{TEXT}', TEXT);
             url = url.replace('{URL}', URL);
             var params = SERVICE_DATA[service_name]['params'];
-            debugger;
             if(!window.open(url, "sharing", params)){
                 window.location.href=url;
             }
@@ -2094,11 +2093,9 @@ var socialSharing = function(){
                     url = url.replace('{URL}', data.tinyurl);
                 },
                 error: function(xhr, opts, error) {
-                    debugger;
                     url = url.replace('{URL}', URL);
                 },
                 complete: function(data) {
-                    debugger;
                     url = url.replace('{TEXT}', TEXT);
                     var params = SERVICE_DATA[service_name]['params'];
                     if(!window.open(url, "sharing", params)){
