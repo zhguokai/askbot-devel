@@ -206,15 +206,20 @@ class PostManager(BaseQuerySetManager):
 
         assert(post_type in const.POST_TYPES)
 
-        post = Post(
-            post_type = post_type,
-            thread = thread,
-            parent = parent,
-            author = author,
-            added_at = added_at,
-            wiki = wiki,
-            text = text,
+        if thread:
             language_code = thread.language_code
+        else:
+            language_code = get_language()
+
+        post = Post(
+            post_type=post_type,
+            thread=thread,
+            parent=parent,
+            author=author,
+            added_at=added_at,
+            wiki=wiki,
+            text=text,
+            language_code=language_code
             #.html field is denormalized by the save() call
         )
 
