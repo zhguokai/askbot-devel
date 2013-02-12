@@ -81,32 +81,49 @@ def test_askbot_url():
     exception, if the setting is not good.
     """
     url = django_settings.ASKBOT_URL
-    if url != '':
+    if url == '':
+        return
 
-        if isinstance(url, str) or isinstance(url, unicode):
-            pass
-        else:
-            msg = 'setting ASKBOT_URL must be of string or unicode type'
-            raise AskbotConfigError(msg)
+    if isinstance(url, str) or isinstance(url, unicode):
+        pass
+    else:
+        msg = 'setting ASKBOT_URL must be of string or unicode type'
+        raise AskbotConfigError(msg)
 
-        if url == '/':
-            msg = 'value "/" for ASKBOT_URL is invalid. '+ \
-                'Please, either make ASKBOT_URL an empty string ' + \
-                'or a non-empty path, ending with "/" but not ' + \
-                'starting with "/", for example: "forum/"'
+    if url == '/':
+        msg = 'value "/" for ASKBOT_URL is invalid. '+ \
+            'Please, either make ASKBOT_URL an empty string ' + \
+            'or a non-empty path, ending with "/" but not ' + \
+            'starting with "/", for example: "forum/"'
+        raise AskbotConfigError(msg)
+    else:
+        try:
+            assert(url.endswith('/'))
+        except AssertionError:
+            msg = 'if ASKBOT_URL setting is not empty, ' + \
+                    'it must end with /'
             raise AskbotConfigError(msg)
-        else:
-            try:
-                assert(url.endswith('/'))
-            except AssertionError:
-                msg = 'if ASKBOT_URL setting is not empty, ' + \
-                        'it must end with /'
-                raise AskbotConfigError(msg)
-            try:
-                assert(not url.startswith('/'))
-            except AssertionError:
-                msg = 'if ASKBOT_URL setting is not empty, ' + \
-                        'it must not start with /'
+        try:
+            assert(not url.startswith('/'))
+        except AssertionError:
+            msg = 'if ASKBOT_URL setting is not empty, ' + \
+                    'it must not start with /'
+
+def test_login_redirect_url():
+    """Makes sure that the LOGIN_REDIRECT_URL starts and ends with a slash"""
+    url = getattr(django_settings, 'LOGIN_REDIRECT_URL', '')
+    if url == '':
+        raise AskbotConfigError(
+            'Your LOGIN_REDIRECT_URL setting is empty string. '
+            'If you would like redirect be the root url - then please set '
+            "it to '/', otherwise make sure that url both starts and "
+            "ends with a '/'"
+        )
+    if not (url.startswith('/') and url.endswith('/')):
+        raise AskbotConfigError(
+            'Please may your LOGIN_REDIRECT_URL setting both '
+            "start and end with a '/' and is a valid url."
+        )
 
 def test_middleware():
     """Checks that all required middleware classes are
@@ -846,6 +863,7 @@ def run_startup_tests():
     test_encoding()
     test_modules()
     test_askbot_url()
+    test_login_redirect_url()
     #test_postgres()
     test_middleware()
     test_celery()
@@ -875,7 +893,7 @@ def run_startup_tests():
             'message': 'add setting LOGIN_REDIRECT_URL - an url\n'
                 'where you want to send users after they log in\n'
                 'a reasonable default is\n'
-                'LOGIN_REDIRECT_URL = ASKBOT_URL'
+                "LOGIN_REDIRECT_URL = '/' + ASKBOT_URL"
         },
         'ASKBOT_FILE_UPLOAD_DIR': {
             'test_for_absence': True,

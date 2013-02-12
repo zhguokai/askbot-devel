@@ -28,10 +28,12 @@
     askbot['urls']['titleSearch'] = '{% url "title_search" %}';
     askbot['urls']['ask'] = '{% url "ask" %}';
 	askbot['urls']['questions'] = '{% url "questions" %}';
+    askbot['settings']['csrfCookieName'] = '{{ settings.CSRF_COOKIE_NAME }}';
     askbot['settings']['static_url'] = '{{ settings.STATIC_URL }}';
     askbot['settings']['minSearchWordLength'] = {{ settings.MIN_SEARCH_WORD_LENGTH }};
     askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
     askbot['settings']['sharingSuffixText'] = '{{ settings.SHARING_SUFFIX_TEXT|escape }}';
+    askbot['settings']['closedForumMode'] = {% if settings.ASKBOT_CLOSED_FORUM_MODE %}true{% else %}false{% endif %};
 </script>
 <script 
     type="text/javascript"
@@ -57,6 +59,14 @@
 {% endif %}
 <script type="text/javascript">
     /*<![CDATA[*/
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                var csrfToken = getCookie(askbot['settings']['csrfCookieName']);
+                xhr.setRequestHeader('X-CSRFToken', csrfToken);
+            }
+        }
+    });
     $(document).ready(function(){
         // focus input on the search bar endcomment
         {% if active_tab in ('users', 'questions', 'tags', 'badges') %}
@@ -104,9 +114,18 @@
         {%endif%}
         {% endif %}
         var loginLink = $('a.login');
-        if (loginLink.length === 1) {
+        var closedModeOn = askbot['settings']['closedForumMode'];
+        if (closedModeOn === false && loginLink.length === 1) {
             var loginBtn = new LoginLink();
             loginBtn.decorate(loginLink);
+            {# 
+                todo: make it more obvious how login menu operates 
+                it is not good that we need to pass around this
+                reference to the login link object.
+                We need this in order to destroy the object upon
+                successful login so that repeated logins and logouts work
+            #}
+            askbot['data']['loginLinkObject'] = loginBtn;
         }
         var logoutLink = $('a.logout');
         if (logoutLink.length === 1) {

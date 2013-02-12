@@ -34,7 +34,7 @@
     {% else %}
         var userIsAuthenticated = false;
     {% endif %}
-    askbot['settings']['signin_always_show_local_login'] = {% if settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}true{% else %}false{% endif %};
+    askbot['settings']['loginRedirectUrl'] = '{{ settings.LOGIN_REDIRECT_URL }}';
     (function() {
         var menuElement = $('.auth-menu');
         if (menuElement.length) {
@@ -42,5 +42,13 @@
             authMenu.decorate(menuElement);
         }
     })();
+    $(document).ready(function() {
+        var completeRegistrationForm = $('.complete-registration');
+        if (completeRegistrationForm.length === 1) {
+            //enables the registration form
+            var form = new CompleteRegistrationForm();
+            form.decorate(completeRegistrationForm);
+        }
+    });
     //@ sourceURL=init_login_methods
 </script>

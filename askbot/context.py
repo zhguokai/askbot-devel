@@ -30,6 +30,7 @@ def application_settings(request):
         return {}
     my_settings = askbot_settings.as_dict()
     my_settings['LANGUAGE_CODE'] = getattr(request, 'LANGUAGE_CODE', settings.LANGUAGE_CODE)
+    my_settings['CSRF_COOKIE_NAME'] = getattr(settings, 'CSRF_COOKIE_NAME')
     my_settings['MULTILINGUAL'] = getattr(settings, 'ASKBOT_MULTILINGUAL', False)
     my_settings['LANGUAGES_DICT'] = dict(getattr(settings, 'LANGUAGES', []))
     my_settings['ALLOWED_UPLOAD_FILE_TYPES'] = \
@@ -49,6 +50,7 @@ def application_settings(request):
     my_settings['DEBUG'] = settings.DEBUG
     my_settings['USING_RUNSERVER'] = 'runserver' in sys.argv
     my_settings['ASKBOT_VERSION'] = askbot.get_version()
+    my_settings['LOGIN_REDIRECT_URL'] = settings.LOGIN_REDIRECT_URL
     my_settings['LOGIN_URL'] = url_utils.get_login_url()
     my_settings['LOGOUT_URL'] = url_utils.get_logout_url()
     my_settings['LOGOUT_REDIRECT_URL'] = url_utils.get_logout_redirect_url()

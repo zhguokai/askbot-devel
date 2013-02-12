@@ -3515,10 +3515,13 @@ a.thumbnail:hover {
   /*border-bottom: 1px solid #eee;*/
 }
 .modal-header .close {
-  margin: 7px 8px;
+  margin: 4px -1px;
 }
 .modal-body {
   box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
   overflow-y: auto;
   max-height: 600px;
   padding: 20px;

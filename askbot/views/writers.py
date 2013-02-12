@@ -52,7 +52,7 @@ QUESTIONS_PAGE_SIZE = 10
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
@@ -206,6 +206,7 @@ def import_data(request):
     "Login takes about 30 seconds, initial signup takes a minute or less."
 ))
 @decorators.check_spam('text')
+@csrf.csrf_protect
 def ask(request):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
@@ -321,7 +322,7 @@ def ask(request):#view used to ask a new question
     return render(request, 'ask.html', data)
 
 @login_required
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def retag_question(request, id):
     """retag question view
     """
@@ -550,6 +551,7 @@ def edit_answer(request, id):
 #todo: rename this function to post_new_answer
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to answer questions'))
 @decorators.check_spam('text')
+@csrf.csrf_protect
 def answer(request, id):#process a new answer
     """view that posts new answer
 
@@ -681,7 +683,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
 
     return response
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.check_spam('comment')
 def edit_comment(request):
@@ -714,7 +716,7 @@ def edit_comment(request):
         'voted': comment_post.is_upvoted_by(request.user),
     }
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def delete_comment(request):
     """ajax handler to delete comment
     """
@@ -751,6 +753,7 @@ def delete_comment(request):
 
 @decorators.admins_only
 @decorators.post_only
+@csrf.csrf_protect
 def comment_to_answer(request):
     comment_id = request.POST.get('comment_id')
     if comment_id:
@@ -784,6 +787,7 @@ def comment_to_answer(request):
 
 @decorators.admins_only
 @decorators.post_only
+@csrf.csrf_protect
 def answer_to_comment(request):
     answer_id = request.POST.get('answer_id')
     if answer_id:

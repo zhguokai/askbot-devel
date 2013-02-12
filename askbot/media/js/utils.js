@@ -7,6 +7,53 @@ var mediaUrl = function(resource){
     return askbot['settings']['static_url'] + 'default' + '/' + resource;
 };
 
+var getCookie = function(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = $.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                return decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        }
+    }
+    return cookieValue;
+};
+
+var csrfSafeMethod = function(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+};
+
+var sameOrigin = function(url) {
+    var host = document.location.host;
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    return (
+        (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        !(/^(\/\/|http:|https:).*/.test(url))
+
+    );
+};
+
+/* Returns "next" parameter from the window.location.search
+ * or default post-signin redirect url */
+var getNextUrl = function() {
+    var search = window.location.search;
+    search = search.slice(1);
+    var searchBits = search.split('&');
+    for (i = 0; i < searchBits.length; i++) {
+        var keyVal = searchBits[i].split('=');
+        if (keyVal[0] === 'next') {
+            return decodeURIComponent(keyVal[1]);
+        }
+    }
+    return askbot['settings']['loginRedirectUrl'];
+};
+
 var cleanUrl = function(url){
     var re = new RegExp('//', 'g');
     return url.replace(re, '/');
@@ -571,11 +618,33 @@ var LabeledInput = function() {
 };
 inherits(LabeledInput, WrappedElement);
 
+LabeledInput.prototype.putLabelInside = function() {
+    if (this._label.hasClass('active') === false) {
+        return;
+    }
+    var coor = this._element.offset();
+    //why divide by 2 below???
+    coor.top = coor.top + this._activeLabelVerticalOffset/2;
+    this._label.offset(coor);
+    this._label.removeClass('active');
+    
+};
+
 LabeledInput.prototype.putLabelOutside = function() {
+    if (this._label.hasClass('active')) {
+        return;
+    }
     var coor = this._element.offset();
     this._label.addClass('active');
-    coor.top = coor.top - this._label.outerHeight();
+    this._activeLabelVerticalOffset = this._label.outerHeight();
+    coor.top = coor.top - this._activeLabelVerticalOffset;
     this._label.offset(coor);
+};
+
+LabeledInput.prototype.reset = function() {
+    this.putLabelInside();
+    this._element.val('');
+    this._element.blur();
 };
 
 LabeledInput.prototype.decorate = function(element) {
@@ -586,6 +655,8 @@ LabeledInput.prototype.decorate = function(element) {
     }
     this._element = element;
     this._label = label;
+
+    element.attr('autocomplete', 'off');
 
     var me = this;
     element.keydown(function() {
@@ -1309,6 +1380,9 @@ PjaxDialog.prototype.startOpening = function() {
 
 /**
  * @constructor
+ * NOTE: this class is just loading the dialog.
+ * the login functionality itself is part of
+ * the AuthMenu class defined elsewhere.
  */
 var LoginDialog = function(customOpts) {
     var opts = {
@@ -1352,7 +1426,7 @@ PjaxDialogTrigger.prototype.getOpenDialogHandler = function() {
     var me = this;
     var dialogOpts = this._dialogOpts;
     return function() {
-        var dialog = me.getDialog(dialogOpts);
+        var dialog = me.getDialog();
         if (dialog) {
             dialog.show();
         } else {
@@ -1487,7 +1561,7 @@ LogoutLink.prototype.setUserToolsNavHTML = function(html) {
 
 LogoutLink.prototype.activateLoginLink = function() {
     var nav = $('#userToolsNav');
-    var loginLink = new LoginLink();
+    var loginLink = askbot['data']['loginLinkObject'] || new LoginLink();
     loginLink.decorate(nav.find('.login'));
 };
 
@@ -1501,6 +1575,12 @@ LogoutLink.prototype.getLogoutHandler = function() {
             url: me.getUrl(),
             success: function(data) {
                 if (data['success']) {
+                    //if we have closed mode we redirect to the login page
+                    if (askbot['settings']['closedForumMode']) {
+                        window.location.href = askbot['urls']['userSignin'];
+                        return;
+                    }
+                    //otherwise - repaint the login link
                     var html = data['userToolsNavHTML'];
                     me.setUserToolsNavHTML(html);
                     me.activateLoginLink();

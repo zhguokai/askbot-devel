@@ -13,10 +13,16 @@
 </ul>
 <div class="clearfix"></div>
 <div class="extra-openid-info">
-    <label for="openid-login-token">
-        {% trans %}Please enter your <span>user name</span>, then sign in{% endtrans %}
-    </label>
-    <input id="openid-login-token" type="text" name="openid_login_token"/>
+    <div class="labeled-input">
+        <label for="openid-login-token">
+            {% trans %}enter <span>user name</span>{% endtrans %}
+        </label>
+        <input 
+            id="openid-login-token"
+            type="text"
+            name="login-openid_login_token"
+        />
+    </div>
     <input 
         type="submit"
         class="submit"

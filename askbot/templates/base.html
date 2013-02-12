@@ -72,15 +72,7 @@
         </script>
         {% if 'modal_menu' in request.session %}
             {% include "authopenid/providers_javascript.html" %}
-            <script type="text/javascript">
-                (function() {
-                    var completeRegistrationForm = $('.complete-registration');
-                    if (completeRegistrationForm.length === 1) {
-                        var form = new CompleteRegistrationForm();
-                        form.decorate(completeRegistrationForm);
-                    }
-                })();
-            </script>
+            {% set junk_var = request.session.pop('modal_menu') %}
         {% endif %}
         </body>
 </html>

@@ -192,7 +192,10 @@ def get_logged_in_user_data(request, user):
     for the header"""
     html = render_to_string(request, 'widgets/user_navigation.html')
     #using a patched variable for the url of a post entered before login
-    url = getattr(user, '_askbot_new_post_url', None)
+    if askbot_settings.ASKBOT_CLOSED_FORUM_MODE:
+        url = get_next_url(request, default=django_settings.LOGIN_REDIRECT_URL)
+    else:
+        url = getattr(user, '_askbot_new_post_url', None)
     return {'userToolsNavHTML': html, 'redirectUrl': url}
 
 def get_url_host(request):
@@ -420,6 +423,7 @@ def complete_oauth_signin(request):
         return HttpResponseRedirect(next_url)
 
 
+"""
 @csrf.csrf_protect
 @post_only
 def change_password(request):
@@ -432,6 +436,7 @@ def change_password(request):
                         provider_name=provider_name
                     )
         return {'message': _('Your new password saved')}
+"""
 
 
 @csrf.csrf_protect
@@ -494,7 +499,7 @@ def ldap_signin(request):
                 login_form.set_password_login_error()
 
 
-#@csrf.csrf_protect
+@csrf.csrf_protect
 @ajax_only
 @post_only
 def password_signin(request):
@@ -519,7 +524,7 @@ def password_signin(request):
         return {'errors': form.errors}
 
 #@not_authenticated
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def signin(request, template_name='authopenid/signin_full.html'):
     """
     signin page. It manages the legacy authentification (user/password)
@@ -544,7 +549,7 @@ def signin(request, template_name='authopenid/signin_full.html'):
 
     #todo: decide how to set next_url
     login_redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
-    next_url = get_next_url(request, default = login_redirect_url)
+    next_url = get_next_url(request, default=login_redirect_url)
     logging.debug('next url is %s' % next_url)
 
     if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
@@ -565,7 +570,7 @@ def signin(request, template_name='authopenid/signin_full.html'):
         if request.is_ajax():
             return get_signin_view_data(request, 'authopenid/signin.html')
         else:
-            return get_signin_view(request)
+            return get_signin_view(request, template_name=template_name)
     else:
         login_form = forms.LoginForm(request.POST, prefix='login')
         if login_form.is_valid():
@@ -577,6 +582,7 @@ def signin(request, template_name='authopenid/signin_full.html'):
                 #todo: make a simple-use wrapper for openid protocol
 
                 sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
+                next_url = login_form.cleaned_data['next']
                 redirect_to = "%s%s?%s" % (
                         get_url_host(request),
                         reverse('user_complete_signin'),
@@ -662,6 +668,10 @@ def signin(request, template_name='authopenid/signin_full.html'):
             logging.debug('login form is not valid')
             logging.debug(login_form.errors)
             logging.debug(request.REQUEST)
+            json_data = simplejson.dumps(
+                {'errors': login_form.errors, 'success': True}
+            )
+            return HttpResponse(json_data, mimetype='application/json')
 
 def get_signin_view_context(request):
     """url-less utility function that populates
@@ -747,11 +757,12 @@ def get_signin_view_context(request):
 
     return data
 
-def get_signin_view(request):
+def get_signin_view(request, template_name='authopenid/signin_full.html'):
     data = get_signin_view_context(request)
     close_modal_menu(request)#don't allow modal menues on this page
-    return render(request, 'authopenid/signin_full.html', data)
+    return render(request, template_name, data)
 
+@csrf.csrf_protect
 @ajax_only
 def get_signin_view_data(request, template_name='authopenid/signin.html'):
     data = get_signin_view_context(request)
@@ -763,6 +774,7 @@ def get_signin_view_data(request, template_name='authopenid/signin.html'):
     return {'html': signin_view_html, 'scripts': scripts}
 
 @login_required
+@csrf.csrf_protect
 def delete_login_method(request):
     if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False:
         raise Http404
@@ -791,10 +803,8 @@ def delete_login_method(request):
 def complete_signin(request):
     """ in case of complete signin with openid """
     logging.debug('')#blank log just for the trace
-    return complete(
-                request,
-                return_to = get_url_host(request) + reverse('user_complete_signin')
-            )
+    return_to = get_url_host(request) + reverse('user_complete_signin')
+    return complete(request, return_to=return_to)
 
 def signin_success(request, identity_url, openid_response):
     """
@@ -905,17 +915,32 @@ def finalize_generic_signin(
         login(request, user)
         logging.debug('login success')
         close_modal_menu(request)
-        if hasattr(user, '_askbot_new_post_url'):
-            redirect_url = user._askbot_new_post_url
+
+        if askbot_settings.ASKBOT_CLOSED_FORUM_MODE:
+            redirect_url = get_next_url(
+                            request,
+                            default=django_settings.LOGIN_REDIRECT_URL
+                        )
+        elif hasattr(user, '_askbot_new_post_url'):
+                redirect_url = user._askbot_new_post_url
+
         return HttpResponseRedirect(redirect_url)
     else:
         assert(None not in (login_provider_name, user_identifier))
         request.session['login_provider_name'] = login_provider_name
         request.session['user_identifier'] = user_identifier
-        request.session['modal_menu'] = render_register_form_to_string(request)
+        if urlparse(redirect_url).path == reverse('user_signin'):
+            #this branch is for signin in full-page version
+            #here we need to redirect to the full-page verion
+            #of the registration page
+            data = get_register_form_context(request)
+            return render(request, 'authopenid/complete_full.html', data)
+        else:
+            modal_menu_html = render_register_form_to_string(request)
+            request.session['modal_menu'] = modal_menu_html
         return HttpResponseRedirect(redirect_url)
 
-def render_register_form_to_string(request):
+def get_register_form_context(request):
     form_class = forms.get_registration_form_class()
     register_form = form_class(
         initial={
@@ -923,13 +948,19 @@ def render_register_form_to_string(request):
             'email': request.session.get('email', ''),
         }
     )
-    data = {'openid_register_form': register_form,
+    return {
+        'openid_register_form': register_form,
         'login_type':'openid', #<- is this the only option that is ever used?
     }
+
+def render_register_form_to_string(request):
+    """string is used for the modal registration menu"""
+    data = get_register_form_context(request)
     return render_to_string(request, 'authopenid/complete.html', data)
 
 @ajax_only
 @post_only
+@csrf.csrf_protect
 def register(request, login_provider_name=None, user_identifier=None):
     """
     this function is used via it's own url with request.method=POST
@@ -963,7 +994,8 @@ def register(request, login_provider_name=None, user_identifier=None):
     register_form = form_class(post_data)
 
     if not register_form.is_valid():
-        return {'errors': register_form.errors}
+        json_data = simplejson.dumps({'errors': register_form.errors})
+        return HttpResponse(json_data, mimetype='application/json')
     else:
         username = register_form.cleaned_data['username']
         email = register_form.cleaned_data['email']
@@ -980,7 +1012,6 @@ def register(request, login_provider_name=None, user_identifier=None):
             login(request, user)
             cleanup_post_register_session(request)
             close_modal_menu(request)
-            return get_logged_in_user_data(request, user)
 
         elif askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
 
@@ -993,7 +1024,6 @@ def register(request, login_provider_name=None, user_identifier=None):
             login(request, user)
             cleanup_post_register_session(request)
             close_modal_menu(request)
-            return get_logged_in_user_data(request, user)
         else:
             #todo: broken branch
             request.session['username'] = username
@@ -1005,7 +1035,11 @@ def register(request, login_provider_name=None, user_identifier=None):
             redirect_url = reverse('verify_email_and_register') \
                             + '?next=' + get_next_url(request)
             close_modal_menu(request)
+            raise NotImplementedError()
             return HttpResponseRedirect(redirect_url)
+
+        return render_to_json_response(get_logged_in_user_data(request, user))
+
     raise NotImplementedError('should never fall through here')
 
 def signin_failure(request, message):
@@ -1069,6 +1103,7 @@ def verify_email_and_register(request):
 
 @ajax_only
 @post_only
+@csrf.csrf_protect
 def register_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
@@ -1107,8 +1142,8 @@ def register_with_password(request):
         #todo return data via ajax
         return {'errors': form.errors}
 
-
 @ajax_only
+@csrf.csrf_protect
 def ajax_signout(request):
     """sign out view specifically for the ajax use"""
     if request.user.is_anonymous():
@@ -1173,6 +1208,7 @@ def send_user_new_email_key(user):
     user.save()
     send_email_key(user.email, user.email_key)
 
+@csrf.csrf_protect
 def account_recover(request):
     """view similar to send_email_key, except
     it allows user to recover an account by entering
