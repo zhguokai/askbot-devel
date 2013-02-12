@@ -20,6 +20,14 @@ KMAIL_QUOTE_RE = r'\AOn [^\n]+ you wrote:\s*\n\n'
 OUTLOOK_RTF_QUOTE_RE = r'\nSubject: [^\n]+\nFrom: [^\n]+\nTo: [^\n]+\nDate: [^\n]+\Z'
 OUTLOOK_TEXT_QUOTE_RE = r'\n_+\Z'
 
+"""below is a samle in Dutch:
+----- Oorspronkelijk bericht -----
+Van: "Evgeny Fadeev" <evgeny.fadeev@gmail.com>
+Aan: "Rick van Es" <email@example.com>
+Verzonden: Maandag 14 januari 2013 15:58:52
+Onderwerp: Re: tag subscriptions
+"""
+
 def compile_quote_regexes():
     regex_names = filter(
         lambda v: v.endswith('_QUOTE_RE'),
