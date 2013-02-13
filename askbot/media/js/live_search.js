@@ -640,7 +640,7 @@ FullTextSearch.prototype.renderSearchTags = function(tags, query_string){
             tag.setDeletable(true);
             tag.setDeleteHandler(
                 function(){
-                    this.removeSearchTag(tag_name, query_string);
+                    me.removeSearchTag(tag_name, query_string);
                 }
             );
             search_tags.append(tag.getElement());
