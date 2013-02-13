@@ -1809,7 +1809,7 @@ class Post(models.Model):
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):
             if rev_no == 1:
-                comment = const.POST_STATUS['default_version']
+                comment = unicode(const.POST_STATUS['default_version'])
             else:
                 comment = 'No.%s Revision' % rev_no
         return PostRevision.objects.create(
@@ -1837,7 +1837,7 @@ class Post(models.Model):
         rev_no = self.revisions.all().count() + 1
         if comment in (None, ''):
             if rev_no == 1:
-                comment = const.POST_STATUS['default_version']
+                comment = unicode(const.POST_STATUS['default_version'])
             else:
                 comment = 'No.%s Revision' % rev_no
 
@@ -1951,7 +1951,7 @@ class Post(models.Model):
             else:
                 attr = None
             if attr is not None:
-                return u'%s %s' % (self.thread.title, attr)
+                return u'%s %s' % (self.thread.title, unicode(attr))
             else:
                 return self.thread.title
         raise NotImplementedError
