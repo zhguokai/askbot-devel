@@ -191,7 +191,7 @@ body.user-messages {
     top: 0px;
     left: 0px;
     width: 100%;
-    z-index: 100;
+    z-index: 100000;
     padding: 0;
     text-align: center;
     background-color: #f5dd69;
@@ -1793,7 +1793,7 @@ ul#related-tags li {
 #editor { /* adjustment for editor preview */
     display: block;
     font-size: 100%;
-    min-height: 200px;
+    min-height: 210px;
     line-height: 18px;
     margin: 0;
     border: 0;
@@ -1809,7 +1809,7 @@ ul#related-tags li {
 
 .wmd-preview {
     color: #525252;
-    margin: 0;
+    margin: 0 0 12px 0;
     padding: 5px;
     background-color: #F5F5F5;
     min-height: 20px;
@@ -1873,9 +1873,10 @@ ul#related-tags li {
 }
 
 .preview-toggle {
-    width: 100%;
     color: #b6a475; /*letter-spacing:1px;*/
+    line-height: 28px;
     text-align: left;
+    width: 100%;
 }
 
 .preview-toggle span:hover {
@@ -4089,7 +4090,7 @@ textarea.tipped-input {
 
 .editor-status {
     float: right;
-    margin: 7px 350px 0 0;
+    margin: 8px 350px 0 0;
     font-weight: bold;
 
     span {

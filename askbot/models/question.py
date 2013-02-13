@@ -166,7 +166,7 @@ class ThreadManager(BaseQuerySetManager):
             author=author,
             is_anonymous=is_anonymous,
             text=text,
-            comment=const.POST_STATUS['default_version'],
+            comment=unicode(const.POST_STATUS['default_version']),
             revised_at=added_at,
             by_email=by_email,
             email_address=email_address
@@ -1275,10 +1275,10 @@ class Thread(models.Model):
         tag_names.append(tag_name)
 
         self.retag(
-            retagged_by = user,
-            retagged_at = timestamp,
-            tagnames = ' '.join(tag_names),
-            silent = silent
+            retagged_by=user,
+            retagged_at=timestamp,
+            tagnames=' '.join(tag_names),
+            silent=silent
         )
 
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
@@ -1308,13 +1308,13 @@ class Thread(models.Model):
         # Create a new revision
         latest_revision = thread_question.get_latest_revision()
         PostRevision.objects.create(
-            post = thread_question,
-            title      = latest_revision.title,
-            author     = retagged_by,
-            revised_at = retagged_at,
-            tagnames   = tagnames,
-            summary    = const.POST_STATUS['retagged'],
-            text       = latest_revision.text
+            post=thread_question,
+            title=latest_revision.title,
+            author=retagged_by,
+            revised_at=retagged_at,
+            tagnames=tagnames,
+            summary=unicode(const.POST_STATUS['retagged']),
+            text=latest_revision.text
         )
 
     def has_favorite_by_user(self, user):
