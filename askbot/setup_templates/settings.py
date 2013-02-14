@@ -244,7 +244,7 @@ HAYSTACK_SITECONF = 'askbot.search.haystack'
 #http://django-haystack.readthedocs.org/en/v1.2.7/settings.html
 HAYSTACK_SEARCH_ENGINE = 'simple'
 
-TINYMCE_COMPRESSOR = False
+TINYMCE_COMPRESSOR = True
 TINYMCE_SPELLCHECKER = False
 TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'default/media/js/tinymce/')
 

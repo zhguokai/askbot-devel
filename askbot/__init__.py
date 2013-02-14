@@ -33,14 +33,14 @@ REQUIREMENTS = {
     'openid': 'python-openid',
     'pystache': 'pystache==0.3.1',
     'pytz': 'pytz',
-    'tinymce': 'django-tinymce',
+    'tinymce': 'django-tinymce==1.5.1b2',
     'longerusername': 'longerusername',
     'bs4': 'beautifulsoup4'
 }
 
 if platform.system() != 'Windows':
     REQUIREMENTS['lamson'] = 'Lamson'
-    
+
 #necessary for interoperability of django and coffin
 try:
     from askbot import patches
