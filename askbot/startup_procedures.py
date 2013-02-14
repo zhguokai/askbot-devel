@@ -231,7 +231,7 @@ def test_template_loader():
         errors.append(
             '"%s" must be the first element of TEMPLATE_LOADERS' % current_loader
         )
-        
+
     print_errors(errors)
 
 def test_celery():
@@ -609,7 +609,7 @@ def test_tinymce():
     required_attrs = (
         'TINYMCE_COMPRESSOR',
         'TINYMCE_JS_ROOT',
-        'TINYMCE_URL',
+        'TINYMCE_JS_URL',
         'TINYMCE_DEFAULT_CONFIG'
     )
 
@@ -665,11 +665,11 @@ def test_tinymce():
         errors.append(error_tpl % relative_js_path)
 
     #check url setting
-    url = getattr(django_settings, 'TINYMCE_URL', '')
-    expected_url = django_settings.STATIC_URL + relative_js_path
+    url = getattr(django_settings, 'TINYMCE_JS_URL', '')
+    expected_url = django_settings.STATIC_URL + relative_js_path + 'tiny_mce.js'
     old_expected_url = django_settings.STATIC_URL + old_relative_js_path
     if urls_equal(url, expected_url) is False:
-        error_tpl = "add line: TINYMCE_URL = STATIC_URL + '%s'"
+        error_tpl = "add line: TINYMCE_JS_URL = STATIC_URL + '%s'"
         if urls_equal(url, old_expected_url):
             error_tpl += '\nNote: we have moved files from "common" into "default"'
         errors.append(error_tpl % relative_js_path)
@@ -721,7 +721,7 @@ def test_template_context_processors():
         required_processors.append(new_auth_processor)
         if old_auth_processor in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
             invalid_processors.append(old_auth_processor)
-            
+
     missing_processors = list()
     for processor in required_processors:
         if processor not in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
@@ -790,7 +790,7 @@ def test_group_messaging():
             errors.append(
                 "make setting 'GROUP_MESSAGING to be exactly:\n" + settings_sample
             )
-            
+
         url_params = settings.get('BASE_URL_PARAMS', None)
     else:
         errors.append('add this to your settings.py:\n' + settings_sample)
@@ -819,7 +819,7 @@ def test_multilingual():
         errors.append('ASKBOT_MULTILINGUAL=True works only with django >= 1.4')
 
     if is_multilang:
-        middleware = 'django.middleware.locale.LocaleMiddleware' 
+        middleware = 'django.middleware.locale.LocaleMiddleware'
         if middleware not in django_settings.MIDDLEWARE_CLASSES:
             errors.append(
                 "add 'django.middleware.locale.LocaleMiddleware' to your MIDDLEWARE_CLASSES "

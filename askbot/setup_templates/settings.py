@@ -244,11 +244,11 @@ HAYSTACK_SITECONF = 'askbot.search.haystack'
 #http://django-haystack.readthedocs.org/en/v1.2.7/settings.html
 HAYSTACK_SEARCH_ENGINE = 'simple'
 
-TINYMCE_COMPRESSOR = True
+TINYMCE_COMPRESSOR = False
 TINYMCE_SPELLCHECKER = False
 TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'default/media/js/tinymce/')
 
-TINYMCE_URL = STATIC_URL + 'default/media/js/tinymce/'
+TINYMCE_JS_URL = STATIC_URL + 'default/media/js/tinymce/tiny_mce.js'
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': 'askbot_imageuploader,askbot_attachment',
     'convert_urls': False,
@@ -268,6 +268,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme_advanced_resizing': True,
     'theme_advanced_resize_horizontal': False,
     'theme_advanced_statusbar_location': 'bottom',
+    'width': '730',
     'height': '250'
 }
 
