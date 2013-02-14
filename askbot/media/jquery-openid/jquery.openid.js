@@ -1,7 +1,17 @@
 var FederatedLoginMenu = function() {
     WrappedElement.call(this);
+    this._parent = undefined;
 };
 inherits(FederatedLoginMenu, WrappedElement);
+
+FederatedLoginMenu.prototype.setParent = function(parentMenu) {
+    this._parent = parentMenu;
+};
+
+FederatedLoginMenu.prototype.reset = function() {
+    this._openidLoginTokenLabeledInput.reset();
+    this._extraInfo.hide();
+};
 
 FederatedLoginMenu.prototype.getLoginHandler = function() {
     var providerInput = this._providerNameElement;
@@ -17,8 +27,9 @@ FederatedLoginMenu.prototype.getLoginHandler = function() {
 FederatedLoginMenu.prototype.getOpenidUsernameLoginHandler = function() {
     var providerInput = this._providerNameElement;
     var openidLoginTokenInput = this._openidLoginTokenInput;
+    var tokenLabeledInput = this._openidLoginTokenLabeledInput;
     var extraInfo = this._extraInfo;
-    return function(providerName) {
+    return function(providerName, providerNameText) {
         providerInput.val(providerName);
         //@todo: move selectors to the decorator function
         var button = $('button[name="' + providerName + '"]')
@@ -26,11 +37,36 @@ FederatedLoginMenu.prototype.getOpenidUsernameLoginHandler = function() {
         extraInfo.css('position', 'absolute');
         var offsetLeft = position.left - 20;
         extraInfo.css('margin-left', offsetLeft + 'px');
-        extraInfo.css('margin-top', '10px');
         extraInfo.css('background', 'white');
         extraInfo.css('z-index', 1);
         extraInfo.show();
+        //important - his must be after "show"
+        tokenLabeledInput.reset();//clear errors if any
+        //set the label text; important - must be after "reset"
+        if (providerName === 'openid') {
+            var labelText = gettext('enter OpenID url');
+        } else {
+            var formatStr = gettext('enter %s user name');
+            var labelText = interpolate(formatStr, [providerNameText]);
+        }
+        tokenLabeledInput.setLabelText(labelText);
         openidLoginTokenInput.focus();
+    };
+};
+
+FederatedLoginMenu.prototype.getOpenidLoginWithTokenHandler = function() {
+    var tokenInput = this._openidLoginTokenInput;
+    var tokenLabeledInput = this._openidLoginTokenLabeledInput;
+    var form = this._form;
+    return function() {
+        if ($.trim(tokenInput.val()) === '') {
+            tokenLabeledInput.putLabelInside();
+            tokenLabeledInput.setError();
+            tokenLabeledInput.focus();
+            return false;
+        } else {
+            form.submit();
+        }
     };
 };
 
@@ -43,6 +79,7 @@ FederatedLoginMenu.prototype.decorate = function(element) {
 
     var labeledInput = new LabeledInput();
     labeledInput.decorate(this._openidLoginTokenInput);
+    this._openidLoginTokenLabeledInput = labeledInput;
 
 
     var buttons = element.find('li > button');
@@ -52,11 +89,12 @@ FederatedLoginMenu.prototype.decorate = function(element) {
     $.each(buttons, function(idx, item) {
         var button = $(item);
         var providerName = button.attr('name');
-        if (button.hasClass('openid-username')) {
+        var providerNameLabel = $('label[for="' + button.attr('id') + '"]');
+        if (button.hasClass('openid-username') || button.hasClass('openid-generic')) {
             setupButtonEventHandlers(
                 button,
                 function() { 
-                    loginWithOpenidUsername(providerName);
+                    loginWithOpenidUsername(providerName, providerNameLabel.html());
                     return false;
                 }
             );
@@ -67,9 +105,19 @@ FederatedLoginMenu.prototype.decorate = function(element) {
                             );
         }
     });
-    var form = this._form;
-    var submitHandler = makeKeyHandler(13, function() { form.submit() });
+
+    //event handlers for the AOL type of openid (with extra token)
+    //1) enter key handler for the extra user name popup input
+    var openidLoginWithTokenHandler = this.getOpenidLoginWithTokenHandler();
+    var submitHandler = makeKeyHandler(13, openidLoginWithTokenHandler);
     this._openidLoginTokenInput.keydown(submitHandler);
+
+    //2) submit button handler for the little popup form
+    setupButtonEventHandlers( 
+        this._extraInfo.find('input[type="submit"]'),
+        openidLoginWithTokenHandler
+    )
+    //3) prevent menu closure upon click (click on the big menu closes the popup)
     this._extraInfo.click(function(evt){
         evt.stopPropagation();
     });
@@ -179,31 +227,21 @@ AjaxForm.prototype.decorate = function(element) {
  */
 var LoginOrRegisterForm = function() {
     AjaxForm.call(this);
+    this._parent = undefined;
 };
 inherits(LoginOrRegisterForm, AjaxForm);
 
-LoginOrRegisterForm.prototype.isModal = function() {
-    var count = $('.modal').length;
-    if (count > 1) {
-        throw 'too many modal menues open!!!';
-    } else {
-        return count === 1;
-    }
-};
-
-LoginOrRegisterForm.prototype.closeModalMenu = function() {
-    $('.modal').modal('hide');
-    $('.modal').hide();
-    $('.modal-backdrop').hide();
+LoginOrRegisterForm.prototype.setParent = function(parentMenu) {
+    this._parent = parentMenu;
 };
 
 LoginOrRegisterForm.prototype.handleSuccess = function(data) {
     if (data['redirectUrl']) {
         window.location.href = data['redirectUrl'];
     }
-    if (this.isModal()) {
+    if (this._parent.isModal()) {
         //stay on the page
-        this.closeModalMenu();
+        this._parent.reset();
     } else {
         //go to the next page
         window.location.href = getNextUrl();
@@ -211,7 +249,6 @@ LoginOrRegisterForm.prototype.handleSuccess = function(data) {
     }
     this._userToolsNav.html(data['userToolsNavHTML']);
     //askbot['vars']['modalDialog'].hide();//@note: using global variable
-    this.reset();
     /* if login form is not part of the modal menu, then
      * redirect either based on the query part of the url
      * or to the default post-login redirect page */
@@ -265,22 +302,6 @@ CompleteRegistrationForm.prototype.closeModalMenu = function() {
     $('.modal-backdrop').remove();
 };
 
-CompleteRegistrationForm.prototype.isModal = function() {
-    return $('.modal').length === 1;
-};
-
-/**
- * on success we just close the menu
- */
-CompleteRegistrationForm.prototype.eueuhandleSuccess = function(data) {
-    if (this.isModal()) {
-        this.closeModalMenu();
-        this.dispose();
-    } else {
-        window.location.href = getNextUrl();
-    }
-};
-
 CompleteRegistrationForm.prototype.decorate = function(element) {
     CompleteRegistrationForm.superClass_.decorate.call(this, element);
     //a hack that makes registration menu closable
@@ -314,6 +335,11 @@ AccountRecoveryForm.prototype.hide = function() {
     this._inputs['email'].blur();
 };
 
+AccountRecoveryForm.prototype.reset = function() {
+    this._inputs['email'].val('');
+    this.hide();
+};
+
 AccountRecoveryForm.prototype.handleSuccess = function() {
     this._prompt.html(gettext('Email sent. Please follow the enclosed recovery link'));
     this.hide();
@@ -337,29 +363,55 @@ var AuthMenu = function() {
 };
 inherits(AuthMenu, WrappedElement);
 
+AuthMenu.prototype.isModal = function() {
+    var count = $('.modal').length;
+    if (count > 1) {
+        throw 'too many modal menues open!!!';
+    } else {
+        return count === 1;
+    }
+};
+
+AuthMenu.prototype.closeModalMenu = function() {
+    $('.modal').modal('hide');
+    $('.modal').hide();
+    $('.modal-backdrop').hide();
+};
+
+AuthMenu.prototype.reset = function() {
+    this._federatedLogins.reset();
+    this._passwordLogin.reset();
+    this._passwordRegister.reset();
+    this._accountRecoveryForm.reset();
+    if (this.isModal()) {
+        this.closeModalMenu();
+    }
+};
+
 AuthMenu.prototype.decorate = function(element) {
     this._element = element;
 
     var federatedLogins = new FederatedLoginMenu();
+    federatedLogins.setParent(this);
     federatedLogins.decorate($('.federated-login-methods'));
     this._federatedLogins = federatedLogins;
 
     var passwordLogin = new PasswordLoginForm();
+    passwordLogin.setParent(this);
     passwordLogin.decorate($('.password-login'));
     this._passwordLogin = passwordLogin;
 
     var passwordRegister = new PasswordRegisterForm();
+    passwordRegister.setParent(this);
     passwordRegister.decorate($('.password-registration'));
     this._passwordRegister = passwordRegister;
 
     var recoveryForm = new AccountRecoveryForm();
     recoveryForm.decorate($('.account-recovery'));
+    //this one does not need setParent(), b/c it does not close on success
     this._accountRecoveryForm = recoveryForm;
 
     //need this to close the extra username popup
-    element.click(function(){
-        $('.extra-openid-info').hide();
-    });
-    //@todo: make sure to include account recovery field, hidden by default
+    element.click(function(){ federatedLogins.reset(); });
 };
 //@ sourceURL=jquery.openid.js

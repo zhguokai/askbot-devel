@@ -3,20 +3,19 @@
     {% for provider in login_providers %}
     <li>
         <button
+          id="{{ provider.name }}_id"
           name="{{ provider.name }}"
           class="{{ provider.type }} {{provider.name|replace('.', '-')}}"
           title="{{ provider.tooltip_text }}"
         >{{ provider.tooltip_text}}</button>
-        <label>{{ provider.display_name }}</label>
+        <label for="{{ provider.name }}_id">{{ provider.display_name }}</label>
     </li>
     {% endfor %}
 </ul>
 <div class="clearfix"></div>
 <div class="extra-openid-info">
     <div class="labeled-input">
-        <label for="openid-login-token">
-            {% trans %}enter <span>user name</span>{% endtrans %}
-        </label>
+        <label for="openid-login-token"></label>{# populated by js #}
         <input 
             id="openid-login-token"
             type="text"

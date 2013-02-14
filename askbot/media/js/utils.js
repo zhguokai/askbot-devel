@@ -618,16 +618,24 @@ var LabeledInput = function() {
 };
 inherits(LabeledInput, WrappedElement);
 
+LabeledInput.prototype.setLabelText = function(text) {
+    this._label.html(text);
+};
+
+LabeledInput.prototype.setError = function(errorText) {
+    this._label.addClass('error');
+    if (errorText) {
+        this.setLabelText(errorText);
+    };
+};
+
 LabeledInput.prototype.putLabelInside = function() {
     if (this._label.hasClass('active') === false) {
         return;
     }
-    var coor = this._element.offset();
-    //why divide by 2 below???
-    coor.top = coor.top + this._activeLabelVerticalOffset/2;
-    this._label.offset(coor);
+    //tried using .offset but had hard time reproducing the position
+    this._label.css('top', 0);
     this._label.removeClass('active');
-    
 };
 
 LabeledInput.prototype.putLabelOutside = function() {
@@ -635,16 +643,21 @@ LabeledInput.prototype.putLabelOutside = function() {
         return;
     }
     var coor = this._element.offset();
-    this._label.addClass('active');
-    this._activeLabelVerticalOffset = this._label.outerHeight();
-    coor.top = coor.top - this._activeLabelVerticalOffset;
+    coor.top = coor.top - this._label.outerHeight();
     this._label.offset(coor);
+    this._label.addClass('active');
 };
 
 LabeledInput.prototype.reset = function() {
     this.putLabelInside();
+    this._label.removeClass('error');
+    this.setLabelText(this._originalLabelText);
     this._element.val('');
     this._element.blur();
+};
+
+LabeledInput.prototype.focus = function() {
+    this._element.focus();
 };
 
 LabeledInput.prototype.decorate = function(element) {
@@ -655,6 +668,7 @@ LabeledInput.prototype.decorate = function(element) {
     }
     this._element = element;
     this._label = label;
+    this._originalLabelText = label.html();
 
     element.attr('autocomplete', 'off');
 

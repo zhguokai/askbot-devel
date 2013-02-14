@@ -994,7 +994,7 @@ def register(request, login_provider_name=None, user_identifier=None):
     register_form = form_class(post_data)
 
     if not register_form.is_valid():
-        json_data = simplejson.dumps({'errors': register_form.errors})
+        json_data = simplejson.dumps({'errors': register_form.errors, 'success': True})
         return HttpResponse(json_data, mimetype='application/json')
     else:
         username = register_form.cleaned_data['username']
@@ -1047,7 +1047,7 @@ def signin_failure(request, message):
     falure with openid signin. Go back to signin page.
     """
     request.user.message_set.create(message = message)
-    return get_signin_view_data(request)
+    return HttpResponseRedirect(get_next_url(request))
 
 @not_authenticated
 @csrf.csrf_protect
