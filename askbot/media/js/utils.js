@@ -22,6 +22,18 @@ var getCookie = function(name) {
     return cookieValue;
 };
 
+var disableAllInputs = function() {
+    $('input').attr('disabled', 'disabled');
+    $('button').attr('disabled', 'disabled');
+    $('textarea').attr('disabled', 'disabled');
+};
+
+var enableAllInputs = function() {
+    $('input').removeAttr('disabled');
+    $('button').removeAttr('disabled');
+    $('textarea').removeAttr('disabled');
+};
+
 var csrfSafeMethod = function(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 };
@@ -604,6 +616,72 @@ Widget.prototype.makeButton = function(label, handler) {
     setupButtonEventHandlers(button, handler);
     return button;
 };
+
+/**
+ * @constructor
+ * A button that allows to validate email
+ * associated with some text that advises user to validate
+ * email address
+ */
+var EmailValidator = function() {
+    Widget.call(this);
+    this._waitInterval = undefined;
+};
+inherits(EmailValidator, Widget);
+
+EmailValidator.prototype.setCloseHandler = function(handler) {
+    this._closeHandler = handler;
+};
+
+EmailValidator.prototype.close = function() {
+    if (this._closeHandler) {
+        this._closeHandler();
+    };
+};
+
+EmailValidator.prototype.startWaiting = function() {
+    var state = this.getState();
+    if (state === 'waiting') {
+        return;
+    };
+    this._prompt.html(gettext(
+        'Thanks! An email with a validation link sent. ' +
+        'Please open your email account and click the link.'
+    ));
+    this._button.html(gettext('Check status or resend the link'));
+    this.setState('waiting');
+};
+
+EmailValidator.prototype.getStartValidationHandler = function() {
+    var me = this;
+    return function() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: askbot['urls']['validateEmail'],
+            success: function(data) {
+                if (data['success']) {
+                    if (data['status'] === 'done') {
+                        me.close();
+                        me.dispose();
+                    } else {
+                        me.startWaiting();
+                    }
+                }
+            }
+        });
+    };
+};
+
+EmailValidator.prototype.decorate = function(element) {
+    this._element = element;
+    this._prompt = element.find('.prompt');
+    var btn = element.find('button');
+    btn.removeAttr('disabled');
+    this._button = btn;
+    setupButtonEventHandlers(btn, this.getStartValidationHandler());
+};
+
 
 /**
  * @constructor

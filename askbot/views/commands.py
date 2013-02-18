@@ -34,6 +34,7 @@ from askbot import conf
 from askbot import const
 from askbot import mail
 from askbot.conf import settings as askbot_settings
+from askbot.mail import send_email_key
 from askbot.utils import html as html_utils
 from askbot.utils import category_tree
 from askbot.utils import decorators
@@ -429,7 +430,7 @@ def vote(request, id):
     return HttpResponse(data, mimetype="application/json")
 
 #internally grouped views - used by the tagging system
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.post_only
 @decorators.ajax_login_required
 def mark_tag(request, **kwargs):#tagging system
@@ -599,7 +600,7 @@ def rename_tag(request):
     )
     category_tree.save_data(tree)
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def delete_tag(request):
@@ -1483,7 +1484,7 @@ def get_editor(request):
     }
     return HttpResponse(simplejson.dumps(data), mimetype='application/json')
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def publish_answer(request):
@@ -1513,3 +1514,24 @@ def publish_answer(request):
         #todo: notify enquirer by email about the post
     request.user.message_set.create(message=message)
     return {'redirect_url': answer.get_absolute_url()}
+
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def validate_email(request):
+    """validates user's email
+    and returs status - either 'done' or 'waiting'
+    'done' - when email was valid before the call
+    and 'waiting' - if the validation email was sent
+    and we are waiting for the user to click the link
+    """
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied()
+
+    if request.user.email_isvalid:
+        return {'status': 'done'}
+    else:
+        request.user.reset_email_validation_key()
+        send_email_key(request.user.email, request.user.email_key)
+        return {'status': 'waiting'}

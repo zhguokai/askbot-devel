@@ -13,24 +13,31 @@
 {% endblock %}
 {% block content %}
     <div class="question-instructions">
-        {% if settings.QUESTION_INSTRUCTIONS %}
-            {{ settings.QUESTION_INSTRUCTIONS|safe }}
-        {% else %}
+        {% set can_post = True %}{# false if email needs validation #}
+        {% if not request.user.is_authenticated() %}
             <ul>
-                {% if not request.user.is_authenticated() %}
                 <li class="warning">{% trans %}since you are not logged in right now, you will be asked to sign in or register after posting your question{% endtrans %}</li>
-                {% else %}
-                    {% if settings.EMAIL_VALIDATION %}
-                        {% if not request.user.email_isvalid %}
-                        <li class="warning">{% trans email=request.user.email %}YYour email, %(email)s has not yet been validated. To post messages you must verify your email, please see <a href='%(email_validation_faq_url)s'>more details here</a>. You can submit your question now and validate email after that. Meanwhile, your question will saved as pending.{% endtrans %}</li>
-                        {% endif %}
-                    {% endif %}
-                {% endif %}
-                <li>{% trans %}please, try to make your question interesting to this community{% endtrans %}</li>
-                <li>{% trans %}provide enough details{% endtrans %}</li>
-                <li>{% trans %}be clear and concise{% endtrans %}</li>
             </ul>
+        {% else %}
+            {% if settings.EMAIL_VALIDATION and request.user.email_isvalid == False %}
+            <div class="email-validator">
+                <p class="prompt">{% trans email=request.user.email %}Your email address, {{ email }} has not yet been validated and your posts cannot be published.{% endtrans %}</p>
+                {% set can_post = False %}
+                <button class="submit">{% trans %}Validate your email now{% endtrans %}</button>
+            </div>
+            {% endif %}
         {% endif %}
+        <div {% if can_post == False %}class="cannot-post"{% endif %}>
+            {% if settings.QUESTION_INSTRUCTIONS %}
+                {{ settings.QUESTION_INSTRUCTIONS|safe }}
+            {% else %}
+                <ul>
+                    <li>{% trans %}please, try to make your question interesting to this community{% endtrans %}</li>
+                    <li>{% trans %}provide enough details{% endtrans %}</li>
+                    <li>{% trans %}be clear and concise{% endtrans %}</li>
+                </ul>
+            {% endif %}
+        </div>
     </div>
     {% include "widgets/ask_form.html" %}
 {% endblock %}
@@ -56,50 +63,6 @@
         {% else %}
             var codeFriendlyMarkdown = false;
         {% endif %}
-        $().ready(function(){
-            //set current module button style
-            $('#editor').TextAreaResizer();
-            //highlight code synctax when editor has new text
-            $("#editor").typeWatch({highlight: false, wait: 3000,
-                             captureLength: 5, callback: lanai.highlightSyntax});
-
-            //toggle preview of editor
-            //todo remove copy-paste
-            var display = true;
-            var txt = "[{% trans %}hide preview{% endtrans %}]";
-            $('#pre-collapse').text(txt);
-            $('#pre-collapse').bind('click', function(){
-                txt = display ? "[{% trans %}show preview{% endtrans %}]" : "[{% trans %}hide preview{% endtrans %}]";
-                display = !display;
-                $('#previewer').toggle();
-                $('#pre-collapse').text(txt);
-            });
-            //Tags autocomplete
-
-            {{ macros.tag_autocomplete_js(id = '#id_tags') }}
-
-            setupFormValidation($("#fmask"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
-            lanai.highlightSyntax();
-
-            if (askbot['data']['userIsAuthenticated']) {
-                var draftHandler = new DraftQuestion();
-                draftHandler.decorate($(document));
-                window.onbeforeunload = function() {
-                    var saveHandler = draftHandler.getSaveHandler();
-                    saveHandler(true);
-                    //var msg = gettext("%s, we've saved your draft, but...");
-                    //return interpolate(msg, [askbot['data']['userName']]);
-                };
-            }
-            var askAnonBtn = $('input[name="post_anon"]');
-            if (askAnonBtn.length === 1) {
-                var btn = new AskAnonBtn();
-                btn.decorate(askAnonBtn);
-            } else {
-                var btn = new AskBtn();
-                btn.decorate($('input[name="post"]'));
-            }
-        });
     </script>
 {% endblock %}
 

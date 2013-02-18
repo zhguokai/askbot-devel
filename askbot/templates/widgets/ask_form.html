@@ -5,6 +5,7 @@
             id="id_title"
             class="questionTitleInput"
             name="title"
+            type="text"
             autocomplete="off"
             value="{% if form.initial.title %}{{form.initial.title|escape}}{% endif %}"/>
         <span class="form-error">{{ form.title.errors }}</span>

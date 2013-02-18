@@ -4094,6 +4094,79 @@ $(document).ready(function() {
         groupsPopup.setHeadingText(gettext('Shared with the following groups:'));
         groupsPopup.decorate(showSharedGroups);
     }
+
+    if ($('#id_tags').length === 1) {
+        var tagAc = new AutoCompleter({
+            url: askbot['urls']['get_tag_list'],
+            preloadData: true,
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10
+        });
+        tagAc.decorate($("#id_tags"));
+    }
+
+    //initialize the ask page
+    if ($('body').hasClass('ask-page')) {
+        $('#editor').TextAreaResizer();
+        //highlight code synctax when editor has new text
+        $("#editor").typeWatch({
+            highlight: false,
+            wait: 3000,
+            captureLength: 5,
+            callback: lanai.highlightSyntax}
+        );
+
+        //toggle preview of editor
+        //todo: apply this to the question page (for the answer answer) too
+        var display = true;
+        var hidePreviewText = "[" + gettext('hide preview') + "]";
+        var showPreviewText = "[" + gettext('show preview') + "]";
+        $('#pre-collapse').text(hidePreviewText);
+        $('#pre-collapse').bind('click', function(){
+            $('#pre-collapse').text(
+                display ? showPreviewText: hidePreviewText
+            );
+            display = !display;
+            $('#previewer').toggle();
+        });
+        //Tags autocomplete
+
+        setupFormValidation($("#fmask"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
+        lanai.highlightSyntax();
+
+        if (askbot['data']['userIsAuthenticated']) {
+            var draftHandler = new DraftQuestion();
+            draftHandler.decorate($(document));
+            window.onbeforeunload = function() {
+                var saveHandler = draftHandler.getSaveHandler();
+                saveHandler(true);
+                //var msg = gettext("%s, we've saved your draft, but...");
+                //return interpolate(msg, [askbot['data']['userName']]);
+            };
+
+            var validatorElement = $('.email-validator');
+            if (validatorElement.length === 1) {
+                var validator = new EmailValidator();
+                validator.setCloseHandler(function() {
+                    $('.question-instructions .cannot-post').show();
+                    enableAllInputs();
+                });
+                disableAllInputs();
+                validator.decorate(validatorElement);
+            }
+        }
+        var askAnonBtn = $('input[name="post_anon"]');
+        if (askAnonBtn.length === 1) {
+            var btn = new AskAnonBtn();
+            btn.decorate(askAnonBtn);
+        } else {
+            var btn = new AskBtn();
+            btn.decorate($('input[name="post"]'));
+        }
+    }
 });
 
 

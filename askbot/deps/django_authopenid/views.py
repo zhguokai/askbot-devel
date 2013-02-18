@@ -58,6 +58,7 @@ from askbot.mail import send_mail
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
+from askbot.mail import send_email_key
 from askbot.skins.loaders import render_to_string
 from askbot.utils.decorators import ajax_only
 from askbot.utils.decorators import post_only
@@ -1186,23 +1187,6 @@ def set_new_email(user, new_email):
         user.email_isvalid = False
         user.save()
 
-def send_email_key(email, key, handler_url_name='user_account_recover'):
-    """private function. sends email containing validation key
-    to user's email address
-    """
-    subject = _("Recover your %(site)s account") % \
-                {'site': askbot_settings.APP_SHORT_NAME}
-
-    url = urlparse(askbot_settings.APP_URL)
-    data = {
-        'validation_link': url.scheme + '://' + url.netloc + \
-                            reverse(handler_url_name) +\
-                            '?validation_code=' + key
-    }
-    template = get_template('authopenid/email_validation.html')
-    message = template.render(data)#todo: inject language preference
-    send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])
-
 def send_user_new_email_key(user):
     user.email_key = generate_random_key()
     user.save()
@@ -1237,6 +1221,8 @@ def account_recover(request):
             return HttpResponseRedirect(get_next_url(request))
 
         user = authenticate(email_key=key, method='email')
+        message = _('Thank you for validating your email!')
+        user.message_set.create(message=message)
         if user:
             if request.user.is_authenticated():
                 if user != request.user:

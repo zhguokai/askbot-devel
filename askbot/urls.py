@@ -321,6 +321,11 @@ urlpatterns = patterns('',
         name = 'save_group_logo_url'
     ),
     url(#ajax only
+        r'^validate-email/',
+        views.commands.validate_email,
+        name='validate_email'
+    ),
+    url(#ajax only
         r'^delete-group-logo/',
         views.commands.delete_group_logo,
         name = 'delete_group_logo'

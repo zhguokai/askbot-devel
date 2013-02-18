@@ -17,12 +17,15 @@ from bs4 import BeautifulSoup
 from django.core import mail
 from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
 from django.forms import ValidationError
+from django.template import Context
+from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.utils.translation import string_concat
-from django.template import Context
 from django.utils.html import strip_tags
+from urlparse import urlparse
 
 #todo: maybe send_mail functions belong to models
 #or the future API
@@ -432,3 +435,21 @@ def process_emailed_question(
                 subject,
                 reason = 'problem_posting',
             )
+
+
+def send_email_key(email, key, handler_url_name='user_account_recover'):
+    """private function. sends email containing validation key
+    to user's email address
+    """
+    subject = _("Recover your %(site)s account") % \
+                {'site': askbot_settings.APP_SHORT_NAME}
+
+    url = urlparse(askbot_settings.APP_URL)
+    data = {
+        'validation_link': url.scheme + '://' + url.netloc + \
+                            reverse(handler_url_name) +\
+                            '?validation_code=' + key
+    }
+    template = get_template('authopenid/email_validation.html')
+    message = template.render(data)#todo: inject language preference
+    send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])

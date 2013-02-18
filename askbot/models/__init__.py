@@ -58,6 +58,7 @@ from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute, Vote
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot import auth
+from askbot.utils.functions import generate_random_key
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
@@ -2032,6 +2033,13 @@ def user_set_admin_status(self):
     self.is_staff = True
     self.is_superuser = True
 
+def user_reset_email_validation_key(self):
+    """generates the new email key and marks it 
+    as invalid"""
+    self.email_key = generate_random_key()
+    self.email_isvalid = False
+    self.save()
+
 def user_add_missing_askbot_subscriptions(self):
     from askbot import forms#need to avoid circular dependency
     form = forms.EditUserEmailFeedsForm()
@@ -2903,6 +2911,7 @@ User.add_to_class('can_make_group_private_posts', user_can_make_group_private_po
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
+User.add_to_class('reset_email_validation_key', user_reset_email_validation_key)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
 User.add_to_class('join_group', user_join_group)
 User.add_to_class('leave_group', user_leave_group)
