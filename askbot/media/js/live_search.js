@@ -753,6 +753,7 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
     var toolTip = this._toolTip;
     var xButton = this._xButton;
     var dropMenu = this._dropMenu;
+    var formSubmitHandler = this.makeFormSubmitHandler();
     return function(e) {//don't like the keyup delay to
         var keyCode = getKeyCode(e);
 
@@ -761,6 +762,9 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
                 me.reset();
                 return false;
             }
+        } else if (keyCode === 13) {
+            formSubmitHandler(e);
+            return false;
         }
 
         var query = me.getSearchQuery();
