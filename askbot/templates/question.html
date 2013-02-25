@@ -209,7 +209,7 @@
 {% endblock %}
 {% block content %}
     <div>
-        {{ settings.QUESTION_PAGE_TOP_BANNER }}
+        {{ settings.QUESTION_PAGE_TOP_BANNER|safe }}
     </div>
     {% if is_cacheable %}
         {% cache long_time "thread-content-html" thread.id %}
