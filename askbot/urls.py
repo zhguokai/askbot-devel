@@ -38,7 +38,7 @@ urlpatterns = patterns('',
         name='sitemap'
     ),
     #no translation for this url!!
-    url(r'import-data/$', views.writers.import_data, name='import_data'),
+    url(r'^import-data/$', views.writers.import_data, name='import_data'),
     url(r'^%s$' % _('about/'), views.meta.about, name='about'),
     url(r'^%s$' % _('faq/'), views.meta.faq, name='faq'),
     url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
