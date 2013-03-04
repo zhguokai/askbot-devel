@@ -1,7 +1,6 @@
 from collections import defaultdict
 import datetime
 import operator
-import cgi
 import logging
 
 from django.utils.html import strip_tags
@@ -35,7 +34,7 @@ from askbot.models.tag import tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
-from askbot.utils.html import sanitize_html
+from askbot.utils.html import sanitize_html, strip_tags
 from askbot.models.base import BaseQuerySetManager, DraftContent
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
@@ -425,24 +424,23 @@ class Post(models.Model):
         if self.post_type in ('question', 'answer', 'tag_wiki', 'reject_reason'):
             _urlize = False
             _use_markdown = (askbot_settings.EDITOR_TYPE == 'markdown')
-            _escape_html = False #markdow does the escaping
         elif self.is_comment():
             _urlize = True
             _use_markdown = (askbot_settings.EDITOR_TYPE == 'markdown')
-            _escape_html = True
         else:
             raise NotImplementedError
 
         text = self.text
-
-        if _escape_html:
-            text = cgi.escape(text)
 
         if _urlize:
             text = html.urlize(text)
 
         if _use_markdown:
             text = sanitize_html(markup.get_parser().convert(text))
+
+        if askbot_settings.EDITOR_TYPE == 'tinymce':
+            #todo: see what can be done with the "object" tag
+            text = strip_tags(text, ['script', 'style', 'link'])
 
         #todo, add markdown parser call conditional on
         #self.use_markdown flag

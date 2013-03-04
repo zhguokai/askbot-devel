@@ -29,6 +29,13 @@ var animateHashes = function(){
     }
 };
 
+var getNewInt = function() {
+    var num = askbot['data']['uniqueInt'] || 0;
+    num = num + 1;
+    askbot['data']['uniqueInt'] = num;
+    return num;
+};
+
 var getUniqueValues = function(values) {
     var uniques = new Object();
     var out = new Array();
@@ -126,6 +133,14 @@ var setupButtonEventHandlers = function(button, callback){
     button.click(callback);
 };
 
+var removeButtonEventHandlers = function(button) {
+    button.unbind('click');
+    button.unbind('keydown');
+};
+
+var decodeHtml = function(encodedText) {
+    return $('<div/>').html(encodedText).text();
+};
 
 var putCursorAtEnd = function(element){
     var el = $(element).get()[0];
@@ -352,7 +367,7 @@ WrappedElement.prototype.getElement = function(){
     return this._element;
 };
 WrappedElement.prototype.inDocument = function(){
-    return this._in_document;
+    return (this._element && this._element.is(':hidden') === false);
 };
 WrappedElement.prototype.enterDocument = function(){
     return this._in_document = true;

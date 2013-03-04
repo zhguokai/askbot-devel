@@ -143,6 +143,13 @@ html {
     visibility: hidden;
 }
 
+.invisible {
+    margin: -1px 0 0 -1px;
+    height: 1px;
+    overflow: hidden;
+    width: 1px;
+}
+
 .badges a {
     color: #763333;
     text-decoration: underline;
@@ -273,6 +280,7 @@ body.user-messages {
 #userToolsNav {/* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
     height: 20px;
     padding-bottom:5px;
+    white-space: nowrap;
 
     a {
         height: 35px;
@@ -1776,6 +1784,10 @@ ul#related-tags li {
         width: 723px;
         width: 100%;
     }
+    .post-comments .wmd-container {
+        margin-bottom: 8px;
+        margin-left: -2px;
+    }
     #editor {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -1944,9 +1956,9 @@ ul#related-tags li {
 
 /* ----- Question template ----- */
 
-.question-page{
+.question-page {
 
-    h1{
+    h1 {
         padding-top:0px;
         font-family:@main-font;
 
@@ -2008,6 +2020,10 @@ ul#related-tags li {
     #question-table td {
         width:20px;
         vertical-align:top;
+    }
+    .answer-table .mceEditor td,
+    #question-table .mceEditor td {
+        width: auto;
     }
     .question-body, .answer-body {
         overflow: auto;
@@ -2289,7 +2305,7 @@ ul#related-tags li {
         }
         button{
             line-height:25px;
-            margin-bottom:5px;
+            margin: 0 10px 5px -2px;
             .button-style(27px, 12px);
             font-family:@body-font;
             font-weight:bold;
@@ -2301,7 +2317,6 @@ ul#related-tags li {
             display: inline-block;
             width: 245px;
             float:right;
-            color:#b6a475 !important;
             vertical-align: top;
             font-family:@body-font;
             float:right;
@@ -2311,14 +2326,11 @@ ul#related-tags li {
             border-bottom: 1px solid #edeeeb;
             clear:both;
             margin: 0;
-            margin-top:8px;
             padding-bottom:4px;
             overflow: auto;
             font-family:@body-font;
             font-size:11px;
             min-height: 25px;
-            background:#fff url(../images/comment-background.png) bottom repeat-x;
-            .rounded-corners(5px);
         }
         div.comment:hover {
             background-color: #efefef;
@@ -3106,28 +3118,29 @@ ins .post-tag, ins p, ins {
 
 .vote-notification {
     z-index: 1;
+    background-color: #8e0000;
+    color: white;
     cursor: pointer;
     display: none;
-    position: absolute;
     font-family:@secondary-font;
     font-size:14px;
     font-weight:normal;
-    color: white;
-    background-color: #8e0000;
-    text-align: center;
     padding-bottom:10px;
+    position: absolute;
+    text-align: center;
     .box-shadow(0px, 2px, 4px, #370000);
     .rounded-corners(4px);
 
     h3{
         background:url(../images/notification.png) repeat-x top;
-       padding:10px 10px 10px 10px;
-       font-size:13px;
-       margin-bottom:5px;
-       border-top:#8e0000 1px solid;
-       color:#fff;
-       font-weight:normal;
-       .rounded-corners-top(4px);
+        padding:10px 10px 10px 10px;
+        font-size:13px;
+        margin-bottom:5px;
+        border-top:#8e0000 1px solid;
+        color:#fff;
+        line-height: 20px;
+        font-weight:normal;
+        .rounded-corners-top(4px);
     }
     a {
         color: #fb7321;

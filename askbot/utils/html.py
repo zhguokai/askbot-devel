@@ -94,7 +94,15 @@ def replace_links_with_text(html):
             link.replaceWith(format_url_replacement(url, text))
 
     return unicode(soup.find('body').renderContents(), 'utf-8')
-            
+
+def strip_tags(html, tags=None):
+    """strips tags from given html output"""
+    assert(tags != None)
+    soup = BeautifulSoup(html)
+    for tag in tags:
+        tag_matches = soup.find_all(tag)
+        map(lambda v: v.replaceWith(''), tag_matches)
+    return unicode(soup.find('body').renderContents(), 'utf-8')
 
 def sanitize_html(html):
     """Sanitizes an HTML fragment."""

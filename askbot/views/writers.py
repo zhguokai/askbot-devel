@@ -17,7 +17,11 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
+from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseForbidden
+from django.http import HttpResponseRedirect
+from django.http import Http404
 from django.utils import simplejson
 from django.utils.html import strip_tags, escape
 from django.utils.translation import get_language
@@ -611,7 +615,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
                 is_deletable = True
             except exceptions.PermissionDenied:
                 is_deletable = False
-            is_editable = template_filters.can_edit_comment(comment.author, comment)
+            is_editable = template_filters.can_edit_comment(user, comment)
         else:
             is_deletable = False
             is_editable = False
@@ -640,6 +644,10 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
 @csrf.csrf_exempt
 @decorators.check_spam('comment')
 def post_comments(request):#generic ajax handler to load comments to an object
+    """todo: fixme: post_comments is ambigous:
+    means either get comments for post or 
+    add a new comment to post
+    """
     # only support get post comments by ajax now
 
     post_type = request.REQUEST.get('post_type', '')
@@ -648,11 +656,27 @@ def post_comments(request):#generic ajax handler to load comments to an object
 
     user = request.user
 
-    id = request.REQUEST['post_id']
-    obj = get_object_or_404(models.Post, id=id)
+    if request.method == 'POST':
+        form = forms.NewCommentForm(request.POST)
+    elif request.method == 'GET':
+        form = forms.GetCommentsForPostForm(request.GET)
+
+    if form.is_valid() == False:
+        return HttpResponseBadRequest(
+            _('This content is forbidden'),
+            mimetype='application/json'
+        )
+
+    post_id = form.cleaned_data['post_id']
+    try:
+        post = models.Post.objects.get(id=post_id)
+    except models.Post.DoesNotExist:
+        return HttpResponseBadRequest(
+            _('Post not found'), mimetype='application/json'
+        )
 
     if request.method == "GET":
-        response = __generate_comments_json(obj, user)
+        response = __generate_comments_json(post, user)
     elif request.method == "POST":
         try:
             if user.is_anonymous():
@@ -661,37 +685,54 @@ def post_comments(request):#generic ajax handler to load comments to an object
                         '<a href="%(sign_in_url)s">sign in</a>.') % \
                         {'sign_in_url': url_utils.get_login_url()}
                 raise exceptions.PermissionDenied(msg)
-            user.post_comment(parent_post=obj, body_text=request.POST.get('comment'))
-            response = __generate_comments_json(obj, user)
+            user.post_comment(
+                parent_post=post, body_text=form.cleaned_data['comment']
+            )
+            response = __generate_comments_json(post, user)
         except exceptions.PermissionDenied, e:
             response = HttpResponseForbidden(unicode(e), mimetype="application/json")
 
     return response
 
-@csrf.csrf_exempt
+#@csrf.csrf_exempt
 @decorators.ajax_only
-@decorators.check_spam('comment')
+#@decorators.check_spam('comment')
 def edit_comment(request):
     if request.user.is_anonymous():
         raise exceptions.PermissionDenied(_('Sorry, anonymous users cannot edit comments'))
 
-    comment_id = int(request.POST['comment_id'])
-    comment_post = models.Post.objects.get(post_type='comment', id=comment_id)
+    form = forms.EditCommentForm(request.POST)
+    if form.is_valid() == False:
+        raise exceptions.PermissionDenied('This content is forbidden')
 
-    request.user.edit_comment(comment_post=comment_post, body_text = request.POST['comment'])
+    comment_id = form.cleaned_data['comment_id']
+    comment_post = models.Post.objects.get(
+                    post_type='comment',
+                    id=comment_id
+                )
 
-    is_deletable = template_filters.can_delete_comment(comment_post.author, comment_post)
-    is_editable = template_filters.can_edit_comment(comment_post.author, comment_post)
+    request.user.edit_comment(
+        comment_post=comment_post,
+        body_text=form.cleaned_data['comment']
+    )
+
+    is_deletable = template_filters.can_delete_comment(
+                            comment_post.author, comment_post)
+
+    is_editable = template_filters.can_edit_comment(
+                            comment_post.author, comment_post)
+
     tz = ' ' + template_filters.TIMEZONE_STR
 
     tz = template_filters.TIMEZONE_STR
+    timestamp = str(comment_post.added_at.replace(microsecond=0)) + tz
 
     return {
         'id' : comment_post.id,
         'object_id': comment_post.parent.id,
-        'comment_added_at': str(comment_post.added_at.replace(microsecond = 0)) + tz,
+        'comment_added_at': timestamp,
         'html': comment_post.html,
-        'user_display_name': comment_post.author.username,
+        'user_display_name': escape(comment_post.author.username),
         'user_url': comment_post.author.get_profile_url(),
         'user_id': comment_post.author.id,
         'is_deletable': is_deletable,

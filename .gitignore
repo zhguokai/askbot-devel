@@ -19,6 +19,7 @@ lint
 env
 /static
 django
+tinymce
 lamson
 django/*
 nbproject

@@ -1463,7 +1463,12 @@ def get_editor(request):
     if 'config' not in request.GET:
         return HttpResponseForbidden()
     config = simplejson.loads(request.GET['config'])
-    form = forms.EditorForm(editor_attrs=config, user=request.user)
+    element_id = request.GET.get('id', 'editor')
+    form = forms.EditorForm(
+                attrs={'id': element_id},
+                editor_attrs=config,
+                user=request.user
+            )
     editor_html = render_text_into_skin(
         '{{ form.media }} {{ form.editor }}',
         {'form': form},
