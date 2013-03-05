@@ -12,6 +12,7 @@ run
 nbproject
 settings_local.py
 settings.py
+tinymce
 .idea
 .coverage
 *.iml
