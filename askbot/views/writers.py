@@ -771,22 +771,43 @@ def comment_to_answer(request):
 
 @decorators.admins_only
 @decorators.post_only
-def answer_to_comment(request):
+#todo: change the urls config for this
+def repost_answer_as_comment(request, destination=None):
+    assert(
+        destination in (
+                'comment_under_question',
+                'comment_under_previous_answer'
+            )
+    )
     answer_id = request.POST.get('answer_id')
     if answer_id:
         answer_id = int(answer_id)
         answer = get_object_or_404(models.Post,
                 post_type = 'answer', id=answer_id)
+
+        if destination == 'comment_under_question':
+            destination_post = answer.thread._question_post()
+        else:
+            #comment_under_previous_answer
+            destination_post = answer.get_previous_answer(user=request.user)
+        #todo: implement for comment under other answer
+
+        if destination_post is None:
+            message = _('Error - could not find the destination post')
+            request.user.message_set.create(message=message)
+            return HttpResponseRedirect(answer.get_absolute_url())
+
         if len(answer.text) <= askbot_settings.MAX_COMMENT_LENGTH:
             answer.post_type = 'comment'
-            answer.parent =  answer.thread._question_post()
+            answer.parent = destination_post
             #can we trust this?
             old_comment_count = answer.comment_count
             answer.comment_count = 0
 
             answer_comments = models.Post.objects.get_comments().filter(parent=answer)
-            answer_comments.update(parent=answer.parent)
+            answer_comments.update(parent=destination_post)
 
+            #why this and not just "save"?
             answer.parse_and_save(author=answer.author)
             answer.thread.update_answer_count()
 

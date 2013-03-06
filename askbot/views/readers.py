@@ -598,6 +598,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'user_post_id_list': user_post_id_list,
         'user_can_post_comment': user_can_post_comment,#in general
         'user_already_gave_answer': user_already_gave_answer,
+        'oldest_answer_id': thread.get_oldest_answer_id(request.user),
         'previous_answer': previous_answer,
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
