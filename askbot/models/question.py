@@ -600,6 +600,13 @@ class Thread(models.Model):
         else:
             return self.get_answers(user).count()
 
+    def get_oldest_answer_id(self, user=None):
+        """give oldest visible answer id for the user"""
+        answers = self.get_answers(user=user).order_by('added_at')
+        if len(answers) > 0:
+            return answers[0].id
+        return None
+
     def get_sharing_info(self, visitor=None):
         """returns a dictionary with abbreviated thread sharing info:
         * users - up to a certain number of users, excluding the visitor
