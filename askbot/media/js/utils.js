@@ -3071,22 +3071,24 @@ AutoCompleter.prototype.setCaret = function(pos) {
     } else if (days == 1) {
         return gettext('yesterday')
     } else if (minutes >= 60) {
+        var wholeHours = Math.floor(hours);
         return interpolate(
                     ngettext(
                         '%s hour ago',
                         '%s hours ago',
-                        hours
+                        wholeHours
                     ),
-                    [Math.floor(hours),]
+                    [wholeHours,]
                 )
     } else if (seconds > 90){
+        var wholeMinutes = Math.floor(minutes);
         return interpolate(
                     ngettext(
                         '%s min ago',
                         '%s mins ago',
-                        minutes
+                        wholeMinutes
                     ),
-                    [Math.floor(minutes),]
+                    [wholeMinutes,]
                 )
     } else {
         return gettext('just now')
