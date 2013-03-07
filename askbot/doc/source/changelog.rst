@@ -7,6 +7,7 @@ Development version
   Danish, Dutch, English, Finnish, French, German, Hungarian,
   Italian, Japanese (requires package textsearch_ja), Norwegian,
   Portugese, Romanian, Russian, Spanish, Swedish, Turkish.
+* repost answer as a comment under the previous (older) answer
   
 
 0.7.48 (Jan 28, 2013)

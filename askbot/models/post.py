@@ -579,6 +579,11 @@ class Post(models.Model):
     def is_reject_reason(self):
         return self.post_type == 'reject_reason'
 
+    def get_last_edited_date(self):
+        """returns date of last edit or date of creation
+        if there were no edits"""
+        return self.last_edited_at or self.added_at
+
     def get_moderators(self):
         """returns query set of users who are site administrators
         and moderators"""
@@ -587,10 +592,27 @@ class Post(models.Model):
             user_filter = user_filter & models.Q(groups__in=self.groups.all())
         return User.objects.filter(user_filter)
 
-    def get_last_edited_date(self):
-        """returns date of last edit or date of creation
-        if there were no edits"""
-        return self.last_edited_at or self.added_at
+    def get_previous_answer(self, user=None):
+        """returns a previous answer to a given answer;
+        only works on the "answer" post types"""
+        assert(self.post_type == 'answer')
+        all_answers = self.thread.get_answers(user=user)
+
+        matching_answers = all_answers.filter(
+                        added_at__lt=self.added_at,
+                    ).order_by('-added_at')
+
+        if len(matching_answers) == 0:
+            return None
+
+        answer = matching_answers[0]
+
+        if answer.id == self.id:
+            return None
+        if answer.added_at > self.added_at:
+            return None
+
+        return answer
 
     def has_group(self, group):
         """true if post belongs to the group"""
