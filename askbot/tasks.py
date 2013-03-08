@@ -152,10 +152,11 @@ def record_question_visit(
     if update_view_count:
         question_post.thread.increase_view_count()
 
-    user = User.objects.get(id=user_id)
-
-    if user.is_anonymous():
+    #we do not track visits per anon user
+    if user_id is None:
         return
+
+    user = User.objects.get(id=user_id)
 
     #2) question view count per user and clear response displays
     #user = User.objects.get(id = user_id)
