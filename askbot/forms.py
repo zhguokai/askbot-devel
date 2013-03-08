@@ -1676,3 +1676,6 @@ class BulkTagSubscriptionForm(forms.Form):
         self.fields['users'] = forms.ModelMultipleChoiceField(queryset=User.objects.all())
         if askbot_settings.GROUPS_ENABLED:
             self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.exclude_personal())
+
+class DeleteCommentForm(forms.Form):
+    comment_id = forms.IntegerField()
