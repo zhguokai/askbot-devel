@@ -533,10 +533,6 @@ class ShowQuestionForm(forms.Form):
     page = forms.IntegerField(required=False)
     sort = forms.CharField(required=False)
 
-    def __init__(self, data, default_sort_method):
-        super(ShowQuestionForm, self).__init__(data)
-        self.default_sort_method = default_sort_method
-
     def get_pruned_data(self):
         nones = ('answer', 'comment', 'page')
         for key in nones:
@@ -566,10 +562,7 @@ class ShowQuestionForm(forms.Form):
             out_data['show_answer'] = in_data.get('answer', None)
         else:
             out_data['show_page'] = in_data.get('page', 1)
-            out_data['answer_sort_method'] = in_data.get(
-                                                    'sort',
-                                                    self.default_sort_method
-                                                )
+            out_data['answer_sort_method'] = in_data.get('sort', 'votes')
             out_data['show_comment'] = None
             out_data['show_answer'] = None
         self.cleaned_data = out_data
