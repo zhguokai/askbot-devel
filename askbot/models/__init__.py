@@ -514,6 +514,8 @@ def _assert_user_can(
     if assertion fails, method raises exception.PermissionDenied
     with appropriate text as a payload
     """
+    if general_error_message is None:
+        general_error_message = _('Sorry, this operation is not allowed')
     if blocked_error_message and user.is_blocked():
         error_message = blocked_error_message
     elif post and owner_can and user == post.get_owner():
@@ -1678,9 +1680,10 @@ def user_post_question(
 def user_edit_comment(
                     self,
                     comment_post=None,
-                    body_text = None,
-                    timestamp = None,
-                    by_email = False
+                    body_text=None,
+                    timestamp=None,
+                    by_email=False,
+                    suppress_email=False
                 ):
     """apply edit to a comment, the method does not
     change the comments timestamp and no signals are sent
@@ -1689,20 +1692,22 @@ def user_edit_comment(
     """
     self.assert_can_edit_comment(comment_post)
     comment_post.apply_edit(
-                        text = body_text,
-                        edited_at = timestamp,
-                        edited_by = self,
-                        by_email = by_email
+                        text=body_text,
+                        edited_at=timestamp,
+                        edited_by=self,
+                        by_email=by_email,
+                        suppress_email=suppress_email
                     )
     comment_post.thread.invalidate_cached_data()
 
 def user_edit_post(self,
-                post = None,
-                body_text = None,
-                revision_comment = None,
-                timestamp = None,
-                by_email = False,
-                is_private = False
+                post=None,
+                body_text=None,
+                revision_comment=None,
+                timestamp=None,
+                by_email=False,
+                is_private=False,
+                suppress_email=False,
             ):
     """a simple method that edits post body
     todo: unify it in the style of just a generic post
@@ -1711,36 +1716,39 @@ def user_edit_post(self,
     """
     if post.post_type == 'comment':
         self.edit_comment(
-                comment_post = post,
-                body_text = body_text,
-                by_email = by_email
+                comment_post=post,
+                body_text=body_text,
+                by_email=by_email,
+                suppress_email=suppress_email
             )
     elif post.post_type == 'answer':
         self.edit_answer(
-            answer = post,
-            body_text = body_text,
-            timestamp = timestamp,
-            revision_comment = revision_comment,
-            by_email = by_email
+            answer=post,
+            body_text=body_text,
+            timestamp=timestamp,
+            revision_comment=revision_comment,
+            by_email=by_email,
+            suppress_email=suppress_email
         )
     elif post.post_type == 'question':
         self.edit_question(
-            question = post,
-            body_text = body_text,
-            timestamp = timestamp,
-            revision_comment = revision_comment,
-            by_email = by_email,
-            is_private = is_private
+            question=post,
+            body_text=body_text,
+            timestamp=timestamp,
+            revision_comment=revision_comment,
+            by_email=by_email,
+            is_private=is_private,
+            suppress_email=suppress_email,
         )
     elif post.post_type == 'tag_wiki':
         post.apply_edit(
-            edited_at = timestamp,
-            edited_by = self,
-            text = body_text,
+            edited_at=timestamp,
+            edited_by=self,
+            text=body_text,
             #todo: summary name clash in question and question revision
-            comment = revision_comment,
-            wiki = True,
-            by_email = False
+            comment=revision_comment,
+            wiki=True,
+            by_email=False
         )
     else:
         raise NotImplementedError()
@@ -1748,17 +1756,18 @@ def user_edit_post(self,
 @auto_now_timestamp
 def user_edit_question(
                 self,
-                question = None,
-                title = None,
-                body_text = None,
-                revision_comment = None,
-                tags = None,
-                wiki = False,
-                edit_anonymously = False,
-                is_private = False,
-                timestamp = None,
-                force = False,#if True - bypass the assert
-                by_email = False
+                question=None,
+                title=None,
+                body_text=None,
+                revision_comment=None,
+                tags=None,
+                wiki=False,
+                edit_anonymously=False,
+                is_private=False,
+                timestamp=None,
+                force=False,#if True - bypass the assert
+                by_email=False,
+                suppress_email=False
             ):
     if force == False:
         self.assert_can_edit_question(question)
@@ -1774,7 +1783,8 @@ def user_edit_question(
         wiki = wiki,
         edit_anonymously = edit_anonymously,
         is_private = is_private,
-        by_email = by_email
+        by_email = by_email,
+        suppress_email=suppress_email
     )
 
     question.thread.invalidate_cached_data()
@@ -1789,14 +1799,15 @@ def user_edit_question(
 @auto_now_timestamp
 def user_edit_answer(
                     self,
-                    answer = None,
-                    body_text = None,
-                    revision_comment = None,
-                    wiki = False,
-                    is_private = False,
-                    timestamp = None,
-                    force = False,#if True - bypass the assert
-                    by_email = False
+                    answer=None,
+                    body_text=None,
+                    revision_comment=None,
+                    wiki=False,
+                    is_private=False,
+                    timestamp=None,
+                    force=False,#if True - bypass the assert
+                    by_email=False,
+                    suppress_email=False,
                 ):
     if force == False:
         self.assert_can_edit_answer(answer)
@@ -1808,7 +1819,8 @@ def user_edit_answer(
         comment=revision_comment,
         wiki=wiki,
         is_private=is_private,
-        by_email=by_email
+        by_email=by_email,
+        suppress_email=suppress_email
     )
 
     answer.thread.invalidate_cached_data()
@@ -3178,11 +3190,12 @@ def calculate_gravatar_hash(instance, **kwargs):
 
 def record_post_update_activity(
         post,
-        newly_mentioned_users = None,
-        updated_by = None,
-        timestamp = None,
-        created = False,
-        diff = None,
+        newly_mentioned_users=None,
+        updated_by=None,
+        suppress_email=False,
+        timestamp=None,
+        created=False,
+        diff=None,
         **kwargs
     ):
     """called upon signal askbot.models.signals.post_updated
@@ -3204,13 +3217,14 @@ def record_post_update_activity(
     from askbot import tasks
 
     tasks.record_post_update_celery_task.delay(
-        post_id = post.id,
-        post_content_type_id = ContentType.objects.get_for_model(post).id,
-        newly_mentioned_user_id_list = [u.id for u in newly_mentioned_users],
-        updated_by_id = updated_by.id,
-        timestamp = timestamp,
-        created = created,
-        diff = diff,
+        post_id=post.id,
+        post_content_type_id=ContentType.objects.get_for_model(post).id,
+        newly_mentioned_user_id_list=[u.id for u in newly_mentioned_users],
+        updated_by_id=updated_by.id,
+        suppress_email=suppress_email,
+        timestamp=timestamp,
+        created=created,
+        diff=diff,
     )
 
 

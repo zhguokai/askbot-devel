@@ -211,6 +211,13 @@ class LanguageField(forms.ChoiceField):
         super(LanguageField, self).__init__(*args, **kwargs)
 
 
+class SuppressEmailField(forms.BooleanField):
+    def __init__(self):
+        super(SuppressEmailField, self).__init__()
+        self.required = False
+        self.label = _("minor edit (don't send alerts)")
+
+
 class DomainNameField(forms.CharField):
     """Field for Internet Domain Names
     todo: maybe there is a standard field for this?
@@ -227,7 +234,7 @@ class DomainNameField(forms.CharField):
 
 
 class TitleField(forms.CharField):
-    """Fild receiving question title"""
+    """Field receiving question title"""
     def __init__(self, *args, **kwargs):
         super(TitleField, self).__init__(*args, **kwargs)
         self.required = kwargs.get('required', True)
@@ -1193,6 +1200,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
         label=_('reveal identity'),
         required=False,
     )
+    suppress_email = SuppressEmailField()
 
     #todo: this is odd that this form takes question as an argument
     def __init__(self, *args, **kwargs):
@@ -1310,6 +1318,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
 class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     summary = SummaryField()
     wiki = WikiField()
+    suppress_email = SuppressEmailField()
 
     def __init__(self, answer, revision, *args, **kwargs):
         self.answer = answer
@@ -1330,6 +1339,9 @@ class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         else:
             return False
 
+class EditCommentForm(forms.Form):
+    comment_id = forms.IntegerField()
+    suppress_email = SuppressEmailField()
 
 class EditTagWikiForm(forms.Form):
     text = forms.CharField(required=False)
