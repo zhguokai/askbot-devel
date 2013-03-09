@@ -8,7 +8,7 @@ Development version
   Italian, Japanese (requires package textsearch_ja), Norwegian,
   Portugese, Romanian, Russian, Spanish, Swedish, Turkish.
 * repost answer as a comment under the previous (older) answer
-* minor edit option for question and answer, to suppress email alerts
+* minor edit option for question, answer and comments, to suppress email alerts
 
 0.7.48 (Jan 28, 2013)
 ---------------------

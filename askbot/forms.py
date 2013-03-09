@@ -1342,10 +1342,6 @@ class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         else:
             return False
 
-class EditCommentForm(forms.Form):
-    comment_id = forms.IntegerField()
-    suppress_email = SuppressEmailField()
-
 class EditTagWikiForm(forms.Form):
     text = forms.CharField(required=False)
     tag_id = forms.IntegerField()
@@ -1700,7 +1696,10 @@ class NewCommentForm(forms.Form):
     post_id = forms.IntegerField()
 
 class EditCommentForm(forms.Form):
+    comment_id = forms.IntegerField()
     comment = forms.CharField()
+    suppress_email = SuppressEmailField()
+
 
 class DeleteCommentForm(forms.Form):
     comment_id = forms.IntegerField()

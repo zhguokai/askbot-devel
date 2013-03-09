@@ -30,6 +30,7 @@
     {% endif %}
     askbot['settings']['minRepToPostComment'] = {{ settings.MIN_REP_TO_LEAVE_COMMENTS }};
     askbot['settings']['tagSource'] = '{{ settings.TAG_SOURCE }}';
+    askbot['settings']['enableEmailAlerts'] = {% if settings.ENABLE_EMAIL_ALERTS %}true{% else %}false{% endif %};
 </script>
 <script type="text/javascript" src='{{"/bootstrap/js/bootstrap.js"|media}}'></script>
 {% if settings.EDITOR_TYPE == 'markdown' %}

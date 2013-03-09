@@ -1495,9 +1495,11 @@ EditCommentForm.prototype.attachTo = function(comment, mode){
     //fix up the comment submit button, depending on the mode
     if (this._type == 'add'){
         this._submit_btn.html(gettext('add comment'));
+        this._minorEditBox.hide();
     }
     else {
         this._submit_btn.html(gettext('save comment'));
+        this._minorEditBox.show();
     }
     //enable the editor
     this.getElement().show();
@@ -1616,14 +1618,32 @@ EditCommentForm.prototype.createDom = function(){
      * and will be initialized by the attachTo()
      */
 
+    this._controlsBox = this.makeElement('div');
+    div.append(this._controlsBox);
+
     this._text_counter = $('<span></span>').attr('class', 'counter');
-    div.append(this._text_counter);
+    this._controlsBox.append(this._text_counter);
 
     this._submit_btn = $('<button class="submit small"></button>');
-    div.append(this._submit_btn);
+    this._controlsBox.append(this._submit_btn);
     this._cancel_btn = $('<button class="submit small"></button>');
     this._cancel_btn.html(gettext('cancel'));
-    div.append(this._cancel_btn);
+    this._controlsBox.append(this._cancel_btn);
+
+    //if email alerts are enabled, add a checkbox "suppress_email"
+    if (askbot['settings']['enableEmailAlerts'] === true) {
+        this._minorEditBox = this.makeElement('div');
+        this._controlsBox.append(this._minorEditBox);
+        var checkBox = this.makeElement('input');
+        checkBox.attr('type', 'checkbox');
+        checkBox.attr('name', 'suppress_email');
+        this._minorEditBox.append(checkBox);
+        var label = this.makeElement('label');
+        label.attr('for', 'suppress_email');
+        label.html(gettext("minor edit (don't send alerts)"));
+        this._minorEditBox.append(label);
+    }
+
 };
 
 EditCommentForm.prototype.isEnabled = function() {
@@ -1656,6 +1676,14 @@ EditCommentForm.prototype.confirmAbandon = function(){
     );
     this._editor.setHighlight(false);
     return answer;
+};
+
+EditCommentForm.prototype.getSuppressEmail = function() {
+    return this._element.find('input[name="suppress_email"]').is(':checked');
+};
+
+EditCommentForm.prototype.setSuppressEmail = function(bool) {
+    this._element.find('input[name="suppress_email"]').prop('checked', bool);
 };
 
 EditCommentForm.prototype.getSaveHandler = function(){
@@ -1695,6 +1723,8 @@ EditCommentForm.prototype.getSaveHandler = function(){
         if (me._type == 'edit'){
             post_data['comment_id'] = me._comment.getId();
             post_url = askbot['urls']['editComment'];
+            post_data['suppress_email'] = me.getSuppressEmail();
+            me.setSuppressEmail(false);
         }
         else {
             post_data['post_type'] = me._comment.getParentType();
