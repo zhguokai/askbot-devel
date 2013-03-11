@@ -1535,6 +1535,9 @@ def user_delete_question(
     question.deleted_at = timestamp
     question.save()
 
+    question.thread.deleted = True
+    question.thread.save()
+
     for tag in list(question.thread.tags.all()):
         if tag.used_count == 1:
             tag.deleted = True
