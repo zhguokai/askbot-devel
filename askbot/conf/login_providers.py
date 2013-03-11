@@ -81,6 +81,7 @@ providers = (
     'Verisign',
     'Yahoo',
     'identi.ca',
+    'LaunchPad'
 )
 
 need_extra_setup = ('Twitter', 'Facebook', 'LinkedIn', 'identi.ca',)

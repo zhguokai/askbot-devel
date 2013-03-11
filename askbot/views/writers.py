@@ -17,7 +17,11 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
+from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseForbidden
+from django.http import HttpResponseRedirect
+from django.http import Http404
 from django.utils import simplejson
 from django.utils.html import strip_tags, escape
 from django.utils.translation import get_language
@@ -420,6 +424,7 @@ def edit_question(request, id):
                         is_anon_edit = form.cleaned_data['stay_anonymous']
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
                         post_privately = form.cleaned_data['post_privately']
+                        suppress_email = form.cleaned_data['suppress_email']
 
                         user = form.get_post_user(request.user)
 
@@ -431,7 +436,8 @@ def edit_question(request, id):
                             tags = form.cleaned_data['tags'],
                             wiki = is_wiki,
                             edit_anonymously = is_anon_edit,
-                            is_private = post_privately
+                            is_private = post_privately,
+                            suppress_email=suppress_email
                         )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
@@ -506,13 +512,15 @@ def edit_answer(request, id):
                 if form.is_valid():
                     if form.has_changed():
                         user = form.get_post_user(request.user)
+                        suppress_email = form.cleaned_data['suppress_email']
+                        is_private = form.cleaned_data.get('post_privately', False)
                         user.edit_answer(
                             answer=answer,
                             body_text=form.cleaned_data['text'],
                             revision_comment=form.cleaned_data['summary'],
                             wiki=form.cleaned_data.get('wiki', answer.wiki),
-                            is_private=form.cleaned_data.get('post_privately', False)
-                            #todo: add wiki field to form
+                            is_private=is_private,
+                            suppress_email=suppress_email
                         )
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
@@ -675,10 +683,20 @@ def edit_comment(request):
     if request.user.is_anonymous():
         raise exceptions.PermissionDenied(_('Sorry, anonymous users cannot edit comments'))
 
-    comment_id = int(request.POST['comment_id'])
+    form = forms.EditCommentForm(request.POST)
+    if form.is_valid() == False:
+        return HttpResponseBadRequest()
+        
+    comment_id = form.cleaned_data['comment_id']
+    suppress_email = form.cleaned_data['suppress_email']
+
     comment_post = models.Post.objects.get(post_type='comment', id=comment_id)
 
-    request.user.edit_comment(comment_post=comment_post, body_text = request.POST['comment'])
+    request.user.edit_comment(
+        comment_post=comment_post,
+        body_text = request.POST['comment'],
+        suppress_email=suppress_email
+    )
 
     is_deletable = template_filters.can_delete_comment(comment_post.author, comment_post)
     is_editable = template_filters.can_edit_comment(comment_post.author, comment_post)
@@ -714,7 +732,12 @@ def delete_comment(request):
             raise exceptions.PermissionDenied(msg)
         if request.is_ajax():
 
-            comment_id = request.POST['comment_id']
+            form = forms.DeleteCommentForm(request.POST)
+
+            if form.is_valid() == False:
+                return HttpResponseBadRequest()
+
+            comment_id = form.cleaned_data['comment_id']
             comment = get_object_or_404(models.Post, post_type='comment', id=comment_id)
             request.user.assert_can_delete_comment(comment)
 

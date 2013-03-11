@@ -338,8 +338,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #process url parameters
     #todo: fix inheritance of sort method from questions
     #before = datetime.datetime.now()
-    default_sort_method = request.session.get('questions_sort_method', 'votes')
-    form = ShowQuestionForm(request.GET, default_sort_method)
+    form = ShowQuestionForm(request.GET)
     form.full_clean()#always valid
     show_answer = form.cleaned_data['show_answer']
     show_comment = form.cleaned_data['show_comment']
