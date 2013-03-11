@@ -1370,6 +1370,17 @@ def user_mark_tags(
     if tagnames is None:
         tagnames = list()
 
+    #figure out which tags don't yet exist
+    existing_tagnames = Tag.objects.filter(
+                            name__in=tagnames
+                        ).values_list(
+                            'name', flat=True
+                        )
+    non_existing_tagnames = set(tagnames) - set(existing_tagnames)
+    #create those tags, and if tags are moderated make them suggested
+    if (len(non_existing_tagnames) > 0):
+        Tag.objects.create_in_bulk(tag_names=tagnames, user=self)
+
     #below we update normal tag selections
     marked_ts = MarkedTag.objects.filter(
                                     user = self,
