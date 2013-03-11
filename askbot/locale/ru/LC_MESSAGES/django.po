@@ -8605,7 +8605,7 @@ msgstr "ВСЕ"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 msgid "UNANSWERED"
-msgstr "НЕОТВЕЧЕННЫЕ"
+msgstr "БЕЗ ОТВЕТА"
 
 #: skins/default/templates/widgets/scope_nav.html:11
 msgid "see your followed questions"
