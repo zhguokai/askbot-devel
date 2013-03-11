@@ -9,6 +9,7 @@ Development version
   Portugese, Romanian, Russian, Spanish, Swedish, Turkish.
 * repost answer as a comment under the previous (older) answer
 * minor edit option for question, answer and comments, to suppress email alerts
+* allowed tags to be created updon marking them as interesting/ignored/subscribed
 
 0.7.48 (Jan 28, 2013)
 ---------------------

@@ -49,15 +49,18 @@ class ThreadQuerySet(models.query.QuerySet):
         todo: implement full text search on relevant fields
         """
         db_engine_name = askbot.get_database_engine_name()
+        filter_parameters = {'deleted': False}
         if 'postgresql_psycopg2' in db_engine_name:
             from askbot.search import postgresql
             return postgresql.run_title_search(
                                     self, search_query
+                                ).filter(
+                                    **filter_parameters
                                 ).order_by('-relevance')
         elif 'mysql' in db_engine_name and mysql.supports_full_text_search():
-            filter_parameters = {'title__search': search_query}
+            filter_parameters['title__search'] = search_query
         else:
-            filter_parameters = {'title__icontains': search_query}
+            filter_parameters['title__icontains'] = search_query
 
         if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
             filter_parameters['language_code'] = get_language()
@@ -550,6 +553,7 @@ class Thread(models.Model):
                                             null=True,
                                             blank=True
                                         )
+    deleted = models.BooleanField(default=False, db_index=True)
 
     #denormalized data: the core approval of the posts is made
     #in the revisions. In the revisions there is more data about
