@@ -84,12 +84,16 @@ providers = (
     'LaunchPad'
 )
 
+DISABLED_BY_DEFAULT = (
+    'LaunchPad'
+)
+
 need_extra_setup = ('Twitter', 'Facebook', 'LinkedIn', 'identi.ca',)
 
 for provider in providers:
     kwargs = {
         'description': _('Activate %(provider)s login') % {'provider': provider},
-        'default': True,
+        'default': not (provider in DISABLED_BY_DEFAULT)
     }
     if provider in need_extra_setup:
         kwargs['help_text'] = _(
