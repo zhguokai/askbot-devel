@@ -23,8 +23,8 @@ def safe_add_column(table, column, column_data, keep_default = False):
             db.add_column(table, column, column_data, keep_default = keep_default)
             db.commit_transaction()
             return True
-	except:
-	    db.rollback_transaction()
+        except:
+            db.rollback_transaction()
             return False
 
 
