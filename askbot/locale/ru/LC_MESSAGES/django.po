@@ -34,7 +34,7 @@ msgstr "-"
 
 #: feed.py:28
 msgid "Individual question feed"
-msgstr "Личная лента вопросов"
+msgstr "Лента вопросов"
 
 #: feed.py:100 feed.py:90
 msgid "latest questions"
@@ -65,20 +65,19 @@ msgstr "заголовок"
 
 #: forms.py:105
 msgid "please enter a descriptive title for your question"
-msgstr "пожалуйста, введите заголовок, содержащий суть вашего вопроса"
+msgstr "Например: \"Какие самые вкусные рестораны в Париже?\""
 
 #: forms.py:110
 msgid "title must be > 10 characters"
-msgstr "заголовок должен иметь хотя бы 10 букв"
+msgstr "минимум 10 букв"
 
 #: forms.py:119 forms.py:149
 msgid "content"
-msgstr ""
-"основное содержание"
+msgstr "содержание"
 
 #: forms.py:125
 msgid "question content must be > 10 characters"
-msgstr "содержание вопроса должно быть более 10-ти букв"
+msgstr "минимум 10 букв"
 
 #: forms.py:134 skins/default/templates/macros.html:659
 #: skins/default/templates/macros.html:671
@@ -92,7 +91,7 @@ msgstr "тэги"
 msgid ""
 "Tags are short keywords, with no spaces within. Up to five tags can be used."
 msgstr ""
-"Теги - ключевые слова, характеризующие вопрос. Теги отделяются пробелом, "
+"Теги - ключевые слова. Теги отделяются пробелом, "
 "может быть использовано до 5 тегов."
 
 #: forms.py:164 skins/default/templates/question_retag.html:58 forms.py:222
@@ -136,7 +135,7 @@ msgstr ""
 #: forms.py:233 forms.py:294
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr ""
-"вики (карма не присуждается и многие могут редактировать пост)"
+"вики (карма не присуждается, другие могут редактировать пост)"
 
 #: forms.py:234 forms.py:295
 msgid ""
@@ -298,12 +297,12 @@ msgstr "Этот адрес ассоциирован с глобальным а�
 
 #: forms.py:863 forms.py:888
 msgid "Real name"
-msgstr "Настоящее имя"
+msgstr "Имя"
 
 #: forms.py:870 forms.py:895
 msgid "Website"
 msgstr ""
-"Веб-страница"
+"Мой сайт"
 
 #: forms.py:877 forms.py:902
 msgid "City"
@@ -311,7 +310,7 @@ msgstr "Город"
 
 #: forms.py:886 forms.py:911
 msgid "Show country"
-msgstr "Показать страну"
+msgstr "Показывать страну"
 
 #: forms.py:891 forms.py:916
 msgid "Date of birth"
@@ -324,7 +323,7 @@ msgstr "показывается только возраст, формат ГГ�
 
 #: forms.py:898 forms.py:923
 msgid "Profile"
-msgstr "Профиль"
+msgstr "О себе"
 
 #: forms.py:907 forms.py:932
 msgid "Screen name"
@@ -373,11 +372,11 @@ msgstr "спасибо - не надо"
 
 #: forms.py:1090 forms.py:1112
 msgid "please choose one of the options above"
-msgstr "пожалуйста сделайте Ваш выбор (см. выше)"
+msgstr "пожалуйста, сделайте выбор (см. выше)"
 
 #: urls.py:41
 msgid "about/"
-msgstr "o-nas/"
+msgstr "about/"
 
 #: urls.py:42
 msgid "faq/"
@@ -385,98 +384,98 @@ msgstr "faq/"
 
 #: urls.py:43
 msgid "privacy/"
-msgstr "politika-informacii/"
+msgstr "privacy/"
 
 #: urls.py:46 urls.py:51
 msgid "answers/"
-msgstr "otvety/"
+msgstr "answers/"
 
 #: urls.py:46 urls.py:87 urls.py:212
 msgid "edit/"
-msgstr "redaktirovat/"
+msgstr "edit/"
 
 #: urls.py:51 urls.py:117
 msgid "revisions/"
-msgstr "versii/"
+msgstr "revisions/"
 
 #: urls.py:82 urls.py:87 urls.py:92 urls.py:97 urls.py:102 urls.py:107
 #: urls.py:112 urls.py:117 urls.py:123 urls.py:299
 msgid "questions/"
-msgstr "voprosy/"
+msgstr "questions/"
 
 #: urls.py:82
 msgid "ask/"
-msgstr "sprosit/"
+msgstr "ask/"
 
 #: urls.py:89 urls.py:92
 msgid "retag/"
 msgstr ""
-"smenit-tag/"
+"retag/"
 
 #: urls.py:94 urls.py:97
 msgid "close/"
 msgstr ""
-"zakryt/"
+"close/"
 
 #: urls.py:99 urls.py:102
 msgid "reopen/"
 msgstr ""
-"otkryt-snova/"
+"reopen/"
 
 #: urls.py:107
 msgid "answer/"
-msgstr "otvet/"
+msgstr "answer/"
 
 #: urls.py:112
 msgid "vote/"
-msgstr "zolosovat/"
+msgstr "vote/"
 
 #: urls.py:158
 msgid "tags/"
-msgstr "tegi/"
+msgstr "tags/"
 
 #: urls.py:201
 msgid "subscribe-for-tags/"
-msgstr "podpisatsya-na-tagi/"
+msgstr "subscribe-for-tags/"
 
 #: urls.py:206 urls.py:212 urls.py:218 urls.py:226
 msgid "users/"
-msgstr "polzovateli/"
+msgstr "users/"
 
 #: urls.py:211 urls.py:219
 msgid "subscriptions/"
-msgstr "podpiski/"
+msgstr "subscriptions/"
 
 #: urls.py:231
 msgid "users/update_has_custom_avatar/"
-msgstr "polzovateli/obnovlenie_so_svoim_avatarom/"
+msgstr "users/update_has_custom_avatar/"
 
 #: urls.py:236 urls.py:241
 msgid "badges/"
-msgstr "nagrady/"
+msgstr "badges/"
 
 #: urls.py:238 urls.py:246
 msgid "messages/"
 msgstr ""
-"soobscheniya/"
+"messages/"
 
 #: urls.py:238 urls.py:246
 msgid "markread/"
 msgstr ""
-"pometit-kak-prochitanoe/"
+"markread/"
 
 #: urls.py:254 urls.py:262
 msgid "upload/"
 msgstr ""
-"zagruzit/"
+"upload/"
 
 #: urls.py:263
 msgid "feedback/"
-msgstr "otziv/"
+msgstr "feedback/"
 
 #: urls.py:305
 msgid "question/"
-msgstr "vopros/"
+msgstr "question/"
 
 #: urls.py:304 setup_templates/settings.py:203
 #: skins/default/templates/authopenid/providers_javascript.html:7 urls.py:312
@@ -484,7 +483,7 @@ msgstr "vopros/"
 #: skins/common/templates/authopenid/providers_javascript.html:7
 msgid "account/"
 msgstr ""
-"polzovatel/"
+"account/"
 
 #: conf/badges.py:13
 msgid "Badge settings"
@@ -6215,7 +6214,7 @@ msgstr ""
 
 #: skins/default/templates/blocks/ask_form.html:102
 msgid "Ask your question"
-msgstr "Задайте Ваш вопрос"
+msgstr "Задайте вопрос"
 
 #: skins/default/templates/meta/bottom_scripts.html:7
 #, python-format
