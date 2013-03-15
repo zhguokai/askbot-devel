@@ -2,8 +2,7 @@
 <link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
 {% endif %}
 {% if settings.ASKBOT_CSS_DEVEL == False %}
-
-<link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
+<link href="{{"/style/style.less"|media }}" rel="stylesheet" type="text/less" />
 {{ skin.get_extra_css_link() }}
 {% else %}
 <link href="{{"/style/style.less"|media }}" rel="stylesheet/less" type="text/css" />
