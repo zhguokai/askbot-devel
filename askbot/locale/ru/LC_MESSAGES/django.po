@@ -8134,7 +8134,7 @@ msgstr "Тэги"
 #: skins/common/templates/widgets/tag_selector.html:19
 #: skins/common/templates/widgets/tag_selector.html:36
 msgid "add"
-msgstr "доб."
+msgstr " + "
 
 #: skins/default/templates/ask.html:4
 #: skins/default/templates/widgets/ask_button.html:5
