@@ -5213,31 +5213,27 @@ msgstr "Ответить на вопрос"
 #: skins/default/templates/question.html:395
 #: skins/default/templates/question/sidebar.html:6
 msgid "Question tools"
-msgstr "Закладки и информация"
+msgstr "Подписка на вопрос"
 
 #: skins/default/templates/question.html:398
 #: skins/default/templates/question/sidebar.html:9
 msgid "click to unfollow this question"
-msgstr ""
-"нажмите чтобы прекратить следить за этим вопросом"
+msgstr "нажмите, чтобы отписаться"
 
 #: skins/default/templates/question.html:399
 #: skins/default/templates/question/sidebar.html:10
 msgid "Following"
-msgstr ""
-"Есть закладка!"
+msgstr "✓ Наблюдаете"
 
 #: skins/default/templates/question.html:400
 #: skins/default/templates/question/sidebar.html:11
 msgid "Unfollow"
-msgstr ""
-"Снять закладку"
+msgstr "✗ Отписаться"
 
 #: skins/default/templates/question.html:404
 #: skins/default/templates/question/sidebar.html:15
 msgid "click to follow this question"
-msgstr ""
-"нажмите, чтобы добавить закладку"
+msgstr "нажмите, чтобы подписаться"
 
 #: skins/default/templates/question.html:405
 #: skins/default/templates/question/sidebar.html:16
@@ -5250,33 +5246,31 @@ msgstr "Подписаться"
 msgid "%(count)s follower"
 msgid_plural "%(count)s followers"
 msgstr[0] ""
-"%(count)s закладка"
+"%(count)s подписчик"
 msgstr[1] ""
-"%(count)s закладки"
+"%(count)s подписчика"
 msgstr[2] ""
-"%(count)s закладок"
+"%(count)s подписчиков"
 
 #: skins/default/templates/question.html:418
 #: skins/default/templates/question/sidebar.html:29
 msgid "email the updates"
-msgstr ""
-"получать обновления по email"
+msgstr "обновления на почту"
 
 #: skins/default/templates/question.html:421
 #: skins/default/templates/question/sidebar.html:32
 msgid ""
 "<strong>Here</strong> (once you log in) you will be able to sign up for the "
 "periodic email updates about this question."
-msgstr ""
-"получать обновления по email"
+msgstr "Подписаться на обновление по почте можно только после регистрации"
 
 #: skins/default/templates/question/sidebar.html:37
 msgid "subscribe to this question rss feed"
-msgstr "Подписаться на rss канал этого вопроса"
+msgstr "подписаться на обновления по rss"
 
 #: skins/default/templates/question.html:427
 msgid "subsribe to rss feed"
-msgstr "подписаться на RSS-канал для вопросов"
+msgstr "обновления по rss"
 
 #: skins/default/templates/question.html:436
 msgid "Question tags"
