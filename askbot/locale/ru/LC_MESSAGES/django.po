@@ -5213,7 +5213,7 @@ msgstr "Ответить на вопрос"
 #: skins/default/templates/question.html:395
 #: skins/default/templates/question/sidebar.html:6
 msgid "Question tools"
-msgstr "Подписка на вопрос"
+msgstr "Настройка подписок"
 
 #: skins/default/templates/question.html:398
 #: skins/default/templates/question/sidebar.html:9
@@ -5223,7 +5223,7 @@ msgstr "нажмите, чтобы отписаться"
 #: skins/default/templates/question.html:399
 #: skins/default/templates/question/sidebar.html:10
 msgid "Following"
-msgstr "✓ Наблюдаете"
+msgstr " ✓ Наблюдаете"
 
 #: skins/default/templates/question.html:400
 #: skins/default/templates/question/sidebar.html:11
