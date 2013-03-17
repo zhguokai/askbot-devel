@@ -4961,12 +4961,12 @@ msgstr "мне не понравился этот пост (нажмите ещ�
 #: skins/default/templates/question.html:89
 #: skins/common/templates/question/question_controls.html:35
 msgid "retag"
-msgstr "изменить тег"
+msgstr "изменить теги"
 
 #: skins/default/templates/question.html:96
 #: skins/common/templates/question/question_controls.html:6
 msgid "reopen"
-msgstr "переоткрыть"
+msgstr "открыть"
 
 #: skins/default/templates/question.html:100
 #: skins/common/templates/question/question_controls.html:8
@@ -5223,7 +5223,7 @@ msgstr "нажмите, чтобы отписаться"
 #: skins/default/templates/question.html:399
 #: skins/default/templates/question/sidebar.html:10
 msgid "Following"
-msgstr " ✓ Наблюдаете"
+msgstr " ✓ Подписаны"
 
 #: skins/default/templates/question.html:400
 #: skins/default/templates/question/sidebar.html:11
@@ -8391,7 +8391,7 @@ msgstr ""
 #: skins/default/templates/tags.html:14 skins/default/templates/users.html:9
 #: skins/default/templates/main_page/tab_bar.html:15
 msgid "Sort by &raquo;"
-msgstr "Сорт. по &raquo;"
+msgstr " "
 
 #: skins/default/templates/main_page/headline.html:12
 msgid "Tagged"
@@ -8459,11 +8459,11 @@ msgid ""
 "your answers</strong> - no need to answer the same question twice. Also, "
 "please <strong>don't forget to vote</strong> - it really helps to select the "
 "best questions and answers!"
-msgstr ""
+msgstr "Постарайтесь дать развёрнутый ответ. Будет отлично, если вы сможете чем-то его подтвердить."
 
 #: skins/default/templates/question/sidebar.html:38
 msgid "subscribe to rss feed"
-msgstr "подписаться на rss ленту новостей"
+msgstr "подписаться на rss"
 
 #: skins/default/templates/question/sidebar.html:46
 msgid "Stats"
@@ -8617,7 +8617,7 @@ msgstr "выход"
 
 #: skins/default/templates/widgets/user_navigation.html:12
 msgid "Hi, there! Please sign in"
-msgstr "Пожалуйста, войдите здесь."
+msgstr "Вход на сайт"
 
 #: templatetags/extra_filters_jinja.py:279
 msgid "no"

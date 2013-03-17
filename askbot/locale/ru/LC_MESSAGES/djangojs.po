@@ -23,24 +23,23 @@ msgstr ""
 
 #: skins/default/media/js/post.js:532
 msgid "Follow"
-msgstr ""
-"Добавить закладку"
+msgstr "Подписаться"
 
 #: skins/default/media/js/post.js:541 skins/default/media/js/post.js.py:550
 #, perl-format
 msgid "%s follower"
 msgid_plural "%s followers"
 msgstr[0] ""
-"%s закладка"
+"%s подписчик"
 msgstr[1] ""
-"%s закладки"
+"%s подписчика"
 msgstr[2] ""
-"%s закладок"
+"%s подписчиков"
 
 #: skins/default/media/js/post.js:546
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
 msgstr ""
-"<div>Есть закладка!</div><div class=\"unfollow\">Убрать закладку</div>"
+"<div></div><div class=\"unfollow\">✗ Отписаться</div>"
 
 #: skins/default/media/js/post.js:1684 skins/common/media/js/post.js:1874
 msgid "Please enter question title (>10 characters)"
@@ -135,7 +134,7 @@ msgstr "Создать пароль"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:343
 msgid "Create a password-protected account"
-msgstr "Создать аккаунт, защищенный паролем"
+msgstr "Создать новый аккаунт"
 
 #: skins/common/media/js/post.js:28
 msgid "loading..."
@@ -155,15 +154,15 @@ msgstr "пожалуйста, войдите на сайт"
 
 #: skins/common/media/js/post.js:326
 msgid "anonymous users cannot follow questions"
-msgstr "анонимные пользователи не могут отслеживать вопросы"
+msgstr "анонимусы не могут отслеживать вопросы"
 
 #: skins/common/media/js/post.js:327
 msgid "anonymous users cannot subscribe to questions"
-msgstr "анонимные пользователи не могут подписываться на вопросы"
+msgstr "анонимусы не могут подписываться на вопросы"
 
 #: skins/common/media/js/post.js:328
 msgid "anonymous users cannot vote"
-msgstr "извините, анонимные пользователи не могут голосовать"
+msgstr "извините, анонимусы не могут голосовать"
 
 #: skins/common/media/js/post.js:330
 msgid "please confirm offensive"
@@ -178,7 +177,7 @@ msgstr ""
 #: skins/common/media/js/post.js:332
 msgid "anonymous users cannot flag offensive posts"
 msgstr ""
-"анонимные пользователи не могут отметить флагом нарушающие правила сообщения"
+"анонимусы не могут отметить флагом нарушающие правила сообщения"
 
 #: skins/common/media/js/post.js:333
 msgid "confirm delete"
@@ -187,7 +186,7 @@ msgstr "вы уверены, что хотите удалить это сооб�
 #: skins/common/media/js/post.js:334
 msgid "anonymous users cannot delete/undelete"
 msgstr ""
-"извините, анонимные пользователи не могут удалить или отменить удаление "
+"извините, анонимусы не могут удалить или отменить удаление "
 "сообщения"
 
 #: skins/common/media/js/post.js:335
@@ -241,7 +240,7 @@ msgstr[2] "удалить эти сообщения?"
 
 #: skins/common/media/js/utils.js:44
 msgid "click to close"
-msgstr "нажмите чтобы закрыть"
+msgstr "нажмите, чтобы закрыть"
 
 #: skins/common/media/js/wmd/wmd.js:26
 msgid "bold"

@@ -292,7 +292,7 @@ InputToolTip.prototype.createDom = function() {
     var element = this.makeElement('div');
     this._element = element;
 
-    element.html(gettext('search or ask your question'));
+    element.html(gettext('поиск по вопросам'));
     element.addClass('input-tool-tip');
 
     var handler = this._clickHandler;
