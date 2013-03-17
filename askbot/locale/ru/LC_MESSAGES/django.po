@@ -4928,7 +4928,7 @@ msgstr "%(seen)s неуместных сообщений"
 #: skins/default/templates/main_page/headline.html:2
 #: skins/default/templates/main_page/headline.html:18
 msgid "Questions"
-msgstr "вопросы"
+msgstr ""
 
 #: skins/default/templates/privacy.html:3
 #: skins/default/templates/privacy.html:5 views/meta.py:106
