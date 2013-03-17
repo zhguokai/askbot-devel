@@ -5242,8 +5242,7 @@ msgstr ""
 #: skins/default/templates/question.html:405
 #: skins/default/templates/question/sidebar.html:16
 msgid "Follow"
-msgstr ""
-"Добавить закладку"
+msgstr "Подписаться"
 
 #: skins/default/templates/question.html:412
 #: skins/default/templates/question/sidebar.html:23
@@ -8927,10 +8926,10 @@ msgstr ""
 #~ msgstr "Местоположение"
 
 #~ msgid "command/"
-#~ msgstr "komanda/"
+#~ msgstr "command/"
 
 #~ msgid "search/"
-#~ msgstr "poisk/"
+#~ msgstr "search/"
 
 #~ msgid "allow only selected tags"
 #~ msgstr "включить только выбранные тэги"
