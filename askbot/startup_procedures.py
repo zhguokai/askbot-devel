@@ -609,7 +609,6 @@ def test_tinymce():
     required_attrs = (
         'TINYMCE_COMPRESSOR',
         'TINYMCE_JS_ROOT',
-        'TINYMCE_JS_URL',
         'TINYMCE_DEFAULT_CONFIG'
     )
 
@@ -661,16 +660,6 @@ def test_tinymce():
     if os.path.normpath(js_root) != os.path.normpath(expected_js_root):
         error_tpl = "add line: TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, '%s')"
         if os.path.normpath(js_root) == os.path.normpath(old_expected_js_root):
-            error_tpl += '\nNote: we have moved files from "common" into "default"'
-        errors.append(error_tpl % relative_js_path)
-
-    #check url setting
-    url = getattr(django_settings, 'TINYMCE_JS_URL', '')
-    expected_url = django_settings.STATIC_URL + relative_js_path + 'tiny_mce.js'
-    old_expected_url = django_settings.STATIC_URL + old_relative_js_path
-    if urls_equal(url, expected_url) is False:
-        error_tpl = "add line: TINYMCE_JS_URL = STATIC_URL + '%s'"
-        if urls_equal(url, old_expected_url):
             error_tpl += '\nNote: we have moved files from "common" into "default"'
         errors.append(error_tpl % relative_js_path)
 
