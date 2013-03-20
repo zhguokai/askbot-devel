@@ -8615,9 +8615,9 @@ msgstr "Задавайте свой вопрос здесь"
 msgid "sign out"
 msgstr "выход"
 
-#: skins/default/templates/widgets/user_navigation.html:12
-msgid "Hi, there! Please sign in"
-msgstr "Вход на сайт"
+#: templates/widgets/user_navigation.html:20
+msgid "Hi there! Please sign in"
+msgstr "вход"
 
 #: templatetags/extra_filters_jinja.py:279
 msgid "no"
