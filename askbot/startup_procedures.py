@@ -824,6 +824,10 @@ def test_multilingual():
 
     print_errors(errors)
 
+def test_messages_framework():
+    if not 'django.contrib.messages' in django_settings.INSTALLED_APPS:
+        errors = ('Add to the INSTALLED_APPS section of your settings.py:\n "django.contrib.messages"', )
+        print_errors(errors)
 
 def run_startup_tests():
     """function that runs
@@ -847,6 +851,7 @@ def run_startup_tests():
     test_avatar()
     test_group_messaging()
     test_multilingual()
+    test_messages_framework()
     test_haystack()
     test_cache_backend()
     test_secret_key()

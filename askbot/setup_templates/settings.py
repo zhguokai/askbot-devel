@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
+    'django.contrib.messages',
     #'debug_toolbar',
     #'haystack',
     'askbot',
