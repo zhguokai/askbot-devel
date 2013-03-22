@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Allowed to enable and disable question scopes on the main page
 * Added full text support for some languages with Postgresql:
   Danish, Dutch, English, Finnish, French, German, Hungarian,
   Italian, Japanese (requires package textsearch_ja), Norwegian,

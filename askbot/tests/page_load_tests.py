@@ -256,7 +256,7 @@ class PageLoadTestCase(AskbotTestCase):
             template='main_page.html',
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('favorite').query_string(),
+            url_name=reverse('questions') + SearchState.get_empty().change_scope('followed').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,

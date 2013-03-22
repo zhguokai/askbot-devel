@@ -43,6 +43,10 @@ def is_current_language(lang):
     return lang == django_get_language()
 
 @register.filter
+def to_int(value):
+    return int(value)
+
+@register.filter
 def safe_urlquote(text, quote_plus = False):
     if quote_plus:
         return urllib.quote_plus(text.encode('utf8'))

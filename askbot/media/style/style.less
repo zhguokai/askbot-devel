@@ -446,6 +446,10 @@ body.user-messages {
     .sprites(-51px,-36px);
 }
 
+#scopeNav {
+    height: 41px;
+}
+
 .scope-selector {
     display:block;
     float:left;
@@ -580,7 +584,7 @@ input[type="submit"].searchBtn {
     line-height: 22px;
     text-align: center;
     float:right;
-    margin: 8px 28px 0 0;
+    margin: -33px 28px 0 0;
     width: 48px;
     .sprites(-98px,-37px);
     .rounded-corners(0);
@@ -693,7 +697,7 @@ input[type="submit"].link:hover {
     font-size: 20px;
     height: 42px;
     line-height: 44px;
-    margin-top: 6px;
+    margin-top: -35px;
     text-transform: uppercase;
     width: 200px;/* to match width of sidebar */
 }
@@ -718,12 +722,21 @@ input[type="submit"].link:hover {
 body.anon.ask-page .search-drop-menu {
     margin: 0;
 }
-body.anon {
-    #searchBar,
-    .search-drop-menu {
-        margin-left: 227px;/* we don't have the "followed" scope */
-    }
+#searchBar.scopes-True-True-False {
+    margin-left: 228px;
 }
+#searchBar.scopes-True-False-True {
+    margin-left: 203px;
+}
+#searchBar.scopes-False-True-True {
+    margin-left: 286px;
+}
+#searchBar.scopes-True-False-False,
+#searchBar.scopes-False-True-False,
+#searchBar.scopes-False-False-True {
+    margin-left: 52px;
+}
+
 #searchBar.cancelable {
     padding-right: 82px;
 }
