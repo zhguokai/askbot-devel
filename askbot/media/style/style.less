@@ -621,20 +621,20 @@ input[type="submit"].searchBtn:hover {
     .sprites(-98px-48,-37px);
 }
 
-.cancelSearchBtn {
-    font-size: 30px;
-    color: #ce8888;
-    background:#fff;
-    height: 41px;
-    line-height: 42px;
-    border:0px;
-    border-left:#deded0 1px solid;
+input[type="button"].cancelSearchBtn {
+    font-size: 30px !important;
+    color: #aaa;
+    background: #fff !important;
+    height: 37px !important;
+    line-height: 37px;
+    border: 0px;
     .box-shadow(0, 0, 0);
+    .rounded-corners(0);
     text-align: center;
-    width: 35px;
+    width: 35px !important;
     cursor:pointer;
     float: right;
-    margin: 7px 0 0 0;
+    margin: -34px 0 0 0;
     position: relative;
     z-index: 10001;
 }
@@ -722,19 +722,31 @@ input[type="submit"].link:hover {
 body.anon.ask-page .search-drop-menu {
     margin: 0;
 }
-#searchBar.scopes-True-True-False {
-    margin-left: 228px;
+.scopes-True-True-False {
+    #searchBar,
+    .search-drop-menu {
+        margin-left: 228px;
+    }
 }
-#searchBar.scopes-True-False-True {
-    margin-left: 203px;
+.scopes-True-False-True {
+    #searchBar,
+    .search-drop-menu {
+        margin-left: 203px;
+    }
 }
-#searchBar.scopes-False-True-True {
-    margin-left: 286px;
+.scopes-False-True-True {
+    #searchBar,
+    .search-drop-menu {
+        margin-left: 286px;
+    }
 }
-#searchBar.scopes-True-False-False,
-#searchBar.scopes-False-True-False,
-#searchBar.scopes-False-False-True {
-    margin-left: 52px;
+.scopes-True-False-False,
+.scopes-False-True-False,
+.scopes-False-False-True {
+    #searchBar,
+    .search-drop-menu {
+        margin-left: 52px;
+    }
 }
 
 #searchBar.cancelable {

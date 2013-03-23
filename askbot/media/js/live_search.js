@@ -581,7 +581,7 @@ FullTextSearch.prototype.reset = function() {
 FullTextSearch.prototype.refreshXButton = function() {
     if(this.getSearchQuery().length > 0){
         if (this._query.hasClass('searchInput')){
-            $('#searchBar').attr('class', 'cancelable');
+            $('#searchBar').addClass('cancelable');
             this._xButton.show();
         }
     } else {

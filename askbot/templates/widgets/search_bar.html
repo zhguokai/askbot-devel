@@ -1,13 +1,8 @@
 {% if active_tab != "ask" %}
 {% spaceless %}
-{% set enabled_scopes_class = 'scopes-' + 
-    '%s'|format(settings.ALL_SCOPE_ENABLED) + '-' +
-    '%s'|format(settings.UNANSWERED_SCOPE_ENABLED) + '-' +
-    '%s'|format((request.user.is_authenticated() and settings.FOLLOWED_SCOPE_ENABLED))
-%}
 <div 
     id="searchBar"
-    class="{% if query %}cancelable{% endif %} {{ enabled_scopes_class }}"
+    class="{% if query %}cancelable{% endif %}"
 >
     {# url action depends on which tab is active #}
             {% if active_tab == "tags" %}
