@@ -43,6 +43,7 @@ Programming, bug fixes and documentation
 * `Paul Backhouse <https://github.com/powlo>`_
 * `jtrain <https://github.com/jtrain>`_
 * Niki Rocco
+* `Tyler Mandry <https://github.com/tmandry>`_
 
 Translations
 ------------

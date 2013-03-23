@@ -108,6 +108,26 @@ def test_askbot_url():
                 msg = 'if ASKBOT_URL setting is not empty, ' + \
                         'it must not start with /'
 
+
+def test_jinja2():
+    """tests Jinja2 settings"""
+    compressor_ext = 'compressor.contrib.jinja2ext.CompressorExtension'
+    ext_list = getattr(django_settings, 'JINJA2_EXTENSIONS', None)
+    errors = list()
+    if ext_list is None:
+        errors.append(
+            "Please add the following line to your settings.py:\n"
+            "JINJA2_EXTENSIONS = ('%s',)" % compressor_ext
+        )
+    elif compressor_ext not in ext_list:
+        errors.append(
+            "Please add to the JINJA2_EXTENSIONS list an item:\n"
+            "'%s'," % compressor_ext
+        )
+        
+    print_errors(errors)
+
+
 def test_middleware():
     """Checks that all required middleware classes are
     installed in the django settings.py file. If that is not the
@@ -286,6 +306,33 @@ def test_celery():
             "\nPlease rename setting BROKER_BACKEND to BROKER_TRANSPORT\n"
             "in your settings.py file"
         )
+
+def test_compressor():
+    """test settings for django compressor"""
+    precompilers = getattr(django_settings, 'COMPRESS_PRECOMPILERS', None)
+    errors = list()
+    lessc_item = ('text/less', 'lessc {infile} {outfile}')
+    if precompilers is None:
+        errors.append(
+            'Please add to your settings.py file: \n'
+            'COMPRESS_PRECOMPILERS = (\n'
+            "    ('%s', '%s'),\n"
+            ')' % lessc_item
+        )
+    else:
+        if lessc_item not in precompilers:
+            errors.append(
+                'Please add to the COMPRESS_PRECOMPILERS the following item:\n'
+                "('%s', '%s')," % lessc_item
+            )
+
+    if 'compressor' not in django_settings.INSTALLED_APPS:
+        errors.append(
+            'add to the INSTALLED_APPS the following entry:\n'
+            "    'compressor',"
+        )
+
+    print_errors(errors)
 
 def test_media_url():
     """makes sure that setting `MEDIA_URL`
@@ -470,6 +517,26 @@ def test_staticfiles():
         errors.append(
             'Run command (after fixing the above errors)\n'
             '    python manage.py collectstatic\n'
+        )
+
+    required_finders = (
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+        'compressor.finders.CompressorFinder',
+    )
+
+    finders = getattr(django_settings, 'STATICFILES_FINDERS', None)
+
+    missing_finders = list()
+    for finder in required_finders:
+        if finder not in finders:
+            missing_finders.append(finder)
+
+    if missing_finders:
+        errors.append(
+            'Please make sure that the following items are \n' + \
+            'part of the STATICFILES_FINDERS tuple, create this tuple, if it is missing:\n' +
+            '    "' + '",\n    "'.join(missing_finders) + '",\n'
         )
 
     print_errors(errors)
@@ -840,27 +907,32 @@ def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
     """
+    #this is first because it gives good info on what to install
+    test_modules()
 
     #todo: refactor this when another test arrives
-    test_template_loader()
-    test_encoding()
-    test_modules()
     test_askbot_url()
+    test_avatar()
+    test_cache_backend()
+    test_celery()
+    test_compressor()
+    test_custom_user_profile_tab()
+    test_encoding()
+    test_group_messaging()
+    test_haystack()
+    test_jinja2()
+    test_longerusername()
+    test_new_skins()
+    test_media_url()
     #test_postgres()
     test_middleware()
-    test_celery()
+    test_multilingual()
     #test_csrf_cookie_domain()
+    test_secret_key()
+    test_staticfiles()
+    test_template_loader()
     test_template_context_processors()
     test_tinymce()
-    test_staticfiles()
-    test_new_skins()
-    test_longerusername()
-    test_avatar()
-    test_group_messaging()
-    test_multilingual()
-    test_haystack()
-    test_cache_backend()
-    test_secret_key()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,
@@ -897,10 +969,8 @@ def run_startup_tests():
         }
     })
     settings_tester.run()
-    test_media_url()
     if 'manage.py test' in ' '.join(sys.argv):
         test_settings_for_test_runner()
-    test_custom_user_profile_tab()
 
 @transaction.commit_manually
 def run():
