@@ -1006,7 +1006,7 @@ var Vote = function(){
             questionId = qId;
             questionSlug = qSlug;
             questionAuthorId = questionAuthor;
-            currentUserId = userId;
+            currentUserId = '' + userId;//convert to string
             bindEvents();
         },
 
@@ -1840,7 +1840,7 @@ Comment.prototype.getElement = function(){
     Comment.superClass_.getElement.call(this);
     if (this.isBlank() && this.hasContent()){
         this.setContent();
-        if (enableMathJax === true){
+        if (askbot['settings']['mathjaxEnabled'] === true){
             MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
         }
     }

@@ -124,7 +124,7 @@ def test_jinja2():
             "Please add to the JINJA2_EXTENSIONS list an item:\n"
             "'%s'," % compressor_ext
         )
-        
+
     print_errors(errors)
 
 
@@ -325,6 +325,13 @@ def test_compressor():
                 'Please add to the COMPRESS_PRECOMPILERS the following item:\n'
                 "('%s', '%s')," % lessc_item
             )
+
+    js_filters = getattr(django_settings, 'COMPRESS_JS_FILTERS', [])
+    if len(js_filters) > 0:
+        errors.append(
+            'Askbot does not yet support js minification, please add to your settings.py:\n'
+            'COMPRESS_JS_FILTERS = []'
+        )
 
     if 'compressor' not in django_settings.INSTALLED_APPS:
         errors.append(

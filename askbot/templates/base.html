@@ -19,14 +19,12 @@
             title="{% trans site_title=settings.APP_SHORT_NAME %}RSS feed from {{ site_title }}{% endtrans %}"
             href="{{ settings.APP_URL }}{% url "latest_questions_feed" %}"
         />
-        {% compress css %}
         {% block before_css %}{% endblock %}
         {% include "meta/html_head_stylesheets.html" %}
-        {% endcompress %}
         {% include "meta/fonts.html" %} {# may contain external files #}
-        {% compress css %}{% block forestyle %}{% endblock %}{% endcompress %}
+        {% block forestyle %}{% endblock %}
         {% include "meta/html_head_javascript.html" %}
-        {% compress js %}{% block forejs %}{% endblock %}{% endcompress %}
+        {% block forejs %}{% endblock %}
         {% if settings.USE_CUSTOM_HTML_HEAD %}
             {{ settings.CUSTOM_HTML_HEAD }}
         {% endif %}
