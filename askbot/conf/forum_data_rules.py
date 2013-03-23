@@ -15,7 +15,7 @@ FORUM_DATA_RULES = livesettings.ConfigurationGroup(
 
 EDITOR_CHOICES = (
     ('markdown', 'markdown'),
-    ('tinymce', 'WISYWIG (tinymce)')
+    ('tinymce', 'WYSIWYG (tinymce)')
 )
 
 settings.register(
@@ -354,7 +354,7 @@ settings.register(
     )
 )
 
-#todo: looks like there is a bug in askbot.deps.livesettings 
+#todo: looks like there is a bug in askbot.deps.livesettings
 #that does not allow Integer values with defaults and choices
 settings.register(
     livesettings.StringValue(

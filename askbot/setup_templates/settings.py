@@ -169,6 +169,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
+    'django.contrib.messages',
     #'debug_toolbar',
     #'haystack',
     'askbot',
@@ -263,7 +264,7 @@ TINYMCE_COMPRESSOR = True
 TINYMCE_SPELLCHECKER = False
 TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'default/media/js/tinymce/')
 
-TINYMCE_URL = STATIC_URL + 'default/media/js/tinymce/'
+#TINYMCE_JS_URL = STATIC_URL + 'default/media/js/tinymce/tiny_mce.js'
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': 'askbot_imageuploader,askbot_attachment',
     'convert_urls': False,
@@ -283,8 +284,16 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme_advanced_resizing': True,
     'theme_advanced_resize_horizontal': False,
     'theme_advanced_statusbar_location': 'bottom',
+    'width': '730',
     'height': '250'
 }
 
 #delayed notifications, time in seconds, 15 mins by default
 NOTIFICATION_DELAY_TIME = 60 * 15
+
+GROUP_MESSAGING = {
+    'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',
+    'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'}
+}
+
+ASKBOT_MULTILINGUAL = False

@@ -44,6 +44,7 @@ Programming, bug fixes and documentation
 * `jtrain <https://github.com/jtrain>`_
 * Niki Rocco
 * `Tyler Mandry <https://github.com/tmandry>`_
+* `Jorge López Pérez <https://github.com/adobo>`_
 
 Translations
 ------------

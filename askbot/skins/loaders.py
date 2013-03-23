@@ -5,6 +5,7 @@ from django.template import TemplateDoesNotExist
 from django.http import HttpResponse
 from django.utils import translation
 from django.conf import settings as django_settings
+from django.core.exceptions import ImproperlyConfigured
 from coffin.common import CoffinEnvironment
 from jinja2 import loaders as jinja_loaders
 from jinja2.exceptions import TemplateNotFound
@@ -92,7 +93,12 @@ SKINS = load_skins()
 def get_skin(request = None):
     """retreives the skin environment
     for a given request (request var is not used at this time)"""
-    return SKINS[askbot_settings.ASKBOT_DEFAULT_SKIN]
+    skin_name = askbot_settings.ASKBOT_DEFAULT_SKIN
+    try:
+        return SKINS[skin_name]
+    except KeyError:
+        msg_fmt = 'skin "%s" not found, check value of "ASKBOT_EXTRA_SKINS_DIR"'
+        raise ImproperlyConfigured(msg_fmt % skin_name)
 
 def get_askbot_template(template, request = None):
     """

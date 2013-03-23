@@ -27,7 +27,7 @@
 {# buttons below cannot be cached yet #}
 {% if user_already_gave_answer %}
     <a
-        class="submit"
+        class="button submit"
         href="{% url "edit_answer" previous_answer.id %}"
     >{% trans %}Edit Your Previous Answer{% endtrans %}</a>
     <span>{% trans %}(only one answer per question is allowed){% endtrans %}</span>

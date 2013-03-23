@@ -150,6 +150,14 @@
                 if (flags.length > 0) {
                     removeNode(flags[0]);
                 }
+                var closeBtn = findChildrenByClassName(controls, 'question-close');
+                if (
+                    closeBtn.length === 1 &&
+                    data['userReputation'] <
+                    {{ settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS }}
+                ) {
+                    removeNode(closeBtn[0]);
+                }
                 if (//maybe remove "edit" button
                     data['userReputation'] <
                     {{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}}

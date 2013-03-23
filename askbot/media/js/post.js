@@ -1544,9 +1544,9 @@ EditCommentForm.prototype.createDom = function(){
     div.append(this._textarea);
     this._text_counter = $('<span></span>').attr('class', 'counter');
     div.append(this._text_counter);
-    this._submit_btn = $('<button class="submit small"></button>');
+    this._submit_btn = $('<button class="submit"></button>');
     div.append(this._submit_btn);
-    this._cancel_btn = $('<button class="submit small"></button>');
+    this._cancel_btn = $('<button class="submit"></button>');
     this._cancel_btn.html(gettext('cancel'));
     div.append(this._cancel_btn);
 
@@ -2107,7 +2107,7 @@ var socialSharing = function(){
             URL = window.location.href;
             var urlBits = URL.split('/');
             URL = urlBits.slice(0, -2).join('/') + '/';
-            TEXT = escape($('h1 > a').html());
+            TEXT = encodeURIComponent($('h1 > a').html());
             var hashtag = encodeURIComponent(
                                 askbot['settings']['sharingSuffixText']
                             );

@@ -336,7 +336,7 @@ class ThreadManager(BaseQuerySetManager):
             else:
                 raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
 
-        elif search_state.scope == 'favorite':
+        elif search_state.scope == 'followed':
             favorite_filter = models.Q(favorited_by=request_user)
             if 'followit' in django_settings.INSTALLED_APPS:
                 followed_users = request_user.get_followed_users()
