@@ -572,22 +572,26 @@ input[type="submit"].searchBtn:hover {
   background-image: none;
   background: -146px -37px url(../images/sprites.png) no-repeat;
 }
-.cancelSearchBtn {
-  font-size: 30px;
-  color: #ce8888;
-  background: #fff;
-  height: 41px;
-  line-height: 42px;
+input[type="button"].cancelSearchBtn {
+  font-size: 30px !important;
+  color: #aaa;
+  background: #fff !important;
+  height: 37px !important;
+  line-height: 37px;
   border: 0px;
-  border-left: #deded0 1px solid;
   -webkit-box-shadow: 0 0 0 #929292;
   -moz-box-shadow: 0 0 0 #929292;
   box-shadow: 0 0 0 #929292;
+  border-radius: 0;
+  -ms-border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  -khtml-border-radius: 0;
   text-align: center;
-  width: 35px;
+  width: 35px !important;
   cursor: pointer;
   float: right;
-  margin: 7px 0 0 0;
+  margin: -34px 0 0 0;
   position: relative;
   z-index: 10001;
 }
@@ -700,18 +704,24 @@ input[type="submit"].link:hover {
 body.anon.ask-page .search-drop-menu {
   margin: 0;
 }
-#searchBar.scopes-True-True-False {
+.scopes-True-True-False #searchBar,
+.scopes-True-True-False .search-drop-menu {
   margin-left: 228px;
 }
-#searchBar.scopes-True-False-True {
+.scopes-True-False-True #searchBar,
+.scopes-True-False-True .search-drop-menu {
   margin-left: 203px;
 }
-#searchBar.scopes-False-True-True {
+.scopes-False-True-True #searchBar,
+.scopes-False-True-True .search-drop-menu {
   margin-left: 286px;
 }
-#searchBar.scopes-True-False-False,
-#searchBar.scopes-False-True-False,
-#searchBar.scopes-False-False-True {
+.scopes-True-False-False #searchBar,
+.scopes-False-True-False #searchBar,
+.scopes-False-False-True #searchBar,
+.scopes-True-False-False .search-drop-menu,
+.scopes-False-True-False .search-drop-menu,
+.scopes-False-False-True .search-drop-menu {
   margin-left: 52px;
 }
 #searchBar.cancelable {
