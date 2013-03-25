@@ -409,9 +409,6 @@ body.user-messages {
 #homeButton:hover {
   background: -51px -36px url(../images/sprites.png) no-repeat;
 }
-#scopeNav {
-  height: 41px;
-}
 .scope-selector {
   display: block;
   float: left;
@@ -493,6 +490,7 @@ body.user-messages {
   padding: 0 0 10px 0;
   margin: 0;
   position: relative;
+  width: 100%;
 }
 .search-drop-menu ul li {
   padding: 5px 10px;
@@ -533,7 +531,7 @@ input[type="submit"].searchBtn {
   line-height: 22px;
   text-align: center;
   float: right;
-  margin: -33px 28px 0 0;
+  margin: -39px -48px 0 0;
   width: 48px;
   background: -98px -37px url(../images/sprites.png) no-repeat;
   border-radius: 0;
@@ -547,6 +545,15 @@ input[type="submit"].searchBtn {
   cursor: pointer;
   position: relative;
   z-index: 10001;
+}
+.groups-page input[type="submit"].searchBtn,
+.tags-page input[type="submit"].searchBtn,
+.badges-pages input[type="submit"].searchBtn,
+.user-profile-page input[type="submit"].searchBtn,
+.meta input[type="submit"].searchBtn,
+.openid-signin input[type="submit"].searchBtn,
+.users-page input[type="submit"].searchBtn {
+  margin-top: 1px;
 }
 .ask-page input[type="submit"].searchBtn {
   display: none;
@@ -591,7 +598,7 @@ input[type="button"].cancelSearchBtn {
   width: 35px !important;
   cursor: pointer;
   float: right;
-  margin: -34px 0 0 0;
+  margin: -40px 0 0 0;
   position: relative;
   z-index: 10001;
 }
@@ -678,7 +685,7 @@ input[type="submit"].link:hover {
   font-size: 20px;
   height: 42px;
   line-height: 44px;
-  margin-top: -35px;
+  margin-top: 6px;
   text-transform: uppercase;
   width: 200px;
   /* to match width of sidebar */
@@ -704,17 +711,31 @@ input[type="submit"].link:hover {
 body.anon.ask-page .search-drop-menu {
   margin: 0;
 }
+#scopeNav {
+  height: 41px;
+  float: left;
+  width: 280px;
+}
 .scopes-True-True-False #searchBar,
 .scopes-True-True-False .search-drop-menu {
   margin-left: 228px;
+}
+.scopes-True-True-False #scopeNav {
+  width: 180px;
 }
 .scopes-True-False-True #searchBar,
 .scopes-True-False-True .search-drop-menu {
   margin-left: 203px;
 }
+.scopes-True-False-True #scopeNav {
+  width: 150px;
+}
 .scopes-False-True-True #searchBar,
 .scopes-False-True-True .search-drop-menu {
   margin-left: 286px;
+}
+.scopes-False-True-True #scopeNav {
+  width: 238px;
 }
 .scopes-True-False-False #searchBar,
 .scopes-False-True-False #searchBar,
@@ -723,9 +744,6 @@ body.anon.ask-page .search-drop-menu {
 .scopes-False-True-False .search-drop-menu,
 .scopes-False-False-True .search-drop-menu {
   margin-left: 52px;
-}
-#searchBar.cancelable {
-  padding-right: 82px;
 }
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
 #ContentLeft {
