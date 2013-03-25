@@ -15,6 +15,20 @@ MAIN_PAGES = livesettings.ConfigurationGroup(
 settings.register(
     livesettings.BooleanValue(
         MAIN_PAGES,
+        'ASK_BUTTON_ENABLED',
+        default=True,
+        description=_('Enable big Ask button'),
+        help_text=_(
+            'Disabling this button will reduce number of new questions. '
+            'If this button is disabled, the ask button in the search menu '
+            'will still be available.'
+        )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        MAIN_PAGES,
         'ALL_SCOPE_ENABLED',
         default=True,
         description=_('Enable "All Questions" selector'),

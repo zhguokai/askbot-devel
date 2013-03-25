@@ -446,10 +446,6 @@ body.user-messages {
     .sprites(-51px,-36px);
 }
 
-#scopeNav {
-    height: 41px;
-}
-
 .scope-selector {
     display:block;
     float:left;
@@ -536,6 +532,7 @@ body.user-messages {
         padding: 0 0 10px 0;
         margin: 0;
         position: relative;
+        width: 100%;
         li {
             padding: 5px 10px;
             position: relative;
@@ -584,7 +581,7 @@ input[type="submit"].searchBtn {
     line-height: 22px;
     text-align: center;
     float:right;
-    margin: -33px 28px 0 0;
+    margin: -39px -48px 0 0;
     width: 48px;
     .sprites(-98px,-37px);
     .rounded-corners(0);
@@ -593,6 +590,19 @@ input[type="submit"].searchBtn {
     position: relative;
     z-index: 10001;
 }
+
+.groups-page, /* todo: clean up - should not need this */
+.tags-page,
+.badges-pages,
+.user-profile-page,
+.meta,
+.openid-signin,
+.users-page {
+    input[type="submit"].searchBtn {
+        margin-top: 1px;
+    }
+}
+
 .ask-page {
     input[type="submit"].searchBtn {
         display: none;
@@ -634,7 +644,7 @@ input[type="button"].cancelSearchBtn {
     width: 35px !important;
     cursor:pointer;
     float: right;
-    margin: -34px 0 0 0;
+    margin: -40px 0 0 0;
     position: relative;
     z-index: 10001;
 }
@@ -697,7 +707,7 @@ input[type="submit"].link:hover {
     font-size: 20px;
     height: 42px;
     line-height: 44px;
-    margin-top: -35px;
+    margin-top: 6px;
     text-transform: uppercase;
     width: 200px;/* to match width of sidebar */
 }
@@ -722,10 +732,18 @@ input[type="submit"].link:hover {
 body.anon.ask-page .search-drop-menu {
     margin: 0;
 }
+#scopeNav {
+    height: 41px;
+    float: left;
+    width: 280px;
+}
 .scopes-True-True-False {
     #searchBar,
     .search-drop-menu {
         margin-left: 228px;
+    }
+    #scopeNav {
+        width: 180px;
     }
 }
 .scopes-True-False-True {
@@ -733,11 +751,17 @@ body.anon.ask-page .search-drop-menu {
     .search-drop-menu {
         margin-left: 203px;
     }
+    #scopeNav {
+        width: 150px;
+    }
 }
 .scopes-False-True-True {
     #searchBar,
     .search-drop-menu {
         margin-left: 286px;
+    }
+    #scopeNav {
+        width: 238px;
     }
 }
 .scopes-True-False-False,
@@ -748,11 +772,6 @@ body.anon.ask-page .search-drop-menu {
         margin-left: 52px;
     }
 }
-
-#searchBar.cancelable {
-    padding-right: 82px;
-}
-
 
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
 
