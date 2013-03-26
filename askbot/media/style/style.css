@@ -740,10 +740,18 @@ body.anon.ask-page .search-drop-menu {
 .scopes-True-False-False #searchBar,
 .scopes-False-True-False #searchBar,
 .scopes-False-False-True #searchBar,
+.scopes-False-False-False #searchBar,
 .scopes-True-False-False .search-drop-menu,
 .scopes-False-True-False .search-drop-menu,
-.scopes-False-False-True .search-drop-menu {
+.scopes-False-False-True .search-drop-menu,
+.scopes-False-False-False .search-drop-menu {
   margin-left: 52px;
+}
+.scopes-True-False-False #scopeNav,
+.scopes-False-True-False #scopeNav,
+.scopes-False-False-True #scopeNav,
+.scopes-False-False-False #scopeNav {
+  width: 0;
 }
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
 #ContentLeft {
