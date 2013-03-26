@@ -35,12 +35,14 @@ from django.views.decorators import csrf
 from askbot import exceptions as askbot_exceptions
 from askbot import forms
 from askbot import models
+from askbot.models import signals
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot.utils.forms import format_errors
 from askbot.utils.functions import diff_date
 from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
+from askbot.utils.loading import load_module
 from askbot.views import context
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
@@ -555,7 +557,15 @@ def answer(request, id):#process a new answer
     """
     question = get_object_or_404(models.Post, post_type='question', id=id)
     if request.method == "POST":
-        form = forms.AnswerForm(request.POST, user=request.user)
+
+        custom_class_path = getattr(settings, 'ASKBOT_NEW_ANSWER_FORM', None)
+        if custom_class_path:
+            form_class = load_module(custom_class_path)
+        else:
+            form_class = forms.AnswerForm
+
+        form = form_class(request.POST, user=request.user)
+
         if form.is_valid():
             wiki = form.cleaned_data['wiki']
             text = form.cleaned_data['text']
@@ -581,6 +591,13 @@ def answer(request, id):#process a new answer
                                         is_private = is_private,
                                         timestamp = update_time,
                                     )
+
+                    signals.new_answer_posted.send(None,
+                        answer=answer,
+                        user=user,
+                        form_data=form.cleaned_data
+                    )
+
                     return HttpResponseRedirect(answer.get_absolute_url())
                 except askbot_exceptions.AnswerAlreadyGiven, e:
                     request.user.message_set.create(message = unicode(e))
