@@ -319,6 +319,7 @@
     {% if settings.TAG_SOURCE == 'category-tree' %}
         {% include "meta/category_tree_js.html" %}
     {% endif %}
+    {% include "question/custom_javascript.html" ignore missing %}
     {% endcompress %}
     {#
     <script type="text/javascript">

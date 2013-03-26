@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added a placeholder template for the custom javascript on the question page
 * Allowed to disable the big "ask" button.
 * Some support for the media compression (Tyler Mandry)
 * Allowed to enable and disable question scopes on the main page
