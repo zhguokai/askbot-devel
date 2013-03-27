@@ -481,6 +481,13 @@ def edit_question(request, id):
 def edit_answer(request, id):
     answer = get_object_or_404(models.Post, id=id)
     revision = answer.get_latest_revision()
+
+    class_path = getattr(settings, 'ASKBOT_EDIT_ANSWER_FORM', None)
+    if class_path:
+        edit_answer_form_class = load_module(class_path)
+    else:
+        edit_answer_form_class = forms.EditAnswerForm
+
     try:
         request.user.assert_can_edit_answer(answer)
         if request.method == "POST":
@@ -495,18 +502,18 @@ def edit_answer(request, id):
                     # Replace with those from the selected revision
                     rev = revision_form.cleaned_data['revision']
                     revision = answer.revisions.get(revision = rev)
-                    form = forms.EditAnswerForm(
+                    form = edit_answer_form_class(
                                     answer, revision, user=request.user
                                 )
                 else:
-                    form = forms.EditAnswerForm(
-                                            answer,
-                                            revision,
-                                            request.POST,
-                                            user=request.user
-                                        )
+                    form = edit_answer_form_class(
+                                                answer,
+                                                revision,
+                                                request.POST,
+                                                user=request.user
+                                            )
             else:
-                form = forms.EditAnswerForm(
+                form = edit_answer_form_class(
                     answer, revision, request.POST, user=request.user
                 )
                 revision_form = forms.RevisionForm(answer, revision)
@@ -524,12 +531,27 @@ def edit_answer(request, id):
                             is_private=is_private,
                             suppress_email=suppress_email
                         )
+
+                        signals.answer_edited.send(None,
+                            answer=answer,
+                            user=user,
+                            form_data=form.cleaned_data
+                        )
+
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
             revision_form = forms.RevisionForm(answer, revision)
-            form = forms.EditAnswerForm(answer, revision, user=request.user)
+            form = edit_answer_form_class(answer, revision, user=request.user)
             if request.user.can_make_group_private_posts():
                 form.initial['post_privately'] = answer.is_private()
+
+        #gives a chance to set extra initial data on the form
+        signals.answer_before_editing.send(None,
+            answer=answer,
+            user=request.user,
+            form=form
+        )
+
         data = {
             'page_class': 'edit-answer-page',
             'active_tab': 'questions',
