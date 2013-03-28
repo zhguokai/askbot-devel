@@ -40,6 +40,7 @@ from askbot import const
 from askbot.utils import functions
 from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
+from askbot.utils.loading import load_module
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.templatetags import extra_tags
 from askbot.conf import settings as askbot_settings
@@ -613,6 +614,14 @@ def question(request, id):#refactor - long subroutine. display question body, an
         data['sharing_info'] = thread.get_sharing_info()
 
     data.update(context.get_for_tag_editor())
+
+    extra_context = getattr(
+        django_settings, 'ASKBOT_QUESTION_PAGE_EXTRA_CONTEXT', None
+    )
+    if extra_context:
+        extra_context_getter = load_module(extra_context)
+        extra_data = extra_context_getter(request, data)
+        data.update(extra_data)
 
     return render(request, 'question.html', data)
 

@@ -1006,7 +1006,7 @@ var Vote = function(){
             questionId = qId;
             questionSlug = qSlug;
             questionAuthorId = questionAuthor;
-            currentUserId = userId;
+            currentUserId = '' + userId;//convert to string
             bindEvents();
         },
 
@@ -1624,9 +1624,9 @@ EditCommentForm.prototype.createDom = function(){
     this._text_counter = $('<span></span>').attr('class', 'counter');
     this._controlsBox.append(this._text_counter);
 
-    this._submit_btn = $('<button class="submit small"></button>');
+    this._submit_btn = $('<button class="submit"></button>');
     this._controlsBox.append(this._submit_btn);
-    this._cancel_btn = $('<button class="submit small"></button>');
+    this._cancel_btn = $('<button class="submit"></button>');
     this._cancel_btn.html(gettext('cancel'));
     this._controlsBox.append(this._cancel_btn);
 
@@ -2022,7 +2022,7 @@ Comment.prototype.getElement = function(){
     Comment.superClass_.getElement.call(this);
     if (this.isBlank() && this.hasContent()){
         this.setContent();
-        if (enableMathJax === true){
+        if (askbot['settings']['mathjaxEnabled'] === true){
             MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
         }
     }
@@ -2318,7 +2318,7 @@ var socialSharing = function(){
             URL = window.location.href;
             var urlBits = URL.split('/');
             URL = urlBits.slice(0, -2).join('/') + '/';
-            TEXT = escape($('h1 > a').html());
+            TEXT = encodeURIComponent($('h1 > a').html());
             var hashtag = encodeURIComponent(
                                 askbot['settings']['sharingSuffixText']
                             );

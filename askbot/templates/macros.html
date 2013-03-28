@@ -258,7 +258,7 @@ poor design of the data or methods on data objects #}
 -%}
     {% if acceptance_level in ('open', 'moderated') %}
         <button 
-            class="group-join-btn follow-toggle {% if membership_level != 'none' %}on on-state{% endif %}"
+            class="group-join-btn button follow-toggle {% if membership_level != 'none' %}on on-state{% endif %}"
             data-group-id="{{group_id}}"
             {% if acceptance_level == 'open' %}
                 data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
@@ -564,7 +564,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
-        class="follow-toggle follow-user-toggle" 
+        class="button follow-toggle follow-user-toggle" 
         id="follow-{{ name|escape }}-{{ id }}"
     >
         {% if follow %}

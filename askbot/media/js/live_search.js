@@ -291,10 +291,13 @@ InputToolTip.prototype.setClickHandler = function(handler) {
 InputToolTip.prototype.createDom = function() {
     var element = this.makeElement('div');
     this._element = element;
-
-    element.html(gettext('search or ask your question'));
     element.addClass('input-tool-tip');
+    element.html(gettext('search or ask your question'));
+    this.decorate(element);
+};
 
+InputToolTip.prototype.decorate = function(element) {
+    this._element = element;
     var handler = this._clickHandler;
     var me = this;
     element.click(function() { 
@@ -581,7 +584,7 @@ FullTextSearch.prototype.reset = function() {
 FullTextSearch.prototype.refreshXButton = function() {
     if(this.getSearchQuery().length > 0){
         if (this._query.hasClass('searchInput')){
-            $('#searchBar').attr('class', 'cancelable');
+            $('#searchBar').addClass('cancelable');
             this._xButton.show();
         }
     } else {
@@ -815,7 +818,9 @@ FullTextSearch.prototype.decorate = function(element) {
     toolTip.setClickHandler(function() {
         element.focus();
     });
-    this._element.after(toolTip.getElement());
+
+    element.after(toolTip.getElement());
+
     //below is called after getElement, b/c element must be defined
     if (this._prevText !== '') {
         toolTip.hide();//hide if search query is not empty

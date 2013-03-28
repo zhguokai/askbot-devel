@@ -1,4 +1,3 @@
-//var $, scriptUrl, askbotSkin
 /**
  * attention - this function needs to be retired
  * as it cannot accurately give url to the media file
@@ -70,6 +69,18 @@ var joinAsPhrase = function(values) {
         var prev = values.pop();
         return values.join(', ') + prev + gettext('and') + last;
     }
+};
+
+/**
+ * @return {boolean}
+ */
+var inArray = function(item, itemsList) {
+    for (var i = 0; i < itemsList.length; i++) {
+        if (item === itemsList[i]) {
+            return true;
+        }
+    }
+    return false;
 };
 
 var showMessage = function(element, msg, where) {

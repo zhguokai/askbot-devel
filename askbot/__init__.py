@@ -14,6 +14,7 @@ VERSION = (0, 7, 48)
 REQUIREMENTS = {
     'akismet': 'akismet',
     'django': 'django>=1.3.1,<1.5',
+    'compressor': 'django-compressor==1.2',
     'jinja2': 'Jinja2',
     'coffin': 'Coffin>=0.3',
     'south': 'South>=0.7.1',
@@ -40,7 +41,7 @@ REQUIREMENTS = {
 
 if platform.system() != 'Windows':
     REQUIREMENTS['lamson'] = 'Lamson'
-    
+
 #necessary for interoperability of django and coffin
 try:
     from askbot import patches
