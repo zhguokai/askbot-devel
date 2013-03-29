@@ -1447,6 +1447,9 @@ EditCommentForm.prototype.startEditor = function() {
         content_css: mediaUrl('media/style/tinymce/comments-content.css'),
         elements: editorId,
         plugins: 'autoresize',
+        theme: 'advanced',
+        theme_advanced_toolbar_location: 'top',
+        theme_advanced_toolbar_align: 'left',
         theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',
         theme_advanced_buttons2: '',
         theme_advanced_path: false,
@@ -1495,11 +1498,15 @@ EditCommentForm.prototype.attachTo = function(comment, mode){
     //fix up the comment submit button, depending on the mode
     if (this._type == 'add'){
         this._submit_btn.html(gettext('add comment'));
-        this._minorEditBox.hide();
+        if (this._minorEditBox) {
+            this._minorEditBox.hide();
+        }
     }
     else {
         this._submit_btn.html(gettext('save comment'));
-        this._minorEditBox.show();
+        if (this._minorEditBox) {
+            this._minorEditBox.show();
+        }
     }
     //enable the editor
     this.getElement().show();
@@ -1576,9 +1583,10 @@ EditCommentForm.prototype.canCancel = function(){
 
 EditCommentForm.prototype.getCancelHandler = function(){
     var form = this;
-    return function(){
+    return function(evt){
         if (form.canCancel()){
             form.detach();
+            evt.preventDefault();
         }
         return false;
     };
@@ -2535,7 +2543,7 @@ TinyMCE.prototype.setHighlight = function() {};
 TinyMCE.prototype.putCursorAtEnd = function() {};
 
 TinyMCE.prototype.focus = function() {
-    tinymce.execCommand('mceFocus', false, this._id);
+    //tinymce.execCommand('mceFocus', false, this._id);
 
     //@todo: make this general to all editors
     var winH = $(window).height();
