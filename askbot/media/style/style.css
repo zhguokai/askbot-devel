@@ -3079,6 +3079,14 @@ ins p,
 ins {
   background-color: #E6F0A2;
 }
+body.question-page ins,
+body.main-page ins {
+  /* a hack for google adwords
+     * todo: make rule above more specific
+     * and remove this one */
+
+  background: transparent;
+}
 /* ----- Red Popup notification ----- */
 .vote-notification {
   z-index: 1;
