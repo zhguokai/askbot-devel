@@ -658,8 +658,8 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- macro user_website_link(user, max_display_length=25) -%}
     {% if user.website and (not user.is_blocked()) %}
         <a 
-            href="{{user.website}}"
-            title="{% trans username=user.username|escape, url=user.website %}{{username}}'s website is {{url}}{% endtrans %}"
+            href="{{user.website|escape}}"
+            title="{% trans username=user.username|escape, url=user.website|escape %}{{username}}'s website is {{url}}{% endtrans %}"
             {% if user.can_have_strong_url() == False %}
             rel="nofollow"
             {% endif %}
