@@ -265,9 +265,9 @@
     </script>
 {% endblock %}
 {% block content %}
-    <div>
-        {{ settings.QUESTION_PAGE_TOP_BANNER|safe }}
-    </div>
+    {% if settings.QUESTION_PAGE_TOP_BANNER %}
+        <div class="banner">{{ settings.QUESTION_PAGE_TOP_BANNER|safe }}</div>
+    {% endif %}
     {% if is_cacheable %}
         {% cache long_time "thread-content-html" thread.id %}
             {% include "question/content.html" %}
