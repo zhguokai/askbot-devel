@@ -930,8 +930,9 @@ TagSearch.prototype.renderResult = function(html) {
 };
 
 TagSearch.prototype.runSearch = function() {
+    var query = this.getQuery();
     var data = {
-        'query': this.getQuery(),
+        'query': query,
         'sort': this.getSort(),
         'page': '1'
     };
@@ -945,6 +946,10 @@ TagSearch.prototype.runSearch = function() {
             if (data['success']) {
                 me.renderResult(data['html']);
                 me.setIsRunning(false);
+                //rerun if query changed meanwhile
+                if (query !== me.getQuery()) {
+                    me.runSearch();
+                }
             }
         },
         error: function() { me.setIsRunning(false); }
