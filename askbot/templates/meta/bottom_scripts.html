@@ -84,6 +84,9 @@
                 search.setAskButtonEnabled(false);
             }
             search.decorate(searchInput);
+        } else if (activeTab === 'tags') {
+            var search = new TagSearch();
+            search.decorate(searchInput);
         }
 
         if (askbot['data']['userIsAdminOrMod']) {

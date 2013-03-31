@@ -547,7 +547,6 @@ input[type="submit"].searchBtn {
   z-index: 10001;
 }
 .groups-page input[type="submit"].searchBtn,
-.tags-page input[type="submit"].searchBtn,
 .badges-pages input[type="submit"].searchBtn,
 .user-profile-page input[type="submit"].searchBtn,
 .meta input[type="submit"].searchBtn,

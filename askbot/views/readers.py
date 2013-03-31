@@ -245,9 +245,10 @@ def questions(request, **kwargs):
 def tags(request):#view showing a listing of available tags - plain list
 
     #1) Get parameters. This normally belongs to form cleaning.
-    sortby = request.GET.get('sort', 'used')
+    post_data = request.GET
+    sortby = post_data.get('sort', 'used')
     try:
-        page = int(request.GET.get('page', '1'))
+        page = int(post_data.get('page', '1'))
     except ValueError:
         page = 1
 
@@ -256,13 +257,13 @@ def tags(request):#view showing a listing of available tags - plain list
     else:
         order_by = '-used_count'
 
-    query = request.GET.get('query', '').strip()
+    query = post_data.get('query', '').strip()
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
 
     #2) Get query set for the tags.
     query_params = {'deleted': False}
     if query != '':
-        query_params['name__icontains': query]
+        query_params['name__icontains'] = query
 
     tags_qs = Tag.objects.filter(**query_params).exclude(used_count=0)
 
@@ -307,7 +308,14 @@ def tags(request):#view showing a listing of available tags - plain list
 
     data['tags'] = tags
 
-    return render(request, 'tags.html', data)
+    if request.is_ajax():
+        template = get_template('tags/content.html')
+        template_context = RequestContext(request, data)
+        json_data = {'success': True, 'html': template.render(template_context)}
+        json_string = simplejson.dumps(json_data)
+        return HttpResponse(json_string, mimetype='application/json')
+    else:
+        return render(request, 'tags.html', data)
 
 @csrf.csrf_protect
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
