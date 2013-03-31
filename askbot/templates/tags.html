@@ -15,10 +15,10 @@
             {% for tag in tags.object_list %}
             <li>
                 {{ macros.tag_widget(
-                            tag = tag.name,
-                            html_tag = 'div',
-                            truncate_long_tag = True,
-                            extra_content = '<span class="tag-number">&#215; ' ~
+                            tag=tag.name,
+                            html_tag='div',
+                            truncate_long_tag=True,
+                            extra_content='<span class="tag-number">&#215; ' ~
                                             tag.used_count|intcomma ~ '</span>'
                     )
                 }}
@@ -35,7 +35,7 @@
     {% if not tags %}
         <span>{% trans %}Nothing found{% endtrans %}</span>
     {% endif %}
-    {{ macros.tag_cloud(tags = tags, font_sizes = font_size, search_state = search_state) }}
+    {{ macros.tag_cloud(tags=tags, font_sizes=font_size, search_state=search_state) }}
 {% endif %}
 
 {% endblock %}
