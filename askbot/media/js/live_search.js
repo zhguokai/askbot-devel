@@ -154,6 +154,14 @@ SearchDropMenu.prototype.createDom = function() {
     this._element.addClass('search-drop-menu');
     this._element.hide();
 
+    if (askbot['data']['languageCode'] === 'ja') {
+        var warning = this.makeElement('p');
+        this._header = warning;
+        warning.addClass('header');
+        warning.html(gettext('To see search results, 2 or more characters may be required'));
+        this._element.append(warning);
+    }
+
     this._resultsList = this.makeElement('ul');
     this._element.append(this._resultsList);
     this._element.addClass('empty');
