@@ -1641,6 +1641,7 @@ EditCommentForm.prototype.createDom = function(){
     //if email alerts are enabled, add a checkbox "suppress_email"
     if (askbot['settings']['enableEmailAlerts'] === true) {
         this._minorEditBox = this.makeElement('div');
+        this._minorEditBox.addClass('checkbox');
         this._controlsBox.append(this._minorEditBox);
         var checkBox = this.makeElement('input');
         checkBox.attr('type', 'checkbox');
