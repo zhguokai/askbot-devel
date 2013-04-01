@@ -40,7 +40,6 @@ from askbot import const
 from askbot.utils import functions
 from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
-from askbot.utils.loading import load_module
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.templatetags import extra_tags
 from askbot.conf import settings as askbot_settings
@@ -307,6 +306,7 @@ def tags(request):#view showing a listing of available tags - plain list
         data['font_size'] = font_size
 
     data['tags'] = tags
+    data.update(context.get_extra('ASKBOT_TAGS_PAGE_EXTRA_CONTEXT', request, data))
 
     if request.is_ajax():
         template = get_template('tags/content.html')
@@ -601,13 +601,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     data.update(context.get_for_tag_editor())
 
-    extra_context = getattr(
-        django_settings, 'ASKBOT_QUESTION_PAGE_EXTRA_CONTEXT', None
-    )
-    if extra_context:
-        extra_context_getter = load_module(extra_context)
-        extra_data = extra_context_getter(request, data)
-        data.update(extra_data)
+    extra = context.get_extra('ASKBOT_QUESTION_PAGE_EXTRA_CONTEXT', request, data)
+    data.update(extra)
 
     return render(request, 'question.html', data)
 
