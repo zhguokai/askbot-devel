@@ -60,7 +60,9 @@ def application_settings(request):
 
     #for some languages we will start searching for shorter words
     if current_language == 'ja':
-        min_search_word_length = 2
+        #we need to open the search box and show info message about
+        #the japanese lang search
+        min_search_word_length = 1
     else:   
         min_search_word_length = my_settings['MIN_SEARCH_WORD_LENGTH']
 
