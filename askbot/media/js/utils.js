@@ -2454,6 +2454,9 @@ AutoCompleter.prototype.activate = function() {
 
 AutoCompleter.prototype.activateNow = function() {
     var value = this.getValue();
+    if (value.length === 0) {
+        this.finish();
+    }
     if (value !== this.lastProcessedValue_ && value !== this.lastSelectedValue_) {
         if (value.length >= this.options.minChars) {
             this.active_ = true;
@@ -2803,7 +2806,7 @@ AutoCompleter.prototype.selectItem = function($li) {
  * @param {string} symbol - a single char string
  */
 AutoCompleter.prototype.isContentChar = function(symbol){
-    if (symbol.match(this.options['stopCharRegex'])){
+    if (this.options['stopCharRegex'] && symbol.match(this.options['stopCharRegex'])){
         return false;
     } else if (symbol === this.options['multipleSeparator']){
         return false;
