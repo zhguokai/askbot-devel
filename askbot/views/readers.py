@@ -238,6 +238,13 @@ def questions(request, **kwargs):
             'feed_url': context_feed_url,
         }
 
+        extra_context = context.get_extra(
+                                    'ASKBOT_QUESTIONS_PAGE_EXTRA_CONTEXT',
+                                    request,
+                                    template_data
+                                )
+        template_data.update(extra_context)
+
         return render(request, 'main_page.html', template_data)
 
 
