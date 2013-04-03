@@ -2472,21 +2472,15 @@ Attacklab.wmd_env = {};
 Attacklab.account_options = {};
 Attacklab.wmd_defaults = {version:1, output:"Markdown", lineLength:40, delayLoad:false};
 
-if(!Attacklab.wmd)
-{
-	Attacklab.wmd = function()
-	{
-		Attacklab.loadEnv = function()
-		{
-			var mergeEnv = function(env)
-			{
-				if(!env)
-				{
+if (askbot['settings']['editorType'] == 'markdown' && !Attacklab.wmd) {
+	Attacklab.wmd = function() {
+		Attacklab.loadEnv = function() {
+			var mergeEnv = function(env) {
+				if(!env) {
 					return;
 				}
 			
-				for(var key in env)
-				{
+				for(var key in env) {
 					Attacklab.wmd_env[key] = env[key];
 				}
 			};
@@ -2507,4 +2501,3 @@ if(!Attacklab.wmd)
 	Attacklab.wmdBase();
 	Attacklab.Util.startEditor();
 };
-
