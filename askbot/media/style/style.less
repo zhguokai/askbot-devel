@@ -491,6 +491,19 @@ body.user-messages {
     z-index: 10000;
     position: relative;
 
+    /* the guts are absolute-positioned */
+    input.searchInput,
+    div.input-tool-tip,
+    input[type="submit"].searchBtn,
+    input[type="button"].cancelSearchBtn {
+        position: absolute;
+        z-index: 100;
+    }
+
+    input.searchInput {
+        z-index: 99;/* just below the buttons and the hint */
+    }
+
     input.searchInput {
         font-size: 22px;
         height: 26px;
@@ -502,18 +515,36 @@ body.user-messages {
         font-family:@body-font;
         width: 100%;
         margin: 8px 0 6px 0;
-        padding: 0;
+        padding: 0 80px 0 8px;
+        top: 0;
+        left: 0;
         .box-shadow(0, 0, 0);
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
     }
 
     div.input-tool-tip {
-        margin-top: -40px;
-        padding-top: 10px;
-        height: 30px;
-        line-height: 20px;
+        padding: 0 0 0 10px;
+        height: 41px;
+        line-height: 41px;
         font-size: 20px;
         font-style: italic;
-        position: absolute;
+        bottom: 0;
+        left: 0;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        width: 100%a
+    }
+
+    input[type="submit"].searchBtn {
+        right: 0;
+        top: 0;
+    }
+    input[type="button"].cancelSearchBtn {
+        right: 48px;
+        top: 0;
     }
 }
 
@@ -524,7 +555,6 @@ body.user-messages {
     border-top: none;
     margin: 0;
     position: relative;
-    top: 0;
     z-index: 10000;
 
     ul {
@@ -581,14 +611,12 @@ input[type="submit"].searchBtn {
     border:#FFF 1px solid;
     line-height: 22px;
     text-align: center;
-    float:right;
-    margin: 1px -48px 0 0;
+    margin: 1px 0 0 0;
     width: 48px;
     .sprites(-98px,-37px);
     .rounded-corners(0);
     .box-shadow(0, 0, 0);
     cursor:pointer;
-    position: relative;
     z-index: 10001;
 }
 
@@ -643,9 +671,6 @@ input[type="button"].cancelSearchBtn {
     text-align: center;
     width: 35px !important;
     cursor:pointer;
-    float: right;
-    margin: -40px 0 0 0;
-    position: relative;
     z-index: 10001;
 }
 
