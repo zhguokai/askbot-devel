@@ -903,6 +903,7 @@ var ModalDialog = function() {
     var me = this;
     this._reject_handler = function() { me.hide(); };
     this._content_element = undefined;
+    this._headerEnabled = true;
 };
 inherits(ModalDialog, WrappedElement);
 
@@ -965,19 +966,21 @@ ModalDialog.prototype.createDom = function() {
     element.addClass('modal');
 
     //1) create header
-    var header = this.makeElement('div')
-    header.addClass('modal-header');
-    element.append(header);
+    if (this._headerEnabled) {
+        var header = this.makeElement('div')
+        header.addClass('modal-header');
+        element.append(header);
+        var close_link = this.makeElement('div');
+        close_link.addClass('close');
+        close_link.attr('data-dismiss', 'modal');
+        close_link.html('x');
+        header.append(close_link);
+        var title = this.makeElement('h3');
+        title.html(this._heading_text);
+        header.append(title);
+    }
 
-    var close_link = this.makeElement('div');
-    close_link.addClass('close');
-    close_link.attr('data-dismiss', 'modal');
-    close_link.html('x');
-    header.append(close_link);
 
-    var title = this.makeElement('h3');
-    title.html(this._heading_text);
-    header.append(title);
 
     //2) create content
     var body = this.makeElement('div')
@@ -994,13 +997,13 @@ ModalDialog.prototype.createDom = function() {
     element.append(footer);
 
     var accept_btn = this.makeElement('button');
-    accept_btn.addClass('btn btn-primary');
+    accept_btn.addClass('submit');
     accept_btn.html(this._accept_button_text);
     footer.append(accept_btn);
 
     if (this._reject_button_text) {
         var reject_btn = this.makeElement('button');
-        reject_btn.addClass('btn cancel');
+        reject_btn.addClass('submit cancel');
         reject_btn.html(this._reject_button_text);
         footer.append(reject_btn);
     }
@@ -1010,7 +1013,9 @@ ModalDialog.prototype.createDom = function() {
     if (this._reject_button_text) {
         setupButtonEventHandlers(reject_btn, this._reject_handler);
     }
-    setupButtonEventHandlers(close_link, this._reject_handler);
+    if (this._headerEnabled) {
+        setupButtonEventHandlers(close_link, this._reject_handler);
+    }
 
     this.hide();
 };
@@ -1020,9 +1025,26 @@ ModalDialog.prototype.createDom = function() {
  */
 var FileUploadDialog = function() {
     ModalDialog.call(this);
-    self._post_upload_handler = undefined;
+    this._post_upload_handler = undefined;
+    this._fileType = 'image';
+    this._headerEnabled = false;
 };
 inherits(FileUploadDialog, ModalDialog);
+
+/**
+ * allowed values: 'image', 'attachment'
+ */
+FileUploadDialog.prototype.setFileType = function(fileType) {
+    this._fileType = fileType;
+};
+
+FileUploadDialog.prototype.getFileType = function() {
+    return this._fileType;
+};
+
+FileUploadDialog.prototype.setButtonText = function(text) {
+    this._fakeInput.val(text);
+};
 
 FileUploadDialog.prototype.setPostUploadHandler = function(handler) {
     this._post_upload_handler = handler;
@@ -1038,6 +1060,10 @@ FileUploadDialog.prototype.setInputId = function(id) {
 
 FileUploadDialog.prototype.getInputId = function() {
     return this._input_id;
+};
+
+FileUploadDialog.prototype.setLabelText= function(text) {
+    this._label.html(text);
 };
 
 FileUploadDialog.prototype.setUrlInputTooltip = function(text) {
@@ -1063,30 +1089,112 @@ FileUploadDialog.prototype.resetInputs = function() {
     this._upload_input.val('');
 };
 
+FileUploadDialog.prototype.getInputElement = function() {
+    return $('#' + this.getInputId());
+};
+
+FileUploadDialog.prototype.installFileUploadHandler = function(handler) {
+    var upload_input = this.getInputElement();
+    upload_input.unbind('change');
+    //todo: fix this - make event handler reinstall work
+    upload_input.change(handler);
+};
+
 FileUploadDialog.prototype.show = function() {
     //hack around the ajaxFileUpload plugin
     FileUploadDialog.superClass_.show.call(this);
-    var upload_input = this._upload_input;
-    upload_input.unbind('change');
-    //todo: fix this - make event handler reinstall work
-    upload_input.change(this.getStartUploadHandler());
+    var handler = this.getStartUploadHandler();
+    this.installFileUploadHandler(handler);
+};
+
+FileUploadDialog.prototype.getUrlInputElement = function() {
+    return this._url_input.getElement();
+};
+
+/*
+ * argument startUploadHandler is very special it must
+ * be a function calling this one!!! Todo: see if there
+ * is a more civilized way to do this.
+ */
+FileUploadDialog.prototype.startFileUpload = function(startUploadHandler) {
+
+    var spinner = this._spinner;
+    var label = this._label;
+
+    spinner.ajaxStart(function(){ 
+        spinner.show();
+        label.hide();
+    });
+    spinner.ajaxComplete(function(){
+        spinner.hide();
+        label.show();
+    });
+
+    /* important!!! upload input must be loaded by id
+     * because ajaxFileUpload monkey-patches the upload form */
+    var uploadInput = this.getInputElement();
+    uploadInput.ajaxStart(function(){ uploadInput.hide(); });
+    uploadInput.ajaxComplete(function(){ uploadInput.show(); });
+
+    //var localFilePath = upload_input.val();
+
+    var me = this;
+
+    $.ajaxFileUpload({
+        url: askbot['urls']['upload'],
+        secureuri: false,//todo: check on https
+        fileElementId: this.getInputId(),
+        dataType: 'xml',
+        success: function (data, status) {
+
+            var fileURL = $(data).find('file_url').text();
+            var origFileName = $(data).find('orig_file_name').text();
+            var newStatus = interpolate(
+                                gettext('Uploaded file: %s'),
+                                [origFileName]
+                            );
+            /*
+            * hopefully a fix for the "fakepath" issue
+            * https://www.mediawiki.org/wiki/Special:Code/MediaWiki/83225
+            */
+            fileURL = fileURL.replace(/\w:.*\\(.*)$/,'$1');
+            var error = $(data).find('error').text();
+            if (error != ''){
+                alert(error);
+            } else {
+                me.getUrlInputElement().attr('value', fileURL);
+                me.setLabelText(newStatus);
+                if (me.getFileType() === 'image') {
+                    var buttonText = gettext('Choose a different image');
+                } else {
+                    var buttonText = gettext('Choose a different file');
+                }
+                me.setButtonText(buttonText);
+            }
+
+            /* re-install this as the upload extension
+             * will remove the handler to prevent double uploading
+             * this hack is a manipulation around the 
+             * ajaxFileUpload jQuery plugin. */
+            me.installFileUploadHandler(startUploadHandler);
+        },
+        error: function (data, status, e) {
+            /* re-install this as the upload extension
+            * will remove the handler to prevent double uploading */
+            me.installFileUploadHandler(startUploadHandler);
+        }
+    });
+    return false;
 };
 
 FileUploadDialog.prototype.getStartUploadHandler = function(){
-    /* startUploadHandler is passed in to re-install the event handler
-     * which is removed by the ajaxFileUpload jQuery extension
-     */
-    var spinner = this._spinner;
-    var uploadInputId = this.getInputId();
-    var urlInput = this._url_input;
+    var me = this;
     var handler = function() {
-        var options = {
-            'spinner': spinner,
-            'uploadInputId': uploadInputId,
-            'urlInput': urlInput.getElement(),
-            'startUploadHandler': handler//pass in itself
-        };
-        return ajaxFileUpload(options);
+        /* the trick is that we need inside the function call
+         * to have a reference to itself
+         * in order to reinstall the handler later
+         * because ajaxFileUpload jquery extension might be destroying it */
+        return me.startFileUpload(handler);
     };
     return handler;
 };
@@ -1113,10 +1221,11 @@ FileUploadDialog.prototype.createDom = function() {
     superClass.createDom.call(this);
 
     var form = this.makeElement('form');
+    form.addClass('ajax-file-upload');
     form.css('margin-bottom', 0);
     this.prependContent(form);
 
-    // File upload button
+    // Browser native file upload field
     var upload_input = this.makeElement('input');
     upload_input.attr({
         id: this._input_id,
@@ -1126,9 +1235,32 @@ FileUploadDialog.prototype.createDom = function() {
     });
     form.append(upload_input);
     this._upload_input = upload_input;
-    form.append($('<br/>'));
 
-    // The url input text box
+    var fakeInput = this.makeElement('input');
+    fakeInput.attr('type', 'button');
+    fakeInput.addClass('submit');
+    fakeInput.addClass('fake-file-input');
+    if (this._fileType === 'image') {
+        var buttonText = gettext('Choose an image to insert');
+    } else {
+        var buttonText = gettext('Choose a file to insert');
+    }
+    fakeInput.val(buttonText);
+    this._fakeInput = fakeInput;
+    form.append(fakeInput);
+
+    setupButtonEventHandlers(fakeInput, function() { upload_input.click() });
+
+    // Label which will also serve as status display
+    var label = this.makeElement('label');
+    label.attr('for', this._input_id);
+    var types = askbot['settings']['allowedUploadFileTypes'];
+    types = types.join(', ');
+    label.html(gettext('Allowed file types are:') + ' ' + types + '.');
+    form.append(label);
+    this._label = label;
+
+    // The url input text box, probably unused in fact
     var url_input = new TippedInput();
     url_input.setInstruction(this._url_input_tooltip || gettext('Or paste file url here'));
     var url_input_element = url_input.getElement();
@@ -1140,15 +1272,6 @@ FileUploadDialog.prototype.createDom = function() {
     //form.append($('<br/>'));
     this._url_input = url_input;
 
-    var label = this.makeElement('label');
-    label.attr('for', this._input_id);
-
-    var types = askbot['settings']['allowedUploadFileTypes'];
-    types = types.join(', ');
-    label.html(gettext('Allowed file types are:') + ' ' + types + '.');
-    form.append(label);
-    form.append($('<br/>'));
-
     /* //Description input box
     var descr_input = new TippedInput();
     descr_input.setInstruction(gettext('Describe the image here'));
@@ -1158,8 +1281,9 @@ FileUploadDialog.prototype.createDom = function() {
     this._description_input = descr_input;
     */
     var spinner = this.makeElement('img');
-    spinner.attr('src', mediaUrl('media/images/indicator.gif'));
+    spinner.attr('src', mediaUrl('media/images/ajax-loader.gif'));
     spinner.css('display', 'none');
+    spinner.addClass('spinner');
     form.append(spinner);
     this._spinner = spinner;
 

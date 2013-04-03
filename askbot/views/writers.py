@@ -62,6 +62,8 @@ ANSWERS_PAGE_SIZE = 10
 def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
+    import pdb
+    pdb.set_trace()
 
     # check upload permission
     result = ''
@@ -81,10 +83,11 @@ def upload(request):#ajax upload file to a question or answer
             raise exceptions.PermissionDenied('invalid upload file name prefix')
 
         #todo: check file type
-        f = request.FILES['file-upload']#take first file
+        uploaded_file = request.FILES['file-upload']#take first file
+        orig_file_name = uploaded_file.name
         #todo: extension checking should be replaced with mimetype checking
         #and this must be part of the form validation
-        file_extension = os.path.splitext(f.name)[1].lower()
+        file_extension = os.path.splitext(orig_file_name)[1].lower()
         if not file_extension in settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES:
             file_types = "', '".join(settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES)
             msg = _("allowed file types are '%(file_types)s'") % \
@@ -93,7 +96,7 @@ def upload(request):#ajax upload file to a question or answer
 
         # generate new file name and storage object
         file_storage, new_file_name, file_url = store_file(
-                                            f, file_name_prefix
+                                            uploaded_file, file_name_prefix
                                         )
         # check file size
         # byte
@@ -122,8 +125,8 @@ def upload(request):#ajax upload file to a question or answer
     #    'file_url': file_url
     #})
     #return HttpResponse(data, mimetype = 'application/json')
-    xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url></result>"
-    xml = xml_template % (result, error, file_url)
+    xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url><orig_file_name><![CDATA[%s]]></orig_file_name></result>"
+    xml = xml_template % (result, error, file_url, orig_file_name)
 
     return HttpResponse(xml, mimetype="application/xml")
 
