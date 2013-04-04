@@ -303,3 +303,5 @@ if 'ASKBOT_CSS_DEVEL' in locals() and ASKBOT_CSS_DEVEL == True:
     COMPRESS_PRECOMPILERS = (
         ('text/less', 'lessc {infile} {outfile}'),
     )
+
+COMPRESS_JS_FILTERS = []
