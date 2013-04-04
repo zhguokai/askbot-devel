@@ -2455,6 +2455,9 @@ AutoCompleter.prototype.activate = function() {
 };
 
 AutoCompleter.prototype.activateNow = function() {
+    if (this._isRunning) {
+        return;
+    }
     var value = this.getValue();
     if (value.length === 0) {
         this.finish();
@@ -2474,11 +2477,9 @@ AutoCompleter.prototype.setIsRunning = function(isRunning) {
 
 AutoCompleter.prototype.fetchData = function(value) {
     var self = this;
-    if (this._isRunning === false) {
-        this.fetchRemoteData(value, function(remoteData) {
-            self.filterAndShowResults(remoteData, value);
-        });
-    }
+    this.fetchRemoteData(value, function(remoteData) {
+        self.filterAndShowResults(remoteData, value);
+    });
 };
 
 AutoCompleter.prototype.fetchRemoteData = function(filter, callback) {
