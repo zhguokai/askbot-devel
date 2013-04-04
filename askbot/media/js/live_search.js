@@ -420,7 +420,6 @@ FullTextSearch.prototype.activateTagSearchInput = function() {
     var me = this;
     var ac = new AutoCompleter({
         url: askbot['urls']['get_tag_list'],
-        preloadData: true,
         minChars: 1,
         useCache: true,
         matchInside: true,

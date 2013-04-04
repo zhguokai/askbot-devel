@@ -2843,6 +2843,9 @@ AutoCompleter.prototype.isContentChar = function(symbol){
  * autocompletable word
  */
 AutoCompleter.prototype.getValue = function(){
+    if (this._element === undefined) {
+        return '';
+    }
     var sel = this._element.getSelection();
     var text = this._element.val();
     var pos = sel.start;//estimated start

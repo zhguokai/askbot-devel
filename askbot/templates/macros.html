@@ -539,7 +539,6 @@ for the purposes of the AJAX comment editor #}
 {%- macro tag_autocomplete_js(id = '#id_tags') -%}
     var tagAc = new AutoCompleter({
             url: '{% url "get_tag_list" %}',
-            preloadData: true,
             minChars: 1,
             useCache: true,
             matchInside: true,
