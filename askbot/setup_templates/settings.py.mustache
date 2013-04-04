@@ -167,6 +167,7 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     #Optional, to enable haystack search
     #'haystack',
+    'compressor',
     'askbot',
     'askbot.deps.django_authopenid',
     #'askbot.importers.stackexchange', #se loader
@@ -288,3 +289,8 @@ GROUP_MESSAGING = {
 }
 
 ASKBOT_MULTILINGUAL = False
+
+if ASKBOT_CSS_DEVEL == True:
+    COMPRESS_PRECOMPILERS = (
+        ('text/less', 'lessc {infile} {outfile}'),
+    )
