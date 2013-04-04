@@ -2225,6 +2225,8 @@ var AutoCompleter = function(options) {
      */
     this.finishOnBlur_ = true;
 
+    this._isRunning = false;
+
     this.options.minChars = parseInt(this.options.minChars, 10);
     if (isNaN(this.options.minChars) || this.options.minChars < 1) {
         this.options.minChars = 2;
@@ -2466,11 +2468,17 @@ AutoCompleter.prototype.activateNow = function() {
     }
 };
 
+AutoCompleter.prototype.setIsRunning = function(isRunning) {
+    this._isRunning = isRunning;
+};
+
 AutoCompleter.prototype.fetchData = function(value) {
     var self = this;
-    this.fetchRemoteData(value, function(remoteData) {
-        self.filterAndShowResults(remoteData, value);
-    });
+    if (this._isRunning === false) {
+        this.fetchRemoteData(value, function(remoteData) {
+            self.filterAndShowResults(remoteData, value);
+        });
+    }
 };
 
 AutoCompleter.prototype.fetchRemoteData = function(filter, callback) {
@@ -2496,11 +2504,21 @@ AutoCompleter.prototype.fetchRemoteData = function(filter, callback) {
         };
         $.ajax({
             url: this.makeUrl(filter),
-            success: ajaxCallback,
+            success: function(data) {
+                ajaxCallback(data);
+                self.setIsRunning(false);
+                //if query changed - rerun the search immediately
+                var newQuery = self.getValue();
+                if (newQuery && newQuery !== filter) {
+                    self.activateNow();
+                }
+            },
             error: function() {
                 ajaxCallback(false);
+                self.setIsRunning(false);
             }
         });
+        self.setIsRunning(true);
     }
 };
 
