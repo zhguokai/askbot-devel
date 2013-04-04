@@ -284,6 +284,10 @@ InputToolTip.prototype.dim = function() {
     this._element.addClass('dimmed');
 };
 
+InputToolTip.prototype.setPromptText = function(text) {
+    this._promptText = text;
+};
+
 InputToolTip.prototype.setClickHandler = function(handler) {
     this._clickHandler = handler;
 };
@@ -291,10 +295,13 @@ InputToolTip.prototype.setClickHandler = function(handler) {
 InputToolTip.prototype.createDom = function() {
     var element = this.makeElement('div');
     this._element = element;
-
-    element.html(gettext('поиск по вопросам'));
     element.addClass('input-tool-tip');
+    element.html(this._promptText);
+    this.decorate(element);
+};
 
+InputToolTip.prototype.decorate = function(element) {
+    this._element = element;
     var handler = this._clickHandler;
     var me = this;
     element.click(function() { 

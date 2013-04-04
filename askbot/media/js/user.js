@@ -950,7 +950,6 @@ GroupAdderWidget.prototype.decorate = function(element){
 
     var groupsAc = new AutoCompleter({
         url: askbot['urls']['getGroupsList'],
-        preloadData: true,
         minChars: 1,
         useCache: false,
         matchInside: false,

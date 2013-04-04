@@ -67,6 +67,7 @@
             <input type="hidden" name="answer_id" id="id_answer_id" value="{{answer.id}}"/>
             <input 
                 type="submit"
+                class="link"
                 value="{% trans %}repost as a question comment{% endtrans %}"
             />
         </form>
@@ -80,6 +81,7 @@
             <input type="hidden" name="answer_id" value="{{ answer.id }}"/>
             <input 
                 type="submit"
+                class="link"
                 value="{% trans %}repost as a comment under the older answer{% endtrans %}"
             />
         </form>

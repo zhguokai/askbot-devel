@@ -336,12 +336,24 @@ class ThreadManager(BaseQuerySetManager):
             else:
                 raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
 
-        elif search_state.scope == 'favorite':
-            favorite_filter = models.Q(favorited_by=request_user)
+        elif search_state.scope == 'followed':
+            followed_filter = models.Q(favorited_by=request_user)
             if 'followit' in django_settings.INSTALLED_APPS:
                 followed_users = request_user.get_followed_users()
-                favorite_filter |= models.Q(posts__post_type__in=('question', 'answer'), posts__author__in=followed_users)
-            qs = qs.filter(favorite_filter)
+                followed_filter |= models.Q(posts__post_type__in=('question', 'answer'), posts__author__in=followed_users)
+
+            #a special case: "personalized" main page only ==
+            #if followed is the only available scope
+            #if total number (regardless of users selections) 
+            #followed questions is < than a pagefull - we should mix in a list of
+            #random questions
+            if askbot_settings.ALL_SCOPE_ENABLED == askbot_settings.UNANSWERED_SCOPE_ENABLED == False:
+                followed_question_count = qs.filter(followed_filter).distinct().count()
+                if followed_question_count < 30:
+                    #here we mix in anything
+                    followed_filter |= models.Q(deleted=False)
+
+            qs = qs.filter(followed_filter)
 
         #user contributed questions & answers
         if search_state.author:
@@ -1398,6 +1410,8 @@ class Thread(models.Model):
             'search_state': DummySearchState(),
             'visitor': visitor
         }
+        from askbot.views.context import get_extra as get_extra_context
+        context.update(get_extra_context('ASKBOT_QUESTION_SUMMARY_EXTRA_CONTEXT', None, context))
         html = get_template('widgets/question_summary.html').render(context)
         # INFO: Timeout is set to 30 days:
         # * timeout=0/None is not a reliable cross-backend way to set infinite timeout
