@@ -20,8 +20,6 @@
 
     {{ macros.paginator(paginator_context, anchor='#sort-top') }}
     <div class="clean"></div>
-{% else %}
-    {% include "question/sharing_prompt_phrase.html" %}
 {% endif %}
 
 {# buttons below cannot be cached yet #}

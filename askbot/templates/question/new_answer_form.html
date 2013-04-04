@@ -3,9 +3,6 @@
         action="{% url answer question.id %}"
         method="post"
         >{% csrf_token %}
-    {# ==== START: question/subscribe_by_email_prompt.html ==== #}
-    {% include "question/subscribe_by_email_prompt.html" %}
-    {# ==== END: question/subscribe_by_email_prompt.html ==== #}
     <div style="clear:both"></div>
     {% if request.user.is_anonymous() and settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False %}
         {% if not thread.closed %}
