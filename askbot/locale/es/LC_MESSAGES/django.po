@@ -272,7 +272,7 @@ msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr ""
-"Lo sentimos, sólo el propietario de la pregunta anónima puede revelar su "
+"Lo sentimos, solo el propietario de la pregunta anónima puede revelar su "
 "identidad, por favor desactiva el check de la casilla"
 
 #: forms.py:844
@@ -502,7 +502,7 @@ msgstr "Acceder a los ajustes"
 
 #: conf/access_control.py:17
 msgid "Allow only registered user to access the forum"
-msgstr "Permitir sólo a los usuarios registrados acceder al sitio"
+msgstr "Permitir solo a los usuarios registrados acceder al sitio"
 
 #: conf/badges.py:13
 msgid "Badge settings"
@@ -771,7 +771,7 @@ msgstr ""
 
 #: conf/email.py:237
 msgid "Allow only one account per email address"
-msgstr "Permitir sólo una cuenta por cada email"
+msgstr "Permitir solo una cuenta por cada email"
 
 #: conf/email.py:246
 msgid "Fake email for anonymous user"
@@ -874,7 +874,7 @@ msgid ""
 "a>"
 msgstr ""
 "Recaptcha te permite distinguir a gente real de los robots que envían spam. "
-"Puedes obtener una clave pública aqui: <a href=\"%(url)s\">%(url)s</a>"
+"Puedes obtener una clave pública aquí: <a href=\"%(url)s\">%(url)s</a>"
 
 #: conf/external_keys.py:84
 msgid "Facebook public API key"
@@ -1429,7 +1429,7 @@ msgid ""
 "shown above and the entry in the post #123 will produce link to the bug 123 "
 "in the redhat bug tracker."
 msgstr ""
-"Introduce aqui las direcciones URL de las plantillas para cada una de las "
+"Introduce aquí las direcciones URL de las plantillas para cada una de las "
 "cadenas que has introducido previamente, solo una entrada por cada linea de "
 "texto. <strong>Asegurate que el numero de lineas coincida con el anterior "
 "ajuste.</strong> Por ejemplo la plantilla https://bugzilla.redhat.com/"
@@ -2936,7 +2936,7 @@ msgstr "Tu login de %(provider)s funciona correctamente"
 msgid "your email needs to be validated see %(details_url)s"
 msgstr ""
 "Tu email necesita validación. Encuentra más detalles <a "
-"id='validate_email_alert' href='%(details_url)s'>aqui</a>."
+"id='validate_email_alert' href='%(details_url)s'>aquí</a>."
 
 #: deps/django_authopenid/views.py:1083
 #, python-format
@@ -3137,7 +3137,7 @@ msgstr ""
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
 msgstr ""
-"Lo siento, sólo podrás aceptar esta pregunta después de %(will_be_able_at)s"
+"Lo siento, solo podrás aceptar esta pregunta después de %(will_be_able_at)s"
 
 #: models/__init__.py:367
 #, python-format
@@ -3145,7 +3145,7 @@ msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
 "can accept or unaccept the best answer"
 msgstr ""
-"Lo siento, sólo los moderadores o el autor de la pregunta %(username)s "
+"Lo siento, solo los moderadores o el autor de la pregunta %(username)s "
 "pueden aceptar o cancelar la mejor respuesta"
 
 #: models/__init__.py:390
@@ -3192,16 +3192,16 @@ msgid_plural ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
 "minutes from posting"
 msgstr[0] ""
-"Lo sentimos, los comentarios (a excepción del último) sólo se pueden editar "
+"Lo sentimos, los comentarios (a excepción del último) solo se pueden editar "
 "al %(minutes)s minuto de enviar"
 msgstr[1] ""
-"Lo sentimos, los comentarios (a excepción del último) sólo se pueden editar "
+"Lo sentimos, los comentarios (a excepción del último) solo se pueden editar "
 "a los %(minutes)s minutos de enviar"
 
 #: models/__init__.py:494
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
-"Lo sentimos, pero sólo los dueños de los posts o los moderadores pueden "
+"Lo sentimos, pero solo los dueños de los posts o los moderadores pueden "
 "editar comentarios"
 
 #: models/__init__.py:519
@@ -3226,7 +3226,7 @@ msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr ""
-"Este post ha sido eliminado y puede ser visto sólo por los dueños de los "
+"Este post ha sido eliminado y puede ser visto solo por los dueños de los "
 "posts, el administrador del sitio y los moderadores."
 
 #: models/__init__.py:570
@@ -3234,7 +3234,7 @@ msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted "
 "posts"
 msgstr ""
-"Lo sentimos, sólo los moderadores, los administradores del sitio y los "
+"Lo sentimos, solo los moderadores, los administradores del sitio y los "
 "dueños de los comentarios pueden editar posts eliminados."
 
 #: models/__init__.py:585
@@ -3246,7 +3246,7 @@ msgstr ""
 #: models/__init__.py:589
 msgid "Sorry, since your account is suspended you can edit only your own posts"
 msgstr ""
-"Lo sentimos, debido a que tu cuenta está suspendida sólo puedes editar tus "
+"Lo sentimos, debido a que tu cuenta está suspendida solo puedes editar tus "
 "propios posts"
 
 #: models/__init__.py:594
@@ -3289,7 +3289,7 @@ msgstr ""
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr ""
-"Lo sentimos, debido a que tu cuenta está suspendida sólo puedes eliminar tus "
+"Lo sentimos, debido a que tu cuenta está suspendida solo puedes eliminar tus "
 "propios posts"
 
 #: models/__init__.py:687
@@ -3336,7 +3336,7 @@ msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > "
 "%(min_rep)s can reopen questions."
 msgstr ""
-"Lo sentimos, sólo los administradores, moderadores y los dueños de los posts "
+"Lo sentimos, solo los administradores, moderadores y los dueños de los posts "
 "con reputación mayor de %(min_rep)s pueden reabrir las preguntas"
 
 #: models/__init__.py:754
@@ -3416,7 +3416,7 @@ msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
 msgstr ""
-"Lo sentimos, sólo los dueños de las preguntas, los administradores del sitio "
+"Lo sentimos, solo los dueños de las preguntas, los administradores del sitio "
 "y los moderadores pueden re-etiquetar las preguntas eliminadas"
 
 #: models/__init__.py:894
@@ -3429,7 +3429,7 @@ msgstr ""
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr ""
-"Lo sentimos, debido a que tu cuenta está suspendida, sólo puedes re-"
+"Lo sentimos, debido a que tu cuenta está suspendida, solo puedes re-"
 "etiquetar tus propias preguntas"
 
 #: models/__init__.py:902
@@ -3450,7 +3450,7 @@ msgstr ""
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr ""
-"Lo sentimos, debido a que tu cuenta está suspendida sólo puedes borrar tus "
+"Lo sentimos, debido a que tu cuenta está suspendida solo puedes borrar tus "
 "propios comentarios"
 
 #: models/__init__.py:929
@@ -4428,7 +4428,7 @@ msgstr ""
 
 #: skins/common/templates/authopenid/signup_with_password.html:23
 msgid "or create a new user name and password here"
-msgstr "o crea un nuevo usuario y contraseña aqui"
+msgstr "o crea un nuevo usuario y contraseña aquí"
 
 #: skins/common/templates/authopenid/signup_with_password.html:25
 msgid "Create login name and password"
@@ -5834,11 +5834,11 @@ msgstr "añadir etiqueta y una palabra clave para refinar tu busqueda"
 
 #: skins/default/templates/main_page/nothing_found.html:4
 msgid "There are no unanswered questions here"
-msgstr "No hay preguntas sin responder aqui"
+msgstr "No hay preguntas sin responder aquí"
 
 #: skins/default/templates/main_page/nothing_found.html:7
 msgid "No questions here. "
-msgstr "No hay preguntas aqui"
+msgstr "No hay preguntas aquí"
 
 #: skins/default/templates/main_page/nothing_found.html:8
 msgid "Please follow some questions or follow some users."
@@ -5867,11 +5867,11 @@ msgstr "Por favor, pregunta cuando quieras!"
 
 #: skins/default/templates/main_page/questions_loop.html:11
 msgid "Did not find what you were looking for?"
-msgstr "No encontraste lo que estabas buscando?"
+msgstr "¿No encontraste lo que estabas buscando?"
 
 #: skins/default/templates/main_page/questions_loop.html:12
 msgid "Please, post your question!"
-msgstr "Por favor, envia tu pregunta"
+msgstr "Por favor, envía tu pregunta"
 
 #: skins/default/templates/main_page/tab_bar.html:10
 msgid "subscribe to the questions feed"
@@ -5889,7 +5889,7 @@ msgid ""
 "a>"
 msgstr ""
 "Nota: %(app_name)s requiere javascript para que funcione correctamente, por "
-"favor activa javascript en tu navegador, aqui puedes encontrar la <a href="
+"favor activa javascript en tu navegador, aquí puedes encontrar la <a href="
 "\"%(noscript_url)s\">ayuda</a>"
 
 #: skins/default/templates/meta/editor_data.html:7
@@ -6064,7 +6064,7 @@ msgid ""
 "<strong>Here</strong> (once you log in) you will be able to sign up for the "
 "periodic email updates about this question."
 msgstr ""
-"<strong>Aqui</strong> podras activar las actualizaciones periodicas por "
+"<strong>Aquí</strong> podras activar las actualizaciones periodicas por "
 "email (cuando hagas login)."
 
 #: skins/default/templates/question/sidebar.html:37
@@ -6118,7 +6118,7 @@ msgid ""
 "<span class='strong'>Here</span> (once you log in) you will be able to sign "
 "up for the periodic email updates about this question."
 msgstr ""
-"<strong>Aqui</strong> podras activar las actualizaciones periodicas por "
+"<strong>Aquí</strong> podras activar las actualizaciones periodicas por "
 "email (cuando hagas login)."
 
 #: skins/default/templates/user_profile/user.html:12
@@ -6743,7 +6743,7 @@ msgstr[1] "votos"
 
 #: skins/default/templates/widgets/scope_nav.html:6
 msgid "ALL"
-msgstr "TODOS"
+msgstr "TODAS"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 msgid "see unanswered questions"
@@ -6751,7 +6751,7 @@ msgstr "ver preguntas sin respuesta"
 
 #: skins/default/templates/widgets/scope_nav.html:8
 msgid "UNANSWERED"
-msgstr "NUEVOS"
+msgstr "NUEVAS"
 
 #: skins/default/templates/widgets/scope_nav.html:11
 msgid "see your followed questions"
@@ -6763,7 +6763,7 @@ msgstr "SEGUIDAS"
 
 #: skins/default/templates/widgets/scope_nav.html:14
 msgid "Please ask your question here"
-msgstr "Por favor haz tu pregunta desde aqui"
+msgstr "Por favor haz tu pregunta desde aquí"
 
 #: skins/default/templates/widgets/user_long_score_and_badge_summary.html:3
 msgid "karma:"
@@ -6839,7 +6839,7 @@ msgstr ""
 #: utils/forms.py:74
 msgid "user name can only consist of letters, empty space and underscore"
 msgstr ""
-"nombre de usuario sólo puede constar de letras, espacio vacío y subrayado"
+"nombre de usuario solo puede constar de letras, espacio vacío y subrayado"
 
 #: utils/forms.py:75
 msgid "please use at least some alphabetic characters in the user name"
@@ -7337,7 +7337,7 @@ msgstr "lo sentimos, tenemos dificultades técnicas"
 #~ "<span class='big strong'>Tu email se ha modificado a %(email)s.</span> "
 #~ "Las actualizaciones a las preguntas que más te gustan serán enviadas a "
 #~ "este email. Las notificaciones de email se envían una vez al día o con "
-#~ "menos frecuencia, sólo cuando hay actualizaciones."
+#~ "menos frecuencia, solo cuando hay actualizaciones."
 
 #~ msgid "thanks for verifying email"
 #~ msgstr ""
@@ -7534,7 +7534,7 @@ msgid "you can answer anonymously and then login"
 msgstr "tu puedes contestar anonimamente y luego ingresar"
 
 msgid "answer your own question only to give an answer"
-msgstr "responder a tu pregunta sólo para dar una respuesta"
+msgstr "responder a tu pregunta solo para dar una respuesta"
 
 msgid "please only give an answer, no discussions"
 msgstr "por favor intenta responder, no discutir"
@@ -7600,7 +7600,7 @@ msgstr "Preguntar"
 #~ msgstr ""
 #~ "<span class='strong big'>Tu email, %(email)s no ha sido validado todavia."
 #~ "</span> Para enviar mensajes debes verificar tu email, por favor lee <a "
-#~ "href='%(email_validation_faq_url)s'>mas detalles aqui</a>.<br>Puedes "
+#~ "href='%(email_validation_faq_url)s'>mas detalles aquí</a>.<br>Puedes "
 #~ "enviar una pregunta ahora y validar el email despues de enviarla. Tu "
 #~ "pregunta se guardara como pendiente mientras tanto. "
 
@@ -7640,7 +7640,7 @@ msgstr "reputación del usuario en la comunidad"
 #~ "anónima</span>. Cuando envíes la pregunta, serás redirigido a la página "
 #~ "de login o registro. Tu pregunta será guardada en la sesión actual y será "
 #~ "publicada después de que hagas login. Hacer login o registro es muy fácil "
-#~ "y sólo te tomará 30 segundos."
+#~ "y solo te tomará 30 segundos."
 
 #~ msgid ""
 #~ "As a registered user you can login with your OpenID, log out of the site "
