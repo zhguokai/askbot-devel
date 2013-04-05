@@ -475,7 +475,7 @@ msgstr "revisions/"
 
 #: urls.py:62
 msgid "questions"
-msgstr "вопросы"
+msgstr "questions"
 
 #: urls.py:127 urls.py:132 urls.py:137 urls.py:142 urls.py:147 urls.py:152
 #: urls.py:157 urls.py:162 urls.py:558
