@@ -57,7 +57,7 @@ msgstr "título"
 
 #: forms.py:105
 msgid "please enter a descriptive title for your question"
-msgstr "por favor ingrese un título descriptivo para su pregunta"
+msgstr "por favor ingresa un título descriptivo para tu pregunta"
 
 #: forms.py:113
 #, python-format
@@ -5838,11 +5838,11 @@ msgstr "No hay preguntas sin responder aquí"
 
 #: skins/default/templates/main_page/nothing_found.html:7
 msgid "No questions here. "
-msgstr "No hay preguntas aquí"
+msgstr "No hay preguntas aquí."
 
 #: skins/default/templates/main_page/nothing_found.html:8
 msgid "Please follow some questions or follow some users."
-msgstr "Por favor, sigue las preguntas o usuarios que desees"
+msgstr "Por favor, sigue las preguntas o usuarios que desees."
 
 #: skins/default/templates/main_page/nothing_found.html:13
 msgid "You can expand your search by "
@@ -5863,7 +5863,7 @@ msgstr "empezando de nuevo"
 
 #: skins/default/templates/main_page/nothing_found.html:30
 msgid "Please always feel free to ask your question!"
-msgstr "Por favor, pregunta cuando quieras!"
+msgstr "Por favor, ¡pregunta cuando quieras!"
 
 #: skins/default/templates/main_page/questions_loop.html:11
 msgid "Did not find what you were looking for?"
@@ -6580,7 +6580,7 @@ msgstr "intenta dar todos los detalles"
 #: skins/default/templates/widgets/answer_edit_tips.html:15
 #: skins/default/templates/widgets/question_edit_tips.html:11
 msgid "be clear and concise"
-msgstr "se claro y conciso"
+msgstr "sé claro y conciso"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:20
 #: skins/default/templates/widgets/question_edit_tips.html:16
