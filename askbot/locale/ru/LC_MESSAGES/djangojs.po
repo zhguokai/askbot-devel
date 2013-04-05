@@ -31,16 +31,16 @@ msgstr ""
 msgid "%s follower"
 msgid_plural "%s followers"
 msgstr[0] ""
-"%s закладка"
+"%s подписчик"
 msgstr[1] ""
-"%s закладки"
+"%s подписчика"
 msgstr[2] ""
-"%s закладок"
+"%s подписчиков"
 
 #: skins/default/media/js/post.js:546
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
 msgstr ""
-"<div>Есть закладка!</div><div class=\"unfollow\">Убрать закладку</div>"
+"<div>Есть закладка!</div><div class=\"unfollow\">✗ Отписаться</div>"
 
 #: skins/default/media/js/post.js:1684 skins/common/media/js/post.js:1874
 msgid "Please enter question title (>10 characters)"
@@ -135,7 +135,7 @@ msgstr "Создать пароль"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:343
 msgid "Create a password-protected account"
-msgstr "Создать аккаунт, защищенный паролем"
+msgstr "Создать аккаунт"
 
 #: skins/common/media/js/post.js:28
 msgid "loading..."
@@ -241,7 +241,7 @@ msgstr[2] "удалить эти сообщения?"
 
 #: skins/common/media/js/utils.js:44
 msgid "click to close"
-msgstr "нажмите чтобы закрыть"
+msgstr "нажмите, чтобы закрыть"
 
 #: skins/common/media/js/wmd/wmd.js:26
 msgid "bold"

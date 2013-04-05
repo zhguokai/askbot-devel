@@ -33,7 +33,7 @@ msgstr "-"
 
 #: feed.py:33 feed.py:107
 msgid "Individual question feed"
-msgstr "Личная лента вопросов"
+msgstr "Персональная лента"
 
 #: forms.py:138
 msgid "select country"
@@ -96,7 +96,7 @@ msgstr ""
 
 #: forms.py:305
 msgid "content"
-msgstr "основное содержание"
+msgstr "содержание"
 
 #: forms.py:366
 #, python-format
@@ -169,8 +169,7 @@ msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr ""
-"кратко опишите здесь суть вашей правки (например - исправление орфографии, "
-"грамматики, стиля, это необязательно)"
+"кратко опишите причину правки (например - граммар наци)"
 
 #: forms.py:590
 msgid "Enter number of points to add or subtract"
@@ -249,8 +248,7 @@ msgstr "Ваше имя (не обязательно):"
 #: forms.py:733
 msgid "Email:"
 msgstr ""
-"<strong>Ваш E-mail</strong> (<i>адрес должен быть правильным, никогда не "
-"показывается другим пользователям</i>)"
+"<strong>Email:</strong> (<i>мы держим вашу почту в секрете</i>)"
 
 #: forms.py:735
 msgid "Your message:"
@@ -258,12 +256,12 @@ msgstr "Ваше сообщение:"
 
 #: forms.py:740
 msgid "I don't want to give my email or receive a response:"
-msgstr "Я не хочу оставлять свой E-mail адрес или получать на него ответы:"
+msgstr "Я не хочу оставлять свой E-mail или получать на него ответы:"
 
 #: forms.py:763
 msgid "Please mark \"I dont want to give my mail\" field."
 msgstr ""
-"Пожалуйста, отметьте поле \"Я не хочу оставлять свой адрес электронной почты"
+"Пожалуйста, отметьте поле \"Я не хочу оставлять адрес электронной почты"
 "\"."
 
 #: forms.py:796
@@ -342,11 +340,11 @@ msgstr ""
 
 #: forms.py:1360
 msgid "Real name"
-msgstr "Настоящее имя"
+msgstr "Имя"
 
 #: forms.py:1367
 msgid "Website"
-msgstr "Веб-страница"
+msgstr "Мой сайт"
 
 #: forms.py:1374
 msgid "City"
@@ -354,7 +352,7 @@ msgstr "Город"
 
 #: forms.py:1383
 msgid "Show country"
-msgstr "Показать страну"
+msgstr "Показывать страну"
 
 #: forms.py:1388
 msgid "Show tag choices"
@@ -370,7 +368,7 @@ msgstr "показывается только возраст, формат ГГ�
 
 #: forms.py:1403
 msgid "Profile"
-msgstr "Профиль"
+msgstr "О себе"
 
 #: forms.py:1412
 msgid "Screen name"
@@ -406,7 +404,7 @@ msgstr "Сообщения в которых упоминается моё им�
 
 #: forms.py:1607
 msgid "please choose one of the options above"
-msgstr "пожалуйста сделайте Ваш выбор (см. выше)"
+msgstr "пожалуйста, сделайте выбор (см. выше)"
 
 #: forms.py:1610
 msgid "okay, let's try!"
@@ -449,7 +447,7 @@ msgstr ""
 
 #: urls.py:42
 msgid "about/"
-msgstr "o-nas/"
+msgstr "about/"
 
 #: urls.py:43
 msgid "faq/"
@@ -457,7 +455,7 @@ msgstr "faq/"
 
 #: urls.py:44
 msgid "privacy/"
-msgstr "politika-informacii/"
+msgstr "privacy/"
 
 #: urls.py:45
 msgid "help/"
@@ -465,15 +463,15 @@ msgstr "help/"
 
 #: urls.py:47 urls.py:52
 msgid "answers/"
-msgstr "otvety/"
+msgstr "answers/"
 
 #: urls.py:47 urls.py:132 urls.py:383 urls.py:498
 msgid "edit/"
-msgstr "redaktirovat/"
+msgstr "edit/"
 
 #: urls.py:52 urls.py:162
 msgid "revisions/"
-msgstr "versii/"
+msgstr "revisions/"
 
 #: urls.py:62
 msgid "questions"
@@ -482,100 +480,100 @@ msgstr "вопросы"
 #: urls.py:127 urls.py:132 urls.py:137 urls.py:142 urls.py:147 urls.py:152
 #: urls.py:157 urls.py:162 urls.py:558
 msgid "questions/"
-msgstr "voprosy/"
+msgstr "questions/"
 
 #: urls.py:127 urls.py:472 urls.py:477 urls.py:482 urls.py:488
 msgid "ask/"
-msgstr "sprosit/"
+msgstr "ask/"
 
 #: urls.py:137
 msgid "retag/"
-msgstr "smenit-tag/"
+msgstr "retag/"
 
 #: urls.py:142
 msgid "close/"
-msgstr "zakryt/"
+msgstr "close/"
 
 #: urls.py:147
 msgid "reopen/"
-msgstr "otkryt-snova/"
+msgstr "reopen/"
 
 #: urls.py:152
 msgid "answer/"
-msgstr "otvet/"
+msgstr "answer/"
 
 #: urls.py:157
 msgid "vote/"
-msgstr "zolosovat/"
+msgstr "vote/"
 
 #: urls.py:220
 msgid "tags/"
-msgstr "tegi/"
+msgstr "tags/"
 
 #: urls.py:225
 #, fuzzy
 msgid "tags/subscriptions/"
-msgstr "podpiski/"
+msgstr "tags/subscriptions/"
 
 #: urls.py:230
 #, fuzzy
 msgid "tags/subscriptions/delete/"
-msgstr "podpiski/"
+msgstr "tags/subscriptions/delete/"
 
 #: urls.py:235
 #, fuzzy
 msgid "tags/subscriptions/create/"
-msgstr "podpiski/"
+msgstr "tags/subscriptions/create/"
 
 #: urls.py:240
 #, fuzzy
 msgid "tags/subscriptions/edit/"
-msgstr "podpiski/"
+msgstr "tags/subscriptions/edit/"
 
 #: urls.py:246
 #, fuzzy
 msgid "suggested-tags/"
-msgstr "смотреть теги"
+msgstr "suggested-tags/"
 
 #: urls.py:366
 msgid "subscribe-for-tags/"
-msgstr "podpisatsya-na-tagi/"
+msgstr "subscribe-for-tags/"
 
 #: urls.py:371 urls.py:376 urls.py:383 urls.py:389 urls.py:398 urls.py:405
 msgid "users/"
-msgstr "polzovateli/"
+msgstr "users/"
 
 #: urls.py:376
 msgid "by-group/"
-msgstr ""
+msgstr "by-group/"
 
 #: urls.py:390
 msgid "subscriptions/"
-msgstr "podpiski/"
+msgstr "subscriptions/"
 
 #: urls.py:399
 msgid "select_languages/"
-msgstr ""
+msgstr "select_languages/"
 
 #: urls.py:410
 msgid "groups/"
-msgstr ""
+msgstr "groups/"
 
 #: urls.py:415
 msgid "users/update_has_custom_avatar/"
-msgstr "polzovateli/obnovlenie_so_svoim_avatarom/"
+msgstr "users/update_has_custom_avatar/"
 
 #: urls.py:420 urls.py:425
 msgid "badges/"
-msgstr "nagrady/"
+msgstr "badges/"
 
 #: urls.py:435
 msgid "messages/"
-msgstr "soobscheniya/"
+msgstr "messages/"
 
 #: urls.py:435
 msgid "markread/"
-msgstr "pometit-kak-prochitanoe/"
+msgstr "markread/"
 
 #: urls.py:466 urls.py:472 urls.py:477 urls.py:482 urls.py:488 urls.py:493
 #: urls.py:498 urls.py:503 urls.py:509
@@ -584,32 +582,32 @@ msgstr "widgets/"
 
 #: urls.py:488 deps/django_authopenid/urls.py:20
 msgid "complete/"
-msgstr "zavershaem/"
+msgstr "complete/"
 
 #: urls.py:493
 msgid "create/"
-msgstr ""
+msgstr "create/"
 
 #: urls.py:503
 msgid "delete/"
-msgstr "удалить/"
+msgstr "delete/"
 
 #: urls.py:519
 msgid "upload/"
-msgstr "zagruzit/"
+msgstr "upload/"
 
 #: urls.py:520
 msgid "feedback/"
-msgstr "otziv/"
+msgstr "feedback/"
 
 #: urls.py:564
 msgid "question/"
-msgstr "vopros/"
+msgstr "question/"
 
 #: urls.py:571 setup_templates/settings.py:227
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
-msgstr "polzovatel/"
+msgstr "account/"
 
 #: conf/access_control.py:8
 msgid "Access control settings"
@@ -5023,7 +5021,7 @@ msgstr "показать предварительный просмотр"
 #: templates/ask.html:4 templates/widgets/ask_button.html:9
 #: templates/widgets/ask_form.html:48
 msgid "Ask Your Question"
-msgstr "Задайте Ваш вопрос"
+msgstr "Задайте вопрос"
 
 #: templates/ask.html:21
 msgid ""
@@ -5851,7 +5849,7 @@ msgstr "%(seen)s неуместных сообщений"
 
 #: templates/main_page.html:11
 msgid "Questions"
-msgstr "вопросы"
+msgstr "Вопросы о путешествиях"
 
 #: templates/question.html:204
 msgid "post a comment / <strong>some</strong> more"
@@ -5978,7 +5976,7 @@ msgstr ""
 #: templates/users.html:20
 #, fuzzy
 msgid "Select/Sort by &raquo;"
-msgstr "Сорт. по &raquo;"
+msgstr " "
 
 #: templates/users.html:25
 #, fuzzy, python-format
@@ -6215,7 +6213,7 @@ msgstr "Пароль:"
 
 #: templates/authopenid/confirm_email.txt:8
 msgid "Please sign in here:"
-msgstr "Пожалуйста, войдите здесь:"
+msgstr "Вход на сайт"
 
 #: templates/authopenid/confirm_email.txt:11
 #: templates/authopenid/email_validation.txt:13
@@ -6845,7 +6843,7 @@ msgstr ""
 #: templates/embed/ask_by_widget.html:170
 #, fuzzy
 msgid "Please enter a descriptive title for your question"
-msgstr "пожалуйста, введите заголовок, содержащий суть вашего вопроса"
+msgstr "Например: \"Какие самые вкусные рестораны в Париже?\""
 
 #: templates/embed/list_widgets.html:44
 msgid "How to use?"
@@ -7269,15 +7267,15 @@ msgid ""
 "your answers</strong> - no need to answer the same question twice. Also, "
 "please <strong>don't forget to vote</strong> - it really helps to select the "
 "best questions and answers!"
-msgstr ""
+msgstr "Постарайтесь дать развёрнутый ответ. Будет отлично, если вы сможете чем-то его подкрепить."
 
 #: templates/question/question_controls.html:5
 msgid "retag"
-msgstr "изменить тег"
+msgstr "изменить теги"
 
 #: templates/question/question_controls.html:29
 msgid "reopen"
-msgstr "переоткрыть"
+msgstr "открыть"
 
 #: templates/question/question_controls.html:31
 msgid "close"
@@ -7302,53 +7300,53 @@ msgstr "email"
 
 #: templates/question/sidebar.html:8
 msgid "Question tools"
-msgstr "Закладки и информация"
+msgstr "Настройка подписок"
 
 #: templates/question/sidebar.html:11
 msgid "click to unfollow this question"
-msgstr "нажмите чтобы прекратить следить за этим вопросом"
+msgstr "нажмите, чтобы отписаться"
 
 #: templates/question/sidebar.html:12
 msgid "Following"
-msgstr "Есть закладка!"
+msgstr " ✓ Подписаны"
 
 #: templates/question/sidebar.html:13
 msgid "Unfollow"
-msgstr "Снять закладку"
+msgstr "✗ Отписаться"
 
 #: templates/question/sidebar.html:17
 msgid "click to follow this question"
-msgstr "нажмите, чтобы добавить закладку"
+msgstr "нажмите, чтобы подписаться"
 
 #: templates/question/sidebar.html:18
 msgid "Follow"
-msgstr "Добавить закладку"
+msgstr "Подписаться"
 
 #: templates/question/sidebar.html:25
 #, python-format
 msgid "%(count)s follower"
 msgid_plural "%(count)s followers"
-msgstr[0] "%(count)s закладка"
-msgstr[1] "%(count)s закладки"
-msgstr[2] "%(count)s закладок"
+msgstr[0] "%(count)s подписчик"
+msgstr[1] "%(count)s подписчика"
+msgstr[2] "%(count)s подписчиков"
 
 #: templates/question/sidebar.html:37
 msgid "email the updates"
-msgstr "получать обновления по email"
+msgstr "обновления на почту"
 
 #: templates/question/sidebar.html:40
 msgid ""
 "<strong>Here</strong> (once you log in) you will be able to sign up for the "
 "periodic email updates about this question."
-msgstr "получать обновления по email"
+msgstr "Подписаться на обновление по почте можно только после регистрации"
 
 #: templates/question/sidebar.html:46
 msgid "subscribe to this question rss feed"
-msgstr "Подписаться на rss канал этого вопроса"
+msgstr "подписаться на обновления по rss"
 
 #: templates/question/sidebar.html:47
 msgid "subscribe to rss feed"
-msgstr "подписаться на rss ленту новостей"
+msgstr "подписаться на rss"
 
 #: templates/question/sidebar.html:57
 msgid "Invite"
@@ -7360,7 +7358,7 @@ msgstr ""
 #: templates/widgets/tag_selector.html:37
 #: templates/widgets/tag_selector.html:56
 msgid "add"
-msgstr "доб."
+msgstr " + "
 
 #: templates/question/sidebar.html:65 templates/question/sidebar.html.py:71
 #, fuzzy
@@ -8295,7 +8293,7 @@ msgstr "смотреть неотвеченные вопросы"
 
 #: templates/widgets/scope_nav.html:22
 msgid "UNANSWERED"
-msgstr "НЕОТВЕЧЕННЫЕ"
+msgstr "БЕЗ ОТВЕТА"
 
 #: templates/widgets/scope_nav.html:27
 msgid "see your followed questions"
@@ -8368,7 +8366,7 @@ msgstr "выход"
 #: templates/widgets/user_navigation.html:20
 #, fuzzy
 msgid "Hi there! Please sign in"
-msgstr "Пожалуйста, войдите здесь."
+msgstr "вход"
 
 #: templates/widgets/user_navigation.html:23
 msgid "settings"
@@ -8803,13 +8801,13 @@ msgstr ""
 #~ msgstr "заголовок должен иметь хотя бы 10 букв"
 
 #~ msgid "question content must be > 10 characters"
-#~ msgstr "содержание вопроса должно быть более 10-ти букв"
+#~ msgstr "минимум 10 букв"
 
 #~ msgid ""
 #~ "Tags are short keywords, with no spaces within. Up to five tags can be "
 #~ "used."
 #~ msgstr ""
-#~ "Теги - ключевые слова, характеризующие вопрос. Теги отделяются пробелом, "
+#~ "Теги - ключевые слова. Теги отделяются пробелом, "
 #~ "может быть использовано до 5 тегов."
 
 #~ msgid "use-these-chars-in-tags"
@@ -9892,10 +9890,10 @@ msgstr ""
 #~ msgstr "Местоположение"
 
 #~ msgid "command/"
-#~ msgstr "komanda/"
+#~ msgstr "command/"
 
 #~ msgid "search/"
-#~ msgstr "poisk/"
+#~ msgstr "search/"
 
 #~ msgid "less answers"
 #~ msgstr "меньше ответов"

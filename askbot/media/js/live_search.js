@@ -267,7 +267,7 @@ TagWarningBox.prototype.showWarning = function(){
  */
 var InputToolTip = function() {
     WrappedElement.call(this);
-    this._promptText = gettext('search or ask your question');
+    this._promptText = gettext('поиск по вопросам');
 };
 inherits(InputToolTip, WrappedElement);
 
