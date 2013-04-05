@@ -63,8 +63,8 @@ msgstr "por favor ingresa un título descriptivo para tu pregunta"
 #, python-format
 msgid "title must be > %d character"
 msgid_plural "title must be > %d characters"
-msgstr[0] "el titulo debe contener mas de %d caracter"
-msgstr[1] "el titulo debe contener mas de  %d caracteres"
+msgstr[0] "el título debe contener mas de %d caracter"
+msgstr[1] "el título debe contener mas de  %d caracteres"
 
 #: forms.py:123
 #, python-format
@@ -74,7 +74,7 @@ msgstr "El título es demasiado largo, el tamaño máximo permitido es de %d car
 #: forms.py:130
 #, python-format
 msgid "The title is too long, maximum allowed size is %d bytes"
-msgstr "El titulo es demasiado, el tamaño máximo permitido es %d bytes"
+msgstr "El título es demasiado, el tamaño máximo permitido es %d bytes"
 
 #: forms.py:149
 msgid "content"
@@ -1051,7 +1051,7 @@ msgstr "Tamaño máximo de una etiqueta (número de caracteres)"
 
 #: conf/forum_data_rules.py:96
 msgid "Minimum length of title (number of characters)"
-msgstr "Tamaño minimo del titulo (numero de caracteres)"
+msgstr "Tamaño minimo del título (numero de caracteres)"
 
 #: conf/forum_data_rules.py:106
 msgid "Minimum length of question body (number of characters)"
@@ -1726,7 +1726,7 @@ msgstr "URLs, keywords y agradecimientos"
 
 #: conf/site_settings.py:21
 msgid "Site title for the Q&A forum"
-msgstr "Titulo del sitio"
+msgstr "Título del sitio"
 
 #: conf/site_settings.py:30
 msgid "Comma separated list of Q&A site keywords"
@@ -5637,7 +5637,7 @@ msgstr "Re-abrir pregunta"
 
 #: skins/default/templates/reopen.html:6
 msgid "Title"
-msgstr "Titulo"
+msgstr "Título"
 
 #: skins/default/templates/reopen.html:11
 #, python-format
@@ -6914,7 +6914,7 @@ msgid ""
 msgstr ""
 "<p>Para preguntar por email, por favor:</p>\n"
 "<ul>\n"
-"    <li>Formatea el asunto como: [Tag1; Tag2] Titulo de la pregunta</li>\n"
+"    <li>Formatea el asunto como: [Tag1; Tag2] Título de la pregunta</li>\n"
 "    <li>Escribe los detalles de tu pregunta en el cuerpo del mensaje de "
 "email</li>\n"
 "</ul>\n"
