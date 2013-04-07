@@ -455,6 +455,20 @@ body.user-messages {
   height: 41px;
   z-index: 10000;
   position: relative;
+  /* the guts are absolute-positioned */
+
+}
+#searchBar input.searchInput,
+#searchBar div.input-tool-tip,
+#searchBar input[type="submit"].searchBtn,
+#searchBar input[type="button"].cancelSearchBtn {
+  position: absolute;
+  z-index: 100;
+}
+#searchBar input.searchInput {
+  z-index: 99;
+  /* just below the buttons and the hint */
+
 }
 #searchBar input.searchInput {
   font-size: 22px;
@@ -467,18 +481,36 @@ body.user-messages {
   font-family: Arial;
   width: 100%;
   margin: 8px 0 6px 0;
-  padding: 0;
+  padding: 0 80px 0 8px;
+  top: 0;
+  left: 0;
   -webkit-box-shadow: 0 0 0 #929292;
   -moz-box-shadow: 0 0 0 #929292;
   box-shadow: 0 0 0 #929292;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 #searchBar div.input-tool-tip {
-  margin-top: -40px;
-  padding-top: 10px;
-  height: 30px;
-  line-height: 20px;
+  padding: 0 0 0 10px;
+  height: 41px;
+  line-height: 41px;
   font-size: 20px;
   font-style: italic;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 100% a;
+}
+#searchBar input[type="submit"].searchBtn {
+  right: 0;
+  top: 0;
+}
+#searchBar input[type="button"].cancelSearchBtn {
+  right: 48px;
+  top: 0;
 }
 .search-drop-menu {
   box-sizing: border-box;
@@ -487,7 +519,6 @@ body.user-messages {
   border-top: none;
   margin: 0;
   position: relative;
-  top: 0;
   z-index: 10000;
 }
 .search-drop-menu ul {
@@ -536,8 +567,7 @@ input[type="submit"].searchBtn {
   border: #FFF 1px solid;
   line-height: 22px;
   text-align: center;
-  float: right;
-  margin: -39px -48px 0 0;
+  margin: 1px 0 0 0;
   width: 48px;
   background: -98px -37px url(../images/sprites.png) no-repeat;
   border-radius: 0;
@@ -549,11 +579,9 @@ input[type="submit"].searchBtn {
   -moz-box-shadow: 0 0 0 #929292;
   box-shadow: 0 0 0 #929292;
   cursor: pointer;
-  position: relative;
   z-index: 10001;
 }
 .groups-page input[type="submit"].searchBtn,
-.tags-page input[type="submit"].searchBtn,
 .badges-pages input[type="submit"].searchBtn,
 .user-profile-page input[type="submit"].searchBtn,
 .meta input[type="submit"].searchBtn,
@@ -603,9 +631,6 @@ input[type="button"].cancelSearchBtn {
   text-align: center;
   width: 35px !important;
   cursor: pointer;
-  float: right;
-  margin: -40px 0 0 0;
-  position: relative;
   z-index: 10001;
 }
 .cancelSearchBtn:hover {
@@ -2296,6 +2321,12 @@ ul#related-tags li {
   width: 100%;
   margin: 3px 0 20px 5px;
 }
+.question-page .comments .edit-comment-buttons {
+  margin-left: -4px;
+}
+.question-page .comments .edit-comment-buttons .checkbox {
+  margin: 3px;
+}
 .question-page .comments .controls a {
   border: none;
   color: #988e4c;
@@ -2333,15 +2364,24 @@ ul#related-tags li {
 .question-page .comments textarea {
   box-sizing: border-box;
   border: #cce6ec 3px solid;
+  color: #666;
   font-family: Arial;
   font-size: 13px;
   height: 54px;
   line-height: 1.3;
-  margin: -1px 0 7px 1px;
+  margin: -1px 0 0 1px;
   outline: none;
   overflow: auto;
-  padding: 0px 19px 2px 3px;
-  width: 100%;
+  padding: 5px 19px 2px 3px;
+  width: 99.6%;
+}
+.question-page .comments .wmd-container textarea {
+  border: none;
+}
+.question-page .comments .transient-comment {
+  margin-bottom: 3px;
+  /* match paragraph style */
+
 }
 .question-page .comments input {
   margin-left: 10px;
@@ -2380,6 +2420,9 @@ ul#related-tags li {
   font-family: Arial;
   font-size: 11px;
   min-height: 25px;
+}
+.question-page .comments .comment:last-child {
+  border-bottom: none;
 }
 .question-page .comments div.comment:hover {
   background-color: #efefef;
@@ -3135,6 +3178,14 @@ ins .post-tag,
 ins p,
 ins {
   background-color: #E6F0A2;
+}
+body.question-page ins,
+body.main-page ins {
+  /* a hack for google adwords
+     * todo: make rule above more specific
+     * and remove this one */
+
+  background: transparent;
 }
 /* ----- Red Popup notification ----- */
 .vote-notification {

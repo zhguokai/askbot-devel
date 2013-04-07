@@ -5,6 +5,7 @@ Development version
 -------------------
 * Added possibility to choose editor for comments: plain text, or same as
   editor used for the questions or answers: WMD or TinyMCE.
+* Added ajax search to the tags page
 * Added a placeholder template for the custom javascript on the question page
 * Allowed to disable the big "ask" button.
 * Some support for the media compression (Tyler Mandry)

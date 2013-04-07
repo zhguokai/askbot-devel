@@ -6,29 +6,15 @@ from askbot.conf.super_groups import DATA_AND_FORMATTING
 from askbot.deps import livesettings
 from django.utils.translation import ugettext_lazy as _
 
-MAIN_PAGES = livesettings.ConfigurationGroup(
-            'MAIN_PAGES',
-            _('Logic of the questions page'), 
+QUESTION_LISTS = livesettings.ConfigurationGroup(
+            'QUESTION_LISTS',
+            _('Listings of questions'), 
             super_group=DATA_AND_FORMATTING
         )
 
 settings.register(
     livesettings.BooleanValue(
-        MAIN_PAGES,
-        'ASK_BUTTON_ENABLED',
-        default=True,
-        description=_('Enable big Ask button'),
-        help_text=_(
-            'Disabling this button will reduce number of new questions. '
-            'If this button is disabled, the ask button in the search menu '
-            'will still be available.'
-        )
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        MAIN_PAGES,
+        QUESTION_LISTS,
         'ALL_SCOPE_ENABLED',
         default=True,
         description=_('Enable "All Questions" selector'),
@@ -38,7 +24,7 @@ settings.register(
 
 settings.register(
     livesettings.BooleanValue(
-        MAIN_PAGES,
+        QUESTION_LISTS,
         'UNANSWERED_SCOPE_ENABLED',
         default=True,
         description=_('Enable "Unanswered Questions" selector'),
@@ -48,7 +34,7 @@ settings.register(
 
 settings.register(
     livesettings.BooleanValue(
-        MAIN_PAGES,
+        QUESTION_LISTS,
         'FOLLOWED_SCOPE_ENABLED',
         default=True,
         description=_('Enable "Followed Questions" selector'),
@@ -71,7 +57,7 @@ SCOPE_CHOICES_AUTHENTICATED = (
 
 settings.register(
     livesettings.StringValue(
-        MAIN_PAGES,
+        QUESTION_LISTS,
         'DEFAULT_SCOPE_AUTHENTICATED',
         choices=SCOPE_CHOICES_AUTHENTICATED,
         default='all',
@@ -87,7 +73,7 @@ SCOPE_CHOICES_ANONYMOUS = (#anonymous users can't see followed questions
 
 settings.register(
     livesettings.StringValue(
-        MAIN_PAGES,
+        QUESTION_LISTS,
         'DEFAULT_SCOPE_ANONYMOUS',
         choices=SCOPE_CHOICES_ANONYMOUS,
         default='all',

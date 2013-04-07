@@ -2394,6 +2394,8 @@ var AutoCompleter = function(options) {
      */
     this.finishOnBlur_ = true;
 
+    this._isRunning = false;
+
     this.options.minChars = parseInt(this.options.minChars, 10);
     if (isNaN(this.options.minChars) || this.options.minChars < 1) {
         this.options.minChars = 2;
@@ -2622,7 +2624,13 @@ AutoCompleter.prototype.activate = function() {
 };
 
 AutoCompleter.prototype.activateNow = function() {
+    if (this._isRunning) {
+        return;
+    }
     var value = this.getValue();
+    if (value.length === 0) {
+        this.finish();
+    }
     if (value !== this.lastProcessedValue_ && value !== this.lastSelectedValue_) {
         if (value.length >= this.options.minChars) {
             this.active_ = true;
@@ -2630,6 +2638,10 @@ AutoCompleter.prototype.activateNow = function() {
             this.fetchData(value);
         }
     }
+};
+
+AutoCompleter.prototype.setIsRunning = function(isRunning) {
+    this._isRunning = isRunning;
 };
 
 AutoCompleter.prototype.fetchData = function(value) {
@@ -2662,11 +2674,21 @@ AutoCompleter.prototype.fetchRemoteData = function(filter, callback) {
         };
         $.ajax({
             url: this.makeUrl(filter),
-            success: ajaxCallback,
+            success: function(data) {
+                ajaxCallback(data);
+                self.setIsRunning(false);
+                //if query changed - rerun the search immediately
+                var newQuery = self.getValue();
+                if (newQuery && newQuery !== filter) {
+                    self.activateNow();
+                }
+            },
             error: function() {
                 ajaxCallback(false);
+                self.setIsRunning(false);
             }
         });
+        self.setIsRunning(true);
     }
 };
 
@@ -2972,7 +2994,7 @@ AutoCompleter.prototype.selectItem = function($li) {
  * @param {string} symbol - a single char string
  */
 AutoCompleter.prototype.isContentChar = function(symbol){
-    if (symbol.match(this.options['stopCharRegex'])){
+    if (this.options['stopCharRegex'] && symbol.match(this.options['stopCharRegex'])){
         return false;
     } else if (symbol === this.options['multipleSeparator']){
         return false;
@@ -2990,6 +3012,9 @@ AutoCompleter.prototype.isContentChar = function(symbol){
  * autocompletable word
  */
 AutoCompleter.prototype.getValue = function(){
+    if (this._element === undefined) {
+        return '';
+    }
     var sel = this._element.getSelection();
     var text = this._element.val();
     var pos = sel.start;//estimated start

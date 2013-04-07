@@ -170,6 +170,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     'django.contrib.messages',
+    'compressor',
     #'debug_toolbar',
     #'haystack',
     'askbot',
@@ -297,3 +298,12 @@ GROUP_MESSAGING = {
 }
 
 ASKBOT_MULTILINGUAL = False
+
+ASKBOT_CSS_DEVEL = False
+if 'ASKBOT_CSS_DEVEL' in locals() and ASKBOT_CSS_DEVEL == True:
+    COMPRESS_PRECOMPILERS = (
+        ('text/less', 'lessc {infile} {outfile}'),
+    )
+
+COMPRESS_JS_FILTERS = []
+JINJA2_EXTENSIONS = ('compressor.contrib.jinja2ext.CompressorExtension',)

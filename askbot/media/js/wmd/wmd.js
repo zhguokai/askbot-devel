@@ -2480,8 +2480,7 @@ Attacklab.wmd_env = {};
 Attacklab.account_options = {};
 Attacklab.wmd_defaults = {version:1, output:"Markdown", lineLength:40, delayLoad:false};
 
-//@todo: this needs to be moved out of the wmd.js as we have askbot-specific code here
-if(!Attacklab.wmd && askbot['settings']['editorType'] === 'markdown') {
+if (askbot['settings']['editorType'] == 'markdown' && !Attacklab.wmd) {
 	Attacklab.wmd = function() {
 		Attacklab.loadEnv = function() {
 			var mergeEnv = function(env) {
@@ -2510,4 +2509,3 @@ if(!Attacklab.wmd && askbot['settings']['editorType'] === 'markdown') {
 	Attacklab.wmdBase();
 	Attacklab.Util.startEditor();
 };
-

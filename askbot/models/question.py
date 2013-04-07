@@ -1410,6 +1410,8 @@ class Thread(models.Model):
             'search_state': DummySearchState(),
             'visitor': visitor
         }
+        from askbot.views.context import get_extra as get_extra_context
+        context.update(get_extra_context('ASKBOT_QUESTION_SUMMARY_EXTRA_CONTEXT', None, context))
         html = get_template('widgets/question_summary.html').render(context)
         # INFO: Timeout is set to 30 days:
         # * timeout=0/None is not a reliable cross-backend way to set infinite timeout

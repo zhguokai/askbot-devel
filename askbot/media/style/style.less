@@ -498,6 +498,19 @@ body.user-messages {
     z-index: 10000;
     position: relative;
 
+    /* the guts are absolute-positioned */
+    input.searchInput,
+    div.input-tool-tip,
+    input[type="submit"].searchBtn,
+    input[type="button"].cancelSearchBtn {
+        position: absolute;
+        z-index: 100;
+    }
+
+    input.searchInput {
+        z-index: 99;/* just below the buttons and the hint */
+    }
+
     input.searchInput {
         font-size: 22px;
         height: 26px;
@@ -509,17 +522,36 @@ body.user-messages {
         font-family:@body-font;
         width: 100%;
         margin: 8px 0 6px 0;
-        padding: 0;
+        padding: 0 80px 0 8px;
+        top: 0;
+        left: 0;
         .box-shadow(0, 0, 0);
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
     }
 
     div.input-tool-tip {
-        margin-top: -40px;
-        padding-top: 10px;
-        height: 30px;
-        line-height: 20px;
+        padding: 0 0 0 10px;
+        height: 41px;
+        line-height: 41px;
         font-size: 20px;
         font-style: italic;
+        bottom: 0;
+        left: 0;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        width: 100%a
+    }
+
+    input[type="submit"].searchBtn {
+        right: 0;
+        top: 0;
+    }
+    input[type="button"].cancelSearchBtn {
+        right: 48px;
+        top: 0;
     }
 }
 
@@ -530,7 +562,6 @@ body.user-messages {
     border-top: none;
     margin: 0;
     position: relative;
-    top: 0;
     z-index: 10000;
 
     ul {
@@ -587,19 +618,16 @@ input[type="submit"].searchBtn {
     border:#FFF 1px solid;
     line-height: 22px;
     text-align: center;
-    float:right;
-    margin: -39px -48px 0 0;
+    margin: 1px 0 0 0;
     width: 48px;
     .sprites(-98px,-37px);
     .rounded-corners(0);
     .box-shadow(0, 0, 0);
     cursor:pointer;
-    position: relative;
     z-index: 10001;
 }
 
 .groups-page, /* todo: clean up - should not need this */
-.tags-page,
 .badges-pages,
 .user-profile-page,
 .meta,
@@ -650,9 +678,6 @@ input[type="button"].cancelSearchBtn {
     text-align: center;
     width: 35px !important;
     cursor:pointer;
-    float: right;
-    margin: -40px 0 0 0;
-    position: relative;
     z-index: 10001;
 }
 
@@ -2389,6 +2414,13 @@ ul#related-tags li {
             width: 100%;
             margin: 3px 0 20px 5px;
         }
+
+        .edit-comment-buttons {
+            margin-left: -4px;
+            .checkbox {
+                margin: 3px;
+            }
+        }
         
         .controls a {
             border: none;
@@ -2483,6 +2515,9 @@ ul#related-tags li {
             font-family: @body-font;
             font-size: 11px;
             min-height: 25px;
+        }
+        .comment:last-child {
+            border-bottom: none;
         }
         div.comment:hover {
             background-color: #efefef;
@@ -3258,6 +3293,14 @@ del, del .post-tag {
 
 ins .post-tag, ins p, ins {
     background-color: #E6F0A2;
+}
+
+body.question-page ins,
+body.main-page ins {
+    /* a hack for google adwords
+     * todo: make rule above more specific
+     * and remove this one */
+    background: transparent;
 }
 
 /* ----- Red Popup notification ----- */

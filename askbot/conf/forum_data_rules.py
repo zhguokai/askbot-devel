@@ -46,6 +46,21 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
+        'ASK_BUTTON_ENABLED',
+        default=True,
+        description=_('Enable big Ask button'),
+        help_text=_(
+            'Disabling this button will reduce number of new questions. '
+            'If this button is disabled, the ask button in the search menu '
+            'will still be available.'
+        )
+    )
+)
+
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
         'ENABLE_VIDEO_EMBEDDING',
         default = False,
         description = _('Enable embedding videos. '),

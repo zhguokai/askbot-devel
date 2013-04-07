@@ -1243,7 +1243,6 @@ var questionRetagger = function(){
         //populate input
         var tagAc = new AutoCompleter({
             url: askbot['urls']['get_tag_list'],
-            preloadData: true,
             minChars: 1,
             useCache: true,
             matchInside: true,
@@ -1665,6 +1664,7 @@ EditCommentForm.prototype.createDom = function(){
      */
 
     this._controlsBox = this.makeElement('div');
+    this._controlsBox.addClass('edit-comment-buttons');
     div.append(this._controlsBox);
 
     this._text_counter = $('<span></span>').attr('class', 'counter');
@@ -2483,6 +2483,7 @@ SimpleEditor.prototype.setText = function(text) {
  */
 SimpleEditor.prototype.createDom = function() {
     this._element = this.makeElement('div');
+    this._element.addClass('wmd-container');
     var textarea = this.makeElement('textarea');
     this._element.append(textarea);
     this._textarea = textarea;
@@ -3369,7 +3370,6 @@ TagEditor.prototype.decorate = function(element) {
                 me.clearNewTagInput();
             }
         },
-        preloadData: true,
         minChars: 1,
         useCache: true,
         matchInside: true,
@@ -4370,7 +4370,6 @@ $(document).ready(function() {
 
         var fakeUserAc = new AutoCompleter({
             url: '/get-users-info/',//askbot['urls']['get_users_info'],
-            preloadData: true,
             promptText: gettext('User name:'),
             minChars: 1,
             useCache: true,
@@ -4392,7 +4391,6 @@ $(document).ready(function() {
     if (groupsInput.length === 1) {
         var groupsAc = new AutoCompleter({
             url: askbot['urls']['getGroupsList'],
-            preloadData: true,
             promptText: gettext('Group name:'),
             minChars: 1,
             useCache: false,
@@ -4406,7 +4404,6 @@ $(document).ready(function() {
     if (usersInput.length === 1) {
         var usersAc = new AutoCompleter({
             url: '/get-users-info/',
-            preloadData: true,
             promptText: gettext('User name:'),
             minChars: 1,
             useCache: false,

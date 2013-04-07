@@ -171,12 +171,12 @@ poor design of the data or methods on data objects #}
 
 {%- macro tag_cloud(tags = None, font_sizes = None, search_state = None) -%}
     {% for tag in tags %}
-    <span class="tag-size-{{ font_sizes[tag.name] }}">
+    <span class="tag-size-{{ font_sizes[tag.name]|escape }}">
         <a 
             class="link-typeA"
             title="Number of entries: {{ tag.used_count }}"
             href="{{ search_state.add_tag(tag.name).full_url() }}"
-        >{{ tag.name }}</a>
+        >{{ tag.name|escape }}</a>
     </span>
     {% endfor %}
 {%- endmacro -%}
@@ -539,7 +539,6 @@ for the purposes of the AJAX comment editor #}
 {%- macro tag_autocomplete_js(id = '#id_tags') -%}
     var tagAc = new AutoCompleter({
             url: '{% url "get_tag_list" %}',
-            preloadData: true,
             minChars: 1,
             useCache: true,
             matchInside: true,
@@ -658,8 +657,8 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- macro user_website_link(user, max_display_length=25) -%}
     {% if user.website and (not user.is_blocked()) %}
         <a 
-            href="{{user.website}}"
-            title="{% trans username=user.username|escape, url=user.website %}{{username}}'s website is {{url}}{% endtrans %}"
+            href="{{user.website|escape}}"
+            title="{% trans username=user.username|escape, url=user.website|escape %}{{username}}'s website is {{url}}{% endtrans %}"
             {% if user.can_have_strong_url() == False %}
             rel="nofollow"
             {% endif %}
