@@ -1433,15 +1433,27 @@ EditCommentForm.prototype.setWaitingStatus = function(isWaiting) {
         this._editor.getElement().hide();
         this._submit_btn.hide();
         this._cancel_btn.hide();
+        this._minorEditBox.hide();
+        this._element.hide();
     } else {
+        this._element.show();
         this._editor.getElement().show();
         this._submit_btn.show();
         this._cancel_btn.show();
+        this._minorEditBox.show();
     }
 };
 
-EditCommentForm.prototype.startEditor = function() {
-    var editorId = 'comment-editor-' + getNewInt();
+EditCommentForm.prototype.getEditorType = function() {
+    if (askbot['settings']['commentsEditorType'] === 'rich-text') {
+        return askbot['settings']['editorType'];
+    } else {
+        return 'plain-text';
+    }
+};
+
+EditCommentForm.prototype.startTinyMCEEditor = function() {
+    var editorId = this.makeId('comment-editor');
     var opts = {
         mode: 'exact',
         content_css: mediaUrl('media/style/tinymce/comments-content.css'),
@@ -1460,23 +1472,49 @@ EditCommentForm.prototype.startEditor = function() {
     var editor = new TinyMCE(opts);
     editor.setId(editorId);
     editor.setText(this._text);
-    //@todo: remove global variable maxCommentLength
     this._editorBox.prepend(editor.getElement());
     editor.start();
-    editor.focus();
     this._editor = editor;
+};
 
-    return;
+EditCommentForm.prototype.startWMDEditor = function() {
+    var editor = new WMD();
+    editor.setEnabledButtons('bold italic link code ol ul');
+    editor.setPreviewerEnabled(false);
+    editor.setText(this._text);
+    this._editorBox.prepend(editor.getElement());//attach DOM before start
+    editor.start();//have to start after attaching DOM
+    this._editor = editor;
+};
 
-    //todo: make this work for tinymce
+EditCommentForm.prototype.startSimpleEditor = function() {
+    this._editor = new SimpleEditor();
+    this._editorBox.prepend(this._editor.getElement());
+};
+
+EditCommentForm.prototype.startEditor = function() {
+    var editorType = this.getEditorType();
+    if (editorType === 'tinymce') {
+        this.startTinyMCEEditor();
+        //@todo: implement save on enter and character counter in tinyMCE
+        return;
+    } else if (editorType === 'markdown') {
+        this.startWMDEditor();
+    } else {
+        this.startSimpleEditor();
+    }
+
+    //code below is common to SimpleEditor and WMD
+    var editorElement = this._editor.getElement();
     var updateCounter = this.getCounterUpdater();
     var escapeHandler = makeKeyHandler(27, this.getCancelHandler());
-
     //todo: try this on the div
-    editor.getElement().blur(updateCounter)
-                            .focus(updateCounter)
-                            .keyup(updateCounter)
-                            .keyup(escapeHandler);
+    var editor = this._editor;
+    //this should be set on the textarea!
+    editorElement.blur(updateCounter);
+    editorElement.focus(updateCounter);
+    editorElement.keyup(updateCounter)
+    editorElement.keyup(escapeHandler);
 
     if (askbot['settings']['saveCommentOnEnter']){
         var save_handler = makeKeyHandler(13, this.getSaveHandler());
@@ -1513,8 +1551,8 @@ EditCommentForm.prototype.attachTo = function(comment, mode){
     this.enableForm();
     this.startEditor();
     this._editor.setText(this._text);
-    //this._editor.focus();
-    //this._editor.putCursorAtEnd();
+    this._editor.focus();
+    this._editor.putCursorAtEnd();
     setupButtonEventHandlers(this._submit_btn, this.getSaveHandler());
     setupButtonEventHandlers(this._cancel_btn, this.getCancelHandler());
 };
@@ -1556,6 +1594,7 @@ EditCommentForm.prototype.getCounterUpdater = function(){
         }
         counter.html(feedback);
         counter.css('color', color);
+        return true;
     };
     return handler;
 };
@@ -1573,8 +1612,7 @@ EditCommentForm.prototype.canCancel = function(){
     var ctext = this._editor.getText();
     if ($.trim(ctext) == $.trim(this._text)){
         return true;
-    }
-    else if (this.confirmAbandon()){
+    } else if (this.confirmAbandon()){
         return true;
     }
     this._editor.focus();
@@ -1718,7 +1756,8 @@ EditCommentForm.prototype.getSaveHandler = function(){
         var timestamp = commentData['comment_added_at'] || gettext('just now');
         var userName = commentData['user_display_name'] || askbot['data']['userName'];
         me._comment.setContent({
-            'html': text,
+            'html': editor.getHtml(),
+            'text': text,
             'user_display_name': userName,
             'comment_added_at': timestamp
         });
@@ -2426,6 +2465,10 @@ SimpleEditor.prototype.getText = function() {
     return $.trim(this._textarea.val());
 };
 
+SimpleEditor.prototype.getHtml = function() {
+    return '<div class="transient-comment">' + this.getText() + '</div>';
+};
+
 SimpleEditor.prototype.setText = function(text) {
     this._text = text;
     if (this._textarea) {
@@ -2442,6 +2485,7 @@ SimpleEditor.prototype.createDom = function() {
     this._element = this.makeElement('div');
     var textarea = this.makeElement('textarea');
     this._element.append(textarea);
+    this._textarea = textarea;
     if (this._text) {
         textarea.val(this._text);
     };
@@ -2466,6 +2510,8 @@ var WMD = function(){
 };
 inherits(WMD, SimpleEditor);
 
+//@todo: implement getHtml method that runs text through showdown renderer
+
 WMD.prototype.setEnabledButtons = function(buttons){
     this._enabled_buttons = buttons;
 };
@@ -2487,12 +2533,12 @@ WMD.prototype.createDom = function(){
     this._element.append(wmd_container);
 
     var wmd_buttons = this.makeElement('div')
-                        .attr('id', 'wmd-button-bar')
+                        .attr('id', this.makeId('wmd-button-bar'))
                         .addClass('wmd-panel');
     wmd_container.append(wmd_buttons);
 
     var editor = this.makeElement('textarea')
-                        .attr('id', 'editor');
+                        .attr('id', this.makeId('editor'));
     wmd_container.append(editor);
     this._textarea = editor;
 
@@ -2501,7 +2547,7 @@ WMD.prototype.createDom = function(){
     }
 
     var previewer = this.makeElement('div')
-                        .attr('id', 'previewer')
+                        .attr('id', this.makeId('previewer'))
                         .addClass('wmd-preview');
     wmd_container.append(previewer);
     this._previewer = previewer;
@@ -2511,7 +2557,7 @@ WMD.prototype.createDom = function(){
 };
 
 WMD.prototype.start = function(){
-    Attacklab.Util.startEditor(true, this._enabled_buttons);
+    Attacklab.Util.startEditor(true, this._enabled_buttons, this.getIdSeed());
 };
 
 /**
@@ -2576,6 +2622,8 @@ TinyMCE.prototype.setText = function(text) {
 TinyMCE.prototype.getText = function() {
     return tinyMCE.activeEditor.getContent();
 };
+
+TinyMCE.prototype.getHtml = TinyMCE.prototype.getText;
 
 TinyMCE.prototype.isLoaded = function() {
     return (tinymce.get(this._id) !== undefined);

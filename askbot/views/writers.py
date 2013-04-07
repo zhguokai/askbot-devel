@@ -62,9 +62,6 @@ ANSWERS_PAGE_SIZE = 10
 def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
-    import pdb
-    pdb.set_trace()
-
     # check upload permission
     result = ''
     error = ''
@@ -744,7 +741,6 @@ def post_comments(request):#generic ajax handler to load comments to an object
 @decorators.ajax_only
 #@decorators.check_spam('comment')
 def edit_comment(request):
-
     if request.user.is_anonymous():
         raise exceptions.PermissionDenied(_('Sorry, anonymous users cannot edit comments'))
 

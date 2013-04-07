@@ -28,6 +28,21 @@ settings.register(
     )
 )
 
+COMMENTS_EDITOR_CHOICES = (
+    ('plain-text', 'Plain text editor'),
+    ('rich-text', 'Same editor as for questions and answers')
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'COMMENTS_EDITOR_TYPE',
+        default='plain-text',
+        choices=COMMENTS_EDITOR_CHOICES,
+        description=_('Editor for the comments')
+    )
+)
+
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
@@ -315,8 +330,12 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'SAVE_COMMENT_ON_ENTER',
-        default = True,
-        description = _('Save comment by pressing <Enter> key')
+        default=False,
+        description=_('Save comment by pressing <Enter> key'),
+        help_text=_(
+            'This may be useful when only one-line comments '
+            'are desired. Will not work with TinyMCE editor.'
+        )
     )
 )
 

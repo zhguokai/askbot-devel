@@ -28,7 +28,16 @@ var animateHashes = function(){
     }
 };
 
-var getNewInt = function() {
+/**
+ * @param {string} id_token - any token
+ * @param {string} unique_seed - the unique part
+ * @returns {string} unique id that can be used in DOM
+ */
+var askbotMakeId = function(id_token, unique_seed) {
+    return id_token + '-' + unique_seed;
+};
+
+var getNewUniqueInt = function() {
     var num = askbot['data']['uniqueInt'] || 0;
     num = num + 1;
     askbot['data']['uniqueInt'] = num;
@@ -322,10 +331,31 @@ var inherits = function(childCtor, parentCtor) {
 var WrappedElement = function(){
     this._element = null;
     this._in_document = false;
+    this._idSeed = null;
 };
 /* note that we do not call inherits() here
  * See TippedInput as an example of a subclass
  */
+
+/**
+ * returns a unique integer for any instance of WrappedElement
+ * which can be used to construct a unique id for use in the DOM
+ * @return {string}
+ */
+WrappedElement.prototype.getIdSeed = function() {
+    var seed = this._idSeed || parseInt(getNewUniqueInt());
+    this._idSeed = seed;
+    return seed;
+};
+
+/**
+ * returns unique ide based on the prefix and the id seed
+ * @param {string} prefix
+ * @return {string}
+ */
+WrappedElement.prototype.makeId = function(prefix) {
+    return askbotMakeId(prefix, this.getIdSeed());
+};
 
 /**
  * notice that we use ObjCls.prototype.someMethod = function()
