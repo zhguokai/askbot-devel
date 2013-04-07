@@ -609,8 +609,10 @@ class Post(models.Model):
             return markup.plain_text_input_converter
         elif parser_type == 'markdown':
             return markup.markdown_input_converter
-        elif parser_type == 'tynymce':
+        elif parser_type == 'tinymce':
             return markup.tinymce_input_converter
+        else:
+            raise NotImplementedError
 
     def has_group(self, group):
         """true if post belongs to the group"""

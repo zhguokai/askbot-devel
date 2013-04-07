@@ -202,7 +202,7 @@ def markdown_input_converter(text):
     text = get_parser().convert(text)
     return sanitize_html(text)
 
-def tinymce_input_parser(text):
+def tinymce_input_converter(text):
     """tinymce input to production html converter"""
     text = urlize(text)
     return strip_tags(text, ['script', 'style', 'link'])
