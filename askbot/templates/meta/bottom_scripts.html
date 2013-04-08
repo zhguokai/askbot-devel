@@ -27,9 +27,19 @@
 	askbot['urls']['questions'] = '{% url "questions" %}';
     askbot['settings']['groupsEnabled'] = {{ settings.GROUPS_ENABLED|as_js_bool }};
     askbot['settings']['static_url'] = '{{ settings.STATIC_URL }}';
-    askbot['settings']['minSearchWordLength'] = {{ settings.MIN_SEARCH_WORD_LENGTH }};
+    askbot['settings']['minSearchWordLength'] = {{ min_search_word_length }};
     askbot['settings']['mathjaxEnabled'] = {{ settings.ENABLE_MATHJAX|as_js_bool }};
     askbot['settings']['sharingSuffixText'] = '{{ settings.SHARING_SUFFIX_TEXT|escape }}';
+    askbot['data']['maxCommentLength'] = {{ settings.MAX_COMMENT_LENGTH }};
+    askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
+    askbot['settings']['commentsEditorType'] = '{{ settings.COMMENTS_EDITOR_TYPE }}';
+    {% if settings.ALLOWED_UPLOAD_FILE_TYPES %}
+        askbot['settings']['allowedUploadFileTypes'] = [
+            "{{ settings.ALLOWED_UPLOAD_FILE_TYPES|join('", "')|replace('.','') }}"
+        ];
+    {% else %}
+        askbot['settings']['allowedUploadFileTypes'] = [];
+    {% endif %}
     askbot['data']['haveFlashNotifications'] = {{ user_messages|as_js_bool }};
     askbot['data']['activeTab'] = '{{ active_tab }}';
     {% if search_state %}
@@ -58,6 +68,7 @@
 {% endif %}
 <script type="text/javascript">
     /*<![CDATA[*/
+    $('.mceStatusbar').remove();//a hack to remove the tinyMCE status bar
     $(document).ready(function(){
         // focus input on the search bar endcomment
         var activeTab = askbot['data']['activeTab'];

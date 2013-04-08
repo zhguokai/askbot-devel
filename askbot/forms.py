@@ -295,9 +295,11 @@ class EditorField(forms.CharField):
         self.user = user
 
         editor_attrs = kwargs.pop('editor_attrs', {})
+        widget_attrs = kwargs.pop('attrs', {})
+        widget_attrs.setdefault('id', 'editor')
+
         super(EditorField, self).__init__(*args, **kwargs)
         self.required = True
-        widget_attrs = {'id': 'editor'}
         if askbot_settings.EDITOR_TYPE == 'markdown':
             self.widget = forms.Textarea(attrs=widget_attrs)
         elif askbot_settings.EDITOR_TYPE == 'tinymce':
@@ -506,17 +508,18 @@ class SummaryField(forms.CharField):
             'field is optional)'
         )
 
-
 class EditorForm(forms.Form):
     """form with one field - `editor`
     the field must be created dynamically, so it's added
     in the __init__() function"""
 
-    def __init__(self, user=None, editor_attrs=None):
+    def __init__(self, attrs=None, user=None, editor_attrs=None):
         super(EditorForm, self).__init__()
         editor_attrs = editor_attrs or {}
         self.fields['editor'] = EditorField(
-                                    user=user, editor_attrs=editor_attrs
+                                    attrs=attrs,
+                                    editor_attrs=editor_attrs,
+                                    user=user
                                 )
 
 
@@ -1339,10 +1342,6 @@ class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         else:
             return False
 
-class EditCommentForm(forms.Form):
-    comment_id = forms.IntegerField()
-    suppress_email = SuppressEmailField()
-
 class EditTagWikiForm(forms.Form):
     text = forms.CharField(required=False)
     tag_id = forms.IntegerField()
@@ -1688,6 +1687,19 @@ class BulkTagSubscriptionForm(forms.Form):
         self.fields['users'] = forms.ModelMultipleChoiceField(queryset=User.objects.all())
         if askbot_settings.GROUPS_ENABLED:
             self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.exclude_personal())
+
+class GetCommentsForPostForm(forms.Form):
+    post_id = forms.IntegerField()
+
+class NewCommentForm(forms.Form):
+    comment = forms.CharField()
+    post_id = forms.IntegerField()
+
+class EditCommentForm(forms.Form):
+    comment_id = forms.IntegerField()
+    comment = forms.CharField()
+    suppress_email = SuppressEmailField()
+
 
 class DeleteCommentForm(forms.Form):
     comment_id = forms.IntegerField()

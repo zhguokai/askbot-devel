@@ -21,6 +21,7 @@ env
 /custom_settings
 /static
 django
+tinymce
 lamson
 django/*
 nbproject

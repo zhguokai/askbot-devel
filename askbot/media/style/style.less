@@ -146,6 +146,13 @@ html {
     visibility: hidden;
 }
 
+.invisible {
+    margin: -1px 0 0 -1px;
+    height: 1px;
+    overflow: hidden;
+    width: 1px;
+}
+
 .badges a {
     color: #763333;
     text-decoration: underline;
@@ -683,17 +690,18 @@ input[type="submit"],
 input[type="button"],
 input[type="reset"],
 .button {
+    border: 0 !important;
+    border-top: #eaf2f3 1px solid;
     cursor: pointer;
     color: @button-label;
-    height: 27px;
     font-family: @main-font;
     font-size: 14px;
     font-weight: bold;
+    height: 27px;
+    margin-right: 10px;
     text-align: center;
     text-decoration: none;
     .text-shadow(0px,1px,0px,#c6d9dd);
-    border: 0 !important;
-    border-top: #eaf2f3 1px solid;
     .linear-gradient(#d1e2e5,#a9c2c7);
     .rounded-corners(4px);
     .box-shadow(1px, 1px, 2px, #636363)
@@ -725,6 +733,40 @@ input[type="submit"].link {
 
 input[type="submit"].link:hover {
     text-decoration: underline;
+}
+
+form.ajax-file-upload {
+    height: 60px;
+    position: relative;
+    input[type="file"],
+    input.fake-file-input {
+        cursor: pointer;
+        height: 32px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    input[type="file"] {
+        z-index: 2;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+        filter: alpha(opacity=0);
+        -moz-opacity: 0;
+        -khtml-opacity: 0;
+        opacity: 0;
+    }
+    input.fake-file-input {
+        z-index: 1;
+    }
+    label,
+    img.spinner {
+        bottom: 0;
+        left: 3px;
+        position: absolute;
+    }
+    img.spinner {
+        bottom: 6px;
+        left: 10px;
+    }
 }
 
 #askButton { /* check blocks/secondary_header.html and widgets/ask_button.html*/
@@ -1873,6 +1915,10 @@ ul#related-tags li {
         width: 723px;
         width: 100%;
     }
+    .post-comments .wmd-container {
+        margin-bottom: 8px;
+        margin-left: -2px;
+    }
     #editor {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
@@ -2041,9 +2087,9 @@ ul#related-tags li {
 
 /* ----- Question template ----- */
 
-.question-page{
+.question-page {
 
-    h1{
+    h1 {
         padding-top:0px;
         font-family:@main-font;
 
@@ -2105,6 +2151,10 @@ ul#related-tags li {
     #question-table td {
         width:20px;
         vertical-align:top;
+    }
+    .answer-table .mceEditor td,
+    #question-table .mceEditor td {
+        width: auto;
     }
     .question-body, .answer-body {
         overflow: auto;
@@ -2364,6 +2414,13 @@ ul#related-tags li {
             width: 100%;
             margin: 3px 0 20px 5px;
         }
+
+        .edit-comment-buttons {
+            margin-left: -4px;
+            .checkbox {
+                margin: 3px;
+            }
+        }
         
         .controls a {
             border: none;
@@ -2402,15 +2459,22 @@ ul#related-tags li {
         textarea {
             box-sizing: border-box;
             border: #cce6ec 3px solid;
+            color: #666;
             font-family: @body-font;
             font-size: 13px;
             height: 54px;
             line-height: 1.3;
-            margin: -1px 0 7px 1px;
+            margin: -1px 0 0 1px;
             outline: none;
             overflow:auto;
-            padding: 0px 19px 2px 3px;
-            width:100%;
+            padding: 5px 19px 2px 3px;
+            width: 99.6%;
+        }
+        .wmd-container textarea {
+            border: none;
+        }
+        .transient-comment {
+            margin-bottom: 3px; /* match paragraph style */
         }
         input {
             margin-left: 10px;
@@ -2418,6 +2482,15 @@ ul#related-tags li {
             vertical-align: top;
             width: 100px;
         }
+
+        input[name="suppress_email"] {
+            margin: 4px 5px 0 0;
+            width: auto;
+        }
+        label[for="suppress_email"] {
+            vertical-align: top;
+        }
+
         button.submit {
             height: 26px;
             line-height: 26px;
@@ -2428,7 +2501,6 @@ ul#related-tags li {
             display: inline-block;
             width: 245px;
             float:right;
-            color:#b6a475 !important;
             vertical-align: top;
             font-family:@body-font;
             float:right;
@@ -2443,6 +2515,9 @@ ul#related-tags li {
             font-family: @body-font;
             font-size: 11px;
             min-height: 25px;
+        }
+        .comment:last-child {
+            border-bottom: none;
         }
         div.comment:hover {
             background-color: #efefef;
@@ -3232,28 +3307,29 @@ body.main-page ins {
 
 .vote-notification {
     z-index: 1;
+    background-color: #8e0000;
+    color: white;
     cursor: pointer;
     display: none;
-    position: absolute;
     font-family:@secondary-font;
     font-size:14px;
     font-weight:normal;
-    color: white;
-    background-color: #8e0000;
-    text-align: center;
     padding-bottom:10px;
+    position: absolute;
+    text-align: center;
     .box-shadow(0px, 2px, 4px, #370000);
     .rounded-corners(4px);
 
     h3{
         background:url(../images/notification.png) repeat-x top;
-       padding:10px 10px 10px 10px;
-       font-size:13px;
-       margin-bottom:5px;
-       border-top:#8e0000 1px solid;
-       color:#fff;
-       font-weight:normal;
-       .rounded-corners-top(4px);
+        padding:10px 10px 10px 10px;
+        font-size:13px;
+        margin-bottom:5px;
+        border-top:#8e0000 1px solid;
+        color:#fff;
+        line-height: 20px;
+        font-weight:normal;
+        .rounded-corners-top(4px);
     }
     a {
         color: #fb7321;

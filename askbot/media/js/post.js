@@ -1410,50 +1410,160 @@ DeletePostLink.prototype.decorate = function(element){
     this.setHandler(this.getDeleteHandler());
 }
 
-//constructor for the form
+/**
+ * Form for editing and posting new comment
+ * supports 3 editors: markdown, tinymce and plain textarea.
+ * There is only one instance of this form in use on the question page.
+ * It can be attached to any comment on the page, or to a new blank 
+ * comment.
+ */
 var EditCommentForm = function(){
     WrappedElement.call(this);
     this._comment = null;
     this._comment_widget = null;
     this._element = null;
+    this._editorReady = false;
     this._text = '';
-    this._id = 'edit-comment-form';
 };
 inherits(EditCommentForm, WrappedElement);
 
-EditCommentForm.prototype.getElement = function(){
-    EditCommentForm.superClass_.getElement.call(this);
-    this._textarea.val(this._text);
-    return this._element;
+EditCommentForm.prototype.setWaitingStatus = function(isWaiting) {
+    if (isWaiting === true) {
+        this._editor.getElement().hide();
+        this._submit_btn.hide();
+        this._cancel_btn.hide();
+        this._minorEditBox.hide();
+        this._element.hide();
+    } else {
+        this._element.show();
+        this._editor.getElement().show();
+        this._submit_btn.show();
+        this._cancel_btn.show();
+        this._minorEditBox.show();
+    }
 };
 
+EditCommentForm.prototype.getEditorType = function() {
+    if (askbot['settings']['commentsEditorType'] === 'rich-text') {
+        return askbot['settings']['editorType'];
+    } else {
+        return 'plain-text';
+    }
+};
+
+EditCommentForm.prototype.startTinyMCEEditor = function() {
+    var editorId = this.makeId('comment-editor');
+    var opts = {
+        mode: 'exact',
+        content_css: mediaUrl('media/style/tinymce/comments-content.css'),
+        elements: editorId,
+        plugins: 'autoresize',
+        theme: 'advanced',
+        theme_advanced_toolbar_location: 'top',
+        theme_advanced_toolbar_align: 'left',
+        theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',
+        theme_advanced_buttons2: '',
+        theme_advanced_path: false,
+        plugins: '',
+        width: '100%',
+        height: '60px'
+    };
+    var editor = new TinyMCE(opts);
+    editor.setId(editorId);
+    editor.setText(this._text);
+    this._editorBox.prepend(editor.getElement());
+    editor.start();
+    this._editor = editor;
+};
+
+EditCommentForm.prototype.startWMDEditor = function() {
+    var editor = new WMD();
+    editor.setEnabledButtons('bold italic link code ol ul');
+    editor.setPreviewerEnabled(false);
+    editor.setText(this._text);
+    this._editorBox.prepend(editor.getElement());//attach DOM before start
+    editor.start();//have to start after attaching DOM
+    this._editor = editor;
+};
+
+EditCommentForm.prototype.startSimpleEditor = function() {
+    this._editor = new SimpleEditor();
+    this._editorBox.prepend(this._editor.getElement());
+};
+
+EditCommentForm.prototype.startEditor = function() {
+    var editorType = this.getEditorType();
+    if (editorType === 'tinymce') {
+        this.startTinyMCEEditor();
+        //@todo: implement save on enter and character counter in tinyMCE
+        return;
+    } else if (editorType === 'markdown') {
+        this.startWMDEditor();
+    } else {
+        this.startSimpleEditor();
+    }
+
+    //code below is common to SimpleEditor and WMD
+    var editorElement = this._editor.getElement();
+    var updateCounter = this.getCounterUpdater();
+    var escapeHandler = makeKeyHandler(27, this.getCancelHandler());
+    //todo: try this on the div
+    var editor = this._editor;
+    //this should be set on the textarea!
+    editorElement.blur(updateCounter);
+    editorElement.focus(updateCounter);
+    editorElement.keyup(updateCounter)
+    editorElement.keyup(escapeHandler);
+
+    if (askbot['settings']['saveCommentOnEnter']){
+        var save_handler = makeKeyHandler(13, this.getSaveHandler());
+        editor.getElement().keydown(save_handler);
+    }
+};
+
+/**
+ * attaches comment editor to a particular comment
+ */
 EditCommentForm.prototype.attachTo = function(comment, mode){
     this._comment = comment;
-    this._type = mode;
+    this._type = mode;//action: 'add' or 'edit'
     this._comment_widget = comment.getContainerWidget();
     this._text = comment.getText();
     comment.getElement().after(this.getElement());
     comment.getElement().hide();
-    this._comment_widget.hideButton();
+    this._comment_widget.hideButton();//hide add comment button
+    //fix up the comment submit button, depending on the mode
     if (this._type == 'add'){
         this._submit_btn.html(gettext('add comment'));
+        if (this._minorEditBox) {
+            this._minorEditBox.hide();
+        }
     }
     else {
         this._submit_btn.html(gettext('save comment'));
+        if (this._minorEditBox) {
+            this._minorEditBox.show();
+        }
     }
+    //enable the editor
     this.getElement().show();
     this.enableForm();
-    this.focus();
-    putCursorAtEnd(this._textarea);
+    this.startEditor();
+    this._editor.setText(this._text);
+    this._editor.focus();
+    this._editor.putCursorAtEnd();
+    setupButtonEventHandlers(this._submit_btn, this.getSaveHandler());
+    setupButtonEventHandlers(this._cancel_btn, this.getCancelHandler());
 };
 
 EditCommentForm.prototype.getCounterUpdater = function(){
     //returns event handler
     var counter = this._text_counter;
+    var editor = this._editor;
     var handler = function(){
-        var textarea = $(this);
-        var length = textarea.val() ? textarea.val().length : 0;
+        var length = editor.getText().length;
         var length1 = maxCommentLength - 100;
+
         if (length1 < 0){
             length1 = Math.round(0.7*maxCommentLength);
         }
@@ -1462,46 +1572,58 @@ EditCommentForm.prototype.getCounterUpdater = function(){
             length2 = Math.round(0.9*maxCommentLength);
         }
 
-        //todo:
-        //1) use class instead of color - move color def to css
+        /* todo make smooth color transition, from gray to red
+         * or rather - from start color to end color */
         var color = 'maroon';
         var chars = 10;
         if (length === 0){
-            var feedback = interpolate(gettext('%s title minchars'), [chars]);
+            var feedback = interpolate(gettext('enter at least %s characters'), [chars]);
+        } else if (length < 10){
+            var feedback = interpolate(gettext('enter at least %s more characters'), [chars - length]);
+        } else {
+            if (length > length2) {
+                color = '#f00';
+            } else if (length > length1) {
+                color = '#f60';
+            } else {
+                color = '#999';
+            }
+			chars = maxCommentLength - length;
+            var feedback = interpolate(gettext('%s characters left'), [chars]);
         }
-        else if (length < 10){
-            var feedback = interpolate(gettext('enter %s more characters'), [chars - length]);
-        }
-        else {
-            color = length > length2 ? "#f00" : length > length1 ? "#f60" : "#999"
-			chars = maxCommentLength - length
-            var feedback = interpolate(gettext('%s characters left'), [chars])
-        }
-        counter.html(feedback).css('color', color)
+        counter.html(feedback);
+        counter.css('color', color);
+        return true;
     };
     return handler;
 };
 
+/**
+ * @todo: clean up this method so it does just one thing
+ */
 EditCommentForm.prototype.canCancel = function(){
     if (this._element === null){
         return true;
     }
-    var ctext = $.trim(this._textarea.val());
+    if (this._editor === undefined) {
+        return true;
+    };
+    var ctext = this._editor.getText();
     if ($.trim(ctext) == $.trim(this._text)){
         return true;
-    }
-    else if (this.confirmAbandon()){
+    } else if (this.confirmAbandon()){
         return true;
     }
-    this.focus();
+    this._editor.focus();
     return false;
 };
 
 EditCommentForm.prototype.getCancelHandler = function(){
     var form = this;
-    return function(){
+    return function(evt){
         if (form.canCancel()){
             form.detach();
+            evt.preventDefault();
         }
         return false;
     };
@@ -1514,12 +1636,17 @@ EditCommentForm.prototype.detach = function(){
     this._comment.getContainerWidget().showButton();
     if (this._comment.isBlank()){
         this._comment.dispose();
-    }
-    else {
+    } else {
         this._comment.getElement().show();
     }
     this.reset();
     this._element = this._element.detach();
+
+    this._editor.dispose();
+    this._editor = undefined;
+
+    removeButtonEventHandlers(this._submit_btn);
+    removeButtonEventHandlers(this._cancel_btn);
 };
 
 EditCommentForm.prototype.createDom = function(){
@@ -1527,46 +1654,43 @@ EditCommentForm.prototype.createDom = function(){
     this._element.attr('class', 'post-comments');
 
     var div = $('<div></div>');
-    this._textarea = $('<textarea></textarea>');
-    this._textarea.attr('id', this._id);
-
-    /*
-    this._help_text = $('<span></span>').attr('class', 'help-text');
-    this._help_text.html(gettext('Markdown is allowed in the comments'));
-    div.append(this._help_text);
-
-    this._help_text = $('<div></div>').attr('class', 'clearfix');
-    div.append(this._help_text);
-    */
-
     this._element.append(div);
-    div.append(this._textarea);
+
+    /** a stub container for the editor */
+    this._editorBox = div;
+    /** 
+     * editor itself will live at this._editor
+     * and will be initialized by the attachTo()
+     */
+
+    this._controlsBox = this.makeElement('div');
+    this._controlsBox.addClass('edit-comment-buttons');
+    div.append(this._controlsBox);
+
     this._text_counter = $('<span></span>').attr('class', 'counter');
-    div.append(this._text_counter);
+    this._controlsBox.append(this._text_counter);
+
     this._submit_btn = $('<button class="submit"></button>');
-    div.append(this._submit_btn);
+    this._controlsBox.append(this._submit_btn);
     this._cancel_btn = $('<button class="submit"></button>');
     this._cancel_btn.html(gettext('cancel'));
-    div.append(this._cancel_btn);
+    this._controlsBox.append(this._cancel_btn);
 
-    setupButtonEventHandlers(this._submit_btn, this.getSaveHandler());
-    setupButtonEventHandlers(this._cancel_btn, this.getCancelHandler());
-
-    var update_counter = this.getCounterUpdater();
-    var escape_handler = makeKeyHandler(27, this.getCancelHandler());
-    this._textarea.attr('name', 'comment')
-            .attr('cols', 60)
-            .attr('rows', 5)
-            .attr('maxlength', maxCommentLength)
-            .blur(update_counter)
-            .focus(update_counter)
-            .keyup(update_counter)
-            .keyup(escape_handler);
-    if (askbot['settings']['saveCommentOnEnter']){
-        var save_handler = makeKeyHandler(13, this.getSaveHandler());
-        this._textarea.keydown(save_handler);
+    //if email alerts are enabled, add a checkbox "suppress_email"
+    if (askbot['settings']['enableEmailAlerts'] === true) {
+        this._minorEditBox = this.makeElement('div');
+        this._minorEditBox.addClass('checkbox');
+        this._controlsBox.append(this._minorEditBox);
+        var checkBox = this.makeElement('input');
+        checkBox.attr('type', 'checkbox');
+        checkBox.attr('name', 'suppress_email');
+        this._minorEditBox.append(checkBox);
+        var label = this.makeElement('label');
+        label.attr('for', 'suppress_email');
+        label.html(gettext("minor edit (don't send alerts)"));
+        this._minorEditBox.append(label);
     }
-    this._textarea.val(this._text);
+
 };
 
 EditCommentForm.prototype.isEnabled = function() {
@@ -1586,37 +1710,59 @@ EditCommentForm.prototype.disableForm = function() {
 EditCommentForm.prototype.reset = function(){
     this._comment = null;
     this._text = '';
-    this._textarea.val('');
+    this._editor.setText('');
     this.enableForm();
 };
 
 EditCommentForm.prototype.confirmAbandon = function(){
-    this.focus(true);
-    this._textarea.addClass('highlight');
-    var answer = confirm(gettext("Are you sure you don't want to post this comment?"));
-    this._textarea.removeClass('highlight');
+    this._editor.focus();
+    this._editor.getElement().scrollTop();
+    this._editor.setHighlight(true);
+    var answer = confirm(
+        gettext("Are you sure you don't want to post this comment?")
+    );
+    this._editor.setHighlight(false);
     return answer;
 };
 
-EditCommentForm.prototype.focus = function(hard){
-    this._textarea.focus();
-    if (hard === true){
-        $(this._textarea).scrollTop();
-    }
+EditCommentForm.prototype.getSuppressEmail = function() {
+    return this._element.find('input[name="suppress_email"]').is(':checked');
+};
+
+EditCommentForm.prototype.setSuppressEmail = function(bool) {
+    this._element.find('input[name="suppress_email"]').prop('checked', bool);
 };
 
 EditCommentForm.prototype.getSaveHandler = function(){
 
     var me = this;
+    var editor = this._editor;
     return function(){
         if (me.isEnabled() === false) {//prevent double submits
             return false;
         }
-        var text = me._textarea.val();
+        me.disableForm();
+
+        var text = editor.getText();
         if (text.length < 10){
-            me.focus();
+            editor.focus();
             return false;
         }
+
+        //display the comment and show that it is not yet saved
+        me.setWaitingStatus(true);
+        me._comment.getElement().show();
+        var commentData = me._comment.getData();
+        var timestamp = commentData['comment_added_at'] || gettext('just now');
+        var userName = commentData['user_display_name'] || askbot['data']['userName'];
+        me._comment.setContent({
+            'html': editor.getHtml(),
+            'text': text,
+            'user_display_name': userName,
+            'comment_added_at': timestamp
+        });
+        me._comment.setDraftStatus(true);
+        me._comment.getContainerWidget().showButton();
 
         var post_data = {
             comment: text
@@ -1625,14 +1771,14 @@ EditCommentForm.prototype.getSaveHandler = function(){
         if (me._type == 'edit'){
             post_data['comment_id'] = me._comment.getId();
             post_url = askbot['urls']['editComment'];
+            post_data['suppress_email'] = me.getSuppressEmail();
+            me.setSuppressEmail(false);
         }
         else {
             post_data['post_type'] = me._comment.getParentType();
             post_data['post_id'] = me._comment.getParentId();
             post_url = askbot['urls']['postComments'];
         }
-
-        me.disableForm();
 
         $.ajax({
             type: "POST",
@@ -1641,19 +1787,21 @@ EditCommentForm.prototype.getSaveHandler = function(){
             data: post_data,
             success: function(json) {
                 //type is 'edit' or 'add'
+                me._comment.setDraftStatus(false);
                 if (me._type == 'add'){
                     me._comment.dispose();
                     me._comment.getContainerWidget().reRenderComments(json);
-                }
-                else {
+                } else {
                     me._comment.setContent(json);
-                    me._comment.getElement().show();
                 }
+                me.setWaitingStatus(false);
                 me.detach();
             },
             error: function(xhr, textStatus, errorThrown) {
                 me._comment.getElement().show();
                 showMessage(me._comment.getElement(), xhr.responseText, 'after');
+                me._comment.setDraftStatus(false);
+                me.setWaitingStatus(false);
                 me.detach();
                 me.enableForm();
             }
@@ -1661,9 +1809,6 @@ EditCommentForm.prototype.getSaveHandler = function(){
         return false;
     };
 };
-
-//a single instance to reuse
-var editCommentForm = new EditCommentForm();
 
 var Comment = function(widget, data){
     WrappedElement.call(this);
@@ -1674,6 +1819,7 @@ var Comment = function(widget, data){
     this._is_convertible = askbot['data']['userIsAdminOrMod'];
     this.convert_link = null;
     this._delete_prompt = gettext('delete this comment');
+    this._editorForm = undefined;
     if (data && data['is_deletable']){
         this._deletable = data['is_deletable'];
     }
@@ -1689,11 +1835,38 @@ var Comment = function(widget, data){
 };
 inherits(Comment, WrappedElement);
 
+Comment.prototype.getData = function() {
+    return this._data;
+};
+
+Comment.prototype.startEditing = function() {
+    var form = this._editorForm || new EditCommentForm();
+    this._editorForm = form;
+    // if new comment:
+    if (this.isBlank()) {
+        form.attachTo(this, 'add');
+    } else {
+        form.attachTo(this, 'edit');
+    }
+};
+
 Comment.prototype.decorate = function(element){
     this._element = $(element);
     var parent_type = this._element.parent().parent().attr('id').split('-')[2];
     var comment_id = this._element.attr('id').replace('comment-','');
     this._data = {id: comment_id};
+
+    var timestamp = this._element.find('abbr.timeago');
+    this._data['comment_added_at'] = timestamp.attr('title');
+    var userLink = this._element.find('a.author');
+    this._data['user_display_name'] = userLink.html();
+    // @todo: read other data
+
+    var commentBody = this._element.find('.comment-body');
+    if (commentBody.length > 0) {
+        this._comment_body = commentBody;
+    }
+
     var delete_img = this._element.find('span.delete-icon');
     if (delete_img.length > 0){
         this._deletable = true;
@@ -1715,11 +1888,30 @@ Comment.prototype.decorate = function(element){
         this._convert_link.decorate(convert_link);
     }
 
+    var deleter = this._element.find('.comment-delete');
+    if (deleter.length > 0) {
+        this._comment_delete = deleter;
+    };
+
     var vote = new CommentVoteButton(this);
     vote.decorate(this._element.find('.comment-votes .upvote'));
 
     this._blank = false;
 };
+
+Comment.prototype.setDraftStatus = function(isDraft) {
+    return;
+    //@todo: implement nice feedback about posting in progress
+    //maybe it should be an element that lasts at least a second
+    //to avoid the possible brief flash
+    if (isDraft === true) {
+        this._normalBackground = this._element.css('background');
+        this._element.css('background', 'rgb(255, 243, 195)');
+    } else {
+        this._element.css('background', this._normalBackground);
+    }
+};
+
 
 Comment.prototype.isBlank = function(){
     return this._blank;
@@ -1750,42 +1942,77 @@ Comment.prototype.getParentId = function(){
     return this._container_widget.getPostId();
 };
 
+/**
+ * this function is basically an "updateDom"
+ * for which we don't have the convention
+ */
 Comment.prototype.setContent = function(data){
-    this._data = data || this._data;
-    this._element.html('');
-    this._element.attr('class', 'comment');
+    this._data = $.extend(this._data, data);
+    this._element.addClass('comment');
     this._element.attr('id', 'comment-' + this._data['id']);
 
-    var votes = this.makeElement('div');
-    votes.addClass('comment-votes');
+    // 1) create the votes element if it is not there
+    var votesBox = this._element.find('.comment-votes');
+    if (votesBox.length === 0) {
+        votesBox = this.makeElement('div');
+        votesBox.addClass('comment-votes');
+        this._element.append(votesBox);
 
-    var vote = new CommentVoteButton(this);
-    if (this._data['upvoted_by_user']){
-        vote.setVoted(true);
+        var vote = new CommentVoteButton(this);
+        if (this._data['upvoted_by_user']){
+            vote.setVoted(true);
+        }
+        vote.setScore(this._data['score']);
+        var voteElement = vote.getElement();
+
+        votesBox.append(vote.getElement());
+    } 
+
+    // 2) create the comment deleter if it is not there
+    if (this._comment_delete === undefined) {
+        this._comment_delete = $('<div class="comment-delete"></div>');
+        if (this._deletable){
+            this._delete_icon = new DeleteIcon(this._delete_prompt);
+            this._delete_icon.setHandler(this.getDeleteHandler());
+            this._comment_delete.append(this._delete_icon.getElement());
+        }
+        this._element.append(this._comment_delete);
     }
-    vote.setScore(this._data['score']);
-    votes.append(vote.getElement());
 
-    this._element.append(votes);
-
-    this._comment_delete = $('<div class="comment-delete"></div>');
-    if (this._deletable){
-        this._delete_icon = new DeleteIcon(this._delete_prompt);
-        this._delete_icon.setHandler(this.getDeleteHandler());
-        this._comment_delete.append(this._delete_icon.getElement());
+    // 3) create or replace the comment body
+    if (this._comment_body === undefined) {
+        this._comment_body = $('<div class="comment-body"></div>');
+        this._element.append(this._comment_body);
     }
-    this._element.append(this._comment_delete);
-
-    this._comment_body = $('<div class="comment-body"></div>');
-    this._comment_body.html(this._data['html']);
+    if (askbot['settings']['editorType'] === 'tinymce') {
+        var theComment = $('<div/>');
+        theComment.html(this._data['html']);
+        //sanitize, just in case
+        this._comment_body.empty();
+        this._comment_body.append(theComment);
+        this._data['text'] = this._data['html'];
+    } else {
+        this._comment_body.empty();
+        this._comment_body.html(this._data['html']);
+    }
     //this._comment_body.append(' &ndash; ');
 
+    // 4) create user link if absent
+    if (this._user_link !== undefined) {
+        this._user_link.detach();
+        this._user_link = undefined;
+    }
     this._user_link = $('<a></a>').attr('class', 'author');
     this._user_link.attr('href', this._data['user_url']);
     this._user_link.html(this._data['user_display_name']);
     this._comment_body.append(' ');
     this._comment_body.append(this._user_link);
 
+    // 5) create or update the timestamp
+    if (this._comment_added_at !== undefined) {
+        this._comment_added_at.detach();
+        this._comment_added_at = undefined;
+    }
     this._comment_body.append(' (');
     this._comment_added_at = $('<abbr class="timeago"></abbr>');
     this._comment_added_at.html(this._data['comment_added_at']);
@@ -1794,18 +2021,22 @@ Comment.prototype.setContent = function(data){
     this._comment_body.append(this._comment_added_at);
     this._comment_body.append(')');
 
-    if (this._editable){
+    if (this._editable) {
+        if (this._edit_link !== undefined) {
+            this._edit_link.dispose();
+        }
         this._edit_link = new EditLink();
         this._edit_link.setHandler(this.getEditHandler())
         this._comment_body.append(this._edit_link.getElement());
     }
 
-    if (this._is_convertible){
+    if (this._is_convertible) {
+        if (this._convert_link !== undefined) {
+            this._convert_link.dispose();
+        }
         this._convert_link = new CommentConvertLink(this._data['id']); 
         this._comment_body.append(this._convert_link.getElement());
     }
-    this._element.append(this._comment_body);
-
     this._blank = false;
 };
 
@@ -1872,20 +2103,12 @@ Comment.prototype.getText = function(){
 }
 
 Comment.prototype.getEditHandler = function(){
-    var comment = this;
+    var me = this;
     return function(){
-        if (editCommentForm.canCancel()){
-            editCommentForm.detach();
-            if (comment.hasText()){
-                editCommentForm.attachTo(comment, 'edit');
-            }
-            else {
-                comment.loadText(
-                    function(){
-                        editCommentForm.attachTo(comment, 'edit');
-                    }
-                );
-            }
+        if (me.hasText()){
+            me.startEditing();
+        } else {
+            me.loadText(function(){ me.startEditing() });
         }
     };
 };
@@ -1978,28 +2201,65 @@ PostCommentsWidget.prototype.showButton = function(){
 }
 
 PostCommentsWidget.prototype.startNewComment = function(){
-    var comment = new Comment(this);
+    var opts = {
+        'is_deletable': true,
+        'is_editable': true
+    };
+    var comment = new Comment(this, opts);
     this._cbox.append(comment.getElement());
-    editCommentForm.attachTo(comment, 'add');
+    comment.startEditing();
 };
 
 PostCommentsWidget.prototype.needToReload = function(){
     return this._is_truncated;
 };
 
+PostCommentsWidget.prototype.userCanPost = function() {
+    var data = askbot['data'];
+    if (data['userIsAuthenticated']) {
+        //true if admin, post owner or high rep user
+        if (data['userIsAdminOrMod']) {
+            return true;
+        } else if (data['userReputation'] >= askbot['settings']['minRepToPostComment']) {
+            return true;
+        } else if (this.getPostId() in data['user_posts']) {
+            return true;
+        }
+    }
+    return false;
+};
+
 PostCommentsWidget.prototype.getActivateHandler = function(){
     var me = this;
+    var button = this._activate_button;
     return function() {
-        if (editCommentForm.canCancel()){
-            editCommentForm.detach();
-            if (me.needToReload()){
-                me.reloadAllComments(function(json){
-                    me.reRenderComments(json);
-                    me.startNewComment();
-                });
-            }
-            else {
+        if (me.needToReload()){
+            me.reloadAllComments(function(json){
+                me.reRenderComments(json);
+                //2) change button text to "post a comment"
+                button.html(gettext('post a comment'));
+            });
+        }
+        else {
+            //if user can't post, we tell him something and refuse
+            if (me.userCanPost()) {
                 me.startNewComment();
+            } else {
+                if (askbot['data']['userIsAuthenticated']) {
+                    var template = gettext(
+                        'You can always leave comments under your own posts.<br/>' +
+                        'However, to post comments anywhere, karma should be at least %s,<br/> ' +
+                        'and at the moment your karma is %s.<br/>'
+                    );
+                    var context = [
+                        askbot['settings']['minRepToPostComment'],
+                        askbot['data']['userReputation']
+                    ];
+                    var message = interpolate(template, context);
+                } else {
+                    var message = gettext('please sign in or register to post comments');
+                }
+                showMessage(button, message, 'after');
             }
         }
     };
@@ -2169,15 +2429,89 @@ QASwapper.prototype.startSwapping = function(){
 
 /**
  * @constructor
+ * a simple textarea-based editor
+ */
+var SimpleEditor = function(attrs) {
+    WrappedElement.call(this);
+    attrs = attrs || {};
+    this._rows = attrs['rows'] || 10;
+    this._cols = attrs['cols'] || 60;
+    this._maxlength = attrs['maxlength'] || 1000;
+};
+inherits(SimpleEditor, WrappedElement);
+
+SimpleEditor.prototype.focus = function() {
+    this._textarea.focus();
+};
+
+SimpleEditor.prototype.putCursorAtEnd = function() {
+    putCursorAtEnd(this._textarea);
+};
+
+/**
+ * a noop function
+ */
+SimpleEditor.prototype.start = function() {};
+
+SimpleEditor.prototype.setHighlight = function(isHighlighted) {
+    if (isHighlighted === true) {
+        this._textarea.addClass('highlight');
+    } else {
+        this._textarea.removeClass('highlight');
+    }
+};
+
+SimpleEditor.prototype.getText = function() {
+    return $.trim(this._textarea.val());
+};
+
+SimpleEditor.prototype.getHtml = function() {
+    return '<div class="transient-comment">' + this.getText() + '</div>';
+};
+
+SimpleEditor.prototype.setText = function(text) {
+    this._text = text;
+    if (this._textarea) {
+        this._textarea.val(text);
+    };
+};
+
+/**
+ * a textarea inside a div,
+ * the reason for this is that we subclass this
+ * in WMD, and that one requires a more complex structure
+ */
+SimpleEditor.prototype.createDom = function() {
+    this._element = this.makeElement('div');
+    this._element.addClass('wmd-container');
+    var textarea = this.makeElement('textarea');
+    this._element.append(textarea);
+    this._textarea = textarea;
+    if (this._text) {
+        textarea.val(this._text);
+    };
+    textarea.attr({
+        'cols': this._cols,
+        'rows': this._rows,
+        'maxlength': this._maxlength
+    });
+}
+
+
+/**
+ * @constructor
+ * a wrapper for the WMD editor
  */
 var WMD = function(){
-    WrappedElement.call(this);
+    SimpleEditor.call(this);
     this._text = undefined;
     this._enabled_buttons = 'bold italic link blockquote code ' +
         'image attachment ol ul heading hr';
     this._is_previewer_enabled = true;
 };
-inherits(WMD, WrappedElement);
+inherits(WMD, SimpleEditor);
+
+//@todo: implement getHtml method that runs text through showdown renderer
 
 WMD.prototype.setEnabledButtons = function(buttons){
     this._enabled_buttons = buttons;
@@ -2200,21 +2534,21 @@ WMD.prototype.createDom = function(){
     this._element.append(wmd_container);
 
     var wmd_buttons = this.makeElement('div')
-                        .attr('id', 'wmd-button-bar')
+                        .attr('id', this.makeId('wmd-button-bar'))
                         .addClass('wmd-panel');
     wmd_container.append(wmd_buttons);
 
     var editor = this.makeElement('textarea')
-                        .attr('id', 'editor');
+                        .attr('id', this.makeId('editor'));
     wmd_container.append(editor);
     this._textarea = editor;
 
-    if (this._markdown){
-        editor.val(this._markdown);
+    if (this._text){
+        editor.val(this._text);
     }
 
     var previewer = this.makeElement('div')
-                        .attr('id', 'previewer')
+                        .attr('id', this.makeId('previewer'))
                         .addClass('wmd-preview');
     wmd_container.append(previewer);
     this._previewer = previewer;
@@ -2223,19 +2557,8 @@ WMD.prototype.createDom = function(){
     }
 };
 
-WMD.prototype.setText = function(text){
-    this._markdown = text;
-    if (this._textarea){
-        this._textarea.val(text);
-    }
-};
-
-WMD.prototype.getText = function(){
-    return this._textarea.val();
-};
-
 WMD.prototype.start = function(){
-    Attacklab.Util.startEditor(true, this._enabled_buttons);
+    Attacklab.Util.startEditor(true, this._enabled_buttons, this.getIdSeed());
 };
 
 /**
@@ -2244,60 +2567,77 @@ WMD.prototype.start = function(){
 var TinyMCE = function(config) {
     WrappedElement.call(this);
     this._config = config || {};
+    this._id = 'editor';//desired id of the textarea
 };
 inherits(TinyMCE, WrappedElement);
 
 /* 3 dummy functions to match WMD api */
 TinyMCE.prototype.setEnabledButtons = function() {};
+
 TinyMCE.prototype.start = function() {
-    this.loadEditor();
+    //copy the options, because we need to modify them
+    var opts = $.extend({}, this._config);
+    var me = this;
+    var extraOpts = {
+        'mode': 'exact',
+        'elements': this._id,
+    };
+    opts = $.extend(opts, extraOpts);
+    tinyMCE.init(opts);
+    $('.mceStatusbar').remove();
 };
 TinyMCE.prototype.setPreviewerEnabled = function() {};
+TinyMCE.prototype.setHighlight = function() {};
+TinyMCE.prototype.putCursorAtEnd = function() {};
+
+TinyMCE.prototype.focus = function() {
+    //tinymce.execCommand('mceFocus', false, this._id);
+
+    //@todo: make this general to all editors
+    var winH = $(window).height();
+    var winY = $(window).scrollTop();
+    var edY = this._element.offset().top;
+    var edH = this._element.height();
+
+    //if editor bottom is below viewport
+    var isBelow = ((edY + edH) > (winY + winH));
+    var isAbove = (edY < winY);
+    if (isBelow || isAbove) {
+        //then center on screen
+        $(window).scrollTop(edY - edH/2 - winY/2);
+    }
+
+};
+
+TinyMCE.prototype.setId = function(id) {
+    this._id = id;
+};
 
 TinyMCE.prototype.setText = function(text) {
     this._text = text;
+    if (this.isLoaded()) {
+        tinymce.get(this._id).setContent(text);
+    }
 };
 
 TinyMCE.prototype.getText = function() {
     return tinyMCE.activeEditor.getContent();
 };
 
-TinyMCE.prototype.loadEditor = function() {
-    var config = JSON.stringify(this._config);
-    var data = {config: config};
-    var editorBox = this._element;
-    var me = this;
-    $.ajax({
-        async: false,
-        type: 'GET',
-        dataType: 'json',
-        cache: false,
-        url: askbot['urls']['getEditor'],
-        data: data,
-        success: function(data) {
-            if (data['success']) {
-                editorBox.html(data['html']);
-                editorBox.find('textarea').val(me._text);//@todo: fixme
-                $.each(data['scripts'], function(idx, scriptData) {
-                    var scriptElement = me.makeElement('script');
-                    scriptElement.attr('type', 'text/javascript');
-                    if (scriptData['src']) {
-                        scriptElement.attr('src', scriptData['src']);
-                    }
-                    if (scriptData['contents']) {
-                        scriptElement.html(scriptData['contents']);
-                    }
-                    $('head').append(scriptElement);
-                });
-            }
-        }
-    });
+TinyMCE.prototype.getHtml = TinyMCE.prototype.getText;
+
+TinyMCE.prototype.isLoaded = function() {
+    return (tinymce.get(this._id) !== undefined);
 };
 
 TinyMCE.prototype.createDom = function() {
     var editorBox = this.makeElement('div');
     editorBox.addClass('wmd-container');
     this._element = editorBox;
+    var textarea = this.makeElement('textarea');
+    textarea.attr('id', this._id);
+    textarea.addClass('editor');
+    this._element.append(textarea);
 };
 
 /**
@@ -2460,12 +2800,10 @@ TagWikiEditor.prototype.decorate = function(element){
         var editor = new WMD();
     } else {
         var editor = new TinyMCE({//override defaults
-            mode: 'exact',
-            elements: 'editor',
             theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',
             theme_advanced_buttons2: '',
-            plugins: '',
-            width: '200'
+            theme_advanced_path: false,
+            plugins: ''
         });
     }
     if (this._enabled_editor_buttons){

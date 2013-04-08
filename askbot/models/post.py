@@ -1,10 +1,8 @@
 from collections import defaultdict
 import datetime
 import operator
-import cgi
 import logging
 
-from django.utils.html import strip_tags
 from django.contrib.sitemaps import ping_google
 from django.utils import html
 from django.conf import settings as django_settings
@@ -35,7 +33,7 @@ from askbot.models.tag import tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
-from askbot.utils.html import sanitize_html
+from askbot.utils.html import sanitize_html, strip_tags
 from askbot.models.base import BaseQuerySetManager, DraftContent
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
@@ -422,27 +420,8 @@ class Post(models.Model):
         removed_mentions - list of mention <Activity> objects - for removed ones
         """
 
-        if self.post_type in ('question', 'answer', 'tag_wiki', 'reject_reason'):
-            _urlize = False
-            _use_markdown = (askbot_settings.EDITOR_TYPE == 'markdown')
-            _escape_html = False #markdow does the escaping
-        elif self.is_comment():
-            _urlize = True
-            _use_markdown = (askbot_settings.EDITOR_TYPE == 'markdown')
-            _escape_html = True
-        else:
-            raise NotImplementedError
-
-        text = self.text
-
-        if _escape_html:
-            text = cgi.escape(text)
-
-        if _urlize:
-            text = html.urlize(text)
-
-        if _use_markdown:
-            text = sanitize_html(markup.get_parser().convert(text))
+        text_converter = self.get_text_converter()
+        text = text_converter(self.text)
 
         #todo, add markdown parser call conditional on
         #self.use_markdown flag
@@ -615,6 +594,25 @@ class Post(models.Model):
             return None
 
         return answer
+
+    def get_text_converter(self):
+        have_simple_comment = (
+            self.is_comment() and 
+            askbot_settings.COMMENTS_EDITOR_TYPE == 'plain-text'
+        )
+        if have_simple_comment:
+            parser_type = 'plain-text'
+        else:
+            parser_type = askbot_settings.EDITOR_TYPE
+
+        if parser_type == 'plain-text':
+            return markup.plain_text_input_converter
+        elif parser_type == 'markdown':
+            return markup.markdown_input_converter
+        elif parser_type == 'tinymce':
+            return markup.tinymce_input_converter
+        else:
+            raise NotImplementedError
 
     def has_group(self, group):
         """true if post belongs to the group"""

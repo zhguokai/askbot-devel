@@ -115,9 +115,9 @@
                     {% for badge, badge_user_awards in badges %}
                         <a
                             href="{{badge.get_absolute_url()}}"
-                            title="{% trans description=badge.description %}{{description}}{% endtrans %}"
+                            title="{% trans description=badge.get_description() %}{{description}}{% endtrans %}"
                             class="medal"
-                        ><span class="{{ badge.css_class }}">&#9679;</span>&nbsp;{% trans name=badge.name %}{{name}}{% endtrans %}
+                        ><span class="{{ badge.get_css_class() }}">&#9679;</span>&nbsp;{% trans name=badge.get_name() %}{{name}}{% endtrans %}
                         </a>&nbsp;
                         <span class="tag-number">&#215;
                             <span class="badge-context-toggle">{{ badge_user_awards|length|intcomma }}</span>

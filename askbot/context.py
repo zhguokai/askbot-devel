@@ -55,8 +55,20 @@ def application_settings(request):
     my_settings['LOGOUT_REDIRECT_URL'] = url_utils.get_logout_redirect_url()
     my_settings['USE_ASKBOT_LOGIN_SYSTEM'] = 'askbot.deps.django_authopenid' \
         in settings.INSTALLED_APPS
+    
+    current_language = get_language()
+
+    #for some languages we will start searching for shorter words
+    if current_language == 'ja':
+        #we need to open the search box and show info message about
+        #the japanese lang search
+        min_search_word_length = 1
+    else:   
+        min_search_word_length = my_settings['MIN_SEARCH_WORD_LENGTH']
+
     context = {
-        'current_language_code': get_language(),
+        'min_search_word_length': min_search_word_length,
+        'current_language_code': current_language,
         'settings': my_settings,
         'skin': get_skin(request),
         'moderation_items': api.get_info_on_moderation_items(request.user),

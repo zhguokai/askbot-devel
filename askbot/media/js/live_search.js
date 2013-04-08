@@ -149,10 +149,30 @@ SearchDropMenu.prototype.hideWaitIcon = function() {
     }
 };
 
+SearchDropMenu.prototype.hideHeader = function() {
+    if (this._header) {
+        this._header.hide();
+    }
+};
+
+SearchDropMenu.prototype.showHeader = function() {
+    if (this._header) {
+        this._header.show();
+    }
+};
+
 SearchDropMenu.prototype.createDom = function() {
     this._element = this.makeElement('div');
     this._element.addClass('search-drop-menu');
     this._element.hide();
+
+    if (askbot['data']['languageCode'] === 'ja') {
+        var warning = this.makeElement('p');
+        this._header = warning;
+        warning.addClass('header');
+        warning.html(gettext('To see search results, 2 or more characters may be required'));
+        this._element.append(warning);
+    }
 
     this._resultsList = this.makeElement('ul');
     this._element.append(this._resultsList);
@@ -503,6 +523,9 @@ FullTextSearch.prototype.getSearchQuery = function() {
 FullTextSearch.prototype.renderTitleSearchResult = function(data) {
     var menu = this._dropMenu;
     menu.hideWaitIcon();
+    if (data.length > 0) {
+        menu.hideHeader();
+    }
     menu.setData(data);
     menu.render();
     menu.show();
@@ -789,6 +812,7 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
                        past the minimum length to trigger search */
                     dropMenu.show();
                     dropMenu.showWaitIcon();
+                    dropMenu.showHeader();
                 } else {
                     //close drop menu if we were deleting the query
                     dropMenu.reset();
