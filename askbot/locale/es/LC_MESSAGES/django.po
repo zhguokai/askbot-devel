@@ -7766,5 +7766,5 @@ msgstr "por favor, intenta hacer tu pregunta interesante para la comunidad"
 msgid "Hi there! Please sign in"
 msgstr "Ingresa"
 
-msgid "What can we do for you?"
-msgstr "¿En qué podemos ayudarte?"
+msgid "keep private within your groups"
+msgstr "privada, sólo visible en tus grupos"
