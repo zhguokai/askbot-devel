@@ -725,7 +725,7 @@ class CommandViewTests(AskbotTestCase):
     def test_load_object_description_fails(self):
         response = self.client.get(reverse('load_object_description'))
         soup = BeautifulSoup(response.content)
-        title = soup.find_all('h1')[0].contents[0]
+        title = soup.find_all('h1')[0].contents[0].strip()
         self.assertEqual(title, 'Page not found')
 
     def test_set_tag_filter_strategy(self):
