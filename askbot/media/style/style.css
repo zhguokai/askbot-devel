@@ -1801,9 +1801,16 @@ ul#related-tags li {
 }
 .wmd-container {
   border: #cce6ec 3px solid;
+  transition: 1s;
 }
 .wmd-container textarea {
   border: none;
+}
+.wmd-container.inactive {
+  border-color: #ddd;
+}
+.wmd-container.inactive .mceToolbar {
+  display: none;
 }
 .users-page .wmd-container {
   width: auto;
