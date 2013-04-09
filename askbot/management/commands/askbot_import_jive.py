@@ -129,6 +129,7 @@ class Command(BaseCommand):
         title = post.find('subject').text
         added_at = parse_date(post.find('creationdate').text)
         username = post.find('username').text
+        body = post.find('body').text
         try:
             user = models.User.objects.get(username=username)
         except models.User.DoesNotExist:
@@ -136,4 +137,4 @@ class Command(BaseCommand):
             self.bad_email_count += 1
             user = models.User(username=username, email=email)
             user.save()
-        return title, post.text, added_at, user
+        return title, body, added_at, user
