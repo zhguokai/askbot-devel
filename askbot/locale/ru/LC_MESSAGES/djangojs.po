@@ -39,34 +39,11 @@ msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
 msgstr ""
 "<div>Есть закладка!</div><div class=\"unfollow\">✗ Отписаться</div>"
 
-#: skins/default/media/js/post.js:1684 skins/common/media/js/post.js:1874
-msgid "Please enter question title (>10 characters)"
-msgstr ""
-"Пожалуйста, введите заголовок вопроса (>10 символов)"
-
 #: skins/default/media/js/tag_selector.js:15
 #: skins/common/media/js/tag_selector.js:15
 msgid "Tag \"<span></span>\" matches:"
 msgstr ""
 "Тег \"<span></span>\" подходит для:"
-
-#: skins/default/media/js/tag_selector.js:84
-#: skins/common/media/js/tag_selector.js:84
-#, perl-format
-msgid "and %s more, not shown..."
-msgstr ""
-"и еще %s, которые не показаны..."
-
-#: skins/default/media/js/user.js:129 skins/common/media/js/user.js:159
-msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr ""
-"Пожалуйста <a href=\"%(signin_url)s\">войдите на сайт</a> чтобы отметить "
-"профиль %(username)s"
-
-#: skins/common/media/js/user.js:191
-#, perl-format
-msgid "unfollow %s"
-msgstr "перестать следить за %s"
 
 #: skins/common/media/js/user.js:194
 #, perl-format
@@ -298,22 +275,6 @@ msgstr "ваше сообщение восстановлено"
 msgid "post deleted"
 msgstr "ваше сообщение было удалено"
 
-#: media/js/post.js:831
-msgid "Follow"
-msgstr ""
-
-#: media/js/post.js:840 media/js/post.js.c:849
-#, c-format
-msgid "%s follower"
-msgid_plural "%s followers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-
-#: media/js/post.js:845
-msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr ""
-
 #: media/js/post.js:901
 msgid "remove flag"
 msgstr ""
@@ -462,10 +423,6 @@ msgstr ""
 msgid "Shared with the following groups:"
 msgstr ""
 
-#: media/js/tag_selector.js:14
-msgid "Tag \"<span></span>\" matches:"
-msgstr "Совпадают с тэгом \"<span></span>\":"
-
 #: media/js/tag_selector.js:84
 #, c-format
 msgid "and %s more, not shown..."
@@ -544,16 +501,6 @@ msgstr "Пожалуйста, <a href=\"%(signin_url)s\">войдите на с�
 #, c-format
 msgid "unfollow %s"
 msgstr "перестать следить за %s"
-
-#: media/js/user.js:743
-#, c-format
-msgid "following %s"
-msgstr "отслеживаем за %s"
-
-#: media/js/user.js:749
-#, c-format
-msgid "follow %s"
-msgstr "отслеживать %s"
 
 #: media/js/user.js:807
 msgid "Remove"
