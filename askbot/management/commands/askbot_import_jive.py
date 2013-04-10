@@ -8,27 +8,6 @@ from django.db import transaction
 from django.forms import EmailField, ValidationError
 from datetime import datetime
 
-"""
-Jive --> CategoryList --> Category --> ForumList --> Forum
-  <Name>ouaou</Name>
-  <CreationDate>2008-05-06-0249</CreationDate>
-  <ModifiedDate/>
-  <ThreadList>
-    <Thread id="4046">
-      <CreationDate>2013/03/08 01:50:42.54 CST</CreationDate>
-      <ModifiedDate>2013/03/12 23:44:45.528 CDT</ModifiedDate>
-      <Message id="16809">
-        <Subject>Need help setting up mirror space</Subject>
-        <Body>Body text</Body>
-        <Username>jfawcett</Username>
-        <CreationDate>2013/03/08 01:50:42.54 CST</CreationDate>
-        <ModifiedDate>2013/03/08 01:50:42.54 CST</ModifiedDate>
-        <MessageList>
-        </MessageList>
-      </Message>
-    </Thread>
-"""
-
 def parse_date(date_str):
     return datetime.strptime(date_str[:-8], '%Y/%m/%d %H:%M:%S')
 
@@ -129,7 +108,11 @@ class Command(BaseCommand):
         title = post.find('subject').text
         added_at = parse_date(post.find('creationdate').text)
         username = post.find('username').text
-        body = post.find('body').text
+        body_node = post.find('messagebody')
+        if body_node:
+            body = post.find('messagebody').text
+        else:
+            raise Exception('Rename tags <Body> to <MessageBody> then clear the database and re-import')
         try:
             user = models.User.objects.get(username=username)
         except models.User.DoesNotExist:
