@@ -26,17 +26,17 @@
 {% if new_answer_allowed %}
     {% include "question/new_answer_form.html" %}
 {% else %}
-<div style="margin-top: 15px">
-    <a
-        class="button submit"
-        href="{% url "edit_answer" previous_answer.id %}"
-    >{% trans %}Edit Your Previous Answer{% endtrans %}</a>
-    <span>{% trans %}(only one answer per user is allowed){% endtrans %}</span>
-    <div class="invisible">
-        {# hidden because we still need js from the tinymce widget #}
-        {% include "question/new_answer_form.html" %}
+    <div style="margin-top: 15px">
+        <a
+            class="button submit"
+            href="{% url "edit_answer" previous_answer.id %}"
+        >{% trans %}Edit Your Previous Answer{% endtrans %}</a>
+        <span>{% trans %}(only one answer per user is allowed){% endtrans %}</span>
+        <div class="invisible">
+            {# hidden because we still need js from the tinymce widget #}
+            {% include "question/new_answer_form.html" %}
+        </div>
     </div>
-</div>
 {% endif %}
 {% if question.closed == False and request.user == question.author %}{# this is outside the form on purpose #}
 <input 

@@ -84,4 +84,11 @@
             CPValidator.getAnswerFormMessages()
         );
     }
+    (function() {
+        var editorBox = $('.folded-editor');
+        if (editorBox.length) {
+            var foldedEditor = new FoldedEditor();
+            foldedEditor.decorate(editorBox);
+        }
+    })();
 </script>

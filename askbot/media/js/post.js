@@ -2429,6 +2429,55 @@ QASwapper.prototype.startSwapping = function(){
 
 /**
  * @constructor
+ * An element that encloses an editor and everything inside it.
+ * By default editor is hidden and user sees a box with a prompt
+ * suggesting to make a post.
+ * When user clicks, editor becomes accessible.
+ */
+var FoldedEditor = function() {
+    WrappedElement.call(this);
+};
+inherits(FoldedEditor, WrappedElement);
+
+FoldedEditor.prototype.getOpenHandler = function() {
+    var editorBox = this._editorBox;
+    var promptBox = this._prompt;
+    var editor = this._editor;
+    var me = this;
+    return function() {
+        promptBox.hide();
+        editorBox.show();
+        me.getElement().addClass('unfolded');
+        if (editor) {
+            editor.focus();
+            setTimeout(function() {editor.focus()}, 100);
+        }
+    };
+};
+
+FoldedEditor.prototype.decorate = function(element) {
+    this._element = element;
+    this._prompt = element.find('.prompt');
+    this._editorBox = element.find('.editor-proper');
+
+    var editorType = askbot['settings']['editorType'];
+    if (editorType === 'tinymce') {
+        var editor = new TinyMCE();
+        editor.decorate(element.find('textarea'));
+        this._editor = editor;
+    } else if (editorType === 'markdown') {
+        var editor = new WMD();
+        editor.decorate(element);
+        this._editor = editor;
+    }
+
+    var openHandler = this.getOpenHandler();
+    element.click(openHandler);
+    element.focus(openHandler);
+};
+
+/**
+ * @constructor
  * a simple textarea-based editor
  */
 var SimpleEditor = function(attrs) {
@@ -2557,6 +2606,12 @@ WMD.prototype.createDom = function(){
     }
 };
 
+WMD.prototype.decorate = function(element) {
+    this._element = element;
+    this._textarea = element.find('textarea');
+    this._previewer = element.find('.wmd-preview');
+};
+
 WMD.prototype.start = function(){
     Attacklab.Util.startEditor(true, this._enabled_buttons, this.getIdSeed());
 };
@@ -2591,7 +2646,7 @@ TinyMCE.prototype.setHighlight = function() {};
 TinyMCE.prototype.putCursorAtEnd = function() {};
 
 TinyMCE.prototype.focus = function() {
-    //tinymce.execCommand('mceFocus', false, this._id);
+    tinymce.execCommand('mceFocus', false, this._id);
 
     //@todo: make this general to all editors
     var winH = $(window).height();
@@ -2638,6 +2693,11 @@ TinyMCE.prototype.createDom = function() {
     textarea.attr('id', this._id);
     textarea.addClass('editor');
     this._element.append(textarea);
+};
+
+TinyMCE.prototype.decorate = function(element) {
+    this._element = element;
+    this._id = element.attr('id');
 };
 
 /**
