@@ -3,6 +3,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils.console import ProgressBar
 from askbot.utils.slug import slugify
 from bs4 import BeautifulSoup
+from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.forms import EmailField, ValidationError
@@ -25,11 +26,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         assert len(args) == 1, 'Dump file name is required'
         xml = open(args[0], 'r').read() 
-        try:
-            import lxml
-            soup = BeautifulSoup(xml, 'lxml')
-        except ImportError:
-            soup = BeautifulSoup(xml)
+        soup = BeautifulSoup(xml, ['lxml', 'xml'])
 
         self.import_users(soup.find_all('user'))
         self.import_forums(soup.find_all('forum'))
@@ -82,7 +79,8 @@ class Command(BaseCommand):
             title=title,
             body_text=body,
             timestamp=timestamp,
-            tags=tag_name
+            tags=tag_name,
+            language=django_settings.LANGUAGE_CODE
         )
         #post answers
         if not question_soup.messagelist:
@@ -93,7 +91,8 @@ class Command(BaseCommand):
             answer = user.post_answer(
                 question=question,
                 body_text=body,
-                timestamp=timestamp
+                timestamp=timestamp,
+                language=django_settings.LANGUAGE_CODE
             )
             comments = answer_soup.find_all('message')
             for comment in comments:
@@ -101,18 +100,15 @@ class Command(BaseCommand):
                 user.post_comment(
                     parent_post=answer,
                     body_text=body,
-                    timestamp=timestamp
+                    timestamp=timestamp,
+                    language=django_settings.LANGUAGE_CODE
                 )
 
     def parse_post(self, post):
         title = post.find('subject').text
         added_at = parse_date(post.find('creationdate').text)
         username = post.find('username').text
-        body_node = post.find('messagebody')
-        if body_node:
-            body = post.find('messagebody').text
-        else:
-            raise Exception('Rename tags <Body> to <MessageBody> then clear the database and re-import')
+        body = post.find('body').text
         try:
             user = models.User.objects.get(username=username)
         except models.User.DoesNotExist:
