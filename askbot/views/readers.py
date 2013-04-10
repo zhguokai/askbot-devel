@@ -563,13 +563,13 @@ def question(request, id):#refactor - long subroutine. display question body, an
         request.user.is_authenticated() and request.user.can_post_comment()
     )
 
-    user_already_gave_answer = False
+    new_answer_allowed = True
     previous_answer = None
     if request.user.is_authenticated():
         if askbot_settings.LIMIT_ONE_ANSWER_PER_USER:
             for answer in answers:
                 if answer.author == request.user:
-                    user_already_gave_answer = True
+                    new_answer_allowed = False
                     previous_answer = answer
                     break
 
@@ -590,7 +590,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'user_votes': user_votes,
         'user_post_id_list': user_post_id_list,
         'user_can_post_comment': user_can_post_comment,#in general
-        'user_already_gave_answer': user_already_gave_answer,
+        'new_answer_allowed': new_answer_allowed,
         'oldest_answer_id': thread.get_oldest_answer_id(request.user),
         'previous_answer': previous_answer,
         'tab_id' : answer_sort_method,
