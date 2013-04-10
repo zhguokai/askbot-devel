@@ -72,7 +72,7 @@ class Command(BaseCommand):
 
     def import_thread(self, thread, tag_name):
         """import individual thread"""
-        question_soup = thread.message
+        question_soup = thread.find('Message')
         title, body, timestamp, user = self.parse_post(question_soup)
         #post question
         question = user.post_question(
