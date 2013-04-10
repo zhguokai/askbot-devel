@@ -1,21 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.7\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-10 03:04-0500\n"
-"PO-Revision-Date: 2012-10-22 03:03+0100\n"
-"Last-Translator: Dario Kolak <dkolak@gmail.com>\n"
+"Project-Id-Version: askbot\n"
+"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"POT-Creation-Date: 2013-04-10 01:42-0500\n"
+"PO-Revision-Date: 2013-04-14 02:55+0000\n"
+"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
@@ -101,6 +101,7 @@ msgid "user {{str}} does not exist"
 msgid_plural "users {{str}} do not exist"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/group_messaging.js:278
 msgid "cannot send message to yourself"
@@ -123,6 +124,7 @@ msgid "Sorry, this tag does not exist"
 msgid_plural "Sorry, these tags do not exist"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/live_search.js:290
 msgid "search or ask your question"
@@ -137,15 +139,15 @@ msgid "must be shorter than %(max_chars)s character"
 msgid_plural "must be shorter than %(max_chars)s characters"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/post.js:154 media/js/post.js.c:1273
 msgid "tags cannot be empty"
 msgstr "please enter at least one tag"
 
 #: media/js/post.js:160 media/js/post.js.c:193
-#, fuzzy
 msgid "content cannot be empty"
-msgstr "please enter at least one tag"
+msgstr ""
 
 #: media/js/post.js:163
 #, c-format
@@ -153,24 +155,27 @@ msgid "question body must be > %s character"
 msgid_plural "question body must be > %s characters"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/post.js:171
 msgid "please enter title"
 msgstr ""
 
 #: media/js/post.js:174
-#, fuzzy, c-format
+#, c-format
 msgid "title must be > %s character"
 msgid_plural "title must be > %s characters"
-msgstr[0] "please enter at least %s more characters"
-msgstr[1] "please enter at least %s more characters"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/post.js:196
-#, fuzzy, c-format
+#, c-format
 msgid "answer must be > %s character"
 msgid_plural "answer must be > %s characters"
-msgstr[0] "please enter at least %s more characters"
-msgstr[1] "please enter at least %s more characters"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/post.js:253
 msgid "Back to the question"
@@ -206,16 +211,11 @@ msgstr "sorry, anonymous users cannot vote "
 
 #: media/js/post.js:558
 msgid "please confirm offensive"
-msgstr ""
-"are you sure this post is offensive, contains spam, advertising, malicious "
-"remarks, etc.?"
+msgstr "are you sure this post is offensive, contains spam, advertising, malicious remarks, etc.?"
 
 #: media/js/post.js:559
-#, fuzzy
 msgid "please confirm removal of offensive flag"
 msgstr ""
-"are you sure this post is offensive, contains spam, advertising, malicious "
-"remarks, etc.?"
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
@@ -242,11 +242,12 @@ msgid "Follow"
 msgstr "Follow"
 
 #: media/js/post.js:840 media/js/post.js.c:849
-#, fuzzy, c-format
+#, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
-msgstr[0] "prati %s"
-msgstr[1] "prati %s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/post.js:845
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
@@ -257,21 +258,16 @@ msgid "remove flag"
 msgstr ""
 
 #: media/js/post.js:935 media/js/post.js.c:964
-#, fuzzy
 msgid "flag offensive"
 msgstr ""
-"are you sure this post is offensive, contains spam, advertising, malicious "
-"remarks, etc.?"
 
 #: media/js/post.js:990 media/js/post.js.c:1373
-#, fuzzy
 msgid "undelete"
-msgstr "are you sure you want to delete this?"
+msgstr ""
 
 #: media/js/post.js:995 media/js/post.js.c:1377
-#, fuzzy
 msgid "delete"
-msgstr "your post has been deleted"
+msgstr ""
 
 #: media/js/post.js:1537
 msgid "add comment"
@@ -282,46 +278,43 @@ msgid "save comment"
 msgstr "save comment"
 
 #: media/js/post.js:1580
-#, fuzzy, c-format
+#, c-format
 msgid "enter at least %s characters"
-msgstr "please enter at least %s more characters"
+msgstr ""
 
 #: media/js/post.js:1582
-#, fuzzy, c-format
+#, c-format
 msgid "enter at least %s more characters"
-msgstr "please enter at least %s more characters"
+msgstr ""
 
 #: media/js/post.js:1592
-#, fuzzy, c-format
+#, c-format
 msgid "%s characters left"
-msgstr "please enter at least %s more characters"
+msgstr ""
 
 #: media/js/post.js:1690
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
 #: media/js/post.js:1722
-#, fuzzy
 msgid "Are you sure you don't want to post this comment?"
-msgstr "Jeste li sigurni da želite ukloniti svoj %s prijavu?"
+msgstr ""
 
 #: media/js/post.js:1756 media/js/utils.js:3151 media/js/utils.js.c:3306
 msgid "just now"
 msgstr ""
 
 #: media/js/post.js:1821
-#, fuzzy
 msgid "delete this comment"
-msgstr "Obrisati ovaj unos?"
+msgstr ""
 
 #: media/js/post.js:2120
 msgid "confirm delete comment"
 msgstr "do you really want to delete this comment?"
 
 #: media/js/post.js:2240
-#, fuzzy
 msgid "post a comment"
-msgstr "save comment"
+msgstr ""
 
 #: media/js/post.js:2250
 msgid "You can always leave comments under your own posts.<br/>"
@@ -344,9 +337,8 @@ msgid "Enter the logo url or upload an image"
 msgstr ""
 
 #: media/js/post.js:3005
-#, fuzzy
 msgid "Do you really want to remove the image?"
-msgstr "Jeste li sigurni da želite ukloniti svoj %s prijavu?"
+msgstr ""
 
 #: media/js/post.js:3113
 msgid "change logo"
@@ -358,8 +350,7 @@ msgstr ""
 
 #: media/js/post.js:3216
 #, c-format
-msgid ""
-"tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
+msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr ""
 
 #: media/js/post.js:3225
@@ -368,20 +359,19 @@ msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/post.js:3571
-#, fuzzy
 msgid "Delete category?"
-msgstr "Obrisati ovaj unos?"
+msgstr ""
 
 #: media/js/post.js:3660 media/js/utils.js:851
 msgid "edit"
 msgstr "edit"
 
 #: media/js/post.js:3747
-#, fuzzy
 msgid "category name cannot be empty"
-msgstr "please enter at least one tag"
+msgstr ""
 
 #: media/js/post.js:3783
 msgid "already exists at the current level!"
@@ -427,31 +417,31 @@ msgstr "Odaberite barem jednu stavku"
 #: media/js/user.js:59
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] "Obrisati ovu obavijest ?"
-msgstr[1] "Obrisati ove obavijesti?"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/user.js:66
 msgid "Close this entry?"
 msgid_plural "Close these entries?"
-msgstr[0] "Zatvoriti ovaj unos?"
-msgstr[1] "Zatvoriti ove unose?"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/user.js:74
-#, fuzzy
 msgid "Remove all flags and approve this entry?"
 msgid_plural "Remove all flags and approve these entries?"
-msgstr[0] "Ukloniti sve zastave na ovom unosu?"
-msgstr[1] "Ukloniti sve zastave na ovim unosima?"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/user.js:223
-#, fuzzy
 msgid "Post deleted"
-msgstr "your post has been deleted"
+msgstr ""
 
 #: media/js/user.js:225
-#, fuzzy
 msgid "Post approved"
-msgstr "your post is now restored!"
+msgstr ""
 
 #: media/js/user.js:246
 msgid "Accept"
@@ -487,8 +477,7 @@ msgstr ""
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr ""
-"<a href=\"%(signin_url)s\">Prijavite se</a> za praćenje korsnika %(username)s"
+msgstr "<a href=\"%(signin_url)s\">Prijavite se</a> za praćenje korsnika %(username)s"
 
 #: media/js/user.js:740
 #, c-format
@@ -711,6 +700,7 @@ msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/utils.js:3299
 #, c-format
@@ -718,17 +708,15 @@ msgid "%s min ago"
 msgid_plural "%s mins ago"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:71
 msgid "Insert a file"
 msgstr ""
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
-#, fuzzy
 msgid "Insert image"
 msgstr ""
-"enter URL of the image, e.g. http://www.example.com/image.jpg or upload an "
-"image file"
 
 #: media/js/wmd/wmd.js:31
 msgid "bold"
@@ -784,9 +772,7 @@ msgstr "ponovo učiniti"
 
 #: media/js/wmd/wmd.js:54
 msgid "enter image url"
-msgstr ""
-"enter URL of the image, e.g. http://www.example.com/image.jpg or upload an "
-"image file"
+msgstr "enter URL of the image, e.g. http://www.example.com/image.jpg or upload an image file"
 
 #: media/js/wmd/wmd.js:55
 msgid "enter url"
@@ -805,16 +791,11 @@ msgid "file name"
 msgstr ""
 
 #: media/js/wmd/wmd.js:1848
-#, fuzzy
 msgid "link text"
-msgstr "veza"
+msgstr ""
 
-#, fuzzy
 #~ msgid "%s content minchars"
 #~ msgstr "please enter more than %s characters"
 
 #~ msgid "%s title minchars"
 #~ msgstr "please enter at least %s characters"
-
-#~ msgid "confirm abandon comment"
-#~ msgstr "Are you sure you do not want to post this comment?"

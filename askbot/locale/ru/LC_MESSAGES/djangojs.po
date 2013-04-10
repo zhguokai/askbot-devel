@@ -18,43 +18,6 @@ msgstr ""
 "Language: ru\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: skins/default/media/js/post.js:532
-msgid "Follow"
-msgstr ""
-"Добавить закладку"
-
-#: skins/default/media/js/post.js:541 skins/default/media/js/post.js.py:550
-#, perl-format
-msgid "%s follower"
-msgid_plural "%s followers"
-msgstr[0] ""
-"%s подписчик"
-msgstr[1] ""
-"%s подписчика"
-msgstr[2] ""
-"%s подписчиков"
-
-#: skins/default/media/js/post.js:546
-msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr ""
-"<div>Есть закладка!</div><div class=\"unfollow\">✗ Отписаться</div>"
-
-#: skins/default/media/js/tag_selector.js:15
-#: skins/common/media/js/tag_selector.js:15
-msgid "Tag \"<span></span>\" matches:"
-msgstr ""
-"Тег \"<span></span>\" подходит для:"
-
-#: skins/common/media/js/user.js:194
-#, perl-format
-msgid "following %s"
-msgstr "отслеживаем за %s"
-
-#: skins/common/media/js/user.js:200
-#, perl-format
-msgid "follow %s"
-msgstr "отслеживать %s"
-
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
@@ -107,7 +70,7 @@ msgstr "Создать пароль"
 
 #: media/jquery-openid/jquery.openid.js:344
 msgid "Create a password-protected account"
-msgstr "Создать аккаунт"
+msgstr "Создать аккаунт, защищенный паролем"
 
 #: media/js/group_messaging.js:102 media/js/group_messaging.js.c:293
 msgid "required"
@@ -275,6 +238,22 @@ msgstr "ваше сообщение восстановлено"
 msgid "post deleted"
 msgstr "ваше сообщение было удалено"
 
+#: media/js/post.js:831
+msgid "Follow"
+msgstr ""
+
+#: media/js/post.js:840 media/js/post.js.c:849
+#, c-format
+msgid "%s follower"
+msgid_plural "%s followers"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: media/js/post.js:845
+msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
+msgstr ""
+
 #: media/js/post.js:901
 msgid "remove flag"
 msgstr ""
@@ -423,6 +402,10 @@ msgstr ""
 msgid "Shared with the following groups:"
 msgstr ""
 
+#: media/js/tag_selector.js:14
+msgid "Tag \"<span></span>\" matches:"
+msgstr "Совпадают с тэгом \"<span></span>\":"
+
 #: media/js/tag_selector.js:84
 #, c-format
 msgid "and %s more, not shown..."
@@ -502,6 +485,16 @@ msgstr "Пожалуйста, <a href=\"%(signin_url)s\">войдите на с�
 msgid "unfollow %s"
 msgstr "перестать следить за %s"
 
+#: media/js/user.js:743
+#, c-format
+msgid "following %s"
+msgstr "отслеживаем за %s"
+
+#: media/js/user.js:749
+#, c-format
+msgid "follow %s"
+msgstr "отслеживать %s"
+
 #: media/js/user.js:807
 msgid "Remove"
 msgstr ""
@@ -520,7 +513,7 @@ msgstr ""
 
 #: media/js/utils.js:97
 msgid "click to close"
-msgstr "нажмите, чтобы закрыть"
+msgstr "нажмите чтобы закрыть"
 
 #: media/js/utils.js:850
 msgid "click to edit this comment"
