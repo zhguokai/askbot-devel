@@ -28,8 +28,8 @@ class Command(BaseCommand):
         xml = open(args[0], 'r').read() 
         soup = BeautifulSoup(xml, ['lxml', 'xml'])
 
-        self.import_users(soup.find_all('user'))
-        self.import_forums(soup.find_all('forum'))
+        self.import_users(soup.find_all('User'))
+        self.import_forums(soup.find_all('Forum'))
 
     @transaction.commit_manually
     def import_users(self, user_soup):
@@ -37,15 +37,15 @@ class Command(BaseCommand):
 
         message = 'Importing users:'
         for user in ProgressBar(iter(user_soup), len(user_soup), message):
-            username = user.find('username').text
-            real_name = user.find('name').text
+            username = user.find('Username').text
+            real_name = user.find('Name').text
             try:
-                email = EmailField().clean(user.find('email').text)
+                email = EmailField().clean(user.find('Email').text)
             except ValidationError:
                 email = 'unknown%d@example.com' % self.bad_email_count
                 self.bad_email_count += 1
                 
-            joined_timestamp = parse_date(user.find('creationdate').text)
+            joined_timestamp = parse_date(user.find('CreationDate').text)
             user = models.User(
                 username=username,
                 email=email,
@@ -60,8 +60,8 @@ class Command(BaseCommand):
         and then importing all threads for the tag"""
         admin = models.User.objects.get(id=1)
         for forum in forum_soup:
-            threads_soup = forum.find_all('thread')
-            self.import_threads(threads_soup, forum.find('name').text)
+            threads_soup = forum.find_all('Thread')
+            self.import_threads(threads_soup, forum.find('Name').text)
 
     @transaction.commit_manually
     def import_threads(self, threads, tag_name):
@@ -86,7 +86,7 @@ class Command(BaseCommand):
         if not question_soup.messagelist:
             return
 
-        for answer_soup in question_soup.messagelist.find_all('message', recursive=False):
+        for answer_soup in question_soup.messagelist.find_all('Message', recursive=False):
             title, body, timestamp, user = self.parse_post(answer_soup)
             answer = user.post_answer(
                 question=question,
@@ -94,7 +94,7 @@ class Command(BaseCommand):
                 timestamp=timestamp,
                 language=django_settings.LANGUAGE_CODE
             )
-            comments = answer_soup.find_all('message')
+            comments = answer_soup.find_all('Message')
             for comment in comments:
                 title, body, timestamp, user = self.parse_post(comment)
                 user.post_comment(
@@ -105,10 +105,10 @@ class Command(BaseCommand):
                 )
 
     def parse_post(self, post):
-        title = post.find('subject').text
-        added_at = parse_date(post.find('creationdate').text)
-        username = post.find('username').text
-        body = post.find('body').text
+        title = post.find('Subject').text
+        added_at = parse_date(post.find('CreationDate').text)
+        username = post.find('Username').text
+        body = post.find('Body').text
         try:
             user = models.User.objects.get(username=username)
         except models.User.DoesNotExist:
