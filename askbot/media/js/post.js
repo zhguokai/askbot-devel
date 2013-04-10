@@ -2450,7 +2450,7 @@ FoldedEditor.prototype.getOpenHandler = function() {
         me.getElement().addClass('unfolded');
         if (editor) {
             editor.focus();
-            setTimeout(function() {editor.focus()}, 100);
+            setTimeout(function() {editor.focus()}, 300);
         }
     };
 };
