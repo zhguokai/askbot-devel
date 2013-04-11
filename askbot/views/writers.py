@@ -68,6 +68,7 @@ def upload(request):#ajax upload file to a question or answer
     new_file_name = ''
     try:
         #may raise exceptions.PermissionDenied
+        result, error, file_url, orig_file_name = None, None, None, None
         if request.user.is_anonymous():
             msg = _('Sorry, anonymous users cannot upload files')
             raise exceptions.PermissionDenied(msg)
