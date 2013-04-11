@@ -937,7 +937,7 @@ body.anon.ask-page .search-drop-menu {
 .box .inputs #subscribedTagAdd,
 .box .inputs #ab-tag-search-add {
   border: 0;
-  margin-top: -2px;
+  margin: -2px 0 0 0;
 }
 .box .inputs #ab-tag-search-add {
   width: 47px;
