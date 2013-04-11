@@ -68,6 +68,8 @@ settings.register(
     )
 )
 
+"""
+#this is disabled to possibly be completely removed later
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
@@ -76,6 +78,7 @@ settings.register(
         description=_('Leave comments')
     )
 )
+"""
 
 settings.register(
     livesettings.IntegerValue(

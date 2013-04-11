@@ -771,6 +771,9 @@ def user_assert_can_edit_comment(self, comment = None):
 def user_can_post_comment(self, parent_post = None):
     """a simplified method to test ability to comment
     """
+    return True
+    """
+    #commented out to disable the min rep
     if self.reputation >= askbot_settings.MIN_REP_TO_LEAVE_COMMENTS:
         return True
     if parent_post and self == parent_post.author:
@@ -778,6 +781,7 @@ def user_can_post_comment(self, parent_post = None):
     if self.is_administrator_or_moderator():
         return True
     return False
+    """
 
 
 def user_assert_can_post_comment(self, parent_post = None):
@@ -795,7 +799,7 @@ def user_assert_can_post_comment(self, parent_post = None):
                 'Sorry, to comment any post a minimum reputation of '
                 '%(min_rep)s points is required. You can still comment '
                 'your own posts and answers to your questions'
-            ) % {'min_rep': askbot_settings.MIN_REP_TO_LEAVE_COMMENTS}
+            ) % {'min_rep': 0}#askbot_settings.MIN_REP_TO_LEAVE_COMMENTS}
 
     blocked_message = get_i18n_message('BLOCKED_USERS_CANNOT_POST')
 
@@ -806,7 +810,7 @@ def user_assert_can_post_comment(self, parent_post = None):
             owner_can = True,
             blocked_error_message = blocked_message,
             suspended_error_message = suspended_error_message,
-            min_rep_setting = askbot_settings.MIN_REP_TO_LEAVE_COMMENTS,
+            min_rep_setting = 0,#askbot_settings.MIN_REP_TO_LEAVE_COMMENTS,
             low_rep_error_message = low_rep_error_message,
         )
     except askbot_exceptions.InsufficientReputation, e:

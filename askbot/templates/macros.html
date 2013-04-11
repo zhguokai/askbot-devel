@@ -378,6 +378,12 @@ for the purposes of the AJAX comment editor #}
     </script>
 {%- endmacro -%}
 
+{%- macro csrf_middleware_token(csrf_token) -%}
+    <div style="display: none;">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+    </div>
+{%- endmacro -%}
+
 {%- macro post_comments_widget(
         post=None,
         show_post = None,

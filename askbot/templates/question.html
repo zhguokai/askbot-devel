@@ -43,6 +43,25 @@
                 return nodes;
             };
 
+            var hasAttribute = function(node, attrName) {
+                if (node.hasAttribute) {
+                    return node.hasAttribute(attrName);
+                } else {
+                    return (!(!(node.getAttribute(attrName))));
+                }
+            };
+
+            var findChildByAttribute = function(node, attrName, attrVal) {
+                var children = node.childNodes;
+                for (var i = 0; i < children.length; i++) {
+                    var child = children[i];
+                    if (child.getAttribute(attrName) === attrVal) {
+                        return child;
+                    }
+                };
+                return null;
+            };
+
             var removeNode = function(node) {
                 node.parentNode.removeChild(node);
             };
@@ -52,6 +71,10 @@
             };
 
             var data = askbot['data'];
+            var isAuthorOfPost = function(post_id) {
+                return (data['user_posts'] && data['user_posts'][post_id]);
+            };
+
             if (data['userIsAuthenticated']){
                 var votes = {};
                 {% for post_id in user_votes %}
@@ -98,7 +121,11 @@
                 var repostAsPrevAnsComment = document.getElementById(id2);
                 var extraOptsList = repostAsQuestionComment.parentNode;
                 var extraOpts = extraOptsList.parentNode;
-                if (data['userIsAdminOrMod']){
+
+                var isAuthenticated = data['userIsAuthenticated'];
+                var isMod = data['userIsAdminOrMod'];
+                if (isAuthenticated && (isMod || isAuthorOfPost(post_id))) {
+                    //still may need to hide because answer may be too long
                     var answer_id = 'post-id-' + post_id;
                     var answer_container = document.getElementById(answer_id);
                     var answerBody = findChildrenByClassName(answer_container, 'answer-body')[0];
@@ -111,11 +138,12 @@
                     } else if (parseInt(post_id) === data['oldestAnswerId']) {
                         repostAsPrevAnsComment.parentNode.removeChild(repostAsPrevAnsComment);
                     }
-                } else{
+                } else {
                     repostAsQuestionComment.parentNode.removeChild(repostAsQuestionComment);
                     repostAsPrevAnsComment.parentNode.removeChild(repostAsPrevAnsComment);
                 }
 
+                //if the whole control is empty - remove it
                 if (extraOptsList.getElementsByTagName('li').length === 0) {
                     extraOpts.parentNode.removeChild(extraOpts);
                 }
@@ -210,13 +238,22 @@
                 }
             }
 
-            function hide_convert_links(){
-              if (!askbot['data']['userIsAdminOrMod']){
-                var links = findChildrenByClassName(document, 'convert-comment');
-                for (i=0; i<links.length; i++){
-                  links[i].setAttribute('style', 'display:none;');
+            function hide_convert_links() {
+                var isAuthenticated = data['userIsAuthenticated'];
+                var isMod = data['userIsAdminOrMod'];
+                if (isAuthenticated && isMod) {
+                    return;
                 }
-              }
+                var convertForms = findChildrenByClassName(document, 'convert-comment');
+                for (var i = 0; i < convertForms.length; i++) {
+                    //get comment id
+                    var form = convertForms[i];
+                    var idInput = findChildByAttribute(form, 'name', 'comment_id');
+                    var commentId = idInput.getAttribute('value');
+                    if (! isAuthorOfPost(commentId) ) {
+                        form.setAttribute('style', 'display:none;');
+                    }
+                }
             }
             
             askbot['functions'] = askbot['functions'] || {};

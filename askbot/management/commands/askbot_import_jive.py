@@ -20,7 +20,7 @@ class Command(BaseCommand):
         #relax certain settings
         askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', False)
         askbot_settings.update('MAX_COMMENT_LENGTH', 1000000)
-        askbot_settings.update('MIN_REP_TO_LEAVE_COMMENTS', 1)
+        #askbot_settings.update('MIN_REP_TO_LEAVE_COMMENTS', 1)
         self.bad_email_count = 0
 
     def handle(self, *args, **kwargs):

@@ -825,7 +825,6 @@ def delete_comment(request):
                     mimetype = 'application/json'
                 )
 
-@decorators.admins_only
 @decorators.post_only
 def comment_to_answer(request):
     comment_id = request.POST.get('comment_id')
@@ -858,8 +857,8 @@ def comment_to_answer(request):
     else:
         raise Http404
 
-@decorators.admins_only
 @decorators.post_only
+@csrf.csrf_protect
 #todo: change the urls config for this
 def repost_answer_as_comment(request, destination=None):
     assert(
