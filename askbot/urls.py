@@ -154,7 +154,7 @@ urlpatterns = patterns('',
         name='answer'
     ),
     url(#ajax only
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')),
+        r'^vote$',
         views.commands.vote,
         name='vote'
     ),

@@ -1030,16 +1030,17 @@ var Vote = function(){
                 );
                 return false;
             }
+            postId = questionId;
             submit(object, VoteType.favorite, callback_favorite);
         },
 
         vote: function(object, voteType){
-            if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
+            if (!currentUserId || currentUserId.toUpperCase() == "NONE") {
                 if (voteType == VoteType.questionSubscribeUpdates || voteType == VoteType.questionUnsubscribeUpdates){
                     getquestionSubscribeSidebarCheckbox().removeAttr('checked');
                     getquestionSubscribeUpdatesCheckbox().removeAttr('checked');
                     showMessage(object, subscribeAnonymousMessage);
-                }else {
+                } else {
                     showMessage(
                         $(object),
                         voteAnonymousMessage.replace(
@@ -1056,9 +1057,10 @@ var Vote = function(){
             // up and downvote processor
             if (voteType == VoteType.answerUpVote){
                 postId = object.attr("id").substring(imgIdPrefixAnswerVoteup.length);
-            }
-            else if (voteType == VoteType.answerDownVote){
+            } else if (voteType == VoteType.answerDownVote){
                 postId = object.attr("id").substring(imgIdPrefixAnswerVotedown.length);
+            } else {
+                postId = questionId;
             }
 
             submit(object, voteType, callback_vote);
@@ -1144,16 +1146,14 @@ var Vote = function(){
             var do_proceed = false;
             if (postType == 'answer'){
                 postNode = $('#post-id-' + postId);
-            }
-            else if (postType == 'question'){
+            } else if (postType == 'question') {
                 postNode = $('#question-table');
             }
             postRemoveLink = object;
-            if (postNode.hasClass('deleted')){
+            if (postNode.hasClass('deleted')) {
                 removeActionType = 'undelete';
                 do_proceed = true;
-            }
-            else {
+            } else {
                 removeActionType = 'delete';
                 do_proceed = confirm(removeConfirmation);
             }

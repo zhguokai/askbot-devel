@@ -203,7 +203,7 @@ def process_vote(user = None, vote_direction = None, post = None):
 
 
 @csrf.csrf_exempt
-def vote(request, id):
+def vote(request):
     """
     todo: this subroutine needs serious refactoring it's too long and is hard to understand
 
@@ -262,6 +262,8 @@ def vote(request, id):
         else:
             raise Exception(_('Sorry, something is not right here...'))
 
+        id = request.POST.get('postId')
+
         if vote_type == '0':
             if askbot_settings.ACCEPTING_ANSWERS_ENABLED is False:
                 return
@@ -296,8 +298,8 @@ def vote(request, id):
             if vote_type in ('5', '6'):
                 #todo: fix this weirdness - why postId here
                 #and not with question?
-                id = request.POST.get('postId')
-                post = get_object_or_404(models.Post, post_type='answer', id=id)
+                post_id = request.POST.get('postId')
+                post = get_object_or_404(models.Post, post_type='answer', id=post_id)
             else:
                 post = get_object_or_404(models.Post, post_type='question', id=id)
             #
