@@ -52,6 +52,13 @@ def application_settings(request):
     my_settings['ASKBOT_VERSION'] = askbot.get_version()
     my_settings['LOGIN_URL'] = url_utils.get_login_url()
     my_settings['LOGOUT_URL'] = url_utils.get_logout_url()
+
+    if my_settings['EDITOR_TYPE'] == 'tinymce':
+        tinymce_plugins = settings.TINYMCE_DEFAULT_CONFIG.get('plugins', '').split(',')
+        my_settings['TINYMCE_PLUGINS'] = map(lambda v: v.strip(), tinymce_plugins)
+    else:
+        my_settings['TINYMCE_PLUGINS'] = [];
+
     my_settings['LOGOUT_REDIRECT_URL'] = url_utils.get_logout_redirect_url()
     my_settings['USE_ASKBOT_LOGIN_SYSTEM'] = 'askbot.deps.django_authopenid' \
         in settings.INSTALLED_APPS

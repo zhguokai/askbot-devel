@@ -11,4 +11,5 @@
     askbot['settings']['minQuestionBodyLength'] = {{ settings.MIN_QUESTION_BODY_LENGTH }};
     askbot['settings']['minAnswerBodyLength'] = {{ settings.MIN_ANSWER_BODY_LENGTH }};
     askbot['settings']['tag_editor'] = '{{ tag_editor_settings|escapejs }}';
+    askbot['settings']['tinyMCEPlugins'] = JSON.parse('{{ settings.TINYMCE_PLUGINS|as_json }}');
 </script>

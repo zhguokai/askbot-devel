@@ -2626,6 +2626,21 @@ var TinyMCE = function(config) {
 };
 inherits(TinyMCE, WrappedElement);
 
+/*
+ * not passed onto prototoype on purpose!!!
+ */
+TinyMCE.onInitHook = function() {
+    //set initial content
+    tinyMCE.activeEditor.setContent(askbot['data']['editorContent'] || '');
+    //if we have spellchecker - enable it by default
+    if (inArray('spellchecker', askbot['settings']['tinyMCEPlugins'])) {
+        setTimeout(function() {
+            tinyMCE.activeEditor.controlManager.setActive('spellchecker', true);
+            tinymce.execCommand('mceSpellCheck', true);
+        }, 1);
+    }
+};
+
 /* 3 dummy functions to match WMD api */
 TinyMCE.prototype.setEnabledButtons = function() {};
 
