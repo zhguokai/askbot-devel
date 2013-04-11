@@ -528,6 +528,13 @@ def user_stats(request, user, context):
     }
     context.update(data)
 
+    extra_context = view_context.get_extra(
+                                'ASKBOT_USER_PROFILE_PAGE_EXTRA_CONTEXT',
+                                request,
+                                context
+                            )
+    context.update(extra_context)
+
     return render(request, 'user_profile/user_stats.html', context)
 
 def user_recent(request, user, context):
