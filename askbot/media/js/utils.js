@@ -1092,8 +1092,14 @@ FileUploadDialog.prototype.getInputId = function() {
     return this._input_id;
 };
 
+FileUploadDialog.prototype.setErrorText = function(text) {
+    this.setLabelText(text);
+    this._label.addClass('error');
+};
+
 FileUploadDialog.prototype.setLabelText= function(text) {
     this._label.html(text);
+    this._label.removeClass('error');
 };
 
 FileUploadDialog.prototype.setUrlInputTooltip = function(text) {
@@ -1190,7 +1196,7 @@ FileUploadDialog.prototype.startFileUpload = function(startUploadHandler) {
             fileURL = fileURL.replace(/\w:.*\\(.*)$/,'$1');
             var error = $(data).find('error').text();
             if (error != ''){
-                alert(error);
+                me.setErrorText(error);
             } else {
                 me.getUrlInputElement().attr('value', fileURL);
                 me.setLabelText(newStatus);
@@ -1211,6 +1217,7 @@ FileUploadDialog.prototype.startFileUpload = function(startUploadHandler) {
         error: function (data, status, e) {
             /* re-install this as the upload extension
             * will remove the handler to prevent double uploading */
+            me.setErrorText(gettext('Oops, looks like we had an error. Sorry.'));
             me.installFileUploadHandler(startUploadHandler);
         }
     });
