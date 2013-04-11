@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version
 -------------------
+* Disable/enable best answer feature
+* Allowed post owners repost answers and comments (this used to be mod-only function).
 * Answer editor is "folded" by default. Editor buttons and options show on click.
 * Management command `askbot_import_jive` to import data from Jive forums.
 * Added possibility to choose editor for comments: plain text, or same as

@@ -263,6 +263,8 @@ def vote(request, id):
             raise Exception(_('Sorry, something is not right here...'))
 
         if vote_type == '0':
+            if askbot_settings.ACCEPTING_ANSWERS_ENABLED is False:
+                return
             if request.user.is_authenticated():
                 answer_id = request.POST.get('postId')
                 answer = get_object_or_404(models.Post, post_type='answer', id = answer_id)

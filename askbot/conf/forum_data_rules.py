@@ -178,6 +178,15 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
+        'ACCEPTING_ANSWERS_ENABLED',
+        default=True,
+        description = _('Enable accepting best answer')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
         'TAGS_ARE_REQUIRED',
         description = _('Are tags required?'),
         default = False,
