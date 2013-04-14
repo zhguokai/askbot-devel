@@ -49,7 +49,7 @@ Programming, bug fixes and documentation
 Translations
 ------------
 * Mike Chen, Sailing Cai, suyu8776 - Chinese
-* Bruno Sarlo, Adolfo Fitoria, Francisco Espinoza - Spanish
+* Bruno Sarlo, Adolfo Fitoria, Francisco Espinoza,  - Spanish
 * Evgeny Kalinin - Russian
 * Evgeny Fadeev - English
 * Oktay Yildiz, Onur Mat, Cemre - Turkish
@@ -59,4 +59,5 @@ Translations
 * Adi Robian - Romanian
 * `Stefano Mancini <https://github.com/xponrails>`_, Dario Ghilardi, Federico Poloni, `Luca Ferroni <http://www.linkedin.com/in/lucaferroni>`_ - Italian
 * `Jordi Bofill <https://github.com/jbofill>`_ - Catalan
-
+* Vašek Chalupníček - Chech
+* Dario Kolak - Croatian
