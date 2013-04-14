@@ -4551,7 +4551,7 @@ msgid ""
 "href='http://gravatar.com'><strong>gravatar.com</strong></a> (just please be"
 " sure to use the same email address that you used to register with us). "
 "Default image that looks like a kitchen tile is generated automatically.</p>"
-msgstr "<p>Das Bild das die Benutzer kennzeichnet und in Ihren Profilen zu sehen ist nennt sich <strong>gravatar</strong> (was soviel heißt wie <strong>g</strong>lobally <strong>r</strong>ecognized <strong>avatar</strong>).</p><p>So funktioniert es: Ein <strong>Eindeutiger Schlüssel</strong> (unbreakable code) wird aus deiner Email Adresse errechnet. Du kannst dann auf der Webseite <a href='http://gravatar.com'><strong>gravatar.com</strong></a> ein Foto hochladen (ein echtes von Dir oder ein Spaßbild), von da an holen wir uns dort dein hinterlegtes Bild.</p><p>Dadurch kannst du auf vielen Seiten, eben auch bei uns, ein Avatar in deinem Profil oder deinen Beiträgen anzeigen lassen auch ohne deine Email Adresse veröffentlichen zu müssen</p><p>Bitte <strong>personalisiere deinen Account</strong> mit einem Bild - einfach anmelden auf <a href='http://gravatar.com'><strong>gravatar.com</strong></a> (vergewissere dich aber das du die gleiche Email Adresse verwendest die du auch bei uns angegeben hast). Die standartmäßige Grafik die solange eingeblendet wird, wurde automatisch für dich generiert.</p>"
+msgstr "<p>Das Bild das die Benutzer kennzeichnet und in Ihren Profilen zu sehen ist nennt sich <strong>gravatar</strong> (was soviel heißt wie <strong>g</strong>lobally <strong>r</strong>ecognized <strong>avatar</strong>).</p><p>So funktioniert es: Ein <strong>Eindeutiger Schlüssel</strong> (unbreakable code) wird aus deiner Email Adresse errechnet. Du kannst dann auf der Webseite <a href='http://gravatar.com'><strong>gravatar.com</strong></a> ein Foto hochladen (ein echtes von Dir oder ein Spaßbild), von da an holen wir uns dort dein hinterlegtes Bild.</p><p>Dadurch kannst du auf vielen Seiten, eben auch bei uns, ein Avatar in deinem Profil oder deinen Beiträgen anzeigen lassen auch ohne deine Email Adresse veröffentlichen zu müssen</p><p>Bitte <strong>personalisiere deinen Account</strong> mit einem Bild - einfach anmelden auf <a href='http://gravatar.com'><strong>gravatar.com</strong></a> (vergewissere dich aber, dass Du die gleiche Email-Adresse verwendest, die Du auch bei uns angegeben hast). Die standartmäßige Grafik, die eingeblendet wird, wurde automatisch für dich generiert.</p>"
 
 #: skins/default/templates/faq_static.html:71
 msgid "To register, do I need to create new password?"
@@ -4559,8 +4559,7 @@ msgstr "Muß ich ein neues Passwort anlegen, um mich zu registrieren?"
 
 #: skins/default/templates/faq_static.html:72
 msgid ""
-"No, you don't have to. You can login through any service that supports "
-"OpenID, e.g. Google, Yahoo, AOL, etc.\""
+"No, you don't have to. You can login through any service that supports OpenID, e.g. Google, Yahoo, AOL, etc."
 msgstr "Nein, brauchst du nicht. Du kannst dich mit verschiedenen externen Accountprovidern anmelden, wie zum Beispiel mit deinem Google, Twitter oder Facebook Account, und anderen."
 
 #: skins/default/templates/faq_static.html:73
@@ -4584,7 +4583,7 @@ msgstr "Fragen und Antworten nach dem Wiki-Prinzip für alle bearbeitbar zu mach
 
 #: skins/default/templates/faq_static.html:77
 msgid "If this approach is not for you, we respect your choice."
-msgstr "Falls Dir dies nicht gefällt, ist unser Forum vielleicht nicht das richtige für Dich."
+msgstr " "
 
 #: skins/default/templates/faq_static.html:79
 msgid "Still have questions?"
@@ -4593,8 +4592,7 @@ msgstr "Hast Du noch Fragen?"
 #: skins/default/templates/faq_static.html:80
 #, python-format
 msgid ""
-"Please <a href='%%(ask_question_url)s'>ask</a> your question, help make our "
-"community better!"
+"Please <a href='%%(ask_question_url)s'>ask</a> your question, help make our community better!"
 msgstr "Bitte <a href='%%(ask_question_url)s'>stelle</a> deine Frage, helfe mit unsere Community besser zu machen!"
 
 #: skins/default/templates/feedback.html:3
@@ -4657,18 +4655,18 @@ msgstr "Willkommen %(username)s,"
 
 #: skins/default/templates/help.html:9
 msgid "Welcome,"
-msgstr "Willkommen,"
+msgstr ""
 
 #: skins/default/templates/help.html:13
 #, python-format
 msgid "Thank you for using %(app_name)s, here is how it works."
-msgstr "Danke das Du %(app_name)s verwendest, und so funktioniert das ganze."
+msgstr "Danke, dass Du %(app_name)s verwendest!"
 
 #: skins/default/templates/help.html:16
 msgid ""
 "This site is for asking and answering questions, not for open-ended "
 "discussions."
-msgstr "Diese Seite ist zum <strong>Stellen von Fragen</strong> und zum <strong>Antworten auf Fragen</strong>, nicht für endlose Diskussionen."
+msgstr "Dieses Portal ist zum <strong>Stellen von Fragen</strong> und zum <strong>Antworten auf Fragen</strong>, nicht für endlose Diskussionen."
 
 #: skins/default/templates/help.html:17
 msgid ""
@@ -4680,7 +4678,7 @@ msgstr "Wir bitten jeden die \"Fragen Funktion\" zum Stellen, und die \"Antworte
 msgid ""
 "Despite that, each question and answer can be commented – \n"
 "    the comments are good for the limited discussions."
-msgstr "Abseits davon, jede Frage und jede Antwort kann kommentiert werden - diese Kommentare sind ausreichend für eine eingeschränkte Diskussion."
+msgstr "Jede Frage und jede Antwort kann kommentiert werden - diese Kommentare sind ausreichend für eine eingeschränkte Diskussion."
 
 #: skins/default/templates/help.html:24
 #, python-format
@@ -4694,7 +4692,7 @@ msgstr "Das Bewerten, also das Voten in %(app_name)s hilft die besten Antworten 
 msgid ""
 "Please vote when you find helpful information,\n"
 "    it really helps the %(app_name)s community."
-msgstr "Bitte vote wenn du eine nützliche Information findest, das hilft der %(app_name)s Community sehr."
+msgstr "Bitte vote, wenn Du eine nützliche Information findest, das hilft der Community sehr."
 
 #: skins/default/templates/help.html:29
 msgid ""
@@ -4854,7 +4852,8 @@ msgstr ""
 msgid ""
 "This post is a wiki.\n"
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
-msgstr ""
+msgstr "Wiki-Post.\n Jeder mit Karma &gt;%(wiki_min_rep)s darf verbessern."
+
 
 #: skins/default/templates/macros.html:88
 msgid "asked"
@@ -5340,7 +5339,7 @@ msgid ""
 "<strong>use comments for discussions</strong>  and <strong>please don't "
 "forget to vote :)</strong> for the answers that you liked (or perhaps did "
 "not like)!"
-msgstr "<span class='big strong'>Du kannst gerne eine Antwort auf deine eigene Frage geben</span>, aber bitte stelle sicher das es auch wirklich eine <strong>Antwort</strong> ist. Denke daran, du kann jederzeit <strong>deine eigene Frage neu formulieren</strong>. Bitte <strong>benutze Kommentare zum diskutieren</strong> und <strong>vergiss nicht zu voten :)</strong> für die Antwort die dir gefällt (oder eben wenn du sie nicht magst)!"
+msgstr "Du kannst gerne eine Antwort auf deine eigene Frage geben, aber bitte stelle sicher, dass es auch wirklich eine <strong>Antwort</strong> ist. Denke daran, Du kannst jederzeit deine eigene Frage neu formulieren. Bitte benutze Kommentare zum diskutieren und vergiß nicht zu voten :) für die Antwort, die dir gefällt (oder eben wenn Du sie nicht magst)!"
 
 #: skins/default/templates/question/new_answer_form.html:38
 msgid ""
@@ -5350,14 +5349,14 @@ msgid ""
 " your answers</strong> - no need to answer the same question twice. Also, "
 "please <strong>don't forget to vote</strong> - it really helps to select the"
 " best questions and answers!"
-msgstr "<span class='big strong'>Bitte versuche ein hilfreiche Antwort zu geben</span>. Wenn du eine Anmerkung zu einer Antwort hast <strong>benutze bitte die Kommentarfunktion</strong>. Denke daran das du deine Antworten <strong>ändern kannst</strong> - kein Grund mehrere Antworten zu geben. Vergesse bitte auch nicht <strong>zu voten</strong> - dies hilft sehr viel die besten Fragen und Antworten auszuwählen!"
+msgstr "<span class='big strong'>Bitte versuche ein hilfreiche Antwort zu geben</span>. Wenn du eine Anmerkung zu einer Antwort hast <strong>benutze bitte die Kommentarfunktion</strong>. Denke daran, dass du deine Antworten jeder zeit editieren kannst - kein Grund also mehrere Antworten zu geben. Vergiß bitte auch nicht <strong>zu voten</strong> - dies hilft die besten Fragen und Antworten auszuwählen!"
 
 #: skins/default/templates/question/sharing_prompt_phrase.html:2
 #, python-format
 msgid ""
 "Know someone who can answer?  Share a <a href=\"%(question_url)s\">link</a> "
 "to this question via"
-msgstr "Wenn Du jemanden kennst  der die Antwort weiß, teile einen <a href=\"%(question_url)s\">Link</a> zu dieser Frage via"
+msgstr "Wenn Du jemanden kennst, der die Antwort weiß, teile einen <a href=\"%(question_url)s\">Link</a> zu dieser Frage via"
 
 #: skins/default/templates/question/sharing_prompt_phrase.html:8
 msgid " or"
@@ -5369,7 +5368,7 @@ msgstr "Email"
 
 #: skins/default/templates/question/sidebar.html:6
 msgid "Question tools"
-msgstr "Fragen-Tools"
+msgstr "Frage-Tools"
 
 #: skins/default/templates/question/sidebar.html:9
 msgid "click to unfollow this question"
@@ -5385,7 +5384,7 @@ msgstr ""
 
 #: skins/default/templates/question/sidebar.html:15
 msgid "click to follow this question"
-msgstr ""
+msgstr "Klicke um dieser Frage zu folgen"
 
 #: skins/default/templates/question/sidebar.html:16
 msgid "Follow"
@@ -5400,13 +5399,13 @@ msgstr[1] "%(count)s Beobachter"
 
 #: skins/default/templates/question/sidebar.html:29
 msgid "email the updates"
-msgstr "Email mir Updates"
+msgstr "Updates per Email"
 
 #: skins/default/templates/question/sidebar.html:32
 msgid ""
 "<strong>Here</strong> (once you log in) you will be able to sign up for the "
 "periodic email updates about this question."
-msgstr "<strong>Hier</strong> (bist du erstmal angemeldet) kannst du dir zu dieser Frage neue Benachrichtigungen via Email schicken lassen."
+msgstr "<strong>Hier</strong> (bist du erstmal angemeldet) kannst du Dir zu dieser Frage neue Benachrichtigungen via Email schicken lassen."
 
 #: skins/default/templates/question/sidebar.html:37
 msgid "subscribe to this question rss feed"
@@ -5418,7 +5417,7 @@ msgstr "abonniere den RSS-Feed"
 
 #: skins/default/templates/question/sidebar.html:46
 msgid "Stats"
-msgstr "Fragen-Statistiken"
+msgstr "Statistiken"
 
 #: skins/default/templates/question/sidebar.html:48
 msgid "Asked"
@@ -5438,7 +5437,7 @@ msgstr "Letztes Update"
 
 #: skins/default/templates/question/sidebar.html:62
 msgid "Related questions"
-msgstr "Verwandte / ähnliche Fragen"
+msgstr "Verwandte Fragen"
 
 #: skins/default/templates/question/subscribe_by_email_prompt.html:5
 msgid "Email me when there are any new answers"
@@ -5917,7 +5916,8 @@ msgstr "*italic* oder _italic_"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:41
 #: skins/default/templates/widgets/question_edit_tips.html:36
-msgid "**bold** or __bold__"
+msgid "**bold** or __bold__
+ui"
 msgstr "**bold** oder __bold__"
 
 #: skins/default/templates/widgets/answer_edit_tips.html:45
@@ -5991,7 +5991,7 @@ msgstr "Hilfe"
 
 #: skins/default/templates/widgets/footer.html:42
 msgid "privacy policy"
-msgstr "Datenschutzrichtlinien"
+msgstr "Impressum und Datenschutz"
 
 #: skins/default/templates/widgets/footer.html:51
 msgid "give feedback"
@@ -6082,7 +6082,7 @@ msgstr "Einstellungen"
 
 #: templatetags/extra_filters_jinja.py:279
 msgid "no"
-msgstr "null"
+msgstr "0"
 
 #: utils/decorators.py:90 views/commands.py:73 views/commands.py:93
 msgid "Oops, apologies - there was some error"
@@ -6134,7 +6134,7 @@ msgstr ""
 
 #: utils/forms.py:138
 msgid "Your email <i>(never shared)</i>"
-msgstr "Deine Email-Adresse <i>(wird nicht angezeigt)</i>"
+msgstr "Deine Email-Adresse"
 
 #: utils/forms.py:139
 msgid "email address is required"
@@ -6302,7 +6302,7 @@ msgstr "Wir freuen uns auf Dein Feedback! Gerne auch nächstes Mal :)"
 
 #: views/meta.py:106
 msgid "Privacy policy"
-msgstr "Datenschutzrichtlinien"
+msgstr "Impressum und Datenschutz"
 
 #: views/readers.py:133
 #, python-format
@@ -6410,7 +6410,7 @@ msgstr "Zum Beantworten bitte einloggen"
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
-msgstr "Sembla que heu sortit i no podeu posar comentaris. <a href=\"%(sign_in_url)s\">Entreu</a>."
+msgstr "Bitte einloggen, dann kommentieren. <a href=\"%(sign_in_url)s\">Einloggen</a>."
 
 #: views/writers.py:589
 msgid "Sorry, anonymous users cannot edit comments"
