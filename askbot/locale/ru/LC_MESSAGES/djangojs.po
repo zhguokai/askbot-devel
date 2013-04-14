@@ -18,6 +18,66 @@ msgstr ""
 "Language: ru\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+#: skins/default/media/js/post.js:532
+msgid "Follow"
+msgstr ""
+"Добавить закладку"
+
+#: skins/default/media/js/post.js:541 skins/default/media/js/post.js.py:550
+#, perl-format
+msgid "%s follower"
+msgid_plural "%s followers"
+msgstr[0] ""
+"%s подписчик"
+msgstr[1] ""
+"%s подписчика"
+msgstr[2] ""
+"%s подписчиков"
+
+#: skins/default/media/js/post.js:546
+msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
+msgstr ""
+"<div>Есть закладка!</div><div class=\"unfollow\">✗ Отписаться</div>"
+
+#: skins/default/media/js/post.js:1684 skins/common/media/js/post.js:1874
+msgid "Please enter question title (>10 characters)"
+msgstr ""
+"Пожалуйста, введите заголовок вопроса (>10 символов)"
+
+#: skins/default/media/js/tag_selector.js:15
+#: skins/common/media/js/tag_selector.js:15
+msgid "Tag \"<span></span>\" matches:"
+msgstr ""
+"Тег \"<span></span>\" подходит для:"
+
+#: skins/default/media/js/tag_selector.js:84
+#: skins/common/media/js/tag_selector.js:84
+#, perl-format
+msgid "and %s more, not shown..."
+msgstr ""
+"и еще %s, которые не показаны..."
+
+#: skins/default/media/js/user.js:129 skins/common/media/js/user.js:159
+msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
+msgstr ""
+"Пожалуйста <a href=\"%(signin_url)s\">войдите на сайт</a> чтобы отметить "
+"профиль %(username)s"
+
+#: skins/common/media/js/user.js:191
+#, perl-format
+msgid "unfollow %s"
+msgstr "перестать следить за %s"
+
+#: skins/common/media/js/user.js:194
+#, perl-format
+msgid "following %s"
+msgstr "отслеживаем за %s"
+
+#: skins/common/media/js/user.js:200
+#, perl-format
+msgid "follow %s"
+msgstr "отслеживать %s"
+
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
@@ -70,7 +130,7 @@ msgstr "Создать пароль"
 
 #: media/jquery-openid/jquery.openid.js:344
 msgid "Create a password-protected account"
-msgstr "Создать аккаунт, защищенный паролем"
+msgstr "Создать аккаунт"
 
 #: media/js/group_messaging.js:102 media/js/group_messaging.js.c:293
 msgid "required"
@@ -513,7 +573,7 @@ msgstr ""
 
 #: media/js/utils.js:97
 msgid "click to close"
-msgstr "нажмите чтобы закрыть"
+msgstr "нажмите, чтобы закрыть"
 
 #: media/js/utils.js:850
 msgid "click to edit this comment"

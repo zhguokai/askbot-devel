@@ -48,9 +48,13 @@ Programming, bug fixes and documentation
 
 Translations
 ------------
+Thanks for the help to all translators.
+If you believe you were incorrectly missed out of this list,
+please let us know at support@askbot.com.
+
 * Mike Chen, Sailing Cai, suyu8776 - Chinese
-* Bruno Sarlo, Adolfo Fitoria, Francisco Espinoza,  - Spanish
-* Evgeny Kalinin - Russian
+* Bruno Sarlo, Adolfo Fitoria, Francisco Espinoza - Spanish
+* Evgeny Kalinin, Andrey Komrachkov - Russian
 * Evgeny Fadeev - English
 * Oktay Yildiz, Onur Mat, Cemre - Turkish
 * Jérôme Blondon (bearstech) - French
