@@ -2001,7 +2001,7 @@ var GroupDropdown = function(groups){
     this._add_link = this.makeElement('a');
     this._add_link.attr('href', '#');
     this._add_link.attr('class', 'group-name');
-    this._add_link.text('add new group');
+    this._add_link.text(gettext('add new group'));
 };
 inherits(GroupDropdown, WrappedElement);
 
