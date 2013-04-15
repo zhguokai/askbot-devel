@@ -27,8 +27,8 @@ SHARE_MY_POSTS = 1
 SHARE_EVERYTHING = 2
 SOCIAL_SHARING_MODE_CHOICES = (
     (SHARE_NOTHING, _('disable sharing')),
-    (SHARE_MY_POSTS, _('share my posts')),
-    (SHARE_EVERYTHING, _('share all posts'))
+    (SHARE_MY_POSTS, _('my posts')),
+    (SHARE_EVERYTHING, _('all posts'))
 )
 
 TYPE_REPUTATION = (

@@ -464,6 +464,28 @@ def user_can_post_by_email(self):
     return askbot_settings.REPLY_BY_EMAIL and \
         self.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL
 
+def user_get_social_sharing_mode(self):
+    """returns what user wants to share on his/her channels"""
+    mode = self.social_sharing_mode
+    if mode == const.SHARE_NOTHING:
+        return 'share-nothing'
+    elif mode == const.SHARE_MY_POSTS:
+        return 'share-my-posts'
+    else:
+        assert(mode == const.SHARE_EVERYTHING)
+        return 'share-everything'
+
+def user_get_social_sharing_status(self, channel):
+    """channel is only 'twitter' for now"""
+    assert(channel == 'twitter')
+    if self.twitter_handle:
+        if self.get_social_sharing_mode() == 'share-nothing':
+            return 'inactive'
+        else:
+            return 'enabled'
+    else:
+        return 'disabled'
+
 def user_get_or_create_fake_user(self, username, email):
     """
     Get's or creates a user, most likely with the purpose
@@ -2896,6 +2918,8 @@ User.add_to_class('get_notifications', user_get_notifications)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
 User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
+User.add_to_class('get_social_sharing_mode', user_get_social_sharing_mode)
+User.add_to_class('get_social_sharing_status', user_get_social_sharing_status)
 User.add_to_class('update_avatar_type', user_update_avatar_type)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)

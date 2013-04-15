@@ -88,6 +88,9 @@
                     <td>{{ macros.user_website_link(view_user, max_display_length = 30) }}</td>
                 </tr>
                 {% endif  %}
+                {% if request.user == view_user and settings.ENABLE_SHARING_TWITTER %}
+                {% include "user_profile/twitter_sharing_controls.html" %}
+                {% endif %}
                 {% if view_user.location or view_user.country %}
                 <tr>
                     <td>{% trans %}location{% endtrans %}</td>
