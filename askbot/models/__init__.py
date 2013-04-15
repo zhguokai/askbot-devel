@@ -241,6 +241,24 @@ User.add_to_class(
     models.CharField(max_length=128, default=django_settings.LANGUAGE_CODE)
 )
 
+User.add_to_class(
+    'twitter_access_token',
+    models.CharField(max_length=256, default='')
+)
+
+User.add_to_class(
+    'twitter_handle',
+    models.CharField(max_length=32, default='')
+)
+
+User.add_to_class(
+    'social_sharing_mode',
+    models.IntegerField(
+        default=const.SHARE_NOTHING,
+        choices = const.SOCIAL_SHARING_MODE_CHOICES
+    )
+)
+
 GRAVATAR_TEMPLATE = "//www.gravatar.com/avatar/%(gravatar)s?" + \
     "s=%(size)d&amp;d=%(type)s&amp;r=PG"
 

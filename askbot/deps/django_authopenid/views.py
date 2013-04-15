@@ -559,7 +559,7 @@ def signin(request, template_name='authopenid/signin.html'):
                     request.session['oauth_provider_name'] = provider_name
                     request.session['next_url'] = next_url#special case for oauth
 
-                    oauth_url = connection.get_auth_url(login_only = False)
+                    oauth_url = connection.get_auth_url(login_only=True)
                     return HttpResponseRedirect(oauth_url)
 
                 except util.OAuthError, e:
