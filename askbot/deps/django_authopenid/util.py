@@ -768,7 +768,7 @@ class OAuthConnection(object):
 
     def get_access_token(self, oauth_token=None, oauth_verifier=None):
         """returns data as returned upon visiting te access_token_url"""
-        client = self.get_client(self, oauth_token, oauth_verifier)
+        client = self.get_client(oauth_token, oauth_verifier)
         url = self.parameters['access_token_url']
         #there must be some provider-specific post-processing
         return self.send_request(client = client, url=url, method='GET')
