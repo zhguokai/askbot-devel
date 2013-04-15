@@ -230,9 +230,16 @@ settings.register(
         'MIN_REP_TO_TRIGGER_EMAIL',
         default=15,
         description=_('Trigger email notifications'),
-        help_text=_(
-            'Reduces spam as notifications wont\'t be sent '
-            'to regular users for posts of low karma users'
-        )
+        help_text=_('Reduces spam')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
+        'MIN_REP_TO_TWEET_ON_OTHERS_ACCOUNTS',
+        default=15,
+        description=_('Trigger tweets on others accounts'),
+        help_text=_('Reduces spam')
     )
 )

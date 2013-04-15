@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Auto-tweet option for questions and answers
 * Added Chech and Croatian translations
 * Disable/enable best answer feature
 * Allowed post owners repost answers and comments (this used to be mod-only function).

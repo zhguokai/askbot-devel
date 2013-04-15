@@ -3690,6 +3690,12 @@ def moderate_group_joining(sender, instance=None, created=False, **kwargs):
                 content_object = group
             )
 
+def tweet_new_post(sender, user=None, question=None, answer=None, form_data=None, **kwargs):
+    """seends out tweets about the new post"""
+    from askbot.tasks import tweet_new_post_task
+    post = question or answer
+    tweet_new_post_task.delay(post.id)
+
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
@@ -3721,6 +3727,8 @@ signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
 signals.post_updated.connect(record_post_update_activity)
+signals.new_answer_posted.connect(tweet_new_post)
+signals.new_question_posted.connect(tweet_new_post)
 
 #probably we cannot use post-save here the point of this is
 #to tell when the revision becomes publicly visible, not when it is saved

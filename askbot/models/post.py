@@ -404,6 +404,21 @@ class Post(models.Model):
         if number:
             self.points = int(number)
 
+    def as_tweet(self):
+        """a naive tweet representation of post
+        todo: add mentions to relevant people
+        """
+        url = self.get_absolute_url(no_slug=True)
+        url = askbot_settings.APP_URL + url
+        if self.post_type == 'question':
+            tweet = _('Question: ')
+        elif self.post_type == 'answer':
+            tweet = _('Answer: ')
+
+        chars_left = 140 - (len(url) + len(tweet) + 1)
+        title_str = self.thread.title[:chars_left]
+        return tweet + title_str + ' ' + url
+
     def parse_post_text(self):
         """typically post has a field to store raw source text
         in comment it is called .comment, in Question and Answer it is
@@ -785,11 +800,17 @@ class Post(models.Model):
         if self.is_answer():
             if not question_post:
                 question_post = self.thread._question_post()
-            url = u'%(base)s%(slug)s/?answer=%(id)d#post-id-%(id)d' % {
-                'base': urlresolvers.reverse('question', args=[question_post.id]),
-                'slug': django_urlquote(slugify(self.thread.title)),
-                'id': self.id
-            }
+            if no_slug:
+                url = u'%(base)s?answer=%(id)d#post-id-%(id)d' % {
+                    'base': urlresolvers.reverse('question', args=[question_post.id]),
+                    'id': self.id
+                }
+            else:
+                url = u'%(base)s%(slug)s/?answer=%(id)d#post-id-%(id)d' % {
+                    'base': urlresolvers.reverse('question', args=[question_post.id]),
+                    'slug': django_urlquote(slugify(self.thread.title)),
+                    'id': self.id
+                }
         elif self.is_question():
             url = urlresolvers.reverse('question', args=[self.id])
             if thread:

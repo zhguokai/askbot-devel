@@ -252,6 +252,11 @@ def ask(request):#view used to ask a new question
                         group_id=group_id,
                         language=language
                     )
+                    signals.new_question_posted.send(None,
+                        question=question,
+                        user=user,
+                        form_data=form.cleaned_data
+                    )
                     return HttpResponseRedirect(question.get_absolute_url())
                 except exceptions.PermissionDenied, e:
                     request.user.message_set.create(message = unicode(e))

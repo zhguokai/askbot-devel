@@ -757,14 +757,18 @@ class OAuthConnection(object):
     def get_token(self):
         return self.request_token
 
-    def get_access_token(self, oauth_token=None, oauth_verifier=None):
-        """returns data as returned upon visiting te access_token_url"""
+    def get_client(self, oauth_token=None, oauth_verifier=None):
         token = oauth.Token(
                     oauth_token['oauth_token'],
                     oauth_token['oauth_token_secret']
                 )
-        token.set_verifier(oauth_verifier)
-        client = oauth.Client(self.consumer, token = token)
+        if oauth_verifier:
+            token.set_verifier(oauth_verifier)
+        return oauth.Client(self.consumer, token=token)
+
+    def get_access_token(self, oauth_token=None, oauth_verifier=None):
+        """returns data as returned upon visiting te access_token_url"""
+        client = self.get_client(self, oauth_token, oauth_verifier)
         url = self.parameters['access_token_url']
         #there must be some provider-specific post-processing
         return self.send_request(client = client, url=url, method='GET')
