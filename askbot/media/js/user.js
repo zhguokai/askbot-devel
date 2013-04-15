@@ -1056,7 +1056,6 @@ Tweeting.prototype.decorate = function(element) {
     this._startUrl = element.data('startUrl');
     if (element.hasClass('disabled')) {
         this._startButton = element.find('.start-tweeting');
-        this._startUrl = this._startButton.data('url');
         setupButtonEventHandlers(this._startButton, this.getStartHandler());
     } else if (element.hasClass('inactive')) {
         //decorate choose account selector
