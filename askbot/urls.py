@@ -515,6 +515,21 @@ urlpatterns = patterns('',
         views.widgets.question_widget,
         name = 'question_widget'
     ),
+    url(
+        r'^start-sharing-twitter/$',
+        views.sharing.start_sharing_twitter,
+        name='start_sharing_twitter'
+    ),
+    url(
+        r'^save-twitter-access-token/$',
+        views.sharing.save_twitter_access_token,
+        name='save_twitter_access_token'
+    ),
+    url(#ajax post only
+        r'^change-social-sharing-mode/$',
+        views.sharing.change_social_sharing_mode,
+        name='change_social_sharing_mode'
+    ),
     #upload url is ajax only
     url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),

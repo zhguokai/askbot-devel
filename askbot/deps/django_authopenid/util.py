@@ -757,11 +757,8 @@ class OAuthConnection(object):
     def get_token(self):
         return self.request_token
 
-    def get_user_id(self, oauth_token = None, oauth_verifier = None):
-        """Returns user ID within the OAuth provider system,
-        based on ``oauth_token`` and ``oauth_verifier``
-        """
-
+    def get_access_token(self, oauth_token=None, oauth_verifier=None):
+        """returns data as returned upon visiting te access_token_url"""
         token = oauth.Token(
                     oauth_token['oauth_token'],
                     oauth_token['oauth_token_secret']
@@ -770,7 +767,13 @@ class OAuthConnection(object):
         client = oauth.Client(self.consumer, token = token)
         url = self.parameters['access_token_url']
         #there must be some provider-specific post-processing
-        data = self.send_request(client = client, url=url, method='GET')
+        return self.send_request(client = client, url=url, method='GET')
+
+    def get_user_id(self, oauth_token = None, oauth_verifier = None):
+        """Returns user ID within the OAuth provider system,
+        based on ``oauth_token`` and ``oauth_verifier``
+        """
+        data = self.get_access_token(oauth_token, oauth_verifier)
         data['consumer_key'] = self.parameters['consumer_key']
         data['consumer_secret'] = self.parameters['consumer_secret']
         return self.parameters['get_user_id_function'](data)

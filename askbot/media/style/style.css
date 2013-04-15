@@ -2980,6 +2980,9 @@ a:hover.medal {
 .user-details h3 {
   font-size: 16px;
 }
+.user-details td {
+  padding-right: 10px;
+}
 .user-about {
   background-color: #EEEEEE;
   height: 200px;
@@ -4344,4 +4347,8 @@ textarea.tipped-input {
 }
 .tag-subscriptions ul.tags li {
   margin: 2px 5px;
+}
+.auto-tweeting select {
+  width: auto;
+  margin-bottom: 0;
 }
