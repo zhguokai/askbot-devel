@@ -1219,7 +1219,7 @@ var questionRetagger = function(){
                 }
             },
             error: function(xhr, textStatus, errorThrown) {
-                showMessage(tagsDiv, 'sorry, something is not right here');
+                showMessage(tagsDiv, gettext('sorry, something is not right here'));
                 cancelRetag();
             }
         });
@@ -1342,6 +1342,134 @@ var questionRetagger = function(){
         }
     };
 }();
+
+/**
+ * @constructor
+ * Controls vor voting for a post
+ */
+var VoteControls = function() {
+    WrappedElement.call(this);
+    this._postAuthorId = undefined;
+    this._postId = undefined;
+};
+inherits(VoteControls, WrappedElement);
+
+VoteControls.prototype.setPostId = function(postId) {
+    this._postId = postId;
+};
+
+VoteControls.prototype.getPostId = function() {
+    return this._postId;
+};
+
+VoteControls.prototype.setPostAuthorId = function(userId) {
+    this._postAuthorId = userId;
+};
+
+VoteControls.prototype.setSlug = function(slug) {
+    this._slug = slug;
+};
+
+VoteControls.prototype.setPostType = function(postType) {
+    this._postType = postType;
+};
+
+VoteControls.prototype.getPostType = function() {
+    return this._postType;
+};
+
+VoteControls.prototype.clearVotes = function() {
+    this._upvoteButton.removeClass('on');
+    this._downvoteButton.removeClass('on');
+};
+
+VoteControls.prototype.toggleButton = function(button) {
+    if (button.hasClass('on')) {
+        button.removeClass('on');
+    } else {
+        button.addClass('on');
+    }
+};
+
+VoteControls.prototype.toggleVote = function(voteType) {
+    if (voteType === 'upvote') {
+        this.toggleButton(this._upvoteButton);
+    } else {
+        this.toggleButton(this._downvoteButton);
+    }
+};
+
+VoteControls.prototype.setVoteCount = function(count) {
+    this._voteCount.html(count);
+};
+
+VoteControls.prototype.updateDisplay = function(voteType, data) {
+    if (data['status'] == '1'){
+        this.clearVotes();
+    } else {
+        this.toggleVote(voteType);
+    }
+    this.setVoteCount(data['count']);
+    if (data['message'] && data['message'].length > 0){
+        showMessage(this._element, data.message);
+    }
+};
+
+VoteControls.prototype.getAnonymousMessage = function(message) {
+    var pleaseLogin = " <a href='" + askbot['urls']['user_signin'] + ">"
+                        + gettext('please login') + "</a>";
+    message += pleaseLogin;
+    message = message.replace("{{QuestionID}}", me._postId);
+    return message.replace('{{questionSlug}}', me._slug);
+};
+
+VoteControls.prototype.getVoteHandler = function(voteType) {
+    var me = this;
+    return function() {
+        if (askbot['data']['userIsAuthenticated'] === false) {
+            var message = me.getAnonymousMessage(gettext('anonymous users cannot vote'));
+            showMessage(me.getElement(), message);
+        } else {
+            //this function submits votes
+            var voteMap = {
+                'question': { 'upvote': 1, 'downvote': 2 },
+                'answer': { 'upvote': 5, 'downvote': 6 }
+            };
+            var legacyVoteType = voteMap[me.getPostType()][voteType];
+            $.ajax({
+                type: "POST",
+                cache: false,
+                dataType: "json",
+                url: askbot['urls']['vote_url'],
+                data: {
+                    "type": legacyVoteType,
+                    "postId": me.getPostId()
+                },
+                error: function() {
+                    showMessage(me.getElement(), gettext('sorry, something is not right here'));
+                },
+                success: function(data) {
+                    if (data['success']) {
+                        me.updateDisplay(voteType, data);
+                    } else {
+                        showMessage(me.getElement(), data['message']);
+                    }
+                }
+            });
+        }
+    };
+};
+
+VoteControls.prototype.decorate = function(element) {
+    this._element = element;
+    var upvoteButton = element.find('.upvote');
+    this._upvoteButton = upvoteButton;
+    setupButtonEventHandlers(upvoteButton, this.getVoteHandler('upvote'));
+    var downvoteButton = element.find('.downvote');
+    this._downvoteButton = downvoteButton;
+    setupButtonEventHandlers(downvoteButton, this.getVoteHandler('downvote'));
+    this._voteCount = element.find('.vote-number');
+};
 
 var DeletePostLink = function(){
     SimpleControl.call(this);

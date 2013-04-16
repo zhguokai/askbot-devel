@@ -36,7 +36,7 @@
 
 {%- macro post_vote_buttons(post = None) -%}
 <div id="{{post.post_type}}-img-upvote-{{ post.id }}"
-    class="{{post.post_type}}-img-upvote post-vote">
+    class="{{post.post_type}}-img-upvote post-vote upvote">
 </div>
 <div 
     id="{{post.post_type}}-vote-number-{{ post.id }}"
@@ -45,7 +45,7 @@
 >{{ post.score }}</div>
 <div
     id="{{post.post_type}}-img-downvote-{{ post.id }}"
-    class="{{post.post_type}}-img-downvote post-vote">
+    class="{{post.post_type}}-img-downvote post-vote downvote">
 </div>
 <script type="text/javascript">
     askbot['functions']['renderPostVoteButtons']('{{post.post_type}}', '{{post.id}}');
