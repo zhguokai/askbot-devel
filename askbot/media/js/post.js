@@ -1419,8 +1419,8 @@ VoteControls.prototype.getAnonymousMessage = function(message) {
     var pleaseLogin = " <a href='" + askbot['urls']['user_signin'] + ">"
                         + gettext('please login') + "</a>";
     message += pleaseLogin;
-    message = message.replace("{{QuestionID}}", me._postId);
-    return message.replace('{{questionSlug}}', me._slug);
+    message = message.replace("{{QuestionID}}", this._postId);
+    return message.replace('{{questionSlug}}', this._slug);
 };
 
 VoteControls.prototype.getVoteHandler = function(voteType) {
