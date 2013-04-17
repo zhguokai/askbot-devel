@@ -501,7 +501,7 @@ def test_staticfiles():
     if extra_skins_dir is not None:
         if not os.path.isdir(extra_skins_dir):
             errors.append(
-                'Directory specified with settning ASKBOT_EXTRA_SKINS_DIR '
+                'Directory specified with setting ASKBOT_EXTRA_SKINS_DIR '
                 'must exist and contain your custom skins for askbot.'
             )
         if extra_skins_dir not in staticfiles_dirs:
