@@ -2348,8 +2348,6 @@ PostCommentsWidget.prototype.userCanPost = function() {
         //true if admin, post owner or high rep user
         if (data['userIsAdminOrMod']) {
             return true;
-        } else if (data['userReputation'] >= askbot['settings']['minRepToPostComment']) {
-            return true;
         } else if (this.getPostId() in data['user_posts']) {
             return true;
         }
@@ -2370,23 +2368,10 @@ PostCommentsWidget.prototype.getActivateHandler = function(){
         }
         else {
             //if user can't post, we tell him something and refuse
-            if (me.userCanPost()) {
+            if (askbot['data']['userIsAuthenticated']) {
                 me.startNewComment();
             } else {
-                if (askbot['data']['userIsAuthenticated']) {
-                    var template = gettext(
-                        'You can always leave comments under your own posts.<br/>' +
-                        'However, to post comments anywhere, karma should be at least %s,<br/> ' +
-                        'and at the moment your karma is %s.<br/>'
-                    );
-                    var context = [
-                        askbot['settings']['minRepToPostComment'],
-                        askbot['data']['userReputation']
-                    ];
-                    var message = interpolate(template, context);
-                } else {
-                    var message = gettext('please sign in or register to post comments');
-                }
+                var message = gettext('please sign in or register to post comments');
                 showMessage(button, message, 'after');
             }
         }
