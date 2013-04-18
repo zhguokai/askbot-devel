@@ -4165,14 +4165,38 @@ textarea.tipped-input {
 /* modifications for small screens */
 @media screen and (max-width: 960px) {
   /* content margins touch viewport */
+  * {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
   #homeButton {
     background: 1px -36px url(../images/sprites.png) no-repeat;
   }
   #homeButton:hover {
     background: -44px -36px url(../images/sprites.png) no-repeat;
   }
+  #ContentLeft,
+  #ContentFull {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  .short-summary .answers,
+  .short-summary .views,
+  .short-summary .votes {
+    height: 51px;
+  }
+  .question-page .vote-buttons {
+    margin-right: 2px;
+  }
 }
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 800px) {
+  body {
+    padding: 0;
+  }
+  input[type="submit"].searchBtn {
+    margin-right: 0;
+  }
   .content-wrapper {
     width: 100%;
   }
@@ -4320,9 +4344,6 @@ textarea.tipped-input {
   .search-drop-menu,
   body.anon .search-drop-menu {
     margin: 0 8px 0 52px;
-  }
-  input[type="submit"].searchBtn {
-    margin-right: 8px;
   }
   .short-summary {
     width: 100%;
