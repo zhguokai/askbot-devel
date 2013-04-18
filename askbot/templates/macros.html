@@ -57,10 +57,7 @@
         <img alt="{% trans %}anonymous user{% endtrans %}" src="{{ '/images/anon.png'|media }} " class="gravatar" width="32" height="32" />
         <p>{{ user.get_anonymous_name() }}</p>
     {% else %}
-        {{ gravatar(user, 32) }}
-        {{ user.get_profile_link()}}{{ user_country_flag(user) }}<br/>
-        {{ user_score_and_badge_summary(user, karma_mode = karma_mode, badges_mode = badges_mode) }}<br/>
-        {{ user_website_link(user) }}
+        {{ user_card(user, karma_mode=karma_mode, badges_mode=badges_mode) }}
     {% endif %}
     {{ user_primary_group(user) }}
 {%- endmacro -%}
@@ -558,14 +555,6 @@ for the purposes of the AJAX comment editor #}
 answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif -%}
 {%- endmacro -%}
 
-{%- macro user_score_and_badge_summary(
-                                    user,
-                                    karma_mode = None,
-                                    badges_mode = None
-) -%}
-  {%include "widgets/user_score_and_badge_summary.html"%}
-{%- endmacro -%}
-
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
@@ -639,11 +628,12 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
     {{ user_country_name_and_flag(user) }}
 {%- endmacro -%}
 
-{%- macro user_list(
-        users, profile_section = None, karma_mode = None, badges_mode = None
-    )
--%}
-{% include "widgets/user_list.html"%}
+{% macro user_card(user, karma_mode=None, badges_mode=None) %}
+    {% include "widgets/user_card.html" %}
+{% endmacro %}
+
+{%- macro user_list(users, karma_mode=None, badges_mode=None) -%}
+    {% include "widgets/user_list.html" %}
 {%- endmacro -%}
 
 {#todo: rename this to avatar #}

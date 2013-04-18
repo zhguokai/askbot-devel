@@ -750,7 +750,7 @@ form.ajax-file-upload img.spinner {
   font-size: 20px;
   height: 42px;
   line-height: 44px;
-  margin-top: 6px;
+  margin: 6px 0 0 0;
   text-transform: uppercase;
   width: 200px;
   /* to match width of sidebar */
@@ -2023,10 +2023,13 @@ ul#related-tags li {
   font-family: 'Open Sans Condensed', Arial, sans-serif;
   vertical-align: top;
 }
+.question-page .question-card {
+  display: relative;
+}
 .question-page .question-content {
-  float: right;
-  width: 682px;
+  padding-left: 43px;
   margin-bottom: 10px;
+  width: auto;
 }
 .question-page .question-content pre,
 .question-page .answer pre,
@@ -2095,7 +2098,6 @@ ul#related-tags li {
   float: right;
   font-size: 9px;
   font-family: Arial;
-  width: 158px;
   padding: 4px;
   margin: 0px 0px 5px 5px;
   line-height: 14px;
@@ -2495,7 +2497,7 @@ ul#related-tags li {
   float: right;
   width: 14px;
   line-height: 130%;
-  padding: 8px 6px;
+  padding: 8px 0px;
 }
 .question-page .comments .upvote {
   margin: 0px;
@@ -3834,6 +3836,28 @@ p.signup_p {
 .userList {
   font-size: 13px;
 }
+.user-list {
+  margin: 0;
+  list-style: none;
+}
+.user-list li {
+  margin: 5px 10px 15px 0;
+  display: inline-block;
+}
+.user-card {
+  display: inline-block;
+  height: 35px;
+  width: 166px;
+  overflow: hidden;
+}
+.user-card .avatar-box {
+  float: left;
+  margin: 3px 6px 0 0;
+}
+.user-card .info {
+  height: 32px;
+  width: 134px;
+}
 img.flag {
   border: 1px solid #eee;
   vertical-align: text-top;
@@ -4179,7 +4203,13 @@ textarea.tipped-input {
   #ContentLeft,
   #ContentFull {
     padding-left: 6px;
+  }
+  #ContentRight,
+  #ContentFull {
     padding-right: 6px;
+  }
+  .short-summary {
+    width: 100%;
   }
   .short-summary .answers,
   .short-summary .views,
@@ -4188,6 +4218,9 @@ textarea.tipped-input {
   }
   .question-page .vote-buttons {
     margin-right: 2px;
+  }
+  .tag-right {
+    height: 20px;
   }
 }
 @media screen and (max-width: 800px) {
@@ -4205,11 +4238,11 @@ textarea.tipped-input {
   }
   #ContentLeft {
     width: 100%;
+    padding-right: 6px;
   }
   .main-page h1,
   #askButton,
   #metaNav #navBadges,
-  .user-info,
   .copyright,
   .counts .views,
   .counts .votes,
@@ -4281,7 +4314,7 @@ textarea.tipped-input {
   .question-page .post-update-info {
     float: none;
     margin-left: 0;
-    width: 95%;
+    width: auto;
   }
   .question-page .post-update-info br,
   .question-page .post-update-info .badge1,
@@ -4289,23 +4322,14 @@ textarea.tipped-input {
   .question-page .post-update-info .badge3,
   .question-page .post-update-info .gravatar,
   .question-page .post-update-info .reputation-score,
+  .question-page .post-update-info .user-card,
   .question-page .post-update-info .badge-count {
     display: none;
   }
-  .question-page .question-content,
-  .question-page ul.post-retag input {
-    width: 88%;
-  }
   .question-page .answer-table,
   .question-page #question-table {
-    width: 85%;
-  }
-  .users-page .userList td {
-    display: block;
-    width: 100%;
-  }
-  .users-page .userList td .user {
-    width: 100%;
+    float: left;
+    margin-left: 12px;
   }
   .user-profile-page td {
     display: block;
