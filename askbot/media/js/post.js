@@ -2774,7 +2774,12 @@ TinyMCE.prototype.setHighlight = function() {};
 TinyMCE.prototype.putCursorAtEnd = function() {};
 
 TinyMCE.prototype.focus = function() {
-    tinymce.execCommand('mceFocus', false, this._id);
+    var editorId = this._id;
+    setTimeout(function() {
+            tinymce.execCommand('mceFocus', false, editorId);
+        },
+        100
+    );
 
     //@todo: make this general to all editors
     var winH = $(window).height();
