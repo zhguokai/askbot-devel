@@ -2122,7 +2122,7 @@ ul#related-tags li {
     p.rss {
         float:none;
         clear:both;
-        padding: 3px 0 0 23px;
+        padding: 3px 0 3px 18px;
         font-size: 15px;
         width:130px;
         background-position:center left;
@@ -2134,75 +2134,66 @@ ul#related-tags li {
         vertical-align: top;
     }
 
-    .question-card {
-        display: relative;
-    }
-
-    .question-content {
-        padding-left: 43px;
-        margin-bottom:10px;
-        width: auto;
-    }
-
-    .question-content, .answer {
+    .post {
+        display: table;
+        padding: 3px;
+        margin-bottom: 16px;
+        width: 100%;
+        .mceEditor td {
+            width: auto;
+        }
         pre, code {
             clear:both;
         }
     }
 
-    #question-table{
-        float:left;
-        border-top:#f0f0f0 1px solid;
-    }
-
-    #question-table,
-    .answer-table {
-        margin: 8px 0 6px 0;
+    .post-content {
+        display: table-cell;
         border-spacing: 0px;
-        width: 670px;
-        padding-right:10px;
-    }
-
-    .answer-table {
-        margin-top:0px;
-        border-bottom: 1px solid #D4D4D4;
-        float:right;
-    }
-
-    .answer-table td,
-    #question-table td {
-        width:20px;
-        vertical-align:top;
-    }
-    .answer-table .mceEditor td,
-    #question-table .mceEditor td {
+        padding-left: 14px;
+        vertical-align: top;
         width: auto;
     }
-    .question-body, .answer-body {
+
+    .question .post-content {
+        margin-bottom:10px;
+    }
+
+    .answer .post-content {
+        border-bottom: 1px solid #D4D4D4;
+    }
+
+    .post-body {
         overflow: auto;
-        margin-top:10px;
-        font-family:@body-font;
-        color:#4b4b4b;
+        font-family: @body-font;
+        color: #4b4b4b;
         word-wrap: break-word;
 
-        p{
-            margin-bottom:14px;
-          line-height:1.4;
-          font-size:14px;
-          padding:0px 5px 5px 0px;
-        }
-        
         a {
             color:@link;
         }
-        
+
+        img {
+            max-width: 100%;
+        }
+
         li {
             margin-bottom:7px;
         }
+
+        p {
+            margin-bottom:14px;
+            line-height:1.4;
+            font-size:14px;
+            padding:0px 5px 5px 0px;
+        }
+
     }
 
-    .question-body IMG, .answer-body IMG {
-        max-width: 600px;
+    .question .post-body {
+        margin-top: 8px;
+        border-top: #f0f0f0 1px solid;
+        padding-top: 10px;
     }
 
     .post-update-info-container {
@@ -2215,9 +2206,11 @@ ul#related-tags li {
         float: right;
         font-size: 9px;
         font-family:@secondary-font;
-        padding:4px;
-        margin:0px 0px 5px 5px;
         line-height: 14px;
+        margin:0px 0px 5px 5px;
+        padding:4px;
+        width: 166px;
+
         .rounded-corners(4px);
         .box-shadow (0px, 2px,1px,#bfbfbf);
         
@@ -2392,23 +2385,23 @@ ul#related-tags li {
     div.comments {
         padding: 0;
     }
-    #comment-title{
-       font-weight:bold;
-       font-size:23px;
-       color:@section-title;
+    h2.comment-title {
+       color: @section-title;
+       font-weight: bold;
+       font-size: 23px;
+       font-family: @main-font;
+       float: left;
+       padding-left: 0;
        width:200px;
-       float:left;
-       font-family:@main-font;
     }
     .comments {
         font-size: 12px;    
         clear: both;
         
         div.controls {
-            clear: both;
-            float:left;
             width: 100%;
             margin: 3px 0 20px 5px;
+            padding-left: 30px;
         }
 
         .edit-comment-buttons {
@@ -2447,7 +2440,7 @@ ul#related-tags li {
         }
         
         form.post-comments {
-            padding: 6px 6px 7px 42px;
+            padding: 1px 6px 7px 31px;
             border-bottom: 1px solid #edeeeb;
             margin-bottom: 0;
         }
@@ -2504,13 +2497,26 @@ ul#related-tags li {
         }
         .comment {
             border-bottom: 1px solid #edeeeb;
-            clear: both;
-            margin: 0;
-            padding-bottom: 4px;
-            overflow: auto;
+            display: table;
             font-family: @body-font;
             font-size: 11px;
+            margin: 0;
             min-height: 25px;
+            overflow: auto;
+            padding-bottom: 4px;
+            width: 100%;
+
+            .comment-votes, /* layout fixed-fluid */
+            .comment-content {
+                display: table-cell;
+                vertical-align: top;
+            }
+            .comment-content {
+                width: auto;
+            }
+            .comment-votes {
+                width: 25px;
+            }
         }
         .comment:last-child {
             border-bottom: none;
@@ -2543,15 +2549,13 @@ ul#related-tags li {
         }
 
         .comment-votes {
-            float: left;
-            width: 37px;
             line-height: 130%;
             padding: 6px 5px 6px 3px;
         }
 
         .comment-body {
             line-height: 1.3;
-            margin: 3px 26px 0 46px;
+            margin: 3px 26px 0 0;
             padding: 5px 3px;
             color: #666;
             font-size:13px;
@@ -2658,35 +2662,24 @@ ul#related-tags li {
     }
 
     .vote-buttons .notify-sidebar {
-        text-align: left;
+        text-align: center;
         width:130px;
-        margin-top: 7px;
+        margin: 7px auto 0;
         label {
             vertical-align: top;
         }
     }
 
-    .tabBar-answer{
+    .tabBar-answer {
         margin-bottom:15px;
         padding-left:7px;
         width:723px;
         margin-top:10px;
     }
-    .answer{
-        .vote-buttons {
-            float:left;
-            margin-top: 10px;
-        }
-    }
+
     .accepted-answer {
         background-color: #f7fecc;
         border-bottom-color: #9BD59B;
-
-        .vote-buttons {
-            width:27px;
-           margin-right:10px;
-           margin-top:10px;
-        }
     }
 
     .answer .post-update-info a{
@@ -2716,9 +2709,6 @@ ul#related-tags li {
         .comments {
             background-color: #E6ECFF;
        }
-        .vote-buttons {
-           margin-right:10px;
-        }
     }
 
     .answer-img-accept {
@@ -2730,13 +2720,6 @@ ul#related-tags li {
     .accepted-answer .answer-img-accept,
     .answer-img-accept:hover {
         background: url(../images/vote-accepted-on.png)
-    }
-
-    .answer-body a {
-        color:@link;
-    }
-    .answer-body li {
-        margin-bottom:0.7em;
     }
 
     #fmanswer{
@@ -2762,25 +2745,30 @@ ul#related-tags li {
 }
 
 .vote-buttons {
-    float: left;
+    display: table-cell;
     text-align: center;
     padding-top: 2px;
-    margin:0px 10px 0px 3px;
+    width: 25px;
+    margin-right: 13px;
+    * {
+        margin: 0;
+    }
     /* small IE fixes */
     *margin:0; 
     *height:210px;
     *width:30px;
 }
 
-.vote-buttons img {
-    cursor: pointer;
+.box.vote-buttons {
+    display: block;
+    width: 100%;
 }
 
 .question-img-upvote, .question-img-downvote,
 .answer-img-upvote, .answer-img-downvote {
     width: 25px;
     height: 20px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .question-img-upvote, .answer-img-upvote {
@@ -3926,11 +3914,11 @@ ul.form-horizontal-rows li input {
 
 
 ul.post-tags {
-    margin-left: 3px;
-}
-ul.post-tags li {
-    margin-top: 4px;
-    margin-bottom: 3px;
+    margin: 2px 0 0 3px;
+    li {
+        margin-top: 4px;
+        margin-bottom: 3px;
+    }
 }
 
 ul.post-retag {
@@ -4506,11 +4494,6 @@ textarea.tipped-input {
             .badge-count {
                 display: none;
             }
-        }
-        .answer-table,
-        #question-table {
-            float: left;
-            margin-left: 12px;
         }
     }
 

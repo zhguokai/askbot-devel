@@ -392,7 +392,7 @@ for the purposes of the AJAX comment editor #}
 -%}
     {% spaceless %}
     {% if post.comment_count > 0 %}
-        <h2 id="comment-title">Comments</h2>
+        <h2 class="comment-title">Comments</h2>
         <div class="clean"></div> 
     {% endif %}
     {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
@@ -420,23 +420,38 @@ for the purposes of the AJAX comment editor #}
                             <div class="upvote"></div>
                         {% endif %}
                     </div>
-                    <div 
-                        id="post-{{comment.id}}-delete"
-                        class="comment-delete"
-                    >
-                        <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
-                    </div>
-                    <div class="comment-body">
-                        {{comment.html}}
-                        <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username|escape}}</a>
-                        <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
-                        <a id="post-{{comment.id}}-edit"
-                            class="edit">{% trans %}edit{% endtrans %}</a>
-                        <form action="{% url comment_to_answer %}" method="POST" accept-charset="utf-8" class='convert-comment'>
-                          {% csrf_token %}
-                          <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
-                          <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
-                        </form>
+                    <div class="comment-content">
+                        <div 
+                            id="post-{{comment.id}}-delete"
+                            class="comment-delete"
+                        >
+                            <span 
+                                class="delete-icon"
+                                title="{% trans %}delete this comment{% endtrans %}"
+                            ></span>
+                        </div>
+                        <div class="comment-body">
+                            {{comment.html}}
+                            <a 
+                                class="author"
+                                href="{{comment.author.get_profile_url()}}"
+                            >{{comment.author.username|escape}}</a>
+                            <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
+                            <a 
+                                id="post-{{comment.id}}-edit"
+                                class="edit"
+                            >{% trans %}edit{% endtrans %}</a>
+                            <form 
+                                action="{% url comment_to_answer %}"
+                                method="POST"
+                                accept-charset="utf-8"
+                                class='convert-comment'
+                            >
+                                {% csrf_token %}
+                                <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
+                                <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <script type="text/javascript">
@@ -552,7 +567,7 @@ for the purposes of the AJAX comment editor #}
 {%- endmacro -%}
 
 {%- macro answer_classes(answer, question) -%}
-answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif -%}
+ {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif -%}
 {%- endmacro -%}
 
 {%- macro follow_toggle(follow, name, alias, id) -%}

@@ -617,17 +617,17 @@ var Vote = function(){
     };
 
     var getOffensiveQuestionFlag = function(){
-        var offensiveQuestionFlag = '#question-table span[id^="'+ offensiveIdPrefixQuestionFlag +'"]';
+        var offensiveQuestionFlag = '.question-card span[id^="'+ offensiveIdPrefixQuestionFlag +'"]';
         return $(offensiveQuestionFlag);
     };
 
     var getRemoveOffensiveQuestionFlag = function(){
-        var removeOffensiveQuestionFlag = '#question-table span[id^="'+ removeOffensiveIdPrefixQuestionFlag +'"]';
+        var removeOffensiveQuestionFlag = '.question-card span[id^="'+ removeOffensiveIdPrefixQuestionFlag +'"]';
         return $(removeOffensiveQuestionFlag);
     };
 
     var getRemoveAllOffensiveQuestionFlag = function(){
-        var removeAllOffensiveQuestionFlag = '#question-table span[id^="'+ removeAllOffensiveIdPrefixQuestionFlag +'"]';
+        var removeAllOffensiveQuestionFlag = '.question-card span[id^="'+ removeAllOffensiveIdPrefixQuestionFlag +'"]';
         return $(removeAllOffensiveQuestionFlag);
     };
 
@@ -1144,11 +1144,7 @@ var Vote = function(){
             postType = bits.shift();
 
             var do_proceed = false;
-            if (postType == 'answer'){
-                postNode = $('#post-id-' + postId);
-            } else if (postType == 'question') {
-                postNode = $('#question-table');
-            }
+            postNode = $('#post-id-' + postId);
             postRemoveLink = object;
             if (postNode.hasClass('deleted')) {
                 removeActionType = 'undelete';
@@ -1883,6 +1879,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
         var commentData = me._comment.getData();
         var timestamp = commentData['comment_added_at'] || gettext('just now');
         var userName = commentData['user_display_name'] || askbot['data']['userName'];
+
         me._comment.setContent({
             'html': editor.getHtml(),
             'text': text,
@@ -1984,6 +1981,8 @@ Comment.prototype.decorate = function(element){
     var comment_id = this._element.attr('id').replace('comment-','');
     this._data = {id: comment_id};
 
+    this._contentBox = this._element.find('.comment-content');
+
     var timestamp = this._element.find('abbr.timeago');
     this._data['comment_added_at'] = timestamp.attr('title');
     var userLink = this._element.find('a.author');
@@ -2077,6 +2076,8 @@ Comment.prototype.getParentId = function(){
 Comment.prototype.setContent = function(data){
     this._data = $.extend(this._data, data);
     this._element.addClass('comment');
+    this._element.css('display', 'table');//@warning: hardcoded
+    //display is set to "block" if .show() is called, but we need table.
     this._element.attr('id', 'comment-' + this._data['id']);
 
     // 1) create the votes element if it is not there
@@ -2096,6 +2097,14 @@ Comment.prototype.setContent = function(data){
         votesBox.append(vote.getElement());
     } 
 
+    // 2) create the comment content container
+    if (this._contentBox === undefined) {
+        var contentBox = this.makeElement('div');
+        contentBox.addClass('comment-content');
+        this._contentBox = contentBox;
+        this._element.append(contentBox);
+    }
+
     // 2) create the comment deleter if it is not there
     if (this._comment_delete === undefined) {
         this._comment_delete = $('<div class="comment-delete"></div>');
@@ -2104,13 +2113,13 @@ Comment.prototype.setContent = function(data){
             this._delete_icon.setHandler(this.getDeleteHandler());
             this._comment_delete.append(this._delete_icon.getElement());
         }
-        this._element.append(this._comment_delete);
+        this._contentBox.append(this._comment_delete);
     }
 
     // 3) create or replace the comment body
     if (this._comment_body === undefined) {
         this._comment_body = $('<div class="comment-body"></div>');
-        this._element.append(this._comment_body);
+        this._contentBox.append(this._comment_body);
     }
     if (askbot['settings']['editorType'] === 'tinymce') {
         var theComment = $('<div/>');
@@ -4476,7 +4485,7 @@ CategorySelectorLoader.prototype.getCancelHandler = function() {
 CategorySelectorLoader.prototype.decorate = function(element) {
     this._element = element;
     this._display_tags_container = $('#question-tags');
-    this._question_body = $('.question-body');
+    this._question_body = $('.question .post-body');
     this._question_controls = $('#question-controls');
 
     this._editor_buttons = this.makeElement('div');

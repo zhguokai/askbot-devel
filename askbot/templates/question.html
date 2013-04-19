@@ -128,7 +128,7 @@
                     //still may need to hide because answer may be too long
                     var answer_id = 'post-id-' + post_id;
                     var answer_container = document.getElementById(answer_id);
-                    var answerBody = findChildrenByClassName(answer_container, 'answer-body')[0];
+                    var answerBody = findChildrenByClassName(answer_container, 'post-body')[0];
                     //todo: this is not reliable
                     var answerBodyNodes = answerBody.childNodes;
                     var answerElement = answerBodyNodes[answerBodyNodes.length - 1];
