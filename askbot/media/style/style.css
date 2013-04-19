@@ -4170,6 +4170,30 @@ textarea.tipped-input {
   width: 515px;
   margin-bottom: 0px;
 }
+.tag-subscriptions {
+  border-spacing: 10px;
+  border-collapse: separate;
+}
+.tag-subscriptions form {
+  display: inline-block;
+  margin-bottom: 0;
+}
+.tag-subscriptions td {
+  vertical-align: middle;
+}
+.tag-subscriptions .action {
+  cursor: pointer;
+  color: #4A757F;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  text-decoration: none;
+}
+.tag-subscriptions ul.tags li {
+  margin: 2px 5px;
+}
+.auto-tweeting select {
+  width: auto;
+  margin-bottom: 0;
+}
 /* modifications for small screens */
 @media screen and (max-width: 960px) {
   /* content margins touch viewport */
@@ -4352,27 +4376,8 @@ textarea.tipped-input {
     width: 100%;
   }
 }
-.tag-subscriptions {
-  border-spacing: 10px;
-  border-collapse: separate;
-}
-.tag-subscriptions form {
-  display: inline-block;
-  margin-bottom: 0;
-}
-.tag-subscriptions td {
-  vertical-align: middle;
-}
-.tag-subscriptions .action {
-  cursor: pointer;
-  color: #4A757F;
-  font-family: 'Open Sans Condensed', Arial, sans-serif;
-  text-decoration: none;
-}
-.tag-subscriptions ul.tags li {
-  margin: 2px 5px;
-}
-.auto-tweeting select {
-  width: auto;
-  margin-bottom: 0;
+@media screen and (max-width: 338px) {
+  #scopeNav {
+    display: none;
+  }
 }
