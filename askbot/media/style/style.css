@@ -2472,7 +2472,8 @@ ul#related-tags li {
   font-size: 13px;
   font-weight: normal;
   line-height: 13px;
-  margin: 0 0 0 8px;
+  margin: 0 0 3px 8px;
+  vertical-align: middle;
   -webkit-box-shadow: 0 0 0 #929292;
   -moz-box-shadow: 0 0 0 #929292;
   box-shadow: 0 0 0 #929292;

@@ -165,6 +165,17 @@ settings.register(
 )
 
 settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MIN_COMMENT_BODY_LENGTH',
+        default=10,
+        description=_(
+            'Minimum length of comment (number of characters)'
+        )
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'LIMIT_ONE_ANSWER_PER_USER',

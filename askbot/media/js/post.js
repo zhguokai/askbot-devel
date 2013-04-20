@@ -1590,7 +1590,7 @@ EditCommentForm.prototype.startTinyMCEEditor = function() {
         theme_advanced_path: false,
         plugins: '',
         width: '100%',
-        height: '60px'
+        height: '70'
     };
     var editor = new TinyMCE(opts);
     editor.setId(editorId);
@@ -1674,8 +1674,11 @@ EditCommentForm.prototype.attachTo = function(comment, mode){
     this.enableForm();
     this.startEditor();
     this._editor.setText(this._text);
-    this._editor.focus();
-    this._editor.putCursorAtEnd();
+    var ed = this._editor
+    var onFocus = function() {
+        ed.putCursorAtEnd();
+    };
+    this._editor.focus(onFocus);
     setupButtonEventHandlers(this._submit_btn, this.getSaveHandler());
     setupButtonEventHandlers(this._cancel_btn, this.getCancelHandler());
 };
@@ -1868,7 +1871,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
         me.disableForm();
 
         var text = editor.getText();
-        if (text.length < 10){
+        if (text.length < askbot['settings']['minCommentBodyLength']){
             editor.focus();
             return false;
         }
@@ -2121,7 +2124,7 @@ Comment.prototype.setContent = function(data){
         this._comment_body = $('<div class="comment-body"></div>');
         this._contentBox.append(this._comment_body);
     }
-    if (askbot['settings']['editorType'] === 'tinymce') {
+    if (EditCommentForm.prototype.getEditorType() === 'tinymce') {
         var theComment = $('<div/>');
         theComment.html(this._data['html']);
         //sanitize, just in case
@@ -2611,8 +2614,11 @@ var SimpleEditor = function(attrs) {
 };
 inherits(SimpleEditor, WrappedElement);
 
-SimpleEditor.prototype.focus = function() {
+SimpleEditor.prototype.focus = function(onFocus) {
     this._textarea.focus();
+    if (onFocus) {
+        onFocus();
+    }
 };
 
 SimpleEditor.prototype.putCursorAtEnd = function() {
@@ -2753,12 +2759,13 @@ inherits(TinyMCE, WrappedElement);
  */
 TinyMCE.onInitHook = function() {
     //set initial content
-    tinyMCE.activeEditor.setContent(askbot['data']['editorContent'] || '');
+    var ed = tinyMCE.activeEditor;
+    ed.setContent(askbot['data']['editorContent'] || '');
     //if we have spellchecker - enable it by default
     if (inArray('spellchecker', askbot['settings']['tinyMCEPlugins'])) {
         setTimeout(function() {
-            tinyMCE.activeEditor.controlManager.setActive('spellchecker', true);
-            tinymce.execCommand('mceSpellCheck', true);
+            ed.controlManager.setActive('spellchecker', true);
+            tinyMCE.execCommand('mceSpellCheck', true);
         }, 1);
     }
 };
@@ -2780,29 +2787,46 @@ TinyMCE.prototype.start = function() {
 };
 TinyMCE.prototype.setPreviewerEnabled = function() {};
 TinyMCE.prototype.setHighlight = function() {};
-TinyMCE.prototype.putCursorAtEnd = function() {};
 
-TinyMCE.prototype.focus = function() {
+TinyMCE.prototype.putCursorAtEnd = function() {
+    var ed = tinyMCE.activeEditor;
+    //add an empty span with a unique id
+    var endId = tinymce.DOM.uniqueId();
+    ed.dom.add(ed.getBody(), 'span', {'id': endId}, '');
+    //select that span
+    var newNode = ed.dom.select('span#' + endId);
+    ed.selection.select(newNode[0]);
+};
+
+TinyMCE.prototype.focus = function(onFocus) {
     var editorId = this._id;
-    setTimeout(function() {
-            tinymce.execCommand('mceFocus', false, editorId);
-        },
-        100
-    );
-
-    //@todo: make this general to all editors
     var winH = $(window).height();
     var winY = $(window).scrollTop();
     var edY = this._element.offset().top;
     var edH = this._element.height();
 
-    //if editor bottom is below viewport
-    var isBelow = ((edY + edH) > (winY + winH));
-    var isAbove = (edY < winY);
-    if (isBelow || isAbove) {
-        //then center on screen
-        $(window).scrollTop(edY - edH/2 - winY/2);
-    }
+    //@todo: the fallacy of this method is timeout - should instead use queue
+    //because at the time of calling focus() the editor may not be initialized yet
+    setTimeout(
+        function() { 
+            tinyMCE.execCommand('mceFocus', false, editorId);
+
+            //@todo: make this general to all editors
+
+            //if editor bottom is below viewport
+            var isBelow = ((edY + edH) > (winY + winH));
+            var isAbove = (edY < winY);
+            if (isBelow || isAbove) {
+                //then center on screen
+                $(window).scrollTop(edY - edH/2 - winY/2);
+            }
+            if (onFocus) {
+                onFocus();
+            }
+        },
+        100
+    );
+
 
 };
 
