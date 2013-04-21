@@ -130,9 +130,9 @@ var validateTagCount = function(value){
 $.validator.addMethod('limit_tag_count', validateTagCount);
 $.validator.addMethod('limit_tag_length', validateTagLength);
 
-var CPValidator = function(){
+var CPValidator = function() {
     return {
-        getQuestionFormRules : function(){
+        getQuestionFormRules : function() {
             return {
                 tags: {
                     required: askbot['settings']['tagsAreRequired'],
@@ -157,22 +157,22 @@ var CPValidator = function(){
                     limit_tag_length: askbot['messages']['maxTagLength']
                 },
                 text: {
-                    required: " " + gettext('content cannot be empty'),
+                    required: " " + gettext('details are required'),
                     minlength: interpolate(
                                     ngettext(
-                                        'question body must be > %s character',
-                                        'question body must be > %s characters',
+                                        'details must have > %s character',
+                                        'details must have > %s characters',
                                         askbot['settings']['minQuestionBodyLength']
                                     ),
                                     [askbot['settings']['minQuestionBodyLength'], ]
                                 )
                 },
                 title: {
-                    required: " " + gettext('please enter title'),
+                    required: " " + gettext('enter your question'),
                     minlength: interpolate(
                                     ngettext(
-                                        'title must be > %s character',
-                                        'title must be > %s characters',
+                                        'question must have > %s character',
+                                        'question must have > %s characters',
                                         askbot['settings']['minTitleLength']
                                     ),
                                     [askbot['settings']['minTitleLength'], ]

@@ -22,7 +22,7 @@
                 {% else %}
                     {% if settings.EMAIL_VALIDATION %}
                         {% if not request.user.email_isvalid %}
-                        <li class="warning">{% trans email=request.user.email %}YYour email, %(email)s has not yet been validated. To post messages you must verify your email, please see <a href='%(email_validation_faq_url)s'>more details here</a>. You can submit your question now and validate email after that. Meanwhile, your question will saved as pending.{% endtrans %}</li>
+                        <li class="warning">{% trans email=request.user.email %}Your email, %(email)s has not yet been validated. To post messages you must verify your email, please see <a href='%(email_validation_faq_url)s'>more details here</a>. You can submit your question now and validate email after that. Meanwhile, your question will saved as pending.{% endtrans %}</li>
                         {% endif %}
                     {% endif %}
                 {% endif %}

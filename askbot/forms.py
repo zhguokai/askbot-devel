@@ -244,7 +244,7 @@ class TitleField(forms.CharField):
         self.max_length = 255
         self.label = _('title')
         self.help_text = _(
-            'please enter a descriptive title for your question'
+            'Please enter your question'
         )
         self.initial = ''
 
@@ -255,8 +255,8 @@ class TitleField(forms.CharField):
             value = ''
         if len(value) < askbot_settings.MIN_TITLE_LENGTH:
             msg = ungettext_lazy(
-                'title must be > %d character',
-                'title must be > %d characters',
+                'must have > %d character',
+                'must have > %d characters',
                 askbot_settings.MIN_TITLE_LENGTH
             ) % askbot_settings.MIN_TITLE_LENGTH
             raise forms.ValidationError(msg)
@@ -265,14 +265,14 @@ class TitleField(forms.CharField):
             if len(value) > self.max_length:
                 raise forms.ValidationError(
                     _(
-                        'The title is too long, maximum allowed size is '
+                        'The question is too long, maximum allowed size is '
                         '%d characters'
                     ) % self.max_length
                 )
         elif len(encoded_value) > self.max_length:
             raise forms.ValidationError(
                 _(
-                    'The title is too long, maximum allowed size is '
+                    'The question is too long, maximum allowed size is '
                     '%d bytes'
                 ) % self.max_length
             )

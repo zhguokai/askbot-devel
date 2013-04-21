@@ -797,7 +797,7 @@ form.ajax-file-upload {
 }
 .ask-page .search-drop-menu,
 body.anon.ask-page .search-drop-menu {
-    margin: 0;
+    margin: -9px 0 10px;
 }
 #scopeNav {
     height: 41px;
@@ -1708,7 +1708,7 @@ ul#related-tags li {
     padding: 4px 0 0 0;
     margin-top:0px;
     width: 100%;
-    
+
     p {
        margin:0 0 5px 0;
        font-size:14px;
@@ -1720,13 +1720,23 @@ ul#related-tags li {
         height: 36px;
         line-height: 36px;
         margin: 0;
-        padding: 0;/*-left: 5px;*/
+        padding-left: 5px;
         border:#cce6ec 3px solid;
         width: 100%;/*719px;*/
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
     }
 }
 
-.ask-page, .edit-question-page {
+.ask-page {
+    #askFormBar {
+        padding: 0 0 10px 0;
+    }
+}
+
+.ask-page,
+.edit-question-page {
 
     div#question-list {
         border-bottom:#f0f0ec 1px solid;
@@ -1760,6 +1770,14 @@ ul#related-tags li {
         background: #b8d0d5;
         .rounded-corners(3px);
     }
+
+    label[for="editor"],
+    label[for="id_title"],
+    span.form-error {
+        font-size: 16px;
+        font-style: italic;
+    }
+
     label{
         color:@info-text-dark;
         font-size:13px;
@@ -1797,6 +1815,7 @@ ul#related-tags li {
     }
     table.proxy-user-info {
         border-spacing: 0px;
+        margin-bottom: 12px;
         width: 100%;
 
         .form-item {
@@ -1930,6 +1949,9 @@ ul#related-tags li {
 .edit-question-page,
 .edit-answer-page {
     .wmd-container {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
         width: 723px;
         width: 100%;
     }
@@ -2061,9 +2083,10 @@ ul#related-tags li {
     color: #666;
     line-height: 13px;
     margin-bottom:5px;
-}
-.question-options label {
-    vertical-align: text-bottom;
+
+    label {
+        vertical-align: text-top;
+    }
 }
 
 .edit-content-html {
@@ -2077,8 +2100,7 @@ ul#related-tags li {
     
     #id_revision{
         font-size:14px;
-        margin-top:5px;
-        margin-bottom:5px;
+        margin: 12px 0 5px 0;
         width: 100%;
     }
     #id_title{
@@ -2090,6 +2112,9 @@ ul#related-tags li {
         border:#cce6ec 3px solid;
         width: 100%;
         margin-bottom:10px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
     }
     #id_summary{
         border:#cce6ec 3px solid;
@@ -3416,7 +3441,6 @@ span.text-counter {
 span.form-error {
     color: #990000;
     font-weight: normal;
-    margin-left: 5px;
 }
 
 ul.errorlist {
@@ -3502,15 +3526,6 @@ label.retag-error {
     margin-top: 10px;
     padding: 10px;
 }
-
-
-span.form-error {
-    color: #990000;
-    font-size: 90%;
-    font-weight: normal;
-    margin-left: 5px;
-}
-
 
 /*
 .favorites-count-off {

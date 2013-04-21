@@ -16,13 +16,22 @@
                                         name="select_revision" 
                                         value="false">
     </div> 
+    <div class="form-item">
+        <label for="id_title" >
+            {% trans %}Question - in one sentence{% endtrans %}
+            {% if form.title.errors %}
+                {{ form.title.errors }}
+            {% endif %}
+        </label>
+        {{ form.title }}
+    </div>
+    <label for="editor">{% trans %}Details{% endtrans %}</label>
     {% set use_category_selector = (settings.TAG_SOURCE == 'category-tree') %}
     {{
         macros.edit_post(
                     form,
                     post_type = 'question',
                     post_html = revision.text,
-                    edit_title = True,
                     mandatory_tags = mandatory_tags,
                     use_category_selector = use_category_selector,
                     tag_names = tag_names,

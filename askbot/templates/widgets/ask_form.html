@@ -1,20 +1,26 @@
 {% import "macros.html" as macros %}
 <form id="fmask" action="" method="post" >{% csrf_token %}
     <div class="form-item ask-form-bar">
+        <label for="id_title">
+            {{ form.title.help_text }}
+            {% if form.title.errors %}
+                <span class="form-error">{{ form.title.errors }}</span>
+            {% endif %}
+        </label>
         <div id="askFormBar">
             <input id="id_title" class="questionTitleInput" name="title" autocomplete="off"
                 value="{% if form.initial.title %}{{form.initial.title|escape}}{% endif %}"/>
-            <span class="form-error">{{ form.title.errors }}</span>
-        </div>
-        <div class="title-desc">
-            {{ form.title.help_text }}
         </div>
     </div>
+    {% if settings.MIN_QUESTION_BODY_LENGTH == 0 %}
+        <label for="editor">{% trans %}Add details{% endtrans %}</label>
+    {% else %}
+        <label for="editor">{% trans %}Add details, if necessary{% endtrans %}</label>
+    {% endif %}
     {{
         macros.edit_post(
             form,
             post_type = 'question',
-            edit_title = False,
             mandatory_tags = mandatory_tags,
             use_category_selector = (settings.TAG_SOURCE == 'category-tree'),
             editor_type = settings.EDITOR_TYPE,
