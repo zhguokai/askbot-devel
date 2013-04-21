@@ -1872,6 +1872,9 @@ ul#related-tags li {
 .edit-answer-page .retagger-buttons button {
   margin: 8px 10px 5px 0;
 }
+.edit-answer-page .wmd-container {
+  margin-top: 13px;
+}
 #editor {
   /* adjustment for editor preview */
 
@@ -1968,9 +1971,6 @@ ul#related-tags li {
   color: #666;
   line-height: 13px;
   margin-bottom: 5px;
-}
-.question-options label {
-  vertical-align: text-top;
 }
 .edit-content-html {
   border-top: 1px dotted #D8D2A9;
@@ -4087,15 +4087,20 @@ textarea.tipped-input {
 /* category selector */
 .category-selector {
   border-spacing: 0;
+  width: 100%;
 }
 .category-selector ul.select-box {
   height: 150px;
-  width: 235px;
+  width: 100%;
   overflow: auto;
   border: #ccc 3px solid;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 .category-selector td {
   vertical-align: top;
+  width: 33.333%;
 }
 .category-selector li {
   position: relative;
@@ -4318,6 +4323,9 @@ textarea.tipped-input {
   .edit-answer-page #fmedit #id_title,
   .edit-question-page #fmedit #id_title {
     margin: 15px 0 0 0;
+  }
+  .edit-answer-page .after-editor {
+    margin-top: 8px;
   }
   .question-page .comment-votes {
     display: none;

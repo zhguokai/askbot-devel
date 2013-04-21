@@ -8,14 +8,9 @@
 {% block content %}
 <div class="section-title">{% trans %}Edit question{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</div>
 <form id="fmedit" action="{% url edit_question question.id %}" method="post" >{% csrf_token %}
-
     {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
-    <div style="vertical-align:middle">
-    {{ revision_form.revision }} <input type="hidden"
-                                        id="select_revision"
-                                        name="select_revision" 
-                                        value="false">
-    </div> 
+    {{ revision_form.revision }}
+    <input type="hidden" id="select_revision" name="select_revision" value="false"/>
     <div class="form-item">
         <label for="id_title" >
             {% trans %}Question - in one sentence{% endtrans %}

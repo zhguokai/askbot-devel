@@ -6,19 +6,14 @@
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}
-<h1 class="section-title">
+<div class="section-title">
     {% trans %}Edit answer{% endtrans %} [<a href="{{ answer.thread._question_post().get_absolute_url() }}#{{ answer.id }}">{% trans %}back{% endtrans %}</a>]
-</h1>
+</div>
 <div id="main-body" class="ask-body">
     <form id="fmedit" action="{% url edit_answer answer.id %}" method="post" >{% csrf_token %}
-        <label for="id_revision" >{% trans %}revision{% endtrans %}:</label> <br/> 
         {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
-        <div style="vertical-align:middle">
-        {{ revision_form.revision }} <input type="hidden"
-                                    id="select_revision"
-                                    name="select_revision"
-                                    value="false">
-        </div>
+        {{ revision_form.revision }}
+        <input type="hidden" id="select_revision" name="select_revision" value="false"/>
         {{ macros.edit_post(
                         form,
                         post_html = revision.text,

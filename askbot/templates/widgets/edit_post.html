@@ -52,7 +52,8 @@
         {% endif %}
     </div>
 {% endif %}
-{% if 'summary' in post_form['fields'] %}
+{#% if 'summary' in post_form['fields'] %}
+    <!-- todo: either remove this field or make it folded by default -->
     <div class="form-item revision-comment">
         <strong>{{ post_form.summary.label_tag() }}</strong> <br/>
         {{ post_form.summary }}
@@ -61,7 +62,7 @@
         </div>
         <div class="form-error" >{{ post_form.summary.errors }}</div>
     </div>
-{% endif %}
+{% endif %#}
 
 {% if editor_type == 'markdown' %}
     <div class="preview-toggle">
