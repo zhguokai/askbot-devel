@@ -160,19 +160,20 @@ def get_provider_name(openid_url):
 
 def use_password_login():
     """password login is activated
-    either if USE_RECAPTCHA is false
-    of if recaptcha keys are set correctly
+    if any of the login methods requiring user name
+    and password are activated
+
+    TODO: these should be mutually exclusive and
+    it should be possible to register another login
+    method using password and user name via configuration
     """
     if askbot_settings.SIGNIN_WORDPRESS_SITE_ENABLED:
         return True
-    if askbot_settings.USE_RECAPTCHA:
-        if askbot_settings.RECAPTCHA_KEY and askbot_settings.RECAPTCHA_SECRET:
-            return True
-        else:
-            logging.critical('if USE_RECAPTCHA == True, set recaptcha keys!!!')
-            return False
-    else:
+    if askbot_settings.SIGNIN_LOCAL_ENABLED:
         return True
+    if askbot_settings.USE_LDAP_FOR_PASSWORD_LOGIN:
+        return True
+    return False
 
 def filter_enabled_providers(data):
     """deletes data about disabled providers from
