@@ -45,7 +45,7 @@ class AskbotConfigError(ImproperlyConfigured):
 
 def askbot_warning(line):
     """prints a warning with the nice header, but does not quit"""
-    print >> sys.stderr, line
+    print >> sys.stderr, unicode(line).encode('utf-8')
 
 def print_errors(error_messages, header = None, footer = None):
     """if there is one or more error messages,

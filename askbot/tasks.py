@@ -160,7 +160,7 @@ def record_post_update_celery_task(
         # HACK: exceptions from Celery job don't propagate upwards
         # to the Django test runner
         # so at least let's print tracebacks
-        print >>sys.stderr, traceback.format_exc()
+        print >>sys.stderr, unicode(traceback.format_exc()).encode('utf-8')
         raise
 
 @task(ignore_result = True)

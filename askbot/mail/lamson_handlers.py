@@ -160,9 +160,9 @@ def process_reply(func):
              received the notification.")
         except Exception, e:
             import sys
-            sys.stderr.write(str(e))
+            sys.stderr.write(unicode(e).encode('utf-8'))
             import traceback
-            sys.stderr.write(traceback.format_exc())
+            sys.stderr.write(unicode(traceback.format_exc()).encode('utf-8'))
 
         if error is not None:
             template = get_template('email/reply_by_email_error.html')
