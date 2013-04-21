@@ -159,6 +159,8 @@ a:hover {
 }
 .avatar-box {
   text-decoration: none;
+  width: 32px;
+  height: 32px;
 }
 .badge-context-toggle.active {
   cursor: pointer;
@@ -838,8 +840,11 @@ body.anon.ask-page .search-drop-menu {
 .box {
   background: #fff;
   padding: 4px 0px 10px 1px;
-  width: 200px;
+  width: 100%;
   overflow: hidden;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   /* widgets for question template */
 
   /* notify by email box */
@@ -2032,11 +2037,11 @@ ul#related-tags li {
 .question-page p.rss {
   float: none;
   clear: both;
-  padding: 3px 0 3px 18px;
+  display: inline-block;
+  padding: 3px 0 3px 20px;
   font-size: 15px;
-  width: 130px;
+  width: auto;
   background-position: center left;
-  margin-left: 0px !important;
 }
 .question-page p.rss a {
   font-family: 'Open Sans Condensed', Arial, sans-serif;
@@ -2565,8 +2570,7 @@ ul#related-tags li {
 }
 .question-page .vote-buttons .notify-sidebar {
   text-align: center;
-  width: 130px;
-  margin: 7px auto 0;
+  margin: 6px auto 0;
 }
 .question-page .vote-buttons .notify-sidebar label {
   vertical-align: top;

@@ -164,6 +164,8 @@ a:hover {
 
 .avatar-box {
     text-decoration: none;
+    width: 32px;
+    height: 32px;
 }
 
 .badge-context-toggle.active {
@@ -869,8 +871,11 @@ body.anon.ask-page .search-drop-menu {
 .box {
     background: #fff;
     padding: 4px 0px 10px 1px;
-    width:200px;
+    width: 100%;
     overflow: hidden;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 
     p {
         margin-bottom: 4px;
@@ -2149,13 +2154,13 @@ ul#related-tags li {
     }
 
     p.rss {
-        float:none;
-        clear:both;
-        padding: 3px 0 3px 18px;
+        float: none;
+        clear: both;
+        display: inline-block;
+        padding: 3px 0 3px 20px;
         font-size: 15px;
-        width:130px;
-        background-position:center left;
-        margin-left:0px !important;
+        width: auto;
+        background-position: center left;
     }
 
     p.rss a {
@@ -2693,8 +2698,7 @@ ul#related-tags li {
 
     .vote-buttons .notify-sidebar {
         text-align: center;
-        width:130px;
-        margin: 7px auto 0;
+        margin: 6px auto 0;
         label {
             vertical-align: top;
         }

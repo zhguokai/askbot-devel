@@ -9,7 +9,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.cache import cache
 from django.utils import simplejson
 from django.utils.datastructures import SortedDict
-from django.utils.encoding import smart_str
+from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.core.files import storage
@@ -246,11 +246,11 @@ class Value(object):
                 work = []
                 for x in self.choices:
                     if x[0] in self.default:
-                        work.append(smart_str(x[1]))
-                note = _('Default value: ') + ", ".join(work)
+                        work.append(force_unicode(x[1]))
+                note = _('Default value: ') + unicode(u", ".join(work))
 
             else:
-                note = _("Default value: %s") % unicode(self.default)
+                note = _("Default value: %s") % force_unicode(self.default)
 
         return note
 
