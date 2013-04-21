@@ -218,16 +218,6 @@ def test_postgres():
         else:
             pass #everythin is ok
 
-def test_encoding():
-    """prints warning if encoding error is not UTF-8"""
-    if hasattr(sys.stdout, 'encoding'):
-        if sys.stdout.encoding != 'UTF-8':
-            askbot_warning(
-                'Your output encoding is not UTF-8, there may be '
-                'issues with the software when anything is printed '
-                'to the terminal or log files'
-            )
-
 def test_template_loader():
     """Sends a warning if you have an old style template
     loader that used to send a warning"""
@@ -919,7 +909,6 @@ def run_startup_tests():
     test_celery()
     test_compressor()
     test_custom_user_profile_tab()
-    test_encoding()
     test_group_messaging()
     test_haystack()
     test_jinja2()

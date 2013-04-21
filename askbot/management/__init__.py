@@ -55,7 +55,7 @@ class NoArgsJob(NoArgsCommand):
         afterwards there will be a short summary
         """
 
-        sys.stdout.write(batch['title'])
+        sys.stdout.write(batch['title'].encode('utf-8'))
         changed_count = 0
         checked_count = 0
         total_count = batch['query_set'].count()
