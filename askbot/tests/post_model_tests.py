@@ -629,8 +629,11 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
         self.client.logout()
         self.client.login(username='user2', password='pswd')
-        response = self.client.post(urlresolvers.reverse('vote', kwargs={'id': question.id}), data={'type': '1'},
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest') # use AJAX request
+        response = self.client.post(
+            urlresolvers.reverse('vote'),
+            data={'type': '1', 'postId': question.id},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        ) # use AJAX request
         self.assertEqual(200, response.status_code)
         data = simplejson.loads(response.content)
 
@@ -645,8 +648,11 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
         ###
 
-        response = self.client.post(urlresolvers.reverse('vote', kwargs={'id': question.id}), data={'type': '2'},
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest') # use AJAX request
+        response = self.client.post(
+            urlresolvers.reverse('vote'),
+            data={'type': '2', 'postId': question.id},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        ) # use AJAX request
         self.assertEqual(200, response.status_code)
         data = simplejson.loads(response.content)
 
@@ -665,8 +671,11 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
         self.client.logout()
         self.client.login(username='user2', password='pswd')
-        response = self.client.post(urlresolvers.reverse('vote', kwargs={'id': question.id}), data={'type': '0', 'postId': answer.id},
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest') # use AJAX request
+        response = self.client.post(
+            urlresolvers.reverse('vote'),
+            data={'type': '0', 'postId': answer.id},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        ) # use AJAX request
         self.assertEqual(200, response.status_code)
         data = simplejson.loads(response.content)
 
