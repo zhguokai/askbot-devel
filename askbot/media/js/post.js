@@ -1873,6 +1873,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
         var text = editor.getText();
         if (text.length < askbot['settings']['minCommentBodyLength']){
             editor.focus();
+            me.enableForm();
             return false;
         }
 
