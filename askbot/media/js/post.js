@@ -2569,6 +2569,13 @@ FoldedEditor.prototype.getEditor = function() {
     return this._editor;
 };
 
+FoldedEditor.prototype.onAfterOpenHandler = function() {
+    var editor = this.getEditor();
+    if (editor) {
+        setTimeout(editor.focus(), 500);
+    }
+};
+
 FoldedEditor.prototype.getOpenHandler = function() {
     var editorBox = this._editorBox;
     var promptBox = this._prompt;
@@ -2577,10 +2584,7 @@ FoldedEditor.prototype.getOpenHandler = function() {
         promptBox.hide();
         editorBox.show();
         me.getElement().addClass('unfolded');
-        var editor = me.getEditor();
-        if (editor) {
-            setTimeout(editor.focus(), 500);
-        }
+        me.onAfterOpenHandler();
     };
 };
 
