@@ -2565,18 +2565,21 @@ var FoldedEditor = function() {
 };
 inherits(FoldedEditor, WrappedElement);
 
+FoldedEditor.prototype.getEditor = function() {
+    return this._editor;
+};
+
 FoldedEditor.prototype.getOpenHandler = function() {
     var editorBox = this._editorBox;
     var promptBox = this._prompt;
-    var editor = this._editor;
     var me = this;
     return function() {
         promptBox.hide();
         editorBox.show();
         me.getElement().addClass('unfolded');
+        var editor = me.getEditor();
         if (editor) {
-            //editor.focus();
-            //setTimeout(function() {editor.focus()}, 300);
+            setTimeout(editor.focus(), 500);
         }
     };
 };
