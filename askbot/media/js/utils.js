@@ -54,6 +54,11 @@ var getSingletonController = function(controllerClass, name) {
     return controller;
 };
 
+var setController = function(controller, name) {
+    askbot['controllers'] = askbot['controllers'] || {};
+    askbot['controllers'][name] = controller;
+};
+
 var getUniqueValues = function(values) {
     var uniques = new Object();
     var out = new Array();
