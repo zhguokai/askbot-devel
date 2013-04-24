@@ -390,7 +390,10 @@ def process_emailed_question(
             #note that signature '' means it is unset and 'empty signature' is a sentinel
             #because there is no other way to indicate unset signature without adding
             #another field to the user model
-            signature_changed = (stripped_body_text == body_text and user.email_signature)
+            signature_changed = (
+                stripped_body_text == body_text and
+                user.email_signature != 'empty signature'
+            )
 
             need_new_signature = (
                 user.email_isvalid is False or
