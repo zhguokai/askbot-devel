@@ -342,10 +342,11 @@ def process_parts(parts, reply_code=None):
     #if the response separator is present -
     #split the body with it, and discard the "so and so wrote:" part
     if reply_code:
+        #todo: maybe move this part out
         signature = extract_user_signature(body_markdown, reply_code)
+        body_markdown = extract_reply(body_markdown)
     else:
         signature = None
-    body_markdown = extract_reply(body_markdown)
 
     body_markdown += attachments_markdown
     return body_markdown.strip(), stored_files, signature
