@@ -228,9 +228,18 @@ def VALIDATE_EMAIL(
     reply_code = reply_address_object.address
     try:
         content, stored_files, signature = mail.process_parts(parts, reply_code)
+
+        #patch signature to a sentinel value if it is truly empty, because we
+        #cannot allow empty signature field, which indicates no
+        #signature at all and in that case we ask user to create one
+        if signature == '':
+            signature = 'empty signature'
+
         user = reply_address_object.user
-        if signature and signature != user.email_signature:
+
+        if signature != user.email_signature:
             user.email_signature = signature
+
         user.email_isvalid = True
         user.save()
 

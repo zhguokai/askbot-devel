@@ -379,14 +379,20 @@ def process_emailed_question(
                 raise PermissionDenied(messages.insufficient_reputation(user))
 
             body_text = form.cleaned_data['body_text']
-            stripped_body_text = user.strip_email_signature(body_text)
-            signature_not_detected = (
-                stripped_body_text == body_text and user.email_signature
-            )
 
+            stripped_body_text = user.strip_email_signature(body_text)
+
+            signature_not_detected = (stripped_body_text == body_text)
+
+            need_new_signature = (
+                user.email_isvalid is False or
+                user.email_signature == '' or
+                signature_not_detected
+            )
+            
             #ask for signature response if user's email has not been
             #validated yet or if email signature could not be found
-            if user.email_isvalid is False or signature_not_detected:
+            if need_new_signature:
 
                 reply_to = ReplyAddress.objects.create_new(
                     user = user,
