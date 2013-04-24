@@ -220,7 +220,7 @@ settings.register(
         MIN_REP,
         'MIN_REP_TO_POST_BY_EMAIL',
         default=100,
-        description=_('Post answers and comments by email')
+        description=_('Make posts by email')
     )
 )
 

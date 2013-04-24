@@ -45,6 +45,7 @@ Programming, bug fixes and documentation
 * Niki Rocco
 * `Tyler Mandry <https://github.com/tmandry>`_
 * `Jorge López Pérez <https://github.com/adobo>`_
+* `Zafer Cakmak <https://github.com/xaph>`_
 
 Translations
 ------------

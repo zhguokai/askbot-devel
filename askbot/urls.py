@@ -62,10 +62,10 @@ urlpatterns = patterns('',
         (r'^%s' % _('questions') +
             r'(%s)?' % r'/scope:(?P<scope>\w+)' +
             r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
-            r'(%s)?' % r'/query:(?P<query>[^/]+)' +  # INFO: question string cannot contain slash (/), which is a section terminator
             r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
             r'(%s)?' % r'/author:(?P<author>\d+)' +
             r'(%s)?' % r'/page:(?P<page>\d+)' +
+            r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
         r'/$'),
         views.readers.questions,
         name='questions'

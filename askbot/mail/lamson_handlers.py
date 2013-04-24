@@ -228,16 +228,20 @@ def VALIDATE_EMAIL(
     reply_code = reply_address_object.address
     try:
         content, stored_files, signature = mail.process_parts(parts, reply_code)
+
         user = reply_address_object.user
-        if signature and signature != user.email_signature:
+
+        if signature != user.email_signature:
             user.email_signature = signature
+
         user.email_isvalid = True
         user.save()
 
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,
             'site_url': askbot_settings.APP_URL,
-            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
+            'can_post_by_email': user.can_post_by_email()
         }
         template = get_template('email/re_welcome_lamson_on.html')
 
@@ -274,20 +278,18 @@ def PROCESS(
 
     #2) process body text and email signature
     user = reply_address_object.user
-    if signature is not None:#if there, then it was stripped
-        if signature != user.email_signature:
-            user.email_signature = signature
-    else:#try to strip signature
-        stripped_body_text = user.strip_email_signature(body_text)
-        #todo: add test cases for emails without the signature
-        if stripped_body_text == body_text and user.email_signature:
-            #todo: send an email asking to update the signature
-            raise ValueError('email signature changed or unknown')
-        body_text = stripped_body_text
 
-    #3) validate email address and save user
+    if signature != user.email_signature:
+        user.email_signature = signature
+
+    #3) validate email address and save user along with maybe new signature
     user.email_isvalid = True
     user.save()#todo: actually, saving is not necessary, if nothing changed
+
+    #here we might be in danger of chomping off some of the 
+    #message is body text ends with a legitimate text coinciding with
+    #the user's email signature
+    body_text = user.strip_email_signature(body_text)
 
     #4) actually make an edit in the forum
     robj = reply_address_object

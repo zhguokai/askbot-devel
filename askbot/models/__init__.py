@@ -461,6 +461,8 @@ def user_can_have_strong_url(self):
 def user_can_post_by_email(self):
     """True, if reply by email is enabled
     and user has sufficient reputatiton"""
+    if self.is_administrator_or_moderator():
+        return True
     return askbot_settings.REPLY_BY_EMAIL and \
         self.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL
 
@@ -3600,13 +3602,16 @@ def greet_new_user(user, **kwargs):
         template_name = 'email/welcome_lamson_off.html'
 
     data = {
-        'site_name': askbot_settings.APP_SHORT_NAME
+        'site_name': askbot_settings.APP_SHORT_NAME,
+        'site_url': askbot_settings.APP_URL,
+        'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
+        'can_post_by_email': user.can_post_by_email()
     }
     send_respondable_email_validation_message(
-        user = user,
-        subject_line = _('Welcome to %(site_name)s') % data,
-        data = data,
-        template_name = template_name
+        user=user,
+        subject_line=_('Welcome to %(site_name)s') % data,
+        data=data,
+        template_name=template_name
     )
 
 

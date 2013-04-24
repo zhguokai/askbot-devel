@@ -284,10 +284,10 @@ QSutils.patch_query_string = function (query_string, patch, remove) {
     /* The order of selectors should match the Django URL */
     add_selector('scope');
     add_selector('sort');
-    add_selector('query');
     add_selector('tags');
     add_selector('author');
     add_selector('page');
+    add_selector('query');
 
     return new_query_string;
 };

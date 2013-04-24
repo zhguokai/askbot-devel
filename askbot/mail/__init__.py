@@ -298,6 +298,8 @@ def extract_user_signature(text, reply_code):
     """extracts email signature as text trailing
     the reply code"""
     stripped_text = strip_tags(text)
+
+    signature = ''
     if reply_code in stripped_text:
         #extract the signature
         tail = list()
@@ -312,9 +314,12 @@ def extract_user_signature(text, reply_code):
         while tail and (tail[0].startswith('>') or tail[0].strip() == ''):
             tail.pop(0)
 
-        return '\n'.join(tail)
-    else:
-        return None
+        signature = '\n'.join(tail)
+
+    #patch signature to a sentinel value if it is truly empty, because we
+    #cannot allow empty signature field, which indicates no
+    #signature at all and in that case we ask user to create one
+    return signature or 'empty signature'
 
 
 def process_parts(parts, reply_code=None):
@@ -342,10 +347,11 @@ def process_parts(parts, reply_code=None):
     #if the response separator is present -
     #split the body with it, and discard the "so and so wrote:" part
     if reply_code:
+        #todo: maybe move this part out
         signature = extract_user_signature(body_markdown, reply_code)
+        body_markdown = extract_reply(body_markdown)
     else:
         signature = None
-    body_markdown = extract_reply(body_markdown)
 
     body_markdown += attachments_markdown
     return body_markdown.strip(), stored_files, signature
@@ -378,19 +384,31 @@ def process_emailed_question(
                 raise PermissionDenied(messages.insufficient_reputation(user))
 
             body_text = form.cleaned_data['body_text']
+
             stripped_body_text = user.strip_email_signature(body_text)
-            signature_not_detected = (
-                stripped_body_text == body_text and user.email_signature
+
+            #note that signature '' means it is unset and 'empty signature' is a sentinel
+            #because there is no other way to indicate unset signature without adding
+            #another field to the user model
+            signature_changed = (
+                stripped_body_text == body_text and
+                user.email_signature != 'empty signature'
             )
 
+            need_new_signature = (
+                user.email_isvalid is False or
+                user.email_signature == '' or
+                signature_changed
+            )
+            
             #ask for signature response if user's email has not been
             #validated yet or if email signature could not be found
-            if user.email_isvalid is False or signature_not_detected:
+            if need_new_signature:
 
                 reply_to = ReplyAddress.objects.create_new(
                     user = user,
                     reply_action = 'validate_email'
-                ).as_email_address()
+                ).as_email_address(prefix='welcome-')
                 message = messages.ask_for_signature(user, footer_code = reply_to)
                 raise PermissionDenied(message)
 
