@@ -298,6 +298,8 @@ def extract_user_signature(text, reply_code):
     """extracts email signature as text trailing
     the reply code"""
     stripped_text = strip_tags(text)
+
+    signature = ''
     if reply_code in stripped_text:
         #extract the signature
         tail = list()
@@ -314,13 +316,10 @@ def extract_user_signature(text, reply_code):
 
         signature = '\n'.join(tail)
 
-        #patch signature to a sentinel value if it is truly empty, because we
-        #cannot allow empty signature field, which indicates no
-        #signature at all and in that case we ask user to create one
-        if signature == '':
-            signature = 'empty signature'
-    else:
-        return None
+    #patch signature to a sentinel value if it is truly empty, because we
+    #cannot allow empty signature field, which indicates no
+    #signature at all and in that case we ask user to create one
+    return signature or 'empty signature'
 
 
 def process_parts(parts, reply_code=None):
@@ -388,12 +387,15 @@ def process_emailed_question(
 
             stripped_body_text = user.strip_email_signature(body_text)
 
-            signature_not_detected = (stripped_body_text == body_text)
+            #note that signature '' means it is unset and 'empty signature' is a sentinel
+            #because there is no other way to indicate unset signature without adding
+            #another field to the user model
+            signature_changed = (stripped_body_text == body_text and user.email_signature)
 
             need_new_signature = (
                 user.email_isvalid is False or
                 user.email_signature == '' or
-                signature_not_detected
+                signature_changed
             )
             
             #ask for signature response if user's email has not been
