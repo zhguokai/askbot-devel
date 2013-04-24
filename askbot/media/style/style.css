@@ -455,7 +455,7 @@ body.user-messages {
   background-color: #fff;
   border: 1px solid #c9c9b5;
   height: 41px;
-  z-index: 10000;
+  z-index: 1000;
   position: relative;
   /* the guts are absolute-positioned */
 
@@ -511,7 +511,7 @@ body.user-messages {
   top: 0;
 }
 #searchBar input[type="button"].cancelSearchBtn {
-  right: 48px;
+  right: 39px;
   top: 0;
 }
 .search-drop-menu {
