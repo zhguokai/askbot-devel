@@ -312,7 +312,13 @@ def extract_user_signature(text, reply_code):
         while tail and (tail[0].startswith('>') or tail[0].strip() == ''):
             tail.pop(0)
 
-        return '\n'.join(tail)
+        signature = '\n'.join(tail)
+
+        #patch signature to a sentinel value if it is truly empty, because we
+        #cannot allow empty signature field, which indicates no
+        #signature at all and in that case we ask user to create one
+        if signature == '':
+            signature = 'empty signature'
     else:
         return None
 
