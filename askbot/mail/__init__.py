@@ -403,7 +403,7 @@ def process_emailed_question(
                 reply_to = ReplyAddress.objects.create_new(
                     user = user,
                     reply_action = 'validate_email'
-                ).as_email_address(prefix='-welcome')
+                ).as_email_address(prefix='welcome-')
                 message = messages.ask_for_signature(user, footer_code = reply_to)
                 raise PermissionDenied(message)
 
