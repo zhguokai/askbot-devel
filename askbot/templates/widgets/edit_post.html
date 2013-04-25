@@ -20,7 +20,7 @@
 </div>
 {# need label element for resizable input, b/c form validation won't find span #}
 {% if post_type == 'question' %}
-    <div class="form-item">
+    <div class="form-item question-tags">
         {% if use_category_selector %}
             {% include "widgets/three_column_category_selector.html" %}
             <div class="tags-desc">{% trans %}Tags{% endtrans %}</div>
