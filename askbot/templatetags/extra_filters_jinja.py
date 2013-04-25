@@ -4,6 +4,7 @@ import re
 import time
 import urllib
 from coffin import template as coffin_template
+from bs4 import BeautifulSoup
 from django.core import exceptions as django_exceptions
 from django.utils.translation import ugettext as _
 from django.utils.translation import get_language as django_get_language
@@ -52,6 +53,18 @@ def as_json(data):
 @register.filter
 def is_current_language(lang):
     return lang == django_get_language()
+
+@register.filter
+def is_empty_editor_value(value):
+    if value == None:
+        return True
+    if str(value).strip() == '':
+        return True
+    #tinymce uses a weird sentinel placeholder
+    if askbot_settings.EDITOR_TYPE == 'tinymce':
+        soup = BeautifulSoup(value)
+        return soup.getText().strip() == ''
+    return False
 
 @register.filter
 def to_int(value):
