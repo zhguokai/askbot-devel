@@ -1134,7 +1134,7 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     #People can override this function to save their additional fields to db
     def save(self, question, user):
-        wiki = self.cleaned_data['wiki'],
+        wiki = self.cleaned_data['wiki']
         text = self.cleaned_data['text']
         follow = self.cleaned_data['email_notify']
         is_private = self.cleaned_data['post_privately']        
