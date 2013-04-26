@@ -866,11 +866,8 @@ class Post(models.Model):
     def __unicode__(self):
         if self.is_question():
             return self.thread.title
-        elif self.is_answer() or self.is_reject_reason():
+        else:
             return self.html
-        elif self.is_comment():
-            return self.text
-        raise NotImplementedError
 
     def save(self, *args, **kwargs):
         if self.is_answer() and self.is_anonymous:

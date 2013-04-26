@@ -163,11 +163,8 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     paginator_data = {
         'is_paginated' : is_paginated,
         'pages': objects_list.num_pages,
-        'page': page,
-        'has_previous': users_page.has_previous(),
-        'has_next': users_page.has_next(),
-        'previous': users_page.previous_page_number(),
-        'next': users_page.next_page_number(),
+        'current_page_number': page,
+        'page_object': users_page,
         'base_url' : base_url
     }
     paginator_context = functions.setup_paginator(paginator_data) #
