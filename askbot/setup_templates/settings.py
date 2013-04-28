@@ -307,4 +307,5 @@ if 'ASKBOT_CSS_DEVEL' in locals() and ASKBOT_CSS_DEVEL == True:
     )
 
 COMPRESS_JS_FILTERS = []
+COMPRESS_PARSER = 'compressor.parser.HtmlParser' 
 JINJA2_EXTENSIONS = ('compressor.contrib.jinja2ext.CompressorExtension',)
