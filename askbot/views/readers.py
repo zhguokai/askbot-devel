@@ -115,14 +115,9 @@ def questions(request, **kwargs):
 
     paginator_context = {
         'is_paginated' : (paginator.count > page_size),
-
         'pages': paginator.num_pages,
-        'page': search_state.page,
-        'has_previous': page.has_previous(),
-        'has_next': page.has_next(),
-        'previous': page.previous_page_number(),
-        'next': page.next_page_number(),
-
+        'current_page_number': search_state.page,
+        'page_object': page,
         'base_url' : search_state.query_string(),
         'page_size' : page_size,
     }
@@ -297,11 +292,8 @@ def tags(request):#view showing a listing of available tags - plain list
         paginator_data = {
             'is_paginated' : (objects_list.num_pages > 1),
             'pages': objects_list.num_pages,
-            'page': page,
-            'has_previous': tags.has_previous(),
-            'has_next': tags.has_next(),
-            'previous': tags.previous_page_number(),
-            'next': tags.next_page_number(),
+            'current_page_number': page,
+            'page_object': tags,
             'base_url' : reverse('tags') + '?sort=%s&amp;' % sortby
         }
         paginator_context = functions.setup_paginator(paginator_data)
@@ -524,11 +516,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
     paginator_data = {
         'is_paginated' : (objects_list.count > const.ANSWERS_PAGE_SIZE),
         'pages': objects_list.num_pages,
-        'page': show_page,
-        'has_previous': page_objects.has_previous(),
-        'has_next': page_objects.has_next(),
-        'previous': page_objects.previous_page_number(),
-        'next': page_objects.next_page_number(),
+        'current_page_number': show_page,
+        'page_object': page_objects,
         'base_url' : request.path + '?sort=%s&amp;' % answer_sort_method,
     }
     paginator_context = functions.setup_paginator(paginator_data)

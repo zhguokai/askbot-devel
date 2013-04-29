@@ -111,25 +111,23 @@ class PageLoadTestCase(AskbotTestCase):
         self.assertEqual(r.status_code, status_code)
 
         if template and status_code != 302:
-            if isinstance(r.template, coffin.template.Template):
-                self.assertEqual(r.template.name, template)
-            elif isinstance(r.template, list):
+            if hasattr(r, 'template'):
+                if isinstance(r.template, coffin.template.Template):
+                    self.assertEqual(r.template.name, template)
+                    return
+
+            if hasattr(r, 'template'):
+                templates = r.template
+            elif hasattr(r, 'templates'):
+                templates = r.templates
+            else:
+                raise NotImplementedError()
+
+            if isinstance(templates, list):
                 #asuming that there is more than one template
-                template_names = ','.join([t.name for t in r.template])
-                print 'templates are %s' % template_names
-                # The following code is no longer relevant because we're using
-                # additional templates for cached fragments [e.g. thread.get_summary_html()]
-#                if follow == False:
-#                    self.fail(
-#                        ('Have issue accessing %s. '
-#                        'This should not have happened, '
-#                        'since you are not expecting a redirect '
-#                        'i.e. follow == False, there should be only '
-#                        'one template') % url
-#                    )
-#
-#               self.assertEqual(r.template[0].name, template)
-                self.assertIn(template, [t.name for t in r.template])
+                template_names = [t.name for t in templates]
+                print 'templates are %s' % ','.join(template_names)
+                self.assertIn(template, template_names)
             else:
                 raise Exception('unexpected error while runnig test')
 
@@ -141,8 +139,14 @@ class PageLoadTestCase(AskbotTestCase):
         self.failUnless(len(response.redirect_chain) == 1)
         redirect_url = response.redirect_chain[0][0]
         self.failUnless(unicode(redirect_url).endswith('/questions/'))
-        self.assertTrue(isinstance(response.template, list))
-        self.assertIn('main_page.html', [t.name for t in response.template])
+        if hasattr(response, 'template'):
+            templates = response.template
+        elif hasattr(response, 'templates'):
+            templates = response.templates
+        else:
+            raise NotImplementedError()
+        self.assertTrue(isinstance(templates, list))
+        self.assertIn('main_page.html', [t.name for t in templates])
 
     def proto_test_ask_page(self, allow_anonymous, status_code):
         prev_setting = askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN

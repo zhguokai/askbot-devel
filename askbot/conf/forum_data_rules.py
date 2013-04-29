@@ -110,6 +110,26 @@ settings.register(
     )
 )
 
+QUESTION_BODY_EDITOR_MODE_CHOICES = (
+    ('open', _('Fully open by default')),
+    ('folded', _('Folded by default'))
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'QUESTION_BODY_EDITOR_MODE',
+        choices=QUESTION_BODY_EDITOR_MODE_CHOICES,
+        default='open',
+        description=_('Question details/body editor should be'),
+        help_text =_(
+            'To use folded mode, please first set minimum '
+            'question body length to 0. Also - please make tags '
+            'optional.'
+        )
+    )
+)
+
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,

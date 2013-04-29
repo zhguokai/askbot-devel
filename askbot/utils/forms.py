@@ -1,6 +1,5 @@
 import re
 from django import forms
-from django.http import str_to_unicode
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.http import Http404
@@ -22,7 +21,8 @@ def clean_next(next, default = None):
             return default
         else:
             return DEFAULT_NEXT
-    next = str_to_unicode(urllib.unquote(next), 'utf-8')
+    if isinstance(next, str):
+        next = unicode(urllib.unquote(next), 'utf-8', 'replace')
     next = next.strip()
     logging.debug('next url is %s' % next)
     return next

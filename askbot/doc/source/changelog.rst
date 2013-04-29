@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Support for Django 1.5
 * Auto-tweet option for questions and answers
 * Added Chech and Croatian translations
 * Disable/enable best answer feature

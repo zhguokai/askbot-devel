@@ -61,6 +61,14 @@
         {% else %}
             var codeFriendlyMarkdown = false;
         {% endif %}
+        (function() {
+            var bodyTriggerLink = $('.question-body-trigger');
+            if (bodyTriggerLink.length === 1) {
+                var foldedEditor = new FoldedEditor();
+                foldedEditor.setExternalTrigger(bodyTriggerLink);
+                foldedEditor.decorate($('.folded-editor'));
+            }
+        })();
         $().ready(function(){
             //set current module button style
             $('#editor').TextAreaResizer();

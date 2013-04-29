@@ -2569,6 +2569,10 @@ FoldedEditor.prototype.getEditor = function() {
     return this._editor;
 };
 
+FoldedEditor.prototype.getEditorInputId = function() {
+    return this._element.find('textarea').attr('id');
+};
+
 FoldedEditor.prototype.onAfterOpenHandler = function() {
     var editor = this.getEditor();
     if (editor) {
@@ -2579,13 +2583,26 @@ FoldedEditor.prototype.onAfterOpenHandler = function() {
 FoldedEditor.prototype.getOpenHandler = function() {
     var editorBox = this._editorBox;
     var promptBox = this._prompt;
+    var externalTrigger = this._externalTrigger;
     var me = this;
     return function() {
         promptBox.hide();
         editorBox.show();
         me.getElement().addClass('unfolded');
         me.onAfterOpenHandler();
+
+        if (externalTrigger) {
+            var label = me.makeElement('label');
+            label.html(externalTrigger.html());
+            //set what the label is for
+            label.attr('for', me.getEditorInputId());
+            externalTrigger.replaceWith(label);
+        }
     };
+};
+
+FoldedEditor.prototype.setExternalTrigger = function(element) {
+    this._externalTrigger = element;
 };
 
 FoldedEditor.prototype.decorate = function(element) {
@@ -2607,6 +2624,9 @@ FoldedEditor.prototype.decorate = function(element) {
     var openHandler = this.getOpenHandler();
     element.click(openHandler);
     element.focus(openHandler);
+    if (this._externalTrigger) {
+        this._externalTrigger.click(openHandler);
+    }
 };
 
 /**

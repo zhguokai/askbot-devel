@@ -839,7 +839,7 @@ body.anon.ask-page .search-drop-menu {
 /* ----- Sidebar Widgets Box, check main_page/sidebar.html or question/sidebar.html ----- */
 .box {
   background: #fff;
-  padding: 4px 0px 10px 1px;
+  padding: 4px 0px 10px 0px;
   width: 100%;
   overflow: hidden;
   box-sizing: border-box;
@@ -1634,7 +1634,10 @@ ul#related-tags li {
   -webkit-box-sizing: border-box;
 }
 .ask-page #askFormBar {
-  padding: 0 0 10px 0;
+  padding: 0 0 6px 0;
+}
+.ask-page .checkbox {
+  margin: 0;
 }
 .ask-page div#question-list,
 .edit-question-page div#question-list {
@@ -1831,8 +1834,16 @@ ul#related-tags li {
   margin: 5px 8px;
   display: block;
 }
+.ask-page .folded-editor {
+  border: none;
+  height: 0;
+}
 .folded-editor.unfolded {
   border: none;
+  height: auto;
+}
+.folded-editor.unfolded .editor-proper {
+  display: block;
 }
 .wmd-container {
   border: #cce6ec 3px solid;

@@ -870,7 +870,7 @@ body.anon.ask-page .search-drop-menu {
 
 .box {
     background: #fff;
-    padding: 4px 0px 10px 1px;
+    padding: 4px 0px 10px 0px;
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
@@ -1736,7 +1736,10 @@ ul#related-tags li {
 
 .ask-page {
     #askFormBar {
-        padding: 0 0 10px 0;
+        padding: 0 0 6px 0;
+    }
+    .checkbox {
+        margin: 0;
     }
 }
 
@@ -1936,8 +1939,16 @@ ul#related-tags li {
         display: block;
     }
 }
+.ask-page .folded-editor {
+    border: none;
+    height: 0;
+}
 .folded-editor.unfolded {
     border: none;
+    height: auto;
+    .editor-proper {
+        display: block;
+    }
 }
 
 .wmd-container {

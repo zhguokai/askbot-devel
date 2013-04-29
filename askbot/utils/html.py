@@ -97,7 +97,12 @@ def replace_links_with_text(html):
 
 def strip_tags(html, tags=None):
     """strips tags from given html output"""
+    #a corner case
+    if html.strip() == '':
+        return html
+
     assert(tags != None)
+
     soup = BeautifulSoup(html)
     for tag in tags:
         tag_matches = soup.find_all(tag)
