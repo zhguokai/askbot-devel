@@ -247,19 +247,17 @@ class UserEmailField(forms.EmailField):
                     allowed_email_domains=allowed_domains
                 ):
                 raise forms.ValidationError(self.error_messages['unauthorized'])
-        if askbot_settings.EMAIL_UNIQUE == True:
-            try:
-                user = User.objects.get(email = email)
-                logging.debug('email taken')
-                raise forms.ValidationError(self.error_messages['taken'])
-            except User.DoesNotExist:
-                logging.debug('email valid')
-                return email
-            except User.MultipleObjectsReturned:
-                logging.debug('email taken many times over')
-                raise forms.ValidationError(self.error_messages['taken'])
-        else:
-            return email 
+
+        try:
+            user = User.objects.get(email__iexact=email)
+            logging.debug('email taken')
+            raise forms.ValidationError(self.error_messages['taken'])
+        except User.DoesNotExist:
+            logging.debug('email valid')
+            return email
+        except User.MultipleObjectsReturned:
+            logging.critical('email taken many times over')
+            raise forms.ValidationError(self.error_messages['taken'])
 
 class SetPasswordForm(forms.Form):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
