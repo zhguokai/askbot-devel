@@ -1449,21 +1449,20 @@ class EditUserForm(forms.Form):
         """For security reason one unique email in database"""
         if self.user.email != self.cleaned_data['email']:
             #todo dry it, there is a similar thing in openidauth
-            if askbot_settings.EMAIL_UNIQUE is True:
-                if 'email' in self.cleaned_data:
-                    try:
-                        User.objects.get(email=self.cleaned_data['email'])
-                    except User.DoesNotExist:
-                        return self.cleaned_data['email']
-                    except User.MultipleObjectsReturned:
-                        raise forms.ValidationError(_(
-                            'this email has already been registered, '
-                            'please use another one')
-                        )
+            if 'email' in self.cleaned_data:
+                try:
+                    User.objects.get(email=self.cleaned_data['email'])
+                except User.DoesNotExist:
+                    return self.cleaned_data['email']
+                except User.MultipleObjectsReturned:
                     raise forms.ValidationError(_(
                         'this email has already been registered, '
                         'please use another one')
                     )
+                raise forms.ValidationError(_(
+                    'this email has already been registered, '
+                    'please use another one')
+                )
         return self.cleaned_data['email']
 
 

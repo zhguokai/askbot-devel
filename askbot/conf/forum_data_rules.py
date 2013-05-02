@@ -110,6 +110,15 @@ settings.register(
     )
 )
 
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'AUTO_FOLLOW_QUESTION_BY_OP',
+        default=True,
+        description=_('Auto-follow questions by the Author')
+    )
+)
+
 QUESTION_BODY_EDITOR_MODE_CHOICES = (
     ('open', _('Fully open by default')),
     ('folded', _('Folded by default'))

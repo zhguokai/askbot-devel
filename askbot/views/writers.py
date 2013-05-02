@@ -551,13 +551,6 @@ def edit_answer(request, id):
             if request.user.can_make_group_private_posts():
                 form.initial['post_privately'] = answer.is_private()
 
-        #gives a chance to set extra initial data on the form
-        signals.answer_before_editing.send(None,
-            answer=answer,
-            user=request.user,
-            form=form
-        )
-
         data = {
             'page_class': 'edit-answer-page',
             'active_tab': 'questions',
@@ -566,6 +559,13 @@ def edit_answer(request, id):
             'revision_form': revision_form,
             'form': form,
         }
+        extra_context = context.get_extra(
+            'ASKBOT_EDIT_ANSWER_PAGE_EXTRA_CONTEXT',
+            request,
+            data
+        )
+        data.update(extra_context)
+
         return render(request, 'answer_edit.html', data)
 
     except exceptions.PermissionDenied, e:

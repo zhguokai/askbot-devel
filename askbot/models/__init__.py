@@ -1734,6 +1734,10 @@ def user_post_question(
         raise ValueError('question.author != self')
     question.author = self # HACK: Some tests require that question.author IS exactly the same object as self-user (kind of identity map which Django doesn't provide),
                            #       because they set some attributes for that instance and expect them to be changed also for question.author
+
+    if askbot_settings.AUTO_FOLLOW_QUESTION_BY_OP:
+        self.toggle_favorite_question(question)
+
     return question
 
 @auto_now_timestamp

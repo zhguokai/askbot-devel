@@ -2588,9 +2588,24 @@ FoldedEditor.prototype.getOpenHandler = function() {
     return function() {
         promptBox.hide();
         editorBox.show();
-        me.getElement().addClass('unfolded');
+        var element = me.getElement();
+        element.addClass('unfolded');
+
+        /* make the editor one shot - once it unfolds it's
+         * not accepting any events
+         */
+        element.unbind('click');
+        element.unbind('focus');
+
+        /* this function will open the editor
+         * and focus cursor on the editor
+         */
         me.onAfterOpenHandler();
 
+        /* external trigger is a clickable target
+         * placed outside of the this._element
+         * that will cause the editor to unfold
+         */       
         if (externalTrigger) {
             var label = me.makeElement('label');
             label.html(externalTrigger.html());
