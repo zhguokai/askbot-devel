@@ -875,7 +875,7 @@ def finalize_generic_signin(
                                     user=request.user,
                                     provider_name=login_provider_name
                                 )
-                logging.critical('switching account or open id changed???')
+                logging.info('switching account or open id changed???')
                 #did openid url change? or we are dealing with a brand new open id?
                 message1 = _(
                     'If you are trying to sign in to another account, '
@@ -1040,7 +1040,6 @@ def register(request, login_provider_name=None, user_identifier=None):
         }
     if login_provider_name not in providers:
         provider_logo = login_provider_name
-        logging.error('openid provider named "%s" has no pretty customized logo' % login_provider_name)
     else:
         provider_logo = providers[login_provider_name]
 
