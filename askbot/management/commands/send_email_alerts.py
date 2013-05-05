@@ -14,6 +14,7 @@ from django.contrib.contenttypes.models import ContentType
 from askbot import const
 from askbot import mail
 from askbot.utils.slug import slugify
+from askbot.utils.html import site_url
 
 DEBUG_THIS_COMMAND = False
 
@@ -403,8 +404,6 @@ class Command(NoArgsCommand):
                 else:
                     num_q += 1
             if num_q > 0:
-                url_prefix = askbot_settings.APP_URL
-
                 threads = Thread.objects.filter(id__in=[qq.thread_id for qq in q_list.keys()])
                 tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
 
@@ -452,7 +451,7 @@ class Command(NoArgsCommand):
                         format_action_count('%(num)d ans rev',meta_data['ans_rev'],act_list)
                         act_token = ', '.join(act_list)
                         text += '<li><a href="%s?sort=latest">%s</a> <font color="#777777">(%s)</font></li>' \
-                                    % (url_prefix + q.get_absolute_url(), q.thread.title, act_token)
+                                    % (site_url(q.get_absolute_url()), q.thread.title, act_token)
                 text += '</ul>'
                 text += '<p></p>'
                 #if len(q_list.keys()) >= askbot_settings.MAX_ALERTS_PER_EMAIL:
@@ -462,13 +461,13 @@ class Command(NoArgsCommand):
                 #                'the askbot and see what\'s new!<br>'
                 #              )
 
-                link = url_prefix + reverse(
-                                        'user_subscriptions', 
-                                        kwargs = {
-                                            'id': user.id,
-                                            'slug': slugify(user.username)
-                                        }
-                                    )
+                link = reverse(
+                    'user_subscriptions', 
+                    kwargs = {
+                        'id': user.id,
+                        'slug': slugify(user.username)
+                    }
+                )
 
                 text += _(
                     '<p>Please remember that you can always <a '
@@ -477,7 +476,7 @@ class Command(NoArgsCommand):
                     'error, please email about it the forum administrator at %(admin_email)s.</'
                     'p><p>Sincerely,</p><p>Your friendly %(sitename)s server.</p>'
                 ) % {
-                    'email_settings_link': link,
+                    'email_settings_link': site_url(link),
                     'admin_email': django_settings.ADMINS[0][1],
                     'sitename': askbot_settings.APP_SHORT_NAME
                 }

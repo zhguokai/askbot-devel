@@ -52,14 +52,14 @@ def absolutize_urls(html):
     url_re2 = re.compile(r"(?P<prefix><img[^<]+src=)'(?P<url>/[^']+)'", re.I)
     url_re3 = re.compile(r'(?P<prefix><a[^<]+href=)"(?P<url>/[^"]+)"', re.I)
     url_re4 = re.compile(r"(?P<prefix><a[^<]+href=)'(?P<url>/[^']+)'", re.I)
-    img_replacement = '\g<prefix>"%s/\g<url>" style="max-width:500px;"' % askbot_settings.APP_URL
-    replacement = '\g<prefix>"%s\g<url>"' % askbot_settings.APP_URL
+    base_url = site_url('')#important to have this without the slash
+    img_replacement = '\g<prefix>"%s/\g<url>" style="max-width:500px;"' % base_url
+    replacement = '\g<prefix>"%s\g<url>"' % base_url
     html = url_re1.sub(img_replacement, html)
     html = url_re2.sub(img_replacement, html)
     html = url_re3.sub(replacement, html)
     #temporal fix for bad regex with wysiwyg editor
-    return url_re4.sub(replacement, html).replace('%s//' % askbot_settings.APP_URL,
-                                                  '%s/' % askbot_settings.APP_URL)
+    return url_re4.sub(replacement, html).replace('%s//' % base_url, '%s/' % base_url)
 
 def replace_links_with_text(html):
     """any absolute links will be replaced with the
@@ -131,8 +131,6 @@ def site_link(url_name, title):
     todo: may be improved to process url parameters, keyword
     and other arguments
     """
-    from askbot.conf import settings
-    base_url = urlparse(settings.APP_URL)
     url = site_url(reverse(url_name))
     return '<a href="%s">%s</a>' % (url, title)
 

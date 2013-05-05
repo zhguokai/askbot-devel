@@ -19,7 +19,7 @@
             rel="alternate"
             type="application/rss+xml"
             title="{% trans site_title=settings.APP_SHORT_NAME %}RSS feed from {{ site_title }}{% endtrans %}"
-            href="{{ settings.APP_URL }}{% url "latest_questions_feed" %}"
+            href="{{ base_url }}{% url "latest_questions_feed" %}"
         />
         {% block before_css %}{% endblock %}
         {% include "meta/html_head_stylesheets.html" %}

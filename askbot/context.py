@@ -16,6 +16,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import get_skin
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
+from askbot.utils.html import site_url
 
 def application_settings(request):
     """The context processor function"""
@@ -74,6 +75,7 @@ def application_settings(request):
         min_search_word_length = my_settings['MIN_SEARCH_WORD_LENGTH']
 
     context = {
+        'base_url': site_url(''),
         'min_search_word_length': min_search_word_length,
         'current_language_code': current_language,
         'settings': my_settings,

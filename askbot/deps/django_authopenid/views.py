@@ -51,6 +51,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot.mail import send_mail
+from askbot.utils.html import site_url
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
@@ -299,7 +300,7 @@ def complete_oauth2_signin(request):
     client = OAuth2Client(
             token_endpoint=params['token_endpoint'],
             resource_endpoint=params['resource_endpoint'],
-            redirect_uri=askbot_settings.APP_URL + reverse('user_complete_oauth2_signin'),
+            redirect_uri=site_url(reverse('user_complete_oauth2_signin')),
             client_id=client_id,
             client_secret=client_secret
         )
@@ -1254,10 +1255,8 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
     subject = _("Recover your %(site)s account") % \
                 {'site': askbot_settings.APP_SHORT_NAME}
 
-    url = urlparse(askbot_settings.APP_URL)
     data = {
-        'validation_link': url.scheme + '://' + url.netloc + \
-                            reverse(handler_url_name) +\
+        'validation_link': site_url(reverse(handler_url_name)) + \
                             '?validation_code=' + key
     }
     template = get_template('authopenid/email_validation.html')
