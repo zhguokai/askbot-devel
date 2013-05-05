@@ -995,7 +995,7 @@ var _EncodeCode = function(text) {
 var _DoItalicsAndBold = function(text) {
 
     // <strong> must go first:
-    if (codeFriendlyMarkdown === true){
+    if (window.codeFriendlyMarkdown === true){
         text = text.replace(/(\*\*)(?=\S)([^\r]*?\S[\*]*)\1/g,
             "<strong>$2</strong>");
 
