@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-# Victor Trujillo <>, 2012.
+# Gustavo Gómez <gustavo.gomez@nuevosmedios.ws>, 2013
+# Victor Trujillo <>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-04-10 01:41-0500\n"
-"PO-Revision-Date: 2013-04-14 02:32+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-04-15 19:11+0000\n"
+"Last-Translator: Gustavo Gómez <gustavo.gomez@nuevosmedios.ws>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/askbot/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,11 +33,11 @@ msgstr "Feed independiente por preguntas"
 
 #: forms.py:138
 msgid "select country"
-msgstr "selecciona un país"
+msgstr "seleccione país"
 
 #: forms.py:148
 msgid "Country"
-msgstr "País"
+msgstr "Mostrar país"
 
 #: forms.py:156
 msgid "Country field is required"
