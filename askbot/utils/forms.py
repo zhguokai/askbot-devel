@@ -121,7 +121,7 @@ class UserNameField(StrippedNonEmptyCharField):
         max_length = MAX_USERNAME_LENGTH()
         super(UserNameField,self).__init__(
                 max_length=max_length,
-                widget=forms.TextInput(attrs=login_form_widget_attrs),
+                widget=forms.TextInput(attrs=widget_attrs),
                 label=label,
                 error_messages=error_messages,
                 **kw

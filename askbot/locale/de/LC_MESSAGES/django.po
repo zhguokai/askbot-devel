@@ -3,16 +3,17 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-#   <edur@justnetwork.eu>, 2012.
-#   <Eidexe@justnetwork.eu>, 2012.
-# Mathias Ullrich <mathias.ullrich@hotmail.de>, 2012.
+# Alexander Lieder <enormitas@gmail.com>, 2013
+# Edur <edur@justnetwork.eu>, 2012
+# Eidexe <Eidexe@justnetwork.eu>, 2012
+# Mathias Ullrich <mathias.ullrich@hotmail.de>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-04-10 01:41-0500\n"
-"PO-Revision-Date: 2013-04-14 02:32+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-04-29 18:31+0000\n"
+"Last-Translator: Alexander Lieder <enormitas@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/askbot/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +61,7 @@ msgstr[1] ""
 
 #: forms.py:218
 msgid "minor edit (don't send alerts)"
-msgstr ""
+msgstr "Kleine Änderungen (Keine E-Mail Benachrichtigungen werden verschickt)"
 
 #: forms.py:245 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
@@ -254,7 +255,7 @@ msgstr ""
 
 #: forms.py:847
 msgid "Email address:"
-msgstr ""
+msgstr "E-Mail Adresse:"
 
 #: forms.py:897
 msgid "User name is required with the email"
@@ -583,11 +584,11 @@ msgstr ""
 
 #: conf/access_control.py:44
 msgid "Allowed email addresses"
-msgstr ""
+msgstr "Erlaubte E-Mail Adressen"
 
 #: conf/access_control.py:45
 msgid "Please use space to separate the entries"
-msgstr ""
+msgstr "Bitte benutze die Leertaste, um die Einträge zu trennen"
 
 #: conf/access_control.py:54
 msgid "Allowed email domain names"
@@ -595,7 +596,7 @@ msgstr ""
 
 #: conf/access_control.py:55
 msgid "Please use space to separate the entries, do not use the @ symbol!"
-msgstr ""
+msgstr "Bitte benutze die Leertaste, um die Einträge zu trennen. Benutze nicht das @ Symbol!"
 
 #: conf/badges.py:13
 msgid "Badge settings"
@@ -611,7 +612,7 @@ msgstr "Gruppenzwang: Minimum downvotes bis zum löschen eines Eintrages"
 
 #: conf/badges.py:41
 msgid "Teacher: minimum upvotes for the answer"
-msgstr ""
+msgstr "Teacher: minimum upvotes for the answer"
 
 #: conf/badges.py:50
 msgid "Nice Answer: minimum upvotes for the answer"
@@ -1016,7 +1017,7 @@ msgstr ""
 
 #: conf/flatpages.py:45
 msgid "Instructions on how to ask questions"
-msgstr ""
+msgstr "Instruktionen wie man Fragen richtig stellt"
 
 #: conf/flatpages.py:48
 msgid ""
@@ -1067,7 +1068,7 @@ msgstr "Aktiviere eingebette Videos."
 #: conf/forum_data_rules.py:68
 #, python-format
 msgid "<em>Note: please read <a href=\"%(url)s\">read this</a> first.</em>"
-msgstr ""
+msgstr "<em>Achtung: bitte zuerst folgendes lesen <a href=\"%(url)s\"></a> first.</em>"
 
 #: conf/forum_data_rules.py:78
 msgid "Check to enable community wiki feature"
@@ -1081,7 +1082,7 @@ msgstr "Erlaube Fragen anonym zu stellen"
 msgid ""
 "Users do not accrue reputation for anonymous questions and their identity is"
 " not revealed until they change their mind"
-msgstr ""
+msgstr "Anonyme User erhalten keine Karma-Punkte für ihre anonymen Fragen."
 
 #: conf/forum_data_rules.py:101
 msgid "Allow posting before logging in"
@@ -1157,7 +1158,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:231
 msgid "Force lowercase the tags"
-msgstr ""
+msgstr "Erzwinge kleine Buchstaben für die Tags"
 
 #: conf/forum_data_rules.py:233
 msgid ""
@@ -1446,7 +1447,7 @@ msgstr ""
 
 #: conf/ldap.py:168 conf/ldap.py:178
 msgid "This field can be blank"
-msgstr ""
+msgstr "Dieses Feld kann leer bleiben"
 
 #: conf/ldap.py:176
 msgid "Surname (last) name"
@@ -1458,7 +1459,7 @@ msgstr "LDAP Server EMAIL Feldname"
 
 #: conf/ldap.py:188
 msgid "This field is required"
-msgstr ""
+msgstr "Dieses Feld wird benötigt"
 
 #: conf/leading_sidebar.py:12
 msgid "Common left sidebar"
@@ -1992,7 +1993,7 @@ msgstr ""
 
 #: conf/sidebar_question.py:91
 msgid "Show related questions in sidebar"
-msgstr ""
+msgstr "Zeige verwandte Fragen in der Seitenleiste von Fragen"
 
 #: conf/sidebar_question.py:93
 msgid "Uncheck this if you want to hide the list of related questions. "
@@ -2052,7 +2053,7 @@ msgstr ""
 
 #: conf/site_settings.py:93
 msgid "Use HTML to format the message "
-msgstr ""
+msgstr "Benutze HTML, um die Nachrichten zu formatieren"
 
 #: conf/site_settings.py:102
 msgid "Feedback site URL"
@@ -2060,7 +2061,7 @@ msgstr ""
 
 #: conf/site_settings.py:104
 msgid "If left empty, a simple internal feedback form will be used instead"
-msgstr ""
+msgstr "Wenn leer, dann wird eine einfaches Feedback-Formular benutzt"
 
 #: conf/skin_general_settings.py:15
 msgid "Skin, logos and HTML <head> parts"
@@ -2773,24 +2774,24 @@ msgstr ""
 
 #: const/__init__.py:311
 msgid "show all tags"
-msgstr ""
+msgstr "alle Tags anzeigen"
 
 #: const/__init__.py:312 const/__init__.py:321 const/__init__.py:327
 #: const/__init__.py:333
 msgid "exclude ignored tags"
-msgstr ""
+msgstr "ignorierte Tags ausschließen "
 
 #: const/__init__.py:313 const/__init__.py:322 const/__init__.py:334
 msgid "only interesting tags"
-msgstr ""
+msgstr "nur interessante Tags"
 
 #: const/__init__.py:317 const/__init__.py:328 const/__init__.py:335
 msgid "only subscribed tags"
-msgstr ""
+msgstr "nur abonnierte Tags"
 
 #: const/__init__.py:320 const/__init__.py:326 const/__init__.py:332
 msgid "email for all tags"
-msgstr ""
+msgstr "E-Mail für alle Tags"
 
 #: const/__init__.py:339
 msgid "instantly"
@@ -2969,14 +2970,14 @@ msgid ""
 "Sorry, your account appears to be blocked and you cannot make new posts "
 "until this issue is resolved. Please contact the forum administrator to "
 "reach a resolution."
-msgstr ""
+msgstr "Dein Account wurde geblockt, dadurch kannst du keine neuen Beiträge veröffentlichen.Bitte kontaktiere den Administrator."
 
 #: const/message_keys.py:52 models/__init__.py:1078
 msgid ""
 "Sorry, your account appears to be suspended and you cannot make new posts "
 "until this issue is resolved. You can, however edit your existing posts. "
 "Please contact the forum administrator to reach a resolution."
-msgstr ""
+msgstr "Sorry, dein Account wurde gesperrt, deswegen kannst du keine neuen Beiträge verfassen. Deine alten Beiträge kannst du dennoch editieren. Kontaktiere bitte den Administrator."
 
 #: deps/django_authopenid/backends.py:99
 msgid ""
@@ -3163,7 +3164,7 @@ msgstr ""
 #: deps/django_authopenid/util.py:661
 #, python-format
 msgid "Sign in with your %(provider)s account"
-msgstr ""
+msgstr "Logge dich ein mit dem %(provider)s Account"
 
 #: deps/django_authopenid/views.py:212
 #, python-format
@@ -3196,7 +3197,7 @@ msgstr ""
 
 #: deps/django_authopenid/views.py:721
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Bitte füge eine oder mehrere Login-Methoden ein"
 
 #: deps/django_authopenid/views.py:723
 msgid "If you wish, please add, remove or re-validate your login methods"
@@ -3208,7 +3209,7 @@ msgstr ""
 
 #: deps/django_authopenid/views.py:727
 msgid "Sorry, this account recovery key has expired or is invalid"
-msgstr ""
+msgstr "Tut uns leid, der Wiederherstellungsschlüssel ist abgelaufen oder ist ungültig"
 
 #: deps/django_authopenid/views.py:800
 #, python-format
@@ -3236,7 +3237,7 @@ msgstr ""
 #: deps/django_authopenid/views.py:1109
 msgid ""
 "Sorry, registration failed. Please ask the site administrator for help."
-msgstr ""
+msgstr "Sorry, die Registrierung ist fehlgeschlagen. Frage den Administrator."
 
 #: deps/django_authopenid/views.py:1255
 #, python-format
@@ -3245,7 +3246,7 @@ msgstr "Stelle dein %(site)s Account wieder her"
 
 #: deps/django_authopenid/views.py:1291
 msgid "Please check your email and visit the enclosed link."
-msgstr ""
+msgstr "Checke deine Emails und klicke auf den Link"
 
 #: deps/group_messaging/models.py:356
 msgid "Re: "
@@ -3326,7 +3327,7 @@ msgstr "Configuracions incloses a %(name)s."
 #: deps/livesettings/templates/livesettings/group_settings.html:62
 #: deps/livesettings/templates/livesettings/site_settings.html:97
 msgid "You don't have permission to edit values."
-msgstr ""
+msgstr "Du hast keine Berechtigung die Werte zu ändern."
 
 #: deps/livesettings/templates/livesettings/site_settings.html:27
 msgid "Edit Site Settings"
@@ -3381,27 +3382,27 @@ msgstr ""
 msgid ""
 "<p>Note that a tag may consist of more than one word, to separate\n"
 "the tags, use a semicolon or a comma, for example, [One tag; Other tag]</p>"
-msgstr ""
+msgstr "<p>Bedenke, dass Tags aus mehr als nur einem Wort bestehen können. Um die Tags zu trennen, benutze ein Semikolon- oder ein Komma-Zeichen: [One tag; Other tag]</p>"
 
 #: mail/__init__.py:214
 #, python-format
 msgid ""
 "<p>Sorry, there was an error posting your question please contact the "
 "%(site)s administrator</p>"
-msgstr ""
+msgstr "<p>Sorry,ein unerwarteter Fehler ist passiert, bitte kontaktiere %(site)s Administrator</p>"
 
 #: mail/__init__.py:241
 #, python-format
 msgid ""
 "<p>Sorry, in order to post questions on %(site)s by email, please <a "
 "href=\"%(url)s\">register first</a></p>"
-msgstr ""
+msgstr "<p>Sorry, damit du Fragen auf  %(site)s per E-Mail stellen kannst, musst du dich <a href=\"%(url)s\">registrieren</a></p>"
 
 #: mail/__init__.py:249
 msgid ""
 "<p>Sorry, your question could not be posted due to insufficient privileges "
 "of your user account</p>"
-msgstr ""
+msgstr "<p>Sorry, deine Frage konnte nicht gepostet werden, weil dein Account über nicht genügend Rechte Verfügt</p>"
 
 #: mail/lamson_handlers.py:158
 msgid ""
@@ -3468,7 +3469,7 @@ msgid ""
 "an error, please email about it the forum administrator at "
 "%(admin_email)s.</p><p>Sincerely,</p><p>Your friendly %(sitename)s "
 "server.</p>"
-msgstr ""
+msgstr "<p>Du kannst die Häufigkeit der E-Mails <a href=\"%(email_settings_link)s\">einstellen</a> oder sie komplett abbestellen. <br/>Wenn du denkst, dass diese E-Mail ein Fehler ist, dann schicke eine Nachricht an den Administrator %(admin_email)s.</p><p>MfG,</p><p>Dein %(sitename)s Server.</p>"
 
 #: management/commands/send_unanswered_question_reminders.py:66
 #, python-format
@@ -3484,32 +3485,32 @@ msgstr "Bitte einloggen um %s zu verwenden"
 
 #: models/__init__.py:518
 msgid "Sorry, this operation is not allowed"
-msgstr ""
+msgstr "Sorry, diese Operation ist nicht erlaubt"
 
 #: models/__init__.py:568
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
-msgstr ""
+msgstr "Sorry, du kannst nicht eine Antwort als die \"beste Antwort\" wählen oder abwählen, weil dein Account geblockt wurde."
 
 #: models/__init__.py:572
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
-msgstr ""
+msgstr "Sorry, du kannst nicht eine Antwort als die \"beste Antwort\" wählen oder abwählen, weil dein Account gesperrt wurde."
 
 #: models/__init__.py:586
 #, python-format
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
 "own question"
-msgstr ""
+msgstr " Du Brauchst mehr als %(points)s, um die eigene Antwort auf die eigene Frage als die \"beste\" zu wählen."
 
 #: models/__init__.py:610
 #, python-format
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
-msgstr ""
+msgstr "Sorry, die Frage kannst du erst nach %(will_be_able_at)s akzeptieren"
 
 #: models/__init__.py:619
 #, python-format
@@ -3524,11 +3525,11 @@ msgstr "Tut mir leid, du kannst nicht für deinen eigenen Eintrag abstimmen"
 
 #: models/__init__.py:646
 msgid "Sorry your account appears to be blocked "
-msgstr ""
+msgstr "Sorry, dein Account scheint geblockt worden zu sein."
 
 #: models/__init__.py:651
 msgid "Sorry your account appears to be suspended "
-msgstr ""
+msgstr "Dein Account scheint gesperrt worden zu sein."
 
 #: models/__init__.py:661
 #, python-format
@@ -3569,8 +3570,8 @@ msgid ""
 msgid_plural ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
 "minutes from posting"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " Sorry, Kommentare (abgesehen vom letzten) darf man nur innerhalb von %(minutes)s Minute bearbeiten."
+msgstr[1] " Sorry, Kommentare (abgesehen vom letzten) darf man nur innerhalb von %(minutes)s Minuten bearbeiten."
 
 #: models/__init__.py:766
 msgid "Sorry, but only post owners or moderators can edit comments"
@@ -3579,20 +3580,20 @@ msgstr ""
 #: models/__init__.py:795
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
-msgstr ""
+msgstr "Sorry, da dein Account gesperrt ist, kannst du nur deine eigenen Beiträge kommentieren"
 
 #: models/__init__.py:799
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
-msgstr ""
+msgstr "Sorry, um zu kommentieren sin mindestens %(min_rep)s Karma-Punkte notwendig. Du kannst aber deine eigenen Beiträge und die Antworten auf deine Fragen kommentieren."
 
 #: models/__init__.py:829
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
-msgstr ""
+msgstr "Dieser Beitrag wurde gelöscht und kann nur von dem Verfasser, dem Administrator und den Moderatoren gesehen werden."
 
 #: models/__init__.py:846
 msgid ""
@@ -3602,12 +3603,12 @@ msgstr ""
 
 #: models/__init__.py:861
 msgid "Sorry, since your account is blocked you cannot edit posts"
-msgstr ""
+msgstr "Sorry, dein Account ist geblockt. Du kannst jetzt keine Beiträge bearbeiten."
 
 #: models/__init__.py:865
 msgid ""
 "Sorry, since your account is suspended you can edit only your own posts"
-msgstr ""
+msgstr "Sorry, dein Account ist gesperrt. Du kannst jetzt nur die eigenen Beiträge bearbeiten."
 
 #: models/__init__.py:870
 #, python-format
@@ -3693,7 +3694,7 @@ msgstr ""
 
 #: models/__init__.py:1065
 msgid "You have flagged this question before and cannot do it more than once"
-msgstr ""
+msgstr "Du hast diese Frage schon mal gemeldet. Du kannst es nur einmal machen."
 
 #: models/__init__.py:1073
 msgid ""
@@ -3738,7 +3739,7 @@ msgstr[1] ""
 
 #: models/__init__.py:1152
 msgid "you don't have the permission to remove all flags"
-msgstr ""
+msgstr "Du hast keine Berechtigung die Flags zu entfernen."
 
 #: models/__init__.py:1153
 msgid "no flags for this entry"
@@ -3912,7 +3913,7 @@ msgstr ""
 #: models/__init__.py:3079
 #, python-format
 msgid "%(user)s posted a %(post_link)s"
-msgstr ""
+msgstr " %(post_link)s von dem User %(user)s "
 
 #: models/__init__.py:3082
 #, python-format
@@ -3922,12 +3923,12 @@ msgstr ""
 #: models/__init__.py:3084
 #, python-format
 msgid "%(user)s posted an %(post_link)s."
-msgstr ""
+msgstr " %(post_link)s von dem User %(user)s."
 
 #: models/__init__.py:3089
 #, python-format
 msgid "%(user)s posted a %(post_link)s."
-msgstr ""
+msgstr " %(post_link)s von dem User %(user)s."
 
 #: models/__init__.py:3106
 msgid "To reply, PLEASE WRITE ABOVE THIS LINE."
@@ -4248,14 +4249,14 @@ msgstr "Entschuldigung, aber der Kommentar den du suchst ist nicht länger verf�
 
 #: models/post.py:1619
 msgid "This post is temporarily not available"
-msgstr ""
+msgstr "Dieser Beitrag ist momentan nicht verfügbar"
 
 #: models/post.py:2128
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
-msgstr ""
+msgstr "Danke für deinen Beitrag auf %(site)s. Dein Beitrag wird veröffentlicht nach dem die Moderatoren ihn überprüft haben."
 
 #: models/post.py:2132
 #, python-format
@@ -4266,7 +4267,7 @@ msgstr ""
 msgid ""
 "Your post was placed on the moderation queue and will be published after the"
 " moderator approval."
-msgstr ""
+msgstr "Dein Beitrag wurde an die Moderatoren geschickt. Nach der Überprüfung wird er freigeschaltet."
 
 #: models/question.py:102
 #, python-format
@@ -4353,7 +4354,7 @@ msgstr ""
 #: models/tag.py:209
 #, python-format
 msgid "New tags added to %s"
-msgstr ""
+msgstr "Neue Tags hinzugefügt zu %s"
 
 #: models/user.py:284
 msgid "Entire forum"
@@ -4536,7 +4537,7 @@ msgstr "Stelle deine Frage"
 msgid ""
 "since you are not logged in right now, you will be asked to sign in or "
 "register after posting your question"
-msgstr ""
+msgstr "Da Du nicht eingeloggt bist, wirst du nach dem Erstellen der Frage gebeten dich einzuloggen oder dich zu registrieren."
 
 #: templates/ask.html:25
 #, python-format
@@ -4546,11 +4547,11 @@ msgid ""
 "href='%%(email_validation_faq_url)s'>more details here</a>. You can submit "
 "your question now and validate email after that. Meanwhile, your question "
 "will saved as pending."
-msgstr ""
+msgstr "Deine E-Mail-Adresse %%(email)s wurde noch nicht bestätigt. Damit du neue Beiträge verfassen kannst, musst du deine E-Mail-Adresse verifizieren, für mehr Informationen siehe <a href='%%(email_validation_faq_url)s'>hier</a>. Du kannst deine Frage auch ohne Verifizierung deiner E-Mail-Adresse verfassen. Die Frage wird auf dem Server gespeichert und nach der Bestätigung freigegeben."
 
 #: templates/ask.html:29
 msgid "please, try to make your question interesting to this community"
-msgstr ""
+msgstr "Stelle eine Frage, die auch andere User dieser Community interessieren könnte"
 
 #: templates/ask.html:30 templates/widgets/answer_edit_tips.html:12
 #: templates/widgets/question_edit_tips.html:8
@@ -4627,7 +4628,7 @@ msgstr "Gold-Abzeichen: Diese höchste Ehre ist sehr selten"
 msgid ""
 "Gold badge is the highest award in this community. To obtain it you have to show \n"
 "profound knowledge and ability in addition to your active participation."
-msgstr ""
+msgstr "Gold-Abzeichen ist die höchste Auszeichnung dieser Community. Diese Auszeichnung bekommen nur User, die über sehr gute Kenntnisse verfügen und sehr aktiv sind."
 
 #: templates/badges.html:42 templates/badges.html.py:46
 msgid ""
@@ -4671,7 +4672,7 @@ msgstr "Was für Fragen kann ich hier stellen?"
 msgid ""
 "Most importantly - questions should be <strong>relevant</strong> to this "
 "community."
-msgstr ""
+msgstr "Das wichtigste ist: Die Fragen müssen für diese Community relevant sein."
 
 #: templates/faq_static.html:8
 msgid ""
@@ -4703,7 +4704,7 @@ msgstr "ist eine <strong>Fragen und Antworten</strong> Webseite - <strong>es ist
 
 #: templates/faq_static.html:15
 msgid "Who moderates this community?"
-msgstr "Wer moderiert diese Forum?"
+msgstr "Wer moderiert diese Community?"
 
 #: templates/faq_static.html:16
 msgid "The short answer is: <strong>you</strong>."
@@ -4711,7 +4712,7 @@ msgstr "Die Antwort ist: <strong>Du!</strong>"
 
 #: templates/faq_static.html:17
 msgid "This website is moderated by the users."
-msgstr "Dieses Forum wird von seinen Benutzern moderiert."
+msgstr "Diese Community wird von seinen Benutzern moderiert."
 
 #: templates/faq_static.html:18
 msgid ""
@@ -4729,7 +4730,7 @@ msgid ""
 "some points, which are called \\\"karma points\\\". These points serve as a "
 "rough measure of the community trust to him/her. Various moderation tasks "
 "are gradually assigned to the users based on those points."
-msgstr "Wenn eine Frage oder Antwort positiv bewertet wird bekommt der Ersteller Punkte gutgeschrieben, sogenannte \"Karma Punkte\". Diese Punkte sind für die Community ein wichtiges Indiz diesem Benutzer zu vertrauen. Verschiedene und stetig anwachsende Moderationsrechte, basierend auf seiner Punktezahl, stehen diesem Nutzer zur Verfügung."
+msgstr "Wenn eine Frage oder Antwort positiv bewertet wird, bekommt der Ersteller Punkte gutgeschrieben, sogenannte \"Karma Punkte\". Diese Punkte sind für die Community ein wichtiges Indiz diesem Benutzer zu vertrauen. Verschiedene und stetig anwachsende Moderationsrechte, basierend auf seiner Punktezahl, stehen diesem Nutzer zur Verfügung."
 
 #: templates/faq_static.html:22
 #, python-format
@@ -4743,7 +4744,7 @@ msgid ""
 "points that can be accumulated for a question or answer per day. The table "
 "below explains reputation point requirements for each type of moderation "
 "task."
-msgstr "Zum Beispiel, wenn du eine interessante Frage stellst oder eine hilfreiche Antwort gibst, wird wahrscheinlich dein Eintrag positiv bewertet. Auf der anderen Seite wird eine dumme Antwort negativ bewertet. Jede gute Bewertung bringt dir <strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> Punkte, jeder schlechte Vote zieht dir <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> Punkte ab. Es gibt ein Limit von <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> Punkten die du maximal pro Frage oder Antwort am Tag bekommen kannst. Diese Aufstellung zeigt dir mit wievielen Punkten du jeweils die nächste Stufe der Moderationsrechte erreichen kannst."
+msgstr "Zum Beispiel, wenn du eine interessante Frage stellst oder eine hilfreiche Antwort gibst, wird wahrscheinlich dein Eintrag positiv bewertet. Auf der anderen Seite wird eine dumme Antwort negativ bewertet. Jede gute Bewertung bringt dir <strong>%(REP_GAIN_FOR_RECEIVING_UPVOTE)s</strong> Punkte, jeder schlechte Vote zieht dir <strong>%(REP_LOSS_FOR_RECEIVING_DOWNVOTE)s</strong> Punkte ab. Es gibt ein Limit von <strong>%(MAX_REP_GAIN_PER_USER_PER_DAY)s</strong> Punkten, die du maximal pro Frage oder Antwort am Tag bekommen kannst. Diese Aufstellung zeigt dir mit wie vielen Punkten du jeweils die nächste Stufe der Moderationsrechte erreichen kannst."
 
 #: templates/faq_static.html:32 templates/user_profile/user_votes.html:14
 msgid "upvote"
@@ -4801,7 +4802,7 @@ msgid ""
 "href='http://gravatar.com'><strong>gravatar.com</strong></a> (just please be"
 " sure to use the same email address that you used to register with us). "
 "Default image that looks like a kitchen tile is generated automatically.</p>"
-msgstr "<p>Das Bild das die Benutzer kennzeichnet und in Ihren Profilen zu sehen ist nennt sich <strong>gravatar</strong> (was soviel heißt wie <strong>g</strong>lobally <strong>r</strong>ecognized <strong>avatar</strong>).</p><p>So funktioniert es: Ein <strong>Eindeutiger Schlüssel</strong> (unbreakable code) wird aus deiner Email Adresse errechnet. Du kannst dann auf der Webseite <a href='http://gravatar.com'><strong>gravatar.com</strong></a> ein Foto hochladen (ein echtes von Dir oder ein Spaßbild), von da an holen wir uns dort dein hinterlegtes Bild.</p><p>Dadurch kannst du auf vielen Seiten, eben auch bei uns, ein Avatar in deinem Profil oder deinen Beiträgen anzeigen lassen auch ohne deine Email Adresse veröffentlichen zu müssen</p><p>Bitte <strong>personalisiere deinen Account</strong> mit einem Bild - einfach anmelden auf <a href='http://gravatar.com'><strong>gravatar.com</strong></a> (vergewissere dich aber das du die gleiche Email Adresse verwendest die du auch bei uns angegeben hast). Die standartmäßige Grafik die solange eingeblendet wird, wurde automatisch für dich generiert.</p>"
+msgstr "<p>Das Bild, das die Benutzer kennzeichnet und in Ihren Profilen zu sehen ist nennt sich <strong>Gravatar</strong> (was soviel heißt wie <strong>g</strong>lobally <strong>r</strong>ecognized <strong>avatar</strong>).</p><p>So funktioniert es: Ein <strong>Eindeutiger Schlüssel</strong> (unbreakable code) wird aus deiner Email Adresse errechnet. Du kannst dann auf der Webseite <a href='http://gravatar.com'><strong>gravatar.com</strong></a> ein Foto hochladen (ein echtes von Dir oder ein Spaßbild), von da an holen wir uns dort dein hinterlegtes Bild.</p><p>Dadurch kannst du auf vielen Seiten, so auch bei uns, ein Avatar in deinem Profil oder deinen Beiträgen anzeigen lassen auch ohne deine Email Adresse veröffentlichen zu müssen</p><p>Bitte <strong>personalisiere deinen Account</strong> mit einem Bild - einfach anmelden auf <a href='http://gravatar.com'><strong>gravatar.com</strong></a> (vergewissere dich aber, dass du die gleiche Email Adresse verwendest, die du auch bei uns angegeben hast). Die standardmäßige Grafik die solange eingeblendet wird, wurde automatisch für dich generiert.</p>"
 
 #: templates/faq_static.html:73
 msgid "To register, do I need to create new password?"
@@ -4811,7 +4812,7 @@ msgstr "Muß ich ein neues Passwort anlegen, um mich zu registrieren?"
 msgid ""
 "No, you don't have to. You can login through any service that supports "
 "OpenID, e.g. Google, Yahoo, AOL, etc."
-msgstr ""
+msgstr "Nein, nicht unbedingt! Du kannst dich über OpenID, Google, Yahoo, usw. einloggen."
 
 #: templates/faq_static.html:75
 msgid "\"Login now!\""
@@ -4845,7 +4846,7 @@ msgstr "Hast Du noch Fragen?"
 msgid ""
 "Please <a href='%(ask_question_url)s'>ask</a> your question, help make our "
 "community better!"
-msgstr ""
+msgstr "Stelle neue <a href='%(ask_question_url)s'>Fragen</a> und gebe tolle Antworten! So wird die Community besser."
 
 #: templates/feedback.html:3
 msgid "Feedback"
@@ -4874,7 +4875,7 @@ msgstr "\n<span class='big strong'>Hallo Gast</span>, wir wollen uns immer verbe
 
 #: templates/feedback.html:30
 msgid "(to hear from us please enter a valid email or check the box below)"
-msgstr ""
+msgstr "(Damit du von uns eine Nachricht erhalten kannst, gebe bitte eine funktionierende E-Mail-Adresse ein)"
 
 #: templates/feedback.html:37 templates/feedback.html.py:46
 msgid "(this field is required)"
@@ -4966,7 +4967,7 @@ msgstr "Abseits davon, jede Frage und jede Antwort kann kommentiert werden - die
 
 #: templates/help.html:26
 msgid "Please search before asking your questions"
-msgstr ""
+msgstr "Benutze bitte die Suchfunktion bevor du Fragen stellst, damit keine Fragen doppelt gestellt werden."
 
 #: templates/help.html:27
 msgid ""
@@ -4984,7 +4985,7 @@ msgstr ""
 
 #: templates/help.html:32
 msgid "to search by tags - enter [tag: sometag] or #sometag"
-msgstr ""
+msgstr "nach Tags sucht man so: [tag: irgendeinTag] oder noch einfacher #irgendeinTag"
 
 #: templates/help.html:33
 msgid "to search by user - enter [user: somename] or @somename or @\"some name\""
@@ -5028,7 +5029,7 @@ msgstr "Bitte vote wenn du eine nützliche Information findest, das hilft der %(
 
 #: templates/help.html:51
 msgid "Other topics"
-msgstr ""
+msgstr "Andere Themen "
 
 #: templates/help.html:53
 msgid ""
@@ -5094,7 +5095,7 @@ msgstr ""
 
 #: templates/list_suggested_tags.html:38
 msgid "There are no questions with this tag yet"
-msgstr ""
+msgstr "Es gibt noch keine Fragen zu diesem Tag "
 
 #: templates/list_suggested_tags.html:62
 #, python-format
@@ -5137,14 +5138,14 @@ msgstr "veröffentlicht"
 
 #: templates/macros.html:104
 msgid "this post is marked as community wiki"
-msgstr ""
+msgstr "Dieser Post ist als Wiki-Post markiert"
 
 #: templates/macros.html:107
 #, python-format
 msgid ""
 "This post is a wiki.\n"
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
-msgstr ""
+msgstr "Das ist ein Wiki-Beitrag.\n        Jeder mit Karma &gt;%(wiki_min_rep)s darf diesen Beitrag verbessern."
 
 #: templates/macros.html:149
 msgid "updated"
@@ -5152,12 +5153,12 @@ msgstr "aktualisiert"
 
 #: templates/macros.html:264 templates/macros.html.py:270
 msgid "Leave this group"
-msgstr ""
+msgstr "Verlasse diese Gruppe"
 
 #: templates/macros.html:265 templates/macros.html.py:267
 #: templates/macros.html:286
 msgid "Join this group"
-msgstr ""
+msgstr "Dieser Gruppe beitreten"
 
 #: templates/macros.html:266 templates/macros.html.py:271
 #: templates/macros.html:281
@@ -5277,7 +5278,7 @@ msgstr "Fragen"
 
 #: templates/question.html:210
 msgid "see more comments"
-msgstr ""
+msgstr "siehe mehr Kommentare"
 
 #: templates/question.html:212 templates/question.html.py:315
 msgid "post a comment"
@@ -5317,7 +5318,7 @@ msgstr "Warum Tags verwenden und bearbeiten?"
 
 #: templates/question_retag.html:30
 msgid "Tags help to keep the content better organized and searchable"
-msgstr ""
+msgstr "Tags helfen die Fragen zu organisieren"
 
 #: templates/question_retag.html:32
 msgid "tag editors receive special awards from the community"
@@ -5381,7 +5382,7 @@ msgstr "Abonniere"
 
 #: templates/tags.html:17
 msgid "search for tags"
-msgstr ""
+msgstr "nach Tags suchen"
 
 #: templates/users.html:4 templates/users.html.py:14
 #: templates/tags/list_bulk_tag_subscription.html:13
@@ -5409,7 +5410,7 @@ msgstr "Sortiere nach &raquo;"
 
 #: templates/users.html:36
 msgid "see people with the highest reputation"
-msgstr ""
+msgstr "User mit höchster Reputation"
 
 #: templates/users.html:37 templates/user_profile/user_info.html:26
 #: templates/user_profile/user_reputation.html:5
@@ -5448,7 +5449,7 @@ msgstr "Nichts gefunden."
 
 #: templates/authopenid/authopenid_macros.html:63
 msgid "Please enter your <span>user name</span>, then sign in"
-msgstr ""
+msgstr "Bitte gebe deinen <span>Benutzernamen</span> ein und logge dich dann ein"
 
 #: templates/authopenid/authopenid_macros.html:64
 #: templates/authopenid/signin.html:98
@@ -5478,7 +5479,7 @@ msgid ""
 "<span class=\\\"strong big\\\">Enter your new email into the box below</span> if \n"
 "you'd like to use another email for <strong>update subscriptions</strong>.\n"
 "<br>Currently you are using <strong>%%(email)s</strong>"
-msgstr ""
+msgstr "<span class=\\\"strong big\\\">Bitte gebe in die untere Box deine neue E-Mail ein,</span> wenn du eine andere E-Mail für <strong>Abbonements Updates</strong> haben möchtest .\n<br>Momentan benutzt du folgende E-Mail-Adresse: <strong>%%(email)s</strong>"
 
 #: templates/authopenid/changeemail.html:19
 #, python-format
@@ -5520,7 +5521,7 @@ msgid ""
 "email on <span class=\\\"orange\\\">Q&amp;A</span>. If you would like to use \n"
 "<strong>another email</strong>, please <a \n"
 "href='%%(change_email_url)s'><strong>change it again</strong></a>."
-msgstr ""
+msgstr "<span class=\\\"strong big\\\">Eine E-Mail mit einem Bestätigungslink wurde an diese Adresse %%(email)s geschickt.</span> Bitte<strong> öffne Link</strong> in deinem Browser. E-Mail Verifizierung ist wichtig für die Sicherheit der Webseite. Wenn du eine andere Adresse benutzen möchtest, dann  <a \nhref='%%(change_email_url)s'><strong>ändere  deine E-Mail-Adresse hier</strong></a>."
 
 #: templates/authopenid/changeemail.html:70
 msgid "Email not changed"
@@ -5547,7 +5548,7 @@ msgid ""
 "Updates on the questions that you like most will be sent to this address. \n"
 "Email notifications are sent once a day or less frequently - only when there \n"
 "are any news."
-msgstr ""
+msgstr "\n<span class='big strong'>Deine  E-Mail-Adresse ist jetzt  %%(email)s.</span>\nUpdates zu den Fragen, die du magst werden an diese Adresse geschickt."
 
 #: templates/authopenid/changeemail.html:91
 msgid "Email verified"
@@ -5625,7 +5626,7 @@ msgstr "Bitte hier anmelden:"
 msgid ""
 "Sincerely,\n"
 "Q&A Forum Administrator"
-msgstr ""
+msgstr "Mit freundlichen Grüßen\nAdministrator"
 
 #: templates/authopenid/email_validation.html:2
 #: templates/authopenid/email_validation.html:3
@@ -5649,7 +5650,7 @@ msgid ""
 "If you believe that this message was sent in mistake - \n"
 "no further action is needed. Just ignore this email, we apologize\n"
 "for any inconvenience"
-msgstr ""
+msgstr "Wenn du denkst, dass du diese E-Mail irrtümlich bekommen hast, dann brauchst du nichts weiter zu tun. Wir entschuldigen uns für die Unannehmlichkeiten."
 
 #: templates/authopenid/logout.html:3
 msgid "Logout"
@@ -5677,7 +5678,7 @@ msgid ""
 "\n"
 "        Your answer to %(title)s %(summary)s will be posted once you log in\n"
 "        "
-msgstr ""
+msgstr "\n<span class=\"strong big\">Deine Antwort auf die Frage </span> <i>\"<strong>%(title)s</strong> %(summary)s...\"</i> <span class=\"strong big\"> ist gespeichert und wird veröffentlicht sobald du dich angemeldet hast.</span>"
 
 #: templates/authopenid/signin.html:22
 #: templates/authopenid/widget_signin.html:26
@@ -5686,7 +5687,7 @@ msgid ""
 "Your question \n"
 "        %(title)s %(summary)s will be posted once you log in\n"
 "        "
-msgstr ""
+msgstr "<span class=\"strong big\">Deine Frage </span> <i>\"<strong>%(title)s</strong> %(summary)s...\"</i> <span class=\"strong big\">ist gespeichert und wird veröffentlicht sobald du dich angemeldet hast.</span>"
 
 #: templates/authopenid/signin.html:31
 #: templates/authopenid/widget_signin.html:36
@@ -5701,7 +5702,7 @@ msgstr ""
 msgid ""
 "Please add a more permanent login method by clicking one of the icons below,"
 " to avoid logging in via email each time."
-msgstr ""
+msgstr "Bitte gebe eine permanente Login-Methode ein, indem du auf einen unten abgebildeten Icon klickst. Dann kannst du dich ohne deine E-Mail-Adresse einloggen."
 
 #: templates/authopenid/signin.html:37
 #: templates/authopenid/widget_signin.html:42
@@ -5715,14 +5716,14 @@ msgstr ""
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr ""
+msgstr "Du hast noch keine Login-Methode gewählt. Bitte füge eine oder mehrere Login-Methoden hinzu in dem du auf einen Icon klickst."
 
 #: templates/authopenid/signin.html:42
 #: templates/authopenid/widget_signin.html:47
 msgid ""
 "Please check your email and visit the enclosed link to re-connect to your "
 "account"
-msgstr ""
+msgstr "Bitte überprüfe deine E-Mails und besuche den angegeben Link"
 
 #: templates/authopenid/signin.html:90
 #: templates/authopenid/widget_signin.html:94
@@ -5767,7 +5768,7 @@ msgstr "Bitte wiederholen"
 #: templates/authopenid/signin.html:162
 #: templates/authopenid/widget_signin.html:162
 msgid "Here are your current login methods"
-msgstr ""
+msgstr "Hier sind deine Login-Optionen"
 
 #: templates/authopenid/signin.html:166
 #: templates/authopenid/widget_signin.html:166
@@ -5804,7 +5805,7 @@ msgstr "Probleme beim einloggen?"
 #: templates/authopenid/signin.html:202
 #: templates/authopenid/widget_signin.html:202
 msgid "Please, enter your email address below and obtain a new key"
-msgstr ""
+msgstr "Gebe unten deine E-Mail Adresse an und erhalte einen neuen Schlüssel"
 
 #: templates/authopenid/signin.html:204
 #: templates/authopenid/widget_signin.html:204
@@ -5845,7 +5846,7 @@ msgid ""
 "<strong>OpenID</strong> login method. With <strong>OpenID</strong> you can \n"
 "simply reuse your external login (e.g. Gmail or AOL) without ever sharing \n"
 "your login details with anyone and having to remember yet another password."
-msgstr ""
+msgstr "<span class='strong big'>An dieser Stelle kannst du deinen Login-Namen und ein Passwort erstellen. </span>Bedenke, dass wir auch folgende Anmelde-Methoden unterstützen:  \n<strong>OpenID</strong>. Mit <strong>OpenID</strong> wird dein Passwort mit niemandem geteilt, auch nicht mit uns."
 
 #: templates/authopenid/signup_with_password.html:42
 msgid ""
@@ -5966,12 +5967,12 @@ msgstr ""
 msgid ""
 "\n"
 "Hello, this is a %(site_title)s forum feedback message.\n"
-msgstr ""
+msgstr "\nHallo, das ist  %(site_title)s Community Feedback Nachricht.\n"
 
 #: templates/email/footer.html:1
 #, python-format
 msgid "Sincerely,<br>%(site_name)s Administrator"
-msgstr ""
+msgstr "Mit freundlichen Grüßen <br>%(site_name)s Administrator"
 
 #: templates/email/instant_notification.html:6
 #, python-format
@@ -5980,12 +5981,12 @@ msgid ""
 "<p style=\"font-size:10px; font-style:italic;\">\n"
 "Please note - you can easily <a href=\"%(user_subscriptions_url)s\">change</a>\n"
 "how often you receive these notifications or unsubscribe. Thank you for your interest in our forum!</p>\n"
-msgstr ""
+msgstr "\n<p style=\"font-size:10px; font-style:italic;\">\nBeachte, dass du sehr einfach die Häufigkeit deiner E-Mail Benachrichtigungen <a href=\"%(user_subscriptions_url)s\">ändern</a> kannst. Du kannst sie auch komplett abbestellen. Danke, dass du ein Teil unserer Community bist!</p>\n"
 
 #: templates/email/insufficient_rep_to_post_by_email.html:10
 #, python-format
 msgid "%(username)s, your question could not be posted by email just yet."
-msgstr ""
+msgstr "%(username)s, deine Frage konnte nicht übe E-Mail veröffentlicht werden."
 
 #: templates/email/insufficient_rep_to_post_by_email.html:14
 #, python-format
@@ -6009,11 +6010,11 @@ msgid ""
 "\n"
 "                                In reply to %(author)s's question:\n"
 "                            "
-msgstr ""
+msgstr "\n                               Eine neue Antwort auf die Frage von %(author)s's :\n                            "
 
 #: templates/email/macros.html:26
 msgid "Question :"
-msgstr ""
+msgstr "Frage: "
 
 #: templates/email/macros.html:33
 #, python-format
@@ -6038,12 +6039,12 @@ msgid ""
 "\n"
 "                                In reply to %(author)s's answer:\n"
 "                            "
-msgstr ""
+msgstr "\n                                Ein neuer Beitrag auf die Antwort von  %(author)s's :\n                            "
 
 #: templates/email/macros.html:57
 #, python-format
 msgid "Answered by %(author)s:"
-msgstr ""
+msgstr "Beantwortet von %(author)s:"
 
 #: templates/email/macros.html:64
 #, python-format
@@ -6059,7 +6060,7 @@ msgid ""
 "\n"
 "                                In reply to %(author)s's comment:\n"
 "                            "
-msgstr ""
+msgstr "\n                              Ein neuer Beitrag auf das Kommentar von %(author)s's :\n                            "
 
 #: templates/email/macros.html:73
 #, python-format
@@ -6067,11 +6068,11 @@ msgid ""
 "\n"
 "                            Commented by %(author)s:\n"
 "                        "
-msgstr ""
+msgstr "\n                            Ein Kommentar von %(author)s:\n                        "
 
 #: templates/email/notify_author_about_approved_post.html:20
 msgid "Below is a copy of your post:"
-msgstr ""
+msgstr "Darunter ist die Kopie von deinem Beitrag"
 
 #: templates/email/post_as_subthread.html:8
 #, python-format
@@ -6120,7 +6121,7 @@ msgstr ""
 
 #: templates/email/rejected_post.html:7
 msgid "Here is your original post"
-msgstr ""
+msgstr "Hier ist dein Originalbeitrag"
 
 #: templates/email/reply_by_email_error.html:1
 msgid ""
@@ -6156,7 +6157,7 @@ msgstr ""
 
 #: templates/embed/ask_by_widget.html:170
 msgid "Please enter a descriptive title for your question"
-msgstr ""
+msgstr "Bitte wähle einen guten Titel für deine Frage"
 
 #: templates/embed/list_widgets.html:44
 msgid "How to use?"
@@ -6213,7 +6214,7 @@ msgstr ""
 msgid ""
 "To reply please <a class=\"thread-link\" href=\"THREAD_URL_HOLE\">visit your"
 " message inbox</a>"
-msgstr ""
+msgstr "Um zu antworten, besuche bitte  <a class=\"thread-link\" href=\"THREAD_URL_HOLE\">besuche deinen Postkasten</a>"
 
 #: templates/group_messaging/home.html:7
 #: templates/group_messaging/home_thread_details.html:7
@@ -6379,7 +6380,7 @@ msgstr[1] ""
 #, python-format
 msgid ""
 "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
-msgstr ""
+msgstr "Bitte benutze bis zu %(tag_count)s Tags, wobei jeder Tag weniger als %(max_chars)s Zeichen haben soll"
 
 #: templates/question/answer_card.html:20
 msgid "This response is published"
@@ -6438,15 +6439,15 @@ msgstr "link"
 
 #: templates/question/answer_controls.html:58
 msgid "more"
-msgstr ""
+msgstr "mehr"
 
 #: templates/question/answer_controls.html:71
 msgid "repost as a question comment"
-msgstr ""
+msgstr "umwandeln in einen Kommentar zur Frage"
 
 #: templates/question/answer_controls.html:85
 msgid "repost as a comment under the older answer"
-msgstr ""
+msgstr "umwandeln in einen Kommentar unter der älteren Antwort"
 
 #: templates/question/answer_tab_bar.html:3
 #, python-format
@@ -6525,7 +6526,7 @@ msgid ""
 "you log in or create a new account. Please try to give a <strong>substantial"
 " answer</strong>, for discussions, <strong>please use comments</strong> and "
 "<strong>please do remember to vote</strong> (after you log in)!"
-msgstr "<span class='strong big'>Du kannst deinen Eintrag bereits als Gast verfassen</span> - Deine Antwort wird zwischengespeichert, bis du dich eingeloggt oder registriert hast. Versuche bitte eine <strong>vernünftige Antwort</strong> zu geben. Für Diskussionen, <strong>benutze bitte die Kommentarfunktion</strong> und <strong>denke daran zu voten</strong> (nachdem du eingeloggt bist)!"
+msgstr "Du kannst deinen Eintrag bereits als Gast verfassen. Deine Antwort wird zwischengespeichert, bis du dich eingeloggt oder registriert hast. <br>\nBitte nur <strong>konstruktive</strong> Antworten auf <strong>diese konkrete</strong> Frage posten. <br> Falls du eine Frage stellen willst, dann stelle eine <strong>neue</strong> Frage.<br> Für kurze Diskussionen und Nachfragen benutze bitte die <strong>Kommentar-Funktion</strong>. <br> \nDeine Fragen und Antworten kannst du jederzeit nachbearbeiten und verbessern.<br>\nGute Fragen und Antworten kannst du mit einem Upvote oder Downvote <strong>bewerten</strong>."
 
 #: templates/question/new_answer_form.html:32
 msgid ""
@@ -6535,7 +6536,7 @@ msgid ""
 "<strong>use comments for discussions</strong>  and <strong>please don't "
 "forget to vote :)</strong> for the answers that you liked (or perhaps did "
 "not like)!"
-msgstr "<span class='big strong'>Du kannst gerne eine Antwort auf deine eigene Frage geben</span>, aber bitte stelle sicher das es auch wirklich eine <strong>Antwort</strong> ist. Denke daran, du kann jederzeit <strong>deine eigene Frage neu formulieren</strong>. Bitte <strong>benutze Kommentare zum diskutieren</strong> und <strong>vergiss nicht zu voten :)</strong> für die Antwort die dir gefällt (oder eben wenn du sie nicht magst)!"
+msgstr "Du darfst auch Antworten auf deine eigene Frage geben.\n <br>\nBitte nur <strong>konstruktive</strong> Antworten auf <strong>diese konkrete</strong> Frage posten. <br> \nDeine Fragen und Antworten kannst du jederzeit nachbearbeiten und verbessern.<br>\nGute Fragen und Antworten kannst du mit einem Upvote oder Downvote <strong>bewerten</strong>."
 
 #: templates/question/new_answer_form.html:34
 msgid ""
@@ -6545,11 +6546,11 @@ msgid ""
 " your answers</strong> - no need to answer the same question twice. Also, "
 "please <strong>don't forget to vote</strong> - it really helps to select the"
 " best questions and answers!"
-msgstr "<span class='big strong'>Bitte versuche ein hilfreiche Antwort zu geben</span>. Wenn du eine Anmerkung zu einer Antwort hast <strong>benutze bitte die Kommentarfunktion</strong>. Denke daran das du deine Antworten <strong>ändern kannst</strong> - kein Grund mehrere Antworten zu geben. Vergesse bitte auch nicht <strong>zu voten</strong> - dies hilft sehr viel die besten Fragen und Antworten auszuwählen!"
+msgstr "Bitte nur <strong>konstruktive</strong> Antworten auf <strong>diese konkrete</strong> Frage posten. <br> Falls du eine Frage stellen willst, dann stelle eine <strong>neue</strong> Frage.<br> Für kurze Diskussionen und Nachfragen benutze bitte die <strong>Kommentar-Funktion</strong>. <br> \nDeine Fragen und Antworten kannst du jederzeit nachbearbeiten und verbessern.<br>\nGute Fragen und Antworten kannst du mit einem Upvote oder Downvote <strong>bewerten</strong>."
 
 #: templates/question/new_answer_form.html:39
 msgid "Add answer"
-msgstr ""
+msgstr "Schreibe deine Antwort auf diese Frage"
 
 #: templates/question/question_controls.html:5
 msgid "retag"
@@ -6569,7 +6570,7 @@ msgstr "Fragen-Tools"
 
 #: templates/question/sidebar.html:11
 msgid "click to unfollow this question"
-msgstr ""
+msgstr "Klicke, um dieser Frage nicht mehr zu folgen"
 
 #: templates/question/sidebar.html:12
 msgid "Following"
@@ -6581,7 +6582,7 @@ msgstr ""
 
 #: templates/question/sidebar.html:17
 msgid "click to follow this question"
-msgstr ""
+msgstr "Klicke, um dieser Frage zu folgen"
 
 #: templates/question/sidebar.html:18
 msgid "Follow"
@@ -6606,7 +6607,7 @@ msgstr "<strong>Hier</strong> (bist du erstmal angemeldet) kannst du dir zu dies
 
 #: templates/question/sidebar.html:46
 msgid "subscribe to this question rss feed"
-msgstr ""
+msgstr "Abonniere den RSS Feed dieser Frage"
 
 #: templates/question/sidebar.html:47
 msgid "subscribe to rss feed"
@@ -6651,21 +6652,21 @@ msgstr ""
 #: templates/question/sidebar.html:133
 #, python-format
 msgid "%(more_count)s more"
-msgstr ""
+msgstr "%(more_count)s mehr"
 
 #: templates/question/sidebar.html:139
 msgid "Public thread"
-msgstr ""
+msgstr "Öffentlicher Thread"
 
 #: templates/question/sidebar.html:140
 #, python-format
 msgid ""
 "This thread is public, all members of %(site_name)s can read this page."
-msgstr ""
+msgstr "Dieser Thread ist öffentlich alle Mitglieder von %(site_name)s können diese Seite lesen."
 
 #: templates/question/sidebar.html:148
 msgid "Stats"
-msgstr "Fragen-Statistiken"
+msgstr "Statistik"
 
 #: templates/question/sidebar.html:150
 msgid "Asked"
@@ -6685,7 +6686,7 @@ msgstr "Letztes Update"
 
 #: templates/question/sidebar.html:164
 msgid "Related questions"
-msgstr "Verwandte / ähnliche Fragen"
+msgstr "Verwandte Fragen"
 
 #: templates/tags/form_bulk_tag_subscription.html:4
 msgid "Tag subscriptions"
@@ -7349,7 +7350,7 @@ msgstr ""
 
 #: templates/widgets/group_info.html:63
 msgid "How users join this group?"
-msgstr ""
+msgstr "Wie können User dieser Gruppe beitreten?"
 
 #: templates/widgets/group_info.html:87
 msgid "Make group VIP"
@@ -7508,7 +7509,7 @@ msgstr "Ignoriere Tags"
 
 #: templates/widgets/tag_selector.html:40
 msgid "Subscribed tags"
-msgstr ""
+msgstr "Abonnierte Tags"
 
 #: templates/widgets/tag_selector.html:59
 msgid "Show only questions from"
@@ -7526,7 +7527,7 @@ msgstr ""
 msgid ""
 "Categorize your question using this tag selector or entering text in tag "
 "box."
-msgstr ""
+msgstr "Benutze Tags, um deine Frage zu kategorisieren."
 
 #: templates/widgets/three_column_category_selector.html:7
 #: templates/widgets/three_column_category_selector.html:10
@@ -7553,7 +7554,7 @@ msgstr "Ausloggen"
 
 #: templates/widgets/user_navigation.html:20
 msgid "Hi there! Please sign in"
-msgstr ""
+msgstr "Einloggen"
 
 #: templates/widgets/user_navigation.html:23
 msgid "settings"
@@ -7565,7 +7566,7 @@ msgstr ""
 
 #: templatetags/extra_filters_jinja.py:308
 msgid "no"
-msgstr "null"
+msgstr "0"
 
 #: utils/decorators.py:103 views/commands.py:146
 msgid "Oops, apologies - there was some error"
@@ -7581,7 +7582,7 @@ msgstr "In deinem Eintrag wurde Spam entdeckt, Entschuldigung wenn dies ein Fehl
 
 #: utils/decorators.py:242
 msgid "This function is limited to moderators and administrators"
-msgstr ""
+msgstr "Diese Funktion steht nur Moderatoren und Administratoren zur verfügung"
 
 #: utils/forms.py:66
 msgid "this field is required"
@@ -7617,7 +7618,7 @@ msgstr "Der Benutzername kann aus Buchstaben, Leerzeichen und Unterstrichen best
 
 #: utils/forms.py:109
 msgid "please use at least some alphabetic characters in the user name"
-msgstr ""
+msgstr "Bitte benutze wenigstens einen Buchstaben im Benutzernamen"
 
 #: utils/forms.py:110
 msgid "symbol \"@\" is not allowed"
@@ -7625,7 +7626,7 @@ msgstr ""
 
 #: utils/forms.py:222
 msgid "Your email <i>(never shared)</i>"
-msgstr "Deine Email-Adresse <i>(wird nicht angezeigt)</i>"
+msgstr "Deine Email-Adresse"
 
 #: utils/forms.py:224
 msgid "email address is required"
@@ -7641,7 +7642,7 @@ msgstr "Diese Email-Adresse ist bereits in Benutzung, bitte gebe eine andere ein
 
 #: utils/forms.py:227
 msgid "this email address is not authorized"
-msgstr ""
+msgstr "Diese E-Mail Adresse ist nicht autorisiert"
 
 #: utils/forms.py:267
 msgid "password is required"
@@ -7695,7 +7696,7 @@ msgstr "Die ausgewählten Avatare wurden erfolgreich gelöscht."
 
 #: views/commands.py:123
 msgid "your post was not accepted"
-msgstr ""
+msgstr "Dein Beitrag wurde nicht akzeptiert"
 
 #: views/commands.py:136
 msgid "Sorry, but anonymous users cannot access the inbox"
@@ -7727,7 +7728,7 @@ msgstr "Tut mir leid, anonyme Benutzer können keine Antworten akzeptieren"
 msgid ""
 "Your subscription is saved, but email address %(email)s needs to be "
 "validated, please see <a href=\"%(details_url)s\">more details here</a>"
-msgstr ""
+msgstr "Deine Email Adresse %(email)s muss noch verifiziert werden, weitere Details sinnd hier: <a href=\"%(details_url)s\"></a>"
 
 #: views/commands.py:405
 msgid "email update frequency has been set to daily"
@@ -7766,7 +7767,7 @@ msgstr ""
 
 #: views/commands.py:1506
 msgid "Sorry, only thread moderators can use this function"
-msgstr ""
+msgstr "Sorry, nur Moderatoren dürfen diese Funktion benutzen"
 
 #: views/commands.py:1521
 msgid "The answer is now unpublished"
@@ -7783,7 +7784,7 @@ msgstr "Über %(site)s"
 
 #: views/meta.py:91
 msgid "Please sign in or register to send your feedback"
-msgstr ""
+msgstr "Logge dich ein oder registriere dich, damit du Feedback senden kanst"
 
 #: views/meta.py:118
 msgid "Q&A forum feedback"
@@ -7803,7 +7804,7 @@ msgstr "Datenschutzrichtlinien"
 
 #: views/meta.py:219
 msgid "Suggested tags"
-msgstr ""
+msgstr "Vorgeschlagene Tags"
 
 #: views/readers.py:410
 msgid ""
@@ -7922,7 +7923,7 @@ msgstr "Zum Beantworten bitte einloggen"
 
 #: views/writers.py:710
 msgid "This content is forbidden"
-msgstr ""
+msgstr "Dieser Inhalt ist verboten"
 
 #: views/writers.py:719
 msgid "Post not found"
@@ -7959,7 +7960,7 @@ msgstr ""
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "
 "maximum allowed for comments"
-msgstr ""
+msgstr "Die Umwandlung klappt nicht, weil der Text mehr als die maximal erlaubten %(max_chars)s - Zeichen für Kommentare enthält"
 
 #~ msgid "your email needs to be validated see %(details_url)s"
 #~ msgstr ""

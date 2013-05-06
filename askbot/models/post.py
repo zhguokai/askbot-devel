@@ -34,6 +34,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html, strip_tags
+from askbot.utils.html import site_url
 from askbot.models.base import BaseQuerySetManager, DraftContent
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
@@ -408,8 +409,7 @@ class Post(models.Model):
         """a naive tweet representation of post
         todo: add mentions to relevant people
         """
-        url = self.get_absolute_url(no_slug=True)
-        url = askbot_settings.APP_URL + url
+        url = site_url(self.get_absolute_url(no_slug=True))
         if self.post_type == 'question':
             tweet = _('Question: ')
         elif self.post_type == 'answer':

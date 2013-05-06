@@ -18,6 +18,7 @@ from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
 from askbot.utils.html import absolutize_urls
+from askbot.utils.html import site_url
 from askbot.utils import functions
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
@@ -150,10 +151,7 @@ def media(url):
 
 @register.filter
 def fullmedia(url):
-    domain = askbot_settings.APP_URL
-    #protocol = getattr(settings, "PROTOCOL", "http")
-    path = media(url)
-    return "%s%s" % (domain, path)
+    return site_url(media(url))
 
 diff_date = register.filter(functions.diff_date)
 

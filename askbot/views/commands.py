@@ -612,12 +612,20 @@ def delete_tag(request):
     if request.user.is_anonymous() \
         or not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied()
-    post_data = simplejson.loads(request.raw_post_data)
-    tag_name = forms.clean_tag(post_data['tag_name'])
-    path = post_data['path']
-    tree = category_tree.get_data()
-    category_tree.delete_category(tree, tag_name, path)
-    category_tree.save_data(tree)
+
+    try:
+        post_data = simplejson.loads(request.raw_post_data)
+        tag_name = post_data['tag_name']
+        path = post_data['path']
+        tree = category_tree.get_data()
+        category_tree.delete_category(tree, tag_name, path)
+        category_tree.save_data(tree)
+    except Exception:
+        if 'tag_name' in locals():
+            logging.critical('could not delete tag %s' % tag_name)
+        else:
+            logging.critical('failed to parse post data %s' % request.raw_post_data)
+        raise exceptions.PermissionDenied(_('Sorry, could not delete tag'))
     return {'tree_data': tree}
 
 @csrf.csrf_exempt

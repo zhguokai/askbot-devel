@@ -12,7 +12,6 @@ import random
 import sys
 import tempfile
 import time
-import urlparse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required

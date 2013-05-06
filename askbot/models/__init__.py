@@ -63,6 +63,7 @@ from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
 from askbot.utils.html import replace_links_with_text
 from askbot.utils.html import sanitize_html
+from askbot.utils.html import site_url
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
 from askbot import mail
@@ -3069,17 +3070,7 @@ def format_instant_notification_email(
     only update_types in const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     are supported
     """
-    site_url = askbot_settings.APP_URL
     origin_post = post.get_origin_post()
-    #todo: create a better method to access "sub-urls" in user views
-    user_subscriptions_url = site_url + \
-                                reverse(
-                                    'user_subscriptions',
-                                    kwargs = {
-                                        'id': to_user.id,
-                                        'slug': slugify(to_user.username)
-                                    }
-                                )
 
     if update_type == 'question_comment':
         assert(isinstance(post, Post) and post.is_comment())
@@ -3143,9 +3134,8 @@ def format_instant_notification_email(
     else:
         raise ValueError('unrecognized post type')
 
-    base_url = strip_path(site_url)
-    post_url = base_url + post.get_absolute_url()
-    user_url = base_url + from_user.get_absolute_url()
+    post_url = site_url(post.get_absolute_url())
+    user_url = site_url(from_user.get_absolute_url())
     user_action = user_action % {
         'user': '<a href="%s">%s</a>' % (user_url, from_user.username),
         'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
@@ -3174,6 +3164,13 @@ def format_instant_notification_email(
     else:
         reply_separator = user_action
 
+    user_subscriptions_url = reverse(
+                                    'user_subscriptions',
+                                    kwargs = {
+                                        'id': to_user.id,
+                                        'slug': slugify(to_user.username)
+                                    }
+                                )
     update_data = {
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
@@ -3184,7 +3181,7 @@ def format_instant_notification_email(
         'update_type': update_type,
         'post_url': post_url,
         'origin_post_title': origin_post.thread.title,
-        'user_subscriptions_url': user_subscriptions_url,
+        'user_subscriptions_url': site_url(user_subscriptions_url),
         'reply_separator': reply_separator,
         'reply_address': reply_address
     }
@@ -3607,7 +3604,7 @@ def greet_new_user(user, **kwargs):
 
     data = {
         'site_name': askbot_settings.APP_SHORT_NAME,
-        'site_url': askbot_settings.APP_URL,
+        'site_url': site_url(reverse('questions')),
         'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
         'can_post_by_email': user.can_post_by_email()
     }

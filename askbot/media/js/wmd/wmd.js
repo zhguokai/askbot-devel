@@ -446,7 +446,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
     
     // Why is this in a zero-length timeout?
     // Is it working around a browser bug?
-    top.setTimeout(function(){
+    setTimeout(function(){
         createDialog();
         var defTextLen = defaultInputText.length;
         if (input.type == 'text' && input.selectionStart !== undefined) {
@@ -582,11 +582,11 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		// Set how often we poll the textarea for changes.
 		var assignInterval = function(){
 			// previewPollInterval is set at the top of the namespace.
-			killHandle = top.setInterval(doTickCallback, interval);
+			killHandle = setInterval(doTickCallback, interval);
 		};
 		
 		this.destroy = function(){
-			top.clearInterval(killHandle);
+			clearInterval(killHandle);
 		};
 		
 		assignInterval();
@@ -616,7 +616,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			}
 			
 			if (!global.isIE || mode != "moving") {
-				timer = top.setTimeout(refreshState, 1);
+				timer = setTimeout(refreshState, 1);
 			}
 			else {
 				inputStateObj = null;
@@ -632,7 +632,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		this.setCommandMode = function(){
 			mode = "command";
 			saveState();
-			timer = top.setTimeout(refreshState, 0);
+			timer = setTimeout(refreshState, 0);
 		};
 		
 		this.canUndo = function(){
@@ -747,8 +747,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 				if (event.preventDefault) {
 					event.preventDefault();
 				}
-				if (top.event) {
-					top.event.returnValue = false;
+				if (event) {
+					event.returnValue = false;
 				}
 				return;
 			}
@@ -1287,8 +1287,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 						key.preventDefault();
 					}
 					
-					if (top.event) {
-						top.event.returnValue = false;
+					if (event) {
+						event.returnValue = false;
 					}
 				}
 			});
@@ -1334,7 +1334,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 				if (markdownConverter) {
 					inputBox.value = markdownConverter.makeHtml(text);
           //value is assigned here
-					top.setTimeout(callback, 0);
+					setTimeout(callback, 0);
 				}
 			}
 			return true;
@@ -1369,7 +1369,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			if (inputBox) {
 				inputBox.style.marginTop = "";
 			}
-			top.clearInterval(creationHandle);
+			clearInterval(creationHandle);
 		};
 		
 		init();
@@ -1950,8 +1950,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		
 			var result = 0;
 			
-			if (top.innerHeight) {
-				result = top.pageYOffset;
+			if (innerHeight) {
+				result = pageYOffset;
 			}
 			else 
 				if (doc.documentElement && doc.documentElement.scrollTop) {
@@ -2004,7 +2004,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		var applyTimeout = function(){
 		
 			if (timeout) {
-				top.clearTimeout(timeout);
+				clearTimeout(timeout);
 				timeout = undefined;
 			}
 			
@@ -2019,7 +2019,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 				if (delay > maxDelay) {
 					delay = maxDelay;
 				}
-				timeout = top.setTimeout(makePreviewHtml, delay);
+				timeout = setTimeout(makePreviewHtml, delay);
 			}
 		};
 		
@@ -2104,12 +2104,12 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			var fullTop = position.getTop(wmd.panels.input) - getDocScrollTop();
 			
 			if (global.isIE) {
-				top.setTimeout(function(){
-					top.scrollBy(0, fullTop - emptyTop);
+				setTimeout(function(){
+					scrollBy(0, fullTop - emptyTop);
 				}, 0);
 			}
 			else {
-				top.scrollBy(0, fullTop - emptyTop);
+				scrollBy(0, fullTop - emptyTop);
 			}
 		};
 		
