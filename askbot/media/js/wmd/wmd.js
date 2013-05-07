@@ -452,8 +452,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
         if (input.type == 'text' && input.selectionStart !== undefined) {
             input.selectionStart = 0;
             input.selectionEnd = defTextLen;
-        }
-        else if (input.createTextRange) {
+        } else if (input.createTextRange) {
             var range = input.createTextRange();
             range.collapse(false);
             range.moveStart("character", -defTextLen);
@@ -494,30 +493,26 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		var innerWidth, innerHeight;
 		
 		// It's not very clear which blocks work with which browsers.
-		if(self.innerHeight && self.scrollMaxY){
+		if (self.innerHeight && self.scrollMaxY) {
 			scrollWidth = doc.body.scrollWidth;
 			scrollHeight = self.innerHeight + self.scrollMaxY;
-		}
-		else if(doc.body.scrollHeight > doc.body.offsetHeight){
+		} else if (doc.body.scrollHeight > doc.body.offsetHeight){
 			scrollWidth = doc.body.scrollWidth;
 			scrollHeight = doc.body.scrollHeight;
-		}
-		else{
+		} else {
 			scrollWidth = doc.body.offsetWidth;
 			scrollHeight = doc.body.offsetHeight;
 		}
 		
-		if(self.innerHeight){
+		if (self.innerHeight) {
 			// Non-IE browser
 			innerWidth = self.innerWidth;
 			innerHeight = self.innerHeight;
-		}
-		else if(doc.documentElement && doc.documentElement.clientHeight){
+		} else if (doc.documentElement && doc.documentElement.clientHeight){
 			// Some versions of IE (IE 6 w/ a DOCTYPE declaration)
 			innerWidth = doc.documentElement.clientWidth;
 			innerHeight = doc.documentElement.clientHeight;
-		}
-		else if(doc.body){
+		} else if(doc.body) {
 			// Other versions of IE
 			innerWidth = doc.body.clientWidth;
 			innerHeight = doc.body.clientHeight;
@@ -1917,7 +1912,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
         if (start_now){
             loadListener();
         } else {
-		    util.addEvent(top, "load", loadListener);
+		    util.addEvent(window, "load", loadListener);
         }
 	};
 	
@@ -1950,7 +1945,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		
 			var result = 0;
 			
-			if (innerHeight) {
+			if (window.innerHeight) {
 				result = pageYOffset;
 			}
 			else 
@@ -2495,7 +2490,7 @@ if (askbot['settings']['editorType'] == 'markdown' && !Attacklab.wmd) {
 			
 			mergeEnv(Attacklab.wmd_defaults);
 			mergeEnv(Attacklab.account_options);
-			mergeEnv(top["wmd_options"]);
+			mergeEnv(window["wmd_options"]);
 			Attacklab.full = true;
 			
 			var defaultButtons = "bold italic link blockquote code image attachment ol ul heading hr";

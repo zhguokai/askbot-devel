@@ -2225,8 +2225,12 @@ Comment.prototype.loadText = function(on_load_handler){
         url: askbot['urls']['getComment'],
         data: {id: this._data['id']},
         success: function(json){
-            me._data['text'] = json['text'];
-            on_load_handler()
+            if (json['success']) {
+                me._data['text'] = json['text'];
+                on_load_handler()
+            } else {
+                showMessage(me.getElement(), json['message'], 'after');
+            }
         },
         error: function(xhr, textStatus, exception) {
             showMessage(me.getElement(), xhr.responseText, 'after');
@@ -2576,7 +2580,7 @@ FoldedEditor.prototype.getEditorInputId = function() {
 FoldedEditor.prototype.onAfterOpenHandler = function() {
     var editor = this.getEditor();
     if (editor) {
-        setTimeout(editor.focus(), 500);
+        setTimeout(function() {editor.focus()}, 500);
     }
 };
 
