@@ -62,6 +62,13 @@
                 return null;
             };
 
+            var postIsComment = function(postId) {
+                if (document.getElementById('comment-' + postId)) {
+                    return true;
+                }
+                return false;
+            };
+
             var removeNode = function(node) {
                 node.parentNode.removeChild(node);
             };
@@ -186,9 +193,9 @@
                 ) {
                     removeNode(closeBtn[0]);
                 }
+                var repLow = (data['userReputation'] < {{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}});
                 if (//maybe remove "edit" button
-                    data['userReputation'] <
-                    {{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}}
+                    repLow || postIsComment(post_id)//only authors edit comments
                 ){
                     var edit_btn = document.getElementById(
                         'post-' + post_id + '-edit'
