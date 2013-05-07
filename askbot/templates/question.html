@@ -43,6 +43,10 @@
                 return nodes;
             };
 
+            var getTextContent = function(node) {
+                return node.innerText || node.textContent;
+            };
+
             var hasAttribute = function(node, attrName) {
                 if (node.hasAttribute) {
                     return node.hasAttribute(attrName);
@@ -139,7 +143,7 @@
                     //todo: this is not reliable
                     var answerBodyNodes = answerBody.childNodes;
                     var answerElement = answerBodyNodes[answerBodyNodes.length - 1];
-                    if (trim(answerElement.textContent).length > askbot['data']['maxCommentLength']) {
+                    if (trim(getTextContent(answerElement)).length > askbot['data']['maxCommentLength']) {
                         repostAsQuestionComment.parentNode.removeChild(repostAsQuestionComment);
                         repostAsPrevAnsComment.parentNode.removeChild(repostAsPrevAnsComment);
                     } else if (parseInt(post_id) === data['oldestAnswerId']) {
