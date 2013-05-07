@@ -2580,7 +2580,7 @@ FoldedEditor.prototype.getEditorInputId = function() {
 FoldedEditor.prototype.onAfterOpenHandler = function() {
     var editor = this.getEditor();
     if (editor) {
-        setTimeout(editor.focus(), 500);
+        setTimeout(function() {editor.focus()}, 500);
     }
 };
 

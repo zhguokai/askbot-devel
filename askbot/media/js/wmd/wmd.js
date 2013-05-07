@@ -1912,7 +1912,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
         if (start_now){
             loadListener();
         } else {
-		    util.addEvent(top, "load", loadListener);
+		    util.addEvent(window, "load", loadListener);
         }
 	};
 	
@@ -2490,7 +2490,7 @@ if (askbot['settings']['editorType'] == 'markdown' && !Attacklab.wmd) {
 			
 			mergeEnv(Attacklab.wmd_defaults);
 			mergeEnv(Attacklab.account_options);
-			mergeEnv(top["wmd_options"]);
+			mergeEnv(window["wmd_options"]);
 			Attacklab.full = true;
 			
 			var defaultButtons = "bold italic link blockquote code image attachment ol ul heading hr";
