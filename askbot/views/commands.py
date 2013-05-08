@@ -699,7 +699,7 @@ def subscribe_for_tags(request):
             else:
                 message = _(
                     'Tag subscription was canceled (<a href="%(url)s">undo</a>).'
-                ) % {'url': request.path + '?tags=' + request.REQUEST['tags']}
+                ) % {'url': escape(request.path) + '?tags=' + request.REQUEST['tags']}
                 request.user.message_set.create(message = message)
             return HttpResponseRedirect(reverse('index'))
         else:

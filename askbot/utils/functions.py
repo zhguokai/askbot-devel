@@ -3,6 +3,7 @@ import random
 import datetime
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
+from django.utils.html import escape
 
 def get_from_dict_or_object(source, key):
     try:
@@ -158,7 +159,7 @@ def setup_paginator(context):
             next_page_number = None
 
         return {
-            "base_url": context["base_url"],
+            "base_url": escape(context["base_url"]),
             "is_paginated": context["is_paginated"],
             "previous": previous_page_number,
             "has_previous": page_object.has_previous(),
