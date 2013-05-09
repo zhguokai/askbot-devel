@@ -6,22 +6,20 @@ try:
 
     class ThreadIndex(indexes.SearchIndex):
         text = indexes.CharField(document=True, use_template=True)
-        title = indexes.CharField(model_attr='title')
-        post_text = indexes.CharField(model_attr='posts__text__search')
+        title = indexes.CharField()
+        tags = indexes.MultiValueField()
 
         def index_queryset(self):
             return Thread.objects.filter(posts__deleted=False)
 
-        def prepare(self, obj):
-            self.prepared_data = super(ThreadIndex, self).prepare(object)
-
-            self.prepared_data['tags'] = [tag.name for tag in objects.tags.all()]
+        def prepare_tags(self, obj):
+            return [tag.name for tag in obj.tags.all()]
 
     class PostIndex(indexes.SearchIndex):
         text = indexes.CharField(document=True, use_template=True)
         post_text = indexes.CharField(model_attr='text')
-        author = indexes.CharField(model_attr='user')
-        thread_id = indexes.CharField(model_attr='thread')
+        author = indexes.CharField()
+        thread_id = indexes.IntegerField(model_attr='thread__pk')
 
         def index_queryset(self):
             return Post.objects.filter(deleted=False)
@@ -32,8 +30,8 @@ try:
         def index_queryset(self):
             return User.objects.all()
 
-    site.register(Post, PostIndex)
     site.register(Thread, ThreadIndex)
+    site.register(Post, PostIndex)
     site.register(User, UserIndex)
 
     class AskbotSearchQuerySet(SearchQuerySet):

@@ -344,7 +344,7 @@ class ThreadManager(BaseQuerySetManager):
 
             #a special case: "personalized" main page only ==
             #if followed is the only available scope
-            #if total number (regardless of users selections) 
+            #if total number (regardless of users selections)
             #followed questions is < than a pagefull - we should mix in a list of
             #random questions
             if askbot_settings.ALL_SCOPE_ENABLED == askbot_settings.UNANSWERED_SCOPE_ENABLED == False:
