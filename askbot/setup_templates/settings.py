@@ -258,6 +258,8 @@ RECAPTCHA_USE_SSL = True
 #HAYSTACK_SETTINGS
 ENABLE_HAYSTACK_SEARCH = False
 HAYSTACK_SITECONF = 'askbot.search.haystack'
+#if you set this to True it can fail
+HAYSTACK_ENABLE_REGISTRATIONS = False
 #more information
 #http://django-haystack.readthedocs.org/en/v1.2.7/settings.html
 HAYSTACK_SEARCH_ENGINE = 'simple'
@@ -307,5 +309,5 @@ if 'ASKBOT_CSS_DEVEL' in locals() and ASKBOT_CSS_DEVEL == True:
     )
 
 COMPRESS_JS_FILTERS = []
-COMPRESS_PARSER = 'compressor.parser.HtmlParser' 
+COMPRESS_PARSER = 'compressor.parser.HtmlParser'
 JINJA2_EXTENSIONS = ('compressor.contrib.jinja2ext.CompressorExtension',)
