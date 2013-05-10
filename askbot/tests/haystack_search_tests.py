@@ -12,7 +12,7 @@ class HaystackSearchTests(AskbotTestCase):
     """
     def setUp(self):
         self._old_value = getattr(settings, 'ENABLE_HAYSTACK_SEARCH', False)
-        self._old_search_engine = getattr(settings, 'HAYSTACK_SEARCH_ENGINE' 'simple')
+        self._old_search_engine = getattr(settings, 'HAYSTACK_SEARCH_ENGINE', 'simple')
         setattr(settings, "ENABLE_HAYSTACK_SEARCH", True)
         setattr(settings, "HAYSTACK_SEARCH_ENGINE", 'simple')
 
