@@ -5,12 +5,12 @@ import urlparse
 import functools
 import re
 import random
+from askbot.utils.html import site_url
 from openid.store.interface import OpenIDStore
 from openid.association import Association as OIDAssociation
 from openid.extensions import sreg
 from openid import store as openid_store
 import oauth2 as oauth # OAuth1 protocol
-
 from django.db.models.query import Q
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -731,7 +731,7 @@ class OAuthConnection(object):
         request_url = self.parameters['request_token_url']
 
         if callback_url:
-            callback_url = '%s%s' % (askbot_settings.APP_URL, callback_url)
+            callback_url = site_url(callback_url)
             request_body = urllib.urlencode(dict(oauth_callback=callback_url))
 
             self.request_token = self.send_request(
@@ -819,7 +819,7 @@ def get_oauth2_starter_url(provider_name, csrf_token):
     providers = get_enabled_login_providers()
     params = providers[provider_name]
     client_id = getattr(askbot_settings, provider_name.upper() + '_KEY')
-    redirect_uri = askbot_settings.APP_URL + reverse('user_complete_oauth2_signin')
+    redirect_uri = site_url(reverse('user_complete_oauth2_signin'))
     client = Client(
         auth_endpoint=params['auth_endpoint'],
         client_id=client_id,

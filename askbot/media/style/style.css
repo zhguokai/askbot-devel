@@ -1,8 +1,6 @@
-@import url(jquery.autocomplete.css);
 /* General Predifined classes, read more in lesscss.org */
 /* Variables for Colors*/
 /* Variables for fonts*/
-/* "Trebuchet MS", sans-serif;*/
 /* General styles for gradients */
 /* Receive exactly positions for background Sprite  */
 /* CSS3 Elements */
@@ -4226,6 +4224,135 @@ textarea.tipped-input {
 .auto-tweeting select {
   width: auto;
   margin-bottom: 0;
+}
+.settings-nav,
+.settings-main {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  margin: 6px 0 10px;
+}
+.settings-nav *,
+.settings-main * {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.settings-main {
+  float: right;
+  padding: 11px 0 11px 15px;
+  width: 80%;
+}
+.settings-main .help {
+  font-size: 12px;
+  line-height: 1.3;
+  margin: 10px 0;
+}
+.settings-main label {
+  font-weight: bold;
+  line-height: 1.2;
+}
+.settings-main img {
+  margin: 0 0 10px 0;
+}
+.settings-nav {
+  background: #e9e9e1;
+  border: 1px solid #d3d3c2;
+  float: left;
+  padding: 0;
+  width: 20%;
+}
+.settings-nav h2 {
+  background: #777;
+  color: #eaeaea;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.35;
+  padding: 10px;
+}
+.settings-nav ul {
+  list-style: none;
+  margin: 10px 0;
+}
+.settings-nav li {
+  line-height: 1.45;
+  padding: 0 10px;
+}
+.settings-nav li.on,
+.settings-nav li:hover {
+  background: white;
+}
+.settings-nav li.on a,
+.settings-nav li:hover a {
+  text-decoration: none;
+}
+table.settings {
+  width: 100%;
+}
+table.settings td {
+  vertical-align: top;
+  padding-bottom: 10px;
+}
+td.setting-label {
+  width: 30%;
+}
+td.setting-input {
+  padding-left: 10px;
+  width: 70%;
+}
+td.setting-input input[type="text"] {
+  font-size: 13px;
+  height: 25px;
+  line-height: 25px;
+  padding-left: 5px;
+  width: 50%;
+}
+td.setting-input textarea {
+  width: 100%;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+.acInput {
+  width: 200px;
+}
+.acResults {
+  padding: 0px;
+  border: 1px solid WindowFrame;
+  background-color: #fff;
+  overflow: hidden;
+  -webkit-box-shadow: 0px  1px 1px #A7A7A7;
+  -moz-box-shadow: 0px  1px 1px #BFBFBF;
+  box-shadow: 0px  1px 1px #BFBFBF;
+}
+.acResults ul {
+  width: 100%;
+  list-style-position: outside;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.acResults li {
+  margin: 0px;
+  padding: 2px 5px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  font: menu;
+  font-size: 14px;
+  overflow: hidden;
+}
+.acLoading {
+  background: url('../images/indicator.gif') right center no-repeat;
+}
+.acSelect {
+  background-color: Highlight;
+  color: HighlightText;
 }
 /* modifications for small screens */
 @media screen and (max-width: 960px) {

@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version
 -------------------
+* Applied Askbot templates to the settings control panel
+* Added option to auto-follow questions by the question posters with default "on"
 * Support for Django 1.5
 * Auto-tweet option for questions and answers
 * Added Chech and Croatian translations

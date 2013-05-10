@@ -34,9 +34,6 @@ new_question_posted = django.dispatch.Signal(
 answer_edited = django.dispatch.Signal(
     providing_args=['answer', 'user', 'form_data']
 )
-answer_before_editing = django.dispatch.Signal(
-    providing_args=['answer', 'user', 'form']
-)
 
 post_updated = django.dispatch.Signal(
                                 providing_args=[

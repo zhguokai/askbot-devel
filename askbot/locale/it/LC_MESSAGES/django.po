@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-# Evgeny Fadeev <evgeny.fadeev@gmail.com>, 2009.
+# evgeny <evgeny.fadeev@gmail.com>, 2009
+# giohappy <giohappy@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-04-10 01:41-0500\n"
-"PO-Revision-Date: 2013-04-14 02:32+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-04-30 16:58+0000\n"
+"Last-Translator: giohappy <giohappy@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/askbot/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2980,7 +2981,7 @@ msgstr ""
 msgid ""
 "Welcome! Please set email address (important!) in your profile and adjust "
 "screen name, if necessary."
-msgstr ""
+msgstr "Benvenuto! Inserisci l'indirizzo email (importante!) nel tuo profilo e modifica il tuo nome pubblico, se necessario."
 
 #: deps/django_authopenid/forms.py:112 deps/django_authopenid/views.py:205
 msgid "i-names are not supported"
@@ -3010,7 +3011,7 @@ msgstr "Le password non corrispondono"
 #: deps/django_authopenid/forms.py:300
 #, python-format
 msgid "Please choose password > %(len)s characters"
-msgstr ""
+msgstr "Scegli una password con un numero di caratteri > %(len)s"
 
 #: deps/django_authopenid/forms.py:338
 msgid "Current password"
@@ -3024,7 +3025,7 @@ msgstr "La vecchia password non è corretta. Per favore inserisci la password co
 
 #: deps/django_authopenid/forms.py:402
 msgid "Sorry, we don't have this email address in the database"
-msgstr ""
+msgstr "Spiacenti, non abbiamo questo indirizzo email nel database"
 
 #: deps/django_authopenid/forms.py:441
 msgid "Your user name (<i>required</i>)"
@@ -3079,7 +3080,7 @@ msgstr "Per favore inserisci username e password di %(site)s"
 #: deps/django_authopenid/util.py:384 templates/authopenid/signin.html:120
 #: templates/authopenid/widget_signin.html:120
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "Crea un account protetto da password"
 
 #: deps/django_authopenid/util.py:385
 msgid "Change your password"
@@ -3087,7 +3088,7 @@ msgstr "Cambia password"
 
 #: deps/django_authopenid/util.py:485
 msgid "Sign in with Yahoo"
-msgstr ""
+msgstr "Accedi tramite Yahoo"
 
 #: deps/django_authopenid/util.py:492
 msgid "AOL screen name"
@@ -3111,15 +3112,15 @@ msgstr "nome utente di Technorati"
 
 #: deps/django_authopenid/util.py:553
 msgid "WordPress blog name"
-msgstr ""
+msgstr "Nome del blog Wordpress"
 
 #: deps/django_authopenid/util.py:561
 msgid "Blogger blog name"
-msgstr ""
+msgstr "Nome del blog Blogger"
 
 #: deps/django_authopenid/util.py:569
 msgid "LiveJournal blog name"
-msgstr ""
+msgstr "Nome del blog LiveJournal"
 
 #: deps/django_authopenid/util.py:577
 msgid "ClaimID user name"
@@ -3141,12 +3142,12 @@ msgstr "Cambia password di %(provider)s"
 #: deps/django_authopenid/util.py:632
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
-msgstr ""
+msgstr "Clicca qua per verificare se i tuoi %(provider)s di accesso funzionano ancora per %(site_name)s"
 
 #: deps/django_authopenid/util.py:641
 #, python-format
 msgid "Create password for %(provider)s"
-msgstr ""
+msgstr "Crea una password per %(provider)s"
 
 #: deps/django_authopenid/util.py:645
 #, python-format
@@ -3156,12 +3157,12 @@ msgstr "Collega il tuo account %(provider)s per %(site_name)s"
 #: deps/django_authopenid/util.py:654
 #, python-format
 msgid "Signin with %(provider)s user name and password"
-msgstr ""
+msgstr "Accedi usando nome utente e password di %(provider)s"
 
 #: deps/django_authopenid/util.py:661
 #, python-format
 msgid "Sign in with your %(provider)s account"
-msgstr ""
+msgstr "Accedi tramite il tuo account %(provider)s"
 
 #: deps/django_authopenid/views.py:212
 #, python-format
@@ -3182,36 +3183,36 @@ msgstr "Nuova password salvata"
 
 #: deps/django_authopenid/views.py:612
 msgid "The login password combination was not correct"
-msgstr ""
+msgstr "La password non è corretta"
 
 #: deps/django_authopenid/views.py:716
 msgid "Please click any of the icons below to sign in"
-msgstr ""
+msgstr "Per accedere clicca su qualsiasi delle seguenti icone"
 
 #: deps/django_authopenid/views.py:718
 msgid "Account recovery email sent"
-msgstr ""
+msgstr "L'email per il recupero dell'account è stata inviata"
 
 #: deps/django_authopenid/views.py:721
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Aggiungi uno o più metodi di accesso"
 
 #: deps/django_authopenid/views.py:723
 msgid "If you wish, please add, remove or re-validate your login methods"
-msgstr ""
+msgstr "Se desideri, aggiungi, rimuovi o rivalida i tuoi metodi di login"
 
 #: deps/django_authopenid/views.py:725
 msgid "Please wait a second! Your account is recovered, but ..."
-msgstr ""
+msgstr "Un momento! Il tuo account è stato recuperato, ma..."
 
 #: deps/django_authopenid/views.py:727
 msgid "Sorry, this account recovery key has expired or is invalid"
-msgstr ""
+msgstr "Spiacenti, la chiave di recupero dell'account è scaduto o invalida"
 
 #: deps/django_authopenid/views.py:800
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
-msgstr ""
+msgstr "Il metodo di accesso %(provider_name)s non esiste"
 
 #: deps/django_authopenid/views.py:806
 msgid "Oops, sorry - there was some error - please try again"
@@ -3229,7 +3230,7 @@ msgstr ""
 #: deps/django_authopenid/views.py:917
 #, python-format
 msgid "Your %(provider)s login works fine"
-msgstr ""
+msgstr "Il tuo accesso tramite %(provider)s funziona correttamente"
 
 #: deps/django_authopenid/views.py:1109
 msgid ""
@@ -3386,20 +3387,20 @@ msgstr ""
 msgid ""
 "<p>Sorry, there was an error posting your question please contact the "
 "%(site)s administrator</p>"
-msgstr ""
+msgstr "<p>Spiacenti, c'è stato un errore nell'invio della tua domanda, vi preghiamo di contattare l'amministratore di %(site)s</p>"
 
 #: mail/__init__.py:241
 #, python-format
 msgid ""
 "<p>Sorry, in order to post questions on %(site)s by email, please <a "
 "href=\"%(url)s\">register first</a></p>"
-msgstr ""
+msgstr "<p>Spiacenti, per inviare domande su %(site)s via email è necessario essere <a href=\"%(url)s\">registrati</a></p>"
 
 #: mail/__init__.py:249
 msgid ""
 "<p>Sorry, your question could not be posted due to insufficient privileges "
 "of your user account</p>"
-msgstr ""
+msgstr "<p>Spiacenti, non è stato possibile inviare la tua domanda per insufficienza di privilegi del tuo account</p>"
 
 #: mail/lamson_handlers.py:158
 msgid ""
@@ -3788,11 +3789,11 @@ msgstr "il %(date)s"
 
 #: models/__init__.py:1928
 msgid "in two days"
-msgstr ""
+msgstr "tra due giorni"
 
 #: models/__init__.py:1930
 msgid "tomorrow"
-msgstr ""
+msgstr "domani"
 
 #: models/__init__.py:1932
 #, python-format
@@ -3950,7 +3951,7 @@ msgstr ""
 
 #: models/__init__.py:3581 views/commands.py:689
 msgid "Your tag subscription was saved, thanks!"
-msgstr ""
+msgstr "La tua registrazione al tag è stata salvata. grazie!"
 
 #: models/badges.py:129
 #, python-format
@@ -4181,7 +4182,7 @@ msgstr "Domanda apprezzata"
 
 #: models/badges.py:710
 msgid "Enthusiast"
-msgstr ""
+msgstr "Entusiasta"
 
 #: models/badges.py:714
 #, python-format
@@ -4226,7 +4227,7 @@ msgstr "Mi spiace, questa domanda è stata cancellata e non è più accessibile"
 msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
-msgstr ""
+msgstr "Spiacenti, la risposta che stai cercando non è più disponibile, perché la domanda è stata rimossa"
 
 #: models/post.py:1574
 msgid "Sorry, this answer has been removed and is no longer accessible"

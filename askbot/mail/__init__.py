@@ -90,7 +90,7 @@ def clean_html_email(email_body):
     todo: needs more clenup might not work for other email templates
     that do not use table layout
     """
-    soup = BeautifulSoup(email_body)
+    soup = BeautifulSoup(email_body, 'html5lib')
     body_element = soup.find('body')
     filter_func = lambda s: bool(s.strip())
     phrases = map(

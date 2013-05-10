@@ -6,7 +6,7 @@
 {% endblock %}
 {% block keywords %}{{thread.tagname_meta_generator()}}{% endblock %}
 {% block forestyle %}
-    <link rel="canonical" href="{{settings.APP_URL|strip_path}}{{question.get_absolute_url()}}" />
+    <link rel="canonical" href="{{ base_url }}{{question.get_absolute_url()}}" />
     <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
 {% endblock %}
 {% block forejs %}
@@ -43,6 +43,10 @@
                 return nodes;
             };
 
+            var getTextContent = function(node) {
+                return node.innerText || node.textContent;
+            };
+
             var hasAttribute = function(node, attrName) {
                 if (node.hasAttribute) {
                     return node.hasAttribute(attrName);
@@ -60,6 +64,13 @@
                     }
                 };
                 return null;
+            };
+
+            var postIsComment = function(postId) {
+                if (document.getElementById('comment-' + postId)) {
+                    return true;
+                }
+                return false;
             };
 
             var removeNode = function(node) {
@@ -132,7 +143,7 @@
                     //todo: this is not reliable
                     var answerBodyNodes = answerBody.childNodes;
                     var answerElement = answerBodyNodes[answerBodyNodes.length - 1];
-                    if (trim(answerElement.textContent).length > askbot['data']['maxCommentLength']) {
+                    if (trim(getTextContent(answerElement)).length > askbot['data']['maxCommentLength']) {
                         repostAsQuestionComment.parentNode.removeChild(repostAsQuestionComment);
                         repostAsPrevAnsComment.parentNode.removeChild(repostAsPrevAnsComment);
                     } else if (parseInt(post_id) === data['oldestAnswerId']) {
@@ -186,9 +197,9 @@
                 ) {
                     removeNode(closeBtn[0]);
                 }
+                var repLow = (data['userReputation'] < {{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}});
                 if (//maybe remove "edit" button
-                    data['userReputation'] <
-                    {{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}}
+                    repLow || postIsComment(post_id)//only authors edit comments
                 ){
                     var edit_btn = document.getElementById(
                         'post-' + post_id + '-edit'

@@ -446,14 +446,13 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
     
     // Why is this in a zero-length timeout?
     // Is it working around a browser bug?
-    top.setTimeout(function(){
+    setTimeout(function(){
         createDialog();
         var defTextLen = defaultInputText.length;
         if (input.type == 'text' && input.selectionStart !== undefined) {
             input.selectionStart = 0;
             input.selectionEnd = defTextLen;
-        }
-        else if (input.createTextRange) {
+        } else if (input.createTextRange) {
             var range = input.createTextRange();
             range.collapse(false);
             range.moveStart("character", -defTextLen);
@@ -494,30 +493,26 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		var innerWidth, innerHeight;
 		
 		// It's not very clear which blocks work with which browsers.
-		if(self.innerHeight && self.scrollMaxY){
+		if (self.innerHeight && self.scrollMaxY) {
 			scrollWidth = doc.body.scrollWidth;
 			scrollHeight = self.innerHeight + self.scrollMaxY;
-		}
-		else if(doc.body.scrollHeight > doc.body.offsetHeight){
+		} else if (doc.body.scrollHeight > doc.body.offsetHeight){
 			scrollWidth = doc.body.scrollWidth;
 			scrollHeight = doc.body.scrollHeight;
-		}
-		else{
+		} else {
 			scrollWidth = doc.body.offsetWidth;
 			scrollHeight = doc.body.offsetHeight;
 		}
 		
-		if(self.innerHeight){
+		if (self.innerHeight) {
 			// Non-IE browser
 			innerWidth = self.innerWidth;
 			innerHeight = self.innerHeight;
-		}
-		else if(doc.documentElement && doc.documentElement.clientHeight){
+		} else if (doc.documentElement && doc.documentElement.clientHeight){
 			// Some versions of IE (IE 6 w/ a DOCTYPE declaration)
 			innerWidth = doc.documentElement.clientWidth;
 			innerHeight = doc.documentElement.clientHeight;
-		}
-		else if(doc.body){
+		} else if(doc.body) {
 			// Other versions of IE
 			innerWidth = doc.body.clientWidth;
 			innerHeight = doc.body.clientHeight;
@@ -582,11 +577,11 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		// Set how often we poll the textarea for changes.
 		var assignInterval = function(){
 			// previewPollInterval is set at the top of the namespace.
-			killHandle = top.setInterval(doTickCallback, interval);
+			killHandle = setInterval(doTickCallback, interval);
 		};
 		
 		this.destroy = function(){
-			top.clearInterval(killHandle);
+			clearInterval(killHandle);
 		};
 		
 		assignInterval();
@@ -616,7 +611,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			}
 			
 			if (!global.isIE || mode != "moving") {
-				timer = top.setTimeout(refreshState, 1);
+				timer = setTimeout(refreshState, 1);
 			}
 			else {
 				inputStateObj = null;
@@ -632,7 +627,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		this.setCommandMode = function(){
 			mode = "command";
 			saveState();
-			timer = top.setTimeout(refreshState, 0);
+			timer = setTimeout(refreshState, 0);
 		};
 		
 		this.canUndo = function(){
@@ -747,8 +742,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 				if (event.preventDefault) {
 					event.preventDefault();
 				}
-				if (top.event) {
-					top.event.returnValue = false;
+				if (event) {
+					event.returnValue = false;
 				}
 				return;
 			}
@@ -1287,8 +1282,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 						key.preventDefault();
 					}
 					
-					if (top.event) {
-						top.event.returnValue = false;
+					if (event) {
+						event.returnValue = false;
 					}
 				}
 			});
@@ -1334,7 +1329,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 				if (markdownConverter) {
 					inputBox.value = markdownConverter.makeHtml(text);
           //value is assigned here
-					top.setTimeout(callback, 0);
+					setTimeout(callback, 0);
 				}
 			}
 			return true;
@@ -1369,7 +1364,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			if (inputBox) {
 				inputBox.style.marginTop = "";
 			}
-			top.clearInterval(creationHandle);
+			clearInterval(creationHandle);
 		};
 		
 		init();
@@ -1917,7 +1912,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
         if (start_now){
             loadListener();
         } else {
-		    util.addEvent(top, "load", loadListener);
+		    util.addEvent(window, "load", loadListener);
         }
 	};
 	
@@ -1950,8 +1945,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		
 			var result = 0;
 			
-			if (top.innerHeight) {
-				result = top.pageYOffset;
+			if (window.innerHeight) {
+				result = pageYOffset;
 			}
 			else 
 				if (doc.documentElement && doc.documentElement.scrollTop) {
@@ -2004,7 +1999,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		var applyTimeout = function(){
 		
 			if (timeout) {
-				top.clearTimeout(timeout);
+				clearTimeout(timeout);
 				timeout = undefined;
 			}
 			
@@ -2019,7 +2014,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 				if (delay > maxDelay) {
 					delay = maxDelay;
 				}
-				timeout = top.setTimeout(makePreviewHtml, delay);
+				timeout = setTimeout(makePreviewHtml, delay);
 			}
 		};
 		
@@ -2104,12 +2099,12 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			var fullTop = position.getTop(wmd.panels.input) - getDocScrollTop();
 			
 			if (global.isIE) {
-				top.setTimeout(function(){
-					top.scrollBy(0, fullTop - emptyTop);
+				setTimeout(function(){
+					scrollBy(0, fullTop - emptyTop);
 				}, 0);
 			}
 			else {
-				top.scrollBy(0, fullTop - emptyTop);
+				scrollBy(0, fullTop - emptyTop);
 			}
 		};
 		
@@ -2495,7 +2490,7 @@ if (askbot['settings']['editorType'] == 'markdown' && !Attacklab.wmd) {
 			
 			mergeEnv(Attacklab.wmd_defaults);
 			mergeEnv(Attacklab.account_options);
-			mergeEnv(top["wmd_options"]);
+			mergeEnv(window["wmd_options"]);
 			Attacklab.full = true;
 			
 			var defaultButtons = "bold italic link blockquote code image attachment ol ul heading hr";
