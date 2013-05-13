@@ -48,24 +48,30 @@ class ThreadQuerySet(models.query.QuerySet):
         todo: possibly add tags
         todo: implement full text search on relevant fields
         """
-        db_engine_name = askbot.get_database_engine_name()
-        filter_parameters = {'deleted': False}
-        if 'postgresql_psycopg2' in db_engine_name:
-            from askbot.search import postgresql
-            return postgresql.run_title_search(
-                                    self, search_query
-                                ).filter(
-                                    **filter_parameters
-                                ).order_by('-relevance')
-        elif 'mysql' in db_engine_name and mysql.supports_full_text_search():
-            filter_parameters['title__search'] = search_query
+
+        if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
+            from askbot.search.haystack import AskbotSearchQuerySet
+            hs_qs = AskbotSearchQuerySet().filter(content=search_query).models(self.model)
+            return hs_qs.get_django_queryset()
         else:
-            filter_parameters['title__icontains'] = search_query
+            db_engine_name = askbot.get_database_engine_name()
+            filter_parameters = {'deleted': False}
+            if 'postgresql_psycopg2' in db_engine_name:
+                from askbot.search import postgresql
+                return postgresql.run_title_search(
+                                        self, search_query
+                                    ).filter(
+                                        **filter_parameters
+                                    ).order_by('-relevance')
+            elif 'mysql' in db_engine_name and mysql.supports_full_text_search():
+                filter_parameters['title__search'] = search_query
+            else:
+                filter_parameters['title__icontains'] = search_query
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-            filter_parameters['language_code'] = get_language()
+            if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+                filter_parameters['language_code'] = get_language()
 
-        return self.filter(**filter_parameters)
+            return self.filter(**filter_parameters)
 
 
 class ThreadManager(BaseQuerySetManager):
