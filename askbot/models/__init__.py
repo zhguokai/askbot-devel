@@ -70,6 +70,9 @@ from askbot import mail
 
 from django import VERSION
 
+if django_settings.ENABLE_HAYSTACK_SEARCH:
+    from askbot.search import haystack as askbot_haystack
+
 #stores the 1.X version not the security release numbers
 DJANGO_VERSION = VERSION[:2]
 
