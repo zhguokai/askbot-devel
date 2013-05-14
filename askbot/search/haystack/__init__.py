@@ -1,3 +1,6 @@
+from django.conf import settings
+from django.utils.translation import get_language
+
 from haystack import indexes, site
 from haystack.query import SearchQuerySet
 
@@ -50,4 +53,12 @@ class AskbotSearchQuerySet(SearchQuerySet):
                 #FIXME: add a highlight here?
                 id_list.append(r.pk)
 
-        return model_klass.objects.filter(id__in=set(id_list))
+        if model_klass == User:
+            return model_klass.objects.filter(id__in=set(id_list))
+        else:
+            if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
+                language_code = get_language()
+                return model_klass.objects.filter(id__in=set(id_list),
+                                                language_code=language_code)
+            else:
+                return model_klass.objects.filter(id__in=set(id_list))
