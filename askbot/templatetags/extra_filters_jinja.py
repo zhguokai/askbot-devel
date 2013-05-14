@@ -63,7 +63,7 @@ def is_empty_editor_value(value):
         return True
     #tinymce uses a weird sentinel placeholder
     if askbot_settings.EDITOR_TYPE == 'tinymce':
-        soup = BeautifulSoup(value)
+        soup = BeautifulSoup(value, 'html5lib')
         return soup.getText().strip() == ''
     return False
 

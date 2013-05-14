@@ -1286,7 +1286,7 @@ FileUploadDialog.prototype.createDom = function() {
     upload_input.attr({
         id: this._input_id,
         type: 'file',
-        name: 'file-upload',
+        name: 'file-upload'
         //size: 26???
     });
     form.append(upload_input);

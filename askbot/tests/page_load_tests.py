@@ -799,3 +799,14 @@ class UserProfilePageTests(AskbotTestCase):
         user = self.reload_object(self.user)
         self.assertEqual(user.username, 'edited')
         self.assertEqual(user.email, 'new@example.com')
+
+    def test_user_network(self):
+        user2 = self.create_user('user2')
+        user2.follow_user(self.user)
+        self.user.follow_user(user2)
+        name_slug = slugify(self.user.username)
+        kwargs={'id': self.user.id, 'slug': name_slug}
+        url = reverse('user_profile', kwargs=kwargs)
+        response = self.client.get(url, data={'sort':'network'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'user_profile/user_network.html')

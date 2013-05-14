@@ -73,7 +73,7 @@ def replace_links_with_text(html):
             return '%s (%s)' % (url, text)
         return url or text or ''
             
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, 'html5lib')
     abs_url_re = r'^http(s)?://'
 
     images = soup.find_all('img')
@@ -103,7 +103,7 @@ def strip_tags(html, tags=None):
 
     assert(tags != None)
 
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, 'html5lib')
     for tag in tags:
         tag_matches = soup.find_all(tag)
         map(lambda v: v.replaceWith(''), tag_matches)

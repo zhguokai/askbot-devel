@@ -1489,7 +1489,7 @@ def get_editor(request):
     )
     #parse out javascript and dom, and return them separately
     #we need that, because js needs to be added in a special way
-    html_soup = BeautifulSoup(editor_html)
+    html_soup = BeautifulSoup(editor_html, 'html5lib')
 
     parsed_scripts = list()
     for script in html_soup.find_all('script'):
