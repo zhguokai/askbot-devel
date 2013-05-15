@@ -63,6 +63,13 @@ textarea:focus,
 input:focus {
   outline: none;
 }
+input[type="text"],
+input[type="password"],
+select,
+textarea,
+#askFormBar .questionTitleInput {
+  border: #cce6ec 3px solid;
+}
 iframe {
   border: none;
 }
@@ -438,7 +445,6 @@ body.user-messages {
 }
 .validate-email-page #validation-code {
   padding-left: 5px;
-  border: #cce6ec 3px solid;
   height: 25px;
   font-size: 14px;
   width: 200px;
@@ -1622,7 +1628,6 @@ ul#related-tags li {
   line-height: 36px;
   margin: 0;
   padding-left: 5px;
-  border: #cce6ec 3px solid;
   width: 100%;
   /*719px;*/
 
@@ -1690,7 +1695,6 @@ ul#related-tags li {
 .ask-page #id_tags,
 .edit-question-page #id_tags {
   box-sizing: border-box;
-  border: #cce6ec 3px solid;
   height: 31px;
   padding-left: 5px;
   font-size: 14px;
@@ -1709,7 +1713,6 @@ ul#related-tags li {
 .question-page #id_post_author_email,
 .edit-question-page #id_post_author_email,
 .edit-answer-page #id_post_author_email {
-  border: #cce6ec 3px solid;
   height: 25px;
   line-height: 25px;
   padding-left: 5px;
@@ -1762,7 +1765,6 @@ ul#related-tags li {
 }
 #id_user,
 #id_user_author {
-  border: #cce6ec 3px solid;
   height: 25px;
   padding-left: 5px;
   width: 395px;
@@ -1789,7 +1791,6 @@ ul#related-tags li {
 }
 #id_user,
 #id_user_author {
-  border: #cce6ec 3px solid;
   height: 25px;
   padding-left: 5px;
   width: 395px;
@@ -1819,7 +1820,6 @@ ul#related-tags li {
   margin-right: 7px;
 }
 .folded-editor {
-  border: #cce6ec 3px solid;
   height: 100px;
   outline: none;
   width: 100%;
@@ -2010,7 +2010,6 @@ ul#related-tags li {
   height: 36px;
   margin: 0px;
   padding: 0px 0 0 5px;
-  border: #cce6ec 3px solid;
   width: 100%;
   margin-bottom: 10px;
   box-sizing: border-box;
@@ -2020,7 +2019,6 @@ ul#related-tags li {
 .edit-question-page #id_summary,
 #fmedit #id_summary,
 .wmd-preview #id_summary {
-  border: #cce6ec 3px solid;
   height: 25px;
   padding-left: 5px;
   width: 395px;
@@ -2372,7 +2370,6 @@ ul#related-tags li {
 }
 .question-page .comments textarea {
   box-sizing: border-box;
-  border: #cce6ec 3px solid;
   color: #666;
   font-family: Arial;
   font-size: 13px;
@@ -2659,7 +2656,7 @@ ul#related-tags li {
 }
 .box.vote-buttons {
   display: block;
-  width: 100%;
+  width: 100% !important;
 }
 .question-img-upvote,
 .question-img-downvote,
@@ -2774,7 +2771,6 @@ ul#related-tags li {
 .users-page select,
 .user-profile-edit-page select,
 .user-profile-page select {
-  border: #cce6ec 3px solid;
   height: 25px;
   line-height: 25px;
   padding-left: 5px;
@@ -2794,7 +2790,6 @@ ul#related-tags li {
 .users-page textarea,
 .user-profile-edit-page textarea,
 .user-profile-page textarea {
-  border: #cce6ec 3px solid;
   padding-left: 5px;
   padding-top: 5px;
   width: 395px;
@@ -2878,7 +2873,6 @@ ul#related-tags li {
   height: 20px;
   margin: 0px;
   padding: 0px 0 0 5px;
-  border: #cce6ec 3px solid;
   width: 200px;
 }
 .openid-input {

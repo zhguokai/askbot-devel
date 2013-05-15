@@ -409,7 +409,7 @@ FullTextSearch.prototype.runTagSearch = function() {
         url: url,
         dataType: 'json',
         success: function(data, text_status, xhr){
-            me.renderFullTextResult(data, text_status, xhr);
+            me.renderFullTextSearchResult(data, text_status, xhr);
             $('#ab-tag-search').val('');
         },
     });
@@ -445,7 +445,7 @@ FullTextSearch.prototype.activateTagSearchInput = function() {
         matchInside: true,
         maxCacheLength: 100,
         maxItemsToShow: 20,
-        onItemSelect: function(){ this.runTagSearch(); },
+        onItemSelect: function(){ me.runTagSearch(); },
         delay: 10
     });
     ac.decorate($('#ab-tag-search'));
