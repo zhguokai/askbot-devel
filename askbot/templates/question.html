@@ -44,7 +44,12 @@
             };
 
             var getTextContent = function(node) {
-                return node.innerText || node.textContent;
+                var text = node.innerText || node.textContent;
+                if (text === undefined) {
+                    return '';
+                } else {
+                    return text;
+                }
             };
 
             var hasAttribute = function(node, attrName) {
