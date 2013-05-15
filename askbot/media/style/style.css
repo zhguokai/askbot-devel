@@ -2659,7 +2659,7 @@ ul#related-tags li {
 }
 .box.vote-buttons {
   display: block;
-  width: 100%;
+  width: 100% !important;
 }
 .question-img-upvote,
 .question-img-downvote,
