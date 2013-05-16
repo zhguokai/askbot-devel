@@ -31,6 +31,9 @@ new_answer_posted = django.dispatch.Signal(
 new_question_posted = django.dispatch.Signal(
     providing_args=['question', 'user', 'form_data']
 )
+new_comment_posted = django.dispatch.Signal(
+    providing_args=['comment', 'user', 'form_data']
+)
 answer_edited = django.dispatch.Signal(
     providing_args=['answer', 'user', 'form_data']
 )
