@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-# Evgeny Fadeev &lt;evgeny.fadeev@gmail.com&gt;, 2009.
+# Evgeny Fadeev &lt;evgeny.fadeev@gmail.com&gt;, 2009
+# littlepig <jocl1@sapo.pt>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-04-10 01:41-0500\n"
-"PO-Revision-Date: 2013-04-14 02:32+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-05-10 13:51+0000\n"
+"Last-Translator: littlepig <jocl1@sapo.pt>\n"
 "Language-Team: Portuguese (http://www.transifex.com/projects/p/askbot/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr "Desculpe, mas os visitantes anónimos não podem aceder a esta função"
+msgstr "Desculpe, mas visitantes anónimos não podem aceder a esta função"
 
 #: feed.py:32 feed.py:106
 msgid " - "
@@ -515,7 +516,7 @@ msgstr ""
 
 #: urls.py:420 urls.py:425
 msgid "badges/"
-msgstr ""
+msgstr "medalhas/"
 
 #: urls.py:435
 msgid "messages/"
@@ -597,11 +598,11 @@ msgstr ""
 
 #: conf/badges.py:13
 msgid "Badge settings"
-msgstr ""
+msgstr "definições de medalhas"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
-msgstr ""
+msgstr "Disciplinado: número mínimo de votos para apagar entrada"
 
 #: conf/badges.py:32
 msgid "Peer Pressure: minimum downvotes for deleted post"
@@ -6794,7 +6795,7 @@ msgstr ""
 
 #: templates/user_inbox/responses_and_flags.html:10
 msgid "seen"
-msgstr "vistas"
+msgstr "a questão foi vista"
 
 #: templates/user_inbox/responses_and_flags.html:11
 msgid "new"
@@ -7039,7 +7040,7 @@ msgstr ""
 
 #: templates/user_profile/user_moderate.html:38
 msgid "Subtract"
-msgstr "Remover"
+msgstr "Subtrair"
 
 #: templates/user_profile/user_moderate.html:39
 msgid "Add"
@@ -7214,7 +7215,7 @@ msgstr "Responder a:"
 
 #: templates/user_profile/user_tabs.html:5
 msgid "User profile"
-msgstr "Perfil do utilizador:"
+msgstr "Perfil do utilizador"
 
 #: templates/user_profile/user_tabs.html:10 views/users.py:876
 msgid "comments and answers to others questions"
@@ -7415,7 +7416,7 @@ msgstr "*ítálico* ou _ítálico_"
 
 #: templates/widgets/markdown_help.html:16
 msgid "**bold** or __bold__"
-msgstr "**negrito** ou _negrito_"
+msgstr "**negrito** ou __negrito__"
 
 #: templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
@@ -7444,7 +7445,7 @@ msgstr ""
 
 #: templates/widgets/meta_nav.html:20
 msgid "users"
-msgstr "utilizadores"
+msgstr "pessoas"
 
 #: templates/widgets/meta_nav.html:27
 msgid "badges"
@@ -7474,7 +7475,7 @@ msgstr[1] "votos"
 
 #: templates/widgets/scope_nav.html:17
 msgid "ALL"
-msgstr "Tudo"
+msgstr "TODAS"
 
 #: templates/widgets/scope_nav.html:22
 msgid "see unanswered questions"

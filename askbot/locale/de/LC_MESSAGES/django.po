@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-04-10 01:41-0500\n"
-"PO-Revision-Date: 2013-04-29 18:31+0000\n"
+"PO-Revision-Date: 2013-05-15 16:37+0000\n"
 "Last-Translator: Alexander Lieder <enormitas@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/askbot/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -2992,7 +2992,7 @@ msgstr "i-names werden nicht unterstützt."
 #: deps/django_authopenid/forms.py:236
 #, python-format
 msgid "Please enter your %(username_token)s"
-msgstr ""
+msgstr "Bitte gebe deinen  %(username_token)s ein"
 
 #: deps/django_authopenid/forms.py:262
 msgid "Please, enter your user name"
@@ -4981,7 +4981,7 @@ msgstr ""
 
 #: templates/help.html:31
 msgid "to search in title - enter [title: your text]"
-msgstr ""
+msgstr "so sucht man in Überschriften - gebe ein [title: Dein Suchbegriff]"
 
 #: templates/help.html:32
 msgid "to search by tags - enter [tag: sometag] or #sometag"
@@ -5479,7 +5479,7 @@ msgid ""
 "<span class=\\\"strong big\\\">Enter your new email into the box below</span> if \n"
 "you'd like to use another email for <strong>update subscriptions</strong>.\n"
 "<br>Currently you are using <strong>%%(email)s</strong>"
-msgstr "<span class=\\\"strong big\\\">Bitte gebe in die untere Box deine neue E-Mail ein,</span> wenn du eine andere E-Mail für <strong>Abbonements Updates</strong> haben möchtest .\n<br>Momentan benutzt du folgende E-Mail-Adresse: <strong>%%(email)s</strong>"
+msgstr "<span class=\\\"strong big\\\">Bitte gebe in die untere Box deine neue E-Mail-Adresse ein,</span> wenn du eine andere E-Mail-Adresse für <strong>Abbonements Updates</strong> haben möchtest .\n<br>Momentan benutzt du folgende E-Mail-Adresse: <strong>%%(email)s</strong>"
 
 #: templates/authopenid/changeemail.html:19
 #, python-format
@@ -5805,12 +5805,12 @@ msgstr "Probleme beim einloggen?"
 #: templates/authopenid/signin.html:202
 #: templates/authopenid/widget_signin.html:202
 msgid "Please, enter your email address below and obtain a new key"
-msgstr "Gebe unten deine E-Mail Adresse an und erhalte einen neuen Schlüssel"
+msgstr "Gebe unten deine E-Mail-Adresse an und erhalte einen neuen Schlüssel"
 
 #: templates/authopenid/signin.html:204
 #: templates/authopenid/widget_signin.html:204
 msgid "Please, enter your email address below to recover your account"
-msgstr "Bitte gebe deine Email Adresse an um deinen Account wiederherzustellen"
+msgstr "Bitte gebe deine E-Mail-Adresse an, um deinen Account wiederherzustellen"
 
 #: templates/authopenid/signin.html:207
 #: templates/authopenid/widget_signin.html:207
@@ -6837,7 +6837,7 @@ msgstr ""
 
 #: templates/user_profile/reject_post_dialog.html:14
 msgid "2) Please enter details here. This text will be sent to the user."
-msgstr ""
+msgstr "2) Bitte gebe den Text hier ein. Diese Nachricht wird an den Benutzer geschickt."
 
 #: templates/user_profile/reject_post_dialog.html:20
 #: templates/user_profile/reject_post_dialog.html:88
@@ -7057,7 +7057,7 @@ msgstr "Sende eine Nachricht an %(username)s"
 msgid ""
 "An email will be sent to the user with 'reply-to' field set to your email "
 "address. Please make sure that your address is entered correctly."
-msgstr "Eine Email wird an diesen Benutzer gesendet, als 'Antwortadresse' wird deine eigene Email Adresse angegeben. Bitte stelle sicher das diese korrekt und aktuell hinterlegt ist."
+msgstr "Eine Email wird an diesen Benutzer gesendet, als 'Antwortadresse' wird deine eigene E-Mail-Adresse angegeben. Bitte stelle sicher, dass diese korrekt und aktuell hinterlegt ist."
 
 #: templates/user_profile/user_moderate.html:46
 msgid "Message sent"
@@ -7259,7 +7259,7 @@ msgstr "Tipps"
 
 #: templates/widgets/answer_edit_tips.html:6
 msgid "give an answer interesting to this community"
-msgstr "Gebe eine Antwort die diese Community interessieren könnte."
+msgstr "Gebe eine Antwort, die diese Community interessieren könnte."
 
 #: templates/widgets/answer_edit_tips.html:9
 msgid "try to give an answer, rather than engage into a discussion"
@@ -7297,7 +7297,7 @@ msgstr "Die Markdown-Echtzeit-Vorschau ein- oder ausblenden"
 msgid ""
 "To post on behalf of someone else, enter user name <strong>and</strong> "
 "email below."
-msgstr ""
+msgstr "Beitrag als ein  andere Nutzer verfassen. Gebe einen Benutzernamen und eine E-Mail Adresse ein."
 
 #: templates/widgets/footer.html:33
 #, python-format

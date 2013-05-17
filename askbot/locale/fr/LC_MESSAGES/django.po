@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-# Alban Tiberghien <alban.tiberghien@gmail.com>, 2012.
-# Christophe kryskool <christophe.chauvet@gmail.com>, 2011-2013.
-# Evgeny Fadeev <evgeny.fadeev@gmail.com>, 2009.
-# florent  <fpam1108@gmail.com>, 2012.
-#   <mademoisellegeek42@gmail.com>, 2011.
-# Mademoiselle Geek <mademoisellegeek42@gmail.com>, 2011.
+# Alban Tiberghien <alban.tiberghien@gmail.com>, 2012
+# Christophe kryskool <christophe.chauvet@gmail.com>, 2011-2013
+# evgeny <evgeny.fadeev@gmail.com>, 2009
+# florent <fpam1108@gmail.com>, 2012
+# Camille Baldock <mademoisellegeek42@gmail.com>, 2011
+# Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-04-10 01:41-0500\n"
-"PO-Revision-Date: 2013-04-14 02:32+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-05-08 13:30+0000\n"
+"Last-Translator: Christophe kryskool <christophe.chauvet@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/askbot/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,8 +51,8 @@ msgstr "Le champ pays est requis"
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "doit être > %d mot"
+msgstr[1] "doit être > %d mots"
 
 #: forms.py:197
 #, python-format
@@ -63,7 +63,7 @@ msgstr[1] ""
 
 #: forms.py:218
 msgid "minor edit (don't send alerts)"
-msgstr ""
+msgstr "modification mineure (ne pas envoyer d'alerte)"
 
 #: forms.py:245 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
@@ -249,7 +249,7 @@ msgstr ""
 
 #: forms.py:838
 msgid "User name:"
-msgstr ""
+msgstr "Connexion utilisateur"
 
 #: forms.py:840
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
@@ -766,7 +766,7 @@ msgstr ""
 msgid ""
 "Default notification frequency for mentions                        and "
 "comments"
-msgstr ""
+msgstr "Fréquence de notification par défaut pour les mentions et commentaires"
 
 #: conf/email.py:117
 msgid ""
@@ -1138,7 +1138,7 @@ msgstr "Est ce que les étiquettes sont requises?"
 
 #: conf/forum_data_rules.py:197
 msgid "category tree"
-msgstr ""
+msgstr "Arborescence de la catégorie"
 
 #: conf/forum_data_rules.py:198
 msgid "user input"
@@ -1146,7 +1146,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:205
 msgid "Source of tags"
-msgstr ""
+msgstr "Source des étiquettes"
 
 #: conf/forum_data_rules.py:216
 msgid "Mandatory tags"
@@ -5376,7 +5376,7 @@ msgstr "S'abonner pour ces étiquettes"
 
 #: templates/subscribe_for_tags.html:6
 msgid "Please, subscribe for the following tags:"
-msgstr ""
+msgstr "Veuillez vous inscrire pour suivre les étiquettes:"
 
 #: templates/subscribe_for_tags.html:15
 msgid "Subscribe"
@@ -5412,7 +5412,7 @@ msgstr "Trier par &raquo;"
 
 #: templates/users.html:36
 msgid "see people with the highest reputation"
-msgstr ""
+msgstr "voir les personnes avec une réputation élevée"
 
 #: templates/users.html:37 templates/user_profile/user_info.html:26
 #: templates/user_profile/user_reputation.html:5
@@ -5422,7 +5422,7 @@ msgstr "aura"
 
 #: templates/users.html:43
 msgid "see people who joined most recently"
-msgstr ""
+msgstr "voir les personnes qui nous ont rejoint récemment"
 
 #: templates/users.html:44
 msgid "recent"
@@ -5434,7 +5434,7 @@ msgstr ""
 
 #: templates/users.html:55
 msgid "see people sorted by name"
-msgstr ""
+msgstr "voir les personnes triés par leur nom"
 
 #: templates/users.html:56
 msgid "by username"
@@ -5584,7 +5584,7 @@ msgstr "Enregistrement"
 
 #: templates/authopenid/complete.html:23
 msgid "User registration"
-msgstr ""
+msgstr "Enregistrement utilisateur"
 
 #: templates/authopenid/complete.html:47
 msgid "<strong>Screen Name</strong> (<i>will be shown to others</i>)"
@@ -5735,7 +5735,7 @@ msgstr ""
 #: templates/authopenid/signin.html:94
 #: templates/authopenid/widget_signin.html:98
 msgid "Please, sign in"
-msgstr ""
+msgstr "Veuillez vous enregistrer"
 
 #: templates/authopenid/signin.html:104
 #: templates/authopenid/widget_signin.html:105
@@ -6394,7 +6394,7 @@ msgstr "ignorer cette question"
 
 #: templates/question/answer_controls.html:11
 msgid "remove offensive flag"
-msgstr ""
+msgstr "supprimer le drapeau offensif"
 
 #: templates/question/answer_controls.html:13
 #: templates/question/question_controls.html:12
@@ -6827,7 +6827,7 @@ msgstr ""
 
 #: templates/user_inbox/responses_and_flags.html:23
 msgid "delete post"
-msgstr ""
+msgstr "supprimer le message"
 
 #: templates/user_profile/reject_post_dialog.html:4
 msgid "Reject the post(s)?"

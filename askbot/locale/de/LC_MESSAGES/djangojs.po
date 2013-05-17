@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-04-10 01:42-0500\n"
-"PO-Revision-Date: 2013-04-30 15:57+0000\n"
+"PO-Revision-Date: 2013-05-12 04:06+0000\n"
 "Last-Translator: Alexander Lieder <enormitas@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/askbot/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr "Bist du sicher das du deinen %s login löschen möchtest?"
+msgstr "Bist du sicher, dass du deinen %s Login löschen möchtest?"
 
 #: media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
@@ -211,7 +211,7 @@ msgstr "Bist du dir sicher, dass dieser Beitrag Spam, unerwünschte Werbung, Bel
 
 #: media/js/post.js:559
 msgid "please confirm removal of offensive flag"
-msgstr "Bist du dir sicher das dieser Beitrag Spam, unerwünschte Werbung, Beleidigungen, illegale oder unangebrachte Inhalte enthält?"
+msgstr "Bist du dir sicher, dass dieser Beitrag Spam, unerwünschte Werbung, Beleidigungen, illegale oder unangebrachte Inhalte enthält?"
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
@@ -305,7 +305,7 @@ msgstr "Klicken, um das Kommentar zu editieren"
 
 #: media/js/post.js:2120
 msgid "confirm delete comment"
-msgstr "Bist du dir siche, dass du diesen Kommentar löschen möchtest?"
+msgstr "Bist du dir sicher, dass du diesen Kommentar löschen möchtest?"
 
 #: media/js/post.js:2240
 msgid "post a comment"
