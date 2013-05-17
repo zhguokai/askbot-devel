@@ -17,11 +17,11 @@ We need the following packages installed::
 
 We need to download Apache Solr from the `official site <http://lucene.apache.org/solr/downloads.html>`_::
 
-    wget http://apache.mirrors.pair.com/lucene/solr/4.3.0/solr-4.3.0.tgz
+    wget http://www.bizdirusa.com/mirrors/apache/lucene/solr/3.6.2/apache-solr-3.6.2.tgz 
 
 Then we decompress it::
 
-    tar -xzf solr-4.3.0.tgz
+    tar -xzf solr-3.6.2.tgz
 
 Setting up Tomcat
 -----------------
@@ -80,7 +80,7 @@ Configuring Askbot with Solr
 
 Open settings.py file and configure the following::
 
-    ENABLE_HAYSTACK_SEARCH = 'solr'
+    ENABLE_HAYSTACK_SEARCH = True
     HAYSTACK_SEARCH_ENGINE = 'solr'
     HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
 
