@@ -67,7 +67,9 @@ input[type="text"],
 input[type="password"],
 select,
 textarea,
-#askFormBar .questionTitleInput {
+#askFormBar .questionTitleInput,
+.wmd-container,
+.folded-editor {
   border: #cce6ec 3px solid;
 }
 iframe {
@@ -1840,9 +1842,6 @@ ul#related-tags li {
 }
 .folded-editor.unfolded .editor-proper {
   display: block;
-}
-.wmd-container {
-  border: #cce6ec 3px solid;
 }
 .wmd-container textarea {
   border: none;
