@@ -31,12 +31,15 @@ from django.conf import settings as django_settings
 import askbot
 from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.forms import AnswerForm, ShowQuestionForm
+from askbot.forms import AnswerForm
+from askbot.forms import ShowQuestionForm
+from askbot.forms import ShowQuestionsForm
 from askbot import conf
 from askbot import models
 from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
+from askbot import spaces
 from askbot.utils import functions
 from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
@@ -65,8 +68,12 @@ DEFAULT_PAGE_SIZE = 60
 
 def index(request):#generates front page - shows listing of questions sorted in various ways
     """index view mapped to the root url of the Q&A site
+    This is the future placeholder for the "spaces" listing view
     """
-    return HttpResponseRedirect(reverse('questions'))
+    space = spaces.get_default()
+    return HttpResponseRedirect(
+        reverse('questions', kwargs={'space': space})
+    )
 
 def questions(request, **kwargs):
     """
@@ -76,6 +83,10 @@ def questions(request, **kwargs):
     #before = datetime.datetime.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
+
+    form = ShowQuestionsForm(kwargs)
+    if form.is_valid() is False:
+        raise Http404()
 
     search_state = SearchState(
                     user_logged_in=request.user.is_authenticated(),

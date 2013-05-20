@@ -1,10 +1,12 @@
 """
 Settings for askbot data display and entry
 """
+import re
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
 from askbot import const
 from askbot.conf.super_groups import DATA_AND_FORMATTING
+from django.conf import settings as django_settings
 from django.utils.translation import ugettext_lazy as _
 
 FORUM_DATA_RULES = livesettings.ConfigurationGroup(
@@ -40,6 +42,68 @@ settings.register(
         default='plain-text',
         choices=COMMENTS_EDITOR_CHOICES,
         description=_('Editor for the comments')
+    )
+)
+
+def get_forbidden_space_values():
+    #add any url prefixes that are not 
+    #defined with a service_url call in the urls.py
+    #to protect from potential clashing of namespace url
+    #with
+    forbidden_values = (
+        'questions',
+        'question',
+        'users',
+        'groups',
+        'tags',
+        'badges',
+    )
+
+    from django.utils.translation import ugettext
+    if django_settings.ASKBOT_TRANSLATE_URL:
+        return map(lambda v: ugettext(v), forbidden_values)
+    else:
+        return forbidden_values
+
+def forum_spaces_callback(old_value, new_value):
+    values = map(lambda v: v.strip(), new_value.split(','))
+    forbidden = get_forbidden_space_values()
+    bad_values = set()
+    for value in values:
+        if not re.match('\w+$', value):
+            bad_values.add(value)
+        if value in forbidden:
+            bad_values.add(value)
+
+    if bad_values:
+        forbidden_list = ', '.join(forbidden)
+        bad_list = ', '.join(bad_values)
+        if len(bad_values) > 1:
+            raise Exception(_(
+                    'Spaces %s are invalid: must not be one of %s '
+                    'and must be single words of letters and numbers only'
+                ) % (bad_list, forbidden_list)
+            )
+        else:
+            raise Exception(_(
+                    'Space %s is invalid: must not be one of %s '
+                    'and must be a single word of letters and numbers only'
+                ) % (bad_list, forbidden_list)
+            )
+
+    return ', '.join(values)
+
+settings.register(
+    livesettings.LongStringValue(
+        FORUM_DATA_RULES,
+        'FORUM_SPACES',
+        default='',
+        description=_('Spaces, to be available via url prefix'),
+        help_text=_(
+            'This field must be either empty or should be '
+            'a comma-separated list of single words.'
+        ),
+        update_callback=forum_spaces_callback
     )
 )
 

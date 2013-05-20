@@ -580,6 +580,33 @@ class ShowQuestionForm(forms.Form):
         return out_data
 
 
+class ShowQuestionsForm(forms.Form):
+    """Validates parameters from the questions listing url
+    which are encoded in the path section.
+    """
+    space = forms.CharField(max_length=64)
+    #todo: add all the remaining fields
+
+    def clean_space(self):
+        spaces_data = askbot_settings.FORUM_SPACES
+
+        #space must match one of the items
+        space = self.cleaned_data.get('space', '')
+        if spaces_data:
+            spaces = map(lambda v: v.strip(), spaces_data.split(','))
+            if space not in spaces:
+                raise forms.ValidationError('unrecognized forum space "%s"' % space)
+        else:
+            if django_settings.ASKBOT_TRANSLATE_URL:
+                expected = _('questions')
+            else:
+                expected = 'questions'
+            if space != expected:
+                raise forms.ValidationError(
+                    'unrecognized forum space "%s", expected %s' % (space, expected)
+                )
+
+
 class ChangeUserReputationForm(forms.Form):
     """Form that allows moderators and site administrators
     to adjust reputation of users.

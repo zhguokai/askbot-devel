@@ -28,10 +28,10 @@
                     <a href="{{ search_state.remove_tags().full_url() }}">{% trans %}reset tags{% endtrans %}</a>
                 {% endif %}
                 {% if query %}{% trans %} or {% endtrans %}
-                    <a href="{% url questions %}">{% trans %}start over{% endtrans %}</a>
+                    <a href="{{ search_state.base_url() }}">{% trans %}start over{% endtrans %}</a>
                 {% endif %}
             {% else %}
-                <a href="{% url questions %}">{% trans %}start over{% endtrans %}</a>
+                <a href="{{ search_state.base_url() }}">{% trans %}start over{% endtrans %}</a>
             {% endif %}
             {% trans %} - to expand, or dig in by adding more tags and revising the query.{% endtrans %}
             </p>

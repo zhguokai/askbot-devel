@@ -36,22 +36,9 @@ sitemaps = {
 PREFIX = getattr(settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
 
 APP_PATH = os.path.dirname(__file__)
+#NOTE that the questions url is the LAST ONE as it has a catch all regex
 urlpatterns = patterns('',
     url(r'^$', views.readers.index, name='index'),
-    # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
-    url(
-        # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
-        (r'^%s' % _('questions') +
-            r'(%s)?' % r'/scope:(?P<scope>\w+)' +
-            r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
-            r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
-            r'(%s)?' % r'/author:(?P<author>\d+)' +
-            r'(%s)?' % r'/page:(?P<page>\d+)' +
-            r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
-        r'/$'),
-        views.readers.questions,
-        name='questions'
-    ),
     url(
         r'^%s(?P<id>\d+)/' % _('question/'),
         views.readers.question,
@@ -596,3 +583,21 @@ if 'avatar' in settings.INSTALLED_APPS:
             name='avatar_render_primary'
         ),
     )
+
+
+urlpatterns += (
+    # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
+    url(
+        # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
+        (r'^(?P<space>\w+)' + 
+            r'(%s)?' % r'/scope:(?P<scope>\w+)' +
+            r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
+            r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
+            r'(%s)?' % r'/author:(?P<author>\d+)' +
+            r'(%s)?' % r'/page:(?P<page>\d+)' +
+            r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
+        r'/$'),
+        views.readers.questions,
+        name='questions'
+    ),
+)

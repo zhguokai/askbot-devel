@@ -24,7 +24,8 @@
     askbot['urls']['getEditor'] = '{% url "get_editor" %}';
     askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
     askbot['urls']['ask'] = '{% url "ask" %}';
-	askbot['urls']['questions'] = '{% url "questions" %}';
+    {% set search_state=search_state or dummy_search_state %}
+	askbot['urls']['questions'] = '{{ search_state.base_url() }}';
     askbot['settings']['groupsEnabled'] = {{ settings.GROUPS_ENABLED|as_js_bool }};
     askbot['settings']['static_url'] = '{{ settings.STATIC_URL }}';
     askbot['settings']['minSearchWordLength'] = {{ min_search_word_length }};

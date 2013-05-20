@@ -3,7 +3,7 @@ import re
 import urllib
 import copy
 
-from django.core import urlresolvers
+from django.core.urlresolvers import reverse
 from django.utils.http import urlencode
 from django.utils.encoding import smart_str
 
@@ -11,6 +11,7 @@ import askbot
 import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot import const
+from askbot import spaces
 from askbot.utils.functions import strip_plus
 
 
@@ -88,8 +89,12 @@ class SearchState(object):
     def get_empty(cls):
         return cls(scope=None, sort=None, query=None, tags=None, author=None, page=None, user_logged_in=None)
 
-    def __init__(self, scope, sort, query, tags, author, page, user_logged_in):
+    def __init__(
+        self, space, scope, sort, query,
+        tags, author, page, user_logged_in
+    ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
+        self.space = space
 
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:
@@ -137,13 +142,19 @@ class SearchState(object):
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
 
-        self._questions_url = urlresolvers.reverse('questions')
+        self._questions_url = reverse(
+                                    'questions',
+                                    kwargs={'space': self.space}
+                                )
 
     def __str__(self):
         return self.query_string()
 
     def full_url(self):
         return self._questions_url + self.query_string()
+
+    def base_url(self):
+        return self._questions_url
 
     def ask_query_string(self): # TODO: test me
         """returns string to prepopulate title field on the "Ask your question" page"""
@@ -153,7 +164,7 @@ class SearchState(object):
         return '?' + urlencode({'title': ask_title})
 
     def full_ask_url(self):
-        return urlresolvers.reverse('ask') + self.ask_query_string()
+        return reverse('ask') + self.ask_query_string()
 
     def unified_tags(self):
         "Returns tags both from tag selector and extracted from query"
@@ -272,6 +283,9 @@ class SearchState(object):
 
 class DummySearchState(object): # Used for caching question/thread summaries
 
+    def __init__(self):
+        self.tag = ''
+
     def add_tag(self, tag):
         self.tag = tag
         return self
@@ -279,5 +293,20 @@ class DummySearchState(object): # Used for caching question/thread summaries
     def change_scope(self, new_scope):
         return self
 
+    def change_sort(self, new_sort):
+        return self
+
     def full_url(self):
         return '<<<%s>>>' % self.tag
+
+    def full_ask_url(self):
+        return reverse('ask')
+
+    def query_string(self):
+        return ''
+
+    def base_url(self):
+        if not hasattr(self, '_base_url'):
+            space = spaces.get_default()
+            self._base_url = reverse('questions', kwargs={'space': space})
+        return self._base_url

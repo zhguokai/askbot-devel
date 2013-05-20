@@ -13,6 +13,7 @@ from askbot import api
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot.search.state_manager import DummySearchState
 from askbot.skins.loaders import get_skin
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
@@ -82,6 +83,7 @@ def application_settings(request):
         'skin': get_skin(request),
         'moderation_items': api.get_info_on_moderation_items(request.user),
         'noscript_url': const.DEPENDENCY_URLS['noscript'],
+        'dummy_search_state': DummySearchState()
     }
 
     if askbot_settings.GROUPS_ENABLED:
