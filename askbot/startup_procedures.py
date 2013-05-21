@@ -625,7 +625,7 @@ def test_haystack():
             if not hasattr(django_settings, 'HAYSTACK_ENABLE_REGISTRATIONS'):
                 message = 'Please add "HAYSTACK_ENABLE_REGISTRATIONS = False"'
                 errors.append(message)
-            elif not getattr(django_settings, 'HAYSTACK_ENABLE_REGISTRATIONS') :
+            elif getattr(django_settings, 'HAYSTACK_ENABLE_REGISTRATIONS'):
                 message = 'Please set "HAYSTACK_ENABLE_REGISTRATIONS = False"'
                 errors.append(message)
             footer = 'Please refer to haystack documentation at http://django-haystack.readthedocs.org/en/v1.2.7/settings.html#haystack-search-engine'
