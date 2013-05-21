@@ -1324,7 +1324,7 @@ def account_recover(request):
 #internal server view used as return value by other views
 def validation_email_sent(request):
     """this function is called only if EMAIL_VALIDATION setting is
-    set to True bolean value, basically dead now"""
+    set to True bolean value"""
     assert(askbot_settings.EMAIL_VALIDATION == True)
     logging.debug('')
     data = {

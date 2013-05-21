@@ -1799,7 +1799,7 @@ EditCommentForm.prototype.createDom = function(){
 
     this._submit_btn = $('<button class="submit"></button>');
     this._controlsBox.append(this._submit_btn);
-    this._cancel_btn = $('<button class="submit"></button>');
+    this._cancel_btn = $('<button class="submit cancel"></button>');
     this._cancel_btn.html(gettext('cancel'));
     this._controlsBox.append(this._cancel_btn);
 

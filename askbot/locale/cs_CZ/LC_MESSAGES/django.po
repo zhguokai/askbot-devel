@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-#   <vit.usela@gmail.com>, 2012.
+# kettnerv <vit.usela@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
-"POT-Creation-Date: 2013-04-10 01:41-0500\n"
-"PO-Revision-Date: 2013-04-14 02:32+0000\n"
+"POT-Creation-Date: 2013-05-18 09:59-0500\n"
+"PO-Revision-Date: 2013-05-18 18:48+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/askbot/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
@@ -22,27 +22,27 @@ msgstr ""
 msgid "Sorry, but anonymous visitors cannot access this function"
 msgstr "Promiňte, ale anonymní návštěvníci nemají přístup k této funkci"
 
-#: feed.py:32 feed.py:106
+#: feed.py:34 feed.py:108
 msgid " - "
 msgstr "-"
 
-#: feed.py:33 feed.py:107
+#: feed.py:35 feed.py:109
 msgid "Individual question feed"
 msgstr "načítání jednotlivé otázky"
 
-#: forms.py:138
+#: forms.py:139
 msgid "select country"
 msgstr "zvolte zemi"
 
-#: forms.py:148
+#: forms.py:149
 msgid "Country"
 msgstr "Země"
 
-#: forms.py:156
+#: forms.py:157
 msgid "Country field is required"
 msgstr "Pole země je povinné"
 
-#: forms.py:186
+#: forms.py:187
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
@@ -50,7 +50,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: forms.py:197
+#: forms.py:198
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
@@ -58,42 +58,42 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: forms.py:218
+#: forms.py:219
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
-#: forms.py:245 templates/widgets/markdown_help.html:20
+#: forms.py:246 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
 msgstr "Název"
 
-#: forms.py:247
-msgid "please enter a descriptive title for your question"
-msgstr "Prosím zadejte popisek pro vaši otázku"
+#: forms.py:248 templates/embed/ask_by_widget.html:170
+msgid "Please enter your question"
+msgstr ""
 
-#: forms.py:258
+#: forms.py:259
 #, python-format
-msgid "title must be > %d character"
-msgid_plural "title must be > %d characters"
-msgstr[0] "nadpis musí být > %d znak"
-msgstr[1] "nadpis musí být > %d znaků"
-msgstr[2] "nadpis musí být > %d znaků"
+msgid "must have > %d character"
+msgid_plural "must have > %d characters"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: forms.py:268
+#: forms.py:269
 #, python-format
-msgid "The title is too long, maximum allowed size is %d characters"
-msgstr "Nadpis je moc dlouhý, maximální povolená délka je %d znaků"
+msgid "The question is too long, maximum allowed size is %d characters"
+msgstr ""
 
-#: forms.py:275
+#: forms.py:276
 #, python-format
-msgid "The title is too long, maximum allowed size is %d bytes"
-msgstr "Nadpis je moc dlouhý, maximální povolená velikost je %d bytů"
+msgid "The question is too long, maximum allowed size is %d bytes"
+msgstr ""
 
-#: forms.py:307
+#: forms.py:308
 msgid "content"
 msgstr "obsah"
 
-#: forms.py:368
+#: forms.py:369
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
@@ -101,18 +101,18 @@ msgstr[0] "každý štítek musí být kratší než than %(max_chars)d znaků"
 msgstr[1] "každý štítek musí být kratší než than %(max_chars)d znaků"
 msgstr[2] "každý štítek musí být kratší než than %(max_chars)d znaků"
 
-#: forms.py:405
+#: forms.py:406
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
 msgstr ""
 
-#: forms.py:408 forms.py:1014 models/widgets.py:27
-#: templates/widgets/edit_post.html:41 templates/widgets/meta_nav.html:6
+#: forms.py:409 forms.py:1015 models/widgets.py:27
+#: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
 msgstr "štítky"
 
-#: forms.py:410
+#: forms.py:411
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -124,7 +124,7 @@ msgstr[0] "Štítky jsou krátká slova bez mezer. Může být použito nanejvý
 msgstr[1] "Štítky jsou krátká slova bez mezer. Může být použito nanejvýš %(max_tags)d štítků."
 msgstr[2] "Štítky jsou krátká slova bez mezer. Může být použito nanejvýš %(max_tags)d štítků."
 
-#: forms.py:437
+#: forms.py:438
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
@@ -132,280 +132,280 @@ msgstr[0] "prosím použijte %(tag_count)d štítků nebo méně"
 msgstr[1] "prosím použijte %(tag_count)d štítků nebo méně"
 msgstr[2] "prosím použijte %(tag_count)d štítků nebo méně"
 
-#: forms.py:445
+#: forms.py:446
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr "Alespoň jeden z následujících štítků je povinný: %(tags)s"
 
-#: forms.py:473
+#: forms.py:474
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr "společná wiki (reputace není udělována & ostatní mohou editovat příspěvky na wiki"
 
-#: forms.py:477
+#: forms.py:478
 msgid ""
 "if you choose community wiki option, the question and answer do not generate"
 " points and name of author will not be shown"
 msgstr "pokud zvolíte možnost společné wiki, otázky a odpovědi nebudou generovat body a jméno autora nebude zobrazeno"
 
-#: forms.py:504
+#: forms.py:505
 msgid "update summary:"
 msgstr "upravit shrnutí:"
 
-#: forms.py:506
+#: forms.py:507
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr "zadejte stručné shrnutí vaší opravy (např. opravené hláskování, gramatika, vylepšený styl, toto pole je nepovinné)"
 
-#: forms.py:593
+#: forms.py:594
 msgid "Enter number of points to add or subtract"
 msgstr "Zadejte počet bodů pro přidání nebo odebrání"
 
-#: forms.py:608 const/__init__.py:366
+#: forms.py:609 const/__init__.py:375
 msgid "approved"
 msgstr "schváleno"
 
-#: forms.py:609 const/__init__.py:367
+#: forms.py:610 const/__init__.py:376
 msgid "watched"
 msgstr "sledované"
 
-#: forms.py:610 const/__init__.py:368
+#: forms.py:611 const/__init__.py:377
 msgid "suspended"
 msgstr "pozastaveno"
 
-#: forms.py:611 const/__init__.py:369
+#: forms.py:612 const/__init__.py:378
 msgid "blocked"
 msgstr "zablokováno"
 
-#: forms.py:613
+#: forms.py:614
 msgid "administrator"
 msgstr "administrátor"
 
-#: forms.py:614 const/__init__.py:365
+#: forms.py:615 const/__init__.py:374
 msgid "moderator"
 msgstr "moderátor"
 
-#: forms.py:633
+#: forms.py:634
 msgid "Change status to"
 msgstr "Změnit status na"
 
-#: forms.py:660
+#: forms.py:661
 msgid "which one?"
 msgstr "kterou?"
 
-#: forms.py:681
+#: forms.py:682
 msgid "Cannot change own status"
 msgstr "Nelze změnit vlastní status"
 
-#: forms.py:687
+#: forms.py:688
 msgid "Cannot turn other user to moderator"
 msgstr "Nelze přepnout ostatního uživatele na moderátora"
 
-#: forms.py:694
+#: forms.py:695
 msgid "Cannot change status of another moderator"
 msgstr "Nelze změnit status jiného moderátora"
 
-#: forms.py:700
+#: forms.py:701
 msgid "Cannot change status to admin"
 msgstr "Nelze změnit status na administrátora"
 
-#: forms.py:706
+#: forms.py:707
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr "Pokud si přejete změnit status v počtu %(username)s's, prosím zvolte smysluplnou možnost"
 
-#: forms.py:716
+#: forms.py:717
 msgid "Subject line"
 msgstr "Řádka pro předmět"
 
-#: forms.py:721
+#: forms.py:722
 msgid "Message text"
 msgstr "Text zprávy"
 
-#: forms.py:735
+#: forms.py:736
 msgid "Your name (optional):"
 msgstr "Vaše jméno (nepovinné):"
 
-#: forms.py:736
+#: forms.py:737
 msgid "Email:"
 msgstr "Email:"
 
-#: forms.py:738
+#: forms.py:739
 msgid "Your message:"
 msgstr "Vaše zpráva:"
 
-#: forms.py:743
+#: forms.py:744
 msgid "I don't want to give my email or receive a response:"
 msgstr "Nechci poskytnout svůj email ani dostávat odpovědi:"
 
-#: forms.py:766
+#: forms.py:767
 msgid "Please mark \"I dont want to give my mail\" field."
 msgstr "Prosím zaškrtněte políčko \"Nechci poskytnout svůj email\"."
 
-#: forms.py:799
+#: forms.py:800
 msgid "keep private within your groups"
 msgstr ""
 
-#: forms.py:838
+#: forms.py:839
 msgid "User name:"
 msgstr ""
 
-#: forms.py:840
+#: forms.py:841
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
 msgstr ""
 
-#: forms.py:847
+#: forms.py:848
 msgid "Email address:"
 msgstr ""
 
-#: forms.py:897
+#: forms.py:898
 msgid "User name is required with the email"
 msgstr ""
 
-#: forms.py:902
+#: forms.py:903
 msgid "Email is required if user name is added"
 msgstr ""
 
-#: forms.py:922 forms.py:965
+#: forms.py:923 forms.py:966
 msgid "ask anonymously"
 msgstr "zeptejte se anonymně"
 
-#: forms.py:924 forms.py:967
+#: forms.py:925 forms.py:968
 msgid "Check if you do not want to reveal your name when asking this question"
 msgstr "Zkontrolujte zda nechcete odhalit své jméno při položení této otázky"
 
-#: forms.py:955
+#: forms.py:956
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr "Řádka pro předmět je požadována ve formátu: [štítek1, štítek2, štítek3,...] nadpis otázky"
 
-#: forms.py:1199
+#: forms.py:1215
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
 msgstr "Položil jste tuto otázku anonymně, pokud se rozhodnete odhalit svou identitu, zaškrtněte toto políčko"
 
-#: forms.py:1203
+#: forms.py:1219
 msgid "reveal identity"
 msgstr "odhalit identitu"
 
-#: forms.py:1282
+#: forms.py:1298
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr "Promiňte, pouze vlastník anonymní otázky může odhalit svou vlastní identitu, prosím odškrtněte toto políčko"
 
-#: forms.py:1295
+#: forms.py:1311
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr "Promiňte, zřejmě se právě změnila pravidla - již není možné pokládat otázky anonymně.  Prosím zaškrtněte \"odhalit identitu\" nebo znovu načtěte tuto stránku a zkuste znovu upravit otázku"
 
-#: forms.py:1359
+#: forms.py:1375
 msgid "Real name"
 msgstr "Skutečné jméno"
 
-#: forms.py:1366
+#: forms.py:1382
 msgid "Website"
 msgstr "Webové stránky"
 
-#: forms.py:1373
+#: forms.py:1389
 msgid "City"
 msgstr "Město"
 
-#: forms.py:1382
+#: forms.py:1398
 msgid "Show country"
 msgstr "Zobrazit zemi"
 
-#: forms.py:1387
+#: forms.py:1403
 msgid "Show tag choices"
 msgstr ""
 
-#: forms.py:1392
+#: forms.py:1408
 msgid "Date of birth"
 msgstr "Datum narození"
 
-#: forms.py:1394
+#: forms.py:1410
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "nebude zobrazeno, využito k výpočtu věku, formát: RRRR-MM-DD"
 
-#: forms.py:1402
+#: forms.py:1418
 msgid "Profile"
 msgstr "Profil"
 
-#: forms.py:1411
+#: forms.py:1427
 msgid "Screen name"
 msgstr "Zobrazené jméno"
 
-#: forms.py:1444 forms.py:1448
+#: forms.py:1459 forms.py:1463
 msgid "this email has already been registered, please use another one"
 msgstr "tento e-mail je již zaregistrován, prosím použijte jiný"
 
-#: forms.py:1457
+#: forms.py:1472
 msgid "Choose email tag filter"
 msgstr "Zvolte filter emailových štítků"
 
-#: forms.py:1509
+#: forms.py:1524
 msgid "Asked by me"
 msgstr "Moje otázky"
 
-#: forms.py:1512
+#: forms.py:1527
 msgid "Answered by me"
 msgstr "Moje odpovědi"
 
-#: forms.py:1515
+#: forms.py:1530
 msgid "Individually selected"
 msgstr "jednotlivě vybrané"
 
-#: forms.py:1518
+#: forms.py:1533
 msgid "Entire forum (tag filtered)"
 msgstr "Celé fórum (štítky filtrovány)"
 
-#: forms.py:1522
+#: forms.py:1537
 msgid "Comments and posts mentioning me"
 msgstr "Komentáře a příspěvky o mně"
 
-#: forms.py:1606
+#: forms.py:1621
 msgid "please choose one of the options above"
 msgstr "prosím zvolte jednu z možností výše"
 
-#: forms.py:1609
+#: forms.py:1624
 msgid "okay, let's try!"
 msgstr "dobře, zkusme to!"
 
-#: forms.py:1612
+#: forms.py:1627
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr "žádné %(sitename)s emaily, děkuji "
 
-#: forms.py:1660 templates/reopen.html:7
+#: forms.py:1675 templates/reopen.html:7
 msgid "Title"
 msgstr "Nadpis"
 
-#: forms.py:1663 templates/groups.html:32
+#: forms.py:1678 templates/groups.html:32
 msgid "Description"
 msgstr ""
 
-#: forms.py:1682 templates/tags.html:3 templates/tags/header.html:9
+#: forms.py:1697 templates/tags.html:3 templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
-#: templates/widgets/edit_post.html:35 templates/widgets/related_tags.html:3
+#: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
 msgid "Tags"
 msgstr "Štítky"
 
-#: tasks.py:68
+#: tasks.py:94
 msgid "An edit for my answer"
 msgstr ""
 
-#: tasks.py:71
+#: tasks.py:97
 msgid "To add to your post EDIT ABOVE THIS LINE"
 msgstr ""
 
-#: tasks.py:89
+#: tasks.py:115
 #, python-format
 msgid "Your post at %(site_name)s is now published"
 msgstr ""
@@ -430,11 +430,11 @@ msgstr "nápověda/"
 msgid "answers/"
 msgstr "odpovědi/"
 
-#: urls.py:47 urls.py:132 urls.py:383 urls.py:498
+#: urls.py:47 urls.py:131 urls.py:382 urls.py:497
 msgid "edit/"
 msgstr "upravit/"
 
-#: urls.py:52 urls.py:162
+#: urls.py:52 urls.py:161
 msgid "revisions/"
 msgstr "úpravy/"
 
@@ -442,125 +442,125 @@ msgstr "úpravy/"
 msgid "questions"
 msgstr "otázky"
 
-#: urls.py:127 urls.py:132 urls.py:137 urls.py:142 urls.py:147 urls.py:152
-#: urls.py:162 urls.py:558
+#: urls.py:126 urls.py:131 urls.py:136 urls.py:141 urls.py:146 urls.py:151
+#: urls.py:161 urls.py:573
 msgid "questions/"
 msgstr "otázky/"
 
-#: urls.py:127 urls.py:472 urls.py:477 urls.py:482 urls.py:488
+#: urls.py:126 urls.py:471 urls.py:476 urls.py:481 urls.py:487
 msgid "ask/"
 msgstr "zeptat se/"
 
-#: urls.py:137
+#: urls.py:136
 msgid "retag/"
 msgstr "přeštítkovat/"
 
-#: urls.py:142
+#: urls.py:141
 msgid "close/"
 msgstr "zavřít/"
 
-#: urls.py:147
+#: urls.py:146
 msgid "reopen/"
 msgstr "znovu otevřít/"
 
-#: urls.py:152
+#: urls.py:151
 msgid "answer/"
 msgstr "odpovědět/"
 
-#: urls.py:220
+#: urls.py:219
 msgid "tags/"
 msgstr "štítky/"
 
-#: urls.py:225
+#: urls.py:224
 msgid "tags/subscriptions/"
 msgstr ""
 
-#: urls.py:230
+#: urls.py:229
 msgid "tags/subscriptions/delete/"
 msgstr ""
 
-#: urls.py:235
+#: urls.py:234
 msgid "tags/subscriptions/create/"
 msgstr ""
 
-#: urls.py:240
+#: urls.py:239
 msgid "tags/subscriptions/edit/"
 msgstr ""
 
-#: urls.py:246
+#: urls.py:245
 msgid "suggested-tags/"
 msgstr ""
 
-#: urls.py:366
+#: urls.py:365
 msgid "subscribe-for-tags/"
 msgstr "odebírat štítky/"
 
-#: urls.py:371 urls.py:376 urls.py:383 urls.py:389 urls.py:398 urls.py:405
+#: urls.py:370 urls.py:375 urls.py:382 urls.py:388 urls.py:397 urls.py:404
 msgid "users/"
 msgstr "uživatelé/"
 
-#: urls.py:376
+#: urls.py:375
 msgid "by-group/"
 msgstr ""
 
-#: urls.py:390
+#: urls.py:389
 msgid "subscriptions/"
 msgstr "odběr/"
 
-#: urls.py:399
+#: urls.py:398
 msgid "select_languages/"
 msgstr ""
 
-#: urls.py:410
+#: urls.py:409
 msgid "groups/"
 msgstr ""
 
-#: urls.py:415
+#: urls.py:414
 msgid "users/update_has_custom_avatar/"
 msgstr "uživatelé/update_has_custom_avatar/"
 
-#: urls.py:420 urls.py:425
+#: urls.py:419 urls.py:424
 msgid "badges/"
 msgstr "odznáčky/"
 
-#: urls.py:435
+#: urls.py:434
 msgid "messages/"
 msgstr "zprávy/"
 
-#: urls.py:435
+#: urls.py:434
 msgid "markread/"
 msgstr "označit jako přečtené/"
 
-#: urls.py:466 urls.py:472 urls.py:477 urls.py:482 urls.py:488 urls.py:493
-#: urls.py:498 urls.py:503 urls.py:509
+#: urls.py:465 urls.py:471 urls.py:476 urls.py:481 urls.py:487 urls.py:492
+#: urls.py:497 urls.py:502 urls.py:508
 msgid "widgets/"
 msgstr "ovládací prvky/"
 
-#: urls.py:488 deps/django_authopenid/urls.py:20
+#: urls.py:487 deps/django_authopenid/urls.py:20
 msgid "complete/"
 msgstr "Dokončit/"
 
-#: urls.py:493
+#: urls.py:492
 msgid "create/"
 msgstr ""
 
-#: urls.py:503
+#: urls.py:502
 msgid "delete/"
 msgstr ""
 
-#: urls.py:519
+#: urls.py:533
 msgid "upload/"
 msgstr "nahrát/"
 
-#: urls.py:520
+#: urls.py:534
 msgid "feedback/"
 msgstr "napište nám/"
 
-#: urls.py:564
+#: urls.py:579
 msgid "question/"
 msgstr "otázka/"
 
-#: urls.py:571 setup_templates/settings.py:229
+#: urls.py:586 setup_templates/settings.py:229
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
 msgstr "účet/"
@@ -834,54 +834,50 @@ msgid ""
 msgstr "Prověření aktivity e-mailu se provede odesláním verifikačního klíče na e-mail"
 
 #: conf/email.py:237
-msgid "Allow only one account per email address"
-msgstr "Povolit pouze jeden účet pro jednu email adresu."
-
-#: conf/email.py:246
 msgid "Fake email for anonymous user"
 msgstr "Falešný email anonymního uživatele"
 
-#: conf/email.py:247
+#: conf/email.py:238
 msgid "Use this setting to control gravatar for email-less user"
 msgstr "Použijte toto nastavení pro ovládání gravataru pro uživatele bez mail adresy."
 
-#: conf/email.py:256
+#: conf/email.py:247
 msgid "Allow posting questions by email"
 msgstr "Povolit zadávání otázek emailem"
 
-#: conf/email.py:258
+#: conf/email.py:249
 msgid ""
 "Before enabling this setting - please fill out IMAP settings in the "
 "settings.py file"
 msgstr "Před povolením tohoto nastavení prosím vyplňte IMAP nastavení v settings.py souboru"
 
-#: conf/email.py:269
+#: conf/email.py:260
 msgid "Replace space in emailed tags with dash"
 msgstr "Nahradit mezeru ve štítcích z emailu pomlčkou"
 
-#: conf/email.py:271
+#: conf/email.py:262
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
 msgstr "Toto nastavení se týká štítků zapsaných v řádku pro předmět u otázek položených emailem"
 
-#: conf/email.py:282
+#: conf/email.py:273
 msgid "Enable posting answers and comments by email"
 msgstr "Povolit zasílání odpovědí a komentářů emailem"
 
-#: conf/email.py:285
+#: conf/email.py:276
 msgid "To enable this feature make sure lamson is running"
 msgstr "Pro povolení této funkce, ujistěte se, že běží lamson"
 
-#: conf/email.py:296
+#: conf/email.py:287
 msgid "Emailed post: when to notify author about publishing"
 msgstr ""
 
-#: conf/email.py:321
+#: conf/email.py:312
 msgid "Reply by email hostname"
 msgstr "Odpovědět emailovou hostname"
 
-#: conf/email.py:332
+#: conf/email.py:323
 msgid ""
 "Email replies having fewer words than this number will be posted as comments"
 " instead of answers"
@@ -1100,189 +1096,215 @@ msgid ""
 msgstr "Zaškrtněte, pokud si přejete povolit uživatelům odesílání otázek a odpovědí bez přihlášení. Toto povolení může vyžadovat úpravu v nastavení přihlašování uživatelů pro kontrolu fronty příspěvků po každém přihlášení uživatele. Zabudovaná funkce Askbota systému přihlašování toto podporuje."
 
 #: conf/forum_data_rules.py:118
+msgid "Auto-follow questions by the Author"
+msgstr ""
+
+#: conf/forum_data_rules.py:123
+msgid "Fully open by default"
+msgstr ""
+
+#: conf/forum_data_rules.py:124
+msgid "Folded by default"
+msgstr ""
+
+#: conf/forum_data_rules.py:133
+msgid "Question details/body editor should be"
+msgstr ""
+
+#: conf/forum_data_rules.py:135
+msgid ""
+"To use folded mode, please first set minimum question body length to 0. Also"
+" - please make tags optional."
+msgstr ""
+
+#: conf/forum_data_rules.py:147
 msgid "Allow swapping answer with question"
 msgstr "Umožní zaměnit odpověď za otázku"
 
-#: conf/forum_data_rules.py:120
+#: conf/forum_data_rules.py:149
 msgid ""
 "This setting will help import data from other forums such as zendesk, when "
 "automatic data import fails to detect the original question correctly."
 msgstr "Toto nastavení usnadní import dat z jiných systémů jako zendesk v případě, že automatický import dat nerozpozná původní otázku korektně."
 
-#: conf/forum_data_rules.py:132
+#: conf/forum_data_rules.py:161
 msgid "Maximum length of tag (number of characters)"
 msgstr "Maximální délka štítku (počet znaků)."
 
-#: conf/forum_data_rules.py:141
+#: conf/forum_data_rules.py:170
 msgid "Minimum length of title (number of characters)"
 msgstr "Minimální délka názvu (počet znaků)"
 
-#: conf/forum_data_rules.py:151
+#: conf/forum_data_rules.py:180
 msgid "Minimum length of question body (number of characters)"
 msgstr "Minimální délka těla otázky (počet znaků)"
 
-#: conf/forum_data_rules.py:162
+#: conf/forum_data_rules.py:191
 msgid "Minimum length of answer body (number of characters)"
 msgstr "Minimální délka těla odpovědi (počet znaků)"
 
-#: conf/forum_data_rules.py:173
+#: conf/forum_data_rules.py:202
+msgid "Minimum length of comment (number of characters)"
+msgstr ""
+
+#: conf/forum_data_rules.py:213
 msgid "Limit one answer per question per user"
 msgstr ""
 
-#: conf/forum_data_rules.py:183
+#: conf/forum_data_rules.py:223
 msgid "Enable accepting best answer"
 msgstr ""
 
-#: conf/forum_data_rules.py:191
+#: conf/forum_data_rules.py:231
 msgid "Are tags required?"
 msgstr "Jsou štítky povinné?"
 
-#: conf/forum_data_rules.py:197
+#: conf/forum_data_rules.py:237
 msgid "category tree"
 msgstr ""
 
-#: conf/forum_data_rules.py:198
+#: conf/forum_data_rules.py:238
 msgid "user input"
 msgstr ""
 
-#: conf/forum_data_rules.py:205
+#: conf/forum_data_rules.py:245
 msgid "Source of tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:216
+#: conf/forum_data_rules.py:256
 msgid "Mandatory tags"
 msgstr "Povinné štítky"
 
-#: conf/forum_data_rules.py:219
+#: conf/forum_data_rules.py:259
 msgid ""
 "At least one of these tags will be required for any new or newly edited "
 "question. A mandatory tag may be wildcard, if the wildcard tags are active."
 msgstr "Alespoň jeden takový štítek bude vyžadován pro každou novou nebo nově upravenou otázku. Povinný štítek může být všeobecný, pokud jsou všeobecné štítky aktivní"
 
-#: conf/forum_data_rules.py:231
+#: conf/forum_data_rules.py:271
 msgid "Force lowercase the tags"
 msgstr "Vynutit malá písmena pro štítky"
 
-#: conf/forum_data_rules.py:233
+#: conf/forum_data_rules.py:273
 msgid ""
 "Attention: after checking this, please back up the database, and run a "
 "management command: <code>python manage.py fix_question_tags</code> to "
 "globally rename the tags"
 msgstr "Pozor: po zaškrtnutí prosím zazálohujte databázi a spusťte kontrolní příkaz: <code>python manage.py fix_question_tags</code> pro globální přejmenování štítků"
 
-#: conf/forum_data_rules.py:247
+#: conf/forum_data_rules.py:287
 msgid "Format of tag list"
 msgstr "Formát seznamu štítků"
 
-#: conf/forum_data_rules.py:249
+#: conf/forum_data_rules.py:289
 msgid ""
 "Select the format to show tags in, either as a simple list, or as a tag "
 "cloud"
 msgstr "Zvolte formát zobrazení štítků buď v seznamu nebo oblaku štítků"
 
-#: conf/forum_data_rules.py:261
+#: conf/forum_data_rules.py:301
 msgid "Use wildcard tags"
 msgstr "Použít všeobecné štítky"
 
-#: conf/forum_data_rules.py:263
+#: conf/forum_data_rules.py:303
 msgid ""
 "Wildcard tags can be used to follow or ignore many tags at once, a valid "
 "wildcard tag has a single wildcard at the very end"
 msgstr "Všeobecné štítky mohou být použity ke sledování nebo vypnutí sledování naráz, validní všeobecný štítek má jediný všeobecný štítek zcela na konci"
 
-#: conf/forum_data_rules.py:275
+#: conf/forum_data_rules.py:315
 msgid "Use separate set for subscribed tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:277
+#: conf/forum_data_rules.py:317
 msgid ""
 "If enabled, users will have a third set of tag selections - \"subscribed\" "
 "(by email) in additon to \"interesting\" and \"ignored\""
 msgstr ""
 
-#: conf/forum_data_rules.py:285
+#: conf/forum_data_rules.py:325
 msgid "Always, for all users"
 msgstr ""
 
-#: conf/forum_data_rules.py:286
+#: conf/forum_data_rules.py:326
 msgid "Never, for all users"
 msgstr ""
 
-#: conf/forum_data_rules.py:287
+#: conf/forum_data_rules.py:327
 msgid "Let users decide"
 msgstr ""
 
-#: conf/forum_data_rules.py:295
+#: conf/forum_data_rules.py:335
 msgid "Publicly show user tag selections"
 msgstr ""
 
-#: conf/forum_data_rules.py:304
+#: conf/forum_data_rules.py:344
 msgid "Enable separate tag search box on main page"
 msgstr ""
 
-#: conf/forum_data_rules.py:314
+#: conf/forum_data_rules.py:354
 msgid "Default max number of comments to display under posts"
 msgstr "Výchozí maximální počet zobrazených komentářů pod příspěvky"
 
-#: conf/forum_data_rules.py:325
+#: conf/forum_data_rules.py:365
 #, python-format
 msgid "Maximum comment length, must be < %(max_len)s"
 msgstr "Maximální délka komentáře musí být < %(max_len)s"
 
-#: conf/forum_data_rules.py:335
+#: conf/forum_data_rules.py:375
 msgid "Limit time to edit comments"
 msgstr "Omezit časový limit pro editaci komentářů"
 
-#: conf/forum_data_rules.py:337
+#: conf/forum_data_rules.py:377
 msgid "If unchecked, there will be no time limit to edit the comments"
 msgstr "Pokud nezatrženo, pak nebude žádný časový limit pro editaci komentářů"
 
-#: conf/forum_data_rules.py:348
+#: conf/forum_data_rules.py:388
 msgid "Minutes allowed to edit a comment"
 msgstr "Minuty přípustné pro úpravu komentáře"
 
-#: conf/forum_data_rules.py:349
+#: conf/forum_data_rules.py:389
 msgid "To enable this setting, check the previous one"
 msgstr "Pro umožnění tohoto nastavení, zatrhněte předcházející"
 
-#: conf/forum_data_rules.py:358
+#: conf/forum_data_rules.py:398
 msgid "Save comment by pressing <Enter> key"
 msgstr "Uložit komentář stisknutím klávesy <Enter>"
 
-#: conf/forum_data_rules.py:360
+#: conf/forum_data_rules.py:400
 msgid ""
 "This may be useful when only one-line comments are desired. Will not work "
 "with TinyMCE editor."
 msgstr ""
 
-#: conf/forum_data_rules.py:371
+#: conf/forum_data_rules.py:411
 msgid "Minimum length of search term for Ajax search"
 msgstr "Minimální délka řetězce pro Ajaxové prohledávání"
 
-#: conf/forum_data_rules.py:372
+#: conf/forum_data_rules.py:412
 msgid "Must match the corresponding database backend setting"
 msgstr "Musí souhlasit odpovídající nastavení databázového pozadí"
 
-#: conf/forum_data_rules.py:381
+#: conf/forum_data_rules.py:421
 msgid "Do not make text query sticky in search"
 msgstr "Neproblematizujte textové dotazy při vyhledávání"
 
-#: conf/forum_data_rules.py:383
+#: conf/forum_data_rules.py:423
 msgid ""
 "Check to disable the \"sticky\" behavior of the search query. This may be "
 "useful if you want to move the search bar away from the default position or "
 "do not like the default sticky behavior of the text search query."
 msgstr "Zaškrtněte pro zablokování problematického chování vyhledávacích dotazů. Toto může být užitečné v případě, že chcete přesunout vyhledávací panel mimo výchozí pozici nebo se vám nelíbí výchozí chování textového vyhledávače. "
 
-#: conf/forum_data_rules.py:396
+#: conf/forum_data_rules.py:436
 msgid "Maximum number of tags per question"
 msgstr "Maximální počet štítků na otázku"
 
-#: conf/forum_data_rules.py:408
+#: conf/forum_data_rules.py:448
 msgid "Number of questions to list by default"
 msgstr "Výchozí počet otázek zobrazených v seznamu"
 
-#: conf/forum_data_rules.py:418
+#: conf/forum_data_rules.py:458
 msgid "What should \"unanswered question\" mean?"
 msgstr "Co by mělo znamenat \"nezodpovězená otázka\"?"
 
@@ -1338,69 +1360,69 @@ msgstr ""
 msgid "LDAP login configuration"
 msgstr "LDAP konfigurace přihlášení"
 
-#: conf/ldap.py:24
+#: conf/ldap.py:17
 msgid "Use LDAP authentication for the password login"
 msgstr "Použít LDAP autentizaci pro přihlášení heslem"
 
-#: conf/ldap.py:34
+#: conf/ldap.py:26
 msgid "Automatically create user accounts when possible"
 msgstr ""
 
-#: conf/ldap.py:37
+#: conf/ldap.py:29
 msgid ""
 "Potentially reduces number of steps in the registration process but can "
 "expose personal information, e.g. when LDAP login name is the same as email "
 "address or real name."
 msgstr ""
 
-#: conf/ldap.py:45
+#: conf/ldap.py:37
 msgid "Version 3"
 msgstr ""
 
-#: conf/ldap.py:46
+#: conf/ldap.py:38
 msgid "Version 2 (insecure and deprecated)!!!"
 msgstr ""
 
-#: conf/ldap.py:55
+#: conf/ldap.py:47
 msgid "LDAP protocol version"
 msgstr ""
 
-#: conf/ldap.py:57
+#: conf/ldap.py:49
 msgid ""
 "Note that Version 2 protocol is not secure!!! Do not use it on unprotected "
 "network."
 msgstr ""
 
-#: conf/ldap.py:67
+#: conf/ldap.py:59
 msgid "LDAP URL"
 msgstr "LDAP URL"
 
-#: conf/ldap.py:76
+#: conf/ldap.py:68
 msgid "LDAP encoding"
 msgstr ""
 
-#: conf/ldap.py:79
+#: conf/ldap.py:71
 msgid ""
 "This value in almost all cases is \"utf-8\". Change it if yours is "
 "different. This field is required"
 msgstr ""
 
-#: conf/ldap.py:90
+#: conf/ldap.py:82
 msgid "Base DN (distinguished name)"
 msgstr ""
 
-#: conf/ldap.py:93
+#: conf/ldap.py:85
 msgid ""
 "Usually base DN mirrors domain name of your organization, e.g. "
 "\"dn=example,dn=com\" when your site url is \"example.com\".This value is "
 "the \"root\" address of your LDAP directory."
 msgstr ""
 
-#: conf/ldap.py:104
+#: conf/ldap.py:96
 msgid "User search filter template"
 msgstr ""
 
-#: conf/ldap.py:107
+#: conf/ldap.py:99
 msgid ""
 "Python string format template, must have two string placeholders, which "
 "should be left in the intact format. First placeholder will be used for the "
@@ -1408,59 +1430,59 @@ msgid ""
 " be extended to match schema of your LDAP directory."
 msgstr ""
 
-#: conf/ldap.py:121
+#: conf/ldap.py:113
 msgid "UserID/login field"
 msgstr ""
 
-#: conf/ldap.py:124
+#: conf/ldap.py:116
 msgid ""
 "This field is required. For Microsoft Active Directory this value usually is"
 " \"sAMAccountName\"."
 msgstr ""
 
-#: conf/ldap.py:135
+#: conf/ldap.py:127
 msgid "\"Common Name\" field"
 msgstr ""
 
-#: conf/ldap.py:137
+#: conf/ldap.py:129
 msgid ""
 "Common name is a formal or informal name of a person, can be blank. Use it "
 "only if surname and given names are not available."
 msgstr ""
 
-#: conf/ldap.py:147
+#: conf/ldap.py:139
 msgid "First name, Last name"
 msgstr ""
 
-#: conf/ldap.py:148
+#: conf/ldap.py:140
 msgid "Last name, First name"
 msgstr ""
 
-#: conf/ldap.py:155
+#: conf/ldap.py:147
 msgid "\"Common Name\" field format"
 msgstr ""
 
-#: conf/ldap.py:158
+#: conf/ldap.py:150
 msgid "Use this only if \"Common Name\" field is used."
 msgstr ""
 
-#: conf/ldap.py:166
+#: conf/ldap.py:158
 msgid "Given (First) name"
 msgstr ""
 
-#: conf/ldap.py:168 conf/ldap.py:178
+#: conf/ldap.py:160 conf/ldap.py:170
 msgid "This field can be blank"
 msgstr ""
 
-#: conf/ldap.py:176
+#: conf/ldap.py:168
 msgid "Surname (last) name"
 msgstr ""
 
-#: conf/ldap.py:186
+#: conf/ldap.py:178
 msgid "LDAP Server EMAIL field name"
 msgstr "LDAP Server EMAIL field name"
 
-#: conf/ldap.py:188
+#: conf/ldap.py:180
 msgid "This field is required"
 msgstr ""
 
@@ -1561,12 +1583,16 @@ msgstr "Pro zapnutí pokračujte na Nastavení-->Zápis-->Vzdálená publikace a
 msgid "Upload your icon"
 msgstr "Nahrajte svou ikonku"
 
-#: conf/login_providers.py:95
+#: conf/login_providers.py:93
+msgid "local password"
+msgstr ""
+
+#: conf/login_providers.py:98
 #, python-format
 msgid "Activate %(provider)s login"
 msgstr "Zapnout %(provider)s přihlášení"
 
-#: conf/login_providers.py:100
+#: conf/login_providers.py:103
 #, python-format
 msgid ""
 "Note: to really enable %(provider)s login some additional parameters will "
@@ -1745,17 +1771,19 @@ msgid ""
 msgstr "Když vyhledávač při procházení narazína rel=nofollow atribut v odkazu - tento odkaz se nebude započítávat mezi osobní stránky uživatelů."
 
 #: conf/minimum_reputation.py:223
-msgid "Post answers and comments by email"
-msgstr "Odesílat odpovědi a komentáře emailem"
+msgid "Make posts by email"
+msgstr ""
 
 #: conf/minimum_reputation.py:232
 msgid "Trigger email notifications"
 msgstr ""
 
-#: conf/minimum_reputation.py:234
-msgid ""
-"Reduces spam as notifications wont't be sent to regular users for posts of "
-"low karma users"
+#: conf/minimum_reputation.py:233 conf/minimum_reputation.py:243
+msgid "Reduces spam"
+msgstr ""
+
+#: conf/minimum_reputation.py:242
+msgid "Trigger tweets on others accounts"
 msgstr ""
 
 #: conf/moderation.py:19
@@ -2343,19 +2371,26 @@ msgstr ""
 msgid "Check to enable sharing of questions on Twitter"
 msgstr "Zaškrtněte pro umožnění sdílení otázek na Twitteru"
 
-#: conf/social_sharing.py:47
+#: conf/social_sharing.py:40
+msgid ""
+"Important - to actually start sharing on twitter, it is required to set up "
+"Twitter consumer key and secret in the \"keys to external services\" "
+"section."
+msgstr ""
+
+#: conf/social_sharing.py:52
 msgid "Check to enable sharing of questions on Facebook"
 msgstr "Zaškrtněte pro umožnění sdílení otázek na Facebooku."
 
-#: conf/social_sharing.py:56
+#: conf/social_sharing.py:61
 msgid "Check to enable sharing of questions on LinkedIn"
 msgstr "Zaškrtněte pro umožnění sdílení otázek na LinkedIn"
 
-#: conf/social_sharing.py:65
+#: conf/social_sharing.py:70
 msgid "Check to enable sharing of questions on Identi.ca"
 msgstr "Zaškrtněte pro umožnění sdílení otázek na Identi.ca"
 
-#: conf/social_sharing.py:74
+#: conf/social_sharing.py:79
 msgid "Check to enable sharing of questions on Google+"
 msgstr "Zaškrtněte pro umožnění sdílení otázek na Google+"
 
@@ -2551,340 +2586,356 @@ msgstr "Spam nebo nevyžádaná reklama"
 msgid "too localized"
 msgstr "Příliš omezené"
 
-#: const/__init__.py:45 templates/question/answer_tab_bar.html:18
+#: const/__init__.py:29
+msgid "disable sharing"
+msgstr ""
+
+#: const/__init__.py:30
+#: templates/user_profile/twitter_sharing_controls.html:13
+#: templates/user_profile/twitter_sharing_controls.html:17
+msgid "my posts"
+msgstr ""
+
+#: const/__init__.py:31
+#: templates/user_profile/twitter_sharing_controls.html:14
+#: templates/user_profile/twitter_sharing_controls.html:16
+msgid "all posts"
+msgstr ""
+
+#: const/__init__.py:54 templates/question/answer_tab_bar.html:18
 msgid "newest"
 msgstr "Nejnovější"
 
-#: const/__init__.py:46 templates/users.html:50
+#: const/__init__.py:55 templates/users.html:54
 #: templates/question/answer_tab_bar.html:15
 msgid "oldest"
 msgstr "Nejstarší"
 
-#: const/__init__.py:47
+#: const/__init__.py:56
 msgid "active"
 msgstr "Aktivní"
 
-#: const/__init__.py:48
+#: const/__init__.py:57
 msgid "inactive"
 msgstr "Neaktivní"
 
-#: const/__init__.py:49
+#: const/__init__.py:58
 msgid "hottest"
 msgstr "Nejožehavější"
 
-#: const/__init__.py:50
+#: const/__init__.py:59
 msgid "coldest"
 msgstr "Nejzastaralejší"
 
-#: const/__init__.py:51 templates/question/answer_tab_bar.html:21
+#: const/__init__.py:60 templates/question/answer_tab_bar.html:21
 msgid "most voted"
 msgstr "Nejvíc hlasů"
 
-#: const/__init__.py:52
+#: const/__init__.py:61
 msgid "least voted"
 msgstr "Nejméně hlasů"
 
-#: const/__init__.py:53
+#: const/__init__.py:62
 msgid "relevance"
 msgstr "Relevance"
 
-#: const/__init__.py:65
+#: const/__init__.py:74
 msgid "Never"
 msgstr ""
 
-#: const/__init__.py:66
+#: const/__init__.py:75
 msgid "When new post is published"
 msgstr ""
 
-#: const/__init__.py:67
+#: const/__init__.py:76
 msgid "When post is published or revised"
 msgstr ""
 
-#: const/__init__.py:99
+#: const/__init__.py:108
 #, python-format
 msgid ""
 "Note: to reply with a comment, please use <a "
 "href=\"mailto:%(addr)s?subject=%(subject)s\">this link</a>"
 msgstr ""
 
-#: const/__init__.py:113 templates/user_inbox/responses_and_flags.html:9
+#: const/__init__.py:122 templates/user_inbox/responses_and_flags.html:9
 msgid "all"
 msgstr "Vše"
 
-#: const/__init__.py:114
+#: const/__init__.py:123
 msgid "unanswered"
 msgstr "Nezodpovězené"
 
-#: const/__init__.py:115
+#: const/__init__.py:124
 msgid "followed"
 msgstr ""
 
-#: const/__init__.py:120
+#: const/__init__.py:129
 msgid "list"
 msgstr "Seznam"
 
-#: const/__init__.py:121
+#: const/__init__.py:130
 msgid "cloud"
 msgstr "Oblak"
 
-#: const/__init__.py:129
+#: const/__init__.py:138
 msgid "Question has no answers"
 msgstr "Otázka nemá odpovědi"
 
-#: const/__init__.py:130
+#: const/__init__.py:139
 msgid "Question has no accepted answers"
 msgstr "Otázka nemá odsouhlsené odpovědi"
 
-#: const/__init__.py:186
+#: const/__init__.py:195
 msgid "asked a question"
 msgstr "Položená otázka"
 
-#: const/__init__.py:187
+#: const/__init__.py:196
 msgid "answered a question"
 msgstr "Zodpovězená otázka"
 
-#: const/__init__.py:188 const/__init__.py:292
+#: const/__init__.py:197 const/__init__.py:301
 msgid "commented question"
 msgstr "Okomentovaná otázka"
 
-#: const/__init__.py:189 const/__init__.py:293
+#: const/__init__.py:198 const/__init__.py:302
 msgid "commented answer"
 msgstr "Okomentovaná odpověď"
 
-#: const/__init__.py:190
+#: const/__init__.py:199
 msgid "edited question"
 msgstr "Upravená otázka"
 
-#: const/__init__.py:191
+#: const/__init__.py:200
 msgid "edited answer"
 msgstr "Upravená odpověď"
 
-#: const/__init__.py:192
+#: const/__init__.py:201
 msgid "received badge"
 msgstr "získaný odznáček"
 
-#: const/__init__.py:193
+#: const/__init__.py:202
 msgid "marked best answer"
 msgstr "Označeno za nejlepší odpověď"
 
-#: const/__init__.py:194
+#: const/__init__.py:203
 msgid "upvoted"
 msgstr "Odhlasováno kladně"
 
-#: const/__init__.py:195
+#: const/__init__.py:204
 msgid "downvoted"
 msgstr "Odhlasováno záporně"
 
-#: const/__init__.py:196
+#: const/__init__.py:205
 msgid "canceled vote"
 msgstr "Zrušený hlas"
 
-#: const/__init__.py:197
+#: const/__init__.py:206
 msgid "deleted question"
 msgstr "Smazaná otázka"
 
-#: const/__init__.py:198
+#: const/__init__.py:207
 msgid "deleted answer"
 msgstr "Smazaná odpověď"
 
-#: const/__init__.py:199
+#: const/__init__.py:208
 msgid "marked offensive"
 msgstr "Označeno za útočné"
 
-#: const/__init__.py:200
+#: const/__init__.py:209
 msgid "updated tags"
 msgstr "Aktualizované štítky"
 
-#: const/__init__.py:201
+#: const/__init__.py:210
 msgid "selected favorite"
 msgstr "Vybráno za oblíbené"
 
-#: const/__init__.py:202
+#: const/__init__.py:211
 msgid "completed user profile"
 msgstr "Dokončený profil uživatele"
 
-#: const/__init__.py:203
+#: const/__init__.py:212
 msgid "email update sent to user"
 msgstr "Emailové oznámení zaslané uživateli"
 
-#: const/__init__.py:204
+#: const/__init__.py:213
 msgid "a post was shared"
 msgstr ""
 
-#: const/__init__.py:207
+#: const/__init__.py:216
 msgid "reminder about unanswered questions sent"
 msgstr "připomenutí o nezodpovězených otázkách bylo odesláno"
 
-#: const/__init__.py:211
+#: const/__init__.py:220
 msgid "reminder about accepting the best answer sent"
 msgstr "připomenutí o odsouhlasení nejlepší odpovědi odesláno"
 
-#: const/__init__.py:213
+#: const/__init__.py:222
 msgid "mentioned in the post"
 msgstr "zmíněno v příspěvku"
 
-#: const/__init__.py:216
+#: const/__init__.py:225
 msgid "created tag description"
 msgstr ""
 
-#: const/__init__.py:220
+#: const/__init__.py:229
 msgid "updated tag description"
 msgstr ""
 
-#: const/__init__.py:222
+#: const/__init__.py:231
 msgid "made a new post"
 msgstr ""
 
-#: const/__init__.py:225
+#: const/__init__.py:234
 msgid "made an edit"
 msgstr ""
 
-#: const/__init__.py:229
+#: const/__init__.py:238
 msgid "created post reject reason"
 msgstr ""
 
-#: const/__init__.py:233
+#: const/__init__.py:242
 msgid "updated post reject reason"
 msgstr ""
 
-#: const/__init__.py:291
+#: const/__init__.py:300
 msgid "answered question"
 msgstr "zodpovězená otázka"
 
-#: const/__init__.py:294
+#: const/__init__.py:303
 msgid "accepted answer"
 msgstr "odsouhlasená odpověď"
 
-#: const/__init__.py:298
+#: const/__init__.py:307
 msgid "[closed]"
 msgstr "[uzavřeno]"
 
-#: const/__init__.py:299
+#: const/__init__.py:308
 msgid "[deleted]"
 msgstr "[smazáno]"
 
-#: const/__init__.py:300 views/readers.py:624
+#: const/__init__.py:309 views/readers.py:613
 msgid "initial version"
 msgstr "původní verze"
 
-#: const/__init__.py:301
+#: const/__init__.py:310
 msgid "retagged"
 msgstr "přeštítkováno"
 
-#: const/__init__.py:302
+#: const/__init__.py:311
 msgid "[private]"
 msgstr ""
 
-#: const/__init__.py:311
+#: const/__init__.py:320
 msgid "show all tags"
 msgstr ""
 
-#: const/__init__.py:312 const/__init__.py:321 const/__init__.py:327
-#: const/__init__.py:333
+#: const/__init__.py:321 const/__init__.py:330 const/__init__.py:336
+#: const/__init__.py:342
 msgid "exclude ignored tags"
 msgstr ""
 
-#: const/__init__.py:313 const/__init__.py:322 const/__init__.py:334
+#: const/__init__.py:322 const/__init__.py:331 const/__init__.py:343
 msgid "only interesting tags"
 msgstr ""
 
-#: const/__init__.py:317 const/__init__.py:328 const/__init__.py:335
+#: const/__init__.py:326 const/__init__.py:337 const/__init__.py:344
 msgid "only subscribed tags"
 msgstr ""
 
-#: const/__init__.py:320 const/__init__.py:326 const/__init__.py:332
+#: const/__init__.py:329 const/__init__.py:335 const/__init__.py:341
 msgid "email for all tags"
 msgstr ""
 
-#: const/__init__.py:339
+#: const/__init__.py:348
 msgid "instantly"
 msgstr "ihned"
 
-#: const/__init__.py:340
+#: const/__init__.py:349
 msgid "daily"
 msgstr "denně"
 
-#: const/__init__.py:341
+#: const/__init__.py:350
 msgid "weekly"
 msgstr "týdně"
 
-#: const/__init__.py:342
+#: const/__init__.py:351
 msgid "no email"
 msgstr "žádný email"
 
-#: const/__init__.py:349
+#: const/__init__.py:358
 msgid "identicon"
 msgstr "identikona"
 
-#: const/__init__.py:350
+#: const/__init__.py:359
 msgid "mystery-man"
 msgstr "mystery-man"
 
-#: const/__init__.py:351
+#: const/__init__.py:360
 msgid "monsterid"
 msgstr "monsterid"
 
-#: const/__init__.py:352
+#: const/__init__.py:361
 msgid "wavatar"
 msgstr "wavatar"
 
-#: const/__init__.py:353
+#: const/__init__.py:362
 msgid "retro"
 msgstr "retro"
 
-#: const/__init__.py:400 templates/badges.html:33
+#: const/__init__.py:409 templates/badges.html:33
 msgid "gold"
 msgstr "zlatý"
 
-#: const/__init__.py:401 templates/badges.html:43
+#: const/__init__.py:410 templates/badges.html:43
 msgid "silver"
 msgstr "stříbrný"
 
-#: const/__init__.py:402 templates/badges.html:50
+#: const/__init__.py:411 templates/badges.html:50
 msgid "bronze"
 msgstr "bronzový"
 
-#: const/__init__.py:414
+#: const/__init__.py:423
 msgid "None"
 msgstr "Žádný"
 
-#: const/__init__.py:415
+#: const/__init__.py:424
 msgid "Gravatar"
 msgstr "Gravatar"
 
-#: const/__init__.py:416
+#: const/__init__.py:425
 msgid "Uploaded Avatar"
 msgstr "Nahraná ikonka"
 
-#: const/__init__.py:420
+#: const/__init__.py:429
 msgid "date descendant"
 msgstr ""
 
-#: const/__init__.py:421
+#: const/__init__.py:430
 msgid "date ascendant"
 msgstr ""
 
-#: const/__init__.py:422
+#: const/__init__.py:431
 msgid "activity descendant"
 msgstr ""
 
-#: const/__init__.py:423
+#: const/__init__.py:432
 msgid "activity ascendant"
 msgstr ""
 
-#: const/__init__.py:424
+#: const/__init__.py:433
 msgid "answers descendant"
 msgstr ""
 
-#: const/__init__.py:425
+#: const/__init__.py:434
 msgid "answers ascendant"
 msgstr ""
 
-#: const/__init__.py:426
+#: const/__init__.py:435
 msgid "votes descendant"
 msgstr ""
 
-#: const/__init__.py:427
+#: const/__init__.py:436
 msgid "votes ascendant"
 msgstr ""
 
@@ -2975,7 +3026,7 @@ msgid ""
 "reach a resolution."
 msgstr "Promiňte, váš účet je zřejmě zablokován a nemůžete odesílat nové příspěvky, dokud se tato situace nevyřeší. Kontaktujte prosím správce fóra pro vyřešení této situace."
 
-#: const/message_keys.py:52 models/__init__.py:1078
+#: const/message_keys.py:52 models/__init__.py:1121
 msgid ""
 "Sorry, your account appears to be suspended and you cannot make new posts "
 "until this issue is resolved. You can, however edit your existing posts. "
@@ -2988,7 +3039,7 @@ msgid ""
 "screen name, if necessary."
 msgstr "Vítejte! Prosím, nastavte emailovou adresu (důležité!) ve svém profilu a upravte zobrazené jméno, pokud je třeba"
 
-#: deps/django_authopenid/forms.py:112 deps/django_authopenid/views.py:205
+#: deps/django_authopenid/forms.py:112 deps/django_authopenid/views.py:206
 msgid "i-names are not supported"
 msgstr "i-names nejsou podporovány"
 
@@ -3028,15 +3079,15 @@ msgid ""
 "password."
 msgstr "Staré heslo je nesprávné. Prosím zadejte správné heslo."
 
-#: deps/django_authopenid/forms.py:402
+#: deps/django_authopenid/forms.py:399
 msgid "Sorry, we don't have this email address in the database"
 msgstr "Promiňte, nemáme tuto email adresu v databázi"
 
-#: deps/django_authopenid/forms.py:441
+#: deps/django_authopenid/forms.py:438
 msgid "Your user name (<i>required</i>)"
 msgstr "Vaše uživatelské jméno (<i>povinné</i>)"
 
-#: deps/django_authopenid/forms.py:458
+#: deps/django_authopenid/forms.py:455
 msgid "sorry, there is no such user name"
 msgstr "promiňte, takové uživatelské jméno neexistuje"
 
@@ -3077,162 +3128,162 @@ msgstr "Obnovit/"
 msgid "verify-email/"
 msgstr ""
 
-#: deps/django_authopenid/util.py:378
+#: deps/django_authopenid/util.py:379
 #, python-format
 msgid "%(site)s user name and password"
 msgstr "%(site)s uživatelské jméno a heslo"
 
-#: deps/django_authopenid/util.py:384 templates/authopenid/signin.html:120
+#: deps/django_authopenid/util.py:385 templates/authopenid/signin.html:120
 #: templates/authopenid/widget_signin.html:120
 msgid "Create a password-protected account"
 msgstr "Vytvořit účet chráněný heslem"
 
-#: deps/django_authopenid/util.py:385
+#: deps/django_authopenid/util.py:386
 msgid "Change your password"
 msgstr "Změnit heslo"
 
-#: deps/django_authopenid/util.py:485
+#: deps/django_authopenid/util.py:486
 msgid "Sign in with Yahoo"
 msgstr "Přihlásit se přes Yahoo"
 
-#: deps/django_authopenid/util.py:492
+#: deps/django_authopenid/util.py:493
 msgid "AOL screen name"
 msgstr "AOL zobrazené jméno"
 
-#: deps/django_authopenid/util.py:501
+#: deps/django_authopenid/util.py:502
 msgid "Sign in with LaunchPad"
 msgstr ""
 
-#: deps/django_authopenid/util.py:508
+#: deps/django_authopenid/util.py:509
 msgid "OpenID url"
 msgstr "OpenID url adresa"
 
-#: deps/django_authopenid/util.py:537
+#: deps/django_authopenid/util.py:538
 msgid "Flickr user name"
 msgstr "Flickr uživatelské jméno"
 
-#: deps/django_authopenid/util.py:545
+#: deps/django_authopenid/util.py:546
 msgid "Technorati user name"
 msgstr "Technorati uživatelské jméno"
 
-#: deps/django_authopenid/util.py:553
+#: deps/django_authopenid/util.py:554
 msgid "WordPress blog name"
 msgstr "WordPress blogovací uživ. jméno"
 
-#: deps/django_authopenid/util.py:561
+#: deps/django_authopenid/util.py:562
 msgid "Blogger blog name"
 msgstr "Blogger blogovací uživ. jméno"
 
-#: deps/django_authopenid/util.py:569
+#: deps/django_authopenid/util.py:570
 msgid "LiveJournal blog name"
 msgstr "LiveJournal blogovací uživ. jméno"
 
-#: deps/django_authopenid/util.py:577
+#: deps/django_authopenid/util.py:578
 msgid "ClaimID user name"
 msgstr "ClaimID uživatelské jméno"
 
-#: deps/django_authopenid/util.py:585
+#: deps/django_authopenid/util.py:586
 msgid "Vidoop user name"
 msgstr "Vidoop uživatelské jméno"
 
-#: deps/django_authopenid/util.py:593
+#: deps/django_authopenid/util.py:594
 msgid "Verisign user name"
 msgstr "Verisign uživatelské jméno"
 
-#: deps/django_authopenid/util.py:628
+#: deps/django_authopenid/util.py:629
 #, python-format
 msgid "Change your %(provider)s password"
 msgstr "Změnit vaše %(provider)s heslo"
 
-#: deps/django_authopenid/util.py:632
+#: deps/django_authopenid/util.py:633
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
 msgstr "Klepněte pro zjištění zda vaše %(provider)s přihlášení stále funguje pro %(site_name)s"
 
-#: deps/django_authopenid/util.py:641
+#: deps/django_authopenid/util.py:642
 #, python-format
 msgid "Create password for %(provider)s"
 msgstr "Vytvořit heslo pro %(provider)s"
 
-#: deps/django_authopenid/util.py:645
+#: deps/django_authopenid/util.py:646
 #, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
 msgstr "Spojit váš %(provider)s účet s %(site_name)s"
 
-#: deps/django_authopenid/util.py:654
+#: deps/django_authopenid/util.py:655
 #, python-format
 msgid "Signin with %(provider)s user name and password"
 msgstr "Přihlásit se s %(provider)s jménem a heslem"
 
-#: deps/django_authopenid/util.py:661
+#: deps/django_authopenid/util.py:662
 #, python-format
 msgid "Sign in with your %(provider)s account"
 msgstr "Přihlásit se s %(provider)s účtem"
 
-#: deps/django_authopenid/views.py:212
+#: deps/django_authopenid/views.py:213
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
 msgstr "OpenID %(openid_url)s je neplatné"
 
-#: deps/django_authopenid/views.py:390 deps/django_authopenid/views.py:567
-#: deps/django_authopenid/views.py:582
+#: deps/django_authopenid/views.py:391 deps/django_authopenid/views.py:568
+#: deps/django_authopenid/views.py:583
 #, python-format
 msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
 "please try again or use another provider"
 msgstr "Bohužel vznikl nějaký problém při spojení s %(provider)s, zkuste prosím znovu nebo zvolte jiného poskytovatele"
 
-#: deps/django_authopenid/views.py:519
+#: deps/django_authopenid/views.py:520
 msgid "Your new password saved"
 msgstr "Vaše nové heslo bylo uloženo"
 
-#: deps/django_authopenid/views.py:612
+#: deps/django_authopenid/views.py:613
 msgid "The login password combination was not correct"
 msgstr "Kombinace hesla pro přihlášení byla nesprávná"
 
-#: deps/django_authopenid/views.py:716
+#: deps/django_authopenid/views.py:717
 msgid "Please click any of the icons below to sign in"
 msgstr "Prosím klepněte na některou z ikonek níže pro přihlášení"
 
-#: deps/django_authopenid/views.py:718
+#: deps/django_authopenid/views.py:719
 msgid "Account recovery email sent"
 msgstr "Email k obnovení účtu byl odeslán"
 
-#: deps/django_authopenid/views.py:721
+#: deps/django_authopenid/views.py:722
 msgid "Please add one or more login methods."
 msgstr "Prosím doplňte jeden nebo více způsobů přihlášení."
 
-#: deps/django_authopenid/views.py:723
+#: deps/django_authopenid/views.py:724
 msgid "If you wish, please add, remove or re-validate your login methods"
 msgstr "Chcete-li, prosím doplňte, odeberte nebo znouzkontolujte svůj způsob přihlášení"
 
-#: deps/django_authopenid/views.py:725
+#: deps/django_authopenid/views.py:726
 msgid "Please wait a second! Your account is recovered, but ..."
 msgstr "Prosím vyčkejte! Váš účet je obnoven, avšak..."
 
-#: deps/django_authopenid/views.py:727
+#: deps/django_authopenid/views.py:728
 msgid "Sorry, this account recovery key has expired or is invalid"
 msgstr "Promiňte, tento klíč k obnově účtu vypršel nebo je nesprávný"
 
-#: deps/django_authopenid/views.py:800
+#: deps/django_authopenid/views.py:801
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
 msgstr "Způsob přihlášení %(provider_name)s neexistuje"
 
-#: deps/django_authopenid/views.py:806
+#: deps/django_authopenid/views.py:807
 msgid "Oops, sorry - there was some error - please try again"
 msgstr "Jejda, promiňte - došlo k nějaké chybě - prosím zkuste znovu"
 
-#: deps/django_authopenid/views.py:881
+#: deps/django_authopenid/views.py:882
 msgid ""
 "If you are trying to sign in to another account, please sign out first."
 msgstr ""
 
-#: deps/django_authopenid/views.py:886
+#: deps/django_authopenid/views.py:887
 msgid "Otherwise, please report the incident to the site administrator."
 msgstr ""
 
-#: deps/django_authopenid/views.py:917
+#: deps/django_authopenid/views.py:918
 #, python-format
 msgid "Your %(provider)s login works fine"
 msgstr "Vaše %(provider)s přihlášení funguje správně"
@@ -3247,7 +3298,7 @@ msgstr ""
 msgid "Recover your %(site)s account"
 msgstr "Obnovit váš %(site)s účet"
 
-#: deps/django_authopenid/views.py:1291
+#: deps/django_authopenid/views.py:1289
 msgid "Please check your email and visit the enclosed link."
 msgstr "Prosím zkontrolujte e-mail a klepněte na přiložený odkaz."
 
@@ -3259,100 +3310,31 @@ msgstr ""
 msgid "Site"
 msgstr "Web"
 
-#: deps/livesettings/values.py:71
+#: deps/livesettings/values.py:72
 msgid "Main"
 msgstr "Hlavní"
 
-#: deps/livesettings/values.py:132
+#: deps/livesettings/values.py:133
 msgid "Base Settings"
 msgstr "Základní nastavení"
 
-#: deps/livesettings/values.py:243
+#: deps/livesettings/values.py:244
 msgid "Default value: \"\""
 msgstr "Výchozí hodnota: \"\""
 
-#: deps/livesettings/values.py:250
+#: deps/livesettings/values.py:251
 msgid "Default value: "
 msgstr "Výchozí hodnota:"
 
-#: deps/livesettings/values.py:253
+#: deps/livesettings/values.py:254
 #, python-format
 msgid "Default value: %s"
 msgstr "Výchozí hodnota: %s"
 
-#: deps/livesettings/values.py:640
+#: deps/livesettings/values.py:641
 #, python-format
 msgid "Allowed image file types are %(types)s"
 msgstr "Povolené typy obrázkových souborů jsou %(types)s"
-
-#: deps/livesettings/templates/livesettings/_admin_site_views.html:4
-msgid "Sites"
-msgstr "Stránky"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:11
-#: deps/livesettings/templates/livesettings/site_settings.html:23
-msgid "Documentation"
-msgstr "Dokumentace"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:11
-#: deps/livesettings/templates/livesettings/site_settings.html:23
-#: templates/authopenid/signin.html:148
-#: templates/authopenid/widget_signin.html:148
-msgid "Change password"
-msgstr "Změnit heslo"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:11
-#: deps/livesettings/templates/livesettings/site_settings.html:23
-msgid "Log out"
-msgstr "Odhlásit se"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:14
-#: deps/livesettings/templates/livesettings/site_settings.html:26
-msgid "Home"
-msgstr "Domů"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:15
-msgid "Edit Group Settings"
-msgstr "Upravit nastavení skupin"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:22
-#: deps/livesettings/templates/livesettings/site_settings.html:50
-msgid "Please correct the error below."
-msgid_plural "Please correct the errors below."
-msgstr[0] "Opravte prosím chybu vypsanou níže."
-msgstr[1] "Opravte prosím chyby vypsané níže."
-msgstr[2] "Opravte prosím chyby vypsané níže."
-
-#: deps/livesettings/templates/livesettings/group_settings.html:28
-#, python-format
-msgid "Settings included in %(name)s."
-msgstr "Nastavení zahrnuto v %(name)s."
-
-#: deps/livesettings/templates/livesettings/group_settings.html:62
-#: deps/livesettings/templates/livesettings/site_settings.html:97
-msgid "You don't have permission to edit values."
-msgstr "Nemáte oprávnění upravovat hodnoty."
-
-#: deps/livesettings/templates/livesettings/site_settings.html:27
-msgid "Edit Site Settings"
-msgstr "Upravit nastavení webu"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:43
-msgid "Livesettings are disabled for this site."
-msgstr "Živé nastavení není povoleno pro tento web"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:44
-msgid "All configuration options must be edited in the site settings.py file"
-msgstr "Všechny konfigurační možnosti musí být upraveny v settings.py souboru webu"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:66
-#, python-format
-msgid "Group settings: %(name)s"
-msgstr "Nastavení skupin: %(name)s"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:93
-msgid "Uncollapse all"
-msgstr "Sbalit vše"
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:150
 msgid "Congratulations, you are now an Administrator"
@@ -3408,41 +3390,41 @@ msgid ""
 "of your user account</p>"
 msgstr "<p>Promiňte, vaše otázka nemohla být uložena v důsledku nedostatečných práv vašeho uživatelského účtu</p>"
 
-#: mail/lamson_handlers.py:158
+#: mail/lamson_handlers.py:160
 msgid ""
 "You were replying to an email address             unknown to the system or "
 "you were replying from a different address from the one where you"
 "             received the notification."
 msgstr ""
 
-#: mail/lamson_handlers.py:245
+#: mail/lamson_handlers.py:251
 #, python-format
 msgid "Re: Welcome to %(site_name)s"
 msgstr ""
 
-#: mail/lamson_handlers.py:252
+#: mail/lamson_handlers.py:258
 msgid "Please reply to the welcome email without editing it"
 msgstr ""
 
-#: mail/lamson_handlers.py:314
+#: mail/lamson_handlers.py:318
 #, python-format
 msgid "Re: %s"
 msgstr ""
 
-#: management/commands/send_accept_answer_reminders.py:60
+#: management/commands/send_accept_answer_reminders.py:61
 #, python-format
 msgid "Accept the best answer for %(question_count)d of your questions"
 msgstr "Odsouhlasit nejlepší odpověď pro %(question_count)d ze svých otázek"
 
-#: management/commands/send_accept_answer_reminders.py:65
+#: management/commands/send_accept_answer_reminders.py:66
 msgid "Please accept the best answer for this question:"
 msgstr "Prosím odsouhlaste nejlepší odpověď pro tuto otázku:"
 
-#: management/commands/send_accept_answer_reminders.py:67
+#: management/commands/send_accept_answer_reminders.py:68
 msgid "Please accept the best answer for these questions:"
 msgstr "Prosím, odsouhlaste nejlepší odpověď pro tyto otázky:"
 
-#: management/commands/send_email_alerts.py:414
+#: management/commands/send_email_alerts.py:413
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
@@ -3450,7 +3432,7 @@ msgstr[0] "%(question_count)d aktualizovaná otázka k tématu %(topics)s"
 msgstr[1] "%(question_count)d aktualizovaných otázek k tématu %(topics)s"
 msgstr[2] "%(question_count)d aktualizovaných otázek k tématu %(topics)s"
 
-#: management/commands/send_email_alerts.py:425
+#: management/commands/send_email_alerts.py:424
 #, python-format
 msgid ""
 "<p>Dear %(name)s,</p><p>The following question has been updated "
@@ -3462,11 +3444,11 @@ msgstr[0] "<p>Vážený/á %(name)s,</p><p>Následující otázka byla aktualizo
 msgstr[1] "<p>Vážený/á %(name)s,</p><p>Následující %(num)d otázky byly aktualizovány na %(sitename)s:</p>"
 msgstr[2] "<p>Vážený/á %(name)s,</p><p>Následujících %(num)d otázek bylo aktualizováno na %(sitename)s:</p>"
 
-#: management/commands/send_email_alerts.py:449
+#: management/commands/send_email_alerts.py:448
 msgid "new question"
 msgstr "nová otázka"
 
-#: management/commands/send_email_alerts.py:474
+#: management/commands/send_email_alerts.py:473
 #, python-format
 msgid ""
 "<p>Please remember that you can always <a "
@@ -3477,7 +3459,7 @@ msgid ""
 "server.</p>"
 msgstr ""
 
-#: management/commands/send_unanswered_question_reminders.py:66
+#: management/commands/send_unanswered_question_reminders.py:67
 #, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
@@ -3490,86 +3472,86 @@ msgstr[2] "%(question_count)d nezodpovězených otázek k tématu %(topics)s"
 msgid "Please log in to use %s"
 msgstr "Prosím přihlašte se pro použití %s"
 
-#: models/__init__.py:518
+#: models/__init__.py:561
 msgid "Sorry, this operation is not allowed"
 msgstr ""
 
-#: models/__init__.py:568
+#: models/__init__.py:611
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
 msgstr "Promiňte, nemůžete odsouhlasit či zamítnout nejlepší odpovědi, protože váš účet je zablokován."
 
-#: models/__init__.py:572
+#: models/__init__.py:615
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
 msgstr "Promiňte, nemůžete odsouhlasit či zamítnout nejlepší odpovědi, protože váš účet je pozastaven."
 
-#: models/__init__.py:586
+#: models/__init__.py:629
 #, python-format
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
 "own question"
 msgstr ">%(points)s bodů je třeba k odsouhlasení či zamítnutí vlastní odpovědi k vlastní otázce"
 
-#: models/__init__.py:610
+#: models/__init__.py:653
 #, python-format
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
 msgstr "Promiňte,žete odsouhlasit tuto odpověď až po %(will_be_able_at)s"
 
-#: models/__init__.py:619
+#: models/__init__.py:662
 #, python-format
 msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
 "can accept or unaccept the best answer"
 msgstr "Promiňte, pouze moderátoři nebo původní autoři otázky - %(username)s -   mohou odsouhlasit nebo zamítnout nejlepší odpověď"
 
-#: models/__init__.py:642
+#: models/__init__.py:685
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "Promiňte, nemůžete hlasovat pro vlastní příspěvek"
 
-#: models/__init__.py:646
+#: models/__init__.py:689
 msgid "Sorry your account appears to be blocked "
 msgstr "Promiňte, váš účet je zřejmě zablokován"
 
-#: models/__init__.py:651
+#: models/__init__.py:694
 msgid "Sorry your account appears to be suspended "
 msgstr "Promiňte, váš účet je zřejmě pozastaven"
 
-#: models/__init__.py:661
+#: models/__init__.py:704
 #, python-format
 msgid ">%(points)s points required to upvote"
 msgstr ">%(points)s bodů je třeba k hlasování kladně"
 
-#: models/__init__.py:667
+#: models/__init__.py:710
 #, python-format
 msgid ">%(points)s points required to downvote"
 msgstr ">%(points)s bodů je třeba k hlasování záporně"
 
-#: models/__init__.py:682
+#: models/__init__.py:725
 msgid "Sorry, blocked users cannot upload files"
 msgstr "Promiňte, zablokovaní uživatelé nemohou nahrávat soubory"
 
-#: models/__init__.py:683
+#: models/__init__.py:726
 msgid "Sorry, suspended users cannot upload files"
 msgstr "Promiňte, pozastavení uživatelé nemohou nahrávat soubory"
 
-#: models/__init__.py:685
+#: models/__init__.py:728
 #, python-format
 msgid "sorry, file uploading requires karma >%(min_rep)s"
 msgstr "promiňte, nahrávání souborů vyžaduje vlivnost >%(min_rep)s"
 
-#: models/__init__.py:704
+#: models/__init__.py:747
 msgid "Could not post, because your karma is insufficient to publish links"
 msgstr ""
 
-#: models/__init__.py:730
+#: models/__init__.py:773
 msgid "Sorry, you already gave an answer, please edit it instead."
 msgstr ""
 
-#: models/__init__.py:754
+#: models/__init__.py:797
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
@@ -3581,57 +3563,57 @@ msgstr[0] "Promiňte, komentáře (kromě toho posledního) lze upravit až za %
 msgstr[1] "Promiňte, komentáře (kromě toho posledního) lze upravit až za %(minutes)s minut od odeslání"
 msgstr[2] "Promiňte, komentáře (kromě toho posledního) lze upravit až za %(minutes)s minut od odeslání"
 
-#: models/__init__.py:766
+#: models/__init__.py:809
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr "Promiňte, ale pouze vlastníci příspěvků nebo moderátoři mohou upravovat komentáře"
 
-#: models/__init__.py:795
+#: models/__init__.py:838
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr "Promiňte, protože váš účet je pozastaven, můžete komentovat pouze své vlastní příspěvky"
 
-#: models/__init__.py:799
+#: models/__init__.py:842
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
 msgstr "Promiňte, pro komentování kteréhokoliv příspěvku je třeba minimálně %(min_rep)s bodů. Můžete ovšem komentovat své vlastní příspěvky a odpovědi k vašim otázkám"
 
-#: models/__init__.py:829
+#: models/__init__.py:872
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr "Tento příspěvek byl smazán a může být zobrazen pouze vlastníkům příspěvků, administrátorům webu a moderátorům"
 
-#: models/__init__.py:846
+#: models/__init__.py:889
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted"
 " posts"
 msgstr "Promiňte, pouze moderátoři, administrátoři webu a vlastníci příspěvků mohou upravovat příspěvky"
 
-#: models/__init__.py:861
+#: models/__init__.py:904
 msgid "Sorry, since your account is blocked you cannot edit posts"
 msgstr "Promiňte, protože váš účet je zablokován, nemůžete upravovat příspěvky"
 
-#: models/__init__.py:865
+#: models/__init__.py:908
 msgid ""
 "Sorry, since your account is suspended you can edit only your own posts"
 msgstr "Promiňte, protože váš účet je pozastaven, můžete upravovat pouze své vlastní příspěvky"
 
-#: models/__init__.py:870
+#: models/__init__.py:913
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr "Promiňte, k editaci wiki příspěvků je vyžadována minimálně %(min_rep)s reputace"
 
-#: models/__init__.py:877
+#: models/__init__.py:920
 #, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "Promiňte, k úpravě příspěvků ostatních je vyžadována nejméně %(min_rep)s reputace."
 
-#: models/__init__.py:940
+#: models/__init__.py:983
 msgid ""
 "Sorry, cannot delete your question since it has an upvoted answer posted by "
 "someone else"
@@ -3642,103 +3624,103 @@ msgstr[0] "Promiňte, nelze smazat vaši otázku, protože obsahuje kladně ohod
 msgstr[1] "Promiňte, nelze smazat vaše otázky, protože obsahují kladně ohodnocenéu odpovědi zaslané někým jiným"
 msgstr[2] "Promiňte, nelze smazat vaše otázky, protože obsahují kladně ohodnocenéu odpovědi zaslané někým jiným"
 
-#: models/__init__.py:955
+#: models/__init__.py:998
 msgid "Sorry, since your account is blocked you cannot delete posts"
 msgstr "Promiňte, protože váš účet je zablokován, nemůžete mazat příspěvky"
 
-#: models/__init__.py:959
+#: models/__init__.py:1002
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr "Promiňte, protože váš účet je pozastaven, můžete smazat pouze své vlastní příspěvky"
 
-#: models/__init__.py:963
+#: models/__init__.py:1006
 #, python-format
 msgid ""
 "Sorry, to delete other people's posts, a minimum reputation of %(min_rep)s "
 "is required"
 msgstr ""
 
-#: models/__init__.py:983
+#: models/__init__.py:1026
 msgid "Sorry, since your account is blocked you cannot close questions"
 msgstr "Promiňte, protože váš účet je zablokován, nemůžete uzavřít vlastní otázky"
 
-#: models/__init__.py:987
+#: models/__init__.py:1030
 msgid "Sorry, since your account is suspended you cannot close questions"
 msgstr "Promiňte, protože váš účet je pozastaven, nemůžete uzavřít vlastní otázky"
 
-#: models/__init__.py:991
+#: models/__init__.py:1034
 #, python-format
 msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "Promiňte, k zavření příspěvků ostatních je vyžadována nejméně %(min_rep)s reputace"
 
-#: models/__init__.py:1000
+#: models/__init__.py:1043
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
 msgstr "Promiňte, k zavření vlastní otázky je vyžadována nejméně %(min_rep)s reputace"
 
-#: models/__init__.py:1026
+#: models/__init__.py:1069
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > "
 "%(min_rep)s can reopen questions."
 msgstr "Promiňte, pouze administrátoři, moderátoři a vlastníci příspěvků s reputací minimálně %(min_rep)s mohou znovuotevřít otázky."
 
-#: models/__init__.py:1032
+#: models/__init__.py:1075
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "Promiňte, pro znovuotevření vlastní otázky je vyžadována minimálně %(min_rep)s reputace"
 
-#: models/__init__.py:1037
+#: models/__init__.py:1080
 msgid "Sorry, you cannot reopen questions because your account is blocked"
 msgstr ""
 
-#: models/__init__.py:1042
+#: models/__init__.py:1085
 msgid "Sorry, you cannot reopen questions because your account is suspended"
 msgstr ""
 
-#: models/__init__.py:1065
+#: models/__init__.py:1108
 msgid "You have flagged this question before and cannot do it more than once"
 msgstr "Již jste označil tuto otázku dříve a to nelze více než jednou"
 
-#: models/__init__.py:1073
+#: models/__init__.py:1116
 msgid ""
 "Sorry, since your account is blocked you cannot flag posts as offensive"
 msgstr "Promiňte, protože váš účet je zablokován, nemůlžete označit příspěvek za útočný"
 
-#: models/__init__.py:1084
+#: models/__init__.py:1127
 #, python-format
 msgid ""
 "Sorry, to flag posts as offensive a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "Promiňte, pro označení příspěvku jako útočného je vyžadována nejméně %(min_rep)s reputace"
 
-#: models/__init__.py:1105
+#: models/__init__.py:1148
 #, python-format
 msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 msgstr "Promiňte, vyčerpal jste maximální počet %(max_flags_per_day)s označení pro útočné na den."
 
-#: models/__init__.py:1117
+#: models/__init__.py:1160
 msgid "cannot remove non-existing flag"
 msgstr "Nelze odebrat neexistující značku"
 
-#: models/__init__.py:1123
+#: models/__init__.py:1166
 msgid "Sorry, since your account is blocked you cannot remove flags"
 msgstr "Promiňte, protože je váš účet zablokován, nemůžete odstranit značky"
 
-#: models/__init__.py:1127
+#: models/__init__.py:1170
 msgid ""
 "Sorry, your account appears to be suspended and you cannot remove flags. "
 "Please contact the forum administrator to reach a resolution."
 msgstr "Promiňte, váš účet je zřejmě pozastavený a nemůžete odebrat značky. Kontaktujte prosím administrátora fóra pro vyřešení situace."
 
-#: models/__init__.py:1133
+#: models/__init__.py:1176
 #, python-format
 msgid "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgid_plural ""
@@ -3747,67 +3729,67 @@ msgstr[0] "Promiňte, pro označení příspěvků je vyžadována nejméně %(m
 msgstr[1] "Promiňte, pro označení příspěvků je vyžadována nejméně %(min_rep)d reputace"
 msgstr[2] "Promiňte, pro označení příspěvků je vyžadována nejméně %(min_rep)d reputace"
 
-#: models/__init__.py:1152
+#: models/__init__.py:1195
 msgid "you don't have the permission to remove all flags"
 msgstr "nemáte oprávnění odstranit všechny značky"
 
-#: models/__init__.py:1153
+#: models/__init__.py:1196
 msgid "no flags for this entry"
 msgstr "žádné značky pro tento záznam"
 
-#: models/__init__.py:1177
+#: models/__init__.py:1220
 msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
 msgstr "Promiňte, pouze vlastníci otázek, administrátoři webu a moderátoři mohou přeštítkovat smazané otázky"
 
-#: models/__init__.py:1184
+#: models/__init__.py:1227
 msgid "Sorry, since your account is blocked you cannot retag questions"
 msgstr "Promiňte, protože váš účet je zablokován, nemůžete přeštítkovat otázky"
 
-#: models/__init__.py:1188
+#: models/__init__.py:1231
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr "Promiňte, protože váš účet je pozastaven, můžete přeštítkovat pouze vlastní otázky"
 
-#: models/__init__.py:1192
+#: models/__init__.py:1235
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
 msgstr "Promiňte, pro přeštítkování otázek je vyžadována minimálně %(min_rep)s reputace"
 
-#: models/__init__.py:1211
+#: models/__init__.py:1254
 msgid "Sorry, since your account is blocked you cannot delete comment"
 msgstr "Promiňte, protože váš účet je zablokován, nemůžete mazat komentáře"
 
-#: models/__init__.py:1215
+#: models/__init__.py:1258
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr "Promiňte, protože váš účet je pozastaven, můžete mazat pouze vlastní komentáře"
 
-#: models/__init__.py:1219
+#: models/__init__.py:1262
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr "Promiňte, pro mazání komentářů je vyžadována %(min_rep)s reputace "
 
-#: models/__init__.py:1243
+#: models/__init__.py:1286
 msgid "sorry, but older votes cannot be revoked"
 msgstr "promiňte, ale starší hlasy nemohou být odvolány"
 
-#: models/__init__.py:1926 utils/functions.py:97
+#: models/__init__.py:1973 utils/functions.py:98
 #, python-format
 msgid "on %(date)s"
 msgstr "dne %(date)s"
 
-#: models/__init__.py:1928
+#: models/__init__.py:1975
 msgid "in two days"
 msgstr "za dva dny"
 
-#: models/__init__.py:1930
+#: models/__init__.py:1977
 msgid "tomorrow"
 msgstr "zítra"
 
-#: models/__init__.py:1932
+#: models/__init__.py:1979
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
@@ -3815,7 +3797,7 @@ msgstr[0] "za %(hr)d hodinu"
 msgstr[1] "za %(hr)d hodiny"
 msgstr[2] "za %(hr)d hodiny"
 
-#: models/__init__.py:1934
+#: models/__init__.py:1981
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
@@ -3823,7 +3805,7 @@ msgstr[0] "za %(min)d minutu"
 msgstr[1] "za %(min)d minuty"
 msgstr[2] "za %(min)d minuty"
 
-#: models/__init__.py:1935
+#: models/__init__.py:1982
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
@@ -3831,51 +3813,51 @@ msgstr[0] "%(days)d den"
 msgstr[1] "%(days)d dní"
 msgstr[2] "%(days)d dní"
 
-#: models/__init__.py:1937
+#: models/__init__.py:1984
 #, python-format
 msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
 "post an answer %(left)s"
 msgstr "Noví uživatelé musí vyčkat %(days)s před zodpovězením svých otázek. Můžete odeslat odpověď %(left)s"
 
-#: models/__init__.py:2125 templates/email/feedback_email.txt:9
+#: models/__init__.py:2172 templates/email/feedback_email.txt:9
 msgid "Anonymous"
 msgstr "Anonymní"
 
-#: models/__init__.py:2229
+#: models/__init__.py:2276
 msgid "Site Adminstrator"
 msgstr "Administrátor webu"
 
-#: models/__init__.py:2231
+#: models/__init__.py:2278
 msgid "Forum Moderator"
 msgstr "Moderátor fóra"
 
-#: models/__init__.py:2233
+#: models/__init__.py:2280
 msgid "Suspended User"
 msgstr "Vyloučený uživatel"
 
-#: models/__init__.py:2235
+#: models/__init__.py:2282
 msgid "Blocked User"
 msgstr "Zablokovaný uživatel"
 
-#: models/__init__.py:2237
+#: models/__init__.py:2284
 msgid "Registered User"
 msgstr "Registrovaný uživatel"
 
-#: models/__init__.py:2239
+#: models/__init__.py:2286
 msgid "Watched User"
 msgstr "Sledovaný uživatel"
 
-#: models/__init__.py:2241
+#: models/__init__.py:2288
 msgid "Approved User"
 msgstr "Schválený uživatel"
 
-#: models/__init__.py:2423
+#: models/__init__.py:2473
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr "%(username)s vlivnost je %(reputation)s"
 
-#: models/__init__.py:2433
+#: models/__init__.py:2486
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
@@ -3883,7 +3865,7 @@ msgstr[0] "jeden zlatý odznáček"
 msgstr[1] "%(count)d zlatých odznáčků"
 msgstr[2] "%(count)d zlatých odznáčků"
 
-#: models/__init__.py:2440
+#: models/__init__.py:2493
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
@@ -3891,7 +3873,7 @@ msgstr[0] "jeden stříbrný odznáček"
 msgstr[1] "%(count)d stříbrných odznáčků"
 msgstr[2] "%(count)d stříbrných odznáčků"
 
-#: models/__init__.py:2447
+#: models/__init__.py:2500
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
@@ -3899,17 +3881,17 @@ msgstr[0] "jeden bronzový odznáček"
 msgstr[1] "%(count)d bronzových odznáčků"
 msgstr[2] "%(count)d bronzových odznáčků"
 
-#: models/__init__.py:2458
+#: models/__init__.py:2511
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr "%(item1)s a %(item2)s"
 
-#: models/__init__.py:2462
+#: models/__init__.py:2513
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr "%(user)s má %(badges)s"
 
-#: models/__init__.py:2595
+#: models/__init__.py:2646
 #, python-format
 msgid "At least %d karma point is required to post links"
 msgid_plural "At least %d karma points is required to post links"
@@ -3917,58 +3899,58 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/__init__.py:3074
+#: models/__init__.py:3118
 #, python-format
 msgid "%(user)s shared a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3077 models/__init__.py:3087
+#: models/__init__.py:3121 models/__init__.py:3131
 #, python-format
 msgid "%(user)s edited a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3079
+#: models/__init__.py:3123
 #, python-format
 msgid "%(user)s posted a %(post_link)s"
 msgstr ""
 
-#: models/__init__.py:3082
+#: models/__init__.py:3126
 #, python-format
 msgid "%(user)s edited an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3084
+#: models/__init__.py:3128
 #, python-format
 msgid "%(user)s posted an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3089
+#: models/__init__.py:3133
 #, python-format
 msgid "%(user)s posted a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3106
+#: models/__init__.py:3149
 msgid "To reply, PLEASE WRITE ABOVE THIS LINE."
 msgstr ""
 
-#: models/__init__.py:3138
+#: models/__init__.py:3188
 #, python-format
 msgid "\"%(title)s\""
 msgstr "\"%(title)s\""
 
-#: models/__init__.py:3290
+#: models/__init__.py:3340
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr "Blahopřejeme, právě jste obdržel odznáček '%(badge_name)s'. Zkontrolujte <a href=\"%(user_profile)s\">svůj profil</a>"
 
-#: models/__init__.py:3560
+#: models/__init__.py:3613
 #, python-format
 msgid "Welcome to %(site_name)s"
 msgstr ""
 
-#: models/__init__.py:3581 views/commands.py:689
+#: models/__init__.py:3634 views/commands.py:697
 msgid "Your tag subscription was saved, thanks!"
 msgstr "Vaše přidělení štítku bylo uloženo, děkujeme!"
 
@@ -4238,49 +4220,57 @@ msgstr "Velmi aktivní v jednom štítku"
 msgid "message"
 msgstr ""
 
-#: models/post.py:1551
+#: models/post.py:414
+msgid "Question: "
+msgstr ""
+
+#: models/post.py:416
+msgid "Answer: "
+msgstr ""
+
+#: models/post.py:1569
 msgid "Sorry, this question has been deleted and is no longer accessible"
 msgstr "Promiňte, tato otázka byla smazána a již není přístupná"
 
-#: models/post.py:1567
+#: models/post.py:1585
 msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
 msgstr "Promiňte, odpověď, kterou hledáte již není dostupná, protože nadřazená otázka byla odstraněna"
 
-#: models/post.py:1574
+#: models/post.py:1592
 msgid "Sorry, this answer has been removed and is no longer accessible"
 msgstr "Promiňte, tato odpověď byla odstraněna a již není přístupná"
 
-#: models/post.py:1590
+#: models/post.py:1608
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent question has been removed"
 msgstr "Promiňte, hledaný komentář již není přístupný, protože nadřazená otázka byla odstraněna"
 
-#: models/post.py:1597
+#: models/post.py:1615
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent answer has been removed"
 msgstr "Promiňte, hledaný komentář již není přístupný, protože nadřazená odpověď byla odstraněna"
 
-#: models/post.py:1619
+#: models/post.py:1637
 msgid "This post is temporarily not available"
 msgstr ""
 
-#: models/post.py:2128
+#: models/post.py:2146
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
 msgstr ""
 
-#: models/post.py:2132
+#: models/post.py:2150
 #, python-format
 msgid "your post to %(site)s"
 msgstr ""
 
-#: models/post.py:2139
+#: models/post.py:2157
 msgid ""
 "Your post was placed on the moderation queue and will be published after the"
 " moderator approval."
@@ -4303,17 +4293,17 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/question.py:1263
+#: models/question.py:1267
 #, python-format
 msgid "Tag %s is new and will be submitted for the moderators approval"
 msgstr ""
 
-#: models/question.py:1268 models/tag.py:217
+#: models/question.py:1272 models/tag.py:217
 #, python-format
 msgid "Tags %s are new and will be submitted for the moderators approval"
 msgstr ""
 
-#: models/question.py:1503
+#: models/question.py:1507
 #, python-format
 msgid "Please, <a href=\"%s\">review your question</a>."
 msgstr ""
@@ -4513,19 +4503,14 @@ msgstr "Upravit odpověď"
 msgid "back"
 msgstr "zpět"
 
-#: templates/answer_edit.html:14
-msgid "revision"
-msgstr "úprava"
-
-#: templates/answer_edit.html:46 templates/question_edit.html:57
+#: templates/answer_edit.html:41 templates/question_edit.html:61
 msgid "Save edit"
 msgstr "Uložit úpravu"
 
-#: templates/answer_edit.html:51 templates/close.html:16
-#: templates/feedback.html:64 templates/question_edit.html:58
+#: templates/answer_edit.html:46 templates/close.html:16
+#: templates/feedback.html:64 templates/question_edit.html:62
 #: templates/question_retag.html:22 templates/reopen.html:28
 #: templates/subscribe_for_tags.html:16
-#: templates/authopenid/changeemail.html:51
 #: templates/user_profile/reject_post_dialog.html:36
 #: templates/user_profile/reject_post_dialog.html:74
 #: templates/user_profile/reject_post_dialog.html:104
@@ -4533,21 +4518,21 @@ msgstr "Uložit úpravu"
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: templates/answer_edit.html:92 templates/answer_edit.html.py:95
-#: templates/ask.html:74 templates/ask.html.py:77
-#: templates/question_edit.html:97 templates/question_edit.html.py:100
+#: templates/answer_edit.html:87 templates/answer_edit.html.py:90
+#: templates/ask.html:82 templates/ask.html.py:85
+#: templates/question_edit.html:101 templates/question_edit.html.py:104
 #: templates/question/javascript.html:73 templates/question/javascript.html:76
-#: templates/widgets/edit_post.html:83
+#: templates/widgets/edit_post.html:73
 msgid "hide preview"
 msgstr "skrýt náhled"
 
-#: templates/answer_edit.html:95 templates/ask.html:77
-#: templates/question_edit.html:100 templates/question/javascript.html:76
+#: templates/answer_edit.html:90 templates/ask.html:85
+#: templates/question_edit.html:104 templates/question/javascript.html:76
 msgid "show preview"
 msgstr "zobrazit náhled"
 
 #: templates/ask.html:4 templates/widgets/ask_button.html:9
-#: templates/widgets/ask_form.html:48
+#: templates/widgets/ask_form.html:66
 msgid "Ask Your Question"
 msgstr "Zeptejte se"
 
@@ -4560,11 +4545,10 @@ msgstr ""
 #: templates/ask.html:25
 #, python-format
 msgid ""
-"YYour email, %%(email)s has not yet been validated. To post messages you "
-"must verify your email, please see <a "
-"href='%%(email_validation_faq_url)s'>more details here</a>. You can submit "
-"your question now and validate email after that. Meanwhile, your question "
-"will saved as pending."
+"Your email, %(email)s has not yet been validated. To post messages you must "
+"verify your email, please see <a href='%(email_validation_faq_url)s'>more "
+"details here</a>. You can submit your question now and validate email after "
+"that. Meanwhile, your question will saved as pending."
 msgstr ""
 
 #: templates/ask.html:29
@@ -4658,7 +4642,7 @@ msgstr "stříbrný odznak: příležitostně udělený za příspěvky ve vysok
 msgid "bronze badge: often given as a special honor"
 msgstr "bronzový odznak: často udělený za zvláštní přínos"
 
-#: templates/base.html:19
+#: templates/base.html:22
 #, python-format
 msgid "RSS feed from %(site_title)s"
 msgstr ""
@@ -5143,61 +5127,61 @@ msgstr "současný počet hlasů"
 msgid "anonymous user"
 msgstr "anonymní uživatel"
 
-#: templates/macros.html:94 templates/macros.html.py:113
+#: templates/macros.html:91 templates/macros.html.py:110
 msgid "asked"
 msgstr "položené"
 
-#: templates/macros.html:96 templates/macros.html.py:115
+#: templates/macros.html:93 templates/macros.html.py:112
 msgid "answered"
 msgstr "zodpovězené"
 
-#: templates/macros.html:98 templates/macros.html.py:117
+#: templates/macros.html:95 templates/macros.html.py:114
 msgid "posted"
 msgstr "odeslané"
 
-#: templates/macros.html:104
+#: templates/macros.html:101
 msgid "this post is marked as community wiki"
 msgstr "tento příspěvek je označen jako společná wiki"
 
-#: templates/macros.html:107
+#: templates/macros.html:104
 #, python-format
 msgid ""
 "This post is a wiki.\n"
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
 msgstr "Tento příspěvek je wiki.\nKaždý s vlivností &gt;%(wiki_min_rep)s je vítán, aby jej vylepšil."
 
-#: templates/macros.html:149
+#: templates/macros.html:146
 msgid "updated"
 msgstr "aktualizované"
 
-#: templates/macros.html:264 templates/macros.html.py:270
+#: templates/macros.html:261 templates/macros.html.py:267
 msgid "Leave this group"
 msgstr ""
 
-#: templates/macros.html:265 templates/macros.html.py:267
-#: templates/macros.html:286
+#: templates/macros.html:262 templates/macros.html.py:264
+#: templates/macros.html:283
 msgid "Join this group"
 msgstr ""
 
-#: templates/macros.html:266 templates/macros.html.py:271
-#: templates/macros.html:281
+#: templates/macros.html:263 templates/macros.html.py:268
+#: templates/macros.html:278
 msgid "You are a member"
 msgstr ""
 
-#: templates/macros.html:273
+#: templates/macros.html:270
 msgid "Cancel application"
 msgstr ""
 
-#: templates/macros.html:274 templates/macros.html.py:283
+#: templates/macros.html:271 templates/macros.html.py:280
 msgid "Waiting approval"
 msgstr ""
 
-#: templates/macros.html:276 templates/macros.html.py:277
-#: templates/macros.html:288
+#: templates/macros.html:273 templates/macros.html.py:274
+#: templates/macros.html:285
 msgid "Ask to join"
 msgstr ""
 
-#: templates/macros.html:317
+#: templates/macros.html:314
 #, python-format
 msgid "see questions tagged '%(tag)s'"
 msgstr "prohlédnout otázky se štítky '%(tag)s'"
@@ -5206,66 +5190,66 @@ msgstr "prohlédnout otázky se štítky '%(tag)s'"
 msgid "delete this comment"
 msgstr "smazat tento komentář"
 
-#: templates/macros.html:437 templates/revisions.html:38
+#: templates/macros.html:443 templates/revisions.html:38
 #: templates/revisions.html.py:41 templates/question/answer_controls.html:5
 #: templates/question/question_controls.html:1
 msgid "edit"
 msgstr "editovat"
 
-#: templates/macros.html:441
+#: templates/macros.html:452
 msgid "convert to answer"
 msgstr ""
 
-#: templates/macros.html:576
+#: templates/macros.html:579
 #, python-format
 msgid "follow %(alias)s"
 msgstr "sledovat %(alias)s"
 
-#: templates/macros.html:579
+#: templates/macros.html:582
 #, python-format
 msgid "unfollow %(alias)s"
 msgstr "nesledovat %(alias)s"
 
-#: templates/macros.html:580
+#: templates/macros.html:583
 #, python-format
 msgid "following %(alias)s"
 msgstr "sledovaní %(alias)s"
 
-#: templates/macros.html:658 templatetags/extra_tags.py:44
+#: templates/macros.html:662 templatetags/extra_tags.py:44
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr "%(username)s gravatar obrázek"
 
-#: templates/macros.html:667
+#: templates/macros.html:671
 #, python-format
 msgid "%(username)s's website is %(url)s"
 msgstr "%(username)s stránky jsou %(url)s"
 
-#: templates/macros.html:682 templates/macros.html.py:683
-#: templates/macros.html:721 templates/macros.html.py:722
+#: templates/macros.html:686 templates/macros.html.py:687
+#: templates/macros.html:725 templates/macros.html.py:726
 msgid "previous"
 msgstr "předchozí"
 
-#: templates/macros.html:694 templates/macros.html.py:733
+#: templates/macros.html:698 templates/macros.html.py:737
 msgid "current page"
 msgstr "tato stránka"
 
-#: templates/macros.html:696 templates/macros.html.py:703
-#: templates/macros.html:735 templates/macros.html.py:742
+#: templates/macros.html:700 templates/macros.html.py:707
+#: templates/macros.html:739 templates/macros.html.py:746
 #, python-format
 msgid "page %(num)s"
 msgstr "stránka %(num)s"
 
-#: templates/macros.html:707 templates/macros.html.py:746
+#: templates/macros.html:711 templates/macros.html.py:750
 msgid "next page"
 msgstr "další stránka"
 
-#: templates/macros.html:758
+#: templates/macros.html:762
 #, python-format
 msgid "responses for %(username)s"
 msgstr "odpovědi pro %(username)s"
 
-#: templates/macros.html:761
+#: templates/macros.html:765
 #, python-format
 msgid "you have %(response_count)s new response"
 msgid_plural "you have %(response_count)s new responses"
@@ -5273,21 +5257,21 @@ msgstr[0] "máte %(response_count)s novou odpověď"
 msgstr[1] "máte %(response_count)s nové odpovědi"
 msgstr[2] "máte %(response_count)s nové odpovědi"
 
-#: templates/macros.html:764
+#: templates/macros.html:768
 msgid "no new responses yet"
 msgstr "ještě žádné nové odpovědi"
 
-#: templates/macros.html:779 templates/macros.html.py:780
+#: templates/macros.html:783 templates/macros.html.py:784
 #, python-format
 msgid "%(new)s new flagged posts and %(seen)s previous"
 msgstr "%(new)s nově označené příspěvky a %(seen)s předchozí"
 
-#: templates/macros.html:782 templates/macros.html.py:783
+#: templates/macros.html:786 templates/macros.html.py:787
 #, python-format
 msgid "%(new)s new flagged posts"
 msgstr "%(new)s nově označené příspěvky"
 
-#: templates/macros.html:788 templates/macros.html.py:789
+#: templates/macros.html:792 templates/macros.html.py:793
 #, python-format
 msgid "%(seen)s flagged posts"
 msgstr "%(seen)s označené příspěvky"
@@ -5296,23 +5280,23 @@ msgstr "%(seen)s označené příspěvky"
 msgid "Questions"
 msgstr "Otázky"
 
-#: templates/question.html:210
+#: templates/question.html:226
 msgid "see more comments"
 msgstr ""
 
-#: templates/question.html:212 templates/question.html.py:315
+#: templates/question.html:228 templates/question.html.py:331
 msgid "post a comment"
 msgstr "odeslat komentář"
 
-#: templates/question.html:225 templates/question/content.html:46
+#: templates/question.html:241 templates/question/content.html:46
 msgid "Answer Your Own Question"
 msgstr "Zodpovědět svou vlastní otázku"
 
-#: templates/question.html:230
+#: templates/question.html:246
 msgid "Post Your Answer"
 msgstr "Odeslat odpověď"
 
-#: templates/question.html:236 templates/widgets/ask_form.html:46
+#: templates/question.html:252 templates/widgets/ask_form.html:64
 msgid "Login/Signup to Post"
 msgstr "Přihlásit se/Zaregistrovat pro odeslání"
 
@@ -5320,7 +5304,15 @@ msgstr "Přihlásit se/Zaregistrovat pro odeslání"
 msgid "Edit question"
 msgstr "Upravit otázku"
 
-#: templates/question_edit.html:52
+#: templates/question_edit.html:16
+msgid "Question - in one sentence"
+msgstr ""
+
+#: templates/question_edit.html:23
+msgid "Details"
+msgstr ""
+
+#: templates/question_edit.html:56
 msgid "Change language"
 msgstr ""
 
@@ -5404,66 +5396,66 @@ msgstr "Zapsat se"
 msgid "search for tags"
 msgstr ""
 
-#: templates/users.html:4 templates/users.html.py:14
+#: templates/users.html:8 templates/users.html.py:18
 #: templates/tags/list_bulk_tag_subscription.html:13
 msgid "Users"
 msgstr "Lidé"
 
-#: templates/users.html:12
+#: templates/users.html:16
 #, python-format
 msgid "Users in group %(name)s"
 msgstr ""
 
-#: templates/users.html:20
+#: templates/users.html:24
 msgid "Select/Sort by &raquo;"
 msgstr ""
 
-#: templates/users.html:25
+#: templates/users.html:29
 #, python-format
 msgid "people in group %(name)s"
 msgstr ""
 
-#: templates/users.html:29 templates/main_page/tab_bar.html:17
+#: templates/users.html:33 templates/main_page/tab_bar.html:17
 #: templates/tags/header.html:14
 msgid "Sort by &raquo;"
 msgstr "Seřadit dle &raquo;"
 
-#: templates/users.html:36
+#: templates/users.html:40
 msgid "see people with the highest reputation"
 msgstr "prohlédnout si lidi s nejvyšší reputací"
 
-#: templates/users.html:37 templates/user_profile/user_info.html:26
+#: templates/users.html:41 templates/user_profile/user_info.html:26
 #: templates/user_profile/user_reputation.html:5
 #: templates/user_profile/user_tabs.html:24
 msgid "karma"
 msgstr "vlivnost"
 
-#: templates/users.html:43
+#: templates/users.html:47
 msgid "see people who joined most recently"
 msgstr "prohlédnout si lidi, kteří se přidali zcela nedávno"
 
-#: templates/users.html:44
+#: templates/users.html:48
 msgid "recent"
 msgstr "poslední"
 
-#: templates/users.html:49
+#: templates/users.html:53
 msgid "see people who joined the site first"
 msgstr "prohlédnout si lidi, kteří se přidali jako první"
 
-#: templates/users.html:55
+#: templates/users.html:59
 msgid "see people sorted by name"
 msgstr "prohlédnout si lidi podle jména"
 
-#: templates/users.html:56
+#: templates/users.html:60
 msgid "by username"
 msgstr "dle jména"
 
-#: templates/users.html:62
+#: templates/users.html:66
 #, python-format
 msgid "users matching query %(search_query)s:"
 msgstr ""
 
-#: templates/users.html:65
+#: templates/users.html:69
 msgid "Nothing found."
 msgstr "Nic nenalezeno."
 
@@ -5484,97 +5476,29 @@ msgid "Sign in"
 msgstr "Přihlásit se"
 
 #: templates/authopenid/changeemail.html:2
-#: templates/authopenid/changeemail.html:8
-#: templates/authopenid/changeemail.html:49
 msgid "Change Email"
 msgstr "Změnit Email"
 
-#: templates/authopenid/changeemail.html:10
-msgid "Save your email address"
-msgstr "Uložit svou emailovou adresu"
-
-#: templates/authopenid/changeemail.html:15
-#, python-format
-msgid ""
-"<span class=\\\"strong big\\\">Enter your new email into the box below</span> if \n"
-"you'd like to use another email for <strong>update subscriptions</strong>.\n"
-"<br>Currently you are using <strong>%%(email)s</strong>"
-msgstr "<span class=\\\"strong big\\\">Zadejte váš nový email do pole níže</span> \npokud chcete použít další email pro<strong>zasílání novinek</strong>.\n <br>Nyní používáte<strong>%%(email)s</strong>"
-
-#: templates/authopenid/changeemail.html:19
-#, python-format
-msgid ""
-"<span class='strong big'>Please enter your email address in the box below.</span>\n"
-"Valid email address is required on this Q&amp;A forum. If you like, \n"
-"you can <strong>receive updates</strong> on interesting questions or entire\n"
-"forum via email. Also, your email is used to create a unique \n"
-"<a href='%%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your\n"
-"account. Email addresses are never shown or otherwise shared with anybody\n"
-"else."
-msgstr "<span class='strong big'>Prosím zadejte vaši email adresu do pole níže.</span>\nPlatná email adresa je vyžadována na tomto Q&amp;A fóru. Pokud chcete,\nmůžete<strong>odebírat novinky</strong> o zajímavých otázkách nebo z celého\nfóra přes email. Váš email je také použit k vytvoření unikátního \n<a href='%%(gravatar_faq_url)s'><strong>gravatar</strong></a> obrázku pro váš\núčet. Emailové adresy nejsou nikdy nikomu zobrazeny nebo jakkoliv sdíleny s někým\njiným."
-
-#: templates/authopenid/changeemail.html:38
-msgid ""
-"<strong>Your new Email:</strong> \n"
-"(will <strong>not</strong> be shown to anyone, must be valid)"
-msgstr "<strong>Váš nový Email:</strong>\n(<strong>nebude</strong> nikomu zobrazen; musí být platný)"
-
-#: templates/authopenid/changeemail.html:41
-msgid ""
-"<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
-msgstr ""
-
-#: templates/authopenid/changeemail.html:49
-msgid "Save Email"
-msgstr "Uložit Email"
-
-#: templates/authopenid/changeemail.html:58
+#: templates/authopenid/changeemail.html:6
 msgid "Validate email"
 msgstr "Ověřit email"
 
-#: templates/authopenid/changeemail.html:61
+#: templates/authopenid/changeemail.html:9
 #, python-format
 msgid ""
 "<span class=\\\"strong big\\\">An email with a validation link has been sent to \n"
-"%%(email)s.</span> Please <strong>follow the emailed link</strong> with your \n"
+"%(email)s.</span> Please <strong>follow the emailed link</strong> with your \n"
 "web browser. Email validation is necessary to help insure the proper use of \n"
 "email on <span class=\\\"orange\\\">Q&amp;A</span>. If you would like to use \n"
 "<strong>another email</strong>, please <a \n"
-"href='%%(change_email_url)s'><strong>change it again</strong></a>."
-msgstr "<span class=\\\"strong big\\\">Email s ověřovacím odkazem byl zaslána na\n%%(email)s.</span> Prosím <strong>následujte zaslaný odkaz link</strong> prostřednictvím\nwebového prohlížeče. Ověření emailu je nezbytné pro snazší zajištění správného používání emailu na <span class=\\\"orange\\\">Q&amp;A</span>. Pokud byste chtěl/a použít\n<strong>další email</strong>, prosím <a\nhref='%%(change_email_url)s'><strong>změňte jej znovu</strong></a>."
+"href='%(change_email_url)s'><strong>change it again</strong></a>."
+msgstr ""
 
-#: templates/authopenid/changeemail.html:70
-msgid "Email not changed"
-msgstr "Email nezměněn"
-
-#: templates/authopenid/changeemail.html:73
-#, python-format
-msgid ""
-"<span class=\\\"strong big\\\">Your email address %%(email)s has not been changed.\n"
-"</span> If you decide to change it later - you can always do it by editing \n"
-"it in your user profile or by using the <a \n"
-"href='%%(change_email_url)s'><strong>previous form</strong></a> again."
-msgstr "<span class=\\\"strong big\\\">Vaše email adresa %%(email)s nebyla změněna.</span> Pokud se rozhodnete pro změnu později - můžete tak vždy učinit upravením\nadresy v uživatelském profilu nebo použitím  <a\nhref='%%(change_email_url)s'><strong>předchozího formuláře </strong></a> znovu."
-
-#: templates/authopenid/changeemail.html:80
-msgid "Email changed"
-msgstr "Email změněn"
-
-#: templates/authopenid/changeemail.html:83
-#, python-format
-msgid ""
-"\n"
-"<span class='big strong'>Your email address is now set to %%(email)s.</span> \n"
-"Updates on the questions that you like most will be sent to this address. \n"
-"Email notifications are sent once a day or less frequently - only when there \n"
-"are any news."
-msgstr "\n<span class='big strong'>Vaše emailová adresa je nyní nastavena na %%(email)s.</span>\nNovinky k otázkám, které máte v oblibě budou zaslány na tuto adresu.\nEmailová oznámení jsou zasílána jednou denně nebo méně často - pouze když se objeví\nněco nového."
-
-#: templates/authopenid/changeemail.html:91
+#: templates/authopenid/changeemail.html:18
 msgid "Email verified"
 msgstr "Email prověřen"
 
-#: templates/authopenid/changeemail.html:94
+#: templates/authopenid/changeemail.html:21
 msgid ""
 "<span class=\\\"big strong\\\">Thank you for verifying your email!</span> Now \n"
 "you can <strong>ask</strong> and <strong>answer</strong> questions. Also if \n"
@@ -5582,19 +5506,6 @@ msgid ""
 "updates</strong> - then will be notified about changes <strong>once a day</strong>\n"
 "or less frequently."
 msgstr "<span class=\\\"big strong\\\">Děkujeme za ověření vašeho emailu!</span> Nyní\nse můžete <strong>zeptat</strong> a <strong>zodpovídat</strong> dotazy. Také když\nnarazíte na velmi zajímavou otázku, můžete <strong>požádat o novinky</strong> - pak budete informován o změnách <strong>jednou denně</strong>\nanebo méně často."
-
-#: templates/authopenid/changeemail.html:102
-msgid "Validation email not sent"
-msgstr "Potvrzovací email nebyl odeslán"
-
-#: templates/authopenid/changeemail.html:105
-#, python-format
-msgid ""
-"<span class='big strong'>Your current email address %%(email)s has been \n"
-"validated before</span> so the new key was not sent. You can <a \n"
-"href='%%(change_link)s'>change</a> email used for update subscriptions if \n"
-"necessary."
-msgstr "<span class='big strong'>Vaše současná emailová adresa %%(email)s byla\nověřena dříve</span>, takže nový klíč nebyl odeslán. Můžete <a\nhref='%%(change_link)s'>změnit</a> email adresu použitou pro aktualizaci žádostí o zasílání, bude-li třeba."
 
 #: templates/authopenid/complete.html:21
 msgid "Registration"
@@ -5766,7 +5677,7 @@ msgid "Login or email"
 msgstr "Přihlášení nebo email"
 
 #: templates/authopenid/signin.html:113
-#: templates/authopenid/widget_signin.html:113 utils/forms.py:266
+#: templates/authopenid/widget_signin.html:113 utils/forms.py:264
 msgid "Password"
 msgstr "Heslo"
 
@@ -5784,6 +5695,12 @@ msgstr "Nové heslo"
 #: templates/authopenid/widget_signin.html:138
 msgid "Please, retype"
 msgstr "Znovu opište, prosím"
+
+#: templates/authopenid/signin.html:148
+#: templates/authopenid/widget_signin.html:148
+#: templates/livesettings/site_settings.html:24
+msgid "Change password"
+msgstr "Změnit heslo"
 
 #: templates/authopenid/signin.html:162
 #: templates/authopenid/widget_signin.html:162
@@ -6090,7 +6007,7 @@ msgid ""
 "                        "
 msgstr ""
 
-#: templates/email/notify_author_about_approved_post.html:20
+#: templates/email/notify_author_about_approved_post.html:21
 msgid "Below is a copy of your post:"
 msgstr ""
 
@@ -6114,22 +6031,30 @@ msgstr[2] ""
 msgid "Great, you are ready to use %(site_name)s!"
 msgstr ""
 
-#: templates/email/re_welcome_lamson_on.html:6
+#: templates/email/re_welcome_lamson_on.html:7
 #, python-format
 msgid "You can post questions by emailing them at %(ask_address)s."
 msgstr ""
 
-#: templates/email/re_welcome_lamson_on.html:7
+#: templates/email/re_welcome_lamson_on.html:8
 msgid ""
 "When you receive update notifications, you will be able to respond to them, "
 "also by email."
 msgstr ""
 
-#: templates/email/re_welcome_lamson_on.html:8
+#: templates/email/re_welcome_lamson_on.html:9
 #, python-format
 msgid ""
 "Of course, you can always visit the %(site_name)s at <a "
-"href=\"%(site_url)s\">%(site_url)s</a>"
+"href=\"%(site_url)s\">%(site_url)s</a>."
+msgstr ""
+
+#: templates/email/re_welcome_lamson_on.html:11
+#: templates/email/welcome_lamson_off.html:10
+#, python-format
+msgid ""
+"Please visit %(site_name)s at <a href=\"%(site_url)s\">%(site_url)s</a>, we "
+"look forward to your posts."
 msgstr ""
 
 #: templates/email/rejected_post.html:2 templates/email/rejected_post.html:3
@@ -6158,10 +6083,6 @@ msgstr "\n<p>Systém nedokázal úspěšně zpracovat vaši zprávu, kvůli tomu
 msgid "Welcome to %(site_name)s!"
 msgstr ""
 
-#: templates/email/welcome_lamson_off.html:10
-msgid "We look forward to your Questions!"
-msgstr ""
-
 #: templates/email/welcome_lamson_on.html:11
 msgid ""
 "Important: <em>Please reply</em> to this message, without editing it. We "
@@ -6174,10 +6095,6 @@ msgstr ""
 msgid ""
 "Until we receive the response from you, you will not be able ask or answer "
 "questions on %(site_name)s by email."
-msgstr ""
-
-#: templates/embed/ask_by_widget.html:170
-msgid "Please enter a descriptive title for your question"
 msgstr ""
 
 #: templates/embed/list_widgets.html:44
@@ -6268,7 +6185,66 @@ msgstr ""
 msgid "there are no messages yet..."
 msgstr ""
 
-#: templates/main_page/headline.html:4 views/readers.py:154
+#: templates/livesettings/_admin_site_views.html:4
+msgid "Sites"
+msgstr "Stránky"
+
+#: templates/livesettings/group_settings.html:4
+msgid "Settings"
+msgstr ""
+
+#: templates/livesettings/group_settings.html:9
+#: templates/livesettings/site_settings.html:51
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Opravte prosím chybu vypsanou níže."
+msgstr[1] "Opravte prosím chyby vypsané níže."
+msgstr[2] "Opravte prosím chyby vypsané níže."
+
+#: templates/livesettings/group_settings.html:16
+#, python-format
+msgid "Settings included in %(name)s."
+msgstr "Nastavení zahrnuto v %(name)s."
+
+#: templates/livesettings/group_settings.html:50
+#: templates/livesettings/site_settings.html:98
+msgid "You don't have permission to edit values."
+msgstr "Nemáte oprávnění upravovat hodnoty."
+
+#: templates/livesettings/site_settings.html:24
+msgid "Documentation"
+msgstr "Dokumentace"
+
+#: templates/livesettings/site_settings.html:24
+msgid "Log out"
+msgstr "Odhlásit se"
+
+#: templates/livesettings/site_settings.html:27
+msgid "Home"
+msgstr "Domů"
+
+#: templates/livesettings/site_settings.html:28
+msgid "Edit Site Settings"
+msgstr "Upravit nastavení webu"
+
+#: templates/livesettings/site_settings.html:44
+msgid "Livesettings are disabled for this site."
+msgstr "Živé nastavení není povoleno pro tento web"
+
+#: templates/livesettings/site_settings.html:45
+msgid "All configuration options must be edited in the site settings.py file"
+msgstr "Všechny konfigurační možnosti musí být upraveny v settings.py souboru webu"
+
+#: templates/livesettings/site_settings.html:67
+#, python-format
+msgid "Group settings: %(name)s"
+msgstr "Nastavení skupin: %(name)s"
+
+#: templates/livesettings/site_settings.html:94
+msgid "Uncollapse all"
+msgstr "Sbalit vše"
+
+#: templates/main_page/headline.html:4 views/readers.py:149
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
@@ -6357,8 +6333,8 @@ msgid "Did not find what you were looking for?"
 msgstr "Nenašel jste, co jste hledal/a?"
 
 #: templates/main_page/questions_loop.html:10
-msgid "Please, post your question!"
-msgstr "Zadejte prosím svou otázku!"
+msgid "Ask your question!"
+msgstr ""
 
 #: templates/main_page/tab_bar.html:11
 msgid "subscribe to the questions feed"
@@ -6406,7 +6382,7 @@ msgid ""
 "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
 msgstr "použijte prosím nejvýše %(tag_count)s štítků, méně než %(max_chars)s znaků pro každý"
 
-#: templates/question/answer_card.html:20
+#: templates/question/answer_card.html:21
 msgid "This response is published"
 msgstr ""
 
@@ -6771,7 +6747,7 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: templates/tags/list_bulk_tag_subscription.html:48 views/commands.py:751
+#: templates/tags/list_bulk_tag_subscription.html:48 views/commands.py:759
 msgid "Edit"
 msgstr ""
 
@@ -6906,6 +6882,35 @@ msgstr ""
 msgid "Edit this reason"
 msgstr ""
 
+#: templates/user_profile/twitter_sharing_controls.html:8
+#, python-format
+msgid "Auto-tweeting to @%(handle)s"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:19
+msgid "stop tweeting"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:23
+msgid "Auto-tweeting is inactive"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:26
+msgid "Select twitter account"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:28
+msgid "use another account"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:32
+msgid "Auto-tweeting is off"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:33
+msgid "Start tweeting"
+msgstr ""
+
 #: templates/user_profile/user.html:12
 #, python-format
 msgid "%(username)s's profile"
@@ -7017,24 +7022,24 @@ msgstr "naposledy spatřen"
 msgid "website"
 msgstr "webové stránky"
 
-#: templates/user_profile/user_info.html:93
+#: templates/user_profile/user_info.html:100
 msgid "location"
 msgstr "místo"
 
-#: templates/user_profile/user_info.html:100
+#: templates/user_profile/user_info.html:107
 msgid "age"
 msgstr "věk"
 
-#: templates/user_profile/user_info.html:101
+#: templates/user_profile/user_info.html:108
 #, python-format
 msgid "%(age)s years old"
 msgstr ""
 
-#: templates/user_profile/user_info.html:106
+#: templates/user_profile/user_info.html:113
 msgid "todays unused votes"
 msgstr "dnešní nevyužité hlasy"
 
-#: templates/user_profile/user_info.html:107
+#: templates/user_profile/user_info.html:114
 msgid "votes left"
 msgstr "zbývající hlasy"
 
@@ -7133,7 +7138,7 @@ msgstr[0] "Sledované %(count)s osobou"
 msgstr[1] "Sledované %(count)s osobami"
 msgstr[2] "Sledované %(count)s osobami"
 
-#: templates/user_profile/user_network.html:21
+#: templates/user_profile/user_network.html:20
 #, python-format
 msgid "Following %(count)s person"
 msgid_plural "Following %(count)s people"
@@ -7141,13 +7146,13 @@ msgstr[0] "Sledovaná %(count)s osoba"
 msgstr[1] "Sledované %(count)s osoby"
 msgstr[2] "Sledovaných %(count)s osob"
 
-#: templates/user_profile/user_network.html:33
+#: templates/user_profile/user_network.html:31
 msgid ""
 "Your network is empty. Would you like to follow someone? - Just visit their "
 "profiles and click \"follow\""
 msgstr "Vaše síť je prázdná. Chcete někoho následovat? - Pouze navštivte jejich profil a klepněte na \"následovat\""
 
-#: templates/user_profile/user_network.html:35
+#: templates/user_profile/user_network.html:33
 #, python-format
 msgid "%(username)s's network is empty"
 msgstr "%(username)s's síť je prázdná"
@@ -7253,7 +7258,7 @@ msgstr "Odpověď na:"
 msgid "User profile"
 msgstr "Uživatelský profil"
 
-#: templates/user_profile/user_tabs.html:10 views/users.py:876
+#: templates/user_profile/user_tabs.html:10 views/users.py:873
 msgid "comments and answers to others questions"
 msgstr "komentáře a odpovědi otázek od ostatních"
 
@@ -7269,7 +7274,7 @@ msgstr "Graf uživatelské vlivnosti"
 msgid "questions that user is following"
 msgstr "otázky tohoto uživatele jsou následující"
 
-#: templates/user_profile/user_tabs.html:36 views/users.py:918
+#: templates/user_profile/user_tabs.html:36 views/users.py:915
 msgid "user vote record"
 msgstr "záznam uživatelova hlasování"
 
@@ -7278,11 +7283,11 @@ msgstr "záznam uživatelova hlasování"
 msgid "votes"
 msgstr "hlasy"
 
-#: templates/user_profile/user_tabs.html:42 views/users.py:1030
+#: templates/user_profile/user_tabs.html:42 views/users.py:1027
 msgid "email subscription settings"
 msgstr "nastavení přihlášení přes email"
 
-#: templates/user_profile/user_tabs.html:48 views/users.py:286
+#: templates/user_profile/user_tabs.html:48 views/users.py:283
 msgid "moderate this user"
 msgstr "upravit tohoto uživatele"
 
@@ -7303,7 +7308,15 @@ msgstr "zkuste dát odpověď spíše než se zapojit do debaty"
 msgid "Ask the Group"
 msgstr ""
 
-#: templates/widgets/ask_form.html:40
+#: templates/widgets/ask_form.html:21 templates/widgets/ask_form.html.py:23
+msgid "Add details (optional)"
+msgstr ""
+
+#: templates/widgets/ask_form.html:25
+msgid "Add details"
+msgstr ""
+
+#: templates/widgets/ask_form.html:58
 msgid "Select language"
 msgstr ""
 
@@ -7311,23 +7324,23 @@ msgstr ""
 msgid "Contributors"
 msgstr "Přispěvatelé"
 
-#: templates/widgets/edit_post.html:42
+#: templates/widgets/edit_post.html:33
 msgid ", one of these is required"
 msgstr ", jeden z těchto je povinný"
 
-#: templates/widgets/edit_post.html:51 templates/widgets/edit_post.html:56
+#: templates/widgets/edit_post.html:42 templates/widgets/edit_post.html:47
 msgid "tags:"
 msgstr "štítky:"
 
-#: templates/widgets/edit_post.html:52
+#: templates/widgets/edit_post.html:43
 msgid "(required)"
 msgstr "(povinné)"
 
-#: templates/widgets/edit_post.html:81
+#: templates/widgets/edit_post.html:71
 msgid "Toggle the real time Markdown editor preview"
 msgstr "Přepnout Markdown náhled editoru v reálném čase"
 
-#: templates/widgets/edit_post.html:96
+#: templates/widgets/edit_post.html:86
 msgid ""
 "To post on behalf of someone else, enter user name <strong>and</strong> "
 "email below."
@@ -7601,23 +7614,23 @@ msgstr "nastavení"
 msgid "widgets"
 msgstr ""
 
-#: templatetags/extra_filters_jinja.py:308
+#: templatetags/extra_filters_jinja.py:319
 msgid "no"
 msgstr "ne"
 
-#: utils/decorators.py:103 views/commands.py:146
+#: utils/decorators.py:104 views/commands.py:146
 msgid "Oops, apologies - there was some error"
 msgstr "Jejda, omlouváme se - došlo k nějaké chybě"
 
-#: utils/decorators.py:122
+#: utils/decorators.py:123
 msgid "Please login to post"
 msgstr "Prosím přihlašte se, abyste mohl/a přispívat"
 
-#: utils/decorators.py:218
+#: utils/decorators.py:219
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr "Ve vašem příspěvku byl zachycen spam, omlouváme se, došlo-li k omylu"
 
-#: utils/decorators.py:242
+#: utils/decorators.py:243
 msgid "This function is limited to moderators and administrators"
 msgstr ""
 
@@ -7681,31 +7694,31 @@ msgstr "tato adresa je již obsazena někým jiným, zvolte prosím jinou"
 msgid "this email address is not authorized"
 msgstr ""
 
-#: utils/forms.py:267
+#: utils/forms.py:265
 msgid "password is required"
 msgstr "je vyžadováno heslo"
 
-#: utils/forms.py:270
+#: utils/forms.py:268
 msgid "Password <i>(please retype)</i>"
 msgstr "Heslo <i>(prosím napište znovu)</i>"
 
-#: utils/forms.py:271
+#: utils/forms.py:269
 msgid "please, retype your password"
 msgstr "prosím opište heslo znovu"
 
-#: utils/forms.py:272
+#: utils/forms.py:270
 msgid "sorry, entered passwords did not match, please try again"
 msgstr "promiňte, zadaná hesla se neshodují, zkuste to prosím znovu"
 
-#: utils/functions.py:101
+#: utils/functions.py:102
 msgid "2 days ago"
 msgstr "před 2 dny"
 
-#: utils/functions.py:103
+#: utils/functions.py:104
 msgid "yesterday"
 msgstr "včera"
 
-#: utils/functions.py:106
+#: utils/functions.py:107
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
@@ -7713,7 +7726,7 @@ msgstr[0] "před %(hr)d hodinou"
 msgstr[1] "před %(hr)d hodinami"
 msgstr[2] "před %(hr)d hodinami"
 
-#: utils/functions.py:112
+#: utils/functions.py:113
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
@@ -7773,46 +7786,50 @@ msgstr "Váš požadavek byl uložen, ale emailová adresa %(email)s musí být 
 msgid "email update frequency has been set to daily"
 msgstr "frekvence emailové aktualizace byla nastavena na denní"
 
-#: views/commands.py:693
+#: views/commands.py:628
+msgid "Sorry, could not delete tag"
+msgstr ""
+
+#: views/commands.py:701
 #, python-format
 msgid "Tag subscription was canceled (<a href=\"%(url)s\">undo</a>)."
 msgstr "Sledování štítku bylo zrušeno  (<a href=\"%(url)s\">zpět</a>)."
 
-#: views/commands.py:702
+#: views/commands.py:710
 #, python-format
 msgid "Please sign in to subscribe for: %(tags)s"
 msgstr "Prosím přihlaste se pro sledování: %(tags)s"
 
-#: views/commands.py:721
+#: views/commands.py:729
 msgid "Create"
 msgstr ""
 
-#: views/commands.py:950
+#: views/commands.py:959
 msgid "Please sign in to vote"
 msgstr "Prosím pro hlasování se přihlaste"
 
-#: views/commands.py:971
+#: views/commands.py:980
 msgid "Please sign in to delete/restore posts"
 msgstr "Prosím přihlašte se pro smazání/obnovení příspěvků"
 
-#: views/commands.py:1393 views/commands.py:1426
+#: views/commands.py:1402 views/commands.py:1435
 msgid "Sorry, looks like sharing request was invalid"
 msgstr ""
 
-#: views/commands.py:1449
+#: views/commands.py:1458
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
 msgstr ""
 
-#: views/commands.py:1506
+#: views/commands.py:1515
 msgid "Sorry, only thread moderators can use this function"
 msgstr ""
 
-#: views/commands.py:1521
+#: views/commands.py:1530
 msgid "The answer is now unpublished"
 msgstr ""
 
-#: views/commands.py:1525
+#: views/commands.py:1534
 msgid "The answer is now published"
 msgstr ""
 
@@ -7841,113 +7858,113 @@ msgstr "Těšíme se na vaši odezvu! Prosím, napište nám příště. :)"
 msgid "Privacy policy"
 msgstr "Prohlášení o soukromí"
 
-#: views/meta.py:219
+#: views/meta.py:216
 msgid "Suggested tags"
 msgstr ""
 
-#: views/readers.py:410
+#: views/readers.py:402
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
 msgstr "Promiňte, hledaný komentář byl smazán a již není přístupný"
 
-#: views/users.py:287
+#: views/users.py:284
 msgid "moderate user"
 msgstr "moderovat uživatele"
 
-#: views/users.py:505
+#: views/users.py:502
 msgid "user profile"
 msgstr "uživatelský profil"
 
-#: views/users.py:506
+#: views/users.py:503
 msgid "user profile overview"
 msgstr "přehled uživatelova profilu"
 
-#: views/users.py:707
+#: views/users.py:704
 msgid "recent user activity"
 msgstr "nedávná aktivita uživatele"
 
-#: views/users.py:708
+#: views/users.py:705
 msgid "profile - recent activity"
 msgstr "profil - nedávná aktivita"
 
-#: views/users.py:739
+#: views/users.py:736
 msgid "group joining requests"
 msgstr ""
 
-#: views/users.py:740
+#: views/users.py:737
 msgid "profile - moderation"
 msgstr ""
 
-#: views/users.py:796
+#: views/users.py:793
 msgid "private messages"
 msgstr ""
 
-#: views/users.py:797
+#: views/users.py:794
 msgid "profile - messages"
 msgstr ""
 
-#: views/users.py:877
+#: views/users.py:874
 msgid "profile - responses"
 msgstr "profil - odpovědi"
 
-#: views/users.py:919
+#: views/users.py:916
 msgid "profile - votes"
 msgstr "profil - hlasy"
 
-#: views/users.py:940
+#: views/users.py:937
 msgid "user karma"
 msgstr "uživatelská vlivnost"
 
-#: views/users.py:941
+#: views/users.py:938
 msgid "Profile - User's Karma"
 msgstr "Profil - Uživatelova vlivnost"
 
-#: views/users.py:959
+#: views/users.py:956
 msgid "users favorite questions"
 msgstr "oblíbené otázky uživatelů"
 
-#: views/users.py:960
+#: views/users.py:957
 msgid "profile - favorite questions"
 msgstr "profil - oblíbené otázky"
 
-#: views/users.py:1001 views/users.py:1005
+#: views/users.py:998 views/users.py:1002
 msgid "changes saved"
 msgstr "změny uloženy"
 
-#: views/users.py:1011
+#: views/users.py:1008
 msgid "email updates canceled"
 msgstr "emailová aktualizace zrušena"
 
-#: views/users.py:1031
+#: views/users.py:1028
 msgid "profile - email subscriptions"
 msgstr "profil - emailová oznámení"
 
-#: views/users.py:1052
+#: views/users.py:1049
 #, python-format
 msgid "profile - %(section)s"
 msgstr ""
 
-#: views/writers.py:73
+#: views/writers.py:72
 msgid "Sorry, anonymous users cannot upload files"
 msgstr "Promiňte, anonymní uživatelé nemohou nahrávat soubory"
 
-#: views/writers.py:91
+#: views/writers.py:90
 #, python-format
 msgid "allowed file types are '%(file_types)s'"
 msgstr "povolené typy souborů jsou '%(file_types)s'"
 
-#: views/writers.py:104
+#: views/writers.py:103
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
 msgstr "maximální velikost nahrávaného souboru je %(file_size)sK"
 
-#: views/writers.py:112
+#: views/writers.py:111
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you."
 msgstr "Chyba při nahrávání souboru. Prosím kontaktujte spráce webu, děkujeme."
 
-#: views/writers.py:209
+#: views/writers.py:208
 msgid ""
 "<span class=\"strong big\">You are welcome to start submitting your question"
 " anonymously</span>. When you submit the post, you will be redirected to the"
@@ -7956,45 +7973,45 @@ msgid ""
 "Login takes about 30 seconds, initial signup takes a minute or less."
 msgstr "<span class=\"strong big\">Můžete samozřejmě položit svou otázku anonymně</span>. Když odešlete svůj příspěvek, budete přesměrován/a na přihlašovací/registrační stránku. Vaše otázka bude uložena pro stávající spojení a bude publikována, jakmile se přihlásíte. Přihlášení/registrace jsou velmi jednoduché. Přihlášení trvá okolo 30 vteřin, první registrace zabere minutu i méně."
 
-#: views/writers.py:571
+#: views/writers.py:575
 msgid "Please log in to answer questions"
 msgstr "Prosím přihlašte se pro zodpovězení otázky"
 
-#: views/writers.py:710
+#: views/writers.py:701
 msgid "This content is forbidden"
 msgstr ""
 
-#: views/writers.py:719
+#: views/writers.py:710
 msgid "Post not found"
 msgstr ""
 
-#: views/writers.py:727
+#: views/writers.py:718
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "Promiňte, zdá se, že jste odhlášen a nemůžete odesílat komentáře. Prosím <a href=\"%(sign_in_url)s\">přihlašte se</a>. "
 
-#: views/writers.py:746
+#: views/writers.py:742
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr "Promiňte, anonymní uživatelé nemohou upravovat komentáře"
 
-#: views/writers.py:795
+#: views/writers.py:791
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "Promiňte, zdá se, že jste odhlášen a nemůžete mazat komentáře. Prosím <a href=\"%(sign_in_url)s\">přihlašte se</a>."
 
-#: views/writers.py:821
+#: views/writers.py:817
 msgid "sorry, we seem to have some technical difficulties"
 msgstr "Omlouváme se, zdá se, že máme nějaké technické potíže"
 
-#: views/writers.py:885
+#: views/writers.py:881
 msgid "Error - could not find the destination post"
 msgstr ""
 
-#: views/writers.py:909
+#: views/writers.py:905
 #, python-format
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "

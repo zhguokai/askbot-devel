@@ -720,8 +720,13 @@ def post_comments(request):#generic ajax handler to load comments to an object
                         '<a href="%(sign_in_url)s">sign in</a>.') % \
                         {'sign_in_url': url_utils.get_login_url()}
                 raise exceptions.PermissionDenied(msg)
-            user.post_comment(
+            comment = user.post_comment(
                 parent_post=post, body_text=form.cleaned_data['comment']
+            )
+            signals.new_comment_posted.send(None,
+                comment=comment,
+                user=user,
+                form_data=form.cleaned_data
             )
             response = __generate_comments_json(post, user)
         except exceptions.PermissionDenied, e:

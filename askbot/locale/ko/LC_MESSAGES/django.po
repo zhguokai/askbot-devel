@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-#   <16thetower@gmail.com>, 2012.
-#   <chantrek@gmail.com>, 2012.
-# Evgeny Fadeev <evgeny.fadeev@gmail.com>, 2009.
-#   <nocaca@daum.net>, 2012.
-# seok woojing <ultra066@gmail.com>, 2012.
-# Whoami Jeong <>, 2012.
-# Yong Choi <sk8er.choi@gmail.com>, 2012.
+# EunMiLee <16thetower@gmail.com>, 2012
+# netyoung <chantrek@gmail.com>, 2012
+# evgeny <evgeny.fadeev@gmail.com>, 2009
+# alisol <nocaca@daum.net>, 2012
+# seok woojing <ultra066@gmail.com>, 2012
+# Whoami Jeong <>, 2012
+# Yong Choi <sk8er.choi@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
-"POT-Creation-Date: 2013-04-10 01:41-0500\n"
-"PO-Revision-Date: 2013-04-14 02:32+0000\n"
+"POT-Creation-Date: 2013-05-18 09:59-0500\n"
+"PO-Revision-Date: 2013-05-18 18:48+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/askbot/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -28,89 +28,89 @@ msgstr ""
 msgid "Sorry, but anonymous visitors cannot access this function"
 msgstr "죄송합니다. 로그인 하지 않으면 이 기능을 사용 할 수 없습니다."
 
-#: feed.py:32 feed.py:106
+#: feed.py:34 feed.py:108
 msgid " - "
 msgstr " - "
 
-#: feed.py:33 feed.py:107
+#: feed.py:35 feed.py:109
 msgid "Individual question feed"
 msgstr "개별 질문 피드"
 
-#: forms.py:138
+#: forms.py:139
 msgid "select country"
 msgstr "국가 선택"
 
-#: forms.py:148
+#: forms.py:149
 msgid "Country"
 msgstr "국가"
 
-#: forms.py:156
+#: forms.py:157
 msgid "Country field is required"
 msgstr "국가를 선택해야 합니다"
 
-#: forms.py:186
+#: forms.py:187
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
 msgstr[0] ""
 
-#: forms.py:197
+#: forms.py:198
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
 msgstr[0] ""
 
-#: forms.py:218
+#: forms.py:219
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
-#: forms.py:245 templates/widgets/markdown_help.html:20
+#: forms.py:246 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
 msgstr "제목"
 
-#: forms.py:247
-msgid "please enter a descriptive title for your question"
-msgstr "질문 내용을 요약하여 제목을 붙여주세요"
+#: forms.py:248 templates/embed/ask_by_widget.html:170
+msgid "Please enter your question"
+msgstr ""
 
-#: forms.py:258
+#: forms.py:259
 #, python-format
-msgid "title must be > %d character"
-msgid_plural "title must be > %d characters"
-msgstr[0] "제목은 %d 자보다 길어야 합니다"
+msgid "must have > %d character"
+msgid_plural "must have > %d characters"
+msgstr[0] ""
 
-#: forms.py:268
+#: forms.py:269
 #, python-format
-msgid "The title is too long, maximum allowed size is %d characters"
-msgstr "제목은 %d 자까지 쓰실 수 있습니다"
+msgid "The question is too long, maximum allowed size is %d characters"
+msgstr ""
 
-#: forms.py:275
+#: forms.py:276
 #, python-format
-msgid "The title is too long, maximum allowed size is %d bytes"
-msgstr "제목은 %d 바이트까지 쓰실 수 있습니다"
+msgid "The question is too long, maximum allowed size is %d bytes"
+msgstr ""
 
-#: forms.py:307
+#: forms.py:308
 msgid "content"
 msgstr "내용"
 
-#: forms.py:368
+#: forms.py:369
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] "각 태그는 %(max_chars)d 자 이하여야 합니다"
 
-#: forms.py:405
+#: forms.py:406
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
 msgstr ""
 
-#: forms.py:408 forms.py:1014 models/widgets.py:27
-#: templates/widgets/edit_post.html:41 templates/widgets/meta_nav.html:6
+#: forms.py:409 forms.py:1015 models/widgets.py:27
+#: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
 msgstr "태그"
 
-#: forms.py:410
+#: forms.py:411
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -120,286 +120,286 @@ msgid_plural ""
 "be used."
 msgstr[0] "태그는 짧은 키워드로서, 공백이 포함되지 않습니다. %(max_tags)d 개까지의 태그를 사용할 수 있습니다."
 
-#: forms.py:437
+#: forms.py:438
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] "%(tag_count)d 개 이하의 태그를 사용해주세요"
 
-#: forms.py:445
+#: forms.py:446
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr "다음 태그들 중 적어도 하나는 선택해야 합니다 : %(tags)s"
 
-#: forms.py:473
+#: forms.py:474
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr "커뮤니티 위키(위키 게시물은 다른 사람들이 편집할 수 있음 & 카르마는 부여되지 않음)"
 
-#: forms.py:477
+#: forms.py:478
 msgid ""
 "if you choose community wiki option, the question and answer do not generate"
 " points and name of author will not be shown"
 msgstr "커뮤니티 위키 옵션을 선택하면 질문과 답변을 해도 포인트가 쌓이지 않으며 작성자의 이름도 표시되지 않습니다."
 
-#: forms.py:504
+#: forms.py:505
 msgid "update summary:"
 msgstr "변경사항 요약:"
 
-#: forms.py:506
+#: forms.py:507
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr "바뀐 내용을 간단히 요약해주세요(맞춤법, 띄어쓰기, 문체 수정 등)."
 
-#: forms.py:593
+#: forms.py:594
 msgid "Enter number of points to add or subtract"
 msgstr "더하거나 뺄 점수를 입력하세요"
 
-#: forms.py:608 const/__init__.py:366
+#: forms.py:609 const/__init__.py:375
 msgid "approved"
 msgstr "승인됨"
 
-#: forms.py:609 const/__init__.py:367
+#: forms.py:610 const/__init__.py:376
 msgid "watched"
 msgstr "감시"
 
-#: forms.py:610 const/__init__.py:368
+#: forms.py:611 const/__init__.py:377
 msgid "suspended"
 msgstr "정지됨"
 
-#: forms.py:611 const/__init__.py:369
+#: forms.py:612 const/__init__.py:378
 msgid "blocked"
 msgstr "차단됨"
 
-#: forms.py:613
+#: forms.py:614
 msgid "administrator"
 msgstr "운영자"
 
-#: forms.py:614 const/__init__.py:365
+#: forms.py:615 const/__init__.py:374
 msgid "moderator"
 msgstr "조정자"
 
-#: forms.py:633
+#: forms.py:634
 msgid "Change status to"
 msgstr "상태를 변경"
 
-#: forms.py:660
+#: forms.py:661
 msgid "which one?"
 msgstr "선택"
 
-#: forms.py:681
+#: forms.py:682
 msgid "Cannot change own status"
 msgstr "자신의 상태를 변경할 수 없습니다."
 
-#: forms.py:687
+#: forms.py:688
 msgid "Cannot turn other user to moderator"
 msgstr "다른 사용자를 중재자로 전환할 수 없습니다"
 
-#: forms.py:694
+#: forms.py:695
 msgid "Cannot change status of another moderator"
 msgstr "다른 조정자의 상태를 변경할 수 없습니다."
 
-#: forms.py:700
+#: forms.py:701
 msgid "Cannot change status to admin"
 msgstr "운영자로 바꿀 수 없습니다"
 
-#: forms.py:706
+#: forms.py:707
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr "%(username)s 의 상태를 바꾸시길 원하신다면,  의미 있는 선택을 해주세요."
 
-#: forms.py:716
+#: forms.py:717
 msgid "Subject line"
 msgstr "제목"
 
-#: forms.py:721
+#: forms.py:722
 msgid "Message text"
 msgstr "내용"
 
-#: forms.py:735
+#: forms.py:736
 msgid "Your name (optional):"
 msgstr "귀하의 이름 (선택):"
 
-#: forms.py:736
+#: forms.py:737
 msgid "Email:"
 msgstr "이메일:"
 
-#: forms.py:738
+#: forms.py:739
 msgid "Your message:"
 msgstr "귀하의 메시지 :"
 
-#: forms.py:743
+#: forms.py:744
 msgid "I don't want to give my email or receive a response:"
 msgstr "이메일을 제공하거나 응답을 받고싶지 않습니다:"
 
-#: forms.py:766
+#: forms.py:767
 msgid "Please mark \"I dont want to give my mail\" field."
 msgstr "\"메일을 제공하고 싶지 않음\" 항목에 표시하세요."
 
-#: forms.py:799
+#: forms.py:800
 msgid "keep private within your groups"
 msgstr ""
 
-#: forms.py:838
+#: forms.py:839
 msgid "User name:"
 msgstr ""
 
-#: forms.py:840
+#: forms.py:841
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
 msgstr ""
 
-#: forms.py:847
+#: forms.py:848
 msgid "Email address:"
 msgstr ""
 
-#: forms.py:897
+#: forms.py:898
 msgid "User name is required with the email"
 msgstr ""
 
-#: forms.py:902
+#: forms.py:903
 msgid "Email is required if user name is added"
 msgstr ""
 
-#: forms.py:922 forms.py:965
+#: forms.py:923 forms.py:966
 msgid "ask anonymously"
 msgstr "익명으로 질문"
 
-#: forms.py:924 forms.py:967
+#: forms.py:925 forms.py:968
 msgid "Check if you do not want to reveal your name when asking this question"
 msgstr "이 질문을 할때 이름을 숨기고 싶다면 체크하세요"
 
-#: forms.py:955
+#: forms.py:956
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr "주제 행 형식: [태그1, 태그2, 태그3,...] 질문 제목"
 
-#: forms.py:1199
+#: forms.py:1215
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
 msgstr "익명으로 질문을 올린 후, 다시 이름을 보이게 하고 싶다면 체크하세요."
 
-#: forms.py:1203
+#: forms.py:1219
 msgid "reveal identity"
 msgstr "이름 보이기"
 
-#: forms.py:1282
+#: forms.py:1298
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr "죄송합니다. 작성자만이 자신의 이름을 나타나게 할 수 있습니다."
 
-#: forms.py:1295
+#: forms.py:1311
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr "죄송합니다. 방금 규칙이 바뀐 것 같습니다 - 더이상 익명으로 질문할 수 없습니다. “이름 보이기” 를 체크하시던가, 페이지를 새로고침 한 후 다시 질문을 작성하세요."
 
-#: forms.py:1359
+#: forms.py:1375
 msgid "Real name"
 msgstr "실제 이름"
 
-#: forms.py:1366
+#: forms.py:1382
 msgid "Website"
 msgstr "웹사이트"
 
-#: forms.py:1373
+#: forms.py:1389
 msgid "City"
 msgstr "도시"
 
-#: forms.py:1382
+#: forms.py:1398
 msgid "Show country"
 msgstr "국가표시"
 
-#: forms.py:1387
+#: forms.py:1403
 msgid "Show tag choices"
 msgstr ""
 
-#: forms.py:1392
+#: forms.py:1408
 msgid "Date of birth"
 msgstr "생일"
 
-#: forms.py:1394
+#: forms.py:1410
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "표시되지 않고 나이를 계산하는데 이용됩니다.  날짜형식: YYYY-MM-DD"
 
-#: forms.py:1402
+#: forms.py:1418
 msgid "Profile"
 msgstr "프로필"
 
-#: forms.py:1411
+#: forms.py:1427
 msgid "Screen name"
 msgstr "닉네임"
 
-#: forms.py:1444 forms.py:1448
+#: forms.py:1459 forms.py:1463
 msgid "this email has already been registered, please use another one"
 msgstr "이미 등록된 이메일입니다. 다른 이메일을 사용해 주세요."
 
-#: forms.py:1457
+#: forms.py:1472
 msgid "Choose email tag filter"
 msgstr "이메일 태그 필터 선택"
 
-#: forms.py:1509
+#: forms.py:1524
 msgid "Asked by me"
 msgstr "내 질문"
 
-#: forms.py:1512
+#: forms.py:1527
 msgid "Answered by me"
 msgstr "내 답변"
 
-#: forms.py:1515
+#: forms.py:1530
 msgid "Individually selected"
 msgstr "개별적으로 선택한 것"
 
-#: forms.py:1518
+#: forms.py:1533
 msgid "Entire forum (tag filtered)"
 msgstr "게시판 전체 (태그 선별)"
 
-#: forms.py:1522
+#: forms.py:1537
 msgid "Comments and posts mentioning me"
 msgstr "나를 언급한 댓글 및 게시물"
 
-#: forms.py:1606
+#: forms.py:1621
 msgid "please choose one of the options above"
 msgstr "위의 옵션들 중 하나를 선택해 주세요"
 
-#: forms.py:1609
+#: forms.py:1624
 msgid "okay, let's try!"
 msgstr "좋아요, 받아보겠습니다!"
 
-#: forms.py:1612
+#: forms.py:1627
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr "%(sitename)s 이메일을 받지 않겠습니다"
 
-#: forms.py:1660 templates/reopen.html:7
+#: forms.py:1675 templates/reopen.html:7
 msgid "Title"
 msgstr "제목"
 
-#: forms.py:1663 templates/groups.html:32
+#: forms.py:1678 templates/groups.html:32
 msgid "Description"
 msgstr ""
 
-#: forms.py:1682 templates/tags.html:3 templates/tags/header.html:9
+#: forms.py:1697 templates/tags.html:3 templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
-#: templates/widgets/edit_post.html:35 templates/widgets/related_tags.html:3
+#: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
 msgid "Tags"
 msgstr "태그들"
 
-#: tasks.py:68
+#: tasks.py:94
 msgid "An edit for my answer"
 msgstr ""
 
-#: tasks.py:71
+#: tasks.py:97
 msgid "To add to your post EDIT ABOVE THIS LINE"
 msgstr ""
 
-#: tasks.py:89
+#: tasks.py:115
 #, python-format
 msgid "Your post at %(site_name)s is now published"
 msgstr ""
@@ -424,11 +424,11 @@ msgstr "help/"
 msgid "answers/"
 msgstr "answers/"
 
-#: urls.py:47 urls.py:132 urls.py:383 urls.py:498
+#: urls.py:47 urls.py:131 urls.py:382 urls.py:497
 msgid "edit/"
 msgstr "edit/"
 
-#: urls.py:52 urls.py:162
+#: urls.py:52 urls.py:161
 msgid "revisions/"
 msgstr "revisions/"
 
@@ -436,125 +436,125 @@ msgstr "revisions/"
 msgid "questions"
 msgstr "questions"
 
-#: urls.py:127 urls.py:132 urls.py:137 urls.py:142 urls.py:147 urls.py:152
-#: urls.py:162 urls.py:558
+#: urls.py:126 urls.py:131 urls.py:136 urls.py:141 urls.py:146 urls.py:151
+#: urls.py:161 urls.py:573
 msgid "questions/"
 msgstr "questions/"
 
-#: urls.py:127 urls.py:472 urls.py:477 urls.py:482 urls.py:488
+#: urls.py:126 urls.py:471 urls.py:476 urls.py:481 urls.py:487
 msgid "ask/"
 msgstr "ask/"
 
-#: urls.py:137
+#: urls.py:136
 msgid "retag/"
 msgstr "retag/"
 
-#: urls.py:142
+#: urls.py:141
 msgid "close/"
 msgstr "close/"
 
-#: urls.py:147
+#: urls.py:146
 msgid "reopen/"
 msgstr "reopen/"
 
-#: urls.py:152
+#: urls.py:151
 msgid "answer/"
 msgstr "answer/"
 
-#: urls.py:220
+#: urls.py:219
 msgid "tags/"
 msgstr "tags/"
 
-#: urls.py:225
+#: urls.py:224
 msgid "tags/subscriptions/"
 msgstr ""
 
-#: urls.py:230
+#: urls.py:229
 msgid "tags/subscriptions/delete/"
 msgstr ""
 
-#: urls.py:235
+#: urls.py:234
 msgid "tags/subscriptions/create/"
 msgstr ""
 
-#: urls.py:240
+#: urls.py:239
 msgid "tags/subscriptions/edit/"
 msgstr ""
 
-#: urls.py:246
+#: urls.py:245
 msgid "suggested-tags/"
 msgstr ""
 
-#: urls.py:366
+#: urls.py:365
 msgid "subscribe-for-tags/"
 msgstr "subscribe-for-tags/"
 
-#: urls.py:371 urls.py:376 urls.py:383 urls.py:389 urls.py:398 urls.py:405
+#: urls.py:370 urls.py:375 urls.py:382 urls.py:388 urls.py:397 urls.py:404
 msgid "users/"
 msgstr "users/"
 
-#: urls.py:376
+#: urls.py:375
 msgid "by-group/"
 msgstr ""
 
-#: urls.py:390
+#: urls.py:389
 msgid "subscriptions/"
 msgstr "subscriptions/"
 
-#: urls.py:399
+#: urls.py:398
 msgid "select_languages/"
 msgstr ""
 
-#: urls.py:410
+#: urls.py:409
 msgid "groups/"
 msgstr ""
 
-#: urls.py:415
+#: urls.py:414
 msgid "users/update_has_custom_avatar/"
 msgstr "users/update_has_custom_avatar/"
 
-#: urls.py:420 urls.py:425
+#: urls.py:419 urls.py:424
 msgid "badges/"
 msgstr "badges/"
 
-#: urls.py:435
+#: urls.py:434
 msgid "messages/"
 msgstr "messages/"
 
-#: urls.py:435
+#: urls.py:434
 msgid "markread/"
 msgstr "markread/"
 
-#: urls.py:466 urls.py:472 urls.py:477 urls.py:482 urls.py:488 urls.py:493
-#: urls.py:498 urls.py:503 urls.py:509
+#: urls.py:465 urls.py:471 urls.py:476 urls.py:481 urls.py:487 urls.py:492
+#: urls.py:497 urls.py:502 urls.py:508
 msgid "widgets/"
 msgstr "widgets/"
 
-#: urls.py:488 deps/django_authopenid/urls.py:20
+#: urls.py:487 deps/django_authopenid/urls.py:20
 msgid "complete/"
 msgstr "complete/"
 
-#: urls.py:493
+#: urls.py:492
 msgid "create/"
 msgstr ""
 
-#: urls.py:503
+#: urls.py:502
 msgid "delete/"
 msgstr ""
 
-#: urls.py:519
+#: urls.py:533
 msgid "upload/"
 msgstr "upload/"
 
-#: urls.py:520
+#: urls.py:534
 msgid "feedback/"
 msgstr "feedback/"
 
-#: urls.py:564
+#: urls.py:579
 msgid "question/"
 msgstr "question/"
 
-#: urls.py:571 setup_templates/settings.py:229
+#: urls.py:586 setup_templates/settings.py:229
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
 msgstr "account/"
@@ -828,54 +828,50 @@ msgid ""
 msgstr "보내드린 이메일의 인증키를 통해 활성 이메일 인증이 되었습니다"
 
 #: conf/email.py:237
-msgid "Allow only one account per email address"
-msgstr "한 계정당 하나의 이메일만 허용"
-
-#: conf/email.py:246
 msgid "Fake email for anonymous user"
 msgstr "익명 사용자를 위한 가짜 이메일"
 
-#: conf/email.py:247
+#: conf/email.py:238
 msgid "Use this setting to control gravatar for email-less user"
 msgstr "이메일 없는 사용자를 위한 그라바타 제어를 목적으로 설정을 사용"
 
-#: conf/email.py:256
+#: conf/email.py:247
 msgid "Allow posting questions by email"
 msgstr "이메일을 통해서 질문 쓰기 허용"
 
-#: conf/email.py:258
+#: conf/email.py:249
 msgid ""
 "Before enabling this setting - please fill out IMAP settings in the "
 "settings.py file"
 msgstr "이 설정을 활성화하기 전에 settings.py 파일 안의 IMAP 관련 설정들을 해주세요."
 
-#: conf/email.py:269
+#: conf/email.py:260
 msgid "Replace space in emailed tags with dash"
 msgstr "이메일 태그에서 공백을 대시로 바꾸기"
 
-#: conf/email.py:271
+#: conf/email.py:262
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
 msgstr "이메일을 통해 들어오는 질문의 제목에 쓰여진 태그를 적용하는 설정입니다"
 
-#: conf/email.py:282
+#: conf/email.py:273
 msgid "Enable posting answers and comments by email"
 msgstr "이메일을 통한 답변 게시 및 댓글을 허용"
 
-#: conf/email.py:285
+#: conf/email.py:276
 msgid "To enable this feature make sure lamson is running"
 msgstr "이 기능을 사용하려면 lamson이 동작하고 있어야 합니다"
 
-#: conf/email.py:296
+#: conf/email.py:287
 msgid "Emailed post: when to notify author about publishing"
 msgstr ""
 
-#: conf/email.py:321
+#: conf/email.py:312
 msgid "Reply by email hostname"
 msgstr "Reply by 이메일 호스트명"
 
-#: conf/email.py:332
+#: conf/email.py:323
 msgid ""
 "Email replies having fewer words than this number will be posted as comments"
 " instead of answers"
@@ -1094,189 +1090,215 @@ msgid ""
 msgstr "로그인하기전에 사용자가 질문이나 답변 등록을 할 수 있게 하려면 체크해주세요. 사용자가 로그인 할 때마다 펜딩된 포스트를 체크하도록 로그인 시스템 조정이 필요할 수 있습니다. 애스크봇 로그인 시스템은 이 기능을 지원합니다."
 
 #: conf/forum_data_rules.py:118
+msgid "Auto-follow questions by the Author"
+msgstr ""
+
+#: conf/forum_data_rules.py:123
+msgid "Fully open by default"
+msgstr ""
+
+#: conf/forum_data_rules.py:124
+msgid "Folded by default"
+msgstr ""
+
+#: conf/forum_data_rules.py:133
+msgid "Question details/body editor should be"
+msgstr ""
+
+#: conf/forum_data_rules.py:135
+msgid ""
+"To use folded mode, please first set minimum question body length to 0. Also"
+" - please make tags optional."
+msgstr ""
+
+#: conf/forum_data_rules.py:147
 msgid "Allow swapping answer with question"
 msgstr "답변을 질문으로 바꿔치기 허용하기"
 
-#: conf/forum_data_rules.py:120
+#: conf/forum_data_rules.py:149
 msgid ""
 "This setting will help import data from other forums such as zendesk, when "
 "automatic data import fails to detect the original question correctly."
 msgstr "이 설정은 zendesk와 같은 다른 포럼들로부터 자료를 가져오는 경우, 자동 데이터 임포트가 원래의 질문을 올바로 탐지하는 데에 실패하였을 때에 도움을 줍니다."
 
-#: conf/forum_data_rules.py:132
+#: conf/forum_data_rules.py:161
 msgid "Maximum length of tag (number of characters)"
 msgstr "태그의 최대 길이(문자수)"
 
-#: conf/forum_data_rules.py:141
+#: conf/forum_data_rules.py:170
 msgid "Minimum length of title (number of characters)"
 msgstr "제목의 최대 길이(문자수)"
 
-#: conf/forum_data_rules.py:151
+#: conf/forum_data_rules.py:180
 msgid "Minimum length of question body (number of characters)"
 msgstr "질문 본문의 최소 길이(문자수)"
 
-#: conf/forum_data_rules.py:162
+#: conf/forum_data_rules.py:191
 msgid "Minimum length of answer body (number of characters)"
 msgstr "답변 본문의 최소 길이(문자수)"
 
-#: conf/forum_data_rules.py:173
+#: conf/forum_data_rules.py:202
+msgid "Minimum length of comment (number of characters)"
+msgstr ""
+
+#: conf/forum_data_rules.py:213
 msgid "Limit one answer per question per user"
 msgstr ""
 
-#: conf/forum_data_rules.py:183
+#: conf/forum_data_rules.py:223
 msgid "Enable accepting best answer"
 msgstr ""
 
-#: conf/forum_data_rules.py:191
+#: conf/forum_data_rules.py:231
 msgid "Are tags required?"
 msgstr "태그가 필요한가요?"
 
-#: conf/forum_data_rules.py:197
+#: conf/forum_data_rules.py:237
 msgid "category tree"
 msgstr ""
 
-#: conf/forum_data_rules.py:198
+#: conf/forum_data_rules.py:238
 msgid "user input"
 msgstr ""
 
-#: conf/forum_data_rules.py:205
+#: conf/forum_data_rules.py:245
 msgid "Source of tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:216
+#: conf/forum_data_rules.py:256
 msgid "Mandatory tags"
 msgstr "필수 태그"
 
-#: conf/forum_data_rules.py:219
+#: conf/forum_data_rules.py:259
 msgid ""
 "At least one of these tags will be required for any new or newly edited "
 "question. A mandatory tag may be wildcard, if the wildcard tags are active."
 msgstr "질문에는 최소한 한 개 이상의 태그가 필요합니다. 와일드카드 태그 기능이 활성화 되어 있다면 필수 태그에 와일드카드를 사용할 수 있습니다."
 
-#: conf/forum_data_rules.py:231
+#: conf/forum_data_rules.py:271
 msgid "Force lowercase the tags"
 msgstr "태그에 소문자만 허용"
 
-#: conf/forum_data_rules.py:233
+#: conf/forum_data_rules.py:273
 msgid ""
 "Attention: after checking this, please back up the database, and run a "
 "management command: <code>python manage.py fix_question_tags</code> to "
 "globally rename the tags"
 msgstr "주의: 체크한 후에는, 데이터베이스를 백업하고, 전체 태그들의 이름을 바꿔주는 다음 명령을 수행하세요: <code>python manage.py fix_question_tags</code>"
 
-#: conf/forum_data_rules.py:247
+#: conf/forum_data_rules.py:287
 msgid "Format of tag list"
 msgstr "태크 목록의 형식"
 
-#: conf/forum_data_rules.py:249
+#: conf/forum_data_rules.py:289
 msgid ""
 "Select the format to show tags in, either as a simple list, or as a tag "
 "cloud"
 msgstr "간단한 목록나 태그 클라우드 중 선택"
 
-#: conf/forum_data_rules.py:261
+#: conf/forum_data_rules.py:301
 msgid "Use wildcard tags"
 msgstr "와일드카드 태그 사용하기"
 
-#: conf/forum_data_rules.py:263
+#: conf/forum_data_rules.py:303
 msgid ""
 "Wildcard tags can be used to follow or ignore many tags at once, a valid "
 "wildcard tag has a single wildcard at the very end"
 msgstr "와일드카드 태그는 한번에 많은 태그들을 팔로우하거나 무시할 수 있습니다. 마지막에 한 개의 와일드카드를 갖는 와일드카드 태그가 유효합니다"
 
-#: conf/forum_data_rules.py:275
+#: conf/forum_data_rules.py:315
 msgid "Use separate set for subscribed tags"
 msgstr ""
 
-#: conf/forum_data_rules.py:277
+#: conf/forum_data_rules.py:317
 msgid ""
 "If enabled, users will have a third set of tag selections - \"subscribed\" "
 "(by email) in additon to \"interesting\" and \"ignored\""
 msgstr ""
 
-#: conf/forum_data_rules.py:285
+#: conf/forum_data_rules.py:325
 msgid "Always, for all users"
 msgstr ""
 
-#: conf/forum_data_rules.py:286
+#: conf/forum_data_rules.py:326
 msgid "Never, for all users"
 msgstr ""
 
-#: conf/forum_data_rules.py:287
+#: conf/forum_data_rules.py:327
 msgid "Let users decide"
 msgstr ""
 
-#: conf/forum_data_rules.py:295
+#: conf/forum_data_rules.py:335
 msgid "Publicly show user tag selections"
 msgstr ""
 
-#: conf/forum_data_rules.py:304
+#: conf/forum_data_rules.py:344
 msgid "Enable separate tag search box on main page"
 msgstr ""
 
-#: conf/forum_data_rules.py:314
+#: conf/forum_data_rules.py:354
 msgid "Default max number of comments to display under posts"
 msgstr "게시물 아래에 표시되는 댓글의 최대 개수의 기본값"
 
-#: conf/forum_data_rules.py:325
+#: conf/forum_data_rules.py:365
 #, python-format
 msgid "Maximum comment length, must be < %(max_len)s"
 msgstr "최대 댓글 개수는 %(max_len)s 보다 작아야합니다"
 
-#: conf/forum_data_rules.py:335
+#: conf/forum_data_rules.py:375
 msgid "Limit time to edit comments"
 msgstr "댓글 수정 제한 시간"
 
-#: conf/forum_data_rules.py:337
+#: conf/forum_data_rules.py:377
 msgid "If unchecked, there will be no time limit to edit the comments"
 msgstr "체크하지 않으면, 댓글 수정에 시간 제한을 두지 않습니다"
 
-#: conf/forum_data_rules.py:348
+#: conf/forum_data_rules.py:388
 msgid "Minutes allowed to edit a comment"
 msgstr "댓글 수정 허용 시간"
 
-#: conf/forum_data_rules.py:349
+#: conf/forum_data_rules.py:389
 msgid "To enable this setting, check the previous one"
 msgstr "이 설정을 활성화 하려면 이전 항목을 체크하세요"
 
-#: conf/forum_data_rules.py:358
+#: conf/forum_data_rules.py:398
 msgid "Save comment by pressing <Enter> key"
 msgstr "<Enter>를 눌러서 댓글을 저장하세요"
 
-#: conf/forum_data_rules.py:360
+#: conf/forum_data_rules.py:400
 msgid ""
 "This may be useful when only one-line comments are desired. Will not work "
 "with TinyMCE editor."
 msgstr ""
 
-#: conf/forum_data_rules.py:371
+#: conf/forum_data_rules.py:411
 msgid "Minimum length of search term for Ajax search"
 msgstr "Ajax 검색 조건의 최소 길이"
 
-#: conf/forum_data_rules.py:372
+#: conf/forum_data_rules.py:412
 msgid "Must match the corresponding database backend setting"
 msgstr "해당 데이터베이스 백엔드 설정을 일치시켜야 합니다"
 
-#: conf/forum_data_rules.py:381
+#: conf/forum_data_rules.py:421
 msgid "Do not make text query sticky in search"
 msgstr "Do not make text query sticky in search"
 
-#: conf/forum_data_rules.py:383
+#: conf/forum_data_rules.py:423
 msgid ""
 "Check to disable the \"sticky\" behavior of the search query. This may be "
 "useful if you want to move the search bar away from the default position or "
 "do not like the default sticky behavior of the text search query."
 msgstr "검색 질의의 \"달라붙는\" 성질을 비활성화하려면 체크합니다. 검색 막대를 기본 위치에서 떨어진 곳으로 옮기고자 하거나 텍스트 검색 질의가 달라붙는 속성을 좋아하지 않는다면 유용합니다."
 
-#: conf/forum_data_rules.py:396
+#: conf/forum_data_rules.py:436
 msgid "Maximum number of tags per question"
 msgstr "질문당 최대 태그 개수"
 
-#: conf/forum_data_rules.py:408
+#: conf/forum_data_rules.py:448
 msgid "Number of questions to list by default"
 msgstr "목록당 최대 질문 기본 개수"
 
-#: conf/forum_data_rules.py:418
+#: conf/forum_data_rules.py:458
 msgid "What should \"unanswered question\" mean?"
 msgstr "\"답변 없는 질문\"은 무엇을 의미합니까?"
 
@@ -1332,69 +1354,69 @@ msgstr ""
 msgid "LDAP login configuration"
 msgstr "LDAP 로그인 설정"
 
-#: conf/ldap.py:24
+#: conf/ldap.py:17
 msgid "Use LDAP authentication for the password login"
 msgstr "비밀번호 로그인에 LDAP 인증을 사용"
 
-#: conf/ldap.py:34
+#: conf/ldap.py:26
 msgid "Automatically create user accounts when possible"
 msgstr ""
 
-#: conf/ldap.py:37
+#: conf/ldap.py:29
 msgid ""
 "Potentially reduces number of steps in the registration process but can "
 "expose personal information, e.g. when LDAP login name is the same as email "
 "address or real name."
 msgstr ""
 
-#: conf/ldap.py:45
+#: conf/ldap.py:37
 msgid "Version 3"
 msgstr ""
 
-#: conf/ldap.py:46
+#: conf/ldap.py:38
 msgid "Version 2 (insecure and deprecated)!!!"
 msgstr ""
 
-#: conf/ldap.py:55
+#: conf/ldap.py:47
 msgid "LDAP protocol version"
 msgstr ""
 
-#: conf/ldap.py:57
+#: conf/ldap.py:49
 msgid ""
 "Note that Version 2 protocol is not secure!!! Do not use it on unprotected "
 "network."
 msgstr ""
 
-#: conf/ldap.py:67
+#: conf/ldap.py:59
 msgid "LDAP URL"
 msgstr "LDAP URL"
 
-#: conf/ldap.py:76
+#: conf/ldap.py:68
 msgid "LDAP encoding"
 msgstr ""
 
-#: conf/ldap.py:79
+#: conf/ldap.py:71
 msgid ""
 "This value in almost all cases is \"utf-8\". Change it if yours is "
 "different. This field is required"
 msgstr ""
 
-#: conf/ldap.py:90
+#: conf/ldap.py:82
 msgid "Base DN (distinguished name)"
 msgstr ""
 
-#: conf/ldap.py:93
+#: conf/ldap.py:85
 msgid ""
 "Usually base DN mirrors domain name of your organization, e.g. "
 "\"dn=example,dn=com\" when your site url is \"example.com\".This value is "
 "the \"root\" address of your LDAP directory."
 msgstr ""
 
-#: conf/ldap.py:104
+#: conf/ldap.py:96
 msgid "User search filter template"
 msgstr ""
 
-#: conf/ldap.py:107
+#: conf/ldap.py:99
 msgid ""
 "Python string format template, must have two string placeholders, which "
 "should be left in the intact format. First placeholder will be used for the "
@@ -1402,59 +1424,59 @@ msgid ""
 " be extended to match schema of your LDAP directory."
 msgstr ""
 
-#: conf/ldap.py:121
+#: conf/ldap.py:113
 msgid "UserID/login field"
 msgstr ""
 
-#: conf/ldap.py:124
+#: conf/ldap.py:116
 msgid ""
 "This field is required. For Microsoft Active Directory this value usually is"
 " \"sAMAccountName\"."
 msgstr ""
 
-#: conf/ldap.py:135
+#: conf/ldap.py:127
 msgid "\"Common Name\" field"
 msgstr ""
 
-#: conf/ldap.py:137
+#: conf/ldap.py:129
 msgid ""
 "Common name is a formal or informal name of a person, can be blank. Use it "
 "only if surname and given names are not available."
 msgstr ""
 
-#: conf/ldap.py:147
+#: conf/ldap.py:139
 msgid "First name, Last name"
 msgstr ""
 
-#: conf/ldap.py:148
+#: conf/ldap.py:140
 msgid "Last name, First name"
 msgstr ""
 
-#: conf/ldap.py:155
+#: conf/ldap.py:147
 msgid "\"Common Name\" field format"
 msgstr ""
 
-#: conf/ldap.py:158
+#: conf/ldap.py:150
 msgid "Use this only if \"Common Name\" field is used."
 msgstr ""
 
-#: conf/ldap.py:166
+#: conf/ldap.py:158
 msgid "Given (First) name"
 msgstr ""
 
-#: conf/ldap.py:168 conf/ldap.py:178
+#: conf/ldap.py:160 conf/ldap.py:170
 msgid "This field can be blank"
 msgstr ""
 
-#: conf/ldap.py:176
+#: conf/ldap.py:168
 msgid "Surname (last) name"
 msgstr ""
 
-#: conf/ldap.py:186
+#: conf/ldap.py:178
 msgid "LDAP Server EMAIL field name"
 msgstr "LDAP 서버 EMAIL 필드명"
 
-#: conf/ldap.py:188
+#: conf/ldap.py:180
 msgid "This field is required"
 msgstr ""
 
@@ -1555,12 +1577,16 @@ msgstr "활성화하기 위해서, 설정 -> 쓰기 -> 원격 전송으로 이�
 msgid "Upload your icon"
 msgstr "아이콘을 업로드하세요"
 
-#: conf/login_providers.py:95
+#: conf/login_providers.py:93
+msgid "local password"
+msgstr ""
+
+#: conf/login_providers.py:98
 #, python-format
 msgid "Activate %(provider)s login"
 msgstr "%(provider)s 로그인 활성화"
 
-#: conf/login_providers.py:100
+#: conf/login_providers.py:103
 #, python-format
 msgid ""
 "Note: to really enable %(provider)s login some additional parameters will "
@@ -1739,17 +1765,19 @@ msgid ""
 msgstr "검색 엔진 크롤러가 rel=nofollow 속성을 발견하면 해당 링크는 사용자 개인 사이트 순위에 집계되지 않습니다."
 
 #: conf/minimum_reputation.py:223
-msgid "Post answers and comments by email"
-msgstr "이메일을 통해 답변 및 댓글 게시"
+msgid "Make posts by email"
+msgstr ""
 
 #: conf/minimum_reputation.py:232
 msgid "Trigger email notifications"
 msgstr ""
 
-#: conf/minimum_reputation.py:234
-msgid ""
-"Reduces spam as notifications wont't be sent to regular users for posts of "
-"low karma users"
+#: conf/minimum_reputation.py:233 conf/minimum_reputation.py:243
+msgid "Reduces spam"
+msgstr ""
+
+#: conf/minimum_reputation.py:242
+msgid "Trigger tweets on others accounts"
 msgstr ""
 
 #: conf/moderation.py:19
@@ -2337,19 +2365,26 @@ msgstr ""
 msgid "Check to enable sharing of questions on Twitter"
 msgstr "트위터에 질문 공유하기 선택"
 
-#: conf/social_sharing.py:47
+#: conf/social_sharing.py:40
+msgid ""
+"Important - to actually start sharing on twitter, it is required to set up "
+"Twitter consumer key and secret in the \"keys to external services\" "
+"section."
+msgstr ""
+
+#: conf/social_sharing.py:52
 msgid "Check to enable sharing of questions on Facebook"
 msgstr "페이스북에 질문 공유하기 선택"
 
-#: conf/social_sharing.py:56
+#: conf/social_sharing.py:61
 msgid "Check to enable sharing of questions on LinkedIn"
 msgstr "Linkedln에 질문 공유하기 선택"
 
-#: conf/social_sharing.py:65
+#: conf/social_sharing.py:70
 msgid "Check to enable sharing of questions on Identi.ca"
 msgstr "Identi.ca에 질문 공유하기 선택"
 
-#: conf/social_sharing.py:74
+#: conf/social_sharing.py:79
 msgid "Check to enable sharing of questions on Google+"
 msgstr "Google+에 질문 공유하기 선택"
 
@@ -2545,340 +2580,356 @@ msgstr "스팸이거나 광고성"
 msgid "too localized"
 msgstr "너무 지역적임"
 
-#: const/__init__.py:45 templates/question/answer_tab_bar.html:18
+#: const/__init__.py:29
+msgid "disable sharing"
+msgstr ""
+
+#: const/__init__.py:30
+#: templates/user_profile/twitter_sharing_controls.html:13
+#: templates/user_profile/twitter_sharing_controls.html:17
+msgid "my posts"
+msgstr ""
+
+#: const/__init__.py:31
+#: templates/user_profile/twitter_sharing_controls.html:14
+#: templates/user_profile/twitter_sharing_controls.html:16
+msgid "all posts"
+msgstr ""
+
+#: const/__init__.py:54 templates/question/answer_tab_bar.html:18
 msgid "newest"
 msgstr "최신의"
 
-#: const/__init__.py:46 templates/users.html:50
+#: const/__init__.py:55 templates/users.html:54
 #: templates/question/answer_tab_bar.html:15
 msgid "oldest"
 msgstr "가입일"
 
-#: const/__init__.py:47
+#: const/__init__.py:56
 msgid "active"
 msgstr "활발한"
 
-#: const/__init__.py:48
+#: const/__init__.py:57
 msgid "inactive"
 msgstr "활발하지 않은"
 
-#: const/__init__.py:49
+#: const/__init__.py:58
 msgid "hottest"
 msgstr "뜨거운 "
 
-#: const/__init__.py:50
+#: const/__init__.py:59
 msgid "coldest"
 msgstr "냉랭한"
 
-#: const/__init__.py:51 templates/question/answer_tab_bar.html:21
+#: const/__init__.py:60 templates/question/answer_tab_bar.html:21
 msgid "most voted"
 msgstr "최다 투표"
 
-#: const/__init__.py:52
+#: const/__init__.py:61
 msgid "least voted"
 msgstr "적게 투표된"
 
-#: const/__init__.py:53
+#: const/__init__.py:62
 msgid "relevance"
 msgstr "관련성"
 
-#: const/__init__.py:65
+#: const/__init__.py:74
 msgid "Never"
 msgstr ""
 
-#: const/__init__.py:66
+#: const/__init__.py:75
 msgid "When new post is published"
 msgstr ""
 
-#: const/__init__.py:67
+#: const/__init__.py:76
 msgid "When post is published or revised"
 msgstr ""
 
-#: const/__init__.py:99
+#: const/__init__.py:108
 #, python-format
 msgid ""
 "Note: to reply with a comment, please use <a "
 "href=\"mailto:%(addr)s?subject=%(subject)s\">this link</a>"
 msgstr ""
 
-#: const/__init__.py:113 templates/user_inbox/responses_and_flags.html:9
+#: const/__init__.py:122 templates/user_inbox/responses_and_flags.html:9
 msgid "all"
 msgstr "모든 것"
 
-#: const/__init__.py:114
+#: const/__init__.py:123
 msgid "unanswered"
 msgstr "답변되지 않은"
 
-#: const/__init__.py:115
+#: const/__init__.py:124
 msgid "followed"
 msgstr ""
 
-#: const/__init__.py:120
+#: const/__init__.py:129
 msgid "list"
 msgstr "목록"
 
-#: const/__init__.py:121
+#: const/__init__.py:130
 msgid "cloud"
 msgstr "클라우드"
 
-#: const/__init__.py:129
+#: const/__init__.py:138
 msgid "Question has no answers"
 msgstr "답변이 없는 질문"
 
-#: const/__init__.py:130
+#: const/__init__.py:139
 msgid "Question has no accepted answers"
 msgstr "답변을 채택하지 않은 질문"
 
-#: const/__init__.py:186
+#: const/__init__.py:195
 msgid "asked a question"
 msgstr "질문하였습니다"
 
-#: const/__init__.py:187
+#: const/__init__.py:196
 msgid "answered a question"
 msgstr "질문에 답변하였습니다"
 
-#: const/__init__.py:188 const/__init__.py:292
+#: const/__init__.py:197 const/__init__.py:301
 msgid "commented question"
 msgstr "질문에 댓글을 달았습니다"
 
-#: const/__init__.py:189 const/__init__.py:293
+#: const/__init__.py:198 const/__init__.py:302
 msgid "commented answer"
 msgstr "코멘트달린 답변"
 
-#: const/__init__.py:190
+#: const/__init__.py:199
 msgid "edited question"
 msgstr "질문을 편집했습니다"
 
-#: const/__init__.py:191
+#: const/__init__.py:200
 msgid "edited answer"
 msgstr "답변을 편집했습니다"
 
-#: const/__init__.py:192
+#: const/__init__.py:201
 msgid "received badge"
 msgstr "받은 배지"
 
-#: const/__init__.py:193
+#: const/__init__.py:202
 msgid "marked best answer"
 msgstr "으뜸 답변으로 표시됨"
 
-#: const/__init__.py:194
+#: const/__init__.py:203
 msgid "upvoted"
 msgstr "upvoted"
 
-#: const/__init__.py:195
+#: const/__init__.py:204
 msgid "downvoted"
 msgstr "downvoted"
 
-#: const/__init__.py:196
+#: const/__init__.py:205
 msgid "canceled vote"
 msgstr "취소된 투표"
 
-#: const/__init__.py:197
+#: const/__init__.py:206
 msgid "deleted question"
 msgstr "질문을 삭제했습니다"
 
-#: const/__init__.py:198
+#: const/__init__.py:207
 msgid "deleted answer"
 msgstr "삭제된 답변"
 
-#: const/__init__.py:199
+#: const/__init__.py:208
 msgid "marked offensive"
 msgstr "공격적이라고 표시됨"
 
-#: const/__init__.py:200
+#: const/__init__.py:209
 msgid "updated tags"
 msgstr "업데이트된 태그"
 
-#: const/__init__.py:201
+#: const/__init__.py:210
 msgid "selected favorite"
 msgstr "선택된 즐겨찾기"
 
-#: const/__init__.py:202
+#: const/__init__.py:211
 msgid "completed user profile"
 msgstr "완전한 사용자 프로필"
 
-#: const/__init__.py:203
+#: const/__init__.py:212
 msgid "email update sent to user"
 msgstr "이메일 업데이트를 사용자에게 발송하였습니다"
 
-#: const/__init__.py:204
+#: const/__init__.py:213
 msgid "a post was shared"
 msgstr ""
 
-#: const/__init__.py:207
+#: const/__init__.py:216
 msgid "reminder about unanswered questions sent"
 msgstr "답변이 없는 질문에 대한 알림을 발송하였습니다"
 
-#: const/__init__.py:211
+#: const/__init__.py:220
 msgid "reminder about accepting the best answer sent"
 msgstr "으뜸 답변을 채택하도록 알림을 발송했습니다"
 
-#: const/__init__.py:213
+#: const/__init__.py:222
 msgid "mentioned in the post"
 msgstr "포스트내에서 언급되었음"
 
-#: const/__init__.py:216
+#: const/__init__.py:225
 msgid "created tag description"
 msgstr ""
 
-#: const/__init__.py:220
+#: const/__init__.py:229
 msgid "updated tag description"
 msgstr ""
 
-#: const/__init__.py:222
+#: const/__init__.py:231
 msgid "made a new post"
 msgstr ""
 
-#: const/__init__.py:225
+#: const/__init__.py:234
 msgid "made an edit"
 msgstr ""
 
-#: const/__init__.py:229
+#: const/__init__.py:238
 msgid "created post reject reason"
 msgstr ""
 
-#: const/__init__.py:233
+#: const/__init__.py:242
 msgid "updated post reject reason"
 msgstr ""
 
-#: const/__init__.py:291
+#: const/__init__.py:300
 msgid "answered question"
 msgstr "답변된 질문"
 
-#: const/__init__.py:294
+#: const/__init__.py:303
 msgid "accepted answer"
 msgstr "채택된 답변"
 
-#: const/__init__.py:298
+#: const/__init__.py:307
 msgid "[closed]"
 msgstr "[종료됨]"
 
-#: const/__init__.py:299
+#: const/__init__.py:308
 msgid "[deleted]"
 msgstr "[삭제되었음]"
 
-#: const/__init__.py:300 views/readers.py:624
+#: const/__init__.py:309 views/readers.py:613
 msgid "initial version"
 msgstr "이니셜 버젼"
 
-#: const/__init__.py:301
+#: const/__init__.py:310
 msgid "retagged"
 msgstr "태그 수정됨"
 
-#: const/__init__.py:302
+#: const/__init__.py:311
 msgid "[private]"
 msgstr ""
 
-#: const/__init__.py:311
+#: const/__init__.py:320
 msgid "show all tags"
 msgstr ""
 
-#: const/__init__.py:312 const/__init__.py:321 const/__init__.py:327
-#: const/__init__.py:333
+#: const/__init__.py:321 const/__init__.py:330 const/__init__.py:336
+#: const/__init__.py:342
 msgid "exclude ignored tags"
 msgstr ""
 
-#: const/__init__.py:313 const/__init__.py:322 const/__init__.py:334
+#: const/__init__.py:322 const/__init__.py:331 const/__init__.py:343
 msgid "only interesting tags"
 msgstr ""
 
-#: const/__init__.py:317 const/__init__.py:328 const/__init__.py:335
+#: const/__init__.py:326 const/__init__.py:337 const/__init__.py:344
 msgid "only subscribed tags"
 msgstr ""
 
-#: const/__init__.py:320 const/__init__.py:326 const/__init__.py:332
+#: const/__init__.py:329 const/__init__.py:335 const/__init__.py:341
 msgid "email for all tags"
 msgstr ""
 
-#: const/__init__.py:339
+#: const/__init__.py:348
 msgid "instantly"
 msgstr "즉시"
 
-#: const/__init__.py:340
+#: const/__init__.py:349
 msgid "daily"
 msgstr "매일"
 
-#: const/__init__.py:341
+#: const/__init__.py:350
 msgid "weekly"
 msgstr "매주"
 
-#: const/__init__.py:342
+#: const/__init__.py:351
 msgid "no email"
 msgstr "받지 않음"
 
-#: const/__init__.py:349
+#: const/__init__.py:358
 msgid "identicon"
 msgstr "사용자 아이콘"
 
-#: const/__init__.py:350
+#: const/__init__.py:359
 msgid "mystery-man"
 msgstr "mystery-man"
 
-#: const/__init__.py:351
+#: const/__init__.py:360
 msgid "monsterid"
 msgstr "monsterid"
 
-#: const/__init__.py:352
+#: const/__init__.py:361
 msgid "wavatar"
 msgstr "wavatar"
 
-#: const/__init__.py:353
+#: const/__init__.py:362
 msgid "retro"
 msgstr "retro"
 
-#: const/__init__.py:400 templates/badges.html:33
+#: const/__init__.py:409 templates/badges.html:33
 msgid "gold"
 msgstr "금"
 
-#: const/__init__.py:401 templates/badges.html:43
+#: const/__init__.py:410 templates/badges.html:43
 msgid "silver"
 msgstr "은"
 
-#: const/__init__.py:402 templates/badges.html:50
+#: const/__init__.py:411 templates/badges.html:50
 msgid "bronze"
 msgstr "동"
 
-#: const/__init__.py:414
+#: const/__init__.py:423
 msgid "None"
 msgstr "없음"
 
-#: const/__init__.py:415
+#: const/__init__.py:424
 msgid "Gravatar"
 msgstr "Gravatar"
 
-#: const/__init__.py:416
+#: const/__init__.py:425
 msgid "Uploaded Avatar"
 msgstr "업로드 된 아바타"
 
-#: const/__init__.py:420
+#: const/__init__.py:429
 msgid "date descendant"
 msgstr ""
 
-#: const/__init__.py:421
+#: const/__init__.py:430
 msgid "date ascendant"
 msgstr ""
 
-#: const/__init__.py:422
+#: const/__init__.py:431
 msgid "activity descendant"
 msgstr ""
 
-#: const/__init__.py:423
+#: const/__init__.py:432
 msgid "activity ascendant"
 msgstr ""
 
-#: const/__init__.py:424
+#: const/__init__.py:433
 msgid "answers descendant"
 msgstr ""
 
-#: const/__init__.py:425
+#: const/__init__.py:434
 msgid "answers ascendant"
 msgstr ""
 
-#: const/__init__.py:426
+#: const/__init__.py:435
 msgid "votes descendant"
 msgstr ""
 
-#: const/__init__.py:427
+#: const/__init__.py:436
 msgid "votes ascendant"
 msgstr ""
 
@@ -2969,7 +3020,7 @@ msgid ""
 "reach a resolution."
 msgstr "미안합니다. 계정이 차단되어 문제가 해결될 때까지 새로운 포스팅을 하실 수 없습니다. 포럼 관리자에게 문의해주세요."
 
-#: const/message_keys.py:52 models/__init__.py:1078
+#: const/message_keys.py:52 models/__init__.py:1121
 msgid ""
 "Sorry, your account appears to be suspended and you cannot make new posts "
 "until this issue is resolved. You can, however edit your existing posts. "
@@ -2982,7 +3033,7 @@ msgid ""
 "screen name, if necessary."
 msgstr "환영합니다! 프로필이나 닉네임에서 필요시 이메일 주소를 설정해주세요(중요!)"
 
-#: deps/django_authopenid/forms.py:112 deps/django_authopenid/views.py:205
+#: deps/django_authopenid/forms.py:112 deps/django_authopenid/views.py:206
 msgid "i-names are not supported"
 msgstr "i-names를 지원하지 않습니다."
 
@@ -3022,15 +3073,15 @@ msgid ""
 "password."
 msgstr "이전 비밀번호가 맞지 않습니다. 올바른 비밀번호를 입력하세요."
 
-#: deps/django_authopenid/forms.py:402
+#: deps/django_authopenid/forms.py:399
 msgid "Sorry, we don't have this email address in the database"
 msgstr "죄송합니다. 등록된 이메일 주소가 아닙니다."
 
-#: deps/django_authopenid/forms.py:441
+#: deps/django_authopenid/forms.py:438
 msgid "Your user name (<i>required</i>)"
 msgstr "사용자명 (<i>필수</i>)"
 
-#: deps/django_authopenid/forms.py:458
+#: deps/django_authopenid/forms.py:455
 msgid "sorry, there is no such user name"
 msgstr "미안합니다. 그런 사용자명은 없습니다"
 
@@ -3071,162 +3122,162 @@ msgstr "recover/"
 msgid "verify-email/"
 msgstr ""
 
-#: deps/django_authopenid/util.py:378
+#: deps/django_authopenid/util.py:379
 #, python-format
 msgid "%(site)s user name and password"
 msgstr "%(site)s 사용자명과 비밀번호"
 
-#: deps/django_authopenid/util.py:384 templates/authopenid/signin.html:120
+#: deps/django_authopenid/util.py:385 templates/authopenid/signin.html:120
 #: templates/authopenid/widget_signin.html:120
 msgid "Create a password-protected account"
 msgstr "비밀번호로 보호되는 계정을 생성"
 
-#: deps/django_authopenid/util.py:385
+#: deps/django_authopenid/util.py:386
 msgid "Change your password"
 msgstr "비밀번호 변경"
 
-#: deps/django_authopenid/util.py:485
+#: deps/django_authopenid/util.py:486
 msgid "Sign in with Yahoo"
 msgstr "Yahoo 로그인"
 
-#: deps/django_authopenid/util.py:492
+#: deps/django_authopenid/util.py:493
 msgid "AOL screen name"
 msgstr "AOL 닉네임"
 
-#: deps/django_authopenid/util.py:501
+#: deps/django_authopenid/util.py:502
 msgid "Sign in with LaunchPad"
 msgstr ""
 
-#: deps/django_authopenid/util.py:508
+#: deps/django_authopenid/util.py:509
 msgid "OpenID url"
 msgstr "OpenID 주소"
 
-#: deps/django_authopenid/util.py:537
+#: deps/django_authopenid/util.py:538
 msgid "Flickr user name"
 msgstr "Flickr 사용자명"
 
-#: deps/django_authopenid/util.py:545
+#: deps/django_authopenid/util.py:546
 msgid "Technorati user name"
 msgstr "테크노라티 사용자명"
 
-#: deps/django_authopenid/util.py:553
+#: deps/django_authopenid/util.py:554
 msgid "WordPress blog name"
 msgstr "워드프레스 블로그 이름"
 
-#: deps/django_authopenid/util.py:561
+#: deps/django_authopenid/util.py:562
 msgid "Blogger blog name"
 msgstr "Blogger 블로그 이름"
 
-#: deps/django_authopenid/util.py:569
+#: deps/django_authopenid/util.py:570
 msgid "LiveJournal blog name"
 msgstr "LiveJournal 블로그 이름"
 
-#: deps/django_authopenid/util.py:577
+#: deps/django_authopenid/util.py:578
 msgid "ClaimID user name"
 msgstr "ClaimID 사용자명"
 
-#: deps/django_authopenid/util.py:585
+#: deps/django_authopenid/util.py:586
 msgid "Vidoop user name"
 msgstr "Vidoop 사용자명"
 
-#: deps/django_authopenid/util.py:593
+#: deps/django_authopenid/util.py:594
 msgid "Verisign user name"
 msgstr "Verisign 사용자명"
 
-#: deps/django_authopenid/util.py:628
+#: deps/django_authopenid/util.py:629
 #, python-format
 msgid "Change your %(provider)s password"
 msgstr "%(provider)s 비밀번호 변경"
 
-#: deps/django_authopenid/util.py:632
+#: deps/django_authopenid/util.py:633
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
 msgstr "%(site_name)s에서 %(provider)s 로그인이 작동하는지 보려면 클릭하세요"
 
-#: deps/django_authopenid/util.py:641
+#: deps/django_authopenid/util.py:642
 #, python-format
 msgid "Create password for %(provider)s"
 msgstr "%(provider)s 비밀번호 생성"
 
-#: deps/django_authopenid/util.py:645
+#: deps/django_authopenid/util.py:646
 #, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
 msgstr "%(provider)s의 계정을 %(site_name)s에 연결"
 
-#: deps/django_authopenid/util.py:654
+#: deps/django_authopenid/util.py:655
 #, python-format
 msgid "Signin with %(provider)s user name and password"
 msgstr "%(provider)s의 사용자명과 비밀번호로 로그인"
 
-#: deps/django_authopenid/util.py:661
+#: deps/django_authopenid/util.py:662
 #, python-format
 msgid "Sign in with your %(provider)s account"
 msgstr "%(provider)s의 계정으로 로그인"
 
-#: deps/django_authopenid/views.py:212
+#: deps/django_authopenid/views.py:213
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
 msgstr "OpenID %(openid_url)s이 유효하지 않습니다"
 
-#: deps/django_authopenid/views.py:390 deps/django_authopenid/views.py:567
-#: deps/django_authopenid/views.py:582
+#: deps/django_authopenid/views.py:391 deps/django_authopenid/views.py:568
+#: deps/django_authopenid/views.py:583
 #, python-format
 msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
 "please try again or use another provider"
 msgstr "%(provider)s에 연결하는 데에 문제가 있습니다. 다시 시도하거나 다른 제공자를 사용하세요"
 
-#: deps/django_authopenid/views.py:519
+#: deps/django_authopenid/views.py:520
 msgid "Your new password saved"
 msgstr "새 비밀번호가 저장되었습니다"
 
-#: deps/django_authopenid/views.py:612
+#: deps/django_authopenid/views.py:613
 msgid "The login password combination was not correct"
 msgstr "로그인 비밀번호 조합이 올바르지 않습니다"
 
-#: deps/django_authopenid/views.py:716
+#: deps/django_authopenid/views.py:717
 msgid "Please click any of the icons below to sign in"
 msgstr "아래의 아이콘 중 하나를 선택하여 로그인하세요"
 
-#: deps/django_authopenid/views.py:718
+#: deps/django_authopenid/views.py:719
 msgid "Account recovery email sent"
 msgstr "계정 복구 이메일을 발송하였습니다"
 
-#: deps/django_authopenid/views.py:721
+#: deps/django_authopenid/views.py:722
 msgid "Please add one or more login methods."
 msgstr "한 가지 이상의 로그인 방법을 추가하세요"
 
-#: deps/django_authopenid/views.py:723
+#: deps/django_authopenid/views.py:724
 msgid "If you wish, please add, remove or re-validate your login methods"
 msgstr "로그인 방법을 추가, 제거, 재확인하실 수 있습니다"
 
-#: deps/django_authopenid/views.py:725
+#: deps/django_authopenid/views.py:726
 msgid "Please wait a second! Your account is recovered, but ..."
 msgstr "잠깐만 기다려 주세요! 계정이 복구되었습니다만, ..."
 
-#: deps/django_authopenid/views.py:727
+#: deps/django_authopenid/views.py:728
 msgid "Sorry, this account recovery key has expired or is invalid"
 msgstr "죄송합니다. 이 계정 복구 키는 만료되었거나 유효하지 않습니다"
 
-#: deps/django_authopenid/views.py:800
+#: deps/django_authopenid/views.py:801
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
 msgstr "로그인 방법 %(provider_name)s이 존재하지 않습니다"
 
-#: deps/django_authopenid/views.py:806
+#: deps/django_authopenid/views.py:807
 msgid "Oops, sorry - there was some error - please try again"
 msgstr "앗, 죄송하지만 문제가 있습니다. 다시 시도해 주세요"
 
-#: deps/django_authopenid/views.py:881
+#: deps/django_authopenid/views.py:882
 msgid ""
 "If you are trying to sign in to another account, please sign out first."
 msgstr ""
 
-#: deps/django_authopenid/views.py:886
+#: deps/django_authopenid/views.py:887
 msgid "Otherwise, please report the incident to the site administrator."
 msgstr ""
 
-#: deps/django_authopenid/views.py:917
+#: deps/django_authopenid/views.py:918
 #, python-format
 msgid "Your %(provider)s login works fine"
 msgstr "%(provider)s 로그인이 잘 동작합니다"
@@ -3241,7 +3292,7 @@ msgstr ""
 msgid "Recover your %(site)s account"
 msgstr "%(site)s 계정 복구"
 
-#: deps/django_authopenid/views.py:1291
+#: deps/django_authopenid/views.py:1289
 msgid "Please check your email and visit the enclosed link."
 msgstr "이메일을 확인하시고 포함된 링크를 방문해주세요."
 
@@ -3253,98 +3304,31 @@ msgstr ""
 msgid "Site"
 msgstr "사이트"
 
-#: deps/livesettings/values.py:71
+#: deps/livesettings/values.py:72
 msgid "Main"
 msgstr "메인"
 
-#: deps/livesettings/values.py:132
+#: deps/livesettings/values.py:133
 msgid "Base Settings"
 msgstr "기본 설정"
 
-#: deps/livesettings/values.py:243
+#: deps/livesettings/values.py:244
 msgid "Default value: \"\""
 msgstr "기본값: \"\""
 
-#: deps/livesettings/values.py:250
+#: deps/livesettings/values.py:251
 msgid "Default value: "
 msgstr "기본값: "
 
-#: deps/livesettings/values.py:253
+#: deps/livesettings/values.py:254
 #, python-format
 msgid "Default value: %s"
 msgstr "기본 값: %s"
 
-#: deps/livesettings/values.py:640
+#: deps/livesettings/values.py:641
 #, python-format
 msgid "Allowed image file types are %(types)s"
 msgstr "이미지 파일 타입을 %(types)s로 허용"
-
-#: deps/livesettings/templates/livesettings/_admin_site_views.html:4
-msgid "Sites"
-msgstr "사이트"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:11
-#: deps/livesettings/templates/livesettings/site_settings.html:23
-msgid "Documentation"
-msgstr "첨부 문서"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:11
-#: deps/livesettings/templates/livesettings/site_settings.html:23
-#: templates/authopenid/signin.html:148
-#: templates/authopenid/widget_signin.html:148
-msgid "Change password"
-msgstr "비밀번호 변경"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:11
-#: deps/livesettings/templates/livesettings/site_settings.html:23
-msgid "Log out"
-msgstr "로그 아웃"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:14
-#: deps/livesettings/templates/livesettings/site_settings.html:26
-msgid "Home"
-msgstr "홈"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:15
-msgid "Edit Group Settings"
-msgstr "그룹 설정 편집"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:22
-#: deps/livesettings/templates/livesettings/site_settings.html:50
-msgid "Please correct the error below."
-msgid_plural "Please correct the errors below."
-msgstr[0] "다음의 오류를 수정해주세요."
-
-#: deps/livesettings/templates/livesettings/group_settings.html:28
-#, python-format
-msgid "Settings included in %(name)s."
-msgstr "%(name)s에 설정이 포함됨."
-
-#: deps/livesettings/templates/livesettings/group_settings.html:62
-#: deps/livesettings/templates/livesettings/site_settings.html:97
-msgid "You don't have permission to edit values."
-msgstr "값을 편집할 권한이 없습니다."
-
-#: deps/livesettings/templates/livesettings/site_settings.html:27
-msgid "Edit Site Settings"
-msgstr "사이트 설정 수정"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:43
-msgid "Livesettings are disabled for this site."
-msgstr "이 사이트에서는 Livesettings가 비활성화되었습니다."
-
-#: deps/livesettings/templates/livesettings/site_settings.html:44
-msgid "All configuration options must be edited in the site settings.py file"
-msgstr "모든 구성 옵션은 사이트의 settings.py 파일에서 편집하여야 합니다"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:66
-#, python-format
-msgid "Group settings: %(name)s"
-msgstr "그룹 설정: %(name)s"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:93
-msgid "Uncollapse all"
-msgstr "전체 확대"
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:150
 msgid "Congratulations, you are now an Administrator"
@@ -3400,47 +3384,47 @@ msgid ""
 "of your user account</p>"
 msgstr "<p>죄송합니다. 귀하의 계정으로는 질문을 등록하실 수 없습니다</p>"
 
-#: mail/lamson_handlers.py:158
+#: mail/lamson_handlers.py:160
 msgid ""
 "You were replying to an email address             unknown to the system or "
 "you were replying from a different address from the one where you"
 "             received the notification."
 msgstr ""
 
-#: mail/lamson_handlers.py:245
+#: mail/lamson_handlers.py:251
 #, python-format
 msgid "Re: Welcome to %(site_name)s"
 msgstr ""
 
-#: mail/lamson_handlers.py:252
+#: mail/lamson_handlers.py:258
 msgid "Please reply to the welcome email without editing it"
 msgstr ""
 
-#: mail/lamson_handlers.py:314
+#: mail/lamson_handlers.py:318
 #, python-format
 msgid "Re: %s"
 msgstr ""
 
-#: management/commands/send_accept_answer_reminders.py:60
+#: management/commands/send_accept_answer_reminders.py:61
 #, python-format
 msgid "Accept the best answer for %(question_count)d of your questions"
 msgstr "귀하의 질문의 %(question_count)d에 대한 으뜸 답변을 선택하세요"
 
-#: management/commands/send_accept_answer_reminders.py:65
+#: management/commands/send_accept_answer_reminders.py:66
 msgid "Please accept the best answer for this question:"
 msgstr "이 질문에 대한 으뜸 답변을 선택하세요:"
 
-#: management/commands/send_accept_answer_reminders.py:67
+#: management/commands/send_accept_answer_reminders.py:68
 msgid "Please accept the best answer for these questions:"
 msgstr "이 질문들에 대한 으뜸 답변을 선택하세요:"
 
-#: management/commands/send_email_alerts.py:414
+#: management/commands/send_email_alerts.py:413
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
 msgstr[0] "%(topics)s에 관한 질문 %(question_count)d개가 업데이트됨"
 
-#: management/commands/send_email_alerts.py:425
+#: management/commands/send_email_alerts.py:424
 #, python-format
 msgid ""
 "<p>Dear %(name)s,</p><p>The following question has been updated "
@@ -3450,11 +3434,11 @@ msgid_plural ""
 " %(sitename)s:</p>"
 msgstr[0] "<p>%(name)s 님,</p><p>The following %(num)d questions have been updated on %(sitename)s:</p>"
 
-#: management/commands/send_email_alerts.py:449
+#: management/commands/send_email_alerts.py:448
 msgid "new question"
 msgstr "새로운 질문"
 
-#: management/commands/send_email_alerts.py:474
+#: management/commands/send_email_alerts.py:473
 #, python-format
 msgid ""
 "<p>Please remember that you can always <a "
@@ -3465,7 +3449,7 @@ msgid ""
 "server.</p>"
 msgstr ""
 
-#: management/commands/send_unanswered_question_reminders.py:66
+#: management/commands/send_unanswered_question_reminders.py:67
 #, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
@@ -3476,86 +3460,86 @@ msgstr[0] "%(topics)s에 관한 질문 중 %(question_count)d개가 답변되지
 msgid "Please log in to use %s"
 msgstr "%s를 사용하기 위해 로그인해주세요"
 
-#: models/__init__.py:518
+#: models/__init__.py:561
 msgid "Sorry, this operation is not allowed"
 msgstr ""
 
-#: models/__init__.py:568
+#: models/__init__.py:611
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
 msgstr "죄송합니다. 계정이 차단되어 으뜸 답변을 선택 또는 거부할 수 없습니다"
 
-#: models/__init__.py:572
+#: models/__init__.py:615
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
 msgstr "죄송합니다. 계정이 정지되어 으뜸 답변을 선택 또는 거부할 수 없습니다"
 
-#: models/__init__.py:586
+#: models/__init__.py:629
 #, python-format
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
 "own question"
 msgstr "자신의 질문에 대하여 스스로 작성한 답변을 선택하려면 %(points)s 포인트가 필요합니다"
 
-#: models/__init__.py:610
+#: models/__init__.py:653
 #, python-format
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
 msgstr "미안합니다. 이 답변은 %(will_be_able_at)s 이후에 채택할 수 있습니다"
 
-#: models/__init__.py:619
+#: models/__init__.py:662
 #, python-format
 msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
 "can accept or unaccept the best answer"
 msgstr "미안합니다. 조정나 또는 질문의 원저자인 %(username)s만이 으뜸 답변을 채택하거나 거부할 수 있습니다"
 
-#: models/__init__.py:642
+#: models/__init__.py:685
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "미안합니다. 자신의 포스트에 투표하실 수 없습니다"
 
-#: models/__init__.py:646
+#: models/__init__.py:689
 msgid "Sorry your account appears to be blocked "
 msgstr "미안합니다. 계정이 차단된 것 같습니다"
 
-#: models/__init__.py:651
+#: models/__init__.py:694
 msgid "Sorry your account appears to be suspended "
 msgstr "미안합다. 계정이 정지된 것 같습니다"
 
-#: models/__init__.py:661
+#: models/__init__.py:704
 #, python-format
 msgid ">%(points)s points required to upvote"
 msgstr "찬성하기 위해 >%(points)s 점 필요"
 
-#: models/__init__.py:667
+#: models/__init__.py:710
 #, python-format
 msgid ">%(points)s points required to downvote"
 msgstr "반대표에 >%(points)s 점 필요"
 
-#: models/__init__.py:682
+#: models/__init__.py:725
 msgid "Sorry, blocked users cannot upload files"
 msgstr "죄송합니다. 차단된 사용자는 파일을 업로드할 수 없습니다"
 
-#: models/__init__.py:683
+#: models/__init__.py:726
 msgid "Sorry, suspended users cannot upload files"
 msgstr "미안합니다. 정지된 사용자는 파일을 업로드할 수 없습니다"
 
-#: models/__init__.py:685
+#: models/__init__.py:728
 #, python-format
 msgid "sorry, file uploading requires karma >%(min_rep)s"
 msgstr "미안합니다. 파일 업로드에는 karma >%(min_rep)s가 필요합니다"
 
-#: models/__init__.py:704
+#: models/__init__.py:747
 msgid "Could not post, because your karma is insufficient to publish links"
 msgstr ""
 
-#: models/__init__.py:730
+#: models/__init__.py:773
 msgid "Sorry, you already gave an answer, please edit it instead."
 msgstr ""
 
-#: models/__init__.py:754
+#: models/__init__.py:797
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
@@ -3565,57 +3549,57 @@ msgid_plural ""
 "minutes from posting"
 msgstr[0] "미안합니다. 댓글은 게시한지 %(minutes)s 분 이내에만 수정할 수 있습니다(마지막 것은 제외) ."
 
-#: models/__init__.py:766
+#: models/__init__.py:809
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr "미안합니다. 게시물의 소유자 또는 조정자만이 댓글을 수정할 수 있습니다"
 
-#: models/__init__.py:795
+#: models/__init__.py:838
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr "미안합니다. 계정이 정지되었기 때문에 자신의 게시물에 대해서만 댓글을 달 수 있습니다"
 
-#: models/__init__.py:799
+#: models/__init__.py:842
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
 msgstr "미안합니다. 게시물에 댓글을 달기 위해서는 %(min_rep)s 점의 평판이 필요합니다. 그렇더라도 자신의 게시물에는 댓글을 달 수 있으며 자신의 질문에도 답변할 수 있습니다"
 
-#: models/__init__.py:829
+#: models/__init__.py:872
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr "이 게시물은 삭제되었으며 게시물의 소유자, 사이트 관리자 및 조정자만 볼 수 있습니다"
 
-#: models/__init__.py:846
+#: models/__init__.py:889
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted"
 " posts"
 msgstr "미안합니다. 조정자, 사이트 관리자 및 게시물의 소유자만이 삭제된 게시물을 편집할 수 있습니다"
 
-#: models/__init__.py:861
+#: models/__init__.py:904
 msgid "Sorry, since your account is blocked you cannot edit posts"
 msgstr "미안합니다. 계정이 차단되어 게시물을 편집하실 수 없습니다"
 
-#: models/__init__.py:865
+#: models/__init__.py:908
 msgid ""
 "Sorry, since your account is suspended you can edit only your own posts"
 msgstr "미안합니다. 계정이 정지되었으므로 자신의 게시물만 편집할 수 있습니다"
 
-#: models/__init__.py:870
+#: models/__init__.py:913
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr "미안합니다. 위키 게시물을 편집하려면, 최소 %(min_rep)s 점의 평판이 필요합니다"
 
-#: models/__init__.py:877
+#: models/__init__.py:920
 #, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "미안합니다. 다른 사람들의 게시물을 편집하려면, 최소 %(min_rep)s 점의 평판이 필요합니다"
 
-#: models/__init__.py:940
+#: models/__init__.py:983
 msgid ""
 "Sorry, cannot delete your question since it has an upvoted answer posted by "
 "someone else"
@@ -3624,317 +3608,317 @@ msgid_plural ""
 "by other users"
 msgstr[0] "미안합니다. 다른 사용자가 게시한 답변에 추천이 있으므로 질문을 삭제할 수 없습니다."
 
-#: models/__init__.py:955
+#: models/__init__.py:998
 msgid "Sorry, since your account is blocked you cannot delete posts"
 msgstr "미안합니다. 계정이 차단되었으므로 게시물을 삭제할 수 없습니다"
 
-#: models/__init__.py:959
+#: models/__init__.py:1002
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr "미안합니다. 계정이 정지되었으므로 자신의 게시물만 삭제할 수 있습니다"
 
-#: models/__init__.py:963
+#: models/__init__.py:1006
 #, python-format
 msgid ""
 "Sorry, to delete other people's posts, a minimum reputation of %(min_rep)s "
 "is required"
 msgstr ""
 
-#: models/__init__.py:983
+#: models/__init__.py:1026
 msgid "Sorry, since your account is blocked you cannot close questions"
 msgstr "미안합니다. 계정이 차단되었으므로 질문을 종료할 수 없습니다"
 
-#: models/__init__.py:987
+#: models/__init__.py:1030
 msgid "Sorry, since your account is suspended you cannot close questions"
 msgstr "미안합니다. 계정이 정지되었으므로 질문을 종료할 수 없습니다"
 
-#: models/__init__.py:991
+#: models/__init__.py:1034
 #, python-format
 msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "미안합니다. 다른 사람의 게시물을 종료하려면 최소 %(min_rep)s의 평판이 필요합니다"
 
-#: models/__init__.py:1000
+#: models/__init__.py:1043
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
 msgstr "미안합니다. 자신의 질문을 종료하려면 최소 %(min_rep)s 점의 평판이 필요합니다"
 
-#: models/__init__.py:1026
+#: models/__init__.py:1069
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > "
 "%(min_rep)s can reopen questions."
 msgstr "미안합니다. 관리자, 조정자 또는 %(min_rep)s보다 높은 평판을 얻은 게시물의 소유자만이 질문을 재개할 수 있습니다."
 
-#: models/__init__.py:1032
+#: models/__init__.py:1075
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "미안합니다. 자신의 질문을 재개하려면 최소 %(min_rep)s 평판이 필요합니다"
 
-#: models/__init__.py:1037
+#: models/__init__.py:1080
 msgid "Sorry, you cannot reopen questions because your account is blocked"
 msgstr ""
 
-#: models/__init__.py:1042
+#: models/__init__.py:1085
 msgid "Sorry, you cannot reopen questions because your account is suspended"
 msgstr ""
 
-#: models/__init__.py:1065
+#: models/__init__.py:1108
 msgid "You have flagged this question before and cannot do it more than once"
 msgstr "전에 이 질문을 신고하였으므로 다시 신고하실 수 없습니다"
 
-#: models/__init__.py:1073
+#: models/__init__.py:1116
 msgid ""
 "Sorry, since your account is blocked you cannot flag posts as offensive"
 msgstr "미안합니다. 계정이 차단되어 포스트에 대해 공격적이라고 신고하실 수 없습니다"
 
-#: models/__init__.py:1084
+#: models/__init__.py:1127
 #, python-format
 msgid ""
 "Sorry, to flag posts as offensive a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "미안합니다. 포스트가 공격적이라고 신고하시기 위해서는 최소 평판 %(min_rep)s 점이 필요합니다"
 
-#: models/__init__.py:1105
+#: models/__init__.py:1148
 #, python-format
 msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 msgstr "미안합니다. 공격적인 게시물에 대한 신고는 하루에 %(max_flags_per_day)s 회까지 하실 수 있습니다."
 
-#: models/__init__.py:1117
+#: models/__init__.py:1160
 msgid "cannot remove non-existing flag"
 msgstr "존재하지 않는 표시는 제거할수 없습니다"
 
-#: models/__init__.py:1123
+#: models/__init__.py:1166
 msgid "Sorry, since your account is blocked you cannot remove flags"
 msgstr "미안합니다. 계정이 차단되었으므로 신고를 취소하실 수 없습니다"
 
-#: models/__init__.py:1127
+#: models/__init__.py:1170
 msgid ""
 "Sorry, your account appears to be suspended and you cannot remove flags. "
 "Please contact the forum administrator to reach a resolution."
 msgstr "미안합니다. 계정이 정지되어 신고를 취소하실 수 없습니다. 포럼 관리자에게 문의하세요."
 
-#: models/__init__.py:1133
+#: models/__init__.py:1176
 #, python-format
 msgid "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgid_plural ""
 "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgstr[0] "미안합니다. 게시물을 신고하려면 최소 평판 %(min_rep)d 점이 필요합니다"
 
-#: models/__init__.py:1152
+#: models/__init__.py:1195
 msgid "you don't have the permission to remove all flags"
 msgstr "모든 표시를 제거할수 있는 권한이 없습니다"
 
-#: models/__init__.py:1153
+#: models/__init__.py:1196
 msgid "no flags for this entry"
 msgstr "이 항목에 대한 표시가 없습니다"
 
-#: models/__init__.py:1177
+#: models/__init__.py:1220
 msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
 msgstr "미안합니다. 질문의 소유자, 사이트 관리자 및 조정자만이 삭제된 질문에 대하여 태그를 수정할 수 있습니다"
 
-#: models/__init__.py:1184
+#: models/__init__.py:1227
 msgid "Sorry, since your account is blocked you cannot retag questions"
 msgstr "미안합니다. 계정이 차단되었으므로 질문의 태그를 수정할 수 없습니다"
 
-#: models/__init__.py:1188
+#: models/__init__.py:1231
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr "미안합니다. 계정이 정지되었으므로 자신의 질문에 대한 태그만 수정하실 수 있습니다"
 
-#: models/__init__.py:1192
+#: models/__init__.py:1235
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
 msgstr "미안합니다. 질문에 대한 태그를 수정하려면 최소 %(min_rep)s 평판이 필요합니다"
 
-#: models/__init__.py:1211
+#: models/__init__.py:1254
 msgid "Sorry, since your account is blocked you cannot delete comment"
 msgstr "미안합니다. 계정이 차단되었으므로 댓글을 삭제할 수 없습니다"
 
-#: models/__init__.py:1215
+#: models/__init__.py:1258
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr "미안합니다. 계정이 정지되었으므로 자신의 댓글만 삭제할 수 있습니다"
 
-#: models/__init__.py:1219
+#: models/__init__.py:1262
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr "미안합니다. 댓글을 삭제하려면 %(min_rep)s 평판이 필요합니다"
 
-#: models/__init__.py:1243
+#: models/__init__.py:1286
 msgid "sorry, but older votes cannot be revoked"
 msgstr "미안합니다. 오래된 투표는 취소하실 수 없습니다"
 
-#: models/__init__.py:1926 utils/functions.py:97
+#: models/__init__.py:1973 utils/functions.py:98
 #, python-format
 msgid "on %(date)s"
 msgstr "on %(date)s"
 
-#: models/__init__.py:1928
+#: models/__init__.py:1975
 msgid "in two days"
 msgstr "이틀 내로"
 
-#: models/__init__.py:1930
+#: models/__init__.py:1977
 msgid "tomorrow"
 msgstr "내일"
 
-#: models/__init__.py:1932
+#: models/__init__.py:1979
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] "%(hr)d 시간 내"
 
-#: models/__init__.py:1934
+#: models/__init__.py:1981
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] "%(min)d 분 내"
 
-#: models/__init__.py:1935
+#: models/__init__.py:1982
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] "%(days)d 일"
 
-#: models/__init__.py:1937
+#: models/__init__.py:1984
 #, python-format
 msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
 "post an answer %(left)s"
 msgstr "자신의 질문에 답변하기 위해서는 %(days)s 동안 기다려야 합니다.  %(left)s 답변을 게시할 수 있습니다"
 
-#: models/__init__.py:2125 templates/email/feedback_email.txt:9
+#: models/__init__.py:2172 templates/email/feedback_email.txt:9
 msgid "Anonymous"
 msgstr "익명"
 
-#: models/__init__.py:2229
+#: models/__init__.py:2276
 msgid "Site Adminstrator"
 msgstr "사이트 관리자"
 
-#: models/__init__.py:2231
+#: models/__init__.py:2278
 msgid "Forum Moderator"
 msgstr "포럼 조정자"
 
-#: models/__init__.py:2233
+#: models/__init__.py:2280
 msgid "Suspended User"
 msgstr "정지된 사용자"
 
-#: models/__init__.py:2235
+#: models/__init__.py:2282
 msgid "Blocked User"
 msgstr "차단된 사용자"
 
-#: models/__init__.py:2237
+#: models/__init__.py:2284
 msgid "Registered User"
 msgstr "등록된 사용자"
 
-#: models/__init__.py:2239
+#: models/__init__.py:2286
 msgid "Watched User"
 msgstr "Watched 사용자"
 
-#: models/__init__.py:2241
+#: models/__init__.py:2288
 msgid "Approved User"
 msgstr "승인된 사용자"
 
-#: models/__init__.py:2423
+#: models/__init__.py:2473
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr "%(username)s 카르마는 %(reputation)s입니다"
 
-#: models/__init__.py:2433
+#: models/__init__.py:2486
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] "%(count)d 금 배지"
 
-#: models/__init__.py:2440
+#: models/__init__.py:2493
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] "%(count)d 은 배지"
 
-#: models/__init__.py:2447
+#: models/__init__.py:2500
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] "%(count)d 동 배지"
 
-#: models/__init__.py:2458
+#: models/__init__.py:2511
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr "%(item1)s과 %(item2)s"
 
-#: models/__init__.py:2462
+#: models/__init__.py:2513
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr "%(user)s는 %(badges)s를 갖고 있습니다"
 
-#: models/__init__.py:2595
+#: models/__init__.py:2646
 #, python-format
 msgid "At least %d karma point is required to post links"
 msgid_plural "At least %d karma points is required to post links"
 msgstr[0] ""
 
-#: models/__init__.py:3074
+#: models/__init__.py:3118
 #, python-format
 msgid "%(user)s shared a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3077 models/__init__.py:3087
+#: models/__init__.py:3121 models/__init__.py:3131
 #, python-format
 msgid "%(user)s edited a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3079
+#: models/__init__.py:3123
 #, python-format
 msgid "%(user)s posted a %(post_link)s"
 msgstr ""
 
-#: models/__init__.py:3082
+#: models/__init__.py:3126
 #, python-format
 msgid "%(user)s edited an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3084
+#: models/__init__.py:3128
 #, python-format
 msgid "%(user)s posted an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3089
+#: models/__init__.py:3133
 #, python-format
 msgid "%(user)s posted a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3106
+#: models/__init__.py:3149
 msgid "To reply, PLEASE WRITE ABOVE THIS LINE."
 msgstr ""
 
-#: models/__init__.py:3138
+#: models/__init__.py:3188
 #, python-format
 msgid "\"%(title)s\""
 msgstr "\"%(title)s\""
 
-#: models/__init__.py:3290
+#: models/__init__.py:3340
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr "축하합니다. '%(badge_name)s' 배지를 받으셨습니다. <a href=\"%(user_profile)s\">사용자 프로필</a>을 확인해보세요."
 
-#: models/__init__.py:3560
+#: models/__init__.py:3613
 #, python-format
 msgid "Welcome to %(site_name)s"
 msgstr ""
 
-#: models/__init__.py:3581 views/commands.py:689
+#: models/__init__.py:3634 views/commands.py:697
 msgid "Your tag subscription was saved, thanks!"
 msgstr "태그 구독이 저장되었습니다. 고맙습니다!"
 
@@ -4204,49 +4188,57 @@ msgstr "한 개의 태그에 매우 활동적임"
 msgid "message"
 msgstr ""
 
-#: models/post.py:1551
+#: models/post.py:414
+msgid "Question: "
+msgstr ""
+
+#: models/post.py:416
+msgid "Answer: "
+msgstr ""
+
+#: models/post.py:1569
 msgid "Sorry, this question has been deleted and is no longer accessible"
 msgstr "미안합니다. 이 질문은 삭제되었으므로 더 이상 접근할 수 없습니다"
 
-#: models/post.py:1567
+#: models/post.py:1585
 msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
 msgstr "미안합니다. 부모 질문이 삭제되었으므로, 찾으시는 답변이 더 이상 유효하지 않습니다"
 
-#: models/post.py:1574
+#: models/post.py:1592
 msgid "Sorry, this answer has been removed and is no longer accessible"
 msgstr "미안합니다. 이 질문은 삭제되었으므로 더 이상 접근할 수 없습니다"
 
-#: models/post.py:1590
+#: models/post.py:1608
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent question has been removed"
 msgstr "미안합니다. 찾으시는 댓글의 부모 질문이 삭제되었으므로 더 이상 접근할 수 없습니다."
 
-#: models/post.py:1597
+#: models/post.py:1615
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent answer has been removed"
 msgstr "미안합니다. 찾으시는 댓글의 부모 답변이 삭제되었으므로 더 이상 접근할 수 없습니다."
 
-#: models/post.py:1619
+#: models/post.py:1637
 msgid "This post is temporarily not available"
 msgstr ""
 
-#: models/post.py:2128
+#: models/post.py:2146
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
 msgstr ""
 
-#: models/post.py:2132
+#: models/post.py:2150
 #, python-format
 msgid "your post to %(site)s"
 msgstr ""
 
-#: models/post.py:2139
+#: models/post.py:2157
 msgid ""
 "Your post was placed on the moderation queue and will be published after the"
 " moderator approval."
@@ -4267,17 +4259,17 @@ msgid "%(count)d answer:"
 msgid_plural "%(count)d answers:"
 msgstr[0] ""
 
-#: models/question.py:1263
+#: models/question.py:1267
 #, python-format
 msgid "Tag %s is new and will be submitted for the moderators approval"
 msgstr ""
 
-#: models/question.py:1268 models/tag.py:217
+#: models/question.py:1272 models/tag.py:217
 #, python-format
 msgid "Tags %s are new and will be submitted for the moderators approval"
 msgstr ""
 
-#: models/question.py:1503
+#: models/question.py:1507
 #, python-format
 msgid "Please, <a href=\"%s\">review your question</a>."
 msgstr ""
@@ -4477,19 +4469,14 @@ msgstr "답변을 편집"
 msgid "back"
 msgstr "뒤로"
 
-#: templates/answer_edit.html:14
-msgid "revision"
-msgstr "리비전"
-
-#: templates/answer_edit.html:46 templates/question_edit.html:57
+#: templates/answer_edit.html:41 templates/question_edit.html:61
 msgid "Save edit"
 msgstr "수정내용 저장하기"
 
-#: templates/answer_edit.html:51 templates/close.html:16
-#: templates/feedback.html:64 templates/question_edit.html:58
+#: templates/answer_edit.html:46 templates/close.html:16
+#: templates/feedback.html:64 templates/question_edit.html:62
 #: templates/question_retag.html:22 templates/reopen.html:28
 #: templates/subscribe_for_tags.html:16
-#: templates/authopenid/changeemail.html:51
 #: templates/user_profile/reject_post_dialog.html:36
 #: templates/user_profile/reject_post_dialog.html:74
 #: templates/user_profile/reject_post_dialog.html:104
@@ -4497,21 +4484,21 @@ msgstr "수정내용 저장하기"
 msgid "Cancel"
 msgstr "취소"
 
-#: templates/answer_edit.html:92 templates/answer_edit.html.py:95
-#: templates/ask.html:74 templates/ask.html.py:77
-#: templates/question_edit.html:97 templates/question_edit.html.py:100
+#: templates/answer_edit.html:87 templates/answer_edit.html.py:90
+#: templates/ask.html:82 templates/ask.html.py:85
+#: templates/question_edit.html:101 templates/question_edit.html.py:104
 #: templates/question/javascript.html:73 templates/question/javascript.html:76
-#: templates/widgets/edit_post.html:83
+#: templates/widgets/edit_post.html:73
 msgid "hide preview"
 msgstr "미리보기 숨김"
 
-#: templates/answer_edit.html:95 templates/ask.html:77
-#: templates/question_edit.html:100 templates/question/javascript.html:76
+#: templates/answer_edit.html:90 templates/ask.html:85
+#: templates/question_edit.html:104 templates/question/javascript.html:76
 msgid "show preview"
 msgstr "미리보기"
 
 #: templates/ask.html:4 templates/widgets/ask_button.html:9
-#: templates/widgets/ask_form.html:48
+#: templates/widgets/ask_form.html:66
 msgid "Ask Your Question"
 msgstr "질문하기"
 
@@ -4524,11 +4511,10 @@ msgstr ""
 #: templates/ask.html:25
 #, python-format
 msgid ""
-"YYour email, %%(email)s has not yet been validated. To post messages you "
-"must verify your email, please see <a "
-"href='%%(email_validation_faq_url)s'>more details here</a>. You can submit "
-"your question now and validate email after that. Meanwhile, your question "
-"will saved as pending."
+"Your email, %(email)s has not yet been validated. To post messages you must "
+"verify your email, please see <a href='%(email_validation_faq_url)s'>more "
+"details here</a>. You can submit your question now and validate email after "
+"that. Meanwhile, your question will saved as pending."
 msgstr ""
 
 #: templates/ask.html:29
@@ -4620,7 +4606,7 @@ msgstr "은 배지: 높은 수준의 공헌에 대하여 가끔 포상"
 msgid "bronze badge: often given as a special honor"
 msgstr "동 배지: 특별한 영예로서 종종 주어짐"
 
-#: templates/base.html:19
+#: templates/base.html:22
 #, python-format
 msgid "RSS feed from %(site_title)s"
 msgstr ""
@@ -5105,61 +5091,61 @@ msgstr "현재 총 투표수"
 msgid "anonymous user"
 msgstr "익명의 사용자"
 
-#: templates/macros.html:94 templates/macros.html.py:113
+#: templates/macros.html:91 templates/macros.html.py:110
 msgid "asked"
 msgstr "질문"
 
-#: templates/macros.html:96 templates/macros.html.py:115
+#: templates/macros.html:93 templates/macros.html.py:112
 msgid "answered"
 msgstr "답변"
 
-#: templates/macros.html:98 templates/macros.html.py:117
+#: templates/macros.html:95 templates/macros.html.py:114
 msgid "posted"
 msgstr "게시"
 
-#: templates/macros.html:104
+#: templates/macros.html:101
 msgid "this post is marked as community wiki"
 msgstr "이 게시물은 커뮤니티 위키로 표시되었습니다"
 
-#: templates/macros.html:107
+#: templates/macros.html:104
 #, python-format
 msgid ""
 "This post is a wiki.\n"
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
 msgstr "이 게시물은 위키입니다.\n        개선시켜주세요. (카르마 %(wiki_min_rep)s 이상이면 가능)"
 
-#: templates/macros.html:149
+#: templates/macros.html:146
 msgid "updated"
 msgstr "수정"
 
-#: templates/macros.html:264 templates/macros.html.py:270
+#: templates/macros.html:261 templates/macros.html.py:267
 msgid "Leave this group"
 msgstr ""
 
-#: templates/macros.html:265 templates/macros.html.py:267
-#: templates/macros.html:286
+#: templates/macros.html:262 templates/macros.html.py:264
+#: templates/macros.html:283
 msgid "Join this group"
 msgstr ""
 
-#: templates/macros.html:266 templates/macros.html.py:271
-#: templates/macros.html:281
+#: templates/macros.html:263 templates/macros.html.py:268
+#: templates/macros.html:278
 msgid "You are a member"
 msgstr ""
 
-#: templates/macros.html:273
+#: templates/macros.html:270
 msgid "Cancel application"
 msgstr ""
 
-#: templates/macros.html:274 templates/macros.html.py:283
+#: templates/macros.html:271 templates/macros.html.py:280
 msgid "Waiting approval"
 msgstr ""
 
-#: templates/macros.html:276 templates/macros.html.py:277
-#: templates/macros.html:288
+#: templates/macros.html:273 templates/macros.html.py:274
+#: templates/macros.html:285
 msgid "Ask to join"
 msgstr ""
 
-#: templates/macros.html:317
+#: templates/macros.html:314
 #, python-format
 msgid "see questions tagged '%(tag)s'"
 msgstr "'%(tag)s 로 태그된 질문들 보기"
@@ -5168,86 +5154,86 @@ msgstr "'%(tag)s 로 태그된 질문들 보기"
 msgid "delete this comment"
 msgstr "이 댓글을 삭제"
 
-#: templates/macros.html:437 templates/revisions.html:38
+#: templates/macros.html:443 templates/revisions.html:38
 #: templates/revisions.html.py:41 templates/question/answer_controls.html:5
 #: templates/question/question_controls.html:1
 msgid "edit"
 msgstr "편집"
 
-#: templates/macros.html:441
+#: templates/macros.html:452
 msgid "convert to answer"
 msgstr ""
 
-#: templates/macros.html:576
+#: templates/macros.html:579
 #, python-format
 msgid "follow %(alias)s"
 msgstr "%(alias)s 를 팔로우"
 
-#: templates/macros.html:579
+#: templates/macros.html:582
 #, python-format
 msgid "unfollow %(alias)s"
 msgstr "%(alias)s 를 언팔로우"
 
-#: templates/macros.html:580
+#: templates/macros.html:583
 #, python-format
 msgid "following %(alias)s"
 msgstr "%(alias)s 를 팔로우중"
 
-#: templates/macros.html:658 templatetags/extra_tags.py:44
+#: templates/macros.html:662 templatetags/extra_tags.py:44
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr "%(username)s의 그라바타 이미지"
 
-#: templates/macros.html:667
+#: templates/macros.html:671
 #, python-format
 msgid "%(username)s's website is %(url)s"
 msgstr "%(username)s의 웹사이트는 %(url)s입니다"
 
-#: templates/macros.html:682 templates/macros.html.py:683
-#: templates/macros.html:721 templates/macros.html.py:722
+#: templates/macros.html:686 templates/macros.html.py:687
+#: templates/macros.html:725 templates/macros.html.py:726
 msgid "previous"
 msgstr "이전"
 
-#: templates/macros.html:694 templates/macros.html.py:733
+#: templates/macros.html:698 templates/macros.html.py:737
 msgid "current page"
 msgstr "현재 페이지"
 
-#: templates/macros.html:696 templates/macros.html.py:703
-#: templates/macros.html:735 templates/macros.html.py:742
+#: templates/macros.html:700 templates/macros.html.py:707
+#: templates/macros.html:739 templates/macros.html.py:746
 #, python-format
 msgid "page %(num)s"
 msgstr "%(num)s 페이지"
 
-#: templates/macros.html:707 templates/macros.html.py:746
+#: templates/macros.html:711 templates/macros.html.py:750
 msgid "next page"
 msgstr "다음 페이지"
 
-#: templates/macros.html:758
+#: templates/macros.html:762
 #, python-format
 msgid "responses for %(username)s"
 msgstr "%(username)s의 응답"
 
-#: templates/macros.html:761
+#: templates/macros.html:765
 #, python-format
 msgid "you have %(response_count)s new response"
 msgid_plural "you have %(response_count)s new responses"
 msgstr[0] "%(response_count)s 개의 새로운 응답이 있습니다"
 
-#: templates/macros.html:764
+#: templates/macros.html:768
 msgid "no new responses yet"
 msgstr "아직 새로운 반응들이 없습니다"
 
-#: templates/macros.html:779 templates/macros.html.py:780
+#: templates/macros.html:783 templates/macros.html.py:784
 #, python-format
 msgid "%(new)s new flagged posts and %(seen)s previous"
 msgstr "%(new)s 새로 신고된 게시물 및 %(seen)s 이전"
 
-#: templates/macros.html:782 templates/macros.html.py:783
+#: templates/macros.html:786 templates/macros.html.py:787
 #, python-format
 msgid "%(new)s new flagged posts"
 msgstr "%(new)s 새로 신고된 게시물"
 
-#: templates/macros.html:788 templates/macros.html.py:789
+#: templates/macros.html:792 templates/macros.html.py:793
 #, python-format
 msgid "%(seen)s flagged posts"
 msgstr "%(seen)s 신고된 게시물"
@@ -5256,23 +5242,23 @@ msgstr "%(seen)s 신고된 게시물"
 msgid "Questions"
 msgstr "질문들"
 
-#: templates/question.html:210
+#: templates/question.html:226
 msgid "see more comments"
 msgstr ""
 
-#: templates/question.html:212 templates/question.html.py:315
+#: templates/question.html:228 templates/question.html.py:331
 msgid "post a comment"
 msgstr "댓글 달기"
 
-#: templates/question.html:225 templates/question/content.html:46
+#: templates/question.html:241 templates/question/content.html:46
 msgid "Answer Your Own Question"
 msgstr "자신의 질문에 답변"
 
-#: templates/question.html:230
+#: templates/question.html:246
 msgid "Post Your Answer"
 msgstr "답변하기"
 
-#: templates/question.html:236 templates/widgets/ask_form.html:46
+#: templates/question.html:252 templates/widgets/ask_form.html:64
 msgid "Login/Signup to Post"
 msgstr "글 작성을 위해 로그인/가입"
 
@@ -5280,7 +5266,15 @@ msgstr "글 작성을 위해 로그인/가입"
 msgid "Edit question"
 msgstr "질문을 편집"
 
-#: templates/question_edit.html:52
+#: templates/question_edit.html:16
+msgid "Question - in one sentence"
+msgstr ""
+
+#: templates/question_edit.html:23
+msgid "Details"
+msgstr ""
+
+#: templates/question_edit.html:56
 msgid "Change language"
 msgstr ""
 
@@ -5364,66 +5358,66 @@ msgstr "구독"
 msgid "search for tags"
 msgstr ""
 
-#: templates/users.html:4 templates/users.html.py:14
+#: templates/users.html:8 templates/users.html.py:18
 #: templates/tags/list_bulk_tag_subscription.html:13
 msgid "Users"
 msgstr "사람들"
 
-#: templates/users.html:12
+#: templates/users.html:16
 #, python-format
 msgid "Users in group %(name)s"
 msgstr ""
 
-#: templates/users.html:20
+#: templates/users.html:24
 msgid "Select/Sort by &raquo;"
 msgstr ""
 
-#: templates/users.html:25
+#: templates/users.html:29
 #, python-format
 msgid "people in group %(name)s"
 msgstr ""
 
-#: templates/users.html:29 templates/main_page/tab_bar.html:17
+#: templates/users.html:33 templates/main_page/tab_bar.html:17
 #: templates/tags/header.html:14
 msgid "Sort by &raquo;"
 msgstr "정렬 기준 &raquo;"
 
-#: templates/users.html:36
+#: templates/users.html:40
 msgid "see people with the highest reputation"
 msgstr "가장 높은 평판을 얻은 사람들"
 
-#: templates/users.html:37 templates/user_profile/user_info.html:26
+#: templates/users.html:41 templates/user_profile/user_info.html:26
 #: templates/user_profile/user_reputation.html:5
 #: templates/user_profile/user_tabs.html:24
 msgid "karma"
 msgstr "카르마"
 
-#: templates/users.html:43
+#: templates/users.html:47
 msgid "see people who joined most recently"
 msgstr "최근에 가입한 사람들 보기"
 
-#: templates/users.html:44
+#: templates/users.html:48
 msgid "recent"
 msgstr "최근"
 
-#: templates/users.html:49
+#: templates/users.html:53
 msgid "see people who joined the site first"
 msgstr "사이트에 처음 가입한 사람들 보기"
 
-#: templates/users.html:55
+#: templates/users.html:59
 msgid "see people sorted by name"
 msgstr "사람들을 이름 순으로 보기"
 
-#: templates/users.html:56
+#: templates/users.html:60
 msgid "by username"
 msgstr "사용자명"
 
-#: templates/users.html:62
+#: templates/users.html:66
 #, python-format
 msgid "users matching query %(search_query)s:"
 msgstr ""
 
-#: templates/users.html:65
+#: templates/users.html:69
 msgid "Nothing found."
 msgstr "아무 것도 찾지 못함."
 
@@ -5444,97 +5438,29 @@ msgid "Sign in"
 msgstr "로그인"
 
 #: templates/authopenid/changeemail.html:2
-#: templates/authopenid/changeemail.html:8
-#: templates/authopenid/changeemail.html:49
 msgid "Change Email"
 msgstr "이메일 변경"
 
-#: templates/authopenid/changeemail.html:10
-msgid "Save your email address"
-msgstr "이메일 주소를 저장해 주십시오"
-
-#: templates/authopenid/changeemail.html:15
-#, python-format
-msgid ""
-"<span class=\\\"strong big\\\">Enter your new email into the box below</span> if \n"
-"you'd like to use another email for <strong>update subscriptions</strong>.\n"
-"<br>Currently you are using <strong>%%(email)s</strong>"
-msgstr "<strong>새 소식 받아보기</strong>에 다른 이메일을 사용하고 싶으시다면 <span class=\\\"strong big\\\">새로운 이메일을 아래의 박스에 입력하세요</span>.\n<br>현재 사용하시는 이메일은 <strong>%%(email)s</strong>입니다"
-
-#: templates/authopenid/changeemail.html:19
-#, python-format
-msgid ""
-"<span class='strong big'>Please enter your email address in the box below.</span>\n"
-"Valid email address is required on this Q&amp;A forum. If you like, \n"
-"you can <strong>receive updates</strong> on interesting questions or entire\n"
-"forum via email. Also, your email is used to create a unique \n"
-"<a href='%%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your\n"
-"account. Email addresses are never shown or otherwise shared with anybody\n"
-"else."
-msgstr "<span class='strong big'>아래의 박스에 이메일 주소를 입력하세요.</span>\n이 Q&amp;A 포럼에서는 유효한 이메일 주소를 필요로 합니다. 원하신다면, \n관심 있는 질문 또는 전체 포럼에 대하여 이메일을 통하여 <strong>업데이트를 받아보기</strong> 하실 수 있습니다. 또한, 이메일은 유일한 \n<a href='%%(gravatar_faq_url)s'><strong>그라바타</strong></a> 이미지을 생성하는 데에 사용됩니다. 이메일 주소는 노출되지 않으며 다른 사람에게 공유되지 않습니다."
-
-#: templates/authopenid/changeemail.html:38
-msgid ""
-"<strong>Your new Email:</strong> \n"
-"(will <strong>not</strong> be shown to anyone, must be valid)"
-msgstr "<strong>새로운 이메일:</strong> \n(<strong>다른 사람에게 보이지 않으니</strong>, 유효한 주소를 입력해주세요)"
-
-#: templates/authopenid/changeemail.html:41
-msgid ""
-"<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
-msgstr ""
-
-#: templates/authopenid/changeemail.html:49
-msgid "Save Email"
-msgstr "이메일 저장"
-
-#: templates/authopenid/changeemail.html:58
+#: templates/authopenid/changeemail.html:6
 msgid "Validate email"
 msgstr "이메일 유효성 검사"
 
-#: templates/authopenid/changeemail.html:61
+#: templates/authopenid/changeemail.html:9
 #, python-format
 msgid ""
 "<span class=\\\"strong big\\\">An email with a validation link has been sent to \n"
-"%%(email)s.</span> Please <strong>follow the emailed link</strong> with your \n"
+"%(email)s.</span> Please <strong>follow the emailed link</strong> with your \n"
 "web browser. Email validation is necessary to help insure the proper use of \n"
 "email on <span class=\\\"orange\\\">Q&amp;A</span>. If you would like to use \n"
 "<strong>another email</strong>, please <a \n"
-"href='%%(change_email_url)s'><strong>change it again</strong></a>."
-msgstr "<span class=\\\"strong big\\\">검증 링크가 있는 이메일이 \n%%(email)s으로 발송되었습니다.</span> 웹 브라우저에서 <strong>이메일 링크를 따라가세요</strong>.\n<span class=\\\"orange\\\">Q&amp;A</span>에 대한 이메일을 적합하게 사용함을 확인하기 위하여 이메일 검증이 필요합니다.\n<strong>다른 이메일</strong>을 사용하고 싶으시면, <a href='%%(change_email_url)s'><strong>다시 변경해주세요</strong></a>."
+"href='%(change_email_url)s'><strong>change it again</strong></a>."
+msgstr ""
 
-#: templates/authopenid/changeemail.html:70
-msgid "Email not changed"
-msgstr "이메일 변경 안됨"
-
-#: templates/authopenid/changeemail.html:73
-#, python-format
-msgid ""
-"<span class=\\\"strong big\\\">Your email address %%(email)s has not been changed.\n"
-"</span> If you decide to change it later - you can always do it by editing \n"
-"it in your user profile or by using the <a \n"
-"href='%%(change_email_url)s'><strong>previous form</strong></a> again."
-msgstr "<span class=\\\"strong big\\\">이메일 주소 %%(email)s가 변경되지 않았습니다.</span>\n<a href='%%(change_email_url)s'><strong>이전 양식</strong></a>으로 돌아가거나,\n나중에 사용자 프로필에서 변경하실 수 있습니다."
-
-#: templates/authopenid/changeemail.html:80
-msgid "Email changed"
-msgstr "이메일 변경됨"
-
-#: templates/authopenid/changeemail.html:83
-#, python-format
-msgid ""
-"\n"
-"<span class='big strong'>Your email address is now set to %%(email)s.</span> \n"
-"Updates on the questions that you like most will be sent to this address. \n"
-"Email notifications are sent once a day or less frequently - only when there \n"
-"are any news."
-msgstr "\n<span class='big strong'>귀하의 이메일 주소는 %%(email)s로 설정되었습니다.</span> \n좋아하시는 질문에 대한 업데이트가 이 주소로 발송될 것입니다. \n이메일 알림은 새로운 소식일 있을 경우에만 하루에 한 번 이내로 발송됩니다."
-
-#: templates/authopenid/changeemail.html:91
+#: templates/authopenid/changeemail.html:18
 msgid "Email verified"
 msgstr "이메일 인증됨"
 
-#: templates/authopenid/changeemail.html:94
+#: templates/authopenid/changeemail.html:21
 msgid ""
 "<span class=\\\"big strong\\\">Thank you for verifying your email!</span> Now \n"
 "you can <strong>ask</strong> and <strong>answer</strong> questions. Also if \n"
@@ -5542,19 +5468,6 @@ msgid ""
 "updates</strong> - then will be notified about changes <strong>once a day</strong>\n"
 "or less frequently."
 msgstr "<span class=\\\"big strong\\\">이메일을 확인해주셔서 고맙습니다!</span> 이제 <strong>질문</strong>과 <strong>답변</strong>을 하실 수 있습니다. 또한 흥미로운 질문을 발견하시면 <strong>업데이트를 구독</strong>하심으로써 변경된 사항을 <strong>하루에 한 번</strong> 이내로 받아보실 수 있습니다."
-
-#: templates/authopenid/changeemail.html:102
-msgid "Validation email not sent"
-msgstr "확인 이메일이 발송되지 않음"
-
-#: templates/authopenid/changeemail.html:105
-#, python-format
-msgid ""
-"<span class='big strong'>Your current email address %%(email)s has been \n"
-"validated before</span> so the new key was not sent. You can <a \n"
-"href='%%(change_link)s'>change</a> email used for update subscriptions if \n"
-"necessary."
-msgstr "<span class='big strong'>귀하의 현재 이메일 주소 %%(email)은 이미 확인되었으므로</span> 새로운 키가 발송되지 않았습니다. 필요하다면 구독 갱신을 위하여 사용되는 이메일을 <a \nhref='%%(change_link)s'>변경</a>하실 수 있습니다"
 
 #: templates/authopenid/complete.html:21
 msgid "Registration"
@@ -5726,7 +5639,7 @@ msgid "Login or email"
 msgstr "아이디 또는 이메일"
 
 #: templates/authopenid/signin.html:113
-#: templates/authopenid/widget_signin.html:113 utils/forms.py:266
+#: templates/authopenid/widget_signin.html:113 utils/forms.py:264
 msgid "Password"
 msgstr "비밀번호"
 
@@ -5744,6 +5657,12 @@ msgstr "새로운 비밀번호"
 #: templates/authopenid/widget_signin.html:138
 msgid "Please, retype"
 msgstr "다시 입력해 주십시오"
+
+#: templates/authopenid/signin.html:148
+#: templates/authopenid/widget_signin.html:148
+#: templates/livesettings/site_settings.html:24
+msgid "Change password"
+msgstr "비밀번호 변경"
 
 #: templates/authopenid/signin.html:162
 #: templates/authopenid/widget_signin.html:162
@@ -6050,7 +5969,7 @@ msgid ""
 "                        "
 msgstr ""
 
-#: templates/email/notify_author_about_approved_post.html:20
+#: templates/email/notify_author_about_approved_post.html:21
 msgid "Below is a copy of your post:"
 msgstr ""
 
@@ -6072,22 +5991,30 @@ msgstr[0] ""
 msgid "Great, you are ready to use %(site_name)s!"
 msgstr ""
 
-#: templates/email/re_welcome_lamson_on.html:6
+#: templates/email/re_welcome_lamson_on.html:7
 #, python-format
 msgid "You can post questions by emailing them at %(ask_address)s."
 msgstr ""
 
-#: templates/email/re_welcome_lamson_on.html:7
+#: templates/email/re_welcome_lamson_on.html:8
 msgid ""
 "When you receive update notifications, you will be able to respond to them, "
 "also by email."
 msgstr ""
 
-#: templates/email/re_welcome_lamson_on.html:8
+#: templates/email/re_welcome_lamson_on.html:9
 #, python-format
 msgid ""
 "Of course, you can always visit the %(site_name)s at <a "
-"href=\"%(site_url)s\">%(site_url)s</a>"
+"href=\"%(site_url)s\">%(site_url)s</a>."
+msgstr ""
+
+#: templates/email/re_welcome_lamson_on.html:11
+#: templates/email/welcome_lamson_off.html:10
+#, python-format
+msgid ""
+"Please visit %(site_name)s at <a href=\"%(site_url)s\">%(site_url)s</a>, we "
+"look forward to your posts."
 msgstr ""
 
 #: templates/email/rejected_post.html:2 templates/email/rejected_post.html:3
@@ -6116,10 +6043,6 @@ msgstr "\n<p>이 시스템은 당신의 메시지를 올바로 처리할 수 없
 msgid "Welcome to %(site_name)s!"
 msgstr ""
 
-#: templates/email/welcome_lamson_off.html:10
-msgid "We look forward to your Questions!"
-msgstr ""
-
 #: templates/email/welcome_lamson_on.html:11
 msgid ""
 "Important: <em>Please reply</em> to this message, without editing it. We "
@@ -6132,10 +6055,6 @@ msgstr ""
 msgid ""
 "Until we receive the response from you, you will not be able ask or answer "
 "questions on %(site_name)s by email."
-msgstr ""
-
-#: templates/embed/ask_by_widget.html:170
-msgid "Please enter a descriptive title for your question"
 msgstr ""
 
 #: templates/embed/list_widgets.html:44
@@ -6226,7 +6145,64 @@ msgstr ""
 msgid "there are no messages yet..."
 msgstr ""
 
-#: templates/main_page/headline.html:4 views/readers.py:154
+#: templates/livesettings/_admin_site_views.html:4
+msgid "Sites"
+msgstr "사이트"
+
+#: templates/livesettings/group_settings.html:4
+msgid "Settings"
+msgstr ""
+
+#: templates/livesettings/group_settings.html:9
+#: templates/livesettings/site_settings.html:51
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "다음의 오류를 수정해주세요."
+
+#: templates/livesettings/group_settings.html:16
+#, python-format
+msgid "Settings included in %(name)s."
+msgstr "%(name)s에 설정이 포함됨."
+
+#: templates/livesettings/group_settings.html:50
+#: templates/livesettings/site_settings.html:98
+msgid "You don't have permission to edit values."
+msgstr "값을 편집할 권한이 없습니다."
+
+#: templates/livesettings/site_settings.html:24
+msgid "Documentation"
+msgstr "첨부 문서"
+
+#: templates/livesettings/site_settings.html:24
+msgid "Log out"
+msgstr "로그 아웃"
+
+#: templates/livesettings/site_settings.html:27
+msgid "Home"
+msgstr "홈"
+
+#: templates/livesettings/site_settings.html:28
+msgid "Edit Site Settings"
+msgstr "사이트 설정 수정"
+
+#: templates/livesettings/site_settings.html:44
+msgid "Livesettings are disabled for this site."
+msgstr "이 사이트에서는 Livesettings가 비활성화되었습니다."
+
+#: templates/livesettings/site_settings.html:45
+msgid "All configuration options must be edited in the site settings.py file"
+msgstr "모든 구성 옵션은 사이트의 settings.py 파일에서 편집하여야 합니다"
+
+#: templates/livesettings/site_settings.html:67
+#, python-format
+msgid "Group settings: %(name)s"
+msgstr "그룹 설정: %(name)s"
+
+#: templates/livesettings/site_settings.html:94
+msgid "Uncollapse all"
+msgstr "전체 확대"
+
+#: templates/main_page/headline.html:4 views/readers.py:149
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
@@ -6313,8 +6289,8 @@ msgid "Did not find what you were looking for?"
 msgstr "원하는 것을 찾지 못하셨나요?"
 
 #: templates/main_page/questions_loop.html:10
-msgid "Please, post your question!"
-msgstr "질문을 올려주세요!"
+msgid "Ask your question!"
+msgstr ""
 
 #: templates/main_page/tab_bar.html:11
 msgid "subscribe to the questions feed"
@@ -6358,7 +6334,7 @@ msgid ""
 "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
 msgstr "태그는 %(tag_count)s 개까지, 각각 %(max_chars)s 자 미만으로 사용해주세요"
 
-#: templates/question/answer_card.html:20
+#: templates/question/answer_card.html:21
 msgid "This response is published"
 msgstr ""
 
@@ -6719,7 +6695,7 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: templates/tags/list_bulk_tag_subscription.html:48 views/commands.py:751
+#: templates/tags/list_bulk_tag_subscription.html:48 views/commands.py:759
 msgid "Edit"
 msgstr ""
 
@@ -6854,6 +6830,35 @@ msgstr ""
 msgid "Edit this reason"
 msgstr ""
 
+#: templates/user_profile/twitter_sharing_controls.html:8
+#, python-format
+msgid "Auto-tweeting to @%(handle)s"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:19
+msgid "stop tweeting"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:23
+msgid "Auto-tweeting is inactive"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:26
+msgid "Select twitter account"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:28
+msgid "use another account"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:32
+msgid "Auto-tweeting is off"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:33
+msgid "Start tweeting"
+msgstr ""
+
 #: templates/user_profile/user.html:12
 #, python-format
 msgid "%(username)s's profile"
@@ -6965,24 +6970,24 @@ msgstr "최종 방문일"
 msgid "website"
 msgstr "웹사이트"
 
-#: templates/user_profile/user_info.html:93
+#: templates/user_profile/user_info.html:100
 msgid "location"
 msgstr "위치"
 
-#: templates/user_profile/user_info.html:100
+#: templates/user_profile/user_info.html:107
 msgid "age"
 msgstr "나이"
 
-#: templates/user_profile/user_info.html:101
+#: templates/user_profile/user_info.html:108
 #, python-format
 msgid "%(age)s years old"
 msgstr ""
 
-#: templates/user_profile/user_info.html:106
+#: templates/user_profile/user_info.html:113
 msgid "todays unused votes"
 msgstr "사용하지 않은 일일 투표"
 
-#: templates/user_profile/user_info.html:107
+#: templates/user_profile/user_info.html:114
 msgid "votes left"
 msgstr "표 남음"
 
@@ -7079,19 +7084,19 @@ msgid "Followed by %(count)s person"
 msgid_plural "Followed by %(count)s people"
 msgstr[0] "%(count)s 명에게 팔로우됨"
 
-#: templates/user_profile/user_network.html:21
+#: templates/user_profile/user_network.html:20
 #, python-format
 msgid "Following %(count)s person"
 msgid_plural "Following %(count)s people"
 msgstr[0] "%(count)s 명을 팔로잉"
 
-#: templates/user_profile/user_network.html:33
+#: templates/user_profile/user_network.html:31
 msgid ""
 "Your network is empty. Would you like to follow someone? - Just visit their "
 "profiles and click \"follow\""
 msgstr "인맥이 형성되지 않았습니다. 누군가를 팔로우하시겠습니까? - 프로필을 방문하고 \"팔로우\"를 클릭하시면 됩니다."
 
-#: templates/user_profile/user_network.html:35
+#: templates/user_profile/user_network.html:33
 #, python-format
 msgid "%(username)s's network is empty"
 msgstr "%(username)s 님의 인맥이 형성되지 않았습니다"
@@ -7185,7 +7190,7 @@ msgstr "답변 대상:"
 msgid "User profile"
 msgstr "사용자 프로필"
 
-#: templates/user_profile/user_tabs.html:10 views/users.py:876
+#: templates/user_profile/user_tabs.html:10 views/users.py:873
 msgid "comments and answers to others questions"
 msgstr "다른 사람들의 질문에 대한 댓글과 답변"
 
@@ -7201,7 +7206,7 @@ msgstr "사용자 카르마 그래프"
 msgid "questions that user is following"
 msgstr "사용자가 팔로잉한 질문들"
 
-#: templates/user_profile/user_tabs.html:36 views/users.py:918
+#: templates/user_profile/user_tabs.html:36 views/users.py:915
 msgid "user vote record"
 msgstr "사용자 투표 기록"
 
@@ -7210,11 +7215,11 @@ msgstr "사용자 투표 기록"
 msgid "votes"
 msgstr "투표"
 
-#: templates/user_profile/user_tabs.html:42 views/users.py:1030
+#: templates/user_profile/user_tabs.html:42 views/users.py:1027
 msgid "email subscription settings"
 msgstr "이메일 구독 설정"
 
-#: templates/user_profile/user_tabs.html:48 views/users.py:286
+#: templates/user_profile/user_tabs.html:48 views/users.py:283
 msgid "moderate this user"
 msgstr "이 사용자에 대한 조정"
 
@@ -7235,7 +7240,15 @@ msgstr "논의에 참여하기 보다는 답변을 하기 위해 노력하라."
 msgid "Ask the Group"
 msgstr ""
 
-#: templates/widgets/ask_form.html:40
+#: templates/widgets/ask_form.html:21 templates/widgets/ask_form.html.py:23
+msgid "Add details (optional)"
+msgstr ""
+
+#: templates/widgets/ask_form.html:25
+msgid "Add details"
+msgstr ""
+
+#: templates/widgets/ask_form.html:58
 msgid "Select language"
 msgstr ""
 
@@ -7243,23 +7256,23 @@ msgstr ""
 msgid "Contributors"
 msgstr "공헌자"
 
-#: templates/widgets/edit_post.html:42
+#: templates/widgets/edit_post.html:33
 msgid ", one of these is required"
 msgstr ", 이들 중 하나가 요구됩니다"
 
-#: templates/widgets/edit_post.html:51 templates/widgets/edit_post.html:56
+#: templates/widgets/edit_post.html:42 templates/widgets/edit_post.html:47
 msgid "tags:"
 msgstr "태그들:"
 
-#: templates/widgets/edit_post.html:52
+#: templates/widgets/edit_post.html:43
 msgid "(required)"
 msgstr "(필수)"
 
-#: templates/widgets/edit_post.html:81
+#: templates/widgets/edit_post.html:71
 msgid "Toggle the real time Markdown editor preview"
 msgstr "실시간 마크다운 편집기 미리보기 토글"
 
-#: templates/widgets/edit_post.html:96
+#: templates/widgets/edit_post.html:86
 msgid ""
 "To post on behalf of someone else, enter user name <strong>and</strong> "
 "email below."
@@ -7527,23 +7540,23 @@ msgstr "설정"
 msgid "widgets"
 msgstr ""
 
-#: templatetags/extra_filters_jinja.py:308
+#: templatetags/extra_filters_jinja.py:319
 msgid "no"
 msgstr "0"
 
-#: utils/decorators.py:103 views/commands.py:146
+#: utils/decorators.py:104 views/commands.py:146
 msgid "Oops, apologies - there was some error"
 msgstr "앗, 죄송합니다. 오류가 있네요"
 
-#: utils/decorators.py:122
+#: utils/decorators.py:123
 msgid "Please login to post"
 msgstr "게시하려면 로그인해주세요"
 
-#: utils/decorators.py:218
+#: utils/decorators.py:219
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr "게시물에서 스팸이 탐지되었습니다. 잘못 탐지되었다면 죄송합니다"
 
-#: utils/decorators.py:242
+#: utils/decorators.py:243
 msgid "This function is limited to moderators and administrators"
 msgstr ""
 
@@ -7607,37 +7620,37 @@ msgstr "이 이메일은 이미 다른 사람이 사용하고 있습니다. 다�
 msgid "this email address is not authorized"
 msgstr ""
 
-#: utils/forms.py:267
+#: utils/forms.py:265
 msgid "password is required"
 msgstr "비밀번호가 필요합니다"
 
-#: utils/forms.py:270
+#: utils/forms.py:268
 msgid "Password <i>(please retype)</i>"
 msgstr "비밀번호 <i>(한 번 더 입력해주세요)</i>"
 
-#: utils/forms.py:271
+#: utils/forms.py:269
 msgid "please, retype your password"
 msgstr "비밀번호를 한 번 더 입력해주세요"
 
-#: utils/forms.py:272
+#: utils/forms.py:270
 msgid "sorry, entered passwords did not match, please try again"
 msgstr "미안합니다. 입력하신 비밀번호가 일치하지 않습니다. 다시 입력해주세요"
 
-#: utils/functions.py:101
+#: utils/functions.py:102
 msgid "2 days ago"
 msgstr "이틀 전"
 
-#: utils/functions.py:103
+#: utils/functions.py:104
 msgid "yesterday"
 msgstr "어제"
 
-#: utils/functions.py:106
+#: utils/functions.py:107
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
 msgstr[0] "%(hr)d 시간 전"
 
-#: utils/functions.py:112
+#: utils/functions.py:113
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
@@ -7695,46 +7708,50 @@ msgstr "구독이 저장되었지만, 이메일 주소 %(email)s에 대한 확�
 msgid "email update frequency has been set to daily"
 msgstr "이메일 업데이트 주기가 매일로 설정되었습니다"
 
-#: views/commands.py:693
+#: views/commands.py:628
+msgid "Sorry, could not delete tag"
+msgstr ""
+
+#: views/commands.py:701
 #, python-format
 msgid "Tag subscription was canceled (<a href=\"%(url)s\">undo</a>)."
 msgstr "태그 구독이 취소되었습니다(<a href=\"%(url)s\">되돌리기</a>)."
 
-#: views/commands.py:702
+#: views/commands.py:710
 #, python-format
 msgid "Please sign in to subscribe for: %(tags)s"
 msgstr "%(tags)s를 구독하려면 로그인해주세요"
 
-#: views/commands.py:721
+#: views/commands.py:729
 msgid "Create"
 msgstr ""
 
-#: views/commands.py:950
+#: views/commands.py:959
 msgid "Please sign in to vote"
 msgstr "투표하려면 로그인해주세요"
 
-#: views/commands.py:971
+#: views/commands.py:980
 msgid "Please sign in to delete/restore posts"
 msgstr "게시물을 삭제/복구하려면 로그인해주세요"
 
-#: views/commands.py:1393 views/commands.py:1426
+#: views/commands.py:1402 views/commands.py:1435
 msgid "Sorry, looks like sharing request was invalid"
 msgstr ""
 
-#: views/commands.py:1449
+#: views/commands.py:1458
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
 msgstr ""
 
-#: views/commands.py:1506
+#: views/commands.py:1515
 msgid "Sorry, only thread moderators can use this function"
 msgstr ""
 
-#: views/commands.py:1521
+#: views/commands.py:1530
 msgid "The answer is now unpublished"
 msgstr ""
 
-#: views/commands.py:1525
+#: views/commands.py:1534
 msgid "The answer is now published"
 msgstr ""
 
@@ -7763,113 +7780,113 @@ msgstr "피드백을 들려주세요! 다음 번에는요 :)"
 msgid "Privacy policy"
 msgstr "개인정보 정책"
 
-#: views/meta.py:219
+#: views/meta.py:216
 msgid "Suggested tags"
 msgstr ""
 
-#: views/readers.py:410
+#: views/readers.py:402
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
 msgstr "미안합니다. 찾으시는 댓글은 삭제되었거나 더 이상 접근할 수 없습니다"
 
-#: views/users.py:287
+#: views/users.py:284
 msgid "moderate user"
 msgstr "사용자 조정"
 
-#: views/users.py:505
+#: views/users.py:502
 msgid "user profile"
 msgstr "사용자 프로필"
 
-#: views/users.py:506
+#: views/users.py:503
 msgid "user profile overview"
 msgstr "사용자 프로필 둘러보기"
 
-#: views/users.py:707
+#: views/users.py:704
 msgid "recent user activity"
 msgstr "사용자의 최근 활동"
 
-#: views/users.py:708
+#: views/users.py:705
 msgid "profile - recent activity"
 msgstr "프로필 - 최근 활동"
 
-#: views/users.py:739
+#: views/users.py:736
 msgid "group joining requests"
 msgstr ""
 
-#: views/users.py:740
+#: views/users.py:737
 msgid "profile - moderation"
 msgstr ""
 
-#: views/users.py:796
+#: views/users.py:793
 msgid "private messages"
 msgstr ""
 
-#: views/users.py:797
+#: views/users.py:794
 msgid "profile - messages"
 msgstr ""
 
-#: views/users.py:877
+#: views/users.py:874
 msgid "profile - responses"
 msgstr "프로필 - 응답"
 
-#: views/users.py:919
+#: views/users.py:916
 msgid "profile - votes"
 msgstr "프로필 - 투표"
 
-#: views/users.py:940
+#: views/users.py:937
 msgid "user karma"
 msgstr "사용자 카르마"
 
-#: views/users.py:941
+#: views/users.py:938
 msgid "Profile - User's Karma"
 msgstr "프로필 - 사용자의 카르마"
 
-#: views/users.py:959
+#: views/users.py:956
 msgid "users favorite questions"
 msgstr "사용자가 좋아하는 질문"
 
-#: views/users.py:960
+#: views/users.py:957
 msgid "profile - favorite questions"
 msgstr "프로필 - 좋아하는 질문"
 
-#: views/users.py:1001 views/users.py:1005
+#: views/users.py:998 views/users.py:1002
 msgid "changes saved"
 msgstr "변경사항이 저장됨"
 
-#: views/users.py:1011
+#: views/users.py:1008
 msgid "email updates canceled"
 msgstr "이메일 변경이 취소됨"
 
-#: views/users.py:1031
+#: views/users.py:1028
 msgid "profile - email subscriptions"
 msgstr "프로필 - 이메일 구독"
 
-#: views/users.py:1052
+#: views/users.py:1049
 #, python-format
 msgid "profile - %(section)s"
 msgstr ""
 
-#: views/writers.py:73
+#: views/writers.py:72
 msgid "Sorry, anonymous users cannot upload files"
 msgstr "미안합니다. 익명으로 파일을 업로드할 수 없습니다"
 
-#: views/writers.py:91
+#: views/writers.py:90
 #, python-format
 msgid "allowed file types are '%(file_types)s'"
 msgstr "허용되는 파일 형식은 '%(file_types)s'"
 
-#: views/writers.py:104
+#: views/writers.py:103
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
 msgstr "최대 업로드 파일 크기는 %(file_size)sK입니다"
 
-#: views/writers.py:112
+#: views/writers.py:111
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you."
 msgstr "파일 업로드 오류. 사이트 관리자에게 문의해주세요. 고맙습니다."
 
-#: views/writers.py:209
+#: views/writers.py:208
 msgid ""
 "<span class=\"strong big\">You are welcome to start submitting your question"
 " anonymously</span>. When you submit the post, you will be redirected to the"
@@ -7878,45 +7895,45 @@ msgid ""
 "Login takes about 30 seconds, initial signup takes a minute or less."
 msgstr "<span class=\"strong big\">익명으로 질문을 올리시는 것을 환영합니다</span>. 게시물을 제출하면, 로그인/가입 페이지로 이동합니다. 귀하의 질문은 현재 세션 내에 저장되며 로그인 후에 발행됩니다. 로그인/가입 절차는 매우 간단합니다. 로그인에는 30 초, 처음 가입에는 몇 분 밖에 걸리지 않습니다."
 
-#: views/writers.py:571
+#: views/writers.py:575
 msgid "Please log in to answer questions"
 msgstr "질문에 답하려면 로그인해주세요"
 
-#: views/writers.py:710
+#: views/writers.py:701
 msgid "This content is forbidden"
 msgstr ""
 
-#: views/writers.py:719
+#: views/writers.py:710
 msgid "Post not found"
 msgstr ""
 
-#: views/writers.py:727
+#: views/writers.py:718
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "미안합니다. 로그아웃하신 것으로 보여서 댓글을 달 수 없습니다. <a href=\"%(sign_in_url)s\">로그인</a>해주세요."
 
-#: views/writers.py:746
+#: views/writers.py:742
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr "미안합니다. 익명의 사용자는 댓글을 편집할 수 없습니다"
 
-#: views/writers.py:795
+#: views/writers.py:791
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "미안합니다. 로그아웃하신 것으로 보여서 댓글을 삭제할 수 없습니다. <a href=\"%(sign_in_url)s\">로그인</a>해주세요."
 
-#: views/writers.py:821
+#: views/writers.py:817
 msgid "sorry, we seem to have some technical difficulties"
 msgstr "미안합니다. 기술적인 어려움이 있는 것 같습니다."
 
-#: views/writers.py:885
+#: views/writers.py:881
 msgid "Error - could not find the destination post"
 msgstr ""
 
-#: views/writers.py:909
+#: views/writers.py:905
 #, python-format
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "
