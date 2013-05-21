@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
-"POT-Creation-Date: 2013-04-10 01:41-0500\n"
-"PO-Revision-Date: 2013-04-30 20:00+0000\n"
-"Last-Translator: masdzen <masdzen@gmail.com>\n"
+"POT-Creation-Date: 2013-05-18 09:59-0500\n"
+"PO-Revision-Date: 2013-05-18 18:48+0000\n"
+"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/askbot/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,27 +26,27 @@ msgstr ""
 msgid "Sorry, but anonymous visitors cannot access this function"
 msgstr "К сожалению, эта функция недоступна для неавторизованных пользователей"
 
-#: feed.py:32 feed.py:106
+#: feed.py:34 feed.py:108
 msgid " - "
 msgstr "-"
 
-#: feed.py:33 feed.py:107
+#: feed.py:35 feed.py:109
 msgid "Individual question feed"
 msgstr "Личная лента вопросов"
 
-#: forms.py:138
+#: forms.py:139
 msgid "select country"
 msgstr "выбрать страну"
 
-#: forms.py:148
+#: forms.py:149
 msgid "Country"
 msgstr "Страна"
 
-#: forms.py:156
+#: forms.py:157
 msgid "Country field is required"
 msgstr "Заполните поле \"Страна\""
 
-#: forms.py:186
+#: forms.py:187
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
@@ -54,7 +54,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: forms.py:197
+#: forms.py:198
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
@@ -62,42 +62,42 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: forms.py:218
+#: forms.py:219
 msgid "minor edit (don't send alerts)"
 msgstr "незначительное изменение (не отправлять уведомления)"
 
-#: forms.py:245 templates/widgets/markdown_help.html:20
+#: forms.py:246 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
 msgstr "заголовок"
 
-#: forms.py:247
-msgid "please enter a descriptive title for your question"
-msgstr "пожалуйста, введите заголовок, содержащий суть вашего вопроса"
+#: forms.py:248 templates/embed/ask_by_widget.html:170
+msgid "Please enter your question"
+msgstr ""
 
-#: forms.py:258
+#: forms.py:259
 #, python-format
-msgid "title must be > %d character"
-msgid_plural "title must be > %d characters"
-msgstr[0] "заглавие должно быть больше %d символа"
-msgstr[1] "заглавие должно быть больше %d символов"
-msgstr[2] "заглавие должно быть больше %d символов"
+msgid "must have > %d character"
+msgid_plural "must have > %d characters"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: forms.py:268
+#: forms.py:269
 #, python-format
-msgid "The title is too long, maximum allowed size is %d characters"
-msgstr "Название слишком длинное, максимальный размер - %d знаков"
+msgid "The question is too long, maximum allowed size is %d characters"
+msgstr ""
 
-#: forms.py:275
+#: forms.py:276
 #, python-format
-msgid "The title is too long, maximum allowed size is %d bytes"
-msgstr "Название слишком длинное, максимальный размер - %d байт"
+msgid "The question is too long, maximum allowed size is %d bytes"
+msgstr ""
 
-#: forms.py:307
+#: forms.py:308
 msgid "content"
 msgstr "содержание"
 
-#: forms.py:368
+#: forms.py:369
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
@@ -105,18 +105,18 @@ msgstr[0] "каждый тэг должен содержать не более %
 msgstr[1] "каждый тэг должен содержать не более %(max_chars)d знаков"
 msgstr[2] "каждый тэг должен содержать не более %(max_chars)d знаков"
 
-#: forms.py:405
+#: forms.py:406
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
 msgstr "Нам не хватило места для записи тегов. Пожалуйста, сократить или удалить некоторые из них."
 
-#: forms.py:408 forms.py:1014 models/widgets.py:27
-#: templates/widgets/edit_post.html:41 templates/widgets/meta_nav.html:6
+#: forms.py:409 forms.py:1015 models/widgets.py:27
+#: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
 msgstr "тэги"
 
-#: forms.py:410
+#: forms.py:411
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -128,7 +128,7 @@ msgstr[0] "Тэг это короткое ключевое слово без п�
 msgstr[1] "Тэг это короткое ключевое слово без пробелов. Вы можете использовать до %(max_tags)d тэгов одновременно."
 msgstr[2] "Тэг это короткое ключевое слово без пробелов. Вы можете использовать до %(max_tags)d тэгов одновременно."
 
-#: forms.py:437
+#: forms.py:438
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
@@ -136,280 +136,280 @@ msgstr[0] "пожалуйста введите не более %(tag_count)d с�
 msgstr[1] "пожалуйста введите не более %(tag_count)d слов"
 msgstr[2] "пожалуйста введите не более %(tag_count)d слов"
 
-#: forms.py:445
+#: forms.py:446
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr "Необходим хотя бы один из следующих тэгов : %(tags)s"
 
-#: forms.py:473
+#: forms.py:474
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr "wiki-вопрос (вы не получите очки репутации и все участники смогут редактировать этот вопрос)"
 
-#: forms.py:477
+#: forms.py:478
 msgid ""
 "if you choose community wiki option, the question and answer do not generate"
 " points and name of author will not be shown"
 msgstr "если вы отметите опцию \"Вики сообщества\", то вопрос и ответ не дадут вам кармы и имя автора не будет отображаться"
 
-#: forms.py:504
+#: forms.py:505
 msgid "update summary:"
 msgstr "информация об обновлениях:"
 
-#: forms.py:506
+#: forms.py:507
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr "кратко опишите здесь суть вашей правки (например - исправление орфографии, грамматики, стиля, это необязательно)"
 
-#: forms.py:593
+#: forms.py:594
 msgid "Enter number of points to add or subtract"
 msgstr "Введите количество очков которые Вы собираетесь вычесть или добавить"
 
-#: forms.py:608 const/__init__.py:366
+#: forms.py:609 const/__init__.py:375
 msgid "approved"
 msgstr "одобрен"
 
-#: forms.py:609 const/__init__.py:367
+#: forms.py:610 const/__init__.py:376
 msgid "watched"
 msgstr "под надзором"
 
-#: forms.py:610 const/__init__.py:368
+#: forms.py:611 const/__init__.py:377
 msgid "suspended"
 msgstr "ограничен в правах"
 
-#: forms.py:611 const/__init__.py:369
+#: forms.py:612 const/__init__.py:378
 msgid "blocked"
 msgstr "заблокирован"
 
-#: forms.py:613
+#: forms.py:614
 msgid "administrator"
 msgstr "администратор"
 
-#: forms.py:614 const/__init__.py:365
+#: forms.py:615 const/__init__.py:374
 msgid "moderator"
 msgstr "модератор"
 
-#: forms.py:633
+#: forms.py:634
 msgid "Change status to"
 msgstr "Изменить статус на"
 
-#: forms.py:660
+#: forms.py:661
 msgid "which one?"
 msgstr "выберите"
 
-#: forms.py:681
+#: forms.py:682
 msgid "Cannot change own status"
 msgstr "Невозможно изменить собственный статус"
 
-#: forms.py:687
+#: forms.py:688
 msgid "Cannot turn other user to moderator"
 msgstr "У Вас нет возможности присваивать другим пользователям статус модератора"
 
-#: forms.py:694
+#: forms.py:695
 msgid "Cannot change status of another moderator"
 msgstr "У Вас нет возможности изменять статус модераторов"
 
-#: forms.py:700
+#: forms.py:701
 msgid "Cannot change status to admin"
 msgstr "Невозможно изменить статус администратора"
 
-#: forms.py:706
+#: forms.py:707
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr "Если Вы хотите изменить статус пользователя %(username)s, это можно сделать здесь"
 
-#: forms.py:716
+#: forms.py:717
 msgid "Subject line"
 msgstr "Тема"
 
-#: forms.py:721
+#: forms.py:722
 msgid "Message text"
 msgstr "Текст сообщения"
 
-#: forms.py:735
+#: forms.py:736
 msgid "Your name (optional):"
 msgstr "Ваше имя (не обязательно):"
 
-#: forms.py:736
+#: forms.py:737
 msgid "Email:"
 msgstr "<strong>Ваш E-mail</strong> (<i>адрес должен быть правильным, никогда не показывается другим пользователям</i>)"
 
-#: forms.py:738
+#: forms.py:739
 msgid "Your message:"
 msgstr "Ваше сообщение:"
 
-#: forms.py:743
+#: forms.py:744
 msgid "I don't want to give my email or receive a response:"
 msgstr "Я не хочу оставлять свой E-mail адрес или получать на него ответы:"
 
-#: forms.py:766
+#: forms.py:767
 msgid "Please mark \"I dont want to give my mail\" field."
 msgstr "Пожалуйста, отметьте поле \"Я не хочу оставлять свой адрес электронной почты\"."
 
-#: forms.py:799
+#: forms.py:800
 msgid "keep private within your groups"
 msgstr "храните приватность внутри вашей группы"
 
-#: forms.py:838
+#: forms.py:839
 msgid "User name:"
 msgstr "Войти как пользователь"
 
-#: forms.py:840
+#: forms.py:841
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
 msgstr "Введите имя, чтобы ответить от кого-то другого. Можно создать новый аккаунт."
 
-#: forms.py:847
+#: forms.py:848
 msgid "Email address:"
 msgstr "Электронная почта:"
 
-#: forms.py:897
+#: forms.py:898
 msgid "User name is required with the email"
 msgstr "Имя пользователя требует электронной почты"
 
-#: forms.py:902
+#: forms.py:903
 msgid "Email is required if user name is added"
 msgstr "Электронная почта необходима, если добавляется новый пользователь"
 
-#: forms.py:922 forms.py:965
+#: forms.py:923 forms.py:966
 msgid "ask anonymously"
 msgstr "спросить анонимно"
 
-#: forms.py:924 forms.py:967
+#: forms.py:925 forms.py:968
 msgid "Check if you do not want to reveal your name when asking this question"
 msgstr "Поставьте галочку, если не хотите раскрывать свою личность, когда задаете вопрос"
 
-#: forms.py:955
+#: forms.py:956
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr "Ожидаемый формат темы письма: [тэг1, тэг2, тэг3,...] заголовок вопроса"
 
-#: forms.py:1199
+#: forms.py:1215
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
 msgstr "Вы задали вопрос анонимно, если решите раскрыть свою личность, отметьте эту опцию."
 
-#: forms.py:1203
+#: forms.py:1219
 msgid "reveal identity"
 msgstr "раскрыть личность"
 
-#: forms.py:1282
+#: forms.py:1298
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr "Простите, только создатель анонимного вопроса может раскрыть свою личность, пожалуйста, снимите галочку."
 
-#: forms.py:1295
+#: forms.py:1311
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr "Простите, похоже, правила изменились - больше невозможно задавать вопросы анонимно. Пожалуйста, отметьте опцию \"раскрыть личность\" или перезагрузите эту страницу и попробуйте отредактировать вопрос снова."
 
-#: forms.py:1359
+#: forms.py:1375
 msgid "Real name"
 msgstr "Настоящее имя"
 
-#: forms.py:1366
+#: forms.py:1382
 msgid "Website"
 msgstr "Веб-страница"
 
-#: forms.py:1373
+#: forms.py:1389
 msgid "City"
 msgstr "Город"
 
-#: forms.py:1382
+#: forms.py:1398
 msgid "Show country"
 msgstr "Показать страну"
 
-#: forms.py:1387
+#: forms.py:1403
 msgid "Show tag choices"
 msgstr "Показать выбор тэгов"
 
-#: forms.py:1392
+#: forms.py:1408
 msgid "Date of birth"
 msgstr "Дата рождения"
 
-#: forms.py:1394
+#: forms.py:1410
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "показывается только возраст, формат ГГГГ-ММ-ДД"
 
-#: forms.py:1402
+#: forms.py:1418
 msgid "Profile"
 msgstr "Профиль"
 
-#: forms.py:1411
+#: forms.py:1427
 msgid "Screen name"
 msgstr "Отображаемое имя"
 
-#: forms.py:1444 forms.py:1448
+#: forms.py:1459 forms.py:1463
 msgid "this email has already been registered, please use another one"
 msgstr "этот email-адрес уже зарегистрирован, пожалуйста введите другой"
 
-#: forms.py:1457
+#: forms.py:1472
 msgid "Choose email tag filter"
 msgstr "Выберите тип фильтра по темам (ключевым словам)"
 
-#: forms.py:1509
+#: forms.py:1524
 msgid "Asked by me"
 msgstr "Заданные мной"
 
-#: forms.py:1512
+#: forms.py:1527
 msgid "Answered by me"
 msgstr "Отвеченные мной"
 
-#: forms.py:1515
+#: forms.py:1530
 msgid "Individually selected"
 msgstr "Выбранные мной"
 
-#: forms.py:1518
+#: forms.py:1533
 msgid "Entire forum (tag filtered)"
 msgstr "Весь форум (фильтрованный по тэгам)"
 
-#: forms.py:1522
+#: forms.py:1537
 msgid "Comments and posts mentioning me"
 msgstr "Сообщения в которых упоминается моё имя"
 
-#: forms.py:1606
+#: forms.py:1621
 msgid "please choose one of the options above"
 msgstr "пожалуйста сделайте Ваш выбор (см. выше)"
 
-#: forms.py:1609
+#: forms.py:1624
 msgid "okay, let's try!"
 msgstr "хорошо - попробуем!"
 
-#: forms.py:1612
+#: forms.py:1627
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr "больше не посылать мне email с %(sitename)s"
 
-#: forms.py:1660 templates/reopen.html:7
+#: forms.py:1675 templates/reopen.html:7
 msgid "Title"
 msgstr "Заглавие"
 
-#: forms.py:1663 templates/groups.html:32
+#: forms.py:1678 templates/groups.html:32
 msgid "Description"
 msgstr "Описание"
 
-#: forms.py:1682 templates/tags.html:3 templates/tags/header.html:9
+#: forms.py:1697 templates/tags.html:3 templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
-#: templates/widgets/edit_post.html:35 templates/widgets/related_tags.html:3
+#: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
 msgid "Tags"
 msgstr "Тэги"
 
-#: tasks.py:68
+#: tasks.py:94
 msgid "An edit for my answer"
 msgstr "Редактировать для моего ответа"
 
-#: tasks.py:71
+#: tasks.py:97
 msgid "To add to your post EDIT ABOVE THIS LINE"
 msgstr "Чтобы добавить в сообщение РЕДАКТИРОВАТЬ НАД ЭТОЙ ЛИНИЕЙ"
 
-#: tasks.py:89
+#: tasks.py:115
 #, python-format
 msgid "Your post at %(site_name)s is now published"
 msgstr "Ваше сообщение %(site_name)s теперь опубликовано"
@@ -424,7 +424,7 @@ msgstr "faq/"
 
 #: urls.py:44
 msgid "privacy/"
-msgstr "politika-privatnosti/"
+msgstr "politika-informacii/"
 
 #: urls.py:45
 msgid "help/"
@@ -434,11 +434,11 @@ msgstr "help/"
 msgid "answers/"
 msgstr "otvety/"
 
-#: urls.py:47 urls.py:132 urls.py:383 urls.py:498
+#: urls.py:47 urls.py:131 urls.py:382 urls.py:497
 msgid "edit/"
 msgstr "redaktirovat/"
 
-#: urls.py:52 urls.py:162
+#: urls.py:52 urls.py:161
 msgid "revisions/"
 msgstr "versii/"
 
@@ -446,125 +446,125 @@ msgstr "versii/"
 msgid "questions"
 msgstr "вопросы"
 
-#: urls.py:127 urls.py:132 urls.py:137 urls.py:142 urls.py:147 urls.py:152
-#: urls.py:162 urls.py:558
+#: urls.py:126 urls.py:131 urls.py:136 urls.py:141 urls.py:146 urls.py:151
+#: urls.py:161 urls.py:573
 msgid "questions/"
 msgstr "voprosy/"
 
-#: urls.py:127 urls.py:472 urls.py:477 urls.py:482 urls.py:488
+#: urls.py:126 urls.py:471 urls.py:476 urls.py:481 urls.py:487
 msgid "ask/"
 msgstr "sprosit/"
 
-#: urls.py:137
+#: urls.py:136
 msgid "retag/"
 msgstr "smenit-tag/"
 
-#: urls.py:142
+#: urls.py:141
 msgid "close/"
 msgstr "zakrit/"
 
-#: urls.py:147
+#: urls.py:146
 msgid "reopen/"
 msgstr "otkrit-snova/"
 
-#: urls.py:152
+#: urls.py:151
 msgid "answer/"
 msgstr "otvet/"
 
-#: urls.py:220
+#: urls.py:219
 msgid "tags/"
 msgstr "tegi/"
 
-#: urls.py:225
+#: urls.py:224
 msgid "tags/subscriptions/"
-msgstr ""
+msgstr "тэги/подписчики/"
 
-#: urls.py:230
+#: urls.py:229
 msgid "tags/subscriptions/delete/"
-msgstr ""
+msgstr "тэги/подписчики/удалить/"
 
-#: urls.py:235
+#: urls.py:234
 msgid "tags/subscriptions/create/"
-msgstr ""
+msgstr "тэги/подписчики/создать/"
 
-#: urls.py:240
+#: urls.py:239
 msgid "tags/subscriptions/edit/"
-msgstr ""
+msgstr "тэги/подписчики/редактировать/"
 
-#: urls.py:246
+#: urls.py:245
 msgid "suggested-tags/"
-msgstr ""
+msgstr "предложены-тэги/"
 
-#: urls.py:366
+#: urls.py:365
 msgid "subscribe-for-tags/"
 msgstr "podpisatsya-na-tagi/"
 
-#: urls.py:371 urls.py:376 urls.py:383 urls.py:389 urls.py:398 urls.py:405
+#: urls.py:370 urls.py:375 urls.py:382 urls.py:388 urls.py:397 urls.py:404
 msgid "users/"
 msgstr "polzovateli/"
 
-#: urls.py:376
+#: urls.py:375
 msgid "by-group/"
-msgstr ""
+msgstr "от-группы/"
 
-#: urls.py:390
+#: urls.py:389
 msgid "subscriptions/"
 msgstr "podpiski/"
 
-#: urls.py:399
+#: urls.py:398
 msgid "select_languages/"
-msgstr ""
+msgstr "выбор_языка/"
 
-#: urls.py:410
+#: urls.py:409
 msgid "groups/"
-msgstr ""
+msgstr "группы/"
 
-#: urls.py:415
+#: urls.py:414
 msgid "users/update_has_custom_avatar/"
-msgstr ""
+msgstr "polzovateli/obnovlenie_so_svoim_avatarom/"
 
-#: urls.py:420 urls.py:425
+#: urls.py:419 urls.py:424
 msgid "badges/"
 msgstr "nagrady/"
 
-#: urls.py:435
+#: urls.py:434
 msgid "messages/"
 msgstr "soobscheniya/"
 
-#: urls.py:435
+#: urls.py:434
 msgid "markread/"
 msgstr "pometit-kak-prochitanoe/"
 
-#: urls.py:466 urls.py:472 urls.py:477 urls.py:482 urls.py:488 urls.py:493
-#: urls.py:498 urls.py:503 urls.py:509
+#: urls.py:465 urls.py:471 urls.py:476 urls.py:481 urls.py:487 urls.py:492
+#: urls.py:497 urls.py:502 urls.py:508
 msgid "widgets/"
 msgstr "widgets/"
 
-#: urls.py:488 deps/django_authopenid/urls.py:20
+#: urls.py:487 deps/django_authopenid/urls.py:20
 msgid "complete/"
 msgstr "zavershaem/"
 
-#: urls.py:493
+#: urls.py:492
 msgid "create/"
-msgstr ""
+msgstr "создать/"
 
-#: urls.py:503
+#: urls.py:502
 msgid "delete/"
-msgstr ""
+msgstr "удалить/"
 
-#: urls.py:519
+#: urls.py:533
 msgid "upload/"
 msgstr "zagruzit/"
 
-#: urls.py:520
+#: urls.py:534
 msgid "feedback/"
 msgstr "otziv/"
 
-#: urls.py:564
+#: urls.py:579
 msgid "question/"
 msgstr "vopros/"
 
-#: urls.py:571 setup_templates/settings.py:229
+#: urls.py:586 setup_templates/settings.py:229
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
 msgstr "polzovatel/"
@@ -838,54 +838,50 @@ msgid ""
 msgstr "Подтверждение адреса электронной почты осуществляется отправкой ключа проверки на email"
 
 #: conf/email.py:237
-msgid "Allow only one account per email address"
-msgstr "Разрешить только один аккаунт на каждый email-адрес"
-
-#: conf/email.py:246
 msgid "Fake email for anonymous user"
 msgstr "Поддельный email-адрес для анонимного пользователя"
 
-#: conf/email.py:247
+#: conf/email.py:238
 msgid "Use this setting to control gravatar for email-less user"
 msgstr "Эта установка предназначена для управления аватаром пользователей которые не ввели email-адрес."
 
-#: conf/email.py:256
+#: conf/email.py:247
 msgid "Allow posting questions by email"
 msgstr "Разрешить задавать вопросы по email"
 
-#: conf/email.py:258
+#: conf/email.py:249
 msgid ""
 "Before enabling this setting - please fill out IMAP settings in the "
 "settings.py file"
 msgstr "Прежде чем включать эту настройку, пожалуйста, заполните блок настроек IMAP в файле settings.py"
 
-#: conf/email.py:269
+#: conf/email.py:260
 msgid "Replace space in emailed tags with dash"
 msgstr "Заменить пробелы на тире в тэгах, присланных по email."
 
-#: conf/email.py:271
+#: conf/email.py:262
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
 msgstr "Эта настройка применяется к тэгам, записанным в поле \"Тема\" вопросов, присланных по email."
 
-#: conf/email.py:282
+#: conf/email.py:273
 msgid "Enable posting answers and comments by email"
 msgstr "Включить добавление ответов и комментариев с email"
 
-#: conf/email.py:285
+#: conf/email.py:276
 msgid "To enable this feature make sure lamson is running"
 msgstr "Для активации этой функции убедитесь, что lamson запущен"
 
-#: conf/email.py:296
+#: conf/email.py:287
 msgid "Emailed post: when to notify author about publishing"
 msgstr "Отправлять сообщение по электронной почте, когда надо уведомить автора о публикации"
 
-#: conf/email.py:321
+#: conf/email.py:312
 msgid "Reply by email hostname"
 msgstr "Имя узла для ответов по email"
 
-#: conf/email.py:332
+#: conf/email.py:323
 msgid ""
 "Email replies having fewer words than this number will be posted as comments"
 " instead of answers"
@@ -1104,189 +1100,215 @@ msgid ""
 msgstr "Отметьте, если хотите чтобы пользователи могли начать задавать вопросы до того как войдут на сайт. Включение этой опции может потребовать дополнительной настройки системы входа пользователей для проверки готовых к отправке вопросов каждый раз когда пользователь входит на сайт. Встроенная система Askbot для входа на сайт поддерживает эту функцию."
 
 #: conf/forum_data_rules.py:118
+msgid "Auto-follow questions by the Author"
+msgstr ""
+
+#: conf/forum_data_rules.py:123
+msgid "Fully open by default"
+msgstr ""
+
+#: conf/forum_data_rules.py:124
+msgid "Folded by default"
+msgstr ""
+
+#: conf/forum_data_rules.py:133
+msgid "Question details/body editor should be"
+msgstr ""
+
+#: conf/forum_data_rules.py:135
+msgid ""
+"To use folded mode, please first set minimum question body length to 0. Also"
+" - please make tags optional."
+msgstr ""
+
+#: conf/forum_data_rules.py:147
 msgid "Allow swapping answer with question"
 msgstr "Написать свой ответ"
 
-#: conf/forum_data_rules.py:120
+#: conf/forum_data_rules.py:149
 msgid ""
 "This setting will help import data from other forums such as zendesk, when "
 "automatic data import fails to detect the original question correctly."
 msgstr "Эта настройка поможет импортировать данные из других форумов таких как Zendesk, когда автоматический импорт не позволяет определить вопрос правильно."
 
-#: conf/forum_data_rules.py:132
+#: conf/forum_data_rules.py:161
 msgid "Maximum length of tag (number of characters)"
 msgstr "Максимальное количество букв в тэге"
 
-#: conf/forum_data_rules.py:141
+#: conf/forum_data_rules.py:170
 msgid "Minimum length of title (number of characters)"
 msgstr "Минимальная длинна заглавия  (количество символов)"
 
-#: conf/forum_data_rules.py:151
+#: conf/forum_data_rules.py:180
 msgid "Minimum length of question body (number of characters)"
 msgstr "Минимальная длинна вопроса  (количество символов)"
 
-#: conf/forum_data_rules.py:162
+#: conf/forum_data_rules.py:191
 msgid "Minimum length of answer body (number of characters)"
 msgstr "Минимальная длинна ответа (количество символов)"
 
-#: conf/forum_data_rules.py:173
+#: conf/forum_data_rules.py:202
+msgid "Minimum length of comment (number of characters)"
+msgstr ""
+
+#: conf/forum_data_rules.py:213
 msgid "Limit one answer per question per user"
 msgstr "Ограничение на один ответ на один вопрос для одного пользователя"
 
-#: conf/forum_data_rules.py:183
+#: conf/forum_data_rules.py:223
 msgid "Enable accepting best answer"
 msgstr "Включить принятие ответа - это лучший ответ"
 
-#: conf/forum_data_rules.py:191
+#: conf/forum_data_rules.py:231
 msgid "Are tags required?"
 msgstr "Обязательны ли тэги?"
 
-#: conf/forum_data_rules.py:197
+#: conf/forum_data_rules.py:237
 msgid "category tree"
 msgstr "дерево категорий"
 
-#: conf/forum_data_rules.py:198
+#: conf/forum_data_rules.py:238
 msgid "user input"
 msgstr "Войти как пользователь"
 
-#: conf/forum_data_rules.py:205
+#: conf/forum_data_rules.py:245
 msgid "Source of tags"
 msgstr "Источник тэгов"
 
-#: conf/forum_data_rules.py:216
+#: conf/forum_data_rules.py:256
 msgid "Mandatory tags"
 msgstr "Обязательные тэги"
 
-#: conf/forum_data_rules.py:219
+#: conf/forum_data_rules.py:259
 msgid ""
 "At least one of these tags will be required for any new or newly edited "
 "question. A mandatory tag may be wildcard, if the wildcard tags are active."
 msgstr "Хотя бы один из этих тэгов будет необходим для любого нового или отредактированного вопроса. Обязательный тэг может быть со \"звездочкой\", если тэги со \"звездочкой\" включены."
 
-#: conf/forum_data_rules.py:231
+#: conf/forum_data_rules.py:271
 msgid "Force lowercase the tags"
 msgstr "Принудительно перевести тэги в нижний регистр"
 
-#: conf/forum_data_rules.py:233
+#: conf/forum_data_rules.py:273
 msgid ""
 "Attention: after checking this, please back up the database, and run a "
 "management command: <code>python manage.py fix_question_tags</code> to "
 "globally rename the tags"
 msgstr "Внимание: после того как отметите эту опцию, пожалуйста, зарезервируйте свою базу данных и запустите команду: <code>python manage.py fix_question_tags</code> чтобы глобально переименовать тэги"
 
-#: conf/forum_data_rules.py:247
+#: conf/forum_data_rules.py:287
 msgid "Format of tag list"
 msgstr "Формат списка тэгов"
 
-#: conf/forum_data_rules.py:249
+#: conf/forum_data_rules.py:289
 msgid ""
 "Select the format to show tags in, either as a simple list, or as a tag "
 "cloud"
 msgstr "Выберите формат, в котором будут отображаться тэги: обычный список или \"облако\" тэгов"
 
-#: conf/forum_data_rules.py:261
+#: conf/forum_data_rules.py:301
 msgid "Use wildcard tags"
 msgstr "Использовать тэги со \"звездочкой\""
 
-#: conf/forum_data_rules.py:263
+#: conf/forum_data_rules.py:303
 msgid ""
 "Wildcard tags can be used to follow or ignore many tags at once, a valid "
 "wildcard tag has a single wildcard at the very end"
 msgstr "Тэги со \"звездочкой\" могут быть использованы чтобы выбрать или отменить выбор многих тэгов за раз, у правильного тэга со \"звездочкой\" есть только одна \"звездочка\" в самом конце"
 
-#: conf/forum_data_rules.py:275
+#: conf/forum_data_rules.py:315
 msgid "Use separate set for subscribed tags"
 msgstr "Используйте разделение для тэгов подписки"
 
-#: conf/forum_data_rules.py:277
+#: conf/forum_data_rules.py:317
 msgid ""
 "If enabled, users will have a third set of tag selections - \"subscribed\" "
 "(by email) in additon to \"interesting\" and \"ignored\""
 msgstr "Если включено, пользователи будут иметь 3 варианта работы с тэгами: \"подписка\" (по электронной почте), добавление в \"интересные\" и \"игнорирование\""
 
-#: conf/forum_data_rules.py:285
+#: conf/forum_data_rules.py:325
 msgid "Always, for all users"
 msgstr "Всегда, для всех пользователей"
 
-#: conf/forum_data_rules.py:286
+#: conf/forum_data_rules.py:326
 msgid "Never, for all users"
 msgstr "Никогда, для всех пользователей"
 
-#: conf/forum_data_rules.py:287
+#: conf/forum_data_rules.py:327
 msgid "Let users decide"
 msgstr "Пусть решит пользователь"
 
-#: conf/forum_data_rules.py:295
+#: conf/forum_data_rules.py:335
 msgid "Publicly show user tag selections"
 msgstr "Сделать общедоступным пользовательский выбор тэгов"
 
-#: conf/forum_data_rules.py:304
+#: conf/forum_data_rules.py:344
 msgid "Enable separate tag search box on main page"
 msgstr "Включить поиск по тэгам в отдельном блоке на главной странице"
 
-#: conf/forum_data_rules.py:314
+#: conf/forum_data_rules.py:354
 msgid "Default max number of comments to display under posts"
 msgstr "Число комментариев по-умолчанию, которое показывается под сообщениями"
 
-#: conf/forum_data_rules.py:325
+#: conf/forum_data_rules.py:365
 #, python-format
 msgid "Maximum comment length, must be < %(max_len)s"
 msgstr "Максимальная длина комментария не должна превышать %(max_len)s символов"
 
-#: conf/forum_data_rules.py:335
+#: conf/forum_data_rules.py:375
 msgid "Limit time to edit comments"
 msgstr "Ограничить время на редактирование комментариев"
 
-#: conf/forum_data_rules.py:337
+#: conf/forum_data_rules.py:377
 msgid "If unchecked, there will be no time limit to edit the comments"
 msgstr "Если галочка снята, время на редактирование комментариев не будет ограничено"
 
-#: conf/forum_data_rules.py:348
+#: conf/forum_data_rules.py:388
 msgid "Minutes allowed to edit a comment"
 msgstr "Время на редактирование комментария в минутах"
 
-#: conf/forum_data_rules.py:349
+#: conf/forum_data_rules.py:389
 msgid "To enable this setting, check the previous one"
 msgstr "Чтобы включить эту настройку также включите предыдущую"
 
-#: conf/forum_data_rules.py:358
+#: conf/forum_data_rules.py:398
 msgid "Save comment by pressing <Enter> key"
 msgstr "Сохранять комментарий нажатием клавиши <Enter>"
 
-#: conf/forum_data_rules.py:360
+#: conf/forum_data_rules.py:400
 msgid ""
 "This may be useful when only one-line comments are desired. Will not work "
 "with TinyMCE editor."
 msgstr "Это может быть использовано, когда требуется ответить одной строкой. Не будет работать с редактором TinyMCE."
 
-#: conf/forum_data_rules.py:371
+#: conf/forum_data_rules.py:411
 msgid "Minimum length of search term for Ajax search"
 msgstr "Минимальная длина поискового запроса в AJAX поиске"
 
-#: conf/forum_data_rules.py:372
+#: conf/forum_data_rules.py:412
 msgid "Must match the corresponding database backend setting"
 msgstr "Значение должно равняться соответствующей установке в Вашей базе данных"
 
-#: conf/forum_data_rules.py:381
+#: conf/forum_data_rules.py:421
 msgid "Do not make text query sticky in search"
 msgstr "Не позволять запросу \"прилипать\" к поисковой строке"
 
-#: conf/forum_data_rules.py:383
+#: conf/forum_data_rules.py:423
 msgid ""
 "Check to disable the \"sticky\" behavior of the search query. This may be "
 "useful if you want to move the search bar away from the default position or "
 "do not like the default sticky behavior of the text search query."
 msgstr "Отметьте чтобы отключить \"залипание\" в поисковой строке. Это может быть полезно, если вы хотите сдвинуть поисковую строку с ее обычного положения или вам не нравится обычное \"залипание\" поискового запроса."
 
-#: conf/forum_data_rules.py:396
+#: conf/forum_data_rules.py:436
 msgid "Maximum number of tags per question"
 msgstr "Максимум тэгов на один вопрос"
 
-#: conf/forum_data_rules.py:408
+#: conf/forum_data_rules.py:448
 msgid "Number of questions to list by default"
 msgstr "Количество вопросов отображаемых на странице"
 
-#: conf/forum_data_rules.py:418
+#: conf/forum_data_rules.py:458
 msgid "What should \"unanswered question\" mean?"
 msgstr "Что должен означать \"неотвеченный вопрос\"?"
 
@@ -1308,7 +1330,7 @@ msgstr "Глобальное название пользовательской �
 
 #: conf/group_settings.py:43
 msgid "All users belong to this group automatically"
-msgstr ""
+msgstr "Все пользователи принадлежат к этой группе автоматически"
 
 #: conf/group_settings.py:53
 msgid "Enable group email adddresses"
@@ -1316,95 +1338,95 @@ msgstr ""
 
 #: conf/group_settings.py:55
 msgid "If selected, users can post to groups by email \"group-name@domain.com\""
-msgstr ""
+msgstr "Если выбрано, то пользователи могут отправить сообщение в группу через сообщение электронной почты на адрес \"group-name@domain.com\""
 
 #: conf/karma_and_badges_visibility.py:12
 msgid "Karma & Badge visibility"
-msgstr ""
+msgstr "Видимость кармы и значков"
 
 #: conf/karma_and_badges_visibility.py:27
 msgid "Visibility of karma"
-msgstr ""
+msgstr "Видимость кармы"
 
 #: conf/karma_and_badges_visibility.py:30
 msgid "User's karma may be shown publicly or only to the owners"
-msgstr ""
+msgstr "Карма пользователя может быть видима всем или только хозяину"
 
 #: conf/karma_and_badges_visibility.py:44
 msgid "Visibility of badges"
-msgstr ""
+msgstr "Видимость значков"
 
 #: conf/karma_and_badges_visibility.py:47
 msgid "Badges can be either publicly shown or completely hidden"
-msgstr ""
+msgstr "Значки могут быть показаны всем или полностью скрыты"
 
 #: conf/ldap.py:9
 msgid "LDAP login configuration"
 msgstr "Настройка входа через LDAP"
 
-#: conf/ldap.py:24
+#: conf/ldap.py:17
 msgid "Use LDAP authentication for the password login"
 msgstr "Использовать протокол LDAP для авторизации через пароль и имя пользователя"
 
-#: conf/ldap.py:34
+#: conf/ldap.py:26
 msgid "Automatically create user accounts when possible"
-msgstr ""
+msgstr "Автоматически создавать пользовательский аккаунт когда возможно"
 
-#: conf/ldap.py:37
+#: conf/ldap.py:29
 msgid ""
 "Potentially reduces number of steps in the registration process but can "
 "expose personal information, e.g. when LDAP login name is the same as email "
 "address or real name."
-msgstr ""
+msgstr "Потенциально снижает количество шагов в процессе регистрации, но могут предоставлять личную информацию, например, когда LDAP регистрационное имя такое же, как адрес электронной почты или настоящее имя."
 
-#: conf/ldap.py:45
+#: conf/ldap.py:37
 msgid "Version 3"
-msgstr ""
+msgstr "Версия 3"
 
-#: conf/ldap.py:46
+#: conf/ldap.py:38
 msgid "Version 2 (insecure and deprecated)!!!"
-msgstr ""
+msgstr "Версия 2 (небезопасно и не поддерживается)!!!"
 
-#: conf/ldap.py:55
+#: conf/ldap.py:47
 msgid "LDAP protocol version"
-msgstr ""
+msgstr "Версия протокола LDAP"
 
-#: conf/ldap.py:57
+#: conf/ldap.py:49
 msgid ""
 "Note that Version 2 protocol is not secure!!! Do not use it on unprotected "
 "network."
-msgstr ""
+msgstr "Обратите внимание, версия 2 протокола не безопасна!!! Не используйте её в незащищённых сетях."
 
-#: conf/ldap.py:67
+#: conf/ldap.py:59
 msgid "LDAP URL"
 msgstr "LDAP URL"
 
-#: conf/ldap.py:76
+#: conf/ldap.py:68
 msgid "LDAP encoding"
-msgstr ""
+msgstr "Кодирование LDAP"
 
-#: conf/ldap.py:79
+#: conf/ldap.py:71
 msgid ""
 "This value in almost all cases is \"utf-8\". Change it if yours is "
 "different. This field is required"
-msgstr ""
+msgstr "Это поле почти во всех случаях показывается в \"utf-8\". Измените его если оно отличается от вашего. Это поле обязательно для заполнения"
 
-#: conf/ldap.py:90
+#: conf/ldap.py:82
 msgid "Base DN (distinguished name)"
-msgstr ""
+msgstr "Базовый DN (отличительное имя)"
 
-#: conf/ldap.py:93
+#: conf/ldap.py:85
 msgid ""
 "Usually base DN mirrors domain name of your organization, e.g. "
 "\"dn=example,dn=com\" when your site url is \"example.com\".This value is "
 "the \"root\" address of your LDAP directory."
 msgstr ""
 
-#: conf/ldap.py:104
+#: conf/ldap.py:96
 msgid "User search filter template"
-msgstr ""
+msgstr "Шаблон фильтра пользовательского поиска"
 
-#: conf/ldap.py:107
+#: conf/ldap.py:99
 msgid ""
 "Python string format template, must have two string placeholders, which "
 "should be left in the intact format. First placeholder will be used for the "
@@ -1412,59 +1434,59 @@ msgid ""
 " be extended to match schema of your LDAP directory."
 msgstr ""
 
-#: conf/ldap.py:121
+#: conf/ldap.py:113
 msgid "UserID/login field"
-msgstr ""
+msgstr "Войти как пользователь"
 
-#: conf/ldap.py:124
+#: conf/ldap.py:116
 msgid ""
 "This field is required. For Microsoft Active Directory this value usually is"
 " \"sAMAccountName\"."
-msgstr ""
+msgstr "Это поле необходимо для заполнения. Для Microsoft Active Directory его значение обычно \"sAMAccountName\"."
 
-#: conf/ldap.py:135
+#: conf/ldap.py:127
 msgid "\"Common Name\" field"
-msgstr ""
+msgstr "Поле \"Common Name\""
 
-#: conf/ldap.py:137
+#: conf/ldap.py:129
 msgid ""
 "Common name is a formal or informal name of a person, can be blank. Use it "
 "only if surname and given names are not available."
 msgstr ""
 
-#: conf/ldap.py:147
+#: conf/ldap.py:139
 msgid "First name, Last name"
 msgstr ""
 
-#: conf/ldap.py:148
+#: conf/ldap.py:140
 msgid "Last name, First name"
 msgstr ""
 
-#: conf/ldap.py:155
+#: conf/ldap.py:147
 msgid "\"Common Name\" field format"
 msgstr ""
 
-#: conf/ldap.py:158
+#: conf/ldap.py:150
 msgid "Use this only if \"Common Name\" field is used."
 msgstr ""
 
-#: conf/ldap.py:166
+#: conf/ldap.py:158
 msgid "Given (First) name"
 msgstr ""
 
-#: conf/ldap.py:168 conf/ldap.py:178
+#: conf/ldap.py:160 conf/ldap.py:170
 msgid "This field can be blank"
 msgstr ""
 
-#: conf/ldap.py:176
+#: conf/ldap.py:168
 msgid "Surname (last) name"
 msgstr ""
 
-#: conf/ldap.py:186
+#: conf/ldap.py:178
 msgid "LDAP Server EMAIL field name"
 msgstr "Значение поля \"EMAIL\" сервера LDAP"
 
-#: conf/ldap.py:188
+#: conf/ldap.py:180
 msgid "This field is required"
 msgstr ""
 
@@ -1565,12 +1587,16 @@ msgstr "Включая эту опцию, зайдите в Settings->Writing->R
 msgid "Upload your icon"
 msgstr "Загрузите Ваше изображение"
 
-#: conf/login_providers.py:95
+#: conf/login_providers.py:93
+msgid "local password"
+msgstr ""
+
+#: conf/login_providers.py:98
 #, python-format
 msgid "Activate %(provider)s login"
 msgstr "Включить вход через %(provider)s"
 
-#: conf/login_providers.py:100
+#: conf/login_providers.py:103
 #, python-format
 msgid ""
 "Note: to really enable %(provider)s login some additional parameters will "
@@ -1749,17 +1775,19 @@ msgid ""
 msgstr "Когда поисковый робот увидит аттрибут rel=nofollow на ссылке, такая ссылка не будет учитываться для рассчета рейтинга сайта."
 
 #: conf/minimum_reputation.py:223
-msgid "Post answers and comments by email"
-msgstr "Публиковать ответы и комментарии по email"
+msgid "Make posts by email"
+msgstr ""
 
 #: conf/minimum_reputation.py:232
 msgid "Trigger email notifications"
 msgstr ""
 
-#: conf/minimum_reputation.py:234
-msgid ""
-"Reduces spam as notifications wont't be sent to regular users for posts of "
-"low karma users"
+#: conf/minimum_reputation.py:233 conf/minimum_reputation.py:243
+msgid "Reduces spam"
+msgstr ""
+
+#: conf/minimum_reputation.py:242
+msgid "Trigger tweets on others accounts"
 msgstr ""
 
 #: conf/moderation.py:19
@@ -2347,19 +2375,26 @@ msgstr ""
 msgid "Check to enable sharing of questions on Twitter"
 msgstr "Поставьте галочку, чтобы включить публикацию вопросов в Twitter"
 
-#: conf/social_sharing.py:47
+#: conf/social_sharing.py:40
+msgid ""
+"Important - to actually start sharing on twitter, it is required to set up "
+"Twitter consumer key and secret in the \"keys to external services\" "
+"section."
+msgstr ""
+
+#: conf/social_sharing.py:52
 msgid "Check to enable sharing of questions on Facebook"
 msgstr "Поставьте галочку, чтобы включить публикацию вопросов в Facebook"
 
-#: conf/social_sharing.py:56
+#: conf/social_sharing.py:61
 msgid "Check to enable sharing of questions on LinkedIn"
 msgstr "Поставьте галочку, чтобы включить публикацию вопросов в LinkedIn"
 
-#: conf/social_sharing.py:65
+#: conf/social_sharing.py:70
 msgid "Check to enable sharing of questions on Identi.ca"
 msgstr "Поставьте галочку, чтобы включить публикацию вопросов в Identi.ca"
 
-#: conf/social_sharing.py:74
+#: conf/social_sharing.py:79
 msgid "Check to enable sharing of questions on Google+"
 msgstr "Поставьте галочку, чтобы включить публикацию вопросов в Google+"
 
@@ -2555,340 +2590,356 @@ msgstr "спам или реклама"
 msgid "too localized"
 msgstr "слишком специализированный"
 
-#: const/__init__.py:45 templates/question/answer_tab_bar.html:18
+#: const/__init__.py:29
+msgid "disable sharing"
+msgstr ""
+
+#: const/__init__.py:30
+#: templates/user_profile/twitter_sharing_controls.html:13
+#: templates/user_profile/twitter_sharing_controls.html:17
+msgid "my posts"
+msgstr ""
+
+#: const/__init__.py:31
+#: templates/user_profile/twitter_sharing_controls.html:14
+#: templates/user_profile/twitter_sharing_controls.html:16
+msgid "all posts"
+msgstr ""
+
+#: const/__init__.py:54 templates/question/answer_tab_bar.html:18
 msgid "newest"
 msgstr "новые"
 
-#: const/__init__.py:46 templates/users.html:50
+#: const/__init__.py:55 templates/users.html:54
 #: templates/question/answer_tab_bar.html:15
 msgid "oldest"
 msgstr "бывалым"
 
-#: const/__init__.py:47
+#: const/__init__.py:56
 msgid "active"
 msgstr "активные"
 
-#: const/__init__.py:48
+#: const/__init__.py:57
 msgid "inactive"
 msgstr "неактивные"
 
-#: const/__init__.py:49
+#: const/__init__.py:58
 msgid "hottest"
 msgstr "самые горячие"
 
-#: const/__init__.py:50
+#: const/__init__.py:59
 msgid "coldest"
 msgstr "самые холодные"
 
-#: const/__init__.py:51 templates/question/answer_tab_bar.html:21
+#: const/__init__.py:60 templates/question/answer_tab_bar.html:21
 msgid "most voted"
 msgstr "лучшие"
 
-#: const/__init__.py:52
+#: const/__init__.py:61
 msgid "least voted"
 msgstr "меньше голосов"
 
-#: const/__init__.py:53
+#: const/__init__.py:62
 msgid "relevance"
 msgstr "уместность"
 
-#: const/__init__.py:65
+#: const/__init__.py:74
 msgid "Never"
 msgstr ""
 
-#: const/__init__.py:66
+#: const/__init__.py:75
 msgid "When new post is published"
 msgstr ""
 
-#: const/__init__.py:67
+#: const/__init__.py:76
 msgid "When post is published or revised"
 msgstr ""
 
-#: const/__init__.py:99
+#: const/__init__.py:108
 #, python-format
 msgid ""
 "Note: to reply with a comment, please use <a "
 "href=\"mailto:%(addr)s?subject=%(subject)s\">this link</a>"
 msgstr ""
 
-#: const/__init__.py:113 templates/user_inbox/responses_and_flags.html:9
+#: const/__init__.py:122 templates/user_inbox/responses_and_flags.html:9
 msgid "all"
 msgstr "все"
 
-#: const/__init__.py:114
+#: const/__init__.py:123
 msgid "unanswered"
 msgstr "неотвеченные"
 
-#: const/__init__.py:115
+#: const/__init__.py:124
 msgid "followed"
 msgstr ""
 
-#: const/__init__.py:120
+#: const/__init__.py:129
 msgid "list"
 msgstr "Тэги"
 
-#: const/__init__.py:121
+#: const/__init__.py:130
 msgid "cloud"
 msgstr "облако"
 
-#: const/__init__.py:129
+#: const/__init__.py:138
 msgid "Question has no answers"
 msgstr "Нет ни одного ответа"
 
-#: const/__init__.py:130
+#: const/__init__.py:139
 msgid "Question has no accepted answers"
 msgstr "Нет принятого ответа"
 
-#: const/__init__.py:186
+#: const/__init__.py:195
 msgid "asked a question"
 msgstr "задан вопрос"
 
-#: const/__init__.py:187
+#: const/__init__.py:196
 msgid "answered a question"
 msgstr "ответил"
 
-#: const/__init__.py:188 const/__init__.py:292
+#: const/__init__.py:197 const/__init__.py:301
 msgid "commented question"
 msgstr "прокомментирован вопрос"
 
-#: const/__init__.py:189 const/__init__.py:293
+#: const/__init__.py:198 const/__init__.py:302
 msgid "commented answer"
 msgstr "прокомментирован ответ"
 
-#: const/__init__.py:190
+#: const/__init__.py:199
 msgid "edited question"
 msgstr "отредактирован вопрос"
 
-#: const/__init__.py:191
+#: const/__init__.py:200
 msgid "edited answer"
 msgstr "отредактирован ответ"
 
-#: const/__init__.py:192
+#: const/__init__.py:201
 msgid "received badge"
 msgstr "полученная награда"
 
-#: const/__init__.py:193
+#: const/__init__.py:202
 msgid "marked best answer"
 msgstr "отмечен как лучший ответ"
 
-#: const/__init__.py:194
+#: const/__init__.py:203
 msgid "upvoted"
 msgstr "проголосовали \"за\""
 
-#: const/__init__.py:195
+#: const/__init__.py:204
 msgid "downvoted"
 msgstr "проголосовали \"против\""
 
-#: const/__init__.py:196
+#: const/__init__.py:205
 msgid "canceled vote"
 msgstr "отмененный голос"
 
-#: const/__init__.py:197
+#: const/__init__.py:206
 msgid "deleted question"
 msgstr "удаленный вопрос"
 
-#: const/__init__.py:198
+#: const/__init__.py:207
 msgid "deleted answer"
 msgstr "удаленный ответ"
 
-#: const/__init__.py:199
+#: const/__init__.py:208
 msgid "marked offensive"
 msgstr "отметка о нарушении правил"
 
-#: const/__init__.py:200
+#: const/__init__.py:209
 msgid "updated tags"
 msgstr "обновленные тэги "
 
-#: const/__init__.py:201
+#: const/__init__.py:210
 msgid "selected favorite"
 msgstr "выбран избранным"
 
-#: const/__init__.py:202
+#: const/__init__.py:211
 msgid "completed user profile"
 msgstr "заполненный профиль пользователя"
 
-#: const/__init__.py:203
+#: const/__init__.py:212
 msgid "email update sent to user"
 msgstr "сообщение выслано по электронной почте"
 
-#: const/__init__.py:204
+#: const/__init__.py:213
 msgid "a post was shared"
 msgstr ""
 
-#: const/__init__.py:207
+#: const/__init__.py:216
 msgid "reminder about unanswered questions sent"
 msgstr "напоминание о неотвеченных вопросах выслано"
 
-#: const/__init__.py:211
+#: const/__init__.py:220
 msgid "reminder about accepting the best answer sent"
 msgstr "напоминание о принятии лучшего ответа отправлено"
 
-#: const/__init__.py:213
+#: const/__init__.py:222
 msgid "mentioned in the post"
 msgstr "упомянуто в тексте сообщения"
 
-#: const/__init__.py:216
+#: const/__init__.py:225
 msgid "created tag description"
 msgstr ""
 
-#: const/__init__.py:220
+#: const/__init__.py:229
 msgid "updated tag description"
 msgstr ""
 
-#: const/__init__.py:222
+#: const/__init__.py:231
 msgid "made a new post"
 msgstr ""
 
-#: const/__init__.py:225
+#: const/__init__.py:234
 msgid "made an edit"
 msgstr ""
 
-#: const/__init__.py:229
+#: const/__init__.py:238
 msgid "created post reject reason"
 msgstr ""
 
-#: const/__init__.py:233
+#: const/__init__.py:242
 msgid "updated post reject reason"
 msgstr ""
 
-#: const/__init__.py:291
+#: const/__init__.py:300
 msgid "answered question"
 msgstr "отвеченный вопрос"
 
-#: const/__init__.py:294
+#: const/__init__.py:303
 msgid "accepted answer"
 msgstr "принятый ответ"
 
-#: const/__init__.py:298
+#: const/__init__.py:307
 msgid "[closed]"
 msgstr "[закрыт]"
 
-#: const/__init__.py:299
+#: const/__init__.py:308
 msgid "[deleted]"
 msgstr "[удален]"
 
-#: const/__init__.py:300 views/readers.py:624
+#: const/__init__.py:309 views/readers.py:613
 msgid "initial version"
 msgstr "изначальная версия"
 
-#: const/__init__.py:301
+#: const/__init__.py:310
 msgid "retagged"
 msgstr "теги изменены"
 
-#: const/__init__.py:302
+#: const/__init__.py:311
 msgid "[private]"
 msgstr ""
 
-#: const/__init__.py:311
+#: const/__init__.py:320
 msgid "show all tags"
 msgstr ""
 
-#: const/__init__.py:312 const/__init__.py:321 const/__init__.py:327
-#: const/__init__.py:333
+#: const/__init__.py:321 const/__init__.py:330 const/__init__.py:336
+#: const/__init__.py:342
 msgid "exclude ignored tags"
 msgstr ""
 
-#: const/__init__.py:313 const/__init__.py:322 const/__init__.py:334
+#: const/__init__.py:322 const/__init__.py:331 const/__init__.py:343
 msgid "only interesting tags"
 msgstr ""
 
-#: const/__init__.py:317 const/__init__.py:328 const/__init__.py:335
+#: const/__init__.py:326 const/__init__.py:337 const/__init__.py:344
 msgid "only subscribed tags"
 msgstr ""
 
-#: const/__init__.py:320 const/__init__.py:326 const/__init__.py:332
+#: const/__init__.py:329 const/__init__.py:335 const/__init__.py:341
 msgid "email for all tags"
 msgstr ""
 
-#: const/__init__.py:339
+#: const/__init__.py:348
 msgid "instantly"
 msgstr "сразу же"
 
-#: const/__init__.py:340
+#: const/__init__.py:349
 msgid "daily"
 msgstr "ежедневно"
 
-#: const/__init__.py:341
+#: const/__init__.py:350
 msgid "weekly"
 msgstr "еженедельно"
 
-#: const/__init__.py:342
+#: const/__init__.py:351
 msgid "no email"
 msgstr "не слать email"
 
-#: const/__init__.py:349
+#: const/__init__.py:358
 msgid "identicon"
 msgstr "identicon"
 
-#: const/__init__.py:350
+#: const/__init__.py:359
 msgid "mystery-man"
 msgstr "mystery-man"
 
-#: const/__init__.py:351
+#: const/__init__.py:360
 msgid "monsterid"
 msgstr "monsterid"
 
-#: const/__init__.py:352
+#: const/__init__.py:361
 msgid "wavatar"
 msgstr "Как сменить мой аватар (Gravatar) и что это такое?"
 
-#: const/__init__.py:353
+#: const/__init__.py:362
 msgid "retro"
 msgstr "retro"
 
-#: const/__init__.py:400 templates/badges.html:33
+#: const/__init__.py:409 templates/badges.html:33
 msgid "gold"
 msgstr "золотая"
 
-#: const/__init__.py:401 templates/badges.html:43
+#: const/__init__.py:410 templates/badges.html:43
 msgid "silver"
 msgstr "серебряная"
 
-#: const/__init__.py:402 templates/badges.html:50
+#: const/__init__.py:411 templates/badges.html:50
 msgid "bronze"
 msgstr "бронзовая "
 
-#: const/__init__.py:414
+#: const/__init__.py:423
 msgid "None"
 msgstr "Ничего"
 
-#: const/__init__.py:415
+#: const/__init__.py:424
 msgid "Gravatar"
 msgstr "Как сменить мой аватар (Gravatar) и что это такое?"
 
-#: const/__init__.py:416
+#: const/__init__.py:425
 msgid "Uploaded Avatar"
 msgstr "Как сменить мой аватар (Gravatar) и что это такое?"
 
-#: const/__init__.py:420
+#: const/__init__.py:429
 msgid "date descendant"
 msgstr ""
 
-#: const/__init__.py:421
+#: const/__init__.py:430
 msgid "date ascendant"
 msgstr ""
 
-#: const/__init__.py:422
+#: const/__init__.py:431
 msgid "activity descendant"
 msgstr ""
 
-#: const/__init__.py:423
+#: const/__init__.py:432
 msgid "activity ascendant"
 msgstr ""
 
-#: const/__init__.py:424
+#: const/__init__.py:433
 msgid "answers descendant"
 msgstr ""
 
-#: const/__init__.py:425
+#: const/__init__.py:434
 msgid "answers ascendant"
 msgstr ""
 
-#: const/__init__.py:426
+#: const/__init__.py:435
 msgid "votes descendant"
 msgstr ""
 
-#: const/__init__.py:427
+#: const/__init__.py:436
 msgid "votes ascendant"
 msgstr ""
 
@@ -2979,7 +3030,7 @@ msgid ""
 "reach a resolution."
 msgstr "Простите, похоже, что Ваш аккаунт заблокирован и Вы не сможете публиковать сообщения пока эта ситуация не разрешится. Пожалуйста, свяжитесь с администрацией форума для поиска решения."
 
-#: const/message_keys.py:52 models/__init__.py:1078
+#: const/message_keys.py:52 models/__init__.py:1121
 msgid ""
 "Sorry, your account appears to be suspended and you cannot make new posts "
 "until this issue is resolved. You can, however edit your existing posts. "
@@ -2992,7 +3043,7 @@ msgid ""
 "screen name, if necessary."
 msgstr "Приветствуем! Пожалуйста добавьте email адрес (это важно!) в свой профиль пользователя и измените отображаемое имя, если это необходимо."
 
-#: deps/django_authopenid/forms.py:112 deps/django_authopenid/views.py:205
+#: deps/django_authopenid/forms.py:112 deps/django_authopenid/views.py:206
 msgid "i-names are not supported"
 msgstr "i-names не поддерживаются"
 
@@ -3032,15 +3083,15 @@ msgid ""
 "password."
 msgstr "Старый пароль неверен. Пожалуйста, введите правильный пароль."
 
-#: deps/django_authopenid/forms.py:402
+#: deps/django_authopenid/forms.py:399
 msgid "Sorry, we don't have this email address in the database"
 msgstr "Извините, но этого адреса нет в нашей базе данных."
 
-#: deps/django_authopenid/forms.py:441
+#: deps/django_authopenid/forms.py:438
 msgid "Your user name (<i>required</i>)"
 msgstr "Ваше имя пользователя <i>(обязательно)</i>"
 
-#: deps/django_authopenid/forms.py:458
+#: deps/django_authopenid/forms.py:455
 msgid "sorry, there is no such user name"
 msgstr "простите, такого имени пользователя не существует"
 
@@ -3059,7 +3110,7 @@ msgstr "vyhod/"
 
 #: deps/django_authopenid/urls.py:23
 msgid "complete-oauth/"
-msgstr ""
+msgstr "zavershaem-oauth/"
 
 #: deps/django_authopenid/urls.py:32
 msgid "register/"
@@ -3081,162 +3132,162 @@ msgstr "vosstanovleniye-accounta/"
 msgid "verify-email/"
 msgstr ""
 
-#: deps/django_authopenid/util.py:378
+#: deps/django_authopenid/util.py:379
 #, python-format
 msgid "%(site)s user name and password"
 msgstr "имя пользователя и пароль на %(site)s"
 
-#: deps/django_authopenid/util.py:384 templates/authopenid/signin.html:120
+#: deps/django_authopenid/util.py:385 templates/authopenid/signin.html:120
 #: templates/authopenid/widget_signin.html:120
 msgid "Create a password-protected account"
 msgstr "Создайте новый аккаунт с именем и паролем"
 
-#: deps/django_authopenid/util.py:385
+#: deps/django_authopenid/util.py:386
 msgid "Change your password"
 msgstr "Сменить пароль"
 
-#: deps/django_authopenid/util.py:485
+#: deps/django_authopenid/util.py:486
 msgid "Sign in with Yahoo"
 msgstr "Вход через Yahoo"
 
-#: deps/django_authopenid/util.py:492
+#: deps/django_authopenid/util.py:493
 msgid "AOL screen name"
 msgstr "Имя пользователя в AOL"
 
-#: deps/django_authopenid/util.py:501
+#: deps/django_authopenid/util.py:502
 msgid "Sign in with LaunchPad"
 msgstr ""
 
-#: deps/django_authopenid/util.py:508
+#: deps/django_authopenid/util.py:509
 msgid "OpenID url"
 msgstr "Адрес Вашего OpenID"
 
-#: deps/django_authopenid/util.py:537
+#: deps/django_authopenid/util.py:538
 msgid "Flickr user name"
 msgstr "Имя пользователя на Flickr"
 
-#: deps/django_authopenid/util.py:545
+#: deps/django_authopenid/util.py:546
 msgid "Technorati user name"
 msgstr "Имя пользователя в Technorati"
 
-#: deps/django_authopenid/util.py:553
+#: deps/django_authopenid/util.py:554
 msgid "WordPress blog name"
 msgstr "Имя блога на WordPress"
 
-#: deps/django_authopenid/util.py:561
+#: deps/django_authopenid/util.py:562
 msgid "Blogger blog name"
 msgstr "Имя блога на Blogger"
 
-#: deps/django_authopenid/util.py:569
+#: deps/django_authopenid/util.py:570
 msgid "LiveJournal blog name"
 msgstr "Имя блога на LiveJournal"
 
-#: deps/django_authopenid/util.py:577
+#: deps/django_authopenid/util.py:578
 msgid "ClaimID user name"
 msgstr "Имя пользователя в ClaimID"
 
-#: deps/django_authopenid/util.py:585
+#: deps/django_authopenid/util.py:586
 msgid "Vidoop user name"
 msgstr "Имя пользователя в Vidoop"
 
-#: deps/django_authopenid/util.py:593
+#: deps/django_authopenid/util.py:594
 msgid "Verisign user name"
 msgstr "Имя пользователя в Verisign"
 
-#: deps/django_authopenid/util.py:628
+#: deps/django_authopenid/util.py:629
 #, python-format
 msgid "Change your %(provider)s password"
 msgstr "Сменить пароль в %(provider)s"
 
-#: deps/django_authopenid/util.py:632
+#: deps/django_authopenid/util.py:633
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
 msgstr "Проверьте, работает ли по-прежнему Ваш логин от %(provider)s на %(site_name)s"
 
-#: deps/django_authopenid/util.py:641
+#: deps/django_authopenid/util.py:642
 #, python-format
 msgid "Create password for %(provider)s"
 msgstr "Создать пароль для %(provider)s"
 
-#: deps/django_authopenid/util.py:645
+#: deps/django_authopenid/util.py:646
 #, python-format
 msgid "Connect your %(provider)s account to %(site_name)s"
 msgstr "Соедините Ваш аккаунт на %(provider)s с Вашей учетной записью на %(site_name)s"
 
-#: deps/django_authopenid/util.py:654
+#: deps/django_authopenid/util.py:655
 #, python-format
 msgid "Signin with %(provider)s user name and password"
 msgstr "Заходите с именем пользователя и паролем %(provider)s "
 
-#: deps/django_authopenid/util.py:661
+#: deps/django_authopenid/util.py:662
 #, python-format
 msgid "Sign in with your %(provider)s account"
 msgstr "Заходите через Ваш аккаунт на %(provider)s"
 
-#: deps/django_authopenid/views.py:212
+#: deps/django_authopenid/views.py:213
 #, python-format
 msgid "OpenID %(openid_url)s is invalid"
 msgstr "OpenID %(openid_url)s недействителен"
 
-#: deps/django_authopenid/views.py:390 deps/django_authopenid/views.py:567
-#: deps/django_authopenid/views.py:582
+#: deps/django_authopenid/views.py:391 deps/django_authopenid/views.py:568
+#: deps/django_authopenid/views.py:583
 #, python-format
 msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
 "please try again or use another provider"
 msgstr "К сожалению, возникла проблема при соединении с %(provider)s, пожалуйста попробуйте ещё раз или зайдите через другого провайдера"
 
-#: deps/django_authopenid/views.py:519
+#: deps/django_authopenid/views.py:520
 msgid "Your new password saved"
 msgstr "Ваш новый пароль сохранен"
 
-#: deps/django_authopenid/views.py:612
+#: deps/django_authopenid/views.py:613
 msgid "The login password combination was not correct"
 msgstr "Комбинация имени пользователя и пароля была неверной"
 
-#: deps/django_authopenid/views.py:716
+#: deps/django_authopenid/views.py:717
 msgid "Please click any of the icons below to sign in"
 msgstr "Введите имя пользователя и пароль"
 
-#: deps/django_authopenid/views.py:718
+#: deps/django_authopenid/views.py:719
 msgid "Account recovery email sent"
 msgstr "Email для восстановления аккаунта выслан"
 
-#: deps/django_authopenid/views.py:721
+#: deps/django_authopenid/views.py:722
 msgid "Please add one or more login methods."
 msgstr "Пожалуйста, добавьте хотя бы один постоянный метод для авторизации. Иметь два или больше методов тоже можно."
 
-#: deps/django_authopenid/views.py:723
+#: deps/django_authopenid/views.py:724
 msgid "If you wish, please add, remove or re-validate your login methods"
 msgstr "Здесь можно изменить пароль и проверить текущие методы авторизации"
 
-#: deps/django_authopenid/views.py:725
+#: deps/django_authopenid/views.py:726
 msgid "Please wait a second! Your account is recovered, but ..."
 msgstr "Пожалуйста, подождите секунду! Ваша учетная запись восстанавлена, но ..."
 
-#: deps/django_authopenid/views.py:727
+#: deps/django_authopenid/views.py:728
 msgid "Sorry, this account recovery key has expired or is invalid"
 msgstr "К сожалению, этот ключ восстановления истек или не является верным"
 
-#: deps/django_authopenid/views.py:800
+#: deps/django_authopenid/views.py:801
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
 msgstr "Метод входа %(provider_name) s не существует"
 
-#: deps/django_authopenid/views.py:806
+#: deps/django_authopenid/views.py:807
 msgid "Oops, sorry - there was some error - please try again"
 msgstr "Упс, извините, произошла ошибка - пожалуйста, попробуйте ещё раз"
 
-#: deps/django_authopenid/views.py:881
+#: deps/django_authopenid/views.py:882
 msgid ""
 "If you are trying to sign in to another account, please sign out first."
 msgstr ""
 
-#: deps/django_authopenid/views.py:886
+#: deps/django_authopenid/views.py:887
 msgid "Otherwise, please report the incident to the site administrator."
 msgstr ""
 
-#: deps/django_authopenid/views.py:917
+#: deps/django_authopenid/views.py:918
 #, python-format
 msgid "Your %(provider)s login works fine"
 msgstr "Вход при помощи %(provider)s работает отлично"
@@ -3251,7 +3302,7 @@ msgstr ""
 msgid "Recover your %(site)s account"
 msgstr "Восстановить аккаунт на сайте %(site)s"
 
-#: deps/django_authopenid/views.py:1291
+#: deps/django_authopenid/views.py:1289
 msgid "Please check your email and visit the enclosed link."
 msgstr "Пожалуйста, проверьте свой email и пройдите по вложенной ссылке."
 
@@ -3263,100 +3314,31 @@ msgstr ""
 msgid "Site"
 msgstr "Сайт"
 
-#: deps/livesettings/values.py:71
+#: deps/livesettings/values.py:72
 msgid "Main"
 msgstr "Главная"
 
-#: deps/livesettings/values.py:132
+#: deps/livesettings/values.py:133
 msgid "Base Settings"
 msgstr "Основные настройки"
 
-#: deps/livesettings/values.py:243
+#: deps/livesettings/values.py:244
 msgid "Default value: \"\""
 msgstr "Значение по умолчанию:\"\""
 
-#: deps/livesettings/values.py:250
+#: deps/livesettings/values.py:251
 msgid "Default value: "
 msgstr "Значение по умолчанию:"
 
-#: deps/livesettings/values.py:253
+#: deps/livesettings/values.py:254
 #, python-format
 msgid "Default value: %s"
 msgstr "Значение по умолчанию: %s"
 
-#: deps/livesettings/values.py:640
+#: deps/livesettings/values.py:641
 #, python-format
 msgid "Allowed image file types are %(types)s"
 msgstr "Допустимые типы файлов изображений: %(types)s"
-
-#: deps/livesettings/templates/livesettings/_admin_site_views.html:4
-msgid "Sites"
-msgstr "Сайты"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:11
-#: deps/livesettings/templates/livesettings/site_settings.html:23
-msgid "Documentation"
-msgstr "Документация"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:11
-#: deps/livesettings/templates/livesettings/site_settings.html:23
-#: templates/authopenid/signin.html:148
-#: templates/authopenid/widget_signin.html:148
-msgid "Change password"
-msgstr "Изменить пароль"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:11
-#: deps/livesettings/templates/livesettings/site_settings.html:23
-msgid "Log out"
-msgstr "Выйти"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:14
-#: deps/livesettings/templates/livesettings/site_settings.html:26
-msgid "Home"
-msgstr "Главная"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:15
-msgid "Edit Group Settings"
-msgstr "Редактировать настройки групп"
-
-#: deps/livesettings/templates/livesettings/group_settings.html:22
-#: deps/livesettings/templates/livesettings/site_settings.html:50
-msgid "Please correct the error below."
-msgid_plural "Please correct the errors below."
-msgstr[0] "Пожалуйста исправте ошибку ниже."
-msgstr[1] "Пожалуйста исправте ошибки ниже."
-msgstr[2] "Пожалуйста исправте ошибки ниже."
-
-#: deps/livesettings/templates/livesettings/group_settings.html:28
-#, python-format
-msgid "Settings included in %(name)s."
-msgstr "Настройки включены в %(name)s."
-
-#: deps/livesettings/templates/livesettings/group_settings.html:62
-#: deps/livesettings/templates/livesettings/site_settings.html:97
-msgid "You don't have permission to edit values."
-msgstr "У вас нет разрешения на изменение значений."
-
-#: deps/livesettings/templates/livesettings/site_settings.html:27
-msgid "Edit Site Settings"
-msgstr "Редактировать настройки сайта"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:43
-msgid "Livesettings are disabled for this site."
-msgstr "Livesettings отключены для этого сайта."
-
-#: deps/livesettings/templates/livesettings/site_settings.html:44
-msgid "All configuration options must be edited in the site settings.py file"
-msgstr "Все параметры конфигурации должны быть изменены в файле settings.py"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:66
-#, python-format
-msgid "Group settings: %(name)s"
-msgstr "Настройки группы: %(name)s"
-
-#: deps/livesettings/templates/livesettings/site_settings.html:93
-msgid "Uncollapse all"
-msgstr "Развернуть все"
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:150
 msgid "Congratulations, you are now an Administrator"
@@ -3412,41 +3394,41 @@ msgid ""
 "of your user account</p>"
 msgstr "<p>Извините, ваш вопрос невозможно добавить, поскольку у вашей учетной записи недостаточно прав</p>"
 
-#: mail/lamson_handlers.py:158
+#: mail/lamson_handlers.py:160
 msgid ""
 "You were replying to an email address             unknown to the system or "
 "you were replying from a different address from the one where you"
 "             received the notification."
 msgstr ""
 
-#: mail/lamson_handlers.py:245
+#: mail/lamson_handlers.py:251
 #, python-format
 msgid "Re: Welcome to %(site_name)s"
 msgstr ""
 
-#: mail/lamson_handlers.py:252
+#: mail/lamson_handlers.py:258
 msgid "Please reply to the welcome email without editing it"
 msgstr ""
 
-#: mail/lamson_handlers.py:314
+#: mail/lamson_handlers.py:318
 #, python-format
 msgid "Re: %s"
 msgstr ""
 
-#: management/commands/send_accept_answer_reminders.py:60
+#: management/commands/send_accept_answer_reminders.py:61
 #, python-format
 msgid "Accept the best answer for %(question_count)d of your questions"
 msgstr "Принять лучший ответ для %(question_count)d ваших вопросов"
 
-#: management/commands/send_accept_answer_reminders.py:65
+#: management/commands/send_accept_answer_reminders.py:66
 msgid "Please accept the best answer for this question:"
 msgstr "<span class='big strong'>Пожалуйста, старайтесь давать ответы по-существу</span>. Если вы хотите обсудить вопрос или ответ, <strong>используйте комментирование</strong>. Пожалуйста, помните, что вы всегда можете <strong>пересмотреть свой вопрос</strong> - нет нужды задавать один и тот же вопрос дважды. Кроме того, пожалуйста, <strong>не забывайте голосовать</strong> - это действительно помогает выбрать лучшие вопросы и ответы!"
 
-#: management/commands/send_accept_answer_reminders.py:67
+#: management/commands/send_accept_answer_reminders.py:68
 msgid "Please accept the best answer for these questions:"
 msgstr "<span class='big strong'>Пожалуйста, старайтесь давать ответы по-существу</span>. Если вы хотите обсудить вопрос или ответ, <strong>используйте комментирование</strong>. Пожалуйста, помните, что вы всегда можете <strong>пересмотреть свой вопрос</strong> - нет нужды задавать один и тот же вопрос дважды. Кроме того, пожалуйста, <strong>не забывайте голосовать</strong> - это действительно помогает выбрать лучшие вопросы и ответы!"
 
-#: management/commands/send_email_alerts.py:414
+#: management/commands/send_email_alerts.py:413
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
@@ -3454,7 +3436,7 @@ msgstr[0] "%(question_count)d вопрос обновлен в %(topics)s"
 msgstr[1] "%(question_count)d вопросы обновлены в %(topics)s"
 msgstr[2] "%(question_count)d вопросы обновлены в %(topics)s"
 
-#: management/commands/send_email_alerts.py:425
+#: management/commands/send_email_alerts.py:424
 #, python-format
 msgid ""
 "<p>Dear %(name)s,</p><p>The following question has been updated "
@@ -3466,11 +3448,11 @@ msgstr[0] "<p>Уважаемый %(name)s,</p><p>Следующий вопрос
 msgstr[1] "<p>Уважаемый %(name)s,</p><p>Следующие %(num)d вопроса были обновлены на %(sitename)s:</p>"
 msgstr[2] "<p>Уважаемый %(name)s,</p><p>Следующие %(num)d вопросов были обновлены на %(sitename)s:</p>"
 
-#: management/commands/send_email_alerts.py:449
+#: management/commands/send_email_alerts.py:448
 msgid "new question"
 msgstr "новый вопрос"
 
-#: management/commands/send_email_alerts.py:474
+#: management/commands/send_email_alerts.py:473
 #, python-format
 msgid ""
 "<p>Please remember that you can always <a "
@@ -3481,7 +3463,7 @@ msgid ""
 "server.</p>"
 msgstr ""
 
-#: management/commands/send_unanswered_question_reminders.py:66
+#: management/commands/send_unanswered_question_reminders.py:67
 #, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
@@ -3494,86 +3476,86 @@ msgstr[2] "%(question_count)d неотвеченных вопросов на т�
 msgid "Please log in to use %s"
 msgstr "Пожалуйста войдите чтобы использовать %s"
 
-#: models/__init__.py:518
+#: models/__init__.py:561
 msgid "Sorry, this operation is not allowed"
 msgstr ""
 
-#: models/__init__.py:568
+#: models/__init__.py:611
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
 msgstr "К сожалению, вы не можете принять или не принять   лучший ответ, потому что ваша учетная запись заблокирована"
 
-#: models/__init__.py:572
+#: models/__init__.py:615
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
 msgstr "К сожалению, вы не можете принять или не принять   лучший ответ, потому что ваша учетная запись приостановлена"
 
-#: models/__init__.py:586
+#: models/__init__.py:629
 #, python-format
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
 "own question"
 msgstr ">%(points)s очков необходимо чтобы принять или отклонить ваш собственный ответ на ваш собственный вопрос"
 
-#: models/__init__.py:610
+#: models/__init__.py:653
 #, python-format
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
 msgstr "Извините, вы сможете принять этот ответ только через %(will_be_able_at)s"
 
-#: models/__init__.py:619
+#: models/__init__.py:662
 #, python-format
 msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
 "can accept or unaccept the best answer"
 msgstr "Извините, только модераторы или автор вопроса - %(username)s - могут принимать или отклонять лучший ответ"
 
-#: models/__init__.py:642
+#: models/__init__.py:685
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "Простите, Вы не можете голосовать за свои же сообщения"
 
-#: models/__init__.py:646
+#: models/__init__.py:689
 msgid "Sorry your account appears to be blocked "
 msgstr "К сожалению, ваша  учетная запись заблокирована"
 
-#: models/__init__.py:651
+#: models/__init__.py:694
 msgid "Sorry your account appears to be suspended "
 msgstr "К сожалению, ваша  учетная запись приостановлена"
 
-#: models/__init__.py:661
+#: models/__init__.py:704
 #, python-format
 msgid ">%(points)s points required to upvote"
 msgstr "для повышения рейтинга требуется минимум %(points)s баллов "
 
-#: models/__init__.py:667
+#: models/__init__.py:710
 #, python-format
 msgid ">%(points)s points required to downvote"
 msgstr "для понижения рейтинга требуется минимум %(points)s баллов"
 
-#: models/__init__.py:682
+#: models/__init__.py:725
 msgid "Sorry, blocked users cannot upload files"
 msgstr "К сожалению, заблокированные пользователи не могут загружать файлы"
 
-#: models/__init__.py:683
+#: models/__init__.py:726
 msgid "Sorry, suspended users cannot upload files"
 msgstr "К сожалению, временно блокированные пользователи не могут загружать файлы"
 
-#: models/__init__.py:685
+#: models/__init__.py:728
 #, python-format
 msgid "sorry, file uploading requires karma >%(min_rep)s"
 msgstr "простите, загрузка файлов требует >%(min_rep)s очков репутации"
 
-#: models/__init__.py:704
+#: models/__init__.py:747
 msgid "Could not post, because your karma is insufficient to publish links"
 msgstr ""
 
-#: models/__init__.py:730
+#: models/__init__.py:773
 msgid "Sorry, you already gave an answer, please edit it instead."
 msgstr ""
 
-#: models/__init__.py:754
+#: models/__init__.py:797
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
@@ -3585,57 +3567,57 @@ msgstr[0] "Извините, комментарии (кроме последне
 msgstr[1] "Извините, комментарии (кроме последнего) можно редактировать только %(minutes)s минуты после добавления"
 msgstr[2] "Извините, комментарии (кроме последнего) можно редактировать только %(minutes)s минут после добавления"
 
-#: models/__init__.py:766
+#: models/__init__.py:809
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr "К сожалению, только владелец или модератор может редактировать комментарий"
 
-#: models/__init__.py:795
+#: models/__init__.py:838
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr "К сожалению, так как ваш аккаунт приостановлен вы можете комментировать только свои собственные сообщения"
 
-#: models/__init__.py:799
+#: models/__init__.py:842
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
 msgstr "К сожалению, для комментирования любого сообщения требуется  %(min_rep)s баллов репутации. Вы можете комментировать только свои собственные сообщения и ответы на ваши вопросы"
 
-#: models/__init__.py:829
+#: models/__init__.py:872
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr "Этот пост был удален, его может увидеть только владелец, администраторы сайта и модераторы"
 
-#: models/__init__.py:846
+#: models/__init__.py:889
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted"
 " posts"
 msgstr "Извините, только модераторы, администраторы сайта и владельцы сообщения могут редактировать удаленные сообщения"
 
-#: models/__init__.py:861
+#: models/__init__.py:904
 msgid "Sorry, since your account is blocked you cannot edit posts"
 msgstr "К сожалению, так как Ваш учетная запись заблокирована Вы не можете редактировать сообщения"
 
-#: models/__init__.py:865
+#: models/__init__.py:908
 msgid ""
 "Sorry, since your account is suspended you can edit only your own posts"
 msgstr "К сожалению, так как ваша учетная запись приостановлена вы можете редактировать только ваши собственные сообщения"
 
-#: models/__init__.py:870
+#: models/__init__.py:913
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr "К сожалению, для редактирования вики сообщений, требуется %(min_rep)s баллов кармы"
 
-#: models/__init__.py:877
+#: models/__init__.py:920
 #, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "К сожалению, для редактировать сообщения других пользователей, требуется %(min_rep)s балов кармы"
 
-#: models/__init__.py:940
+#: models/__init__.py:983
 msgid ""
 "Sorry, cannot delete your question since it has an upvoted answer posted by "
 "someone else"
@@ -3646,103 +3628,103 @@ msgstr[0] "К сожалению, Вы не может удалить ваш в�
 msgstr[1] "К сожалению, Вы не может удалить ваш вопрос, поскольку на него ответили другие пользователи и их ответы получили положительные голоса"
 msgstr[2] "К сожалению, Вы не может удалить ваш вопрос, поскольку на него ответили другие пользователи и их ответы получили положительные голоса"
 
-#: models/__init__.py:955
+#: models/__init__.py:998
 msgid "Sorry, since your account is blocked you cannot delete posts"
 msgstr "К сожалению, так как Ваша учетная запись заблокирована Вы не можете удалять сообщения"
 
-#: models/__init__.py:959
+#: models/__init__.py:1002
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr "К сожалению, так как Ваша учетная запись приостановлена Вы не можете удалять сообщения"
 
-#: models/__init__.py:963
+#: models/__init__.py:1006
 #, python-format
 msgid ""
 "Sorry, to delete other people's posts, a minimum reputation of %(min_rep)s "
 "is required"
 msgstr ""
 
-#: models/__init__.py:983
+#: models/__init__.py:1026
 msgid "Sorry, since your account is blocked you cannot close questions"
 msgstr "К сожалению, так как Ваша учетная запись заблокирована вы не можете закрыть вопросы"
 
-#: models/__init__.py:987
+#: models/__init__.py:1030
 msgid "Sorry, since your account is suspended you cannot close questions"
 msgstr "К сожалению, так как Ваша учетная запись приостановлена вы не можете закрыть вопросы"
 
-#: models/__init__.py:991
+#: models/__init__.py:1034
 #, python-format
 msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "К сожалению, для закрытия сообщения других пользователей, требуется %(min_rep)s балов кармы"
 
-#: models/__init__.py:1000
+#: models/__init__.py:1043
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
 msgstr "К сожалению, для закрытия своего вопроса, требуется %(min_rep)s балов кармы"
 
-#: models/__init__.py:1026
+#: models/__init__.py:1069
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > "
 "%(min_rep)s can reopen questions."
 msgstr "К сожалению, только администраторы, модераторы или владельцы с кармой >%(min_rep)s может открыть вопрос"
 
-#: models/__init__.py:1032
+#: models/__init__.py:1075
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "К сожалению, чтобы вновь открыть собственный вопрос требуется %(min_rep)s баллов кармы"
 
-#: models/__init__.py:1037
+#: models/__init__.py:1080
 msgid "Sorry, you cannot reopen questions because your account is blocked"
 msgstr ""
 
-#: models/__init__.py:1042
+#: models/__init__.py:1085
 msgid "Sorry, you cannot reopen questions because your account is suspended"
 msgstr ""
 
-#: models/__init__.py:1065
+#: models/__init__.py:1108
 msgid "You have flagged this question before and cannot do it more than once"
 msgstr "Вы уже пометили этот вопрос и не можете сделать это несколько раз"
 
-#: models/__init__.py:1073
+#: models/__init__.py:1116
 msgid ""
 "Sorry, since your account is blocked you cannot flag posts as offensive"
 msgstr "Простите, поскольку Ваш аккаунт заблокирован, Вы не можете помечать сообщения как нарушающие правила"
 
-#: models/__init__.py:1084
+#: models/__init__.py:1127
 #, python-format
 msgid ""
 "Sorry, to flag posts as offensive a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "Простите, чтобы помечать сообщения как нарушающие правила, требуется минимум %(min_rep)s очков репутации"
 
-#: models/__init__.py:1105
+#: models/__init__.py:1148
 #, python-format
 msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 msgstr "Простите, Вы израсходовали максимальное число отметок о нарушении правил за день - %(max_flags_per_day)s штук"
 
-#: models/__init__.py:1117
+#: models/__init__.py:1160
 msgid "cannot remove non-existing flag"
 msgstr "нельзя удалить несуществующий флаг"
 
-#: models/__init__.py:1123
+#: models/__init__.py:1166
 msgid "Sorry, since your account is blocked you cannot remove flags"
 msgstr "Простите, поскольку Ваш аккаунт заблокирован, Вы не можете удалять отметки"
 
-#: models/__init__.py:1127
+#: models/__init__.py:1170
 msgid ""
 "Sorry, your account appears to be suspended and you cannot remove flags. "
 "Please contact the forum administrator to reach a resolution."
 msgstr "Простите, поскольку Ваш аккаунт приостановлен, Вы не можете удалять отметки.\nОбратитесь к администратору форума за разрешением ситуации."
 
-#: models/__init__.py:1133
+#: models/__init__.py:1176
 #, python-format
 msgid "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgid_plural ""
@@ -3751,67 +3733,67 @@ msgstr[0] "Простите, чтобы пометить сообщение тр
 msgstr[1] "Простите, чтобы пометить сообщение требуется минимум %(min_rep)d очка репутации"
 msgstr[2] "Простите, чтобы пометить сообщение требуется минимум %(min_rep)d очков репутации"
 
-#: models/__init__.py:1152
+#: models/__init__.py:1195
 msgid "you don't have the permission to remove all flags"
 msgstr "у вас нету прав чтобы удалить все обжалованные сообщения"
 
-#: models/__init__.py:1153
+#: models/__init__.py:1196
 msgid "no flags for this entry"
 msgstr "без заметок на эту запись"
 
-#: models/__init__.py:1177
+#: models/__init__.py:1220
 msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
 msgstr "К сожалению, только владельцы, администраторы сайта и модераторы могут менять теги к удаленным вопросам"
 
-#: models/__init__.py:1184
+#: models/__init__.py:1227
 msgid "Sorry, since your account is blocked you cannot retag questions"
 msgstr "К сожалению, так как Ваша учетная запись заблокирована вы не можете поменять теги вопроса "
 
-#: models/__init__.py:1188
+#: models/__init__.py:1231
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr "К сожалению, так как Ваша учетная запись приостановлена вы можете менять теги только на свои вопросы"
 
-#: models/__init__.py:1192
+#: models/__init__.py:1235
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
 msgstr "К сожалению, для изменения тегов требуется %(min_rep)s баллов кармы"
 
-#: models/__init__.py:1211
+#: models/__init__.py:1254
 msgid "Sorry, since your account is blocked you cannot delete comment"
 msgstr "К сожалению, так как Ваша учетная запись заблокирована Вы не можете удалять комментарий"
 
-#: models/__init__.py:1215
+#: models/__init__.py:1258
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr "К сожалению, так как Ваша учетная запись приостановлена вы можете удалять только ваши собственные комментарии"
 
-#: models/__init__.py:1219
+#: models/__init__.py:1262
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr "К сожалению, для удаления комментариев требуется %(min_rep)s баллов репутации"
 
-#: models/__init__.py:1243
+#: models/__init__.py:1286
 msgid "sorry, but older votes cannot be revoked"
 msgstr "простите, но старые голоса не могут быть отозваны"
 
-#: models/__init__.py:1926 utils/functions.py:97
+#: models/__init__.py:1973 utils/functions.py:98
 #, python-format
 msgid "on %(date)s"
 msgstr "%(date)s"
 
-#: models/__init__.py:1928
+#: models/__init__.py:1975
 msgid "in two days"
 msgstr "через два дня"
 
-#: models/__init__.py:1930
+#: models/__init__.py:1977
 msgid "tomorrow"
 msgstr "завтра"
 
-#: models/__init__.py:1932
+#: models/__init__.py:1979
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
@@ -3819,7 +3801,7 @@ msgstr[0] "через %(hr)d час"
 msgstr[1] "через %(hr)d часа"
 msgstr[2] "через %(hr)d часов"
 
-#: models/__init__.py:1934
+#: models/__init__.py:1981
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
@@ -3827,7 +3809,7 @@ msgstr[0] "через %(min)d минуту"
 msgstr[1] "через %(min)d минуты"
 msgstr[2] "через %(min)d минут"
 
-#: models/__init__.py:1935
+#: models/__init__.py:1982
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
@@ -3835,51 +3817,51 @@ msgstr[0] "%(days)d день"
 msgstr[1] "%(days)d дня"
 msgstr[2] "%(days)d дней"
 
-#: models/__init__.py:1937
+#: models/__init__.py:1984
 #, python-format
 msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
 "post an answer %(left)s"
 msgstr "Новые пользователи должны подождать %(days)s дней прежде чем получат возможность ответить на свой собственный вопрос. Вы можете ответить через %(left)s"
 
-#: models/__init__.py:2125 templates/email/feedback_email.txt:9
+#: models/__init__.py:2172 templates/email/feedback_email.txt:9
 msgid "Anonymous"
 msgstr "Аноним"
 
-#: models/__init__.py:2229
+#: models/__init__.py:2276
 msgid "Site Adminstrator"
 msgstr "Администратор сайта"
 
-#: models/__init__.py:2231
+#: models/__init__.py:2278
 msgid "Forum Moderator"
 msgstr "С уважением, Модератор форума"
 
-#: models/__init__.py:2233
+#: models/__init__.py:2280
 msgid "Suspended User"
 msgstr "Приостановленный пользователь "
 
-#: models/__init__.py:2235
+#: models/__init__.py:2282
 msgid "Blocked User"
 msgstr "Заблокированный пользователь"
 
-#: models/__init__.py:2237
+#: models/__init__.py:2284
 msgid "Registered User"
 msgstr "Зарегистрированный пользователь"
 
-#: models/__init__.py:2239
+#: models/__init__.py:2286
 msgid "Watched User"
 msgstr "Видный пользователь"
 
-#: models/__init__.py:2241
+#: models/__init__.py:2288
 msgid "Approved User"
 msgstr "Утвержденный Пользователь"
 
-#: models/__init__.py:2423
+#: models/__init__.py:2473
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr "Репутация пользователя %(username)s равна %(reputation)s"
 
-#: models/__init__.py:2433
+#: models/__init__.py:2486
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
@@ -3887,7 +3869,7 @@ msgstr[0] "%(count)d золотая награда"
 msgstr[1] "%(count)d золотых наград"
 msgstr[2] "%(count)d золотых наград"
 
-#: models/__init__.py:2440
+#: models/__init__.py:2493
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
@@ -3895,7 +3877,7 @@ msgstr[0] "%(count)d серебряная награда"
 msgstr[1] "%(count)d серебряных наград"
 msgstr[2] "%(count)d серебряных медалей"
 
-#: models/__init__.py:2447
+#: models/__init__.py:2500
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
@@ -3903,17 +3885,17 @@ msgstr[0] "%(count)d бронзовая награда"
 msgstr[1] "%(count)d бронзовых медалей"
 msgstr[2] "%(count)d бронзовых медалей"
 
-#: models/__init__.py:2458
+#: models/__init__.py:2511
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr "%(item1)s и %(item2)s"
 
-#: models/__init__.py:2462
+#: models/__init__.py:2513
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr "У пользователя %(user)s - %(badges)s наград"
 
-#: models/__init__.py:2595
+#: models/__init__.py:2646
 #, python-format
 msgid "At least %d karma point is required to post links"
 msgid_plural "At least %d karma points is required to post links"
@@ -3921,58 +3903,58 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/__init__.py:3074
+#: models/__init__.py:3118
 #, python-format
 msgid "%(user)s shared a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3077 models/__init__.py:3087
+#: models/__init__.py:3121 models/__init__.py:3131
 #, python-format
 msgid "%(user)s edited a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3079
+#: models/__init__.py:3123
 #, python-format
 msgid "%(user)s posted a %(post_link)s"
 msgstr ""
 
-#: models/__init__.py:3082
+#: models/__init__.py:3126
 #, python-format
 msgid "%(user)s edited an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3084
+#: models/__init__.py:3128
 #, python-format
 msgid "%(user)s posted an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3089
+#: models/__init__.py:3133
 #, python-format
 msgid "%(user)s posted a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3106
+#: models/__init__.py:3149
 msgid "To reply, PLEASE WRITE ABOVE THIS LINE."
 msgstr ""
 
-#: models/__init__.py:3138
+#: models/__init__.py:3188
 #, python-format
 msgid "\"%(title)s\""
 msgstr "\"%(title)s\""
 
-#: models/__init__.py:3290
+#: models/__init__.py:3340
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr "Поздравляем, вы получили '%(badge_name)s'. Проверьте свой <a href=\"%(user_profile)s\">профиль</a>."
 
-#: models/__init__.py:3560
+#: models/__init__.py:3613
 #, python-format
 msgid "Welcome to %(site_name)s"
 msgstr ""
 
-#: models/__init__.py:3581 views/commands.py:689
+#: models/__init__.py:3634 views/commands.py:697
 msgid "Your tag subscription was saved, thanks!"
 msgstr "Ваша подписка на тэги была сохранена"
 
@@ -4242,49 +4224,57 @@ msgstr "Очень активен в одном теге"
 msgid "message"
 msgstr ""
 
-#: models/post.py:1551
+#: models/post.py:414
+msgid "Question: "
+msgstr ""
+
+#: models/post.py:416
+msgid "Answer: "
+msgstr ""
+
+#: models/post.py:1569
 msgid "Sorry, this question has been deleted and is no longer accessible"
 msgstr "Извините, вопрос удалён и больше не доступен"
 
-#: models/post.py:1567
+#: models/post.py:1585
 msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
 msgstr "К сожалению, ответ который вы ищете больше не доступен, потому что вопрос был удален"
 
-#: models/post.py:1574
+#: models/post.py:1592
 msgid "Sorry, this answer has been removed and is no longer accessible"
 msgstr "К сожалению, этот ответ был удален и больше не доступен"
 
-#: models/post.py:1590
+#: models/post.py:1608
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent question has been removed"
 msgstr "К сожалению, комментарии который вы ищете больше не доступны, потому что вопрос был удален"
 
-#: models/post.py:1597
+#: models/post.py:1615
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent answer has been removed"
 msgstr "К сожалению, комментарий который Вы ищете больше не доступен, потому что ответ был удален"
 
-#: models/post.py:1619
+#: models/post.py:1637
 msgid "This post is temporarily not available"
 msgstr ""
 
-#: models/post.py:2128
+#: models/post.py:2146
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
 msgstr ""
 
-#: models/post.py:2132
+#: models/post.py:2150
 #, python-format
 msgid "your post to %(site)s"
 msgstr ""
 
-#: models/post.py:2139
+#: models/post.py:2157
 msgid ""
 "Your post was placed on the moderation queue and will be published after the"
 " moderator approval."
@@ -4307,17 +4297,17 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: models/question.py:1263
+#: models/question.py:1267
 #, python-format
 msgid "Tag %s is new and will be submitted for the moderators approval"
 msgstr ""
 
-#: models/question.py:1268 models/tag.py:217
+#: models/question.py:1272 models/tag.py:217
 #, python-format
 msgid "Tags %s are new and will be submitted for the moderators approval"
 msgstr ""
 
-#: models/question.py:1503
+#: models/question.py:1507
 #, python-format
 msgid "Please, <a href=\"%s\">review your question</a>."
 msgstr ""
@@ -4517,19 +4507,14 @@ msgstr "Править ответ"
 msgid "back"
 msgstr "назад"
 
-#: templates/answer_edit.html:14
-msgid "revision"
-msgstr "версия правки"
-
-#: templates/answer_edit.html:46 templates/question_edit.html:57
+#: templates/answer_edit.html:41 templates/question_edit.html:61
 msgid "Save edit"
 msgstr "Сохранить"
 
-#: templates/answer_edit.html:51 templates/close.html:16
-#: templates/feedback.html:64 templates/question_edit.html:58
+#: templates/answer_edit.html:46 templates/close.html:16
+#: templates/feedback.html:64 templates/question_edit.html:62
 #: templates/question_retag.html:22 templates/reopen.html:28
 #: templates/subscribe_for_tags.html:16
-#: templates/authopenid/changeemail.html:51
 #: templates/user_profile/reject_post_dialog.html:36
 #: templates/user_profile/reject_post_dialog.html:74
 #: templates/user_profile/reject_post_dialog.html:104
@@ -4537,21 +4522,21 @@ msgstr "Сохранить"
 msgid "Cancel"
 msgstr "Отменить"
 
-#: templates/answer_edit.html:92 templates/answer_edit.html.py:95
-#: templates/ask.html:74 templates/ask.html.py:77
-#: templates/question_edit.html:97 templates/question_edit.html.py:100
+#: templates/answer_edit.html:87 templates/answer_edit.html.py:90
+#: templates/ask.html:82 templates/ask.html.py:85
+#: templates/question_edit.html:101 templates/question_edit.html.py:104
 #: templates/question/javascript.html:73 templates/question/javascript.html:76
-#: templates/widgets/edit_post.html:83
+#: templates/widgets/edit_post.html:73
 msgid "hide preview"
 msgstr "скрыть предварительный просмотр"
 
-#: templates/answer_edit.html:95 templates/ask.html:77
-#: templates/question_edit.html:100 templates/question/javascript.html:76
+#: templates/answer_edit.html:90 templates/ask.html:85
+#: templates/question_edit.html:104 templates/question/javascript.html:76
 msgid "show preview"
 msgstr "показать предварительный просмотр"
 
 #: templates/ask.html:4 templates/widgets/ask_button.html:9
-#: templates/widgets/ask_form.html:48
+#: templates/widgets/ask_form.html:66
 msgid "Ask Your Question"
 msgstr "Задать вопрос"
 
@@ -4564,11 +4549,10 @@ msgstr ""
 #: templates/ask.html:25
 #, python-format
 msgid ""
-"YYour email, %%(email)s has not yet been validated. To post messages you "
-"must verify your email, please see <a "
-"href='%%(email_validation_faq_url)s'>more details here</a>. You can submit "
-"your question now and validate email after that. Meanwhile, your question "
-"will saved as pending."
+"Your email, %(email)s has not yet been validated. To post messages you must "
+"verify your email, please see <a href='%(email_validation_faq_url)s'>more "
+"details here</a>. You can submit your question now and validate email after "
+"that. Meanwhile, your question will saved as pending."
 msgstr ""
 
 #: templates/ask.html:29
@@ -4662,7 +4646,7 @@ msgstr "серебряная награда: как правило, присуж
 msgid "bronze badge: often given as a special honor"
 msgstr "бронзовая награда: часто даётся за особые заслуги"
 
-#: templates/base.html:19
+#: templates/base.html:22
 #, python-format
 msgid "RSS feed from %(site_title)s"
 msgstr ""
@@ -5147,61 +5131,61 @@ msgstr "текущее число голосов"
 msgid "anonymous user"
 msgstr "анонимный пользователь"
 
-#: templates/macros.html:94 templates/macros.html.py:113
+#: templates/macros.html:91 templates/macros.html.py:110
 msgid "asked"
 msgstr "спросил"
 
-#: templates/macros.html:96 templates/macros.html.py:115
+#: templates/macros.html:93 templates/macros.html.py:112
 msgid "answered"
 msgstr "ответил"
 
-#: templates/macros.html:98 templates/macros.html.py:117
+#: templates/macros.html:95 templates/macros.html.py:114
 msgid "posted"
 msgstr "опубликовал"
 
-#: templates/macros.html:104
+#: templates/macros.html:101
 msgid "this post is marked as community wiki"
 msgstr "пост отмечен как вики сообщества"
 
-#: templates/macros.html:107
+#: templates/macros.html:104
 #, python-format
 msgid ""
 "This post is a wiki.\n"
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
 msgstr "Это wiki-сообщение.\n       Любой пользователь с репутацией &gt;%(wiki_min_rep)s может улучшить его."
 
-#: templates/macros.html:149
+#: templates/macros.html:146
 msgid "updated"
 msgstr "обновил"
 
-#: templates/macros.html:264 templates/macros.html.py:270
+#: templates/macros.html:261 templates/macros.html.py:267
 msgid "Leave this group"
 msgstr ""
 
-#: templates/macros.html:265 templates/macros.html.py:267
-#: templates/macros.html:286
+#: templates/macros.html:262 templates/macros.html.py:264
+#: templates/macros.html:283
 msgid "Join this group"
 msgstr ""
 
-#: templates/macros.html:266 templates/macros.html.py:271
-#: templates/macros.html:281
+#: templates/macros.html:263 templates/macros.html.py:268
+#: templates/macros.html:278
 msgid "You are a member"
 msgstr ""
 
-#: templates/macros.html:273
+#: templates/macros.html:270
 msgid "Cancel application"
 msgstr ""
 
-#: templates/macros.html:274 templates/macros.html.py:283
+#: templates/macros.html:271 templates/macros.html.py:280
 msgid "Waiting approval"
 msgstr ""
 
-#: templates/macros.html:276 templates/macros.html.py:277
-#: templates/macros.html:288
+#: templates/macros.html:273 templates/macros.html.py:274
+#: templates/macros.html:285
 msgid "Ask to join"
 msgstr ""
 
-#: templates/macros.html:317
+#: templates/macros.html:314
 #, python-format
 msgid "see questions tagged '%(tag)s'"
 msgstr "смотри вопросы с тегами '%(tag)s' "
@@ -5210,66 +5194,66 @@ msgstr "смотри вопросы с тегами '%(tag)s' "
 msgid "delete this comment"
 msgstr "удалить этот комментарий"
 
-#: templates/macros.html:437 templates/revisions.html:38
+#: templates/macros.html:443 templates/revisions.html:38
 #: templates/revisions.html.py:41 templates/question/answer_controls.html:5
 #: templates/question/question_controls.html:1
 msgid "edit"
 msgstr "редактировать"
 
-#: templates/macros.html:441
+#: templates/macros.html:452
 msgid "convert to answer"
 msgstr ""
 
-#: templates/macros.html:576
+#: templates/macros.html:579
 #, python-format
 msgid "follow %(alias)s"
 msgstr "подписатся %(alias)s"
 
-#: templates/macros.html:579
+#: templates/macros.html:582
 #, python-format
 msgid "unfollow %(alias)s"
 msgstr "отменить подписку %(alias)s"
 
-#: templates/macros.html:580
+#: templates/macros.html:583
 #, python-format
 msgid "following %(alias)s"
 msgstr "подписан %(alias)s"
 
-#: templates/macros.html:658 templatetags/extra_tags.py:44
+#: templates/macros.html:662 templatetags/extra_tags.py:44
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr "%(username)s Gravatar"
 
-#: templates/macros.html:667
+#: templates/macros.html:671
 #, python-format
 msgid "%(username)s's website is %(url)s"
 msgstr "сайт %(username)s это %(url)s"
 
-#: templates/macros.html:682 templates/macros.html.py:683
-#: templates/macros.html:721 templates/macros.html.py:722
+#: templates/macros.html:686 templates/macros.html.py:687
+#: templates/macros.html:725 templates/macros.html.py:726
 msgid "previous"
 msgstr "предыдущая"
 
-#: templates/macros.html:694 templates/macros.html.py:733
+#: templates/macros.html:698 templates/macros.html.py:737
 msgid "current page"
 msgstr "текущая страница"
 
-#: templates/macros.html:696 templates/macros.html.py:703
-#: templates/macros.html:735 templates/macros.html.py:742
+#: templates/macros.html:700 templates/macros.html.py:707
+#: templates/macros.html:739 templates/macros.html.py:746
 #, python-format
 msgid "page %(num)s"
 msgstr "страница %(num)s"
 
-#: templates/macros.html:707 templates/macros.html.py:746
+#: templates/macros.html:711 templates/macros.html.py:750
 msgid "next page"
 msgstr "следующая страница"
 
-#: templates/macros.html:758
+#: templates/macros.html:762
 #, python-format
 msgid "responses for %(username)s"
 msgstr "ответы пользователю %(username)s"
 
-#: templates/macros.html:761
+#: templates/macros.html:765
 #, python-format
 msgid "you have %(response_count)s new response"
 msgid_plural "you have %(response_count)s new responses"
@@ -5277,21 +5261,21 @@ msgstr[0] "у Вас %(response_count)s новый ответ"
 msgstr[1] "у Вас %(response_count)s новых ответа"
 msgstr[2] "у Вас %(response_count)s новых ответов"
 
-#: templates/macros.html:764
+#: templates/macros.html:768
 msgid "no new responses yet"
 msgstr "новых ответов нет"
 
-#: templates/macros.html:779 templates/macros.html.py:780
+#: templates/macros.html:783 templates/macros.html.py:784
 #, python-format
 msgid "%(new)s new flagged posts and %(seen)s previous"
 msgstr "%(new)s новых помеченых сообщений и %(seen)s предыдущих"
 
-#: templates/macros.html:782 templates/macros.html.py:783
+#: templates/macros.html:786 templates/macros.html.py:787
 #, python-format
 msgid "%(new)s new flagged posts"
 msgstr "%(new)s новых неуместных сообщений"
 
-#: templates/macros.html:788 templates/macros.html.py:789
+#: templates/macros.html:792 templates/macros.html.py:793
 #, python-format
 msgid "%(seen)s flagged posts"
 msgstr "%(seen)s неуместных сообщений"
@@ -5300,23 +5284,23 @@ msgstr "%(seen)s неуместных сообщений"
 msgid "Questions"
 msgstr "Вопросы"
 
-#: templates/question.html:210
+#: templates/question.html:226
 msgid "see more comments"
 msgstr ""
 
-#: templates/question.html:212 templates/question.html.py:315
+#: templates/question.html:228 templates/question.html.py:331
 msgid "post a comment"
 msgstr "оставить комментарий"
 
-#: templates/question.html:225 templates/question/content.html:46
+#: templates/question.html:241 templates/question/content.html:46
 msgid "Answer Your Own Question"
 msgstr "Ответьте на собственный вопрос"
 
-#: templates/question.html:230
+#: templates/question.html:246
 msgid "Post Your Answer"
 msgstr "Оставить ответ"
 
-#: templates/question.html:236 templates/widgets/ask_form.html:46
+#: templates/question.html:252 templates/widgets/ask_form.html:64
 msgid "Login/Signup to Post"
 msgstr "Войдите / Зарегистрируйтесь чтобы оставить сообщение"
 
@@ -5324,7 +5308,15 @@ msgstr "Войдите / Зарегистрируйтесь чтобы оста�
 msgid "Edit question"
 msgstr "Изменить вопрос"
 
-#: templates/question_edit.html:52
+#: templates/question_edit.html:16
+msgid "Question - in one sentence"
+msgstr ""
+
+#: templates/question_edit.html:23
+msgid "Details"
+msgstr ""
+
+#: templates/question_edit.html:56
 msgid "Change language"
 msgstr ""
 
@@ -5408,66 +5400,66 @@ msgstr "Подписаться"
 msgid "search for tags"
 msgstr ""
 
-#: templates/users.html:4 templates/users.html.py:14
+#: templates/users.html:8 templates/users.html.py:18
 #: templates/tags/list_bulk_tag_subscription.html:13
 msgid "Users"
 msgstr "Пользователи"
 
-#: templates/users.html:12
+#: templates/users.html:16
 #, python-format
 msgid "Users in group %(name)s"
 msgstr ""
 
-#: templates/users.html:20
+#: templates/users.html:24
 msgid "Select/Sort by &raquo;"
 msgstr ""
 
-#: templates/users.html:25
+#: templates/users.html:29
 #, python-format
 msgid "people in group %(name)s"
 msgstr ""
 
-#: templates/users.html:29 templates/main_page/tab_bar.html:17
+#: templates/users.html:33 templates/main_page/tab_bar.html:17
 #: templates/tags/header.html:14
 msgid "Sort by &raquo;"
 msgstr "Сорт. по &raquo;"
 
-#: templates/users.html:36
+#: templates/users.html:40
 msgid "see people with the highest reputation"
 msgstr "показать пользователей с наивысшим рейтингом"
 
-#: templates/users.html:37 templates/user_profile/user_info.html:26
+#: templates/users.html:41 templates/user_profile/user_info.html:26
 #: templates/user_profile/user_reputation.html:5
 #: templates/user_profile/user_tabs.html:24
 msgid "karma"
 msgstr "репутации"
 
-#: templates/users.html:43
+#: templates/users.html:47
 msgid "see people who joined most recently"
 msgstr "посмотреть пользователей которые присоединились недавно"
 
-#: templates/users.html:44
+#: templates/users.html:48
 msgid "recent"
 msgstr "новичкам"
 
-#: templates/users.html:49
+#: templates/users.html:53
 msgid "see people who joined the site first"
 msgstr "посмотреть пользователей которые присоединились ранее"
 
-#: templates/users.html:55
+#: templates/users.html:59
 msgid "see people sorted by name"
 msgstr "показать пользователей отсортированными по имени"
 
-#: templates/users.html:56
+#: templates/users.html:60
 msgid "by username"
 msgstr "имени"
 
-#: templates/users.html:62
+#: templates/users.html:66
 #, python-format
 msgid "users matching query %(search_query)s:"
 msgstr ""
 
-#: templates/users.html:65
+#: templates/users.html:69
 msgid "Nothing found."
 msgstr "Ничего не найдено."
 
@@ -5488,97 +5480,29 @@ msgid "Sign in"
 msgstr "Войти"
 
 #: templates/authopenid/changeemail.html:2
-#: templates/authopenid/changeemail.html:8
-#: templates/authopenid/changeemail.html:49
 msgid "Change Email"
 msgstr "Сменить Email"
 
-#: templates/authopenid/changeemail.html:10
-msgid "Save your email address"
-msgstr "Сохранить адрес электронной почты"
-
-#: templates/authopenid/changeemail.html:15
-#, python-format
-msgid ""
-"<span class=\\\"strong big\\\">Enter your new email into the box below</span> if \n"
-"you'd like to use another email for <strong>update subscriptions</strong>.\n"
-"<br>Currently you are using <strong>%%(email)s</strong>"
-msgstr "<span class=\\\"strong big\\\">Введите ваш новый email-адрес в строку ниже,</span> если захотите использовать другой адрес для <strong>рассылки новостей</strong>.\n<br>Сейчас Вы используете <strong>%%(email)s</strong>"
-
-#: templates/authopenid/changeemail.html:19
-#, python-format
-msgid ""
-"<span class='strong big'>Please enter your email address in the box below.</span>\n"
-"Valid email address is required on this Q&amp;A forum. If you like, \n"
-"you can <strong>receive updates</strong> on interesting questions or entire\n"
-"forum via email. Also, your email is used to create a unique \n"
-"<a href='%%(gravatar_faq_url)s'><strong>gravatar</strong></a> image for your\n"
-"account. Email addresses are never shown or otherwise shared with anybody\n"
-"else."
-msgstr "<span class='strong big'>Пожалуйста, введите Ваш email-адрес в поле ниже.</span>\nПодтвержденный email-адрес требуется на этом Q&amp;A форуме. Вы также можете <strong>получать обновления</strong> интересующих Вас вопросов или всего форума. Также, Ваш email-адрес используется для создания уникального <a href='%%(gravatar_faq_url)s'><strong>граватара</strong></a> - изображения для Вашей учетной записи. Email-адреса никогда не отображаются и не передаются никому другому."
-
-#: templates/authopenid/changeemail.html:38
-msgid ""
-"<strong>Your new Email:</strong> \n"
-"(will <strong>not</strong> be shown to anyone, must be valid)"
-msgstr "<strong>Ваш новый Email-адрес:</strong> \n(<strong>не будет</strong> отображаться никому, но должен быть подтвержданным)"
-
-#: templates/authopenid/changeemail.html:41
-msgid ""
-"<strong>Your Email</strong> (<i>must be valid, never shown to others</i>)"
-msgstr ""
-
-#: templates/authopenid/changeemail.html:49
-msgid "Save Email"
-msgstr "Сохранить Email"
-
-#: templates/authopenid/changeemail.html:58
+#: templates/authopenid/changeemail.html:6
 msgid "Validate email"
 msgstr "Проверить email-адрес"
 
-#: templates/authopenid/changeemail.html:61
+#: templates/authopenid/changeemail.html:9
 #, python-format
 msgid ""
 "<span class=\\\"strong big\\\">An email with a validation link has been sent to \n"
-"%%(email)s.</span> Please <strong>follow the emailed link</strong> with your \n"
+"%(email)s.</span> Please <strong>follow the emailed link</strong> with your \n"
 "web browser. Email validation is necessary to help insure the proper use of \n"
 "email on <span class=\\\"orange\\\">Q&amp;A</span>. If you would like to use \n"
 "<strong>another email</strong>, please <a \n"
-"href='%%(change_email_url)s'><strong>change it again</strong></a>."
-msgstr "<span class=\\\"strong big\\\">Сообщение с ссылкой для подтверждения email-адреса было отправлено на %%(email)s.</span> Пожалуйста, <strong>пройдите по ссылке в сообщении</strong> с помощью Вашего web-браузера. Подтверждение Email-адреса необходимо, чтобы убедиться в правильном использовании email на <span class=\\\"orange\\\">Q&amp;A форуме</span>. Если Вы хотите использовать \n<strong>другой email</strong>, пожалуйста <a \nhref='%%(change_email_url)s'><strong>смените его снова</strong></a>."
+"href='%(change_email_url)s'><strong>change it again</strong></a>."
+msgstr ""
 
-#: templates/authopenid/changeemail.html:70
-msgid "Email not changed"
-msgstr "Email не изменился"
-
-#: templates/authopenid/changeemail.html:73
-#, python-format
-msgid ""
-"<span class=\\\"strong big\\\">Your email address %%(email)s has not been changed.\n"
-"</span> If you decide to change it later - you can always do it by editing \n"
-"it in your user profile or by using the <a \n"
-"href='%%(change_email_url)s'><strong>previous form</strong></a> again."
-msgstr "<span class=\\\"strong big\\\">Ваш электронный адрес %%(email)s не был изменен</span>если Вы решите изменить его позже - Вы всегда можете сделать это в настройках профиля или используя <a \nhref='%%(change_email_url)s'><strong>предыдущую форму</strong></a> снова."
-
-#: templates/authopenid/changeemail.html:80
-msgid "Email changed"
-msgstr "Email изменен"
-
-#: templates/authopenid/changeemail.html:83
-#, python-format
-msgid ""
-"\n"
-"<span class='big strong'>Your email address is now set to %%(email)s.</span> \n"
-"Updates on the questions that you like most will be sent to this address. \n"
-"Email notifications are sent once a day or less frequently - only when there \n"
-"are any news."
-msgstr "\n<span class='big strong'>Ваш почтовый ящик изменен на %%(email)s.</span> \nОбновления на наиболее понравившиеся Вам вопросы будут отправлены на этот адрес. Уведомления по электронной почте отправляются один раз в день или реже - только когда есть какие то новости."
-
-#: templates/authopenid/changeemail.html:91
+#: templates/authopenid/changeemail.html:18
 msgid "Email verified"
 msgstr "Email проверен"
 
-#: templates/authopenid/changeemail.html:94
+#: templates/authopenid/changeemail.html:21
 msgid ""
 "<span class=\\\"big strong\\\">Thank you for verifying your email!</span> Now \n"
 "you can <strong>ask</strong> and <strong>answer</strong> questions. Also if \n"
@@ -5586,19 +5510,6 @@ msgid ""
 "updates</strong> - then will be notified about changes <strong>once a day</strong>\n"
 "or less frequently."
 msgstr "<span class=\\\"big strong\\\">Спасибо за подтверждение Вашего электронного адреса!</span> Теперь Вы можете <strong>задавать</strong> и <strong>отвечать</strong> на вопросы. Так же если Вы найдете интересные вопросы Вы можете <strong>подписаться на обновления к ним</strong> - тогда мы будем оповещать Вас о изменениях <strong>раз в день</strong>\nили реже."
-
-#: templates/authopenid/changeemail.html:102
-msgid "Validation email not sent"
-msgstr "Сообщение с подтверждением не отправлено"
-
-#: templates/authopenid/changeemail.html:105
-#, python-format
-msgid ""
-"<span class='big strong'>Your current email address %%(email)s has been \n"
-"validated before</span> so the new key was not sent. You can <a \n"
-"href='%%(change_link)s'>change</a> email used for update subscriptions if \n"
-"necessary."
-msgstr "<span class='big strong'>Ваш текущий email-адрес %%(email)s уже был подтвержден ранее</span> поэтому новый ключ не был отослан. Если это необходимо, Вы можете <a \nhref='%%(change_link)s'>сменить</a> email-адрес."
 
 #: templates/authopenid/complete.html:21
 msgid "Registration"
@@ -5770,7 +5681,7 @@ msgid "Login or email"
 msgstr "Логин или email"
 
 #: templates/authopenid/signin.html:113
-#: templates/authopenid/widget_signin.html:113 utils/forms.py:266
+#: templates/authopenid/widget_signin.html:113 utils/forms.py:264
 msgid "Password"
 msgstr "Пароль"
 
@@ -5788,6 +5699,12 @@ msgstr "Новый пароль "
 #: templates/authopenid/widget_signin.html:138
 msgid "Please, retype"
 msgstr "Пожалуйста, повторите"
+
+#: templates/authopenid/signin.html:148
+#: templates/authopenid/widget_signin.html:148
+#: templates/livesettings/site_settings.html:24
+msgid "Change password"
+msgstr "Изменить пароль"
 
 #: templates/authopenid/signin.html:162
 #: templates/authopenid/widget_signin.html:162
@@ -6094,7 +6011,7 @@ msgid ""
 "                        "
 msgstr ""
 
-#: templates/email/notify_author_about_approved_post.html:20
+#: templates/email/notify_author_about_approved_post.html:21
 msgid "Below is a copy of your post:"
 msgstr ""
 
@@ -6118,22 +6035,30 @@ msgstr[2] ""
 msgid "Great, you are ready to use %(site_name)s!"
 msgstr ""
 
-#: templates/email/re_welcome_lamson_on.html:6
+#: templates/email/re_welcome_lamson_on.html:7
 #, python-format
 msgid "You can post questions by emailing them at %(ask_address)s."
 msgstr ""
 
-#: templates/email/re_welcome_lamson_on.html:7
+#: templates/email/re_welcome_lamson_on.html:8
 msgid ""
 "When you receive update notifications, you will be able to respond to them, "
 "also by email."
 msgstr ""
 
-#: templates/email/re_welcome_lamson_on.html:8
+#: templates/email/re_welcome_lamson_on.html:9
 #, python-format
 msgid ""
 "Of course, you can always visit the %(site_name)s at <a "
-"href=\"%(site_url)s\">%(site_url)s</a>"
+"href=\"%(site_url)s\">%(site_url)s</a>."
+msgstr ""
+
+#: templates/email/re_welcome_lamson_on.html:11
+#: templates/email/welcome_lamson_off.html:10
+#, python-format
+msgid ""
+"Please visit %(site_name)s at <a href=\"%(site_url)s\">%(site_url)s</a>, we "
+"look forward to your posts."
 msgstr ""
 
 #: templates/email/rejected_post.html:2 templates/email/rejected_post.html:3
@@ -6162,10 +6087,6 @@ msgstr "\n<p>Система не смогла обработать Ваше со
 msgid "Welcome to %(site_name)s!"
 msgstr ""
 
-#: templates/email/welcome_lamson_off.html:10
-msgid "We look forward to your Questions!"
-msgstr ""
-
 #: templates/email/welcome_lamson_on.html:11
 msgid ""
 "Important: <em>Please reply</em> to this message, without editing it. We "
@@ -6178,10 +6099,6 @@ msgstr ""
 msgid ""
 "Until we receive the response from you, you will not be able ask or answer "
 "questions on %(site_name)s by email."
-msgstr ""
-
-#: templates/embed/ask_by_widget.html:170
-msgid "Please enter a descriptive title for your question"
 msgstr ""
 
 #: templates/embed/list_widgets.html:44
@@ -6272,7 +6189,66 @@ msgstr ""
 msgid "there are no messages yet..."
 msgstr ""
 
-#: templates/main_page/headline.html:4 views/readers.py:154
+#: templates/livesettings/_admin_site_views.html:4
+msgid "Sites"
+msgstr "Сайты"
+
+#: templates/livesettings/group_settings.html:4
+msgid "Settings"
+msgstr ""
+
+#: templates/livesettings/group_settings.html:9
+#: templates/livesettings/site_settings.html:51
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Пожалуйста исправте ошибку ниже."
+msgstr[1] "Пожалуйста исправте ошибки ниже."
+msgstr[2] "Пожалуйста исправте ошибки ниже."
+
+#: templates/livesettings/group_settings.html:16
+#, python-format
+msgid "Settings included in %(name)s."
+msgstr "Настройки включены в %(name)s."
+
+#: templates/livesettings/group_settings.html:50
+#: templates/livesettings/site_settings.html:98
+msgid "You don't have permission to edit values."
+msgstr "У вас нет разрешения на изменение значений."
+
+#: templates/livesettings/site_settings.html:24
+msgid "Documentation"
+msgstr "Документация"
+
+#: templates/livesettings/site_settings.html:24
+msgid "Log out"
+msgstr "Выйти"
+
+#: templates/livesettings/site_settings.html:27
+msgid "Home"
+msgstr "Главная"
+
+#: templates/livesettings/site_settings.html:28
+msgid "Edit Site Settings"
+msgstr "Редактировать настройки сайта"
+
+#: templates/livesettings/site_settings.html:44
+msgid "Livesettings are disabled for this site."
+msgstr "Livesettings отключены для этого сайта."
+
+#: templates/livesettings/site_settings.html:45
+msgid "All configuration options must be edited in the site settings.py file"
+msgstr "Все параметры конфигурации должны быть изменены в файле settings.py"
+
+#: templates/livesettings/site_settings.html:67
+#, python-format
+msgid "Group settings: %(name)s"
+msgstr "Настройки группы: %(name)s"
+
+#: templates/livesettings/site_settings.html:94
+msgid "Uncollapse all"
+msgstr "Развернуть все"
+
+#: templates/main_page/headline.html:4 views/readers.py:149
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
@@ -6361,8 +6337,8 @@ msgid "Did not find what you were looking for?"
 msgstr "Не нашли то, что искали?"
 
 #: templates/main_page/questions_loop.html:10
-msgid "Please, post your question!"
-msgstr "Тогда задайте свой вопрос!"
+msgid "Ask your question!"
+msgstr ""
 
 #: templates/main_page/tab_bar.html:11
 msgid "subscribe to the questions feed"
@@ -6410,7 +6386,7 @@ msgid ""
 "please use up to %(tag_count)s tags, less than %(max_chars)s characters each"
 msgstr "пожалуйста используйте до %(tag_count)s тегов, меньше чем %(max_chars)s символов каждый"
 
-#: templates/question/answer_card.html:20
+#: templates/question/answer_card.html:21
 msgid "This response is published"
 msgstr ""
 
@@ -6775,7 +6751,7 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: templates/tags/list_bulk_tag_subscription.html:48 views/commands.py:751
+#: templates/tags/list_bulk_tag_subscription.html:48 views/commands.py:759
 msgid "Edit"
 msgstr ""
 
@@ -6910,6 +6886,35 @@ msgstr ""
 msgid "Edit this reason"
 msgstr ""
 
+#: templates/user_profile/twitter_sharing_controls.html:8
+#, python-format
+msgid "Auto-tweeting to @%(handle)s"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:19
+msgid "stop tweeting"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:23
+msgid "Auto-tweeting is inactive"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:26
+msgid "Select twitter account"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:28
+msgid "use another account"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:32
+msgid "Auto-tweeting is off"
+msgstr ""
+
+#: templates/user_profile/twitter_sharing_controls.html:33
+msgid "Start tweeting"
+msgstr ""
+
 #: templates/user_profile/user.html:12
 #, python-format
 msgid "%(username)s's profile"
@@ -7021,24 +7026,24 @@ msgstr "последнее посещение"
 msgid "website"
 msgstr "web-страница"
 
-#: templates/user_profile/user_info.html:93
+#: templates/user_profile/user_info.html:100
 msgid "location"
 msgstr "местоположение"
 
-#: templates/user_profile/user_info.html:100
+#: templates/user_profile/user_info.html:107
 msgid "age"
 msgstr "возраст"
 
-#: templates/user_profile/user_info.html:101
+#: templates/user_profile/user_info.html:108
 #, python-format
 msgid "%(age)s years old"
 msgstr ""
 
-#: templates/user_profile/user_info.html:106
+#: templates/user_profile/user_info.html:113
 msgid "todays unused votes"
 msgstr "неиспользованных голосов"
 
-#: templates/user_profile/user_info.html:107
+#: templates/user_profile/user_info.html:114
 msgid "votes left"
 msgstr "голосов осталось"
 
@@ -7137,7 +7142,7 @@ msgstr[0] "Подписан %(count)s человек"
 msgstr[1] "Подписано %(count)s человек"
 msgstr[2] "Подписаны %(count)s человек"
 
-#: templates/user_profile/user_network.html:21
+#: templates/user_profile/user_network.html:20
 #, python-format
 msgid "Following %(count)s person"
 msgid_plural "Following %(count)s people"
@@ -7145,13 +7150,13 @@ msgstr[0] "Отслеживается %(count)s пользователем"
 msgstr[1] "Отслеживается %(count)s пользователями"
 msgstr[2] "Отслеживается %(count)s пользователями"
 
-#: templates/user_profile/user_network.html:33
+#: templates/user_profile/user_network.html:31
 msgid ""
 "Your network is empty. Would you like to follow someone? - Just visit their "
 "profiles and click \"follow\""
 msgstr "Ваша сеть пуста. Хотите подписатся на какого то пользователя? Посетите его профиль и нажмите \"Пописатся\""
 
-#: templates/user_profile/user_network.html:35
+#: templates/user_profile/user_network.html:33
 #, python-format
 msgid "%(username)s's network is empty"
 msgstr "%(username)s's сеть пуста"
@@ -7257,7 +7262,7 @@ msgstr "Ответить:"
 msgid "User profile"
 msgstr "Профиль пользователя"
 
-#: templates/user_profile/user_tabs.html:10 views/users.py:876
+#: templates/user_profile/user_tabs.html:10 views/users.py:873
 msgid "comments and answers to others questions"
 msgstr "комментарии и ответы на другие вопросы"
 
@@ -7273,7 +7278,7 @@ msgstr "График репутации пользователя"
 msgid "questions that user is following"
 msgstr "вопросы отслеживаемые пользователем"
 
-#: templates/user_profile/user_tabs.html:36 views/users.py:918
+#: templates/user_profile/user_tabs.html:36 views/users.py:915
 msgid "user vote record"
 msgstr "голос пользователя"
 
@@ -7282,11 +7287,11 @@ msgstr "голос пользователя"
 msgid "votes"
 msgstr "голоса"
 
-#: templates/user_profile/user_tabs.html:42 views/users.py:1030
+#: templates/user_profile/user_tabs.html:42 views/users.py:1027
 msgid "email subscription settings"
 msgstr "настройки подписки по email"
 
-#: templates/user_profile/user_tabs.html:48 views/users.py:286
+#: templates/user_profile/user_tabs.html:48 views/users.py:283
 msgid "moderate this user"
 msgstr "Модерировать этого пользователя"
 
@@ -7307,7 +7312,15 @@ msgstr "постарайтесь ответить, а не заниматься 
 msgid "Ask the Group"
 msgstr ""
 
-#: templates/widgets/ask_form.html:40
+#: templates/widgets/ask_form.html:21 templates/widgets/ask_form.html.py:23
+msgid "Add details (optional)"
+msgstr ""
+
+#: templates/widgets/ask_form.html:25
+msgid "Add details"
+msgstr ""
+
+#: templates/widgets/ask_form.html:58
 msgid "Select language"
 msgstr ""
 
@@ -7315,23 +7328,23 @@ msgstr ""
 msgid "Contributors"
 msgstr "Авторы"
 
-#: templates/widgets/edit_post.html:42
+#: templates/widgets/edit_post.html:33
 msgid ", one of these is required"
 msgstr ", один из этих тэгов необходим"
 
-#: templates/widgets/edit_post.html:51 templates/widgets/edit_post.html:56
+#: templates/widgets/edit_post.html:42 templates/widgets/edit_post.html:47
 msgid "tags:"
 msgstr "тэги:"
 
-#: templates/widgets/edit_post.html:52
+#: templates/widgets/edit_post.html:43
 msgid "(required)"
 msgstr "(обязательно)"
 
-#: templates/widgets/edit_post.html:81
+#: templates/widgets/edit_post.html:71
 msgid "Toggle the real time Markdown editor preview"
 msgstr "Включить/выключить предварительный просмотр текста"
 
-#: templates/widgets/edit_post.html:96
+#: templates/widgets/edit_post.html:86
 msgid ""
 "To post on behalf of someone else, enter user name <strong>and</strong> "
 "email below."
@@ -7605,23 +7618,23 @@ msgstr "настройки"
 msgid "widgets"
 msgstr ""
 
-#: templatetags/extra_filters_jinja.py:308
+#: templatetags/extra_filters_jinja.py:319
 msgid "no"
 msgstr "нет"
 
-#: utils/decorators.py:103 views/commands.py:146
+#: utils/decorators.py:104 views/commands.py:146
 msgid "Oops, apologies - there was some error"
 msgstr "Извините, произошла ошибка!"
 
-#: utils/decorators.py:122
+#: utils/decorators.py:123
 msgid "Please login to post"
 msgstr "Пожалуйста, войдите чтобы оставить сообщение"
 
-#: utils/decorators.py:218
+#: utils/decorators.py:219
 msgid "Spam was detected on your post, sorry for if this is a mistake"
 msgstr "В вашем сообщении обнаружен спам, простите, если произошла ошибка."
 
-#: utils/decorators.py:242
+#: utils/decorators.py:243
 msgid "This function is limited to moderators and administrators"
 msgstr ""
 
@@ -7685,31 +7698,31 @@ msgstr "этот email уже используется кем-то еще, по�
 msgid "this email address is not authorized"
 msgstr ""
 
-#: utils/forms.py:267
+#: utils/forms.py:265
 msgid "password is required"
 msgstr "пароль обязателен"
 
-#: utils/forms.py:270
+#: utils/forms.py:268
 msgid "Password <i>(please retype)</i>"
 msgstr "Пароль <i>(пожалуйста, введите снова)</i>"
 
-#: utils/forms.py:271
+#: utils/forms.py:269
 msgid "please, retype your password"
 msgstr "пожалуйста, повторите свой пароль"
 
-#: utils/forms.py:272
+#: utils/forms.py:270
 msgid "sorry, entered passwords did not match, please try again"
 msgstr "к сожалению, пароли не совпадают, попробуйте еще раз"
 
-#: utils/functions.py:101
+#: utils/functions.py:102
 msgid "2 days ago"
 msgstr "2 дня назад"
 
-#: utils/functions.py:103
+#: utils/functions.py:104
 msgid "yesterday"
 msgstr "вчера"
 
-#: utils/functions.py:106
+#: utils/functions.py:107
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
@@ -7717,7 +7730,7 @@ msgstr[0] "%(hr)d час назад"
 msgstr[1] "%(hr)d часов назад"
 msgstr[2] "%(hr)d часа назад"
 
-#: utils/functions.py:112
+#: utils/functions.py:113
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
@@ -7777,46 +7790,50 @@ msgstr "Ваша подписка сохранена, но email-адрес %(em
 msgid "email update frequency has been set to daily"
 msgstr "частота обновлений по email была установлена в ежедневную"
 
-#: views/commands.py:693
+#: views/commands.py:628
+msgid "Sorry, could not delete tag"
+msgstr ""
+
+#: views/commands.py:701
 #, python-format
 msgid "Tag subscription was canceled (<a href=\"%(url)s\">undo</a>)."
 msgstr "Подписка на тэги была отменена (<a href=\"%(url)s\">вернуть</a>)."
 
-#: views/commands.py:702
+#: views/commands.py:710
 #, python-format
 msgid "Please sign in to subscribe for: %(tags)s"
 msgstr "Пожалуйста, войдите чтобы подписаться на: %(tags)s"
 
-#: views/commands.py:721
+#: views/commands.py:729
 msgid "Create"
 msgstr ""
 
-#: views/commands.py:950
+#: views/commands.py:959
 msgid "Please sign in to vote"
 msgstr "Пожалуйста, войдите чтобы проголосовать"
 
-#: views/commands.py:971
+#: views/commands.py:980
 msgid "Please sign in to delete/restore posts"
 msgstr "Пожалуйста, войдите чтобы удалять/восстанавливать сообщения"
 
-#: views/commands.py:1393 views/commands.py:1426
+#: views/commands.py:1402 views/commands.py:1435
 msgid "Sorry, looks like sharing request was invalid"
 msgstr ""
 
-#: views/commands.py:1449
+#: views/commands.py:1458
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
 msgstr ""
 
-#: views/commands.py:1506
+#: views/commands.py:1515
 msgid "Sorry, only thread moderators can use this function"
 msgstr ""
 
-#: views/commands.py:1521
+#: views/commands.py:1530
 msgid "The answer is now unpublished"
 msgstr ""
 
-#: views/commands.py:1525
+#: views/commands.py:1534
 msgid "The answer is now published"
 msgstr ""
 
@@ -7845,113 +7862,113 @@ msgstr "Мы с нетерпением ждем ваших отзывов!"
 msgid "Privacy policy"
 msgstr "Политика конфиденциальности"
 
-#: views/meta.py:219
+#: views/meta.py:216
 msgid "Suggested tags"
 msgstr ""
 
-#: views/readers.py:410
+#: views/readers.py:402
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
 msgstr "Извините, но запрашиваемый комментарий был удалён"
 
-#: views/users.py:287
+#: views/users.py:284
 msgid "moderate user"
 msgstr "модерировать пользователя"
 
-#: views/users.py:505
+#: views/users.py:502
 msgid "user profile"
 msgstr "профиль пользователя"
 
-#: views/users.py:506
+#: views/users.py:503
 msgid "user profile overview"
 msgstr "обзор профиля пользователя"
 
-#: views/users.py:707
+#: views/users.py:704
 msgid "recent user activity"
 msgstr "последние данные по активности пользователя"
 
-#: views/users.py:708
+#: views/users.py:705
 msgid "profile - recent activity"
 msgstr "профиль - последние данные по активности"
 
-#: views/users.py:739
+#: views/users.py:736
 msgid "group joining requests"
 msgstr ""
 
-#: views/users.py:740
+#: views/users.py:737
 msgid "profile - moderation"
 msgstr ""
 
-#: views/users.py:796
+#: views/users.py:793
 msgid "private messages"
 msgstr ""
 
-#: views/users.py:797
+#: views/users.py:794
 msgid "profile - messages"
 msgstr ""
 
-#: views/users.py:877
+#: views/users.py:874
 msgid "profile - responses"
 msgstr "профиль - ответы"
 
-#: views/users.py:919
+#: views/users.py:916
 msgid "profile - votes"
 msgstr "профиль - голоса"
 
-#: views/users.py:940
+#: views/users.py:937
 msgid "user karma"
 msgstr "репутация пользователя"
 
-#: views/users.py:941
+#: views/users.py:938
 msgid "Profile - User's Karma"
 msgstr "Профиль - Репутация Пользователя"
 
-#: views/users.py:959
+#: views/users.py:956
 msgid "users favorite questions"
 msgstr "избранные вопросы пользователей"
 
-#: views/users.py:960
+#: views/users.py:957
 msgid "profile - favorite questions"
 msgstr "профиль - избранные вопросы"
 
-#: views/users.py:1001 views/users.py:1005
+#: views/users.py:998 views/users.py:1002
 msgid "changes saved"
 msgstr "изменения сохранены"
 
-#: views/users.py:1011
+#: views/users.py:1008
 msgid "email updates canceled"
 msgstr "обновления по email отменены"
 
-#: views/users.py:1031
+#: views/users.py:1028
 msgid "profile - email subscriptions"
 msgstr "профиль - подписки"
 
-#: views/users.py:1052
+#: views/users.py:1049
 #, python-format
 msgid "profile - %(section)s"
 msgstr ""
 
-#: views/writers.py:73
+#: views/writers.py:72
 msgid "Sorry, anonymous users cannot upload files"
 msgstr "Неавторизованные пользователи не могут загружать файлы"
 
-#: views/writers.py:91
+#: views/writers.py:90
 #, python-format
 msgid "allowed file types are '%(file_types)s'"
 msgstr "допустимые типы файлов: '%(file_types)s'"
 
-#: views/writers.py:104
+#: views/writers.py:103
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
 msgstr "максимальный размер загружаемого файла - %(file_size)s K"
 
-#: views/writers.py:112
+#: views/writers.py:111
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you."
 msgstr "Ошибка при загрузке файла. Пожалуйста, свяжитесь с администрацией сайта."
 
-#: views/writers.py:209
+#: views/writers.py:208
 msgid ""
 "<span class=\"strong big\">You are welcome to start submitting your question"
 " anonymously</span>. When you submit the post, you will be redirected to the"
@@ -7960,45 +7977,45 @@ msgid ""
 "Login takes about 30 seconds, initial signup takes a minute or less."
 msgstr "<span class=\\\"strong big\\\">Вы можете задавать Ваши вопросы анонимно</span>. Когда Вы подтвердите сообщение , Вас перенаправит на страницу авторизации. Ваше сообщение будет сохранено в ткущей сессии и опубликовано после того как вы авторизируетесь. Процесс авторизации очень прост. Авторизация занимает около 30 секунд, регистрация занимает минуту или меньше."
 
-#: views/writers.py:571
+#: views/writers.py:575
 msgid "Please log in to answer questions"
 msgstr "<span class='big strong'>Пожалуйста, старайтесь давать ответы по-существу</span>. Если вы хотите обсудить вопрос или ответ, <strong>используйте комментирование</strong>. Пожалуйста, помните, что вы всегда можете <strong>пересмотреть свой вопрос</strong> - нет нужды задавать один и тот же вопрос дважды. Кроме того, пожалуйста, <strong>не забывайте голосовать</strong> - это действительно помогает выбрать лучшие вопросы и ответы!"
 
-#: views/writers.py:710
+#: views/writers.py:701
 msgid "This content is forbidden"
 msgstr ""
 
-#: views/writers.py:719
+#: views/writers.py:710
 msgid "Post not found"
 msgstr ""
 
-#: views/writers.py:727
+#: views/writers.py:718
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "Извините, вы не вошли, поэтому не можете оставлять комментарии. <a href=\"%(sign_in_url)s\">Войдите</a>."
 
-#: views/writers.py:746
+#: views/writers.py:742
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr "Неавторизованные пользователи не могут исправлять комментарии"
 
-#: views/writers.py:795
+#: views/writers.py:791
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "Извините, вы не вошли, поэтому не можете удалять комментарии. <a href=\"%(sign_in_url)s\">Войдите</a>."
 
-#: views/writers.py:821
+#: views/writers.py:817
 msgid "sorry, we seem to have some technical difficulties"
 msgstr "Извините, у нас определённые технические проблемы."
 
-#: views/writers.py:885
+#: views/writers.py:881
 msgid "Error - could not find the destination post"
 msgstr ""
 
-#: views/writers.py:909
+#: views/writers.py:905
 #, python-format
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "

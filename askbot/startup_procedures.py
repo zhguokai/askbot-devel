@@ -902,6 +902,14 @@ def test_messages_framework():
         errors = ('Add to the INSTALLED_APPS section of your settings.py:\n "django.contrib.messages"', )
         print_errors(errors)
 
+def test_service_url_prefix():
+    errors = list()
+    prefix = getattr(django_settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
+    message = 'Service url prefix must have > 1 letters and must end with /'
+    if prefix:
+        if len(prefix) == 1 or (not prefix.endswith('/')):
+            print_errors((message,))
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -928,6 +936,7 @@ def run_startup_tests():
     test_multilingual()
     #test_csrf_cookie_domain()
     test_secret_key()
+    test_service_url_prefix()
     test_staticfiles()
     test_template_loader()
     test_template_context_processors()

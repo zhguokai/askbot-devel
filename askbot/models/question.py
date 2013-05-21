@@ -896,13 +896,17 @@ class Thread(models.Model):
             thread_posts = thread_posts.filter(groups__in=groups)
             thread_posts = thread_posts.distinct()#important for >1 group
 
-        thread_posts = thread_posts.order_by(
-                    {
+        order_by_method = {
                         'latest':'-added_at',
                         'oldest':'added_at',
                         'votes':'-points'
-                    }[sort_method]
-                )
+                    }
+        if sort_method in order_by_method:
+            order_by = order_by_method[sort_method]
+        else:
+            order_by = order_by_method['latest']
+
+        thread_posts = thread_posts.order_by(order_by)
         #1) collect question, answer and comment posts and list of post id's
         answers = list()
         post_map = dict()
