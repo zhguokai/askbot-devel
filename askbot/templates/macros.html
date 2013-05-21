@@ -396,7 +396,7 @@ for the purposes of the AJAX comment editor #}
         <div class="clean"></div> 
     {% endif %}
     {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
-    <div class="comments" id="{{widget_id}}">
+    <div class="comments{% if post.comment_count == 0 %} empty{% endif %}" id="{{ widget_id }}">
         <div class="content">
             {% if show_post == post and show_comment and show_comment_position > max_comments %}
                 {% set comments = post.get_cached_comments()[:show_comment_position] %}
