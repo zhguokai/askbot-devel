@@ -380,15 +380,13 @@ def clean_tag(tag_name):
         )
 
     if askbot_settings.FORCE_LOWERCASE_TAGS:
+        tag_name = tag_name.lower()
+
+    if askbot_settings.FORCE_LOWERCASE_TAGS:
         #a simpler way to handle tags - just lowercase thew all
         return tag_name.lower()
     else:
-        try:
-            from askbot import models
-            stored_tag = models.Tag.objects.get(name__iexact=tag_name)
-            return stored_tag.name
-        except models.Tag.DoesNotExist:
-            return tag_name
+        return tag_name
 
 
 class TagNamesField(forms.CharField):

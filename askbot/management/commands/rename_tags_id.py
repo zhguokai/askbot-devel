@@ -126,14 +126,16 @@ or repost a bug, if that does not help"""
         from_tag_names = format_tag_name_list(from_tags)
         to_tag_names = format_tag_name_list(to_tags)
 
-        prompt = 'Rename tags %s --> %s?' % (from_tag_names, to_tag_names)
-        choice = console.choice_dialog(prompt, choices=('yes', 'no'))
-        if choice == 'no':
-            print 'Canceled'
-            sys.exit()
+        if not options.get('is_force', False):
+            prompt = 'Rename tags %s --> %s?' % (from_tag_names, to_tag_names)
+            choice = console.choice_dialog(prompt, choices=('yes', 'no'))
+            if choice == 'no':
+                print 'Canceled'
+                sys.exit()
         else:
-            sys.stdout.write('Processing:')
-
+            print 'Renaming tags %s --> %s' % (from_tag_names, to_tag_names)
+        sys.stdout.write('Processing:')
+        
         #actual processing stage, only after this point we start to
         #modify stuff in the database, one question per transaction
         from_tag_names = get_tag_names(from_tags)
