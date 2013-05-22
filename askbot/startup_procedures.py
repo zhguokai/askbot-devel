@@ -925,7 +925,7 @@ def run_startup_tests():
     test_compressor()
     test_custom_user_profile_tab()
     test_group_messaging()
-    test_haystack()
+    #test_haystack()
     test_jinja2()
     test_longerusername()
     test_new_skins()
@@ -971,10 +971,6 @@ def run_startup_tests():
             'value': True,
             'message': 'Please add: RECAPTCHA_USE_SSL = True'
         },
-        'HAYSTACK_SITECONF': {
-            'value': 'askbot.search.haystack',
-            'message': 'Please add: HAYSTACK_SITECONF = "askbot.search.haystack"'
-        }
     })
     settings_tester.run()
     if 'manage.py test' in ' '.join(sys.argv):

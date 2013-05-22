@@ -1,40 +1,45 @@
 from django.conf import settings
 from django.utils.translation import get_language
 
-from haystack import indexes, site
+from haystack import indexes
 from haystack.query import SearchQuerySet
 
 from askbot.models import Post, Thread, User
 
-class ThreadIndex(indexes.SearchIndex):
+class ThreadIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     title = indexes.CharField()
     tags = indexes.MultiValueField()
 
-    def index_queryset(self):
-        return Thread.objects.filter(posts__deleted=False)
+    def get_model(self):
+        return Thread
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.filter(posts__deleted=False)
 
     def prepare_tags(self, obj):
         return [tag.name for tag in obj.tags.all()]
 
-class PostIndex(indexes.SearchIndex):
+class PostIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     post_text = indexes.CharField(model_attr='text')
     author = indexes.CharField()
     thread_id = indexes.IntegerField(model_attr='thread__pk')
 
-    def index_queryset(self):
-        return Post.objects.filter(deleted=False)
+    def get_model(self):
+        return Post
 
-class UserIndex(indexes.SearchIndex):
+    def index_queryset(self, using=None):
+        return self.get_model().objects.filter(deleted=False)
+
+class UserIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
 
-    def index_queryset(self):
-        return User.objects.all()
+    def get_model(self):
+        return User
 
-site.register(Thread, ThreadIndex)
-site.register(Post, PostIndex)
-site.register(User, UserIndex)
+    def index_queryset(self, using=None):
+        return self.get_model().objects.all()
 
 class AskbotSearchQuerySet(SearchQuerySet):
 
