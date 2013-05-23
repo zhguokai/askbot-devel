@@ -1544,7 +1544,7 @@ DeletePostLink.prototype.decorate = function(element){
 var EditCommentForm = function(){
     WrappedElement.call(this);
     this._comment = null;
-    this._comment_widget = null;
+    this._commentsWidget = null;
     this._element = null;
     this._editorReady = false;
     this._text = '';
@@ -1645,17 +1645,21 @@ EditCommentForm.prototype.startEditor = function() {
     }
 };
 
+EditCommentForm.prototype.getCommentsWidget = function() {
+    return this._commentsWidget;
+};
+
 /**
  * attaches comment editor to a particular comment
  */
 EditCommentForm.prototype.attachTo = function(comment, mode){
     this._comment = comment;
     this._type = mode;//action: 'add' or 'edit'
-    this._comment_widget = comment.getContainerWidget();
+    this._commentsWidget = comment.getContainerWidget();
     this._text = comment.getText();
     comment.getElement().after(this.getElement());
     comment.getElement().hide();
-    this._comment_widget.hideButton();//hide add comment button
+    this._commentsWidget.hideButton();//hide add comment button
     //fix up the comment submit button, depending on the mode
     if (this._type == 'add'){
         this._submit_btn.html(gettext('add comment'));
@@ -1746,10 +1750,12 @@ EditCommentForm.prototype.canCancel = function(){
 };
 
 EditCommentForm.prototype.getCancelHandler = function(){
-    var form = this;
+    var me = this;
     return function(evt){
-        if (form.canCancel()){
-            form.detach();
+        if (me.canCancel()){
+            var widget = me.getCommentsWidget();
+            widget.handleDeletedComment();
+            me.detach();
             evt.preventDefault();
         }
         return false;
@@ -2269,7 +2275,9 @@ Comment.prototype.getDeleteHandler = function(){
                 url: askbot['urls']['deleteComment'],
                 data: { comment_id: comment.getId() },
                 success: function(json, textStatus, xhr) {
+                    var widget = comment.getContainerWidget();
                     comment.dispose();
+                    widget.handleDeletedComment();
                 },
                 error: function(xhr, textStatus, exception) {
                     comment.getElement().show()
@@ -2326,6 +2334,15 @@ PostCommentsWidget.prototype.decorate = function(element){
     this._comments = comments;
 };
 
+PostCommentsWidget.prototype.handleDeletedComment = function() {
+    /* if the widget does not have any comments, set
+    the 'empty' class on the widget element */
+    if (this._cbox.children('.comment').length === 0) {
+        this._element.siblings('.comment-title').hide();
+        this._element.addClass('empty');
+    }
+};
+
 PostCommentsWidget.prototype.getPostType = function(){
     return this._post_type;
 };
@@ -2352,6 +2369,7 @@ PostCommentsWidget.prototype.startNewComment = function(){
     };
     var comment = new Comment(this, opts);
     this._cbox.append(comment.getElement());
+    this._element.removeClass('empty');
     comment.startEditing();
 };
 
@@ -2380,7 +2398,7 @@ PostCommentsWidget.prototype.getActivateHandler = function(){
             me.reloadAllComments(function(json){
                 me.reRenderComments(json);
                 //2) change button text to "post a comment"
-                button.html(gettext('post a comment'));
+                button.html(askbot['messages']['addComment']);
             });
         }
         else {
