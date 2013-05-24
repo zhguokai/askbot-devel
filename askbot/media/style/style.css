@@ -1742,7 +1742,7 @@ ul#related-tags li {
 }
 .groups-input,
 .users-input {
-  width: 152px;
+  width: 150px;
   padding-left: 5px;
   border: #c9c9b5 1px solid;
   height: 25px;
@@ -1751,7 +1751,7 @@ ul#related-tags li {
 .add-groups,
 .add-users {
   border: 0;
-  margin-top: -2px;
+  margin: -2px 0 0 0 !important;
 }
 .share-input-col {
   width: 160px;
@@ -1763,32 +1763,6 @@ ul#related-tags li {
   display: block;
   padding: 0 10px;
   height: 25px;
-}
-#id_user,
-#id_user_author {
-  height: 25px;
-  padding-left: 5px;
-  width: 395px;
-  font-size: 14px;
-}
-.groups-input,
-.users-input {
-  width: 152px;
-  padding-left: 5px;
-  border: #c9c9b5 1px solid;
-  height: 25px;
-  font-size: 14px;
-}
-.add-groups,
-.add-users {
-  border: 0;
-  margin-top: -2px;
-}
-.add-everyone-group {
-  text-align: center;
-  margin: auto;
-  display: block;
-  padding: 0 10px;
 }
 #id_user,
 #id_user_author {
