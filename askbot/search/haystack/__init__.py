@@ -15,7 +15,12 @@ class ThreadIndex(indexes.SearchIndex, indexes.Indexable):
         return Thread
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.filter(posts__deleted=False)
+        if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
+            lang_code = get_language()[:2]
+            return self.get_model().objects.filter(language_code=lang_code,
+                                                  posts__deleted=False)
+        else:
+            return self.get_model().objects.filter(posts__deleted=False)
 
     def prepare_tags(self, obj):
         return [tag.name for tag in obj.tags.all()]
@@ -30,7 +35,12 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
         return Post
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.filter(deleted=False)
+        if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
+            lang_code = get_language()[:2]
+            return self.get_model().objects.filter(language_code=lang_code,
+                                                  deleted=False)
+        else:
+            return self.get_model().objects.filter(deleted=False)
 
 class UserIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -90,9 +100,4 @@ class AskbotSearchQuerySet(SearchQuerySet):
         if model_klass == User:
             return model_klass.objects.filter(id__in=set(id_list))
         else:
-            if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
-                language_code = get_language()
-                return model_klass.objects.filter(id__in=set(id_list),
-                                                language_code=language_code)
-            else:
-                return model_klass.objects.filter(id__in=set(id_list))
+            return model_klass.objects.filter(id__in=set(id_list))
