@@ -59,6 +59,11 @@ var setController = function(controller, name) {
     askbot['controllers'][name] = controller;
 };
 
+var sortChildNodes = function(node, cmpFunc) {
+    var items = node.children().sort(cmpFunc);
+    node.append(items);
+};
+
 var getUniqueValues = function(values) {
     var uniques = new Object();
     var out = new Array();
@@ -2046,37 +2051,64 @@ GroupDropdown.prototype.createDom =  function(){
     }
 };
 
+/**
+ * inserts a link to group with a given url to the group page
+ * and name
+ */
 GroupDropdown.prototype.insertGroup = function(group_name, url){
+
+    //1) take out first and last list elements: 
+    // everyone and the "add group" item
+    var list = this._element.children();
+    var everyoneGroup = list.first().detach();
+    var groupAdder = list.last().detach();
+    var divider = this._element.find('.divider').detach();
+
+    //2) append group link into the list
     var li = this.makeElement('li');
     var a = this.makeElement('a');
     a.attr('href', url);
     a.attr('class', 'group-name');
     a.text(group_name);
     li.append(a);
-    var links_array = this._element.find('a')
-    for (var i=1; i < links_array.length; i++){
-        var listedName = links_array[i].text;
-        var cleanedListedName = listedName.toLowerCase();
-        var cleanedNewName = group_name.toLowerCase()
-        if (listedName < cleanedNewName) {
-            if (i === links_array.length - 1){
-                li.insertAfter(this._element.find('li')[i-1])
-                break;
-            } else {
-                continue;
-            }
-        } else if (cleanedNewName === cleanedNewName) {
-            var message = interpolate(gettext(
-                    'Group %(name)s already exists. Group names are case-insensitive.'
-                ), {'name': listedName}, true
-            );
-            notify.show(message);
-            return;
-        } else {
-            li.insertAfter(this._element.find('li')[i-1])
-            break;
+    li.hide();
+    this._element.append(li);
+
+    //3) sort rest of the list alphanumerically
+    sortChildNodes(
+        this._element,
+        function(a, b) {
+            var valA = $(a).find('a').text().toLowerCase();
+            var valB = $(b).find('a').text().toLowerCase();
+            return (valA < valB) ? -1: (valA > valB) ? 1: 0;
+        }
+    );
+
+    //a dramatic effect
+    li.fadeIn();
+
+    //4) reinsert the first and last elements of the list:
+    this._element.prepend(everyoneGroup);
+    this._element.append(divider);
+    this._element.append(groupAdder);
+};
+
+GroupDropdown.prototype.setState = function(state) {
+    if (state === 'display') {
+        this._input_box_element.hide();
+        this._add_link.show();
+    }
+};
+
+GroupDropdown.prototype.hasGroup = function(groupName) {
+    var items = this._element.find('li');
+    for (var i=1; i < items.length - 1; i++) {
+        var cGroupName = $(items[i]).find('a').text();
+        if (cGroupName.toLowerCase() === groupName.toLowerCase()) {
+            return true;
         }
     }
+    return false;
 };
 
 GroupDropdown.prototype._add_group_handler = function(group_name){
@@ -2091,12 +2123,22 @@ GroupDropdown.prototype._add_group_handler = function(group_name){
         url: askbot['urls']['add_group'],
         data: {group: group_name},
         success: function(data){
-            if (data.success){
-                me.insertGroup(data.group_name, data.url);
-                me._input_box_element.hide();
-                me._add_link.show();
-                return true; 
+            if (data['success']){
+                var groupName = data['group_name'];
+                if (me.hasGroup(groupName)) {
+                    var message = interpolate(gettext(
+                            'Group %(name)s already exists. Group names are case-insensitive.'
+                        ), {'name': groupName}, true
+                    );
+                    notify.show(message);
+                    return false;
+                } else {
+                    me.insertGroup(data['group_name'], data['url']);
+                    me.setState('display');
+                    return true; 
+                }
             } else{
+                notify.show(data['message']);
                 return false;
             }
         },
