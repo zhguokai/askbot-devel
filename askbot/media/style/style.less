@@ -232,6 +232,36 @@ body.user-messages {
     margin: 5px 0 8px;
 }
 
+.hovercard {
+    background: white;
+    border: 1px solid #aaa;
+    .box-shadow(0, 0, 1px);
+    font-size: 13px;
+    display: block;
+    max-width: 250px;
+    padding: 10px;
+    position: absolute;
+    p:last-child {
+        margin-bottom: 0;
+    }
+    ul {
+        margin-bottom: 0;
+        li {
+            font-size: 13px;
+            line-height: 16px;
+            margin: 5px 0;
+        }
+    }
+    .triangle {
+        border-left: 5px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #fcfcfc;
+        height: 0;
+        margin: -20px 0 10px 0;
+        width: 0;
+    }
+}
+
 #closeNotify {
     position: absolute;
     right: 5px;
@@ -2364,7 +2394,7 @@ ul#related-tags li {
             line-height:18px;
             margin-top:-2px;
             margin-left:4px;
-            box-shadow: none;
+            .box-shadow(0, 0, 0);
         }
         
         .answer-convert input:hover{

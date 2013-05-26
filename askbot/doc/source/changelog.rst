@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added hovercard on the user's karma display in the header
 * Added option to hide ad blocks from logged in users
 * Applied Askbot templates to the settings control panel
 * Added option to auto-follow questions by the question posters with default "on"
