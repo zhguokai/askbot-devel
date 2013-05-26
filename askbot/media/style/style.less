@@ -234,13 +234,15 @@ body.user-messages {
 
 .hovercard {
     background: white;
-    border: 1px solid #aaa;
-    .box-shadow(0, 0, 1px);
+    border: 3px solid #ddd;
+    .box-shadow(0, 0, 3px);
     font-size: 13px;
     display: block;
     max-width: 250px;
     padding: 10px;
     position: absolute;
+    .rounded-corners(5px);
+    z-index: 1001;
     p:last-child {
         margin-bottom: 0;
     }
@@ -255,7 +257,7 @@ body.user-messages {
     .triangle {
         border-left: 5px solid transparent;
         border-right: 10px solid transparent;
-        border-bottom: 10px solid #fcfcfc;
+        border-bottom: 10px solid #ddd;
         height: 0;
         margin: -20px 0 10px 0;
         width: 0;
