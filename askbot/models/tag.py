@@ -323,7 +323,7 @@ class MarkedTag(models.Model):
 class TagSynonym(models.Model):
 
     source_tag_name = models.CharField(max_length=255, unique=True)
-    target_tag_name = models.CharField(max_length=255)
+    target_tag_name = models.CharField(max_length=255, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     owned_by = models.ForeignKey(User, related_name='tag_synonyms')
     auto_rename_count = models.IntegerField(default=0)

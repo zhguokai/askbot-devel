@@ -110,8 +110,12 @@ remove source_tag"""
         try: 
             models.Tag.objects.get(name=target_tag_name)
         except models.Tag.DoesNotExist:
+            # we are creating a target tag, let's copy source tag's info
+            # used_count are updated later
             models.Tag.objects.create(name=target_tag_name,
-                                      created_by = admin
+                                      created_by = admin,
+                                      status = source_tag.status,
+                                      tag_wiki = source_tag.tag_wiki
                                       )
 
         tag_synonym_tmp, created = models.TagSynonym.objects.get_or_create(source_tag_name = source_tag_name,
