@@ -8,9 +8,7 @@ from django.conf import settings
 
 try:
     from haystack.management.commands.clear_index import Command as ClearCommand
-    from haystack.management.commands.update_index import Command as UpdateCommand
-    haystack_option_list = [option for option in UpdateCommand.base_options if option.get_opt_string() != '--verbosity'] + \
-                  [option for option in ClearCommand.base_options if not option.get_opt_string() in ['--using', '--verbosity']]
+    haystack_option_list = [option for option in ClearCommand.base_options if not option.get_opt_string() != '--verbosity']
 except ImportError:
     haystack_option_list = []
 
@@ -20,15 +18,12 @@ class Command(BaseCommand):
                                 help='Language to user, in language code format'),]
     option_list = list(BaseCommand.option_list) + haystack_option_list + base_options
 
-    def handle(self, *args, **options):
+    def handle(self, **options):
         lang_code = options.get('language', settings.LANGUAGE_CODE.lower())
         options['using'] = ['default_%s' % lang_code[:2],]
         activate_language(lang_code)
 
         klass = self._get_command_class('clear_index')
-        klass.handle(*args, **options)
-
-        klass = self._get_command_class('update_index')
         klass.handle(*args, **options)
 
     def _get_command_class(self, name):
