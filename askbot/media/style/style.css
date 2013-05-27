@@ -1826,12 +1826,22 @@ ul#related-tags li {
   margin-right: 7px;
 }
 .folded-editor {
+  box-shadow: inset 0 0 3px 1px #aaa;
+  -moz-box-shadow: inset 0 0 3px 1px #aaa;
+  -webkit-box-shadow: inset 0 0 3px 1px #aaa;
+  cursor: text;
   height: 100px;
   outline: none;
   width: 100%;
 }
 .folded-editor .editor-proper {
   display: none;
+}
+.folded-editor.unfolded {
+  cursor: default;
+  box-shadow: 0 0 0 0;
+  -moz-box-shadow: 0 0 0 0;
+  -webkit-box-shadow: 0 0 0 0;
 }
 .folded-editor p.prompt {
   margin: 5px 8px;
