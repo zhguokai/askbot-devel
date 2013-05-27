@@ -1112,7 +1112,7 @@ def user(request, id, slug=None, tab_name=None):
         sort=None,
         query=None,
         tags=None,
-        author=profile_owner.id,
+        author=None,
         page=None,
         user_logged_in=profile_owner.is_authenticated(),
     )
