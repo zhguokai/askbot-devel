@@ -59,6 +59,11 @@ var setController = function(controller, name) {
     askbot['controllers'][name] = controller;
 };
 
+var sortChildNodes = function(node, cmpFunc) {
+    var items = node.children().sort(cmpFunc);
+    node.append(items);
+};
+
 var getUniqueValues = function(values) {
     var uniques = new Object();
     var out = new Array();
@@ -2011,8 +2016,18 @@ SelectBox.prototype.createDom = function() {
 var GroupDropdown = function(groups){
     WrappedElement.call(this);
     this._group_list = groups; 
+};
+inherits(GroupDropdown, WrappedElement);
+
+GroupDropdown.prototype.createDom =  function(){
+    this._element = this.makeElement('ul');
+    this._element.attr('class', 'dropdown-menu');
+    this._element.attr('id', 'groups-dropdown');
+    this._element.attr('role', 'menu');
+    this._element.attr('aria-labelledby', 'navGroups');
+
     this._input_box = new TippedInput();
-    this._input_box.setInstruction('group name');
+    this._input_box.setInstruction(gettext('group name'));
     this._input_box.createDom();
     this._input_box_element = this._input_box.getElement();
     this._input_box_element.attr('class', 'group-name');
@@ -2021,115 +2036,128 @@ var GroupDropdown = function(groups){
     this._add_link.attr('href', '#');
     this._add_link.attr('class', 'group-name');
     this._add_link.text(gettext('add new group'));
-};
-inherits(GroupDropdown, WrappedElement);
 
-GroupDropdown.prototype.createDom =  function(){
-  this._element = this.makeElement('ul');
-  this._element.attr('class', 'dropdown-menu');
-  this._element.attr('id', 'groups-dropdown');
-  this._element.attr('role', 'menu');
-  this._element.attr('aria-labelledby', 'navGroups');
-
-  for (i=0; i<this._group_list.length; i++){
-    li_element = this.makeElement('li');
-    a_element = this.makeElement('a');
-    a_element.text(this._group_list[i].name);
-    a_element.attr('href', this._group_list[i].link);
-    a_element.attr('class', 'group-name');
-    li_element.append(a_element);
-    this._element.append(li_element);
-  }
-};
-
-GroupDropdown.prototype.decorate = function(element){
-  this._element = element; 
-  this._element.attr('class', 'dropdown-menu');
-  this._element.attr('id', 'groups-dropdown');
-  this._element.attr('role', 'menu');
-  this._element.attr('aria-labelledby', 'navGroups');
-
-  for (i=0; i<this._group_list.length; i++){
-    li_element = this.makeElement('li');
-    a_element = this.makeElement('a');
-    a_element.text(this._group_list[i].name);
-    a_element.attr('href', this._group_list[i].link);
-    a_element.attr('class', 'group-name');
-    li_element.append(a_element);
-    this._element.append(li_element);
-  }
-};
-
-GroupDropdown.prototype.insertGroup = function(group_name, url){
-    var new_group_li = this.makeElement('li');
-    new_group_a = this.makeElement('a');
-    new_group_a.attr('href', url);
-    new_group_a.attr('class', 'group-name');
-    new_group_a.text(group_name);
-    new_group_li.append(new_group_a);
-    links_array = this._element.find('a')
-    for (i=1; i < links_array.length; i++){
-        var listedName = links_array[i].text;
-        var cleanedListedName = listedName.toLowerCase();
-        var cleanedNewName = group_name.toLowerCase()
-        if (listedName < newName) {
-            if (i == links_array.length - 1){
-                new_group_li.insertAfter(this._element.find('li')[i-1])
-                break;
-            } else {
-                continue;
-            }
-        } else if (cleanedNewName === cleanedNewName) {
-            var message = interpolate(gettext(
-                    'Group %(name)s already exists. Group names are case-insensitive.'
-                ), {'name': listedName}, true
-            );
-            notify.show(message);
-            return;
-        } else {
-            new_group_li.insertAfter(this._element.find('li')[i-1])
-            break;
-        }
+    for (var i=0; i<this._group_list.length; i++){
+        var li = this.makeElement('li');
+        var a = this.makeElement('a');
+        a.text(this._group_list[i].name);
+        a.attr('href', this._group_list[i].link);
+        a.attr('class', 'group-name');
+        li.append(a);
+        this._element.append(li);
+    }
+    if (askbot['data']['userIsAdmin']) {
+        this.enableAddGroups();
     }
 };
 
-GroupDropdown.prototype._add_group_handler = function(group_name){
-  var group_name = this._input_box_element.val();
-  self = this;
-  if (!group_name){
-    return;
-  }
+/**
+ * inserts a link to group with a given url to the group page
+ * and name
+ */
+GroupDropdown.prototype.insertGroup = function(group_name, url){
 
-  $.ajax({
-    type: 'POST',
-    url: askbot['urls']['add_group'],
-    data: {group: group_name},
-    success: function(data){
-       if (data.success){
-         self.insertGroup(data.group_name, data.url);
-         self._input_box_element.hide();
-         self._add_link.show();
-         return true; 
-       } else{
-         return false;
-       }
-     },
-     error: function(){console.log('error');}
-  });
+    //1) take out first and last list elements: 
+    // everyone and the "add group" item
+    var list = this._element.children();
+    var everyoneGroup = list.first().detach();
+    var groupAdder = list.last().detach();
+    var divider = this._element.find('.divider').detach();
+
+    //2) append group link into the list
+    var li = this.makeElement('li');
+    var a = this.makeElement('a');
+    a.attr('href', url);
+    a.attr('class', 'group-name');
+    a.text(group_name);
+    li.append(a);
+    li.hide();
+    this._element.append(li);
+
+    //3) sort rest of the list alphanumerically
+    sortChildNodes(
+        this._element,
+        function(a, b) {
+            var valA = $(a).find('a').text().toLowerCase();
+            var valB = $(b).find('a').text().toLowerCase();
+            return (valA < valB) ? -1: (valA > valB) ? 1: 0;
+        }
+    );
+
+    //a dramatic effect
+    li.fadeIn();
+
+    //4) reinsert the first and last elements of the list:
+    this._element.prepend(everyoneGroup);
+    this._element.append(divider);
+    this._element.append(groupAdder);
+};
+
+GroupDropdown.prototype.setState = function(state) {
+    if (state === 'display') {
+        this._input_box_element.hide();
+        this._add_link.show();
+    }
+};
+
+GroupDropdown.prototype.hasGroup = function(groupName) {
+    var items = this._element.find('li');
+    for (var i=1; i < items.length - 1; i++) {
+        var cGroupName = $(items[i]).find('a').text();
+        if (cGroupName.toLowerCase() === groupName.toLowerCase()) {
+            return true;
+        }
+    }
+    return false;
+};
+
+GroupDropdown.prototype._add_group_handler = function(group_name){
+    var group_name = this._input_box_element.val();
+    var me = this;
+    if (!group_name){
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: askbot['urls']['add_group'],
+        data: {group: group_name},
+        success: function(data){
+            if (data['success']){
+                var groupName = data['group_name'];
+                if (me.hasGroup(groupName)) {
+                    var message = interpolate(gettext(
+                            'Group %(name)s already exists. Group names are case-insensitive.'
+                        ), {'name': groupName}, true
+                    );
+                    notify.show(message);
+                    return false;
+                } else {
+                    me.insertGroup(data['group_name'], data['url']);
+                    me.setState('display');
+                    return true; 
+                }
+            } else{
+                notify.show(data['message']);
+                return false;
+            }
+        },
+        error: function(){console.log('error');}
+    });
 };
 
 GroupDropdown.prototype.enableAddGroups = function(){
     var self = this;
     this._add_link.click(function(){ 
-      self._add_link.hide();
-      self._input_box_element.show(); 
-      self._input_box_element.focus(); 
+        self._add_link.hide();
+        self._input_box_element.show(); 
+        self._input_box_element.focus(); 
     });
     this._input_box_element.keydown(function(event){
-      if (event.which == 13 || event.keyCode==13){
-        self._add_group_handler(); 
-        self._input_box_element.val('');
-      }
+        if (event.which == 13 || event.keyCode==13){
+            self._add_group_handler(); 
+            self._input_box_element.val('');
+        }
     });
 
     var divider = this.makeElement('li');
@@ -2295,6 +2323,148 @@ Tag.prototype.createDom = function(){
         del_icon_elem.text('x'); // HACK by Tomasz
         this._element.append(del_icon_elem);
     }
+};
+
+var PermsHoverCard = function() {
+    WrappedElement.call(this);
+    this._isLoaded = false;
+};
+inherits(PermsHoverCard, WrappedElement);
+
+PermsHoverCard.prototype.setContent = function(data) {
+    this._element.html(data['html']);
+};
+
+PermsHoverCard.prototype.setTrigger = function(trigger) {
+    this._trigger = trigger;
+};
+
+PermsHoverCard.prototype.setPosition = function() {
+    var trigger = this._trigger.getElement();
+    var coors = trigger.offset();
+    var height = trigger.outerHeight();
+    var triangle = this._element.find('.triangle')
+    var triangleHeight = triangle.outerHeight();
+    this._element.css({
+        'top': coors.top + height + triangleHeight,
+        'left': coors.left
+    });
+};
+
+PermsHoverCard.prototype.setUrl = function(url) {
+    this._url = url;
+};
+
+PermsHoverCard.prototype.startLoading = function(onLoad) {
+    var me = this;
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        cache: false,
+        url: this._url,
+        success: function(data) {
+            if (data['success']) {
+                me.setContent(data);
+                me.setPosition();
+                onLoad();
+                me.setIsLoaded();
+            } else {
+                notify.show(data['message']);
+            }
+        }
+    });
+};
+
+PermsHoverCard.prototype.isLoaded = function() {
+    return this._isLoaded;
+};
+
+PermsHoverCard.prototype.setIsLoaded = function() {
+    this._isLoaded = true;
+};
+
+PermsHoverCard.prototype.getOpenHandler = function() {
+    var me = this;
+    return function() {
+        me.clearCancelOpenTimeout();
+        if (me.isLoaded()) {
+            me.getElement().show();
+        } else {
+            var onload = function() {
+                me.getElement().show();
+            }
+            me.startLoading(onload);
+        }
+    };
+};
+
+PermsHoverCard.prototype.setCancelOpenTimoutId = function(timeoutId) {
+    this._cancelOpenTimeoutId = timeoutId;
+};
+
+PermsHoverCard.prototype.clearCancelOpenTimeout = function() {
+    var timeout = this._cancelOpenTimeoutId;
+    if (timeout) {
+        clearTimeout(timeout);
+    }
+};
+
+PermsHoverCard.prototype.getCloseHandler = function() {
+    var me = this;
+    return function() {
+        var element = me.getElement();
+        //start timeout to close
+        var timeout = setTimeout(function() {
+            element.hide();
+            //element.fadeOut('fast');
+        }, 200);
+        me.setCancelOpenTimoutId(timeout);
+    };
+};
+
+PermsHoverCard.prototype.getImmediateCloseHandler = function() {
+    var me = this;
+    return function() {
+        me.getElement().hide();
+    };
+};
+
+PermsHoverCard.prototype.getKeepHandler = function() {
+    var me = this;
+    return function() {
+        me.clearCancelOpenTimeout();
+    };
+};
+
+PermsHoverCard.prototype.createDom = function() {
+    var element = this.makeElement('div');
+    this._element = element;
+    element.addClass('hovercard');
+    element.hover(
+        this.getKeepHandler(),
+        this.getCloseHandler()
+    );
+};
+
+var ShowPermsTrigger = function() {
+    WrappedElement.call(this);
+};
+inherits(ShowPermsTrigger, WrappedElement);
+
+ShowPermsTrigger.prototype.decorate = function(element) {
+    this._element = element;
+    var hoverCard = new PermsHoverCard();
+    this._hoverCard = hoverCard;
+    $('body').append(hoverCard.getElement());
+
+    hoverCard.setTrigger(this);
+    hoverCard.setUrl(element.data('url'));
+
+    var onEnter = hoverCard.getOpenHandler();
+    var onExit = hoverCard.getCloseHandler();
+    element.hover(onEnter, onExit);
+    var onClose = hoverCard.getImmediateCloseHandler();
+    $('body').click(onClose);
 };
 
 //Search Engine Keyword Highlight with Javascript

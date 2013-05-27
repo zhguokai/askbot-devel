@@ -60,6 +60,7 @@ def owner_or_moderator_required(f):
         return f(request, profile_owner, context)
     return wrapped_func
 
+
 def show_users(request, by_group=False, group_id=None, group_slug=None):
     """Users view, including listing of users by group"""
     if askbot_settings.GROUPS_ENABLED and not by_group:

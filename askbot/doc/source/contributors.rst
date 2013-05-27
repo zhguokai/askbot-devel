@@ -47,6 +47,7 @@ Programming, bug fixes and documentation
 * `Jorge López Pérez <https://github.com/adobo>`_
 * `Zafer Cakmak <https://github.com/xaph>`_
 * `Kevin Porterfield <http://www.shotgunsoftware.com>_`
+* `Robert Martin <https://github.com/bobbydavid>_`
 
 Translations
 ------------
