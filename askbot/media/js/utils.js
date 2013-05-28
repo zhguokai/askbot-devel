@@ -2444,6 +2444,7 @@ PermsHoverCard.prototype.createDom = function() {
         this.getKeepHandler(),
         this.getCloseHandler()
     );
+    this._element.hide();
 };
 
 var ShowPermsTrigger = function() {
