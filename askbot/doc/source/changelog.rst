@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added management command `apply_hinted_tags` to batch-apply tags from a list
 * Added hovercard on the user's karma display in the header
 * Added option to hide ad blocks from logged in users
 * Applied Askbot templates to the settings control panel
