@@ -1039,7 +1039,7 @@ def edit_group_membership(request):
             }
         elif action == 'remove':
             try:
-                group = models.Group.objects.get(group_name = group_name)
+                group = models.Group.objects.get(name = group_name)
                 request.user.edit_group_membership(user, group, 'remove')
             except models.Group.DoesNotExist:
                 raise exceptions.PermissionDenied()
