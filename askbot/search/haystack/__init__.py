@@ -20,7 +20,7 @@ class ThreadIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
             lang_code = get_language()[:2]
-            return self.get_model().objects.filter(language_code=lang_code,
+            return self.get_model().objects.filter(language_code__startswith=lang_code,
                                                 posts__deleted=False)
         else:
             return self.get_model().objects.filter(posts__deleted=False)
@@ -41,7 +41,7 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
             lang_code = get_language()[:2]
-            return self.get_model().objects.filter(language_code=lang_code,
+            return self.get_model().objects.filter(language_code__startswith=lang_code,
                                                 deleted=False)
         else:
             return self.get_model().objects.filter(deleted=False)
