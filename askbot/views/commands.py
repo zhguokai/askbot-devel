@@ -1034,7 +1034,7 @@ def edit_group_membership(request):
             template = get_template('widgets/group_snippet.html')
             return {
                 'name': group.name,
-                'description': getattr(group.tag_wiki, 'text', ''),
+                'description': getattr(group.description, 'text', ''),
                 'html': template.render({'group': group})
             }
         elif action == 'remove':
