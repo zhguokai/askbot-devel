@@ -9,7 +9,7 @@ This document describes the process of instalation of Apache Solr search engine 
 for askbot use. To follow this steps you must have already askbot installed and running.
 
 Getting the requirements
-------------------------
+========================
 
 We need the following packages installed::
 
@@ -24,7 +24,7 @@ Then we decompress it::
     tar -xzf solr-3.6.2.tgz
 
 Setting up Tomcat
------------------
+=================
 
 After installing tomcat there are some configuration required to make it work. First we are going to add 
 Tomcat users. Edit /etc/tomcat7/tomcat-users.xml and add the following::
@@ -46,7 +46,7 @@ To make see if it works go to: http://youripaddress:8080/manager it will ask for
 described in the tomcat-users.xml
 
 Installing Solr under Tomcat
-----------------------------
+============================
 
 Extract the solr tar archive from the previous download::
 
@@ -76,13 +76,17 @@ By now you should be able to see the "solr" application in the tomcat manager an
 
 
 Configuring Askbot with Solr
-----------------------------
+============================
 
 Open settings.py file and configure the following::
 
     ENABLE_HAYSTACK_SEARCH = True
-    HAYSTACK_SEARCH_ENGINE = 'solr'
-    HAYSTACK_SOLR_URL = 'http://127.0.0.1:8080/solr'
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+            'URL': 'http://127.0.0.1:8080/solr'
+        }
+    }
 
 After that create the solr schema and store the output to your solr instalation::
 
@@ -107,7 +111,53 @@ You must be good to go after this, just restart the askbot application and test 
 
 
 Keeping the index fresh
------------------------
+=======================
 
 For this we recommend to use one of haystack `third party apps <http://django-haystack.readthedocs.org/en/latest/other_apps.html>`_ that use celery, 
 plese check this `link <http://django-haystack.readthedocs.org/en/latest/other_apps.html>`_  for more info.
+
+
+Multilingual Setup
+==================
+
+.. note::
+    This is experimental feature, currently xml generation works for: English, Spanish, Chinese, Japanese, Korean and French.
+
+Add the following to settings.py::
+
+    HAYSTACK_ROUTERS = ['askbot.search.haystack.routers.LanguageRouter',]
+
+Configure the HAYSTACK_CONNECTIONS settings with the following format for each language::
+
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+            'URL': 'http://127.0.0.1:8080/solr'
+        },
+        'default_<language_code>': {
+            'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+            'URL': 'http://127.0.0.1:8080/solr/core-<language_code>'
+        },
+    }
+
+
+
+Generate xml files according to language::
+
+    python manage.py askbot_build_solr_schema -l <language_code> > /opt/solr/example/solr/conf/schema-<language_code>.xml 
+
+Add cores to Solr
+-----------------
+
+For each language that you want to support you will need to add a solr core like this::
+
+    http://127.0.0.1:8080/solr/admin/cores?action=CREATE&name=core-<language_code>&instanceDir=.&config=solrconfig.xml&schema=schema-<language_code>.xml&dataDir=data
+
+For more information on how to handle Solr cores visit `the oficial Solr documetation wiki.     <http://wiki.apache.org/solr/CoreAdmin>`_
+
+Build the index according to language
+-------------------------------------
+
+For every language supported you'll need to rebuild the index the following way::
+
+    python manage.py askbot_rebuild_index -l <language_code>
