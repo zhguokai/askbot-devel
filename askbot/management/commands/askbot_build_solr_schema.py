@@ -7,6 +7,9 @@ from django.template import loader, Context
 from haystack.backends.solr_backend import SolrSearchBackend
 from haystack.constants import ID, DJANGO_CT, DJANGO_ID, DEFAULT_OPERATOR, DEFAULT_ALIAS
 
+SUPPORTED_LANGUAGES = ['en', 'es', 'ru', 'cn', \
+                       'zn', 'fr', 'jp', 'ko']
+
 
 class Command(BaseCommand):
     help = "Generates a Solr schema that reflects the indexes."
@@ -23,7 +26,12 @@ class Command(BaseCommand):
     def handle(self, **options):
         """Generates a Solr schema that reflects the indexes."""
         using = options.get('using')
-        language = options.get('language')
+        language = options.get('language')[:2]
+        if language not in SUPPORTED_LANGUAGES:
+            sys.stderr.write("\n\n")
+            sys.stderr.write("WARNING: your language: '%s' is not supported in our " % language)
+            sys.stderr.write("template it will default to English more information in http://wiki.apache.org/solr/LanguageAnalysis")
+            sys.stderr.write("\n\n")
         schema_xml = self.build_template(using=using, language=language)
 
         if options.get('filename'):

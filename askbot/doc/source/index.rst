@@ -27,6 +27,7 @@ at the forum_ or by email at admin@askbot.org
    Appendix D: Askbot as reusable Django application <askbot-as-reusable-django-application>
    Appendix E: Customizing skin in askbot <customizing-skin-in-askbot>
    Appendix F: Intranet setup <intranet-setup>
+   Appendix G: Haystack with Solr and Apache Tomcat <solr>
    Footnotes <footnotes>
    Contributors <contributors>
    Changelog<changelog>
