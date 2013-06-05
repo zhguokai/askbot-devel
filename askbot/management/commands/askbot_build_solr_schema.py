@@ -8,7 +8,7 @@ from haystack.backends.solr_backend import SolrSearchBackend
 from haystack.constants import ID, DJANGO_CT, DJANGO_ID, DEFAULT_OPERATOR, DEFAULT_ALIAS
 
 SUPPORTED_LANGUAGES = ['en', 'es', 'ru', 'cn', \
-                       'zn', 'fr', 'jp', 'ko']
+                       'zn', 'fr', 'jp', 'ko', 'de']
 
 
 class Command(BaseCommand):
