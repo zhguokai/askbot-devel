@@ -1256,6 +1256,7 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
                 {'site': askbot_settings.APP_SHORT_NAME}
 
     data = {
+        'site_name': askbot_settings.APP_SHORT_NAME,
         'validation_link': site_url(reverse(handler_url_name)) + \
                             '?validation_code=' + key
     }
