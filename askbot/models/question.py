@@ -50,7 +50,7 @@ class ThreadQuerySet(models.query.QuerySet):
         """
 
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
-            from askbot.search.haystack import AskbotSearchQuerySet
+            from askbot.search.haystack.searchquery import AskbotSearchQuerySet
             hs_qs = AskbotSearchQuerySet().filter(content=search_query).models(self.model)
             return hs_qs.get_django_queryset()
         else:
@@ -213,7 +213,7 @@ class ThreadManager(BaseQuerySetManager):
         todo: move to query set
         """
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
-            from askbot.search.haystack import AskbotSearchQuerySet
+            from askbot.search.haystack.searchquery import AskbotSearchQuerySet
             hs_qs = AskbotSearchQuerySet().filter(content=search_query)
             return hs_qs.get_django_queryset()
         else:
