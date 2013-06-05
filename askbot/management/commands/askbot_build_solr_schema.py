@@ -23,7 +23,7 @@ class Command(BaseCommand):
     )
     option_list = BaseCommand.option_list + base_options
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """Generates a Solr schema that reflects the indexes."""
         using = options.get('using')
         language = options.get('language')[:2]

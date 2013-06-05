@@ -18,7 +18,7 @@ class Command(BaseCommand):
                                 help='Language to user, in language code format'),]
     option_list = list(BaseCommand.option_list) + haystack_option_list + base_options
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         lang_code = options.get('language', settings.LANGUAGE_CODE.lower())
         activate_language(lang_code)
         options['using'] = ['default_%s' % lang_code[:2],]
