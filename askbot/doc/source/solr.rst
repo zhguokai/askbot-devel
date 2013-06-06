@@ -21,7 +21,7 @@ We need to download Apache Solr from the `official site <http://lucene.apache.or
 
 Then we decompress it::
 
-    tar -xzf solr-3.6.2.tgz
+    tar -xzf apache-solr-3.6.2.tgz
 
 Setting up Tomcat
 =================
@@ -52,7 +52,7 @@ Extract the solr tar archive from the previous download::
 
     tar -xzf solr-4.3.0.tgz
 
-Copy the example/ directory from the source to /opt/solr/. Open the file /opt/solr/example/conf/solrconfig.xml 
+Copy the example/ directory from the source to /opt/solr/. Open the file /opt/solr/example/solr/conf/solrconfig.xml 
 and Modify the dataDir parameter as:: 
 
     <dataDir>${solr.data.dir:/opt/solr/example/solr/data}</dataDir>
@@ -153,7 +153,7 @@ For each language that you want to support you will need to add a solr core like
 
     http://127.0.0.1:8080/solr/admin/cores?action=CREATE&name=core-<language_code>&instanceDir=.&config=solrconfig.xml&schema=schema-<language_code>.xml&dataDir=data
 
-For more information on how to handle Solr cores visit `the oficial Solr documetation wiki.     <http://wiki.apache.org/solr/CoreAdmin>`_
+For more information on how to handle Solr cores visit `the oficial Solr documetation wiki. <http://wiki.apache.org/solr/CoreAdmin>`_
 
 Build the index according to language
 -------------------------------------
