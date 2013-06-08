@@ -1069,6 +1069,22 @@ Tweeting.prototype.decorate = function(element) {
     }
 };
 
+var UserQuestionsPaginator = function() {
+    Paginator.call(this);
+};
+inherits(UserQuestionsPaginator, Paginator);
+
+UserQuestionsPaginator.prototype.renderPage = function(data) {
+};
+
+UserQuestionsPaginator.prototype.getPageDataUrl = function(pageNo) {
+    var url = QSutils.patch_query_string(
+                    askbot['data']['searchUrl'],
+                    'user:' + this._userId
+                );
+    return QSutils.patch_query_string(url, 'sort:votes-desc');
+};
+
 (function(){
     var fbtn = $('.follow-user-toggle');
     if (fbtn.length === 1){
@@ -1092,4 +1108,11 @@ Tweeting.prototype.decorate = function(element) {
         var tweetingControl = new Tweeting();
         tweetingControl.decorate(tweeting);
     }
+    
+    var qPager = $('.user-questions-pager');
+    if (qPager.length) {
+        var qPaginator = new UserQuestionsPaginator();
+        qPaginator.decorate(qPager);
+    }
+
 })();

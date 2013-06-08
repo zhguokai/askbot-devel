@@ -501,6 +501,162 @@ WaitIcon.prototype.createDom = function() {
     this.setVisible(this._isVisible); 
 };
 
+var Paginator = function() {
+    WrappedElement.call(this);
+};
+inherits(Paginator, WrappedElement);
+
+/** 
+ * A mandotory method.
+ * this method needs to be implemented by the subclass
+ * @interface
+ * @param data is json dict returted by the server
+ */
+Paginator.prototype.renderPage = function(data) {
+    throw 'implement me in the subclass';
+};
+
+/**
+ * A mandatory method.
+ * @interface - implement in subclass
+ * returns url that can be used to retrieve page data
+ */
+Paginator.prototype.getPageDataUrl = function(pageNo) {
+    throw 'implement me in the subclass';
+};
+
+/** 
+ * Optional method
+ * @interface - implement in subclass
+ * returns url parameters for the page request
+ */
+Paginator.prototype.getPageDataUrlParams = function(pageNo) {};
+
+Paginator.prototype.setIsLoading = function(isLoading) {
+    this._isLoading = isLoading;
+};
+
+Paginator.prototype.startLoadingPageData = function(pageNo) {
+    if (this._isLoading) {
+        return;
+    }
+    var me = this;
+    var requestParams = {
+        type: 'GET',
+        dataType: 'json',
+        url: this.getPageDataUrl(),
+        cache: false,
+        success: function(data) {
+            if (data['success']) {
+                me.renderPage(data);
+                me.setCurrentPage(pageNo);
+                me.setIsLoading(false);
+            } else {
+                showMessage(me.getElement(), data['message']);
+                me.setIsLoading(false);
+            }
+        }
+        failure: function() {
+            me.setIsLoading(false);
+        }
+    };
+    var urlParams = this.getPageDataUrlParams(pageNo);
+    if (urlParams) {
+        requestParams['data'] = urlParams;
+    }
+    $.ajax(requestParams);
+    me.setIsLoading(true);
+};
+
+Paginator.prototype.getCurrentPageNo = function() {
+    var page = this._element.find('.curr');
+    return parseInt(page.data('page'));
+};
+
+Paginator.prototype.getIncrementalPageHandler = function(direction) {
+    var me = this;
+    return function() {
+        var pageNo = me.getCurrentPageNo();
+        if (direction === 'next') {
+            pageNo = pageNo + 1;
+        } else {
+            pageNo = pageNo - 1;
+        }
+        me.startLoadingPageData(pageNo);
+    };
+};
+
+Paginator.prototype.setCurrentPage = function(pageNo) {
+    //naive - assuming all pages are shown and not "dotted out"
+    var page = this._element.find('[data-page="' + pageNo '"]');
+    if (page.length === 1) {
+        var curr = this._element.find('.curr');
+        curr.removeClass('curr').addClass('page');
+        page.removeClass('page').addClass('curr');
+        if (page !== 1) {
+            this._prevPageButton.show();
+        } else {
+            this._prevPageButton.hide();
+        }
+        if (page === this._numPages) {
+            this._nextPageButton.show();
+        } else {
+            this._nextPageButton.hide();
+        }
+    }
+};
+
+Paginator.prototype.createButton = function(cls, label) {
+    var btn = this.makeElement('span');
+    btn.addClass(cls);
+    var link = this.makeElement('a');
+    link.html(label);
+    btn.append(link);
+    return btn;
+};
+
+Paginator.prototype.decorate = function(element) {
+    this._element = element;
+    var pages = element.find('.page');
+    this._numPages = element.data('numPages');
+    for (var i = 0; i < pages.length; i++) {
+        var page = $(pages[i]);
+        var pageNo = page.data('page');
+        var link = page.find('a');
+        var pageHandler = this.getPageSelectHandler(pageNo);
+        setupButtonEventHandlers(link, pageHandler);
+    }
+    
+    //dom for the next page button
+    var nextPage = element.find('next');
+    if (nextPage.length) {
+        this._nextPageButton = nextPage;
+    } else {
+        var btn = this.createButton('next', gettext('next') + ' &raquo;');
+        this._nextPageButton = btn;
+        element.append(btn);
+    }
+
+    setupButtonEventHandlers(
+        this._nextPageButton,
+        this.getIncrementalPageHandler('next')
+    );
+
+    var prevPage = element.find('prev');
+    if (prevPage.length) {
+        this._prevPageButton = prevPage;
+    } else {
+        var btn = this.createButton('prev', '&laquo; ' + gettext('previous'));
+        this._prevPageButton = btn;
+        element.prepend(btn);
+    }
+
+    setupButtonEventHandlers(
+        this._prevPageButton,
+        this.getIncrementalPageHandler('prev');
+    );
+};
+
 /**
  * @contsructor
  * a form helper that disables submit button

@@ -367,7 +367,7 @@ def user_stats(request, user, context):
     #
     # Questions
     #
-    questions = user.posts.get_questions(
+    questions_qs = user.posts.get_questions(
                     user=request.user
                 ).filter(
                     **question_filter
@@ -375,18 +375,24 @@ def user_stats(request, user, context):
                     '-points', '-thread__last_activity_at'
                 ).select_related(
                     'thread', 'thread__last_activity_by'
-                )[:100]
+                )
 
-    #added this if to avoid another query if questions is less than 100
-    if len(questions) < 100:
-        question_count = len(questions)
-    else:
-        question_count = user.posts.get_questions().filter(**question_filter).count()
+    page_size = 2
+    q_paginator = Paginator(questions_qs, page_size)
+    questions = q_paginator.page(1).object_list
+    question_count = q_paginator.count
 
+    q_paginator_context = functions.setup_paginator({
+                                    'is_paginated' : (question_count > page_size),
+                                    'pages': q_paginator.num_pages,
+                                    'current_page_number': 1,
+                                    'page_object': q_paginator.page(1),
+                                    'base_url' : '' #this paginator will be ajax
+                                })
     #
     # Top answers
     #
-    top_answers = user.posts.get_answers(
+    top_answers_qs = user.posts.get_answers(
         request.user
     ).filter(
         deleted=False,
@@ -396,9 +402,19 @@ def user_stats(request, user, context):
         'thread'
     ).order_by(
         '-points', '-added_at'
-    )[:100]
+    )
 
-    top_answer_count = len(top_answers)
+    a_paginator = Paginator(top_answers_qs, page_size)
+    top_answers = a_paginator.page(1).object_list
+    top_answer_count = a_paginator.count
+
+    a_paginator_context = functions.setup_paginator({
+                                    'is_paginated' : (top_answer_count > page_size),
+                                    'pages': a_paginator.num_pages,
+                                    'current_page_number': 1,
+                                    'page_object': a_paginator.page(1),
+                                    'base_url' : '' #this paginator will be ajax
+                                })
     #
     # Votes
     #
@@ -505,9 +521,12 @@ def user_stats(request, user, context):
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
         'question_count': question_count,
+        'q_paginator_context': q_paginator_context,
 
         'top_answers': top_answers,
         'top_answer_count': top_answer_count,
+        'a_paginator_context': a_paginator_context,
+        'page_size': page_size,
 
         'up_votes' : up_votes,
         'down_votes' : down_votes,
@@ -1107,7 +1126,7 @@ def user(request, id, slug=None, tab_name=None):
 
     user_view_func = USER_VIEW_CALL_TABLE.get(tab_name, user_stats)
 
-    search_state = SearchState( # Non-default SearchState with user data set
+    search_state = SearchState(
         scope=None,
         sort=None,
         query=None,
