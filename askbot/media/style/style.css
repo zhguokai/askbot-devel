@@ -3753,8 +3753,9 @@ ul.post-retag {
 }
 ul.post-retag input {
   width: 400px;
-  height: 1.5em;
-  margin: 3px 0 0 -3px;
+  height: 22px;
+  margin: 3px 0 0 -5px;
+  padding: 0 5px;
 }
 #question-controls .tags {
   margin: 0 0 3px 0;

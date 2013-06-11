@@ -277,7 +277,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'stag' : query,
         'tab_id' : sortby,
         'keywords' : query,
-        'search_state': SearchState(*[None for x in range(7)])
+        'search_state': SearchState(*[None for x in range(8)])
     }
 
     if tag_list_type == 'list':

@@ -46,7 +46,7 @@ from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
 
-USER_POSTS_PAGE_SIZE = 10
+USER_POSTS_PAGE_SIZE = 2
 
 def owner_or_moderator_required(f):
     @functools.wraps(f)
@@ -966,9 +966,26 @@ def user_reputation(request, user, context):
 
 def user_favorites(request, user, context):
     favorite_threads = user.user_favorite_questions.values_list('thread', flat=True)
-    questions = models.Post.objects.filter(post_type='question', thread__in=favorite_threads)\
-                    .select_related('thread', 'thread__last_activity_by')\
-                    .order_by('-points', '-thread__last_activity_at')[:const.USER_VIEW_DATA_SIZE]
+    questions_qs = models.Post.objects.filter(
+                                post_type='question',
+                                thread__in=favorite_threads
+                            ).select_related(
+                                'thread', 'thread__last_activity_by'
+                            ).order_by(
+                                '-points', '-thread__last_activity_at'
+                            )[:const.USER_VIEW_DATA_SIZE]
+
+    q_paginator = Paginator(questions_qs, USER_POSTS_PAGE_SIZE)
+    questions = q_paginator.page(1).object_list
+    question_count = q_paginator.count
+
+    q_paginator_context = functions.setup_paginator({
+                    'is_paginated' : (question_count > USER_POSTS_PAGE_SIZE),
+                    'pages': q_paginator.num_pages,
+                    'current_page_number': 1,
+                    'page_object': q_paginator.page(1),
+                    'base_url' : '?' #this paginator will be ajax
+                })
 
     data = {
         'active_tab':'users',
@@ -977,6 +994,9 @@ def user_favorites(request, user, context):
         'tab_description' : _('users favorite questions'),
         'page_title' : _('profile - favorite questions'),
         'questions' : questions,
+        'q_paginator_context': q_paginator_context,
+        'question_count': question_count,
+        'page_size': USER_POSTS_PAGE_SIZE
     }
     context.update(data)
     return render(request, 'user_profile/user_favorites.html', context)

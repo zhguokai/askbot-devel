@@ -384,10 +384,12 @@ def clean_tag(tag_name):
         return tag_name.lower()
     else:
         try:
+            #todo: move this into Thread.update_tags() to hopefully lower
+            #the database hits - here we do one per tag
             from askbot import models
-            stored_tag = models.Tag.objects.get(name__iexact=tag_name)
+            stored_tag = models.Tag.objects.filter(name__iexact=tag_name)[0]
             return stored_tag.name
-        except models.Tag.DoesNotExist:
+        except IndexError:
             return tag_name
 
 
