@@ -50,4 +50,4 @@ class AskbotSearchQuerySet(SearchQuerySet):
         if model_klass == User:
             return model_klass.objects.filter(id__in=set(id_list))
         else:
-            return model_klass.objects.filter(id__in=set(id_list))
+            return model_klass.objects.filter(id__in=set(id_list), deleted=False)

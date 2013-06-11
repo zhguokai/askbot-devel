@@ -21,9 +21,9 @@ class ThreadIndex(indexes.SearchIndex, indexes.Indexable):
         if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
             lang_code = get_language()[:2]
             return self.get_model().objects.filter(language_code__startswith=lang_code,
-                                                posts__deleted=False)
+                                                   deleted=False)
         else:
-            return self.get_model().objects.filter(posts__deleted=False)
+            return self.get_model().objects.filter(deleted=False)
 
     def prepare_tags(self, obj):
         return [tag.name for tag in obj.tags.all()]
