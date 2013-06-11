@@ -292,6 +292,7 @@ QSutils.patch_query_string = function (query_string, patch, remove) {
     add_selector('tags');
     add_selector('author');
     add_selector('page');
+    add_selector('page-size');
     add_selector('query');
 
     return new_query_string;
@@ -544,18 +545,13 @@ Paginator.prototype.startLoadingPageData = function(pageNo) {
     var requestParams = {
         type: 'GET',
         dataType: 'json',
-        url: this.getPageDataUrl(),
+        url: this.getPageDataUrl(pageNo),
         cache: false,
         success: function(data) {
-            if (data['success']) {
-                me.renderPage(data);
-                me.setCurrentPage(pageNo);
-                me.setIsLoading(false);
-            } else {
-                showMessage(me.getElement(), data['message']);
-                me.setIsLoading(false);
-            }
-        }
+            me.renderPage(data);
+            me.setCurrentPage(pageNo);
+            me.setIsLoading(false);
+        },
         failure: function() {
             me.setIsLoading(false);
         }
@@ -566,6 +562,7 @@ Paginator.prototype.startLoadingPageData = function(pageNo) {
     }
     $.ajax(requestParams);
     me.setIsLoading(true);
+    return false;
 };
 
 Paginator.prototype.getCurrentPageNo = function() {
@@ -583,12 +580,13 @@ Paginator.prototype.getIncrementalPageHandler = function(direction) {
             pageNo = pageNo - 1;
         }
         me.startLoadingPageData(pageNo);
+        return false;
     };
 };
 
 Paginator.prototype.setCurrentPage = function(pageNo) {
     //naive - assuming all pages are shown and not "dotted out"
-    var page = this._element.find('[data-page="' + pageNo '"]');
+    var page = this._element.find('[data-page="' + pageNo + '"]');
     if (page.length === 1) {
         var curr = this._element.find('.curr');
         curr.removeClass('curr').addClass('page');
@@ -618,23 +616,33 @@ Paginator.prototype.createButton = function(cls, label) {
 Paginator.prototype.decorate = function(element) {
     this._element = element;
     var pages = element.find('.page');
-    this._numPages = element.data('numPages');
+    var paginatorButtons = element.find('.paginator');
+    this._numPages = paginatorButtons.data('numPages');
     for (var i = 0; i < pages.length; i++) {
         var page = $(pages[i]);
         var pageNo = page.data('page');
         var link = page.find('a');
-        var pageHandler = this.getPageSelectHandler(pageNo);
+        var me = this;
+        var pageHandler = function() { 
+            me.startLoadingPageData(pageNo); 
+            return false;
+        };
         setupButtonEventHandlers(link, pageHandler);
     }
+
+    var currPageNo = element.find('.curr').data('page');
     
     //dom for the next page button
-    var nextPage = element.find('next');
+    var nextPage = element.find('.next');
     if (nextPage.length) {
         this._nextPageButton = nextPage;
     } else {
         var btn = this.createButton('next', gettext('next') + ' &raquo;');
         this._nextPageButton = btn;
-        element.append(btn);
+        paginatorButtons.append(btn);
+    }
+    if (currPageNo === this._numPages) {
+        this._nextPageButton.hide();
     }
 
     setupButtonEventHandlers(
@@ -648,12 +656,15 @@ Paginator.prototype.decorate = function(element) {
     } else {
         var btn = this.createButton('prev', '&laquo; ' + gettext('previous'));
         this._prevPageButton = btn;
-        element.prepend(btn);
+        paginatorButtons.prepend(btn);
+    }
+    if (currPageNo === 1) {
+        this._prevPageButton.hide();
     }
 
     setupButtonEventHandlers(
         this._prevPageButton,
-        this.getIncrementalPageHandler('prev');
+        this.getIncrementalPageHandler('prev')
     );
 };
 

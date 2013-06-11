@@ -81,7 +81,6 @@ def questions(request, **kwargs):
                     user_logged_in=request.user.is_authenticated(),
                     **kwargs
                 )
-    page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
 
     qs, meta_data = models.Thread.objects.run_advanced_search(
                         request_user=request.user, search_state=search_state
@@ -89,7 +88,7 @@ def questions(request, **kwargs):
     if meta_data['non_existing_tags']:
         search_state = search_state.remove_tags(meta_data['non_existing_tags'])
 
-    paginator = Paginator(qs, page_size)
+    paginator = Paginator(qs, search_state.page_size)
     if paginator.num_pages < search_state.page:
         search_state.page = 1
     page = paginator.page(search_state.page)
@@ -114,12 +113,12 @@ def questions(request, **kwargs):
                         )
 
     paginator_context = {
-        'is_paginated' : (paginator.count > page_size),
+        'is_paginated' : (paginator.count > search_state.page_size),
         'pages': paginator.num_pages,
         'current_page_number': search_state.page,
         'page_object': page,
         'base_url' : search_state.query_string(),
-        'page_size' : page_size,
+        'page_size' : search_state.page_size,
     }
 
     # We need to pass the rss feed url based
@@ -149,14 +148,14 @@ def questions(request, **kwargs):
         question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
         question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
 
-        if q_count > page_size:
+        if q_count > search_state.page_size:
             paginator_tpl = get_template('main_page/paginator.html')
             paginator_html = paginator_tpl.render(
                 RequestContext(
                     request, {
-                        'context': functions.setup_paginator(paginator_context),
+                        'context': paginator_context,
                         'questions_count': q_count,
-                        'page_size' : page_size,
+                        'page_size' : search_state.page_size,
                         'search_state': search_state,
                     }
                 )
@@ -187,7 +186,7 @@ def questions(request, **kwargs):
             'faces': [],#[extra_tags.gravatar(contributor, 48) for contributor in contributors],
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
-            'page_size' : page_size,
+            'page_size' : search_state.page_size,
             'questions': questions_html.replace('\n',''),
             'non_existing_tags': meta_data['non_existing_tags']
         }
@@ -212,7 +211,7 @@ def questions(request, **kwargs):
             'language_code': translation.get_language(),
             'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
             'page_class': 'main-page',
-            'page_size': page_size,
+            'page_size': search_state.page_size,
             'query': search_state.query,
             'threads' : page,
             'questions_count' : paginator.count,

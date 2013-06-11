@@ -1439,7 +1439,7 @@ ul#searchTags {
         color: #777;
         padding: 2px 4px 3px 4px;
     }
-    a{
+    a {
         color:@section-title;
     }
     .prev {
@@ -1461,12 +1461,24 @@ ul#searchTags {
         background-color: #8ebcc7;
         color: #fff;
         font-weight: bold;
+        a {
+            background: #8ebcc7;
+            color: white;
+            padding: 0;
+        }
     }
+    .curr.page {
+        a:hover {
+            background: #8ebcc7;
+            color: white;
+            padding: 0;
+        }
+    }
+
     .next a, .prev a{
         color:@section-title
     }
     .page a:hover,
-    .curr a:hover,
     .prev a:hover,
     .next a:hover {
         color: #8C8C8C;

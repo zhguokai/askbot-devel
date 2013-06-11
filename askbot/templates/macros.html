@@ -681,7 +681,11 @@ for the purposes of the AJAX comment editor #}
 {%- macro paginator(p, position='left', anchor='') -%}{# p is paginator context dictionary #}
 {% spaceless %}
     {% if p.is_paginated %}
-        <div class="paginator" style="float:{{position}}">
+        <div 
+            class="paginator"
+            style="float:{{ position }}"
+            data-num-pages="{{ p.pages }}"
+        >
         {% if p.has_previous %}
             <span class="prev"><a href="{{p.base_url}}page={{ p.previous }}{{ anchor }}" title="{% trans %}previous{% endtrans %}">
         &laquo; {% trans %}previous{% endtrans %}</a></span>
@@ -697,7 +701,7 @@ for the purposes of the AJAX comment editor #}
          
         {% for num in p.page_numbers %}
           {% if num == p.page and p.pages != 1%}
-            <span class="curr" data-page="{{ num }}" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
+            <span class="curr page" data-page="{{ num }}" title="{% trans %}current page{% endtrans %}"><a>{{ num }}</a></span>
           {% else %}
             <span class="page" data-page="{{ num }}"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
           {% endif %}

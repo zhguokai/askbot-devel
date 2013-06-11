@@ -46,6 +46,8 @@ from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
 
+USER_POSTS_PAGE_SIZE = 10
+
 def owner_or_moderator_required(f):
     @functools.wraps(f)
     def wrapped_func(request, profile_owner, context):
@@ -377,18 +379,17 @@ def user_stats(request, user, context):
                     'thread', 'thread__last_activity_by'
                 )
 
-    page_size = 2
-    q_paginator = Paginator(questions_qs, page_size)
+    q_paginator = Paginator(questions_qs, USER_POSTS_PAGE_SIZE)
     questions = q_paginator.page(1).object_list
     question_count = q_paginator.count
 
     q_paginator_context = functions.setup_paginator({
-                                    'is_paginated' : (question_count > page_size),
-                                    'pages': q_paginator.num_pages,
-                                    'current_page_number': 1,
-                                    'page_object': q_paginator.page(1),
-                                    'base_url' : '' #this paginator will be ajax
-                                })
+                    'is_paginated' : (question_count > USER_POSTS_PAGE_SIZE),
+                    'pages': q_paginator.num_pages,
+                    'current_page_number': 1,
+                    'page_object': q_paginator.page(1),
+                    'base_url' : '?' #this paginator will be ajax
+                })
     #
     # Top answers
     #
@@ -404,17 +405,17 @@ def user_stats(request, user, context):
         '-points', '-added_at'
     )
 
-    a_paginator = Paginator(top_answers_qs, page_size)
+    a_paginator = Paginator(top_answers_qs, USER_POSTS_PAGE_SIZE)
     top_answers = a_paginator.page(1).object_list
     top_answer_count = a_paginator.count
 
     a_paginator_context = functions.setup_paginator({
-                                    'is_paginated' : (top_answer_count > page_size),
-                                    'pages': a_paginator.num_pages,
-                                    'current_page_number': 1,
-                                    'page_object': a_paginator.page(1),
-                                    'base_url' : '' #this paginator will be ajax
-                                })
+                    'is_paginated' : (top_answer_count > USER_POSTS_PAGE_SIZE),
+                    'pages': a_paginator.num_pages,
+                    'current_page_number': 1,
+                    'page_object': a_paginator.page(1),
+                    'base_url' : '?' #this paginator will be ajax
+                })
     #
     # Votes
     #
@@ -526,7 +527,7 @@ def user_stats(request, user, context):
         'top_answers': top_answers,
         'top_answer_count': top_answer_count,
         'a_paginator_context': a_paginator_context,
-        'page_size': page_size,
+        'page_size': USER_POSTS_PAGE_SIZE,
 
         'up_votes' : up_votes,
         'down_votes' : down_votes,
@@ -1133,6 +1134,7 @@ def user(request, id, slug=None, tab_name=None):
         tags=None,
         author=None,
         page=None,
+        page_size=USER_POSTS_PAGE_SIZE,
         user_logged_in=profile_owner.is_authenticated(),
     )
 
