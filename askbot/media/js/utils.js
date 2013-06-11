@@ -3430,6 +3430,17 @@ AutoCompleter.prototype.displayValue = function(value, data) {
     }
 };
 
+AutoCompleter.prototype.clear = function() {
+    this._element.val('');
+    this._results.hide();
+    this.lastKeyPressed_ = null;
+    this.lastProcessedValue_ = null;
+    if (this._keyTimeout_) {
+        clearTimeout(this._keyTimeout);
+    }
+    this._active = false;
+};
+
 AutoCompleter.prototype.finish = function() {
     if (this.keyTimeout_) {
         clearTimeout(this.keyTimeout_);
