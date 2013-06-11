@@ -126,9 +126,27 @@ def simple_dialog(prompt_phrase, required=False):
         time.sleep(1)
 
 
-def get_yes_or_no(prompt_phrase):
+def get_yes_or_no(prompt_phrase, default=None):
+    """Prompts user for a yes or no response with an optional default
+    value which will be inferred if the user just hits enter
+
+    :param prompt_phrase: (str) Question to prompt the user with
+
+    :param default: (str) Either 'yes' or 'no'. If a valid option is
+    provided, the user can simply press enter to accept the default.
+    If an invalid option is passed in, a `ValueError` is raised.
+
+    :returns: (str) 'yes' or 'no'
+    """
     while True:
-        response = raw_input(prompt_phrase + ' (yes/no)\n> ').strip()
+        prompt_phrase += ' (yes/no)'
+        if default:
+            prompt_phrase += '\n[%s] >' % default
+        else:
+            prompt_phrase += '\n >' % default
+        response = raw_input(prompt_phrase).strip()
+        if not response and default:
+            return default
         if response in ('yes', 'no'):
             return response
             
