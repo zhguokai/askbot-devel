@@ -1,7 +1,7 @@
 from django.db.models import signals as django_signals
 from django.contrib.auth.models import User
+
 from haystack.signals import BaseSignalProcessor
-from askbot.models import signals as askbot_signals
 
 class AskbotRealtimeSignalProcessor(BaseSignalProcessor):
     '''
@@ -12,6 +12,7 @@ class AskbotRealtimeSignalProcessor(BaseSignalProcessor):
     def setup(self):
         try:
             from askbot.models import Post, Thread
+            from askbot.models import signals as askbot_signals
             django_signals.post_save.connect(self.handle_save, sender=User)
             django_signals.post_save.connect(self.handle_save, sender=Thread)
             django_signals.post_save.connect(self.handle_save, sender=Post)
@@ -25,6 +26,7 @@ class AskbotRealtimeSignalProcessor(BaseSignalProcessor):
 
     def teardown(self):
         from askbot.models import Post, Thread
+        from askbot.models import signals as askbot_signals
         django_signals.post_save.disconnect(self.handle_save, sender=User)
         django_signals.post_save.disconnect(self.handle_save, sender=Post)
         django_signals.post_save.disconnect(self.handle_save, sender=Thread)
