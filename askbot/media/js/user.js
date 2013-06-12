@@ -1079,7 +1079,7 @@ UserQuestionsPaginator.prototype.renderPage = function(data) {
 };
 
 UserQuestionsPaginator.prototype.getPageDataUrl = function(pageNo) {
-    var userId = askbot['data']['userId'];
+    var userId = askbot['data']['viewUserId'];
     var pageSize = askbot['data']['userPostsPageSize'];
     var url = QSutils.patch_query_string('', 'author:' + userId);
     url = QSutils.patch_query_string(url, 'sort:votes-desc');
