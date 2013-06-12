@@ -714,7 +714,7 @@ for the purposes of the AJAX comment editor #}
             {% endfor %}
         {% endif %}
         {% if p.has_next %}
-            <span class="next"><a href="{{p.base_url}}page={{ p.next }}{{ anchor }}" title="{% trans %}next page{% endtrans %}">{% trans %}next page{% endtrans %} &raquo;</a></span>
+            <span class="next"><a href="{{p.base_url}}page={{ p.next }}{{ anchor }}" title="{% trans %}next page{% endtrans %}">{% trans %}next{% endtrans %} &raquo;</a></span>
         {% endif %}
         </div>
     {% endif %}
