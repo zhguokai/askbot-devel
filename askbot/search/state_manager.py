@@ -88,7 +88,10 @@ class SearchState(object):
     def get_empty(cls):
         return cls(scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
 
-    def __init__(self, scope, sort, query, tags, author, page, page_size, user_logged_in):
+    def __init__(self, 
+        scope=None, sort=None, query=None, tags=None,
+        author=None, page=None, page_size=None, user_logged_in=False
+    ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
 
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
