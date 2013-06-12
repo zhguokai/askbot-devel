@@ -1362,19 +1362,15 @@ ul#searchTags {
 .paginator a {
   color: #7ea9b3;
 }
-.paginator .prev {
-  margin-right: .5em;
-}
+.paginator .prev,
 .paginator .next {
-  margin-left: .5em;
+  margin-right: .5em;
 }
 .paginator .page a,
 .paginator .page a:visited,
 .paginator .curr {
   padding: .25em;
-  background-color: #fff;
   margin: 0em .25em;
-  color: #ff;
 }
 .paginator .curr {
   background-color: #8ebcc7;
@@ -1390,10 +1386,6 @@ ul#searchTags {
   background: #8ebcc7;
   color: white;
   padding: 0;
-}
-.paginator .next a,
-.paginator .prev a {
-  color: #7ea9b3;
 }
 .paginator .page a:hover,
 .paginator .prev a:hover,

@@ -589,17 +589,17 @@ Paginator.prototype.setCurrentPage = function(pageNo) {
     var page = this._element.find('[data-page="' + pageNo + '"]');
     if (page.length === 1) {
         var curr = this._element.find('.curr');
-        curr.removeClass('curr').addClass('page');
-        page.removeClass('page').addClass('curr');
-        if (page !== 1) {
-            this._prevPageButton.show();
-        } else {
+        curr.removeClass('curr');
+        page.addClass('curr');
+        if (pageNo === 1) {
             this._prevPageButton.hide();
-        }
-        if (page === this._numPages) {
-            this._nextPageButton.show();
         } else {
+            this._prevPageButton.show();
+        }
+        if (pageNo === this._numPages) {
             this._nextPageButton.hide();
+        } else {
+            this._nextPageButton.show();
         }
     }
 };
@@ -613,6 +613,16 @@ Paginator.prototype.createButton = function(cls, label) {
     return btn;
 };
 
+Paginator.prototype.getPageButtonHandler = function(pageNo) {
+    var me = this;
+    return function() { 
+        if (me.getCurrentPageNo() !== pageNo) {
+            me.startLoadingPageData(pageNo); 
+        }
+        return false;
+    };
+};
+
 Paginator.prototype.decorate = function(element) {
     this._element = element;
     var pages = element.find('.page');
@@ -623,10 +633,7 @@ Paginator.prototype.decorate = function(element) {
         var pageNo = page.data('page');
         var link = page.find('a');
         var me = this;
-        var pageHandler = function() { 
-            me.startLoadingPageData(pageNo); 
-            return false;
-        };
+        var pageHandler = this.getPageButtonHandler(pageNo);
         setupButtonEventHandlers(link, pageHandler);
     }
 

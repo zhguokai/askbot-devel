@@ -46,7 +46,7 @@ from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
 
-USER_POSTS_PAGE_SIZE = 2
+USER_POSTS_PAGE_SIZE = 10
 
 def owner_or_moderator_required(f):
     @functools.wraps(f)
