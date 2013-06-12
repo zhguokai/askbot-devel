@@ -3760,6 +3760,12 @@ signals.new_question_posted.connect(tweet_new_post)
 signals.post_revision_published.connect(notify_author_of_published_revision)
 signals.site_visited.connect(record_user_visit)
 
+if getattr('HAYSTACK_SIGNAL_PROCESSOR',
+           django_settings, ' ').endswith('AskbotRealtimeSignalProcessor'):
+    from haystack import signal_processor
+    signal_processor.teardown()
+    signal_processor.setup()
+
 __all__ = [
         'signals',
 
