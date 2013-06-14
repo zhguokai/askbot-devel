@@ -143,7 +143,7 @@ def get_yes_or_no(prompt_phrase, default=None):
         if default:
             prompt_phrase += '\n[%s] >' % default
         else:
-            prompt_phrase += '\n >' % default
+            prompt_phrase += '\n >'
         response = raw_input(prompt_phrase).strip()
         if not response and default:
             return default
