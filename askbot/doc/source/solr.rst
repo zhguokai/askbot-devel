@@ -19,10 +19,6 @@ We need to download Apache Solr from the `official site <http://lucene.apache.or
 
     wget http://www.bizdirusa.com/mirrors/apache/lucene/solr/3.6.2/apache-solr-3.6.2.tgz 
 
-Then we decompress it::
-
-    tar -xzf apache-solr-3.6.2.tgz
-
 Setting up Tomcat
 =================
 
@@ -50,7 +46,7 @@ Installing Solr under Tomcat
 
 Extract the solr tar archive from the previous download::
 
-    tar -xzf solr-4.3.0.tgz
+    tar -xzf apache-solr-3.6.2.tgz
 
 Copy the example/ directory from the source to /opt/solr/. Open the file /opt/solr/example/solr/conf/solrconfig.xml 
 and Modify the dataDir parameter as:: 
@@ -110,13 +106,6 @@ The output should be something like::
 You must be good to go after this, just restart the askbot application and test the search with haystack and solr
 
 
-Keeping the index fresh
-=======================
-
-For this we recommend to use one of haystack `third party apps <http://django-haystack.readthedocs.org/en/latest/other_apps.html>`_ that use celery, 
-plese check this `link <http://django-haystack.readthedocs.org/en/latest/other_apps.html>`_  for more info.
-
-
 Multilingual Setup
 ==================
 
@@ -141,7 +130,6 @@ Configure the HAYSTACK_CONNECTIONS settings with the following format for each l
     }
 
 
-
 Generate xml files according to language::
 
     python manage.py askbot_build_solr_schema -l <language_code> > /opt/solr/example/solr/conf/schema-<language_code>.xml 
@@ -161,3 +149,34 @@ Build the index according to language
 For every language supported you'll need to rebuild the index the following way::
 
     python manage.py askbot_rebuild_index -l <language_code>
+
+
+Keeping the search index fresh
+==============================
+
+There are several ways to keep the index fresh in askbot with haystack.
+
+Cronjob
+-------
+
+Create a cronjob that executes *askbot_update_index* command for each language installed (in case of multilingual setup).
+
+Real Time Signal
+----------------
+
+The real time signal method updates the index synchronously after each object it's  saved or deleted, to enable it add this to settings.py::
+
+    HAYSTACK_SIGNAL_PROCESSOR = 'askbot.search.haystack.signals.AskbotRealtimeSignalProcessor'
+
+this can delay the requests time of your page, if you have a high traffic site this is not recommended.
+
+Updating the Index with Celery
+------------------------------
+
+The real time signal method updates the index asynchronously after each object it's  saved or deleted using Celery as queue  to enable it add this to settings.py::
+
+    HAYSTACK_SIGNAL_PROCESSOR = 'askbot.search.haystack.signals.AskbotCelerySignalProcessor'
+    #modify CELERY_ALWAYS_EAGER to:
+    CELERY_ALWAYS_EAGER = False
+
+You will need to enable Celery to make this work. 

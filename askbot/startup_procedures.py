@@ -634,6 +634,10 @@ def test_haystack():
                     message = "'askbot.search.haystack.routers.LanguageRouter' to HAYSTACK_ROUTERS as first element in settings.py"
                     errors.append(message)
 
+            if getattr(django_settings, 'HAYSTACK_SIGNAL_PROCESSOR',
+                       False).endswith('AskbotCelerySignalProcessor'):
+                try_import('celery_haystack', 'celery-haystack', short_message = True)
+
             footer = 'Please refer to haystack documentation at https://django-haystack.readthedocs.org/en/latest/settings.html'
             print_errors(errors, footer=footer)
 
