@@ -627,6 +627,9 @@ input[type="submit"].searchBtn {
 .users-page input[type="submit"].searchBtn {
   margin-top: 1px;
 }
+table.openid td {
+  padding: 0 10px 5px 0;
+}
 .ask-page input[type="submit"].searchBtn {
   display: none;
 }
@@ -2887,11 +2890,12 @@ ul#related-tags li {
 #local_login_buttons #id_password,
 #password-fs #id_password,
 #openid-fs #id_password {
+  color: #525252;
   font-size: 12px;
-  line-height: 20px;
-  height: 20px;
+  line-height: 25px;
+  height: 25px;
   margin: 0px;
-  padding: 0px 0 0 5px;
+  padding: 0 5px;
   width: 200px;
 }
 .openid-input {
