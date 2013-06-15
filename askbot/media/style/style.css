@@ -627,9 +627,6 @@ input[type="submit"].searchBtn {
 .users-page input[type="submit"].searchBtn {
   margin-top: 1px;
 }
-table.openid td {
-  padding: 0 10px 5px 0;
-}
 .ask-page input[type="submit"].searchBtn {
   display: none;
 }
@@ -3002,6 +2999,22 @@ a:hover.medal {
   padding: 10px 0px 10px 0px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
+.user-profile-page .up-votes,
+.user-profile-page .down-votes {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: bold;
+  height: 30px;
+  padding-left: 27px;
+  line-height: 22px;
+  margin: 0 15px 0 2px;
+}
+.user-profile-page .up-votes {
+  background: url(../images/vote-arrow-up-on.png) no-repeat;
+}
+.user-profile-page .down-votes {
+  background: url(../images/vote-arrow-down-on.png) no-repeat;
+}
 .user-profile-page .inputs {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -3422,8 +3435,29 @@ label.retag-error {
   float: left;
 }
 .user-info-table {
-  margin-bottom: 10px;
+  margin: 10px 0;
   border-spacing: 0;
+  display: table;
+}
+.user-info-table .col1,
+.user-info-table .col2,
+.user-info-table .col3 {
+  display: table-cell;
+  vertical-align: top;
+}
+.user-info-table .col1 {
+  width: 140px;
+  text-align: center;
+}
+.user-info-table .col2 {
+  padding: 0 0 0 10px;
+  width: 400px;
+}
+.user-info-table .col3 {
+  width: 460px;
+}
+.user-info-table .gravatar {
+  margin: 0;
 }
 /* todo: remove this hack? */
 .user-stats-table .narrow {
@@ -3798,9 +3832,6 @@ p.signup_p {
 .faq-rep-item {
   text-align: right;
   padding-right: 5px;
-}
-.user-info-table .gravatar {
-  margin: 0;
 }
 #responses {
   clear: both;
