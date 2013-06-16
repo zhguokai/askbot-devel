@@ -46,8 +46,6 @@ from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
 
-USER_POSTS_PAGE_SIZE = 10
-
 def owner_or_moderator_required(f):
     @functools.wraps(f)
     def wrapped_func(request, profile_owner, context):
@@ -379,12 +377,12 @@ def user_stats(request, user, context):
                     'thread', 'thread__last_activity_by'
                 )
 
-    q_paginator = Paginator(questions_qs, USER_POSTS_PAGE_SIZE)
+    q_paginator = Paginator(questions_qs, const.USER_POSTS_PAGE_SIZE)
     questions = q_paginator.page(1).object_list
     question_count = q_paginator.count
 
     q_paginator_context = functions.setup_paginator({
-                    'is_paginated' : (question_count > USER_POSTS_PAGE_SIZE),
+                    'is_paginated' : (question_count > const.USER_POSTS_PAGE_SIZE),
                     'pages': q_paginator.num_pages,
                     'current_page_number': 1,
                     'page_object': q_paginator.page(1),
@@ -393,24 +391,12 @@ def user_stats(request, user, context):
     #
     # Top answers
     #
-    top_answers_qs = user.posts.get_answers(
-        request.user
-    ).filter(
-        deleted=False,
-        thread__posts__deleted=False,
-        thread__posts__post_type='question',
-    ).select_related(
-        'thread'
-    ).order_by(
-        '-points', '-added_at'
-    )
-
-    a_paginator = Paginator(top_answers_qs, USER_POSTS_PAGE_SIZE)
+    a_paginator = user.get_top_answers_paginator(request.user)
     top_answers = a_paginator.page(1).object_list
     top_answer_count = a_paginator.count
 
     a_paginator_context = functions.setup_paginator({
-                    'is_paginated' : (top_answer_count > USER_POSTS_PAGE_SIZE),
+                    'is_paginated' : (top_answer_count > const.USER_POSTS_PAGE_SIZE),
                     'pages': a_paginator.num_pages,
                     'current_page_number': 1,
                     'page_object': a_paginator.page(1),
@@ -527,7 +513,7 @@ def user_stats(request, user, context):
         'top_answers': top_answers,
         'top_answer_count': top_answer_count,
         'a_paginator_context': a_paginator_context,
-        'page_size': USER_POSTS_PAGE_SIZE,
+        'page_size': const.USER_POSTS_PAGE_SIZE,
 
         'up_votes' : up_votes,
         'down_votes' : down_votes,
@@ -975,12 +961,12 @@ def user_favorites(request, user, context):
                                 '-points', '-thread__last_activity_at'
                             )[:const.USER_VIEW_DATA_SIZE]
 
-    q_paginator = Paginator(questions_qs, USER_POSTS_PAGE_SIZE)
+    q_paginator = Paginator(questions_qs, const.USER_POSTS_PAGE_SIZE)
     questions = q_paginator.page(1).object_list
     question_count = q_paginator.count
 
     q_paginator_context = functions.setup_paginator({
-                    'is_paginated' : (question_count > USER_POSTS_PAGE_SIZE),
+                    'is_paginated' : (question_count > const.USER_POSTS_PAGE_SIZE),
                     'pages': q_paginator.num_pages,
                     'current_page_number': 1,
                     'page_object': q_paginator.page(1),
@@ -996,7 +982,7 @@ def user_favorites(request, user, context):
         'questions' : questions,
         'q_paginator_context': q_paginator_context,
         'question_count': question_count,
-        'page_size': USER_POSTS_PAGE_SIZE
+        'page_size': const.USER_POSTS_PAGE_SIZE
     }
     context.update(data)
     return render(request, 'user_profile/user_favorites.html', context)
@@ -1154,7 +1140,7 @@ def user(request, id, slug=None, tab_name=None):
         tags=None,
         author=None,
         page=None,
-        page_size=USER_POSTS_PAGE_SIZE,
+        page_size=const.USER_POSTS_PAGE_SIZE,
         user_logged_in=profile_owner.is_authenticated(),
     )
 

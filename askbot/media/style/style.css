@@ -2996,15 +2996,31 @@ a:hover.medal {
   padding: 5px;
 }
 .user-profile-page h2 {
-  padding: 10px 0px 10px 0px;
+  padding: 30px 0px 10px 0px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
+}
+.user-profile-page .user-stats-table h2 {
+  padding-top: 10px;
+}
+.user-profile-page .user-stats-table.badges {
+  margin-bottom: 30px;
+}
+.user-profile-page select {
+  margin-bottom: 12px;
 }
 .user-profile-page .inputs {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.user-profile-page select {
-  margin-bottom: 12px;
+.user-profile-page .pager {
+  margin-bottom: 0;
+}
+.user-profile-page .paginator {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.user-profile-page .users-questions {
+  margin-top: -10px;
 }
 .user-details {
   font-size: 13px;

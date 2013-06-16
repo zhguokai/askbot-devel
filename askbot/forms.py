@@ -1708,6 +1708,11 @@ class BulkTagSubscriptionForm(forms.Form):
 class GetCommentsForPostForm(forms.Form):
     post_id = forms.IntegerField()
 
+class GetUserItemsForm(forms.Form):
+    page_size = forms.IntegerField(required=False)
+    page_number = forms.IntegerField(min_value=1)
+    user_id = forms.IntegerField()
+
 class NewCommentForm(forms.Form):
     comment = forms.CharField()
     post_id = forms.IntegerField()

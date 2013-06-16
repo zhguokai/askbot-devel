@@ -12,7 +12,11 @@ import urllib
 import operator
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotAllowed
+from django.http import HttpResponseRedirect
+from django.http import HttpResponse
+from django.http import Http404
+from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template.loader import get_template
 from django.template import RequestContext
@@ -31,7 +35,9 @@ from django.conf import settings as django_settings
 import askbot
 from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.forms import AnswerForm, ShowQuestionForm
+from askbot.forms import AnswerForm
+from askbot.forms import ShowQuestionForm
+from askbot.forms import GetUserItemsForm
 from askbot import conf
 from askbot import models
 from askbot import schedules
@@ -241,6 +247,23 @@ def questions(request, **kwargs):
 
         return render(request, 'main_page.html', template_data)
 
+
+def get_top_answers(request):
+    """returns a snippet of html of users answers"""
+    form = GetUserItemsForm(request.GET)
+    if form.is_valid():
+        owner = models.User.objects.get(id=form.cleaned_data['user_id'])
+        paginator = owner.get_top_answers_paginator(visitor=request.user)
+        answers = paginator.page(form.cleaned_data['page_number']).object_list
+        template = get_template('user_profile/user_answers_list.html')
+        answers_html = template.render({'top_answers': answers})
+        json_string = simplejson.dumps({
+                            'html': answers_html,
+                            'num_answers': paginator.count}
+                        )
+        return HttpResponse(json_string, mimetype='application/json')
+    else:
+        raise HttpResponseBadRequest()
 
 def tags(request):#view showing a listing of available tags - plain list
 

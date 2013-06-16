@@ -167,6 +167,11 @@ urlpatterns = patterns('',
         kwargs = {'post_type': 'answer'},
         name='answer_revisions'
     ),
+    service_url(
+        r'^get-top-answers/',
+        views.readers.get_top_answers,
+        name='get_top_answers'
+    ),
     # END main page urls
     service_url(
         r'^api/get_questions/',

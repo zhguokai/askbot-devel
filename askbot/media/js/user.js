@@ -1088,6 +1088,26 @@ UserQuestionsPaginator.prototype.getPageDataUrl = function(pageNo) {
     return askbot['urls']['questions'] + url;
 };
 
+var UserAnswersPaginator = function() {
+    Paginator.call(this);
+};
+inherits(UserAnswersPaginator, Paginator);
+
+UserAnswersPaginator.prototype.renderPage = function(data) {
+    $('.users-answers').html(data['html']);
+};
+
+UserAnswersPaginator.prototype.getPageDataUrl = function() {
+    return askbot['urls']['getTopAnswers'];
+};
+
+UserAnswersPaginator.prototype.getPageDataUrlParams = function(pageNo) {
+    return {
+        user_id: askbot['data']['viewUserId'],
+        page_number: pageNo
+    }
+};
+
 (function(){
     var fbtn = $('.follow-user-toggle');
     if (fbtn.length === 1){
@@ -1116,6 +1136,12 @@ UserQuestionsPaginator.prototype.getPageDataUrl = function(pageNo) {
     if (qPager.length) {
         var qPaginator = new UserQuestionsPaginator();
         qPaginator.decorate(qPager);
+    }
+
+    var aPager = $('.user-answers-pager');
+    if (aPager.length) {
+        var aPaginator = new UserAnswersPaginator();
+        aPaginator.decorate(aPager);
     }
 
 })();
