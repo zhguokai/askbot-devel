@@ -2986,12 +2986,13 @@ ul#related-tags li {
 #email-input-fs,#local_login_buttons,#password-fs,#openid-fs{
     margin-top:10px;
     #id_email,#id_username,#id_password{
+        color: #525252;
         font-size: 12px;
-        line-height: 20px;
-        height: 20px;
+        line-height: 25px;
+        height: 25px;
         margin: 0px;
-        padding: 0px 0 0 5px;
-        width:200px;
+        padding: 0 5px;
+        width: 200px;
     }
 }
 
@@ -3133,6 +3134,23 @@ a:hover.medal {
     select {
         margin-bottom: 12px;
     }
+    .up-votes,
+    .down-votes {
+        display: inline-block;
+        font-size: 18px;
+        font-weight: bold;
+        height: 30px;
+        padding-left: 27px;
+        line-height: 22px;
+        margin: 0 15px 0 2px;
+    }
+    .up-votes {
+        background: url(../images/vote-arrow-up-on.png) no-repeat;
+    }
+    .down-votes {
+        background: url(../images/vote-arrow-down-on.png) no-repeat;
+    }
+
     .inputs {
         margin-top: 10px; 
         margin-bottom: 10px; 
@@ -3596,8 +3614,30 @@ label.retag-error {
 }
 
 .user-info-table {
-    margin-bottom: 10px;
+    margin: 10px 0;
     border-spacing: 0;
+    display: table;
+
+    .col1,
+    .col2,
+    .col3 {
+        display: table-cell;
+        vertical-align: top;
+    }
+    .col1 {
+        width: 140px;
+        text-align: center;
+    }
+    .col2 {
+        padding: 0 0 0 10px;
+        width: 400px;
+    }
+    .col3 {
+        width: 460px;
+    }
+    .gravatar {
+        margin:0;
+    }
 }
 
 /* todo: remove this hack? */
@@ -4056,10 +4096,6 @@ p.signup_p {
     padding-right:5px; 
 }
 
-
-.user-info-table .gravatar {
-    margin:0;
-}
 
 #responses {
     clear:both;

@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Improved Zendesk import feature
 * Added backend support for the tag synonyms
 * Added management command `apply_hinted_tags` to batch-apply tags from a list
 * Added hovercard on the user's karma display in the header
