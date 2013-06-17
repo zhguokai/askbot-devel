@@ -3,6 +3,11 @@ Changes in Askbot
 
 Development version
 -------------------
+* Improved Zendesk import feature
+* Added backend support for the tag synonyms
+* Added management command `apply_hinted_tags` to batch-apply tags from a list
+* Added hovercard on the user's karma display in the header
+* Added option to hide ad blocks from logged in users
 * Applied Askbot templates to the settings control panel
 * Added option to auto-follow questions by the question posters with default "on"
 * Support for Django 1.5

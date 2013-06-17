@@ -19,7 +19,7 @@ import askbot
 from askbot.conf import settings as askbot_settings
 from askbot import mail
 from askbot.mail import messages
-from askbot.models.tag import Tag
+from askbot.models.tag import Tag, TagSynonym
 from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import separate_unused_tags
@@ -601,6 +601,64 @@ class Thread(models.Model):
             return post
         self._question_cache = Post.objects.get(post_type='question', thread=self)
         return self._question_cache
+
+    def apply_hinted_tags(self, hints=None, user=None, timestamp=None, silent=False):
+        """match words in title and body with hints
+        and apply some of the hints as tags,
+        so that total number of tags in no more
+        than the maximum allowed number of tags"""
+
+        #1) see how many tags we're missing,
+        #if we don't need more we return
+        existing_tags = self.get_tag_names()
+        tags_count = len(existing_tags)
+        if tags_count >= askbot_settings.MAX_TAGS_PER_POST:
+            return
+
+        #2) get set of words from title and body
+        post_text = self.title + ' ' + self._question_post().text
+        post_text = post_text.lower()#normalize
+        post_words = set(post_text.split())
+
+        #3) get intersection set
+        #normalize hints and tags and remember the originals
+        orig_hints = dict()
+        for hint in hints:
+            orig_hints[hint.lower()] = hint
+
+        norm_hints = orig_hints.keys()
+        norm_tags = map(lambda v: v.lower(), existing_tags)
+
+        common_words = (set(norm_hints) & post_words) - set(norm_tags)
+
+        #4) for each common word count occurances in corpus
+        counts = dict()
+        for word in common_words:
+            counts[word] = sum(map(lambda w: w.lower() == word.lower(), post_words))
+
+        #5) sort words by count
+        sorted_words = sorted(
+                        common_words,
+                        lambda a, b: cmp(counts[b], counts[a])
+                    )
+
+        #6) extract correct number of most frequently used tags
+        need_tags = askbot_settings.MAX_TAGS_PER_POST - len(existing_tags)
+        add_tags = sorted_words[0:need_tags]
+        add_tags = map(lambda h: orig_hints[h], add_tags)
+
+        tagnames = ' '.join(existing_tags + add_tags)
+
+        if askbot_settings.FORCE_LOWERCASE_TAGS:
+            tagnames = tagnames.lower()
+
+        self.retag(
+            retagged_by=user,
+            retagged_at=timestamp or datetime.datetime.now(),
+            tagnames =' '.join(existing_tags + add_tags),
+            silent=silent
+        )
+
 
     def get_absolute_url(self):
         return self._question_post().get_absolute_url(thread = self)
@@ -1200,6 +1258,8 @@ class Thread(models.Model):
         Tag use counts are recalculated
         A signal tags updated is sent
 
+        TagSynonym is used to replace tag names
+
         *IMPORTANT*: self._question_post() has to
         exist when update_tags() is called!
         """
@@ -1209,9 +1269,20 @@ class Thread(models.Model):
         previous_tags = list(self.tags.filter(status = Tag.STATUS_ACCEPTED))
 
         ordered_updated_tagnames = [t for t in tagnames.strip().split(' ')]
+        updated_tagnames_tmp = set(ordered_updated_tagnames)
+
+        #apply TagSynonym
+        updated_tagnames = set()
+        for tag_name in updated_tagnames_tmp:
+            try:
+                tag_synonym = TagSynonym.objects.get(source_tag_name=tag_name)
+                updated_tagnames.add(tag_synonym.target_tag_name)
+                tag_synonym.auto_rename_count += 1
+                tag_synonym.save()
+            except TagSynonym.DoesNotExist:
+                updated_tagnames.add(tag_name)
 
         previous_tagnames = set([tag.name for tag in previous_tags])
-        updated_tagnames = set(ordered_updated_tagnames)
         removed_tagnames = previous_tagnames - updated_tagnames
 
         #remove tags from the question's tags many2many relation

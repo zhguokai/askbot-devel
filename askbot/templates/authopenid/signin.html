@@ -87,15 +87,12 @@
             {% if user.is_anonymous() %}
                 {% if have_buttons %}
                     <h2 id="password-heading">
-                        {% trans %}or enter your <span>user name and password</span>, then sign in{% endtrans %}
+                        {% trans %}or enter your <span>user name and password</span>{% endtrans %}
                     </h2>
                 {% else %}
                     <h1 class="section-title">
                         {% trans %}Please, sign in{% endtrans %}
                     </h1>
-                {% endif %}
-                {% if have_buttons %}
-                    <p class="hint">{% trans %}(or select another login method above){% endtrans %}</p>
                 {% endif %}
                 <table class="login">
                     {% if login_form.password_login_failed %}

@@ -232,6 +232,38 @@ body.user-messages {
     margin: 5px 0 8px;
 }
 
+.hovercard {
+    background: white;
+    border: 3px solid #ddd;
+    .box-shadow(0, 0, 3px);
+    font-size: 13px;
+    display: block;
+    max-width: 250px;
+    padding: 10px;
+    position: absolute;
+    .rounded-corners(5px);
+    z-index: 1001;
+    p:last-child {
+        margin-bottom: 0;
+    }
+    ul {
+        margin-bottom: 0;
+        li {
+            font-size: 13px;
+            line-height: 16px;
+            margin: 5px 0;
+        }
+    }
+    .triangle {
+        border-left: 5px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #ddd;
+        height: 0;
+        margin: -20px 0 10px 0;
+        width: 0;
+    }
+}
+
 #closeNotify {
     position: absolute;
     right: 5px;
@@ -381,25 +413,18 @@ body.user-messages {
 
     a.group-name {
         padding: 0px;
-        float:center;
-        margin:5px 0px 5px 10px;
+        float: none;
+        margin: 5px 10px;
     }
     
-    input.group-name{
-        border:none;
-        height: 25px;
-        font-size: 18px;
-        font-weight: 100;
-        text-decoration: none;
+    input.group-name {
+        border: 1px solid #c9c9b5;
+        color: #464646;
         display: block;
-        margin: 0px 10px 0px 10px;
-        width: 140px;
-        font-family: @main-font;
-        font-weight: 100;
-    }
-
-    input.group-name:focus{
-        border:none;
+        font-size: 14px;
+        height: 25px;
+        margin: 0px 10px 5px 10px;
+        padding: 0 5px;
     }
 
     a.group-name:hover{
@@ -418,11 +443,11 @@ body.user-messages {
         float:left;
     }
 
-    .dropdown-menu{
+    .dropdown-menu {
         border-top: none;
-        left: 7%;
+        left: 33px;
         z-index: 10100;
-        a{
+        a {
             color: #666;
             height: 25px;
         }
@@ -1838,17 +1863,17 @@ ul#related-tags li {
 
 .groups-input,
 .users-input {
-    width:152px;
-    padding-left:5px;
-    border:#c9c9b5 1px solid;
-    height:25px;
+    width: 150px;
+    padding-left: 5px;
+    border: #c9c9b5 1px solid;
+    height: 25px;
     font-size: 14px;
 }
 
 .add-groups,
 .add-users {
-    border:0;
-    margin-top:-2px;
+    border: 0;
+    margin: -2px 0 0 0 !important;
 }
 
 .share-input-col {
@@ -1862,36 +1887,6 @@ ul#related-tags li {
     display: block;
     padding: 0 10px;
     height: 25px;
-}
-
-#id_user,
-#id_user_author {
-    height:25px;
-    padding-left:5px;
-    width:395px;
-    font-size:14px;
-}
-
-.groups-input,
-.users-input {
-    width:152px;
-    padding-left:5px;
-    border:#c9c9b5 1px solid;
-    height:25px;
-    font-size: 14px;
-}
-
-.add-groups,
-.add-users {
-    border:0;
-    margin-top:-2px;
-}
-
-.add-everyone-group {
-    text-align: center;
-    margin: auto;
-    display: block;
-    padding: 0 10px;
 }
 
 #id_user,
@@ -1928,12 +1923,23 @@ ul#related-tags li {
 }
 
 .folded-editor {
+    box-shadow: inset 0 0 3px 1px #aaa;
+    -moz-box-shadow: inset 0 0 3px 1px #aaa;
+    -webkit-box-shadow: inset 0 0 3px 1px #aaa;
+    cursor: text;
     height: 100px;
     outline: none;
     width: 100%;
 
     .editor-proper {
         display: none;
+    }
+
+    &.unfolded {
+        cursor: default;
+        box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        -webkit-box-shadow: 0 0 0 0;
     }
     p.prompt {
         margin: 5px 8px;
@@ -2401,7 +2407,7 @@ ul#related-tags li {
             line-height:18px;
             margin-top:-2px;
             margin-left:4px;
-            box-shadow: none;
+            .box-shadow(0, 0, 0);
         }
         
         .answer-convert input:hover{
@@ -2976,12 +2982,13 @@ ul#related-tags li {
 #email-input-fs,#local_login_buttons,#password-fs,#openid-fs{
     margin-top:10px;
     #id_email,#id_username,#id_password{
+        color: #525252;
         font-size: 12px;
-        line-height: 20px;
-        height: 20px;
+        line-height: 25px;
+        height: 25px;
         margin: 0px;
-        padding: 0px 0 0 5px;
-        width:200px;
+        padding: 0 5px;
+        width: 200px;
     }
 }
 
@@ -3111,6 +3118,23 @@ a:hover.medal {
         font-family:@main-font;
     }
 
+    .up-votes,
+    .down-votes {
+        display: inline-block;
+        font-size: 18px;
+        font-weight: bold;
+        height: 30px;
+        padding-left: 27px;
+        line-height: 22px;
+        margin: 0 15px 0 2px;
+    }
+    .up-votes {
+        background: url(../images/vote-arrow-up-on.png) no-repeat;
+    }
+    .down-votes {
+        background: url(../images/vote-arrow-down-on.png) no-repeat;
+    }
+
     .inputs {
         margin-top: 10px; 
         margin-bottom: 10px; 
@@ -3127,6 +3151,7 @@ a:hover.medal {
     }
     td {
         padding-right: 10px;
+        vertical-align: top;
     }
 }
 
@@ -3566,8 +3591,30 @@ label.retag-error {
 }
 
 .user-info-table {
-    margin-bottom: 10px;
+    margin: 10px 0;
     border-spacing: 0;
+    display: table;
+
+    .col1,
+    .col2,
+    .col3 {
+        display: table-cell;
+        vertical-align: top;
+    }
+    .col1 {
+        width: 140px;
+        text-align: center;
+    }
+    .col2 {
+        padding: 0 0 0 10px;
+        width: 400px;
+    }
+    .col3 {
+        width: 460px;
+    }
+    .gravatar {
+        margin:0;
+    }
 }
 
 /* todo: remove this hack? */
@@ -4026,10 +4073,6 @@ p.signup_p {
 }
 
 
-.user-info-table .gravatar {
-    margin:0;
-}
-
 #responses {
     clear:both;
     line-height:18px;
@@ -4092,6 +4135,9 @@ p.signup_p {
     h3 {
         padding: 0;
         margin-top: -3px;
+    }
+    .vote-notification h3 {
+        padding: 10px;
     }
     ul.tags {
         margin-left: 5px;
@@ -4163,24 +4209,25 @@ body.anon.lang-es {
 }
 
 /* user groups */
-#user-groups ul {
-    margin-bottom: 0px;
-}
-#user-groups .delete-icon {
-    float: none;
-    display: inline;
-    color: #525252;
-    padding: 0 3px 0 3px;
-    background: #ccc;
-    border-radius: 4px;
-    line-height:inherit;
-    -moz-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    -webkit-border-radius: 4px;
-}
-#user-groups .delete-icon:hover {
-    color: white;
-    background: #b32f2f;
+#user-groups {
+    input[type="text"] {
+        height: 21px;
+        width: 100px;
+    }
+    ul {
+        margin-bottom: 0px;
+    }
+    .delete-icon {
+        background: url(../images/close-small.png) no-repeat;
+        border: none;
+        display: inline-block;
+        height: 14px;
+        margin-top: 4px;
+        width: 14px;
+    }
+    .delete-icon:hover {
+        background: url(../images/close-small-hover.png) no-repeat;
+    }
 }
 
 .question-page .post-update-info a.primary-group-name,
@@ -4222,9 +4269,6 @@ img.group-logo {
     margin-left: 0px;
     .group-name {
         padding-right: 20px;
-    }
-    td {
-        padding-bottom: 5px;
     }
 }
 
