@@ -1069,6 +1069,45 @@ Tweeting.prototype.decorate = function(element) {
     }
 };
 
+var UserQuestionsPaginator = function() {
+    Paginator.call(this);
+};
+inherits(UserQuestionsPaginator, Paginator);
+
+UserQuestionsPaginator.prototype.renderPage = function(data) {
+    $('.users-questions').html(data['questions']);
+};
+
+UserQuestionsPaginator.prototype.getPageDataUrl = function(pageNo) {
+    var userId = askbot['data']['viewUserId'];
+    var pageSize = askbot['data']['userPostsPageSize'];
+    var url = QSutils.patch_query_string('', 'author:' + userId);
+    url = QSutils.patch_query_string(url, 'sort:votes-desc');
+    url = QSutils.patch_query_string(url, 'page:' + pageNo);
+    url = QSutils.patch_query_string(url, 'page-size:'+ pageSize);
+    return askbot['urls']['questions'] + url;
+};
+
+var UserAnswersPaginator = function() {
+    Paginator.call(this);
+};
+inherits(UserAnswersPaginator, Paginator);
+
+UserAnswersPaginator.prototype.renderPage = function(data) {
+    $('.users-answers').html(data['html']);
+};
+
+UserAnswersPaginator.prototype.getPageDataUrl = function() {
+    return askbot['urls']['getTopAnswers'];
+};
+
+UserAnswersPaginator.prototype.getPageDataUrlParams = function(pageNo) {
+    return {
+        user_id: askbot['data']['viewUserId'],
+        page_number: pageNo
+    }
+};
+
 (function(){
     var fbtn = $('.follow-user-toggle');
     if (fbtn.length === 1){
@@ -1092,4 +1131,17 @@ Tweeting.prototype.decorate = function(element) {
         var tweetingControl = new Tweeting();
         tweetingControl.decorate(tweeting);
     }
+    
+    var qPager = $('.user-questions-pager');
+    if (qPager.length) {
+        var qPaginator = new UserQuestionsPaginator();
+        qPaginator.decorate(qPager);
+    }
+
+    var aPager = $('.user-answers-pager');
+    if (aPager.length) {
+        var aPaginator = new UserAnswersPaginator();
+        aPaginator.decorate(aPager);
+    }
+
 })();

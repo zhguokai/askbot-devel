@@ -12,7 +12,11 @@ import urllib
 import operator
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotAllowed
+from django.http import HttpResponseRedirect
+from django.http import HttpResponse
+from django.http import Http404
+from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template.loader import get_template
 from django.template import RequestContext
@@ -31,7 +35,9 @@ from django.conf import settings as django_settings
 import askbot
 from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.forms import AnswerForm, ShowQuestionForm
+from askbot.forms import AnswerForm
+from askbot.forms import ShowQuestionForm
+from askbot.forms import GetUserItemsForm
 from askbot import conf
 from askbot import models
 from askbot import schedules
@@ -81,7 +87,6 @@ def questions(request, **kwargs):
                     user_logged_in=request.user.is_authenticated(),
                     **kwargs
                 )
-    page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
 
     qs, meta_data = models.Thread.objects.run_advanced_search(
                         request_user=request.user, search_state=search_state
@@ -89,7 +94,7 @@ def questions(request, **kwargs):
     if meta_data['non_existing_tags']:
         search_state = search_state.remove_tags(meta_data['non_existing_tags'])
 
-    paginator = Paginator(qs, page_size)
+    paginator = Paginator(qs, search_state.page_size)
     if paginator.num_pages < search_state.page:
         search_state.page = 1
     page = paginator.page(search_state.page)
@@ -114,12 +119,12 @@ def questions(request, **kwargs):
                         )
 
     paginator_context = {
-        'is_paginated' : (paginator.count > page_size),
+        'is_paginated' : (paginator.count > search_state.page_size),
         'pages': paginator.num_pages,
         'current_page_number': search_state.page,
         'page_object': page,
         'base_url' : search_state.query_string(),
-        'page_size' : page_size,
+        'page_size' : search_state.page_size,
     }
 
     # We need to pass the rss feed url based
@@ -149,14 +154,14 @@ def questions(request, **kwargs):
         question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
         question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
 
-        if q_count > page_size:
+        if q_count > search_state.page_size:
             paginator_tpl = get_template('main_page/paginator.html')
             paginator_html = paginator_tpl.render(
                 RequestContext(
                     request, {
-                        'context': functions.setup_paginator(paginator_context),
+                        'context': paginator_context,
                         'questions_count': q_count,
-                        'page_size' : page_size,
+                        'page_size' : search_state.page_size,
                         'search_state': search_state,
                     }
                 )
@@ -187,7 +192,7 @@ def questions(request, **kwargs):
             'faces': [],#[extra_tags.gravatar(contributor, 48) for contributor in contributors],
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
-            'page_size' : page_size,
+            'page_size' : search_state.page_size,
             'questions': questions_html.replace('\n',''),
             'non_existing_tags': meta_data['non_existing_tags']
         }
@@ -212,7 +217,7 @@ def questions(request, **kwargs):
             'language_code': translation.get_language(),
             'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
             'page_class': 'main-page',
-            'page_size': page_size,
+            'page_size': search_state.page_size,
             'query': search_state.query,
             'threads' : page,
             'questions_count' : paginator.count,
@@ -242,6 +247,23 @@ def questions(request, **kwargs):
 
         return render(request, 'main_page.html', template_data)
 
+
+def get_top_answers(request):
+    """returns a snippet of html of users answers"""
+    form = GetUserItemsForm(request.GET)
+    if form.is_valid():
+        owner = models.User.objects.get(id=form.cleaned_data['user_id'])
+        paginator = owner.get_top_answers_paginator(visitor=request.user)
+        answers = paginator.page(form.cleaned_data['page_number']).object_list
+        template = get_template('user_profile/user_answers_list.html')
+        answers_html = template.render({'top_answers': answers})
+        json_string = simplejson.dumps({
+                            'html': answers_html,
+                            'num_answers': paginator.count}
+                        )
+        return HttpResponse(json_string, mimetype='application/json')
+    else:
+        raise HttpResponseBadRequest()
 
 def tags(request):#view showing a listing of available tags - plain list
 
@@ -278,7 +300,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'stag' : query,
         'tab_id' : sortby,
         'keywords' : query,
-        'search_state': SearchState(*[None for x in range(7)])
+        'search_state': SearchState(*[None for x in range(8)])
     }
 
     if tag_list_type == 'list':

@@ -384,10 +384,12 @@ def clean_tag(tag_name):
         return tag_name.lower()
     else:
         try:
+            #todo: move this into Thread.update_tags() to hopefully lower
+            #the database hits - here we do one per tag
             from askbot import models
-            stored_tag = models.Tag.objects.get(name__iexact=tag_name)
+            stored_tag = models.Tag.objects.filter(name__iexact=tag_name)[0]
             return stored_tag.name
-        except models.Tag.DoesNotExist:
+        except IndexError:
             return tag_name
 
 
@@ -1691,6 +1693,11 @@ class BulkTagSubscriptionForm(forms.Form):
 
 class GetCommentsForPostForm(forms.Form):
     post_id = forms.IntegerField()
+
+class GetUserItemsForm(forms.Form):
+    page_size = forms.IntegerField(required=False)
+    page_number = forms.IntegerField(min_value=1)
+    user_id = forms.IntegerField()
 
 class NewCommentForm(forms.Form):
     comment = forms.CharField()

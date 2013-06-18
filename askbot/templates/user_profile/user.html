@@ -22,9 +22,11 @@
     <script type="text/javascript">
         var viewUserID = {{view_user.id}};
         askbot['data']['viewUserName'] = '{{ view_user.username|escape }}';
-        askbot['data']['viewUserId'] = {{view_user.id}};
+        askbot['data']['viewUserId'] = {{ view_user.id }};
+        askbot['data']['userPostsPageSize'] = {{ page_size }};
         askbot['urls']['edit_group_membership'] = '{% url edit_group_membership %}';
         askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
+        askbot['urls']['getTopAnswers'] = '{% url get_top_answers %}';
     </script>
     {% if request.user|can_moderate_user(view_user) %}
         <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>

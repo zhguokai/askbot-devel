@@ -20,7 +20,6 @@ class Command(BaseCommand):
         #relax certain settings
         askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', False)
         askbot_settings.update('MAX_COMMENT_LENGTH', 1000000)
-        #askbot_settings.update('MIN_REP_TO_LEAVE_COMMENTS', 1)
         self.bad_email_count = 0
 
     def handle(self, *args, **kwargs):
@@ -59,6 +58,7 @@ class Command(BaseCommand):
         """import forums by associating each with a special tag,
         and then importing all threads for the tag"""
         admin = models.User.objects.get(id=1)
+        print 'Have %d forums' % len(forum_soup)
         for forum in forum_soup:
             threads_soup = forum.find_all('Thread')
             self.import_threads(threads_soup, forum.find('Name').text)
@@ -83,16 +83,16 @@ class Command(BaseCommand):
             language=django_settings.LANGUAGE_CODE
         )
         #post answers
-        if not question_soup.messagelist:
+        message_list = question_soup.find_all('MessageList', recursive=False)
+        if len(message_list) == 0:
             return
 
-        for answer_soup in question_soup.messagelist.find_all('Message', recursive=False):
+        for answer_soup in message_list[0].find_all('Message', recursive=False):
             title, body, timestamp, user = self.parse_post(answer_soup)
             answer = user.post_answer(
                 question=question,
                 body_text=body,
-                timestamp=timestamp,
-                language=django_settings.LANGUAGE_CODE
+                timestamp=timestamp
             )
             comments = answer_soup.find_all('Message')
             for comment in comments:
@@ -100,8 +100,7 @@ class Command(BaseCommand):
                 user.post_comment(
                     parent_post=answer,
                     body_text=body,
-                    timestamp=timestamp,
-                    language=django_settings.LANGUAGE_CODE
+                    timestamp=timestamp
                 )
 
     def parse_post(self, post):

@@ -744,34 +744,40 @@ for the purposes of the AJAX comment editor #}
 {%- macro paginator(p, position='left', anchor='') -%}{# p is paginator context dictionary #}
 {% spaceless %}
     {% if p.is_paginated %}
-        <div class="paginator" style="float:{{position}}">
+        <div 
+            class="paginator"
+            style="float:{{ position }}"
+            data-num-pages="{{ p.pages }}"
+        >
         {% if p.has_previous %}
             <span class="prev"><a href="{{p.base_url}}page={{ p.previous }}{{ anchor }}" title="{% trans %}previous{% endtrans %}">
         &laquo; {% trans %}previous{% endtrans %}</a></span>
         {% endif %}
         {% if not p.in_leading_range %}
             {% for num in p.pages_outside_trailing_range %}
-                <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" >{{ num }}</a></span>
+                <span class="page" data-page="{{ num }}">
+                    <a href="{{p.base_url}}page={{ num }}{{ anchor }}" >{{ num }}</a>
+                </span>
             {% endfor %}
         ...
         {% endif %}
          
         {% for num in p.page_numbers %}
           {% if num == p.page and p.pages != 1%}
-            <span class="curr" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
+            <span class="curr page" data-page="{{ num }}" title="{% trans %}current page{% endtrans %}"><a>{{ num }}</a></span>
           {% else %}
-            <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
+            <span class="page" data-page="{{ num }}"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
           {% endif %}
         {% endfor %}
          
         {% if not p.in_trailing_range %}
             ...
             {% for num in p.pages_outside_leading_range|reverse %}
-                <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page {{ num }}{% endtrans %}">{{ num }}</a></span>
+                <span class="page" data-page="{{ num }}"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page {{ num }}{% endtrans %}">{{ num }}</a></span>
             {% endfor %}
         {% endif %}
         {% if p.has_next %}
-            <span class="next"><a href="{{p.base_url}}page={{ p.next }}{{ anchor }}" title="{% trans %}next page{% endtrans %}">{% trans %}next page{% endtrans %} &raquo;</a></span>
+            <span class="next"><a href="{{p.base_url}}page={{ p.next }}{{ anchor }}" title="{% trans %}next page{% endtrans %}">{% trans %}next{% endtrans %} &raquo;</a></span>
         {% endif %}
         </div>
     {% endif %}

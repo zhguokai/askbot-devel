@@ -1,6 +1,7 @@
 <!-- users_questions.html -->
 {% import "macros.html" as macros %}
 <div class="user-stats-table">
+    <div class="users-questions">
     {% for question in questions %}
     {{
         macros.question_summary(
@@ -10,5 +11,13 @@
         )
     }}
     {% endfor %}
+    </div>
+    {% if question_count > page_size %}
+        <div class="clearfix"></div>
+        <div id="pager" class="pager user-questions-pager">
+            {{ macros.paginator(q_paginator_context) }}
+            <div class="clearfix"></div>
+        </div>
+    {% endif %}
 </div>
 <!-- end users_questions.html -->

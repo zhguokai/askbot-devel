@@ -367,6 +367,7 @@ QSutils.patch_query_string = function (query_string, patch, remove) {
     add_selector('tags');
     add_selector('author');
     add_selector('page');
+    add_selector('page-size');
     add_selector('query');
 
     return new_query_string;
@@ -605,6 +606,179 @@ WaitIcon.prototype.createDom = function() {
     img.attr('src', mediaUrl('media/images/ajax-loader.gif'));
     box.append(img);
     this.setVisible(this._isVisible); 
+};
+
+var Paginator = function() {
+    WrappedElement.call(this);
+};
+inherits(Paginator, WrappedElement);
+
+/** 
+ * A mandotory method.
+ * this method needs to be implemented by the subclass
+ * @interface
+ * @param data is json dict returted by the server
+ */
+Paginator.prototype.renderPage = function(data) {
+    throw 'implement me in the subclass';
+};
+
+/**
+ * A mandatory method.
+ * @interface - implement in subclass
+ * returns url that can be used to retrieve page data
+ */
+Paginator.prototype.getPageDataUrl = function(pageNo) {
+    throw 'implement me in the subclass';
+};
+
+/** 
+ * Optional method
+ * @interface - implement in subclass
+ * returns url parameters for the page request
+ */
+Paginator.prototype.getPageDataUrlParams = function(pageNo) {};
+
+Paginator.prototype.setIsLoading = function(isLoading) {
+    this._isLoading = isLoading;
+};
+
+Paginator.prototype.startLoadingPageData = function(pageNo) {
+    if (this._isLoading) {
+        return;
+    }
+    var me = this;
+    var requestParams = {
+        type: 'GET',
+        dataType: 'json',
+        url: this.getPageDataUrl(pageNo),
+        cache: false,
+        success: function(data) {
+            me.renderPage(data);
+            me.setCurrentPage(pageNo);
+            me.setIsLoading(false);
+        },
+        failure: function() {
+            me.setIsLoading(false);
+        }
+    };
+    var urlParams = this.getPageDataUrlParams(pageNo);
+    if (urlParams) {
+        requestParams['data'] = urlParams;
+    }
+    $.ajax(requestParams);
+    me.setIsLoading(true);
+    return false;
+};
+
+Paginator.prototype.getCurrentPageNo = function() {
+    var page = this._element.find('.curr');
+    return parseInt(page.data('page'));
+};
+
+Paginator.prototype.getIncrementalPageHandler = function(direction) {
+    var me = this;
+    return function() {
+        var pageNo = me.getCurrentPageNo();
+        if (direction === 'next') {
+            pageNo = pageNo + 1;
+        } else {
+            pageNo = pageNo - 1;
+        }
+        me.startLoadingPageData(pageNo);
+        return false;
+    };
+};
+
+Paginator.prototype.setCurrentPage = function(pageNo) {
+    //naive - assuming all pages are shown and not "dotted out"
+    var page = this._element.find('[data-page="' + pageNo + '"]');
+    if (page.length === 1) {
+        var curr = this._element.find('.curr');
+        curr.removeClass('curr');
+        page.addClass('curr');
+        if (pageNo === 1) {
+            this._prevPageButton.hide();
+        } else {
+            this._prevPageButton.show();
+        }
+        if (pageNo === this._numPages) {
+            this._nextPageButton.hide();
+        } else {
+            this._nextPageButton.show();
+        }
+    }
+};
+
+Paginator.prototype.createButton = function(cls, label) {
+    var btn = this.makeElement('span');
+    btn.addClass(cls);
+    var link = this.makeElement('a');
+    link.html(label);
+    btn.append(link);
+    return btn;
+};
+
+Paginator.prototype.getPageButtonHandler = function(pageNo) {
+    var me = this;
+    return function() { 
+        if (me.getCurrentPageNo() !== pageNo) {
+            me.startLoadingPageData(pageNo); 
+        }
+        return false;
+    };
+};
+
+Paginator.prototype.decorate = function(element) {
+    this._element = element;
+    var pages = element.find('.page');
+    var paginatorButtons = element.find('.paginator');
+    this._numPages = paginatorButtons.data('numPages');
+    for (var i = 0; i < pages.length; i++) {
+        var page = $(pages[i]);
+        var pageNo = page.data('page');
+        var link = page.find('a');
+        var me = this;
+        var pageHandler = this.getPageButtonHandler(pageNo);
+        setupButtonEventHandlers(link, pageHandler);
+    }
+
+    var currPageNo = element.find('.curr').data('page');
+    
+    //dom for the next page button
+    var nextPage = element.find('.next');
+    if (nextPage.length) {
+        this._nextPageButton = nextPage;
+    } else {
+        var btn = this.createButton('next', gettext('next') + ' &raquo;');
+        this._nextPageButton = btn;
+        paginatorButtons.append(btn);
+    }
+    if (currPageNo === this._numPages) {
+        this._nextPageButton.hide();
+    }
+
+    setupButtonEventHandlers(
+        this._nextPageButton,
+        this.getIncrementalPageHandler('next')
+    );
+
+    var prevPage = element.find('prev');
+    if (prevPage.length) {
+        this._prevPageButton = prevPage;
+    } else {
+        var btn = this.createButton('prev', '&laquo; ' + gettext('previous'));
+        this._prevPageButton = btn;
+        paginatorButtons.prepend(btn);
+    }
+    if (currPageNo === 1) {
+        this._prevPageButton.hide();
+    }
+
+    setupButtonEventHandlers(
+        this._prevPageButton,
+        this.getIncrementalPageHandler('prev')
+    );
 };
 
 /**

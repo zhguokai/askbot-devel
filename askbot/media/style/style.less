@@ -1485,38 +1485,42 @@ ul#searchTags {
 
     .prev a, .prev a:visited,
     .next a, .next a:visited {
-         background-color: #fff;
+        background-color: #fff;
         color: #777;
         padding: 2px 4px 3px 4px;
     }
-    a{
-        color:@section-title;
+    a {
+        color: @section-title;
     }
-    .prev {
-        margin-right: .5em;
-    }
-
+    .prev,
     .next {
-        margin-left: .5em;
+        margin-right: .5em;
     }
 
     .page a, .page a:visited, .curr {
         padding: .25em;
-        background-color: #fff;
         margin: 0em .25em;
-        color: #ff;
     }
 
     .curr {
         background-color: #8ebcc7;
         color: #fff;
         font-weight: bold;
+        a {
+            background: #8ebcc7;
+            color: white;
+            padding: 0;
+        }
     }
-    .next a, .prev a{
-        color:@section-title
+    .curr.page {
+        a:hover {
+            background: #8ebcc7;
+            color: white;
+            padding: 0;
+        }
     }
+
     .page a:hover,
-    .curr a:hover,
     .prev a:hover,
     .next a:hover {
         color: #8C8C8C;
@@ -3181,11 +3185,23 @@ a:hover.medal {
         border:#eee 1px solid;
        padding:5px;
     }
+
     h2 {
-        padding:10px 0px 10px 0px;
-        font-family:@main-font;
+        padding: 30px 0px 10px 0px;
+        font-family: @main-font;
     }
 
+    .user-stats-table h2 {
+        padding-top: 10px;
+    }
+
+    .user-stats-table.badges {
+        margin-bottom: 30px;
+    }
+
+    select {
+        margin-bottom: 12px;
+    }
     .up-votes,
     .down-votes {
         display: inline-block;
@@ -3207,8 +3223,15 @@ a:hover.medal {
         margin-top: 10px; 
         margin-bottom: 10px; 
     }
-    select {
-        margin-bottom: 12px;
+    .pager {
+        margin-bottom: 0;
+    }
+    .paginator {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .users-questions {
+        margin-top: -10px;
     }
 }
 
@@ -4061,12 +4084,13 @@ ul.post-tags {
 }
 
 ul.post-retag {
-    margin-bottom:0px;
-    margin-left:5px;
+    margin-bottom: 0px;
+    margin-left: 5px;
     input {
         width: 400px;
-        height: 1.5em;
-        margin: 3px 0 0 -3px;
+        height: 22px;
+        margin: 3px 0 0 -5px;
+        padding: 0 5px;
     }
 }
 

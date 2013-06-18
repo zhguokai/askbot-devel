@@ -19,6 +19,7 @@ import uuid
 from celery import states
 from celery.task import task
 from django.core.urlresolvers import reverse, NoReverseMatch
+from django.core.paginator import Paginator
 from django.db.models import signals as django_signals
 from django.template import Context
 from django.template.loader import get_template
@@ -307,6 +308,21 @@ def user_get_avatar_url(self, size):
             return self.get_gravatar_url(size)
         else:
             return self.get_default_avatar_url(size)
+
+def user_get_top_answers_paginator(self, visitor=None):
+    """get paginator for top answers by the user for a
+    specific visitor"""
+    answers = self.posts.get_answers(
+                                visitor
+                            ).filter(
+                                deleted=False,
+                                thread__deleted=False
+                            ).select_related(
+                                'thread'
+                            ).order_by(
+                                '-points', '-added_at'
+                            )
+    return Paginator(answers, const.USER_POSTS_PAGE_SIZE)
 
 def user_update_avatar_type(self):
     """counts number of custom avatars
@@ -2937,6 +2953,10 @@ User.add_to_class(
 User.add_to_class(
     'get_followed_question_alert_frequency',
     user_get_followed_question_alert_frequency
+)
+User.add_to_class(
+    'get_top_answers_paginator',
+    user_get_top_answers_paginator
 )
 User.add_to_class(
     'subscribe_for_followed_question_alerts',
