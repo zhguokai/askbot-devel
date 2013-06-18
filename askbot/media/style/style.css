@@ -488,7 +488,7 @@ body.user-messages {
 }
 .labeled-input label.active,
 .labeled-input label.active.error {
-  padding-left: 0;
+  padding-left: 3px;
   font-size: 12px;
 }
 .box .labeled-input {
@@ -4643,6 +4643,9 @@ td.setting-input textarea {
 .federated-login-methods button {
   background: 0 0 url(../jquery-openid/images/login-provider-logos-small.png) no-repeat;
   border: none;
+  -webkit-box-shadow: 0 0 0 #929292;
+  -moz-box-shadow: 0 0 0 #929292;
+  box-shadow: 0 0 0 #929292;
   height: 45px;
   text-indent: -10000px;
   width: 48px;

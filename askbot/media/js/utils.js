@@ -1835,6 +1835,8 @@ var PjaxDialog = function(opts) {
 };
 inherits(PjaxDialog, ModalDialog);
 
+PjaxDialog.prototype.beforeOpenHandler = function() {};
+
 PjaxDialog.prototype.startOpening = function() {
     var me = this;
     $.ajax({
@@ -1846,6 +1848,7 @@ PjaxDialog.prototype.startOpening = function() {
             me.setContent(data['html']);
             var element = me.getElement();
             $(document).append(element);
+            me.beforeOpenHandler();
             me.show();
             $.each(data['scripts'], function(idx, scriptData) {
                 var script = new ScriptElement(scriptData);
@@ -1874,6 +1877,12 @@ var LoginDialog = function(customOpts) {
     this._loadUrl = askbot['urls']['userSignin'];
 };
 inherits(LoginDialog, PjaxDialog);
+
+LoginDialog.prototype.beforeOpenHandler = function() {
+    this._element.addClass('login-modal-menu');
+    this._element.find('.modal-footer').remove();
+    this._element.find('h3').html(gettext('Login or register'));
+};
 
 /**
  * @constructor

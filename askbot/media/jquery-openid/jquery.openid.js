@@ -235,20 +235,39 @@ LoginOrRegisterForm.prototype.setParent = function(parentMenu) {
     this._parent = parentMenu;
 };
 
+/*
+ * @note: this function is a hack and has no access to the modal
+ * menu object itself.
+ */
+LoginOrRegisterForm.prototype.closeModalMenu = function() {
+    $('.modal').remove();
+    $('.modal-backdrop').remove();
+};
+
+
+LoginOrRegisterForm.prototype.isModal = function() {
+    return ($('.modal').length > 0);
+};
+
 LoginOrRegisterForm.prototype.handleSuccess = function(data) {
     if (data['redirectUrl']) {
         window.location.href = data['redirectUrl'];
     }
-    if (this._parent.isModal()) {
-        //stay on the page
-        this._parent.reset();
-    } else {
+    if (this._parent) {
+        if (this._parent.isModal()) {
+            //stay on the page
+            this._parent.reset();
+        } else {
+            //go to the next page
+            window.location.href = getNextUrl();
+            return;
+        }
+    } else if (this.isModal() === false) {
         //go to the next page
         window.location.href = getNextUrl();
         return;
     }
     this._userToolsNav.html(data['userToolsNavHTML']);
-    //askbot['vars']['modalDialog'].hide();//@note: using global variable
     /* if login form is not part of the modal menu, then
      * redirect either based on the query part of the url
      * or to the default post-login redirect page */
@@ -257,6 +276,10 @@ LoginOrRegisterForm.prototype.handleSuccess = function(data) {
         var logoutLink = new LogoutLink();
         logoutLink.decorate(logoutBtn);
     }
+
+    if (this.isModal()) {
+        this.closeModalMenu();
+    };
 };
 
 LoginOrRegisterForm.prototype.decorate = function(element) {
@@ -293,15 +316,6 @@ var CompleteRegistrationForm = function() {
 };
 inherits(CompleteRegistrationForm, LoginOrRegisterForm);
 
-/*
- * @note: this function is a hack and has no access to the modal
- * menu object itself.
- */
-CompleteRegistrationForm.prototype.closeModalMenu = function() {
-    $('.modal').remove();
-    $('.modal-backdrop').remove();
-};
-
 CompleteRegistrationForm.prototype.decorate = function(element) {
     CompleteRegistrationForm.superClass_.decorate.call(this, element);
     //a hack that makes registration menu closable
@@ -311,6 +325,10 @@ CompleteRegistrationForm.prototype.decorate = function(element) {
         me.closeModalMenu();
         me.dispose();
     });
+    //todo: move this to the html template
+    var modal = $('.modal');
+    modal.find('h3').html(gettext('Finish registration'));
+    modal.find('.modal-footer').remove();
 };
 
 /**
