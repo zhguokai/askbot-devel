@@ -100,6 +100,7 @@ MIDDLEWARE_CLASSES = (
     #'django.middleware.gzip.GZipMiddleware',
     #'askbot.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.cache.FetchFromCacheMiddleware',
@@ -114,6 +115,14 @@ MIDDLEWARE_CLASSES = (
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'askbot.middleware.view_log.ViewLogMiddleware',
     'askbot.middleware.spaceless.SpacelessMiddleware',
+)
+
+JINJA2_EXTENSIONS = (
+    'compressor.contrib.jinja2ext.CompressorExtension',
+)
+
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
 )
 
 
@@ -161,6 +170,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.sitemaps',
+    'django.contrib.messages',
+    'compressor',
     #'debug_toolbar',
     #'haystack',
     'askbot',
@@ -176,6 +187,8 @@ INSTALLED_APPS = (
     'followit',
     'tinymce',
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
+
+    'compressor',
 )
 
 
@@ -234,6 +247,11 @@ CSRF_COOKIE_NAME = 'askbot_csrf'
 STATICFILES_DIRS = (
     ('default/media', os.path.join(ASKBOT_ROOT, 'media')),
 )
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 RECAPTCHA_USE_SSL = True
 
@@ -248,7 +266,7 @@ TINYMCE_COMPRESSOR = True
 TINYMCE_SPELLCHECKER = False
 TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'default/media/js/tinymce/')
 
-TINYMCE_URL = STATIC_URL + 'default/media/js/tinymce/'
+#TINYMCE_JS_URL = STATIC_URL + 'default/media/js/tinymce/tiny_mce.js'
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': 'askbot_imageuploader,askbot_attachment',
     'convert_urls': False,
@@ -257,7 +275,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'force_p_newlines': False,
     'forced_root_block': '',
     'mode' : 'textareas',
-    'oninit': "function(){ tinyMCE.activeEditor.setContent(askbot['data']['editorContent'] || ''); }",
+    'oninit': "TinyMCE.onInitHook",
     'plugins': 'askbot_imageuploader,askbot_attachment',
     'theme_advanced_toolbar_location' : 'top',
     'theme_advanced_toolbar_align': 'left',
@@ -274,3 +292,24 @@ TINYMCE_DEFAULT_CONFIG = {
 
 #delayed notifications, time in seconds, 15 mins by default
 NOTIFICATION_DELAY_TIME = 60 * 15
+
+GROUP_MESSAGING = {
+    'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',
+    'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'}
+}
+
+ASKBOT_MULTILINGUAL = False
+
+ASKBOT_CSS_DEVEL = False
+if 'ASKBOT_CSS_DEVEL' in locals() and ASKBOT_CSS_DEVEL == True:
+    COMPRESS_PRECOMPILERS = (
+        ('text/less', 'lessc {infile} {outfile}'),
+    )
+
+COMPRESS_JS_FILTERS = []
+COMPRESS_PARSER = 'compressor.parser.HtmlParser'
+JINJA2_EXTENSIONS = ('compressor.contrib.jinja2ext.CompressorExtension',)
+
+# Use syncdb for tests instead of South migrations. Without this, some tests
+# fail spuriously in MySQL.
+SOUTH_TESTS_MIGRATE = False

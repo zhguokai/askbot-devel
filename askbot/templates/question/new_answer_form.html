@@ -7,7 +7,7 @@
     {% if request.user.is_anonymous() and settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False %}
         {% if not thread.closed %}
             <a
-                    class="submit"
+                    class="button submit"
                     href="{{settings.LOGIN_URL}}?next={% url question question.id %}"
                     >{% trans %}Login/Signup to Answer{% endtrans %}</a>
         {% endif %}
@@ -35,19 +35,27 @@
                     {% endif %}
                 </p>
             {% endif %}
-            {{ macros.edit_post(
-                    answer,
-                    user = request.user,
-                    editor_type = settings.EDITOR_TYPE
-                )
-            }}
-            <input id="add-answer-btn" type="submit" class="submit" style="float:left"/>
-            <script type="text/javascript">
-                askbot['functions']['renderAddAnswerButton']();
-            </script>
-            <div class="clearfix"></div>
-            <div class="post-opts">
-                {{ macros.post_options(answer, request.user, settings) }}
+            <div class="folded-editor" tabindex="6">
+                <p class="prompt"><a>{% trans %}Add answer{% endtrans %}</a></p>
+                <div class="editor-proper">
+                    {{ macros.edit_post(
+                            answer,
+                            user = request.user,
+                            editor_type = settings.EDITOR_TYPE
+                        )
+                    }}
+                    <input id="add-answer-btn" type="submit" class="submit after-editor" style="float:left"/>
+                    <script type="text/javascript">
+                        askbot['functions']['renderAddAnswerButton']();
+                    </script>
+                    {{ macros.post_options(answer, request.user, settings) }}
+                    {% if settings.GROUPS_ENABLED and 
+                        request.user.is_authenticated() and 
+                        request.user.can_make_group_private_posts()
+                    %}
+                        {{ macros.checkbox_in_div(answer.post_privately) }}
+                    {% endif %}
+                </div>
             </div>
         {% endif %}
     {% endif %}

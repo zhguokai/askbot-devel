@@ -204,7 +204,7 @@ def process_vote(user = None, vote_direction = None, post = None):
 
 
 @csrf.csrf_protect
-def vote(request, id):
+def vote(request):
     """
     todo: this subroutine needs serious refactoring it's too long and is hard to understand
 
@@ -263,7 +263,11 @@ def vote(request, id):
         else:
             raise Exception(_('Sorry, something is not right here...'))
 
+        id = request.POST.get('postId')
+
         if vote_type == '0':
+            if askbot_settings.ACCEPTING_ANSWERS_ENABLED is False:
+                return
             if request.user.is_authenticated():
                 answer_id = request.POST.get('postId')
                 answer = get_object_or_404(models.Post, post_type='answer', id = answer_id)
@@ -295,8 +299,8 @@ def vote(request, id):
             if vote_type in ('5', '6'):
                 #todo: fix this weirdness - why postId here
                 #and not with question?
-                id = request.POST.get('postId')
-                post = get_object_or_404(models.Post, post_type='answer', id=id)
+                post_id = request.POST.get('postId')
+                post = get_object_or_404(models.Post, post_type='answer', id=post_id)
             else:
                 post = get_object_or_404(models.Post, post_type='question', id=id)
             #
@@ -609,12 +613,20 @@ def delete_tag(request):
     if request.user.is_anonymous() \
         or not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied()
-    post_data = simplejson.loads(request.raw_post_data)
-    tag_name = forms.clean_tag(post_data['tag_name'])
-    path = post_data['path']
-    tree = category_tree.get_data()
-    category_tree.delete_category(tree, tag_name, path)
-    category_tree.save_data(tree)
+
+    try:
+        post_data = simplejson.loads(request.raw_post_data)
+        tag_name = post_data['tag_name']
+        path = post_data['path']
+        tree = category_tree.get_data()
+        category_tree.delete_category(tree, tag_name, path)
+        category_tree.save_data(tree)
+    except Exception:
+        if 'tag_name' in locals():
+            logging.critical('could not delete tag %s' % tag_name)
+        else:
+            logging.critical('failed to parse post data %s' % request.raw_post_data)
+        raise exceptions.PermissionDenied(_('Sorry, could not delete tag'))
     return {'tree_data': tree}
 
 @csrf.csrf_protect
@@ -688,7 +700,7 @@ def subscribe_for_tags(request):
             else:
                 message = _(
                     'Tag subscription was canceled (<a href="%(url)s">undo</a>).'
-                ) % {'url': request.path + '?tags=' + request.REQUEST['tags']}
+                ) % {'url': escape(request.path) + '?tags=' + request.REQUEST['tags']}
                 request.user.message_set.create(message = message)
             return HttpResponseRedirect(reverse('index'))
         else:
@@ -807,21 +819,22 @@ def delete_bulk_tag_subscription(request):
         return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
 
 @decorators.get_only
-def title_search(request):
+def api_get_questions(request):
     """json api for retrieving questions by title match"""
-    query = request.GET.get('query_text')
-
-    if query is None:
-        return HttpResponseBadRequest('Invalid query')
-
-    query = query.strip()
+    query = request.GET.get('query_text', '').strip()
+    tag_name = request.GET.get('tag_name', None)
 
     if askbot_settings.GROUPS_ENABLED:
         threads = models.Thread.objects.get_visible(user=request.user)
     else:
         threads = models.Thread.objects.all()
 
-    threads = threads.get_for_title_query(query)
+    if tag_name:
+        threads = threads.filter(tags__name=tag_name)
+
+    if query:
+        threads = threads.get_for_title_query(query)
+
     #todo: filter out deleted threads, for now there is no way
     threads = threads.distinct()[:30]
 
@@ -1019,18 +1032,23 @@ def edit_group_membership(request):
         action = form.cleaned_data['action']
         #warning: possible race condition
         if action == 'add':
-            group_params = {'name': group_name, 'user': user}
-            group = models.Group.objects.get_or_create(**group_params)
-            request.user.edit_group_membership(user, group, 'add')
-            template = get_template('widgets/group_snippet.html')
-            return {
-                'name': group.name,
-                'description': getattr(group.tag_wiki, 'text', ''),
-                'html': template.render({'group': group})
-            }
+            try:
+                group = models.Group.objects.get(name=group_name)
+                request.user.edit_group_membership(user, group, 'add')
+                template = get_template('widgets/group_snippet.html')
+                return {
+                    'name': group.name,
+                    'description': getattr(group.description, 'text', ''),
+                    'html': template.render({'group': group})
+                }
+            except models.Group.DoesNotExist:
+                raise exceptions.PermissionDenied(
+                    _('Group %(name)s does not exist') % {'name': group_name}
+                )
+                
         elif action == 'remove':
             try:
-                group = models.Group.objects.get(group_name = group_name)
+                group = models.Group.objects.get(name = group_name)
                 request.user.edit_group_membership(user, group, 'remove')
             except models.Group.DoesNotExist:
                 raise exceptions.PermissionDenied()
@@ -1237,9 +1255,9 @@ def moderate_suggested_tag(request):
             return
 
         if thread_id:
-            threads = models.Thread.objects.filter(id = thread_id)
+            threads = models.Thread.objects.filter(id=thread_id)
         else:
-            threads = tag.threads.all()
+            threads = tag.threads.none()
 
         if form.cleaned_data['action'] == 'accept':
             #todo: here we lose ability to come back
@@ -1467,7 +1485,12 @@ def get_editor(request):
     if 'config' not in request.GET:
         return HttpResponseForbidden()
     config = simplejson.loads(request.GET['config'])
-    form = forms.EditorForm(editor_attrs=config, user=request.user)
+    element_id = request.GET.get('id', 'editor')
+    form = forms.EditorForm(
+                attrs={'id': element_id},
+                editor_attrs=config,
+                user=request.user
+            )
     editor_html = render_text_into_skin(
         '{{ form.media }} {{ form.editor }}',
         {'form': form},

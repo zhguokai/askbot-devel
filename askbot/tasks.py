@@ -26,6 +26,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
+from django.utils import simplejson
 from celery.decorators import task
 from askbot.conf import settings as askbot_settings
 from askbot import const
@@ -34,10 +35,35 @@ from askbot.models import Post, Thread, User, ReplyAddress
 from askbot.models.badges import award_badges_signal
 from askbot.models import get_reply_to_addresses, format_instant_notification_email
 from askbot import exceptions as askbot_exceptions
+from askbot.utils.twitter import Twitter
 
 # TODO: Make exceptions raised inside record_post_update_celery_task() ...
 #       ... propagate upwards to test runner, if only CELERY_ALWAYS_EAGER = True
 #       (i.e. if Celery tasks are not deferred but executed straight away)
+@task(ignore_result=True)
+def tweet_new_post_task(post_id):
+    post = Post.objects.get(id=post_id)
+
+    is_mod = post.author.is_administrator_or_moderator()
+    if is_mod or post.author.reputation > askbot_settings.MIN_REP_TO_TWEET_ON_OTHERS_ACCOUNTS:
+        tweeters = User.objects.filter(social_sharing_mode=const.SHARE_EVERYTHING)
+        tweeters = tweeters.exclude(id=post.author.id)
+        access_tokens = tweeters.values_list('twitter_access_token', flat=True)
+    else:
+        access_tokens = list()
+
+    tweet_text = post.as_tweet()
+
+    twitter = Twitter()
+
+    for raw_token in access_tokens:
+        token = simplejson.loads(raw_token)
+        twitter.tweet(tweet_text, access_token=token)
+
+    if post.author.social_sharing_mode != const.SHARE_NOTHING:
+        token = simplejson.loads(post.author.twitter_access_token)
+        twitter.tweet(tweet_text, access_token=token)
+        
 
 @task(ignore_result = True)
 def notify_author_of_published_revision_celery_task(revision):
@@ -98,11 +124,12 @@ def notify_author_of_published_revision_celery_task(revision):
 def record_post_update_celery_task(
         post_id,
         post_content_type_id,
-        newly_mentioned_user_id_list = None,
-        updated_by_id = None,
-        timestamp = None,
-        created = False,
-        diff = None,
+        newly_mentioned_user_id_list=None,
+        updated_by_id=None,
+        suppress_email=False,
+        timestamp=None,
+        created=False,
+        diff=None,
     ):
     #reconstitute objects from the database
     updated_by = User.objects.get(id=updated_by_id)
@@ -124,6 +151,7 @@ def record_post_update_celery_task(
             updated_by=updated_by,
             notify_sets=notify_sets,
             activity_type=activity_type,
+            suppress_email=suppress_email,
             timestamp=timestamp,
             diff=diff
         )
@@ -132,7 +160,7 @@ def record_post_update_celery_task(
         # HACK: exceptions from Celery job don't propagate upwards
         # to the Django test runner
         # so at least let's print tracebacks
-        print >>sys.stderr, traceback.format_exc()
+        print >>sys.stderr, unicode(traceback.format_exc()).encode('utf-8')
         raise
 
 @task(ignore_result = True)
@@ -152,10 +180,11 @@ def record_question_visit(
     if update_view_count:
         question_post.thread.increase_view_count()
 
-    user = User.objects.get(id=user_id)
-
-    if user.is_anonymous():
+    #we do not track visits per anon user
+    if user_id is None:
         return
+
+    user = User.objects.get(id=user_id)
 
     #2) question view count per user and clear response displays
     #user = User.objects.get(id = user_id)

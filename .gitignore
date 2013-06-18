@@ -17,6 +17,7 @@ settings.py
 *.iml
 lint
 env
+/custom_settings
 /static
 django
 lamson

@@ -3,11 +3,34 @@ Changes in Askbot
 
 Development version
 -------------------
+* Improved Zendesk import feature
+* Added backend support for the tag synonyms
+* Added management command `apply_hinted_tags` to batch-apply tags from a list
+* Added hovercard on the user's karma display in the header
+* Added option to hide ad blocks from logged in users
+* Applied Askbot templates to the settings control panel
+* Added option to auto-follow questions by the question posters with default "on"
+* Support for Django 1.5
+* Auto-tweet option for questions and answers
+* Added Chech and Croatian translations
+* Disable/enable best answer feature
+* Allowed post owners repost answers and comments (this used to be mod-only function).
+* Answer editor is "folded" by default. Editor buttons and options show on click.
+* Management command `askbot_import_jive` to import data from Jive forums.
+* Added possibility to choose editor for comments: plain text, or same as
+  editor used for the questions or answers: WMD or TinyMCE.
+* Added ajax search to the tags page
+* Added a placeholder template for the custom javascript on the question page
+* Allowed to disable the big "ask" button.
+* Some support for the media compression (Tyler Mandry)
+* Allowed to enable and disable question scopes on the main page
 * Added full text support for some languages with Postgresql:
   Danish, Dutch, English, Finnish, French, German, Hungarian,
   Italian, Japanese (requires package textsearch_ja), Norwegian,
   Portugese, Romanian, Russian, Spanish, Swedish, Turkish.
-  
+* repost answer as a comment under the previous (older) answer
+* minor edit option for question and answer, to suppress email alerts
+* allowed tags to be created upon marking them as interesting/ignored/subscribed
 
 0.7.48 (Jan 28, 2013)
 ---------------------

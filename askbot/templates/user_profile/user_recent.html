@@ -15,9 +15,9 @@
                 <div style="float:left;overflow:hidden;">
                     {% if act.is_badge %}
                         <a href="{{act.badge.get_absolute_url()}}"
-                           title="{{ act.badge.get_type_display() }} : {% trans description=act.badge.description %}{{description}}{% endtrans %}"
+                           title="{{ act.badge.get_type_display() }} : {% trans description=act.badge.get_description() %}{{description}}{% endtrans %}"
                            class="medal">
-                            <span class="{{ act.badge.css_class }}">&#9679;</span>&nbsp;{% trans name=act.badge.name %}{{name}}{% endtrans %}
+                            <span class="{{ act.badge.get_css_class() }}">&#9679;</span>&nbsp;{% trans name=act.badge.get_name() %}{{name}}{% endtrans %}
                         </a>
                         {% if act.content_object.post_type == 'question' %}
                             {% set question=act.content_object %}

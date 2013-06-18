@@ -230,15 +230,6 @@ settings.register(
 )
 
 settings.register(
-    livesettings.BooleanValue(
-        EMAIL,
-        'EMAIL_UNIQUE',
-        default=True,
-        description=_('Allow only one account per email address')
-    )
-)
-
-settings.register(
     livesettings.StringValue(
         EMAIL,
         'ANONYMOUS_USER_EMAIL',

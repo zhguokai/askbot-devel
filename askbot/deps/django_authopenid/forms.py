@@ -326,21 +326,18 @@ class ChangeEmailForm(forms.Form):
     def clean_email(self):
         """ check if email don't exist """
         if 'email' in self.cleaned_data:
-            if askbot_settings.EMAIL_UNIQUE == True:
-                try:
-                    user = User.objects.get(email = self.cleaned_data['email'])
-                    if self.user and self.user == user:   
-                        return self.cleaned_data['email']
-                except User.DoesNotExist:
+            try:
+                user = User.objects.get(email = self.cleaned_data['email'])
+                if self.user and self.user == user:   
                     return self.cleaned_data['email']
-                except User.MultipleObjectsReturned:
-                    raise forms.ValidationError(u'There is already more than one \
-                        account registered with that e-mail address. Please try \
-                        another.')
-                raise forms.ValidationError(u'This email is already registered \
-                    in our database. Please choose another.')
-            else:
+            except User.DoesNotExist:
                 return self.cleaned_data['email']
+            except User.MultipleObjectsReturned:
+                raise forms.ValidationError(u'There is already more than one \
+                    account registered with that e-mail address. Please try \
+                    another.')
+            raise forms.ValidationError(u'This email is already registered \
+                in our database. Please choose another.')
 
 class AccountRecoveryForm(forms.Form):
     """with this form user enters email address and
@@ -370,7 +367,6 @@ class AccountRecoveryForm(forms.Form):
         self.cleaned_data['user'] = users[0]
 
                 
-        
 class ChangeopenidForm(forms.Form):
     """ change openid form """
     openid_url = forms.CharField(max_length=255,

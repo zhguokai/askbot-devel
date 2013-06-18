@@ -68,6 +68,8 @@ settings.register(
     )
 )
 
+"""
+#this is disabled to possibly be completely removed later
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
@@ -76,6 +78,7 @@ settings.register(
         description=_('Leave comments')
     )
 )
+"""
 
 settings.register(
     livesettings.IntegerValue(
@@ -192,15 +195,6 @@ settings.register(
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
-        'MIN_REP_TO_LOCK_POSTS',
-        default=400,
-        description=_('Lock posts')
-    )
-)
-
-settings.register(
-    livesettings.IntegerValue(
-        MIN_REP,
         'MIN_REP_TO_HAVE_STRONG_URL',
         default=25,
         description=_('Remove rel=nofollow from own homepage'),
@@ -217,7 +211,7 @@ settings.register(
         MIN_REP,
         'MIN_REP_TO_POST_BY_EMAIL',
         default=100,
-        description=_('Post answers and comments by email')
+        description=_('Make posts by email')
     )
 )
 
@@ -227,9 +221,16 @@ settings.register(
         'MIN_REP_TO_TRIGGER_EMAIL',
         default=15,
         description=_('Trigger email notifications'),
-        help_text=_(
-            'Reduces spam as notifications wont\'t be sent '
-            'to regular users for posts of low karma users'
-        )
+        help_text=_('Reduces spam')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
+        'MIN_REP_TO_TWEET_ON_OTHERS_ACCOUNTS',
+        default=15,
+        description=_('Trigger tweets on others accounts'),
+        help_text=_('Reduces spam')
     )
 )

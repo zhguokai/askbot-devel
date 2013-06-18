@@ -7,6 +7,8 @@ import re
 import logging
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot.utils.html import sanitize_html, strip_tags
+from django.utils.html import urlize
 from markdown2 import Markdown
 #url taken from http://regexlib.com/REDetails.aspx?regexp_id=501 by Brian Bothwell
 URL_RE = re.compile("((?<!(href|.src|data)=['\"])((http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*))")
@@ -189,3 +191,18 @@ def mentionize_text(text, anticipated_authors):
     #append the rest of text that did not have @ symbols
     output += text
     return mentioned_authors, output
+
+def plain_text_input_converter(text):
+    """plain text to html converter"""
+    return sanitize_html(urlize('<p>' + text + '</p>'))
+
+def markdown_input_converter(text):
+    """markdown to html converter"""
+    text = urlize(text)
+    text = get_parser().convert(text)
+    return sanitize_html(text)
+
+def tinymce_input_converter(text):
+    """tinymce input to production html converter"""
+    text = urlize(text)
+    return strip_tags(text, ['script', 'style', 'link'])

@@ -26,7 +26,7 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_KEYWORDS',
-        default=u'Askbot,CNPROG,forum,community',
+        default=u'Askbot,forum,community',
         description=_('Comma separated list of Q&A site keywords')
     )
 )

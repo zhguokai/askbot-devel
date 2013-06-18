@@ -1,4 +1,8 @@
-{% extends "two_column_body.html" %}
+{% if settings.GROUPS_ENABLED %}
+    {% extends "two_column_body.html" %}
+{% else %}
+    {% extends "one_column_body.html" %}
+{% endif %}
 {% import "macros.html" as macros %}
 <!-- users.html -->
 {% block title %}{% spaceless %}{% trans %}Users{% endtrans %}{% endspaceless %}{% endblock %}
@@ -59,7 +63,7 @@
     <div class="clearfix"></div>
 </div>
 {% if search_query %}
-    <p>{% trans %}users matching query {{search_query}}:{% endtrans %}</p>
+    <p>{% trans search_query=search_query|escape %}users matching query {{search_query}}:{% endtrans %}</p>
 {% endif %}
 {% if not users.object_list %}
     <p><span>{% trans %}Nothing found.{% endtrans %}</span></p>

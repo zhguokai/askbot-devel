@@ -60,6 +60,7 @@ def owner_or_moderator_required(f):
         return f(request, profile_owner, context)
     return wrapped_func
 
+
 def show_users(request, by_group=False, group_id=None, group_slug=None):
     """Users view, including listing of users by group"""
     if askbot_settings.GROUPS_ENABLED and not by_group:
@@ -163,11 +164,8 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     paginator_data = {
         'is_paginated' : is_paginated,
         'pages': objects_list.num_pages,
-        'page': page,
-        'has_previous': users_page.has_previous(),
-        'has_next': users_page.has_next(),
-        'previous': users_page.previous_page_number(),
-        'next': users_page.next_page_number(),
+        'current_page_number': page,
+        'page_object': users_page,
         'base_url' : base_url
     }
     paginator_context = functions.setup_paginator(paginator_data) #
@@ -528,6 +526,13 @@ def user_stats(request, user, context):
     }
     context.update(data)
 
+    extra_context = view_context.get_extra(
+                                'ASKBOT_USER_PROFILE_PAGE_EXTRA_CONTEXT',
+                                request,
+                                context
+                            )
+    context.update(extra_context)
+
     return render(request, 'user_profile/user_stats.html', context)
 
 def user_recent(request, user, context):
@@ -726,6 +731,7 @@ def show_group_join_requests(request, user, context):
                     ).order_by('-active_at')
     data = {
         'active_tab':'users',
+        'inbox_section': 'group-join-requests',
         'page_class': 'user-profile-page',
         'tab_name' : 'join_requests',
         'tab_description' : _('group joining requests'),
@@ -1106,7 +1112,7 @@ def user(request, id, slug=None, tab_name=None):
         sort=None,
         query=None,
         tags=None,
-        author=profile_owner.id,
+        author=None,
         page=None,
         user_logged_in=profile_owner.is_authenticated(),
     )

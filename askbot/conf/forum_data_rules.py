@@ -15,7 +15,7 @@ FORUM_DATA_RULES = livesettings.ConfigurationGroup(
 
 EDITOR_CHOICES = (
     ('markdown', 'markdown'),
-    ('tinymce', 'WISYWIG (tinymce)')
+    ('tinymce', 'WYSIWYG (tinymce)')
 )
 
 settings.register(
@@ -27,6 +27,36 @@ settings.register(
         description = _('Editor for the posts')
     )
 )
+
+COMMENTS_EDITOR_CHOICES = (
+    ('plain-text', 'Plain text editor'),
+    ('rich-text', 'Same editor as for questions and answers')
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'COMMENTS_EDITOR_TYPE',
+        default='plain-text',
+        choices=COMMENTS_EDITOR_CHOICES,
+        description=_('Editor for the comments')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ASK_BUTTON_ENABLED',
+        default=True,
+        description=_('Enable big Ask button'),
+        help_text=_(
+            'Disabling this button will reduce number of new questions. '
+            'If this button is disabled, the ask button in the search menu '
+            'will still be available.'
+        )
+    )
+)
+
 
 settings.register(
     livesettings.BooleanValue(
@@ -76,6 +106,35 @@ settings.register(
             'user login system to check for pending posts '
             'every time the user logs in. The builtin Askbot login system '
             'supports this feature.'
+        )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'AUTO_FOLLOW_QUESTION_BY_OP',
+        default=True,
+        description=_('Auto-follow questions by the Author')
+    )
+)
+
+QUESTION_BODY_EDITOR_MODE_CHOICES = (
+    ('open', _('Fully open by default')),
+    ('folded', _('Folded by default'))
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'QUESTION_BODY_EDITOR_MODE',
+        choices=QUESTION_BODY_EDITOR_MODE_CHOICES,
+        default='open',
+        description=_('Question details/body editor should be'),
+        help_text =_(
+            'To use folded mode, please first set minimum '
+            'question body length to 0. Also - please make tags '
+            'optional.'
         )
     )
 )
@@ -135,6 +194,17 @@ settings.register(
 )
 
 settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MIN_COMMENT_BODY_LENGTH',
+        default=10,
+        description=_(
+            'Minimum length of comment (number of characters)'
+        )
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'LIMIT_ONE_ANSWER_PER_USER',
@@ -142,6 +212,15 @@ settings.register(
         description = _(
             'Limit one answer per question per user'
         )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ACCEPTING_ANSWERS_ENABLED',
+        default=True,
+        description = _('Enable accepting best answer')
     )
 )
 
@@ -315,8 +394,12 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'SAVE_COMMENT_ON_ENTER',
-        default = True,
-        description = _('Save comment by pressing <Enter> key')
+        default=False,
+        description=_('Save comment by pressing <Enter> key'),
+        help_text=_(
+            'This may be useful when only one-line comments '
+            'are desired. Will not work with TinyMCE editor.'
+        )
     )
 )
 
@@ -354,7 +437,7 @@ settings.register(
     )
 )
 
-#todo: looks like there is a bug in askbot.deps.livesettings 
+#todo: looks like there is a bug in askbot.deps.livesettings
 #that does not allow Integer values with defaults and choices
 settings.register(
     livesettings.StringValue(

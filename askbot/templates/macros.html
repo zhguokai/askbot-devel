@@ -36,7 +36,7 @@
 
 {%- macro post_vote_buttons(post = None) -%}
 <div id="{{post.post_type}}-img-upvote-{{ post.id }}"
-    class="{{post.post_type}}-img-upvote post-vote">
+    class="{{post.post_type}}-img-upvote post-vote upvote">
 </div>
 <div 
     id="{{post.post_type}}-vote-number-{{ post.id }}"
@@ -45,7 +45,7 @@
 >{{ post.score }}</div>
 <div
     id="{{post.post_type}}-img-downvote-{{ post.id }}"
-    class="{{post.post_type}}-img-downvote post-vote">
+    class="{{post.post_type}}-img-downvote post-vote downvote">
 </div>
 <script type="text/javascript">
     askbot['functions']['renderPostVoteButtons']('{{post.post_type}}', '{{post.id}}');
@@ -56,10 +56,7 @@
     {% if post.is_anonymous %}
         {{ gravatar(user, 32, anonymous=True) }}
     {% else %}
-        {{ gravatar(user, 32) }}
-        {{ user.get_profile_link()}}{{ user_country_flag(user) }}<br/>
-        {{ user_score_and_badge_summary(user, karma_mode = karma_mode, badges_mode = badges_mode) }}<br/>
-        {{ user_website_link(user) }}
+        {{ user_card(user, karma_mode=karma_mode, badges_mode=badges_mode) }}
     {% endif %}
     {{ user_primary_group(user) }}
 {%- endmacro -%}
@@ -170,12 +167,12 @@ poor design of the data or methods on data objects #}
 
 {%- macro tag_cloud(tags = None, font_sizes = None, search_state = None) -%}
     {% for tag in tags %}
-    <span class="tag-size-{{ font_sizes[tag.name] }}">
+    <span class="tag-size-{{ font_sizes[tag.name]|escape }}">
         <a 
             class="link-typeA"
             title="Number of entries: {{ tag.used_count }}"
             href="{{ search_state.add_tag(tag.name).full_url() }}"
-        >{{ tag.name }}</a>
+        >{{ tag.name|escape }}</a>
     </span>
     {% endfor %}
 {%- endmacro -%}
@@ -257,7 +254,7 @@ poor design of the data or methods on data objects #}
 -%}
     {% if acceptance_level in ('open', 'moderated') %}
         <button 
-            class="group-join-btn follow-toggle {% if membership_level != 'none' %}on on-state{% endif %}"
+            class="group-join-btn button follow-toggle {% if membership_level != 'none' %}on on-state{% endif %}"
             data-group-id="{{group_id}}"
             {% if acceptance_level == 'open' %}
                 data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
@@ -377,6 +374,12 @@ for the purposes of the AJAX comment editor #}
     </script>
 {%- endmacro -%}
 
+{%- macro csrf_middleware_token(csrf_token) -%}
+    <div style="display: none;">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+    </div>
+{%- endmacro -%}
+
 {%- macro post_comments_widget(
         post=None,
         show_post = None,
@@ -388,11 +391,11 @@ for the purposes of the AJAX comment editor #}
 -%}
     {% spaceless %}
     {% if post.comment_count > 0 %}
-        <h2 id="comment-title">Comments</h2>
+        <h2 class="comment-title">{% trans %}Comments{% endtrans %}</h2>
         <div class="clean"></div> 
     {% endif %}
     {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
-    <div class="comments" id="{{widget_id}}">
+    <div class="comments{% if post.comment_count == 0 %} empty{% endif %}" id="{{ widget_id }}">
         <div class="content">
             {% if show_post == post and show_comment and show_comment_position > max_comments %}
                 {% set comments = post.get_cached_comments()[:show_comment_position] %}
@@ -416,23 +419,38 @@ for the purposes of the AJAX comment editor #}
                             <div class="upvote"></div>
                         {% endif %}
                     </div>
-                    <div 
-                        id="post-{{comment.id}}-delete"
-                        class="comment-delete"
-                    >
-                        <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
-                    </div>
-                    <div class="comment-body">
-                        {{comment.html}}
-                        <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username|escape}}</a>
-                        <span class="age">({{ timeago(comment.added_at) }})</span>
-                        <a id="post-{{comment.id}}-edit"
-                            class="edit">{% trans %}edit{% endtrans %}</a>
-                        <form action="{% url comment_to_answer %}" method="POST" accept-charset="utf-8" class='convert-comment'>
-                          {% csrf_token %}
-                          <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
-                          <input class="convert-comment" type="submit" value="{% trans %}convert to answer{% endtrans %}">
-                        </form>
+                    <div class="comment-content">
+                        <div 
+                            id="post-{{comment.id}}-delete"
+                            class="comment-delete"
+                        >
+                            <span 
+                                class="delete-icon"
+                                title="{% trans %}delete this comment{% endtrans %}"
+                            ></span>
+                        </div>
+                        <div class="comment-body">
+                            {{comment.html}}
+                            <a 
+                                class="author"
+                                href="{{comment.author.get_profile_url()}}"
+                            >{{comment.author.username|escape}}</a>
+                            <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
+                            <a 
+                                id="post-{{comment.id}}-edit"
+                                class="edit"
+                            >{% trans %}edit{% endtrans %}</a>
+                            <form 
+                                action="{% url comment_to_answer %}"
+                                method="POST"
+                                accept-charset="utf-8"
+                                class='convert-comment'
+                            >
+                                {% csrf_token %}
+                                <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
+                                <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <script type="text/javascript">
@@ -525,7 +543,6 @@ for the purposes of the AJAX comment editor #}
                 post_type = None,
                 post_html = None,
                 mandatory_tags = None,
-                edit_title = False,
                 use_category_selector = False,
                 tag_names = None,
                 editor_type = None,
@@ -581,24 +598,32 @@ for the purposes of the AJAX comment editor #}
     %}
         {{ checkbox_in_div(post_form.post_privately) }}
     {% endif %}
+    {% if settings.ENABLE_EMAIL_ALERTS and post_form.suppress_email %}
+        {{ checkbox_in_div(post_form.suppress_email) }}
+    {% endif %}
+{% endmacro %}
+
+
+{%- macro tag_autocomplete_js(id = '#id_tags') -%}
+    var tagAc = new AutoCompleter({
+            url: '{% url "get_tag_list" %}',
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10
+    });
+    tagAc.decorate($("{{ id }}"));
 {%- endmacro -%}
 
 {%- macro answer_classes(answer, question) -%}
-answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif -%}
-{%- endmacro -%}
-
-{%- macro user_score_and_badge_summary(
-                                    user,
-                                    karma_mode = None,
-                                    badges_mode = None
-) -%}
-  {%include "widgets/user_score_and_badge_summary.html"%}
+ {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif -%}
 {%- endmacro -%}
 
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
-        class="follow-toggle follow-user-toggle" 
+        class="button follow-toggle follow-user-toggle" 
         id="follow-{{ name|escape }}-{{ id }}"
     >
         {% if follow %}
@@ -668,11 +693,12 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
     {{ user_country_name_and_flag(user) }}
 {%- endmacro -%}
 
-{%- macro user_list(
-        users, profile_section = None, karma_mode = None, badges_mode = None
-    )
--%}
-{% include "widgets/user_list.html"%}
+{% macro user_card(user, karma_mode=None, badges_mode=None) %}
+    {% include "widgets/user_card.html" %}
+{% endmacro %}
+
+{%- macro user_list(users, karma_mode=None, badges_mode=None) -%}
+    {% include "widgets/user_list.html" %}
 {%- endmacro -%}
 
 {#todo: rename this to avatar #}
@@ -704,8 +730,8 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- macro user_website_link(user, max_display_length=25) -%}
     {% if user.website and (not user.is_blocked()) %}
         <a 
-            href="{{user.website}}"
-            title="{% trans username=user.username|escape, url=user.website %}{{username}}'s website is {{url}}{% endtrans %}"
+            href="{{user.website|escape}}"
+            title="{% trans username=user.username|escape, url=user.website|escape %}{{username}}'s website is {{url}}{% endtrans %}"
             {% if user.can_have_strong_url() == False %}
             rel="nofollow"
             {% endif %}

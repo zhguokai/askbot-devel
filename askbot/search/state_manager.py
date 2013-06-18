@@ -9,6 +9,7 @@ from django.utils.encoding import smart_str
 
 import askbot
 import askbot.conf
+from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.utils.functions import strip_plus
 
@@ -90,8 +91,11 @@ class SearchState(object):
     def __init__(self, scope, sort, query, tags, author, page, user_logged_in):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
 
-        if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'favorite' and not user_logged_in):
-            self.scope = const.DEFAULT_POST_SCOPE
+        if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
+            if user_logged_in:
+                self.scope = askbot_settings.DEFAULT_SCOPE_AUTHENTICATED
+            else:
+                self.scope = askbot_settings.DEFAULT_SCOPE_ANONYMOUS
         else:
             self.scope = scope
 
@@ -180,14 +184,25 @@ class SearchState(object):
             'sort:' + self.sort
         ]
 
-        if self.query:
-            lst.append('query:' + urllib.quote(smart_str(self.query), safe=self.SAFE_CHARS))
+        """
+            ATTN: a copy from urls.py
+            r'(%s)?' % r'/scope:(?P<scope>\w+)' +
+            r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
+            r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
+            r'(%s)?' % r'/author:(?P<author>\d+)' +
+            r'(%s)?' % r'/page:(?P<page>\d+)' +
+            r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
+        """
+
+        #order of items is important!!!
         if self.tags:
             lst.append('tags:' + urllib.quote(smart_str(const.TAG_SEP.join(self.tags)), safe=self.SAFE_CHARS))
         if self.author:
             lst.append('author:' + str(self.author))
         if self.page:
             lst.append('page:' + str(self.page))
+        if self.query:
+            lst.append('query:' + urllib.quote(smart_str(self.query), safe=self.SAFE_CHARS))
         return '/'.join(lst) + '/'
 
     def deepcopy(self): # TODO: test me

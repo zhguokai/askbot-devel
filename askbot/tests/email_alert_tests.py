@@ -595,6 +595,19 @@ class BlankWeeklySelectedQuestionsEmailAlertTests(EmailAlertTests):
     def setUp(self):
         self.notification_schedule['q_sel'] = 'w'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(14)
+        self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 0, }
+        self.expected_results['question_comment'] = {'message_count': 0, }
+        self.expected_results['question_comment_delete'] = {'message_count': 0, }
+        self.expected_results['answer_comment'] = {'message_count': 0, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 0, }
+        self.expected_results['mention_in_question'] = {'message_count': 0, }
+        self.expected_results['mention_in_answer'] = {'message_count': 0, }
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        self.expected_results['q_ans'] = {'message_count': 0, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 0, }
 
 class BlankInstantSelectedQuestionsEmailAlertTests(EmailAlertTests):
     """blank means that this is testing for the absence of email
@@ -605,6 +618,19 @@ class BlankInstantSelectedQuestionsEmailAlertTests(EmailAlertTests):
     def setUp(self):
         self.notification_schedule['q_sel'] = 'i'
         self.setup_timestamp = datetime.datetime.now() - datetime.timedelta(1)
+        self.expected_results['q_ask'] = {'message_count': 1, }
+        self.expected_results['q_ask_delete_answer'] = {'message_count': 1, }
+        self.expected_results['question_comment'] = {'message_count': 1, }
+        self.expected_results['question_comment_delete'] = {'message_count': 1, }
+        self.expected_results['answer_comment'] = {'message_count': 0, }
+        self.expected_results['answer_delete_comment'] = {'message_count': 0, }
+        self.expected_results['mention_in_question'] = {'message_count': 0, }
+        self.expected_results['mention_in_answer'] = {'message_count': 0, }
+        self.expected_results['question_edit'] = {'message_count': 1, }
+        self.expected_results['answer_edit'] = {'message_count': 1, }
+        self.expected_results['question_and_answer_by_target'] = {'message_count': 0, }
+        self.expected_results['q_ans'] = {'message_count': 0, }
+        self.expected_results['q_ans_new_answer'] = {'message_count': 0, }
 
 class LiveWeeklySelectedQuestionsEmailAlertTests(EmailAlertTests):
     """live means that this is testing for the presence of email
@@ -738,7 +764,7 @@ class FeedbackTests(utils.AskbotTestCase):
         }
         response = client.post(reverse('feedback'), data)
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.template.name, 'feedback.html')
+        self.assertEquals(response.templates[0].name, 'feedback.html')
 
     def test_mail_moderators(self):
         """tests askbot.mail_moderators()
@@ -1071,7 +1097,7 @@ class PostApprovalTests(utils.AskbotTestCase):
         u2.approve_post_revision(question.get_latest_revision())
 
         outbox = django.core.mail.outbox
-        self.assertEquals(len(outbox), 1)
+        self.assertEquals(len(outbox), 2)
         #moderation notification
         self.assertEquals(outbox[0].recipients(), [u1.email,])
         #self.assertEquals(outbox[1].recipients(), [u1.email,])#approval

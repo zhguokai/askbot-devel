@@ -52,14 +52,14 @@ def absolutize_urls(html):
     url_re2 = re.compile(r"(?P<prefix><img[^<]+src=)'(?P<url>/[^']+)'", re.I)
     url_re3 = re.compile(r'(?P<prefix><a[^<]+href=)"(?P<url>/[^"]+)"', re.I)
     url_re4 = re.compile(r"(?P<prefix><a[^<]+href=)'(?P<url>/[^']+)'", re.I)
-    img_replacement = '\g<prefix>"%s/\g<url>" style="max-width:500px;"' % askbot_settings.APP_URL
-    replacement = '\g<prefix>"%s\g<url>"' % askbot_settings.APP_URL
+    base_url = site_url('')#important to have this without the slash
+    img_replacement = '\g<prefix>"%s/\g<url>" style="max-width:500px;"' % base_url
+    replacement = '\g<prefix>"%s\g<url>"' % base_url
     html = url_re1.sub(img_replacement, html)
     html = url_re2.sub(img_replacement, html)
     html = url_re3.sub(replacement, html)
     #temporal fix for bad regex with wysiwyg editor
-    return url_re4.sub(replacement, html).replace('%s//' % askbot_settings.APP_URL,
-                                                  '%s/' % askbot_settings.APP_URL)
+    return url_re4.sub(replacement, html).replace('%s//' % base_url, '%s/' % base_url)
 
 def replace_links_with_text(html):
     """any absolute links will be replaced with the
@@ -73,7 +73,7 @@ def replace_links_with_text(html):
             return '%s (%s)' % (url, text)
         return url or text or ''
             
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, 'html5lib')
     abs_url_re = r'^http(s)?://'
 
     images = soup.find_all('img')
@@ -94,7 +94,20 @@ def replace_links_with_text(html):
             link.replaceWith(format_url_replacement(url, text))
 
     return unicode(soup.find('body').renderContents(), 'utf-8')
-            
+
+def strip_tags(html, tags=None):
+    """strips tags from given html output"""
+    #a corner case
+    if html.strip() == '':
+        return html
+
+    assert(tags != None)
+
+    soup = BeautifulSoup(html, 'html5lib')
+    for tag in tags:
+        tag_matches = soup.find_all(tag)
+        map(lambda v: v.replaceWith(''), tag_matches)
+    return unicode(soup.find('body').renderContents(), 'utf-8')
 
 def sanitize_html(html):
     """Sanitizes an HTML fragment."""
@@ -118,8 +131,6 @@ def site_link(url_name, title):
     todo: may be improved to process url parameters, keyword
     and other arguments
     """
-    from askbot.conf import settings
-    base_url = urlparse(settings.APP_URL)
     url = site_url(reverse(url_name))
     return '<a href="%s">%s</a>' % (url, title)
 
@@ -137,7 +148,11 @@ def split_contents_and_scripts(html):
         })
         script.extract()
 
-    cleaned_html = unicode(html_soup.find('body').renderContents(), 'utf-8')
+    html_body = html_soup.find('body')
+    if html_body:
+        cleaned_html = unicode(html_body.renderContents(), 'utf-8')
+    else:
+        cleaned_html = ''
     return cleaned_html, parsed_scripts
 
 def unescape(text):

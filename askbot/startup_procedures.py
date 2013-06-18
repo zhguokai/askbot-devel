@@ -45,7 +45,7 @@ class AskbotConfigError(ImproperlyConfigured):
 
 def askbot_warning(line):
     """prints a warning with the nice header, but does not quit"""
-    print >> sys.stderr, line
+    print >> sys.stderr, unicode(line).encode('utf-8')
 
 def print_errors(error_messages, header = None, footer = None):
     """if there is one or more error messages,
@@ -124,6 +124,26 @@ def test_login_redirect_url():
             'Please may your LOGIN_REDIRECT_URL setting both '
             "start and end with a '/' and is a valid url."
         )
+
+
+def test_jinja2():
+    """tests Jinja2 settings"""
+    compressor_ext = 'compressor.contrib.jinja2ext.CompressorExtension'
+    ext_list = getattr(django_settings, 'JINJA2_EXTENSIONS', None)
+    errors = list()
+    if ext_list is None:
+        errors.append(
+            "Please add the following line to your settings.py:\n"
+            "JINJA2_EXTENSIONS = ('%s',)" % compressor_ext
+        )
+    elif compressor_ext not in ext_list:
+        errors.append(
+            "Please add to the JINJA2_EXTENSIONS list an item:\n"
+            "'%s'," % compressor_ext
+        )
+
+    print_errors(errors)
+
 
 def test_middleware():
     """Checks that all required middleware classes are
@@ -215,16 +235,6 @@ def test_postgres():
         else:
             pass #everythin is ok
 
-def test_encoding():
-    """prints warning if encoding error is not UTF-8"""
-    if hasattr(sys.stdout, 'encoding'):
-        if sys.stdout.encoding != 'UTF-8':
-            askbot_warning(
-                'Your output encoding is not UTF-8, there may be '
-                'issues with the software when anything is printed '
-                'to the terminal or log files'
-            )
-
 def test_template_loader():
     """Sends a warning if you have an old style template
     loader that used to send a warning"""
@@ -248,7 +258,7 @@ def test_template_loader():
         errors.append(
             '"%s" must be the first element of TEMPLATE_LOADERS' % current_loader
         )
-        
+
     print_errors(errors)
 
 def test_celery():
@@ -304,6 +314,42 @@ def test_celery():
             "in your settings.py file"
         )
 
+def test_compressor():
+    """test settings for django compressor"""
+    errors = list()
+
+    if getattr(django_settings, 'ASKBOT_CSS_DEVEL', False):
+        precompilers = getattr(django_settings, 'COMPRESS_PRECOMPILERS', None)
+        lessc_item = ('text/less', 'lessc {infile} {outfile}')
+        if precompilers is None:
+            errors.append(
+                'Please add to your settings.py file: \n'
+                'COMPRESS_PRECOMPILERS = (\n'
+                "    ('%s', '%s'),\n"
+                ')' % lessc_item
+            )
+        else:
+            if lessc_item not in precompilers:
+                errors.append(
+                    'Please add to the COMPRESS_PRECOMPILERS the following item:\n'
+                    "('%s', '%s')," % lessc_item
+                )
+
+    js_filters = getattr(django_settings, 'COMPRESS_JS_FILTERS', [])
+    if len(js_filters) > 0:
+        errors.append(
+            'Askbot does not yet support js minification, please add to your settings.py:\n'
+            'COMPRESS_JS_FILTERS = []'
+        )
+
+    if 'compressor' not in django_settings.INSTALLED_APPS:
+        errors.append(
+            'add to the INSTALLED_APPS the following entry:\n'
+            "    'compressor',"
+        )
+
+    print_errors(errors)
+
 def test_media_url():
     """makes sure that setting `MEDIA_URL`
     has leading slash"""
@@ -327,7 +373,8 @@ class SettingsTester(object):
         * required_value (optional)
         * error_message
         """
-        self.settings = load_module(os.environ['DJANGO_SETTINGS_MODULE'])
+        settings_module = os.environ['DJANGO_SETTINGS_MODULE']
+        self.settings = load_module(settings_module.encode('utf-8'))
         self.messages = list()
         self.requirements = requirements
 
@@ -462,7 +509,7 @@ def test_staticfiles():
     if extra_skins_dir is not None:
         if not os.path.isdir(extra_skins_dir):
             errors.append(
-                'Directory specified with settning ASKBOT_EXTRA_SKINS_DIR '
+                'Directory specified with setting ASKBOT_EXTRA_SKINS_DIR '
                 'must exist and contain your custom skins for askbot.'
             )
         if extra_skins_dir not in staticfiles_dirs:
@@ -487,6 +534,26 @@ def test_staticfiles():
         errors.append(
             'Run command (after fixing the above errors)\n'
             '    python manage.py collectstatic\n'
+        )
+
+    required_finders = (
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+        'compressor.finders.CompressorFinder',
+    )
+
+    finders = getattr(django_settings, 'STATICFILES_FINDERS', None)
+
+    missing_finders = list()
+    for finder in required_finders:
+        if finder not in finders:
+            missing_finders.append(finder)
+
+    if missing_finders:
+        errors.append(
+            'Please make sure that the following items are \n' + \
+            'part of the STATICFILES_FINDERS tuple, create this tuple, if it is missing:\n' +
+            '    "' + '",\n    "'.join(missing_finders) + '",\n'
         )
 
     print_errors(errors)
@@ -626,7 +693,6 @@ def test_tinymce():
     required_attrs = (
         'TINYMCE_COMPRESSOR',
         'TINYMCE_JS_ROOT',
-        'TINYMCE_URL',
         'TINYMCE_DEFAULT_CONFIG'
     )
 
@@ -681,16 +747,6 @@ def test_tinymce():
             error_tpl += '\nNote: we have moved files from "common" into "default"'
         errors.append(error_tpl % relative_js_path)
 
-    #check url setting
-    url = getattr(django_settings, 'TINYMCE_URL', '')
-    expected_url = django_settings.STATIC_URL + relative_js_path
-    old_expected_url = django_settings.STATIC_URL + old_relative_js_path
-    if urls_equal(url, expected_url) is False:
-        error_tpl = "add line: TINYMCE_URL = STATIC_URL + '%s'"
-        if urls_equal(url, old_expected_url):
-            error_tpl += '\nNote: we have moved files from "common" into "default"'
-        errors.append(error_tpl % relative_js_path)
-
     if errors:
         header = 'Please add the tynymce editor configuration ' + \
             'to your settings.py file.'
@@ -738,7 +794,7 @@ def test_template_context_processors():
         required_processors.append(new_auth_processor)
         if old_auth_processor in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
             invalid_processors.append(old_auth_processor)
-            
+
     missing_processors = list()
     for processor in required_processors:
         if processor not in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
@@ -807,7 +863,7 @@ def test_group_messaging():
             errors.append(
                 "make setting 'GROUP_MESSAGING to be exactly:\n" + settings_sample
             )
-            
+
         url_params = settings.get('BASE_URL_PARAMS', None)
     else:
         errors.append('add this to your settings.py:\n' + settings_sample)
@@ -836,7 +892,7 @@ def test_multilingual():
         errors.append('ASKBOT_MULTILINGUAL=True works only with django >= 1.4')
 
     if is_multilang:
-        middleware = 'django.middleware.locale.LocaleMiddleware' 
+        middleware = 'django.middleware.locale.LocaleMiddleware'
         if middleware not in django_settings.MIDDLEWARE_CLASSES:
             errors.append(
                 "add 'django.middleware.locale.LocaleMiddleware' to your MIDDLEWARE_CLASSES "
@@ -852,33 +908,51 @@ def test_multilingual():
 
     print_errors(errors)
 
+def test_messages_framework():
+    if not 'django.contrib.messages' in django_settings.INSTALLED_APPS:
+        errors = ('Add to the INSTALLED_APPS section of your settings.py:\n "django.contrib.messages"', )
+        print_errors(errors)
+
+def test_service_url_prefix():
+    errors = list()
+    prefix = getattr(django_settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
+    message = 'Service url prefix must have > 1 letters and must end with /'
+    if prefix:
+        if len(prefix) == 1 or (not prefix.endswith('/')):
+            print_errors((message,))
 
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
     """
+    #this is first because it gives good info on what to install
+    test_modules()
 
     #todo: refactor this when another test arrives
-    test_template_loader()
-    test_encoding()
-    test_modules()
     test_askbot_url()
     test_login_redirect_url()
-    #test_postgres()
-    test_middleware()
+    test_avatar()
+    test_cache_backend()
     test_celery()
+    test_compressor()
+    test_custom_user_profile_tab()
+    test_group_messaging()
+    test_haystack()
+    test_jinja2()
+    test_longerusername()
+    test_new_skins()
+    test_media_url()
+    #test_postgres()
+    test_messages_framework()
+    test_middleware()
+    test_multilingual()
     #test_csrf_cookie_domain()
+    test_secret_key()
+    test_service_url_prefix()
+    test_staticfiles()
+    test_template_loader()
     test_template_context_processors()
     test_tinymce()
-    test_staticfiles()
-    test_new_skins()
-    test_longerusername()
-    test_avatar()
-    test_group_messaging()
-    test_multilingual()
-    test_haystack()
-    test_cache_backend()
-    test_secret_key()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,
@@ -915,10 +989,8 @@ def run_startup_tests():
         }
     })
     settings_tester.run()
-    test_media_url()
     if 'manage.py test' in ' '.join(sys.argv):
         test_settings_for_test_runner()
-    test_custom_user_profile_tab()
 
 @transaction.commit_manually
 def run():

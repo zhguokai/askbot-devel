@@ -31,7 +31,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import datetime
-from django.http import HttpResponseRedirect, get_host, Http404
+from django.http import HttpResponseRedirect, Http404
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
 from django.template import RequestContext, Context
@@ -55,6 +55,7 @@ from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot import exceptions as askbot_exceptions
 from askbot.mail import send_mail
+from askbot.utils.html import site_url
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
@@ -113,7 +114,7 @@ def create_authenticated_user_account(
     user = User.objects.create_user(username, email)
     user_registered.send(None, user=user)
 
-    logging.debug('creating new openid user association for %s')
+    logging.debug('creating new openid user association for %s', username)
 
     if password:
         user.set_password(password)
@@ -204,7 +205,7 @@ def get_url_host(request):
         protocol = 'https'
     else:
         protocol = 'http'
-    host = escape(get_host(request))
+    host = escape(request.get_host())
     return '%s://%s' % (protocol, host)
 
 def get_full_url(request):
@@ -317,7 +318,7 @@ def complete_oauth2_signin(request):
     client = OAuth2Client(
             token_endpoint=params['token_endpoint'],
             resource_endpoint=params['resource_endpoint'],
-            redirect_uri=askbot_settings.APP_URL + reverse('user_complete_oauth2_signin'),
+            redirect_uri=site_url(reverse('user_complete_oauth2_signin')),
             client_id=client_id,
             client_secret=client_secret
         )
@@ -610,7 +611,7 @@ def signin(request, template_name='authopenid/signin_full.html'):
                     request.session['oauth_provider_name'] = provider_name
                     request.session['next_url'] = next_url#special case for oauth
 
-                    oauth_url = connection.get_auth_url(login_only = False)
+                    oauth_url = connection.get_auth_url(login_only=True)
                     return HttpResponseRedirect(oauth_url)
 
                 except util.OAuthError, e:
@@ -1236,7 +1237,7 @@ def account_recover(request):
 #internal server view used as return value by other views
 def validation_email_sent(request):
     """this function is called only if EMAIL_VALIDATION setting is
-    set to True bolean value, basically dead now"""
+    set to True bolean value"""
     assert(askbot_settings.EMAIL_VALIDATION == True)
     logging.debug('')
     data = {
