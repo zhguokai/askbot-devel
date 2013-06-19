@@ -121,14 +121,15 @@
                 <h2 id="password-heading">
                     {% trans %}To change your password - please enter the new one twice, then submit{% endtrans %}
                 </h2>
+                <div class="change-password-message"></div>
                 <table class="login">
                     <tr>
                         <td><label for="id_new_password">{% trans %}New password{% endtrans %}</label></td>
                         <td>
                             {{login_form.new_password}}
                         </td>
-                        <td>
-                            <span class="error">{{login_form.new_password.errors[0]}}</span>
+                        <td style="text-align: left">
+                            <span class="error new-password-errors">{{login_form.new_password.errors[0]}}</span>
                         </td>
                     </tr>
                     <tr>
@@ -136,8 +137,8 @@
                         <td>
                             {{login_form.new_password_retyped}}
                         </td>
-                        <td>
-                            <span class="error">{{login_form.new_password_retyped.errors[0]}}</span>
+                        <td style="text-align: left">
+                            <span class="error new-password-retyped-errors">{{login_form.new_password_retyped.errors[0]}}</span>
                         </td>
                     </tr>
                 </table>

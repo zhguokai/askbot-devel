@@ -433,3 +433,74 @@ $.fn.authenticator = function() {
     clear_password_fields();
     return this;
 };
+
+/** 
+ * @constructor
+ */
+var ChangePasswordForm = function() {
+    WrappedElement.call(this);
+};
+inherits(ChangePasswordForm, WrappedElement);
+
+ChangePasswordForm.prototype.showMessage = function(message) {
+    this._messageElement.html(message);
+};
+
+ChangePasswordForm.prototype.clearErrors = function() {
+    this._pwInput1Errors.html('');
+    this._pwInput2Errors.html('');
+};
+
+ChangePasswordForm.prototype.showErrors = function(errors) {
+    if (errors['new_password']) {
+        this._pwInput1Errors.html(errors['new_password'][0]);
+    }
+    if (errors['new_password_retyped']) {
+        this._pwInput2Errors.html(errors['new_password_retyped'][0]);
+    }
+    if (errors['__all__']) {
+        this._pwInput2Errors.html(errors['__all__'][0]);
+    }
+};
+
+ChangePasswordForm.prototype.getData = function() {
+    return {
+        'new_password': this._pwInput1.val(),
+        'new_password_retyped': this._pwInput2.val()
+    };
+};
+
+ChangePasswordForm.prototype.getSubmitHandler = function() {
+    var me = this;
+    return function() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: me.getData(),
+            url: askbot['urls']['changePassword'],
+            success: function(data) {
+                if (data['message']) {
+                    me.showMessage(data['message']);
+                    me.clearErrors();
+                }
+                if (data['errors']) {
+                    me.showMessage('');
+                    me.clearErrors();
+                    me.showErrors(data['errors']);
+                }
+            }
+        });
+        return false;
+    };
+};
+
+ChangePasswordForm.prototype.decorate = function(element) {
+    this._element = element;
+    this._pwInput1 = element.find('#id_new_password');
+    this._pwInput2 = element.find('#id_new_password_retyped');
+    this._pwInput1Errors = element.find('.new-password-errors');
+    this._pwInput2Errors = element.find('.new-password-retyped-errors');
+    this._button = element.find('input[name="change_password"]');
+    this._messageElement = element.find('.change-password-message');
+    setupButtonEventHandlers(this._button, this.getSubmitHandler());
+};

@@ -50,7 +50,9 @@ from askbot.utils.functions import generate_random_key
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
+from django.utils import simplejson
 from askbot.mail import send_mail
+from askbot.utils import decorators as askbot_decorators
 from askbot.utils.html import site_url
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
@@ -517,7 +519,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                             provider_name=provider_name
                                         )
                             request.user.message_set.create(
-                                        message = _('Your new password saved')
+                                        message = _('Your new password is saved')
                                     )
                             return HttpResponseRedirect(next_url)
                     else:
@@ -782,6 +784,20 @@ def show_signin_view(
     data['minor_login_providers'] = minor_login_providers.values()
 
     return render(request, template_name, data)
+
+@csrf.csrf_exempt
+@askbot_decorators.post_only
+@askbot_decorators.ajax_login_required
+def change_password(request):
+    form = forms.ChangePasswordForm(request.POST)
+    data = dict()
+    if form.is_valid():
+        request.user.set_password(form.cleaned_data['new_password'])
+        request.user.save()
+        data['message'] = _('Your new password is saved')
+    else:
+        data['errors'] = form.errors
+    return HttpResponse(simplejson.dumps(data), mimetype='application/json')
 
 @login_required
 def delete_login_method(request):
