@@ -13,6 +13,7 @@ class Migration(SchemaMigration):
             ('key', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255, primary_key=True)),
             ('value', self.gf('picklefield.fields.PickledObjectField')()),
             ('verified', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('expires_on', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
         ))
         db.send_create_signal('django_authopenid', ['UserEmailVerifier'])
 

@@ -1077,6 +1077,7 @@ def verify_email_and_register(request):
             email_verifier = UserEmailVerifier.objects.get(key=presented_code)
             #verifies that the code has not been used already
             assert(email_verifier.verified == False)
+            assert(email_verifier.has_expired() == False)
 
             username = email_verifier.value['username']
             email = email_verifier.value['email']

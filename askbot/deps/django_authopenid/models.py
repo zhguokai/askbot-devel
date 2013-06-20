@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -6,6 +8,8 @@ from django.db import models
 from picklefield.fields import PickledObjectField
 
 import hashlib, random, sys, os, time
+
+VERIFIER_EXPIRE_DAYS = getattr(settings, 'VERIFIER_EXPIRE_DAYS', 3)
 
 __all__ = ['Nonce', 'Association', 'UserAssociation',
         'UserPasswordQueueManager', 'UserPasswordQueue',
@@ -92,6 +96,18 @@ class UserEmailVerifier(models.Model):
     key = models.CharField(max_length=255, unique=True, primary_key=True)
     value = PickledObjectField()
     verified = models.BooleanField(default=False)
+    expires_on = models.DateTimeField(blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.expires_on:
+            self.expires_on = datetime.datetime.now() + \
+                    datetime.timedelta(VERIFIER_EXPIRE_DAYS)
+
+        super(UserEmailVerifier, self).save(*args, **kwargs)
+
+    def has_expired(self):
+        now = datetime.datetime.now()
+        return now > self.expires_on
 
     def __unicode__(self):
         return self.key
