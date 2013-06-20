@@ -1110,7 +1110,7 @@ def verify_email_and_register(request):
         except Exception, e:
             message = _(
                 'Sorry, registration failed. '
-                'Please ask the site administrator for help.'
+                'The token can be already used or has expired. Please try again'
             )
             request.user.message_set.create(message=message)
             return HttpResponseRedirect(reverse('index'))
