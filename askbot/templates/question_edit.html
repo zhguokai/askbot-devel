@@ -78,8 +78,7 @@
     <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
     {% if settings.EDITOR_TYPE == 'markdown' %}
-        <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-        <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+        {% include "meta/markdown_javascript.html" %}
     {% endif %}
     <script type="text/javascript">
     {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
