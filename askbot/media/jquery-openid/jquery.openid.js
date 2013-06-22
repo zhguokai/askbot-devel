@@ -443,7 +443,9 @@ var ChangePasswordForm = function() {
 inherits(ChangePasswordForm, WrappedElement);
 
 ChangePasswordForm.prototype.showMessage = function(message) {
-    this._messageElement.html(message);
+    var flash = new FlashAlert('...saved');
+    this._passwordHeading.append(flash.getElement());
+    flash.run();
 };
 
 ChangePasswordForm.prototype.clearErrors = function() {
@@ -484,7 +486,6 @@ ChangePasswordForm.prototype.getSubmitHandler = function() {
                     me.clearErrors();
                 }
                 if (data['errors']) {
-                    me.showMessage('');
                     me.clearErrors();
                     me.showErrors(data['errors']);
                 }
@@ -501,6 +502,6 @@ ChangePasswordForm.prototype.decorate = function(element) {
     this._pwInput1Errors = element.find('.new-password-errors');
     this._pwInput2Errors = element.find('.new-password-retyped-errors');
     this._button = element.find('input[name="change_password"]');
-    this._messageElement = element.find('.change-password-message');
+    this._passwordHeading = element.find('#password-heading');
     setupButtonEventHandlers(this._button, this.getSubmitHandler());
 };

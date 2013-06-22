@@ -121,7 +121,6 @@
                 <h2 id="password-heading">
                     {% trans %}To change your password - please enter the new one twice, then submit{% endtrans %}
                 </h2>
-                <div class="change-password-message"></div>
                 <table class="login">
                     <tr>
                         <td><label for="id_new_password">{% trans %}New password{% endtrans %}</label></td>
@@ -197,9 +196,9 @@
             <p class="hint">
                 <span class="text">
                 {% if view_subtype == 'bad_key' %}
-                    {% trans %}Please, enter your email address below and obtain a new key{% endtrans %}
+                    {% trans %}Enter your email address below and obtain a new key{% endtrans %}
                 {% else %}
-                    {% trans %}Please, enter your email address below to recover your account{% endtrans %}
+                    {% trans %}Enter your email address below to recover your account{% endtrans %}
                 {% endif %}
                 </span>
                 <span style="display:none" class="link"> - <a href="#">{% trans %}recover your account via email{% endtrans %}</a></span>

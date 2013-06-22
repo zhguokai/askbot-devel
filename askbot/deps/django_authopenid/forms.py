@@ -363,7 +363,7 @@ class ChangePasswordForm(forms.Form):
             pw1 = self.cleaned_data['new_password']
             pw2 = self.cleaned_data['new_password_retyped']
             if pw1 != pw2:
-                error = _('sorry, entered passwords did not match, please try again')
+                error = _('entered passwords did not match, please try again')
                 raise forms.ValidationError(error)
         return self.cleaned_data
 

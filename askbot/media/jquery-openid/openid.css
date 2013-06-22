@@ -1,4 +1,6 @@
-div#login-icons {padding: 0;}
+div#login-icons {
+    padding: 6px 0 0 0;
+}
 ul.login-icons {width: 450px; margin:0;padding:0;text-align:left; list-style-type:none; display:block;}
 ul.login-icons li {display:inline;} 
 ul.large input {height: 40px; width: 90px;border:1px solid #ccc;margin:0 5px 5px 0;}
@@ -14,6 +16,27 @@ ul.large input {height: 40px; width: 90px;border:1px solid #ccc;margin:0 5px 5px
 #password-fs a {padding-left:5px;}
 /*#signin-form #account-recovery-form input {cursor:pointer;}
 #signin-form #account-recovery-form input.text {cursor:default;}*/
+
+#login-list-enabler {
+    margin: 20px 0 10px 0;
+}
+#existing-login-methods {
+    margin: 10px 0;
+}
+#account-recovery-form {
+    margin: 25px 0 10px;
+}
+#account-recovery-form h2 {
+    line-height: 16px;
+}
+#signup-form {
+    margin-bottom: 25px;
+}
+#password-heading .flash-alert {
+    color: #fe6806;
+    display: inline;
+    padding: 5px;
+}
 
 table.login { 
     text-align: right;
