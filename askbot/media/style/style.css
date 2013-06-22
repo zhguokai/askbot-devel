@@ -2745,6 +2745,16 @@ ul#related-tags li {
   background-position: -52px 0px;
 }
 /* -----Content pages, Login, About, FAQ, Users----- */
+.openid-signin input[type="text"],
+.openid-signin input[type="password"] {
+  color: #525252;
+  font-size: 12px;
+  line-height: 25px;
+  height: 25px;
+  margin: 0px;
+  padding: 0 5px;
+  width: 200px;
+}
 .openid-signin,
 .meta,
 .user-profile-edit-page {
@@ -2769,24 +2779,20 @@ ul#related-tags li {
   padding-left: 0px;
   font-size: 16px;
 }
-.openid-signin form,
 .meta form,
 .users-page form,
 .user-profile-edit-page form,
 .user-profile-page form {
   margin-bottom: 15px;
 }
-.openid-signin input[type="text"],
 .meta input[type="text"],
 .users-page input[type="text"],
 .user-profile-edit-page input[type="text"],
 .user-profile-page input[type="text"],
-.openid-signin input[type="password"],
 .meta input[type="password"],
 .users-page input[type="password"],
 .user-profile-edit-page input[type="password"],
 .user-profile-page input[type="password"],
-.openid-signin select,
 .meta select,
 .users-page select,
 .user-profile-edit-page select,
@@ -2797,7 +2803,6 @@ ul#related-tags li {
   width: 395px;
   font-size: 14px;
 }
-.openid-signin select,
 .meta select,
 .users-page select,
 .user-profile-edit-page select,
@@ -2805,7 +2810,6 @@ ul#related-tags li {
   width: 405px;
   height: 30px;
 }
-.openid-signin textarea,
 .meta textarea,
 .users-page textarea,
 .user-profile-edit-page textarea,
@@ -2815,7 +2819,6 @@ ul#related-tags li {
   width: 395px;
   font-size: 14px;
 }
-.openid-signin input.submit,
 .meta input.submit,
 .users-page input.submit,
 .user-profile-edit-page input.submit,
@@ -2823,7 +2826,6 @@ ul#related-tags li {
   font-weight: normal;
   margin: 5px 0px;
 }
-.openid-signin .cancel,
 .meta .cancel,
 .users-page .cancel,
 .user-profile-edit-page .cancel,
@@ -2831,14 +2833,12 @@ ul#related-tags li {
   background: url(../images/small-button-cancel.png) repeat-x top !important;
   color: #525252 !important;
 }
-.openid-signin .cancel:hover,
 .meta .cancel:hover,
 .users-page .cancel:hover,
 .user-profile-edit-page .cancel:hover,
 .user-profile-page .cancel:hover {
   background: url(../images/small-button-cancel.png) repeat-x bottom !important;
 }
-.openid-signin .re,
 .meta .re,
 .users-page .re,
 .user-profile-edit-page .re,
@@ -2871,30 +2871,9 @@ ul#related-tags li {
   margin-bottom: 5px;
 }
 #email-input-fs,
-#local_login_buttons,
 #password-fs,
 #openid-fs {
   margin-top: 10px;
-}
-#email-input-fs #id_email,
-#local_login_buttons #id_email,
-#password-fs #id_email,
-#openid-fs #id_email,
-#email-input-fs #id_username,
-#local_login_buttons #id_username,
-#password-fs #id_username,
-#openid-fs #id_username,
-#email-input-fs #id_password,
-#local_login_buttons #id_password,
-#password-fs #id_password,
-#openid-fs #id_password {
-  color: #525252;
-  font-size: 12px;
-  line-height: 25px;
-  height: 25px;
-  margin: 0px;
-  padding: 0 5px;
-  width: 200px;
 }
 .openid-input {
   background: url(../images/openid.gif) no-repeat;

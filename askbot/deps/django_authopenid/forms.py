@@ -297,7 +297,7 @@ class LoginForm(forms.Form):
                         del self.cleaned_data['new_password']
                         del self.cleaned_data['new_password_retyped']
                         error_message = _(
-                                    'Please choose password > %(len)s characters'
+                                    'choose password > %(len)s characters'
                                 ) % {'len': askbot_const.PASSWORD_MIN_LENGTH}
                         error = self.error_class([error_message])
                         self._errors['new_password'] = error
@@ -343,7 +343,7 @@ class ChangePasswordForm(forms.Form):
     new_password_retyped = forms.CharField(
                         widget=forms.PasswordInput(),
                         error_messages = {
-                            'required': _('please, retype your password'),
+                            'required': _('retype your password'),
                         }
                     )
 
@@ -352,7 +352,7 @@ class ChangePasswordForm(forms.Form):
             password = self.cleaned_data['new_password']
             min_len = askbot_const.PASSWORD_MIN_LENGTH
             if len(password) < min_len:
-                error = _('Please choose password > %(len)s characters') % \
+                error = _('choose password > %(len)s characters') % \
                                                                 {'len': min_len}
                 raise forms.ValidationError(error)
             return password
