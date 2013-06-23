@@ -626,7 +626,8 @@ Paginator.prototype.renderPaginatorWindow = function(windowStart) {
     }
 };
 
-Paginator.prototype.renderPaginatorEdges = function(windowStart) {
+Paginator.prototype.renderPaginatorEdges = function(windowStart, pageNo) {
+    //first page button
     var first = this._firstPageNav;
     if (windowStart === 1) {
         first.hide();
@@ -634,12 +635,30 @@ Paginator.prototype.renderPaginatorEdges = function(windowStart) {
         first.show();
     }
 
+    //last page button
     var lastWindowStart = this._numPages - this._numActivePages + 1;
     var last = this._lastPageNav;
     if (windowStart === lastWindowStart) {
         last.hide();
     } else {
         last.show();
+    }
+
+    //show or hide "prev" and "next" buttons
+    if (this._numPages === this._numActivePages) {
+        this._prevPageButton.hide();
+        this._nextPageButton.hide();
+    } else {
+        if (pageNo === 1) {
+            this._prevPageButton.hide();
+        } else {
+            this._prevPageButton.show();
+        }
+        if (pageNo === this._numPages) {
+            this._nextPageButton.hide();
+        } else {
+            this._nextPageButton.show();
+        }
     }
 };
 
@@ -662,19 +681,7 @@ Paginator.prototype.setCurrentPage = function(pageNo) {
 
     //show or hide ellipses (...) and the last/first page buttons
     //newWindow is starting page of the new paginator window
-    this.renderPaginatorEdges(newWindow);
-
-    //show or hide "prev" and "next" buttons
-    if (pageNo === 1) {
-        this._prevPageButton.hide();
-    } else {
-        this._prevPageButton.show();
-    }
-    if (pageNo === this._numPages) {
-        this._nextPageButton.hide();
-    } else {
-        this._nextPageButton.show();
-    }
+    this.renderPaginatorEdges(newWindow, pageNo);
 };
 
 Paginator.prototype.createButton = function(cls, label) {
