@@ -5,6 +5,7 @@ from django.db import connection
 from django.db.models import Q, F
 from askbot.models import User, Post, PostRevision, Thread
 from askbot.models import Activity, EmailFeedSetting
+from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.conf import settings as django_settings
@@ -410,6 +411,7 @@ class Command(NoArgsCommand):
     def send_email_alerts(self):
         #does not change the database, only sends the email
         #todo: move this to template
+        template = get_template('email/delayed_email_alert.html')
         for user in User.objects.all():
             user.add_missing_askbot_subscriptions()
             #todo: q_list is a dictionary, not a list
@@ -437,48 +439,28 @@ class Command(NoArgsCommand):
                     'topics': tag_summary
                 }
 
-                #todo: send this to special log
-                #print 'have %d updated questions for %s' % (num_q, user.username)
-                text = ungettext(
-                    '<p>Dear %(name)s,</p><p>The following question has been updated '
-                    '%(sitename)s</p>',
-                    '<p>Dear %(name)s,</p><p>The following %(num)d questions have been '
-                    'updated on %(sitename)s:</p>',
-                    num_q
-                ) % {
-                    'num':num_q,
-                    'name':user.username,
-                    'sitename': askbot_settings.APP_SHORT_NAME
-                }
-
-                text += '<ul>'
                 items_added = 0
                 items_unreported = 0
+                questions_data = list()
                 for q, meta_data in q_list.items():
                     act_list = []
                     if meta_data['skip']:
                         continue
                     if items_added >= askbot_settings.MAX_ALERTS_PER_EMAIL:
                         items_unreported = num_q - items_added #may be inaccurate actually, but it's ok
-                        
+                        break
                     else:
                         items_added += 1
                         if meta_data['new_q']:
                             act_list.append(_('new question'))
-                        format_action_count('%(num)d rev', meta_data['q_rev'],act_list)
-                        format_action_count('%(num)d ans', meta_data['new_ans'],act_list)
-                        format_action_count('%(num)d ans rev',meta_data['ans_rev'],act_list)
-                        act_token = ', '.join(act_list)
-                        text += '<li><a href="%s?sort=latest">%s</a> <font color="#777777">(%s)</font></li>' \
-                                    % (site_url(q.get_absolute_url()), q.thread.title, act_token)
-                text += '</ul>'
-                text += '<p></p>'
-                #if len(q_list.keys()) >= askbot_settings.MAX_ALERTS_PER_EMAIL:
-                #    text += _('There may be more questions updated since '
-                #                'you have logged in last time as this list is '
-                #                'abridged for your convinience. Please visit '
-                #                'the askbot and see what\'s new!<br>'
-                #              )
+                        format_action_count('%(num)d rev', meta_data['q_rev'], act_list)
+                        format_action_count('%(num)d ans', meta_data['new_ans'], act_list)
+                        format_action_count('%(num)d ans rev', meta_data['ans_rev'], act_list)
+                        questions_data.append({
+                            'url': site_url(q.get_absolute_url()),
+                            'info': ', '.join(act_list),
+                            'title': q.thread.title
+                        })
 
                 link = reverse(
                     'user_subscriptions', 
@@ -488,17 +470,14 @@ class Command(NoArgsCommand):
                     }
                 )
 
-                text += _(
-                    '<p>Please remember that you can always <a '
-                    'href="%(email_settings_link)s">adjust</a> frequency of the email updates or '
-                    'turn them off entirely.<br/>If you believe that this message was sent in an '
-                    'error, please email about it the forum administrator at %(admin_email)s.</'
-                    'p><p>Sincerely,</p><p>Your friendly %(sitename)s server.</p>'
-                ) % {
+                text = template.render({
+                    'questions': questions_data,
+                    'name': user.username,
                     'email_settings_link': site_url(link),
                     'admin_email': django_settings.ADMINS[0][1],
-                    'sitename': askbot_settings.APP_SHORT_NAME
-                }
+                    'site_name': askbot_settings.APP_SHORT_NAME
+                })
+
                 if DEBUG_THIS_COMMAND == True:
                     recipient_email = django_settings.ADMINS[0][1]
                 else:
