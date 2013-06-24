@@ -829,27 +829,8 @@ def comment_to_answer(request):
         comment_id = int(comment_id)
         comment = get_object_or_404(models.Post,
                 post_type='comment', id=comment_id)
-        comment.post_type = 'answer'
-        old_parent = comment.parent
 
-        comment.parent =  comment.thread._question_post()
-        comment.save()
-
-        comment.thread.update_answer_count()
-
-        comment.parent.comment_count += 1
-        comment.parent.save()
-
-        #to avoid db constraint error
-        if old_parent.comment_count >= 1:
-            old_parent.comment_count -= 1
-        else:
-            old_parent.comment_count = 0
-
-        old_parent.save()
-
-        comment.thread.invalidate_cached_data()
-
+        request.user.repost_comment_as_answer(comment)
         return HttpResponseRedirect(comment.get_absolute_url())
     else:
         raise Http404

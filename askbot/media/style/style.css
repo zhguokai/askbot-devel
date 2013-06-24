@@ -2101,6 +2101,7 @@ ul#related-tags li {
   font-family: Arial;
   color: #4b4b4b;
   word-wrap: break-word;
+  max-width: 683px;
 }
 .question-page .post-body a {
   color: #1b79bd;
@@ -2662,6 +2663,9 @@ ul#related-tags li {
   padding: 5px;
   margin: 0px 0 10px 0;
 }
+body.anon.question-page .question div.comments.empty {
+  margin-top: -14px;
+}
 .vote-buttons {
   display: table-cell;
   text-align: center;
@@ -2755,6 +2759,14 @@ ul#related-tags li {
   line-height: 25px;
   height: 25px;
   margin: 0px;
+  padding: 0 5px;
+  width: 200px;
+}
+.registration-page .login input[type="text"] {
+  height: 22px;
+  font-size: 12px;
+  line-height: 22px;
+  color: #525252;
   padding: 0 5px;
   width: 200px;
 }

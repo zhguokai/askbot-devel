@@ -8,18 +8,72 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.forms import EmailField, ValidationError
 from datetime import datetime
+from optparse import make_option
+import re
 
 def parse_date(date_str):
     return datetime.strptime(date_str[:-8], '%Y/%m/%d %H:%M:%S')
 
+def turn_first_company_user_to_admin(domain):
+    company_users = models.User.objects.filter(
+                        email__endswith='@' + domain
+                    ).order_by('id')
+    if company_users.count() == 0:
+        return None
+
+    user = company_users[0]
+    user.is_staff = True
+    user.is_superuser = True
+    user.save()
+    return user
+
+def thread_get_answer_from_company(thread, domain):
+    answers = thread.posts.filter(
+                        post_type='answer'
+                    ).select_related(
+                        'author__email'
+                    )
+    for answer in answers:
+        if answer.author.email.endswith('@' + domain):
+            return answer
+    return None
+
+def thread_find_first_comment_from_company(thread, domain):
+    comments = thread.posts.filter(
+                        post_type='comment'
+                    ).select_related(
+                        'author__email'
+                    ).order_by('added_at')
+    for comment in comments:
+        if comment.author.email.endswith('@' + domain):
+            return comment
+    return None
+
+COMPANY_DOMAIN_HELP = """If used - first response from user with that domain
+then first response in each question from user with matching email address
+will be posted as answer and accepted as correct. Also, first user
+with a matching email address will be a site administrator."""
+
 class Command(BaseCommand):
     args = '<jive-dump.xml>'
+    option_list = BaseCommand.option_list + (
+        make_option('--company-domain',
+            action = 'store',
+            type = 'str',
+            dest = 'company_domain',
+            default = None,
+            help = COMPANY_DOMAIN_HELP
+        ),
+    )
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
         #relax certain settings
         askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', False)
         askbot_settings.update('MAX_COMMENT_LENGTH', 1000000)
+        askbot_settings.update('MIN_REP_TO_INSERT_LINK', 1)
+        askbot_settings.update('MIN_REP_TO_SUGGEST_LINK', 1)
+        askbot_settings.update('COMMENTS_EDITOR_TYPE', 'rich-text')
         self.bad_email_count = 0
 
     def handle(self, *args, **kwargs):
@@ -29,6 +83,33 @@ class Command(BaseCommand):
 
         self.import_users(soup.find_all('User'))
         self.import_forums(soup.find_all('Forum'))
+        if kwargs['company_domain']:
+            self.promote_company_replies(kwargs['company_domain'])
+        models.Message.objects.all().delete()
+
+    @transaction.commit_manually
+    def promote_company_replies(self, domain):
+        admin = turn_first_company_user_to_admin(domain)
+        if admin is None:
+            print "Note: did not find any users with email matching %s" % domain
+            return
+        message = 'Promoting company replies to accepted answers:'
+        threads = models.Thread.objects.all()
+        count = threads.count()
+        for thread in ProgressBar(threads.iterator(), count, message):
+            answer = thread_get_answer_from_company(thread, domain)
+
+            if answer == None:
+                comment = thread_find_first_comment_from_company(thread, domain)
+                if comment:
+                    admin.repost_comment_as_answer(comment)
+                    answer = comment
+
+            if answer:
+                admin.accept_best_answer(answer=answer, force=True)
+
+            transaction.commit()
+        transaction.commit()
 
     @transaction.commit_manually
     def import_users(self, user_soup):
@@ -51,6 +132,7 @@ class Command(BaseCommand):
                 real_name=real_name,
                 date_joined=joined_timestamp
             )
+            user.set_unusable_password()
             user.save()
             transaction.commit()
 
@@ -108,6 +190,7 @@ class Command(BaseCommand):
         added_at = parse_date(post.find('CreationDate').text)
         username = post.find('Username').text
         body = post.find('Body').text
+        body = re.sub('\n>', '\n    ', body)
         try:
             user = models.User.objects.get(username=username)
         except models.User.DoesNotExist:

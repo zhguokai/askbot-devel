@@ -1510,6 +1510,34 @@ def user_retag_question(
         timestamp = timestamp
     )
 
+
+def user_repost_comment_as_answer(self, comment):
+    """converts comment to answer under the
+    parent question"""
+
+    #todo: add assertion
+    #self.assert_can_repost_comment_as_answer(comment)
+
+    comment.post_type = 'answer'
+    old_parent = comment.parent
+
+    comment.parent = comment.thread._question_post()
+    comment.save()
+
+    comment.thread.update_answer_count()
+
+    comment.parent.comment_count += 1
+    comment.parent.save()
+
+    #to avoid db constraint error
+    if old_parent.comment_count >= 1:
+        old_parent.comment_count -= 1
+    else:
+        old_parent.comment_count = 0
+
+    old_parent.save()
+    comment.thread.invalidate_cached_data()
+
 @auto_now_timestamp
 def user_accept_best_answer(
                 self, answer = None,
@@ -2969,6 +2997,7 @@ User.add_to_class('update_avatar_type', user_update_avatar_type)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('retag_question', user_retag_question)
+User.add_to_class('repost_comment_as_answer', user_repost_comment_as_answer)
 User.add_to_class('post_answer', user_post_answer)
 User.add_to_class('edit_answer', user_edit_answer)
 User.add_to_class('edit_post', user_edit_post)
