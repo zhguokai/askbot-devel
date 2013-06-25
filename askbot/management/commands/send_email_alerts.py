@@ -50,7 +50,7 @@ def extend_question_list(
             raise ValueError('cutoff_time is a mandatory parameter')
 
     for q in src:
-        if languages and src.language_code not in languages:
+        if languages and q.language_code not in languages:
             continue
         if q in dst:
             meta_data = dst[q]
@@ -467,7 +467,8 @@ class Command(NoArgsCommand):
                     'questions': questions_data,
                     'name': user.username,
                     'admin_email': django_settings.ADMINS[0][1],
-                    'site_name': askbot_settings.APP_SHORT_NAME
+                    'site_name': askbot_settings.APP_SHORT_NAME,
+                    'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
                 })
 
                 if DEBUG_THIS_COMMAND == True:

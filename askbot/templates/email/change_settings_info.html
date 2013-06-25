@@ -1,6 +1,10 @@
 <p style="font-size:10px; font-style:italic;">
     {% set url = 'user_subscriptions'|url(recipient_user.id, recipient_user.username|slugify) %}
-    {% trans %}To change your email alert settings, please visit <a href="{{ url }}">your user profile</a>.{% endtrans %}
+    {% if is_multilingual %}
+        {% trans %}To change frequency, language and content of these alerts, please visit <a href="{{ url }}">your user profile</a>.{% endtrans %}
+    {% else %}
+        {% trans %}To change freqency and content of these alerts, please visit <a href="{{ url }}">your user profile</a>.{% endtrans %}
+    {% endif %}
 </p>
 <p style="font-size:10px; font-style:italic;">
     {% trans %}If you believe that this message was sent in an error, please email about it the forum administrator at {{ admin_email }}.{% endtrans %}
