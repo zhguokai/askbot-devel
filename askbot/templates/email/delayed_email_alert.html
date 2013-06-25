@@ -9,8 +9,7 @@
     </li>
 {% endfor %}
 </ul>
-<p>{% trans %}To change your email alert settings, please visit <a href="{{ email_settings_link }}">your user profile</a>.{% endtrans %}</p>
-<p>{% trans %}If you believe that this message was sent in an error, please email about it the forum administrator at {{ admin_email }}.{% endtrans %}</p>
+{% include "email/change_settings_info.html" %}
 {% endblock %}
 {% block footer %}
     {% include "email/footer.html" %}

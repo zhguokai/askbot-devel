@@ -462,18 +462,10 @@ class Command(NoArgsCommand):
                             'title': q.thread.title
                         })
 
-                link = reverse(
-                    'user_subscriptions', 
-                    kwargs = {
-                        'id': user.id,
-                        'slug': slugify(user.username)
-                    }
-                )
-
                 text = template.render({
+                    'recipient_user': user,
                     'questions': questions_data,
                     'name': user.username,
-                    'email_settings_link': site_url(link),
                     'admin_email': django_settings.ADMINS[0][1],
                     'site_name': askbot_settings.APP_SHORT_NAME
                 })
