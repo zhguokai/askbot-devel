@@ -36,7 +36,7 @@
     <body class="{% block body_class %}{% endblock %}{% if user_messages %} user-messages{% endif %}{% if page_class %} {{page_class}}{% endif %}{% if request.user.is_anonymous() %} anon{% endif %} lang-{{ language_code }}">
         {% include "widgets/system_messages.html" %}
         {% include "debug_header.html" %}
-        {% if settings.MULTILINGUAL %}
+        {% if settings.ASKBOT_MULTILINGUAL %}
             <div class="content-wrapper">
                 {% include "widgets/language_nav.html" %}
             </div>
