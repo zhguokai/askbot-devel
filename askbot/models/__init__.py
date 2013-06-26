@@ -3173,9 +3173,8 @@ def format_instant_notification_email(
     #add indented summaries for the parent posts
     content_preview += post.format_for_email_as_parent_thread_summary()
 
-    content_preview += '<p>======= Full thread summary =======</p>'
-
-    content_preview += post.thread.format_for_email(user=to_user)
+    #content_preview += '<p>======= Full thread summary =======</p>'
+    #content_preview += post.thread.format_for_email(user=to_user)
 
     if update_type == 'post_shared':
         user_action = _('%(user)s shared a %(post_link)s.')
@@ -3235,18 +3234,21 @@ def format_instant_notification_email(
                                     }
                                 )
     update_data = {
+        'admin_email': django_settings.ADMINS[0][1],
+        'recipient_user': to_user,
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
         'receiving_user_karma': to_user.reputation,
         'reply_by_email_karma_threshold': askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
         'can_reply': can_reply,
-        'content_preview': content_preview,#post.get_snippet()
+        'content_preview': content_preview,
         'update_type': update_type,
         'post_url': post_url,
         'origin_post_title': origin_post.thread.title,
         'user_subscriptions_url': site_url(user_subscriptions_url),
         'reply_separator': reply_separator,
-        'reply_address': reply_address
+        'reply_address': reply_address,
+        'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
 
