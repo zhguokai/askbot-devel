@@ -4,14 +4,16 @@
 # 
 # Translators:
 # evgeny <evgeny.fadeev@gmail.com>, 2009
+# evgeny <evgeny.fadeev@gmail.com>, 2009
+# whisky <whisky@ystaiwan.org.tw>, 2013
 # whisky <whisky@ystaiwan.org.tw>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-05-18 09:59-0500\n"
-"PO-Revision-Date: 2013-05-18 18:48+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-06-23 10:17+0000\n"
+"Last-Translator: marr <marr.tw@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/askbot/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +68,7 @@ msgstr "標題"
 
 #: forms.py:248 templates/embed/ask_by_widget.html:170
 msgid "Please enter your question"
-msgstr ""
+msgstr "輸入問題的標題"
 
 #: forms.py:259
 #, python-format
@@ -113,7 +115,7 @@ msgid ""
 msgid_plural ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tags can "
 "be used."
-msgstr[0] ""
+msgstr[0] "標籤就是關鍵字，最多可以指定 %(max_tags)d 個標籤。"
 
 #: forms.py:438
 #, python-format
@@ -223,7 +225,7 @@ msgstr ""
 
 #: forms.py:739
 msgid "Your message:"
-msgstr ""
+msgstr "訊息內容："
 
 #: forms.py:744
 msgid "I don't want to give my email or receive a response:"
@@ -384,7 +386,7 @@ msgstr ""
 #: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
 msgid "Tags"
-msgstr ""
+msgstr "標籤"
 
 #: tasks.py:94
 msgid "An edit for my answer"
@@ -2653,11 +2655,11 @@ msgstr "全部"
 
 #: const/__init__.py:123
 msgid "unanswered"
-msgstr "尚未回答"
+msgstr "未回答"
 
 #: const/__init__.py:124
 msgid "followed"
-msgstr ""
+msgstr "追蹤中"
 
 #: const/__init__.py:129
 msgid "list"
@@ -2817,16 +2819,16 @@ msgstr ""
 
 #: const/__init__.py:320
 msgid "show all tags"
-msgstr ""
+msgstr "顯示所有的標籤"
 
 #: const/__init__.py:321 const/__init__.py:330 const/__init__.py:336
 #: const/__init__.py:342
 msgid "exclude ignored tags"
-msgstr ""
+msgstr "排除被忽略的標籤"
 
 #: const/__init__.py:322 const/__init__.py:331 const/__init__.py:343
 msgid "only interesting tags"
-msgstr ""
+msgstr "顯示感興趣的標籤"
 
 #: const/__init__.py:326 const/__init__.py:337 const/__init__.py:344
 msgid "only subscribed tags"
@@ -2938,7 +2940,7 @@ msgstr ""
 
 #: const/message_keys.py:23
 msgid "by relevance"
-msgstr ""
+msgstr "相關程度"
 
 #: const/message_keys.py:24
 msgid "click to see the oldest questions"
@@ -2946,7 +2948,7 @@ msgstr "點選觀看最早問題"
 
 #: const/message_keys.py:25
 msgid "by date"
-msgstr ""
+msgstr "發表日期"
 
 #: const/message_keys.py:26
 msgid "click to see the newest questions"
@@ -2958,7 +2960,7 @@ msgstr "點選觀看最近最少被更新的問題"
 
 #: const/message_keys.py:28
 msgid "by activity"
-msgstr ""
+msgstr "更新次數"
 
 #: const/message_keys.py:29
 msgid "click to see the most recently updated questions"
@@ -2970,7 +2972,7 @@ msgstr ""
 
 #: const/message_keys.py:31
 msgid "by answers"
-msgstr ""
+msgstr "回答次數"
 
 #: const/message_keys.py:32
 msgid "click to see the most answered questions"
@@ -2982,7 +2984,7 @@ msgstr ""
 
 #: const/message_keys.py:34
 msgid "by votes"
-msgstr ""
+msgstr "投票次數"
 
 #: const/message_keys.py:35
 msgid "click to see most voted questions"
@@ -4485,17 +4487,17 @@ msgstr "取消"
 #: templates/question/javascript.html:73 templates/question/javascript.html:76
 #: templates/widgets/edit_post.html:73
 msgid "hide preview"
-msgstr "禁用預覽"
+msgstr "停用預覽"
 
 #: templates/answer_edit.html:90 templates/ask.html:85
 #: templates/question_edit.html:104 templates/question/javascript.html:76
 msgid "show preview"
-msgstr "顯示預覽"
+msgstr "啟動預覽"
 
 #: templates/ask.html:4 templates/widgets/ask_button.html:9
 #: templates/widgets/ask_form.html:66
 msgid "Ask Your Question"
-msgstr ""
+msgstr "開始發問"
 
 #: templates/ask.html:21
 msgid ""
@@ -4514,17 +4516,17 @@ msgstr ""
 
 #: templates/ask.html:29
 msgid "please, try to make your question interesting to this community"
-msgstr ""
+msgstr "好的標題能讓其他人更容易參與回答"
 
 #: templates/ask.html:30 templates/widgets/answer_edit_tips.html:12
 #: templates/widgets/question_edit_tips.html:8
 msgid "provide enough details"
-msgstr ""
+msgstr "請提供足夠的細節"
 
 #: templates/ask.html:31 templates/widgets/answer_edit_tips.html:15
 #: templates/widgets/question_edit_tips.html:11
 msgid "be clear and concise"
-msgstr "簡單扼要"
+msgstr "內容要盡量明確精準"
 
 #: templates/ask.html:36 templates/widgets/answer_edit_tips.html:20
 #: templates/widgets/question_edit_tips.html:16
@@ -4535,7 +4537,7 @@ msgstr "查看常見問題"
 #: templates/faq_static.html.py:5 templates/widgets/answer_edit_tips.html:20
 #: templates/widgets/question_edit_tips.html:16 views/meta.py:71
 msgid "FAQ"
-msgstr ""
+msgstr "常見問題"
 
 #: templates/badge.html:5 templates/badge.html.py:9
 #: templates/user_profile/user_recent.html:20
@@ -4599,7 +4601,7 @@ msgstr "銀牌:偶爾頒發之優質獎章"
 
 #: templates/badges.html:49 templates/badges.html.py:53
 msgid "bronze badge: often given as a special honor"
-msgstr "第三名獎勵:授予之特殊榮譽"
+msgstr "銅牌:授予之特殊榮譽"
 
 #: templates/base.html:22
 #, python-format
@@ -4628,7 +4630,7 @@ msgstr "常見問題"
 
 #: templates/faq_static.html:6
 msgid "What kinds of questions can I ask here?"
-msgstr "我可以在這裏提問什麼樣的問題？"
+msgstr "我可以在這裏提問什麼樣的問題?"
 
 #: templates/faq_static.html:7
 msgid ""
@@ -4650,11 +4652,11 @@ msgstr ""
 msgid ""
 "Please avoid asking questions that are not relevant to this community, too "
 "subjective and argumentative."
-msgstr "請避免提問無關的，過於主觀性，易造成爭吵的問題。"
+msgstr "請避免提出: 和社群無關、過於主觀、爭議性的問題。"
 
 #: templates/faq_static.html:13
 msgid "What should I avoid in my answers?"
-msgstr "什麼樣的回答是不受歡迎的？"
+msgstr "什麼樣的回答是不受歡迎的?"
 
 #: templates/faq_static.html:14
 msgid ""
@@ -4666,7 +4668,7 @@ msgstr ""
 
 #: templates/faq_static.html:15
 msgid "Who moderates this community?"
-msgstr "誰是社群的管理員？"
+msgstr "誰是社群的管理員?"
 
 #: templates/faq_static.html:16
 msgid "The short answer is: <strong>you</strong>."
@@ -4768,7 +4770,7 @@ msgstr ""
 
 #: templates/faq_static.html:73
 msgid "To register, do I need to create new password?"
-msgstr "注冊需要一個新密碼嗎？"
+msgstr "注冊需要一個新密碼嗎?"
 
 #: templates/faq_static.html:74
 msgid ""
@@ -4782,7 +4784,7 @@ msgstr ""
 
 #: templates/faq_static.html:77
 msgid "Why other people can edit my questions/answers?"
-msgstr "為什麼其他人可以修改我的問題/回答？"
+msgstr "為什麼其他人可以修改我的問題/回答?"
 
 #: templates/faq_static.html:78
 msgid "Goal of this site is..."
@@ -4801,7 +4803,7 @@ msgstr "如果您不喜歡這種方式，我們尊重你的選擇。"
 
 #: templates/faq_static.html:81
 msgid "Still have questions?"
-msgstr "還有其他問題？"
+msgstr "還有其他問題?"
 
 #: templates/faq_static.html:82
 #, python-format
@@ -4812,7 +4814,7 @@ msgstr ""
 
 #: templates/feedback.html:3
 msgid "Feedback"
-msgstr "問題回饋"
+msgstr "聯絡站長"
 
 #: templates/feedback.html:5
 msgid "Give us your feedback!"
@@ -4841,7 +4843,7 @@ msgstr ""
 
 #: templates/feedback.html:37 templates/feedback.html.py:46
 msgid "(this field is required)"
-msgstr " (此欄不能為空白)"
+msgstr "(這是必填欄位)"
 
 #: templates/feedback.html:55
 msgid "(Please solve the captcha)"
@@ -4849,7 +4851,7 @@ msgstr ""
 
 #: templates/feedback.html:63
 msgid "Send Feedback"
-msgstr "送出問題回饋"
+msgstr "送出訊息"
 
 #: templates/groups.html:3 templates/groups.html.py:6
 #: templates/question/sidebar.html:121
@@ -5283,7 +5285,7 @@ msgstr ""
 
 #: templates/question_retag.html:28
 msgid "Why use and modify tags?"
-msgstr "為什麼要用或修改標籤？"
+msgstr "為什麼要用或修改標籤?"
 
 #: templates/question_retag.html:30
 msgid "Tags help to keep the content better organized and searchable"
@@ -5356,7 +5358,7 @@ msgstr ""
 #: templates/users.html:8 templates/users.html.py:18
 #: templates/tags/list_bulk_tag_subscription.html:13
 msgid "Users"
-msgstr "用戶列表"
+msgstr "使用者列表"
 
 #: templates/users.html:16
 #, python-format
@@ -5375,7 +5377,7 @@ msgstr ""
 #: templates/users.html:33 templates/main_page/tab_bar.html:17
 #: templates/tags/header.html:14
 msgid "Sort by &raquo;"
-msgstr ""
+msgstr "排序方式 &raquo;"
 
 #: templates/users.html:40
 msgid "see people with the highest reputation"
@@ -6281,11 +6283,11 @@ msgstr ""
 
 #: templates/main_page/questions_loop.html:9
 msgid "Did not find what you were looking for?"
-msgstr "找不到結果? "
+msgstr "找不到想要的結果?"
 
 #: templates/main_page/questions_loop.html:10
 msgid "Ask your question!"
-msgstr ""
+msgstr "直接發問!"
 
 #: templates/main_page/tab_bar.html:11
 msgid "subscribe to the questions feed"
@@ -6410,7 +6412,7 @@ msgstr[0] ""
 
 #: templates/question/answer_tab_bar.html:11
 msgid "Sort by »"
-msgstr ""
+msgstr "排序方式 »"
 
 #: templates/question/answer_tab_bar.html:14
 msgid "oldest answers will be shown first"
@@ -7237,11 +7239,11 @@ msgstr ""
 
 #: templates/widgets/ask_form.html:21 templates/widgets/ask_form.html.py:23
 msgid "Add details (optional)"
-msgstr ""
+msgstr "細節說明 (非必填)"
 
 #: templates/widgets/ask_form.html:25
 msgid "Add details"
-msgstr ""
+msgstr "輸入細節說明"
 
 #: templates/widgets/ask_form.html:58
 msgid "Select language"
@@ -7257,7 +7259,7 @@ msgstr ""
 
 #: templates/widgets/edit_post.html:42 templates/widgets/edit_post.html:47
 msgid "tags:"
-msgstr ""
+msgstr "標籤："
 
 #: templates/widgets/edit_post.html:43
 msgid "(required)"
@@ -7284,7 +7286,7 @@ msgstr "關於本站"
 
 #: templates/widgets/footer.html:40 templates/widgets/user_navigation.html:26
 msgid "help"
-msgstr ""
+msgstr "說明"
 
 #: templates/widgets/footer.html:42
 msgid "privacy policy"
@@ -7292,7 +7294,7 @@ msgstr "隱私政策"
 
 #: templates/widgets/footer.html:51
 msgid "give feedback"
-msgstr "問題回饋"
+msgstr "聯絡站長"
 
 #: templates/widgets/group_info.html:3
 msgid "Group info"
@@ -7376,23 +7378,23 @@ msgstr ""
 
 #: templates/widgets/markdown_help.html:2
 msgid "Markdown basics"
-msgstr ""
+msgstr "語法簡介"
 
 #: templates/widgets/markdown_help.html:6
 msgid "*italic*"
-msgstr ""
+msgstr "*斜體*"
 
 #: templates/widgets/markdown_help.html:9
 msgid "**bold**"
-msgstr ""
+msgstr "**粗體**"
 
 #: templates/widgets/markdown_help.html:13
 msgid "*italic* or _italic_"
-msgstr ""
+msgstr "*斜體* 或 _斜體_"
 
 #: templates/widgets/markdown_help.html:16
 msgid "**bold** or __bold__"
-msgstr "**加粗** 或者 __加粗__ "
+msgstr "**粗體** 或 __粗體__ "
 
 #: templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
@@ -7405,11 +7407,11 @@ msgstr "圖片"
 
 #: templates/widgets/markdown_help.html:28
 msgid "numbered list:"
-msgstr "有序列表："
+msgstr "排序列表:"
 
 #: templates/widgets/markdown_help.html:33
 msgid "basic HTML tags are also supported"
-msgstr "支援基本的HTML標籤"
+msgstr "支援基本的 HTML 標籤"
 
 #: templates/widgets/markdown_help.html:38
 msgid "learn more about Markdown"
@@ -7448,7 +7450,7 @@ msgstr[0] ""
 
 #: templates/widgets/scope_nav.html:17
 msgid "ALL"
-msgstr ""
+msgstr "所有問題"
 
 #: templates/widgets/scope_nav.html:22
 msgid "see unanswered questions"
@@ -7456,7 +7458,7 @@ msgstr ""
 
 #: templates/widgets/scope_nav.html:22
 msgid "UNANSWERED"
-msgstr ""
+msgstr "未被回答"
 
 #: templates/widgets/scope_nav.html:27
 msgid "see your followed questions"
@@ -7464,7 +7466,7 @@ msgstr ""
 
 #: templates/widgets/scope_nav.html:27
 msgid "FOLLOWED"
-msgstr ""
+msgstr "追蹤中"
 
 #: templates/widgets/scope_nav.html:30
 msgid "Please ask your question here"
@@ -7472,11 +7474,11 @@ msgstr ""
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
-msgstr "有趣的標籤"
+msgstr "感興趣的標籤"
 
 #: templates/widgets/tag_selector.html:22
 msgid "Ignored tags"
-msgstr "忽視標籤"
+msgstr "被忽略的標籤"
 
 #: templates/widgets/tag_selector.html:40
 msgid "Subscribed tags"
@@ -7484,7 +7486,7 @@ msgstr ""
 
 #: templates/widgets/tag_selector.html:59
 msgid "Show only questions from"
-msgstr ""
+msgstr "搜尋的篩選條件"
 
 #: templates/widgets/tag_selector.html:70
 msgid "Send me email alerts for"
@@ -7521,19 +7523,19 @@ msgstr ""
 
 #: templates/widgets/user_navigation.html:17
 msgid "sign out"
-msgstr ""
+msgstr "登出"
 
 #: templates/widgets/user_navigation.html:20
 msgid "Hi there! Please sign in"
-msgstr ""
+msgstr "登入"
 
 #: templates/widgets/user_navigation.html:23
 msgid "settings"
-msgstr ""
+msgstr "設定"
 
 #: templates/widgets/user_navigation.html:24
 msgid "widgets"
-msgstr ""
+msgstr "工具"
 
 #: templatetags/extra_filters_jinja.py:319
 msgid "no"

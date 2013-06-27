@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2013
+# kelemeng <kelemeng@gnome.hu>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-05-18 10:00-0500\n"
-"PO-Revision-Date: 2013-05-18 18:49+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-05-23 21:02+0000\n"
+"Last-Translator: kelemeng <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian (http://www.transifex.com/projects/p/askbot/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,25 +146,25 @@ msgstr "a címkék nem lehetnek üresek"
 
 #: media/js/post.js:160
 msgid "details are required"
-msgstr ""
+msgstr "az adatok kötelezők"
 
 #: media/js/post.js:163
 #, c-format
 msgid "details must have > %s character"
 msgid_plural "details must have > %s characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "írjon be még legalább %s karaktert"
+msgstr[1] "írjon be még legalább %s karaktert"
 
 #: media/js/post.js:171
 msgid "enter your question"
-msgstr ""
+msgstr "írja be kérdését"
 
 #: media/js/post.js:174
 #, c-format
 msgid "question must have > %s character"
 msgid_plural "question must have > %s characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "írjon be még legalább %s karaktert"
+msgstr[1] "írjon be még legalább %s karaktert"
 
 #: media/js/post.js:193
 msgid "content cannot be empty"
@@ -269,7 +270,7 @@ msgstr "törlés"
 
 #: media/js/post.js:1218 media/js/post.js.c:1445
 msgid "sorry, something is not right here"
-msgstr ""
+msgstr "elnézést, valamilyen hiba történt"
 
 #: media/js/post.js:1661
 msgid "add comment"
@@ -576,7 +577,7 @@ msgstr "letiltva"
 
 #: media/js/utils.js:2023
 msgid "add new group"
-msgstr ""
+msgstr "új csoport hozzáadása"
 
 #: media/js/utils.js:2084
 msgid "Group %(name)s already exists. Group names are case-insensitive."

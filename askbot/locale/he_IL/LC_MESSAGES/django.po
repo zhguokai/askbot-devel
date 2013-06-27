@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-# Hanan Natan <hen770@gmail.com>, 2012
+# Hanan Natan, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
