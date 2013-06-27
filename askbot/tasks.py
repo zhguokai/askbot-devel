@@ -54,7 +54,10 @@ def tweet_new_post_task(post_id):
 
     tweet_text = post.as_tweet()
 
-    twitter = Twitter()
+    try:
+        twitter = Twitter()
+    except:
+        return
 
     for raw_token in access_tokens:
         token = simplejson.loads(raw_token)
