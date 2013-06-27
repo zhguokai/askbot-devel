@@ -194,12 +194,28 @@ def questions(request, **kwargs):
             'query_string': search_state.query_string(),
             'page_size' : search_state.page_size,
             'questions': questions_html.replace('\n',''),
-            'non_existing_tags': meta_data['non_existing_tags']
+            'non_existing_tags': meta_data['non_existing_tags'],
         }
         ajax_data['related_tags'] = [{
             'name': escape(tag.name),
             'used_count': humanize.intcomma(tag.local_used_count)
         } for tag in related_tags]
+
+        #here we add and then delete some items
+        #to allow extra context processor to work
+        ajax_data['tags'] = related_tags
+        ajax_data['interesting_tag_names'] = None
+        ajax_data['threads'] = page
+        extra_context = context.get_extra(
+                                    'ASKBOT_QUESTIONS_PAGE_EXTRA_CONTEXT',
+                                    request,
+                                    ajax_data
+                                )
+        del ajax_data['tags']
+        del ajax_data['interesting_tag_names']
+        del ajax_data['threads']
+
+        ajax_data.update(extra_context)
 
         return HttpResponse(simplejson.dumps(ajax_data), mimetype = 'application/json')
 
