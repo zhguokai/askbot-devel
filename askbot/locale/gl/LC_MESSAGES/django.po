@@ -6009,13 +6009,13 @@ msgstr "A seguir vai unha copia da súa publicación:"
 #, python-format
 msgid ""
 "\n"
-"                %(comment)s comment:\n"
+"                %(count)s comment:\n"
 "            "
 msgid_plural ""
 "\n"
 "                %(count)s comments:\n"
 "            "
-msgstr[0] "\n%(comment)s comentario:"
+msgstr[0] "\n%(count)s comentario:"
 msgstr[1] "\n%(count)s comentarios:"
 
 #: templates/email/re_welcome_lamson_on.html:2
