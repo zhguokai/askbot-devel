@@ -2853,7 +2853,8 @@ def user_update_wildcard_tag_selections(
     return new_tags
 
 
-def user_edit_group_membership(self, user=None, group=None, action=None):
+def user_edit_group_membership(self, user=None, group=None,
+                               action=None, force=False):
     """allows one user to add another to a group
     or remove user from group.
 
@@ -2868,17 +2869,20 @@ def user_edit_group_membership(self, user=None, group=None, action=None):
         openness = group.get_openness_level_for_user(user)
 
         #let people join these special groups, but not leave
-        if group.name == askbot_settings.GLOBAL_GROUP_NAME:
-            openness = 'open'
-        elif group.name == format_personal_group_name(user):
-            openness = 'open'
+        if not force:
+            if group.name == askbot_settings.GLOBAL_GROUP_NAME:
+                openness = 'open'
+            elif group.name == format_personal_group_name(user):
+                openness = 'open'
 
-        if openness == 'open':
+            if openness == 'open':
+                level = GroupMembership.FULL
+            elif openness == 'moderated':
+                level = GroupMembership.PENDING
+            elif openness == 'closed':
+                raise django_exceptions.PermissionDenied()
+        else:
             level = GroupMembership.FULL
-        elif openness == 'moderated':
-            level = GroupMembership.PENDING
-        elif openness == 'closed':
-            raise django_exceptions.PermissionDenied()
 
         membership, created = GroupMembership.objects.get_or_create(
                         user=user, group=group, level=level
@@ -2891,8 +2895,9 @@ def user_edit_group_membership(self, user=None, group=None, action=None):
     else:
         raise ValueError('invalid action')
 
-def user_join_group(self, group):
-    return self.edit_group_membership(group=group, user=self, action='add')
+def user_join_group(self, group, force=False):
+    return self.edit_group_membership(group=group, user=self,
+                                      action='add', force=force)
 
 def user_leave_group(self, group):
     self.edit_group_membership(group=group, user=self, action='remove')
