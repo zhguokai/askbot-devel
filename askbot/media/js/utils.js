@@ -981,6 +981,10 @@ var FlashAlert = function(text) {
 };
 inherits(FlashAlert, WrappedElement);
 
+FlashAlert.prototype.setPostRunHandler = function(handler) {
+    this._postRunHandler = handler;
+};
+
 FlashAlert.prototype.setText = function(text) {
     this._text = text;
     if (this.hasElement()) {
@@ -991,9 +995,13 @@ FlashAlert.prototype.setText = function(text) {
 FlashAlert.prototype.run = function() {
     var element = this._element;
     var me = this;
+    var postRunHandler = this._postRunHandler;
     var finish = function() {
         element.fadeOut();
         me.dispose();
+        if (postRunHandler) {
+            postRunHandler();
+        }
     };
     element.fadeIn(function() { setTimeout(finish, 1000) });
 };

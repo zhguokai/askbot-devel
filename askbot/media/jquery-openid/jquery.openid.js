@@ -442,8 +442,11 @@ var ChangePasswordForm = function() {
 };
 inherits(ChangePasswordForm, WrappedElement);
 
-ChangePasswordForm.prototype.showMessage = function(message) {
-    var flash = new FlashAlert('...saved');
+ChangePasswordForm.prototype.showMessage = function(message, callback) {
+    var flash = new FlashAlert('...saved, thanks');
+    if (callback) {
+        flash.setPostRunHandler(callback);
+    }
     this._passwordHeading.append(flash.getElement());
     flash.run();
 };
@@ -482,7 +485,14 @@ ChangePasswordForm.prototype.getSubmitHandler = function() {
             url: askbot['urls']['changePassword'],
             success: function(data) {
                 if (data['message']) {
-                    me.showMessage(data['message']);
+                    if (me.inAccountRecovery()) {
+                        var callback = function() {
+                            window.location.href = askbot['urls']['questions'];
+                        };
+                        me.showMessage(data['message'], callback);
+                    } else {
+                        me.showMessage(data['message']);
+                    }
                     me.clearErrors();
                 }
                 if (data['errors']) {
@@ -493,6 +503,10 @@ ChangePasswordForm.prototype.getSubmitHandler = function() {
         });
         return false;
     };
+};
+
+ChangePasswordForm.prototype.inAccountRecovery = function() {
+    return ($('input[name="in_recovery"]').length === 1);
 };
 
 ChangePasswordForm.prototype.decorate = function(element) {

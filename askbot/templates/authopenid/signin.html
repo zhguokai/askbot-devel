@@ -53,6 +53,9 @@
             wants to always show the password login form - then
             the button is useless.
         #}
+        {% if 'in_recovery' in request.session %}
+            <input type="hidden" name="in_recovery" value="true" />
+        {% endif %}
         {{ login_form.login_provider_name }}
         {{ login_form.next }}
         {{ 

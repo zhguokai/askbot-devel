@@ -883,6 +883,12 @@ def finalize_generic_signin(
     have been resolved
     """
 
+    if request.session['in_recovery']:
+        del request.session['in_recovery']
+        redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
+        if redirect_url is None:
+            redirect_url = reverse('questions')
+
     if request.user.is_authenticated():
         #this branch is for adding a new association
         if user is None:
@@ -1331,6 +1337,7 @@ def account_recover(request):
             else:
                 login(request, user)
             #need to show "sticky" signin view here
+            request.session['in_recovery'] = True
             return show_signin_view(
                                 request,
                                 view_subtype = 'add_openid',
