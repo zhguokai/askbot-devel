@@ -2347,6 +2347,9 @@ ul#related-tags li {
   font-size: 12px;
   clear: both;
 }
+.question-page .comments .truncated-post:nth-last-child(3) {
+  float: left;
+}
 .question-page .comments div.controls {
   width: 100%;
   margin: 3px 0 20px 5px;

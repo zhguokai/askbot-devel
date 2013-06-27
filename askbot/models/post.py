@@ -375,6 +375,7 @@ class Post(models.Model):
     last_edited_by = models.ForeignKey(User, null=True, blank=True, related_name='last_edited_posts')
 
     html = models.TextField(null=True)#html rendition of the latest revision
+    truncated_html = models.TextField(null=True)#used if applicable
     text = models.TextField(null=True)#denormalized copy of latest revision
     language_code = models.CharField(max_length=16, default=django_settings.LANGUAGE_CODE)
 

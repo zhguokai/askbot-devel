@@ -431,7 +431,7 @@ for the purposes of the AJAX comment editor #}
                             ></span>
                         </div>
                         <div class="comment-body">
-                            {{comment.html}}
+                            {{ comment.html|truncate_html_post }}
                             <a 
                                 class="author"
                                 href="{{comment.author.get_profile_url()}}"
