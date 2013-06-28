@@ -12,15 +12,15 @@
 {% endif %}
     {% if answer %}
         <div class="message">
-        {% trans title=answer.question.title|escape, summary=answer.summary|escape %}
-        Your answer to {{title}} {{summary}} will be posted once you log in
+        {% trans title=answer.question.title|escape %}
+        Your answer to {{title}} will be posted once you log in
         {% endtrans %}
         </div>
     {% endif %}
     {% if question %}
         <div class="message">
-        {% trans title=question.title|escape, summary=question.summary|escape %}Your question 
-        {{title}} {{summary}} will be posted once you log in
+        {% trans title=question.title|escape %}Your question 
+        {{title}} will be posted once you log in
         {% endtrans %}
         </div>
     {% endif %}

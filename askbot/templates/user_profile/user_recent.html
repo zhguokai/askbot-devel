@@ -21,7 +21,7 @@
                         </a>
                         {% if act.content_object.post_type == 'question' %}
                             {% set question=act.content_object %}
-                            (<a title="{{question.summary|collapse|escape}}"
+                            (<a 
                                 href="{% url question question.id %}{{question.thread.title|slugify}}">{% trans %}source{% endtrans %}</a>)
                         {% elif act.content_object.post_type == 'answer' %}
                             {% set answer=act.content_object %}

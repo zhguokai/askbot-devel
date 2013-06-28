@@ -224,6 +224,11 @@ urlpatterns = patterns('',
         name='get_editor'
     ),
     service_url(
+        r'^get-post-html/',
+        views.readers.get_post_html,
+        name='get_post_html'
+    ),
+    service_url(
         r'^%s%s$' % (_('questions/'), _('ask/')),
         views.writers.ask,
         name='ask'

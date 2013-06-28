@@ -38,6 +38,7 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AnswerForm
 from askbot.forms import ShowQuestionForm
 from askbot.forms import GetUserItemsForm
+from askbot.forms import GetDataForPostForm
 from askbot import conf
 from askbot import models
 from askbot import schedules
@@ -279,7 +280,7 @@ def get_top_answers(request):
                         )
         return HttpResponse(json_string, mimetype='application/json')
     else:
-        raise HttpResponseBadRequest()
+        return HttpResponseBadRequest()
 
 def tags(request):#view showing a listing of available tags - plain list
 
@@ -738,3 +739,10 @@ def get_perms_data(request):
     })
 
     return {'html': html}
+
+@ajax_only
+@get_only
+def get_post_html(request):
+    post = models.Post.objects.get(id=request.GET['post_id'])
+    post.assert_is_visible_to(request.user)
+    return {'post_html': post.html}

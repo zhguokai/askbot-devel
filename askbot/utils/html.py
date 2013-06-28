@@ -6,6 +6,7 @@ import re
 import htmlentitydefs
 from urlparse import urlparse
 from django.core.urlresolvers import reverse
+from django.utils.html import strip_tags as strip_all_tags
 from askbot.conf import settings as askbot_settings
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
@@ -60,6 +61,9 @@ def absolutize_urls(html):
     html = url_re3.sub(replacement, html)
     #temporal fix for bad regex with wysiwyg editor
     return url_re4.sub(replacement, html).replace('%s//' % base_url, '%s/' % base_url)
+
+def get_word_count(html):
+    return len(strip_all_tags(html).split())
 
 def replace_links_with_text(html):
     """any absolute links will be replaced with the

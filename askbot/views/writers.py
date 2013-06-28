@@ -694,7 +694,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
     if request.method == 'POST':
         form = forms.NewCommentForm(request.POST)
     elif request.method == 'GET':
-        form = forms.GetCommentsForPostForm(request.GET)
+        form = forms.GetDataForPostForm(request.GET)
 
     if form.is_valid() == False:
         return HttpResponseBadRequest(
