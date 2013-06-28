@@ -3304,6 +3304,14 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     var btn = element.find('#vip-toggle');
     vip_toggle.decorate(btn);
 
+    var read_only_toggle = new TwoStateToggle();
+    read_only_toggle.setPostData({
+        group_id: this.getTagId(),
+        property_name: 'read_only'
+    });
+    var btn = element.find('#read-only-toggle');
+    read_only_toggle.decorate(btn);
+
     var opennessSelector = new DropdownSelect();
     var selectorElement = element.find('#group-openness-selector');
     opennessSelector.setPostData({

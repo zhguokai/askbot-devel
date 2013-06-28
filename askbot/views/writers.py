@@ -45,6 +45,7 @@ from askbot.utils.loading import load_module
 from askbot.views import context
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
+from askbot.utils.slug import slugify
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -303,6 +304,13 @@ def ask(request):#view used to ask a new question
         try:
             group_id = int(request.GET.get('group_id', None))
             form.initial['group_id'] = group_id
+            group = get_object_or_404(models.Group, pk=group_id)
+            if group.read_only:
+                request.user.message_set.create(message = _("This group is read only"))
+                return HttpResponseRedirect(reverse('users_by_group',
+                                                    kwargs = {'group_id': group.id,
+                                                              'group_slug': slugify(group.name)}
+                                                    ))
         except Exception:
             pass
 
@@ -592,7 +600,7 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
                 form_class = load_module(custom_class_path)
             else:
                 form_class = forms.AnswerForm
-        
+
         form = form_class(request.POST, user=request.user)
 
         if form.is_valid():
@@ -680,7 +688,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
 @decorators.check_spam('comment')
 def post_comments(request):#generic ajax handler to load comments to an object
     """todo: fixme: post_comments is ambigous:
-    means either get comments for post or 
+    means either get comments for post or
     add a new comment to post
     """
     # only support get post comments by ajax now
