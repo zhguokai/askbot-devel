@@ -883,7 +883,7 @@ def finalize_generic_signin(
     have been resolved
     """
 
-    if request.session['in_recovery']:
+    if 'in_recovery' in request.session:
         del request.session['in_recovery']
         redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
         if redirect_url is None:
