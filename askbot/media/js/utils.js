@@ -1174,6 +1174,12 @@ PostExpander.prototype.getPostId = function() {
     return this._postId;
 };
 
+PostExpander.prototype.showWaitIcon = function() {
+    var icon = new WaitIcon();
+    this._element.html(icon.getElement());
+    icon.show();
+};
+
 PostExpander.prototype.updateTheDots = function() {
     var numDots = this._cNumDots + 1;
     if (numDots > this._maxNumDots) {
@@ -1222,14 +1228,13 @@ PostExpander.prototype.getExpandHandler = function() {
             url: askbot['urls']['getPostHtml'],
             success: function(data) {
                 if (data['post_html']) {
-                    me.stopTheDots();
                     snippet.hide();
                     snippet.html(data['post_html']);
                     snippet.fadeIn();
                 }
             }
         });
-        me.startTheDots();
+        me.showWaitIcon();
     };
 };
 
