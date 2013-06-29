@@ -6,13 +6,14 @@
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # Hannu Sehm <hannu@kipax.fi>, 2012
 # Otto Nuoranne <otto.nuoranne@hotmail.com>, 2012
+# Pekka Järvinen <pekka.jarvinen@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-05-18 09:59-0500\n"
-"PO-Revision-Date: 2013-05-18 18:48+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-06-13 03:39+0000\n"
+"Last-Translator: Pekka Järvinen <pekka.jarvinen@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/projects/p/askbot/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -246,7 +247,7 @@ msgstr ""
 
 #: forms.py:839
 msgid "User name:"
-msgstr ""
+msgstr "Kirjautuminen"
 
 #: forms.py:841
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
@@ -384,14 +385,14 @@ msgstr "Nimi"
 
 #: forms.py:1678 templates/groups.html:32
 msgid "Description"
-msgstr ""
+msgstr "Kuvaus"
 
 #: forms.py:1697 templates/tags.html:3 templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
 msgid "Tags"
-msgstr ""
+msgstr "Tagit"
 
 #: tasks.py:94
 msgid "An edit for my answer"
@@ -497,7 +498,7 @@ msgstr "kayttajat/"
 
 #: urls.py:375
 msgid "by-group/"
-msgstr ""
+msgstr "ryhman-mukaan/"
 
 #: urls.py:389
 msgid "subscriptions/"
@@ -505,11 +506,11 @@ msgstr "Tilaukset"
 
 #: urls.py:398
 msgid "select_languages/"
-msgstr ""
+msgstr "valitse_kielet/"
 
 #: urls.py:409
 msgid "groups/"
-msgstr ""
+msgstr "ryhmat/"
 
 #: urls.py:414
 msgid "users/update_has_custom_avatar/"
@@ -538,11 +539,11 @@ msgstr "valmis/"
 
 #: urls.py:492
 msgid "create/"
-msgstr ""
+msgstr "luo/"
 
 #: urls.py:502
 msgid "delete/"
-msgstr ""
+msgstr "poista/"
 
 #: urls.py:533
 msgid "upload/"
@@ -571,7 +572,7 @@ msgstr "Salli sisäänpääsy foorumille vain rekisteröityneille käyttäjille"
 
 #: conf/access_control.py:22
 msgid "nothing - not required"
-msgstr ""
+msgstr "ei mitään - ei vaadittu"
 
 #: conf/access_control.py:23
 msgid "access to content"
@@ -713,7 +714,7 @@ msgstr "Vakioasetus django-asetuksen EMAIL_SUBJECT_PREFIX mukaan.  Tähän kentt
 
 #: conf/email.py:38
 msgid "Enable email alerts"
-msgstr ""
+msgstr "Sähköpostihuomautukset päälle"
 
 #: conf/email.py:47
 msgid "Maximum number of news entries in an email alert"
@@ -1157,11 +1158,11 @@ msgstr ""
 
 #: conf/forum_data_rules.py:237
 msgid "category tree"
-msgstr ""
+msgstr "kategoriapuu"
 
 #: conf/forum_data_rules.py:238
 msgid "user input"
-msgstr ""
+msgstr "Kirjautuminen"
 
 #: conf/forum_data_rules.py:245
 msgid "Source of tags"
@@ -1220,15 +1221,15 @@ msgstr ""
 
 #: conf/forum_data_rules.py:325
 msgid "Always, for all users"
-msgstr ""
+msgstr "Aina, kaikille käyttäjille"
 
 #: conf/forum_data_rules.py:326
 msgid "Never, for all users"
-msgstr ""
+msgstr "Ei koskaan, kaikille käyttäjille"
 
 #: conf/forum_data_rules.py:327
 msgid "Let users decide"
-msgstr ""
+msgstr "Anna käyttäjien päättää"
 
 #: conf/forum_data_rules.py:335
 msgid "Publicly show user tag selections"
@@ -1314,7 +1315,7 @@ msgstr ""
 
 #: conf/group_settings.py:41
 msgid "everyone"
-msgstr ""
+msgstr "kaikki"
 
 #: conf/group_settings.py:42
 msgid "Global user group name"
@@ -1338,7 +1339,7 @@ msgstr ""
 
 #: conf/karma_and_badges_visibility.py:27
 msgid "Visibility of karma"
-msgstr ""
+msgstr "Mainepisteiden näyttäminen"
 
 #: conf/karma_and_badges_visibility.py:30
 msgid "User's karma may be shown publicly or only to the owners"
@@ -1354,7 +1355,7 @@ msgstr ""
 
 #: conf/ldap.py:9
 msgid "LDAP login configuration"
-msgstr ""
+msgstr "LDAP-palvelimen kirjautumisasetukset"
 
 #: conf/ldap.py:17
 msgid "Use LDAP authentication for the password login"
@@ -1373,29 +1374,29 @@ msgstr ""
 
 #: conf/ldap.py:37
 msgid "Version 3"
-msgstr ""
+msgstr "Versio 3"
 
 #: conf/ldap.py:38
 msgid "Version 2 (insecure and deprecated)!!!"
-msgstr ""
+msgstr "Versio 2 (turvaton ja vanhentunut)!!!"
 
 #: conf/ldap.py:47
 msgid "LDAP protocol version"
-msgstr ""
+msgstr "LDAP-protokollan versio"
 
 #: conf/ldap.py:49
 msgid ""
 "Note that Version 2 protocol is not secure!!! Do not use it on unprotected "
 "network."
-msgstr ""
+msgstr "Huom: versio 2 protokollasta on turvaton!!! Älä käytä sitä turvattomassa verkossa."
 
 #: conf/ldap.py:59
 msgid "LDAP URL"
-msgstr ""
+msgstr "LDAP-palvelimen URL-osoite"
 
 #: conf/ldap.py:68
 msgid "LDAP encoding"
-msgstr ""
+msgstr "LDAP-enkoodaus"
 
 #: conf/ldap.py:71
 msgid ""
@@ -1428,7 +1429,7 @@ msgstr ""
 
 #: conf/ldap.py:113
 msgid "UserID/login field"
-msgstr ""
+msgstr "Kirjautuminen"
 
 #: conf/ldap.py:116
 msgid ""
@@ -1448,11 +1449,11 @@ msgstr ""
 
 #: conf/ldap.py:139
 msgid "First name, Last name"
-msgstr ""
+msgstr "Etunimi, sukunimi"
 
 #: conf/ldap.py:140
 msgid "Last name, First name"
-msgstr ""
+msgstr "Sukunimi, etunimi"
 
 #: conf/ldap.py:147
 msgid "\"Common Name\" field format"
@@ -1468,7 +1469,7 @@ msgstr ""
 
 #: conf/ldap.py:160 conf/ldap.py:170
 msgid "This field can be blank"
-msgstr ""
+msgstr "Tämä kenttä voi olla tyhjä"
 
 #: conf/ldap.py:168
 msgid "Surname (last) name"
@@ -1503,7 +1504,7 @@ msgstr "Käytä tätä kenttää lisätäksesi sisältöä VASEMPAAN sivupalkkii
 
 #: conf/license.py:13
 msgid "Content License"
-msgstr ""
+msgstr "Sisällön lisenssi"
 
 #: conf/license.py:21
 msgid "Show license clause in the site footer"
@@ -1823,11 +1824,11 @@ msgstr ""
 
 #: conf/question_lists.py:53 conf/question_lists.py:70
 msgid "All Questions"
-msgstr ""
+msgstr "Kaikki kysymykset"
 
 #: conf/question_lists.py:54 conf/question_lists.py:71
 msgid "Unanswered Questions"
-msgstr ""
+msgstr "Vastaamattomat kysymykset"
 
 #: conf/question_lists.py:55
 msgid "Followed Questions"
@@ -2357,7 +2358,7 @@ msgstr ""
 
 #: conf/social_sharing.py:20
 msgid "Check to enable RSS feeds"
-msgstr ""
+msgstr "RSS-syötetuki päälle"
 
 #: conf/social_sharing.py:29
 msgid "Hashtag or suffix to sharing messages"
@@ -2457,7 +2458,7 @@ msgstr "Salli käyttäjien vaihtaa omaa sähköpostiosoitettaan"
 
 #: conf/user_settings.py:69
 msgid "Allow email address in user name"
-msgstr ""
+msgstr "Hyväksy sähköpostiosoite käyttäjätunnuksessa"
 
 #: conf/user_settings.py:78
 msgid "Allow account recovery by email"
@@ -2637,7 +2638,7 @@ msgstr "merkitys"
 
 #: const/__init__.py:74
 msgid "Never"
-msgstr ""
+msgstr "Ei koskaan"
 
 #: const/__init__.py:75
 msgid "When new post is published"
@@ -2708,7 +2709,7 @@ msgstr "muokkasi vastausta"
 
 #: const/__init__.py:201
 msgid "received badge"
-msgstr ""
+msgstr "sai mitalin"
 
 #: const/__init__.py:202
 msgid "marked best answer"
@@ -2784,7 +2785,7 @@ msgstr ""
 
 #: const/__init__.py:234
 msgid "made an edit"
-msgstr ""
+msgstr "teki muokkauksen"
 
 #: const/__init__.py:238
 msgid "created post reject reason"
@@ -2796,11 +2797,11 @@ msgstr ""
 
 #: const/__init__.py:300
 msgid "answered question"
-msgstr ""
+msgstr "vastasi kysymykseen"
 
 #: const/__init__.py:303
 msgid "accepted answer"
-msgstr ""
+msgstr "hyväksyi vastauksen"
 
 #: const/__init__.py:307
 msgid "[closed]"
@@ -2820,11 +2821,11 @@ msgstr "tagätty uudelleen"
 
 #: const/__init__.py:311
 msgid "[private]"
-msgstr ""
+msgstr "[yksityinen]"
 
 #: const/__init__.py:320
 msgid "show all tags"
-msgstr ""
+msgstr "näytä kaikki tagit"
 
 #: const/__init__.py:321 const/__init__.py:330 const/__init__.py:336
 #: const/__init__.py:342
@@ -3005,7 +3006,7 @@ msgstr "jätetty huomioitta"
 
 #: const/message_keys.py:38 models/tag.py:313
 msgid "subscribed"
-msgstr ""
+msgstr "tilasi"
 
 #: const/message_keys.py:39 templates/question_retag.html:58
 msgid "tags are required"
@@ -3085,7 +3086,7 @@ msgstr "Käyttäjätunnuksesi (<i>pakollinen</i>)"
 
 #: deps/django_authopenid/forms.py:455
 msgid "sorry, there is no such user name"
-msgstr ""
+msgstr "Valitettavasti tätä käyttäjänimeä ei ole olemassa"
 
 #: deps/django_authopenid/urls.py:14 deps/django_authopenid/urls.py:20
 #: deps/django_authopenid/urls.py:23 setup_templates/settings.py:229
@@ -3300,7 +3301,7 @@ msgstr "Tarkista sähköpostisi ja klikkaa liitteenä olevaa linkkiä"
 
 #: deps/group_messaging/models.py:356
 msgid "Re: "
-msgstr ""
+msgstr "Re: "
 
 #: deps/livesettings/models.py:107 deps/livesettings/models.py:153
 msgid "Site"
@@ -3405,7 +3406,7 @@ msgstr ""
 #: mail/lamson_handlers.py:318
 #, python-format
 msgid "Re: %s"
-msgstr ""
+msgstr "Re: %s"
 
 #: management/commands/send_accept_answer_reminders.py:61
 #, python-format
@@ -3931,7 +3932,7 @@ msgstr "Onneksi olkoon, olet ansainnut '%(badge_name)s'-mitalin. Katso:  <a href
 #: models/__init__.py:3613
 #, python-format
 msgid "Welcome to %(site_name)s"
-msgstr ""
+msgstr "Tervetuloa käyttämään %(site_name)s"
 
 #: models/__init__.py:3634 views/commands.py:697
 msgid "Your tag subscription was saved, thanks!"
@@ -4201,15 +4202,15 @@ msgstr "Aktiivinen yhden tagin alla"
 
 #: models/message.py:16
 msgid "message"
-msgstr ""
+msgstr "viesti"
 
 #: models/post.py:414
 msgid "Question: "
-msgstr ""
+msgstr "Kysymys:"
 
 #: models/post.py:416
 msgid "Answer: "
-msgstr ""
+msgstr "Vastaus:"
 
 #: models/post.py:1569
 msgid "Sorry, this question has been deleted and is no longer accessible"
@@ -4292,15 +4293,15 @@ msgstr ""
 
 #: models/reply_by_email.py:38
 msgid "Post an answer"
-msgstr ""
+msgstr "Jätä vastaus"
 
 #: models/reply_by_email.py:39
 msgid "Post a comment"
-msgstr ""
+msgstr "Jätä kommentti"
 
 #: models/reply_by_email.py:40
 msgid "Edit post"
-msgstr ""
+msgstr "Muokkaa"
 
 #: models/reply_by_email.py:41
 msgid "Append to post"
@@ -4320,7 +4321,7 @@ msgstr ""
 
 #: models/reply_by_email.py:109
 msgid "edited by email"
-msgstr ""
+msgstr "muokattu sähköpostitse"
 
 #: models/repute.py:207
 #, python-format
@@ -4384,11 +4385,11 @@ msgstr "Ei sähköpostia"
 
 #: models/user.py:528
 msgid "Can join when they want"
-msgstr ""
+msgstr "Voi liittyä vapaasti"
 
 #: models/user.py:529
 msgid "Users ask permission"
-msgstr ""
+msgstr "Käyttäjät pyytävät lupaa"
 
 #: models/user.py:530
 msgid "Moderator adds users"
@@ -4404,7 +4405,7 @@ msgstr ""
 
 #: models/widgets.py:34
 msgid "css for the widget"
-msgstr ""
+msgstr "widgetin CSS-muotoilut"
 
 #: templates/404.html:3 templates/404.html.py:10
 msgid "Page not found"
@@ -4516,7 +4517,7 @@ msgstr "näytä esikatselu"
 #: templates/ask.html:4 templates/widgets/ask_button.html:9
 #: templates/widgets/ask_form.html:66
 msgid "Ask Your Question"
-msgstr ""
+msgstr "Esitä kysymyksesi"
 
 #: templates/ask.html:21
 msgid ""
@@ -4666,7 +4667,7 @@ msgstr ""
 
 #: templates/faq_static.html:10
 msgid "What kinds of questions should be avoided?"
-msgstr ""
+msgstr "Minkälaisia kysymyksiä minun pitäisi välttää?"
 
 #: templates/faq_static.html:11
 msgid ""
@@ -4877,23 +4878,23 @@ msgstr "Lähetä"
 #: templates/question/sidebar.html:121
 #: templates/tags/list_bulk_tag_subscription.html:15
 msgid "Groups"
-msgstr ""
+msgstr "Ryhmät"
 
 #: templates/groups.html:11
 msgid "All groups"
-msgstr ""
+msgstr "Kaikki ryhmät"
 
 #: templates/groups.html:13
 msgid "all groups"
-msgstr ""
+msgstr "kaikki ryhmät"
 
 #: templates/groups.html:15
 msgid "My groups"
-msgstr ""
+msgstr "Omat ryhmäni"
 
 #: templates/groups.html:17
 msgid "my groups"
-msgstr ""
+msgstr "omat ryhmäni"
 
 #: templates/groups.html:25
 msgid ""
@@ -4903,11 +4904,11 @@ msgstr ""
 
 #: templates/groups.html:30
 msgid "Group"
-msgstr ""
+msgstr "Ryhmä"
 
 #: templates/groups.html:31
 msgid "Number of members"
-msgstr ""
+msgstr "Jäsenten määrä"
 
 #: templates/help.html:2 templates/help.html.py:4
 msgid "Help"
@@ -4995,7 +4996,7 @@ msgstr ""
 
 #: templates/help.html:42
 msgid "Voting"
-msgstr ""
+msgstr "Äänestäminen"
 
 #: templates/help.html:44
 #, python-format
@@ -5055,7 +5056,7 @@ msgstr "Jos sinulla on vaikeuksia tämän tiedonsiirtotyökalun kanssa,\nyritä 
 
 #: templates/list_suggested_tags.html:11
 msgid "Tag"
-msgstr ""
+msgstr "Tagi"
 
 #: templates/list_suggested_tags.html:12
 msgid "Suggested by"
@@ -5063,7 +5064,7 @@ msgstr ""
 
 #: templates/list_suggested_tags.html:13
 msgid "Your decision"
-msgstr ""
+msgstr "Päätöksesi"
 
 #: templates/list_suggested_tags.html:14
 msgid "Suggested tag was used for questions"
@@ -5071,15 +5072,15 @@ msgstr ""
 
 #: templates/list_suggested_tags.html:34 templates/list_suggested_tags.html:45
 msgid "Accept"
-msgstr ""
+msgstr "Hyväksy"
 
 #: templates/list_suggested_tags.html:35 templates/list_suggested_tags.html:46
 msgid "Reject"
-msgstr ""
+msgstr "Hylkää"
 
 #: templates/list_suggested_tags.html:38
 msgid "There are no questions with this tag yet"
-msgstr ""
+msgstr "Ei kysymyksiä vielä tällä tagilla"
 
 #: templates/list_suggested_tags.html:62
 #, python-format
@@ -5088,7 +5089,7 @@ msgstr ""
 
 #: templates/list_suggested_tags.html:63
 msgid "Reject tag"
-msgstr ""
+msgstr "Hylkää tagi"
 
 #: templates/list_suggested_tags.html:71 templates/tags/content.html:5
 #: templates/tags/content.html.py:31
@@ -5137,17 +5138,17 @@ msgstr "päivitetty"
 
 #: templates/macros.html:261 templates/macros.html.py:267
 msgid "Leave this group"
-msgstr ""
+msgstr "Jätä tämä ryhmä"
 
 #: templates/macros.html:262 templates/macros.html.py:264
 #: templates/macros.html:283
 msgid "Join this group"
-msgstr ""
+msgstr "Liity tähän ryhmään"
 
 #: templates/macros.html:263 templates/macros.html.py:268
 #: templates/macros.html:278
 msgid "You are a member"
-msgstr ""
+msgstr "Olet jäsen"
 
 #: templates/macros.html:270
 msgid "Cancel application"
@@ -5155,12 +5156,12 @@ msgstr ""
 
 #: templates/macros.html:271 templates/macros.html.py:280
 msgid "Waiting approval"
-msgstr ""
+msgstr "Odottaa hyväksymistä"
 
 #: templates/macros.html:273 templates/macros.html.py:274
 #: templates/macros.html:285
 msgid "Ask to join"
-msgstr ""
+msgstr "Pyydä liittyä"
 
 #: templates/macros.html:314
 #, python-format
@@ -5179,7 +5180,7 @@ msgstr "muokkaa"
 
 #: templates/macros.html:452
 msgid "convert to answer"
-msgstr ""
+msgstr "muunna vastaukseksi"
 
 #: templates/macros.html:579
 #, python-format
@@ -5219,7 +5220,7 @@ msgstr "nykyinen sivu"
 #: templates/macros.html:739 templates/macros.html.py:746
 #, python-format
 msgid "page %(num)s"
-msgstr ""
+msgstr "sivu %(num)s"
 
 #: templates/macros.html:711 templates/macros.html.py:750
 msgid "next page"
@@ -5262,11 +5263,11 @@ msgstr "Kysymykset"
 
 #: templates/question.html:226
 msgid "see more comments"
-msgstr ""
+msgstr "näytä lisää kommentteja"
 
 #: templates/question.html:228 templates/question.html.py:331
 msgid "post a comment"
-msgstr ""
+msgstr "jätä kommentti"
 
 #: templates/question.html:241 templates/question/content.html:46
 msgid "Answer Your Own Question"
@@ -5274,7 +5275,7 @@ msgstr "Vastaa omaan kysymykseesi"
 
 #: templates/question.html:246
 msgid "Post Your Answer"
-msgstr ""
+msgstr "Jätä vastauksesi"
 
 #: templates/question.html:252 templates/widgets/ask_form.html:64
 msgid "Login/Signup to Post"
@@ -5294,7 +5295,7 @@ msgstr ""
 
 #: templates/question_edit.html:56
 msgid "Change language"
-msgstr ""
+msgstr "Vaihda kieli"
 
 #: templates/question_retag.html:3 templates/question_retag.html.py:5
 msgid "Retag question"
@@ -5457,7 +5458,7 @@ msgstr "Kirjaudu sisään"
 
 #: templates/authopenid/changeemail.html:2
 msgid "Change Email"
-msgstr ""
+msgstr "Vaihda sähköpostiosoite"
 
 #: templates/authopenid/changeemail.html:6
 msgid "Validate email"
@@ -5493,7 +5494,7 @@ msgstr "Rekisteröinti"
 
 #: templates/authopenid/complete.html:23
 msgid "User registration"
-msgstr ""
+msgstr "Rekisteröinti"
 
 #: templates/authopenid/complete.html:47
 msgid "<strong>Screen Name</strong> (<i>will be shown to others</i>)"
@@ -5644,7 +5645,7 @@ msgstr ""
 #: templates/authopenid/signin.html:94
 #: templates/authopenid/widget_signin.html:98
 msgid "Please, sign in"
-msgstr ""
+msgstr "Ole hyvä, kirjaudu sisään"
 
 #: templates/authopenid/signin.html:104
 #: templates/authopenid/widget_signin.html:105
@@ -5782,7 +5783,7 @@ msgstr "palaa OpenID-palvelun kirjautumiseen"
 #: templates/authopenid/verify_email.html:2
 #: templates/authopenid/verify_email.html:4
 msgid "Confirm email address"
-msgstr ""
+msgstr "Vahvista sähköpostiosoite"
 
 #: templates/authopenid/verify_email.html:6
 msgid ""
@@ -5792,7 +5793,7 @@ msgstr ""
 
 #: templates/authopenid/verify_email.html:11
 msgid "Confirm email"
-msgstr ""
+msgstr "Vahvista sähköpostiosoite"
 
 #: templates/authopenid/widget_signin.html:33
 msgid ""
@@ -5931,7 +5932,7 @@ msgstr ""
 
 #: templates/email/macros.html:26
 msgid "Question :"
-msgstr ""
+msgstr "Kysymys:"
 
 #: templates/email/macros.html:33
 #, python-format
@@ -5940,7 +5941,7 @@ msgstr ""
 
 #: templates/email/macros.html:40
 msgid "Tags:"
-msgstr ""
+msgstr "Tagit:"
 
 #: templates/email/macros.html:48
 #, python-format
@@ -6099,7 +6100,7 @@ msgstr "Tallenna"
 
 #: templates/embed/widgets.html:3 templates/embed/widgets.html.py:5
 msgid "Widgets"
-msgstr ""
+msgstr "Widgetit"
 
 #: templates/embed/widgets.html:11
 msgid ""
@@ -6112,7 +6113,7 @@ msgstr ""
 
 #: templates/embed/widgets.html:17 templates/embed/widgets.html.py:26
 msgid "create"
-msgstr ""
+msgstr "luo"
 
 #: templates/embed/widgets.html:20 templates/embed/widgets.html.py:29
 msgid "view list"
@@ -6154,11 +6155,11 @@ msgstr "viestit"
 
 #: templates/group_messaging/senders_list.html:9
 msgid "sent"
-msgstr ""
+msgstr "lähetetyt"
 
 #: templates/group_messaging/senders_list.html:16
 msgid "trash"
-msgstr ""
+msgstr "roskakori"
 
 #: templates/group_messaging/threads_list.html:25
 msgid "there are no messages yet..."
@@ -6170,7 +6171,7 @@ msgstr "Sivustot"
 
 #: templates/livesettings/group_settings.html:4
 msgid "Settings"
-msgstr ""
+msgstr "Asetukset"
 
 #: templates/livesettings/group_settings.html:9
 #: templates/livesettings/site_settings.html:51
@@ -6311,7 +6312,7 @@ msgstr "Et löytänyt etsimääsi?"
 
 #: templates/main_page/questions_loop.html:10
 msgid "Ask your question!"
-msgstr ""
+msgstr "Esitä kysymyksesi!"
 
 #: templates/main_page/tab_bar.html:11
 msgid "subscribe to the questions feed"
@@ -6327,7 +6328,7 @@ msgstr ""
 
 #: templates/main_page/tag_search.html:5
 msgid "search"
-msgstr ""
+msgstr "haku"
 
 #: templates/meta/bottom_scripts.html:7
 #, python-format
@@ -6401,7 +6402,7 @@ msgstr ""
 
 #: templates/question/answer_controls.html:48
 msgid "publish"
-msgstr ""
+msgstr "julkaise"
 
 #: templates/question/answer_controls.html:54
 msgid "permanent link"
@@ -6414,7 +6415,7 @@ msgstr "linkki"
 
 #: templates/question/answer_controls.html:58
 msgid "more"
-msgstr ""
+msgstr "lisää"
 
 #: templates/question/answer_controls.html:71
 msgid "repost as a question comment"
@@ -6525,7 +6526,7 @@ msgstr ""
 
 #: templates/question/new_answer_form.html:39
 msgid "Add answer"
-msgstr ""
+msgstr "Lisää vastaus"
 
 #: templates/question/question_controls.html:5
 msgid "retag"
@@ -6590,7 +6591,7 @@ msgstr "tilaa RSS-syöte"
 
 #: templates/question/sidebar.html:57
 msgid "Invite"
-msgstr ""
+msgstr "Kutsu"
 
 #: templates/question/sidebar.html:63 templates/question/sidebar.html.py:69
 #: templates/user_profile/user_email_subscriptions.html:59
@@ -6602,15 +6603,15 @@ msgstr "lisää"
 
 #: templates/question/sidebar.html:65 templates/question/sidebar.html.py:71
 msgid "- or -"
-msgstr ""
+msgstr "- tai -"
 
 #: templates/question/sidebar.html:83
 msgid "share with everyone"
-msgstr ""
+msgstr "jaa kaikille"
 
 #: templates/question/sidebar.html:94
 msgid "This question is currently shared only with:"
-msgstr ""
+msgstr "tämä kysymys on jaettu vain seuraaville:"
 
 #: templates/question/sidebar.html:96
 msgid "Individual users"
@@ -6618,20 +6619,20 @@ msgstr ""
 
 #: templates/question/sidebar.html:101
 msgid "You"
-msgstr ""
+msgstr "Sinä"
 
 #: templates/question/sidebar.html:108 templates/question/sidebar.html:128
 msgid "and"
-msgstr ""
+msgstr "ja"
 
 #: templates/question/sidebar.html:133
 #, python-format
 msgid "%(more_count)s more"
-msgstr ""
+msgstr "%(more_count)s lisää"
 
 #: templates/question/sidebar.html:139
 msgid "Public thread"
-msgstr ""
+msgstr "Julkinen keskustelu"
 
 #: templates/question/sidebar.html:140
 #, python-format
@@ -6645,11 +6646,11 @@ msgstr "Tilastot"
 
 #: templates/question/sidebar.html:150
 msgid "Asked"
-msgstr ""
+msgstr "Kysytty"
 
 #: templates/question/sidebar.html:153
 msgid "Seen"
-msgstr ""
+msgstr "Nähty"
 
 #: templates/question/sidebar.html:153
 msgid "times"
@@ -6657,7 +6658,7 @@ msgstr "kertaa"
 
 #: templates/question/sidebar.html:156
 msgid "Last updated"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #: templates/question/sidebar.html:164
 msgid "Related questions"
@@ -6694,15 +6695,15 @@ msgstr "suosituksen mukaan"
 
 #: templates/tags/header.html:34 templates/tags/header.html.py:35
 msgid "suggested"
-msgstr ""
+msgstr "ehdottaa"
 
 #: templates/tags/header.html:42 templates/tags/header.html.py:43
 msgid "manage subscriptions"
-msgstr ""
+msgstr "muokkaa tilauksia"
 
 #: templates/tags/list_bulk_tag_subscription.html:4
 msgid "Manage Tag subscriptions"
-msgstr ""
+msgstr "Muokkaa tagien tilauksia"
 
 #: templates/tags/list_bulk_tag_subscription.html:6
 msgid "Manage Tag subscription</a> "
@@ -6714,15 +6715,15 @@ msgstr ""
 
 #: templates/tags/list_bulk_tag_subscription.html:11
 msgid "Date"
-msgstr ""
+msgstr "Päivämäärä"
 
 #: templates/tags/list_bulk_tag_subscription.html:17
 msgid "Action"
-msgstr ""
+msgstr "Toimenpide"
 
 #: templates/tags/list_bulk_tag_subscription.html:48 views/commands.py:759
 msgid "Edit"
-msgstr ""
+msgstr "Muokkaa"
 
 #: templates/user_inbox/base.html:14
 msgid "Sections:"
@@ -6730,7 +6731,7 @@ msgstr "Osiot:"
 
 #: templates/user_inbox/base.html:19
 msgid "messages"
-msgstr ""
+msgstr "viestit"
 
 #: templates/user_inbox/base.html:24
 #, python-format
@@ -6744,7 +6745,7 @@ msgstr ""
 
 #: templates/user_inbox/base.html:38
 msgid "group join requests"
-msgstr ""
+msgstr "ryhmäänliittymispyynnöt"
 
 #: templates/user_inbox/group_join_requests.html:4
 msgid "inbox - group join requests"
@@ -6752,11 +6753,11 @@ msgstr ""
 
 #: templates/user_inbox/group_join_requests.html:26
 msgid "Approve"
-msgstr ""
+msgstr "Hyväksy"
 
 #: templates/user_inbox/group_join_requests.html:41
 msgid "Deny"
-msgstr ""
+msgstr "Hylkää"
 
 #: templates/user_inbox/messages.html:104
 msgid "inbox - messages"
@@ -6834,15 +6835,15 @@ msgstr ""
 
 #: templates/user_profile/reject_post_dialog.html:58
 msgid "Select this reason"
-msgstr ""
+msgstr "Valitse tämä syy"
 
 #: templates/user_profile/reject_post_dialog.html:65
 msgid "Delete this reason"
-msgstr ""
+msgstr "Poista tämä syy"
 
 #: templates/user_profile/reject_post_dialog.html:71
 msgid "Add a new reason"
-msgstr ""
+msgstr "Lisää uusi syy"
 
 #: templates/user_profile/reject_post_dialog.html:81
 msgid ""
@@ -6853,7 +6854,7 @@ msgstr ""
 
 #: templates/user_profile/reject_post_dialog.html:101
 msgid "Edit this reason"
-msgstr ""
+msgstr "Muokkaa tätä syytä"
 
 #: templates/user_profile/twitter_sharing_controls.html:8
 #, python-format
@@ -6944,7 +6945,7 @@ msgstr ""
 
 #: templates/user_profile/user_email_subscriptions.html:24
 msgid "Stop Email"
-msgstr ""
+msgstr "Pysäytä sähköposti"
 
 #: templates/user_profile/user_email_subscriptions.html:30
 msgid "Subscribed languages"
@@ -6952,7 +6953,7 @@ msgstr ""
 
 #: templates/user_profile/user_email_subscriptions.html:43
 msgid "Save languages"
-msgstr ""
+msgstr "Tallenna kielet"
 
 #: templates/user_profile/user_email_subscriptions.html:48
 msgid "Subscribed Tags"
@@ -6977,15 +6978,15 @@ msgstr "nimi"
 
 #: templates/user_profile/user_info.html:61
 msgid "groups"
-msgstr ""
+msgstr "ryhmät"
 
 #: templates/user_profile/user_info.html:71
 msgid "add group"
-msgstr ""
+msgstr "lisää ryhmä"
 
 #: templates/user_profile/user_info.html:76
 msgid "member since"
-msgstr ""
+msgstr "liittynyt"
 
 #: templates/user_profile/user_info.html:81
 msgid "last seen"
@@ -6993,7 +6994,7 @@ msgstr "nähty viimeksi"
 
 #: templates/user_profile/user_info.html:87
 msgid "website"
-msgstr ""
+msgstr "sivusto"
 
 #: templates/user_profile/user_info.html:100
 msgid "location"
@@ -7006,7 +7007,7 @@ msgstr "ikä"
 #: templates/user_profile/user_info.html:108
 #, python-format
 msgid "%(age)s years old"
-msgstr ""
+msgstr "%(age)s vuotta vanha"
 
 #: templates/user_profile/user_info.html:113
 msgid "todays unused votes"
@@ -7233,7 +7234,7 @@ msgstr "seuraajat ja seuratut käyttäjät"
 
 #: templates/user_profile/user_tabs.html:22
 msgid "Graph of user karma"
-msgstr ""
+msgstr "Graafi käyttäjän mainepisteistä"
 
 #: templates/user_profile/user_tabs.html:27
 msgid "questions that user is following"
@@ -7259,7 +7260,7 @@ msgstr "hallitse tätä käyttäjää"
 #: templates/widgets/answer_edit_tips.html:3
 #: templates/widgets/question_edit_tips.html:3
 msgid "Tips"
-msgstr ""
+msgstr "Vinkkejä"
 
 #: templates/widgets/answer_edit_tips.html:6
 msgid "give an answer interesting to this community"
@@ -7295,7 +7296,7 @@ msgstr ""
 
 #: templates/widgets/edit_post.html:42 templates/widgets/edit_post.html:47
 msgid "tags:"
-msgstr ""
+msgstr "tagit:"
 
 #: templates/widgets/edit_post.html:43
 msgid "(required)"
@@ -7342,15 +7343,15 @@ msgstr ""
 
 #: templates/widgets/group_info.html:30
 msgid "change logo"
-msgstr ""
+msgstr "Vaihda logo"
 
 #: templates/widgets/group_info.html:32
 msgid "delete logo"
-msgstr ""
+msgstr "poista logo"
 
 #: templates/widgets/group_info.html:36
 msgid "add logo"
-msgstr ""
+msgstr "lisää logo"
 
 #: templates/widgets/group_info.html:46
 msgid "moderate emailed questions"
@@ -7455,7 +7456,7 @@ msgstr "opi lisää Markdownista"
 
 #: templates/widgets/meta_nav.html:12
 msgid "people & groups"
-msgstr ""
+msgstr "ihmiset ja ryhmät"
 
 #: templates/widgets/meta_nav.html:20
 msgid "users"
@@ -7562,11 +7563,11 @@ msgstr "mitalit:"
 
 #: templates/widgets/user_navigation.html:17
 msgid "sign out"
-msgstr ""
+msgstr "kirjaudu ulos"
 
 #: templates/widgets/user_navigation.html:20
 msgid "Hi there! Please sign in"
-msgstr ""
+msgstr "Hei! Kirjaudu sisään"
 
 #: templates/widgets/user_navigation.html:23
 msgid "settings"
@@ -7574,11 +7575,11 @@ msgstr "asetukset"
 
 #: templates/widgets/user_navigation.html:24
 msgid "widgets"
-msgstr ""
+msgstr "widgetit"
 
 #: templatetags/extra_filters_jinja.py:319
 msgid "no"
-msgstr ""
+msgstr "ei"
 
 #: utils/decorators.py:104 views/commands.py:146
 msgid "Oops, apologies - there was some error"
@@ -7594,7 +7595,7 @@ msgstr "Sähköpostistasi löydettiin roskapostia, anteeksi, jos huomio oli virh
 
 #: utils/decorators.py:243
 msgid "This function is limited to moderators and administrators"
-msgstr ""
+msgstr "Tämä toiminnallisuus on rajattu ainoastaan ylemmän tason käyttäjille"
 
 #: utils/forms.py:66
 msgid "this field is required"
@@ -7602,7 +7603,7 @@ msgstr "vaadittu kenttä"
 
 #: utils/forms.py:93
 msgid "Choose a screen name"
-msgstr ""
+msgstr "Valitse käyttäjätunnus"
 
 #: utils/forms.py:103
 msgid "user name is required"
@@ -7634,11 +7635,11 @@ msgstr "käytä ainakin yhtä aakkosta käyttäjänimessä"
 
 #: utils/forms.py:110
 msgid "symbol \"@\" is not allowed"
-msgstr ""
+msgstr "\"@\"-merkki ei ole sallittu"
 
 #: utils/forms.py:222
 msgid "Your email <i>(never shared)</i>"
-msgstr ""
+msgstr "sähköpostiosoitteesi  <i>(emme jaa osoitettasi)</i>"
 
 #: utils/forms.py:224
 msgid "email address is required"
@@ -7662,7 +7663,7 @@ msgstr "salasana vaaditaan"
 
 #: utils/forms.py:268
 msgid "Password <i>(please retype)</i>"
-msgstr ""
+msgstr "Salasana uudestaan"
 
 #: utils/forms.py:269
 msgid "please, retype your password"
@@ -7716,7 +7717,7 @@ msgstr "Valitettavasti anonyymit käyttäjät eivät voi käyttää inboxia"
 
 #: views/commands.py:165
 msgid "Sorry, anonymous users cannot vote"
-msgstr ""
+msgstr "anonyymit käyttäjät eivät voi äänestää"
 
 #: views/commands.py:182
 msgid "Sorry you ran out of votes for today"
@@ -7762,7 +7763,7 @@ msgstr "Kirjaudu sisään kirjoittautuaksesi %(tags)s:n tilaajaksi"
 
 #: views/commands.py:729
 msgid "Create"
-msgstr ""
+msgstr "Luo"
 
 #: views/commands.py:959
 msgid "Please sign in to vote"
@@ -7874,7 +7875,7 @@ msgstr "profiili - äänet"
 
 #: views/users.py:937
 msgid "user karma"
-msgstr ""
+msgstr "käyttäjän mainepisteet"
 
 #: views/users.py:938
 msgid "Profile - User's Karma"

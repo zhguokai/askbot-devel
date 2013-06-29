@@ -76,31 +76,39 @@ class SkinEnvironment(CoffinEnvironment):
 
         return ''
 
-def load_skins():
+def load_skins(language_code):
     skins = dict()
     for skin_name in utils.get_available_skins():
-        skins[skin_name] = SkinEnvironment(
+        skin_code = skin_name + '-' + language_code
+        skins[skin_code] = SkinEnvironment(
                                 skin = skin_name,
                                 extensions=['jinja2.ext.i18n',]
                             )
-        skins[skin_name].set_language(django_settings.LANGUAGE_CODE)
+        skins[skin_code].set_language(language_code)
         #from askbot.templatetags import extra_filters_jinja as filters
         #skins[skin_name].filters['media'] = filters.media
     return skins
 
-SKINS = load_skins()
+if django_settings.ASKBOT_MULTILINGUAL:
+    SKINS = dict()
+    for lang in dict(django_settings.LANGUAGES).keys():
+        SKINS.update(load_skins(lang))
+else:
+    SKINS = load_skins(django_settings.LANGUAGE_CODE)
 
-def get_skin(request = None):
+def get_skin():
     """retreives the skin environment
     for a given request (request var is not used at this time)"""
     skin_name = askbot_settings.ASKBOT_DEFAULT_SKIN
+    skin_name += '-' + translation.get_language()
+
     try:
         return SKINS[skin_name]
     except KeyError:
         msg_fmt = 'skin "%s" not found, check value of "ASKBOT_EXTRA_SKINS_DIR"'
         raise ImproperlyConfigured(msg_fmt % skin_name)
 
-def get_askbot_template(template, request = None):
+def get_askbot_template(template):
     """
     retreives template for the skin
     request variable will be used in the future to set
@@ -108,14 +116,12 @@ def get_askbot_template(template, request = None):
 
     request variable is used to localize the skin if possible
     """
-    skin = get_skin(request)
-    if hasattr(request,'LANGUAGE_CODE'):
-        skin.set_language(request.LANGUAGE_CODE)
+    skin = get_skin()
     return skin.get_template(template)
 
 def render_into_skin_as_string(template, data, request):
     context = RequestContext(request, data)
-    template = get_askbot_template(template, request)
+    template = get_askbot_template(template)
     return template.render(context)
 
 def render_text_into_skin(text, data, request):
