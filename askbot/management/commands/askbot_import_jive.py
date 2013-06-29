@@ -11,6 +11,20 @@ from datetime import datetime
 from optparse import make_option
 import re
 
+def jive_to_markdown(text):
+    """convert jive forum markup to markdown
+    using common sense guesswork
+    """
+    text = re.sub('(\n\n)+', '\n\n', text)#paragraph separators
+    text = re.sub('\t', '    ', text)#tabs to four spaces
+    text = re.sub('\n\s*>[^\n]+', '', text)#delete forum quotes
+    text = re.sub('(?<!\n)\n', '\n    ', text)#force linebreaks via <pre>
+    text = re.sub(r'\n\sEdited by:[^\n]*\n', '', text)#delete "Edited by" comments
+    text = re.sub(r'([^\n])\n(?!\n)', r'\1\n    ', text)#force linebreakes via <pre>
+    text = re.sub(r'\n[ ]*([^\n]*{code}[^\n]*)\n', r'\n\1\n', text)#undo damage from above
+    text = re.sub(r'{code}([^{]+){code}', r'`\1`', text)
+    return text
+
 def parse_date(date_str):
     return datetime.strptime(date_str[:-8], '%Y/%m/%d %H:%M:%S')
 
@@ -74,6 +88,7 @@ class Command(BaseCommand):
         askbot_settings.update('MIN_REP_TO_INSERT_LINK', 1)
         askbot_settings.update('MIN_REP_TO_SUGGEST_LINK', 1)
         askbot_settings.update('COMMENTS_EDITOR_TYPE', 'rich-text')
+        askbot_settings.update('MARKUP_CODE_FRIENDLY', True)
         self.bad_email_count = 0
 
     def handle(self, *args, **kwargs):
@@ -189,8 +204,7 @@ class Command(BaseCommand):
         title = post.find('Subject').text
         added_at = parse_date(post.find('CreationDate').text)
         username = post.find('Username').text
-        body = post.find('Body').text
-        body = re.sub('\n>', '\n    ', body)
+        body = jive_to_markdown(post.find('Body').text)
         try:
             user = models.User.objects.get(username=username)
         except models.User.DoesNotExist:
