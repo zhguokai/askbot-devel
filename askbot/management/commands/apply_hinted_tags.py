@@ -1,6 +1,8 @@
 import datetime
+from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
+from django.utils import translation
 from optparse import make_option
 from askbot.utils.console import ProgressBar
 from askbot.models import Thread
@@ -27,6 +29,7 @@ class Command(BaseCommand):
         then applies tags to questions by matching them
         with the question titles and content
         """
+        translation.activate(django_settings.LANGUAGE_CODE)
         if kwargs['tags_file'] is None:
             raise CommandError('parameter --tags-file is required')
         try:
