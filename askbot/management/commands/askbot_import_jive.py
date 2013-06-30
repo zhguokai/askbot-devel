@@ -7,9 +7,23 @@ from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.forms import EmailField, ValidationError
+from django.utils import translation
 from datetime import datetime
 from optparse import make_option
 import re
+
+class DummyTransaction(object):
+    @classmethod
+    def commit(cls):
+        pass
+
+    @classmethod
+    def commit_manually(cls, func):
+        def decorated(*args, **kwargs):
+            func(*args, **kwargs)
+        return decorated
+
+#transaction = DummyTransaction()
 
 def jive_to_markdown(text):
     """convert jive forum markup to markdown
@@ -19,7 +33,7 @@ def jive_to_markdown(text):
     text = re.sub('\t', '    ', text)#tabs to four spaces
     text = re.sub('\n\s*>[^\n]+', '', text)#delete forum quotes
     text = re.sub('(?<!\n)\n', '\n    ', text)#force linebreaks via <pre>
-    text = re.sub(r'\n\sEdited by:[^\n]*\n', '', text)#delete "Edited by" comments
+    text = re.sub(r'\n\s*Edited by:[^\n]*(\n|$)', '\n', text)#delete "Edited by" comments
     text = re.sub(r'([^\n])\n(?!\n)', r'\1\n    ', text)#force linebreakes via <pre>
     text = re.sub(r'\n[ ]*([^\n]*{code}[^\n]*)\n', r'\n\1\n', text)#undo damage from above
     text = re.sub(r'{code}([^{]+){code}', r'`\1`', text)
@@ -92,6 +106,7 @@ class Command(BaseCommand):
         self.bad_email_count = 0
 
     def handle(self, *args, **kwargs):
+        translation.activate(django_settings.LANGUAGE_CODE)
         assert len(args) == 1, 'Dump file name is required'
         xml = open(args[0], 'r').read() 
         soup = BeautifulSoup(xml, ['lxml', 'xml'])
