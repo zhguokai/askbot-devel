@@ -562,6 +562,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
                     previous_answer = answer
                     break
 
+    if askbot_settings.GROUPS_ENABLED:
+        group_read_only = question_post.groups.exclude_personal()[0].read_only
+    else:
+        group_read_only = False
+
     data = {
         'is_cacheable': False,#is_cacheable, #temporary, until invalidation fix
         'long_time': const.LONG_TIME,#"forever" caching
@@ -590,6 +595,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_post': show_post,
         'show_comment': show_comment,
         'show_comment_position': show_comment_position,
+        'group_read_only': group_read_only,
     }
     #shared with ...
     if askbot_settings.GROUPS_ENABLED:
@@ -692,7 +698,7 @@ def get_perms_data(request):
             getattr(askbot_settings, item)
         )
         data.append(setting)
-    
+
     template = get_template('widgets/user_perms.html')
     html = template.render({
         'user': request.user,

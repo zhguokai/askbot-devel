@@ -2608,32 +2608,36 @@ FoldedEditor.prototype.getOpenHandler = function() {
     var externalTrigger = this._externalTrigger;
     var me = this;
     return function() {
-        promptBox.hide();
-        editorBox.show();
-        var element = me.getElement();
-        element.addClass('unfolded');
+        if (askbot['data']['groupReadOnly'] == true){
+          notify.show(gettext('This group is read only.'));
+        } else {
+          promptBox.hide();
+          editorBox.show();
+          var element = me.getElement();
+          element.addClass('unfolded');
 
-        /* make the editor one shot - once it unfolds it's
-         * not accepting any events
-         */
-        element.unbind('click');
-        element.unbind('focus');
+          /* make the editor one shot - once it unfolds it's
+           * not accepting any events
+           */
+          element.unbind('click');
+          element.unbind('focus');
 
-        /* this function will open the editor
-         * and focus cursor on the editor
-         */
-        me.onAfterOpenHandler();
+          /* this function will open the editor
+           * and focus cursor on the editor
+           */
+          me.onAfterOpenHandler();
 
-        /* external trigger is a clickable target
-         * placed outside of the this._element
-         * that will cause the editor to unfold
-         */       
-        if (externalTrigger) {
-            var label = me.makeElement('label');
-            label.html(externalTrigger.html());
-            //set what the label is for
-            label.attr('for', me.getEditorInputId());
-            externalTrigger.replaceWith(label);
+          /* external trigger is a clickable target
+           * placed outside of the this._element
+           * that will cause the editor to unfold
+           */       
+          if (externalTrigger) {
+              var label = me.makeElement('label');
+              label.html(externalTrigger.html());
+              //set what the label is for
+              label.attr('for', me.getEditorInputId());
+              externalTrigger.replaceWith(label);
+          }
         }
     };
 };
@@ -2820,7 +2824,9 @@ var TinyMCE = function(config) {
 inherits(TinyMCE, WrappedElement);
 
 /*
- * not passed onto prototoype on purpose!!!
+ * not passed onto prototoype on purpose!!!{
+ *
+* }
  */
 TinyMCE.onInitHook = function() {
     //set initial content
