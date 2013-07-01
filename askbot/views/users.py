@@ -27,6 +27,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
 from django.utils import simplejson
+from django.utils.html import strip_tags as strip_all_tags
 from django.views.decorators import csrf
 
 from askbot.utils.slug import slugify
@@ -327,7 +328,7 @@ def edit_user(request, id):
                     group.name = format_personal_group_name(user)
                     group.save()
 
-            user.real_name = sanitize_html(form.cleaned_data['realname'])
+            user.real_name = strip_all_tags(form.cleaned_data['realname'])
             user.website = sanitize_html(form.cleaned_data['website'])
             user.location = sanitize_html(form.cleaned_data['city'])
             user.date_of_birth = form.cleaned_data.get('birthday', None)
