@@ -12,6 +12,7 @@ from jinja2.exceptions import TemplateNotFound
 from jinja2.utils import open_if_exists
 from askbot.conf import settings as askbot_settings
 from askbot.skins import utils
+from askbot.utils.translation import get_language
 
 from coffin import template
 template.add_to_builtins('askbot.templatetags.extra_filters_jinja')
@@ -95,12 +96,6 @@ if django_settings.ASKBOT_MULTILINGUAL:
         SKINS.update(load_skins(lang))
 else:
     SKINS = load_skins(django_settings.LANGUAGE_CODE)
-
-def get_language():
-    if django_settings.ASKBOT_MULTILINGUAL:
-        return translation.get_language()
-    else:
-        return django_settings.LANGUAGE_CODE
 
 def get_skin():
     """retreives the skin environment
