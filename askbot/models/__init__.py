@@ -558,8 +558,10 @@ def _assert_user_can(
     if assertion fails, method raises exception.PermissionDenied
     with appropriate text as a payload
     """
+    group_read_only_error_message = group_read_only_error_message or \
+                                    _("This group is read only")
 
-    if group_read_only_error_message:
+    if askbot_settings.GROUPS_ENABLED:
         assert(post)
         group = post.groups.exclude_personal()[0]
         if group.read_only:
@@ -908,7 +910,6 @@ def user_assert_can_edit_post(self, post = None):
         self.assert_can_edit_deleted_post(post)
         return
 
-    group_read_only_error_message = _("This group is read only")
 
     blocked_error_message = _(
                 'Sorry, since your account is blocked '
@@ -941,7 +942,6 @@ def user_assert_can_edit_post(self, post = None):
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
         min_rep_setting = min_rep_setting,
-        group_read_only_error_message = group_read_only_error_message
     )
 
 
@@ -1020,7 +1020,6 @@ def user_assert_can_delete_answer(self, answer = None):
             {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS}
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS
 
-    group_read_only_error_message = _("This group is read only")
 
     _assert_user_can(
         user = self,
@@ -1030,7 +1029,6 @@ def user_assert_can_delete_answer(self, answer = None):
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
         min_rep_setting = min_rep_setting,
-        group_read_only_error_message = group_read_only_error_message
     )
 
 
@@ -1058,7 +1056,6 @@ def user_assert_can_close_question(self, question = None):
                         'a minimum reputation of %(min_rep)s is required'
                     ) % {'min_rep': owner_min_rep_setting}
 
-    group_read_only_error_message = _("This group is read only")
 
     _assert_user_can(
         user = self,
@@ -1071,7 +1068,6 @@ def user_assert_can_close_question(self, question = None):
         low_rep_error_message = low_rep_error_message,
         owner_low_rep_error_message = owner_low_rep_error_message,
         min_rep_setting = min_rep_setting,
-        group_read_only_error_message = group_read_only_error_message
     )
 
 
@@ -1240,7 +1236,6 @@ def user_assert_can_retag_question(self, question = None):
                         )
             raise django_exceptions.PermissionDenied(error_message)
 
-    group_read_only_error_message = _("This group is read only")
 
     blocked_error_message = _(
                 'Sorry, since your account is blocked '
@@ -1265,7 +1260,6 @@ def user_assert_can_retag_question(self, question = None):
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
         min_rep_setting = min_rep_setting,
-        group_read_only_error_message = group_read_only_error_message
     )
 
 
@@ -1285,7 +1279,6 @@ def user_assert_can_delete_comment(self, comment = None):
             {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS
 
-    group_read_only_error_message = _("This group is read only")
 
     _assert_user_can(
         user = self,
@@ -1295,7 +1288,6 @@ def user_assert_can_delete_comment(self, comment = None):
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
         min_rep_setting = min_rep_setting,
-        group_read_only_error_message=group_read_only_error_message
     )
 
 
