@@ -96,11 +96,17 @@ if django_settings.ASKBOT_MULTILINGUAL:
 else:
     SKINS = load_skins(django_settings.LANGUAGE_CODE)
 
+def get_language():
+    if django_settings.ASKBOT_MULTILINGUAL:
+        return translation.get_language()
+    else:
+        return django_settings.LANGUAGE_CODE
+
 def get_skin():
     """retreives the skin environment
     for a given request (request var is not used at this time)"""
     skin_name = askbot_settings.ASKBOT_DEFAULT_SKIN
-    skin_name += '-' + translation.get_language()
+    skin_name += '-' + get_language()
 
     try:
         return SKINS[skin_name]
