@@ -148,10 +148,10 @@ class ThreadManager(BaseQuerySetManager):
             added_at = added_at,
             wiki = wiki,
             is_anonymous = is_anonymous,
-            #html field is denormalized in .save() call
             text = text,
-            #summary field is denormalized in .save() call
+            language_code=language
         )
+        #html and summary fields are denormalized in .save() call
         if question.wiki:
             #DATED COMMENT
             #todo: this is confusing - last_edited_at field

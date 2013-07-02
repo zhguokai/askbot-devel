@@ -375,6 +375,7 @@ var FullTextSearch = function() {
     /** @todo: the questions/ needs translation... */
     this._searchUrl = '/scope:all/sort:activity-desc/page:1/'
     this._askButtonEnabled = true;
+    this._fullTextSearchEnabled = true;
 };
 inherits(FullTextSearch, WrappedElement);
 

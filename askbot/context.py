@@ -6,7 +6,6 @@ import sys
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
-from django.utils.translation import get_language
 
 import askbot
 from askbot import api
@@ -17,6 +16,7 @@ from askbot.skins.loaders import get_skin
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
+from askbot.utils.translation import get_language
 
 def application_settings(request):
     """The context processor function"""
@@ -79,7 +79,7 @@ def application_settings(request):
         'min_search_word_length': min_search_word_length,
         'current_language_code': current_language,
         'settings': my_settings,
-        'skin': get_skin(request),
+        'skin': get_skin(),
         'moderation_items': api.get_info_on_moderation_items(request.user),
         'noscript_url': const.DEPENDENCY_URLS['noscript'],
     }
