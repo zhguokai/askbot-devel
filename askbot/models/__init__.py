@@ -559,12 +559,12 @@ def _assert_user_can(
     with appropriate text as a payload
     """
     group_read_only_error_message = group_read_only_error_message or \
-                                    _("This group is read only")
+                                    _("You are not allowed to create content")
 
     if askbot_settings.GROUPS_ENABLED:
-        assert(post)
-        group = post.groups.exclude_personal()[0]
-        if group.read_only:
+        assert(user)
+        is_on_read_only_group = user.get_groups().filter(read_only=True).count()
+        if is_on_read_only_group:
             raise django_exceptions.PermissionDenied(group_read_only_error_message)
 
     if general_error_message is None:
@@ -1379,6 +1379,11 @@ def user_post_anonymous_askbot_content(user, session_key):
     """
     aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
     aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
+
+
+    is_on_read_only_group = user.get_groups().filter(read_only=True).count()
+    if is_on_read_only_group:
+        user.message_set.create(message = _("You are not allowed to create content"))
     #from askbot.conf import settings as askbot_settings
     if askbot_settings.EMAIL_VALIDATION == True:#add user to the record
         for aq in aq_list:

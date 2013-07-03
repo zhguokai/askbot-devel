@@ -563,7 +563,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
                     break
 
     if askbot_settings.GROUPS_ENABLED:
-        group_read_only = question_post.groups.exclude_personal()[0].read_only
+        group_read_only = bool(request.user.get_groups().filter(read_only=True).count())
     else:
         group_read_only = False
 

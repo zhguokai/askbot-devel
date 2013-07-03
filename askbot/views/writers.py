@@ -220,6 +220,13 @@ def ask(request):#view used to ask a new question
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
+    if request.user.is_authenticated():
+        is_on_read_only_group = request.user.get_groups().filter(read_only=True).count()
+        if is_on_read_only_group:
+            referer = request.META.get("HTTP_REFERER", reverse('questions'))
+            request.user.message_set.create(message=_("You are not allowed to create content"))
+            return HttpResponseRedirect(referer)
+
     form = forms.AskForm(request.REQUEST, user=request.user)
     if request.method == 'POST':
         if form.is_valid():
@@ -304,13 +311,6 @@ def ask(request):#view used to ask a new question
         try:
             group_id = int(request.GET.get('group_id', None))
             form.initial['group_id'] = group_id
-            group = get_object_or_404(models.Group, pk=group_id)
-            if group.read_only:
-                request.user.message_set.create(message = _("This group is read only"))
-                return HttpResponseRedirect(reverse('users_by_group',
-                                                    kwargs = {'group_id': group.id,
-                                                              'group_slug': slugify(group.name)}
-                                                    ))
         except Exception:
             pass
 
