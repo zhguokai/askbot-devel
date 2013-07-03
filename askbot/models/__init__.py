@@ -3185,7 +3185,7 @@ def format_instant_notification_email(
                                     }
                                 )
     update_data = {
-        'admin_email': django_settings.ADMINS[0][1],
+        'admin_email': askbot_settings.ADMIN_EMAIL,
         'recipient_user': to_user,
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,

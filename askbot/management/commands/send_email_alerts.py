@@ -466,13 +466,13 @@ class Command(NoArgsCommand):
                     'recipient_user': user,
                     'questions': questions_data,
                     'name': user.username,
-                    'admin_email': django_settings.ADMINS[0][1],
+                    'admin_email': askbot_settings.ADMIN_EMAIL,
                     'site_name': askbot_settings.APP_SHORT_NAME,
                     'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
                 })
 
                 if DEBUG_THIS_COMMAND == True:
-                    recipient_email = django_settings.ADMINS[0][1]
+                    recipient_email = askbot_settings.ADMIN_EMAIL
                 else:
                     recipient_email = user.email
 
