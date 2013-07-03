@@ -572,6 +572,12 @@ urlpatterns = patterns('',
     ),
     service_url('^messages/', include('group_messaging.urls')),
     service_url('^settings/', include('livesettings.urls')),
+
+    service_url('^api/info/forum/$', views.api.api_forum_info, name='api_forum_info'),
+    service_url('^api/info/users/$', views.api.api_users_info, name='api_users_info'),
+    service_url('^api/info/users/(?P<user_id>\d+)/$', views.api.api_user_info, name='api_user_info'),
+    service_url('^api/info/questions/$', views.api.api_latest_questions, name='api_latest_questions'),
+    service_url('^api/info/questions/(?P<thread_id>\d+)/$', views.api.api_question_info, name='api_question_info'),
 )
 
 if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
