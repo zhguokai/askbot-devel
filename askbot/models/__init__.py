@@ -3393,7 +3393,7 @@ def record_user_visit(user, timestamp, **kwargs):
     """
     prev_last_seen = user.last_seen or datetime.datetime.now()
     user.last_seen = timestamp
-    if (user.last_seen - prev_last_seen).days == 1:
+    if (user.last_seen.date() - prev_last_seen.date()).days == 1:
         user.consecutive_days_visit_count += 1
         award_badges_signal.send(None,
             event = 'site_visit',
