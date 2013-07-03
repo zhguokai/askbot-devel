@@ -608,6 +608,8 @@ def user_recent(request, user, context):
     activity_objects = models.Activity.objects.filter(
                                         user=user,
                                         activity_type__in=activity_types
+                                    ).order_by(
+                                        '-active_at'
                                     )[:const.USER_VIEW_DATA_SIZE]
 
     #a list of digest objects, suitable for display
