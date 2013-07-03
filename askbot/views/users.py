@@ -15,6 +15,7 @@ import operator
 import urllib
 
 from django.db.models import Count
+from django.db.models import Q
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
 from django.core import exceptions as django_exceptions
@@ -304,6 +305,15 @@ def set_new_email(user, new_email, nomessage=False):
         #if askbot_settings.EMAIL_VALIDATION == True:
         #    send_new_email_key(user,nomessage=nomessage)
 
+
+def need_to_invalidate_post_caches(user, form):
+    """a utility function for the edit user profile view"""
+    new_country = (form.cleaned_data['country'] != user.country)
+    new_show_country = (form.cleaned_data['show_country'] != user.show_country)
+    new_username = (form.cleaned_data['username'] != user.username)
+    return (new_country or new_show_country or new_username)
+
+
 @login_required
 @csrf.csrf_protect
 def edit_user(request, id):
@@ -320,13 +330,28 @@ def edit_user(request, id):
                 new_email = sanitize_html(form.cleaned_data['email'])
                 set_new_email(user, new_email)
 
+            prev_username = user.username
             if askbot_settings.EDITABLE_SCREEN_NAME:
-                new_username = sanitize_html(form.cleaned_data['username'])
+                new_username = strip_all_tags(form.cleaned_data['username'])
                 if user.username != new_username:
                     group = user.get_personal_group()
                     user.username = new_username
                     group.name = format_personal_group_name(user)
                     group.save()
+
+            #Maybe we need to clear post caches, b/c
+            #author info may need to be updated on posts and thread summaries
+            if need_to_invalidate_post_caches(user, form):
+                #get threads where users participated
+                thread_ids = models.Post.objects.filter(
+                                    Q(author=user) | Q(last_edited_by=user)
+                                ).values_list(
+                                    'thread__id', flat=True
+                                ).distinct()
+                threads = models.Thread.objects.filter(id__in=thread_ids)
+                for thread in threads:
+                    #for each thread invalidate cache keys for posts, etc
+                    thread.invalidate_cached_data(lazy=True)
 
             user.real_name = strip_all_tags(form.cleaned_data['realname'])
             user.website = sanitize_html(form.cleaned_data['website'])
