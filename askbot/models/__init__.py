@@ -3210,7 +3210,7 @@ def format_instant_notification_email(
                                     }
                                 )
     update_data = {
-        'admin_email': django_settings.ADMINS[0][1],
+        'admin_email': askbot_settings.ADMIN_EMAIL,
         'recipient_user': to_user,
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
@@ -3418,7 +3418,7 @@ def record_user_visit(user, timestamp, **kwargs):
     """
     prev_last_seen = user.last_seen or datetime.datetime.now()
     user.last_seen = timestamp
-    if (user.last_seen - prev_last_seen).days == 1:
+    if (user.last_seen.date() - prev_last_seen.date()).days == 1:
         user.consecutive_days_visit_count += 1
         award_badges_signal.send(None,
             event = 'site_visit',

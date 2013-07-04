@@ -610,8 +610,8 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
                                                 thread=question.thread
                                             )
                 drafts.delete()
+                user = form.get_post_user(request.user)
                 try:
-                    user = form.get_post_user(request.user)
                     answer = form.save(question, user)
 
                     signals.new_answer_posted.send(None,
@@ -623,7 +623,7 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
                     return HttpResponseRedirect(answer.get_absolute_url())
                 except askbot_exceptions.AnswerAlreadyGiven, e:
                     request.user.message_set.create(message = unicode(e))
-                    answer = question.thread.get_answers_by_user(request.user)[0]
+                    answer = question.thread.get_answers_by_user(user)[0]
                     return HttpResponseRedirect(answer.get_absolute_url())
                 except exceptions.PermissionDenied, e:
                     request.user.message_set.create(message = unicode(e))

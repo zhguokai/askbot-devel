@@ -2424,9 +2424,6 @@ ul#related-tags li {
   vertical-align: top;
 }
 .question-page .comments button.submit {
-  height: 26px;
-  line-height: 26px;
-  padding: 0 8px;
   margin-right: 6px;
 }
 .question-page .comments .counter {
@@ -2659,6 +2656,9 @@ ul#related-tags li {
 .question-page .message {
   padding: 5px;
   margin: 0px 0 10px 0;
+}
+.question-page.anon .comments div.controls {
+  margin-top: 28px;
 }
 .vote-buttons {
   display: table-cell;

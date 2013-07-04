@@ -388,10 +388,10 @@ def complete_oauth_signin(request):
 
     except Exception, e:
         logging.critical(e)
-        msg = _('Unfortunately, there was some problem when '
-                'connecting to %(provider)s, please try again '
-                'or use another provider'
-            ) % {'provider': oauth_provider_name}
+        msg = _('Sorry, there was some problem '
+                'connecting to the login provider, please try again '
+                'or use another login method'
+            )
         request.user.message_set.create(message = msg)
         return HttpResponseRedirect(next_url)
 
