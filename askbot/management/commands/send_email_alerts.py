@@ -166,7 +166,7 @@ class Command(NoArgsCommand):
         Q_set_A = not_seen_qs
         Q_set_B = seen_before_last_mod_qs
 
-        if django_settings.ASKBOT_MULTILINGUAL:
+        if getattr(django_settings,'ASKBOT_MULTILINGUAL', False):
             languages = user.languages.split()
         else:
             languages = None
@@ -466,13 +466,13 @@ class Command(NoArgsCommand):
                     'recipient_user': user,
                     'questions': questions_data,
                     'name': user.username,
-                    'admin_email': django_settings.ADMINS[0][1],
+                    'admin_email': askbot_settings.ADMIN_EMAIL,
                     'site_name': askbot_settings.APP_SHORT_NAME,
                     'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
                 })
 
                 if DEBUG_THIS_COMMAND == True:
-                    recipient_email = django_settings.ADMINS[0][1]
+                    recipient_email = askbot_settings.ADMIN_EMAIL
                 else:
                     recipient_email = user.email
 
