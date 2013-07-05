@@ -3185,7 +3185,7 @@ def format_instant_notification_email(
                                     }
                                 )
     update_data = {
-        'admin_email': django_settings.ADMINS[0][1],
+        'admin_email': askbot_settings.ADMIN_EMAIL,
         'recipient_user': to_user,
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
@@ -3199,7 +3199,7 @@ def format_instant_notification_email(
         'user_subscriptions_url': site_url(user_subscriptions_url),
         'reply_separator': reply_separator,
         'reply_address': reply_address,
-        'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
+        'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
 
@@ -3393,7 +3393,7 @@ def record_user_visit(user, timestamp, **kwargs):
     """
     prev_last_seen = user.last_seen or datetime.datetime.now()
     user.last_seen = timestamp
-    if (user.last_seen - prev_last_seen).days == 1:
+    if (user.last_seen.date() - prev_last_seen.date()).days == 1:
         user.consecutive_days_visit_count += 1
         award_badges_signal.send(None,
             event = 'site_visit',

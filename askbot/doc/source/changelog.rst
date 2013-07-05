@@ -3,8 +3,9 @@ Changes in Askbot
 
 Development version
 -------------------
-* Improved Zendesk import feature
-* Added backend support for the tag synonyms
+* Added "admin email" to livesettings
+* Improved Zendesk import feature `Kevin Porterfield, Shotgun Software<http://www.shotgunsoftware.com>_`
+* Added backend support for the tag synonyms `pcompassion https://github.com/pcompassion`_
 * Added management command `apply_hinted_tags` to batch-apply tags from a list
 * Added hovercard on the user's karma display in the header
 * Added option to hide ad blocks from logged in users
