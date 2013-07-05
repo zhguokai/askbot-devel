@@ -3199,7 +3199,7 @@ def format_instant_notification_email(
         'user_subscriptions_url': site_url(user_subscriptions_url),
         'reply_separator': reply_separator,
         'reply_address': reply_address,
-        'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
+        'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
 
