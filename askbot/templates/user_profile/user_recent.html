@@ -5,14 +5,12 @@
     {% trans %}activity{% endtrans %}
 {% endblock %}
 {% block usercontent %}
-        <div style="padding-top:5px;font-size:13px;">
+        <table class="user-activity">
         {% for act in activities %}
-            <div style="clear:both;line-height:20px" >
-                <div style="width:180px;float:left">{{ timeago(act.time) }}</div>
-                <div style="width:150px;float:left">
-                <span class="user-action-{{ act.type_id }}">{{ act.type }}</span>
-                </div>
-                <div style="float:left;overflow:hidden;">
+            <tr class="user-action-{{ act.type_id }}">
+                <td class="timestamp">{{ timeago(act.time) }}</td>
+                <td class="action-type">{{ act.type }}</td>
+                <td class="description">
                     {% if act.is_badge %}
                         <a href="{{act.badge.get_absolute_url()}}"
                            title="{{ act.badge.get_type_display() }} : {% trans description=act.badge.get_description() %}{{description}}{% endtrans %}"
@@ -30,12 +28,11 @@
                         {% endif %}
                     {% else %}
                         <span class="post-type-{{ act.type_id }}"><a href="{{ act.title_link }}">{{ act.title|escape }}</a></span>
-                        {% if act.summary %}<span class="revision-summary">{{ act.summary|escape }}</span>{% endif %}
+                        {% if act.summary %}<div class="revision-summary">{{ act.summary }}</div>{% endif %}
                     {% endif %}
-                    <div style="height:5px"></div>
-                </div>
-            </div>
+                </td>
+            </tr>
         {% endfor %}
-        </div>
+        </table>
 {% endblock %}
 <!-- end user_recent.html -->
