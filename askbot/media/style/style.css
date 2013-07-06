@@ -3489,6 +3489,7 @@ label.retag-error {
 }
 .user-activity .action-type {
   width: 150px;
+  font-size: 13px;
 }
 .user-activity .description {
   width: auto;

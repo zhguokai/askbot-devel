@@ -27,7 +27,7 @@
                                 href="{% url question answer.thread._question_post().id %}{{answer.thread.title|slugify}}#{{answer.id}}">{% trans %}source{% endtrans %}</a>)
                         {% endif %}
                     {% else %}
-                        <span class="post-type-{{ act.type_id }}"><a href="{{ act.title_link }}">{{ act.title|escape }}</a></span>
+                        <a class="question-title" href="{{ act.title_link }}">{{ act.title|escape }}</a>
                         {% if act.summary %}<div class="revision-summary">{{ act.summary }}</div>{% endif %}
                     {% endif %}
                 </td>
