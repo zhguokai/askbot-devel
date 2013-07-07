@@ -45,6 +45,10 @@ def strip_trailing_empties_and_quotes(text):
 def strip_leading_empties(text):
     return re.sub(r'\A[\n\s\xa0]*', '', text)
 
+def strip_trailing_sender_references(text, email_address):
+    pattern = r'\n[^\n]*%s[^\n]*$' % email_address
+    return re.sub(pattern, '', text)
+
 def strip_email_client_quote_separator(text):
     """strips email client quote separator from the responses,
     e.g. (on such date XYZ wrote)
