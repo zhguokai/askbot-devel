@@ -30,6 +30,21 @@ settings.register(
     )
 )
 
+def get_default_admin_email():
+    try:
+        return django_settings.ADMINS[0][1]
+    except:
+        return ''
+
+settings.register(
+    livesettings.StringValue(
+        EMAIL,
+        'ADMIN_EMAIL',
+        default=get_default_admin_email(),
+        description=_('Site administrator email address')
+    )
+)
+
 settings.register(
     livesettings.BooleanValue(
         EMAIL,

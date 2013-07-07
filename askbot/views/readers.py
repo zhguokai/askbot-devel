@@ -44,6 +44,7 @@ from askbot import models
 from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
+from askbot.startup_procedures import domain_is_bad
 from askbot.utils import functions
 from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
@@ -261,6 +262,23 @@ def questions(request, **kwargs):
                                     template_data
                                 )
         template_data.update(extra_context)
+
+        #and one more thing:) give admin user heads up about 
+        #setting the domain name if they have not done that yet
+        #todo: move this out to a separate middleware
+        if request.user.is_authenticated() and request.user.is_administrator():
+            if domain_is_bad():
+                url = reverse(
+                    'group_settings',
+                    kwargs = {'group': 'QA_SITE_SETTINGS'}
+                )
+                url = url + '#id_QA_SITE_SETTINGS__APP_URL'
+                msg = _(
+                    'Please go to '
+                    '<a href="%s">"settings->URLs, keywords and greetings"</a> '
+                    'and set the base url for your site to function properly'
+                ) % url
+                request.user.message_set.create(message=msg)
 
         return render(request, 'main_page.html', template_data)
 

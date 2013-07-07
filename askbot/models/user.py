@@ -21,6 +21,7 @@ from askbot.models.tag import clean_group_name#todo - delete this
 from askbot.models.tag import get_tags_by_names
 from askbot.forms import DomainNameField
 from askbot.utils.forms import email_is_allowed
+from collections import defaultdict
 
 PERSONAL_GROUP_NAME_PREFIX = '_personal_'
 
@@ -35,7 +36,8 @@ class ResponseAndMentionActivityManager(models.Manager):
                     activity_type__in = response_types
                 )
 
-class ActivityManager(models.Manager):
+class ActivityQuerySet(models.query.QuerySet):
+    """query set for the `Activity` model"""
     def get_all_origin_posts(self):
         #todo: redo this with query sets
         origin_posts = set()
@@ -49,6 +51,36 @@ class ActivityManager(models.Manager):
                             % unicode(post)
                         )
         return list(origin_posts)
+
+    def fetch_content_objects_dict(self):
+        """return a dictionary where keys are activity ids
+        and values - content objects"""
+        content_object_ids = defaultdict(list)# lists of c.object ids by c.types
+        activity_type_ids = dict()#links c.objects back to activity objects
+        for act in self:
+            content_type_id = act.content_type_id
+            object_id = act.object_id
+            content_object_ids[content_type_id].append(object_id)
+            activity_type_ids[(content_type_id, object_id)] = act.id
+
+        #3) get links from activity objects to content objects
+        objects_by_activity = dict()
+        for content_type_id, object_id_list in content_object_ids.items():
+            content_type = ContentType.objects.get_for_id(content_type_id)
+            model_class = content_type.model_class()
+            content_objects = model_class.objects.filter(id__in=object_id_list)
+            for content_object in content_objects:
+                key = (content_type_id, content_object.id)
+                activity_id = activity_type_ids[key]
+                objects_by_activity[activity_id] = content_object
+
+        return objects_by_activity
+
+
+class ActivityManager(BaseQuerySetManager):
+    """manager class for the `Activity` model"""
+    def get_query_set(self):
+        return ActivityQuerySet(self.model)
 
     def create_new_mention(
                 self,

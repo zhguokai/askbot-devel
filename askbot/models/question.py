@@ -912,10 +912,12 @@ class Thread(models.Model):
         for sort_method in const.ANSWER_SORT_METHODS:
             cache.cache.delete(self.get_post_data_cache_key(sort_method))
 
-    def invalidate_cached_data(self):
+    def invalidate_cached_data(self, lazy=False):
         self.invalidate_cached_post_data()
-        #self.invalidate_cached_thread_content_fragment()
-        self.update_summary_html()
+        if lazy:
+            self.invalidate_cached_thread_content_fragment()
+        else:
+            self.update_summary_html()
 
     def get_cached_post_data(self, user = None, sort_method = 'votes'):
         """returns cached post data, as calculated by
