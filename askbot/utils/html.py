@@ -65,18 +65,18 @@ def absolutize_urls(html):
 def get_word_count(html):
     return len(strip_all_tags(html).split())
 
+def format_url_replacement(url, text):
+    url = url.strip()
+    text = text.strip()
+    url_domain = urlparse(url).netloc
+    if url and text and url_domain != text and url != text:
+        return '%s (%s)' % (url, text)
+    return url or text or ''
+
 def replace_links_with_text(html):
     """any absolute links will be replaced with the
     url in plain text, same with any img tags
     """
-    def format_url_replacement(url, text):
-        url = url.strip()
-        text = text.strip()
-        url_domain = urlparse(url).netloc
-        if url and text and url_domain != text and url != text:
-            return '%s (%s)' % (url, text)
-        return url or text or ''
-            
     soup = BeautifulSoup(html, 'html5lib')
     abs_url_re = r'^http(s)?://'
 
@@ -98,6 +98,35 @@ def replace_links_with_text(html):
             link.replaceWith(format_url_replacement(url, text))
 
     return unicode(soup.find('body').renderContents(), 'utf-8')
+
+def get_text_from_html(html_text):
+    """Returns the content part from an HTML document
+    retains links and references to images and line breaks.
+    """
+    soup = BeautifulSoup(html_text, 'html5lib')
+
+    #replace <a> links with plain text
+    links = soup.find_all('a')
+    for link in links:
+        url = link.get('href', '')
+        text = ''.join(link.text) or ''
+        link.replaceWith(format_url_replacement(url, text))
+
+    #replace <img> tags with plain text
+    images = soup.find_all('img')
+    for image in images:
+        url = image.get('src', '')
+        text = image.get('alt', '')
+        image.replaceWith(format_url_replacement(url, text))
+
+    #extract and join phrases
+    body_element = soup.find('body')
+    filter_func = lambda s: bool(s.strip())
+    phrases = map(
+        lambda s: s.strip(),
+        filter(filter_func, body_element.get_text().split('\n'))
+    )
+    return '\n\n'.join(phrases)
 
 def strip_tags(html, tags=None):
     """strips tags from given html output"""

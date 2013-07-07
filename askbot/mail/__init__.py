@@ -13,6 +13,7 @@ from askbot.mail import parsing
 from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
 from askbot.utils.html import absolutize_urls
+from askbot.utils.html import get_text_from_html
 from bs4 import BeautifulSoup
 from django.core import mail
 from django.conf import settings as django_settings
@@ -85,21 +86,6 @@ def thread_headers(post, orig_post, update):
 
     return headers
 
-def clean_html_email(email_body):
-    """returns the content part from an HTML email.
-    todo: needs more clenup might not work for other email templates
-    that do not use table layout
-    """
-    soup = BeautifulSoup(email_body, 'html5lib')
-    body_element = soup.find('body')
-    filter_func = lambda s: bool(s.strip())
-    phrases = map(
-        lambda s: s.strip(),
-        filter(filter_func, body_element.get_text().split('\n'))
-    )
-    return '\n\n'.join(phrases)
-
-
 def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=None):
     """base send_mail function, which will attach email in html format
     if html email is enabled"""
@@ -111,7 +97,7 @@ def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=No
 
     msg = message_class(
                 subject_line,
-                clean_html_email(body_text),
+                get_text_from_html(body_text),
                 sender_email,
                 recipient_list,
                 headers = headers
