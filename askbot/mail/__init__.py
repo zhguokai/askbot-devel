@@ -99,6 +99,27 @@ def clean_html_email(email_body):
     )
     return '\n\n'.join(phrases)
 
+
+def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=None):
+    """base send_mail function, which will attach email in html format
+    if html email is enabled"""
+    html_enabled = askbot_settings.HTML_EMAIL_ENABLED
+    if html_enabled:
+        message_class = mail.EmailMultiAlternatives
+    else:
+        message_class = mail.EmailMessage
+
+    msg = message_class(
+                subject_line,
+                clean_html_email(body_text),
+                sender_email,
+                recipient_list,
+                headers = headers
+            )
+    if html_enabled:
+        msg.attach_alternative(body_text, "text/html")
+    msg.send()
+
 def send_mail(
             subject_line = None,
             body_text = None,
@@ -126,15 +147,13 @@ def send_mail(
     try:
         assert(subject_line is not None)
         subject_line = prefix_the_subject_line(subject_line)
-        msg = mail.EmailMultiAlternatives(
-                        subject_line,
-                        clean_html_email(body_text),
-                        from_email,
-                        recipient_list,
-                        headers = headers
-                    )
-        msg.attach_alternative(body_text, "text/html")
-        msg.send()
+        _send_mail(
+            subject_line,
+            body_text,
+            from_email,
+            recipient_list,
+            headers=headers
+        )
         logging.debug('sent update to %s' % ','.join(recipient_list))
         if related_object is not None:
             assert(activity_type is not None)
@@ -161,24 +180,15 @@ def mail_moderators(
                 ).values_list('email', flat=True)
     recipient_list = set(recipient_list)
 
-    from_email = ''
-    if hasattr(django_settings, 'DEFAULT_FROM_EMAIL'):
-        from_email = django_settings.DEFAULT_FROM_EMAIL
+    send_mail(
+        subject_line=subject_line,
+        body_text=body_text,
+        from_email=getattr(django_settings, 'DEFAULT_FROM_EMAIL', ''),
+        recipient_list=recipient_list,
+        raise_on_failure=raise_on_failure,
+        headers=headers
+    )
 
-    try:
-        msg = mail.EmailMessage(
-                        subject_line,
-                        body_text,
-                        from_email,
-                        recipient_list,
-                        headers = headers or {}
-                    )
-        msg.content_subtype = 'html'
-        msg.send()
-    except smtplib.SMTPException, error:
-        sys.stderr.write('\n' + unicode(error).encode('utf-8') + '\n')
-        if raise_on_failure == True:
-            raise exceptions.EmailNotSent(unicode(error))
 
 INSTRUCTIONS_PREAMBLE = ugettext_lazy('<p>To ask by email, please:</p>')
 QUESTION_TITLE_INSTRUCTION = ugettext_lazy(
