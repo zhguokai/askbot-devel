@@ -3,6 +3,7 @@ this file is a candidate for publishing as an independent module
 """
 import re
 import sys
+from askbot.conf import settings as askbot_settings
 
 #Regexes for quote separators
 #add more via variables ending with _QUOTE_RE
@@ -44,6 +45,12 @@ def strip_trailing_empties_and_quotes(text):
 
 def strip_leading_empties(text):
     return re.sub(r'\A[\n\s\xa0]*', '', text)
+
+def strip_trailing_sender_references(text, email_address):
+    server_email = 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+    email_pattern = '(%s|%s)' % (email_address, server_email)
+    pattern = r'\n[^\n]*%s[^\n]*$' % email_pattern
+    return re.sub(pattern, '', text, re.IGNORECASE)
 
 def strip_email_client_quote_separator(text):
     """strips email client quote separator from the responses,
