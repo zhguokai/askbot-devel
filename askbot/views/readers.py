@@ -241,7 +241,7 @@ def questions(request, **kwargs):
                                 )
         template_data.update(extra_context)
 
-        #and one more thing:) give admin user heads up about 
+        #and one more thing:) give admin user heads up about
         #setting the domain name if they have not done that yet
         #todo: move this out to a separate middleware
         if request.user.is_authenticated() and request.user.is_administrator():
@@ -581,7 +581,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
                     break
 
     if askbot_settings.GROUPS_ENABLED:
-        group_read_only = bool(request.user.get_groups().filter(read_only=True).count())
+        group_read_only = request.user.is_read_only()
     else:
         group_read_only = False
 

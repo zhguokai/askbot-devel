@@ -4620,6 +4620,23 @@ CategorySelectorLoader.prototype.decorate = function(element) {
     );
 };
 
+var AskButton = function(){
+  WrappedElement.call(this);
+};
+inherits(AskButton, WrappedElement);
+
+AskButton.prototype.decorate = function(element){
+  this._element = element;
+  this._element.click(this.clickCallback);
+};
+
+AskButton.prototype.clickCallback = function(e){
+  if (askbot['data']['groupReadOnly'] === true){
+    notify.show(gettext('This group is read only.'));
+    e.preventDefault();
+  }
+};
+
 $(document).ready(function() {
     $('[id^="comments-for-"]').each(function(index, element){
         var comments = new PostCommentsWidget();
@@ -4731,6 +4748,9 @@ $(document).ready(function() {
         groupsPopup.setHeadingText(gettext('Shared with the following groups:'));
         groupsPopup.decorate(showSharedGroups);
     }
+
+    var askButton = new AskButton();
+    askButton.decorate($("#askButton"));
 });
 
 /* google prettify.js from google code */

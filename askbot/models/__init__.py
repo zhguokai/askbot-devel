@@ -527,6 +527,12 @@ def user_notify_users(
     activity.save()
     activity.add_recipients(recipients)
 
+def user_is_read_only(self):
+    if self.is_authenticated() and askbot_settings.GROUPS_ENABLED:
+        return bool(self.get_groups().filter(read_only=True).count())
+    else:
+        return False
+
 def user_get_notifications(self, notification_types=None, **kwargs):
     """returns query set of activity audit status objects"""
     return ActivityAuditStatus.objects.filter(
@@ -563,8 +569,7 @@ def _assert_user_can(
 
     if askbot_settings.GROUPS_ENABLED:
         assert(user)
-        is_on_read_only_group = user.get_groups().filter(read_only=True).count()
-        if is_on_read_only_group:
+        if  user.is_read_only():
             raise django_exceptions.PermissionDenied(group_read_only_error_message)
 
     if general_error_message is None:
@@ -3054,6 +3059,7 @@ User.add_to_class(
 )
 User.add_to_class('approve_post_revision', user_approve_post_revision)
 User.add_to_class('notify_users', user_notify_users)
+User.add_to_class('is_read_only', user_is_read_only)
 
 #assertions
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)

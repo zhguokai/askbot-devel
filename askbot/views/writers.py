@@ -221,8 +221,7 @@ def ask(request):#view used to ask a new question
     must login/register in order for the question go be shown
     """
     if request.user.is_authenticated():
-        is_on_read_only_group = request.user.get_groups().filter(read_only=True).count()
-        if is_on_read_only_group:
+        if request.user.is_read_only():
             referer = request.META.get("HTTP_REFERER", reverse('questions'))
             request.user.message_set.create(message=_("You are not allowed to create content"))
             return HttpResponseRedirect(referer)
