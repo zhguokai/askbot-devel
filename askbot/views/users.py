@@ -570,19 +570,14 @@ def user_recent(request, user, context):
 
     class Event(object):
         is_badge = False
-        def __init__(self, time, type, title, summary, answer_id, question_id):
+        def __init__(self, time, type, title, summary, url):
             self.time = time
             self.type = get_type_name(type)
             self.type_id = type
             self.title = title
             self.summary = summary
             slug_title = slugify(title)
-            self.title_link = reverse(
-                                'question',
-                                kwargs={'id':question_id}
-                            ) + u'%s' % slug_title
-            if int(answer_id) > 0:
-                self.title_link += '#%s' % answer_id
+            self.title_link = url
 
     class AwardEvent(object):
         is_badge = True
@@ -604,7 +599,7 @@ def user_recent(request, user, context):
         const.TYPE_ACTIVITY_PRIZE
     )
 
-    #source of information about activities
+    #1) get source of information about activities
     activity_objects = models.Activity.objects.filter(
                                         user=user,
                                         activity_type__in=activity_types
@@ -612,117 +607,39 @@ def user_recent(request, user, context):
                                         '-active_at'
                                     )[:const.USER_VIEW_DATA_SIZE]
 
+    #2) load content objects ("c.objects) for each activity
+    # the return value is dictionary where activity id's are keys
+    content_objects_by_activity = activity_objects.fetch_content_objects_dict()
+
+        
     #a list of digest objects, suitable for display
     #the number of activities to show is not guaranteed to be
     #const.USER_VIEW_DATA_TYPE, because we don't show activity
     #for deleted content
     activities = []
     for activity in activity_objects:
+        content = content_objects_by_activity.get(activity.id)
 
-        # TODO: multi-if means that we have here a construct for which a design pattern should be used
+        if content is None:
+            continue
 
-        # ask questions
-        if activity.activity_type == const.TYPE_ACTIVITY_ASK_QUESTION:
-            question = activity.content_object
-            if not question.deleted:
-                activities.append(Event(
-                    time=activity.active_at,
-                    type=activity.activity_type,
-                    title=question.thread.title,
-                    summary='', #q.summary,  # TODO: was set to '' before, but that was probably wrong
-                    answer_id=0,
-                    question_id=question.id
-                ))
+        if activity.activity_type == const.TYPE_ACTIVITY_PRIZE:
+            event = AwardEvent(
+                time=content.awarded_at,
+                type=activity.activity_type,
+                content_object=content.content_object,
+                badge=content.badge,
+            )
+        else:
+            event = Event(
+                time=activity.active_at,
+                type=activity.activity_type,
+                title=content.thread.title,
+                summary=content.summary,
+                url=content.get_absolute_url()
+            )
 
-        elif activity.activity_type == const.TYPE_ACTIVITY_ANSWER:
-            ans = activity.content_object
-            question = ans.thread._question_post()
-            if not ans.deleted and not question.deleted:
-                activities.append(Event(
-                    time=activity.active_at,
-                    type=activity.activity_type,
-                    title=ans.thread.title,
-                    summary=question.summary,
-                    answer_id=ans.id,
-                    question_id=question.id
-                ))
-
-        elif activity.activity_type == const.TYPE_ACTIVITY_COMMENT_QUESTION:
-            cm = activity.content_object
-            q = cm.parent
-            #assert q.is_question(): todo the activity types may be wrong
-            if not q.deleted:
-                activities.append(Event(
-                    time=cm.added_at,
-                    type=activity.activity_type,
-                    title=q.thread.title,
-                    summary='',
-                    answer_id=0,
-                    question_id=q.id
-                ))
-
-        elif activity.activity_type == const.TYPE_ACTIVITY_COMMENT_ANSWER:
-            cm = activity.content_object
-            ans = cm.parent
-            #assert ans.is_answer()
-            question = ans.thread._question_post()
-            if not ans.deleted and not question.deleted:
-                activities.append(Event(
-                    time=cm.added_at,
-                    type=activity.activity_type,
-                    title=ans.thread.title,
-                    summary='',
-                    answer_id=ans.id,
-                    question_id=question.id
-                ))
-
-        elif activity.activity_type == const.TYPE_ACTIVITY_UPDATE_QUESTION:
-            q = activity.content_object
-            if not q.deleted:
-                activities.append(Event(
-                    time=activity.active_at,
-                    type=activity.activity_type,
-                    title=q.thread.title,
-                    summary=q.summary,
-                    answer_id=0,
-                    question_id=q.id
-                ))
-
-        elif activity.activity_type == const.TYPE_ACTIVITY_UPDATE_ANSWER:
-            ans = activity.content_object
-            question = ans.thread._question_post()
-            if not ans.deleted and not question.deleted:
-                activities.append(Event(
-                    time=activity.active_at,
-                    type=activity.activity_type,
-                    title=ans.thread.title,
-                    summary=ans.summary,
-                    answer_id=ans.id,
-                    question_id=question.id
-                ))
-
-        elif activity.activity_type == const.TYPE_ACTIVITY_MARK_ANSWER:
-            ans = activity.content_object
-            question = ans.thread._question_post()
-            if not ans.deleted and not question.deleted:
-                activities.append(Event(
-                    time=activity.active_at,
-                    type=activity.activity_type,
-                    title=ans.thread.title,
-                    summary='',
-                    answer_id=0,
-                    question_id=question.id
-                ))
-
-        elif activity.activity_type == const.TYPE_ACTIVITY_PRIZE:
-            award = activity.content_object
-            if award is not None:#todo: work around halfa$$ comment deletion
-                activities.append(AwardEvent(
-                    time=award.awarded_at,
-                    type=activity.activity_type,
-                    content_object=award.content_object,
-                    badge=award.badge,
-                ))
+        activities.append(event)
 
     activities.sort(key=operator.attrgetter('time'), reverse=True)
 
