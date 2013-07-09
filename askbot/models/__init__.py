@@ -528,7 +528,8 @@ def user_notify_users(
     activity.add_recipients(recipients)
 
 def user_is_read_only(self):
-    if self.is_authenticated() and askbot_settings.GROUPS_ENABLED:
+    """True if user is allowed to change content on the site"""
+    if askbot_settings.GROUPS_ENABLED:
         return bool(self.get_groups().filter(read_only=True).count())
     else:
         return False
@@ -554,7 +555,6 @@ def _assert_user_can(
                         low_rep_error_message = None,
                         owner_low_rep_error_message = None,
                         general_error_message = None,
-                        group_read_only_error_message = None
                     ):
     """generic helper assert for use in several
     User.assert_can_XYZ() calls regarding changing content
@@ -564,13 +564,10 @@ def _assert_user_can(
     if assertion fails, method raises exception.PermissionDenied
     with appropriate text as a payload
     """
-    group_read_only_error_message = group_read_only_error_message or \
-                                    _("You are not allowed to create content")
-
     if askbot_settings.GROUPS_ENABLED:
-        assert(user)
-        if  user.is_read_only():
-            raise django_exceptions.PermissionDenied(group_read_only_error_message)
+        if user.is_read_only():
+            message = _('Sorry, but you have only read access')
+            raise django_exceptions.PermissionDenied(message)
 
     if general_error_message is None:
         general_error_message = _('Sorry, this operation is not allowed')
@@ -1388,7 +1385,7 @@ def user_post_anonymous_askbot_content(user, session_key):
 
     is_on_read_only_group = user.get_groups().filter(read_only=True).count()
     if is_on_read_only_group:
-        user.message_set.create(message = _("You are not allowed to create content"))
+        user.message_set.create(message = _('Sorry, but you have only read access'))
     #from askbot.conf import settings as askbot_settings
     if askbot_settings.EMAIL_VALIDATION == True:#add user to the record
         for aq in aq_list:

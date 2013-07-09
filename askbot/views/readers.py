@@ -580,7 +580,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
                     previous_answer = answer
                     break
 
-    if askbot_settings.GROUPS_ENABLED:
+    if request.user.is_authenticated() and askbot_settings.GROUPS_ENABLED:
         group_read_only = request.user.is_read_only()
     else:
         group_read_only = False

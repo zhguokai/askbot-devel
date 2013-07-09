@@ -223,7 +223,7 @@ def ask(request):#view used to ask a new question
     if request.user.is_authenticated():
         if request.user.is_read_only():
             referer = request.META.get("HTTP_REFERER", reverse('questions'))
-            request.user.message_set.create(message=_("You are not allowed to create content"))
+            request.user.message_set.create(message=_('Sorry, but you have only read access'))
             return HttpResponseRedirect(referer)
 
     form = forms.AskForm(request.REQUEST, user=request.user)

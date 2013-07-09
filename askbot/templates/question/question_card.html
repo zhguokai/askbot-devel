@@ -20,8 +20,8 @@
         <script type="text/javascript">
             (function(){
              if (askbot['data']['userIsAuthenticated'] === false || 
-                 askbot['data']['groupReadOnly'] === true){
-                    var ctrl = document.getElementById('question-controls')
+                 askbot['data']['userIsReadOnly'] === true){
+                    var ctrl = document.getElementById('question-controls');
                     ctrl.parentNode.removeChild(ctrl);
                 }
             })();
