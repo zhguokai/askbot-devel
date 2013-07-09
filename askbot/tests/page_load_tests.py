@@ -107,7 +107,7 @@ class PageLoadTestCase(AskbotTestCase):
 
         if r.status_code != status_code:
             print 'Error in status code for url: %s' % url
-            
+
         self.assertEqual(r.status_code, status_code)
 
         if template and status_code != 302:
@@ -189,6 +189,50 @@ class PageLoadTestCase(AskbotTestCase):
         response_data = simplejson.loads(response.content)
         self.assertEqual(len(response_data), 1)
 
+    def test_api_user_info(self):
+        user = self.create_user('apiuser')
+        response = self.client.get(reverse('api_user_info', args=(user.id,)))
+        response_data = simplejson.loads(response.content)
+        expected_keys = ('username', 'reputation', 'questions', 'answers')
+        for key in expected_keys:
+            self.assertTrue(key in response_data.keys())
+
+    def test_api_forum_info(self):
+        response = self.client.get(reverse('api_forum_info'))
+        response_data = simplejson.loads(response.content)
+        expected_keys = ('answers', 'comments', 'users', 'questions')
+        for key in expected_keys:
+            self.assertTrue(key in response_data.keys())
+
+    def test_api_users_info(self):
+        response = self.client.get(reverse('api_users_info'))
+        response_data = simplejson.loads(response.content)
+        expected_keys = ('total_pages', 'count', 'user_list')
+        for key in expected_keys:
+            self.assertTrue(key in response_data.keys())
+
+        expected_keys = ('id', 'username', 'date_joined', 'reputation')
+        for key in expected_keys:
+            self.assertTrue(key in response_data['user_list'][0].keys())
+
+    def test_api_latest_questions(self):
+        response = self.client.get(reverse('api_latest_questions'))
+        response_data = simplejson.loads(response.content)
+        expected_keys = ('query_data', 'question_count', 'query_string',
+                         'page_size', 'non_existing_tags', 'question_list')
+
+        for key in expected_keys:
+            self.assertTrue(key in response_data.keys())
+
+        expected_keys = ('tags', 'sort_order', 'ask_query_string')
+        for key in expected_keys:
+            self.assertTrue(key in response_data['query_data'].keys())
+
+        expected_keys = ('id', 'view_count', 'tagnames',
+                         'title', 'answer_count', 'last_activity_by',
+                         'last_activity_by___username')
+        for key in expected_keys:
+            self.assertTrue(key in response_data['question_list'][0].keys())
 
     def test_ask_page_disallowed_anonymous(self):
         self.proto_test_ask_page(False, 302)
@@ -460,6 +504,7 @@ class PageLoadTestCase(AskbotTestCase):
         #user = User.objects.get(id=1)
         #somehow login this user
         #self.proto_test_non_user_urls()
+
 
     def proto_test_user_urls(self, status_code):
         user = models.User.objects.get(id=2)   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
@@ -762,7 +807,7 @@ class CommandViewTests(AskbotTestCase):
             user = self.reload_object(user)
             self.assertEqual(user.display_tag_filter_strategy, value)
 
-            
+
 class UserProfilePageTests(AskbotTestCase):
     def setUp(self):
         self.user = self.create_user('user')
