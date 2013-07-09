@@ -102,12 +102,14 @@ def api_users_info(request):
         return HttpResponse(json_string, mimetype='application/json')
 
 
-def api_question_info(request, thread_id):
+def api_question_info(request, question_id):
     '''
     Gets a single question
     '''
-    post = get_object_or_404(models.Post, thread__id=thread_id, deleted=False)
-
+    post = get_object_or_404(
+        models.Post, id=question_id,
+        post_type='question', deleted=False
+    )
     question_url = '%s%s' % (askbot_settings.APP_URL, post.get_absolute_url())
 
     response_dict = {

@@ -229,8 +229,8 @@ class PageLoadTestCase(AskbotTestCase):
             self.assertTrue(key in response_data['query_data'].keys())
 
         expected_keys = ('id', 'view_count', 'tagnames',
-                         'title', 'answer_count', 'last_activity_by',
-                         'last_activity_by___username')
+                         'title', 'answer_count', 
+                         'last_activity_by__username')
         for key in expected_keys:
             self.assertTrue(key in response_data['question_list'][0].keys())
 

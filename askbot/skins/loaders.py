@@ -127,7 +127,7 @@ def render_into_skin_as_string(template, data, request):
 
 def render_text_into_skin(text, data, request):
     context = RequestContext(request, data)
-    skin = get_skin(request)
+    skin = get_skin()
     template = skin.from_string(text)
     return template.render(context)
 
