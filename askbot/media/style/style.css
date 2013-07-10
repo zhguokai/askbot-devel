@@ -2161,15 +2161,16 @@ ul#related-tags li {
   font-size: 10px;
 }
 .question-page .post-controls {
+  clear: left;
+  float: right;
   font-size: 11px;
+  height: 18px;
   line-height: 12px;
+  margin-top: 10px;
+  margin-bottom: 8px;
   min-width: 200px;
   padding-left: 5px;
   text-align: right;
-  clear: left;
-  float: right;
-  margin-top: 10px;
-  margin-bottom: 8px;
 }
 .question-page .post-controls a,
 .question-page .post-controls span.dropdown-toggle {
@@ -2656,9 +2657,6 @@ ul#related-tags li {
 .question-page .message {
   padding: 5px;
   margin: 0px 0 10px 0;
-}
-.question-page.anon .comments div.controls {
-  margin-top: 28px;
 }
 .vote-buttons {
   display: table-cell;
