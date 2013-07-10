@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-05-18 09:59-0500\n"
-"PO-Revision-Date: 2013-05-18 18:48+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-06-25 15:43+0000\n"
+"Last-Translator: Alexander Lieder <enormitas@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/askbot/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,14 +70,14 @@ msgstr "Titel"
 
 #: forms.py:248 templates/embed/ask_by_widget.html:170
 msgid "Please enter your question"
-msgstr ""
+msgstr "Bitte gebe hier Deine Frage ein"
 
 #: forms.py:259
 #, python-format
 msgid "must have > %d character"
 msgid_plural "must have > %d characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bitte mehr als  %d Zeichen eingeben"
+msgstr[1] "Bitte mehr als  %d Zeichen eingeben"
 
 #: forms.py:269
 #, python-format
@@ -608,7 +608,7 @@ msgstr ""
 
 #: conf/badges.py:32
 msgid "Peer Pressure: minimum downvotes for deleted post"
-msgstr "Gruppenzwang: Minimum downvotes bis zum löschen eines Eintrages"
+msgstr "Gruppenzwang: Minimum downvotes bis zum löschen eines Beitrages"
 
 #: conf/badges.py:41
 msgid "Teacher: minimum upvotes for the answer"
@@ -1045,7 +1045,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:42
 msgid "Editor for the comments"
-msgstr ""
+msgstr "Editor für Kommentare"
 
 #: conf/forum_data_rules.py:51
 msgid "Enable big Ask button"
@@ -2507,7 +2507,7 @@ msgstr ""
 
 #: conf/user_settings.py:146
 msgid "Name for the Anonymous user"
-msgstr "Name für den Anonymen Benutzer"
+msgstr "Name für den anonymen Benutzer"
 
 #: conf/vote_rules.py:14
 msgid "Vote and flag limits"
@@ -2545,7 +2545,7 @@ msgstr "Anzah der Meldungen ab wann ein Eintrag automatisch gelöscht wird"
 msgid ""
 "Minimum days to accept an answer, if it has not been accepted by the "
 "question poster"
-msgstr ""
+msgstr "Minimale Anzahl von Tagen, um eine Frage zu akzeptieren, falls die Frage nicht von dem Fragesteller akzeptiert wurde"
 
 #: const/__init__.py:11
 msgid "duplicate question"
@@ -3034,7 +3034,7 @@ msgstr "Sorry, dein Account wurde gesperrt, deswegen kannst du keine neuen Beitr
 msgid ""
 "Welcome! Please set email address (important!) in your profile and adjust "
 "screen name, if necessary."
-msgstr "Willkommen! Bitte trage in deinem Profil eine Email Adresse ein (Wichtig!) und wähle einen Nickname wenn nötig."
+msgstr "Willkommen! Bitte trage in deinem Profil eine E-Mail-Adresse ein (Wichtig!) und wähle einen Nickname, wenn nötig."
 
 #: deps/django_authopenid/forms.py:112 deps/django_authopenid/views.py:206
 msgid "i-names are not supported"
@@ -3458,8 +3458,8 @@ msgstr "<p>Du kannst die Häufigkeit der E-Mails <a href=\"%(email_settings_link
 #, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(question_count)d unbeantwortete Frage über %(topics)s"
+msgstr[1] "%(question_count)d unbeantwortete Fragen über %(topics)s"
 
 #: middleware/forum_mode.py:63
 #, python-format
@@ -3504,7 +3504,7 @@ msgstr ""
 
 #: models/__init__.py:685
 msgid "Sorry, you cannot vote for your own posts"
-msgstr "Tut mir leid, du kannst nicht für deinen eigenen Eintrag abstimmen"
+msgstr "Tut mir leid, du kannst nicht für deinen eigenen Beitrag abstimmen"
 
 #: models/__init__.py:689
 msgid "Sorry your account appears to be blocked "
@@ -3558,7 +3558,7 @@ msgstr[1] " Sorry, Kommentare (abgesehen vom letzten) darf man nur innerhalb von
 
 #: models/__init__.py:809
 msgid "Sorry, but only post owners or moderators can edit comments"
-msgstr ""
+msgstr "Tut uns leid, aber nur der Ersteller des Kommentars oder der Moderator kann es ändern."
 
 #: models/__init__.py:838
 msgid ""
@@ -3634,7 +3634,7 @@ msgstr ""
 
 #: models/__init__.py:1026
 msgid "Sorry, since your account is blocked you cannot close questions"
-msgstr ""
+msgstr "Dein Account wurde geblockt, du kannst jetzt keine Fragen schließen"
 
 #: models/__init__.py:1030
 msgid "Sorry, since your account is suspended you cannot close questions"
@@ -3756,12 +3756,12 @@ msgstr "Entschuldigung, dein Account ist blockiert. Dadurch kannst du keine Komm
 #: models/__init__.py:1258
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
-msgstr "Entschuldigung, aber da dein Account vorübergehend ausgeschlossen wurde kannst du nur noch deine eigenen Kommentare löschen."
+msgstr "Entschuldigung, aber da dein Account vorübergehend ausgeschlossen wurde, kannst du nur noch deine eigenen Kommentare löschen."
 
 #: models/__init__.py:1262
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
-msgstr ""
+msgstr "Damit Du Kommentare löschen kannst benötigst Du mindestens %(min_rep)s Punkte."
 
 #: models/__init__.py:1286
 msgid "sorry, but older votes cannot be revoked"
@@ -3891,7 +3891,7 @@ msgstr ""
 #: models/__init__.py:3121 models/__init__.py:3131
 #, python-format
 msgid "%(user)s edited a %(post_link)s."
-msgstr ""
+msgstr "Der Benutzer %(user)s editierte  %(post_link)s."
 
 #: models/__init__.py:3123
 #, python-format
@@ -3901,7 +3901,7 @@ msgstr " %(post_link)s von dem User %(user)s "
 #: models/__init__.py:3126
 #, python-format
 msgid "%(user)s edited an %(post_link)s."
-msgstr ""
+msgstr "Der Benutzer  %(user)s editierte %(post_link)s."
 
 #: models/__init__.py:3128
 #, python-format
@@ -3915,7 +3915,7 @@ msgstr " %(post_link)s von dem User %(user)s."
 
 #: models/__init__.py:3149
 msgid "To reply, PLEASE WRITE ABOVE THIS LINE."
-msgstr ""
+msgstr " "
 
 #: models/__init__.py:3188
 #, python-format
@@ -4206,7 +4206,7 @@ msgstr ""
 
 #: models/post.py:414
 msgid "Question: "
-msgstr ""
+msgstr "Frage:"
 
 #: models/post.py:416
 msgid "Answer: "
@@ -4532,7 +4532,7 @@ msgid ""
 "verify your email, please see <a href='%(email_validation_faq_url)s'>more "
 "details here</a>. You can submit your question now and validate email after "
 "that. Meanwhile, your question will saved as pending."
-msgstr ""
+msgstr "Deine E-Mail-Adresse %(email)s wurde noch nicht bestätigt. Damit Du Beiträge posten kannst, musst du deine E-Mail-Adresse bestätigen. Siehe <a href='%(email_validation_faq_url)s'>für weitere Details</a>. Du kannst Deine Frage aber schon jetzt verfassen. Sie wird dann zwischengespeichert und nach der Verifizierung der E-Mail-Adresse freigegeben."
 
 #: templates/ask.html:29
 msgid "please, try to make your question interesting to this community"
@@ -4546,7 +4546,7 @@ msgstr "Hinterlasse genug Details"
 #: templates/ask.html:31 templates/widgets/answer_edit_tips.html:15
 #: templates/widgets/question_edit_tips.html:11
 msgid "be clear and concise"
-msgstr "Sei klar und deutlich."
+msgstr "Sei klar, deutlich und achte auf deine Rechtschreibung"
 
 #: templates/ask.html:36 templates/widgets/answer_edit_tips.html:20
 #: templates/widgets/question_edit_tips.html:16
@@ -4926,7 +4926,7 @@ msgstr "Willkommen,"
 #: templates/help.html:13
 #, python-format
 msgid "Thank you for using %(app_name)s, here is how it works."
-msgstr "Danke das Du %(app_name)s verwendest, und so funktioniert das ganze."
+msgstr "Danke, dass Du %(app_name)s verwendest, und so funktioniert das Ganze."
 
 #: templates/help.html:16
 msgid "How questions, answers and comments work"
@@ -4948,7 +4948,7 @@ msgstr "Wir bitten jeden die \"Fragen Funktion\" zum Stellen, und die \"Antworte
 msgid ""
 "Despite that, each question and answer can be commented – \n"
 "    the comments are good for the limited discussions."
-msgstr "Abseits davon, jede Frage und jede Antwort kann kommentiert werden - diese Kommentare sind ausreichend für eine eingeschränkte Diskussion."
+msgstr "Außerdem, jede Frage und jede Antwort kann kommentiert werden - diese Kommentare sind ausreichend für eine eingeschränkte Diskussion."
 
 #: templates/help.html:26
 msgid "Please search before asking your questions"
@@ -4958,7 +4958,7 @@ msgstr "Benutze bitte die Suchfunktion bevor du Fragen stellst, damit keine Frag
 msgid ""
 "Type your question in the search bar and see whether a similar question has "
 "been asked before"
-msgstr ""
+msgstr "Tippe Deine Frage in die Suchleiste ein, so wirst Du sehen, ob eine ähnliche Frage bereits gestellt wurde"
 
 #: templates/help.html:29
 msgid "Search has advanced capabilities:"
@@ -5003,14 +5003,14 @@ msgstr ""
 msgid ""
 "Voting in %(app_name)s helps to select best answers and thank most helpful "
 "users."
-msgstr "Das Bewerten, also das Voten in %(app_name)s hilft die besten Antworten und hilfreichsten Einträge für die Nutzer auszuwählen."
+msgstr "Das Bewerten, also das Voten auf %(app_name)s hilft die besten Antworten und hilfreichsten Einträge für die Nutzer auszuwählen."
 
 #: templates/help.html:47
 #, python-format
 msgid ""
 "Please vote when you find helpful information,\n"
 "    it really helps the %(app_name)s community."
-msgstr "Bitte vote wenn du eine nützliche Information findest, das hilft der %(app_name)s Community sehr."
+msgstr "Bitte vote, wenn du eine nützliche Information findest, das hilft der %(app_name)s Community sehr."
 
 #: templates/help.html:51
 msgid "Other topics"
@@ -5287,7 +5287,7 @@ msgstr "Frage bearbeiten"
 
 #: templates/question_edit.html:16
 msgid "Question - in one sentence"
-msgstr ""
+msgstr "Frage - in einem Satz"
 
 #: templates/question_edit.html:23
 msgid "Details"
@@ -5330,7 +5330,7 @@ msgstr "Frage wieder eröffnen"
 msgid ""
 "This question has been closed by \n"
 "    <a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
-msgstr ""
+msgstr "Diese Frage hat folgender Benutzer geschlossen: \n    <a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
 
 #: templates/reopen.html:17
 msgid "Close reason:"
@@ -5434,7 +5434,7 @@ msgstr "Benutzernamen"
 #: templates/users.html:66
 #, python-format
 msgid "users matching query %(search_query)s:"
-msgstr ""
+msgstr "Folgende Benutzer mit dem Namen \"%(search_query)s\" wurden gefunden:  :"
 
 #: templates/users.html:69
 msgid "Nothing found."
@@ -5448,7 +5448,7 @@ msgstr "Bitte gebe deinen <span>Benutzernamen</span> ein und logge dich dann ein
 #: templates/authopenid/signin.html:98
 #: templates/authopenid/widget_signin.html:102
 msgid "(or select another login method above)"
-msgstr "(ansonsten wähle eine der anderen Loginmethoden von oben aus)"
+msgstr "(oder wähle oben eine andere Loginmethode aus)"
 
 #: templates/authopenid/authopenid_macros.html:66
 #: templates/authopenid/signin.html:118
@@ -5473,7 +5473,7 @@ msgid ""
 "email on <span class=\\\"orange\\\">Q&amp;A</span>. If you would like to use \n"
 "<strong>another email</strong>, please <a \n"
 "href='%(change_email_url)s'><strong>change it again</strong></a>."
-msgstr ""
+msgstr "<span class=\\\"strong big\\\">Eine E-Mail mit dem Bestätigungslink wurde an folgende E-Mil-Adresse geschickt:\n%(email)s.</span> Bitte <strong>öffne den Link</strong> mit deinem Browser. E-Mail Bestätigung ist wichtig damit die Community spamfrei bleibt. Wenn Du eine andere E-Mail-Adresse benutzen möchtest, dann <a \nhref='%(change_email_url)s'><strong>ändere sie nochmal</strong></a>."
 
 #: templates/authopenid/changeemail.html:18
 msgid "Email verified"
@@ -5486,7 +5486,7 @@ msgid ""
 "you find a very interesting question you can <strong>subscribe for the \n"
 "updates</strong> - then will be notified about changes <strong>once a day</strong>\n"
 "or less frequently."
-msgstr ""
+msgstr "<span class=\\\"big strong\\\">Danke für die Bestätigung deiner E-Mail-Adresse!</span> Jetzt kannst Du <strong>Fragen</strong>  stellen und <strong>beantworten</strong>. Wenn du eine interessante Frage findest, dann kannst Du dieser Frage folgen, so bekommst Du die neuesten Updates zu dieser Frage."
 
 #: templates/authopenid/complete.html:21
 msgid "Registration"
@@ -5498,14 +5498,14 @@ msgstr "Benutzerregistrierung"
 
 #: templates/authopenid/complete.html:47
 msgid "<strong>Screen Name</strong> (<i>will be shown to others</i>)"
-msgstr ""
+msgstr "<strong>Nickname</strong> (<i>ist für andere Benutzer sichtbar</i>)"
 
 #: templates/authopenid/complete.html:56
 msgid ""
 "<strong>Email Address</strong> (<i>will <strong>not</strong> be shared with \n"
 "anyone, must be valid</i>)\n"
 "                    "
-msgstr ""
+msgstr "<strong>E-Mail Addresse</strong> (muss gültig sein)\n                    "
 
 #: templates/authopenid/complete.html:71
 #: templates/authopenid/signup_with_password.html:5
@@ -5747,11 +5747,11 @@ msgstr "Accountwiederherstellung via Email"
 
 #: templates/authopenid/signup_with_password.html:11
 msgid "Please register by clicking on any of the icons below"
-msgstr "Bitte registriere dich durch das klicken auf eines der oberen Icons"
+msgstr "Bitte registriere Dich durch das Klicken auf eines der unteren Icons"
 
 #: templates/authopenid/signup_with_password.html:24
 msgid "or create a new user name and password here"
-msgstr "oder erstelle einen Neuen Benutzernamen & Passwort hier"
+msgstr "oder erstelle einen neuen Benutzernamen & Passwort hier"
 
 #: templates/authopenid/signup_with_password.html:26
 msgid "Create login name and password"
@@ -5920,7 +5920,7 @@ msgstr ""
 #: templates/email/macros.html:19
 #, python-format
 msgid "Question by %(author)s:"
-msgstr ""
+msgstr "Frage von %(author)s:"
 
 #: templates/email/macros.html:21
 #, python-format
@@ -5996,14 +5996,14 @@ msgstr "Darunter ist die Kopie von deinem Beitrag"
 #, python-format
 msgid ""
 "\n"
-"                %(comment)s comment:\n"
+"                %(count)s comment:\n"
 "            "
 msgid_plural ""
 "\n"
 "                %(count)s comments:\n"
 "            "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\n                %(count)s Kommentar:\n            "
+msgstr[1] "\n                %(count)s Kommentare:\n            "
 
 #: templates/email/re_welcome_lamson_on.html:2
 #: templates/email/re_welcome_lamson_on.html:3
@@ -6109,7 +6109,7 @@ msgstr ""
 
 #: templates/embed/widgets.html:16
 msgid "Ask a question"
-msgstr ""
+msgstr "Stelle eine Frage"
 
 #: templates/embed/widgets.html:17 templates/embed/widgets.html.py:26
 msgid "create"
@@ -6183,7 +6183,7 @@ msgstr[1] "Bitte korrigiere folgende Fehler."
 #: templates/livesettings/group_settings.html:16
 #, python-format
 msgid "Settings included in %(name)s."
-msgstr "Configuracions incloses a %(name)s."
+msgstr "Einstellungen enthalten in %(name)s."
 
 #: templates/livesettings/group_settings.html:50
 #: templates/livesettings/site_settings.html:98
@@ -6312,7 +6312,7 @@ msgstr "Nicht gefunden wonach Du gesuchst hast?"
 
 #: templates/main_page/questions_loop.html:10
 msgid "Ask your question!"
-msgstr ""
+msgstr "Stelle Deine Frage!"
 
 #: templates/main_page/tab_bar.html:11
 msgid "subscribe to the questions feed"
@@ -6342,8 +6342,8 @@ msgstr "Bitte beachte: %(app_name)s benötigt javascript um korrekt zu funktioni
 #, python-format
 msgid "each tag must be shorter that %(max_chars)s character"
 msgid_plural "each tag must be shorter than %(max_chars)s characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Jeder Tag muss länger sein als  %(max_chars)s Zeichen"
+msgstr[1] "Jeder Tag muss länger sein als %(max_chars)s Zeichen"
 
 #: templates/meta/editor_data.html:7
 #, python-format
@@ -6468,7 +6468,7 @@ msgstr "Makiere diese Antwort als korrekt (klicke nochmal um zu revidieren)"
 msgid ""
 "The question has been closed for the following reason "
 "<b>\"%(close_reason)s\"</b> <i>by"
-msgstr ""
+msgstr "Die Frage wurde aus folgendem Grund geschlossen: <b>\"%(close_reason)s\"</b> <i>von"
 
 #: templates/question/closed_question_info.html:4
 #, python-format
@@ -6611,7 +6611,7 @@ msgstr ""
 
 #: templates/question/sidebar.html:94
 msgid "This question is currently shared only with:"
-msgstr ""
+msgstr "Diese Frage wird momentan geteilt mit:"
 
 #: templates/question/sidebar.html:96
 msgid "Individual users"
@@ -6675,7 +6675,7 @@ msgstr ""
 #: templates/tags/header.html:7
 #, python-format
 msgid "Tags, matching \"%(tag_query)s\""
-msgstr ""
+msgstr "Suchbegriff  \"%(tag_query)s\". Folgende Tags wurden gefunden:"
 
 #: templates/tags/header.html:19
 msgid "sorted alphabetically"
@@ -6801,7 +6801,7 @@ msgstr ""
 
 #: templates/user_inbox/responses_and_flags.html:23
 msgid "delete post"
-msgstr "Lösche Eintrag"
+msgstr "Lösche Beitrag"
 
 #: templates/user_profile/reject_post_dialog.html:4
 msgid "Reject the post(s)?"
@@ -7176,8 +7176,8 @@ msgstr "Diese Antwort ist %(answer_score)s mal positiv bewertet worden"
 #, python-format
 msgid "(%(comment_count)s comment)"
 msgid_plural "the answer has been commented %(comment_count)s times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "(%(comment_count)s Kommentar)"
+msgstr[1] "die Antwort wurde %(comment_count)s mal kommentiert"
 
 #: templates/user_profile/user_stats.html:45
 #, python-format
@@ -7280,7 +7280,7 @@ msgstr ""
 
 #: templates/widgets/ask_form.html:25
 msgid "Add details"
-msgstr ""
+msgstr "Einzelheiten zu Deiner Frage kommen hier rein:"
 
 #: templates/widgets/ask_form.html:58
 msgid "Select language"
@@ -7510,7 +7510,7 @@ msgstr "BEOBACHTETE"
 
 #: templates/widgets/scope_nav.html:30
 msgid "Please ask your question here"
-msgstr "Bitte stelle deine Frage hier"
+msgstr "Bitte stelle Deine Frage"
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
@@ -7611,15 +7611,15 @@ msgstr "Der Benutzername wird benötigt"
 
 #: utils/forms.py:104
 msgid "sorry, this name is taken, please choose another"
-msgstr "Dieser Benutzername ist bereits vergeben. Bitte wähle einen anderen"
+msgstr "Dieser Benutzername ist bereits vergeben. Bitte wähle einen anderen Benutzernamen aus."
 
 #: utils/forms.py:105
 msgid "sorry, this name is not allowed, please choose another"
-msgstr "Dieser Benutzername ist nicht erlaubt. Bitte wähle einen anderen"
+msgstr "Dieser Benutzername ist nicht erlaubt. Bitte wähle einen anderen Benutzernamen aus."
 
 #: utils/forms.py:106
 msgid "sorry, there is no user with this name"
-msgstr "Es gibt keinen Benutzer dieses Namens"
+msgstr "Es gibt keinen Benutzer mit diesem Namen"
 
 #: utils/forms.py:107
 msgid "sorry, we have a serious error - user name is taken by several users"
@@ -7827,7 +7827,7 @@ msgstr "Vorgeschlagene Tags"
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
-msgstr ""
+msgstr "Dieser Kommentar wurde gelöscht."
 
 #: views/users.py:284
 msgid "moderate user"
@@ -7951,18 +7951,18 @@ msgstr ""
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
-msgstr "Sembla que heu sortit i no podeu posar comentaris. <a href=\"%(sign_in_url)s\">Entreu</a>."
+msgstr "Du hast Dich scheinbar ausgeloggt, daher kannst jetzt keine Kommentare verfassen. Bitte logge Dich  <a href=\"%(sign_in_url)s\">erneut ein</a>."
 
 #: views/writers.py:742
 msgid "Sorry, anonymous users cannot edit comments"
-msgstr "Entschuldigung, Anonyme Benutzer können keine Kommentare ändern"
+msgstr "Entschuldigung, anonyme Benutzer können keine Kommentare ändern"
 
 #: views/writers.py:791
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
-msgstr ""
+msgstr "Du hast Dich scheinbar ausgeloggt, daher kannst jetzt keine Kommentare löschen. Bitte logge Dich  <a href=\"%(sign_in_url)s\">erneut ein</a>."
 
 #: views/writers.py:817
 msgid "sorry, we seem to have some technical difficulties"

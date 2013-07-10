@@ -4,13 +4,14 @@
 # 
 # Translators:
 # evgeny <evgeny.fadeev@gmail.com>, 2009
+# gareth <gareth@unitedstack.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-05-18 09:59-0500\n"
-"PO-Revision-Date: 2013-05-18 18:48+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-06-24 09:50+0000\n"
+"Last-Translator: gareth <gareth@unitedstack.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/askbot/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr "对不起,匿名用户不能使用此功能"
+msgstr "对不起，匿名用户不能使用此功能"
 
 #: feed.py:34 feed.py:108
 msgid " - "
@@ -28,7 +29,7 @@ msgstr "-"
 
 #: feed.py:35 feed.py:109
 msgid "Individual question feed"
-msgstr "单条问题订阅"
+msgstr "个人问题订阅"
 
 #: forms.py:139
 msgid "select country"
@@ -151,7 +152,7 @@ msgstr "输入要添加或减去的分数"
 
 #: forms.py:609 const/__init__.py:375
 msgid "approved"
-msgstr "已认证"
+msgstr "已采纳"
 
 #: forms.py:610 const/__init__.py:376
 msgid "watched"
@@ -202,7 +203,7 @@ msgstr "不能修改管理员的状态"
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
-msgstr "如果你希望修改 %(username)s 的状态，请做出有意义的选择。"
+msgstr "如果你希望修改 %(username)s 的状态，请做出有合理的选择。"
 
 #: forms.py:717
 msgid "Subject line"
@@ -335,7 +336,7 @@ msgstr "该电子邮件已被注册，请选择另一个再试。"
 
 #: forms.py:1472
 msgid "Choose email tag filter"
-msgstr "选择邮件标签过来"
+msgstr "选择邮件标签过滤"
 
 #: forms.py:1524
 msgid "Asked by me"
@@ -449,7 +450,7 @@ msgstr "关闭/"
 
 #: urls.py:146
 msgid "reopen/"
-msgstr "打开/"
+msgstr "重新打开/"
 
 #: urls.py:151
 msgid "answer/"
@@ -591,7 +592,7 @@ msgstr ""
 
 #: conf/badges.py:13
 msgid "Badge settings"
-msgstr "设置"
+msgstr "奖牌设置"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
@@ -603,51 +604,51 @@ msgstr "用户压力：达到删除帖子的最低否决票数"
 
 #: conf/badges.py:41
 msgid "Teacher: minimum upvotes for the answer"
-msgstr "老师:答案的最小推荐票数"
+msgstr "老师：答案的最低同意票数"
 
 #: conf/badges.py:50
 msgid "Nice Answer: minimum upvotes for the answer"
-msgstr "好答案:答案的最小推荐票数"
+msgstr "好答案：答案的最低同意票数"
 
 #: conf/badges.py:59
 msgid "Good Answer: minimum upvotes for the answer"
-msgstr "良好的答案:答案的最小推荐票数"
+msgstr "良好的答案：答案的最低同意票数"
 
 #: conf/badges.py:68
 msgid "Great Answer: minimum upvotes for the answer"
-msgstr "极好的答案:答案的最小推荐票数"
+msgstr "极好的答案：答案的最低同意票数"
 
 #: conf/badges.py:77
 msgid "Nice Question: minimum upvotes for the question"
-msgstr "好问题:问题的最小推荐票数"
+msgstr "好问题：问题的最低同意票数"
 
 #: conf/badges.py:86
 msgid "Good Question: minimum upvotes for the question"
-msgstr "良好的问题:问题的最小推荐票数"
+msgstr "良好的问题：问题的最低同意票数"
 
 #: conf/badges.py:95
 msgid "Great Question: minimum upvotes for the question"
-msgstr "优秀的问题:问题的最小推荐票数"
+msgstr "优秀的问题：问题的最低同意票数"
 
 #: conf/badges.py:104
 msgid "Popular Question: minimum views"
-msgstr "受欢迎问题:最小浏览次数"
+msgstr "受欢迎问题：最小浏览次数"
 
 #: conf/badges.py:113
 msgid "Notable Question: minimum views"
-msgstr "关注的问题:最小浏览次数"
+msgstr "关注的问题：最小浏览次数"
 
 #: conf/badges.py:122
 msgid "Famous Question: minimum views"
-msgstr "极好的问题:最小浏览次数"
+msgstr "极好的问题：最小浏览次数"
 
 #: conf/badges.py:131
 msgid "Self-Learner: minimum answer upvotes"
-msgstr "自学者：答案最少推荐票数"
+msgstr "自学者：答案最少同意票数"
 
 #: conf/badges.py:140
 msgid "Civic Duty: minimum votes"
-msgstr "居民义务:最少投票数"
+msgstr "居民义务：最少投票数"
 
 #: conf/badges.py:149
 msgid "Enlightened Duty: minimum upvotes"
@@ -655,7 +656,7 @@ msgstr "优良义务：最低同意票数"
 
 #: conf/badges.py:158
 msgid "Guru: minimum upvotes"
-msgstr "专家:最少推荐票数"
+msgstr "专家：最少同意票数"
 
 #: conf/badges.py:167
 msgid "Necromancer: minimum upvotes"

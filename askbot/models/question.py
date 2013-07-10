@@ -154,10 +154,10 @@ class ThreadManager(BaseQuerySetManager):
             added_at = added_at,
             wiki = wiki,
             is_anonymous = is_anonymous,
-            #html field is denormalized in .save() call
             text = text,
-            #summary field is denormalized in .save() call
+            language_code=language
         )
+        #html and summary fields are denormalized in .save() call
         if question.wiki:
             #DATED COMMENT
             #todo: this is confusing - last_edited_at field
@@ -918,10 +918,12 @@ class Thread(models.Model):
         for sort_method in const.ANSWER_SORT_METHODS:
             cache.cache.delete(self.get_post_data_cache_key(sort_method))
 
-    def invalidate_cached_data(self):
+    def invalidate_cached_data(self, lazy=False):
         self.invalidate_cached_post_data()
-        #self.invalidate_cached_thread_content_fragment()
-        self.update_summary_html()
+        if lazy:
+            self.invalidate_cached_thread_content_fragment()
+        else:
+            self.update_summary_html()
 
     def get_cached_post_data(self, user = None, sort_method = 'votes'):
         """returns cached post data, as calculated by
