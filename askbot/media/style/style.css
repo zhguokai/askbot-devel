@@ -71,6 +71,9 @@ textarea,
 .wmd-container,
 .folded-editor {
   border: #cce6ec 3px solid;
+  height: 22px;
+  font-size: 13px;
+  padding: 0 5px;
 }
 iframe {
   border: none;
@@ -963,7 +966,7 @@ body.anon.ask-page .search-drop-menu {
 .box .inputs #ignoredTagInput,
 .box .inputs #subscribedTagInput,
 .box .inputs #ab-tag-search {
-  width: 152px;
+  width: 150px;
   padding-left: 5px;
   border: #c9c9b5 1px solid;
   height: 25px;
