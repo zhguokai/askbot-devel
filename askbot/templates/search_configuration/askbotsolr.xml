@@ -94,7 +94,7 @@
         <filter class="solr.ElisionFilterFactory"/>
         <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_fr.txt" enablePositionIncrements="true" />
         <filter class="solr.SnowballPorterFilterFactory" language="French" />
-        {% elif language == 'cn' or language == 'zn' %}
+        {% elif language == 'cn' or language == 'zh' %}
         <tokenizer class="solr.SmartChineseSentenceTokenizerFactory"/>
         <filter class="solr.SmartChineseWordTokenFilterFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>

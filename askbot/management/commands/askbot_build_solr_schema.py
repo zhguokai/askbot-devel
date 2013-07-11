@@ -1,6 +1,7 @@
 from optparse import make_option
 import sys
 
+from django.utils.translation import activate as activate_language
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand
 from django.template import loader, Context
@@ -27,6 +28,7 @@ class Command(BaseCommand):
         """Generates a Solr schema that reflects the indexes."""
         using = options.get('using')
         language = options.get('language')[:2]
+        activate_language(language)
         if language not in SUPPORTED_LANGUAGES:
             sys.stderr.write("\n\n")
             sys.stderr.write("WARNING: your language: '%s' is not supported in our " % language)
