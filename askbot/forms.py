@@ -1125,7 +1125,7 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         if self.is_bound:
             return True
 
-        initial_text = self.initial['text']
+        initial_text = self.initial.get('text', '')
         if askbot_settings.EDITOR_TYPE == 'tinymce':
             stripped_text = strip_tags(initial_text).strip()
         else:
@@ -1141,7 +1141,6 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         return user.post_answer(
             question = question,
             body_text = text,
-            follow = follow,
             wiki = wiki,
             is_private = is_private,
             timestamp = datetime.datetime.now(),
