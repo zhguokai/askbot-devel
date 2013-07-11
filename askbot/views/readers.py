@@ -596,6 +596,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'user_is_thread_moderator': thread.has_moderator(request.user),
         'published_answer_ids': published_answer_ids,
         'answer' : answer_form,
+        'editor_is_unfolded': answer_form.has_data(),
         'answers' : page_objects.object_list,
         'answer_count': thread.get_answer_count(request.user),
         'category_tree_data': askbot_settings.CATEGORY_TREE,
