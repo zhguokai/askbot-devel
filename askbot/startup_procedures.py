@@ -644,7 +644,7 @@ def test_haystack():
                     errors.append(message)
 
             if getattr(django_settings, 'HAYSTACK_SIGNAL_PROCESSOR',
-                       False).endswith('AskbotCelerySignalProcessor'):
+                       '').endswith('AskbotCelerySignalProcessor'):
                 try_import('celery_haystack', 'celery-haystack', short_message = True)
 
             footer = 'Please refer to haystack documentation at https://django-haystack.readthedocs.org/en/latest/settings.html'
