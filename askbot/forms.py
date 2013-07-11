@@ -484,16 +484,6 @@ class WikiField(forms.BooleanField):
     def clean(self, value):
         return value and askbot_settings.WIKI_ON
 
-
-class EmailNotifyField(forms.BooleanField):
-    """Rendered as checkbox which turns on
-    email notifications on the post"""
-    def __init__(self, *args, **kwargs):
-        super(EmailNotifyField, self).__init__(*args, **kwargs)
-        self.required = False
-        self.widget.attrs['class'] = 'nomargin'
-
-
 class SummaryField(forms.CharField):
 
     def __init__(self, *args, **kwargs):
@@ -1125,23 +1115,19 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         required=False, max_length=255,
         widget=forms.TextInput(attrs={'size': 40, 'class': 'openid-input'})
     )
-    email_notify = EmailNotifyField(initial=False)
 
     def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
         self.fields['text'] = AnswerEditorField(user=kwargs['user'])
-        self.fields['email_notify'].widget.attrs['id'] = \
-                                    'question-subscribe-updates'
 
     def has_data(self):
         """True if form is bound or has inital data"""
-
         if self.is_bound:
             return True
 
         initial_text = self.initial['text']
         if askbot_settings.EDITOR_TYPE == 'tinymce':
-            stripped_text = strip_tags(inital_text).strip()
+            stripped_text = strip_tags(initial_text).strip()
         else:
             stripped_text = initial_text.strip()
         return len(stripped_text) > 0
@@ -1150,7 +1136,6 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     def save(self, question, user):
         wiki = self.cleaned_data['wiki']
         text = self.cleaned_data['text']
-        follow = self.cleaned_data['email_notify']
         is_private = self.cleaned_data['post_privately']        
 
         return user.post_answer(
