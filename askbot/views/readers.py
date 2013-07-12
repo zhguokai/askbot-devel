@@ -31,6 +31,7 @@ from django.conf import settings as django_settings
 import askbot
 from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
+from askbot.utils.loading import load_module
 from askbot.forms import AnswerForm, ShowQuestionForm
 from askbot import conf
 from askbot import models
@@ -550,11 +551,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
     elif show_comment_position > askbot_settings.MAX_COMMENTS_TO_SHOW:
         is_cacheable = False
 
-    initial = {
-        'wiki': question_post.wiki and askbot_settings.WIKI_ON,
-        'email_notify': thread.is_followed_by(request.user)
-    }
     #maybe load draft
+    initial = {}
     if request.user.is_authenticated():
         #todo: refactor into methor on thread
         drafts = models.DraftAnswer.objects.filter(
@@ -564,7 +562,13 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if drafts.count() > 0:
             initial['text'] = drafts[0].text
 
-    answer_form = AnswerForm(initial, user=request.user)
+    custom_answer_form_path = getattr(django_settings, 'ASKBOT_NEW_ANSWER_FORM', None)
+    if custom_answer_form_path:
+        answer_form_class = load_module(custom_answer_form_path)
+    else:
+        answer_form_class = AnswerForm
+
+    answer_form = answer_form_class(initial=initial, user=request.user)
 
     user_can_post_comment = (
         request.user.is_authenticated() and request.user.can_post_comment()
@@ -596,6 +600,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'user_is_thread_moderator': thread.has_moderator(request.user),
         'published_answer_ids': published_answer_ids,
         'answer' : answer_form,
+        'editor_is_unfolded': answer_form.has_data(),
         'answers' : page_objects.object_list,
         'answer_count': thread.get_answer_count(request.user),
         'category_tree_data': askbot_settings.CATEGORY_TREE,

@@ -3,7 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
-* Allowed read-only user groups (Adolfo)
+* Allowed read-only access user groups (Adolfo)
 * Added simple read-only API (Adolfo)
 * Added "admin email" to livesettings (Evgeny)
 * Improved Zendesk import feature `Kevin Porterfield, Shotgun Software<http://www.shotgunsoftware.com>_`
