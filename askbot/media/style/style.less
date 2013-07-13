@@ -4141,18 +4141,6 @@ a.edit {
     float: left;
 }
 
-/* language-specific fixes */
-body.lang-es {
-    #searchBar {
-        /* need special left padding */
-    }
-}
-body.anon.lang-es {
-    #searchBar {
-        /* need special left padding */
-    }
-}
-
 /* user groups */
 #user-groups {
     input[type="text"] {
@@ -4749,5 +4737,28 @@ td.setting-input {
 @media screen and (max-width: 338px) {
     #scopeNav {
         display: none;
+    }
+}
+
+/* language-specific fixes */
+body.lang-es {
+    #searchBar {
+        /* need special left padding */
+    }
+}
+body.anon.lang-es {
+    #searchBar {
+        /* need special left padding */
+    }
+}
+
+body.lang-zh {
+    .box .inputs {
+         #interestingTagInput,
+         #ignoredTagInput,
+         #subscribedTagInput,
+         #ab-tag-search {
+            width: 125px;
+         }
     }
 }

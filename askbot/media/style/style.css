@@ -4000,15 +4000,6 @@ li.L9 {
 #leading-sidebar {
   float: left;
 }
-/* language-specific fixes */
-body.lang-es #searchBar {
-  /* need special left padding */
-
-}
-body.anon.lang-es #searchBar {
-  /* need special left padding */
-
-}
 /* user groups */
 #user-groups input[type="text"] {
   height: 21px;
@@ -4555,4 +4546,19 @@ td.setting-input textarea {
   #scopeNav {
     display: none;
   }
+}
+/* language-specific fixes */
+body.lang-es #searchBar {
+  /* need special left padding */
+
+}
+body.anon.lang-es #searchBar {
+  /* need special left padding */
+
+}
+body.lang-zh .box .inputs #interestingTagInput,
+body.lang-zh .box .inputs #ignoredTagInput,
+body.lang-zh .box .inputs #subscribedTagInput,
+body.lang-zh .box .inputs #ab-tag-search {
+  width: 125px;
 }
