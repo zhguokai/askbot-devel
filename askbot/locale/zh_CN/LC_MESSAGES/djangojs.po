@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
-"POT-Creation-Date: 2013-05-18 10:00-0500\n"
-"PO-Revision-Date: 2013-05-18 18:49+0000\n"
+"POT-Creation-Date: 2013-06-27 03:53-0500\n"
+"PO-Revision-Date: 2013-06-27 08:56+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/askbot/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -83,8 +83,8 @@ msgstr ""
 msgid "send"
 msgstr ""
 
-#: media/js/group_messaging.js:164 media/js/post.js:1803
-#: media/js/post.js.c:3059 media/js/post.js.c:4568 media/js/user.js:888
+#: media/js/group_messaging.js:164 media/js/post.js:1809
+#: media/js/post.js.c:3077 media/js/post.js.c:4586 media/js/user.js:888
 msgid "cancel"
 msgstr ""
 
@@ -109,20 +109,20 @@ msgstr ""
 msgid "Recipient:"
 msgstr ""
 
-#: media/js/live_search.js:173
+#: media/js/live_search.js:196
 msgid "To see search results, 2 or more characters may be required"
 msgstr ""
 
-#: media/js/live_search.js:195
+#: media/js/live_search.js:218
 msgid "Ask Your Question"
 msgstr ""
 
-#: media/js/live_search.js:276
+#: media/js/live_search.js:299
 msgid "Sorry, this tag does not exist"
 msgid_plural "Sorry, these tags do not exist"
 msgstr[0] ""
 
-#: media/js/live_search.js:290
+#: media/js/live_search.js:313
 msgid "search or ask your question"
 msgstr ""
 
@@ -263,129 +263,125 @@ msgstr ""
 msgid "sorry, something is not right here"
 msgstr ""
 
-#: media/js/post.js:1661
+#: media/js/post.js:1665
 msgid "add comment"
 msgstr "添加评论"
 
-#: media/js/post.js:1667
+#: media/js/post.js:1671
 msgid "save comment"
 msgstr "保存评论"
 
-#: media/js/post.js:1707
+#: media/js/post.js:1711
 #, c-format
 msgid "enter at least %s characters"
 msgstr ""
 
-#: media/js/post.js:1709
+#: media/js/post.js:1713
 #, c-format
 msgid "enter at least %s more characters"
 msgstr ""
 
-#: media/js/post.js:1719
+#: media/js/post.js:1723
 #, c-format
 msgid "%s characters left"
 msgstr ""
 
-#: media/js/post.js:1817
+#: media/js/post.js:1823
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
-#: media/js/post.js:1849
+#: media/js/post.js:1855
 msgid "Are you sure you don't want to post this comment?"
 msgstr ""
 
-#: media/js/post.js:1884 media/js/utils.js:3170 media/js/utils.js.c:3325
+#: media/js/post.js:1890 media/js/utils.js:3352 media/js/utils.js.c:3507
 msgid "just now"
 msgstr ""
 
-#: media/js/post.js:1950
+#: media/js/post.js:1956
 msgid "delete this comment"
 msgstr ""
 
-#: media/js/post.js:2265
+#: media/js/post.js:2271
 msgid "confirm delete comment"
 msgstr ""
 
-#: media/js/post.js:2383
-msgid "post a comment"
-msgstr ""
-
-#: media/js/post.js:2391
+#: media/js/post.js:2409
 msgid "please sign in or register to post comments"
 msgstr ""
 
-#: media/js/post.js:2542
+#: media/js/post.js:2560
 msgid "Please enter question title (>10 characters)"
 msgstr "请输入提问标题 (>10 字符)"
 
-#: media/js/post.js:3053 media/js/post.js.c:3839 media/js/post.js.c:4028
+#: media/js/post.js:3071 media/js/post.js.c:3857 media/js/post.js.c:4046
 msgid "save"
 msgstr ""
 
-#: media/js/post.js:3177
+#: media/js/post.js:3195
 msgid "Enter the logo url or upload an image"
 msgstr ""
 
-#: media/js/post.js:3203
+#: media/js/post.js:3221
 msgid "Do you really want to remove the image?"
 msgstr ""
 
-#: media/js/post.js:3311
+#: media/js/post.js:3329
 msgid "change logo"
 msgstr ""
 
-#: media/js/post.js:3312
+#: media/js/post.js:3330
 msgid "add logo"
 msgstr ""
 
-#: media/js/post.js:3414
+#: media/js/post.js:3432
 #, c-format
 msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr ""
 
-#: media/js/post.js:3423
+#: media/js/post.js:3441
 #, c-format
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
 msgstr[0] ""
 
-#: media/js/post.js:3769
+#: media/js/post.js:3787
 msgid "Delete category?"
 msgstr ""
 
-#: media/js/post.js:3858 media/js/utils.js:870
+#: media/js/post.js:3876 media/js/utils.js:875
 msgid "edit"
 msgstr ""
 
-#: media/js/post.js:3945
+#: media/js/post.js:3963
 msgid "category name cannot be empty"
 msgstr ""
 
-#: media/js/post.js:3981
+#: media/js/post.js:3999
 msgid "already exists at the current level!"
 msgstr ""
 
-#: media/js/post.js:4017
+#: media/js/post.js:4035
 msgid "add category"
 msgstr ""
 
-#: media/js/post.js:4564
+#: media/js/post.js:4582
 msgid "save tags"
 msgstr ""
 
-#: media/js/post.js:4646 media/js/post.js.c:4680
+#: media/js/post.js:4664 media/js/post.js.c:4698
 msgid "User name:"
 msgstr ""
 
-#: media/js/post.js:4667
+#: media/js/post.js:4685
 msgid "Group name:"
 msgstr ""
 
-#: media/js/post.js:4693
+#: media/js/post.js:4711
 msgid "Shared with the following users:"
 msgstr ""
 
-#: media/js/post.js:4699
+#: media/js/post.js:4717
 msgid "Shared with the following groups:"
 msgstr ""
 
@@ -476,217 +472,217 @@ msgstr "正在关注 %s"
 msgid "follow %s"
 msgstr "关注 %s"
 
-#: media/js/user.js:807
-msgid "Remove"
-msgstr ""
-
 #: media/js/user.js:883
 msgid "add group"
 msgstr ""
 
-#: media/js/user.js:962
+#: media/js/user.js:963
 msgid "add"
 msgstr ""
 
-#: media/js/utils.js:94
+#: media/js/utils.js:99
 msgid "and"
 msgstr ""
 
-#: media/js/utils.js:112
+#: media/js/utils.js:117
 msgid "click to close"
 msgstr "点击消息框关闭"
 
-#: media/js/utils.js:869
+#: media/js/utils.js:874
 msgid "click to edit this comment"
 msgstr ""
 
-#: media/js/utils.js:894
+#: media/js/utils.js:899
 msgid "convert to answer"
 msgstr ""
 
-#: media/js/utils.js:947
+#: media/js/utils.js:952
 msgid "Ok"
 msgstr ""
 
-#: media/js/utils.js:948 media/js/utils.js.c:1396
+#: media/js/utils.js:953 media/js/utils.js.c:1401
 msgid "Cancel"
 msgstr ""
 
-#: media/js/utils.js:1208
+#: media/js/utils.js:1213
 #, c-format
 msgid "Uploaded file: %s"
 msgstr ""
 
-#: media/js/utils.js:1223
+#: media/js/utils.js:1228
 msgid "Choose a different image"
 msgstr ""
 
-#: media/js/utils.js:1225
+#: media/js/utils.js:1230
 msgid "Choose a different file"
 msgstr ""
 
-#: media/js/utils.js:1239
+#: media/js/utils.js:1244
 msgid "Oops, looks like we had an error. Sorry."
 msgstr ""
 
-#: media/js/utils.js:1300
+#: media/js/utils.js:1305
 msgid "Choose an image to insert"
 msgstr ""
 
-#: media/js/utils.js:1302
+#: media/js/utils.js:1307
 msgid "Choose a file to insert"
 msgstr ""
 
-#: media/js/utils.js:1315
+#: media/js/utils.js:1320
 msgid "Allowed file types are:"
 msgstr ""
 
-#: media/js/utils.js:1321
+#: media/js/utils.js:1326
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:35
 msgid "Or paste file url here"
 msgstr ""
 
-#: media/js/utils.js:1395
+#: media/js/utils.js:1400
 msgid "Save"
 msgstr ""
 
-#: media/js/utils.js:1467
+#: media/js/utils.js:1472
 msgid "saved"
 msgstr ""
 
-#: media/js/utils.js:1591
+#: media/js/utils.js:1596
 msgid "enabled"
 msgstr ""
 
-#: media/js/utils.js:1593
+#: media/js/utils.js:1598
 msgid "disabled"
 msgstr ""
 
-#: media/js/utils.js:2023
+#: media/js/utils.js:2030
+msgid "group name"
+msgstr ""
+
+#: media/js/utils.js:2038
 msgid "add new group"
 msgstr ""
 
-#: media/js/utils.js:2084
+#: media/js/utils.js:2130
 msgid "Group %(name)s already exists. Group names are case-insensitive."
 msgstr ""
 
-#: media/js/utils.js:2275
+#: media/js/utils.js:2303
 #, c-format
 msgid "see questions tagged '%s'"
 msgstr ""
 
-#: media/js/utils.js:3168
+#: media/js/utils.js:3350
 msgid "ago"
 msgstr ""
 
-#: media/js/utils.js:3169
+#: media/js/utils.js:3351
 msgid "from now"
 msgstr ""
 
-#: media/js/utils.js:3171
+#: media/js/utils.js:3353
 msgid "about a minute"
 msgstr ""
 
-#: media/js/utils.js:3172
+#: media/js/utils.js:3354
 #, c-format
 msgid "%d minutes"
 msgstr ""
 
-#: media/js/utils.js:3173
+#: media/js/utils.js:3355
 msgid "about an hour"
 msgstr ""
 
-#: media/js/utils.js:3174
+#: media/js/utils.js:3356
 #, c-format
 msgid "%d hours"
 msgstr ""
 
-#: media/js/utils.js:3175 media/js/utils.js.c:3303
+#: media/js/utils.js:3357 media/js/utils.js.c:3485
 msgid "yesterday"
 msgstr ""
 
-#: media/js/utils.js:3176
+#: media/js/utils.js:3358
 #, c-format
 msgid "%d days"
 msgstr ""
 
-#: media/js/utils.js:3177
+#: media/js/utils.js:3359
 msgid "about a month"
 msgstr ""
 
-#: media/js/utils.js:3178
+#: media/js/utils.js:3360
 #, c-format
 msgid "%d months"
 msgstr ""
 
-#: media/js/utils.js:3179
+#: media/js/utils.js:3361
 msgid "about a year"
 msgstr ""
 
-#: media/js/utils.js:3180
+#: media/js/utils.js:3362
 #, c-format
 msgid "%d years"
 msgstr ""
 
-#: media/js/utils.js:3278
+#: media/js/utils.js:3460
 msgid "Jan"
 msgstr ""
 
-#: media/js/utils.js:3279
+#: media/js/utils.js:3461
 msgid "Feb"
 msgstr ""
 
-#: media/js/utils.js:3280
+#: media/js/utils.js:3462
 msgid "Mar"
 msgstr ""
 
-#: media/js/utils.js:3281
+#: media/js/utils.js:3463
 msgid "Apr"
 msgstr ""
 
-#: media/js/utils.js:3282
+#: media/js/utils.js:3464
 msgid "May"
 msgstr ""
 
-#: media/js/utils.js:3283
+#: media/js/utils.js:3465
 msgid "Jun"
 msgstr ""
 
-#: media/js/utils.js:3284
+#: media/js/utils.js:3466
 msgid "Jul"
 msgstr ""
 
-#: media/js/utils.js:3285
+#: media/js/utils.js:3467
 msgid "Aug"
 msgstr ""
 
-#: media/js/utils.js:3286
+#: media/js/utils.js:3468
 msgid "Sep"
 msgstr ""
 
-#: media/js/utils.js:3287
+#: media/js/utils.js:3469
 msgid "Oct"
 msgstr ""
 
-#: media/js/utils.js:3288
+#: media/js/utils.js:3470
 msgid "Nov"
 msgstr ""
 
-#: media/js/utils.js:3289
+#: media/js/utils.js:3471
 msgid "Dec"
 msgstr ""
 
-#: media/js/utils.js:3301
+#: media/js/utils.js:3483
 msgid "2 days ago"
 msgstr ""
 
-#: media/js/utils.js:3308
+#: media/js/utils.js:3490
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] ""
 
-#: media/js/utils.js:3318
+#: media/js/utils.js:3500
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"
@@ -775,6 +771,9 @@ msgstr ""
 #: media/js/wmd/wmd.js:1843
 msgid "link text"
 msgstr ""
+
+#~ msgid "post a comment"
+#~ msgstr "save comment"
 
 #~ msgid "%s content minchars"
 #~ msgstr "please enter more than %s characters"
