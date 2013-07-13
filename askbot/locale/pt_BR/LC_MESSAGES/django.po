@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the CNPROG package.
 #
 # Translators:
+# Translators:
 # Sandro  <sandrossv@hotmail.com>, 2011.
-# Olivier Hallot <olivier.hallot@libreoffice.org>, 2012, 2013.
 # ePhillipe <erick@domminii.com>, 2012
 # gjmveloso <gjmveloso@gmail.com>, 2012
 # Rafael Ferreira <rafael.f.f1@gmail.com>, 2012
 # ReyX <regis.sabino@gmail.com>, 2013
 # Sandro <sandrossv@hotmail.com>, 2011, 2012
 # marcusbraga <tereshop@hotmail.com>, 2012
+# Olivier Hallot <olivier.hallot@libreoffice.org>, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
@@ -9671,8 +9672,8 @@ msgstr ""
 #~ "are any news."
 #~ msgstr ""
 #~ "\n"
-#~ "<span class='big strong'>Seu endereço de e-mail foi definido como "
-#~ "%%(email)s.</span>\n"
+#~ "<span class='big strong'>Seu endereço de e-mail foi definido como %"
+#~ "%(email)s.</span>\n"
 #~ "Atualizações nas perguntas que mais gostar serão enviadas neste endereço. "
 #~ "Notificações de e-mail são enviadas uma vez ao dia ou menos "
 #~ "frequentemente, somente quando houver novidades."
