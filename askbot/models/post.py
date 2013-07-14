@@ -2067,7 +2067,7 @@ class PostRevision(models.Model):
     author = models.ForeignKey('auth.User', related_name='%(class)ss')
     revised_at = models.DateTimeField()
     summary = models.CharField(max_length=300, blank=True)
-    text = models.TextField()
+    text = models.TextField(blank=True)
 
     approved = models.BooleanField(default=False, db_index=True)
     approved_by = models.ForeignKey(User, null = True, blank = True)
