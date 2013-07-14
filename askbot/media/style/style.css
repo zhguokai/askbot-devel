@@ -2875,24 +2875,16 @@ ul#related-tags li {
 .openid-signin form {
   margin-bottom: 5px;
 }
-#email-input-fs,
-#local_login_buttons,
-#password-fs,
-#openid-fs {
-  margin-top: 10px;
-}
-#email-input-fs #id_email,
-#local_login_buttons #id_email,
-#password-fs #id_email,
-#openid-fs #id_email,
-#email-input-fs #id_username,
-#local_login_buttons #id_username,
-#password-fs #id_username,
-#openid-fs #id_username,
-#email-input-fs #id_password,
-#local_login_buttons #id_password,
-#password-fs #id_password,
-#openid-fs #id_password {
+#email-input-fs input[type="text"],
+#local_login_buttons input[type="text"],
+#password-fs input[type="text"],
+#openid-fs input[type="text"],
+#signup-form input[type="text"],
+#email-input-fs input[type="password"],
+#local_login_buttons input[type="password"],
+#password-fs input[type="password"],
+#openid-fs input[type="password"],
+#signup-form input[type="password"] {
   color: #525252;
   font-size: 12px;
   line-height: 25px;
@@ -2900,6 +2892,12 @@ ul#related-tags li {
   margin: 0px;
   padding: 0 5px;
   width: 200px;
+}
+#email-input-fs,
+#local_login_buttons,
+#password-fs,
+#openid-fs {
+  margin-top: 10px;
 }
 .openid-input {
   background: url(../images/openid.gif) no-repeat;
