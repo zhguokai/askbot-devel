@@ -1015,6 +1015,134 @@ LabeledInput.prototype.decorate = function(element) {
     });
 };
 
+
+/**
+ * @constructor
+ * A form that is posted to some url
+ * Each field is labeled and errors show in
+ * place of the labels.
+ * When form is submitted either error messages
+ * are set/cleared or function handleSuccess is run.
+ * .handleSuccess() must be defined in the subclass.
+ */
+var AjaxForm = function() {
+    WrappedElement.call(this);
+    this._fieldNames = [];//define fields in subclasses
+    this._inputs = {};//all keyed by field name
+    this._labels = {};
+    this._labeledInputObjects = {};
+    this._labelDefaultTexts = {};
+    this._formPrefix = undefined;//set to string (folowed by dash in django)
+};
+inherits(AjaxForm, WrappedElement);
+
+/**
+ * returns value of the field by the name attribute
+ */
+AjaxForm.prototype.getValueByFieldName = function(name) {
+    var field = this._inputs[name];
+    if (field.attr('type') === 'checkbox') {
+        return field.is(':checked');
+    } else {
+        return field.val() || '';
+    }
+};
+
+AjaxForm.prototype.getValues = function() {
+    var fieldNames = this._fieldNames;
+    var data = {};
+    for (var i=0; i < fieldNames.length; i++) {
+        var name = fieldNames[i];
+        data[name] = this.getValueByFieldName(name);
+    }
+    return data;
+};
+
+AjaxForm.prototype.getSubmitHandler = function() {
+    var me = this;
+    var inputs = this._inputs;
+    var fieldNames = this._fieldNames;
+    var url = this._url;
+    return function () {
+        var data = me.getValues();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function(data) {
+                if (data['success']) {
+                    if (data['errors']) {
+                        me.setErrors(data['errors']);
+                    } else {
+                        me.handleSuccess(data);
+                    }
+                }
+            }
+        });
+    };
+};
+
+AjaxForm.prototype.reset = function() {
+    this.setErrors();
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+        this._labeledInputObjects[fieldName].reset();
+    }
+};
+
+AjaxForm.prototype.setErrors = function(errors) {
+    errors = errors || {};
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+
+        var label = this._labels[fieldName];
+        if (errors[fieldName]) {
+            label.html(errors[fieldName][0]);
+            label.addClass('error');
+        } else {
+            var defaultText = this._labelDefaultTexts[fieldName];
+            label.html(defaultText);
+            label.removeClass('error');
+        }
+    };
+};
+
+AjaxForm.prototype.decorate = function(element) {
+    this._element = element;
+
+    //init labels, inputs and default texts
+    var formPrefix = this._formPrefix;
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+        var domFieldName = fieldName;
+        if (formPrefix) {
+            domFieldName = formPrefix + fieldName;
+        }
+        var input = element.find('input[name="' + domFieldName + '"]');
+        var label = element.find('label[for="' + input.attr('id') + '"]');
+        this._inputs[fieldName] = input;
+        this._labels[fieldName] = label;
+        this._labelDefaultTexts[fieldName] = label.html();
+        var activeLabel = new LabeledInput();
+        activeLabel.decorate(input);
+        this._labeledInputObjects[fieldName] = activeLabel;
+    }
+
+    this._button = element.find('input[type="submit"]');
+    this._url = this._button.data('url');
+
+    var submitHandler = this.getSubmitHandler();
+    var enterKeyHandler = makeKeyHandler(13, submitHandler);
+
+    $.each(this._inputs, function(idx, inputItem) {
+        $(inputItem).keyup(enterKeyHandler);
+    });
+
+    setupButtonEventHandlers(this._button, submitHandler);
+};
+
+
 /**
  * @todo: probably decommission tis in favor of LabeledInput
  * Can be used for an input box or textarea.

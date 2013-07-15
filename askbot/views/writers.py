@@ -262,13 +262,18 @@ def ask(request):#view used to ask a new question
                         user=user,
                         form_data=form.cleaned_data
                     )
-                    response = simplejson.dumps({
-                        'success': True,
-                        'redirectUrl': question.get_absolute_url()
-                    })
+                    if request.is_ajax():
+                        response = simplejson.dumps({
+                            'success': True,
+                            'redirectUrl': question.get_absolute_url()
+                        })
+                        return HttpResponse(response, mimetype='application/json')
+                    else:
+                        return HttpResponseRedirect(question.get_absolute_url())
                 except exceptions.PermissionDenied, e:
-                    response = simplejson.dumps({'success': True, 'errors': unicode(e)})
-                return HttpResponse(response, mimetype='application/json')
+                    if request.is_ajax():
+                        response = simplejson.dumps({'success': True, 'errors': unicode(e)})
+                        return HttpResponse(response, mimetype='application/json')
             else:
                 request.session.flush()
                 session_key = request.session.session_key
@@ -282,8 +287,11 @@ def ask(request):#view used to ask a new question
                     added_at = timestamp,
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
-                response = simplejson.dumps({'success': True})
-                return HttpResponse(response, mimetype='application/json')
+                if request.is_ajax():
+                    response = simplejson.dumps({'success': True})
+                    return HttpResponse(response, mimetype='application/json')
+                else:
+                    return HttpResponseRedirect(reverse('user_signin'))
         else:
             if request.is_ajax():
                 errors  = form.errors.values()

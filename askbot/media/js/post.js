@@ -1534,6 +1534,7 @@ DeletePostLink.prototype.decorate = function(element){
     this.setHandler(this.getDeleteHandler());
 }
 
+
 /**
  * Form for editing and posting new comment
  * supports 3 editors: markdown, tinymce and plain textarea.
@@ -4764,7 +4765,6 @@ $(document).ready(function() {
         });
         //Tags autocomplete
 
-        setupFormValidation($("#fmask"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
         lanai.highlightSyntax();
 
         if (askbot['data']['userIsAuthenticated']) {
