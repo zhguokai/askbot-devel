@@ -23,11 +23,17 @@ var {{variable_name}} = {
     var containerDiv = document.createElement('div');
     motherDiv.appendChild(containerDiv);
 
-    {%if widget.outer_style %}
-    outerStyle = document.createElement('style');
+    {% if widget.outer_style %}
+    var outerStyle = document.createElement('style');
     outerStyle.innerText = "{{widget.outer_style}}";
     motherDiv.appendChild(outerStyle);
-    {%endif%}
+    {% endif %}
+
+    var title = document.createElement('div');
+    title.className = 'widget-title';
+    title.innerHtml = '{{ widget.title }}';
+
+    containerDiv.appendChild(title);
 
     var closeButton = document.createElement('a');
     closeButton.setAttribute('href', '#');
@@ -49,7 +55,7 @@ var {{variable_name}} = {
     }
   },
   createButton: function() {
-    var label="{{widget.title}}"; //TODO: add to the model
+    var label="{{ widget.title }}"; //TODO: add to the model
     var buttonDiv = document.createElement('div');
     buttonDiv.setAttribute('id', "AskbotAskButton");
 

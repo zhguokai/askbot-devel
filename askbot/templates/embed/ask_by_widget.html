@@ -181,11 +181,10 @@
   </style>
 {%endblock%}
 
-{%block body%}
-<div class="title">{{widget.title}}</div>
+{% block body %}
 <form action="." method="POST" accept-charset="utf-8">
   {% csrf_token %}
-  <label>{%trans%}Enter your question{%endtrans%}</label>
+  <label>{% trans %}Enter your question{% endtrans %}</label>
   <div class="input-title">
     {{form.title}}
   </div>
