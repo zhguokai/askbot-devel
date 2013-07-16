@@ -13,7 +13,7 @@
      width:600px;
      {%if widget.include_text_field%}
      {% if editor_type == 'markdown' %}
-     height: 434px;
+     height: 437px;
      {%else%}
      height:520px;
      {%endif%}
@@ -32,7 +32,7 @@
     color: #333;
     font-family: 'Open Sans Condensed', Arial, sans-serif; 
     font-size: 25px;
-    margin: 0 0 8px 10px;
+    margin: 0 0 -5px 10px;
     text-align: left;
 }
 
@@ -46,5 +46,4 @@
 #{{variable_name}} iframe{
      width: 600px;
      height: 430px;
-     margin-top: -34px;
 }
