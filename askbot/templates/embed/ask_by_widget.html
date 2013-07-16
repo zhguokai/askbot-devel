@@ -15,6 +15,9 @@
         display: block;
         margin-bottom: 4px;
     }
+    label[for="id_ask_anonymously"] {
+        display: inline;
+    }
     #editor {
       display: block;
       min-height: 200px;
@@ -27,7 +30,6 @@
     .wmd-container{
       border: #CCE6EC 3px solid;
       width: 100%;
-      margin-top: 20px;
     }
 
     #id_title{
@@ -205,9 +207,9 @@
     {% for error in form.text.errors %} {{error}} {%endfor%}
   </div>
   {% endif %}
-  {% if form.ask_anonymously %}
-    <p>{{form.ask_anonymously.label_tag()}}: {{form.ask_anonymously}}</p>
-  {%endif%}
+  {% if settings.ALLOW_ASK_ANONYMOUSLY %}
+    <p>{{ form.ask_anonymously.label_tag() }} {{ form.ask_anonymously }}</p>
+  {% endif %}
   <input type="submit" value="Ask your question" id="submit" />
 </form>
 {%endblock%}
