@@ -31,7 +31,7 @@ var {{variable_name}} = {
 
     var title = document.createElement('div');
     title.className = 'widget-title';
-    title.innerHtml = '{{ widget.title }}';
+    title.innerText = '{{ widget.title }}';
 
     containerDiv.appendChild(title);
 
