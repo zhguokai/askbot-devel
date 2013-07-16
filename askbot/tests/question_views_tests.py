@@ -29,7 +29,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
     def test_post_private_question(self):
         data = self.qdata
         data['post_privately'] = 'checked'
-        response1 = self.client.post(reverse('ask'), data=data)
+        response1 = self.client.post(spaces.get_url('ask'), data=data)
         response2 = self.client.get(response1['location'])
         dom = BeautifulSoup(response2.content)
         title = dom.find('h1').text

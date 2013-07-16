@@ -3,7 +3,6 @@ import re
 import urllib
 import copy
 
-from django.core.urlresolvers import reverse
 from django.utils.http import urlencode
 from django.utils.encoding import smart_str
 
@@ -161,7 +160,7 @@ class SearchState(object):
         return '?' + urlencode({'title': ask_title})
 
     def full_ask_url(self):
-        return reverse('ask') + self.ask_query_string()
+        return spaces.get_url('ask', self.space) + self.ask_query_string()
 
     def unified_tags(self):
         "Returns tags both from tag selector and extracted from query"
@@ -297,7 +296,7 @@ class DummySearchState(object): # Used for caching question/thread summaries
         return '<<<%s>>>' % self.tag
 
     def full_ask_url(self):
-        return reverse('ask')
+        return spaces.get_url('ask', spaces.get_default())
 
     def query_string(self):
         return ''

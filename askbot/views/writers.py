@@ -212,17 +212,18 @@ def import_data(request):
     "Login takes about 30 seconds, initial signup takes a minute or less."
 ))
 @decorators.check_spam('text')
-def ask(request):#view used to ask a new question
+def ask(request, space=None):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
 
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
-    form = forms.AskForm(request.REQUEST, user=request.user)
+    form = forms.AskForm(request.REQUEST, space=space, user=request.user)
     if request.method == 'POST':
         if form.is_valid():
             timestamp = datetime.datetime.now()
+            space = form.cleaned_data['space']
             title = form.cleaned_data['title']
             wiki = form.cleaned_data['wiki']
             tagnames = form.cleaned_data['tags']
@@ -243,6 +244,7 @@ def ask(request):#view used to ask a new question
                     question = user.post_question(
                         title=title,
                         body_text=text,
+                        space=space,
                         tags=tagnames,
                         wiki=wiki,
                         is_anonymous=ask_anonymously,

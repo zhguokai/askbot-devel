@@ -18,6 +18,7 @@ from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 from askbot.conf import get_tag_display_filter_strategy_choices
+from askbot import spaces
 from tinymce.widgets import TinyMCE
 import logging
 
@@ -588,24 +589,12 @@ class ShowQuestionsForm(forms.Form):
     #todo: add all the remaining fields
 
     def clean_space(self):
-        spaces_data = askbot_settings.FORUM_SPACES
-
         #space must match one of the items
         space = self.cleaned_data.get('space', '')
-        if spaces_data:
-            spaces = map(lambda v: v.strip(), spaces_data.split(','))
-            if space not in spaces:
-                raise forms.ValidationError('unrecognized forum space "%s"' % space)
+        if spaces.space_exists(space):
+            return space
         else:
-            if django_settings.ASKBOT_TRANSLATE_URL:
-                expected = _('questions')
-            else:
-                expected = 'questions'
-            if space != expected:
-                raise forms.ValidationError(
-                    'unrecognized forum space "%s", expected %s' % (space, expected)
-                )
-
+            raise forms.ValidationError('unrecognized forum space "%s"' % space)
 
 class ChangeUserReputationForm(forms.Form):
     """Form that allows moderators and site administrators
@@ -961,6 +950,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        self._space = kwargs.pop('space', None)
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
         self.fields['text'] = QuestionEditorField(user=user)
@@ -971,12 +961,19 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
             self.hide_field('ask_anonymously')
 
+    def clean_space(self):
+        return self._space or spaces.get_default()
+
     def clean_ask_anonymously(self):
         """returns false if anonymous asking is not allowed
         """
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
             self.cleaned_data['ask_anonymously'] = False
         return self.cleaned_data['ask_anonymously']
+
+    def clean(self):
+        self.cleaned_data['space'] = self.clean_space()
+        return self.cleaned_data
 
 
 ASK_BY_EMAIL_SUBJECT_HELP = _(

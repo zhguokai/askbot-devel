@@ -17,6 +17,7 @@ from django.views import static
 from django.views.decorators import csrf
 from django.db.models import Max, Count
 from askbot import skins
+from askbot import spaces
 from askbot.conf import settings as askbot_settings
 from askbot.forms import FeedbackForm
 from askbot.utils.url_utils import get_login_url
@@ -76,7 +77,7 @@ def faq(request):
     else:
         data = {
             'gravatar_faq_url': reverse('faq') + '#gravatar',
-            'ask_question_url': reverse('ask'),
+            'ask_question_url': spaces.get_url('ask'),
             'page_class': 'meta',
         }
         return render(request, 'faq_static.html', data)

@@ -205,11 +205,6 @@ urlpatterns = patterns('',
         name='get_editor'
     ),
     service_url(
-        r'^%s%s$' % (_('questions/'), _('ask/')),
-        views.writers.ask,
-        name='ask'
-    ),
-    service_url(
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')),
         views.writers.edit_question,
         name='edit_question'
@@ -599,5 +594,10 @@ urlpatterns += (
         r'/$'),
         views.readers.questions,
         name='questions'
+    ),
+    url(
+        r'^(?P<space>\w+)/%s$' % _('ask/'),
+        views.writers.ask,
+        name='ask'
     ),
 )

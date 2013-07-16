@@ -94,6 +94,15 @@ def forum_spaces_callback(old_value, new_value):
     return ', '.join(values)
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'SPACES_ENABLED',
+        default=False,
+        description=_('Enable spaces feature')
+    )
+)
+
+settings.register(
     livesettings.LongStringValue(
         FORUM_DATA_RULES,
         'FORUM_SPACES',

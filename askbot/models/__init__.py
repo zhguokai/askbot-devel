@@ -1690,6 +1690,7 @@ def user_post_question(
                     self,
                     title = None,
                     body_text = '',
+                    space = None,
                     tags = None,
                     wiki = False,
                     is_anonymous = False,
@@ -1708,12 +1709,19 @@ def user_post_question(
     if body_text == '':#a hack to allow bodyless question
         body_text = ' '
 
+    if space is None:
+        space = spaces.get_default()
+
     if title is None:
         raise ValueError('Title is required to post question')
     if tags is None:
         raise ValueError('Tags are required to post question')
     if timestamp is None:
         timestamp = datetime.datetime.now()
+
+    #!!!!A HACK space is prepended as tag
+    if askbot_settings.SPACES_ENABLED:
+        tags = space + ' ' + tags
 
     #todo: split this into "create thread" + "add question", if text exists
     #or maybe just add a blank question post anyway

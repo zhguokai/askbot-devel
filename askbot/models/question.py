@@ -7,7 +7,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 from django.core import exceptions as django_exceptions
-from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
@@ -320,8 +319,13 @@ class ThreadManager(BaseQuerySetManager):
             #construct filter for the tag search
             for tag in tags:
                 qs = qs.filter(tags__name=tag) # Tags or AND-ed here, not OR-ed (i.e. we fetch only threads with all tags)
+
         else:
             meta_data['non_existing_tags'] = list()
+
+        #filter by space if enabled
+        if askbot_settings.SPACES_ENABLED:
+            qs = qs.filter(tags__name=search_state.space)
 
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section
@@ -1503,8 +1507,6 @@ class AnonymousQuestion(DraftContent):
                             tagnames=self.tagnames
                         )
             #add message with a link to the ask page
-            extra_message = _(
-                'Please, <a href="%s">review your question</a>.'
-            ) % reverse('ask')
+            extra_message = _('Please, review your question')
             message = string_concat(unicode(error), u' ', extra_message)
             user.message_set.create(message=unicode(message))

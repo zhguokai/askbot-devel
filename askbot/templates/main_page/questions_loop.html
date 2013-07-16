@@ -7,7 +7,7 @@
     {% endfor %}
     <div class="evenMore">
         {% trans %}Did not find what you were looking for?{% endtrans %} 
-        <a href="{% url ask %}">{% trans %}Ask your question!{% endtrans %}</a>
+        <a href="{{ (search_state or dummy_search_state).full_ask_url() }}">{% trans %}Ask your question!{% endtrans %}</a>
     </div>
 {% endif %}
 

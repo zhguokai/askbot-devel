@@ -17,6 +17,7 @@ from askbot.models import Thread
 from askbot.models import Tag
 from askbot.models import Group
 from askbot.search.state_manager import DummySearchState
+from askbot import spaces
 from django.utils import simplejson
 from askbot.conf import settings as askbot_settings
 
@@ -453,7 +454,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
     def test_post_question(self):
         self.assertEqual(0, Post.objects.count())
-        response = self.client.post(urlresolvers.reverse('ask'), data={
+        response = self.client.post(spaces.get_url('ask'), data={
             'title': 'test title',
             'text': 'test body text',
             'tags': 'tag1 tag2',
