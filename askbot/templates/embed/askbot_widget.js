@@ -29,8 +29,7 @@ var {{variable_name}} = {
     motherDiv.appendChild(outerStyle);
     {% endif %}
 
-    var title = document.createElement('div');
-    title.className = 'widget-title';
+    var title = document.createElement('h1');
     title.innerText = '{{ widget.title }}';
 
     containerDiv.appendChild(title);
