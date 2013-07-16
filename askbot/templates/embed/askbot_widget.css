@@ -28,6 +28,12 @@
      text-align: right;
 }
 
+#{{variable_name}} h1 {
+    font-family: 'Open Sans Condensed', Arial, sans-serif; 
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
 #{{variable_name}} a{
      padding:5px;
 }
