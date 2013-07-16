@@ -56,74 +56,12 @@
         display: none !important;
     }
 
-    #question-list {
-      height: auto;
-      z-index: 10000;
-      position: absolute;
-      border: 3px solid #CCE6EC;
-      border-top:none;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
-      background: #fff;
-      {% if editor_type == 'markdown' %}
-      width:97.4%;
-      {%else%}
-      width:90.8%;
-      {%endif%}
-      margin-top: -4.9px;
+    .search-drop-menu ul {
+        padding: 0 5px;
+        line-height: 1.5;
+        margin: 5px 0 0;
     }
 
-    #question-list {
-        display: none;
-    }
-
-    #question-list h2{
-      text-decoration: none;
-      margin: 0px;
-      font-size: 13px;
-      padding: 3px 0 3px 5px;
-      padding-bottom: 0;
-      border-top: #F0F0EC 1px solid;
-      min-height: 30px;
-      line-height: 30px;
-      font-weight: normal
-    }
-
-    #question-list h2:first-child{
-      border-top: none; 
-    }
-
-    #question-list a{
-      color: #005580;
-    }
-
-    #question-list a:hover{
-        color: #005580;
-        text-decoration: underline;
-    }
-
-    #question-list a:visited{
-      color: #005580;
-      text-decoration: none;
-    }
-
-    #question-list span{
-      width: 28px;
-      height: 26px;
-      line-height: 26px;
-      text-align: center;
-      margin-right: 10px;
-      float: left;
-      display: block;
-      color: white;
-      background: #B8D0D5;
-      border-radius: 3px;
-      -ms-border-radius: 3px;
-      -moz-border-radius: 3px;
-      -webkit-border-radius: 3px;
-      -khtml-border-radius: 3px;
-    }
     {% if editor_type == 'markdown' %}
     #wmd-button-bar {
       background: url({{"/js/wmd/images/editor-toolbar-background.png"|media}}) repeat-x bottom;
