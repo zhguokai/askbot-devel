@@ -19,6 +19,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils import url_utils
 from askbot.utils.html import site_url
 from askbot import get_version
+from askbot import spaces
 
 def auto_now_timestamp(func):
     """decorator that will automatically set
@@ -203,9 +204,10 @@ def check_spam(field):
                     data.update({'comment_author_email': request.user.email})
 
                 from akismet import Akismet
+                url = spaces.get_url('questions')
                 api = Akismet(
                     askbot_settings.AKISMET_API_KEY, 
-                    smart_str(site_url(reverse('questions'))), 
+                    smart_str(site_url(url)),
                     "Askbot/%s" % get_version()
                 )
 

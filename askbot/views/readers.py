@@ -70,10 +70,7 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """index view mapped to the root url of the Q&A site
     This is the future placeholder for the "spaces" listing view
     """
-    space = spaces.get_default()
-    return HttpResponseRedirect(
-        reverse('questions', kwargs={'space': space})
-    )
+    return HttpResponseRedirect(spaces.get_url('questions'))
 
 def questions(request, **kwargs):
     """
@@ -289,7 +286,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'stag' : query,
         'tab_id' : sortby,
         'keywords' : query,
-        'search_state': SearchState(*[None for x in range(7)])
+        'search_state': SearchState(*[None for x in range(8)])
     }
 
     if tag_list_type == 'list':

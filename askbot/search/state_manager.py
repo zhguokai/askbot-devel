@@ -142,10 +142,7 @@ class SearchState(object):
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
 
-        self._questions_url = reverse(
-                                    'questions',
-                                    kwargs={'space': self.space}
-                                )
+        self._questions_url = spaces.get_url('questions', self.space)
 
     def __str__(self):
         return self.query_string()
@@ -308,5 +305,5 @@ class DummySearchState(object): # Used for caching question/thread summaries
     def base_url(self):
         if not hasattr(self, '_base_url'):
             space = spaces.get_default()
-            self._base_url = reverse('questions', kwargs={'space': space})
+            self._base_url = spaces.get_url('questions', space)
         return self._base_url

@@ -13,6 +13,7 @@ import coffin.template
 from bs4 import BeautifulSoup
 
 from askbot import models
+from askbot import spaces
 from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
 from askbot.tests.utils import AskbotTestCase
@@ -247,76 +248,76 @@ class PageLoadTestCase(AskbotTestCase):
                 kwargs={'id': models.Post.objects.get_answers().order_by('id')[0].id}
             )
         #todo: test different sort methods and scopes
+        questions_url = spaces.get_url('questions')
         self.try_url(
-            'questions',
+            url_name=questions_url,
+            plain_url_passed=True,
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').query_string(),
             plain_url_passed=True,
-
             status_code=status_code,
             template='main_page.html',
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('followed').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('followed').query_string(),
+            plain_url_passed=True,
+            status_code=status_code,
+            template='main_page.html'
+        )
+        self.try_url(
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').change_sort('age-desc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('age-desc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').change_sort('age-asc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('age-asc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').change_sort('activity-desc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('activity-desc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').change_sort('activity-asc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('activity-asc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_sort('answers-desc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_sort('answers-desc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_sort('answers-asc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_sort('answers-asc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_sort('votes-desc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_sort('votes-desc').query_string(),
-            plain_url_passed=True,
-
-            status_code=status_code,
-            template='main_page.html'
-        )
-        self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_sort('votes-asc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_sort('votes-asc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,

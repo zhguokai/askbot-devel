@@ -231,40 +231,40 @@ class ThreadTagModelsTests(AskbotTestCase):
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss.add_tag('tag1').add_tag('tag3').add_tag('tag6'))
         self.assertEqual(1, qs.count())
 
-        ss = SearchState(scope=None, sort=None, query="#tag3", tags='tag1, tag6', author=None, page=None, user_logged_in=None)
+        ss = SearchState(space=None, scope=None, sort=None, query="#tag3", tags='tag1, tag6', author=None, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, qs.count())
 
     def test_run_adv_search_query_author(self):
-        ss = SearchState(scope=None, sort=None, query="@user", tags=None, author=None, page=None, user_logged_in=None)
+        ss = SearchState(space=None, scope=None, sort=None, query="@user", tags=None, author=None, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(2, len(qs))
         self.assertEqual(self.q1.thread_id, min(qs[0].id, qs[1].id))
         self.assertEqual(self.q2.thread_id, max(qs[0].id, qs[1].id))
 
-        ss = SearchState(scope=None, sort=None, query="@user2", tags=None, author=None, page=None, user_logged_in=None)
+        ss = SearchState(space=None, scope=None, sort=None, query="@user2", tags=None, author=None, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, len(qs))
         self.assertEqual(self.q3.thread_id, qs[0].id)
 
-        ss = SearchState(scope=None, sort=None, query="@user3", tags=None, author=None, page=None, user_logged_in=None)
+        ss = SearchState(space=None, scope=None, sort=None, query="@user3", tags=None, author=None, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, len(qs))
         self.assertEqual(self.q4.thread_id, qs[0].id)
 
     def test_run_adv_search_url_author(self):
-        ss = SearchState(scope=None, sort=None, query=None, tags=None, author=self.user.id, page=None, user_logged_in=None)
+        ss = SearchState(space=None, scope=None, sort=None, query=None, tags=None, author=self.user.id, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(2, len(qs))
         self.assertEqual(self.q1.thread_id, min(qs[0].id, qs[1].id))
         self.assertEqual(self.q2.thread_id, max(qs[0].id, qs[1].id))
 
-        ss = SearchState(scope=None, sort=None, query=None, tags=None, author=self.user2.id, page=None, user_logged_in=None)
+        ss = SearchState(space=None, scope=None, sort=None, query=None, tags=None, author=self.user2.id, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, len(qs))
         self.assertEqual(self.q3.thread_id, qs[0].id)
 
-        ss = SearchState(scope=None, sort=None, query=None, tags=None, author=self.user3.id, page=None, user_logged_in=None)
+        ss = SearchState(space=None, scope=None, sort=None, query=None, tags=None, author=self.user3.id, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, len(qs))
         self.assertEqual(self.q4.thread_id, qs[0].id)

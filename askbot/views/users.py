@@ -43,6 +43,7 @@ from askbot import exceptions
 from askbot.models.badges import award_badges_signal
 from askbot.models.tag import format_personal_group_name
 from askbot.search.state_manager import SearchState
+from askbot import spaces
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
 
@@ -1107,6 +1108,7 @@ def user(request, id, slug=None, tab_name=None):
     user_view_func = USER_VIEW_CALL_TABLE.get(tab_name, user_stats)
 
     search_state = SearchState( # Non-default SearchState with user data set
+        space=spaces.get_default(),
         scope=None,
         sort=None,
         query=None,

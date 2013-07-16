@@ -58,6 +58,7 @@ from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute, Vote
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot import auth
+from askbot import spaces
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
@@ -3604,7 +3605,7 @@ def greet_new_user(user, **kwargs):
 
     data = {
         'site_name': askbot_settings.APP_SHORT_NAME,
-        'site_url': site_url(reverse('questions')),
+        'site_url': site_url(spaces.get_url('questions')),
         'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
         'can_post_by_email': user.can_post_by_email()
     }

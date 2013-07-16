@@ -1,7 +1,6 @@
 import re
 import functools
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.urlresolvers import reverse
 from django.conf import settings as django_settings
 from django.template import Context
 from django.template.loader import get_template
@@ -10,6 +9,7 @@ from lamson.routing import route, stateless
 from lamson.server import Relay
 from askbot.models import ReplyAddress, Group, Tag
 from askbot import mail
+from askbot import spaces
 from askbot.conf import settings as askbot_settings
 from askbot.utils.html import site_url
 
@@ -241,7 +241,7 @@ def VALIDATE_EMAIL(
 
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,
-            'site_url': site_url(reverse('questions')),
+            'site_url': site_url(spaces.get_url('questions')),
             'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
             'can_post_by_email': user.can_post_by_email()
         }
@@ -309,7 +309,7 @@ def PROCESS(
         #todo: this is copy-paste - factor it out to askbot.mail.messages
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,
-            'site_url': site_url(reverse('questions')),
+            'site_url': site_url(spaces.get_url('questions')),
             'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME
         }
         template = get_template('email/re_welcome_lamson_on.html')
