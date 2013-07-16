@@ -29,17 +29,22 @@
 }
 
 #{{variable_name}} h1 {
+    color: #333;
     font-family: 'Open Sans Condensed', Arial, sans-serif; 
     font-size: 25px;
-    margin-bottom: 10px;
+    margin: 0 0 10px 10px;
+    text-align: left;
 }
 
 #{{variable_name}} a{
-     padding:5px;
+     padding: 5px;
+     display: block;
+     margin-top: -50px;
+     float: right;
 }
 
 #{{variable_name}} iframe{
-     width:600px;
-     height:430px;
+     width: 600px;
+     height: 430px;
      margin-top: -34px;
 }
