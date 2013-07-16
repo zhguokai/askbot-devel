@@ -11,6 +11,10 @@
     body{
       font-family: Verdana, Arial, Helvetica, sans-serif;
     }
+    label {
+        display: block;
+        margin-bottom: 4px;
+    }
     #editor {
       display: block;
       min-height: 200px;
@@ -177,13 +181,14 @@
 <div class="title">{{widget.title}}</div>
 <form action="." method="POST" accept-charset="utf-8">
   {% csrf_token %}
-  <label>{%trans%}Please enter your question{%endtrans%}</label>
+  <label>{%trans%}Enter your question{%endtrans%}</label>
   <div class="input-title">
     {{form.title}}
   </div>
   <div class="field-errors">
     {% for error in form.title.errors %} {{error}} {%endfor%}
   </div>
+  <label>{% trans %}Add details{% endtrans %}</label>
 {% if widget.include_text_field %}
   {% if editor_type == 'markdown' %}
       <div class="wmd-container">
