@@ -13,7 +13,7 @@ var {{variable_name}} = {
     var protocol = document.location.protocol;
 
     link.setAttribute("rel", "stylesheet");
-    link.setAttribute("href", protocol + '//{{host}}{%url render_ask_widget_css widget.id%}');
+    link.setAttribute("href", protocol + '//{{host}}{% url render_ask_widget_css widget.id %}');
 
     //creating the div
     var motherDiv = document.createElement('div');
