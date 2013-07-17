@@ -39,6 +39,7 @@ from askbot.forms import AnswerForm
 from askbot.forms import ShowQuestionForm
 from askbot.forms import GetUserItemsForm
 from askbot.forms import GetDataForPostForm
+from askbot.utils.loading import load_module
 from askbot import conf
 from askbot import models
 from askbot import schedules
@@ -263,7 +264,7 @@ def questions(request, **kwargs):
                                 )
         template_data.update(extra_context)
 
-        #and one more thing:) give admin user heads up about 
+        #and one more thing:) give admin user heads up about
         #setting the domain name if they have not done that yet
         #todo: move this out to a separate middleware
         if request.user.is_authenticated() and request.user.is_administrator():
@@ -589,11 +590,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
     elif show_comment_position > askbot_settings.MAX_COMMENTS_TO_SHOW:
         is_cacheable = False
 
-    initial = {
-        'wiki': question_post.wiki and askbot_settings.WIKI_ON,
-        'email_notify': thread.is_followed_by(request.user)
-    }
     #maybe load draft
+    initial = {}
     if request.user.is_authenticated():
         #todo: refactor into methor on thread
         drafts = models.DraftAnswer.objects.filter(
@@ -603,7 +601,13 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if drafts.count() > 0:
             initial['text'] = drafts[0].text
 
-    answer_form = AnswerForm(initial, user=request.user)
+    custom_answer_form_path = getattr(django_settings, 'ASKBOT_NEW_ANSWER_FORM', None)
+    if custom_answer_form_path:
+        answer_form_class = load_module(custom_answer_form_path)
+    else:
+        answer_form_class = AnswerForm
+
+    answer_form = answer_form_class(initial=initial, user=request.user)
 
     user_can_post_comment = (
         request.user.is_authenticated() and request.user.can_post_comment()
@@ -619,6 +623,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
                     previous_answer = answer
                     break
 
+    if request.user.is_authenticated() and askbot_settings.GROUPS_ENABLED:
+        group_read_only = request.user.is_read_only()
+    else:
+        group_read_only = False
+
     data = {
         'is_cacheable': False,#is_cacheable, #temporary, until invalidation fix
         'long_time': const.LONG_TIME,#"forever" caching
@@ -630,6 +639,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'user_is_thread_moderator': thread.has_moderator(request.user),
         'published_answer_ids': published_answer_ids,
         'answer' : answer_form,
+        'editor_is_unfolded': answer_form.has_data(),
         'answers' : page_objects.object_list,
         'answer_count': thread.get_answer_count(request.user),
         'category_tree_data': askbot_settings.CATEGORY_TREE,
@@ -647,6 +657,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_post': show_post,
         'show_comment': show_comment,
         'show_comment_position': show_comment_position,
+        'group_read_only': group_read_only,
     }
     #shared with ...
     if askbot_settings.GROUPS_ENABLED:
@@ -749,7 +760,7 @@ def get_perms_data(request):
             getattr(askbot_settings, item)
         )
         data.append(setting)
-    
+
     template = get_template('widgets/user_perms.html')
     html = template.render({
         'user': request.user,

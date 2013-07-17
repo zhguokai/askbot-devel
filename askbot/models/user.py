@@ -535,7 +535,11 @@ class Group(AuthGroup):
                             null = True, blank = True, default = ''
                         )
 
-    is_vip = models.BooleanField(default=False)
+    is_vip = models.BooleanField(
+        default=False,
+        help_text='Check to make members of this group site moderators'
+    )
+    read_only = models.BooleanField(default=False)
 
     objects = GroupManager()
 

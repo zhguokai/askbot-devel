@@ -60,6 +60,9 @@ textarea,
 .wmd-container,
 .folded-editor {
     border: #cce6ec 3px solid;
+    height: 22px;
+    font-size: 13px;
+    padding: 0 5px;
 }
 
 iframe {
@@ -327,6 +330,7 @@ body.user-messages {
     height: 20px;
     padding-bottom:5px;
     white-space: nowrap;
+    font-size:16px;
 
     a {
         height: 35px;
@@ -334,7 +338,6 @@ body.user-messages {
         margin-left: 20px;
         text-decoration: underline;
         color:#d0e296;
-        font-size:16px;
     }
     
     a:first-child {
@@ -994,11 +997,11 @@ body.anon.ask-page .search-drop-menu {
         #ignoredTagInput,
         #subscribedTagInput,
         #ab-tag-search {
-            width:152px;
-            padding-left:5px;
-            border:#c9c9b5 1px solid;
-            height:25px;
-            line-height:25px;
+            width: 150px;
+            padding-left: 5px;
+            border: #c9c9b5 1px solid;
+            height: 25px;
+            line-height: 25px;
             font-size: 14px;
         }
         #ab-tag-search {
@@ -1965,6 +1968,7 @@ ul#related-tags li {
 }
 .ask-page .folded-editor {
     border: none;
+    padding: 0;
     height: 0;
 }
 .folded-editor.unfolded {
@@ -1991,6 +1995,8 @@ ul#related-tags li {
         box-sizing: border-box;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
+        height: auto;
+        padding: 0;
         width: 723px;
         width: 100%;
     }
@@ -2302,16 +2308,17 @@ ul#related-tags li {
         }
     }
 
-    .post-controls{
-        font-size: 11px;
-        line-height: 12px;
-        min-width: 200px;
-        padding-left: 5px;
-        text-align:right;
+    .post-controls {
         clear: left;
         float: right;
-        margin-top:10px;
-        margin-bottom:8px;
+        font-size: 11px;
+        height: 18px;
+        line-height: 12px;
+        margin-top: 10px;
+        margin-bottom: 8px;
+        min-width: 200px;
+        padding-left: 5px;
+        text-align: right;
         
         a,
         span.dropdown-toggle {
@@ -2815,10 +2822,6 @@ ul#related-tags li {
 
 }
 
-.question-page.anon .comments div.controls {
-    margin-top: 0;
-}
-
 .vote-buttons {
     display: table-cell;
     text-align: center;
@@ -3027,10 +3030,27 @@ ul#related-tags li {
     margin-bottom: 5px;
 }
 
+#local_login_buttons,
+#password-fs,
+#openid-fs,
+#signup-form {
+    input[type="text"],
+    input[type="password"] {
+        color: #525252;
+        font-size: 12px;
+        line-height: 25px;
+        height: 25px;
+        margin: 0px;
+        padding: 0 5px;
+        width: 200px;
+    }
+}
+
 #email-input-fs,
+#local_login_buttons,
 #password-fs,
 #openid-fs {
-    margin-top: 10px;
+    margin-top:10px;
 }
 
 .openid-input {
@@ -3703,7 +3723,7 @@ label.retag-error {
         vertical-align: top;
     }
     .timestamp {
-        width: 56px;
+        width: 80px;
     }
     .action-type {
         width: 150px;
@@ -4196,18 +4216,6 @@ a.edit {
 
 #leading-sidebar {
     float: left;
-}
-
-/* language-specific fixes */
-body.lang-es {
-    #searchBar {
-        /* need special left padding */
-    }
-}
-body.anon.lang-es {
-    #searchBar {
-        /* need special left padding */
-    }
 }
 
 /* user groups */
@@ -4806,5 +4814,28 @@ td.setting-input {
 @media screen and (max-width: 338px) {
     #scopeNav {
         display: none;
+    }
+}
+
+/* language-specific fixes */
+body.lang-es {
+    #searchBar {
+        /* need special left padding */
+    }
+}
+body.anon.lang-es {
+    #searchBar {
+        /* need special left padding */
+    }
+}
+
+body.lang-zh {
+    .box .inputs {
+         #interestingTagInput,
+         #ignoredTagInput,
+         #subscribedTagInput,
+         #ab-tag-search {
+            width: 125px;
+         }
     }
 }

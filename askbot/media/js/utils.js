@@ -1152,7 +1152,7 @@ SimpleControl.prototype.setTitle = function(title){
     this._title = title;
 };
 
-SimpleControl.prototype.decorate = function(element){
+SimpleControl.prototype.decorate = function(element) {
     this._element = element;
     this.setHandlerInternal();
 };
@@ -1237,7 +1237,6 @@ PostExpander.prototype.getExpandHandler = function() {
         me.showWaitIcon();
     };
 };
-
 
 var EditLink = function(){
     SimpleControl.call(this)
@@ -1999,28 +1998,30 @@ TwoStateToggle.prototype.decorate = function(element){
         }
     }
 
-    //set mouseover handler
-    var me = this;
-    element.mouseover(function(){
-        var is_on = me.isOn();
-        if (is_on){
-            me.setState('off-prompt');
-        } else {
-            me.setState('on-prompt');
-        }
-        //element.css('background-color', 'red');
-        return false;
-    });
-    element.mouseout(function(){
-        var is_on = me.isOn();
-        if (is_on){
-            me.setState('on-state');
-        } else {
-            me.setState('off-state');
-        }
-        //element.css('background-color', 'white');
-        return false;
-    });
+    //set mouseover handler only for non-checkbox version
+    if (this.isCheckBox() === false) {
+        var me = this;
+        element.mouseover(function(){
+            var is_on = me.isOn();
+            if (is_on){
+                me.setState('off-prompt');
+            } else {
+                me.setState('on-prompt');
+            }
+            //element.css('background-color', 'red');
+            return false;
+        });
+        element.mouseout(function(){
+            var is_on = me.isOn();
+            if (is_on){
+                me.setState('on-state');
+            } else {
+                me.setState('off-state');
+            }
+            //element.css('background-color', 'white');
+            return false;
+        });
+    }
 
     setupButtonEventHandlers(element, this.getHandler());
 };

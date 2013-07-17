@@ -132,9 +132,9 @@ settings.register(
         default='open',
         description=_('Question details/body editor should be'),
         help_text =_(
-            'To use folded mode, please first set minimum '
+            '<b style="color:red;">To use folded mode, please first set minimum '
             'question body length to 0. Also - please make tags '
-            'optional.'
+            'optional.</b>'
         )
     )
 )

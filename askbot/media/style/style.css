@@ -71,6 +71,9 @@ textarea,
 .wmd-container,
 .folded-editor {
   border: #cce6ec 3px solid;
+  height: 22px;
+  font-size: 13px;
+  padding: 0 5px;
 }
 iframe {
   border: none;
@@ -315,6 +318,7 @@ body.user-messages {
   height: 20px;
   padding-bottom: 5px;
   white-space: nowrap;
+  font-size: 16px;
 }
 #userToolsNav a {
   height: 35px;
@@ -322,7 +326,6 @@ body.user-messages {
   margin-left: 20px;
   text-decoration: underline;
   color: #d0e296;
-  font-size: 16px;
 }
 #userToolsNav a:first-child {
   margin-left: 0;
@@ -963,7 +966,7 @@ body.anon.ask-page .search-drop-menu {
 .box .inputs #ignoredTagInput,
 .box .inputs #subscribedTagInput,
 .box .inputs #ab-tag-search {
-  width: 152px;
+  width: 150px;
   padding-left: 5px;
   border: #c9c9b5 1px solid;
   height: 25px;
@@ -1859,6 +1862,7 @@ ul#related-tags li {
 }
 .ask-page .folded-editor {
   border: none;
+  padding: 0;
   height: 0;
 }
 .folded-editor.unfolded {
@@ -1881,6 +1885,8 @@ ul#related-tags li {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  height: auto;
+  padding: 0;
   width: 723px;
   width: 100%;
 }
@@ -2170,15 +2176,16 @@ ul#related-tags li {
   font-size: 10px;
 }
 .question-page .post-controls {
+  clear: left;
+  float: right;
   font-size: 11px;
+  height: 18px;
   line-height: 12px;
+  margin-top: 10px;
+  margin-bottom: 8px;
   min-width: 200px;
   padding-left: 5px;
   text-align: right;
-  clear: left;
-  float: right;
-  margin-top: 10px;
-  margin-bottom: 8px;
 }
 .question-page .post-controls a,
 .question-page .post-controls span.dropdown-toggle {
@@ -2669,9 +2676,6 @@ ul#related-tags li {
   padding: 5px;
   margin: 0px 0 10px 0;
 }
-.question-page.anon .comments div.controls {
-  margin-top: 0;
-}
 .vote-buttons {
   display: table-cell;
   text-align: center;
@@ -2891,7 +2895,24 @@ ul#related-tags li {
 .openid-signin form {
   margin-bottom: 5px;
 }
+#local_login_buttons input[type="text"],
+#password-fs input[type="text"],
+#openid-fs input[type="text"],
+#signup-form input[type="text"],
+#local_login_buttons input[type="password"],
+#password-fs input[type="password"],
+#openid-fs input[type="password"],
+#signup-form input[type="password"] {
+  color: #525252;
+  font-size: 12px;
+  line-height: 25px;
+  height: 25px;
+  margin: 0px;
+  padding: 0 5px;
+  width: 200px;
+}
 #email-input-fs,
+#local_login_buttons,
 #password-fs,
 #openid-fs {
   margin-top: 10px;
@@ -3500,7 +3521,7 @@ label.retag-error {
   vertical-align: top;
 }
 .user-activity .timestamp {
-  width: 56px;
+  width: 80px;
 }
 .user-activity .action-type {
   width: 150px;
@@ -4014,15 +4035,6 @@ li.L9 {
 }
 #leading-sidebar {
   float: left;
-}
-/* language-specific fixes */
-body.lang-es #searchBar {
-  /* need special left padding */
-
-}
-body.anon.lang-es #searchBar {
-  /* need special left padding */
-
 }
 /* user groups */
 #user-groups input[type="text"] {
@@ -4570,4 +4582,19 @@ td.setting-input textarea {
   #scopeNav {
     display: none;
   }
+}
+/* language-specific fixes */
+body.lang-es #searchBar {
+  /* need special left padding */
+
+}
+body.anon.lang-es #searchBar {
+  /* need special left padding */
+
+}
+body.lang-zh .box .inputs #interestingTagInput,
+body.lang-zh .box .inputs #ignoredTagInput,
+body.lang-zh .box .inputs #subscribedTagInput,
+body.lang-zh .box .inputs #ab-tag-search {
+  width: 125px;
 }

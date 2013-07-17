@@ -10,8 +10,10 @@
         askbot['data']['userIsAdminOrMod'] = {{ request.user.is_administrator_or_moderator()|as_js_bool }};
         askbot['data']['userIsAdmin'] = {{ request.user.is_administrator()|as_js_bool }};
         askbot['data']['userReputation'] = {{ request.user.reputation }};
+        askbot['data']['userIsReadOnly'] = {{ request.user.is_read_only()|as_js_bool }};
     {% else %}
         askbot['data']['userReputation'] = 0;
+        askbot['data']['userIsReadOnly'] = false;//in principle we allow anon users to start posting
     {% endif %}
     askbot['urls'] = {};
     askbot['settings'] = {};
