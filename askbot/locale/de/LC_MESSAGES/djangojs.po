@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
-"POT-Creation-Date: 2013-06-27 03:53-0500\n"
-"PO-Revision-Date: 2013-07-10 12:13+0000\n"
-"Last-Translator: Alexander Lieder <enormitas@gmail.com>\n"
+"POT-Creation-Date: 2013-07-13 14:07-0500\n"
+"PO-Revision-Date: 2013-07-13 19:09+0000\n"
+"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/askbot/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +86,7 @@ msgid "send"
 msgstr "abschicken"
 
 #: media/js/group_messaging.js:164 media/js/post.js:1809
-#: media/js/post.js.c:3077 media/js/post.js.c:4586 media/js/user.js:888
+#: media/js/post.js.c:3081 media/js/post.js.c:4598 media/js/user.js:888
 msgid "cancel"
 msgstr "abbrechen"
 
@@ -303,7 +303,7 @@ msgstr "Kleine Korrekturen (keine Benachrichtigungen senden)"
 msgid "Are you sure you don't want to post this comment?"
 msgstr "Bist du dir sicher, dass du diesen Kommentar veröffentlichen möchtest?"
 
-#: media/js/post.js:1890 media/js/utils.js:3352 media/js/utils.js.c:3507
+#: media/js/post.js:1890 media/js/utils.js:3360 media/js/utils.js.c:3515
 msgid "just now"
 msgstr "jetzt"
 
@@ -323,75 +323,79 @@ msgstr "Bitte logge Dich ein, damit Du Kommentare posten kannst. "
 msgid "Please enter question title (>10 characters)"
 msgstr "Bitte gebe den Titel der Frage ein (>10 Zeichen)"
 
-#: media/js/post.js:3071 media/js/post.js.c:3857 media/js/post.js.c:4046
+#: media/js/post.js:2612 media/js/post.js.c:4626
+msgid "Sorry, you have only read access"
+msgstr ""
+
+#: media/js/post.js:3075 media/js/post.js.c:3869 media/js/post.js.c:4058
 msgid "save"
 msgstr "speichern"
 
-#: media/js/post.js:3195
+#: media/js/post.js:3199
 msgid "Enter the logo url or upload an image"
 msgstr "Gebe die URL-Adresse des Logos ein oder lade ein Logo-Bild hoch"
 
-#: media/js/post.js:3221
+#: media/js/post.js:3225
 msgid "Do you really want to remove the image?"
 msgstr "Bist du dir sicher, dass du das Bild entfernen möchtest?"
 
-#: media/js/post.js:3329
+#: media/js/post.js:3341
 msgid "change logo"
 msgstr "Logo ändern"
 
-#: media/js/post.js:3330
+#: media/js/post.js:3342
 msgid "add logo"
 msgstr "Logo hinzufügen"
 
-#: media/js/post.js:3432
+#: media/js/post.js:3444
 #, c-format
 msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr "Tag \"%s\" wurde bereits hinzugefügt, es besteht keine Notwendigkeit ihn zweimal anzugeben (drücke\"Entfernen\" zum Löschen)"
 
-#: media/js/post.js:3441
+#: media/js/post.js:3453
 #, c-format
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
 msgstr[0] "Es ist maximal %s Tag erlaubt"
 msgstr[1] "Es sind maximal %s Tags erlaubt"
 
-#: media/js/post.js:3787
+#: media/js/post.js:3799
 msgid "Delete category?"
 msgstr "Kategorie löschen?"
 
-#: media/js/post.js:3876 media/js/utils.js:875
+#: media/js/post.js:3888 media/js/utils.js:881
 msgid "edit"
 msgstr "bearbeiten"
 
-#: media/js/post.js:3963
+#: media/js/post.js:3975
 msgid "category name cannot be empty"
 msgstr "Bitte gebe mindestens ein Tag ein"
 
-#: media/js/post.js:3999
+#: media/js/post.js:4011
 msgid "already exists at the current level!"
 msgstr "Existiert bereits"
 
-#: media/js/post.js:4035
+#: media/js/post.js:4047
 msgid "add category"
 msgstr "Kategorie hinzufügen"
 
-#: media/js/post.js:4582
+#: media/js/post.js:4594
 msgid "save tags"
 msgstr "Tags speichern"
 
-#: media/js/post.js:4664 media/js/post.js.c:4698
+#: media/js/post.js:4689 media/js/post.js.c:4723
 msgid "User name:"
 msgstr "Benutzername:"
 
-#: media/js/post.js:4685
+#: media/js/post.js:4710
 msgid "Group name:"
 msgstr "Gruppenname:"
 
-#: media/js/post.js:4711
+#: media/js/post.js:4736
 msgid "Shared with the following users:"
 msgstr "Geteilt mit folgenden Benutzern:"
 
-#: media/js/post.js:4717
+#: media/js/post.js:4742
 msgid "Shared with the following groups:"
 msgstr "Geteilt mit folgenden Gruppen:"
 
@@ -501,202 +505,202 @@ msgstr "und"
 msgid "click to close"
 msgstr "Zum Schließen klicken"
 
-#: media/js/utils.js:874
+#: media/js/utils.js:880
 msgid "click to edit this comment"
 msgstr "Klicken, um das Kommentar zu editieren"
 
-#: media/js/utils.js:899
+#: media/js/utils.js:905
 msgid "convert to answer"
 msgstr "In eine Antwort umwandeln"
 
-#: media/js/utils.js:952
+#: media/js/utils.js:958
 msgid "Ok"
 msgstr "OK"
 
-#: media/js/utils.js:953 media/js/utils.js.c:1401
+#: media/js/utils.js:959 media/js/utils.js.c:1407
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: media/js/utils.js:1213
+#: media/js/utils.js:1219
 #, c-format
 msgid "Uploaded file: %s"
 msgstr "Hochgeladene Datei: %s"
 
-#: media/js/utils.js:1228
+#: media/js/utils.js:1234
 msgid "Choose a different image"
 msgstr "Wähle ein anderes Bild"
 
-#: media/js/utils.js:1230
+#: media/js/utils.js:1236
 msgid "Choose a different file"
 msgstr "Wähle eine andere Datei"
 
-#: media/js/utils.js:1244
+#: media/js/utils.js:1250
 msgid "Oops, looks like we had an error. Sorry."
 msgstr "Ein Fehler ist aufgetreten. Das tut uns leid."
 
-#: media/js/utils.js:1305
+#: media/js/utils.js:1311
 msgid "Choose an image to insert"
 msgstr "Wähle ein Bild, das du einfügen möchtest"
 
-#: media/js/utils.js:1307
+#: media/js/utils.js:1313
 msgid "Choose a file to insert"
 msgstr "Wähle eine Datei, die du einfügen möchtest"
 
-#: media/js/utils.js:1320
+#: media/js/utils.js:1326
 msgid "Allowed file types are:"
 msgstr "Die erlaubten Dateitypen sind:"
 
-#: media/js/utils.js:1326
+#: media/js/utils.js:1332
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:35
 msgid "Or paste file url here"
 msgstr "Oder füge hier die URL der Datei ein"
 
-#: media/js/utils.js:1400
+#: media/js/utils.js:1406
 msgid "Save"
 msgstr "Speichern"
 
-#: media/js/utils.js:1472
+#: media/js/utils.js:1478
 msgid "saved"
 msgstr "Gespeichert"
 
-#: media/js/utils.js:1596
+#: media/js/utils.js:1602
 msgid "enabled"
 msgstr "aktiviert"
 
-#: media/js/utils.js:1598
+#: media/js/utils.js:1604
 msgid "disabled"
 msgstr "deaktiviert"
 
-#: media/js/utils.js:2030
+#: media/js/utils.js:2038
 msgid "group name"
 msgstr "Gruppenname"
 
-#: media/js/utils.js:2038
+#: media/js/utils.js:2046
 msgid "add new group"
 msgstr "neue Gruppe hinzufügen"
 
-#: media/js/utils.js:2130
+#: media/js/utils.js:2138
 msgid "Group %(name)s already exists. Group names are case-insensitive."
 msgstr "Gruppe %(name)s existiert bereits. Gruppennamen sind unterscheiden nicht zwischen Groß-und Kleinschreibung."
 
-#: media/js/utils.js:2303
+#: media/js/utils.js:2311
 #, c-format
 msgid "see questions tagged '%s'"
 msgstr "Siehe Fragen mit den Tags '%s'"
 
-#: media/js/utils.js:3350
+#: media/js/utils.js:3358
 msgid "ago"
 msgstr ""
 
-#: media/js/utils.js:3351
+#: media/js/utils.js:3359
 msgid "from now"
 msgstr "von jetzt an"
 
-#: media/js/utils.js:3353
+#: media/js/utils.js:3361
 msgid "about a minute"
 msgstr "vor einer Minute"
 
-#: media/js/utils.js:3354
+#: media/js/utils.js:3362
 #, c-format
 msgid "%d minutes"
 msgstr "%d Minuten"
 
-#: media/js/utils.js:3355
+#: media/js/utils.js:3363
 msgid "about an hour"
 msgstr "über eine Stunde"
 
-#: media/js/utils.js:3356
+#: media/js/utils.js:3364
 #, c-format
 msgid "%d hours"
 msgstr "%d Stunden"
 
-#: media/js/utils.js:3357 media/js/utils.js.c:3485
+#: media/js/utils.js:3365 media/js/utils.js.c:3493
 msgid "yesterday"
 msgstr "gestern"
 
-#: media/js/utils.js:3358
+#: media/js/utils.js:3366
 #, c-format
 msgid "%d days"
 msgstr "%d Tagen"
 
-#: media/js/utils.js:3359
+#: media/js/utils.js:3367
 msgid "about a month"
 msgstr "vor einem Monat"
 
-#: media/js/utils.js:3360
+#: media/js/utils.js:3368
 #, c-format
 msgid "%d months"
 msgstr "%d Monaten"
 
-#: media/js/utils.js:3361
+#: media/js/utils.js:3369
 msgid "about a year"
 msgstr "vor einem Jahr"
 
-#: media/js/utils.js:3362
+#: media/js/utils.js:3370
 #, c-format
 msgid "%d years"
 msgstr "%d Jahren"
 
-#: media/js/utils.js:3460
+#: media/js/utils.js:3468
 msgid "Jan"
 msgstr "Jan."
 
-#: media/js/utils.js:3461
+#: media/js/utils.js:3469
 msgid "Feb"
 msgstr "Feb."
 
-#: media/js/utils.js:3462
+#: media/js/utils.js:3470
 msgid "Mar"
 msgstr "März"
 
-#: media/js/utils.js:3463
+#: media/js/utils.js:3471
 msgid "Apr"
 msgstr "Apr."
 
-#: media/js/utils.js:3464
+#: media/js/utils.js:3472
 msgid "May"
 msgstr "Mai"
 
-#: media/js/utils.js:3465
+#: media/js/utils.js:3473
 msgid "Jun"
 msgstr "Juni"
 
-#: media/js/utils.js:3466
+#: media/js/utils.js:3474
 msgid "Jul"
 msgstr "Juli"
 
-#: media/js/utils.js:3467
+#: media/js/utils.js:3475
 msgid "Aug"
 msgstr "Aug."
 
-#: media/js/utils.js:3468
+#: media/js/utils.js:3476
 msgid "Sep"
 msgstr "Sep"
 
-#: media/js/utils.js:3469
+#: media/js/utils.js:3477
 msgid "Oct"
 msgstr "Okt"
 
-#: media/js/utils.js:3470
+#: media/js/utils.js:3478
 msgid "Nov"
 msgstr "Nov"
 
-#: media/js/utils.js:3471
+#: media/js/utils.js:3479
 msgid "Dec"
 msgstr "Dez"
 
-#: media/js/utils.js:3483
+#: media/js/utils.js:3491
 msgid "2 days ago"
 msgstr "vor 2 Tagen"
 
-#: media/js/utils.js:3490
+#: media/js/utils.js:3498
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] "vor %s Stunde"
 msgstr[1] "vor %s Stunden"
 
-#: media/js/utils.js:3500
+#: media/js/utils.js:3508
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"
