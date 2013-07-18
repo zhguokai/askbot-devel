@@ -501,7 +501,7 @@ def ldap_signin(request):
                 login_form.set_password_login_error()
 
 
-@csrf.csrf_protect
+#@csrf.csrf_protect
 @ajax_only
 @post_only
 def password_signin(request):
@@ -1108,7 +1108,7 @@ def verify_email_and_register(request):
 
 @ajax_only
 @post_only
-@csrf.csrf_protect
+#@csrf.csrf_protect
 def register_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
@@ -1196,7 +1196,7 @@ def send_user_new_email_key(user):
     user.save()
     send_email_key(user.email, user.email_key)
 
-@csrf.csrf_protect
+#@csrf.csrf_protect
 def account_recover(request):
     """view similar to send_email_key, except
     it allows user to recover an account by entering
