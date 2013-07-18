@@ -4788,14 +4788,6 @@ $(document).ready(function() {
                 validator.decorate(validatorElement);
             }
         }
-        var askAnonBtn = $('input[name="post_anon"]');
-        if (askAnonBtn.length === 1) {
-            var btn = new AskAnonBtn();
-            btn.decorate(askAnonBtn);
-        } else {
-            var btn = new AskBtn();
-            btn.decorate($('input[name="post"]'));
-        }
     }
 });
 
