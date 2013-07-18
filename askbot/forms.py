@@ -911,7 +911,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     wiki = WikiField()
     group_id = forms.IntegerField(required = False, widget = forms.HiddenInput)
     ask_anonymously = forms.BooleanField(
-        label=_('ask anonymously'),
+        label=_('hide my name'),
         help_text=_(
             'Check if you do not want to reveal your name '
             'when asking this question'

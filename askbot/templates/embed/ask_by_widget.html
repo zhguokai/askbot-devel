@@ -19,6 +19,12 @@
     label[for="id_ask_anonymously"] {
         display: inline;
     }
+    p.opts {
+        margin-top: 7px;
+    }
+    input[type="checkbox"] {
+        margin: 0 1px 0 20px;
+    }
     #editor {
       display: block;
       min-height: 200px;
@@ -142,7 +148,7 @@
   {% endif %}
   <input type="submit" value="Ask your question" id="submit" />
   {% if settings.ALLOW_ASK_ANONYMOUSLY %}
-    <p>{{ form.ask_anonymously }} {{ form.ask_anonymously.label_tag() }}</p>
+    <p class="queston-opts">{{ form.ask_anonymously }} {{ form.ask_anonymously.label_tag() }}</p>
   {% endif %}
 </form>
 {%endblock%}
