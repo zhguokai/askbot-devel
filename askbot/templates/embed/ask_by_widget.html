@@ -33,7 +33,7 @@
       width: 100%;
     }
 
-    #id_title{
+    #id_title {
       {% if editor_type == 'markdown' %}
       width: 100%;
       {%else%}
@@ -73,17 +73,6 @@
     {% endif %}
 
     #submit{
-      display: block;
-      font-size: 130%;
-      margin-right: -6px;
-      text-align: center;
-      text-decoration: none;
-      cursor: pointer;
-      color: #4A757F;
-      font-family: 'Open Sans Condensed', Arial, sans-serif;
-      text-shadow: 0px 1px 0px #C6D9DD;
-      -moz-text-shadow: 0px 1px 0px #c6d9dd;
-      -webkit-text-shadow: 0px 1px 0px #c6d9dd;
       border-top: #EAF2F3 1px solid;
       background-color: #D1E2E5;
       background-repeat: no-repeat;
@@ -101,8 +90,18 @@
       -webkit-box-shadow: 1px 1px 2px #636363;
       -moz-box-shadow: 1px 1px 2px #636363;
       box-shadow: 1px 1px 2px #636363;
+      cursor: pointer;
+      color: #4A757F;
+      display: block;
+      font: 130% 'Open Sans Condensed', Arial, sans-serif;
+      float: left;
+      margin: 0;
+      text-align: center;
+      text-decoration: none;
+      text-shadow: 0px 1px 0px #C6D9DD;
+      -moz-text-shadow: 0px 1px 0px #c6d9dd;
+      -webkit-text-shadow: 0px 1px 0px #c6d9dd;
       width: 200px;
-      margin: 0 auto;
     } 
 
     .field-errors{
