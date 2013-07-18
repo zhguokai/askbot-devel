@@ -2166,8 +2166,8 @@ Comment.prototype.setContent = function(data){
     this._comment_added_at.html(this._data['comment_added_at']);
     this._comment_added_at.attr('title', this._data['comment_added_at']);
     this._comment_added_at.timeago();
-    span.append(this._comment_added_at);
-    span.append(')');
+    this._comment_body.append(this._comment_added_at);
+    this._comment_body.append(')');
 
     if (this._editable) {
         if (this._edit_link !== undefined) {
