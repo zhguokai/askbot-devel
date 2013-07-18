@@ -100,13 +100,12 @@ def ask_widget(request, widget_id):
             else:
                 request.session['widget_question'] = data_dict
                 next_url = '%s?next=%s' % (
-                        reverse('widget_signin', kwargs={'widget_id': widget_id}),
-                        reverse('ask_by_widget', args=(widget.id,))
+                        reverse('widget_signin'),
+                        reverse('ask_by_widget', kwargs={'widget_id': widget_id})
                 )
                 return redirect(next_url)
     else:
-        if 'widget_question' in request.session and \
-                request.GET.get('action', 'post-after-login'):
+        if 'widget_question' in request.session:
             if request.user.is_authenticated():
                 data_dict = request.session['widget_question']
                 data_dict['author'] = request.user

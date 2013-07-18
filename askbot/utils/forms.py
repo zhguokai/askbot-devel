@@ -27,8 +27,12 @@ def clean_next(next, default = None):
     logging.debug('next url is %s' % next)
     return next
 
-def get_next_url(request, default = None):
-    return clean_next(request.REQUEST.get('next'), default)
+def get_next_url(request, default=None, form_prefix=None):
+    data = request.REQUEST
+    if form_prefix:
+        default = data.get(form_prefix + '-next', default)
+    raw_url = data.get('next', default)
+    return clean_next(raw_url)
 
 def get_db_object_or_404(params):
     """a utility function that returns an object

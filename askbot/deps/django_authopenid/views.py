@@ -551,20 +551,23 @@ def signin(request, template_name='authopenid/signin_full.html'):
 
     #todo: decide how to set next_url
     login_redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
-    next_url = get_next_url(request, default=login_redirect_url)
+    next_url = get_next_url(request, default=login_redirect_url, form_prefix='login')
     logging.debug('next url is %s' % next_url)
 
     if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
         and request.user.is_authenticated():
         raise django_exceptions.PermissionDenied()
 
-    #todo: what should we do with this???
+    #this is a trap for the signin page used to validate logins
     if next_url == reverse('user_signin'):
         next_url = '%(next)s?next=%(next)s' % {'next': next_url}
 
     #need this to keep users on the same page after third party registration
+    #unless rererer is the signin page
     if 'HTTP_REFERER' in request.META:
-        request.session['next_url'] = request.META['HTTP_REFERER']
+        referer = request.META['HTTP_REFERER']
+        if urlparse(referer).path != reverse('widget_signin'):
+            request.session['next_url'] = referer
 
     #todo: get next url make it sticky if next is 'user_signin'
     if request.method == 'GET':

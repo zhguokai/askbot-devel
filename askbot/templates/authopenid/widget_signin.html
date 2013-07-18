@@ -5,12 +5,39 @@
 {% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forestyle %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{"/style/style.css"|media}}"/>
+    <style type="text/css">
+        body {
+            padding: 10px;
+        }
+        html {
+            overflow: hidden;
+        }
+        .auth-menu {
+            margin-top: 15px;
+        }
+        .auth-menu .submit, 
+        .complete-registration .submit {
+            margin-top: 10px;
+        }
+        .labeled-input {
+            margin-top: 26px;
+        }
+        .labeled-input input {
+            color: #666;
+            font-size: 14px;
+            height: 29px !important;
+            padding: 0 5px;
+            width: 200px;
+        }
+    </style>
 {% endblock %}
 {% block forejs %}
     {% include "meta/bottom_scripts.html" %}
     {% include "meta/html_head_javascript.html" %}
 {% endblock %}
 {% block content %}
+    <h1 class="section-title">{% trans %}Login or Register{% endtrans %}</h1>
+    {% include "authopenid/signin.html" %}
 {% endblock %}
 {% block endjs %}
 {% include "authopenid/providers_javascript.html" %}
