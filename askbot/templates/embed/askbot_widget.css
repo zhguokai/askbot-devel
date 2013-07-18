@@ -10,7 +10,7 @@
 }
 
 #{{variable_name}} div{
-     width:600px;
+     width:596px;
      {%if widget.include_text_field%}
      {% if editor_type == 'markdown' %}
      height: 436px;
