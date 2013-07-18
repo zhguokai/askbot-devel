@@ -1,8 +1,28 @@
 {% extends "widget_base.html" %}
 {% block forestyle %}
-{%endblock%}
+    <style type="text/css">
+        * {
+            font-family: Verdana, Arial, sans-serif;
+        }
+        h2 {
+            color: #333;
+        }
+        a,
+        a:visited {
+            color: #08c;
+        }
+    </style>
+{% endblock %}
 
-{%block body%}
-<a href="{{question_url}}" target="_blank" >Question posted</a>
-{%endblock%}
+{% block body %}
+    <h2>{% trans %}Thanks for asking:{% endtrans %}
+        "{{ question_title|escape }}"
+    </h2>
+    <a href="{{ question_url }}"
+        class="question-link"
+        target="_blank"
+    >{% trans site_name=settings.APP_SHORT_NAME %}See your question on {{ site_name }}{% endtrans %}</a>
+    {% trans %}or{% endtrans %}
+    <a href="{% url ask_by_widget widget_id %}">{% trans %}Ask another question{% endtrans %}</a>
+{% endblock %}
 

@@ -53,9 +53,9 @@ def ask_widget(request, widget_id):
 
     def post_question(data, request):
         thread = models.Thread.objects.create_new(**data)
-        question = thread._question_post()
-        request.session['widget_question_url'] = question.get_absolute_url()
-        return question
+        request.session['widget_thread_id'] = thread.id
+        request.session['widget_id'] = widget_id
+        return thread._question_post()
 
     widget = get_object_or_404(models.AskWidget, id=widget_id)
 
@@ -95,7 +95,7 @@ def ask_widget(request, widget_id):
             }
             if request.user.is_authenticated():
                 data_dict['author'] = request.user
-                #question = post_question(data_dict, request)
+                question = post_question(data_dict, request)
                 return redirect('ask_by_widget_complete')
             else:
                 request.session['widget_question'] = data_dict
@@ -132,17 +132,15 @@ def ask_widget(request, widget_id):
 
 @login_required
 def ask_widget_complete(request):
-    question_url = request.session.get('widget_question_url')
-    custom_css = request.session.get('widget_css')
-    if question_url:
-        del request.session['widget_question_url']
-    else:
-        question_url = '#'
-
-    if custom_css:
-        del request.session['widget_css']
-
-    data = {'question_url': question_url, 'custom_css': custom_css}
+    thread_id = request.session.pop('widget_thread_id')
+    thread = models.Thread.objects.get(id=thread_id)
+    data = {
+        'question_url': thread.get_absolute_url(),
+        'question_title': thread.title,
+        'question_body_html': thread._question_post().html,
+        'custom_css': request.session.pop('widget_css', ''),
+        'widget_id': request.session.pop('widget_id')
+    }
     return render(request, 'embed/ask_widget_complete.html', data)
 
 
