@@ -140,10 +140,10 @@
     {% for error in form.text.errors %} {{error}} {%endfor%}
   </div>
   {% endif %}
-  {% if settings.ALLOW_ASK_ANONYMOUSLY %}
-    <p>{{ form.ask_anonymously.label_tag() }} {{ form.ask_anonymously }}</p>
-  {% endif %}
   <input type="submit" value="Ask your question" id="submit" />
+  {% if settings.ALLOW_ASK_ANONYMOUSLY %}
+    <p>{{ form.ask_anonymously }} {{ form.ask_anonymously.label_tag() }}</p>
+  {% endif %}
 </form>
 {%endblock%}
 {% block endjs %}
