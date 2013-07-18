@@ -257,8 +257,6 @@ def ask(request):#view used to ask a new question
                         group_id=group_id,
                         language=language
                     )
-                    import pdb
-                    pdb.set_trace()
                     signals.new_question_posted.send(None,
                         question=question,
                         user=user,
