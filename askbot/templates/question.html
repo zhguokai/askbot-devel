@@ -333,6 +333,8 @@
         askbot['data']['questionId'] = {{ question.id }};
         askbot['data']['threadSlug'] = '{{ thread.title|slugify }}';
         askbot['messages']['addComment'] = '{% trans %}add a comment{% endtrans %}';
+        askbot['messages']['userNamePrompt'] = '{% trans %}User name:{% endtrans %}';
+        askbot['messages']['userEmailPrompt'] = '{% trans %}Email address:{% endtrans %}';
         askbot['settings']['saveCommentOnEnter'] = {{ settings.SAVE_COMMENT_ON_ENTER|as_js_bool }};
         askbot['settings']['tagSource'] = '{{ settings.TAG_SOURCE }}';
         askbot['settings']['enableSharingGoogle'] = {{ settings.ENABLE_SHARING_GOOGLE|as_js_bool }};
