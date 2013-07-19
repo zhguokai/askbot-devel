@@ -308,9 +308,9 @@ def set_new_email(user, new_email, nomessage=False):
 
 def need_to_invalidate_post_caches(user, form):
     """a utility function for the edit user profile view"""
-    new_country = (form.cleaned_data['country'] != user.country)
-    new_show_country = (form.cleaned_data['show_country'] != user.show_country)
-    new_username = (form.cleaned_data['username'] != user.username)
+    new_country = (form.cleaned_data.get('country') != user.country)
+    new_show_country = (form.cleaned_data.get('show_country') != user.show_country)
+    new_username = (form.cleaned_data.get('username') != user.username)
     return (new_country or new_show_country or new_username)
 
 
