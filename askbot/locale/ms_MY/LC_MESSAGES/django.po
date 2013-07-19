@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
-"POT-Creation-Date: 2013-06-27 03:52-0500\n"
-"PO-Revision-Date: 2013-06-27 08:55+0000\n"
+"POT-Creation-Date: 2013-07-13 14:06-0500\n"
+"PO-Revision-Date: 2013-07-13 19:08+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Malay (Malaysia) (http://www.transifex.com/projects/p/askbot/language/ms_MY/)\n"
 "MIME-Version: 1.0\n"
@@ -30,81 +30,81 @@ msgstr "-"
 msgid "Individual question feed"
 msgstr ""
 
-#: forms.py:139
+#: forms.py:140
 msgid "select country"
 msgstr "pilih negara"
 
-#: forms.py:149
+#: forms.py:150
 msgid "Country"
 msgstr "Negara"
 
-#: forms.py:157
+#: forms.py:158
 msgid "Country field is required"
 msgstr "Negara diperlukan"
 
-#: forms.py:187
+#: forms.py:188
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
 msgstr[0] ""
 
-#: forms.py:198
+#: forms.py:199
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
 msgstr[0] ""
 
-#: forms.py:219
+#: forms.py:220
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
-#: forms.py:246 templates/widgets/markdown_help.html:20
+#: forms.py:247 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
 msgstr "tajuk"
 
-#: forms.py:248 templates/embed/ask_by_widget.html:170
+#: forms.py:249 templates/embed/ask_by_widget.html:170
 msgid "Please enter your question"
 msgstr ""
 
-#: forms.py:259
+#: forms.py:260
 #, python-format
 msgid "must have > %d character"
 msgid_plural "must have > %d characters"
 msgstr[0] ""
 
-#: forms.py:269
+#: forms.py:270
 #, python-format
 msgid "The question is too long, maximum allowed size is %d characters"
 msgstr ""
 
-#: forms.py:276
+#: forms.py:277
 #, python-format
 msgid "The question is too long, maximum allowed size is %d bytes"
 msgstr ""
 
-#: forms.py:308
+#: forms.py:309
 msgid "content"
 msgstr "kandungan"
 
-#: forms.py:369
+#: forms.py:370
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] "setiap kata kunci mesti tidak lebih daripada  %(max_chars)d huruf"
 
-#: forms.py:406
+#: forms.py:407
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
 msgstr ""
 
-#: forms.py:409 forms.py:1015 models/widgets.py:27
+#: forms.py:410 forms.py:1006 models/widgets.py:27
 #: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
 msgstr ""
 
-#: forms.py:411
+#: forms.py:412
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -114,271 +114,271 @@ msgid_plural ""
 "be used."
 msgstr[0] "Tags adalah kata kunci pendek tanpa ruang kosong diantaranya. Sebanyak %(max_tags)d 'tags' boleh digunakan."
 
-#: forms.py:438
+#: forms.py:439
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] "sila guna %(tag_count)d 'tags' atau kurang"
 
-#: forms.py:446
+#: forms.py:447
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr "Sekurang-kurangnya satu kata kunci diperlukan  : %(tags)s"
 
-#: forms.py:474
+#: forms.py:475
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr "wiki komuniti (reputasi tidak dihadiahkan & orang lain dibenarkan untuk ubah artikel ini)"
 
-#: forms.py:478
+#: forms.py:479
 msgid ""
 "if you choose community wiki option, the question and answer do not generate"
 " points and name of author will not be shown"
 msgstr "Jika anda pilih komuniti wiki, soalan dan jawapan tidak akan dihadiahkan mata serta nama penulis tidak akan disiarkan"
 
-#: forms.py:505
+#: forms.py:496
 msgid "update summary:"
 msgstr "ringkasan kemaskini"
 
-#: forms.py:507
+#: forms.py:498
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
 msgstr "Masukkan ringkasan semakan anda (contoh: ejaan dibetulkan, tatabahasa, gaya diubah, ruang ini adalah tidak wajib dimasukkan)"
 
-#: forms.py:594
+#: forms.py:585
 msgid "Enter number of points to add or subtract"
 msgstr "Masukkan jumlah mata untuk ditambah atau ditolak"
 
-#: forms.py:609 const/__init__.py:375
+#: forms.py:600 const/__init__.py:375
 msgid "approved"
 msgstr "disahkan"
 
-#: forms.py:610 const/__init__.py:376
+#: forms.py:601 const/__init__.py:376
 msgid "watched"
 msgstr ""
 
-#: forms.py:611 const/__init__.py:377
+#: forms.py:602 const/__init__.py:377
 msgid "suspended"
 msgstr "tergantung"
 
-#: forms.py:612 const/__init__.py:378
+#: forms.py:603 const/__init__.py:378
 msgid "blocked"
 msgstr "terhalang"
 
-#: forms.py:614
+#: forms.py:605
 msgid "administrator"
 msgstr "pentadbir"
 
-#: forms.py:615 const/__init__.py:374
+#: forms.py:606 const/__init__.py:374
 msgid "moderator"
 msgstr "pengendali"
 
-#: forms.py:634
+#: forms.py:625
 msgid "Change status to"
 msgstr "tukar status kepada"
 
-#: forms.py:661
+#: forms.py:652
 msgid "which one?"
 msgstr "yang mana satu? "
 
-#: forms.py:682
+#: forms.py:673
 msgid "Cannot change own status"
 msgstr "Tidak boleh ubah status "
 
-#: forms.py:688
+#: forms.py:679
 msgid "Cannot turn other user to moderator"
 msgstr "Tidak boleh alihkan pengguna kepada pengendali"
 
-#: forms.py:695
+#: forms.py:686
 msgid "Cannot change status of another moderator"
 msgstr "Tidak boleh ubah status pengendali lain"
 
-#: forms.py:701
+#: forms.py:692
 msgid "Cannot change status to admin"
 msgstr "Tidak boleh ubah status kepada pentadbir"
 
-#: forms.py:707
+#: forms.py:698
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr "Jika anda mahu tukar %(username)s's status, sila buat pilihan yang bermakna."
 
-#: forms.py:717
+#: forms.py:708
 msgid "Subject line"
 msgstr "Baris subjek"
 
-#: forms.py:722
+#: forms.py:713
 msgid "Message text"
 msgstr "Teks mesej"
 
-#: forms.py:736
+#: forms.py:727
 msgid "Your name (optional):"
 msgstr "Nama anda ('optional'):"
 
-#: forms.py:737
+#: forms.py:728
 msgid "Email:"
 msgstr ""
 
-#: forms.py:739
+#: forms.py:730
 msgid "Your message:"
 msgstr "Mesej anda:"
 
-#: forms.py:744
+#: forms.py:735
 msgid "I don't want to give my email or receive a response:"
 msgstr "Saya tidak mahu memberi emel saya atau menerima mana-mana respons:"
 
-#: forms.py:767
+#: forms.py:758
 msgid "Please mark \"I dont want to give my mail\" field."
 msgstr ""
 
-#: forms.py:800
+#: forms.py:791
 msgid "keep private within your groups"
 msgstr ""
 
-#: forms.py:839
+#: forms.py:830
 msgid "User name:"
 msgstr ""
 
-#: forms.py:841
+#: forms.py:832
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
 msgstr ""
 
-#: forms.py:848
+#: forms.py:839
 msgid "Email address:"
 msgstr ""
 
-#: forms.py:898
+#: forms.py:889
 msgid "User name is required with the email"
 msgstr ""
 
-#: forms.py:903
+#: forms.py:894
 msgid "Email is required if user name is added"
 msgstr ""
 
-#: forms.py:923 forms.py:966
+#: forms.py:914 forms.py:957
 msgid "ask anonymously"
 msgstr "tanya tanpa mendedahkan nama anda"
 
-#: forms.py:925 forms.py:968
+#: forms.py:916 forms.py:959
 msgid "Check if you do not want to reveal your name when asking this question"
 msgstr "Tandajika anda tidak mahu dedahkan nama anda apabila mahu bertanyakan soalan ini"
 
-#: forms.py:956
+#: forms.py:947
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr ""
 
-#: forms.py:1215
+#: forms.py:1213
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
 msgstr "Anda telah bertanyakan soalan ini tanpa mendedahkan identiti anda, jika anda memutuskan untuk dedahkan identiti anda, sila tandakan kotak ini."
 
-#: forms.py:1219
+#: forms.py:1217
 msgid "reveal identity"
 msgstr "dedahkan identiti"
 
-#: forms.py:1298
+#: forms.py:1296
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr "Maaf, hanya pemilik soalan boleh mendedahkan identiti mereka, sila 'uncheck' kotak ini"
 
-#: forms.py:1311
+#: forms.py:1309
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr "Maaf, nampaknya peraturan baru sahaja diubah - pengguna tidak lagi mampu bertanya soalan tanpa mendedahkan identiti sendiri. Sila tandakan kotak \"dedahkan identiti\" atau 'reload' halaman ini dan cuba edit soalan sekali lagi."
 
-#: forms.py:1375
+#: forms.py:1373
 msgid "Real name"
 msgstr "Nama sebenar"
 
-#: forms.py:1382
+#: forms.py:1380
 msgid "Website"
 msgstr "Laman web"
 
-#: forms.py:1389
+#: forms.py:1387
 msgid "City"
 msgstr "Bandar"
 
-#: forms.py:1398
+#: forms.py:1396
 msgid "Show country"
 msgstr "Perlihatkan negara"
 
-#: forms.py:1403
+#: forms.py:1401
 msgid "Show tag choices"
 msgstr ""
 
-#: forms.py:1408
+#: forms.py:1406
 msgid "Date of birth"
 msgstr "Tarikh lahir"
 
-#: forms.py:1410
+#: forms.py:1408
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "tidak akan dipaparkan, digunakan untuk mengira umur, format: YYYY-MM-DD"
 
-#: forms.py:1418
+#: forms.py:1416
 msgid "Profile"
 msgstr "Profile"
 
-#: forms.py:1427
+#: forms.py:1425
 msgid "Screen name"
 msgstr "Nama samaran"
 
-#: forms.py:1459 forms.py:1463
+#: forms.py:1457 forms.py:1461
 msgid "this email has already been registered, please use another one"
 msgstr "Email ini telah didaftarkan, sila guna email yang lain"
 
-#: forms.py:1472
+#: forms.py:1470
 msgid "Choose email tag filter"
 msgstr "Sila pilih penapis kata kunci "
 
-#: forms.py:1524
+#: forms.py:1522
 msgid "Asked by me"
 msgstr "Ditanya oleh saya"
 
-#: forms.py:1527
+#: forms.py:1525
 msgid "Answered by me"
 msgstr "Dijawab oleh saya"
 
-#: forms.py:1530
+#: forms.py:1528
 msgid "Individually selected"
 msgstr "Terpilih secara individu"
 
-#: forms.py:1533
+#: forms.py:1531
 msgid "Entire forum (tag filtered)"
 msgstr "Keseluruhan forum (kata kunci ditapis)"
 
-#: forms.py:1537
+#: forms.py:1535
 msgid "Comments and posts mentioning me"
 msgstr "Komen atau tulisan yang ada menyebut berkenaan saya"
 
-#: forms.py:1621
+#: forms.py:1619
 msgid "please choose one of the options above"
 msgstr "sila pilih salah satu pilihan di atas"
 
-#: forms.py:1624
+#: forms.py:1622
 msgid "okay, let's try!"
 msgstr "okay, jom cuba!"
 
-#: forms.py:1627
+#: forms.py:1625
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr ""
 
-#: forms.py:1675 templates/reopen.html:7
+#: forms.py:1673 templates/reopen.html:7
 msgid "Title"
 msgstr ""
 
-#: forms.py:1678 templates/groups.html:32
+#: forms.py:1676 templates/groups.html:32
 msgid "Description"
 msgstr ""
 
-#: forms.py:1697 templates/tags.html:3 templates/tags/header.html:9
+#: forms.py:1695 templates/tags.html:3 templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
@@ -544,7 +544,7 @@ msgstr ""
 msgid "upload/"
 msgstr ""
 
-#: urls.py:579 setup_templates/settings.py:229
+#: urls.py:585 setup_templates/settings.py:229
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
 msgstr ""
@@ -699,169 +699,173 @@ msgid ""
 "value entered here will overridethe default."
 msgstr ""
 
-#: conf/email.py:38
+#: conf/email.py:44
+msgid "Site administrator email address"
+msgstr ""
+
+#: conf/email.py:53
 msgid "Enable email alerts"
 msgstr ""
 
-#: conf/email.py:47
+#: conf/email.py:62
 msgid "Maximum number of news entries in an email alert"
 msgstr ""
 
-#: conf/email.py:57
+#: conf/email.py:72
 msgid "Default notification frequency all questions"
 msgstr ""
 
-#: conf/email.py:59
+#: conf/email.py:74
 msgid "Option to define frequency of emailed updates for: all questions."
 msgstr ""
 
-#: conf/email.py:71
+#: conf/email.py:86
 msgid "Default notification frequency questions asked by the user"
 msgstr ""
 
-#: conf/email.py:73
+#: conf/email.py:88
 msgid ""
 "Option to define frequency of emailed updates for: Question asked by the "
 "user."
 msgstr ""
 
-#: conf/email.py:85
+#: conf/email.py:100
 msgid "Default notification frequency questions answered by the user"
 msgstr ""
 
-#: conf/email.py:87
+#: conf/email.py:102
 msgid ""
 "Option to define frequency of emailed updates for: Question answered by the "
 "user."
 msgstr ""
 
-#: conf/email.py:99
+#: conf/email.py:114
 msgid ""
 "Default notification frequency questions individually"
 "                        selected by the user"
 msgstr ""
 
-#: conf/email.py:102
+#: conf/email.py:117
 msgid ""
 "Option to define frequency of emailed updates for: Question individually "
 "selected by the user."
 msgstr ""
 
-#: conf/email.py:114
+#: conf/email.py:129
 msgid ""
 "Default notification frequency for mentions                        and "
 "comments"
 msgstr ""
 
-#: conf/email.py:117
+#: conf/email.py:132
 msgid ""
 "Option to define frequency of emailed updates for: Mentions and comments."
 msgstr ""
 
-#: conf/email.py:128
+#: conf/email.py:143
 msgid "Send periodic reminders about unanswered questions"
 msgstr "Hantar pesanan berkala berkaitan soalan yang masih tidak dijawab"
 
-#: conf/email.py:130
+#: conf/email.py:145
 msgid ""
 "NOTE: in order to use this feature, it is necessary to run the management "
 "command \"send_unanswered_question_reminders\" (for example, via a cron job "
 "- with an appropriate frequency) "
 msgstr ""
 
-#: conf/email.py:143
+#: conf/email.py:158
 msgid "Days before starting to send reminders about unanswered questions"
 msgstr "Hari sebelum mula hantar pesanan berkaitan soalan yang masih tidak dijawab"
 
-#: conf/email.py:154
+#: conf/email.py:169
 msgid ""
 "How often to send unanswered question reminders (in days between the "
 "reminders sent)."
 msgstr "Berapa kerap pesanan soalan yang tidak dijawab perlu dihantar (dalam hari antara pesanan yang telah dihantar)."
 
-#: conf/email.py:166
+#: conf/email.py:181
 msgid "Max. number of reminders to send about unanswered questions"
 msgstr "Bilangan maksimum pesanan untuk dihantar berkaitan soalan yang tidak dijawab"
 
-#: conf/email.py:177
+#: conf/email.py:192
 msgid "Send periodic reminders to accept the best answer"
 msgstr ""
 
-#: conf/email.py:179
+#: conf/email.py:194
 msgid ""
 "NOTE: in order to use this feature, it is necessary to run the management "
 "command \"send_accept_answer_reminders\" (for example, via a cron job - with"
 " an appropriate frequency) "
 msgstr ""
 
-#: conf/email.py:192
+#: conf/email.py:207
 msgid "Days before starting to send reminders to accept an answer"
 msgstr ""
 
-#: conf/email.py:203
+#: conf/email.py:218
 msgid ""
 "How often to send accept answer reminders (in days between the reminders "
 "sent)."
 msgstr ""
 
-#: conf/email.py:215
+#: conf/email.py:230
 msgid "Max. number of reminders to send to accept the best answer"
 msgstr ""
 
-#: conf/email.py:227
+#: conf/email.py:242
 msgid "Require email verification before allowing to post"
 msgstr "Pengesahan email diperlukan sebelum dibenarkan bertanya atau kiriman sebarang komen"
 
-#: conf/email.py:228
+#: conf/email.py:243
 msgid ""
 "Active email verification is done by sending a verification key in email"
 msgstr "Pengesahan email aktif dilakukan melalui penghantaran 'verification key' ke dalam email"
 
-#: conf/email.py:237
+#: conf/email.py:252
 msgid "Fake email for anonymous user"
 msgstr "Email palsu untuk pengguna 'anonymous'"
 
-#: conf/email.py:238
+#: conf/email.py:253
 msgid "Use this setting to control gravatar for email-less user"
 msgstr ""
 
-#: conf/email.py:247
+#: conf/email.py:262
 msgid "Allow posting questions by email"
 msgstr ""
 
-#: conf/email.py:249
+#: conf/email.py:264
 msgid ""
 "Before enabling this setting - please fill out IMAP settings in the "
 "settings.py file"
 msgstr ""
 
-#: conf/email.py:260
+#: conf/email.py:275
 msgid "Replace space in emailed tags with dash"
 msgstr ""
 
-#: conf/email.py:262
+#: conf/email.py:277
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
 msgstr ""
 
-#: conf/email.py:273
+#: conf/email.py:288
 msgid "Enable posting answers and comments by email"
 msgstr ""
 
-#: conf/email.py:276
+#: conf/email.py:291
 msgid "To enable this feature make sure lamson is running"
 msgstr ""
 
-#: conf/email.py:287
+#: conf/email.py:302
 msgid "Emailed post: when to notify author about publishing"
 msgstr ""
 
-#: conf/email.py:312
+#: conf/email.py:327
 msgid "Reply by email hostname"
 msgstr ""
 
-#: conf/email.py:323
+#: conf/email.py:338
 msgid ""
 "Email replies having fewer words than this number will be posted as comments"
 " instead of answers"
@@ -2033,51 +2037,59 @@ msgid ""
 "will be changed after you modify this setting."
 msgstr ""
 
-#: conf/site_settings.py:12
+#: conf/site_settings.py:14
 msgid "URLS, keywords & greetings"
 msgstr ""
 
-#: conf/site_settings.py:21
+#: conf/site_settings.py:23
 msgid "Site title for the Q&A forum"
 msgstr ""
 
-#: conf/site_settings.py:30
+#: conf/site_settings.py:32
 msgid "Comma separated list of Q&A site keywords"
 msgstr ""
 
-#: conf/site_settings.py:39
+#: conf/site_settings.py:41
 msgid "Copyright message to show in the footer"
 msgstr ""
 
-#: conf/site_settings.py:49
+#: conf/site_settings.py:51
 msgid "Site description for the search engines"
 msgstr ""
 
-#: conf/site_settings.py:58
+#: conf/site_settings.py:60
 msgid "Short name for your Q&A forum"
 msgstr ""
 
-#: conf/site_settings.py:67
+#: conf/site_settings.py:70
+msgid "Please enter url of your site"
+msgstr ""
+
+#: conf/site_settings.py:73
+msgid "Url must start either from http or https"
+msgstr ""
+
+#: conf/site_settings.py:92
 msgid "Base URL for your Q&A forum, must start with http or https"
 msgstr ""
 
-#: conf/site_settings.py:78
+#: conf/site_settings.py:104
 msgid "Check to enable greeting for anonymous user"
 msgstr ""
 
-#: conf/site_settings.py:89
+#: conf/site_settings.py:115
 msgid "Text shown in the greeting message shown to the anonymous user"
 msgstr ""
 
-#: conf/site_settings.py:93
+#: conf/site_settings.py:119
 msgid "Use HTML to format the message "
 msgstr ""
 
-#: conf/site_settings.py:102
+#: conf/site_settings.py:128
 msgid "Feedback site URL"
 msgstr ""
 
-#: conf/site_settings.py:104
+#: conf/site_settings.py:130
 msgid "If left empty, a simple internal feedback form will be used instead"
 msgstr ""
 
@@ -2801,7 +2813,7 @@ msgstr ""
 msgid "[deleted]"
 msgstr ""
 
-#: const/__init__.py:309 views/readers.py:613
+#: const/__init__.py:309 views/readers.py:642
 msgid "initial version"
 msgstr ""
 
@@ -3013,7 +3025,7 @@ msgid ""
 "reach a resolution."
 msgstr ""
 
-#: const/message_keys.py:52 models/__init__.py:1121
+#: const/message_keys.py:52 models/__init__.py:1136
 msgid ""
 "Sorry, your account appears to be suspended and you cannot make new posts "
 "until this issue is resolved. You can, however edit your existing posts. "
@@ -3212,17 +3224,22 @@ msgstr "Daftar masuk melalui akaun %(provider)s anda"
 msgid "OpenID %(openid_url)s is invalid"
 msgstr ""
 
-#: deps/django_authopenid/views.py:391 deps/django_authopenid/views.py:568
-#: deps/django_authopenid/views.py:583
-#, python-format
+#: deps/django_authopenid/views.py:391
 msgid ""
-"Unfortunately, there was some problem when connecting to %(provider)s, "
-"please try again or use another provider"
+"Sorry, there was some problem connecting to the login provider, please try "
+"again or use another login method"
 msgstr ""
 
 #: deps/django_authopenid/views.py:520
 msgid "Your new password saved"
 msgstr "'Password' baru telah disimpan"
+
+#: deps/django_authopenid/views.py:568 deps/django_authopenid/views.py:583
+#, python-format
+msgid ""
+"Unfortunately, there was some problem when connecting to %(provider)s, "
+"please try again or use another provider"
+msgstr ""
 
 #: deps/django_authopenid/views.py:613
 msgid "The login password combination was not correct"
@@ -3430,86 +3447,90 @@ msgstr[0] "%(question_count)d unanswered questions about %(topics)s"
 msgid "Please log in to use %s"
 msgstr ""
 
-#: models/__init__.py:561
+#: models/__init__.py:569 models/__init__.py:1388 views/writers.py:226
+msgid "Sorry, but you have only read access"
+msgstr ""
+
+#: models/__init__.py:573
 msgid "Sorry, this operation is not allowed"
 msgstr ""
 
-#: models/__init__.py:611
+#: models/__init__.py:623
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
 msgstr "Maaf, anda tidak dibenarkan untuk menerima atau menolak jawapan terbaik kerana akaun anda telah dihalang atau 'blocked'"
 
-#: models/__init__.py:615
+#: models/__init__.py:627
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
 msgstr "Maaf, anda tidak dibenarkan untuk menerima atau menolak jawapan terbaik kerana akaun anda telah digantung atau 'suspended'"
 
-#: models/__init__.py:629
+#: models/__init__.py:641
 #, python-format
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
 "own question"
 msgstr ">%(points)s mata reputasi diperlukan untuk menerima atau menolak  jawapan anda sendiri kepada soalan anda sendiri"
 
-#: models/__init__.py:653
+#: models/__init__.py:665
 #, python-format
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
 msgstr ""
 
-#: models/__init__.py:662
+#: models/__init__.py:674
 #, python-format
 msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
 "can accept or unaccept the best answer"
 msgstr ""
 
-#: models/__init__.py:685
+#: models/__init__.py:697
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "Maaf, anda tidak boleh mengundi atau 'vote' untuk soalan/jawapan mahupun komen anda sendiri"
 
-#: models/__init__.py:689
+#: models/__init__.py:701
 msgid "Sorry your account appears to be blocked "
 msgstr "Maaf, akaun anda nampaknya telah dihalang atau 'blocked'"
 
-#: models/__init__.py:694
+#: models/__init__.py:706
 msgid "Sorry your account appears to be suspended "
 msgstr "Maaf, akaun anda nampaknya telah digantung atau 'suspended'"
 
-#: models/__init__.py:704
+#: models/__init__.py:716
 #, python-format
 msgid ">%(points)s points required to upvote"
 msgstr ""
 
-#: models/__init__.py:710
+#: models/__init__.py:722
 #, python-format
 msgid ">%(points)s points required to downvote"
 msgstr ""
 
-#: models/__init__.py:725
+#: models/__init__.py:737
 msgid "Sorry, blocked users cannot upload files"
 msgstr ""
 
-#: models/__init__.py:726
+#: models/__init__.py:738
 msgid "Sorry, suspended users cannot upload files"
 msgstr ""
 
-#: models/__init__.py:728
+#: models/__init__.py:740
 #, python-format
 msgid "sorry, file uploading requires karma >%(min_rep)s"
 msgstr "maaf, muat naik fail memerlukan reputasi >%(min_rep)s"
 
-#: models/__init__.py:747
+#: models/__init__.py:759
 msgid "Could not post, because your karma is insufficient to publish links"
 msgstr ""
 
-#: models/__init__.py:773
+#: models/__init__.py:785
 msgid "Sorry, you already gave an answer, please edit it instead."
 msgstr ""
 
-#: models/__init__.py:797
+#: models/__init__.py:809
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
@@ -3519,57 +3540,57 @@ msgid_plural ""
 "minutes from posting"
 msgstr[0] ""
 
-#: models/__init__.py:809
+#: models/__init__.py:821
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
 
-#: models/__init__.py:838
+#: models/__init__.py:850
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr "Maaf, oleh kerana akaun anda digantung, anda hanya boleh komen kiriman anda sendiri"
 
-#: models/__init__.py:842
+#: models/__init__.py:854
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
 "required. You can still comment your own posts and answers to your questions"
 msgstr "Maaf, untuk komen mana-mana 'post', sebanyak %(min_rep)s mata reputasi minimum diperlukan. Anda masih boleh komen 'post' anda sendiri dan jawab soalan anda sendiri"
 
-#: models/__init__.py:872
+#: models/__init__.py:884
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
 msgstr ""
 
-#: models/__init__.py:889
+#: models/__init__.py:901
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted"
 " posts"
 msgstr ""
 
-#: models/__init__.py:904
+#: models/__init__.py:917
 msgid "Sorry, since your account is blocked you cannot edit posts"
 msgstr "Maaf, oleh kerana akaun anda telah dihalang, anda tidak boleh mengedit 'post'."
 
-#: models/__init__.py:908
+#: models/__init__.py:921
 msgid ""
 "Sorry, since your account is suspended you can edit only your own posts"
 msgstr "Maaf, oleh kerana akaun anda telah digantung, anda hanya boleh sunting 'post' anda sendiri sahaja"
 
-#: models/__init__.py:913
+#: models/__init__.py:926
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:920
+#: models/__init__.py:933
 #, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "Maaf, untuk edit 'posts' pengguna lain, reputasi minimum sebanyak %(min_rep)s diperlukan"
 
-#: models/__init__.py:983
+#: models/__init__.py:996
 msgid ""
 "Sorry, cannot delete your question since it has an upvoted answer posted by "
 "someone else"
@@ -3578,317 +3599,317 @@ msgid_plural ""
 "by other users"
 msgstr[0] "one: Maaf, tidak boleh padamkan soalan anda kerana ia mempunyai jawapan yang diundi naik oleh seseorang\n\none: Maaf, tidak boleh padamkan soalan anda kerana ia mempunyai jawapan yang diundi naik oleh pengguna-pengguna lain"
 
-#: models/__init__.py:998
+#: models/__init__.py:1011
 msgid "Sorry, since your account is blocked you cannot delete posts"
 msgstr "Maaf, oleh kerana akaun anda telah dihalang, anda tidak boleh delete 'posts'"
 
-#: models/__init__.py:1002
+#: models/__init__.py:1015
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr "Maaf, oleh kerana akaun anda telah digantung, anda hanya boleh memadam 'posts' anda sendiri sahaja "
 
-#: models/__init__.py:1006
+#: models/__init__.py:1019
 #, python-format
 msgid ""
 "Sorry, to delete other people's posts, a minimum reputation of %(min_rep)s "
 "is required"
 msgstr ""
 
-#: models/__init__.py:1026
+#: models/__init__.py:1040
 msgid "Sorry, since your account is blocked you cannot close questions"
 msgstr "Maaf, oleh kerana akaun anda telah dihalang, anda tidak boleh tutup mana-mana soalan"
 
-#: models/__init__.py:1030
+#: models/__init__.py:1044
 msgid "Sorry, since your account is suspended you cannot close questions"
 msgstr "Maaf, oleh kerana akaun anda telah digantung, anda tidak boleh tutup mana-mana soalan"
 
-#: models/__init__.py:1034
+#: models/__init__.py:1048
 #, python-format
 msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
 "required"
 msgstr "Maaf, untuk menutup 'posts' pengguna lain, reputasi minimum sebanyak %(min_rep)s diperlukan"
 
-#: models/__init__.py:1043
+#: models/__init__.py:1057
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:1069
+#: models/__init__.py:1084
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > "
 "%(min_rep)s can reopen questions."
 msgstr ""
 
-#: models/__init__.py:1075
+#: models/__init__.py:1090
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
 
-#: models/__init__.py:1080
+#: models/__init__.py:1095
 msgid "Sorry, you cannot reopen questions because your account is blocked"
 msgstr ""
 
-#: models/__init__.py:1085
+#: models/__init__.py:1100
 msgid "Sorry, you cannot reopen questions because your account is suspended"
 msgstr ""
 
-#: models/__init__.py:1108
+#: models/__init__.py:1123
 msgid "You have flagged this question before and cannot do it more than once"
 msgstr ""
 
-#: models/__init__.py:1116
+#: models/__init__.py:1131
 msgid ""
 "Sorry, since your account is blocked you cannot flag posts as offensive"
 msgstr ""
 
-#: models/__init__.py:1127
+#: models/__init__.py:1142
 #, python-format
 msgid ""
 "Sorry, to flag posts as offensive a minimum reputation of %(min_rep)s is "
 "required"
 msgstr ""
 
-#: models/__init__.py:1148
+#: models/__init__.py:1163
 #, python-format
 msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 msgstr ""
 
-#: models/__init__.py:1160
+#: models/__init__.py:1175
 msgid "cannot remove non-existing flag"
 msgstr ""
 
-#: models/__init__.py:1166
+#: models/__init__.py:1181
 msgid "Sorry, since your account is blocked you cannot remove flags"
 msgstr ""
 
-#: models/__init__.py:1170
+#: models/__init__.py:1185
 msgid ""
 "Sorry, your account appears to be suspended and you cannot remove flags. "
 "Please contact the forum administrator to reach a resolution."
 msgstr ""
 
-#: models/__init__.py:1176
+#: models/__init__.py:1191
 #, python-format
 msgid "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgid_plural ""
 "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgstr[0] ""
 
-#: models/__init__.py:1195
+#: models/__init__.py:1210
 msgid "you don't have the permission to remove all flags"
 msgstr "anda tidak mempunyai keizinan untuk memadam semua 'flags'"
 
-#: models/__init__.py:1196
+#: models/__init__.py:1211
 msgid "no flags for this entry"
 msgstr ""
 
-#: models/__init__.py:1220
+#: models/__init__.py:1235
 msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
 msgstr ""
 
-#: models/__init__.py:1227
+#: models/__init__.py:1243
 msgid "Sorry, since your account is blocked you cannot retag questions"
 msgstr "Maaf, oleh kerana akaun anda telah dihalang, anda tidak boleh ubah kata kunci mana-mana soalan"
 
-#: models/__init__.py:1231
+#: models/__init__.py:1247
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr "Maaf, oleh kerana akaun anda telah digantung, anda hanya boleh ubah kata kunci soalan-soalan anda sendiri sahaja"
 
-#: models/__init__.py:1235
+#: models/__init__.py:1251
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:1254
+#: models/__init__.py:1270
 msgid "Sorry, since your account is blocked you cannot delete comment"
 msgstr "Maaf, oleh kerana akaun anda telah dihalang, anda tidak boleh padam komen-komen"
 
-#: models/__init__.py:1258
+#: models/__init__.py:1274
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr "Maaf, oleh kerana akaun anda telah digantung, anda hanya boleh padam komen anda sendiri sahaja"
 
-#: models/__init__.py:1262
+#: models/__init__.py:1278
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr ""
 
-#: models/__init__.py:1286
+#: models/__init__.py:1303
 msgid "sorry, but older votes cannot be revoked"
 msgstr ""
 
-#: models/__init__.py:1973 utils/functions.py:98
+#: models/__init__.py:1995 utils/functions.py:98
 #, python-format
 msgid "on %(date)s"
 msgstr ""
 
-#: models/__init__.py:1975
+#: models/__init__.py:1997
 msgid "in two days"
 msgstr ""
 
-#: models/__init__.py:1977
+#: models/__init__.py:1999
 msgid "tomorrow"
 msgstr ""
 
-#: models/__init__.py:1979
+#: models/__init__.py:2001
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] ""
 
-#: models/__init__.py:1981
+#: models/__init__.py:2003
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] ""
 
-#: models/__init__.py:1982
+#: models/__init__.py:2004
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] ""
 
-#: models/__init__.py:1984
+#: models/__init__.py:2006
 #, python-format
 msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
 "post an answer %(left)s"
 msgstr "Pengguna baru perlu menunggu selama %(days)s hari sebelum boleh menjawab soalan sendiri. Anda boleh menjawab soalan %(left)s"
 
-#: models/__init__.py:2172 templates/email/feedback_email.txt:9
+#: models/__init__.py:2194 templates/email/feedback_email.txt:9
 msgid "Anonymous"
 msgstr ""
 
-#: models/__init__.py:2276
+#: models/__init__.py:2298
 msgid "Site Adminstrator"
 msgstr ""
 
-#: models/__init__.py:2278
+#: models/__init__.py:2300
 msgid "Forum Moderator"
 msgstr ""
 
-#: models/__init__.py:2280
+#: models/__init__.py:2302
 msgid "Suspended User"
 msgstr ""
 
-#: models/__init__.py:2282
+#: models/__init__.py:2304
 msgid "Blocked User"
 msgstr ""
 
-#: models/__init__.py:2284
+#: models/__init__.py:2306
 msgid "Registered User"
 msgstr ""
 
-#: models/__init__.py:2286
+#: models/__init__.py:2308
 msgid "Watched User"
 msgstr ""
 
-#: models/__init__.py:2288
+#: models/__init__.py:2310
 msgid "Approved User"
 msgstr ""
 
-#: models/__init__.py:2473
+#: models/__init__.py:2495
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr "reputasi %(username)s adalah %(reputation)s"
 
-#: models/__init__.py:2486
+#: models/__init__.py:2508
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] "one: satu lencana emas\n\nother: %(count)d lencana emas"
 
-#: models/__init__.py:2493
+#: models/__init__.py:2515
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] "one: satu lencana perak\n\none: %(count)d lencana perak"
 
-#: models/__init__.py:2500
+#: models/__init__.py:2522
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] "one: satu lencana perak\n\nother: %(count)d lencana perak"
 
-#: models/__init__.py:2511
+#: models/__init__.py:2533
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr ""
 
-#: models/__init__.py:2513
+#: models/__init__.py:2535
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr "%(user)s mempunyai %(badges)s"
 
-#: models/__init__.py:2660
+#: models/__init__.py:2682
 #, python-format
 msgid "At least %d karma point is required to post links"
 msgid_plural "At least %d karma points is required to post links"
 msgstr[0] ""
 
-#: models/__init__.py:3131
+#: models/__init__.py:3159
 #, python-format
 msgid "%(user)s shared a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3134 models/__init__.py:3144
+#: models/__init__.py:3162 models/__init__.py:3172
 #, python-format
 msgid "%(user)s edited a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3136
+#: models/__init__.py:3164
 #, python-format
 msgid "%(user)s posted a %(post_link)s"
 msgstr ""
 
-#: models/__init__.py:3139
+#: models/__init__.py:3167
 #, python-format
 msgid "%(user)s edited an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3141
+#: models/__init__.py:3169
 #, python-format
 msgid "%(user)s posted an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3146
+#: models/__init__.py:3174
 #, python-format
 msgid "%(user)s posted a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3162
+#: models/__init__.py:3190
 msgid "To reply, PLEASE WRITE ABOVE THIS LINE."
 msgstr ""
 
-#: models/__init__.py:3204
+#: models/__init__.py:3232
 #, python-format
 msgid "\"%(title)s\""
 msgstr ""
 
-#: models/__init__.py:3356
+#: models/__init__.py:3384
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr "Tahniah, anda telah menerima satu 'badge' '%(badge_name)s'. Sila lihat <a href=\"%(user_profile)s\">profail anda</a>."
 
-#: models/__init__.py:3629
+#: models/__init__.py:3657
 #, python-format
 msgid "Welcome to %(site_name)s"
 msgstr ""
 
-#: models/__init__.py:3650 views/commands.py:697
+#: models/__init__.py:3678 views/commands.py:697
 msgid "Your tag subscription was saved, thanks!"
 msgstr "Langganan kata kunci anda telah disimpan, terima kasih!"
 
@@ -4166,80 +4187,80 @@ msgstr ""
 msgid "Answer: "
 msgstr ""
 
-#: models/post.py:1569
+#: models/post.py:1570
 msgid "Sorry, this question has been deleted and is no longer accessible"
 msgstr ""
 
-#: models/post.py:1585
+#: models/post.py:1586
 msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
 msgstr "Maaf, jawapan yang anda cari tidak lagi boleh disediakan, kerana soalan utama telah dipadam"
 
-#: models/post.py:1592
+#: models/post.py:1593
 msgid "Sorry, this answer has been removed and is no longer accessible"
 msgstr ""
 
-#: models/post.py:1608
+#: models/post.py:1609
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent question has been removed"
 msgstr "Maaf, komen yang abda cari tidak lagi boleh diakses, kerana soalan utama telah dipadam"
 
-#: models/post.py:1615
+#: models/post.py:1616
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent answer has been removed"
 msgstr "Maaf, komen yang anda cari tidak lagi boleh diakses, kerana soalan utama telah dipadam"
 
-#: models/post.py:1637
+#: models/post.py:1638
 msgid "This post is temporarily not available"
 msgstr ""
 
-#: models/post.py:2146
+#: models/post.py:2147
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
 msgstr ""
 
-#: models/post.py:2150
+#: models/post.py:2151
 #, python-format
 msgid "your post to %(site)s"
 msgstr ""
 
-#: models/post.py:2157
+#: models/post.py:2158
 msgid ""
 "Your post was placed on the moderation queue and will be published after the"
 " moderator approval."
 msgstr ""
 
-#: models/question.py:102
+#: models/question.py:108
 #, python-format
 msgid "\" and \"%s\""
 msgstr ""
 
-#: models/question.py:105
+#: models/question.py:111
 msgid "\" and more"
 msgstr ""
 
-#: models/question.py:828
+#: models/question.py:834
 #, python-format
 msgid "%(count)d answer:"
 msgid_plural "%(count)d answers:"
 msgstr[0] ""
 
-#: models/question.py:1338
+#: models/question.py:1346
 #, python-format
 msgid "Tag %s is new and will be submitted for the moderators approval"
 msgstr ""
 
-#: models/question.py:1343 models/tag.py:217
+#: models/question.py:1351 models/tag.py:217
 #, python-format
 msgid "Tags %s are new and will be submitted for the moderators approval"
 msgstr ""
 
-#: models/question.py:1582
+#: models/question.py:1590
 #, python-format
 msgid "Please, <a href=\"%s\">review your question</a>."
 msgstr ""
@@ -4300,59 +4321,59 @@ msgstr ""
 msgid "New tags added to %s"
 msgstr ""
 
-#: models/user.py:284
+#: models/user.py:316
 msgid "Entire forum"
 msgstr ""
 
-#: models/user.py:285
+#: models/user.py:317
 msgid "Questions that I asked"
 msgstr ""
 
-#: models/user.py:286
+#: models/user.py:318
 msgid "Questions that I answered"
 msgstr ""
 
-#: models/user.py:287
+#: models/user.py:319
 msgid "Individually selected questions"
 msgstr ""
 
-#: models/user.py:288
+#: models/user.py:320
 msgid "Mentions and comment responses"
 msgstr ""
 
-#: models/user.py:291
+#: models/user.py:323
 msgid "Instantly"
 msgstr ""
 
-#: models/user.py:292
+#: models/user.py:324
 msgid "Daily"
 msgstr ""
 
-#: models/user.py:293
+#: models/user.py:325
 msgid "Weekly"
 msgstr ""
 
-#: models/user.py:294
+#: models/user.py:326
 msgid "No email"
 msgstr ""
 
-#: models/user.py:530
+#: models/user.py:566
 msgid "Can join when they want"
 msgstr ""
 
-#: models/user.py:531
+#: models/user.py:567
 msgid "Users ask permission"
 msgstr ""
 
-#: models/user.py:532
+#: models/user.py:568
 msgid "Moderator adds users"
 msgstr ""
 
-#: models/user.py:581
+#: models/user.py:617
 msgid "Please give a list of valid email addresses."
 msgstr ""
 
-#: models/user.py:591
+#: models/user.py:627
 msgid "Please give a list of valid email domain names."
 msgstr ""
 
@@ -4513,7 +4534,7 @@ msgid "FAQ"
 msgstr ""
 
 #: templates/badge.html:5 templates/badge.html.py:9
-#: templates/user_profile/user_recent.html:20
+#: templates/user_profile/user_recent.html:18
 #: templates/user_profile/user_stats.html:73
 #, python-format
 msgid "%(name)s"
@@ -4528,7 +4549,7 @@ msgstr "Lencana"
 msgid "Badge \"%(name)s\""
 msgstr "Lencana \"%(name)s\""
 
-#: templates/badge.html:9 templates/user_profile/user_recent.html:18
+#: templates/badge.html:9 templates/user_profile/user_recent.html:16
 #: templates/user_profile/user_stats.html:71
 #, python-format
 msgid "%(description)s"
@@ -5216,23 +5237,23 @@ msgstr ""
 msgid "Questions"
 msgstr ""
 
-#: templates/question.html:226
+#: templates/question.html:230
 msgid "see more comments"
 msgstr ""
 
-#: templates/question.html:228 templates/question.html.py:331
+#: templates/question.html:232 templates/question.html.py:335
 msgid "add a comment"
 msgstr ""
 
-#: templates/question.html:241 templates/question/content.html:46
+#: templates/question.html:245 templates/question/content.html:46
 msgid "Answer Your Own Question"
 msgstr "Jawab soalan anda sendiri"
 
-#: templates/question.html:246
+#: templates/question.html:250
 msgid "Post Your Answer"
 msgstr ""
 
-#: templates/question.html:252 templates/widgets/ask_form.html:65
+#: templates/question.html:256 templates/widgets/ask_form.html:65
 msgid "Login/Signup to Post"
 msgstr "Log masuk/Daftar untuk Tanya/Jawab atau Komen"
 
@@ -5692,12 +5713,12 @@ msgstr ""
 msgid "recover your account via email"
 msgstr ""
 
-#: templates/authopenid/signin.html:214
+#: templates/authopenid/signin.html:215
 #: templates/authopenid/widget_signin.html:217
 msgid "Send a new recovery key"
 msgstr ""
 
-#: templates/authopenid/signin.html:216
+#: templates/authopenid/signin.html:217
 #: templates/authopenid/widget_signin.html:219
 msgid "Recover your account via email"
 msgstr ""
@@ -5859,7 +5880,8 @@ msgstr ""
 #, python-format
 msgid ""
 "If you believe that this message was sent in an error, please email about it"
-" the forum administrator at %(admin_email)s."
+" the forum administrator at <a "
+"href=\"mailto:%(admin_email)s\">%(admin_email)s</a>."
 msgstr ""
 
 #: templates/email/delayed_email_alert.html:2
@@ -6206,7 +6228,7 @@ msgstr ""
 msgid "Uncollapse all"
 msgstr ""
 
-#: templates/main_page/headline.html:4 views/readers.py:149
+#: templates/main_page/headline.html:4 views/readers.py:151
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
@@ -7101,8 +7123,8 @@ msgstr ""
 msgid "activity"
 msgstr ""
 
-#: templates/user_profile/user_recent.html:25
-#: templates/user_profile/user_recent.html:29
+#: templates/user_profile/user_recent.html:23
+#: templates/user_profile/user_recent.html:27
 msgid "source"
 msgstr ""
 
@@ -7157,7 +7179,7 @@ msgstr ""
 msgid "User profile"
 msgstr ""
 
-#: templates/user_profile/user_tabs.html:10 views/users.py:874
+#: templates/user_profile/user_tabs.html:10 views/users.py:819
 msgid "comments and answers to others questions"
 msgstr "komen dan jawapan soalan-soalan lain"
 
@@ -7173,7 +7195,7 @@ msgstr "Graf reputasi pengguna"
 msgid "questions that user is following"
 msgstr ""
 
-#: templates/user_profile/user_tabs.html:36 views/users.py:916
+#: templates/user_profile/user_tabs.html:36 views/users.py:861
 msgid "user vote record"
 msgstr ""
 
@@ -7182,11 +7204,11 @@ msgstr ""
 msgid "votes"
 msgstr ""
 
-#: templates/user_profile/user_tabs.html:42 views/users.py:1028
+#: templates/user_profile/user_tabs.html:42 views/users.py:973
 msgid "email subscription settings"
 msgstr ""
 
-#: templates/user_profile/user_tabs.html:48 views/users.py:284
+#: templates/user_profile/user_tabs.html:48 views/users.py:286
 msgid "moderate this user"
 msgstr ""
 
@@ -7310,41 +7332,45 @@ msgid "How users join this group?"
 msgstr ""
 
 #: templates/widgets/group_info.html:87
-msgid "Make group VIP"
+msgid "Can moderate site"
 msgstr ""
 
-#: templates/widgets/group_info.html:93
+#: templates/widgets/group_info.html:97
+msgid "Allow only read access"
+msgstr ""
+
+#: templates/widgets/group_info.html:102
 msgid "list of email addresses of pre-approved users"
 msgstr ""
 
-#: templates/widgets/group_info.html:98
+#: templates/widgets/group_info.html:107
 msgid "List of preapproved email addresses"
 msgstr ""
 
-#: templates/widgets/group_info.html:99
+#: templates/widgets/group_info.html:108
 msgid ""
 "Users with these email adderesses will be added to the group automatically."
 msgstr ""
 
-#: templates/widgets/group_info.html:100
+#: templates/widgets/group_info.html:109
 msgid "edit preapproved emails"
 msgstr ""
 
-#: templates/widgets/group_info.html:104
+#: templates/widgets/group_info.html:113
 msgid "list of preapproved email address domain names"
 msgstr ""
 
-#: templates/widgets/group_info.html:109
+#: templates/widgets/group_info.html:118
 msgid "List of preapproved email domain names"
 msgstr ""
 
-#: templates/widgets/group_info.html:110
+#: templates/widgets/group_info.html:119
 msgid ""
 "Users whose email adderesses belong to these domains will be added to the "
 "group automatically."
 msgstr ""
 
-#: templates/widgets/group_info.html:111
+#: templates/widgets/group_info.html:120
 msgid "edit preapproved email domains"
 msgstr ""
 
@@ -7494,11 +7520,15 @@ msgstr ""
 msgid "(edit categories)"
 msgstr ""
 
-#: templates/widgets/user_long_score_and_badge_summary.html:7
+#: templates/widgets/user_long_score_and_badge_summary.html:3
+msgid "read only access"
+msgstr ""
+
+#: templates/widgets/user_long_score_and_badge_summary.html:10
 msgid "karma:"
 msgstr "reputasi:"
 
-#: templates/widgets/user_long_score_and_badge_summary.html:12
+#: templates/widgets/user_long_score_and_badge_summary.html:15
 msgid "badges:"
 msgstr "lencana:"
 
@@ -7745,24 +7775,24 @@ msgstr "Sila daftar masuk untuk padam/kembalikan kiriman "
 msgid "Group %(name)s does not exist"
 msgstr ""
 
-#: views/commands.py:1407 views/commands.py:1440
+#: views/commands.py:1408 views/commands.py:1441
 msgid "Sorry, looks like sharing request was invalid"
 msgstr ""
 
-#: views/commands.py:1463
+#: views/commands.py:1464
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
 msgstr ""
 
-#: views/commands.py:1520
+#: views/commands.py:1521
 msgid "Sorry, only thread moderators can use this function"
 msgstr ""
 
-#: views/commands.py:1535
+#: views/commands.py:1536
 msgid "The answer is now unpublished"
 msgstr ""
 
-#: views/commands.py:1539
+#: views/commands.py:1540
 msgid "The answer is now published"
 msgstr ""
 
@@ -7795,109 +7825,116 @@ msgstr ""
 msgid "Suggested tags"
 msgstr ""
 
-#: views/readers.py:402
+#: views/readers.py:256
+#, python-format
+msgid ""
+"Please go to <a href=\"%s\">\"settings->URLs, keywords and greetings\"</a> "
+"and set the base url for your site to function properly"
+msgstr ""
+
+#: views/readers.py:421
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
 msgstr "Maaf, komen yang anda cari telah dipadam dan tidak lagi boleh diakses"
 
-#: views/users.py:285
+#: views/users.py:287
 msgid "moderate user"
 msgstr ""
 
-#: views/users.py:503
+#: views/users.py:529
 msgid "user profile"
 msgstr ""
 
-#: views/users.py:504
+#: views/users.py:530
 msgid "user profile overview"
 msgstr ""
 
-#: views/users.py:705
+#: views/users.py:650
 msgid "recent user activity"
 msgstr ""
 
-#: views/users.py:706
+#: views/users.py:651
 msgid "profile - recent activity"
 msgstr ""
 
-#: views/users.py:737
+#: views/users.py:682
 msgid "group joining requests"
 msgstr ""
 
-#: views/users.py:738
+#: views/users.py:683
 msgid "profile - moderation"
 msgstr ""
 
-#: views/users.py:794
+#: views/users.py:739
 msgid "private messages"
 msgstr ""
 
-#: views/users.py:795
+#: views/users.py:740
 msgid "profile - messages"
 msgstr ""
 
-#: views/users.py:875
+#: views/users.py:820
 msgid "profile - responses"
 msgstr ""
 
-#: views/users.py:917
+#: views/users.py:862
 msgid "profile - votes"
 msgstr ""
 
-#: views/users.py:938
+#: views/users.py:883
 msgid "user karma"
 msgstr "reputasi pengguna"
 
-#: views/users.py:939
+#: views/users.py:884
 msgid "Profile - User's Karma"
 msgstr "Profail - Reputasi Pengguna"
 
-#: views/users.py:957
+#: views/users.py:902
 msgid "users favorite questions"
 msgstr ""
 
-#: views/users.py:958
+#: views/users.py:903
 msgid "profile - favorite questions"
 msgstr ""
 
-#: views/users.py:999 views/users.py:1003
+#: views/users.py:944 views/users.py:948
 msgid "changes saved"
 msgstr ""
 
-#: views/users.py:1009
+#: views/users.py:954
 msgid "email updates canceled"
 msgstr ""
 
-#: views/users.py:1029
+#: views/users.py:974
 msgid "profile - email subscriptions"
 msgstr ""
 
-#: views/users.py:1050
+#: views/users.py:995
 #, python-format
 msgid "profile - %(section)s"
 msgstr ""
 
-#: views/writers.py:72
+#: views/writers.py:73
 msgid "Sorry, anonymous users cannot upload files"
 msgstr ""
 
-#: views/writers.py:90
+#: views/writers.py:91
 #, python-format
 msgid "allowed file types are '%(file_types)s'"
 msgstr ""
 
-#: views/writers.py:103
+#: views/writers.py:104
 #, python-format
 msgid "maximum upload file size is %(file_size)sK"
 msgstr ""
 
-#: views/writers.py:111
+#: views/writers.py:112
 msgid ""
 "Error uploading file. Please contact the site administrator. Thank you."
 msgstr ""
 
-#: views/writers.py:208
+#: views/writers.py:209
 msgid ""
 "<span class=\"strong big\">You are welcome to start submitting your question"
 " anonymously</span>. When you submit the post, you will be redirected to the"
@@ -7906,45 +7943,45 @@ msgid ""
 "Login takes about 30 seconds, initial signup takes a minute or less."
 msgstr "<span class=\\\"strong big\\\">Anda sangat dialu-alukan untuk bertanyakan soalan anda tanpa mendedahkan identiti</span>. Apabila anda mengemukakan soalan, anda akan dibawa ke laman untuk log masuk/daftar. Soalan anda akan disimpan dalam sesi ini dan akan disiarkan setelah anda log masuk. Proses log masuk ataupun daftar sangat mudah. Hanya 30 saat diperlukan untuk log masuk, manakala daftar memerlukan seminit ataupun kurang"
 
-#: views/writers.py:575
+#: views/writers.py:582
 msgid "Please log in to answer questions"
 msgstr ""
 
-#: views/writers.py:701
+#: views/writers.py:708
 msgid "This content is forbidden"
 msgstr ""
 
-#: views/writers.py:710
+#: views/writers.py:717
 msgid "Post not found"
 msgstr ""
 
-#: views/writers.py:718
+#: views/writers.py:725
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "Maaf, anda kelihatan telah log keluar menyebabkan anda tidak boleh mengirimkan komen anda. Sila <a href=\"%(sign_in_url)s\">sign in</a>."
 
-#: views/writers.py:742
+#: views/writers.py:749
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr ""
 
-#: views/writers.py:791
+#: views/writers.py:798
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "Maaf, anda kelihatan telah log keluar menyebabkan anda tidak boleh padamkan komen. Sila <a href=\"%(sign_in_url)s\">sign in</a>."
 
-#: views/writers.py:817
+#: views/writers.py:824
 msgid "sorry, we seem to have some technical difficulties"
 msgstr ""
 
-#: views/writers.py:881
+#: views/writers.py:888
 msgid "Error - could not find the destination post"
 msgstr ""
 
-#: views/writers.py:905
+#: views/writers.py:912
 #, python-format
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "
