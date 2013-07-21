@@ -4686,7 +4686,7 @@ $(document).ready(function() {
 
         var fakeUserAc = new AutoCompleter({
             url: '/get-users-info/',//askbot['urls']['get_users_info'],
-            promptText: gettext('User name:'),
+            promptText: askbot['messages']['userNamePrompt'],
             minChars: 1,
             useCache: true,
             matchInside: true,
@@ -4720,7 +4720,7 @@ $(document).ready(function() {
     if (usersInput.length === 1) {
         var usersAc = new AutoCompleter({
             url: '/get-users-info/',
-            promptText: gettext('User name:'),
+            promptText: askbot['messages']['userNamePrompt'],
             minChars: 1,
             useCache: false,
             matchInside: true,
