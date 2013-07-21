@@ -7,7 +7,7 @@ class ApiV1Tests(AskbotTestCase):
         user = self.create_user('apiuser')
         response = self.client.get(reverse('api_v1_user', args=(user.id,)))
         response_data = simplejson.loads(response.content)
-        expected_keys = set(['id', 'name', 'reputation', 'questions', 'comments',
+        expected_keys = set(['id', 'username', 'reputation', 'questions', 'comments',
                 'avatar', 'joined_at', 'last_seen_at', 'answers'])
         self.assertEqual(expected_keys, set(response_data.keys()))
 
@@ -24,7 +24,7 @@ class ApiV1Tests(AskbotTestCase):
         expected_keys = set(['pages', 'count', 'users'])
         self.assertEqual(expected_keys, set(response_data.keys()))
 
-        expected_keys = set(['id', 'avatar', 'name',
+        expected_keys = set(['id', 'avatar', 'username',
                             'joined_at', 'last_seen_at', 'reputation'])
         self.assertEqual(expected_keys, set(response_data['users'][0].keys()))
 
@@ -44,9 +44,9 @@ class ApiV1Tests(AskbotTestCase):
         self.assertEqual(expected_keys, set(response_data['questions'][0].keys()))
 
         author_info = response_data['questions'][0]['author']
-        self.assertEqual(set(author_info.keys()), set(['id', 'name']))
+        self.assertEqual(set(author_info.keys()), set(['id', 'username']))
         self.assertEqual(set(author_info.values()), set([user.id, user.username]))
 
         last_act_info = response_data['questions'][0]['last_activity_by']
-        self.assertEqual(set(last_act_info.keys()), set(['id', 'name']))
+        self.assertEqual(set(last_act_info.keys()), set(['id', 'username']))
         self.assertEqual(set(last_act_info.values()), set([user.id, user.username]))

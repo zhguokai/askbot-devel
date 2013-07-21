@@ -19,7 +19,7 @@ def get_user_data(user):
     return {
         'id': user.id,
         'avatar': avatar_url,
-        'name': user.username,
+        'username': user.username,
         'joined_at': user.date_joined.strftime('%s'),
         'last_seen_at': user.last_seen.strftime('%s'),
         'reputation': user.reputation,
@@ -40,11 +40,11 @@ def get_question_data(thread):
     }
     datum['author'] = {
         'id': thread._question_post().author.id,
-        'name': thread._question_post().author.username
+        'username': thread._question_post().author.username
     }
     datum['last_activity_by'] = {
         'id': thread.last_activity_by.id,
-        'name': thread.last_activity_by.username
+        'username': thread.last_activity_by.username
     }
     return datum
 
