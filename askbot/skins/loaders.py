@@ -66,14 +66,17 @@ class SkinEnvironment(CoffinEnvironment):
         if django_settings.ASKBOT_CSS_DEVEL is True:
             url = utils.get_media_url('style/extra.less', ignore_missing=True)
             rel = "stylesheet/less"
+            link_type = "text/less"
 
         #second try - if there is no extra.less in devel mode - try css
         if url is None:
             url = utils.get_media_url('style/extra.css', ignore_missing=True)
             rel = "stylesheet"
+            link_type = "text/css"
 
         if url is not None:
-            return '<link href="%s" rel="%s" type="text/less" />' % (url, rel)
+            return '<link href="%s" rel="%s" type="%s" />' % \
+                (url, rel, link_type)
 
         return ''
 
