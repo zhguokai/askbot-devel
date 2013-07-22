@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Olivier Hallot, 2012-2013
+# ohallot <olivier.hallot@libreoffice.org>, 2013
 # Rafael Ferreira <rafael.f.f1@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-07-17 13:58+0000\n"
+"PO-Revision-Date: 2013-07-22 11:07+0000\n"
 "Last-Translator: ohallot <olivier.hallot@libreoffice.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/askbot/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -102,7 +103,7 @@ msgstr "mensagem enviada"
 msgid "user {{str}} does not exist"
 msgid_plural "users {{str}} do not exist"
 msgstr[0] "O usuário {{str}} não existe"
-msgstr[1] "os usuários {{str}} não existem"
+msgstr[1] "Os usuários {{str}} não existem"
 
 #: media/js/group_messaging.js:278
 msgid "cannot send message to yourself"
@@ -199,15 +200,15 @@ msgstr "faça o login"
 
 #: media/js/post.js:554
 msgid "anonymous users cannot follow questions"
-msgstr "usuários anônimos não podem seguir perguntas"
+msgstr "Usuários anônimos não podem seguir perguntas"
 
 #: media/js/post.js:555
 msgid "anonymous users cannot subscribe to questions"
-msgstr "usuários anônimos não podem subscrever perguntas"
+msgstr "Usuários anônimos não podem subscrever perguntas"
 
 #: media/js/post.js:556 media/js/post.js.c:1426
 msgid "anonymous users cannot vote"
-msgstr "usuários anônimos não podem votar"
+msgstr "Usuários anônimos não podem votar"
 
 #: media/js/post.js:558
 msgid "please confirm offensive"
@@ -219,7 +220,7 @@ msgstr "confirme a remoção do sinalizador de teor ofensivo"
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
-msgstr "usuários anônimos não podem sinalizar postagens ofensivas"
+msgstr "Usuários anônimos não podem sinalizar postagens ofensivas"
 
 #: media/js/post.js:561
 msgid "confirm delete"
@@ -227,7 +228,7 @@ msgstr "confirme a exclusão"
 
 #: media/js/post.js:562
 msgid "anonymous users cannot delete/undelete"
-msgstr "usuários anônimos não podem excluir/recuperar"
+msgstr "Usuários anônimos não podem excluir ou recuperar postagens"
 
 #: media/js/post.js:563
 msgid "post recovered"

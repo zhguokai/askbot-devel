@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-15 15:42+0000\n"
+"PO-Revision-Date: 2013-07-18 05:01+0000\n"
 "Last-Translator: Alexander Lieder <enormitas@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/askbot/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -5180,7 +5180,7 @@ msgstr "bearbeiten"
 
 #: templates/macros.html:452
 msgid "convert to answer"
-msgstr ""
+msgstr "Dein Kommentar in eine Antwort umwandeln"
 
 #: templates/macros.html:579
 #, python-format
@@ -7186,7 +7186,7 @@ msgstr[1] "<span class=\"count\">%(counter)s</span> Fragen"
 #: templates/user_profile/user_stats.html:17
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] "Antworte"
+msgstr[0] "Antwort"
 msgstr[1] "Antworten"
 
 #: templates/user_profile/user_stats.html:23
@@ -7489,8 +7489,8 @@ msgstr[1] "views"
 #: templates/widgets/question_summary.html:30
 msgid "answer"
 msgid_plural "answers"
-msgstr[0] "antwort"
-msgstr[1] "antworten"
+msgstr[0] "Antwort"
+msgstr[1] "Antworten"
 
 #: templates/widgets/question_summary.html:41
 msgid "vote"
