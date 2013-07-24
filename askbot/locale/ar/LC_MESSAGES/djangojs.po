@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-07-17 17:15+0000\n"
-"Last-Translator: Husam M. ALFarra <husamfarra@gmail.com>\n"
+"PO-Revision-Date: 2013-07-20 23:44+0000\n"
+"Last-Translator: Ahmad Khayyat <akhayyat@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/askbot/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -174,7 +174,7 @@ msgstr[5] ""
 
 #: media/js/post.js:171
 msgid "enter your question"
-msgstr "قم بالسؤال هنا من فضلك"
+msgstr "اطرح سؤالك"
 
 #: media/js/post.js:174
 #, c-format
@@ -236,27 +236,27 @@ msgstr "المستخدم المجهول لا يمكنه التصويت"
 
 #: media/js/post.js:558
 msgid "please confirm offensive"
-msgstr "قم بتأكيد بأنه عدواني"
+msgstr "هل أنت متأكد من أن هذه المشاركة مسيئة أو غير مرغوب فيها؟"
 
 #: media/js/post.js:559
 msgid "please confirm removal of offensive flag"
-msgstr "قم بتأكيد إزالة علم العدوانية"
+msgstr "هل أنت متأكد من أن هذه المشاركة مسيئة أو غير مرغوب فيها؟"
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
-msgstr "المستخدم المجهول لا يمكنه تعيين علم عدوانية للمشاركات"
+msgstr "لا يمكن للمستخدمين غير المسجلين الإشارة إلى مشاركة مسيئة"
 
 #: media/js/post.js:561
 msgid "confirm delete"
-msgstr "تأكيد الحذف"
+msgstr "هل أنت متأكد من هذا الحذف؟"
 
 #: media/js/post.js:562
 msgid "anonymous users cannot delete/undelete"
-msgstr "المستخدم المجهول لا يمكنه الحذف أو إعادة ما تم حذفه"
+msgstr "عذراً، لا يمكن للمستخدمين غير المسجلين حذف أو استعادة المشاركات"
 
 #: media/js/post.js:563
 msgid "post recovered"
-msgstr "تم إستعادة المشاركة"
+msgstr "تمت استعادة المشاركة!"
 
 #: media/js/post.js:564
 msgid "post deleted"
@@ -354,7 +354,7 @@ msgstr "من فضلك ادخل عنوان السؤال (أن يكون أكبر �
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
-msgstr "لديك صلاحيات قرأة فقط"
+msgstr "عذراً، لديك صلاحيات قراءة فقط"
 
 #: media/js/post.js:3075 media/js/post.js.c:3869 media/js/post.js.c:4058
 msgid "save"
@@ -443,27 +443,27 @@ msgstr "و المزيد من %s، غير معروض"
 
 #: media/js/user.js:15
 msgid "Please select at least one item"
-msgstr "من فضلك اختر علي الأقل عنصر واحد"
+msgstr "فضلاً اختر عنصراً واحداً علي الأقل"
 
 #: media/js/user.js:59
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] "حذف هذه الإشعار؟"
-msgstr[1] "حذف هذه الإشعار؟"
-msgstr[2] "حذف هذان الإشعاران؟"
-msgstr[3] "حذف تلك الإشعارات؟"
-msgstr[4] "حذف تلك الإشعارات؟"
-msgstr[5] "حذف تلك الإشعارات؟"
+msgstr[0] "حذف هذه التنبيهات؟"
+msgstr[1] "حذف هذا التنبيه؟"
+msgstr[2] "حذف هذين التنبيهين؟"
+msgstr[3] "حذف هذه التنبيهات؟"
+msgstr[4] "حذف هذه التنبيهات؟"
+msgstr[5] "حذف هذه التنبيهات؟"
 
 #: media/js/user.js:66
 msgid "Close this entry?"
 msgid_plural "Close these entries?"
-msgstr[0] "غلق هذه التدوينة؟"
-msgstr[1] "غلق هذه التدوينة؟"
-msgstr[2] "غلق هذه التدوينات؟"
-msgstr[3] "غلق هذه التدوينات؟"
-msgstr[4] "غلق هذه التدوينات؟"
-msgstr[5] "غلق هذه التدوينات؟"
+msgstr[0] "إغلاق هذه المدخلات؟"
+msgstr[1] "إغلاق هذا المدخل؟"
+msgstr[2] "إغلاق هذين المدخلين؟"
+msgstr[3] "إغلاق هذه المدخلات؟"
+msgstr[4] "إغلاق هذه المدخلات؟"
+msgstr[5] "إغلاق هذه المدخلات؟"
 
 #: media/js/user.js:74
 msgid "Remove all flags and approve this entry?"
@@ -618,11 +618,11 @@ msgstr "غير مسموح به"
 
 #: media/js/utils.js:2038
 msgid "group name"
-msgstr "اسم المجموعة :"
+msgstr "اسم المجموعة"
 
 #: media/js/utils.js:2046
 msgid "add new group"
-msgstr "اضف مجموعة"
+msgstr "إضافة مجموعة"
 
 #: media/js/utils.js:2138
 msgid "Group %(name)s already exists. Group names are case-insensitive."
@@ -639,7 +639,7 @@ msgstr ""
 
 #: media/js/utils.js:3359
 msgid "from now"
-msgstr "من الان فصاعدا"
+msgstr "من الآن"
 
 #: media/js/utils.js:3361
 msgid "about a minute"
@@ -652,7 +652,7 @@ msgstr ""
 
 #: media/js/utils.js:3363
 msgid "about an hour"
-msgstr "في حدود ساعة"
+msgstr "ساعة تفريباً"
 
 #: media/js/utils.js:3364
 #, c-format
@@ -670,7 +670,7 @@ msgstr ""
 
 #: media/js/utils.js:3367
 msgid "about a month"
-msgstr "في حدود شهر"
+msgstr "شهر تفريباً"
 
 #: media/js/utils.js:3368
 #, c-format
@@ -679,7 +679,7 @@ msgstr ""
 
 #: media/js/utils.js:3369
 msgid "about a year"
-msgstr "في حدود سنة"
+msgstr "سنة تقريباً"
 
 #: media/js/utils.js:3370
 #, c-format
@@ -736,7 +736,7 @@ msgstr ""
 
 #: media/js/utils.js:3491
 msgid "2 days ago"
-msgstr "منذ يومان"
+msgstr "منذ يومين"
 
 #: media/js/utils.js:3498
 #, c-format
@@ -762,7 +762,7 @@ msgstr[5] ""
 
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:71
 msgid "Insert a file"
-msgstr "ادخل الملف"
+msgstr "إدراج ملف"
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
 msgid "Insert image"
@@ -770,7 +770,7 @@ msgstr ""
 
 #: media/js/wmd/wmd.js:31
 msgid "bold"
-msgstr "غليظ"
+msgstr "سميك"
 
 #: media/js/wmd/wmd.js:32
 msgid "italic"
@@ -782,7 +782,7 @@ msgstr "رابط"
 
 #: media/js/wmd/wmd.js:34
 msgid "quote"
-msgstr "عبارة"
+msgstr "اقتباس"
 
 #: media/js/wmd/wmd.js:35
 msgid "preformatted text"
@@ -806,7 +806,7 @@ msgstr "قائمة نقطية"
 
 #: media/js/wmd/wmd.js:40
 msgid "heading"
-msgstr "رأس الموضوع"
+msgstr "عنوان"
 
 #: media/js/wmd/wmd.js:41
 msgid "horizontal bar"
@@ -814,23 +814,23 @@ msgstr "شريط أفقي"
 
 #: media/js/wmd/wmd.js:42
 msgid "undo"
-msgstr "إلغاء"
+msgstr "تراجع"
 
 #: media/js/wmd/wmd.js:43 media/js/wmd/wmd.js.c:1169
 msgid "redo"
-msgstr "إستعادة"
+msgstr "إعادة"
 
 #: media/js/wmd/wmd.js:54
 msgid "enter image url"
-msgstr "ادخل موقع الصورة"
+msgstr "أدخل عنوان الصورة، مثلاً http://www.example.com/image.jpg - أو ارفع ملف صورة"
 
 #: media/js/wmd/wmd.js:55
 msgid "enter url"
-msgstr "ادخل عنوان الموقع"
+msgstr "أدخل عنوان الموقع، مثلاً http://www.example.com \"عنوان الصفحة\""
 
 #: media/js/wmd/wmd.js:56
 msgid "upload file attachment"
-msgstr "تحميل ملف كمرفق"
+msgstr "فضلاً اختر ملفاً لرفعه:"
 
 #: media/js/wmd/wmd.js:1836
 msgid "image description"
@@ -842,7 +842,7 @@ msgstr "اسم الملف"
 
 #: media/js/wmd/wmd.js:1843
 msgid "link text"
-msgstr "رابط"
+msgstr "نص الرابط"
 
 #~ msgid "post a comment"
 #~ msgstr "save comment"

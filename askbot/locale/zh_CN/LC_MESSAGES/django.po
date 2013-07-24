@@ -5,13 +5,14 @@
 # Translators:
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # gareth <gareth@unitedstack.com>, 2013
+# daisy.ycguo <daisy.ycguo@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-13 19:08+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-07-19 19:07+0000\n"
+"Last-Translator: daisy.ycguo <daisy.ycguo@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/askbot/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -943,7 +944,7 @@ msgstr "Twitter consumer key"
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">twitter applications "
 "site</a>"
-msgstr ""
+msgstr "请在这里注册你的论坛 <a href=\"%(url)s\">twitter应用网站</a>"
 
 #: conf/external_keys.py:120
 msgid "Twitter consumer secret"
@@ -958,7 +959,7 @@ msgstr "LinkedIn consumer key"
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">LinkedIn developer "
 "site</a>"
-msgstr ""
+msgstr "请在这里注册你的论坛 <a href=\"%(url)s\">LinkedIn开发者网站</a>"
 
 #: conf/external_keys.py:141
 msgid "LinkedIn consumer secret"
@@ -973,7 +974,7 @@ msgstr "ident.ca 客户 key"
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">Identi.ca applications "
 "site</a>"
-msgstr ""
+msgstr "请在这里注册你的论坛 <a href=\"%(url)s\">Identi.ca应用网站</a>"
 
 #: conf/external_keys.py:162
 msgid "ident.ca consumer secret"
@@ -1613,7 +1614,7 @@ msgstr "Mathjax支持(LaTex渲染)"
 msgid ""
 "If you enable this feature, <a href=\"%(url)s\">mathjax</a> must be "
 "installed on your server in its own directory."
-msgstr ""
+msgstr "如需激活此功能, <a href=\"%(url)s\">mathjax</a> 必须安装在服务器上它自己的目录下。"
 
 #: conf/markup.py:74
 msgid "Base url of MathJax deployment"
@@ -3299,7 +3300,7 @@ msgstr ""
 #: deps/django_authopenid/views.py:1257
 #, python-format
 msgid "Recover your %(site)s account"
-msgstr ""
+msgstr "恢复你的账户 %(site)s "
 
 #: deps/django_authopenid/views.py:1292
 msgid "Please check your email and visit the enclosed link."
@@ -3337,7 +3338,7 @@ msgstr "默认值: %s"
 #: deps/livesettings/values.py:641
 #, python-format
 msgid "Allowed image file types are %(types)s"
-msgstr ""
+msgstr "只允许上传%(types)s类型的镜像文件！"
 
 #: importers/stackexchange/management/commands/load_stackexchange.py:150
 msgid "Congratulations, you are now an Administrator"
@@ -3446,7 +3447,7 @@ msgstr[0] "关于 %(topics)s问题有%(question_count)d 个更新"
 #: middleware/forum_mode.py:63
 #, python-format
 msgid "Please log in to use %s"
-msgstr ""
+msgstr "请登录后使用%s"
 
 #: models/__init__.py:569 models/__init__.py:1388 views/writers.py:226
 msgid "Sorry, but you have only read access"
@@ -3473,7 +3474,7 @@ msgstr "对不起,你不能认定或否决最佳答案因为你的账户已暂�
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
 "own question"
-msgstr ""
+msgstr "分数必须大于%(points)s才能认定或否决你自己回答的自己的问题。"
 
 #: models/__init__.py:665
 #, python-format
@@ -7290,7 +7291,7 @@ msgstr "关于本站"
 
 #: templates/widgets/footer.html:40 templates/widgets/user_navigation.html:26
 msgid "help"
-msgstr ""
+msgstr "帮助"
 
 #: templates/widgets/footer.html:42
 msgid "privacy policy"
@@ -7800,7 +7801,7 @@ msgstr ""
 #: views/meta.py:47
 #, python-format
 msgid "About %(site)s"
-msgstr ""
+msgstr "关于 %(site)s"
 
 #: views/meta.py:91
 msgid "Please sign in or register to send your feedback"
