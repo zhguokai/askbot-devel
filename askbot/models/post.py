@@ -340,6 +340,7 @@ class PostManager(BaseQuerySetManager):
 class Post(models.Model):
     post_type = models.CharField(max_length=255, db_index=True)
 
+    #NOTE!!! if these fields are deleted - then jive import needs fixing!!!
     old_question_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
     old_answer_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
     old_comment_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)

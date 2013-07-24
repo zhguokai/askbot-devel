@@ -2,45 +2,71 @@ from askbot import models
 from askbot.conf import settings as askbot_settings
 from askbot.utils.console import ProgressBar
 from askbot.utils.slug import slugify
+from askbot.utils.jive import JiveConverter
+from askbot.utils.jive import internal_link_re
+from askbot.utils.file_utils import make_file_name
 from bs4 import BeautifulSoup
 from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+#from askbot.utils.transaction import dummy_transaction as transaction
 from django.forms import EmailField, ValidationError
 from django.utils import translation
 from datetime import datetime
 from optparse import make_option
 import re
+import os
+import shutil
 
-class DummyTransaction(object):
-    @classmethod
-    def commit(cls):
-        pass
+FILE_TYPES = {
+    "application/java-archive": 'jar',
+    "application/msword": 'doc',
+    "application/octet-stream": 'txt',
+    "application/text": 'txt',
+    "application/vnd.visio": 'vsd',
+    "application/x-bzip": 'bz',
+    "application/x-gzip": 'gz',
+    "application/x-java-archive": 'jar',
+    "application/x-shellscript": 'sh',
+    "application/x-zip-compressed": 'zip',
+    "application/xml": 'xml',
+    "application/zip": 'zip',
+    "image/bmp": 'bmp',
+    "image/gif": 'gif',
+    "image/jpeg": 'jpeg',
+    "image/pjpeg": 'pjpeg',
+    "image/png": 'png',
+    "image/x-png": 'png',
+    "text/html": 'html',
+    "text/java": 'java',
+    "text/plain": 'txt',
+    "text/x-java": 'java',
+    "text/x-java-source": 'java',
+    "text/x-log": 'log',
+    "text/xml": 'xml'
+}
 
-    @classmethod
-    def commit_manually(cls, func):
-        def decorated(*args, **kwargs):
-            func(*args, **kwargs)
-        return decorated
-
-#transaction = DummyTransaction()
-
-def jive_to_markdown(text):
-    """convert jive forum markup to markdown
-    using common sense guesswork
-    """
-    text = re.sub('(\n\n)+', '\n\n', text)#paragraph separators
-    text = re.sub('\t', '    ', text)#tabs to four spaces
-    text = re.sub('\n\s*>[^\n]+', '', text)#delete forum quotes
-    text = re.sub('(?<!\n)\n', '\n    ', text)#force linebreaks via <pre>
-    text = re.sub(r'\n\s*Edited by:[^\n]*(\n|$)', '\n', text)#delete "Edited by" comments
-    text = re.sub(r'([^\n])\n(?!\n)', r'\1\n    ', text)#force linebreakes via <pre>
-    text = re.sub(r'\n[ ]*([^\n]*{code}[^\n]*)\n', r'\n\1\n', text)#undo damage from above
-    text = re.sub(r'{code}([^{]+){code}', r'`\1`', text)
-    return text
+jive = JiveConverter()
 
 def parse_date(date_str):
     return datetime.strptime(date_str[:-8], '%Y/%m/%d %H:%M:%S')
+
+def internal_link_sub(match):
+    """pull post by the matched pars in the old link 
+    and returns link to the new post"""
+    link_type = match.group(1)
+    item_id = int(match.group(2))
+    lookup_key = (link_type == 'message' and 'old_answer_id' or 'old_question_id')
+    try:
+        post = models.Post.objects.get(**{lookup_key: item_id})
+        return post.get_absolute_url()
+    except models.Post.DoesNotExist:
+        return ''
+
+def fix_internal_links_in_post(post):
+    """will replace old internal urls with the new ones."""
+    post.text = internal_link_re.sub(internal_link_sub, post.text)
+    post.save()
 
 def turn_first_company_user_to_admin(domain):
     company_users = models.User.objects.filter(
@@ -104,18 +130,54 @@ class Command(BaseCommand):
         askbot_settings.update('COMMENTS_EDITOR_TYPE', 'rich-text')
         askbot_settings.update('MARKUP_CODE_FRIENDLY', True)
         self.bad_email_count = 0
+        self.attachments_path = ''
+        self.soup = None
 
     def handle(self, *args, **kwargs):
         translation.activate(django_settings.LANGUAGE_CODE)
         assert len(args) == 1, 'Dump file name is required'
-        xml = open(args[0], 'r').read() 
+        dump_file_name = args[0]
+        xml = open(dump_file_name, 'r').read() 
         soup = BeautifulSoup(xml, ['lxml', 'xml'])
+        self.soup = soup
 
-        self.import_users(soup.find_all('User'))
-        self.import_forums(soup.find_all('Forum'))
+        dump_dir = os.path.dirname(os.path.abspath(dump_file_name))
+        self.attachments_path = os.path.join(dump_dir, 'attachments')
+
+        self.import_users()
+        self.import_forums()
         if kwargs['company_domain']:
             self.promote_company_replies(kwargs['company_domain'])
+        self.fix_internal_links()
+        self.convert_jive_markup_to_html()
         models.Message.objects.all().delete()
+
+    @transaction.commit_manually
+    def convert_jive_markup_to_html(self):
+        posts = models.Post.objects.all()
+        count = posts.count()
+        message = 'Converting jive markup to html'
+        for post in ProgressBar(posts.iterator(), count, message):
+            post.html = jive.convert(post.text)
+            post.summary = post.get_snippet()
+            post.save()
+            transaction.commit()
+        transaction.commit()
+
+    @transaction.commit_manually
+    def fix_internal_links(self):
+        url_prop = self.soup.find('Property', attrs={'name': 'jiveURL'})
+        jive_url= url_prop['value']
+        print 'Base url of old forum: %s' % jive_url
+        posts = models.Post.objects.all()
+        count = posts.count()
+        message = 'Fixing internal links'
+        for post in ProgressBar(posts.iterator(), count, message):
+            if jive_url in post.text:
+                post.text = post.text.replace(jive_url, '')
+                fix_internal_links_in_post(post)
+                transaction.commit()
+        transaction.commit()
 
     @transaction.commit_manually
     def promote_company_replies(self, domain):
@@ -142,8 +204,10 @@ class Command(BaseCommand):
         transaction.commit()
 
     @transaction.commit_manually
-    def import_users(self, user_soup):
+    def import_users(self):
         """import users from jive to askbot"""
+
+        user_soup = self.soup.find_all('User')
 
         message = 'Importing users:'
         for user in ProgressBar(iter(user_soup), len(user_soup), message):
@@ -166,12 +230,17 @@ class Command(BaseCommand):
             user.save()
             transaction.commit()
 
-    def import_forums(self, forum_soup):
+    def import_forums(self):
         """import forums by associating each with a special tag,
         and then importing all threads for the tag"""
         admin = models.User.objects.get(id=1)
+        forum_soup = self.soup.find_all('Forum')
         print 'Have %d forums' % len(forum_soup)
+        i = 0
         for forum in forum_soup:
+            i += 1
+            if i < 3:
+                continue
             threads_soup = forum.find_all('Thread')
             self.import_threads(threads_soup, forum.find('Name').text)
 
@@ -182,10 +251,33 @@ class Command(BaseCommand):
             self.import_thread(thread, tag_name)
             transaction.commit()
 
+    def add_attachments_to_post(self, post, attachments):
+        if len(attachments) == 0:
+            return
+
+        post.text += '\nh4. Attachments\n'
+        for att in attachments:
+            att_id, name, mimetype = att
+            ext = '.' + FILE_TYPES[mimetype]
+            file_name = make_file_name(ext)
+            # copy attachment file to a new place
+            source_file = os.path.join(self.attachments_path, att_id + '.bin')
+            dest_file = os.path.join(django_settings.MEDIA_ROOT, file_name)
+            shutil.copyfile(source_file, dest_file)
+            # add link to file to the post text
+            post.text += '# [%s|%s%s]\n' % (name, django_settings.MEDIA_URL, file_name)
+
     def import_thread(self, thread, tag_name):
         """import individual thread"""
         question_soup = thread.find('Message')
-        title, body, timestamp, user = self.parse_post(question_soup)
+        post_id, title, body, attachments, timestamp, user = \
+                                        self.parse_post(question_soup)
+
+        if models.Post.objects.filter(old_question_id=thread['id']).count() == 1:
+            #this allows restarting the process of importing forums
+            #any time
+            return
+
         #post question
         question = user.post_question(
             title=title,
@@ -194,32 +286,59 @@ class Command(BaseCommand):
             tags=tag_name,
             language=django_settings.LANGUAGE_CODE
         )
+        self.add_attachments_to_post(question, attachments)
+        question.html = jive.convert(question.text)
+        question.old_question_id = int(thread['id'])
+        question.old_answer_id = post_id
+        question.summary = question.get_snippet()
+        question.save()
         #post answers
         message_list = question_soup.find_all('MessageList', recursive=False)
         if len(message_list) == 0:
             return
 
         for answer_soup in message_list[0].find_all('Message', recursive=False):
-            title, body, timestamp, user = self.parse_post(answer_soup)
+            post_id, title, body, attachments, timestamp, user = \
+                                            self.parse_post(answer_soup)
             answer = user.post_answer(
                 question=question,
                 body_text=body,
                 timestamp=timestamp
             )
+            self.add_attachments_to_post(answer, attachments)
+            answer.html = jive.convert(answer.text)
+            answer.summary = answer.get_snippet()
+            answer.old_answer_id = post_id
+            answer.save()
             comments = answer_soup.find_all('Message')
             for comment in comments:
-                title, body, timestamp, user = self.parse_post(comment)
-                user.post_comment(
+                post_id, title, body, attachments, timestamp, user = \
+                                                    self.parse_post(comment)
+                comment = user.post_comment(
                     parent_post=answer,
                     body_text=body,
                     timestamp=timestamp
                 )
+                comment.old_answer_id = post_id
+                self.add_attachments_to_post(comment, attachments)
+                comment.html = jive.convert(comment.text)
+                comment.summary = comment.get_snippet()
+                comment.save()
+                
 
     def parse_post(self, post):
         title = post.find('Subject').text
         added_at = parse_date(post.find('CreationDate').text)
         username = post.find('Username').text
-        body = jive_to_markdown(post.find('Body').text)
+        body = post.find('Body').text
+        attachments_soup = post.find_all('Attachment')
+        attachments = list() 
+        for att in attachments_soup:
+            att_id = att['id']
+            name = att.find('Name').text
+            content_type = att['contentType']
+            attachments.append((att_id, name, content_type))
+
         try:
             user = models.User.objects.get(username=username)
         except models.User.DoesNotExist:
@@ -227,4 +346,4 @@ class Command(BaseCommand):
             self.bad_email_count += 1
             user = models.User(username=username, email=email)
             user.save()
-        return title, body, added_at, user
+        return int(post['id']), title, body, attachments, added_at, user
