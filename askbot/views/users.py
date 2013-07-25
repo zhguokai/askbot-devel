@@ -772,6 +772,20 @@ def user_responses(request, user, context):
         (request.user.is_moderator() or request.user.is_administrator()):
         raise Http404
 
+    join_requests = []
+    if request.user.is_administrator_or_moderator() \
+        and askbot_settings.GROUPS_ENABLED:
+        group_content_type = ContentType.objects.get_for_model(models.Group)
+        groups = request.user.get_groups()
+        #construct a dictionary group id --> group object
+        #to avoid loading group via activity content object
+        groups_dict = dict([(group.id, group) for group in groups])
+        join_requests = models.Activity.objects.filter(
+                            activity_type=const.TYPE_ACTIVITY_ASK_TO_JOIN_GROUP,
+                            content_type=group_content_type,
+                            object_id__in=groups_dict.keys()
+                        )
+
     if section == 'forum':
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
         activity_types += (const.TYPE_ACTIVITY_MENTION,)
@@ -798,7 +812,8 @@ def user_responses(request, user, context):
             'tab_name' : 'inbox',
             'inbox_section': section,
             'tab_description' : _('private messages'),
-            'page_title' : _('profile - messages')
+            'page_title' : _('profile - messages'),
+            'join_requests': join_requests
         }
         context.update(data)
         if 'thread_id' in request.GET:
@@ -849,6 +864,7 @@ def user_responses(request, user, context):
             'response_id': memo.activity.question.id,
             'nested_responses': [],
             'response_content': memo.activity.content_object.html,
+            'join_requests': join_requests
         }
         response_list.append(response)
 
@@ -881,6 +897,7 @@ def user_responses(request, user, context):
         'page_title' : _('profile - responses'),
         'post_reject_reasons': reject_reasons,
         'responses' : filtered_response_list,
+        'join_requests': join_requests
     }
     context.update(data)
     return render(request, 'user_inbox/responses_and_flags.html', context)
