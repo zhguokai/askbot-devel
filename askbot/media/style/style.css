@@ -45,10 +45,17 @@ hr {
   border-top: 1px dashed #ccccce;
 }
 input,
-select {
+select,
+textarea {
   vertical-align: middle;
   font-family: Trebuchet MS, "segoe ui", Helvetica, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
   margin-left: 0px;
+  -webkit-appearance: none;
+  border-radius: 0;
+  -ms-border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  -khtml-border-radius: 0;
 }
 select {
   width: 100%;
@@ -4546,6 +4553,17 @@ td.setting-input textarea {
 @media screen and (max-width: 338px) {
   #scopeNav {
     display: none;
+  }
+  .ask-page #id_post_author_username,
+  .question-page #id_post_author_username,
+  .edit-question-page #id_post_author_username,
+  .edit-answer-page #id_post_author_username,
+  .ask-page #id_post_author_email,
+  .question-page #id_post_author_email,
+  .edit-question-page #id_post_author_email,
+  .edit-answer-page #id_post_author_email {
+    width: 100%;
+    margin: 6px 0;
   }
 }
 /* language-specific fixes */

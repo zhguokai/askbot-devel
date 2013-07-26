@@ -32,10 +32,12 @@ hr {
     border-top: 1px dashed #ccccce;
 }
 
-input, select {
+input, select, textarea {
     vertical-align: middle;
     font-family: Trebuchet MS, "segoe ui", Helvetica, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
     margin-left:0px;
+    -webkit-appearance: none;
+    .rounded-corners(0);
 }
 select {
     width: 100%;
@@ -4750,6 +4752,16 @@ td.setting-input {
 @media screen and (max-width: 338px) {
     #scopeNav {
         display: none;
+    }
+    .ask-page,
+    .question-page,
+    .edit-question-page,
+    .edit-answer-page {
+        #id_post_author_username,
+        #id_post_author_email {
+            width: 100%;
+            margin: 6px 0;
+        }
     }
 }
 
