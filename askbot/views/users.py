@@ -1172,7 +1172,7 @@ def user(request, id, slug=None, tab_name=None):
         context['custom_tab_slug'] = CUSTOM_TAB['SLUG']
     return user_view_func(request, profile_owner, context)
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def update_has_custom_avatar(request):
     """updates current avatar type data for the user
     """

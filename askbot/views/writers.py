@@ -57,7 +57,7 @@ QUESTIONS_PAGE_SIZE = 10
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
-#@csrf.csrf_protect
+@csrf.csrf_exempt
 def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
@@ -203,7 +203,7 @@ def import_data(request):
     return render(request, 'import_data.html', data)
 
 #@login_required #actually you can post anonymously, but then must register
-#@csrf.csrf_protect
+@csrf.csrf_protect
 @decorators.check_authorization_to_post(ugettext_lazy(
     "<span class=\"strong big\">You are welcome to start submitting your question "
     "anonymously</span>. When you submit the post, you will be redirected to the "
@@ -699,7 +699,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, mimetype="application/json")
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.check_spam('comment')
 def post_comments(request):#generic ajax handler to load comments to an object
     """todo: fixme: post_comments is ambigous:

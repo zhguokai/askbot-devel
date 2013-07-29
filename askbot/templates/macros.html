@@ -386,7 +386,8 @@ for the purposes of the AJAX comment editor #}
         show_comment = None,
         show_comment_position = None,
         user=None,
-        max_comments=None
+        max_comments=None,
+        csrf_token=None
     )
 -%}
     {% spaceless %}
@@ -446,7 +447,7 @@ for the purposes of the AJAX comment editor #}
                                 accept-charset="utf-8"
                                 class='convert-comment'
                             >
-                                {% csrf_token %}
+                                {{ csrf_middleware_token(csrf_token) }}
                                 <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
                                 <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
                             </form>
