@@ -57,6 +57,9 @@ textarea {
   -webkit-border-radius: 0;
   -khtml-border-radius: 0;
 }
+input[type="radio"] {
+  -webkit-appearance: radio;
+}
 select {
   width: 100%;
 }
