@@ -51,20 +51,34 @@ jive = JiveConverter()
 def parse_date(date_str):
     return datetime.strptime(date_str[:-8], '%Y/%m/%d %H:%M:%S')
 
-def internal_link_sub(match):
-    """pull post by the matched pars in the old link 
-    and returns link to the new post"""
-    link_type = match.group(1)
-    item_id = int(match.group(2))
-    lookup_key = (link_type == 'message' and 'old_answer_id' or 'old_question_id')
-    try:
-        post = models.Post.objects.get(**{lookup_key: item_id})
-        return post.get_absolute_url()
-    except models.Post.DoesNotExist:
-        return ''
-
 def fix_internal_links_in_post(post):
     """will replace old internal urls with the new ones."""
+
+    def link_is_naked(match):
+        """naked link either starts at the beginning of string
+        or is not inside the jive link construct: [...]"""
+        pos = match.start()
+        # the second test is rather naive as it assumes that a 
+        # | will be preceded by something like [some link
+        # which we don't test here
+        return pos < 2 or post.text[pos-2] not in ('[', '|') 
+
+    def internal_link_sub(match):
+        """pull post by the matched pars in the old link 
+        and returns link to the new post"""
+        link_type = match.group(1)
+        item_id = int(match.group(2))
+        lookup_key = (link_type == 'message' and 'old_answer_id' or 'old_question_id')
+        try:
+            post = models.Post.objects.get(**{lookup_key: item_id})
+            # if original link is naked, we put in into brackets
+            # so that the formatter will render the result correctly
+            # otherwise "naked" /url will stay plain text
+            new_url = post.get_absolute_url()
+            return (link_is_naked(match) and '[%s]' % new_url or new_url)
+        except models.Post.DoesNotExist:
+            return ''
+
     post.text = internal_link_re.sub(internal_link_sub, post.text)
     post.save()
 
@@ -108,16 +122,26 @@ then first response in each question from user with matching email address
 will be posted as answer and accepted as correct. Also, first user
 with a matching email address will be a site administrator."""
 
+JIVE_REDIRECTS_HELP = """This file will contain redirects from the old
+posts to new"""
+
 class Command(BaseCommand):
     args = '<jive-dump.xml>'
     option_list = BaseCommand.option_list + (
         make_option('--company-domain',
-            action = 'store',
-            type = 'str',
-            dest = 'company_domain',
-            default = None,
-            help = COMPANY_DOMAIN_HELP
+            action='store',
+            type='str',
+            dest='company_domain',
+            default=None,
+            help=COMPANY_DOMAIN_HELP
         ),
+        make_option('--redirects_file',
+            action='store',
+            type='str',
+            dest='redirects_file',
+            default='',
+            help=JIVE_REDIRECTS_HELP
+        )
     )
 
     def __init__(self, *args, **kwargs):
@@ -132,6 +156,7 @@ class Command(BaseCommand):
         self.bad_email_count = 0
         self.attachments_path = ''
         self.soup = None
+        self.jive_url = None
 
     def handle(self, *args, **kwargs):
         translation.activate(django_settings.LANGUAGE_CODE)
@@ -140,6 +165,8 @@ class Command(BaseCommand):
         xml = open(dump_file_name, 'r').read() 
         soup = BeautifulSoup(xml, ['lxml', 'xml'])
         self.soup = soup
+        url_prop = self.soup.find('Property', attrs={'name': 'jiveURL'})
+        self.jive_url= url_prop['value']
 
         dump_dir = os.path.dirname(os.path.abspath(dump_file_name))
         self.attachments_path = os.path.join(dump_dir, 'attachments')
@@ -149,8 +176,33 @@ class Command(BaseCommand):
         if kwargs['company_domain']:
             self.promote_company_replies(kwargs['company_domain'])
         self.fix_internal_links()
+        self.add_legacy_links()
+        if kwargs['redirects_file']:
+            self.make_redirects(kwargs['redirects_file'])
         self.convert_jive_markup_to_html()
         models.Message.objects.all().delete()
+
+    @transaction.commit_manually
+    def add_legacy_links(self):
+        questions = models.Post.objects.filter(post_type='question')
+        count = questions.count()
+        message = 'Adding links to old forum'
+        template = """\n\n{quote}This thread was imported from the previous forum.
+For your reference, the original is [available here|%s]{quote}"""
+        for question in ProgressBar(questions.iterator(), count, message):
+            thread_id = question.old_question_id
+            jive_url = self.jive_url
+            old_url = '%s/thread.jspa?threadID=%s' % (jive_url, thread_id)
+            question.text += template % old_url
+            question.save()
+            transaction.commit()
+        transaction.commit()
+
+    @transaction.commit_manually
+    def make_redirects(self):
+        """todo: implement this when needed"""
+        pass
+            
 
     @transaction.commit_manually
     def convert_jive_markup_to_html(self):
@@ -166,17 +218,15 @@ class Command(BaseCommand):
 
     @transaction.commit_manually
     def fix_internal_links(self):
-        url_prop = self.soup.find('Property', attrs={'name': 'jiveURL'})
-        jive_url= url_prop['value']
+        jive_url = self.jive_url
         print 'Base url of old forum: %s' % jive_url
-        posts = models.Post.objects.all()
+        posts = models.Post.objects.filter(text__contains=jive_url)
         count = posts.count()
         message = 'Fixing internal links'
         for post in ProgressBar(posts.iterator(), count, message):
-            if jive_url in post.text:
-                post.text = post.text.replace(jive_url, '')
-                fix_internal_links_in_post(post)
-                transaction.commit()
+            post.text = post.text.replace(jive_url, '')
+            fix_internal_links_in_post(post)
+            transaction.commit()
         transaction.commit()
 
     @transaction.commit_manually
@@ -236,11 +286,7 @@ class Command(BaseCommand):
         admin = models.User.objects.get(id=1)
         forum_soup = self.soup.find_all('Forum')
         print 'Have %d forums' % len(forum_soup)
-        i = 0
         for forum in forum_soup:
-            i += 1
-            if i < 3:
-                continue
             threads_soup = forum.find_all('Thread')
             self.import_threads(threads_soup, forum.find('Name').text)
 

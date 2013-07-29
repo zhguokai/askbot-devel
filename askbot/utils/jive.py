@@ -191,7 +191,9 @@ class JiveConverter(object):
             text = text.replace(hash, html)
         return text
 
+    _email_pattern = r'[-.\w]+\@[-\w]+(?:\.[-\w]+)*\.[a-z]+'
     _url_pattern = "((http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*)"
+    _email_re = re.compile(_email_pattern, re.I | re.U)
     _url_re = re.compile(_url_pattern)
     _hypertext_link_re1 = re.compile(r'\[(.*?)\]')
     def _hypertext_link_sub1(self, match):
@@ -201,7 +203,7 @@ class JiveConverter(object):
             return match.group(0)#return the whole thing
         elif num_bits == 1:
             link = link_bits[0]
-            if self._url_re.match(link):
+            if self._url_re.match(link) or not self._email_re.match(link):
                 return '<a href="%s">%s</a>' % (link, link)
         elif num_bits in (2, 3):
             #if self._url_re.match(link_bits[1]):
@@ -244,10 +246,10 @@ class JiveConverter(object):
         now do only image and href links
         todo: more link types https://community.jivesoftware.com/markuphelpfull.jspa
         """
-        text = self._do_hypertext_links(text)
-        text = self._do_image_links(text)
         #do this first [url]http://...[/url] --> plain http://...
         text = self._hypertext_link_re2.sub(self._hypertext_link_sub2, text)
+        text = self._do_hypertext_links(text)
+        text = self._do_image_links(text)
         #now take care of plain links
         return self._do_auto_links(text)
 
@@ -438,12 +440,10 @@ class JiveConverter(object):
     _auto_email_link_re = re.compile(r"""
           \[
           (
-              [-.\w]+
-              \@
-              [-\w]+(\.[-\w]+)*\.[a-z]+
+            %s
           )
           \]
-        """, re.I | re.X | re.U)
+        """ % _email_pattern, re.I | re.X | re.U)
     def _auto_email_link_sub(self, match):
         email = match.group(1)
         return '<a href="mailto:%s">%s</a>' % (email, email)

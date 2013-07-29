@@ -2,6 +2,12 @@ import unittest
 from askbot.utils.jive import JiveConverter
 from askbot.utils.jive import internal_link_re as link_re
 
+#class MockPost(object):
+#    def __init__(self):
+#        self.text = ''
+#    def get_absolute_url(self):
+#        return '/url'
+
 class JiveTests(unittest.TestCase):
 
     def setUp(self):
@@ -126,7 +132,7 @@ two plus two equals four
 <p>two plus two equals four</p></blockquote>"""
         self.assertEqual(self.convert(text), expected)
 
-    def test_code1(self):
+    def test_code0(self):
         text = """something {code}#comment _haha_ http://example.com {code}"""
         expected = """<p>something</p>
 <pre><code>#comment _haha_ http://example.com </code></pre>"""
@@ -145,13 +151,15 @@ http://example.com/1 blah
 [link text4|http://example.com/4|tooltip text4]
 !http://example.com/img.png!
 [email@example.com]
+[/some/file/]
 """
         expected = """<p><a href="http://example.com/2">http://example.com/2</a> blah<br/>
 <a href="http://example.com/1">http://example.com/1</a> blah<br/>
 <a href="http://example.com/3" title="tooltip text3">link text3</a> blah2 <br/>
 <a href="http://example.com/4" title="tooltip text4">link text4</a><br/>
 <img src="http://example.com/img.png"/><br/>
-<a href="mailto:email@example.com">email@example.com</a></p>"""
+<a href="mailto:email@example.com">email@example.com</a><br/>
+<a href="/some/file/">/some/file/</a></p>"""
         self.assertEqual(self.convert(text), expected)
 
     def test_bold(self):
@@ -252,5 +260,21 @@ Nothing happened.
         self.assertTrue(link_re.search('/thread.jspa?threadID=1888&amp;tstart=210'))
         self.assertTrue(link_re.search('/thread.jspa?threadID=3087&amp;tstart=-258'))
 
+#    def test_fix_internal_links1(self):
+#        from askbot.management.commands.askbot_import_jive import fix_internal_links_in_post
+#        post = MockPost()
+#        post.text = """/message.jspa?messageID=8477 sometext
+#sometext /thread.jspa?messageID=10175&amp;#10175 sometext
+#[sometext|/thread.jspa?messageID=10662#10662] [/thread.jspa?messageID=11058]
+#[sometext|/thread.jspa?threadID=1888&amp;tstart=210|title]
+#/thread.jspa?threadID=3087&amp;tstart=-258"""
+#        expected = """<a href="/url">/url</a> sometext<br/>
+#sometext <a href="/url">/url</a> sometext<br/>
+#<a href="/url">sometext</a> <a href="/url">/url</a><br/>
+#<a href="/url" title="title">sometext</a><br/>
+#<a href="/url">/url</a>"""
+#        fix_internal_links_in_post(post)
+#        self.assertEqual(post.text, expected)
+        
 if __name__ == '__main__':
     unittest.main()
