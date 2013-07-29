@@ -57,7 +57,7 @@ QUESTIONS_PAGE_SIZE = 10
 # used in answers
 ANSWERS_PAGE_SIZE = 10
 
-@csrf.csrf_protect
+#@csrf.csrf_protect
 def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
