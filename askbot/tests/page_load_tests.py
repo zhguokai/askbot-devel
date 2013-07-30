@@ -153,9 +153,10 @@ class PageLoadTestCase(AskbotTestCase):
         prev_setting = askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN
         askbot_settings.update('ALLOW_POSTING_BEFORE_LOGGING_IN', allow_anonymous)
         self.try_url(
-            'ask',
-            status_code = status_code,
-            template = 'ask.html'
+            spaces.get_url('ask'),
+            plain_url_passed=True,
+            status_code=status_code,
+            template='ask.html'
         )
         askbot_settings.update('ALLOW_POSTING_BEFORE_LOGGING_IN', prev_setting)
 
