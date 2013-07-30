@@ -15,6 +15,7 @@ class LocaleMiddleware(object):
 
     def process_request(self, request):
         language = settings.ASKBOT_LANGUAGE
+        print settings.ASKBOT_LANGUAGE
         translation.activate(language)
         request.LANGUAGE_CODE = translation.get_language()
 
@@ -22,5 +23,6 @@ class LocaleMiddleware(object):
         patch_vary_headers(response, ('Accept-Language',))
         if 'Content-Language' not in response:
             response['Content-Language'] = translation.get_language()
-        translation.deactivate()
+        print translation.get_language()
+        #translation.deactivate()
         return response

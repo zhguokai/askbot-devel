@@ -54,17 +54,27 @@ LANGUAGE_CHOICES = (
             ('zh_TW', _("Chinese (Taiwan)")),
         )
 
-"""
+def cleaned_language_code(language_code=django_settings.LANGUAGE_CODE):
+    '''makes shure that settings.LANGUAGE_CODE is on
+    the dictionary'''
+    if language_code in [code for code, name in LANGUAGE_CHOICES]:
+        return language_code
+    elif '_' in language_code:
+        lang, country = django_settings.LANGUAGE_CODE.split('_')
+        return cleaned_language_code(lang)
+    else:
+        #english as a default fallback
+        return 'en'
+
 settings.register(
     values.StringValue(
         GENERAL_SKIN_SETTINGS,
         'ASKBOT_LANGUAGE',
-        default = 'en',
+        default = cleaned_language_code(),
         choices =  LANGUAGE_CHOICES,
         description = _('Select Language'),
     )
 )
-"""
 
 settings.register(
     values.BooleanValue(

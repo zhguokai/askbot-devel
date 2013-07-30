@@ -93,12 +93,9 @@ def load_skins(language_code):
         #skins[skin_name].filters['media'] = filters.media
     return skins
 
-if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-    SKINS = dict()
-    for lang in dict(django_settings.LANGUAGES).keys():
-        SKINS.update(load_skins(lang))
-else:
-    SKINS = load_skins(django_settings.LANGUAGE_CODE)
+SKINS = dict()
+for lang in dict(django_settings.LANGUAGES).keys():
+    SKINS.update(load_skins(lang))
 
 def get_skin():
     """retreives the skin environment
