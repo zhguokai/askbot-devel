@@ -43,6 +43,15 @@ class AskbotConfigError(ImproperlyConfigured):
             msg += FOOTER
             super(AskbotConfigError, self).__init__(msg)
 
+def domain_is_bad():
+    from askbot.conf import settings as askbot_settings
+    parsed = urlparse(askbot_settings.APP_URL)
+    if parsed.netloc == '':
+        return True
+    if parsed.scheme not in ('http', 'https'):
+        return True
+    return False
+
 def askbot_warning(line):
     """prints a warning with the nice header, but does not quit"""
     print >> sys.stderr, unicode(line).encode('utf-8')
@@ -616,13 +625,29 @@ def test_haystack():
         try_import('haystack', 'django-haystack', short_message = True)
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
             errors = list()
-            if not hasattr(django_settings, 'HAYSTACK_SEARCH_ENGINE'):
-                message = "Please HAYSTACK_SEARCH_ENGINE to an appropriate value, value 'simple' can be used for basic testing"
+            if not hasattr(django_settings, 'HAYSTACK_CONNECTIONS'):
+                message = "Please HAYSTACK_CONNECTIONS to an appropriate value, value 'simple' can be used for basic testing sample:\n"
+                message += """HAYSTACK_CONNECTIONS = {
+                    'default': {
+                    'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+                        }
+                    }"""
                 errors.append(message)
-            if not hasattr(django_settings, 'HAYSTACK_SITECONF'):
-                message = 'Please add HAYSTACK_SITECONF = "askbot.search.haystack"'
-                errors.append(message)
-            footer = 'Please refer to haystack documentation at http://django-haystack.readthedocs.org/en/v1.2.7/settings.html#haystack-search-engine'
+
+            if getattr(django_settings, 'ASKBOT_MULTILINGUAL'):
+                if not hasattr(django_settings, "HAYSTACK_ROUTERS"):
+                    message = "Please add HAYSTACK_ROUTERS = ['askbot.search.haystack.routers.LanguageRouter',] to settings.py"
+                    errors.append(message)
+                elif 'askbot.search.haystack.routers.LanguageRouter' not in \
+                        getattr(django_settings, 'HAYSTACK_ROUTERS'):
+                    message = "'askbot.search.haystack.routers.LanguageRouter' to HAYSTACK_ROUTERS as first element in settings.py"
+                    errors.append(message)
+
+            if getattr(django_settings, 'HAYSTACK_SIGNAL_PROCESSOR',
+                       '').endswith('AskbotCelerySignalProcessor'):
+                try_import('celery_haystack', 'celery-haystack', short_message = True)
+
+            footer = 'Please refer to haystack documentation at https://django-haystack.readthedocs.org/en/latest/settings.html'
             print_errors(errors, footer=footer)
 
 def test_custom_user_profile_tab():
@@ -965,10 +990,6 @@ def run_startup_tests():
             'value': True,
             'message': 'Please add: RECAPTCHA_USE_SSL = True'
         },
-        'HAYSTACK_SITECONF': {
-            'value': 'askbot.search.haystack',
-            'message': 'Please add: HAYSTACK_SITECONF = "askbot.search.haystack"'
-        }
     })
     settings_tester.run()
     if 'manage.py test' in ' '.join(sys.argv):

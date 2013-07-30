@@ -95,8 +95,7 @@
         askbot['urls']['join_or_leave_group'] = '{% url join_or_leave_group %}';
     </script>
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    {% include "meta/markdown_javascript.html" %}
     <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
     <script src='{{"/js/post.js"|media}}' type='text/javascript'></script>
     <script type="text/javascript">

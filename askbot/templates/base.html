@@ -12,6 +12,7 @@
         {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="google-site-verification" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
         {% endif %}
+        <meta name="referrer" content="always" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         {% if settings.SITE_FAVICON %}
         <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />
@@ -32,7 +33,7 @@
             {{ settings.CUSTOM_HTML_HEAD }}
         {% endif %}
     </head>
-    <body class="{% block body_class %}{% endblock %}{% if user_messages %} user-messages{% endif %}{% if page_class %} {{page_class}}{% endif %}{% if request.user.is_anonymous() %} anon{% endif %} lang-{{ language_code }}">
+    <body class="{% block body_class %}{% endblock %}{% if user_messages %} user-messages{% endif %}{% if page_class %} {{page_class}}{% endif %}{% if request.user.is_anonymous() %} anon{% endif %} lang-{{ current_language_code }}">
         {% include "widgets/system_messages.html" %}
         {% include "debug_header.html" %}
         {% if settings.MULTILINGUAL %}

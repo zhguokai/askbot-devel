@@ -17,14 +17,6 @@
         <div id="question-controls" class="post-controls">
             {% include "question/question_controls.html" %}
         </div>
-        <script type="text/javascript">
-            (function(){
-                if (askbot['data']['userIsAuthenticated'] === false){
-                    var ctrl = document.getElementById('question-controls')
-                    ctrl.parentNode.removeChild(ctrl);
-                }
-            })();
-        </script>
         {% if thread.closed %}
             <div class="clearfix"></div>
             {# ==== START: question/closed_question_info.html ==== #}

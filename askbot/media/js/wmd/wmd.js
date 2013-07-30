@@ -1316,7 +1316,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		var convertToHtml = function(){
 		
 			if (wmd.showdown) {
-				var markdownConverter = new wmd.showdown.converter();
+				var markdownConverter = getAskbotMarkdownConverter();
 			}
 			var text = inputBox.value;
 			
@@ -1978,8 +1978,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			
 			var prevTime = new Date().getTime();
 			
-			if (!converter && wmd.showdown) {
-				converter = new wmd.showdown.converter();
+			if (!converter) {
+                converter = getAskbotMarkdownConverter();
 			}
 			
 			if (converter) {

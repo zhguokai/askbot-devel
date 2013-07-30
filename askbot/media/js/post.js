@@ -1544,7 +1544,7 @@ DeletePostLink.prototype.decorate = function(element){
 var EditCommentForm = function(){
     WrappedElement.call(this);
     this._comment = null;
-    this._comment_widget = null;
+    this._commentsWidget = null;
     this._element = null;
     this._editorReady = false;
     this._text = '';
@@ -1645,17 +1645,21 @@ EditCommentForm.prototype.startEditor = function() {
     }
 };
 
+EditCommentForm.prototype.getCommentsWidget = function() {
+    return this._commentsWidget;
+};
+
 /**
  * attaches comment editor to a particular comment
  */
 EditCommentForm.prototype.attachTo = function(comment, mode){
     this._comment = comment;
     this._type = mode;//action: 'add' or 'edit'
-    this._comment_widget = comment.getContainerWidget();
+    this._commentsWidget = comment.getContainerWidget();
     this._text = comment.getText();
     comment.getElement().after(this.getElement());
     comment.getElement().hide();
-    this._comment_widget.hideButton();//hide add comment button
+    this._commentsWidget.hideButton();//hide add comment button
     //fix up the comment submit button, depending on the mode
     if (this._type == 'add'){
         this._submit_btn.html(gettext('add comment'));
@@ -1746,10 +1750,12 @@ EditCommentForm.prototype.canCancel = function(){
 };
 
 EditCommentForm.prototype.getCancelHandler = function(){
-    var form = this;
+    var me = this;
     return function(evt){
-        if (form.canCancel()){
-            form.detach();
+        if (me.canCancel()){
+            var widget = me.getCommentsWidget();
+            widget.handleDeletedComment();
+            me.detach();
             evt.preventDefault();
         }
         return false;
@@ -1799,7 +1805,7 @@ EditCommentForm.prototype.createDom = function(){
 
     this._submit_btn = $('<button class="submit"></button>');
     this._controlsBox.append(this._submit_btn);
-    this._cancel_btn = $('<button class="submit"></button>');
+    this._cancel_btn = $('<button class="submit cancel"></button>');
     this._cancel_btn.html(gettext('cancel'));
     this._controlsBox.append(this._cancel_btn);
 
@@ -2269,7 +2275,9 @@ Comment.prototype.getDeleteHandler = function(){
                 url: askbot['urls']['deleteComment'],
                 data: { comment_id: comment.getId() },
                 success: function(json, textStatus, xhr) {
+                    var widget = comment.getContainerWidget();
                     comment.dispose();
+                    widget.handleDeletedComment();
                 },
                 error: function(xhr, textStatus, exception) {
                     comment.getElement().show()
@@ -2326,6 +2334,15 @@ PostCommentsWidget.prototype.decorate = function(element){
     this._comments = comments;
 };
 
+PostCommentsWidget.prototype.handleDeletedComment = function() {
+    /* if the widget does not have any comments, set
+    the 'empty' class on the widget element */
+    if (this._cbox.children('.comment').length === 0) {
+        this._element.siblings('.comment-title').hide();
+        this._element.addClass('empty');
+    }
+};
+
 PostCommentsWidget.prototype.getPostType = function(){
     return this._post_type;
 };
@@ -2352,6 +2369,7 @@ PostCommentsWidget.prototype.startNewComment = function(){
     };
     var comment = new Comment(this, opts);
     this._cbox.append(comment.getElement());
+    this._element.removeClass('empty');
     comment.startEditing();
 };
 
@@ -2380,7 +2398,7 @@ PostCommentsWidget.prototype.getActivateHandler = function(){
             me.reloadAllComments(function(json){
                 me.reRenderComments(json);
                 //2) change button text to "post a comment"
-                button.html(gettext('post a comment'));
+                button.html(askbot['messages']['addComment']);
             });
         }
         else {
@@ -2590,32 +2608,36 @@ FoldedEditor.prototype.getOpenHandler = function() {
     var externalTrigger = this._externalTrigger;
     var me = this;
     return function() {
-        promptBox.hide();
-        editorBox.show();
-        var element = me.getElement();
-        element.addClass('unfolded');
+        if (askbot['data']['userIsReadOnly'] === true){
+            notify.show(gettext('Sorry, you have only read access'));
+        } else {
+            promptBox.hide();
+            editorBox.show();
+            var element = me.getElement();
+            element.addClass('unfolded');
 
-        /* make the editor one shot - once it unfolds it's
-         * not accepting any events
-         */
-        element.unbind('click');
-        element.unbind('focus');
+            /* make the editor one shot - once it unfolds it's
+            * not accepting any events
+            */
+            element.unbind('click');
+            element.unbind('focus');
 
-        /* this function will open the editor
-         * and focus cursor on the editor
-         */
-        me.onAfterOpenHandler();
+            /* this function will open the editor
+            * and focus cursor on the editor
+            */
+            me.onAfterOpenHandler();
 
-        /* external trigger is a clickable target
-         * placed outside of the this._element
-         * that will cause the editor to unfold
-         */       
-        if (externalTrigger) {
-            var label = me.makeElement('label');
-            label.html(externalTrigger.html());
-            //set what the label is for
-            label.attr('for', me.getEditorInputId());
-            externalTrigger.replaceWith(label);
+            /* external trigger is a clickable target
+            * placed outside of the this._element
+            * that will cause the editor to unfold
+            */       
+            if (externalTrigger) {
+                var label = me.makeElement('label');
+                label.html(externalTrigger.html());
+                //set what the label is for
+                label.attr('for', me.getEditorInputId());
+                externalTrigger.replaceWith(label);
+            }
         }
     };
 };
@@ -3285,6 +3307,14 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     });
     var btn = element.find('#vip-toggle');
     vip_toggle.decorate(btn);
+
+    var readOnlyToggle = new TwoStateToggle();
+    readOnlyToggle.setPostData({
+        group_id: this.getTagId(),
+        property_name: 'read_only'
+    });
+    var btn = element.find('#read-only-toggle');
+    readOnlyToggle.decorate(btn);
 
     var opennessSelector = new DropdownSelect();
     var selectorElement = element.find('#group-openness-selector');
@@ -4588,6 +4618,19 @@ CategorySelectorLoader.prototype.decorate = function(element) {
     );
 };
 
+
+var AskButton = function(){
+    SimpleControl.call(this);
+    this._handler = function(evt){
+        if (askbot['data']['userIsReadOnly'] === true){
+            notify.show(gettext('Sorry, you have only read access'));
+            evt.preventDefault();
+        }
+    };
+};
+inherits(AskButton, SimpleControl);
+
+
 $(document).ready(function() {
     $('[id^="comments-for-"]').each(function(index, element){
         var comments = new PostCommentsWidget();
@@ -4643,7 +4686,7 @@ $(document).ready(function() {
 
         var fakeUserAc = new AutoCompleter({
             url: '/get-users-info/',//askbot['urls']['get_users_info'],
-            promptText: gettext('User name:'),
+            promptText: askbot['messages']['userNamePrompt'],
             minChars: 1,
             useCache: true,
             matchInside: true,
@@ -4677,7 +4720,7 @@ $(document).ready(function() {
     if (usersInput.length === 1) {
         var usersAc = new AutoCompleter({
             url: '/get-users-info/',
-            promptText: gettext('User name:'),
+            promptText: askbot['messages']['userNamePrompt'],
             minChars: 1,
             useCache: false,
             matchInside: true,
@@ -4699,6 +4742,9 @@ $(document).ready(function() {
         groupsPopup.setHeadingText(gettext('Shared with the following groups:'));
         groupsPopup.decorate(showSharedGroups);
     }
+
+    var askButton = new AskButton();
+    askButton.decorate($("#askButton"));
 });
 
 /* google prettify.js from google code */

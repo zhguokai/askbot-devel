@@ -111,7 +111,7 @@ settings.register(
     livesettings.IntegerValue(
         MIN_REP,
         'MIN_REP_TO_INSERT_LINK',
-        default=30,
+        default=1,
         description=_('Insert clickable links')
     )
 )
@@ -120,7 +120,7 @@ settings.register(
     livesettings.IntegerValue(
         MIN_REP,
         'MIN_REP_TO_SUGGEST_LINK',
-        default=10,
+        default=1,
         description=_('Insert link suggestions as plain text'),
         help_text=_(
             'This value should be smaller than that for "insert clickable links". '
@@ -189,15 +189,6 @@ settings.register(
         'MIN_REP_TO_CLOSE_OTHERS_QUESTIONS',
         default=200,
         description=_('Close questions asked by others')
-    )
-)
-
-settings.register(
-    livesettings.IntegerValue(
-        MIN_REP,
-        'MIN_REP_TO_LOCK_POSTS',
-        default=400,
-        description=_('Lock posts')
     )
 )
 

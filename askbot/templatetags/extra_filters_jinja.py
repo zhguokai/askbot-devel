@@ -18,7 +18,7 @@ from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
 from askbot.utils.html import absolutize_urls
-from askbot.utils.html import site_url
+from askbot.utils.html import site_url as site_url_func
 from askbot.utils import functions
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
@@ -77,6 +77,15 @@ def safe_urlquote(text, quote_plus = False):
         return urllib.quote_plus(text.encode('utf8'))
     else:
         return urllib.quote(text.encode('utf8'))
+
+@register.filter
+def show_block_to(block_name, user):
+    block = getattr(askbot_settings, block_name)
+    if block:
+        flag_name = block_name + '_ANON_ONLY'
+        require_anon = getattr(askbot_settings, flag_name, False)
+        return (require_anon is False) or user.is_anonymous()
+    return False
 
 @register.filter
 def strip_path(url):
@@ -151,7 +160,11 @@ def media(url):
 
 @register.filter
 def fullmedia(url):
-    return site_url(media(url))
+    return site_url_func(media(url))
+
+@register.filter
+def site_url(url):
+    return site_url_func(url)
 
 diff_date = register.filter(functions.diff_date)
 

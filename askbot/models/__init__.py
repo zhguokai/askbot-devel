@@ -42,7 +42,7 @@ from askbot.mail import messages
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
-from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import Tag, MarkedTag, TagSynonym
 from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership
@@ -278,7 +278,7 @@ def user_get_default_avatar_url(self, size):
     """
     return skin_utils.get_media_url(askbot_settings.DEFAULT_AVATAR_URL)
 
-def user_get_avatar_url(self, size):
+def user_get_avatar_url(self, size=48):
     """returns avatar url - by default - gravatar,
     but if application django-avatar is installed
     it will use avatar provided through that app
@@ -528,6 +528,13 @@ def user_notify_users(
     activity.save()
     activity.add_recipients(recipients)
 
+def user_is_read_only(self):
+    """True if user is allowed to change content on the site"""
+    if askbot_settings.GROUPS_ENABLED:
+        return bool(self.get_groups().filter(read_only=True).count())
+    else:
+        return False
+
 def user_get_notifications(self, notification_types=None, **kwargs):
     """returns query set of activity audit status objects"""
     return ActivityAuditStatus.objects.filter(
@@ -548,7 +555,7 @@ def _assert_user_can(
                         min_rep_setting = None,
                         low_rep_error_message = None,
                         owner_low_rep_error_message = None,
-                        general_error_message = None
+                        general_error_message = None,
                     ):
     """generic helper assert for use in several
     User.assert_can_XYZ() calls regarding changing content
@@ -558,6 +565,11 @@ def _assert_user_can(
     if assertion fails, method raises exception.PermissionDenied
     with appropriate text as a payload
     """
+    if askbot_settings.GROUPS_ENABLED:
+        if user.is_read_only():
+            message = _('Sorry, but you have only read access')
+            raise django_exceptions.PermissionDenied(message)
+
     if general_error_message is None:
         general_error_message = _('Sorry, this operation is not allowed')
     if blocked_error_message and user.is_blocked():
@@ -901,6 +913,7 @@ def user_assert_can_edit_post(self, post = None):
         self.assert_can_edit_deleted_post(post)
         return
 
+
     blocked_error_message = _(
                 'Sorry, since your account is blocked '
                 'you cannot edit posts'
@@ -931,7 +944,7 @@ def user_assert_can_edit_post(self, post = None):
         blocked_error_message = blocked_error_message,
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
-        min_rep_setting = min_rep_setting
+        min_rep_setting = min_rep_setting,
     )
 
 
@@ -1010,6 +1023,7 @@ def user_assert_can_delete_answer(self, answer = None):
             {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS}
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS
 
+
     _assert_user_can(
         user = self,
         post = answer,
@@ -1017,7 +1031,7 @@ def user_assert_can_delete_answer(self, answer = None):
         blocked_error_message = blocked_error_message,
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
-        min_rep_setting = min_rep_setting
+        min_rep_setting = min_rep_setting,
     )
 
 
@@ -1045,6 +1059,7 @@ def user_assert_can_close_question(self, question = None):
                         'a minimum reputation of %(min_rep)s is required'
                     ) % {'min_rep': owner_min_rep_setting}
 
+
     _assert_user_can(
         user = self,
         post = question,
@@ -1055,7 +1070,7 @@ def user_assert_can_close_question(self, question = None):
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
         owner_low_rep_error_message = owner_low_rep_error_message,
-        min_rep_setting = min_rep_setting
+        min_rep_setting = min_rep_setting,
     )
 
 
@@ -1224,6 +1239,7 @@ def user_assert_can_retag_question(self, question = None):
                         )
             raise django_exceptions.PermissionDenied(error_message)
 
+
     blocked_error_message = _(
                 'Sorry, since your account is blocked '
                 'you cannot retag questions'
@@ -1246,7 +1262,7 @@ def user_assert_can_retag_question(self, question = None):
         blocked_error_message = blocked_error_message,
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
-        min_rep_setting = min_rep_setting
+        min_rep_setting = min_rep_setting,
     )
 
 
@@ -1266,6 +1282,7 @@ def user_assert_can_delete_comment(self, comment = None):
             {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS
 
+
     _assert_user_can(
         user = self,
         post = comment,
@@ -1273,7 +1290,7 @@ def user_assert_can_delete_comment(self, comment = None):
         blocked_error_message = blocked_error_message,
         suspended_error_message = suspended_error_message,
         low_rep_error_message = low_rep_error_message,
-        min_rep_setting = min_rep_setting
+        min_rep_setting = min_rep_setting,
     )
 
 
@@ -1365,6 +1382,11 @@ def user_post_anonymous_askbot_content(user, session_key):
     """
     aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
     aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
+
+
+    is_on_read_only_group = user.get_groups().filter(read_only=True).count()
+    if is_on_read_only_group:
+        user.message_set.create(message = _('Sorry, but you have only read access'))
     #from askbot.conf import settings as askbot_settings
     if askbot_settings.EMAIL_VALIDATION == True:#add user to the record
         for aq in aq_list:
@@ -2541,12 +2563,21 @@ def toggle_favorite_question(
     about processing the "cancel" option
     another strange thing is that this function unlike others below
     returns a value
+
+    todo: the on-screen follow and email subscription is not
+    fully merged yet - see use of FavoriteQuestion and follow/unfollow question
+    btw, names of the objects/methods is quite misleading ATM
     """
     try:
+        #this attempts to remove the on-screen follow
         fave = FavoriteQuestion.objects.get(thread=question.thread, user=self)
         fave.delete()
         result = False
         question.thread.update_favorite_count()
+        #this removes email subscription
+        if question.thread.is_followed_by(self):
+            self.unfollow_question(question)
+
     except FavoriteQuestion.DoesNotExist:
         if timestamp is None:
             timestamp = datetime.datetime.now()
@@ -2556,6 +2587,11 @@ def toggle_favorite_question(
             added_at = timestamp,
         )
         fave.save()
+
+        #this removes email subscription
+        if question.thread.is_followed_by(self) is False:
+            self.follow_question(question)
+
         result = True
         question.thread.update_favorite_count()
         award_badges_signal.send(None,
@@ -2848,7 +2884,8 @@ def user_update_wildcard_tag_selections(
     return new_tags
 
 
-def user_edit_group_membership(self, user=None, group=None, action=None):
+def user_edit_group_membership(self, user=None, group=None,
+                               action=None, force=False):
     """allows one user to add another to a group
     or remove user from group.
 
@@ -2863,17 +2900,20 @@ def user_edit_group_membership(self, user=None, group=None, action=None):
         openness = group.get_openness_level_for_user(user)
 
         #let people join these special groups, but not leave
-        if group.name == askbot_settings.GLOBAL_GROUP_NAME:
-            openness = 'open'
-        elif group.name == format_personal_group_name(user):
-            openness = 'open'
+        if not force:
+            if group.name == askbot_settings.GLOBAL_GROUP_NAME:
+                openness = 'open'
+            elif group.name == format_personal_group_name(user):
+                openness = 'open'
 
-        if openness == 'open':
+            if openness == 'open':
+                level = GroupMembership.FULL
+            elif openness == 'moderated':
+                level = GroupMembership.PENDING
+            elif openness == 'closed':
+                raise django_exceptions.PermissionDenied()
+        else:
             level = GroupMembership.FULL
-        elif openness == 'moderated':
-            level = GroupMembership.PENDING
-        elif openness == 'closed':
-            raise django_exceptions.PermissionDenied()
 
         membership, created = GroupMembership.objects.get_or_create(
                         user=user, group=group, level=level
@@ -2886,8 +2926,9 @@ def user_edit_group_membership(self, user=None, group=None, action=None):
     else:
         raise ValueError('invalid action')
 
-def user_join_group(self, group):
-    return self.edit_group_membership(group=group, user=self, action='add')
+def user_join_group(self, group, force=False):
+    return self.edit_group_membership(group=group, user=self,
+                                      action='add', force=force)
 
 def user_leave_group(self, group):
     self.edit_group_membership(group=group, user=self, action='remove')
@@ -3024,6 +3065,7 @@ User.add_to_class(
 )
 User.add_to_class('approve_post_revision', user_approve_post_revision)
 User.add_to_class('notify_users', user_notify_users)
+User.add_to_class('is_read_only', user_is_read_only)
 
 #assertions
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
@@ -3119,9 +3161,8 @@ def format_instant_notification_email(
     #add indented summaries for the parent posts
     content_preview += post.format_for_email_as_parent_thread_summary()
 
-    content_preview += '<p>======= Full thread summary =======</p>'
-
-    content_preview += post.thread.format_for_email(user=to_user)
+    #content_preview += '<p>======= Full thread summary =======</p>'
+    #content_preview += post.thread.format_for_email(user=to_user)
 
     if update_type == 'post_shared':
         user_action = _('%(user)s shared a %(post_link)s.')
@@ -3181,18 +3222,21 @@ def format_instant_notification_email(
                                     }
                                 )
     update_data = {
+        'admin_email': askbot_settings.ADMIN_EMAIL,
+        'recipient_user': to_user,
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
         'receiving_user_karma': to_user.reputation,
         'reply_by_email_karma_threshold': askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
         'can_reply': can_reply,
-        'content_preview': content_preview,#post.get_snippet()
+        'content_preview': content_preview,
         'update_type': update_type,
         'post_url': post_url,
         'origin_post_title': origin_post.thread.title,
         'user_subscriptions_url': site_url(user_subscriptions_url),
         'reply_separator': reply_separator,
-        'reply_address': reply_address
+        'reply_address': reply_address,
+        'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
 
@@ -3386,7 +3430,7 @@ def record_user_visit(user, timestamp, **kwargs):
     """
     prev_last_seen = user.last_seen or datetime.datetime.now()
     user.last_seen = timestamp
-    if (user.last_seen - prev_last_seen).days == 1:
+    if (user.last_seen.date() - prev_last_seen.date()).days == 1:
         user.consecutive_days_visit_count += 1
         award_badges_signal.send(None,
             event = 'site_visit',
@@ -3776,6 +3820,7 @@ __all__ = [
         'Vote',
         'PostFlagReason',
         'MarkedTag',
+        'TagSynonym',
 
         'BadgeData',
         'Award',

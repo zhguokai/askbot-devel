@@ -185,8 +185,9 @@
                 var deleteBtn = document.getElementById('post-' + post_id + '-delete');
                 var controls = deleteBtn.parentNode;
                 if (//maybe remove "delete" button
-                    data['userReputation'] < 
-                    {{settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}}
+                    (data['userReputation'] < 
+                    {{settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}}) ||
+                    data['userIsReadOnly']
                 ) {
                     removeNode(deleteBtn);
                 }
@@ -197,14 +198,16 @@
                 var closeBtn = findChildrenByClassName(controls, 'question-close');
                 if (
                     closeBtn.length === 1 &&
-                    data['userReputation'] <
-                    {{ settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS }}
+                    (
+                        (data['userReputation'] < {{ settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS }}) ||
+                        data['userIsReadOnly']
+                    )
                 ) {
                     removeNode(closeBtn[0]);
                 }
                 var repLow = (data['userReputation'] < {{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}});
                 if (//maybe remove "edit" button
-                    repLow || postIsComment(post_id)//only authors edit comments
+                    repLow || data['userIsReadOnly']//only authors edit comments
                 ){
                     var edit_btn = document.getElementById(
                         'post-' + post_id + '-edit'
@@ -212,8 +215,9 @@
                     edit_btn.parentNode.removeChild(edit_btn);
                 }
                 if (//maybe remove retag button
-                    data['userReputation'] <
-                    {{settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS}}
+                    (data['userReputation'] <
+                    {{settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS}}) ||
+                    data['userIsReadOnly']
                 ){
                     var retagBtn = document.getElementById('retag');
                     if (retagBtn) {
@@ -225,7 +229,7 @@
                 if (extra_comment_count > 0){
                     var text = "{% trans %}see more comments{% endtrans%}";
                 } else {
-                    var text = "{% trans %}post a comment{% endtrans %}";
+                    var text = "{% trans %}add a comment{% endtrans %}";
                 }
                 var add_comment_btn = document.getElementById('add-comment-to-post-' + post_id);
                 add_comment_btn.innerHTML = text;
@@ -285,7 +289,7 @@
     </script>
 {% endblock %}
 {% block content %}
-    {% if settings.QUESTION_PAGE_TOP_BANNER %}
+    {% if 'QUESTION_PAGE_TOP_BANNER'|show_block_to(request.user) %}
         <div class="banner">{{ settings.QUESTION_PAGE_TOP_BANNER|safe }}</div>
     {% endif %}
     {% if is_cacheable %}
@@ -328,7 +332,9 @@
         askbot['data']['answersSortTab'] = '{{ tab_id }}';
         askbot['data']['questionId'] = {{ question.id }};
         askbot['data']['threadSlug'] = '{{ thread.title|slugify }}';
-        askbot['messages']['addComment'] = '{% trans %}post a comment{% endtrans %}';
+        askbot['messages']['addComment'] = '{% trans %}add a comment{% endtrans %}';
+        askbot['messages']['userNamePrompt'] = '{% trans %}User name:{% endtrans %}';
+        askbot['messages']['userEmailPrompt'] = '{% trans %}Email address:{% endtrans %}';
         askbot['settings']['saveCommentOnEnter'] = {{ settings.SAVE_COMMENT_ON_ENTER|as_js_bool }};
         askbot['settings']['tagSource'] = '{{ settings.TAG_SOURCE }}';
         askbot['settings']['enableSharingGoogle'] = {{ settings.ENABLE_SHARING_GOOGLE|as_js_bool }};

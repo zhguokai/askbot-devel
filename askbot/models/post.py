@@ -586,7 +586,7 @@ class Post(models.Model):
         user_filter = models.Q(is_superuser=True) | models.Q(status='m')
         if askbot_settings.GROUPS_ENABLED:
             user_filter = user_filter & models.Q(groups__in=self.groups.all())
-        return User.objects.filter(user_filter)
+        return User.objects.filter(user_filter).distinct()
 
     def get_previous_answer(self, user=None):
         """returns a previous answer to a given answer;
@@ -638,6 +638,7 @@ class Post(models.Model):
         #this is likely to be temporary - we add
         #vip groups to the list behind the scenes.
         groups = list(groups)
+        #add moderator groups to the post implicitly
         vips = Group.objects.filter(is_vip=True)
         groups.extend(vips)
         #todo: use bulk-creation
@@ -2066,7 +2067,7 @@ class PostRevision(models.Model):
     author = models.ForeignKey('auth.User', related_name='%(class)ss')
     revised_at = models.DateTimeField()
     summary = models.CharField(max_length=300, blank=True)
-    text = models.TextField()
+    text = models.TextField(blank=True)
 
     approved = models.BooleanField(default=False, db_index=True)
     approved_by = models.ForeignKey(User, null = True, blank = True)
