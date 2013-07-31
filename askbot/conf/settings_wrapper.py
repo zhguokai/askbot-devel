@@ -67,8 +67,9 @@ class ConfigSettings(object):
             setting.update(value)
         except:
             from askbot.deps.livesettings.models import Setting
-            setting = Setting.objects.get(key=key)
+            setting, created = Setting.objects.get_or_create(key=key)
             setting.value = value
+            setting.group = self.__group_map[key]
             setting.save()
         #self.prime_cache()
 

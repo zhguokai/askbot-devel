@@ -8,7 +8,10 @@ def add_space(name):
     """adds space if it does not exist"""
     if not space_exists(name):
         spaces_string = askbot_settings.FORUM_SPACES
-        askbot_settings.update('FORUM_SPACES', spaces_string + ', ' + name)
+        enabled_spaces = map(lambda v: v.strip(), spaces_string.split(','))
+        if name not in enabled_spaces:
+            enabled_spaces.append(name)
+            askbot_settings.update(', '.join(enabled_spaces))
 
 def get_default():
     """returns default space
@@ -41,4 +44,3 @@ def get_url(url_pattern_name, space=None, kwargs=None):
 
 def space_exists(value):
     return value in get_spaces()
-    
