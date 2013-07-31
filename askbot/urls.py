@@ -40,11 +40,6 @@ APP_PATH = os.path.dirname(__file__)
 urlpatterns = patterns('',
     url(r'^$', views.readers.index, name='index'),
     url(
-        r'^%s(?P<id>\d+)/' % _('question/'),
-        views.readers.question,
-        name='question'
-    ),
-    url(
         r'^%s$' % _('tags/'),
         views.readers.tags,
         name='tags'
@@ -610,6 +605,11 @@ urlpatterns += (
         r'^(?P<space>\w+)/%s$' % _('ask/'),
         views.writers.ask,
         name='ask'
+    ),
+    url(
+        r'^(?P<space>\w+)/(?P<id>\d+)/',
+        views.readers.question,
+        name='question'
     ),
 )
 

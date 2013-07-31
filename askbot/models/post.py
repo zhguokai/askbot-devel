@@ -786,7 +786,10 @@ class Post(models.Model):
         #todo: do we need this, can't we just use is_approved()?
         return self.approved is False
 
-    def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
+    def get_absolute_url(self, 
+            space=None, no_slug = False,
+            question_post=None, thread=None
+        ):
         from askbot.utils.slug import slugify
         #todo: the url generation function is pretty bad -
         #the trailing slash is entered in three places here + in urls.py
@@ -798,22 +801,37 @@ class Post(models.Model):
             request_language = get_language()
             activate_language(self.thread.language_code)
 
+        if space is None:
+            space = self.thread.get_default_space()
+
         if self.is_answer():
             if not question_post:
                 question_post = self.thread._question_post()
+
+            url_kwargs = {
+                'id': question_post.id,
+                'space': space
+            }
+            base_url = urlresolvers.reverse('question', kwargs=url_kwargs)
+
             if no_slug:
                 url = u'%(base)s?answer=%(id)d#post-id-%(id)d' % {
-                    'base': urlresolvers.reverse('question', args=[question_post.id]),
+                    'base': base_url,
                     'id': self.id
                 }
             else:
                 url = u'%(base)s%(slug)s/?answer=%(id)d#post-id-%(id)d' % {
-                    'base': urlresolvers.reverse('question', args=[question_post.id]),
+                    'base': base_url,
                     'slug': django_urlquote(slugify(self.thread.title)),
                     'id': self.id
                 }
+
         elif self.is_question():
-            url = urlresolvers.reverse('question', args=[self.id])
+            url_kwargs = {
+                'id': self.id,
+                'space': space
+            }
+            url = urlresolvers.reverse('question', kwargs=url_kwargs)
             if thread:
                 url += django_urlquote(slugify(thread.title)) + '/'
             elif no_slug is False:

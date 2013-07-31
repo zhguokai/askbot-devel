@@ -89,8 +89,8 @@ class SearchState(object):
         return cls(space=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, user_logged_in=None)
 
     def __init__(
-        self, space, scope, sort, query,
-        tags, author, page, user_logged_in
+        self, space=None, scope='all', sort=None, query=None,
+        tags=None, author=None, page=1, user_logged_in=False
     ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
         self.space = space

@@ -345,7 +345,7 @@ def tags(request):#view showing a listing of available tags - plain list
         return render(request, 'tags.html', data)
 
 @csrf.csrf_protect
-def question(request, id):#refactor - long subroutine. display question body, answers and comments
+def question(request, space=None, id=None):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and
     all answers to it
     """
@@ -358,6 +358,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
     show_comment = form.cleaned_data['show_comment']
     show_page = form.cleaned_data['show_page']
     answer_sort_method = form.cleaned_data['answer_sort_method']
+
+    #todo: verify that space exists
 
     #load question and maybe refuse showing deleted question
     #if the question does not exist - try mapping to old questions
@@ -606,6 +608,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'question' : question_post,
         'thread': thread,
         'thread_is_moderated': thread.is_moderated(),
+        'search_state': SearchState(space=space),
         'user_is_thread_moderator': thread.has_moderator(request.user),
         'published_answer_ids': published_answer_ids,
         'answer' : answer_form,

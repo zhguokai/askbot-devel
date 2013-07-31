@@ -17,6 +17,7 @@ from django.utils.translation import get_language
 import askbot
 from askbot.conf import settings as askbot_settings
 from askbot import mail
+from askbot import spaces
 from askbot.mail import messages
 from askbot.models.tag import Tag, TagSynonym
 from askbot.models.tag import get_tags_by_names
@@ -683,6 +684,30 @@ class Thread(models.Model):
             return self.answer_count
         else:
             return self.get_answers(user).count()
+
+    def get_default_space(self):
+        """returns default space to which this thread belongs
+        corrently we emulate spaces with tags, but in the future
+        they will move into a special entity and 
+        probably each thread will have default space.
+        """
+        available_spaces = spaces.get_spaces()
+        tag_names = self.get_tag_names()
+        #1) find ovelapping
+        common_spaces = set(available_spaces) & set(tag_names)
+        num_in_common = len(common_spaces)
+        #2) if none return first of available
+        if num_in_common == 0:
+            return available_spaces[0]
+        #3) if one - just return it
+        elif num_in_common == 1:
+            return list(common_spaces)[0]
+        #4) otherwise find the first in the list
+        else:
+            for space in available_spaces:
+                if space in common_spaces:
+                    return space
+   
 
     def get_oldest_answer_id(self, user=None):
         """give oldest visible answer id for the user"""

@@ -36,6 +36,7 @@ from askbot import forms
 from askbot import models
 from askbot.models import signals
 from askbot.conf import settings as askbot_settings
+from askbot.search.state_manager import SearchState
 from askbot.utils import decorators
 from askbot.utils.forms import format_errors
 from askbot.utils.functions import diff_date
@@ -322,6 +323,7 @@ def ask(request, space=None):#view used to ask a new question
         'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
         'category_tree_data': askbot_settings.CATEGORY_TREE,
+        'search_state': SearchState(space=space),
         'tag_names': list()#need to keep context in sync with edit_question for tag editor
     }
     data.update(context.get_for_tag_editor())

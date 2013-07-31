@@ -11,7 +11,7 @@ def add_space(name):
         enabled_spaces = map(lambda v: v.strip(), spaces_string.split(','))
         if name not in enabled_spaces:
             enabled_spaces.append(name)
-            askbot_settings.update(', '.join(enabled_spaces))
+            askbot_settings.update('FORUM_SPACES', ', '.join(enabled_spaces))
 
 def get_default():
     """returns default space
