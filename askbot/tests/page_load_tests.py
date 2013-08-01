@@ -105,7 +105,7 @@ class PageLoadTestCase(AskbotTestCase):
         if hasattr(self.client, 'redirect_chain'):
             print 'redirect chain: %s' % ','.join(self.client.redirect_chain)
 
-        self.assertEqual(r.status_code, status_code, url)
+        self.assertEqual(r.status_code, status_code, 'Error in ' + url)
 
         if template and status_code != 302:
             if hasattr(r, 'template'):
@@ -185,7 +185,6 @@ class PageLoadTestCase(AskbotTestCase):
         response = self.client.get(reverse('api_get_questions'), query_data)
         response_data = simplejson.loads(response.content)
         self.assertEqual(len(response_data), 1)
-
 
     def test_ask_page_disallowed_anonymous(self):
         self.proto_test_ask_page(False, 302)
@@ -457,6 +456,7 @@ class PageLoadTestCase(AskbotTestCase):
         #user = User.objects.get(id=1)
         #somehow login this user
         #self.proto_test_non_user_urls()
+
 
     def proto_test_user_urls(self, status_code):
         user = models.User.objects.get(id=2)   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
@@ -759,7 +759,7 @@ class CommandViewTests(AskbotTestCase):
             user = self.reload_object(user)
             self.assertEqual(user.display_tag_filter_strategy, value)
 
-            
+
 class UserProfilePageTests(AskbotTestCase):
     def setUp(self):
         self.user = self.create_user('user')

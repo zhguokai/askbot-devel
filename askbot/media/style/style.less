@@ -32,10 +32,18 @@ hr {
     border-top: 1px dashed #ccccce;
 }
 
-input, select {
+input, select, textarea {
     vertical-align: middle;
     font-family: Trebuchet MS, "segoe ui", Helvetica, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
     margin-left:0px;
+    -webkit-appearance: none;
+    .rounded-corners(0);
+}
+input[type="radio"] {
+    -webkit-appearance: radio;
+}
+input[type="checkbox"] {
+    -webkit-appearance: checkbox;
 }
 select {
     width: 100%;
@@ -60,6 +68,9 @@ textarea,
 .wmd-container,
 .folded-editor {
     border: #cce6ec 3px solid;
+    height: 22px;
+    font-size: 13px;
+    padding: 0 5px;
 }
 
 iframe {
@@ -330,6 +341,7 @@ body.user-messages {
     height: 20px;
     padding-bottom:5px;
     white-space: nowrap;
+    font-size:16px;
 
     a {
         height: 35px;
@@ -337,7 +349,6 @@ body.user-messages {
         margin-left: 20px;
         text-decoration: underline;
         color:#d0e296;
-        font-size:16px;
     }
     
     a:first-child {
@@ -1030,11 +1041,11 @@ body.anon.ask-page .search-drop-menu {
         #ignoredTagInput,
         #subscribedTagInput,
         #ab-tag-search {
-            width:152px;
-            padding-left:5px;
-            border:#c9c9b5 1px solid;
-            height:25px;
-            line-height:25px;
+            width: 150px;
+            padding-left: 5px;
+            border: #c9c9b5 1px solid;
+            height: 25px;
+            line-height: 25px;
             font-size: 14px;
         }
         #ab-tag-search {
@@ -1138,11 +1149,14 @@ body.anon.ask-page .search-drop-menu {
 
 .question-instructions {
     background: #e9e9e1;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     -moz-border-radius: 5px;
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;
     .box-shadow(1px, 1px, 3px, #999);
-    padding: 7px 0;
+    padding: 7px 10px 1px 10px;
     margin-bottom: 10px;
     width: 100%;
 
@@ -1273,7 +1287,6 @@ body.anon.ask-page .search-drop-menu {
     font-weight:bold;
     font-size:20px;
     color:@section-title;
-    width:200px;
     float:left;
     margin-bottom:6px;
     padding-top: 6px;
@@ -2034,6 +2047,7 @@ ul#related-tags li {
 }
 .ask-page .folded-editor {
     border: none;
+    padding: 0;
     height: 0;
 }
 .folded-editor.unfolded {
@@ -2060,6 +2074,8 @@ ul#related-tags li {
         box-sizing: border-box;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
+        height: auto;
+        padding: 0;
         width: 723px;
         width: 100%;
     }
@@ -2371,16 +2387,17 @@ ul#related-tags li {
         }
     }
 
-    .post-controls{
-        font-size: 11px;
-        line-height: 12px;
-        min-width: 200px;
-        padding-left: 5px;
-        text-align:right;
+    .post-controls {
         clear: left;
         float: right;
-        margin-top:10px;
-        margin-bottom:8px;
+        font-size: 11px;
+        height: 18px;
+        line-height: 12px;
+        margin-top: 10px;
+        margin-bottom: 8px;
+        min-width: 200px;
+        padding-left: 5px;
+        text-align: right;
         
         a,
         span.dropdown-toggle {
@@ -2620,9 +2637,6 @@ ul#related-tags li {
         }
 
         button.submit {
-            height: 26px;
-            line-height: 26px;
-            padding: 0 8px;
             margin-right: 6px;
         }
         .counter {
@@ -3051,9 +3065,13 @@ ul#related-tags li {
     margin-bottom: 5px;
 }
 
-#email-input-fs,#local_login_buttons,#password-fs,#openid-fs{
-    margin-top:10px;
-    #id_email,#id_username,#id_password{
+#email-input-fs,
+#local_login_buttons,
+#password-fs,
+#openid-fs,
+#signup-form {
+    input[type="text"],
+    input[type="password"] {
         color: #525252;
         font-size: 12px;
         line-height: 25px;
@@ -3064,6 +3082,12 @@ ul#related-tags li {
     }
 }
 
+#email-input-fs,
+#local_login_buttons,
+#password-fs,
+#openid-fs {
+    margin-top:10px;
+}
 
 .openid-input {
     background: url(../images/openid.gif) no-repeat;
@@ -3718,50 +3742,23 @@ label.retag-error {
     float: left;
 }
 
-
-
-
-/* todo: make these more semantic */
-.user-action-1 {
-    font-weight: bold;
-    color: #333;
-}
-
-.user-action-2 {
-    font-weight: bold;
-    color: #CCC;
-}
-
-.user-action-3 {
-    color: #333;
-}
-
-.user-action-4 {
-    color: #333;
-}
-
-.user-action-5 {
-    color: darkred;
-}
-
-.user-action-6 {
-    color: darkred;
-}
-
-.user-action-7 {
-    color: #333;
-}
-
-.user-action-8 {
-    padding: 3px;
-    font-weight: bold;
-    background-color: #CCC;
-    color: #763333;
-}
-
-.revision-summary {
-    background-color: #FFFE9B;
-    padding: 2px;
+.user-activity {
+    margin-top: 12px;
+    width: 100%;
+    td {
+        padding: 3px 11px;
+        vertical-align: top;
+    }
+    .timestamp {
+        width: 80px;
+    }
+    .action-type {
+        width: 150px;
+        font-size: 13px;
+    }
+    .description {
+        width: auto;
+    }
 }
 
 .question-title-link a {
@@ -3770,37 +3767,6 @@ label.retag-error {
 }
 
 .answer-title-link a {
-    color: #333;
-}
-
-/* todo: make these more semantic */
-.post-type-1 a {
-    font-weight: bold;
-
-}
-
-.post-type-3 a {
-    font-weight: bold;
-
-}
-
-.post-type-5 a {
-    font-weight: bold;
-}
-
-.post-type-2 a {
-    color: #333;
-}
-
-.post-type-4 a {
-    color: #333;
-}
-
-.post-type-6 a {
-    color: #333;
-}
-
-.post-type-8 a {
     color: #333;
 }
 
@@ -4279,18 +4245,6 @@ a.edit {
     float: left;
 }
 
-/* language-specific fixes */
-body.lang-es {
-    #searchBar {
-        /* need special left padding */
-    }
-}
-body.anon.lang-es {
-    #searchBar {
-        /* need special left padding */
-    }
-}
-
 /* user groups */
 #user-groups {
     input[type="text"] {
@@ -4743,6 +4697,14 @@ td.setting-input {
         width: 100%;
         padding-right: 6px;
     }
+    .edit-question-page,
+    .edit-answer-page,
+    .openid-signin,
+    .meta {
+        #ContentLeft {
+            padding: 0 10px;
+        }
+    }
     .main-page h1,
     #askButton,
     #metaNav #navBadges,
@@ -5096,8 +5058,61 @@ td.setting-input {
     }
 }
 
+@media screen and (max-width: 480px) {
+    .openid-signin {
+        h1, h2 {
+            line-height: 1.1;
+            margin-bottom: 12px;
+        }
+    }
+
+    .openid-signin,
+    .meta,
+    .users-page,
+    .user-profile-edit-page,
+    .user-profile-page {
+    textarea,
+    input[type="text"]{
+        width: 100%;
+        }
+    }
+}
+
 @media screen and (max-width: 338px) {
     #scopeNav {
         display: none;
+    }
+    .ask-page,
+    .question-page,
+    .edit-question-page,
+    .edit-answer-page {
+        #id_post_author_username,
+        #id_post_author_email {
+            width: 100%;
+            margin: 6px 0;
+        }
+    }
+}
+
+/* language-specific fixes */
+body.lang-es {
+    #searchBar {
+        /* need special left padding */
+    }
+}
+body.anon.lang-es {
+    #searchBar {
+        /* need special left padding */
+    }
+}
+
+body.lang-zh {
+    .box .inputs {
+         #interestingTagInput,
+         #ignoredTagInput,
+         #subscribedTagInput,
+         #ab-tag-search {
+            width: 125px;
+         }
     }
 }

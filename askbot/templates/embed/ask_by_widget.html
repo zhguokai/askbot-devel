@@ -156,8 +156,7 @@
 {% block endjs %}
 <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
 {% if editor_type == 'markdown' %}
-    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    {% include "meta/markdown_javascript.html" %}
 {% else %}
     {% include "meta/tinymce_css.html" %}{# todo - maybe move to form media? #}
 {% endif %}

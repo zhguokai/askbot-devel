@@ -325,14 +325,14 @@ def extract_user_signature(text, reply_code):
     return signature or 'empty signature'
 
 
-def process_parts(parts, reply_code=None):
+def process_parts(parts, reply_code=None, from_address=None):
     """Uploads the attachments and parses out the
     body, if body is multipart.
     Links to attachments will be added to the body of the question.
     Returns ready to post body of the message and the list
     of uploaded files.
     """
-    body_markdown = ''
+    body_text = ''
     stored_files = list()
     attachments_markdown = ''
     for (part_type, content) in parts:
@@ -341,23 +341,30 @@ def process_parts(parts, reply_code=None):
             stored_files.append(stored_file)
             attachments_markdown += '\n\n' + markdown
         elif part_type == 'body':
-            body_markdown += '\n\n' + content.strip('\n\t ')
+            body_text += '\n\n' + content.strip('\n\t ')
         elif part_type == 'inline':
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
-            body_markdown += markdown
+            body_text += markdown
 
     #if the response separator is present -
     #split the body with it, and discard the "so and so wrote:" part
     if reply_code:
         #todo: maybe move this part out
-        signature = extract_user_signature(body_markdown, reply_code)
-        body_markdown = extract_reply(body_markdown)
+        signature = extract_user_signature(body_text, reply_code)
+        body_text = extract_reply(body_text)
     else:
         signature = None
 
-    body_markdown += attachments_markdown
-    return body_markdown.strip(), stored_files, signature
+    body_text += attachments_markdown
+
+    if from_address:
+        body_text = parsing.strip_trailing_sender_references(
+                                                        body_text,
+                                                        from_address
+                                                    )
+
+    return body_text.strip(), stored_files, signature
 
 
 def process_emailed_question(

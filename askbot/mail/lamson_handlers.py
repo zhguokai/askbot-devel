@@ -276,7 +276,7 @@ def PROCESS(
     #1) get actual email content
     #   todo: factor this out into the process_reply decorator
     reply_code = reply_address_object.address
-    body_text, stored_files, signature = mail.process_parts(parts, reply_code)
+    body_text, stored_files, signature = mail.process_parts(parts, reply_code, from_address)
 
     #2) process body text and email signature
     user = reply_address_object.user

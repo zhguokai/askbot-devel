@@ -45,10 +45,23 @@ hr {
   border-top: 1px dashed #ccccce;
 }
 input,
-select {
+select,
+textarea {
   vertical-align: middle;
   font-family: Trebuchet MS, "segoe ui", Helvetica, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
   margin-left: 0px;
+  -webkit-appearance: none;
+  border-radius: 0;
+  -ms-border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  -khtml-border-radius: 0;
+}
+input[type="radio"] {
+  -webkit-appearance: radio;
+}
+input[type="checkbox"] {
+  -webkit-appearance: checkbox;
 }
 select {
   width: 100%;
@@ -71,6 +84,9 @@ textarea,
 .wmd-container,
 .folded-editor {
   border: #cce6ec 3px solid;
+  height: 22px;
+  font-size: 13px;
+  padding: 0 5px;
 }
 iframe {
   border: none;
@@ -318,6 +334,7 @@ body.user-messages {
   height: 20px;
   padding-bottom: 5px;
   white-space: nowrap;
+  font-size: 16px;
 }
 #userToolsNav a {
   height: 35px;
@@ -325,7 +342,6 @@ body.user-messages {
   margin-left: 20px;
   text-decoration: underline;
   color: #d0e296;
-  font-size: 16px;
 }
 #userToolsNav a:first-child {
   margin-left: 0;
@@ -995,7 +1011,7 @@ body.anon.ask-page .search-drop-menu {
 .box .inputs #ignoredTagInput,
 .box .inputs #subscribedTagInput,
 .box .inputs #ab-tag-search {
-  width: 152px;
+  width: 150px;
   padding-left: 5px;
   border: #c9c9b5 1px solid;
   height: 25px;
@@ -1089,13 +1105,16 @@ body.anon.ask-page .search-drop-menu {
 /* tips and markdown help are widgets for ask template */
 .question-instructions {
   background: #e9e9e1;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   -moz-border-radius: 5px;
   -khtml-border-radius: 5px;
   -webkit-border-radius: 5px;
   -webkit-box-shadow: 1px 1px 3px #999999;
   -moz-box-shadow: 1px 1px 3px #999999;
   box-shadow: 1px 1px 3px #999999;
-  padding: 7px 0;
+  padding: 7px 10px 1px 10px;
   margin-bottom: 10px;
   width: 100%;
 }
@@ -1213,7 +1232,6 @@ body.anon.ask-page .search-drop-menu {
   font-weight: bold;
   font-size: 20px;
   color: #7ea9b3;
-  width: 200px;
   float: left;
   margin-bottom: 6px;
   padding-top: 6px;
@@ -1923,6 +1941,7 @@ ul#related-tags li {
 }
 .ask-page .folded-editor {
   border: none;
+  padding: 0;
   height: 0;
 }
 .folded-editor.unfolded {
@@ -1945,6 +1964,8 @@ ul#related-tags li {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  height: auto;
+  padding: 0;
   width: 723px;
   width: 100%;
 }
@@ -2234,15 +2255,16 @@ ul#related-tags li {
   font-size: 10px;
 }
 .question-page .post-controls {
+  clear: left;
+  float: right;
   font-size: 11px;
+  height: 18px;
   line-height: 12px;
+  margin-top: 10px;
+  margin-bottom: 8px;
   min-width: 200px;
   padding-left: 5px;
   text-align: right;
-  clear: left;
-  float: right;
-  margin-top: 10px;
-  margin-bottom: 8px;
 }
 .question-page .post-controls a,
 .question-page .post-controls span.dropdown-toggle {
@@ -2497,9 +2519,6 @@ ul#related-tags li {
   vertical-align: top;
 }
 .question-page .comments button.submit {
-  height: 26px;
-  line-height: 26px;
-  padding: 0 8px;
   margin-right: 6px;
 }
 .question-page .comments .counter {
@@ -2915,24 +2934,16 @@ ul#related-tags li {
 .openid-signin form {
   margin-bottom: 5px;
 }
-#email-input-fs,
-#local_login_buttons,
-#password-fs,
-#openid-fs {
-  margin-top: 10px;
-}
-#email-input-fs #id_email,
-#local_login_buttons #id_email,
-#password-fs #id_email,
-#openid-fs #id_email,
-#email-input-fs #id_username,
-#local_login_buttons #id_username,
-#password-fs #id_username,
-#openid-fs #id_username,
-#email-input-fs #id_password,
-#local_login_buttons #id_password,
-#password-fs #id_password,
-#openid-fs #id_password {
+#email-input-fs input[type="text"],
+#local_login_buttons input[type="text"],
+#password-fs input[type="text"],
+#openid-fs input[type="text"],
+#signup-form input[type="text"],
+#email-input-fs input[type="password"],
+#local_login_buttons input[type="password"],
+#password-fs input[type="password"],
+#openid-fs input[type="password"],
+#signup-form input[type="password"] {
   color: #525252;
   font-size: 12px;
   line-height: 25px;
@@ -2940,6 +2951,12 @@ ul#related-tags li {
   margin: 0px;
   padding: 0 5px;
   width: 200px;
+}
+#email-input-fs,
+#local_login_buttons,
+#password-fs,
+#openid-fs {
+  margin-top: 10px;
 }
 .openid-input {
   background: url(../images/openid.gif) no-repeat;
@@ -3529,67 +3546,29 @@ label.retag-error {
 .narrow .tags {
   float: left;
 }
-/* todo: make these more semantic */
-.user-action-1 {
-  font-weight: bold;
-  color: #333;
+.user-activity {
+  margin-top: 12px;
+  width: 100%;
 }
-.user-action-2 {
-  font-weight: bold;
-  color: #CCC;
+.user-activity td {
+  padding: 3px 11px;
+  vertical-align: top;
 }
-.user-action-3 {
-  color: #333;
+.user-activity .timestamp {
+  width: 80px;
 }
-.user-action-4 {
-  color: #333;
+.user-activity .action-type {
+  width: 150px;
+  font-size: 13px;
 }
-.user-action-5 {
-  color: darkred;
-}
-.user-action-6 {
-  color: darkred;
-}
-.user-action-7 {
-  color: #333;
-}
-.user-action-8 {
-  padding: 3px;
-  font-weight: bold;
-  background-color: #CCC;
-  color: #763333;
-}
-.revision-summary {
-  background-color: #FFFE9B;
-  padding: 2px;
+.user-activity .description {
+  width: auto;
 }
 .question-title-link a {
   font-weight: bold;
   color: #0077CC;
 }
 .answer-title-link a {
-  color: #333;
-}
-/* todo: make these more semantic */
-.post-type-1 a {
-  font-weight: bold;
-}
-.post-type-3 a {
-  font-weight: bold;
-}
-.post-type-5 a {
-  font-weight: bold;
-}
-.post-type-2 a {
-  color: #333;
-}
-.post-type-4 a {
-  color: #333;
-}
-.post-type-6 a {
-  color: #333;
-}
-.post-type-8 a {
   color: #333;
 }
 .hilite {
@@ -4091,15 +4070,6 @@ li.L9 {
 #leading-sidebar {
   float: left;
 }
-/* language-specific fixes */
-body.lang-es #searchBar {
-  /* need special left padding */
-
-}
-body.anon.lang-es #searchBar {
-  /* need special left padding */
-
-}
 /* user groups */
 #user-groups input[type="text"] {
   height: 21px;
@@ -4511,6 +4481,12 @@ td.setting-input textarea {
     width: 100%;
     padding-right: 6px;
   }
+  .edit-question-page #ContentLeft,
+  .edit-answer-page #ContentLeft,
+  .openid-signin #ContentLeft,
+  .meta #ContentLeft {
+    padding: 0 10px;
+  }
   .main-page h1,
   #askButton,
   #metaNav #navBadges,
@@ -4895,8 +4871,53 @@ td.setting-input textarea {
 .tag-subscriptions ul.tags li {
   margin: 2px 5px;
 }
+@media screen and (max-width: 480px) {
+  .openid-signin h1,
+  .openid-signin h2 {
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .openid-signin textarea,
+  .meta textarea,
+  .users-page textarea,
+  .user-profile-edit-page textarea,
+  .user-profile-page textarea,
+  .openid-signin input[type="text"],
+  .meta input[type="text"],
+  .users-page input[type="text"],
+  .user-profile-edit-page input[type="text"],
+  .user-profile-page input[type="text"] {
+    width: 100%;
+  }
+}
 @media screen and (max-width: 338px) {
   #scopeNav {
     display: none;
   }
+  .ask-page #id_post_author_username,
+  .question-page #id_post_author_username,
+  .edit-question-page #id_post_author_username,
+  .edit-answer-page #id_post_author_username,
+  .ask-page #id_post_author_email,
+  .question-page #id_post_author_email,
+  .edit-question-page #id_post_author_email,
+  .edit-answer-page #id_post_author_email {
+    width: 100%;
+    margin: 6px 0;
+  }
+}
+/* language-specific fixes */
+body.lang-es #searchBar {
+  /* need special left padding */
+
+}
+body.anon.lang-es #searchBar {
+  /* need special left padding */
+
+}
+body.lang-zh .box .inputs #interestingTagInput,
+body.lang-zh .box .inputs #ignoredTagInput,
+body.lang-zh .box .inputs #subscribedTagInput,
+body.lang-zh .box .inputs #ab-tag-search {
+  width: 125px;
 }

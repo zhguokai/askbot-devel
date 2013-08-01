@@ -91,7 +91,7 @@ import urllib
 from askbot import forms as askbot_forms
 from askbot.deps.django_authopenid import util
 from askbot.deps.django_authopenid import decorators
-from askbot.deps.django_authopenid.models import UserAssociation
+from askbot.deps.django_authopenid.models import UserAssociation, UserEmailVerifier
 from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
@@ -415,13 +415,11 @@ def complete_oauth_signin(request):
 
     except Exception, e:
         logging.critical(e)
-        #message = _('Unfortunately, there was some problem when '
-        #        'connecting to %(provider)s, please try again '
-        #        'or use another provider'
-        #    ) % {'provider': oauth_provider_name}
-        #todo: populate
-        #request.session['modal_menu']
-        #context = {'title': _('OAuth login falied'), 'message': message}
+        msg = _('Sorry, there was some problem '
+                'connecting to the login provider, please try again '
+                'or use another login method'
+            )
+        request.user.message_set.create(message = msg)
         return HttpResponseRedirect(next_url)
 
 
@@ -1031,6 +1029,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             close_modal_menu(request)
         else:
             #todo: broken branch
+            raise NotImplementedError()
             request.session['username'] = username
             request.session['email'] = email
             key = generate_random_key()
@@ -1068,14 +1067,17 @@ def verify_email_and_register(request):
         try:
             #we get here with post if button is pushed
             #or with "get" if emailed link is clicked
-            expected_code = request.session['validation_code']
-            assert(presented_code == expected_code)
-            #create an account!
-            username = request.session['username']
-            email = request.session['email']
-            password = request.session.get('password', None)
-            user_identifier = request.session.get('user_identifier', None)
-            login_provider_name = request.session.get('login_provider_name', None)
+            email_verifier = UserEmailVerifier.objects.get(key=presented_code)
+            #verifies that the code has not been used already
+            assert(email_verifier.verified == False)
+            assert(email_verifier.has_expired() == False)
+
+            username = email_verifier.value['username']
+            email = email_verifier.value['email']
+            password = email_verifier.value.get('password', None)
+            user_identifier = email_verifier.value.get('user_identifier', None)
+            login_provider_name = email_verifier.value.get('login_provider_name', None)
+
             if password:
                 user = create_authenticated_user_account(
                     username=username,
@@ -1093,12 +1095,15 @@ def verify_email_and_register(request):
                 raise NotImplementedError()
 
             login(request, user)
+            email_verifier.verified = True
+            email_verifier.save()
             cleanup_post_register_session(request)
+
             return HttpResponseRedirect(get_next_url(request))
         except Exception, e:
             message = _(
                 'Sorry, registration failed. '
-                'Please ask the site administrator for help.'
+                'The token can be already used or has expired. Please try again'
             )
             request.user.message_set.create(message=message)
             return HttpResponseRedirect(reverse('index'))

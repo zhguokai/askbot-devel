@@ -48,24 +48,30 @@ class ThreadQuerySet(models.query.QuerySet):
         todo: possibly add tags
         todo: implement full text search on relevant fields
         """
-        db_engine_name = askbot.get_database_engine_name()
-        filter_parameters = {'deleted': False}
-        if 'postgresql_psycopg2' in db_engine_name:
-            from askbot.search import postgresql
-            return postgresql.run_title_search(
-                                    self, search_query
-                                ).filter(
-                                    **filter_parameters
-                                ).order_by('-relevance')
-        elif 'mysql' in db_engine_name and mysql.supports_full_text_search():
-            filter_parameters['title__search'] = search_query
+
+        if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
+            from askbot.search.haystack.searchquery import AskbotSearchQuerySet
+            hs_qs = AskbotSearchQuerySet().filter(content=search_query).models(self.model)
+            return hs_qs.get_django_queryset()
         else:
-            filter_parameters['title__icontains'] = search_query
+            db_engine_name = askbot.get_database_engine_name()
+            filter_parameters = {'deleted': False}
+            if 'postgresql_psycopg2' in db_engine_name:
+                from askbot.search import postgresql
+                return postgresql.run_title_search(
+                                        self, search_query
+                                    ).filter(
+                                        **filter_parameters
+                                    ).order_by('-relevance')
+            elif 'mysql' in db_engine_name and mysql.supports_full_text_search():
+                filter_parameters['title__search'] = search_query
+            else:
+                filter_parameters['title__icontains'] = search_query
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-            filter_parameters['language_code'] = get_language()
+            if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+                filter_parameters['language_code'] = get_language()
 
-        return self.filter(**filter_parameters)
+            return self.filter(**filter_parameters)
 
 
 class ThreadManager(BaseQuerySetManager):
@@ -148,10 +154,10 @@ class ThreadManager(BaseQuerySetManager):
             added_at = added_at,
             wiki = wiki,
             is_anonymous = is_anonymous,
-            #html field is denormalized in .save() call
             text = text,
-            #summary field is denormalized in .save() call
+            language_code=language
         )
+        #html and summary fields are denormalized in .save() call
         if question.wiki:
             #DATED COMMENT
             #todo: this is confusing - last_edited_at field
@@ -207,7 +213,7 @@ class ThreadManager(BaseQuerySetManager):
         todo: move to query set
         """
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
-            from askbot.search.haystack import AskbotSearchQuerySet
+            from askbot.search.haystack.searchquery import AskbotSearchQuerySet
             hs_qs = AskbotSearchQuerySet().filter(content=search_query)
             return hs_qs.get_django_queryset()
         else:
@@ -912,10 +918,12 @@ class Thread(models.Model):
         for sort_method in const.ANSWER_SORT_METHODS:
             cache.cache.delete(self.get_post_data_cache_key(sort_method))
 
-    def invalidate_cached_data(self):
+    def invalidate_cached_data(self, lazy=False):
         self.invalidate_cached_post_data()
-        #self.invalidate_cached_thread_content_fragment()
-        self.update_summary_html()
+        if lazy:
+            self.invalidate_cached_thread_content_fragment()
+        else:
+            self.update_summary_html()
 
     def get_cached_post_data(self, user = None, sort_method = 'votes'):
         """returns cached post data, as calculated by

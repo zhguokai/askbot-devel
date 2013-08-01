@@ -1,5 +1,5 @@
 {% import "macros.html" as macros %}
-<form id="fmask" action="" method="post" >{% csrf_token %}
+<form id="fmask" action="{% url "ask" %}" method="post" >{% csrf_token %}
     <div class="form-item ask-form-bar">
         <label for="id_title">
             {{ form.title.help_text }}

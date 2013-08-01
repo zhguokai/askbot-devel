@@ -638,6 +638,7 @@ class Post(models.Model):
         #this is likely to be temporary - we add
         #vip groups to the list behind the scenes.
         groups = list(groups)
+        #add moderator groups to the post implicitly
         vips = Group.objects.filter(is_vip=True)
         groups.extend(vips)
         #todo: use bulk-creation
@@ -2066,7 +2067,7 @@ class PostRevision(models.Model):
     author = models.ForeignKey('auth.User', related_name='%(class)ss')
     revised_at = models.DateTimeField()
     summary = models.CharField(max_length=300, blank=True)
-    text = models.TextField()
+    text = models.TextField(blank=True)
 
     approved = models.BooleanField(default=False, db_index=True)
     approved_by = models.ForeignKey(User, null = True, blank = True)

@@ -1125,6 +1125,8 @@ class AbsolutizeUrlsInEmailsTests(utils.AskbotTestCase):
         links = soup.find_all('a')
         url_bits = {}
         for link in links:
+            if link.attrs['href'].startswith('mailto:'):
+                continue
             url_bits[link.attrs['href'][:4]] = 1
 
         self.assertEqual(len(url_bits.keys()), 1)

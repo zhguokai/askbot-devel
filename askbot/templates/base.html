@@ -37,6 +37,7 @@
         {% if 'modal_menu' in request.session %}
             {% include "widgets/modal_menu.html" %}
         {% endif %}
+        {% include "widgets/system_messages.html" %}
         {% include "debug_header.html" %}
         {% if settings.MULTILINGUAL %}
             <div class="content-wrapper">

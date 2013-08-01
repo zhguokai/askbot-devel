@@ -1524,6 +1524,7 @@ var ModalDialog = function(customOptions) {
     askbot['vars'] = {} || askbot['vars'];
     askbot['vars']['modalDialog'] = this;
     this._headerEnabled = true;
+    this._className = undefined;
 };
 inherits(ModalDialog, WrappedElement);
 
@@ -1616,6 +1617,9 @@ ModalDialog.prototype.createDom = function() {
     var element = this._element;
 
     element.addClass('modal');
+    if (this._className) {
+        element.addClass(this._className);
+    }
 
     //1) create header
     if (this._headerEnabled) {
@@ -1679,6 +1683,7 @@ ModalDialog.prototype.createDom = function() {
  */
 var FileUploadDialog = function() {
     ModalDialog.call(this);
+    this._className = 'file-upload-dialog';
     this._post_upload_handler = undefined;
     this._fileType = 'image';
     this._headerEnabled = false;
@@ -2478,28 +2483,30 @@ TwoStateToggle.prototype.decorate = function(element){
         }
     }
 
-    //set mouseover handler
-    var me = this;
-    element.mouseover(function(){
-        var is_on = me.isOn();
-        if (is_on){
-            me.setState('off-prompt');
-        } else {
-            me.setState('on-prompt');
-        }
-        //element.css('background-color', 'red');
-        return false;
-    });
-    element.mouseout(function(){
-        var is_on = me.isOn();
-        if (is_on){
-            me.setState('on-state');
-        } else {
-            me.setState('off-state');
-        }
-        //element.css('background-color', 'white');
-        return false;
-    });
+    //set mouseover handler only for non-checkbox version
+    if (this.isCheckBox() === false) {
+        var me = this;
+        element.mouseover(function(){
+            var is_on = me.isOn();
+            if (is_on){
+                me.setState('off-prompt');
+            } else {
+                me.setState('on-prompt');
+            }
+            //element.css('background-color', 'red');
+            return false;
+        });
+        element.mouseout(function(){
+            var is_on = me.isOn();
+            if (is_on){
+                me.setState('on-state');
+            } else {
+                me.setState('off-state');
+            }
+            //element.css('background-color', 'white');
+            return false;
+        });
+    }
 
     setupButtonEventHandlers(element, this.getHandler());
 };
