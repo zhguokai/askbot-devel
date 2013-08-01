@@ -30,51 +30,16 @@ settings.register(
     )
 )
 
-LANGUAGE_CHOICES = (
-            ('en', _("English")),
-            ('es', _("Spanish")),
-            ('ca', _("Catalan")),
-            ('de', _("German")),
-            ('el', _("Greek")),
-            ('fi', _("Finnish")),
-            ('fr', _("French")),
-            ('hi', _("Hindi")),
-            ('hu', _("Hungarian")),
-            ('it', _("Italian")),
-            ('ja', _("Japanese")),
-            ('ko', _("Korean")),
-            ('pt', _("Portuguese")),
-            ('pt_BR', _("Brazilian Portuguese")),
-            ('ro', _("Romanian")),
-            ('ru', _("Russian")),
-            ('sr', _("Serbian")),
-            ('tr', _("Turkish")),
-            ('vi', _("Vietnamese")),
-            ('zh_CN', _("Chinese")),
-            ('zh_TW', _("Chinese (Taiwan)")),
+if not getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+    settings.register(
+        values.StringValue(
+            GENERAL_SKIN_SETTINGS,
+            'ASKBOT_LANGUAGE',
+            default = django_settings.LANGUAGE_CODE,
+            choices =  django_settings.LANGUAGES,
+            description = _('Select Language'),
         )
-
-def cleaned_language_code(language_code=django_settings.LANGUAGE_CODE):
-    '''makes shure that settings.LANGUAGE_CODE is on
-    the dictionary'''
-    if language_code in [code for code, name in LANGUAGE_CHOICES]:
-        return language_code
-    elif '_' in language_code:
-        lang, country = django_settings.LANGUAGE_CODE.split('_')
-        return cleaned_language_code(lang)
-    else:
-        #english as a default fallback
-        return 'en'
-
-settings.register(
-    values.StringValue(
-        GENERAL_SKIN_SETTINGS,
-        'ASKBOT_LANGUAGE',
-        default = cleaned_language_code(),
-        choices =  LANGUAGE_CHOICES,
-        description = _('Select Language'),
     )
-)
 
 settings.register(
     values.BooleanValue(
