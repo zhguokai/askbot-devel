@@ -4616,6 +4616,14 @@ td.setting-input {
         width: 100%;
         padding-right: 6px;
     }
+    .edit-question-page,
+    .edit-answer-page,
+    .openid-signin,
+    .meta {
+        #ContentLeft {
+            padding: 0 10px;
+        }
+    }
     .main-page h1,
     #askButton,
     #metaNav #navBadges,
@@ -4752,6 +4760,26 @@ td.setting-input {
     }
     .short-summary {
         width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .openid-signin {
+        h1, h2 {
+            line-height: 1.1;
+            margin-bottom: 12px;
+        }
+    }
+
+    .openid-signin,
+    .meta,
+    .users-page,
+    .user-profile-edit-page,
+    .user-profile-page {
+    textarea,
+    input[type="text"]{
+        width: 100%;
+        }
     }
 }
 

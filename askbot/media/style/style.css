@@ -4425,6 +4425,12 @@ td.setting-input textarea {
     width: 100%;
     padding-right: 6px;
   }
+  .edit-question-page #ContentLeft,
+  .edit-answer-page #ContentLeft,
+  .openid-signin #ContentLeft,
+  .meta #ContentLeft {
+    padding: 0 10px;
+  }
   .main-page h1,
   #askButton,
   #metaNav #navBadges,
@@ -4553,6 +4559,25 @@ td.setting-input textarea {
     margin: 0 8px 0 52px;
   }
   .short-summary {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 480px) {
+  .openid-signin h1,
+  .openid-signin h2 {
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .openid-signin textarea,
+  .meta textarea,
+  .users-page textarea,
+  .user-profile-edit-page textarea,
+  .user-profile-page textarea,
+  .openid-signin input[type="text"],
+  .meta input[type="text"],
+  .users-page input[type="text"],
+  .user-profile-edit-page input[type="text"],
+  .user-profile-page input[type="text"] {
     width: 100%;
   }
 }
