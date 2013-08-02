@@ -60,7 +60,7 @@ def get_parser():
     return Markdown(
                 html4tags=True,
                 extras=extras,
-                link_patterns = link_patterns
+                link_patterns=link_patterns
             )
 
 
