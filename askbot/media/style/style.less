@@ -4811,13 +4811,29 @@ body.anon.lang-es {
     }
 }
 
-body.lang-zh {
+body.lang-zh,
+body.lang-zh_CN,
+body.lang-zh_TW {
     .box .inputs {
          #interestingTagInput,
          #ignoredTagInput,
          #subscribedTagInput,
          #ab-tag-search {
-            width: 125px;
+            width: 142px;
          }
+    }
+    button,
+    input[type="submit"],
+    input[type="button"],
+    input[type="reset"],
+    .button {
+        line-height: 24px;
+    }
+    .box a.followed,
+    .box a.follow {
+        line-height: 34px !important;
+    }
+    &.question-page a.submit {
+        line-height: 30px !important;
     }
 }
