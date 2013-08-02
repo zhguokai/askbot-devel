@@ -1,75 +1,76 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: askbot\n"
+"Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-07-13 19:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/askbot/language/zh_TW/)\n"
+"PO-Revision-Date: 2012-04-21 20:38+0800\n"
+"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.6\n"
 
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr ""
+msgstr "您確定要移除您的 %s 登入嗎？"
 
 #: media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "請加入一個或多個登入方法。"
 
 #: media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr ""
+msgstr "您沒有任何可以立刻登入的方法，請底下方任一個圖示來加入登入方法。"
 
 #: media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
-msgstr ""
+msgstr "密碼不相符"
 
 #: media/jquery-openid/jquery.openid.js:162
 msgid "Show/change current login methods"
-msgstr ""
+msgstr "顯示或變更目前的登入方法"
 
 #: media/jquery-openid/jquery.openid.js:227
 #, c-format
 msgid "Please enter your %s, then proceed"
-msgstr ""
+msgstr "請輸入您的 %s，接著繼續"
 
 #: media/jquery-openid/jquery.openid.js:229
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr ""
+msgstr "連接您的 %(provider_name)s 帳號至 %(site)s"
 
 #: media/jquery-openid/jquery.openid.js:323
 #, c-format
 msgid "Change your %s password"
-msgstr ""
+msgstr "變更您的 %s 密碼"
 
 #: media/jquery-openid/jquery.openid.js:324
 msgid "Change password"
-msgstr ""
+msgstr "變更密碼"
 
 #: media/jquery-openid/jquery.openid.js:327
 #, c-format
 msgid "Create a password for %s"
-msgstr ""
+msgstr "變更 %s 的密碼"
 
 #: media/jquery-openid/jquery.openid.js:328
 msgid "Create password"
-msgstr ""
+msgstr "建立密碼"
 
 #: media/jquery-openid/jquery.openid.js:344
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "建立有密碼保護的帳號"
 
 #: media/js/group_messaging.js:102 media/js/group_messaging.js.c:293
 msgid "required"
@@ -86,7 +87,7 @@ msgstr ""
 #: media/js/group_messaging.js:164 media/js/post.js:1809
 #: media/js/post.js.c:3081 media/js/post.js.c:4598 media/js/user.js:888
 msgid "cancel"
-msgstr ""
+msgstr "取消"
 
 #: media/js/group_messaging.js:227
 msgid "Reply"
@@ -128,7 +129,7 @@ msgstr ""
 
 #: media/js/post.js:28
 msgid "loading..."
-msgstr "讀取中..."
+msgstr "正載入..."
 
 #: media/js/post.js:100
 msgid "must be shorter than %(max_chars)s character"
@@ -137,7 +138,7 @@ msgstr[0] ""
 
 #: media/js/post.js:154 media/js/post.js.c:1269
 msgid "tags cannot be empty"
-msgstr ""
+msgstr "標籤不能為空白"
 
 #: media/js/post.js:160
 msgid "details are required"
@@ -161,13 +162,13 @@ msgstr[0] ""
 
 #: media/js/post.js:193
 msgid "content cannot be empty"
-msgstr ""
+msgstr "內容不能為空白"
 
 #: media/js/post.js:196
-#, c-format
+#, fuzzy, c-format
 msgid "answer must be > %s character"
 msgid_plural "answer must be > %s characters"
-msgstr[0] ""
+msgstr[0] "還可輸入%s個字元"
 
 #: media/js/post.js:253
 msgid "Back to the question"
@@ -179,11 +180,11 @@ msgstr ""
 
 #: media/js/post.js:548
 msgid "insufficient privilege"
-msgstr "權限不足"
+msgstr "權力不足"
 
 #: media/js/post.js:549
 msgid "cannot pick own answer as best"
-msgstr "不能蔽掃自珍"
+msgstr "不能把自己的答案標為最佳解"
 
 #: media/js/post.js:552 media/js/post.js.c:1416
 msgid "please login"
@@ -191,27 +192,28 @@ msgstr "請先登錄"
 
 #: media/js/post.js:554
 msgid "anonymous users cannot follow questions"
-msgstr ""
+msgstr "匿名使用者無法跟隨問題"
 
 #: media/js/post.js:555
 msgid "anonymous users cannot subscribe to questions"
-msgstr ""
+msgstr "匿名使用者無法訂閱問題"
 
 #: media/js/post.js:556 media/js/post.js.c:1426
 msgid "anonymous users cannot vote"
-msgstr ""
+msgstr "匿名使用者無法投票"
 
 #: media/js/post.js:558
 msgid "please confirm offensive"
-msgstr "確定要歸類該帖為廣告、人身攻擊、惡意言論嗎？"
+msgstr "請確定是否為惡意言論？"
 
 #: media/js/post.js:559
+#, fuzzy
 msgid "please confirm removal of offensive flag"
-msgstr ""
+msgstr "請確定是否為惡意言論？"
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
-msgstr "匿名用戶不能操作"
+msgstr "匿名使用者無法標記惡意文章"
 
 #: media/js/post.js:561
 msgid "confirm delete"
@@ -219,45 +221,46 @@ msgstr "確定刪除"
 
 #: media/js/post.js:562
 msgid "anonymous users cannot delete/undelete"
-msgstr "匿名用戶不能刪除或恢復帖子"
+msgstr "匿名使用者不能刪除或取消刪除"
 
 #: media/js/post.js:563
 msgid "post recovered"
-msgstr "操作成功！該帖子已被恢複。"
+msgstr "文章已復原"
 
 #: media/js/post.js:564
 msgid "post deleted"
-msgstr "操作成功！該帖子已刪除。"
+msgstr "文章已刪除"
 
 #: media/js/post.js:831
 msgid "Follow"
-msgstr ""
+msgstr "跟隨"
 
 #: media/js/post.js:840 media/js/post.js.c:849
 #, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
-msgstr[0] ""
+msgstr[0] "%s 位跟隨者"
 
 #: media/js/post.js:845
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr ""
+msgstr "<div>跟隨</div><div class=\"unfollow\">不跟隨</div>"
 
 #: media/js/post.js:901
 msgid "remove flag"
 msgstr ""
 
 #: media/js/post.js:935 media/js/post.js.c:964
+#, fuzzy
 msgid "flag offensive"
-msgstr ""
+msgstr "請確定是否為惡意言論？"
 
 #: media/js/post.js:990 media/js/post.js.c:1497
 msgid "undelete"
-msgstr ""
+msgstr "取消刪除"
 
 #: media/js/post.js:995 media/js/post.js.c:1501
 msgid "delete"
-msgstr ""
+msgstr "刪除"
 
 #: media/js/post.js:1218 media/js/post.js.c:1445
 msgid "sorry, something is not right here"
@@ -265,34 +268,37 @@ msgstr ""
 
 #: media/js/post.js:1665
 msgid "add comment"
-msgstr "添加評論"
+msgstr "添加評註"
 
+# 75%
+# 100%
 #: media/js/post.js:1671
 msgid "save comment"
-msgstr ""
+msgstr "儲存評註"
 
 #: media/js/post.js:1711
-#, c-format
+#, fuzzy, c-format
 msgid "enter at least %s characters"
-msgstr ""
+msgstr "還可輸入%s個字元"
 
 #: media/js/post.js:1713
-#, c-format
+#, fuzzy, c-format
 msgid "enter at least %s more characters"
-msgstr ""
+msgstr "還可輸入%s個字元"
 
 #: media/js/post.js:1723
 #, c-format
 msgid "%s characters left"
-msgstr ""
+msgstr "還剩%s個字元"
 
 #: media/js/post.js:1823
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
 #: media/js/post.js:1855
+#, fuzzy
 msgid "Are you sure you don't want to post this comment?"
-msgstr ""
+msgstr "您確定要移除您的 %s 登入嗎？"
 
 #: media/js/post.js:1890 media/js/utils.js:3360 media/js/utils.js.c:3515
 msgid "just now"
@@ -300,11 +306,11 @@ msgstr ""
 
 #: media/js/post.js:1956
 msgid "delete this comment"
-msgstr ""
+msgstr "刪除此評註"
 
 #: media/js/post.js:2271
 msgid "confirm delete comment"
-msgstr ""
+msgstr "確認刪除評註"
 
 #: media/js/post.js:2409
 msgid "please sign in or register to post comments"
@@ -312,7 +318,7 @@ msgstr ""
 
 #: media/js/post.js:2560
 msgid "Please enter question title (>10 characters)"
-msgstr ""
+msgstr "請輸入問題標題 (>10 個字元)"
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
@@ -327,8 +333,9 @@ msgid "Enter the logo url or upload an image"
 msgstr ""
 
 #: media/js/post.js:3225
+#, fuzzy
 msgid "Do you really want to remove the image?"
-msgstr ""
+msgstr "您確定要移除您的 %s 登入嗎？"
 
 #: media/js/post.js:3341
 msgid "change logo"
@@ -340,7 +347,8 @@ msgstr ""
 
 #: media/js/post.js:3444
 #, c-format
-msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
+msgid ""
+"tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr ""
 
 #: media/js/post.js:3453
@@ -355,11 +363,12 @@ msgstr ""
 
 #: media/js/post.js:3888 media/js/utils.js:881
 msgid "edit"
-msgstr ""
+msgstr "編輯"
 
 #: media/js/post.js:3975
+#, fuzzy
 msgid "category name cannot be empty"
-msgstr ""
+msgstr "內容不能為空白"
 
 #: media/js/post.js:4011
 msgid "already exists at the current level!"
@@ -374,8 +383,9 @@ msgid "save tags"
 msgstr ""
 
 #: media/js/post.js:4689 media/js/post.js.c:4723
+#, fuzzy
 msgid "User name:"
-msgstr ""
+msgstr "檔案名稱"
 
 #: media/js/post.js:4710
 msgid "Group name:"
@@ -391,26 +401,27 @@ msgstr ""
 
 #: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
-msgstr ""
+msgstr "標記 \"<span></span>\" 符合："
 
 #: media/js/tag_selector.js:84
 #, c-format
 msgid "and %s more, not shown..."
-msgstr ""
+msgstr "與 %s 項其他，不顯示..."
 
 #: media/js/user.js:15
 msgid "Please select at least one item"
-msgstr ""
+msgstr "請至少選取一個項目"
 
 #: media/js/user.js:59
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] ""
+msgstr[0] "是否要刪除這些通知？"
 
 #: media/js/user.js:66
+#, fuzzy
 msgid "Close this entry?"
 msgid_plural "Close these entries?"
-msgstr[0] ""
+msgstr[0] "刪除此評註"
 
 #: media/js/user.js:74
 msgid "Remove all flags and approve this entry?"
@@ -418,12 +429,14 @@ msgid_plural "Remove all flags and approve these entries?"
 msgstr[0] ""
 
 #: media/js/user.js:223
+#, fuzzy
 msgid "Post deleted"
-msgstr ""
+msgstr "文章已刪除"
 
 #: media/js/user.js:225
+#, fuzzy
 msgid "Post approved"
-msgstr ""
+msgstr "文章已復原"
 
 #: media/js/user.js:246
 msgid "Accept"
@@ -442,8 +455,9 @@ msgid "Looks there are some things to fix:"
 msgstr ""
 
 #: media/js/user.js:443
+#, fuzzy
 msgid "Please provide description."
-msgstr ""
+msgstr "影像描述"
 
 #: media/js/user.js:446
 msgid "Please provide details."
@@ -459,22 +473,22 @@ msgstr ""
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr ""
+msgstr "請<a href=\"%(signin_url)s\">登入</a>才能跟隨 %(username)s"
 
 #: media/js/user.js:740
 #, c-format
 msgid "unfollow %s"
-msgstr ""
+msgstr "不跟隨 %s"
 
 #: media/js/user.js:743
 #, c-format
 msgid "following %s"
-msgstr ""
+msgstr "正跟隨 %s"
 
 #: media/js/user.js:749
 #, c-format
 msgid "follow %s"
-msgstr ""
+msgstr "跟隨 %s"
 
 #: media/js/user.js:883
 msgid "add group"
@@ -490,11 +504,11 @@ msgstr ""
 
 #: media/js/utils.js:117
 msgid "click to close"
-msgstr "點擊消息框關閉"
+msgstr "點擊以關閉"
 
 #: media/js/utils.js:880
 msgid "click to edit this comment"
-msgstr ""
+msgstr "點擊以編輯此評註"
 
 #: media/js/utils.js:905
 msgid "convert to answer"
@@ -505,8 +519,9 @@ msgid "Ok"
 msgstr ""
 
 #: media/js/utils.js:959 media/js/utils.js.c:1407
+#, fuzzy
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: media/js/utils.js:1219
 #, c-format
@@ -573,7 +588,7 @@ msgstr ""
 #: media/js/utils.js:2311
 #, c-format
 msgid "see questions tagged '%s'"
-msgstr ""
+msgstr "查看標有「%s」的問題"
 
 #: media/js/utils.js:3358
 msgid "ago"
@@ -697,8 +712,9 @@ msgid "Insert a file"
 msgstr ""
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
+#, fuzzy
 msgid "Insert image"
-msgstr ""
+msgstr "輸入影像網址"
 
 #: media/js/wmd/wmd.js:31
 msgid "bold"
@@ -710,31 +726,31 @@ msgstr "斜體"
 
 #: media/js/wmd/wmd.js:33
 msgid "link"
-msgstr "超連接"
+msgstr "連結"
 
 #: media/js/wmd/wmd.js:34
 msgid "quote"
-msgstr "引用"
+msgstr "引文"
 
 #: media/js/wmd/wmd.js:35
 msgid "preformatted text"
-msgstr "代碼"
+msgstr "預先格式文字"
 
 #: media/js/wmd/wmd.js:36
 msgid "image"
-msgstr "圖片"
+msgstr "影像"
 
 #: media/js/wmd/wmd.js:37
 msgid "attachment"
-msgstr ""
+msgstr "附件"
 
 #: media/js/wmd/wmd.js:38
 msgid "numbered list"
-msgstr "數字編號列表"
+msgstr "數字編號清單"
 
 #: media/js/wmd/wmd.js:39
 msgid "bulleted list"
-msgstr "項目符號列表"
+msgstr "項目符號清單"
 
 #: media/js/wmd/wmd.js:40
 msgid "heading"
@@ -742,45 +758,54 @@ msgstr "標題"
 
 #: media/js/wmd/wmd.js:41
 msgid "horizontal bar"
-msgstr "水平線"
+msgstr "水平列"
 
 #: media/js/wmd/wmd.js:42
 msgid "undo"
-msgstr "撤銷"
+msgstr "取消動作"
 
 #: media/js/wmd/wmd.js:43 media/js/wmd/wmd.js.c:1169
 msgid "redo"
-msgstr "重做"
+msgstr "再次動作"
 
 #: media/js/wmd/wmd.js:54
 msgid "enter image url"
-msgstr "<b>輸入圖片地址</b></p><p>示例：<br />http://www.example.com/image.jpg   \"我的截圖\""
+msgstr "輸入影像網址"
 
 #: media/js/wmd/wmd.js:55
 msgid "enter url"
-msgstr "<b>輸入Web地址</b></p><p>示例：<br />http://www.cnprog.com/   \"我的網站\"</p>"
+msgstr "輸入網址"
 
 #: media/js/wmd/wmd.js:56
 msgid "upload file attachment"
-msgstr ""
+msgstr "上傳檔案附件"
 
 #: media/js/wmd/wmd.js:1836
 msgid "image description"
-msgstr ""
+msgstr "影像描述"
 
 #: media/js/wmd/wmd.js:1839
 msgid "file name"
-msgstr ""
+msgstr "檔案名稱"
 
 #: media/js/wmd/wmd.js:1843
 msgid "link text"
-msgstr ""
+msgstr "連結文字"
 
+# 75%
+# 100%
+#, fuzzy
 #~ msgid "post a comment"
-#~ msgstr "save comment"
+#~ msgstr "儲存評註"
 
 #~ msgid "%s content minchars"
-#~ msgstr "please enter more than %s characters"
+#~ msgstr "內容至少 %s 個字元"
 
 #~ msgid "%s title minchars"
-#~ msgstr "please enter at least %s characters"
+#~ msgstr "標題最少 %s 個字元"
+
+#~ msgid "please enter title"
+#~ msgstr "請輸入標題"
+
+#~ msgid "confirm abandon comment"
+#~ msgstr "確認棄用評註"
