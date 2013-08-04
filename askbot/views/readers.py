@@ -156,7 +156,7 @@ def questions(request, **kwargs):
             paginator_html = paginator_tpl.render(
                 RequestContext(
                     request, {
-                        'context': functions.setup_paginator(paginator_context),
+                        'context': paginator_context,
                         'questions_count': q_count,
                         'page_size' : page_size,
                         'search_state': search_state,

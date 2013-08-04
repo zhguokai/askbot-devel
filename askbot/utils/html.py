@@ -81,7 +81,7 @@ def urlize_html(html):
         if unicode(node) == urlized_text:
             continue
 
-        sub_soup = BeautifulSoup(urlize(node), 'html5lib')
+        sub_soup = BeautifulSoup(urlized_text, 'html5lib')
         contents = sub_soup.find('body').contents
         num_items = len(contents)
         for i in range(num_items):
