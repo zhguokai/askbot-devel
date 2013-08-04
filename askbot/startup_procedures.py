@@ -31,7 +31,8 @@ PREAMBLE = """\n
 """
 
 FOOTER = """\n
-If necessary, type ^C (Ctrl-C) to stop the program.
+If necessary, type ^C (Ctrl-C) to stop the program
+(to disable the self-test add ASKBOT_SELF_TEST = False).
 """
 
 class AskbotConfigError(ImproperlyConfigured):
@@ -74,6 +75,7 @@ def print_errors(error_messages, header = None, footer = None):
     message += '\n\n'.join(error_messages)
     if footer:
         message += '\n\n' + footer
+
     raise AskbotConfigError(message)
 
 def format_as_text_tuple_entries(items):
@@ -929,6 +931,34 @@ def test_service_url_prefix():
         if len(prefix) == 1 or (not prefix.endswith('/')):
             print_errors((message,))
 
+def test_versions():
+    """inform of version incompatibilities, where possible"""
+    errors = list()
+    py_ver = sys.version_info
+    #python3 will not work
+    py_ver = (3, 5)
+    if py_ver[0] == 3:
+        errors.append(
+            'Askbot does not yet support Python3, please use '
+            'the latest release of Python 2.x'
+        )
+
+    #if django version is >= 1.5, require python 2.6.5 or higher
+    dj_ver = django.VERSION
+    if dj_ver[:2] > (1, 5):
+        errors.append(
+            'Highest major version of django supported is 1.5 '
+            'if you would like to try newer version add setting.'
+        )
+    elif dj_ver[0:2] == (1, 5) and py_ver[:3] < (2, 6, 4):
+        errors.append(
+            'Django 1.5 and higher requires Python '
+            'version 2.6.4 or higher, please see release notes.\n'
+            'https://docs.djangoproject.com/en/dev/releases/1.5/'
+        )
+
+    print_errors(errors)
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -937,6 +967,7 @@ def run_startup_tests():
     test_modules()
 
     #todo: refactor this when another test arrives
+    test_versions()
     test_askbot_url()
     test_avatar()
     test_cache_backend()
@@ -999,7 +1030,8 @@ def run_startup_tests():
 def run():
     """runs all the startup procedures"""
     try:
-        run_startup_tests()
+        if getattr(django_settings, 'ASKBOT_SELF_TEST', True):
+            run_startup_tests()
     except AskbotConfigError, error:
         transaction.rollback()
         print error
