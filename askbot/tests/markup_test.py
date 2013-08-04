@@ -91,7 +91,7 @@ class MarkdownTestCase(TestCase):
 
     def test_full_link_converts_to_anchor(self):
         text = """text http://example.com/ text"""
-        expected ="""<p>text <a href="http://example.com">http://example.com</a>/ text</p>\n"""
+        expected ="""<p>text <a href="http://example.com/">http://example.com/</a> text</p>\n"""
         #todo: note there is a weird artefact produced by markdown2 inself
         #trailing slash after the closing </a> tag
         #the artifact is produced by _do_auto_links() function
