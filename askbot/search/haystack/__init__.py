@@ -34,17 +34,21 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
     author = indexes.CharField()
     thread_id = indexes.IntegerField(model_attr='thread__pk')
 
+
     def get_model(self):
         from askbot.models import Post
         return Post
 
     def index_queryset(self, using=None):
+        ALLOWED_TYPES = ('question', 'answer', 'comment')
         if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
             lang_code = get_language()[:2]
             return self.get_model().objects.filter(language_code__startswith=lang_code,
-                                                deleted=False)
+                                                   deleted=False,
+                                                   post_type__in=ALLOWED_TYPES)
         else:
-            return self.get_model().objects.filter(deleted=False)
+            return self.get_model().objects.filter(deleted=False,
+                                                   post_type__in=ALLOWED_TYPES)
 
 class UserIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
