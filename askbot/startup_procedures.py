@@ -936,7 +936,6 @@ def test_versions():
     errors = list()
     py_ver = sys.version_info
     #python3 will not work
-    py_ver = (3, 5)
     if py_ver[0] == 3:
         errors.append(
             'Askbot does not yet support Python3, please use '
