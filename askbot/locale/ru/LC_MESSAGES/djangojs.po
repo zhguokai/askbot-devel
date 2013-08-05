@@ -1,38 +1,41 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-# Translators:
 # olloff <olloff@gmail.com>, 2012
 # masdzen <masdzen@gmail.com>, 2013
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: askbot\n"
+"Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-07-13 19:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
-"Language-Team: Russian (http://www.transifex.com/projects/p/askbot/language/ru/)\n"
+"PO-Revision-Date: 2011-09-28 08:02-0800\n"
+"Last-Translator: Rosandra Cuello <rosandra.cuello@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
+"X-Translated-Using: django-rosetta 0.6.2\n"
 
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr "Вы действительно уверены, что хотите удалить вашего пользователя %s?"
+msgstr "Вы действительно хотите удалить логин через %s?"
 
 #: media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr "Пожалуйста, добавьте один или несколько методов входа."
+msgstr "Пожалуйста, добавьте хотя бы один постоянный метод для авторизации."
 
 #: media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr "Вами не выбран метод входа, пожалуйста, выберите один из них, нажав на одну из иконок ниже."
+msgstr ""
+"У Вас сейчас нет постоянного метода авторизации, пожалуйста выберите хотя бы "
+"один, нажав на любую из предложеных ниже кнопок."
 
 #: media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
@@ -40,30 +43,30 @@ msgstr "пароли не совпадают"
 
 #: media/jquery-openid/jquery.openid.js:162
 msgid "Show/change current login methods"
-msgstr "Отобразить/изменить текущие методы входа"
+msgstr "Просмотреть, изменить существующие методы авторизации."
 
 #: media/jquery-openid/jquery.openid.js:227
 #, c-format
 msgid "Please enter your %s, then proceed"
-msgstr "Пожалуйста, введите имя важей учетной записи %s"
+msgstr "Чтобы продолжить, пожалуйста введите %s"
 
 #: media/jquery-openid/jquery.openid.js:229
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr "Подключите вашу учетную запись %(provider_name)s к сайту %(site)s"
+msgstr "Соедините %(site)s с Вашим аккаунтом от %(provider_name)s"
 
 #: media/jquery-openid/jquery.openid.js:323
 #, c-format
 msgid "Change your %s password"
-msgstr "Сменить пароль вашей учетной записи %s"
+msgstr "Измените Ваш пароль для %s"
 
 #: media/jquery-openid/jquery.openid.js:324
 msgid "Change password"
-msgstr "Сменить пароль"
+msgstr "Изменить пароль"
 
 #: media/jquery-openid/jquery.openid.js:327
 #, c-format
 msgid "Create a password for %s"
-msgstr "Создать пароль для учетной записи %s"
+msgstr "Создать пароль для %s"
 
 #: media/jquery-openid/jquery.openid.js:328
 msgid "Create password"
@@ -88,7 +91,7 @@ msgstr "отправить"
 #: media/js/group_messaging.js:164 media/js/post.js:1809
 #: media/js/post.js.c:3081 media/js/post.js.c:4598 media/js/user.js:888
 msgid "cancel"
-msgstr "отмена"
+msgstr ""
 
 #: media/js/group_messaging.js:227
 msgid "Reply"
@@ -145,7 +148,7 @@ msgstr[2] ""
 
 #: media/js/post.js:154 media/js/post.js.c:1269
 msgid "tags cannot be empty"
-msgstr "пожалуйста, введите хотя бы один тэг"
+msgstr "введите теги"
 
 #: media/js/post.js:160
 msgid "details are required"
@@ -173,15 +176,15 @@ msgstr[2] ""
 
 #: media/js/post.js:193
 msgid "content cannot be empty"
-msgstr "пожалуйста, введите хотя бы один тэг"
+msgstr "пожалуйста, добавьте содержание"
 
 #: media/js/post.js:196
-#, c-format
+#, fuzzy, c-format
 msgid "answer must be > %s character"
 msgid_plural "answer must be > %s characters"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "недостаточно символов, пожалуйста, добавьте ещё %s"
+msgstr[1] "недостаточно символов, пожалуйста, добавьте ещё %s"
+msgstr[2] "недостаточно символов, пожалуйста, добавьте ещё %s"
 
 #: media/js/post.js:253
 msgid "Back to the question"
@@ -193,87 +196,90 @@ msgstr "черновик сохранён..."
 
 #: media/js/post.js:548
 msgid "insufficient privilege"
-msgstr "недостаточно прав доступа"
+msgstr "недостаточно прав"
 
 #: media/js/post.js:549
 msgid "cannot pick own answer as best"
-msgstr "простите, вы не можете принять ваш собственный ответ"
+msgstr "Извините, выбрать собственный ответ в качестве лучшего не разрешается"
 
 #: media/js/post.js:552 media/js/post.js.c:1416
 msgid "please login"
-msgstr "пожалуйста, войдите на сайт"
+msgstr "введите логин"
 
 #: media/js/post.js:554
 msgid "anonymous users cannot follow questions"
-msgstr "анонимные пользователи не могут отслеживать вопросы"
+msgstr ""
 
 #: media/js/post.js:555
 msgid "anonymous users cannot subscribe to questions"
-msgstr "анонимные пользователи не могут подписываться на вопросы"
+msgstr ""
 
 #: media/js/post.js:556 media/js/post.js.c:1426
 msgid "anonymous users cannot vote"
-msgstr "извините, анонимные пользователи не могут голосовать"
+msgstr "Извините, но для того чтобы голосовать, "
 
 #: media/js/post.js:558
 msgid "please confirm offensive"
-msgstr "вы уверены, что это сообщение оскорбительно, содержит спам, рекламу, и т.д.?"
+msgstr "Вы уверены что это сообщение неуместно?"
 
 #: media/js/post.js:559
+#, fuzzy
 msgid "please confirm removal of offensive flag"
-msgstr "вы уверены, что это сообщение нарушает правила сообщества, содержит спам, рекламу, оскорбительные выражения и т.д.?"
+msgstr "Вы уверены что это сообщение неуместно?"
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
-msgstr "анонимные пользователи не могут отметить флагом нарушающие правила сообщения"
+msgstr "Извините, но для того чтобы пожаловаться на сообщение, "
 
 #: media/js/post.js:561
 msgid "confirm delete"
-msgstr "вы уверены, что хотите удалить это сообщение?"
+msgstr "Удалить?"
 
 #: media/js/post.js:562
 msgid "anonymous users cannot delete/undelete"
-msgstr "извините, анонимные пользователи не могут удалить или отменить удаление сообщения"
+msgstr ""
+"неавторизированные пользователи не могут восстанавливать и удалять сообщения "
 
 #: media/js/post.js:563
 msgid "post recovered"
-msgstr "ваше сообщение восстановлено"
+msgstr "восстановить сообщение"
 
 #: media/js/post.js:564
 msgid "post deleted"
-msgstr "ваше сообщение было удалено"
+msgstr "сообщение удалено"
 
 #: media/js/post.js:831
 msgid "Follow"
-msgstr "Следить"
+msgstr "Добавить закладку"
 
 #: media/js/post.js:840 media/js/post.js.c:849
 #, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s закладка"
+msgstr[1] "%s закладки"
+msgstr[2] "%s закладок"
 
 #: media/js/post.js:845
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr "<div>Следить</div><div class=\"unfollow\">Перестать следить</div>"
+msgstr "<div>Есть закладка!</div><div class=\"unfollow\">Убрать закладку</div>"
 
 #: media/js/post.js:901
 msgid "remove flag"
 msgstr "убрать заметку"
 
 #: media/js/post.js:935 media/js/post.js.c:964
+#, fuzzy
 msgid "flag offensive"
-msgstr "вы уверены, что это сообщение оскорбительно, содержит спам, рекламу, и т.д.?"
+msgstr "Вы уверены что это сообщение неуместно?"
 
 #: media/js/post.js:990 media/js/post.js.c:1497
 msgid "undelete"
-msgstr "вы уверены, что хотите удалить это?"
+msgstr "восстановить"
 
 #: media/js/post.js:995 media/js/post.js.c:1501
 msgid "delete"
-msgstr "ваше сообщение было удалено"
+msgstr "удалить"
 
 #: media/js/post.js:1218 media/js/post.js.c:1445
 msgid "sorry, something is not right here"
@@ -288,27 +294,28 @@ msgid "save comment"
 msgstr "сохранить комментарий"
 
 #: media/js/post.js:1711
-#, c-format
+#, fuzzy, c-format
 msgid "enter at least %s characters"
-msgstr "пожалуйста, введите больше чем %s символов"
+msgstr "недостаточно символов, пожалуйста, добавьте ещё %s"
 
 #: media/js/post.js:1713
-#, c-format
+#, fuzzy, c-format
 msgid "enter at least %s more characters"
-msgstr "пожалуйста, введите больше чем %s символов"
+msgstr "недостаточно символов, пожалуйста, добавьте ещё %s"
 
 #: media/js/post.js:1723
 #, c-format
 msgid "%s characters left"
-msgstr "пожалуйста, введите больше чем %s символов"
+msgstr "осталось место для %s символов"
 
 #: media/js/post.js:1823
 msgid "minor edit (don't send alerts)"
 msgstr "небольшое изменение (не посылать уведомления)"
 
 #: media/js/post.js:1855
+#, fuzzy
 msgid "Are you sure you don't want to post this comment?"
-msgstr "Вы действительно уверены, что не хотите добавлять этот комментарий?"
+msgstr "Вы действительно хотите удалить логин через %s?"
 
 #: media/js/post.js:1890 media/js/utils.js:3360 media/js/utils.js.c:3515
 msgid "just now"
@@ -316,11 +323,11 @@ msgstr "прямо сейчас"
 
 #: media/js/post.js:1956
 msgid "delete this comment"
-msgstr "нажмите, чтобы отредактировать этот комментарий"
+msgstr "удалить этот комментарий"
 
 #: media/js/post.js:2271
 msgid "confirm delete comment"
-msgstr "вы действительно хотите удалить этот комментарий?"
+msgstr "Удалить комментарий?"
 
 #: media/js/post.js:2409
 msgid "please sign in or register to post comments"
@@ -328,7 +335,7 @@ msgstr "пожалуйста, войдите или зарегистрируйт
 
 #: media/js/post.js:2560
 msgid "Please enter question title (>10 characters)"
-msgstr "Пожалуйста, введите заголовок вопроса (>10 символов)"
+msgstr "Пожалуйста, добавьте заглавие к вопросу (>10 букв)"
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
@@ -343,8 +350,9 @@ msgid "Enter the logo url or upload an image"
 msgstr "Указать путь до логотипа или загрузить изображение"
 
 #: media/js/post.js:3225
+#, fuzzy
 msgid "Do you really want to remove the image?"
-msgstr "Вы действительно хотите удалить это изображение?"
+msgstr "Вы действительно хотите удалить логин через %s?"
 
 #: media/js/post.js:3341
 msgid "change logo"
@@ -356,8 +364,11 @@ msgstr "добавить логотип"
 
 #: media/js/post.js:3444
 #, c-format
-msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
-msgstr "тэг \"%s\" уже есть, не стоит повторять его (нажмите \"escape\" чтобы удалить)"
+msgid ""
+"tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
+msgstr ""
+"тэг \"%s\" уже есть, не стоит повторять его (нажмите \"escape\" чтобы "
+"удалить)"
 
 #: media/js/post.js:3453
 #, c-format
@@ -376,8 +387,9 @@ msgid "edit"
 msgstr "редактировать"
 
 #: media/js/post.js:3975
+#, fuzzy
 msgid "category name cannot be empty"
-msgstr "пожалуйста, введите хотя бы один тэг"
+msgstr "пожалуйста, добавьте содержание"
 
 #: media/js/post.js:4011
 msgid "already exists at the current level!"
@@ -392,8 +404,9 @@ msgid "save tags"
 msgstr "сохранить тэги"
 
 #: media/js/post.js:4689 media/js/post.js.c:4723
+#, fuzzy
 msgid "User name:"
-msgstr "Имя пользователя:"
+msgstr "название файла"
 
 #: media/js/post.js:4710
 msgid "Group name:"
@@ -409,30 +422,31 @@ msgstr "Сделать доступным для следующих групп:"
 
 #: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
-msgstr "Совпадают с тэгом \"<span></span>\":"
+msgstr "Тег \"<span></span>\" подходит для:"
 
 #: media/js/tag_selector.js:84
 #, c-format
 msgid "and %s more, not shown..."
-msgstr "и еще %s, которые не показаны..."
+msgstr "и ещё %s, не показано..."
 
 #: media/js/user.js:15
 msgid "Please select at least one item"
-msgstr "Пожалуйста, выберите хотя бы один из вариантов"
+msgstr "Пожалуйста, отметьте хотя бы одно извещение"
 
 #: media/js/user.js:59
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] "Удалить это уведомление?"
-msgstr[1] "Удалить эти уведомления?"
-msgstr[2] "Удалить эти уведомления?"
+msgstr[0] "Удалить это извещение?"
+msgstr[1] "Удалить эти извещения?"
+msgstr[2] "Удалить эти извещения?"
 
 #: media/js/user.js:66
+#, fuzzy
 msgid "Close this entry?"
 msgid_plural "Close these entries?"
-msgstr[0] "Закрыть эту запись?"
-msgstr[1] "Закрыть эти записи?"
-msgstr[2] "Закрыть эти записи?"
+msgstr[0] "удалить этот комментарий"
+msgstr[1] "удалить этот комментарий"
+msgstr[2] "удалить этот комментарий"
 
 #: media/js/user.js:74
 msgid "Remove all flags and approve this entry?"
@@ -442,12 +456,14 @@ msgstr[1] ""
 msgstr[2] ""
 
 #: media/js/user.js:223
+#, fuzzy
 msgid "Post deleted"
-msgstr "ваше сообщение было удалено"
+msgstr "сообщение удалено"
 
 #: media/js/user.js:225
+#, fuzzy
 msgid "Post approved"
-msgstr "теперь ваше сообщение восстановлено!"
+msgstr "восстановить сообщение"
 
 #: media/js/user.js:246
 msgid "Accept"
@@ -483,22 +499,24 @@ msgstr "Для отклонения сообщения необходимо вы
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr "Пожалуйста, <a href=\"%(signin_url)s\">войдите на сайт</a> чтобы начать отслеживать %(username)s"
+msgstr ""
+"Пожалуйста <a href=\"%(signin_url)s\">авторизуйтесь</a> чтобы отметить "
+"профиль %(username)s"
 
 #: media/js/user.js:740
 #, c-format
 msgid "unfollow %s"
-msgstr "перестать следить за %s"
+msgstr ""
 
 #: media/js/user.js:743
 #, c-format
 msgid "following %s"
-msgstr "отслеживаем за %s"
+msgstr ""
 
 #: media/js/user.js:749
 #, c-format
 msgid "follow %s"
-msgstr "отслеживать %s"
+msgstr ""
 
 #: media/js/user.js:883
 msgid "add group"
@@ -514,11 +532,11 @@ msgstr "и"
 
 #: media/js/utils.js:117
 msgid "click to close"
-msgstr "нажмите чтобы закрыть"
+msgstr ""
 
 #: media/js/utils.js:880
 msgid "click to edit this comment"
-msgstr "кликнуть, чтобы изменить комментарий"
+msgstr "нажмите здесь, чтобы отредактировать этот комментарий"
 
 #: media/js/utils.js:905
 msgid "convert to answer"
@@ -592,12 +610,13 @@ msgstr ""
 
 #: media/js/utils.js:2138
 msgid "Group %(name)s already exists. Group names are case-insensitive."
-msgstr "Группа %(name)s уже существует. Название группы не чувствительно к регистру."
+msgstr ""
+"Группа %(name)s уже существует. Название группы не чувствительно к регистру."
 
 #: media/js/utils.js:2311
 #, c-format
 msgid "see questions tagged '%s'"
-msgstr "посмотреть вопросы, помеченные тэгом '%s'"
+msgstr "смотрите вопросы, помеченные '%s'"
 
 #: media/js/utils.js:3358
 msgid "ago"
@@ -725,8 +744,10 @@ msgid "Insert a file"
 msgstr "Вставте файл"
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
+#, fuzzy
 msgid "Insert image"
-msgstr "введите URL изображения, напр. http://www.example.com/image.jpg или загрузите файл изображения"
+msgstr ""
+"введите url изображения, например:<br /> http://www.domain.ru/kartinka.gif"
 
 #: media/js/wmd/wmd.js:31
 msgid "bold"
@@ -746,7 +767,7 @@ msgstr "цитата"
 
 #: media/js/wmd/wmd.js:35
 msgid "preformatted text"
-msgstr "форматированный текст"
+msgstr "форматирование текста"
 
 #: media/js/wmd/wmd.js:36
 msgid "image"
@@ -754,11 +775,11 @@ msgstr "изображение"
 
 #: media/js/wmd/wmd.js:37
 msgid "attachment"
-msgstr "прикрепленный файл"
+msgstr ""
 
 #: media/js/wmd/wmd.js:38
 msgid "numbered list"
-msgstr "нумерованный список"
+msgstr "пронумерованный список"
 
 #: media/js/wmd/wmd.js:39
 msgid "bulleted list"
@@ -770,7 +791,7 @@ msgstr "заголовок"
 
 #: media/js/wmd/wmd.js:41
 msgid "horizontal bar"
-msgstr "горизонтальная линия"
+msgstr "горизонтальная полоса"
 
 #: media/js/wmd/wmd.js:42
 msgid "undo"
@@ -782,33 +803,44 @@ msgstr "повторить"
 
 #: media/js/wmd/wmd.js:54
 msgid "enter image url"
-msgstr "введите URL-адрес изображения, например http://www.example.com/image.jpg или загрузите файл изображения"
+msgstr ""
+"введите url изображения, например:<br /> http://www.domain.ru/kartinka.gif"
 
 #: media/js/wmd/wmd.js:55
 msgid "enter url"
-msgstr "введите Web-адрес, например http://www.example.com \"заголовок страницы\""
+msgstr "введите url, например:<br />http://www.domain.ru/ </p>"
 
 #: media/js/wmd/wmd.js:56
 msgid "upload file attachment"
-msgstr "Пожалуйста, выберите и загрузите файл:"
+msgstr "загрузить файл"
 
 #: media/js/wmd/wmd.js:1836
 msgid "image description"
-msgstr "описание изображения"
+msgstr ""
 
 #: media/js/wmd/wmd.js:1839
 msgid "file name"
-msgstr "имя файла"
+msgstr "название файла"
 
 #: media/js/wmd/wmd.js:1843
 msgid "link text"
-msgstr "текст ссылки"
+msgstr ""
 
+#, fuzzy
 #~ msgid "post a comment"
-#~ msgstr "save comment"
+#~ msgstr "сохранить комментарий"
 
 #~ msgid "%s content minchars"
-#~ msgstr "please enter more than %s characters"
+#~ msgstr "содержание должно быть более %s символов"
 
 #~ msgid "%s title minchars"
-#~ msgstr "please enter at least %s characters"
+#~ msgstr "заголовок должен быть более %s символов"
+
+#~ msgid "please enter title"
+#~ msgstr "пожалуйста, введите заголовок"
+
+#~ msgid "%(q_num)s question"
+#~ msgid_plural "%(q_num)s questions"
+#~ msgstr[0] "%(q_num)s вопрос"
+#~ msgstr[1] "%(q_num)s вопроса"
+#~ msgstr[2] "%(q_num)s вопросов"

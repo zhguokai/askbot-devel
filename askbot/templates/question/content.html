@@ -12,14 +12,19 @@
     <div class="clean"></div>
 
     {% for answer in answers %}
-        {% if loop.index == 2 and 'QUESTION_PAGE_ANSWER_BANNER'|show_block_to(request.user) %}
+        {% include "question/answer_card.html" %}
+        {% if loop.index == 1 and 'QUESTION_PAGE_ANSWER_BANNER'|show_block_to(request.user) %}
             <div class="banner">{{ settings.QUESTION_PAGE_ANSWER_BANNER|safe }}</div>
         {% endif %}
-        {% include "question/answer_card.html" %}
     {% endfor %}
 
     {{ macros.paginator(paginator_context, anchor='#sort-top') }}
     <div class="clean"></div>
+{% elif settings.QUESTION_PAGE_ALWAYS_SHOW_ANSWER_BANNER %}
+    <div class="clearfix"></div>
+    {% if 'QUESTION_PAGE_ANSWER_BANNER'|show_block_to(request.user) %}
+        <div class="banner">{{ settings.QUESTION_PAGE_ANSWER_BANNER|safe }}</div>
+    {% endif %}
 {% endif %}
 
 {# buttons below cannot be cached yet #}

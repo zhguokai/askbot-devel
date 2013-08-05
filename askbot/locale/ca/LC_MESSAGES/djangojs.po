@@ -1,36 +1,40 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: askbot\n"
+"Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-07-13 19:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
-"Language-Team: Catalan (http://www.transifex.com/projects/p/askbot/language/ca/)\n"
+"PO-Revision-Date: 2012-04-25 10:54+0000\n"
+"Last-Translator: Jesús <jesus@softcatala.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.0-beta1\n"
+"X-POOTLE-MTIME: 1335351263.0\n"
 
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr "Vol eliminar l'entrada %s?"
+msgstr "Esteu segur de voler suprimir l'inici de sessió %s?"
 
 #: media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr "Afegir un o més mètodes d'entrada."
+msgstr "Afegiu un o més mètodes d'iniciar sessió."
 
 #: media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr "Actualment no teniu cap mètode d'entrada, afegiu-ne un clicant una de les icones."
+msgstr ""
+"No teniu cap mètode per iniciar sessió, afegiu un o més fent clic a "
+"qualsevol de les icones inferiors."
 
 #: media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
@@ -38,38 +42,38 @@ msgstr "les contrasenyes no coincideixen"
 
 #: media/jquery-openid/jquery.openid.js:162
 msgid "Show/change current login methods"
-msgstr "Mostrar/canviar els mètodes d'entrada actuals"
+msgstr "Mostra/canvia els mètodes d'inici de sessió"
 
 #: media/jquery-openid/jquery.openid.js:227
 #, c-format
 msgid "Please enter your %s, then proceed"
-msgstr "Entrar el vostre %s per continuar"
+msgstr "Introduïu el vostre %s i procediu"
 
 #: media/jquery-openid/jquery.openid.js:229
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr "Connectar el compte %(provider_name)s a %(site)s"
+msgstr "Connecteu el vostre compte de %(provider_name)s al %(site)s"
 
 #: media/jquery-openid/jquery.openid.js:323
 #, c-format
 msgid "Change your %s password"
-msgstr "Canviar la contrasenya %s"
+msgstr "Canvieu la contrasenya de l'%s"
 
 #: media/jquery-openid/jquery.openid.js:324
 msgid "Change password"
-msgstr "Canviar contrasenya"
+msgstr "Canvia la contrasenya"
 
 #: media/jquery-openid/jquery.openid.js:327
 #, c-format
 msgid "Create a password for %s"
-msgstr "Crear una contrasenya per %s"
+msgstr "Crea una contrasenya per a l'%s"
 
 #: media/jquery-openid/jquery.openid.js:328
 msgid "Create password"
-msgstr "Crear contrasenya"
+msgstr "Crea una contrasenya"
 
 #: media/jquery-openid/jquery.openid.js:344
 msgid "Create a password-protected account"
-msgstr "Crear un compte protegit amb contrasenya"
+msgstr "Crea un compte protegit amb contrasenya"
 
 #: media/js/group_messaging.js:102 media/js/group_messaging.js.c:293
 msgid "required"
@@ -86,7 +90,7 @@ msgstr ""
 #: media/js/group_messaging.js:164 media/js/post.js:1809
 #: media/js/post.js.c:3081 media/js/post.js.c:4598 media/js/user.js:888
 msgid "cancel"
-msgstr ""
+msgstr "cancel·la"
 
 #: media/js/group_messaging.js:227
 msgid "Reply"
@@ -130,7 +134,7 @@ msgstr ""
 
 #: media/js/post.js:28
 msgid "loading..."
-msgstr "càrrega..."
+msgstr "s'està carregant..."
 
 #: media/js/post.js:100
 msgid "must be shorter than %(max_chars)s character"
@@ -140,7 +144,7 @@ msgstr[1] ""
 
 #: media/js/post.js:154 media/js/post.js.c:1269
 msgid "tags cannot be empty"
-msgstr ""
+msgstr "les etiquetes no poden ser buides"
 
 #: media/js/post.js:160
 msgid "details are required"
@@ -166,14 +170,14 @@ msgstr[1] ""
 
 #: media/js/post.js:193
 msgid "content cannot be empty"
-msgstr ""
+msgstr "el contingut no pot ser buit"
 
 #: media/js/post.js:196
-#, c-format
+#, fuzzy, c-format
 msgid "answer must be > %s character"
 msgid_plural "answer must be > %s characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "introduïu %s caràcters més"
+msgstr[1] "introduïu %s caràcters més"
 
 #: media/js/post.js:253
 msgid "Back to the question"
@@ -185,47 +189,48 @@ msgstr ""
 
 #: media/js/post.js:548
 msgid "insufficient privilege"
-msgstr "permisos insuficients "
+msgstr "permissos insuficients"
 
 #: media/js/post.js:549
 msgid "cannot pick own answer as best"
-msgstr "no es pot escollir resp. pròpia com a millor"
+msgstr "no podeu escollir la vostra pròpia resposta com a la millor"
 
 #: media/js/post.js:552 media/js/post.js.c:1416
 msgid "please login"
-msgstr "entrar"
+msgstr "inicieu la sessió"
 
 #: media/js/post.js:554
 msgid "anonymous users cannot follow questions"
-msgstr "usuaris anònims no poden seguir preguntes"
+msgstr "els usuaris anònims no poden seguir preguntes"
 
 #: media/js/post.js:555
 msgid "anonymous users cannot subscribe to questions"
-msgstr "usuaris anònims no poden subscriures a preguntes"
+msgstr "els usuaris anònims no es poden subscriure a les preguntes"
 
 #: media/js/post.js:556 media/js/post.js.c:1426
 msgid "anonymous users cannot vote"
-msgstr "usuaris anònims no poden votar"
+msgstr "els usuaris anònims no poden votar"
 
 #: media/js/post.js:558
 msgid "please confirm offensive"
-msgstr "confirmar com ofensiu"
+msgstr "confirmeu que és ofensiu"
 
 #: media/js/post.js:559
+#, fuzzy
 msgid "please confirm removal of offensive flag"
-msgstr ""
+msgstr "confirmeu que és ofensiu"
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
-msgstr "usuaris anònims no poden senyalar entrades com ofensives"
+msgstr "els usuaris anònims no poden marcar les entrades com ofensives"
 
 #: media/js/post.js:561
 msgid "confirm delete"
-msgstr "confirmar eliminar"
+msgstr "confirmeu la supressió"
 
 #: media/js/post.js:562
 msgid "anonymous users cannot delete/undelete"
-msgstr "usuaris anònims no poden eliminar/recuperar"
+msgstr "els usuaris anònims no poden suprimir ni recuperar"
 
 #: media/js/post.js:563
 msgid "post recovered"
@@ -233,38 +238,39 @@ msgstr "entrada recuperada"
 
 #: media/js/post.js:564
 msgid "post deleted"
-msgstr "entrada eliminada"
+msgstr "entrada suprimida"
 
 #: media/js/post.js:831
 msgid "Follow"
-msgstr ""
+msgstr "Segueix"
 
 #: media/js/post.js:840 media/js/post.js.c:849
 #, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s seguidor"
+msgstr[1] "%s seguidors"
 
 #: media/js/post.js:845
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr ""
+msgstr "<div>Seguint</div><div class=\"unfollow\">Deixa de seguir</div>"
 
 #: media/js/post.js:901
 msgid "remove flag"
 msgstr ""
 
 #: media/js/post.js:935 media/js/post.js.c:964
+#, fuzzy
 msgid "flag offensive"
-msgstr ""
+msgstr "confirmeu que és ofensiu"
 
 #: media/js/post.js:990 media/js/post.js.c:1497
 msgid "undelete"
-msgstr ""
+msgstr "recupera"
 
 #: media/js/post.js:995 media/js/post.js.c:1501
 msgid "delete"
-msgstr ""
+msgstr "suprimeix"
 
 #: media/js/post.js:1218 media/js/post.js.c:1445
 msgid "sorry, something is not right here"
@@ -272,34 +278,35 @@ msgstr ""
 
 #: media/js/post.js:1665
 msgid "add comment"
-msgstr "afegir comentari"
+msgstr "afegeix un comentari"
 
 #: media/js/post.js:1671
 msgid "save comment"
-msgstr "desar comentari"
+msgstr "desa el comentari"
 
 #: media/js/post.js:1711
-#, c-format
+#, fuzzy, c-format
 msgid "enter at least %s characters"
-msgstr ""
+msgstr "introduïu %s caràcters més"
 
 #: media/js/post.js:1713
-#, c-format
+#, fuzzy, c-format
 msgid "enter at least %s more characters"
-msgstr ""
+msgstr "introduïu %s caràcters més"
 
 #: media/js/post.js:1723
 #, c-format
 msgid "%s characters left"
-msgstr ""
+msgstr "queden %s caràcters"
 
 #: media/js/post.js:1823
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
 #: media/js/post.js:1855
+#, fuzzy
 msgid "Are you sure you don't want to post this comment?"
-msgstr ""
+msgstr "Esteu segur de voler suprimir l'inici de sessió %s?"
 
 #: media/js/post.js:1890 media/js/utils.js:3360 media/js/utils.js.c:3515
 msgid "just now"
@@ -307,11 +314,11 @@ msgstr ""
 
 #: media/js/post.js:1956
 msgid "delete this comment"
-msgstr ""
+msgstr "suprimeix aquest comentari"
 
 #: media/js/post.js:2271
 msgid "confirm delete comment"
-msgstr ""
+msgstr "confirmeu eliminar comentari"
 
 #: media/js/post.js:2409
 msgid "please sign in or register to post comments"
@@ -319,7 +326,7 @@ msgstr ""
 
 #: media/js/post.js:2560
 msgid "Please enter question title (>10 characters)"
-msgstr "Títol de la pregunta (més de 10 caràcters)"
+msgstr "Introduïu el títol de la pregunta (més de 10 caràcters)"
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
@@ -334,8 +341,9 @@ msgid "Enter the logo url or upload an image"
 msgstr ""
 
 #: media/js/post.js:3225
+#, fuzzy
 msgid "Do you really want to remove the image?"
-msgstr ""
+msgstr "Esteu segur de voler suprimir l'inici de sessió %s?"
 
 #: media/js/post.js:3341
 msgid "change logo"
@@ -347,7 +355,8 @@ msgstr ""
 
 #: media/js/post.js:3444
 #, c-format
-msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
+msgid ""
+"tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr ""
 
 #: media/js/post.js:3453
@@ -363,11 +372,12 @@ msgstr ""
 
 #: media/js/post.js:3888 media/js/utils.js:881
 msgid "edit"
-msgstr ""
+msgstr "edita"
 
 #: media/js/post.js:3975
+#, fuzzy
 msgid "category name cannot be empty"
-msgstr ""
+msgstr "el contingut no pot ser buit"
 
 #: media/js/post.js:4011
 msgid "already exists at the current level!"
@@ -382,8 +392,9 @@ msgid "save tags"
 msgstr ""
 
 #: media/js/post.js:4689 media/js/post.js.c:4723
+#, fuzzy
 msgid "User name:"
-msgstr ""
+msgstr "nom del fitxer"
 
 #: media/js/post.js:4710
 msgid "Group name:"
@@ -399,28 +410,29 @@ msgstr ""
 
 #: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
-msgstr "Coincidències de la etiqueta:"
+msgstr "Coincidències de l'etiqueta \"<span></span>\" amb:"
 
 #: media/js/tag_selector.js:84
 #, c-format
 msgid "and %s more, not shown..."
-msgstr "i %s més què no es mostren ..."
+msgstr "i %s més què no es mostren..."
 
 #: media/js/user.js:15
 msgid "Please select at least one item"
-msgstr "Seleccinar com a mínim un ítem"
+msgstr "Seleccioneu com a mínim un element"
 
 #: media/js/user.js:59
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] "Eliminar aquesta notificació?"
-msgstr[1] "Eliminar aquestes notificacions"
+msgstr[0] "Voleu suprimir aquesta notificació?"
+msgstr[1] "Voleu suprimir aquestes notificacions?"
 
 #: media/js/user.js:66
+#, fuzzy
 msgid "Close this entry?"
 msgid_plural "Close these entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "suprimeix aquest comentari"
+msgstr[1] "suprimeix aquest comentari"
 
 #: media/js/user.js:74
 msgid "Remove all flags and approve this entry?"
@@ -429,12 +441,14 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: media/js/user.js:223
+#, fuzzy
 msgid "Post deleted"
-msgstr ""
+msgstr "entrada suprimida"
 
 #: media/js/user.js:225
+#, fuzzy
 msgid "Post approved"
-msgstr ""
+msgstr "entrada recuperada"
 
 #: media/js/user.js:246
 msgid "Accept"
@@ -453,8 +467,9 @@ msgid "Looks there are some things to fix:"
 msgstr ""
 
 #: media/js/user.js:443
+#, fuzzy
 msgid "Please provide description."
-msgstr ""
+msgstr "descripció de la imatge"
 
 #: media/js/user.js:446
 msgid "Please provide details."
@@ -470,22 +485,23 @@ msgstr ""
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr "<a href=\"%(signin_url)s\">Entrar</a> per seguir a %(username)s"
+msgstr ""
+"<a href=\"%(signin_url)s\">Inicieu sessió</a> per seguir a %(username)s"
 
 #: media/js/user.js:740
 #, c-format
 msgid "unfollow %s"
-msgstr "deixar de seguir a %s"
+msgstr "deixa de seguir a %s"
 
 #: media/js/user.js:743
 #, c-format
 msgid "following %s"
-msgstr "seguint a %s"
+msgstr "esteu seguint a %s"
 
 #: media/js/user.js:749
 #, c-format
 msgid "follow %s"
-msgstr "seguir a %s"
+msgstr "segueix a %s"
 
 #: media/js/user.js:883
 msgid "add group"
@@ -501,11 +517,11 @@ msgstr ""
 
 #: media/js/utils.js:117
 msgid "click to close"
-msgstr "clicar per tancar"
+msgstr "feu clic per tancar"
 
 #: media/js/utils.js:880
 msgid "click to edit this comment"
-msgstr ""
+msgstr "feu clic per modificar aquest comentari"
 
 #: media/js/utils.js:905
 msgid "convert to answer"
@@ -516,8 +532,9 @@ msgid "Ok"
 msgstr ""
 
 #: media/js/utils.js:959 media/js/utils.js.c:1407
+#, fuzzy
 msgid "Cancel"
-msgstr ""
+msgstr "cancel·la"
 
 #: media/js/utils.js:1219
 #, c-format
@@ -584,7 +601,7 @@ msgstr ""
 #: media/js/utils.js:2311
 #, c-format
 msgid "see questions tagged '%s'"
-msgstr ""
+msgstr "veure les preguntes etiquetades amb '%s'"
 
 #: media/js/utils.js:3358
 msgid "ago"
@@ -710,8 +727,9 @@ msgid "Insert a file"
 msgstr ""
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
+#, fuzzy
 msgid "Insert image"
-msgstr ""
+msgstr "introduïu l'enllaç de la imatge"
 
 #: media/js/wmd/wmd.js:31
 msgid "bold"
@@ -727,11 +745,11 @@ msgstr "enllaç"
 
 #: media/js/wmd/wmd.js:34
 msgid "quote"
-msgstr "citar"
+msgstr "cita"
 
 #: media/js/wmd/wmd.js:35
 msgid "preformatted text"
-msgstr "format predefinit "
+msgstr "text preformatat"
 
 #: media/js/wmd/wmd.js:36
 msgid "image"
@@ -759,41 +777,48 @@ msgstr "barra horitzontal"
 
 #: media/js/wmd/wmd.js:42
 msgid "undo"
-msgstr "desfer"
+msgstr "desfés"
 
 #: media/js/wmd/wmd.js:43 media/js/wmd/wmd.js.c:1169
 msgid "redo"
-msgstr "refer"
+msgstr "refés"
 
 #: media/js/wmd/wmd.js:54
 msgid "enter image url"
-msgstr "entrar url de la imatge"
+msgstr "introduïu l'enllaç de la imatge"
 
 #: media/js/wmd/wmd.js:55
 msgid "enter url"
-msgstr "entrar l'url"
+msgstr "introduïu l'enllaç"
 
 #: media/js/wmd/wmd.js:56
 msgid "upload file attachment"
-msgstr "pujar arxiu adjunt"
+msgstr "puja el fitxer adjunt"
 
 #: media/js/wmd/wmd.js:1836
 msgid "image description"
-msgstr ""
+msgstr "descripció de la imatge"
 
 #: media/js/wmd/wmd.js:1839
 msgid "file name"
-msgstr ""
+msgstr "nom del fitxer"
 
 #: media/js/wmd/wmd.js:1843
 msgid "link text"
-msgstr ""
+msgstr "text de l'enllaç"
 
+#, fuzzy
 #~ msgid "post a comment"
-#~ msgstr "save comment"
+#~ msgstr "desa el comentari"
 
 #~ msgid "%s content minchars"
-#~ msgstr "please enter more than %s characters"
+#~ msgstr "contingut mín. de %s caràcters"
 
 #~ msgid "%s title minchars"
-#~ msgstr "please enter at least %s characters"
+#~ msgstr "títol mín. de %s caràcters."
+
+#~ msgid "please enter title"
+#~ msgstr "introduïu un títol"
+
+#~ msgid "confirm abandon comment"
+#~ msgstr "confirmeu l'abandó del comentari"
