@@ -959,7 +959,7 @@ def get_register_form_context(request):
 def render_register_form_to_string(request):
     """string is used for the modal registration menu"""
     data = get_register_form_context(request)
-    return render_to_string(request, 'authopenid/complete.html', data)
+    return render_to_string(request, 'authopenid/complete_modal.html', data)
 
 @ajax_only
 @post_only

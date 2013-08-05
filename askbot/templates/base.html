@@ -35,7 +35,10 @@
     </head>
     <body class="{% block body_class %}{% endblock %}{% if user_messages %} user-messages{% endif %}{% if page_class %} {{page_class}}{% endif %}{% if request.user.is_anonymous() %} anon{% endif %} lang-{{settings.LANGUAGE_CODE}}">
         {% if 'modal_menu' in request.session %}
-            {% include "widgets/modal_menu.html" %}
+            {% set modal_is_open=True %}
+            {{ request.session['modal_menu']|safe }}
+        {% elif request.user.is_anonymous() %}
+            {% include "authopenid/signin_modal.html" %}
         {% endif %}
         {% include "widgets/system_messages.html" %}
         {% include "debug_header.html" %}

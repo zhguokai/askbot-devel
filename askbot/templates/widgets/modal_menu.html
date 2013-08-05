@@ -1,10 +1,9 @@
-{% set is_closed = ('modal_menu' not in request.session) %}
 <div class="modal-backdrop"
-    {% if is_closed %}style="display:none"{% endif %}
+    {% if not modal_is_open %}style="display:none"{% endif %}
 ></div>
 <div class="modal
     {% block modal_class %}{% endblock %}"
-    {% if is_closed %}style="display:none"{% endif %}
+    {% if not modal_is_open %}style="display:none"{% endif %}
 >
     <div class="modal-header">
         <a class="close" data-dismiss="modal">x</a>
@@ -12,7 +11,6 @@
     </div>
     <div class="modal-body">
         {% block modal_body %}{% endblock %}
-        {{ request.session['modal_menu']|safe }}
     </div>
     <div class="modal-footer">
         {% block modal_footer %}{% endblock %}
