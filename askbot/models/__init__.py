@@ -3656,9 +3656,10 @@ def greet_new_user(user, **kwargs):
     else:
         template_name = 'email/welcome_lamson_off.html'
 
+    home_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', '/')
     data = {
         'site_name': askbot_settings.APP_SHORT_NAME,
-        'site_url': site_url(spaces.get_url('questions')),
+        'site_url': site_url(home_url),
         'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
         'can_post_by_email': user.can_post_by_email()
     }

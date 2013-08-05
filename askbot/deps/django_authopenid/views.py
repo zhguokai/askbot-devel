@@ -86,6 +86,7 @@ from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
 from askbot.utils.forms import get_next_url
+from askbot.utils.forms import get_space
 from askbot.utils.http import get_request_info
 from askbot.models.signals import user_logged_in, user_registered
 
@@ -533,10 +534,14 @@ def signin(request, template_name='authopenid/signin.html'):
                 #todo: make a simple-use wrapper for openid protocol
 
                 sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
+                url_params = {
+                    'next': next_url,
+                    'space': get_space(request)#todo make work w/o spaces
+                }
                 redirect_to = "%s%s?%s" % (
                         get_url_host(request),
                         reverse('user_complete_signin'),
-                        urllib.urlencode({'next':next_url})
+                        urllib.urlencode(url_params)
                 )
                 return ask_openid(
                             request,
@@ -780,6 +785,7 @@ def show_signin_view(
 
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
+    data['space'] = get_space(request)
 
     return render(request, template_name, data)
 
@@ -949,7 +955,6 @@ def register(request, login_provider_name=None, user_identifier=None):
     """
 
     logging.debug('')
-
     next_url = get_next_url(request)
 
     user = None

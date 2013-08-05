@@ -10,6 +10,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify
 from askbot.utils.functions import split_list
 from askbot import const
+from askbot import spaces
 from longerusername import MAX_USERNAME_LENGTH
 import logging
 import urllib
@@ -27,8 +28,18 @@ def clean_next(next, default = None):
     logging.debug('next url is %s' % next)
     return next
 
+def get_space(request):
+    return request.REQUEST.get('space')
+
 def get_next_url(request, default = None):
-    return clean_next(request.REQUEST.get('next'), default)
+    #todo: clean this up - the "space" parameter is new
+    space = get_space(request)
+    if space:
+        #default to the space root url for now
+        return spaces.get_url('questions', space)
+    else:
+        #otherwise use the old way of passing next url
+        return clean_next(request.REQUEST.get('next'), default)
 
 def get_db_object_or_404(params):
     """a utility function that returns an object

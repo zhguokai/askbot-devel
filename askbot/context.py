@@ -13,10 +13,12 @@ from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.search.state_manager import DummySearchState
+from askbot.search.state_manager import SearchState
 from askbot.skins.loaders import get_skin
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
+from askbot.utils.forms import get_space
 from askbot.utils.translation import get_language
 
 def application_settings(request):
@@ -85,6 +87,10 @@ def application_settings(request):
         'noscript_url': const.DEPENDENCY_URLS['noscript'],
         'dummy_search_state': DummySearchState()
     }
+
+    space = get_space(request)
+    search_state = (space and SearchState(space=space) or DummySearchState())
+    context['dummy_search_state'] = search_state
 
     if askbot_settings.GROUPS_ENABLED:
         #calculate context needed to list all the groups
