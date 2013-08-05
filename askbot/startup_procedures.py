@@ -1000,7 +1000,7 @@ def run_startup_tests():
     #test_postgres()
     test_messages_framework()
     test_middleware()
-    #test_multilingual()
+    test_multilingual()
     test_locale_middlewares()
     #test_csrf_cookie_domain()
     test_secret_key()
