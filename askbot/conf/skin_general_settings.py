@@ -30,7 +30,9 @@ settings.register(
     )
 )
 
-if not getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+#cannot use HAS_ASKBOT_LOCALE_MIDDLEWARE due to circular import error
+if not getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) and \
+        'askbot.middleware.locale.LocaleMiddleware' in django_settings.MIDDLEWARE_CLASSES:
     settings.register(
         values.StringValue(
             GENERAL_SKIN_SETTINGS,
