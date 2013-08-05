@@ -833,7 +833,7 @@ class PostAsSomeoneForm(forms.Form):
             'Can create new accounts.'
         ),
         required=False,
-        widget=forms.TextInput()
+        widget=forms.TextInput(attrs={'class': 'tipped-input blank'})
     )
     post_author_email = forms.CharField(
         initial=_('Email address:'),

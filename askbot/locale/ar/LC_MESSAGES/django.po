@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-19 10:31+0000\n"
+"PO-Revision-Date: 2013-07-24 09:19+0000\n"
 "Last-Translator: Ahmad Khayyat <akhayyat@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/askbot/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -3818,7 +3818,7 @@ msgstr "في %(date)s"
 
 #: models/__init__.py:1997
 msgid "in two days"
-msgstr "خلال يومان"
+msgstr "خلال يومين"
 
 #: models/__init__.py:1999
 msgid "tomorrow"
@@ -3862,7 +3862,7 @@ msgstr[5] "%(days)d أيام"
 msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
 "post an answer %(left)s"
-msgstr "علي الأعضاء الجدد الإنتظار %(days)s يوماً للإجابة علي أسئلتهم بأنفسهم. يمكنك إرسال الإجابة لاحقاً بعد %(left)s"
+msgstr "علي الأعضاء الجدد الانتظار %(days)s يوماً للإجابة علي أسئلتهم بأنفسهم. يمكنك إرسال إجابة %(left)s"
 
 #: models/__init__.py:2194 templates/email/feedback_email.txt:9
 msgid "Anonymous"
@@ -3878,15 +3878,15 @@ msgstr "مشرف المنتدي"
 
 #: models/__init__.py:2302
 msgid "Suspended User"
-msgstr "عضو موقوف"
+msgstr "مستخدم موقوف مؤقتاً"
 
 #: models/__init__.py:2304
 msgid "Blocked User"
-msgstr "عضو ممنوع"
+msgstr "مستخدم محجوب"
 
 #: models/__init__.py:2306
 msgid "Registered User"
-msgstr "عضو مسجل"
+msgstr "مستخدم مسجل"
 
 #: models/__init__.py:2308
 msgid "Watched User"
@@ -3894,7 +3894,7 @@ msgstr ""
 
 #: models/__init__.py:2310
 msgid "Approved User"
-msgstr "عضو مقبول"
+msgstr "مستخدم مقبول"
 
 #: models/__init__.py:2495
 #, python-format

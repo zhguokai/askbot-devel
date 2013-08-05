@@ -4425,6 +4425,12 @@ td.setting-input textarea {
     width: 100%;
     padding-right: 6px;
   }
+  .edit-question-page #ContentLeft,
+  .edit-answer-page #ContentLeft,
+  .openid-signin #ContentLeft,
+  .meta #ContentLeft {
+    padding: 0 10px;
+  }
   .main-page h1,
   #askButton,
   #metaNav #navBadges,
@@ -4556,6 +4562,25 @@ td.setting-input textarea {
     width: 100%;
   }
 }
+@media screen and (max-width: 480px) {
+  .openid-signin h1,
+  .openid-signin h2 {
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .openid-signin textarea,
+  .meta textarea,
+  .users-page textarea,
+  .user-profile-edit-page textarea,
+  .user-profile-page textarea,
+  .openid-signin input[type="text"],
+  .meta input[type="text"],
+  .users-page input[type="text"],
+  .user-profile-edit-page input[type="text"],
+  .user-profile-page input[type="text"] {
+    width: 100%;
+  }
+}
 @media screen and (max-width: 338px) {
   #scopeNav {
     display: none;
@@ -4582,8 +4607,46 @@ body.anon.lang-es #searchBar {
 
 }
 body.lang-zh .box .inputs #interestingTagInput,
+body.lang-zh_CN .box .inputs #interestingTagInput,
+body.lang-zh_TW .box .inputs #interestingTagInput,
 body.lang-zh .box .inputs #ignoredTagInput,
+body.lang-zh_CN .box .inputs #ignoredTagInput,
+body.lang-zh_TW .box .inputs #ignoredTagInput,
 body.lang-zh .box .inputs #subscribedTagInput,
-body.lang-zh .box .inputs #ab-tag-search {
-  width: 125px;
+body.lang-zh_CN .box .inputs #subscribedTagInput,
+body.lang-zh_TW .box .inputs #subscribedTagInput,
+body.lang-zh .box .inputs #ab-tag-search,
+body.lang-zh_CN .box .inputs #ab-tag-search,
+body.lang-zh_TW .box .inputs #ab-tag-search {
+  width: 142px;
+}
+body.lang-zh button,
+body.lang-zh_CN button,
+body.lang-zh_TW button,
+body.lang-zh input[type="submit"],
+body.lang-zh_CN input[type="submit"],
+body.lang-zh_TW input[type="submit"],
+body.lang-zh input[type="button"],
+body.lang-zh_CN input[type="button"],
+body.lang-zh_TW input[type="button"],
+body.lang-zh input[type="reset"],
+body.lang-zh_CN input[type="reset"],
+body.lang-zh_TW input[type="reset"],
+body.lang-zh .button,
+body.lang-zh_CN .button,
+body.lang-zh_TW .button {
+  line-height: 24px;
+}
+body.lang-zh .box a.followed,
+body.lang-zh_CN .box a.followed,
+body.lang-zh_TW .box a.followed,
+body.lang-zh .box a.follow,
+body.lang-zh_CN .box a.follow,
+body.lang-zh_TW .box a.follow {
+  line-height: 34px !important;
+}
+body.lang-zh.question-page a.submit,
+body.lang-zh_CN.question-page a.submit,
+body.lang-zh_TW.question-page a.submit {
+  line-height: 30px !important;
 }
