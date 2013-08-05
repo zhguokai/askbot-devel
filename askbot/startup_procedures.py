@@ -902,11 +902,6 @@ def test_locale_middlewares():
             errors.append("Please remove '%s' from your MIDDLEWARE_CLASSES" % askbot_locale_middleware)
         if django_locale_middleware not in django_settings.MIDDLEWARE_CLASSES:
             errors.append("Please add '%s' to your MIDDLEWARE_CLASSES" % django_locale_middleware)
-    else:
-        if askbot_locale_middleware not in django_settings.MIDDLEWARE_CLASSES:
-            errors.append("Please add '%s' to your MIDDLEWARE_CLASSES" % askbot_locale_middleware)
-        if django_locale_middleware in django_settings.MIDDLEWARE_CLASSES:
-            errors.append("Please remove '%s' from your MIDDLEWARE_CLASSES" % django_locale_middleware)
 
     print_errors(errors)
 
