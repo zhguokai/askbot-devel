@@ -4916,8 +4916,46 @@ body.anon.lang-es #searchBar {
 
 }
 body.lang-zh .box .inputs #interestingTagInput,
+body.lang-zh_CN .box .inputs #interestingTagInput,
+body.lang-zh_TW .box .inputs #interestingTagInput,
 body.lang-zh .box .inputs #ignoredTagInput,
+body.lang-zh_CN .box .inputs #ignoredTagInput,
+body.lang-zh_TW .box .inputs #ignoredTagInput,
 body.lang-zh .box .inputs #subscribedTagInput,
-body.lang-zh .box .inputs #ab-tag-search {
-  width: 125px;
+body.lang-zh_CN .box .inputs #subscribedTagInput,
+body.lang-zh_TW .box .inputs #subscribedTagInput,
+body.lang-zh .box .inputs #ab-tag-search,
+body.lang-zh_CN .box .inputs #ab-tag-search,
+body.lang-zh_TW .box .inputs #ab-tag-search {
+  width: 142px;
+}
+body.lang-zh button,
+body.lang-zh_CN button,
+body.lang-zh_TW button,
+body.lang-zh input[type="submit"],
+body.lang-zh_CN input[type="submit"],
+body.lang-zh_TW input[type="submit"],
+body.lang-zh input[type="button"],
+body.lang-zh_CN input[type="button"],
+body.lang-zh_TW input[type="button"],
+body.lang-zh input[type="reset"],
+body.lang-zh_CN input[type="reset"],
+body.lang-zh_TW input[type="reset"],
+body.lang-zh .button,
+body.lang-zh_CN .button,
+body.lang-zh_TW .button {
+  line-height: 24px;
+}
+body.lang-zh .box a.followed,
+body.lang-zh_CN .box a.followed,
+body.lang-zh_TW .box a.followed,
+body.lang-zh .box a.follow,
+body.lang-zh_CN .box a.follow,
+body.lang-zh_TW .box a.follow {
+  line-height: 34px !important;
+}
+body.lang-zh.question-page a.submit,
+body.lang-zh_CN.question-page a.submit,
+body.lang-zh_TW.question-page a.submit {
+  line-height: 30px !important;
 }

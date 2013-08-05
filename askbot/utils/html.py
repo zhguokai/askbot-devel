@@ -1,11 +1,13 @@
 """Utilities for working with HTML."""
 from bs4 import BeautifulSoup
+from bs4 import NavigableString
 import html5lib
 from html5lib import sanitizer, serializer, tokenizer, treebuilders, treewalkers
 import re
 import htmlentitydefs
 from urlparse import urlparse
 from django.core.urlresolvers import reverse
+from django.utils.html import urlize
 from askbot.conf import settings as askbot_settings
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
@@ -60,6 +62,50 @@ def absolutize_urls(html):
     html = url_re3.sub(replacement, html)
     #temporal fix for bad regex with wysiwyg editor
     return url_re4.sub(replacement, html).replace('%s//' % base_url, '%s/' % base_url)
+
+def urlize_html(html):
+    """will urlize html, while ignoring link
+    patterns inside anchors, <pre> and <code> tags
+    """
+    soup = BeautifulSoup(html, 'html5lib')
+    extract_nodes = list()
+    for node in soup.findAll(text=True):
+        parent_tags = [p.name for p in node.parents]
+        skip_tags = ['a', 'img', 'pre', 'code']
+        if set(parent_tags) & set(skip_tags):
+            continue
+
+        #bs4 is weird, so we work around to replace nodes
+        #maybe there is a better way though
+        urlized_text = urlize(node)
+        if unicode(node) == urlized_text:
+            continue
+
+        sub_soup = BeautifulSoup(urlized_text, 'html5lib')
+        contents = sub_soup.find('body').contents
+        num_items = len(contents)
+        for i in range(num_items):
+            #there is strange thing in bs4, can't iterate
+            #as the tag seemingly can't belong to >1 soup object
+            child = contents[0] #always take first element
+            #insure that text nodes are sandwiched by space
+            have_string = (not hasattr(child, 'name'))
+            if have_string:
+                node.insert_before(soup.new_string(' '))
+            node.insert_before(child)
+            if have_string:
+                node.insert_before(soup.new_string(' '))
+
+        extract_nodes.append(node)
+
+    #extract the nodes that we replaced
+    for node in extract_nodes:
+        node.extract()
+
+    result = unicode(soup.find('body').renderContents(), 'utf8')
+    if html.endswith('\n') and not result.endswith('\n'):
+        result += '\n'
+    return result
 
 def replace_links_with_text(html):
     """any absolute links will be replaced with the
