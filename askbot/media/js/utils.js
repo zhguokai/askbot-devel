@@ -50,6 +50,19 @@ var sameOrigin = function(url) {
     );
 };
 
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            // Send the token to same-origin, relative URLs only.
+            // Send the token only if the method warrants CSRF protection
+            // Using the CSRFToken value acquired earlier
+            var csrfCookieName = askbot['settings']['csrfCookieName'];
+            debugger;
+            xhr.setRequestHeader("X-CSRFToken", getCookie(csrfCookieName));
+        }
+    }
+});
+
 /* Returns "next" parameter from the window.location.search
  * or default post-signin redirect url */
 var getNextUrl = function() {
@@ -418,7 +431,7 @@ var inherits = function(childCtor, parentCtor) {
 };
 
 /* helper function to access superclass */
-var super = function(cls) {
+var superClass = function(cls) {
     return cls.superClass_;
 };
 
@@ -2324,7 +2337,7 @@ var LoginDialog = function(customOpts) {
 inherits(LoginDialog, ModalDialog);
 
 LoginDialog.prototype.decorate = function(element) {
-    super(LoginDialog).decorate.call(this, element);
+    superClass(LoginDialog).decorate.call(this, element);
     var authMenu = new AuthMenu();
     authMenu.decorate(element.find('.auth-menu'));
 };
@@ -2348,6 +2361,7 @@ ModalDialogTrigger.prototype.setDialog = function(dialog) {
 ModalDialogTrigger.prototype.getDialog = function() {
     if (!this._dialog) {
         this._dialog = new this._dialogClass();
+        this._dialog.decorate($('.modal'));
     }
     return this._dialog;
 };

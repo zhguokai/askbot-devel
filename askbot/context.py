@@ -6,18 +6,21 @@ import sys
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
+from django.views.decorators import csrf
 
 import askbot
 from askbot import api
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot.deps.django_authopenid.views import get_signin_view_context
 from askbot.skins.loaders import get_skin
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
 from askbot.utils.translation import get_language
 
+@csrf.csrf_protect
 def application_settings(request):
     """The context processor function"""
     if not request.path.startswith('/' + settings.ASKBOT_URL):
