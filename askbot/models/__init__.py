@@ -466,7 +466,7 @@ def user_can_post_by_email(self):
     if self.is_administrator_or_moderator():
         return True
     return askbot_settings.REPLY_BY_EMAIL and \
-        self.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL
+        self.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL
 
 def user_get_social_sharing_mode(self):
     """returns what user wants to share on his/her channels"""
