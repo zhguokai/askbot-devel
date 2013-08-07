@@ -53,3 +53,15 @@ class EmailParsingTests(utils.AskbotTestCase):
             mail.extract_reply(text),
             u'reply from hotmail without RTF'
         )
+
+    def test_outlook_desktop1(self):
+        text = """some real text
+
+-----Original Message-----
+From: forum@example.com [mailto:forum@example.com] 
+Sent: Wednesday, August 07, 2013 11:00 AM
+To: Jane Doe
+Subject: "One more test question from email."
+
+"""
+        self.assertEqual(mail.extract_reply(text), "some real text")
