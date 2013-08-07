@@ -1,5 +1,6 @@
-import re
 import functools
+import re
+import sys
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.conf import settings as django_settings
@@ -12,6 +13,7 @@ from askbot.models import ReplyAddress, Group, Tag
 from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot.utils.html import site_url
+from askbot.mail import DEBUG_EMAIL
 
 #we might end up needing to use something like this
 #to distinguish the reply text from the quoted original message
@@ -191,6 +193,13 @@ def ASK(message, host = None, addr = None):
 
     parts = get_parts(message)
     from_address = message.From
+
+    if DEBUG_EMAIL:
+        sys.stderr.write(
+            (u'Received email from %s\n' % from_address).encode('utf-8')
+        )
+
+
     #why lamson does not give it normally?
     subject = message['Subject'].strip('\n\t ')
     body_text, stored_files, unused = mail.process_parts(parts)
@@ -228,6 +237,11 @@ def VALIDATE_EMAIL(
     todo: go a step further and
     """
     reply_code = reply_address_object.address
+
+    if DEBUG_EMAIL:
+        msg = u'Received email validation from %s\n' % from_address
+        sys.stderr.write(msg.encode('utf-8'))
+
     try:
         content, stored_files, signature = mail.process_parts(parts, reply_code)
 
@@ -273,6 +287,10 @@ def PROCESS(
     """handler to process the emailed message
     and make a post to askbot based on the contents of
     the email, including the text body and the file attachments"""
+    if DEBUG_EMAIL:
+        sys.stderr.write(
+            (u'Received reply from %s\n' % from_address).encode('utf-8')
+        )
     #1) get actual email content
     #   todo: factor this out into the process_reply decorator
     reply_code = reply_address_object.address
