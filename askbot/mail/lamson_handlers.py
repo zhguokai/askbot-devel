@@ -332,6 +332,10 @@ def PROCESS(
         }
         template = get_template('email/re_welcome_lamson_on.html')
 
+        if DEBUG_EMAIL:
+            msg = u'Sending welcome mail to %s\n' % from_address
+            sys.stderr.write(msg.encode('utf-8'))
+
         mail.send_mail(
             subject_line = _('Re: %s') % subject_line,
             body_text = template.render(Context(data)),#todo: set lang
