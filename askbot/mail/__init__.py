@@ -1,6 +1,9 @@
 """functions that send email in askbot
 these automatically catch email-related exceptions
 """
+from django.conf import settings as django_settings
+DEBUG_EMAIL = getattr(django_settings, 'ASKBOT_DEBUG_INCOMING_EMAIL', False)
+
 import logging
 import os
 import re
@@ -15,7 +18,6 @@ from askbot.utils.file_utils import store_file
 from askbot.utils.html import absolutize_urls
 from bs4 import BeautifulSoup
 from django.core import mail
-from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.forms import ValidationError
@@ -335,17 +337,32 @@ def process_parts(parts, reply_code=None, from_address=None):
     body_text = ''
     stored_files = list()
     attachments_markdown = ''
+
+    if DEBUG_EMAIL:
+        sys.stderr.write('--- MESSAGE PARTS:\n\n')
+
     for (part_type, content) in parts:
         if part_type == 'attachment':
+            if DEBUG_EMAIL:
+                sys.stderr.write('REGULAR ATTACHMENT:\n')
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
             attachments_markdown += '\n\n' + markdown
         elif part_type == 'body':
+            if DEBUG_EMAIL:
+                sys.stderr.write('BODY:\n')
+                sys.stderr.write(content.encode('utf-8'))
+                sys.stderr.write('\n')
             body_text += '\n\n' + content.strip('\n\t ')
         elif part_type == 'inline':
+            if DEBUG_EMAIL:
+                sys.stderr.write('INLINE ATTACHMENT:\n')
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
             body_text += markdown
+
+    if DEBUG_EMAIL:
+        sys.stderr.write('--- THE END\n')
 
     #if the response separator is present -
     #split the body with it, and discard the "so and so wrote:" part
