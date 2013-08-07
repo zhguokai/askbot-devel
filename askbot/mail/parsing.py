@@ -21,6 +21,19 @@ KMAIL_QUOTE_RE = r'\AOn [^\n]+ you wrote:\s*\n\n'
 OUTLOOK_RTF_QUOTE_RE = r'\nSubject: [^\n]+\nFrom: [^\n]+\nTo: [^\n]+\nDate: [^\n]+\Z'
 OUTLOOK_TEXT_QUOTE_RE = r'\n_+\Z'
 
+OUTLOOK1_QUOTE_RE = r'\n-+Original Message-+\nFrom:.*\nSent:.*\nTo:.*Subject\n'
+
+# extra samples
+"""
+-----Original Message-----^M
+From: forum@example.com [mailto:forum@example.com] ^M
+Sent: Wednesday, August 07, 2013 11:00 AM^M
+To: Jane Doe^M
+Subject: "One more test question from email."^M
+
+"""
+
+
 def compile_quote_regexes():
     regex_names = filter(
         lambda v: v.endswith('_QUOTE_RE'),
