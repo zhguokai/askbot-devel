@@ -1338,6 +1338,7 @@ var ModalDialog = function() {
     this._reject_handler = function() { me.hide(); };
     this._content_element = undefined;
     this._headerEnabled = true;
+    this._className = undefined;
 };
 inherits(ModalDialog, WrappedElement);
 
@@ -1398,6 +1399,9 @@ ModalDialog.prototype.createDom = function() {
     var element = this._element;
 
     element.addClass('modal');
+    if (this._className) {
+        element.addClass(this._className);
+    }
 
     //1) create header
     if (this._headerEnabled) {
@@ -1459,6 +1463,7 @@ ModalDialog.prototype.createDom = function() {
  */
 var FileUploadDialog = function() {
     ModalDialog.call(this);
+    this._className = 'file-upload-dialog';
     this._post_upload_handler = undefined;
     this._fileType = 'image';
     this._headerEnabled = false;

@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
+# mohsenb <basirat@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-13 19:08+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-07-19 00:07+0000\n"
+"Last-Translator: mohsenb <basirat@gmail.com>\n"
 "Language-Team: Persian (Iran) (http://www.transifex.com/projects/p/askbot/language/fa_IR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,11 +32,11 @@ msgstr ""
 
 #: forms.py:140
 msgid "select country"
-msgstr ""
+msgstr "انتخاب کشور"
 
 #: forms.py:150
 msgid "Country"
-msgstr ""
+msgstr "کشور"
 
 #: forms.py:158
 msgid "Country field is required"
@@ -60,7 +61,7 @@ msgstr ""
 #: forms.py:247 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
-msgstr ""
+msgstr "عنوان"
 
 #: forms.py:249 templates/embed/ask_by_widget.html:170
 msgid "Please enter your question"
@@ -84,7 +85,7 @@ msgstr ""
 
 #: forms.py:309
 msgid "content"
-msgstr ""
+msgstr "محتوا"
 
 #: forms.py:370
 #, python-format
@@ -101,7 +102,7 @@ msgstr ""
 #: forms.py:410 forms.py:1006 models/widgets.py:27
 #: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
-msgstr ""
+msgstr "برچسب"
 
 #: forms.py:412
 #, python-format
@@ -150,15 +151,15 @@ msgstr ""
 
 #: forms.py:600 const/__init__.py:375
 msgid "approved"
-msgstr ""
+msgstr "پذیرفته شد"
 
 #: forms.py:601 const/__init__.py:376
 msgid "watched"
-msgstr ""
+msgstr "دیده شده"
 
 #: forms.py:602 const/__init__.py:377
 msgid "suspended"
-msgstr ""
+msgstr "معلق شده"
 
 #: forms.py:603 const/__init__.py:378
 msgid "blocked"
@@ -170,7 +171,7 @@ msgstr ""
 
 #: forms.py:606 const/__init__.py:374
 msgid "moderator"
-msgstr ""
+msgstr "ویراستار"
 
 #: forms.py:625
 msgid "Change status to"
@@ -178,7 +179,7 @@ msgstr ""
 
 #: forms.py:652
 msgid "which one?"
-msgstr ""
+msgstr "کدامیک؟"
 
 #: forms.py:673
 msgid "Cannot change own status"
@@ -205,7 +206,7 @@ msgstr ""
 
 #: forms.py:708
 msgid "Subject line"
-msgstr ""
+msgstr "موضوع"
 
 #: forms.py:713
 msgid "Message text"
@@ -294,7 +295,7 @@ msgstr ""
 
 #: forms.py:1373
 msgid "Real name"
-msgstr ""
+msgstr "نام واقعی"
 
 #: forms.py:1380
 msgid "Website"
@@ -302,7 +303,7 @@ msgstr ""
 
 #: forms.py:1387
 msgid "City"
-msgstr ""
+msgstr "شهر"
 
 #: forms.py:1396
 msgid "Show country"
@@ -322,11 +323,11 @@ msgstr ""
 
 #: forms.py:1416
 msgid "Profile"
-msgstr ""
+msgstr "شناسه "
 
 #: forms.py:1425
 msgid "Screen name"
-msgstr ""
+msgstr "نام صفحه"
 
 #: forms.py:1457 forms.py:1461
 msgid "this email has already been registered, please use another one"
@@ -338,7 +339,7 @@ msgstr ""
 
 #: forms.py:1522
 msgid "Asked by me"
-msgstr ""
+msgstr "پرسش از من"
 
 #: forms.py:1525
 msgid "Answered by me"
@@ -411,7 +412,7 @@ msgstr ""
 
 #: urls.py:66 urls.py:71 urls.py:78 urls.py:84 urls.py:93 urls.py:100
 msgid "users/"
-msgstr ""
+msgstr "کاربران"
 
 #: urls.py:71
 msgid "by-group/"
@@ -439,7 +440,7 @@ msgstr ""
 
 #: urls.py:115 urls.py:120
 msgid "badges/"
-msgstr ""
+msgstr "نشانها/"
 
 #: urls.py:133
 msgid "feedback/"
@@ -447,11 +448,11 @@ msgstr ""
 
 #: urls.py:154
 msgid "about/"
-msgstr ""
+msgstr "درباره/"
 
 #: urls.py:155
 msgid "faq/"
-msgstr ""
+msgstr "سوالات متداول"
 
 #: urls.py:156
 msgid "privacy/"
@@ -463,7 +464,7 @@ msgstr ""
 
 #: urls.py:159 urls.py:164
 msgid "answers/"
-msgstr ""
+msgstr "سوالات"
 
 #: urls.py:164 urls.py:256
 msgid "revisions/"
@@ -476,7 +477,7 @@ msgstr ""
 
 #: urls.py:221 urls.py:495 urls.py:500 urls.py:505 urls.py:510
 msgid "ask/"
-msgstr ""
+msgstr "سوال/"
 
 #: urls.py:231
 msgid "retag/"
@@ -484,11 +485,11 @@ msgstr ""
 
 #: urls.py:236
 msgid "close/"
-msgstr ""
+msgstr "بسته/"
 
 #: urls.py:241
 msgid "reopen/"
-msgstr ""
+msgstr "بازکردن مجدد/"
 
 #: urls.py:246
 msgid "answer/"
@@ -516,7 +517,7 @@ msgstr ""
 
 #: urls.py:459
 msgid "messages/"
-msgstr ""
+msgstr "پیامها/"
 
 #: urls.py:459
 msgid "markread/"
@@ -541,12 +542,12 @@ msgstr ""
 
 #: urls.py:560
 msgid "upload/"
-msgstr ""
+msgstr "بارگذاری/"
 
 #: urls.py:585 setup_templates/settings.py:229
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
-msgstr ""
+msgstr "حساب کاربری/"
 
 #: conf/access_control.py:8
 msgid "Access control settings"

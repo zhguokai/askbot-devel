@@ -590,7 +590,7 @@ class Post(models.Model):
         user_filter = models.Q(is_superuser=True) | models.Q(status='m')
         if askbot_settings.GROUPS_ENABLED:
             user_filter = user_filter & models.Q(groups__in=self.groups.all())
-        return User.objects.filter(user_filter)
+        return User.objects.filter(user_filter).distinct()
 
     def get_previous_answer(self, user=None):
         """returns a previous answer to a given answer;

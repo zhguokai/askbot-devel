@@ -32,10 +32,18 @@ hr {
     border-top: 1px dashed #ccccce;
 }
 
-input, select {
+input, select, textarea {
     vertical-align: middle;
     font-family: Trebuchet MS, "segoe ui", Helvetica, Tahoma, Verdana, MingLiu, PMingLiu, Arial, sans-serif;
     margin-left:0px;
+    -webkit-appearance: none;
+    .rounded-corners(0);
+}
+input[type="radio"] {
+    -webkit-appearance: radio;
+}
+input[type="checkbox"] {
+    -webkit-appearance: checkbox;
 }
 select {
     width: 100%;
@@ -4672,6 +4680,14 @@ td.setting-input {
         width: 100%;
         padding-right: 6px;
     }
+    .edit-question-page,
+    .edit-answer-page,
+    .openid-signin,
+    .meta {
+        #ContentLeft {
+            padding: 0 10px;
+        }
+    }
     .main-page h1,
     #askButton,
     #metaNav #navBadges,
@@ -4811,9 +4827,39 @@ td.setting-input {
     }
 }
 
+@media screen and (max-width: 480px) {
+    .openid-signin {
+        h1, h2 {
+            line-height: 1.1;
+            margin-bottom: 12px;
+        }
+    }
+
+    .openid-signin,
+    .meta,
+    .users-page,
+    .user-profile-edit-page,
+    .user-profile-page {
+    textarea,
+    input[type="text"]{
+        width: 100%;
+        }
+    }
+}
+
 @media screen and (max-width: 338px) {
     #scopeNav {
         display: none;
+    }
+    .ask-page,
+    .question-page,
+    .edit-question-page,
+    .edit-answer-page {
+        #id_post_author_username,
+        #id_post_author_email {
+            width: 100%;
+            margin: 6px 0;
+        }
     }
 }
 
@@ -4829,13 +4875,29 @@ body.anon.lang-es {
     }
 }
 
-body.lang-zh {
+body.lang-zh,
+body.lang-zh_CN,
+body.lang-zh_TW {
     .box .inputs {
          #interestingTagInput,
          #ignoredTagInput,
          #subscribedTagInput,
          #ab-tag-search {
-            width: 125px;
+            width: 142px;
          }
+    }
+    button,
+    input[type="submit"],
+    input[type="button"],
+    input[type="reset"],
+    .button {
+        line-height: 24px;
+    }
+    .box a.followed,
+    .box a.follow {
+        line-height: 34px !important;
+    }
+    &.question-page a.submit {
+        line-height: 30px !important;
     }
 }

@@ -3,9 +3,11 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
+# Ahmad Khayyat <akhayyat@gmail.com>, 2013
 # Ahmad Khayyat <akhayyat@gmail.com>, 2012
 # AminosAmigos <aminosamigos@gmail.com>, 2012
 # Fahad Al-Fattani <fahadaaf@gmail.com>, 2012
+# Husam M. ALFarra <husamfarra@gmail.com>, 2013
 # Khalid A Sam <kifcaliph@hotmail.com>, 2012
 # Khalid A Sam <kifcaliph@hotmail.com>, 2013
 # Ratnadeep Debnath <rtnpro@indifex.com>, 2012
@@ -14,8 +16,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-13 19:08+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-07-24 09:19+0000\n"
+"Last-Translator: Ahmad Khayyat <akhayyat@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/askbot/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -313,7 +315,7 @@ msgstr "لقد سألت هذا السؤال دون تحديد هويتك. فضل
 
 #: forms.py:1217
 msgid "reveal identity"
-msgstr "إفصاح الهوية"
+msgstr "الإفصاح عن الهوية"
 
 #: forms.py:1296
 msgid ""
@@ -370,7 +372,7 @@ msgstr "تم تسجيل هذا البريد الإلكتروني من قبل، �
 
 #: forms.py:1470
 msgid "Choose email tag filter"
-msgstr "اختر مرشح بريد إلكتروني للتصنيف"
+msgstr "اختر طريقة ترشيح الوسوم للبريد إلكتروني"
 
 #: forms.py:1522
 msgid "Asked by me"
@@ -382,19 +384,19 @@ msgstr "أسئلة أجبت عليها"
 
 #: forms.py:1528
 msgid "Individually selected"
-msgstr "اختيار فردي"
+msgstr "تم اختيارها مفردة"
 
 #: forms.py:1531
 msgid "Entire forum (tag filtered)"
-msgstr "المنتدي بالكامل (مرشح بالتصنيف)"
+msgstr "المنتدى بالكامل (مع ترشيح الوسوم)"
 
 #: forms.py:1535
 msgid "Comments and posts mentioning me"
-msgstr "تعليقات ومشاركات ذكرتني"
+msgstr "تعليقات ومشاركات تذكرني"
 
 #: forms.py:1619
 msgid "please choose one of the options above"
-msgstr "فضلاً قم باختيار أحد الخيارات أعلاه"
+msgstr "فضلاً اختر أحد الخيارات أعلاه"
 
 #: forms.py:1622
 msgid "okay, let's try!"
@@ -439,15 +441,15 @@ msgstr "أسئلة"
 
 #: urls.py:56
 msgid "question/"
-msgstr "سؤال/"
+msgstr "question/"
 
 #: urls.py:61
 msgid "tags/"
-msgstr "علامات/"
+msgstr "tags/"
 
 #: urls.py:66 urls.py:71 urls.py:78 urls.py:84 urls.py:93 urls.py:100
 msgid "users/"
-msgstr "مستخدمين/"
+msgstr "users/"
 
 #: urls.py:71
 msgid "by-group/"
@@ -455,11 +457,11 @@ msgstr ""
 
 #: urls.py:78 urls.py:159 urls.py:226 urls.py:520
 msgid "edit/"
-msgstr "تحرير/"
+msgstr "edit/"
 
 #: urls.py:85
 msgid "subscriptions/"
-msgstr "إشتراكات/"
+msgstr "subscriptions/"
 
 #: urls.py:94
 msgid "select_languages/"
@@ -471,27 +473,27 @@ msgstr ""
 
 #: urls.py:110
 msgid "users/update_has_custom_avatar/"
-msgstr "المستخدم/صورته/"
+msgstr "users/update_has_custom_avatar/"
 
 #: urls.py:115 urls.py:120
 msgid "badges/"
-msgstr "شارات/"
+msgstr "badges/"
 
 #: urls.py:133
 msgid "feedback/"
-msgstr "التعليقات/"
+msgstr "feedback/"
 
 #: urls.py:154
 msgid "about/"
-msgstr "عن/"
+msgstr "about/"
 
 #: urls.py:155
 msgid "faq/"
-msgstr "الأسئلة الشائعة/"
+msgstr "faq/"
 
 #: urls.py:156
 msgid "privacy/"
-msgstr "الخصوصية/"
+msgstr "privacy/"
 
 #: urls.py:157
 msgid "help/"
@@ -499,36 +501,36 @@ msgstr "مساعدة/"
 
 #: urls.py:159 urls.py:164
 msgid "answers/"
-msgstr "إجابات/"
+msgstr "answers/"
 
 #: urls.py:164 urls.py:256
 msgid "revisions/"
-msgstr "مراجعات/"
+msgstr "revisions/"
 
 #: urls.py:221 urls.py:226 urls.py:231 urls.py:236 urls.py:241 urls.py:246
 #: urls.py:256
 msgid "questions/"
-msgstr "أسئلة/"
+msgstr "questions/"
 
 #: urls.py:221 urls.py:495 urls.py:500 urls.py:505 urls.py:510
 msgid "ask/"
-msgstr "أسأل/"
+msgstr "ask/"
 
 #: urls.py:231
 msgid "retag/"
-msgstr "إعادة التعليم/"
+msgstr "retag/"
 
 #: urls.py:236
 msgid "close/"
-msgstr "إغلاق/"
+msgstr "close/"
 
 #: urls.py:241
 msgid "reopen/"
-msgstr "فتح مرة أخري/"
+msgstr "reopen/"
 
 #: urls.py:246
 msgid "answer/"
-msgstr "إجابة/"
+msgstr "answer/"
 
 #: urls.py:314
 msgid "tags/subscriptions/"
@@ -552,11 +554,11 @@ msgstr ""
 
 #: urls.py:459
 msgid "messages/"
-msgstr "رسائل/"
+msgstr "messages/"
 
 #: urls.py:459
 msgid "markread/"
-msgstr "تعليم كمقروء"
+msgstr "markread/"
 
 #: urls.py:490 urls.py:495 urls.py:500 urls.py:505 urls.py:510 urls.py:515
 #: urls.py:520 urls.py:525 urls.py:530
@@ -577,12 +579,12 @@ msgstr ""
 
 #: urls.py:560
 msgid "upload/"
-msgstr "تحميل/"
+msgstr "upload/"
 
 #: urls.py:585 setup_templates/settings.py:229
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
-msgstr "حساب/"
+msgstr "account/"
 
 #: conf/access_control.py:8
 msgid "Access control settings"
@@ -638,27 +640,27 @@ msgstr ""
 
 #: conf/badges.py:50
 msgid "Nice Answer: minimum upvotes for the answer"
-msgstr "جواب بارع: الحد الأدني تصويت مقبول للإجابة"
+msgstr "جواب لطيف: الحد الأدني من الأصوات للجواب"
 
 #: conf/badges.py:59
 msgid "Good Answer: minimum upvotes for the answer"
-msgstr "جواب جيد: الحد الأدني تصويت مقبول للإجابة"
+msgstr "جواب جيد: الحد الأدني من الأصوات للجواب"
 
 #: conf/badges.py:68
 msgid "Great Answer: minimum upvotes for the answer"
-msgstr "جواب عظيم: الحد الأدني تصويت مقبول للإجابة"
+msgstr "جواب عظيم: الحد الأدني من الأصوات للجواب"
 
 #: conf/badges.py:77
 msgid "Nice Question: minimum upvotes for the question"
-msgstr ""
+msgstr "سؤال لطيف: الحد الأدني من الأصوات للسؤال"
 
 #: conf/badges.py:86
 msgid "Good Question: minimum upvotes for the question"
-msgstr ""
+msgstr "سؤال جيد: الحد الأدني من الأصوات للسؤال"
 
 #: conf/badges.py:95
 msgid "Great Question: minimum upvotes for the question"
-msgstr "سؤال عظيم: "
+msgstr "سؤال عظيم: الحد الأدني من الأصوات للسؤال"
 
 #: conf/badges.py:104
 msgid "Popular Question: minimum views"
@@ -702,7 +704,7 @@ msgstr ""
 
 #: conf/badges.py:194
 msgid "Favorite Question: minimum stars"
-msgstr "سؤال مفضل:أقل نجوم"
+msgstr "سؤال مفضل: الحد الأدني من النجوم"
 
 #: conf/badges.py:203
 msgid "Stellar Question: minimum stars"
@@ -816,7 +818,7 @@ msgstr "عدد الأيام التي سيتم انتظارها قبل إرسال
 msgid ""
 "How often to send unanswered question reminders (in days between the "
 "reminders sent)."
-msgstr "عدد الأيام بين الرسائل التذكيرية للأسئلة غير المجابة"
+msgstr "عدد الأيام بين الرسائل التذكيرية للأسئلة غير المجابة."
 
 #: conf/email.py:181
 msgid "Max. number of reminders to send about unanswered questions"
@@ -882,7 +884,7 @@ msgstr ""
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
-msgstr "يطبق هذا الإعداد على البطاقات المذكورة في عناوين الأسئلة المرسلة بالبريد الإلكتروني"
+msgstr "يطبق هذا الإعداد على الوسوم المذكورة في عناوين الأسئلة المرسلة بالبريد الإلكتروني"
 
 #: conf/email.py:288
 msgid "Enable posting answers and comments by email"
@@ -912,7 +914,7 @@ msgstr ""
 
 #: conf/external_keys.py:19
 msgid "Google site verification key"
-msgstr "شفرة مفتاج قوقل للتحقق من الموقع"
+msgstr "مفتاح Google للتحقق من الموقع"
 
 #: conf/external_keys.py:21
 #, python-format
@@ -938,11 +940,11 @@ msgstr ""
 
 #: conf/external_keys.py:62
 msgid "Recaptcha public key"
-msgstr "مفتاح التشفير العام لنظام تحقق الهوية المرئي"
+msgstr "مفتاح Recaptcha العام (نظام التحقق من الهوية المرئي)"
 
 #: conf/external_keys.py:70
 msgid "Recaptcha private key"
-msgstr "مفتاح التشفير الخاص لنظام تحقق الهوية المرئي"
+msgstr "مفتاح Recaptcha الخاص"
 
 #: conf/external_keys.py:72
 #, python-format
@@ -1094,7 +1096,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:78
 msgid "Check to enable community wiki feature"
-msgstr "اختر لتمكين ويكي المجتمع"
+msgstr "اختر لتمكين وظيفة ويكي المجتمع"
 
 #: conf/forum_data_rules.py:87
 msgid "Allow asking questions anonymously"
@@ -1152,7 +1154,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:161
 msgid "Maximum length of tag (number of characters)"
-msgstr "طول البطاقات الأقصى (عدد الحروف)"
+msgstr "الحد الأقصى لطول الوسم (عدد الحروف)"
 
 #: conf/forum_data_rules.py:170
 msgid "Minimum length of title (number of characters)"
@@ -1196,7 +1198,7 @@ msgstr ""
 
 #: conf/forum_data_rules.py:256
 msgid "Mandatory tags"
-msgstr "بطاقات إلزامية"
+msgstr "وسوم إلزامية"
 
 #: conf/forum_data_rules.py:259
 msgid ""
@@ -1217,13 +1219,13 @@ msgstr ""
 
 #: conf/forum_data_rules.py:287
 msgid "Format of tag list"
-msgstr "تنسيق قائمة البطاقات"
+msgstr "تنسيق قائمة الوسوم"
 
 #: conf/forum_data_rules.py:289
 msgid ""
 "Select the format to show tags in, either as a simple list, or as a tag "
 "cloud"
-msgstr "اختر طريقة عرض البطاقات، إما كقائمة بسيطة، أو على شكل سحابة بطاقات"
+msgstr "اختر طريقة عرض الوسوم، إما كقائمة بسيطة، أو على شكل سحابة بطاقات"
 
 #: conf/forum_data_rules.py:301
 msgid "Use wildcard tags"
@@ -1284,7 +1286,7 @@ msgstr "في حالة عدم الاختيار، لن يكون هناك قيد ز
 
 #: conf/forum_data_rules.py:388
 msgid "Minutes allowed to edit a comment"
-msgstr "عدد الدقائق المسموح خلالها تعديل التعليقات"
+msgstr "عدد الدقائق المسموح خلالها بتعديل التعليقات"
 
 #: conf/forum_data_rules.py:389
 msgid "To enable this setting, check the previous one"
@@ -1321,11 +1323,11 @@ msgstr ""
 
 #: conf/forum_data_rules.py:436
 msgid "Maximum number of tags per question"
-msgstr "العدد الأقصى من البطاقات لكل سؤال"
+msgstr "العدد الأقصى من الوسوم لكل سؤال"
 
 #: conf/forum_data_rules.py:448
 msgid "Number of questions to list by default"
-msgstr "عدد الأسئلة الإفتراضي للعرض"
+msgstr "العدد الافتراضي للأسئلة المعروضة"
 
 #: conf/forum_data_rules.py:458
 msgid "What should \"unanswered question\" mean?"
@@ -1574,11 +1576,11 @@ msgstr "إعدادات مقدم خدمة تسجيل الدخول"
 
 #: conf/login_providers.py:22
 msgid "Show alternative login provider buttons on the password \"Sign Up\" page"
-msgstr "عرض أزرار لمقدمي خدمة تسجيل الدخول الآخرين على صفحة الالتحاق بالموقع"
+msgstr "عرض أزرار لمقدمي خدمة تسجيل الدخول الآخرين في صفحة الالتحاق بالموقع"
 
 #: conf/login_providers.py:31
 msgid "Always display local login form and hide \"Askbot\" button."
-msgstr "عرض خيار تسجيل الدخول باستخدام حساب محلي بشكل دائم وإخفاء زر \"askbot\"."
+msgstr "عرض خيار تسجيل الدخول باستخدام حساب محلي بشكل دائم وإخفاء زر \"Askbot\"."
 
 #: conf/login_providers.py:40
 msgid "Activate to allow login with self-hosted wordpress site"
@@ -1715,7 +1717,7 @@ msgstr "تسليم إجابتك"
 
 #: conf/minimum_reputation.py:49
 msgid "Accept own answer"
-msgstr "قبول إجابتك"
+msgstr "قبول إجابتي"
 
 #: conf/minimum_reputation.py:58
 msgid "Accept any answer"
@@ -1723,7 +1725,7 @@ msgstr ""
 
 #: conf/minimum_reputation.py:67
 msgid "Flag offensive"
-msgstr "أبلغ عن إساءة"
+msgstr "إبلاغ عن إساءة"
 
 #: conf/minimum_reputation.py:88
 msgid "Delete comments posted by others"
@@ -1757,7 +1759,7 @@ msgstr "إغلاق سؤالي"
 
 #: conf/minimum_reputation.py:146
 msgid "Retag questions posted by other people"
-msgstr "إعادة تعيين البطاقات لأسئلة الآخرين"
+msgstr "إعادة تعيين الوسوم لأسئلة الآخرين"
 
 #: conf/minimum_reputation.py:155
 msgid "Reopen own questions"
@@ -1960,7 +1962,7 @@ msgstr ""
 
 #: conf/sidebar_main.py:68
 msgid "Show tag selector in sidebar"
-msgstr "أظهر مؤشر الأوسمة في القائمة الجانبية"
+msgstr "عرض منتقي الوسوم في الشريط الجانبي"
 
 #: conf/sidebar_main.py:70
 msgid ""
@@ -1979,7 +1981,7 @@ msgstr ""
 
 #: conf/sidebar_main.py:94 conf/sidebar_question.py:132
 msgid "Custom sidebar footer"
-msgstr "تذيل قائمة جانبية مخصص"
+msgstr "تذييل مخصص للشريط الجانبي"
 
 #: conf/sidebar_main.py:97 conf/sidebar_question.py:135
 msgid ""
@@ -2032,7 +2034,7 @@ msgstr ""
 
 #: conf/sidebar_question.py:92
 msgid "Show tag list in sidebar"
-msgstr "أظهر مجموعة الأوسمة في القائمة الجانبية"
+msgstr "عرض قائمة الأوسمة في الشريط الجانبي"
 
 #: conf/sidebar_question.py:94
 msgid "Uncheck this if you want to hide the tag list from the sidebar "
@@ -2040,7 +2042,7 @@ msgstr ""
 
 #: conf/sidebar_question.py:105
 msgid "Show meta information in sidebar"
-msgstr "أضهر المعلومات الوصفية في القائمة الجانبية "
+msgstr "عرض المعلومات الوصفية في الشريط الجانبي"
 
 #: conf/sidebar_question.py:107
 msgid ""
@@ -2050,7 +2052,7 @@ msgstr ""
 
 #: conf/sidebar_question.py:119
 msgid "Show related questions in sidebar"
-msgstr "أظهر الأسئلة ذات الصلة في القائمة الجانبية"
+msgstr "عرض الأسئلة ذات الصلة في الشريط الجانبي"
 
 #: conf/sidebar_question.py:121
 msgid "Uncheck this if you want to hide the list of related questions. "
@@ -2086,15 +2088,15 @@ msgstr ""
 
 #: conf/site_settings.py:41
 msgid "Copyright message to show in the footer"
-msgstr "عبارة حقوق الملكية لتظهر في ذيل الصفحة"
+msgstr "عبارة حقوق الملكية المعروضة في ذيل الصفحة"
 
 #: conf/site_settings.py:51
 msgid "Site description for the search engines"
-msgstr "وصف الموقع للإستخدام في محركات البحث "
+msgstr "وصف الموقع لمحركات البحث "
 
 #: conf/site_settings.py:60
 msgid "Short name for your Q&A forum"
-msgstr "الإسم المختصر لمنتدى الأسئلة والأجوبة"
+msgstr "الاسم المختصر لمنتدى الأسئلة والأجوبة"
 
 #: conf/site_settings.py:70
 msgid "Please enter url of your site"
@@ -2269,7 +2271,7 @@ msgstr ""
 
 #: conf/skin_general_settings.py:137
 msgid "Select skin"
-msgstr "إختيار السمة"
+msgstr "اختيار السمة"
 
 #: conf/skin_general_settings.py:148
 msgid "Customize HTML <HEAD>"
@@ -2352,7 +2354,7 @@ msgstr ""
 
 #: conf/skin_general_settings.py:266
 msgid "Add custom javascript"
-msgstr "إضافة جافاسكريبت معدل"
+msgstr "إضافة javascript مخصص"
 
 #: conf/skin_general_settings.py:269
 msgid "Check to enable javascript that you can enter in the next field"
@@ -2598,23 +2600,23 @@ msgstr ""
 
 #: const/__init__.py:14
 msgid "not a real question"
-msgstr "سؤال ليس حقيقي"
+msgstr "ليس بسؤال حقيقي"
 
 #: const/__init__.py:15
 msgid "the question is answered, right answer was accepted"
-msgstr "تمت إجابة السؤال،وتم قبول الإجابة الصحيحة "
+msgstr "تمت إجابة السؤال، وتم قبول الجواب الصحيح"
 
 #: const/__init__.py:16
 msgid "question is not relevant or outdated"
-msgstr "سؤال غير ملائم و قديم"
+msgstr "سؤال غير ملائم أو قديم"
 
 #: const/__init__.py:17
 msgid "question contains offensive or malicious remarks"
-msgstr "السؤال يحتوي على عدواني أو علامة سيئة"
+msgstr "سؤال مسيء"
 
 #: const/__init__.py:18
 msgid "spam or advertising"
-msgstr "دعاية و إعلانات "
+msgstr "دعاية أو مادة غير مرغوب فيها"
 
 #: const/__init__.py:19
 msgid "too localized"
@@ -2671,7 +2673,7 @@ msgstr "الأقل تصويتاً"
 
 #: const/__init__.py:62
 msgid "relevance"
-msgstr "المرتبط"
+msgstr "الملاءمة"
 
 #: const/__init__.py:74
 msgid "Never"
@@ -2714,35 +2716,35 @@ msgstr "السحابة"
 
 #: const/__init__.py:138
 msgid "Question has no answers"
-msgstr "أسئلة بلا إجابات"
+msgstr "سؤال بلا إجابات"
 
 #: const/__init__.py:139
 msgid "Question has no accepted answers"
-msgstr "أسئلة بلا إجابات مقبولة"
+msgstr "سؤال بلا إجابات مقبولة"
 
 #: const/__init__.py:195
 msgid "asked a question"
-msgstr "طرح سؤلاً"
+msgstr "طرح سؤالاً"
 
 #: const/__init__.py:196
 msgid "answered a question"
-msgstr "أجاب سؤلاً"
+msgstr "أجاب سؤالاً"
 
 #: const/__init__.py:197 const/__init__.py:301
 msgid "commented question"
-msgstr "علّق علي سؤال"
+msgstr "علق علي سؤال"
 
 #: const/__init__.py:198 const/__init__.py:302
 msgid "commented answer"
-msgstr "علّق علي إجابة"
+msgstr "علق علي إجابة"
 
 #: const/__init__.py:199
 msgid "edited question"
-msgstr "حرّر سؤال"
+msgstr "حرر سؤالاً"
 
 #: const/__init__.py:200
 msgid "edited answer"
-msgstr "حرّر إجابة"
+msgstr "حرر إجابة"
 
 #: const/__init__.py:201
 msgid "received badge"
@@ -2750,7 +2752,7 @@ msgstr "تلقي شارة"
 
 #: const/__init__.py:202
 msgid "marked best answer"
-msgstr "مَعْلَمُ كأفضل سؤال"
+msgstr "اختار أفضل جواب"
 
 #: const/__init__.py:203
 msgid "upvoted"
@@ -2762,31 +2764,31 @@ msgstr ""
 
 #: const/__init__.py:205
 msgid "canceled vote"
-msgstr "تصويت ملغي"
+msgstr "ألغى صوتاً"
 
 #: const/__init__.py:206
 msgid "deleted question"
-msgstr "سؤال محذوف"
+msgstr "حذف سؤالاً"
 
 #: const/__init__.py:207
 msgid "deleted answer"
-msgstr "جواب محذوف"
+msgstr "حذف جواباً"
 
 #: const/__init__.py:208
 msgid "marked offensive"
-msgstr "مَعْلَمُ كعدواني"
+msgstr "أشار إلى محتوى مسيء"
 
 #: const/__init__.py:209
 msgid "updated tags"
-msgstr "أوسمة محدثة"
+msgstr "حدّث وسوماً"
 
 #: const/__init__.py:210
 msgid "selected favorite"
-msgstr "مختارات المفضلة"
+msgstr "اختار مفضلاً"
 
 #: const/__init__.py:211
 msgid "completed user profile"
-msgstr "الملف الشخصي المكتمل للمستخدم"
+msgstr "أكمل الملف الشخصي"
 
 #: const/__init__.py:212
 msgid "email update sent to user"
@@ -2806,7 +2808,7 @@ msgstr ""
 
 #: const/__init__.py:222
 msgid "mentioned in the post"
-msgstr "ذكرت في المشاركة"
+msgstr "ذكر في المشاركة"
 
 #: const/__init__.py:225
 msgid "created tag description"
@@ -2842,15 +2844,15 @@ msgstr "إجابة مقبولة"
 
 #: const/__init__.py:307
 msgid "[closed]"
-msgstr "(مغلق)"
+msgstr "[مغلق]"
 
 #: const/__init__.py:308
 msgid "[deleted]"
-msgstr "(محذوف)"
+msgstr "[محذوف]"
 
 #: const/__init__.py:309 views/readers.py:642
 msgid "initial version"
-msgstr "الإصدار الأولي"
+msgstr "النسخة الأولى"
 
 #: const/__init__.py:310
 msgid "retagged"
@@ -2883,15 +2885,15 @@ msgstr ""
 
 #: const/__init__.py:348
 msgid "instantly"
-msgstr "فوري"
+msgstr "حالاً"
 
 #: const/__init__.py:349
 msgid "daily"
-msgstr "يومي"
+msgstr "يومياً"
 
 #: const/__init__.py:350
 msgid "weekly"
-msgstr "أسبوعي"
+msgstr "أسبوعياً"
 
 #: const/__init__.py:351
 msgid "no email"
@@ -2975,11 +2977,11 @@ msgstr ""
 
 #: const/message_keys.py:21
 msgid "most relevant questions"
-msgstr "الأسئلة الأكثر إرتباطاً"
+msgstr "الأسئلة الأكثر ارتباطاً"
 
 #: const/message_keys.py:22
 msgid "click to see most relevant questions"
-msgstr "انقر لرؤية الأسئلة الأكثر إرتباطاً"
+msgstr "انقر لرؤية الأسئلة الأكثر ارتباطاً"
 
 #: const/message_keys.py:23
 msgid "by relevance"
@@ -2987,7 +2989,7 @@ msgstr "بالإنتماء"
 
 #: const/message_keys.py:24
 msgid "click to see the oldest questions"
-msgstr "انقر لرؤية الأسئلة الأقدم"
+msgstr "انقر لرؤية أقدم الأسئلة"
 
 #: const/message_keys.py:25
 msgid "by date"
@@ -2995,7 +2997,7 @@ msgstr "بالتاريخ"
 
 #: const/message_keys.py:26
 msgid "click to see the newest questions"
-msgstr "انقر لرؤية الأسئلة الأحدث"
+msgstr "انقر لرؤية أحدث الأسئلة"
 
 #: const/message_keys.py:27
 msgid "click to see the least recently updated questions"
@@ -3011,7 +3013,7 @@ msgstr ""
 
 #: const/message_keys.py:30
 msgid "click to see the least answered questions"
-msgstr "انقر لرؤية الأسئلة الأقل عدد إجابات"
+msgstr "انقر لرؤية الأسئلة الأقل إجابات"
 
 #: const/message_keys.py:31
 msgid "by answers"
@@ -3019,7 +3021,7 @@ msgstr "بالإجابات"
 
 #: const/message_keys.py:32
 msgid "click to see the most answered questions"
-msgstr "انقر لرؤية الأسئلة الأكثر عدد إجابات"
+msgstr "انقر لرؤية الأسئلة الأكثر إجابات"
 
 #: const/message_keys.py:33
 msgid "click to see least voted questions"
@@ -3084,19 +3086,19 @@ msgstr ""
 
 #: deps/django_authopenid/forms.py:262
 msgid "Please, enter your user name"
-msgstr "من فضلك، ادخل اسم مستخدم لك"
+msgstr "فضلاً أدخل اسم المستخدم"
 
 #: deps/django_authopenid/forms.py:266
 msgid "Please, enter your password"
-msgstr "من فضلك، ادخل كلمة مرورك"
+msgstr "فضلاً أدخل كلمة السر"
 
 #: deps/django_authopenid/forms.py:273 deps/django_authopenid/forms.py:277
 msgid "Please, enter your new password"
-msgstr "من فضلك، أدخل كلمة المرور الجديدة"
+msgstr "فضلاً أدخل كلمة السر الجديدة"
 
 #: deps/django_authopenid/forms.py:288
 msgid "Passwords did not match"
-msgstr "كلمات المرور لم تتطابق"
+msgstr "كلمات السر لم تتطابق"
 
 #: deps/django_authopenid/forms.py:300
 #, python-format
@@ -3105,7 +3107,7 @@ msgstr ""
 
 #: deps/django_authopenid/forms.py:338
 msgid "Current password"
-msgstr "كلمة المرور الحالية"
+msgstr "كلمة السر الحالية"
 
 #: deps/django_authopenid/forms.py:349
 msgid ""
@@ -3115,11 +3117,11 @@ msgstr ""
 
 #: deps/django_authopenid/forms.py:399
 msgid "Sorry, we don't have this email address in the database"
-msgstr "عذراً،لا يوجد لدينا هذا البريد الإلكتروني في قاعدة البيانات."
+msgstr "عذراً، هذا البريد الإلكتروني غير موجود في قاعدة البيانات"
 
 #: deps/django_authopenid/forms.py:438
 msgid "Your user name (<i>required</i>)"
-msgstr "اسم المستخدم لك (<i>مطلوب</i>)"
+msgstr "اسم المستخدم (<i>مطلوب</i>)"
 
 #: deps/django_authopenid/forms.py:455
 msgid "sorry, there is no such user name"
@@ -3128,7 +3130,7 @@ msgstr "عفواً، لا يوجد اسم الدخول هذا"
 #: deps/django_authopenid/urls.py:14 deps/django_authopenid/urls.py:20
 #: deps/django_authopenid/urls.py:23 setup_templates/settings.py:229
 msgid "signin/"
-msgstr "دخول/"
+msgstr "signin/"
 
 #: deps/django_authopenid/urls.py:15
 msgid "widget/signin/"
@@ -3136,7 +3138,7 @@ msgstr ""
 
 #: deps/django_authopenid/urls.py:18
 msgid "signout/"
-msgstr "خروج/"
+msgstr "signout/"
 
 #: deps/django_authopenid/urls.py:23
 msgid "complete-oauth/"
@@ -3174,11 +3176,11 @@ msgstr ""
 
 #: deps/django_authopenid/util.py:386
 msgid "Change your password"
-msgstr "تغير كلمة السر"
+msgstr "تغيير كلمة السر"
 
 #: deps/django_authopenid/util.py:486
 msgid "Sign in with Yahoo"
-msgstr "الدخول بحساب بريد ياهو"
+msgstr "الدخول بحساب Yahoo"
 
 #: deps/django_authopenid/util.py:493
 msgid "AOL screen name"
@@ -3345,7 +3347,7 @@ msgstr ""
 
 #: deps/livesettings/models.py:107 deps/livesettings/models.py:153
 msgid "Site"
-msgstr "موقع"
+msgstr "الموقع"
 
 #: deps/livesettings/values.py:72
 msgid "Main"
@@ -3816,7 +3818,7 @@ msgstr "في %(date)s"
 
 #: models/__init__.py:1997
 msgid "in two days"
-msgstr "خلال يومان"
+msgstr "خلال يومين"
 
 #: models/__init__.py:1999
 msgid "tomorrow"
@@ -3860,7 +3862,7 @@ msgstr[5] "%(days)d أيام"
 msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
 "post an answer %(left)s"
-msgstr "علي الأعضاء الجدد الإنتظار %(days)s يوماً للإجابة علي أسئلتهم بأنفسهم. يمكنك إرسال الإجابة لاحقاً بعد %(left)s"
+msgstr "علي الأعضاء الجدد الانتظار %(days)s يوماً للإجابة علي أسئلتهم بأنفسهم. يمكنك إرسال إجابة %(left)s"
 
 #: models/__init__.py:2194 templates/email/feedback_email.txt:9
 msgid "Anonymous"
@@ -3876,15 +3878,15 @@ msgstr "مشرف المنتدي"
 
 #: models/__init__.py:2302
 msgid "Suspended User"
-msgstr "عضو موقوف"
+msgstr "مستخدم موقوف مؤقتاً"
 
 #: models/__init__.py:2304
 msgid "Blocked User"
-msgstr "عضو ممنوع"
+msgstr "مستخدم محجوب"
 
 #: models/__init__.py:2306
 msgid "Registered User"
-msgstr "عضو مسجل"
+msgstr "مستخدم مسجل"
 
 #: models/__init__.py:2308
 msgid "Watched User"
@@ -3892,7 +3894,7 @@ msgstr ""
 
 #: models/__init__.py:2310
 msgid "Approved User"
-msgstr "عضو مقبول"
+msgstr "مستخدم مقبول"
 
 #: models/__init__.py:2495
 #, python-format

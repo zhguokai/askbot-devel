@@ -12,7 +12,7 @@ from jinja2.exceptions import TemplateNotFound
 from jinja2.utils import open_if_exists
 from askbot.conf import settings as askbot_settings
 from askbot.skins import utils
-from askbot.utils.translation import get_language
+from askbot.utils.translation import get_language, HAS_ASKBOT_LOCALE_MIDDLEWARE
 
 from coffin import template
 template.add_to_builtins('askbot.templatetags.extra_filters_jinja')
@@ -66,14 +66,17 @@ class SkinEnvironment(CoffinEnvironment):
         if django_settings.ASKBOT_CSS_DEVEL is True:
             url = utils.get_media_url('style/extra.less', ignore_missing=True)
             rel = "stylesheet/less"
+            link_type = "text/less"
 
         #second try - if there is no extra.less in devel mode - try css
         if url is None:
             url = utils.get_media_url('style/extra.css', ignore_missing=True)
             rel = "stylesheet"
+            link_type = "text/css"
 
         if url is not None:
-            return '<link href="%s" rel="%s" type="text/less" />' % (url, rel)
+            return '<link href="%s" rel="%s" type="%s" />' % \
+                (url, rel, link_type)
 
         return ''
 
@@ -90,8 +93,9 @@ def load_skins(language_code):
         #skins[skin_name].filters['media'] = filters.media
     return skins
 
-if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-    SKINS = dict()
+SKINS = dict()
+if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) or\
+        HAS_ASKBOT_LOCALE_MIDDLEWARE:
     for lang in dict(django_settings.LANGUAGES).keys():
         SKINS.update(load_skins(lang))
 else:

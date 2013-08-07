@@ -1,76 +1,76 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-# Translators:
 # Tomoyuki KATO <tomo@dream.daynight.jp>, 2012-2013
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: askbot\n"
+"Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-07-13 19:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
-"Language-Team: Japanese (http://www.transifex.com/projects/p/askbot/language/ja/)\n"
+"PO-Revision-Date: 2011-12-07 11:33+0200\n"
+"Last-Translator: tnishiki <tnishiki@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.6\n"
 
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr "本当に %s のログインを削除したいですか？"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr "１つ以上のログイン方法を追加してください。"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr "今すぐにログインする方法がありません、以下のアイコンのどれかをクリックして1つ以上を追加してください。"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
-msgstr "パスワードが一致しません"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:162
 msgid "Show/change current login methods"
-msgstr "現在のログイン方法の表示・変更"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:227
 #, c-format
 msgid "Please enter your %s, then proceed"
-msgstr "%s を入力して、進んでください"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:229
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr "%(provider_name)s アカウントを %(site)s に接続します"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:323
 #, c-format
 msgid "Change your %s password"
-msgstr "%s のパスワードを変更します"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:324
 msgid "Change password"
-msgstr "パスワードを変更します"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:327
 #, c-format
 msgid "Create a password for %s"
-msgstr "%s のパスワードを作成します"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:328
 msgid "Create password"
-msgstr "パスワードを作成します"
+msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:344
 msgid "Create a password-protected account"
-msgstr "パスワード保護されたアカウントを作成します"
+msgstr ""
 
 #: media/js/group_messaging.js:102 media/js/group_messaging.js.c:293
 msgid "required"
@@ -129,7 +129,7 @@ msgstr ""
 
 #: media/js/post.js:28
 msgid "loading..."
-msgstr "読み込み中..."
+msgstr ""
 
 #: media/js/post.js:100
 msgid "must be shorter than %(max_chars)s character"
@@ -180,31 +180,31 @@ msgstr ""
 
 #: media/js/post.js:548
 msgid "insufficient privilege"
-msgstr "不十分な権限"
+msgstr ""
 
 #: media/js/post.js:549
 msgid "cannot pick own answer as best"
-msgstr "申し訳ありませんが、あなたの回答を受領できません"
+msgstr ""
 
 #: media/js/post.js:552 media/js/post.js.c:1416
 msgid "please login"
-msgstr "ログインしてください"
+msgstr ""
 
 #: media/js/post.js:554
 msgid "anonymous users cannot follow questions"
-msgstr "匿名ユーザーは質問をフォローできません"
+msgstr ""
 
 #: media/js/post.js:555
 msgid "anonymous users cannot subscribe to questions"
-msgstr "匿名ユーザーは質問を購読できません"
+msgstr ""
 
 #: media/js/post.js:556 media/js/post.js.c:1426
 msgid "anonymous users cannot vote"
-msgstr "申し訳ありませんが、匿名ユーザーは投票できません "
+msgstr ""
 
 #: media/js/post.js:558
 msgid "please confirm offensive"
-msgstr "あなたはこの投稿が攻撃的、スパム、広告、悪意のある意見などであると思いますか？"
+msgstr ""
 
 #: media/js/post.js:559
 msgid "please confirm removal of offensive flag"
@@ -212,23 +212,23 @@ msgstr "この投稿が本当に、攻撃的、スパム、広告、悪意のあ
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
-msgstr "匿名ユーザーが攻撃的な投稿のフラグをつけられません"
+msgstr ""
 
 #: media/js/post.js:561
 msgid "confirm delete"
-msgstr "本当にこれを削除したいですか？"
+msgstr ""
 
 #: media/js/post.js:562
 msgid "anonymous users cannot delete/undelete"
-msgstr "申し訳ありませんが、匿名ユーザーは投稿を削除または復旧できません"
+msgstr ""
 
 #: media/js/post.js:563
 msgid "post recovered"
-msgstr "これで投稿が復元されました！"
+msgstr ""
 
 #: media/js/post.js:564
 msgid "post deleted"
-msgstr "投稿が削除されました"
+msgstr ""
 
 #: media/js/post.js:831
 msgid "Follow"
@@ -266,11 +266,11 @@ msgstr ""
 
 #: media/js/post.js:1665
 msgid "add comment"
-msgstr "コメントの追加"
+msgstr ""
 
 #: media/js/post.js:1671
 msgid "save comment"
-msgstr "コメントの保存"
+msgstr ""
 
 #: media/js/post.js:1711
 #, c-format
@@ -313,7 +313,7 @@ msgstr ""
 
 #: media/js/post.js:2560
 msgid "Please enter question title (>10 characters)"
-msgstr "質問の見出しを入力してください ( >10 文字)"
+msgstr ""
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
@@ -341,7 +341,8 @@ msgstr ""
 
 #: media/js/post.js:3444
 #, c-format
-msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
+msgid ""
+"tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr ""
 
 #: media/js/post.js:3453
@@ -392,21 +393,21 @@ msgstr ""
 
 #: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
-msgstr "タグ \"<span></span>\" が一致します:"
+msgstr ""
 
 #: media/js/tag_selector.js:84
 #, c-format
 msgid "and %s more, not shown..."
-msgstr "さらに %s 個、表示されていません..."
+msgstr ""
 
 #: media/js/user.js:15
 msgid "Please select at least one item"
-msgstr "最低1つの項目を選択してください"
+msgstr ""
 
 #: media/js/user.js:59
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] "この通知を削除しますか？"
+msgstr[0] ""
 
 #: media/js/user.js:66
 msgid "Close this entry?"
@@ -460,22 +461,22 @@ msgstr ""
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr "%(username)s をフォローするには<a href=\"%(signin_url)s\">サインイン</a>してください"
+msgstr ""
 
 #: media/js/user.js:740
 #, c-format
 msgid "unfollow %s"
-msgstr "%s のフォロー解除"
+msgstr ""
 
 #: media/js/user.js:743
 #, c-format
 msgid "following %s"
-msgstr "%s のフォロー中"
+msgstr ""
 
 #: media/js/user.js:749
 #, c-format
 msgid "follow %s"
-msgstr "%s のフォロー"
+msgstr ""
 
 #: media/js/user.js:883
 msgid "add group"
@@ -491,7 +492,7 @@ msgstr ""
 
 #: media/js/utils.js:117
 msgid "click to close"
-msgstr "閉じるにはクリックしてください"
+msgstr ""
 
 #: media/js/utils.js:880
 msgid "click to edit this comment"
@@ -703,67 +704,67 @@ msgstr ""
 
 #: media/js/wmd/wmd.js:31
 msgid "bold"
-msgstr "太字"
+msgstr ""
 
 #: media/js/wmd/wmd.js:32
 msgid "italic"
-msgstr "斜体"
+msgstr ""
 
 #: media/js/wmd/wmd.js:33
 msgid "link"
-msgstr "リンク"
+msgstr ""
 
 #: media/js/wmd/wmd.js:34
 msgid "quote"
-msgstr "引用"
+msgstr ""
 
 #: media/js/wmd/wmd.js:35
 msgid "preformatted text"
-msgstr "整形済みテキスト"
+msgstr ""
 
 #: media/js/wmd/wmd.js:36
 msgid "image"
-msgstr "画像"
+msgstr ""
 
 #: media/js/wmd/wmd.js:37
 msgid "attachment"
-msgstr "添付"
+msgstr ""
 
 #: media/js/wmd/wmd.js:38
 msgid "numbered list"
-msgstr "番号付きリスト"
+msgstr ""
 
 #: media/js/wmd/wmd.js:39
 msgid "bulleted list"
-msgstr "箇条書きリスト"
+msgstr ""
 
 #: media/js/wmd/wmd.js:40
 msgid "heading"
-msgstr "見出し"
+msgstr ""
 
 #: media/js/wmd/wmd.js:41
 msgid "horizontal bar"
-msgstr "水平線"
+msgstr ""
 
 #: media/js/wmd/wmd.js:42
 msgid "undo"
-msgstr "やり直し"
+msgstr ""
 
 #: media/js/wmd/wmd.js:43 media/js/wmd/wmd.js.c:1169
 msgid "redo"
-msgstr "再実行"
+msgstr ""
 
 #: media/js/wmd/wmd.js:54
 msgid "enter image url"
-msgstr "画像のURL（例、http://www.example.com/image.jpg）を入力してください、または画像ファイルをアップロードしてください"
+msgstr ""
 
 #: media/js/wmd/wmd.js:55
 msgid "enter url"
-msgstr "ウェブアドレス（例、http://www.example.com \"page title\"）を入力してください"
+msgstr ""
 
 #: media/js/wmd/wmd.js:56
 msgid "upload file attachment"
-msgstr "ファイルを選択してアップロードしてください:"
+msgstr ""
 
 #: media/js/wmd/wmd.js:1836
 msgid "image description"
@@ -777,11 +778,5 @@ msgstr ""
 msgid "link text"
 msgstr ""
 
-#~ msgid "post a comment"
-#~ msgstr "save comment"
-
-#~ msgid "%s content minchars"
-#~ msgstr "please enter more than %s characters"
-
-#~ msgid "%s title minchars"
-#~ msgstr "please enter at least %s characters"
+msgid "post a comment"
+msgstr "save comment"
