@@ -2417,6 +2417,12 @@ def user_get_profile_url(self, profile_section=None):
 def user_get_absolute_url(self):
     return self.get_profile_url()
 
+def user_get_primary_language(self):
+    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        return django_settings.LANGUAGE_CODE
+    else:
+        return self.languages.split()[0]
+
 def get_profile_link(self):
     profile_link = u'<a href="%s">%s</a>' \
         % (self.get_profile_url(), escape(self.username))
@@ -3040,6 +3046,7 @@ User.add_to_class('has_affinity_to_question', user_has_affinity_to_question)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)
 User.add_to_class('get_badge_summary', user_get_badge_summary)
+User.add_to_class('get_primary_language', user_get_primary_language)
 User.add_to_class('get_status_display', user_get_status_display)
 User.add_to_class('get_old_vote_for_post', user_get_old_vote_for_post)
 User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)
