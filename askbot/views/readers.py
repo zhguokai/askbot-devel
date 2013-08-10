@@ -282,7 +282,7 @@ def get_top_answers(request):
                         )
         return HttpResponse(json_string, mimetype='application/json')
     else:
-        raise HttpResponseBadRequest()
+        return HttpResponseBadRequest()
 
 def tags(request):#view showing a listing of available tags - plain list
 
