@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from askbot.conf import settings as askbot_settings
 
+#these functions will be per-feed
 def add_space(name):
     """adds space if it does not exist"""
     if not space_exists(name):
@@ -21,26 +22,14 @@ def get_default():
     custom = askbot_settings.FORUM_SPACES
     if askbot_settings.SPACES_ENABLED and custom.strip():
         return custom.split(',')[0].strip()
-    elif django_settings.ASKBOT_TRANSLATE_URL:
-        return _('questions')
-    else:
-        return 'questions'
+    return None
 
 def get_spaces():
     """returns list of available spaces"""
     custom = askbot_settings.FORUM_SPACES
     if askbot_settings.SPACES_ENABLED and custom.strip():
         return map(lambda v: v.strip(), custom.split(','))
-    elif django_settings.ASKBOT_TRANSLATE_URL:
-        return [_('questions'),]
-    else:
-        return ['questions',]
-
-def get_url(url_pattern_name, space=None, kwargs=None):
-    """reverse url prefixed with space"""
-    kwargs = kwargs or dict()
-    kwargs['space'] = space or get_default()
-    return reverse(url_pattern_name, kwargs=kwargs)
+    return []
 
 def space_exists(value):
     return value in get_spaces()

@@ -19,6 +19,7 @@ from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 from askbot.conf import get_tag_display_filter_strategy_choices
+from askbot import feeds
 from askbot import spaces
 from tinymce.widgets import TinyMCE
 import logging
@@ -576,16 +577,16 @@ class ShowQuestionsForm(forms.Form):
     """Validates parameters from the questions listing url
     which are encoded in the path section.
     """
-    space = forms.CharField(max_length=64)
+    feed = forms.CharField(max_length=64)
     #todo: add all the remaining fields
 
-    def clean_space(self):
+    def clean_feed(self):
         #space must match one of the items
-        space = self.cleaned_data.get('space', '')
-        if spaces.space_exists(space):
-            return space
+        feed = self.cleaned_data.get('feed', '')
+        if feeds.feed_exists(feed):
+            return feed
         else:
-            raise forms.ValidationError('unrecognized forum space "%s"' % space)
+            raise forms.ValidationError('unrecognized forum feed "%s"' % feed)
 
 class ChangeUserReputationForm(forms.Form):
     """Form that allows moderators and site administrators
@@ -941,7 +942,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
-        self._space = kwargs.pop('space', None)
+        self._feed = kwargs.pop('feed', None)
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
         self.fields['text'] = QuestionEditorField(user=user)
@@ -953,7 +954,11 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
             self.hide_field('ask_anonymously')
 
     def clean_space(self):
-        return self._space or spaces.get_default()
+        """this is not a real clean code as we don't have field for space
+        in this form, it is called from the general "clean" method
+        """
+        #todo: get default space for a feed instead
+        return spaces.get_default()
 
     def clean_ask_anonymously(self):
         """returns false if anonymous asking is not allowed

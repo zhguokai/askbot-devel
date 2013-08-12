@@ -787,7 +787,7 @@ class Post(models.Model):
         return self.approved is False
 
     def get_absolute_url(self, 
-            space=None, no_slug = False,
+            feed=None, no_slug = False,
             question_post=None, thread=None
         ):
         from askbot.utils.slug import slugify
@@ -801,8 +801,8 @@ class Post(models.Model):
             request_language = get_language()
             activate_language(self.thread.language_code)
 
-        if space is None:
-            space = self.thread.get_default_space()
+        if feed is None:
+            feed = self.thread.get_default_feed()
 
         if self.is_answer():
             if not question_post:
@@ -810,7 +810,7 @@ class Post(models.Model):
 
             url_kwargs = {
                 'id': question_post.id,
-                'space': space
+                'feed': feed
             }
             base_url = urlresolvers.reverse('question', kwargs=url_kwargs)
 
@@ -829,7 +829,7 @@ class Post(models.Model):
         elif self.is_question():
             url_kwargs = {
                 'id': self.id,
-                'space': space
+                'feed': feed
             }
             url = urlresolvers.reverse('question', kwargs=url_kwargs)
             if thread:

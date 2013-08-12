@@ -18,7 +18,7 @@ from askbot.skins.loaders import get_skin
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
-from askbot.utils.forms import get_space
+from askbot.utils.forms import get_feed
 from askbot.utils.translation import get_language
 
 def application_settings(request):
@@ -88,10 +88,10 @@ def application_settings(request):
         'dummy_search_state': DummySearchState()
     }
 
-    space = get_space(request)
-    search_state = (space and SearchState(space=space) or DummySearchState())
+    feed = get_feed(request)
+    search_state = (feed and SearchState(feed=feed) or DummySearchState())
     context['dummy_search_state'] = search_state
-    context['space'] = space
+    context['feed'] = feed 
 
     if askbot_settings.GROUPS_ENABLED:
         #calculate context needed to list all the groups

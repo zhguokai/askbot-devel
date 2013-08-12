@@ -32,7 +32,7 @@ from django.utils.html import strip_tags as strip_all_tags
 from django.views.decorators import csrf
 
 from askbot.utils.slug import slugify
-from askbot.utils.forms import get_space
+from askbot.utils.forms import get_feed
 from askbot.utils.html import sanitize_html
 from askbot.mail import send_mail
 from askbot.utils.http import get_request_info
@@ -46,7 +46,7 @@ from askbot import exceptions
 from askbot.models.badges import award_badges_signal
 from askbot.models.tag import format_personal_group_name
 from askbot.search.state_manager import SearchState
-from askbot import spaces
+from askbot import feeds
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
 
@@ -1055,7 +1055,7 @@ def user(request, id, slug=None, tab_name=None):
     user_view_func = USER_VIEW_CALL_TABLE.get(tab_name, user_stats)
 
     search_state = SearchState( # Non-default SearchState with user data set
-        space=get_space(request),
+        feed=get_feed(request),
         scope=None,
         sort=None,
         query=None,

@@ -24,7 +24,7 @@ from django.http import Http404
 from askbot.conf import settings as askbot_settings
 from askbot.models import Post
 from askbot.utils.html import site_url
-from askbot import spaces
+from askbot import feeds 
 
 class RssIndividualQuestionFeed(Feed):
     """rss feed class for particular questions
@@ -53,7 +53,7 @@ class RssIndividualQuestionFeed(Feed):
         return site_url(item.get_absolute_url())
 
     def link(self):
-        return site_url(spaces.get_url('questions'))
+        return site_url(feeds.get_url('questions'))
 
     def item_pubdate(self, item):
         """get date of creation for the item
@@ -120,7 +120,7 @@ class RssLastestQuestionsFeed(Feed):
         return site_url(item.get_absolute_url())
 
     def link(self):
-        return site_url(spaces.get_url('questions'))
+        return site_url(feeds.get_url('questions'))
 
     def item_author_name(self, item):
         """get name of author

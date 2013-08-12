@@ -214,21 +214,21 @@ def import_data(request):
     "Login takes about 30 seconds, initial signup takes a minute or less."
 ))
 @decorators.check_spam('text')
-def ask(request, space=None):#view used to ask a new question
+def ask(request, feed=None):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
 
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
-    request.session['askbot_space'] = space
+    request.session['askbot_feed'] = feed
     if request.user.is_authenticated():
         if request.user.is_read_only():
             referer = request.META.get("HTTP_REFERER", reverse('questions'))
             request.user.message_set.create(message=_('Sorry, but you have only read access'))
             return HttpResponseRedirect(referer)
 
-    form = forms.AskForm(request.REQUEST, space=space, user=request.user)
+    form = forms.AskForm(request.REQUEST, feed=feed, user=request.user)
     if request.method == 'POST':
         if form.is_valid():
             timestamp = datetime.datetime.now()
@@ -324,7 +324,7 @@ def ask(request, space=None):#view used to ask a new question
         'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
         'category_tree_data': askbot_settings.CATEGORY_TREE,
-        'search_state': SearchState(space=space),
+        'search_state': SearchState(feed=feed),
         'tag_names': list()#need to keep context in sync with edit_question for tag editor
     }
     data.update(context.get_for_tag_editor())

@@ -10,7 +10,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify
 from askbot.utils.functions import split_list
 from askbot import const
-from askbot import spaces
+from askbot import feeds
 from longerusername import MAX_USERNAME_LENGTH
 import logging
 import urllib
@@ -28,15 +28,15 @@ def clean_next(next, default = None):
     logging.debug('next url is %s' % next)
     return next
 
-def get_space(request):
-    return request.session.get('askbot_space', spaces.get_default())
+def get_feed(request):
+    return request.session.get('askbot_feed', feeds.get_default())
 
 def get_next_url(request, default = None):
     #todo: clean this up - the "space" parameter is new
-    space = get_space(request)
-    if space:
+    feed = get_feed(request)
+    if feed:
         #default to the space root url for now
-        return spaces.get_url('questions', space)
+        return feeds.get_url('questions', feed)
     else:
         #otherwise use the old way of passing next url
         return clean_next(request.REQUEST.get('next'), default)

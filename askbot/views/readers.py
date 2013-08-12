@@ -40,7 +40,7 @@ from askbot import models
 from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
-from askbot import spaces
+from askbot import feeds
 from askbot.startup_procedures import domain_is_bad
 from askbot.utils import functions
 from askbot.utils.html import sanitize_html
@@ -70,9 +70,9 @@ DEFAULT_PAGE_SIZE = 60
 
 def index(request):#generates front page - shows listing of questions sorted in various ways
     """index view mapped to the root url of the Q&A site
-    This is the future placeholder for the "spaces" listing view
+    This is the future placeholder for the "feeds" listing view
     """
-    return HttpResponseRedirect(spaces.get_url('questions'))
+    return HttpResponseRedirect(feeds.get_url('questions'))
 
 def questions(request, **kwargs):
     """
@@ -87,7 +87,7 @@ def questions(request, **kwargs):
     if form.is_valid() is False:
         raise Http404()
 
-    request.session['askbot_space'] = kwargs['space']
+    request.session['askbot_feed'] = kwargs['feed']
 
     search_state = SearchState(
                     user_logged_in=request.user.is_authenticated(),
@@ -230,7 +230,7 @@ def questions(request, **kwargs):
             'questions_count' : paginator.count,
             'reset_method_count': reset_method_count,
             'scope': search_state.scope,
-            'space': search_state.space,
+            'feed': search_state.feed,
             'show_sort_by_relevance': conf.should_show_sort_by_relevance(),
             'search_tags' : search_state.tags,
             'sort': search_state.sort,
@@ -346,11 +346,11 @@ def tags(request):#view showing a listing of available tags - plain list
         return render(request, 'tags.html', data)
 
 @csrf.csrf_protect
-def question(request, space=None, id=None):#refactor - long subroutine. display question body, answers and comments
+def question(request, feed=None, id=None):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and
     all answers to it
     """
-    request.session['askbot_space'] = space
+    request.session['askbot_feed'] = feed
     #process url parameters
     #todo: fix inheritance of sort method from questions
     #before = datetime.datetime.now()
@@ -610,7 +610,7 @@ def question(request, space=None, id=None):#refactor - long subroutine. display 
         'question' : question_post,
         'thread': thread,
         'thread_is_moderated': thread.is_moderated(),
-        'search_state': SearchState(space=space),
+        'search_state': SearchState(feed=feed),
         'user_is_thread_moderator': thread.has_moderator(request.user),
         'published_answer_ids': published_answer_ids,
         'answer' : answer_form,

@@ -16,6 +16,7 @@ from django.utils.translation import get_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
+from askbot import feeds
 from askbot import mail
 from askbot import spaces
 from askbot.mail import messages
@@ -330,9 +331,10 @@ class ThreadManager(BaseQuerySetManager):
         else:
             meta_data['non_existing_tags'] = list()
 
-        #filter by space if enabled
+        #this allows to emulate spaces via tags
         if askbot_settings.SPACES_ENABLED:
-            qs = qs.filter(tags__name=search_state.space)
+            #todo: pull spaces per feed
+            qs = qs.filter(tags__name__in=spaces.get_spaces())
 
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section
@@ -684,6 +686,10 @@ class Thread(models.Model):
             return self.answer_count
         else:
             return self.get_answers(user).count()
+
+    def get_default_feed(self):
+        #todo: accomodate for >1 feed
+        return feeds.get_default()
 
     def get_default_space(self):
         """returns default space to which this thread belongs

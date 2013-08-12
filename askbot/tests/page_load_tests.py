@@ -13,7 +13,7 @@ import coffin.template
 from bs4 import BeautifulSoup
 
 from askbot import models
-from askbot import spaces
+from askbot import feeds
 from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
 from askbot.tests.utils import AskbotTestCase
@@ -153,7 +153,7 @@ class PageLoadTestCase(AskbotTestCase):
         prev_setting = askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN
         askbot_settings.update('ALLOW_POSTING_BEFORE_LOGGING_IN', allow_anonymous)
         self.try_url(
-            spaces.get_url('ask'),
+            feeds.get_url('ask'),
             plain_url_passed=True,
             status_code=status_code,
             template='ask.html'
@@ -248,7 +248,7 @@ class PageLoadTestCase(AskbotTestCase):
                 kwargs={'id': models.Post.objects.get_answers().order_by('id')[0].id}
             )
         #todo: test different sort methods and scopes
-        questions_url = spaces.get_url('questions')
+        questions_url = feeds.get_url('questions')
         self.try_url(
             url_name=questions_url,
             plain_url_passed=True,
@@ -323,25 +323,25 @@ class PageLoadTestCase(AskbotTestCase):
             status_code=status_code,
             template='main_page.html'
         )
-        space = spaces.get_default()
+        feed = feeds.get_default()
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':1, 'space': space},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':1, 'feed': feed},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':2, 'space': space},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':2, 'feed': feed},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':3, 'space': space},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':3, 'feed': feed},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
@@ -613,21 +613,21 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(200, resp.status_code)
         self.assertEqual(self.q, resp.context['question'])
 
-        space = self.q.thread.get_default_space()
+        feed = self.q.thread.get_default_feed()
 
-        url = reverse('question', kwargs={'id': self.q.id, 'space': space})
+        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed})
         resp = self.client.get(url)
         self.assertRedirects(
             resp,
             expected_url=self.q.get_absolute_url()
         )
 
-        url = reverse('question', kwargs={'id': 101, 'space': space})
+        url = reverse('question', kwargs={'id': 101, 'feed': feed})
         resp = self.client.get(url)
-        url = reverse('question', kwargs={'id': self.q.id, 'space': space}) + self.q.slug + '/'# redirect uses the new question.id !
+        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed}) + self.q.slug + '/'# redirect uses the new question.id !
         self.assertRedirects(resp, expected_url=url)
 
-        url = reverse('question', kwargs={'id': 101, 'space': space}) + self.q.slug + '/'
+        url = reverse('question', kwargs={'id': 101, 'feed': feed}) + self.q.slug + '/'
         resp = self.client.get(url)
         self.assertEqual(200, resp.status_code)
         self.assertEqual(self.q, resp.context['question'])
@@ -638,9 +638,9 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.q, resp.context['question'])
         self.assertEqual(self.a, resp.context['show_post'])
 
-        space = self.q.thread.get_default_space()
+        feed = self.q.thread.get_default_feed()
 
-        url = reverse('question', kwargs={'id': self.q.id, 'space': space})
+        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed})
         resp = self.client.get(url, data={'answer': self.a.id})
         url = self.q.get_absolute_url()
         self.assertRedirects(resp, expected_url=url + '?answer=%d' % self.a.id)
@@ -651,7 +651,7 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.a, resp.context['show_post'])
 
         #test redirect from old question
-        url = reverse('question', kwargs={'id': 101, 'space': space}) + self.q.slug + '/'
+        url = reverse('question', kwargs={'id': 101, 'feed': feed}) + self.q.slug + '/'
         resp = self.client.get(url, data={'answer': 201})
         self.assertRedirects(resp, expected_url=self.a.get_absolute_url())
 

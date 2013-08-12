@@ -10,7 +10,7 @@ import askbot
 import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot import const
-from askbot import spaces
+from askbot import feeds
 from askbot.utils.functions import strip_plus
 
 
@@ -86,14 +86,14 @@ class SearchState(object):
 
     @classmethod
     def get_empty(cls):
-        return cls(space=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, user_logged_in=None)
+        return cls(feed=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, user_logged_in=None)
 
     def __init__(
-        self, space=None, scope='all', sort=None, query=None,
+        self, feed=None, scope='all', sort=None, query=None,
         tags=None, author=None, page=1, user_logged_in=False
     ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
-        self.space = space
+        self.feed = feed
 
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:
@@ -141,7 +141,7 @@ class SearchState(object):
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
 
-        self._questions_url = spaces.get_url('questions', self.space)
+        self._questions_url = feeds.get_url('questions', self.feed)
 
     def __str__(self):
         return self.query_string()
@@ -160,7 +160,7 @@ class SearchState(object):
         return '?' + urlencode({'title': ask_title})
 
     def full_ask_url(self):
-        return spaces.get_url('ask', self.space) + self.ask_query_string()
+        return feeds.get_url('ask', self.feed) + self.ask_query_string()
 
     def unified_tags(self):
         "Returns tags both from tag selector and extracted from query"
@@ -296,13 +296,13 @@ class DummySearchState(object): # Used for caching question/thread summaries
         return '<<<%s>>>' % self.tag
 
     def full_ask_url(self):
-        return spaces.get_url('ask', spaces.get_default())
+        return feeds.get_url('ask', feeds.get_default())
 
     def query_string(self):
         return ''
 
     def base_url(self):
         if not hasattr(self, '_base_url'):
-            space = spaces.get_default()
-            self._base_url = spaces.get_url('questions', space)
+            feed = feeds.get_default()
+            self._base_url = feeds.get_url('questions', feed)
         return self._base_url

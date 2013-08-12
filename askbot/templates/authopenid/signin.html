@@ -55,8 +55,8 @@
         #}
         {{ login_form.login_provider_name }}
         {{ login_form.next }}
-        {% if space %}
-            <input type="hidden" name="space" value="{{ space }}"/>
+        {% if feed %}
+            <input type="hidden" name="feed" value="{{ feed }}"/>
         {% endif %}
         {{ 
             login_macros.provider_buttons(
