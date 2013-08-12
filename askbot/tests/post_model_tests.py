@@ -21,6 +21,12 @@ from askbot import spaces
 from django.utils import simplejson
 from askbot.conf import settings as askbot_settings
 
+class MockThread(object):
+    def __init__(self, id=1, title=''):
+        self.id = id
+        self.title = title
+    def get_default_space(self):
+        return spaces.get_default()
 
 class PostModelTests(AskbotTestCase):
 
@@ -123,11 +129,11 @@ class PostModelTests(AskbotTestCase):
         del self.user
 
     def test_cached_get_absolute_url_1(self):
-        th = lambda:1
-        th.title = 'lala-x-lala'
+        th = MockThread(id=1, title='lala-x-lala')
         p = Post(id=3, post_type='question')
         p._thread_cache = th  # cannot assign non-Thread instance directly
-        expected_url = urlresolvers.reverse('question', kwargs={'id': 3}) \
+        space = spaces.get_default()
+        expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'space': space}) \
                                                                 + th.title + '/'
         self.assertEqual(expected_url, p.get_absolute_url(thread=th))
         self.assertTrue(p._thread_cache is th)
@@ -135,9 +141,9 @@ class PostModelTests(AskbotTestCase):
 
     def test_cached_get_absolute_url_2(self):
         p = Post(id=3, post_type='question')
-        th = lambda:1
-        th.title = 'lala-x-lala'
-        expected_url = urlresolvers.reverse('question', kwargs={'id': 3}) \
+        th = MockThread(id=1, title='lala-x-lala')
+        space = spaces.get_default()
+        expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'space': space}) \
                                                                 + th.title + '/'
         self.assertEqual(expected_url, p.get_absolute_url(thread=th))
         self.assertTrue(p._thread_cache is th)
@@ -609,7 +615,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         self.client.logout()
         # INFO: We need to pass some headers to make question() view believe we're not a robot
         self.client.get(
-            urlresolvers.reverse('question', kwargs={'id': question.id}),
+            question.get_absolute_url(),
             {},
             follow=True, # the first view redirects to the full question url (with slug in it), so we have to follow that redirect
             HTTP_ACCEPT_LANGUAGE='en',

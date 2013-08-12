@@ -323,25 +323,25 @@ class PageLoadTestCase(AskbotTestCase):
             status_code=status_code,
             template='main_page.html'
         )
-
+        space = spaces.get_default()
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':1},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':1, 'space': space},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':2},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':2, 'space': space},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':3},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':3, 'space': space},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
@@ -613,19 +613,21 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(200, resp.status_code)
         self.assertEqual(self.q, resp.context['question'])
 
-        url = reverse('question', kwargs={'id': self.q.id})
+        space = self.q.thread.get_default_space()
+
+        url = reverse('question', kwargs={'id': self.q.id, 'space': space})
         resp = self.client.get(url)
         self.assertRedirects(
             resp,
             expected_url=self.q.get_absolute_url()
         )
 
-        url = reverse('question', kwargs={'id': 101})
+        url = reverse('question', kwargs={'id': 101, 'space': space})
         resp = self.client.get(url)
-        url = reverse('question', kwargs={'id': self.q.id}) + self.q.slug + '/'# redirect uses the new question.id !
+        url = reverse('question', kwargs={'id': self.q.id, 'space': space}) + self.q.slug + '/'# redirect uses the new question.id !
         self.assertRedirects(resp, expected_url=url)
 
-        url = reverse('question', kwargs={'id': 101}) + self.q.slug + '/'
+        url = reverse('question', kwargs={'id': 101, 'space': space}) + self.q.slug + '/'
         resp = self.client.get(url)
         self.assertEqual(200, resp.status_code)
         self.assertEqual(self.q, resp.context['question'])
@@ -636,7 +638,9 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.q, resp.context['question'])
         self.assertEqual(self.a, resp.context['show_post'])
 
-        url = reverse('question', kwargs={'id': self.q.id})
+        space = self.q.thread.get_default_space()
+
+        url = reverse('question', kwargs={'id': self.q.id, 'space': space})
         resp = self.client.get(url, data={'answer': self.a.id})
         url = self.q.get_absolute_url()
         self.assertRedirects(resp, expected_url=url + '?answer=%d' % self.a.id)
@@ -647,7 +651,7 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.a, resp.context['show_post'])
 
         #test redirect from old question
-        url = reverse('question', kwargs={'id': 101}) + self.q.slug + '/'
+        url = reverse('question', kwargs={'id': 101, 'space': space}) + self.q.slug + '/'
         resp = self.client.get(url, data={'answer': 201})
         self.assertRedirects(resp, expected_url=self.a.get_absolute_url())
 
