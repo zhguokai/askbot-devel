@@ -221,6 +221,7 @@ def ask(request, space=None):#view used to ask a new question
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
+    request.session['askbot_space'] = space
     if request.user.is_authenticated():
         if request.user.is_read_only():
             referer = request.META.get("HTTP_REFERER", reverse('questions'))

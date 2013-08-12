@@ -15,6 +15,9 @@
         askbot['data']['userReputation'] = 0;
         askbot['data']['userIsReadOnly'] = false;//in principle we allow anon users to start posting
     {% endif %}
+    {% if space %}
+        askbot['data']['space'] = '{{ space }}';
+    {% endif %}
     askbot['urls'] = {};
     askbot['settings'] = {};
     askbot['messages'] = {};

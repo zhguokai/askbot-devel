@@ -29,7 +29,7 @@ def clean_next(next, default = None):
     return next
 
 def get_space(request):
-    return request.REQUEST.get('space')
+    return request.session.get('askbot_space', spaces.get_default())
 
 def get_next_url(request, default = None):
     #todo: clean this up - the "space" parameter is new

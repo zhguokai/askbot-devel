@@ -32,6 +32,7 @@ from django.utils.html import strip_tags as strip_all_tags
 from django.views.decorators import csrf
 
 from askbot.utils.slug import slugify
+from askbot.utils.forms import get_space
 from askbot.utils.html import sanitize_html
 from askbot.mail import send_mail
 from askbot.utils.http import get_request_info
@@ -1054,7 +1055,7 @@ def user(request, id, slug=None, tab_name=None):
     user_view_func = USER_VIEW_CALL_TABLE.get(tab_name, user_stats)
 
     search_state = SearchState( # Non-default SearchState with user data set
-        space=spaces.get_default(),
+        space=get_space(request),
         scope=None,
         sort=None,
         query=None,

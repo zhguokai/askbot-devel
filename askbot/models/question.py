@@ -1486,8 +1486,7 @@ class Thread(models.Model):
             re.UNICODE
         )
 
-        if search_state is None:
-            search_state = DummySearchState()
+        search_state = search_state or DummySearchState()
 
         while True:
             match = regex.search(html)

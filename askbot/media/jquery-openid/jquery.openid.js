@@ -334,8 +334,7 @@ $.fn.authenticator = function() {
             password_action_input.val('change_password');
             var focus_input = $('#id_new_password');
             var submittable_input = $('#id_new_password_retyped');
-        }
-        else{
+        } else {
             $('#password-heading>span').html(token_name);
             var password_button = $('input[name=login_with_password]');
             var submit_action = submit_login_with_password;
@@ -344,9 +343,11 @@ $.fn.authenticator = function() {
                 create_pw_link.html(gettext('Create a password-protected account'));
                 var url = create_pw_link.attr('href');
                 if (url.indexOf('?') !== -1){
-                    url = url.replace(/\?.*$/,'?login_provider=' + provider_name);
-                }
-                else{
+                    url = url.replace(
+                        /login_provider=[^&]+/,
+                        'login_provider=' + provider_name
+                    );
+                } else {
                     url += '?login_provider=' + provider_name;
                 }
                 create_pw_link.attr('href', url);

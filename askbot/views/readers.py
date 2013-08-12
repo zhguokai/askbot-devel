@@ -45,7 +45,7 @@ from askbot.startup_procedures import domain_is_bad
 from askbot.utils import functions
 from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
-from askbot.search.state_manager import SearchState, DummySearchState
+from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.conf import settings as askbot_settings
 from askbot.views import context
@@ -86,6 +86,8 @@ def questions(request, **kwargs):
     form = ShowQuestionsForm(kwargs)
     if form.is_valid() is False:
         raise Http404()
+
+    request.session['askbot_space'] = kwargs['space']
 
     search_state = SearchState(
                     user_logged_in=request.user.is_authenticated(),
@@ -305,8 +307,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'tag_list_type' : tag_list_type,
         'stag' : query,
         'tab_id' : sortby,
-        'keywords' : query,
-        'search_state': SearchState(*[None for x in range(8)])
+        'keywords' : query
     }
 
     if tag_list_type == 'list':
@@ -349,6 +350,7 @@ def question(request, space=None, id=None):#refactor - long subroutine. display 
     """view that displays body of the question and
     all answers to it
     """
+    request.session['askbot_space'] = space
     #process url parameters
     #todo: fix inheritance of sort method from questions
     #before = datetime.datetime.now()

@@ -585,7 +585,7 @@ if 'avatar' in settings.INSTALLED_APPS:
         ),
     )
 
-
+#spacey urls. These can change the "space" for the future navigation
 urlpatterns += (
     # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
     url(

@@ -91,6 +91,7 @@ def application_settings(request):
     space = get_space(request)
     search_state = (space and SearchState(space=space) or DummySearchState())
     context['dummy_search_state'] = search_state
+    context['space'] = space
 
     if askbot_settings.GROUPS_ENABLED:
         #calculate context needed to list all the groups
