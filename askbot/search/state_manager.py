@@ -10,7 +10,7 @@ import askbot
 import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot import const
-from askbot import feeds
+from askbot.models import get_feed_url, Feed
 from askbot.utils.functions import strip_plus
 
 
@@ -141,7 +141,7 @@ class SearchState(object):
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
 
-        self._questions_url = feeds.get_url('questions', self.feed)
+        self._questions_url = get_feed_url('questions', self.feed)
 
     def __str__(self):
         return self.query_string()
@@ -160,7 +160,7 @@ class SearchState(object):
         return '?' + urlencode({'title': ask_title})
 
     def full_ask_url(self):
-        return feeds.get_url('ask', self.feed) + self.ask_query_string()
+        return get_feed_url('ask', self.feed) + self.ask_query_string()
 
     def unified_tags(self):
         "Returns tags both from tag selector and extracted from query"
@@ -296,13 +296,13 @@ class DummySearchState(object): # Used for caching question/thread summaries
         return '<<<%s>>>' % self.tag
 
     def full_ask_url(self):
-        return feeds.get_url('ask', feeds.get_default())
+        return get_feed_url('ask', Feed.objects.get_default())
 
     def query_string(self):
         return ''
 
     def base_url(self):
         if not hasattr(self, '_base_url'):
-            feed = feeds.get_default()
-            self._base_url = feeds.get_url('questions', feed)
+            feed = Feed.objects.get_default()
+            self._base_url = get_feed_url('questions', feed)
         return self._base_url

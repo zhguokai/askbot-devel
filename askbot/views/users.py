@@ -46,7 +46,6 @@ from askbot import exceptions
 from askbot.models.badges import award_badges_signal
 from askbot.models.tag import format_personal_group_name
 from askbot.search.state_manager import SearchState
-from askbot import feeds
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
 
@@ -613,7 +612,7 @@ def user_recent(request, user, context):
     # the return value is dictionary where activity id's are keys
     content_objects_by_activity = activity_objects.fetch_content_objects_dict()
 
-        
+
     #a list of digest objects, suitable for display
     #the number of activities to show is not guaranteed to be
     #const.USER_VIEW_DATA_TYPE, because we don't show activity

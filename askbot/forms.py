@@ -19,8 +19,7 @@ from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 from askbot.conf import get_tag_display_filter_strategy_choices
-from askbot import feeds
-from askbot import spaces
+from askbot.models import Space, Feed
 from tinymce.widgets import TinyMCE
 import logging
 
@@ -583,7 +582,7 @@ class ShowQuestionsForm(forms.Form):
     def clean_feed(self):
         #space must match one of the items
         feed = self.cleaned_data.get('feed', '')
-        if feeds.feed_exists(feed):
+        if Feed.objects.feed_exists(feed):
             return feed
         else:
             raise forms.ValidationError('unrecognized forum feed "%s"' % feed)
@@ -958,7 +957,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         in this form, it is called from the general "clean" method
         """
         #todo: get default space for a feed instead
-        return spaces.get_default()
+        return Space.objects.get_default()
 
     def clean_ask_anonymously(self):
         """returns false if anonymous asking is not allowed
@@ -1165,7 +1164,7 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     def save(self, question, user):
         wiki = self.cleaned_data['wiki']
         text = self.cleaned_data['text']
-        is_private = self.cleaned_data['post_privately']        
+        is_private = self.cleaned_data['post_privately']
 
         return user.post_answer(
             question = question,

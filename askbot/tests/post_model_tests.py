@@ -16,8 +16,9 @@ from askbot.models import PostRevision
 from askbot.models import Thread
 from askbot.models import Tag
 from askbot.models import Group
+from askbot.models import Feed
 from askbot.search.state_manager import DummySearchState
-from askbot import feeds
+from askbot.models import get_feed_url
 from django.utils import simplejson
 from askbot.conf import settings as askbot_settings
 
@@ -26,7 +27,7 @@ class MockThread(object):
         self.id = id
         self.title = title
     def get_default_feed(self):
-        return feeds.get_default()
+        return Feed.objects.get_default()
 
 class PostModelTests(AskbotTestCase):
 
@@ -132,7 +133,7 @@ class PostModelTests(AskbotTestCase):
         th = MockThread(id=1, title='lala-x-lala')
         p = Post(id=3, post_type='question')
         p._thread_cache = th  # cannot assign non-Thread instance directly
-        feed = feeds.get_default()
+        feed = Feed.objects.get_default()
         expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'feed': feed}) \
                                                                 + th.title + '/'
         self.assertEqual(expected_url, p.get_absolute_url(thread=th))
@@ -142,7 +143,7 @@ class PostModelTests(AskbotTestCase):
     def test_cached_get_absolute_url_2(self):
         p = Post(id=3, post_type='question')
         th = MockThread(id=1, title='lala-x-lala')
-        feed = feeds.get_default()
+        feed = Feed.objects.get_default()
         expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'feed': feed}) \
                                                                 + th.title + '/'
         self.assertEqual(expected_url, p.get_absolute_url(thread=th))
@@ -460,7 +461,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
     def test_post_question(self):
         self.assertEqual(0, Post.objects.count())
-        response = self.client.post(feeds.get_url('ask'), data={
+        response = self.client.post(get_feed_url('ask'), data={
             'title': 'test title',
             'text': 'test body text',
             'tags': 'tag1 tag2',

@@ -16,9 +16,8 @@ from django.utils.translation import get_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
-from askbot import feeds
 from askbot import mail
-from askbot import spaces
+from askbot.models import Space, Feed
 from askbot.mail import messages
 from askbot.models.tag import Tag, TagSynonym
 from askbot.models.tag import get_tags_by_names
@@ -334,7 +333,8 @@ class ThreadManager(BaseQuerySetManager):
         #this allows to emulate spaces via tags
         if askbot_settings.SPACES_ENABLED:
             #todo: pull spaces per feed
-            qs = qs.filter(tags__name__in=spaces.get_spaces())
+            #TODO: change for all
+            qs = qs.filter(tags__name__in=Space.objects.get_spaces())
 
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section
@@ -689,15 +689,16 @@ class Thread(models.Model):
 
     def get_default_feed(self):
         #todo: accomodate for >1 feed
-        return feeds.get_default()
+        return Feed.objects.get_default()
 
     def get_default_space(self):
         """returns default space to which this thread belongs
         corrently we emulate spaces with tags, but in the future
-        they will move into a special entity and 
+        they will move into a special entity and
         probably each thread will have default space.
         """
-        available_spaces = spaces.get_spaces()
+        #TODO: change for all
+        available_spaces = Space.objects.get_spaces()
         tag_names = self.get_tag_names()
         #1) find ovelapping
         common_spaces = set(available_spaces) & set(tag_names)
@@ -713,7 +714,7 @@ class Thread(models.Model):
             for space in available_spaces:
                 if space in common_spaces:
                     return space
-   
+
 
     def get_oldest_answer_id(self, user=None):
         """give oldest visible answer id for the user"""

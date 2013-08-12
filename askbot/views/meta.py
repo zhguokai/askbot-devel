@@ -17,7 +17,6 @@ from django.views import static
 from django.views.decorators import csrf
 from django.db.models import Max, Count
 from askbot import skins
-from askbot import feeds
 from askbot.conf import settings as askbot_settings
 from askbot.forms import FeedbackForm
 from askbot.utils.url_utils import get_login_url
@@ -25,6 +24,7 @@ from askbot.utils.forms import get_next_url
 from askbot.mail import mail_moderators
 from askbot.models import BadgeData, Award, User, Tag
 from askbot.models import badges as badge_data
+from askbot.models import get_feed_url
 from askbot.skins.loaders import render_text_into_skin
 from askbot.utils.decorators import admins_only
 from askbot.utils.forms import get_next_url
@@ -77,7 +77,7 @@ def faq(request):
     else:
         data = {
             'gravatar_faq_url': reverse('faq') + '#gravatar',
-            'ask_question_url': feeds.get_url('ask'),
+            'ask_question_url': get_feed_url('ask'),
             'page_class': 'meta',
         }
         return render(request, 'faq_static.html', data)

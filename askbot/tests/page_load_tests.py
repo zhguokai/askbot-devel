@@ -13,7 +13,6 @@ import coffin.template
 from bs4 import BeautifulSoup
 
 from askbot import models
-from askbot import feeds
 from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
 from askbot.tests.utils import AskbotTestCase
@@ -153,7 +152,7 @@ class PageLoadTestCase(AskbotTestCase):
         prev_setting = askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN
         askbot_settings.update('ALLOW_POSTING_BEFORE_LOGGING_IN', allow_anonymous)
         self.try_url(
-            feeds.get_url('ask'),
+            models.get_feed_url('ask'),
             plain_url_passed=True,
             status_code=status_code,
             template='ask.html'
@@ -248,7 +247,7 @@ class PageLoadTestCase(AskbotTestCase):
                 kwargs={'id': models.Post.objects.get_answers().order_by('id')[0].id}
             )
         #todo: test different sort methods and scopes
-        questions_url = feeds.get_url('questions')
+        questions_url = models.get_feed_url('questions')
         self.try_url(
             url_name=questions_url,
             plain_url_passed=True,
@@ -323,7 +322,7 @@ class PageLoadTestCase(AskbotTestCase):
             status_code=status_code,
             template='main_page.html'
         )
-        feed = feeds.get_default()
+        feed = models.Feed.objects.get_default()
         self.try_url(
                 'question',
                 status_code=status_code,

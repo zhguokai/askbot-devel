@@ -10,7 +10,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify
 from askbot.utils.functions import split_list
 from askbot import const
-from askbot import feeds
+from askbot.models import get_feed_url, Feed
 from longerusername import MAX_USERNAME_LENGTH
 import logging
 import urllib
@@ -29,14 +29,14 @@ def clean_next(next, default = None):
     return next
 
 def get_feed(request):
-    return request.session.get('askbot_feed', feeds.get_default())
+    return request.session.get('askbot_feed', Feed.objects.get_default())
 
 def get_next_url(request, default = None):
     #todo: clean this up - the "space" parameter is new
     feed = get_feed(request)
     if feed:
         #default to the space root url for now
-        return feeds.get_url('questions', feed)
+        return get_feed_url('questions', feed)
     else:
         #otherwise use the old way of passing next url
         return clean_next(request.REQUEST.get('next'), default)
@@ -107,7 +107,7 @@ class UserNameField(StrippedNonEmptyCharField):
     ):
         self.must_exist = must_exist
         self.skip_clean = skip_clean
-        self.db_model = db_model 
+        self.db_model = db_model
         self.db_field = db_field
         self.user_instance = None
         error_messages={
@@ -247,7 +247,7 @@ class UserEmailField(forms.EmailField):
         email = super(UserEmailField,self).clean(email.strip())
         if self.skip_clean:
             return email
-        
+
         allowed_domains = askbot_settings.ALLOWED_EMAIL_DOMAINS.strip()
         allowed_emails = askbot_settings.ALLOWED_EMAILS.strip()
 
@@ -287,7 +287,7 @@ class SetPasswordForm(forms.Form):
     def clean_password2(self):
         """
         Validates that the two password inputs match.
-        
+
         """
         if 'password1' in self.cleaned_data:
             if self.cleaned_data['password1'] == self.cleaned_data['password2']:

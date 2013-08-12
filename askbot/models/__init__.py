@@ -36,6 +36,7 @@ from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.const.message_keys import get_i18n_message
 from askbot.conf import settings as askbot_settings
+from askbot.models.spaces import Space, Feed, get_feed_url
 from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
 from askbot.mail import messages
@@ -58,7 +59,6 @@ from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute, Vote
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot import auth
-from askbot import spaces
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
@@ -1733,7 +1733,7 @@ def user_post_question(
         body_text = ' '
 
     if space is None:
-        space = spaces.get_default()
+        space = Space.objects.get_default()
 
     if title is None:
         raise ValueError('Title is required to post question')
@@ -3835,6 +3835,10 @@ __all__ = [
         'Group',
 
         'User',
+
+        'Space',
+        'Feed',
+        'get_feed_url',
 
         'ReplyAddress',
 

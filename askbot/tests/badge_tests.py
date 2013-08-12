@@ -5,7 +5,7 @@ from django.test.client import Client
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings
 from askbot import models
-from askbot import feeds
+from askbot.models import get_feed_url
 from askbot.models.badges import award_badges_signal
 
 class BadgeTests(AskbotTestCase):
@@ -504,6 +504,6 @@ class BadgeTests(AskbotTestCase):
         self.u1.save()
         self.assert_have_badge('enthusiast', self.u1, 0)
         self.client.login(method = 'force', user_id = self.u1.id)
-        self.client.get(feeds.get_url('questions'))
+        self.client.get(get_feed_url('questions'))
         self.assert_have_badge('enthusiast', self.u1, 1)
 

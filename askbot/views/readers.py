@@ -40,7 +40,7 @@ from askbot import models
 from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
-from askbot import feeds
+from askbot.models import get_feed_url
 from askbot.startup_procedures import domain_is_bad
 from askbot.utils import functions
 from askbot.utils.html import sanitize_html
@@ -72,7 +72,7 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """index view mapped to the root url of the Q&A site
     This is the future placeholder for the "feeds" listing view
     """
-    return HttpResponseRedirect(feeds.get_url('questions'))
+    return HttpResponseRedirect(get_feed_url('questions'))
 
 def questions(request, **kwargs):
     """
