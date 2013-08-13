@@ -20,7 +20,7 @@ class SpaceManager(BaseQuerySetManager):
             return self.get_query_set().create(name=space_name)
 
     def space_exists(self, value):
-        self.get_query_set.get(name=value).exists()
+        self.get_query_set.filter(name=value).exists()
 
 class FeedManager(BaseQuerySetManager):
 
@@ -52,7 +52,7 @@ class FeedManager(BaseQuerySetManager):
         return reverse(url_pattern_name, kwargs=kwargs)
 
     def feed_exists(self, value):
-        return self.get_query_set(name=value).exists()
+        return self.get_query_set().filter(name=value).exists()
 
 class Space(models.Model):
     name = models.CharField(max_length=100, unique=True)
