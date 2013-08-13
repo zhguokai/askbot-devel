@@ -957,7 +957,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         in this form, it is called from the general "clean" method
         """
         #todo: get default space for a feed instead
-        return Space.objects.get_default()
+        return Space.objects.get_default().name
 
     def clean_ask_anonymously(self):
         """returns false if anonymous asking is not allowed

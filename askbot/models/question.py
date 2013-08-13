@@ -129,6 +129,7 @@ class ThreadManager(BaseQuerySetManager):
                 by_email=False,
                 email_address=None,
                 language=None,
+                space=None,
             ):
         """creates new thread"""
         # TODO: Some of this code will go to Post.objects.create_new
@@ -204,6 +205,12 @@ class ThreadManager(BaseQuerySetManager):
             diff=parse_results['diff'],
             sender=question.__class__
         )
+
+        #adding thread to space
+        if not space:
+            space = Space.objects.get_default()
+
+        space.questions.add(thread)
 
         return thread
 

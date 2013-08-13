@@ -13,10 +13,11 @@ class SpaceManager(BaseQuerySetManager):
         if we are using spaces, give the first one in the list
         otherwise give "questions", translated or not
         """
-        custom = askbot_settings.FORUM_SPACES
-        if askbot_settings.SPACES_ENABLED and custom.strip():
-            return custom.split(',')[0].strip()
-        return None
+        space_name = askbot_settings.DEFAULT_SPACE_NAME
+        try:
+            return self.get_query_set().get(name=space_name)
+        except Space.DoesNotExist:
+            return self.get_query_set().create(name=space_name)
 
     def get_spaces(self):
         """returns list of available spaces"""
@@ -61,7 +62,7 @@ class FeedManager(BaseQuerySetManager):
         return value in self.get_feeds()
 
 class Space(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     questions = models.ManyToManyField('Thread')
 
     objects = SpaceManager()

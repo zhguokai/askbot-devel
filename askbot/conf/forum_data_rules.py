@@ -46,7 +46,7 @@ settings.register(
 )
 
 def get_forbidden_space_values():
-    #add any url prefixes that are not 
+    #add any url prefixes that are not
     #defined with a service_url call in the urls.py
     #to protect from potential clashing of namespace url
     #with
@@ -66,14 +66,18 @@ def get_forbidden_space_values():
         return forbidden_values
 
 def forum_spaces_callback(old_value, new_value):
+    from askbot.models import Space
+
     values = map(lambda v: v.strip(), new_value.split(','))
     forbidden = get_forbidden_space_values()
     bad_values = set()
-    for value in values:
-        if not re.match('\w+$', value):
-            bad_values.add(value)
-        if value in forbidden:
-            bad_values.add(value)
+
+    new_value = new_value.strip()
+
+    if not re.match('\w+$', new_value):
+        bad_values.add(new_value)
+    if new_value in forbidden:
+        bad_values.add(new_value)
 
     if bad_values:
         forbidden_list = ', '.join(forbidden)
@@ -90,8 +94,12 @@ def forum_spaces_callback(old_value, new_value):
                     'and must be a single word of letters and numbers only'
                 ) % (bad_list, forbidden_list)
             )
+    else:
+        default_space = Space.objects.get_default()
+        default_space.name = new_value
+        default_space.save()
+        return new_value
 
-    return ', '.join(values)
 
 settings.register(
     livesettings.BooleanValue(
@@ -103,14 +111,13 @@ settings.register(
 )
 
 settings.register(
-    livesettings.LongStringValue(
+    livesettings.StringValue(
         FORUM_DATA_RULES,
-        'FORUM_SPACES',
-        default='',
-        description=_('Spaces, to be available via url prefix'),
+        'DEFAULT_SPACE_NAME',
+        default='questions',
+        description=_('Name for default space'),
         help_text=_(
             'This field must be either empty or should be '
-            'a comma-separated list of single words.'
         ),
         update_callback=forum_spaces_callback
     )
@@ -129,7 +136,6 @@ settings.register(
         )
     )
 )
-
 
 settings.register(
     livesettings.BooleanValue(

@@ -1734,6 +1734,8 @@ def user_post_question(
 
     if space is None:
         space = Space.objects.get_default()
+    elif type(space) in (unicode, str):
+        space = Space.objects.get(name=space)
 
     if title is None:
         raise ValueError('Title is required to post question')
@@ -1741,10 +1743,6 @@ def user_post_question(
         raise ValueError('Tags are required to post question')
     if timestamp is None:
         timestamp = datetime.datetime.now()
-
-    #!!!!A HACK space is prepended as tag
-    if askbot_settings.SPACES_ENABLED:
-        tags = space + ' ' + tags
 
     #todo: split this into "create thread" + "add question", if text exists
     #or maybe just add a blank question post anyway
@@ -1760,7 +1758,8 @@ def user_post_question(
                                     group_id=group_id,
                                     by_email=by_email,
                                     email_address=email_address,
-                                    language=language
+                                    language=language,
+                                    space=space
                                 )
     question = thread._question_post()
     if question.author != self:
