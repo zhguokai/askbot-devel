@@ -326,21 +326,21 @@ class PageLoadTestCase(AskbotTestCase):
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':1, 'feed': feed},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':1, 'feed': feed.name},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':2, 'feed': feed},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':2, 'feed': feed.name},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':3, 'feed': feed},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':3, 'feed': feed.name},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
@@ -614,19 +614,19 @@ class QuestionPageRedirectTests(AskbotTestCase):
 
         feed = self.q.thread.get_default_feed()
 
-        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed})
+        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed.name})
         resp = self.client.get(url)
         self.assertRedirects(
             resp,
             expected_url=self.q.get_absolute_url()
         )
 
-        url = reverse('question', kwargs={'id': 101, 'feed': feed})
+        url = reverse('question', kwargs={'id': 101, 'feed': feed.name})
         resp = self.client.get(url)
-        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed}) + self.q.slug + '/'# redirect uses the new question.id !
+        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed.name}) + self.q.slug + '/'# redirect uses the new question.id !
         self.assertRedirects(resp, expected_url=url)
 
-        url = reverse('question', kwargs={'id': 101, 'feed': feed}) + self.q.slug + '/'
+        url = reverse('question', kwargs={'id': 101, 'feed': feed.name}) + self.q.slug + '/'
         resp = self.client.get(url)
         self.assertEqual(200, resp.status_code)
         self.assertEqual(self.q, resp.context['question'])
@@ -639,7 +639,7 @@ class QuestionPageRedirectTests(AskbotTestCase):
 
         feed = self.q.thread.get_default_feed()
 
-        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed})
+        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed.name})
         resp = self.client.get(url, data={'answer': self.a.id})
         url = self.q.get_absolute_url()
         self.assertRedirects(resp, expected_url=url + '?answer=%d' % self.a.id)
@@ -650,7 +650,7 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.a, resp.context['show_post'])
 
         #test redirect from old question
-        url = reverse('question', kwargs={'id': 101, 'feed': feed}) + self.q.slug + '/'
+        url = reverse('question', kwargs={'id': 101, 'feed': feed.name}) + self.q.slug + '/'
         resp = self.client.get(url, data={'answer': 201})
         self.assertRedirects(resp, expected_url=self.a.get_absolute_url())
 

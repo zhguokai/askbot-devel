@@ -612,7 +612,7 @@ class Post(models.Model):
 
     def get_text_converter(self):
         have_simple_comment = (
-            self.is_comment() and 
+            self.is_comment() and
             askbot_settings.COMMENTS_EDITOR_TYPE == 'plain-text'
         )
         if have_simple_comment:
@@ -786,7 +786,7 @@ class Post(models.Model):
         #todo: do we need this, can't we just use is_approved()?
         return self.approved is False
 
-    def get_absolute_url(self, 
+    def get_absolute_url(self,
             feed=None, no_slug = False,
             question_post=None, thread=None
         ):
@@ -802,7 +802,7 @@ class Post(models.Model):
             activate_language(self.thread.language_code)
 
         if feed is None:
-            feed = self.thread.get_default_feed()
+            feed = self.thread.get_default_feed().name
 
         if self.is_answer():
             if not question_post:

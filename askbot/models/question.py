@@ -341,7 +341,7 @@ class ThreadManager(BaseQuerySetManager):
         if askbot_settings.SPACES_ENABLED:
             #todo: pull spaces per feed
             #TODO: change for all
-            qs = qs.filter(tags__name__in=Space.objects.get_spaces())
+            qs = qs.filter(space__in=Space.objects.get_spaces())
 
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section

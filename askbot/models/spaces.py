@@ -19,47 +19,40 @@ class SpaceManager(BaseQuerySetManager):
         except Space.DoesNotExist:
             return self.get_query_set().create(name=space_name)
 
-    def get_spaces(self):
-        """returns list of available spaces"""
-        custom = askbot_settings.FORUM_SPACES
-        if askbot_settings.SPACES_ENABLED and custom.strip():
-            return map(lambda v: v.strip(), custom.split(','))
-
-    def add_space(self, name):
-        """adds space if it does not exist"""
-        if not space_exists(name):
-            spaces_string = askbot_settings.FORUM_SPACES
-            enabled_spaces = map(lambda v: v.strip(), spaces_string.split(','))
-            if name not in enabled_spaces:
-                enabled_spaces.append(name)
-                askbot_settings.update('FORUM_SPACES', ', '.join(enabled_spaces))
-
-
     def space_exists(self, value):
-        return value in get_spaces()
+        self.get_query_set.get(name=value).exists()
 
 class FeedManager(BaseQuerySetManager):
 
     def get_default(self):
-        if django_settings.ASKBOT_TRANSLATE_URL:
-            return _('questions')
-        else:
-            return 'questions'
+        default_url = askbot_settings.DEFAULT_FEED_NAME
+        try:
+            return self.get_query_set().get(name=default_url)
+        except Feed.DoesNotExist:
+            default_space = Space.objects.get_default()
+            return self.get_query_set().create(name=default_url,
+                                               default_space=default_space)
 
     def get_feeds(self):
         if django_settings.ASKBOT_TRANSLATE_URL:
-            return [_('questions'),]
+            return map(_, self.get_query_set().values_list('name', flat=True))
         else:
-            return ['questions',]
+            return self.get_query_set().values_list('name', flat=True)
 
     def get_url(self, url_pattern_name, feed=None, kwargs=None):
         """reverse url prefixed with feed"""
         kwargs = kwargs or dict()
-        kwargs['feed'] = feed or self.get_default()
+        if type(feed) is type(Feed):
+            kwargs['feed'] = feed.name
+        elif type(feed) in (unicode, str):
+            kwargs['feed'] = feed
+        else:
+            kwargs['feed'] = self.get_default().name
+
         return reverse(url_pattern_name, kwargs=kwargs)
 
     def feed_exists(self, value):
-        return value in self.get_feeds()
+        return self.get_query_set(name=value).exists()
 
 class Space(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -75,18 +68,18 @@ class Space(models.Model):
 
 class Feed(models.Model):
     #TODO: url should never change add validation.
-    url = models.CharField(max_length=50)
-    redirect = models.ForeignKey('self')
+    name = models.CharField(max_length=50)
     default_space = models.ForeignKey(Space)
+    redirect = models.ForeignKey('self', null=True, blank=True)
 
-    site = models.ForeignKey(Site)
+    #site = models.ForeignKey(Site)
     objects = FeedManager()
 
     class Meta:
         app_label = 'askbot'
 
     def __unicode__(self):
-        return "Feed %s" % self.url
+        return "Feed %s" % self.name
 
 class FeedToSpace(models.Model):
     space = models.ForeignKey(Space)

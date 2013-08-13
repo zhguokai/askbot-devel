@@ -65,16 +65,15 @@ def get_forbidden_space_values():
     else:
         return forbidden_values
 
-def forum_spaces_callback(old_value, new_value):
+def forum_default_space_callback(old_value, new_value):
     from askbot.models import Space
 
-    values = map(lambda v: v.strip(), new_value.split(','))
     forbidden = get_forbidden_space_values()
     bad_values = set()
 
     new_value = new_value.strip()
 
-    if not re.match('\w+$', new_value):
+    if not re.match('/\w+/$', new_value):
         bad_values.add(new_value)
     if new_value in forbidden:
         bad_values.add(new_value)
@@ -100,6 +99,38 @@ def forum_spaces_callback(old_value, new_value):
         default_space.save()
         return new_value
 
+def forum_default_feed_callback(old_value, new_value):
+    from askbot.models import Space, Feed
+
+    forbidden = get_forbidden_space_values()
+    new_value = new_value.strip()
+
+    if not re.match('\w+$', new_value):
+        bad_values.add(new_value)
+    if new_value in forbidden:
+        bad_values.add(new_value)
+
+    if bad_values:
+        forbidden_list = ', '.join(forbidden)
+        bad_list = ', '.join(bad_values)
+        if len(bad_values) > 1:
+            raise Exception(_(
+                    'Feeds %s are invalid: must not be one of %s '
+                    'and must be single words of letters and numbers only'
+                ) % (bad_list, forbidden_list)
+            )
+        else:
+            raise Exception(_(
+                    'Feeds %s is invalid: must not be one of %s '
+                    'and must be a single word of letters and numbers only'
+                ) % (bad_list, forbidden_list)
+            )
+    else:
+        default_feed = Feed.objects.get_default()
+        default_feed.name= new_value
+        return new_value
+
+
 
 settings.register(
     livesettings.BooleanValue(
@@ -116,10 +147,17 @@ settings.register(
         'DEFAULT_SPACE_NAME',
         default='questions',
         description=_('Name for default space'),
-        help_text=_(
-            'This field must be either empty or should be '
-        ),
-        update_callback=forum_spaces_callback
+        update_callback=forum_default_space_callback
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'DEFAULT_FEED_NAME',
+        default='questions',
+        description=_('URL for default feed'),
+        update_callback=forum_default_feed_callback
     )
 )
 

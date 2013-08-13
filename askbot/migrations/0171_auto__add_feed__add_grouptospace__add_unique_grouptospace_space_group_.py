@@ -11,10 +11,9 @@ class Migration(SchemaMigration):
         # Adding model 'Feed'
         db.create_table('askbot_feed', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('url', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('redirect', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Feed'])),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('default_space', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Space'])),
-            ('site', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['sites.Site'])),
+            ('redirect', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Feed'], null=True, blank=True)),
         ))
         db.send_create_signal('askbot', ['Feed'])
 
@@ -32,7 +31,7 @@ class Migration(SchemaMigration):
         # Adding model 'Space'
         db.create_table('askbot_space', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
         ))
         db.send_create_signal('askbot', ['Space'])
 
@@ -195,9 +194,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Feed'},
             'default_space': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Space']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'redirect': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Feed']"}),
-            'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
-            'url': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'redirect': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Feed']", 'null': 'True', 'blank': 'True'})
         },
         'askbot.feedtospace': {
             'Meta': {'unique_together': "(('space', 'feed'),)", 'object_name': 'FeedToSpace'},
@@ -346,7 +344,7 @@ class Migration(SchemaMigration):
         'askbot.space': {
             'Meta': {'object_name': 'Space'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'questions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['askbot.Thread']", 'symmetrical': 'False'})
         },
         'askbot.tag': {
@@ -487,12 +485,6 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'sites.site': {
-            'Meta': {'ordering': "('domain',)", 'object_name': 'Site', 'db_table': "'django_site'"},
-            'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
 

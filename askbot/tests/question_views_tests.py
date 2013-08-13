@@ -45,7 +45,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         self.assertEqual(response.content, '')
         #private question link is not shown on the main page
         #to unauthorized users
-        response = self.client.get(reverse('questions', kwargs={'feed': Feed.objects.get_default()}))
+        response = self.client.get(reverse('questions', kwargs={'feed': Feed.objects.get_default().name}))
         self.assertFalse(self.qdata['title'] in response.content)
         #private question link is not shown on the poster profile
         #to the unauthorized users

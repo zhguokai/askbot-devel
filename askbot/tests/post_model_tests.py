@@ -134,7 +134,7 @@ class PostModelTests(AskbotTestCase):
         p = Post(id=3, post_type='question')
         p._thread_cache = th  # cannot assign non-Thread instance directly
         feed = Feed.objects.get_default()
-        expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'feed': feed}) \
+        expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'feed': feed.name}) \
                                                                 + th.title + '/'
         self.assertEqual(expected_url, p.get_absolute_url(thread=th))
         self.assertTrue(p._thread_cache is th)
@@ -144,7 +144,7 @@ class PostModelTests(AskbotTestCase):
         p = Post(id=3, post_type='question')
         th = MockThread(id=1, title='lala-x-lala')
         feed = Feed.objects.get_default()
-        expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'feed': feed}) \
+        expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'feed': feed.name}) \
                                                                 + th.title + '/'
         self.assertEqual(expected_url, p.get_absolute_url(thread=th))
         self.assertTrue(p._thread_cache is th)
