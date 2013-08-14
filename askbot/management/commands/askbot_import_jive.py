@@ -18,6 +18,9 @@ import re
 import os
 import shutil
 
+#todo: make a pass through all attachments
+#and make sure that mimetypes dictionary is up to date
+#raise an error if it's not
 FILE_TYPES = {
     "application/java-archive": 'jar',
     "application/msword": 'doc',
@@ -304,6 +307,8 @@ For your reference, the original is [available here|%s]{quote}"""
         post.text += '\nh4. Attachments\n'
         for att in attachments:
             att_id, name, mimetype = att
+            if mimetype not in FILE_TYPES:
+                continue
             ext = '.' + FILE_TYPES[mimetype]
             file_name = make_file_name(ext)
             # copy attachment file to a new place
