@@ -81,6 +81,19 @@ class Feed(models.Model):
     def __unicode__(self):
         return "Feed %s" % self.name
 
+    def get_spaces(self):
+        feed_to_space_list = [feedtospace.space for feedtospace in \
+                self.feedtospace_set.exclude(space=self.default_space)]
+        feed_to_space_list.append(self.default_space)
+        return feed_to_space_list
+
+    def add_space(self, space):
+        feed_to_space = FeedToSpace.objects.create(feed=self, space=space)
+        self.feedtospace_set.add(feed_to_space)
+
+    def thread_belongs_to_feed(self, thread):
+        return thread.space_set.filter(feed=self).exists()
+
 class FeedToSpace(models.Model):
     space = models.ForeignKey(Space)
     feed = models.ForeignKey(Feed)

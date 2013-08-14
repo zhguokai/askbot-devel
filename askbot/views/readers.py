@@ -88,6 +88,7 @@ def questions(request, **kwargs):
         raise Http404()
 
     request.session['askbot_feed'] = kwargs['feed']
+    kwargs['feed'] = get_object_or_404(models.Feed, name=kwargs['feed'])
 
     search_state = SearchState(
                     user_logged_in=request.user.is_authenticated(),
@@ -351,6 +352,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     all answers to it
     """
     request.session['askbot_feed'] = feed
+    feed = get_object_or_404(models.Feed, name=feed)
     #process url parameters
     #todo: fix inheritance of sort method from questions
     #before = datetime.datetime.now()
@@ -360,8 +362,6 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     show_comment = form.cleaned_data['show_comment']
     show_page = form.cleaned_data['show_page']
     answer_sort_method = form.cleaned_data['answer_sort_method']
-
-    #todo: verify that space exists
 
     #load question and maybe refuse showing deleted question
     #if the question does not exist - try mapping to old questions
@@ -400,6 +400,10 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     except exceptions.QuestionHidden, error:
         request.user.message_set.create(message = unicode(error))
         return HttpResponseRedirect(reverse('index'))
+
+    #making sure that the question belongs to the current feed.
+    if not feed.thread_belongs_to_feed(question_post.thread):
+        raise Http404
 
     #redirect if slug in the url is wrong
     if request.path.split('/')[-2] != question_post.slug:

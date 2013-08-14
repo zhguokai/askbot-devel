@@ -339,9 +339,7 @@ class ThreadManager(BaseQuerySetManager):
 
         #this allows to emulate spaces via tags
         if askbot_settings.SPACES_ENABLED:
-            #todo: pull spaces per feed
-            #TODO: change for all
-            qs = qs.filter(space__in=Space.objects.get_spaces())
+            qs = qs.filter(space__in=search_state.feed.get_spaces())
 
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section

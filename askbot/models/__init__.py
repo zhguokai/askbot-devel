@@ -37,6 +37,7 @@ from askbot import const
 from askbot.const.message_keys import get_i18n_message
 from askbot.conf import settings as askbot_settings
 from askbot.models.spaces import Space, Feed, get_feed_url
+from askbot.models.spaces import FeedToSpace
 from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
 from askbot.mail import messages
@@ -3837,6 +3838,7 @@ __all__ = [
 
         'Space',
         'Feed',
+        'FeedToSpace',
         'get_feed_url',
 
         'ReplyAddress',
