@@ -751,6 +751,27 @@ Paginator.prototype.decorate = function(element) {
 };
 
 /**
+ * makes images never take more spaces then they can take
+ */
+var LimitedWidthImage = function(sizeRules) {
+    this._sizeRules = sizeRules;
+    WrappedElement.call(this);
+};
+inherits(LimitedWidthImage, WrappedElement);
+
+LimitedWidthImage.prototype.autoResize = function() {
+    var winWidth = $(window).width();
+    //@todo: do the actual resizing job here
+};
+
+LimitedWidthImage.prototype.decorate = function(element) {
+    this._element = element;
+    this.autoResize();
+    var me = this;
+    $(window).resize(function() { me.autoResize(); });
+};
+
+/**
  * @contsructor
  * a form helper that disables submit button
  * after it is submitted the first time

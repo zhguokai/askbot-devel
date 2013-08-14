@@ -384,13 +384,11 @@ def clean_tag(tag_name):
         #a simpler way to handle tags - just lowercase thew all
         return tag_name.lower()
     else:
-        try:
-            #todo: move this into Thread.update_tags() to hopefully lower
-            #the database hits - here we do one per tag
-            from askbot import models
-            stored_tag = models.Tag.objects.filter(name__iexact=tag_name)[0]
-            return stored_tag.name
-        except IndexError:
+        from askbot import models
+        matching_tags = models.Tag.objects.filter(name__iexact=tag_name)
+        if len(matching_tags) > 0:
+            return matching_tags[0].name
+        else:
             return tag_name
 
 
