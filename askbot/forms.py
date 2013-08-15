@@ -557,14 +557,16 @@ class ShowQuestionForm(forms.Form):
 
         in_data = self.get_pruned_data()
         out_data = dict()
+        default_answer_sort = askbot_settings.DEFAULT_ANSWER_SORT_METHOD
         if ('answer' in in_data) ^ ('comment' in in_data):
             out_data['show_page'] = None
-            out_data['answer_sort_method'] = 'votes'
+            out_data['answer_sort_method'] = default_answer_sort
             out_data['show_comment'] = in_data.get('comment', None)
             out_data['show_answer'] = in_data.get('answer', None)
         else:
             out_data['show_page'] = in_data.get('page', 1)
-            out_data['answer_sort_method'] = in_data.get('sort', 'votes')
+            answer_sort_method = in_data.get('sort', default_answer_sort)
+            out_data['answer_sort_method'] = answer_sort_method
             out_data['show_comment'] = None
             out_data['show_answer'] = None
         self.cleaned_data = out_data
