@@ -337,7 +337,6 @@ class ThreadManager(BaseQuerySetManager):
         else:
             meta_data['non_existing_tags'] = list()
 
-        #this allows to emulate spaces via tags
         if askbot_settings.SPACES_ENABLED:
             qs = qs.filter(space__in=search_state.feed.get_spaces())
 

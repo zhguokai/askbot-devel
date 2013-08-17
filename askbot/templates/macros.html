@@ -350,7 +350,7 @@ poor design of the data or methods on data objects #}
     {% endfor %}
 {%- endmacro -%}
 
-{%- macro question_summary(thread, question, extra_class=None, search_state=None, visitor = None) -%}
+{%- macro question_summary(thread, question, extra_class=None, search_state=None, visitor = None, feed=None) -%}
 {%include "widgets/question_summary.html" %}
 {%- endmacro -%}
 

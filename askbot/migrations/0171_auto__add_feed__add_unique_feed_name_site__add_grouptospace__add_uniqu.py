@@ -14,8 +14,12 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('default_space', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Space'])),
             ('redirect', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Feed'], null=True, blank=True)),
+            ('site', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['sites.Site'])),
         ))
         db.send_create_signal('askbot', ['Feed'])
+
+        # Adding unique constraint on 'Feed', fields ['name', 'site']
+        db.create_unique('askbot_feed', ['name', 'site_id'])
 
         # Adding model 'GroupToSpace'
         db.create_table('askbot_grouptospace', (
@@ -31,7 +35,8 @@ class Migration(SchemaMigration):
         # Adding model 'Space'
         db.create_table('askbot_space', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('site', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['sites.Site'])),
         ))
         db.send_create_signal('askbot', ['Space'])
 
@@ -42,6 +47,9 @@ class Migration(SchemaMigration):
             ('thread', models.ForeignKey(orm['askbot.thread'], null=False))
         ))
         db.create_unique('askbot_space_questions', ['space_id', 'thread_id'])
+
+        # Adding unique constraint on 'Space', fields ['name', 'site']
+        db.create_unique('askbot_space', ['name', 'site_id'])
 
         # Adding model 'FeedToSpace'
         db.create_table('askbot_feedtospace', (
@@ -59,8 +67,14 @@ class Migration(SchemaMigration):
         # Removing unique constraint on 'FeedToSpace', fields ['space', 'feed']
         db.delete_unique('askbot_feedtospace', ['space_id', 'feed_id'])
 
+        # Removing unique constraint on 'Space', fields ['name', 'site']
+        db.delete_unique('askbot_space', ['name', 'site_id'])
+
         # Removing unique constraint on 'GroupToSpace', fields ['space', 'group']
         db.delete_unique('askbot_grouptospace', ['space_id', 'group_id'])
+
+        # Removing unique constraint on 'Feed', fields ['name', 'site']
+        db.delete_unique('askbot_feed', ['name', 'site_id'])
 
         # Deleting model 'Feed'
         db.delete_table('askbot_feed')
@@ -191,11 +205,12 @@ class Migration(SchemaMigration):
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_favorite_questions'", 'to': "orm['auth.User']"})
         },
         'askbot.feed': {
-            'Meta': {'object_name': 'Feed'},
+            'Meta': {'unique_together': "(('name', 'site'),)", 'object_name': 'Feed'},
             'default_space': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Space']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'redirect': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Feed']", 'null': 'True', 'blank': 'True'})
+            'redirect': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Feed']", 'null': 'True', 'blank': 'True'}),
+            'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"})
         },
         'askbot.feedtospace': {
             'Meta': {'unique_together': "(('space', 'feed'),)", 'object_name': 'FeedToSpace'},
@@ -342,10 +357,11 @@ class Migration(SchemaMigration):
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
         'askbot.space': {
-            'Meta': {'object_name': 'Space'},
+            'Meta': {'unique_together': "(('name', 'site'),)", 'object_name': 'Space'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
-            'questions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['askbot.Thread']", 'symmetrical': 'False'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'questions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['askbot.Thread']", 'symmetrical': 'False'}),
+            'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"})
         },
         'askbot.tag': {
             'Meta': {'ordering': "('-used_count', 'name')", 'object_name': 'Tag', 'db_table': "u'tag'"},
@@ -485,6 +501,12 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        'sites.site': {
+            'Meta': {'ordering': "('domain',)", 'object_name': 'Site', 'db_table': "'django_site'"},
+            'domain': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
 

@@ -25,6 +25,7 @@ from django.views.decorators import csrf
 from django.core.urlresolvers import reverse
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
+from django.contrib.sites.models import get_current_site
 from django.http import QueryDict
 from django.conf import settings as django_settings
 
@@ -88,7 +89,8 @@ def questions(request, **kwargs):
         raise Http404()
 
     request.session['askbot_feed'] = kwargs['feed']
-    kwargs['feed'] = get_object_or_404(models.Feed, name=kwargs['feed'])
+    kwargs['feed'] = get_object_or_404(models.Feed, name=kwargs['feed'],
+                                       site=get_current_site(request))
 
     search_state = SearchState(
                     user_logged_in=request.user.is_authenticated(),
@@ -352,7 +354,8 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     all answers to it
     """
     request.session['askbot_feed'] = feed
-    feed = get_object_or_404(models.Feed, name=feed)
+    feed = get_object_or_404(models.Feed, name=feed,
+                             site=get_current_site(request))
     #process url parameters
     #todo: fix inheritance of sort method from questions
     #before = datetime.datetime.now()
@@ -615,6 +618,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
         'thread': thread,
         'thread_is_moderated': thread.is_moderated(),
         'search_state': SearchState(feed=feed),
+        'feed': feed,
         'user_is_thread_moderator': thread.has_moderator(request.user),
         'published_answer_ids': published_answer_ids,
         'answer' : answer_form,

@@ -14,30 +14,39 @@ class SpaceManager(BaseQuerySetManager):
         otherwise give "questions", translated or not
         """
         space_name = askbot_settings.DEFAULT_SPACE_NAME
+        current_site = Site.objects.get_current()
         try:
-            return self.get_query_set().get(name=space_name)
+            return self.get_query_set().get(name=space_name,
+                                            site=current_site)
         except Space.DoesNotExist:
-            return self.get_query_set().create(name=space_name)
+            return self.get_query_set().create(name=space_name,
+                                               site=current_site)
 
     def space_exists(self, value):
-        self.get_query_set.filter(name=value).exists()
+        current_site = Site.objects.get_current()
+        self.get_query_set.filter(name=value,
+                                  site=current_site).exists()
 
 class FeedManager(BaseQuerySetManager):
 
     def get_default(self):
         default_url = askbot_settings.DEFAULT_FEED_NAME
+        current_site = Site.objects.get_current()
         try:
-            return self.get_query_set().get(name=default_url)
+            return self.get_query_set().get(name=default_url, site=current_site)
         except Feed.DoesNotExist:
             default_space = Space.objects.get_default()
             return self.get_query_set().create(name=default_url,
-                                               default_space=default_space)
+                                               default_space=default_space,
+                                               site=current_site
+                                              )
 
     def get_feeds(self):
+        current_site = Site.objects.get_current()
         if django_settings.ASKBOT_TRANSLATE_URL:
-            return map(_, self.get_query_set().values_list('name', flat=True))
+            return map(_, self.get_query_set().filter(site=current_site).values_list('name', flat=True))
         else:
-            return self.get_query_set().values_list('name', flat=True)
+            return self.get_query_set().filter(site=current_site).values_list('name', flat=True)
 
     def get_url(self, url_pattern_name, feed=None, kwargs=None):
         """reverse url prefixed with feed"""
@@ -55,13 +64,15 @@ class FeedManager(BaseQuerySetManager):
         return self.get_query_set().filter(name=value).exists()
 
 class Space(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     questions = models.ManyToManyField('Thread')
 
+    site = models.ForeignKey(Site)
     objects = SpaceManager()
 
     class Meta:
         app_label = 'askbot'
+        unique_together = ('name', 'site')
 
     def __unicode__(self):
         return "Space %s" % self.name
@@ -72,18 +83,20 @@ class Feed(models.Model):
     default_space = models.ForeignKey(Space)
     redirect = models.ForeignKey('self', null=True, blank=True)
 
-    #site = models.ForeignKey(Site)
+    site = models.ForeignKey(Site)
     objects = FeedManager()
 
     class Meta:
         app_label = 'askbot'
+        unique_together = ('name', 'site')
 
     def __unicode__(self):
         return "Feed %s" % self.name
 
+
     def get_spaces(self):
         feed_to_space_list = [feedtospace.space for feedtospace in \
-                self.feedtospace_set.exclude(space=self.default_space)]
+                self.feedtospace_set.filter(space__site=self.site).exclude(space=self.default_space)]
         feed_to_space_list.append(self.default_space)
         return feed_to_space_list
 
