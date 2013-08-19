@@ -338,7 +338,7 @@ class ThreadManager(BaseQuerySetManager):
             meta_data['non_existing_tags'] = list()
 
         if askbot_settings.SPACES_ENABLED:
-            qs = qs.filter(space__in=search_state.feed.get_spaces())
+            qs = qs.filter(spaces__in=search_state.feed.get_spaces())
 
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section

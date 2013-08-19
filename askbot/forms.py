@@ -956,8 +956,14 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         """this is not a real clean code as we don't have field for space
         in this form, it is called from the general "clean" method
         """
-        #todo: get default space for a feed instead
-        return Space.objects.get_default().name
+        if askbot_settings.SPACES_ENABLED:
+            from askbot.models import Feed
+            from django.contrib.sites.models import Site
+            current_site = Site.objects.get_current()
+            feed = Feed.objects.get(name=self._feed, site=current_site)
+            return feed.default_space
+        else:
+            return Space.objects.get_default()
 
     def clean_ask_anonymously(self):
         """returns false if anonymous asking is not allowed

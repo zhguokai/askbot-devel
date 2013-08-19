@@ -1735,8 +1735,6 @@ def user_post_question(
 
     if space is None:
         space = Space.objects.get_default()
-    elif type(space) in (unicode, str):
-        space = Space.objects.get(name=space)
 
     if title is None:
         raise ValueError('Title is required to post question')

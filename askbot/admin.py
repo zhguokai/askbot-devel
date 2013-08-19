@@ -34,6 +34,12 @@ class ReputeAdmin(admin.ModelAdmin):
 class ActivityAdmin(admin.ModelAdmin):
     """  admin class"""
 
+class SpaceAdmin(admin.ModelAdmin):
+    pass
+
+class FeedAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(models.Post)
 admin.site.register(models.Tag, TagAdmin)
 admin.site.register(models.Vote, VoteAdmin)
@@ -43,3 +49,5 @@ admin.site.register(models.Award, AwardAdmin)
 admin.site.register(models.Repute, ReputeAdmin)
 admin.site.register(models.Activity, ActivityAdmin)
 admin.site.register(models.BulkTagSubscription)
+admin.site.register(models.Space, SpaceAdmin)
+admin.site.register(models.Feed, FeedAdmin)

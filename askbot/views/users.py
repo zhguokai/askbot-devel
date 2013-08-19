@@ -18,6 +18,7 @@ from django.db.models import Count
 from django.db.models import Q
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
 from django.core import exceptions as django_exceptions
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
@@ -391,6 +392,10 @@ def user_stats(request, user, context):
     if askbot_settings.ENABLE_CONTENT_MODERATION:
         question_filter['approved'] = True
 
+
+    if askbot_settings.SPACES_ENABLED:
+        site_spaces = models.Space.objects.get_for_site()
+        question_filter['thread__spaces__in'] = site_spaces
     #
     # Questions
     #
@@ -413,6 +418,14 @@ def user_stats(request, user, context):
     #
     # Top answers
     #
+    answers_filter = {
+        'deleted': False,
+        'thread__posts__deleted': False,
+        'thread__posts__post_type': 'question',
+    }
+    if askbot_settings.SPACES_ENABLED:
+        answers_filter['thread__spaces__in'] = site_spaces
+
     top_answers = user.posts.get_answers(
         request.user
     ).filter(
@@ -891,10 +904,22 @@ def user_reputation(request, user, context):
 
 
 def user_favorites(request, user, context):
-    favorite_threads = user.user_favorite_questions.values_list('thread', flat=True)
-    questions = models.Post.objects.filter(post_type='question', thread__in=favorite_threads)\
-                    .select_related('thread', 'thread__last_activity_by')\
-                    .order_by('-points', '-thread__last_activity_at')[:const.USER_VIEW_DATA_SIZE]
+
+    question_filter = {
+        'post_type': 'question',
+        'thread__in': user.user_favorite_questions.values_list('thread', flat=True)
+    }
+    if askbot_settings.SPACES_ENABLED:
+        site_spaces = models.Space.objects.get_for_site()
+        question_filter['thread__spaces__in'] = site_spaces
+
+    questions = models.Post.objects.filter(
+                    **question_filter
+                ).select_related(
+                    'thread', 'thread__last_activity_by'
+                ).order_by(
+                    '-points', '-thread__last_activity_at'
+                )[:const.USER_VIEW_DATA_SIZE]
 
     data = {
         'active_tab':'users',
