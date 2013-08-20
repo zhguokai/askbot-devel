@@ -65,6 +65,7 @@ input[type="checkbox"] {
 }
 select {
   width: 100%;
+  -webkit-appearance: menulist-button;
 }
 input[type="text"].prompt,
 input[type="password"].prompt,
@@ -692,11 +693,6 @@ input[type="submit"].searchBtn {
 }
 input[type="submit"].searchBtn:hover {
   background-image: none;
-  background-image: none;
-  background-image: none;
-  background-image: none;
-  background-image: none;
-  background-image: none;
   background: -146px -37px url(../images/sprites.png) no-repeat;
 }
 input[type="button"].cancelSearchBtn {
@@ -1212,8 +1208,6 @@ body.anon.ask-page .search-drop-menu {
   border: none;
 }
 .rss {
-  float: right;
-  font-size: 16px;
   color: #f57900;
   margin: 5px 0px 3px 7px;
   width: 52px;
@@ -2198,7 +2192,7 @@ ul#related-tags li {
   color: #1b79bd;
 }
 .question-page .post-body img {
-  max-width: 100%;
+  max-width: 685px;
 }
 .question-page .post-body li {
   margin-bottom: 7px;
@@ -2524,7 +2518,6 @@ ul#related-tags li {
 .question-page .comments .counter {
   display: inline-block;
   width: auto;
-  float: right;
   vertical-align: top;
   font-family: Arial;
   float: right;

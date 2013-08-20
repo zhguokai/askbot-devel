@@ -10,14 +10,15 @@
 # Husam M. ALFarra <husamfarra@gmail.com>, 2013
 # Khalid A Sam <kifcaliph@hotmail.com>, 2012
 # Khalid A Sam <kifcaliph@hotmail.com>, 2013
+# mustafaalbazy <mustafa@albazy.com>, 2013
 # Ratnadeep Debnath <rtnpro@indifex.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-24 09:19+0000\n"
-"Last-Translator: Ahmad Khayyat <akhayyat@gmail.com>\n"
+"PO-Revision-Date: 2013-08-02 10:49+0000\n"
+"Last-Translator: mustafaalbazy <mustafa@albazy.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/askbot/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -925,7 +926,7 @@ msgstr ""
 
 #: conf/external_keys.py:36
 msgid "Google Analytics key"
-msgstr ""
+msgstr "مفتاح جوجل Analytics"
 
 #: conf/external_keys.py:38
 #, python-format
@@ -956,7 +957,7 @@ msgstr ""
 
 #: conf/external_keys.py:84
 msgid "Facebook public API key"
-msgstr ""
+msgstr "مفتاح Facebook العام"
 
 #: conf/external_keys.py:86
 #, python-format
