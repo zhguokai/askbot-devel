@@ -431,12 +431,15 @@ def change_password(request):
     if user.is_anonymous():
         return HttpResponseForbidden()
 
-    form = forms.SetPasswordForm(request.POST)
+    post_data = simplejson.loads(request.raw_post_data)
+    form = forms.SetPasswordForm(post_data)
     if form.is_valid():
         password = form.cleaned_data['password1']
         user.set_password(password)
         user.save()
         return {'message': _('Your new password saved')}
+    else:
+        return {'errors': form.errors}
 
 
 @csrf.csrf_protect
@@ -1246,7 +1249,7 @@ def account_recover(request):
                                     'authopenid/establish_login_modal.html',
                                     get_establish_login_view_context(request)
                                 )
-            return HttpResponse(reverse('questions'))
+            return HttpResponseRedirect(reverse('questions'))
         else:
             message = _('Recovery link was invalid, please try again')
             request.user.message_set.create(message=message)
@@ -1264,6 +1267,7 @@ def get_establish_login_view_context(request):
         'login_form': login_form,
         'set_password_form': forms.SetPasswordForm(prefix='set_password'),
         'use_password_login': util.use_password_login(),
+        'modal_is_open': True
     }
 
     login_providers = util.get_enabled_login_providers()

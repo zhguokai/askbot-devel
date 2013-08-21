@@ -4701,16 +4701,21 @@ td.setting-input textarea {
 }
 .auth-menu button,
 .complete-registration button,
+.establish-login-menu button,
 .auth-menu input,
 .complete-registration input,
+.establish-login-menu input,
 .auth-menu label,
 .complete-registration label,
+.establish-login-menu label,
 .auth-menu li,
-.complete-registration li {
+.complete-registration li,
+.establish-login-menu li {
   display: block;
 }
 .auth-menu .submit,
-.complete-registration .submit {
+.complete-registration .submit,
+.establish-login-menu .submit {
   margin: -9px 0 0 0;
 }
 .auth-menu {
@@ -4758,6 +4763,9 @@ td.setting-input textarea {
 .openid-signin .extra-openid-info input[type="text"],
 .complete-federated-registration .extra-openid-info input[type="text"],
 .modal .extra-openid-info input[type="text"],
+.openid-signin .establish-login-menu input[type="text"],
+.complete-federated-registration .establish-login-menu input[type="text"],
+.modal .establish-login-menu input[type="text"],
 .openid-signin .account-recovery input[type="text"],
 .complete-federated-registration .account-recovery input[type="text"],
 .modal .account-recovery input[type="text"],
@@ -4773,6 +4781,9 @@ td.setting-input textarea {
 .openid-signin .extra-openid-info input[type="password"],
 .complete-federated-registration .extra-openid-info input[type="password"],
 .modal .extra-openid-info input[type="password"],
+.openid-signin .establish-login-menu input[type="password"],
+.complete-federated-registration .establish-login-menu input[type="password"],
+.modal .establish-login-menu input[type="password"],
 .openid-signin .account-recovery input[type="password"],
 .complete-federated-registration .account-recovery input[type="password"],
 .modal .account-recovery input[type="password"] {
@@ -4800,6 +4811,9 @@ td.setting-input textarea {
 .openid-signin .extra-openid-info p,
 .complete-federated-registration .extra-openid-info p,
 .modal .extra-openid-info p,
+.openid-signin .establish-login-menu p,
+.complete-federated-registration .establish-login-menu p,
+.modal .establish-login-menu p,
 .openid-signin .account-recovery p,
 .complete-federated-registration .account-recovery p,
 .modal .account-recovery p {
