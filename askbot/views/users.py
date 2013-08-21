@@ -453,7 +453,13 @@ def user_stats(request, user, context):
     # INFO: There's bug in Django that makes the following query kind of broken (GROUP BY clause is problematic):
     #       http://stackoverflow.com/questions/7973461/django-aggregation-does-excessive-group-by-clauses
     #       Fortunately it looks like it returns correct results for the test data
-    user_tags = models.Tag.objects.filter(threads__posts__author=user).distinct().\
+    tag_isolation = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
+    tag_filter = {'threads__posts__author': user}
+    if tag_isolation == 'per-site':
+        current_site = Site.objects.get_current()
+        tag_filter['site_links__site'] = current_site
+
+    user_tags = models.Tag.objects.filter(**tag_filter).distinct().\
                     annotate(user_tag_usage_count=Count('threads')).\
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
     user_tags = list(user_tags) # evaluate

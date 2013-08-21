@@ -34,6 +34,8 @@ from askbot.search import mysql
 from askbot.utils.slug import slugify
 from askbot.search.state_manager import DummySearchState
 
+TAG_ISOLATION = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
+
 class ThreadQuerySet(models.query.QuerySet):
     def get_visible(self, user):
         """filters out threads not belonging to the user groups"""
@@ -1289,6 +1291,11 @@ class Thread(models.Model):
         for tag in self.tags.all():
             if tag.name in tagnames:
                 tag.used_count -= 1
+                if TAG_ISOLATION == 'per-site':
+                    site_link = tag.get_site_link()
+                    site_link.used_count -= 1
+                    site_link.save()
+
                 removed_tags.append(tag)
         self.tags.remove(*removed_tags)
         return removed_tags
@@ -1361,6 +1368,14 @@ class Thread(models.Model):
             #todo: not nice that assignment of added_tags is way above
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
+
+            #assign tags to site if we have a multiportal setup
+            #and the site owner wants to isolate tags per site
+            if TAG_ISOLATION == 'per-site':
+                for tag in added_tags:
+                    site_link = tag.get_site_link()
+                    site_link.used_count += 1
+                    site_link.save()
         else:
             added_tags = Tag.objects.none()
 

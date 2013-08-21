@@ -299,9 +299,14 @@ def tags(request):#view showing a listing of available tags - plain list
     if query != '':
         query_params['name__icontains'] = query
 
-    tags_qs = Tag.objects.filter(**query_params).exclude(used_count=0)
-
-    tags_qs = tags_qs.order_by(order_by)
+    tag_isolation = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
+    if tag_isolation == 'per-site':
+        #TODO: load tags for the current site,
+        #take used_counts from site_link of each tag instead of the tag itself
+        pass
+    else:
+        tags_qs = Tag.objects.filter(**query_params).exclude(used_count=0)
+        tags_qs = tags_qs.order_by(order_by)
 
     #3) Start populating the template context.
     data = {
