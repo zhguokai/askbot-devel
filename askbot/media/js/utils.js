@@ -1515,13 +1515,40 @@ CompleteRegistrationForm.prototype.decorate = function(element) {
 
 /**
  * @constructor
+ * creates or changes password
  */
-var AuthMenu = function() {
+var SetPasswordForm = function() {
+    AjaxForm.call(this);
+    this._fieldNames = ['password1', 'password2'];
+    this._formPrefix = 'set_password-';
+};
+inherits(SetPasswordForm, AjaxForm);
+
+SetPasswordForm.prototype.setParent = function(parentMenu) {
+    this._parent = parentMenu;
+}
+
+SetPasswordForm.prototype.handleSuccess = function(data) {
+    if (this._parent.isModal()) {
+        this._parent.closeModalMenu();
+    }
+    if (data['message']) {
+        notify.show(data['message']);
+    }
+};
+
+
+/**
+ * @constructor
+ * menu with forms, that may be inside
+ * a modal dialog or in a 'static' in page dialog
+ */
+var MaybeModalMenu = function() {
     WrappedElement.call(this);
 };
-inherits(AuthMenu, WrappedElement);
+inherits(MaybeModalMenu, WrappedElement);
 
-AuthMenu.prototype.isModal = function() {
+MaybeModalMenu.prototype.isModal = function() {
     var count = $('.modal').length;
     if (count > 1) {
         throw 'too many modal menues open!!!';
@@ -1530,11 +1557,25 @@ AuthMenu.prototype.isModal = function() {
     }
 };
 
-AuthMenu.prototype.closeModalMenu = function() {
+MaybeModalMenu.prototype.closeModalMenu = function() {
     $('.modal').modal('hide');
     $('.modal').hide();
     $('.modal-backdrop').hide();
 };
+
+
+/**
+ * @constructor
+ * Composite authentication menu with:
+ * - login buttons
+ * - password login form
+ * - password registration form
+ * - account recovery form
+ */
+var AuthMenu = function() {
+    MaybeModalMenu.call(this);
+};
+inherits(AuthMenu, MaybeModalMenu);
 
 AuthMenu.prototype.reset = function() {
     this._federatedLogins.reset();
@@ -1572,6 +1613,45 @@ AuthMenu.prototype.decorate = function(element) {
     //need this to close the extra username popup
     element.click(function(){ federatedLogins.reset(); });
 };
+
+/**
+ * @constructor
+ * Composite menu for establishing login methods with:
+ * - login buttons
+ * - password change form
+ * @todo: add listing of existing login methods
+ */
+var EstablishLoginMenu = function() {
+    MaybeModalMenu.call(this);
+};
+inherits(EstablishLoginMenu, MaybeModalMenu);
+
+EstablishLoginMenu.prototype.reset = function() {
+    this._federatedLogins.reset();
+    this._setPasswordForm.reset();
+    if (this.isModal()) {
+        this.closeModalMenu();
+    }
+};
+
+EstablishLoginMenu.prototype.decorate = function(element) {
+    this._element = element;
+
+    var federatedLogins = new FederatedLoginMenu();
+    federatedLogins.setParent(this);
+    federatedLogins.decorate($('.federated-login-methods'));
+    this._federatedLogins = federatedLogins;
+
+    var setPasswordForm = new SetPasswordForm();
+    setPasswordForm.setParent(this);
+    setPasswordForm.decorate($('.set-password'));
+    this._setPasswordForm = setPasswordForm;
+
+    element.click(function(){ federatedLogins.reset(); });
+};
+
+
+
 /**
  * @todo: probably decommission tis in favor of LabeledInput
  * Can be used for an input box or textarea.

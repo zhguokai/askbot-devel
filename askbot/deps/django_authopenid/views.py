@@ -34,6 +34,7 @@ import datetime
 from django.http import HttpResponseRedirect, Http404
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
+from django.http import HttpResponseForbidden
 from django.template import RequestContext, Context
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
@@ -422,21 +423,20 @@ def complete_oauth_signin(request):
         request.user.message_set.create(message = msg)
         return HttpResponseRedirect(next_url)
 
-
-"""
 @csrf.csrf_protect
+@ajax_only
 @post_only
 def change_password(request):
-    if request.user.is_authenticated():
-        new_password = \
-            login_form.cleaned_data['new_password']
-        AuthBackend.set_password(
-                        user=request.user,
-                        password=new_password,
-                        provider_name=provider_name
-                    )
+    user = request.user
+    if user.is_anonymous():
+        return HttpResponseForbidden()
+
+    form = forms.SetPasswordForm(request.POST)
+    if form.is_valid():
+        password = form.cleaned_data['password1']
+        user.set_password(password)
+        user.save()
         return {'message': _('Your new password saved')}
-"""
 
 
 @csrf.csrf_protect
@@ -499,7 +499,7 @@ def ldap_signin(request):
                 login_form.set_password_login_error()
 
 
-#@csrf.csrf_protect
+@csrf.csrf_protect
 @ajax_only
 @post_only
 def password_signin(request):
@@ -939,8 +939,11 @@ def finalize_generic_signin(
             data = get_register_form_context(request)
             return render(request, 'authopenid/complete_full.html', data)
         else:
-            modal_menu_html = render_register_form_to_string(request)
-            request.session['modal_menu'] = modal_menu_html
+            request.session['modal_menu'] = render_to_string(
+                                    request,
+                                    'authopenid/complete_modal.html',
+                                    get_register_form_context(request)
+                                )
         return HttpResponseRedirect(redirect_url)
 
 def get_register_form_context(request):
@@ -951,15 +954,7 @@ def get_register_form_context(request):
             'email': request.session.get('email', ''),
         }
     )
-    return {
-        'openid_register_form': register_form,
-        'login_type':'openid', #<- is this the only option that is ever used?
-    }
-
-def render_register_form_to_string(request):
-    """string is used for the modal registration menu"""
-    data = get_register_form_context(request)
-    return render_to_string(request, 'authopenid/complete_modal.html', data)
+    return {'register_form': register_form}
 
 @ajax_only
 @post_only
@@ -1113,7 +1108,7 @@ def verify_email_and_register(request):
 
 @ajax_only
 @post_only
-#@csrf.csrf_protect
+@csrf.csrf_protect
 def register_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
@@ -1201,7 +1196,7 @@ def send_user_new_email_key(user):
     user.save()
     send_email_key(user.email, user.email_key)
 
-#@csrf.csrf_protect
+@csrf.csrf_protect
 def account_recover(request):
     """view similar to send_email_key, except
     it allows user to recover an account by entering
@@ -1227,11 +1222,14 @@ def account_recover(request):
     else:
         key = request.GET.get('validation_code', None)
         if key is None:
+            message = _(
+                'Hmm, could not recover your account - maybe '
+                'the validation link was incorrect?'
+            )
+            request.user.message_set.create(message=message)
             return HttpResponseRedirect(get_next_url(request))
 
         user = authenticate(email_key=key, method='email')
-        message = _('Thank you for validating your email!')
-        user.message_set.create(message=message)
         if user:
             if request.user.is_authenticated():
                 if user != request.user:
@@ -1242,17 +1240,45 @@ def account_recover(request):
 
             from askbot.models import greet_new_user
             greet_new_user(user)
-
-            #need to show "sticky" signin view here
-            return show_signin_view(
-                                request,
-                                view_subtype = 'add_openid',
-                                sticky = True
-                            )
+            #open blocking modal account recovery menu
+            request.session['modal_menu'] = render_to_string(
+                                    request,
+                                    'authopenid/establish_login_modal.html',
+                                    get_establish_login_view_context(request)
+                                )
+            return HttpResponse(reverse('questions'))
         else:
-            return show_signin_view(request, view_subtype = 'bad_key')
+            message = _('Recovery link was invalid, please try again')
+            request.user.message_set.create(message=message)
+            return HttpResponseRedirect(get_next_url(request))
 
-        return HttpResponseRedirect(get_next_url(request))
+
+def get_establish_login_view_context(request):
+    """prepares context for the establish login menu"""
+    next_url = get_next_url(request)
+    login_form = forms.LoginForm(
+                    initial={'next': next_url},
+                    prefix='login'
+                )
+    data = {
+        'login_form': login_form,
+        'set_password_form': forms.SetPasswordForm(prefix='set_password'),
+        'use_password_login': util.use_password_login(),
+    }
+
+    login_providers = util.get_enabled_login_providers()
+    data['login_providers'] = login_providers.values()
+
+    #determine if we are only using password login or we also have buttons
+    active_provider_names = [p['name'] for p in login_providers.values()]
+    data['have_buttons'] = len(active_provider_names)
+
+    #todo: add user's active login methods for the users to see and 
+    #delete if they want to
+        
+    data.update(csrf_context(request))
+    return data
+
 
 #internal server view used as return value by other views
 def validation_email_sent(request):

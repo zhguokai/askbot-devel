@@ -45,6 +45,8 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     #url(r'^%s%s$' % (_('email/'), _('sendkey/')), 'send_email_key', name='send_email_key'),
     #url(r'^%s%s(?P<id>\d+)/(?P<key>[\dabcdef]{32})/$' % (_('email/'), _('verify/')), 'verifyemail', name='user_verifyemail'),
     url(r'^%s$' % _('recover/'), 'account_recover', name='user_account_recover'),
+    #change password is an ajax-only view
+    url(r'^change-password/', 'change_password', name='user_change_password'),
     url(
         r'^%s$' % _('verify-email/'),
         'verify_email_and_register',

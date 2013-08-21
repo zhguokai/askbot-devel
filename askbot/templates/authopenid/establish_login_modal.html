@@ -1,0 +1,5 @@
+{% extends "widgets/modal_menu.html" %}
+{% block modal_title %}{% trans %}Establish a login method{% endtrans %}{% endblock %}
+{% block modal_body %}
+    {% include "authopenid/establish_login.html" %}
+{% endblock %}

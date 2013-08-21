@@ -41,6 +41,11 @@
             var authMenu = new AuthMenu();
             authMenu.decorate(menuElement);
         }
+        menuElement = $('.establish-login-menu');
+        if (menuElement.length) {
+            var establishLoginMenu = new EstablishLoginMenu();
+            establishLoginMenu.decorate(menuElement);
+        }
     })();
     $(document).ready(function() {
         var completeRegistrationForm = $('.complete-registration');

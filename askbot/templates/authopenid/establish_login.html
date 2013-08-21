@@ -1,0 +1,45 @@
+{% import "authopenid/authopenid_macros.html" as login_macros %}
+<!-- establish_login.html -->
+<div class="establish-login-menu">
+    {% if have_buttons %}
+    <div class="federated-login-methods">
+        <form 
+            method="post"
+            action="{{ settings.LOGIN_URL }}"
+        >{% csrf_token %}
+            {{ login_form.login_provider_name }}
+            {{ login_form.next }}
+            {{ login_macros.provider_buttons(login_providers) }}
+        </form>
+    </div>
+    {% endif %}
+    {% if use_password_login %}
+    <div class="col1 single-column">
+        <div class="set-password">
+            <p>{% trans %}Create or change password{% endtrans %}</p>
+            <div class="labeled-input">
+                <label for="id_set_password-password1">
+                    {% trans %}New password{% endtrans %}
+                </label>
+                {{ set_password_form.password1 }}
+            </div>
+            <div class="labeled-input">
+                <label for="id_set_password-password2">
+                    {% trans %}Please, retype{% endtrans %}
+                </label>
+                {{ set_password_form.password2 }}
+            </div>
+                <input 
+                    class="submit"
+                    type="submit"
+                    value="{% trans %}Save password{% endtrans %}"
+                    data-url='{% url "user_change_password" %}'
+                />
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    {# todo: add listing of current login methods to the right column #}
+    <div class="clearfix"></div>
+</div>
+<!-- end signin.html -->
