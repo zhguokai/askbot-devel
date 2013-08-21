@@ -4654,3 +4654,19 @@ body.lang-hu .users-input,
 body.lang-hu .groups-input {
   width: 100px;
 }
+body.lang-es .scope-selector {
+  margin-left: 10px;
+}
+body.lang-es .box .inputs #interestingTagInput,
+body.lang-es .box .inputs #ignoredTagInput {
+  width: 130px;
+}
+body.lang-es .users-input,
+body.lang-es .groups-input {
+  width: 130px;
+}
+body.lang-es .short-summary .counts .answers div,
+body.lang-es .short-summary .counts .views div,
+body.lang-es .short-summary .counts .votes div {
+  font-size: 10px;
+}
