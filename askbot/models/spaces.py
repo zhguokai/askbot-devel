@@ -119,7 +119,9 @@ class Feed(models.Model):
         self.feedtospace_set.add(feed_to_space)
 
     def thread_belongs_to_feed(self, thread):
-        return thread.spaces.filter(feed=self).exists()
+        feed_spaces = set(self.get_spaces())
+        thread_spaces = set(thread.spaces.all())
+        return len(feed_spaces & thread_spaces) > 0
 
 class FeedToSpace(models.Model):
     space = models.ForeignKey(Space)
