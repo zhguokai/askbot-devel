@@ -457,7 +457,7 @@ def user_stats(request, user, context):
     tag_filter = {'threads__posts__author': user}
     if tag_isolation == 'per-site':
         current_site = Site.objects.get_current()
-        tag_filter['site_links__site'] = current_site
+        tag_filter['askbot_site_links__site'] = current_site
 
     user_tags = models.Tag.objects.filter(**tag_filter).distinct().\
                     annotate(user_tag_usage_count=Count('threads')).\

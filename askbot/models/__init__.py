@@ -45,6 +45,7 @@ from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.tag import Tag, MarkedTag, TagSynonym
+from askbot.models.tag import TagToSite
 from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership
@@ -3821,6 +3822,7 @@ __all__ = [
         'PostFlagReason',
         'MarkedTag',
         'TagSynonym',
+        'TagToSite',
 
         'BadgeData',
         'Award',

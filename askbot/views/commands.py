@@ -551,7 +551,7 @@ def get_tag_list(request):
     }
     tag_isolation = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
     if tag_isolation == 'per-site':
-        tag_filter['site_links__site'] = Site.objects.get_current()
+        tag_filter['askbot_site_links__site'] = Site.objects.get_current()
 
     tags = models.Tag.objects.filter(**tag_filter)
     tag_names = tags.values_list('name', flat=True)
