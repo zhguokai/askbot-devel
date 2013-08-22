@@ -958,7 +958,10 @@ def get_register_form_context(request):
             'email': request.session.get('email', ''),
         }
     )
-    return {'register_form': register_form}
+    return {
+        'register_form': register_form,
+        'modal_is_open': True
+    }
 
 @ajax_only
 @post_only
