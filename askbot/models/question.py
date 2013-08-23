@@ -556,7 +556,8 @@ class ThreadToGroup(models.Model):
 
 
 class Thread(models.Model):
-    SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
+    #in this template first number is site id
+    SUMMARY_CACHE_KEY_TPL = 'site-%d-thread-question-summary-%d'
     ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
 
     title = models.CharField(max_length=300)
@@ -947,18 +948,39 @@ class Thread(models.Model):
             #            )
 
     def invalidate_cached_thread_content_fragment(self):
-        cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        site_id = django_settings.SITE_ID
+        site_ids = getattr(django_settings, 'ASKBOT_SITE_IDS', [site_id,])
+        cache_keys = list()
+        for site_id in site_ids:
+            cache_key = self.get_thread_summary_cache_key(site_id=site_id)
+            cache_keys.append(cache_key)
+        cache.cache.delete_many(cache_keys)
 
-    def get_post_data_cache_key(self, sort_method = None):
-        return 'thread-data-%s-%s' % (self.id, sort_method)
+    def get_thread_summary_cache_key(self, site_id=None):
+        site_id = site_id or django_settings.SITE_ID
+        cache_key = self.SUMMARY_CACHE_KEY_TPL % (site_id, self.id)
+
+    def get_post_data_cache_key(self, sort_method=None, site_id=None):
+        site_id = site_id or django_settings.SITE_ID
+        return 'site-%s-thread-data-%s-%s' % (site_id, self.id, sort_method)
 
     def invalidate_cached_post_data(self):
         """needs to be called when anything notable
         changes in the post data - on votes, adding,
         deleting, editing content"""
         #we can call delete_many() here if using Django > 1.2
-        for sort_method in const.ANSWER_SORT_METHODS:
-            cache.cache.delete(self.get_post_data_cache_key(sort_method))
+        site_id = django_settings.SITE_ID
+        site_ids = getattr(django_settings, 'ASKBOT_SITE_IDS', [site_id,])
+        cache_keys = list()
+        for site_id in site_ids:
+            for sort_method in const.ANSWER_SORT_METHODS:
+                cache_key = self.get_post_data_cache_key(
+                                                sort_method=sort_method,
+                                                site_id=site_id
+                                            )
+                cache_keys.append(cache_key)
+
+        cache.cache.delete_many(cache_keys)
 
     def invalidate_cached_data(self, lazy=False):
         self.invalidate_cached_post_data()
@@ -1531,7 +1553,8 @@ class Thread(models.Model):
         #parameter visitor is there to get summary out by the user groups
         if askbot_settings.GROUPS_ENABLED:
             return None
-        return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        cache_key = self.get_thread_summary_cache_key()
+        return cache.cache.get(cache_key)
 
     def update_summary_html(self, visitor = None):
         #todo: it is quite wrong that visitor is an argument here
@@ -1556,14 +1579,15 @@ class Thread(models.Model):
         # * Additionally, Memcached treats timeouts > 30day as dates (https://code.djangoproject.com/browser/django/tags/releases/1.3/django/core/cache/backends/memcached.py#L36),
         #   which probably doesn't break anything but if we can stick to 30 days then let's stick to it
         cache.cache.set(
-            self.SUMMARY_CACHE_KEY_TPL % self.id,
+            self.get_thread_summary_cache_key(),
             html,
             timeout=const.LONG_TIME
         )
         return html
 
     def summary_html_cached(self):
-        return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        cache_key = self.get_thread_summary_cache_key()
+        return cache.cache.has_key(cache_key)
 
 class QuestionView(models.Model):
     question = models.ForeignKey(Post, related_name='viewed')
