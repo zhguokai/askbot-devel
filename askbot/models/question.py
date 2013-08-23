@@ -557,7 +557,6 @@ class ThreadToGroup(models.Model):
 
 class Thread(models.Model):
     #in this template first number is site id
-    SUMMARY_CACHE_KEY_TPL = 'site-%d-thread-question-summary-%d'
     ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
 
     title = models.CharField(max_length=300)
@@ -958,7 +957,8 @@ class Thread(models.Model):
 
     def get_thread_summary_cache_key(self, site_id=None):
         site_id = site_id or django_settings.SITE_ID
-        cache_key = self.SUMMARY_CACHE_KEY_TPL % (site_id, self.id)
+        cache_key_tpl = 'site-%d-thread-question-summary-%d'
+        return cache_key_tpl % (site_id, self.id)
 
     def get_post_data_cache_key(self, sort_method=None, site_id=None):
         site_id = site_id or django_settings.SITE_ID
