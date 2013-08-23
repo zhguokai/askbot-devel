@@ -128,3 +128,21 @@ class ManagementCommandTests(AskbotTestCase):
 
         print 'done create_tag_synonym_test'
         
+    def test_delete_unused_tags(self):
+
+        user = self.create_user()
+        question = self.post_question(user=user)
+
+        tag_count = models.Tag.objects.count()
+
+        #create some unused tags
+        self.create_tag("picasso", user)
+        self.create_tag("renoir", user)
+        self.create_tag("pissarro", user)
+
+        #check they're in the db
+        self.assertEqual(models.Tag.objects.count(), tag_count+3)
+        management.call_command('delete_unused_tags')
+
+        #now they should be removed
+        self.assertEqual(models.Tag.objects.count(), tag_count)
