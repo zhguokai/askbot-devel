@@ -3606,7 +3606,6 @@ def send_respondable_email_validation_message(
         subject_line = subject_line,
         body_text = body_text,
         recipient_list = [user.email, ],
-        activity_type = const.TYPE_ACTIVITY_VALIDATION_EMAIL_SENT,
         headers = {'Reply-To': reply_to_address}
     )
 

@@ -104,8 +104,6 @@ def send_mail(
             body_text = None,
             from_email = django_settings.DEFAULT_FROM_EMAIL,
             recipient_list = None,
-            activity_type = None,
-            related_object = None,
             headers = None,
             raise_on_failure = False,
         ):
@@ -115,10 +113,6 @@ def send_mail(
     logs email sending activity
     and any errors are reported as critical
     in the main log file
-
-    related_object is not mandatory, other arguments
-    are. related_object (if given, will be saved in
-    the activity record)
 
     if raise_on_failure is True, exceptions.EmailNotSent is raised
     """
@@ -136,8 +130,6 @@ def send_mail(
         msg.attach_alternative(body_text, "text/html")
         msg.send()
         logging.debug('sent update to %s' % ','.join(recipient_list))
-        if related_object is not None:
-            assert(activity_type is not None)
     except Exception, error:
         sys.stderr.write('\n' + unicode(error).encode('utf-8') + '\n')
         if raise_on_failure == True:

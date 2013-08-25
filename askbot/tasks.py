@@ -119,8 +119,6 @@ def notify_author_of_published_revision_celery_task(revision):
             subject_line = _('Your post at %(site_name)s is now published') % data,
             body_text = template.render(Context(data)),
             recipient_list = [revision.author.email,],
-            related_object = revision,
-            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
             headers = headers
         )
 
@@ -264,8 +262,6 @@ def send_instant_notifications_about_activity_in_post(
                 subject_line=subject_line,
                 body_text=body_text,
                 recipient_list=[user.email],
-                related_object=origin_post,
-                activity_type=const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
                 headers=headers,
                 raise_on_failure=True
             )
