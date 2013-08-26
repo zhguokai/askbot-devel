@@ -3204,8 +3204,8 @@ def format_instant_notification_email(
     else:
         raise ValueError('unrecognized post type')
 
-    post_url = site_url(post.get_absolute_url())
-    user_url = site_url(from_user.get_absolute_url())
+    post_url = post.get_absolute_url()
+    user_url = from_user.get_absolute_url()
     user_action = user_action % {
         'user': '<a href="%s">%s</a>' % (user_url, from_user.username),
         'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
@@ -3253,7 +3253,7 @@ def format_instant_notification_email(
         'update_type': update_type,
         'post_url': post_url,
         'origin_post_title': origin_post.thread.title,
-        'user_subscriptions_url': site_url(user_subscriptions_url),
+        'user_subscriptions_url': user_subscriptions_url,
         'reply_separator': reply_separator,
         'reply_address': reply_address,
         'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
