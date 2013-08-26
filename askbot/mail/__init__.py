@@ -117,7 +117,7 @@ def send_mail(
     if raise_on_failure is True, exceptions.EmailNotSent is raised
     """
     from askbot import models
-    if isinstance(recipient, str):
+    if isinstance(recipient, basestring):
         base_url = askbot_settings.APP_URL
         recipient_address = recipient
     elif isinstance(recipient, models.User):
