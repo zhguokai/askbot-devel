@@ -29,6 +29,7 @@ from django.utils.html import escape
 from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from django.core import cache
 from django.core import exceptions as django_exceptions
 from django_countries.fields import CountryField
@@ -3813,8 +3814,8 @@ signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
-signals.user_registered.connect(greet_new_user)
 signals.user_registered.connect(init_askbot_user_profile)
+signals.user_registered.connect(greet_new_user)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
