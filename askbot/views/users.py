@@ -207,6 +207,8 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
 @csrf.csrf_protect
 def user_moderate(request, subject, context):
     """user subview for moderation
+    A bit confusingly ``subject`` is actually user
+    which is being moderated
     """
     moderator = request.user
 
@@ -238,9 +240,9 @@ def user_moderate(request, subject, context):
 
                 try:
                     send_mail(
-                            subject_line = subject_line,
-                            body_text = body_text,
-                            recipient_list = [subject.email],
+                            subject_line=subject_line,
+                            body_text=body_text,
+                            recipient=subject,
                             headers={'Reply-to':moderator.email},
                             raise_on_failure = True
                         )

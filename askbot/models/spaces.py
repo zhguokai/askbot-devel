@@ -139,5 +139,19 @@ class GroupToSpace(models.Model):
         app_label = 'askbot'
         unique_together = ('space', 'group')
 
+"""
+class AskbotSite(models.Model):
+    django_site = models.OneToOneField(Site, related_name='askbot_site')
+    protocol = models.CharField(max_length=8, default='http')
+    base_url = models.CharField(max_length=128, default='/')
+
+    class Meta:
+        app_label = 'askbot'
+        db_table = 'askbot_site'
+
+    def get_absolute_url(self):
+        return self.protocol + '://' + self.domain + self.base_url
+"""
+
 def get_feed_url(url_pattern_name, feed=None, kwargs=None):
     return Feed.objects.get_url(url_pattern_name, feed, kwargs)
