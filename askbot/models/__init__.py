@@ -463,7 +463,7 @@ def user_can_have_strong_url(self):
 def user_can_post_by_email(self):
     """True, if reply by email is enabled
     and user has sufficient reputatiton"""
-    if self.is_administrator_or_moderator():
+    if self.is_administrator_or_moderator() and askbot_settings.REPLY_BY_EMAIL:
         return True
     return askbot_settings.REPLY_BY_EMAIL and \
         self.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL
