@@ -97,7 +97,7 @@ class Feed(models.Model):
     default_space = models.ForeignKey(Space)
     redirect = models.ForeignKey('self', null=True, blank=True)
 
-    site = models.ForeignKey(Site)
+    site = models.ForeignKey(Site, related_name='askbot_feeds')
     objects = FeedManager()
 
     class Meta:
@@ -109,8 +109,8 @@ class Feed(models.Model):
 
 
     def get_spaces(self):
-        feed_to_space_list = [feedtospace.space for feedtospace in \
-                self.feedtospace_set.exclude(space=self.default_space)]
+        feed_to_space_list = [space_link.space for space_link in \
+                self.space_links.exclude(space=self.default_space)]
         feed_to_space_list.append(self.default_space)
         return feed_to_space_list
 
@@ -124,8 +124,8 @@ class Feed(models.Model):
         return len(feed_spaces & thread_spaces) > 0
 
 class FeedToSpace(models.Model):
-    space = models.ForeignKey(Space)
-    feed = models.ForeignKey(Feed)
+    space = models.ForeignKey(Space, related_name='feed_links')
+    feed = models.ForeignKey(Feed, related_name='space_links')
 
     class Meta:
         app_label = 'askbot'

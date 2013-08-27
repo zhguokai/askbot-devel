@@ -708,3 +708,10 @@ class UserProfile(models.Model):
 
     class Meta:
         app_label = 'askbot'
+
+    def get_spaces(self):
+        """returns query set of spaces configured
+        to show on the user's default site"""
+        feeds = self.default_site.askbot_feeds.all()
+        from askbot.models.spaces import Space
+        return Space.objects.filter(feed_links__feed__in=feeds)

@@ -909,17 +909,18 @@ class Post(models.Model):
 
     def filter_authorized_users(self, candidates):
         """returns list of users who are allowed to see this post"""
-        if askbot_settings.GROUPS_ENABLED == False:
-            return candidates
+        filtered_candidates = set()
+        if askbot_settings.GROUPS_ENABLED is False:
+            filtered_candidates = candidates
         else:
             if len(candidates) == 0:
                 return candidates
             #get post groups
-            groups = list(self.groups.all())
+            groups = set(self.groups.all())
 
             if len(groups) == 0:
                 logging.critical('post %d is groupless' % self.id)
-                return list()
+                return set()
 
             #load group memberships for the candidates
             memberships = GroupMembership.objects.filter(
@@ -929,12 +930,25 @@ class Post(models.Model):
             user_ids = set(memberships.values_list('user__id', flat=True))
 
             #scan through the user ids and see which are group members
-            filtered_candidates = set()
             for candidate in candidates:
                 if candidate.id in user_ids:
                     filtered_candidates.add(candidate)
 
+        if askbot_settings.SPACES_ENABLED is False:
             return filtered_candidates
+
+        if getattr(django_settings, 'ASKBOT_SITE_IDS', None):
+            #filter out recipients who don't belong to sites where
+            #this post is made
+            double_filtered_candidates = set()
+            for user in filtered_candidates:
+                user_spaces = set(user.askbot_profile.get_spaces())
+                post_spaces = set(self.thread.spaces.all())
+                if user_spaces & post_spaces:
+                    double_filtered_candidates.add(user)
+            filtered_candidates = double_filtered_candidates
+
+        return filtered_candidates
 
     def format_for_email(
         self, quote_level=0, is_leaf_post=False, format=None

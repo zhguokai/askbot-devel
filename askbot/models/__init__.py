@@ -1546,6 +1546,8 @@ def user_accept_best_answer(
         auth.onAnswerAcceptCanceled(prev_accepted_answer, self)
 
     auth.onAnswerAccept(answer, self, timestamp = timestamp)
+    answer.thread.invalidate_cached_data()
+
     award_badges_signal.send(None,
         event = 'accept_best_answer',
         actor = self,
@@ -1563,6 +1565,7 @@ def user_unaccept_best_answer(
         self.assert_can_unaccept_best_answer(answer)
     if not answer.accepted():
         return
+    answer.thread.invalidate_cached_data()
     auth.onAnswerAcceptCanceled(answer, self)
 
 @auto_now_timestamp
