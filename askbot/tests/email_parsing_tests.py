@@ -62,3 +62,26 @@ Subject: "One more test question from email."
 
 """
         self.assertEqual(mail.extract_reply(text), "some real text")
+
+    def test_blackberry(self):
+
+        text = """Lorem ipsum lorem ipsum
+blah blah blah
+
+some more text here
+
+Joe
+
+________________________________________
+From: forum@ask.askbot.com
+Sent: Thursday, August 15, 2013 1:58:21 AM
+To: Mister Joe
+Subject: Our forum: "some text in the subject line"
+"""
+        expected = """Lorem ipsum lorem ipsum
+blah blah blah
+
+some more text here
+
+Joe"""
+        self.assertEqual(mail.extract_reply(text), expected)
