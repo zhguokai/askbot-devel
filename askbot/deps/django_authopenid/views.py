@@ -280,7 +280,8 @@ def complete_oauth2_signin(request):
         return HttpResponseRedirect(reverse('index'))
 
     csrf_token = request.GET.get('state', None)
-    if csrf_token is None or csrf_token != request.session.pop('oauth2_csrf_token'):
+    oauth2_csrf_token = request.session.pop('oauth2_csrf_token', None)
+    if csrf_token is None or csrf_token != oauth2_csrf_token:
         return HttpResponseBadRequest()
 
     providers = util.get_enabled_login_providers()
@@ -1324,6 +1325,10 @@ def account_recover(request):
                     login(request, user)
             else:
                 login(request, user)
+
+            from askbot.models import greet_new_user
+            greet_new_user(user)
+
             #need to show "sticky" signin view here
             return show_signin_view(
                                 request,
@@ -1333,6 +1338,7 @@ def account_recover(request):
         else:
             return show_signin_view(request, view_subtype = 'bad_key')
 
+        return HttpResponseRedirect(get_next_url(request))
 
 #internal server view used as return value by other views
 def validation_email_sent(request):

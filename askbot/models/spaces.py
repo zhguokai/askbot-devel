@@ -115,8 +115,8 @@ class Feed(models.Model):
         return feed_to_space_list
 
     def add_space(self, space):
-        feed_to_space = FeedToSpace.objects.create(feed=self, space=space)
-        self.feedtospace_set.add(feed_to_space)
+        link, created = FeedToSpace.objects.get_or_create(feed=self, space=space)
+        self.space_links.add(link)
 
     def thread_belongs_to_feed(self, thread):
         feed_spaces = set(self.get_spaces())

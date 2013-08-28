@@ -982,6 +982,10 @@ class Thread(models.Model):
 
         cache.cache.delete_many(cache_keys)
 
+        sort_methods = map(lambda v: v[0], const.ANSWER_SORT_METHODS)
+        for sort_method in sort_methods:
+            cache.cache.delete(self.get_post_data_cache_key(sort_method))
+
     def invalidate_cached_data(self, lazy=False):
         self.invalidate_cached_post_data()
         if lazy:
@@ -989,9 +993,11 @@ class Thread(models.Model):
         else:
             self.update_summary_html()
 
-    def get_cached_post_data(self, user = None, sort_method = 'votes'):
+    def get_cached_post_data(self, user = None, sort_method = None):
         """returns cached post data, as calculated by
         the method get_post_data()"""
+        sort_method = sort_method or askbot_settings.DEFAULT_ANSWER_SORT_METHOD
+
         if askbot_settings.GROUPS_ENABLED:
             #temporary plug: bypass cache where groups are enabled
             return self.get_post_data(sort_method=sort_method, user=user)
@@ -1002,7 +1008,7 @@ class Thread(models.Model):
             cache.cache.set(key, post_data, const.LONG_TIME)
         return post_data
 
-    def get_post_data(self, sort_method='votes', user=None):
+    def get_post_data(self, sort_method=None, user=None):
         """returns question, answers as list and a list of post ids
         for the given thread, and the list of published post ids
         (four values)
@@ -1010,6 +1016,8 @@ class Thread(models.Model):
         all (both posts and the comments sorted in the correct
         order)
         """
+        sort_method = sort_method or askbot_settings.DEFAULT_ANSWER_SORT_METHOD
+
         thread_posts = self.posts.all()
         if askbot_settings.GROUPS_ENABLED:
             if user is None or user.is_anonymous():
@@ -1025,12 +1033,18 @@ class Thread(models.Model):
                         'oldest':'added_at',
                         'votes':'-points'
                     }
-        if sort_method in order_by_method:
-            order_by = order_by_method[sort_method]
-        else:
-            order_by = order_by_method['latest']
 
-        thread_posts = thread_posts.order_by(order_by)
+        default_answer_sort_method = askbot_settings.DEFAULT_ANSWER_SORT_METHOD
+        default_order_by_method = order_by_method[default_answer_sort_method]
+        order_by = order_by_method.get(sort_method, default_order_by_method)
+        #we add secondary sort method for the answers to make
+        #discussion more coherent
+        if order_by != default_order_by_method:
+            order_by = (order_by, default_order_by_method)
+        else:
+            order_by = (order_by,)
+
+        thread_posts = thread_posts.order_by(*order_by)
         #1) collect question, answer and comment posts and list of post id's
         answers = list()
         post_map = dict()
@@ -1090,11 +1104,7 @@ class Thread(models.Model):
                                     ).filter(
                                         deleted=False
                                     ).order_by(
-                                        {
-                                            'latest':'-added_at',
-                                            'oldest':'added_at',
-                                            'votes':'-points'
-                                        }[sort_method]
+                                        *order_by
                                     ).values_list('id', flat=True)
 
             published_answer_ids = reversed(published_answer_ids)
