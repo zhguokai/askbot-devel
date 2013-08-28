@@ -37,7 +37,9 @@ from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.const.message_keys import get_i18n_message
 from askbot.conf import settings as askbot_settings
-from askbot.models.spaces import Space, Feed, get_feed_url
+from askbot.models.spaces import Space
+from askbot.models.spaces import Feed
+from askbot.models.spaces import get_feed_url
 from askbot.models.spaces import FeedToSpace
 #from askbot.models.spaces import AskbotSite
 from askbot.models.question import Thread
