@@ -8,7 +8,7 @@ except ImportError:
     pass
 
 tags_updated = django.dispatch.Signal(
-                        providing_args=['tags', 'user', 'timestamp']
+                        providing_args=['thread', 'tags', 'user', 'timestamp']
                     )
 
 #todo: this one seems to be unused

@@ -20,6 +20,7 @@ from celery import states
 from celery.task import task
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
+from askbot.models import signals
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
@@ -61,7 +62,6 @@ from askbot.models.post import PostFlagReason, AnonymousAnswer
 from askbot.models.post import PostToGroup
 from askbot.models.post import DraftAnswer
 from askbot.models.reply_by_email import ReplyAddress
-from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute, Vote
 from askbot.models.widgets import AskWidget, QuestionWidget
