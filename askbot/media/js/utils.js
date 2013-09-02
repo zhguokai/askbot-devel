@@ -1054,6 +1054,9 @@ ModalDialog.prototype.prependContent = function(content) {
 
 ModalDialog.prototype.setHeadingText = function(text) {
     this._heading_text = text;
+    if (this._headingTextElement) {
+        this._headingTextElement.html(text);
+    }
 };
 
 ModalDialog.prototype.setAcceptButtonText = function(text) {
@@ -1105,11 +1108,10 @@ ModalDialog.prototype.createDom = function() {
         close_link.html('x');
         header.append(close_link);
         var title = this.makeElement('h3');
+        this._headingTextElement = title;
         title.html(this._heading_text);
         header.append(title);
     }
-
-
 
     //2) create content
     var body = this.makeElement('div')
@@ -1129,12 +1131,14 @@ ModalDialog.prototype.createDom = function() {
     accept_btn.addClass('submit');
     accept_btn.html(this._accept_button_text);
     footer.append(accept_btn);
+    this._acceptButton = accept_btn;
 
     if (this._reject_button_text) {
         var reject_btn = this.makeElement('button');
         reject_btn.addClass('submit cancel');
         reject_btn.html(this._reject_button_text);
         footer.append(reject_btn);
+        this._rejectButton = reject_btn;
     }
 
     //4) attach event handlers to the buttons

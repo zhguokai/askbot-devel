@@ -988,9 +988,8 @@ class Thread(models.Model):
 
     def invalidate_cached_data(self, lazy=False):
         self.invalidate_cached_post_data()
-        if lazy:
-            self.invalidate_cached_thread_content_fragment()
-        else:
+        self.invalidate_cached_thread_content_fragment()
+        if lazy is False:
             self.update_summary_html()
 
     def get_cached_post_data(self, user = None, sort_method = None):
