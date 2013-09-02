@@ -20,7 +20,6 @@ from celery import states
 from celery.task import task
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
-from askbot.models import signals
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
@@ -3833,6 +3832,7 @@ if 'avatar' in django_settings.INSTALLED_APPS:
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2
+from askbot.models import signals
 signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)

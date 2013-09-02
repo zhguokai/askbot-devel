@@ -1400,6 +1400,12 @@ class Thread(models.Model):
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
 
+            try:
+                from windriver.models import auto_share_question_via_tags
+                auto_share_question_via_tags(self, added_tags, user, timestamp)
+            except:
+                pass
+
             #assign tags to site if we have a multiportal setup
             #and the site owner wants to isolate tags per site
             if TAG_ISOLATION == 'per-site':
