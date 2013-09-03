@@ -973,7 +973,7 @@ class Thread(models.Model):
         site_ids = getattr(django_settings, 'ASKBOT_SITE_IDS', [site_id,])
         cache_keys = list()
         for site_id in site_ids:
-            for sort_method in const.ANSWER_SORT_METHODS:
+            for sort_method in dict(const.ANSWER_SORT_METHODS).keys():
                 cache_key = self.get_post_data_cache_key(
                                                 sort_method=sort_method,
                                                 site_id=site_id
@@ -1399,12 +1399,6 @@ class Thread(models.Model):
             #todo: not nice that assignment of added_tags is way above
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
-
-            try:
-                from windriver.models import auto_share_question_via_tags
-                auto_share_question_via_tags(self, added_tags, user, timestamp)
-            except:
-                pass
 
             #assign tags to site if we have a multiportal setup
             #and the site owner wants to isolate tags per site
