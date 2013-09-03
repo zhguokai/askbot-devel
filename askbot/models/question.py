@@ -1374,6 +1374,13 @@ class Thread(models.Model):
         #remove tags from the question's tags many2many relation
         #used_count values are decremented on all tags
         removed_tags = self.remove_tags_by_names(removed_tagnames)
+        if removed_tags:
+            signals.tags_removed.send(None,
+                                thread=self,
+                                tags=removed_tags,
+                                user=user,
+                                timestamp=timestamp
+                            )
 
         #modified tags go on to recounting their use
         #todo - this can actually be done asynchronously - not so important
@@ -1407,6 +1414,13 @@ class Thread(models.Model):
                     site_link = tag.get_site_link()
                     site_link.used_count += 1
                     site_link.save()
+
+            signals.tags_added.send(None,
+                                thread=self,
+                                tags=added_tags,
+                                user=user,
+                                timestamp=timestamp
+                            )
         else:
             added_tags = Tag.objects.none()
 
