@@ -97,6 +97,7 @@ from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
 from askbot.utils.forms import get_next_url
+from askbot.utils.forms import get_feed
 from askbot.utils.http import get_request_info
 from askbot.models.signals import user_logged_in, user_registered
 
@@ -590,10 +591,14 @@ def signin(request, template_name='authopenid/signin_full.html'):
 
                 sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
                 next_url = login_form.cleaned_data['next']
+                url_params = {
+                    'next': next_url,
+                    'space': get_feed(request)#todo make work w/o spaces
+                }
                 redirect_to = "%s%s?%s" % (
                         get_url_host(request),
                         reverse('user_complete_signin'),
-                        urllib.urlencode({'next':next_url})
+                        urllib.urlencode(url_params)
                 )
                 return ask_openid(
                             request,
@@ -762,6 +767,9 @@ def get_signin_view_context(request):
     data['login_providers'] = login_providers.values()
     data.update(csrf_context(request))
 
+    data['major_login_providers'] = major_login_providers.values()
+    data['minor_login_providers'] = minor_login_providers.values()
+    data['feed'] = get_feed(request)
     return data
 
 def get_signin_view(request, template_name='authopenid/signin_full.html'):
@@ -1197,6 +1205,27 @@ def set_new_email(user, new_email):
         user.email = new_email
         user.email_isvalid = False
         user.save()
+
+def send_email_key(email, key, handler_url_name='user_account_recover'):
+    """private function. sends email containing validation key
+    to user's email address
+    """
+    subject = _("Recover your %(site)s account") % \
+                {'site': askbot_settings.APP_SHORT_NAME}
+
+    data = {
+        'site_name': askbot_settings.APP_SHORT_NAME,
+        'validation_link': site_url(reverse(handler_url_name)) + \
+                            '?validation_code=' + key
+    }
+    template = get_template('authopenid/email_validation.html')
+    message = template.render(data)#todo: inject language preference
+    send_mail(
+        subject_line=subject,
+        body_text=message,
+        from_email=django_settings.DEFAULT_FROM_EMAIL,
+        recipient=email
+    )
 
 def send_user_new_email_key(user):
     user.email_key = generate_random_key()

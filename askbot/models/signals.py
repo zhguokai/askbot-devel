@@ -7,9 +7,13 @@ try:
 except ImportError:
     pass
 
-tags_updated = django.dispatch.Signal(
-                        providing_args=['tags', 'user', 'timestamp']
-                    )
+TAG_SIGNAL_ARGS = ['thread', 'tags', 'user', 'timestamp']
+#fires when tags are added to the question
+tags_added = django.dispatch.Signal(providing_args=TAG_SIGNAL_ARGS)
+#fires when tags are removed from the question
+tags_removed = django.dispatch.Signal(providing_args=TAG_SIGNAL_ARGS)
+#fires any time when tags are added or removed
+tags_updated = django.dispatch.Signal(providing_args=TAG_SIGNAL_ARGS)
 
 #todo: this one seems to be unused
 edit_question_or_answer = django.dispatch.Signal(

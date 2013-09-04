@@ -569,6 +569,22 @@ class ShowQuestionForm(forms.Form):
         return out_data
 
 
+class ShowQuestionsForm(forms.Form):
+    """Validates parameters from the questions listing url
+    which are encoded in the path section.
+    """
+    feed = forms.CharField(max_length=64)
+    #todo: add all the remaining fields
+
+    def clean_feed(self):
+        #space must match one of the items
+        feed = self.cleaned_data.get('feed', '')
+        from askbot.models import Feed
+        if Feed.objects.feed_exists(feed):
+            return feed
+        else:
+            raise forms.ValidationError('unrecognized forum feed "%s"' % feed)
+
 class ChangeUserReputationForm(forms.Form):
     """Form that allows moderators and site administrators
     to adjust reputation of users.
@@ -914,6 +930,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        self._feed = kwargs.pop('feed', None)
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
         self.fields['text'] = QuestionEditorField(user=user)
@@ -924,12 +941,30 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
             self.hide_field('ask_anonymously')
 
+    def clean_space(self):
+        """this is not a real clean code as we don't have field for space
+        in this form, it is called from the general "clean" method
+        """
+        if askbot_settings.SPACES_ENABLED:
+            from askbot.models import Feed
+            from django.contrib.sites.models import Site
+            current_site = Site.objects.get_current()
+            feed = Feed.objects.get(name=self._feed, site=current_site)
+            return feed.default_space
+        else:
+            from askbot.models import Space
+            return Space.objects.get_default()
+
     def clean_ask_anonymously(self):
         """returns false if anonymous asking is not allowed
         """
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
             self.cleaned_data['ask_anonymously'] = False
         return self.cleaned_data['ask_anonymously']
+
+    def clean(self):
+        self.cleaned_data['space'] = self.clean_space()
+        return self.cleaned_data
 
 
 ASK_BY_EMAIL_SUBJECT_HELP = _(
@@ -1125,7 +1160,7 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     def save(self, question, user):
         wiki = self.cleaned_data['wiki']
         text = self.cleaned_data['text']
-        is_private = self.cleaned_data['post_privately']        
+        is_private = self.cleaned_data['post_privately']
 
         return user.post_answer(
             question = question,

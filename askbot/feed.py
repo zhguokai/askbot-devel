@@ -17,7 +17,6 @@ from django.contrib.syndication.views import Feed
 import itertools
 
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
@@ -25,6 +24,7 @@ from django.http import Http404
 from askbot.conf import settings as askbot_settings
 from askbot.models import Post
 from askbot.utils.html import site_url
+from askbot.models import get_feed_url
 
 class RssIndividualQuestionFeed(Feed):
     """rss feed class for particular questions
@@ -53,7 +53,7 @@ class RssIndividualQuestionFeed(Feed):
         return site_url(item.get_absolute_url())
 
     def link(self):
-        return site_url(reverse('questions'))
+        return site_url(get_feed_url('questions'))
 
     def item_pubdate(self, item):
         """get date of creation for the item
@@ -120,7 +120,7 @@ class RssLastestQuestionsFeed(Feed):
         return site_url(item.get_absolute_url())
 
     def link(self):
-        return site_url(reverse('questions'))
+        return site_url(get_feed_url('questions'))
 
     def item_author_name(self, item):
         """get name of author

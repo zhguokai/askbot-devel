@@ -1,4 +1,5 @@
 <!-- template secondary_header.html -->
+{% set search_state=search_state or dummy_search_state %}
 <div id="secondaryHeader">
     <div class="content-wrapper">
         {# form is wrapping search buttons and the search bar inputs #}
@@ -11,11 +12,11 @@
             {% if active_tab == "tags" %}
                 action="{% url tags %}" 
             {% elif page_class == 'user-profile-page' %}
-                action="{% url questions %}" id="searchForm"
+                action="{{ search_state.base_url() }}" id="searchForm"
             {% elif active_tab == "users" %}
                 action="" 
             {% else %}
-                action="{% url questions %}" id="searchForm"
+                action="{{ search_state.base_url() }}" id="searchForm"
             {% endif %}
             class="{{ enabled_scopes_class }}"
             method="get">
@@ -28,7 +29,7 @@
                     Search bar may have padding on the left and right
                     to accomodate the buttons.
                 #}
-                <a id="homeButton" href="{% url questions %}"></a>
+                <a id="homeButton" href="{{ search_state.base_url() }}"></a>
                 {% include "widgets/scope_nav.html" %}            
                 {# 
                     three buttons below are in the opposite order because

@@ -16,10 +16,18 @@ from askbot.models import PostRevision
 from askbot.models import Thread
 from askbot.models import Tag
 from askbot.models import Group
+from askbot.models import Feed
 from askbot.search.state_manager import DummySearchState
+from askbot.models import get_feed_url
 from django.utils import simplejson
 from askbot.conf import settings as askbot_settings
 
+class MockThread(object):
+    def __init__(self, id=1, title=''):
+        self.id = id
+        self.title = title
+    def get_default_feed(self):
+        return Feed.objects.get_default()
 
 class PostModelTests(AskbotTestCase):
 
@@ -122,11 +130,11 @@ class PostModelTests(AskbotTestCase):
         del self.user
 
     def test_cached_get_absolute_url_1(self):
-        th = lambda:1
-        th.title = 'lala-x-lala'
+        th = MockThread(id=1, title='lala-x-lala')
         p = Post(id=3, post_type='question')
         p._thread_cache = th  # cannot assign non-Thread instance directly
-        expected_url = urlresolvers.reverse('question', kwargs={'id': 3}) \
+        feed = Feed.objects.get_default()
+        expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'feed': feed.name}) \
                                                                 + th.title + '/'
         self.assertEqual(expected_url, p.get_absolute_url(thread=th))
         self.assertTrue(p._thread_cache is th)
@@ -134,9 +142,9 @@ class PostModelTests(AskbotTestCase):
 
     def test_cached_get_absolute_url_2(self):
         p = Post(id=3, post_type='question')
-        th = lambda:1
-        th.title = 'lala-x-lala'
-        expected_url = urlresolvers.reverse('question', kwargs={'id': 3}) \
+        th = MockThread(id=1, title='lala-x-lala')
+        feed = Feed.objects.get_default()
+        expected_url = urlresolvers.reverse('question', kwargs={'id': 3, 'feed': feed.name}) \
                                                                 + th.title + '/'
         self.assertEqual(expected_url, p.get_absolute_url(thread=th))
         self.assertTrue(p._thread_cache is th)
@@ -231,40 +239,40 @@ class ThreadTagModelsTests(AskbotTestCase):
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss.add_tag('tag1').add_tag('tag3').add_tag('tag6'))
         self.assertEqual(1, qs.count())
 
-        ss = SearchState(scope=None, sort=None, query="#tag3", tags='tag1, tag6', author=None, page=None, user_logged_in=None)
+        ss = SearchState(feed=None, scope=None, sort=None, query="#tag3", tags='tag1, tag6', author=None, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, qs.count())
 
     def test_run_adv_search_query_author(self):
-        ss = SearchState(scope=None, sort=None, query="@user", tags=None, author=None, page=None, user_logged_in=None)
+        ss = SearchState(feed=None, scope=None, sort=None, query="@user", tags=None, author=None, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(2, len(qs))
         self.assertEqual(self.q1.thread_id, min(qs[0].id, qs[1].id))
         self.assertEqual(self.q2.thread_id, max(qs[0].id, qs[1].id))
 
-        ss = SearchState(scope=None, sort=None, query="@user2", tags=None, author=None, page=None, user_logged_in=None)
+        ss = SearchState(feed=None, scope=None, sort=None, query="@user2", tags=None, author=None, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, len(qs))
         self.assertEqual(self.q3.thread_id, qs[0].id)
 
-        ss = SearchState(scope=None, sort=None, query="@user3", tags=None, author=None, page=None, user_logged_in=None)
+        ss = SearchState(feed=None, scope=None, sort=None, query="@user3", tags=None, author=None, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, len(qs))
         self.assertEqual(self.q4.thread_id, qs[0].id)
 
     def test_run_adv_search_url_author(self):
-        ss = SearchState(scope=None, sort=None, query=None, tags=None, author=self.user.id, page=None, user_logged_in=None)
+        ss = SearchState(feed=None, scope=None, sort=None, query=None, tags=None, author=self.user.id, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(2, len(qs))
         self.assertEqual(self.q1.thread_id, min(qs[0].id, qs[1].id))
         self.assertEqual(self.q2.thread_id, max(qs[0].id, qs[1].id))
 
-        ss = SearchState(scope=None, sort=None, query=None, tags=None, author=self.user2.id, page=None, user_logged_in=None)
+        ss = SearchState(feed=None, scope=None, sort=None, query=None, tags=None, author=self.user2.id, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, len(qs))
         self.assertEqual(self.q3.thread_id, qs[0].id)
 
-        ss = SearchState(scope=None, sort=None, query=None, tags=None, author=self.user3.id, page=None, user_logged_in=None)
+        ss = SearchState(feed=None, scope=None, sort=None, query=None, tags=None, author=self.user3.id, page=None, user_logged_in=None)
         qs, meta_data = Thread.objects.run_advanced_search(request_user=self.user, search_state=ss)
         self.assertEqual(1, len(qs))
         self.assertEqual(self.q4.thread_id, qs[0].id)
@@ -365,7 +373,7 @@ class ThreadRenderLowLevelCachingTests(AskbotTestCase):
         cache.cache = LocMemCache('', {})  # Enable local caching
 
         thread = self.q.thread
-        key = Thread.SUMMARY_CACHE_KEY_TPL % thread.id
+        key = thread.get_thread_summary_cache_key()
 
         self.assertTrue(thread.summary_html_cached())
         self.assertIsNotNone(thread.get_cached_summary_html())
@@ -453,7 +461,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
     def test_post_question(self):
         self.assertEqual(0, Post.objects.count())
-        response = self.client.post(urlresolvers.reverse('ask'), data={
+        response = self.client.post(get_feed_url('ask'), data={
             'title': 'test title',
             'text': 'test body text',
             'tags': 'tag1 tag2',
@@ -614,7 +622,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         self.client.logout()
         # INFO: We need to pass some headers to make question() view believe we're not a robot
         self.client.get(
-            urlresolvers.reverse('question', kwargs={'id': question.id}),
+            question.get_absolute_url(),
             {},
             follow=True, # the first view redirects to the full question url (with slug in it), so we have to follow that redirect
             HTTP_ACCEPT_LANGUAGE='en',

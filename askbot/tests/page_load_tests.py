@@ -149,9 +149,10 @@ class PageLoadTestCase(AskbotTestCase):
         prev_setting = askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN
         askbot_settings.update('ALLOW_POSTING_BEFORE_LOGGING_IN', allow_anonymous)
         self.try_url(
-            'ask',
-            status_code = status_code,
-            template = 'ask.html'
+            models.get_feed_url('ask'),
+            plain_url_passed=True,
+            status_code=status_code,
+            template='ask.html'
         )
         askbot_settings.update('ALLOW_POSTING_BEFORE_LOGGING_IN', prev_setting)
 
@@ -243,100 +244,100 @@ class PageLoadTestCase(AskbotTestCase):
                 kwargs={'id': models.Post.objects.get_answers().order_by('id')[0].id}
             )
         #todo: test different sort methods and scopes
+        questions_url = models.get_feed_url('questions')
         self.try_url(
-            'questions',
+            url_name=questions_url,
+            plain_url_passed=True,
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').query_string(),
             plain_url_passed=True,
-
             status_code=status_code,
             template='main_page.html',
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('followed').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('followed').query_string(),
+            plain_url_passed=True,
+            status_code=status_code,
+            template='main_page.html'
+        )
+        self.try_url(
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').change_sort('age-desc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('age-desc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').change_sort('age-asc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('age-asc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').change_sort('activity-desc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('activity-desc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_scope('unanswered').change_sort('activity-asc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_scope('unanswered').change_sort('activity-asc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_sort('answers-desc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_sort('answers-desc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_sort('answers-asc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_sort('answers-asc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_sort('votes-desc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
         self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_sort('votes-desc').query_string(),
+            url_name=questions_url + SearchState.get_empty().change_sort('votes-asc').query_string(),
             plain_url_passed=True,
 
             status_code=status_code,
             template='main_page.html'
         )
-        self.try_url(
-            url_name=reverse('questions') + SearchState.get_empty().change_sort('votes-asc').query_string(),
-            plain_url_passed=True,
-
-            status_code=status_code,
-            template='main_page.html'
-        )
-
+        feed = models.Feed.objects.get_default()
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':1},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':1, 'feed': feed.name},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':2},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':2, 'feed': feed.name},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
         self.try_url(
                 'question',
                 status_code=status_code,
-                kwargs={'id':3},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+                kwargs={'id':3, 'feed': feed.name},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 follow=True,
                 template='question.html'
             )
@@ -608,19 +609,21 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(200, resp.status_code)
         self.assertEqual(self.q, resp.context['question'])
 
-        url = reverse('question', kwargs={'id': self.q.id})
+        feed = self.q.thread.get_default_feed()
+
+        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed.name})
         resp = self.client.get(url)
         self.assertRedirects(
             resp,
             expected_url=self.q.get_absolute_url()
         )
 
-        url = reverse('question', kwargs={'id': 101})
+        url = reverse('question', kwargs={'id': 101, 'feed': feed.name})
         resp = self.client.get(url)
-        url = reverse('question', kwargs={'id': self.q.id}) + self.q.slug + '/'# redirect uses the new question.id !
+        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed.name}) + self.q.slug + '/'# redirect uses the new question.id !
         self.assertRedirects(resp, expected_url=url)
 
-        url = reverse('question', kwargs={'id': 101}) + self.q.slug + '/'
+        url = reverse('question', kwargs={'id': 101, 'feed': feed.name}) + self.q.slug + '/'
         resp = self.client.get(url)
         self.assertEqual(200, resp.status_code)
         self.assertEqual(self.q, resp.context['question'])
@@ -631,7 +634,9 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.q, resp.context['question'])
         self.assertEqual(self.a, resp.context['show_post'])
 
-        url = reverse('question', kwargs={'id': self.q.id})
+        feed = self.q.thread.get_default_feed()
+
+        url = reverse('question', kwargs={'id': self.q.id, 'feed': feed.name})
         resp = self.client.get(url, data={'answer': self.a.id})
         url = self.q.get_absolute_url()
         self.assertRedirects(resp, expected_url=url + '?answer=%d' % self.a.id)
@@ -642,7 +647,7 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.a, resp.context['show_post'])
 
         #test redirect from old question
-        url = reverse('question', kwargs={'id': 101}) + self.q.slug + '/'
+        url = reverse('question', kwargs={'id': 101, 'feed': feed.name}) + self.q.slug + '/'
         resp = self.client.get(url, data={'answer': 201})
         self.assertRedirects(resp, expected_url=self.a.get_absolute_url())
 

@@ -2,7 +2,6 @@ import functools
 import re
 import sys
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.urlresolvers import reverse
 from django.conf import settings as django_settings
 from django.template import Context
 from django.template.loader import get_template
@@ -11,6 +10,7 @@ from lamson.routing import route, stateless
 from lamson.server import Relay
 from askbot.models import ReplyAddress, Group, Tag
 from askbot import mail
+from askbot.models import get_feed_url
 from askbot.conf import settings as askbot_settings
 from askbot.utils.html import site_url
 from askbot.mail import DEBUG_EMAIL
@@ -172,9 +172,9 @@ def process_reply(func):
             template = get_template('email/reply_by_email_error.html')
             body_text = template.render(Context({'error':error}))#todo: set lang
             mail.send_mail(
-                subject_line = "Error posting your reply",
-                body_text = body_text,
-                recipient_list = [message.From],
+                subject_line="Error posting your reply",
+                body_text=body_text,
+                recipient=message.From
             )
 
     return wrapped
@@ -255,16 +255,16 @@ def VALIDATE_EMAIL(
 
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,
-            'site_url': site_url(reverse('questions')),
+            'site_url': site_url(get_feed_url('questions')),
             'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
             'can_post_by_email': user.can_post_by_email()
         }
         template = get_template('email/re_welcome_lamson_on.html')
 
         mail.send_mail(
-            subject_line = _('Re: Welcome to %(site_name)s') % data,
-            body_text = template.render(Context(data)),#todo: set lang
-            recipient_list = [from_address,]
+            subject_line=_('Re: Welcome to %(site_name)s') % data,
+            body_text=template.render(Context(data)),#todo: set lang
+            recipient=from_address
         )
     except ValueError:
         raise ValueError(
@@ -306,7 +306,7 @@ def PROCESS(
     user.email_isvalid = True
     user.save()#todo: actually, saving is not necessary, if nothing changed
 
-    #here we might be in danger of chomping off some of the 
+    #here we might be in danger of chomping off some of the
     #message is body text ends with a legitimate text coinciding with
     #the user's email signature
     body_text = user.strip_email_signature(body_text)
@@ -327,7 +327,7 @@ def PROCESS(
         #todo: this is copy-paste - factor it out to askbot.mail.messages
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,
-            'site_url': site_url(reverse('questions')),
+            'site_url': site_url(get_feed_url('questions')),
             'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME
         }
         template = get_template('email/re_welcome_lamson_on.html')
@@ -337,7 +337,7 @@ def PROCESS(
             sys.stderr.write(msg.encode('utf-8'))
 
         mail.send_mail(
-            subject_line = _('Re: %s') % subject_line,
-            body_text = template.render(Context(data)),#todo: set lang
-            recipient_list = [from_address,]
+            subject_line=_('Re: %s') % subject_line,
+            body_text=template.render(Context(data)),#todo: set lang
+            recipient=from_address
         )

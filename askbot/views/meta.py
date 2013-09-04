@@ -24,6 +24,7 @@ from askbot.utils.forms import get_next_url
 from askbot.mail import mail_moderators
 from askbot.models import BadgeData, Award, User, Tag
 from askbot.models import badges as badge_data
+from askbot.models import get_feed_url
 from askbot.skins.loaders import render_text_into_skin
 from askbot.utils.decorators import admins_only
 from askbot.utils.forms import get_next_url
@@ -76,7 +77,7 @@ def faq(request):
     else:
         data = {
             'gravatar_faq_url': reverse('faq') + '#gravatar',
-            'ask_question_url': reverse('ask'),
+            'ask_question_url': get_feed_url('ask'),
             'page_class': 'meta',
         }
         return render(request, 'faq_static.html', data)

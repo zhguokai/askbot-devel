@@ -18,6 +18,7 @@ from django.db.models import Count
 from django.db.models import Q
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
 from django.core import exceptions as django_exceptions
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
@@ -32,6 +33,7 @@ from django.utils.html import strip_tags as strip_all_tags
 from django.views.decorators import csrf
 
 from askbot.utils.slug import slugify
+from askbot.utils.forms import get_feed
 from askbot.utils.html import sanitize_html
 from askbot.mail import send_mail
 from askbot.utils.http import get_request_info
@@ -205,6 +207,8 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
 @csrf.csrf_protect
 def user_moderate(request, subject, context):
     """user subview for moderation
+    A bit confusingly ``subject`` is actually user
+    which is being moderated
     """
     moderator = request.user
 
@@ -236,9 +240,9 @@ def user_moderate(request, subject, context):
 
                 try:
                     send_mail(
-                            subject_line = subject_line,
-                            body_text = body_text,
-                            recipient_list = [subject.email],
+                            subject_line=subject_line,
+                            body_text=body_text,
+                            recipient=subject,
                             headers={'Reply-to':moderator.email},
                             raise_on_failure = True
                         )
@@ -390,6 +394,10 @@ def user_stats(request, user, context):
     if askbot_settings.ENABLE_CONTENT_MODERATION:
         question_filter['approved'] = True
 
+
+    if askbot_settings.SPACES_ENABLED:
+        site_spaces = models.Space.objects.get_for_site()
+        question_filter['thread__spaces__in'] = site_spaces
     #
     # Questions
     #
@@ -442,7 +450,13 @@ def user_stats(request, user, context):
     # INFO: There's bug in Django that makes the following query kind of broken (GROUP BY clause is problematic):
     #       http://stackoverflow.com/questions/7973461/django-aggregation-does-excessive-group-by-clauses
     #       Fortunately it looks like it returns correct results for the test data
-    user_tags = models.Tag.objects.filter(threads__posts__author=user).distinct().\
+    tag_isolation = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
+    tag_filter = {'threads__posts__author': user}
+    if tag_isolation == 'per-site':
+        current_site = Site.objects.get_current()
+        tag_filter['askbot_site_links__site'] = current_site
+
+    user_tags = models.Tag.objects.filter(**tag_filter).distinct().\
                     annotate(user_tag_usage_count=Count('threads')).\
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
     user_tags = list(user_tags) # evaluate
@@ -617,7 +631,7 @@ def user_recent(request, user, context):
     # the return value is dictionary where activity id's are keys
     content_objects_by_activity = activity_objects.fetch_content_objects_dict()
 
-        
+
     #a list of digest objects, suitable for display
     #the number of activities to show is not guaranteed to be
     #const.USER_VIEW_DATA_TYPE, because we don't show activity
@@ -913,15 +927,22 @@ def user_reputation(request, user, context):
 
 
 def user_favorites(request, user, context):
-    favorite_threads = user.user_favorite_questions.values_list('thread', flat=True)
+
+    question_filter = {
+        'post_type': 'question',
+        'thread__in': user.user_favorite_questions.values_list('thread', flat=True)
+    }
+    if askbot_settings.SPACES_ENABLED:
+        site_spaces = models.Space.objects.get_for_site()
+        question_filter['thread__spaces__in'] = site_spaces
+
     questions_qs = models.Post.objects.filter(
-                                post_type='question',
-                                thread__in=favorite_threads
-                            ).select_related(
-                                'thread', 'thread__last_activity_by'
-                            ).order_by(
-                                '-points', '-thread__last_activity_at'
-                            )[:const.USER_VIEW_DATA_SIZE]
+                    **question_filter
+                ).select_related(
+                    'thread', 'thread__last_activity_by'
+                ).order_by(
+                    '-points', '-thread__last_activity_at'
+                )[:const.USER_VIEW_DATA_SIZE]
 
     q_paginator = Paginator(questions_qs, const.USER_POSTS_PAGE_SIZE)
     questions = q_paginator.page(1).object_list
@@ -1095,7 +1116,8 @@ def user(request, id, slug=None, tab_name=None):
 
     user_view_func = USER_VIEW_CALL_TABLE.get(tab_name, user_stats)
 
-    search_state = SearchState(
+    search_state = SearchState( # Non-default SearchState with user data set
+        feed=get_feed(request),
         scope=None,
         sort=None,
         query=None,

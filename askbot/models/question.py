@@ -7,7 +7,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 from django.core import exceptions as django_exceptions
-from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
@@ -18,6 +17,7 @@ from django.utils.translation import get_language
 import askbot
 from askbot.conf import settings as askbot_settings
 from askbot import mail
+from askbot.models import Space, Feed
 from askbot.mail import messages
 from askbot.models.tag import Tag, TagSynonym
 from askbot.models.tag import get_tags_by_names
@@ -33,6 +33,8 @@ from askbot.utils.lists import LazyList
 from askbot.search import mysql
 from askbot.utils.slug import slugify
 from askbot.search.state_manager import DummySearchState
+
+TAG_ISOLATION = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
 
 class ThreadQuerySet(models.query.QuerySet):
     def get_visible(self, user):
@@ -129,6 +131,7 @@ class ThreadManager(BaseQuerySetManager):
                 by_email=False,
                 email_address=None,
                 language=None,
+                space=None,
             ):
         """creates new thread"""
         # TODO: Some of this code will go to Post.objects.create_new
@@ -204,6 +207,12 @@ class ThreadManager(BaseQuerySetManager):
             diff=parse_results['diff'],
             sender=question.__class__
         )
+
+        #adding thread to space
+        if not space:
+            space = Space.objects.get_default()
+
+        space.questions.add(thread)
 
         return thread
 
@@ -326,8 +335,12 @@ class ThreadManager(BaseQuerySetManager):
             #construct filter for the tag search
             for tag in tags:
                 qs = qs.filter(tags__name=tag) # Tags or AND-ed here, not OR-ed (i.e. we fetch only threads with all tags)
+
         else:
             meta_data['non_existing_tags'] = list()
+
+        if askbot_settings.SPACES_ENABLED:
+            qs = qs.filter(spaces__in=search_state.feed.get_spaces())
 
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section
@@ -543,7 +556,7 @@ class ThreadToGroup(models.Model):
 
 
 class Thread(models.Model):
-    SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
+    #in this template first number is site id
     ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
 
     title = models.CharField(max_length=300)
@@ -679,6 +692,35 @@ class Thread(models.Model):
             return self.answer_count
         else:
             return self.get_answers(user).count()
+
+    def get_default_feed(self):
+        #todo: accomodate for >1 feed
+        return Feed.objects.get_default()
+
+    def get_default_space(self):
+        """returns default space to which this thread belongs
+        corrently we emulate spaces with tags, but in the future
+        they will move into a special entity and
+        probably each thread will have default space.
+        """
+        #TODO: change for all
+        available_spaces = Space.objects.get_spaces()
+        tag_names = self.get_tag_names()
+        #1) find ovelapping
+        common_spaces = set(available_spaces) & set(tag_names)
+        num_in_common = len(common_spaces)
+        #2) if none return first of available
+        if num_in_common == 0:
+            return available_spaces[0]
+        #3) if one - just return it
+        elif num_in_common == 1:
+            return list(common_spaces)[0]
+        #4) otherwise find the first in the list
+        else:
+            for space in available_spaces:
+                if space in common_spaces:
+                    return space
+
 
     def get_oldest_answer_id(self, user=None):
         """give oldest visible answer id for the user"""
@@ -905,25 +947,49 @@ class Thread(models.Model):
             #            )
 
     def invalidate_cached_thread_content_fragment(self):
-        cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        site_id = django_settings.SITE_ID
+        site_ids = getattr(django_settings, 'ASKBOT_SITE_IDS', [site_id,])
+        cache_keys = list()
+        for site_id in site_ids:
+            cache_key = self.get_thread_summary_cache_key(site_id=site_id)
+            cache_keys.append(cache_key)
+        cache.cache.delete_many(cache_keys)
 
-    def get_post_data_cache_key(self, sort_method = None):
-        return 'thread-data-%s-%s' % (self.id, sort_method)
+    def get_thread_summary_cache_key(self, site_id=None):
+        site_id = site_id or django_settings.SITE_ID
+        cache_key_tpl = 'site-%d-thread-question-summary-%d'
+        return cache_key_tpl % (site_id, self.id)
+
+    def get_post_data_cache_key(self, sort_method=None, site_id=None):
+        site_id = site_id or django_settings.SITE_ID
+        return 'site-%s-thread-data-%s-%s' % (site_id, self.id, sort_method)
 
     def invalidate_cached_post_data(self):
         """needs to be called when anything notable
         changes in the post data - on votes, adding,
         deleting, editing content"""
         #we can call delete_many() here if using Django > 1.2
+        site_id = django_settings.SITE_ID
+        site_ids = getattr(django_settings, 'ASKBOT_SITE_IDS', [site_id,])
+        cache_keys = list()
+        for site_id in site_ids:
+            for sort_method in dict(const.ANSWER_SORT_METHODS).keys():
+                cache_key = self.get_post_data_cache_key(
+                                                sort_method=sort_method,
+                                                site_id=site_id
+                                            )
+                cache_keys.append(cache_key)
+
+        cache.cache.delete_many(cache_keys)
+
         sort_methods = map(lambda v: v[0], const.ANSWER_SORT_METHODS)
         for sort_method in sort_methods:
             cache.cache.delete(self.get_post_data_cache_key(sort_method))
 
     def invalidate_cached_data(self, lazy=False):
         self.invalidate_cached_post_data()
-        if lazy:
-            self.invalidate_cached_thread_content_fragment()
-        else:
+        self.invalidate_cached_thread_content_fragment()
+        if lazy is False:
             self.update_summary_html()
 
     def get_cached_post_data(self, user = None, sort_method = None):
@@ -1256,6 +1322,11 @@ class Thread(models.Model):
         for tag in self.tags.all():
             if tag.name in tagnames:
                 tag.used_count -= 1
+                if TAG_ISOLATION == 'per-site':
+                    site_link = tag.get_site_link()
+                    site_link.used_count -= 1
+                    site_link.save()
+
                 removed_tags.append(tag)
         self.tags.remove(*removed_tags)
         return removed_tags
@@ -1303,6 +1374,13 @@ class Thread(models.Model):
         #remove tags from the question's tags many2many relation
         #used_count values are decremented on all tags
         removed_tags = self.remove_tags_by_names(removed_tagnames)
+        if removed_tags:
+            signals.tags_removed.send(None,
+                                thread=self,
+                                tags=removed_tags,
+                                user=user,
+                                timestamp=timestamp
+                            )
 
         #modified tags go on to recounting their use
         #todo - this can actually be done asynchronously - not so important
@@ -1328,6 +1406,21 @@ class Thread(models.Model):
             #todo: not nice that assignment of added_tags is way above
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
+
+            #assign tags to site if we have a multiportal setup
+            #and the site owner wants to isolate tags per site
+            if TAG_ISOLATION == 'per-site':
+                for tag in added_tags:
+                    site_link = tag.get_site_link()
+                    site_link.used_count += 1
+                    site_link.save()
+
+            signals.tags_added.send(None,
+                                thread=self,
+                                tags=added_tags,
+                                user=user,
+                                timestamp=timestamp
+                            )
         else:
             added_tags = Tag.objects.none()
 
@@ -1464,8 +1557,7 @@ class Thread(models.Model):
             re.UNICODE
         )
 
-        if search_state is None:
-            search_state = DummySearchState()
+        search_state = search_state or DummySearchState()
 
         while True:
             match = regex.search(html)
@@ -1484,7 +1576,8 @@ class Thread(models.Model):
         #parameter visitor is there to get summary out by the user groups
         if askbot_settings.GROUPS_ENABLED:
             return None
-        return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        cache_key = self.get_thread_summary_cache_key()
+        return cache.cache.get(cache_key)
 
     def update_summary_html(self, visitor = None):
         #todo: it is quite wrong that visitor is an argument here
@@ -1509,14 +1602,15 @@ class Thread(models.Model):
         # * Additionally, Memcached treats timeouts > 30day as dates (https://code.djangoproject.com/browser/django/tags/releases/1.3/django/core/cache/backends/memcached.py#L36),
         #   which probably doesn't break anything but if we can stick to 30 days then let's stick to it
         cache.cache.set(
-            self.SUMMARY_CACHE_KEY_TPL % self.id,
+            self.get_thread_summary_cache_key(),
             html,
             timeout=const.LONG_TIME
         )
         return html
 
     def summary_html_cached(self):
-        return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        cache_key = self.get_thread_summary_cache_key()
+        return cache.cache.has_key(cache_key)
 
 class QuestionView(models.Model):
     question = models.ForeignKey(Post, related_name='viewed')
@@ -1594,8 +1688,6 @@ class AnonymousQuestion(DraftContent):
                             tagnames=self.tagnames
                         )
             #add message with a link to the ask page
-            extra_message = _(
-                'Please, <a href="%s">review your question</a>.'
-            ) % reverse('ask')
+            extra_message = _('Please, review your question')
             message = string_concat(unicode(error), u' ', extra_message)
             user.message_set.create(message=unicode(message))

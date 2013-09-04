@@ -1,4 +1,3 @@
-{% extends "two_column_body.html" %}
 <!-- template 500.html -->
 {% block title %}{% spaceless %}{% trans %}Internal server error{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
@@ -9,8 +8,6 @@
         {% trans %}please report the error to the site administrators if you wish{% endtrans %}
         <ul>
             <li><a href="#" id="linkPrevious">{% trans %}back to previous page{% endtrans %}</li>
-            <li><a href="{% url questions %}">{% trans %}see latest questions{% endtrans %}</a></li>
-            <li><a href="{% url tags %}">{% trans %}see tags{% endtrans %}</a></li>
         </u>
     </div>
 </div>

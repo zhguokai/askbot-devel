@@ -20,6 +20,7 @@ from askbot.utils import url_utils
 from askbot.utils.http import render_to_json_response
 from askbot.utils.html import site_url
 from askbot import get_version
+from askbot.models import get_feed_url
 
 def auto_now_timestamp(func):
     """decorator that will automatically set
@@ -93,7 +94,7 @@ def ajax_only(view_func):
             if hasattr(e, 'messages'):
                 if len(e.messages) > 1:
                     message = u'<ul>' + \
-                        u''.join( 
+                        u''.join(
                             map(lambda v: u'<li>%s</li>' % v, e.messages)
                         ) + \
                         u'</ul>'
@@ -150,10 +151,10 @@ def profile(log_file):
     for later processing and examination.
 
     It takes one argument, the profile log name. If it's a relative path, it
-    places it under the PROFILE_LOG_BASE. It also inserts a time stamp into the 
-    file name, such that 'my_view.prof' become 'my_view-20100211T170321.prof', 
-    where the time stamp is in UTC. This makes it easy to run and compare 
-    multiple trials.     
+    places it under the PROFILE_LOG_BASE. It also inserts a time stamp into the
+    file name, such that 'my_view.prof' become 'my_view-20100211T170321.prof',
+    where the time stamp is in UTC. This makes it easy to run and compare
+    multiple trials.
 
     http://code.djangoproject.com/wiki/ProfilingDjango
     """
@@ -199,9 +200,10 @@ def check_spam(field):
                     data.update({'comment_author_email': request.user.email})
 
                 from akismet import Akismet
+                url = get_feed_url('questions')
                 api = Akismet(
-                    askbot_settings.AKISMET_API_KEY, 
-                    smart_str(site_url(reverse('questions'))), 
+                    askbot_settings.AKISMET_API_KEY,
+                    smart_str(site_url(url)),
                     "Askbot/%s" % get_version()
                 )
 
@@ -217,7 +219,7 @@ def check_spam(field):
                     )
                     if request.is_ajax():
                         return HttpResponseForbidden(
-                                spam_message, 
+                                spam_message,
                                 mimetype="application/json"
                             )
                     else:

@@ -612,7 +612,7 @@ class Post(models.Model):
 
     def get_text_converter(self):
         have_simple_comment = (
-            self.is_comment() and 
+            self.is_comment() and
             askbot_settings.COMMENTS_EDITOR_TYPE == 'plain-text'
         )
         if have_simple_comment:
@@ -786,7 +786,10 @@ class Post(models.Model):
         #todo: do we need this, can't we just use is_approved()?
         return self.approved is False
 
-    def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
+    def get_absolute_url(self,
+            feed=None, no_slug = False,
+            question_post=None, thread=None
+        ):
         from askbot.utils.slug import slugify
         #todo: the url generation function is pretty bad -
         #the trailing slash is entered in three places here + in urls.py
@@ -798,22 +801,37 @@ class Post(models.Model):
             request_language = get_language()
             activate_language(self.thread.language_code)
 
+        if feed is None:
+            feed = self.thread.get_default_feed().name
+
         if self.is_answer():
             if not question_post:
                 question_post = self.thread._question_post()
+
+            url_kwargs = {
+                'id': question_post.id,
+                'feed': feed
+            }
+            base_url = urlresolvers.reverse('question', kwargs=url_kwargs)
+
             if no_slug:
                 url = u'%(base)s?answer=%(id)d#post-id-%(id)d' % {
-                    'base': urlresolvers.reverse('question', args=[question_post.id]),
+                    'base': base_url,
                     'id': self.id
                 }
             else:
                 url = u'%(base)s%(slug)s/?answer=%(id)d#post-id-%(id)d' % {
-                    'base': urlresolvers.reverse('question', args=[question_post.id]),
+                    'base': base_url,
                     'slug': django_urlquote(slugify(self.thread.title)),
                     'id': self.id
                 }
+
         elif self.is_question():
-            url = urlresolvers.reverse('question', args=[self.id])
+            url_kwargs = {
+                'id': self.id,
+                'feed': feed
+            }
+            url = urlresolvers.reverse('question', kwargs=url_kwargs)
             if thread:
                 url += django_urlquote(slugify(thread.title)) + '/'
             elif no_slug is False:
@@ -891,17 +909,18 @@ class Post(models.Model):
 
     def filter_authorized_users(self, candidates):
         """returns list of users who are allowed to see this post"""
-        if askbot_settings.GROUPS_ENABLED == False:
-            return candidates
+        filtered_candidates = set()
+        if askbot_settings.GROUPS_ENABLED is False:
+            filtered_candidates = candidates
         else:
             if len(candidates) == 0:
                 return candidates
             #get post groups
-            groups = list(self.groups.all())
+            groups = set(self.groups.all())
 
             if len(groups) == 0:
                 logging.critical('post %d is groupless' % self.id)
-                return list()
+                return set()
 
             #load group memberships for the candidates
             memberships = GroupMembership.objects.filter(
@@ -911,12 +930,25 @@ class Post(models.Model):
             user_ids = set(memberships.values_list('user__id', flat=True))
 
             #scan through the user ids and see which are group members
-            filtered_candidates = set()
             for candidate in candidates:
                 if candidate.id in user_ids:
                     filtered_candidates.add(candidate)
 
+        if askbot_settings.SPACES_ENABLED is False:
             return filtered_candidates
+
+        if getattr(django_settings, 'ASKBOT_SITE_IDS', None):
+            #filter out recipients who don't belong to sites where
+            #this post is made
+            double_filtered_candidates = set()
+            for user in filtered_candidates:
+                user_spaces = set(user.askbot_profile.get_spaces())
+                post_spaces = set(self.thread.spaces.all())
+                if user_spaces & post_spaces:
+                    double_filtered_candidates.add(user)
+            filtered_candidates = double_filtered_candidates
+
+        return filtered_candidates
 
     def format_for_email(
         self, quote_level=0, is_leaf_post=False, format=None
@@ -2148,9 +2180,9 @@ class PostRevision(models.Model):
                     'It will be published after the moderators review.'
                 ) % email_context
                 send_mail(
-                    subject_line = _('your post to %(site)s') % email_context,
-                    body_text = body_text,
-                    recipient_list = [self.author.email,],
+                    subject_line=_('your post to %(site)s') % email_context,
+                    body_text=body_text,
+                    recipient=self.author
                 )
 
             else:

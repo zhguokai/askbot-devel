@@ -3,7 +3,6 @@ import re
 import urllib
 import copy
 
-from django.core import urlresolvers
 from django.utils.http import urlencode
 from django.utils.encoding import smart_str
 
@@ -11,6 +10,7 @@ import askbot
 import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot import const
+from askbot.models import get_feed_url, Feed
 from askbot.utils.functions import strip_plus
 
 
@@ -86,13 +86,14 @@ class SearchState(object):
 
     @classmethod
     def get_empty(cls):
-        return cls(scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
+        return cls(feed=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, user_logged_in=None)
 
-    def __init__(self, 
-        scope=None, sort=None, query=None, tags=None,
-        author=None, page=None, page_size=None, user_logged_in=False
+    def __init__(
+        self, feed=None, scope='all', sort=None, query=None,
+        tags=None, author=None, page=1, user_logged_in=False
     ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
+        self.feed = feed
 
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:
@@ -143,13 +144,16 @@ class SearchState(object):
         default_page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
         self.page_size = int(page_size) if page_size else default_page_size
 
-        self._questions_url = urlresolvers.reverse('questions')
+        self._questions_url = get_feed_url('questions', self.feed)
 
     def __str__(self):
         return self.query_string()
 
     def full_url(self):
         return self._questions_url + self.query_string()
+
+    def base_url(self):
+        return self._questions_url
 
     def ask_query_string(self): # TODO: test me
         """returns string to prepopulate title field on the "Ask your question" page"""
@@ -159,7 +163,7 @@ class SearchState(object):
         return '?' + urlencode({'title': ask_title})
 
     def full_ask_url(self):
-        return urlresolvers.reverse('ask') + self.ask_query_string()
+        return get_feed_url('ask', self.feed) + self.ask_query_string()
 
     def unified_tags(self):
         "Returns tags both from tag selector and extracted from query"
@@ -278,6 +282,10 @@ class SearchState(object):
 
 class DummySearchState(object): # Used for caching question/thread summaries
 
+    def __init__(self):
+        self.tag = ''
+        self.feed = Feed.objects.get_default()
+
     def add_tag(self, tag):
         self.tag = tag
         return self
@@ -285,5 +293,21 @@ class DummySearchState(object): # Used for caching question/thread summaries
     def change_scope(self, new_scope):
         return self
 
+    def change_sort(self, new_sort):
+        return self
+
     def full_url(self):
         return '<<<%s>>>' % self.tag
+
+    def full_ask_url(self):
+        return get_feed_url('ask', Feed.objects.get_default())
+
+    def query_string(self):
+        return ''
+
+
+    def base_url(self):
+        if not hasattr(self, '_base_url'):
+            self._base_url = get_feed_url('questions',
+                                          self.feed)
+        return self._base_url

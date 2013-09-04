@@ -36,6 +36,7 @@ from askbot import forms
 from askbot import models
 from askbot.models import signals
 from askbot.conf import settings as askbot_settings
+from askbot.search.state_manager import SearchState
 from askbot.utils import decorators
 from askbot.utils.forms import format_errors
 from askbot.utils.functions import diff_date
@@ -213,28 +214,26 @@ def import_data(request):
     "Login takes about 30 seconds, initial signup takes a minute or less."
 ))
 @decorators.check_spam('text')
-@csrf.csrf_protect
-def ask(request):#view used to ask a new question
+def ask(request, feed=None):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
 
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
-    if request.is_ajax():
-        post_data = simplejson.loads(request.raw_post_data)
-    else:
-        post_data = request.REQUEST
+    request.session['askbot_feed'] = feed
+    search_state = SearchState(feed=feed),
+    if request.user.is_authenticated():
+        if request.user.is_read_only():
+            referer = request.META.get("HTTP_REFERER", search_state.base_url())
+            request.user.message_set.create(message=_('Sorry, but you have only read access'))
+            return HttpResponseRedirect(referer)
 
-    if request.user.is_authenticated() and request.user.is_read_only():
-        referer = request.META.get("HTTP_REFERER", reverse('questions'))
-        request.user.message_set.create(message=_('Sorry, but you have only read access'))
-        return HttpResponseRedirect(referer)
-
-    form = forms.AskForm(request.REQUEST, user=request.user)
+    form = forms.AskForm(request.REQUEST, feed=feed, user=request.user)
     if request.method == 'POST':
         if form.is_valid():
             timestamp = datetime.datetime.now()
+            space = form.cleaned_data['space']
             title = form.cleaned_data['title']
             wiki = form.cleaned_data['wiki']
             tagnames = form.cleaned_data['tags']
@@ -255,6 +254,7 @@ def ask(request):#view used to ask a new question
                     question = user.post_question(
                         title=title,
                         body_text=text,
+                        space=space,
                         tags=tagnames,
                         wiki=wiki,
                         is_anonymous=ask_anonymously,
@@ -341,6 +341,7 @@ def ask(request):#view used to ask a new question
         'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
         'category_tree_data': askbot_settings.CATEGORY_TREE,
+        'search_state': search_state,
         'tag_names': list()#need to keep context in sync with edit_question for tag editor
     }
     data.update(context.get_for_tag_editor())

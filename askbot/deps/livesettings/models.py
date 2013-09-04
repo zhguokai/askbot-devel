@@ -110,6 +110,7 @@ class Setting(models.Model, CachedObjectMixin):
     value = models.CharField(max_length=255, blank=True)
 
     objects = SettingManager()
+    all_objects = models.Manager()
 
     def __nonzero__(self):
         return self.id is not None
@@ -121,13 +122,17 @@ class Setting(models.Model, CachedObjectMixin):
         self.cache_delete()
         super(Setting, self).delete()
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, force_insert=False, force_update=False, **kwargs):
         try:
             site = self.site
         except Site.DoesNotExist:
             self.site = Site.objects.get_current()
 
-        super(Setting, self).save(force_insert=force_insert, force_update=force_update)
+        super(Setting, self).save(
+                    force_insert=force_insert,
+                    force_update=force_update,
+                    **kwargs
+                )
 
         self.cache_set()
 
@@ -156,6 +161,7 @@ class LongSetting(models.Model, CachedObjectMixin):
     value = models.TextField(blank=True)
 
     objects = LongSettingManager()
+    all_objects = models.Manager()#use this one to query all sites
 
     def __nonzero__(self):
         return self.id is not None

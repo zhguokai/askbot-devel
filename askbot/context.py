@@ -14,10 +14,13 @@ from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.deps.django_authopenid.views import get_signin_view_context
+from askbot.search.state_manager import DummySearchState
+from askbot.search.state_manager import SearchState
 from askbot.skins.loaders import get_skin
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
+from askbot.utils.forms import get_feed
 from askbot.utils.translation import get_language
 
 @csrf.csrf_protect
@@ -87,12 +90,17 @@ def application_settings(request):
         'skin': get_skin(),
         'moderation_items': api.get_info_on_moderation_items(request.user),
         'noscript_url': const.DEPENDENCY_URLS['noscript'],
+        'dummy_search_state': DummySearchState()
     }
 
     #add context for the modal login menu
     if my_settings['USE_ASKBOT_LOGIN_SYSTEM'] and request.user.is_anonymous():
         context.update(get_signin_view_context(request))
 
+    feed = get_feed(request)
+    search_state = (feed and SearchState(feed=feed) or DummySearchState())
+    context['dummy_search_state'] = search_state
+    context['feed'] = feed 
 
     if askbot_settings.GROUPS_ENABLED:
         #calculate context needed to list all the groups

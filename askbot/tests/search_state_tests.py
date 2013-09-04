@@ -1,5 +1,6 @@
 from askbot.tests.utils import AskbotTestCase
 from askbot.search.state_manager import SearchState
+from askbot.models import get_feed_url, Feed
 import askbot.conf
 from django.core import urlresolvers
 
@@ -7,13 +8,13 @@ from django.core import urlresolvers
 class SearchStateTests(AskbotTestCase):
     def _ss(self, query=None, tags=None):
         return SearchState(
+            feed=Feed.objects.get_default(),
             scope=None,
             sort=None,
             query=query,
             tags=tags,
             author=None,
             page=None,
-
             user_logged_in=False
         )
 
@@ -26,6 +27,7 @@ class SearchStateTests(AskbotTestCase):
 
     def test_buggy_selectors(self):
         ss = SearchState(
+            feed=Feed.objects.get_default(),
             scope='blah1',
             sort='blah2',
             query=None,
@@ -44,6 +46,7 @@ class SearchStateTests(AskbotTestCase):
 
     def test_all_valid_selectors(self):
         ss = SearchState(
+            feed=Feed.objects.get_default(),
             scope='unanswered',
             sort='age-desc',
             query=' alfa',
@@ -64,6 +67,7 @@ class SearchStateTests(AskbotTestCase):
 
     def test_edge_cases_1(self):
         ss = SearchState(
+            feed=Feed.objects.get_default(),
             scope='followed', # this is not a valid choice for non-logger users
             sort='age-desc',
             query=' alfa',
@@ -83,6 +87,7 @@ class SearchStateTests(AskbotTestCase):
         )
 
         ss = SearchState(
+            feed=Feed.objects.get_default(),
             scope='followed',
             sort='age-desc',
             query=' alfa',
@@ -106,13 +111,13 @@ class SearchStateTests(AskbotTestCase):
         askbot.conf.should_show_sort_by_relevance = lambda: True # monkey patch
 
         ss = SearchState(
+            feed=Feed.objects.get_default(),
             scope='all',
             sort='relevance-desc',
             query='hejho',
             tags='miki, mini',
             author='12',
             page='2',
-
             user_logged_in=False
         )
         self.assertEqual(
@@ -121,13 +126,13 @@ class SearchStateTests(AskbotTestCase):
         )
 
         ss = SearchState(
+            feed=Feed.objects.get_default(),
             scope='all',
             sort='relevance-desc', # this is not a valid choice for empty queries
             query=None,
             tags='miki, mini',
             author='12',
             page='2',
-
             user_logged_in=False
         )
         self.assertEqual(
@@ -138,6 +143,7 @@ class SearchStateTests(AskbotTestCase):
         askbot.conf.should_show_sort_by_relevance = lambda: False # monkey patch
 
         ss = SearchState(
+            feed=Feed.objects.get_default(),
             scope='all',
             sort='relevance-desc', # this is also invalid for db-s other than Postgresql
             query='hejho',
@@ -216,13 +222,13 @@ class SearchStateTests(AskbotTestCase):
         # 2. lists are cloned so that change in the copy doesn't affect the original
 
         ss = SearchState(
+            feed=Feed.objects.get_default(),
             scope='unanswered',
             sort='votes-desc',
             query='hejho #tag1 [tag: tag2] @user @user2 title:"what is this?"',
             tags='miki, mini',
             author='12',
             page='2',
-
             user_logged_in=False
         )
         ss2 = ss.deepcopy()
@@ -257,7 +263,10 @@ class SearchStateTests(AskbotTestCase):
         self.assertEqual(ss.query_title, 'what is this?')
         self.assertTrue(ss.query_title is ss2.query_title)
 
-        self.assertEqual(ss._questions_url, urlresolvers.reverse('questions'))
+        self.assertEqual(
+            ss._questions_url,
+            get_feed_url('questions', ss.feed)
+        )
         self.assertTrue(ss._questions_url is ss2._questions_url)
 
     def test_deep_copy_2(self):
@@ -277,6 +286,7 @@ class SearchStateTests(AskbotTestCase):
 
     def test_prevent_dupped_tags(self):
         ss = SearchState(
+            feed=Feed.objects.get_default(),
             scope=None,
             sort=None,
             query=None,

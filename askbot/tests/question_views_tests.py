@@ -3,6 +3,7 @@ from askbot import const
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
 from bs4 import BeautifulSoup
+from askbot.models import get_feed_url, Feed
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
 
@@ -29,9 +30,8 @@ class PrivateQuestionViewsTests(AskbotTestCase):
     def test_post_private_question(self):
         data = self.qdata
         data['post_privately'] = 'checked'
-        response1 = self.client.post(reverse('ask'), data=data)
-        data1 = simplejson.loads(response1.content)
-        response2 = self.client.get(data1['redirectUrl'])
+        response1 = self.client.post(get_feed_url('ask'), data=data)
+        response2 = self.client.get(response1['location'])
         dom = BeautifulSoup(response2.content)
         title = dom.find('h1').text
         self.assertTrue(unicode(const.POST_STATUS['private']) in title)
@@ -46,7 +46,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         self.assertEqual(response.content, '')
         #private question link is not shown on the main page
         #to unauthorized users
-        response = self.client.get(reverse('questions'))
+        response = self.client.get(reverse('questions', kwargs={'feed': Feed.objects.get_default().name}))
         self.assertFalse(self.qdata['title'] in response.content)
         #private question link is not shown on the poster profile
         #to the unauthorized users

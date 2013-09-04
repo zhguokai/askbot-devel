@@ -23,10 +23,12 @@
     askbot['urls']['userSignin'] = '{{ settings.LOGIN_URL }}';
     askbot['urls']['getEditor'] = '{% url "get_editor" %}';
     askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
-    askbot['urls']['ask'] = '{% url "ask" %}';
-	askbot['urls']['questions'] = '{% url "questions" %}';
     askbot['urls']['validateEmail'] = '{% url "validate_email" %}';
     askbot['settings']['csrfCookieName'] = '{{ settings.CSRF_COOKIE_NAME }}';
+    {% set search_state=search_state or dummy_search_state %}
+    askbot['urls']['ask'] = '{{ search_state.full_ask_url() }}';
+	askbot['urls']['questions'] = '{{ search_state.base_url() }}';
+    askbot['settings']['groupsEnabled'] = {{ settings.GROUPS_ENABLED|as_js_bool }};
     askbot['settings']['static_url'] = '{{ settings.STATIC_URL }}';
     askbot['settings']['minSearchWordLength'] = {{ settings.MIN_SEARCH_WORD_LENGTH }};
     askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
@@ -59,6 +61,7 @@
 <script type='text/javascript' src="{{"/js/jquery.history.js"|media }}"></script>
 <script type='text/javascript' src="{{"/js/utils.js"|media }}"></script>
 <script type="text/javascript" src="{{'/js/live_search.js'|media}}"></script>
+{% endcompress %}
 <script type="text/javascript">
     /*<![CDATA[*/
     $.ajaxSetup({
@@ -146,7 +149,6 @@
     /*]]>*/
 </script>
 {% include "meta/custom_javascript.html" ignore missing %}
-{% endcompress %}
 {# stuff below should not be compressed #}
 {% if settings.ENABLE_MATHJAX %}
     {# we don't want to load mathjax just in case, only if it is really enabled #}

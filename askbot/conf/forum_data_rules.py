@@ -1,10 +1,12 @@
 """
 Settings for askbot data display and entry
 """
+import re
 from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
 from askbot import const
 from askbot.conf.super_groups import DATA_AND_FORMATTING
+from django.conf import settings as django_settings
 from django.utils.translation import ugettext_lazy as _
 
 FORUM_DATA_RULES = livesettings.ConfigurationGroup(
@@ -43,6 +45,122 @@ settings.register(
     )
 )
 
+def get_forbidden_space_values():
+    #add any url prefixes that are not
+    #defined with a service_url call in the urls.py
+    #to protect from potential clashing of namespace url
+    #with
+    forbidden_values = (
+        'questions',
+        'question',
+        'users',
+        'groups',
+        'tags',
+        'badges',
+    )
+
+    from django.utils.translation import ugettext
+    if django_settings.ASKBOT_TRANSLATE_URL:
+        return map(lambda v: ugettext(v), forbidden_values)
+    else:
+        return forbidden_values
+
+def forum_default_space_callback(old_value, new_value):
+    from askbot.models import Space
+
+    forbidden = get_forbidden_space_values()
+    bad_values = set()
+
+    new_value = new_value.strip()
+
+    if not re.match('/\w+/$', new_value):
+        bad_values.add(new_value)
+    if new_value in forbidden:
+        bad_values.add(new_value)
+
+    if bad_values:
+        forbidden_list = ', '.join(forbidden)
+        bad_list = ', '.join(bad_values)
+        if len(bad_values) > 1:
+            raise Exception(_(
+                    'Spaces %s are invalid: must not be one of %s '
+                    'and must be single words of letters and numbers only'
+                ) % (bad_list, forbidden_list)
+            )
+        else:
+            raise Exception(_(
+                    'Space %s is invalid: must not be one of %s '
+                    'and must be a single word of letters and numbers only'
+                ) % (bad_list, forbidden_list)
+            )
+    else:
+        default_space = Space.objects.get_default()
+        default_space.name = new_value
+        default_space.save()
+        return new_value
+
+def forum_default_feed_callback(old_value, new_value):
+    from askbot.models import Space, Feed
+
+    forbidden = get_forbidden_space_values()
+    new_value = new_value.strip()
+
+    if not re.match('\w+$', new_value):
+        bad_values.add(new_value)
+    if new_value in forbidden:
+        bad_values.add(new_value)
+
+    if bad_values:
+        forbidden_list = ', '.join(forbidden)
+        bad_list = ', '.join(bad_values)
+        if len(bad_values) > 1:
+            raise Exception(_(
+                    'Feeds %s are invalid: must not be one of %s '
+                    'and must be single words of letters and numbers only'
+                ) % (bad_list, forbidden_list)
+            )
+        else:
+            raise Exception(_(
+                    'Feeds %s is invalid: must not be one of %s '
+                    'and must be a single word of letters and numbers only'
+                ) % (bad_list, forbidden_list)
+            )
+    else:
+        default_feed = Feed.objects.get_default()
+        default_feed.name= new_value
+        return new_value
+
+
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'SPACES_ENABLED',
+        default=False,
+        description=_('Enable spaces feature')
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'DEFAULT_SPACE_NAME',
+        default='questions',
+        description=_('Name for default space'),
+        update_callback=forum_default_space_callback
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'DEFAULT_FEED_NAME',
+        default='questions',
+        description=_('URL for default feed'),
+        update_callback=forum_default_feed_callback
+    )
+)
+
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
@@ -56,7 +174,6 @@ settings.register(
         )
     )
 )
-
 
 settings.register(
     livesettings.BooleanValue(

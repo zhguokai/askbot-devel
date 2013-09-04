@@ -4466,6 +4466,7 @@ CategorySelectorLoader.prototype.closeEditor = function() {
     this._display_tags_container.show();
     this._question_body.show();
     this._question_controls.show();
+    this._empty_comments_control.show();
 };
 
 CategorySelectorLoader.prototype.openEditor = function() {
@@ -4474,6 +4475,7 @@ CategorySelectorLoader.prototype.openEditor = function() {
     this._display_tags_container.hide();
     this._question_body.hide();
     this._question_controls.hide();
+    this._empty_comments_control.hide();
     var sel = this._category_selector;
     sel.setState('select');
     sel.getEditorToggle().setState('off-state');
@@ -4594,6 +4596,7 @@ CategorySelectorLoader.prototype.decorate = function(element) {
     this._done_button = this.makeElement('button');
     this._done_button.html(gettext('save tags'));
     this._editor_buttons.append(this._done_button);
+    this._empty_comments_control = $('.post.question .comments.empty');
 
     this._cancel_button = this.makeElement('button');
     this._cancel_button.html(gettext('cancel'));

@@ -29,6 +29,7 @@ from django.views.decorators import csrf
 from django.core.urlresolvers import reverse
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
+from django.contrib.sites.models import get_current_site
 from django.http import QueryDict
 from django.conf import settings as django_settings
 
@@ -38,17 +39,19 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AnswerForm
 from askbot.forms import ShowQuestionForm
 from askbot.forms import GetUserItemsForm
+from askbot.forms import ShowQuestionsForm
 from askbot.utils.loading import load_module
 from askbot import conf
 from askbot import models
 from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
+from askbot.models import get_feed_url
 from askbot.startup_procedures import domain_is_bad
 from askbot.utils import functions
 from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
-from askbot.search.state_manager import SearchState, DummySearchState
+from askbot.search.state_manager import SearchState
 from askbot.templatetags import extra_tags
 from askbot.conf import settings as askbot_settings
 from askbot.views import context
@@ -73,8 +76,9 @@ DEFAULT_PAGE_SIZE = 60
 
 def index(request):#generates front page - shows listing of questions sorted in various ways
     """index view mapped to the root url of the Q&A site
+    This is the future placeholder for the "feeds" listing view
     """
-    return HttpResponseRedirect(reverse('questions'))
+    return HttpResponseRedirect(get_feed_url('questions'))
 
 def questions(request, **kwargs):
     """
@@ -84,6 +88,14 @@ def questions(request, **kwargs):
     #before = datetime.datetime.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
+
+    form = ShowQuestionsForm(kwargs)
+    if form.is_valid() is False:
+        raise Http404()
+
+    request.session['askbot_feed'] = kwargs['feed']
+    kwargs['feed'] = get_object_or_404(models.Feed, name=kwargs['feed'],
+                                       site=get_current_site(request))
 
     search_state = SearchState(
                     user_logged_in=request.user.is_authenticated(),
@@ -225,6 +237,7 @@ def questions(request, **kwargs):
             'questions_count' : paginator.count,
             'reset_method_count': reset_method_count,
             'scope': search_state.scope,
+            'feed': search_state.feed,
             'show_sort_by_relevance': conf.should_show_sort_by_relevance(),
             'search_tags' : search_state.tags,
             'sort': search_state.sort,
@@ -294,24 +307,35 @@ def tags(request):#view showing a listing of available tags - plain list
     except ValueError:
         page = 1
 
-    if sortby == 'name':
-        order_by = 'name'
-    else:
-        order_by = '-used_count'
+    tag_isolation = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
 
     query = post_data.get('query', '').strip()
-    tag_list_type = askbot_settings.TAG_LIST_FORMAT
 
     #2) Get query set for the tags.
-    query_params = {'deleted': False}
+    query_params = dict()
     if query != '':
         query_params['name__icontains'] = query
 
-    tags_qs = Tag.objects.filter(**query_params).exclude(used_count=0)
+    if tag_isolation == 'per-site':
+        query_params['askbot_site_links__site'] = get_current_site(request)
+        #query_params['askbot_site_links__used_count__gt'] = 0
+    else:
+        query_params['used_count__gt'] = 0
+
+    tags_qs = Tag.objects.filter(**query_params)
+
+    if sortby == 'name':
+        order_by = 'name'
+    else:
+        if tag_isolation == 'per-site':
+            order_by = '-askbot_site_links__used_count'
+        else:
+            order_by = '-used_count'
 
     tags_qs = tags_qs.order_by(order_by)
 
     #3) Start populating the template context.
+    tag_list_type = askbot_settings.TAG_LIST_FORMAT
     data = {
         'active_tab': 'tags',
         'page_class': 'tags-page',
@@ -320,6 +344,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'tab_id' : sortby,
         'keywords' : query,
         'search_state': SearchState(*[None for x in range(8)])
+        'tag_isolation': tag_isolation
     }
 
     if tag_list_type == 'list':
@@ -358,10 +383,13 @@ def tags(request):#view showing a listing of available tags - plain list
         return render(request, 'tags.html', data)
 
 @csrf.csrf_protect
-def question(request, id):#refactor - long subroutine. display question body, answers and comments
+def question(request, feed=None, id=None):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and
     all answers to it
     """
+    request.session['askbot_feed'] = feed
+    feed = get_object_or_404(models.Feed, name=feed,
+                             site=get_current_site(request))
     #process url parameters
     #todo: fix inheritance of sort method from questions
     #before = datetime.datetime.now()
@@ -409,6 +437,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
     except exceptions.QuestionHidden, error:
         request.user.message_set.create(message = unicode(error))
         return HttpResponseRedirect(reverse('index'))
+
+    #making sure that the question belongs to the current feed.
+    if not feed.thread_belongs_to_feed(question_post.thread):
+        raise Http404
 
     #redirect if slug in the url is wrong
     if request.path.split('/')[-2] != question_post.slug:
@@ -620,6 +652,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'question' : question_post,
         'thread': thread,
         'thread_is_moderated': thread.is_moderated(),
+        'search_state': SearchState(feed=feed),
+        'feed': feed,
         'user_is_thread_moderator': thread.has_moderator(request.user),
         'published_answer_ids': published_answer_ids,
         'answer' : answer_form,

@@ -21,6 +21,7 @@ at run time
 askbot.deps.livesettings is a module developed for satchmo project
 """
 from django.core.cache import cache
+from django.contrib.sites.models import Site
 from askbot.deps.livesettings import SortedDotDict, config_register
 from askbot.deps.livesettings.functions import config_get
 from askbot.deps.livesettings import signals
@@ -61,14 +62,30 @@ class ConfigSettings(object):
         """returns setting to the default value"""
         self.update(key, self.get_default(key))
 
+    def get_value_for_site(self, site, key):
+        """returns string value for the setting for a given site"""
+        from askbot.deps.livesettings.models import Setting, LongSetting
+        try:
+            #note that we use custom manager "all_objects" to query by site
+            setting = LongSetting.all_objects.get(site=site, key=key)
+        except LongSetting.DoesNotExist:
+            try:
+                #note that we use custom manager "all_objects" to query by site
+                setting = Setting.all_objects.get(site=site, key=key)
+            except Setting.DoesNotExist:
+                return None
+        return setting.value
+
     def update(self, key, value):
         try:
             setting = config_get(self.__group_map[key], key) 
             setting.update(value)
         except:
             from askbot.deps.livesettings.models import Setting
-            setting = Setting.objects.get(key=key)
+            setting, created = Setting.objects.get_or_create(key=key)
             setting.value = value
+            setting.group = self.__group_map[key]
+            setting.site = Site.objects.get_current()
             setting.save()
         #self.prime_cache()
 

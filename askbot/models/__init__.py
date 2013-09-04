@@ -30,6 +30,7 @@ from django.utils.html import escape
 from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from django.core import cache
 from django.core import exceptions as django_exceptions
 from django_countries.fields import CountryField
@@ -37,6 +38,11 @@ from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.const.message_keys import get_i18n_message
 from askbot.conf import settings as askbot_settings
+from askbot.models.spaces import Space
+from askbot.models.spaces import Feed
+from askbot.models.spaces import get_feed_url
+from askbot.models.spaces import FeedToSpace
+#from askbot.models.spaces import AskbotSite
 from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
 from askbot.mail import messages
@@ -44,17 +50,18 @@ from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.tag import Tag, MarkedTag, TagSynonym
+from askbot.models.tag import TagToSite
 from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership
 from askbot.models.user import Group
+from askbot.models.user import UserProfile
 from askbot.models.user import BulkTagSubscription
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostFlagReason, AnonymousAnswer
 from askbot.models.post import PostToGroup
 from askbot.models.post import DraftAnswer
 from askbot.models.reply_by_email import ReplyAddress
-from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute, Vote
 from askbot.models.widgets import AskWidget, QuestionWidget
@@ -313,11 +320,18 @@ def user_get_avatar_url(self, size=48):
 def user_get_top_answers_paginator(self, visitor=None):
     """get paginator for top answers by the user for a
     specific visitor"""
+    answers_filter = {
+        'deleted': False,
+        'thread__deleted': False,
+    }
+    if askbot_settings.SPACES_ENABLED:
+        site_spaces = models.Space.objects.get_for_site()
+        answers_filter['thread__spaces__in'] = site_spaces
+
     answers = self.posts.get_answers(
                                 visitor
                             ).filter(
-                                deleted=False,
-                                thread__deleted=False
+                                **answers_filter
                             ).select_related(
                                 'thread'
                             ).order_by(
@@ -480,10 +494,15 @@ def user_can_have_strong_url(self):
 def user_can_post_by_email(self):
     """True, if reply by email is enabled
     and user has sufficient reputatiton"""
-    if self.is_administrator_or_moderator():
-        return True
-    return askbot_settings.REPLY_BY_EMAIL and \
-        self.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL
+
+    if askbot_settings.REPLY_BY_EMAIL:
+        if self.is_administrator_or_moderator():
+            return True
+        else:
+            return self.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL
+    else:
+        return False
+
 
 def user_get_social_sharing_mode(self):
     """returns what user wants to share on his/her channels"""
@@ -1564,6 +1583,8 @@ def user_accept_best_answer(
         auth.onAnswerAcceptCanceled(prev_accepted_answer, self)
 
     auth.onAnswerAccept(answer, self, timestamp = timestamp)
+    answer.thread.invalidate_cached_data()
+
     award_badges_signal.send(None,
         event = 'accept_best_answer',
         actor = self,
@@ -1581,6 +1602,7 @@ def user_unaccept_best_answer(
         self.assert_can_unaccept_best_answer(answer)
     if not answer.accepted():
         return
+    answer.thread.invalidate_cached_data()
     auth.onAnswerAcceptCanceled(answer, self)
 
 @auto_now_timestamp
@@ -1736,6 +1758,7 @@ def user_post_question(
                     self,
                     title = None,
                     body_text = '',
+                    space = None,
                     tags = None,
                     wiki = False,
                     is_anonymous = False,
@@ -1753,6 +1776,9 @@ def user_post_question(
 
     if body_text == '':#a hack to allow bodyless question
         body_text = ' '
+
+    if space is None:
+        space = Space.objects.get_default()
 
     if title is None:
         raise ValueError('Title is required to post question')
@@ -1775,7 +1801,8 @@ def user_post_question(
                                     group_id=group_id,
                                     by_email=by_email,
                                     email_address=email_address,
-                                    language=language
+                                    language=language,
+                                    space=space
                                 )
     question = thread._question_post()
     if question.author != self:
@@ -2460,6 +2487,21 @@ def get_profile_link(self):
 
     return mark_safe(profile_link)
 
+def user_get_default_site(self):
+    profile = self.askbot_profile
+    return profile.default_site
+
+def user_get_default_site_base_url(self):
+    """returns base url to the primary site of the user"""
+    if getattr(django_settings, 'ASKBOT_SITE_IDS', None):
+        #if we have multi site setup - we return url for the
+        #default site of this user
+        site = self.get_default_site()
+        return 'http://' + site.domain + '/'
+        #return site.get_absolute_url()
+    else:
+        return askbot_settings.APP_URL
+
 def user_get_groups(self, private=False):
     """returns a query set of groups to which user belongs"""
     #todo: maybe cache this query
@@ -3044,6 +3086,8 @@ User.add_to_class(
 User.add_to_class('get_flags_for_post', user_get_flags_for_post)
 User.add_to_class('get_profile_url', user_get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
+User.add_to_class('get_default_site', user_get_default_site)
+User.add_to_class('get_default_site_base_url', user_get_default_site_base_url)
 User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
@@ -3219,8 +3263,8 @@ def format_instant_notification_email(
     else:
         raise ValueError('unrecognized post type')
 
-    post_url = site_url(post.get_absolute_url())
-    user_url = site_url(from_user.get_absolute_url())
+    post_url = post.get_absolute_url()
+    user_url = from_user.get_absolute_url()
     user_action = user_action % {
         'user': '<a href="%s">%s</a>' % (user_url, from_user.username),
         'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
@@ -3268,7 +3312,7 @@ def format_instant_notification_email(
         'update_type': update_type,
         'post_url': post_url,
         'origin_post_title': origin_post.thread.title,
-        'user_subscriptions_url': site_url(user_subscriptions_url),
+        'user_subscriptions_url': user_subscriptions_url,
         'reply_separator': reply_separator,
         'reply_address': reply_address,
         'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
@@ -3465,8 +3509,10 @@ def record_user_visit(user, timestamp, **kwargs):
     """
     prev_last_seen = user.last_seen or datetime.datetime.now()
     user.last_seen = timestamp
+    consecutive_days = user.consecutive_days_visit_count
     if (user.last_seen.date() - prev_last_seen.date()).days == 1:
         user.consecutive_days_visit_count += 1
+        consecutive_days = user.consecutive_days_visit_count
         award_badges_signal.send(None,
             event = 'site_visit',
             actor = user,
@@ -3474,7 +3520,11 @@ def record_user_visit(user, timestamp, **kwargs):
             timestamp = timestamp
         )
     #somehow it saves on the query as compared to user.save()
-    User.objects.filter(id = user.id).update(last_seen = timestamp)
+    update_data = {
+        'last_seen': timestamp,
+        'consecutive_days_visit_count': consecutive_days
+    }
+    User.objects.filter(id=user.id).update(**update_data)
 
 
 def record_vote(instance, created, **kwargs):
@@ -3638,11 +3688,10 @@ def send_respondable_email_validation_message(
                         )
 
     mail.send_mail(
-        subject_line = subject_line,
-        body_text = body_text,
-        recipient_list = [user.email, ],
-        activity_type = const.TYPE_ACTIVITY_VALIDATION_EMAIL_SENT,
-        headers = {'Reply-To': reply_to_address}
+        subject_line=subject_line,
+        body_text=body_text,
+        recipient=user,
+        headers={'Reply-To': reply_to_address}
     )
 
 
@@ -3690,9 +3739,10 @@ def greet_new_user(user, **kwargs):
     else:
         template_name = 'email/welcome_lamson_off.html'
 
+    home_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', '/')
     data = {
         'site_name': askbot_settings.APP_SHORT_NAME,
-        'site_url': site_url(reverse('questions')),
+        'site_url': site_url(home_url),
         'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
         'can_post_by_email': user.can_post_by_email()
     }
@@ -3702,6 +3752,14 @@ def greet_new_user(user, **kwargs):
         data=data,
         template_name=template_name
     )
+
+
+def init_askbot_user_profile(user, **kwargs):
+    """adds default site record to the askbot user profile"""
+    user.askbot_profile = UserProfile()
+    user.askbot_profile.default_site = Site.objects.get_current()
+    user.askbot_profile.save()
+    user.save()
 
 
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
@@ -3811,10 +3869,12 @@ if 'avatar' in django_settings.INSTALLED_APPS:
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 
 #change this to real m2m_changed with Django1.2
+from askbot.models import signals
 signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
+signals.user_registered.connect(init_askbot_user_profile)
 signals.user_registered.connect(greet_new_user)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
@@ -3850,6 +3910,7 @@ __all__ = [
         'PostFlagReason',
         'MarkedTag',
         'TagSynonym',
+        'TagToSite',
 
         'BadgeData',
         'Award',
@@ -3862,6 +3923,11 @@ __all__ = [
         'Group',
 
         'User',
+
+        'Space',
+        'Feed',
+        'FeedToSpace',
+        'get_feed_url',
 
         'ReplyAddress',
 
