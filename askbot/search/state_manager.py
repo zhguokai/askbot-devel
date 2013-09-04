@@ -86,11 +86,11 @@ class SearchState(object):
 
     @classmethod
     def get_empty(cls):
-        return cls(feed=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, user_logged_in=None)
+        return cls(feed=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
 
     def __init__(
         self, feed=None, scope='all', sort=None, query=None,
-        tags=None, author=None, page=1, user_logged_in=False
+        tags=None, author=None, page=1, page_size=None, user_logged_in=False
     ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
         self.feed = feed
@@ -141,8 +141,7 @@ class SearchState(object):
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
 
-        default_page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
-        self.page_size = int(page_size) if page_size else default_page_size
+        self.page_size = page_size or askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE
 
         self._questions_url = get_feed_url('questions', self.feed)
 

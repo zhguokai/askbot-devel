@@ -343,7 +343,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'stag' : query,
         'tab_id' : sortby,
         'keywords' : query,
-        'search_state': SearchState(*[None for x in range(8)])
+        'search_state': SearchState(),
         'tag_isolation': tag_isolation
     }
 

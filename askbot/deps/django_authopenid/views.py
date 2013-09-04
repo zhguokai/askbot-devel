@@ -767,8 +767,6 @@ def get_signin_view_context(request):
     data['login_providers'] = login_providers.values()
     data.update(csrf_context(request))
 
-    data['major_login_providers'] = major_login_providers.values()
-    data['minor_login_providers'] = minor_login_providers.values()
     data['feed'] = get_feed(request)
     return data
 

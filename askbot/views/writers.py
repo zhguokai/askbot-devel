@@ -222,7 +222,7 @@ def ask(request, feed=None):#view used to ask a new question
     must login/register in order for the question go be shown
     """
     request.session['askbot_feed'] = feed
-    search_state = SearchState(feed=feed),
+    search_state = SearchState(feed=feed)
     if request.user.is_authenticated():
         if request.user.is_read_only():
             referer = request.META.get("HTTP_REFERER", search_state.base_url())
