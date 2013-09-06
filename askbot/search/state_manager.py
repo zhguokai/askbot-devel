@@ -93,7 +93,7 @@ class SearchState(object):
         tags=None, author=None, page=1, page_size=None, user_logged_in=False
     ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
-        self.feed = feed
+        self.feed = feed or Feed.objects.get_default().name
 
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:

@@ -1280,7 +1280,8 @@ def account_recover(request):
                                     'authopenid/establish_login_modal.html',
                                     get_establish_login_view_context(request)
                                 )
-            return HttpResponseRedirect(reverse('questions'))
+            from askbot.search.state_manager import SearchState
+            return HttpResponseRedirect(SearchState().base_url())
         else:
             message = _('Recovery link was invalid, please try again')
             request.user.message_set.create(message=message)

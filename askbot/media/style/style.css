@@ -864,6 +864,9 @@ body.anon.ask-page .search-drop-menu {
   float: left;
   width: 280px;
 }
+.ask-page #scopeNav {
+  width: 280px !important;
+}
 .scopes-True-True-False #searchBar,
 .scopes-True-True-False .search-drop-menu {
   margin-left: 228px;
@@ -1110,7 +1113,7 @@ body.anon.ask-page .search-drop-menu {
   -webkit-box-shadow: 1px 1px 3px #999999;
   -moz-box-shadow: 1px 1px 3px #999999;
   box-shadow: 1px 1px 3px #999999;
-  padding: 7px 10px 1px 10px;
+  padding: 7px 10px 10px 14px;
   margin-bottom: 10px;
   width: 100%;
 }
@@ -1120,9 +1123,6 @@ body.anon.ask-page .search-drop-menu {
 .question-instructions .email-validator button {
   display: block;
   margin: 5px auto;
-}
-.question-instructions div {
-  margin: 0 14px;
 }
 .question-instructions ul {
   margin: 0 0 0 15px;
