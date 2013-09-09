@@ -1160,28 +1160,6 @@ var Vote = function(){
     };
 } ();
 
-/**
- * @constructor
- * A sub-class for the sole purpose to fix the overlap
- * of the static "tags:" label with the dynamic label
- * from the 
- */
-var AskPageTagsAutoCompleter = function(options) {
-    AutoCompleter.call(this, options);
-};
-inherits(AskPageTagsAutoCompleter, AutoCompleter);
-
-AskPageTagsAutoCompleter.prototype.removeStaticLabel = function() {
-    var label = $('.question-tags strong')[0]
-    $(label).remove();
-};
-
-AskPageTagsAutoCompleter.prototype.decorate = function(element) {
-    AskPageTagsAutoCompleter.superClass_.call(this, element);
-    var me = this;
-    $(element).change(function(){ me.removeStaticLabel() });
-};
-
 var questionRetagger = function(){
 
     var oldTagsHTML = '';
@@ -1259,7 +1237,7 @@ var questionRetagger = function(){
         tagInput = $('<input id="retag_tags" type="text" autocomplete="off" name="tags" size="30"/>');
         //var tagLabel = $('<label for="retag_tags" class="error"></label>');
         //populate input
-        var tagAc = new AskPageTagsAutoCompleter({
+        var tagAc = new AutoCompleter({
             url: askbot['urls']['get_tag_list'],
             minChars: 1,
             useCache: true,
