@@ -828,6 +828,10 @@ def api_get_questions(request):
     else:
         threads = models.Thread.objects.all()
 
+    if askbot_settings.SPACES_ENABLED:
+        site = Site.objects.get_current()
+        threads = threads.filter(spaces__in=models.Space.objects.get_for_site(site))
+
     if tag_name:
         threads = threads.filter(tags__name=tag_name)
 
