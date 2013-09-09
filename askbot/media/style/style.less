@@ -1881,12 +1881,14 @@ ul#related-tags li {
 
     label[for="editor"],
     label[for="id_title"],
+    label[for="id_tags"] strong,
     span.form-error {
         font-size: 16px;
         font-style: italic;
+        font-weight: normal;
     }
 
-    label{
+    label {
         color:@info-text-dark;
         font-size:13px;
     }
@@ -2857,9 +2859,6 @@ ul#related-tags li {
         background: #F1F1FF;
 
         .comments .button {
-            background-color: #E6ECFF;
-        }
-        .comments {
             background-color: #E6ECFF;
         }
     }
@@ -4419,8 +4418,8 @@ textarea.tipped-input {
 }
 
 .editor-status {
-    float: right;
-    margin: 8px 350px 0 0;
+    float: left;
+    margin: -22px 0 0 5px;
     font-weight: bold;
 
     span {

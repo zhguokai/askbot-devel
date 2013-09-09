@@ -48,6 +48,7 @@
                     <script type="text/javascript">
                         askbot['functions']['renderAddAnswerButton']();
                     </script>
+                    <div class="clearfix"></div>
                     {{ macros.post_options(answer, request.user, settings) }}
                     {% if settings.GROUPS_ENABLED and 
                         request.user.is_authenticated() and 

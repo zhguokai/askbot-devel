@@ -26,8 +26,8 @@
             <div class="tags-desc">{% trans %}Tags{% endtrans %}</div>
             {% include "widgets/tag_editor.html" %}
         {% else %}
+            <label for="id_tags" style="top: 0 !important">
             {% if tags_are_required %}
-                <label for="id_tags">
                 {% if mandatory_tags %}
                     <strong>{% trans %}tags{% endtrans %}</strong>
                     {% trans %}, one of these is required{% endtrans %}
@@ -39,16 +39,15 @@
                         )
                     }}
                 {% else %}
-                    <strong>{% trans %}tags:{% endtrans %}</strong> 
+                    <strong>{% trans %}tags:{% endtrans %}</strong>
                     {% trans %}(required){% endtrans %}
                 {% endif %}
-                </label>
             {% else %}
-                <strong>{% trans %}tags:{% endtrans %}</strong>
+                {{ post_form.tags.help_text }}
             {% endif %}
-            <span class="form-error">{{ post_form.tags.errors }}</span><br/>
-            {{ post_form.tags }}
-            <br/><label for="id_tags">{{ post_form.tags.help_text }}</label>
+            </label><br/>
+            {{ post_form.tags }}<br/>
+            <span class="form-error">{{ post_form.tags.errors }}</span>
         {% endif %}
     </div>
 {% endif %}

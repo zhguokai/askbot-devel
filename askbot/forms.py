@@ -410,10 +410,10 @@ class TagNamesField(forms.CharField):
                         )
         self.label = kwargs.get('label') or _('tags')
         self.help_text = kwargs.get('help_text') or ungettext_lazy(
-            'Tags are short keywords, with no spaces within. '
-            'Up to %(max_tags)d tag can be used.',
-            'Tags are short keywords, with no spaces within. '
-            'Up to %(max_tags)d tags can be used.',
+            '<strong>Add tags</strong> (short keywords, with no spaces within. '
+            'Up to %(max_tags)d tag can be used)',
+            '<strong>Add tags</strong> (short keywords, with no spaces within. '
+            'Up to %(max_tags)d tags can be used)',
             askbot_settings.MAX_TAGS_PER_POST
         ) % {'max_tags': askbot_settings.MAX_TAGS_PER_POST}
         self.initial = ''

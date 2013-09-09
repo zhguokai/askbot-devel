@@ -1771,10 +1771,13 @@ ul#related-tags li {
 .edit-question-page label[for="editor"],
 .ask-page label[for="id_title"],
 .edit-question-page label[for="id_title"],
+.ask-page label[for="id_tags"] strong,
+.edit-question-page label[for="id_tags"] strong,
 .ask-page span.form-error,
 .edit-question-page span.form-error {
   font-size: 16px;
   font-style: italic;
+  font-weight: normal;
 }
 .ask-page label,
 .edit-question-page label {
@@ -2714,9 +2717,6 @@ ul#related-tags li {
   background: #F1F1FF;
 }
 .question-page .answered-by-owner .comments .button {
-  background-color: #E6ECFF;
-}
-.question-page .answered-by-owner .comments {
   background-color: #E6ECFF;
 }
 .question-page .answer-img-accept {
@@ -4213,8 +4213,8 @@ textarea.tipped-input {
   margin-left: 0;
 }
 .editor-status {
-  float: right;
-  margin: 8px 350px 0 0;
+  float: left;
+  margin: -22px 0 0 5px;
   font-weight: bold;
 }
 .editor-status span {

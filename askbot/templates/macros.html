@@ -555,7 +555,7 @@ for the purposes of the AJAX comment editor #}
 
 {%- macro post_options(post_form, user, settings) -%}
     {% if user and user.is_authenticated() and user.is_administrator() %}
-        <label>{% trans %}Extra options:{% endtrans %}</label>
+        <p>{% trans %}Extra options:{% endtrans %}</p>
         {# 1 - post on behalf of someone else #}
         <div class="clearfix"></div>
         <div class="labeled-input">
