@@ -980,6 +980,9 @@ LabeledInput.prototype.setError = function(errorText) {
 };
 
 LabeledInput.prototype.putLabelInside = function() {
+    if (this._label === undefined) {
+        return;
+    }
     if (this._label.hasClass('active') === false) {
         return;
     }
