@@ -1002,6 +1002,9 @@ LabeledInput.prototype.putLabelOutside = function() {
 };
 
 LabeledInput.prototype.reset = function() {
+    if (this._label === undefined) {
+        return;
+    }
     this.putLabelInside();
     this._label.removeClass('error');
     this.setLabelText(this._originalLabelText);
