@@ -20,7 +20,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.html import strip_tags
 from django.http import Http404
 
 from askbot.conf import settings as askbot_settings
@@ -93,12 +92,12 @@ class RssIndividualQuestionFeed(Feed):
             title = "Answer by %s for %s " % (item.author, self.title)
         elif item.post_type == "comment":
             title = "Comment by %s for %s" % (item.author, self.title)
-        return strip_tags(title)
+        return title
 
     def item_description(self, item):
         """returns the description for the item
         """
-        return strip_tags(item.text)
+        return item.text
 
 
 class RssLastestQuestionsFeed(Feed):
@@ -145,12 +144,12 @@ class RssLastestQuestionsFeed(Feed):
         return site_url(item.get_absolute_url(no_slug = True))
 
     def item_title(self, item):
-        return strip_tags(item)
+        return item
 
     def item_description(self, item):
         """returns the description for the item
         """
-        return strip_tags(item.text)
+        return item.text
 
     def items(self, item):
         """get questions for the feed
