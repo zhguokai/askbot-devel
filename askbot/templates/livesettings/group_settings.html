@@ -1,7 +1,7 @@
 {% extends "one_column_body.html" %}
 {% block content %}
 <h1 class="section-title">
-    {% trans %}Settings{% endtrans %} &rarr; {{ group.super_group.name }} &rarr; {{ group.name }}
+    {% trans %}Settings{% endtrans %} &rarr; {{ settings_group.super_group.name }} &rarr; {{ settings_group.name }}
 </h1>
 <div class="settings-main">
 {% if form.errors %}
@@ -13,7 +13,7 @@
 <form method="post" enctype="multipart/form-data">{% csrf_token %}
     <table 
         class="settings"
-        summary="{% trans name = group.name %}Settings included in {{ name }}.{% endtrans %}"
+        summary="{% trans name = settings_group.name %}Settings included in {{ name }}.{% endtrans %}"
     >
         {% for field in form %}
             {% if field.is_hidden %}
@@ -57,7 +57,7 @@
         <ul>
         {% for g in super_group.groups %}
             {% if g.keys %}
-                {% if g.key == group.key %}
+                {% if g.key == settings_group.key %}
                     <li class="on">{{g.name}}</li>
                 {% else %}
                     <li><a href="{% url "group_settings" g.key %}">{{g.name}}</a></li>
