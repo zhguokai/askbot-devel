@@ -20,6 +20,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.html import strip_tags
 from django.http import Http404
 
 from askbot.conf import settings as askbot_settings
@@ -92,12 +93,12 @@ class RssIndividualQuestionFeed(Feed):
             title = "Answer by %s for %s " % (item.author, self.title)
         elif item.post_type == "comment":
             title = "Comment by %s for %s" % (item.author, self.title)
-        return title
+        return strip_tags(title)
 
     def item_description(self, item):
         """returns the description for the item
         """
-        return item.text
+        return strip_tags(item.text)
 
 
 class RssLastestQuestionsFeed(Feed):
@@ -106,7 +107,7 @@ class RssLastestQuestionsFeed(Feed):
 
     def title(self):
         return askbot_settings.APP_TITLE + _(' - ') + \
-                _('Individual question feed')
+                _('Latest question feed')
 
     def feed_copyright(self):
         return askbot_settings.APP_COPYRIGHT
@@ -143,10 +144,13 @@ class RssLastestQuestionsFeed(Feed):
         """
         return site_url(item.get_absolute_url(no_slug = True))
 
+    def item_title(self, item):
+        return strip_tags(item)
+
     def item_description(self, item):
         """returns the description for the item
         """
-        return item.text
+        return strip_tags(item.text)
 
     def items(self, item):
         """get questions for the feed
@@ -177,11 +181,3 @@ class RssLastestQuestionsFeed(Feed):
     def get_feed(self, obj, request):
         self.request = request
         return super(RssLastestQuestionsFeed, self).get_feed(obj, request)
-
-def main():
-    """main function for use as a script
-    """
-    pass
-
-if __name__ == '__main__':
-    main()
