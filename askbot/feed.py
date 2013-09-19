@@ -144,7 +144,7 @@ class RssLastestQuestionsFeed(Feed):
         return site_url(item.get_absolute_url(no_slug = True))
 
     def item_title(self, item):
-        return item
+        return item.thread.title
 
     def item_description(self, item):
         """returns the description for the item
