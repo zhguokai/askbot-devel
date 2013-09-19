@@ -12,6 +12,7 @@ import coffin
 import coffin.template
 from bs4 import BeautifulSoup
 
+import askbot
 from askbot import models
 from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
@@ -74,7 +75,12 @@ class PageLoadTestCase(AskbotTestCase):
         #Disable caching (to not interfere with production cache,
         #not sure if that's possible but let's not risk it)
         cache.cache = DummyCache('', {})
-        management.call_command('init_postgresql_full_text_search', verbosity=0, interactive=False)
+        if 'postgresql' in askbot.get_database_engine_name():
+            management.call_command(
+                'init_postgresql_full_text_search',
+                verbosity=0,
+                interactive=False
+            )
 
     def tearDown(self):
         cache.cache = self.old_cache  # Restore caching
