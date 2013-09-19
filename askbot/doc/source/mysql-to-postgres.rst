@@ -76,21 +76,19 @@ Enabling Postgresql full text search
 Askbot relies on special postgresql features for better search, in this case the py-mysql2pgsql tool will not 
 add these features, so it requires to be added manually.
 
+To fix it run the command::
+
+    python manage.py init_postgresql_full_text_search
+
+It may take a while according to your database size. Test this by running a search query on the askbot site.
+
 ..
-   To fix it run the command::
-        python manage.py init_postgresql_full_text_search
-
-Download:
-
-1. `thread_and_post_models_10032013.plsql <https://raw.github.com/ASKBOT/askbot-devel/master/askbot/search/postgresql/thread_and_post_models_10032013.plsql>`_
-2. `user_profile_search_08312012.plsql <https://raw.github.com/ASKBOT/askbot-devel/master/askbot/search/postgresql/user_profile_search_08312012.plsql>`_
-
-And apply them to your postgres database like this::
-
-    psql your_database < thread_and_post_models_10032013.plsql
-    psql your_database < user_profile_search_08312012.plsql
-
-It may take a while according to your database size. Test this by running a search query on the askbot site, if it does not work do the following:
+    Download:
+        1. `thread_and_post_models_10032013.plsql <https://raw.github.com/ASKBOT/askbot-devel/master/askbot/search/postgresql/thread_and_post_models_10032013.plsql>`_
+        2. `user_profile_search_08312012.plsql <https://raw.github.com/ASKBOT/askbot-devel/master/askbot/search/postgresql/user_profile_search_08312012.plsql>`_
+        And apply them to your postgres database like this::
+            psql your_database < thread_and_post_models_10032013.plsql
+            psql your_database < user_profile_search_08312012.plsql
 
 
 Fixing data types
