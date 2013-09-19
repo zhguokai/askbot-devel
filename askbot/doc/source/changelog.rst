@@ -1,8 +1,8 @@
 Changes in Askbot
 =================
 
-Development version
--------------------
+0.7.49 (Sep 19, 2013)
+---------------------
 * Support for Solr search backend (Adolfo)
 * Allowed read-only access user groups (Adolfo)
 * Added simple read-only API (Adolfo)
