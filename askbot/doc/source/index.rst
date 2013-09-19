@@ -29,6 +29,7 @@ at the forum_ or by email at admin@askbot.org
    Appendix F: Customizing skin in askbot <customizing-skin-in-askbot>
    Appendix G: Intranet setup <intranet-setup>
    Appendix H: Haystack with Solr and Apache Tomcat <solr>
+   Appendix I: Migration from MySQL to PostgreSQL <mysql-to-postgres>
    Footnotes <footnotes>
    Contributors <contributors>
    Changelog <changelog>
