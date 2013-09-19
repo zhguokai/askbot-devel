@@ -8,10 +8,10 @@
 # Christophe kryskool <christophe.chauvet@gmail.com>, 2011-2013
 # Emmanuel <emmanuel@raviart.com>, 2013
 # evgeny <evgeny.fadeev@gmail.com>, 2009
-# fbureau <francois.bureau@cloudwatt.com>, 2013
+# François Bureau <francois.bureau@cloudwatt.com>, 2013
 # florent <fpam1108@gmail.com>, 2012
 # florent <fpam1108@gmail.com>, 2012
-# fbureau <francois.bureau@cloudwatt.com>, 2013
+# François Bureau <francois.bureau@cloudwatt.com>, 2013
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 msgid ""

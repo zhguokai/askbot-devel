@@ -3,17 +3,18 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# rgv151 <rgv151@gmail.com>, 2013
-# Nguyen Long <gialacmail@gmail.com>, 2013
 # linux <linux87s@gmail.com>, 2013
+# linux <linux87s@gmail.com>, 2013
+# Nguyen Long <gialacmail@gmail.com>, 2013
+# rgv151 <rgv151@gmail.com>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: AskGuru.VN\n"
+"Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-08-31 04:41+0000\n"
-"Last-Translator: rgv151 <rgv151@gmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/projects/p/askguruvn/language/vi/)\n"
+"PO-Revision-Date: 2013-09-19 03:25+0000\n"
+"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"Language-Team: Vietnamese (http://www.transifex.com/projects/p/askbot/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"

@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# noizer, 2013
 # Valter Mura <valtermura@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-08-02 06:25+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-08-28 14:50+0000\n"
+"Last-Translator: noizer\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/askbot/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,11 +79,11 @@ msgstr ""
 
 #: media/js/group_messaging.js:139
 msgid "Your message:"
-msgstr ""
+msgstr "Il tuo messaggio:"
 
 #: media/js/group_messaging.js:152
 msgid "send"
-msgstr ""
+msgstr "invia"
 
 #: media/js/group_messaging.js:164 media/js/post.js:1809
 #: media/js/post.js.c:3081 media/js/post.js.c:4598 media/js/user.js:888
@@ -91,11 +92,11 @@ msgstr "annulla"
 
 #: media/js/group_messaging.js:227
 msgid "Reply"
-msgstr ""
+msgstr "Rispondi"
 
 #: media/js/group_messaging.js:236 media/js/group_messaging.js.c:743
 msgid "message sent"
-msgstr ""
+msgstr "Messaggio inviato"
 
 #: media/js/group_messaging.js:271
 msgid "user {{str}} does not exist"
@@ -105,7 +106,7 @@ msgstr[1] ""
 
 #: media/js/group_messaging.js:278
 msgid "cannot send message to yourself"
-msgstr ""
+msgstr "impossibile inviare un messaggio a te stesso"
 
 #: media/js/group_messaging.js:323
 msgid "Recipient:"
@@ -117,7 +118,7 @@ msgstr ""
 
 #: media/js/live_search.js:218
 msgid "Ask Your Question"
-msgstr ""
+msgstr "Fai la tua domanda"
 
 #: media/js/live_search.js:299
 msgid "Sorry, this tag does not exist"
@@ -127,7 +128,7 @@ msgstr[1] ""
 
 #: media/js/live_search.js:313
 msgid "search or ask your question"
-msgstr ""
+msgstr "cerca o fai la tua domanda"
 
 #: media/js/post.js:28
 msgid "loading..."
@@ -178,11 +179,11 @@ msgstr[1] ""
 
 #: media/js/post.js:253
 msgid "Back to the question"
-msgstr ""
+msgstr "Torna alla domanda"
 
 #: media/js/post.js:303
 msgid "draft saved..."
-msgstr ""
+msgstr "bozza salvata..."
 
 #: media/js/post.js:548
 msgid "insufficient privilege"
@@ -214,7 +215,7 @@ msgstr "conferma che questo post è offensivo"
 
 #: media/js/post.js:559
 msgid "please confirm removal of offensive flag"
-msgstr ""
+msgstr "sei certo che questo post sia offensivo, contenga spam, pubblicità, osservazioni poco idonee, ecc.?"
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
@@ -253,11 +254,11 @@ msgstr "<div>Segui</div><div class=\"unfollow\">Non seguire</div>"
 
 #: media/js/post.js:901
 msgid "remove flag"
-msgstr ""
+msgstr "rimuovi flag"
 
 #: media/js/post.js:935 media/js/post.js.c:964
 msgid "flag offensive"
-msgstr ""
+msgstr "sei certo che questo post sia offensivo, contenga spam, pubblicità, osservazioni poco idonee, ecc.?"
 
 #: media/js/post.js:990 media/js/post.js.c:1497
 msgid "undelete"

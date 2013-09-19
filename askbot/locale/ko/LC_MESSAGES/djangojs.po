@@ -4,15 +4,15 @@
 # 
 # Translators:
 # EunMiLee <16thetower@gmail.com>, 2012
-# Sungjin Gang <potopro@gmail.com>, 2013
+# ujuc Gang <potopro@gmail.com>, 2013
 # Yong Choi <sk8er.choi@gmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-08-20 08:22+0000\n"
-"Last-Translator: Sungjin Gang <potopro@gmail.com>\n"
+"PO-Revision-Date: 2013-08-20 16:24+0000\n"
+"Last-Translator: ujuc Gang <potopro@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/askbot/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -144,23 +144,23 @@ msgstr "적어도 하나의 태그를 입력하십시오."
 
 #: media/js/post.js:160
 msgid "details are required"
-msgstr ""
+msgstr "details이 필요합니다."
 
 #: media/js/post.js:163
 #, c-format
 msgid "details must have > %s character"
 msgid_plural "details must have > %s characters"
-msgstr[0] ""
+msgstr[0] "적어도 %s 글자 이상으로 입력을 해주십시오."
 
 #: media/js/post.js:171
 msgid "enter your question"
-msgstr ""
+msgstr "질문을 입력해주세요."
 
 #: media/js/post.js:174
 #, c-format
 msgid "question must have > %s character"
 msgid_plural "question must have > %s characters"
-msgstr[0] ""
+msgstr[0] "적어도 %s 글자 이상으로 입력을 해주십시오."
 
 #: media/js/post.js:193
 msgid "content cannot be empty"
@@ -264,7 +264,7 @@ msgstr "글이 삭제되었습니다."
 
 #: media/js/post.js:1218 media/js/post.js.c:1445
 msgid "sorry, something is not right here"
-msgstr ""
+msgstr "죄송합니다. 뭔가 올바르지 않습니다."
 
 #: media/js/post.js:1665
 msgid "add comment"
@@ -319,7 +319,7 @@ msgstr "질문을 입력해 주세요 (10자 이상)"
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
-msgstr ""
+msgstr "죄송합니다. 읽기만 가능합니다."
 
 #: media/js/post.js:3075 media/js/post.js.c:3869 media/js/post.js.c:4058
 msgid "save"
@@ -366,7 +366,7 @@ msgstr "최소 하나의 tag를 입력해 주십시오."
 
 #: media/js/post.js:4011
 msgid "already exists at the current level!"
-msgstr ""
+msgstr "이미 현재 레벨이 존재합니다!"
 
 #: media/js/post.js:4047
 msgid "add category"
@@ -430,35 +430,35 @@ msgstr "글이 복원되었습니다."
 
 #: media/js/user.js:246
 msgid "Accept"
-msgstr ""
+msgstr "수락"
 
 #: media/js/user.js:255
 msgid "Reject"
-msgstr ""
+msgstr "거절"
 
 #: media/js/user.js:270
 msgid "add new reject reason"
-msgstr ""
+msgstr "새로운 거절 이유 추가"
 
 #: media/js/user.js:375
 msgid "Looks there are some things to fix:"
-msgstr ""
+msgstr "해결하기 위한 어떤 것들:"
 
 #: media/js/user.js:443
 msgid "Please provide description."
-msgstr ""
+msgstr "설명을 작성하십시오."
 
 #: media/js/user.js:446
 msgid "Please provide details."
-msgstr ""
+msgstr "세부 사항을 작성하십시오."
 
 #: media/js/user.js:560
 msgid "A reason must be selected to delete one."
-msgstr ""
+msgstr "하나를 삭제하려면 선택하여야 합니다."
 
 #: media/js/user.js:659
 msgid "A reason must be selected to reject post."
-msgstr ""
+msgstr "포스트를 거절하기 위해서는 선택하여야 합니다."
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
@@ -481,15 +481,15 @@ msgstr "%s 팔로우"
 
 #: media/js/user.js:883
 msgid "add group"
-msgstr ""
+msgstr "그룹 추가"
 
 #: media/js/user.js:963
 msgid "add"
-msgstr ""
+msgstr "추가"
 
 #: media/js/utils.js:99
 msgid "and"
-msgstr ""
+msgstr "그리고"
 
 #: media/js/utils.js:117
 msgid "click to close"
@@ -497,211 +497,211 @@ msgstr "close를 선택"
 
 #: media/js/utils.js:880
 msgid "click to edit this comment"
-msgstr ""
+msgstr "클릭하여 이 댓글 수정"
 
 #: media/js/utils.js:905
 msgid "convert to answer"
-msgstr ""
+msgstr "답변 변경"
 
 #: media/js/utils.js:958
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: media/js/utils.js:959 media/js/utils.js.c:1407
 msgid "Cancel"
-msgstr ""
+msgstr "취소"
 
 #: media/js/utils.js:1219
 #, c-format
 msgid "Uploaded file: %s"
-msgstr ""
+msgstr "파일 업로드: %s"
 
 #: media/js/utils.js:1234
 msgid "Choose a different image"
-msgstr ""
+msgstr "다른 이미지 선택"
 
 #: media/js/utils.js:1236
 msgid "Choose a different file"
-msgstr ""
+msgstr "다른 파일 선택"
 
 #: media/js/utils.js:1250
 msgid "Oops, looks like we had an error. Sorry."
-msgstr ""
+msgstr "이런! 오류가 발생했네요. 죄송합니다."
 
 #: media/js/utils.js:1311
 msgid "Choose an image to insert"
-msgstr ""
+msgstr "삽입할 이미지 선택"
 
 #: media/js/utils.js:1313
 msgid "Choose a file to insert"
-msgstr ""
+msgstr "삽입할 파일 선택"
 
 #: media/js/utils.js:1326
 msgid "Allowed file types are:"
-msgstr ""
+msgstr "파일 형식 허용:"
 
 #: media/js/utils.js:1332
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:35
 msgid "Or paste file url here"
-msgstr ""
+msgstr "파일 url을 여기에 붙여넣기 하십시오."
 
 #: media/js/utils.js:1406
 msgid "Save"
-msgstr ""
+msgstr "저장"
 
 #: media/js/utils.js:1478
 msgid "saved"
-msgstr ""
+msgstr "저장"
 
 #: media/js/utils.js:1602
 msgid "enabled"
-msgstr ""
+msgstr "활성화"
 
 #: media/js/utils.js:1604
 msgid "disabled"
-msgstr ""
+msgstr "비활성화"
 
 #: media/js/utils.js:2038
 msgid "group name"
-msgstr ""
+msgstr "그룹 이름"
 
 #: media/js/utils.js:2046
 msgid "add new group"
-msgstr ""
+msgstr "새로운 그룹 추가"
 
 #: media/js/utils.js:2138
 msgid "Group %(name)s already exists. Group names are case-insensitive."
-msgstr ""
+msgstr "그룹 %(name)s이 존재합니다. 그룹 이름은 대소문자 구분합니다."
 
 #: media/js/utils.js:2311
 #, c-format
 msgid "see questions tagged '%s'"
-msgstr ""
+msgstr "'%s'로 태그된 질문들 보기"
 
 #: media/js/utils.js:3358
 msgid "ago"
-msgstr ""
+msgstr "전"
 
 #: media/js/utils.js:3359
 msgid "from now"
-msgstr ""
+msgstr "지금부터"
 
 #: media/js/utils.js:3361
 msgid "about a minute"
-msgstr ""
+msgstr "분에 대해서"
 
 #: media/js/utils.js:3362
 #, c-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d 분"
 
 #: media/js/utils.js:3363
 msgid "about an hour"
-msgstr ""
+msgstr "시간에 대해서"
 
 #: media/js/utils.js:3364
 #, c-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d 시간"
 
 #: media/js/utils.js:3365 media/js/utils.js.c:3493
 msgid "yesterday"
-msgstr ""
+msgstr "어제"
 
 #: media/js/utils.js:3366
 #, c-format
 msgid "%d days"
-msgstr ""
+msgstr "%d 일"
 
 #: media/js/utils.js:3367
 msgid "about a month"
-msgstr ""
+msgstr "개월에 대해서"
 
 #: media/js/utils.js:3368
 #, c-format
 msgid "%d months"
-msgstr ""
+msgstr "%d 개월"
 
 #: media/js/utils.js:3369
 msgid "about a year"
-msgstr ""
+msgstr "년도에 대해"
 
 #: media/js/utils.js:3370
 #, c-format
 msgid "%d years"
-msgstr ""
+msgstr "%d 년"
 
 #: media/js/utils.js:3468
 msgid "Jan"
-msgstr ""
+msgstr "1월"
 
 #: media/js/utils.js:3469
 msgid "Feb"
-msgstr ""
+msgstr "2월"
 
 #: media/js/utils.js:3470
 msgid "Mar"
-msgstr ""
+msgstr "3월"
 
 #: media/js/utils.js:3471
 msgid "Apr"
-msgstr ""
+msgstr "4월"
 
 #: media/js/utils.js:3472
 msgid "May"
-msgstr ""
+msgstr "5월"
 
 #: media/js/utils.js:3473
 msgid "Jun"
-msgstr ""
+msgstr "6월"
 
 #: media/js/utils.js:3474
 msgid "Jul"
-msgstr ""
+msgstr "7월"
 
 #: media/js/utils.js:3475
 msgid "Aug"
-msgstr ""
+msgstr "8월"
 
 #: media/js/utils.js:3476
 msgid "Sep"
-msgstr ""
+msgstr "9월"
 
 #: media/js/utils.js:3477
 msgid "Oct"
-msgstr ""
+msgstr "10월"
 
 #: media/js/utils.js:3478
 msgid "Nov"
-msgstr ""
+msgstr "11월"
 
 #: media/js/utils.js:3479
 msgid "Dec"
-msgstr ""
+msgstr "12월"
 
 #: media/js/utils.js:3491
 msgid "2 days ago"
-msgstr ""
+msgstr "이틀 전"
 
 #: media/js/utils.js:3498
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
-msgstr[0] ""
+msgstr[0] "%s 시간 전"
 
 #: media/js/utils.js:3508
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"
-msgstr[0] ""
+msgstr[0] "%s 분 전"
 
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:71
 msgid "Insert a file"
-msgstr ""
+msgstr "파일 삽입"
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
 msgid "Insert image"
-msgstr ""
+msgstr "이미지에 대한 URL를 입력해주세요. 예를들어, http://www.example.com/image.jpg 또는 이미지 파일을 올려주세요."
 
 #: media/js/wmd/wmd.js:31
 msgid "bold"
@@ -769,15 +769,15 @@ msgstr "업로드할 파일을 선택해주세요"
 
 #: media/js/wmd/wmd.js:1836
 msgid "image description"
-msgstr ""
+msgstr "이미지 설명"
 
 #: media/js/wmd/wmd.js:1839
 msgid "file name"
-msgstr ""
+msgstr "파일 이름"
 
 #: media/js/wmd/wmd.js:1843
 msgid "link text"
-msgstr ""
+msgstr "링크 텍스트"
 
 #~ msgid "post a comment"
 #~ msgstr "save comment"

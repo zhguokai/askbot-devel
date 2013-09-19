@@ -10,7 +10,7 @@
 # Jihui Choi <jihui.choi@gmail.com>, 2013
 # alisol <nocaca@daum.net>, 2012
 # seok woojing <ultra066@gmail.com>, 2012
-# Sungjin Gang <potopro@gmail.com>, 2013
+# ujuc Gang <potopro@gmail.com>, 2013
 # Whoami Jeong <>, 2012
 # Yong Choi <sk8er.choi@gmail.com>, 2012
 msgid ""

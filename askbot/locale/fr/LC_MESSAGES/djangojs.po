@@ -6,8 +6,8 @@
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 # Christophe kryskool <christophe.chauvet@gmail.com>, 2011-2013
 # Emmanuel <emmanuel@raviart.com>, 2013
-# fbureau <francois.bureau@cloudwatt.com>, 2013
-# fbureau <francois.bureau@cloudwatt.com>, 2013
+# François Bureau <francois.bureau@cloudwatt.com>, 2013
+# François Bureau <francois.bureau@cloudwatt.com>, 2013
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 msgid ""
 msgstr ""

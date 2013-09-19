@@ -6,13 +6,14 @@
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # giohappy <giohappy@gmail.com>, 2013
 # giohappy <giohappy@gmail.com>, 2013
+# noizer, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-08-02 06:24+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-08-28 14:51+0000\n"
+"Last-Translator: noizer\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/askbot/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3793,8 +3794,8 @@ msgstr[1] "%(min)d minuti fa"
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(days)d giorno"
+msgstr[1] "%(days)d giorni"
 
 #: models/__init__.py:2006
 #, python-format
@@ -3864,12 +3865,12 @@ msgstr[1] "%(count)d medaglie di bronzo"
 #: models/__init__.py:2533
 #, python-format
 msgid "%(item1)s and %(item2)s"
-msgstr ""
+msgstr "%(item1)s e %(item2)s"
 
 #: models/__init__.py:2535
 #, python-format
 msgid "%(user)s has %(badges)s"
-msgstr ""
+msgstr "%(user)s ha %(badges)s"
 
 #: models/__init__.py:2682
 #, python-format
