@@ -66,6 +66,8 @@ please let us know at support@askbot.com.
 * Pekka Järvinen - Finnish
 * Adi Robian - Romanian
 * `Stefano Mancini <https://github.com/xponrails>`_, Dario Ghilardi, Federico Poloni, `Luca Ferroni <http://www.linkedin.com/in/lucaferroni>`_ - Italian
-* `Jordi Bofill <https://github.com/jbofill>`_ - Catalan
+* Cong It, Nguyen Long, ppranhh - Vietnamese
+* `Jordi Bofill <https://github.gom/jbofill>`_ - Catalan
 * Vašek Chalupníček - Chech
 * Dario Kolak - Croatian
+.
