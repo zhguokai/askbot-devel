@@ -3237,7 +3237,7 @@ msgid ""
 msgstr ""
 
 #: deps/django_authopenid/views.py:520
-msgid "Your new password saved"
+msgid "Your new password is saved"
 msgstr ""
 
 #: deps/django_authopenid/views.py:568 deps/django_authopenid/views.py:583

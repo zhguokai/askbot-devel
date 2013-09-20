@@ -687,6 +687,12 @@ class Thread(models.Model):
             return answers[0].id
         return None
 
+    def get_latest_post(self):
+        """returns latest non-deleted post"""
+        if askbot_settings.GROUPS_ENABLED:
+            raise NotImplementedError()
+        return self.posts.filter(deleted=False).order_by('-added_at')[0]
+
     def get_sharing_info(self, visitor=None):
         """returns a dictionary with abbreviated thread sharing info:
         * users - up to a certain number of users, excluding the visitor

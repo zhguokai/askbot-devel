@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.db import models
 from django.utils import html as html_utils
+from django.utils.text import truncate_html_words
 from django.utils.translation import activate as activate_language
 from django.utils.translation import get_language
 from django.utils.translation import ugettext as _
@@ -33,7 +34,9 @@ from askbot.models.tag import tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
-from askbot.utils.html import sanitize_html, strip_tags
+from askbot.utils.html import get_word_count
+from askbot.utils.html import sanitize_html
+from askbot.utils.html import strip_tags
 from askbot.utils.html import site_url
 from askbot.models.base import BaseQuerySetManager, DraftContent
 
@@ -337,6 +340,7 @@ class PostManager(BaseQuerySetManager):
 class Post(models.Model):
     post_type = models.CharField(max_length=255, db_index=True)
 
+    #NOTE!!! if these fields are deleted - then jive import needs fixing!!!
     old_question_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
     old_answer_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
     old_comment_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
@@ -884,10 +888,38 @@ class Post(models.Model):
         return slugify(self.thread.title)
     slug = property(_get_slug)
 
-    def get_snippet(self, max_length = 120):
-        """returns an abbreviated snippet of the content
+    def get_snippet(self, max_length=None):
+        """returns an abbreviated HTML snippet of the content
+        or full content, depending on how long it is
+        todo: remove the max_length parameter
         """
-        return html_utils.strip_tags(self.html)[:max_length] + ' ...'
+        if max_length is None:
+            if self.post_type == 'comment':
+                max_words = 30
+            else:
+                max_words = 100
+        else:
+            max_words = int(max_length/5)
+
+        #todo: truncate so that we have max number of lines
+        #the issue is that code blocks have few words
+        #but very tall, while paragraphs can be dense on words
+        #and fit into fewer lines
+        truncated = truncate_html_words(self.html, max_words)
+        new_count = get_word_count(truncated)
+        orig_count = get_word_count(self.html)
+        if new_count + 1 < orig_count:
+            expander = '<span class="expander"> <a>(' + _('more') + ')</a></span>'
+            if truncated.endswith('</p>'):
+                #better put expander inside the paragraph
+                snippet = truncated[:-4] + expander + '</p>'
+            else:
+                snippet = truncated + expander
+            #it is important to have div here, so that we can make
+            #the expander work
+            return '<div class="snippet">' + snippet + '</div>'
+        else:
+            return self.html
 
     def filter_authorized_users(self, candidates):
         """returns list of users who are allowed to see this post"""
@@ -2269,7 +2301,7 @@ class PostRevision(models.Model):
             return sanitized_html
 
     def get_snippet(self, max_length = 120):
-        """same as Post.get_snippet"""
+        """a little simpler than as Post.get_snippet"""
         return html_utils.strip_tags(self.html)[:max_length] + '...'
 
 

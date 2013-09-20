@@ -47,6 +47,7 @@ urlpatterns = patterns('',
             r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
             r'(%s)?' % r'/author:(?P<author>\d+)' +
             r'(%s)?' % r'/page:(?P<page>\d+)' +
+            r'(%s)?' % r'/page-size:(?P<page_size>\d+)' +
             r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
         r'/$'),
         views.readers.questions,
@@ -166,6 +167,11 @@ urlpatterns = patterns('',
         kwargs = {'post_type': 'answer'},
         name='answer_revisions'
     ),
+    service_url(
+        r'^get-top-answers/',
+        views.readers.get_top_answers,
+        name='get_top_answers'
+    ),
     # END main page urls
     service_url(
         r'^api/get_questions/',
@@ -216,6 +222,11 @@ urlpatterns = patterns('',
         r'^get-editor/',
         views.commands.get_editor,
         name='get_editor'
+    ),
+    service_url(
+        r'^get-post-html/',
+        views.readers.get_post_html,
+        name='get_post_html'
     ),
     service_url(
         r'^%s%s$' % (_('questions/'), _('ask/')),

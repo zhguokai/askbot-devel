@@ -46,8 +46,7 @@
                                         <button class="reject">{% trans %}Reject{% endtrans %}</button>
                                     </td>
                                     <td class="thread-links-col">
-                                        <a title="{{ thread._question_post().summary|escape }}"
-                                            href="{{ thread.get_absolute_url() }}"
+                                        <a href="{{ thread.get_absolute_url() }}"
                                         >{{ thread.title|escape }}</a>
                                     </td>
                                 </tr>

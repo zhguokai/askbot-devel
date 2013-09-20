@@ -297,7 +297,7 @@ class LoginForm(forms.Form):
                         del self.cleaned_data['new_password']
                         del self.cleaned_data['new_password_retyped']
                         error_message = _(
-                                    'Please choose password > %(len)s characters'
+                                    'choose password > %(len)s characters'
                                 ) % {'len': askbot_const.PASSWORD_MIN_LENGTH}
                         error = self.error_class([error_message])
                         self._errors['new_password'] = error
@@ -332,23 +332,40 @@ class SafeClassicRegisterForm(ClassicRegisterForm):
                     public_key = askbot_settings.RECAPTCHA_KEY
                 )
 
-class ChangePasswordForm(SetPasswordForm):
+class ChangePasswordForm(forms.Form):
     """ change password form """
-    oldpw = forms.CharField(widget=forms.PasswordInput(attrs={'class':'required'}),
-                label=mark_safe(ugettext_lazy('Current password')))
+    new_password = forms.CharField(
+                        widget=forms.PasswordInput(),
+                        error_messages = {
+                            'required': _('password is required'),
+                        }
+                    )
+    new_password_retyped = forms.CharField(
+                        widget=forms.PasswordInput(),
+                        error_messages = {
+                            'required': _('retype your password'),
+                        }
+                    )
 
-    def __init__(self, data=None, user=None, *args, **kwargs):
-        if user is None:
-            raise TypeError("Keyword argument 'user' must be supplied")
-        super(ChangePasswordForm, self).__init__(data, *args, **kwargs)
-        self.user = user
+    def clean_new_password(self):
+        if 'new_password' in self.cleaned_data:
+            password = self.cleaned_data['new_password']
+            min_len = askbot_const.PASSWORD_MIN_LENGTH
+            if len(password) < min_len:
+                error = _('choose password > %(len)s characters') % \
+                                                                {'len': min_len}
+                raise forms.ValidationError(error)
+            return password
 
-    def clean_oldpw(self):
-        """ test old password """
-        if not self.user.check_password(self.cleaned_data['oldpw']):
-            raise forms.ValidationError(_("Old password is incorrect. \
-                    Please enter the correct password."))
-        return self.cleaned_data['oldpw']
+    def clean(self):
+        expected_keys = set(['new_password', 'new_password_retyped'])
+        if set(self.cleaned_data.keys()) == expected_keys:
+            pw1 = self.cleaned_data['new_password']
+            pw2 = self.cleaned_data['new_password_retyped']
+            if pw1 != pw2:
+                error = _('entered passwords did not match, please try again')
+                raise forms.ValidationError(error)
+        return self.cleaned_data
 
 class ChangeEmailForm(forms.Form):
     """ change email form """

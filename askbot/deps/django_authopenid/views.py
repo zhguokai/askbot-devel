@@ -50,7 +50,9 @@ from askbot.utils.functions import generate_random_key
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
+from django.utils import simplejson
 from askbot.mail import send_mail
+from askbot.utils import decorators as askbot_decorators
 from askbot.utils.html import site_url
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
@@ -518,7 +520,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                             provider_name=provider_name
                                         )
                             request.user.message_set.create(
-                                        message = _('Your new password saved')
+                                        message = _('Your new password is saved')
                                     )
                             return HttpResponseRedirect(next_url)
                     else:
@@ -784,6 +786,20 @@ def show_signin_view(
 
     return render(request, template_name, data)
 
+@csrf.csrf_exempt
+@askbot_decorators.post_only
+@askbot_decorators.ajax_login_required
+def change_password(request):
+    form = forms.ChangePasswordForm(request.POST)
+    data = dict()
+    if form.is_valid():
+        request.user.set_password(form.cleaned_data['new_password'])
+        request.user.save()
+        data['message'] = _('Your new password is saved')
+    else:
+        data['errors'] = form.errors
+    return HttpResponse(simplejson.dumps(data), mimetype='application/json')
+
 @login_required
 def delete_login_method(request):
     if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False:
@@ -867,6 +883,12 @@ def finalize_generic_signin(
     generic signin, run after all protocol-dependent details
     have been resolved
     """
+
+    if 'in_recovery' in request.session:
+        del request.session['in_recovery']
+        redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
+        if redirect_url is None:
+            redirect_url = reverse('questions')
 
     if request.user.is_authenticated():
         #this branch is for adding a new association
@@ -1320,6 +1342,7 @@ def account_recover(request):
             greet_new_user(user)
 
             #need to show "sticky" signin view here
+            request.session['in_recovery'] = True
             return show_signin_view(
                                 request,
                                 view_subtype = 'add_openid',

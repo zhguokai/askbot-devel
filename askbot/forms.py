@@ -1703,8 +1703,13 @@ class BulkTagSubscriptionForm(forms.Form):
         if askbot_settings.GROUPS_ENABLED:
             self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.exclude_personal())
 
-class GetCommentsForPostForm(forms.Form):
+class GetDataForPostForm(forms.Form):
     post_id = forms.IntegerField()
+
+class GetUserItemsForm(forms.Form):
+    page_size = forms.IntegerField(required=False)
+    page_number = forms.IntegerField(min_value=1)
+    user_id = forms.IntegerField()
 
 class NewCommentForm(forms.Form):
     comment = forms.CharField()

@@ -1,6 +1,7 @@
 <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
 <script type="text/javascript" src="{{"/jquery-openid/jquery.openid.js"|media}}"></script>
 <script type="text/javascript">
+    askbot['urls']['changePassword'] = '{% url change_password %}';
     var extra_token_name = {};
     var create_pw_text = {};
     var change_pw_text = {};
@@ -36,4 +37,8 @@
     {% endif %}
     askbot['settings']['signin_always_show_local_login'] = {% if settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}true{% else %}false{% endif %};
     $("body").authenticator();
+    (function() {
+        var form = new ChangePasswordForm();
+        form.decorate($('body'));//a hack
+    })();
 </script>

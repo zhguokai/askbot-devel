@@ -16,15 +16,15 @@
 {% endif %}
     {% if answer %}
         <div class="message">
-        {% trans title=answer.question.title|escape, summary=answer.summary|escape %}
-        Your answer to {{title}} {{summary}} will be posted once you log in
+        {% trans title=answer.question.title|escape %}
+        Your answer to {{title}} will be posted once you log in
         {% endtrans %}
         </div>
     {% endif %}
     {% if question %}
         <div class="message">
-        {% trans title=question.title|escape, summary=question.summary|escape %}Your question 
-        {{title}} {{summary}} will be posted once you log in
+        {% trans title=question.title|escape %}Your question 
+        {{title}} will be posted once you log in
         {% endtrans %}
         </div>
     {% endif %}
@@ -199,9 +199,9 @@
             <p class="hint">
                 <span class="text">
                 {% if view_subtype == 'bad_key' %}
-                    {% trans %}Please, enter your email address below and obtain a new key{% endtrans %}
+                    {% trans %}Enter your email address below and obtain a new key{% endtrans %}
                 {% else %}
-                    {% trans %}Please, enter your email address below to recover your account{% endtrans %}
+                    {% trans %}Enter your email address below to recover your account{% endtrans %}
                 {% endif %}
                 </span>
                 <span style="display:none" class="link"> - <a href="#">{% trans %}recover your account via email{% endtrans %}</a></span>
