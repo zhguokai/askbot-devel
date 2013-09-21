@@ -1160,15 +1160,23 @@ def register_with_password(request):
         #todo return data via ajax
         return {'errors': form.errors}
 
-@ajax_only
 @csrf.csrf_protect
+@ajax_only
 def ajax_signout(request):
     """sign out view specifically for the ajax use"""
     if request.user.is_anonymous():
         raise django_exceptions.PermissionDenied()
     logout(request)
-    html = render_to_string(request, 'widgets/user_navigation.html')
-    return {'userToolsNavHTML': html}
+    userToolsHtml = render_to_string(request, 'widgets/user_navigation.html')
+    loginMenuHtml = render_to_string(
+                        request,
+                        'authopenid/signin_modal.html',
+                        get_signin_view_context(request)
+                    )
+    return {
+        'userToolsNavHtml': userToolsHtml,
+        'loginMenuHtml': loginMenuHtml
+    }
 
 
 @login_required

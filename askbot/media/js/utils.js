@@ -1087,7 +1087,7 @@ AjaxForm.prototype.getSubmitHandler = function() {
     var inputs = this._inputs;
     var fieldNames = this._fieldNames;
     var url = this._url;
-    return function () {
+    return function (evt) {
         var data = me.getValues();
         $.ajax({
             type: 'POST',
@@ -1164,6 +1164,21 @@ AjaxForm.prototype.decorate = function(element) {
     });
 
     setupButtonEventHandlers(this._button, submitHandler);
+    this._submitHandler = submitHandler
+};
+
+AjaxForm.prototype.dispose = function() {
+    removeButtonEventHandlers(this._button);
+    this._button.remove();
+    $.each(this._inputs, function(idx, inputItem) {
+        $(inputItem).unbind('keyup');
+    });
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+        this._labeledInputObjects[fieldName].dispose();
+    }
+    this._labels = null;
+    this._element.remove();
 };
 
 /**
@@ -1303,6 +1318,7 @@ FederatedLoginMenu.prototype.decorate = function(element) {
 var LoginOrRegisterForm = function() {
     AjaxForm.call(this);
     this._parent = undefined;
+    this._objectId = getNewUniqueInt();
 };
 inherits(LoginOrRegisterForm, AjaxForm);
 
@@ -1315,8 +1331,7 @@ LoginOrRegisterForm.prototype.setParent = function(parentMenu) {
  * menu object itself.
  */
 LoginOrRegisterForm.prototype.closeModalMenu = function() {
-    $('.modal').remove();
-    $('.modal-backdrop').remove();
+    this._parent.closeModalMenu();
 };
 
 
@@ -1325,23 +1340,22 @@ LoginOrRegisterForm.prototype.isModal = function() {
 };
 
 LoginOrRegisterForm.prototype.handleSuccess = function(data) {
+    if (this._successHandled) {
+        return;
+    }
+    this._successHandled = true;
+    /* two redirect conditions - in this case 
+     * we don't need to clean up any js-built objects */
     if (data['redirectUrl']) {
         window.location.href = data['redirectUrl'];
     }
-    if (this._parent) {
-        if (this._parent.isModal()) {
-            //stay on the page
-            this._parent.reset();
-        } else {
-            //go to the next page
-            window.location.href = getNextUrl();
-            return;
-        }
-    } else if (this.isModal() === false) {
+    if (this.isModal() === false) {
         //go to the next page
         window.location.href = getNextUrl();
         return;
     }
+
+    // redraw the user link in the header
     this._userToolsNav.html(data['userToolsNavHTML']);
     /* if login form is not part of the modal menu, then
      * redirect either based on the query part of the url
@@ -1352,8 +1366,17 @@ LoginOrRegisterForm.prototype.handleSuccess = function(data) {
         logoutLink.decorate(logoutBtn);
     }
 
+    /* lastly - we need to destroy entire form
+     * if it is modal - including remove all event handlers */
     if (this.isModal()) {
         this.closeModalMenu();
+        if (this._parent) {
+            //this won't touch the modal, but only the contents
+            this._parent.dispose();
+            //now remove the modal menu itself
+            $('.modal').remove();
+            $('.modal-backdrop').remove();
+        }
     };
 };
 
@@ -1541,6 +1564,9 @@ SetPasswordForm.prototype.handleSuccess = function(data) {
     if (data['message']) {
         notify.show(data['message']);
     }
+    if (this._parent) {
+        this._parent.dispose();
+    }
 };
 
 
@@ -1561,6 +1587,14 @@ MaybeModalMenu.prototype.isModal = function() {
     } else {
         return count === 1;
     }
+};
+
+MaybeModalMenu.prototype.dispose = function() {
+    if (this.isModal()) {
+        $('.modal').remove();
+        $('.modal-backdrop').remove();
+    }
+    MaybeModalMenu.superClass_.dispose.call(this);
 };
 
 MaybeModalMenu.prototype.closeModalMenu = function() {
@@ -1618,6 +1652,15 @@ AuthMenu.prototype.decorate = function(element) {
 
     //need this to close the extra username popup
     element.click(function(){ federatedLogins.reset(); });
+};
+
+AuthMenu.prototype.dispose = function() {
+    this._federatedLogins.dispose();
+    this._passwordLogin.dispose();
+    this._passwordRegister.dispose();
+    this._accountRecoveryForm.dispose();
+    this._element.unbind('click');
+    this._element.remove();
 };
 
 /**
@@ -2106,7 +2149,7 @@ ModalDialog.prototype.setMessage = function(text, message_type) {
 ModalDialog.prototype.decorate = function(element) {
     
     if (element.length > 1) {
-        element = element[0];
+        element = $(element[0]);
         debug('strange too many modal menues found!!!');
     } else if (element.length === 0) {
         debug('no modal menues found, instead check for length of this selector outside');
@@ -2519,10 +2562,8 @@ ModalDialogTrigger.prototype.setDialog = function(dialog) {
 };
 
 ModalDialogTrigger.prototype.getDialog = function() {
-    if (!this._dialog) {
-        this._dialog = new this._dialogClass();
-        this._dialog.decorate($('.modal'));
-    }
+    this._dialog = new this._dialogClass();
+    this._dialog.decorate($('.modal'));
     return this._dialog;
 };
 
@@ -2654,15 +2695,21 @@ LogoutLink.prototype.getUrl = function() {
     return this._url;
 };
 
-LogoutLink.prototype.setUserToolsNavHTML = function(html) {
+LogoutLink.prototype.setUserToolsNavHtml = function(html) {
     var nav = $('#userToolsNav');
     nav.empty();
     nav.html(html);
 };
 
+LogoutLink.prototype.setLoginMenuHtml = function(html) {
+    var div = this.makeElement('div');
+    div.html(html);
+    $('body').append(div);
+};
+
 LogoutLink.prototype.activateLoginLink = function() {
     var nav = $('#userToolsNav');
-    var loginLink = askbot['data']['loginLinkObject'] || new LoginLink();
+    var loginLink = new LoginLink();
     loginLink.decorate(nav.find('.login'));
 };
 
@@ -2681,9 +2728,13 @@ LogoutLink.prototype.getLogoutHandler = function() {
                         window.location.href = askbot['urls']['userSignin'];
                         return;
                     }
-                    //otherwise - repaint the login link
-                    var html = data['userToolsNavHTML'];
-                    me.setUserToolsNavHTML(html);
+                    //otherwise - repaint the login link and the login menu
+                    me.setUserToolsNavHtml(data['userToolsNavHtml']);
+                    me.setLoginMenuHtml(data['loginMenuHtml']);
+                    //NOTE: no need to do below as dialog is inited on login link click
+                    //var loginDialog = new LoginDialog();
+                    //loginDialog.decorate($('.modal'));
+                    //activate the login menu
                     me.activateLoginLink();
                 }
             }

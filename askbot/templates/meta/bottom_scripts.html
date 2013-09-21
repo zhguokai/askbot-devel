@@ -116,14 +116,6 @@
         if (closedModeOn === false && loginLink.length === 1) {
             var loginBtn = new LoginLink();
             loginBtn.decorate(loginLink);
-            {# 
-                todo: make it more obvious how login menu operates 
-                it is not good that we need to pass around this
-                reference to the login link object.
-                We need this in order to destroy the object upon
-                successful login so that repeated logins and logouts work
-            #}
-            askbot['data']['loginLinkObject'] = loginBtn;
         }
         var logoutLink = $('a.logout');
         if (logoutLink.length === 1) {
