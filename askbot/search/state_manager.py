@@ -93,7 +93,6 @@ class SearchState(object):
         author=None, page=None, page_size=None, user_logged_in=False
     ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
-
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:
                 self.scope = askbot_settings.DEFAULT_SCOPE_AUTHENTICATED
