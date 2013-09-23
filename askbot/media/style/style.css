@@ -4595,6 +4595,20 @@ td.setting-input textarea {
     width: 100%;
   }
 }
+@media screen and (max-width: 540px) {
+  .question-page .post-controls {
+    float: left;
+    margin-left: -8px;
+    padding-left: 0;
+    text-align: left;
+  }
+  .question-page .post-controls .question-close {
+    display: none;
+  }
+  .question-page div.comments.empty {
+    margin-top: 0;
+  }
+}
 @media screen and (max-width: 480px) {
   .openid-signin h1,
   .openid-signin h2 {
@@ -4614,6 +4628,15 @@ td.setting-input textarea {
     width: 100%;
   }
 }
+@media screen and (max-width: 380px) {
+  .wmd-button-bar .wmd-hr-button,
+  .wmd-button-bar .wmd-heading-button {
+    display: none;
+  }
+  .editor-status {
+    margin-right: 0;
+  }
+}
 @media screen and (max-width: 338px) {
   #scopeNav {
     display: none;
@@ -4628,6 +4651,9 @@ td.setting-input textarea {
   .edit-answer-page #id_post_author_email {
     width: 100%;
     margin: 6px 0;
+  }
+  .question-page .post-controls .offensive-flag {
+    display: none;
   }
 }
 /* language-specific fixes */
