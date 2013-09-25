@@ -67,4 +67,4 @@ def slugify(input_text, max_length=150):
             #apply the cut-off directly
             slug = slug[:max_length]
             break
-    return slug
+    return slug or '_'
