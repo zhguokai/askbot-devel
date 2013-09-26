@@ -14,9 +14,12 @@ from longerusername import MAX_USERNAME_LENGTH
 import logging
 import urllib
 
+def is_url(url):
+    return url.startswith('/') or url.startswith('http://') or url.startswith('https://')
+
 DEFAULT_NEXT = '/' + getattr(settings, 'ASKBOT_URL')
 def clean_next(next, default = None):
-    if next is None or not next.startswith('/'):
+    if next is None or not is_url(next):
         if default:
             return default
         else:
@@ -37,10 +40,11 @@ def get_next_url(request, default = None):
     feed = get_feed(request)
     if feed:
         #default to the space root url for now
-        return get_feed_url('questions', feed)
+        default_next_url = get_feed_url('questions', feed)
     else:
-        #otherwise use the old way of passing next url
-        return clean_next(request.REQUEST.get('next'), default)
+        default_next_url = None
+    #otherwise use the old way of passing next url
+    return clean_next(request.REQUEST.get('next'), default_next_url)
 
 def get_db_object_or_404(params):
     """a utility function that returns an object
