@@ -806,7 +806,7 @@ class PostPrivatelyForm(forms.Form, FormWithHideableFields):
     two related methods"""
 
     post_privately = forms.BooleanField(
-        label = _('keep private within your groups'),
+        label = _('keep private'),
         required = False
     )
     def __init__(self, *args, **kwargs):
