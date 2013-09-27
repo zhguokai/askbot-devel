@@ -325,7 +325,7 @@ def user_get_top_answers_paginator(self, visitor=None):
         'thread__deleted': False,
     }
     if askbot_settings.SPACES_ENABLED:
-        site_spaces = models.Space.objects.get_for_site()
+        site_spaces = Space.objects.get_for_site()
         answers_filter['thread__spaces__in'] = site_spaces
 
     answers = self.posts.get_answers(
