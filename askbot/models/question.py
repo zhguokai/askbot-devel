@@ -52,7 +52,7 @@ class ThreadQuerySet(models.query.QuerySet):
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
             from askbot.search.haystack.searchquery import AskbotSearchQuerySet
             hs_qs = AskbotSearchQuerySet().filter(content=search_query).models(self.model)
-            return hs_qs.get_django_queryset()
+            return self & hs_qs.get_django_queryset()
         else:
             db_engine_name = askbot.get_database_engine_name()
             filter_parameters = {'deleted': False}
