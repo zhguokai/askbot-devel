@@ -947,6 +947,7 @@ def finalize_generic_signin(
             #here we need to redirect to the full-page verion
             #of the registration page
             data = get_register_form_context(request)
+            close_modal_menu(request)
             return render(request, 'authopenid/complete_full.html', data)
         else:
             request.session['modal_menu'] = render_to_string(

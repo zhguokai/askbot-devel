@@ -37,7 +37,7 @@
         {% if 'modal_menu' in request.session %}
             {% set modal_is_open=True %}
             {{ request.session['modal_menu']|safe }}
-        {% elif request.user.is_anonymous() %}
+        {% elif settings.ASKBOT_CLOSED_FORUM_MODE==False and request.user.is_anonymous() %}
             {% include "authopenid/signin_modal.html" %}
         {% endif %}
         {% include "widgets/system_messages.html" %}
