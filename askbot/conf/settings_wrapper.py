@@ -20,6 +20,7 @@ at run time
 
 askbot.deps.livesettings is a module developed for satchmo project
 """
+from django.conf import settings as django_settings
 from django.core.cache import cache
 from django.contrib.sites.models import Site
 from askbot.deps.livesettings import SortedDotDict, config_register
@@ -110,22 +111,23 @@ class ConfigSettings(object):
             self.__group_map[key] = group_key
 
     def as_dict(self):
-        settings = cache.get('askbot-livesettings')
+        cache_key = 'askbot-livesettings-' + str(django_settings.SITE_ID)
+        settings = cache.get(cache_key)
         if settings:
             return settings
         else:
-            self.prime_cache()
-            return cache.get('askbot-livesettings')
+            self.prime_cache(cache_key)
+            return cache.get(cache_key)
 
     @classmethod
-    def prime_cache(cls, **kwargs):
+    def prime_cache(cls, cache_key, **kwargs):
         """reload all settings into cache as dictionary
         """
         out = dict()
         for key in cls.__instance.keys():
             #todo: this is odd that I could not use self.__instance.items() mapping here
             out[key] = cls.__instance[key].value
-        cache.set('askbot-livesettings', out)
+        cache.set(cache_key, out)
 
 
 signals.configuration_value_changed.connect(ConfigSettings.prime_cache)
