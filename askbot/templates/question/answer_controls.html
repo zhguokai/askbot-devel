@@ -1,5 +1,5 @@
 {#<span class="action-link swap-qa">
-    <a id="swap-question-with-answer-{{answer.id}}">{% trans %}swap with question{% endtrans %}</a>
+  <a id="swap-question-with-answer-{{answer.id}}">{% if settings.WORDS_SWAP_WITH_QUESTION %}{{ settings.WORDS_SWAP_WITH_QUESTION }}{% else %}{% trans %}swap with question{% endtrans %}{% endif %}</a>
 </span>uncomment if needed#}
 <span id='post-{{answer.id}}-edit' class="action-link">
     <a class="question-edit" href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a>
@@ -68,7 +68,7 @@
             <input 
                 type="submit"
                 class="link"
-                value="{% trans %}repost as a question comment{% endtrans %}"
+                value="{% if settings.WORDS_REPOST_AS_A_QUESTION_COMMENT %}{{ settings.WORDS_REPOST_AS_A_QUESTION_COMMENT }}{% else %}{% trans %}repost as a question comment{% endtrans %}{% endif %}"
             />
         </form>
     </li>

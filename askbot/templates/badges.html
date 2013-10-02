@@ -4,7 +4,11 @@
 {% block content %}
 <h1 class="section-title">{% trans %}Badges{% endtrans %}</h1>
 <p>
-{% trans %}Community gives you awards for your questions, answers and votes.{% endtrans %}<br/>
+{% if settings.WORDS_COMMUNITY_GIVES_YOU_AWARDS %}
+{{ settings.WORDS_COMMUNITY_GIVES_YOU_AWARDS }}
+{% else %}
+{% trans %}Community gives you awards for your questions, answers and votes.{% endtrans %}
+{% endif %}<br/>
 {% trans %}Below is the list of available badges and number of times each type of badge has been awarded.{% endtrans %}
 </p>
 <div id="medalList">

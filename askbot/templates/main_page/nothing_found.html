@@ -4,8 +4,8 @@
     {% trans %}There are no unanswered questions here{% endtrans %}
 {% endif %}
 {% if search_state.scope == "followed" %}
-    {% trans %}No questions here. {% endtrans %}
-    {% trans %}Please follow some questions or follow some users.{% endtrans %}
+    {% if settings.WORDS_NO_QUESTIONS_HERE %}{{ settings.WORDS_NO_QUESTIONS_HERE }}{% else %}{% trans %}No questions here. {% endtrans %}{% endif %}
+    {% if settings.WORDS_PLEASE_FOLLOW_QUESTIONS %}{{ settings.WORDS_PLEASE_FOLLOW_QUESTIONS }}{% else %}{% trans %}Please follow some questions or follow some users.{% endtrans %}{% endif %}
 {% endif %}
 </p>
 {% if search_state.query or search_state.tags or search_state.author %}
@@ -27,5 +27,5 @@
 </p>
 {% endif %}
 <p class="evenMore" style="text-align:center">
-<a href="{% url ask %}">{% trans %}Please always feel free to ask your question!{% endtrans %}</a>
+<a href="{% url ask %}">{% if settings.WORDS_PLEASE_FEEL_FREE_TO_ASK_YOUR_QUESTION %}{{ settings.WORDS_PLEASE_FEEL_FREE_TO_ASK_YOUR_QUESTION }}{% else %}{% trans %}Please always feel free to ask your question!{% endtrans %}{% endif %}</a>
 </p>

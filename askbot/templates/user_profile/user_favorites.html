@@ -1,7 +1,7 @@
 {% extends "user_profile/user.html" %}
 <!-- user_favorites.html -->
 {% block profilesection %}
-   {% trans %}followed questions{% endtrans %}
+  {% if settings.WORDS_FOLLOWED_QUESTIONS %}{{ settings.WORDS_FOLLOWED_QUESTIONS }}{% else %}{% trans %}followed questions{% endtrans %}{% endif %}
 {% endblock %}
 {% block usercontent %}
 {% include "user_profile/users_questions.html" %}

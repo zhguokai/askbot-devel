@@ -19,7 +19,11 @@
                         {% if answers %}
                             {% trans %}Your answer{% endtrans %}
                         {% else %}
+                            {% if settings.WORDS_BE_THE_FIRST_TO_ANSWER_THIS_QUESTION %}
+                            {{ settings.WORDS_BE_THE_FIRST_TO_ANSWER_THIS_QUESTION }}
+                            {% else %}
                             {% trans %}Be the first one to answer this question!{% endtrans %}
+                            {% endif %}
                         {% endif %}
                     </h2>
                 {% endspaceless %}

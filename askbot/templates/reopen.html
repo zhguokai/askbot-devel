@@ -1,9 +1,9 @@
 {% extends "two_column_body.html" %}
 {% from "macros.html" import timeago %}
 <!-- reopen.html -->
-{% block title %}{% spaceless %}{% trans %}Reopen question{% endtrans %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% if settings.WORDS_REOPEN_QUESTION %}{{ settings.WORDS_REOPEN_QUESTION }}{% else %}{% trans %}Reopen question{% endtrans %}{% endif %}{% endspaceless %}{% endblock %}
 {% block content %}
-<h1>{% trans %}Reopen question{% endtrans %}</h1>
+<h1>{% if settings.WORDS_REOPEN_QUESTION %}{{ settings.WORDS_REOPEN_QUESTION }}{% else %}{% trans %}Reopen question{% endtrans %}{% endif %}</h1>
 <p>{% trans %}Title{% endtrans %}: 
     <a href="{{ question.get_absolute_url() }}">
         <span class="big">{{ question.get_question_title()|escape }}</span>
@@ -20,7 +20,7 @@
     {% trans %}When:{% endtrans %} {{ timeago(question.thread.closed_at) }}
 </p>
 <p>
-    {% trans %}Reopen this question?{% endtrans %}
+    {% if settings.WORDS_REOPEN_QUESTION %}{{ settings.WORDS_REOPEN_QUESTION }}?{% else %}{% trans %}Reopen question{% endtrans %}{% endif %}
 </p>
 <form id="fmclose" action="{% url reopen question.id %}" method="post" >{% csrf_token %}
     <div id="" style="padding:20px 0 20px 0">

@@ -26,7 +26,7 @@
                         {% endif %}
                     {% endif %}
                 {% endif %}
-                <li>{% trans %}please, try to make your question interesting to this community{% endtrans %}</li>
+              <li>{% if settings.WORDS_TRY_TO_MAKE_YOUR_QUESTION_INTERESTING %}{{ settings.WORDS_TRY_TO_MAKE_YOUR_QUESTION_INTERESTING }}{% else %}{% trans %}please, try to make your question interesting to this community{% endtrans %}{% endif %}</li>
                 <li>{% trans %}provide enough details{% endtrans %}</li>
                 <li>{% trans %}be clear and concise{% endtrans %}</li>
             </ul>

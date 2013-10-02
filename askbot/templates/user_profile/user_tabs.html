@@ -7,7 +7,7 @@
         ><span>{% trans %}overview{% endtrans %}</span></a>
         {% if request.user == view_user or request.user|can_moderate_user(view_user) %}
         <a id="inbox" {% if tab_name=="inbox" %}class="on"{% endif %} 
-            title="{% trans %}comments and answers to others questions{% endtrans %}" 
+            title="{% if settings.WORDS_COMMENTS_AND_ANSWERS_TO_OTHERS_QUESTIONS %}{{ settings.WORDS_COMMENTS_AND_ANSWERS_TO_OTHERS_QUESTIONS }}{% else %}{% trans %}comments and answers to others questions{% endtrans %}{% endif %}" 
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=inbox"
         ><span>{% trans %}inbox{% endtrans %}</span></a>
         {% endif %}
@@ -24,9 +24,9 @@
         ><span>{% trans %}karma{% endtrans %}</span></a>
         {% endif %}
         <a id="favorites" {% if tab_name=="favorites" %}class="on"{% endif %} 
-            title="{% trans %}questions that user is following{% endtrans %}"
+            title="{% if settings.WORDS_QUESTIONS_THAT_USER_IS_FOLLOWING %}{{ settings.WORDS_QUESTIONS_THAT_USER_IS_FOLLOWING }}{% else %}{% trans %}questions that user is following{% endtrans %}{% endif %}"
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=favorites"
-        ><span>{% trans %}followed questions{% endtrans %}</span></a>
+        ><span>{% if settings.WORDS_FOLLOWED_QUESTIONS %}{{ settings.WORDS_FOLLOWED_QUESTIONS }}{% else %}{% trans %}followed questions{% endtrans %}{% endif %}</span></a>
         <a id="recent" {% if tab_name=="recent" %}class="on"{% endif %} 
             title="{% trans %}activity{% endtrans %}" 
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=recent"

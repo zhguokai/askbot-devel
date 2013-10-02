@@ -2,7 +2,7 @@
 <div id ="tips" class="box">
     <h2>{% trans %}Tips{% endtrans %}</h2>
     <ul>
-        <li> <b>{% trans %}ask a question interesting to this community{% endtrans %}</b>
+      <li> <b>{% if settings.WORDS_ASK_A_QUESTION_INTERESTING_TO_THIS_COMMUNITY %}{{ settings.WORDS_ASK_A_QUESTION_INTERESTING_TO_THIS_COMMUNITY }}{% else %}{% trans %}ask a question interesting to this community{% endtrans %}{% endif %}</b>
         </li>
         <li>
             {% trans %}provide enough details{% endtrans %}

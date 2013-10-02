@@ -23,7 +23,7 @@
                             {%- endtrans %}
                         {% endif %}
                     {% else %}
-                        {% trans %}Question :{% endtrans %}
+                      {% if settings.WORDS_QUESTION_SINGULAR %}{{ settings.WORDS_QUESTION_SINGULAR }}{% else %}{% trans %}Question :{% endtrans %}{% endif %}
                     {% endif %}
                     {{ post.thread.title }}
             </p>

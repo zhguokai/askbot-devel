@@ -1,6 +1,6 @@
 {% extends "one_column_body.html" %}
 <!-- template close.html -->
-{% block title %}{% spaceless %}{% trans %}Close question{% endtrans %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% if settings.WORDS_CLOSE_QUESTION %}{{ settings.WORDS_CLOSE_QUESTION }}{% else %}{% trans %}Close question{% endtrans %}{% endif %}{% endspaceless %}{% endblock %}
 {% block content %}
 <h1>{% trans %}Close question{% endtrans %}</h1>
     <p>{% trans %}Close the question{% endtrans %}: <a href="{{ question.get_absolute_url() }}">
