@@ -23,7 +23,7 @@ settings.register(
         default = EMAIL_SUBJECT_PREFIX,
         description = _('Prefix for the email subject line'),
         help_text = _(
-                'This setting takes default from the django setting'
+                'This setting takes default from the django setting '
                 'EMAIL_SUBJECT_PREFIX. A value entered here will override'
                 'the default.'
             )
