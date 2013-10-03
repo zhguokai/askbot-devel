@@ -476,9 +476,10 @@ def signin(request, template_name='authopenid/signin.html'):
                                     request.session['last_name'] = \
                                         user_info['last_name']
                                 else:
-                                    del request.session['username']
-                                    del request.session['first_name']
-                                    del request.session['last_name']
+                                    #clean up the session dict - we don't want these items to be there
+                                    request.session.pop('username', None)
+                                    request.session.pop('first_name', None)
+                                    request.session.pop('last_name', None)
                                 return finalize_generic_signin(
                                     request,
                                     login_provider_name = 'ldap',
