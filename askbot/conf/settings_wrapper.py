@@ -130,6 +130,11 @@ class ConfigSettings(object):
         cache.set(cache_key, out)
 
 
-signals.configuration_value_changed.connect(ConfigSettings.prime_cache)
+def prime_cache_handler():
+    """signal handler priming the livesettings cache"""
+    cache_key = 'askbot-livesettings-' + str(django_settings.SITE_ID)
+    ConfigSettings.prime_cache(cache_key)
+
+signals.configuration_value_changed.connect(prime_cache_handler)
 #settings instance to be used elsewhere in the project
 settings = ConfigSettings()
