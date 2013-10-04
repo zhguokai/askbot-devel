@@ -134,6 +134,7 @@ def record_post_update_celery_task(
         diff=None,
     ):
     #reconstitute objects from the database
+    logging.debug('recording post update for %d' % post_id)
     updated_by = User.objects.get(id=updated_by_id)
     post_content_type = ContentType.objects.get(id=post_content_type_id)
     post = post_content_type.get_object_for_this_type(id=post_id)
@@ -145,6 +146,8 @@ def record_post_update_celery_task(
                                 mentioned_users=newly_mentioned_users,
                                 exclude_list=[updated_by,]
                             )
+        recipient_emails = [user.email for user in notify_sets['for_email']]
+        logging.debug('will email to: ' + ', '.join(recipient_emails))
         #todo: take into account created == True case
         #update_object is not used
         (activity_type, update_object) = post.get_updated_activity_data(created)
