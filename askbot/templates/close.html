@@ -2,8 +2,8 @@
 <!-- template close.html -->
 {% block title %}{% spaceless %}{% if settings.WORDS_CLOSE_QUESTION %}{{ settings.WORDS_CLOSE_QUESTION }}{% else %}{% trans %}Close question{% endtrans %}{% endif %}{% endspaceless %}{% endblock %}
 {% block content %}
-<h1>{% trans %}Close question{% endtrans %}</h1>
-    <p>{% trans %}Close the question{% endtrans %}: <a href="{{ question.get_absolute_url() }}">
+<h1>{% if settings.WORDS_CLOSE_QUESTION %}{{ settings.WORDS_CLOSE_QUESTION }}{% else %}{% trans %}Close question{% endtrans %}{% endif %}</h1>
+    <p>{% if settings.WORDS_CLOSE_QUESTION %}{{ settings.WORDS_CLOSE_QUESTION }}{% else %}{% trans %}Close question{% endtrans %}{% endif %}: <a href="{{ question.get_absolute_url() }}">
     <strong>{{ question.get_question_title()|escape }}</strong></a>
     </p>
     <form id="fmclose" action="{% url close question.id %}" method="post" >{% csrf_token %}

@@ -24,7 +24,7 @@
         ><span>{% trans %}karma{% endtrans %}</span></a>
         {% endif %}
         <a id="favorites" {% if tab_name=="favorites" %}class="on"{% endif %} 
-            title="{% if settings.WORDS_QUESTIONS_THAT_USER_IS_FOLLOWING %}{{ settings.WORDS_QUESTIONS_THAT_USER_IS_FOLLOWING }}{% else %}{% trans %}questions that user is following{% endtrans %}{% endif %}"
+            title="{% if settings.WORDS_QUESTIONS_THAT_THE_USER_IS_FOLLOWING %}{{ settings.WORDS_QUESTIONS_THAT_THE_USER_IS_FOLLOWING }}{% else %}{% trans %}questions that user is following{% endtrans %}{% endif %}"
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=favorites"
         ><span>{% if settings.WORDS_FOLLOWED_QUESTIONS %}{{ settings.WORDS_FOLLOWED_QUESTIONS }}{% else %}{% trans %}followed questions{% endtrans %}{% endif %}</span></a>
         <a id="recent" {% if tab_name=="recent" %}class="on"{% endif %} 

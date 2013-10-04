@@ -78,7 +78,7 @@
         {% if shared_users_count or shared_groups_count %}
             <p 
                 style="margin:16px 0 4px 0"
-            >{% if settings.WORDS_THIS_QUESTION_IS_CURRENLTLY_SHARED_ONLY_WITH %}{{ settings.WORDS_THIS_QUESTION_IS_CURRENLTLY_SHARED_ONLY_WITH }}{% else %}{% trans %}This question is currently shared only with:{% endtrans %}{% endif %}</p>
+            >{% if settings.WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH %}{{ settings.WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH }}{% else %}{% trans %}This question is currently shared only with:{% endtrans %}{% endif %}</p>
         {% endif %}
         <h3>{% trans %}Individual users{% endtrans %}</h3>
             {% set comma = joiner(',') %}
