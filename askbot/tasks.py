@@ -19,7 +19,6 @@ That is the reason for having two types of methods here:
 """
 import sys
 import traceback
-import logging
 import uuid
 
 from django.contrib.contenttypes.models import ContentType
@@ -36,6 +35,12 @@ from askbot.models.badges import award_badges_signal
 from askbot.models import get_reply_to_addresses, format_instant_notification_email
 from askbot import exceptions as askbot_exceptions
 from askbot.utils.twitter import Twitter
+
+DEBUG_CELERY = False
+
+def debug(message):
+    if DEBUG_CELERY:
+        print >>sys.stderr, unicode(message).encode('utf-8')
 
 # TODO: Make exceptions raised inside record_post_update_celery_task() ...
 #       ... propagate upwards to test runner, if only CELERY_ALWAYS_EAGER = True
@@ -134,7 +139,7 @@ def record_post_update_celery_task(
         diff=None,
     ):
     #reconstitute objects from the database
-    logging.debug('recording post update for %d' % post_id)
+    debug('recording post update for %d' % post_id)
     updated_by = User.objects.get(id=updated_by_id)
     post_content_type = ContentType.objects.get(id=post_content_type_id)
     post = post_content_type.get_object_for_this_type(id=post_id)
@@ -147,7 +152,7 @@ def record_post_update_celery_task(
                                 exclude_list=[updated_by,]
                             )
         recipient_emails = [user.email for user in notify_sets['for_email']]
-        logging.debug('will email to: ' + ', '.join(recipient_emails))
+        debug('will email to: ' + ', '.join(recipient_emails))
         #todo: take into account created == True case
         #update_object is not used
         (activity_type, update_object) = post.get_updated_activity_data(created)
@@ -165,7 +170,7 @@ def record_post_update_celery_task(
         # HACK: exceptions from Celery job don't propagate upwards
         # to the Django test runner
         # so at least let's print tracebacks
-        print >>sys.stderr, unicode(traceback.format_exc()).encode('utf-8')
+        debug(traceback.format_exc())
         raise
 
 @task(ignore_result = True)
@@ -234,11 +239,10 @@ def send_instant_notifications_about_activity_in_post(
                             update_activity.activity_type
                         )
 
-    logger = logging.getLogger()
-    if logger.getEffectiveLevel() <= logging.DEBUG:
+    if DEBUG_CELERY:
         log_id = uuid.uuid1()
         message = 'email-alert %s, logId=%s' % (post.get_absolute_url(), log_id)
-        logger.debug(message)
+        debug(message)
     else:
         log_id = None
 
@@ -269,8 +273,6 @@ def send_instant_notifications_about_activity_in_post(
                 raise_on_failure=True
             )
         except askbot_exceptions.EmailNotSent, error:
-            logger.debug(
-                '%s, error=%s, logId=%s' % (user.email, error, log_id)
-            )
+            debug('%s, error=%s, logId=%s' % (user.email, error, log_id))
         else:
-            logger.debug('success %s, logId=%s' % (user.email, log_id))
+            debug('success %s, logId=%s' % (user.email, log_id))
