@@ -72,17 +72,16 @@ settings.register(
 settings.register(
     values.StringValue(
         VOCALBULARY,
-        'QUESTION_SINGULAR',
+        'WORDS_QUESTION_SINGULAR',
         default = '',
         description = _('question (singular)'),
-        help_text = _('Replace Questions word in the site, default text: "question"'),
     )
 )
 
 settings.register(
     values.StringValue(
         VOCALBULARY,
-        'QUESTION_PLURAL',
+        'WORDS_QUESTION_PLURAL',
         default = '',
         description = _('questions (plural)'),
         help_text = _('Replace Questions word in the site, default text: "questions"'),
@@ -365,5 +364,122 @@ settings.register(
         'WORDS_REOPEN_QUESTION',
         default = '',
         description = _('Phrase: Reopen question'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_THERE_ARE_NO_UNANSWERED_QUESTIONS_HERE',
+        default = '',
+        description = _('Phrase: There are no unanswered questions here'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_THIS_ANSWER_HAS_BEEN_SELECTED_AS_CORRECT',
+        default = '',
+        description = _('Phrase: this answer has been selected as correct'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_MARK_THIS_ANSWER_AS_CORRECT',
+        default = '',
+        description = _('Phrase: mark this answer as correct (click again to undo)'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_LOGIN_SIGNUP_TO_ANSWER',
+        default = '',
+        description = _('Phrase: Login/Signup to Answer'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_YOUR_ANSWER',
+        default = '',
+        description = _('Phrase: Your Answer'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_ADD_ANSWER',
+        default = '',
+        description = _('Phrase: Add Answer'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_GIVE_AN_ANSWER_INTERESTING_TO_THIS_COMMUNITY',
+        default = '',
+        description = _('Phrase: give an answer interesting to this community'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_TRY_TO_GIVE_AN_ANSWER',
+        default = '',
+        description = _('Phrase: try to give an answer, rather than engage into a discussion'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_SHOW_ONLY_SELECTED_ANSWERS_TO_ENQUIRERS',
+        default = '',
+        description = _('Phrase: show only selected answers to enquirers'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_UNANSWERED',
+        default = '',
+        description = _('Phrase: UNANSWERED'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_SEE_UNANSWERED',
+        default = '',
+        description = _('Phrase: see unanswered'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_EDIT_ANSWER',
+        default = '',
+        description = _('Phrase: Edit Answer'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        VOCALBULARY,
+        'WORDS_ANSWERED',
+        default = '',
+        description = _('Phrase: Answered'),
     )
 )

@@ -19,7 +19,7 @@
         {% if settings.UNANSWERED_SCOPE_ENABLED %}
         <a class="scope-selector {% if scope == 'unanswered' %}on{% endif %}"
             href="{{ search_state.change_scope('unanswered').change_sort('answers-asc').full_url() }}"
-            title="{% trans %}see unanswered{% endtrans %}">{% trans %}UNANSWERED{% endtrans %}</a>
+            title="{% if settings.WORDS_SEE_UNANSWERED %}{{ settings.WORDS_SEE_UNANSWERED }}{% else %}{% trans %}see unanswered{% endtrans %}{% endif %}">{% if settings.WORDS_UNANSWERED %}{{ settings.WORDS_UNANSWERED }}{% else %}{% trans %}UNANSWERED{% endtrans %}{% endif %}</a>
         {% endif %}
         {% if request.user.is_authenticated() and settings.FOLLOWED_SCOPE_ENABLED %} 
         <a class="scope-selector {% if scope == 'followed' %}on{% endif %}"

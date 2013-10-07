@@ -82,7 +82,7 @@
             <input 
                 type="submit"
                 class="link"
-                value="{% trans %}repost as a comment under the older answer{% endtrans %}"
+                value="{% if settings.WORDS_REPOST_AS_A_COMMENT_UNDER_THE_OLDER_ANSWER %}{{ settings.WORDS_REPOST_AS_A_COMMENT_UNDER_THE_OLDER_ANSWER }}{% else %}{% trans %}repost as a comment under the older answer{% endtrans %}{% endif %}"
             />
         </form>
     </li>

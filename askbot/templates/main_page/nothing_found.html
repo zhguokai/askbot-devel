@@ -1,7 +1,11 @@
 {# todo: add tips to widen selection #}
 <p class="evenMore" style="padding-top:30px;text-align:center;">
 {% if search_state.scope == "unanswered" %}
+    {% if settings.WORDS_THERE_ARE_NO_UNANSWERED_QUESTIONS_HERE %}
+    {{ settings.WORDS_THERE_ARE_NO_UNANSWERED_QUESTIONS_HERE }}
+    {% else %}
     {% trans %}There are no unanswered questions here{% endtrans %}
+    {% endif %}
 {% endif %}
 {% if search_state.scope == "followed" %}
     {% if settings.WORDS_NO_QUESTIONS_HERE %}{{ settings.WORDS_NO_QUESTIONS_HERE }}{% else %}{% trans %}No questions here. {% endtrans %}{% endif %}

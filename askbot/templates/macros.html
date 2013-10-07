@@ -90,7 +90,8 @@ poor design of the data or methods on data objects #}
            {%- if post.post_type == 'question' -%}
                 {%- trans %}asked{% endtrans %}
            {% elif post.post_type == 'answer' %}
-                {%- trans %}answered{% endtrans %}
+                {#{% if settings.WORDS_ANSWERED %}{{ settings.WORDS_ANSWERED }}{% else %}{% trans %}answered{% endtrans %}{% endif %}#}
+                {% trans %}answered{% endtrans %}}
            {% else %}
                 {%- trans %}posted{% endtrans %}
            {% endif %}
@@ -109,7 +110,8 @@ poor design of the data or methods on data objects #}
             {% if post.post_type == 'question' %}
                 {% trans %}asked{% endtrans %}
             {% elif post.post_type == 'answer' %}
-                {% trans %}answered{% endtrans %}
+                {#{% if settings.WORDS_ANSWERED %}{{ settings.WORDS_ANSWERED }}{% else %}{% trans %}answered{% endtrans %}{% endif %}#}
+                {% trans %}answered{% endtrans %}}
             {% else %}
                 {% trans %}posted{% endtrans %}
             {% endif %}

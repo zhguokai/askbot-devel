@@ -55,7 +55,11 @@
             data-toggle-url="{% url toggle_group_profile_property %}"
         />
         <label for="moderate-answers-to-enquirers">
+            {% if settings.WORDS_SHOW_ONLY_SELECTED_ANSWERS_TO_ENQUIRERS %}
+            {{ settings.WORDS_SHOW_ONLY_SELECTED_ANSWERS_TO_ENQUIRERS }}
+            {% else %}
             {% trans %}show only selected answers to enquirers{% endtrans %}
+            {% endif %}
         </label>
         <br/>
 
