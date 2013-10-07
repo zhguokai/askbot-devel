@@ -152,6 +152,5 @@ class AskbotSite(models.Model):
     def get_absolute_url(self):
         return self.protocol + '://' + self.domain + self.base_url
 """
-
 def get_feed_url(url_pattern_name, feed=None, kwargs=None):
     return Feed.objects.get_url(url_pattern_name, feed, kwargs)

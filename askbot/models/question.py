@@ -5,6 +5,7 @@ import re
 from django.conf import settings as django_settings
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 from django.core import exceptions as django_exceptions
 from django.template.loader import get_template
@@ -30,6 +31,7 @@ from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
+from askbot.utils.html import site_url
 from askbot.search import mysql
 from askbot.utils.slug import slugify
 from askbot.search.state_manager import DummySearchState
@@ -144,10 +146,17 @@ class ThreadManager(BaseQuerySetManager):
         ).create(
             title=title,
             tagnames=tagnames,
+            site=Site.objects.get_current(),
             last_activity_at=added_at,
             last_activity_by=author,
-            language_code=language
+            language_code=language,
         )
+
+        #adding thread to space
+        if not space:
+            space = Space.objects.get_default()
+
+        space.questions.add(thread)
 
         #todo: code below looks like ``Post.objects.create_new()``
         question = Post(
@@ -207,12 +216,6 @@ class ThreadManager(BaseQuerySetManager):
             diff=parse_results['diff'],
             sender=question.__class__
         )
-
-        #adding thread to space
-        if not space:
-            space = Space.objects.get_default()
-
-        space.questions.add(thread)
 
         return thread
 
@@ -563,6 +566,7 @@ class Thread(models.Model):
 
     tags = models.ManyToManyField('Tag', related_name='threads')
     groups = models.ManyToManyField(Group, through=ThreadToGroup, related_name='group_threads')
+    site = models.ForeignKey(Site, null=True, blank=True)
 
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)
@@ -679,8 +683,16 @@ class Thread(models.Model):
         )
 
 
-    def get_absolute_url(self):
-        return self._question_post().get_absolute_url(thread = self)
+    def get_absolute_url(self, as_full_url=False):
+        url = self._question_post().get_absolute_url(thread = self)
+        if as_full_url:
+            if askbot.is_multisite():
+                protocol = askbot.get_site_protocol(self.site)
+                domain = self.site.domain
+                url = protocol + domain + url
+            else:
+                url = site_url(url)
+        return url
         #question_id = self._question_post().id
         #return reverse('question', args = [question_id]) + slugify(self.title)
 

@@ -409,7 +409,8 @@ class Post(models.Model):
         """a naive tweet representation of post
         todo: add mentions to relevant people
         """
-        url = site_url(self.get_absolute_url(no_slug=True))
+        domain = self.thread.site.domain
+        url = domain + self.get_absolute_url(no_slug=True)
         if self.post_type == 'question':
             tweet = _('Question: ')
         elif self.post_type == 'answer':
@@ -788,7 +789,8 @@ class Post(models.Model):
 
     def get_absolute_url(self,
             feed=None, no_slug = False,
-            question_post=None, thread=None
+            question_post=None, thread=None,
+            as_full_url=False
         ):
         from askbot.utils.slug import slugify
         #todo: the url generation function is pretty bad -
@@ -845,6 +847,15 @@ class Post(models.Model):
 
         if is_multilingual:
             activate_language(request_language)
+
+        if as_full_url:
+            if askbot.is_multisite():
+                thread = thread or self.thread
+                domain = thread.site.domain
+                protocol = askbot.get_site_protocol(thread.site)
+                url = protocol + domain + url
+            else:
+                url = site_url(url)
 
         return url
 
@@ -937,7 +948,7 @@ class Post(models.Model):
         if askbot_settings.SPACES_ENABLED is False:
             return filtered_candidates
 
-        if getattr(django_settings, 'ASKBOT_SITE_IDS', None):
+        if askbot.is_multisite():
             #filter out recipients who don't belong to sites where
             #this post is made
             double_filtered_candidates = set()

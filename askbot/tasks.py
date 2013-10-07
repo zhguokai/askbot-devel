@@ -36,7 +36,7 @@ from askbot.models import get_reply_to_addresses, format_instant_notification_em
 from askbot import exceptions as askbot_exceptions
 from askbot.utils.twitter import Twitter
 
-DEBUG_CELERY = False
+DEBUG_CELERY = True
 
 def debug(message):
     if DEBUG_CELERY:
@@ -245,7 +245,6 @@ def send_instant_notifications_about_activity_in_post(
         debug(message)
     else:
         log_id = None
-
 
     for user in recipients:
         if user.is_blocked():

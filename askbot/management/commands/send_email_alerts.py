@@ -16,7 +16,6 @@ from django.contrib.contenttypes.models import ContentType
 from askbot import const
 from askbot import mail
 from askbot.utils.slug import slugify
-from askbot.utils.html import site_url
 
 DEBUG_THIS_COMMAND = False
 
@@ -459,7 +458,7 @@ class Command(NoArgsCommand):
                         format_action_count('%(num)d ans', meta_data['new_ans'], act_list)
                         format_action_count('%(num)d ans rev', meta_data['ans_rev'], act_list)
                         questions_data.append({
-                            'url': site_url(q.get_absolute_url()),
+                            'url': q.get_absolute_url(as_full_url=True),
                             'info': ', '.join(act_list),
                             'title': q.thread.title
                         })

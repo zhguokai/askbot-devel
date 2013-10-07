@@ -62,6 +62,20 @@ def get_install_directory():
     return os.path.dirname(__file__)
 
 
+def get_site_protocol(site):
+    from django.conf import settings as django_settings
+    return django_settings.ASKBOT_SITE_PROTOCOLS[site.id]
+
+
+def is_multisite():
+    from django.conf import settings as django_settings
+    site_ids = getattr(django_settings, 'ASKBOT_SITE_IDS', None)
+    if site_ids is None:
+        return False
+    else:
+        return len(site_ids) > 1
+
+
 def get_path_to(relative_path):
     """returns absolute path to a file
     relative to ``askbot`` directory

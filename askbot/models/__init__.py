@@ -3220,7 +3220,7 @@ def format_instant_notification_email(
     else:
         raise ValueError('unrecognized post type')
 
-    post_url = post.get_absolute_url()
+    post_url = post.get_absolute_url(as_full_url=True)
     user_url = from_user.get_absolute_url()
     user_action = user_action % {
         'user': '<a href="%s">%s</a>' % (user_url, from_user.username),
