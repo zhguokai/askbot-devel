@@ -287,6 +287,19 @@ var setCheckBoxesIn = function(selector, value){
     return $(selector + '> input[type=checkbox]').attr('checked', value);
 };
 
+var removeModalMenu = function() {
+    $('.modal').remove();
+    $('.modal-backdrop').remove();
+};
+
+var setModalMenuHtml = function(html) {
+    removeModalMenu();
+    var div = $('<div></div>');
+    div.html(html);
+    $('body').append(div);
+};
+
+
 /*
  * Old style notify handler
  */
@@ -1331,7 +1344,13 @@ LoginOrRegisterForm.prototype.setParent = function(parentMenu) {
  * menu object itself.
  */
 LoginOrRegisterForm.prototype.closeModalMenu = function() {
-    this._parent.closeModalMenu();
+    if (this._parent) {
+        this._parent.closeModalMenu();
+    } else {
+        $('.modal').modal('hide');
+        $('.modal').hide();
+        $('.modal-backdrop').hide();
+    }
 };
 
 
@@ -1527,14 +1546,44 @@ var CompleteRegistrationForm = function() {
 };
 inherits(CompleteRegistrationForm, LoginOrRegisterForm);
 
+CompleteRegistrationForm.prototype.handleSuccess = function(data) {
+    CompleteRegistrationForm.superClass_.handleSuccess.call(this, data);
+    this.dispose();
+}
+
+CompleteRegistrationForm.prototype.dispose = function() {
+    $('.modal .close').unbind('click');
+    this.closeModalMenu();
+    this._element.remove();
+};
+
+CompleteRegistrationForm.prototype.restoreLoginMenu = function() {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: askbot['urls']['getLoginMenuHtml'],
+        success: function(data) {
+            if (data['success']) {
+                setModalMenuHtml(data['loginMenuHtml']);
+                var loginElement = $('#userToolsNav .login');
+                removeButtonEventHandlers(loginElement);
+                var loginLink = new LoginLink();
+                loginLink.decorate(loginElement);
+            }
+        }
+    });
+    return false;
+};
+
 CompleteRegistrationForm.prototype.decorate = function(element) {
     CompleteRegistrationForm.superClass_.decorate.call(this, element);
     //a hack that makes registration menu closable
     var me = this;
     $('#id_username').focus();
     $('.modal .close').click(function() {
-        me.closeModalMenu();
+        //todo - if not logged in - reinstall the login link
         me.dispose();
+        me.restoreLoginMenu();
     });
     //todo: move this to the html template
     var modal = $('.modal');
@@ -2701,12 +2750,6 @@ LogoutLink.prototype.setUserToolsNavHtml = function(html) {
     nav.html(html);
 };
 
-LogoutLink.prototype.setLoginMenuHtml = function(html) {
-    var div = this.makeElement('div');
-    div.html(html);
-    $('body').append(div);
-};
-
 LogoutLink.prototype.activateLoginLink = function() {
     var nav = $('#userToolsNav');
     var loginLink = new LoginLink();
@@ -2730,7 +2773,7 @@ LogoutLink.prototype.getLogoutHandler = function() {
                     }
                     //otherwise - repaint the login link and the login menu
                     me.setUserToolsNavHtml(data['userToolsNavHtml']);
-                    me.setLoginMenuHtml(data['loginMenuHtml']);
+                    setModalMenuHtml(data['loginMenuHtml']);
                     //NOTE: no need to do below as dialog is inited on login link click
                     //var loginDialog = new LoginDialog();
                     //loginDialog.decorate($('.modal'));

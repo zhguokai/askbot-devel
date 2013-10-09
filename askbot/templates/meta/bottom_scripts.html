@@ -24,6 +24,7 @@
     askbot['urls']['getEditor'] = '{% url "get_editor" %}';
     askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
     askbot['urls']['validateEmail'] = '{% url "validate_email" %}';
+    askbot['urls']['getLoginMenuHtml'] = '{% url "get_login_menu_html" %}';
     askbot['settings']['csrfCookieName'] = '{{ settings.CSRF_COOKIE_NAME }}';
     {% set search_state=search_state or dummy_search_state %}
     askbot['urls']['ask'] = '{{ search_state.full_ask_url() }}';

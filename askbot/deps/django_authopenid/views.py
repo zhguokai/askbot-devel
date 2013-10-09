@@ -1179,6 +1179,15 @@ def ajax_signout(request):
         'loginMenuHtml': loginMenuHtml
     }
 
+@csrf.csrf_protect
+@ajax_only
+def get_login_menu_html(request):
+    loginMenuHtml = render_to_string(
+                        request,
+                        'authopenid/signin_modal.html',
+                        get_signin_view_context(request)
+                    )
+    return {'loginMenuHtml': loginMenuHtml}
 
 @login_required
 def signout(request):
