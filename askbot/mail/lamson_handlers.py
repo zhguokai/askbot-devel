@@ -205,7 +205,11 @@ def ASK(message, host = None, addr = None):
     body_text, stored_files, unused = mail.process_parts(parts)
     if addr == 'ask':
         mail.process_emailed_question(
-            from_address, subject, body_text, stored_files
+            from_address,
+            subject,
+            body_text,
+            stored_files,
+            email_host=host
         )
     else:
         #this is the Ask the group branch
