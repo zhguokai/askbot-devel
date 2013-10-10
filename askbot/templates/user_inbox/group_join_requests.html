@@ -5,11 +5,11 @@
 {% endblock %}
 {% block inbox_content %}
     <table>
-    {% for join_request in join_requests %}
+    {% for membership in pending_group_memberships %}
         <tr>
             <td>{% trans 
-                    user=join_request.user,
-                    group=groups_dict[join_request.object_id].name
+                    user=membership.user,
+                    group=membership.group.name
                 %}{{ user }} wants to join group {{ group }}{% endtrans %}
             </td>
             <td>{# forms with accept and reject buttons #}
@@ -18,7 +18,7 @@
                     <input 
                         type="hidden"
                         name="request_id"
-                        value="{{join_request.id}}"
+                        value="{{ membership.id }}"
                     />
                     <input type="hidden" name="action" value="approve"/>
                     <input
@@ -33,7 +33,7 @@
                     <input 
                         type="hidden"
                         name="request_id"
-                        value="{{join_request.id}}"
+                        value="{{ membership.id }}"
                     />
                     <input type="hidden" name="action" value="deny"/>
                     <input

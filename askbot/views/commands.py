@@ -1456,14 +1456,11 @@ def moderate_group_join_request(request):
     action = request.POST['action']
     assert(action in ('approve', 'deny'))
 
-    activity = get_object_or_404(models.Activity, pk=request_id)
-    group = activity.content_object
-    applicant = activity.user
+    group_membership = get_object_or_404(models.GroupMembership, pk=request_id)
+    group = models.Group.objects.get(pk=group_membership.group.id)
+    applicant = group_membership.user
 
     if group.has_moderator(request.user):
-        group_membership = models.GroupMembership.objects.get(
-                                            user=applicant, group=group
-                                        )
         if action == 'approve':
             group_membership.level = models.GroupMembership.FULL
             group_membership.save()
@@ -1473,7 +1470,6 @@ def moderate_group_join_request(request):
         else:
             group_membership.delete()
 
-        activity.delete()
         url = request.user.get_absolute_url() + '?sort=inbox&section=join_requests'
         return HttpResponseRedirect(url)
     else:

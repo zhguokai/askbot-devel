@@ -683,17 +683,11 @@ def show_group_join_requests(request, user, context):
 
     #get group to which user belongs
     groups = request.user.get_groups()
-    #construct a dictionary group id --> group object
-    #to avoid loading group via activity content object
-    groups_dict = dict([(group.id, group) for group in groups])
-
     #get join requests for those groups
-    group_content_type = ContentType.objects.get_for_model(models.Group)
-    join_requests = models.Activity.objects.filter(
-                        activity_type=const.TYPE_ACTIVITY_ASK_TO_JOIN_GROUP,
-                        content_type=group_content_type,
-                        object_id__in=groups_dict.keys()
-                    ).order_by('-active_at')
+    pending_group_memberships = models.GroupMembership.objects.filter(
+                                            group__in=groups,
+                                            level=models.GroupMembership.PENDING
+                                        ).order_by('-id')
     data = {
         'active_tab':'users',
         'inbox_section': 'group-join-requests',
@@ -701,8 +695,7 @@ def show_group_join_requests(request, user, context):
         'tab_name' : 'join_requests',
         'tab_description' : _('group joining requests'),
         'page_title' : _('profile - moderation'),
-        'groups_dict': groups_dict,
-        'join_requests': join_requests
+        'pending_group_memberships': pending_group_memberships
     }
     context.update(data)
     return render(request, 'user_inbox/group_join_requests.html', context)
