@@ -214,8 +214,12 @@ def ASK(message, host = None, addr = None):
         try:
             group = Group.objects.get(name__iexact=addr)
             mail.process_emailed_question(
-                from_address, subject, body_text, stored_files,
-                group_id = group.id
+                from_address,
+                subject,
+                body_text,
+                stored_files,
+                group_id=group.id,
+                email_host=host
             )
         except Group.DoesNotExist:
             #do nothing because this handler will match all emails

@@ -1076,6 +1076,7 @@ class AskByEmailForm(forms.Form):
             'required': ASK_BY_EMAIL_SUBJECT_HELP
         }
     )
+    email_host = forms.CharField()
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -1131,6 +1132,30 @@ class AskByEmailForm(forms.Form):
         else:
             raise forms.ValidationError(ASK_BY_EMAIL_SUBJECT_HELP)
         return self.cleaned_data['subject']
+
+    def clean_space(self):
+        """this is not a real clean code as we don't have field for space
+        in this form, it is called from the general "clean" method
+        """
+        #todo: replace this with "askbot.is_multisite()"
+        if hasattr(django_settings, 'ASKBOT_SITE_IDS'):
+            from askbot.models import Feed
+            from django.contrib.sites.models import Site
+            email_domain = self.cleaned_data['email_domain']
+            try:
+                current_site = Site.objects.get(domain=email_domain)
+            except Site.DoesNotExist:
+                raise forms.ValidationError('Unknown domain name %s' % email_domain)
+            #todo!!! should be Site.--> default feed here we cheat - only one feed works
+            feed = Feed.objects.filter(site=current_site)[0]
+            return feed.default_space
+        else:
+            from askbot.models import Space
+            return Space.objects.get_default()
+
+    def clean(self):
+        self.cleaned_data['space'] = self.clean_space()
+        return self.cleaned_data
 
 
 class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):

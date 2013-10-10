@@ -17,6 +17,7 @@ from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
 from askbot.utils.html import absolutize_urls
 from bs4 import BeautifulSoup
+from django.contrib.sites.models import Site
 from django.core import mail
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -392,7 +393,7 @@ def process_parts(parts, reply_code=None, from_address=None):
 
 def process_emailed_question(
     from_address, subject, body_text, stored_files,
-    tags=None, group_id=None
+    tags=None, group_id=None, email_host=None
 ):
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
@@ -406,7 +407,8 @@ def process_emailed_question(
         data = {
             'sender': from_address,
             'subject': subject,
-            'body_text': body_text
+            'body_text': body_text,
+            'email_host': email_host
         }
         user = User.objects.get(email__iexact=from_address)
         form = AskByEmailForm(data, user=user)
@@ -446,20 +448,19 @@ def process_emailed_question(
                 raise PermissionDenied(message)
 
             tagnames = form.cleaned_data['tagnames']
-            title = form.cleaned_data['title']
 
             #defect - here we might get "too many tags" issue
             if tags:
                 tagnames += ' ' + ' '.join(tags)
 
-
             user.post_question(
-                title=title,
+                title=form.cleaned_data['title'],
                 tags=tagnames.strip(),
+                space=form.cleaned_data['space'],
                 body_text=stripped_body_text,
                 by_email=True,
                 email_address=from_address,
-                group_id=group_id
+                group_id=group_id,
             )
         else:
             raise ValidationError()
