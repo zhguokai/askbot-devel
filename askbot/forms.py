@@ -1141,11 +1141,11 @@ class AskByEmailForm(forms.Form):
         if hasattr(django_settings, 'ASKBOT_SITE_IDS'):
             from askbot.models import Feed
             from django.contrib.sites.models import Site
-            email_domain = self.cleaned_data['email_domain']
+            email_host = self.cleaned_data['email_host']
             try:
-                current_site = Site.objects.get(domain=email_domain)
+                current_site = Site.objects.get(domain=email_host)
             except Site.DoesNotExist:
-                raise forms.ValidationError('Unknown domain name %s' % email_domain)
+                raise forms.ValidationError('Unknown domain name %s' % email_host)
             #todo!!! should be Site.--> default feed here we cheat - only one feed works
             feed = Feed.objects.filter(site=current_site)[0]
             return feed.default_space
