@@ -49,6 +49,7 @@ Programming, bug fixes and documentation
 * `Kevin Porterfield <http://www.shotgunsoftware.com>_`
 * `Robert Martin <https://github.com/bobbydavid>_`
 * `Director <http://codeflow.co.kr>`_
+* `Stéphane Klein <http://stephane-klein.info>`_
 
 Translations
 ------------
