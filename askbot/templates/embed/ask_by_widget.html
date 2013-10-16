@@ -167,7 +167,7 @@
 <div class="title">{{widget.title}}</div>
 <form action="." method="POST" accept-charset="utf-8">
   {% csrf_token %}
-  <label>{% if settings.WORDS_PLEASE_ENTER_YOUR_QUESTION %}{{ settings.WORDS_PLEASE_ENTER_YOUR_QUESTION }}{% else %}{%trans%}Please enter your question{%endtrans%}{% endif %}</label>
+  <label>{{ settings.WORDS_PLEASE_ENTER_YOUR_QUESTION|escape }}</label>
   <div class="input-title">
     {{form.title}}
   </div>
@@ -195,7 +195,7 @@
   {% if form.ask_anonymously %}
     <p>{{form.ask_anonymously.label_tag()}}: {{form.ask_anonymously}}</p>
   {%endif%}
-<input type="submit" value="{% if settings.WORDS_ASK_YOUR_QUESTION %}{{ settings.WORDS_ASK_YOUR_QUESTION }}{% else %}{% trans %}Ask your question{% endtrans%}{% endif %}" id="submit" />
+  <input type="submit" value="{{ settings.WORDS_ASK_YOUR_QUESTION|escape }}" id="submit" />
 </form>
 {%endblock%}
 {% block endjs %}

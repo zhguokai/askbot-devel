@@ -1,9 +1,9 @@
 {% extends "two_column_body.html" %}
 {% from "macros.html" import timeago %}
 <!-- reopen.html -->
-{% block title %}{% spaceless %}{% if settings.WORDS_REOPEN_QUESTION %}{{ settings.WORDS_REOPEN_QUESTION }}{% else %}{% trans %}Reopen question{% endtrans %}{% endif %}{% endspaceless %}{% endblock %}
+{% block title %}{{ settings.WORDS_REOPEN_QUESTION|escape }}{% endblock %}
 {% block content %}
-<h1>{% if settings.WORDS_REOPEN_QUESTION %}{{ settings.WORDS_REOPEN_QUESTION }}{% else %}{% trans %}Reopen question{% endtrans %}{% endif %}</h1>
+<h1>{{ settings.WORDS_REOPEN_QUESTION|escape }}</h1>
 <p>{% trans %}Title{% endtrans %}: 
     <a href="{{ question.get_absolute_url() }}">
         <span class="big">{{ question.get_question_title()|escape }}</span>
@@ -19,13 +19,10 @@
 <p>
     {% trans %}When:{% endtrans %} {{ timeago(question.thread.closed_at) }}
 </p>
-<p>
-    {% if settings.WORDS_REOPEN_QUESTION %}{{ settings.WORDS_REOPEN_QUESTION }}?{% else %}{% trans %}Reopen question{% endtrans %}{% endif %}
-</p>
+<p>{{ settings.WORDS_REOPEN_QUESTION|escape }}?</p>
 <form id="fmclose" action="{% url reopen question.id %}" method="post" >{% csrf_token %}
     <div id="" style="padding:20px 0 20px 0">
-        <input type="submit" value="{% if settings.WORDS_REOPEN_QUESTION %}{{ settings.WORDS_REOPEN_QUESTION }}?{% else %}{% trans %}Reopen question{% endtrans %}{% endif %}
-" class="submit" />&nbsp;
+        <input type="submit" value="{{ settings.WORDS_REOPEN_QUESTION|escape }}" class="submit" />&nbsp;
         <input id="btBack" type="button" value="{% trans %}Cancel{% endtrans %}"  class="submit"  />
     </div>
 </form>

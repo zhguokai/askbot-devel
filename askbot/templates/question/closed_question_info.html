@@ -1,6 +1,6 @@
 <div class="question-status">
-    <h3>{% if settings.WORDS_THE_QUESTION_HAS_BEEN_CLOSED_FOR_THE_FOLLOWING_REASON %}
-      {{ settings.WORDS_THE_QUESTION_HAS_BEEN_CLOSED_FOR_THE_FOLLOWING_REASON }} <b>{{ thread.get_close_reason_display() }}</b> {% trans %}by{% endtrans %}
+    <h3>{% trans %}Closed for the following reason{% endtrans %}
+      <b>{{ thread.get_close_reason_display() }}</b> {% trans %}by{% endtrans %}
       {% else %}
       {% trans close_reason=thread.get_close_reason_display() %}The question has been closed for the following reason <b>"{{ close_reason }}"</b> <i>by{% endtrans %}
       {% endif %}

@@ -5,7 +5,7 @@
 </div>
 {% endif %}
 <div class="box vote-buttons">
-  <h2 >{% if settings.WORDS_QUESTION_TOOLS %}{{ settings.WORDS_QUESTION_TOOLS }}{% else %}{% trans %}Question tools{% endtrans %}{% endif %}</h2>
+  <h2>{{ settings.WORDS_QUESTION_TOOLS|escape }}</h2>
     {% if favorited %}
         <a class="button followed" 
             alt="{% trans %}click to unfollow {% endtrans %}">
@@ -42,8 +42,7 @@
 <div class="box sharing-widget">
     {% if thread.is_private() %}
         <h2>{% trans %}Invite{% endtrans %}</h2>
-        <p style="margin: 16px 0"
-        >{% if settings.WORDS_INVITE_OTHERS_TO_HELP_ANSWER_THIS_QUESTION %}{{ settings.WORDS_INVITE_OTHERS_TO_HELP_ANSWER_THIS_QUESTION }}{% else %}{% trans %}Invite others to help answer this question{% endtrans %}{% endif %}</p>
+        <p style="margin: 16px 0">{{ settings.WORDS_INVITE_OTHERS_TO_HELP_ANSWER_THIS_QUESTION|escape }}</p>
         <form action="{% url share_question_with_user %}" method="post">{% csrf_token %}
             <input id="share_user_name" type="text" class="groups-input" name="recipient_name" />
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
@@ -78,7 +77,7 @@
         {% if shared_users_count or shared_groups_count %}
             <p 
                 style="margin:16px 0 4px 0"
-            >{% if settings.WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH %}{{ settings.WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH }}{% else %}{% trans %}This question is currently shared only with:{% endtrans %}{% endif %}</p>
+            >{{ settings.WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH|escape }}</p>
         {% endif %}
         <h3>{% trans %}Individual users{% endtrans %}</h3>
             {% set comma = joiner(',') %}
@@ -148,7 +147,7 @@
 {% if similar_threads.data() and settings.SIDEBAR_QUESTION_SHOW_RELATED %}
     {#% cache 1800 "related_questions" related_questions question.id language_code %#}
     <div class="box">
-      <h2>{% if settings.WORDS_RELATED_QUESTIONS %}{{ settings.WORDS_RELATED_QUESTIONS }}{% else %}{% trans %}Related questions{% endtrans %}{% endif %}</h2>
+      <h2>{{ settings.WORDS_RELATED_QUESTIONS|escape }}</h2>
         <div class="questions-related">
             {% for thread_dict in similar_threads.data() %}
             <p>

@@ -55,11 +55,7 @@
             data-toggle-url="{% url toggle_group_profile_property %}"
         />
         <label for="moderate-answers-to-enquirers">
-            {% if settings.WORDS_SHOW_ONLY_SELECTED_ANSWERS_TO_ENQUIRERS %}
-            {{ settings.WORDS_SHOW_ONLY_SELECTED_ANSWERS_TO_ENQUIRERS }}
-            {% else %}
-            {% trans %}show only selected answers to enquirers{% endtrans %}
-            {% endif %}
+            {{ settings.WORDS_SHOW_ONLY_SELECTED_ANSWERS_TO_ENQUIRERS|escape }}
         </label>
         <br/>
 
@@ -103,7 +99,6 @@
         <br/>
         <a 
             id="preapproved-emails"
-            title="{% trans %}list of email addresses of pre-approved users{% endtrans %}"
             data-object-id="{{group.group_ptr_id}}"
             data-model-name="Group"
             data-property-name="preapproved_emails"
@@ -114,7 +109,6 @@
         <br/>
         <a 
             id="preapproved-email-domains"
-            title="{% trans %}list of preapproved email address domain names{% endtrans %}"
             data-object-id="{{group.group_ptr_id}}"
             data-model-name="Group"
             data-property-name="preapproved_email_domains"

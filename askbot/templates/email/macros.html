@@ -1,8 +1,8 @@
 {% macro quoted_post(
-        post = None,
-        quote_level = 0,
-        format = None,
-        is_leaf_post = False
+        post=None,
+        quote_level=0,
+        format=None,
+        is_leaf_post=False
     )
 %}
     {% spaceless %}
@@ -23,7 +23,7 @@
                             {%- endtrans %}
                         {% endif %}
                     {% else %}
-                      {% if settings.WORDS_QUESTION_SINGULAR %}{{ settings.WORDS_QUESTION_SINGULAR }}{% else %}{% trans %}Question :{% endtrans %}{% endif %}
+                        {{ settings.WORDS_QUESTION_SINGULAR|title|escape }} :
                     {% endif %}
                     {{ post.thread.title }}
             </p>

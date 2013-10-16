@@ -203,7 +203,6 @@ class PageLoadTestCase(AskbotTestCase):
         """test all reader views thoroughly
         on non-crashiness (no correcteness tests here)
         """
-
         self.try_url('sitemap')
         self.try_url(
             'get_groups_list',

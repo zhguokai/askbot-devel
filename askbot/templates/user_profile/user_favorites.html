@@ -1,8 +1,6 @@
 {% extends "user_profile/user.html" %}
 <!-- user_favorites.html -->
-{% block profilesection %}
-  {% if settings.WORDS_FOLLOWED_QUESTIONS %}{{ settings.WORDS_FOLLOWED_QUESTIONS }}{% else %}{% trans %}followed questions{% endtrans %}{% endif %}
-{% endblock %}
+{% block profilesection %}{{ settings.WORDS_FOLLOWED_QUESTIONS|escape }}{% endblock %}
 {% block usercontent %}
 {% include "user_profile/users_questions.html" %}
 {% endblock %}

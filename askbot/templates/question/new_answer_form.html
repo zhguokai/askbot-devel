@@ -9,7 +9,7 @@
             <a
                     class="button submit"
                     href="{{settings.LOGIN_URL}}?next={% url question question.id %}"
-                    >{% if settings.WORDS_LOGIN_SIGNUP_TO_ANSWER %}{{ settings.WORDS_LOGIN_SIGNUP_TO_ANSWER }}{% else %}{% trans %}Login/Signup to Answer{% endtrans %}{% endif %}</a>
+                    >{{ settings.WORDS_LOGIN_SIGNUP_TO_ANSWER|escape }}</a>
         {% endif %}
     {% else %}
         {% if not thread.closed %}
@@ -17,13 +17,9 @@
                 {% spaceless %}
                     <h2>
                         {% if answers %}
-                            {% if settings.WORDS_YOUR_ANSWER %}{{ settings.WORDS_YOUR_ANSWER }}{% else %}{% trans %}Your answer{% endtrans %}{% endif %}
+                            {{ settings.WORDS_YOUR_ANSWER|escape }}
                         {% else %}
-                            {% if settings.WORDS_BE_THE_FIRST_TO_ANSWER_THIS_QUESTION %}
-                            {{ settings.WORDS_BE_THE_FIRST_TO_ANSWER_THIS_QUESTION }}
-                            {% else %}
-                            {% trans %}Be the first one to answer this question!{% endtrans %}
-                            {% endif %}
+                            {{ settings.WORDS_BE_THE_FIRST_TO_ANSWER_THIS_QUESTION|escape }}
                         {% endif %}
                     </h2>
                 {% endspaceless %}
@@ -40,7 +36,7 @@
                 </p>
             {% endif %}
             <div class="folded-editor{% if editor_is_unfolded %}unfolded{% endif %}" tabindex="6">
-              <p class="prompt"><a>{% if settings.WORDS_ADD_ANSWER %}{{ settings.WORDS_ADD_ANSWER }}{% else %}{% trans %}Add answer{% endtrans %}{% endif %}</a></p>
+              <p class="prompt"><a>{{ settings.WORDS_ADD_ANSWER|escape }}</a></p>
                 <div class="editor-proper">
                     {{ macros.edit_post(
                             answer,

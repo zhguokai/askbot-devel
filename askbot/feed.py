@@ -32,7 +32,7 @@ class RssIndividualQuestionFeed(Feed):
 
     def title(self):
         return askbot_settings.APP_TITLE + _(' - ') + \
-                _('Individual question feed')
+                _('Individual %(question)s feed') % askbot_settings.WORDS_QUESTION_SINGULAR
 
     def feed_copyright(self):
         return askbot_settings.APP_COPYRIGHT
@@ -106,7 +106,7 @@ class RssLastestQuestionsFeed(Feed):
 
     def title(self):
         return askbot_settings.APP_TITLE + _(' - ') + \
-                _('Latest question feed')
+                _('Latest %(question)s feed') % {'question': askbot_settings.WORDS_QUESTION_SINGULAR}
 
     def feed_copyright(self):
         return askbot_settings.APP_COPYRIGHT

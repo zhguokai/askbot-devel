@@ -93,24 +93,35 @@ class ConfigSettings(object):
             self.__group_map[key] = group_key
 
     def as_dict(self):
-        settings = cache.get('askbot-livesettings')
+        cache_key = get_bulk_cache_key()
+        settings = cache.get(cache_key)
         if settings:
             return settings
         else:
-            self.prime_cache()
-            return cache.get('askbot-livesettings')
+            self.prime_cache(cache_key)
+            return cache.get(cache_key)
 
     @classmethod
-    def prime_cache(cls, **kwargs):
+    def prime_cache(cls, cache_key, **kwargs):
         """reload all settings into cache as dictionary
         """
         out = dict()
         for key in cls.__instance.keys():
             #todo: this is odd that I could not use self.__instance.items() mapping here
             out[key] = cls.__instance[key].value
-        cache.set('askbot-livesettings', out)
+        cache.set(cache_key, out)
 
 
-signals.configuration_value_changed.connect(ConfigSettings.prime_cache)
+def get_bulk_cache_key():
+    from askbot.utils.translation import get_language
+    return 'askbot-settings-' + get_language()
+
+
+def prime_cache_handler(*args, **kwargs):
+    cache_key = get_bulk_cache_key()
+    ConfigSettings.prime_cache(cache_key)
+
+
+signals.configuration_value_changed.connect(prime_cache_handler)
 #settings instance to be used elsewhere in the project
 settings = ConfigSettings()

@@ -56,7 +56,7 @@
             <input id="subscribedTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
         </div>
     {% endif %}
-    <h3>{% if settings.WORDS_SHOW_ONLY_QUESTIONS_FROM %}{{ settings.WORDS_SHOW_ONLY_QUESTIONS_FROM }}{% else %}{% trans %}Show only questions from{% endtrans%}{% endif %}</h3>
+    <h3>{{ settings.WORDS_SHOW_ONLY_QUESTIONS_FROM|escape }}</h3>
     <div id="displayTagFilterControl">
         {{
             macros.radio_select(

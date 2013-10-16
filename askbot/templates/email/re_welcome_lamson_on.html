@@ -4,7 +4,7 @@
 
 {% block content %}
 {% if can_post_by_email %}
-    <p>{% if settings.WORDS_YOU_CAN_POST_QUESTIONS_BY_EMAILING_THEM_AT %}{{ settings.WORDS_YOU_CAN_POST_QUESTIONS_BY_EMAILING_THEM_AT }} {{ ask_address }}{% else %}{% trans %}You can post questions by emailing them at {{ ask_address }}.{% endtrans %}{% endif %}</p>
+    <p>{{ settings.WORDS_YOU_CAN_POST_QUESTIONS_BY_EMAILING_THEM_AT|escape }} {{ ask_address }}</p>
     <p>{% trans %}When you receive update notifications, you will be able to respond to them, also by email.{% endtrans %}</p>
     <p>{% trans %}Of course, you can always visit the {{ site_name }} at <a href="{{ site_url }}">{{ site_url }}</a>.{% endtrans %}</p>
 {% else %}

@@ -1,5 +1,5 @@
 {#<span class="action-link swap-qa">
-  <a id="swap-question-with-answer-{{answer.id}}">{% if settings.WORDS_SWAP_WITH_QUESTION %}{{ settings.WORDS_SWAP_WITH_QUESTION }}{% else %}{% trans %}swap with question{% endtrans %}{% endif %}</a>
+  <a id="swap-question-with-answer-{{answer.id}}">{{ settings.WORDS_SWAP_WITH_QUESTION|escape }}</a>
 </span>uncomment if needed#}
 <span id='post-{{answer.id}}-edit' class="action-link">
     <a class="question-edit" href="{% url edit_answer answer.id %}">{% trans %}edit{% endtrans %}</a>
@@ -68,7 +68,7 @@
             <input 
                 type="submit"
                 class="link"
-                value="{% if settings.WORDS_REPOST_AS_A_QUESTION_COMMENT %}{{ settings.WORDS_REPOST_AS_A_QUESTION_COMMENT }}{% else %}{% trans %}repost as a question comment{% endtrans %}{% endif %}"
+                value="{{ settings.WORDS_REPOST_AS_A_QUESTION_COMMENT|escape }}"
             />
         </form>
     </li>
@@ -82,7 +82,7 @@
             <input 
                 type="submit"
                 class="link"
-                value="{% if settings.WORDS_REPOST_AS_A_COMMENT_UNDER_THE_OLDER_ANSWER %}{{ settings.WORDS_REPOST_AS_A_COMMENT_UNDER_THE_OLDER_ANSWER }}{% else %}{% trans %}repost as a comment under the older answer{% endtrans %}{% endif %}"
+                value="{{ settings.WORDS_REPOST_AS_A_COMMENT_UNDER_THE_OLDER_ANSWER|escape }}"
             />
         </form>
     </li>

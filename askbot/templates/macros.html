@@ -88,12 +88,11 @@ poor design of the data or methods on data objects #}
     {% if is_wiki %}
         <p>
            {%- if post.post_type == 'question' -%}
-                {%- trans %}asked{% endtrans %}
+               {{ settings.WORDS_ASKED|escape }}
            {% elif post.post_type == 'answer' %}
-                {#{% if settings.WORDS_ANSWERED %}{{ settings.WORDS_ANSWERED }}{% else %}{% trans %}answered{% endtrans %}{% endif %}#}
-                {% trans %}answered{% endtrans %}}
+               {{ settings.WORDS_ANSWERED|escape }}
            {% else %}
-                {%- trans %}posted{% endtrans %}
+               {%- trans %}posted{% endtrans %}
            {% endif %}
            <strong>{{ timeago(post.added_at) }}</strong>
         </p>
@@ -108,10 +107,9 @@ poor design of the data or methods on data objects #}
         <p style="line-height:12px;">
             {# todo: access to class names needs to be removed here #}
             {% if post.post_type == 'question' %}
-                {% trans %}asked{% endtrans %}
+                {{ settings.WORDS_ASKED|escape }}
             {% elif post.post_type == 'answer' %}
-                {#{% if settings.WORDS_ANSWERED %}{{ settings.WORDS_ANSWERED }}{% else %}{% trans %}answered{% endtrans %}{% endif %}#}
-                {% trans %}answered{% endtrans %}}
+                {{ settings.WORDS_ANSWERED|escape }}
             {% else %}
                 {% trans %}posted{% endtrans %}
             {% endif %}

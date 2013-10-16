@@ -1,8 +1,8 @@
 {% extends "two_column_body.html" %}
 <!-- question_retag.html -->
-{% block title %}{% spaceless %}{% if settings.WORDS_RETAG_QUESTION %}{{ settings.WORDS_RETAG_QUESTION }}{% else %}{% trans %}Retag question{% endtrans %}{% endif %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{{ settings.WORDS_RETAG_QUESTION|escape }}{% endspaceless %}{% endblock %}
 {% block content %}
-<h1>{% if settings.WORDS_RETAG_QUESTION %}{{ settings.WORDS_RETAG_QUESTION }}{% else %}{% trans %}Retag question{% endtrans %}{% endif %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</h1>
+<h1>{{ settings.WORDS_RETAG_QUESTION|escape }} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</h1>
 <form id="fmretag" action="{% url retag_question question.id %}" method="post" >{% csrf_token %}
     <h2>
         {{ question.thread.get_title()|escape }}
