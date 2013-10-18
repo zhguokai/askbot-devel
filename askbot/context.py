@@ -6,7 +6,6 @@ import sys
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
-from django.views.decorators import csrf
 
 import askbot
 from askbot import api
@@ -23,7 +22,6 @@ from askbot.utils.html import site_url
 from askbot.utils.forms import get_feed
 from askbot.utils.translation import get_language
 
-@csrf.csrf_protect
 def application_settings(request):
     """The context processor function"""
     if not request.path.startswith('/' + settings.ASKBOT_URL):
@@ -53,6 +51,7 @@ def application_settings(request):
                                         'ASKBOT_USE_LOCAL_FONTS',
                                         False
                                     )
+
     my_settings['CSRF_COOKIE_NAME'] = settings.CSRF_COOKIE_NAME
     my_settings['DEBUG'] = settings.DEBUG
     my_settings['USING_RUNSERVER'] = 'runserver' in sys.argv

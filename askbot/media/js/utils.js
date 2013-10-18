@@ -57,7 +57,6 @@ $.ajaxSetup({
             // Send the token only if the method warrants CSRF protection
             // Using the CSRFToken value acquired earlier
             var csrfCookieName = askbot['settings']['csrfCookieName'];
-            debugger;
             xhr.setRequestHeader("X-CSRFToken", getCookie(csrfCookieName));
         }
     }
