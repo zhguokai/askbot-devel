@@ -471,11 +471,6 @@ class WikiField(forms.BooleanField):
             'community wiki (karma is not awarded & '
             'many others can edit wiki post)'
         )
-        self.help_text = _(
-            'if you choose community wiki option, the %(question)s '
-            'and answer do not generate points and name of '
-            'author will not be shown'
-        ) % {'question': askbot_settings.WORDS_QUESTION_SINGULAR or unicode(_('question'))}
 
     def clean(self, value):
         return value and askbot_settings.WIKI_ON
@@ -921,10 +916,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
 
         self.fields['ask_anonymously'] = forms.BooleanField(
             label=_('post anonymously'),
-            help_text=_(
-                'Check if you do not want to reveal your name '
-                'when posting this %(question)s'
-            ) % {'question': askbot_settings.WORDS_QUESTION_SINGULAR},
             required=False,
         )
 
@@ -955,10 +946,6 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
     title = TitleField()
     ask_anonymously = forms.BooleanField(
         label=_('ask anonymously'),
-        help_text=_(
-            'Check if you do not want to reveal your name '
-            'when asking this question'
-        ),
         required=False,
     )
 
@@ -1209,11 +1196,6 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
     summary = SummaryField()
     wiki = WikiField()
     reveal_identity = forms.BooleanField(
-        help_text=_(
-            'You have asked this question anonymously, '
-            'if you decide to reveal your identity, please check '
-            'this box.'
-        ),
         label=_('reveal identity'),
         required=False,
     )

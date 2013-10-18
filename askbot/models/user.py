@@ -312,6 +312,7 @@ class EmailFeedSetting(models.Model):
         'q_sel': 'i',
         'm_and_c': 'i'
     }
+    #todo: words
     FEED_TYPE_CHOICES = (
                     ('q_all', ugettext_lazy('Entire forum')),
                     ('q_ask', ugettext_lazy('Questions that I asked')),

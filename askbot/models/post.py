@@ -415,9 +415,9 @@ class Post(models.Model):
         """
         url = site_url(self.get_absolute_url(no_slug=True))
         if self.post_type == 'question':
-            tweet = _('Question: ')
+            tweet = askbot_settings.WORDS_QUESTION_SINGULAR + ': '
         elif self.post_type == 'answer':
-            tweet = _('Answer: ')
+            tweet = askbot_settings.WORDS_ANSWER_SINGULAR + ': '
 
         chars_left = 140 - (len(url) + len(tweet) + 1)
         title_str = self.thread.title[:chars_left]
@@ -1598,10 +1598,7 @@ class Post(models.Model):
         if self.is_approved() is False:
             raise exceptions.QuestionHidden()
         if self.deleted:
-            message = _(
-                'Sorry, this question has been '
-                'deleted and is no longer accessible'
-            )
+            message = _('Sorry, this content is no longer available')
             if user.is_anonymous():
                 raise exceptions.QuestionHidden(message)
             try:
@@ -1614,17 +1611,10 @@ class Post(models.Model):
         try:
             self.thread._question_post().assert_is_visible_to(user)
         except exceptions.QuestionHidden:
-            message = _(
-                'Sorry, the answer you are looking for is '
-                'no longer available, because the parent '
-                'question has been removed'
-            )
+            message = _('Sorry, this content is no longer available')
             raise exceptions.QuestionHidden(message)
         if self.deleted:
-            message = _(
-                'Sorry, this answer has been '
-                'removed and is no longer accessible'
-            )
+            message = _('Sorry, this content is no longer available')
             if user.is_anonymous():
                 raise exceptions.AnswerHidden(message)
             try:
@@ -1637,18 +1627,10 @@ class Post(models.Model):
         try:
             self.parent.assert_is_visible_to(user)
         except exceptions.QuestionHidden:
-            message = _(
-                        'Sorry, the comment you are looking for is no '
-                        'longer accessible, because the parent question '
-                        'has been removed'
-                       )
+            message = _('Sorry, this comment is no longer available')
             raise exceptions.QuestionHidden(message)
         except exceptions.AnswerHidden:
-            message = _(
-                        'Sorry, the comment you are looking for is no '
-                        'longer accessible, because the parent answer '
-                        'has been removed'
-                       )
+            message = _('Sorry, this comment is no longer available')
             raise exceptions.AnswerHidden(message)
 
     def assert_is_visible_to_user_groups(self, user):

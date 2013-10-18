@@ -64,11 +64,13 @@ class Command(NoArgsCommand):
             tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
 
             subject_line = ungettext(
-                '%(question_count)d unanswered question about %(topics)s',
-                '%(question_count)d unanswered questions about %(topics)s',
+                '%(question_count)d %(unanswered_question)s about %(topics)s',
+                '%(question_count)d %(unanswered_questions)s about %(topics)s',
                 question_count
             ) % {
                 'question_count': question_count,
+                'unanswered_question': askbot_settings.WORDS_UNANSWERED_QUESTION_SINGULAR,
+                'unanswered_questions': askbot_settings.WORDS_UNANSWERED_QUESTION_PLURAL,
                 'topics': tag_summary
             }
 

@@ -104,6 +104,24 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_UNANSWERED_QUESTION_SINGULAR',
+        default=_('unanswered question'),
+        description=_('unanswered question (singular)'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_UNANSWERED_QUESTION_PLURAL',
+        default=_('unanswered questions'),
+        description=_('unanswered questions (plural)'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_ANSWER_SINGULAR',
         default=_('answer'),
         description=_('answer (noun, sungular)'),
@@ -125,6 +143,18 @@ settings.register(
         'WORDS_PLEASE_ASK_YOUR_QUESTION_HERE',
         default=_('Please ask your question here'),
         description=_('Please ask your question here'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_THIS_QUESTION_HAS_BEEN_DELETED',
+        default=_(
+                'Sorry, this question has been '
+                'deleted and is no longer accessible'
+            ),
+        description=_('This question has been deleted')
     )
 )
 
@@ -188,6 +218,24 @@ settings.register(
         'WORDS_REPOST_AS_A_QUESTION_COMMENT',
         default=_('repost as a question comment'),
         description=_('repost as a question comment'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ONLY_ONE_ANSWER_PER_USER_IS_ALLOWED',
+        default=_('(only one answer per user is allowed)'),
+        description=_('Only one answer per user is allowed'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ACCEPT_BEST_ANWERS_FOR_YOUR_QUESTIONS',
+        default=_('Accept the best answers for your questions'),
+        description=_('Accept the best answers for your questions')
     )
 )
 

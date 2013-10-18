@@ -836,6 +836,7 @@ class Thread(models.Model):
 
         output = question.format_for_email_as_subthread()
         if answers:
+            #todo: words
             answer_heading = ungettext(
                                     '%(count)d answer:',
                                     '%(count)d answers:',
@@ -1598,9 +1599,3 @@ class AnonymousQuestion(DraftContent):
                             text=self.text,
                             tagnames=self.tagnames
                         )
-            #add message with a link to the ask page
-            extra_message = _(
-                'Please, <a href="%s">review your question</a>.'
-            ) % reverse('ask')
-            message = string_concat(unicode(error), u' ', extra_message)
-            user.message_set.create(message=unicode(message))

@@ -16,10 +16,10 @@
             {% endif %}
                     {% if format == 'parent_subthread' %}
                         {% if is_leaf_post %}
-                            {% trans %}Question by {{ author }}:{% endtrans %}
+                            {% trans %}Started by {{ author }}:{% endtrans %}
                         {% else %}
                             {% trans -%}
-                                In reply to {{ author }}'s question:
+                                In reply to {{ author }}:
                             {%- endtrans %}
                         {% endif %}
                     {% else %}
@@ -30,7 +30,7 @@
             {% if quote_level > 0 %}
             <p style="font-size:10px; font-weight: bold;">
                     {% if format != 'parent_subthread' %}
-                        {% trans %}Asked by {{ author }}:{% endtrans %}
+                        {% trans %}Started by {{ author }}:{% endtrans %}
                     {% endif %}
             </p>
             {% endif %}
@@ -46,15 +46,15 @@
                     {% if format == 'parent_subthread' %}
                         {% if is_leaf_post %}
                             {% trans -%}
-                                {{ author }}'s answer:
+                                {{ author }}'s response:
                             {%- endtrans %}
                         {% else %}
                             {% trans -%}
-                                In reply to {{ author }}'s answer:
+                                In reply to {{ author }}:
                             {%- endtrans %}
                         {% endif %}
                     {% else %}
-                        {% trans %}Answered by {{ author }}:{% endtrans %}
+                        {% trans %}Replied by {{ author }}:{% endtrans %}
                     {% endif %}
                 </p>
             {% else %}

@@ -1352,16 +1352,3 @@ def account_recover(request):
             return show_signin_view(request, view_subtype = 'bad_key')
 
         return HttpResponseRedirect(get_next_url(request))
-
-#internal server view used as return value by other views
-def validation_email_sent(request):
-    """this function is called only if EMAIL_VALIDATION setting is
-    set to True bolean value"""
-    assert(askbot_settings.EMAIL_VALIDATION == True)
-    logging.debug('')
-    data = {
-        'email': request.user.email,
-        'change_email_url': reverse('user_changeemail'),
-        'action_type': 'validate'
-    }
-    return render(request, 'authopenid/changeemail.html', data)

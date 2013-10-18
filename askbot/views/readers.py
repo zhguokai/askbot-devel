@@ -154,6 +154,7 @@ def questions(request, **kwargs):
     if request.is_ajax():
         q_count = paginator.count
 
+        #todo: words
         question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
         question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
 

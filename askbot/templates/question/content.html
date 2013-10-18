@@ -36,7 +36,7 @@
             class="button submit"
             href="{% url "edit_answer" previous_answer.id %}"
         >{{ settings.WORDS_EDIT_YOUR_PREVIOUS_ANSWER|escape }}</a>
-        <span>{% trans %}(only one answer per user is allowed){% endtrans %}</span>
+        <span>{{ settings.WORDS_ONLY_ONE_ANSWER_PER_USER_IS_ALLOWED|escape }}</span>
         <div class="invisible">
             {# hidden because we still need js from the tinymce widget #}
             {% include "question/new_answer_form.html" %}
