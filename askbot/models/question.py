@@ -149,6 +149,11 @@ class ThreadManager(BaseQuerySetManager):
             language_code=language
         )
 
+        #adding thread to space
+        if not space:
+            space = Space.objects.get_default()
+        space.questions.add(thread)
+
         #todo: code below looks like ``Post.objects.create_new()``
         question = Post(
             post_type='question',
@@ -207,12 +212,6 @@ class ThreadManager(BaseQuerySetManager):
             diff=parse_results['diff'],
             sender=question.__class__
         )
-
-        #adding thread to space
-        if not space:
-            space = Space.objects.get_default()
-
-        space.questions.add(thread)
 
         return thread
 
