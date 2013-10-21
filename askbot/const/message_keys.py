@@ -40,18 +40,11 @@ TAGS_ARE_REQUIRED_MESSAGE = _('tags are required')
 TAG_WRONG_CHARS_MESSAGE = _(
     'please use letters, numbers and characters "-+.#"'
 )
-
-def get_i18n_message(key):
-    messages = {
-        'BLOCKED_USERS_CANNOT_POST': _(
-            'Sorry, your account appears to be blocked and you cannot make new posts '
-            'until this issue is resolved. Please contact the forum administrator to '
-            'reach a resolution.'
-        ),
-        'SUSPENDED_USERS_CANNOT_POST': _(
-            'Sorry, your account appears to be suspended and you cannot make new posts '
-            'until this issue is resolved. You can, however edit your existing posts. '
-            'Please contact the forum administrator to reach a resolution.'
-        )
-    }
-    return messages[key]
+ACCOUNT_CANNOT_PERFORM_ACTION = _(
+    'Sorry, you cannot %(perform_action)s because %(your_account_is)s'
+)
+MIN_REP_REQUIRED_TO_PERFORM_ACTION = _('>%(min_rep)s points required to %(perform_action)s')
+CANNOT_PERFORM_ACTION_UNTIL = _('Sorry, you will be able to %(perform_action)s after %(until)s')
+MODERATORS_OR_AUTHOR_CAN_PEFROM_ACTION = _(
+    'Sorry, only moderators or the %(post_author)s %(perform_action)s'
+)

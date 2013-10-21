@@ -68,6 +68,15 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_ASK_QUESTIONS',
+        default=_('ask questions'),
+        description=_('ask questions')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_ASKED',
         default=_('asked'),
         description=_('asked'),
@@ -242,6 +251,33 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_AUTHOR_OF_THE_QUESTION',
+        default=_('author of the question'),
+        description=_('author of the question')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER',
+        default=_('accept or unaccept the best answer'),
+        description=_('accept or unaccept the best answer')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ACCEPT_OR_UNACCEPT_OWN_ANSWER',
+        defaulw=_('accept or unaccept your own answer'),
+        description=_('accept or unaccept your own answer'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_REPOST_AS_A_COMMENT_UNDER_THE_OLDER_ANSWER',
         default=_('repost as a comment under older answer'),
         description=_('repost as a comment under older answer'),
@@ -350,6 +386,15 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_CLOSE_QUESTIONS',
+        default=_('close questions'),
+        description=_('close questions'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_EDIT_QUESTION',
         default=_('Edit question'),
         description=_('Edit question'),
@@ -371,6 +416,15 @@ settings.register(
         'WORDS_RETAG_QUESTION',
         default=_('Retag question'),
         description=_('Retag question'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_RETAG_QUESTIONS',
+        default=_('retag questions'),
+        description=_('retag questions'),
     )
 )
 
