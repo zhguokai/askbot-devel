@@ -574,8 +574,7 @@ def _assert_user_can(
         suspended_owner_cannot=False,
         suspended_user_cannot=False,
         blocked_user_cannot=False,
-        min_rep_setting=None,
-        general_error_message=None,
+        min_rep_setting=None
     ):
     """generic helper assert for use in several
     User.assert_can_XYZ() calls regarding changing content
@@ -586,33 +585,29 @@ def _assert_user_can(
     with appropriate text as a payload
     """
     action_display = action_display or _('perform this action')
-    if suspended_user_cannot or suspended_owner_cannot and user.is_suspended():
-        suspended_error_message = _(message_keys.ACCOUNT_CANT_PERFORM_ACTION) % {
-            'perform_action': action_display,
-            'your_account_is': _('your account is suspended')
-        }
-
     if askbot_settings.GROUPS_ENABLED:
         if user.is_read_only():
             message = _('Sorry, but you have only read access')
             raise django_exceptions.PermissionDenied(message)
 
-    if general_error_message is None:
-        general_error_message = _('Sorry, this operation is not allowed')
     if blocked_user_cannot and user.is_blocked():
         error_message = _(message_keys.ACCOUNT_CANT_PERFORM_ACTION) % {
             'perform_action': action_display,
             'your_account_is': _('your account is blocked')
         }
     elif post and owner_can and user == post.get_owner():
-        if suspended_owner_cannot and user.is_suspended():
-            error_message = suspended_error_message
-            raise django_exceptions.PermissionDenied(error_message)
+        if suspended_user_cannot or suspended_owner_cannot and user.is_suspended():
+            error_message = _(message_keys.ACCOUNT_CANT_PERFORM_ACTION) % {
+                'perform_action': action_display,
+                'your_account_is': _('your account is suspended')
+            }
         else:
             return
-        return
     elif suspended_user_cannot and user.is_suspended():
-        error_message = suspended_error_message
+        error_message = _(message_keys.ACCOUNT_CANT_PERFORM_ACTION) % {
+            'perform_action': action_display,
+            'your_account_is': _('your account is suspended')
+        }
     elif user.is_administrator() or user.is_moderator():
         return
     elif user.is_post_moderator(post):
@@ -624,13 +619,27 @@ def _assert_user_can(
                 'min_rep': min_rep_setting
             }
         )
+    elif admin_or_moderator_required:
+        if min_rep_setting is None:
+            #message about admins only
+            error_message = _(
+                'Sorry, only moderators and site administrators can %(perform_action)s'
+            ) % {
+                'perform_action': action_display
+            }
+        else:
+            #message with minimum reputation
+            error_message = _(
+                'Sorry, only administrators, moderators '
+                'or users with reputation > %(min_rep)s '
+                'can %(perform_action)s'
+            ) % {
+                'min_rep': min_rep_setting,
+                'perform_action': action_display
+            }
     else:
-        if admin_or_moderator_required == False:
-            return
+        return
 
-    #if admin or moderator is required, then substitute the message
-    if admin_or_moderator_required:
-        error_message = general_error_message
     assert(error_message is not None)
     raise django_exceptions.PermissionDenied(error_message)
 
@@ -774,8 +783,10 @@ def user_assert_can_post_answer(self, thread = None):
     limit_answers = askbot_settings.LIMIT_ONE_ANSWER_PER_USER
     if limit_answers and thread.has_answer_by_user(self):
         message = _(
-            'Sorry, you already gave an answer, please edit it instead.'
-        )
+            'Sorry, %(you_already_gave_an_answer)s, please edit it instead.'
+        ) % {
+            'you_already_gave_an_answer': askbot_settings.WORDS_YOU_ALREADY_GAVE_AN_ANSWER
+        }
         raise askbot_exceptions.AnswerAlreadyGiven(message)
 
     self.assert_can_post_question()
@@ -845,23 +856,26 @@ def user_assert_can_post_comment(self, parent_post = None):
         suspended_user_cannot=True,
     )
 
-def user_assert_can_see_deleted_post(self, post = None):
+def user_assert_can_see_deleted_post(self, post=None):
 
     """attn: this assertion is independently coded in
     Question.get_answers call
     """
+    try:
+        _assert_user_can(
+            user=self,
+            post=post,
+            admin_or_moderator_required=True,
+            owner_can=True
+        )
+    except django_exceptions.PermissionDenied, e:
+        #re-raise the same exception with a different message
+        error_message = _(
+            'This post has been deleted and can be seen only '
+            'by post owners, site administrators and moderators'
+        )
+        raise django_exceptions.PermissionDenied(error_message)
 
-    error_message = _(
-                        'This post has been deleted and can be seen only '
-                        'by post owners, site administrators and moderators'
-                    )
-    _assert_user_can(
-        user = self,
-        post = post,
-        admin_or_moderator_required = True,
-        owner_can = True,
-        general_error_message = error_message
-    )
 
 def user_assert_can_edit_deleted_post(self, post = None):
     assert(post.deleted == True)
@@ -869,9 +883,9 @@ def user_assert_can_edit_deleted_post(self, post = None):
         self.assert_can_see_deleted_post(post)
     except django_exceptions.PermissionDenied, e:
         error_message = _(
-                    'Sorry, only moderators, site administrators '
-                    'and post owners can edit deleted posts'
-                )
+            'Sorry, only moderators, site administrators '
+            'and post owners can edit deleted posts'
+        )
         raise django_exceptions.PermissionDenied(error_message)
 
 def user_assert_can_edit_post(self, post = None):
@@ -948,12 +962,16 @@ def user_assert_can_delete_question(self, question = None):
                 return
             else:
                 msg = ungettext(
-                    'Sorry, cannot delete your question since it '
-                    'has an upvoted answer posted by someone else',
-                    'Sorry, cannot delete your question since it '
-                    'has some upvoted answers posted by other users',
+                    'Sorry, cannot %(delete_your_question)s since it '
+                    'has an %(upvoted_answer)s posted by someone else',
+                    'Sorry, cannot %(delete_your_question)s since it '
+                    'has some %(upvoted_answers)s posted by other users',
                     answer_count
-                )
+                ) % {
+                    'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION
+                    'upvoted_answer': askbot_settings.WORDS_UPVOTED_ANSWER
+                    'upvoted_answers': askbot_settings.WORDS_UPVOTED_ANSWERS
+                }
                 raise django_exceptions.PermissionDenied(msg)
 
 
@@ -980,7 +998,7 @@ def user_assert_can_close_question(self, question = None):
     _assert_user_can(
         user = self,
         post = question,
-        action_display=_('close questions'),
+        action_display=askbot_settings.WORDS_CLOSE_QUESTIONS,
         owner_can = True,
         suspended_owner_cannot = True,
         blocked_user_cannot=True,
@@ -991,23 +1009,13 @@ def user_assert_can_close_question(self, question = None):
 
 def user_assert_can_reopen_question(self, question = None):
     assert(question.post_type == 'question')
-
-    #for some reason rep to reopen own questions != rep to close own q's
-    min_rep_setting = askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS
-
-    general_error_message = _(
-                        'Sorry, only administrators, moderators '
-                        'or users with reputation > %(min_rep)s '
-                        'can reopen questions.'
-                    ) % {'min_rep': min_rep_setting }
-
     _assert_user_can(
-        user = self,
-        post = question,
+        user=self,
+        post=question,
         action_display=_('reopen questions'),
-        suspended_owner_cannot = True,
-        min_rep_setting = min_rep_setting,
-        general_error_message = general_error_message,
+        suspended_owner_cannot=True,
+        #for some reason rep to reopen own questions != rep to close own q's
+        min_rep_setting=askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS,
         blocked_user_cannot=True,
         suspended_user_cannot=True,
     )
@@ -1018,7 +1026,7 @@ def user_assert_can_flag_offensive(self, post = None):
     assert(post is not None)
 
     double_flagging_error_message = _(
-        'You have flagged this question before and '
+        'You have flagged this post before and '
         'cannot do it more than once'
     )
 
@@ -1095,27 +1103,16 @@ def user_assert_can_remove_all_flags_offensive(self, post = None):
 def user_assert_can_retag_question(self, question = None):
 
     if question.deleted == True:
-        try:
-            self.assert_can_edit_deleted_post(question)
-        except django_exceptions.PermissionDenied:
-            error_message = _(
-                            'Sorry, only question owners, '
-                            'site administrators and moderators '
-                            'can retag deleted questions'
-                        )
-            raise django_exceptions.PermissionDenied(error_message)
-
-
-    min_rep_setting = askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS
+        self.assert_can_edit_deleted_post(question)
 
     _assert_user_can(
-        user = self,
-        post = question,
+        user=self,
+        post=question,
         action_display=askbot_settings.WORDS_RETAG_QUESTIONS,
-        owner_can = True,
+        owner_can=True,
         blocked_error_cannot=True,
         suspended_user_cannot=True,
-        min_rep_setting = min_rep_setting,
+        min_rep_setting=askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS
     )
 
 
@@ -1875,9 +1872,13 @@ def user_post_answer(
                 left = ungettext('in %(min)d min','in %(min)d mins',minutes) % {'min':minutes}
             day = ungettext('%(days)d day','%(days)d days',askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION) % {'days':askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION}
             error_message = _(
-                'New users must wait %(days)s before answering their own question. '
+                'New users must wait %(days)s to %(answer_own_questions)s. '
                 ' You can post an answer %(left)s'
-                ) % {'days': day,'left': left}
+                ) % {
+                    'days': day,
+                    'left': left,
+                    'answer_own_questions': askbot_settings.WORDS_ANSWER_OWN_QUESTIONS
+                }
             assert(error_message is not None)
             raise django_exceptions.PermissionDenied(error_message)
 

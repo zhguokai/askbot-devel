@@ -205,13 +205,7 @@ def import_data(request):
 
 #@login_required #actually you can post anonymously, but then must register
 @csrf.csrf_protect
-@decorators.check_authorization_to_post(ugettext_lazy(
-    "<span class=\"strong big\">You are welcome to start submitting your question "
-    "anonymously</span>. When you submit the post, you will be redirected to the "
-    "login/signup page. Your question will be saved in the current session and "
-    "will be published after you log in. Login/signup process is very simple. "
-    "Login takes about 30 seconds, initial signup takes a minute or less."
-))
+@decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
 @decorators.check_spam('text')
 def ask(request):#view used to ask a new question
     """a view to ask a new question
@@ -579,7 +573,7 @@ def edit_answer(request, id):
         return HttpResponseRedirect(answer.get_absolute_url())
 
 #todo: rename this function to post_new_answer
-@decorators.check_authorization_to_post(ugettext_lazy('Please log in to answer questions'))
+@decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
 @decorators.check_spam('text')
 def answer(request, id, form_class=forms.AnswerForm):#process a new answer
     """view that posts new answer

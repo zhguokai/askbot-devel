@@ -283,7 +283,238 @@ def vote(request):
 
             else:
                 raise exceptions.PermissionDenied(
-                        _('Sorry, but anonymous users cannot accept answers')
+                        _('Sorry, but anonymous users cannot %(perform_action)s') % {
+                        'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER
+                    }
+                )
+
+        elif vote_type in ('1', '2', '5', '6'):#Q&A up/down votes
+
+            ###############################
+            # all this can be avoided with
+            # better query parameters
+            vote_direction = 'up'
+            if vote_type in ('2','6'):
+                vote_direction = 'down'
+
+            if vote_type in ('5', '6'):
+                #todo: fix this weirdness - why postId here
+                #and not with question?
+                post_id = request.POST.get('postId')
+                post = get_object_or_404(models.Post, post_type='answer', id=post_id)
+            else:
+                post = get_object_or_404(models.Post, post_type='question', id=id)
+            #
+            ######################
+
+            response_data = process_vote(
+                                        user = request.user,
+                                        vote_direction = vote_direction,
+                                        post = post
+                                    )
+
+            ####################################################################
+            if vote_type in ('1', '2'): # up/down-vote question
+                post.thread.update_summary_html() # regenerate question/thread summary html
+            ####################################################################
+
+        elif vote_type in ['7', '8']:
+            #flag question or answer
+            if vote_type == '7':
+                post = get_object_or_404(models.Post, post_type='question', id=id)
+            if vote_type == '8':
+                id = request.POST.get('postId')
+                post = get_object_or_404(models.Post, post_type='answer', id=id)
+
+            request.user.flag_post(post)
+
+            response_data['count'] = post.offensive_flag_count
+            response_data['success'] = 1
+
+        elif vote_type in ['7.5', '8.5']:
+            #flag question or answer
+            if vote_type == '7.5':
+                post = get_object_or_404(models.Post, post_type='question', id=id)
+            if vote_type == '8.5':
+                id = request.POST.get('postId')
+                post = get_object_or_404(models.Post, post_type='answer', id=id)
+
+            request.user.flag_post(post, cancel = True)
+
+            response_data['count'] = post.offensive_flag_count
+            response_data['success'] = 1
+
+        elif vote_type in ['7.6', '8.6']:
+            #flag question or answer
+            if vote_type == '7.6':
+                post = get_object_or_404(models.Post, id=id)
+            if vote_type == '8.6':
+                id = request.POST.get('postId')
+                post = get_object_or_404(models.Post, id=id)
+
+            request.user.flag_post(post, cancel_all = True)
+
+            response_data['count'] = post.offensive_flag_count
+            response_data['success'] = 1
+
+        elif vote_type in ['9', '10']:
+            #delete question or answer
+            post = get_object_or_404(models.Post, post_type='question', id=id)
+            if vote_type == '10':
+                id = request.POST.get('postId')
+                post = get_object_or_404(models.Post, post_type='answer', id=id)
+
+            if post.deleted == True:
+                request.user.restore_post(post = post)
+            else:
+                request.user.delete_post(post = post)
+
+        elif request.is_ajax() and request.method == 'POST':
+
+            if not request.user.is_authenticated():
+                response_data['allowed'] = 0
+                response_data['success'] = 0
+
+            question = get_object_or_404(models.Post, post_type='question', id=id)
+            vote_type = request.POST.get('type')
+
+            #accept answer
+            if vote_type == '4':
+                fave = request.user.toggle_favorite_question(question)
+                response_data['count'] = models.FavoriteQuestion.objects.filter(thread = question.thread).count()
+                if fave == False:
+                    response_data['status'] = 1
+
+            elif vote_type == '11':#subscribe q updates
+                user = request.user
+                if user.is_authenticated():
+                    if user not in question.thread.followed_by.all():
+                        user.follow_question(question)
+                        if askbot_settings.EMAIL_VALIDATION == True \
+                            and user.email_isvalid == False:
+
+                            response_data['message'] = \
+                                    _(
+                                        'Your subscription is saved, but email address '
+                                        '%(email)s needs to be validated, please see '
+                                        '<a href="%(details_url)s">more details here</a>'
+                                    ) % {'email':user.email,'details_url':reverse('faq') + '#validate'}
+
+                    subscribed = user.subscribe_for_followed_question_alerts()
+                    if subscribed:
+                        if 'message' in response_data:
+                            response_data['message'] += '<br/>'
+                        response_data['message'] += _('email update frequency has been set to daily')
+                    #response_data['status'] = 1
+                    #responst_data['allowed'] = 1
+                else:
+                    pass
+                    #response_data['status'] = 0
+                    #response_data['allowed'] = 0
+            elif vote_type == '12':#unsubscribe q updates
+                user = request.user
+                if user.is_authenticated():
+                    user.unfollow_question(question)
+        else:
+            response_data['success'] = 0
+            response_data['message'] = u'Request mode is not supported. Please try again.'
+
+        if vote_type not in (1, 2, 4, 5, 6, 11, 12):
+            #favorite or subscribe/unsubscribe
+            #upvote or downvote question or answer - those
+            #are handled within user.upvote and user.downvote
+            post = models.Post.objects.get(id = id)
+            post.thread.invalidate_cached_data()
+
+        data = simplejson.dumps(response_data)
+
+    except Exception, e:
+        response_data['message'] = unicode(e)
+        response_data['success'] = 0
+        data = simplejson.dumps(response_data)
+    return HttpResponse(data, mimetype="application/json")
+
+#internally grouped views - used by the tagging system
+@csrf.csrf_exempt
+@decorators.post_only
+@decorators.ajax_login_required
+def mark_tag(request, **kwargs):#tagging system
+    action = kwargs['action']
+    post_data = simplejson.loads(request.raw_post_data)
+    raw_tagnames = post_data['tagnames']
+    reason = post_data['reason']
+    assert reason in ('good', 'bad', 'subscribed')
+    #separate plain tag names and wildcard tags
+    tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
+
+    if request.user.is_administrator() and 'user' in post_data:
+        user = get_object_or_404(models.User, pk=post_data['user'])
+    else:
+        user = request.user
+
+    cleaned_tagnames, cleaned_wildcards = user.mark_tags(
+                                                         tagnames,
+                                                         wildcards,
+                                                         reason = reason,
+                                                         action = action
+                                                        )
+
+    #lastly - calculate tag usage counts
+    tag_usage_counts = dict()
+    for name in tagnames:
+        if name in cleaned_tagnames:
+            tag_usage_counts[name] = 1
+        else:
+            tag_usage_counts[name] = 0
+
+    for name in wildcards:
+        if name in cleaned_wildcards:
+            tag_usage_counts[name] = models.Tag.objects.filter(
+                                        name__startswith = name[:-1]
+                                    ).count()
+        else:
+            tag_usage_counts[name] = 0
+
+    return HttpResponse(simplejson.dumps(tag_usage_counts), mimetype="application/json")
+
+#@decorators.ajax_only
+@decorators.get_only
+def get_tags_by_wildcard(request):
+    """returns an json encoded array of tag names
+    in the response to a wildcard tag name
+    """
+    wildcard = request.GET.get('wildcard', None)
+    if wildcard is None:
+        return HttpResponseForbidden()
+
+    matching_tags = models.Tag.objects.get_by_wildcards( [wildcard,] )
+    count = matching_tags.count()
+    names = matching_tags.values_list('name', flat = True)[:20]
+    re_data = simplejson.dumps({'tag_count': count, 'tag_names': list(names)})
+    return HttpResponse(re_data, mimetype = 'application/json')
+
+@decorators.get_only
+def get_thread_shared_users(request):
+    """returns snippet of html with users"""
+    thread_id = request.GET['thread_id']
+    thread_id = IntegerField().clean(thread_id)
+    thread = models.Thread.objects.get(id=thread_id)
+    users = thread.get_users_shared_with()
+    data = {
+        'users': users,
+    }
+    html = render_into_skin_as_string('widgets/user_list.html', data, request)
+    re_data = simplejson.dumps({
+        'html': html,
+        'users_count': users.count(),
+        'success': True
+    })
+    return HttpResponse(re_data, mimetype='application/json')
+
+@decorators.get_only
+def get_thread_shared_groups(request):
+    """returns snippet of html with groups"""
+                        }
                     )
 
         elif vote_type in ('1', '2', '5', '6'):#Q&A up/down votes
@@ -1533,11 +1764,11 @@ def publish_answer(request):
     enquirer_group = enquirer.get_personal_group()
 
     if answer.has_group(enquirer_group):
-        message = _('The answer is now unpublished')
+        message = _('The post is now unpublished')
         answer.remove_from_groups([enquirer_group])
     else:
         answer.add_to_groups([enquirer_group])
-        message = _('The answer is now published')
+        message = _('The post is now published')
         #todo: notify enquirer by email about the post
     request.user.message_set.create(message=message)
     return {'redirect_url': answer.get_absolute_url()}

@@ -21,6 +21,7 @@ import datetime
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.dispatch import Signal
 from askbot.models.repute import BadgeData, Award
 from askbot.models.user import Activity
@@ -171,8 +172,11 @@ class PeerPressure(Badge):
 class Teacher(Badge):
     def __init__(self):
         description = _(
-            'Received at least %(votes)s upvote for an answer for the first time'
-        ) % {'votes': askbot_settings.TEACHER_BADGE_MIN_UPVOTES}
+            'Gave an %(answer_voted_up)s at least %(votes)s times for the first time'
+        ) % {
+            'votes': askbot_settings.TEACHER_BADGE_MIN_UPVOTES,
+            'answer_voted_up': askbot_settings.WORDS_ANSWER_VOTED_UP
+        }
         super(Teacher, self).__init__(
             key = 'teacher',
             name = _('Teacher'),
@@ -186,7 +190,7 @@ class Teacher(Badge):
         if context_object.post_type != 'answer':
             return False
 
-        if context_object.points>= askbot_settings.TEACHER_BADGE_MIN_UPVOTES:
+        if context_object.points >= askbot_settings.TEACHER_BADGE_MIN_UPVOTES:
             return self.award(context_object.author, context_object, timestamp)
         return False
 
@@ -249,14 +253,16 @@ class CivicDuty(Badge):
 
 class SelfLearner(Badge):
     def __init__(self):
-        description = _('Answered own question with at least %(num)s up votes')
-        min_votes = askbot_settings.SELF_LEARNER_BADGE_MIN_UPVOTES
+        description = _('%(answered_own_question)s with at least %(num)s up votes') % {
+            'num': askbot_settings.SELF_LEARNER_BADGE_MIN_UPVOTES,
+            'answered_own_question': askbot_settings.WORDS_ANSWERED_OWN_QUESTION
+        }
         super(SelfLearner, self).__init__(
-            key = 'self-learner',
-            name = _('Self-Learner'),
-            description = description % {'num': min_votes},
-            level = const.BRONZE_BADGE,
-            multiple = True
+            key='self-learner',
+            name=_('Self-Learner'),
+            description=description,
+            level=const.BRONZE_BADGE,
+            multiple=True
         )
 
     def consider_award(self, actor = None,
@@ -301,72 +307,90 @@ class QualityPost(Badge):
 class NiceAnswer(QualityPost):
     def __new__(cls):
         self = super(NiceAnswer, cls).__new__(cls)
-        self.name = _('Nice Answer')
+        self.name = askbot_settings.WORDS_NICE_ANSWER
         self.key = 'nice-answer'
         self.level = const.BRONZE_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.NICE_ANSWER_BADGE_MIN_UPVOTES
-        self.description = _('Answer voted up %(num)s times') % {'num': self.min_votes}
+        self.description = _('%(answer_voted_up)s %(num)s times') % {
+            'num': self.min_votes,
+            'answer_voted_up': askbot_settings.WORDS_ANSWER_VOTED_UP
+        }
         self.post_type = 'answer'
         return self
 
 class GoodAnswer(QualityPost):
     def __new__(cls):
         self = super(GoodAnswer, cls).__new__(cls)
-        self.name = _('Good Answer')
+        self.name = askbot_settings.WORDS_GOOD_ANSWER
         self.key = 'good-answer'
         self.level = const.SILVER_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.GOOD_ANSWER_BADGE_MIN_UPVOTES
-        self.description = _('Answer voted up %(num)s times') % {'num': self.min_votes}
+        self.description = _('%(answer_voted_up)s %(num)s times') % {
+            'num': self.min_votes,
+            'answer_voted_up': askbot_settings.WORDS_ANSWER_VOTED_UP
+        }
         self.post_type = 'answer'
         return self
 
 class GreatAnswer(QualityPost):
     def __new__(cls):
         self = super(GreatAnswer, cls).__new__(cls)
-        self.name = _('Great Answer')
+        self.name = askbot_settings.WORDS_GREAT_ANSWER
         self.key = 'great-answer'
         self.level = const.GOLD_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.GREAT_ANSWER_BADGE_MIN_UPVOTES
-        self.description = _('Answer voted up %(num)s times') % {'num': self.min_votes}
+        self.description = _('%(answer_voted_up)s %(num)s times') % {
+            'num': self.min_votes,
+            'answer_voted_up': askbot_settings.WORDS_ANSWER_VOTED_UP
+        }
         self.post_type = 'answer'
         return self
 
 class NiceQuestion(QualityPost):
     def __new__(cls):
         self = super(NiceQuestion, cls).__new__(cls)
-        self.name = _('Nice Question')
+        self.name = askbot_settings.WORDS_NICE_QUESTION
         self.key = 'nice-question'
         self.level = const.BRONZE_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.NICE_QUESTION_BADGE_MIN_UPVOTES
-        self.description = _('Question voted up %(num)s times') % {'num': self.min_votes}
+        self.description = _('%(question_voted_up)s up %(num)s times') % {
+            'num': self.min_votes,
+            'question_voted_up': askbot_settings.WORDS_QUESTION_VOTED_UP
+        }
         self.post_type = 'question'
         return self
 
 class GoodQuestion(QualityPost):
     def __new__(cls):
         self = super(GoodQuestion, cls).__new__(cls)
-        self.name = _('Good Question')
+        self.name = askbot_settings.WORDS_GOOD_QUESTION
         self.key = 'good-question'
         self.level = const.SILVER_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.GOOD_QUESTION_BADGE_MIN_UPVOTES
-        self.description = _('Question voted up %(num)s times') % {'num': self.min_votes}
+        self.description = _('%(question_voted_up)s up %(num)s times') % {
+            'num': self.min_votes,
+            'question_voted_up': askbot_settings.WORDS_QUESTION_VOTED_UP
+        }
         self.post_type = 'question'
         return self
 
 class GreatQuestion(QualityPost):
     def __new__(cls):
         self = super(GreatQuestion, cls).__new__(cls)
-        self.name = _('Great Question')
+        self.name = askbot_settings.WORDS_GREAT_QUESTION
         self.key = 'great-question'
         self.level = const.GOLD_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.GREAT_QUESTION_BADGE_MIN_UPVOTES
-        self.description = _('Question voted up %(num)s times') % {'num': self.min_votes}
+        self.description = _('%(question_voted_up)s %(num)s times') % {
+            'num': self.min_votes,
+            'question_voted_up': askbot_settings.WORDS_QUESTION_VOTED_UP
+        }
         self.post_type = 'question'
         return self
 
@@ -378,7 +402,9 @@ class Student(QualityPost):
         self.level = const.BRONZE_BADGE
         self.multiple = False
         self.min_votes = 1
-        self.description = _('Asked first question with at least one up vote')
+        self.description = _('%(asked_first_question)s with at least one up vote') % {
+                            'asked_first_question': askbot_settings.ASKED_FIRST_QUESTION
+                        }
         self.post_type = 'question'
         return self
 
@@ -411,35 +437,41 @@ class FrequentedQuestion(Badge):
 class PopularQuestion(FrequentedQuestion):
     def __new__(cls):
         self = super(PopularQuestion, cls).__new__(cls)
-        self.name = _('Popular Question')
+        self.name = askbot_settings.WORDS_POPULAR_QUESTION
         self.key = 'popular-question'
         self.level = const.BRONZE_BADGE
         self.min_views = askbot_settings.POPULAR_QUESTION_BADGE_MIN_VIEWS
-        self.description = _('Asked a question with %(views)s views') \
-                            % {'views' : self.min_views}
+        self.description = _('%(asked_a_question)s with %(views)s views') % {
+                            'views' : self.min_views,
+                            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
+                        }
         return self
 
 class NotableQuestion(FrequentedQuestion):
     def __new__(cls):
         self = super(NotableQuestion, cls).__new__(cls)
-        self.name = _('Notable Question')
+        self.name = askbot_settings.WORDS_NOTABLE_QUESTION
         self.key = 'notable-question'
         self.level = const.SILVER_BADGE
         self.min_views = askbot_settings.NOTABLE_QUESTION_BADGE_MIN_VIEWS
-        self.description = _('Asked a question with %(views)s views') \
-                            % {'views' : self.min_views}
+        self.description = _('%(asked_a_question)s with %(views)s views') % {
+                            'views' : self.min_views,
+                            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
+                        }
         return self
 
 class FamousQuestion(FrequentedQuestion):
     def __new__(cls):
         self = super(FamousQuestion, cls).__new__(cls)
-        self.name = _('Famous Question')
+        self.name = askbot_settings.WORDS_FAMOUS_QUESTION
         self.key = 'famous-question'
         self.level = const.GOLD_BADGE
         self.multiple = True
         self.min_views = askbot_settings.FAMOUS_QUESTION_BADGE_MIN_VIEWS
-        self.description = _('Asked a question with %(views)s views') \
-                            % {'views' : self.min_views}
+        self.description = _('%(asked_a_question)s with %(views)s views') % {
+                            'views' : self.min_views,
+                            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
+                        }
         return self
 
 class Scholar(Badge):
@@ -447,7 +479,10 @@ class Scholar(Badge):
     he/she accepts an answer for the first time
     """
     def __init__(self):
-        description = _('Asked a question and accepted an answer')
+        description = _('%(asked_a_question)s and %(accepted_an_answer)s') % {
+                            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION,
+                            'accepted_an_answer': askbot_settings.WORDS_ACCEPTED_AN_ANSWER
+                        }
         super(Scholar, self).__init__(
             key = 'scholar',
             name = _('Scholar'),
@@ -496,8 +531,11 @@ class Enlightened(VotedAcceptedAnswer):
         self.level = const.SILVER_BADGE
         self.multiple = False
         self.min_votes = askbot_settings.ENLIGHTENED_BADGE_MIN_UPVOTES
-        descr = _('First answer was accepted with %(num)s or more votes')
-        self.description = descr % {'num': self.min_votes}
+        descr = _('%(gave_accepted_answer)s upvoted %(num)s or more times')
+        self.description = descr % {
+            'num': self.min_votes,
+            'gave_accepted_answer': askbot_settings.WORDS_GAVE_ACCEPTED_ANSWER
+        }
         return self
 
 class Guru(VotedAcceptedAnswer):
@@ -507,24 +545,31 @@ class Guru(VotedAcceptedAnswer):
         self.name = _('Guru')
         self.level = const.GOLD_BADGE
         self.multiple = True
-        descr = _('Answer accepted with %(num)s or more votes')
         self.min_votes = askbot_settings.GURU_BADGE_MIN_UPVOTES
-        self.description = descr % {'num': self.min_votes}
+        descr = _('%(gave_accepted_answer)s upvoted %(num)s or more times')
+        self.description = descr % {
+            'num': self.min_votes,
+            'gave_accepted_answer': askbot_settings.WORDS_GAVE_ACCEPTED_ANSWER
+        }
         return self
 
 class Necromancer(Badge):
     def __init__(self):
-        description = _(
-            'Answered a question more than %(days)s days '
-            'later with at least %(votes)s votes'
-        )
         days = askbot_settings.NECROMANCER_BADGE_MIN_DELAY
         votes = askbot_settings.NECROMANCER_BADGE_MIN_UPVOTES
+        description = _(
+            '%(answered_a_question)s more than %(days)s days '
+            'later with at least %(votes)s votes'
+        ) % {
+            'days':days,
+            'votes':votes,
+            'answered_a_question': askbot_settings.WORDS_ANSWERED_A_QUESTION
+        }
         super(Necromancer, self).__init__(
             key = 'necromancer',
             name = _('Necromancer'),
             level = const.SILVER_BADGE,
-            description = description % {'days':days, 'votes':votes},
+            description = description,
             multiple = True
         )
 
@@ -660,13 +705,18 @@ class FavoriteTypeBadge(Badge):
     must provide min_stars property for the badge
     """
     def __init__(self):
-        descr = _('Question favorited by %(num)s users')
+        description = _(
+            '%(asked_a_question)s with %(num)s followers'
+        ) % {
+            'num': self.min_stars,
+            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
+        }
         super(FavoriteTypeBadge, self).__init__(
-            key = self.key,
-            name = self.name,
-            level = self.level,
-            multiple = True,
-            description = descr % {'num': self.min_stars}
+            key=self.key,
+            name=self.name,
+            level=self.level,
+            multiple=True,
+            description=description
         )
 
     def consider_award(self, actor = None,
@@ -686,7 +736,7 @@ class StellarQuestion(FavoriteTypeBadge):
     def __new__(cls):
         self = super(StellarQuestion, cls).__new__(cls)
         self.key = 'stellar-question'
-        self.name = _('Stellar Question')
+        self.name = askbot_settings.WORDS_STELLAR_QUESTION
         self.level = const.GOLD_BADGE
         self.min_stars = askbot_settings.STELLAR_QUESTION_BADGE_MIN_STARS
         return self
@@ -695,7 +745,7 @@ class FavoriteQuestion(FavoriteTypeBadge):
     def __new__(cls):
         self = super(FavoriteQuestion, cls).__new__(cls)
         self.key = 'favorite-question'
-        self.name = _('Favorite Question')
+        self.name = askbot_settings.WORDS_FAVORITE_QUESTION
         self.level = const.SILVER_BADGE
         self.min_stars = askbot_settings.FAVORITE_QUESTION_BADGE_MIN_STARS
         return self
@@ -752,8 +802,10 @@ class Taxonomist(Badge):
             name = _('Taxonomist'),
             level = const.SILVER_BADGE,
             multiple = False,
-            description = _(
-                'Created a tag used by %(num)s questions'
+            description = ungettext(
+                'Created a tag used %(num)s time',
+                'Created a tag used %(num)s times'
+                askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT
             ) % {'num': askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT}
         )
 

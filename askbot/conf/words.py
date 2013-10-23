@@ -56,6 +56,60 @@ settings.register(
 )
 
 settings.register(
+    values.LongStringValue(
+        WORDS,
+        'WORDS_INSTRUCTION_TO_ANSWER_OWN_QUESTION',
+        default=_(
+            '<span class="big strong">You are welcome to answer your own question</span>, '
+            'but please make sure to give an <strong>answer</strong>. '
+            'Remember that you can always <strong>revise your original question</strong>.'
+        )
+        description=_('Instruction to answer own questions'),
+        help_text=_('HTML is allowed')
+    )
+)
+
+settings.register(
+    values.LongStringValue(
+        WORDS,
+        'WORDS_INSTRUCTION_TO_POST_ANONYMOUSLY',
+        default=_(
+            '<span class="strong big">Please start posting anonymously</span> - '
+            'your entry will be published after you log in or create a new account.'
+        )
+        description=_('Instruction to post anonymously'),
+        help_text=_('HTML is allowed')
+    )
+)
+
+settings.register(
+    values.LongStringValue(
+        WORDS,
+        'WORDS_INSTRUCTION_TO_GIVE_ANSWERS',
+        default=_(
+            'Please try to <strong>give a substantial answer</strong>, '
+            'for discussions, <strong>please use comments</strong> and '
+            '<strong>do remember to vote</strong>.'
+        )
+        description=_('Instruction to give answers'),
+        help_text=_('HTML is allowed')
+    )
+)
+
+settings.register(
+    values.LongStringValue(
+        WORDS,
+        'WORDS_INSTRUCTION_FOR_THE_CATEGORY_SELECTOR',
+        default=_(
+            'Categorize your question using this tag selector or '
+            'entering text in tag box.'
+        )
+        description=_('Instruction for the catogory selector')
+        help_text=_('Plain text only')
+    )
+)
+
+settings.register(
     values.StringValue(
         WORDS,
         'WORDS_EDIT_YOUR_PREVIOUS_ANSWER',
@@ -80,6 +134,51 @@ settings.register(
         'WORDS_ASKED',
         default=_('asked'),
         description=_('asked'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ASKED_FIRST_QUESTION',
+        default=_('Asked first question'),
+        description=_('Asked first question')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ASKED_A_QUESTION',
+        default=_('Asked a question'),
+        description=_('Asked a question')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ANSWERED_A_QUESTION',
+        default=_('Answered a question'),
+        description=_('Answered a question')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ACCEPTED_AN_ANSWER',
+        default=_('accepted an answer'),
+        description=_('accepted an answer')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_GAVE_ACCEPTED_ANSWER',
+        default=_('Gave accepted answer'),
+        description=_('Gave accepted answer')
     )
 )
 
@@ -140,6 +239,152 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_QUESTION_VOTED_UP',
+        default=_('Question voted up'),
+        description=_('Question voted up'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ANSWER_VOTED_UP',
+        default=_('Answer voted up'),
+        description=_('Answer voted up'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_UPVOTED_ANSWER',
+        default=_('upvoted answer'),
+        description=_('upvoted answer'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_NICE_ANSWER',
+        default=_('Nice Answer'),
+        description=_('Nice Answer')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_NICE_ANSWER',
+        default=_('Nice Question'),
+        description=_('Nice Question'),
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_GOOD_ANSWER',
+        default=_('Good Answer'),
+        description=_('Good Answer')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_GOOD_QUESTION',
+        default=_('Good Question'),
+        description=_('Good Question')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_GREAT_ANSWER',
+        default=_('Great Answer'),
+        description=_('Great Answer')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_GREAT_QUESTION',
+        default=_('Great Question'),
+        description=_('Great Question')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_POPULAR_QUESTION',
+        default=_('Popular Question'),
+        description=_('Popular Question')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_NOTABLE_QUESTION',
+        default=_('Notable Question'),
+        description=_('Notable Question')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_FAMOUS_QUESTION',
+        default=_('Famous Question'),
+        description=_('Famous Question')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_STELLAR_QUESTION',
+        default=_('Stellar Question'),
+        description=_('Stellar Question')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_FAVORITE_QUESTION',
+        default=_('Favorite Question'),
+        description=_('Favorite Question')
+        help_text='Badge name'
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_UPVOTED_ANSWERS',
+        default=_('upvoted answers'),
+        description=_('upvoted answers'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_SHOW_ONLY_QUESTIONS_FROM',
         default=_('Show only questions from'),
         description=_('Show only questions from'),
@@ -173,6 +418,15 @@ settings.register(
         'WORDS_PLEASE_ENTER_YOUR_QUESTION',
         default=_('Please enter your question'),
         description=_('Please enter your question'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_DELETE_YOUR_QUESTION',
+        default=_('delete your question'),
+        description=_('delete your question'),
     )
 )
 
@@ -270,8 +524,44 @@ settings.register(
     values.StringValue(
         WORDS,
         'WORDS_ACCEPT_OR_UNACCEPT_OWN_ANSWER',
-        defaulw=_('accept or unaccept your own answer'),
+        default=_('accept or unaccept your own answer'),
         description=_('accept or unaccept your own answer'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_YOU_ALREADY_GAVE_AN_ANSWER',
+        default=_('you already gave an answer'),
+        description=_('you already gave an answer'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_GAVE_AN_ANSWER',
+        default=_('gave an answer'),
+        description=_('gave an answer'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ANSWER_OWN_QUESTIONS',
+        default=_('answer own questions'),
+        description=_('answer own questions'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ANSWERED_OWN_QUESTION',
+        default=_('Answered own question'),
+        description=_('Answered own question'),
     )
 )
 
@@ -497,6 +787,24 @@ settings.register(
         'WORDS_GIVE_AN_ANSWER_INTERESTING_TO_THIS_COMMUNITY',
         default=_('give an answer interesting to this community'),
         description=_('give an answer interesting to this community'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_GIVE_AN_ANSWER_INTERESTING_TO_THIS_COMMUNITY',
+        default=_('give an answer interesting to this community'),
+        description=_('give an answer interesting to this community'),
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_GIVE_A_GOOD_ANSWER',
+        default=_('give a substantial answer'),
+        description=_('give a substantial answer'),
     )
 )
 
