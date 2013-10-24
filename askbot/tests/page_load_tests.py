@@ -54,6 +54,7 @@ class PageLoadTestCase(AskbotTestCase):
     #
     @classmethod
     def setUpClass(cls):
+        super(PageLoadTestCase, cls).setUpClass()
         management.call_command('flush', verbosity=0, interactive=False)
         activate_language(settings.LANGUAGE_CODE)
         management.call_command('askbot_add_test_content', verbosity=0, interactive=False)

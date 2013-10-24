@@ -36,7 +36,6 @@ from django_countries.fields import CountryField
 from askbot import exceptions as askbot_exceptions
 from askbot import const
 from askbot.const import message_keys
-from askbot.const.message_keys import get_i18n_message
 from askbot.conf import settings as askbot_settings
 from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
@@ -591,20 +590,20 @@ def _assert_user_can(
             raise django_exceptions.PermissionDenied(message)
 
     if blocked_user_cannot and user.is_blocked():
-        error_message = _(message_keys.ACCOUNT_CANT_PERFORM_ACTION) % {
+        error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
             'perform_action': action_display,
             'your_account_is': _('your account is blocked')
         }
     elif post and owner_can and user == post.get_owner():
-        if suspended_user_cannot or suspended_owner_cannot and user.is_suspended():
-            error_message = _(message_keys.ACCOUNT_CANT_PERFORM_ACTION) % {
+        if user.is_suspended() and suspended_owner_cannot:
+            error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
                 'perform_action': action_display,
                 'your_account_is': _('your account is suspended')
             }
         else:
             return
     elif suspended_user_cannot and user.is_suspended():
-        error_message = _(message_keys.ACCOUNT_CANT_PERFORM_ACTION) % {
+        error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
             'perform_action': action_display,
             'your_account_is': _('your account is suspended')
         }
@@ -651,11 +650,11 @@ def user_assert_can_approve_post_revision(self, post_revision = None):
 
 def user_assert_can_unaccept_best_answer(self, answer = None):
     assert getattr(answer, 'post_type', '') == 'answer'
-    suspended_error_message = _(message_keys.ACCOUNT_CANT_PERFORM_ACCTION) % {
+    suspended_error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
         'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
         'your_account_is': _('your account is suspended')
     }
-    blocked_error_message = _(message_keys.ACCOUNT_CANT_PERFORM_ACTION) % {
+    blocked_error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
         'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
         'your_account_is': _('your account is blocked')
     }
@@ -829,18 +828,17 @@ def user_assert_can_edit_comment(self, comment = None):
 def user_can_post_comment(self, parent_post = None):
     """a simplified method to test ability to comment
     """
-    return True
-    """
-    #commented out to disable the min rep
-    if self.reputation >= askbot_settings.MIN_REP_TO_LEAVE_COMMENTS:
-        return True
-    if parent_post and self == parent_post.author:
-        return True
     if self.is_administrator_or_moderator():
         return True
-    return False
-    """
+    elif self.is_suspended():
+        if parent_post and self == parent_post.author:
+            return True
+        else:
+            return False
+    elif self.is_blocked():
+        return False
 
+    return True
 
 def user_assert_can_post_comment(self, parent_post = None):
     """raises exceptions.PermissionDenied if
@@ -849,9 +847,10 @@ def user_assert_can_post_comment(self, parent_post = None):
     the reason will be in text of exception
     """
     _assert_user_can(
-        user = self,
-        post = parent_post,
+        user=self,
+        post=parent_post,
         action_display=_('post comments'),
+        owner_can=True,
         blocked_user_cannot=True,
         suspended_user_cannot=True,
     )
@@ -968,8 +967,8 @@ def user_assert_can_delete_question(self, question = None):
                     'has some %(upvoted_answers)s posted by other users',
                     answer_count
                 ) % {
-                    'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION
-                    'upvoted_answer': askbot_settings.WORDS_UPVOTED_ANSWER
+                    'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION,
+                    'upvoted_answer': askbot_settings.WORDS_UPVOTED_ANSWER,
                     'upvoted_answers': askbot_settings.WORDS_UPVOTED_ANSWERS
                 }
                 raise django_exceptions.PermissionDenied(msg)
@@ -1110,7 +1109,7 @@ def user_assert_can_retag_question(self, question = None):
         post=question,
         action_display=askbot_settings.WORDS_RETAG_QUESTIONS,
         owner_can=True,
-        blocked_error_cannot=True,
+        blocked_user_cannot=True,
         suspended_user_cannot=True,
         min_rep_setting=askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS
     )
@@ -1239,7 +1238,7 @@ def user_post_anonymous_askbot_content(user, session_key):
                 account_status = _('your account is blocked')
             elif user.is_suspended():
                 account_status = _('your account is suspended')
-            user.message_set.create(message = _(message_keys.ACCOUNT_CANT_PERFORM_ACTION) % {
+            user.message_set.create(message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
                 'perform_action': _('make posts'),
                 'your_account_is': account_status
             })

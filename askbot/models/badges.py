@@ -403,8 +403,8 @@ class Student(QualityPost):
         self.multiple = False
         self.min_votes = 1
         self.description = _('%(asked_first_question)s with at least one up vote') % {
-                            'asked_first_question': askbot_settings.ASKED_FIRST_QUESTION
-                        }
+                        'asked_first_question': askbot_settings.WORDS_ASKED_FIRST_QUESTION
+                    }
         self.post_type = 'question'
         return self
 
@@ -804,7 +804,7 @@ class Taxonomist(Badge):
             multiple = False,
             description = ungettext(
                 'Created a tag used %(num)s time',
-                'Created a tag used %(num)s times'
+                'Created a tag used %(num)s times',
                 askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT
             ) % {'num': askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT}
         )

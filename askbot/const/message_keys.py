@@ -4,12 +4,6 @@ that are used as variables
 it is important that a dummy _() function is used here
 this way message key will be pulled into django.po
 and can still be used as a variable in python files.
-
-In addition, some messages are repeated too many times
-in the code, so we need to be able to retreive them
-by a key. Therefore we have a function here, called
-get_i18n_message(). Possibly all messages included in 
-this file could be implemented this way.
 '''
 _ = lambda v:v
 

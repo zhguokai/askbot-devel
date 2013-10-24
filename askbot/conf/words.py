@@ -63,7 +63,7 @@ settings.register(
             '<span class="big strong">You are welcome to answer your own question</span>, '
             'but please make sure to give an <strong>answer</strong>. '
             'Remember that you can always <strong>revise your original question</strong>.'
-        )
+        ),
         description=_('Instruction to answer own questions'),
         help_text=_('HTML is allowed')
     )
@@ -76,7 +76,7 @@ settings.register(
         default=_(
             '<span class="strong big">Please start posting anonymously</span> - '
             'your entry will be published after you log in or create a new account.'
-        )
+        ),
         description=_('Instruction to post anonymously'),
         help_text=_('HTML is allowed')
     )
@@ -90,7 +90,7 @@ settings.register(
             'Please try to <strong>give a substantial answer</strong>, '
             'for discussions, <strong>please use comments</strong> and '
             '<strong>do remember to vote</strong>.'
-        )
+        ),
         description=_('Instruction to give answers'),
         help_text=_('HTML is allowed')
     )
@@ -103,8 +103,8 @@ settings.register(
         default=_(
             'Categorize your question using this tag selector or '
             'entering text in tag box.'
-        )
-        description=_('Instruction for the catogory selector')
+        ),
+        description=_('Instruction for the catogory selector'),
         help_text=_('Plain text only')
     )
 )
@@ -268,7 +268,7 @@ settings.register(
         WORDS,
         'WORDS_NICE_ANSWER',
         default=_('Nice Answer'),
-        description=_('Nice Answer')
+        description=_('Nice Answer'),
         help_text='Badge name'
     )
 )
@@ -276,7 +276,7 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_NICE_ANSWER',
+        'WORDS_NICE_QUESTION',
         default=_('Nice Question'),
         description=_('Nice Question'),
         help_text='Badge name'
@@ -288,7 +288,7 @@ settings.register(
         WORDS,
         'WORDS_GOOD_ANSWER',
         default=_('Good Answer'),
-        description=_('Good Answer')
+        description=_('Good Answer'),
         help_text='Badge name'
     )
 )
@@ -298,7 +298,7 @@ settings.register(
         WORDS,
         'WORDS_GOOD_QUESTION',
         default=_('Good Question'),
-        description=_('Good Question')
+        description=_('Good Question'),
         help_text='Badge name'
     )
 )
@@ -308,7 +308,7 @@ settings.register(
         WORDS,
         'WORDS_GREAT_ANSWER',
         default=_('Great Answer'),
-        description=_('Great Answer')
+        description=_('Great Answer'),
         help_text='Badge name'
     )
 )
@@ -318,7 +318,7 @@ settings.register(
         WORDS,
         'WORDS_GREAT_QUESTION',
         default=_('Great Question'),
-        description=_('Great Question')
+        description=_('Great Question'),
         help_text='Badge name'
     )
 )
@@ -328,7 +328,7 @@ settings.register(
         WORDS,
         'WORDS_POPULAR_QUESTION',
         default=_('Popular Question'),
-        description=_('Popular Question')
+        description=_('Popular Question'),
         help_text='Badge name'
     )
 )
@@ -338,7 +338,7 @@ settings.register(
         WORDS,
         'WORDS_NOTABLE_QUESTION',
         default=_('Notable Question'),
-        description=_('Notable Question')
+        description=_('Notable Question'),
         help_text='Badge name'
     )
 )
@@ -348,7 +348,7 @@ settings.register(
         WORDS,
         'WORDS_FAMOUS_QUESTION',
         default=_('Famous Question'),
-        description=_('Famous Question')
+        description=_('Famous Question'),
         help_text='Badge name'
     )
 )
@@ -358,7 +358,7 @@ settings.register(
         WORDS,
         'WORDS_STELLAR_QUESTION',
         default=_('Stellar Question'),
-        description=_('Stellar Question')
+        description=_('Stellar Question'),
         help_text='Badge name'
     )
 )
@@ -368,7 +368,7 @@ settings.register(
         WORDS,
         'WORDS_FAVORITE_QUESTION',
         default=_('Favorite Question'),
-        description=_('Favorite Question')
+        description=_('Favorite Question'),
         help_text='Badge name'
     )
 )
@@ -496,7 +496,7 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_ACCEPT_BEST_ANWERS_FOR_YOUR_QUESTIONS',
+        'WORDS_ACCEPT_BEST_ANSWERS_FOR_YOUR_QUESTIONS',
         default=_('Accept the best answers for your questions'),
         description=_('Accept the best answers for your questions')
     )
