@@ -89,7 +89,7 @@ def urlize_html(html):
 
         #bs4 is weird, so we work around to replace nodes
         #maybe there is a better way though
-        urlized_text = urlize(node)
+        urlized_text = urlize(node, trim_url_limit=40)
         if unicode(node) == urlized_text:
             continue
 
