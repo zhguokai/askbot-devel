@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-13 14:07-0500\n"
+"POT-Creation-Date: 2013-10-16 16:35-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -312,7 +312,7 @@ msgstr ""
 msgid "Are you sure you don't want to post this comment?"
 msgstr "Are you sure you do not want to post this comment?"
 
-#: media/js/post.js:1890 media/js/utils.js:3360 media/js/utils.js.c:3515
+#: media/js/post.js:1890 media/js/utils.js:3804 media/js/utils.js.c:3959
 msgid "just now"
 msgstr ""
 
@@ -374,7 +374,7 @@ msgstr[1] ""
 msgid "Delete category?"
 msgstr ""
 
-#: media/js/post.js:3888 media/js/utils.js:881
+#: media/js/post.js:3888 media/js/utils.js:1320
 msgid "edit"
 msgstr "edit"
 
@@ -393,10 +393,6 @@ msgstr ""
 
 #: media/js/post.js:4594
 msgid "save tags"
-msgstr ""
-
-#: media/js/post.js:4689 media/js/post.js.c:4723
-msgid "User name:"
 msgstr ""
 
 #: media/js/post.js:4710
@@ -519,202 +515,207 @@ msgstr ""
 msgid "click to close"
 msgstr ""
 
-#: media/js/utils.js:880
+#: media/js/utils.js:619
+#, c-format
+msgid "page %s"
+msgstr ""
+
+#: media/js/utils.js:1319
 msgid "click to edit this comment"
 msgstr "click to edit this comment"
 
-#: media/js/utils.js:905
+#: media/js/utils.js:1344
 msgid "convert to answer"
 msgstr ""
 
-#: media/js/utils.js:958
+#: media/js/utils.js:1397
 msgid "Ok"
 msgstr ""
 
-#: media/js/utils.js:959 media/js/utils.js.c:1407
+#: media/js/utils.js:1398 media/js/utils.js.c:1851
 msgid "Cancel"
 msgstr ""
 
-#: media/js/utils.js:1219
+#: media/js/utils.js:1663
 #, c-format
 msgid "Uploaded file: %s"
 msgstr ""
 
-#: media/js/utils.js:1234
+#: media/js/utils.js:1678
 msgid "Choose a different image"
 msgstr ""
 
-#: media/js/utils.js:1236
+#: media/js/utils.js:1680
 msgid "Choose a different file"
 msgstr ""
 
-#: media/js/utils.js:1250
+#: media/js/utils.js:1694
 msgid "Oops, looks like we had an error. Sorry."
 msgstr ""
 
-#: media/js/utils.js:1311
+#: media/js/utils.js:1755
 msgid "Choose an image to insert"
 msgstr ""
 
-#: media/js/utils.js:1313
+#: media/js/utils.js:1757
 msgid "Choose a file to insert"
 msgstr ""
 
-#: media/js/utils.js:1326
+#: media/js/utils.js:1770
 msgid "Allowed file types are:"
 msgstr ""
 
-#: media/js/utils.js:1332
+#: media/js/utils.js:1776
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:35
 msgid "Or paste file url here"
 msgstr ""
 
-#: media/js/utils.js:1406
+#: media/js/utils.js:1850
 msgid "Save"
 msgstr ""
 
-#: media/js/utils.js:1478
+#: media/js/utils.js:1922
 msgid "saved"
 msgstr ""
 
-#: media/js/utils.js:1602
+#: media/js/utils.js:2046
 msgid "enabled"
 msgstr ""
 
-#: media/js/utils.js:1604
+#: media/js/utils.js:2048
 msgid "disabled"
 msgstr ""
 
-#: media/js/utils.js:2038
+#: media/js/utils.js:2482
 msgid "group name"
 msgstr ""
 
-#: media/js/utils.js:2046
+#: media/js/utils.js:2490
 msgid "add new group"
 msgstr ""
 
-#: media/js/utils.js:2138
+#: media/js/utils.js:2582
 msgid "Group %(name)s already exists. Group names are case-insensitive."
 msgstr ""
 
-#: media/js/utils.js:2311
+#: media/js/utils.js:2755
 #, c-format
 msgid "see questions tagged '%s'"
 msgstr ""
 
-#: media/js/utils.js:3358
+#: media/js/utils.js:3802
 msgid "ago"
 msgstr ""
 
-#: media/js/utils.js:3359
+#: media/js/utils.js:3803
 msgid "from now"
 msgstr ""
 
-#: media/js/utils.js:3361
+#: media/js/utils.js:3805
 msgid "about a minute"
 msgstr ""
 
-#: media/js/utils.js:3362
+#: media/js/utils.js:3806
 #, c-format
 msgid "%d minutes"
 msgstr ""
 
-#: media/js/utils.js:3363
+#: media/js/utils.js:3807
 msgid "about an hour"
 msgstr ""
 
-#: media/js/utils.js:3364
+#: media/js/utils.js:3808
 #, c-format
 msgid "%d hours"
 msgstr ""
 
-#: media/js/utils.js:3365 media/js/utils.js.c:3493
+#: media/js/utils.js:3809 media/js/utils.js.c:3937
 msgid "yesterday"
 msgstr ""
 
-#: media/js/utils.js:3366
+#: media/js/utils.js:3810
 #, c-format
 msgid "%d days"
 msgstr ""
 
-#: media/js/utils.js:3367
+#: media/js/utils.js:3811
 msgid "about a month"
 msgstr ""
 
-#: media/js/utils.js:3368
+#: media/js/utils.js:3812
 #, c-format
 msgid "%d months"
 msgstr ""
 
-#: media/js/utils.js:3369
+#: media/js/utils.js:3813
 msgid "about a year"
 msgstr ""
 
-#: media/js/utils.js:3370
+#: media/js/utils.js:3814
 #, c-format
 msgid "%d years"
 msgstr ""
 
-#: media/js/utils.js:3468
+#: media/js/utils.js:3912
 msgid "Jan"
 msgstr ""
 
-#: media/js/utils.js:3469
+#: media/js/utils.js:3913
 msgid "Feb"
 msgstr ""
 
-#: media/js/utils.js:3470
+#: media/js/utils.js:3914
 msgid "Mar"
 msgstr ""
 
-#: media/js/utils.js:3471
+#: media/js/utils.js:3915
 msgid "Apr"
 msgstr ""
 
-#: media/js/utils.js:3472
+#: media/js/utils.js:3916
 msgid "May"
 msgstr ""
 
-#: media/js/utils.js:3473
+#: media/js/utils.js:3917
 msgid "Jun"
 msgstr ""
 
-#: media/js/utils.js:3474
+#: media/js/utils.js:3918
 msgid "Jul"
 msgstr ""
 
-#: media/js/utils.js:3475
+#: media/js/utils.js:3919
 msgid "Aug"
 msgstr ""
 
-#: media/js/utils.js:3476
+#: media/js/utils.js:3920
 msgid "Sep"
 msgstr ""
 
-#: media/js/utils.js:3477
+#: media/js/utils.js:3921
 msgid "Oct"
 msgstr ""
 
-#: media/js/utils.js:3478
+#: media/js/utils.js:3922
 msgid "Nov"
 msgstr ""
 
-#: media/js/utils.js:3479
+#: media/js/utils.js:3923
 msgid "Dec"
 msgstr ""
 
-#: media/js/utils.js:3491
+#: media/js/utils.js:3935
 msgid "2 days ago"
 msgstr ""
 
-#: media/js/utils.js:3498
+#: media/js/utils.js:3942
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: media/js/utils.js:3508
+#: media/js/utils.js:3952
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"

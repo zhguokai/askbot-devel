@@ -95,7 +95,7 @@ def notify_author_of_published_revision_celery_task(revision):
         if revision.post.post_type == 'question':
             mailto_link_subject = revision.post.thread.title
         else:
-            mailto_link_subject = _('An edit for my answer')
+            mailto_link_subject = _('make an edit by email')
         #todo: possibly add more mailto thread headers to organize messages
 
         prompt = _('To add to your post EDIT ABOVE THIS LINE')

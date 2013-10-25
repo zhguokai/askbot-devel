@@ -35,7 +35,7 @@ from django.core import exceptions as django_exceptions
 from django_countries.fields import CountryField
 from askbot import exceptions as askbot_exceptions
 from askbot import const
-from askbot.const.message_keys import get_i18n_message
+from askbot.const import message_keys
 from askbot.conf import settings as askbot_settings
 from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
@@ -565,19 +565,16 @@ def user_get_notifications(self, notification_types=None, **kwargs):
                     )
 
 def _assert_user_can(
-                        user = None,
-                        post = None, #related post (may be parent)
-                        admin_or_moderator_required = False,
-                        owner_can = False,
-                        suspended_owner_cannot = False,
-                        owner_min_rep_setting = None,
-                        blocked_error_message = None,
-                        suspended_error_message = None,
-                        min_rep_setting = None,
-                        low_rep_error_message = None,
-                        owner_low_rep_error_message = None,
-                        general_error_message = None,
-                    ):
+        user=None,
+        post=None, #related post (may be parent)
+        admin_or_moderator_required=False,
+        owner_can=False,
+        action_display=None,
+        suspended_owner_cannot=False,
+        suspended_user_cannot=False,
+        blocked_user_cannot=False,
+        min_rep_setting=None
+    ):
     """generic helper assert for use in several
     User.assert_can_XYZ() calls regarding changing content
 
@@ -586,69 +583,81 @@ def _assert_user_can(
     if assertion fails, method raises exception.PermissionDenied
     with appropriate text as a payload
     """
+    action_display = action_display or _('perform this action')
     if askbot_settings.GROUPS_ENABLED:
         if user.is_read_only():
             message = _('Sorry, but you have only read access')
             raise django_exceptions.PermissionDenied(message)
 
-    if general_error_message is None:
-        general_error_message = _('Sorry, this operation is not allowed')
-    if blocked_error_message and user.is_blocked():
-        error_message = blocked_error_message
+    if blocked_user_cannot and user.is_blocked():
+        error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+            'perform_action': action_display,
+            'your_account_is': _('your account is blocked')
+        }
     elif post and owner_can and user == post.get_owner():
-        if owner_min_rep_setting:
-            if post.get_owner().reputation < owner_min_rep_setting:
-                if user.is_moderator() or user.is_administrator():
-                    return
-                else:
-                    assert(owner_low_rep_error_message is not None)
-                    raise askbot_exceptions.InsufficientReputation(
-                                                owner_low_rep_error_message
-                                            )
-        if suspended_owner_cannot and user.is_suspended():
-            if suspended_error_message:
-                error_message = suspended_error_message
-            else:
-                error_message = general_error_message
-            assert(error_message is not None)
-            raise django_exceptions.PermissionDenied(error_message)
+        if user.is_suspended() and suspended_owner_cannot:
+            error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+                'perform_action': action_display,
+                'your_account_is': _('your account is suspended')
+            }
         else:
             return
-        return
-    elif suspended_error_message and user.is_suspended():
-        error_message = suspended_error_message
+    elif suspended_user_cannot and user.is_suspended():
+        error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+            'perform_action': action_display,
+            'your_account_is': _('your account is suspended')
+        }
     elif user.is_administrator() or user.is_moderator():
         return
     elif user.is_post_moderator(post):
         return
-    elif low_rep_error_message and user.reputation < min_rep_setting:
-        raise askbot_exceptions.InsufficientReputation(low_rep_error_message)
+    elif min_rep_setting and user.reputation < min_rep_setting:
+        raise askbot_exceptions.InsufficientReputation(
+            _(message_keys.MIN_REP_REQUIRED_TO_PERFORM_ACTION) % {
+                'perform_action': action_display,
+                'min_rep': min_rep_setting
+            }
+        )
+    elif admin_or_moderator_required:
+        if min_rep_setting is None:
+            #message about admins only
+            error_message = _(
+                'Sorry, only moderators and site administrators can %(perform_action)s'
+            ) % {
+                'perform_action': action_display
+            }
+        else:
+            #message with minimum reputation
+            error_message = _(
+                'Sorry, only administrators, moderators '
+                'or users with reputation > %(min_rep)s '
+                'can %(perform_action)s'
+            ) % {
+                'min_rep': min_rep_setting,
+                'perform_action': action_display
+            }
     else:
-        if admin_or_moderator_required == False:
-            return
+        return
 
-    #if admin or moderator is required, then substitute the message
-    if admin_or_moderator_required:
-        error_message = general_error_message
     assert(error_message is not None)
     raise django_exceptions.PermissionDenied(error_message)
 
 def user_assert_can_approve_post_revision(self, post_revision = None):
     _assert_user_can(
-        user = self,
-        admin_or_moderator_required = True
+        user=self,
+        admin_or_moderator_required=True
     )
 
 def user_assert_can_unaccept_best_answer(self, answer = None):
     assert getattr(answer, 'post_type', '') == 'answer'
-    blocked_error_message = _(
-            'Sorry, you cannot accept or unaccept best answers '
-            'because your account is blocked'
-        )
-    suspended_error_message = _(
-            'Sorry, you cannot accept or unaccept best answers '
-            'because your account is suspended'
-        )
+    suspended_error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+        'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
+        'your_account_is': _('your account is suspended')
+    }
+    blocked_error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+        'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
+        'your_account_is': _('your account is blocked')
+    }
 
     if self.is_blocked():
         error_message = blocked_error_message
@@ -658,18 +667,12 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
         if self == answer.get_owner():
             if not self.is_administrator():
                 #check rep
-                min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
-                low_rep_error_message = _(
-                            ">%(points)s points required to accept or unaccept "
-                            " your own answer to your own question"
-                        ) % {'points': min_rep_setting}
-
                 _assert_user_can(
-                    user = self,
-                    blocked_error_message = blocked_error_message,
-                    suspended_error_message = suspended_error_message,
-                    min_rep_setting = min_rep_setting,
-                    low_rep_error_message = low_rep_error_message
+                    user=self,
+                    action_display=askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_OWN_ANSWER,
+                    blocked_user_cannot=True,
+                    suspended_owner_cannot=True,
+                    min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
                 )
         return # success
 
@@ -683,19 +686,19 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
         )
 
         if datetime.datetime.now() < will_be_able_at:
-            error_message = _(
-                'Sorry, you will be able to accept this answer '
-                'only after %(will_be_able_at)s'
-                ) % {'will_be_able_at': will_be_able_at.strftime('%d/%m/%Y')}
+            error_message = _(message_keys.CANNOT_PERFORM_ACTION_UNTIL) % {
+                'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_OWN_ANSWER,
+                'until': will_be_able_at.strftime('%d/%m/%Y')
+            }
         else:
             return
 
     else:
         question_owner = answer.thread._question_post().get_owner()
-        error_message = _(
-            'Sorry, only moderators or original author of the question '
-            ' - %(username)s - can accept or unaccept the best answer'
-        ) % {'username': question_owner.username}
+        error_message = _(message_keys.MODERATORS_OR_AUTHOR_CAN_PEFROM_ACTION) % {
+            'post_author': askbot_settings.WORDS_AUTHOR_OF_THE_QUESTION,
+            'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
+        }
 
     raise django_exceptions.PermissionDenied(error_message)
 
@@ -719,54 +722,32 @@ def user_assert_can_vote_for_post(
             _('Sorry, you cannot vote for your own posts')
         )
 
-    blocked_error_message = _(
-                'Sorry your account appears to be blocked ' +
-                'and you cannot vote - please contact the ' +
-                'site administrator to resolve the issue'
-            ),
-    suspended_error_message = _(
-                'Sorry your account appears to be suspended ' +
-                'and you cannot vote - please contact the ' +
-                'site administrator to resolve the issue'
-            )
-
     assert(direction in ('up', 'down'))
 
     if direction == 'up':
         min_rep_setting = askbot_settings.MIN_REP_TO_VOTE_UP
-        low_rep_error_message = _(
-                    ">%(points)s points required to upvote"
-                ) % \
-                {'points': askbot_settings.MIN_REP_TO_VOTE_UP}
+        action_display = _('upvote')
     else:
         min_rep_setting = askbot_settings.MIN_REP_TO_VOTE_DOWN
-        low_rep_error_message = _(
-                    ">%(points)s points required to downvote"
-                ) % \
-                {'points': askbot_settings.MIN_REP_TO_VOTE_DOWN}
+        action_display = _('downvote')
 
     _assert_user_can(
-        user = self,
-        blocked_error_message = blocked_error_message,
-        suspended_error_message = suspended_error_message,
+        user=self,
+        action_display=action_display,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
         min_rep_setting = min_rep_setting,
-        low_rep_error_message = low_rep_error_message
     )
 
 
 def user_assert_can_upload_file(request_user):
 
-    blocked_error_message = _('Sorry, blocked users cannot upload files')
-    suspended_error_message = _('Sorry, suspended users cannot upload files')
-    low_rep_error_message = _(
-                        'sorry, file uploading requires karma >%(min_rep)s',
-                    ) % {'min_rep': askbot_settings.MIN_REP_TO_UPLOAD_FILES }
-
     _assert_user_can(
-        user = request_user,
-        suspended_error_message = suspended_error_message,
-        min_rep_setting = askbot_settings.MIN_REP_TO_UPLOAD_FILES,
-        low_rep_error_message = low_rep_error_message
+        user=request_user,
+        action_display=_('upload files'),
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
+        min_rep_setting=askbot_settings.MIN_REP_TO_UPLOAD_FILES
     )
 
 
@@ -787,14 +768,11 @@ def user_assert_can_post_question(self):
     """raises exceptions.PermissionDenied with
     text that has the reason for the denial
     """
-
-    blocked_message = get_i18n_message('BLOCKED_USERS_CANNOT_POST')
-    suspended_message = get_i18n_message('SUSPENDED_USERS_CANNOT_POST')
-
     _assert_user_can(
-            user = self,
-            blocked_error_message = blocked_message,
-            suspended_error_message = suspended_message
+        user=self,
+        action_display=askbot_settings.WORDS_ASK_QUESTIONS,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
     )
 
 
@@ -804,8 +782,10 @@ def user_assert_can_post_answer(self, thread = None):
     limit_answers = askbot_settings.LIMIT_ONE_ANSWER_PER_USER
     if limit_answers and thread.has_answer_by_user(self):
         message = _(
-            'Sorry, you already gave an answer, please edit it instead.'
-        )
+            'Sorry, %(you_already_gave_an_answer)s, please edit it instead.'
+        ) % {
+            'you_already_gave_an_answer': askbot_settings.WORDS_YOU_ALREADY_GAVE_AN_ANSWER
+        }
         raise askbot_exceptions.AnswerAlreadyGiven(message)
 
     self.assert_can_post_question()
@@ -848,18 +828,17 @@ def user_assert_can_edit_comment(self, comment = None):
 def user_can_post_comment(self, parent_post = None):
     """a simplified method to test ability to comment
     """
-    return True
-    """
-    #commented out to disable the min rep
-    if self.reputation >= askbot_settings.MIN_REP_TO_LEAVE_COMMENTS:
-        return True
-    if parent_post and self == parent_post.author:
-        return True
     if self.is_administrator_or_moderator():
         return True
-    return False
-    """
+    elif self.is_suspended():
+        if parent_post and self == parent_post.author:
+            return True
+        else:
+            return False
+    elif self.is_blocked():
+        return False
 
+    return True
 
 def user_assert_can_post_comment(self, parent_post = None):
     """raises exceptions.PermissionDenied if
@@ -867,52 +846,35 @@ def user_assert_can_post_comment(self, parent_post = None):
 
     the reason will be in text of exception
     """
+    _assert_user_can(
+        user=self,
+        post=parent_post,
+        action_display=_('post comments'),
+        owner_can=True,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
+    )
 
-    suspended_error_message = _(
-                'Sorry, since your account is suspended '
-                'you can comment only your own posts'
-            )
-    low_rep_error_message = _(
-                'Sorry, to comment any post a minimum reputation of '
-                '%(min_rep)s points is required. You can still comment '
-                'your own posts and answers to your questions'
-            ) % {'min_rep': 0}#askbot_settings.MIN_REP_TO_LEAVE_COMMENTS}
-
-    blocked_message = get_i18n_message('BLOCKED_USERS_CANNOT_POST')
-
-    try:
-        _assert_user_can(
-            user = self,
-            post = parent_post,
-            owner_can = True,
-            blocked_error_message = blocked_message,
-            suspended_error_message = suspended_error_message,
-            min_rep_setting = 0,#askbot_settings.MIN_REP_TO_LEAVE_COMMENTS,
-            low_rep_error_message = low_rep_error_message,
-        )
-    except askbot_exceptions.InsufficientReputation, e:
-        if parent_post.post_type == 'answer':
-            if self == parent_post.thread._question_post().author:
-                return
-        raise e
-
-def user_assert_can_see_deleted_post(self, post = None):
+def user_assert_can_see_deleted_post(self, post=None):
 
     """attn: this assertion is independently coded in
     Question.get_answers call
     """
+    try:
+        _assert_user_can(
+            user=self,
+            post=post,
+            admin_or_moderator_required=True,
+            owner_can=True
+        )
+    except django_exceptions.PermissionDenied, e:
+        #re-raise the same exception with a different message
+        error_message = _(
+            'This post has been deleted and can be seen only '
+            'by post owners, site administrators and moderators'
+        )
+        raise django_exceptions.PermissionDenied(error_message)
 
-    error_message = _(
-                        'This post has been deleted and can be seen only '
-                        'by post owners, site administrators and moderators'
-                    )
-    _assert_user_can(
-        user = self,
-        post = post,
-        admin_or_moderator_required = True,
-        owner_can = True,
-        general_error_message = error_message
-    )
 
 def user_assert_can_edit_deleted_post(self, post = None):
     assert(post.deleted == True)
@@ -920,9 +882,9 @@ def user_assert_can_edit_deleted_post(self, post = None):
         self.assert_can_see_deleted_post(post)
     except django_exceptions.PermissionDenied, e:
         error_message = _(
-                    'Sorry, only moderators, site administrators '
-                    'and post owners can edit deleted posts'
-                )
+            'Sorry, only moderators, site administrators '
+            'and post owners can edit deleted posts'
+        )
         raise django_exceptions.PermissionDenied(error_message)
 
 def user_assert_can_edit_post(self, post = None):
@@ -935,37 +897,21 @@ def user_assert_can_edit_post(self, post = None):
         return
 
 
-    blocked_error_message = _(
-                'Sorry, since your account is blocked '
-                'you cannot edit posts'
-            )
-    suspended_error_message = _(
-                'Sorry, since your account is suspended '
-                'you can edit only your own posts'
-            )
     if post.wiki == True:
-        low_rep_error_message = _(
-                    'Sorry, to edit wiki posts, a minimum '
-                    'reputation of %(min_rep)s is required'
-                ) % \
-                {'min_rep': askbot_settings.MIN_REP_TO_EDIT_WIKI}
+        action_display=_('edit wiki posts')
         min_rep_setting = askbot_settings.MIN_REP_TO_EDIT_WIKI
     else:
-        low_rep_error_message = _(
-                    'Sorry, to edit other people\'s posts, a minimum '
-                    'reputation of %(min_rep)s is required'
-                ) % \
-                {'min_rep': askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS}
+        action_display=_('edit posts')
         min_rep_setting = askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS
 
     _assert_user_can(
-        user = self,
-        post = post,
-        owner_can = True,
-        blocked_error_message = blocked_error_message,
-        suspended_error_message = suspended_error_message,
-        low_rep_error_message = low_rep_error_message,
-        min_rep_setting = min_rep_setting,
+        user=self,
+        post=post,
+        action_display=action_display,
+        owner_can=True,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
+        min_rep_setting = min_rep_setting
     )
 
 
@@ -1015,12 +961,16 @@ def user_assert_can_delete_question(self, question = None):
                 return
             else:
                 msg = ungettext(
-                    'Sorry, cannot delete your question since it '
-                    'has an upvoted answer posted by someone else',
-                    'Sorry, cannot delete your question since it '
-                    'has some upvoted answers posted by other users',
+                    'Sorry, cannot %(delete_your_question)s since it '
+                    'has an %(upvoted_answer)s posted by someone else',
+                    'Sorry, cannot %(delete_your_question)s since it '
+                    'has some %(upvoted_answers)s posted by other users',
                     answer_count
-                )
+                ) % {
+                    'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION,
+                    'upvoted_answer': askbot_settings.WORDS_UPVOTED_ANSWER,
+                    'upvoted_answers': askbot_settings.WORDS_UPVOTED_ANSWERS
+                }
                 raise django_exceptions.PermissionDenied(msg)
 
 
@@ -1029,111 +979,44 @@ def user_assert_can_delete_answer(self, answer = None):
     instead of "answer", because this logic also applies to
     assert on deleting question (in addition to some special rules)
     """
-    blocked_error_message = _(
-                'Sorry, since your account is blocked '
-                'you cannot delete posts'
-            )
-    suspended_error_message = _(
-                'Sorry, since your account is suspended '
-                'you can delete only your own posts'
-            )
-    low_rep_error_message = _(
-                'Sorry, to delete other people\'s posts, a minimum '
-                'reputation of %(min_rep)s is required'
-            ) % \
-            {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS}
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS
-
-
     _assert_user_can(
-        user = self,
-        post = answer,
-        owner_can = True,
-        blocked_error_message = blocked_error_message,
-        suspended_error_message = suspended_error_message,
-        low_rep_error_message = low_rep_error_message,
-        min_rep_setting = min_rep_setting,
+        user=self,
+        post=answer,
+        action_display=_('delete posts'),
+        owner_can=True,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
+        min_rep_setting=min_rep_setting,
     )
 
 
 def user_assert_can_close_question(self, question = None):
     assert(getattr(question, 'post_type', '') == 'question')
-    blocked_error_message = _(
-                'Sorry, since your account is blocked '
-                'you cannot close questions'
-            )
-    suspended_error_message = _(
-                'Sorry, since your account is suspended '
-                'you cannot close questions'
-            )
-    low_rep_error_message = _(
-                'Sorry, to close other people\' posts, a minimum '
-                'reputation of %(min_rep)s is required'
-            ) % \
-            {'min_rep': askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS}
     min_rep_setting = askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS
-
-    owner_min_rep_setting =  askbot_settings.MIN_REP_TO_CLOSE_OWN_QUESTIONS
-
-    owner_low_rep_error_message = _(
-                        'Sorry, to close own question '
-                        'a minimum reputation of %(min_rep)s is required'
-                    ) % {'min_rep': owner_min_rep_setting}
-
-
     _assert_user_can(
         user = self,
         post = question,
+        action_display=askbot_settings.WORDS_CLOSE_QUESTIONS,
         owner_can = True,
         suspended_owner_cannot = True,
-        owner_min_rep_setting = owner_min_rep_setting,
-        blocked_error_message = blocked_error_message,
-        suspended_error_message = suspended_error_message,
-        low_rep_error_message = low_rep_error_message,
-        owner_low_rep_error_message = owner_low_rep_error_message,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
         min_rep_setting = min_rep_setting,
     )
 
 
 def user_assert_can_reopen_question(self, question = None):
     assert(question.post_type == 'question')
-
-    #for some reason rep to reopen own questions != rep to close own q's
-    owner_min_rep_setting =  askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS
-    min_rep_setting = askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS
-
-    general_error_message = _(
-                        'Sorry, only administrators, moderators '
-                        'or post owners with reputation > %(min_rep)s '
-                        'can reopen questions.'
-                    ) % {'min_rep': owner_min_rep_setting }
-
-    owner_low_rep_error_message = _(
-                        'Sorry, to reopen own question '
-                        'a minimum reputation of %(min_rep)s is required'
-                    ) % {'min_rep': owner_min_rep_setting}
-
-    blocked_error_message = _(
-            'Sorry, you cannot reopen questions '
-            'because your account is blocked'
-        )
-
-    suspended_error_message = _(
-            'Sorry, you cannot reopen questions '
-            'because your account is suspended'
-        )
-
     _assert_user_can(
-        user = self,
-        post = question,
-        owner_can = True,
-        suspended_owner_cannot = True,
-        owner_min_rep_setting = owner_min_rep_setting,
-        min_rep_setting = min_rep_setting,
-        owner_low_rep_error_message = owner_low_rep_error_message,
-        general_error_message = general_error_message,
-        blocked_error_message = blocked_error_message,
-        suspended_error_message = suspended_error_message
+        user=self,
+        post=question,
+        action_display=_('reopen questions'),
+        suspended_owner_cannot=True,
+        #for some reason rep to reopen own questions != rep to close own q's
+        min_rep_setting=askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
     )
 
 
@@ -1142,37 +1025,21 @@ def user_assert_can_flag_offensive(self, post = None):
     assert(post is not None)
 
     double_flagging_error_message = _(
-        'You have flagged this question before and '
+        'You have flagged this post before and '
         'cannot do it more than once'
     )
 
     if self.get_flags_for_post(post).count() > 0:
         raise askbot_exceptions.DuplicateCommand(double_flagging_error_message)
 
-    blocked_error_message = _(
-        'Sorry, since your account is blocked '
-        'you cannot flag posts as offensive'
-    )
-
-    suspended_error_message = _(
-        'Sorry, your account appears to be suspended and you cannot make new posts '
-        'until this issue is resolved. You can, however edit your existing posts. '
-        'Please contact the forum administrator to reach a resolution.'
-    )
-
-    low_rep_error_message = _(
-        'Sorry, to flag posts as offensive a minimum reputation '
-        'of %(min_rep)s is required'
-    ) % \
-                        {'min_rep': askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE}
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
 
     _assert_user_can(
         user = self,
         post = post,
-        blocked_error_message = blocked_error_message,
-        suspended_error_message = suspended_error_message,
-        low_rep_error_message = low_rep_error_message,
+        action_display=_('flag posts as offensive'),
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
         min_rep_setting = min_rep_setting
     )
     #one extra assertion
@@ -1199,28 +1066,13 @@ def user_assert_can_remove_flag_offensive(self, post = None):
     if self.get_flags_for_post(post).count() < 1:
         raise django_exceptions.PermissionDenied(non_existing_flagging_error_message)
 
-    blocked_error_message = _(
-        'Sorry, since your account is blocked you cannot remove flags'
-    )
-
-    suspended_error_message = _(
-        'Sorry, your account appears to be suspended and you cannot remove flags. '
-        'Please contact the forum administrator to reach a resolution.'
-    )
-
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
-    low_rep_error_message = ungettext(
-        'Sorry, to flag posts a minimum reputation of %(min_rep)d is required',
-        'Sorry, to flag posts a minimum reputation of %(min_rep)d is required',
-        min_rep_setting
-    ) % {'min_rep': min_rep_setting}
-
     _assert_user_can(
         user = self,
         post = post,
-        blocked_error_message = blocked_error_message,
-        suspended_error_message = suspended_error_message,
-        low_rep_error_message = low_rep_error_message,
+        action_display=_('remove flags'),
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
         min_rep_setting = min_rep_setting
     )
     #one extra assertion
@@ -1250,67 +1102,30 @@ def user_assert_can_remove_all_flags_offensive(self, post = None):
 def user_assert_can_retag_question(self, question = None):
 
     if question.deleted == True:
-        try:
-            self.assert_can_edit_deleted_post(question)
-        except django_exceptions.PermissionDenied:
-            error_message = _(
-                            'Sorry, only question owners, '
-                            'site administrators and moderators '
-                            'can retag deleted questions'
-                        )
-            raise django_exceptions.PermissionDenied(error_message)
-
-
-    blocked_error_message = _(
-                'Sorry, since your account is blocked '
-                'you cannot retag questions'
-            )
-    suspended_error_message = _(
-                'Sorry, since your account is suspended '
-                'you can retag only your own questions'
-            )
-    low_rep_error_message = _(
-                'Sorry, to retag questions a minimum '
-                'reputation of %(min_rep)s is required'
-            ) % \
-            {'min_rep': askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS}
-    min_rep_setting = askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS
+        self.assert_can_edit_deleted_post(question)
 
     _assert_user_can(
-        user = self,
-        post = question,
-        owner_can = True,
-        blocked_error_message = blocked_error_message,
-        suspended_error_message = suspended_error_message,
-        low_rep_error_message = low_rep_error_message,
-        min_rep_setting = min_rep_setting,
+        user=self,
+        post=question,
+        action_display=askbot_settings.WORDS_RETAG_QUESTIONS,
+        owner_can=True,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
+        min_rep_setting=askbot_settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS
     )
 
 
 def user_assert_can_delete_comment(self, comment = None):
-    blocked_error_message = _(
-                'Sorry, since your account is blocked '
-                'you cannot delete comment'
-            )
-    suspended_error_message = _(
-                'Sorry, since your account is suspended '
-                'you can delete only your own comments'
-            )
-    low_rep_error_message = _(
-                'Sorry, to delete comments '
-                'reputation of %(min_rep)s is required'
-            ) % \
-            {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS
 
 
     _assert_user_can(
         user = self,
         post = comment,
+        action_display=_('delete comments'),
         owner_can = True,
-        blocked_error_message = blocked_error_message,
-        suspended_error_message = suspended_error_message,
-        low_rep_error_message = low_rep_error_message,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
         min_rep_setting = min_rep_setting,
     )
 
@@ -1418,12 +1233,15 @@ def user_post_anonymous_askbot_content(user, session_key):
             aa.save()
         #maybe add pending posts message?
     else:
-        if user.is_blocked():
-            msg = get_i18n_message('BLOCKED_USERS_CANNOT_POST')
-            user.message_set.create(message = msg)
-        elif user.is_suspended():
-            msg = get_i18n_message('SUSPENDED_USERS_CANNOT_POST')
-            user.message_set.create(message = msg)
+        if user.is_blocked() or user.is_suspended():
+            if user.is_blocked():
+                account_status = _('your account is blocked')
+            elif user.is_suspended():
+                account_status = _('your account is suspended')
+            user.message_set.create(message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+                'perform_action': _('make posts'),
+                'your_account_is': account_status
+            })
         else:
             for aq in aq_list:
                 aq.publish(user)
@@ -2053,9 +1871,13 @@ def user_post_answer(
                 left = ungettext('in %(min)d min','in %(min)d mins',minutes) % {'min':minutes}
             day = ungettext('%(days)d day','%(days)d days',askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION) % {'days':askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION}
             error_message = _(
-                'New users must wait %(days)s before answering their own question. '
+                'New users must wait %(days)s to %(answer_own_questions)s. '
                 ' You can post an answer %(left)s'
-                ) % {'days': day,'left': left}
+                ) % {
+                    'days': day,
+                    'left': left,
+                    'answer_own_questions': askbot_settings.WORDS_ANSWER_OWN_QUESTIONS
+                }
             assert(error_message is not None)
             raise django_exceptions.PermissionDenied(error_message)
 

@@ -1,13 +1,14 @@
 {% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- template answer_edit.html -->
-{% block title %}{% spaceless %}{% trans %}Edit answer{% endtrans %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{{ settings.WORDS_EDIT_ANSWER|escape }}{% endspaceless %}{% endblock %}
 {% block forestyle %}
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}
 <div class="section-title">
-    {% trans %}Edit answer{% endtrans %} [<a href="{{ answer.thread._question_post().get_absolute_url() }}#{{ answer.id }}">{% trans %}back{% endtrans %}</a>]
+{{ settings.WORDS_EDIT_ANSWER|escape }}
+[<a href="{{ answer.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]
 </div>
 <div id="main-body" class="ask-body">
     <form id="fmedit" action="{% url edit_answer answer.id %}" method="post" >{% csrf_token %}

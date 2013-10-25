@@ -1,5 +1,6 @@
 """utility functions used by Askbot test cases
 """
+from django.core.cache import cache
 from django.test import TestCase
 from functools import wraps
 from askbot import models
@@ -93,6 +94,10 @@ class AskbotTestCase(TestCase):
     """adds some askbot-specific methods
     to django TestCase class
     """
+
+    @classmethod
+    def setUpClass(cls):
+        cache.clear()
 
     def create_user(
                 self,

@@ -1,19 +1,19 @@
 {% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- question_edit.html -->
-{% block title %}{% spaceless %}{% trans %}Edit question{% endtrans %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{{ settings.WORDS_EDIT_QUESTION|escape }}{% endspaceless %}{% endblock %}
 {% block forestyle %}
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}
-<div class="section-title">{% trans %}Edit question{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</div>
+<div class="section-title">{{ settings.WORDS_EDIT_QUESTION|escape }} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</div>
 <form id="fmedit" action="{% url edit_question question.id %}" method="post" >{% csrf_token %}
     {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
     {{ revision_form.revision }}
     <input type="hidden" id="select_revision" name="select_revision" value="false"/>
     <div class="form-item">
         <label for="id_title" >
-            {% trans %}Question - in one sentence{% endtrans %}
+            {{ settings.WORDS_QUESTION_IN_ONE_SENTENCE|escape }}
             {% if form.title.errors %}
                 {{ form.title.errors }}
             {% endif %}

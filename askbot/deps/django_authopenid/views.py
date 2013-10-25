@@ -735,8 +735,8 @@ def show_signin_view(
         'page_class': 'openid-signin',
         'view_subtype': view_subtype, #add_openid|default
         'page_title': page_title,
-        'question':question,
-        'answer':answer,
+        'question': question,
+        'answer': answer,
         'login_form': login_form,
         'use_password_login': util.use_password_login(),
         'account_recovery_form': account_recovery_form,
@@ -1352,16 +1352,3 @@ def account_recover(request):
             return show_signin_view(request, view_subtype = 'bad_key')
 
         return HttpResponseRedirect(get_next_url(request))
-
-#internal server view used as return value by other views
-def validation_email_sent(request):
-    """this function is called only if EMAIL_VALIDATION setting is
-    set to True bolean value"""
-    assert(askbot_settings.EMAIL_VALIDATION == True)
-    logging.debug('')
-    data = {
-        'email': request.user.email,
-        'change_email_url': reverse('user_changeemail'),
-        'action_type': 'validate'
-    }
-    return render(request, 'authopenid/changeemail.html', data)

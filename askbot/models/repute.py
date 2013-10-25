@@ -213,21 +213,10 @@ class Repute(models.Model):
                                 'username': self.user.username,
                                 'question_title': self.question.thread.title
                             }
-            if delta > 0:
-                link_title = _(
-                                '%(points)s points were added for %(username)s\'s '
-                                'contribution to question %(question_title)s'
-                            ) % link_title_data
-            else:
-                link_title = _(
-                                '%(points)s points were subtracted for %(username)s\'s '
-                                'contribution to question %(question_title)s'
-                            ) % link_title_data
 
-            return '<a href="%(url)s" title="%(link_title)s">%(question_title)s</a>' \
+            return '<a href="%(url)s">%(question_title)s</a>' \
                             % {
                                'url': self.question.get_absolute_url(),
                                'question_title': escape(self.question.thread.title),
-                               'link_title': escape(link_title)
                             }
 

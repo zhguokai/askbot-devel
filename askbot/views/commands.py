@@ -283,9 +283,10 @@ def vote(request):
 
             else:
                 raise exceptions.PermissionDenied(
-                        _('Sorry, but anonymous users cannot accept answers')
-                    )
-
+                    _('Sorry, but anonymous users cannot %(perform_action)s') % {
+                        'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER
+                    }
+                )
         elif vote_type in ('1', '2', '5', '6'):#Q&A up/down votes
 
             ###############################

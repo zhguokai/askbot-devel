@@ -7,6 +7,7 @@ text in this project, all unicode text go here.
 from django.utils.translation import ugettext_lazy as _
 import re
 
+#todo: customize words
 CLOSE_REASONS = (
     (1, _('duplicate question')),
     (2, _('question is off-topic or not relevant')),
@@ -122,6 +123,7 @@ DEFAULT_ANSWER_SORT_METHOD = 'votes'
 #of Q.run_advanced_search
 
 DEFAULT_POST_SORT_METHOD = 'activity-desc'
+#todo: customize words
 POST_SCOPE_LIST = (
     ('all', _('all')),
     ('unanswered', _('unanswered')),
@@ -301,13 +303,6 @@ assert(
     == set(RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES.keys())
 )
 
-TYPE_RESPONSE = {
-    'QUESTION_ANSWERED' : _('answered question'),
-    'QUESTION_COMMENTED': _('commented question'),
-    'ANSWER_COMMENTED'  : _('commented answer'),
-    'ANSWER_ACCEPTED'   : _('accepted answer'),
-}
-
 POST_STATUS = {
     'closed': _('[closed]'),
     'deleted': _('[deleted]'),
@@ -433,12 +428,12 @@ AVATAR_STATUS_CHOICE = (
 SEARCH_ORDER_BY = (
                     ('-added_at', _('date descendant')),
                     ('added_at', _('date ascendant')),
-                    ('-last_activity_at', _('activity descendant')),
-                    ('last_activity_at', _('activity ascendant')),
-                    ('-answer_count', _('answers descendant')),
-                    ('answer_count', _('answers ascendant')),
-                    ('-points', _('votes descendant')),
-                    ('points', _('votes ascendant')),
+                    ('-last_activity_at', _('most recently active')),
+                    ('last_activity_at', _('least recently active')),
+                    ('-answer_count', _('more responses')),
+                    ('answer_count', _('fewer responses')),
+                    ('-points', _('more votes')),
+                    ('points', _('less votes')),
                   )
 
 DEFAULT_QUESTION_WIDGET_STYLE = """

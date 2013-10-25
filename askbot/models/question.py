@@ -543,7 +543,7 @@ class ThreadToGroup(models.Model):
 
 
 class Thread(models.Model):
-    SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
+    SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d-%s'
     ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
 
     title = models.CharField(max_length=300)
@@ -836,6 +836,7 @@ class Thread(models.Model):
 
         output = question.format_for_email_as_subthread()
         if answers:
+            #todo: words
             answer_heading = ungettext(
                                     '%(count)d answer:',
                                     '%(count)d answers:',
@@ -911,7 +912,7 @@ class Thread(models.Model):
             #            )
 
     def invalidate_cached_thread_content_fragment(self):
-        cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
 
     def get_post_data_cache_key(self, sort_method = None):
         return 'thread-data-%s-%s' % (self.id, sort_method)
@@ -1490,7 +1491,7 @@ class Thread(models.Model):
         #parameter visitor is there to get summary out by the user groups
         if askbot_settings.GROUPS_ENABLED:
             return None
-        return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
 
     def update_summary_html(self, visitor = None):
         #todo: it is quite wrong that visitor is an argument here
@@ -1515,14 +1516,14 @@ class Thread(models.Model):
         # * Additionally, Memcached treats timeouts > 30day as dates (https://code.djangoproject.com/browser/django/tags/releases/1.3/django/core/cache/backends/memcached.py#L36),
         #   which probably doesn't break anything but if we can stick to 30 days then let's stick to it
         cache.cache.set(
-            self.SUMMARY_CACHE_KEY_TPL % self.id,
+            self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()),
             html,
             timeout=const.LONG_TIME
         )
         return html
 
     def summary_html_cached(self):
-        return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
 
 class QuestionView(models.Model):
     question = models.ForeignKey(Post, related_name='viewed')
@@ -1598,9 +1599,3 @@ class AnonymousQuestion(DraftContent):
                             text=self.text,
                             tagnames=self.tagnames
                         )
-            #add message with a link to the ask page
-            extra_message = _(
-                'Please, <a href="%s">review your question</a>.'
-            ) % reverse('ask')
-            message = string_concat(unicode(error), u' ', extra_message)
-            user.message_set.create(message=unicode(message))

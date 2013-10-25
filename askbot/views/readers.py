@@ -154,6 +154,7 @@ def questions(request, **kwargs):
     if request.is_ajax():
         q_count = paginator.count
 
+        #todo: words
         question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
         question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
 
@@ -738,8 +739,6 @@ def get_perms_data(request):
         'MIN_REP_TO_UPLOAD_FILES',
         'MIN_REP_TO_INSERT_LINK',
         'MIN_REP_TO_SUGGEST_LINK',
-        'MIN_REP_TO_CLOSE_OWN_QUESTIONS',
-        'MIN_REP_TO_REOPEN_OWN_QUESTIONS',
         'MIN_REP_TO_CLOSE_OTHERS_QUESTIONS',
         'MIN_REP_TO_RETAG_OTHERS_QUESTIONS',
         'MIN_REP_TO_EDIT_WIKI',

@@ -246,8 +246,8 @@ class TitleField(forms.CharField):
         self.max_length = 255
         self.label = _('title')
         self.help_text = _(
-            'Please enter your question'
-        )
+            'Please enter your %(question)s'
+        ) % {'question': askbot_settings.WORDS_QUESTION_SINGULAR}
         self.initial = ''
 
     def clean(self, value):
@@ -263,20 +263,21 @@ class TitleField(forms.CharField):
             ) % askbot_settings.MIN_TITLE_LENGTH
             raise forms.ValidationError(msg)
         encoded_value = value.encode('utf-8')
+        question_term = askbot_settings.WORDS_QUESTION_SINGULAR
         if len(value) == len(encoded_value):
             if len(value) > self.max_length:
                 raise forms.ValidationError(
                     _(
-                        'The question is too long, maximum allowed size is '
-                        '%d characters'
-                    ) % self.max_length
+                        'The %(question)s is too long, maximum allowed size is '
+                        '%(length)d characters'
+                    ) % {'question': question_term, 'length': self.max_length}
                 )
         elif len(encoded_value) > self.max_length:
             raise forms.ValidationError(
                 _(
-                    'The question is too long, maximum allowed size is '
-                    '%d bytes'
-                ) % self.max_length
+                    'The %(question)s is too long, maximum allowed size is '
+                    '%(length)d bytes'
+                ) % {'question': question_term, 'length': self.max_length}
             )
 
         return value.strip()  # TODO: test me
@@ -286,9 +287,6 @@ class EditorField(forms.CharField):
     """EditorField is subclassed by the
     :class:`QuestionEditorField` and :class:`AnswerEditorField`
     """
-    length_error_template_singular = 'post content must be > %d character',
-    length_error_template_plural = 'post content must be > %d characters',
-    min_length = 10  # sentinel default value
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -309,16 +307,18 @@ class EditorField(forms.CharField):
         self.label  = _('content')
         self.help_text = u''
         self.initial = ''
+        self.min_length = 10
+        self.post_term_name = _('post')
 
     def clean(self, value):
         if value is None:
             value = ''
         if len(value) < self.min_length:
             msg = ungettext_lazy(
-                self.length_error_template_singular,
-                self.length_error_template_plural,
+                '%(post)s content must be > %(count)d character',
+                '%(post)s content must be > %(count)d characters',
                 self.min_length
-            ) % self.min_length
+            ) % {'post': unicode(self.post_term_name), 'count': self.min_length}
             raise forms.ValidationError(msg)
 
         if self.user.is_anonymous():
@@ -342,11 +342,8 @@ class QuestionEditorField(EditorField):
         super(QuestionEditorField, self).__init__(
                                 user=user, *args, **kwargs
                             )
-        self.length_error_template_singular = \
-            'question body must be > %d character'
-        self.length_error_template_plural = \
-            'question body must be > %d characters'
         self.min_length = askbot_settings.MIN_QUESTION_BODY_LENGTH
+        self.post_term_name = askbot_settings.WORDS_QUESTION_SINGULAR
 
 
 class AnswerEditorField(EditorField):
@@ -354,8 +351,7 @@ class AnswerEditorField(EditorField):
 
     def __init__(self, *args, **kwargs):
         super(AnswerEditorField, self).__init__(*args, **kwargs)
-        self.length_error_template_singular = 'answer must be > %d character'
-        self.length_error_template_plural = 'answer must be > %d characters'
+        self.post_term_name = askbot_settings.WORDS_ANSWER_SINGULAR
         self.min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
 
 
@@ -474,11 +470,6 @@ class WikiField(forms.BooleanField):
         self.label = _(
             'community wiki (karma is not awarded & '
             'many others can edit wiki post)'
-        )
-        self.help_text = _(
-            'if you choose community wiki option, the question '
-            'and answer do not generate points and name of '
-            'author will not be shown'
         )
 
     def clean(self, value):
@@ -912,14 +903,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     tags = TagNamesField()
     wiki = WikiField()
     group_id = forms.IntegerField(required = False, widget = forms.HiddenInput)
-    ask_anonymously = forms.BooleanField(
-        label=_('ask anonymously'),
-        help_text=_(
-            'Check if you do not want to reveal your name '
-            'when asking this question'
-        ),
-        required=False,
-    )
     openid = forms.CharField(
         required=False, max_length=255,
         widget=forms.TextInput(attrs={'size': 40, 'class': 'openid-input'})
@@ -930,6 +913,12 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
         self.fields['text'] = QuestionEditorField(user=user)
+
+        self.fields['ask_anonymously'] = forms.BooleanField(
+            label=_('post anonymously'),
+            required=False,
+        )
+
         #hide ask_anonymously field
         if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
             self.fields['language'] = LanguageField()
@@ -957,10 +946,6 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
     title = TitleField()
     ask_anonymously = forms.BooleanField(
         label=_('ask anonymously'),
-        help_text=_(
-            'Check if you do not want to reveal your name '
-            'when asking this question'
-        ),
         required=False,
     )
 
@@ -1211,11 +1196,6 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
     summary = SummaryField()
     wiki = WikiField()
     reveal_identity = forms.BooleanField(
-        help_text=_(
-            'You have asked this question anonymously, '
-            'if you decide to reveal your identity, please check '
-            'this box.'
-        ),
         label=_('reveal identity'),
         required=False,
     )
