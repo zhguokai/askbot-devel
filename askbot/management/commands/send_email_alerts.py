@@ -13,6 +13,7 @@ from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from askbot import const
 from askbot import mail
 from askbot.utils.slug import slugify
@@ -132,14 +133,14 @@ class Command(NoArgsCommand):
         #base question query set for this user
         #basic things - not deleted, not closed, not too old
         #not last edited by the same user
-        base_qs = Post.objects.get_questions().exclude(
+        base_qs = Post.objects.get_questions().filter(
+                                thread__site=Site.objects.get_current(),
+                                thread__closed=False,
+                                thread__last_activity_at__gt=user.date_joined#exclude old stuff
+                            ).exclude(
                                 thread__last_activity_by=user
                             ).exclude(
-                                thread__last_activity_at__lt=user.date_joined#exclude old stuff
-                            ).exclude(
                                 deleted=True
-                            ).exclude(
-                                thread__closed=True
                             ).order_by('-thread__last_activity_at')
 
         if askbot_settings.ENABLE_CONTENT_MODERATION:
