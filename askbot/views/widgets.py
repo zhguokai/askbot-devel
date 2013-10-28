@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot import models
+from askbot.models import signals
 from askbot import forms
 
 WIDGETS_MODELS = {
@@ -51,12 +52,6 @@ def widgets(request):
 @csrf.csrf_protect
 def ask_widget(request, widget_id):
 
-    def post_question(data, request):
-        thread = models.Thread.objects.create_new(**data)
-        request.session['widget_thread_id'] = thread.id
-        request.session['widget_id'] = widget_id
-        return thread._question_post()
-
     widget = get_object_or_404(models.AskWidget, id=widget_id)
 
     if request.method == "POST":
@@ -86,16 +81,24 @@ def ask_widget(request, widget_id):
 
             data_dict = {
                 'title': title,
-                'added_at': datetime.now(),
+                'body_text': text,
+                'space': form.cleaned_data['space'],
+                'tags': tagnames,
                 'wiki': False,
-                'text': text,
-                'tagnames': tagnames,
-                'group_id': group_id,
-                'is_anonymous': ask_anonymously
+                'is_anonymous': ask_anonymously,
+                'timestamp': datetime.now(),
+                'group_id': group_id
             }
+
             if request.user.is_authenticated():
-                data_dict['author'] = request.user
-                question = post_question(data_dict, request)
+                question = request.user.post_question(**data_dict)
+                request.session['widget_thread_id'] = question.thread.id
+                request.session['widget_id'] = widget_id
+                signals.new_question_posted.send(None,
+                    question=question,
+                    user=request.user,
+                    form_data=form.cleaned_data
+                )
                 return redirect('ask_by_widget_complete')
             else:
                 request.session['widget_question'] = data_dict
@@ -108,8 +111,14 @@ def ask_widget(request, widget_id):
         if 'widget_question' in request.session:
             if request.user.is_authenticated():
                 data_dict = request.session['widget_question']
-                data_dict['author'] = request.user
-                question = post_question(request.session['widget_question'], request)
+                question = request.user.post_question(**data_dict)
+                request.session['widget_thread_id'] = question.thread.id
+                request.session['widget_id'] = widget_id
+                #signals.new_question_posted.send(None,
+                #    question=question,
+                #    user=request.user,
+                #    form_data=data_dict
+                #)
                 del request.session['widget_question']
                 return redirect('ask_by_widget_complete')
             else:

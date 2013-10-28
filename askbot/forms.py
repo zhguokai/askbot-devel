@@ -999,6 +999,27 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
             self.fields['text'].required = False
             self.fields['text'].min_length = 0
 
+
+    def clean_space(self):
+        """this is not a real clean code as we don't have field for space
+        in this form, it is called from the general "clean" method
+        """
+        if askbot_settings.SPACES_ENABLED:
+            from askbot.models import Feed
+            from django.contrib.sites.models import Site
+            current_site = Site.objects.get_current()
+            feed_name = askbot_settings.DEFAULT_FEED_NAME
+            feed = Feed.objects.get(name=feed_name, site=current_site)
+            return feed.default_space
+        else:
+            from askbot.models import Space
+            return Space.objects.get_default()
+
+    def clean(self):
+        self.cleaned_data['space'] = self.clean_space()
+        return self.cleaned_data
+
+
 class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
     title =  forms.CharField(max_length=100)
     include_text_field = forms.BooleanField(required=False)
