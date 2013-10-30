@@ -171,11 +171,15 @@ var CPValidator = function() {
                     required: " " + gettext('enter your question'),
                     minlength: interpolate(
                                     ngettext(
-                                        'question must have > %s character',
-                                        'question must have > %s characters',
+                                        '%(question)s must have > %(length)s character',
+                                        '%(question)s must have > %(length)s characters',
                                         askbot['settings']['minTitleLength']
                                     ),
-                                    [askbot['settings']['minTitleLength'], ]
+                                    { 
+                                        'question': askbot['messages']['questionSingular'],
+                                        'length': askbot['settings']['minTitleLength']
+                                    },
+                                    true
                                 )
                 }
             };
@@ -193,11 +197,15 @@ var CPValidator = function() {
                     required: " " + gettext('content cannot be empty'),
                     minlength: interpolate(
                                     ngettext(
-                                        'answer must be > %s character',
-                                        'answer must be > %s characters',
+                                        '%(answer)s must be > %(length)s character',
+                                        '%(answer)s must be > %(length)s characters',
                                         askbot['settings']['minAnswerBodyLength']
                                     ),
-                                    [askbot['settings']['minAnswerBodyLength'], ]
+                                    {
+                                        'answer': askbot['messages']['answerSingular'],
+                                        'length': askbot['settings']['minAnswerBodyLength']
+                                    },
+                                    true
                                 )
                 },
             }
@@ -546,12 +554,17 @@ var Vote = function(){
     var questionSubscribeSidebar= 'question-subscribe-sidebar';
 
     var acceptAnonymousMessage = gettext('insufficient privilege');
-    var acceptOwnAnswerMessage = gettext('cannot pick own answer as best');
 
     var pleaseLogin = " <a href='" + askbot['urls']['user_signin'] + ">"
                         + gettext('please login') + "</a>";
 
-    var favoriteAnonymousMessage = gettext('anonymous users cannot follow questions') + pleaseLogin;
+    var tmpMsg = interpolate(
+        gettext('anonymous users cannot %(follow_questions)s'),
+        {'follow_questions': askbot['messages']['followQuestions']},
+        true
+    );
+    var favoriteAnonymousMessage = tmpMsg + pleaseLogin;
+    //todo: this below is probably not used
     var subscribeAnonymousMessage = gettext('anonymous users cannot subscribe to questions') + pleaseLogin;
     var voteAnonymousMessage = gettext('anonymous users cannot vote') + pleaseLogin;
     //there were a couple of more messages...
@@ -795,7 +808,12 @@ var Vote = function(){
             showMessage(object, acceptAnonymousMessage);
         }
         else if(data.allowed == "-1"){
-            showMessage(object, acceptOwnAnswerMessage);
+            var message = interpolate(
+                gettext('sorry, you cannot %(accept_own_answer)s'),
+                {'accept_own_answer': askbot['messages']['acceptOwnAnswer']},
+                true
+            );
+            showMessage(object, message);
         }
         else if(data.status == "1"){
             $("#"+answerContainerIdPrefix+postId).removeClass("accepted-answer");

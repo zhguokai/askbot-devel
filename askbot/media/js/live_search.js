@@ -310,7 +310,11 @@ TagWarningBox.prototype.showWarning = function(){
  */
 var InputToolTip = function() {
     WrappedElement.call(this);
-    this._promptText = gettext('search or ask your question');
+    this._promptText = interpolate(
+        gettext('search or %(ask_your_question)s'),
+        {'ask_your_question': askbot['messages']['askYourQuestion'] },
+        true
+    );
 };
 inherits(InputToolTip, WrappedElement);
 

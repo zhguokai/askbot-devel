@@ -651,6 +651,16 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_FOLLOW_QUESTIONS',
+        default=_('follow questions'),
+        description=_('follow questions'),
+        help_text=_('Indefinite form')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_COMMENTS_AND_ANSWERS_TO_OTHERS_QUESTIONS',
         default = '',
         description = _('Phrase: comments and answers to others questions'),
