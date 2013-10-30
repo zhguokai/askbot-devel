@@ -23,6 +23,7 @@ from askbot.utils.html import site_url as site_url_func
 from askbot.utils import functions
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
+from askbot.utils.pluralization import py_pluralize as _py_pluralize
 from askbot.shims.django_shims import ResolverMatch
 
 from django_countries import countries
@@ -350,6 +351,10 @@ def humanize_counter(number):
     else:
         return str(number)
 
+@register.filter
+def py_pluralize(source, count):
+    plural_forms = source.strip().split('\n')
+    return _py_pluralize(plural_forms, count)
 
 @register.filter
 def absolute_value(number):

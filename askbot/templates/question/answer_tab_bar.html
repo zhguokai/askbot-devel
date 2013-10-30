@@ -1,10 +1,6 @@
 <div class="tabBar tabBar-answer">
     <h2 id="questionCount">
-        {% trans counter=answer_count %}
-            {{counter}} Answer
-            {% pluralize %}
-            {{counter}} Answers
-        {% endtrans %}
+        {{ answer_count }} {{ settings.WORDS_ANSWERS_COUNTABLE_FORMS|py_pluralize(answer_count) }}
     </h2>
     <div class="tabsA">
                     <span class="label">

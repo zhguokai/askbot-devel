@@ -192,6 +192,26 @@ settings.register(
 )
 
 settings.register(
+    values.LongStringValue(
+        WORDS,
+        'WORDS_QUESTIONS_COUNTABLE_FORMS',
+        default='question\nquestions',
+        description=_('Countable plural forms for "queston"'),
+        help_text=_('Enter one form per line, pay attention')
+    )
+)
+
+settings.register(
+    values.LongStringValue(
+        WORDS,
+        'WORDS_ANSWERS_COUNTABLE_FORMS',
+        default='answer\nanswers',
+        description=_('Countable plural forms for "answer"'),
+        help_text=_('Enter one form per line, pay attention')
+    )
+)
+
+settings.register(
     values.StringValue(
         WORDS,
         'WORDS_QUESTION_SINGULAR',
