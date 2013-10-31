@@ -34,11 +34,11 @@ class WidgetViewsTests(AskbotTestCase):
 
     def test_post_after_login(self):
         widget_question_data = { 'title': 'testing post after login, does it?',
-                                 'author': self.user,
-                                 'added_at': datetime.now(),
+                                 #'author': self.user,
+                                 'timestamp': datetime.now(),
                                  'wiki': False,
-                                 'text': ' ',
-                                 'tagnames': '',
+                                 'body_text': ' ',
+                                 'tags': '',
                                  'is_anonymous': False
                                }
 

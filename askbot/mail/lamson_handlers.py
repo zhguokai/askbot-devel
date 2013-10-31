@@ -307,7 +307,7 @@ def PROCESS(
     #2) process body text and email signature
     user = reply_address_object.user
 
-    if signature != user.email_signature:
+    if signature != None and signature != user.email_signature:
         user.email_signature = signature
 
     #3) validate email address and save user along with maybe new signature

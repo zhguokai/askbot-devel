@@ -373,11 +373,17 @@ def process_parts(parts, reply_code=None, from_address=None):
 
     #if the response separator is present -
     #split the body with it, and discard the "so and so wrote:" part
-    if reply_code:
+    if reply_code and reply_code in body_text:
         #todo: maybe move this part out
         signature = extract_user_signature(body_text, reply_code)
         body_text = extract_reply(body_text)
     else:
+        #1) signature cannot be detected, b/c there is no reply code
+        #   to designate what text comes after as a signature
+        #2) we will not attempt to extract reply that comes 
+        #   before the reply separator line (above the quote)
+        #   presense of this will usually coincide with the presence
+        #   of the reply_code in the email body
         signature = None
 
     body_text += attachments_markdown

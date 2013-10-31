@@ -85,7 +85,7 @@ class ReplyAddressModelTests(AskbotTestCase):
                                 }
         msg = MockMessage(
             "This is a test reply \n\nOn such and such someone "
-            "wrote: \n\n%s\nlorem ipsum " % (reply_separator),
+            "wrote: \n\n%s\nlorem ipsum\n%s\nsignature" % (reply_separator, addr),
             "user1@domain.com"
         )
         msg['Subject'] = 'test subject'
