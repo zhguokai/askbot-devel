@@ -179,6 +179,15 @@ class ThreadManager(BaseQuerySetManager):
         #this call is rather heavy, we should split into several functions
         parse_results = question.parse_and_save(author=author, is_private=is_private)
 
+        author_group = author.get_personal_group()
+        thread.add_to_groups([author_group], visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES)
+        question.add_to_groups([author_group])
+
+        if is_private or group_id:#add groups to thread and question
+            thread.make_private(author, group_id=group_id)
+        else:
+            thread.make_public()
+
         revision = question.add_revision(
             author=author,
             is_anonymous=is_anonymous,
@@ -188,15 +197,6 @@ class ThreadManager(BaseQuerySetManager):
             by_email=by_email,
             email_address=email_address
         )
-
-        author_group = author.get_personal_group()
-        thread.add_to_groups([author_group], visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES)
-        question.add_to_groups([author_group])
-
-        if is_private or group_id:#add groups to thread and question
-            thread.make_private(author, group_id=group_id)
-        else:
-            thread.make_public()
 
         # INFO: Question has to be saved before update_tags() is called
         thread.update_tags(tagnames=tagnames, user=author, timestamp=added_at)
