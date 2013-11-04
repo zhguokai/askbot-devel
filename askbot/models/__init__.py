@@ -58,6 +58,7 @@ from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute, Vote
 from askbot.models.widgets import AskWidget, QuestionWidget
+from askbot.models.meta import ImportRun, ImportedObjectInfo
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.markup import URL_RE
@@ -76,6 +77,8 @@ DJANGO_VERSION = VERSION[:2]
 
 if DJANGO_VERSION > (1, 3):
     from askbot.models.message import Message
+else:
+    from django.contrib.messages.models import Message
 
 def get_model(model_name):
     """a shortcut for getting model for an askbot app"""
@@ -3716,6 +3719,9 @@ __all__ = [
         'User',
 
         'ReplyAddress',
+        
+        'ImportRun',
+        'ImportedObjectInfo',
 
         'get_model',
 ]
