@@ -720,12 +720,22 @@ for the purposes of the AJAX comment editor #}
     {% else %}
         <a class="avatar-box"
             href="{{ user.get_absolute_url() }}"
-        ><img class="gravatar" 
+        >
+        <img class="gravatar" 
             width="{{ size }}" height="{{ size }}"
             src="{{ user.get_avatar_url(size) }}"
             title="{{ user.username|escape }}" 
             alt="{% trans username=user.username|escape %}{{username}} gravatar image{% endtrans %}" 
-        /></a>
+        />
+        {% set primary_group = user.get_primary_group() %}
+        {% if primary_group and primary_group.logo_url %}
+        <img class="group-logo" 
+            width="{{ size/3 }}" height="{{ size/3 }}"
+            src="{{ primary_group.logo_url }}"
+            alt="{% trans group_name=primary_group.name|escape %}{{group_name}} logo{% endtrans %}" 
+        />
+        {% endif %}
+        </a>
     {% endif %}
 {% endspaceless %}
 {%- endmacro -%}
