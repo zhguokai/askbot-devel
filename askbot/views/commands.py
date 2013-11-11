@@ -377,14 +377,17 @@ def vote(request):
             question = get_object_or_404(models.Post, post_type='question', id=id)
             vote_type = request.POST.get('type')
 
-            #accept answer
             if vote_type == '4':
+                #follow question
                 fave = request.user.toggle_favorite_question(question)
                 response_data['count'] = models.FavoriteQuestion.objects.filter(thread = question.thread).count()
                 if fave == False:
                     response_data['status'] = 1
 
             elif vote_type == '11':#subscribe q updates
+                #todo: this branch is not used anymore
+                #now we just follow question, we don't have the
+                #separate "subscribe" function
                 user = request.user
                 if user.is_authenticated():
                     if user not in question.thread.followed_by.all():

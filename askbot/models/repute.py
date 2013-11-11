@@ -101,6 +101,9 @@ class BadgeData(models.Model):
         from askbot.models import badges
         return badges.get_badge(self.slug)
 
+    def is_multiple(self):
+        return self._get_meta_data().multiple
+
     def get_name(self):
         return self._get_meta_data().name
 

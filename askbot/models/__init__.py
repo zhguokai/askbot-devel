@@ -467,6 +467,13 @@ def user_has_interesting_wildcard_tags(self):
         and self.interesting_tags != ''
     )
 
+def user_has_badge(self, badge):
+    """True, if user was awarded a given badge,
+    ``badge`` is instance of BadgeData
+    """
+    return Award.objects.filter(user=self, badge=badge).count() > 0
+
+
 def user_can_create_tags(self):
     """true if user can create tags"""
     if askbot_settings.ENABLE_TAG_MODERATION:
@@ -2922,6 +2929,7 @@ User.add_to_class('has_interesting_wildcard_tags', user_has_interesting_wildcard
 User.add_to_class('has_ignored_wildcard_tags', user_has_ignored_wildcard_tags)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
 User.add_to_class('has_affinity_to_question', user_has_affinity_to_question)
+User.add_to_class('has_badge', user_has_badge)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)
 User.add_to_class('get_badge_summary', user_get_badge_summary)

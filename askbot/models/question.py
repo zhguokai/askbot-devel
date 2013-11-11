@@ -560,6 +560,8 @@ class Thread(models.Model):
     last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
     language_code = models.CharField(max_length=16, default=django_settings.LANGUAGE_CODE)
 
+    #todo: these two are redundant (we used to have a "star" and "subscribe"
+    #now merged into "followed")
     followed_by     = models.ManyToManyField(User, related_name='followed_threads')
     favorited_by    = models.ManyToManyField(User, through='FavoriteQuestion', related_name='unused_favorite_threads')
 
