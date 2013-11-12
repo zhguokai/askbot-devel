@@ -730,7 +730,7 @@ for the purposes of the AJAX comment editor #}
         {% set primary_group = user.get_primary_group() %}
         {% if primary_group and primary_group.logo_url %}
         <img class="group-logo" 
-            width="{{ size/3 }}" height="{{ size/3 }}"
+            width="{{ size - 2 }}"
             src="{{ primary_group.logo_url }}"
             alt="{% trans group_name=primary_group.name|escape %}{{group_name}} logo{% endtrans %}" 
         />
