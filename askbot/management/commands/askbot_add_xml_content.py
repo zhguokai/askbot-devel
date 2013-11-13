@@ -40,6 +40,10 @@ def get_safe_username(username):
     existing_names = User.objects.filter(
                     username__istartswith=username
                 ).values_list('username', flat=True)
+
+    if len(existing_names) == 0:
+        return username
+
     num = 1
     while True:
         new_name = username + str(num)
@@ -123,14 +127,13 @@ class Command(BaseCommand):
 
         #we need this to link old user ids to
         #new users' personal groups
-        self.record_personal_groups()
+        #self.record_personal_groups()
         
         self.import_user_logins()
         self.import_tags()
         self.import_marked_tags()
 
         self.import_threads()
-        self.apply_question_followers()
         self.apply_groups_to_threads()
 
         #model="askbot.posttogroup">
@@ -139,6 +142,7 @@ class Command(BaseCommand):
         self.import_posts('comment')
         self.import_post_revisions()
         self.apply_groups_to_posts()
+        self.apply_question_followers()
         self.import_votes()
 
         self.import_badges()
@@ -164,30 +168,58 @@ class Command(BaseCommand):
     def remember_message_ids(self):
         self.message_ids = list(Message.objects.values_list('id', flat=True))
 
-    def log_action_with_old_id(self, from_object_id, to_object, info=None):
+    def log_action_with_old_id(self, from_object_id, to_object, extra_info=None):
         info = ImportedObjectInfo()
         info.old_id = from_object_id
         info.new_id = to_object.id
         info.model = str(to_object._meta)
         info.run = self.run
-        info.extra_info = info or dict()
+        info.extra_info = extra_info or dict()
         info.save()
 
-    def log_action(self, from_object, to_object, info=None):
-        self.log_action_with_old_id(from_object.id, to_object, info=info)
+    def log_action(self, from_object, to_object, extra_info=None):
+        self.log_action_with_old_id(from_object.id, to_object, extra_info=extra_info)
 
-    def get_imported_object_by_old_id(self, model_class, old_id):
+    def log_personal_group(self, group):
+        info = ImportedObjectInfo()
+        info.old_id = group.id
+        info.new_id = int(group.name.split('_')[-1])
+        info.model = 'personal_group'
+        info.run = self.run
+        info.save()
+
+    def get_imported_object_id_by_old_id(self, model_class, old_id):
         if old_id is None:
             return None
         try:
             log = ImportedObjectInfo.objects.get(
                                         model=str(model_class._meta),
                                         old_id=old_id,
-                                        run=self.run
+                                        #run=self.run
                                     )
-            return model_class.objects.get(id=log.new_id)
+            return log.new_id
         except ImportedObjectInfo.DoesNotExist:
             return None
+
+    def get_imported_object_by_old_id(self, model_class, old_id):
+        new_id = self.get_imported_object_id_by_old_id(model_class, old_id)
+        if new_id:
+            return model_class.objects.get(id=new_id)
+        return None
+
+    def get_group_by_old_id(self, old_id):
+        normal_group = self.get_imported_object_by_old_id(AuthGroup, old_id)
+        if normal_group:
+            return Group.objects.get(group_ptr=normal_group)
+
+        log = ImportedObjectInfo.objects.get(
+                                        model='personal_group',
+                                        old_id=old_id,
+                                        #run=self.run
+                                    )
+        old_user_id = log.new_id
+        new_user = self.get_imported_object_by_old_id(User, old_user_id)
+        return new_user.get_personal_group()
 
     def get_objects_for_model(self, model_name):
         """returns iterator of objects from the django
@@ -224,6 +256,13 @@ class Command(BaseCommand):
         #1) we import auth groups
         for group in self.get_objects_for_model('auth.group'):
             if group.name.startswith('_personal'):
+                #we don't import these groups, but log
+                #associations between old user ids and old personal
+                #group ids, because we create the personal groups
+                #anew and so need to have a connection
+                #old personal group id --> old user id --> new user id 
+                # --> new pers. group id
+                self.log_personal_group(group)
                 continue
             old_group_id = group.id
             try:
@@ -318,6 +357,8 @@ class Command(BaseCommand):
             if get_status_rank(from_user.status) > get_status_rank(to_user.status):
                 to_user.status = from_user.status
 
+            to_user.save()
+
             group_ids = get_m2m_ids_for_field(from_user, 'groups')
             for group_id in group_ids:
                 #get group by old id,
@@ -341,7 +382,7 @@ class Command(BaseCommand):
             <field type="IntegerField" name="new_response_count">0</field>
             <field type="IntegerField" name="seen_response_count">0</field>
             """
-            self.log_action(from_user, to_user, log_info)
+            self.log_action(from_user, to_user, extra_info=log_info)
 
     def import_avatars(self):
         """imports user avatar, chooses later uploaded primary avatar"""
@@ -386,21 +427,6 @@ class Command(BaseCommand):
             </object>
             """
 
-    def record_personal_groups(self):
-        """make links between old user ids and
-        new personal groups, store data in the ImportedObjectInfo
-        as if we actually imported these"""
-        for user_info in ImportedObjectInfo.objects.filter(model='auth.user'):
-            user = User.objects.get(id=user_info.new_id)
-            personal_group = user.get_groups(private=True)[0]
-            group_info = ImportedObjectInfo(
-                                    model='auth.group',
-                                    old_id=user_info.old_id,
-                                    new_id=personal_group.group_ptr_id,
-                                    run=self.run
-                                )
-            group_info.save()
-
     @transaction.commit_manually
     def import_user_logins(self):
         #logins_soup = self.soup.find_all('object', {'model': 'django_authopenid.userassociation'})
@@ -437,7 +463,9 @@ class Command(BaseCommand):
 
     def import_threads(self):
         """import thread objects"""
+        count = 0
         for thread in self.get_objects_for_model('askbot.thread'):
+            count += 1
             new_thread = Thread(
                 title=thread.title,
                 tagnames=thread.tagnames,
@@ -477,6 +505,7 @@ class Command(BaseCommand):
             else:
                 new_thread.save()
 
+            print 'have %d threads' % count
             self.log_action(thread, new_thread)
             """
             these are not handled here
@@ -491,9 +520,9 @@ class Command(BaseCommand):
         """mark followed questions"""
         for fave in self.get_objects_for_model('askbot.favoritequestion'):
             #askbot.favoritequestion
-            user = self.get_imported_object_by_old_id(FavoriteQuestion, fave.user_id)
+            user = self.get_imported_object_by_old_id(User, fave.user_id)
             thread = self.get_imported_object_by_old_id(Thread, fave.thread_id)
-            user.toggle_favorite_question(thread, timestamp=fave.added_at)
+            user.toggle_favorite_question(thread._question_post(), timestamp=fave.added_at)
             """
             <object pk="1" model="askbot.favoritequestion">
                 <field to="askbot.thread" name="thread" rel="ManyToOneRel">8</field>
@@ -505,7 +534,7 @@ class Command(BaseCommand):
     def apply_groups_to_threads(self):
         for link in self.get_objects_for_model('askbot.threadtogroup'):
             thread = self.get_imported_object_by_old_id(Thread, link.thread_id)
-            group = self.get_imported_object_by_old_id(Group, link.group_id)
+            group = self.get_group_by_old_id(link.group_id)
             thread.add_to_groups([group,], visibility=link.visibility)
 
     def import_posts(self, post_type):
@@ -518,10 +547,10 @@ class Command(BaseCommand):
             post.parent = self.get_imported_object_by_old_id(Post, post.parent_id)
 
             post.thread = self.get_imported_object_by_old_id(Thread, post.thread_id)
-            post.author = self.get_importod_object_by_old_id(User, post.author_id)
+            post.author = self.get_imported_object_by_old_id(User, post.author_id)
             post.deleted_by = self.get_imported_object_by_old_id(User, post.deleted_by_id)
-            post.locked_by = self.get_imported_object_by_old_id(User, post.locked_by)
-            post.last_edited_by = self.get_imported_object_by_old_id(User, post.last_edited_by)
+            post.locked_by = self.get_imported_object_by_old_id(User, post.locked_by_id)
+            post.last_edited_by = self.get_imported_object_by_old_id(User, post.last_edited_by_id)
             post.points = 0
             post.vote_up_count = 0
             post.vote_down_count = 0
@@ -543,7 +572,7 @@ class Command(BaseCommand):
     def apply_groups_to_posts(self):
         for link in self.get_objects_for_model('askbot.posttogroup'):
             post = self.get_imported_object_by_old_id(Post, link.post_id)
-            group = self.get_imported_object_by_old_id(Group, link.group_id)
+            group = self.get_group_by_old_id(link.group_id)
             post.add_to_groups([group,])
 
     def import_post_revisions(self):
@@ -582,9 +611,9 @@ class Command(BaseCommand):
             #if multiple or user does not have this badge, then award
             if badge.is_multiple() or (not award.user.has_badge(badge)):
                 award.badge = badge
-                content_type = self.get_content_type_by_old_id(badge.content_type_id)
-                obj_class = badge.content_type.model_class()
-                award.object_id = self.get_imported_object_id_by_old_id(obj_class, badge.object_id)
+                content_type = self.get_content_type_by_old_id(award.content_type_id)
+                obj_class = content_type.model_class()
+                award.object_id = self.get_imported_object_id_by_old_id(obj_class, award.object_id)
                 award.content_type = content_type
                 award.id = None
                 award.save()
@@ -601,7 +630,7 @@ class Command(BaseCommand):
 
     def import_votes(self):
         for vote in self.get_objects_for_model('askbot.vote'):
-            post = self.get_imported_object_by_old_id(Post, vote.post_id)
+            post = self.get_imported_object_by_old_id(Post, vote.voted_post_id)
             user = self.get_imported_object_by_old_id(User, vote.user_id)
             if vote.vote == 1:
                 user.upvote(post, timestamp=vote.voted_at)
