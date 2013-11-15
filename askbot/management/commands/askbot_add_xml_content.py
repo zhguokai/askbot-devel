@@ -17,8 +17,10 @@ from django.core import serializers
 from django.db import transaction
 from django.db.models import Q
 from django.utils.encoding import smart_str
+from django.utils.translation import activate as activate_language
 import os
 import sys
+from tempfile import mkstemp
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
@@ -114,6 +116,9 @@ class Command(BaseCommand):
     help = 'Adds XML askbot data produced by the "dumpdata" command'
 
     def handle(self, *args, **kwargs):
+
+        activate_language(django_settings.LANGUAGE_CODE)
+
         self.setup_run()
         self.read_xml_file(args[0])
         self.remember_message_ids()
@@ -137,7 +142,7 @@ class Command(BaseCommand):
         self.apply_groups_to_threads()
 
         #model="askbot.posttogroup">
-        self.import_posts('question')
+        self.import_posts('question', save_redirects=True)
         self.import_posts('answer')
         self.import_posts('comment')
         self.import_post_revisions()
@@ -250,11 +255,26 @@ class Command(BaseCommand):
     def get_content_type_by_old_id(self, old_ctype_id):
         return self.content_types_map[old_ctype_id]
 
+    def open_unique_file(self, name_hint):
+        """return a file using name_hint as the hint
+        for the file name, if file with that name exists,
+        create a unique file name containing hint as part of
+        the name"""
+        if os.path.exists(name_hint):
+            info = mkstemp(dir=os.getcwd(), prefix=name_hint + '_')
+            name_hint = info[1]
+        print 'saving file: %s' % name_hint
+        return open(name_hint, 'w')
+
     def import_groups(self):
         """imports askbot group profiles"""
+
+        #redirects_file = self.open_unique_file('group_redirects')
         
         #1) we import auth groups
         for group in self.get_objects_for_model('auth.group'):
+
+            #old_url = group.get_absolute_url()
             if group.name.startswith('_personal'):
                 #we don't import these groups, but log
                 #associations between old user ids and old personal
@@ -271,8 +291,15 @@ class Command(BaseCommand):
                 group.id = None
                 group.save()
 
+            #new_url = group.get_absolute_url()
+
+            #if old_url != new_url:
+            #    redirects_file.write('%s %s\n' % (old_url, new_url))
+
             #we will later populate memberships only in these groups
             self.log_action_with_old_id(old_group_id, group)
+
+        #redirects_file.close()
 
         #2) we import askbot group profiles only for groups
         for profile in self.get_objects_for_model('askbot.group'):
@@ -292,11 +319,16 @@ class Command(BaseCommand):
                 profile.save()
 
     def import_users(self):
+        redirects_file = self.open_unique_file('user_redirects')
+
         model_path = str(User._meta)
         dupes = 0
         for from_user in self.get_objects_for_model('auth.user'):
             log_info = dict()
             log_info['notify_user'] = list()
+
+            old_url = from_user.get_absolute_url()
+
             try:
                 to_user = User.objects.get(email=from_user.email)
                 dupes += 1
@@ -358,6 +390,10 @@ class Command(BaseCommand):
                 to_user.status = from_user.status
 
             to_user.save()
+
+            new_url = to_user.get_absolute_url()
+            if old_url != new_url:
+                redirects_file.write('%s %s\n' % (old_url, new_url))
 
             group_ids = get_m2m_ids_for_field(from_user, 'groups')
             for group_id in group_ids:
@@ -442,7 +478,6 @@ class Command(BaseCommand):
                 association.user = user
                 association.save()
                 transaction.commit()
-                print 'yeah!!!'
             except:
                 transaction.rollback()
 
@@ -505,7 +540,6 @@ class Command(BaseCommand):
             else:
                 new_thread.save()
 
-            print 'have %d threads' % count
             self.log_action(thread, new_thread)
             """
             these are not handled here
@@ -537,8 +571,10 @@ class Command(BaseCommand):
             group = self.get_group_by_old_id(link.group_id)
             thread.add_to_groups([group,], visibility=link.visibility)
 
-    def import_posts(self, post_type):
+    def import_posts(self, post_type, save_redirects=False):
         """imports posts of specific post_type"""
+        if save_redirects:
+            redirects_file = self.open_unique_file('question_redirects')
         for post in self.get_objects_for_model('askbot.post'):
             if post.post_type != post_type:
                 continue
@@ -547,6 +583,10 @@ class Command(BaseCommand):
             post.parent = self.get_imported_object_by_old_id(Post, post.parent_id)
 
             post.thread = self.get_imported_object_by_old_id(Thread, post.thread_id)
+
+            if save_redirects:
+                old_url = post.get_absolute_url(thread=post.thread)
+
             post.author = self.get_imported_object_by_old_id(User, post.author_id)
             post.deleted_by = self.get_imported_object_by_old_id(User, post.deleted_by_id)
             post.locked_by = self.get_imported_object_by_old_id(User, post.locked_by_id)
@@ -560,14 +600,22 @@ class Command(BaseCommand):
             post.id = None
             post.save()
 
+            if save_redirects:
+                new_url = post.get_absolute_url()
+                if old_url != new_url:
+                    redirects_file.write('%s %s\n' % (old_url, new_url))
+
             self.log_action_with_old_id(old_post_id, post)
 
-            """
-            these were not imported
-            votes
-            <field type="PositiveIntegerField" name="comment_count">0</field>
-            <field type="SmallIntegerField" name="offensive_flag_count">0</field>
-            """
+        if save_redirects:
+            redirects_file.close()
+
+        """
+        these were not imported
+        votes
+        <field type="PositiveIntegerField" name="comment_count">0</field>
+        <field type="SmallIntegerField" name="offensive_flag_count">0</field>
+        """
 
     def apply_groups_to_posts(self):
         for link in self.get_objects_for_model('askbot.posttogroup'):
