@@ -9,6 +9,7 @@ from askbot.models import Tag
 from askbot.models import Thread
 from askbot.models import User
 from bs4 import BeautifulSoup
+from collections import defaultdict
 from django.conf import settings as django_settings
 from django.contrib.auth.models import Group as AuthGroup
 from django.contrib.contenttypes.models import ContentType
@@ -18,6 +19,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.utils.encoding import smart_str
 from django.utils.translation import activate as activate_language
+from optparse import make_option
 import os
 import sys
 from tempfile import mkstemp
@@ -115,9 +117,26 @@ def copy_numeric_parameter(from_obj, to_obj, param_name, operator='max'):
 class Command(BaseCommand):
     help = 'Adds XML askbot data produced by the "dumpdata" command'
 
+    option_list = BaseCommand.option_list + (
+            make_option('--redirect-format',
+                action = 'store',
+                dest = 'redirect_format',
+                default = 'none',
+                help = 'Format for the redirect files (apache|nginx|none)'
+            ),
+    )
+
     def handle(self, *args, **kwargs):
 
         activate_language(django_settings.LANGUAGE_CODE)
+
+        #init the redirects file format table
+        format_table = {
+            'nginx': 'rewrite ^%s$ %s break;\n',
+            'apache': 'Redirect permanent %s %s\n',
+        }
+        format_table = defaultdict(lambda: '%s %s\n', format_table)
+        self.redirect_format = format_table[kwargs['redirect_format']]
 
         self.setup_run()
         self.read_xml_file(args[0])
@@ -266,6 +285,10 @@ class Command(BaseCommand):
         print 'saving file: %s' % name_hint
         return open(name_hint, 'w')
 
+    def write_redirect(self, from_url, to_url, redirects_file):
+        if from_url != to_url:
+            redirects_file.write(self.redirect_format % (from_url, to_url))
+
     def import_groups(self):
         """imports askbot group profiles"""
 
@@ -392,8 +415,7 @@ class Command(BaseCommand):
             to_user.save()
 
             new_url = to_user.get_absolute_url()
-            if old_url != new_url:
-                redirects_file.write('%s %s\n' % (old_url, new_url))
+            self.write_redirect(old_url, new_url, redirects_file)
 
             group_ids = get_m2m_ids_for_field(from_user, 'groups')
             for group_id in group_ids:
@@ -419,6 +441,8 @@ class Command(BaseCommand):
             <field type="IntegerField" name="seen_response_count">0</field>
             """
             self.log_action(from_user, to_user, extra_info=log_info)
+
+        redirects_file.close()
 
     def import_avatars(self):
         """imports user avatar, chooses later uploaded primary avatar"""
@@ -602,8 +626,7 @@ class Command(BaseCommand):
 
             if save_redirects:
                 new_url = post.get_absolute_url()
-                if old_url != new_url:
-                    redirects_file.write('%s %s\n' % (old_url, new_url))
+                self.write_redirect(old_url, new_url, redirects_file)
 
             self.log_action_with_old_id(old_post_id, post)
 
