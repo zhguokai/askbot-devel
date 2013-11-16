@@ -3866,7 +3866,7 @@ msgstr "%(reputation)s кармы %(username)s "
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
-msgstr[0] "<span class=\"hidden\">%(count)d</span>золотая медаль"
+msgstr[0] "%(count)d золотая медаль"
 msgstr[1] "%(count)d золотых медалей"
 msgstr[2] "%(count)d золотых медалей"
 
@@ -3874,7 +3874,7 @@ msgstr[2] "%(count)d золотых медалей"
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
-msgstr[0] "<span class=\"hidden\">%(count)d</span>серебряная медаль"
+msgstr[0] "%(count)d серебряная медаль"
 msgstr[1] "%(count)d серебряных медалей"
 msgstr[2] "%(count)d серебряных медалей"
 
@@ -3882,7 +3882,7 @@ msgstr[2] "%(count)d серебряных медалей"
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
-msgstr[0] "<span class=\"hidden\">%(count)d</span>бронзовая медаль"
+msgstr[0] "%(count)d бронзовая медаль"
 msgstr[1] "%(count)d бронзовых медалей"
 msgstr[2] "%(count)d бронзовых медалей"
 

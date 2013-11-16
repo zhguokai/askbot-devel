@@ -137,7 +137,8 @@ def py_pluralize(plural_forms, count):
     formula = get_formula(lang)
     num_forms = len(plural_forms)
     form_number = formula(count)
-    if form_number > num_forms:
+    if form_number >= num_forms:
         template = 'not enough plural forms for %s in language %s'
         logging.critical(template % (str(plural_forms), lang))
+        form_number = num_forms - 1
     return plural_forms[form_number]

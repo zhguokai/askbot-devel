@@ -35,13 +35,24 @@ sitemaps = {
 #except those that are namespaced
 PREFIX = getattr(settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
 
+MAIN_PAGE_BASE_URL = getattr(
+                        settings, 
+                        'ASKBOT_MAIN_PAGE_BASE_URL',
+                        _('questions')
+                    ).strip('/') + '/'
+QUESTION_PAGE_BASE_URL = getattr(
+                        settings,
+                        'ASKBOT_QUESTION_PAGE_BASE_URL',
+                        _('question')
+                    ).strip('/') + '/'
+
 APP_PATH = os.path.dirname(__file__)
 urlpatterns = patterns('',
     url(r'^$', views.readers.index, name='index'),
     # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
     url(
         # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
-        (r'^%s' % _('questions') +
+        (r'^%s' % MAIN_PAGE_BASE_URL.strip('/') +
             r'(%s)?' % r'/scope:(?P<scope>\w+)' +
             r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
             r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
@@ -54,7 +65,7 @@ urlpatterns = patterns('',
         name='questions'
     ),
     url(
-        r'^%s(?P<id>\d+)/' % _('question/'),
+        r'^%s(?P<id>\d+)/' % QUESTION_PAGE_BASE_URL,
         views.readers.question,
         name='question'
     ),
@@ -229,32 +240,32 @@ urlpatterns = patterns('',
         name='get_post_html'
     ),
     service_url(
-        r'^%s%s$' % (_('questions/'), _('ask/')),
+        r'^%s%s$' % (MAIN_PAGE_BASE_URL, _('ask/')),
         views.writers.ask,
         name='ask'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('edit/')),
         views.writers.edit_question,
         name='edit_question'
     ),
     service_url(#this url is both regular and ajax
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('retag/')),
         views.writers.retag_question,
         name='retag_question'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('close/')),
         views.commands.close,
         name='close'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('reopen/')),
         views.commands.reopen,
         name='reopen'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('answer/')),
         views.writers.answer,
         name='answer'
     ),
@@ -264,7 +275,7 @@ urlpatterns = patterns('',
         name='vote'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('revisions/')),
         views.readers.revisions,
         kwargs = {'post_type': 'question'},
         name='question_revisions'
@@ -543,7 +554,7 @@ urlpatterns = patterns('',
         name = 'list_widgets'
     ),
     service_url(
-        r'^widgets/questions/(?P<widget_id>\d+)/$',
+        r'^widgets/%s(?P<widget_id>\d+)/$' % MAIN_PAGE_BASE_URL,
         views.widgets.question_widget,
         name='question_widget'
     ),

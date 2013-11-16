@@ -9,6 +9,7 @@ from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
 from django.forms.util import ErrorList
 from django.utils.html import strip_tags
+from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.text import get_text_list
@@ -245,9 +246,7 @@ class TitleField(forms.CharField):
                         )
         self.max_length = 255
         self.label = _('title')
-        self.help_text = _(
-            'Please enter your %(question)s'
-        ) % {'question': askbot_settings.WORDS_QUESTION_SINGULAR}
+        self.help_text = askbot_settings.WORDS_PLEASE_ENTER_YOUR_QUESTION
         self.initial = ''
 
     def clean(self, value):
@@ -899,7 +898,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     in the cleaned data, and will evaluate to False if the
     settings forbids anonymous asking
     """
-    title = TitleField()
     tags = TagNamesField()
     wiki = WikiField()
     group_id = forms.IntegerField(required = False, widget = forms.HiddenInput)
@@ -912,6 +910,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         user = kwargs.pop('user', None)
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
+        self.fields['title'] = TitleField()
         self.fields['text'] = QuestionEditorField(user=user)
 
         self.fields['ask_anonymously'] = forms.BooleanField(
@@ -943,7 +942,6 @@ ASK_BY_EMAIL_SUBJECT_HELP = _(
 class AskWidgetForm(forms.Form, FormWithHideableFields):
     '''Simple form with just the title to ask a question'''
 
-    title = TitleField()
     ask_anonymously = forms.BooleanField(
         label=_('ask anonymously'),
         required=False,
@@ -952,6 +950,7 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
     def __init__(self, include_text=True, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(AskWidgetForm, self).__init__(*args, **kwargs)
+        self.fields['title'] = TitleField()
         #hide ask_anonymously field
         if not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
@@ -1191,7 +1190,6 @@ class RevisionForm(forms.Form):
         self.fields['revision'].initial = latest_revision.revision
 
 class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
-    title = TitleField()
     tags = TagNamesField()
     summary = SummaryField()
     wiki = WikiField()
@@ -1210,6 +1208,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         #it is important to add this field dynamically
         self.fields['text'] = QuestionEditorField(user=self.user)
+        self.fields['title'] = TitleField()
         self.fields['title'].initial = revision.title
         self.fields['text'].initial = revision.text
         self.fields['tags'].initial = revision.tagnames
@@ -1500,22 +1499,15 @@ class EditUserEmailFeedsForm(forms.Form):
         'mentions_and_comments': 'i',
     }
 
-    asked_by_me = EmailFeedSettingField(
-                            label=_('Asked by me')
-                        )
-    answered_by_me = EmailFeedSettingField(
-                            label=_('Answered by me')
-                        )
-    individually_selected = EmailFeedSettingField(
-                            label=_('Individually selected')
-                        )
-    all_questions = EmailFeedSettingField(
-                            label=_('Entire forum (tag filtered)'),
-                        )
-
-    mentions_and_comments = EmailFeedSettingField(
-                            label=_('Comments and posts mentioning me'),
-                        )
+    def __init__(self, *args, **kwargs):
+        super(EditUserEmailFeedsForm, self).__init__(*args, **kwargs)
+        self.fields = SortedDict((
+            ('asked_by_me', EmailFeedSettingField(label=askbot_settings.WORDS_ASKED_BY_ME)),
+            ('answered_by_me', EmailFeedSettingField(label=askbot_settings.WORDS_ANSWERED_BY_ME)),
+            ('individually_selected', EmailFeedSettingField(label=_('Individually selected'))),
+            ('all_questions', EmailFeedSettingField(label=_('Entire forum (tag filtered)'))),
+            ('mentions_and_comments', EmailFeedSettingField(label=_('Comments and posts mentioning me')))
+        ))
 
     def set_initial_values(self, user=None):
         from askbot import models

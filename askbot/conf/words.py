@@ -11,7 +11,7 @@ from askbot.conf.super_groups import CONTENT_AND_UI
 
 WORDS = ConfigurationGroup(
                     'WORDS',
-                    _('Site term vocalbulary'),
+                    _('Site term vocabulary'),
                     super_group = CONTENT_AND_UI
                 )
 
@@ -22,6 +22,15 @@ settings.register(
         default=_('Ask Your Question'),
         description=_('Ask Your Question'),
         help_text=_('Used on a button')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_PLEASE_ENTER_YOUR_QUESTION',
+        default=_('Please enter your question'),
+        description=_('Please enter your question'),
     )
 )
 
@@ -149,6 +158,15 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_ASKED_BY_ME',
+        default=_('Asked by me'),
+        description=_('Asked by me')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_ASKED_A_QUESTION',
         default=_('Asked a question'),
         description=_('Asked a question')
@@ -163,6 +181,16 @@ settings.register(
         description=_('Answered a question')
     )
 )
+
+settings.register(
+    values.StringValue(
+        WORDS,
+        'WORDS_ANSWERED_BY_ME',
+        default=_('Answered by me'),
+        description=_('Answered by me')
+    )
+)
+
 
 settings.register(
     values.StringValue(
