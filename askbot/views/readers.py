@@ -487,7 +487,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
         except exceptions.AnswerHidden, error:
             request.user.message_set.create(message = unicode(error))
             #use reverse function here because question is not yet loaded
-            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+            return HttpResponseRedirect(question_post.get_absolute_url())
         except exceptions.QuestionHidden, error:
             request.user.message_set.create(message = unicode(error))
             return HttpResponseRedirect(reverse('index'))
@@ -505,7 +505,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
             show_post.assert_is_visible_to(request.user)
         except django_exceptions.PermissionDenied, error:
             request.user.message_set.create(message = unicode(error))
-            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+            return HttpResponseRedirect(question_post.get_absolute_url())
 
     thread = question_post.thread
 
