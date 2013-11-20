@@ -11,7 +11,7 @@ from askbot.conf.super_groups import CONTENT_AND_UI
 
 WORDS = ConfigurationGroup(
                     'WORDS',
-                    _('Site term vocabulary'),
+                    _('Site terms vocabulary'),
                     super_group = CONTENT_AND_UI
                 )
 
