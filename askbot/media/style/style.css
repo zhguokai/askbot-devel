@@ -1252,8 +1252,8 @@ ul#searchTags {
 .short-summary .views {
   text-align: center;
   margin: 0 3px;
-  padding: 8px 2px 0px 2px;
-  width: 51px;
+  padding: 8px 6px 0px 6px;
+  min-width: 43px;
   float: right;
   height: 44px;
   border: #dbdbd4 1px solid;
