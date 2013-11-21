@@ -43,6 +43,7 @@ var {{variable_name}} = {
     containerDiv.appendChild(closeButton);
 
     var iframe = document.createElement('iframe');
+    iframe.setAttribute('frameBorder', '0');
     iframe.setAttribute('src', protocol + '//{{host}}{% url ask_by_widget widget.id %}');
 
     containerDiv.appendChild(iframe);
@@ -77,5 +78,5 @@ var onload_functions = function(){
   {{variable_name}}.toHtml();
 }
 
-window.onload = onload_functions();
+window.onload = onload_functions;
 document.write({{variable_name}}.createButton().outerHTML);
