@@ -70,13 +70,20 @@ var {{variable_name}} = {
   }
 };
 
-previous_function = window.onload;
-var onload_functions = function(){
-  if (previous_function){
-    previous_function();
-  }
-  {{variable_name}}.toHtml();
+var askbot = askbot || {};
+askbot['widgets'] = askbot['widgets'] || {};
+
+if (askbot['widgets']['{{ variable_name }}'] === undefined) {
+    var previous_function_{{ variable_name }} = window.onload;
+    var onload_functions = function(){
+      if (previous_function_{{ variable_name }}){
+        previous_function_{{ variable_name }}();
+      }
+      {{variable_name}}.toHtml();
+    }
+    window.onload = onload_functions;
+    askbot['widgets']['{{ variable_name }}'] = {{ variable_name }};
 }
 
-window.onload = onload_functions;
+
 document.write({{variable_name}}.createButton().outerHTML);
