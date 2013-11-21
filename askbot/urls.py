@@ -483,8 +483,8 @@ urlpatterns = patterns('',
         views.widgets.ask_widget,
         name = 'ask_by_widget'
     ),
-    service_url(
-        r'^%s%s(?P<widget_id>\d+).js$' % (_('widgets/'), _('ask/')),
+    service_url(#url is versioned so that we can change the widget js
+        r'^%s%s(?P<widget_id>\d+)_v1.js$' % (_('widgets/'), _('ask/')),
         views.widgets.render_ask_widget_js,
         name = 'render_ask_widget'
     ),

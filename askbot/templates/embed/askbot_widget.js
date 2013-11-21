@@ -12,6 +12,7 @@ var {{variable_name}} = {
     var link = document.createElement('link');
     var protocol = document.location.protocol;
 
+    //widget css
     link.setAttribute("rel", "stylesheet");
     link.setAttribute("href", protocol + '//{{host}}{% url render_ask_widget_css widget.id %}');
 
@@ -51,6 +52,11 @@ var {{variable_name}} = {
     var body = document.getElementsByTagName('body')[0];
     if (body){
       body.appendChild(link);
+      //login menu css
+      var link2 = document.createElement('link');
+      link2.setAttribute('rel', 'stylesheet');
+      link2.setAttribute('href', protocol + '//{{ host }}{{ '/style/style.css'|media }}');
+      body.appendChild(link2);
       body.appendChild(motherDiv);
     }
   },
