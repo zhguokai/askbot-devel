@@ -676,18 +676,10 @@ def user_recent(request, user, context):
 
 #not a view - no direct url route here, called by `user_responses`
 @csrf.csrf_protect
-def show_group_join_requests(request, user, context):
+def show_group_join_requests(request, user, join_requests, context):
     """show group join requests to admins who belong to the group"""
     if request.user.is_administrator_or_moderator() is False:
         raise Http404
-
-    #get group to which user belongs
-    groups = request.user.get_groups()
-    #get join requests for those groups
-    pending_group_memberships = models.GroupMembership.objects.filter(
-                                            group__in=groups,
-                                            level=models.GroupMembership.PENDING
-                                        ).order_by('-id')
     data = {
         'active_tab':'users',
         'inbox_section': 'group-join-requests',
@@ -695,7 +687,7 @@ def show_group_join_requests(request, user, context):
         'tab_name' : 'join_requests',
         'tab_description' : _('group joining requests'),
         'page_title' : _('profile - moderation'),
-        'pending_group_memberships': pending_group_memberships
+        'join_requests': join_requests
     }
     context.update(data)
     return render(request, 'user_inbox/group_join_requests.html', context)
@@ -727,16 +719,13 @@ def user_responses(request, user, context):
     join_requests = []
     if request.user.is_administrator_or_moderator() \
         and askbot_settings.GROUPS_ENABLED:
-        group_content_type = ContentType.objects.get_for_model(models.Group)
         groups = request.user.get_groups()
         #construct a dictionary group id --> group object
         #to avoid loading group via activity content object
-        groups_dict = dict([(group.id, group) for group in groups])
-        join_requests = models.Activity.objects.filter(
-                            activity_type=const.TYPE_ACTIVITY_ASK_TO_JOIN_GROUP,
-                            content_type=group_content_type,
-                            object_id__in=groups_dict.keys()
-                        )
+        join_requests = models.GroupMembership.objects.filter(
+                                                group__in=groups,
+                                                level=models.GroupMembership.PENDING
+                                            ).order_by('-id')
 
     if section == 'forum':
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
@@ -749,7 +738,7 @@ def user_responses(request, user, context):
                 const.TYPE_ACTIVITY_MODERATED_POST_EDIT
             )
     elif section == 'join_requests':
-        return show_group_join_requests(request, user, context)
+        return show_group_join_requests(request, user, join_requests, context)
     elif section == 'messages':
         if request.user != user:
             raise Http404

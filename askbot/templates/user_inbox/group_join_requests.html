@@ -5,7 +5,7 @@
 {% endblock %}
 {% block inbox_content %}
     <table>
-    {% for membership in pending_group_memberships %}
+    {% for membership in join_requests %}
         <tr>
             <td>{% trans 
                     user=membership.user,
