@@ -716,16 +716,7 @@ def user_responses(request, user, context):
         (request.user.is_moderator() or request.user.is_administrator()):
         raise Http404
 
-    join_requests = []
-    if request.user.is_administrator_or_moderator() \
-        and askbot_settings.GROUPS_ENABLED:
-        groups = request.user.get_groups()
-        #construct a dictionary group id --> group object
-        #to avoid loading group via activity content object
-        join_requests = models.GroupMembership.objects.filter(
-                                                group__in=groups,
-                                                level=models.GroupMembership.PENDING
-                                            ).order_by('-id')
+    join_requests = request.user.get_group_join_requests()
 
     if section == 'forum':
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY

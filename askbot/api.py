@@ -7,6 +7,7 @@ so that other implementations of the data storage could be possible
 from django.db.models import Q
 from askbot import models
 from askbot import const
+from askbot.conf import settings as askbot_settings
 
 def get_info_on_moderation_items(user):
     """returns a dictionary with
@@ -35,9 +36,11 @@ def get_info_on_moderation_items(user):
     new_count = messages.filter(
                     status = models.ActivityAuditStatus.STATUS_NEW
                 ).count()
+
+    group_join_requests = user.get_group_join_requests()
     return {
         'seen_count': seen_count,
-        'new_count': new_count
+        'new_count': new_count + group_join_requests.count()
     }
 
 def get_admin(seed_user_id = None):

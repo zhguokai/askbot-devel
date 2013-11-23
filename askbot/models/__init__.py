@@ -2507,6 +2507,22 @@ def user_get_groups(self, private=False):
     #todo: maybe cache this query
     return Group.objects.get_for_user(self, private=private)
 
+def user_get_group_join_requests(self):
+    """get pending group membership requests
+    to the groups where this user belongs.
+    If user is not admin or groups are disabled,
+    returns empty list"""
+    if not self.is_administrator_or_moderator():
+        return GroupMembership.objects.none()
+    if not askbot_settings.GROUPS_ENABLED:
+        return GroupMembership.objects.none()
+
+    groups = self.get_groups()
+    return GroupMembership.objects.filter(
+                                    group__in=groups,
+                                    level=GroupMembership.PENDING
+                                ).order_by('-id')
+
 def user_get_personal_group(self):
     group_name = format_personal_group_name(self)
     return Group.objects.get(name=group_name)
@@ -3046,6 +3062,7 @@ User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
 User.add_to_class('get_marked_tags', user_get_marked_tags)
 User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('get_groups', user_get_groups)
+User.add_to_class('get_group_join_requests', user_get_group_join_requests)
 User.add_to_class('get_foreign_groups', user_get_foreign_groups)
 User.add_to_class('get_group_membership', user_get_group_membership)
 User.add_to_class('get_personal_group', user_get_personal_group)
