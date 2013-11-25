@@ -99,9 +99,12 @@
             {% set comma = joiner(',') %}
             {{ comma() }}
         <p>
+        {%- if request.user.is_authenticated() %}
         <a href="{{ request.user.get_profile_url() }}">
             {% trans %}You{% endtrans -%}
-        </a>{%- if shared_users_count -%}
+        </a>
+        {%- endif -%}
+        {%- if shared_users_count -%}
                 {%- for user in sharing_info['users'] %}{{ comma() }}
                     {{ user.get_profile_link() }}
                 {%- endfor -%}
