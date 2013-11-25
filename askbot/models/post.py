@@ -25,10 +25,6 @@ import askbot
 
 from askbot.utils.slug import slugify
 from askbot import const
-from askbot.models.user import Activity
-from askbot.models.user import EmailFeedSetting
-from askbot.models.user import Group
-from askbot.models.user import GroupMembership
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
@@ -46,7 +42,7 @@ from askbot.search import mysql
 
 class PostToGroup(models.Model):
     post = models.ForeignKey('Post')
-    group = models.ForeignKey(Group)
+    group = models.ForeignKey('Group')
 
     class Meta:
         unique_together = ('post', 'group')
@@ -62,6 +58,7 @@ class PostQuerySet(models.query.QuerySet):
     #as all methods on this class seem to want to
     #belong to Thread manager or Query set.
     def get_for_user(self, user):
+        from askbot.models.user import Group
         if askbot_settings.GROUPS_ENABLED:
             if user is None or user.is_anonymous():
                 groups = [Group.objects.get_global_group()]
@@ -347,7 +344,7 @@ class Post(models.Model):
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
-    groups = models.ManyToManyField(Group, through='PostToGroup', related_name = 'group_posts')#used for group-private posts
+    groups = models.ManyToManyField('Group', through='PostToGroup', related_name = 'group_posts')#used for group-private posts
 
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
@@ -643,6 +640,7 @@ class Post(models.Model):
         #vip groups to the list behind the scenes.
         groups = list(groups)
         #add moderator groups to the post implicitly
+        from askbot.models.user import Group
         vips = Group.objects.filter(is_vip=True)
         groups.extend(vips)
         #todo: use bulk-creation
@@ -688,6 +686,7 @@ class Post(models.Model):
         else:
             summary = self.get_snippet()
 
+        from askbot.models import Activity
         update_activity = Activity(
                         user = updated_by,
                         active_at = timestamp,
@@ -701,6 +700,7 @@ class Post(models.Model):
         update_activity.add_recipients(notify_sets['for_inbox'])
 
         #create new mentions (barring the double-adds)
+        from askbot.models import Activity
         for u in notify_sets['for_mentions'] - notify_sets['for_inbox']:
             Activity.objects.create_new_mention(
                                     mentioned_whom = u,
@@ -740,6 +740,7 @@ class Post(models.Model):
         """makes post private within user's groups
         todo: this is a copy-paste in thread and post
         """
+        from askbot.models.user import Group
         if group_id:
             group = Group.objects.get(id=group_id)
             groups = [group]
@@ -767,12 +768,14 @@ class Post(models.Model):
 
     def make_public(self):
         """removes the privacy mark from users groups"""
+        from askbot.models.user import Group
         groups = (Group.objects.get_global_group(),)
         self.add_to_groups(groups)
 
     def is_private(self):
         """true, if post belongs to the global group"""
         if askbot_settings.GROUPS_ENABLED:
+            from askbot.models.user import Group
             group = Group.objects.get_global_group()
             return not self.groups.filter(id=group.id).exists()
         return False
@@ -936,6 +939,7 @@ class Post(models.Model):
                 return list()
 
             #load group memberships for the candidates
+            from askbot.models.user import GroupMembership
             memberships = GroupMembership.objects.filter(
                                             user__in=candidates,
                                             group__in=groups
@@ -1138,6 +1142,7 @@ class Post(models.Model):
         """
         subscriber_set = set()
 
+        from askbot.models.user import EmailFeedSetting
         global_subscriptions = EmailFeedSetting.objects.filter(
             feed_type = 'q_all',
             frequency = 'i'
@@ -1215,6 +1220,7 @@ class Post(models.Model):
         #print 'potential subscribers: ', potential_subscribers
 
         #1) mention subscribers - common to questions and answers
+        from askbot.models.user import EmailFeedSetting
         if mentioned_users:
             mention_subscribers = EmailFeedSetting.objects.filter_subscribers(
                 potential_subscribers = mentioned_users,
@@ -1308,6 +1314,7 @@ class Post(models.Model):
         if mentioned_users:
             potential_subscribers.update(mentioned_users)
 
+        from askbot.models.user import EmailFeedSetting
         if potential_subscribers:
             comment_subscribers = EmailFeedSetting.objects.filter_subscribers(
                                         potential_subscribers = potential_subscribers,
@@ -2117,6 +2124,7 @@ class PostRevision(models.Model):
             #if sent by email to group and group does not want moderation
             if self.by_email and self.email_address:
                 group_name = self.email_address.split('@')[0]
+                from askbot.models.user import Group
                 try:
                     group = Group.objects.get(name = group_name, deleted = False)
                     return group.group.profile.moderate_email

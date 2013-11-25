@@ -24,8 +24,6 @@ from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
-from askbot.models.post import Post, PostRevision
-from askbot.models.post import PostToGroup
 from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models import signals
 from askbot import const
@@ -147,6 +145,7 @@ class ThreadManager(BaseQuerySetManager):
         )
 
         #todo: code below looks like ``Post.objects.create_new()``
+        from askbot.models.post import Post
         question = Post(
             post_type='question',
             thread=thread,
@@ -466,6 +465,7 @@ class ThreadManager(BaseQuerySetManager):
         #threads = [thread for thread in threads if not thread.summary_html_cached()]
 
         thread_ids = [obj.id for obj in threads]
+        from askbot.models.post import Post
         page_questions = Post.objects.filter(
             post_type='question', thread__id__in = thread_ids
         ).only(# pick only the used fields
@@ -491,6 +491,7 @@ class ThreadManager(BaseQuerySetManager):
     def get_thread_contributors(self, thread_list):
         """Returns query set of Thread contributors"""
         # INFO: Evaluate this query to avoid subquery in the subsequent query below (At least MySQL can be awfully slow on subqueries)
+        from askbot.models.post import Post
         u_id = list(Post.objects.filter(post_type__in=('question', 'answer'), thread__in=thread_list).values_list('author', flat=True))
 
         #todo: this does not belong gere - here we select users with real faces
@@ -505,6 +506,8 @@ class ThreadManager(BaseQuerySetManager):
 
     def get_for_user(self, user):
         """returns threads where a given user had participated"""
+        from askbot.models.post import PostRevision
+        from askbot.models.post import Post
         post_ids = PostRevision.objects.filter(
                                         author = user
                                     ).values_list(
@@ -580,7 +583,7 @@ class Thread(models.Model):
     #approvals - by whom and when
     approved = models.BooleanField(default=True, db_index=True)
 
-    accepted_answer = models.ForeignKey(Post, null=True, blank=True, related_name='+')
+    accepted_answer = models.ForeignKey('Post', null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
     added_at = models.DateTimeField(default = datetime.datetime.now)
 
@@ -607,6 +610,7 @@ class Thread(models.Model):
         post = getattr(self, '_question_cache', None)
         if post:
             return post
+        from askbot.models.post import Post
         self._question_cache = Post.objects.get(post_type='question', thread=self)
         return self._question_cache
 
@@ -1109,6 +1113,7 @@ class Thread(models.Model):
             # Denormalize questions to speed up template rendering
             # todo: just denormalize question_post_id on the thread!
             thread_map = dict([(thread.id, thread) for thread in similar_threads])
+            from askbot.models.post import Post
             questions = Post.objects.get_questions()
             questions = questions.select_related('thread').filter(thread__in=similar_threads)
             for q in questions:
@@ -1153,6 +1158,7 @@ class Thread(models.Model):
         #it is important that update method is called - not save,
         #because we do not want the signals to fire here
         thread_question = self._question_post()
+        from askbot.models.post import Post
         Post.objects.filter(id=thread_question.id).update(is_anonymous=False)
         thread_question.revisions.all().update(is_anonymous=False)
 
@@ -1186,6 +1192,7 @@ class Thread(models.Model):
         """removes child posts from given groups"""
         post_ids = self.posts.all().values_list('id', flat=True)
         group_ids = [group.id for group in groups]
+        from askbot.models.post import PostToGroup
         PostToGroup.objects.filter(
                         post__id__in=post_ids,
                         tag__id__in=group_ids
@@ -1429,6 +1436,8 @@ class Thread(models.Model):
 
         # Create a new revision
         latest_revision = thread_question.get_latest_revision()
+
+        from askbot.models.post import PostRevision
         PostRevision.objects.create(
             post=thread_question,
             title=latest_revision.title,
@@ -1528,7 +1537,7 @@ class Thread(models.Model):
         return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
 
 class QuestionView(models.Model):
-    question = models.ForeignKey(Post, related_name='viewed')
+    question = models.ForeignKey('Post', related_name='viewed')
     who = models.ForeignKey(User, related_name='question_views')
     when = models.DateTimeField()
 

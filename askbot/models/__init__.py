@@ -54,9 +54,8 @@ from askbot.models.post import PostFlagReason, AnonymousAnswer
 from askbot.models.post import PostToGroup
 from askbot.models.post import DraftAnswer
 from askbot.models.reply_by_email import ReplyAddress
-from askbot.models import signals
-from askbot.models.badges import award_badges_signal, get_badge, BadgeData
-from askbot.models.repute import Award, Repute, Vote
+from askbot.models.badges import award_badges_signal, get_badge
+from askbot.models.repute import Award, Repute, Vote, BadgeData
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot.models.meta import ImportRun, ImportedObjectInfo
 from askbot import auth
@@ -69,6 +68,7 @@ from askbot.utils.html import site_url
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
 from askbot import mail
+from askbot.models import signals
 
 from django import VERSION
 
@@ -3651,6 +3651,13 @@ def tweet_new_post(sender, user=None, question=None, answer=None, form_data=None
     from askbot.tasks import tweet_new_post_task
     post = question or answer
     tweet_new_post_task.delay(post.id)
+
+def init_badge_data(sender, created_models=None, **kwargs):
+    if BadgeData in created_models:
+        from askbot.models import badges
+        badges.init_badges()
+
+django_signals.post_syncdb.connect(init_badge_data)
 
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)

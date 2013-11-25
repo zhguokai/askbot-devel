@@ -23,9 +23,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.dispatch import Signal
-from askbot.models.repute import BadgeData, Award
-from askbot.models.user import Activity
-from askbot.models.question import FavoriteQuestion as Fave#name collision
 from askbot.models.post import Post
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -58,6 +55,7 @@ class Badge(object):
         self.css_class = const.BADGE_CSS_CLASSES[self.level]
 
     def get_stored_data(self):
+        from askbot.models.repute import BadgeData
         data, created = BadgeData.objects.get_or_create(slug = self.key)
         return data
 
@@ -87,7 +85,7 @@ class Badge(object):
 
     def award(self, recipient = None, context_object = None, timestamp = None):
         """do award, the recipient was proven to deserve"""
-
+        from askbot.models.repute import Award
         if self.multiple == False:
             if recipient.badges.filter(slug = self.key).count() != 0:
                 return False
@@ -647,6 +645,7 @@ class EditorTypeBadge(Badge):
             const.TYPE_ACTIVITY_UPDATE_ANSWER
         )
         filters = {'user': actor, 'activity_type__in': atypes}
+        from askbot.models.user import Activity
         if Activity.objects.filter(**filters).count() == self.min_edits:
             return self.award(actor, context_object, timestamp)
 
@@ -723,6 +722,7 @@ class FavoriteTypeBadge(Badge):
             context_object = None, timestamp = None):
         question = context_object
         #model FavoriteQuestion imported under alias of Fave
+        from askbot.models.question import FavoriteQuestion as Fave#name collision
         count = Fave.objects.filter(
                                         thread = question.thread
                                     ).exclude(
@@ -932,6 +932,7 @@ def init_badges():
         get_badge(key).get_stored_data()
     #remove any badges from the database
     #that are no longer in the BADGES dictionary
+    from askbot.models.repute import BadgeData
     BadgeData.objects.exclude(
         slug__in = map(slugify, BADGES.keys())
     ).delete()
