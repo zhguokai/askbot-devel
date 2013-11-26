@@ -1120,9 +1120,9 @@ def verify_email_and_register(request):
         data = {'page_class': 'validate-email-page'}
         return render(request, 'authopenid/verify_email.html', data)
 
+@csrf.csrf_protect
 @ajax_only
 @post_only
-@csrf.csrf_protect
 def register_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
