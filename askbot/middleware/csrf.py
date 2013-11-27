@@ -2,14 +2,6 @@ from django.middleware.csrf import CsrfViewMiddleware as DjangoCsrfViewMiddlewar
 from django.middleware.csrf import get_token
 from django.middleware import csrf
 
-def get_or_create_csrf_token(request):
-    token = request.META.get('CSRF_COOKIE', None)
-    if token is None:
-        token = csrf._get_new_csrf_key()
-        request.META['CSRF_COOKIE'] = token
-        request.META['CSRF_COOKIE_USED'] = True
-        return token
-
 class CsrfViewMiddleware(object):
     """we use this middleware to set csrf token to
     every response, because modal menues that post

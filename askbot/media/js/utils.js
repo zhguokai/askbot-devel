@@ -1320,6 +1320,10 @@ FederatedLoginMenu.prototype.decorate = function(element) {
     this._extraInfo.click(function(evt){
         evt.stopPropagation();
     });
+
+    //4) update csrf token value so that "button logins" work
+    var csrfCookieValue = getCookie(askbot['settings']['csrfCookieName']);
+    element.find('input[name="csrfmiddlewaretoken"]').val(csrfCookieValue);
 };
 
 

@@ -6,7 +6,13 @@
         <form 
             method="post"
             action="{{ settings.LOGIN_URL }}"
-        >{% csrf_token %}
+        >
+            {% if csrf_token == 'NOTPROVIDED' %}
+                {# will be set by javascript if this is part of modal menu #}
+                <input type="hidden" name="csrfmiddlewaretoken" value="NOTPROVIDED" />
+            {% else %}
+                {% csrf_token %}
+            {% endif %}
             {{ login_form.login_provider_name }}
             {{ login_form.next }}
             {{ login_macros.provider_buttons(login_providers) }}
