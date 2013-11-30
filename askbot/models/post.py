@@ -2316,6 +2316,9 @@ class PostFlagReason(models.Model):
     class Meta:
         app_label = 'askbot'
 
+    def __unicode__(self):
+        return self.title
+
 
 class DraftAnswer(models.Model):
     """Provides space for draft answers,
