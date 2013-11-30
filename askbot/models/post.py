@@ -1678,6 +1678,9 @@ class Post(models.Model):
     def assert_is_visible_to(self, user):
         if self.is_comment() == False and askbot_settings.GROUPS_ENABLED:
             self.assert_is_visible_to_user_groups(user)
+
+        self.thread.assert_is_visible_to_user_groups(user)
+
         if self.is_question():
             return self._question__assert_is_visible_to(user)
         elif self.is_answer():

@@ -16,6 +16,7 @@ from django.utils.translation import get_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
+from askbot import exceptions
 from askbot import mail
 from askbot.models import Space, Feed
 from askbot.mail import messages
@@ -1312,6 +1313,23 @@ class Thread(models.Model):
         if len(groups) == 0:
             message = 'Sharing did not work, because group is unknown'
             user.message_set.create(message=message)
+
+    def assert_is_visible_to_user_groups(self, user):
+        """raises permission denied of the thread
+        is hidden due to group memberships"""
+        thread_groups = self.groups.all()
+        global_group_name = askbot_settings.GLOBAL_GROUP_NAME
+        if thread_groups.filter(name=global_group_name).count() == 1:
+            return
+
+        exception = exceptions.QuestionHidden
+        message = _('This post is temporarily not available')
+        if user.is_anonymous():
+            raise exception(message)
+        else:
+            user_groups_ids = user.get_groups().values_list('id', flat = True)
+            if thread_groups.filter(id__in = user_groups_ids).count() == 0:
+                raise exception(message)
 
     def is_private(self):
         """true, if thread belongs to the global group"""
