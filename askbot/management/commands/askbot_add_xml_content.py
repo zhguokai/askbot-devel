@@ -1,28 +1,17 @@
 from askbot.models import BadgeData
 from askbot.models import FavoriteQuestion
 from askbot.models import Group
-from askbot.models import ImportRun
 from askbot.models import ImportedObjectInfo
-from askbot.models import Message
 from askbot.models import Post
 from askbot.models import Tag
 from askbot.models import Thread
 from askbot.models import User
-from bs4 import BeautifulSoup
-from collections import defaultdict
+from askbot.management.commands.base import BaseImportXMLCommand
 from django.conf import settings as django_settings
 from django.contrib.auth.models import Group as AuthGroup
 from django.contrib.contenttypes.models import ContentType
-from django.core.management.base import BaseCommand, CommandError
-from django.core import serializers
 from django.db import transaction
 from django.db.models import Q
-from django.utils.encoding import smart_str
-from django.utils.translation import activate as activate_language
-from optparse import make_option
-import os
-import sys
-from tempfile import mkstemp
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
@@ -38,109 +27,10 @@ def get_status_rank(status):
     except ValueError:
         return 0
 
-def get_safe_username(username):
-    """get unique username similar to `username`
-    to avoid the uniqueness clash"""
-    existing_names = User.objects.filter(
-                    username__istartswith=username
-                ).values_list('username', flat=True)
-
-    if len(existing_names) == 0:
-        return username
-
-    num = 1
-    while True:
-        new_name = username + str(num)
-        if new_name in existing_names:
-            num += 1
-        else:
-            return new_name
-
-def get_deserialized_object(xml_soup):
-    """returns deserialized django object for xml soup with one item"""
-    item_xml = smart_str(xml_soup)
-    #below call assumes a single item within
-    obj = serializers.deserialize('xml', item_xml).next().object
-    obj._source_xml = item_xml
-    return obj
-
-def get_m2m_ids_for_field(obj, field_name):
-    xml = obj._source_xml
-    soup = BeautifulSoup(xml)
-    ids = list()
-    for field in soup.findAll('field', attrs={'name': field_name}): 
-        objs = field.findAll('object')
-        for obj in objs:
-            ids.append(obj.attrs['pk'])
-    return ids
-
-def copy_string_parameter(from_obj, to_obj, param_name):
-    from_par = getattr(from_obj, param_name)
-    to_par = getattr(to_obj, param_name)
-    if from_par is None and to_par is None:
-        return
-    from_par = from_par or ''
-    to_par = to_par or ''
-    if from_par.strip() == '' and to_par.strip() != '':
-        setattr(to_obj, param_name, from_par)
-
-def copy_bool_parameter(from_obj, to_obj, param_name, operator='or'):
-    from_par = getattr(from_obj, param_name)
-    to_par = getattr(to_obj, param_name)
-    if operator == 'or':
-        value = from_par or to_par
-    elif operator == 'and':
-        value = from_par and to_par
-    else:
-        raise ValueError('unsupported operator "%s"' % operator)
-    setattr(to_obj, param_name, value)
-
-def merge_words_parameter(from_obj, to_obj, param_name):
-    from_words = getattr(from_obj, param_name).split()
-    to_words = getattr(to_obj, param_name).split()
-    value = ' '.join(set(from_words)|set(to_words))
-    setattr(to_obj, param_name, value)
-
-def copy_numeric_parameter(from_obj, to_obj, param_name, operator='max'):
-    from_par = getattr(from_obj, param_name)
-    to_par = getattr(to_obj, param_name)
-    if operator == 'max':
-        value = max(from_par, to_par)
-    elif operator == 'min':
-        value = min(from_par, to_par)
-    elif operator == 'sum':
-        value =  from_par + to_par
-    else:
-        raise ValueError('unsupported operator "%s"' % operator)
-    setattr(to_obj, param_name, value)
-
-class Command(BaseCommand):
+class Command(BaseImportXMLCommand):
     help = 'Adds XML askbot data produced by the "dumpdata" command'
 
-    option_list = BaseCommand.option_list + (
-            make_option('--redirect-format',
-                action = 'store',
-                dest = 'redirect_format',
-                default = 'none',
-                help = 'Format for the redirect files (apache|nginx|none)'
-            ),
-    )
-
-    def handle(self, *args, **kwargs):
-
-        activate_language(django_settings.LANGUAGE_CODE)
-
-        #init the redirects file format table
-        format_table = {
-            'nginx': 'rewrite ^%s$ %s break;\n',
-            'apache': 'Redirect permanent %s %s\n',
-        }
-        format_table = defaultdict(lambda: '%s %s\n', format_table)
-        self.redirect_format = format_table[kwargs['redirect_format']]
-
-        self.setup_run()
-        self.read_xml_file(args[0])
-        self.remember_message_ids()
+    def handle_import(self):
         self.read_content_types()
 
         self.import_groups()
@@ -175,35 +65,6 @@ class Command(BaseCommand):
         #we'll try to ignore importing this
         #model="askbot.activity"
 
-    def setup_run(self):
-        """remembers the run information, 
-        for the logging purposes
-        """
-        command = ' '.join(sys.argv)
-        run = ImportRun.objects.create(command=command)
-        self.run = run
-
-    def read_xml_file(self, filename):
-        if not os.path.isfile(filename):
-            raise CommandError('File %s does not exist') % filename
-        xml = open(filename, 'r').read() 
-        self.soup = BeautifulSoup(xml, ['lxml', 'xml'])
-
-    def remember_message_ids(self):
-        self.message_ids = list(Message.objects.values_list('id', flat=True))
-
-    def log_action_with_old_id(self, from_object_id, to_object, extra_info=None):
-        info = ImportedObjectInfo()
-        info.old_id = from_object_id
-        info.new_id = to_object.id
-        info.model = str(to_object._meta)
-        info.run = self.run
-        info.extra_info = extra_info or dict()
-        info.save()
-
-    def log_action(self, from_object, to_object, extra_info=None):
-        self.log_action_with_old_id(from_object.id, to_object, extra_info=extra_info)
-
     def log_personal_group(self, group):
         info = ImportedObjectInfo()
         info.old_id = group.id
@@ -211,25 +72,6 @@ class Command(BaseCommand):
         info.model = 'personal_group'
         info.run = self.run
         info.save()
-
-    def get_imported_object_id_by_old_id(self, model_class, old_id):
-        if old_id is None:
-            return None
-        try:
-            log = ImportedObjectInfo.objects.get(
-                                        model=str(model_class._meta),
-                                        old_id=old_id,
-                                        #run=self.run
-                                    )
-            return log.new_id
-        except ImportedObjectInfo.DoesNotExist:
-            return None
-
-    def get_imported_object_by_old_id(self, model_class, old_id):
-        new_id = self.get_imported_object_id_by_old_id(model_class, old_id)
-        if new_id:
-            return model_class.objects.get(id=new_id)
-        return None
 
     def get_group_by_old_id(self, old_id):
         normal_group = self.get_imported_object_by_old_id(AuthGroup, old_id)
@@ -239,18 +81,11 @@ class Command(BaseCommand):
         log = ImportedObjectInfo.objects.get(
                                         model='personal_group',
                                         old_id=old_id,
-                                        #run=self.run
+                                        run=self.run
                                     )
         old_user_id = log.new_id
         new_user = self.get_imported_object_by_old_id(User, old_user_id)
         return new_user.get_personal_group()
-
-    def get_objects_for_model(self, model_name):
-        """returns iterator of objects from the django
-        xml dump by name"""
-        object_soup = self.soup.find_all('object', {'model': model_name})
-        for datum in object_soup:
-            yield get_deserialized_object(datum)
 
     def read_content_types(self):
         """reads content types from the data dump and makes
@@ -258,10 +93,15 @@ class Command(BaseCommand):
         values - active content type objects"""
         ctypes_map = dict()
         for old_ctype in self.get_objects_for_model('contenttypes.contenttype'):
-            ctypes_map[old_ctype.id] = ContentType.objects.get(
-                                        app_label=old_ctype.app_label,
-                                        model=old_ctype.model
-                                    )
+            try:
+                new_ctype = ContentType.objects.get(
+                                app_label=old_ctype.app_label,
+                                model=old_ctype.model
+                            )
+            except ContentType.DoesNotExist:
+                continue
+            ctypes_map[old_ctype.id] = new_ctype
+
         self.content_types_map = ctypes_map
         """
         <object pk="38" model="contenttypes.contenttype">
@@ -274,21 +114,7 @@ class Command(BaseCommand):
     def get_content_type_by_old_id(self, old_ctype_id):
         return self.content_types_map[old_ctype_id]
 
-    def open_unique_file(self, name_hint):
-        """return a file using name_hint as the hint
-        for the file name, if file with that name exists,
-        create a unique file name containing hint as part of
-        the name"""
-        if os.path.exists(name_hint):
-            info = mkstemp(dir=os.getcwd(), prefix=name_hint + '_')
-            name_hint = info[1]
-        print 'saving file: %s' % name_hint
-        return open(name_hint, 'w')
-
-    def write_redirect(self, from_url, to_url, redirects_file):
-        if from_url != to_url:
-            redirects_file.write(self.redirect_format % (from_url, to_url))
-
+    @transaction.commit_manually
     def import_groups(self):
         """imports askbot group profiles"""
 
@@ -314,6 +140,8 @@ class Command(BaseCommand):
                 group.id = None
                 group.save()
 
+            transaction.commit()
+
             #new_url = group.get_absolute_url()
 
             #if old_url != new_url:
@@ -321,6 +149,9 @@ class Command(BaseCommand):
 
             #we will later populate memberships only in these groups
             self.log_action_with_old_id(old_group_id, group)
+
+        if transaction.is_dirty():
+            transaction.commit()
 
         #redirects_file.close()
 
@@ -332,14 +163,24 @@ class Command(BaseCommand):
 
             #if profile for this group does not exist, then create new profile and save
             try:
-                existing_profile = Group.objects.get(id=auth_group.id)
-                copy_string_parameter(profile, existing_profile, 'logo_url')
-                merge_words_parameter(profile, existing_profile, 'preapproved_emails')
-                merge_words_parameter(profile, existing_profile, 'preapproved_email_domains')
+                existing_profile = Group.objects.get(group_ptr__id=auth_group.id)
+                self.copy_string_parameter(profile, existing_profile, 'logo_url')
+                self.merge_words_parameter(profile, existing_profile, 'preapproved_emails')
+                self.merge_words_parameter(profile, existing_profile, 'preapproved_email_domains')
                 existing_profile.save()
             except Group.DoesNotExist:
-                profile.group_ptr = auth_group
-                profile.save()
+                new_profile = Group.objects.create(
+                                name=auth_group.name,
+                                logo_url=profile.logo_url,
+                                preapproved_emails=profile.preapproved_emails,
+                                preapproved_email_domains=profile.preapproved_email_domains
+                            )
+                new_profile.save()
+
+            transaction.commit()
+
+        if transaction.is_dirty():
+            transaction.commit()
 
     def import_users(self):
         redirects_file = self.open_unique_file('user_redirects')
@@ -356,7 +197,7 @@ class Command(BaseCommand):
                 to_user = User.objects.get(email=from_user.email)
                 dupes += 1
             except User.DoesNotExist:
-                username = get_safe_username(from_user.username)
+                username = self.get_safe_username(from_user.username)
                 if username != from_user.username:
                     template = 'Your user name was changed from %s to %s'
                     log_info['notify_user'].append(template % (from_user.username, username))
@@ -367,46 +208,46 @@ class Command(BaseCommand):
                 names = (from_user.username, to_user.username)
                 log_info['notify_user'].append('Your user name has changed from %s to %s' % names)
 
-            copy_string_parameter(from_user, to_user, 'first_name')
-            copy_string_parameter(from_user, to_user, 'last_name')
-            copy_string_parameter(from_user, to_user, 'real_name')
-            copy_string_parameter(from_user, to_user, 'website')
-            copy_string_parameter(from_user, to_user, 'location')
+            self.copy_string_parameter(from_user, to_user, 'first_name')
+            self.copy_string_parameter(from_user, to_user, 'last_name')
+            self.copy_string_parameter(from_user, to_user, 'real_name')
+            self.copy_string_parameter(from_user, to_user, 'website')
+            self.copy_string_parameter(from_user, to_user, 'location')
 
             to_user.country = from_user.country
 
-            copy_string_parameter(from_user, to_user, 'about')
-            copy_string_parameter(from_user, to_user, 'email_signature')
-            copy_string_parameter(from_user, to_user, 'twitter_access_token')
-            copy_string_parameter(from_user, to_user, 'twitter_handle')
+            self.copy_string_parameter(from_user, to_user, 'about')
+            self.copy_string_parameter(from_user, to_user, 'email_signature')
+            self.copy_string_parameter(from_user, to_user, 'twitter_access_token')
+            self.copy_string_parameter(from_user, to_user, 'twitter_handle')
 
-            merge_words_parameter(from_user, to_user, 'interesting_tags')
-            merge_words_parameter(from_user, to_user, 'ignored_tags')
-            merge_words_parameter(from_user, to_user, 'subscribed_tags')
-            merge_words_parameter(from_user, to_user, 'languages')
+            self.merge_words_parameter(from_user, to_user, 'interesting_tags')
+            self.merge_words_parameter(from_user, to_user, 'ignored_tags')
+            self.merge_words_parameter(from_user, to_user, 'subscribed_tags')
+            self.merge_words_parameter(from_user, to_user, 'languages')
 
             if to_user.password == '!' and from_user.password != '!':
                 to_user.password = from_user.password
-            copy_bool_parameter(from_user, to_user, 'is_staff')
-            copy_bool_parameter(from_user, to_user, 'is_active')
-            copy_bool_parameter(from_user, to_user, 'is_superuser')
-            copy_bool_parameter(from_user, to_user, 'is_fake', operator='and')
-            copy_bool_parameter(from_user, to_user, 'email_isvalid', operator='and')
-            copy_bool_parameter(from_user, to_user, 'show_country')
-            copy_bool_parameter(from_user, to_user, 'show_marked_tags')
+            self.copy_bool_parameter(from_user, to_user, 'is_staff')
+            self.copy_bool_parameter(from_user, to_user, 'is_active')
+            self.copy_bool_parameter(from_user, to_user, 'is_superuser')
+            self.copy_bool_parameter(from_user, to_user, 'is_fake', operator='and')
+            self.copy_bool_parameter(from_user, to_user, 'email_isvalid', operator='and')
+            self.copy_bool_parameter(from_user, to_user, 'show_country')
+            self.copy_bool_parameter(from_user, to_user, 'show_marked_tags')
 
-            copy_numeric_parameter(from_user, to_user, 'last_login')
-            copy_numeric_parameter(from_user, to_user, 'last_seen')
-            copy_numeric_parameter(from_user, to_user, 'date_joined', operator='min')
-            copy_numeric_parameter(from_user, to_user, 'email_tag_filter_strategy')
-            copy_numeric_parameter(from_user, to_user, 'display_tag_filter_strategy')
-            copy_numeric_parameter(
+            self.copy_numeric_parameter(from_user, to_user, 'last_login')
+            self.copy_numeric_parameter(from_user, to_user, 'last_seen')
+            self.copy_numeric_parameter(from_user, to_user, 'date_joined', operator='min')
+            self.copy_numeric_parameter(from_user, to_user, 'email_tag_filter_strategy')
+            self.copy_numeric_parameter(from_user, to_user, 'display_tag_filter_strategy')
+            self.copy_numeric_parameter(
                 from_user,
                 to_user, 
                 'consecutive_days_visit_count',
                 operator='sum'
             )
-            copy_numeric_parameter(from_user, to_user, 'social_sharing_mode')
+            self.copy_numeric_parameter(from_user, to_user, 'social_sharing_mode')
 
             #position of character in this string == rank of status
             if get_status_rank(from_user.status) > get_status_rank(to_user.status):
@@ -417,7 +258,7 @@ class Command(BaseCommand):
             new_url = to_user.get_absolute_url()
             self.write_redirect(old_url, new_url, redirects_file)
 
-            group_ids = get_m2m_ids_for_field(from_user, 'groups')
+            group_ids = self.get_m2m_ids_for_field(from_user, 'groups')
             for group_id in group_ids:
                 #get group by old id,
                 #if group is private - skip,
@@ -715,6 +556,3 @@ class Command(BaseCommand):
                 <field type="DateTimeField" name="voted_at">2012-12-26T19:10:08.334818</field>
             </object>
             """
-
-    def delete_new_messages(self):
-        Message.objects.exclude(id__in=self.message_ids).delete()
