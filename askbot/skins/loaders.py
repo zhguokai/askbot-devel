@@ -86,7 +86,8 @@ def load_skins(language_code):
         skin_code = skin_name + '-' + language_code
         skins[skin_code] = SkinEnvironment(
                                 skin = skin_name,
-                                extensions=['jinja2.ext.i18n',]
+                                extensions=['jinja2.ext.i18n',],
+                                globals={'settings': askbot_settings}
                             )
         skins[skin_code].set_language(language_code)
         #from askbot.templatetags import extra_filters_jinja as filters
