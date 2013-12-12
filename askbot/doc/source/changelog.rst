@@ -1,6 +1,13 @@
 Changes in Askbot
 =================
 
+Development master branch (only on github)
+------------------------------------------
+
+* Management command to add data from other Askbot site.
+* Allowed simple overrides of livesettings with `ASKBOT_...` prefixed 
+  variables in the `settings.py` file
+
 0.7.49 (Sep 19, 2013)
 ---------------------
 * Support for Solr search backend (Adolfo)

@@ -28,12 +28,14 @@ class Command(NoArgsCommand):
                     print dupes[idx].name + ' ',
                     dupes[idx].delete()
                 print ''
+            #todo: see if we can use the tag "clean" procedure here
             if askbot_settings.FORCE_LOWERCASE_TAGS:
                 lowercased_name = first_tag.name.lower()
                 if first_tag.name != lowercased_name:
                     print 'Converting tag %s to lower case' % first_tag.name
                     first_tag.name = lowercased_name
                     first_tag.save()
+
         transaction.commit()
 
         #go through questions and fix tag records on each
