@@ -20,6 +20,7 @@ at run time
 
 askbot.deps.livesettings is a module developed for satchmo project
 """
+from django.conf import settings as django_settings
 from django.core.cache import cache
 from askbot.deps.livesettings import SortedDotDict, config_register
 from askbot.deps.livesettings.functions import config_get
@@ -47,7 +48,11 @@ class ConfigSettings(object):
         will be required in code to convert an app
         depending on django.conf.settings to askbot.deps.livesettings
         """
-        return getattr(self.__instance, key).value
+        hardcoded_setting = getattr(django_settings, 'ASKBOT_' + key, None)
+        if hardcoded_setting is None:
+            return getattr(self.__instance, key).value
+        else:
+            return hardcoded_setting
 
     def get_default(self, key):
         """return the defalut value for the setting"""
@@ -108,7 +113,11 @@ class ConfigSettings(object):
         out = dict()
         for key in cls.__instance.keys():
             #todo: this is odd that I could not use self.__instance.items() mapping here
-            out[key] = cls.__instance[key].value
+            hardcoded_setting = getattr(django_settings, 'ASKBOT_' + key, None)
+            if hardcoded_setting is None:
+                out[key] = cls.__instance[key].value
+            else:
+                out[key] = hardcoded_setting
         cache.set(cache_key, out)
 
 
