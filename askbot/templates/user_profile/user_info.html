@@ -52,7 +52,7 @@
             {% if view_user.real_name %}
             <tr>
                 <td>{% trans %}real name{% endtrans %}</td>
-                <td><b>{{view_user.real_name}}</b></td>
+                <td><b>{{view_user.real_name|escape}}</b></td>
             </tr>
             {% endif %}
             {% if settings.GROUPS_ENABLED %}
