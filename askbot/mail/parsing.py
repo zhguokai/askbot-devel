@@ -23,6 +23,8 @@ QUOTE_REGEXES = (
     r'_+\nFrom:.*?\nSent:.*?\nTo:.*?\nSubject:.*?\Z',
     #OUTLOOK1
     r'\n-+[\w -]+\nFrom:.*?\nSent:.*?\nTo:.*?\nSubject:.*?\Z',
+    #unknown
+    r'\n-+[\w -]+\nFrom:.*?\nDate:.*?\nTo:.*?\nSubject:.*?\Z',
     #YAHOO_QUOTE_RE = 
     r'\n_+\n\s*From: [^\n]+\nTo: [^\n]+\nSent: [^\n]+\nSubject: [^\n]+\Z',
     #KMAIL_QUOTE_RE = 
