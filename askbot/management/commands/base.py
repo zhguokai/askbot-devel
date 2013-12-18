@@ -219,6 +219,12 @@ class BaseImportXMLCommand(BaseCommand):
 
         from_par = getattr(from_obj, from_param_name)
         to_par = getattr(to_obj, to_param_name)
+
+        if from_par is None:
+            return to_par
+        elif to_par is None:
+            return from_par
+
         if operator == 'max':
             value = max(from_par, to_par)
         elif operator == 'min':
