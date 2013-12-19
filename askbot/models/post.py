@@ -1459,17 +1459,13 @@ class Post(models.Model):
         question = self.get_origin_post()
         if user.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
             #at least some of the tags must be marked interesting
-            return user.has_affinity_to_question(
-                question,
-                affinity_type = 'like'
-            )
+            return user.has_affinity_to_question(question, affinity_type = 'like')
         elif user.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
-            return not user.has_affinity_to_question(
-                question,
-                affinity_type = 'dislike'
-            )
+            return not user.has_affinity_to_question(question, affinity_type = 'dislike')
         elif user.email_tag_filter_strategy == const.INCLUDE_ALL:
             return True
+        elif user.email_tag_filter_strategy == const.INCLUDE_SUBSCRIBED:
+            return user.has_affinity_to_question(question, affinity_type='like')
         else:
             raise ValueError(
                 'unexpected User.email_tag_filter_strategy %s'\
