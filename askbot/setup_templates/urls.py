@@ -3,7 +3,6 @@ main url configuration file for the askbot site
 """
 from django.conf import settings
 from django.conf.urls.defaults import handler404
-from django.conf.urls.defaults import handler500
 from django.conf.urls.defaults import include
 from django.conf.urls.defaults import patterns
 from django.conf.urls.defaults import url
@@ -40,3 +39,5 @@ if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
                     url(r'^rosetta/', include('rosetta.urls')),
                 )
+
+handler500 = 'askbot.views.error.internal_error'
