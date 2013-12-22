@@ -825,16 +825,21 @@ def delete_comment(request):
 
 @decorators.post_only
 def comment_to_answer(request):
-    comment_id = request.POST.get('comment_id')
-    if comment_id:
-        comment_id = int(comment_id)
-        comment = get_object_or_404(models.Post,
-                post_type='comment', id=comment_id)
 
-        request.user.repost_comment_as_answer(comment)
-        return HttpResponseRedirect(comment.get_absolute_url())
-    else:
+    try:
+        comment_id = int(request.POST.get('comment_id'))
+    except (ValueError, TypeError):
+        #type or value error is raised is int() fails
         raise Http404
+
+    comment = get_object_or_404(
+                    models.Post,
+                    post_type='comment',
+                    id=comment_id
+                )
+
+    request.user.repost_comment_as_answer(comment)
+    return HttpResponseRedirect(comment.get_absolute_url())
 
 @decorators.post_only
 @csrf.csrf_protect
