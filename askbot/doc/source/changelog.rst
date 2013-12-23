@@ -4,6 +4,7 @@ Changes in Askbot
 Development master branch (only on github)
 ------------------------------------------
 
+* Added `askbot_add_osqa_content` management command.
 * Management command to add data from other Askbot site.
 * Allowed simple overrides of livesettings with `ASKBOT_...` prefixed 
   variables in the `settings.py` file
