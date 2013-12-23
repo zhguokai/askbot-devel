@@ -2586,7 +2586,7 @@ def user_is_following_question(user, question):
     return question.thread.followed_by.filter(id=user.id).exists()
 
 
-def upvote(self, post, timestamp=None, cancel=False, force = False):
+def upvote(self, post, timestamp=None, cancel=False, force=False):
     #force parameter not used yet
     return _process_vote(
         self,
@@ -2596,7 +2596,7 @@ def upvote(self, post, timestamp=None, cancel=False, force = False):
         vote_type=Vote.VOTE_UP
     )
 
-def downvote(self, post, timestamp=None, cancel=False, force = False):
+def downvote(self, post, timestamp=None, cancel=False, force=False):
     #force not used yet
     return _process_vote(
         self,

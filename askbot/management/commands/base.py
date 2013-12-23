@@ -31,12 +31,7 @@ class BaseImportXMLCommand(BaseCommand):
         activate_language(django_settings.LANGUAGE_CODE)
 
         #init the redirects file format table
-        format_table = {
-            'nginx': 'rewrite ^%s$ %s break;\n',
-            'apache': 'Redirect permanent %s %s\n',
-        }
-        format_table = defaultdict(lambda: '%s %s\n', format_table)
-        self.redirect_format = format_table[kwargs['redirect_format']]
+        self.redirect_format = self.get_redirect_format(kwargs['redirect_format'])
 
         self.setup_run()
         self.read_xml_file(args[0])
@@ -56,6 +51,15 @@ class BaseImportXMLCommand(BaseCommand):
         before and after importation
         """
         raise NotImplementedError('Implement this method to import data')
+
+
+    def get_redirect_format(self, format_setting):
+        format_table = {
+            'nginx': 'rewrite ^%s$ %s break;\n',
+            'apache': 'Redirect permanent %s %s\n',
+        }
+        format_table = defaultdict(lambda: '%s %s\n', format_table)
+        return format_table[format_setting]
 
     def setup_run(self):
         """remembers the run information, 

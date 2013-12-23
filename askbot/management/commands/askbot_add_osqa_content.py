@@ -2,13 +2,20 @@ from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.management.commands.base import BaseImportXMLCommand
 from askbot.models import Award
 from askbot.models import BadgeData
+from askbot.models import Post
+from askbot.models import PostRevision
+from askbot.models import Thread
 from askbot.models import Tag
 from askbot.models import User
 from askbot.utils.slug import slugify_camelcase
 from bs4 import BeautifulSoup
 from datetime import datetime
+from django.db.models import Q
 from django.utils import translation
 from django.conf import settings as django_settings
+from django.utils.http import urlquote  as django_urlquote
+from django.template.defaultfilters import slugify
+from HTMLParser import HTMLParser
 
 def decode_datetime(data):
     """Decodes formats:
@@ -49,7 +56,10 @@ class DataObject(object):
     def decode_rel_value(self, field):
         rel_type = field['rel']
         if rel_type in ('ManyToOneRel', 'OneToOneRel'):
-            return int(field.text)
+            try:
+                return int(field.text)
+            except:
+                return None
         elif rel_type == 'ManyToManyRel':
             items = field.find_all('object')
             return [item['pk'] for item in items]
@@ -62,7 +72,7 @@ class DataObject(object):
         type="DateTimeField">
         """
         if key in ('pk', 'id'):
-            return self.soup['pk']
+            return int(self.soup['pk'])
         field = self.soup.find('field', attrs={'name': key})
         if field is None:
             raise ValueError('could not find field %s' % key)
@@ -91,6 +101,7 @@ class Command(BaseImportXMLCommand):
         translation.activate(django_settings.LANGUAGE_CODE)
 
         self.setup_run()
+        self.redirect_format = self.get_redirect_format(options['redirect_format'])
 
         dump_file_name = args[0]
         xml = open(dump_file_name, 'r').read() 
@@ -100,13 +111,26 @@ class Command(BaseImportXMLCommand):
         #forum.keyvalue
         self.import_users()
         self.import_user_logins()
+        #model="forum.tag"
+        self.import_tags()
+
+        #model="forum.question"/answer/comment - derivatives of the Node model
+        self.import_threads()
+        self.import_posts('question', True)
+        self.import_posts('answer')
+        self.import_posts('comment')
+        #model="forum.noderevision"
+        self.import_post_revisions()
+
+        self.fix_answer_counts()
+        self.fix_comment_counts()
+
         #model="forum.subscriptionsettings"
         #this model has no correspondence in Askbot
 
         #model="forum.actionrepute"
         #model="forum.award"
 
-        #model="forum.noderevision"
         #model="forum.nodestate"
 
         #model="forum.question"
@@ -115,21 +139,12 @@ class Command(BaseImportXMLCommand):
         #model="forum.validationhash"
         #model="forum.vote"
         
-        #model="forum.tag"
-        self.import_tags()
         #self.import_marked_tags()
 
-        #self.import_threads()
         #self.apply_groups_to_threads()
 
-        #forum.question
-        #self.import_posts('question', save_redirects=True)
-        #self.import_posts('answer')
-        #self.import_posts('comment')
-        #self.import_post_revisions()
-        #self.apply_groups_to_posts()
         #self.apply_question_followers()
-        #self.import_votes()
+        self.import_votes()
 
         self.import_badges()
         #self.import_badge_awards()
@@ -144,7 +159,6 @@ class Command(BaseImportXMLCommand):
         #in OSQA user profile is split in two models
         #auth.user
         #forum.user
-
         for from_user in self.get_objects_for_model('auth.user'):
             try:
                 to_user = User.objects.get(email=from_user.email)
@@ -289,3 +303,148 @@ class Command(BaseImportXMLCommand):
                 </field>
             </object>
             """
+
+    def import_threads(self):
+        """import thread objects"""
+        count = 0
+        for osqa_thread in self.get_objects_for_model('forum.question'):
+            count += 1
+            #todo: there must be code lated to set the commented values
+            thread = Thread(
+                title=osqa_thread.title,
+                tagnames=osqa_thread.tagnames,
+                view_count=osqa_thread.extra_count,
+                #favourite_count=thread.favourite_count,
+                #answer_count=thread.answer_count,
+                last_activity_at=osqa_thread.last_activity_at,
+                last_activity_by=self.get_imported_object_by_old_id(User, osqa_thread.last_activity_by),
+                language_code=django_settings.LANGUAGE_CODE,
+                #"closed" data is stored differently in OSQA
+                #closed_by=self.get_imported_object_by_old_id(User, thread.closed_by_id),
+                #closed=thread.closed,
+                #closed_at=thread.closed_at,
+                #close_reason=thread.close_reason,
+                #deleted=False,
+                approved=True, #no equivalent in OSQA
+                #must be done later, after importing answers
+                #answer_accepted_at=thread.answer_accepted_at,
+                added_at=osqa_thread.added_at,
+            )
+
+            #apply tags to threads
+            tag_names = thread.get_tag_names()
+            if tag_names:
+
+                tag_filter = Q(name__iexact=tag_names[0])
+                for tag_name in tag_names[1:]:
+                    tag_filter |= Q(name__iexact=tag_name)
+                tags = Tag.objects.filter(tag_filter)
+
+                thread.tagnames = ' '.join([tag.name for tag in tags])
+
+                thread.save()
+                for tag in tags:
+                    thread.tags.add(tag)
+                    tag.used_count += 1
+                    tag.save()
+
+            else:
+                thread.save()
+
+            self.log_action(osqa_thread, thread)
+
+    def import_posts(self, post_type, save_redirects=False):
+        """imports osqa Nodes to askbot Post objects"""
+        if save_redirects:
+            redirects_file = self.open_unique_file('question_redirects')
+
+        models_map = {
+            'question': 'forum.question',
+            'answer': 'forum.answer',
+            'comment': 'forum.comment'
+        }
+
+        model_name = models_map[post_type]
+
+        for osqa_node in self.get_objects_for_model(model_name):
+            if osqa_node.node_type != post_type:
+                continue
+
+            post = Post()
+
+            #this line is a bit risky, but should work if we import things in correct order
+            if osqa_node.parent:
+                post.parent = self.get_imported_object_by_old_id(Post, osqa_node.parent)
+                post.thread = post.parent.thread
+            else:
+                post.thread = self.get_imported_object_by_old_id(Thread, osqa_node.id)
+
+            post.post_type = osqa_node.node_type
+
+            if save_redirects:
+                slug = django_urlquote(slugify(osqa_node.title))
+                #todo: add i18n to the old url
+                old_url = '/questions/%d/%s/' % (osqa_node.id, slug)
+
+            post.author = self.get_imported_object_by_old_id(User, osqa_node.author)
+            post.html = HTMLParser().unescape(osqa_node.body)
+            post.summary = post.get_snippet()
+
+            #these don't have direct equivalent in the OSQA Node object
+            #post.deleted_by
+            #post.locked_by
+            #post.last_edited_by
+
+            #these are to be set later with the real values
+            post.points = 0
+            post.vote_up_count = 0
+            post.vote_down_count = 0
+            post.offensive_flag_count = 0
+
+            post.save()
+
+            if save_redirects:
+                new_url = post.get_absolute_url()
+                self.write_redirect(old_url, new_url, redirects_file)
+
+            self.log_action_with_old_id(osqa_node.id, post)
+
+        if save_redirects:
+            redirects_file.close()
+
+    def import_post_revisions(self):
+        """Imports OSQA revisions to Askbot revisions"""
+        for osqa_revision in self.get_objects_for_model('forum.noderevision'):
+            post = self.get_imported_object_by_old_id(Post, osqa_revision.node)
+            user = self.get_imported_object_by_old_id(User, osqa_revision.author)
+            revision = PostRevision(
+                            post=post,
+                            author=user,
+                            text=osqa_revision.body,
+                            title=osqa_revision.title,
+                            tagnames=osqa_revision.tagnames,
+                            revised_at=osqa_revision.revised_at,
+                            summary=osqa_revision.summary,
+                            revision=osqa_revision.revision
+                        )
+            revision.save()
+
+    def import_votes(self):
+        """Imports OSQA votes to Askbot votes"""
+        for osqa_vote in self.get_objects_for_model('forum.vote'):
+            post = self.get_imported_object_by_old_id(Post, osqa_vote.node)
+            user = self.get_imported_object_by_old_id(User, osqa_vote.user)
+            if osqa_vote.value > 0:
+                user.upvote(post, timestamp=osqa_vote.voted_at, force=True)
+            elif osqa_vote.value < 0:
+                user.downvote(post, timestamp=osqa_vote.voted_at, force=True)
+
+    def fix_answer_counts(self):
+        for thread in Thread.objects.all():
+            thread.answer_count = thread.get_answers().count()
+            thread.save()
+
+    def fix_comment_counts(self):
+        for post in Post.objects.filter(post_type__in=('question', 'answer')):
+            post.comment_count = Post.objects.filter(post_type='comment', parent=post).count()
+            post.save()
