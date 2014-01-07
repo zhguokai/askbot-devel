@@ -63,8 +63,7 @@ class Command(BaseCommand):
     def handle(self, *app_labels, **options):
         from django.db.models import get_app, get_apps, get_models, get_model
 
-        format = options.get('format','json')
-        indent = options.get('indent',None)
+        indent = options.get('indent', None)
         using = options.get('database', DEFAULT_DB_ALIAS)
         connection = connections[using]
         excludes = options.get('exclude',[])
