@@ -380,6 +380,7 @@ class Command(BaseImportXMLCommand):
                 post.thread = self.get_imported_object_by_old_id(Thread, osqa_node.id)
 
             post.post_type = osqa_node.node_type
+            post.added_at = osqa_node.added_at
 
             if save_redirects:
                 slug = django_urlquote(slugify(osqa_node.title))
@@ -387,7 +388,8 @@ class Command(BaseImportXMLCommand):
                 old_url = '/questions/%d/%s/' % (osqa_node.id, slug)
 
             post.author = self.get_imported_object_by_old_id(User, osqa_node.author)
-            post.html = HTMLParser().unescape(osqa_node.body)
+            #html will de added with the revisions
+            #post.html = HTMLParser().unescape(osqa_node.body)
             post.summary = post.get_snippet()
 
             #these don't have direct equivalent in the OSQA Node object
@@ -427,6 +429,14 @@ class Command(BaseImportXMLCommand):
                             summary=osqa_revision.summary,
                             revision=osqa_revision.revision
                         )
+            post.text = osqa_revision.body
+            if osqa_revision == 1:
+                post.added_at = osqa_revision.revised_at
+            else:
+                post.last_edited_at = osqa_revision.revised_at
+                post.last_edited_by = user
+
+            post.parse_and_save(author=user)
             revision.save()
 
     def import_votes(self):
