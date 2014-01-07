@@ -872,8 +872,8 @@ def repost_answer_as_comment(request, destination=None):
         if len(answer.text) <= askbot_settings.MAX_COMMENT_LENGTH:
             answer.post_type = 'comment'
             answer.parent = destination_post
-            #can we trust this?
-            old_comment_count = answer.comment_count
+
+            new_comment_count = answer.comments.count() + 1
             answer.comment_count = 0
 
             answer_comments = models.Post.objects.get_comments().filter(parent=answer)
@@ -883,7 +883,7 @@ def repost_answer_as_comment(request, destination=None):
             answer.parse_and_save(author=answer.author)
             answer.thread.update_answer_count()
 
-            answer.parent.comment_count = 1 + old_comment_count
+            answer.parent.comment_count += new_comment_count
             answer.parent.save()
 
             answer.thread.invalidate_cached_data()
