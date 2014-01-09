@@ -117,6 +117,7 @@ class Command(BaseImportXMLCommand):
         #model="forum.question"/answer/comment - derivatives of the Node model
         self.import_threads()
         self.import_posts('question', True)
+        #inside we also mark accepted answer, b/c it's more convenient that way
         self.import_posts('answer')
         self.import_posts('comment')
         #model="forum.noderevision"
@@ -367,7 +368,12 @@ class Command(BaseImportXMLCommand):
         model_name = models_map[post_type]
 
         for osqa_node in self.get_objects_for_model(model_name):
+            #we iterate through all nodes, but pick only the ones we need
             if osqa_node.node_type != post_type:
+                continue
+
+            #cheat: do not import deleted content
+            if '(deleted)' in osqa_node.state_string:
                 continue
 
             post = Post()
@@ -375,9 +381,13 @@ class Command(BaseImportXMLCommand):
             #this line is a bit risky, but should work if we import things in correct order
             if osqa_node.parent:
                 post.parent = self.get_imported_object_by_old_id(Post, osqa_node.parent)
+                if post.parent is None:
+                    continue #deleted parent
                 post.thread = post.parent.thread
             else:
                 post.thread = self.get_imported_object_by_old_id(Thread, osqa_node.id)
+                if post.thread is None:
+                    continue #deleted thread
 
             post.post_type = osqa_node.node_type
             post.added_at = osqa_node.added_at
@@ -393,7 +403,7 @@ class Command(BaseImportXMLCommand):
             post.summary = post.get_snippet()
 
             #these don't have direct equivalent in the OSQA Node object
-            #post.deleted_by
+            #post.deleted_by - deleted nodes are not imported
             #post.locked_by
             #post.last_edited_by
 
@@ -404,6 +414,13 @@ class Command(BaseImportXMLCommand):
             post.offensive_flag_count = 0
 
             post.save()
+
+            #mark accepted answer
+            if osqa_node.node_type == 'answer':
+                if '(accepted)' in osqa_node.state_string:
+                    post.thread.accepted_answer = post
+                    post.thread.save()
+
 
             if save_redirects:
                 new_url = post.get_absolute_url()
@@ -418,6 +435,8 @@ class Command(BaseImportXMLCommand):
         """Imports OSQA revisions to Askbot revisions"""
         for osqa_revision in self.get_objects_for_model('forum.noderevision'):
             post = self.get_imported_object_by_old_id(Post, osqa_revision.node)
+            if post is None:
+                continue #deleted post
             user = self.get_imported_object_by_old_id(User, osqa_revision.author)
             revision = PostRevision(
                             post=post,
@@ -443,6 +462,8 @@ class Command(BaseImportXMLCommand):
         """Imports OSQA votes to Askbot votes"""
         for osqa_vote in self.get_objects_for_model('forum.vote'):
             post = self.get_imported_object_by_old_id(Post, osqa_vote.node)
+            if post is None:
+                continue #deleted post
             user = self.get_imported_object_by_old_id(User, osqa_vote.user)
             if osqa_vote.value > 0:
                 user.upvote(post, timestamp=osqa_vote.voted_at, force=True)
