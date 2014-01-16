@@ -198,6 +198,9 @@ h1 {
 /* ----- Extra space above for messages ----- */
 body.user-messages {
   margin-top: 2.4em;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 /* ----- Custom positions ----- */
 .left {
@@ -465,11 +468,11 @@ body.user-messages {
   -webkit-box-sizing: border-box;
 }
 #secondaryHeader td {
-    padding: 0;
+  padding: 0;
 }
 #secondaryHeader td.search-bar {
-    padding: 0 10px 0 20px;
-    position: relative;
+  padding: 0 32px 0 15px;
+  position: relative;
 }
 #homeButton {
   border-right: #afaf9e 1px solid;
@@ -483,9 +486,9 @@ body.user-messages {
   background: -51px -36px url(../images/sprites.png) no-repeat;
 }
 .scope-selector {
+  display: inline-block;
   font-size: 20px;
   color: #7a7a6b;
-  display: inline-block;
   height: 55px;
   line-height: 55px;
   margin-left: 16px;
@@ -513,13 +516,14 @@ body.user-messages {
 }
 #searchBar {
   /* Main search form , check widgets/search_bar.html */
-  background-color: #fff;
+
   border: 1px solid #c9c9b5;
+  background: white;
   height: 41px;
   z-index: 1000;
+  position: relative;
   width: 100%;
   /* the guts are absolute-positioned */
-  position: relative;
 
 }
 #searchBar input.searchInput,
@@ -581,15 +585,15 @@ body.user-messages {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   background: whitesmoke;
-  outline: 1px solid #dadad4;
   border-top: none;
-  margin: 0;
-  position: absolute;
   bottom: -50px;
+  margin: 0;
+  outline: 1px solid #dadad4;
+  position: absolute;
   z-index: 10000;
 }
 .search-drop-menu.waiting {
-    bottom: -27px;
+  bottom: -27px;
 }
 .search-drop-menu ul {
   list-style: none;
@@ -614,6 +618,7 @@ body.user-messages {
 }
 .search-drop-menu .footer {
   text-align: center;
+  margin: 0 0 1px 0;
   padding: 9px 0 10px 0;
 }
 .search-drop-menu.empty ul {
@@ -634,7 +639,7 @@ input[type="submit"].searchBtn {
   border: #FFF 1px solid;
   line-height: 22px;
   text-align: center;
-  margin: 1px 0 0 0;
+  margin: 0;
   width: 48px;
   background: -98px -37px url(../images/sprites.png) no-repeat;
   border-radius: 0;
@@ -812,19 +817,18 @@ form.ajax-file-upload img.spinner {
   font-size: 20px;
   height: 42px;
   line-height: 44px;
-  margin: 0 0 1px 0;
+  margin: -1px 0 0 0;
   text-transform: uppercase;
   width: 200px;
   /* to match width of sidebar */
 
 }
-/* line up drop menu the same way as the search bar */
 .search-drop-menu {
   width: 100%;
 }
 .ask-page .search-drop-menu,
 body.anon.ask-page .search-drop-menu {
-  margin: -9px 0 10px;
+  padding: 5px 10px 6px 0;
 }
 #scopeNav {
   height: 54px;
@@ -1040,7 +1044,7 @@ body.anon.ask-page .search-drop-menu {
   -webkit-box-shadow: 1px 1px 3px #999999;
   -moz-box-shadow: 1px 1px 3px #999999;
   box-shadow: 1px 1px 3px #999999;
-  padding: 5px 10px 6px 0;
+  padding: 7px 10px 1px 0;
   margin-bottom: 10px;
   width: 100%;
 }
@@ -1161,7 +1165,8 @@ body.anon.ask-page .search-drop-menu {
 ul#searchTags {
   margin-left: 10px;
   float: right;
-  padding-top: 2px;
+  padding: 8px 6px 0px 6px;
+  min-width: 43px;
 }
 .search-tips {
   font-size: 16px;
@@ -1252,8 +1257,8 @@ ul#searchTags {
 .short-summary .views {
   text-align: center;
   margin: 0 3px;
-  padding: 8px 6px 0px 6px;
-  min-width: 43px;
+  padding: 8px 2px 0px 2px;
+  width: 51px;
   float: right;
   height: 44px;
   border: #dbdbd4 1px solid;
@@ -1469,7 +1474,7 @@ ul#related-tags li {
   background: #f3f6f6;
   border: #fff 1px solid ;
   border-top: #fff 2px solid;
-  outline: #cfdbdb 1px solid;
+  outline: #cfdbdb 1px solid !important;
   /* .box-shadow(0px,1px,0px,#88a8a8);*/
 
   display: block;
@@ -4168,30 +4173,34 @@ textarea.tipped-input {
 }
 /* tag editor */
 .tag-editor {
-  height: 64px;
-  border: #ccc 3px solid;
-  padding-left: 8px;
+  height: 32px;
+  border: #cce6ec 3px solid;
+  padding-left: 6px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 .tag-editor ul.tags {
   margin: 0;
 }
 .tag-editor ul.tags li {
-  margin-top: 8px;
+  margin-top: 6px;
   height: 13px;
 }
 .tag-editor input.new-tags-input,
 .tag-editor input.new-tags-input:focus {
   border: none;
-  font-size: 15px;
+  box-shadow: none;
+  font-size: 14px;
   font-color: #707070;
   height: 16px;
   line-height: 16px;
-  margin-top: 9px;
+  margin: 9px 0 0 -6px;
   -webkit-box-shadow: none;
   /* undo bootstrap glow */
 
   -moz-box-shadow: none;
-  box-shadow: none;
+  padding: 0 0 0 6px;
 }
 /* fixes for bootstrap */
 .caret {
@@ -4408,7 +4417,7 @@ td.setting-input textarea {
     padding: 0;
   }
   input[type="submit"].searchBtn {
-    margin: 0;
+    margin-right: 0;
   }
   .content-wrapper {
     width: 100%;
@@ -4441,9 +4450,6 @@ td.setting-input textarea {
   .userinfo,
   .widgets {
     display: none;
-  }
-  #secondaryHeader td.search-bar {
-    padding: 0 6px;
   }
   .ask-page input[type="submit"].searchBtn,
   .edit-question-page input[type="submit"].searchBtn {
@@ -4550,6 +4556,9 @@ td.setting-input textarea {
   }
   .short-summary {
     width: 100%;
+  }
+  #secondaryHeader td.search-bar {
+    padding: 0 6px;
   }
 }
 @media screen and (max-width: 540px) {
@@ -4685,6 +4694,10 @@ body.lang-zh_TW.question-page a.submit {
 body.lang-hu .scope-selector {
   font-size: 17px;
   margin-left: 10px;
+}
+body.lang-hu #searchBar,
+body.lang-hu .search-drop-menu {
+  margin-left: 252px;
 }
 body.lang-hu .box .inputs #interestingTagInput,
 body.lang-hu .box .inputs #ignoredTagInput,

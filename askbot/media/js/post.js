@@ -90,7 +90,12 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
 var cleanTag = function(tag_name, settings) {
     var tag_regex = new RegExp(settings['tag_regex']);
     if (tag_regex.test(tag_name) === false) {
-        throw settings['messages']['wrong_chars']
+        var firstChar = tag_name.substring(0, 1);
+        if (settings['tag_forbidden_first_chars'].indexOf(firstChar) > -1) {
+            throw settings['messages']['wrong_first_char'];
+        } else {
+            throw settings['messages']['wrong_chars'];
+        }
     }
 
     var max_length = settings['max_tag_length'];
@@ -3406,8 +3411,54 @@ var TagEditor = function() {
     WrappedElement.call(this);
     this._has_hot_backspace = false;
     this._settings = JSON.parse(askbot['settings']['tag_editor']);
+    /*
+    tags: {
+        required: askbot['settings']['tagsAreRequired'],
+        maxlength: askbot['settings']['maxTagsPerPost'] * askbot['settings']['maxTagLength'],
+        limit_tag_count: true,
+        limit_tag_length: true
+    },
+    tags: {
+        required: " " + gettext('tags cannot be empty'),
+        maxlength: askbot['messages']['tagLimits'],
+        limit_tag_count: askbot['messages']['maxTagsPerPost'],
+        limit_tag_length: askbot['messages']['maxTagLength']
+    },
+    */
 };
 inherits(TagEditor, WrappedElement);
+
+/* retagger function
+    var doRetag = function(){
+        $.ajax({
+            type: "POST",
+            url: retagUrl,//todo add this url to askbot['urls']
+            dataType: "json",
+            data: { tags: getUniqueWords(tagInput.val()).join(' ') },
+            success: function(json) {
+                if (json['success'] === true){
+                    new_tags = getUniqueWords(json['new_tags']);
+                    oldTagsHtml = '';
+                    cancelRetag();
+                    drawNewTags(new_tags.join(' '));
+                    if (json['message']) {
+                        notify.show(json['message']);
+                    }
+                }
+                else {
+                    cancelRetag();
+                    showMessage(tagsDiv, json['message']);
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                showMessage(tagsDiv, gettext('sorry, something is not right here'));
+                cancelRetag();
+            }
+        });
+        return false;
+    }
+*/
+
 
 TagEditor.prototype.getSelectedTags = function() {
     return $.trim(this._hidden_tags_input.val()).split(/\s+/);

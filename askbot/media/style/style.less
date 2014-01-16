@@ -205,6 +205,9 @@ h1 {
 
 body.user-messages {
     margin-top: 2.4em;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 /* ----- Custom positions ----- */
@@ -487,37 +490,44 @@ body.user-messages {
     border-top:#fcfcfc 1px solid;
     margin-bottom:10px;
     font-family:@main-font;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    td {
+        padding: 0;
+        &.search-bar {
+            padding: 0 32px 0 15px;
+            position: relative;
+        }
+    }
 }
 
 #homeButton{
     border-right: #afaf9e 1px solid;
     .sprites(-6px,-36px);
-    height:55px;
-    width:43px;
-    display:block;
-    float:left;
+    height: 54px;
+    width: 43px;
+    display: block;
+    float: left;
 }
 
-#homeButton:hover{
+#homeButton:hover {
     .sprites(-51px,-36px);
 }
 
 .scope-selector {
-    display:block;
-    float:left;
-    font-size:20px;
-    color:#7a7a6b;
-    height:55px;
-    line-height:55px;
-    margin-left:16px
-}
-
-.scope-selector.on {
-    background:url(../images/scopearrow.png) no-repeat center bottom;
-}
-
-.scope-selector.ask-message {
-    font-size:24px;
+    display: inline-block;
+    font-size: 20px;
+    color: #7a7a6b;
+    height: 55px;
+    line-height: 55px;
+    margin-left: 16px;
+    &.on {
+        background: url(../images/scopearrow.png) no-repeat center 41px;
+    }
+    &.ask-message {
+        font-size: 24px;
+    }
 }
 
 .validate-email-page {
@@ -539,12 +549,12 @@ body.user-messages {
 }
 
 #searchBar { /* Main search form , check widgets/search_bar.html */
-    display: block;
-    background-color: #fff;
     border: 1px solid #c9c9b5;
+    background: white;
     height: 41px;
     z-index: 1000;
     position: relative;
+    width: 100%;
 
     /* the guts are absolute-positioned */
     input.searchInput,
@@ -605,12 +615,19 @@ body.user-messages {
 
 .search-drop-menu {
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     background: whitesmoke;
-    border: 1px solid #c9c9b5;
     border-top: none;
+    bottom: -50px;
     margin: 0;
-    position: relative;
+    outline: 1px solid #dadad4;
+    position: absolute;
     z-index: 10000;
+
+     &.waiting {
+         bottom: -27px;
+     }
 
     ul {
         list-style: none;
@@ -634,12 +651,9 @@ body.user-messages {
         }
     }
 
-    ul.empty {
-        margin-bottom: 0;
-    }
-
     .footer {
         text-align: center;
+        margin: 0 0 1px 0;
         padding: 9px 0 10px 0;
     }
 }
@@ -666,7 +680,7 @@ input[type="submit"].searchBtn {
     border:#FFF 1px solid;
     line-height: 22px;
     text-align: center;
-    margin: 1px 0 0 0;
+    margin: 0;
     width: 48px;
     .sprites(-98px,-37px);
     .rounded-corners(0);
@@ -822,74 +836,22 @@ form.ajax-file-upload {
     font-size: 20px;
     height: 42px;
     line-height: 44px;
-    margin: 6px 0 0 0;
+    margin: -1px 0 0 0;
     text-transform: uppercase;
     width: 200px;/* to match width of sidebar */
 }
 
-/* 
-    Put the secondary navigation together:
-    1) raise the search bar by 55px
-    2) add padding to fit the buttons
-*/
-#searchBar {
-    margin: 0 228px 0 327px;
-    width: auto;
-    margin-top: -49px;
-    padding: 0 49px 0 8px;
-}
-/* line up drop menu the same way as the search bar */
 .search-drop-menu {
-    margin: 0 228px 0 327px;
-    width: auto;
+    width: 100%;
 }
 .ask-page .search-drop-menu,
 body.anon.ask-page .search-drop-menu {
-    margin: -9px 0 10px;
+    padding: 5px 10px 6px 0;
 }
 #scopeNav {
-    height: 41px;
-    float: left;
-    width: 280px;
-}
-.scopes-True-True-False {
-    #searchBar,
-    .search-drop-menu {
-        margin-left: 228px;
-    }
-    #scopeNav {
-        width: 180px;
-    }
-}
-.scopes-True-False-True {
-    #searchBar,
-    .search-drop-menu {
-        margin-left: 203px;
-    }
-    #scopeNav {
-        width: 150px;
-    }
-}
-.scopes-False-True-True {
-    #searchBar,
-    .search-drop-menu {
-        margin-left: 286px;
-    }
-    #scopeNav {
-        width: 238px;
-    }
-}
-.scopes-True-False-False,
-.scopes-False-True-False,
-.scopes-False-False-True,
-.scopes-False-False-False {
-    #searchBar,
-    .search-drop-menu {
-        margin-left: 52px;
-    }
-    #scopeNav {
-        width: 0;
-    }
+    height: 54px;
+    display: inline-block;
+    white-space: nowrap;
 }
 
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
@@ -1255,7 +1217,8 @@ body.anon.ask-page .search-drop-menu {
 ul#searchTags {
     margin-left:10px;
     float:right;
-    padding-top:2px;
+    padding: 8px 6px 0px 6px;
+    min-width: 43px;
 }
 
 .search-tips {
@@ -1606,7 +1569,7 @@ ul#related-tags li {
     background: #f3f6f6;
     border:#fff 1px solid ;
     border-top:#fff 2px solid;
-    outline:#cfdbdb 1px solid;
+    outline:#cfdbdb 1px solid !important;
    /* .box-shadow(0px,1px,0px,#88a8a8);*/
     display: block;
     float: left;
@@ -4418,27 +4381,31 @@ textarea.tipped-input {
 
 /* tag editor */
 .tag-editor {
-    height: 64px;
-    border: #ccc 3px solid;
-    padding-left: 8px;
+    height: 32px;
+    border: #cce6ec 3px solid;
+    padding-left: 6px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     ul.tags {
         margin: 0;
         li {
-            margin-top: 8px;
+            margin-top: 6px;
             height: 13px;
         }
     }
     input.new-tags-input,
     input.new-tags-input:focus {
         border: none;
-        font-size: 15px;
+        box-shadow: none;
+        font-size: 14px;
         font-color: @info-text;
         height: 16px;
         line-height: 16px;
-        margin-top: 9px;
+        margin: 9px 0 0 -6px;
         -webkit-box-shadow: none;/* undo bootstrap glow */
         -moz-box-shadow: none;
-        box-shadow: none;
+        padding: 0 0 0 6px;
     }
 }
 
@@ -4819,16 +4786,11 @@ td.setting-input {
     .short-summary:first-child {
         padding-top: 0;
     }
-    #searchBar,
-    body.anon #searchBar {
-        margin: -49px 8px 0 52px;
-    }
-    .search-drop-menu,
-    body.anon .search-drop-menu {
-        margin: 0 8px 0 52px;
-    }
     .short-summary {
         width: 100%;
+    }
+    #secondaryHeader td.search-bar {
+        padding: 0 6px;
     }
 }
 
@@ -4930,33 +4892,16 @@ body.lang-zh_TW {
     &.question-page a.submit {
         line-height: 30px !important;
     }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 194px;
-        }
-    }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 274px;
-        }
-    }
 }
 
 body.lang-hu {
-  .scope-selector{
+  .scope-selector {
     font-size: 17px;
     margin-left: 10px;
   }
-  .scopes-True-True-False {
-    #scopeNav {
-        width: 200px;
-    }
-    #searchBar,
-    .search-drop-menu {
+   #searchBar,
+  .search-drop-menu {
         margin-left: 252px;
-    }
   }
   .box {
     .inputs{
@@ -4995,44 +4940,11 @@ body.lang-es {
   .short-summary .counts .votes div {
     font-size: 10px; 
   }
-    .scopes-True-True-False {
-        #scopeNav {
-            width: 187px;
-        }
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 250px;
-        }
-    }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 327px;
-        }
-    }
 }
 
 body.lang-de {
     .scope-selector {
         font-size: 17px;
-    }
-    .scopes-True-True-False {
-        #scopeNav {
-            width: 218px;
-        }
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 250px;
-        }
-    }
-    .scopes-True-True-True {
-        #scopeNav {
-            width: 354px;
-        }
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 354px;
-        }
     }
     #metaNav a {
         font-size: 16px;
@@ -5063,12 +4975,6 @@ body.lang-gl {
             }
         }
     }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 299px;
-        }
-    }
 }
 
 body.lang-pt_BR {
@@ -5082,21 +4988,9 @@ body.lang-pt_BR {
             }
         }
     }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 236px;
-        }
-    }
 }
 
 body.lang-fr {
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 287px;
-        }
-    }
     .box {
         .inputs {
             #interestingTagInput,
@@ -5119,18 +5013,6 @@ body.lang-fi {
     .scope-selector {
         font-size: 17px;
     }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 371px;
-        }
-    }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 268px;
-        }
-    }
     .box {
         .inputs {
             #interestingTagInput,
@@ -5150,18 +5032,6 @@ body.lang-ru {
     .scope-selector {
         font-size: 17px;
     }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 326px;
-        }
-    }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 227px;
-        }
-    }
     .box {
         .inputs {
             #interestingTagInput,
@@ -5178,18 +5048,6 @@ body.lang-ko {
     #scopeNav {
         width: 315px;
     }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 248px;
-        }
-    }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 183px;
-        }
-    }
     .box {
         .inputs {
             #interestingTagInput,
@@ -5204,18 +5062,6 @@ body.lang-ko {
 
 body.lang-nb_NO,
 body.lang-nb_NO, {
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 289px;
-        }
-    }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 220px;
-        }
-    }
     .box {
         .inputs {
             #interestingTagInput,

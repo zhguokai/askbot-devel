@@ -34,6 +34,9 @@ TAGS_ARE_REQUIRED_MESSAGE = _('tags are required')
 TAG_WRONG_CHARS_MESSAGE = _(
     'please use letters, numbers and characters "-+.#"'
 )
+TAG_WRONG_FIRST_CHAR_MESSAGE = _(
+    'please use only letters at the beginning of tags'
+)
 ACCOUNT_CANNOT_PERFORM_ACTION = _(
     'Sorry, you cannot %(perform_action)s because %(your_account_is)s'
 )

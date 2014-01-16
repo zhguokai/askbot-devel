@@ -157,7 +157,9 @@ UNANSWERED_QUESTION_MEANING_CHOICES = (
 #to do full string match
 #IMPRTANT: tag related regexes must be portable between js and python
 TAG_CHARS = r'\w+.#-'
-TAG_REGEX_BARE = r'[%s]+' % TAG_CHARS
+TAG_FIRST_CHARS = r'\w'
+TAG_FORBIDDEN_FIRST_CHARS = r'.#-'
+TAG_REGEX_BARE = r'%s[%s]+' % (TAG_FIRST_CHARS, TAG_CHARS)
 TAG_REGEX = r'^%s$' % TAG_REGEX_BARE
 TAG_SPLIT_REGEX = r'[ ,]+'
 TAG_SEP = ',' # has to be valid TAG_SPLIT_REGEX char and MUST NOT be in const.TAG_CHARS

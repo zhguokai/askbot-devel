@@ -371,9 +371,14 @@ def clean_tag(tag_name):
     #todo - this needs to come from settings
     tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
     if not tagname_re.search(tag_name):
-        raise forms.ValidationError(
-            _(message_keys.TAG_WRONG_CHARS_MESSAGE)
-        )
+        if tag_name[0] in const.TAG_FORBIDDEN_FIRST_CHARS:
+            raise forms.ValidationError(
+                _(message_keys.TAG_WRONG_FIRST_CHAR_MESSAGE)
+            )
+        else:
+            raise forms.ValidationError(
+                _(message_keys.TAG_WRONG_CHARS_MESSAGE)
+            )
 
     if askbot_settings.FORCE_LOWERCASE_TAGS:
         #a simpler way to handle tags - just lowercase thew all
