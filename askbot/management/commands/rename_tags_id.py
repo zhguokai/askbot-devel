@@ -8,8 +8,10 @@ also, corresponding questions are retagged
 import re
 import sys
 from optparse import make_option
+from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.utils import translation
 from askbot import const, models
 from askbot.utils import console
 from askbot.management.commands.rename_tags import get_admin
@@ -84,6 +86,7 @@ rename_tags, but using tag id's
     def handle(self, *args, **options):
         """command handle function. retrieves tags by id
         """
+        translation.activate(django_settings.LANGUAGE_CODE)
         try:
             from_tag_ids = parse_tag_ids(options['from'])
             to_tag_ids = parse_tag_ids(options['to'])
@@ -161,6 +164,7 @@ or repost a bug, if that does not help"""
                 tags = u' '.join(tag_names),
                 #silent = True #do we want to timestamp activity on question
             )
+            question.invalidate_cached_thread_content_fragment()
             i += 1
             sys.stdout.write('%6.2f%%' % (100*float(i)/float(question_count)))
             sys.stdout.write('\b'*7)
