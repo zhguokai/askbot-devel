@@ -12,11 +12,40 @@ from askbot.models import signals
 from askbot.conf import settings as askbot_settings
 from askbot.management.commands.rename_tags import get_admin
 
+def get_valid_tag_name(tag):
+    """Returns valid version of the tag name.
+    If necessary, lowercases the tag.
+    Strips the forbidden first characters in the tag.
+    """
+    name = tag.name
+    if askbot_settings.FORCE_LOWERCASE_TAGS:
+        name = name.lower()
+    #if tag name starts with forbidden character, chop off that character
+    #until no more forbidden chars are at the beginning
+    first_char_regex = re.compile('^%s+' % const.TAG_FORBIDDEN_FIRST_CHARS)
+    return first_char_regex.sub('', name)
+
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         signal_data = signals.pop_all_db_signal_receivers()
         self.run_command()
         signals.set_all_db_signal_receivers(signal_data)
+
+    def retag_threads(self, from_tags, to_tag):
+        """finds threads matching the `from_tags`
+        removes the `from_tags` from them and applies the
+        to_tags"""
+        threads = models.Thread.objects.filter(tags__in=from_tags)
+        from_tag_names = [tag.name for tag in from_tags]
+        for thread in threads:
+            tagnames = set(thread.get_tag_names())
+            tagnames.difference_update(from_tag_names)
+            tagnames.add(to_tag.name)
+            self.admin.retag_question(
+                question=thread._question_post(),
+                tags=' '.join(tagnames)
+            )
+
 
     @transaction.commit_manually
     def run_command(self):
@@ -24,67 +53,66 @@ class Command(NoArgsCommand):
         #go through tags and find character case duplicates and eliminate them
         translation.activate(django_settings.LANGUAGE_CODE)
         tagnames = models.Tag.objects.values_list('name', flat = True)
-        admin = get_admin()
+        self.admin = get_admin()
+
         #1) first we go through all tags and
         #either fix or delete illegal tags
         found_count = 0
+
         for name in tagnames:
-            dupes = models.Tag.objects.filter(name__iexact = name)
-            first_tag = dupes[0]
-            if dupes.count() > 1:
-                line = 'Found duplicate tags for %s: ' % first_tag.name
-                print line,
-                for idx in xrange(1, dupes.count()):
-                    print dupes[idx].name + ' ',
-                    dupes[idx].delete()
-                print ''
-            #todo: see if we can use the tag "clean" procedure here
-            if askbot_settings.FORCE_LOWERCASE_TAGS:
-                lowercased_name = first_tag.name.lower()
-                if first_tag.name != lowercased_name:
-                    print 'Converting tag %s to lower case' % first_tag.name
-                    first_tag.name = lowercased_name
-                    first_tag.save()
-
-            #if tag name starts with forbidden character, chop off that character
-            #until no more forbidden chars are at the beginning
-            #if the tag after chopping is zero length, delete the tag
-            first_char_regex = re.compile('^%s+' % const.TAG_FORBIDDEN_FIRST_CHARS)
-
-            old_name = first_tag.name
-            new_name = first_char_regex.sub('', first_tag.name)
-            if new_name == old_name:
+            try:
+                tag = models.Tag.objects.get(name=name)
+            except models.Tag.DoesNotExist:
+                #tag with this name was already deleted,
+                #because it was an invalid duplicate version
+                #of other valid tag
                 continue
-            else:
-                first_tag.name = new_name
-
-            if len(first_tag.name) == 0:
-                #the tag had only bad characters at the beginning
-                first_tag.delete()
-                found_count += 1
-            else:
-                #save renamed tag if there is no exact match
-                new_dupes = models.Tag.objects.filter(name__iexact=first_tag.name)
-                if new_dupes.count() == 0:
-                    first_tag.save()
-                else:
-                    #we stripped forbidden chars and have a tag with duplicates.
-                    #Now we need to find all questions with the existing tag and 
-                    #reassign those questions to other tag
-                    to_tag = new_dupes[0].name
-                    from_tag = first_tag
-                    threads = models.Thread.objects.filter(tags=from_tag)
-                    for thread in threads:
-                        tagnames = set(thread.get_tag_names())
-                        tagnames.remove(old_name)
-                        tagnames.add(to_tag)
-                        admin.retag_question(
-                            question=thread._question_post(),
-                            tags=' '.join(tagnames)
-                        )
-                    first_tag.delete()
-                    found_count += 1
                 
+
+            fixed_name = get_valid_tag_name(tag)
+
+            #if fixed name is empty after cleaning, delete the tag
+            if fixed_name == '':
+                print 'Deleting invalid tag: %s' % name
+                tag.delete()
+                found_count += 1
+                continue
+
+            if fixed_name != name:
+                print 'Renaming tag: %s -> %s' % (name, fixed_name)
+
+            #if tag name changed, see if there is a duplicate
+            #with the same name, in which case we re-assign questions
+            #with the current tag to that other duplicate
+            #then delete the current tag as no longer used
+            if fixed_name != name:
+                try:
+                    duplicate_tag = models.Tag.objects.get(name=fixed_name)
+                except models.Tag.DoesNotExist:
+                    pass
+                self.retag_threads([tag], duplicate_tag)
+                tag.delete()
+                found_count += 1
+                continue
+                
+
+            #if there are case variant dupes, we assign questions
+            #from the case variants to the current tag and
+            #delete the case variant tags
+            dupes = models.Tag.objects.filter(
+                                name__iexact=fixed_name
+                            ).exclude(pk=tag.id)
+
+            dupes_count = dupes.count()
+            if dupes_count:
+                self.retag_threads(dupes, tag)
+                dupes.delete()
+                found_count += dupes_count
+
+            if tag.name != fixed_name:
+                tag.name = fixed_name
+                tag.save()
+
         transaction.commit()
 
         #2) go through questions and fix tag records on each
@@ -92,13 +120,13 @@ class Command(NoArgsCommand):
         threads = models.Thread.objects.all()
         checked_count = 0
         total_count = threads.count()
-        print "Searching for questions with inconsistent tag records:",
+        print "Searching for questions with inconsistent copies of tag records:",
         for thread in threads:
             tags = thread.tags.all()
             denorm_tag_set = set(thread.get_tag_names())
             norm_tag_set = set(thread.tags.values_list('name', flat=True))
             if norm_tag_set != denorm_tag_set:
-                admin.retag_question(
+                self.admin.retag_question(
                     question=thread._question_post(),
                     tags=' '.join(norm_tag_set)
                 )
