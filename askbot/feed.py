@@ -32,7 +32,7 @@ class RssIndividualQuestionFeed(Feed):
 
     def title(self):
         return askbot_settings.APP_TITLE + _(' - ') + \
-                _('Individual %(question)s feed') % askbot_settings.WORDS_QUESTION_SINGULAR
+                _('Individual %(question)s feed') % {'question': askbot_settings.WORDS_QUESTION_SINGULAR}
 
     def feed_copyright(self):
         return askbot_settings.APP_COPYRIGHT
@@ -85,13 +85,12 @@ class RssIndividualQuestionFeed(Feed):
     def item_title(self, item):
         """returns the title for the item
         """
-        title = item
         if item.post_type == "question":
-            self.title = item
+            title = item.thread.title
         elif item.post_type == "answer":
-            title = "Answer by %s for %s " % (item.author, self.title)
+            title = "Answer by %s for %s " % (item.author, item.parent.summary)
         elif item.post_type == "comment":
-            title = "Comment by %s for %s" % (item.author, self.title)
+            title = "Comment by %s for %s" % (item.author, item.parent.summary)
         return title
 
     def item_description(self, item):

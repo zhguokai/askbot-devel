@@ -10,6 +10,7 @@ import django.core.mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
+from django.utils import translation
 from askbot.tests import utils
 from askbot.tests.utils import with_settings
 from askbot import models
@@ -155,6 +156,7 @@ class EmailAlertTests(TestCase):
         between the default version (defined in the decorator) and the
         desired version in the "real" test
         """
+        translation.activate('en')
         pass
 
     def setUpUsers(self):
