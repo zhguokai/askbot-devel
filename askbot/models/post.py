@@ -446,10 +446,14 @@ class Post(models.Model):
         removed_mentions = list()
         if '@' in text:
             op = self.get_origin_post()
-            anticipated_authors = op.get_author_list(
-                include_comments = True,
-                recursive = True
-            )
+
+            if op.id:
+                anticipated_authors = op.get_author_list(
+                    include_comments = True,
+                    recursive = True
+                )
+            else:
+                anticipated_authors = list()
 
             extra_name_seeds = markup.extract_mentioned_name_seeds(text)
 
@@ -501,7 +505,6 @@ class Post(models.Model):
         """generic method to use with posts to be used prior to saving
         post edit or addition
         """
-
         assert(author is not None)
 
         last_revision = self.html
