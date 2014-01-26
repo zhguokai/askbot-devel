@@ -767,7 +767,7 @@ for the purposes of the AJAX comment editor #}
 
                 {% for num in p.page_numbers %}
                     {% if num == p.page and p.pages != 1%}
-                        <span class="curr" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
+                        <span class="curr page" title="{% trans %}current page{% endtrans %}"><a>{{ num }}</a></span>
                     {% else %}
                         <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
                     {% endif %}
