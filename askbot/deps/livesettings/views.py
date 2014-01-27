@@ -49,6 +49,7 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
                         #messages.success(request, message)
                         #the else if for the settings that are not updated.
                     except Exception, e:
+                        log.critical(e)
                         request.user.message_set.create(message=e.message)
 
                 return HttpResponseRedirect(request.path)

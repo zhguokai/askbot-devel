@@ -41,7 +41,7 @@ settings.register(
         default = _('everyone'),
         description = _('Global user group name'),
         help_text = _('All users belong to this group automatically'),
-        update_callback=group_name_update_callback
+        #update_callback=group_name_update_callback
     )
 )
 

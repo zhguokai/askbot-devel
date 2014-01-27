@@ -141,7 +141,7 @@ class SearchState(object):
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
 
-        self.page_size = page_size or askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE
+        self.page_size = int(page_size or askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
 
         self._questions_url = get_feed_url('questions', self.feed)
 
