@@ -30,6 +30,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import cgi
 import datetime
 from django.http import HttpResponseRedirect, Http404
 from django.http import HttpResponse
@@ -212,6 +213,7 @@ def ask_openid(
     try:
         auth_request = consumer.begin(openid_url)
     except DiscoveryFailure:
+        openid_url = cgi.escape(openid_url)
         msg = _(u"OpenID %(openid_url)s is invalid" % {'openid_url':openid_url})
         logging.debug(msg)
         return on_failure(request, msg)
