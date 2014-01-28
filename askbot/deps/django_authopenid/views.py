@@ -327,6 +327,11 @@ def complete_oauth2_signin(request):
     request.session['email'] = ''#todo: pull from profile
     request.session['username'] = ''#todo: pull from profile
 
+    if (provider_name == 'facebook'):
+        profile = client.request("me")
+        request.session['email'] = profile['email']
+        request.session['username'] = profile['username']
+
     return finalize_generic_signin(
                         request = request,
                         user = user,
