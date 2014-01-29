@@ -32,6 +32,27 @@ from askbot.search import mysql
 from askbot.utils.slug import slugify
 from askbot.search.state_manager import DummySearchState
 
+
+def clean_tagnames(tagnames):
+    """Cleans tagnames string so that the field fits the constraint of the
+    database.
+    TODO: remove this when the Thread.tagnames field is converted into
+    text_field
+    """
+    original = tagnames
+    tagnames = tagnames.strip().split()
+    #see if the tagnames field fits into 125 bytes
+    while True:
+        encoded_tagnames = ' '.join(tagnames).encode('utf-8')
+        length = len(encoded_tagnames)
+        if length == 0:
+            return ''
+        elif length <= 125:
+            return ' '.join(tagnames)
+        else:
+            tagnames.pop()
+
+
 class ThreadQuerySet(models.query.QuerySet):
     def get_visible(self, user):
         """filters out threads not belonging to the user groups"""
@@ -132,7 +153,7 @@ class ThreadManager(BaseQuerySetManager):
         # TODO: Some of this code will go to Post.objects.create_new
 
         language = language or get_language()
-        tagnames = self.clean_tagnames(tagnames)
+        tagnames = clean_tagnames(tagnames)
 
         thread = super(
             ThreadManager,
@@ -1412,32 +1433,12 @@ class Thread(models.Model):
         )
 
 
-    def clean_tagnames(self, tagnames):
-        """Cleans tagnames string so that the field fits the constraint of the
-        database.
-        TODO: remove this when the Thread.tagnames field is converted into
-        text_field
-        """
-        original = tagnames
-        tagnames = tagnames.strip().split()
-        #see if the tagnames field fits into 125 bytes
-        while True:
-            encoded_tagnames = ' '.join(tagnames).encode('utf-8')
-            length = len(encoded_tagnames)
-            if length == 0:
-                return ''
-            elif length <= 125:
-                return ' '.join(tagnames)
-            else:
-                tagnames.pop()
-
-
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
         """changes thread tags"""
         if None in (retagged_by, retagged_at, tagnames):
             raise Exception('arguments retagged_at, retagged_by and tagnames are required')
 
-        tagnames = self.clean_tagnames(tagnames)
+        tagnames = clean_tagnames(tagnames)
         self.tagnames = tagnames
         self.save()
 
