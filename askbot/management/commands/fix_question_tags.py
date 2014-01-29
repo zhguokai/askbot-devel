@@ -8,6 +8,7 @@ from askbot import const
 from askbot import models
 from askbot import forms
 from askbot.utils import console
+from askbot.utils.slug import slugify_camelcase
 from askbot.models import signals
 from askbot.conf import settings as askbot_settings
 from askbot.management.commands.rename_tags import get_admin
@@ -19,6 +20,7 @@ def get_valid_tag_name(tag):
     """
     name = tag.name
     if askbot_settings.FORCE_LOWERCASE_TAGS:
+        #name = slugify_camelcase(name)
         name = name.lower()
     #if tag name starts with forbidden character, chop off that character
     #until no more forbidden chars are at the beginning
@@ -122,13 +124,23 @@ class Command(NoArgsCommand):
         total_count = threads.count()
         print "Searching for questions with inconsistent copies of tag records:",
         for thread in threads:
+            #make sure that denormalized tag set is the same as normalized
+            #we just add both the tags together and try to apply them
+            #to the question
             tags = thread.tags.all()
             denorm_tag_set = set(thread.get_tag_names())
             norm_tag_set = set(thread.tags.values_list('name', flat=True))
+
             if norm_tag_set != denorm_tag_set:
+                denorm_tag_set.update(norm_tag_set)
+                cleaned_tag_set = set(
+                            models.Tag.objects.filter(
+                                name__in=denorm_tag_set
+                            ).values_list('name', flat=True)
+                        )
                 self.admin.retag_question(
                     question=thread._question_post(),
-                    tags=' '.join(norm_tag_set)
+                    tags=' '.join(cleaned_tag_set)
                 )
 
             transaction.commit()
