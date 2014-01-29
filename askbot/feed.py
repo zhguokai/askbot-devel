@@ -88,7 +88,7 @@ class RssIndividualQuestionFeed(Feed):
         if item.post_type == "question":
             title = item.thread.title
         elif item.post_type == "answer":
-            title = "Answer by %s for %s " % (item.author, item.parent.summary)
+            title = "Answer by %s for %s " % (item.author, item.thread._question_post().summary)
         elif item.post_type == "comment":
             title = "Comment by %s for %s" % (item.author, item.parent.summary)
         return title
