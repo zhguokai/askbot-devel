@@ -752,13 +752,15 @@ FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string){
     var arrow = (sense == 'asc' ? ' &#9650;':' &#9660;');
     var active_tab = $('#by_' + name);
     active_tab.attr('class', 'on');
-    active_tab.attr(
-        'title',
-        askbot['data']['sortButtonData'][name][antisense + '_tooltip']
-    );
-    active_tab.html(
-        askbot['data']['sortButtonData'][name]['label'] + arrow
-    );
+    if (askbot['data']['sortButtonData'][name]) {
+        active_tab.attr(
+            'title',
+            askbot['data']['sortButtonData'][name][antisense + '_tooltip']
+        );
+        active_tab.html(
+            askbot['data']['sortButtonData'][name]['label'] + arrow
+        );
+    }
 };
 
 FullTextSearch.prototype.renderRelevanceSortTab = function(query_string) {

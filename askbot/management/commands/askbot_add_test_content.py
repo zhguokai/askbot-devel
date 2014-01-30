@@ -1,6 +1,7 @@
 import sys
 from askbot.conf import settings as askbot_settings
 from askbot.models import User
+from askbot.models import init_askbot_user_profile
 from askbot.utils.console import choice_dialog
 from django.core.management.base import NoArgsCommand
 from django.conf import settings as django_settings
@@ -80,33 +81,37 @@ class Command(NoArgsCommand):
         if self.verbosity > 0:
             print text
 
+    def create_user(self, username, email):
+        """creates a user with username, email
+        makes password to be the same as the username
+        """
+        user = User.objects.create_user(username, email)
+        user.set_password(username)
+        user.reputation = INITIAL_REPUTATION
+        self.print_if_verbose('Created user %s' % username)
+        user.save()
+        init_askbot_user_profile(user)
+        return user
+
     def create_users(self):
         "Create the users and return an array of created users"
         users = []
 
         #add admin with the same password - this user will be admin automatically
-        admin = User.objects.create_user('admin', 'admin@example.com')
-        admin.set_password('admin')
-        admin.save()
-        self.print_if_verbose("Created User 'admin'")
+        admin = self.create_user('admin', 'admin@example.com')
         users.append(admin)
 
         #this user will have regular privileges, because it's second
-        joe = User.objects.create_user('joe', 'joe@example.com')
-        joe.set_password('joe')
-        joe.save()
-        self.print_if_verbose("Created User 'joe'")
+        joe = self.create_user('joe', 'joe@example.com')
+        users.append(joe)
 
         # Keeping the created users in array - we will iterate over them
         # several times, we don't want querying the model each and every time.
         for i in range(NUM_USERS):
             s_idx = str(i)
-            user = User.objects.create_user(USERNAME_TEMPLATE % s_idx,
-                                            EMAIL_TEMPLATE % s_idx)
-            user.set_password(PASSWORD_TEMPLATE % s_idx)
-            user.reputation = INITIAL_REPUTATION
-            user.save()
-            self.print_if_verbose("Created User '%s'" % user.username)
+            username = USERNAME_TEMPLATE % s_idx
+            email = EMAIL_TEMPLATE % s_idx
+            user = self.create_user(username, email)
             users.append(user)
 
         return users
