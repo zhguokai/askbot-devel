@@ -54,10 +54,10 @@
 
 {%- macro thread_last_activity_user_avatar(thread, size=32) -%}
     {% set question_post = thread._question_post() %}
-    {% if thread.last_activity_by_id == question_post.author_id and question_post.is_anonymous %}
-        {{ gravatar(thread.last_activity_by, size, anonymous=True) }}
+    {% if question_post.is_anonymous %}
+        {{ gravatar(question_post.author, size, anonymous=True) }}
     {% else %}
-        {{ gravatar(thread.last_activity_by, size) }}
+        {{ gravatar(question_post.author, size) }}
     {% endif %}
 {%- endmacro -%}
 

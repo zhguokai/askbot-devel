@@ -666,13 +666,14 @@ FullTextSearch.prototype.renderRelatedTags = function(tags, query_string){
         tag.setName(tags[i]['name']);
         tag.setDeletable(false);
         tag.setLinkable(true);
+        tag.setHtmlTag('div');
         tag.setUrlParams(query_string);
 
-        html_list.push(tag.getElement().outerHTML());
-        html_list.push('<span class="tag-number">&#215; ');
-        html_list.push(tags[i]['used_count']);
-        html_list.push('</span>');
-        html_list.push('<br />');
+        var listItem = '<li>' + tag.getElement().outerHTML();
+        listItem = listItem + '<span class="tag-number">&#215; ' + tags[i]['used_count'] +  '</span>';
+        listItem = listItem + '</li>';
+
+        html_list.push(listItem);
     }
     $('#related-tags').html(html_list.join(''));
 };
