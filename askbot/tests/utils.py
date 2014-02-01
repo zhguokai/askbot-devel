@@ -4,6 +4,7 @@ from django.core.cache import cache
 from django.test import TestCase
 from functools import wraps
 from askbot import models
+from askbot.models import signals
 
 def with_settings(**settings_dict):
     """a decorator that will run function with settings
@@ -87,6 +88,8 @@ def create_user(
                         subscriber = user
                     )
         feed.save()
+
+    signals.user_registered.send(None, user=user)
     return user
 
 

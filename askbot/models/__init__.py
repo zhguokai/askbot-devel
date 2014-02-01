@@ -3619,22 +3619,17 @@ def set_user_avatar_type_flag(instance, created, **kwargs):
 def update_user_avatar_type_flag(instance, **kwargs):
     instance.user.update_avatar_type()
 
-def make_admin_if_first_user(instance, **kwargs):
+def make_admin_if_first_user(user, **kwargs):
     """first user automatically becomes an administrator
     the function is run only once in the interpreter session
+
+    function is run when user registers
     """
     import sys
-    #have to check sys.argv to satisfy the test runner
-    #which fails with the cache-based skipping
-    #for real the setUp() code in the base test case must
-    #clear the cache!!!
-    if 'test' not in sys.argv and cache.cache.get('admin-created'):
-        #no need to hit the database every time!
-        return
     user_count = User.objects.all().count()
-    if user_count == 0:
-        instance.set_admin_status()
-    cache.cache.set('admin-created', True)
+    if user_count == 1:
+        user.set_admin_status()
+        user.save()
 
 def moderate_group_joining(sender, instance=None, created=False, **kwargs):
     if created and instance.level == GroupMembership.PENDING:
@@ -3660,7 +3655,6 @@ def init_badge_data(sender, created_models=None, **kwargs):
 django_signals.post_syncdb.connect(init_badge_data)
 
 #signal for User model save changes
-django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(add_user_to_global_group, sender=User)
@@ -3686,6 +3680,7 @@ signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
 signals.user_registered.connect(greet_new_user)
+signals.user_registered.connect(make_admin_if_first_user)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
