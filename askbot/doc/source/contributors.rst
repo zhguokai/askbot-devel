@@ -52,6 +52,7 @@ Programming, bug fixes and documentation
 * `Stéphane Klein <http://stephane-klein.info>`_
 * `Andrew Chen <https://github.com/yongjhih>`_
 * `Benjamin Abel <https://github.com/BenjaminABEL>`_
+* `Pami Ketolainen <https://github.com/keto>`_
 
 Translations
 ------------
