@@ -50,6 +50,8 @@ Programming, bug fixes and documentation
 * `Robert Martin <https://github.com/bobbydavid>_`
 * `Director <http://codeflow.co.kr>`_
 * `Stéphane Klein <http://stephane-klein.info>`_
+* `Andrew Chen <https://github.com/yongjhih>`_
+* `Benjamin Abel <https://github.com/BenjaminABEL>`_
 
 Translations
 ------------
