@@ -9,7 +9,10 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.shortcuts import render
 from django.template import RequestContext, Template
 from django.template.loader import get_template
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import Http404
+from django.http import HttpResponse
+from django.http import HttpResponseForbidden
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
@@ -35,13 +38,18 @@ def generic_view(request, template = None, page_class = None):
         return render_to_response('django_error.html')
     return render(request, template, {'page_class': page_class})
 
+PUBLIC_VARIABLES = ('CUSTOM_CSS', 'CUSTOM_JS')
+
 def config_variable(request, variable_name = None, mimetype = None):
     """Print value from the configuration settings
     as response content. All parameters are required.
     """
-    #todo add http header-based caching here!!!
-    output = getattr(askbot_settings, variable_name, '')
-    return HttpResponse(output, mimetype = mimetype)
+    if variable_name in PUBLIC_VARIABLES:
+        #todo add http header-based caching here!!!
+        output = getattr(askbot_settings, variable_name, '')
+        return HttpResponse(output, mimetype = mimetype)
+    else:
+        return HttpResponseForbidden()
 
 def about(request, template='about.html'):
     title = _('About %(site)s') % {'site': askbot_settings.APP_SHORT_NAME}
