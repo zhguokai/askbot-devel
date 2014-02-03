@@ -8,7 +8,7 @@ from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 from lamson.routing import route, stateless
 from lamson.server import Relay
-from askbot.models import ReplyAddress, Group, Tag
+from askbot.models import ReplyAddress, Group
 from askbot import mail
 from askbot.models import get_feed_url
 from askbot.conf import settings as askbot_settings
@@ -228,7 +228,7 @@ def ASK(message, host = None, addr = None):
         except Group.DoesNotExist:
             #do nothing because this handler will match all emails
             return
-        except Tag.MultipleObjectsReturned:
+        except Group.MultipleObjectsReturned:
             return
 
 @route('welcome-(address)@(host)', address='.+')
