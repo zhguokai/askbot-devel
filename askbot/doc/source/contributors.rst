@@ -53,6 +53,7 @@ Programming, bug fixes and documentation
 * `Andrew Chen <https://github.com/yongjhih>`_
 * `Benjamin Abel <https://github.com/BenjaminABEL>`_
 * `Pami Ketolainen <https://github.com/keto>`_
+* `Hamdi <https://github.com/Hamdy>`_
 
 Translations
 ------------
