@@ -735,7 +735,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
 
     return response
 
-#@csrf.csrf_exempt
+@csrf.csrf_exempt
 @decorators.ajax_only
 #@decorators.check_spam('comment')
 def edit_comment(request):
