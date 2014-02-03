@@ -145,7 +145,7 @@ def process_reply(func):
 
         try:
             reply_address = ReplyAddress.objects.get(
-                                            address = address,
+                                            address__iexact = address,
                                             allowed_from_email = message.From
                                         )
 
