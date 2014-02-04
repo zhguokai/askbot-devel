@@ -73,7 +73,6 @@ def create_user(
     if date_joined is not None:
         user.date_joined = date_joined
         user.save()
-    user.set_status(status)
     if notification_schedule == None:
         notification_schedule = models.EmailFeedSetting.NO_EMAIL_SCHEDULE
 
@@ -90,6 +89,8 @@ def create_user(
         feed.save()
 
     signals.user_registered.send(None, user=user)
+    user.set_status(status)
+
     return user
 
 
