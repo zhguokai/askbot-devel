@@ -3542,6 +3542,10 @@ def greet_new_user(user, **kwargs):
     if askbot_settings.NEW_USER_GREETING:
         user.message_set.create(message = askbot_settings.NEW_USER_GREETING)
 
+    import sys
+    if 'test' in sys.argv:
+        return
+
     if askbot_settings.REPLY_BY_EMAIL:#with this on we also collect signature
         template_name = 'email/welcome_lamson_on.html'
     else:
