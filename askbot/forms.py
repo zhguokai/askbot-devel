@@ -725,7 +725,6 @@ class FeedbackForm(forms.Form):
     email = forms.EmailField(label=_('Email:'), required=False)
     message = forms.CharField(
         label=_('Your message:'),
-        max_length=800,
         widget=forms.Textarea(attrs={'cols': 60})
     )
     no_email = forms.BooleanField(
@@ -746,6 +745,11 @@ class FeedbackForm(forms.Form):
                             private_key=askbot_settings.RECAPTCHA_SECRET,
                             public_key=askbot_settings.RECAPTCHA_KEY
                         )
+    def clean_message(self):
+        message = self.cleaned_data.get('message', '').strip()
+        if not message:
+            raise forms.ValidationError(_('Message is required'))
+        return message
 
     def clean(self):
         super(FeedbackForm, self).clean()
