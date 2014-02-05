@@ -446,6 +446,11 @@ def process_emailed_question(
             #validated yet or if email signature could not be found
             if need_new_signature:
 
+                if DEBUG_EMAIL:
+                    sys.stderr.write('FAILED SIGNATURE IN:\n%s\n' % body_text)
+                    sys.stderr.write('CURRENT SIGNATURE:\n%s\n' % user.email_signature)
+                    sys.stderr.write('USER ID %d\n' % user.id)
+
                 reply_to = ReplyAddress.objects.create_new(
                     user = user,
                     reply_action = 'validate_email'
