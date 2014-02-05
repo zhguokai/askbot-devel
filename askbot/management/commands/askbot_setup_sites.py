@@ -11,6 +11,27 @@ SITE1_NAME = getattr(django_settings, 'SITE1_NAME', 'windriver')
 SITE2_DOMAIN = getattr(django_settings, 'SITE2_DOMAIN', 'intel.askbot.com')
 SITE2_NAME = getattr(django_settings, 'SITE2_NAME', 'intel')
 
+"""examples:
+#key - space id, value - space name
+ASKBOT_SPACES = {
+    1: 'support',
+    2: 'development'
+}
+#key - site id, value - (site name, site domain)
+ASKBOT_SITES = {
+    1: ('public', 'public.example.com'),
+    2: ('private', 'private.example.com')
+}
+#key - feed id, value - (feed name, site id, (space id list))
+ASKBOT_FEEDS = {
+    1: ('questions', 1, (1,)),
+    2: ('questions', 2, (1, 2))
+}
+"""
+
+SPACES = getattr(django_settings, 'ASKBOT_SPACES')
+FEEDS = getattr(django_settings, 'ASKBOT_FEEDS')
+
 def get_object_by_id(object_class, object_id):
     try:
         return object_class.objects.get(id=object_id)
@@ -19,38 +40,31 @@ def get_object_by_id(object_class, object_id):
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **kwargs):
-        space1 = get_object_by_id(Space, 1)
-        space1.name = SITE1_NAME
-        space1.save()
 
-        space2 = get_object_by_id(Space, 2)
-        space2.name = SITE2_NAME
-        space2.save()
+        #create spaces
+        for (space_id, space_name) in SPACES.items():
+            space = get_object_by_id(Space, space_id)
+            space.name = space_name
+            space.save()
+            
+        #create sites
+        for (site_id, site_data) in SITES.items()
+            site = get_object_by_id(Site, site_id)
+            site.name = site_data[0]
+            site.domain = site_data[1]
+            site.save()
 
-        site1 = get_object_by_id(Site, 1)
-        site1.name = SITE1_NAME
-        site1.domain = SITE1_DOMAIN
-        site1.save()
+        #create feeds
+        for (feed_id, feed_data) in FEEDS.items():
+            feed = get_object_by_id(Feed, 1)
+            feed.name = 'questions'
+            feed.default_space = space1
+            feed.site = site1
+            feed.save()
 
-        feed1 = get_object_by_id(Feed, 1)
-        feed1.name = 'questions'
-        feed1.default_space = space1
-        feed1.site = site1
-        feed1.save()
-        feed1.add_space(space1)
-        feed1.add_space(space2)
-
-        site2 = get_object_by_id(Site, 2)
-        site2.name = SITE2_NAME
-        site2.domain = SITE2_DOMAIN
-        site2.save()
-
-        feed2 = get_object_by_id(Feed, 2)
-        feed2.name = 'questions'
-        feed2.default_space = space2
-        feed2.site = site2
-        feed2.save()
-        feed2.add_space(space2)
+            for space_id in feed_data[1:]:
+                space = get_object_by_id(Space, space_id)
+                feed.add_space(space)
 
         threads = Thread.objects.all()
         count = threads.count()
