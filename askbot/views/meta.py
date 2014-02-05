@@ -31,6 +31,7 @@ from askbot.skins.loaders import render_text_into_skin
 from askbot.utils.decorators import admins_only
 from askbot.utils.forms import get_next_url
 from askbot.utils import functions
+from recaptcha_works.decorators import fix_recaptcha_remote_ip
 
 def generic_view(request, template = None, page_class = None):
     """this may be not necessary, since it is just a rewrite of render"""
@@ -90,6 +91,7 @@ def faq(request):
         return render(request, 'faq_static.html', data)
 
 @csrf.csrf_protect
+@fix_recaptcha_remote_ip
 def feedback(request):
     data = {'page_class': 'meta'}
     form = None
