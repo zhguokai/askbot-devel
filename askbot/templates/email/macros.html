@@ -7,7 +7,11 @@
 %}
     {% spaceless %}
         {{ start_quote(quote_level) }}
-            {% set author = post.author.username|escape %}
+            {% if post.is_anonymous %}
+                {% set author = settings.NAME_OF_ANONYMOUS_USER %}
+            {% else %}
+                {% set author = post.author.username|escape %}
+            {% endif %}
             {% if post.post_type == 'question' %}
             {% if quote_level > 0 %}
             <p style="font-size:10px; font-weight: bold;">
