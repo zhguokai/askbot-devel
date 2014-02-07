@@ -10,7 +10,7 @@ def print_users(users):
 
 def get_repeating_values(cls, field_name):
     values = cls.objects.values_list(field_name, flat=True)
-    variants = defaultdict(list)
+    variants = defaultdict(int)
     repeats = set()
     for value in values:
         base = value.lower()
