@@ -1469,6 +1469,8 @@ class Post(models.Model):
             )
         elif user.email_tag_filter_strategy == const.INCLUDE_ALL:
             return True
+        elif user.email_tag_filter_strategy == const.INCLUDE_SUBSCRIBED:
+            return user.has_affinity_to_question(question, affinity_type='like')
         else:
             raise ValueError(
                 'unexpected User.email_tag_filter_strategy %s'\
