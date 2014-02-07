@@ -1,6 +1,7 @@
 import sys
 from askbot.conf import settings as askbot_settings
 from askbot.models import User
+from askbot.models import init_askbot_user_profile
 from askbot.utils.console import choice_dialog
 from django.core.management.base import NoArgsCommand
 from django.conf import settings as django_settings
@@ -106,6 +107,7 @@ class Command(NoArgsCommand):
             user.set_password(PASSWORD_TEMPLATE % s_idx)
             user.reputation = INITIAL_REPUTATION
             user.save()
+            init_askbot_user_profile(user)
             self.print_if_verbose("Created User '%s'" % user.username)
             users.append(user)
 
