@@ -8,6 +8,12 @@ def print_users(users):
     for u in users:
         print '%d\t%s\t%s' % (u.id, u.username, u.email)
 
+def print_associations(associations):
+    for a in associations:
+        u = a.user
+        data = (a.id, a.openid_url, u.id, u.username, u.email)
+        print 'a_id=%d\ta=%s\tu_id=%d\tu=%s\temail=%s' % data
+
 def get_repeating_values(cls, field_name):
     values = cls.objects.values_list(field_name, flat=True)
     variants = defaultdict(int)
@@ -18,6 +24,13 @@ def get_repeating_values(cls, field_name):
         if variants[base] > 1:
             repeats.add(base)
     return repeats
+
+def print_count(items):
+    num = len(items)
+    if num == 0:
+        print 'Not found'
+    else:
+        print '%d found' % num
 
 class Command(NoArgsCommand):
     help = """Prints summary about users with duplicate email addresses,
@@ -30,22 +43,18 @@ class Command(NoArgsCommand):
         for email in emails:
             users = User.objects.filter(email__iexact=email)
             print_users(users)
-        if len(emails) == 0:
-            print 'Not found'
+        print_count(emails)
 
         print '\nLooking for users with duplicate username:'
         names = get_repeating_values(User, 'email')
         for name in names:
             users = User.objects.filter(username__iexact=name)
             print_users(users)
-        if len(names) == 0:
-            print 'Not found'
+        print_count(names)
 
         print '\nLooking for users with duplicate login associations'
         logins = get_repeating_values(UserAssociation, 'openid_url')
         for login in logins:
             associations = UserAssociation.objects.filter(openid_url__iexact=login)
-            users = [assoc.user for assoc in associations]
-            print_users(users)
-        if len(logins) == 0:
-            print 'Not found'
+            print_associations(associations)
+        print_count(names)
