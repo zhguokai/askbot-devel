@@ -328,6 +328,13 @@ def extract_user_signature(text, reply_code):
 
         signature = '\n'.join(tail)
 
+    #another hack: remove the inline images from the attachment
+    #a better solution is to refactor the code to allow inclusion
+    #of images in the signatures. The issue is images are "re-uploaded"
+    #every time effectively changing the signature.
+    img_re = re.compile(r'\[[^]]+\]\(/upfiles/[^)]+\)')
+    signature = img_re.sub('', signature)
+
     #patch signature to a sentinel value if it is truly empty, because we
     #cannot allow empty signature field, which indicates no
     #signature at all and in that case we ask user to create one

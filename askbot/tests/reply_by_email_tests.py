@@ -1,7 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 from askbot.models import ReplyAddress
 from askbot.mail.lamson_handlers import PROCESS, VALIDATE_EMAIL, get_parts
-from askbot.mail import extract_user_signature
 from askbot import const
 
 

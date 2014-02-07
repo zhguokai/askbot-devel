@@ -358,13 +358,32 @@ def user_update_avatar_type(self):
 
 def user_strip_email_signature(self, text):
     """strips email signature from the end of the text"""
-    if self.email_signature.strip() == '':
+    def _strip(text):
+        if self.email_signature.strip() == '':
+            return text
+
+        text = '\n'.join(text.splitlines())#normalize the line endings
+        while text.endswith(self.email_signature):
+            text = text[0:-len(self.email_signature)]
         return text
 
-    text = '\n'.join(text.splitlines())#normalize the line endings
-    while text.endswith(self.email_signature):
-        text = text[0:-len(self.email_signature)]
-    return text
+    text0 = text
+    text1 = _strip(text)
+    #we do this monkey business because email parsing does not
+    #accomodate email signatures with inline images
+    if text1 == text0:
+        #try removing latest image and strip signature again
+        img_re = re.compile(r'\[[^]]+\]\(/upfiles/[^)]+\).*$')
+        text2 = img_re.sub('', text1)
+        #if substitution worked, try stipping signature again
+        if text2 != text1:
+            text3 = _strip(text2)
+            #if strip worked - return the result
+            if text3 != text2:
+                return text3
+    #otherwise return result of first stripping
+    return text1
+
 
 def _check_gravatar(gravatar):
     gravatar_url = "http://www.gravatar.com/avatar/%s?d=404" % gravatar
