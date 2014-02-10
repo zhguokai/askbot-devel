@@ -20,14 +20,7 @@ class MergeUsersBaseCommand(BaseCommand):
         self.parse_arguments(*arguments)
         
         for rel in User._meta.get_all_related_objects():
-            sid = transaction.savepoint()
-            try:
-                self.process_field(rel.model, rel.field.name)
-                transaction.savepoint_commit(sid)
-            except Exception, error:
-                self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
-                transaction.savepoint_rollback(sid)
-            transaction.commit()
+            self.process_field(rel.model, rel.field.name)
 
         for rel in User._meta.get_all_related_many_to_many_objects():
             sid = transaction.savepoint()
@@ -62,8 +55,16 @@ class MergeUsersBaseCommand(BaseCommand):
         """reassigns the related object to the new user"""
         filter_condition = {field_name: self.from_user}
         related_objects_qs = model.objects.filter(**filter_condition)
+        #try updating objects in a transaction
+        sid = transaction.savepoint()
         update_condition = {field_name: self.to_user}
-        related_objects_qs.update(**update_condition)
+        try:
+            related_objects_qs.update(**update_condition)
+            transaction.savepoint_commit(sid)
+        except:
+            transaction.savepoint_rollback(sid)
+            related_objects_qs.delete()
+        transaction.commit()
 
     def process_m2m_field(self, model, field_name):
         """removes the old user from the M2M relation
@@ -92,5 +93,5 @@ class Command(MergeUsersBaseCommand):
 
     def cleanup(self):
         self.to_user.save()
-        #self.from_user.delete()
+        self.from_user.delete()
 

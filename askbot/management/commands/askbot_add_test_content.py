@@ -89,6 +89,7 @@ class Command(NoArgsCommand):
         admin = User.objects.create_user('admin', 'admin@example.com')
         admin.set_password('admin')
         admin.save()
+        init_askbot_user_profile(admin)
         self.print_if_verbose("Created User 'admin'")
         users.append(admin)
 
@@ -96,6 +97,7 @@ class Command(NoArgsCommand):
         joe = User.objects.create_user('joe', 'joe@example.com')
         joe.set_password('joe')
         joe.save()
+        init_askbot_user_profile(joe)
         self.print_if_verbose("Created User 'joe'")
 
         # Keeping the created users in array - we will iterate over them
