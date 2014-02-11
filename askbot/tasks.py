@@ -26,6 +26,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
+from django.utils.translation import activate as activate_language
 from django.utils import simplejson
 from celery.decorators import task
 from askbot.conf import settings as askbot_settings
@@ -111,6 +112,7 @@ def notify_author_of_published_revision_celery_task(revision):
         }
 
         #load the template
+        activate_language(revision.post.language_code)
         template = get_template('email/notify_author_about_approved_post.html')
         #todo: possibly add headers to organize messages in threads
         headers = {'Reply-To': append_content_address}
@@ -248,6 +250,7 @@ def send_instant_notifications_about_activity_in_post(
 
         reply_address, alt_reply_address = get_reply_to_addresses(user, post)
 
+        activate_language(post.language_code)
         subject_line, body_text = format_instant_notification_email(
                             to_user = user,
                             from_user = update_activity.user,

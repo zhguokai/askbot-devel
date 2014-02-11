@@ -14,6 +14,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.translation import string_concat
 from django.utils.translation import get_language
+from django.utils.translation import activate as activate_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
@@ -1541,6 +1542,7 @@ class Thread(models.Model):
         }
         from askbot.views.context import get_extra as get_extra_context
         context.update(get_extra_context('ASKBOT_QUESTION_SUMMARY_EXTRA_CONTEXT', None, context))
+        activate_language(self.language_code)
         html = get_template('widgets/question_summary.html').render(context)
         # INFO: Timeout is set to 30 days:
         # * timeout=0/None is not a reliable cross-backend way to set infinite timeout
