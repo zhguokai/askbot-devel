@@ -586,14 +586,14 @@ body.user-messages {
   -webkit-box-sizing: border-box;
   background: whitesmoke;
   border-top: none;
-  bottom: -50px;
+  bottom: -86px;
   margin: 0;
   outline: 1px solid #dadad4;
   position: absolute;
   z-index: 10000;
 }
-.search-drop-menu.waiting {
-  bottom: -27px;
+.search-drop-menu.empty {
+  bottom: -50px;
 }
 .search-drop-menu ul {
   list-style: none;
