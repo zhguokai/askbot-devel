@@ -91,7 +91,7 @@ def application_settings(request):
         'skin': get_skin(),
         'moderation_items': api.get_info_on_moderation_items(request.user),
         'noscript_url': const.DEPENDENCY_URLS['noscript'],
-        'dummy_search_state': DummySearchState()
+        'dummy_search_state': DummySearchState(),
     }
 
     #add context for the modal login menu
@@ -134,5 +134,17 @@ def application_settings(request):
             link = _get_group_url(group)
             group_list.append({'name': group['name'], 'link': link})
         context['group_list'] = simplejson.dumps(group_list)
+
+        #todo: get default ask group from the default ask group of the default
+        #space of the current feed. Right now we take default group by id per-site,
+        #but it should be per feed
+        default_ask_group_id = getattr(django_settings, 'DEFAULT_ASK_GROUP_ID', 0)
+        default_ask_group_name = ''
+        if default_ask_group_id != 0:
+            default_group = models.Group.get(id=default_ask_group_id)
+            default_ask_group_name = default_group.name
+
+        context['default_ask_group_id'] = default_ask_group_id
+        context['default_ask_group_name'] = default_ask_group_name
 
     return context

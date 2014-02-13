@@ -215,7 +215,18 @@ SearchDropMenu.prototype.createDom = function() {
         footer.addClass('footer');
         var button = this.makeElement('button');
         button.addClass('submit');
-        button.html(gettext('Ask Your Question'))
+        var buttonText = '';
+        var defaultAskGroupName = askbot['settings']['defaultAskGroupName'];
+        if (defaultAskGroupName) {
+            buttonText = interpolate(
+                gettext('Ask %(group_name)s'),
+                {'group_name': defaultAskGroupName },
+                true
+            );
+        } else {
+            buttonText = gettext('Ask Your Question');
+        }
+        button.html(buttonText);
         footer.append(button);
         var handler = this._askHandler;
         setupButtonEventHandlers(button, handler);
@@ -787,7 +798,12 @@ FullTextSearch.prototype.makeAskHandler = function() {
     var me = this;
     return function() {
         var query = me.getSearchQuery();
-        window.location.href = askbot['urls']['ask'] + '?title=' + query;
+        var askHref = askbot['urls']['ask'] + '?title=' + query;
+        var defaultAskGroupId = askbot['settings']['defaultAskGroupId'];
+        if (defaultAskGroupId) {
+            askHref += '&group_id=' + defaultAskGroupId;
+        }
+        window.location.href = askHref;
         return false;
     };
 };

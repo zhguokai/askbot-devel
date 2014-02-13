@@ -154,15 +154,21 @@ class SearchState(object):
     def base_url(self):
         return self._questions_url
 
-    def ask_query_string(self): # TODO: test me
+    def ask_query_string(self, group_id=None): # TODO: test me
         """returns string to prepopulate title field on the "Ask your question" page"""
         ask_title = self.stripped_query or self.query or ''
-        if not ask_title:
+        query_data = dict()
+        if ask_title:
+            query_data['title'] = ask_title
+        if group_id:
+            query_data['group_id'] = group_id
+        if query_data:
+            return '?' + urlencode(query_data)
+        else:
             return ''
-        return '?' + urlencode({'title': ask_title})
 
-    def full_ask_url(self):
-        return get_feed_url('ask', self.feed) + self.ask_query_string()
+    def full_ask_url(self, group_id=None):
+        return get_feed_url('ask', self.feed) + self.ask_query_string(group_id=group_id)
 
     def unified_tags(self):
         "Returns tags both from tag selector and extracted from query"
