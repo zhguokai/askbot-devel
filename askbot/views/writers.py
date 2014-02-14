@@ -30,6 +30,7 @@ from django.core.urlresolvers import reverse
 from django.core import exceptions
 from django.conf import settings
 from django.views.decorators import csrf
+from django.contrib.auth.models import User
 
 from askbot import exceptions as askbot_exceptions
 from askbot import forms
@@ -46,6 +47,7 @@ from askbot.views import context
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
 from askbot.utils.slug import slugify
+from recaptcha_works.decorators import fix_recaptcha_remote_ip
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -203,6 +205,7 @@ def import_data(request):
     }
     return render(request, 'import_data.html', data)
 
+@fix_recaptcha_remote_ip
 #@login_required #actually you can post anonymously, but then must register
 @csrf.csrf_protect
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
@@ -220,7 +223,7 @@ def ask(request):#view used to ask a new question
             request.user.message_set.create(message=_('Sorry, but you have only read access'))
             return HttpResponseRedirect(referer)
 
-    form = forms.AskForm(request.REQUEST, user=request.user)
+    form = forms.AskForm(request.POST, user=request.user)
     if request.method == 'POST':
         if form.is_valid():
             timestamp = datetime.datetime.now()
@@ -235,11 +238,19 @@ def ask(request):#view used to ask a new question
 
             if request.user.is_authenticated():
                 drafts = models.DraftQuestion.objects.filter(
-                                                author=request.user
-                                            )
+                    author=request.user
+                    )
                 drafts.delete()
 
-                user = form.get_post_user(request.user)
+            if (    request.user.is_authenticated()
+                or (    askbot_settings.USE_RECAPTCHA
+                    and askbot_settings.ALLOW_ASK_ANONYMOUSLY)):
+
+                if not request.user.is_authenticated():
+                    ask_anonymously = True
+                    user = User.objects.filter(is_staff=True)[0].get_or_create_fake_user("anonymous", "anonymous@example.com")
+                else:
+                    user = form.get_post_user(request.user)
                 try:
                     question = user.post_question(
                         title=title,

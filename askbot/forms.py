@@ -923,11 +923,20 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
             required=False,
         )
 
+        if (not user.is_authenticated()
+            and askbot_settings.USE_RECAPTCHA
+            and askbot_settings.ALLOW_ASK_ANONYMOUSLY):
+            self.fields['recaptcha'] = RecaptchaField(
+                private_key=askbot_settings.RECAPTCHA_SECRET,
+                public_key=askbot_settings.RECAPTCHA_KEY,
+                label='Are you human?', required=True)
+
         #hide ask_anonymously field
         if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
             self.fields['language'] = LanguageField()
 
-        if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
+        if (   not askbot_settings.ALLOW_ASK_ANONYMOUSLY
+            or not user.is_authenticated()):
             self.hide_field('ask_anonymously')
 
     def clean_ask_anonymously(self):
@@ -936,7 +945,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
             self.cleaned_data['ask_anonymously'] = False
         return self.cleaned_data['ask_anonymously']
-
 
 ASK_BY_EMAIL_SUBJECT_HELP = _(
     'Subject line is expected in the format: '

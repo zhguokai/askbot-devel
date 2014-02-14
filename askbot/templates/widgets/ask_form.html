@@ -61,10 +61,16 @@
         </div>
         {% endif %}
     </div>
-    {% if not request.user.is_authenticated() %}
-    <input type="submit" name="post_anon" value="{% trans %}Login/Signup to Post{% endtrans %}" class="submit" />
+
+    {% if form.recaptcha.errors %}
+        <span class="form-error">{{ form.recaptcha.errors }}</span>
+    {% endif %}
+    {{ form.recaptcha }}
+
+    {% if request.user.is_authenticated() or form.recaptcha %}
+      <input type="submit" name="post" value="{{ settings.WORDS_ASK_YOUR_QUESTION|escape }}" class="submit" />
     {% else %}
-    <input type="submit" name="post" value="{{ settings.WORDS_ASK_YOUR_QUESTION|escape }}" class="submit" />
+      <input type="submit" name="post_anon" value="{% trans %}Login/Signup to Post{% endtrans %}" class="submit" />
     {% endif %}
     <div class="clean"></div>
 </form>
