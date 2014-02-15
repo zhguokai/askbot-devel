@@ -64,6 +64,15 @@
     {% if not request.user.is_authenticated() %}
     <input type="submit" name="post_anon" value="{% trans %}Login/Signup to Post{% endtrans %}" class="submit" />
     {% else %}
-    <input type="submit" name="post" value="{% trans %}Ask Your Question{% endtrans %}" class="submit" />
+        {% if group_id == None and default_ask_group_id %}
+            {% set group_id = default_ask_group_id %}
+            {% set group_name = default_ask_group_name %}
+        {% endif %}
+        <input 
+            type="submit" 
+            name="post"
+            value="{% trans %}Ask Your Question{% endtrans %}" class="submit" 
+            value="{% if group_id %}{% trans %}Ask {{ group_name }}{% endtrans %}{% else %}{% trans %}Ask Your Question{% endtrans %}{% endif %}"
+        />
     {% endif %}
 </form>

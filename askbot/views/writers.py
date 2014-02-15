@@ -327,12 +327,18 @@ def ask(request, feed=None):#view used to ask a new question
         'language': get_language(),
         'wiki': request.REQUEST.get('wiki', False),
     }
-    if 'group_id' in request.REQUEST:
+
+    group_id = int(request.REQUEST.get('group_id', None))
+    if group_id:
         try:
-            group_id = int(request.GET.get('group_id', None))
+            group = models.Group.objects.get(id=group_id)
+            group_name = group.name
             form.initial['group_id'] = group_id
-        except Exception:
-            pass
+        except models.Group.DoesNotExist:
+            group_id = None
+            group_name = None
+    else:
+        group_name = None
 
     data = {
         'active_tab': 'ask',
@@ -342,7 +348,9 @@ def ask(request, feed=None):#view used to ask a new question
         'email_validation_faq_url':reverse('faq') + '#validate',
         'category_tree_data': askbot_settings.CATEGORY_TREE,
         'search_state': search_state,
-        'tag_names': list()#need to keep context in sync with edit_question for tag editor
+        'tag_names': list(),#need to keep context in sync with edit_question for tag editor
+        'group_id': group_id,
+        'group_name': group_name
     }
     data.update(context.get_for_tag_editor())
     return render(request, 'ask.html', data)
