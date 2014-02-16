@@ -39,7 +39,7 @@
     askbot['settings']['mathjaxEnabled'] = {{ settings.ENABLE_MATHJAX|as_js_bool }};
     {% if settings.GROUPS_ENABLED %}
         askbot['settings']['defaultAskGroupId'] = {{ default_ask_group_id }};
-        askbot['settings']['defaultAskGroupName'] = {{ default_ask_group_name }};
+        askbot['settings']['defaultAskGroupName'] = '{{ default_ask_group_name }}';
     {% endif %}
     askbot['data']['maxCommentLength'] = {{ settings.MAX_COMMENT_LENGTH }};
     askbot['settings']['commentsEditorType'] = '{{ settings.COMMENTS_EDITOR_TYPE }}';

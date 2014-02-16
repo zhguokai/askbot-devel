@@ -138,10 +138,10 @@ def application_settings(request):
         #todo: get default ask group from the default ask group of the default
         #space of the current feed. Right now we take default group by id per-site,
         #but it should be per feed
-        default_ask_group_id = getattr(django_settings, 'DEFAULT_ASK_GROUP_ID', 0)
+        default_ask_group_id = getattr(settings, 'DEFAULT_ASK_GROUP_ID', 0)
         default_ask_group_name = ''
         if default_ask_group_id != 0:
-            default_group = models.Group.get(id=default_ask_group_id)
+            default_group = models.Group.objects.get(id=default_ask_group_id)
             default_ask_group_name = default_group.name
 
         context['default_ask_group_id'] = default_ask_group_id
