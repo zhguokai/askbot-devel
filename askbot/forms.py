@@ -1191,7 +1191,7 @@ class AskByEmailForm(forms.Form):
                     site = Site.objects.get(domain=self.cleaned_data['email_host'])
                 except Site.DoesNotExist:
                     return None
-                return site_to_group[site.id]
+                return site_to_group.get(site.id, None)
             else:
                 return None
 
