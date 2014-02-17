@@ -2562,7 +2562,9 @@ def user_get_primary_group(self):
     for group in groups:
         if group.is_personal():
             continue
-        return group
+        membership = self.get_group_membership(group)
+        if membership.level == GroupMembership.FULL:
+            return group
     return None
 
 def user_can_make_group_private_posts(self):
