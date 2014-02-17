@@ -1177,9 +1177,7 @@ class AskByEmailForm(forms.Form):
 
     def _clean_group_id(self):
         #clean group id
-        if 'group_id' in self.cleaned_data:
-            return self.cleaned_data['group_id']
-        else:
+        if self.cleaned_data['group_id'] is None:
             #todo: make default_ask_group a property of space
             #meanwhile we take this from a custom setting,
             #associating the SITE_ID --> default ask group id
@@ -1192,8 +1190,7 @@ class AskByEmailForm(forms.Form):
                 except Site.DoesNotExist:
                     return None
                 return site_to_group.get(site.id, None)
-            else:
-                return None
+        return None
 
     def clean(self):
         self.cleaned_data['space'] = self.clean_space()
