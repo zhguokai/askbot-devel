@@ -421,7 +421,8 @@ def process_emailed_question(
             'sender': from_address,
             'subject': subject,
             'body_text': body_text,
-            'email_host': email_host
+            'email_host': email_host,
+            'group_id': group_id
         }
         user = User.objects.get(email__iexact=from_address)
         form = AskByEmailForm(data, user=user)
@@ -478,7 +479,7 @@ def process_emailed_question(
                 body_text=stripped_body_text,
                 by_email=True,
                 email_address=from_address,
-                group_id=group_id,
+                group_id=form.cleaned_data['group_id'],
             )
         else:
             raise ValidationError()

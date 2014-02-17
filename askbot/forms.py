@@ -1098,6 +1098,7 @@ class AskByEmailForm(forms.Form):
         }
     )
     email_host = forms.CharField()
+    group_id = forms.IntegerField(required=False)
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -1174,8 +1175,29 @@ class AskByEmailForm(forms.Form):
             from askbot.models import Space
             return Space.objects.get_default()
 
+    def _clean_group_id(self):
+        #clean group id
+        if 'group_id' in self.cleaned_data:
+            return self.cleaned_data['group_id']
+        else:
+            #todo: make default_ask_group a property of space
+            #meanwhile we take this from a custom setting,
+            #associating the SITE_ID --> default ask group id
+            site_to_group = getattr(django_settings, 'ASKBOT_SITE_TO_DEFAULT_ASK_GROUP', None)
+            if site_to_group:
+                #get site id from the email_host name
+                from django.contrib.sites.models import Site
+                try:
+                    site = Site.objects.get(domain=self.cleaned_data['email_host'])
+                except Site.DoesNotExist:
+                    return None
+                return site_to_group[site.id]
+            else:
+                return None
+
     def clean(self):
         self.cleaned_data['space'] = self.clean_space()
+        self.cleaned_data['group_id'] = self._clean_group_id()
         return self.cleaned_data
 
 
