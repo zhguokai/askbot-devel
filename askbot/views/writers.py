@@ -328,16 +328,13 @@ def ask(request, feed=None):#view used to ask a new question
         'wiki': request.REQUEST.get('wiki', False),
     }
 
-    group_id = int(request.REQUEST.get('group_id', None))
-    if group_id:
-        try:
-            group = models.Group.objects.get(id=group_id)
-            group_name = group.name
-            form.initial['group_id'] = group_id
-        except models.Group.DoesNotExist:
-            group_id = None
-            group_name = None
-    else:
+    try:
+        group_id = int(request.REQUEST.get('group_id', None))
+        group = models.Group.objects.get(id=group_id)
+        group_name = group.name
+        form.initial['group_id'] = group_id
+    except (ValueError, TypeError, models.Group.DoesNotExist):
+        group_id = None
         group_name = None
 
     data = {
