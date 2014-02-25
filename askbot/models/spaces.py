@@ -91,6 +91,20 @@ class Space(models.Model):
     def __unicode__(self):
         return "Space %s (id=%d)" % (self.name, self.id)
 
+    def get_default_ask_group_id(self):
+        """returns id of group to which question must be asked by default
+        within this space, or None
+        """
+        #todo: implement this on the level of models
+        if askbot_settings.GROUPS_ENABLED:
+            spaces_settings = getattr(django_settings, 'ASKBOT_SPACES', None)
+            if spaces_settings:
+                space_settings = spaces_settings.get(self.id, None)
+                if space_settings:
+                    if len(space_settings) > 0:
+                        return space_settings[1]
+        return None
+
 class Feed(models.Model):
     #TODO: url should never change add validation.
     name = models.CharField(max_length=50)

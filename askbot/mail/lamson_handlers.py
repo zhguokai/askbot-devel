@@ -215,21 +215,15 @@ def ASK(message, host = None, addr = None):
         #this is the Ask the group branch
         if askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED == False:
             return
-        try:
-            group = Group.objects.get(name__iexact=addr)
-            mail.process_emailed_question(
-                from_address,
-                subject,
-                body_text,
-                stored_files,
-                group_id=group.id,
-                email_host=host
-            )
-        except Group.DoesNotExist:
-            #do nothing because this handler will match all emails
-            return
-        except Group.MultipleObjectsReturned:
-            return
+
+        mail.process_emailed_question(
+            from_address,
+            subject,
+            body_text,
+            stored_files,
+            destination=addr,
+            email_host=host
+        )
 
 @route('welcome-(address)@(host)', address='.+')
 @stateless

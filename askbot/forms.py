@@ -1098,7 +1098,7 @@ class AskByEmailForm(forms.Form):
         }
     )
     email_host = forms.CharField()
-    group_id = forms.IntegerField(required=False)
+    destination = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -1159,6 +1159,14 @@ class AskByEmailForm(forms.Form):
         """this is not a real clean code as we don't have field for space
         in this form, it is called from the general "clean" method
         """
+        destination = self.cleaned_data['destination']
+        if destination:
+            from askbot.models import Space
+            try:
+                return Space.objects.get(name__iexact=destination)
+            except Space.DoesNotExist:
+                raise forms.ValidationError('Unknown space %s' % destination)
+
         #todo: replace this with "askbot.is_multisite()"
         if hasattr(django_settings, 'ASKBOT_SITE_IDS'):
             from askbot.models import Feed
@@ -1174,29 +1182,6 @@ class AskByEmailForm(forms.Form):
         else:
             from askbot.models import Space
             return Space.objects.get_default()
-
-    def _clean_group_id(self):
-        #clean group id
-        if self.cleaned_data['group_id'] is None:
-            #todo: make default_ask_group a property of space
-            #meanwhile we take this from a custom setting,
-            #associating the SITE_ID --> default ask group id
-            site_to_group = getattr(django_settings, 'ASKBOT_SITE_TO_DEFAULT_ASK_GROUP', None)
-            if site_to_group:
-                #get site id from the email_host name
-                from django.contrib.sites.models import Site
-                try:
-                    site = Site.objects.get(domain=self.cleaned_data['email_host'])
-                except Site.DoesNotExist:
-                    return None
-                return site_to_group.get(site.id, None)
-        return None
-
-    def clean(self):
-        self.cleaned_data['space'] = self.clean_space()
-        self.cleaned_data['group_id'] = self._clean_group_id()
-        return self.cleaned_data
-
 
 class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     wiki = WikiField()

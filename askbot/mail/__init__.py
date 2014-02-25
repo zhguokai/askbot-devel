@@ -406,7 +406,7 @@ def process_parts(parts, reply_code=None, from_address=None):
 
 def process_emailed_question(
     from_address, subject, body_text, stored_files,
-    tags=None, group_id=None, email_host=None
+    tags=None, destination=None, email_host=None
 ):
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
@@ -422,7 +422,7 @@ def process_emailed_question(
             'subject': subject,
             'body_text': body_text,
             'email_host': email_host,
-            'group_id': group_id
+            'destination': destination
         }
         user = User.objects.get(email__iexact=from_address)
         form = AskByEmailForm(data, user=user)
@@ -472,14 +472,16 @@ def process_emailed_question(
             if tags:
                 tagnames += ' ' + ' '.join(tags)
 
+            space = form.cleaned_data['space']
+
             user.post_question(
                 title=form.cleaned_data['title'],
                 tags=tagnames.strip(),
-                space=form.cleaned_data['space'],
+                space=space,
                 body_text=stripped_body_text,
                 by_email=True,
                 email_address=from_address,
-                group_id=form.cleaned_data['group_id'],
+                group_id=space.get_default_ask_group_id()
             )
         else:
             raise ValidationError()

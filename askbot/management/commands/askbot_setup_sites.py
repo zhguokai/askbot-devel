@@ -10,8 +10,8 @@ from django.contrib.sites.models import Site
 #key - space id, value - space name
 #here we create two question spaces
 ASKBOT_SPACES = {
-    1: 'support',
-    2: 'development'
+    1: ('support', 5), #first value is space name second is default ask group id
+    2: ('development',)
 }
 #key - site id, value - (site name, site domain)
 #here we have two sites
@@ -42,9 +42,9 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **kwargs):
 
         #create spaces
-        for (space_id, space_name) in SPACES.items():
+        for (space_id, space_settings) in SPACES.items():
             space = get_object_by_id(Space, space_id)
-            space.name = space_name
+            space.name = space_settings[0]
             space.save()
             
         #create sites
