@@ -1098,7 +1098,7 @@ class AskByEmailForm(forms.Form):
         }
     )
     email_host = forms.CharField()
-    destination = forms.CharField(required=False)
+    space = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -1159,13 +1159,13 @@ class AskByEmailForm(forms.Form):
         """this is not a real clean code as we don't have field for space
         in this form, it is called from the general "clean" method
         """
-        destination = self.cleaned_data['destination']
-        if destination:
+        space_name = self.cleaned_data['space']
+        if space_name:
             from askbot.models import Space
             try:
-                return Space.objects.get(name__iexact=destination)
+                space = Space.objects.get(name__iexact=space_name)
             except Space.DoesNotExist:
-                raise forms.ValidationError('Unknown space %s' % destination)
+                raise forms.ValidationError('Unknown space %s' % space_name)
 
         #todo: replace this with "askbot.is_multisite()"
         if hasattr(django_settings, 'ASKBOT_SITE_IDS'):
@@ -1178,10 +1178,15 @@ class AskByEmailForm(forms.Form):
                 raise forms.ValidationError('Unknown domain name %s' % email_host)
             #todo!!! should be Site.--> default feed here we cheat - only one feed works
             feed = Feed.objects.filter(site=current_site)[0]
-            return feed.default_space
+            space = feed.default_space
         else:
             from askbot.models import Space
-            return Space.objects.get_default()
+            space = Space.objects.get_default()
+
+        self.cleaned_data['space'] = space
+        return space
+
+
 
 class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     wiki = WikiField()

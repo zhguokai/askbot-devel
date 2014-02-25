@@ -221,7 +221,7 @@ def ASK(message, host = None, addr = None):
             subject,
             body_text,
             stored_files,
-            destination=addr,
+            space_name=addr,
             email_host=host
         )
 

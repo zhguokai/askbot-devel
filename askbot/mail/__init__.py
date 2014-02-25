@@ -406,7 +406,7 @@ def process_parts(parts, reply_code=None, from_address=None):
 
 def process_emailed_question(
     from_address, subject, body_text, stored_files,
-    tags=None, destination=None, email_host=None
+    tags=None, space_name=None, email_host=None
 ):
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
@@ -422,7 +422,7 @@ def process_emailed_question(
             'subject': subject,
             'body_text': body_text,
             'email_host': email_host,
-            'destination': destination
+            'space': space_name
         }
         user = User.objects.get(email__iexact=from_address)
         form = AskByEmailForm(data, user=user)
