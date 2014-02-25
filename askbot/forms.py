@@ -1166,22 +1166,22 @@ class AskByEmailForm(forms.Form):
                 space = Space.objects.get(name__iexact=space_name)
             except Space.DoesNotExist:
                 raise forms.ValidationError('Unknown space %s' % space_name)
-
-        #todo: replace this with "askbot.is_multisite()"
-        if hasattr(django_settings, 'ASKBOT_SITE_IDS'):
-            from askbot.models import Feed
-            from django.contrib.sites.models import Site
-            email_host = self.cleaned_data['email_host']
-            try:
-                current_site = Site.objects.get(domain=email_host)
-            except Site.DoesNotExist:
-                raise forms.ValidationError('Unknown domain name %s' % email_host)
-            #todo!!! should be Site.--> default feed here we cheat - only one feed works
-            feed = Feed.objects.filter(site=current_site)[0]
-            space = feed.default_space
         else:
-            from askbot.models import Space
-            space = Space.objects.get_default()
+            #todo: replace this with "askbot.is_multisite()"
+            if hasattr(django_settings, 'ASKBOT_SITE_IDS'):
+                from askbot.models import Feed
+                from django.contrib.sites.models import Site
+                email_host = self.cleaned_data['email_host']
+                try:
+                    current_site = Site.objects.get(domain=email_host)
+                except Site.DoesNotExist:
+                    raise forms.ValidationError('Unknown domain name %s' % email_host)
+                #todo!!! should be Site.--> default feed here we cheat - only one feed works
+                feed = Feed.objects.filter(site=current_site)[0]
+                space = feed.default_space
+            else:
+                from askbot.models import Space
+                space = Space.objects.get_default()
 
         self.cleaned_data['space'] = space
         return space
