@@ -97,6 +97,18 @@ settings.register(
 )
 
 settings.register(
+    livesettings.StringValue(
+        QA_SITE_SETTINGS,
+        'AVATAR_URL',
+        description=_(
+                'Base URL for the used avatar service'
+            ),
+        default='http://www.gravatar.com/avatar'
+    )
+)
+
+
+settings.register(
     livesettings.BooleanValue(
         QA_SITE_SETTINGS,
         'ENABLE_GREETING_FOR_ANON_USER',
