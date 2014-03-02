@@ -60,6 +60,10 @@ def ask_widget(request, widget_id):
     widget = get_object_or_404(models.AskWidget, id=widget_id)
 
     if request.method == "POST":
+
+        if askbot_settings.READ_ONLY_MODE_ENABLED:
+            return redirect('ask_by_widget')
+
         form = forms.AskWidgetForm(
                     include_text=widget.include_text_field,
                     data=request.POST,

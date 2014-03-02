@@ -2392,7 +2392,10 @@ PostCommentsWidget.prototype.getActivateHandler = function(){
         }
         else {
             //if user can't post, we tell him something and refuse
-            if (askbot['data']['userIsAuthenticated']) {
+            if (askbot['settings']['readOnlyModeEnabled'] === true) {
+                var message = askbot['messages']['readOnlyMessage'];
+                showMessage(button, message, 'after');
+            } else if (askbot['data']['userIsAuthenticated']) {
                 me.startNewComment();
             } else {
                 var message = gettext('please sign in or register to post comments');

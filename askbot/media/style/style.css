@@ -3555,6 +3555,14 @@ a.offensive {
 .message p {
   margin-bottom: 0px;
 }
+.system-messages {
+  color: red;
+  background: yellow;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 25px;
+  padding: 0 5px;
+}
 p.space-above {
   margin-top: 10px;
 }

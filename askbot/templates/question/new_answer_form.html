@@ -12,7 +12,7 @@
                     >{{ settings.WORDS_LOGIN_SIGNUP_TO_ANSWER|escape }}</a>
         {% endif %}
     {% else %}
-        {% if not thread.closed %}
+        {% if not thread.closed and settings.READ_ONLY_MODE_ENABLED == False %}
             <div>
                 {% spaceless %}
                     <h2>
