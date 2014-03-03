@@ -4,9 +4,13 @@
 
 {% block content %}
 {% if can_post_by_email %}
-    <p>{% trans %}You can post questions by emailing them at {{ ask_address }}.{% endtrans %}</p>
-    <p>{% trans %}When you receive update notifications, you will be able to respond to them, also by email.{% endtrans %}</p>
-    <p>{% trans %}Of course, you can always visit the {{ site_name }} at <a href="{{ site_url }}">{{ site_url }}</a>.{% endtrans %}</p>
+    {% if alt_content %}
+        {{ alt_content|safe }}
+    {% else %}
+        <p>{% trans %}You can post questions by emailing them at {{ ask_address }}.{% endtrans %}</p>
+        <p>{% trans %}When you receive update notifications, you will be able to respond to them, also by email.{% endtrans %}</p>
+        <p>{% trans %}Of course, you can always visit the {{ site_name }} at <a href="{{ site_url }}">{{ site_url }}</a>.{% endtrans %}</p>
+    {% endif %}
 {% else %}
     <p>{% trans %}Please visit {{ site_name }} at <a href="{{ site_url }}">{{ site_url }}</a>, we look forward to your posts.{% endtrans %}</p>
 {% endif %}

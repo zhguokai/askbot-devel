@@ -268,6 +268,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.LongStringValue(
+        EMAIL,
+        'ASK_BY_EMAIL_INSTRUCTIONS',
+        default='',
+        description=_('Instructions on how to ask by email (optional)'),
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'REPLACE_SPACE_WITH_DASH_IN_EMAILED_TAGS',

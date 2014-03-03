@@ -259,7 +259,8 @@ def VALIDATE_EMAIL(
             'site_name': askbot_settings.APP_SHORT_NAME,
             'site_url': site_url(get_feed_url('questions')),
             'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
-            'can_post_by_email': user.can_post_by_email()
+            'can_post_by_email': user.can_post_by_email(),
+            'alt_content': askbot_settings.ASK_BY_EMAIL_INSTRUCTIONS.strip()
         }
         template = get_template('email/re_welcome_lamson_on.html')
 
