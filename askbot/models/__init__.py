@@ -3305,7 +3305,7 @@ def format_instant_notification_email(
     post_url = post.get_absolute_url()
 
     if post.is_anonymous:
-        user_link = from_user.get_name_of_anonymous_user()
+        user_link = from_user.get_anonymous_name()
     else:
         user_url = from_user.get_absolute_url()
         user_link = '<a href="%s">%s</a>' % (user_url, from_user.username)
