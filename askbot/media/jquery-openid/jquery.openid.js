@@ -310,7 +310,7 @@ $.fn.authenticator = function() {
     var setup_password_login_or_change = function(provider_name){
         var token_name = extra_token_name[provider_name]
         var password_action_input = $('input[name=password_action]');
-        if (userIsAuthenticated === true){
+        if (userIsAuthenticated === true && askbot['settings']['useLdapForPasswordLogin'] == false){
             var password_button = $('input[name=change_password]');
             var submit_action = submit_change_password;
             if (provider_name === 'local'){
@@ -334,8 +334,7 @@ $.fn.authenticator = function() {
             password_action_input.val('change_password');
             var focus_input = $('#id_new_password');
             var submittable_input = $('#id_new_password_retyped');
-        }
-        else{
+        } else {
             $('#password-heading>span').html(token_name);
             var password_button = $('input[name=login_with_password]');
             var submit_action = submit_login_with_password;

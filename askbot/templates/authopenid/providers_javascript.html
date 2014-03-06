@@ -36,6 +36,7 @@
         var userIsAuthenticated = false;
     {% endif %}
     askbot['settings']['signin_always_show_local_login'] = {% if settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}true{% else %}false{% endif %};
+    askbot['settings']['useLdapForPasswordLogin'] = {{ settings.USE_LDAP_FOR_PASSWORD_LOGIN|as_js_bool}};
     $("body").authenticator();
     (function() {
         var form = new ChangePasswordForm();
