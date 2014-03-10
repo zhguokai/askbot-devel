@@ -1,0 +1,38 @@
+{% extends "two_column_body.html" %}
+<!-- tags.html -->
+{% block title %}{% spaceless %}{% trans %}Activity{% endtrans %}{% endspaceless %}{% endblock %}
+{% block content %}
+{% import "macros.html" as macros %}
+    <ul class='revisions'>
+        {% for revision in revisions %}
+        <li>
+            {{ revision.author.get_profile_link() }}
+
+            <a href="{{ revision.post.get_absolute_url() }}">
+                {% if revision.revision == 1 %}
+                    {% trans %}posted{% endtrans %}
+                {% else %}
+                    {% trans %}edited{% endtrans %}
+                {% endif %}
+                {% if revision.post.post_type == 'question' %}
+                    {% trans %}question{% endtrans %}:
+                {% else %}
+                    {% trans %}answer{% endtrans %}:
+                {% endif %}
+            </a>
+
+            {% if revision.post.post_type == 'question' %}
+                <em>"{{ revision.title }}"</em>
+                {#% if revision.tagnames %}
+                    {{ macros.tag_list_widget(tags=revision.tagnames.split()) }}<br/>
+                {% endif %#}
+            {% endif %}
+            {{ revision.text|convert_text(revision.post.post_type) }}
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="clean"></div>
+    <div class="pager">
+        {{macros.paginator(paginator_context)}}
+    </div>
+{% endblock %}

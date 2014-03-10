@@ -136,6 +136,14 @@ def tag_strings_match(tag_string, mandatory_tag):
         return tag_string == mandatory_tag
 
 
+def get_integer_parameter(data, name, default=1):
+    """returns integer value by name"""
+    try:
+        return int(data.get(name, default))
+    except:
+        return default
+
+
 
 COUNTRY_CHOICES = (('unknown', _('select country')),) + countries.COUNTRIES
 

@@ -45,6 +45,11 @@ urlpatterns = patterns('',
         name='tags'
     ),
     url(
+        r'^%s$' % _('activity/'),
+        views.readers.activity,
+        name='activity'
+    ),
+    url(
         r'^%s$' % _('users/'),
         views.users.show_users,
         name='users'

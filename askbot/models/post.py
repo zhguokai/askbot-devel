@@ -436,8 +436,7 @@ class Post(models.Model):
         removed_mentions - list of mention <Activity> objects - for removed ones
         """
 
-        text_converter = self.get_text_converter()
-        text = text_converter(self.text)
+        text = markup.convert_text(self.text, self.post_type)
 
         #todo, add markdown parser call conditional on
         #self.use_markdown flag
@@ -610,25 +609,6 @@ class Post(models.Model):
             return None
 
         return answer
-
-    def get_text_converter(self):
-        have_simple_comment = (
-            self.is_comment() and
-            askbot_settings.COMMENTS_EDITOR_TYPE == 'plain-text'
-        )
-        if have_simple_comment:
-            parser_type = 'plain-text'
-        else:
-            parser_type = askbot_settings.EDITOR_TYPE
-
-        if parser_type == 'plain-text':
-            return markup.plain_text_input_converter
-        elif parser_type == 'markdown':
-            return markup.markdown_input_converter
-        elif parser_type == 'tinymce':
-            return markup.tinymce_input_converter
-        else:
-            raise NotImplementedError
 
     def has_group(self, group):
         """true if post belongs to the group"""

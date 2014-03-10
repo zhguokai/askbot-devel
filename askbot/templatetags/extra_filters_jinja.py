@@ -20,6 +20,7 @@ from askbot.skins import utils as skin_utils
 from askbot.utils.html import site_url as site_url_func
 from askbot.utils import functions
 from askbot.utils import url_utils
+from askbot.utils import markup
 from askbot.utils.slug import slugify
 from askbot.shims.django_shims import ResolverMatch
 
@@ -47,6 +48,10 @@ def as_js_bool(some_object):
 @register.filter
 def as_json(data):
     return simplejson.dumps(data)
+
+@register.filter
+def convert_text(text, post_type):
+    return markup.convert_text(text, post_type)
 
 @register.filter
 def is_current_language(lang):

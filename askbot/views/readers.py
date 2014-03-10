@@ -35,6 +35,7 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AnswerForm
 from askbot.forms import ShowQuestionForm
 from askbot.forms import ShowQuestionsForm
+from askbot.forms import get_integer_parameter
 from askbot.utils.loading import load_module
 from askbot import conf
 from askbot import models
@@ -276,15 +277,34 @@ def questions(request, **kwargs):
         return render(request, 'main_page.html', template_data)
 
 
+def activity(request):
+    """lists latest revisions"""
+    revisions = models.PostRevision.objects.all().select_related('post__post_type')
+    revisions = revisions.order_by('-id')
+    paginator = Paginator(revisions, DEFAULT_PAGE_SIZE)
+    page_number = get_integer_parameter(request.GET, 'page')
+    page = paginator.page(page_number)
+    paginator_data = {
+        'is_paginated' : (paginator.num_pages > 1),
+        'pages': paginator.num_pages,
+        'current_page_number': page_number,
+        'page_object': page,
+        'base_url' : reverse('activity') + '?'
+    }
+    paginator_context = functions.setup_paginator(paginator_data)
+    template_context = {
+        'paginator_context': paginator_context,
+        'revisions': page.object_list
+    }
+    return render(request, 'activity.html', template_context)
+
+
 def tags(request):#view showing a listing of available tags - plain list
 
     #1) Get parameters. This normally belongs to form cleaning.
     post_data = request.GET
     sortby = post_data.get('sort', 'used')
-    try:
-        page = int(post_data.get('page', '1'))
-    except ValueError:
-        page = 1
+    page = get_integer_parameter(post_data, 'page')
 
     tag_isolation = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
 

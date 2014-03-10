@@ -209,3 +209,22 @@ def tinymce_input_converter(text):
     """tinymce input to production html converter"""
     text = urlize(text)
     return strip_tags(text, ['script', 'style', 'link'])
+
+def convert_text(text, post_type=None):
+    have_simple_comment = (
+        post_type == 'comment' and
+        askbot_settings.COMMENTS_EDITOR_TYPE == 'plain-text'
+    )
+    if have_simple_comment:
+        parser_type = 'plain-text'
+    else:
+        parser_type = askbot_settings.EDITOR_TYPE
+
+    if parser_type == 'plain-text':
+        return plain_text_input_converter(text)
+    elif parser_type == 'markdown':
+        return markdown_input_converter(text)
+    elif parser_type == 'tinymce':
+        return tinymce_input_converter(text)
+    else:
+        raise NotImplementedError
