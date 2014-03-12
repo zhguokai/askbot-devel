@@ -933,7 +933,11 @@ class Post(models.Model):
             #this post is made
             double_filtered_candidates = set()
             for user in filtered_candidates:
-                user_spaces = set(user.askbot_profile.get_spaces())
+                try:
+                    user_spaces = set(user.askbot_profile.get_spaces())
+                except:
+                    logging.critical('User without profile? %d' % user.id)
+                    continue
                 post_spaces = set(self.thread.spaces.all())
                 if user_spaces & post_spaces:
                     double_filtered_candidates.add(user)
