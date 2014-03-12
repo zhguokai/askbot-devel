@@ -544,7 +544,12 @@ urlpatterns = patterns('',
         name='change_social_sharing_mode'
     ),
     #upload url is ajax only
-    service_url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
+    service_url(r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
+    service_url(
+        r'^multisite-repost-thread/',
+        views.commands.multisite_repost_thread,
+        name='multisite_repost_thread'
+    ),
     service_url(
         r'^doc/(?P<path>.*)$',
         'django.views.static.serve',

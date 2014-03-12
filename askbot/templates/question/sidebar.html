@@ -37,6 +37,17 @@
     </div> 
 </div>
 
+{% if repost_form %}
+<div class="clearfix"></div>
+<div class="box multisite-repost-thread">
+    <h2>{% trans %}Post through sites{% endtrans %}</h2>
+    <form method="POST" action="{% url multisite_repost_thread %}">{% csrf_token %}
+        <table>{{ repost_form.as_table() }}</table>
+        <input type="submit" value="{% trans %}Save{% endtrans %}"/>
+    </form>
+</div>
+{% endif %}
+
 <div class="clearfix"></div>
 {% if settings.GROUPS_ENABLED %}
 <div class="box sharing-widget">

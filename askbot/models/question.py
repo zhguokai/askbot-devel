@@ -735,6 +735,19 @@ class Thread(models.Model):
             return answers[0].id
         return None
 
+    def get_primary_site_ids(self):
+        """takes threads spaces and returns site ids
+        where those spaces are primary"""
+        space_ids = self.spaces.values_list('id', flat=True)
+        feed_settings = django_settings.ASKBOT_FEEDS.values()
+        site_ids = set()
+        for setting in feed_settings:
+            primary_space_id = setting[2][0]
+            if primary_space_id in space_ids:
+                site_id = setting[1]
+                site_ids.add(site_id)
+        return site_ids
+
     def get_sharing_info(self, visitor=None):
         """returns a dictionary with abbreviated thread sharing info:
         * users - up to a certain number of users, excluding the visitor

@@ -97,3 +97,7 @@ def get_database_engine_name():
             return django_settings.DATABASES['default']['ENGINE']
         else:
             return django_settings.DATABASE_ENGINE
+
+def is_multisite():
+    from django.conf import settings as django_settings
+    return hasattr(django_settings, 'ASKBOT_SITES') and len(django_settings.ASKBOT_SITES)

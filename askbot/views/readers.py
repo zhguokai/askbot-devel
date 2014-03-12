@@ -40,6 +40,7 @@ from askbot.forms import AnswerForm
 from askbot.forms import ShowQuestionForm
 from askbot.forms import GetUserItemsForm
 from askbot.forms import ShowQuestionsForm
+from askbot.forms import MultiSiteRepostThreadForm
 from askbot.utils.loading import load_module
 from askbot import conf
 from askbot import models
@@ -680,6 +681,13 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     #shared with ...
     if askbot_settings.GROUPS_ENABLED:
         data['sharing_info'] = thread.get_sharing_info()
+
+    if askbot.is_multisite() and thread.has_moderator(request.user):
+        initial = {'thread_id': thread.id}
+        for site_id in thread.get_primary_site_ids():
+            initial['site_%d' % site_id] = True
+        repost_form = MultiSiteRepostThreadForm(initial=initial)
+        data['repost_form'] = repost_form
 
     data.update(context.get_for_tag_editor())
 

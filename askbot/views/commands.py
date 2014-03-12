@@ -1558,3 +1558,29 @@ def validate_email(request):
         request.user.reset_email_validation_key()
         send_email_key(request.user.email, request.user.email_key)
         return {'status': 'waiting'}
+
+@csrf.csrf_protect
+@decorators.post_only
+def multisite_repost_thread(request):
+    form = forms.MultiSiteRepostThreadForm(request.POST)
+
+    try:
+        thread_id = int(request.POST['thread_id'])
+        thread = get_object_or_404(models.Thread, id=thread_id)
+    except:
+        raise Http404
+
+    if thread.has_moderator(request.user):
+        if form.is_valid():
+            new_spaces = form.cleaned_data['spaces']
+            if len(new_spaces) > 0:
+                thread.spaces.clear()
+                thread.spaces.add(*new_spaces)
+            else:
+                message = _('Please select at least one site')
+                request.user.message_set.create(message=message)
+    else:
+        message = _('Permission denied')
+        request.user.message_set.create(message=message)
+
+    return HttpResponseRedirect(thread.get_absolute_url())

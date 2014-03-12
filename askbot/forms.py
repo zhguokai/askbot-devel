@@ -3,6 +3,7 @@ used in AskBot"""
 import re
 import datetime
 from django import forms
+from django.forms.widgets import HiddenInput
 from askbot import const
 from askbot.const import message_keys
 from django.conf import settings as django_settings
@@ -1800,3 +1801,36 @@ class EditCommentForm(forms.Form):
 
 class DeleteCommentForm(forms.Form):
     comment_id = forms.IntegerField()
+
+class MultiSiteRepostThreadForm(forms.Form):
+    thread_id = forms.IntegerField(widget=HiddenInput)
+
+    def __init__(self, *args, **kwargs):
+        super(MultiSiteRepostThreadForm, self).__init__(*args, **kwargs)
+        from askbot.models.spaces import get_site_ids, get_site_name
+        for site_id in get_site_ids():
+            field = forms.BooleanField(
+                label=get_site_name(site_id),
+                required=False
+            )
+            self.fields['site_%d' % site_id] = field
+
+    def clean(self):
+        from askbot.models.spaces import get_site_ids
+        all_site_ids = get_site_ids()
+
+        #1) collect site ids with which thread is shared
+        shared_site_ids = list()
+        for site_id in all_site_ids:
+            key = 'site_%d' % site_id 
+            if self.cleaned_data.get(key):
+                shared_site_ids.append(site_id)
+
+        #2) for each site find default sharing space
+        from askbot.models.spaces import get_default_space
+        shared_spaces = set()
+        for site_id in shared_site_ids:
+            shared_spaces.add(get_default_space(site_id))
+
+        self.cleaned_data['spaces'] = shared_spaces
+        return self.cleaned_data

@@ -169,3 +169,28 @@ class AskbotSite(models.Model):
 
 def get_feed_url(url_pattern_name, feed=None, kwargs=None):
     return Feed.objects.get_url(url_pattern_name, feed, kwargs)
+
+def get_site_ids():
+    """get ids of active askbot sites"""
+    site_id = django_settings.SITE_ID
+    return getattr(django_settings, 'ASKBOT_SITE_IDS', [site_id,])
+
+def get_site_name(site_id):
+    """get site name by site id"""
+    site_settings = getattr(django_settings, 'ASKBOT_SITES', None)
+    if site_settings:
+        site_info = site_settings[site_id]
+        if isinstance(site_info, basestring):
+            return site_info
+        else:
+            return site_info[0]
+    else:
+        from django.contrib.sites.models import Site
+        return Site.objects.get(id=site_id).name
+
+def get_default_space(site_id):
+    """get default space for given site id"""
+    feed_settings = django_settings.ASKBOT_FEEDS.values()
+    for setting in feed_settings:
+        if setting[1] == site_id:
+            return Space.objects.get(id=setting[2][0])
