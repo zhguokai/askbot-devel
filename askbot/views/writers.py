@@ -850,6 +850,7 @@ def delete_comment(request):
                 )
 
 @decorators.post_only
+@csrf.csrf_protect
 def comment_to_answer(request):
 
     try:
