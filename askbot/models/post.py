@@ -958,7 +958,8 @@ class Post(models.Model):
             return filtered_candidates
 
     def format_for_email(
-        self, quote_level=0, is_leaf_post=False, format=None
+        self, quote_level=0, is_leaf_post=False, format=None,
+        recipient=None
     ):
         """format post for the output in email,
         if quote_level > 0, the post will be indented that number of times
@@ -969,13 +970,14 @@ class Post(models.Model):
         template = get_template('email/quoted_post.html')
         data = {
             'post': self,
+            'recipient': recipient,
             'quote_level': quote_level,
             'is_leaf_post': is_leaf_post,
             'format': format
         }
         return template.render(Context(data))#todo: set lang
 
-    def format_for_email_as_parent_thread_summary(self):
+    def format_for_email_as_parent_thread_summary(self, recipient=None):
         """format for email as summary of parent posts
         all the way to the original question"""
         quote_level = 0
@@ -987,20 +989,25 @@ class Post(models.Model):
                 break
             quote_level += 1
             output += parent_post.format_for_email(
-                quote_level = quote_level,
-                format = 'parent_subthread'
+                quote_level=quote_level,
+                format='parent_subthread',
+                recipient=recipient
             )
             current_post = parent_post
         return output
 
-    def format_for_email_as_subthread(self):
+    def format_for_email_as_subthread(self, recipient=None):
         """outputs question or answer and all it's comments
         returns empty string for all other post types
         """
         from django.template import Context
         from django.template.loader import get_template
         template = get_template('email/post_as_subthread.html')
-        return template.render(Context({'post': self}))#todo: set lang
+        data = {
+            'post': self,
+            'recipient': recipient
+        }
+        return template.render(Context(data))#todo: set lang
 
     def set_cached_comments(self, comments):
         """caches comments in the lifetime of the object

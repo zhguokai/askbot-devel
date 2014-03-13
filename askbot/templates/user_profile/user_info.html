@@ -55,6 +55,12 @@
                 <td><b>{{view_user.real_name|escape}}</b></td>
             </tr>
             {% endif %}
+            {% if request.user|can_see_private_user_data(view_user) %}
+            <tr>
+                <td>{% trans %}email{% endtrans %}</td>
+                <td>{{view_user.email}}</td>
+            </tr>
+            {% endif %}
             {% if settings.GROUPS_ENABLED %}
             <tr>
                 <td>{% trans %}groups{% endtrans %}</td>

@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development master branch (only on github)
 ------------------------------------------
+* Added option to show user's emails to the moderators
 * Added Read-Only mode for the site in the "access control" section.
 * Added `askbot_add_osqa_content` management command.
 * Management command to add data from other Askbot site.

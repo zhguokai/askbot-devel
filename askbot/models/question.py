@@ -857,13 +857,13 @@ class Thread(models.Model):
         else:
             return self.title
 
-    def format_for_email(self, user=None):
+    def format_for_email(self, recipient=None):
         """experimental function: output entire thread for email"""
 
         question, answers, junk, published_ans_ids = \
-                                self.get_cached_post_data(user=user)
+                                self.get_cached_post_data(user=recipient)
 
-        output = question.format_for_email_as_subthread()
+        output = question.format_for_email_as_subthread(recipient=recipient)
         if answers:
             #todo: words
             answer_heading = ungettext(
@@ -873,7 +873,7 @@ class Thread(models.Model):
                                 ) % {'count': len(answers)}
             output += '<p>%s</p>' % answer_heading
             for answer in answers:
-                output += answer.format_for_email_as_subthread()
+                output += answer.format_for_email_as_subthread(recipient=recipient)
         return output
 
     def get_answers_by_user(self, user):

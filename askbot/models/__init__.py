@@ -3042,13 +3042,13 @@ def format_instant_notification_email(
             )
         #todo: remove hardcoded style
     else:
-        content_preview = post.format_for_email(is_leaf_post = True)
+        content_preview = post.format_for_email(is_leaf_post=True, recipient=to_user)
 
     #add indented summaries for the parent posts
-    content_preview += post.format_for_email_as_parent_thread_summary()
+    content_preview += post.format_for_email_as_parent_thread_summary(recipient=to_user)
 
     #content_preview += '<p>======= Full thread summary =======</p>'
-    #content_preview += post.thread.format_for_email(user=to_user)
+    #content_preview += post.thread.format_for_email(recipient=to_user)
 
     if update_type == 'post_shared':
         user_action = _('%(user)s shared a %(post_link)s.')

@@ -1,5 +1,10 @@
+{%- macro mailto_link(user) -%}
+    <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+{%- endmacro -%}
+
 {% macro quoted_post(
         post=None,
+        recipient=None,
         quote_level=0,
         format=None,
         is_leaf_post=False
@@ -7,11 +12,15 @@
 %}
     {% spaceless %}
         {{ start_quote(quote_level) }}
-            {% if post.is_anonymous %}
+
+            {% if recipient|can_see_private_user_data(post.author) %}
+                {% set author = post.author.username|escape ~ '/(' ~ mailto_link(post.author) ~ ')' %}
+            {% elif post.is_anonymous %}
                 {% set author = post.author.get_name_of_anonymous_user()|escape %}
             {% else %}
                 {% set author = post.author.username|escape %}
             {% endif %}
+
             {% if post.post_type == 'question' %}
             {% if quote_level > 0 %}
             <p style="font-size:10px; font-weight: bold;">

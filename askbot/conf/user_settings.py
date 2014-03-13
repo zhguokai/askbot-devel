@@ -37,8 +37,17 @@ settings.register(
     livesettings.BooleanValue(
         USER_SETTINGS,
         'EDITABLE_SCREEN_NAME',
-        default = True,
-        description = _('Allow editing user screen name')
+        default=True,
+        description=_('Allow editing user screen name')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
+        'SHOW_ADMINS_PRIVATE_USER_DATA',
+        default=False,
+        description=_('Show email addresses to moderators')
     )
 )
 
