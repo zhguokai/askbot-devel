@@ -834,6 +834,20 @@ def user_assert_can_edit_comment(self, comment = None):
     )
     raise django_exceptions.PermissionDenied(error_message)
 
+def user_assert_can_convert_post(self, post = None):
+    """raises exceptions.PermissionDenied if user is not allowed to convert the
+    post to another type (comment -> answer, answer -> comment)
+
+    only owners, moderators or admins can convert posts
+    """
+    if self.is_administrator() or self.is_moderator() or post.author == self:
+        return
+
+    error_message = _(
+        'Sorry, but only post owners or moderators convert posts'
+    )
+    raise django_exceptions.PermissionDenied(error_message)
+
 
 def user_can_post_comment(self, parent_post = None):
     """a simplified method to test ability to comment
@@ -1372,7 +1386,7 @@ def user_repost_comment_as_answer(self, comment):
     parent question"""
 
     #todo: add assertion
-    #self.assert_can_repost_comment_as_answer(comment)
+    self.assert_can_convert_post(comment)
 
     comment.post_type = 'answer'
     old_parent = comment.parent
@@ -2977,6 +2991,8 @@ User.add_to_class('assert_can_delete_post', user_assert_can_delete_post)
 User.add_to_class('assert_can_restore_post', user_assert_can_restore_post)
 User.add_to_class('assert_can_delete_comment', user_assert_can_delete_comment)
 User.add_to_class('assert_can_edit_comment', user_assert_can_edit_comment)
+User.add_to_class('assert_can_convert_post', user_assert_can_convert_post)
+
 User.add_to_class('assert_can_delete_answer', user_assert_can_delete_answer)
 User.add_to_class('assert_can_delete_question', user_assert_can_delete_question)
 User.add_to_class('assert_can_accept_best_answer', user_assert_can_accept_best_answer)

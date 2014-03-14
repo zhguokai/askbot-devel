@@ -882,12 +882,16 @@ def repost_answer_as_comment(request, destination=None):
     )
     answer_id = request.POST.get('answer_id')
     if answer_id:
-        answer_id = int(answer_id)
+        try:
+            answer_id = int(answer_id)
+        except (ValueError, TypeError):
+            raise Http404
         answer = get_object_or_404(models.Post,
                 post_type = 'answer', id=answer_id)
 
         if askbot_settings.READ_ONLY_MODE_ENABLED:
             return HttpResponseRedirect(answer.get_absolute_url())
+        request.user.assert_can_convert_post(post=answer)
 
         if destination == 'comment_under_question':
             destination_post = answer.thread._question_post()
