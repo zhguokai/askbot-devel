@@ -229,7 +229,13 @@ def ask(request, feed=None):#view used to ask a new question
             request.user.message_set.create(message=_('Sorry, but you have only read access'))
             return HttpResponseRedirect(referer)
 
-    form = forms.AskForm(request.REQUEST, feed=feed, user=request.user)
+    custom_class_path = getattr(settings, 'ASKBOT_NEW_QUESTION_FORM', None)
+    if custom_class_path:
+        form_class = load_module(custom_class_path)
+    else:
+        form_class = forms.AskForm
+
+    form = form_class(request.REQUEST, feed=feed, user=request.user)
     if request.method == 'POST':
         if form.is_valid():
             timestamp = datetime.datetime.now()
