@@ -852,6 +852,11 @@ def delete_comment(request):
 @decorators.post_only
 @csrf.csrf_protect
 def comment_to_answer(request):
+    if request.user.is_anonymous():
+        msg = _('Sorry, only logged in users can convert comments to answers. '
+                'Please <a href="%(sign_in_url)s">sign in</a>.') % \
+                {'sign_in_url': url_utils.get_login_url()}
+        raise exceptions.PermissionDenied(msg)
 
     try:
         comment_id = int(request.POST.get('comment_id'))
@@ -880,6 +885,11 @@ def repost_answer_as_comment(request, destination=None):
                 'comment_under_previous_answer'
             )
     )
+    if request.user.is_anonymous():
+        msg = _('Sorry, only logged in users can convert answers to comments. '
+                'Please <a href="%(sign_in_url)s">sign in</a>.') % \
+                {'sign_in_url': url_utils.get_login_url()}
+        raise exceptions.PermissionDenied(msg)
     answer_id = request.POST.get('answer_id')
     if answer_id:
         try:
