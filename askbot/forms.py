@@ -6,6 +6,7 @@ from django import forms
 from django.forms.widgets import HiddenInput
 from askbot import const
 from askbot.const import message_keys
+from askbot.utils.loading import load_module
 from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
 from django.forms.util import ErrorList
@@ -21,6 +22,7 @@ from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 from askbot.conf import get_tag_display_filter_strategy_choices
 from tinymce.widgets import TinyMCE
+import inspect
 import logging
 
 
@@ -124,6 +126,19 @@ def mandatory_tag_missing_in_list(tag_strings):
             if tag_strings_match(tag_string, mandatory_tag):
                 return False
     return True
+
+
+def select_custom_form_class(custom_form, default_form):
+    """Returns form class. Custom form may be python dotted path
+    to form or class object. Custom form takes precedence.
+    If the custom form is not defined, then default is returned."""
+    if custom_form:
+        if inspect.isclass(custom_form):
+            return custom_form
+        form_python_path = getattr(django_settings, custom_form, None)
+        if form_python_path:
+            return load_module(form_python_path)
+    return default_form
 
 
 def tag_strings_match(tag_string, mandatory_tag):

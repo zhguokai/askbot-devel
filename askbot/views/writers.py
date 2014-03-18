@@ -229,11 +229,7 @@ def ask(request, feed=None):#view used to ask a new question
             request.user.message_set.create(message=_('Sorry, but you have only read access'))
             return HttpResponseRedirect(referer)
 
-    custom_class_path = getattr(settings, 'ASKBOT_NEW_QUESTION_FORM', None)
-    if custom_class_path:
-        form_class = load_module(custom_class_path)
-    else:
-        form_class = forms.AskForm
+    form_class = forms.select_custom_form_class('ASKBOT_NEW_QUESTION_FORM', forms.AskForm)
 
     form = form_class(request.REQUEST, feed=feed, user=request.user)
     if request.method == 'POST':
@@ -425,12 +421,22 @@ def edit_question(request, id):
     question = get_object_or_404(models.Post, id=id)
     revision = question.get_latest_revision()
     revision_form = None
+
+    edit_form_class = forms.select_custom_form_class(
+                                    'ASKBOT_EDIT_QUESTION_FORM',
+                                    forms.EditQuestionForm
+                                )
+    revision_form_class = forms.select_custom_form_class(
+                                    'ASKBOT_SELECT_QUESTION_REVISION_FORM',
+                                    forms.RevisionForm
+                                )
+
     try:
         request.user.assert_can_edit_question(question)
         if request.method == 'POST':
             if request.POST['select_revision'] == 'true':
                 #revert-type edit - user selected previous revision
-                revision_form = forms.RevisionForm(
+                revision_form = revision_form_class(
                                                 question,
                                                 revision,
                                                 request.POST
@@ -439,13 +445,13 @@ def edit_question(request, id):
                     # Replace with those from the selected revision
                     rev_id = revision_form.cleaned_data['revision']
                     revision = question.revisions.get(revision = rev_id)
-                    form = forms.EditQuestionForm(
-                                            question=question,
-                                            user=request.user,
-                                            revision=revision
-                                        )
+                    form = edit_form_class(
+                                        question=question,
+                                        user=request.user,
+                                        revision=revision
+                                    )
                 else:
-                    form = forms.EditQuestionForm(
+                    form = edit_form_class(
                                             request.POST,
                                             question=question,
                                             user=question.user,
@@ -453,13 +459,13 @@ def edit_question(request, id):
                                         )
             else:#new content edit
                 # Always check modifications against the latest revision
-                form = forms.EditQuestionForm(
+                form = edit_form_class(
                                         request.POST,
                                         question=question,
                                         revision=revision,
                                         user=request.user,
                                     )
-                revision_form = forms.RevisionForm(question, revision)
+                revision_form = revision_form_class(question, revision)
                 if form.is_valid():
                     if form.has_changed():
                         if form.cleaned_data['reveal_identity']:
@@ -489,18 +495,18 @@ def edit_question(request, id):
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
             #request type was "GET"
-            revision_form = forms.RevisionForm(question, revision)
+            revision_form = revision_form_class(question, revision)
             initial = {
                 'language': question.thread.language_code,
                 'post_privately': question.is_private(),
                 'wiki': question.wiki
             }
-            form = forms.EditQuestionForm(
-                                    question=question,
-                                    revision=revision,
-                                    user=request.user,
-                                    initial=initial
-                                )
+            form = edit_form_class(
+                        question=question,
+                        revision=revision,
+                        user=request.user,
+                        initial=initial
+                    )
 
         data = {
             'page_class': 'edit-question-page',
@@ -527,18 +533,21 @@ def edit_answer(request, id):
     answer = get_object_or_404(models.Post, id=id)
     revision = answer.get_latest_revision()
 
-    class_path = getattr(settings, 'ASKBOT_EDIT_ANSWER_FORM', None)
-    if class_path:
-        edit_answer_form_class = load_module(class_path)
-    else:
-        edit_answer_form_class = forms.EditAnswerForm
+    edit_answer_form_class = forms.select_custom_form_class(
+                                        'ASKBOT_EDIT_ANSWER_FORM',
+                                        forms.EditAnswerForm
+                                    )
+    revision_form_class = forms.select_custom_form_class(
+                                        'ASKBOT_SELECT_ANSWER_REVISION_FORM',
+                                        forms.RevisionForm
+                                    )
 
     try:
         request.user.assert_can_edit_answer(answer)
         if request.method == "POST":
             if request.POST['select_revision'] == 'true':
                 # user has changed revistion number
-                revision_form = forms.RevisionForm(
+                revision_form = revision_form_class(
                                                 answer,
                                                 revision,
                                                 request.POST
@@ -561,7 +570,7 @@ def edit_answer(request, id):
                 form = edit_answer_form_class(
                     answer, revision, request.POST, user=request.user
                 )
-                revision_form = forms.RevisionForm(answer, revision)
+                revision_form = revision_form_class(answer, revision)
 
                 if form.is_valid():
                     if form.has_changed():
@@ -585,7 +594,7 @@ def edit_answer(request, id):
 
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
-            revision_form = forms.RevisionForm(answer, revision)
+            revision_form = revision_form_class(answer, revision)
             form = edit_answer_form_class(answer, revision, user=request.user)
             if request.user.can_make_group_private_posts():
                 form.initial['post_privately'] = answer.is_private()
