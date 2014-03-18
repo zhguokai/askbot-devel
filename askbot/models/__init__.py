@@ -2330,11 +2330,12 @@ def user_get_primary_group(self):
     first non-personal non-everyone group
     works only for one real private group per-person
     """
-    groups = self.get_groups(private=True)
-    for group in groups:
-        if group.is_personal():
-            continue
-        return group
+    if askbot_settings.GROUPS_ENABLED:
+        groups = self.get_groups(private=True)
+        for group in groups:
+            if group.is_personal():
+                continue
+            return group
     return None
 
 def user_can_make_group_private_posts(self):
