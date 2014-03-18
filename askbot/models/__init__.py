@@ -1569,6 +1569,9 @@ def user_restore_post(
         post.deleted_by = None
         post.deleted_at = None
         post.save()
+        if post.post_type == 'question':
+            post.thread.deleted = False
+            post.thread.save()
         post.thread.invalidate_cached_data()
         if post.post_type == 'answer':
             post.thread.update_answer_count()
