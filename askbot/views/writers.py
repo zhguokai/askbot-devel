@@ -307,7 +307,7 @@ def ask(request, feed=None):#view used to ask a new question
                 return HttpResponse(response, mimetype='application/json')
 
     if request.method == 'GET':
-        form = forms.AskForm(user=request.user)
+        form = form_class(user=request.user)
 
     draft_title = ''
     draft_text = ''
@@ -491,6 +491,11 @@ def edit_question(request, id):
                             edit_anonymously = is_anon_edit,
                             is_private = post_privately,
                             suppress_email=suppress_email
+                        )
+                        signals.question_edited.send(None,
+                            question=question,
+                            user=user,
+                            form_data=form.cleaned_data
                         )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
