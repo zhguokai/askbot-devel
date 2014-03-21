@@ -832,6 +832,15 @@ def api_get_questions(request):
     else:
         threads = models.Thread.objects.all()
 
+    if askbot_settings.SPACES_ENABLED and 'feed' in request.session:
+        #todo, add feed to the url
+        feed = get_object_or_404(
+                        models.Feed,
+                        name=request.session['feed'],
+                        site=get_current_site(request)
+                    )
+        qs = qs.filter(spaces__in=feed.get_spaces())
+
     if tag_name:
         threads = threads.filter(tags__name=tag_name)
 

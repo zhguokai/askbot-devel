@@ -119,10 +119,19 @@ def questions(request, **kwargs):
     #       down the pipeline, we have to precache them in thread objects
     models.Thread.objects.precache_view_data_hack(threads=page.object_list)
 
+    #here we cheat because the rigorous queries are very heavy
+    if paginator.count < 1000:
+        #if we have manageable number of questions, we count
+        #tag usage by the list of thread ids
+        thread_ids = qs.values_list('id', flat=True)
+    else:
+        thread_ids = None
+
     related_tags = Tag.objects.get_related_to_search(
-                        threads=qs,
+                        thread_ids=thread_ids,
                         ignored_tag_names=meta_data.get('ignored_tag_names',[])
                     )
+
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
     if tag_list_type == 'cloud': #force cloud to sort by name
         related_tags = sorted(related_tags, key = operator.attrgetter('name'))

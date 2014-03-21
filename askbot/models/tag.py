@@ -9,6 +9,7 @@ from askbot.models.base import BaseQuerySetManager
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import category_tree
+import askbot
 
 def delete_tags(tags):
     """deletes tags in the list"""
@@ -158,12 +159,33 @@ class TagQuerySet(models.query.QuerySet):
             tag_filter |= models.Q(name__startswith = next_tag[:-1])
         return self.filter(tag_filter)
 
-    def get_related_to_search(self, threads, ignored_tag_names):
+    def get_related_to_search(self, thread_ids, ignored_tag_names):
         """Returns at least tag names, along with use counts"""
-        tags = self.filter(threads__in=threads).annotate(local_used_count=models.Count('id')).order_by('-local_used_count', 'name')
+
+        primary_filter = {
+            'deleted': False
+        }
+        if thread_ids:
+            primary_filter['threads__id__in'] = thread_ids
+            annotate = {'local_used_count': models.Count('id')}
+            order_by = '-local_used_count'
+        else:
+            #if askbot.is_multisite():
+            #    primary_filter['sites'] = Site.objects.get_current()
+            annotate = {}
+            order_by = '-used_count'
+
+        tags = self.filter(
+            **primary_filter
+        ).annotate(
+            **annotate
+        ).order_by(
+            order_by, 'name'
+        )
+        
         if ignored_tag_names:
             tags = tags.exclude(name__in=ignored_tag_names)
-        tags = tags.exclude(deleted = True)
+
         return list(tags[:50])
 
 
