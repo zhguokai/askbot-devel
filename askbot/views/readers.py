@@ -128,7 +128,7 @@ def questions(request, **kwargs):
         thread_ids = None
 
     related_tags = Tag.objects.get_related_to_search(
-                        thread_ids=thread_ids,
+                        thread_ids=list(thread_ids),
                         ignored_tag_names=meta_data.get('ignored_tag_names',[])
                     )
 
