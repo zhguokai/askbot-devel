@@ -14,6 +14,7 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
+from django.contrib.sites.models import get_current_site
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
@@ -839,7 +840,7 @@ def api_get_questions(request):
                         name=request.session['feed'],
                         site=get_current_site(request)
                     )
-        qs = qs.filter(spaces__in=feed.get_spaces())
+        threads = threads.filter(spaces__in=feed.get_spaces())
 
     if tag_name:
         threads = threads.filter(tags__name=tag_name)
