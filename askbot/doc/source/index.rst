@@ -28,8 +28,9 @@ at the forum_ or by email at admin@askbot.org
    Appendix E: Askbot as reusable Django application <askbot-as-reusable-django-application>
    Appendix F: Customizing skin in askbot <customizing-skin-in-askbot>
    Appendix G: Intranet setup <intranet-setup>
-   Appendix H: Haystack with Solr and Apache Tomcat <solr>
-   Appendix I: Migration from MySQL to PostgreSQL <mysql-to-postgres>
+   Appendix H: Language support in Askbot <localization>
+   Appendix I: Configuration of text search <text-search>
+   Appendix J: Migration from MySQL to PostgreSQL <mysql-to-postgres>
    Footnotes <footnotes>
    Contributors <contributors>
    Changelog <changelog>
