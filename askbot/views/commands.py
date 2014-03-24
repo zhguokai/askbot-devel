@@ -823,7 +823,7 @@ def delete_bulk_tag_subscription(request):
         return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
 
 @decorators.get_only
-def api_get_questions(request):
+def api_get_questions(request, feed=None):
     """json api for retrieving questions by title match"""
     query = request.GET.get('query_text', '').strip()
     tag_name = request.GET.get('tag_name', None)
@@ -833,11 +833,11 @@ def api_get_questions(request):
     else:
         threads = models.Thread.objects.all()
 
-    if askbot_settings.SPACES_ENABLED and 'feed' in request.session:
+    if askbot_settings.SPACES_ENABLED:
         #todo, add feed to the url
         feed = get_object_or_404(
                         models.Feed,
-                        name=request.session['feed'],
+                        name=feed,
                         site=get_current_site(request)
                     )
         threads = threads.filter(spaces__in=feed.get_spaces())

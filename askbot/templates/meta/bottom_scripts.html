@@ -22,7 +22,7 @@
     askbot['urls']['unfollow_user'] = '/followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
     askbot['urls']['userSignin'] = '{{ settings.LOGIN_URL }}';
     askbot['urls']['getEditor'] = '{% url "get_editor" %}';
-    askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
+    askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" feed.name %}';
     askbot['urls']['validateEmail'] = '{% url "validate_email" %}';
     askbot['urls']['getLoginMenuHtml'] = '{% url "get_login_menu_html" %}';
     askbot['settings']['csrfCookieName'] = '{{ settings.CSRF_COOKIE_NAME }}';

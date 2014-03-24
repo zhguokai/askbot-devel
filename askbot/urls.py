@@ -155,11 +155,6 @@ urlpatterns = patterns('',
     ),
     # END main page urls
     service_url(
-        r'^api/get_questions/',
-        views.commands.api_get_questions,
-        name='api_get_questions'
-    ),
-    service_url(
         r'^get-thread-shared-users/',
         views.commands.get_thread_shared_users,
         name='get_thread_shared_users'
@@ -625,6 +620,11 @@ urlpatterns += (
         r'^(?P<feed>\w+)/(?P<id>\d+)/',
         views.readers.question,
         name='question'
+    ),
+    url(
+        r'^(?P<feed>\w+)/get_questions/',
+        views.commands.api_get_questions,
+        name='api_get_questions'
     ),
 )
 
