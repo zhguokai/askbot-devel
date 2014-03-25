@@ -294,12 +294,12 @@ def complete_oauth2_signin(request):
 
     client_id = getattr(
             askbot_settings,
-            provider_name.upper() + '_KEY'
+            provider_name.upper() + '_KEY',
         )
 
     client_secret = getattr(
             askbot_settings,
-            provider_name.upper() + '_SECRET'
+            provider_name.upper() + '_SECRET',
         )
 
     client = OAuth2Client(
@@ -307,12 +307,13 @@ def complete_oauth2_signin(request):
             resource_endpoint=params['resource_endpoint'],
             redirect_uri=site_url(reverse('user_complete_oauth2_signin')),
             client_id=client_id,
-            client_secret=client_secret
+            client_secret=client_secret,
+            token_transport=params.get('token_transport', None)
         )
 
     client.request_token(
         code=request.GET['code'],
-        parser=params['response_parser']
+        parser=params.get('response_parser', None)
     )
 
     #todo: possibly set additional parameters here
