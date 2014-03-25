@@ -24,7 +24,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.forms import FeedbackForm
 from askbot.utils.url_utils import get_login_url
 from askbot.utils.forms import get_next_url
-from askbot.mail import mail_moderators
+from askbot.mail import mail_moderators, send_mail
 from askbot.models import BadgeData, Award, User, Tag
 from askbot.models import badges as badge_data
 from askbot.skins.loaders import render_text_into_skin
@@ -32,6 +32,8 @@ from askbot.utils.decorators import admins_only
 from askbot.utils.forms import get_next_url
 from askbot.utils import functions
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
+
+import re
 
 def generic_view(request, template = None, page_class = None):
     """this may be not necessary, since it is just a rewrite of render"""
@@ -123,12 +125,21 @@ def feedback(request):
             headers = {}
             if data['email']:
                 headers = {'Reply-To': data['email']}
-
-            mail_moderators(
-                _('Q&A forum feedback'),
-                message,
-                headers=headers
-            )
+            subject = _('Q&A forum feedback')
+            if askbot_settings.FEEDBACK_EMAILS:
+                recipients = re.split('\s*,\s*', askbot_settings.FEEDBACK_EMAILS)
+                send_mail(
+                    subject_line=subject,
+                    body_text=message,
+                    headers=headers,
+                    recipient_list=recipients,
+                )
+            else:
+                mail_moderators(
+                    subject_line=subject,
+                    body_text=message,
+                    headers=headers
+                )
             msg = _('Thanks for the feedback!')
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect(get_next_url(request))
