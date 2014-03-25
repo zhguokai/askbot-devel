@@ -35,7 +35,7 @@ except:
 import time, base64, hmac, hashlib, operator, logging
 from models import Association, Nonce
 
-__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
+__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response']
 
 ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username', 'wordpress')
 
@@ -386,6 +386,18 @@ def get_enabled_major_login_providers():
             'change_password_prompt': _('Change your password'),
             'icon_media_path': askbot_settings.LOCAL_LOGIN_ICON,
             'password_changeable': True
+        }
+
+    if askbot_settings.SIGNIN_CUSTOM_OPENID_ENABLED:
+        context_dict = {'login_name': askbot_settings.SIGNIN_CUSTOM_OPENID_NAME}
+        data['custom_openid'] = {
+            'name': 'custom_openid',
+            'display_name': askbot_settings.SIGNIN_CUSTOM_OPENID_NAME,
+            'type': askbot_settings.SIGNIN_CUSTOM_OPENID_MODE,
+            'icon_media_path': askbot_settings.SIGNIN_CUSTOM_OPENID_LOGIN_BUTTON,
+            'tooltip_text': _('Login with %(login_name)s') % context_dict,
+            'openid_endpoint': askbot_settings.SIGNIN_CUSTOM_OPENID_ENDPOINT,
+            'extra_token_name': _('%(login_name)s username') % context_dict
         }
 
     def get_facebook_user_id(client):
