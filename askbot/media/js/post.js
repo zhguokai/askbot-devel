@@ -2506,7 +2506,7 @@ var socialSharing = function(){
             URL = window.location.href;
             var urlBits = URL.split('/');
             URL = urlBits.slice(0, -2).join('/') + '/';
-            TEXT = encodeURIComponent($('h1 > a').html());
+            TEXT = encodeURIComponent($('h1 > a').text());
             var hashtag = encodeURIComponent(
                                 askbot['settings']['sharingSuffixText']
                             );
