@@ -1,10 +1,13 @@
 import datetime
+import askbot
+from django.contrib.sites.models import Site
 from django.core.management.base import NoArgsCommand
 from django.core.urlresolvers import reverse
 from django.db import connection
 from django.db.models import Q, F
 from askbot.models import User, Post, PostRevision, Thread
 from askbot.models import Activity, EmailFeedSetting
+from askbot.models import Space
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -133,15 +136,24 @@ class Command(NoArgsCommand):
         #base question query set for this user
         #basic things - not deleted, not closed, not too old
         #not last edited by the same user
-        base_qs = Post.objects.get_questions().exclude(
-                                thread__last_activity_by=user
-                            ).exclude(
-                                thread__last_activity_at__lt=user.date_joined#exclude old stuff
-                            ).exclude(
-                                deleted=True
-                            ).exclude(
-                                thread__closed=True
-                            ).order_by('-thread__last_activity_at')
+
+
+        base_qs = Post.objects.get_questions()
+
+        if askbot_settings.SPACES_ENABLED and askbot.is_multisite():
+            site = Site.objects.get_current()
+            spaces = list(Space.objects.get_for_site(site=site))
+            base_qs = base_qs.filter(thread__spaces__in=spaces)
+
+        base_qs = base_qs.exclude(
+                            thread__last_activity_by=user
+                        ).exclude(
+                            thread__last_activity_at__lt=user.date_joined#exclude old stuff
+                        ).exclude(
+                            deleted=True
+                        ).exclude(
+                            thread__closed=True
+                        ).order_by('-thread__last_activity_at')
 
         if askbot_settings.ENABLE_CONTENT_MODERATION:
             base_qs = base_qs.filter(approved = True)
