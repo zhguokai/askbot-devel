@@ -1002,7 +1002,7 @@ def delete_post(request):
 @csrf.csrf_exempt
 def read_message(request):#marks message a read
     if request.method == "POST":
-        if request.POST['formdata'] == 'required':
+        if request.POST.get('formdata') == 'required':
             request.session['message_silent'] = 1
             if request.user.is_authenticated():
                 request.user.delete_messages()
