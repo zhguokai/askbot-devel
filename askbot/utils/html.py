@@ -150,7 +150,7 @@ def strip_tags(html, tags=None):
 
     assert(tags != None)
 
-    soup = BeautifulSoup(html, 'html5lib')
+    soup = BeautifulSoup(html.encode('utf-8'), 'html5lib')
     for tag in tags:
         tag_matches = soup.find_all(tag)
         map(lambda v: v.replaceWith(''), tag_matches)
