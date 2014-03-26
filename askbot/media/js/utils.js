@@ -277,6 +277,19 @@ var notify = function() {
     };
 }();
 
+/*
+ * CSRF token extractor
+ */
+var getCSRFToken = function() {
+    var re = /_csrf=([^;]*)/;
+    var match = re.exec(document.cookie);
+    if(match)
+        return match[1];
+    else
+        return ''
+}
+
+
 /* **************************************************** */
 // Search query-string manipulation utils
 /* **************************************************** */
@@ -1373,6 +1386,12 @@ CommentConvertLink.prototype.createDom = function(){
     hidden_input.attr('name', 'comment_id');
     hidden_input.attr('id', 'id_comment_id');
     element.append(hidden_input);
+
+    var csrf_token = this.makeElement('input');
+    csrf_token.attr('type', 'hidden');
+    csrf_token.attr('name', 'csrfmiddlewaretoken');
+    csrf_token.attr('value', getCSRFToken());
+    element.append(csrf_token);
 
     var submit = this.makeElement('input');
     submit.attr('type', 'submit');
