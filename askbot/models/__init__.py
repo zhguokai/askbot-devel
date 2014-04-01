@@ -3074,7 +3074,14 @@ def format_instant_notification_email(
     post_url = site_url(post.get_absolute_url())
     user_url = site_url(from_user.get_absolute_url())
 
-    if post.is_anonymous:
+    if to_user.is_administrator_or_moderator() and askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA:
+        user_link_fmt = '<a href="%(profile_url)s">%(username)s</a> (<a href="mailto:%(email)s">%(email)s</a>)'
+        user_link = user_link_fmt % {
+            'profile_url': user_url,
+            'username': from_user.username,
+            'email': from_user.email
+        }
+    elif post.is_anonymous:
         user_link = from_user.get_name_of_anonymous_user()
     else:
         user_link = '<a href="%s">%s</a>' % (user_url, from_user.username)
