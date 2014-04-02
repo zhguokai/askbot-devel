@@ -707,12 +707,18 @@ input[type="submit"].searchBtn {
         color: white;
         height: 0;
         z-index: 0;
+        position: absolute;
+        left: -1000px;/* hide away */
     }
-    .search-drop-menu.empty {
-        border: none;
-        padding: 0;
-        ul {
-            padding: 0;
+    .search-drop-menu {
+        top: 37px;
+        &.empty {
+            border: none;
+            outline: none;
+            padding: 0 !important;
+            ul {
+                padding: 0 !important;
+            }
         }
     }
 }
@@ -1736,6 +1742,7 @@ ul#related-tags li {
     padding: 4px 0 0 0;
     margin-top:0px;
     width: 100%;
+    position: relative;
 
     p {
        margin:0 0 5px 0;

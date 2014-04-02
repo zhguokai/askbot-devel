@@ -668,13 +668,21 @@ input[type="submit"].searchBtn {
   color: white;
   height: 0;
   z-index: 0;
+  position: absolute;
+  left: -1000px;
+  /* hide away */
+
+}
+.ask-page .search-drop-menu {
+  top: 37px;
 }
 .ask-page .search-drop-menu.empty {
   border: none;
-  padding: 0;
+  outline: none;
+  padding: 0 !important;
 }
 .ask-page .search-drop-menu.empty ul {
-  padding: 0;
+  padding: 0 !important;
 }
 input[type="submit"].searchBtn:hover {
   background-image: none;
@@ -1636,6 +1644,7 @@ ul#related-tags li {
   padding: 4px 0 0 0;
   margin-top: 0px;
   width: 100%;
+  position: relative;
 }
 #askFormBar p {
   margin: 0 0 5px 0;
