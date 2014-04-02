@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-07-20 23:44+0000\n"
-"Last-Translator: Ahmad Khayyat <akhayyat@gmail.com>\n"
+"PO-Revision-Date: 2013-09-10 07:48+0000\n"
+"Last-Translator: mustafaalbazy <mustafa@albazy.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/projects/p/askbot/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,7 +155,7 @@ msgstr[5] ""
 
 #: media/js/post.js:154 media/js/post.js.c:1269
 msgid "tags cannot be empty"
-msgstr ""
+msgstr "فضلاً حدد المواضيع (مطلوب)"
 
 #: media/js/post.js:160
 msgid "details are required"
@@ -279,7 +279,7 @@ msgstr[5] ""
 
 #: media/js/post.js:845
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr ""
+msgstr "<div>مُتابع</div><div class=\"unfollow\">إلغاء المتابعة</div>"
 
 #: media/js/post.js:901
 msgid "remove flag"
@@ -299,7 +299,7 @@ msgstr "تم حذف المشاركة"
 
 #: media/js/post.js:1218 media/js/post.js.c:1445
 msgid "sorry, something is not right here"
-msgstr ""
+msgstr "عذراً، شيء غير صحيح هنا"
 
 #: media/js/post.js:1665
 msgid "add comment"
@@ -326,7 +326,7 @@ msgstr ""
 
 #: media/js/post.js:1823
 msgid "minor edit (don't send alerts)"
-msgstr ""
+msgstr "تعديل بسيط (لا ترسل تنبيهات بريد)"
 
 #: media/js/post.js:1855
 msgid "Are you sure you don't want to post this comment?"
@@ -501,7 +501,7 @@ msgstr "انظر هل يوجد شئ  لتصليحه :"
 
 #: media/js/user.js:443
 msgid "Please provide description."
-msgstr ""
+msgstr "فضل ضع وصف."
 
 #: media/js/user.js:446
 msgid "Please provide details."
@@ -513,7 +513,7 @@ msgstr "يجب ان تختار سبب لحذف الاخر "
 
 #: media/js/user.js:659
 msgid "A reason must be selected to reject post."
-msgstr ""
+msgstr "يجب إختيار سبب لرفض المشاركة."
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
@@ -544,7 +544,7 @@ msgstr "إضافة"
 
 #: media/js/utils.js:99
 msgid "and"
-msgstr ""
+msgstr "و"
 
 #: media/js/utils.js:117
 msgid "click to close"
@@ -556,7 +556,7 @@ msgstr "انقر لتعديل التعليق"
 
 #: media/js/utils.js:905
 msgid "convert to answer"
-msgstr ""
+msgstr "تحويل لإجابة"
 
 #: media/js/utils.js:958
 msgid "Ok"
@@ -569,7 +569,7 @@ msgstr "إلغاء"
 #: media/js/utils.js:1219
 #, c-format
 msgid "Uploaded file: %s"
-msgstr ""
+msgstr "الملفات المرفوعة: %s"
 
 #: media/js/utils.js:1234
 msgid "Choose a different image"
@@ -610,7 +610,7 @@ msgstr "حفظت"
 
 #: media/js/utils.js:1602
 msgid "enabled"
-msgstr ""
+msgstr "مفعل"
 
 #: media/js/utils.js:1604
 msgid "disabled"
@@ -626,7 +626,7 @@ msgstr "إضافة مجموعة"
 
 #: media/js/utils.js:2138
 msgid "Group %(name)s already exists. Group names are case-insensitive."
-msgstr ""
+msgstr "أسم المجموعة %(name)s محجوز، أسماء المجموعات غير حساسة لحالة الأحرف."
 
 #: media/js/utils.js:2311
 #, c-format
@@ -635,7 +635,7 @@ msgstr ""
 
 #: media/js/utils.js:3358
 msgid "ago"
-msgstr ""
+msgstr "منذ"
 
 #: media/js/utils.js:3359
 msgid "from now"
@@ -648,7 +648,7 @@ msgstr "في حدود دقيقة"
 #: media/js/utils.js:3362
 #, c-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d دقيقة"
 
 #: media/js/utils.js:3363
 msgid "about an hour"
@@ -657,7 +657,7 @@ msgstr "ساعة تفريباً"
 #: media/js/utils.js:3364
 #, c-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d ساعة"
 
 #: media/js/utils.js:3365 media/js/utils.js.c:3493
 msgid "yesterday"
@@ -666,7 +666,7 @@ msgstr "البارحة"
 #: media/js/utils.js:3366
 #, c-format
 msgid "%d days"
-msgstr ""
+msgstr "%d يوم"
 
 #: media/js/utils.js:3367
 msgid "about a month"
@@ -675,7 +675,7 @@ msgstr "شهر تفريباً"
 #: media/js/utils.js:3368
 #, c-format
 msgid "%d months"
-msgstr ""
+msgstr "%d أشهر"
 
 #: media/js/utils.js:3369
 msgid "about a year"
@@ -684,55 +684,55 @@ msgstr "سنة تقريباً"
 #: media/js/utils.js:3370
 #, c-format
 msgid "%d years"
-msgstr ""
+msgstr "%d سنة"
 
 #: media/js/utils.js:3468
 msgid "Jan"
-msgstr ""
+msgstr "يناير"
 
 #: media/js/utils.js:3469
 msgid "Feb"
-msgstr ""
+msgstr "فبراير"
 
 #: media/js/utils.js:3470
 msgid "Mar"
-msgstr ""
+msgstr "مارس"
 
 #: media/js/utils.js:3471
 msgid "Apr"
-msgstr ""
+msgstr "أبريل"
 
 #: media/js/utils.js:3472
 msgid "May"
-msgstr ""
+msgstr "مايو"
 
 #: media/js/utils.js:3473
 msgid "Jun"
-msgstr ""
+msgstr "يونيو"
 
 #: media/js/utils.js:3474
 msgid "Jul"
-msgstr ""
+msgstr "يوليو"
 
 #: media/js/utils.js:3475
 msgid "Aug"
-msgstr ""
+msgstr "أغسطس"
 
 #: media/js/utils.js:3476
 msgid "Sep"
-msgstr ""
+msgstr "سبتمبر"
 
 #: media/js/utils.js:3477
 msgid "Oct"
-msgstr ""
+msgstr "أكتوبر"
 
 #: media/js/utils.js:3478
 msgid "Nov"
-msgstr ""
+msgstr "نوفمبر"
 
 #: media/js/utils.js:3479
 msgid "Dec"
-msgstr ""
+msgstr "ديسمبر"
 
 #: media/js/utils.js:3491
 msgid "2 days ago"

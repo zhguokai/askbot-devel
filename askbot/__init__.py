@@ -7,7 +7,7 @@ basic actions on behalf of the forum application
 import os
 import platform
 
-VERSION = (0, 7, 48)
+VERSION = (0, 7, 49)
 
 #keys are module names used by python imports,
 #values - the package qualifier to use for pip
@@ -33,7 +33,7 @@ REQUIREMENTS = {
     'recaptcha_works': 'django-recaptcha-works',
     'openid': 'python-openid',
     'pystache': 'pystache==0.3.1',
-    'pytz': 'pytz',
+    'pytz': 'pytz==2013b',
     'tinymce': 'django-tinymce==1.5.1b2',
     'longerusername': 'longerusername',
     'bs4': 'beautifulsoup4',

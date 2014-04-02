@@ -1,8 +1,19 @@
 Changes in Askbot
 =================
 
-Development version
--------------------
+Development master branch (only on github)
+------------------------------------------
+* Allowed configurable custom OpenID login button
+* Allowed custom list of feedback recipients (Keto)
+* Added option to show user's emails to the moderators
+* Added Read-Only mode for the site in the "access control" section.
+* Added `askbot_add_osqa_content` management command.
+* Management command to add data from other Askbot site.
+* Allowed simple overrides of livesettings with `ASKBOT_...` prefixed 
+  variables in the `settings.py` file.
+
+0.7.49 (Sep 19, 2013)
+---------------------
 * Support for Solr search backend (Adolfo)
 * Allowed read-only access user groups (Adolfo)
 * Added simple read-only API (Adolfo)

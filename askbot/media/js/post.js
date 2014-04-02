@@ -83,35 +83,6 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
     });
 }
 
-/**
- * generic tag cleaning function, settings
- * are from askbot live settings and askbot.const
- */
-var cleanTag = function(tag_name, settings) {
-    var tag_regex = new RegExp(settings['tag_regex']);
-    if (tag_regex.test(tag_name) === false) {
-        throw settings['messages']['wrong_chars']
-    }
-
-    var max_length = settings['max_tag_length'];
-    if (tag_name.length > max_length) {
-        throw interpolate(
-            ngettext(
-                'must be shorter than %(max_chars)s character',
-                'must be shorter than %(max_chars)s characters',
-                max_length
-            ),
-            {'max_chars': max_length },
-            true
-        );
-    }
-    if (settings['force_lowercase_tags']) {
-        return tag_name.toLowerCase();
-    } else {
-        return tag_name;
-    }
-};
-
 var validateTagLength = function(value){
     var tags = getUniqueWords(value);
     var are_tags_ok = true;
@@ -171,11 +142,15 @@ var CPValidator = function() {
                     required: " " + gettext('enter your question'),
                     minlength: interpolate(
                                     ngettext(
-                                        'question must have > %s character',
-                                        'question must have > %s characters',
+                                        '%(question)s must have > %(length)s character',
+                                        '%(question)s must have > %(length)s characters',
                                         askbot['settings']['minTitleLength']
                                     ),
-                                    [askbot['settings']['minTitleLength'], ]
+                                    { 
+                                        'question': askbot['messages']['questionSingular'],
+                                        'length': askbot['settings']['minTitleLength']
+                                    },
+                                    true
                                 )
                 }
             };
@@ -193,11 +168,15 @@ var CPValidator = function() {
                     required: " " + gettext('content cannot be empty'),
                     minlength: interpolate(
                                     ngettext(
-                                        'answer must be > %s character',
-                                        'answer must be > %s characters',
+                                        '%(answer)s must be > %(length)s character',
+                                        '%(answer)s must be > %(length)s characters',
                                         askbot['settings']['minAnswerBodyLength']
                                     ),
-                                    [askbot['settings']['minAnswerBodyLength'], ]
+                                    {
+                                        'answer': askbot['messages']['answerSingular'],
+                                        'length': askbot['settings']['minAnswerBodyLength']
+                                    },
+                                    true
                                 )
                 },
             }
@@ -546,12 +525,17 @@ var Vote = function(){
     var questionSubscribeSidebar= 'question-subscribe-sidebar';
 
     var acceptAnonymousMessage = gettext('insufficient privilege');
-    var acceptOwnAnswerMessage = gettext('cannot pick own answer as best');
 
     var pleaseLogin = " <a href='" + askbot['urls']['user_signin'] + ">"
                         + gettext('please login') + "</a>";
 
-    var favoriteAnonymousMessage = gettext('anonymous users cannot follow questions') + pleaseLogin;
+    var tmpMsg = interpolate(
+        gettext('anonymous users cannot %(follow_questions)s'),
+        {'follow_questions': askbot['messages']['followQuestions']},
+        true
+    );
+    var favoriteAnonymousMessage = tmpMsg + pleaseLogin;
+    //todo: this below is probably not used
     var subscribeAnonymousMessage = gettext('anonymous users cannot subscribe to questions') + pleaseLogin;
     var voteAnonymousMessage = gettext('anonymous users cannot vote') + pleaseLogin;
     //there were a couple of more messages...
@@ -617,17 +601,17 @@ var Vote = function(){
     };
 
     var getOffensiveQuestionFlag = function(){
-        var offensiveQuestionFlag = '.question-card span[id^="'+ offensiveIdPrefixQuestionFlag +'"]';
+        var offensiveQuestionFlag = 'div.question span[id^="'+ offensiveIdPrefixQuestionFlag +'"]';
         return $(offensiveQuestionFlag);
     };
 
     var getRemoveOffensiveQuestionFlag = function(){
-        var removeOffensiveQuestionFlag = '.question-card span[id^="'+ removeOffensiveIdPrefixQuestionFlag +'"]';
+        var removeOffensiveQuestionFlag = 'div.question span[id^="'+ removeOffensiveIdPrefixQuestionFlag +'"]';
         return $(removeOffensiveQuestionFlag);
     };
 
     var getRemoveAllOffensiveQuestionFlag = function(){
-        var removeAllOffensiveQuestionFlag = '.question-card span[id^="'+ removeAllOffensiveIdPrefixQuestionFlag +'"]';
+        var removeAllOffensiveQuestionFlag = 'div.question span[id^="'+ removeAllOffensiveIdPrefixQuestionFlag +'"]';
         return $(removeAllOffensiveQuestionFlag);
     };
 
@@ -795,7 +779,12 @@ var Vote = function(){
             showMessage(object, acceptAnonymousMessage);
         }
         else if(data.allowed == "-1"){
-            showMessage(object, acceptOwnAnswerMessage);
+            var message = interpolate(
+                gettext('sorry, you cannot %(accept_own_answer)s'),
+                {'accept_own_answer': askbot['messages']['acceptOwnAnswer']},
+                true
+            );
+            showMessage(object, message);
         }
         else if(data.status == "1"){
             $("#"+answerContainerIdPrefix+postId).removeClass("accepted-answer");
@@ -2403,7 +2392,10 @@ PostCommentsWidget.prototype.getActivateHandler = function(){
         }
         else {
             //if user can't post, we tell him something and refuse
-            if (askbot['data']['userIsAuthenticated']) {
+            if (askbot['settings']['readOnlyModeEnabled'] === true) {
+                var message = askbot['messages']['readOnlyMessage'];
+                showMessage(button, message, 'after');
+            } else if (askbot['data']['userIsAuthenticated']) {
                 me.startNewComment();
             } else {
                 var message = gettext('please sign in or register to post comments');
@@ -2514,7 +2506,7 @@ var socialSharing = function(){
             URL = window.location.href;
             var urlBits = URL.split('/');
             URL = urlBits.slice(0, -2).join('/') + '/';
-            TEXT = encodeURIComponent($('h1 > a').html());
+            TEXT = encodeURIComponent($('h1 > a').text());
             var hashtag = encodeURIComponent(
                                 askbot['settings']['sharingSuffixText']
                             );
@@ -3388,8 +3380,54 @@ var TagEditor = function() {
     WrappedElement.call(this);
     this._has_hot_backspace = false;
     this._settings = JSON.parse(askbot['settings']['tag_editor']);
+    /*
+    tags: {
+        required: askbot['settings']['tagsAreRequired'],
+        maxlength: askbot['settings']['maxTagsPerPost'] * askbot['settings']['maxTagLength'],
+        limit_tag_count: true,
+        limit_tag_length: true
+    },
+    tags: {
+        required: " " + gettext('tags cannot be empty'),
+        maxlength: askbot['messages']['tagLimits'],
+        limit_tag_count: askbot['messages']['maxTagsPerPost'],
+        limit_tag_length: askbot['messages']['maxTagLength']
+    },
+    */
 };
 inherits(TagEditor, WrappedElement);
+
+/* retagger function
+    var doRetag = function(){
+        $.ajax({
+            type: "POST",
+            url: retagUrl,//todo add this url to askbot['urls']
+            dataType: "json",
+            data: { tags: getUniqueWords(tagInput.val()).join(' ') },
+            success: function(json) {
+                if (json['success'] === true){
+                    new_tags = getUniqueWords(json['new_tags']);
+                    oldTagsHtml = '';
+                    cancelRetag();
+                    drawNewTags(new_tags.join(' '));
+                    if (json['message']) {
+                        notify.show(json['message']);
+                    }
+                }
+                else {
+                    cancelRetag();
+                    showMessage(tagsDiv, json['message']);
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                showMessage(tagsDiv, gettext('sorry, something is not right here'));
+                cancelRetag();
+            }
+        });
+        return false;
+    }
+*/
+
 
 TagEditor.prototype.getSelectedTags = function() {
     return $.trim(this._hidden_tags_input.val()).split(/\s+/);

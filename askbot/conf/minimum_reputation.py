@@ -132,27 +132,9 @@ settings.register(
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
-        'MIN_REP_TO_CLOSE_OWN_QUESTIONS',
-        default=25,
-        description=_('Close own questions'),
-    )
-)
-
-settings.register(
-    livesettings.IntegerValue(
-        MIN_REP,
         'MIN_REP_TO_RETAG_OTHERS_QUESTIONS',
         default=50,
         description=_('Retag questions posted by other people')
-    )
-)
-
-settings.register(
-    livesettings.IntegerValue(
-        MIN_REP,
-        'MIN_REP_TO_REOPEN_OWN_QUESTIONS',
-        default=50,
-        description=_('Reopen own questions')
     )
 )
 
@@ -188,7 +170,7 @@ settings.register(
         MIN_REP,
         'MIN_REP_TO_CLOSE_OTHERS_QUESTIONS',
         default=200,
-        description=_('Close questions asked by others')
+        description=_('Close and reopen questions')
     )
 )
 

@@ -283,9 +283,10 @@ def vote(request):
 
             else:
                 raise exceptions.PermissionDenied(
-                        _('Sorry, but anonymous users cannot accept answers')
-                    )
-
+                    _('Sorry, but anonymous users cannot %(perform_action)s') % {
+                        'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER
+                    }
+                )
         elif vote_type in ('1', '2', '5', '6'):#Q&A up/down votes
 
             ###############################
@@ -376,14 +377,17 @@ def vote(request):
             question = get_object_or_404(models.Post, post_type='question', id=id)
             vote_type = request.POST.get('type')
 
-            #accept answer
             if vote_type == '4':
+                #follow question
                 fave = request.user.toggle_favorite_question(question)
                 response_data['count'] = models.FavoriteQuestion.objects.filter(thread = question.thread).count()
                 if fave == False:
                     response_data['status'] = 1
 
             elif vote_type == '11':#subscribe q updates
+                #todo: this branch is not used anymore
+                #now we just follow question, we don't have the
+                #separate "subscribe" function
                 user = request.user
                 if user.is_authenticated():
                     if user not in question.thread.followed_by.all():
@@ -998,7 +1002,7 @@ def delete_post(request):
 @csrf.csrf_exempt
 def read_message(request):#marks message a read
     if request.method == "POST":
-        if request.POST['formdata'] == 'required':
+        if request.POST.get('formdata') == 'required':
             request.session['message_silent'] = 1
             if request.user.is_authenticated():
                 request.user.delete_messages()

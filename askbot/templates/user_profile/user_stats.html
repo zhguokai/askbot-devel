@@ -9,12 +9,18 @@
     {% include "user_profile/user_info.html" %}
     <a name="questions"></a>
     {% spaceless %}
-        <h2>{% trans counter=question_count %}<span class="count">{{counter}}</span> Question{% pluralize %}<span class="count">{{counter}}</span> Questions{% endtrans %}</h2>
+        <h2>
+            <span class="count">{{ question_count }}</span>
+            {{ settings.WORDS_QUESTIONS_COUNTABLE_FORMS|py_pluralize(question_count)|capitalize }}
+        </h2>
     {% endspaceless %}
     {% include "user_profile/users_questions.html" %}
     <a name="answers"></a>
     {% spaceless %}
-        <h2 style="clear:both;"><span class="count">{{ top_answer_count }}</span> {% trans counter=top_answer_count %}Answer{% pluralize %}Answers{% endtrans %}</h2>
+        <h2 style="clear:both;">
+            <span class="count">{{ top_answer_count }}</span>
+            {{ settings.WORDS_ANSWERS_COUNTABLE_FORMS|py_pluralize(top_answer_count)|capitalize }}
+        </h2>
     {% endspaceless %}
     {% include "user_profile/users_answers.html" %}
     <a name="votes"></a>
@@ -79,7 +85,6 @@
                     {% if award.content_object and award.content_object_is_post %}
                     <li>
                         <a
-                            title="{{ award.content_object.get_snippet()|collapse }}"
                             href="{{ award.content_object.get_absolute_url() }}"
                         >{% if award.content_type.post_type == 'answer' %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.thread.title|escape }}</a>
                     </li>

@@ -109,14 +109,14 @@ def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=No
     msg.send()
 
 def send_mail(
-            subject_line = None,
-            body_text = None,
-            from_email = django_settings.DEFAULT_FROM_EMAIL,
-            recipient_list = None,
-            activity_type = None,
-            related_object = None,
-            headers = None,
-            raise_on_failure = False,
+            subject_line=None,
+            body_text=None,
+            from_email=None,
+            recipient_list=None,
+            activity_type=None,
+            related_object=None,
+            headers=None,
+            raise_on_failure=False,
         ):
     """
     todo: remove parameters not relevant to the function
@@ -131,6 +131,8 @@ def send_mail(
 
     if raise_on_failure is True, exceptions.EmailNotSent is raised
     """
+    from_email = from_email or askbot_settings.ADMIN_EMAIL or \
+                                    django_settings.DEFAULT_FROM_EMAIL
     body_text = absolutize_urls(body_text)
     try:
         assert(subject_line is not None)
@@ -178,12 +180,12 @@ def mail_moderators(
     )
 
 
-INSTRUCTIONS_PREAMBLE = ugettext_lazy('<p>To ask by email, please:</p>')
+INSTRUCTIONS_PREAMBLE = ugettext_lazy('<p>To post by email, please:</p>')
 QUESTION_TITLE_INSTRUCTION = ugettext_lazy(
     '<li>Type title in the subject line</li>'
 )
 QUESTION_DETAILS_INSTRUCTION = ugettext_lazy(
-    '<li>Type details of your question into the email body</li>'
+    '<li>Type details into the email body</li>'
 )
 OPTIONAL_TAGS_INSTRUCTION = ugettext_lazy(
 """<li>The beginning of the subject line can contain tags,
@@ -209,7 +211,7 @@ def bounce_email(
     """
     if reason == 'problem_posting':
         error_message = _(
-            '<p>Sorry, there was an error posting your question '
+            '<p>Sorry, there was an error while processing your message '
             'please contact the %(site)s administrator</p>'
         ) % {'site': askbot_settings.APP_SHORT_NAME}
 
@@ -236,7 +238,7 @@ def bounce_email(
 
     elif reason == 'unknown_user':
         error_message = _(
-            '<p>Sorry, in order to post questions on %(site)s '
+            '<p>Sorry, in order to make posts to %(site)s '
             'by email, please <a href="%(url)s">register first</a></p>'
         ) % {
             'site': askbot_settings.APP_SHORT_NAME,
@@ -244,7 +246,7 @@ def bounce_email(
         }
     elif reason == 'permission_denied' and body_text is None:
         error_message = _(
-            '<p>Sorry, your question could not be posted '
+            '<p>Sorry, your post could not be made by email '
             'due to insufficient privileges of your user account</p>'
         )
     elif body_text:

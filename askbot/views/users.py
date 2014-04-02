@@ -283,7 +283,6 @@ def user_moderate(request, subject, context):
         'active_tab': 'users',
         'page_class': 'user-profile-page',
         'tab_name': 'moderation',
-        'tab_description': _('moderate this user'),
         'page_title': _('moderate user'),
         'change_user_status_form': user_status_form,
         'change_user_reputation_form': user_rep_form,
@@ -529,7 +528,6 @@ def user_stats(request, user, context):
         'page_class': 'user-profile-page',
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'tab_name' : 'stats',
-        'tab_description' : _('user profile'),
         'page_title' : _('user profile overview'),
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
@@ -653,7 +651,6 @@ def user_recent(request, user, context):
         'active_tab': 'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'recent',
-        'tab_description' : _('recent user activity'),
         'page_title' : _('profile - recent activity'),
         'activities' : activities
     }
@@ -685,7 +682,6 @@ def show_group_join_requests(request, user, context):
         'inbox_section': 'group-join-requests',
         'page_class': 'user-profile-page',
         'tab_name' : 'join_requests',
-        'tab_description' : _('group joining requests'),
         'page_title' : _('profile - moderation'),
         'groups_dict': groups_dict,
         'join_requests': join_requests
@@ -742,7 +738,6 @@ def user_responses(request, user, context):
             'page_class': 'user-profile-page',
             'tab_name' : 'inbox',
             'inbox_section': section,
-            'tab_description' : _('private messages'),
             'page_title' : _('profile - messages')
         }
         context.update(data)
@@ -822,7 +817,6 @@ def user_responses(request, user, context):
         'page_class': 'user-profile-page',
         'tab_name' : 'inbox',
         'inbox_section': section,
-        'tab_description' : _('comments and answers to others questions'),
         'page_title' : _('profile - responses'),
         'post_reject_reasons': reject_reasons,
         'responses' : filtered_response_list,
@@ -864,7 +858,6 @@ def user_votes(request, user, context):
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'votes',
-        'tab_description' : _('user vote record'),
         'page_title' : _('profile - votes'),
         'votes' : votes[:const.USER_VIEW_DATA_SIZE]
     }
@@ -886,7 +879,6 @@ def user_reputation(request, user, context):
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name': 'reputation',
-        'tab_description': _('user karma'),
         'page_title': _("Profile - User's Karma"),
         'reputation': reputes,
         'reps': reps
@@ -922,8 +914,7 @@ def user_favorites(request, user, context):
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'favorites',
-        'tab_description' : _('users favorite questions'),
-        'page_title' : _('profile - favorite questions'),
+        'page_title' : _('profile - favorites'),
         'questions' : questions,
         'q_paginator_context': q_paginator_context,
         'question_count': question_count,
@@ -996,7 +987,6 @@ def user_email_subscriptions(request, user, context):
         'subscribed_tag_names': user.get_marked_tag_names('subscribed'),
         'page_class': 'user-profile-page',
         'tab_name': 'email_subscriptions',
-        'tab_description': _('email subscription settings'),
         'page_title': _('profile - email subscriptions'),
         'email_feeds_form': email_feeds_form,
         'tag_filter_selection_form': tag_filter_form,

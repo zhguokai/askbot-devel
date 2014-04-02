@@ -1076,6 +1076,7 @@ inherits(UserQuestionsPaginator, Paginator);
 
 UserQuestionsPaginator.prototype.renderPage = function(data) {
     $('.users-questions').html(data['questions']);
+    $('.timeago').timeago();
 };
 
 UserQuestionsPaginator.prototype.getPageDataUrl = function(pageNo) {
@@ -1095,6 +1096,7 @@ inherits(UserAnswersPaginator, Paginator);
 
 UserAnswersPaginator.prototype.renderPage = function(data) {
     $('.users-answers').html(data['html']);
+    $('.timeago').timeago();
 };
 
 UserAnswersPaginator.prototype.getPageDataUrl = function() {

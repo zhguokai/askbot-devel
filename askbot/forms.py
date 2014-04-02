@@ -9,6 +9,7 @@ from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
 from django.forms.util import ErrorList
 from django.utils.html import strip_tags
+from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.text import get_text_list
@@ -245,9 +246,7 @@ class TitleField(forms.CharField):
                         )
         self.max_length = 255
         self.label = _('title')
-        self.help_text = _(
-            'Please enter your question'
-        )
+        self.help_text = askbot_settings.WORDS_PLEASE_ENTER_YOUR_QUESTION
         self.initial = ''
 
     def clean(self, value):
@@ -263,20 +262,21 @@ class TitleField(forms.CharField):
             ) % askbot_settings.MIN_TITLE_LENGTH
             raise forms.ValidationError(msg)
         encoded_value = value.encode('utf-8')
+        question_term = askbot_settings.WORDS_QUESTION_SINGULAR
         if len(value) == len(encoded_value):
             if len(value) > self.max_length:
                 raise forms.ValidationError(
                     _(
-                        'The question is too long, maximum allowed size is '
-                        '%d characters'
-                    ) % self.max_length
+                        'The %(question)s is too long, maximum allowed size is '
+                        '%(length)d characters'
+                    ) % {'question': question_term, 'length': self.max_length}
                 )
         elif len(encoded_value) > self.max_length:
             raise forms.ValidationError(
                 _(
-                    'The question is too long, maximum allowed size is '
-                    '%d bytes'
-                ) % self.max_length
+                    'The %(question)s is too long, maximum allowed size is '
+                    '%(length)d bytes'
+                ) % {'question': question_term, 'length': self.max_length}
             )
 
         return value.strip()  # TODO: test me
@@ -286,9 +286,6 @@ class EditorField(forms.CharField):
     """EditorField is subclassed by the
     :class:`QuestionEditorField` and :class:`AnswerEditorField`
     """
-    length_error_template_singular = 'post content must be > %d character',
-    length_error_template_plural = 'post content must be > %d characters',
-    min_length = 10  # sentinel default value
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -309,16 +306,18 @@ class EditorField(forms.CharField):
         self.label  = _('content')
         self.help_text = u''
         self.initial = ''
+        self.min_length = 10
+        self.post_term_name = _('post')
 
     def clean(self, value):
         if value is None:
             value = ''
         if len(value) < self.min_length:
             msg = ungettext_lazy(
-                self.length_error_template_singular,
-                self.length_error_template_plural,
+                '%(post)s content must be > %(count)d character',
+                '%(post)s content must be > %(count)d characters',
                 self.min_length
-            ) % self.min_length
+            ) % {'post': unicode(self.post_term_name), 'count': self.min_length}
             raise forms.ValidationError(msg)
 
         if self.user.is_anonymous():
@@ -342,11 +341,8 @@ class QuestionEditorField(EditorField):
         super(QuestionEditorField, self).__init__(
                                 user=user, *args, **kwargs
                             )
-        self.length_error_template_singular = \
-            'question body must be > %d character'
-        self.length_error_template_plural = \
-            'question body must be > %d characters'
         self.min_length = askbot_settings.MIN_QUESTION_BODY_LENGTH
+        self.post_term_name = askbot_settings.WORDS_QUESTION_SINGULAR
 
 
 class AnswerEditorField(EditorField):
@@ -354,8 +350,7 @@ class AnswerEditorField(EditorField):
 
     def __init__(self, *args, **kwargs):
         super(AnswerEditorField, self).__init__(*args, **kwargs)
-        self.length_error_template_singular = 'answer must be > %d character'
-        self.length_error_template_plural = 'answer must be > %d characters'
+        self.post_term_name = askbot_settings.WORDS_ANSWER_SINGULAR
         self.min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
 
 
@@ -376,9 +371,14 @@ def clean_tag(tag_name):
     #todo - this needs to come from settings
     tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
     if not tagname_re.search(tag_name):
-        raise forms.ValidationError(
-            _(message_keys.TAG_WRONG_CHARS_MESSAGE)
-        )
+        if tag_name[0] in const.TAG_FORBIDDEN_FIRST_CHARS:
+            raise forms.ValidationError(
+                _(message_keys.TAG_WRONG_FIRST_CHAR_MESSAGE)
+            )
+        else:
+            raise forms.ValidationError(
+                _(message_keys.TAG_WRONG_CHARS_MESSAGE)
+            )
 
     if askbot_settings.FORCE_LOWERCASE_TAGS:
         #a simpler way to handle tags - just lowercase thew all
@@ -474,11 +474,6 @@ class WikiField(forms.BooleanField):
         self.label = _(
             'community wiki (karma is not awarded & '
             'many others can edit wiki post)'
-        )
-        self.help_text = _(
-            'if you choose community wiki option, the question '
-            'and answer do not generate points and name of '
-            'author will not be shown'
         )
 
     def clean(self, value):
@@ -730,7 +725,6 @@ class FeedbackForm(forms.Form):
     email = forms.EmailField(label=_('Email:'), required=False)
     message = forms.CharField(
         label=_('Your message:'),
-        max_length=800,
         widget=forms.Textarea(attrs={'cols': 60})
     )
     no_email = forms.BooleanField(
@@ -751,6 +745,11 @@ class FeedbackForm(forms.Form):
                             private_key=askbot_settings.RECAPTCHA_SECRET,
                             public_key=askbot_settings.RECAPTCHA_KEY
                         )
+    def clean_message(self):
+        message = self.cleaned_data.get('message', '').strip()
+        if not message:
+            raise forms.ValidationError(_('Message is required'))
+        return message
 
     def clean(self):
         super(FeedbackForm, self).clean()
@@ -908,18 +907,9 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     in the cleaned data, and will evaluate to False if the
     settings forbids anonymous asking
     """
-    title = TitleField()
     tags = TagNamesField()
     wiki = WikiField()
     group_id = forms.IntegerField(required = False, widget = forms.HiddenInput)
-    ask_anonymously = forms.BooleanField(
-        label=_('ask anonymously'),
-        help_text=_(
-            'Check if you do not want to reveal your name '
-            'when asking this question'
-        ),
-        required=False,
-    )
     openid = forms.CharField(
         required=False, max_length=255,
         widget=forms.TextInput(attrs={'size': 40, 'class': 'openid-input'})
@@ -929,7 +919,14 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         user = kwargs.pop('user', None)
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
+        self.fields['title'] = TitleField()
         self.fields['text'] = QuestionEditorField(user=user)
+
+        self.fields['ask_anonymously'] = forms.BooleanField(
+            label=_('post anonymously'),
+            required=False,
+        )
+
         #hide ask_anonymously field
         if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
             self.fields['language'] = LanguageField()
@@ -954,19 +951,15 @@ ASK_BY_EMAIL_SUBJECT_HELP = _(
 class AskWidgetForm(forms.Form, FormWithHideableFields):
     '''Simple form with just the title to ask a question'''
 
-    title = TitleField()
     ask_anonymously = forms.BooleanField(
         label=_('ask anonymously'),
-        help_text=_(
-            'Check if you do not want to reveal your name '
-            'when asking this question'
-        ),
         required=False,
     )
 
     def __init__(self, include_text=True, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(AskWidgetForm, self).__init__(*args, **kwargs)
+        self.fields['title'] = TitleField()
         #hide ask_anonymously field
         if not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
@@ -1206,16 +1199,10 @@ class RevisionForm(forms.Form):
         self.fields['revision'].initial = latest_revision.revision
 
 class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
-    title = TitleField()
     tags = TagNamesField()
     summary = SummaryField()
     wiki = WikiField()
     reveal_identity = forms.BooleanField(
-        help_text=_(
-            'You have asked this question anonymously, '
-            'if you decide to reveal your identity, please check '
-            'this box.'
-        ),
         label=_('reveal identity'),
         required=False,
     )
@@ -1230,6 +1217,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         #it is important to add this field dynamically
         self.fields['text'] = QuestionEditorField(user=self.user)
+        self.fields['title'] = TitleField()
         self.fields['title'].initial = revision.title
         self.fields['text'].initial = revision.text
         self.fields['tags'].initial = revision.tagnames
@@ -1520,22 +1508,15 @@ class EditUserEmailFeedsForm(forms.Form):
         'mentions_and_comments': 'i',
     }
 
-    asked_by_me = EmailFeedSettingField(
-                            label=_('Asked by me')
-                        )
-    answered_by_me = EmailFeedSettingField(
-                            label=_('Answered by me')
-                        )
-    individually_selected = EmailFeedSettingField(
-                            label=_('Individually selected')
-                        )
-    all_questions = EmailFeedSettingField(
-                            label=_('Entire forum (tag filtered)'),
-                        )
-
-    mentions_and_comments = EmailFeedSettingField(
-                            label=_('Comments and posts mentioning me'),
-                        )
+    def __init__(self, *args, **kwargs):
+        super(EditUserEmailFeedsForm, self).__init__(*args, **kwargs)
+        self.fields = SortedDict((
+            ('asked_by_me', EmailFeedSettingField(label=askbot_settings.WORDS_ASKED_BY_ME)),
+            ('answered_by_me', EmailFeedSettingField(label=askbot_settings.WORDS_ANSWERED_BY_ME)),
+            ('individually_selected', EmailFeedSettingField(label=_('Individually selected'))),
+            ('all_questions', EmailFeedSettingField(label=_('Entire forum (tag filtered)'))),
+            ('mentions_and_comments', EmailFeedSettingField(label=_('Comments and posts mentioning me')))
+        ))
 
     def set_initial_values(self, user=None):
         from askbot import models

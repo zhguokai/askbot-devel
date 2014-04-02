@@ -199,10 +199,10 @@ class DBApiTests(AskbotTestCase):
     def test_retag_tags_too_long_raises(self):
         tags = "aoaoesuouooeueooeuoaeuoeou aostoeuoaethoeastn oasoeoa nuhoasut oaeeots aoshootuheotuoehao asaoetoeatuoasu o  aoeuethut aoaoe uou uoetu uouuou ao aouosutoeh"
         question = self.post_question(user=self.user)
-        self.assertRaises(
-            exceptions.ValidationError,
-            self.user.retag_question,
-            question=question, tags=tags
+        self.user.retag_question(question=question, tags=tags)
+        self.assertEqual(
+            set(question.thread.tagnames.split()),
+            set('aoaoesuouooeueooeuoaeuoeou aostoeuoaethoeastn oasoeoa nuhoasut oaeeots aoshootuheotuoehao asaoetoeatuoasu o aoeuethut aoaoe'.split())
         )
 
     def test_search_with_apostrophe_works(self):

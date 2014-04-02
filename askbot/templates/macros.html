@@ -2,7 +2,7 @@
 
 {%- macro share(site = None, site_label = None, icon = False) -%}
     <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"
-        title="{% trans %}Share this question on {{site}}{% endtrans %}"
+        title="{% trans %}Share this content on {{site}}{% endtrans %}"
     >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
 {%- endmacro -%}
 
@@ -59,7 +59,9 @@
     {% else %}
         {{ user_card(user, karma_mode=karma_mode, badges_mode=badges_mode) }}
     {% endif %}
-    {{ user_primary_group(user) }}
+    {% if settings.GROUPS_ENABLED %}
+        {{ user_primary_group(user) }}
+    {% endif %}
 {%- endmacro -%}
 
 {%- macro post_last_updater_and_creator_info(
@@ -88,11 +90,11 @@ poor design of the data or methods on data objects #}
     {% if is_wiki %}
         <p>
            {%- if post.post_type == 'question' -%}
-                {%- trans %}asked{% endtrans %}
+               {{ settings.WORDS_ASKED|escape }}
            {% elif post.post_type == 'answer' %}
-                {%- trans %}answered{% endtrans %}
+               {{ settings.WORDS_ANSWERED|escape }}
            {% else %}
-                {%- trans %}posted{% endtrans %}
+               {%- trans %}posted{% endtrans %}
            {% endif %}
            <strong>{{ timeago(post.added_at) }}</strong>
         </p>
@@ -107,9 +109,9 @@ poor design of the data or methods on data objects #}
         <p style="line-height:12px;">
             {# todo: access to class names needs to be removed here #}
             {% if post.post_type == 'question' %}
-                {% trans %}asked{% endtrans %}
+                {{ settings.WORDS_ASKED|escape }}
             {% elif post.post_type == 'answer' %}
-                {% trans %}answered{% endtrans %}
+                {{ settings.WORDS_ANSWERED|escape }}
             {% else %}
                 {% trans %}posted{% endtrans %}
             {% endif %}
@@ -311,7 +313,6 @@ poor design of the data or methods on data objects #}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
             {% if is_link %}
             href="{{ search_state.add_tag(tag).full_url() }}"
-            title="{% trans tag=tag|escape %}see questions tagged '{{ tag }}'{% endtrans %}"
             {% endif %}
             rel="tag"
             data-tag-name="{{ tag|replace('*', '&#10045;')|escape }}"
@@ -768,7 +769,7 @@ for the purposes of the AJAX comment editor #}
 
                 {% for num in p.page_numbers %}
                     {% if num == p.page and p.pages != 1%}
-                        <span class="curr" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
+                        <span class="curr page" title="{% trans %}current page{% endtrans %}"><a>{{ num }}</a></span>
                     {% else %}
                         <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
                     {% endif %}

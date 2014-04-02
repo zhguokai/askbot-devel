@@ -23,6 +23,7 @@ from askbot.utils.html import site_url as site_url_func
 from askbot.utils import functions
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
+from askbot.utils.pluralization import py_pluralize as _py_pluralize
 from askbot.shims.django_shims import ResolverMatch
 
 from django_countries import countries
@@ -92,6 +93,13 @@ def show_block_to(block_name, user):
 def strip_path(url):
     """removes path part of the url"""
     return url_utils.strip_path(url)
+
+@register.filter
+def can_see_private_user_data(viewer, target):
+    if viewer.is_authenticated() and viewer.is_administrator_or_moderator():
+        #todo: take into account intersection of viewer and target user groups
+        return askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA 
+    return False
 
 @register.filter
 def clean_login_url(url):
@@ -350,6 +358,10 @@ def humanize_counter(number):
     else:
         return str(number)
 
+@register.filter
+def py_pluralize(source, count):
+    plural_forms = source.strip().split('\n')
+    return _py_pluralize(plural_forms, count)
 
 @register.filter
 def absolute_value(number):

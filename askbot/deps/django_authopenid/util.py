@@ -35,9 +35,9 @@ except:
 import time, base64, hmac, hashlib, operator, logging
 from models import Association, Nonce
 
-__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
+__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response']
 
-ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username', 'wordpress')
+ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'oauth2', 'openid-direct', 'openid-username', 'wordpress')
 
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
@@ -273,6 +273,15 @@ class LoginMethod(object):
             self.oauth_authorize_url = self.get_required_attr('OAUTH_AUTHORIZE_URL', for_what)
             self.oauth_get_user_id_function = self.get_required_attr('oauth_get_user_id_function', for_what)
 
+        if self.login_type == 'oauth2':
+            for_what = 'custom OAuth2 login'
+            self.auth_endpoint = self.get_required_attr('OAUTH_ENDPOINT', for_what)
+            self.token_endpoint = self.get_required_attr('OAUTH_TOKEN_ENDPOINT', for_what)
+            self.resource_endpoint = self.get_required_attr('OAUTH_RESOURCE_ENDPOINT', for_what)
+            self.oauth_get_user_id_function = self.get_required_attr('oauth_get_user_id_function', for_what)
+            self.response_parser = getattr(self.mod, 'response_parser', None)
+            self.token_transport = getattr(self.mod, 'token_transport', None)
+
         if self.login_type.startswith('openid'):
             self.openid_endpoint = self.get_required_attr('OPENID_ENDPOINT', 'custom OpenID login')
             if self.login_type == 'openid-username':
@@ -294,7 +303,8 @@ class LoginMethod(object):
             'change_password_prompt', 'consumer_key', 'consumer_secret',
             'request_token_url', 'access_token_url', 'authorize_url',
             'get_user_id_function', 'openid_endpoint', 'tooltip_text',
-            'check_password',
+            'check_password', 'auth_endpoint', 'token_endpoint',
+            'resource_endpoint', 'response_parser', 'token_transport'
         )
         #some parameters in the class have different names from those
         #in the dictionary
@@ -386,6 +396,18 @@ def get_enabled_major_login_providers():
             'change_password_prompt': _('Change your password'),
             'icon_media_path': askbot_settings.LOCAL_LOGIN_ICON,
             'password_changeable': True
+        }
+
+    if askbot_settings.SIGNIN_CUSTOM_OPENID_ENABLED:
+        context_dict = {'login_name': askbot_settings.SIGNIN_CUSTOM_OPENID_NAME}
+        data['custom_openid'] = {
+            'name': 'custom_openid',
+            'display_name': askbot_settings.SIGNIN_CUSTOM_OPENID_NAME,
+            'type': askbot_settings.SIGNIN_CUSTOM_OPENID_MODE,
+            'icon_media_path': askbot_settings.SIGNIN_CUSTOM_OPENID_LOGIN_BUTTON,
+            'tooltip_text': _('Login with %(login_name)s') % context_dict,
+            'openid_endpoint': askbot_settings.SIGNIN_CUSTOM_OPENID_ENDPOINT,
+            'extra_token_name': _('%(login_name)s username') % context_dict
         }
 
     def get_facebook_user_id(client):

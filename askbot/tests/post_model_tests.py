@@ -365,7 +365,7 @@ class ThreadRenderLowLevelCachingTests(AskbotTestCase):
         cache.cache = LocMemCache('', {})  # Enable local caching
 
         thread = self.q.thread
-        key = Thread.SUMMARY_CACHE_KEY_TPL % thread.id
+        key = Thread.SUMMARY_CACHE_KEY_TPL % (thread.id, 'en')
 
         self.assertTrue(thread.summary_html_cached())
         self.assertIsNotNone(thread.get_cached_summary_html())

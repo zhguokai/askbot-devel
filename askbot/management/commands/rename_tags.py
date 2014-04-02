@@ -4,8 +4,10 @@ retagged
 """
 import sys
 from optparse import make_option
+from django.conf import settings as django_settings
 from django.core import management
 from django.core.management.base import BaseCommand, CommandError
+from django.utils import translation
 from askbot import api, models
 from askbot.utils import console
 
@@ -94,6 +96,7 @@ ask you to confirm your action before making changes.
 
         The data of tag id's is then delegated to the command "rename_tag_id"
         """
+        translation.activate(django_settings.LANGUAGE_CODE)
         if options['from'] is None:
             raise CommandError('the --from argument is required')
         if options['to'] is None:
@@ -124,7 +127,7 @@ Also, you can try command "rename_tag_id"
 """ % tag_name
             raise CommandError(error_message)
         except models.Tag.MultipleObjectsReturned:
-            raise CommandError(u'found more than one tag named %s' % from_tag_name)
+            raise CommandError(u'found more than one tag named %s' % tag_name)
 
         admin = get_admin(seed_user_id = options['user_id'])
 

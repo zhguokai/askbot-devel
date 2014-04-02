@@ -13,13 +13,15 @@ def get_for_tag_editor():
     #data for the tag editor
     data = {
         'tag_regex': const.TAG_REGEX,
+        'tag_forbidden_first_chars': const.TAG_FORBIDDEN_FIRST_CHARS,
         'tags_are_required': askbot_settings.TAGS_ARE_REQUIRED,
         'max_tags_per_post': askbot_settings.MAX_TAGS_PER_POST,
         'max_tag_length': askbot_settings.MAX_TAG_LENGTH,
         'force_lowercase_tags': askbot_settings.FORCE_LOWERCASE_TAGS,
         'messages': {
             'required': _(msg.TAGS_ARE_REQUIRED_MESSAGE),
-            'wrong_chars': _(msg.TAG_WRONG_CHARS_MESSAGE)
+            'wrong_chars': _(msg.TAG_WRONG_CHARS_MESSAGE),
+            'wrong_first_char': _(msg.TAG_WRONG_FIRST_CHAR_MESSAGE),
         }
     }
     return {'tag_editor_settings': simplejson.dumps(data)}

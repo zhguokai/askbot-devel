@@ -1,6 +1,8 @@
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import LOGIN_USERS_COMMUNICATION
 from askbot.deps import livesettings
+from askbot.deps.livesettings import BooleanValue
+from askbot.deps.livesettings import StringValue
 from django.utils.translation import ugettext_lazy as _
 
 ACCESS_CONTROL = livesettings.ConfigurationGroup(
@@ -8,6 +10,26 @@ ACCESS_CONTROL = livesettings.ConfigurationGroup(
                     _('Access control settings'),
                     super_group = LOGIN_USERS_COMMUNICATION
                 )
+
+settings.register(
+    BooleanValue(
+        ACCESS_CONTROL,
+        'READ_ONLY_MODE_ENABLED',
+        default=False,
+        description=_('Make site read-only'),
+    )
+)
+
+settings.register(
+    StringValue(
+        ACCESS_CONTROL,
+        'READ_ONLY_MESSAGE',
+        default=_(
+            'The site is temporarily read-only. '
+            'Only viewing of the content is possible at the moment.'
+        )
+    )
+)
 
 settings.register(
     livesettings.BooleanValue(

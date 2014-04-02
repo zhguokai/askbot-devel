@@ -20,6 +20,7 @@ at run time
 
 askbot.deps.livesettings is a module developed for satchmo project
 """
+from django.conf import settings as django_settings
 from django.core.cache import cache
 from askbot.deps.livesettings import SortedDotDict, config_register
 from askbot.deps.livesettings.functions import config_get
@@ -47,7 +48,11 @@ class ConfigSettings(object):
         will be required in code to convert an app
         depending on django.conf.settings to askbot.deps.livesettings
         """
-        return getattr(self.__instance, key).value
+        hardcoded_setting = getattr(django_settings, 'ASKBOT_' + key, None)
+        if hardcoded_setting is None:
+            return getattr(self.__instance, key).value
+        else:
+            return hardcoded_setting
 
     def get_default(self, key):
         """return the defalut value for the setting"""
@@ -93,24 +98,39 @@ class ConfigSettings(object):
             self.__group_map[key] = group_key
 
     def as_dict(self):
-        settings = cache.get('askbot-livesettings')
+        cache_key = get_bulk_cache_key()
+        settings = cache.get(cache_key)
         if settings:
             return settings
         else:
-            self.prime_cache()
-            return cache.get('askbot-livesettings')
+            self.prime_cache(cache_key)
+            return cache.get(cache_key)
 
     @classmethod
-    def prime_cache(cls, **kwargs):
+    def prime_cache(cls, cache_key, **kwargs):
         """reload all settings into cache as dictionary
         """
         out = dict()
         for key in cls.__instance.keys():
             #todo: this is odd that I could not use self.__instance.items() mapping here
-            out[key] = cls.__instance[key].value
-        cache.set('askbot-livesettings', out)
+            hardcoded_setting = getattr(django_settings, 'ASKBOT_' + key, None)
+            if hardcoded_setting is None:
+                out[key] = cls.__instance[key].value
+            else:
+                out[key] = hardcoded_setting
+        cache.set(cache_key, out)
 
 
-signals.configuration_value_changed.connect(ConfigSettings.prime_cache)
+def get_bulk_cache_key():
+    from askbot.utils.translation import get_language
+    return 'askbot-settings-' + get_language()
+
+
+def prime_cache_handler(*args, **kwargs):
+    cache_key = get_bulk_cache_key()
+    ConfigSettings.prime_cache(cache_key)
+
+
+signals.configuration_value_changed.connect(prime_cache_handler)
 #settings instance to be used elsewhere in the project
 settings = ConfigSettings()

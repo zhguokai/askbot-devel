@@ -30,6 +30,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import cgi
 import datetime
 from django.http import HttpResponseRedirect, Http404
 from django.http import HttpResponse
@@ -212,6 +213,7 @@ def ask_openid(
     try:
         auth_request = consumer.begin(openid_url)
     except DiscoveryFailure:
+        openid_url = cgi.escape(openid_url)
         msg = _(u"OpenID %(openid_url)s is invalid" % {'openid_url':openid_url})
         logging.debug(msg)
         return on_failure(request, msg)
@@ -292,12 +294,12 @@ def complete_oauth2_signin(request):
 
     client_id = getattr(
             askbot_settings,
-            provider_name.upper() + '_KEY'
+            provider_name.upper() + '_KEY',
         )
 
     client_secret = getattr(
             askbot_settings,
-            provider_name.upper() + '_SECRET'
+            provider_name.upper() + '_SECRET',
         )
 
     client = OAuth2Client(
@@ -305,12 +307,13 @@ def complete_oauth2_signin(request):
             resource_endpoint=params['resource_endpoint'],
             redirect_uri=site_url(reverse('user_complete_oauth2_signin')),
             client_id=client_id,
-            client_secret=client_secret
+            client_secret=client_secret,
+            token_transport=params.get('token_transport', None)
         )
 
     client.request_token(
         code=request.GET['code'],
-        parser=params['response_parser']
+        parser=params.get('response_parser', None)
     )
 
     #todo: possibly set additional parameters here
@@ -326,6 +329,11 @@ def complete_oauth2_signin(request):
 
     request.session['email'] = ''#todo: pull from profile
     request.session['username'] = ''#todo: pull from profile
+
+    if (provider_name == 'facebook'):
+        profile = client.request("me")
+        request.session['email'] = profile['email']
+        request.session['username'] = profile['username']
 
     return finalize_generic_signin(
                         request = request,
@@ -735,8 +743,8 @@ def show_signin_view(
         'page_class': 'openid-signin',
         'view_subtype': view_subtype, #add_openid|default
         'page_title': page_title,
-        'question':question,
-        'answer':answer,
+        'question': question,
+        'answer': answer,
         'login_form': login_form,
         'use_password_login': util.use_password_login(),
         'account_recovery_form': account_recovery_form,
@@ -1352,16 +1360,3 @@ def account_recover(request):
             return show_signin_view(request, view_subtype = 'bad_key')
 
         return HttpResponseRedirect(get_next_url(request))
-
-#internal server view used as return value by other views
-def validation_email_sent(request):
-    """this function is called only if EMAIL_VALIDATION setting is
-    set to True bolean value"""
-    assert(askbot_settings.EMAIL_VALIDATION == True)
-    logging.debug('')
-    data = {
-        'email': request.user.email,
-        'change_email_url': reverse('user_changeemail'),
-        'action_type': 'validate'
-    }
-    return render(request, 'authopenid/changeemail.html', data)

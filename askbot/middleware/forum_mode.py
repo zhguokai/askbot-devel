@@ -8,13 +8,14 @@ from django.conf import settings
 from django.core.urlresolvers import resolve
 from askbot.shims.django_shims import ResolverMatch
 from askbot.conf import settings as askbot_settings
+import urllib
 
 PROTECTED_VIEW_MODULES = (
     'askbot.views',
     'askbot.feed',
 )
 ALLOWED_VIEWS = (
-    'askbot.views.meta.media',
+    'askbot.views.meta.config_variable',
 )
 
 def is_view_protected(view_func):
@@ -63,5 +64,9 @@ class ForumModeMiddleware(object):
                     _('Please log in to use %s') % \
                     askbot_settings.APP_SHORT_NAME
                 )
-                return HttpResponseRedirect(settings.LOGIN_URL)
+                redirect_url = '%s?next=%s' % (
+                    settings.LOGIN_URL,
+                    urllib.quote_plus(request.get_full_path())
+                )
+                return HttpResponseRedirect(redirect_url)
         return None

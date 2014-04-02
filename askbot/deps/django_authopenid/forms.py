@@ -30,6 +30,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import logging
+import cgi
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
@@ -75,7 +76,7 @@ class LoginProviderField(forms.CharField):
         if value in providers:
             return value
         else:
-            error_message = 'unknown provider name %s' % value
+            error_message = 'unknown provider name %s' % cgi.escape(value)
             logging.critical(error_message)
             raise forms.ValidationError(error_message)
 

@@ -14,6 +14,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.translation import string_concat
 from django.utils.translation import get_language
+from django.utils.translation import activate as activate_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
@@ -24,8 +25,6 @@ from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
-from askbot.models.post import Post, PostRevision
-from askbot.models.post import PostToGroup
 from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models import signals
 from askbot import const
@@ -33,6 +32,27 @@ from askbot.utils.lists import LazyList
 from askbot.search import mysql
 from askbot.utils.slug import slugify
 from askbot.search.state_manager import DummySearchState
+
+
+def clean_tagnames(tagnames):
+    """Cleans tagnames string so that the field fits the constraint of the
+    database.
+    TODO: remove this when the Thread.tagnames field is converted into
+    text_field
+    """
+    original = tagnames
+    tagnames = tagnames.strip().split()
+    #see if the tagnames field fits into 125 bytes
+    while True:
+        encoded_tagnames = ' '.join(tagnames).encode('utf-8')
+        length = len(encoded_tagnames)
+        if length == 0:
+            return ''
+        elif length <= 125:
+            return ' '.join(tagnames)
+        else:
+            tagnames.pop()
+
 
 class ThreadQuerySet(models.query.QuerySet):
     def get_visible(self, user):
@@ -52,7 +72,7 @@ class ThreadQuerySet(models.query.QuerySet):
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
             from askbot.search.haystack.searchquery import AskbotSearchQuerySet
             hs_qs = AskbotSearchQuerySet().filter(content=search_query).models(self.model)
-            return hs_qs.get_django_queryset()
+            return self & hs_qs.get_django_queryset()
         else:
             db_engine_name = askbot.get_database_engine_name()
             filter_parameters = {'deleted': False}
@@ -134,6 +154,7 @@ class ThreadManager(BaseQuerySetManager):
         # TODO: Some of this code will go to Post.objects.create_new
 
         language = language or get_language()
+        tagnames = clean_tagnames(tagnames)
 
         thread = super(
             ThreadManager,
@@ -147,6 +168,7 @@ class ThreadManager(BaseQuerySetManager):
         )
 
         #todo: code below looks like ``Post.objects.create_new()``
+        from askbot.models.post import Post
         question = Post(
             post_type='question',
             thread=thread,
@@ -369,7 +391,7 @@ class ThreadManager(BaseQuerySetManager):
             except User.DoesNotExist:
                 meta_data['author_name'] = None
             else:
-                qs = qs.filter(posts__post_type__in=('question', 'answer'), posts__author=u, posts__deleted=False)
+                qs = qs.filter(posts__post_type='question', posts__author=u, posts__deleted=False)
                 meta_data['author_name'] = u.username
 
         #get users tag filters
@@ -466,6 +488,7 @@ class ThreadManager(BaseQuerySetManager):
         #threads = [thread for thread in threads if not thread.summary_html_cached()]
 
         thread_ids = [obj.id for obj in threads]
+        from askbot.models.post import Post
         page_questions = Post.objects.filter(
             post_type='question', thread__id__in = thread_ids
         ).only(# pick only the used fields
@@ -491,6 +514,7 @@ class ThreadManager(BaseQuerySetManager):
     def get_thread_contributors(self, thread_list):
         """Returns query set of Thread contributors"""
         # INFO: Evaluate this query to avoid subquery in the subsequent query below (At least MySQL can be awfully slow on subqueries)
+        from askbot.models.post import Post
         u_id = list(Post.objects.filter(post_type__in=('question', 'answer'), thread__in=thread_list).values_list('author', flat=True))
 
         #todo: this does not belong gere - here we select users with real faces
@@ -505,6 +529,8 @@ class ThreadManager(BaseQuerySetManager):
 
     def get_for_user(self, user):
         """returns threads where a given user had participated"""
+        from askbot.models.post import PostRevision
+        from askbot.models.post import Post
         post_ids = PostRevision.objects.filter(
                                         author = user
                                     ).values_list(
@@ -543,7 +569,7 @@ class ThreadToGroup(models.Model):
 
 
 class Thread(models.Model):
-    SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
+    SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d-%s'
     ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
 
     title = models.CharField(max_length=300)
@@ -560,6 +586,8 @@ class Thread(models.Model):
     last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
     language_code = models.CharField(max_length=16, default=django_settings.LANGUAGE_CODE)
 
+    #todo: these two are redundant (we used to have a "star" and "subscribe"
+    #now merged into "followed")
     followed_by     = models.ManyToManyField(User, related_name='followed_threads')
     favorited_by    = models.ManyToManyField(User, through='FavoriteQuestion', related_name='unused_favorite_threads')
 
@@ -578,7 +606,7 @@ class Thread(models.Model):
     #approvals - by whom and when
     approved = models.BooleanField(default=True, db_index=True)
 
-    accepted_answer = models.ForeignKey(Post, null=True, blank=True, related_name='+')
+    accepted_answer = models.ForeignKey('Post', null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
     added_at = models.DateTimeField(default = datetime.datetime.now)
 
@@ -605,6 +633,7 @@ class Thread(models.Model):
         post = getattr(self, '_question_cache', None)
         if post:
             return post
+        from askbot.models.post import Post
         self._question_cache = Post.objects.get(post_type='question', thread=self)
         return self._question_cache
 
@@ -828,14 +857,15 @@ class Thread(models.Model):
         else:
             return self.title
 
-    def format_for_email(self, user=None):
+    def format_for_email(self, recipient=None):
         """experimental function: output entire thread for email"""
 
         question, answers, junk, published_ans_ids = \
-                                self.get_cached_post_data(user=user)
+                                self.get_cached_post_data(user=recipient)
 
-        output = question.format_for_email_as_subthread()
+        output = question.format_for_email_as_subthread(recipient=recipient)
         if answers:
+            #todo: words
             answer_heading = ungettext(
                                     '%(count)d answer:',
                                     '%(count)d answers:',
@@ -843,7 +873,7 @@ class Thread(models.Model):
                                 ) % {'count': len(answers)}
             output += '<p>%s</p>' % answer_heading
             for answer in answers:
-                output += answer.format_for_email_as_subthread()
+                output += answer.format_for_email_as_subthread(recipient=recipient)
         return output
 
     def get_answers_by_user(self, user):
@@ -911,7 +941,7 @@ class Thread(models.Model):
             #            )
 
     def invalidate_cached_thread_content_fragment(self):
-        cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
 
     def get_post_data_cache_key(self, sort_method = None):
         return 'thread-data-%s-%s' % (self.id, sort_method)
@@ -1106,6 +1136,7 @@ class Thread(models.Model):
             # Denormalize questions to speed up template rendering
             # todo: just denormalize question_post_id on the thread!
             thread_map = dict([(thread.id, thread) for thread in similar_threads])
+            from askbot.models.post import Post
             questions = Post.objects.get_questions()
             questions = questions.select_related('thread').filter(thread__in=similar_threads)
             for q in questions:
@@ -1150,6 +1181,7 @@ class Thread(models.Model):
         #it is important that update method is called - not save,
         #because we do not want the signals to fire here
         thread_question = self._question_post()
+        from askbot.models.post import Post
         Post.objects.filter(id=thread_question.id).update(is_anonymous=False)
         thread_question.revisions.all().update(is_anonymous=False)
 
@@ -1183,6 +1215,7 @@ class Thread(models.Model):
         """removes child posts from given groups"""
         post_ids = self.posts.all().values_list('id', flat=True)
         group_ids = [group.id for group in groups]
+        from askbot.models.post import PostToGroup
         PostToGroup.objects.filter(
                         post__id__in=post_ids,
                         tag__id__in=group_ids
@@ -1400,18 +1433,17 @@ class Thread(models.Model):
             silent=silent
         )
 
+
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
         """changes thread tags"""
         if None in (retagged_by, retagged_at, tagnames):
             raise Exception('arguments retagged_at, retagged_by and tagnames are required')
 
-        if len(tagnames) > 125:#todo: remove magic number!!!
-            raise django_exceptions.ValidationError('tagnames value too long')
+        tagnames = clean_tagnames(tagnames)
+        self.tagnames = tagnames
+        self.save()
 
         thread_question = self._question_post()
-
-        self.tagnames = tagnames.strip()
-        self.save()
 
         # Update the Question itself
         if silent == False:
@@ -1426,6 +1458,8 @@ class Thread(models.Model):
 
         # Create a new revision
         latest_revision = thread_question.get_latest_revision()
+
+        from askbot.models.post import PostRevision
         PostRevision.objects.create(
             post=thread_question,
             title=latest_revision.title,
@@ -1490,7 +1524,7 @@ class Thread(models.Model):
         #parameter visitor is there to get summary out by the user groups
         if askbot_settings.GROUPS_ENABLED:
             return None
-        return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
 
     def update_summary_html(self, visitor = None):
         #todo: it is quite wrong that visitor is an argument here
@@ -1508,6 +1542,7 @@ class Thread(models.Model):
         }
         from askbot.views.context import get_extra as get_extra_context
         context.update(get_extra_context('ASKBOT_QUESTION_SUMMARY_EXTRA_CONTEXT', None, context))
+        activate_language(self.language_code)
         html = get_template('widgets/question_summary.html').render(context)
         # INFO: Timeout is set to 30 days:
         # * timeout=0/None is not a reliable cross-backend way to set infinite timeout
@@ -1515,17 +1550,17 @@ class Thread(models.Model):
         # * Additionally, Memcached treats timeouts > 30day as dates (https://code.djangoproject.com/browser/django/tags/releases/1.3/django/core/cache/backends/memcached.py#L36),
         #   which probably doesn't break anything but if we can stick to 30 days then let's stick to it
         cache.cache.set(
-            self.SUMMARY_CACHE_KEY_TPL % self.id,
+            self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()),
             html,
             timeout=const.LONG_TIME
         )
         return html
 
     def summary_html_cached(self):
-        return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % self.id)
+        return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
 
 class QuestionView(models.Model):
-    question = models.ForeignKey(Post, related_name='viewed')
+    question = models.ForeignKey('Post', related_name='viewed')
     who = models.ForeignKey(User, related_name='question_views')
     when = models.DateTimeField()
 
@@ -1598,9 +1633,3 @@ class AnonymousQuestion(DraftContent):
                             text=self.text,
                             tagnames=self.tagnames
                         )
-            #add message with a link to the ask page
-            extra_message = _(
-                'Please, <a href="%s">review your question</a>.'
-            ) % reverse('ask')
-            message = string_concat(unicode(error), u' ', extra_message)
-            user.message_set.create(message=unicode(message))

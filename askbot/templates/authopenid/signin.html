@@ -10,20 +10,6 @@
 {% if have_buttons or view_subtype == 'email_sent' %}
     <h1 class="section-title">{{page_title}}</h1>
 {% endif %}
-    {% if answer %}
-        <div class="message">
-        {% trans title=answer.question.title|escape %}
-        Your answer to {{title}} will be posted once you log in
-        {% endtrans %}
-        </div>
-    {% endif %}
-    {% if question %}
-        <div class="message">
-        {% trans title=question.title|escape %}Your question 
-        {{title}} will be posted once you log in
-        {% endtrans %}
-        </div>
-    {% endif %}
     {% if not (view_subtype == 'default' and have_buttons) %}
     <p id='login-intro'>
         {% if view_subtype == 'add_openid' and have_buttons %}
@@ -87,7 +73,7 @@
             {% endif %}
         >
             {{login_form.password_action}}
-            {% if user.is_anonymous() %}
+            {% if user.is_anonymous() or settings.USE_LDAP_FOR_PASSWORD_LOGIN %}
                 {% if have_buttons %}
                     <h2 id="password-heading">
                         {% trans %}or enter your <span>user name and password</span>{% endtrans %}
@@ -106,7 +92,13 @@
                     </tr>
                     {% endif %}
                     <tr>
-                        <td><label for="id_username">{% trans %}Login or email{% endtrans %}</label></td>
+                        <td><label for="id_username">
+                        {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN %}
+                            {% trans %}Login{% endtrans %}
+                        {% else %}
+                            {% trans %}Login or email{% endtrans %}
+                        {% endif %}
+                        </label></td>
                         <td>{{login_form.username}}</td>
                     </tr>
                     <tr>
@@ -120,7 +112,7 @@
                     <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}?login_provider=local">{% trans %}Create a password-protected account{% endtrans %}</a>
                     {% endif %}
                 </p>
-            {% elif settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
+            {% else %}{# change password form #}
                 <h2 id="password-heading">
                     {% trans %}To change your password - please enter the new one twice, then submit{% endtrans %}
                 </h2>

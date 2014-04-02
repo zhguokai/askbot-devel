@@ -5,13 +5,17 @@
 # Translators:
 # ppanhh <ppanhh@gmail.com>, 2013
 # Cong It <EMAIL@ADDRESS>, 2010
+# linux <linux87s@gmail.com>, 2013
+# Nguyen Long <gialacmail@gmail.com>, 2013
+# ppanhh <ppanhh@gmail.com>, 2013
+# rgv151 <rgv151@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-08-17 04:26+0000\n"
-"Last-Translator: ppanhh <ppanhh@gmail.com>\n"
+"PO-Revision-Date: 2013-09-19 03:25+0000\n"
+"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/projects/p/askbot/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,17 +51,17 @@ msgstr "Khung thông tin về quốc gia không được để trống"
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
-msgstr[0] ""
+msgstr[0] "cần phải dài hơn %d kí tự"
 
 #: forms.py:199
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
-msgstr[0] ""
+msgstr[0] "cần phải ngắn hơn %d kí tự"
 
 #: forms.py:220
 msgid "minor edit (don't send alerts)"
-msgstr ""
+msgstr "chỉnh sữa nhỏ (không gửi thông báo)"
 
 #: forms.py:247 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
@@ -66,23 +70,23 @@ msgstr "tiêu đề"
 
 #: forms.py:249 templates/embed/ask_by_widget.html:170
 msgid "Please enter your question"
-msgstr ""
+msgstr "Hãy nhập câu hỏi của bạn"
 
 #: forms.py:260
 #, python-format
 msgid "must have > %d character"
 msgid_plural "must have > %d characters"
-msgstr[0] ""
+msgstr[0] "cần phải dài hơn %d kí tự"
 
 #: forms.py:270
 #, python-format
 msgid "The question is too long, maximum allowed size is %d characters"
-msgstr ""
+msgstr "Câu hỏi này quá dài, tối đa cho phép là %d  kí tự"
 
 #: forms.py:277
 #, python-format
 msgid "The question is too long, maximum allowed size is %d bytes"
-msgstr ""
+msgstr "Câu hỏi này quá dài, tối đa cho phép là %d byte"
 
 #: forms.py:309
 msgid "content"
@@ -98,7 +102,7 @@ msgstr[0] "mỗi thẻ đánh dấu phải có ít hơn %(max_chars)d ký tự"
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
-msgstr ""
+msgstr "Chúng ta đã sử dụng hết dung lượng thẻ tối đa, hãy rút ngắn lại hoặc bỏ bớt để tiếp tục."
 
 #: forms.py:410 forms.py:1006 models/widgets.py:27
 #: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
@@ -113,7 +117,7 @@ msgid ""
 msgid_plural ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tags can "
 "be used."
-msgstr[0] ""
+msgstr[0] "Thẻ là những từ khoá ngắn, không có khoảng trống. Bạn có thể dùng tối đa %(max_tags)d."
 
 #: forms.py:439
 #, python-format
@@ -160,122 +164,122 @@ msgstr "đã theo dõi"
 
 #: forms.py:602 const/__init__.py:377
 msgid "suspended"
-msgstr ""
+msgstr "bị đình chỉ"
 
 #: forms.py:603 const/__init__.py:378
 msgid "blocked"
-msgstr ""
+msgstr "bị khóa"
 
 #: forms.py:605
 msgid "administrator"
-msgstr ""
+msgstr "quản trị viên"
 
 #: forms.py:606 const/__init__.py:374
 msgid "moderator"
-msgstr ""
+msgstr "điều hành viên"
 
 #: forms.py:625
 msgid "Change status to"
-msgstr ""
+msgstr "Đổi trạng thái thành"
 
 #: forms.py:652
 msgid "which one?"
-msgstr ""
+msgstr "-- chọn -- "
 
 #: forms.py:673
 msgid "Cannot change own status"
-msgstr ""
+msgstr "Bạn không thể thay đổi quyền của mình"
 
 #: forms.py:679
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "Bạn không thể nâng quyền điều hành cho người khác"
 
 #: forms.py:686
 msgid "Cannot change status of another moderator"
-msgstr ""
+msgstr "Không thể thay đổi quyền của người điều hành khác"
 
 #: forms.py:692
 msgid "Cannot change status to admin"
-msgstr ""
+msgstr "Không thể nâng lên quyền quản lý"
 
 #: forms.py:698
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
-msgstr ""
+msgstr "Nếu bạn muốn thay đổi quyền của %(username)s, hãy đưa ra lựa chọn hợp lý."
 
 #: forms.py:708
 msgid "Subject line"
-msgstr ""
+msgstr "Tiêu đề"
 
 #: forms.py:713
 msgid "Message text"
-msgstr ""
+msgstr "Nội dung"
 
 #: forms.py:727
 msgid "Your name (optional):"
-msgstr ""
+msgstr "Tên của bạn (Không bắt buộc)"
 
 #: forms.py:728
 msgid "Email:"
-msgstr ""
+msgstr "Email:"
 
 #: forms.py:730
 msgid "Your message:"
-msgstr ""
+msgstr "Thông điệp:"
 
 #: forms.py:735
 msgid "I don't want to give my email or receive a response:"
-msgstr ""
+msgstr "Tôi không muốn cung cấp địa chỉ email hoặc nhận thông tin phản hồi:"
 
 #: forms.py:758
 msgid "Please mark \"I dont want to give my mail\" field."
-msgstr ""
+msgstr "Hãy đánh dấu mục \"Tôi không muốn cung cấp địa chỉ email\"."
 
 #: forms.py:791
 msgid "keep private within your groups"
-msgstr ""
+msgstr "giữ bí mật trong các nhóm của bạn"
 
 #: forms.py:830
 msgid "User name:"
-msgstr ""
+msgstr "Tên đăng nhập:"
 
 #: forms.py:832
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
-msgstr ""
+msgstr "Hãy điền tên của người bạn muốn đăng hộ, hoặc tạo tài khoản mới."
 
 #: forms.py:839
 msgid "Email address:"
-msgstr ""
+msgstr "Địa chỉ email:"
 
 #: forms.py:889
 msgid "User name is required with the email"
-msgstr ""
+msgstr "Tên đăng nhập là bắt buộc cùng với email"
 
 #: forms.py:894
 msgid "Email is required if user name is added"
-msgstr ""
+msgstr "Bạn phải cung cấp địa chỉ email nếu dùng tên đăng nhập"
 
 #: forms.py:914 forms.py:957
 msgid "ask anonymously"
-msgstr ""
+msgstr "hỏi nặc danh"
 
 #: forms.py:916 forms.py:959
 msgid "Check if you do not want to reveal your name when asking this question"
-msgstr ""
+msgstr "chọn nếu bạn không muốn tiết lộ tên của bạn khi hỏi câu hỏi này"
 
 #: forms.py:947
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
-msgstr ""
+msgstr "Tiêu đề được hiểu theo định dạng: [thẻ1, thẻ2, thẻ3,...] câu hỏi"
 
 #: forms.py:1213
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
-msgstr ""
+msgstr "Bạn đã  ẩn danh khi hỏi câu này, nếu bạn quyết định tiết lộ danh tính của bạn, xin vui lòng chọn vào đây ."
 
 #: forms.py:1217
 msgid "reveal identity"
@@ -296,7 +300,7 @@ msgstr ""
 
 #: forms.py:1373
 msgid "Real name"
-msgstr ""
+msgstr "Tên thật"
 
 #: forms.py:1380
 msgid "Website"
@@ -304,27 +308,27 @@ msgstr ""
 
 #: forms.py:1387
 msgid "City"
-msgstr ""
+msgstr "Thành phố"
 
 #: forms.py:1396
 msgid "Show country"
-msgstr ""
+msgstr "Hiển thị Quốc gia"
 
 #: forms.py:1401
 msgid "Show tag choices"
-msgstr ""
+msgstr "Hiển thị lựa chọn từ khóa"
 
 #: forms.py:1406
 msgid "Date of birth"
-msgstr ""
+msgstr "Ngày sinh"
 
 #: forms.py:1408
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr ""
+msgstr "sẽ không được hiển thị, được dùng để tính tuổi, định dạng : YYYY-MM-DD"
 
 #: forms.py:1416
 msgid "Profile"
-msgstr ""
+msgstr "Hồ sơ cá nhân"
 
 #: forms.py:1425
 msgid "Screen name"
@@ -332,7 +336,7 @@ msgstr ""
 
 #: forms.py:1457 forms.py:1461
 msgid "this email has already been registered, please use another one"
-msgstr ""
+msgstr "email này đã được sử dụng hãy thử lại với email khác"
 
 #: forms.py:1470
 msgid "Choose email tag filter"
@@ -340,11 +344,11 @@ msgstr ""
 
 #: forms.py:1522
 msgid "Asked by me"
-msgstr ""
+msgstr "Câu hỏi của tôi"
 
 #: forms.py:1525
 msgid "Answered by me"
-msgstr ""
+msgstr "Câu trả lời của tôi"
 
 #: forms.py:1528
 msgid "Individually selected"
@@ -352,15 +356,15 @@ msgstr ""
 
 #: forms.py:1531
 msgid "Entire forum (tag filtered)"
-msgstr ""
+msgstr "Toàn bộ diễn đàn (đã lọc theo từ khóa)"
 
 #: forms.py:1535
 msgid "Comments and posts mentioning me"
-msgstr ""
+msgstr "Ý kiến ​​và bài ​​viết đề cập đến tôi"
 
 #: forms.py:1619
 msgid "please choose one of the options above"
-msgstr ""
+msgstr "xin vui lòng chọn một trong các tùy chọn ở trên"
 
 #: forms.py:1622
 msgid "okay, let's try!"
@@ -373,51 +377,51 @@ msgstr ""
 
 #: forms.py:1673 templates/reopen.html:7
 msgid "Title"
-msgstr ""
+msgstr "tiêu đề"
 
 #: forms.py:1676 templates/groups.html:32
 msgid "Description"
-msgstr ""
+msgstr "Mô tả"
 
 #: forms.py:1695 templates/tags.html:3 templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
 msgid "Tags"
-msgstr ""
+msgstr "Thẻ đánh dấu"
 
 #: tasks.py:98
 msgid "An edit for my answer"
-msgstr ""
+msgstr "chỉnh sửa câu trả lời của tôi"
 
 #: tasks.py:101
 msgid "To add to your post EDIT ABOVE THIS LINE"
-msgstr ""
+msgstr "Để thêm vào bài viết của bạn SỬA DÒNG TRÊN"
 
 #: tasks.py:119
 #, python-format
 msgid "Your post at %(site_name)s is now published"
-msgstr ""
+msgstr "Bài viết của bạn đã được đăng ở mục %(site_name)s"
 
 #: urls.py:44
 msgid "questions"
-msgstr ""
+msgstr "câu hỏi"
 
 #: urls.py:56
 msgid "question/"
-msgstr ""
+msgstr "câu hỏi/"
 
 #: urls.py:61
 msgid "tags/"
-msgstr ""
+msgstr "thẻ đánh dấu/"
 
 #: urls.py:66 urls.py:71 urls.py:78 urls.py:84 urls.py:93 urls.py:100
 msgid "users/"
-msgstr ""
+msgstr "người dùng/"
 
 #: urls.py:71
 msgid "by-group/"
-msgstr ""
+msgstr "bởi nhóm/"
 
 #: urls.py:78 urls.py:159 urls.py:226 urls.py:520
 msgid "edit/"
@@ -556,23 +560,23 @@ msgstr ""
 
 #: conf/access_control.py:17
 msgid "Allow only registered user to access the forum"
-msgstr ""
+msgstr "Chỉ cho phép người dùng đã đăng ký được vào diễn đàn"
 
 #: conf/access_control.py:22
 msgid "nothing - not required"
-msgstr ""
+msgstr "không có gì - không bắt buộc"
 
 #: conf/access_control.py:23
 msgid "access to content"
-msgstr ""
+msgstr "truy cập nội dung"
 
 #: conf/access_control.py:34
 msgid "Require valid email for"
-msgstr ""
+msgstr "yêu cầu email hợp lệ cho"
 
 #: conf/access_control.py:44
 msgid "Allowed email addresses"
-msgstr ""
+msgstr "Địa chỉ email cho phép"
 
 #: conf/access_control.py:45
 msgid "Please use space to separate the entries"
@@ -580,7 +584,7 @@ msgstr ""
 
 #: conf/access_control.py:54
 msgid "Allowed email domain names"
-msgstr ""
+msgstr "Địa chỉ tên miền email cho phép"
 
 #: conf/access_control.py:55
 msgid "Please use space to separate the entries, do not use the @ symbol!"
@@ -588,7 +592,7 @@ msgstr ""
 
 #: conf/badges.py:13
 msgid "Badge settings"
-msgstr ""
+msgstr "Thiết lập huy hiệu"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
@@ -628,15 +632,15 @@ msgstr ""
 
 #: conf/badges.py:104
 msgid "Popular Question: minimum views"
-msgstr ""
+msgstr "Câu hỏi phổ biến: lượt xem tối thiểu"
 
 #: conf/badges.py:113
 msgid "Notable Question: minimum views"
-msgstr ""
+msgstr "Câu hỏi đáng chú ý:lượt xem tối thiểu"
 
 #: conf/badges.py:122
 msgid "Famous Question: minimum views"
-msgstr ""
+msgstr "Câu hỏi nổi tiếng: lượt xem tối thiểu"
 
 #: conf/badges.py:131
 msgid "Self-Learner: minimum answer upvotes"
@@ -664,7 +668,7 @@ msgstr ""
 
 #: conf/badges.py:185
 msgid "Associate Editor: minimum number of edits"
-msgstr ""
+msgstr "Phó biên tập: số lượng chỉ sửa tối thiểu"
 
 #: conf/badges.py:194
 msgid "Favorite Question: minimum stars"
@@ -688,11 +692,11 @@ msgstr ""
 
 #: conf/email.py:15
 msgid "Email and email alert settings"
-msgstr ""
+msgstr "Email và thiết lập email cảnh báo"
 
 #: conf/email.py:24
 msgid "Prefix for the email subject line"
-msgstr ""
+msgstr "Tiền tố cho dòng chủ đề email"
 
 #: conf/email.py:26
 msgid ""
@@ -702,70 +706,70 @@ msgstr ""
 
 #: conf/email.py:44
 msgid "Site administrator email address"
-msgstr ""
+msgstr "Địa chỉ email của người quản trị trang web"
 
 #: conf/email.py:53
 msgid "Enable email alerts"
-msgstr ""
+msgstr "Bật thông báo bằng email"
 
 #: conf/email.py:62
 msgid "Maximum number of news entries in an email alert"
-msgstr ""
+msgstr "Số lượng tối đa các mục tin tức trong một thông báo qua email"
 
 #: conf/email.py:72
 msgid "Default notification frequency all questions"
-msgstr ""
+msgstr "Mặc định tần số thông báo tất cả các câu hỏi"
 
 #: conf/email.py:74
 msgid "Option to define frequency of emailed updates for: all questions."
-msgstr ""
+msgstr "Tùy chọn để xác định tần số cập nhật được gửi qua email cho: tất cả các câu hỏi."
 
 #: conf/email.py:86
 msgid "Default notification frequency questions asked by the user"
-msgstr ""
+msgstr "Mặc định tần số thông báo câu hỏi của người sử dụng"
 
 #: conf/email.py:88
 msgid ""
 "Option to define frequency of emailed updates for: Question asked by the "
 "user."
-msgstr ""
+msgstr "Tùy chọn để xác định tần số cập nhật được gửi qua email cho: Câu hỏi yêu cầu bởi người dùng."
 
 #: conf/email.py:100
 msgid "Default notification frequency questions answered by the user"
-msgstr ""
+msgstr "Tần số thông báo mặc định cho câu hỏi đã trả lời bởi người dùng"
 
 #: conf/email.py:102
 msgid ""
 "Option to define frequency of emailed updates for: Question answered by the "
 "user."
-msgstr ""
+msgstr "Tùy chọn để xác định tần số cập nhật được gửi qua email cho: Câu hỏi đã trả lời bởi người dùng."
 
 #: conf/email.py:114
 msgid ""
 "Default notification frequency questions individually"
 "                        selected by the user"
-msgstr ""
+msgstr "Tần số  thông báo mặc định câu hỏi lựa chọn cá nhân của người dùng"
 
 #: conf/email.py:117
 msgid ""
 "Option to define frequency of emailed updates for: Question individually "
 "selected by the user."
-msgstr ""
+msgstr "Tùy chọn để xác định tần số cập nhật được gửi qua email cho: Câu hỏi lựa chọn cá nhân của người dùng."
 
 #: conf/email.py:129
 msgid ""
 "Default notification frequency for mentions                        and "
 "comments"
-msgstr ""
+msgstr "Tần số thông báo mặc định  cho đề cập và bình luận"
 
 #: conf/email.py:132
 msgid ""
 "Option to define frequency of emailed updates for: Mentions and comments."
-msgstr ""
+msgstr "Tùy chọn để xác định tần số cập nhật được gửi qua email cho: Đề cập và bình luận."
 
 #: conf/email.py:143
 msgid "Send periodic reminders about unanswered questions"
-msgstr ""
+msgstr "Gửi lời nhắc nhở định kỳ về các câu hỏi chưa được trả lời"
 
 #: conf/email.py:145
 msgid ""
@@ -776,7 +780,7 @@ msgstr ""
 
 #: conf/email.py:158
 msgid "Days before starting to send reminders about unanswered questions"
-msgstr ""
+msgstr "Ngày trước khi bắt đầu gửi lời nhắc nhở về những câu hỏi chưa được trả lời"
 
 #: conf/email.py:169
 msgid ""
@@ -786,11 +790,11 @@ msgstr ""
 
 #: conf/email.py:181
 msgid "Max. number of reminders to send about unanswered questions"
-msgstr ""
+msgstr "Số lượng tối đa của lời nhắc để gửi về các câu hỏi chưa được trả lời"
 
 #: conf/email.py:192
 msgid "Send periodic reminders to accept the best answer"
-msgstr ""
+msgstr "Gửi lời nhắc nhở định kỳ để chấp nhận câu trả lời tốt nhất"
 
 #: conf/email.py:194
 msgid ""
@@ -801,7 +805,7 @@ msgstr ""
 
 #: conf/email.py:207
 msgid "Days before starting to send reminders to accept an answer"
-msgstr ""
+msgstr "Ngày trước khi bắt đầu gửi lời nhắc nhở để chấp nhận một câu trả lời"
 
 #: conf/email.py:218
 msgid ""
@@ -811,11 +815,11 @@ msgstr ""
 
 #: conf/email.py:230
 msgid "Max. number of reminders to send to accept the best answer"
-msgstr ""
+msgstr "Số lượng tối đa của lời nhắc để gửi chấp nhận câu trả lời tốt nhất"
 
 #: conf/email.py:242
 msgid "Require email verification before allowing to post"
-msgstr ""
+msgstr "Yêu cầu xác minh email trước khi cho phép gửi"
 
 #: conf/email.py:243
 msgid ""
@@ -824,7 +828,7 @@ msgstr ""
 
 #: conf/email.py:252
 msgid "Fake email for anonymous user"
-msgstr ""
+msgstr "Email giả mạo cho người dùng vô danh"
 
 #: conf/email.py:253
 msgid "Use this setting to control gravatar for email-less user"
@@ -832,7 +836,7 @@ msgstr ""
 
 #: conf/email.py:262
 msgid "Allow posting questions by email"
-msgstr ""
+msgstr "Cho phép gửi câu hỏi qua email"
 
 #: conf/email.py:264
 msgid ""
@@ -842,21 +846,21 @@ msgstr ""
 
 #: conf/email.py:275
 msgid "Replace space in emailed tags with dash"
-msgstr ""
+msgstr "Thay thế khoảng trống trong thẻ email bằng dấu gạch ngang"
 
 #: conf/email.py:277
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
-msgstr ""
+msgstr "Thiết lập này áp dụng đối với thẻ ghi trong dòng chủ đề của câu hỏi qua email"
 
 #: conf/email.py:288
 msgid "Enable posting answers and comments by email"
-msgstr ""
+msgstr "Cho phép  gửi  câu trả lời và ý kiến ​​qua email"
 
 #: conf/email.py:291
 msgid "To enable this feature make sure lamson is running"
-msgstr ""
+msgstr "Để kích hoạt tính năng này hãy chắc chắn lamson đang chạy"
 
 #: conf/email.py:302
 msgid "Emailed post: when to notify author about publishing"
@@ -874,11 +878,11 @@ msgstr ""
 
 #: conf/external_keys.py:11
 msgid "Keys for external services"
-msgstr ""
+msgstr "Các chìa khóa cho các dịch vụ bên ngoài"
 
 #: conf/external_keys.py:19
 msgid "Google site verification key"
-msgstr ""
+msgstr "Chìa khóa xác minh Google site"
 
 #: conf/external_keys.py:21
 #, python-format
@@ -889,7 +893,7 @@ msgstr ""
 
 #: conf/external_keys.py:36
 msgid "Google Analytics key"
-msgstr ""
+msgstr "Chìa khóa Google Analytics "
 
 #: conf/external_keys.py:38
 #, python-format
@@ -900,7 +904,7 @@ msgstr ""
 
 #: conf/external_keys.py:51
 msgid "Enable recaptcha (keys below are required)"
-msgstr ""
+msgstr "Bật recaptcha (khóa bên dưới là bắt buộc)"
 
 #: conf/external_keys.py:62
 msgid "Recaptcha public key"
@@ -943,7 +947,7 @@ msgstr ""
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">twitter applications "
 "site</a>"
-msgstr ""
+msgstr "Xin vui lòng đăng ký diễn đàn của bạn tại <a href=\"%(url)s\"> ứng dụng trang web twitter</ a>"
 
 #: conf/external_keys.py:120
 msgid "Twitter consumer secret"
@@ -958,7 +962,7 @@ msgstr ""
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">LinkedIn developer "
 "site</a>"
-msgstr ""
+msgstr "Xin vui lòng đăng ký diễn đàn của bạn tại <a href=\"%(url)s\">trang developer  LinkedIn </ a>"
 
 #: conf/external_keys.py:141
 msgid "LinkedIn consumer secret"
@@ -973,7 +977,7 @@ msgstr ""
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">Identi.ca applications "
 "site</a>"
-msgstr ""
+msgstr "Xin vui lòng đăng ký diễn đàn của bạn tại <a href=\"%(url)s\">Identi.ca applications site</a>"
 
 #: conf/external_keys.py:162
 msgid "ident.ca consumer secret"
@@ -981,7 +985,7 @@ msgstr ""
 
 #: conf/flatpages.py:11
 msgid "Messages and pages - about, privacy policy, etc."
-msgstr ""
+msgstr "Tin nhắn và các trang - về chính sách bảo mật, vv"
 
 #: conf/flatpages.py:19
 msgid "Text of the Q&A forum About page (html format)"
@@ -1005,7 +1009,7 @@ msgstr ""
 
 #: conf/flatpages.py:45
 msgid "Instructions on how to ask questions"
-msgstr ""
+msgstr "Hướng dẫn về cách đặt câu hỏi"
 
 #: conf/flatpages.py:48
 msgid ""
@@ -1025,19 +1029,19 @@ msgstr ""
 
 #: conf/flatpages.py:75
 msgid "Do not edit this field manually!!!"
-msgstr ""
+msgstr "Không chỉnh sửa trường này bằng tay!"
 
 #: conf/forum_data_rules.py:12
 msgid "Data entry and display rules"
-msgstr ""
+msgstr "Nhập dữ liệu và các quy tắc hiển thị"
 
 #: conf/forum_data_rules.py:27
 msgid "Editor for the posts"
-msgstr ""
+msgstr "Biên tập viên cho các bài viết"
 
 #: conf/forum_data_rules.py:42
 msgid "Editor for the comments"
-msgstr ""
+msgstr "Biên tập viên cho ý kiến"
 
 #: conf/forum_data_rules.py:51
 msgid "Enable big Ask button"
@@ -1047,11 +1051,11 @@ msgstr ""
 msgid ""
 "Disabling this button will reduce number of new questions. If this button is"
 " disabled, the ask button in the search menu will still be available."
-msgstr ""
+msgstr "Vô hiệu hóa nút này sẽ làm giảm số câu hỏi mới. Nếu nút này bị vô hiệu hóa, các nút ask trong menu tìm kiếm sẽ vẫn có sẵn."
 
 #: conf/forum_data_rules.py:66
 msgid "Enable embedding videos. "
-msgstr ""
+msgstr "Cho phép nhúng video."
 
 #: conf/forum_data_rules.py:68
 #, python-format
@@ -1060,11 +1064,11 @@ msgstr ""
 
 #: conf/forum_data_rules.py:78
 msgid "Check to enable community wiki feature"
-msgstr ""
+msgstr "chọn để kích hoạt tính năng cộng đồng wiki"
 
 #: conf/forum_data_rules.py:87
 msgid "Allow asking questions anonymously"
-msgstr ""
+msgstr "Cho phép đặt câu hỏi ẩn danh"
 
 #: conf/forum_data_rules.py:89
 msgid ""
@@ -7243,11 +7247,11 @@ msgstr ""
 
 #: templates/widgets/ask_form.html:22 templates/widgets/ask_form.html.py:24
 msgid "Add details (optional)"
-msgstr ""
+msgstr "Thêm chi tiết (không bắt buộc)"
 
 #: templates/widgets/ask_form.html:26
 msgid "Add details"
-msgstr ""
+msgstr "Thêm chi tiết"
 
 #: templates/widgets/ask_form.html:59
 msgid "Select language"
@@ -7390,44 +7394,44 @@ msgstr ""
 
 #: templates/widgets/markdown_help.html:6
 msgid "*italic*"
-msgstr ""
+msgstr "*nghiêng*"
 
 #: templates/widgets/markdown_help.html:9
 msgid "**bold**"
-msgstr ""
+msgstr "**đậm**"
 
 #: templates/widgets/markdown_help.html:13
 msgid "*italic* or _italic_"
-msgstr ""
+msgstr "*nghiêng* hoặc _nghiêng_"
 
 #: templates/widgets/markdown_help.html:16
 msgid "**bold** or __bold__"
-msgstr ""
+msgstr "**đậm** hoặc __đậm_"
 
 #: templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "text"
-msgstr ""
+msgstr "chữ"
 
 #: templates/widgets/markdown_help.html:24
 msgid "image"
-msgstr ""
+msgstr "hình"
 
 #: templates/widgets/markdown_help.html:28
 msgid "numbered list:"
-msgstr ""
+msgstr "danh sách (số)"
 
 #: templates/widgets/markdown_help.html:33
 msgid "basic HTML tags are also supported"
-msgstr ""
+msgstr "các thẻ HTML cơ bản cũng được hỗ trợ"
 
 #: templates/widgets/markdown_help.html:38
 msgid "learn more about Markdown"
-msgstr ""
+msgstr "xem thêm về Markdown"
 
 #: templates/widgets/meta_nav.html:12
 msgid "people & groups"
-msgstr ""
+msgstr "thành viên & nhóm"
 
 #: templates/widgets/meta_nav.html:20
 msgid "users"
@@ -7435,7 +7439,7 @@ msgstr "people"
 
 #: templates/widgets/meta_nav.html:27
 msgid "badges"
-msgstr ""
+msgstr "danh hiệu"
 
 #: templates/widgets/question_edit_tips.html:5
 msgid "ask a question interesting to this community"
@@ -7444,41 +7448,41 @@ msgstr ""
 #: templates/widgets/question_summary.html:12
 msgid "view"
 msgid_plural "views"
-msgstr[0] ""
+msgstr[0] "xem"
 
 #: templates/widgets/question_summary.html:30
 msgid "answer"
 msgid_plural "answers"
-msgstr[0] ""
+msgstr[0] "trả lời"
 
 #: templates/widgets/question_summary.html:41
 msgid "vote"
 msgid_plural "votes"
-msgstr[0] ""
+msgstr[0] "đánh giá"
 
 #: templates/widgets/scope_nav.html:17
 msgid "ALL"
-msgstr ""
+msgstr "TẤT CẢ"
 
 #: templates/widgets/scope_nav.html:22
 msgid "see unanswered questions"
-msgstr ""
+msgstr "xem câu hỏi chưa có trả lời"
 
 #: templates/widgets/scope_nav.html:22
 msgid "UNANSWERED"
-msgstr ""
+msgstr "CHƯA TRẢ LỜI"
 
 #: templates/widgets/scope_nav.html:27
 msgid "see your followed questions"
-msgstr ""
+msgstr "xem câu hỏi đang theo dõi"
 
 #: templates/widgets/scope_nav.html:27
 msgid "FOLLOWED"
-msgstr ""
+msgstr "ĐANG THEO DÕI"
 
 #: templates/widgets/scope_nav.html:30
 msgid "Please ask your question here"
-msgstr ""
+msgstr "Hãy đặt câu hỏi của bạn tại đây"
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
@@ -7494,15 +7498,15 @@ msgstr ""
 
 #: templates/widgets/tag_selector.html:59
 msgid "Show only questions from"
-msgstr ""
+msgstr "Chỉ hiển thị câu hỏi từ"
 
 #: templates/widgets/tag_selector.html:70
 msgid "Send me email alerts for"
-msgstr ""
+msgstr "Gửi email thông báo đên tôi khi"
 
 #: templates/widgets/tag_selector.html:86
 msgid "Change frequency of emails"
-msgstr ""
+msgstr "Thay đổi tần suất gửi email"
 
 #: templates/widgets/three_column_category_selector.html:4
 msgid ""
@@ -7527,15 +7531,15 @@ msgstr ""
 
 #: templates/widgets/user_long_score_and_badge_summary.html:10
 msgid "karma:"
-msgstr ""
+msgstr "điểm:"
 
 #: templates/widgets/user_long_score_and_badge_summary.html:15
 msgid "badges:"
-msgstr ""
+msgstr "danh hiệu:"
 
 #: templates/widgets/user_navigation.html:17
 msgid "sign out"
-msgstr ""
+msgstr "đăng xuất"
 
 #: templates/widgets/user_navigation.html:20
 msgid "Hi there! Please sign in"
@@ -7543,7 +7547,7 @@ msgstr ""
 
 #: templates/widgets/user_navigation.html:23
 msgid "settings"
-msgstr ""
+msgstr "thiết lập"
 
 #: templates/widgets/user_navigation.html:24
 msgid "widgets"
@@ -7552,7 +7556,7 @@ msgstr ""
 #: templates/widgets/user_perms.html:1
 #, python-format
 msgid "Your karma is %(karma)s"
-msgstr ""
+msgstr "Số điểm của bạn là %(karma)s"
 
 #: templates/widgets/user_perms.html:4
 msgid "Karma reflects the value of your contribution to this community."

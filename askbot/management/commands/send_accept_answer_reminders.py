@@ -57,15 +57,7 @@ class Command(NoArgsCommand):
             if question_count == 0:
                 continue
 
-            subject_line = _(
-                'Accept the best answer for %(question_count)d of your questions'
-            ) % {'question_count': question_count}
-
-            #todo - make a template for these
-            if question_count == 1:
-                reminder_phrase = _('Please accept the best answer for this question:')
-            else:
-                reminder_phrase = _('Please accept the best answer for these questions:')
+            reminder_phrase = _('Please select the best responses to:')
 
             data = {
                     'site_url': site_url(''),#here we need only the domain name
@@ -76,6 +68,7 @@ class Command(NoArgsCommand):
             template = get_template('email/accept_answer_reminder.html')
             body_text = template.render(Context(data))#todo: set lang
 
+            subject_line = askbot_settings.WORDS_ACCEPT_BEST_ANSWERS_FOR_YOUR_QUESTIONS
             if DEBUG_THIS_COMMAND:
                 print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \
                     (user.email, subject_line, body_text)
