@@ -19,7 +19,6 @@ That is the reason for having two types of methods here:
 """
 import sys
 import traceback
-import logging
 import uuid
 
 from django.contrib.contenttypes.models import ContentType
@@ -35,7 +34,13 @@ from askbot.models import Post, Thread, User, ReplyAddress
 from askbot.models.badges import award_badges_signal
 from askbot.models import get_reply_to_addresses, format_instant_notification_email
 from askbot import exceptions as askbot_exceptions
+from askbot.utils.debug import debug as _debug
 from askbot.utils.twitter import Twitter
+
+DEBUG_CELERY = False
+def debug(message):
+    if DEBUG_CELERY:
+        _debug(message)
 
 # TODO: Make exceptions raised inside record_post_update_celery_task() ...
 #       ... propagate upwards to test runner, if only CELERY_ALWAYS_EAGER = True
@@ -231,11 +236,10 @@ def send_instant_notifications_about_activity_in_post(
                             update_activity.activity_type
                         )
 
-    logger = logging.getLogger()
-    if logger.getEffectiveLevel() <= logging.DEBUG:
+    if DEBUG_CELERY:
         log_id = uuid.uuid1()
         message = 'email-alert %s, logId=%s' % (post.get_absolute_url(), log_id)
-        logger.debug(message)
+        debug(message)
     else:
         log_id = None
 
@@ -266,8 +270,8 @@ def send_instant_notifications_about_activity_in_post(
                 raise_on_failure=True
             )
         except askbot_exceptions.EmailNotSent, error:
-            logger.debug(
+            debug(
                 '%s, error=%s, logId=%s' % (user.email, error, log_id)
             )
         else:
-            logger.debug('success %s, logId=%s' % (user.email, log_id))
+            debug('success %s, logId=%s' % (user.email, log_id))
