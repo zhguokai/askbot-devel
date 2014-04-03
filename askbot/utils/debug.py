@@ -1,6 +1,6 @@
 """debugging utilities"""
 import sys
-from django.config import settings
+from django.conf import settings as django_settings
 
 def debug(message):
     """print debugging message to stderr"""
