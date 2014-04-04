@@ -1118,7 +1118,8 @@ class Thread(models.Model):
             # we had question post id denormalized on the thread
             tags_list = self.get_tag_names()
             similar_threads = Thread.objects.filter(
-                                        tags__name__in=tags_list
+                                        tags__name__in=tags_list,
+                                        language_code=self.language_code
                                     ).exclude(
                                         id = self.id
                                     ).exclude(
