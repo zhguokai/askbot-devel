@@ -24,7 +24,7 @@ from askbot.utils.slug import slugify
 from askbot.shims.django_shims import ResolverMatch
 
 from django_countries import countries
-from django_countries import settings as countries_settings
+from django_countries.conf import settings as countries_settings
 
 register = coffin_template.Library()
 
@@ -118,12 +118,12 @@ def transurl(url):
 
 @register.filter
 def country_display_name(country_code):
-    country_dict = dict(countries.COUNTRIES)
+    country_dict = dict(countries)
     return country_dict[country_code]
 
 @register.filter
 def country_flag_url(country_code):
-    return countries_settings.FLAG_URL % country_code
+    return countries_settings.COUNTRIES_FLAG_URL.format(**country_code)
 
 @register.filter
 def collapse(input):
