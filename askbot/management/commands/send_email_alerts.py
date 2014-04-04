@@ -137,8 +137,7 @@ class Command(NoArgsCommand):
         #basic things - not deleted, not closed, not too old
         #not last edited by the same user
 
-
-        base_qs = Post.objects.get_questions()
+        base_qs = Post.objects.get_questions(user=user)
 
         if askbot_settings.SPACES_ENABLED and askbot.is_multisite():
             site = Site.objects.get_current()
