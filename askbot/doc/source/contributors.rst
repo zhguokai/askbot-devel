@@ -54,6 +54,7 @@ Programming, bug fixes and documentation
 * `Benjamin Abel <https://github.com/BenjaminABEL>`_
 * `Pami Ketolainen <https://github.com/keto>`_
 * `Hamdi <https://github.com/Hamdy>`_
+* `michas2 <https://github.com/michas2>`_
 
 Translations
 ------------

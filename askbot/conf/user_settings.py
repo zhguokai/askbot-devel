@@ -8,6 +8,7 @@ from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
 from django.utils.translation import ugettext_lazy as _
 from askbot import const
+import re
 
 USER_SETTINGS = livesettings.ConfigurationGroup(
                     'USER_SETTINGS',
@@ -121,6 +122,23 @@ settings.register(
     )
 )
 
+def gravatar_url_callback(old, new):
+    """strips trailing slash"""
+    url_re = re.compile(r'([^/]*)/+$')
+    return url_re.sub(r'\1', new)
+
+settings.register(
+    livesettings.StringValue(
+        USER_SETTINGS,
+        'GRAVATAR_BASE_URL',
+        description=_(
+                'Base URL for the gravatar service'
+            ),
+        default='//www.gravatar.com/avatar',
+        update_callback=gravatar_url_callback
+    )
+)
+
 settings.register(
     livesettings.BooleanValue(
         USER_SETTINGS,
@@ -132,7 +150,6 @@ settings.register(
         ) 
     )
 )
-
 
 settings.register(
     livesettings.StringValue(

@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development master branch (only on github)
 ------------------------------------------
+* Allowed custom providers of gravatar service (michas2)
 * Allowed configurable custom OpenID login button
 * Allowed custom list of feedback recipients (Keto)
 * Added option to show user's emails to the moderators

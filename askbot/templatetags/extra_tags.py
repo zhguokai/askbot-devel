@@ -37,7 +37,7 @@ def gravatar(user, size):
                     )
     #safe_username = template.defaultfilters.urlencode(username)
     return mark_safe(GRAVATAR_TEMPLATE % {
-        'gravatar_url': askbot_settings.AVATAR_URL,
+        'gravatar_url': askbot_settings.GRAVATAR_BASE_URL,
         'user_profile_url': user_profile_url,
         'size': size,
         'gravatar_hash': functions.get_from_dict_or_object(user, 'gravatar'),
