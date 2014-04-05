@@ -265,13 +265,14 @@ User.add_to_class(
     )
 )
 
-GRAVATAR_TEMPLATE = "//www.gravatar.com/avatar/%(gravatar)s?" + \
+GRAVATAR_TEMPLATE = "%(gravatar_url)s/%(gravatar)s?" + \
     "s=%(size)d&amp;d=%(type)s&amp;r=PG"
 
 def user_get_gravatar_url(self, size):
     """returns gravatar url
     """
     return GRAVATAR_TEMPLATE % {
+                'gravatar_url': askbot_settings.AVATAR_URL,
                 'gravatar': self.gravatar,
                 'type': askbot_settings.GRAVATAR_TYPE,
                 'size': size,
@@ -355,7 +356,7 @@ def user_strip_email_signature(self, text):
     return text
 
 def _check_gravatar(gravatar):
-    gravatar_url = "http://www.gravatar.com/avatar/%s?d=404" % gravatar
+    gravatar_url = askbot_settings.AVATAR_URL+"/%s?d=404" % gravatar
     code = urllib.urlopen(gravatar_url).getcode()
     if urllib.urlopen(gravatar_url).getcode() != 404:
         return 'g' #gravatar
