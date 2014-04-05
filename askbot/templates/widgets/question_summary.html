@@ -54,6 +54,6 @@
             {% endif %}
         </div>
     </div>
-    <h2><a href="{{ question.get_absolute_url(thread=thread) }}">{{thread.get_title(question)|escape}}</a></h2>
+    <h2><a href="{{ question.get_absolute_url(thread=thread) }}">{{thread.get_title()|escape}}</a></h2>
     {{ tag_list_widget(thread.get_tag_names(), search_state=search_state) }}
 </div>
