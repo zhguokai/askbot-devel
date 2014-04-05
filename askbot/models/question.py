@@ -845,7 +845,7 @@ class Thread(models.Model):
             attr = const.POST_STATUS['private']
         elif self.closed:
             attr = const.POST_STATUS['closed']
-        elif question.deleted:
+        elif self.deleted:
             attr = const.POST_STATUS['deleted']
         else:
             attr = None
