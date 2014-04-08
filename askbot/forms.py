@@ -420,7 +420,7 @@ class TagNamesField(forms.CharField):
     def clean(self, value):
         from askbot import models
         value = super(TagNamesField, self).clean(value)
-        data = value.strip()
+        data = value.strip(const.TAG_STRIP_CHARS)
         if len(data) < 1:
             if askbot_settings.TAGS_ARE_REQUIRED:
                 raise forms.ValidationError(

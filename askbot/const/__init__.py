@@ -161,9 +161,12 @@ TAG_FIRST_CHARS = r'\w'
 TAG_FORBIDDEN_FIRST_CHARS = r'#'
 TAG_REGEX_BARE = r'%s[%s]+' % (TAG_FIRST_CHARS, TAG_CHARS)
 TAG_REGEX = r'^%s$' % TAG_REGEX_BARE
-TAG_SPLIT_REGEX = r'[ ,]+'
+
+TAG_STRIP_CHARS = ', '
+TAG_SPLIT_REGEX = r'[%s]+' % TAG_STRIP_CHARS
 TAG_SEP = ',' # has to be valid TAG_SPLIT_REGEX char and MUST NOT be in const.TAG_CHARS
 #!!! see const.message_keys.TAG_WRONG_CHARS_MESSAGE
+
 EMAIL_REGEX = re.compile(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b', re.I)
 
 TYPE_ACTIVITY_ASK_QUESTION = 1
