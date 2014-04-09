@@ -29,7 +29,12 @@ def clean_next(next, default = None):
 
 def get_feed(request):
     from askbot.models import Feed
-    return request.session.get('askbot_feed', Feed.objects.get_default())
+    feed_name = request.session.get('askbot_feed')
+    if feed_name:
+        feeds = Feed.objects.filter(name=feed_name)
+        if len(feeds):
+            return feeds[0]
+    return Feed.objects.get_default()
 
 def get_next_url(request, default = None, form_prefix=None):
     #todo: clean this up - the "space" parameter is new
