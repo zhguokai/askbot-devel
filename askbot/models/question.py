@@ -1345,7 +1345,7 @@ class Thread(models.Model):
                 raise exception(message)
 
     def is_private(self):
-        """true, if thread belongs to the global group"""
+        """true, if thread doesn't belong to the global group"""
         if askbot_settings.GROUPS_ENABLED:
             group = Group.objects.get_global_group()
             return not self.groups.filter(id=group.id).exists()
