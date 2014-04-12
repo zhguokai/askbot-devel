@@ -849,6 +849,7 @@ def delete_comment(request):
                     mimetype = 'application/json'
                 )
 
+@login_required
 @decorators.post_only
 def comment_to_answer(request):
 

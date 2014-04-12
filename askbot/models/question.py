@@ -608,7 +608,7 @@ class Thread(models.Model):
 
     accepted_answer = models.ForeignKey('Post', null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
-    added_at = models.DateTimeField(default = datetime.datetime.now)
+    added_at = models.DateTimeField(auto_now_add=True)
 
     #db_column will be removed later
     points = models.IntegerField(default = 0, db_column='score')
