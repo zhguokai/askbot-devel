@@ -332,8 +332,8 @@ def complete_oauth2_signin(request):
 
     if (provider_name == 'facebook'):
         profile = client.request("me")
-        request.session['email'] = profile['email']
-        request.session['username'] = profile['username']
+        request.session['email'] = profile.get('email', '')
+        request.session['username'] = profile.get('username', '')
 
     return finalize_generic_signin(
                         request = request,
