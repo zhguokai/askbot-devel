@@ -8,7 +8,7 @@
     {% spaceless %}
         {{ start_quote(quote_level) }}
             {% set author = post.author.username|escape %}
-            {% if post.post_type == 'question' %}
+            {% if post.is_question() %}
             {% if quote_level > 0 %}
             <p style="font-size:10px; font-weight: bold;">
             {% else %}
@@ -41,7 +41,7 @@
                 {{ tag_names|join(', ') }}.
             </p>
             {% endif %}
-            {% elif post.post_type == 'answer' %}
+            {% elif post.is_answer() %}
                 <p style="font-size:10px; font-weight: bold;">
                     {% if format == 'parent_subthread' %}
                         {% if is_leaf_post %}

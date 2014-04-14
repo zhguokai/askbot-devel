@@ -30,21 +30,6 @@ settings.register(
     )
 )
 
-COMMENTS_EDITOR_CHOICES = (
-    ('plain-text', 'Plain text editor'),
-    ('rich-text', 'Same editor as for questions and answers')
-)
-
-settings.register(
-    livesettings.StringValue(
-        FORUM_DATA_RULES,
-        'COMMENTS_EDITOR_TYPE',
-        default='plain-text',
-        choices=COMMENTS_EDITOR_CHOICES,
-        description=_('Editor for the comments')
-    )
-)
-
 def get_forbidden_space_values():
     #add any url prefixes that are not
     #defined with a service_url call in the urls.py
