@@ -76,7 +76,7 @@ class PostQuerySet(models.query.QuerySet):
             models.Q(thread__title__icontains = search_query)\
             | models.Q(text__icontains = search_query)\
             | models.Q(thread__tagnames = search_query)\
-            | models.Q(thread__posts__text__icontains = search_query, thread__posts__post_type='answer')
+            | models.Q(thread__posts__text__icontains = search_query, thread__posts__post_type__endswith='answer')
         )
 #        #todo - goes to thread - we search whole threads
 #        if getattr(django_settings, 'USE_SPHINX_SEARCH', False):
@@ -203,7 +203,7 @@ class PostManager(BaseQuerySetManager):
             ):
         # TODO: Some of this code will go to Post.objects.create_new
 
-        assert(post_type in const.POST_TYPES)
+        #assert(post_type in const.POST_TYPES)
 
         if thread:
             language_code = thread.language_code
@@ -411,9 +411,9 @@ class Post(models.Model):
         """
         domain = self.thread.site.domain
         url = domain + self.get_absolute_url(no_slug=True)
-        if self.post_type == 'question':
+        if self.is_question():
             tweet = _('Question: ')
-        elif self.post_type == 'answer':
+        elif self.is_answer():
             tweet = _('Answer: ')
 
         chars_left = 140 - (len(url) + len(tweet) + 1)
@@ -436,7 +436,7 @@ class Post(models.Model):
         removed_mentions - list of mention <Activity> objects - for removed ones
         """
 
-        text = markup.convert_text(self.text, self.post_type)
+        text = markup.convert_text(self.text)
 
         #todo, add markdown parser call conditional on
         #self.use_markdown flag
@@ -561,19 +561,30 @@ class Post(models.Model):
         return {'diff': diff, 'newly_mentioned_users': newly_mentioned_users}
 
     def is_question(self):
-        return self.post_type == 'question'
+        return self.post_type.endswith('question')
 
     def is_answer(self):
-        return self.post_type == 'answer'
+        return self.post_type.endswith('answer')
 
     def is_comment(self):
-        return self.post_type == 'comment'
+        return self.post_type.endswith('comment')
 
     def is_tag_wiki(self):
         return self.post_type == 'tag_wiki'
 
     def is_reject_reason(self):
         return self.post_type == 'reject_reason'
+
+    def get_base_post_type(self):
+        #ordered by approximate frequency
+        if self.is_answer():
+            return 'answer'
+        elif self.is_comment():
+            return 'comment'
+        elif self.is_question():
+            return 'question'
+        else:
+            return self.post_type
 
     def get_last_edited_date(self):
         """returns date of last edit or date of creation
@@ -591,7 +602,7 @@ class Post(models.Model):
     def get_previous_answer(self, user=None):
         """returns a previous answer to a given answer;
         only works on the "answer" post types"""
-        assert(self.post_type == 'answer')
+        assert(self.is_answer())
         all_answers = self.thread.get_answers(user=user)
 
         matching_answers = all_answers.filter(
@@ -1476,9 +1487,9 @@ class Post(models.Model):
     def get_parent_post(self):
         """returns parent post or None
         if there is no parent, as it is in the case of question post"""
-        if self.post_type == 'comment':
+        if self.is_comment():
             return self.parent
-        elif self.post_type == 'answer':
+        elif self.is_answer():
             return self.get_origin_post()
         else:
             return None
@@ -1693,9 +1704,9 @@ class Post(models.Model):
                 latest_revision = self.get_latest_revision()
                 return const.TYPE_ACTIVITY_UPDATE_QUESTION, latest_revision
         elif self.is_comment():
-            if self.parent.post_type == 'question':
+            if self.parent.is_question():
                 return const.TYPE_ACTIVITY_COMMENT_QUESTION, self
-            elif self.parent.post_type == 'answer':
+            elif self.parent.is_answer():
                 return const.TYPE_ACTIVITY_COMMENT_ANSWER, self
         elif self.is_tag_wiki():
             if created:
@@ -1925,11 +1936,12 @@ class Post(models.Model):
 
     def add_revision(self, *kargs, **kwargs):
         #todo: unify these
-        if self.post_type in ('answer', 'comment', 'tag_wiki', 'reject_reason'):
-            return self.__add_revision(*kargs, **kwargs)
-        elif self.is_question():
+        if self.is_question():
             return self._question__add_revision(*kargs, **kwargs)
-        raise NotImplementedError
+        else:
+            #'answer', 'comment', 'tag_wiki', 'reject_reason'
+            return self.__add_revision(*kargs, **kwargs)
+        #raise NotImplementedError
 
     def _answer__get_response_receivers(self, exclude_list = None):
         """get list of users interested in this response
@@ -2113,6 +2125,9 @@ class PostRevision(models.Model):
         unique_together = ('post', 'revision')
         ordering = ('-revision',)
         app_label = 'askbot'
+
+    def get_base_post_type(self):
+        return self.post.get_base_post_type()
 
     def needs_moderation(self):
         """``True`` if post needs moderation"""

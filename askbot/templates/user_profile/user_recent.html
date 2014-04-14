@@ -17,14 +17,14 @@
                            class="medal">
                             <span class="{{ act.badge.get_css_class() }}">&#9679;</span>&nbsp;{% trans name=act.badge.get_name() %}{{name}}{% endtrans %}
                         </a>
-                        {% if act.content_object.post_type == 'question' %}
+                        {% if act.content_object.is_question() %}
                             {% set question=act.content_object %}
                             <span>
                                 (<a title="{{question.summary|collapse|escape}}"
                                     href="{% url question feed, question.id %}{{question.thread.title|slugify}}"
                                     >{% trans %}source{% endtrans %}</a>)
                             </span>
-                        {% elif act.content_object.post_type == 'answer' %}
+                        {% elif act.content_object.is_answer() %}
                             {% set answer=act.content_object %}
                             (<a title="{{answer.text|collapse|escape}}"
                                 href="{% url question feed, answer.thread._question_post().id %}{{answer.thread.title|slugify}}#{{answer.id}}">{% trans %}source{% endtrans %}</a>)

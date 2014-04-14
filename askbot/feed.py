@@ -86,12 +86,12 @@ class RssIndividualQuestionFeed(Feed):
         """returns the title for the item
         """
         title = item
-        if item.post_type == "question":
+        if item.is_question():
             self.title = item
-        elif item.post_type == "answer":
-            title = "Answer by %s for %s " % (item.author, self.title)
-        elif item.post_type == "comment":
-            title = "Comment by %s for %s" % (item.author, self.title)
+        elif item.is_answer():
+            title = u"Answer by %s for %s " % (item.author, self.title)
+        elif item.is_comment():
+            title = u"Comment by %s for %s" % (item.author, self.title)
         return title
 
     def item_description(self, item):
