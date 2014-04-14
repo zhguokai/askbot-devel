@@ -50,8 +50,8 @@ def as_json(data):
     return simplejson.dumps(data)
 
 @register.filter
-def convert_text(text, post_type):
-    return markup.convert_text(text, post_type)
+def convert_text(text):
+    return markup.convert_text(text)
 
 @register.filter
 def is_current_language(lang):

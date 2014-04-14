@@ -50,7 +50,7 @@ def onFlaggedItem(post, user, timestamp=None):
         mark_by=user
     )
 
-    if post.post_type == 'comment':
+    if post.is_comment():
         #do not hide or delete comments automatically yet,
         #because there is no .deleted field in the comment model
         return
@@ -133,7 +133,7 @@ def onUnFlaggedItem(post, user, timestamp=None):
         mark_by=user
     )
 
-    if post.post_type == 'comment':
+    if post.is_comment():
         #do not hide or delete comments automatically yet,
         #because there is no .deleted field in the comment model
         return
@@ -261,12 +261,12 @@ def onUpVoted(vote, post, user, timestamp=None):
         timestamp = datetime.datetime.now()
     vote.save()
 
-    if post.post_type != 'comment':
+    if not post.is_comment():
         post.vote_up_count = int(post.vote_up_count) + 1
     post.points = int(post.points) + 1
     post.save()
 
-    if post.post_type == 'comment':
+    if post.is_comment():
         #reputation is not affected by the comment votes
         return
 
@@ -295,7 +295,7 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
         timestamp = datetime.datetime.now()
     vote.delete()
 
-    if post.post_type != 'comment':
+    if not post.is_comment():
         post.vote_up_count = int(post.vote_up_count) - 1
         if post.vote_up_count < 0:
             post.vote_up_count  = 0
@@ -303,7 +303,7 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
     post.points = int(post.points) - 1
     post.save()
 
-    if post.post_type == 'comment':
+    if post.is_comment():
         #comment votes do not affect reputation
         return
 

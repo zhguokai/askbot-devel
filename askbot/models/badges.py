@@ -183,7 +183,7 @@ class Teacher(Badge):
 
     def consider_award(self, actor = None,
                 context_object = None, timestamp = None):
-        if context_object.post_type != 'answer':
+        if not context_object.is_answer():
             return False
 
         if context_object.points>= askbot_settings.TEACHER_BADGE_MIN_UPVOTES:
@@ -206,7 +206,7 @@ class FirstVote(Badge):
 
     def consider_award(self, actor = None,
             context_object = None, timestamp = None):
-        if context_object.post_type not in ('question', 'answer'):
+        if not (context_object.is_question() or context_object.is_answer()):
             return False
         return self.award(actor, context_object, timestamp)
 
@@ -242,7 +242,7 @@ class CivicDuty(Badge):
 
     def consider_award(self, actor = None,
             context_object = None, timestamp = None):
-        if context_object.post_type not in ('question', 'answer'):
+        if not (context_object.is_question() or context_object.is_answer()):
             return False
         if actor.votes.count() == askbot_settings.CIVIC_DUTY_BADGE_MIN_VOTES:
             return self.award(actor, context_object, timestamp)
@@ -261,7 +261,7 @@ class SelfLearner(Badge):
 
     def consider_award(self, actor = None,
             context_object = None, timestamp = None):
-        if context_object.post_type != 'answer':
+        if not context_object.is_answer():
             return False
 
         min_upvotes = askbot_settings.SELF_LEARNER_BADGE_MIN_UPVOTES
@@ -292,7 +292,7 @@ class QualityPost(Badge):
 
     def consider_award(self, actor = None,
                 context_object = None, timestamp = None):
-        if context_object.post_type not in ('answer', 'question'):
+        if not (context_object.is_question() or context_object.is_answer()):
             return False
         if context_object.points >= self.min_votes:
             return self.award(context_object.author, context_object, timestamp)
@@ -402,7 +402,7 @@ class FrequentedQuestion(Badge):
 
     def consider_award(self, actor = None,
                 context_object = None, timestamp = None):
-        if context_object.post_type != 'question':
+        if not context_object.is_question():
             return False
         if context_object.thread.view_count >= self.min_views:
             return self.award(context_object.author, context_object, timestamp)
@@ -458,7 +458,7 @@ class Scholar(Badge):
 
     def consider_award(self, actor = None,
             context_object = None, timestamp = None):
-        if context_object.post_type != 'answer':
+        if not context_object.is_answer():
             return False
         answer = context_object
         if answer.thread._question_post().author != actor:
@@ -482,7 +482,7 @@ class VotedAcceptedAnswer(Badge):
 
     def consider_award(self, actor = None,
             context_object = None, timestamp = None):
-        if context_object.post_type != 'answer':
+        if not context_object.is_answer():
             return None
         answer = context_object
         if answer.points >= self.min_votes and answer.accepted():
@@ -530,7 +530,7 @@ class Necromancer(Badge):
 
     def consider_award(self, actor = None,
             context_object = None, timestamp = None):
-        if context_object.post_type != 'answer':
+        if not context_object.is_answer():
             return False
         answer = context_object
         question = answer.thread._question_post()

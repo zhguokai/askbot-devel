@@ -4,6 +4,7 @@ import re
 
 from django.conf import settings as django_settings
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
@@ -896,7 +897,7 @@ class Thread(models.Model):
 
     def get_answers_by_user(self, user):
         """regardless - deleted or not"""
-        return self.posts.filter(post_type='answer', author=user, deleted=False)
+        return self.posts.filter(post_type__endswith='answer', author=user, deleted=False)
 
     def has_answer_by_user(self, user):
         #use len to cache the queryset
@@ -1064,21 +1065,21 @@ class Thread(models.Model):
         question_post = None
         for post in thread_posts:
             #pass through only deleted question posts
-            if post.deleted and post.post_type != 'question':
+            if post.deleted and (not post.is_question()):
                 continue
             if post.is_approved() is False:#hide posts on the moderation queue
                 continue
 
             post_to_author[post.id] = post.author_id
 
-            if post.post_type == 'answer':
+            if post.is_answer():
                 answers.append(post)
                 post_map[post.id] = post
-            elif post.post_type == 'comment':
+            elif post.is_comment():
                 if post.parent_id not in comment_map:
                     comment_map[post.parent_id] = list()
                 comment_map[post.parent_id].append(post)
-            elif post.post_type == 'question':
+            elif post.is_question():
                 assert(question_post == None)
                 post_map[post.id] = post
                 question_post = post
@@ -1246,8 +1247,9 @@ class Thread(models.Model):
         given groups, comments are taken care of implicitly
         by the underlying ``Post`` methods
         """
-        post_types = ('question', 'answer')
-        posts = self.posts.filter(post_type__in=post_types)
+        posts = self.posts.filter(
+            Q(post_type__endswith='question') | Q(post_type__endswith='answer')
+        )
         for post in posts:
             post.add_to_groups(groups)
 

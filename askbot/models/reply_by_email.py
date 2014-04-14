@@ -108,7 +108,7 @@ class ReplyAddress(models.Model):
             assert(reply_action == 'replace_content')
             revision_comment = _('edited by email')
 
-        if post.post_type == 'question':
+        if post.is_question():
             assert(post is self.post)
             self.user.edit_question(
                 question = post,
@@ -131,13 +131,13 @@ class ReplyAddress(models.Model):
         to the user
         """
         result = None
-        if self.post.post_type == 'answer':
+        if self.post.is_answer():
             result = self.user.post_comment(
                                         self.post,
                                         body_text,
                                         by_email = True
                                     )
-        elif self.post.post_type == 'question':
+        elif self.post.is_question():
             if self.reply_action == 'auto_answer_or_comment':
                 wordcount = len(body_text)/6#todo: this is a simplistic hack
                 if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
@@ -164,7 +164,7 @@ class ReplyAddress(models.Model):
                     'Unexpected reply action: "%s", post by email failed' % reply_action
                 )
                 return None#todo: there may be a better action to take here...
-        elif self.post.post_type == 'comment':
+        elif self.post.is_comment():
             result = self.user.post_comment(
                                     self.post.parent,
                                     body_text,

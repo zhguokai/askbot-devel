@@ -631,7 +631,6 @@ def user_assert_can_approve_post_revision(self, post_revision = None):
     )
 
 def user_assert_can_unaccept_best_answer(self, answer = None):
-    assert getattr(answer, 'post_type', '') == 'answer'
     blocked_error_message = _(
             'Sorry, you cannot accept or unaccept best answers '
             'because your account is blocked'
@@ -691,7 +690,6 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
     raise django_exceptions.PermissionDenied(error_message)
 
 def user_assert_can_accept_best_answer(self, answer = None):
-    assert getattr(answer, 'post_type', '') == 'answer'
     self.assert_can_unaccept_best_answer(answer)
 
 def user_assert_can_vote_for_post(
@@ -882,7 +880,7 @@ def user_assert_can_post_comment(self, parent_post = None):
             low_rep_error_message = low_rep_error_message,
         )
     except askbot_exceptions.InsufficientReputation, e:
-        if parent_post.post_type == 'answer':
+        if parent_post.is_answer():
             if self == parent_post.thread._question_post().author:
                 return
         raise e
@@ -961,22 +959,19 @@ def user_assert_can_edit_post(self, post = None):
 
 
 def user_assert_can_edit_question(self, question = None):
-    assert getattr(question, 'post_type', '') == 'question'
     self.assert_can_edit_post(question)
 
 
 def user_assert_can_edit_answer(self, answer = None):
-    assert getattr(answer, 'post_type', '') == 'answer'
     self.assert_can_edit_post(answer)
 
 
 def user_assert_can_delete_post(self, post = None):
-    post_type = getattr(post, 'post_type', '')
-    if post_type == 'question':
+    if post.is_question():
         self.assert_can_delete_question(question = post)
-    elif post_type == 'answer':
+    elif post.is_answer():
         self.assert_can_delete_answer(answer = post)
-    elif post_type == 'comment':
+    elif post.is_comment():
         self.assert_can_delete_comment(comment = post)
     else:
         raise ValueError('Invalid post_type!')
@@ -1048,7 +1043,6 @@ def user_assert_can_delete_answer(self, answer = None):
 
 
 def user_assert_can_close_question(self, question = None):
-    assert(getattr(question, 'post_type', '') == 'question')
     blocked_error_message = _(
                 'Sorry, since your account is blocked '
                 'you cannot close questions'
@@ -1087,7 +1081,6 @@ def user_assert_can_close_question(self, question = None):
 
 
 def user_assert_can_reopen_question(self, question = None):
-    assert(question.post_type == 'question')
 
     #for some reason rep to reopen own questions != rep to close own q's
     owner_min_rep_setting =  askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS
@@ -1685,11 +1678,11 @@ def user_delete_post(
 
     if there is no use cases for it, the method will be removed
     """
-    if post.post_type == 'comment':
+    if post.is_comment():
         self.delete_comment(comment = post, timestamp = timestamp)
-    elif post.post_type == 'answer':
+    elif post.is_answer():
         self.delete_answer(answer = post, timestamp = timestamp)
-    elif post.post_type == 'question':
+    elif post.is_question():
         self.delete_question(question = post, timestamp = timestamp)
     else:
         raise TypeError('either Comment, Question or Answer expected')
@@ -1702,13 +1695,13 @@ def user_restore_post(
                 ):
     #here timestamp is not used, I guess added for consistency
     self.assert_can_restore_post(post)
-    if post.post_type in ('question', 'answer'):
+    if post.is_question() or post.is_answer():
         post.deleted = False
         post.deleted_by = None
         post.deleted_at = None
         post.save()
         post.thread.invalidate_cached_data()
-        if post.post_type == 'answer':
+        if post.is_answer():
             post.thread.update_answer_count()
         else:
             #todo: make sure that these tags actually exist
@@ -1822,14 +1815,14 @@ def user_edit_post(self,
     this requires refactoring of underlying functions
     because we cannot bypass the permissions checks set within
     """
-    if post.post_type == 'comment':
+    if post.is_comment():
         self.edit_comment(
                 comment_post=post,
                 body_text=body_text,
                 by_email=by_email,
                 suppress_email=suppress_email
             )
-    elif post.post_type == 'answer':
+    elif post.is_answer():
         self.edit_answer(
             answer=post,
             body_text=body_text,
@@ -1838,7 +1831,7 @@ def user_edit_post(self,
             by_email=by_email,
             suppress_email=suppress_email
         )
-    elif post.post_type == 'question':
+    elif post.is_question():
         self.edit_question(
             question=post,
             body_text=body_text,
@@ -1848,7 +1841,7 @@ def user_edit_post(self,
             is_private=is_private,
             suppress_email=suppress_email,
         )
-    elif post.post_type == 'tag_wiki':
+    elif post.is_tag_wiki():
         post.apply_edit(
             edited_at=timestamp,
             edited_by=self,
@@ -2032,8 +2025,6 @@ def user_post_answer(
 
     self.assert_can_post_answer(thread = question.thread)
 
-    if getattr(question, 'post_type', '') != 'question':
-        raise TypeError('question argument must be provided')
     if body_text is None:
         raise ValueError('Body text is required to post answer')
     if timestamp is None:
@@ -2197,7 +2188,7 @@ def user_is_owner_of(self, obj):
     """True if user owns object
     False otherwise
     """
-    if isinstance(obj, Post) and obj.post_type == 'question':
+    if isinstance(obj, Post) and obj.is_question():
         return self == obj.author
     else:
         raise NotImplementedError()
@@ -2691,7 +2682,7 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
 
     post.thread.invalidate_cached_data()
 
-    if post.post_type == 'question':
+    if post.is_question():
         #denormalize the question post score on the thread
         post.thread.points = post.points
         post.thread.save()
@@ -2700,7 +2691,7 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
     if cancel:
         return None
 
-    event = VOTES_TO_EVENTS.get((vote_type, post.post_type), None)
+    event = VOTES_TO_EVENTS.get((vote_type, post.get_base_post_type()), None)
     if event:
         award_badges_signal.send(None,
                     event = event,
@@ -2776,7 +2767,7 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
     post.approved = True
     post.save()
 
-    if post_revision.post.post_type == 'question':
+    if post_revision.post.is_question():
         thread = post.thread
         thread.approved = True
         thread.save()
@@ -3224,8 +3215,8 @@ def format_instant_notification_email(
     user_url = from_user.get_absolute_url()
     user_action = user_action % {
         'user': '<a href="%s">%s</a>' % (user_url, from_user.username),
-        'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
-        #'post_link': '%s <a href="%s">>>></a>' % (_(post.post_type), post_url)
+        'post_link': '<a href="%s">%s</a>' % (post_url, _(post.get_base_post_type()))
+        #'post_link': '%s <a href="%s">>>></a>' % (_(post.get_base_post_type()), post_url)
     }
 
     can_reply = to_user.can_post_by_email()
@@ -3233,7 +3224,7 @@ def format_instant_notification_email(
     if can_reply:
         reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
                     _('To reply, PLEASE WRITE ABOVE THIS LINE.')
-        if post.post_type == 'question' and alt_reply_address:
+        if post.is_question() and alt_reply_address:
             data = {
                 'addr': alt_reply_address,
                 'subject': urllib.quote(
@@ -3307,16 +3298,16 @@ def get_reply_to_addresses(user, post):
                 'user': user,
                 'reply_action': 'post_comment'
             }
-            if post.post_type in ('answer', 'comment'):
+            if post.is_answer() or post.is_comment():
                 reply_args['reply_action'] = 'post_comment'
-            elif post.post_type == 'question':
+            elif post.is_question():
                 reply_args['reply_action'] = 'post_answer'
 
             primary_addr = ReplyAddress.objects.create_new(
                                                     **reply_args
                                                 ).as_email_address()
 
-            if post.post_type == 'question':
+            if post.is_question():
                 reply_args['reply_action'] = 'post_comment'
                 secondary_addr = ReplyAddress.objects.create_new(
                                                     **reply_args
@@ -3440,7 +3431,7 @@ def record_answer_accepted(instance, created, **kwargs):
     when answer is accepted, we record this for question author
     - who accepted it.
     """
-    if instance.post_type != 'answer':
+    if not instance.is_answer():
         return
 
     question = instance.thread._question_post()
@@ -3524,9 +3515,9 @@ def record_delete_question(instance, delete_by, **kwargs):
     """
     when user deleted the question
     """
-    if instance.post_type == 'question':
+    if instance.is_question():
         activity_type = const.TYPE_ACTIVITY_DELETE_QUESTION
-    elif instance.post_type == 'answer':
+    elif instance.is_answer():
         activity_type = const.TYPE_ACTIVITY_DELETE_ANSWER
     else:
         return

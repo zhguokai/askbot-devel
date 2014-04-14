@@ -1568,11 +1568,7 @@ EditCommentForm.prototype.setWaitingStatus = function(isWaiting) {
 };
 
 EditCommentForm.prototype.getEditorType = function() {
-    if (askbot['settings']['commentsEditorType'] === 'rich-text') {
-        return askbot['settings']['editorType'];
-    } else {
-        return 'plain-text';
-    }
+    return askbot['settings']['editorType'];
 };
 
 EditCommentForm.prototype.startTinyMCEEditor = function() {

@@ -171,6 +171,8 @@ class EmailAlertTests(TestCase):
             date_joined = self.setup_timestamp,
             status = 'm'
         )
+        #a small delay to make time comparisons work
+        time.sleep(1)
 
     def post_comment(
                 self,

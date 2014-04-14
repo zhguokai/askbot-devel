@@ -97,7 +97,7 @@ def notify_author_of_published_revision_celery_task(revision):
 
         #populate template context variables
         reply_code = append_content_address + ',' + replace_content_address
-        if revision.post.post_type == 'question':
+        if revision.post.is_question():
             mailto_link_subject = revision.post.thread.title
         else:
             mailto_link_subject = _('An edit for my answer')

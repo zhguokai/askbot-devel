@@ -14,20 +14,20 @@
                 {% else %}
                     {% trans %}edited{% endtrans %}
                 {% endif %}
-                {% if revision.post.post_type == 'question' %}
+                {% if revision.post.is_question() %}
                     {% trans %}question{% endtrans %}:
                 {% else %}
                     {% trans %}answer{% endtrans %}:
                 {% endif %}
             </a>
 
-            {% if revision.post.post_type == 'question' %}
+            {% if revision.post.is_question() %}
                 <em>"{{ revision.title }}"</em>
                 {#% if revision.tagnames %}
                     {{ macros.tag_list_widget(tags=revision.tagnames.split()) }}<br/>
                 {% endif %#}
             {% endif %}
-            {{ revision.text|convert_text(revision.post.post_type) }}
+            {{ revision.text|convert_text }}
         </li>
         {% endfor %}
     </ul>
