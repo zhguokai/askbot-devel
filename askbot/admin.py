@@ -40,7 +40,32 @@ class SpaceAdmin(admin.ModelAdmin):
 class FeedAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(models.Post)
+class GroupMembershipAdmin(admin.ModelAdmin):
+    list_display = ('group', 'user', 'level')
+    list_filter = ('level', 'user')
+admin.site.register(models.GroupMembership, GroupMembershipAdmin)
+
+class EmailFeedSettingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'subscriber', 'feed_type', 'frequency', 'added_at', 'reported_at' )
+    list_filter = ('frequency', 'feed_type', 'subscriber')
+admin.site.register(models.EmailFeedSetting, EmailFeedSettingAdmin)
+
+class QuestionViewAdmin(admin.ModelAdmin):
+    list_display = ('who', 'question', 'when')
+    list_filter = ('who',)
+admin.site.register(models.QuestionView, QuestionViewAdmin)
+
+class PostAdmin(admin.ModelAdmin):
+    # TODO: show groups
+    list_display = ('post_type', 'thread', 'author', 'added_at', 'deleted')
+    list_filter = ('deleted', 'post_type', 'author')
+admin.site.register(models.Post, PostAdmin)
+
+class ThreadAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed')
+    list_filter = ('deleted', 'closed', 'last_activity_by')
+admin.site.register(models.Thread, ThreadAdmin)
+
 admin.site.register(models.Tag, TagAdmin)
 admin.site.register(models.Vote, VoteAdmin)
 admin.site.register(models.FavoriteQuestion, FavoriteQuestionAdmin)
