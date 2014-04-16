@@ -69,12 +69,14 @@ def clean_marked_tagnames(tagnames):
         if tagname == '':
             continue
         if tagname.endswith('*'):
-            if tagname.count('*') > 1:
+            if tagname.count('*') > 1 or len(tagname) == 1:
                 continue
             else:
-                wildcards.append(tagname)
+                base_tag = tagname[:-1]
+                cleaned_base_tag = clean_tag(base_tag, look_in_db=False)
+                wildcards.append(cleaned_base_tag + '*')
         else:
-            pure_tags.append(tagname)
+            pure_tags.append(clean_tag(tagname))
 
     return pure_tags, wildcards
 
@@ -354,7 +356,7 @@ class AnswerEditorField(EditorField):
         self.min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
 
 
-def clean_tag(tag_name):
+def clean_tag(tag_name, look_in_db=True):
     """a function that cleans a single tag name"""
     tag_length = len(tag_name)
     if tag_length > askbot_settings.MAX_TAG_LENGTH:
@@ -383,6 +385,8 @@ def clean_tag(tag_name):
     if askbot_settings.FORCE_LOWERCASE_TAGS:
         #a simpler way to handle tags - just lowercase thew all
         return tag_name.lower()
+    elif look_in_db == False:
+        return tag_name
     else:
         from askbot import models
         matching_tags = models.Tag.objects.filter(name__iexact=tag_name)
