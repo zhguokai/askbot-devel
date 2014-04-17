@@ -68,3 +68,16 @@ class ThreadAdmin(admin.ModelAdmin):
     list_filter = ('deleted', 'closed', 'last_activity_by')
 admin.site.register(models.Thread, ThreadAdmin)
 
+from django.contrib.auth.models import User
+try:
+    admin.site.unregister(User)
+finally:
+    from django.contrib.auth.admin import UserAdmin as OrigUserAdmin
+    class UserAdmin(OrigUserAdmin):
+        list_display = OrigUserAdmin.list_display + ('reputation', 
+            'interesting_tags', 'ignored_tags', 'subscribed_tags', 
+            'display_tag_filter_strategy', 'get_groups', 'get_primary_group')
+
+        def list_groups(self, obj):
+            return ', '.join()
+    admin.site.register(User, UserAdmin)
