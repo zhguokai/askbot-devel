@@ -2129,13 +2129,10 @@ def user_visit_question(self, question = None, timestamp = None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
-    try:
-        QuestionView.objects.filter(
-            who=self, question=question
-        ).update(
-            when = timestamp
-        )
-    except QuestionView.DoesNotExist:
+    qvs = QuestionView.objects.filter(who=self, question=question)
+    if qvs:
+        qvs.update(when = timestamp)
+    else:
         QuestionView(
             who=self,
             question=question,
