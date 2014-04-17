@@ -9,6 +9,7 @@ exactly match name of the model used in the project
 """
 from django.contrib import admin
 from askbot import models
+from askbot import const
 
 class AnonymousQuestionAdmin(admin.ModelAdmin):
     """AnonymousQuestion admin class"""
@@ -46,8 +47,24 @@ class GroupMembershipAdmin(admin.ModelAdmin):
 admin.site.register(models.GroupMembership, GroupMembershipAdmin)
 
 class EmailFeedSettingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'subscriber', 'feed_type', 'frequency', 'added_at', 'reported_at' )
+    list_display = ('id', 'subscriber', 'email_tag_filter_strategy', 'feed_type', 'frequency', 'added_at', 'reported_at' )
     list_filter = ('frequency', 'feed_type', 'subscriber')
+    
+    def email_tag_filter_strategy(self, obj):
+        if obj.feed_type == 'q_all':
+            strategy = obj.subscriber.email_tag_filter_strategy
+            if strategy == const.INCLUDE_ALL:
+                return 'all tags'
+            elif strategy == const.EXCLUDE_IGNORED:
+                return 'exclude ignored tags'
+            elif strategy == const.INCLUDE_INTERESTING:
+                return 'only interesting tags'
+            elif strategy == const.INCLUDE_SUBSCRIBED:
+                return 'include subscribed'
+            else:
+                return 'invalid'
+        else:
+            return 'n/a'
 admin.site.register(models.EmailFeedSetting, EmailFeedSettingAdmin)
 
 class QuestionViewAdmin(admin.ModelAdmin):
