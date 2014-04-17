@@ -1,6 +1,6 @@
 {% block content %}
 <p>{% trans %}Dear {{ name }},{% endtrans %}</p>
-<p>{% trans num=questions|length %}The following question has been updated {{ site_name }}:{% pluralize num %}The following {{ num }} questions have been updated on {{ site_name }}:{% endtrans %}</p>
+<p>{% trans num=questions|length %}The following question has been updated on {{ site_name }}:{% pluralize num %}The following {{ num }} questions have been updated on {{ site_name }}:{% endtrans %}</p>
 <ul>
 {% for q in questions %}
     <li>
