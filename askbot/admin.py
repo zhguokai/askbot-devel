@@ -11,35 +11,20 @@ from django.contrib import admin
 from askbot import models
 from askbot import const
 
-class AnonymousQuestionAdmin(admin.ModelAdmin):
-    """AnonymousQuestion admin class"""
-
-class TagAdmin(admin.ModelAdmin):
-    """Tag admin class"""
-
-class VoteAdmin(admin.ModelAdmin):
-    """  admin class"""
-
-class FavoriteQuestionAdmin(admin.ModelAdmin):
-    """  admin class"""
-
-class PostRevisionAdmin(admin.ModelAdmin):
-    """  admin class"""
-
-class AwardAdmin(admin.ModelAdmin):
-    """  admin class"""
-
-class ReputeAdmin(admin.ModelAdmin):
-    """  admin class"""
+admin.site.register(models.Tag)
+admin.site.register(models.Vote)
+admin.site.register(models.FavoriteQuestion)
+admin.site.register(models.PostRevision)
+admin.site.register(models.Award)
+admin.site.register(models.Repute)
+admin.site.register(models.BulkTagSubscription)
+admin.site.register(models.Space)
+admin.site.register(models.Feed)
 
 class ActivityAdmin(admin.ModelAdmin):
-    """  admin class"""
-
-class SpaceAdmin(admin.ModelAdmin):
-    pass
-
-class FeedAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('user', 'active_at', 'activity_type', 'content_type', 'object_id', 'content_object')
+    list_filter = ('activity_type', 'content_type', 'user')
+admin.site.register(models.Activity, ActivityAdmin)
 
 class GroupMembershipAdmin(admin.ModelAdmin):
     list_display = ('group', 'user', 'level')
@@ -83,13 +68,3 @@ class ThreadAdmin(admin.ModelAdmin):
     list_filter = ('deleted', 'closed', 'last_activity_by')
 admin.site.register(models.Thread, ThreadAdmin)
 
-admin.site.register(models.Tag, TagAdmin)
-admin.site.register(models.Vote, VoteAdmin)
-admin.site.register(models.FavoriteQuestion, FavoriteQuestionAdmin)
-admin.site.register(models.PostRevision, PostRevisionAdmin)
-admin.site.register(models.Award, AwardAdmin)
-admin.site.register(models.Repute, ReputeAdmin)
-admin.site.register(models.Activity, ActivityAdmin)
-admin.site.register(models.BulkTagSubscription)
-admin.site.register(models.Space, SpaceAdmin)
-admin.site.register(models.Feed, FeedAdmin)
