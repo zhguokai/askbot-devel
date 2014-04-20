@@ -16,4 +16,6 @@ class Command(NoArgsCommand):
                 post.html = post.parse_post_text()['html']
                 post.save()
                 transaction.commit()
+                if post.thread:
+                    post.thread.invalidate_cached_data(lazy=True)
         transaction.commit()
