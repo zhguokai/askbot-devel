@@ -75,7 +75,7 @@ def format_url_replacement(url, text):
         return '%s (%s)' % (url, text)
     return url or text or ''
 
-def urlize_html(html):
+def urlize_html(html, trim_url_limit=40):
     """will urlize html, while ignoring link
     patterns inside anchors, <pre> and <code> tags
     """
@@ -89,7 +89,7 @@ def urlize_html(html):
 
         #bs4 is weird, so we work around to replace nodes
         #maybe there is a better way though
-        urlized_text = urlize(node, trim_url_limit=40)
+        urlized_text = urlize(node, trim_url_limit=trim_url_limit)
         if unicode(node) == urlized_text:
             continue
 
