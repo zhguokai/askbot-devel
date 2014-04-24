@@ -72,11 +72,27 @@ from django.contrib.auth.models import User
 try:
     admin.site.unregister(User)
 finally:
+    from django.contrib.admin import SimpleListFilter
+    from askbot.models.user import Group
+
+    class InGroup(SimpleListFilter):
+        title = 'group membership'
+        parameter_name = 'name'
+
+        def lookups(self, request, model_admin):
+            return tuple([(g.id, 'in group \'%s\''%g.name) for g in Group.objects.exclude(name__startswith='_personal')])
+        def queryset(self, request, queryset):
+            if self.value():
+                return queryset.filter(groups__id=self.value())
+            else: 
+                return queryset
+
     from django.contrib.auth.admin import UserAdmin as OrigUserAdmin
     class UserAdmin(OrigUserAdmin):
-        list_display = OrigUserAdmin.list_display + ('reputation', 
+        list_display = OrigUserAdmin.list_display + ('date_joined', 'reputation', 
             'interesting_tags', 'ignored_tags', 'subscribed_tags', 
             'display_tag_filter_strategy', 'get_groups', 'get_primary_group')
+        list_filter = (InGroup,) + OrigUserAdmin.list_filter
 
         def list_groups(self, obj):
             return ', '.join()
