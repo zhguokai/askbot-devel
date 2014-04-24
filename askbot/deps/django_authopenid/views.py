@@ -147,6 +147,12 @@ def cleanup_post_register_session(request):
 
 #todo: decouple from askbot
 def login(request, user):
+    
+    if user.is_blocked():
+        message = askbot_settings.BLOCKED_USER_LOGIN_MESSAGE
+        request.user.message_set.create(message=message)
+        return
+    
     from django.contrib.auth import login as _login
 
     # get old session key
