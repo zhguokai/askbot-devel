@@ -25,6 +25,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.LongStringValue(
+        USER_SETTINGS,
+        'BLOCKED_USER_LOGIN_MESSAGE',
+        default=_('Sorry, you account has been discontinued and you cannot log in at the moment'),
+        description = _('Message explaining why blocked user cannot login')
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         USER_SETTINGS,
         'ALLOW_ANONYMOUS_FEEDBACK',

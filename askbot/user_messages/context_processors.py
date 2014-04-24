@@ -18,14 +18,17 @@ def user_messages (request):
         #todo: a hack, for real we need to remove this middleware
         #and switch to the new-style session messages
         return {}
-    messages = request.user.get_and_delete_messages()
-    #if request.user.is_authenticated():
-    #else:
-    #    messages = LazyMessages(request)
-    #import inspect
-    #print inspect.stack()[1]
-    #print messages
-    return { 'user_messages': messages }
+    if hasattr(request.user, 'get_and_delete_messages'):
+        messages = request.user.get_and_delete_messages()
+        #if request.user.is_authenticated():
+        #else:
+        #    messages = LazyMessages(request)
+        #import inspect
+        #print inspect.stack()[1]
+        #print messages
+        return { 'user_messages': messages }
+    else:
+        return {}
 
 class LazyMessages (StrAndUnicode):
     """
