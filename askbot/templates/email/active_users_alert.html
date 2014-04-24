@@ -1,0 +1,17 @@
+{% block content %}
+<p>{% trans %}Hello,{% endtrans %}</p>
+<p>{% trans  %}The following users asked more than 5 questions in the last 24 hours{% endtrans %}:</p>
+{% for user in user_threads.keys() %}
+    <p>{{ user.get_profile_link() }} {% trans %}asked{% endtrans %}:</p>
+    <ul>
+    {% for thread in user_threads[user] %}
+        <li>
+            <a href="{{ thread.get_absolute_url() }}">{{ thread.title|escape }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endfor %}
+{% endblock %}
+{% block footer %}
+    {% include "email/footer.html" %}
+{% endblock %}
