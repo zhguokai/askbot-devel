@@ -59,13 +59,19 @@ admin.site.register(models.QuestionView, QuestionViewAdmin)
 
 class PostAdmin(admin.ModelAdmin):
     # TODO: show groups
-    list_display = ('post_type', 'thread', 'author', 'added_at', 'deleted')
+    list_display = ('post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_private')
     list_filter = ('deleted', 'post_type', 'author')
+
+    def in_groups(self, obj):
+        return ', '.join(obj.groups.exclude(name__startswith='_personal').values_list('name', flat=True))
 admin.site.register(models.Post, PostAdmin)
 
 class ThreadAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed')
+    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'in_groups', 'is_private')
     list_filter = ('deleted', 'closed', 'last_activity_by')
+
+    def in_groups(self, obj):
+        return ', '.join(obj.groups.exclude(name__startswith='_personal').values_list('name', flat=True))
 admin.site.register(models.Thread, ThreadAdmin)
 
 from django.contrib.auth.models import User
@@ -93,7 +99,4 @@ finally:
             'interesting_tags', 'ignored_tags', 'subscribed_tags', 
             'display_tag_filter_strategy', 'get_groups', 'get_primary_group')
         list_filter = (InGroup,) + OrigUserAdmin.list_filter
-
-        def list_groups(self, obj):
-            return ', '.join()
     admin.site.register(User, UserAdmin)
