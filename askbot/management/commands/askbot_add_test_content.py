@@ -1,7 +1,6 @@
 import sys
 from askbot.conf import settings as askbot_settings
 from askbot.models import User
-from askbot.models import init_askbot_user_profile
 from askbot.utils.console import choice_dialog
 from django.core.management.base import NoArgsCommand
 from django.conf import settings as django_settings
@@ -81,37 +80,33 @@ class Command(NoArgsCommand):
         if self.verbosity > 0:
             print text
 
-    def create_user(self, username, email):
-        """creates a user with username, email
-        makes password to be the same as the username
-        """
-        user = User.objects.create_user(username, email)
-        user.set_password(username)
-        user.reputation = INITIAL_REPUTATION
-        self.print_if_verbose('Created user %s' % username)
-        user.save()
-        init_askbot_user_profile(user)
-        return user
-
     def create_users(self):
         "Create the users and return an array of created users"
         users = []
 
         #add admin with the same password - this user will be admin automatically
-        admin = self.create_user('admin', 'admin@example.com')
+        admin = User.objects.create_user('admin', 'admin@example.com')
+        admin.set_password('admin')
+        admin.save()
+        self.print_if_verbose("Created User 'admin'")
         users.append(admin)
 
         #this user will have regular privileges, because it's second
-        joe = self.create_user('joe', 'joe@example.com')
-        users.append(joe)
+        joe = User.objects.create_user('joe', 'joe@example.com')
+        joe.set_password('joe')
+        joe.save()
+        self.print_if_verbose("Created User 'joe'")
 
         # Keeping the created users in array - we will iterate over them
         # several times, we don't want querying the model each and every time.
         for i in range(NUM_USERS):
             s_idx = str(i)
-            username = USERNAME_TEMPLATE % s_idx
-            email = EMAIL_TEMPLATE % s_idx
-            user = self.create_user(username, email)
+            user = User.objects.create_user(USERNAME_TEMPLATE % s_idx,
+                                            EMAIL_TEMPLATE % s_idx)
+            user.set_password(PASSWORD_TEMPLATE % s_idx)
+            user.reputation = INITIAL_REPUTATION
+            user.save()
+            self.print_if_verbose("Created User '%s'" % user.username)
             users.append(user)
 
         return users
@@ -126,7 +121,7 @@ class Command(NoArgsCommand):
         last_vote = False
         # Each user posts a question
         for i in range(NUM_QUESTIONS):
-            user = users[i]
+            user = users[i % len(users)]#allows to post many questions all by less users
             # Downvote/upvote the questions - It's reproducible, yet
             # gives good randomized data
             if not active_question is None:
@@ -169,7 +164,8 @@ class Command(NoArgsCommand):
         active_answer = None
         last_vote = False
         # Now, fill the last added question with answers
-        for user in users[:NUM_ANSWERS]:
+        for i in range(NUM_ANSWERS):
+            user = users[i % len(users)]
             # We don't need to test for data validation, so ONLY users
             # that aren't authors can post answer to the question
             if not active_question.author is user:
@@ -218,7 +214,8 @@ class Command(NoArgsCommand):
         active_question_comment = None
         active_answer_comment = None
 
-        for user in users[:NUM_COMMENTS]:
+        for i in range(NUM_COMMENTS):
+            user = users[i % len(users)]
             active_question_comment = user.post_comment(
                                     parent_post = active_question,
                                     body_text = COMMENT_TEMPLATE
@@ -261,8 +258,19 @@ class Command(NoArgsCommand):
         # Create Users
         users = self.create_users()
 
-        # Create Questions, vote for questions
+        # Create a bunch of questions and answers by a single user
+        # to test pagination in the user profile
+        active_question = self.create_questions(users[0:1])
+
+        # Create Questions, vote for questions by all other users
         active_question = self.create_questions(users)
+
+        # post a bunch of answers by admin now - that active_question is
+        # posted by someone else
+        setting = askbot_settings.LIMIT_ONE_ANSWER_PER_USER
+        askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', False)
+        active_answer = self.create_answers(users[0:1], active_question)
+        askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', setting)
 
         # Create Answers, vote for the answers, vote for the active question
         # vote for the active answer
