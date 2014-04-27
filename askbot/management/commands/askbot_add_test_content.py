@@ -121,7 +121,7 @@ class Command(NoArgsCommand):
         last_vote = False
         # Each user posts a question
         for i in range(NUM_QUESTIONS):
-            user = users[i]
+            user = users[i % len(users)]#allows to post many questions all by less users
             # Downvote/upvote the questions - It's reproducible, yet
             # gives good randomized data
             if not active_question is None:
@@ -164,7 +164,8 @@ class Command(NoArgsCommand):
         active_answer = None
         last_vote = False
         # Now, fill the last added question with answers
-        for user in users[:NUM_ANSWERS]:
+        for i in range(NUM_ANSWERS):
+            user = users[i % len(users)]
             # We don't need to test for data validation, so ONLY users
             # that aren't authors can post answer to the question
             if not active_question.author is user:
@@ -213,7 +214,8 @@ class Command(NoArgsCommand):
         active_question_comment = None
         active_answer_comment = None
 
-        for user in users[:NUM_COMMENTS]:
+        for i in range(NUM_COMMENTS):
+            user = users[i % len(users)]
             active_question_comment = user.post_comment(
                                     parent_post = active_question,
                                     body_text = COMMENT_TEMPLATE
@@ -256,8 +258,19 @@ class Command(NoArgsCommand):
         # Create Users
         users = self.create_users()
 
-        # Create Questions, vote for questions
+        # Create a bunch of questions and answers by a single user
+        # to test pagination in the user profile
+        active_question = self.create_questions(users[0:1])
+
+        # Create Questions, vote for questions by all other users
         active_question = self.create_questions(users)
+
+        # post a bunch of answers by admin now - that active_question is
+        # posted by someone else
+        setting = askbot_settings.LIMIT_ONE_ANSWER_PER_USER
+        askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', False)
+        active_answer = self.create_answers(users[0:1], active_question)
+        askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', setting)
 
         # Create Answers, vote for the answers, vote for the active question
         # vote for the active answer
