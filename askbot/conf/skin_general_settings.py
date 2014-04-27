@@ -17,6 +17,16 @@ GENERAL_SKIN_SETTINGS = ConfigurationGroup(
                 )
 
 settings.register(
+    values.StringValue(
+        GENERAL_SKIN_SETTINGS,
+        'LOGO_DESTINATION_URL',
+        default = '/',
+        description = _('Destination URL for the site logo'),
+    )
+)
+
+
+settings.register(
     values.ImageValue(
         GENERAL_SKIN_SETTINGS,
         'SITE_LOGO_URL',
