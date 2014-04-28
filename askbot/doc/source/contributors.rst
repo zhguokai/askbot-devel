@@ -55,6 +55,7 @@ Programming, bug fixes and documentation
 * `Pami Ketolainen <https://github.com/keto>`_
 * `Hamdi <https://github.com/Hamdy>`_
 * `michas2 <https://github.com/michas2>`_
+* `Francis Devereux <https://github.com/frankoid>`_
 
 Translations
 ------------
