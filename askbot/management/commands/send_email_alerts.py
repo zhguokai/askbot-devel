@@ -1,5 +1,6 @@
 import datetime
 import askbot
+import traceback
 from django.contrib.sites.models import Site
 from django.core.management.base import NoArgsCommand
 from django.core.urlresolvers import reverse
@@ -22,6 +23,17 @@ from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
 
 DEBUG_THIS_COMMAND = False
+
+PRINT_DEBUG_MESSAGES = True
+CURRENT_SITE_ID = Site.objects.get_current().id
+def print_debug_msg(user, msg=''):
+    if PRINT_DEBUG_MESSAGES:
+        if user.groups.filter(name="WaterAid").count():
+            print "%s site_id=%d user=%s: %s" % (
+                datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                CURRENT_SITE_ID, 
+                repr(user.username), 
+                msg)
 
 def get_all_origin_posts(mentions):
     origin_posts = set()
@@ -89,7 +101,7 @@ class Command(NoArgsCommand):
                 try:
                     self.send_email_alerts()
                 except Exception, e:
-                    print e
+                    print traceback.format_exc()
             finally:
                 connection.close()
 
@@ -114,7 +126,9 @@ class Command(NoArgsCommand):
 
         #shortcircuit - if there is no ripe feed to work on for this user
         if should_proceed == False:
+            print_debug_msg(user, "no reports due")
             return {}
+        print_debug_msg(user, "one or more reports is due")
 
         #these are placeholders for separate query sets per question group
         #there are four groups - one for each EmailFeedSetting.feed_type
@@ -138,24 +152,26 @@ class Command(NoArgsCommand):
         #not last edited by the same user
 
         base_qs = Post.objects.get_questions(user=user)
+        print_debug_msg(user, "%d question posts in this user's groups (%s)" % (base_qs.count(), user.groups.all().values_list('name', flat=True)))
 
         if askbot_settings.SPACES_ENABLED and askbot.is_multisite():
             site = Site.objects.get_current()
             spaces = list(Space.objects.get_for_site(site=site))
             base_qs = base_qs.filter(thread__spaces__in=spaces)
+        print_debug_msg(user, "%d question posts left after filtering by spaces" % base_qs.count())
 
-        base_qs = base_qs.exclude(
-                            thread__last_activity_by=user
-                        ).exclude(
-                            thread__last_activity_at__lt=user.date_joined#exclude old stuff
-                        ).exclude(
-                            deleted=True
-                        ).exclude(
-                            thread__closed=True
-                        ).order_by('-thread__last_activity_at')
+        base_qs = base_qs.exclude(thread__last_activity_by=user)
+        print_debug_msg(user, "%d question posts left after excluding those last updated by this user" % base_qs.count())
+        base_qs = base_qs.exclude(thread__last_activity_at__lt=user.date_joined)#exclude old stuff
+        print_debug_msg(user, "%d question posts left after excluding those last updated before this user joined" % base_qs.count())
+        base_qs = base_qs.exclude(deleted=True)
+        print_debug_msg(user, "%d question posts left after excluding those that are deleted" % base_qs.count())
+        base_qs = base_qs.exclude(thread__closed=True).order_by('-thread__last_activity_at')
+        print_debug_msg(user, "%d question posts left after excluding those whose Thread is closed" % base_qs.count())
 
         if askbot_settings.ENABLE_CONTENT_MODERATION:
             base_qs = base_qs.filter(approved = True)
+            print_debug_msg(user, "%d question posts left after limiting to approved posts only" % base_qs.count())
         #todo: for some reason filter on did not work as expected ~Q(viewed__who=user) | 
         #      Q(viewed__who=user,viewed__when__lt=F('thread__last_activity_at'))
         #returns way more questions than you might think it should
@@ -166,6 +182,7 @@ class Command(NoArgsCommand):
 
         #questions that are not seen by the user at all
         not_seen_qs = base_qs.filter(~Q(viewed__who=user))
+        print_debug_msg(user, "%d of these question posts have not been viewed by this user" % not_seen_qs.count())
         #questions that were seen, but before last modification
         seen_before_last_mod_qs = base_qs.filter(
                                     Q(
@@ -173,6 +190,7 @@ class Command(NoArgsCommand):
                                         viewed__when__lt=F('thread__last_activity_at')
                                     )
                                 )
+        print_debug_msg(user, "%d of these question posts were last viewed by this user before last update" % seen_before_last_mod_qs.count())
 
         #shorten variables for convenience
         Q_set_A = not_seen_qs
@@ -184,6 +202,7 @@ class Command(NoArgsCommand):
             languages = None
 
         for feed in user_feeds:
+            print_debug_msg(user, "examine feed %s" % repr(feed))
             if feed.feed_type == 'm_and_c':
                 #alerts on mentions and comments are processed separately
                 #because comments to questions do not trigger change of last_updated
@@ -199,8 +218,12 @@ class Command(NoArgsCommand):
             #we won't send email for a given question if an email has been
             #sent after that cutoff_time
             if feed.should_send_now():
+                print_debug_msg(user, "should_send_now=True")
                 if DEBUG_THIS_COMMAND == False:
+                    print_debug_msg(user, "mark_reported_now")
                     feed.mark_reported_now()
+                else:
+                    print_debug_msg(user, "don't mark_reported_now")
                 cutoff_time = feed.get_previous_report_cutoff_time() 
 
                 if feed.feed_type == 'q_sel':
@@ -232,13 +255,17 @@ class Command(NoArgsCommand):
                     q_all_B = q_all_B[:askbot_settings.MAX_ALERTS_PER_EMAIL]
                     q_all_A.cutoff_time = cutoff_time
                     q_all_B.cutoff_time = cutoff_time
+            else:
+                print_debug_msg(user, "should_send_now=False")
 
         #build ordered list questions for the email report
         q_list = SortedDict()
 
         #todo: refactor q_list into a separate class?
         extend_question_list(q_sel_A, q_list, languages=languages)
+        print_debug_msg(user, "%d items in q_list after extending with q_sel_A" % len(q_list.keys()))
         extend_question_list(q_sel_B, q_list, languages=languages)
+        print_debug_msg(user, "%d items in q_list after extending with q_sel_B" % len(q_list.keys()))
 
         #build list of comment and mention responses here
         #it is separate because posts are not marked as changed
@@ -272,6 +299,7 @@ class Command(NoArgsCommand):
                                 add_comment=True,
                                 languages=languages
                             )
+                print_debug_msg(user, "%d items in q_list after extending with q_commented" % len(q_list.keys()))
 
                 mentions = Activity.objects.get_mentions(
                                                     mentioned_at__lt = cutoff_time,
@@ -295,6 +323,7 @@ class Command(NoArgsCommand):
                     add_mention=True,
                     languages=languages
                 )
+                print_debug_msg(user, "%d items in q_list after extending with q_mentions_A" % len(q_list.keys()))
 
                 q_mentions_B = Q_set_B.filter(id__in = q_mentions_id)
                 q_mentions_B.cutoff_time = cutoff_time
@@ -304,22 +333,31 @@ class Command(NoArgsCommand):
                     add_mention=True,
                     languages=languages
                 )
+                print_debug_msg(user, "%d items in q_list after extending with q_mentions_B" % len(q_list.keys()))
         except EmailFeedSetting.DoesNotExist:
             pass
 
         if user.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
             extend_question_list(q_all_A, q_list, languages=languages)
+            print_debug_msg(user, "%d items in q_list after extending with q_all_A" % len(q_list.keys()))
             extend_question_list(q_all_B, q_list, languages=languages)
+            print_debug_msg(user, "%d items in q_list after extending with q_all_B" % len(q_list.keys()))
 
         extend_question_list(q_ask_A, q_list, limit=True, languages=languages)
+        print_debug_msg(user, "%d items in q_list after extending with limited q_ask_A" % len(q_list.keys()))
         extend_question_list(q_ask_B, q_list, limit=True, languages=languages)
+        print_debug_msg(user, "%d items in q_list after extending with limited q_ask_B" % len(q_list.keys()))
 
         extend_question_list(q_ans_A, q_list, limit=True, languages=languages)
+        print_debug_msg(user, "%d items in q_list after extending with limited q_ans_A" % len(q_list.keys()))
         extend_question_list(q_ans_B, q_list, limit=True, languages=languages)
+        print_debug_msg(user, "%d items in q_list after extending with limited q_ans_B" % len(q_list.keys()))
 
         if user.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
             extend_question_list(q_all_A, q_list, limit=True, languages=languages)
+            print_debug_msg(user, "%d items in q_list after extending with limited q_all_A" % len(q_list.keys()))
             extend_question_list(q_all_B, q_list, limit=True, languages=languages)
+            print_debug_msg(user, "%d items in q_list after extending with limited q_all_B" % len(q_list.keys()))
 
         ctype = ContentType.objects.get_for_model(Post)
         EMAIL_UPDATE_ACTIVITY = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
@@ -426,15 +464,23 @@ class Command(NoArgsCommand):
         activate_language(django_settings.LANGUAGE_CODE)
         template = get_template('email/delayed_email_alert.html')
         for user in User.objects.all():
+            #if user.id == 190:
+            #    import pdb
+            #    pdb.set_trace()
+            #else:
+            #    continue
             user.add_missing_askbot_subscriptions()
             #todo: q_list is a dictionary, not a list
             q_list = self.get_updated_questions_for_user(user)
             if len(q_list.keys()) == 0:
+                print_debug_msg(user, "STOP (no updated questions to report on)")
                 continue
+            print_debug_msg(user, "%d updated questions to report on" % len(q_list.keys()))
             num_q = 0
             for question, meta_data in q_list.items():
                 if meta_data['skip']:
                     del q_list[question]
+                    print_debug_msg(user, "removing this from set: question=%s, meta_data=%s" % (repr(question), repr(meta_data)))
                 else:
                     num_q += 1
             if num_q > 0:
@@ -456,6 +502,7 @@ class Command(NoArgsCommand):
                 items_unreported = 0
                 questions_data = list()
                 for q, meta_data in q_list.items():
+                    print_debug_msg(user, "q=%s, meta_data=%s" % (repr(q), repr(meta_data)))
                     act_list = []
                     if meta_data['skip']:
                         continue

@@ -37,7 +37,7 @@ from askbot import exceptions as askbot_exceptions
 from askbot.utils.debug import debug as _debug
 from askbot.utils.twitter import Twitter
 
-DEBUG_CELERY = False
+DEBUG_CELERY = True
 def debug(message):
     if DEBUG_CELERY:
         _debug(message)
