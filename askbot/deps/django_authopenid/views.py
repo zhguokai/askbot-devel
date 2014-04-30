@@ -537,6 +537,22 @@ def signin(request, template_name='authopenid/signin.html'):
                         )
                         raise Http404
 
+            elif login_form.cleaned_data['login_type'] == 'mozilla-persona':
+                assertion = login_form.cleaned_data['persona_assertion']
+                email = util.mozilla_persona_get_email_from_assertion(assertion)
+                if email:
+                    user = authenticate(email=email, method='mozilla-persona')
+                    if user:
+                        login(request, user)
+                        return HttpResponseRedirect(next_url)
+                    else:
+                        return finalize_generic_signin(
+                            request,
+                            login_provider_name = 'mozilla-persona',
+                            user_identifier = email,
+                            redirect_url = next_url
+                        )
+                    
             elif login_form.cleaned_data['login_type'] == 'openid':
                 #initiate communication process
                 logging.debug('processing signin with openid submission')

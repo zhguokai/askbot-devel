@@ -123,6 +123,7 @@ providers = (
     'Facebook',
     'Flickr',
     'Google',
+    'Mozilla Persona',
     'Twitter',
     'LinkedIn',
     'LiveJournal',
@@ -134,7 +135,7 @@ providers = (
     'Verisign',
     'Yahoo',
     'identi.ca',
-    'LaunchPad'
+    'LaunchPad',
 )
 
 DISABLED_BY_DEFAULT = ('LaunchPad',)
@@ -158,7 +159,7 @@ for provider in providers:
             'in the "External keys" section'
         ) % {'provider': provider}
 
-    setting_name = 'SIGNIN_%s_ENABLED' % provider.upper()
+    setting_name = 'SIGNIN_%s_ENABLED' % provider.upper().replace(' ', '_')
     settings.register(
         livesettings.BooleanValue(
             LOGIN_PROVIDERS,

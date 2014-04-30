@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import cgi
+import httplib
 import urllib
 import urlparse
 import functools
@@ -182,7 +183,8 @@ def filter_enabled_providers(data):
     delete_list = list()
     for provider_key, provider_settings in data.items():
         name = provider_settings['name']
-        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name.upper() + '_ENABLED')
+        name_key = name.upper().replace('-', '_')
+        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name_key + '_ENABLED')
         if is_enabled == False:
             delete_list.append(provider_key)
 
@@ -499,6 +501,12 @@ def get_enabled_major_login_providers():
         'type': 'openid-direct',
         'icon_media_path': '/jquery-openid/images/google.gif',
         'openid_endpoint': 'https://www.google.com/accounts/o8/id',
+    }
+    data['mozilla-persona'] = {
+        'name': 'mozilla-persona',
+        'display_name': 'Mozilla Persona',
+        'type': 'mozilla-persona',
+        'icon_media_path': '/jquery-openid/images/mozilla-persona.gif',
     }
     data['yahoo'] = {
         'name': 'yahoo',
@@ -860,3 +868,20 @@ def ldap_check_password(username, password):
     except ldap.LDAPError, e:
         logging.critical(unicode(e))
         return False
+
+
+def mozilla_persona_get_email_from_assertion(assertion):
+    conn = httplib.HTTPSConnection('verifier.login.persona.org')
+    parsed_url = urlparse.urlparse(askbot_settings.APP_URL)
+    params = urllib.urlencode({
+                    'assertion': assertion,
+                    'audience': parsed_url.scheme + '://' + parsed_url.netloc
+                })
+    headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain'}
+    conn.request('POST', '/verify', params, headers)
+    response = conn.getresponse()
+    if response.status == 200:
+        data = simplejson.loads(response.read())
+        return data.get('email')
+    #todo: nead more feedback to help debug fail cases
+    return None

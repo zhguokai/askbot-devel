@@ -44,6 +44,7 @@
         {% endif %}
         {{ login_form.login_provider_name }}
         {{ login_form.next }}
+        {{ login_form.persona_assertion }}
         {{ 
             login_macros.provider_buttons(
                 login_form = login_form,

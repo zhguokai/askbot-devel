@@ -126,6 +126,10 @@ class LoginForm(forms.Form):
     """
     next = NextUrlField()
     login_provider_name = LoginProviderField()
+    persona_assertion = forms.CharField(
+                            required=False,
+                            widget=forms.widgets.HiddenInput()
+                        )
     openid_login_token = forms.CharField(
                             max_length=256,
                             required = False,
@@ -221,6 +225,8 @@ class LoginForm(forms.Form):
             #self.do_clean_oauth_fields()
         elif provider_type == 'wordpress_site':
             self.cleaned_data['login_type'] = 'wordpress_site'
+        elif provider_type == 'mozilla-persona':
+            self.cleaned_data['login_type'] = 'mozilla-persona'
 
         return self.cleaned_data
 

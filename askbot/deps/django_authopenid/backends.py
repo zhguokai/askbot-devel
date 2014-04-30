@@ -37,6 +37,7 @@ class AuthBackend(object):
                 provider_name = None,#required with all except email_key
                 openid_url = None,
                 email_key = None,
+                email = None, # used with mozilla-persona method
                 oauth_user_id = None,#used with oauth
                 facebook_user_id = None,#user with facebook
                 wordpress_url = None, # required for self hosted wordpress
@@ -129,7 +130,20 @@ class AuthBackend(object):
                     'duplicate openid url in the database!!! %s' % openid_url
                 )
                 return None
-                
+
+        elif method == 'mozilla-persona':
+            try:
+                assoc = UserAssociation.objects.get(
+                                        openid_url=email,
+                                        provider_name='mozilla-persona'
+                                    )
+                return assoc.user
+            except UserAssociation.DoesNotExist:
+                return None
+            except UserAssociation.MultipleObjectsReturned:
+                logging.critical(
+                    'duplicate user with mozilla persona %s!!!' % email
+                )
 
         elif method == 'email':
             #with this method we do no use user association

@@ -381,10 +381,33 @@ $.fn.authenticator = function() {
         $('#id_email').focus();
     };
 
+    var start_mozilla_persona_login = function() {
+        navigator.id.request();
+        return false;
+    };
+
     var clear_password_fields = function(){
         $('#id_password').val('');
         $('#id_new_password').val('');
         $('#id_new_password_retyped').val('');
+    };
+
+    var setupMozillaPersonaListeners = function() {
+        navigator.id.watch({
+            loggedInUser: askbot['data']['userEmail'],
+            onlogin: function(assertion) {
+                var assertionElement = signin_form.find('input[name=persona_assertion]');
+                assertionElement.val(assertion);
+                provider_name_input.val('mozilla-persona');
+                signin_form.submit();
+                return false;
+            },
+            onlogout: function() {
+                if (askbot['data']['userIsAuthenticated']) {
+                    window.location.href = askbot['urls']['signOut'];
+                }
+            }
+        });
     };
 
     var setup_default_handlers = function(){
@@ -402,6 +425,17 @@ $.fn.authenticator = function() {
             signin_page.find('input.openid-generic'),
             start_login_with_extra_openid_token
         );
+
+        var mozillaPersonaBtn = signin_page.find('input.mozilla-persona');
+
+        if (mozillaPersonaBtn.length) {
+            setupMozillaPersonaListeners();
+            setup_event_handlers(
+                signin_page.find('input.mozilla-persona'),
+                start_mozilla_persona_login
+            );
+        }
+
 
         setup_event_handlers(
             signin_page.find('input.oauth,input.oauth2'),

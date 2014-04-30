@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development master branch (only on github)
 ------------------------------------------
+* Implemented Mozilla Persona authentication
 * Allowed custom providers of gravatar service (michas2)
 * Allowed configurable custom OpenID login button
 * Allowed custom list of feedback recipients (Keto)
