@@ -76,7 +76,7 @@ class LoginProviderField(forms.CharField):
         if value in providers:
             return value
         else:
-            error_message = 'unknown provider name %s' % cgi.escape(value)
+            error_message = u'unknown provider name %s' % value
             logging.critical(error_message)
             raise forms.ValidationError(error_message)
 
