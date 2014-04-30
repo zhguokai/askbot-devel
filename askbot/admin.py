@@ -59,25 +59,44 @@ admin.site.register(models.QuestionView, QuestionViewAdmin)
 
 class PostAdmin(admin.ModelAdmin):
     # TODO: show groups
-    list_display = ('post_type', 'thread', 'author', 'added_at', 'deleted')
+    list_display = ('post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_private')
     list_filter = ('deleted', 'post_type', 'author')
+
+    def in_groups(self, obj):
+        return ', '.join(obj.groups.exclude(name__startswith='_personal').values_list('name', flat=True))
 admin.site.register(models.Post, PostAdmin)
 
 class ThreadAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed')
+    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'in_groups', 'is_private')
     list_filter = ('deleted', 'closed', 'last_activity_by')
+
+    def in_groups(self, obj):
+        return ', '.join(obj.groups.exclude(name__startswith='_personal').values_list('name', flat=True))
 admin.site.register(models.Thread, ThreadAdmin)
 
 from django.contrib.auth.models import User
 try:
     admin.site.unregister(User)
 finally:
+    from django.contrib.admin import SimpleListFilter
+    from askbot.models.user import Group
+
+    class InGroup(SimpleListFilter):
+        title = 'group membership'
+        parameter_name = 'name'
+
+        def lookups(self, request, model_admin):
+            return tuple([(g.id, 'in group \'%s\''%g.name) for g in Group.objects.exclude(name__startswith='_personal')])
+        def queryset(self, request, queryset):
+            if self.value():
+                return queryset.filter(groups__id=self.value())
+            else: 
+                return queryset
+
     from django.contrib.auth.admin import UserAdmin as OrigUserAdmin
     class UserAdmin(OrigUserAdmin):
-        list_display = OrigUserAdmin.list_display + ('reputation', 
+        list_display = OrigUserAdmin.list_display + ('date_joined', 'reputation', 
             'interesting_tags', 'ignored_tags', 'subscribed_tags', 
             'display_tag_filter_strategy', 'get_groups', 'get_primary_group')
-
-        def list_groups(self, obj):
-            return ', '.join()
+        list_filter = (InGroup,) + OrigUserAdmin.list_filter
     admin.site.register(User, UserAdmin)
