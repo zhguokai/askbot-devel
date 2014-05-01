@@ -74,17 +74,22 @@ class PostAdmin(admin.ModelAdmin):
     # TODO: show groups
     list_display = ('post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_private')
     list_filter = ('deleted', 'post_type', 'author')
+    search_fields = ('thread__title', 'text',)
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
 admin.site.register(models.Post, PostAdmin)
 
 class ThreadAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'in_groups', 'is_private')
+    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'in_spaces', 'in_groups', 'is_private')
     list_filter = ('deleted', 'closed', 'last_activity_by')
+    search_fields = ('title',)
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
+
+    def in_spaces(self, obj):
+        return ', '.join(obj.spaces.all().values_list('name', flat=True))
 admin.site.register(models.Thread, ThreadAdmin)
 
 
