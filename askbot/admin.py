@@ -87,6 +87,17 @@ class ThreadAdmin(admin.ModelAdmin):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
 admin.site.register(models.Thread, ThreadAdmin)
 
+
+from django.contrib.sites.models import Site
+try:
+    admin.site.unregister(Site)
+finally:
+    from django.contrib.sites.admin import SiteAdmin as OrigSiteAdmin
+    class SiteAdmin(OrigSiteAdmin):
+        list_display = ('id',) + OrigSiteAdmin.list_display
+    admin.site.register(Site, SiteAdmin)
+
+
 from django.contrib.auth.models import User
 try:
     admin.site.unregister(User)
