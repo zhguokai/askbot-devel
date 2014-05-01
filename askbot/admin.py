@@ -63,7 +63,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ('deleted', 'post_type', 'author')
 
     def in_groups(self, obj):
-        return ', '.join(obj.groups.exclude(name__startswith='_personal').values_list('name', flat=True))
+        return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
 admin.site.register(models.Post, PostAdmin)
 
 class ThreadAdmin(admin.ModelAdmin):
@@ -71,7 +71,7 @@ class ThreadAdmin(admin.ModelAdmin):
     list_filter = ('deleted', 'closed', 'last_activity_by')
 
     def in_groups(self, obj):
-        return ', '.join(obj.groups.exclude(name__startswith='_personal').values_list('name', flat=True))
+        return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
 admin.site.register(models.Thread, ThreadAdmin)
 
 from django.contrib.auth.models import User
@@ -79,14 +79,13 @@ try:
     admin.site.unregister(User)
 finally:
     from django.contrib.admin import SimpleListFilter
-    from askbot.models.user import Group
 
     class InGroup(SimpleListFilter):
         title = 'group membership'
         parameter_name = 'name'
 
         def lookups(self, request, model_admin):
-            return tuple([(g.id, 'in group \'%s\''%g.name) for g in Group.objects.exclude(name__startswith='_personal')])
+            return tuple([(g.id, 'in group \'%s\''%g.name) for g in models.Group.objects.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX)])
         def queryset(self, request, queryset):
             if self.value():
                 return queryset.filter(groups__id=self.value())
