@@ -299,13 +299,35 @@ class ThreadManager(BaseQuerySetManager):
 
         #search user names if @user is added to search string
         #or if user name exists in the search state
+        user_filter = None
         if search_state.query_users:
             query_users = User.objects.filter(username__in=search_state.query_users)
             if query_users:
-                qs = qs.filter(
+                user_filter = Q(
                     posts__post_type='question',
                     posts__author__in=query_users
-                ) # TODO: unify with search_state.author ?
+                )
+                #TODO: unify with search_state.author ?
+
+        if search_state.op_email_token:
+            #this feature is mod or admin only
+            if request_user.is_authenticated() and request_user.is_administrator_or_moderator():
+                op_email_filter = Q(
+                    posts__post_type='question',
+                    posts__author__email__icontains=search_state.op_email_token
+                )
+                if user_filter:
+                    user_filter |= op_email_filter
+                else:
+                    user_filter = op_email_filter
+            else:
+                request_user.message_set.create(
+                    message=_('Sorry, you cannot search by the user email')
+                )
+
+        #user filter may be combined of query_users and op_email_token
+        if user_filter:
+            qs = qs.filter(user_filter)
 
         #unified tags - is list of tags taken from the tag selection
         #plus any tags added to the query string with #tag or [tag:something]
