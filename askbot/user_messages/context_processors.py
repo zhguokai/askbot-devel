@@ -5,11 +5,12 @@ Time-stamp: <2008-07-19 23:16:19 carljm context_processors.py>
 
 """
 from django.conf import settings as django_settings
+from django.contrib import messages as django_messages
 from django.utils.encoding import StrAndUnicode
 
 from askbot.user_messages import get_and_delete_messages
 
-def user_messages (request):
+def user_messages(request):
     """
     Returns session messages for the current session.
 
@@ -20,6 +21,7 @@ def user_messages (request):
         return {}
     if hasattr(request.user, 'get_and_delete_messages'):
         messages = request.user.get_and_delete_messages()
+        messages += django_messages.get_messages(request)
         #if request.user.is_authenticated():
         #else:
         #    messages = LazyMessages(request)
@@ -28,7 +30,7 @@ def user_messages (request):
         #print messages
         return { 'user_messages': messages }
     else:
-        return {}
+        return { 'user_messages': django_messages.get_messages(request) }
 
 class LazyMessages (StrAndUnicode):
     """
