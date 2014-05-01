@@ -18,13 +18,26 @@ admin.site.register(models.PostRevision)
 admin.site.register(models.Award)
 admin.site.register(models.Repute)
 admin.site.register(models.BulkTagSubscription)
-admin.site.register(models.Space)
-admin.site.register(models.Feed)
+
+class SpaceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+admin.site.register(models.Space, SpaceAdmin)
+
+class FeedAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'default_space', 'redirect', 'site')
+admin.site.register(models.Feed, FeedAdmin)
 
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('user', 'active_at', 'activity_type', 'content_type', 'object_id', 'content_object')
     list_filter = ('activity_type', 'content_type', 'user')
 admin.site.register(models.Activity, ActivityAdmin)
+
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'logo_url', 'description', 'moderate_email', 'moderate_answers_to_enquirers', 'openness', 'is_vip', 'read_only')
+    list_display_links = ('id', 'name')
+    list_filter = ('moderate_email', 'moderate_answers_to_enquirers', 'openness', 'is_vip', 'read_only')
+    search_fields = ('name', 'logo_url', 'description')
+admin.site.register(models.Group, GroupAdmin)
 
 class GroupMembershipAdmin(admin.ModelAdmin):
     list_display = ('group', 'user', 'level')
