@@ -82,7 +82,7 @@
                         <a
                             title="{{ award.content_object.get_snippet()|collapse }}"
                             href="{{ award.content_object.get_absolute_url() }}"
-                        >{% if award.content_type.is_answer() %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.thread.title|escape }}</a>
+                        >{% if award.content_object.is_answer() %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.thread.title|escape }}</a>
                     </li>
                     {% endif %}
                 {% endfor %}

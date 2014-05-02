@@ -1329,7 +1329,8 @@ def user_post_comment(
                     parent_post = None,
                     body_text = None,
                     timestamp = None,
-                    by_email = False
+                    by_email = False,
+                    comment_type='comment'
                 ):
     """post a comment on behalf of the user
     to parent_post
@@ -1345,10 +1346,11 @@ def user_post_comment(
     self.assert_can_post_comment(parent_post = parent_post)
 
     comment = parent_post.add_comment(
-                    user = self,
-                    comment = body_text,
-                    added_at = timestamp,
-                    by_email = by_email
+                    user=self,
+                    comment=body_text,
+                    added_at=timestamp,
+                    by_email=by_email,
+                    comment_type=comment_type
                 )
     comment.add_to_groups([self.get_personal_group()])
 
