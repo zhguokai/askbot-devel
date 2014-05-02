@@ -8,16 +8,38 @@ Names of the classes must be like `SomeModelAdmin`, where `SomeModel` must
 exactly match name of the model used in the project
 """
 from django.contrib import admin
+from django.contrib.admin import SimpleListFilter
 from askbot import models
 from askbot import const
 
-admin.site.register(models.Tag)
+
 admin.site.register(models.Vote)
 admin.site.register(models.FavoriteQuestion)
 admin.site.register(models.PostRevision)
 admin.site.register(models.Award)
 admin.site.register(models.Repute)
 admin.site.register(models.BulkTagSubscription)
+
+class InSite(SimpleListFilter):
+    title = 'site membership'
+    parameter_name = 'name'
+
+    def lookups(self, request, model_admin):
+        return tuple([(s.id, 'in site \'%s\''%s.name) for s in Site.objects.all()])
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(sites__id=self.value())
+        else: 
+            return queryset
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name', 'deleted', 'status', 'in_sites', 'used_count') 
+    list_filter = ('deleted', 'status', InSite)
+    search_fields = ('name',)
+
+    def in_sites(self, obj):
+        return ', '.join(obj.sites.all().values_list('name', flat=True))
+admin.site.register(models.Tag, TagAdmin)
 
 class SpaceAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
@@ -107,8 +129,6 @@ from django.contrib.auth.models import User
 try:
     admin.site.unregister(User)
 finally:
-    from django.contrib.admin import SimpleListFilter
-
     class InGroup(SimpleListFilter):
         title = 'group membership'
         parameter_name = 'name'
