@@ -882,6 +882,12 @@ def mozilla_persona_get_email_from_assertion(assertion):
     response = conn.getresponse()
     if response.status == 200:
         data = simplejson.loads(response.read())
-        return data.get('email')
+        email = data.get('email')
+        if email:
+            return email
+        else:
+            message = unicode(data)
+            message += '\nMost likely base url in /settings/QA_SITE_SETTINGS/ is incorrect'
+            raise ImproperlyConfigured(message)
     #todo: nead more feedback to help debug fail cases
     return None

@@ -546,6 +546,8 @@ def signin(request, template_name='authopenid/signin.html'):
                         login(request, user)
                         return HttpResponseRedirect(next_url)
                     else:
+                        #pre-fill email address with persona registration
+                        request.session['email'] = email
                         return finalize_generic_signin(
                             request,
                             login_provider_name = 'mozilla-persona',
