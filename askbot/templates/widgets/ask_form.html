@@ -71,8 +71,8 @@
         <input 
             type="submit" 
             name="post"
-            value="{% trans %}Ask Your Question{% endtrans %}" class="submit" 
-            value="{% if group_id %}{% trans %}Ask {{ group_name }}{% endtrans %}{% else %}{% trans %}Ask Your Question{% endtrans %}{% endif %}"
+            class="submit" 
+            value="{% if group_name %}{% trans %}Ask {{ group_name }}{% endtrans %}{% else %}{% trans %}Ask Your Question{% endtrans %}{% endif %}"
         />
     {% endif %}
 </form>

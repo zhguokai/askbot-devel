@@ -18,13 +18,26 @@ admin.site.register(models.PostRevision)
 admin.site.register(models.Award)
 admin.site.register(models.Repute)
 admin.site.register(models.BulkTagSubscription)
-admin.site.register(models.Space)
-admin.site.register(models.Feed)
+
+class SpaceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+admin.site.register(models.Space, SpaceAdmin)
+
+class FeedAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'default_space', 'redirect', 'site')
+admin.site.register(models.Feed, FeedAdmin)
 
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('user', 'active_at', 'activity_type', 'content_type', 'object_id', 'content_object')
     list_filter = ('activity_type', 'content_type', 'user')
 admin.site.register(models.Activity, ActivityAdmin)
+
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'logo_url', 'description', 'moderate_email', 'moderate_answers_to_enquirers', 'openness', 'is_vip', 'read_only')
+    list_display_links = ('id', 'name')
+    list_filter = ('moderate_email', 'moderate_answers_to_enquirers', 'openness', 'is_vip', 'read_only')
+    search_fields = ('name', 'logo_url', 'description')
+admin.site.register(models.Group, GroupAdmin)
 
 class GroupMembershipAdmin(admin.ModelAdmin):
     list_display = ('group', 'user', 'level')
@@ -61,32 +74,47 @@ class PostAdmin(admin.ModelAdmin):
     # TODO: show groups
     list_display = ('post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_private')
     list_filter = ('deleted', 'post_type', 'author')
+    search_fields = ('thread__title', 'text',)
 
     def in_groups(self, obj):
-        return ', '.join(obj.groups.exclude(name__startswith='_personal').values_list('name', flat=True))
+        return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
 admin.site.register(models.Post, PostAdmin)
 
 class ThreadAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'in_groups', 'is_private')
+    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'in_spaces', 'in_groups', 'is_private')
     list_filter = ('deleted', 'closed', 'last_activity_by')
+    search_fields = ('title',)
 
     def in_groups(self, obj):
-        return ', '.join(obj.groups.exclude(name__startswith='_personal').values_list('name', flat=True))
+        return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
+
+    def in_spaces(self, obj):
+        return ', '.join(obj.spaces.all().values_list('name', flat=True))
 admin.site.register(models.Thread, ThreadAdmin)
+
+
+from django.contrib.sites.models import Site
+try:
+    admin.site.unregister(Site)
+finally:
+    from django.contrib.sites.admin import SiteAdmin as OrigSiteAdmin
+    class SiteAdmin(OrigSiteAdmin):
+        list_display = ('id',) + OrigSiteAdmin.list_display
+    admin.site.register(Site, SiteAdmin)
+
 
 from django.contrib.auth.models import User
 try:
     admin.site.unregister(User)
 finally:
     from django.contrib.admin import SimpleListFilter
-    from askbot.models.user import Group
 
     class InGroup(SimpleListFilter):
         title = 'group membership'
         parameter_name = 'name'
 
         def lookups(self, request, model_admin):
-            return tuple([(g.id, 'in group \'%s\''%g.name) for g in Group.objects.exclude(name__startswith='_personal')])
+            return tuple([(g.id, 'in group \'%s\''%g.name) for g in models.Group.objects.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX)])
         def queryset(self, request, queryset):
             if self.value():
                 return queryset.filter(groups__id=self.value())

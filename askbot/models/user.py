@@ -400,6 +400,8 @@ class AuthUserGroups(models.Model):
         db_table = 'auth_user_groups'
         managed = False
 
+    def __unicode__(self):
+        return "%s: member of %s" % (self.user.username, self.group.name)
 
 class GroupMembership(AuthUserGroups):
     """contains one-to-one relation to ``auth_user_group``
@@ -422,6 +424,17 @@ class GroupMembership(AuthUserGroups):
 
     class Meta:
         app_label = 'askbot'
+
+    def get_level_name(self):
+        level_names = [tuple[1] for tuple in GroupMembership.LEVEL_CHOICES if tuple[0]==self.level]
+        if len(level_names) == 1:
+            return level_names[0]
+        else:
+            return 'level-unknown'
+
+    def __unicode__(self):
+        return "%s: %s member of %s)" % (self.user.username, self.get_level_name(), self.group.name)
+
 
     @classmethod
     def get_level_value_display(cls, level):
