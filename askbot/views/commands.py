@@ -1553,3 +1553,12 @@ def publish_answer(request):
         #todo: notify enquirer by email about the post
     request.user.message_set.create(message=message)
     return {'redirect_url': answer.get_absolute_url()}
+
+@decorators.ajax_only
+def get_admin_comment_counts(request):
+    post_ids = simplejson.loads(request.GET['post_ids'])
+    data = dict()
+    for post_id in post_ids:
+        data[post_id] = 0
+
+    return {'comment_counts': data}

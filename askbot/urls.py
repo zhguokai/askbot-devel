@@ -245,6 +245,11 @@ urlpatterns = patterns('',
         views.commands.upvote_comment,
         name = 'upvote_comment'
     ),
+    service_url(#ajax get only
+        r'^get-admin-comment-counts/', 
+        views.commands.get_admin_comment_counts,
+        name='get_admin_comment_counts'
+    ),
     service_url(#ajax only
         r'^post/delete/$',
         views.commands.delete_post,

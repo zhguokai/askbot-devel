@@ -516,6 +516,20 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ADMIN_COMMENTS_ENABLED',
+        default=False,
+        description=_('Enable admin comments on posts'),
+        help_text=_(
+            'When this feature is enabled, each post will have '
+            'a place for the admins and the moderators to leave '
+            'comments, not visible to other users'
+        )
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MIN_SEARCH_WORD_LENGTH',

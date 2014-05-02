@@ -1019,7 +1019,9 @@ class Post(models.Model):
                 comment=None,
                 user=None,
                 added_at=None,
-                by_email = False):
+                by_email=False,
+                comment_type='comment'
+            ):
 
         if added_at is None:
             added_at = datetime.datetime.now()
@@ -1031,9 +1033,9 @@ class Post(models.Model):
                                                 user,
                                                 added_at,
                                                 comment,
-                                                parent = self,
-                                                post_type = 'comment',
-                                                by_email = by_email
+                                                parent=self,
+                                                post_type=comment_type,
+                                                by_email=by_email
                                             )
         self.comment_count = self.comment_count + 1
         self.save()

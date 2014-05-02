@@ -1906,7 +1906,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
             me.setSuppressEmail(false);
         }
         else {
-            post_data['post_type'] = me._comment.getParentType();
+            post_data['comment_type'] = me.getCommentsWidget().getCommentsPostType();
             post_data['post_id'] = me._comment.getParentId();
             post_url = askbot['urls']['postComments'];
         }
@@ -2288,8 +2288,40 @@ Comment.prototype.getDeleteHandler = function(){
 var PostCommentsWidget = function(){
     WrappedElement.call(this);
     this._denied = false;
+    this._commentsPostType = 'comment';
 };
 inherits(PostCommentsWidget, WrappedElement);
+
+PostCommentsWidget.prototype.createDom = function() {
+
+    var commentType = this._commentsPostType;
+
+    var elem = this.makeElement('div');
+    this._element = elem;
+    elem.attr('id', commentType + 's-for-post-' + this.getPostId());
+    elem.addClass('comments empty');
+
+    var content = this.makeElement('div');
+    content.addClass('content');
+    elem.append(content);
+
+    var controls = this.makeElement('div');
+    controls.addClass('controls');
+    elem.append(controls);
+
+    var btn = this.makeElement('a');
+    btn.attr('id', 'add-' + commentType + '-to-post-' + this.getPostId());
+    btn.addClass('button');
+    btn.html(gettext('add a comment'));
+    controls.append(btn);
+
+    //required for the widget to function
+    var id = elem.attr('id');
+    askbot['data'][id] = {};
+    askbot['data'][id]['truncated'] = true;
+    askbot['data'][id]['can_post'] = true;
+    return elem;
+};
 
 PostCommentsWidget.prototype.decorate = function(element){
     var element = $(element);
@@ -2297,8 +2329,7 @@ PostCommentsWidget.prototype.decorate = function(element){
 
     var widget_id = element.attr('id');
     var id_bits = widget_id.split('-');
-    this._post_id = id_bits[3];
-    this._post_type = id_bits[2];
+    this.setPostId(id_bits[3]);
     this._is_truncated = askbot['data'][widget_id]['truncated'];
     this._user_can_post = askbot['data'][widget_id]['can_post'];
 
@@ -2311,8 +2342,7 @@ PostCommentsWidget.prototype.decorate = function(element){
             this._activate_button,
             this.getReadOnlyLoadHandler()
         );
-    }
-    else {
+    } else {
         setupButtonEventHandlers(
             this._activate_button,
             this.getActivateHandler()
@@ -2330,6 +2360,15 @@ PostCommentsWidget.prototype.decorate = function(element){
     this._comments = comments;
 };
 
+PostCommentsWidget.prototype.setCommentsPostType = function(postType) {
+    this._commentsPostType = postType;
+};
+
+PostCommentsWidget.prototype.getCommentsPostType = function() {
+    return this._commentsPostType;
+};
+
+
 PostCommentsWidget.prototype.handleDeletedComment = function() {
     /* if the widget does not have any comments, set
     the 'empty' class on the widget element */
@@ -2339,8 +2378,8 @@ PostCommentsWidget.prototype.handleDeletedComment = function() {
     }
 };
 
-PostCommentsWidget.prototype.getPostType = function(){
-    return this._post_type;
+PostCommentsWidget.prototype.setPostId = function(postId) {
+    this._post_id = postId;
 };
 
 PostCommentsWidget.prototype.getPostId = function(){
@@ -2386,7 +2425,7 @@ PostCommentsWidget.prototype.userCanPost = function() {
     return false;
 };
 
-PostCommentsWidget.prototype.getActivateHandler = function(){
+PostCommentsWidget.prototype.getActivateHandler = function(callback){
     var me = this;
     var button = this._activate_button;
     return function() {
@@ -2395,15 +2434,20 @@ PostCommentsWidget.prototype.getActivateHandler = function(){
                 me.reRenderComments(json);
                 //2) change button text to "post a comment"
                 button.html(askbot['messages']['addComment']);
+                if (callback) {
+                    callback();
+                }
             });
-        }
-        else {
+        } else {
             //if user can't post, we tell him something and refuse
             if (askbot['data']['userIsAuthenticated']) {
                 me.startNewComment();
             } else {
                 var message = gettext('please sign in or register to post comments');
                 showMessage(button, message, 'after');
+            }
+            if (callback) {
+                callback();
             }
         }
     };
@@ -2421,7 +2465,10 @@ PostCommentsWidget.prototype.getReadOnlyLoadHandler = function(){
 
 
 PostCommentsWidget.prototype.reloadAllComments = function(callback){
-    var post_data = {post_id: this._post_id, post_type: this._post_type};
+    var post_data = {
+        post_id: this._post_id,
+        comment_type: this._commentsPostType
+    };
     var me = this;
     $.ajax({
         type: "GET",

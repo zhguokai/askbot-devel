@@ -1746,12 +1746,19 @@ class BulkTagSubscriptionForm(forms.Form):
         if askbot_settings.GROUPS_ENABLED:
             self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.exclude_personal())
 
+COMMENT_TYPE_CHOICES = (
+    ('comment', 'regular comment'),
+    ('admin_comment', 'moderation comment, only visible to the moderators')
+)
+
 class GetCommentsForPostForm(forms.Form):
     post_id = forms.IntegerField()
+    comment_type = forms.ChoiceField(choices=COMMENT_TYPE_CHOICES)
 
 class NewCommentForm(forms.Form):
     comment = forms.CharField()
     post_id = forms.IntegerField()
+    comment_type = forms.ChoiceField(choices=COMMENT_TYPE_CHOICES)
 
 class EditCommentForm(forms.Form):
     comment_id = forms.IntegerField()

@@ -326,6 +326,7 @@
         askbot['urls']['get_html_template'] = '{% url get_html_template %}';
         askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
         askbot['urls']['publishAnswer'] = '{% url publish_answer %}';
+        askbot['urls']['getAdminCommentCounts'] = '{% url get_admin_comment_counts %}';
         askbot['data']['userIsThreadModerator'] = {{ user_is_thread_moderator|as_js_bool }};
         askbot['data']['questionAuthorId'] = {{ question.author_id }};
         askbot['data']['threadIsClosed'] = {{ thread.closed|as_js_bool }};

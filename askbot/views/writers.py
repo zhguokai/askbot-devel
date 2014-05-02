@@ -644,11 +644,18 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
 
     return HttpResponseRedirect(question.get_absolute_url())
 
-def __generate_comments_json(obj, user):#non-view generates json data for the post comments
+def __generate_comments_json(obj, user, comment_type='comment'):#non-view generates json data for the post comments
     """non-view generates json data for the post comments
     """
-    models.Post.objects.precache_comments(for_posts=[obj], visitor=user)
-    comments = obj._cached_comments
+    if comment_type == 'comment':
+        models.Post.objects.precache_comments(for_posts=[obj], visitor=user)
+        comments = obj._cached_comments
+    else:
+        comments = models.Post.objects.filter(
+                                        parent=obj,
+                                        post_type=comment_type,
+                                        deleted=False
+                                    ).order_by('id')
 
     # {"Id":6,"PostId":38589,"CreationDate":"an hour ago","Text":"hello there!","UserDisplayName":"Jarrod Dixon","UserUrl":"/users/3/jarrod-dixon","DeleteUrl":null}
     json_comments = []
@@ -697,10 +704,6 @@ def post_comments(request):#generic ajax handler to load comments to an object
     """
     # only support get post comments by ajax now
 
-    post_type = request.REQUEST.get('post_type', '')
-    if not request.is_ajax() or post_type not in ('question', 'answer'):
-        raise Http404  # TODO: Shouldn't be 404! More like 400, 403 or sth more specific
-
     user = request.user
 
     if request.method == 'POST':
@@ -722,8 +725,10 @@ def post_comments(request):#generic ajax handler to load comments to an object
             _('Post not found'), mimetype='application/json'
         )
 
+    comment_type = form.cleaned_data['comment_type']
+
     if request.method == "GET":
-        response = __generate_comments_json(post, user)
+        response = __generate_comments_json(post, user, comment_type)
     elif request.method == "POST":
         try:
             if user.is_anonymous():
@@ -733,14 +738,16 @@ def post_comments(request):#generic ajax handler to load comments to an object
                         {'sign_in_url': url_utils.get_login_url()}
                 raise exceptions.PermissionDenied(msg)
             comment = user.post_comment(
-                parent_post=post, body_text=form.cleaned_data['comment']
+                parent_post=post, 
+                body_text=form.cleaned_data['comment'],
+                comment_type=comment_type
             )
             signals.new_comment_posted.send(None,
                 comment=comment,
                 user=user,
                 form_data=form.cleaned_data
             )
-            response = __generate_comments_json(post, user)
+            response = __generate_comments_json(post, user, comment_type)
         except exceptions.PermissionDenied, e:
             response = HttpResponseForbidden(unicode(e), mimetype="application/json")
 
@@ -794,6 +801,7 @@ def edit_comment(request):
         'voted': comment_post.is_upvoted_by(request.user),
     }
 
+
 @csrf.csrf_exempt
 def delete_comment(request):
     """ajax handler to delete comment
@@ -823,7 +831,7 @@ def delete_comment(request):
             parent.save()
             parent.thread.invalidate_cached_data()
 
-            return __generate_comments_json(parent, request.user)
+            return __generate_comments_json(parent, request.user, comment.post_type)
 
         raise exceptions.PermissionDenied(
                     _('sorry, we seem to have some technical difficulties')
