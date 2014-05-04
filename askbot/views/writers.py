@@ -819,7 +819,7 @@ def delete_comment(request):
             raise exceptions.PermissionDenied(msg)
         if request.is_ajax():
 
-            form = forms.DeleteCommentForm(request.POST)
+            form = forms.ProcessCommentForm(request.POST)
 
             if form.is_valid() == False:
                 return HttpResponseBadRequest()
@@ -853,16 +853,14 @@ def delete_comment(request):
 @decorators.post_only
 def comment_to_answer(request):
 
-    try:
-        comment_id = int(request.POST.get('comment_id'))
-    except (ValueError, TypeError):
-        #type or value error is raised is int() fails
+    form = forms.ProcessCommentForm(request.POST)
+    if form.is_valid() == False:
         raise Http404
 
     comment = get_object_or_404(
                     models.Post,
                     post_type='comment',
-                    id=comment_id
+                    id=form.cleaned_data['comment_id']
                 )
 
     if askbot_settings.READ_ONLY_MODE_ENABLED is False:

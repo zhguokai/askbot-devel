@@ -1706,5 +1706,5 @@ class EditCommentForm(forms.Form):
     suppress_email = SuppressEmailField()
 
 
-class DeleteCommentForm(forms.Form):
+class ProcessCommentForm(forms.Form):
     comment_id = forms.IntegerField()
