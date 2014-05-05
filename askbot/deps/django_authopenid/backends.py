@@ -158,6 +158,24 @@ class AuthBackend(object):
             except User.DoesNotExist:
                 return None
 
+        elif method == 'valid_email':
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return None
+            except User.MultipleObjectsReturned:
+                LOG.critical(
+                    ('have more than one user with email %s ' +
+                    'he/she will not be able to authenticate with ' +
+                    'the email address in the place of user name') % email_address
+                )
+                return None
+
+            if user.email_isvalid == False:
+                return None
+
+            return user
+
         elif method == 'oauth':
             if login_providers[provider_name]['type'] in ('oauth', 'oauth2'):
                 try:

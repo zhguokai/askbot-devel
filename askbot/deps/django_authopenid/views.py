@@ -542,18 +542,32 @@ def signin(request, template_name='authopenid/signin.html'):
                 email = util.mozilla_persona_get_email_from_assertion(assertion)
                 if email:
                     user = authenticate(email=email, method='mozilla-persona')
+                    if user is None:
+                        user = authenticate(email=email, method='valid_email')
+                        if user:
+                            #create mozilla persona user association
+                            #because we trust the given email address belongs
+                            #to the same user
+                            UserAssociation(
+                                openid_url=email,
+                                user=user,
+                                provider_name='mozilla-persona',
+                                last_used_timestamp=datetime.datetime.now()
+                            ).save()
+
                     if user:
                         login(request, user)
                         return HttpResponseRedirect(next_url)
-                    else:
-                        #pre-fill email address with persona registration
-                        request.session['email'] = email
-                        return finalize_generic_signin(
-                            request,
-                            login_provider_name = 'mozilla-persona',
-                            user_identifier = email,
-                            redirect_url = next_url
-                        )
+
+                    #else - create new user account
+                    #pre-fill email address with persona registration
+                    request.session['email'] = email
+                    return finalize_generic_signin(
+                        request,
+                        login_provider_name = 'mozilla-persona',
+                        user_identifier = email,
+                        redirect_url = next_url
+                    )
                     
             elif login_form.cleaned_data['login_type'] == 'openid':
                 #initiate communication process
