@@ -2345,6 +2345,12 @@ ul#related-tags li {
   margin-top: -34px;
   float: left;
 }
+.question-page .modal div.comments.empty {
+  margin-top: 0;
+}
+.question-page .modal .comments .comment .comment-content {
+  width: 100%;
+}
 .question-page h2.comment-title {
   color: #7ea9b3;
   font-weight: bold;

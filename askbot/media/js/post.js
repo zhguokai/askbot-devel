@@ -2397,7 +2397,7 @@ PostCommentsWidget.prototype.showButton = function(){
     this._activate_button.show();
 }
 
-PostCommentsWidget.prototype.startNewComment = function(){
+PostCommentsWidget.prototype.getNewComment = function() {
     var opts = {
         'is_deletable': true,
         'is_editable': true
@@ -2405,6 +2405,13 @@ PostCommentsWidget.prototype.startNewComment = function(){
     var comment = new Comment(this, opts);
     this._cbox.append(comment.getElement());
     this._element.removeClass('empty');
+    return comment;
+    //this._newComment = comment;
+    //eturn this._newComment;
+};
+
+PostCommentsWidget.prototype.startNewComment = function(){
+    var comment = this.getNewComment();
     comment.startEditing();
 };
 
@@ -4792,6 +4799,177 @@ $(document).ready(function() {
     var askButton = new AskButton();
     askButton.decorate($("#askButton"));
 });
+
+(function() {
+
+    if (!askbot['data']['userIsAdminOrMod']) {
+        return;
+    }
+
+    var getPostIds = function() {
+        var posts = $('.post');
+        var postIds = [];
+        for (var i=0; i<posts.length; i++) {
+            postIds.push($(posts[i]).data('postId'));
+        }
+        return postIds;
+    };
+
+    var AdminCommentsDialog = function(postId) {
+        ModalDialog.call(this);
+        this._postId = postId;
+    };
+    inherits(AdminCommentsDialog, ModalDialog);
+
+    AdminCommentsDialog.prototype.setPostId = function(postId) {
+        this._postId = postId;
+    };
+
+    AdminCommentsDialog.prototype.getCommentsWidget = function() {
+        if (!this._commentsWidget) {
+            var comments = new PostCommentsWidget();
+            comments.setPostId(this._postId);
+            comments.setCommentsPostType('admin_comment');
+            var elem = comments.getElement();
+            this.setContent(elem);
+            comments.decorate(elem);
+            this._commentsWidget = comments;
+        }
+        return this._commentsWidget;
+    };
+
+    AdminCommentsDialog.prototype.getCommentsLoader = function() {
+        if (!this._commentsLoader) {
+            var comments = this.getCommentsWidget();
+            var me = this;
+            var onCommentsLoad = function() {
+                //me.setContent(comments.getElement());
+                me.show();
+            };
+            var loader = comments.getActivateHandler(onCommentsLoad);
+            this._commentsLoader = loader;
+        }
+        return this._commentsLoader;
+    };
+
+    AdminCommentsDialog.prototype.startOpening = function() {
+        var loader = this.getCommentsLoader();
+        loader();
+    };
+
+    AdminCommentsDialog.prototype.createDom = function() {
+        this.setHeadingText(gettext('Moderation comments'));
+        this.setAcceptButtonText(gettext('Back to the question'));
+        var me = this;
+        this.setAcceptHandler(function(){ me.hide(); });
+        this.setRejectButtonText(undefined);
+        AdminCommentsDialog.superClass_.createDom.call(this);
+    };
+
+    /**
+     * @constructor
+     */
+    var AdminCommentButton = function() {
+        SimpleControl.call(this);
+    };
+    inherits(AdminCommentButton, SimpleControl);
+
+    AdminCommentButton.prototype.setCount = function(count) {
+        if (count === 0) {
+            this._count = '!';
+        } else {
+            this._count = count;
+        }
+    };
+
+    AdminCommentButton.prototype.setPostId = function(postId) {
+        this._postId = postId;
+    };
+
+    AdminCommentButton.prototype.getPostId = function() {
+        return this._postId;
+    };
+
+    AdminCommentButton.prototype.getCommentsDialog = function() {
+        if (!this._commentsDialog) {
+            var dlg = new AdminCommentsDialog();
+            dlg.setPostId(this.getPostId());
+            var dlgElem = dlg.getElement();
+            dlg.hide();
+            $('body').append(dlgElem);
+            this._commentsDialog = dlg;
+        }
+        return this._commentsDialog;
+    };
+
+    AdminCommentButton.prototype.loadComments = function() {
+        var commentsDialog = this.getCommentsDialog();
+        commentsDialog.startOpening();
+    };
+
+    AdminCommentButton.prototype.createDom = function() {
+        var elem = this.makeElement('div');
+        this._element = elem;
+        elem.addClass('admin-comments-btn');
+        elem.data('postId', this._postId);
+        elem.attr('title', gettext('see/add admin comments'));
+        elem.text(this._count);
+        var me = this;
+        this.setHandler(function() { me.loadComments() });
+        return elem;
+    };
+
+    var getButtonLocation = function(postId) {
+        var post = $('.post[data-post-id=' + postId + ']');
+        var accept = post.find('.answer-img-accept');
+        if (accept.length) {
+            return accept;
+        }
+        var downvote = post.find('.downvote');
+        if (downvote.length) {
+            return downvote;
+        }
+        var voteCount = post.find('.vote-number');
+        if (voteCount.length) {
+            return voteCount;
+        }
+        return post.find('.vote-buttons:last-child');
+    };
+
+    var initButtons = function(postIds, commentCounts) {
+        for (var i=0; i<postIds.length; i++) {
+            var id = postIds[i];
+            var count = commentCounts[id];
+            var btn = new AdminCommentButton();
+            btn.setCount(count);
+            btn.setPostId(id);
+            var whereToInsert = getButtonLocation(id);
+            var btnElem = btn.createDom();
+            btnElem.hide();
+            whereToInsert.after(btnElem);
+            btnElem.fadeIn('slow');
+        }
+    };
+
+    var loadCounts = function(postIds, initButtons) {
+        var postIdsJson = JSON.stringify(postIds);
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            data: {post_ids: postIdsJson},
+            url: askbot['urls']['getAdminCommentCounts'],
+            cache: false,
+            success: function(data) {
+                if (data['success']) {
+                    initButtons(postIds, data['comment_counts']);
+                }
+            }
+        });
+    };
+
+    var postIds = getPostIds();
+    var commentCounts = loadCounts(postIds, initButtons);
+})();
 
 /* google prettify.js from google code */
 var q=null;window.PR_SHOULD_USE_CONTINUATION=!0;
