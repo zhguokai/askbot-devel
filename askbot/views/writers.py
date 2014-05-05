@@ -764,10 +764,7 @@ def edit_comment(request):
     if form.is_valid() == False:
         raise exceptions.PermissionDenied('This content is forbidden')
 
-    comment_post = models.Post.objects.get(
-                    post_type='comment',
-                    id=form.cleaned_data['comment_id']
-                )
+    comment_post = models.Post.objects.get(id=form.cleaned_data['comment_id'])
 
     request.user.edit_comment(
         comment_post=comment_post,
@@ -821,7 +818,7 @@ def delete_comment(request):
                 return HttpResponseBadRequest()
 
             comment_id = form.cleaned_data['comment_id']
-            comment = get_object_or_404(models.Post, post_type='comment', id=comment_id)
+            comment = get_object_or_404(models.Post, id=comment_id)
             request.user.assert_can_delete_comment(comment)
 
             parent = comment.parent
@@ -847,8 +844,7 @@ def comment_to_answer(request):
     comment_id = request.POST.get('comment_id')
     if comment_id:
         comment_id = int(comment_id)
-        comment = get_object_or_404(models.Post,
-                post_type='comment', id=comment_id)
+        comment = get_object_or_404(models.Post, id=comment_id)
         comment.post_type = 'answer'
         old_parent = comment.parent
 

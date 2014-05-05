@@ -2397,7 +2397,7 @@ PostCommentsWidget.prototype.showButton = function(){
     this._activate_button.show();
 }
 
-PostCommentsWidget.prototype.startNewComment = function(){
+PostCommentsWidget.prototype.getNewComment = function() {
     var opts = {
         'is_deletable': true,
         'is_editable': true
@@ -2405,6 +2405,13 @@ PostCommentsWidget.prototype.startNewComment = function(){
     var comment = new Comment(this, opts);
     this._cbox.append(comment.getElement());
     this._element.removeClass('empty');
+    return comment;
+    //this._newComment = comment;
+    //eturn this._newComment;
+};
+
+PostCommentsWidget.prototype.startNewComment = function(){
+    var comment = this.getNewComment();
     comment.startEditing();
 };
 
@@ -4852,7 +4859,9 @@ $(document).ready(function() {
 
     AdminCommentsDialog.prototype.createDom = function() {
         this.setHeadingText(gettext('Moderation comments'));
-        this.setAcceptButtonText(gettext('Close'));
+        this.setAcceptButtonText(gettext('Back to the question'));
+        var me = this;
+        this.setAcceptHandler(function(){ me.hide(); });
         this.setRejectButtonText(undefined);
         AdminCommentsDialog.superClass_.createDom.call(this);
     };
