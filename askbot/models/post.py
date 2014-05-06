@@ -936,6 +936,13 @@ class Post(models.Model):
                 if candidate.id in user_ids:
                     filtered_candidates.add(candidate)
 
+        if askbot_settings.ADMIN_COMMENTS_ENABLED and self.post_type.startswith('admin_'):
+            admins = set()
+            for candidate in filtered_candidates:
+                if candidate.is_administrator_or_moderator():
+                    admins.add(candidate)
+            filtered_candidates = admins
+
         if askbot_settings.SPACES_ENABLED is False:
             return filtered_candidates
 
