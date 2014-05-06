@@ -89,7 +89,7 @@ FORMULAE = {
 }
 
 GERMANNIC_FAMILY = (
-    'en', 'bg', 'bg_BG', 'el', 'nb_NO', 'pt', 'ast', 'ca', 'de', 
+    'en', 'bg', 'bg_BG', 'el', 'nb_NO', 'pt', 'ast', 'ca', 'de',
     'it', 'hu', 'hi', 'sv_SE', 'fi', 'he_IL', 'gl', 'es', 'bn_IN'
 )
 
@@ -105,7 +105,7 @@ SLOVENIAN_FAMILY = ('sl',)
 CHECH_FAMILY = ('cs', 'cs_CZ')
 
 SINGULAR_FAMILY = (
-    'zh_HK', 'fa_IR', 'zh_CN', 'id_ID', 'zh_TW', 'ko', 'ms_MY', 'tr', 'tr_TR', 'vi', 'ja'
+    'zh_HK', 'fa_IR', 'zh_CN', 'id_ID', 'zh_TW', 'ko', 'ms_MY', 'tr', 'tr_TR', 'vi', 'ja', 'uz', 'uz_UZ'
 )
 
 def get_formula(lang):
