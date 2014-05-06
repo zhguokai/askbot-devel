@@ -936,7 +936,7 @@ class Post(models.Model):
                 if candidate.id in user_ids:
                     filtered_candidates.add(candidate)
 
-        if self.post_type.startswith('admin_'):
+        if askbot_settings.ADMIN_COMMENTS_ENABLED and self.post_type.startswith('admin_'):
             admins = set()
             for candidate in filtered_candidates:
                 if candidate.is_administrator_or_moderator():

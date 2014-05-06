@@ -273,6 +273,18 @@ class Command(NoArgsCommand):
                 #for m in MM:
                 #    print m
 
+                #filter out mentions to admin comments, if recipient user
+                #is not an admin or moderator
+                if askbot_settings.ADMIN_COMMENTS_ENABLED:
+                    filtered_mentions = list()
+                    not_an_admin = (user.is_administrator_or_moderator() == False)
+                    for mention in mentions:
+                        mention_post = mention.content_object
+                        if not_an_admin and mention_post.post_type.startswith('admin_'):
+                            continue
+                        filtered_mentions.append(mention)
+                    mentions = filtered_mentions
+
                 mention_posts = get_all_origin_posts(mentions)
                 q_mentions_id = [q.id for q in mention_posts]
 
