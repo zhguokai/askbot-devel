@@ -145,6 +145,7 @@ finally:
     class UserAdmin(OrigUserAdmin):
         list_display = OrigUserAdmin.list_display + ('date_joined', 'reputation', 
             'interesting_tags', 'ignored_tags', 'subscribed_tags', 
-            'display_tag_filter_strategy', 'get_groups', 'get_primary_group')
-        list_filter = (InGroup,) + OrigUserAdmin.list_filter
+            'email_tag_filter_strategy', 'display_tag_filter_strategy', 
+            'get_groups', 'get_primary_group')
+        list_filter = (InGroup, 'email_tag_filter_strategy', 'display_tag_filter_strategy') + OrigUserAdmin.list_filter
     admin.site.register(User, UserAdmin)
