@@ -20,7 +20,7 @@ class Command(NoArgsCommand):
     """
     def handle_noargs(self, **options):
 
-        cutoff = datetime.now() - timedelta(1)
+        cutoff = datetime.now() - timedelta(5)
 
         user_threads = defaultdict(set)
         for thread in Thread.objects.filter(added_at__gt=cutoff):
