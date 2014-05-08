@@ -105,6 +105,8 @@ class ThreadManager(BaseQuerySetManager):
         tag_list.sort(key=lambda t: tag_counts[t], reverse=True)
 
         #note that double quote placement is important here
+        if len(tag_list) == 0:
+            return ''
         if len(tag_list) == 1:
             last_topic = '"'
         elif len(tag_list) <= 5:

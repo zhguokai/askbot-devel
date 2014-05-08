@@ -489,14 +489,21 @@ class Command(NoArgsCommand):
 
                 question_count = len(q_list.keys())
 
-                subject_line = ungettext(
-                    '%(question_count)d updated question about %(topics)s',
-                    '%(question_count)d updated questions about %(topics)s',
-                    question_count
-                ) % {
-                    'question_count': question_count,
-                    'topics': tag_summary
-                }
+                if tag_summary:
+                    subject_line = ungettext(
+                        '%(question_count)d updated question about %(topics)s',
+                        '%(question_count)d updated questions about %(topics)s',
+                        question_count
+                    ) % {
+                        'question_count': question_count,
+                        'topics': tag_summary
+                    }
+                else:
+                    subject_line = ungettext(
+                        '%(question_count)d updated question',
+                        '%(question_count)d updated questions',
+                        question_count
+                    ) % {'question_count': question_count}
 
                 items_added = 0
                 items_unreported = 0
