@@ -4,7 +4,6 @@ import re
 
 from django.conf import settings as django_settings
 from django.db import models
-from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
@@ -303,7 +302,7 @@ class ThreadManager(BaseQuerySetManager):
         if search_state.query_users:
             query_users = User.objects.filter(username__in=search_state.query_users)
             if query_users:
-                user_filter = Q(
+                user_filter = models.Q(
                     posts__post_type='question',
                     posts__author__in=query_users
                 )
@@ -312,7 +311,7 @@ class ThreadManager(BaseQuerySetManager):
         if search_state.op_email_token:
             #this feature is mod or admin only
             if request_user.is_authenticated() and request_user.is_administrator_or_moderator():
-                op_email_filter = Q(
+                op_email_filter = models.Q(
                     posts__post_type='question',
                     posts__author__email__icontains=search_state.op_email_token
                 )
