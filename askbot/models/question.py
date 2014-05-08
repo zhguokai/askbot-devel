@@ -302,7 +302,7 @@ class ThreadManager(BaseQuerySetManager):
         if search_state.query_users:
             query_users = User.objects.filter(username__in=search_state.query_users)
             if query_users:
-                user_filter = Q(
+                user_filter = models.Q(
                     posts__post_type='question',
                     posts__author__in=query_users
                 )
@@ -311,7 +311,7 @@ class ThreadManager(BaseQuerySetManager):
         if search_state.op_email_token:
             #this feature is mod or admin only
             if request_user.is_authenticated() and request_user.is_administrator_or_moderator():
-                op_email_filter = Q(
+                op_email_filter = models.Q(
                     posts__post_type='question',
                     posts__author__email__icontains=search_state.op_email_token
                 )
