@@ -66,6 +66,12 @@ def parse_query(query):
     tag_regexes = (tag_re1, tag_re2, tag_re3)
     (query_tags, query) = extract_all_matching_tokens(query, tag_regexes)
 
+    op_email_re1 = re.compile(r'\[op_email:(.+?)\]')
+    op_email_re2 = re.compile(r'op_email:"([^"]+?)"')
+    op_email_re3 = re.compile(r"op_email:'([^']+?)'")
+    op_email_regexes = (op_email_re1, op_email_re2, op_email_re2)
+    (op_email, query) = extract_matching_token(query, op_email_regexes)
+
     user_re1 = re.compile(r'\[user:([^\]]+?)\]')
     user_re2 = re.compile(r'user:"([^"]+?)"')
     user_re3 = re.compile(r"user:'([^']+?)'")
@@ -75,14 +81,8 @@ def parse_query(query):
     user_regexes = (user_re1, user_re2, user_re3, user_re4, user_re5, user_re6)
     (query_users, query) = extract_all_matching_tokens(query, user_regexes)
 
-    op_email_re1 = re.compile(r'\[op_email:(.+?)\]')
-    op_email_re2 = re.compile(r'op_email:"([^"]+?)"')
-    op_email_re3 = re.compile(r"op_email:'([^']+?)'")
-    op_email_regexes = (op_email_re1, op_email_re2, op_email_re2)
-    (op_email, stripped_query) = extract_matching_token(query, op_email_regexes)
-
     return {
-        'stripped_query': stripped_query,
+        'stripped_query': query,
         'query_title': query_title,
         'query_tags': query_tags,
         'query_users': query_users,

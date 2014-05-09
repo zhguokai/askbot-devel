@@ -14,7 +14,7 @@ class LogOutBlockedUserMiddleware(object):
             messages.add_message(request, messages.INFO, get_blocked_message())
 
     def process_response(self, request, response):
-        if request.user.is_authenticated() and request.user.is_blocked():
+        if hasattr(request, 'user') and request.user.is_authenticated() and request.user.is_blocked():
             logout(request)
             messages.add_message(request, messages.INFO, get_blocked_message())
             return HttpResponseRedirect(reverse('index'))
