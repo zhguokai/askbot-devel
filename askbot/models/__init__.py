@@ -455,6 +455,15 @@ def user_has_interesting_wildcard_tags(self):
         and self.interesting_tags != ''
     )
 
+def user_can_access_admin_comments(self):
+    """True, if user is admin, moderator or belongs
+    to a vip group"""
+    if self.is_administrator_or_moderator():
+        return True
+    if self.get_groups().filter(is_vip=True).count():
+        return True
+    return False
+
 def user_can_create_tags(self):
     """true if user can create tags"""
     if askbot_settings.ENABLE_TAG_MODERATION:
@@ -3049,6 +3058,7 @@ User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('update_response_counts', user_update_response_counts)
+User.add_to_class('can_access_admin_comments', user_can_access_admin_comments)
 User.add_to_class('can_create_tags', user_can_create_tags)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('can_post_by_email', user_can_post_by_email)

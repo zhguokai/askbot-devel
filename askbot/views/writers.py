@@ -727,6 +727,10 @@ def post_comments(request):#generic ajax handler to load comments to an object
 
     comment_type = form.cleaned_data['comment_type']
 
+    if comment_type == 'admin_comment' and \
+        (user.is_anonymous() or (user.can_access_admin_comments() == False)):
+        raise exceptions.PermissionDenied()
+
     if request.method == "GET":
         response = __generate_comments_json(post, user, comment_type)
     elif request.method == "POST":

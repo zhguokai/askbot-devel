@@ -1556,6 +1556,9 @@ def publish_answer(request):
 
 @decorators.ajax_only
 def get_admin_comment_counts(request):
+    user = request.user
+    if user.is_anonymous() or (user.can_access_admin_comments() == False):
+        raise exceptions.PermissionDenied()
     post_ids = simplejson.loads(request.GET['post_ids'])
     data = dict()
     for post_id in post_ids:

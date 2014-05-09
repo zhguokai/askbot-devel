@@ -13,7 +13,8 @@
     <script type="text/javascript">
         /*<![CDATA[*/
         //below is pure cross-browser javascript, no jQuery
-        askbot['data']['userIsThreadModerator'] = {% if user_is_thread_moderator %}true{% else %}false{% endif %};
+        askbot['data']['userIsThreadModerator'] = {{ user_is_thread_moderator|as_js_bool }};
+        askbot['data']['userCanAccessAdminComments'] = {{ user_can_access_admin_comments|as_js_bool }};
         askbot['data']['oldestAnswerId'] = {% if oldest_answer_id %}{{ oldest_answer_id }}{% else %}-1{% endif %};
         (function(){
 

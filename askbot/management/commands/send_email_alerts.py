@@ -277,7 +277,7 @@ class Command(NoArgsCommand):
                 #is not an admin or moderator
                 if askbot_settings.ADMIN_COMMENTS_ENABLED:
                     filtered_mentions = list()
-                    not_an_admin = (user.is_administrator_or_moderator() == False)
+                    not_an_admin = (user.can_access_admin_comments() == False)
                     for mention in mentions:
                         mention_post = mention.content_object
                         if not_an_admin and mention_post.post_type.startswith('admin_'):

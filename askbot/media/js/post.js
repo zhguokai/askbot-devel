@@ -4802,7 +4802,7 @@ $(document).ready(function() {
 
 (function() {
 
-    if (!askbot['data']['userIsAdminOrMod']) {
+    if (!askbot['data']['userCanAccessAdminComments']) {
         return;
     }
 

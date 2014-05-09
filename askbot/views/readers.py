@@ -641,6 +641,11 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     else:
         group_read_only = False
 
+    if request.user.is_authenticated() and request.user.can_access_admin_comments():
+        user_can_access_admin_comments = True
+    else:
+        user_can_access_admin_comments = False
+
     data = {
         'is_cacheable': False,#is_cacheable, #temporary, until invalidation fix
         'long_time': const.LONG_TIME,#"forever" caching
@@ -661,6 +666,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
         'user_votes': user_votes,
         'user_post_id_list': user_post_id_list,
         'user_can_post_comment': user_can_post_comment,#in general
+        'user_can_access_admin_comments': user_can_access_admin_comments,
         'new_answer_allowed': new_answer_allowed,
         'oldest_answer_id': thread.get_oldest_answer_id(request.user),
         'previous_answer': previous_answer,
