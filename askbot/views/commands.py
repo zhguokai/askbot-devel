@@ -1559,6 +1559,8 @@ def get_admin_comment_counts(request):
     post_ids = simplejson.loads(request.GET['post_ids'])
     data = dict()
     for post_id in post_ids:
-        data[post_id] = 0
-
+        data[post_id] = models.Post.objects.filter(
+                                            post_type='admin_comment',
+                                            parent__id=post_id
+                                        ).count()
     return {'comment_counts': data}
