@@ -8,8 +8,6 @@
     {% compress css %}
         <link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
         {{ skin.get_extra_css_link() }}
-    	<link href="{{'/bower_components/foundation/css/normalize.css'|media}}" rel="stylesheet" type="text/css" />
-    	<link href="{{'/bower_components/foundation/css/foundation.min.css'|media}}" rel="stylesheet" type="text/css" />
     {% endcompress %}
 {% endif %}
 {% if settings.USE_CUSTOM_CSS %}
