@@ -4,6 +4,7 @@ all corresponding questions are retagged
 
 import sys
 from optparse import make_option
+from django.conf import settings as django_settings
 from django.core import management
 from django.core.management.base import BaseCommand, CommandError
 from askbot import models
@@ -47,6 +48,13 @@ remove source_tag"""
             default = None,
             help = 'id of the user who will be marked as a performer of this operation'
         ),
+        make_option('--lang',
+            action='store',
+            type='str',
+            dest='lang',
+            default=django_settings.LANGUAGE_CODE,
+            help='language code of the tag, e.g. "en"'
+        )
     )
 
     def handle(self, *args, **options):
@@ -75,7 +83,7 @@ remove source_tag"""
         is_source_tag_created = False
         
         try:
-            source_tag = models.Tag.objects.get(name=source_tag_name)
+            source_tag = models.Tag.objects.get(name=source_tag_name, language_code=options['lang'])
         except models.Tag.DoesNotExist:
             if not options.get('is_force', False):
                 prompt = """source tag %s doesn't exist, are you sure you want to create a TagSynonym
@@ -84,9 +92,11 @@ remove source_tag"""
                 if choice == 'no':
                     print 'Cancled'
                     sys.exit()
-            source_tag = models.Tag.objects.create(name=source_tag_name,
-                                                   created_by=admin
-                                                   )
+            source_tag = models.Tag.objects.create(
+                                            name=source_tag_name,
+                                            created_by=admin,
+                                            language_code=options['lang']
+                                        )
             is_source_tag_created = True
 
 
@@ -108,15 +118,17 @@ remove source_tag"""
             pass
         
         try: 
-            models.Tag.objects.get(name=target_tag_name)
+            models.Tag.objects.get(name=target_tag_name, language_code=options['lang'])
         except models.Tag.DoesNotExist:
             # we are creating a target tag, let's copy source tag's info
             # used_count are updated later
-            models.Tag.objects.create(name=target_tag_name,
-                                      created_by = admin,
-                                      status = source_tag.status,
-                                      tag_wiki = source_tag.tag_wiki
-                                      )
+            models.Tag.objects.create(
+                              name=target_tag_name,
+                              created_by = admin,
+                              status = source_tag.status,
+                              tag_wiki = source_tag.tag_wiki,
+                              language_code=options['lang']
+                            )
 
         tag_synonym_tmp, created = models.TagSynonym.objects.get_or_create(source_tag_name = source_tag_name,
                                                                            target_tag_name = target_tag_name,

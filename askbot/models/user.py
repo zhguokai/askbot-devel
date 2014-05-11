@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as AuthGroup
 from django.core import exceptions
 from django.forms import EmailField, URLField
+from django.utils import translation
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.utils.html import strip_tags
@@ -657,9 +658,10 @@ class BulkTagSubscriptionManager(BaseQuerySetManager):
 
             from askbot.models.tag import Tag
             new_tags = Tag.objects.create_in_bulk(
-                                        tag_names=new_tag_names,
-                                        user=tag_author
-                                    )
+                                tag_names=new_tag_names,
+                                user=tag_author,
+                                language_code=translation.get_language()
+                            )
 
             tags_id_list.extend([tag.id for tag in new_tags])
             tag_name_list.extend([tag.name for tag in new_tags])

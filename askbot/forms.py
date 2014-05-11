@@ -12,6 +12,7 @@ from django.utils.html import strip_tags
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
+from django.utils.translation import get_language
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django_countries import countries
@@ -389,7 +390,10 @@ def clean_tag(tag_name, look_in_db=True):
         return tag_name
     else:
         from askbot import models
-        matching_tags = models.Tag.objects.filter(name__iexact=tag_name)
+        matching_tags = models.Tag.objects.filter(
+                                            name__iexact=tag_name,
+                                            language_code=get_language()
+                                        )
         if len(matching_tags) > 0:
             return matching_tags[0].name
         else:

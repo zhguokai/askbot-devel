@@ -14,6 +14,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.utils import translation
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.views import static
@@ -209,7 +210,10 @@ def list_suggested_tags(request):
     or cancel the moderation reuest."""
     if askbot_settings.ENABLE_TAG_MODERATION == False:
         raise Http404
-    tags = Tag.objects.filter(status = Tag.STATUS_SUGGESTED)
+    tags = Tag.objects.filter(
+                    status = Tag.STATUS_SUGGESTED,
+                    language_code=translation.get_language()
+                )
     tags = tags.order_by('-used_count', 'name')
     #paginate moderated tags
     paginator = Paginator(tags, 20)

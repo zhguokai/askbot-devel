@@ -323,7 +323,10 @@ def tags(request):#view showing a listing of available tags - plain list
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
 
     #2) Get query set for the tags.
-    query_params = {'deleted': False}
+    query_params = {
+        'deleted': False,
+        'language_code': translation.get_language()
+    }
     if query != '':
         query_params['name__icontains'] = query
 

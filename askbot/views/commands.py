@@ -25,6 +25,7 @@ from django.template.loader import get_template
 from django.views.decorators import csrf
 from django.utils import simplejson
 from django.utils.html import escape
+from django.utils import translation
 from django.utils.translation import ugettext as _
 from django.utils.translation import string_concat
 from askbot.utils.slug import slugify
@@ -472,7 +473,8 @@ def mark_tag(request, **kwargs):#tagging system
     for name in wildcards:
         if name in cleaned_wildcards:
             tag_usage_counts[name] = models.Tag.objects.filter(
-                                        name__startswith = name[:-1]
+                                        name__startswith = name[:-1],
+                                        language_code=translation.get_language()
                                     ).count()
         else:
             tag_usage_counts[name] = 0
@@ -549,8 +551,9 @@ def get_tag_list(request):
     function
     """
     tags = models.Tag.objects.filter(
-                        deleted = False,
-                        status = models.Tag.STATUS_ACCEPTED
+                        deleted=False,
+                        status=models.Tag.STATUS_ACCEPTED,
+                        language_code=translation.get_language()
                     )
 
     tag_names = tags.values_list(
@@ -776,8 +779,11 @@ def edit_bulk_tag_subscription(request, pk):
             tag_id_list = [tag.id for tag in tags]
 
             for new_tag_name in new_tag_names:
-                new_tag = models.Tag.objects.create(name=new_tag_name,
-                                             created_by=request.user)
+                new_tag = models.Tag.objects.create(
+                                        name=new_tag_name,
+                                        created_by=request.user,
+                                        language_code=translation.get_language()
+                                    )
                 tag_id_list.append(new_tag.id)
 
             bulk_subscription.tags.add(*tag_id_list)
@@ -1250,13 +1256,21 @@ def moderate_suggested_tag(request):
         tag_id = form.cleaned_data['tag_id']
         thread_id = form.cleaned_data.get('thread_id', None)
 
+        lang = translation.get_language()
+
         try:
-            tag = models.Tag.objects.get(id=tag_id)#can tag not exist?
+            tag = models.Tag.objects.get(
+                                    id=tag_id,
+                                    language_code=lang
+                                )#can tag not exist?
         except models.Tag.DoesNotExist:
             return
 
         if thread_id:
-            threads = models.Thread.objects.filter(id=thread_id)
+            threads = models.Thread.objects.filter(
+                                            id=thread_id,
+                                            language_code=lang
+                                        )
         else:
             threads = tag.threads.none()
 

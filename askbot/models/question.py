@@ -400,19 +400,23 @@ class ThreadManager(BaseQuerySetManager):
         if request_user and request_user.is_authenticated():
             #mark questions tagged with interesting tags
             #a kind of fancy annotation, would be nice to avoid it
+            lang = get_language()
             interesting_tags = Tag.objects.filter(
-                user_selections__user = request_user,
-                user_selections__reason = 'good'
+                user_selections__user=request_user,
+                user_selections__reason='good',
+                language_code=lang
             )
             ignored_tags = Tag.objects.filter(
                 user_selections__user = request_user,
-                user_selections__reason = 'bad'
+                user_selections__reason = 'bad',
+                language_code=lang
             )
             subscribed_tags = Tag.objects.none()
             if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
                 subscribed_tags = Tag.objects.filter(
                     user_selections__user = request_user,
-                    user_selections__reason = 'subscribed'
+                    user_selections__reason = 'subscribed',
+                    language_code=lang
                 )
                 meta_data['subscribed_tag_names'] = [tag.name for tag in subscribed_tags]
 
@@ -1329,7 +1333,10 @@ class Thread(models.Model):
         updated_tagnames = set()
         for tag_name in updated_tagnames_tmp:
             try:
-                tag_synonym = TagSynonym.objects.get(source_tag_name=tag_name)
+                tag_synonym = TagSynonym.objects.get(
+                                        source_tag_name=tag_name,
+                                        #language_code=self.language_code
+                                    )
                 updated_tagnames.add(tag_synonym.target_tag_name)
                 tag_synonym.auto_rename_count += 1
                 tag_synonym.save()
@@ -1359,8 +1366,9 @@ class Thread(models.Model):
             added_tags = list(reused_tags)
             #tag moderation is in the call below
             created_tags = Tag.objects.create_in_bulk(
+                                        language_code=self.language_code,
                                         tag_names=new_tagnames,
-                                        user=user
+                                        user=user,
                                     )
 
             added_tags.extend(created_tags)

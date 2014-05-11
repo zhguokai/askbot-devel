@@ -1091,6 +1091,7 @@ class Post(models.Model):
         tag_names = self.get_tag_names()
         tag_selections = MarkedTag.objects.filter(
             tag__name__in = tag_names,
+            tag__language_code=get_language(),
             reason = tag_mark_reason
         )
         subscribers = set(

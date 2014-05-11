@@ -23,6 +23,7 @@ from django.core.paginator import Paginator
 from django.db.models import signals as django_signals
 from django.template import Context
 from django.template.loader import get_template
+from django.utils.translation import get_language
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.safestring import mark_safe
@@ -385,8 +386,9 @@ def user_get_marked_tags(self, reason):
             return Tag.objects.none()
 
     return Tag.objects.filter(
-        user_selections__user = self,
-        user_selections__reason = reason
+        user_selections__user=self,
+        user_selections__reason=reason,
+        language_code=get_language()
     )
 
 MARKED_TAG_PROPERTY_MAP = {
@@ -1291,20 +1293,27 @@ def user_mark_tags(
         tagnames = list()
 
     #figure out which tags don't yet exist
+    language_code = get_language()
     existing_tagnames = Tag.objects.filter(
-                            name__in=tagnames
+                            name__in=tagnames,
+                            language_code=language_code
                         ).values_list(
                             'name', flat=True
                         )
     non_existing_tagnames = set(tagnames) - set(existing_tagnames)
     #create those tags, and if tags are moderated make them suggested
     if (len(non_existing_tagnames) > 0):
-        Tag.objects.create_in_bulk(tag_names=tagnames, user=self)
+        Tag.objects.create_in_bulk(
+                        tag_names=tagnames,
+                        user=self,
+                        language_code=language_code
+                    )
 
     #below we update normal tag selections
     marked_ts = MarkedTag.objects.filter(
                                     user = self,
-                                    tag__name__in = tagnames
+                                    tag__name__in=tagnames,
+                                    tag__language_code=language_code
                                 )
     #Marks for "good" and "bad" reasons are exclusive,
     #to make it impossible to "like" and "dislike" something at the same time
@@ -1326,7 +1335,10 @@ def user_mark_tags(
         marked_names = marked_ts.values_list('tag__name', flat = True)
         if len(marked_names) < len(tagnames):
             unmarked_names = set(tagnames).difference(set(marked_names))
-            ts = Tag.objects.filter(name__in = unmarked_names)
+            ts = Tag.objects.filter(
+                            name__in=unmarked_names,
+                            language_code=language_code
+                        )
             new_marks = list()
             for tag in ts:
                 MarkedTag(
@@ -2242,11 +2254,14 @@ def user_get_tag_filtered_questions(self, questions = None):
     if questions is None:
         questions = Post.objects.get_questions()
 
+    language_code = get_language()
+
     if self.email_tag_filter_strategy == const.EXCLUDE_IGNORED:
 
         ignored_tags = Tag.objects.filter(
                                 user_selections__reason = 'bad',
-                                user_selections__user = self
+                                user_selections__user = self,
+                                language_code=language_code
                             )
 
         wk = self.ignored_tags.strip().split()
@@ -2267,7 +2282,8 @@ def user_get_tag_filtered_questions(self, questions = None):
 
         selected_tags = Tag.objects.filter(
                                 user_selections__reason = reason,
-                                user_selections__user = self
+                                user_selections__user = self,
+                                language_code=language_code
                             )
 
         selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
