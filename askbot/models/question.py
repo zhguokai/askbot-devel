@@ -24,7 +24,8 @@ from askbot.models.tag import Tag, TagSynonym
 from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import separate_unused_tags
-from askbot.models.base import DraftContent, BaseQuerySetManager
+from askbot.models.base import BaseQuerySetManager
+from askbot.models.base import DraftContent
 from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models import signals
 from askbot import const
@@ -590,7 +591,11 @@ class Thread(models.Model):
     answer_count = models.PositiveIntegerField(default=0)
     last_activity_at = models.DateTimeField(default=datetime.datetime.now)
     last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
-    language_code = models.CharField(max_length=16, default=django_settings.LANGUAGE_CODE)
+    language_code = models.CharField(
+                            choices=django_settings.LANGUAGES,
+                            default=django_settings.LANGUAGE_CODE,
+                            max_length=16
+                        )
 
     #todo: these two are redundant (we used to have a "star" and "subscribe"
     #now merged into "followed")
@@ -1335,7 +1340,7 @@ class Thread(models.Model):
             try:
                 tag_synonym = TagSynonym.objects.get(
                                         source_tag_name=tag_name,
-                                        #language_code=self.language_code
+                                        language_code=self.language_code
                                     )
                 updated_tagnames.add(tag_synonym.target_tag_name)
                 tag_synonym.auto_rename_count += 1

@@ -283,8 +283,11 @@ class Tag(models.Model):
 
     name = models.CharField(max_length=255)
     created_by = models.ForeignKey(User, related_name='created_tags')
-    language_code = models.CharField(max_length=16, default=django_settings.LANGUAGE_CODE)
-
+    language_code = models.CharField(
+                                choices=django_settings.LANGUAGES,
+                                default=django_settings.LANGUAGE_CODE,
+                                max_length=16,
+                            )
     suggested_by = models.ManyToManyField(
         User, related_name='suggested_tags',
         help_text = 'Works only for suggested tags for tag moderation'
@@ -338,6 +341,11 @@ class TagSynonym(models.Model):
     owned_by = models.ForeignKey(User, related_name='tag_synonyms')
     auto_rename_count = models.IntegerField(default=0)
     last_auto_rename_at = models.DateTimeField(auto_now=True)
+    language_code = models.CharField(
+                                choices=django_settings.LANGUAGES,
+                                default=django_settings.LANGUAGE_CODE,
+                                max_length=16,
+                            )
     
     class Meta:
         app_label = 'askbot'

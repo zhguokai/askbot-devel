@@ -1,63 +1,23 @@
 # -*- coding: utf-8 -*-
 import datetime
-from askbot.utils.console import ProgressBar
 from south.db import db
-from south.v2 import DataMigration
-from django.conf import settings as django_settings
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        # Note: Don't use "from appname.models import ModelName". 
-        # Use orm.ModelName to refer to models in this application,
-        # and orm['appname.ModelName'] for models in other applications.
-        threads = orm['askbot.Thread'].objects.all()
-        count = threads.count()
-        message = 'Applying language code to tags:'
-        for thread in ProgressBar(threads.iterator(), count, message):
-            tags = thread.tags.all()
-            #load each tag by name + language code
-            for tag in tags:
-                #maybe fix language code of thread, unlikely
-                if thread.language_code == '':
-                    thread.language_code = django_settings.LANGUAGE_CODE
-                    thread.save()
-
-                #if tg has no language code, we just copy it from thread
-                if tag.language_code == '':
-                    tag.language_code = thread.language_code
-                    tag.save()
-                elif tag.language_code != thread.language_code:
-                    try:
-                        new_tag = orm['askbot.Tag'].objects.get(
-                                                    name=tag.name,
-                                                    language_code=thread.language_code
-                                                )
-                        if tags.filter(id=new_tag.id).exists():
-                            continue
-                        new_tag.used_count += 1
-
-                    except orm['askbot.Tag'].DoesNotExist:
-                        new_tag = orm['askbot.Tag']()
-                        new_tag.name = tag.name
-                        new_tag.language_code = thread.language_code
-                        new_tag.created_by = thread.last_activity_by
-                        new_tag.used_count = 1
-                        new_tag.status = 1
-                        new_tag.save()
-                        new_tag.suggested_by.add(thread.last_activity_by)
-
-                    if tag.used_count > 1:
-                        tag.used_count -= 1
-                    tag.save()
-                    thread.tags.remove(tag)
-                    thread.tags.add(new_tag)
+        # Adding field 'TagSynonym.language_code'
+        db.add_column('askbot_tagsynonym', 'language_code',
+                      self.gf('django.db.models.fields.CharField')(default='en', max_length=16),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        # Deleting field 'TagSynonym.language_code'
+        db.delete_column('askbot_tagsynonym', 'language_code')
+
 
     models = {
         'askbot.activity': {
@@ -337,6 +297,7 @@ class Migration(DataMigration):
             'auto_rename_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'language_code': ('django.db.models.fields.CharField', [], {'default': "'en'", 'max_length': '16'}),
             'last_auto_rename_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'owned_by': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tag_synonyms'", 'to': "orm['auth.User']"}),
             'source_tag_name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
@@ -461,4 +422,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['askbot']
-    symmetrical = True

@@ -103,7 +103,10 @@ remove source_tag"""
         # test if target_tag is actually synonym for yet another tag
         # when user asked tag2->tag3, we already had tag3->tag4.
         try:
-            tag_synonym_tmp = models.TagSynonym.objects.get(source_tag_name = target_tag_name)
+            tag_synonym_tmp = models.TagSynonym.objects.get(
+                                                source_tag_name=target_tag_name,
+                                                language_code=options['lang']
+                                            )
             if not options.get('is_force', False):
                 prompt = """There exists a TagSynonym %s ==> %s,
     hence we will create a tag synonym %s ==> %s instead. Proceed?""" % (tag_synonym_tmp.source_tag_name, tag_synonym_tmp.target_tag_name,
@@ -130,17 +133,22 @@ remove source_tag"""
                               language_code=options['lang']
                             )
 
-        tag_synonym_tmp, created = models.TagSynonym.objects.get_or_create(source_tag_name = source_tag_name,
-                                                                           target_tag_name = target_tag_name,
-                                                                           owned_by = admin
-                                                                           )
+        tag_synonym_tmp, created = models.TagSynonym.objects.get_or_create(
+                                                                   source_tag_name=source_tag_name,
+                                                                   target_tag_name=target_tag_name,
+                                                                   owned_by=admin,
+                                                                   language_code=options['lang']
+                                                                )
         
         management.call_command('rename_tags', *args, **options)
 
         # When source_tag_name is a target_tag_name of already existing TagSynonym.
         # ie. if tag1->tag2 exists when user asked tag2->tag3
         # we are going to convert all tag1->tag2 to tag1->tag3 as well
-        existing_tag_synonyms = models.TagSynonym.objects.filter(target_tag_name=source_tag_name)
+        existing_tag_synonyms = models.TagSynonym.objects.filter(
+                                                target_tag_name=source_tag_name,
+                                                language_code=options['lang']
+                                            )
         for existing_tag_synonym in existing_tag_synonyms:
             new_options = options.copy()
             new_options['from'] = existing_tag_synonym.source_tag_name
