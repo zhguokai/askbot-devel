@@ -635,9 +635,13 @@ class Group(AuthGroup):
 class BulkTagSubscriptionManager(BaseQuerySetManager):
 
     def create(
-                self, tag_names=None,
-                user_list=None, group_list=None,
-                tag_author=None,  **kwargs
+                self,
+                tag_names=None,
+                user_list=None, 
+                group_list=None,
+                tag_author=None,
+                language_code=None,
+                **kwargs
             ):
 
         tag_names = tag_names or []
@@ -649,7 +653,7 @@ class BulkTagSubscriptionManager(BaseQuerySetManager):
 
         if tag_names:
             from askbot.models.tag import get_tags_by_names
-            tags, new_tag_names = get_tags_by_names(tag_names)
+            tags, new_tag_names = get_tags_by_names(tag_names, language_code)
             if new_tag_names:
                 assert(tag_author)
 

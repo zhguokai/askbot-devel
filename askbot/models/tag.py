@@ -15,13 +15,13 @@ def delete_tags(tags):
     tag_ids = [tag.id for tag in tags]
     Tag.objects.filter(id__in=tag_ids).delete()
 
-def get_tags_by_names(tag_names):
+def get_tags_by_names(tag_names, language_code=None):
     """returns query set of tags
     and a set of tag names that were not found
     """
     tags = Tag.objects.filter(
                     name__in=tag_names,
-                    language_code=get_language()
+                    language_code=language_code
                 )
     #if there are brand new tags, create them
     #and finalize the added tag list
@@ -235,7 +235,9 @@ class TagManager(BaseQuerySetManager):
 
         #load suggested tags
         pre_suggested_tags = self.filter(
-            name__in = tag_names, status = Tag.STATUS_SUGGESTED
+            name__in=tag_names,
+            status=Tag.STATUS_SUGGESTED,
+            language_code=language_code
         )
 
         #deal with suggested tags

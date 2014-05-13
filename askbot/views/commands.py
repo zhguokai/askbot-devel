@@ -740,12 +740,14 @@ def create_bulk_tag_subscription(request):
             tag_names = form.cleaned_data['tags'].split(' ')
             user_list = form.cleaned_data.get('users')
             group_list = form.cleaned_data.get('groups')
+            lang = translation.get_language()
 
             bulk_subscription = models.BulkTagSubscription.objects.create(
                                                             tag_names=tag_names,
                                                             tag_author=request.user,
                                                             user_list=user_list,
-                                                            group_list=group_list
+                                                            group_list=group_list,
+                                                            language_code=lang
                                                         )
 
             return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
@@ -775,14 +777,19 @@ def edit_bulk_tag_subscription(request, pk):
                 group_ids = [user.id for user in form.cleaned_data['groups']]
                 bulk_subscription.groups.add(*group_ids)
 
-            tags, new_tag_names = get_tags_by_names(form.cleaned_data['tags'].split(' '))
+            lang = translation.get_language()
+
+            tags, new_tag_names = get_tags_by_names(
+                                        form.cleaned_data['tags'].split(' '),
+                                        language_code=lang
+                                    )
             tag_id_list = [tag.id for tag in tags]
 
             for new_tag_name in new_tag_names:
                 new_tag = models.Tag.objects.create(
                                         name=new_tag_name,
                                         created_by=request.user,
-                                        language_code=translation.get_language()
+                                        language_code=lang
                                     )
                 tag_id_list.append(new_tag.id)
 

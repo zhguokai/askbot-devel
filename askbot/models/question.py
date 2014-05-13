@@ -1310,7 +1310,7 @@ class Thread(models.Model):
 
 
     def update_tags(
-        self, tagnames = None, user = None, timestamp = None
+        self, tagnames=None, user=None, timestamp=None
     ):
         """
         Updates Tag associations for a thread to match the given
@@ -1365,7 +1365,10 @@ class Thread(models.Model):
 
         if added_tagnames:
             #find reused tags
-            reused_tags, new_tagnames = get_tags_by_names(added_tagnames)
+            reused_tags, new_tagnames = get_tags_by_names(
+                                                added_tagnames,
+                                                language_code=self.language_code
+                                            )
             reused_tags.mark_undeleted()
 
             added_tags = list(reused_tags)
