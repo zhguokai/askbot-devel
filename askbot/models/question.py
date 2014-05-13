@@ -4,6 +4,7 @@ import re
 
 from django.conf import settings as django_settings
 from django.db import models
+from django.db.models import F
 from django.contrib.auth.models import User
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 from django.core import exceptions as django_exceptions
@@ -828,6 +829,65 @@ class Thread(models.Model):
         self.close_reason = close_reason
         self.save()
         self.invalidate_cached_data()
+
+    def set_tags_language_code(self, language_code=None):
+        """sets language code to tags of this thread.
+        If lang code of the tag does not coincide with that
+        of thread, we replace the tag with the one of correct
+        lang code. If necessary, tags are created and
+        the used_counts are updated.
+        """
+        wrong_lang_tags = list()
+        for tag in self.tags.all():
+            if tag.language_code != language_code:
+                wrong_lang_tags.append(tag)
+
+        #remove wrong tags
+        self.tags.remove(*wrong_lang_tags)
+        #update used counts of the wrong tags
+        wrong_lang_tag_names = list()
+        for tag in wrong_lang_tags:
+            wrong_lang_tag_names.append(tag.name)
+            if tag.used_count > 0:
+                tag.used_count -= 1
+                tag.save()
+
+        #load existing tags and figure out which tags don't exist
+        reused_tags, new_tagnames = get_tags_by_names(
+                                            wrong_lang_tag_names,
+                                            language_code=language_code
+                                        )
+        reused_tags.mark_undeleted()
+        #tag moderation is in the call below
+        created_tags = Tag.objects.create_in_bulk(
+                                    language_code=self.language_code,
+                                    tag_names=new_tagnames,
+                                    user=self.last_activity_by,
+                                    auto_approve=True
+                                )
+        #add the tags
+        added_tags = list(reused_tags) + list(created_tags)
+        self.tags.add(*added_tags)
+        #increment the used counts and save tags
+        tag_ids = [tag.id for tag in added_tags]
+        Tag.objects.filter(id__in=tag_ids).update(used_count=F('used_count') + 1)
+
+    def set_language_code(self, language_code=None):
+        assert(language_code)
+
+        #save language code on thread
+        self.language_code = language_code
+        self.save()
+
+        #save language code on all posts
+        #for some reason "update" fails in postgres - possibly b/c of the FTS
+        for post in self.posts.all():
+            post.language_code = language_code
+            post.save()
+
+        #make sure that tags have correct language code
+        self.set_tags_language_code(language_code)
+            
 
     def set_accepted_answer(self, answer, timestamp):
         if answer and answer.thread != self:

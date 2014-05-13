@@ -290,7 +290,7 @@ class AskbotTestCase(TestCase):
             except models.User.DoesNotExist:
                 user = self.create_user('tag_creator')
 
-        tag = models.Tag(created_by = user, name = tag_name)
+        tag = models.Tag(created_by=user, name=tag_name, language_code='en')
         tag.save()
         return tag
 

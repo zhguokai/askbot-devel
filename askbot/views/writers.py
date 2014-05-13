@@ -434,9 +434,6 @@ def edit_question(request, id):
                         if form.cleaned_data['reveal_identity']:
                             question.thread.remove_author_anonymity()
 
-                        if 'language' in form.cleaned_data:
-                            question.thread.language_code = form.cleaned_data['language']
-
                         is_anon_edit = form.cleaned_data['stay_anonymous']
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
                         post_privately = form.cleaned_data['post_privately']
@@ -455,6 +452,10 @@ def edit_question(request, id):
                             is_private = post_privately,
                             suppress_email=suppress_email
                         )
+
+                        if 'language' in form.cleaned_data:
+                            question.thread.set_language_code(form.cleaned_data['language'])
+
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
             #request type was "GET"

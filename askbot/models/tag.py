@@ -181,9 +181,9 @@ class TagManager(BaseQuerySetManager):
         """temporary function that filters out the group tags"""
         return self.all()
 
-    def create(self, name=None, created_by=None, **kwargs):
+    def create(self, name=None, created_by=None, auto_approve=False, **kwargs):
         """Creates a new tag"""
-        if created_by.can_create_tags() or is_preapproved_tag_name(name):
+        if auto_approve or created_by.can_create_tags() or is_preapproved_tag_name(name):
             status = Tag.STATUS_ACCEPTED
         else:
             status = Tag.STATUS_SUGGESTED
@@ -223,7 +223,7 @@ class TagManager(BaseQuerySetManager):
         ) % ', '.join(tag_names)
         user.message_set.create(message = msg)
 
-    def create_in_bulk(self, tag_names=None, user=None, language_code=None):
+    def create_in_bulk(self, tag_names=None, user=None, language_code=None, auto_approve=False):
         """creates tags by names. If user can create tags,
         then they are set status ``STATUS_ACCEPTED``,
         otherwise the status will be set to ``STATUS_SUGGESTED``.
@@ -231,6 +231,7 @@ class TagManager(BaseQuerySetManager):
         One exception: if suggested tag is in the category tree
         and source of tags is category tree - then status of newly
         created tag is ``STATUS_ACCEPTED``
+        if `auto_approve` is True then tags are auto-accepted
         """
 
         #load suggested tags
@@ -241,13 +242,13 @@ class TagManager(BaseQuerySetManager):
         )
 
         #deal with suggested tags
-        if user.can_create_tags():
+        if auto_approve or user.can_create_tags():
             #turn previously suggested tags into accepted
             pre_suggested_tags.update(status = Tag.STATUS_ACCEPTED)
         else:
             #increment use count and add user to "suggested_by"
             for tag in pre_suggested_tags:
-                tag.times_used += 1
+                tag.used_count += 1
                 tag.suggested_by.add(user)
                 tag.save()
 
@@ -262,7 +263,8 @@ class TagManager(BaseQuerySetManager):
             new_tag = Tag.objects.create(
                                     name=tag_name,
                                     created_by=user,
-                                    language_code=language_code
+                                    language_code=language_code,
+                                    auto_approve=auto_approve
                                 )
             created_tags.append(new_tag)
 
