@@ -1,0 +1,20 @@
+%Media folder
+
+#Installation
+In order to install foundation with bower and easily work with scss files, you need to install npm and then run locally:
+
+~~~
+npm install -g grunt-cli bower
+npm install	#Install locally npm package for scss development
+bower install	#Update foundation and dependencies
+~~~
+
+This will install all required programs(like grunt-sass) and modules(jquery, foundation).
+
+#Usage
+Just type `grunt watch` to update automatically the `style.css` file from the changes in any scss files.
+
+
+
+
+	
