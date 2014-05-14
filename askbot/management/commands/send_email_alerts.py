@@ -25,11 +25,12 @@ from askbot.utils.html import site_url
 DEBUG_THIS_COMMAND = False
 
 PRINT_DEBUG_MESSAGES = True
+DEBUG_MESSAGE = "%s site_id=%d user=%s: %s"
 CURRENT_SITE_ID = Site.objects.get_current().id
 def print_debug_msg(user, msg=''):
     if PRINT_DEBUG_MESSAGES:
-        if user.groups.filter(name="WaterAid").count():
-            print "%s site_id=%d user=%s: %s" % (
+        if 1:#user.groups.filter(name="WaterAid").count():
+            print DEBUG_MESSAGE % (
                 datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 CURRENT_SITE_ID, 
                 repr(user.username), 
@@ -463,89 +464,116 @@ class Command(NoArgsCommand):
         #todo: move this to template
         activate_language(django_settings.LANGUAGE_CODE)
         template = get_template('email/delayed_email_alert.html')
-        for user in User.objects.all():
-            #if user.id == 190:
-            #    import pdb
-            #    pdb.set_trace()
-            #else:
-            #    continue
-            user.add_missing_askbot_subscriptions()
-            #todo: q_list is a dictionary, not a list
-            q_list = self.get_updated_questions_for_user(user)
-            if len(q_list.keys()) == 0:
-                print_debug_msg(user, "STOP (no updated questions to report on)")
-                continue
-            print_debug_msg(user, "%d updated questions to report on" % len(q_list.keys()))
-            num_q = 0
-            for question, meta_data in q_list.items():
-                if meta_data['skip']:
-                    del q_list[question]
-                    print_debug_msg(user, "removing this from set: question=%s, meta_data=%s" % (repr(question), repr(meta_data)))
-                else:
-                    num_q += 1
-            if num_q > 0:
-                threads = Thread.objects.filter(id__in=[qq.thread_id for qq in q_list.keys()])
-                tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
-
-                question_count = len(q_list.keys())
-
-                if tag_summary:
-                    subject_line = ungettext(
-                        '%(question_count)d updated question about %(topics)s',
-                        '%(question_count)d updated questions about %(topics)s',
-                        question_count
-                    ) % {
-                        'question_count': question_count,
-                        'topics': tag_summary
-                    }
-                else:
-                    subject_line = ungettext(
-                        '%(question_count)d updated question',
-                        '%(question_count)d updated questions',
-                        question_count
-                    ) % {'question_count': question_count}
-
-                items_added = 0
-                items_unreported = 0
-                questions_data = list()
-                for q, meta_data in q_list.items():
-                    print_debug_msg(user, "q=%s, meta_data=%s" % (repr(q), repr(meta_data)))
-                    act_list = []
+        site = Site.objects.get_current()
+        for user in User.objects.filter(askbot_profile__default_site=site):
+            try:
+                #if user.id == 190:
+                #    import pdb
+                #    pdb.set_trace()
+                #else:
+                #    continue
+                user.add_missing_askbot_subscriptions()
+                #todo: q_list is a dictionary, not a list
+                q_list = self.get_updated_questions_for_user(user)
+                if len(q_list.keys()) == 0:
+                    print_debug_msg(user, "STOP (no updated questions to report on)")
+                    continue
+                print_debug_msg(user, "%d updated questions to report on" % len(q_list.keys()))
+                num_q = 0
+                for question, meta_data in q_list.items():
                     if meta_data['skip']:
-                        continue
-                    if items_added >= askbot_settings.MAX_ALERTS_PER_EMAIL:
-                        items_unreported = num_q - items_added #may be inaccurate actually, but it's ok
-                        break
+                        del q_list[question]
+                        print_debug_msg(user, "removing this from set: question=%s, meta_data=%s" % (repr(question), repr(meta_data)))
                     else:
-                        items_added += 1
-                        if meta_data['new_q']:
-                            act_list.append(_('new question'))
-                        format_action_count('%(num)d rev', meta_data['q_rev'], act_list)
-                        format_action_count('%(num)d ans', meta_data['new_ans'], act_list)
-                        format_action_count('%(num)d ans rev', meta_data['ans_rev'], act_list)
-                        questions_data.append({
-                            'url': site_url(q.get_absolute_url()),
-                            'info': ', '.join(act_list),
-                            'title': q.thread.title
-                        })
+                        num_q += 1
+                if num_q > 0:
+                    threads = Thread.objects.filter(id__in=[qq.thread_id for qq in q_list.keys()])
+                    tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
 
-                activate_language(user.get_primary_language())
-                text = template.render({
-                    'recipient_user': user,
-                    'questions': questions_data,
-                    'name': user.username,
-                    'admin_email': askbot_settings.ADMIN_EMAIL,
-                    'site_name': askbot_settings.APP_SHORT_NAME,
-                    'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
-                })
+                    question_count = len(q_list.keys())
+                    
+                    if tag_summary:
+                        subject_line = ungettext(
+                            '%(question_count)d updated question about %(topics)s',
+                            '%(question_count)d updated questions about %(topics)s',
+                            question_count
+                        ) % {
+                            'question_count': question_count,
+                            'topics': tag_summary
+                        }
+                    else:
+                        subject_line = ungettext(
+                            '%(question_count)d updated question',
+                            '%(question_count)d updated questions',
+                            question_count
+                        ) % {'question_count': question_count}
 
-                if DEBUG_THIS_COMMAND == True:
-                    recipient = askbot_settings.ADMIN_EMAIL
-                else:
-                    recipient = user
+                    items_added = 0
+                    items_unreported = 0
+                    questions_data = list()
+                    for q, meta_data in q_list.items():
+                        print_debug_msg(user, "q=%s, meta_data=%s" % (repr(q), repr(meta_data)))
+                        act_list = []
+                        if meta_data['skip']:
+                            continue
+                        if items_added >= askbot_settings.MAX_ALERTS_PER_EMAIL:
+                            items_unreported = num_q - items_added #may be inaccurate actually, but it's ok
+                            break
+                        else:
+                            items_added += 1
+                            if meta_data['new_q']:
+                                act_list.append(_('new question'))
+                            format_action_count('%(num)d rev', meta_data['q_rev'], act_list)
+                            format_action_count('%(num)d ans', meta_data['new_ans'], act_list)
+                            format_action_count('%(num)d ans rev', meta_data['ans_rev'], act_list)
+                            questions_data.append({
+                                'url': site_url(q.get_absolute_url()),
+                                'info': ', '.join(act_list),
+                                'title': q.thread.title
+                            })
 
-                mail.send_mail(
-                    subject_line=subject_line,
-                    body_text=text,
-                    recipient=user
-                )
+                    activate_language(user.get_primary_language())
+                    text = template.render({
+                        'recipient_user': user,
+                        'questions': questions_data,
+                        'name': user.username,
+                        'admin_email': askbot_settings.ADMIN_EMAIL,
+                        'site_name': askbot_settings.APP_SHORT_NAME,
+                        'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
+                    })
+
+                    if DEBUG_THIS_COMMAND == True:
+                        recipient = askbot_settings.ADMIN_EMAIL
+                    else:
+                        recipient = user
+
+                    mail.send_mail(
+                        subject_line=subject_line,
+                        body_text=text,
+                        recipient=user
+                    )
+            except:
+                msg = DEBUG_MESSAGE % ( 
+                    datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    CURRENT_SITE_ID, 
+                    repr(user.username), 
+                    traceback.format_exc())
+                print msg 
+                admin_email = "joanna.wakeford@gmail.com"#askbot_settings.ADMIN_EMAIL
+                try:
+                    mail.send_mail(
+                        subject_line="Error processing daily/weekly notification for User '%s' for Site '%s'" % (user.username, CURRENT_SITE_ID),
+                        body_text=msg,
+                        recipient=admin_email)
+                except:
+                    print DEBUG_MESSAGE % ( 
+                        datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                        CURRENT_SITE_ID, 
+                        repr(user.username),
+                        "ERROR: was unable to report this exception to %s: %s" % (admin_email, traceback.format_exc()))
+                else: 
+                    print DEBUG_MESSAGE % ( 
+                        datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                        CURRENT_SITE_ID, 
+                        repr(user.username),
+                        "Sent email reporting this exception to %s" % admin_email)
