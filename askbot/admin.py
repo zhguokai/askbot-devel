@@ -33,7 +33,7 @@ class InSite(SimpleListFilter):
             return queryset
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'deleted', 'status', 'in_sites', 'used_count') 
+    list_display = ('name', 'created_by', 'deleted', 'status', 'in_sites', 'used_count') 
     list_filter = ('deleted', 'status', InSite)
     search_fields = ('name',)
 
@@ -52,6 +52,7 @@ admin.site.register(models.Feed, FeedAdmin)
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('user', 'active_at', 'activity_type', 'content_type', 'object_id', 'content_object')
     list_filter = ('activity_type', 'content_type', 'user')
+    search_fields = ('object_id',)
 admin.site.register(models.Activity, ActivityAdmin)
 
 class GroupAdmin(admin.ModelAdmin):
@@ -124,6 +125,10 @@ finally:
         list_display = ('id',) + OrigSiteAdmin.list_display
     admin.site.register(Site, SiteAdmin)
 
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('auth_user', 'default_site')
+    list_filter = ('default_site', 'auth_user')
+admin.site.register(models.UserProfile, UserProfileAdmin)
 
 from django.contrib.auth.models import User
 try:
@@ -144,8 +149,25 @@ finally:
     from django.contrib.auth.admin import UserAdmin as OrigUserAdmin
     class UserAdmin(OrigUserAdmin):
         list_display = OrigUserAdmin.list_display + ('date_joined', 'reputation', 
-            'interesting_tags', 'ignored_tags', 'subscribed_tags', 
+            'my_interesting_tags', 'interesting_tag_wildcards',
+            'my_ignored_tags', 'ignored_tag_wildcards', 
+            'my_subscribed_tags', 'subscribed_tag_wildcards',
             'email_tag_filter_strategy', 'display_tag_filter_strategy', 
-            'get_groups', 'get_primary_group')
+            'get_groups', 'get_primary_group', 'get_default_site')
         list_filter = (InGroup, 'email_tag_filter_strategy', 'display_tag_filter_strategy') + OrigUserAdmin.list_filter
+
+        def interesting_tag_wildcards(self, obj):
+            return ', '.join(obj.interesting_tags.strip().split())
+        def my_interesting_tags(self, obj):
+            return ', '.join(obj.get_marked_tags('good').values_list('name', flat=True))
+
+        def ignored_tag_wildcards(self, obj):
+            return ', '.join(obj.ignored_tags.strip().split())
+        def my_ignored_tags(self, obj):
+            return ', '.join(obj.get_marked_tags('bad').values_list('name', flat=True))
+
+        def subscribed_tag_wildcards(self, obj):
+            return ', '.join(obj.subscribed_tags.strip().split())
+        def my_subscribed_tags(self, obj):
+            return ', '.join(obj.get_marked_tags('subscribed').values_list('name', flat=True))
     admin.site.register(User, UserAdmin)
