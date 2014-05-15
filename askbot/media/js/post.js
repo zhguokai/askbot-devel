@@ -526,6 +526,7 @@ var Vote = function(){
     var imgIdPrefixAccept = 'answer-img-accept-';
     var classPrefixFollow= 'button follow';
     var classPrefixFollowed= 'button followed';
+    var imgClassPostVote = 'post-vote';
     var imgIdPrefixQuestionVoteup = 'question-img-upvote-';
     var imgIdPrefixQuestionVotedown = 'question-img-downvote-';
     var imgIdPrefixAnswerVoteup = 'answer-img-upvote-';
@@ -1035,6 +1036,7 @@ var Vote = function(){
         },
 
         vote: function(object, voteType){
+            object = object.closest('.'+imgClassPostVote)
             if (!currentUserId || currentUserId.toUpperCase() == "NONE") {
                 if (voteType == VoteType.questionSubscribeUpdates || voteType == VoteType.questionUnsubscribeUpdates){
                     getquestionSubscribeSidebarCheckbox().removeAttr('checked');

@@ -94,10 +94,9 @@ class QuestionViewAdmin(admin.ModelAdmin):
 admin.site.register(models.QuestionView, QuestionViewAdmin)
 
 class PostAdmin(admin.ModelAdmin):
-    # TODO: show groups
-    list_display = ('post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_private')
-    list_filter = ('deleted', 'post_type', 'author')
-    search_fields = ('thread__title', 'text',)
+    list_display = ('id', 'post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_private', 'vote_up_count')
+    list_filter = ('deleted', 'post_type', 'author', 'vote_up_count')
+    search_fields = ('id', 'thread__title', 'text', 'author__username')
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
