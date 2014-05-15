@@ -526,9 +526,9 @@ var Vote = function(){
     var imgIdPrefixAccept = 'answer-img-accept-';
     var classPrefixFollow= 'button follow';
     var classPrefixFollowed= 'button followed';
+    var imgClassPostVote = 'post-vote';
     var imgIdPrefixQuestionVoteup = 'question-img-upvote-';
     var imgIdPrefixQuestionVotedown = 'question-img-downvote-';
-    var imgClassAnswerVote = 'post-vote';
     var imgIdPrefixAnswerVoteup = 'answer-img-upvote-';
     var imgIdPrefixAnswerVotedown = 'answer-img-downvote-';
     var divIdFavorite = 'favorite-number';
@@ -1036,7 +1036,7 @@ var Vote = function(){
         },
 
         vote: function(object, voteType){
-            object = object.closest('.'+imgClassAnswerVote)
+            object = object.closest('.'+imgClassPostVote)
             if (!currentUserId || currentUserId.toUpperCase() == "NONE") {
                 if (voteType == VoteType.questionSubscribeUpdates || voteType == VoteType.questionUnsubscribeUpdates){
                     getquestionSubscribeSidebarCheckbox().removeAttr('checked');
