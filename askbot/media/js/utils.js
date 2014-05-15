@@ -6,6 +6,21 @@ var mediaUrl = function(resource){
     return askbot['settings']['static_url'] + 'default' + '/' + resource;
 };
 
+var getCookie = function(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = $.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                return decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        }
+    }
+    return cookieValue;
+};
+
 var cleanUrl = function(url){
     var re = new RegExp('//', 'g');
     return url.replace(re, '/');
@@ -276,18 +291,6 @@ var notify = function() {
         isVisible: function() { return visible; }     
     };
 }();
-
-/*
- * CSRF token extractor
- */
-var getCSRFToken = function() {
-    var re = /_csrf=([^;]*)/;
-    var match = re.exec(document.cookie);
-    if(match)
-        return match[1];
-    else
-        return ''
-}
 
 
 /* **************************************************** */
@@ -1390,7 +1393,7 @@ CommentConvertLink.prototype.createDom = function(){
     var csrf_token = this.makeElement('input');
     csrf_token.attr('type', 'hidden');
     csrf_token.attr('name', 'csrfmiddlewaretoken');
-    csrf_token.attr('value', getCSRFToken());
+    csrf_token.attr('value', getCookie(askbot['settings']['csrfCookieName']));
     element.append(csrf_token);
 
     var submit = this.makeElement('input');
