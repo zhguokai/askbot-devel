@@ -4,7 +4,7 @@
     id="header"
     class="{% if settings.SHOW_LOGO %}with-logo{% else %}without-logo{% endif %}"
 >
-    <div class="content-wrapper">
+    <div class="row">
         <div id="userToolsNav">
             {% include "widgets/user_navigation.html" %}
         </div>
@@ -17,7 +17,7 @@
         <div class="clean"></div>
     </div>
     {% if settings.READ_ONLY_MODE_ENABLED %}
-        <div class="content-wrapper system-messages">
+        <div class="row system-messages">
             {{ settings.READ_ONLY_MESSAGE }}
         </div>
     {% endif %}

@@ -303,12 +303,6 @@ body.user-messages {
     font-family:$main-font;
 }
 
-.content-wrapper {/* wrapper positioning class */
-    width: 960px;
-    margin: auto;
-    position:relative;
-}
-
 #logo img{
     padding: 5px 0px 5px 0px;
     height: 75px;
@@ -4750,9 +4744,6 @@ td.setting-input {
     }
     input[type="submit"].searchBtn {
         margin-right: 0;
-    }
-    .content-wrapper {
-        width: 100%;
     }
     #ContentRight {
         display: none;

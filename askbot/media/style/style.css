@@ -320,6 +320,7 @@ td, th {
 /* General Predifined classes, read more in lesscss.org */
 /* Variables for Colors*/
 /* Variables for fonts*/
+/* Variables for lenghts*/
 /* General styles for gradients */
 /* Receive exactly positions for background Sprite  */
 /* CSS3 Elements */
@@ -423,7 +424,7 @@ select {
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
-  max-width: 62.5rem;
+  max-width: 960px;
   *zoom: 1; }
   .row:before, .row:after {
     content: " ";
@@ -4149,7 +4150,7 @@ meta.foundation-mq-topbar {
     .top-bar.expanded {
       background: #333333; }
   .contain-to-grid .top-bar {
-    max-width: 62.5rem;
+    max-width: 960px;
     margin: 0 auto;
     margin-bottom: 0; }
   .top-bar-section {
@@ -5321,12 +5322,6 @@ body.user-messages {
   margin-top: 0px;
   background: #16160f;
   font-family: 'Open Sans Condensed', Arial, sans-serif; }
-
-.content-wrapper {
-  /* wrapper positioning class */
-  width: 960px;
-  margin: auto;
-  position: relative; }
 
 #logo img {
   padding: 5px 0px 5px 0px;
@@ -8763,8 +8758,6 @@ td.setting-input {
     padding: 0; }
   input[type="submit"].searchBtn {
     margin-right: 0; }
-  .content-wrapper {
-    width: 100%; }
   #ContentRight {
     display: none; }
   #ContentLeft {

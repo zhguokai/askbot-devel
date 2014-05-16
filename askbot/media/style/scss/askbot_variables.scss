@@ -17,6 +17,10 @@ $sort-font:Georgia, serif;
 $main-font:'Open Sans Condensed', Arial, sans-serif;
 $secondary-font:Arial;
 
+/* Variables for lenghts*/
+
+$row-width: 960px;
+
 /* General styles for gradients */
 @mixin linear-gradient($start: #eee, $end: #fff, $stop: 25%) {
     background-color: $start;
