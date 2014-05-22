@@ -6,26 +6,52 @@ from django.conf import settings as django_settings
 from django.core.management.base import NoArgsCommand
 from django.contrib.sites.models import Site
 
-"""examples:
-#key - space id, value - space name
-#here we create two question spaces
-ASKBOT_SPACES = {
-    1: ('support', 5), #first value is space name second is default ask group id
-    2: ('development',)
-}
-#key - site id, value - (site name, site domain)
-#here we have two sites
-ASKBOT_SITES = {
-    1: ('public', 'public.example.com'),
-    2: ('private', 'private.example.com')
-}
-#key - feed id, value - (feed name, site id, (space id list))
-#two feeds, both named 'questions', associated with sites 1 and 2
-#and fist one has space 1, while second - spaces 1 and 2
-ASKBOT_FEEDS = {
-    1: ('questions', 1, (1,)),
-    2: ('questions', 2, (1, 2))
-}
+"""
+Set up a new sub-site http://sitename.main-domain
+========================================
+This command sets up the necessary objects and relationships for a new askbot
+sub-site (eg. http://sitename.domain). However, there are some other steps
+that you must take as well. These are detailed below:
+
+* note the id of the Group that's going to be the sub-site's default ask Group
+    (creating one via the web UI if necessary)
+* for each of the following tables, determine what the next free id is as
+    this will be the id of the corresponding object created by this command
+    * Site
+    * Space
+    * Feed
+* now modify the settings.py file as follows (if site_id is 10, "|<site_id>|" 
+    means you should use "|10|"):
+    * add the new sub-site's domain (sitename.main-domain) to the ALLOWED_HOSTS list
+    * add the id for the new Site object to ASKBOT_SITE_IDS
+    * add this to the ASKBOT_SITES dict: 
+        * <site_id>: ('<site_name>', '<site_domain>')
+    * add this to the ASKBOT_SPACES dict: 
+        * <space_id>: ('<space_name>', '<group_id>')
+    * add this to the ASKBOT_FEEDS dict: 
+        * <feed_id>: ('<feed_name>', <site_id>, <space_ids>)
+        * where <space_ids> is a list of Space ids, the first one being the primary
+    * add this to the ASKBOT_SITE_TO_DEFAULT_ASK_GROUP:
+        * <site_id>: <group_id>
+* run this managment command to create the objects and their relationships:
+    * python manage.py askbot_setup_sites --settings=kp_settings
+* create <site_name>_settings.py file that imports * from the main settings 
+    module and then sets:
+    * SITE_ID
+    * ASKBOT_EXTRA_SKINS_DIR
+    * STATICFILES_DIRS += (ASKBOT_EXTRA_SKINS_DIR,)
+    * DEBUG
+    * DEFAULT_ASK_GROUP_ID
+    * LIVESETTINGS_OPTIONS
+* prepare an askbot livesettings module (you can base it on one you've extracted 
+    from your main Site at maindomain/settings/export/ - remember to change the key 
+    for the top-level dictionary to your new Site's id!)
+* load the livesettings for your new site:
+    * python manage.py askbot_import_livesettings --settings=<site_name>_settings settings_import
+* add the following new line to your cronjob shell script to ensure you'll be sending
+    out daily/weekly digest emails about updates in the new sub-site:
+    * python manage.py send_email_alerts --settings=<site_name>_settings
+* finally, reconfigure your webserver of choice as appropriate
 """
 
 SITES = getattr(django_settings, 'ASKBOT_SITES')
