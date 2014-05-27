@@ -10,7 +10,10 @@
             <td>{% trans 
                     user=membership.user,
                     group=membership.group.name
-                %}{{ user }} wants to join group {{ group }}{% endtrans %}
+                %}{{ user }} asked to join "{{ group }}"{% endtrans %}
+            </td>
+            <td>
+                {{ macros.timeago(membership.requested_at) }}
             </td>
             <td>{# forms with accept and reject buttons #}
                 <form action="{% url moderate_group_join_request %}" method="post"

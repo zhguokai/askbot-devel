@@ -3006,6 +3006,8 @@ def user_edit_group_membership(self, user=None, group=None,
         openness = group.get_openness_level_for_user(user)
 
         #let people join these special groups, but not leave
+        approved_at = None
+        level = None
         if not force:
             if group.name == askbot_settings.GLOBAL_GROUP_NAME:
                 openness = 'open'
@@ -3014,16 +3016,27 @@ def user_edit_group_membership(self, user=None, group=None,
 
             if openness == 'open':
                 level = GroupMembership.FULL
+                approved_at = datetime.datetime.now()
             elif openness == 'moderated':
                 level = GroupMembership.PENDING
             elif openness == 'closed':
                 raise django_exceptions.PermissionDenied()
         else:
             level = GroupMembership.FULL
+            approved_at = datetime.datetime.now()
 
         membership, created = GroupMembership.objects.get_or_create(
-                        user=user, group=group, level=level
+                        user=user,
+                        group=group
                     )
+        if approved_at != None:
+            membership.approved_at = approved_at
+        if level != None:
+            membership.level = level
+
+        if approved_at != None or level != None:
+            membership.save()
+
         return membership
 
     elif action == 'remove':

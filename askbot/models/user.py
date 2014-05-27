@@ -420,7 +420,8 @@ class GroupMembership(AuthUserGroups):
                         default=FULL,
                         choices=LEVEL_CHOICES,
                     )
-
+    requested_at = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now)
+    approved_at = models.DateTimeField(null=True, default=None)
 
     class Meta:
         app_label = 'askbot'
