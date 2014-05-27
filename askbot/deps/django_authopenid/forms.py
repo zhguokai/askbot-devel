@@ -321,6 +321,17 @@ class OpenidRegisterForm(forms.Form):
     username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
 
+class SafeOpenidRegisterForm(OpenidRegisterForm):
+    """this form uses recaptcha in addition
+    to the base register form
+    """
+    def __init__(self, *args, **kwargs):
+        super(SafeOpenidRegisterForm, self).__init__(*args, **kwargs)
+        self.fields['recaptcha'] = RecaptchaField(
+                    private_key = askbot_settings.RECAPTCHA_SECRET,
+                    public_key = askbot_settings.RECAPTCHA_KEY
+                )
+
 class ClassicRegisterForm(SetPasswordForm):
     """ legacy registration form """
 
@@ -334,7 +345,9 @@ class SafeClassicRegisterForm(ClassicRegisterForm):
     """this form uses recaptcha in addition
     to the base register form
     """
-    recaptcha = RecaptchaField(
+    def __init__(self, *args, **kwargs):
+        super(SafeClassicRegisterForm, self).__init__(*args, **kwargs)
+        self.fields['recaptcha'] = RecaptchaField(
                     private_key = askbot_settings.RECAPTCHA_SECRET,
                     public_key = askbot_settings.RECAPTCHA_KEY
                 )
@@ -486,5 +499,7 @@ def get_registration_form_class():
     custom_class = getattr(django_settings, 'REGISTRATION_FORM', None)
     if custom_class:
         return load_module(custom_class)
+    elif askbot_settings.USE_RECAPTCHA:
+        return SafeOpenidRegisterForm
     else:
         return OpenidRegisterForm
