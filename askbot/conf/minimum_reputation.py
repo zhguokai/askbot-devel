@@ -17,6 +17,16 @@ MIN_REP = livesettings.ConfigurationGroup(
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
+        'MIN_REP_TO_AUTOAPPROVE_USER',
+        default=10,
+        description=_('Become approved'),
+        help_text=_('Approved users bypass moderation and skip recaptcha')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
         'MIN_REP_TO_VOTE_UP',
         default=5,
         description=_('Upvote')

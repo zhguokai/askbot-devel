@@ -35,6 +35,10 @@
                 )
     }}
     <div class="after-editor">
+        {% if form.recaptcha %}
+            <div>{{ macros.form_fild_with_errors(form.recaptcha) }}</div>
+            <div class="clearfix"></div>
+        {% endif %}
         <div class="question-options">
             {% if settings.WIKI_ON and question.wiki == False %}
                 {{ macros.checkbox_in_div(form.wiki) }}

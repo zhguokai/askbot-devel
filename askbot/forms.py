@@ -24,6 +24,10 @@ from askbot.conf import get_tag_display_filter_strategy_choices
 from tinymce.widgets import TinyMCE
 import logging
 
+def should_use_recaptcha(user):
+    """True if user must use recaptcha"""
+    return askbot_settings.USE_RECAPTCHA and (user.is_anonymous() or user.is_watched())
+
 
 def cleanup_dict(dictionary, key, empty_value):
     """deletes key from dictionary if it exists
@@ -208,6 +212,14 @@ class CountedWordsField(forms.CharField):
                 string_concat(self.field_name, ' ', msg)
             )
         return value
+
+
+class AskbotRecaptchaField(RecaptchaField):
+    """A recaptcha field with preset keys from the livesettings"""
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('private_key', askbot_settings.RECAPTCHA_SECRET)
+        kwargs.setdefault('public_key', askbot_settings.RECAPTCHA_KEY)
+        super(AskbotRecaptchaField, self).__init__(*args, **kwargs)
 
 
 class LanguageField(forms.ChoiceField):
@@ -721,13 +733,6 @@ class SendMessageForm(forms.Form):
                         )
 
 
-class NotARobotForm(forms.Form):
-    recaptcha = RecaptchaField(
-                    private_key=askbot_settings.RECAPTCHA_SECRET,
-                    public_key=askbot_settings.RECAPTCHA_KEY
-                )
-
-
 class FeedbackForm(forms.Form):
     name = forms.CharField(label=_('Your name (optional):'), required=False)
     email = forms.EmailField(label=_('Email:'), required=False)
@@ -741,18 +746,12 @@ class FeedbackForm(forms.Form):
     )
     next = NextUrlField()
 
-    def __init__(self, is_auth=False, *args, **kwargs):
+    def __init__(self, user=False, *args, **kwargs):
         super(FeedbackForm, self).__init__(*args, **kwargs)
-        self.is_auth = is_auth
-        if not is_auth:
-            if askbot_settings.USE_RECAPTCHA:
-                self._add_recaptcha_field()
+        self.user = user.is_authenticated()
+        if should_use_recaptcha(user):
+            self.fields['recaptcha'] = AskbotRecaptchaField()
 
-    def _add_recaptcha_field(self):
-        self.fields['recaptcha'] = RecaptchaField(
-                            private_key=askbot_settings.RECAPTCHA_SECRET,
-                            public_key=askbot_settings.RECAPTCHA_KEY
-                        )
     def clean_message(self):
         message = self.cleaned_data.get('message', '').strip()
         if not message:
@@ -761,7 +760,7 @@ class FeedbackForm(forms.Form):
 
     def clean(self):
         super(FeedbackForm, self).clean()
-        if not self.is_auth:
+        if self.user.is_anonymous():
             if not self.cleaned_data['no_email'] \
                 and not self.cleaned_data['email']:
                 msg = _('Please mark "I dont want to give my mail" field.')
@@ -942,6 +941,9 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
             self.hide_field('ask_anonymously')
 
+        if should_use_recaptcha(user):
+            self.fields['recaptcha'] = AskbotRecaptchaField()
+
     def clean_ask_anonymously(self):
         """returns false if anonymous asking is not allowed
         """
@@ -977,6 +979,9 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
             #hack to make it validate
             self.fields['text'].required = False
             self.fields['text'].min_length = 0
+
+        if should_use_recaptcha(user):
+            self.fields['recaptcha'] = AskbotRecaptchaField()
 
 class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
     title =  forms.CharField(max_length=100)
@@ -1121,7 +1126,11 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
-        self.fields['text'] = AnswerEditorField(user=kwargs['user'])
+        user = kwargs['user']
+        self.fields['text'] = AnswerEditorField(user=user)
+
+        if should_use_recaptcha(user):
+            self.fields['recaptcha'] = AskbotRecaptchaField()
 
     def has_data(self):
         """True if form is bound or has inital data"""
@@ -1237,6 +1246,9 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
         if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
             self.fields['language'] = LanguageField()
 
+        if should_use_recaptcha(self.user):
+            self.fields['recaptcha'] = AskbotRecaptchaField()
+
     def has_changed(self):
         if super(EditQuestionForm, self).has_changed():
             return True
@@ -1343,6 +1355,9 @@ class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         self.fields['text'] = AnswerEditorField(user=user)
         self.fields['text'].initial = revision.text
         self.fields['wiki'].initial = answer.wiki
+
+        if should_use_recaptcha(user):
+            self.fields['recaptcha'] = AskbotRecaptchaField()
 
     def has_changed(self):
         #todo: this function is almost copy/paste of EditQuestionForm.has_changed()

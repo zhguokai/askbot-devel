@@ -63,12 +63,9 @@ anyone, must be valid</i>)
                 {% endif %}
                 {{ openid_register_form.email }}
             </div>
-            {% if settings.USE_RECAPTCHA %}
+            {% if openid_register_form.recaptcha %}
             <div class="form-row-vertical">
-                {% if openid_register_form.recaptcha.errors %} 
-                    <p class="error">{{ openid_register_form.recaptcha.errors|join(", ") }}</p>
-                {% endif %}
-                {{ openid_register_form.recaptcha }}
+                {{ macros.form_field_with_errors(openid_register_form.recaptcha ) }}
             </div>
             {% endif %}
             <div class="submit-row">

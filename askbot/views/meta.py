@@ -145,8 +145,10 @@ def feedback(request):
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect(get_next_url(request))
     else:
-        form = FeedbackForm(is_auth = request.user.is_authenticated(),
-                            initial={'next':get_next_url(request)})
+        form = FeedbackForm(
+                    user=request.user,
+                    initial={'next':get_next_url(request)}
+                )
 
     data['form'] = form
     return render(request, 'feedback.html', data)
