@@ -4360,6 +4360,10 @@ td.setting-input textarea {
   -o-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
 }
+#recaptcha_area,
+#recaptcha_table {
+  line-height: 0!important;
+}
 .acInput {
   width: 200px;
 }

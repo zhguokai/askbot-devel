@@ -107,10 +107,7 @@ def feedback(request):
             return HttpResponseRedirect(redirect_url)
 
     if request.method == "POST":
-        form = FeedbackForm(
-            is_auth=request.user.is_authenticated(),
-            data=request.POST
-        )
+        form = FeedbackForm(user=request.user, data=request.POST)
         if form.is_valid():
 
             if not request.user.is_authenticated():

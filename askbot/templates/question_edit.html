@@ -36,7 +36,7 @@
     }}
     <div class="after-editor">
         {% if form.recaptcha %}
-            <div>{{ macros.form_fild_with_errors(form.recaptcha) }}</div>
+            <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
             <div class="clearfix"></div>
         {% endif %}
         <div class="question-options">
@@ -62,7 +62,7 @@
             </div>
             {% endif %}
         </div>
-        <input id="edit_post_form_submit_button" type="submit" value="{% trans %}Save edit{% endtrans %}" class="large submit" />&nbsp;
+        <input id="edit_post_form_submit_button" type="submit" value="{% trans %}Save edit{% endtrans %}" class="large submit" />
         <input type="button" value="{% trans %}Cancel{% endtrans %}" class="large submit" onclick="history.back(-1);" />
 
     </div>

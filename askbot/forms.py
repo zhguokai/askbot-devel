@@ -746,9 +746,9 @@ class FeedbackForm(forms.Form):
     )
     next = NextUrlField()
 
-    def __init__(self, user=False, *args, **kwargs):
+    def __init__(self, user=None, *args, **kwargs):
         super(FeedbackForm, self).__init__(*args, **kwargs)
-        self.user = user.is_authenticated()
+        self.user = user
         if should_use_recaptcha(user):
             self.fields['recaptcha'] = AskbotRecaptchaField()
 
@@ -760,7 +760,7 @@ class FeedbackForm(forms.Form):
 
     def clean(self):
         super(FeedbackForm, self).clean()
-        if self.user.is_anonymous():
+        if self.user and self.user.is_anonymous():
             if not self.cleaned_data['no_email'] \
                 and not self.cleaned_data['email']:
                 msg = _('Please mark "I dont want to give my mail" field.')
