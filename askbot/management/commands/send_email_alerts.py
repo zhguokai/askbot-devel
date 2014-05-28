@@ -550,7 +550,7 @@ class Command(NoArgsCommand):
                     mail.send_mail(
                         subject_line=subject_line,
                         body_text=text,
-                        recipient=user
+                        recipient=recipient
                     )
             except:
                 msg = DEBUG_MESSAGE % ( 
