@@ -42,7 +42,6 @@ from askbot.forms import GetDataForPostForm
 from askbot.utils.loading import load_module
 from askbot import conf
 from askbot import models
-from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
 from askbot.startup_procedures import domain_is_bad
@@ -252,7 +251,6 @@ def questions(request, **kwargs):
             'font_size' : extra_tags.get_tag_font_size(related_tags),
             'display_tag_filter_strategy_choices': conf.get_tag_display_filter_strategy_choices(),
             'email_tag_filter_strategy_choices': conf.get_tag_email_filter_strategy_choices(),
-            'update_avatar_data': schedules.should_update_avatar_data(request),
             'query_string': search_state.query_string(),
             'search_state': search_state,
             'feed_url': context_feed_url,

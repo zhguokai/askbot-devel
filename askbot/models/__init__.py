@@ -307,11 +307,10 @@ def user_get_avatar_url(self, size=48):
                 raise django_exceptions.ImproperlyConfigured(message)
         else:
             return self.get_gravatar_url(size)
+    if askbot_settings.ENABLE_GRAVATAR:
+        return self.get_gravatar_url(size)
     else:
-        if askbot_settings.ENABLE_GRAVATAR:
-            return self.get_gravatar_url(size)
-        else:
-            return self.get_default_avatar_url(size)
+        return self.get_default_avatar_url(size)
 
 def user_get_top_answers_paginator(self, visitor=None):
     """get paginator for top answers by the user for a
@@ -356,6 +355,9 @@ def user_strip_email_signature(self, text):
     return text
 
 def _check_gravatar(gravatar):
+    return 'n'
+    #todo: think of whether we need this and if so
+    #how to check the avatar type appropriately
     gravatar_url = askbot_settings.GRAVATAR_BASE_URL + "/%s?d=404" % gravatar
     code = urllib.urlopen(gravatar_url).getcode()
     if urllib.urlopen(gravatar_url).getcode() != 404:
@@ -3729,7 +3731,7 @@ django_signals.post_save.connect(moderate_group_joining, sender=GroupMembership)
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
-    django_signals.post_save.connect(set_user_avatar_type_flag,sender=Avatar)
+    django_signals.post_save.connect(set_user_avatar_type_flag, sender=Avatar)
     django_signals.post_delete.connect(update_user_avatar_type_flag, sender=Avatar)
 
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
