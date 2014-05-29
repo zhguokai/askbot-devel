@@ -205,10 +205,10 @@ def import_data(request):
     return render(request, 'import_data.html', data)
 
 #@login_required #actually you can post anonymously, but then must register
+@fix_recaptcha_remote_ip
 @csrf.csrf_protect
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
 @decorators.check_spam('text')
-@fix_recaptcha_remote_ip
 def ask(request):#view used to ask a new question
     """a view to ask a new question
     gives space for q title, body, tags and checkbox for to post as wiki
@@ -225,8 +225,8 @@ def ask(request):#view used to ask a new question
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         return HttpResponseRedirect(reverse('index'))
 
-    form = forms.AskForm(request.REQUEST, user=request.user)
     if request.method == 'POST':
+        form = forms.AskForm(request.POST, user=request.user)
         if form.is_valid():
             timestamp = datetime.datetime.now()
             title = form.cleaned_data['title']
