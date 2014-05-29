@@ -135,7 +135,7 @@ try:
 finally:
     class InGroup(SimpleListFilter):
         title = 'group membership'
-        parameter_name = 'name'
+        parameter_name = 'in_group'
 
         def lookups(self, request, model_admin):
             return tuple([(g.id, 'in group \'%s\''%g.name) for g in models.Group.objects.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX)])
@@ -145,15 +145,42 @@ finally:
             else: 
                 return queryset
 
+    class _UserBooleanMethodListFilter(SimpleListFilter):
+        def lookups(self, request, model_admin):
+            return (('true', 'yes'), ('false', 'no'))
+
+        def queryset(self, request, queryset):
+            if self.value():
+                print "*"*10, self.method
+                target_boolean = self.value() == 'true'
+                admin_ids = []
+                for user in User.objects.all():
+                    if bool(getattr(user, self.method)()) == target_boolean:
+                        admin_ids.append(user.id)
+                return queryset.filter(id__in=admin_ids)
+            else:
+                return queryset
+
+    class IsAdministrator(_UserBooleanMethodListFilter):
+        method = 'is_administrator'
+        title = 'is administrator'
+        parameter_name = 'is_administrator'
+
+    class IsModerator(_UserBooleanMethodListFilter):
+        method = 'is_moderator'
+        title = 'is moderator'
+        parameter_name = 'is_moderator'
+
     from django.contrib.auth.admin import UserAdmin as OrigUserAdmin
     class UserAdmin(OrigUserAdmin):
         list_display = OrigUserAdmin.list_display + ('date_joined', 'reputation', 
+            'is_administrator', 'is_moderator',
             'my_interesting_tags', 'interesting_tag_wildcards',
             'my_ignored_tags', 'ignored_tag_wildcards', 
             'my_subscribed_tags', 'subscribed_tag_wildcards',
             'email_tag_filter_strategy', 'display_tag_filter_strategy', 
             'get_groups', 'get_primary_group', 'get_default_site')
-        list_filter = (InGroup, 'email_tag_filter_strategy', 'display_tag_filter_strategy') + OrigUserAdmin.list_filter
+        list_filter = (IsAdministrator, IsModerator, InGroup, 'email_tag_filter_strategy', 'display_tag_filter_strategy') + OrigUserAdmin.list_filter
 
         def interesting_tag_wildcards(self, obj):
             return ', '.join(obj.interesting_tags.strip().split())
