@@ -12,7 +12,7 @@
         <br/>
 
         {% if karma_mode == 'public' %}
-        <span class="reputation-score">{{ user.reputation }}</span>
+        <span class="reputation-score" title="{% trans %}karma{% endtrans %}">{{ user.reputation }}</span>
         {% endif %}
 
         {% if badges_mode == 'public' %}
