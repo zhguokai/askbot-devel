@@ -428,7 +428,6 @@ def get_enabled_major_login_providers():
             'icon_media_path': '/jquery-openid/images/facebook.gif',
             'get_user_id_function': get_facebook_user_id,
             'response_parser': lambda data: dict(urlparse.parse_qsl(data))
-
         }
     if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
         data['twitter'] = {
@@ -495,13 +494,22 @@ def get_enabled_major_login_providers():
             'icon_media_path': '/jquery-openid/images/linkedin.gif',
             'get_user_id_function': get_linked_in_user_id
         }
-    data['google'] = {
-        'name': 'google',
-        'display_name': 'Google',
-        'type': 'openid-direct',
-        'icon_media_path': '/jquery-openid/images/google.gif',
-        'openid_endpoint': 'https://www.google.com/accounts/o8/id',
-    }
+
+    def get_google_user_id(client):
+        return client.request('me')['id']
+
+    if askbot_settings.GOOGLE_PLUS_KEY and askbot_settings.GOOGLE_PLUS_SECRET:
+        data['google-plus'] = {
+            'name': 'google-plus',
+            'display_name': 'Google',
+            'type': 'oauth2',
+            'auth_endpoint': 'https://accounts.google.com/o/oauth2/auth',
+            'token_endpoint': 'https://accounts.google.com/o/oauth2/token',
+            'resource_endpoint': 'https://www.googleapis.com/plus/v1/people/',
+            'icon_media_path': '/jquery-openid/images/google.gif',
+            'get_user_id_function': get_google_user_id,
+            'extra_auth_params': {'scope': ('profile',)}# 'email', 'openid')}#, 'openid.realm': 'http://127.0.0.1:8000'}
+        }
     data['mozilla-persona'] = {
         'name': 'mozilla-persona',
         'display_name': 'Mozilla Persona',
@@ -848,14 +856,14 @@ def get_oauth2_starter_url(provider_name, csrf_token):
 
     providers = get_enabled_login_providers()
     params = providers[provider_name]
-    client_id = getattr(askbot_settings, provider_name.upper() + '_KEY')
+    client_id = getattr(askbot_settings, provider_name.replace('-', '_').upper() + '_KEY')
     redirect_uri = site_url(reverse('user_complete_oauth2_signin'))
     client = Client(
         auth_endpoint=params['auth_endpoint'],
         client_id=client_id,
         redirect_uri=redirect_uri
     )
-    return client.auth_uri(state=csrf_token)
+    return client.auth_uri(state=csrf_token, **params.get('extra_auth_params', {}))
 
 
 def ldap_check_password(username, password):

@@ -1,3 +1,11 @@
+var renderGooglePlusBtn = function() {
+    gapi.signin.render('google-plus-btn-id', {
+        'clientid': askbot['settings']['googlePlusPublicKey'],
+        'cookiepolicy': 'single_host_origin',
+        'scope': 'https://www.googleapis.com/auth/plus.login'
+    });
+};
+
 $.fn.authenticator = function() {
     var signin_page = $(this);
     var signin_form = $('#signin-form');
@@ -410,6 +418,19 @@ $.fn.authenticator = function() {
         });
     };
 
+    var activateGooglePlusBtn = function(btn) {
+        //add id to button - so that the "render" call would find it
+        btn.attr('id', 'google-plus-btn-id');
+        //load script with the gplus button code
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        //the global function renderGooglePlusBtn defined above will activate the button
+        po.src = 'https://apis.google.com/js/client:plusone.js?onload=renderGooglePlusBtn';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
+    };
+
     var setup_default_handlers = function(){
         setup_event_handlers(
             signin_page.find('input.openid-direct'),
@@ -435,6 +456,11 @@ $.fn.authenticator = function() {
                 start_mozilla_persona_login
             );
         }
+
+        /*var googlePlusBtn = signin_page.find('input.google-plus');
+        if (googlePlusBtn.length) {
+            activateGooglePlusBtn(googlePlusBtn);
+        }*/
 
 
         setup_event_handlers(

@@ -292,14 +292,15 @@ def complete_oauth2_signin(request):
     params = providers[provider_name]
     assert(params['type'] == 'oauth2')
 
+    name_token = provider_name.replace('-', '_').upper()
     client_id = getattr(
             askbot_settings,
-            provider_name.upper() + '_KEY',
+            name_token + '_KEY',
         )
 
     client_secret = getattr(
             askbot_settings,
-            provider_name.upper() + '_SECRET',
+            name_token + '_SECRET',
         )
 
     client = OAuth2Client(
