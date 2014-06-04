@@ -273,3 +273,14 @@ def send_instant_notifications_about_activity_in_post(
             debug('%s, error=%s, logId=%s' % (user.email, error, log_id))
         else:
             debug('success %s, logId=%s' % (user.email, log_id))
+
+def run_test_task():
+    from askbot import tasks
+    import datetime
+    return tasks.record_post_update_celery_task.delay(
+                                post_id=12056,
+                                updated_by_id=2445,
+                                diff='this is a test, please ignore',
+                                timestamp=datetime.datetime.now(),
+                                newly_mentioned_user_id_list=list()
+                            )
