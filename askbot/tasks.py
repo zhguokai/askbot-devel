@@ -130,7 +130,6 @@ def notify_author_of_published_revision_celery_task(revision):
 @task(ignore_result = True)
 def record_post_update_celery_task(
         post_id,
-        post_content_type_id,
         newly_mentioned_user_id_list=None,
         updated_by_id=None,
         suppress_email=False,
@@ -141,8 +140,7 @@ def record_post_update_celery_task(
     #reconstitute objects from the database
     debug('recording post update for %d' % post_id)
     updated_by = User.objects.get(id=updated_by_id)
-    post_content_type = ContentType.objects.get(id=post_content_type_id)
-    post = post_content_type.get_object_for_this_type(id=post_id)
+    post = Post.objects.get(id=post_id)
     newly_mentioned_users = User.objects.filter(
                                 id__in=newly_mentioned_user_id_list
                             )
