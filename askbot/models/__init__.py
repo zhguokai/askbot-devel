@@ -43,7 +43,7 @@ from askbot.models.spaces import Feed
 from askbot.models.spaces import get_feed_url
 from askbot.models.spaces import FeedToSpace
 #from askbot.models.spaces import AskbotSite
-from askbot.models.question import Thread
+from askbot.models.question import Thread, ThreadToGroup
 from askbot.skins import utils as skin_utils
 from askbot.mail import messages
 from askbot.models.question import QuestionView, AnonymousQuestion
