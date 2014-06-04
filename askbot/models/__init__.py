@@ -3378,7 +3378,6 @@ def record_post_update_activity(
 
     tasks.record_post_update_celery_task.delay(
         post_id=post.id,
-        post_content_type_id=ContentType.objects.get_for_model(post).id,
         newly_mentioned_user_id_list=[u.id for u in newly_mentioned_users],
         updated_by_id=updated_by.id,
         suppress_email=suppress_email,
