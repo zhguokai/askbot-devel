@@ -127,7 +127,7 @@ def notify_author_of_published_revision_celery_task(revision):
             headers=headers
         )
 
-@task(ignore_result = True)
+@task(ignore_result = False)
 def record_post_update_celery_task(
         post_id,
         newly_mentioned_user_id_list=None,
