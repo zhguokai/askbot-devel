@@ -710,18 +710,18 @@ class Post(models.Model):
                     notify_sets['for_email'] = \
                         [u for u in notify_sets['for_email'] if u.is_administrator()]
 
-        if not django_settings.CELERY_ALWAYS_EAGER:
-            cache_key = 'instant-notification-%d-%d' % (self.thread.id, updated_by.id)
-            if cache.cache.get(cache_key):
-                return
-            cache.cache.set(cache_key, True, django_settings.NOTIFICATION_DELAY_TIME)
+        #if not django_settings.CELERY_ALWAYS_EAGER:
+        #    cache_key = 'instant-notification-%d-%d' % (self.thread.id, updated_by.id)
+        #    if cache.cache.get(cache_key):
+        #        return
+        #    cache.cache.set(cache_key, True, django_settings.NOTIFICATION_DELAY_TIME)
 
         from askbot.tasks import send_instant_notifications_about_activity_in_post
         send_instant_notifications_about_activity_in_post.apply_async((
                                 update_activity,
                                 self,
-                                notify_sets['for_email']),
-                                countdown = django_settings.NOTIFICATION_DELAY_TIME
+                                notify_sets['for_email'])
+                                #countdown = django_settings.NOTIFICATION_DELAY_TIME
                             )
 
     def make_private(self, user, group_id=None):
