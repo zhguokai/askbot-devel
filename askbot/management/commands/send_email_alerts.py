@@ -23,6 +23,10 @@ from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
 
 DEBUG_THIS_COMMAND = False
+if DEBUG_THIS_COMMAND:
+    ADMIN_RECIPIENT_EMAIL = "joanna.wakeford@gmail.com"
+else:
+    ADMIN_RECIPIENT_EMAIL = askbot_settings.ADMIN_EMAIL
 
 PRINT_DEBUG_MESSAGES = True
 DEBUG_MESSAGE = "%s site_id=%d user=%s: %s"
@@ -544,7 +548,7 @@ class Command(NoArgsCommand):
                     })
 
                     if DEBUG_THIS_COMMAND == True:
-                        recipient = askbot_settings.ADMIN_EMAIL
+                        recipient = ADMIN_RECIPIENT_EMAIL
                     else:
                         recipient = user
 
@@ -560,7 +564,7 @@ class Command(NoArgsCommand):
                     repr(user.username), 
                     traceback.format_exc())
                 print msg 
-                admin_email = "joanna.wakeford@gmail.com"#askbot_settings.ADMIN_EMAIL
+                admin_email = ADMIN_RECIPIENT_EMAIL
                 try:
                     mail.send_mail(
                         subject_line="Error processing daily/weekly notification for User '%s' for Site '%s'" % (user.username, CURRENT_SITE_ID),
