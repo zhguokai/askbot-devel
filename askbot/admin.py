@@ -49,6 +49,12 @@ class FeedAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'default_space', 'redirect', 'site')
 admin.site.register(models.Feed, FeedAdmin)
 
+class FeedToSpaceAdmin(admin.ModelAdmin):
+    list_display = ('space', 'feed')
+    list_filter = ('space', 'feed')
+    search_fields = ('space__name', 'feed__name')
+admin.site.register(models.FeedToSpace, FeedToSpaceAdmin)
+
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('user', 'active_at', 'activity_type', 'content_type', 'object_id', 'content_object')
     list_filter = ('activity_type', 'content_type', 'user')
