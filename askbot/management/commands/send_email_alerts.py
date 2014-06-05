@@ -486,6 +486,7 @@ class Command(NoArgsCommand):
                         print_debug_msg(user, "removing this from set: question=%s, meta_data=%s" % (repr(question), repr(meta_data)))
                     else:
                         num_q += 1
+                print_debug_msg(user, "%d updated questions left to report on after removing the 'skip's" % num_q)
                 if num_q > 0:
                     threads = Thread.objects.filter(id__in=[qq.thread_id for qq in q_list.keys()])
                     tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
@@ -512,7 +513,6 @@ class Command(NoArgsCommand):
                     items_unreported = 0
                     questions_data = list()
                     for q, meta_data in q_list.items():
-                        print_debug_msg(user, "q=%s, meta_data=%s" % (repr(q), repr(meta_data)))
                         act_list = []
                         if meta_data['skip']:
                             continue
@@ -531,6 +531,7 @@ class Command(NoArgsCommand):
                                 'info': ', '.join(act_list),
                                 'title': q.thread.title
                             })
+                            print_debug_msg(user, "including: q=%s, meta_data=%s" % (repr(q), repr(meta_data)))
 
                     activate_language(user.get_primary_language())
                     text = template.render({
