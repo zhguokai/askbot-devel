@@ -1269,7 +1269,7 @@ class Thread(models.Model):
         by the underlying ``Post`` methods
         """
         posts = self.posts.filter(
-            Q(post_type__endswith='question') | Q(post_type__endswith='answer')
+            models.Q(post_type__endswith='question') | models.Q(post_type__endswith='answer')
         )
         for post in posts:
             post.add_to_groups(groups)
@@ -1342,6 +1342,12 @@ class Thread(models.Model):
         if len(groups) == 0:
             message = 'Sharing did not work, because group is unknown'
             user.message_set.create(message=message)
+
+    def is_in_site(self, site=None):
+        """True, if present in given site"""
+        spaces = Space.objects.get_for_site(site)
+        ids = [space.id for space in spaces]
+        return bool(self.spaces.filter(id__in=ids).count())
 
     def is_private(self):
         """true, if thread belongs to the global group"""

@@ -309,12 +309,14 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.name
 
-    def get_site_link(self):
+    def get_site_link(self, site=None):
         """gets or creates link of this tag to the the current site"""
-        current_site = Site.objects.get_current()
-        link, created = TagToSite.objects.get_or_create(tag=self, site=current_site)
-        return link
+        site = site or Site.objects.get_current()
+        return self.add_to_site(site)
 
+    def add_to_site(self, site):
+        link, created = TagToSite.objects.get_or_create(tag=self, site=site)
+        return link
 
 class TagToSite(models.Model):
     """used only when askbot is used in the multi-portal mode
