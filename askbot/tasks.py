@@ -28,6 +28,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import activate as activate_language
 from django.utils import simplejson
 from celery.decorators import task
+from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot import mail
@@ -187,6 +188,7 @@ def record_question_visit(
     #question_post = Post.objects.filter(
     #    id = question_post_id
     #).select_related('thread')[0]
+    activate_language(django_settings.LANGUAGE_CODE)
     if update_view_count:
         question_post.thread.increase_view_count()
 
