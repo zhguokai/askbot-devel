@@ -317,7 +317,7 @@ def tags(request):#view showing a listing of available tags - plain list
 
     if tag_isolation == 'per-site':
         query_params['askbot_site_links__site'] = get_current_site(request)
-        #query_params['askbot_site_links__used_count__gt'] = 0
+        query_params['askbot_site_links__used_count__gt'] = 0
     else:
         query_params['used_count__gt'] = 0
 

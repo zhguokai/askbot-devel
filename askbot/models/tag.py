@@ -329,6 +329,12 @@ class TagToSite(models.Model):
         app_label = 'askbot'
         unique_together = ('tag', 'site')
 
+    def set_used_count(self, used_count):
+        if used_count < 0:
+            used_count = 0
+        self.used_count = used_count
+        self.save()
+
 class MarkedTag(models.Model):
     TAG_MARK_REASONS = (
         ('good', ugettext_lazy('interesting')),
