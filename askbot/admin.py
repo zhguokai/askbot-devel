@@ -49,10 +49,16 @@ class FeedAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'default_space', 'redirect', 'site')
 admin.site.register(models.Feed, FeedAdmin)
 
+class FeedToSpaceAdmin(admin.ModelAdmin):
+    list_display = ('feed', 'space')
+    list_filter = ('feed', 'space')
+    search_fields = ('feed_name', 'space__name')
+admin.site.register(models.FeedToSpace, FeedToSpaceAdmin)
+
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('user', 'active_at', 'activity_type', 'content_type', 'object_id', 'content_object')
+    list_display = ('user', 'active_at', 'activity_type', 'question', 'content_type', 'object_id', 'content_object')
     list_filter = ('activity_type', 'content_type', 'user')
-    search_fields = ('object_id',)
+    search_fields = ('object_id', 'question__id', 'question__thread__id', 'question__thread__title')
 admin.site.register(models.Activity, ActivityAdmin)
 
 class GroupAdmin(admin.ModelAdmin):
@@ -93,19 +99,33 @@ class QuestionViewAdmin(admin.ModelAdmin):
     list_filter = ('who',)
 admin.site.register(models.QuestionView, QuestionViewAdmin)
 
+class PostToGroupInline(admin.TabularInline):
+    model = models.PostToGroup
+    extra = 1
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_private', 'vote_up_count')
     list_filter = ('deleted', 'post_type', 'author', 'vote_up_count')
     search_fields = ('id', 'thread__title', 'text', 'author__username')
+    inlines = (PostToGroupInline,)
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
 admin.site.register(models.Post, PostAdmin)
 
+class ThreadToGroupInline(admin.TabularInline):
+    model = models.ThreadToGroup
+    extra = 1
+
+class SpacesInline(admin.TabularInline):
+    model = models.Space.questions.through
+    extra = 1
+
 class ThreadAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'in_spaces', 'in_groups', 'is_private')
     list_filter = ('deleted', 'closed', 'last_activity_by')
     search_fields = ('title',)
+    inlines = (ThreadToGroupInline, SpacesInline)
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
@@ -135,7 +155,7 @@ try:
 finally:
     class InGroup(SimpleListFilter):
         title = 'group membership'
-        parameter_name = 'name'
+        parameter_name = 'in_group'
 
         def lookups(self, request, model_admin):
             return tuple([(g.id, 'in group \'%s\''%g.name) for g in models.Group.objects.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX)])
@@ -145,15 +165,42 @@ finally:
             else: 
                 return queryset
 
+    class _UserBooleanMethodListFilter(SimpleListFilter):
+        def lookups(self, request, model_admin):
+            return (('true', 'yes'), ('false', 'no'))
+
+        def queryset(self, request, queryset):
+            if self.value():
+                print "*"*10, self.method
+                target_boolean = self.value() == 'true'
+                admin_ids = []
+                for user in User.objects.all():
+                    if bool(getattr(user, self.method)()) == target_boolean:
+                        admin_ids.append(user.id)
+                return queryset.filter(id__in=admin_ids)
+            else:
+                return queryset
+
+    class IsAdministrator(_UserBooleanMethodListFilter):
+        method = 'is_administrator'
+        title = 'is administrator'
+        parameter_name = 'is_administrator'
+
+    class IsModerator(_UserBooleanMethodListFilter):
+        method = 'is_moderator'
+        title = 'is moderator'
+        parameter_name = 'is_moderator'
+
     from django.contrib.auth.admin import UserAdmin as OrigUserAdmin
     class UserAdmin(OrigUserAdmin):
         list_display = OrigUserAdmin.list_display + ('date_joined', 'reputation', 
+            'is_administrator', 'is_moderator',
             'my_interesting_tags', 'interesting_tag_wildcards',
             'my_ignored_tags', 'ignored_tag_wildcards', 
             'my_subscribed_tags', 'subscribed_tag_wildcards',
             'email_tag_filter_strategy', 'display_tag_filter_strategy', 
             'get_groups', 'get_primary_group', 'get_default_site')
-        list_filter = (InGroup, 'email_tag_filter_strategy', 'display_tag_filter_strategy') + OrigUserAdmin.list_filter
+        list_filter = (IsAdministrator, IsModerator, InGroup, 'email_tag_filter_strategy', 'display_tag_filter_strategy') + OrigUserAdmin.list_filter
 
         def interesting_tag_wildcards(self, obj):
             return ', '.join(obj.interesting_tags.strip().split())

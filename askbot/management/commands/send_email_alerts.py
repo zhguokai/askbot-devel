@@ -23,6 +23,10 @@ from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
 
 DEBUG_THIS_COMMAND = False
+if DEBUG_THIS_COMMAND:
+    ADMIN_RECIPIENT_EMAIL = "joanna.wakeford@gmail.com"
+else:
+    ADMIN_RECIPIENT_EMAIL = askbot_settings.ADMIN_EMAIL
 
 PRINT_DEBUG_MESSAGES = True
 DEBUG_MESSAGE = "%s site_id=%d user=%s: %s"
@@ -486,6 +490,7 @@ class Command(NoArgsCommand):
                         print_debug_msg(user, "removing this from set: question=%s, meta_data=%s" % (repr(question), repr(meta_data)))
                     else:
                         num_q += 1
+                print_debug_msg(user, "%d updated questions left to report on after removing the 'skip's" % num_q)
                 if num_q > 0:
                     threads = Thread.objects.filter(id__in=[qq.thread_id for qq in q_list.keys()])
                     tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
@@ -512,7 +517,6 @@ class Command(NoArgsCommand):
                     items_unreported = 0
                     questions_data = list()
                     for q, meta_data in q_list.items():
-                        print_debug_msg(user, "q=%s, meta_data=%s" % (repr(q), repr(meta_data)))
                         act_list = []
                         if meta_data['skip']:
                             continue
@@ -531,6 +535,7 @@ class Command(NoArgsCommand):
                                 'info': ', '.join(act_list),
                                 'title': q.thread.title
                             })
+                            print_debug_msg(user, "including: q=%s, meta_data=%s" % (repr(q), repr(meta_data)))
 
                     activate_language(user.get_primary_language())
                     text = template.render({
@@ -543,14 +548,14 @@ class Command(NoArgsCommand):
                     })
 
                     if DEBUG_THIS_COMMAND == True:
-                        recipient = askbot_settings.ADMIN_EMAIL
+                        recipient = ADMIN_RECIPIENT_EMAIL
                     else:
                         recipient = user
 
                     mail.send_mail(
                         subject_line=subject_line,
                         body_text=text,
-                        recipient=user
+                        recipient=recipient
                     )
             except:
                 msg = DEBUG_MESSAGE % ( 
@@ -559,7 +564,7 @@ class Command(NoArgsCommand):
                     repr(user.username), 
                     traceback.format_exc())
                 print msg 
-                admin_email = "joanna.wakeford@gmail.com"#askbot_settings.ADMIN_EMAIL
+                admin_email = ADMIN_RECIPIENT_EMAIL
                 try:
                     mail.send_mail(
                         subject_line="Error processing daily/weekly notification for User '%s' for Site '%s'" % (user.username, CURRENT_SITE_ID),
