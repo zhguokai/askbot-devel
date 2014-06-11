@@ -55,12 +55,6 @@ class FeedToSpaceAdmin(admin.ModelAdmin):
     search_fields = ('feed_name', 'space__name')
 admin.site.register(models.FeedToSpace, FeedToSpaceAdmin)
 
-class FeedToSpaceAdmin(admin.ModelAdmin):
-    list_display = ('space', 'feed')
-    list_filter = ('space', 'feed')
-    search_fields = ('space__name', 'feed__name')
-admin.site.register(models.FeedToSpace, FeedToSpaceAdmin)
-
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('user', 'active_at', 'activity_type', 'question', 'content_type', 'object_id', 'content_object')
     list_filter = ('activity_type', 'content_type', 'user')
