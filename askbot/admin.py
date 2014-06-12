@@ -56,9 +56,15 @@ class FeedToSpaceAdmin(admin.ModelAdmin):
 admin.site.register(models.FeedToSpace, FeedToSpaceAdmin)
 
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('user', 'active_at', 'activity_type', 'question', 'content_type', 'object_id', 'content_object')
+    list_display = ('user', 'active_at', 'activity_type', 'question', 'content_type', 'object_id', 'content_object', 'recipients_list', 'receiving_users_list')
     list_filter = ('activity_type', 'content_type', 'user')
     search_fields = ('object_id', 'question__id', 'question__thread__id', 'question__thread__title')
+
+    def recipients_list(self, obj):
+        return ', '.join(obj.recipients.all().values_list('username', flat=True))
+
+    def receiving_users_list(self, obj):
+        return ', '.join(obj.receiving_users.all().values_list('username', flat=True))
 admin.site.register(models.Activity, ActivityAdmin)
 
 class GroupAdmin(admin.ModelAdmin):
