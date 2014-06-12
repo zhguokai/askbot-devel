@@ -14,6 +14,7 @@ from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.conf import settings as askbot_settings
 from askbot.models.signals import user_registered
+from askbot.models.signals import email_validated
 
 LOG = logging.getLogger(__name__)
 
@@ -138,6 +139,7 @@ class AuthBackend(object):
                 user.email_key = None #one time key so delete it
                 user.email_isvalid = True
                 user.save()
+                email_validated.send(None, user=user)
                 return user
             except User.DoesNotExist:
                 return None

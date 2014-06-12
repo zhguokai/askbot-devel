@@ -3816,6 +3816,16 @@ def init_askbot_user_profile(user, **kwargs):
     user.save()
 
 
+def join_preapproved_groups(user, **kwargs):
+    if not askbot_settings.GROUPS_ENABLED == False:
+        return
+
+    groups = Group.objects.exclude_personal()
+    for group in groups:
+        if group.email_is_preapproved(user.email):
+            user.join_group(group, force=True)
+
+
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
     """save pending tag subscriptions saved in the session"""
     if 'subscribe_for_tags' in request.session:
@@ -3925,6 +3935,7 @@ django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 #change this to real m2m_changed with Django1.2
 from askbot.models import signals
 signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
+signals.email_validated.connect(join_preapproved_groups)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)

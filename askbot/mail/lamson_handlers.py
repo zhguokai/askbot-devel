@@ -11,6 +11,7 @@ from lamson.server import Relay
 from askbot.models import ReplyAddress, Group
 from askbot import mail
 from askbot.models import get_feed_url
+from askbot.models.signals import email_validated
 from askbot.conf import settings as askbot_settings
 from askbot.utils.html import site_url
 from askbot.mail import DEBUG_EMAIL
@@ -254,6 +255,7 @@ def VALIDATE_EMAIL(
 
         user.email_isvalid = True
         user.save()
+        email_validated.send(None, user=user)
 
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,

@@ -58,6 +58,12 @@ post_revision_published = django.dispatch.Signal(
                                     'was_approved'
                                 ]
                             )
+
+email_validated = django.dispatch.Signal(
+                                providing_args = [
+                                    'user'
+                                ]
+                            )
 site_visited = django.dispatch.Signal(providing_args=['user', 'timestamp'])
 
 def pop_signal_receivers(signal):

@@ -689,6 +689,40 @@ class GroupTests(AskbotTestCase):
         recipient = acts[0].recipients.all()[0]
         self.assertEqual(recipient, mod)
 
+    def test_preapproved_email(self):
+        group = models.Group(name='somegroup')
+        group.preapproved_emails = 'email1@example.com email2@example.com email3@example.com'
+        group.preapproved_email_domains = 'site1.com site2.com'
+        group.save()
+        self.assertEqual(
+            group.email_is_preapproved('email1@example.com'),
+            True
+        )
+        self.assertEqual(
+            group.email_is_preapproved('email1@EXAMPLE.COM'),
+            True
+        )
+        self.assertEqual(
+            group.email_is_preapproved('Email1@EXAMPLE.COM'),
+            True
+        )
+        self.assertEqual(
+            group.email_is_preapproved('email2@example.com'),
+            True
+        )
+        self.assertEqual(
+            group.email_is_preapproved('email3@example.com'),
+            True
+        )
+        self.assertEqual(
+            group.email_is_preapproved('email3@site1.com'),
+            True
+        )
+        self.assertEqual(
+            group.email_is_preapproved('email3@site2.com'),
+            True
+        )
+
 class LinkPostingTests(AskbotTestCase):
 
     def assert_no_link(self, html):
