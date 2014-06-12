@@ -1582,10 +1582,28 @@ def multisite_repost_thread(request):
 
     if thread.has_moderator(request.user):
         if form.is_valid():
-            new_spaces = form.cleaned_data['spaces']
-            if len(new_spaces) > 0:
-                thread.spaces.clear()
-                thread.spaces.add(*new_spaces)
+            selected_spaces = form.cleaned_data['spaces']
+            if len(selected_spaces) > 0:
+                current_set = set(thread.spaces.all())
+                selected_set = set(selected_spaces)
+                for space in current_set - selected_set:
+                    thread.spaces.remove(space)
+                    models.Activity.objects.create(
+                        user = request.user,
+                        active_at = datetime.datetime.now(),
+                        content_object = space,
+                        activity_type = const.TYPE_ACTIVITY_POST_UNSHARED_WITH_SPACE,
+                        question = thread._question_post(),
+                    )
+                for space in selected_set - current_set:
+                    thread.spaces.add(space)
+                    models.Activity.objects.create(
+                        user = request.user,
+                        active_at = datetime.datetime.now(),
+                        content_object = space,
+                        activity_type = const.TYPE_ACTIVITY_POST_SHARED_WITH_SPACE,
+                        question = thread._question_post(),
+                    )
             else:
                 message = _('Please select at least one site')
                 request.user.message_set.create(message=message)
