@@ -563,11 +563,11 @@ class Thread(models.Model):
 
     title = models.CharField(max_length=300)
 
-    tags = models.ManyToManyField('Tag', related_name='threads')
+    tags = models.ManyToManyField('Tag', related_name='threads', blank=True)
     groups = models.ManyToManyField(Group, through=ThreadToGroup, related_name='group_threads')
 
     # Denormalised data, transplanted from Question
-    tagnames = models.CharField(max_length=125)
+    tagnames = models.CharField(max_length=125, blank=True)
     view_count = models.PositiveIntegerField(default=0)
     favourite_count = models.PositiveIntegerField(default=0)
     answer_count = models.PositiveIntegerField(default=0)
@@ -575,7 +575,7 @@ class Thread(models.Model):
     last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
     language_code = models.CharField(max_length=16, default=django_settings.LANGUAGE_CODE)
 
-    followed_by     = models.ManyToManyField(User, related_name='followed_threads')
+    followed_by     = models.ManyToManyField(User, related_name='followed_threads', blank=True)
     favorited_by    = models.ManyToManyField(User, through='FavoriteQuestion', related_name='unused_favorite_threads')
 
     closed          = models.BooleanField(default=False)

@@ -49,10 +49,16 @@ class FeedAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'default_space', 'redirect', 'site')
 admin.site.register(models.Feed, FeedAdmin)
 
+class FeedToSpaceAdmin(admin.ModelAdmin):
+    list_display = ('feed', 'space')
+    list_filter = ('feed', 'space')
+    search_fields = ('feed_name', 'space__name')
+admin.site.register(models.FeedToSpace, FeedToSpaceAdmin)
+
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('user', 'active_at', 'activity_type', 'content_type', 'object_id', 'content_object')
+    list_display = ('user', 'active_at', 'activity_type', 'question', 'content_type', 'object_id', 'content_object')
     list_filter = ('activity_type', 'content_type', 'user')
-    search_fields = ('object_id',)
+    search_fields = ('object_id', 'question__id', 'question__thread__id', 'question__thread__title')
 admin.site.register(models.Activity, ActivityAdmin)
 
 class GroupAdmin(admin.ModelAdmin):
@@ -93,19 +99,33 @@ class QuestionViewAdmin(admin.ModelAdmin):
     list_filter = ('who',)
 admin.site.register(models.QuestionView, QuestionViewAdmin)
 
+class PostToGroupInline(admin.TabularInline):
+    model = models.PostToGroup
+    extra = 1
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_private', 'vote_up_count')
     list_filter = ('deleted', 'post_type', 'author', 'vote_up_count')
     search_fields = ('id', 'thread__title', 'text', 'author__username')
+    inlines = (PostToGroupInline,)
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
 admin.site.register(models.Post, PostAdmin)
 
+class ThreadToGroupInline(admin.TabularInline):
+    model = models.ThreadToGroup
+    extra = 1
+
+class SpacesInline(admin.TabularInline):
+    model = models.Space.questions.through
+    extra = 1
+
 class ThreadAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'in_spaces', 'in_groups', 'is_private')
     list_filter = ('deleted', 'closed', 'last_activity_by')
     search_fields = ('title',)
+    inlines = (ThreadToGroupInline, SpacesInline)
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
