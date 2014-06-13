@@ -15,7 +15,6 @@ from askbot import const
 
 admin.site.register(models.Vote)
 admin.site.register(models.FavoriteQuestion)
-admin.site.register(models.PostRevision)
 admin.site.register(models.Award)
 admin.site.register(models.Repute)
 admin.site.register(models.BulkTagSubscription)
@@ -110,14 +109,29 @@ class PostToGroupInline(admin.TabularInline):
     extra = 1
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_private', 'vote_up_count')
+    list_display = ('id', 'post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_published', 'is_private', 'vote_up_count')
     list_filter = ('deleted', 'post_type', 'author', 'vote_up_count')
     search_fields = ('id', 'thread__title', 'text', 'author__username')
     inlines = (PostToGroupInline,)
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
+
+    def is_published(self, obj):
+        return obj.thread._question_post().author.get_personal_group() in obj.groups.all()
 admin.site.register(models.Post, PostAdmin)
+
+class PostRevisionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'post_id', 'thread_name', 'revision', 'revised_at', 'author', 'approved')
+    list_filter = ('approved',)
+    search_fields = ('post__id',)
+
+    def post_id(self, obj):
+        return obj.post.id
+
+    def thread_name(self, obj):
+        return obj.post.thread.title
+admin.site.register(models.PostRevision, PostRevisionAdmin)
 
 class ThreadToGroupInline(admin.TabularInline):
     model = models.ThreadToGroup
