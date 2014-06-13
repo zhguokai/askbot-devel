@@ -2527,7 +2527,6 @@ inherits(GroupDropdown, WrappedElement);
 
 GroupDropdown.prototype.createDom =  function(){
     this._element = this.makeElement('ul');
-    this._element.attr('class', 'dropdown-menu');
     this._element.attr('id', 'groups-dropdown');
     this._element.attr('role', 'menu');
     this._element.attr('aria-labelledby', 'navGroups');
@@ -2568,8 +2567,7 @@ GroupDropdown.prototype.insertGroup = function(group_name, url){
     var list = this._element.children();
     var everyoneGroup = list.first().detach();
     var groupAdder = list.last().detach();
-    var divider = this._element.find('.divider').detach();
-
+    
     //2) append group link into the list
     var li = this.makeElement('li');
     var a = this.makeElement('a');
@@ -2595,7 +2593,6 @@ GroupDropdown.prototype.insertGroup = function(group_name, url){
 
     //4) reinsert the first and last elements of the list:
     this._element.prepend(everyoneGroup);
-    this._element.append(divider);
     this._element.append(groupAdder);
 };
 
@@ -2640,7 +2637,7 @@ GroupDropdown.prototype._add_group_handler = function(group_name){
                     return false;
                 } else {
                     me.insertGroup(data['group_name'], data['url']);
-                    me.setState('display');
+                    //me.setState('display');
                     return true; 
                 }
             } else{
@@ -2666,9 +2663,6 @@ GroupDropdown.prototype.enableAddGroups = function(){
         }
     });
 
-    var divider = this.makeElement('li');
-    divider.attr('class', 'divider');
-    this._element.append(divider);
 
     var container = this.makeElement('li');
     container.append(this._add_link);

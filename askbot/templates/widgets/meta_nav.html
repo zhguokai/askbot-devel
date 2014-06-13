@@ -1,29 +1,35 @@
 {% import "macros.html" as macros%}
-<a 
-  id="navTags"
-  href="{% url tags %}"
-  {% if active_tab == 'tags' %}class="on"{% endif %}
->{% trans %}tags{% endtrans %}</a>
+<li class="divider"></li>
+<li>
+    <a id="navTags" href="{% url tags %}" {% if active_tab=='tags' %} class="on"{% endif %}>
+    {% trans %}tags{% endtrans %}</a>
+</li>
+<li class="divider"></li>
+
 {% if settings.GROUPS_ENABLED %}
-<span class="dropdown">
-<a
-  id="navGroups" 
-  {% if active_tab == 'groups' %}class="on"{% endif %}
-  href="{% url groups %}" data-target="#" >
-  {% trans %}people & groups{% endtrans %}
-</a>
-</span>
+<li>
+  <a id="navGroups" {% if active_tab=='groups' %} class="on"{% endif %} href="{% url groups %}" data-dropdown="groups-dropdown" data-options="is_hover:true">
+    {% trans %}people & groups{% endtrans %}
+    <div class="f-dropdown">
+    </div>
+  </a>
+</li>
 {%else%}
-<a 
-  id="navUsers"
-  href="{% url users %}"
-  {% if active_tab == 'users' %}class="on"{% endif %}
->{% trans %}users{% endtrans %}</a>
+<li>
+    <a id="navUsers" href="{% url users %}" {% if active_tab=='users' %}class="on"{% endif %}>
+    {% trans %}users{% endtrans %}</a>
+</li>
 {% endif %}
+
+
+<li class="divider"></li>
 {% if settings.BADGES_MODE == 'public' %}
-<a 
-  id="navBadges"
-  href="{% url badges %}"
-  {% if active_tab == 'badges' %}class="on"{% endif %}
->{% trans %}badges{% endtrans %}</a>
+<li>
+    <a id="navBadges" href="{% url badges %}" {% if active_tab=='badges' %}class="on"{% endif %}>
+    {% trans %}badges{% endtrans %}
+  </a>
+</li>
+<li class="divider"></li>
 {% endif %}
+
+
