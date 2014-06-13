@@ -1810,7 +1810,8 @@ class Post(models.Model):
 
         if edited_at is None:
             edited_at = datetime.datetime.now()
-        self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
+        if suppress_email == False:
+            self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def _question__apply_edit(self, edited_at=None, edited_by=None, title=None,\
                               text=None, comment=None, tags=None, wiki=False,\
@@ -1860,7 +1861,9 @@ class Post(models.Model):
             suppress_email=suppress_email
         )
 
-        self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
+        if suppress_email == False:
+            #for minor edit don't bump thread
+            self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def apply_edit(self, *args, **kwargs):
         #todo: unify this, here we have unnecessary indirection

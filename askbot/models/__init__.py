@@ -3006,6 +3006,8 @@ def user_edit_group_membership(self, user=None, group=None,
         openness = group.get_openness_level_for_user(user)
 
         #let people join these special groups, but not leave
+        approved_at = None
+        level = None
         if not force:
             if group.name == askbot_settings.GLOBAL_GROUP_NAME:
                 openness = 'open'
@@ -3014,16 +3016,27 @@ def user_edit_group_membership(self, user=None, group=None,
 
             if openness == 'open':
                 level = GroupMembership.FULL
+                approved_at = datetime.datetime.now()
             elif openness == 'moderated':
                 level = GroupMembership.PENDING
             elif openness == 'closed':
                 raise django_exceptions.PermissionDenied()
         else:
             level = GroupMembership.FULL
+            approved_at = datetime.datetime.now()
 
         membership, created = GroupMembership.objects.get_or_create(
-                        user=user, group=group, level=level
+                        user=user,
+                        group=group
                     )
+        if approved_at != None:
+            membership.approved_at = approved_at
+        if level != None:
+            membership.level = level
+
+        if approved_at != None or level != None:
+            membership.save()
+
         return membership
 
     elif action == 'remove':
@@ -3803,6 +3816,16 @@ def init_askbot_user_profile(user, **kwargs):
     user.save()
 
 
+def join_preapproved_groups(user, **kwargs):
+    if not askbot_settings.GROUPS_ENABLED == False:
+        return
+
+    groups = Group.objects.exclude_personal()
+    for group in groups:
+        if group.email_is_preapproved(user.email):
+            user.join_group(group, force=True)
+
+
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
     """save pending tag subscriptions saved in the session"""
     if 'subscribe_for_tags' in request.session:
@@ -3912,6 +3935,7 @@ django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 #change this to real m2m_changed with Django1.2
 from askbot.models import signals
 signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
+signals.email_validated.connect(join_preapproved_groups)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)

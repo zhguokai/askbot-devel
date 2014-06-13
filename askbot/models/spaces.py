@@ -27,6 +27,7 @@ class SpaceManager(BaseQuerySetManager):
         """retuns spaces available in the given site
         results are cached
         """
+        site = site or Site.objects.get_current()
         cache_key = u'askbot-spaces-%s' % unicode(site)
         spaces = cache.get(cache_key)
         if spaces is None:

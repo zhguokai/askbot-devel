@@ -1400,6 +1400,7 @@ LoginOrRegisterForm.prototype.handleSuccess = function(data) {
             $('.modal-backdrop').remove();
         }
     };
+    askbot['controllers']['fullTextSearch'].refresh();
 };
 
 LoginOrRegisterForm.prototype.decorate = function(element) {
@@ -2782,6 +2783,7 @@ LogoutLink.prototype.getLogoutHandler = function() {
                     //loginDialog.decorate($('.modal'));
                     //activate the login menu
                     me.activateLoginLink();
+                    askbot['controllers']['fullTextSearch'].refresh();
                 }
             }
         });

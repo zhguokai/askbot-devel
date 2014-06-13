@@ -1473,6 +1473,7 @@ def moderate_group_join_request(request):
     if group.has_moderator(request.user):
         if action == 'approve':
             group_membership.level = models.GroupMembership.FULL
+            group_membership.approved_at = datetime.datetime.now()
             group_membership.save()
             msg_data = {'user': applicant.username, 'group': group.name}
             message = _('%(user)s, welcome to group %(group)s!') % msg_data

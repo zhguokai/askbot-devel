@@ -7,10 +7,21 @@
     <table>
     {% for membership in join_requests %}
         <tr>
+            {% set user = membership.user %}
+            {% set user_token = user.username %}
+            {% if user.real_name %}
+                {% set user_token = user_token ~ ' / ' ~ user.real_name %}
+            {% endif %}
+            {% if user.email %}
+                {% set user_token = user_token ~ ' / ' ~ user.email %}
+            {% endif %}
             <td>{% trans 
-                    user=membership.user,
+                    user=user_token,
                     group=membership.group.name
-                %}{{ user }} wants to join group {{ group }}{% endtrans %}
+                %}{{ user }} asked to join "{{ group }}"{% endtrans %}
+            </td>
+            <td>
+                {{ macros.timeago(membership.requested_at) }}
             </td>
             <td>{# forms with accept and reject buttons #}
                 <form action="{% url moderate_group_join_request %}" method="post"

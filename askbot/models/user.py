@@ -420,7 +420,8 @@ class GroupMembership(AuthUserGroups):
                         default=FULL,
                         choices=LEVEL_CHOICES,
                     )
-
+    requested_at = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now)
+    approved_at = models.DateTimeField(null=True, default=None)
 
     class Meta:
         app_label = 'askbot'
@@ -562,6 +563,15 @@ class Group(AuthGroup):
         app_label = 'askbot'
         db_table = 'askbot_group'
 
+    def email_is_preapproved(self, email):
+        """True, if email matches preapproved_emails
+        or preapproved_email_domains"""
+        return email_is_allowed(
+            email,
+            allowed_emails=self.preapproved_emails,
+            allowed_email_domains=self.preapproved_email_domains
+        )
+
     def get_moderators(self):
         """returns group moderators"""
         user_filter = models.Q(is_superuser=True) | models.Q(status='m')
@@ -604,11 +614,7 @@ class Group(AuthGroup):
             return 'open'
 
         #relying on a specific method of storage
-        if email_is_allowed(
-            user.email,
-            allowed_emails=self.preapproved_emails,
-            allowed_email_domains=self.preapproved_email_domains
-        ):
+        if self.email_is_preapproved(user.email):
             return 'open'
 
         if self.openness == Group.MODERATED:
