@@ -998,6 +998,8 @@ def user_email_subscriptions(request, user, context):
         'user_languages': user.languages.split()
     }
     context.update(data)
+    #todo: really need only if subscribed tags are enabled
+    context.update(view_context.get_for_tag_editor())
     return render(
         request,
         'user_profile/user_email_subscriptions.html',
@@ -1093,17 +1095,6 @@ def user(request, id, slug=None, tab_name=None):
         context['custom_tab_name'] = CUSTOM_TAB['NAME']
         context['custom_tab_slug'] = CUSTOM_TAB['SLUG']
     return user_view_func(request, profile_owner, context)
-
-@csrf.csrf_exempt
-def update_has_custom_avatar(request):
-    """updates current avatar type data for the user
-    """
-    if request.is_ajax() and request.user.is_authenticated():
-        if request.user.avatar_type in ('n', 'g'):
-            request.user.update_avatar_type()
-            request.session['avatar_data_updated_at'] = datetime.datetime.now()
-            return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
-    return HttpResponseForbidden()
 
 def groups(request, id = None, slug = None):
     """output groups page

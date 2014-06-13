@@ -46,6 +46,7 @@ from askbot.views import context
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
 from askbot.utils.slug import slugify
+from recaptcha_works.decorators import fix_recaptcha_remote_ip
 
 # used in index page
 INDEX_PAGE_SIZE = 20
@@ -204,6 +205,7 @@ def import_data(request):
     return render(request, 'import_data.html', data)
 
 #@login_required #actually you can post anonymously, but then must register
+@fix_recaptcha_remote_ip
 @csrf.csrf_protect
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
 @decorators.check_spam('text')
@@ -223,8 +225,8 @@ def ask(request):#view used to ask a new question
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         return HttpResponseRedirect(reverse('index'))
 
-    form = forms.AskForm(request.REQUEST, user=request.user)
     if request.method == 'POST':
+        form = forms.AskForm(request.POST, user=request.user)
         if form.is_valid():
             timestamp = datetime.datetime.now()
             title = form.cleaned_data['title']
@@ -383,6 +385,7 @@ def retag_question(request, id):
 @login_required
 @csrf.csrf_protect
 @decorators.check_spam('text')
+@fix_recaptcha_remote_ip
 def edit_question(request, id):
     """edit question view
     """
@@ -493,6 +496,7 @@ def edit_question(request, id):
 @login_required
 @csrf.csrf_protect
 @decorators.check_spam('text')
+@fix_recaptcha_remote_ip
 def edit_answer(request, id):
     answer = get_object_or_404(models.Post, id=id)
 
@@ -588,6 +592,7 @@ def edit_answer(request, id):
 #todo: rename this function to post_new_answer
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
 @decorators.check_spam('text')
+@fix_recaptcha_remote_ip
 def answer(request, id, form_class=forms.AnswerForm):#process a new answer
     """view that posts new answer
 

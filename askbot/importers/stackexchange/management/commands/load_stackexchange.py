@@ -915,7 +915,7 @@ it may be helpful to split this procedure in two:\n
             u = askbot.User()
             u_type = se_u.user_type.name
             if u_type == 'Administrator':
-                u.set_admin_status()
+                u.set_status('d')
             elif u_type == 'Moderator':
                 u.set_status('m')
             elif u_type not in ('Unregistered', 'Registered'):

@@ -996,6 +996,7 @@ def finalize_generic_signin(
 
 @not_authenticated
 @csrf.csrf_protect
+@fix_recaptcha_remote_ip
 def register(request, login_provider_name=None, user_identifier=None):
     """
     this function is used via it's own url with request.method=POST

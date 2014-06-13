@@ -5,10 +5,10 @@
 <script type="text/javascript" src="{{ "/jquery-openid/jquery.openid.js"|media }}"></script>
 <script type="text/javascript">
     askbot['urls']['changePassword'] = '{% url change_password %}';
+    askbot['urls']['deleteLoginMethod'] = '{% url delete_login_method %}';
     var extra_token_name = {};
     var create_pw_text = {};
     var change_pw_text = {};
-    var authUrl = '/{% trans %}account/{% endtrans %}';
     var siteName = '{{settings.APP_SHORT_NAME}}';
     var provider_count = {{existing_login_methods|length}};
     {% for login_provider in major_login_providers %}

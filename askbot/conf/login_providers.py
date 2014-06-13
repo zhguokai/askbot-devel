@@ -23,6 +23,8 @@ settings.register(
     )
 )
 
+#todo: remove this - we don't want the local login button
+#but instead always show the login/password field when used
 settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,

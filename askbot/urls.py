@@ -125,11 +125,6 @@ urlpatterns = patterns('',
         name='groups'
     ),
     url(
-        r'^%s$' % _('users/update_has_custom_avatar/'),
-        views.users.update_has_custom_avatar,
-        name='user_update_has_custom_avatar'
-    ),
-    url(
         r'^%s$' % _('badges/'),
         views.meta.badges,
         name='badges'
