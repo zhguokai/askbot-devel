@@ -52,7 +52,7 @@ admin.site.register(models.Feed, FeedAdmin)
 class FeedToSpaceAdmin(admin.ModelAdmin):
     list_display = ('feed', 'space')
     list_filter = ('feed', 'space')
-    search_fields = ('feed_name', 'space__name')
+    search_fields = ('feed__name', 'space__name')
 admin.site.register(models.FeedToSpace, FeedToSpaceAdmin)
 
 class ActivityAdmin(admin.ModelAdmin):
