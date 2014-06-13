@@ -2,6 +2,7 @@
 <li class="divider"></li>
 <li>
     <a id="navTags" href="{% url tags %}" {% if active_tab=='tags' %} class="on"{% endif %}>
+    <i class="fa fa-tags fa-lg"></i>
     {% trans %}tags{% endtrans %}</a>
 </li>
 <li class="divider"></li>
@@ -9,6 +10,7 @@
 {% if settings.GROUPS_ENABLED %}
 <li>
   <a id="navGroups" {% if active_tab=='groups' %} class="on"{% endif %} href="{% url groups %}" data-dropdown="groups-dropdown" data-options="is_hover:true">
+    <i class="fa fa-users fa-lg"></i>
     {% trans %}people & groups{% endtrans %}
     <div class="f-dropdown">
     </div>
@@ -17,6 +19,7 @@
 {%else%}
 <li>
     <a id="navUsers" href="{% url users %}" {% if active_tab=='users' %}class="on"{% endif %}>
+    <i class="fa fa-user fa-lg"></i>
     {% trans %}users{% endtrans %}</a>
 </li>
 {% endif %}
@@ -26,6 +29,7 @@
 {% if settings.BADGES_MODE == 'public' %}
 <li>
     <a id="navBadges" href="{% url badges %}" {% if active_tab=='badges' %}class="on"{% endif %}>
+    <i class="fa fa-dot-circle-o fa-lg"></i>
     {% trans %}badges{% endtrans %}
   </a>
 </li>

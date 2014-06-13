@@ -1,6 +1,7 @@
 // Normalize
 @import "../bower_components/foundation/scss/normalize.scss";
 
+//ASKBOT PRE
 // Askbot variables
 @import "./scss/askbot_variables.scss";
 
@@ -51,8 +52,24 @@
 "../bower_components/foundation/scss/foundation/components/_offcanvas.scss",
 "../bower_components/foundation/scss/foundation/components/_visibility.scss";
 
-// ASKBOT
+// FONT-AWESOME
+// Font Licence: SIL OFL 1.1
+// Code Licence: MIT Licence
+@import 
+"../bower_components/components-font-awesome/scss/variables",
+"../bower_components/components-font-awesome/scss/mixins",
+"../bower_components/components-font-awesome/scss/path",
+"../bower_components/components-font-awesome/scss/core",
+"../bower_components/components-font-awesome/scss/larger",
+"../bower_components/components-font-awesome/scss/fixed-width",
+"../bower_components/components-font-awesome/scss/list",
+"../bower_components/components-font-awesome/scss/bordered-pulled",
+"../bower_components/components-font-awesome/scss/spinning",
+"../bower_components/components-font-awesome/scss/rotated-flipped",
+"../bower_components/components-font-awesome/scss/stacked",
+"../bower_components/components-font-awesome/scss/icons";
 
+// ASKBOT POST
 // Askbot stylesheets
 @import "./scss/askbot_styles.scss";
 

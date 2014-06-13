@@ -24,7 +24,9 @@
 {% endif %}
 {% elif settings.USE_ASKBOT_LOGIN_SYSTEM %}
 <li class="divider"></li>
-<li><a href="{{ settings.LOGIN_URL }}?next={{request.path|clean_login_url|escape}}">{% trans %}Hi there! Please sign in{% endtrans %}</a></li>
+<li>
+  <a href="{{ settings.LOGIN_URL }}?next={{request.path|clean_login_url|escape}}">{% trans %}Hi there! Please sign in{% endtrans %}</a>
+</li>
 {% endif %}
 {% if request.user.is_authenticated() and request.user.is_administrator() %}
 <li class="divider"></li>
@@ -37,5 +39,7 @@
 </li>
 {% endif %}
 <li class="divider"></li>
-<li><a class="help" href="{% url "help" %}" title="{% trans %}help{% endtrans %}">{% trans %}help{% endtrans %}</a></li>
+<li>
+  <a class="help" href="{% url "help" %}" title="{% trans %}help{% endtrans %}">{% trans %}help{% endtrans %}</a>
+</li>
 <li class="divider"></li>
