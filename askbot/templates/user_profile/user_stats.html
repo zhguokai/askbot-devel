@@ -101,6 +101,7 @@
 {% block endjs %}
     {{ super() }}
     <script type="text/javascript">
+        askbot['data']['userPostsPageSize'] = {{ page_size }};
         askbot['urls']['join_or_leave_group'] = '{% url join_or_leave_group %}';
         $(document).ready(function(){
             setup_badge_details_toggle();

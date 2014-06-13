@@ -330,6 +330,9 @@ body.user-messages {
   background: white;
   display: block;
 }
+.select-language {
+  margin-top: 6px;
+}
 #userToolsNav {
   /* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
 
@@ -3005,18 +3008,25 @@ a:hover.medal {
   border: #eee 1px solid;
   padding: 5px;
 }
+.user-profile-page form {
+  margin-bottom: 0;
+}
 .user-profile-page h2 {
-  padding: 30px 0px 10px 0px;
+  padding: 4px 0px 10px 0px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
+}
+.user-profile-page h3 {
+  padding: 0;
+  margin-top: -3px;
+}
+.user-profile-page .submit-row {
+  margin-bottom: 0;
 }
 .user-profile-page .user-stats-table h2 {
   padding-top: 10px;
 }
 .user-profile-page .user-stats-table.badges {
   margin-bottom: 30px;
-}
-.user-profile-page select {
-  margin-bottom: 12px;
 }
 .user-profile-page .up-votes,
 .user-profile-page .down-votes {
@@ -3047,6 +3057,18 @@ a:hover.medal {
 }
 .user-profile-page .users-questions {
   margin-top: -10px;
+}
+.user-profile-page .avatar p {
+  margin-bottom: 0px;
+}
+.user-profile-page .tabBar a#stats {
+  margin-left: 0;
+}
+.user-profile-page img.gravatar {
+  margin: 2px 0 3px 0;
+}
+.user-profile-page .vote-notification h3 {
+  padding: 10px;
 }
 .user-details {
   font-size: 13px;
@@ -3872,25 +3894,6 @@ p.signup_p {
 .avatar-page li {
   display: inline;
 }
-.user-profile-page .avatar p {
-  margin-bottom: 0px;
-}
-.user-profile-page .tabBar a#stats {
-  margin-left: 0;
-}
-.user-profile-page img.gravatar {
-  margin: 2px 0 3px 0;
-}
-.user-profile-page h3 {
-  padding: 0;
-  margin-top: -3px;
-}
-.user-profile-page .vote-notification h3 {
-  padding: 10px;
-}
-.user-profile-page ul.tags {
-  margin-left: 5px;
-}
 .userList {
   font-size: 13px;
 }
@@ -4359,6 +4362,10 @@ td.setting-input textarea {
   -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
   -o-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+#recaptcha_area,
+#recaptcha_table {
+  line-height: 0!important;
 }
 .acInput {
   width: 200px;

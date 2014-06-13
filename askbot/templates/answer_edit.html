@@ -21,6 +21,10 @@
                         editor_type = settings.EDITOR_TYPE
                     )
         }}
+        {% if form.recaptcha %}
+            <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
+            <div class="clearfix"></div>
+        {% endif %}
         <div class="answer-options">
         {% if settings.WIKI_ON and answer.wiki == False %}
             {{ macros.checkbox_in_div(form.wiki) }}

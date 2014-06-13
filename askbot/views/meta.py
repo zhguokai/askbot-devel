@@ -107,10 +107,7 @@ def feedback(request):
             return HttpResponseRedirect(redirect_url)
 
     if request.method == "POST":
-        form = FeedbackForm(
-            is_auth=request.user.is_authenticated(),
-            data=request.POST
-        )
+        form = FeedbackForm(user=request.user, data=request.POST)
         if form.is_valid():
 
             if not request.user.is_authenticated():
@@ -145,8 +142,10 @@ def feedback(request):
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect(get_next_url(request))
     else:
-        form = FeedbackForm(is_auth = request.user.is_authenticated(),
-                            initial={'next':get_next_url(request)})
+        form = FeedbackForm(
+                    user=request.user,
+                    initial={'next':get_next_url(request)}
+                )
 
     data['form'] = form
     return render(request, 'feedback.html', data)
