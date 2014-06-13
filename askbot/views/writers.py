@@ -127,7 +127,7 @@ def upload(request):#ajax upload file to a question or answer
     xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url><orig_file_name><![CDATA[%s]]></orig_file_name></result>"
     xml = xml_template % (result, error, file_url, orig_file_name)
 
-    return HttpResponse(xml, mimetype="application/xml")
+    return HttpResponse(xml, content_type="application/xml")
 
 def __import_se_data(dump_file):
     """non-view function that imports the SE data
@@ -193,7 +193,7 @@ def import_data(request):
             dump_storage.flush()
 
             return HttpResponse(__import_se_data(dump_storage))
-            #yield HttpResponse(_('StackExchange import complete.'), mimetype='text/plain')
+            #yield HttpResponse(_('StackExchange import complete.'), content_type='text/plain')
             #dump_storage.close()
     else:
         form = forms.DumpUploadForm()
@@ -351,7 +351,7 @@ def retag_question(request, id):
                         response_data['message'] = message
 
                     data = simplejson.dumps(response_data)
-                    return HttpResponse(data, mimetype="application/json")
+                    return HttpResponse(data, content_type="application/json")
                 else:
                     return HttpResponseRedirect(question.get_absolute_url())
             elif request.is_ajax():
@@ -360,7 +360,7 @@ def retag_question(request, id):
                     'success': False
                 }
                 data = simplejson.dumps(response_data)
-                return HttpResponse(data, mimetype="application/json")
+                return HttpResponse(data, content_type="application/json")
         else:
             form = forms.RetagQuestionForm(question)
 
@@ -377,7 +377,7 @@ def retag_question(request, id):
                 'success': False
             }
             data = simplejson.dumps(response_data)
-            return HttpResponse(data, mimetype="application/json")
+            return HttpResponse(data, content_type="application/json")
         else:
             request.user.message_set.create(message = unicode(e))
             return HttpResponseRedirect(question.get_absolute_url())
@@ -697,7 +697,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
         json_comments.append(comment_data)
 
     data = simplejson.dumps(json_comments)
-    return HttpResponse(data, mimetype="application/json")
+    return HttpResponse(data, content_type="application/json")
 
 @csrf.csrf_exempt
 @decorators.check_spam('comment')
@@ -757,7 +757,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
             )
             response = __generate_comments_json(post, user)
         except exceptions.PermissionDenied, e:
-            response = HttpResponseForbidden(unicode(e), mimetype="application/json")
+            response = HttpResponseForbidden(unicode(e), content_type="application/json")
 
     return response
 

@@ -131,7 +131,7 @@ def manage_inbox(request):
 
                     response_data['success'] = True
                     data = simplejson.dumps(response_data)
-                    return HttpResponse(data, mimetype="application/json")
+                    return HttpResponse(data, content_type="application/json")
                 else:
                     raise exceptions.PermissionDenied(
                         _('Sorry, but anonymous users cannot access the inbox')
@@ -148,7 +148,7 @@ def manage_inbox(request):
         response_data['message'] = message
         response_data['success'] = False
         data = simplejson.dumps(response_data)
-        return HttpResponse(data, mimetype="application/json")
+        return HttpResponse(data, content_type="application/json")
 
 
 def process_vote(user = None, vote_direction = None, post = None):
@@ -435,7 +435,7 @@ def vote(request):
         response_data['message'] = unicode(e)
         response_data['success'] = 0
         data = simplejson.dumps(response_data)
-    return HttpResponse(data, mimetype="application/json")
+    return HttpResponse(data, content_type="application/json")
 
 #internally grouped views - used by the tagging system
 @csrf.csrf_exempt
@@ -479,7 +479,7 @@ def mark_tag(request, **kwargs):#tagging system
         else:
             tag_usage_counts[name] = 0
 
-    return HttpResponse(simplejson.dumps(tag_usage_counts), mimetype="application/json")
+    return HttpResponse(simplejson.dumps(tag_usage_counts), content_type="application/json")
 
 #@decorators.ajax_only
 @decorators.get_only
@@ -513,7 +513,7 @@ def get_thread_shared_users(request):
         'users_count': users.count(),
         'success': True
     })
-    return HttpResponse(re_data, mimetype='application/json')
+    return HttpResponse(re_data, content_type='application/json')
 
 @decorators.get_only
 def get_thread_shared_groups(request):
@@ -529,7 +529,7 @@ def get_thread_shared_groups(request):
         'groups_count': groups.count(),
         'success': True
     })
-    return HttpResponse(re_data, mimetype='application/json')
+    return HttpResponse(re_data, content_type='application/json')
 
 @decorators.ajax_only
 def get_html_template(request):
@@ -1534,7 +1534,7 @@ def get_editor(request):
         'scripts': parsed_scripts,
         'success': True
     }
-    return HttpResponse(simplejson.dumps(data), mimetype='application/json')
+    return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
 @csrf.csrf_exempt
 @decorators.ajax_only
