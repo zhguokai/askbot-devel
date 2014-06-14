@@ -30,6 +30,7 @@ from django.core.urlresolvers import reverse
 from django.core import exceptions
 from django.conf import settings
 from django.views.decorators import csrf
+from django.contrib.auth.models import User
 
 from askbot import exceptions as askbot_exceptions
 from askbot import forms
@@ -204,7 +205,6 @@ def import_data(request):
     }
     return render(request, 'import_data.html', data)
 
-#@login_required #actually you can post anonymously, but then must register
 @fix_recaptcha_remote_ip
 @csrf.csrf_protect
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
@@ -239,12 +239,16 @@ def ask(request):#view used to ask a new question
             language = form.cleaned_data.get('language', None)
 
             if request.user.is_authenticated():
-                drafts = models.DraftQuestion.objects.filter(
-                                                author=request.user
-                                            )
+                drafts = models.DraftQuestion.objects.filter(author=request.user)
                 drafts.delete()
-
                 user = form.get_post_user(request.user)
+            elif request.user.is_anonymous() and askbot_settings.ALLOW_ASK_UNREGISTERED:
+                user = models.get_or_create_anonymous_user()
+                ask_anonymously = True
+            else:
+                user = None
+
+            if user:
                 try:
                     question = user.post_question(
                         title=title,

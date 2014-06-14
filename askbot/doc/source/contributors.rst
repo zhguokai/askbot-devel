@@ -57,6 +57,7 @@ Programming, bug fixes and documentation
 * `michas2 <https://github.com/michas2>`_
 * `Francis Devereux <https://github.com/frankoid>`_
 * `Andrew Chen <https://github.com/yongjhih>`_
+* `Egil Moeller <https://github.com/redhog>`_
 
 Translations
 ------------
