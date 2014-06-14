@@ -27,7 +27,7 @@ REQUIREMENTS = {
     'sanction': 'sanction==0.3.1',
     'unidecode': 'unidecode',
     'django_countries': 'django-countries==1.0.5',
-    'djcelery': 'django-celery==3.0.11',
+    'djcelery': 'django-celery>=3.0.11',
     'djkombu': 'django-kombu==0.9.4',
     'followit': 'django-followit',
     'recaptcha_works': 'django-recaptcha-works',
