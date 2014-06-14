@@ -37,7 +37,7 @@
         {% include "widgets/system_messages.html" %}
         {% include "debug_header.html" %}
         {% if settings.MULTILINGUAL %}
-            <div class="content-wrapper">
+            <div class="row">
                 {% include "widgets/language_nav.html" %}
             </div>
         {% endif %}
@@ -54,7 +54,7 @@
             {{ settings.LEADING_SIDEBAR }}
         </div>
         {% endif %}
-        <div class="content-wrapper">
+        <div class="row">
             {% block body %}
             {% endblock %}
         </div>

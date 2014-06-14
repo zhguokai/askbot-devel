@@ -53,8 +53,6 @@ settings.register(
     )
 )
 
-
-
 settings.register(
     livesettings.StringValue(
         EXTERNAL_KEYS,

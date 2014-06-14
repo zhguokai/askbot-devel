@@ -295,23 +295,46 @@ body.user-messages {
     @include sprites(-26px,-5px);
 }
 
-/* ----- Header, check blocks/header.html ----- */
+//
+// Header, check widgets/header.html 
+//
 
+// nav-bar
 #header {
-    margin-top: 0px;
-    background: $header-color;
-    font-family:$main-font;
-}
+	font-family: $main-font;
+	
+	ul {
+	    background: $header-color;
+	    a {
+		    line-height: $topbar-height - 3px;
+	    }
+	    a:first-child {
+		    font-family: $main-font;
+		    color: $header-text-color;
+		    font-size: 1rem;
+	    }
+	    a:not(:first-child) {
+		    color: $header-text-color;
+		    font-style: italic;
+		    font-size: smaller;
+	   }
+   }
 
-.content-wrapper {/* wrapper positioning class */
-    width: 960px;
-    margin: auto;
-    position:relative;
-}
+    .top-bar .name a {
+	    color:$header-text-color;
+	    font-size: 1.2rem;
+	    text-transform: uppercase;
+	    margin: 1rem;
+    }
 
+    .fa {
+	    margin-right:0.65em;
+    }
+}	
+	
 #logo img{
     padding: 5px 0px 5px 0px;
-    height: 75px;
+    height: $topbar-height;
     width: auto;
     float: left;
 }
@@ -337,148 +360,116 @@ body.user-messages {
     }
 }
 
-#userToolsNav {/* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
-    height: 20px;
-    padding-bottom:5px;
-    white-space: nowrap;
-    font-size:16px;
+// userToolsNav Navigation bar containing login link or user information, check widgets/user_navigation.html
 
-    a {
-        height: 35px;
-        text-align: right;
-        margin-left: 20px;
-        text-decoration: underline;
-        color:#d0e296;
-    }
-    
-    a:first-child {
-        margin-left: 0;
-    }
-    
-    a#ab-responses {
-        margin-left: 3px;
-    }
-    
-    .user-info,.user-micro-info{
-        color:#b5b593;
-    }
-
-    a img {
-        vertical-align:middle;
-        margin-bottom:2px;
-    }
-
-    .user-info a {
-        margin: 0;
-        text-decoration: none;
-    }
+#userToolsNav{
+	> li:first-child a {
+	display:inline;
+	padding:0;
+}
+	span.user-info {
+	padding: 10px;
+	color: $header-text-color;
+}
 }
 
-#metaNav {/* Top Navigation bar containing links for tags, people and badges, check widgets/header.html */
-    float: right;/* for #header.with-logo it is modified */
-    margin-right: 7px;
+// metaNav Top Navigation bar containing links for tags, people and badges, check widgets/header.html
 
-    a {
-        color: #e2e2ae;
-        padding: 0px 0px 0px 35px;
-        height: 35px;
-        line-height: 25px;
-        margin:5px 0px 0px 10px;
-        font-size: 18px;
-        font-weight: 100;
-        text-decoration: none;
-        display: block;
-        float: left;
-    }
+#metaNav{
+	ul{
+		width:inherit;
+	}
+	a.f-dropdown{
+	position: static;
+	}
+	ul#groups-dropdown li > a {
+		font-size: smaller;
+		font-style: italic;
+	}
+	li:focus, li:hover {
+	background: $header-color;
+}
+	input.group-name {
+	border: 1px solid #c9c9b5;
+	border-radius:5px;
+	background: desaturate( $header-color, 50% );
+	display: block;
+	font-size: 14px;
+	height: 25px;
+	margin: 0px 10% 10% 10%;
+	padding: 0 5px;
 
-    a:hover {
-        text-decoration: underline;
     }
+}
+/*float: middle;[> for #header.with-logo it is modified <]*/
+    /*margin-right: 7px;*/
+   
+    /*a {*/
+        /*color: #e2e2ae;*/
+        /*padding: 0px 0px 0px 35px;*/
+        /*height: 35px;*/
+        /*line-height: 25px;*/
+        /*margin:5px 0px 0px 10px;*/
+        /*font-size: 18px;*/
+        /*font-weight: 100;*/
+        /*text-decoration: none;*/
+        /*display: block;*/
+        /*float: left;*/
+    /*}*/
 
-    a.on {
-        font-weight:bold;
-        color: #FFF;
-        text-decoration: none;
-    }
+    /*a:hover {*/
+        /*text-decoration: underline;*/
+    /*}*/
 
-    a.special {
-        font-size: 18px;
-        color: #B02B2C;
-        font-weight: bold;
-        text-decoration: none;
-    }
+    /*a.on {*/
+        /*font-weight:bold;*/
+        /*color: #FFF;*/
+        /*text-decoration: none;*/
+    /*}*/
 
-    a.special:hover {
-        text-decoration: underline;
-    }
+    /*a.special {*/
+        /*font-size: 18px;*/
+        /*color: #B02B2C;*/
+        /*font-weight: bold;*/
+        /*text-decoration: none;*/
+    /*}*/
 
-    #navTags{
-        @include sprites(0px,-95px);
-    }
+    /*a.special:hover {*/
+        /*text-decoration: underline;*/
+    /*}*/
 
-    #navUsers,
-    #navGroups{
-        @include sprites(3px,-133px)
-    }
-
-    #navBadges{
-        @include sprites(3px,-170px)
-    }
-
-    a.group-name {
-        padding: 0px;
-        float: none;
-        margin: 5px 10px;
-    }
+    /*a.group-name {*/
+        /*padding: 0px;*/
+        /*float: none;*/
+        /*margin: 5px 10px;*/
+    /*}*/
     
-    input.group-name {
-        border: 1px solid #c9c9b5;
-        color: #464646;
-        display: block;
-        font-size: 14px;
-        height: 25px;
-        margin: 0px 10px 5px 10px;
-        padding: 0 5px;
-    }
+   
+    /*span.dropdown:hover ul.dropdown-menu {*/
+        /*display: block;    */
+    /*}*/
 
-    a.group-name:hover{
-        background-color: transparent;
-    }
+    /*div.dropdown-container:hover ul.dropdown-menu {*/
+        /*display: block;    */
+    /*}*/
 
-    span.dropdown:hover ul.dropdown-menu {
-        display: block;    
-    }
+    /*.dropdown {*/
+        /*float:left;*/
+    /*}*/
 
-    div.dropdown-container:hover ul.dropdown-menu {
-        display: block;    
-    }
+    /*.dropdown-menu {*/
+        /*border-top: none;*/
+        /*left: 33px;*/
+        /*z-index: 10100;*/
+        /*a {*/
+            /*color: #666;*/
+            /*height: 25px;*/
+        /*}*/
+    /*}*/
 
-    .dropdown {
-        float:left;
-    }
+/*}*/
 
-    .dropdown-menu {
-        border-top: none;
-        left: 33px;
-        z-index: 10100;
-        a {
-            color: #666;
-            height: 25px;
-        }
-    }
 
-}
-
-#header.with-logo #userToolsNav {
-    position:absolute;
-    bottom: 0;
-    right:0px;
-}
-
-#header.without-logo #userToolsNav {
-    float:left;
-    margin-top: 7px;
-}
 
 
 #secondaryHeader{ /* Div containing Home button, scope navigation, search form and ask button, check blocks/secondary_header.html */
@@ -4750,9 +4741,6 @@ td.setting-input {
     }
     input[type="submit"].searchBtn {
         margin-right: 0;
-    }
-    .content-wrapper {
-        width: 100%;
     }
     #ContentRight {
         display: none;

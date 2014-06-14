@@ -99,8 +99,7 @@ def get_admin():
         if User.objects.filter(username='_admin_').count() == 0:
             admin = User.objects.create_user('_admin_', '')
             admin.set_unusable_password()
-            admin.set_admin_status()
-            admin.save()
+            admin.set_status('d')
             return admin
         else:
             raise User.DoesNotExist
@@ -308,11 +307,10 @@ def user_get_avatar_url(self, size=48):
                 raise django_exceptions.ImproperlyConfigured(message)
         else:
             return self.get_gravatar_url(size)
+    if askbot_settings.ENABLE_GRAVATAR:
+        return self.get_gravatar_url(size)
     else:
-        if askbot_settings.ENABLE_GRAVATAR:
-            return self.get_gravatar_url(size)
-        else:
-            return self.get_default_avatar_url(size)
+        return self.get_default_avatar_url(size)
 
 def user_get_top_answers_paginator(self, visitor=None):
     """get paginator for top answers by the user for a
@@ -357,6 +355,9 @@ def user_strip_email_signature(self, text):
     return text
 
 def _check_gravatar(gravatar):
+    return 'n'
+    #todo: think of whether we need this and if so
+    #how to check the avatar type appropriately
     gravatar_url = askbot_settings.GRAVATAR_BASE_URL + "/%s?d=404" % gravatar
     code = urllib.urlopen(gravatar_url).getcode()
     if urllib.urlopen(gravatar_url).getcode() != 404:
@@ -2745,11 +2746,13 @@ def user_update_response_counts(user):
 
 
 def user_receive_reputation(self, num_points):
-    new_points = self.reputation + num_points
+    old_points = self.reputation
+    new_points = old_points + num_points
     if new_points > 0:
         self.reputation = new_points
     else:
         self.reputation = const.MIN_REPUTATION
+    signals.reputation_received.send(None, user=self, reputation_before=old_points)
 
 def user_update_wildcard_tag_selections(
                                     self,
@@ -3681,8 +3684,7 @@ def make_admin_if_first_user(user, **kwargs):
     import sys
     user_count = User.objects.all().count()
     if user_count == 1:
-        user.set_admin_status()
-        user.save()
+        user.set_status('d')
 
 def moderate_group_joining(sender, instance=None, created=False, **kwargs):
     if created and instance.level == GroupMembership.PENDING:
@@ -3699,6 +3701,13 @@ def tweet_new_post(sender, user=None, question=None, answer=None, form_data=None
     from askbot.tasks import tweet_new_post_task
     post = question or answer
     tweet_new_post_task.delay(post.id)
+
+def autoapprove_reputable_user(user=None, reputation_before=None, *args, **kwargs):
+    """if user is 'watched' we change status to 'approved'
+    if user's rep crossed the auto-approval margin"""
+    margin = askbot_settings.MIN_REP_TO_AUTOAPPROVE_USER
+    if user.is_watched() and reputation_before < margin and user.reputation >= margin:
+        user.set_status('a')
 
 def init_badge_data(sender, created_models=None, **kwargs):
     if BadgeData in created_models:
@@ -3722,7 +3731,7 @@ django_signals.post_save.connect(moderate_group_joining, sender=GroupMembership)
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
-    django_signals.post_save.connect(set_user_avatar_type_flag,sender=Avatar)
+    django_signals.post_save.connect(set_user_avatar_type_flag, sender=Avatar)
     django_signals.post_delete.connect(update_user_avatar_type_flag, sender=Avatar)
 
 django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
@@ -3740,6 +3749,7 @@ signals.user_logged_in.connect(post_anonymous_askbot_content)
 signals.post_updated.connect(record_post_update_activity)
 signals.new_answer_posted.connect(tweet_new_post)
 signals.new_question_posted.connect(tweet_new_post)
+signals.reputation_received.connect(autoapprove_reputable_user)
 
 #probably we cannot use post-save here the point of this is
 #to tell when the revision becomes publicly visible, not when it is saved

@@ -6,6 +6,21 @@ var mediaUrl = function(resource){
     return askbot['settings']['static_url'] + 'default' + '/' + resource;
 };
 
+var getCookie = function(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = $.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                return decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        }
+    }
+    return cookieValue;
+};
+
 var cleanUrl = function(url){
     var re = new RegExp('//', 'g');
     return url.replace(re, '/');
@@ -276,18 +291,6 @@ var notify = function() {
         isVisible: function() { return visible; }     
     };
 }();
-
-/*
- * CSRF token extractor
- */
-var getCSRFToken = function() {
-    var re = /_csrf=([^;]*)/;
-    var match = re.exec(document.cookie);
-    if(match)
-        return match[1];
-    else
-        return ''
-}
 
 
 /* **************************************************** */
@@ -1390,7 +1393,7 @@ CommentConvertLink.prototype.createDom = function(){
     var csrf_token = this.makeElement('input');
     csrf_token.attr('type', 'hidden');
     csrf_token.attr('name', 'csrfmiddlewaretoken');
-    csrf_token.attr('value', getCSRFToken());
+    csrf_token.attr('value', getCookie(askbot['settings']['csrfCookieName']));
     element.append(csrf_token);
 
     var submit = this.makeElement('input');
@@ -2527,7 +2530,6 @@ inherits(GroupDropdown, WrappedElement);
 
 GroupDropdown.prototype.createDom =  function(){
     this._element = this.makeElement('ul');
-    this._element.attr('class', 'dropdown-menu');
     this._element.attr('id', 'groups-dropdown');
     this._element.attr('role', 'menu');
     this._element.attr('aria-labelledby', 'navGroups');
@@ -2568,8 +2570,7 @@ GroupDropdown.prototype.insertGroup = function(group_name, url){
     var list = this._element.children();
     var everyoneGroup = list.first().detach();
     var groupAdder = list.last().detach();
-    var divider = this._element.find('.divider').detach();
-
+    
     //2) append group link into the list
     var li = this.makeElement('li');
     var a = this.makeElement('a');
@@ -2595,7 +2596,6 @@ GroupDropdown.prototype.insertGroup = function(group_name, url){
 
     //4) reinsert the first and last elements of the list:
     this._element.prepend(everyoneGroup);
-    this._element.append(divider);
     this._element.append(groupAdder);
 };
 
@@ -2640,7 +2640,7 @@ GroupDropdown.prototype._add_group_handler = function(group_name){
                     return false;
                 } else {
                     me.insertGroup(data['group_name'], data['url']);
-                    me.setState('display');
+                    //me.setState('display');
                     return true; 
                 }
             } else{
@@ -2666,9 +2666,6 @@ GroupDropdown.prototype.enableAddGroups = function(){
         }
     });
 
-    var divider = this.makeElement('li');
-    divider.attr('class', 'divider');
-    this._element.append(divider);
 
     var container = this.makeElement('li');
     container.append(this._add_link);

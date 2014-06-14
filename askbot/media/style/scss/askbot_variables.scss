@@ -1,8 +1,8 @@
 /* General Predifined classes, read more in lesscss.org */
-
 /* Variables for Colors*/
 
 $header-color:#16160f;
+$header-text-color: #D0E296;
 $link:#1b79bd;
 $question-link:#464646;
 $button-label:#4a757f;
@@ -10,12 +10,29 @@ $section-title:#7ea9b3;
 $info-text:#707070;
 $info-text-dark:#525252;
 
-/* Variables for fonts*/
+//
+// FONT-AWESOME VARIABLES
+//
+// Override Font-awesome path
+$fa-font-path: "../bower_components/components-font-awesome/fonts";
 
+//
+// FOUNDATION VARIABLES
+//
+// Foundation Top bar
+$topbar-height: 65px;
+$topbar-bg: $header-color;
+
+// Foundation grid
+$row-width: 960px;
+
+/* Variables for fonts*/
 $body-font:Arial;
 $sort-font:Georgia, serif;
 $main-font:'Open Sans Condensed', Arial, sans-serif;
 $secondary-font:Arial;
+
+
 
 /* General styles for gradients */
 @mixin linear-gradient($start: #eee, $end: #fff, $stop: 25%) {

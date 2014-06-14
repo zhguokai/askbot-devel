@@ -848,3 +848,10 @@ for the purposes of the AJAX comment editor #}
         })();
     </script>
 {% endmacro %}
+
+{% macro form_field_with_errors(field) %}
+    {% if field.errors %} 
+        <p class="error">{{ field.errors|join(", ") }}</p>
+    {% endif %}
+    {{ field }}
+{% endmacro %}
