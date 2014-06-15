@@ -4504,7 +4504,8 @@ msgstr "发起问题"
 msgid ""
 "since you are not logged in right now, you will be asked to sign in or "
 "register after posting your question"
-msgstr ""
+msgstr "因为你还没有登录, 发表问题后你需要注册或登录."
+
 
 #: templates/ask.html:25
 #, python-format
