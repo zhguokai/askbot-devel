@@ -59,6 +59,7 @@ Programming, bug fixes and documentation
 * `Andrew Chen <https://github.com/yongjhih>`_
 * `Egil Moeller <https://github.com/redhog>`_
 * `Jerry Zhenlei Cai <https://github.com/jerryzhenleicai>`_
+* `Dmitry <https://github.com/dmzio>`_
 
 Translations
 ------------
