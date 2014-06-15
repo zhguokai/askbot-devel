@@ -1062,3 +1062,7 @@ def run():
     except AskbotConfigError, error:
         print error
         sys.exit(1)
+    # close DB and cache connections to prevent issues in prefork mode
+    connection.close()
+    if hasattr(cache, 'close'):
+        cache.close()
