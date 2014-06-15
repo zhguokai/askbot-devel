@@ -14,8 +14,6 @@ TEMPLATE_DEBUG = False  # keep false when debugging jinja2 templates
 INTERNAL_IPS = ('127.0.0.1',)
 ALLOWED_HOSTS = ['*',]#change this for better security on your site
 
-ALLOWED_HOSTS = []  # don't forget to set it to correct value, f.e. '.example.com' if DEBUG = False, otherwise you'll have a errors
-
 ADMINS = (
     ('Your Name', 'your_email@domain.com'),
 )
