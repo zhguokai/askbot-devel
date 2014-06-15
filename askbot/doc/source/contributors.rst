@@ -58,6 +58,7 @@ Programming, bug fixes and documentation
 * `Francis Devereux <https://github.com/frankoid>`_
 * `Andrew Chen <https://github.com/yongjhih>`_
 * `Egil Moeller <https://github.com/redhog>`_
+* `Jerry Zhenlei Cai <https://github.com/jerryzhenleicai>`_
 
 Translations
 ------------
