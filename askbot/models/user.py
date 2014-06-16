@@ -578,6 +578,12 @@ class Group(AuthGroup):
         user_filter = user_filter & models.Q(groups__in=[self])
         return User.objects.filter(user_filter)
 
+    def get_preapproved_emails(self):
+        return self.preapproved_emails.strip().split()
+
+    def get_preapproved_email_domains(self):
+        return self.preapproved_email_domains.strip().split()
+
     def has_moderator(self, user):
         """true, if user is a group moderator"""
         mod_ids = self.get_moderators().values_list('id', flat=True)

@@ -21,6 +21,7 @@ from celery.task import task
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.core.paginator import Paginator
 from django.db.models import signals as django_signals
+from django.db.models import Q
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
@@ -3817,6 +3818,9 @@ def init_askbot_user_profile(user, **kwargs):
 
 
 def join_preapproved_groups(user, **kwargs):
+    """User will be joined all groups for which he/she
+    is preapproved via preapproved email addresses or
+    preapproved email domains"""
     if not askbot_settings.GROUPS_ENABLED == False:
         return
 
@@ -3824,6 +3828,51 @@ def join_preapproved_groups(user, **kwargs):
     for group in groups:
         if group.email_is_preapproved(user.email):
             user.join_group(group, force=True)
+
+
+def add_preapproved_users(instance=None, **kwargs):
+    """A symmetric method to above. When group has changed
+    preapproved emails or domains we auto-join all matching users"""
+    group = instance
+    if askbot_settings.GROUPS_ENABLED == False:
+        return
+    if group.is_personal():
+        return
+
+    current_emails = group.get_preapproved_emails()
+    current_domains = group.get_preapproved_email_domains()
+    if group.id:
+        #for pre-existing groups we use only new values
+        old_group = Group.objects.get(id=group.id)
+        old_emails = old_group.get_preapproved_emails()
+        old_domains = old_group.get_preapproved_email_domains()
+
+        emails = set(current_emails) - set(old_emails)
+        domains = set(current_domains) - set(old_domains)
+    else:
+        #for new groups we use current values
+        emails = current_emails
+        domains = current_domains
+
+    #auto-join all users by new email addresses
+    if len(emails):
+        email_filter = Q()
+        for email in emails:
+            email_filter |= Q(email__iexact=email)
+        for user in User.objects.filter(email_filter):
+            user.join_group(group, force=True)
+
+    #auto-join users by domain names
+    if len(domains):
+        domain_filter = Q()
+        for domain in domains:
+            domain_filter |= Q(email__icontains=domain)
+        users = User.objects.filter(domain_filter)
+        cleaned_domains = [domain.lower() for domain in domains]
+        for user in users:
+            user_domain = user.email.split('@')[1].lower()
+            if user_domain in cleaned_domains:
+                user.join_group(group, force=True)
 
 
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
@@ -3914,6 +3963,7 @@ def tweet_new_post(sender, user=None, question=None, answer=None, form_data=None
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
+django_signals.pre_save.connect(add_preapproved_users, sender=Group)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(add_user_to_global_group, sender=User)
 django_signals.post_save.connect(add_user_to_personal_group, sender=User)
