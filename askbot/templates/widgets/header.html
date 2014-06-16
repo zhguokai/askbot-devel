@@ -1,9 +1,10 @@
 <!-- template header.html -->
 {% import "macros.html" as macros %}
 <div id="header" class="{% if settings.SHOW_LOGO %}with-logo{% else %}without-logo{% endif %}">
-    <nav class="top-bar" data-topbar>
-        <ul class="title-area">
-            <li class="name">
+    <!-- nav bar for large screens -->
+    <section class="show-for-large-up">
+        <nav class="top-bar" data-topbar>
+            <section class="title-area">
                 {% if settings.SHOW_LOGO %}
                 {% include "widgets/logo.html" %}
                 {% else%}
@@ -11,17 +12,23 @@
                     {{settings.APP_SHORT_NAME}}
                 </a>
                 {% endif %}
-            </li>
-        </ul>
-        <section class="top-bar-section">
-            <ul id="userToolsNav" class="left">
-                {% include "widgets/user_navigation.html" %}
-            </ul>
-            <ul id="metaNav" class="right show-for-xlarge-up">
-                {% include "widgets/meta_nav.html" %}
-            </ul>
-        </section>
-    </nav>
+            </section>
+            <section class="top-bar-section">
+                <ul id="userToolsNav" class="left">
+                    {% include "widgets/user_navigation.html" %}
+                </ul>
+                <ul id="metaNav" class="right show-for-xlarge-up">
+                    {% include "widgets/meta_nav.html" %}
+                </ul>
+            </section>
+        </nav>
+    </section>
+     <!-- nav bar for small screens with off canvas menu-->
+    <section class="hide-for-large-up">
+        <nav class="tab-bar">
+            {% include "widgets/offcanvas_nav.html" %}
+        </nav>
+    </section>
     {% if settings.READ_ONLY_MODE_ENABLED %}
     <div class="row system-messages">
         {{ settings.READ_ONLY_MESSAGE }}

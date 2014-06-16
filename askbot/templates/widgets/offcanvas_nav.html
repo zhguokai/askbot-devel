@@ -1,0 +1,19 @@
+<section class="title-area">
+    {% if settings.SHOW_LOGO %}
+    {% include "widgets/logo.html" %}
+    {% else%}
+    <a href="{% url questions %}">
+        {{settings.APP_SHORT_NAME}}
+    </a>
+    {% endif %}
+</section>
+<section class="right-small">
+    <a class="right-off-canvas-toggle menu-icon" href="#"><span></span></a>
+</section>
+<aside class="right-off-canvas-menu">
+    <ul class="off-canvas-list">
+        {% include "widgets/user_navigation.html" %}
+      {% include "widgets/meta_nav.html" %}
+    </ul>
+</aside>
+
