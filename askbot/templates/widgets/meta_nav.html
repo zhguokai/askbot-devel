@@ -9,7 +9,7 @@
 
 {% if settings.GROUPS_ENABLED %}
 <li>
-  <a id="navGroups" {% if active_tab=='groups' %} class="on"{% endif %} href="{% url groups %}" data-dropdown="groups-dropdown" data-options="is_hover:true">
+    <a id="navGroups" {% if active_tab=='groups' %} class="on"{% endif %} href="{% url groups %}" data-dropdown="groups-dropdown" data-options="is_hover:true">
     <i class="fa fa-users fa-lg"></i>
     {% trans %}people & groups{% endtrans %}
     <div class="f-dropdown">
@@ -19,7 +19,7 @@
 {%else%}
 <li>
     <a id="navUsers" href="{% url users %}" {% if active_tab=='users' %}class="on"{% endif %}>
-    <i class="fa fa-user fa-lg"></i>
+    <i class="fa fa-users fa-lg"></i>
     {% trans %}users{% endtrans %}</a>
 </li>
 {% endif %}

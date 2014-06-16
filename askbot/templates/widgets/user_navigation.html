@@ -1,11 +1,13 @@
 {%- if request.user.is_authenticated() -%}
-<li><a id="user-id" href="{{ request.user.get_absolute_url() }}">{{ request.user.username|escape }}</a>
+<li>
+  <a id="user-id" href="{{ request.user.get_absolute_url() }}">
+    <i class="fa fa-user fa-lg" ></i>
+    {{ request.user.username|escape }}
+  </a>
   <span class="user-info">
     {{ macros.inbox_link(request.user) }}
     {{ macros.moderation_items_link(request.user, moderation_items) }}
-    {%-
-    if settings.KARMA_MODE != 'hidden' or settings.BADGES_MODE != 'hidden' 
-    -%}
+    {%- if settings.KARMA_MODE != 'hidden' or settings.BADGES_MODE != 'hidden' -%}
     ({{ macros.user_long_score_and_badge_summary(
     user,
     karma_mode=settings.KARMA_MODE,
@@ -19,7 +21,10 @@
 {% if settings.USE_ASKBOT_LOGIN_SYSTEM %}
 <li class="divider"></li>
 <li>
-  <a href="{{ settings.LOGOUT_URL }}?next={{ settings.LOGOUT_REDIRECT_URL }}">{% trans %}sign out{% endtrans %}</a>
+  <a href="{{ settings.LOGOUT_URL }}?next={{ settings.LOGOUT_REDIRECT_URL }}">
+  <i class="fa fa-sign-out fa-lg" ></i>
+    {% trans %}sign out{% endtrans %}
+  </a>
 </li>
 {% endif %}
 {% elif settings.USE_ASKBOT_LOGIN_SYSTEM %}
@@ -31,15 +36,26 @@
 {% if request.user.is_authenticated() and request.user.is_administrator() %}
 <li class="divider"></li>
 <li>
-  <a class="settings" href="{% url site_settings %}">{% trans %}settings{% endtrans %}</a>
+  <a class="settings" href="{% url site_settings %}">
+  <i class="fa fa-cogs fa-lg" ></i>
+  {% trans %}settings{% endtrans %}
+</a>
 </li>
 <li class="divider"></li>
 <li>
-  <a class="widgets" href="{% url widgets %}">{% trans %}widgets{% endtrans %}</a>
+  <a class="widgets" href="{% url widgets %}">
+    <i class="fa fa-cubes fa-lg" ></i>
+    {% trans %}widgets{% endtrans %}
+  </a>
+  
 </li>
 {% endif %}
 <li class="divider"></li>
 <li>
-  <a class="help" href="{% url "help" %}" title="{% trans %}help{% endtrans %}">{% trans %}help{% endtrans %}</a>
+  <a class="help" href="{% url "help" %}" title="{% trans %}help{% endtrans %}">
+    <i class="fa fa-question fa-lg" ></i>
+    {% trans %}help{% endtrans %}
+  </a>
 </li>
 <li class="divider"></li>
+
