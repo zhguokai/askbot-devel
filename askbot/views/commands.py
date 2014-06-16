@@ -1047,7 +1047,11 @@ def edit_group_membership(request):
         if action == 'add':
             try:
                 group = models.Group.objects.get(name=group_name)
-                request.user.edit_group_membership(user, group, 'add')
+                force = False
+                if request.user.is_administrator_or_moderator():
+                    # Don't make the user have to moderate a request, just do the action
+                    force = True
+                request.user.edit_group_membership(user, group, 'add', force=force)
                 template = get_template('widgets/group_snippet.html')
                 return {
                     'name': group.name,

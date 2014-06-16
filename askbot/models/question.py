@@ -1127,7 +1127,7 @@ class Thread(models.Model):
                                         *order_by
                                     ).values_list('id', flat=True)
 
-            published_answer_ids = reversed(published_answer_ids)
+            published_answer_ids = published_answer_ids.reverse()
             #now put those answers first
             answer_map = dict([(answer.id, answer) for answer in answers])
             for answer_id in published_answer_ids:
