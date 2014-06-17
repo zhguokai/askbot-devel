@@ -838,7 +838,7 @@ def change_password(request):
         data['message'] = _('Your new password is saved')
     else:
         data['errors'] = form.errors
-    return HttpResponse(simplejson.dumps(data), mimetype='application/json')
+    return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
 @login_required
 def delete_login_method(request):

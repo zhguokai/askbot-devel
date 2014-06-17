@@ -543,6 +543,20 @@ def user_get_or_create_fake_user(self, username, email):
         user.save()
     return user
 
+def get_or_create_anonymous_user():
+    """returns fake anonymous user"""
+    username = get_name_of_anonymous_user()
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        user = User()
+        user.username = username
+        user.email = askbot_settings.ANONYMOUS_USER_EMAIL
+        user.is_fake = True
+        user.set_unusable_password()
+        user.save()
+    return user
+
 def user_notify_users(
     self, notification_type=None, recipients=None, content_object=None
 ):
