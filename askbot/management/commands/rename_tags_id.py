@@ -8,8 +8,10 @@ also, corresponding questions are retagged
 import re
 import sys
 from optparse import make_option
+from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.utils import translation
 from askbot import const, models
 from askbot.utils import console
 from askbot.management.commands.rename_tags import get_admin
@@ -84,6 +86,7 @@ rename_tags, but using tag id's
     def handle(self, *args, **options):
         """command handle function. retrieves tags by id
         """
+        translation.activate(django_settings.LANGUAGE_CODE)
         try:
             from_tag_ids = parse_tag_ids(options['from'])
             to_tag_ids = parse_tag_ids(options['to'])
@@ -101,6 +104,14 @@ rename_tags, but using tag id's
 
         from_tags = get_tags_by_ids(from_tag_ids)
         to_tags = get_tags_by_ids(to_tag_ids)
+
+        #all tags must belong to the same language
+        lang_codes = {tag.language_code for tag in (from_tags + to_tags)}
+        if len(lang_codes) != 1:
+            langs = ', '.join(lang_codes)
+            raise CommandError('all tags must belong to the same language, have: %s' % langs)
+        lang = list(lang_codes).pop()
+
         admin = get_admin(options['user_id'])
 
         questions = models.Thread.objects.all()
@@ -142,7 +153,10 @@ or repost a bug, if that does not help"""
         #if user provided tag1 as to_tag, and tagsynonym tag1->tag2 exists.
         for to_tag_name in to_tag_names:
             try:
-               tag_synonym =  models.TagSynonym.objects.get(source_tag_name = to_tag_name)
+               tag_synonym =  models.TagSynonym.objects.get(
+                                                source_tag_name=to_tag_name,
+                                                language_code=lang
+                                            )
                raise CommandError(u'You gave %s as --to argument, but TagSynonym: %s -> %s exists, probably you want to provide %s as --to argument' % (to_tag_name, tag_synonym.source_tag_name, tag_synonym.target_tag_name, tag_synonym.target_tag_name))
             except models.TagSynonym.DoesNotExist:
                 pass
@@ -161,6 +175,7 @@ or repost a bug, if that does not help"""
                 tags = u' '.join(tag_names),
                 #silent = True #do we want to timestamp activity on question
             )
+            question.invalidate_cached_thread_content_fragment()
             i += 1
             sys.stdout.write('%6.2f%%' % (100*float(i)/float(question_count)))
             sys.stdout.write('\b'*7)
@@ -191,4 +206,7 @@ or repost a bug, if that does not help"""
         # we want to update tagsynonym (tag1->tag2) to (tag1->tag3)
         for from_tag_name in from_tag_names:
             # we need db_index for target_tag_name as well for this
-            models.TagSynonym.objects.filter(target_tag_name = from_tag_name).update(target_tag_name = to_tag_name) 
+            models.TagSynonym.objects.filter(
+                                target_tag_name=from_tag_name,
+                                language_code=lang
+                            ).update(target_tag_name = to_tag_name) 

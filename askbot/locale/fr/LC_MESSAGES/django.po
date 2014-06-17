@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Alban Tiberghien <alban.tiberghien@gmail.com>, 2012
+# noirbizarre <noirbizarre@gmail.com>, 2013
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 # Christophe kryskool <christophe.chauvet@gmail.com>, 2011-2013
 # Emmanuel <emmanuel@raviart.com>, 2013
 # evgeny <evgeny.fadeev@gmail.com>, 2009
-# fbureau <francois.bureau@cloudwatt.com>, 2013
+# François Bureau <francois.bureau@cloudwatt.com>, 2013
 # florent <fpam1108@gmail.com>, 2012
 # florent <fpam1108@gmail.com>, 2012
-# fbureau <francois.bureau@cloudwatt.com>, 2013
+# François Bureau <francois.bureau@cloudwatt.com>, 2013
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 msgid ""
@@ -19,8 +20,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-08-10 20:34+0000\n"
-"Last-Translator: Emmanuel <emmanuel@raviart.com>\n"
+"PO-Revision-Date: 2013-09-27 13:14+0000\n"
+"Last-Translator: noirbizarre <noirbizarre@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/askbot/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -603,7 +604,7 @@ msgstr "Veuillez utiliser des espaces pour séparer les entrées, ne pas utilise
 
 #: conf/badges.py:13
 msgid "Badge settings"
-msgstr "Réglages des médailles"
+msgstr "Réglages des badges"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
@@ -1109,7 +1110,7 @@ msgstr "Complètement ouvert par défaut"
 
 #: conf/forum_data_rules.py:124
 msgid "Folded by default"
-msgstr ""
+msgstr "Replié par défaut"
 
 #: conf/forum_data_rules.py:133
 msgid "Question details/body editor should be"
@@ -1342,7 +1343,7 @@ msgstr ""
 
 #: conf/karma_and_badges_visibility.py:12
 msgid "Karma & Badge visibility"
-msgstr "Visibilité de l'aura et des médailles "
+msgstr "Visibilité de l'aura et des badges "
 
 #: conf/karma_and_badges_visibility.py:27
 msgid "Visibility of karma"
@@ -1354,11 +1355,11 @@ msgstr "L'aura d'un utilisateur peut être montrée, soit publiquement, soit uni
 
 #: conf/karma_and_badges_visibility.py:44
 msgid "Visibility of badges"
-msgstr "Visibilité des médailles"
+msgstr "Visibilité des badges"
 
 #: conf/karma_and_badges_visibility.py:47
 msgid "Badges can be either publicly shown or completely hidden"
-msgstr "Les médailles peuvent être soit montrées publiquement, soit complètement cachées"
+msgstr "Les badges peuvent être soit montrées publiquement, soit complètement cachées"
 
 #: conf/ldap.py:9
 msgid "LDAP login configuration"
@@ -1815,7 +1816,7 @@ msgstr "Activer le sélecteur \"Toutes les questions\""
 #: conf/question_lists.py:21 conf/question_lists.py:31
 #: conf/question_lists.py:41
 msgid "At least one of these selectors must be enabled"
-msgstr ""
+msgstr "Au moins un de ces sélecteurs doit être activé"
 
 #: conf/question_lists.py:30
 msgid "Enable \"Unanswered Questions\" selector"
@@ -1976,7 +1977,7 @@ msgstr "Identification utilisateur"
 
 #: conf/sidebar_profile.py:20
 msgid "Custom sidebar"
-msgstr ""
+msgstr "Barre latérale personnalisée"
 
 #: conf/sidebar_question.py:11
 msgid "Question page banners and sidebar"
@@ -2051,7 +2052,7 @@ msgid ""
 "values, more suitable for the larger communities, <strong>WARNING:</strong> "
 "your current values for Minimum reputation, Badge Settings and Vote Rules "
 "will be changed after you modify this setting."
-msgstr "Le mode \"grand site\" augmente les seuils de réputation et de certaines médailles à des valeurs mieux adaptées à des communautés plus grandes. <strong>AVERTISSEMENT :</strong> les valeurs actuelles de la réputation minimum, des réglages des médailles et des règles de vote seront changées après que vous ayez modifié ce réglage."
+msgstr "Le mode \"grand site\" augmente les seuils de réputation et de certaines badges à des valeurs mieux adaptées à des communautés plus grandes. <strong>AVERTISSEMENT :</strong> les valeurs actuelles de la réputation minimum, des réglages des badges et des règles de vote seront changées après que vous ayez modifié ce réglage."
 
 #: conf/site_settings.py:14
 msgid "URLS, keywords & greetings"
@@ -2428,7 +2429,7 @@ msgstr "Clé Akismet pour activer la détection du spam"
 
 #: conf/super_groups.py:5
 msgid "Reputation, Badges, Votes & Flags"
-msgstr "Réputation, médailles, votes et marqueurs"
+msgstr "Réputation, badges, votes et marqueurs"
 
 #: conf/super_groups.py:6
 msgid "Static Content, URLS & UI"
@@ -2727,7 +2728,7 @@ msgstr "réponse modifiée"
 
 #: const/__init__.py:201
 msgid "received badge"
-msgstr "médaille reçue"
+msgstr "badge reçue"
 
 #: const/__init__.py:202
 msgid "marked best answer"
@@ -3467,7 +3468,7 @@ msgstr "Veuillez vous connecter pour utiliser %s"
 
 #: models/__init__.py:569 models/__init__.py:1388 views/writers.py:226
 msgid "Sorry, but you have only read access"
-msgstr ""
+msgstr "Désolé, mais vous n'avez q'un accès en lecture seule"
 
 #: models/__init__.py:573
 msgid "Sorry, this operation is not allowed"
@@ -3852,22 +3853,22 @@ msgstr "%(username)s a une aura de %(reputation)s"
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
-msgstr[0] "une médaille d'or"
-msgstr[1] "%(count)d médailles d'or"
+msgstr[0] "un badge d'or"
+msgstr[1] "%(count)d badges d'or"
 
 #: models/__init__.py:2515
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
-msgstr[0] "une médaille d'argent"
-msgstr[1] "%(count)d médailles d'argent"
+msgstr[0] "un badge d'argent"
+msgstr[1] "%(count)d badges d'argent"
 
 #: models/__init__.py:2522
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
-msgstr[0] "une médaille de bronze"
-msgstr[1] "%(count)d médailles de bronze"
+msgstr[0] "un badge de bronze"
+msgstr[1] "%(count)d badges de bronze"
 
 #: models/__init__.py:2533
 #, python-format
@@ -3930,7 +3931,7 @@ msgstr "\"%(title)s\""
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
-msgstr "Félicitations, vous avez reçu une médaille '%(badge_name)s'. Consultez <a href=\"%(user_profile)s\">votre profil</a>."
+msgstr "Félicitations, vous avez reçu un badge '%(badge_name)s'. Consultez <a href=\"%(user_profile)s\">votre profil</a>."
 
 #: models/__init__.py:3657
 #, python-format
@@ -4571,12 +4572,12 @@ msgstr "%(name)s"
 
 #: templates/badge.html:5
 msgid "Badge"
-msgstr "Médaille"
+msgstr "Badge"
 
 #: templates/badge.html:7
 #, python-format
 msgid "Badge \"%(name)s\""
-msgstr "Médaille \"%(name)s\""
+msgstr "Badge \"%(name)s\""
 
 #: templates/badge.html:9 templates/user_profile/user_recent.html:16
 #: templates/user_profile/user_stats.html:71
@@ -4587,12 +4588,12 @@ msgstr "%(description)s"
 #: templates/badge.html:14
 msgid "user received this badge:"
 msgid_plural "users received this badge:"
-msgstr[0] "utilisateur a reçu cette médaille :"
-msgstr[1] "utilisateurs ont reçu cette médaille :"
+msgstr[0] "utilisateur a reçu ce badge :"
+msgstr[1] "utilisateurs ont reçu ce badge :"
 
 #: templates/badges.html:3 templates/badges.html.py:5
 msgid "Badges"
-msgstr "Médailles"
+msgstr "Badges"
 
 #: templates/badges.html:7
 msgid "Community gives you awards for your questions, answers and votes."
@@ -4602,11 +4603,11 @@ msgstr "La communauté récompense vos questions, vos réponses et vos votes en 
 msgid ""
 "Below is the list of available badges and number of times each type of badge"
 " has been awarded."
-msgstr "Ci-dessous figure la liste des médailles existantes et le nombre de fois où elles ont été décernées."
+msgstr "Ci-dessous figure la liste des badges existants et le nombre de fois où elles ont été décernées."
 
 #: templates/badges.html:31
 msgid "Community badges"
-msgstr "Niveaux de médailles"
+msgstr "Niveaux de badges"
 
 #: templates/badges.html:33
 msgid "gold badge: the highest honor and is very rare"
@@ -4616,7 +4617,7 @@ msgstr "badge en or: le plus haute distinction et est très rare"
 msgid ""
 "Gold badge is the highest award in this community. To obtain it you have to show \n"
 "profound knowledge and ability in addition to your active participation."
-msgstr "La médaille d'or est la plus haute distinction dans cette communauté. Pour l'obtenir, vous devez montrer une profonde connaissance et de grandes capacités en plus de votre participation active."
+msgstr "Le badge d'or est la plus haute distinction dans cette communauté. Pour l'obtenir, vous devez montrer une profonde connaissance et de grandes capacités en plus de votre participation active."
 
 #: templates/badges.html:42 templates/badges.html.py:46
 msgid ""
@@ -4625,7 +4626,7 @@ msgstr "badge en argent: occasionnellement donné pour des contributions de trè
 
 #: templates/badges.html:49 templates/badges.html.py:53
 msgid "bronze badge: often given as a special honor"
-msgstr "médaille de bronze : souvent donnée en tant qu'honneur spécial"
+msgstr "badge de bronze : souvent donnée en tant qu'honneur spécial"
 
 #: templates/base.html:23
 #, python-format
@@ -5173,7 +5174,7 @@ msgstr "Voir les questions marquées par '%(tag)s'."
 
 #: templates/macros.html:395
 msgid "Comments"
-msgstr ""
+msgstr "Commentaires"
 
 #: templates/macros.html:430
 msgid "delete this comment"
@@ -5274,7 +5275,7 @@ msgstr "voir plus de commentaires"
 
 #: templates/question.html:232 templates/question.html.py:335
 msgid "add a comment"
-msgstr ""
+msgstr "ajouter un commentaire"
 
 #: templates/question.html:245 templates/question/content.html:46
 msgid "Answer Your Own Question"
@@ -5918,15 +5919,15 @@ msgstr ""
 #: templates/email/delayed_email_alert.html:2
 #, python-format
 msgid "Dear %(name)s,"
-msgstr ""
+msgstr "Cher %(name)s,"
 
 #: templates/email/delayed_email_alert.html:3
 #, python-format
 msgid "The following question has been updated %(site_name)s:"
 msgid_plural ""
 "The following %(num)s questions have been updated on %(site_name)s:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "La question suivante a été mise à jour %(site_name)s:"
+msgstr[1] "Les %(num)s questions suivantes ont été mises à jour sur %(site_name)s:"
 
 #: templates/email/feedback_email.txt:2
 #, python-format
@@ -6041,8 +6042,8 @@ msgid_plural ""
 "\n"
 "                %(count)s comments:\n"
 "            "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\n%(count)s commentaire:"
+msgstr[1] "\n%(count)s commentaires:"
 
 #: templates/email/re_welcome_lamson_on.html:2
 #: templates/email/re_welcome_lamson_on.html:3
@@ -6532,7 +6533,7 @@ msgstr "Votre réponse"
 
 #: templates/question/new_answer_form.html:22
 msgid "Be the first one to answer this question!"
-msgstr "Soyez le premier à répondre à cette quesion !"
+msgstr "Soyez le premier à répondre à cette question !"
 
 #: templates/question/new_answer_form.html:28
 msgid ""
@@ -7215,7 +7216,7 @@ msgstr[1] "<span class=\"count\">%(counter)s</span> Mots-clés"
 msgid "<span class=\"count\">%(counter)s</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
 msgstr[0] "<span class=\"count\">%(counter)s</span> Badge"
-msgstr[1] "<span class=\"count\">%(counter)s</span> Médailles"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Badges"
 
 #: templates/user_profile/user_stats.html:85
 msgid "Answer to:"
@@ -7481,7 +7482,7 @@ msgstr "Communauté"
 
 #: templates/widgets/meta_nav.html:27
 msgid "badges"
-msgstr "médailles"
+msgstr "badges"
 
 #: templates/widgets/question_edit_tips.html:5
 msgid "ask a question interesting to this community"
@@ -7543,11 +7544,11 @@ msgstr ""
 
 #: templates/widgets/tag_selector.html:59
 msgid "Show only questions from"
-msgstr ""
+msgstr "Ne montrer que les questions de"
 
 #: templates/widgets/tag_selector.html:70
 msgid "Send me email alerts for"
-msgstr ""
+msgstr "Envoyez-moi des alertes par email pour"
 
 #: templates/widgets/tag_selector.html:86
 msgid "Change frequency of emails"
@@ -7580,7 +7581,7 @@ msgstr "aura :"
 
 #: templates/widgets/user_long_score_and_badge_summary.html:15
 msgid "badges:"
-msgstr "médailles :"
+msgstr "badges :"
 
 #: templates/widgets/user_navigation.html:17
 msgid "sign out"
@@ -7684,7 +7685,7 @@ msgstr "veuillez utiliser au moins quelques caractères alphabétiques dans le n
 
 #: utils/forms.py:110
 msgid "symbol \"@\" is not allowed"
-msgstr ""
+msgstr "symbole \"@\" non autorisé"
 
 #: utils/forms.py:222
 msgid "Your email <i>(never shared)</i>"
@@ -7704,7 +7705,7 @@ msgstr "Cette adresse email est déjà utilisée par un autre utilisateur; veuil
 
 #: utils/forms.py:227
 msgid "this email address is not authorized"
-msgstr ""
+msgstr "cette adresse email n'est pas autorisée"
 
 #: utils/forms.py:265
 msgid "password is required"
@@ -7825,7 +7826,7 @@ msgstr "Veuillez vous inscrire pour supprimer/récupérer une publication"
 #: views/commands.py:1042
 #, python-format
 msgid "Group %(name)s does not exist"
-msgstr ""
+msgstr "Le groupe %(name)s n'existe pas"
 
 #: views/commands.py:1408 views/commands.py:1441
 msgid "Sorry, looks like sharing request was invalid"
@@ -7920,7 +7921,7 @@ msgstr ""
 
 #: views/users.py:739
 msgid "private messages"
-msgstr ""
+msgstr "messages privés"
 
 #: views/users.py:740
 msgid "profile - messages"

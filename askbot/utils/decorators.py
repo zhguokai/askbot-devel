@@ -43,7 +43,7 @@ def ajax_login_required(view_func):
             return view_func(request, *args, **kwargs)
         else:
             json = simplejson.dumps({'login_required':True})
-            return HttpResponseForbidden(json, mimetype='application/json')
+            return HttpResponseForbidden(json, content_type='application/json')
     return wrap
 
 
@@ -108,7 +108,7 @@ def ajax_only(view_func):
                 'message': message,
                 'success': 0
             }
-            return HttpResponse(simplejson.dumps(data), mimetype='application/json')
+            return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
         if isinstance(data, HttpResponse):#is this used?
             data.mimetype = 'application/json'
@@ -116,7 +116,7 @@ def ajax_only(view_func):
         else:
             data['success'] = 1
             json = simplejson.dumps(data)
-            return HttpResponse(json, mimetype='application/json')
+            return HttpResponse(json, content_type='application/json')
     return wrapper
 
 def check_authorization_to_post(func_or_message):

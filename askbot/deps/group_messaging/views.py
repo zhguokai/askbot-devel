@@ -45,7 +45,7 @@ class InboxView(object):
         template = get_template(template_name)
         html = template.render(context)
         json = simplejson.dumps({'html': html, 'success': True})
-        return HttpResponse(json, mimetype='application/json')
+        return HttpResponse(json, content_type='application/json')
             
 
     def get(self, request, *args, **kwargs):
@@ -120,7 +120,7 @@ class NewThread(InboxView):
                         )
             result['success'] = True
             result['message_id'] = message.id
-        return HttpResponse(simplejson.dumps(result), mimetype='application/json')
+        return HttpResponse(simplejson.dumps(result), content_type='application/json')
 
 
 class PostReply(InboxView):

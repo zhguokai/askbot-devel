@@ -49,7 +49,11 @@ class ConfigSettings(object):
         will be required in code to convert an app
         depending on django.conf.settings to askbot.deps.livesettings
         """
-        return getattr(self.__instance, key).value
+        hardcoded_setting = getattr(django_settings, 'ASKBOT_' + key, None)
+        if hardcoded_setting is None:
+            return getattr(self.__instance, key).value
+        else:
+            return hardcoded_setting
 
     def get_default(self, key):
         """return the defalut value for the setting"""
@@ -111,7 +115,7 @@ class ConfigSettings(object):
             self.__group_map[key] = group_key
 
     def as_dict(self):
-        cache_key = 'askbot-livesettings-' + str(django_settings.SITE_ID)
+        cache_key = get_bulk_cache_key()
         settings = cache.get(cache_key)
         if settings:
             return settings
@@ -126,13 +130,21 @@ class ConfigSettings(object):
         out = dict()
         for key in cls.__instance.keys():
             #todo: this is odd that I could not use self.__instance.items() mapping here
-            out[key] = cls.__instance[key].value
+            hardcoded_setting = getattr(django_settings, 'ASKBOT_' + key, None)
+            if hardcoded_setting is None:
+                out[key] = cls.__instance[key].value
+            else:
+                out[key] = hardcoded_setting
         cache.set(cache_key, out)
 
 
+def get_bulk_cache_key():
+    from askbot.utils.translation import get_language
+    return 'askbot-settings-%s-%d' % (get_language(), django_settings.SITE_ID)
+
+
 def prime_cache_handler(*args, **kwargs):
-    """signal handler priming the livesettings cache"""
-    cache_key = 'askbot-livesettings-' + str(django_settings.SITE_ID)
+    cache_key = get_bulk_cache_key()
     ConfigSettings.prime_cache(cache_key)
 
 signals.configuration_value_changed.connect(prime_cache_handler)

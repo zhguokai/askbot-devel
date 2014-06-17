@@ -1,8 +1,10 @@
 """utility functions used by Askbot test cases
 """
+from django.core.cache import cache
 from django.test import TestCase
 from functools import wraps
 from askbot import models
+from askbot.models import signals
 
 def with_settings(**settings_dict):
     """a decorator that will run function with settings
@@ -71,7 +73,6 @@ def create_user(
     if date_joined is not None:
         user.date_joined = date_joined
         user.save()
-    user.set_status(status)
     if notification_schedule == None:
         notification_schedule = models.EmailFeedSetting.NO_EMAIL_SCHEDULE
 
@@ -86,6 +87,10 @@ def create_user(
                         subscriber = user
                     )
         feed.save()
+
+    signals.user_registered.send(None, user=user)
+    user.set_status(status)
+
     return user
 
 
@@ -93,6 +98,10 @@ class AskbotTestCase(TestCase):
     """adds some askbot-specific methods
     to django TestCase class
     """
+
+    @classmethod
+    def setUpClass(cls):
+        cache.clear()
 
     def create_user(
                 self,
@@ -281,7 +290,7 @@ class AskbotTestCase(TestCase):
             except models.User.DoesNotExist:
                 user = self.create_user('tag_creator')
 
-        tag = models.Tag(created_by = user, name = tag_name)
+        tag = models.Tag(created_by=user, name=tag_name, language_code='en')
         tag.save()
         return tag
 

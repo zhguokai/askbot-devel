@@ -1,9 +1,9 @@
 {% extends "one_column_body.html" %}
 <!-- template close.html -->
-{% block title %}{% spaceless %}{% trans %}Close question{% endtrans %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{{ settings.WORDS_CLOSE_QUESTION|escape }}{% endspaceless %}{% endblock %}
 {% block content %}
-<h1>{% trans %}Close question{% endtrans %}</h1>
-    <p>{% trans %}Close the question{% endtrans %}: <a href="{{ question.get_absolute_url() }}">
+<h1>{{ settings.WORDS_CLOSE_QUESTION|escape }}</h1>
+    <p>{{ settings.WORDS_CLOSE_QUESTION|escape }}: <a href="{{ question.get_absolute_url() }}">
     <strong>{{ question.get_question_title()|escape }}</strong></a>
     </p>
     <form id="fmclose" action="{% url close question.id %}" method="post" >{% csrf_token %}
@@ -12,8 +12,8 @@
             {{ form.reason }}
         </p>
         <p>
-        <input type="submit" value="{% trans %}OK to close{% endtrans %}" class="submit" />&nbsp;
-        <input id="btBack" type="button" class="submit" value="{% trans %}Cancel{% endtrans %}"  />
+        <input type="submit" value="{% trans %}OK to close{% endtrans %}"/>
+        <input id="btBack" type="button" value="{% trans %}Cancel{% endtrans %}"/>
         </p>
     </form>
 {% endblock %}

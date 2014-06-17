@@ -198,6 +198,9 @@ h1 {
 /* ----- Extra space above for messages ----- */
 body.user-messages {
   margin-top: 2.4em;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 /* ----- Custom positions ----- */
 .left {
@@ -326,6 +329,9 @@ body.user-messages {
   color: #707070;
   background: white;
   display: block;
+}
+.select-language {
+  margin-top: 6px;
 }
 #userToolsNav {
   /* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
@@ -460,11 +466,21 @@ body.user-messages {
   border-top: #fcfcfc 1px solid;
   margin-bottom: 10px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+#secondaryHeader td {
+  padding: 0;
+}
+#secondaryHeader td.search-bar {
+  padding: 0 32px 0 15px;
+  position: relative;
 }
 #homeButton {
   border-right: #afaf9e 1px solid;
   background: -6px -36px url(../images/sprites.png) no-repeat;
-  height: 55px;
+  height: 54px;
   width: 43px;
   display: block;
   float: left;
@@ -473,8 +489,7 @@ body.user-messages {
   background: -51px -36px url(../images/sprites.png) no-repeat;
 }
 .scope-selector {
-  display: block;
-  float: left;
+  display: inline-block;
   font-size: 20px;
   color: #7a7a6b;
   height: 55px;
@@ -482,7 +497,7 @@ body.user-messages {
   margin-left: 16px;
 }
 .scope-selector.on {
-  background: url(../images/scopearrow.png) no-repeat center bottom;
+  background: url(../images/scopearrow.png) no-repeat center 41px;
 }
 .scope-selector.ask-message {
   font-size: 24px;
@@ -505,12 +520,12 @@ body.user-messages {
 #searchBar {
   /* Main search form , check widgets/search_bar.html */
 
-  display: block;
-  background-color: #fff;
   border: 1px solid #c9c9b5;
+  background: white;
   height: 41px;
   z-index: 1000;
   position: relative;
+  width: 100%;
   /* the guts are absolute-positioned */
 
 }
@@ -570,17 +585,20 @@ body.user-messages {
 }
 .search-drop-menu {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   background: whitesmoke;
-  border: 1px solid #c9c9b5;
   border-top: none;
+  top: 42px;
   margin: 0;
-  position: relative;
+  outline: 1px solid #dadad4;
+  position: absolute;
   z-index: 10000;
 }
 .search-drop-menu ul {
   list-style: none;
   overflow: auto;
-  padding: 0 0 10px 0;
+  padding: 0;
   margin: 0;
   position: relative;
   width: 100%;
@@ -598,12 +616,13 @@ body.user-messages {
 .search-drop-menu ul li.selected a {
   color: whitesmoke;
 }
-.search-drop-menu ul.empty {
-  margin-bottom: 0;
-}
 .search-drop-menu .footer {
   text-align: center;
-  padding: 9px 0 10px 0;
+  margin: 0 0 1px 0;
+  padding: 4px 0 10px 0;
+}
+.search-drop-menu.empty .footer {
+  padding-top: 9px;
 }
 .search-drop-menu.empty ul {
   padding: 1px;
@@ -623,7 +642,7 @@ input[type="submit"].searchBtn {
   border: #FFF 1px solid;
   line-height: 22px;
   text-align: center;
-  margin: 1px 0 0 0;
+  margin: 0;
   width: 48px;
   background: -98px -37px url(../images/sprites.png) no-repeat;
   border-radius: 0;
@@ -652,13 +671,21 @@ input[type="submit"].searchBtn {
   color: white;
   height: 0;
   z-index: 0;
+  position: absolute;
+  left: -1000px;
+  /* hide away */
+
+}
+.ask-page .search-drop-menu {
+  top: 37px;
 }
 .ask-page .search-drop-menu.empty {
   border: none;
-  padding: 0;
+  outline: none;
+  padding: 0 !important;
 }
 .ask-page .search-drop-menu.empty ul {
-  padding: 0;
+  padding: 0 !important;
 }
 input[type="submit"].searchBtn:hover {
   background-image: none;
@@ -801,73 +828,23 @@ form.ajax-file-upload img.spinner {
   font-size: 20px;
   height: 42px;
   line-height: 44px;
-  margin: 6px 0 0 0;
+  margin: -1px 0 0 0;
   text-transform: uppercase;
   width: 200px;
   /* to match width of sidebar */
 
 }
-/* 
-    Put the secondary navigation together:
-    1) raise the search bar by 55px
-    2) add padding to fit the buttons
-*/
-#searchBar {
-  margin: 0 228px 0 327px;
-  width: auto;
-  margin-top: -49px;
-  padding: 0 49px 0 8px;
-}
-/* line up drop menu the same way as the search bar */
 .search-drop-menu {
-  margin: 0 228px 0 327px;
-  width: auto;
+  width: 100%;
 }
 .ask-page .search-drop-menu,
 body.anon.ask-page .search-drop-menu {
-  margin: -9px 0 10px;
+  padding: 5px 10px 6px 0;
 }
 #scopeNav {
-  height: 41px;
-  float: left;
-  width: 280px;
-}
-.scopes-True-True-False #searchBar,
-.scopes-True-True-False .search-drop-menu {
-  margin-left: 228px;
-}
-.scopes-True-True-False #scopeNav {
-  width: 180px;
-}
-.scopes-True-False-True #searchBar,
-.scopes-True-False-True .search-drop-menu {
-  margin-left: 203px;
-}
-.scopes-True-False-True #scopeNav {
-  width: 150px;
-}
-.scopes-False-True-True #searchBar,
-.scopes-False-True-True .search-drop-menu {
-  margin-left: 286px;
-}
-.scopes-False-True-True #scopeNav {
-  width: 238px;
-}
-.scopes-True-False-False #searchBar,
-.scopes-False-True-False #searchBar,
-.scopes-False-False-True #searchBar,
-.scopes-False-False-False #searchBar,
-.scopes-True-False-False .search-drop-menu,
-.scopes-False-True-False .search-drop-menu,
-.scopes-False-False-True .search-drop-menu,
-.scopes-False-False-False .search-drop-menu {
-  margin-left: 52px;
-}
-.scopes-True-False-False #scopeNav,
-.scopes-False-True-False #scopeNav,
-.scopes-False-False-True #scopeNav,
-.scopes-False-False-False #scopeNav {
-  width: 0;
+  height: 54px;
+  display: inline-block;
+  white-space: nowrap;
 }
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
 #ContentLeft {
@@ -1078,7 +1055,7 @@ body.anon.ask-page .search-drop-menu {
   -webkit-box-shadow: 1px 1px 3px #999999;
   -moz-box-shadow: 1px 1px 3px #999999;
   box-shadow: 1px 1px 3px #999999;
-  padding: 7px 10px 1px 10px;
+  padding: 7px 10px 9px 0;
   margin-bottom: 10px;
   width: 100%;
 }
@@ -1171,7 +1148,7 @@ body.anon.ask-page .search-drop-menu {
   width: 52px;
   padding-left: 2px;
   padding-top: 3px;
-  background: #ffffff url(../images/feed-icon-small.png) no-repeat center right;
+  background: url(../images/feed-icon-small.png) no-repeat center right;
   float: right;
   font-family: Georgia, serif;
   font-size: 16px;
@@ -1199,7 +1176,8 @@ body.anon.ask-page .search-drop-menu {
 ul#searchTags {
   margin-left: 10px;
   float: right;
-  padding-top: 2px;
+  padding: 8px 6px 0px 6px;
+  min-width: 43px;
 }
 .search-tips {
   font-size: 16px;
@@ -1374,31 +1352,34 @@ ul#searchTags {
 .paginator a {
   color: #7ea9b3;
 }
-.paginator .prev {
-  margin-right: .5em;
-}
+.paginator .prev,
 .paginator .next {
-  margin-left: .5em;
+  margin-right: .5em;
 }
 .paginator .page a,
 .paginator .page a:visited,
 .paginator .curr {
-  padding: .25em;
-  background-color: #fff;
-  margin: 0em .25em;
-  color: #ff;
+  padding: 0 .25em;
+  margin: 0em .15em 0 0;
 }
 .paginator .curr {
-  background-color: #8ebcc7;
+  /*background-color: #8ebcc7;*/
+
   color: #fff;
   font-weight: bold;
 }
-.paginator .next a,
-.paginator .prev a {
-  color: #7ea9b3;
+.paginator .curr a {
+  background: #8ebcc7;
+  color: white;
+  /*padding: 0;*/
+
+}
+.paginator .curr.page a:hover {
+  background: #8ebcc7;
+  color: white;
+  padding: 0 0.25em;
 }
 .paginator .page a:hover,
-.paginator .curr a:hover,
 .paginator .prev a:hover,
 .paginator .next a:hover {
   color: #8C8C8C;
@@ -1504,7 +1485,7 @@ ul#related-tags li {
   background: #f3f6f6;
   border: #fff 1px solid ;
   border-top: #fff 2px solid;
-  outline: #cfdbdb 1px solid;
+  outline: #cfdbdb 1px solid !important;
   /* .box-shadow(0px,1px,0px,#88a8a8);*/
 
   display: block;
@@ -1632,6 +1613,13 @@ ul#related-tags li {
 .delete-icon:hover {
   background: #b32f2f;
 }
+.expander .wait-icon-box {
+  display: inline-block;
+  margin: 0;
+}
+.snippet:hover .expander a {
+  text-decoration: underline;
+}
 .tag-number {
   font-weight: normal;
   float: left;
@@ -1659,6 +1647,7 @@ ul#related-tags li {
   padding: 4px 0 0 0;
   margin-top: 0px;
   width: 100%;
+  position: relative;
 }
 #askFormBar p {
   margin: 0 0 5px 0;
@@ -1747,7 +1736,11 @@ ul#related-tags li {
 }
 .ask-page .lang-selector,
 .edit-question-page .lang-selector {
-  margin: 1px 0 0 5px;
+  margin: 9px 0 0 0;
+}
+.ask-page .lang-selector select,
+.edit-question-page .lang-selector select {
+  margin: 3px 0;
 }
 .ask-page #id_post_author_username,
 .question-page #id_post_author_username,
@@ -2112,6 +2105,7 @@ ul#related-tags li {
   font-family: Arial;
   color: #4b4b4b;
   word-wrap: break-word;
+  max-width: 683px;
 }
 .question-page .post-body a {
   color: #1b79bd;
@@ -2142,7 +2136,7 @@ ul#related-tags li {
   float: right;
   font-size: 9px;
   font-family: Arial;
-  line-height: 13px;
+  line-height: 12px;
   margin: 0px 0px 5px 5px;
   padding: 4px;
   width: 166px;
@@ -2363,6 +2357,9 @@ ul#related-tags li {
 .question-page .comments {
   font-size: 12px;
   clear: both;
+}
+.question-page .comments .truncated-post:nth-last-child(3) {
+  float: left;
 }
 .question-page .comments div.controls {
   width: 100%;
@@ -2781,6 +2778,24 @@ ul#related-tags li {
   background-position: -52px 0px;
 }
 /* -----Content pages, Login, About, FAQ, Users----- */
+.openid-signin input[type="text"],
+.openid-signin input[type="password"] {
+  color: #525252;
+  font-size: 12px;
+  line-height: 25px;
+  height: 25px;
+  margin: 0px;
+  padding: 0 5px;
+  width: 200px;
+}
+.registration-page .login input[type="text"] {
+  height: 22px;
+  font-size: 12px;
+  line-height: 22px;
+  color: #525252;
+  padding: 0 5px;
+  width: 200px;
+}
 .openid-signin,
 .meta,
 .user-profile-edit-page {
@@ -2805,24 +2820,20 @@ ul#related-tags li {
   padding-left: 0px;
   font-size: 16px;
 }
-.openid-signin form,
 .meta form,
 .users-page form,
 .user-profile-edit-page form,
 .user-profile-page form {
   margin-bottom: 15px;
 }
-.openid-signin input[type="text"],
 .meta input[type="text"],
 .users-page input[type="text"],
 .user-profile-edit-page input[type="text"],
 .user-profile-page input[type="text"],
-.openid-signin input[type="password"],
 .meta input[type="password"],
 .users-page input[type="password"],
 .user-profile-edit-page input[type="password"],
 .user-profile-page input[type="password"],
-.openid-signin select,
 .meta select,
 .users-page select,
 .user-profile-edit-page select,
@@ -2833,7 +2844,6 @@ ul#related-tags li {
   width: 395px;
   font-size: 14px;
 }
-.openid-signin select,
 .meta select,
 .users-page select,
 .user-profile-edit-page select,
@@ -2841,7 +2851,6 @@ ul#related-tags li {
   width: 405px;
   height: 30px;
 }
-.openid-signin textarea,
 .meta textarea,
 .users-page textarea,
 .user-profile-edit-page textarea,
@@ -2851,7 +2860,6 @@ ul#related-tags li {
   width: 395px;
   font-size: 14px;
 }
-.openid-signin input.submit,
 .meta input.submit,
 .users-page input.submit,
 .user-profile-edit-page input.submit,
@@ -2859,7 +2867,6 @@ ul#related-tags li {
   font-weight: normal;
   margin: 5px 0px;
 }
-.openid-signin .cancel,
 .meta .cancel,
 .users-page .cancel,
 .user-profile-edit-page .cancel,
@@ -2867,14 +2874,12 @@ ul#related-tags li {
   background: url(../images/small-button-cancel.png) repeat-x top !important;
   color: #525252 !important;
 }
-.openid-signin .cancel:hover,
 .meta .cancel:hover,
 .users-page .cancel:hover,
 .user-profile-edit-page .cancel:hover,
 .user-profile-page .cancel:hover {
   background: url(../images/small-button-cancel.png) repeat-x bottom !important;
 }
-.openid-signin .re,
 .meta .re,
 .users-page .re,
 .user-profile-edit-page .re,
@@ -2906,12 +2911,10 @@ ul#related-tags li {
 .openid-signin form {
   margin-bottom: 5px;
 }
-#email-input-fs input[type="text"],
 #local_login_buttons input[type="text"],
 #password-fs input[type="text"],
 #openid-fs input[type="text"],
 #signup-form input[type="text"],
-#email-input-fs input[type="password"],
 #local_login_buttons input[type="password"],
 #password-fs input[type="password"],
 #openid-fs input[type="password"],
@@ -3030,9 +3033,25 @@ a:hover.medal {
   border: #eee 1px solid;
   padding: 5px;
 }
+.user-profile-page form {
+  margin-bottom: 0;
+}
 .user-profile-page h2 {
-  padding: 10px 0px 10px 0px;
+  padding: 4px 0px 10px 0px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
+}
+.user-profile-page h3 {
+  padding: 0;
+  margin-top: -3px;
+}
+.user-profile-page .submit-row {
+  margin-bottom: 0;
+}
+.user-profile-page .user-stats-table h2 {
+  padding-top: 10px;
+}
+.user-profile-page .user-stats-table.badges {
+  margin-bottom: 30px;
 }
 .user-profile-page .up-votes,
 .user-profile-page .down-votes {
@@ -3054,8 +3073,27 @@ a:hover.medal {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.user-profile-page select {
-  margin-bottom: 12px;
+.user-profile-page .pager {
+  margin-bottom: 0;
+}
+.user-profile-page .paginator {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.user-profile-page .users-questions {
+  margin-top: -10px;
+}
+.user-profile-page .avatar p {
+  margin-bottom: 0px;
+}
+.user-profile-page .tabBar a#stats {
+  margin-left: 0;
+}
+.user-profile-page img.gravatar {
+  margin: 2px 0 3px 0;
+}
+.user-profile-page .vote-notification h3 {
+  padding: 10px;
 }
 .user-details {
   font-size: 13px;
@@ -3577,6 +3615,14 @@ a.offensive {
 .message p {
   margin-bottom: 0px;
 }
+.system-messages {
+  color: red;
+  background: yellow;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 25px;
+  padding: 0 5px;
+}
 p.space-above {
   margin-top: 10px;
 }
@@ -3779,8 +3825,9 @@ ul.post-retag {
 }
 ul.post-retag input {
   width: 400px;
-  height: 1.5em;
-  margin: 3px 0 0 -3px;
+  height: 22px;
+  margin: 3px 0 0 -5px;
+  padding: 0 5px;
 }
 #question-controls .tags {
   margin: 0 0 3px 0;
@@ -3872,25 +3919,6 @@ p.signup_p {
 .avatar-page li {
   display: inline;
 }
-.user-profile-page .avatar p {
-  margin-bottom: 0px;
-}
-.user-profile-page .tabBar a#stats {
-  margin-left: 0;
-}
-.user-profile-page img.gravatar {
-  margin: 2px 0 3px 0;
-}
-.user-profile-page h3 {
-  padding: 0;
-  margin-top: -3px;
-}
-.user-profile-page .vote-notification h3 {
-  padding: 10px;
-}
-.user-profile-page ul.tags {
-  margin-left: 5px;
-}
 .userList {
   font-size: 13px;
 }
@@ -3910,7 +3938,7 @@ p.signup_p {
 }
 .user-card .avatar-box {
   float: left;
-  margin: 3px 6px 0 0;
+  margin: 0px 6px 0 2px;
 }
 .user-card .info {
   height: 32px;
@@ -4056,6 +4084,9 @@ a.primary-group-name {
   color: #990E08;
   font-weight: bold;
 }
+.post-update-info .user-info {
+  margin-top: -2px;
+}
 .users-page .wmd-prompt-dialog {
   background: #ccc;
 }
@@ -4191,30 +4222,34 @@ textarea.tipped-input {
 }
 /* tag editor */
 .tag-editor {
-  height: 64px;
-  border: #ccc 3px solid;
-  padding-left: 8px;
+  height: 32px;
+  border: #cce6ec 3px solid;
+  padding-left: 6px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 .tag-editor ul.tags {
   margin: 0;
 }
 .tag-editor ul.tags li {
-  margin-top: 8px;
+  margin-top: 6px;
   height: 13px;
 }
 .tag-editor input.new-tags-input,
 .tag-editor input.new-tags-input:focus {
   border: none;
-  font-size: 15px;
+  box-shadow: none;
+  font-size: 14px;
   font-color: #707070;
   height: 16px;
   line-height: 16px;
-  margin-top: 9px;
+  margin: 9px 0 0 -6px;
   -webkit-box-shadow: none;
   /* undo bootstrap glow */
 
   -moz-box-shadow: none;
-  box-shadow: none;
+  padding: 0 0 0 6px;
 }
 /* fixes for bootstrap */
 .caret {
@@ -4352,6 +4387,10 @@ td.setting-input textarea {
   -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
   -o-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+#recaptcha_area,
+#recaptcha_table {
+  line-height: 0!important;
 }
 .acInput {
   width: 200px;
@@ -4568,16 +4607,25 @@ td.setting-input textarea {
   .short-summary:first-child {
     padding-top: 0;
   }
-  #searchBar,
-  body.anon #searchBar {
-    margin: -49px 8px 0 52px;
-  }
-  .search-drop-menu,
-  body.anon .search-drop-menu {
-    margin: 0 8px 0 52px;
-  }
   .short-summary {
     width: 100%;
+  }
+  #secondaryHeader td.search-bar {
+    padding: 0 6px;
+  }
+}
+@media screen and (max-width: 540px) {
+  .question-page .post-controls {
+    float: left;
+    margin-left: -8px;
+    padding-left: 0;
+    text-align: left;
+  }
+  .question-page .post-controls .question-close {
+    display: none;
+  }
+  .question-page div.comments.empty {
+    margin-top: 0;
   }
 }
 @media screen and (max-width: 480px) {
@@ -4599,6 +4647,15 @@ td.setting-input textarea {
     width: 100%;
   }
 }
+@media screen and (max-width: 380px) {
+  .wmd-button-bar .wmd-hr-button,
+  .wmd-button-bar .wmd-heading-button {
+    display: none;
+  }
+  .editor-status {
+    margin-right: 0;
+  }
+}
 @media screen and (max-width: 338px) {
   #scopeNav {
     display: none;
@@ -4613,6 +4670,9 @@ td.setting-input textarea {
   .edit-answer-page #id_post_author_email {
     width: 100%;
     margin: 6px 0;
+  }
+  .question-page .post-controls .offensive-flag {
+    display: none;
   }
 }
 /* language-specific fixes */
@@ -4684,39 +4744,12 @@ body.lang-zh-tw.question-page a.submit,
 body.lang-zh_TW.question-page a.submit {
   line-height: 30px !important;
 }
-body.lang-zh .scopes-True-True-False #searchBar,
-body.lang-zh_CN .scopes-True-True-False #searchBar,
-body.lang-zh-cn .scopes-True-True-False #searchBar,
-body.lang-zh-tw .scopes-True-True-False #searchBar,
-body.lang-zh_TW .scopes-True-True-False #searchBar,
-body.lang-zh .scopes-True-True-False .search-drop-menu,
-body.lang-zh_CN .scopes-True-True-False .search-drop-menu,
-body.lang-zh-cn .scopes-True-True-False .search-drop-menu,
-body.lang-zh-tw .scopes-True-True-False .search-drop-menu,
-body.lang-zh_TW .scopes-True-True-False .search-drop-menu {
-  margin-left: 194px;
-}
-body.lang-zh .scopes-True-True-True #searchBar,
-body.lang-zh_CN .scopes-True-True-True #searchBar,
-body.lang-zh-cn .scopes-True-True-True #searchBar,
-body.lang-zh-tw .scopes-True-True-True #searchBar,
-body.lang-zh_TW .scopes-True-True-True #searchBar,
-body.lang-zh .scopes-True-True-True .search-drop-menu,
-body.lang-zh_CN .scopes-True-True-True .search-drop-menu,
-body.lang-zh-cn .scopes-True-True-True .search-drop-menu,
-body.lang-zh-tw .scopes-True-True-True .search-drop-menu,
-body.lang-zh_TW .scopes-True-True-True .search-drop-menu {
-  margin-left: 274px;
-}
 body.lang-hu .scope-selector {
   font-size: 17px;
   margin-left: 10px;
 }
-body.lang-hu .scopes-True-True-False #scopeNav {
-  width: 200px;
-}
-body.lang-hu .scopes-True-True-False #searchBar,
-body.lang-hu .scopes-True-True-False .search-drop-menu {
+body.lang-hu #searchBar,
+body.lang-hu .search-drop-menu {
   margin-left: 252px;
 }
 body.lang-hu .box .inputs #interestingTagInput,
@@ -4745,33 +4778,8 @@ body.lang-es .short-summary .counts .views div,
 body.lang-es .short-summary .counts .votes div {
   font-size: 10px;
 }
-body.lang-es .scopes-True-True-False #scopeNav {
-  width: 187px;
-}
-body.lang-es .scopes-True-True-False #searchBar,
-body.lang-es .scopes-True-True-False .search-drop-menu {
-  margin-left: 250px;
-}
-body.lang-es .scopes-True-True-True #searchBar,
-body.lang-es .scopes-True-True-True .search-drop-menu {
-  margin-left: 327px;
-}
 body.lang-de .scope-selector {
   font-size: 17px;
-}
-body.lang-de .scopes-True-True-False #scopeNav {
-  width: 218px;
-}
-body.lang-de .scopes-True-True-False #searchBar,
-body.lang-de .scopes-True-True-False .search-drop-menu {
-  margin-left: 250px;
-}
-body.lang-de .scopes-True-True-True #scopeNav {
-  width: 354px;
-}
-body.lang-de .scopes-True-True-True #searchBar,
-body.lang-de .scopes-True-True-True .search-drop-menu {
-  margin-left: 354px;
 }
 body.lang-de #metaNav a {
   font-size: 16px;
@@ -4791,23 +4799,11 @@ body.lang-gl .box .inputs #subscribedTagInput,
 body.lang-gl .box .inputs #ab-tag-search {
   width: 127px;
 }
-body.lang-gl .scopes-True-True-True #searchBar,
-body.lang-gl .scopes-True-True-True .search-drop-menu {
-  margin-left: 299px;
-}
 body.lang-pt_BR .box .inputs #interestingTagInput,
 body.lang-pt_BR .box .inputs #ignoredTagInput,
 body.lang-pt_BR .box .inputs #subscribedTagInput,
 body.lang-pt_BR .box .inputs #ab-tag-search {
   width: 116px;
-}
-body.lang-pt_BR .scopes-True-True-False #searchBar,
-body.lang-pt_BR .scopes-True-True-False .search-drop-menu {
-  margin-left: 236px;
-}
-body.lang-fr .scopes-True-True-True #searchBar,
-body.lang-fr .scopes-True-True-True .search-drop-menu {
-  margin-left: 287px;
 }
 body.lang-fr .box .inputs #interestingTagInput,
 body.lang-fr .box .inputs #ignoredTagInput,
@@ -4824,33 +4820,14 @@ body.lang-fi #scopeNav {
 body.lang-fi .scope-selector {
   font-size: 17px;
 }
-body.lang-fi .scopes-True-True-True #searchBar,
-body.lang-fi .scopes-True-True-True .search-drop-menu {
-  margin-left: 371px;
-}
-body.lang-fi .scopes-True-True-False #searchBar,
-body.lang-fi .scopes-True-True-False .search-drop-menu {
-  margin-left: 268px;
-}
 body.lang-fi .box .inputs #interestingTagInput,
 body.lang-fi .box .inputs #ignoredTagInput,
 body.lang-fi .box .inputs #subscribedTagInput,
 body.lang-fi .box .inputs #ab-tag-search {
   width: 142px;
 }
-body.lang-ru #scopeNav {
-  width: 315px;
-}
 body.lang-ru .scope-selector {
   font-size: 17px;
-}
-body.lang-ru .scopes-True-True-True #searchBar,
-body.lang-ru .scopes-True-True-True .search-drop-menu {
-  margin-left: 326px;
-}
-body.lang-ru .scopes-True-True-False #searchBar,
-body.lang-ru .scopes-True-True-False .search-drop-menu {
-  margin-left: 227px;
 }
 body.lang-ru .box .inputs #interestingTagInput,
 body.lang-ru .box .inputs #ignoredTagInput,
@@ -4861,31 +4838,11 @@ body.lang-ru .box .inputs #ab-tag-search {
 body.lang-ko #scopeNav {
   width: 315px;
 }
-body.lang-ko .scopes-True-True-True #searchBar,
-body.lang-ko .scopes-True-True-True .search-drop-menu {
-  margin-left: 248px;
-}
-body.lang-ko .scopes-True-True-False #searchBar,
-body.lang-ko .scopes-True-True-False .search-drop-menu {
-  margin-left: 183px;
-}
 body.lang-ko .box .inputs #interestingTagInput,
 body.lang-ko .box .inputs #ignoredTagInput,
 body.lang-ko .box .inputs #subscribedTagInput,
 body.lang-ko .box .inputs #ab-tag-search {
   width: 144px;
-}
-body.lang-nb_NO .scopes-True-True-True #searchBar,
-body.lang-nb_NO .scopes-True-True-True #searchBar,
-body.lang-nb_NO .scopes-True-True-True .search-drop-menu,
-body.lang-nb_NO .scopes-True-True-True .search-drop-menu {
-  margin-left: 289px;
-}
-body.lang-nb_NO .scopes-True-True-False #searchBar,
-body.lang-nb_NO .scopes-True-True-False #searchBar,
-body.lang-nb_NO .scopes-True-True-False .search-drop-menu,
-body.lang-nb_NO .scopes-True-True-False .search-drop-menu {
-  margin-left: 220px;
 }
 body.lang-nb_NO .box .inputs #interestingTagInput,
 body.lang-nb_NO .box .inputs #interestingTagInput,

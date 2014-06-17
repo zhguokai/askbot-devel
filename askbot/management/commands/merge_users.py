@@ -16,11 +16,17 @@ class MergeUsersBaseCommand(BaseCommand):
 
     @transaction.commit_manually
     def handle(self, *arguments, **options):
-
         self.parse_arguments(*arguments)
         
         for rel in User._meta.get_all_related_objects():
-            self.process_field(rel.model, rel.field.name)
+            sid = transaction.savepoint()
+            try:
+                self.process_field(rel.model, rel.field.name)
+                transaction.savepoint_commit(sid)
+            except Exception, error:
+                self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
+                transaction.savepoint_rollback(sid)
+            transaction.commit()
 
         for rel in User._meta.get_all_related_many_to_many_objects():
             sid = transaction.savepoint()

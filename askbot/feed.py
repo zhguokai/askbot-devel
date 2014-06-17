@@ -32,7 +32,7 @@ class RssIndividualQuestionFeed(Feed):
 
     def title(self):
         return askbot_settings.APP_TITLE + _(' - ') + \
-                _('Individual question feed')
+                _('Individual %(question)s feed') % {'question': askbot_settings.WORDS_QUESTION_SINGULAR}
 
     def feed_copyright(self):
         return askbot_settings.APP_COPYRIGHT
@@ -85,13 +85,14 @@ class RssIndividualQuestionFeed(Feed):
     def item_title(self, item):
         """returns the title for the item
         """
-        title = item
         if item.is_question():
-            self.title = item
+            title = item.thread.title
         elif item.is_answer():
-            title = u"Answer by %s for %s " % (item.author, self.title)
+            title = u'Answer by %s for %s ' % (item.author, item.thread._question_post().summary)
         elif item.is_comment():
-            title = u"Comment by %s for %s" % (item.author, self.title)
+            title = u'Comment by %s for %s' % (item.author, item.parent.summary)
+        else:
+            title = unicode(item)
         return title
 
     def item_description(self, item):
@@ -106,7 +107,7 @@ class RssLastestQuestionsFeed(Feed):
 
     def title(self):
         return askbot_settings.APP_TITLE + _(' - ') + \
-                _('Individual question feed')
+                _('Latest %(question)s feed') % {'question': askbot_settings.WORDS_QUESTION_SINGULAR}
 
     def feed_copyright(self):
         return askbot_settings.APP_COPYRIGHT
@@ -143,6 +144,9 @@ class RssLastestQuestionsFeed(Feed):
         """
         return site_url(item.get_absolute_url(no_slug = True))
 
+    def item_title(self, item):
+        return item.thread.title
+
     def item_description(self, item):
         """returns the description for the item
         """
@@ -177,11 +181,3 @@ class RssLastestQuestionsFeed(Feed):
     def get_feed(self, obj, request):
         self.request = request
         return super(RssLastestQuestionsFeed, self).get_feed(obj, request)
-
-def main():
-    """main function for use as a script
-    """
-    pass
-
-if __name__ == '__main__':
-    main()

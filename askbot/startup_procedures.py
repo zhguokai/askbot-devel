@@ -14,7 +14,7 @@ import re
 import south
 import sys
 import urllib
-from django.db import transaction, connection
+from django.db import connection
 from django.conf import settings as django_settings
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
@@ -1054,20 +1054,14 @@ def run_startup_tests():
     if 'manage.py test' in ' '.join(sys.argv):
         test_settings_for_test_runner()
 
-@transaction.commit_manually
 def run():
-    """runs all the startup procedures"""
     try:
         if getattr(django_settings, 'ASKBOT_SELF_TEST', True):
             run_startup_tests()
     except AskbotConfigError, error:
-        transaction.rollback()
         print error
         sys.exit(1)
-    try:
-        from askbot.models import badges
-        badges.init_badges()
-        transaction.commit()
-    except Exception, error:
-        print error
-        transaction.rollback()
+    # close DB and cache connections to prevent issues in prefork mode
+    connection.close()
+    if hasattr(cache, 'close'):
+        cache.close()

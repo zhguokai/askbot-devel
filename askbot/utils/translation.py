@@ -1,3 +1,6 @@
+"""todo: move here all functions related to languages
+in other utils modules
+"""
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from django.utils import translation

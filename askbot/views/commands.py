@@ -27,6 +27,7 @@ from django.template.loader import get_template
 from django.views.decorators import csrf
 from django.utils import simplejson
 from django.utils.html import escape
+from django.utils import translation
 from django.utils.translation import ugettext as _
 from django.utils.translation import string_concat
 from askbot.utils.slug import slugify
@@ -132,7 +133,7 @@ def manage_inbox(request):
 
                     response_data['success'] = True
                     data = simplejson.dumps(response_data)
-                    return HttpResponse(data, mimetype="application/json")
+                    return HttpResponse(data, content_type="application/json")
                 else:
                     raise exceptions.PermissionDenied(
                         _('Sorry, but anonymous users cannot access the inbox')
@@ -149,7 +150,7 @@ def manage_inbox(request):
         response_data['message'] = message
         response_data['success'] = False
         data = simplejson.dumps(response_data)
-        return HttpResponse(data, mimetype="application/json")
+        return HttpResponse(data, content_type="application/json")
 
 
 def process_vote(user = None, vote_direction = None, post = None):
@@ -289,9 +290,10 @@ def vote(request):
 
             else:
                 raise exceptions.PermissionDenied(
-                        _('Sorry, but anonymous users cannot accept answers')
-                    )
-
+                    _('Sorry, but anonymous users cannot %(perform_action)s') % {
+                        'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER
+                    }
+                )
         elif vote_type in ('1', '2', '5', '6'):#Q&A up/down votes
 
             ###############################
@@ -382,14 +384,17 @@ def vote(request):
             question = get_object_or_404(models.Post, post_type__endswith='question', id=id)
             vote_type = request.POST.get('type')
 
-            #accept answer
             if vote_type == '4':
+                #follow question
                 fave = request.user.toggle_favorite_question(question)
                 response_data['count'] = models.FavoriteQuestion.objects.filter(thread = question.thread).count()
                 if fave == False:
                     response_data['status'] = 1
 
             elif vote_type == '11':#subscribe q updates
+                #todo: this branch is not used anymore
+                #now we just follow question, we don't have the
+                #separate "subscribe" function
                 user = request.user
                 if user.is_authenticated():
                     if user not in question.thread.followed_by.all():
@@ -436,7 +441,7 @@ def vote(request):
         response_data['message'] = unicode(e)
         response_data['success'] = 0
         data = simplejson.dumps(response_data)
-    return HttpResponse(data, mimetype="application/json")
+    return HttpResponse(data, content_type="application/json")
 
 #internally grouped views - used by the tagging system
 @csrf.csrf_exempt
@@ -474,12 +479,13 @@ def mark_tag(request, **kwargs):#tagging system
     for name in wildcards:
         if name in cleaned_wildcards:
             tag_usage_counts[name] = models.Tag.objects.filter(
-                                        name__startswith = name[:-1]
+                                        name__startswith = name[:-1],
+                                        language_code=translation.get_language()
                                     ).count()
         else:
             tag_usage_counts[name] = 0
 
-    return HttpResponse(simplejson.dumps(tag_usage_counts), mimetype="application/json")
+    return HttpResponse(simplejson.dumps(tag_usage_counts), content_type="application/json")
 
 #@decorators.ajax_only
 @decorators.get_only
@@ -513,7 +519,7 @@ def get_thread_shared_users(request):
         'users_count': users.count(),
         'success': True
     })
-    return HttpResponse(re_data, mimetype='application/json')
+    return HttpResponse(re_data, content_type='application/json')
 
 @decorators.get_only
 def get_thread_shared_groups(request):
@@ -529,7 +535,7 @@ def get_thread_shared_groups(request):
         'groups_count': groups.count(),
         'success': True
     })
-    return HttpResponse(re_data, mimetype='application/json')
+    return HttpResponse(re_data, content_type='application/json')
 
 @decorators.ajax_only
 def get_html_template(request):
@@ -552,7 +558,8 @@ def get_tag_list(request):
     """
     tag_filter = {
         'deleted': False,
-        'status': models.Tag.STATUS_ACCEPTED
+        'status': models.Tag.STATUS_ACCEPTED,
+        'language_code': translation.get_language()
     }
     tag_isolation = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
     if tag_isolation == 'per-site':
@@ -741,12 +748,14 @@ def create_bulk_tag_subscription(request):
             tag_names = form.cleaned_data['tags'].split(' ')
             user_list = form.cleaned_data.get('users')
             group_list = form.cleaned_data.get('groups')
+            lang = translation.get_language()
 
             bulk_subscription = models.BulkTagSubscription.objects.create(
                                                             tag_names=tag_names,
                                                             tag_author=request.user,
                                                             user_list=user_list,
-                                                            group_list=group_list
+                                                            group_list=group_list,
+                                                            language_code=lang
                                                         )
 
             return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
@@ -776,12 +785,20 @@ def edit_bulk_tag_subscription(request, pk):
                 group_ids = [user.id for user in form.cleaned_data['groups']]
                 bulk_subscription.groups.add(*group_ids)
 
-            tags, new_tag_names = get_tags_by_names(form.cleaned_data['tags'].split(' '))
+            lang = translation.get_language()
+
+            tags, new_tag_names = get_tags_by_names(
+                                        form.cleaned_data['tags'].split(' '),
+                                        language_code=lang
+                                    )
             tag_id_list = [tag.id for tag in tags]
 
             for new_tag_name in new_tag_names:
-                new_tag = models.Tag.objects.create(name=new_tag_name,
-                                             created_by=request.user)
+                new_tag = models.Tag.objects.create(
+                                        name=new_tag_name,
+                                        created_by=request.user,
+                                        language_code=lang
+                                    )
                 tag_id_list.append(new_tag.id)
 
             bulk_subscription.tags.add(*tag_id_list)
@@ -1010,7 +1027,7 @@ def delete_post(request):
 @csrf.csrf_exempt
 def read_message(request):#marks message a read
     if request.method == "POST":
-        if request.POST['formdata'] == 'required':
+        if request.POST.get('formdata') == 'required':
             request.session['message_silent'] = 1
             if request.user.is_authenticated():
                 request.user.delete_messages()
@@ -1258,13 +1275,21 @@ def moderate_suggested_tag(request):
         tag_id = form.cleaned_data['tag_id']
         thread_id = form.cleaned_data.get('thread_id', None)
 
+        lang = translation.get_language()
+
         try:
-            tag = models.Tag.objects.get(id=tag_id)#can tag not exist?
+            tag = models.Tag.objects.get(
+                                    id=tag_id,
+                                    language_code=lang
+                                )#can tag not exist?
         except models.Tag.DoesNotExist:
             return
 
         if thread_id:
-            threads = models.Thread.objects.filter(id=thread_id)
+            threads = models.Thread.objects.filter(
+                                            id=thread_id,
+                                            language_code=lang
+                                        )
         else:
             threads = tag.threads.none()
 
@@ -1521,7 +1546,7 @@ def get_editor(request):
         'scripts': parsed_scripts,
         'success': True
     }
-    return HttpResponse(simplejson.dumps(data), mimetype='application/json')
+    return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
 @csrf.csrf_exempt
 @decorators.ajax_only

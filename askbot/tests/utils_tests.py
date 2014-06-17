@@ -3,6 +3,7 @@ from askbot.tests.utils import with_settings
 from askbot.utils.url_utils import urls_equal
 from askbot.utils.html import absolutize_urls
 from askbot.utils.html import replace_links_with_text
+from askbot.utils.html import get_text_from_html
 from askbot.conf import settings as askbot_settings
 
 class UrlUtilsTests(TestCase):
@@ -101,4 +102,10 @@ class HTMLUtilsTests(TestCase):
         self.assertEqual(
             absolutize_urls(text, 'http://example.com/'),
             '<a href="http://example.com/upfiles/13487909784287052.png"><img src="http://example.com/upfiles/13487909942351405.png" style="max-width:500px;" alt="" /></a><img src="http://i2.cdn.turner.com/cnn/dam/assets/120927033530-ryder-cup-captains-wall-4-tease.jpg" alt="" width="160" height="90" border="0" />and some text<br />aouaosutoaehut'
+        )
+
+    def test_get_text_from_html(self):
+        self.assertEqual(
+            get_text_from_html('ataoesa uau <a>link</a>aueaotuosu ao <a href="http://cnn.com">CNN!</a>\nnaouaouuau<img> <img src="http://cnn.com/1.png"/> <img src="http://cnn.com/2.png" alt="sometext">'),
+            u'ataoesa uau linkaueaotuosu ao http://cnn.com (CNN!)\n\nnaouaouuau http://cnn.com/1.png http://cnn.com/2.png (sometext)'
         )

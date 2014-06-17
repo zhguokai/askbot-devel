@@ -6,7 +6,8 @@ Site modes settings:
 """
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import REP_AND_BADGES
-from askbot.deps.livesettings import ConfigurationGroup, BooleanValue
+from askbot.deps.livesettings import ConfigurationGroup
+from askbot.deps.livesettings import BooleanValue
 from django.utils.translation import ugettext_lazy as _
 
 LARGE_SITE_MODE_SETTINGS = {
@@ -20,9 +21,7 @@ LARGE_SITE_MODE_SETTINGS = {
     'MIN_REP_TO_DELETE_OTHERS_COMMENTS': 2000,
     'MIN_REP_TO_DELETE_OTHERS_POSTS': 5000,
     'MIN_REP_TO_UPLOAD_FILES': 60,
-    'MIN_REP_TO_CLOSE_OWN_QUESTIONS': 250,
     'MIN_REP_TO_RETAG_OTHERS_QUESTIONS': 500,
-    'MIN_REP_TO_REOPEN_OWN_QUESTIONS': 500,
     'MIN_REP_TO_EDIT_WIKI': 750,
     'MIN_REP_TO_EDIT_OTHERS_POSTS': 2000,
     'MIN_REP_TO_VIEW_OFFENSIVE_FLAGS': 2000,

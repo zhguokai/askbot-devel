@@ -162,6 +162,7 @@ SearchDropMenu.prototype.showWaitIcon = function() {
         this._footer.hide();
         this._element.addClass('empty');
     }
+    this._element.addClass('waiting');
 };
 
 SearchDropMenu.prototype.hideWaitIcon = function() {
@@ -170,6 +171,7 @@ SearchDropMenu.prototype.hideWaitIcon = function() {
         this._footer.show();
         this._element.removeClass('empty');
     }
+    this._element.removeClass('waiting');
 };
 
 SearchDropMenu.prototype.hideHeader = function() {
@@ -896,7 +898,7 @@ FullTextSearch.prototype.decorate = function(element) {
     dropMenu.setAskHandler(this.makeAskHandler());
     dropMenu.setAskButtonEnabled(this._askButtonEnabled);
     this._dropMenu = dropMenu;
-    element.parent().after(this._dropMenu.getElement());
+    element.parent().append(this._dropMenu.getElement());
 
     $(element).click(function(e) { return false });
     $(document).click(function() { dropMenu.reset(); });

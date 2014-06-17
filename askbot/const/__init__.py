@@ -7,6 +7,7 @@ text in this project, all unicode text go here.
 from django.utils.translation import ugettext_lazy as _
 import re
 
+#todo: customize words
 CLOSE_REASONS = (
     (1, _('duplicate question')),
     (2, _('question is off-topic or not relevant')),
@@ -122,6 +123,7 @@ DEFAULT_ANSWER_SORT_METHOD = 'votes'
 #of Q.run_advanced_search
 
 DEFAULT_POST_SORT_METHOD = 'activity-desc'
+#todo: customize words
 POST_SCOPE_LIST = (
     ('all', _('all')),
     ('unanswered', _('unanswered')),
@@ -136,6 +138,7 @@ TAG_LIST_FORMAT_CHOICES = (
 
 PAGE_SIZE_CHOICES = (('10', '10',), ('30', '30',), ('50', '50',),)
 ANSWERS_PAGE_SIZE = 10
+USER_POSTS_PAGE_SIZE = 10
 QUESTIONS_PER_PAGE_USER_CHOICES = ((10, u'10'), (30, u'30'), (50, u'50'),)
 
 UNANSWERED_QUESTION_MEANING_CHOICES = (
@@ -154,11 +157,16 @@ UNANSWERED_QUESTION_MEANING_CHOICES = (
 #to do full string match
 #IMPRTANT: tag related regexes must be portable between js and python
 TAG_CHARS = r'\w+.#-'
-TAG_REGEX_BARE = r'[%s]+' % TAG_CHARS
+TAG_FIRST_CHARS = r'\w'
+TAG_FORBIDDEN_FIRST_CHARS = r'#'
+TAG_REGEX_BARE = r'%s[%s]+' % (TAG_FIRST_CHARS, TAG_CHARS)
 TAG_REGEX = r'^%s$' % TAG_REGEX_BARE
-TAG_SPLIT_REGEX = r'[ ,]+'
+
+TAG_STRIP_CHARS = ', '
+TAG_SPLIT_REGEX = r'[%s]+' % TAG_STRIP_CHARS
 TAG_SEP = ',' # has to be valid TAG_SPLIT_REGEX char and MUST NOT be in const.TAG_CHARS
 #!!! see const.message_keys.TAG_WRONG_CHARS_MESSAGE
+
 EMAIL_REGEX = re.compile(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b', re.I)
 
 TYPE_ACTIVITY_ASK_QUESTION = 1
@@ -300,13 +308,6 @@ assert(
     == set(RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES.keys())
 )
 
-TYPE_RESPONSE = {
-    'QUESTION_ANSWERED' : _('answered question'),
-    'QUESTION_COMMENTED': _('commented question'),
-    'ANSWER_COMMENTED'  : _('commented answer'),
-    'ANSWER_ACCEPTED'   : _('accepted answer'),
-}
-
 POST_STATUS = {
     'closed': _('[closed]'),
     'deleted': _('[deleted]'),
@@ -432,12 +433,12 @@ AVATAR_STATUS_CHOICE = (
 SEARCH_ORDER_BY = (
                     ('-added_at', _('date descendant')),
                     ('added_at', _('date ascendant')),
-                    ('-last_activity_at', _('activity descendant')),
-                    ('last_activity_at', _('activity ascendant')),
-                    ('-answer_count', _('answers descendant')),
-                    ('answer_count', _('answers ascendant')),
-                    ('-points', _('votes descendant')),
-                    ('points', _('votes ascendant')),
+                    ('-last_activity_at', _('most recently active')),
+                    ('last_activity_at', _('least recently active')),
+                    ('-answer_count', _('more responses')),
+                    ('answer_count', _('fewer responses')),
+                    ('-points', _('more votes')),
+                    ('points', _('less votes')),
                   )
 
 DEFAULT_QUESTION_WIDGET_STYLE = """

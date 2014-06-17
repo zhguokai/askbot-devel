@@ -674,10 +674,10 @@ MessageCenter.prototype.hitThreadsList = function(url, senderId, requestMethod) 
                 me.setThreadsList(threads);
                 me.setState('show-list');
                 me.setLoadingStatus(false);
-            },
+            }
+        },
         error: function() {
                 me.setLoadingStatus(false);
-            }
         }
     });
     this.setLoadingStatus(true);

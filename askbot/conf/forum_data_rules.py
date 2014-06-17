@@ -186,12 +186,22 @@ settings.register(
         FORUM_DATA_RULES,
         'ALLOW_ASK_ANONYMOUSLY',
         default=True,
-        description=_('Allow asking questions anonymously'),
+        description=_('Allow logged in users ask anonymously'),
         help_text=_(
             'Users do not accrue reputation for anonymous questions '
             'and their identity is not revealed until they change their '
             'mind'
         )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ALLOW_ASK_UNREGISTERED',
+        default=False,
+        description=_('Allow asking without registration'),
+        help_text=_('Enabling ReCaptcha is recommended with this feature')
     )
 )
 

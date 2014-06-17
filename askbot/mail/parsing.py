@@ -19,8 +19,12 @@ QUOTE_REGEXES = (
     r'\nOn [^\n]* wrote:\Z',
     #GMAIL_SECOND_QUOTE_RE = 
     r'\n\d{4}/\d{1,2}/\d{1,2} [^\n]*\Z',
-    #OUTLOOK1_QUOTE_RE = 
-    r'\n-+Original Message-+\nFrom:.*?\nSent:.*?\nTo:.*?\nSubject:.*?\Z',
+    #BLACKBERRY
+    r'_+\nFrom:.*?\nSent:.*?\nTo:.*?\nSubject:.*?\Z',
+    #OUTLOOK1
+    r'\n-+[\w -]+\nFrom:.*?\nSent:.*?\nTo:.*?\nSubject:.*?\Z',
+    #unknown
+    r'\n-+[\w -]+\nFrom:.*?\nDate:.*?\nTo:.*?\nSubject:.*?\Z',
     #YAHOO_QUOTE_RE = 
     r'\n_+\n\s*From: [^\n]+\nTo: [^\n]+\nSent: [^\n]+\nSubject: [^\n]+\Z',
     #KMAIL_QUOTE_RE = 

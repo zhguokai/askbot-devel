@@ -100,8 +100,7 @@ class Command(Command):
 
         self.remove_signals()
         u = User.objects.create_superuser(username, email, password)
-        u.set_admin_status()
-        u.save()
+        u.set_status('d')
 
         if verbosity >= 1:
           self.stdout.write("Askbot Superuser created successfully.\n")

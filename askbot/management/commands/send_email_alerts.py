@@ -444,14 +444,23 @@ class Command(NoArgsCommand):
 
                 question_count = len(q_list.keys())
 
-                subject_line = ungettext(
-                    '%(question_count)d updated question about %(topics)s',
-                    '%(question_count)d updated questions about %(topics)s',
-                    question_count
-                ) % {
-                    'question_count': question_count,
-                    'topics': tag_summary
-                }
+                if tag_summary:
+                    subject_line = ungettext(
+                        '%(question_count)d update about %(topics)s',
+                        '%(question_count)d updates about %(topics)s',
+                        question_count
+                    ) % {
+                        'question_count': question_count,
+                        'topics': tag_summary
+                    }
+                else:
+                    subject_line = ungettext(
+                        '%(question_count)d update',
+                        '%(question_count)d updates',
+                        question_count
+                    ) % {
+                        'question_count': question_count,
+                    }
 
                 items_added = 0
                 items_unreported = 0
@@ -483,7 +492,7 @@ class Command(NoArgsCommand):
                     'name': user.username,
                     'admin_email': askbot_settings.ADMIN_EMAIL,
                     'site_name': askbot_settings.APP_SHORT_NAME,
-                    'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
+                    'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
                 })
 
                 if DEBUG_THIS_COMMAND == True:

@@ -45,7 +45,7 @@ class Migration(DataMigration):
             new_feed.save()
             verbose_frequency = unicode(dict(const.NOTIFICATION_DELIVERY_SCHEDULE_CHOICES)[frequency])
             print 'added \'%s\' subscription for %s (%d)' % (
-                                                            verbose_frequency, 
+                                                            unicode(verbose_frequency), 
                                                             unidecode(user.username), 
                                                             user.id
                                                         )

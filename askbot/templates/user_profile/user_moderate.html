@@ -17,7 +17,7 @@
         </table>
         <p id="id_user_status_info">
         </p>
-        <input type="submit" class="submit" name="change_status" value="{% trans %}Save{% endtrans %}" />
+        <input type="submit" name="change_status" value="{% trans %}Save{% endtrans %}" />
     </form>
 {% endif %}
 <h3>
@@ -35,8 +35,8 @@
     <table class="form-as-table">
     {{ change_user_reputation_form.as_table() }}
     </table>
-    <input type="submit" class="submit" name="subtract_reputation" value="{% trans %}Subtract{% endtrans %}" />&nbsp;
-    <input type="submit" class="submit" name="add_reputation" value="{% trans %}Add{% endtrans %}" />
+    <input type="submit" name="subtract_reputation" value="{% trans %}Subtract{% endtrans %}" />&nbsp;
+    <input type="submit" name="add_reputation" value="{% trans %}Add{% endtrans %}" />
 </form>
 {% if request.user != view_user %}
 <hr/>
@@ -61,7 +61,7 @@
     {% endif %}
     {{ send_message_form.body_text}}
     </div>
-    <input type="submit" class="submit" name="send_message" value="{% trans %}Send message{% endtrans %}" />
+    <input type="submit" name="send_message" value="{% trans %}Send message{% endtrans %}" />
 </form>
 {% endif %}
 {% endblock %}

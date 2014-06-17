@@ -93,15 +93,14 @@ class SearchState(object):
 
     @classmethod
     def get_empty(cls):
-        return cls(feed=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, user_logged_in=None)
+        return cls(feed=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
 
-    def __init__(
-        self, feed=None, scope='all', sort=None, query=None,
-        tags=None, author=None, page=1, user_logged_in=False
+    def __init__(self, 
+        feed=None, scope=None, sort=None, query=None, tags=None,
+        author=None, page=None, page_size=None, user_logged_in=False
     ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
         self.feed = feed
-
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:
                 self.scope = askbot_settings.DEFAULT_SCOPE_AUTHENTICATED
@@ -149,6 +148,9 @@ class SearchState(object):
         self.page = int(page) if page else 1
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
+
+        default_page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
+        self.page_size = int(page_size) if page_size else default_page_size
 
         self._questions_url = get_feed_url('questions', self.feed)
 

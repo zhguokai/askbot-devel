@@ -5,6 +5,7 @@ from django.template.loader import get_template
 from askbot import mail
 from askbot import models
 from askbot.tests import utils
+from askbot.utils.html import get_text_from_html
 
 class EmailParsingTests(utils.AskbotTestCase):
 
@@ -15,10 +16,6 @@ class EmailParsingTests(utils.AskbotTestCase):
         template = get_template(self.template_name)
         self.rendered_template = template.render(Context(self.context))
         self.expected_output = 'Welcome to askbot.com!\n\nImportant: Please reply to this message, without editing it. We need this to determine your email signature and that the email address is valid and was typed correctly.\n\nUntil we receive the response from you, you will not be able ask or answer questions on askbot.com by email.\n\nSincerely,askbot.com Administrator\n\nDwFwndQty'
-
-    def test_clean_email_body(self):
-        cleaned_body = mail.clean_html_email(self.rendered_template)
-        self.assertEqual(self.expected_output, cleaned_body)
 
     def test_gmail_rich_text_response_stripped(self):
         text = u'\n\nthis is my reply!\n\nOn Wed, Oct 31, 2012 at 1:45 AM, <kp@kp-dev.askbot.com> wrote:\n\n> **\n>            '
@@ -65,3 +62,26 @@ Subject: "One more test question from email."
 
 """
         self.assertEqual(mail.extract_reply(text), "some real text")
+
+    def test_blackberry(self):
+
+        text = """Lorem ipsum lorem ipsum
+blah blah blah
+
+some more text here
+
+Joe
+
+________________________________________
+From: forum@ask.askbot.com
+Sent: Thursday, August 15, 2013 1:58:21 AM
+To: Mister Joe
+Subject: Our forum: "some text in the subject line"
+"""
+        expected = """Lorem ipsum lorem ipsum
+blah blah blah
+
+some more text here
+
+Joe"""
+        self.assertEqual(mail.extract_reply(text), expected)

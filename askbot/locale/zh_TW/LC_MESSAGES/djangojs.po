@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# carl_tw, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-08-02 06:31+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-09-02 17:13+0000\n"
+"Last-Translator: carl_tw\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/askbot/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +78,7 @@ msgstr ""
 
 #: media/js/group_messaging.js:139
 msgid "Your message:"
-msgstr ""
+msgstr "您的訊息："
 
 #: media/js/group_messaging.js:152
 msgid "send"
@@ -90,7 +91,7 @@ msgstr "取消"
 
 #: media/js/group_messaging.js:227
 msgid "Reply"
-msgstr ""
+msgstr "回覆"
 
 #: media/js/group_messaging.js:236 media/js/group_messaging.js.c:743
 msgid "message sent"
@@ -316,7 +317,7 @@ msgstr "請輸入問題標題 (>10 個字元)"
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
-msgstr ""
+msgstr "很抱歉，您只擁有讀取權限"
 
 #: media/js/post.js:3075 media/js/post.js.c:3869 media/js/post.js.c:4058
 msgid "save"
@@ -351,7 +352,7 @@ msgstr[0] ""
 
 #: media/js/post.js:3799
 msgid "Delete category?"
-msgstr ""
+msgstr "是否刪除分類？"
 
 #: media/js/post.js:3888 media/js/utils.js:881
 msgid "edit"
@@ -379,15 +380,15 @@ msgstr ""
 
 #: media/js/post.js:4710
 msgid "Group name:"
-msgstr ""
+msgstr "群組名稱："
 
 #: media/js/post.js:4736
 msgid "Shared with the following users:"
-msgstr ""
+msgstr "與這些使用者共享："
 
 #: media/js/post.js:4742
 msgid "Shared with the following groups:"
-msgstr ""
+msgstr "與這些群組共享："
 
 #: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
@@ -410,7 +411,7 @@ msgstr[0] "是否要刪除這些通知？"
 #: media/js/user.js:66
 msgid "Close this entry?"
 msgid_plural "Close these entries?"
-msgstr[0] ""
+msgstr[0] "是否關閉這些項目？"
 
 #: media/js/user.js:74
 msgid "Remove all flags and approve this entry?"
@@ -419,23 +420,23 @@ msgstr[0] ""
 
 #: media/js/user.js:223
 msgid "Post deleted"
-msgstr ""
+msgstr "您的貼文已經刪除"
 
 #: media/js/user.js:225
 msgid "Post approved"
-msgstr ""
+msgstr "您的貼文已經恢復了！"
 
 #: media/js/user.js:246
 msgid "Accept"
-msgstr ""
+msgstr "接受"
 
 #: media/js/user.js:255
 msgid "Reject"
-msgstr ""
+msgstr "拒絕"
 
 #: media/js/user.js:270
 msgid "add new reject reason"
-msgstr ""
+msgstr "新增拒絕原因"
 
 #: media/js/user.js:375
 msgid "Looks there are some things to fix:"
@@ -478,11 +479,11 @@ msgstr "跟隨 %s"
 
 #: media/js/user.js:883
 msgid "add group"
-msgstr ""
+msgstr "加入群組"
 
 #: media/js/user.js:963
 msgid "add"
-msgstr ""
+msgstr "加入"
 
 #: media/js/utils.js:99
 msgid "and"
@@ -502,16 +503,16 @@ msgstr ""
 
 #: media/js/utils.js:958
 msgid "Ok"
-msgstr ""
+msgstr "確定"
 
 #: media/js/utils.js:959 media/js/utils.js.c:1407
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: media/js/utils.js:1219
 #, c-format
 msgid "Uploaded file: %s"
-msgstr ""
+msgstr "已上傳檔案：%s"
 
 #: media/js/utils.js:1234
 msgid "Choose a different image"
@@ -544,27 +545,27 @@ msgstr ""
 
 #: media/js/utils.js:1406
 msgid "Save"
-msgstr ""
+msgstr "儲存"
 
 #: media/js/utils.js:1478
 msgid "saved"
-msgstr ""
+msgstr "已儲存"
 
 #: media/js/utils.js:1602
 msgid "enabled"
-msgstr ""
+msgstr "已啟用"
 
 #: media/js/utils.js:1604
 msgid "disabled"
-msgstr ""
+msgstr "已停用"
 
 #: media/js/utils.js:2038
 msgid "group name"
-msgstr ""
+msgstr "群組名稱"
 
 #: media/js/utils.js:2046
 msgid "add new group"
-msgstr ""
+msgstr "加入新的群組"
 
 #: media/js/utils.js:2138
 msgid "Group %(name)s already exists. Group names are case-insensitive."
@@ -577,7 +578,7 @@ msgstr "查看標有「%s」的問題"
 
 #: media/js/utils.js:3358
 msgid "ago"
-msgstr ""
+msgstr "前"
 
 #: media/js/utils.js:3359
 msgid "from now"
@@ -585,48 +586,48 @@ msgstr ""
 
 #: media/js/utils.js:3361
 msgid "about a minute"
-msgstr ""
+msgstr "約一分鐘"
 
 #: media/js/utils.js:3362
 #, c-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d 分鐘"
 
 #: media/js/utils.js:3363
 msgid "about an hour"
-msgstr ""
+msgstr "約一個小時"
 
 #: media/js/utils.js:3364
 #, c-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d 小時"
 
 #: media/js/utils.js:3365 media/js/utils.js.c:3493
 msgid "yesterday"
-msgstr ""
+msgstr "昨天"
 
 #: media/js/utils.js:3366
 #, c-format
 msgid "%d days"
-msgstr ""
+msgstr "%d 天"
 
 #: media/js/utils.js:3367
 msgid "about a month"
-msgstr ""
+msgstr "約一個月"
 
 #: media/js/utils.js:3368
 #, c-format
 msgid "%d months"
-msgstr ""
+msgstr "%d 個月"
 
 #: media/js/utils.js:3369
 msgid "about a year"
-msgstr ""
+msgstr "約一年"
 
 #: media/js/utils.js:3370
 #, c-format
 msgid "%d years"
-msgstr ""
+msgstr "%d 年"
 
 #: media/js/utils.js:3468
 msgid "Jan"
@@ -678,23 +679,23 @@ msgstr ""
 
 #: media/js/utils.js:3491
 msgid "2 days ago"
-msgstr ""
+msgstr "2 天前"
 
 #: media/js/utils.js:3498
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
-msgstr[0] ""
+msgstr[0] "%s 小時前"
 
 #: media/js/utils.js:3508
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"
-msgstr[0] ""
+msgstr[0] "%s 分鐘前"
 
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:71
 msgid "Insert a file"
-msgstr ""
+msgstr "插入檔案"
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
 msgid "Insert image"

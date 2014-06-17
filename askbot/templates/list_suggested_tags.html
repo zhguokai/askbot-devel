@@ -11,7 +11,7 @@
                     <th class="tags-col">{% trans %}Tag{% endtrans %}</th>
                     <th class="users-col">{% trans %}Suggested by{% endtrans %}</th>
                     <th class="decision-col">{% trans %}Your decision{% endtrans %}</th>
-                    <th>{% trans %}Suggested tag was used for questions{% endtrans %}</th>
+                    <th>{% trans %}Where the tag was used{% endtrans %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,7 +35,7 @@
                                     <button class="reject">{% trans %}Reject{% endtrans %}</button>
                                 </td>
                                 <td class="thread-links-col">
-                                    <span>{% trans %}There are no questions with this tag yet{% endtrans %}</span>
+                                    <span>{% trans %}This tag has not yet been used{% endtrans %}</span>
                                 </td>
                             </tr>
                         {% else %}
@@ -46,8 +46,7 @@
                                         <button class="reject">{% trans %}Reject{% endtrans %}</button>
                                     </td>
                                     <td class="thread-links-col">
-                                        <a title="{{ thread._question_post().summary|escape }}"
-                                            href="{{ thread.get_absolute_url() }}"
+                                        <a href="{{ thread.get_absolute_url() }}"
                                         >{{ thread.title|escape }}</a>
                                     </td>
                                 </tr>
@@ -59,7 +58,7 @@
                 <tr class="per-tag-controls" data-tag-id="{{ tag.id }}">
                     <td colspan="4">
                         {% if tag.threads.count() > 1 %}
-                            <button class="accept">{% trans name=tag.name %}Apply tag "{{ name }}" to all above questions{% endtrans %}</button>
+                            <button class="accept">{% trans name=tag.name %}Apply tag "{{ name }}" to the above{% endtrans %}</button>
                             <button class="reject">{% trans %}Reject tag{% endtrans %}</button>
                         {% endif %}
                     </td>

@@ -13,6 +13,7 @@ from django.template import defaultfilters
 from django.core.urlresolvers import reverse, resolve
 from django.http import Http404
 from django.utils import simplejson
+from django.utils.text import truncate_html_words
 from askbot import exceptions as askbot_exceptions
 from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
@@ -22,6 +23,7 @@ from askbot.utils import functions
 from askbot.utils import url_utils
 from askbot.utils import markup
 from askbot.utils.slug import slugify
+from askbot.utils.pluralization import py_pluralize as _py_pluralize
 from askbot.shims.django_shims import ResolverMatch
 
 from django_countries import countries
@@ -95,6 +97,13 @@ def strip_path(url):
     return url_utils.strip_path(url)
 
 @register.filter
+def can_see_private_user_data(viewer, target):
+    if viewer.is_authenticated() and viewer.is_administrator_or_moderator():
+        #todo: take into account intersection of viewer and target user groups
+        return askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA 
+    return False
+
+@register.filter
 def clean_login_url(url):
     """pass through, unless user was originally on the logout page"""
     try:
@@ -120,6 +129,15 @@ def transurl(url):
     if getattr(django_settings, 'ASKBOT_TRANSLATE_URL', False):
         return urllib.quote(_(url).encode('utf-8'))
     return url
+
+@register.filter
+def truncate_html_post(post_html):
+    """truncates html if it is longer than 100 words"""
+    post_html = truncate_html_words(post_html, 5)
+    post_html = '<div class="truncated-post">' + post_html
+    post_html += '<span class="expander">(<a>' + _('more') + '</a>)</span>'
+    post_html += '<div class="clearfix"></div></div>'
+    return post_html
 
 @register.filter
 def country_display_name(country_code):
@@ -342,6 +360,10 @@ def humanize_counter(number):
     else:
         return str(number)
 
+@register.filter
+def py_pluralize(source, count):
+    plural_forms = source.strip().split('\n')
+    return _py_pluralize(plural_forms, count)
 
 @register.filter
 def absolute_value(number):

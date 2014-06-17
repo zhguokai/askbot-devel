@@ -27,6 +27,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
+from django.utils.translation import get_language
 from django.utils.translation import ugettext as _
 from django.utils import simplejson
 from django.utils.html import strip_tags as strip_all_tags
@@ -287,7 +288,6 @@ def user_moderate(request, subject, context):
         'active_tab': 'users',
         'page_class': 'user-profile-page',
         'tab_name': 'moderation',
-        'tab_description': _('moderate this user'),
         'page_title': _('moderate user'),
         'change_user_status_form': user_status_form,
         'change_user_reputation_form': user_rep_form,
@@ -401,7 +401,7 @@ def user_stats(request, user, context):
     #
     # Questions
     #
-    questions = user.posts.get_questions(
+    questions_qs = user.posts.get_questions(
                     user=request.user
                 ).filter(
                     **question_filter
@@ -409,38 +409,33 @@ def user_stats(request, user, context):
                     '-points', '-thread__last_activity_at'
                 ).select_related(
                     'thread', 'thread__last_activity_by'
-                )[:100]
+                )
 
-    #added this if to avoid another query if questions is less than 100
-    if len(questions) < 100:
-        question_count = len(questions)
-    else:
-        question_count = user.posts.get_questions().filter(**question_filter).count()
+    q_paginator = Paginator(questions_qs, const.USER_POSTS_PAGE_SIZE)
+    questions = q_paginator.page(1).object_list
+    question_count = q_paginator.count
 
+    q_paginator_context = functions.setup_paginator({
+                    'is_paginated' : (question_count > const.USER_POSTS_PAGE_SIZE),
+                    'pages': q_paginator.num_pages,
+                    'current_page_number': 1,
+                    'page_object': q_paginator.page(1),
+                    'base_url' : '?' #this paginator will be ajax
+                })
     #
     # Top answers
     #
-    answers_filter = {
-        'deleted': False,
-        'thread__posts__deleted': False,
-        'thread__posts__post_type': 'question',
-    }
-    if askbot_settings.SPACES_ENABLED:
-        answers_filter['thread__spaces__in'] = site_spaces
+    a_paginator = user.get_top_answers_paginator(request.user)
+    top_answers = a_paginator.page(1).object_list
+    top_answer_count = a_paginator.count
 
-    top_answers = user.posts.get_answers(
-        request.user
-    ).filter(
-        deleted=False,
-        thread__posts__deleted=False,
-        thread__posts__post_type='question',
-    ).select_related(
-        'thread'
-    ).order_by(
-        '-points', '-added_at'
-    )[:100]
-
-    top_answer_count = len(top_answers)
+    a_paginator_context = functions.setup_paginator({
+                    'is_paginated' : (top_answer_count > const.USER_POSTS_PAGE_SIZE),
+                    'pages': a_paginator.num_pages,
+                    'current_page_number': 1,
+                    'page_object': a_paginator.page(1),
+                    'base_url' : '?' #this paginator will be ajax
+                })
     #
     # Votes
     #
@@ -456,7 +451,10 @@ def user_stats(request, user, context):
     #       http://stackoverflow.com/questions/7973461/django-aggregation-does-excessive-group-by-clauses
     #       Fortunately it looks like it returns correct results for the test data
     tag_isolation = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
-    tag_filter = {'threads__posts__author': user}
+    tag_filter = {
+        'threads__posts__author': user,
+        'language_code': get_language()
+    }
     if tag_isolation == 'per-site':
         current_site = Site.objects.get_current()
         tag_filter['askbot_site_links__site'] = current_site
@@ -548,14 +546,16 @@ def user_stats(request, user, context):
         'page_class': 'user-profile-page',
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'tab_name' : 'stats',
-        'tab_description' : _('user profile'),
         'page_title' : _('user profile overview'),
         'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
         'question_count': question_count,
+        'q_paginator_context': q_paginator_context,
 
         'top_answers': top_answers,
         'top_answer_count': top_answer_count,
+        'a_paginator_context': a_paginator_context,
+        'page_size': const.USER_POSTS_PAGE_SIZE,
 
         'up_votes' : up_votes,
         'down_votes' : down_votes,
@@ -669,7 +669,6 @@ def user_recent(request, user, context):
         'active_tab': 'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'recent',
-        'tab_description' : _('recent user activity'),
         'page_title' : _('profile - recent activity'),
         'activities' : activities
     }
@@ -701,7 +700,6 @@ def show_group_join_requests(request, user, context):
         'inbox_section': 'group-join-requests',
         'page_class': 'user-profile-page',
         'tab_name' : 'join_requests',
-        'tab_description' : _('group joining requests'),
         'page_title' : _('profile - moderation'),
         'groups_dict': groups_dict,
         'join_requests': join_requests
@@ -758,7 +756,6 @@ def user_responses(request, user, context):
             'page_class': 'user-profile-page',
             'tab_name' : 'inbox',
             'inbox_section': section,
-            'tab_description' : _('private messages'),
             'page_title' : _('profile - messages')
         }
         context.update(data)
@@ -838,7 +835,6 @@ def user_responses(request, user, context):
         'page_class': 'user-profile-page',
         'tab_name' : 'inbox',
         'inbox_section': section,
-        'tab_description' : _('comments and answers to others questions'),
         'page_title' : _('profile - responses'),
         'post_reject_reasons': reject_reasons,
         'responses' : filtered_response_list,
@@ -880,7 +876,6 @@ def user_votes(request, user, context):
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'votes',
-        'tab_description' : _('user vote record'),
         'page_title' : _('profile - votes'),
         'votes' : votes[:const.USER_VIEW_DATA_SIZE]
     }
@@ -902,7 +897,6 @@ def user_reputation(request, user, context):
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name': 'reputation',
-        'tab_description': _('user karma'),
         'page_title': _("Profile - User's Karma"),
         'reputation': reputes,
         'reps': reps
@@ -912,7 +906,6 @@ def user_reputation(request, user, context):
 
 
 def user_favorites(request, user, context):
-
     question_filter = {
         'post_type': 'question',
         'thread__in': user.user_favorite_questions.values_list('thread', flat=True)
@@ -921,21 +914,35 @@ def user_favorites(request, user, context):
         site_spaces = models.Space.objects.get_for_site()
         question_filter['thread__spaces__in'] = site_spaces
 
-    questions = models.Post.objects.filter(
-                    **question_filter
-                ).select_related(
-                    'thread', 'thread__last_activity_by'
-                ).order_by(
-                    '-points', '-thread__last_activity_at'
-                )[:const.USER_VIEW_DATA_SIZE]
+    questions_qs = models.Post.objects.filter(
+                                **question_filter
+                            ).select_related(
+                                'thread', 'thread__last_activity_by'
+                            ).order_by(
+                                '-points', '-thread__last_activity_at'
+                            )[:const.USER_VIEW_DATA_SIZE]
+
+    q_paginator = Paginator(questions_qs, const.USER_POSTS_PAGE_SIZE)
+    questions = q_paginator.page(1).object_list
+    question_count = q_paginator.count
+
+    q_paginator_context = functions.setup_paginator({
+                    'is_paginated' : (question_count > const.USER_POSTS_PAGE_SIZE),
+                    'pages': q_paginator.num_pages,
+                    'current_page_number': 1,
+                    'page_object': q_paginator.page(1),
+                    'base_url' : '?' #this paginator will be ajax
+                })
 
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'favorites',
-        'tab_description' : _('users favorite questions'),
-        'page_title' : _('profile - favorite questions'),
+        'page_title' : _('profile - favorites'),
         'questions' : questions,
+        'q_paginator_context': q_paginator_context,
+        'question_count': question_count,
+        'page_size': const.USER_POSTS_PAGE_SIZE
     }
     context.update(data)
     return render(request, 'user_profile/user_favorites.html', context)
@@ -1004,7 +1011,6 @@ def user_email_subscriptions(request, user, context):
         'subscribed_tag_names': user.get_marked_tag_names('subscribed'),
         'page_class': 'user-profile-page',
         'tab_name': 'email_subscriptions',
-        'tab_description': _('email subscription settings'),
         'page_title': _('profile - email subscriptions'),
         'email_feeds_form': email_feeds_form,
         'tag_filter_selection_form': tag_filter_form,
@@ -1012,6 +1018,8 @@ def user_email_subscriptions(request, user, context):
         'user_languages': user.languages.split()
     }
     context.update(data)
+    #todo: really need only if subscribed tags are enabled
+    context.update(view_context.get_for_tag_editor())
     return render(
         request,
         'user_profile/user_email_subscriptions.html',
@@ -1094,6 +1102,7 @@ def user(request, id, slug=None, tab_name=None):
         tags=None,
         author=None,
         page=None,
+        page_size=const.USER_POSTS_PAGE_SIZE,
         user_logged_in=profile_owner.is_authenticated(),
     )
 
@@ -1107,17 +1116,6 @@ def user(request, id, slug=None, tab_name=None):
         context['custom_tab_name'] = CUSTOM_TAB['NAME']
         context['custom_tab_slug'] = CUSTOM_TAB['SLUG']
     return user_view_func(request, profile_owner, context)
-
-@csrf.csrf_exempt
-def update_has_custom_avatar(request):
-    """updates current avatar type data for the user
-    """
-    if request.is_ajax() and request.user.is_authenticated():
-        if request.user.avatar_type in ('n', 'g'):
-            request.user.update_avatar_type()
-            request.session['avatar_data_updated_at'] = datetime.datetime.now()
-            return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
-    return HttpResponseForbidden()
 
 def groups(request, id = None, slug = None):
     """output groups page

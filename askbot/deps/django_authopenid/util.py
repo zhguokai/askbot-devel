@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import cgi
+import httplib
 import urllib
 import urlparse
 import functools
@@ -35,9 +36,9 @@ except:
 import time, base64, hmac, hashlib, operator, logging
 from models import Association, Nonce
 
-__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response', 'clean_next']
+__all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response']
 
-ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'openid-direct', 'openid-username', 'wordpress')
+ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'oauth2', 'openid-direct', 'openid-username', 'wordpress')
 
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
@@ -182,7 +183,8 @@ def filter_enabled_providers(data):
     delete_list = list()
     for provider_key, provider_settings in data.items():
         name = provider_settings['name']
-        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name.upper() + '_ENABLED')
+        name_key = name.upper().replace('-', '_')
+        is_enabled = getattr(askbot_settings, 'SIGNIN_' + name_key + '_ENABLED')
         if is_enabled == False:
             delete_list.append(provider_key)
 
@@ -273,6 +275,15 @@ class LoginMethod(object):
             self.oauth_authorize_url = self.get_required_attr('OAUTH_AUTHORIZE_URL', for_what)
             self.oauth_get_user_id_function = self.get_required_attr('oauth_get_user_id_function', for_what)
 
+        if self.login_type == 'oauth2':
+            for_what = 'custom OAuth2 login'
+            self.auth_endpoint = self.get_required_attr('OAUTH_ENDPOINT', for_what)
+            self.token_endpoint = self.get_required_attr('OAUTH_TOKEN_ENDPOINT', for_what)
+            self.resource_endpoint = self.get_required_attr('OAUTH_RESOURCE_ENDPOINT', for_what)
+            self.oauth_get_user_id_function = self.get_required_attr('oauth_get_user_id_function', for_what)
+            self.response_parser = getattr(self.mod, 'response_parser', None)
+            self.token_transport = getattr(self.mod, 'token_transport', None)
+
         if self.login_type.startswith('openid'):
             self.openid_endpoint = self.get_required_attr('OPENID_ENDPOINT', 'custom OpenID login')
             if self.login_type == 'openid-username':
@@ -294,7 +305,8 @@ class LoginMethod(object):
             'change_password_prompt', 'consumer_key', 'consumer_secret',
             'request_token_url', 'access_token_url', 'authorize_url',
             'get_user_id_function', 'openid_endpoint', 'tooltip_text',
-            'check_password',
+            'check_password', 'auth_endpoint', 'token_endpoint',
+            'resource_endpoint', 'response_parser', 'token_transport'
         )
         #some parameters in the class have different names from those
         #in the dictionary
@@ -388,6 +400,18 @@ def get_enabled_major_login_providers():
             'password_changeable': True
         }
 
+    if askbot_settings.SIGNIN_CUSTOM_OPENID_ENABLED:
+        context_dict = {'login_name': askbot_settings.SIGNIN_CUSTOM_OPENID_NAME}
+        data['custom_openid'] = {
+            'name': 'custom_openid',
+            'display_name': askbot_settings.SIGNIN_CUSTOM_OPENID_NAME,
+            'type': askbot_settings.SIGNIN_CUSTOM_OPENID_MODE,
+            'icon_media_path': askbot_settings.SIGNIN_CUSTOM_OPENID_LOGIN_BUTTON,
+            'tooltip_text': _('Login with %(login_name)s') % context_dict,
+            'openid_endpoint': askbot_settings.SIGNIN_CUSTOM_OPENID_ENDPOINT,
+            'extra_token_name': _('%(login_name)s username') % context_dict
+        }
+
     def get_facebook_user_id(client):
         """returns facebook user id given the access token"""
         profile = client.request('me')
@@ -403,8 +427,8 @@ def get_enabled_major_login_providers():
             'resource_endpoint': 'https://graph.facebook.com/',
             'icon_media_path': '/jquery-openid/images/facebook.gif',
             'get_user_id_function': get_facebook_user_id,
-            'response_parser': lambda data: dict(urlparse.parse_qsl(data))
-
+            'response_parser': lambda data: dict(urlparse.parse_qsl(data)),
+            'scope': ['email',],
         }
     if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
         data['twitter'] = {
@@ -471,12 +495,27 @@ def get_enabled_major_login_providers():
             'icon_media_path': '/jquery-openid/images/linkedin.gif',
             'get_user_id_function': get_linked_in_user_id
         }
-    data['google'] = {
-        'name': 'google',
-        'display_name': 'Google',
-        'type': 'openid-direct',
-        'icon_media_path': '/jquery-openid/images/google.gif',
-        'openid_endpoint': 'https://www.google.com/accounts/o8/id',
+
+    def get_google_user_id(client):
+        return client.request('me')['id']
+
+    if askbot_settings.GOOGLE_PLUS_KEY and askbot_settings.GOOGLE_PLUS_SECRET:
+        data['google-plus'] = {
+            'name': 'google-plus',
+            'display_name': 'Google',
+            'type': 'oauth2',
+            'auth_endpoint': 'https://accounts.google.com/o/oauth2/auth',
+            'token_endpoint': 'https://accounts.google.com/o/oauth2/token',
+            'resource_endpoint': 'https://www.googleapis.com/plus/v1/people/',
+            'icon_media_path': '/jquery-openid/images/google.gif',
+            'get_user_id_function': get_google_user_id,
+            'extra_auth_params': {'scope': ('profile',)}# 'email', 'openid')}#, 'openid.realm': 'http://127.0.0.1:8000'}
+        }
+    data['mozilla-persona'] = {
+        'name': 'mozilla-persona',
+        'display_name': 'Mozilla Persona',
+        'type': 'mozilla-persona',
+        'icon_media_path': '/jquery-openid/images/mozilla-persona.gif',
     }
     data['yahoo'] = {
         'name': 'yahoo',
@@ -818,14 +857,14 @@ def get_oauth2_starter_url(provider_name, csrf_token):
 
     providers = get_enabled_login_providers()
     params = providers[provider_name]
-    client_id = getattr(askbot_settings, provider_name.upper() + '_KEY')
+    client_id = getattr(askbot_settings, provider_name.replace('-', '_').upper() + '_KEY')
     redirect_uri = site_url(reverse('user_complete_oauth2_signin'))
     client = Client(
         auth_endpoint=params['auth_endpoint'],
         client_id=client_id,
         redirect_uri=redirect_uri
     )
-    return client.auth_uri(state=csrf_token)
+    return client.auth_uri(state=csrf_token, **params.get('extra_auth_params', {}))
 
 
 def ldap_check_password(username, password):
@@ -838,3 +877,26 @@ def ldap_check_password(username, password):
     except ldap.LDAPError, e:
         logging.critical(unicode(e))
         return False
+
+
+def mozilla_persona_get_email_from_assertion(assertion):
+    conn = httplib.HTTPSConnection('verifier.login.persona.org')
+    parsed_url = urlparse.urlparse(askbot_settings.APP_URL)
+    params = urllib.urlencode({
+                    'assertion': assertion,
+                    'audience': parsed_url.scheme + '://' + parsed_url.netloc
+                })
+    headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain'}
+    conn.request('POST', '/verify', params, headers)
+    response = conn.getresponse()
+    if response.status == 200:
+        data = simplejson.loads(response.read())
+        email = data.get('email')
+        if email:
+            return email
+        else:
+            message = unicode(data)
+            message += '\nMost likely base url in /settings/QA_SITE_SETTINGS/ is incorrect'
+            raise ImproperlyConfigured(message)
+    #todo: nead more feedback to help debug fail cases
+    return None

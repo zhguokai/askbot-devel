@@ -32,7 +32,7 @@ def user_messages(request):
     else:
         return { 'user_messages': django_messages.get_messages(request) }
 
-class LazyMessages (StrAndUnicode):
+class LazyMessages(StrAndUnicode):
     """
     Lazy message container, so messages aren't actually retrieved from
     session and deleted until the template asks for them.

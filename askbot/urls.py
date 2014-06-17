@@ -4,8 +4,14 @@ askbot askbot url configuraion file
 import os.path
 import django
 from django.conf import settings
-from django.conf.urls.defaults import url, patterns, include
-from django.conf.urls.defaults import handler500, handler404
+
+try:
+    from django.conf.urls import url, patterns, include
+    from django.conf.urls import handler404
+except ImportError:
+    from django.conf.urls.defaults import url, patterns, include
+    from django.conf.urls.defaults import handler404
+
 from django.contrib import admin
 from askbot import views
 from askbot.feed import RssLastestQuestionsFeed, RssIndividualQuestionFeed
@@ -34,6 +40,12 @@ sitemaps = {
 #in this case it is safer to use a special prefix to all urls
 #except those that are namespaced
 PREFIX = getattr(settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
+
+MAIN_PAGE_BASE_URL = getattr(
+                        settings, 
+                        'ASKBOT_MAIN_PAGE_BASE_URL',
+                        _('questions')
+                    ).strip('/') + '/'
 
 APP_PATH = os.path.dirname(__file__)
 #NOTE that the questions url is the LAST ONE as it has a catch all regex
@@ -94,11 +106,6 @@ urlpatterns = patterns('',
         name='groups'
     ),
     url(
-        r'^%s$' % _('users/update_has_custom_avatar/'),
-        views.users.update_has_custom_avatar,
-        name='user_update_has_custom_avatar'
-    ),
-    url(
         r'^%s$' % _('badges/'),
         views.meta.badges,
         name='badges'
@@ -153,6 +160,11 @@ urlpatterns = patterns('',
         kwargs = {'post_type': 'answer'},
         name='answer_revisions'
     ),
+    service_url(
+        r'^get-top-answers/',
+        views.readers.get_top_answers,
+        name='get_top_answers'
+    ),
     # END main page urls
     service_url(
         r'^api/get_questions/',
@@ -205,27 +217,32 @@ urlpatterns = patterns('',
         name='get_editor'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')),
+        r'^get-post-html/',
+        views.readers.get_post_html,
+        name='get_post_html'
+    ),
+    service_url(
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('edit/')),
         views.writers.edit_question,
         name='edit_question'
     ),
     service_url(#this url is both regular and ajax
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('retag/')),
         views.writers.retag_question,
         name='retag_question'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('close/')),
         views.commands.close,
         name='close'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('reopen/')),
         views.commands.reopen,
         name='reopen'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('answer/')),
         views.writers.answer,
         name='answer'
     ),
@@ -235,7 +252,7 @@ urlpatterns = patterns('',
         name='vote'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('revisions/')),
         views.readers.revisions,
         kwargs = {'post_type': 'question'},
         name='question_revisions'
@@ -519,7 +536,7 @@ urlpatterns = patterns('',
         name = 'list_widgets'
     ),
     service_url(
-        r'^widgets/questions/(?P<widget_id>\d+)/$',
+        r'^widgets/%s(?P<widget_id>\d+)/$' % MAIN_PAGE_BASE_URL,
         views.widgets.question_widget,
         name='question_widget'
     ),

@@ -122,14 +122,15 @@ Attacklab.wmdBase = function(){
 	// Adds a listener callback to a DOM element which is fired on a specified
 	// event.
 	util.addEvent = function(elem, event, listener){
-		if (elem && elem.attachEvent) {
-			// IE only.  The "on" is mandatory.
-			elem.attachEvent("on" + event, listener);
-		}
-		else {
-			// Other browsers.
-			elem.addEventListener(event, listener, false);
-		}
+		if (elem) {
+            if (elem.attachEvent) {
+                // IE only.  The "on" is mandatory.
+                elem.attachEvent("on" + event, listener);
+            } else {
+                // Other browsers.
+                elem.addEventListener(event, listener, false);
+            }
+        }
 	};
 
 	

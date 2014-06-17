@@ -1,5 +1,7 @@
 {% set search_state=search_state or dummy_search_state %}
-<a id="logo" href="{{ search_state.base_url() }}"><img 
+<a id="logo" 
+    href="{% if settings.LOGO_DESTINATION_URL %}{{ settings.LOGO_DESTINATION_URL }}{% else %}{{ search_state.base_url() }}{% endif %}"
+><img 
     src="{{ settings.SITE_LOGO_URL|media }}" 
     title="{% trans %}back to home page{% endtrans %}"
     alt="{% trans site=settings.APP_SHORT_NAME %}{{site}} logo{% endtrans %}"/>

@@ -10,20 +10,6 @@
 {% if have_buttons or view_subtype == 'email_sent' %}
     <h1 class="section-title">{{page_title}}</h1>
 {% endif %}
-    {% if answer %}
-        <div class="message">
-        {% trans title=answer.question.title|escape, summary=answer.summary|escape %}
-        Your answer to {{title}} {{summary}} will be posted once you log in
-        {% endtrans %}
-        </div>
-    {% endif %}
-    {% if question %}
-        <div class="message">
-        {% trans title=question.title|escape, summary=question.summary|escape %}Your question 
-        {{title}} {{summary}} will be posted once you log in
-        {% endtrans %}
-        </div>
-    {% endif %}
     {% if not (view_subtype == 'default' and have_buttons) %}
     <p id='login-intro'>
         {% if view_subtype == 'add_openid' and have_buttons %}
@@ -53,11 +39,15 @@
             wants to always show the password login form - then
             the button is useless.
         #}
+        {% if 'in_recovery' in request.session %}
+            <input type="hidden" name="in_recovery" value="true" />
+        {% endif %}
         {{ login_form.login_provider_name }}
         {{ login_form.next }}
         {% if feed %}
             <input type="hidden" name="feed" value="{{ feed }}"/>
         {% endif %}
+        {{ login_form.persona_assertion }}
         {{ 
             login_macros.provider_buttons(
                 login_form = login_form,
@@ -87,7 +77,7 @@
             {% endif %}
         >
             {{login_form.password_action}}
-            {% if user.is_anonymous() %}
+            {% if user.is_anonymous() or settings.USE_LDAP_FOR_PASSWORD_LOGIN %}
                 {% if have_buttons %}
                     <h2 id="password-heading">
                         {% trans %}or enter your <span>user name and password</span>{% endtrans %}
@@ -106,7 +96,13 @@
                     </tr>
                     {% endif %}
                     <tr>
-                        <td><label for="id_username">{% trans %}Login or email{% endtrans %}</label></td>
+                        <td><label for="id_username">
+                        {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN %}
+                            {% trans %}Login{% endtrans %}
+                        {% else %}
+                            {% trans %}Login or email{% endtrans %}
+                        {% endif %}
+                        </label></td>
                         <td>{{login_form.username}}</td>
                     </tr>
                     <tr>
@@ -120,7 +116,7 @@
                     <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}?login_provider=local">{% trans %}Create a password-protected account{% endtrans %}</a>
                     {% endif %}
                 </p>
-            {% elif settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
+            {% else %}{# change password form #}
                 <h2 id="password-heading">
                     {% trans %}To change your password - please enter the new one twice, then submit{% endtrans %}
                 </h2>
@@ -130,8 +126,8 @@
                         <td>
                             {{login_form.new_password}}
                         </td>
-                        <td>
-                            <span class="error">{{login_form.new_password.errors[0]}}</span>
+                        <td style="text-align: left">
+                            <span class="error new-password-errors">{{login_form.new_password.errors[0]}}</span>
                         </td>
                     </tr>
                     <tr>
@@ -139,8 +135,8 @@
                         <td>
                             {{login_form.new_password_retyped}}
                         </td>
-                        <td>
-                            <span class="error">{{login_form.new_password_retyped.errors[0]}}</span>
+                        <td style="text-align: left">
+                            <span class="error new-password-retyped-errors">{{login_form.new_password_retyped.errors[0]}}</span>
                         </td>
                     </tr>
                 </table>
@@ -199,9 +195,9 @@
             <p class="hint">
                 <span class="text">
                 {% if view_subtype == 'bad_key' %}
-                    {% trans %}Please, enter your email address below and obtain a new key{% endtrans %}
+                    {% trans %}Enter your email address below and obtain a new key{% endtrans %}
                 {% else %}
-                    {% trans %}Please, enter your email address below to recover your account{% endtrans %}
+                    {% trans %}Enter your email address below to recover your account{% endtrans %}
                 {% endif %}
                 </span>
                 <span style="display:none" class="link"> - <a href="#">{% trans %}recover your account via email{% endtrans %}</a></span>

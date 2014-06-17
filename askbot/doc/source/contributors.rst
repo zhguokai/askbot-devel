@@ -49,6 +49,17 @@ Programming, bug fixes and documentation
 * `Kevin Porterfield <http://www.shotgunsoftware.com>_`
 * `Robert Martin <https://github.com/bobbydavid>_`
 * `Director <http://codeflow.co.kr>`_
+* `Stéphane Klein <http://stephane-klein.info>`_
+* `Andrew Chen <https://github.com/yongjhih>`_
+* `Benjamin Abel <https://github.com/BenjaminABEL>`_
+* `Pami Ketolainen <https://github.com/keto>`_
+* `Hamdi <https://github.com/Hamdy>`_
+* `michas2 <https://github.com/michas2>`_
+* `Francis Devereux <https://github.com/frankoid>`_
+* `Andrew Chen <https://github.com/yongjhih>`_
+* `Egil Moeller <https://github.com/redhog>`_
+* `Jerry Zhenlei Cai <https://github.com/jerryzhenleicai>`_
+* `Dmitry <https://github.com/dmzio>`_
 
 Translations
 ------------
@@ -66,6 +77,8 @@ please let us know at support@askbot.com.
 * Pekka Järvinen - Finnish
 * Adi Robian - Romanian
 * `Stefano Mancini <https://github.com/xponrails>`_, Dario Ghilardi, Federico Poloni, `Luca Ferroni <http://www.linkedin.com/in/lucaferroni>`_ - Italian
-* `Jordi Bofill <https://github.com/jbofill>`_ - Catalan
+* Cong It, Nguyen Long, ppranhh - Vietnamese
+* `Jordi Bofill <https://github.gom/jbofill>`_ - Catalan
 * Vašek Chalupníček - Chech
 * Dario Kolak - Croatian
+.

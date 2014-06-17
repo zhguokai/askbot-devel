@@ -12,6 +12,7 @@ import coffin
 import coffin.template
 from bs4 import BeautifulSoup
 
+import askbot
 from askbot import models
 from askbot.utils.slug import slugify
 from askbot.deployment import package_utils
@@ -53,6 +54,7 @@ class PageLoadTestCase(AskbotTestCase):
     #
     @classmethod
     def setUpClass(cls):
+        super(PageLoadTestCase, cls).setUpClass()
         management.call_command('flush', verbosity=0, interactive=False)
         activate_language(settings.LANGUAGE_CODE)
         management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
@@ -74,6 +76,12 @@ class PageLoadTestCase(AskbotTestCase):
         #Disable caching (to not interfere with production cache,
         #not sure if that's possible but let's not risk it)
         cache.cache = DummyCache('', {})
+        if 'postgresql' in askbot.get_database_engine_name():
+            management.call_command(
+                'init_postgresql_full_text_search',
+                verbosity=0,
+                interactive=False
+            )
 
     def tearDown(self):
         cache.cache = self.old_cache  # Restore caching
@@ -197,7 +205,6 @@ class PageLoadTestCase(AskbotTestCase):
         """test all reader views thoroughly
         on non-crashiness (no correcteness tests here)
         """
-
         self.try_url('sitemap')
         self.try_url(
             'get_groups_list',

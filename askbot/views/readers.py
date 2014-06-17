@@ -12,7 +12,11 @@ import urllib
 import operator
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotAllowed
+from django.http import HttpResponseRedirect
+from django.http import HttpResponse
+from django.http import Http404
+from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template.loader import get_template
 from django.template import RequestContext
@@ -36,10 +40,10 @@ from askbot.forms import AnswerForm
 from askbot.forms import ShowQuestionForm
 from askbot.forms import ShowQuestionsForm
 from askbot.forms import get_integer_parameter
+from askbot.forms import GetUserItemsForm
 from askbot.utils.loading import load_module
 from askbot import conf
 from askbot import models
-from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
 from askbot.models import get_feed_url
@@ -97,7 +101,6 @@ def questions(request, **kwargs):
                     user_logged_in=request.user.is_authenticated(),
                     **kwargs
                 )
-    page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
 
     qs, meta_data = models.Thread.objects.run_advanced_search(
                         request_user=request.user, search_state=search_state
@@ -105,7 +108,7 @@ def questions(request, **kwargs):
     if meta_data['non_existing_tags']:
         search_state = search_state.remove_tags(meta_data['non_existing_tags'])
 
-    paginator = Paginator(qs, page_size)
+    paginator = Paginator(qs, search_state.page_size)
     if paginator.num_pages < search_state.page:
         search_state.page = 1
     page = paginator.page(search_state.page)
@@ -130,12 +133,12 @@ def questions(request, **kwargs):
                         )
 
     paginator_context = {
-        'is_paginated' : (paginator.count > page_size),
+        'is_paginated' : (paginator.count > search_state.page_size),
         'pages': paginator.num_pages,
         'current_page_number': search_state.page,
         'page_object': page,
         'base_url' : search_state.query_string(),
-        'page_size' : page_size,
+        'page_size' : search_state.page_size,
     }
 
     # We need to pass the rss feed url based
@@ -162,17 +165,18 @@ def questions(request, **kwargs):
     if request.is_ajax():
         q_count = paginator.count
 
+        #todo: words
         question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
         question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
 
-        if q_count > page_size:
+        if q_count > search_state.page_size:
             paginator_tpl = get_template('main_page/paginator.html')
             paginator_html = paginator_tpl.render(
                 RequestContext(
                     request, {
                         'context': paginator_context,
                         'questions_count': q_count,
-                        'page_size' : page_size,
+                        'page_size' : search_state.page_size,
                         'search_state': search_state,
                     }
                 )
@@ -203,14 +207,30 @@ def questions(request, **kwargs):
             'faces': [],#[extra_tags.gravatar(contributor, 48) for contributor in contributors],
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
-            'page_size' : page_size,
+            'page_size' : search_state.page_size,
             'questions': questions_html.replace('\n',''),
-            'non_existing_tags': meta_data['non_existing_tags']
+            'non_existing_tags': meta_data['non_existing_tags'],
         }
         ajax_data['related_tags'] = [{
             'name': escape(tag.name),
             'used_count': humanize.intcomma(tag.local_used_count)
         } for tag in related_tags]
+
+        #here we add and then delete some items
+        #to allow extra context processor to work
+        ajax_data['tags'] = related_tags
+        ajax_data['interesting_tag_names'] = None
+        ajax_data['threads'] = page
+        extra_context = context.get_extra(
+                                    'ASKBOT_QUESTIONS_PAGE_EXTRA_CONTEXT',
+                                    request,
+                                    ajax_data
+                                )
+        del ajax_data['tags']
+        del ajax_data['interesting_tag_names']
+        del ajax_data['threads']
+
+        ajax_data.update(extra_context)
 
         return HttpResponse(simplejson.dumps(ajax_data), mimetype = 'application/json')
 
@@ -228,7 +248,7 @@ def questions(request, **kwargs):
             'language_code': translation.get_language(),
             'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
             'page_class': 'main-page',
-            'page_size': page_size,
+            'page_size': search_state.page_size,
             'query': search_state.query,
             'threads' : page,
             'questions_count' : paginator.count,
@@ -244,7 +264,6 @@ def questions(request, **kwargs):
             'font_size' : extra_tags.get_tag_font_size(related_tags),
             'display_tag_filter_strategy_choices': conf.get_tag_display_filter_strategy_choices(),
             'email_tag_filter_strategy_choices': conf.get_tag_email_filter_strategy_choices(),
-            'update_avatar_data': schedules.should_update_avatar_data(request),
             'query_string': search_state.query_string(),
             'search_state': search_state,
             'feed_url': context_feed_url,
@@ -255,7 +274,9 @@ def questions(request, **kwargs):
                                     request,
                                     template_data
                                 )
+
         template_data.update(extra_context)
+        template_data.update(context.get_for_tag_editor())
 
         #and one more thing:) give admin user heads up about
         #setting the domain name if they have not done that yet
@@ -298,6 +319,22 @@ def activity(request):
     }
     return render(request, 'activity.html', template_context)
 
+def get_top_answers(request):
+    """returns a snippet of html of users answers"""
+    form = GetUserItemsForm(request.GET)
+    if form.is_valid():
+        owner = models.User.objects.get(id=form.cleaned_data['user_id'])
+        paginator = owner.get_top_answers_paginator(visitor=request.user)
+        answers = paginator.page(form.cleaned_data['page_number']).object_list
+        template = get_template('user_profile/user_answers_list.html')
+        answers_html = template.render({'top_answers': answers})
+        json_string = simplejson.dumps({
+                            'html': answers_html,
+                            'num_answers': paginator.count}
+                        )
+        return HttpResponse(json_string, content_type='application/json')
+    else:
+        return HttpResponseBadRequest()
 
 def tags(request):#view showing a listing of available tags - plain list
 
@@ -311,7 +348,10 @@ def tags(request):#view showing a listing of available tags - plain list
     query = post_data.get('query', '').strip()
 
     #2) Get query set for the tags.
-    query_params = dict()
+    query_params = {
+        'deleted': False,
+        'language_code': translation.get_language()
+    }
     if query != '':
         query_params['name__icontains'] = query
 
@@ -342,7 +382,8 @@ def tags(request):#view showing a listing of available tags - plain list
         'stag' : query,
         'tab_id' : sortby,
         'keywords' : query,
-        'tag_isolation': tag_isolation
+        'tag_isolation': tag_isolation,
+        'search_state': SearchState(*[None for x in range(8)])
     }
 
     if tag_list_type == 'list':
@@ -376,7 +417,7 @@ def tags(request):#view showing a listing of available tags - plain list
         template_context = RequestContext(request, data)
         json_data = {'success': True, 'html': template.render(template_context)}
         json_string = simplejson.dumps(json_data)
-        return HttpResponse(json_string, mimetype='application/json')
+        return HttpResponse(json_string, content_type='application/json')
     else:
         return render(request, 'tags.html', data)
 
@@ -759,8 +800,6 @@ def get_perms_data(request):
         'MIN_REP_TO_UPLOAD_FILES',
         'MIN_REP_TO_INSERT_LINK',
         'MIN_REP_TO_SUGGEST_LINK',
-        'MIN_REP_TO_CLOSE_OWN_QUESTIONS',
-        'MIN_REP_TO_REOPEN_OWN_QUESTIONS',
         'MIN_REP_TO_CLOSE_OTHERS_QUESTIONS',
         'MIN_REP_TO_RETAG_OTHERS_QUESTIONS',
         'MIN_REP_TO_EDIT_WIKI',
@@ -789,3 +828,10 @@ def get_perms_data(request):
     })
 
     return {'html': html}
+
+@ajax_only
+@get_only
+def get_post_html(request):
+    post = models.Post.objects.get(id=request.GET['post_id'])
+    post.assert_is_visible_to(request.user)
+    return {'post_html': post.html}

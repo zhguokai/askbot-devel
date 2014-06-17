@@ -7,7 +7,10 @@ from askbot.conf.super_groups import CONTENT_AND_UI
 from askbot.deps import livesettings
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings as django_settings
+from django.core.validators import ValidationError, validate_email
+import re
 from urlparse import urlparse
+
 
 QA_SITE_SETTINGS = livesettings.ConfigurationGroup(
                     'QA_SITE_SETTINGS',
@@ -130,5 +133,32 @@ settings.register(
                 'If left empty, a simple internal feedback form '
                 'will be used instead'
             )
+    )
+)
+
+def feedback_emails_callback(old_value, new_value):
+    """validates the fedback emails list"""
+    emails = []
+    for value in re.split('\s*,\s*', new_value):
+        if not value:
+            continue
+        try:
+            validate_email(value)
+            emails.append(value)
+        except ValidationError:
+            raise ValueError(
+                _("'%(value)s' is not a valid email") % {'value': value})
+    return ", ".join(emails)
+
+settings.register(
+    livesettings.StringValue(
+        QA_SITE_SETTINGS,
+        'FEEDBACK_EMAILS',
+        description=_('Internal feedback form email recipients'),
+        help_text=_(
+                'Comma separated list. If left empty, feedback mails are sent '
+                'to admins and moderators'
+            ),
+        update_callback=feedback_emails_callback
     )
 )

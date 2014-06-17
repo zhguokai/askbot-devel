@@ -1,10 +1,11 @@
 import re
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import get_language
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
-from django.conf import settings
 from django.contrib.sites.models import Site
+from django.conf import settings as django_settings
 from askbot.models.base import BaseQuerySetManager
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -13,13 +14,16 @@ from askbot.utils import category_tree
 def delete_tags(tags):
     """deletes tags in the list"""
     tag_ids = [tag.id for tag in tags]
-    Tag.objects.filter(id__in = tag_ids).delete()
+    Tag.objects.filter(id__in=tag_ids).delete()
 
-def get_tags_by_names(tag_names):
+def get_tags_by_names(tag_names, language_code=None):
     """returns query set of tags
     and a set of tag names that were not found
     """
-    tags = Tag.objects.filter(name__in = tag_names)
+    tags = Tag.objects.filter(
+                    name__in=tag_names,
+                    language_code=language_code
+                )
     #if there are brand new tags, create them
     #and finalize the added tag list
     if tags.count() < len(tag_names):
@@ -86,7 +90,6 @@ def tags_match_some_wildcard(tag_names, wildcard_tags):
 def get_mandatory_tags():
     """returns list of mandatory tags,
     or an empty list, if there aren't any"""
-    from askbot.conf import settings as askbot_settings
     #TAG_SOURCE setting is hidden
     #and only is accessible via livesettings overrides
     if askbot_settings.TAG_SOURCE == 'category-tree':
@@ -156,7 +159,7 @@ class TagQuerySet(models.query.QuerySet):
         tag_filter = models.Q(name__startswith = first_tag[:-1])
         for next_tag in wildcards:
             tag_filter |= models.Q(name__startswith = next_tag[:-1])
-        return self.filter(tag_filter)
+        return self.filter(tag_filter & models.Q(language_code=get_language()))
 
     def get_related_to_search(self, threads, ignored_tag_names):
         """Returns at least tag names, along with use counts"""
@@ -178,9 +181,9 @@ class TagManager(BaseQuerySetManager):
         """temporary function that filters out the group tags"""
         return self.all()
 
-    def create(self, name=None, created_by=None, **kwargs):
+    def create(self, name=None, created_by=None, auto_approve=False, **kwargs):
         """Creates a new tag"""
-        if created_by.can_create_tags() or is_preapproved_tag_name(name):
+        if auto_approve or created_by.can_create_tags() or is_preapproved_tag_name(name):
             status = Tag.STATUS_ACCEPTED
         else:
             status = Tag.STATUS_SUGGESTED
@@ -220,7 +223,7 @@ class TagManager(BaseQuerySetManager):
         ) % ', '.join(tag_names)
         user.message_set.create(message = msg)
 
-    def create_in_bulk(self, tag_names = None, user = None):
+    def create_in_bulk(self, tag_names=None, user=None, language_code=None, auto_approve=False):
         """creates tags by names. If user can create tags,
         then they are set status ``STATUS_ACCEPTED``,
         otherwise the status will be set to ``STATUS_SUGGESTED``.
@@ -228,21 +231,24 @@ class TagManager(BaseQuerySetManager):
         One exception: if suggested tag is in the category tree
         and source of tags is category tree - then status of newly
         created tag is ``STATUS_ACCEPTED``
+        if `auto_approve` is True then tags are auto-accepted
         """
 
         #load suggested tags
         pre_suggested_tags = self.filter(
-            name__in = tag_names, status = Tag.STATUS_SUGGESTED
+            name__in=tag_names,
+            status=Tag.STATUS_SUGGESTED,
+            language_code=language_code
         )
 
         #deal with suggested tags
-        if user.can_create_tags():
+        if auto_approve or user.can_create_tags():
             #turn previously suggested tags into accepted
             pre_suggested_tags.update(status = Tag.STATUS_ACCEPTED)
         else:
             #increment use count and add user to "suggested_by"
             for tag in pre_suggested_tags:
-                tag.times_used += 1
+                tag.used_count += 1
                 tag.suggested_by.add(user)
                 tag.save()
 
@@ -254,7 +260,12 @@ class TagManager(BaseQuerySetManager):
 
         for tag_name in set(tag_names) - set(pre_suggested_tag_names):
             #status for the new tags is automatically set within the create()
-            new_tag = Tag.objects.create(name = tag_name, created_by = user)
+            new_tag = Tag.objects.create(
+                                    name=tag_name,
+                                    created_by=user,
+                                    language_code=language_code,
+                                    auto_approve=auto_approve
+                                )
             created_tags.append(new_tag)
 
             if new_tag.status == Tag.STATUS_SUGGESTED:
@@ -274,9 +285,13 @@ class Tag(models.Model):
     STATUS_SUGGESTED = 0
     STATUS_ACCEPTED = 1
 
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     created_by = models.ForeignKey(User, related_name='created_tags')
-
+    language_code = models.CharField(
+                                choices=django_settings.LANGUAGES,
+                                default=django_settings.LANGUAGE_CODE,
+                                max_length=16,
+                            )
     suggested_by = models.ManyToManyField(
         User, related_name='suggested_tags',
         help_text = 'Works only for suggested tags for tag moderation'
@@ -305,6 +320,7 @@ class Tag(models.Model):
         app_label = 'askbot'
         db_table = u'tag'
         ordering = ('-used_count', 'name')
+        unique_together = ('name', 'language_code')
 
     def __unicode__(self):
         return self.name
@@ -357,6 +373,11 @@ class TagSynonym(models.Model):
     owned_by = models.ForeignKey(User, related_name='tag_synonyms')
     auto_rename_count = models.IntegerField(default=0)
     last_auto_rename_at = models.DateTimeField(auto_now=True)
+    language_code = models.CharField(
+                                choices=django_settings.LANGUAGES,
+                                default=django_settings.LANGUAGE_CODE,
+                                max_length=16,
+                            )
     
     class Meta:
         app_label = 'askbot'

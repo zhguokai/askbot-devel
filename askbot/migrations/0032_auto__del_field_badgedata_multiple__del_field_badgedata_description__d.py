@@ -9,13 +9,14 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
 
         # Removing unique constraint on 'BadgeData', fields ['type', 'name']
-        #db.delete_unique('askbot_badgedata', ['type', 'name'])
+        db.delete_unique('askbot_badgedata', ['type', 'name'])
 
         # Deleting field 'BadgeData.multiple'
         db.delete_column('askbot_badgedata', 'multiple')
 
         # Deleting field 'BadgeData.description'
         db.delete_column('askbot_badgedata', 'description')
+
 
         # Deleting field 'BadgeData.type'
         db.delete_column('askbot_badgedata', 'type')

@@ -7,6 +7,7 @@ import re
 import htmlentitydefs
 from urlparse import urlparse
 from django.core.urlresolvers import reverse
+from django.utils.html import strip_tags as strip_all_tags
 from django.utils.html import urlize
 from askbot.conf import settings as askbot_settings
 
@@ -64,7 +65,18 @@ def absolutize_urls(html, base_url):
     #temporal fix for bad regex with wysiwyg editor
     return url_re4.sub(replacement, html).replace('%s//' % base_url, '%s/' % base_url)
 
-def urlize_html(html):
+def get_word_count(html):
+    return len(strip_all_tags(html).split())
+
+def format_url_replacement(url, text):
+    url = url.strip()
+    text = text.strip()
+    url_domain = urlparse(url).netloc
+    if url and text and url_domain != text and url != text:
+        return '%s (%s)' % (url, text)
+    return url or text or ''
+
+def urlize_html(html, trim_url_limit=40):
     """will urlize html, while ignoring link
     patterns inside anchors, <pre> and <code> tags
     """
@@ -78,7 +90,7 @@ def urlize_html(html):
 
         #bs4 is weird, so we work around to replace nodes
         #maybe there is a better way though
-        urlized_text = urlize(node)
+        urlized_text = urlize(node, trim_url_limit=trim_url_limit)
         if unicode(node) == urlized_text:
             continue
 
@@ -112,14 +124,6 @@ def replace_links_with_text(html):
     """any absolute links will be replaced with the
     url in plain text, same with any img tags
     """
-    def format_url_replacement(url, text):
-        url = url.strip()
-        text = text.strip()
-        url_domain = urlparse(url).netloc
-        if url and text and url_domain != text and url != text:
-            return '%s (%s)' % (url, text)
-        return url or text or ''
-            
     soup = BeautifulSoup(html, 'html5lib')
     abs_url_re = r'^http(s)?://'
 
@@ -141,6 +145,35 @@ def replace_links_with_text(html):
             link.replaceWith(format_url_replacement(url, text))
 
     return unicode(soup.find('body').renderContents(), 'utf-8')
+
+def get_text_from_html(html_text):
+    """Returns the content part from an HTML document
+    retains links and references to images and line breaks.
+    """
+    soup = BeautifulSoup(html_text, 'html5lib')
+
+    #replace <a> links with plain text
+    links = soup.find_all('a')
+    for link in links:
+        url = link.get('href', '')
+        text = ''.join(link.text) or ''
+        link.replaceWith(format_url_replacement(url, text))
+
+    #replace <img> tags with plain text
+    images = soup.find_all('img')
+    for image in images:
+        url = image.get('src', '')
+        text = image.get('alt', '')
+        image.replaceWith(format_url_replacement(url, text))
+
+    #extract and join phrases
+    body_element = soup.find('body')
+    filter_func = lambda s: bool(s.strip())
+    phrases = map(
+        lambda s: s.strip(),
+        filter(filter_func, body_element.get_text().split('\n'))
+    )
+    return '\n\n'.join(phrases)
 
 def strip_tags(html, tags=None):
     """strips tags from given html output"""

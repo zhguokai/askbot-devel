@@ -53,8 +53,6 @@ settings.register(
     )
 )
 
-
-
 settings.register(
     livesettings.StringValue(
         EXTERNAL_KEYS,
@@ -74,6 +72,22 @@ settings.register(
                         'Please get this and a public key at '
                         'the <a href="%(url)s">%(url)s</a>'
                     ) % {'url': const.DEPENDENCY_URLS['recaptcha']}
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'GOOGLE_PLUS_KEY',
+        description=_('Google+ public API key')
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'GOOGLE_PLUS_SECRET',
+        description=_('Google+ secret API key')
     )
 )
 

@@ -52,7 +52,13 @@
             {% if view_user.real_name %}
             <tr>
                 <td>{% trans %}real name{% endtrans %}</td>
-                <td><b>{{view_user.real_name}}</b></td>
+                <td><b>{{view_user.real_name|escape}}</b></td>
+            </tr>
+            {% endif %}
+            {% if request.user|can_see_private_user_data(view_user) %}
+            <tr>
+                <td>{% trans %}email{% endtrans %}</td>
+                <td>{{view_user.email}}</td>
             </tr>
             {% endif %}
             {% if settings.GROUPS_ENABLED %}
@@ -119,7 +125,7 @@
     </div>
     <div class="col3 user-about">
     {% if view_user.about and (not view_user.is_blocked()) %}
-        {{view_user.about|linebreaks}}
+        {{view_user.about|linebreaks|escape}}
     {% endif %}
     </div>
 </div>

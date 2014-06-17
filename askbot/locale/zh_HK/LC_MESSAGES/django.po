@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-15 02:23+0000\n"
+"PO-Revision-Date: 2013-08-28 05:48+0000\n"
 "Last-Translator: brucelok\n"
 "Language-Team: Chinese (Hong Kong) (http://www.transifex.com/projects/p/askbot/language/zh_HK/)\n"
 "MIME-Version: 1.0\n"
@@ -163,7 +163,7 @@ msgstr "已暫停"
 
 #: forms.py:603 const/__init__.py:378
 msgid "blocked"
-msgstr ""
+msgstr "阻止"
 
 #: forms.py:605
 msgid "administrator"
@@ -171,11 +171,11 @@ msgstr "管理員"
 
 #: forms.py:606 const/__init__.py:374
 msgid "moderator"
-msgstr ""
+msgstr "協調人"
 
 #: forms.py:625
 msgid "Change status to"
-msgstr ""
+msgstr "將狀態更改為"
 
 #: forms.py:652
 msgid "which one?"
@@ -183,7 +183,7 @@ msgstr "哪一個?"
 
 #: forms.py:673
 msgid "Cannot change own status"
-msgstr ""
+msgstr "不能更改自己的狀態"
 
 #: forms.py:679
 msgid "Cannot turn other user to moderator"

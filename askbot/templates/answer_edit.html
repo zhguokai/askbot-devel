@@ -1,13 +1,14 @@
 {% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- template answer_edit.html -->
-{% block title %}{% spaceless %}{% trans %}Edit answer{% endtrans %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{{ settings.WORDS_EDIT_ANSWER|escape }}{% endspaceless %}{% endblock %}
 {% block forestyle %}
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}
 <div class="section-title">
-    {% trans %}Edit answer{% endtrans %} [<a href="{{ answer.thread._question_post().get_absolute_url() }}#{{ answer.id }}">{% trans %}back{% endtrans %}</a>]
+{{ settings.WORDS_EDIT_ANSWER|escape }}
+[<a href="{{ answer.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]
 </div>
 <div id="main-body" class="ask-body">
     <form id="fmedit" action="{% url edit_answer answer.id %}" method="post" >{% csrf_token %}
@@ -20,6 +21,10 @@
                         editor_type = settings.EDITOR_TYPE
                     )
         }}
+        {% if form.recaptcha %}
+            <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
+            <div class="clearfix"></div>
+        {% endif %}
         <div class="answer-options">
         {% if settings.WIKI_ON and answer.wiki == False %}
             {{ macros.checkbox_in_div(form.wiki) }}
@@ -39,12 +44,11 @@
                 id="edit_post_form_submit_button"
                 type="submit"
                 value="{% trans %}Save edit{% endtrans %}"
-                class="submit"
             />&nbsp;
             <input 
                 type="button"
                 value="{% trans %}Cancel{% endtrans %}"
-                class="submit cancel"
+                class="cancel"
                 onclick="history.back(-1);"
             />
         </div>

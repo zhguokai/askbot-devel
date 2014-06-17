@@ -14,20 +14,20 @@
         {% if settings.ALL_SCOPE_ENABLED %}
         <a class="scope-selector {% if scope == 'all' %}on{% endif %}"
             href="{{ search_state.change_scope('all').full_url() }}"
-            title="{% trans %}see all questions{% endtrans %}">{% trans %}ALL{% endtrans %}</a>
+        >{% trans %}ALL{% endtrans %}</a>
         {% endif %}
         {% if settings.UNANSWERED_SCOPE_ENABLED %}
         <a class="scope-selector {% if scope == 'unanswered' %}on{% endif %}"
             href="{{ search_state.change_scope('unanswered').change_sort('answers-asc').full_url() }}"
-            title="{% trans %}see unanswered questions{% endtrans %}">{% trans %}UNANSWERED{% endtrans %}</a>
+        >{{ settings.WORDS_UNANSWERED|escape }}</a>
         {% endif %}
         {% if request.user.is_authenticated() and settings.FOLLOWED_SCOPE_ENABLED %} 
         <a class="scope-selector {% if scope == 'followed' %}on{% endif %}"
             href="{{ search_state.change_scope('followed').full_url() }}"
-            title="{% trans %}see your followed questions{% endtrans %}">{% trans %}FOLLOWED{% endtrans %}</a>
+        >{% trans %}FOLLOWED{% endtrans %}</a>
         {% endif %}
     {% else %}
-        <div class="scope-selector ask-message">{% trans %}Please ask your question here{% endtrans %}</div>
+    <div class="scope-selector ask-message">{{ settings.WORDS_PLEASE_ASK_YOUR_QUESTION_HERE|escape }}</div>
     {% endif %}
 {% endif %}
 </div>

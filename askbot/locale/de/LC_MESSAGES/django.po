@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-08-03 14:46+0000\n"
+"PO-Revision-Date: 2013-09-13 16:15+0000\n"
 "Last-Translator: Alexander Lieder <enormitas@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/askbot/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -111,7 +111,7 @@ msgstr ""
 #: forms.py:410 forms.py:1006 models/widgets.py:27
 #: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
-msgstr "Schlagwörter"
+msgstr "Tags"
 
 #: forms.py:412
 #, python-format
@@ -2026,7 +2026,7 @@ msgstr ""
 
 #: conf/sidebar_question.py:119
 msgid "Show related questions in sidebar"
-msgstr "Verwandte / ähnliche Fragen in der Seitenleiste anzeigen"
+msgstr "Verwandte Fragen in der Seitenleiste anzeigen"
 
 #: conf/sidebar_question.py:121
 msgid "Uncheck this if you want to hide the list of related questions. "
@@ -6376,8 +6376,8 @@ msgstr "Bitte beachte: %(app_name)s benötigt javascript um korrekt zu funktioni
 #, python-format
 msgid "each tag must be shorter that %(max_chars)s character"
 msgid_plural "each tag must be shorter than %(max_chars)s characters"
-msgstr[0] "Jeder Tag muss länger sein als  %(max_chars)s Zeichen"
-msgstr[1] "Jeder Tag muss länger sein als %(max_chars)s Zeichen"
+msgstr[0] "Jedes Schlagwort muss kürzer sein als  %(max_chars)s Zeichen"
+msgstr[1] "Jedes Schlagwort muss kürzer sein als  %(max_chars)s Zeichen"
 
 #: templates/meta/editor_data.html:7
 #, python-format
@@ -6686,7 +6686,7 @@ msgstr "Letztes Update"
 
 #: templates/question/sidebar.html:151
 msgid "Related questions"
-msgstr "Verwandte / ähnliche Fragen"
+msgstr "Verwandte Fragen"
 
 #: templates/tags/form_bulk_tag_subscription.html:4
 msgid "Tag subscriptions"

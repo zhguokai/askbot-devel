@@ -10,6 +10,7 @@ from django.contrib.auth.models import Group as AuthGroup
 from django.contrib.sites.models import Site
 from django.core import exceptions
 from django.forms import EmailField, URLField
+from django.utils import translation
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.utils.html import strip_tags
@@ -17,12 +18,6 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import functions
 from askbot.models.base import BaseQuerySetManager
-from askbot.models.tag import Tag
-from askbot.models.tag import clean_group_name#todo - delete this
-from askbot.models.tag import get_tags_by_names
-#from askbot.models.spaces import AskbotSite
-from askbot.forms import DomainNameField
-from askbot.utils.forms import email_is_allowed
 from collections import defaultdict
 
 PERSONAL_GROUP_NAME_PREFIX = '_personal_'
@@ -314,6 +309,7 @@ class EmailFeedSetting(models.Model):
         'q_sel': 'i',
         'm_and_c': 'i'
     }
+    #todo: words
     FEED_TYPE_CHOICES = (
                     ('q_all', ugettext_lazy('Entire forum')),
                     ('q_ask', ugettext_lazy('Questions that I asked')),
@@ -457,6 +453,7 @@ class GroupQuerySet(models.query.QuerySet):
             return self.filter(user = user)
 
     def get_by_name(self, group_name = None):
+        from askbot.models.tag import clean_group_name#todo - delete this
         return self.get(name = clean_group_name(group_name))
 
 
@@ -591,6 +588,7 @@ class Group(AuthGroup):
             return 'open'
 
         #relying on a specific method of storage
+        from askbot.utils.forms import email_is_allowed
         if email_is_allowed(
             user.email,
             allowed_emails=self.preapproved_emails,
@@ -621,6 +619,7 @@ class Group(AuthGroup):
         self.preapproved_emails = ' ' + '\n'.join(emails) + ' '
 
         domains = functions.split_list(self.preapproved_email_domains)
+        from askbot.forms import DomainNameField
         domain_field = DomainNameField()
         try:
             map(lambda v: domain_field.clean(v), domains)
@@ -637,9 +636,13 @@ class Group(AuthGroup):
 class BulkTagSubscriptionManager(BaseQuerySetManager):
 
     def create(
-                self, tag_names=None,
-                user_list=None, group_list=None,
-                tag_author=None,  **kwargs
+                self,
+                tag_names=None,
+                user_list=None, 
+                group_list=None,
+                tag_author=None,
+                language_code=None,
+                **kwargs
             ):
 
         tag_names = tag_names or []
@@ -650,17 +653,20 @@ class BulkTagSubscriptionManager(BaseQuerySetManager):
         tag_name_list = []
 
         if tag_names:
-            tags, new_tag_names = get_tags_by_names(tag_names)
+            from askbot.models.tag import get_tags_by_names
+            tags, new_tag_names = get_tags_by_names(tag_names, language_code)
             if new_tag_names:
                 assert(tag_author)
 
             tags_id_list= [tag.id for tag in tags]
             tag_name_list = [tag.name for tag in tags]
 
+            from askbot.models.tag import Tag
             new_tags = Tag.objects.create_in_bulk(
-                                        tag_names=new_tag_names,
-                                        user=tag_author
-                                    )
+                                tag_names=new_tag_names,
+                                user=tag_author,
+                                language_code=translation.get_language()
+                            )
 
             tags_id_list.extend([tag.id for tag in new_tags])
             tag_name_list.extend([tag.name for tag in new_tags])
@@ -689,7 +695,7 @@ class BulkTagSubscriptionManager(BaseQuerySetManager):
 
 class BulkTagSubscription(models.Model):
     date_added = models.DateField(auto_now_add=True)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField('Tag')
     users = models.ManyToManyField(User)
     groups = models.ManyToManyField(Group)
 

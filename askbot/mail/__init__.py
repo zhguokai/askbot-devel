@@ -16,6 +16,7 @@ from askbot.mail import parsing
 from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
 from askbot.utils.html import absolutize_urls
+from askbot.utils.html import get_text_from_html
 from bs4 import BeautifulSoup
 from django.core import mail
 from django.core.exceptions import PermissionDenied
@@ -87,24 +88,30 @@ def thread_headers(post, orig_post, update):
 
     return headers
 
-def clean_html_email(email_body):
-    """returns the content part from an HTML email.
-    todo: needs more clenup might not work for other email templates
-    that do not use table layout
-    """
-    soup = BeautifulSoup(email_body, 'html5lib')
-    body_element = soup.find('body')
-    filter_func = lambda s: bool(s.strip())
-    phrases = map(
-        lambda s: s.strip(),
-        filter(filter_func, body_element.get_text().split('\n'))
-    )
-    return '\n\n'.join(phrases)
+def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=None):
+    """base send_mail function, which will attach email in html format
+    if html email is enabled"""
+    html_enabled = askbot_settings.HTML_EMAIL_ENABLED
+    if html_enabled:
+        message_class = mail.EmailMultiAlternatives
+    else:
+        message_class = mail.EmailMessage
+
+    msg = message_class(
+                subject_line,
+                get_text_from_html(body_text),
+                sender_email,
+                recipient_list,
+                headers = headers
+            )
+    if html_enabled:
+        msg.attach_alternative(body_text, "text/html")
+    msg.send()
 
 def send_mail(
             subject_line=None,
             body_text=None,
-            from_email=django_settings.DEFAULT_FROM_EMAIL,
+            from_email=None,
             recipient=None,
             headers=None,
             raise_on_failure=False,
@@ -127,23 +134,20 @@ def send_mail(
         recipient_address = recipient.email
     else:
         raise TypeError('unexpected type for "recipient" %s' % type(recipient))
-    #if recipient_list has plain text email addresses,
-    #then take base url from the default sites
-    #if recipient_list has instances of user object,
 
     body_text = absolutize_urls(body_text, base_url)
+    from_email = from_email or askbot_settings.ADMIN_EMAIL or \
+                                    django_settings.DEFAULT_FROM_EMAIL
     try:
         assert(subject_line is not None)
         subject_line = prefix_the_subject_line(subject_line)
-        msg = mail.EmailMultiAlternatives(
-                        subject_line,
-                        clean_html_email(body_text),
-                        from_email,
-                        [recipient_address,],
-                        headers = headers
-                    )
-        msg.attach_alternative(body_text, "text/html")
-        msg.send()
+        _send_mail(
+            subject_line,
+            body_text,
+            from_email,
+            [recipient_address,],
+            headers=headers
+        )
         logging.debug('sent update to %s' % recipient_address)
     except Exception, error:
         sys.stderr.write('\n' + unicode(error).encode('utf-8') + '\n')
@@ -169,31 +173,21 @@ def mail_moderators(
                 ).values_list('email', flat=True)
     recipient_list = set(recipient_list)
 
-    from_email = ''
-    if hasattr(django_settings, 'DEFAULT_FROM_EMAIL'):
-        from_email = django_settings.DEFAULT_FROM_EMAIL
+    _send_mail(
+        subject_line,
+        body_text,
+        getattr(django_settings, 'DEFAULT_FROM_EMAIL', ''),
+        recipient_list,
+        headers=headers
+    )
 
-    try:
-        msg = mail.EmailMessage(
-                        subject_line,
-                        body_text,
-                        from_email,
-                        recipient_list,
-                        headers = headers or {}
-                    )
-        msg.content_subtype = 'html'
-        msg.send()
-    except smtplib.SMTPException, error:
-        sys.stderr.write('\n' + unicode(error).encode('utf-8') + '\n')
-        if raise_on_failure == True:
-            raise exceptions.EmailNotSent(unicode(error))
 
-INSTRUCTIONS_PREAMBLE = ugettext_lazy('<p>To ask by email, please:</p>')
+INSTRUCTIONS_PREAMBLE = ugettext_lazy('<p>To post by email, please:</p>')
 QUESTION_TITLE_INSTRUCTION = ugettext_lazy(
     '<li>Type title in the subject line</li>'
 )
 QUESTION_DETAILS_INSTRUCTION = ugettext_lazy(
-    '<li>Type details of your question into the email body</li>'
+    '<li>Type details into the email body</li>'
 )
 OPTIONAL_TAGS_INSTRUCTION = ugettext_lazy(
 """<li>The beginning of the subject line can contain tags,
@@ -219,7 +213,7 @@ def bounce_email(
     """
     if reason == 'problem_posting':
         error_message = _(
-            '<p>Sorry, there was an error posting your question '
+            '<p>Sorry, there was an error while processing your message '
             'please contact the %(site)s administrator</p>'
         ) % {'site': askbot_settings.APP_SHORT_NAME}
 
@@ -246,7 +240,7 @@ def bounce_email(
 
     elif reason == 'unknown_user':
         error_message = _(
-            '<p>Sorry, in order to post questions on %(site)s '
+            '<p>Sorry, in order to make posts to %(site)s '
             'by email, please <a href="%(url)s">register first</a></p>'
         ) % {
             'site': askbot_settings.APP_SHORT_NAME,
@@ -254,7 +248,7 @@ def bounce_email(
         }
     elif reason == 'permission_denied' and body_text is None:
         error_message = _(
-            '<p>Sorry, your question could not be posted '
+            '<p>Sorry, your post could not be made by email '
             'due to insufficient privileges of your user account</p>'
         )
     elif body_text:

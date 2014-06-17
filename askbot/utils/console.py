@@ -25,7 +25,7 @@ def choice_dialog(prompt_phrase, choices = None, invalid_phrase = None):
     assert(not isinstance(choices, basestring))
     while 1:
         response = raw_input(
-            '\n%s (type %s)\n> ' % (prompt_phrase, '/'.join(choices))
+            '\n%s\ntype %s: ' % (prompt_phrase, '/'.join(choices))
         )
         if response in choices:
             return response

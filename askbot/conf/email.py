@@ -55,6 +55,16 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'HTML_EMAIL_ENABLED',
+        default=True,
+        description=_('Enable HTML-formatted email'),
+        help_text=_('May not be supported by some email clients')
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         EMAIL,
         'MAX_ALERTS_PER_EMAIL',

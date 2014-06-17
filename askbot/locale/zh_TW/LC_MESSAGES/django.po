@@ -3,8 +3,11 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
+# carl_tw, 2013
+# carl_tw, 2013
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # evgeny <evgeny.fadeev@gmail.com>, 2009
+# floydsoft <floydsoft@gmail.com>, 2013
 # whisky <whisky@ystaiwan.org.tw>, 2013
 # whisky <whisky@ystaiwan.org.tw>, 2013
 msgid ""
@@ -12,8 +15,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: http://askbot.org/\n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-08-02 06:30+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2013-09-02 17:31+0000\n"
+"Last-Translator: carl_tw\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/askbot/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +26,7 @@ msgstr ""
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr ""
+msgstr "抱歉，匿名訪問者無法存取此功能"
 
 #: feed.py:34 feed.py:108
 msgid " - "
@@ -43,7 +46,7 @@ msgstr "國家"
 
 #: forms.py:158
 msgid "Country field is required"
-msgstr ""
+msgstr "國家欄位必填"
 
 #: forms.py:188
 #, python-format
@@ -162,11 +165,11 @@ msgstr ""
 
 #: forms.py:602 const/__init__.py:377
 msgid "suspended"
-msgstr ""
+msgstr "已停權"
 
 #: forms.py:603 const/__init__.py:378
 msgid "blocked"
-msgstr ""
+msgstr "已封鎖"
 
 #: forms.py:605
 msgid "administrator"
@@ -174,11 +177,11 @@ msgstr "管理員"
 
 #: forms.py:606 const/__init__.py:374
 msgid "moderator"
-msgstr ""
+msgstr "協調人"
 
 #: forms.py:625
 msgid "Change status to"
-msgstr ""
+msgstr "改變狀態至"
 
 #: forms.py:652
 msgid "which one?"
@@ -198,7 +201,7 @@ msgstr ""
 
 #: forms.py:692
 msgid "Cannot change status to admin"
-msgstr ""
+msgstr "無法將狀態改為管理員"
 
 #: forms.py:698
 #, python-format
@@ -221,11 +224,11 @@ msgstr ""
 
 #: forms.py:728
 msgid "Email:"
-msgstr ""
+msgstr "電子信箱："
 
 #: forms.py:730
 msgid "Your message:"
-msgstr "訊息內容："
+msgstr "您的訊息："
 
 #: forms.py:735
 msgid "I don't want to give my email or receive a response:"
@@ -261,7 +264,7 @@ msgstr ""
 
 #: forms.py:914 forms.py:957
 msgid "ask anonymously"
-msgstr ""
+msgstr "匿名提問"
 
 #: forms.py:916 forms.py:959
 msgid "Check if you do not want to reveal your name when asking this question"
@@ -310,7 +313,7 @@ msgstr "城市"
 
 #: forms.py:1396
 msgid "Show country"
-msgstr ""
+msgstr "顯示國家"
 
 #: forms.py:1401
 msgid "Show tag choices"
@@ -330,7 +333,7 @@ msgstr "個人簡介"
 
 #: forms.py:1425
 msgid "Screen name"
-msgstr ""
+msgstr "顯示名稱"
 
 #: forms.py:1457 forms.py:1461
 msgid "this email has already been registered, please use another one"
@@ -407,150 +410,150 @@ msgstr "問題"
 
 #: urls.py:56
 msgid "question/"
-msgstr ""
+msgstr "question/"
 
 #: urls.py:61
 msgid "tags/"
-msgstr ""
+msgstr "tags/"
 
 #: urls.py:66 urls.py:71 urls.py:78 urls.py:84 urls.py:93 urls.py:100
 msgid "users/"
-msgstr ""
+msgstr "users/"
 
 #: urls.py:71
 msgid "by-group/"
-msgstr ""
+msgstr "by-group/"
 
 #: urls.py:78 urls.py:159 urls.py:226 urls.py:520
 msgid "edit/"
-msgstr "編輯/"
+msgstr "edit/"
 
 #: urls.py:85
 msgid "subscriptions/"
-msgstr ""
+msgstr "subscriptions/"
 
 #: urls.py:94
 msgid "select_languages/"
-msgstr ""
+msgstr "select_languages/"
 
 #: urls.py:105
 msgid "groups/"
-msgstr ""
+msgstr "groups/"
 
 #: urls.py:110
 msgid "users/update_has_custom_avatar/"
-msgstr ""
+msgstr "users/update_has_custom_avatar/"
 
 #: urls.py:115 urls.py:120
 msgid "badges/"
-msgstr "徽章/"
+msgstr "badges/"
 
 #: urls.py:133
 msgid "feedback/"
-msgstr ""
+msgstr "feedback/"
 
 #: urls.py:154
 msgid "about/"
-msgstr "關於/"
+msgstr "about/"
 
 #: urls.py:155
 msgid "faq/"
-msgstr ""
+msgstr "faq/"
 
 #: urls.py:156
 msgid "privacy/"
-msgstr ""
+msgstr "privacy/"
 
 #: urls.py:157
 msgid "help/"
-msgstr ""
+msgstr "help/"
 
 #: urls.py:159 urls.py:164
 msgid "answers/"
-msgstr ""
+msgstr "answers/"
 
 #: urls.py:164 urls.py:256
 msgid "revisions/"
-msgstr "版本/"
+msgstr "revisions/"
 
 #: urls.py:221 urls.py:226 urls.py:231 urls.py:236 urls.py:241 urls.py:246
 #: urls.py:256
 msgid "questions/"
-msgstr "問題/"
+msgstr "questions/"
 
 #: urls.py:221 urls.py:495 urls.py:500 urls.py:505 urls.py:510
 msgid "ask/"
-msgstr "提問/"
+msgstr "ask/"
 
 #: urls.py:231
 msgid "retag/"
-msgstr ""
+msgstr "retag/"
 
 #: urls.py:236
 msgid "close/"
-msgstr ""
+msgstr "close/"
 
 #: urls.py:241
 msgid "reopen/"
-msgstr ""
+msgstr "reopen/"
 
 #: urls.py:246
 msgid "answer/"
-msgstr ""
+msgstr "answer/"
 
 #: urls.py:314
 msgid "tags/subscriptions/"
-msgstr ""
+msgstr "tags/subscriptions/"
 
 #: urls.py:319
 msgid "tags/subscriptions/delete/"
-msgstr ""
+msgstr "tags/subscriptions/delete/"
 
 #: urls.py:324
 msgid "tags/subscriptions/create/"
-msgstr ""
+msgstr "tags/subscriptions/create/"
 
 #: urls.py:329
 msgid "tags/subscriptions/edit/"
-msgstr ""
+msgstr "tags/subscriptions/edit/"
 
 #: urls.py:334
 msgid "suggested-tags/"
-msgstr ""
+msgstr "suggested-tags/"
 
 #: urls.py:459
 msgid "messages/"
-msgstr ""
+msgstr "messages/"
 
 #: urls.py:459
 msgid "markread/"
-msgstr ""
+msgstr "markread/"
 
 #: urls.py:490 urls.py:495 urls.py:500 urls.py:505 urls.py:510 urls.py:515
 #: urls.py:520 urls.py:525 urls.py:530
 msgid "widgets/"
-msgstr ""
+msgstr "widgets/"
 
 #: urls.py:510 deps/django_authopenid/urls.py:20
 msgid "complete/"
-msgstr ""
+msgstr "complete/"
 
 #: urls.py:515
 msgid "create/"
-msgstr ""
+msgstr "create/"
 
 #: urls.py:525
 msgid "delete/"
-msgstr ""
+msgstr "delete/"
 
 #: urls.py:560
 msgid "upload/"
-msgstr ""
+msgstr "upload/"
 
 #: urls.py:585 setup_templates/settings.py:229
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
-msgstr ""
+msgstr "account/"
 
 #: conf/access_control.py:8
 msgid "Access control settings"
@@ -590,7 +593,7 @@ msgstr ""
 
 #: conf/badges.py:13
 msgid "Badge settings"
-msgstr ""
+msgstr "徽章設定"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
@@ -690,7 +693,7 @@ msgstr ""
 
 #: conf/email.py:15
 msgid "Email and email alert settings"
-msgstr ""
+msgstr "電子信箱以及信箱通知設定"
 
 #: conf/email.py:24
 msgid "Prefix for the email subject line"
@@ -880,7 +883,7 @@ msgstr ""
 
 #: conf/external_keys.py:19
 msgid "Google site verification key"
-msgstr ""
+msgstr "Google 協作平台驗證金鑰"
 
 #: conf/external_keys.py:21
 #, python-format
@@ -922,7 +925,7 @@ msgstr ""
 
 #: conf/external_keys.py:84
 msgid "Facebook public API key"
-msgstr ""
+msgstr "Facebook 公開 API 金鑰"
 
 #: conf/external_keys.py:86
 #, python-format
@@ -934,7 +937,7 @@ msgstr ""
 
 #: conf/external_keys.py:99
 msgid "Facebook secret key"
-msgstr ""
+msgstr "Facebook 私鑰"
 
 #: conf/external_keys.py:107
 msgid "Twitter consumer key"
@@ -1345,7 +1348,7 @@ msgstr ""
 
 #: conf/karma_and_badges_visibility.py:47
 msgid "Badges can be either publicly shown or completely hidden"
-msgstr ""
+msgstr "徽章可以公開展示，也可以完全隱藏"
 
 #: conf/ldap.py:9
 msgid "LDAP login configuration"
@@ -1572,7 +1575,7 @@ msgstr ""
 
 #: conf/login_providers.py:60
 msgid "Upload your icon"
-msgstr ""
+msgstr "上傳您的圖示"
 
 #: conf/login_providers.py:93
 msgid "local password"
@@ -1894,7 +1897,7 @@ msgstr ""
 
 #: conf/sidebar_main.py:12
 msgid "Main page sidebar"
-msgstr ""
+msgstr "首頁資訊看板"
 
 #: conf/sidebar_main.py:20 conf/sidebar_question.py:67
 msgid "Custom sidebar header"
@@ -1959,7 +1962,7 @@ msgstr ""
 
 #: conf/sidebar_profile.py:12
 msgid "User profile sidebar"
-msgstr ""
+msgstr "使用者資料資訊看板"
 
 #: conf/sidebar_profile.py:20
 msgid "Custom sidebar"
@@ -2000,11 +2003,11 @@ msgstr ""
 
 #: conf/sidebar_question.py:92
 msgid "Show tag list in sidebar"
-msgstr ""
+msgstr "資訊看板顯示標籤清單"
 
 #: conf/sidebar_question.py:94
 msgid "Uncheck this if you want to hide the tag list from the sidebar "
-msgstr ""
+msgstr "若您想在資訊看板隱藏標籤清單，請取消勾選此項"
 
 #: conf/sidebar_question.py:105
 msgid "Show meta information in sidebar"
@@ -2297,7 +2300,7 @@ msgstr ""
 
 #: conf/skin_general_settings.py:234
 msgid "Apply custom style sheet (CSS)"
-msgstr ""
+msgstr "套用自訂樣式表 (CSS)"
 
 #: conf/skin_general_settings.py:236
 msgid ""
@@ -2307,7 +2310,7 @@ msgstr ""
 
 #: conf/skin_general_settings.py:248
 msgid "Custom style sheet (CSS)"
-msgstr ""
+msgstr "自訂樣式表 (CSS)"
 
 #: conf/skin_general_settings.py:250
 msgid ""
@@ -2320,7 +2323,7 @@ msgstr ""
 
 #: conf/skin_general_settings.py:266
 msgid "Add custom javascript"
-msgstr ""
+msgstr "加入自訂 JavaScript"
 
 #: conf/skin_general_settings.py:269
 msgid "Check to enable javascript that you can enter in the next field"
@@ -2501,7 +2504,7 @@ msgstr ""
 
 #: conf/user_settings.py:134
 msgid "Default Gravatar icon type"
-msgstr ""
+msgstr "預設 Gravatar 圖示類型"
 
 #: conf/user_settings.py:136
 msgid ""
@@ -2714,7 +2717,7 @@ msgstr "修改回答"
 
 #: const/__init__.py:201
 msgid "received badge"
-msgstr ""
+msgstr "收到的徽章"
 
 #: const/__init__.py:202
 msgid "marked best answer"
@@ -2903,7 +2906,7 @@ msgstr ""
 
 #: const/__init__.py:424
 msgid "Gravatar"
-msgstr ""
+msgstr "Gravatar"
 
 #: const/__init__.py:425
 msgid "Uploaded Avatar"
@@ -3096,39 +3099,39 @@ msgstr ""
 #: deps/django_authopenid/urls.py:14 deps/django_authopenid/urls.py:20
 #: deps/django_authopenid/urls.py:23 setup_templates/settings.py:229
 msgid "signin/"
-msgstr ""
+msgstr "signin/"
 
 #: deps/django_authopenid/urls.py:15
 msgid "widget/signin/"
-msgstr ""
+msgstr "widget/signin/"
 
 #: deps/django_authopenid/urls.py:18
 msgid "signout/"
-msgstr ""
+msgstr "signout/"
 
 #: deps/django_authopenid/urls.py:23
 msgid "complete-oauth/"
-msgstr ""
+msgstr "complete-oauth/"
 
 #: deps/django_authopenid/urls.py:32
 msgid "register/"
-msgstr ""
+msgstr "register/"
 
 #: deps/django_authopenid/urls.py:34
 msgid "signup/"
-msgstr ""
+msgstr "signup/"
 
 #: deps/django_authopenid/urls.py:38
 msgid "logout/"
-msgstr ""
+msgstr "logout/"
 
 #: deps/django_authopenid/urls.py:43
 msgid "recover/"
-msgstr ""
+msgstr "recover/"
 
 #: deps/django_authopenid/urls.py:45
 msgid "verify-email/"
-msgstr ""
+msgstr "verify-email/"
 
 #: deps/django_authopenid/util.py:379
 #, python-format
@@ -3146,7 +3149,7 @@ msgstr ""
 
 #: deps/django_authopenid/util.py:486
 msgid "Sign in with Yahoo"
-msgstr ""
+msgstr "使用 Yahoo 帳號登入"
 
 #: deps/django_authopenid/util.py:493
 msgid "AOL screen name"
@@ -3329,12 +3332,12 @@ msgstr ""
 
 #: deps/livesettings/values.py:251
 msgid "Default value: "
-msgstr ""
+msgstr "預設值："
 
 #: deps/livesettings/values.py:254
 #, python-format
 msgid "Default value: %s"
-msgstr ""
+msgstr "預設值：%s"
 
 #: deps/livesettings/values.py:641
 #, python-format
@@ -3578,7 +3581,7 @@ msgstr ""
 #: models/__init__.py:921
 msgid ""
 "Sorry, since your account is suspended you can edit only your own posts"
-msgstr ""
+msgstr "很抱歉，由於您的帳號已被停權，因此只能編輯自己的貼文。"
 
 #: models/__init__.py:926
 #, python-format
@@ -3620,7 +3623,7 @@ msgstr ""
 
 #: models/__init__.py:1040
 msgid "Sorry, since your account is blocked you cannot close questions"
-msgstr ""
+msgstr "很抱歉，由於您的帳號已遭封鎖，因此無法關閉問題。"
 
 #: models/__init__.py:1044
 msgid "Sorry, since your account is suspended you cannot close questions"
@@ -3741,7 +3744,7 @@ msgstr ""
 #: models/__init__.py:1274
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
-msgstr ""
+msgstr "很抱歉，由於您的帳號已被停權，因此只能刪除自己的留言"
 
 #: models/__init__.py:1278
 #, python-format
@@ -3769,13 +3772,13 @@ msgstr ""
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
-msgstr[0] ""
+msgstr[0] "於 %(hr)d 小時前"
 
 #: models/__init__.py:2003
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
-msgstr[0] ""
+msgstr[0] "於 %(min)d 分鐘前"
 
 #: models/__init__.py:2004
 #, python-format
@@ -3804,7 +3807,7 @@ msgstr ""
 
 #: models/__init__.py:2302
 msgid "Suspended User"
-msgstr ""
+msgstr "停權的使用者"
 
 #: models/__init__.py:2304
 msgid "Blocked User"
@@ -3831,19 +3834,19 @@ msgstr ""
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
-msgstr[0] ""
+msgstr[0] "%(count)d 個金牌"
 
 #: models/__init__.py:2515
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
-msgstr[0] ""
+msgstr[0] "%(count)d 個銀牌"
 
 #: models/__init__.py:2522
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
-msgstr[0] ""
+msgstr[0] "%(count)d 個銅牌"
 
 #: models/__init__.py:2533
 #, python-format
@@ -4545,12 +4548,12 @@ msgstr ""
 
 #: templates/badge.html:5
 msgid "Badge"
-msgstr "獎牌"
+msgstr "徽章"
 
 #: templates/badge.html:7
 #, python-format
 msgid "Badge \"%(name)s\""
-msgstr ""
+msgstr "「%(name)s」徽章"
 
 #: templates/badge.html:9 templates/user_profile/user_recent.html:16
 #: templates/user_profile/user_stats.html:71
@@ -4561,11 +4564,11 @@ msgstr ""
 #: templates/badge.html:14
 msgid "user received this badge:"
 msgid_plural "users received this badge:"
-msgstr[0] ""
+msgstr[0] "使用者收到此徽章："
 
 #: templates/badges.html:3 templates/badges.html.py:5
 msgid "Badges"
-msgstr "獎勵"
+msgstr "徽章"
 
 #: templates/badges.html:7
 msgid "Community gives you awards for your questions, answers and votes."
@@ -4579,7 +4582,7 @@ msgstr ""
 
 #: templates/badges.html:31
 msgid "Community badges"
-msgstr "社群獎勵"
+msgstr "徽章等級"
 
 #: templates/badges.html:33
 msgid "gold badge: the highest honor and is very rare"
@@ -5350,7 +5353,7 @@ msgstr ""
 
 #: templates/subscribe_for_tags.html:15
 msgid "Subscribe"
-msgstr ""
+msgstr "訂閱"
 
 #: templates/tags.html:17
 msgid "search for tags"
@@ -5552,7 +5555,7 @@ msgstr "登出"
 
 #: templates/authopenid/logout.html:5
 msgid "You have successfully logged out"
-msgstr ""
+msgstr "您已成功登出"
 
 #: templates/authopenid/logout.html:7
 msgid ""
@@ -5651,12 +5654,12 @@ msgstr ""
 #: templates/authopenid/signin.html:126
 #: templates/authopenid/widget_signin.html:129
 msgid "New password"
-msgstr ""
+msgstr "新的密碼"
 
 #: templates/authopenid/signin.html:135
 #: templates/authopenid/widget_signin.html:138
 msgid "Please, retype"
-msgstr ""
+msgstr "請重新輸入"
 
 #: templates/authopenid/signin.html:145
 #: templates/authopenid/widget_signin.html:148
@@ -6489,7 +6492,7 @@ msgstr ""
 
 #: templates/question/new_answer_form.html:12
 msgid "Login/Signup to Answer"
-msgstr ""
+msgstr "登入或註冊回答問題"
 
 #: templates/question/new_answer_form.html:20
 msgid "Your answer"
@@ -7084,7 +7087,7 @@ msgstr ""
 
 #: templates/user_profile/user_moderate.html:83
 msgid "Suspended users can only edit or delete their own posts."
-msgstr ""
+msgstr "遭到停權的使用者只能編輯或刪除自己的貼文。"
 
 #: templates/user_profile/user_moderate.html:86
 msgid ""
@@ -7437,7 +7440,7 @@ msgstr "用戶"
 
 #: templates/widgets/meta_nav.html:27
 msgid "badges"
-msgstr "獎勵榜"
+msgstr "徽章"
 
 #: templates/widgets/question_edit_tips.html:5
 msgid "ask a question interesting to this community"
@@ -7533,7 +7536,7 @@ msgstr ""
 
 #: templates/widgets/user_long_score_and_badge_summary.html:15
 msgid "badges:"
-msgstr ""
+msgstr "徽章："
 
 #: templates/widgets/user_navigation.html:17
 msgid "sign out"

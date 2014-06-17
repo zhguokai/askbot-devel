@@ -33,6 +33,8 @@
     askbot['settings']['sharingSuffixText'] = '{{ settings.SHARING_SUFFIX_TEXT|escape }}';
     askbot['data']['maxCommentLength'] = {{ settings.MAX_COMMENT_LENGTH }};
     askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
+    askbot['settings']['commentsEditorType'] = '{{ settings.COMMENTS_EDITOR_TYPE }}';
+    askbot['messages']['askYourQuestion'] = '{{ settings.WORDS_ASK_YOUR_QUESTION }}';
     {% if settings.ALLOWED_UPLOAD_FILE_TYPES %}
         askbot['settings']['allowedUploadFileTypes'] = [
             "{{ settings.ALLOWED_UPLOAD_FILE_TYPES|join('", "')|replace('.','') }}"
@@ -42,6 +44,7 @@
     {% endif %}
     askbot['data']['haveFlashNotifications'] = {{ user_messages|as_js_bool }};
     askbot['data']['activeTab'] = '{{ active_tab }}';
+    askbot['settings']['csrfCookieName'] = '{{ settings.CSRF_COOKIE_NAME }}';
     {% if search_state %}
         askbot['data']['searchUrl'] = '{{ search_state.query_string()|escapejs }}';
     {% else %}

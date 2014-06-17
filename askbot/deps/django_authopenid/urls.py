@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings as django_settings
-from django.conf.urls.defaults import patterns, url
+try:
+    from django.conf.urls import patterns, url
+except ImportError:
+    from django.conf.urls.defaults import patterns, url
 
 if django_settings.ASKBOT_TRANSLATE_URL == True:
     from django.utils.translation import ugettext as _
@@ -34,6 +37,11 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
         r'^%s$' % _('signup/'),
         'signup_with_password',
         name='user_signup_with_password'
+    ),
+    url(
+        r'change-password/',
+        'change_password',
+        name='change_password'
     ),
     url(r'^%s$' % _('logout/'), 'logout_page', name='logout'),
     #these two commeted out urls should work only with EMAIL_VALIDATION=True

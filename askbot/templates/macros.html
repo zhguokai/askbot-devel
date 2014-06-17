@@ -2,7 +2,7 @@
 
 {%- macro share(site = None, site_label = None, icon = False) -%}
     <a class="{{ site }}-share{% if icon == True %} icon{% endif %}"
-        title="{% trans %}Share this question on {{site}}{% endtrans %}"
+        title="{% trans %}Share this content on {{site}}{% endtrans %}"
     >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
 {%- endmacro -%}
 
@@ -60,7 +60,9 @@
     {% else %}
         {{ user_card(user, karma_mode=karma_mode, badges_mode=badges_mode) }}
     {% endif %}
-    {{ user_primary_group(user) }}
+    {% if settings.GROUPS_ENABLED %}
+        {{ user_primary_group(user) }}
+    {% endif %}
 {%- endmacro -%}
 
 {%- macro post_last_updater_and_creator_info(
@@ -89,12 +91,12 @@ poor design of the data or methods on data objects #}
     <div class='post-update-info'>
     {% if is_wiki %}
         <p>
-           {%- if post.is_question() -%}
-                {%- trans %}asked{% endtrans %}
-           {% elif post.is_answer() %}
-                {%- trans %}answered{% endtrans %}
+           {%- if post_type == 'question' -%}
+               {{ settings.WORDS_ASKED|escape }}
+           {% elif post_type == 'answer' %}
+               {{ settings.WORDS_ANSWERED|escape }}
            {% else %}
-                {%- trans %}posted{% endtrans %}
+               {%- trans %}posted{% endtrans %}
            {% endif %}
            <strong>{{ timeago(post.added_at) }}</strong>
         </p>
@@ -109,9 +111,9 @@ poor design of the data or methods on data objects #}
         <p style="line-height:12px;">
             {# todo: access to class names needs to be removed here #}
             {% if post_type == 'question' %}
-                {% trans %}asked{% endtrans %}
+                {{ settings.WORDS_ASKED|escape }}
             {% elif post_type == 'answer' %}
-                {% trans %}answered{% endtrans %}
+                {{ settings.WORDS_ANSWERED|escape }}
             {% else %}
                 {% trans %}posted{% endtrans %}
             {% endif %}
@@ -313,7 +315,6 @@ poor design of the data or methods on data objects #}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
             {% if is_link %}
             href="{{ search_state.add_tag(tag).full_url() }}"
-            title="{% trans tag=tag|escape %}see questions tagged '{{ tag }}'{% endtrans %}"
             {% endif %}
             rel="tag"
             data-tag-name="{{ tag|replace('*', '&#10045;')|escape }}"
@@ -389,7 +390,8 @@ for the purposes of the AJAX comment editor #}
         show_comment = None,
         show_comment_position = None,
         user=None,
-        max_comments=None
+        max_comments=None,
+        csrf_token=None
     )
 -%}
     {% spaceless %}
@@ -408,7 +410,10 @@ for the purposes of the AJAX comment editor #}
             {% for comment in comments %}
                 {# Warning! Any changes to the comment markup IN THIS `FOR` LOOP must be duplicated in post.js
                    for the purposes of the AJAX comment editor #}
-                <div class="comment" id="comment-{{comment.id}}">
+                <div class="comment" 
+                    id="comment-{{comment.id}}"
+                    data-post-id="{{ comment.id }}"
+                >
                     <div class="comment-votes">
                         {% if comment.score > 0 %}
                             <div 
@@ -433,7 +438,7 @@ for the purposes of the AJAX comment editor #}
                             ></span>
                         </div>
                         <div class="comment-body">
-                            {{comment.html}}
+                            {{ comment.summary }}
                             <a 
                                 class="author"
                                 href="{{comment.author.get_profile_url()}}"
@@ -449,7 +454,7 @@ for the purposes of the AJAX comment editor #}
                                 accept-charset="utf-8"
                                 class='convert-comment'
                             >
-                                {% csrf_token %}
+                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                                 <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
                                 <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
                             </form>
@@ -641,7 +646,7 @@ for the purposes of the AJAX comment editor #}
 
 {%- macro user_full_location(user) -%}
     {% if user.location %}
-        {{ user.location }},
+        {{ user.location|escape }},
     {% endif %}
     {{ user_country_name_and_flag(user) }}
 {%- endmacro -%}
@@ -685,40 +690,69 @@ for the purposes of the AJAX comment editor #}
 {%- macro paginator(p, position='left', anchor='') -%}{# p is paginator context dictionary #}
 {% spaceless %}
     {% if p.is_paginated %}
-        <div class="paginator" style="float:{{position}}">
-        {% if p.has_previous %}
-            <span class="prev"><a href="{{p.base_url}}page={{ p.previous }}{{ anchor }}" title="{% trans %}previous{% endtrans %}">
-        &laquo; {% trans %}previous{% endtrans %}</a></span>
-        {% endif %}
-        {% if not p.in_leading_range %}
-            {% for num in p.pages_outside_trailing_range %}
-                <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" >{{ num }}</a></span>
-            {% endfor %}
-        ...
-        {% endif %}
+        <div 
+            class="paginator"
+            style="float:{{ position }}"
+            data-num-pages="{{ p.pages }}"
+        >
+        <span class="prev"
+            {% if not p.has_previous %}style="display: none"{% endif %}
+        ><a href="{{p.base_url}}page={{ p.previous }}{{ anchor }}" 
+            title="{% trans %}previous{% endtrans %}"
+        >&laquo; {% trans %}previous{% endtrans %}</a></span>
+
+        <span class="first-page-nav"
+            {% if p.in_leading_range %}style="display: none"{% endif %}
+        >
+            <span class="page first-page"
+                data-page="1"
+            >
+                <a href="{{p.base_url}}page={{1}}{{ anchor }}" >1</a>
+            </span>
+            <span class="leading-sep">...</span>
+        </span>
          
+        <span class="main-pages-nav">
         {% for num in p.page_numbers %}
-          {% if num == p.page and p.pages != 1%}
-            <span class="curr" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
-          {% else %}
-            <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
-          {% endif %}
+            {% if num == p.page %}
+                <span class="curr page" 
+                    data-page="{{ num }}"
+                    title="{% trans %}current page{% endtrans %}"
+                ><a>{{ num }}</a></span>
+            {% else %}
+                <span class="page"
+                    data-page="{{ num }}"
+                ><a href="{{p.base_url}}page={{ num }}{{ anchor }}"
+                    title="{% trans %}page {{num}}{% endtrans %}"
+                >{{ num }}</a></span>
+            {% endif %}
         {% endfor %}
-         
-        {% if not p.in_trailing_range %}
-            ...
-            {% for num in p.pages_outside_leading_range|reverse %}
-                <span class="page"><a href="{{p.base_url}}page={{ num }}{{ anchor }}" title="{% trans %}page {{ num }}{% endtrans %}">{{ num }}</a></span>
-            {% endfor %}
-        {% endif %}
-        {% if p.has_next %}
-            <span class="next"><a href="{{p.base_url}}page={{ p.next }}{{ anchor }}" title="{% trans %}next page{% endtrans %}">{% trans %}next page{% endtrans %} &raquo;</a></span>
-        {% endif %}
-        </div>
+        </span>
+
+        {# the "last page" navigation #}
+        <span class="last-page-nav"
+            {% if p.in_trailing_range %}style="display: none"{% endif %}
+        >
+            <span class="trailing-sep">...</span>
+            <span class="page last-page" data-page="{{ p.pages }}">
+                <a href="{{ p.base_url }}page={{ p.pages }}{{ anchor }}"
+                    title="{% trans num=p.pages %}page {{ num }}{% endtrans %}"
+                >{{ p.pages }}</a>
+            </span>
+        <span>
+
+        {# "next" nav link #}
+        <span class="next"
+            {% if not p.has_next %}style="display: none"{% endif %}
+        ><a href="{{p.base_url}}page={{ p.next }}{{ anchor }}"
+                title="{% trans %}next page{% endtrans %}"
+        >{% trans %}next{% endtrans %} &raquo;</a>
+        </span>
+
+    </div>
     {% endif %}
 {% endspaceless %}
 {%- endmacro -%}
-
 
 
 {%- macro paginator_main_page(p, position, search_state) -%} {# p is paginator context dictionary #}
@@ -738,7 +772,7 @@ for the purposes of the AJAX comment editor #}
 
                 {% for num in p.page_numbers %}
                     {% if num == p.page and p.pages != 1%}
-                        <span class="curr" title="{% trans %}current page{% endtrans %}">{{ num }}</span>
+                        <span class="curr page" title="{% trans %}current page{% endtrans %}"><a>{{ num }}</a></span>
                     {% else %}
                         <span class="page"><a href="{{ search_state.change_page(num).full_url() }}" title="{% trans %}page {{num}}{% endtrans %}">{{ num }}</a></span>
                     {% endif %}
@@ -815,4 +849,11 @@ for the purposes of the AJAX comment editor #}
             form.decorate($("{{form}}"));
         })();
     </script>
+{% endmacro %}
+
+{% macro form_field_with_errors(field) %}
+    {% if field.errors %} 
+        <p class="error">{{ field.errors|join(", ") }}</p>
+    {% endif %}
+    {{ field }}
 {% endmacro %}

@@ -1,10 +1,11 @@
 <div class="post question" data-post-id="{{ question.id }}">
     <div class="vote-buttons">
         {% include "question/question_vote_buttons.html" %}
+
         {% include "question/share_buttons.html" %}
     </div>
     <div id="post-id-{{question.id}}" class="post-content{% if question.deleted %} deleted{% endif %}">
-        <h1><a href="{{ question.get_absolute_url() }}">{{ thread.get_title(question)|escape }}</a></h1>
+        <h1><a href="{{ question.get_absolute_url() }}">{{ thread.get_title()|escape }}</a></h1>
         {% include "question/question_tags.html" %}
         <div class="clearfix"></div>
 
@@ -12,7 +13,7 @@
             <div class="post-update-info-container">
                 {% include "question/question_author_info.html" %}
             </div>
-            {{ question.html }}
+            {{ question.summary }}
         </div>
         <div id="question-controls" class="post-controls">
             {% include "question/question_controls.html" %}

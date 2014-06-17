@@ -205,6 +205,9 @@ h1 {
 
 body.user-messages {
     margin-top: 2.4em;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 /* ----- Custom positions ----- */
@@ -334,6 +337,9 @@ body.user-messages {
         background: white;
         display: block;
     }
+}
+.select-language {
+    margin-top: 6px;
 }
 
 #userToolsNav {/* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
@@ -487,37 +493,44 @@ body.user-messages {
     border-top:#fcfcfc 1px solid;
     margin-bottom:10px;
     font-family:@main-font;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    td {
+        padding: 0;
+        &.search-bar {
+            padding: 0 32px 0 15px;
+            position: relative;
+        }
+    }
 }
 
 #homeButton{
     border-right: #afaf9e 1px solid;
     .sprites(-6px,-36px);
-    height:55px;
-    width:43px;
-    display:block;
-    float:left;
+    height: 54px;
+    width: 43px;
+    display: block;
+    float: left;
 }
 
-#homeButton:hover{
+#homeButton:hover {
     .sprites(-51px,-36px);
 }
 
 .scope-selector {
-    display:block;
-    float:left;
-    font-size:20px;
-    color:#7a7a6b;
-    height:55px;
-    line-height:55px;
-    margin-left:16px
-}
-
-.scope-selector.on {
-    background:url(../images/scopearrow.png) no-repeat center bottom;
-}
-
-.scope-selector.ask-message {
-    font-size:24px;
+    display: inline-block;
+    font-size: 20px;
+    color: #7a7a6b;
+    height: 55px;
+    line-height: 55px;
+    margin-left: 16px;
+    &.on {
+        background: url(../images/scopearrow.png) no-repeat center 41px;
+    }
+    &.ask-message {
+        font-size: 24px;
+    }
 }
 
 .validate-email-page {
@@ -539,12 +552,12 @@ body.user-messages {
 }
 
 #searchBar { /* Main search form , check widgets/search_bar.html */
-    display: block;
-    background-color: #fff;
     border: 1px solid #c9c9b5;
+    background: white;
     height: 41px;
     z-index: 1000;
     position: relative;
+    width: 100%;
 
     /* the guts are absolute-positioned */
     input.searchInput,
@@ -605,17 +618,20 @@ body.user-messages {
 
 .search-drop-menu {
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     background: whitesmoke;
-    border: 1px solid #c9c9b5;
     border-top: none;
+    top: 42px;
     margin: 0;
-    position: relative;
+    outline: 1px solid #dadad4;
+    position: absolute;
     z-index: 10000;
 
     ul {
         list-style: none;
         overflow: auto;
-        padding: 0 0 10px 0;
+        padding: 0;
         margin: 0;
         position: relative;
         width: 100%;
@@ -634,13 +650,13 @@ body.user-messages {
         }
     }
 
-    ul.empty {
-        margin-bottom: 0;
-    }
-
     .footer {
         text-align: center;
-        padding: 9px 0 10px 0;
+        margin: 0 0 1px 0;
+        padding: 4px 0 10px 0;
+    }
+    &.empty .footer {
+        padding-top: 9px;
     }
 }
 
@@ -666,7 +682,7 @@ input[type="submit"].searchBtn {
     border:#FFF 1px solid;
     line-height: 22px;
     text-align: center;
-    margin: 1px 0 0 0;
+    margin: 0;
     width: 48px;
     .sprites(-98px,-37px);
     .rounded-corners(0);
@@ -694,12 +710,18 @@ input[type="submit"].searchBtn {
         color: white;
         height: 0;
         z-index: 0;
+        position: absolute;
+        left: -1000px;/* hide away */
     }
-    .search-drop-menu.empty {
-        border: none;
-        padding: 0;
-        ul {
-            padding: 0;
+    .search-drop-menu {
+        top: 37px;
+        &.empty {
+            border: none;
+            outline: none;
+            padding: 0 !important;
+            ul {
+                padding: 0 !important;
+            }
         }
     }
 }
@@ -822,74 +844,22 @@ form.ajax-file-upload {
     font-size: 20px;
     height: 42px;
     line-height: 44px;
-    margin: 6px 0 0 0;
+    margin: -1px 0 0 0;
     text-transform: uppercase;
     width: 200px;/* to match width of sidebar */
 }
 
-/* 
-    Put the secondary navigation together:
-    1) raise the search bar by 55px
-    2) add padding to fit the buttons
-*/
-#searchBar {
-    margin: 0 228px 0 327px;
-    width: auto;
-    margin-top: -49px;
-    padding: 0 49px 0 8px;
-}
-/* line up drop menu the same way as the search bar */
 .search-drop-menu {
-    margin: 0 228px 0 327px;
-    width: auto;
+    width: 100%;
 }
 .ask-page .search-drop-menu,
 body.anon.ask-page .search-drop-menu {
-    margin: -9px 0 10px;
+    padding: 5px 10px 6px 0;
 }
 #scopeNav {
-    height: 41px;
-    float: left;
-    width: 280px;
-}
-.scopes-True-True-False {
-    #searchBar,
-    .search-drop-menu {
-        margin-left: 228px;
-    }
-    #scopeNav {
-        width: 180px;
-    }
-}
-.scopes-True-False-True {
-    #searchBar,
-    .search-drop-menu {
-        margin-left: 203px;
-    }
-    #scopeNav {
-        width: 150px;
-    }
-}
-.scopes-False-True-True {
-    #searchBar,
-    .search-drop-menu {
-        margin-left: 286px;
-    }
-    #scopeNav {
-        width: 238px;
-    }
-}
-.scopes-True-False-False,
-.scopes-False-True-False,
-.scopes-False-False-True,
-.scopes-False-False-False {
-    #searchBar,
-    .search-drop-menu {
-        margin-left: 52px;
-    }
-    #scopeNav {
-        width: 0;
-    }
+    height: 54px;
+    display: inline-block;
+    white-space: nowrap;
 }
 
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
@@ -1121,7 +1091,7 @@ body.anon.ask-page .search-drop-menu {
     -khtml-border-radius: 5px;
     -webkit-border-radius: 5px;
     .box-shadow(1px, 1px, 3px, #999);
-    padding: 7px 10px 1px 10px;
+    padding: 7px 10px 9px 0;
     margin-bottom: 10px;
     width: 100%;
     ul {
@@ -1222,7 +1192,7 @@ body.anon.ask-page .search-drop-menu {
     width:52px;
     padding-left: 2px;
     padding-top:3px;
-    background:#fff url(../images/feed-icon-small.png) no-repeat center right;
+    background: url(../images/feed-icon-small.png) no-repeat center right;
     float:right;
     font-family: @sort-font;
     font-size:16px;
@@ -1255,7 +1225,8 @@ body.anon.ask-page .search-drop-menu {
 ul#searchTags {
     margin-left:10px;
     float:right;
-    padding-top:2px;
+    padding: 8px 6px 0px 6px;
+    min-width: 43px;
 }
 
 .search-tips {
@@ -1449,38 +1420,42 @@ ul#searchTags {
 
     .prev a, .prev a:visited,
     .next a, .next a:visited {
-         background-color: #fff;
+        background-color: #fff;
         color: #777;
         padding: 2px 4px 3px 4px;
     }
-    a{
-        color:@section-title;
+    a {
+        color: @section-title;
     }
-    .prev {
+    .prev,
+    .next {
         margin-right: .5em;
     }
 
-    .next {
-        margin-left: .5em;
-    }
-
     .page a, .page a:visited, .curr {
-        padding: .25em;
-        background-color: #fff;
-        margin: 0em .25em;
-        color: #ff;
+        padding: 0 .25em;
+        margin: 0em .15em 0 0;
     }
 
     .curr {
-        background-color: #8ebcc7;
+        /*background-color: #8ebcc7;*/
         color: #fff;
         font-weight: bold;
+        a {
+            background: #8ebcc7;
+            color: white;
+            /*padding: 0;*/
+        }
     }
-    .next a, .prev a{
-        color:@section-title
+    .curr.page {
+        a:hover {
+            background: #8ebcc7;
+            color: white;
+            padding: 0 0.25em;
+        }
     }
+
     .page a:hover,
-    .curr a:hover,
     .prev a:hover,
     .next a:hover {
         color: #8C8C8C;
@@ -1602,7 +1577,7 @@ ul#related-tags li {
     background: #f3f6f6;
     border:#fff 1px solid ;
     border-top:#fff 2px solid;
-    outline:#cfdbdb 1px solid;
+    outline:#cfdbdb 1px solid !important;
    /* .box-shadow(0px,1px,0px,#88a8a8);*/
     display: block;
     float: left;
@@ -1725,7 +1700,18 @@ ul#related-tags li {
     background: #b32f2f;
 }
 
+.expander {
+    .wait-icon-box {
+        display: inline-block;
+        margin: 0;
+    }
+}
 
+.snippet:hover {
+    .expander a {
+        text-decoration: underline;
+    }
+}
 
 .tag-number {
     font-weight: normal;
@@ -1759,6 +1745,7 @@ ul#related-tags li {
     padding: 4px 0 0 0;
     margin-top:0px;
     width: 100%;
+    position: relative;
 
     p {
        margin:0 0 5px 0;
@@ -1845,7 +1832,10 @@ ul#related-tags li {
         max-width: 395px;
     }
     .lang-selector {
-        margin: 1px 0 0 5px;
+        margin: 9px 0 0 0;
+        select {
+            margin: 3px 0;
+        }
     }
 }
 
@@ -2234,6 +2224,7 @@ ul#related-tags li {
         font-family: @body-font;
         color: #4b4b4b;
         word-wrap: break-word;
+        max-width: 683px;
 
         a {
             color:@link;
@@ -2272,7 +2263,7 @@ ul#related-tags li {
         float: right;
         font-size: 9px;
         font-family:@secondary-font;
-        line-height: 13px;
+        line-height: 12px;
         margin:0px 0px 5px 5px;
         padding:4px;
         width: 166px;
@@ -2474,6 +2465,10 @@ ul#related-tags li {
     .comments {
         font-size: 12px;    
         clear: both;
+
+        .truncated-post:nth-last-child(3) {
+            float: left;
+        }
         
         div.controls {
             width: 100%;
@@ -2916,6 +2911,32 @@ ul#related-tags li {
 
 /* -----Content pages, Login, About, FAQ, Users----- */
 
+.openid-signin {
+    input[type="text"],
+    input[type="password"] {
+        color: #525252;
+        font-size: 12px;
+        line-height: 25px;
+        height: 25px;
+        margin: 0px;
+        padding: 0 5px;
+        width: 200px;
+    }
+}
+
+.registration-page {
+    .login {
+        input[type="text"] {
+            height: 22px;
+            font-size: 12px;
+            line-height: 22px;
+            color: #525252;
+            padding: 0 5px;
+            width: 200px;
+        }
+    }
+}
+
 .openid-signin,
 .meta,
 .user-profile-edit-page,
@@ -2938,18 +2959,17 @@ ul#related-tags li {
     }
 }
 
-.openid-signin,
 .meta,
 .users-page,
 .user-profile-edit-page,
 .user-profile-page {
-    form{
+    form {
         margin-bottom:15px;
     }
 
     input[type="text"],
     input[type="password"],
-    select{
+    select {
         height:25px;
         line-height: 25px;
         padding-left:5px;
@@ -3016,7 +3036,6 @@ ul#related-tags li {
     margin-bottom: 5px;
 }
 
-#email-input-fs,
 #local_login_buttons,
 #password-fs,
 #openid-fs,
@@ -3142,7 +3161,7 @@ a:hover.medal {
 
 /* profile page */
 
-.tabBar-profile{
+.tabBar-profile {
     width:100%;
     margin-bottom:5px;
     float:left;
@@ -3151,7 +3170,7 @@ a:hover.medal {
 .user-profile-page {
     color:@info-text-dark;
 
-    p{
+    p {
         font-size:13px;
         line-height:1.3;
         color:@info-text-dark;
@@ -3160,9 +3179,31 @@ a:hover.medal {
         border:#eee 1px solid;
        padding:5px;
     }
+
+    form {
+        margin-bottom: 0;
+    }
+
     h2 {
-        padding:10px 0px 10px 0px;
-        font-family:@main-font;
+        padding: 4px 0px 10px 0px;
+        font-family: @main-font;
+    }
+
+    h3 {
+        padding: 0;
+        margin-top: -3px;
+    }
+
+    .submit-row {
+        margin-bottom: 0;
+    }
+
+    .user-stats-table h2 {
+        padding-top: 10px;
+    }
+
+    .user-stats-table.badges {
+        margin-bottom: 30px;
     }
 
     .up-votes,
@@ -3175,9 +3216,11 @@ a:hover.medal {
         line-height: 22px;
         margin: 0 15px 0 2px;
     }
+    
     .up-votes {
         background: url(../images/vote-arrow-up-on.png) no-repeat;
     }
+    
     .down-votes {
         background: url(../images/vote-arrow-down-on.png) no-repeat;
     }
@@ -3186,8 +3229,28 @@ a:hover.medal {
         margin-top: 10px; 
         margin-bottom: 10px; 
     }
-    select {
-        margin-bottom: 12px;
+    .pager {
+        margin-bottom: 0;
+    }
+    .paginator {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .users-questions {
+        margin-top: -10px;
+    }
+
+    .avatar p {
+        margin-bottom: 0px;
+    }
+    .tabBar a#stats {
+        margin-left: 0;
+    }
+    img.gravatar {
+        margin: 2px 0 3px 0;
+    }
+    .vote-notification h3 {
+        padding: 10px;
     }
 }
 
@@ -3764,6 +3827,15 @@ a.offensive {
     margin-bottom: 0px;
 }
 
+.system-messages {
+    color: red;
+    background: yellow;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 25px;
+    padding: 0 5px;
+}
+
 p.space-above {
     margin-top: 10px;
 }
@@ -3991,12 +4063,13 @@ ul.post-tags {
 }
 
 ul.post-retag {
-    margin-bottom:0px;
-    margin-left:5px;
+    margin-bottom: 0px;
+    margin-left: 5px;
     input {
         width: 400px;
-        height: 1.5em;
-        margin: 3px 0 0 -3px;
+        height: 22px;
+        margin: 3px 0 0 -5px;
+        padding: 0 5px;
     }
 }
 
@@ -4111,28 +4184,6 @@ p.signup_p {
     display: inline;
 }
 
-.user-profile-page {
-    .avatar p {
-        margin-bottom: 0px;
-    }
-    .tabBar a#stats {
-        margin-left: 0;
-    }
-    img.gravatar {
-        margin: 2px 0 3px 0;
-    }
-    h3 {
-        padding: 0;
-        margin-top: -3px;
-    }
-    .vote-notification h3 {
-        padding: 10px;
-    }
-    ul.tags {
-        margin-left: 5px;
-    }
-}
-
 .userList {
     font-size: 13px;
 }
@@ -4154,7 +4205,7 @@ p.signup_p {
 
     .avatar-box {
         float: left;
-        margin: 3px 6px 0 0;
+        margin: 0px 6px 0 2px;
     }
     .info {
         height: 32px;
@@ -4211,6 +4262,10 @@ a.edit {
 a.primary-group-name {
     color: #990E08;
     font-weight: bold;
+}
+
+.post-update-info .user-info {
+    margin-top: -2px;
 }
 
 .users-page {
@@ -4372,27 +4427,31 @@ textarea.tipped-input {
 
 /* tag editor */
 .tag-editor {
-    height: 64px;
-    border: #ccc 3px solid;
-    padding-left: 8px;
+    height: 32px;
+    border: #cce6ec 3px solid;
+    padding-left: 6px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     ul.tags {
         margin: 0;
         li {
-            margin-top: 8px;
+            margin-top: 6px;
             height: 13px;
         }
     }
     input.new-tags-input,
     input.new-tags-input:focus {
         border: none;
-        font-size: 15px;
+        box-shadow: none;
+        font-size: 14px;
         font-color: @info-text;
         height: 16px;
         line-height: 16px;
-        margin-top: 9px;
+        margin: 9px 0 0 -6px;
         -webkit-box-shadow: none;/* undo bootstrap glow */
         -moz-box-shadow: none;
-        box-shadow: none;
+        padding: 0 0 0 6px;
     }
 }
 
@@ -4541,6 +4600,10 @@ td.setting-input {
         -o-transition: border linear 0.2s, box-shadow linear 0.2s;
         transition: border linear 0.2s, box-shadow linear 0.2s;
     }
+}
+
+#recaptcha_area, #recaptcha_table { 
+    line-height: 0!important;
 }
 
 .acInput {
@@ -4773,16 +4836,28 @@ td.setting-input {
     .short-summary:first-child {
         padding-top: 0;
     }
-    #searchBar,
-    body.anon #searchBar {
-        margin: -49px 8px 0 52px;
-    }
-    .search-drop-menu,
-    body.anon .search-drop-menu {
-        margin: 0 8px 0 52px;
-    }
     .short-summary {
         width: 100%;
+    }
+    #secondaryHeader td.search-bar {
+        padding: 0 6px;
+    }
+}
+
+@media screen and (max-width: 540px) {
+    .question-page {
+        .post-controls {
+            float: left;
+            margin-left: -8px;
+            padding-left: 0;
+            text-align: left;
+            .question-close {
+                display: none;
+            }
+        }
+        div.comments.empty {
+            margin-top: 0;
+        }
     }
 }
 
@@ -4806,6 +4881,18 @@ td.setting-input {
     }
 }
 
+@media screen and (max-width: 380px) {
+    .wmd-button-bar {
+        .wmd-hr-button,
+        .wmd-heading-button {
+            display: none;
+        }
+    }
+    .editor-status {
+        margin-right: 0;
+    }
+}
+
 @media screen and (max-width: 338px) {
     #scopeNav {
         display: none;
@@ -4818,6 +4905,11 @@ td.setting-input {
         #id_post_author_email {
             width: 100%;
             margin: 6px 0;
+        }
+    }
+    .question-page .post-controls {
+        .offensive-flag {
+            display: none;
         }
     }
 }
@@ -4850,33 +4942,16 @@ body.lang-zh_TW {
     &.question-page a.submit {
         line-height: 30px !important;
     }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 194px;
-        }
-    }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 274px;
-        }
-    }
 }
 
 body.lang-hu {
-  .scope-selector{
+  .scope-selector {
     font-size: 17px;
     margin-left: 10px;
   }
-  .scopes-True-True-False {
-    #scopeNav {
-        width: 200px;
-    }
-    #searchBar,
-    .search-drop-menu {
+   #searchBar,
+  .search-drop-menu {
         margin-left: 252px;
-    }
   }
   .box {
     .inputs{
@@ -4915,44 +4990,11 @@ body.lang-es {
   .short-summary .counts .votes div {
     font-size: 10px; 
   }
-    .scopes-True-True-False {
-        #scopeNav {
-            width: 187px;
-        }
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 250px;
-        }
-    }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 327px;
-        }
-    }
 }
 
 body.lang-de {
     .scope-selector {
         font-size: 17px;
-    }
-    .scopes-True-True-False {
-        #scopeNav {
-            width: 218px;
-        }
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 250px;
-        }
-    }
-    .scopes-True-True-True {
-        #scopeNav {
-            width: 354px;
-        }
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 354px;
-        }
     }
     #metaNav a {
         font-size: 16px;
@@ -4983,12 +5025,6 @@ body.lang-gl {
             }
         }
     }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 299px;
-        }
-    }
 }
 
 body.lang-pt_BR {
@@ -5002,21 +5038,9 @@ body.lang-pt_BR {
             }
         }
     }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 236px;
-        }
-    }
 }
 
 body.lang-fr {
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 287px;
-        }
-    }
     .box {
         .inputs {
             #interestingTagInput,
@@ -5039,18 +5063,6 @@ body.lang-fi {
     .scope-selector {
         font-size: 17px;
     }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 371px;
-        }
-    }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 268px;
-        }
-    }
     .box {
         .inputs {
             #interestingTagInput,
@@ -5064,23 +5076,8 @@ body.lang-fi {
 }
 
 body.lang-ru {
-    #scopeNav {
-        width: 315px;
-    }
     .scope-selector {
         font-size: 17px;
-    }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 326px;
-        }
-    }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 227px;
-        }
     }
     .box {
         .inputs {
@@ -5098,18 +5095,6 @@ body.lang-ko {
     #scopeNav {
         width: 315px;
     }
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 248px;
-        }
-    }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 183px;
-        }
-    }
     .box {
         .inputs {
             #interestingTagInput,
@@ -5124,18 +5109,6 @@ body.lang-ko {
 
 body.lang-nb_NO,
 body.lang-nb_NO, {
-    .scopes-True-True-True {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 289px;
-        }
-    }
-    .scopes-True-True-False {
-        #searchBar,
-        .search-drop-menu {
-            margin-left: 220px;
-        }
-    }
     .box {
         .inputs {
             #interestingTagInput,

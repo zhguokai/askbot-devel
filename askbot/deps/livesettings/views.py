@@ -62,7 +62,7 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
     return render_to_response(template, {
         'all_super_groups': mgr.get_super_groups(),
         'title': title,
-        'group' : settings,
+        'settings_group' : settings,
         'form': form,
         'use_db' : use_db
     }, context_instance=RequestContext(request))

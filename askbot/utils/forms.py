@@ -283,7 +283,7 @@ class SetPasswordForm(forms.Form):
     password2 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
                                 label=mark_safe(_('Password <i>(please retype)</i>')),
                                 error_messages={'required':_('please, retype your password'),
-                                                'nomatch':_('sorry, entered passwords did not match, please try again')},
+                                                'nomatch':_('entered passwords did not match, please try again')},
                                 )
 
     def __init__(self, data=None, user=None, *args, **kwargs):

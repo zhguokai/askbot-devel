@@ -102,7 +102,7 @@ def notify_author_of_published_revision_celery_task(revision):
         if revision.post.is_question():
             mailto_link_subject = revision.post.thread.title
         else:
-            mailto_link_subject = _('An edit for my answer')
+            mailto_link_subject = _('make an edit by email')
         #todo: possibly add more mailto thread headers to organize messages
 
         prompt = _('To add to your post EDIT ABOVE THIS LINE')
@@ -118,7 +118,7 @@ def notify_author_of_published_revision_celery_task(revision):
         }
 
         #load the template
-        activate_language(revision.author.languages.split()[0])
+        activate_language(revision.post.language_code)
         template = get_template('email/notify_author_about_approved_post.html')
         #todo: possibly add headers to organize messages in threads
         headers = {'Reply-To': append_content_address}
@@ -254,7 +254,7 @@ def send_instant_notifications_about_activity_in_post(
 
         reply_address, alt_reply_address = get_reply_to_addresses(user, post)
 
-        activate_language(user.languages.split()[0])
+        activate_language(post.language_code)
         subject_line, body_text = format_instant_notification_email(
                             to_user = user,
                             from_user = update_activity.user,

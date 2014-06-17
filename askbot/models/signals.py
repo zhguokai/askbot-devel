@@ -56,6 +56,7 @@ post_revision_published = django.dispatch.Signal(
                                 ]
                             )
 site_visited = django.dispatch.Signal(providing_args=['user', 'timestamp'])
+reputation_received = django.dispatch.Signal(providing_args=['user', 'reputation_before'])
 
 def pop_signal_receivers(signal):
     """disables a given signal by removing listener functions
