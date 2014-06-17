@@ -427,7 +427,8 @@ def get_enabled_major_login_providers():
             'resource_endpoint': 'https://graph.facebook.com/',
             'icon_media_path': '/jquery-openid/images/facebook.gif',
             'get_user_id_function': get_facebook_user_id,
-            'response_parser': lambda data: dict(urlparse.parse_qsl(data))
+            'response_parser': lambda data: dict(urlparse.parse_qsl(data)),
+            'scope': ['email',],
         }
     if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
         data['twitter'] = {

@@ -82,7 +82,7 @@ $.fn.authenticator = function() {
                         if (confirm(message)){
                             $.ajax({
                                 type: 'POST',
-                                url: authUrl + 'delete_login_method/',//url!!!
+                                url: askbot['urls']['deleteLoginMethod'],
                                 data: {provider_name: provider_name},
                                 success: function(data, text_status, xhr){
                                     $(provider_row).remove();

@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development master branch (only on github)
 ------------------------------------------
+* Allow custom destination url under the logo
+* Option to allow asking without registration (Egil Moeller)
 * Implemented Mozilla Persona authentication
 * Allowed custom providers of gravatar service (michas2)
 * Allowed configurable custom OpenID login button

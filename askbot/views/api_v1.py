@@ -64,7 +64,7 @@ def info(request):
         data['groups'] = 0
 
     json_string = simplejson.dumps(data)
-    return HttpResponse(json_string, mimetype='application/json')
+    return HttpResponse(json_string, content_type='application/json')
 
 def user(request, user_id):
     '''
@@ -76,7 +76,7 @@ def user(request, user_id):
     data['answers'] = models.Post.objects.get_answers(user).count()
     data['comments'] = models.Post.objects.filter(post_type='comment').count()
     json_string = simplejson.dumps(data)
-    return HttpResponse(json_string, mimetype='application/json')
+    return HttpResponse(json_string, content_type='application/json')
 
 
 def users(request):
@@ -126,7 +126,7 @@ def users(request):
                 }
         json_string = simplejson.dumps(response_dict)
 
-        return HttpResponse(json_string, mimetype='application/json')
+        return HttpResponse(json_string, content_type='application/json')
 
 
 def question(request, question_id):
@@ -141,7 +141,7 @@ def question(request, question_id):
     )
     datum = get_question_data(post.thread)
     json_string = simplejson.dumps(datum)
-    return HttpResponse(json_string, mimetype='application/json')
+    return HttpResponse(json_string, content_type='application/json')
 
 
 def questions(request):
@@ -196,4 +196,4 @@ def questions(request):
         'questions': question_list
     }
     response_data = simplejson.dumps(ajax_data)
-    return HttpResponse(response_data, mimetype='application/json')
+    return HttpResponse(response_data, content_type='application/json')

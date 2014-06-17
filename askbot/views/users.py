@@ -998,6 +998,8 @@ def user_email_subscriptions(request, user, context):
         'user_languages': user.languages.split()
     }
     context.update(data)
+    #todo: really need only if subscribed tags are enabled
+    context.update(view_context.get_for_tag_editor())
     return render(
         request,
         'user_profile/user_email_subscriptions.html',
