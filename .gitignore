@@ -2,6 +2,7 @@
 *.swp
 *.log
 *~
+.pydevproject
 db
 rebuild-locales.pl
 /src
