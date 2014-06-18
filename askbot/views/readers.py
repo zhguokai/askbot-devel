@@ -41,6 +41,7 @@ from askbot.forms import ShowQuestionForm
 from askbot.forms import ShowQuestionsForm
 from askbot.forms import get_integer_parameter
 from askbot.forms import GetUserItemsForm
+from askbot.forms import MultiSiteRepostThreadForm
 from askbot.utils.loading import load_module
 from askbot import conf
 from askbot import models
@@ -118,10 +119,19 @@ def questions(request, **kwargs):
     #       down the pipeline, we have to precache them in thread objects
     models.Thread.objects.precache_view_data_hack(threads=page.object_list)
 
+    #here we cheat because the rigorous queries are very heavy
+    if paginator.count < 1000:
+        #if we have manageable number of questions, we count
+        #tag usage by the list of thread ids
+        thread_ids = qs.values_list('id', flat=True)
+    else:
+        thread_ids = None
+
     related_tags = Tag.objects.get_related_to_search(
-                        threads=page.object_list,
+                        thread_ids=list(thread_ids),
                         ignored_tag_names=meta_data.get('ignored_tag_names',[])
                     )
+
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
     if tag_list_type == 'cloud': #force cloud to sort by name
         related_tags = sorted(related_tags, key = operator.attrgetter('name'))
@@ -383,7 +393,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'tab_id' : sortby,
         'keywords' : query,
         'tag_isolation': tag_isolation,
-        'search_state': SearchState(*[None for x in range(8)])
+        'search_state': SearchState()
     }
 
     if tag_list_type == 'list':
@@ -526,7 +536,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
         except exceptions.AnswerHidden, error:
             request.user.message_set.create(message = unicode(error))
             #use reverse function here because question is not yet loaded
-            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+            return HttpResponseRedirect(question_post.get_absolute_url())
         except exceptions.QuestionHidden, error:
             request.user.message_set.create(message = unicode(error))
             return HttpResponseRedirect(reverse('index'))
@@ -544,7 +554,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
             show_post.assert_is_visible_to(request.user)
         except django_exceptions.PermissionDenied, error:
             request.user.message_set.create(message = unicode(error))
-            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+            return HttpResponseRedirect(question_post.get_absolute_url())
 
     thread = question_post.thread
 
@@ -560,6 +570,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
                                 sort_method=answer_sort_method,
                                 user=request.user
                             )
+
     question_post.set_cached_comments(
         updated_question_post.get_cached_comments()
     )
@@ -724,6 +735,13 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     #shared with ...
     if askbot_settings.GROUPS_ENABLED:
         data['sharing_info'] = thread.get_sharing_info()
+
+    if askbot.is_multisite() and thread.has_moderator(request.user):
+        initial = {'thread_id': thread.id}
+        for site_id in thread.get_primary_site_ids():
+            initial['site_%d' % site_id] = True
+        repost_form = MultiSiteRepostThreadForm(initial=initial)
+        data['repost_form'] = repost_form
 
     data.update(context.get_for_tag_editor())
 

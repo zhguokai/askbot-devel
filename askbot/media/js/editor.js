@@ -47,6 +47,12 @@ function ajaxFileUpload(options) {
         secureuri: false,
         fileElementId: uploadInputId,
         dataType: 'xml',
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                var csrfCookieName = askbot['settings']['csrfCookieName'];
+                xhr.setRequestHeader('X-CSRFToken', getCookie(csrfCookieName));
+            }
+        },
         success: function (data, status) {
 
             var fileURL = $(data).find('file_url').text();

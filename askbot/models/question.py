@@ -19,6 +19,7 @@ from django.utils.translation import activate as activate_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
+from askbot import exceptions
 from askbot import mail
 from askbot.models import Space, Feed
 from askbot.mail import messages
@@ -209,6 +210,15 @@ class ThreadManager(BaseQuerySetManager):
         #this call is rather heavy, we should split into several functions
         parse_results = question.parse_and_save(author=author, is_private=is_private)
 
+        author_group = author.get_personal_group()
+        thread.add_to_groups([author_group], visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES)
+        question.add_to_groups([author_group])
+
+        if is_private or group_id:#add groups to thread and question
+            thread.make_private(author, group_id=group_id)
+        else:
+            thread.make_public()
+
         revision = question.add_revision(
             author=author,
             is_anonymous=is_anonymous,
@@ -218,15 +228,6 @@ class ThreadManager(BaseQuerySetManager):
             by_email=by_email,
             email_address=email_address
         )
-
-        author_group = author.get_personal_group()
-        thread.add_to_groups([author_group], visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES)
-        question.add_to_groups([author_group])
-
-        if is_private or group_id:#add groups to thread and question
-            thread.make_private(author, group_id=group_id)
-        else:
-            thread.make_public()
 
         # INFO: Question has to be saved before update_tags() is called
         thread.update_tags(tagnames=tagnames, user=author, timestamp=added_at)
@@ -617,12 +618,12 @@ class ThreadToGroup(models.Model):
 class Thread(models.Model):
     title = models.CharField(max_length=300)
 
-    tags = models.ManyToManyField('Tag', related_name='threads')
+    tags = models.ManyToManyField('Tag', related_name='threads', blank=True)
     groups = models.ManyToManyField(Group, through=ThreadToGroup, related_name='group_threads')
     site = models.ForeignKey(Site, null=True, blank=True)
 
     # Denormalised data, transplanted from Question
-    tagnames = models.CharField(max_length=125)
+    tagnames = models.CharField(max_length=125, blank=True)
     view_count = models.PositiveIntegerField(default=0)
     favourite_count = models.PositiveIntegerField(default=0)
     answer_count = models.PositiveIntegerField(default=0)
@@ -636,7 +637,7 @@ class Thread(models.Model):
 
     #todo: these two are redundant (we used to have a "star" and "subscribe"
     #now merged into "followed")
-    followed_by     = models.ManyToManyField(User, related_name='followed_threads')
+    followed_by     = models.ManyToManyField(User, related_name='followed_threads', blank=True)
     favorited_by    = models.ManyToManyField(User, through='FavoriteQuestion', related_name='unused_favorite_threads')
 
     closed          = models.BooleanField(default=False)
@@ -665,6 +666,12 @@ class Thread(models.Model):
 
     class Meta:
         app_label = 'askbot'
+
+    def __unicode__(self):
+        if self.id:
+            return 'Thread id=%d title=%s' % (self.id, self.title)
+        else:
+            return 'Thread (new) title=%s' % self.title
 
     #property to support legacy themes in case there are.
     @property
@@ -806,6 +813,19 @@ class Thread(models.Model):
         if askbot_settings.GROUPS_ENABLED:
             raise NotImplementedError()
         return self.posts.filter(deleted=False).order_by('-added_at')[0]
+
+    def get_primary_site_ids(self):
+        """takes threads spaces and returns site ids
+        where those spaces are primary"""
+        space_ids = self.spaces.values_list('id', flat=True)
+        feed_settings = django_settings.ASKBOT_FEEDS.values()
+        site_ids = set()
+        for setting in feed_settings:
+            primary_space_id = setting[2][0]
+            if primary_space_id in space_ids:
+                site_id = setting[1]
+                site_ids.add(site_id)
+        return site_ids
 
     def get_sharing_info(self, visitor=None):
         """returns a dictionary with abbreviated thread sharing info:
@@ -1031,7 +1051,7 @@ class Thread(models.Model):
             return False
         elif askbot_settings.GROUPS_ENABLED:
             if user.is_administrator_or_moderator():
-                user_groups = user.get_groups(private=True)
+                user_groups = user.get_groups()#private=True)
                 thread_groups = self.get_groups_shared_with()
                 return bool(set(user_groups) & set(thread_groups))
         return False
@@ -1241,7 +1261,7 @@ class Thread(models.Model):
                                         *order_by
                                     ).values_list('id', flat=True)
 
-            published_answer_ids = reversed(published_answer_ids)
+            published_answer_ids = published_answer_ids.reverse()
             #now put those answers first
             answer_map = dict([(answer.id, answer) for answer in answers])
             for answer_id in published_answer_ids:
@@ -1454,8 +1474,25 @@ class Thread(models.Model):
         ids = [space.id for space in spaces]
         return bool(self.spaces.filter(id__in=ids).count())
 
+    def assert_is_visible_to_user_groups(self, user):
+        """raises permission denied of the thread
+        is hidden due to group memberships"""
+        thread_groups = self.groups.all()
+        global_group_name = askbot_settings.GLOBAL_GROUP_NAME
+        if thread_groups.filter(name=global_group_name).count() == 1:
+            return
+
+        exception = exceptions.QuestionHidden
+        message = _('This post is temporarily not available')
+        if user.is_anonymous():
+            raise exception(message)
+        else:
+            user_groups_ids = user.get_groups().values_list('id', flat = True)
+            if thread_groups.filter(id__in = user_groups_ids).count() == 0:
+                raise exception(message)
+
     def is_private(self):
-        """true, if thread belongs to the global group"""
+        """true, if thread doesn't belong to the global group"""
         if askbot_settings.GROUPS_ENABLED:
             group = Group.objects.get_global_group()
             return not self.groups.filter(id=group.id).exists()
@@ -1820,7 +1857,7 @@ class AnonymousQuestion(DraftContent):
         #todo: wrong - use User.post_question() instead
         try:
             user.assert_can_post_text(self.text)
-            Thread.objects.create_new(
+            thread = Thread.objects.create_new(
                 title = self.title,
                 added_at = added_at,
                 author = user,
@@ -1830,6 +1867,7 @@ class AnonymousQuestion(DraftContent):
                 text = self.text,
             )
             self.delete()
+            return thread
         except django_exceptions.PermissionDenied, error:
             #delete previous draft questions (only one is allowed anyway)
             prev_drafts = DraftQuestion.objects.filter(author=user)

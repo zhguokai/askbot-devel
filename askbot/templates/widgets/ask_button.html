@@ -2,10 +2,20 @@
     {% if not search_state %}  {#  get empty SearchState() if there's none #}
         {% set search_state=search_state or dummy_search_state %}
     {% endif %}
+    {% if group %}
+        {% set group_id = group.id %}
+        {% set group_name = group.name %}
+    {% elif default_ask_group_id %}
+        {% set group_id = default_ask_group_id %}
+        {% set group_name = default_ask_group_name %}
+    {% else %}
+        {% set group_id = None %}
+        {% set group_name = None %}
+    {% endif %}
     <a
         id="askButton"
         class="button"
-        href="{{ search_state.full_ask_url() }}{% if group %}{% if '?' in search_state.full_ask_url() %}&amp;{% else %}?{% endif %}group_id={{ group.id }}{% endif %}"
+        href="{{ search_state.full_ask_url(group_id=group_id) }}"
         >{% if group %}
             {{ settings.WORDS_ASK_THE_GROUP|escape }}
         {% else %}

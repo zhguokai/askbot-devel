@@ -241,6 +241,9 @@ body.user-messages {
         line-height: 34px;
         margin: 0 !important;
     }
+    ul {
+        list-style: none;
+    }
 }
 
 .wait-icon-box {
@@ -533,6 +536,36 @@ body.user-messages {
     }
 }
 
+.labeled-input {
+    label {
+        display: block;
+        line-height: 1em;
+        height: 1em;
+        margin-bottom: -1.5em;
+        padding-left: .5em;
+    }
+    input {
+        display: block;
+    }
+    label.error {
+        font-size: inherit;
+        color: rgb(230, 102, 31);
+    }
+    label.active,
+    label.active.error {
+        padding-left: 3px;
+        font-size: 12px;
+    }
+}
+
+.box .labeled-input {
+    margin: 24px 0 10px 0;
+    label,
+    input {
+        display: block;
+    }
+}
+
 .validate-email-page {
     label {
         color: @info-text;
@@ -617,6 +650,9 @@ body.user-messages {
 }
 
 .search-drop-menu {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -1094,8 +1130,18 @@ body.anon.ask-page .search-drop-menu {
     padding: 7px 10px 9px 0;
     margin-bottom: 10px;
     width: 100%;
+
+    .cannot-post {
+        display: none;
+    }
+
+    .email-validator button {
+        display: block;
+        margin: 5px auto;
+    }
+
     ul {
-        margin: 0 0 0 27px;
+        margin: 0 0 0 15px;
     }
 }
 
@@ -1728,11 +1774,13 @@ ul#related-tags li {
 
 /* ----- Ask and Edit Question Form template----- */
 
-.section-title{
+.section-title,
+.modal-header h3 {
     color:@section-title;
     font-family:@main-font;
     font-weight:bold;
     font-size:24px;
+    padding: 0;
 }
 
 #fmask{
@@ -1813,17 +1861,22 @@ ul#related-tags li {
 
     label[for="editor"],
     label[for="id_title"],
+    label[for="id_tags"] strong,
     span.form-error {
         font-size: 16px;
         font-style: italic;
+        font-weight: normal;
     }
 
-    label{
+    label {
         color:@info-text-dark;
         font-size:13px;
     }
 
     #id_tags {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
         box-sizing: border-box;
         height: 31px;
         padding-left: 5px;
@@ -1835,6 +1888,33 @@ ul#related-tags li {
         margin: 9px 0 0 0;
         select {
             margin: 3px 0;
+        }
+    }
+}
+
+.post-opts {
+    margin-top: 12px;
+    .checkbox {
+        margin-left: 0;
+    }
+    .labeled-input {
+        float: left;
+        margin: 20px 10px 10px 0;
+        label,
+        input {
+            display: block;
+        }
+        label {
+            margin-bottom: -1.8em;
+        }
+        input[type="text"] {
+            color: @info-text;
+            border: #cce6ec 3px solid;
+            height: 25px;
+            line-height: 25px;
+            padding-left: 5px;
+            font-size: 14px;
+            width: 186px;
         }
     }
 }
@@ -1991,6 +2071,7 @@ ul#related-tags li {
     #editor {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
         box-sizing: border-box;
         width: 100%;
         height: 100%;
@@ -2595,7 +2676,7 @@ ul#related-tags li {
         a.author{
             background-color: inherit;
             color: @link;
-            padding: 0;
+            padding: 0 4px 0 0;
         }
 
         a.author:hover {
@@ -2774,9 +2855,6 @@ ul#related-tags li {
         .comments .button {
             background-color: #E6ECFF;
         }
-        .comments {
-            background-color: #E6ECFF;
-        }
     }
 
     .answer-img-accept {
@@ -2911,50 +2989,10 @@ ul#related-tags li {
 
 /* -----Content pages, Login, About, FAQ, Users----- */
 
-.openid-signin {
-    input[type="text"],
-    input[type="password"] {
-        color: #525252;
-        font-size: 12px;
-        line-height: 25px;
-        height: 25px;
-        margin: 0px;
-        padding: 0 5px;
-        width: 200px;
-    }
-}
-
-.registration-page {
-    .login {
-        input[type="text"] {
-            height: 22px;
-            font-size: 12px;
-            line-height: 22px;
-            color: #525252;
-            padding: 0 5px;
-            width: 200px;
-        }
-    }
-}
-
-.openid-signin,
 .meta,
-.user-profile-edit-page,
-{
-    font-size:13px;
-    line-height:1.3;
-    color:@info-text-dark;
-    p{
-        font-size:13px;
-        color:@info-text;
-        line-height:1.3;
-        font-family:@body-font;
-        color:@info-text-dark;
-        margin-bottom:12px;
-    }
-    h2{
-        color:@info-text-dark;
-        padding-left:0px;
+.user-profile-edit-page {
+    h2 {
+        padding-left: 0;
         font-size:16px;
     }
 }
@@ -3638,10 +3676,6 @@ table.form-as-table th {
     font-weight: normal;
 }
 
-table.ab-subscr-form {
-    width: 45em;
-}
-
 .submit-row {
     line-height: 30px;
     padding-top: 10px;
@@ -3654,17 +3688,12 @@ table.ab-subscr-form {
     color: #990000;
 }
 
-.error,
-.openid-signin p.error {
+.error {
     color: darkred;
     margin: 0;
     font-size: 12px;
     font-weight: bold;
     text-align: left;
-}
-
-.openid-signin p.error {
-    text-align: center;
 }
 
 label.retag-error {
@@ -4184,7 +4213,29 @@ p.signup_p {
     display: inline;
 }
 
-.userList {
+.user-profile-page {
+    .avatar p {
+        margin-bottom: 0px;
+    }
+    .tabBar a#stats {
+        margin-left: 0;
+    }
+    img.gravatar {
+        margin: 2px 0 3px 0;
+    }
+    h3 {
+        padding: 0;
+        margin-top: -3px;
+    }
+    .vote-notification h3 {
+        padding: 10px;
+    }
+    ul.tags {
+        margin-left: 5px;
+    }
+}
+
+.user-list {
     font-size: 13px;
 }
 
@@ -4297,14 +4348,14 @@ img.group-logo {
     height: 60px;/* important to align with the line spacing */
 }
 
-#groups-list {
+.groups-list {
     margin-left: 0px;
     .group-name {
         padding-right: 20px;
     }
 }
 
-.groups-page #groups-list {
+.groups-page .groups-list {
     th, td {
         padding-right: 20px;
     }
@@ -4333,9 +4384,7 @@ textarea.tipped-input {
 }
 
 .select-box {
-
     margin: 0;
-
     li {
         list-style-type: none;        
         list-style-position: inside;
@@ -4416,8 +4465,8 @@ textarea.tipped-input {
 }
 
 .editor-status {
-    float: right;
-    margin: 8px 350px 0 0;
+    float: left;
+    margin: -22px 0 0 5px;
     font-weight: bold;
 
     span {
@@ -4738,8 +4787,6 @@ td.setting-input {
     .edit-answer-page,
     .edit-question-page {
         .preview-toggle,
-        .proxy-user-info,
-        .answer-options,
         .question-options,
         .revision-comment,
         .wmd-preview,
@@ -4858,6 +4905,224 @@ td.setting-input {
         div.comments.empty {
             margin-top: 0;
         }
+    }
+}
+
+/* signin form styles */
+.federated-login-methods {
+    margin-bottom: 30px;
+    button {
+        background: 0 0 url(../jquery-openid/images/login-provider-logos-small.png) no-repeat;
+        border: none;
+        .box-shadow(0, 0, 0);
+        height: 45px;
+        text-indent: -10000px;
+        width: 48px;
+    }
+    li {
+        float: left;
+        margin: 0 10px 0 0;
+    }
+    li label {
+        text-align: center;
+    }
+    p {
+        margin-bottom: 1.5em;
+    }
+    ul {
+        padding: 0;
+        list-style: none;
+        margin: 0;
+    }
+    .aol {
+        background-position: -40px 0;
+    }
+    .aol:hover {
+        background-position: -40px 0;
+    }
+    .facebook {
+        background-position: -237px 0;
+        margin-left: 10px;
+    }
+    .facebook:hover {
+        background-position: -237px 0;
+    }
+    .google {
+        background-position: 5px 0;
+        width: 40px;
+    }
+    .google:hover {
+        background-position: 5px 0;
+    }
+    .identi-ca {
+        background-position: -333px 0;
+        margin-left: 2px;
+    }
+    .identi-ca:hover {
+        background-position: -333px 0;
+    }
+    .linkedin {
+        background-position: -183px 0;
+    }
+    .linkedin:hover {
+        background-position: -183px 0;
+    }
+    .livejournal {
+        background-position: -379px 0;
+        margin-left: 10px;
+    }
+    .livejournal:hover {
+        background-position: -379px 0;
+    }
+    .openid {
+        background-position: -287px 0;
+    }
+    .openid:hover {
+        background-position: -287px 0;
+    }
+    .twitter {
+        background-position: -138px 0;
+    }
+    .twitter:hover {
+        background-position: -138px 0;
+    }
+    .yahoo {
+        background-position: -87px 0;
+        margin: 0 5px;
+    }
+    .yahoo:hover {
+        background-position: -87px 0;
+    }
+}
+.extra-openid-info {
+    display: none;
+}
+.account-recovery {
+    margin: 2.5em 0 0 0;
+}
+.auth-menu,
+.complete-registration,
+.establish-login-menu {
+    button,
+    input,
+    label,
+    li {
+        display: block;
+    }
+    .submit {
+        margin: -9px 0 0 0
+    }
+}
+.auth-menu {
+    min-width: 430px;
+    .col1, .col2 {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 50%;
+        float: left;
+    }
+    .col1 {
+        padding-right: 19px;
+    }
+    .col2 {
+        padding-left: 20px;
+        border-left: 1px solid #aaa;
+    }
+    .col1.single-column {
+        width: 100%;
+        padding: 0;
+    }
+}
+.extra-openid-info {
+    padding: 20px;
+    padding-top: 30px;
+    border: 1px solid #aaa;
+    border-top: 1px dashed #ccc;
+    -moz-box-shadow:    -1px 3px 5px 2px #ccc;
+    -webkit-box-shadow: -1px 3px 5px 2px #ccc;
+    box-shadow:         -1px 3px 5px 2px #ccc;
+    margin-top: 10px;
+}
+.openid-signin,
+.complete-federated-registration,
+.modal {
+    .password-login, /* todo: apply to all ajax forms */
+    .password-registration,
+    .complete-registration,
+    .extra-openid-info,
+    .establish-login-menu,
+    .account-recovery {
+        input[type="text"],
+        input[type="password"] {
+            color: @info-text;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            box-sizing: border-box;
+            font-size: 14px;
+            height: 2em;
+            line-height: 1.5em;
+            margin-bottom: 2.5em;
+            padding-left: .3em;
+            width: 100%;
+        }
+        p {
+            color:@section-title;
+            font-family:@main-font;
+            font-size: 16px;
+            line-height: 1em;
+            margin-bottom: 2em;
+        }
+    }
+    .password-registration,
+    .account-recovery {
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+        }
+    }
+    .complete-registration {
+        margin-top: 1em;
+        width: 250px;
+        input[type="text"],
+        input[type="password"] {
+            width: 80%;
+        }
+    }
+}
+.openid-signin,
+.complete-federated-registration {
+    .auth-menu,
+    .complete-registration {
+        margin: 20px 0;
+        width: 280px;
+    }
+}
+
+.tag-subscriptions {
+    border-spacing: 10px; 
+    border-collapse: separate;
+
+    form {
+        display: inline-block;
+        margin-bottom: 0;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    .action {
+        cursor: pointer;
+        color: #4A757F;
+        font-family: 'Open Sans Condensed', Arial, sans-serif;
+        text-decoration: none;
+    }
+
+    ul.tags li {
+        margin: 2px 5px;
     }
 }
 

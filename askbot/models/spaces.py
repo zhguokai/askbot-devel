@@ -27,6 +27,7 @@ class SpaceManager(BaseQuerySetManager):
         """retuns spaces available in the given site
         results are cached
         """
+        site = site or Site.objects.get_current()
         cache_key = u'askbot-spaces-%s' % unicode(site)
         spaces = cache.get(cache_key)
         if spaces is None:
@@ -91,6 +92,20 @@ class Space(models.Model):
     def __unicode__(self):
         return "Space %s (id=%d)" % (self.name, self.id)
 
+    def get_default_ask_group_id(self):
+        """returns id of group to which question must be asked by default
+        within this space, or None
+        """
+        #todo: implement this on the level of models
+        if askbot_settings.GROUPS_ENABLED:
+            spaces_settings = getattr(django_settings, 'ASKBOT_SPACES', None)
+            if spaces_settings:
+                space_settings = spaces_settings.get(self.id, None)
+                if space_settings:
+                    if len(space_settings) > 0:
+                        return space_settings[1]
+        return None
+
 class Feed(models.Model):
     #TODO: url should never change add validation.
     name = models.CharField(max_length=50)
@@ -154,3 +169,28 @@ class AskbotSite(models.Model):
 """
 def get_feed_url(url_pattern_name, feed=None, kwargs=None):
     return Feed.objects.get_url(url_pattern_name, feed, kwargs)
+
+def get_site_ids():
+    """get ids of active askbot sites"""
+    site_id = django_settings.SITE_ID
+    return getattr(django_settings, 'ASKBOT_SITE_IDS', [site_id,])
+
+def get_site_name(site_id):
+    """get site name by site id"""
+    site_settings = getattr(django_settings, 'ASKBOT_SITES', None)
+    if site_settings:
+        site_info = site_settings[site_id]
+        if isinstance(site_info, basestring):
+            return site_info
+        else:
+            return site_info[0]
+    else:
+        from django.contrib.sites.models import Site
+        return Site.objects.get(id=site_id).name
+
+def get_default_space(site_id):
+    """get default space for given site id"""
+    feed_settings = django_settings.ASKBOT_FEEDS.values()
+    for setting in feed_settings:
+        if setting[1] == site_id:
+            return Space.objects.get(id=setting[2][0])

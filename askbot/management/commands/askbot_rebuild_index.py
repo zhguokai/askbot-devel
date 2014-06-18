@@ -1,7 +1,9 @@
 import sys
 from optparse import make_option
+import traceback
 
 from django.core.management import get_commands, load_command_class
+from django.utils.encoding import smart_str
 from django.utils.translation import activate as activate_language
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings

@@ -127,12 +127,13 @@ def feedback(request):
             subject = _('Q&A forum feedback')
             if askbot_settings.FEEDBACK_EMAILS:
                 recipients = re.split('\s*,\s*', askbot_settings.FEEDBACK_EMAILS)
-                send_mail(
-                    subject_line=subject,
-                    body_text=message,
-                    headers=headers,
-                    recipient_list=recipients,
-                )
+                for recipient in recipients:
+                    send_mail(
+                        subject_line=subject,
+                        body_text=message,
+                        headers=headers,
+                        recipient=recipient
+                    )
             else:
                 mail_moderators(
                     subject_line=subject,

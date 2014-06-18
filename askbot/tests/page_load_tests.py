@@ -113,10 +113,7 @@ class PageLoadTestCase(AskbotTestCase):
         if hasattr(self.client, 'redirect_chain'):
             print 'redirect chain: %s' % ','.join(self.client.redirect_chain)
 
-        if r.status_code != status_code:
-            print 'Error in status code for url: %s' % url
-
-        self.assertEqual(r.status_code, status_code)
+        self.assertEqual(r.status_code, status_code, 'Error in ' + url)
 
         if template and status_code != 302:
             if hasattr(r, 'template'):
@@ -442,7 +439,7 @@ class PageLoadTestCase(AskbotTestCase):
             )
         self.try_url(
                 'edit_user',
-                template='authopenid/signin.html',
+                template='authopenid/signin_full.html',
                 kwargs={'id':4},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
                 status_code=status_code,
                 follow=True,
@@ -491,7 +488,7 @@ class PageLoadTestCase(AskbotTestCase):
             kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'inbox'},
-            template='authopenid/signin.html',
+            template='authopenid/signin_full.html',
             follow=True
         )
         self.try_url(
@@ -506,7 +503,7 @@ class PageLoadTestCase(AskbotTestCase):
             kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'votes'},
-            template='authopenid/signin.html',
+            template='authopenid/signin_full.html',
             follow = True
         )
         self.try_url(
@@ -521,7 +518,7 @@ class PageLoadTestCase(AskbotTestCase):
             kwargs={'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             status_code=status_code,
             data={'sort':'email_subscriptions'},
-            template='authopenid/signin.html',
+            template='authopenid/signin_full.html',
             follow = True
         )
 

@@ -35,6 +35,9 @@ new_answer_posted = django.dispatch.Signal(
 new_question_posted = django.dispatch.Signal(
     providing_args=['question', 'user', 'form_data']
 )
+question_edited = django.dispatch.Signal(
+    providing_args=['question', 'user', 'form_data']
+)
 new_comment_posted = django.dispatch.Signal(
     providing_args=['comment', 'user', 'form_data']
 )
@@ -53,6 +56,12 @@ post_revision_published = django.dispatch.Signal(
                                 providing_args = [
                                     'revision',
                                     'was_approved'
+                                ]
+                            )
+
+email_validated = django.dispatch.Signal(
+                                providing_args = [
+                                    'user'
                                 ]
                             )
 site_visited = django.dispatch.Signal(providing_args=['user', 'timestamp'])

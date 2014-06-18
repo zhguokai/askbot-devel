@@ -296,7 +296,7 @@ def post_comment(source_post, parent):
         return askbot_comment
     except Exception, e:
         msg = unicode(e)
-        print "Warning: post %d skipped: %s" % (zendesk_post.post_id, msg)
+        print "Warning: post %d skipped: %s" % (source_post.post_id, msg)
 
 def post_answer(zendesk_post, question):
     """Posts an answer to Askbot, from a Zendesk Post

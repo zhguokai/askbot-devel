@@ -19,3 +19,8 @@ and at the same time be able to have some dedicated service
 to read your site without authentication, add
 IP addresses of that service to a tuple ``ASKBOT_INTERNAL_IPS``
 in your ``settings.py`` file.
+
++---------------------------------+-------------------------------------------------------------+
+| Item                            | setting                                                     |
++=================================+=============================================================+
+| Ask a question form             | `ASKBOT_NEW_QUESTION_FORM`                            |

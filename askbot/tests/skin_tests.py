@@ -64,7 +64,7 @@ class SkinTests(TestCase):
                             'logo.gif'
                         )
         logo_file = open(logo_src, 'r')
-        new_logo = UploadedFile(file = logo_file)
+        new_logo = UploadedFile(file=logo_file)
         askbot_settings.update('SITE_LOGO_URL', new_logo)
         logo_url = askbot_settings.SITE_LOGO_URL
         self.assertTrue(logo_url.startswith(django_settings.MEDIA_URL))

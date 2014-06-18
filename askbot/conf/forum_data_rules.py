@@ -89,6 +89,7 @@ def forum_default_feed_callback(old_value, new_value):
 
     forbidden = get_forbidden_space_values()
     new_value = new_value.strip()
+    bad_values = set()
 
     if not re.match('\w+$', new_value):
         bad_values.add(new_value)

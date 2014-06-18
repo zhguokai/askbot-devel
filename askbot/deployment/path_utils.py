@@ -8,11 +8,13 @@ import os
 import os.path
 import tempfile
 import re
+import sys
 import glob
 import shutil
 import imp
 from askbot.utils import console
 from askbot.deployment.template_loader import SettingsTemplate
+from askbot.deployment import messages
 
 
 FILES_TO_CREATE = ('__init__.py', 'manage.py', 'urls.py', 'django.wsgi')
@@ -48,7 +50,7 @@ def clean_directory(directory):
     directory = os.path.abspath(directory)
 
     if os.path.isfile(directory):
-        if options.verbosity >= 1 and os.path.isfile(directory):
+        if os.path.isfile(directory):
             print messages.CANT_INSTALL_INTO_FILE % {'path':directory}
         sys.exit(1)
 

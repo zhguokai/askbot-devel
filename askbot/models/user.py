@@ -18,6 +18,7 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import functions
 from askbot.models.base import BaseQuerySetManager
+from askbot.utils.forms import email_is_allowed
 from collections import defaultdict
 
 PERSONAL_GROUP_NAME_PREFIX = '_personal_'
@@ -396,6 +397,8 @@ class AuthUserGroups(models.Model):
         db_table = 'auth_user_groups'
         managed = False
 
+    def __unicode__(self):
+        return "%s: member of %s" % (self.user.username, self.group.name)
 
 class GroupMembership(AuthUserGroups):
     """contains one-to-one relation to ``auth_user_group``
@@ -414,10 +417,22 @@ class GroupMembership(AuthUserGroups):
                         default=FULL,
                         choices=LEVEL_CHOICES,
                     )
-
+    requested_at = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now)
+    approved_at = models.DateTimeField(null=True, default=None)
 
     class Meta:
         app_label = 'askbot'
+
+    def get_level_name(self):
+        level_names = [tuple[1] for tuple in GroupMembership.LEVEL_CHOICES if tuple[0]==self.level]
+        if len(level_names) == 1:
+            return level_names[0]
+        else:
+            return 'level-unknown'
+
+    def __unicode__(self):
+        return "%s: %s member of %s)" % (self.user.username, self.get_level_name(), self.group.name)
+
 
     @classmethod
     def get_level_value_display(cls, level):
@@ -546,11 +561,26 @@ class Group(AuthGroup):
         app_label = 'askbot'
         db_table = 'askbot_group'
 
+    def email_is_preapproved(self, email):
+        """True, if email matches preapproved_emails
+        or preapproved_email_domains"""
+        return email_is_allowed(
+            email,
+            allowed_emails=self.preapproved_emails,
+            allowed_email_domains=self.preapproved_email_domains
+        )
+
     def get_moderators(self):
         """returns group moderators"""
         user_filter = models.Q(is_superuser=True) | models.Q(status='m')
         user_filter = user_filter & models.Q(groups__in=[self])
         return User.objects.filter(user_filter)
+
+    def get_preapproved_emails(self):
+        return self.preapproved_emails.strip().split()
+
+    def get_preapproved_email_domains(self):
+        return self.preapproved_email_domains.strip().split()
 
     def has_moderator(self, user):
         """true, if user is a group moderator"""
@@ -588,12 +618,7 @@ class Group(AuthGroup):
             return 'open'
 
         #relying on a specific method of storage
-        from askbot.utils.forms import email_is_allowed
-        if email_is_allowed(
-            user.email,
-            allowed_emails=self.preapproved_emails,
-            allowed_email_domains=self.preapproved_email_domains
-        ):
+        if self.email_is_preapproved(user.email):
             return 'open'
 
         if self.openness == Group.MODERATED:

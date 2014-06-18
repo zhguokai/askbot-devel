@@ -5,10 +5,7 @@ import sys
 from django.utils.safestring import mark_safe
 from django.utils.functional import lazy
 from django.template import Node
-try:
-    from functools import WRAPPER_ASSIGNMENTS
-except ImportError:
-    from django.utils.functional import WRAPPER_ASSIGNMENTS
+from functools import WRAPPER_ASSIGNMENTS
 
 def module_has_submodule(package, module_name):
     """See if 'module' is in 'package'."""

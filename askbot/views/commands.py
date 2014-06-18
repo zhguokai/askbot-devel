@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.db.models import Q
+from django.contrib.sites.models import get_current_site
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
@@ -37,18 +38,19 @@ from askbot import conf
 from askbot import const
 from askbot import mail
 from askbot.conf import settings as askbot_settings
+from askbot.mail import send_email_key
+from askbot.utils import html as html_utils
 from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot.utils.forms import get_db_object_or_404
 from django.template import RequestContext
-from askbot.skins.loaders import render_into_skin_as_string
+from askbot.skins.loaders import render_to_string
 from askbot.skins.loaders import render_text_into_skin
 from askbot.models.tag import get_tags_by_names
 
 
-
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def manage_inbox(request):
     """delete, mark as new or seen user's
     response memo objects, excluding flags
@@ -205,7 +207,7 @@ def process_vote(user = None, vote_direction = None, post = None):
     return response_data
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def vote(request):
     """
     todo: this subroutine needs serious refactoring it's too long and is hard to understand
@@ -444,7 +446,7 @@ def vote(request):
     return HttpResponse(data, content_type="application/json")
 
 #internally grouped views - used by the tagging system
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.post_only
 @decorators.ajax_login_required
 def mark_tag(request, **kwargs):#tagging system
@@ -513,7 +515,7 @@ def get_thread_shared_users(request):
     data = {
         'users': users,
     }
-    html = render_into_skin_as_string('widgets/user_list.html', data, request)
+    html = render_to_string(request, 'widgets/user_list.html', data)
     re_data = simplejson.dumps({
         'html': html,
         'users_count': users.count(),
@@ -529,7 +531,7 @@ def get_thread_shared_groups(request):
     thread = models.Thread.objects.get(id=thread_id)
     groups = thread.get_groups_shared_with()
     data = {'groups': groups}
-    html = render_into_skin_as_string('widgets/groups_list.html', data, request)
+    html = render_to_string(request, 'widgets/groups_list.html', data)
     re_data = simplejson.dumps({
         'html': html,
         'groups_count': groups.count(),
@@ -578,7 +580,7 @@ def load_object_description(request):
     text = getattr(obj.description, 'text', '').strip()
     return HttpResponse(text, mimetype = 'text/plain')
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -594,7 +596,7 @@ def save_object_description(request):
         request.user.post_object_description(obj, body_text=text)
     return {'html': obj.description.html}
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def rename_tag(request):
@@ -618,7 +620,7 @@ def rename_tag(request):
     )
     category_tree.save_data(tree)
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def delete_tag(request):
@@ -643,7 +645,7 @@ def delete_tag(request):
         raise exceptions.PermissionDenied(_('Sorry, could not delete tag'))
     return {'tree_data': tree}
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def add_tag_category(request):
@@ -736,6 +738,7 @@ def list_bulk_tag_subscription(request):
     data = {'object_list': object_list}
     return render(request, 'tags/list_bulk_tag_subscription.html', data)
 
+@csrf.csrf_protect
 @decorators.admins_only
 def create_bulk_tag_subscription(request):
     if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
@@ -767,6 +770,7 @@ def create_bulk_tag_subscription(request):
     return render(request, 'tags/form_bulk_tag_subscription.html', data)
 
 @decorators.admins_only
+@csrf.csrf_protect
 def edit_bulk_tag_subscription(request, pk):
     if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
         raise Http404
@@ -827,6 +831,7 @@ def edit_bulk_tag_subscription(request, pk):
 
 @decorators.admins_only
 @decorators.post_only
+@csrf.csrf_protect
 def delete_bulk_tag_subscription(request):
     if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
         raise Http404
@@ -840,7 +845,7 @@ def delete_bulk_tag_subscription(request):
         return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
 
 @decorators.get_only
-def api_get_questions(request):
+def api_get_questions(request, feed=None):
     """json api for retrieving questions by title match"""
     query = request.GET.get('query_text', '').strip()
     tag_name = request.GET.get('tag_name', None)
@@ -851,8 +856,13 @@ def api_get_questions(request):
         threads = models.Thread.objects.all()
 
     if askbot_settings.SPACES_ENABLED:
-        site = Site.objects.get_current()
-        threads = threads.filter(spaces__in=models.Space.objects.get_for_site(site))
+        #todo, add feed to the url
+        feed = get_object_or_404(
+                        models.Feed,
+                        name=feed,
+                        site=get_current_site(request)
+                    )
+        threads = threads.filter(spaces__in=feed.get_spaces())
 
     if tag_name:
         threads = threads.filter(tags__name=tag_name)
@@ -878,7 +888,7 @@ def api_get_questions(request):
     return HttpResponse(json_data, mimetype = "application/json")
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.post_only
 @decorators.ajax_login_required
 def set_tag_filter_strategy(request):
@@ -961,7 +971,7 @@ def reopen(request, id):#re-open question
         return HttpResponseRedirect(question.get_absolute_url())
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 def swap_question_with_answer(request):
     """receives two json parameters - answer id
@@ -980,7 +990,7 @@ def swap_question_with_answer(request):
             return {'question_url': new_question.get_absolute_url() }
     raise Http404
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def upvote_comment(request):
@@ -1001,7 +1011,7 @@ def upvote_comment(request):
     #FIXME: rename js
     return {'score': comment.points}
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def delete_post(request):
@@ -1024,7 +1034,7 @@ def delete_post(request):
     return {'is_deleted': post.deleted}
 
 #askbot-user communication system
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def read_message(request):#marks message a read
     if request.method == "POST":
         if request.POST.get('formdata') == 'required':
@@ -1034,7 +1044,7 @@ def read_message(request):#marks message a read
     return HttpResponse('')
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1059,7 +1069,11 @@ def edit_group_membership(request):
         if action == 'add':
             try:
                 group = models.Group.objects.get(name=group_name)
-                request.user.edit_group_membership(user, group, 'add')
+                force = False
+                if request.user.is_administrator_or_moderator():
+                    # Don't make the user have to moderate a request, just do the action
+                    force = True
+                request.user.edit_group_membership(user, group, 'add', force=force)
                 template = get_template('widgets/group_snippet.html')
                 return {
                     'name': group.name,
@@ -1083,7 +1097,7 @@ def edit_group_membership(request):
         raise exceptions.PermissionDenied()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1099,7 +1113,7 @@ def save_group_logo_url(request):
     else:
         raise ValueError('invalid data found when saving group logo')
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1118,7 +1132,7 @@ def add_group(request):
                              url = url )
         return response_dict
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1129,7 +1143,7 @@ def delete_group_logo(request):
     group.save()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1139,7 +1153,7 @@ def delete_post_reject_reason(request):
     reason.delete()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1160,7 +1174,7 @@ def toggle_group_profile_property(request):
     return {'is_enabled': new_value}
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1172,7 +1186,7 @@ def set_group_openness(request):
     group.save()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.admins_only
 def edit_object_property_text(request):
@@ -1199,7 +1213,7 @@ def edit_object_property_text(request):
         raise exceptions.PermissionDenied()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def join_or_leave_group(request):
@@ -1229,7 +1243,7 @@ def join_or_leave_group(request):
     return {'membership_level': new_level}
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1260,7 +1274,7 @@ def save_post_reject_reason(request):
     else:
         raise Exception(forms.format_form_errors(form))
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1318,7 +1332,7 @@ def moderate_suggested_tag(request):
         raise Exception(forms.format_form_errors(form))
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def save_draft_question(request):
@@ -1345,7 +1359,7 @@ def save_draft_question(request):
             draft.save()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def save_draft_answer(request):
@@ -1486,16 +1500,14 @@ def moderate_group_join_request(request):
     action = request.POST['action']
     assert(action in ('approve', 'deny'))
 
-    activity = get_object_or_404(models.Activity, pk=request_id)
-    group = activity.content_object
-    applicant = activity.user
+    group_membership = get_object_or_404(models.GroupMembership, pk=request_id)
+    group = models.Group.objects.get(pk=group_membership.group.id)
+    applicant = group_membership.user
 
     if group.has_moderator(request.user):
-        group_membership = models.GroupMembership.objects.get(
-                                            user=applicant, group=group
-                                        )
         if action == 'approve':
             group_membership.level = models.GroupMembership.FULL
+            group_membership.approved_at = datetime.datetime.now()
             group_membership.save()
             msg_data = {'user': applicant.username, 'group': group.name}
             message = _('%(user)s, welcome to group %(group)s!') % msg_data
@@ -1503,7 +1515,6 @@ def moderate_group_join_request(request):
         else:
             group_membership.delete()
 
-        activity.delete()
         url = request.user.get_absolute_url() + '?sort=inbox&section=join_requests'
         return HttpResponseRedirect(url)
     else:
@@ -1532,23 +1543,16 @@ def get_editor(request):
     )
     #parse out javascript and dom, and return them separately
     #we need that, because js needs to be added in a special way
-    html_soup = BeautifulSoup(editor_html, 'html5lib')
-
-    parsed_scripts = list()
-    for script in html_soup.find_all('script'):
-        parsed_scripts.append({
-            'contents': script.string,
-            'src': script.get('src', None)
-        })
+    html_contents, scripts = html_utils.split_contents_and_scripts(editor_html)
 
     data = {
-        'html': str(html_soup.textarea),
-        'scripts': parsed_scripts,
+        'html': html_contents,
+        'scripts': scripts,
         'success': True
     }
     return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def publish_answer(request):
@@ -1592,3 +1596,67 @@ def get_admin_comment_counts(request):
                                             parent__id=post_id
                                         ).count()
     return {'comment_counts': data}
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def validate_email(request):
+    """validates user's email
+    and returs status - either 'done' or 'waiting'
+    'done' - when email was valid before the call
+    and 'waiting' - if the validation email was sent
+    and we are waiting for the user to click the link
+    """
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied()
+
+    if request.user.email_isvalid:
+        return {'status': 'done'}
+    else:
+        request.user.reset_email_validation_key()
+        send_email_key(request.user.email, request.user.email_key)
+        return {'status': 'waiting'}
+
+@csrf.csrf_protect
+@decorators.post_only
+def multisite_repost_thread(request):
+    form = forms.MultiSiteRepostThreadForm(request.POST)
+
+    try:
+        thread_id = int(request.POST['thread_id'])
+        thread = get_object_or_404(models.Thread, id=thread_id)
+    except:
+        raise Http404
+
+    if thread.has_moderator(request.user):
+        if form.is_valid():
+            selected_spaces = form.cleaned_data['spaces']
+            if len(selected_spaces) > 0:
+                current_set = set(thread.spaces.all())
+                selected_set = set(selected_spaces)
+                for space in current_set - selected_set:
+                    thread.spaces.remove(space)
+                    models.Activity.objects.create(
+                        user = request.user,
+                        active_at = datetime.datetime.now(),
+                        content_object = space,
+                        activity_type = const.TYPE_ACTIVITY_POST_UNSHARED_WITH_SPACE,
+                        question = thread._question_post(),
+                    )
+                for space in selected_set - current_set:
+                    thread.spaces.add(space)
+                    models.Activity.objects.create(
+                        user = request.user,
+                        active_at = datetime.datetime.now(),
+                        content_object = space,
+                        activity_type = const.TYPE_ACTIVITY_POST_SHARED_WITH_SPACE,
+                        question = thread._question_post(),
+                    )
+            else:
+                message = _('Please select at least one site')
+                request.user.message_set.create(message=message)
+    else:
+        message = _('Permission denied')
+        request.user.message_set.create(message=message)
+
+    return HttpResponseRedirect(thread.get_absolute_url())

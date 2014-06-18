@@ -1,6 +1,8 @@
 """http-related utilities for askbot
 """
 from copy import copy
+from django.http import HttpResponse
+from django.utils import simplejson
 
 def hide_passwords(data):
     """replaces content of values that may contain passsword
@@ -46,3 +48,13 @@ def get_request_info(request):
     else:
         info += 'user is anonymous\n'
     return info
+
+def render_to_json_response(data):
+    """returns data as rendered json response"""
+    if isinstance(data, HttpResponse):#is this used?
+        data.content_type = 'application/json'
+        return data
+    else:
+        data['success'] = 1
+        json = simplejson.dumps(data)
+        return HttpResponse(json, content_type='application/json')

@@ -214,6 +214,27 @@ def site_link(url_name, title):
     url = site_url(reverse(url_name))
     return '<a href="%s">%s</a>' % (url, title)
 
+def split_contents_and_scripts(html):
+    """returns script-less html markup and a list of dictionaries
+    for each script element with keys: 'src', 'contents'
+    """
+    html_soup = BeautifulSoup(html)
+
+    parsed_scripts = list()
+    for script in html_soup.find_all('script'):
+        parsed_scripts.append({
+            'contents': script.string,
+            'src': script.get('src', None)
+        })
+        script.extract()
+
+    html_body = html_soup.find('body')
+    if html_body:
+        cleaned_html = unicode(html_body.renderContents(), 'utf-8')
+    else:
+        cleaned_html = ''
+    return cleaned_html, parsed_scripts
+
 def unescape(text):
     """source: http://effbot.org/zone/re-sub.htm#unescape-html
     Removes HTML or XML character references and entities from a text string.

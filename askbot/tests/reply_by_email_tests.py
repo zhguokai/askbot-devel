@@ -1,7 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 from askbot.models import ReplyAddress
 from askbot.mail.lamson_handlers import PROCESS, VALIDATE_EMAIL, get_parts
-from askbot.mail import extract_user_signature
 from askbot import const
 
 
@@ -85,7 +84,7 @@ class ReplyAddressModelTests(AskbotTestCase):
                                 }
         msg = MockMessage(
             "This is a test reply \n\nOn such and such someone "
-            "wrote: \n\n%s\nlorem ipsum " % (reply_separator),
+            "wrote: \n\n%s\nlorem ipsum\n%s\nsignature" % (reply_separator, addr),
             "user1@domain.com"
         )
         msg['Subject'] = 'test subject'

@@ -125,7 +125,11 @@ def get_askbot_template(template):
     skin = get_skin()
     return skin.get_template(template)
 
-def render_into_skin_as_string(template, data, request):
+def render_to_string(request, template, data=None):
+    """same as django's `render` shortcut, but instead
+    of response, returns rendered template as plain string"""
+    if data is None:
+        data = {}
     context = RequestContext(request, data)
     template = get_askbot_template(template)
     return template.render(context)

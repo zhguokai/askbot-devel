@@ -21,6 +21,62 @@ var getCookie = function(name) {
     return cookieValue;
 };
 
+var disableAllInputs = function() {
+    $('input').attr('disabled', 'disabled');
+    $('button').attr('disabled', 'disabled');
+    $('textarea').attr('disabled', 'disabled');
+};
+
+var enableAllInputs = function() {
+    $('input').removeAttr('disabled');
+    $('button').removeAttr('disabled');
+    $('textarea').removeAttr('disabled');
+};
+
+var csrfSafeMethod = function(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+};
+
+var sameOrigin = function(url) {
+    var host = document.location.host;
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    return (
+        (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        !(/^(\/\/|http:|https:).*/.test(url))
+
+    );
+};
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            // Send the token to same-origin, relative URLs only.
+            // Send the token only if the method warrants CSRF protection
+            // Using the CSRFToken value acquired earlier
+            var csrfCookieName = askbot['settings']['csrfCookieName'];
+            xhr.setRequestHeader("X-CSRFToken", getCookie(csrfCookieName));
+        }
+    }
+});
+
+/* Returns "next" parameter from the window.location.search
+ * or default post-signin redirect url */
+var getNextUrl = function() {
+    var search = window.location.search;
+    search = search.slice(1);
+    var searchBits = search.split('&');
+    for (i = 0; i < searchBits.length; i++) {
+        var keyVal = searchBits[i].split('=');
+        if (keyVal[0] === 'next') {
+            return decodeURIComponent(keyVal[1]);
+        }
+    }
+    return askbot['settings']['loginRedirectUrl'];
+};
+
 var cleanUrl = function(url){
     var re = new RegExp('//', 'g');
     return url.replace(re, '/');
@@ -28,6 +84,10 @@ var cleanUrl = function(url){
 
 var copyAltToTitle = function(sel){
     sel.attr('title', sel.attr('alt'));
+};
+
+var pxToInt = function(pixels) {
+    return parseInt(pixels.replace('px', ''));
 };
 
 var animateHashes = function(){
@@ -40,6 +100,15 @@ var animateHashes = function(){
             .animate({backgroundColor: '#FFF8C6'}, 500, function(){
                 $(id_value).css('backgroundColor', previous_color);
             });
+    }
+};
+
+/**
+ * logs a message, if console is available
+ */
+var debug = function(message) {
+    if (window.console) {
+        console.log(message)
     }
 };
 
@@ -234,6 +303,9 @@ var decodeHtml = function(encodedText) {
 
 var putCursorAtEnd = function(element){
     var el = $(element).get()[0];
+    if (el === undefined) {
+        return;
+    }
     var jEl = $(el);
     if (el.setSelectionRange){
         var len = jEl.val().length * 2;
@@ -248,6 +320,19 @@ var putCursorAtEnd = function(element){
 var setCheckBoxesIn = function(selector, value){
     return $(selector + '> input[type=checkbox]').attr('checked', value);
 };
+
+var removeModalMenu = function() {
+    $('.modal').remove();
+    $('.modal-backdrop').remove();
+};
+
+var setModalMenuHtml = function(html) {
+    removeModalMenu();
+    var div = $('<div></div>');
+    div.html(html);
+    $('body').append(div);
+};
+
 
 /*
  * Old style notify handler
@@ -393,6 +478,11 @@ var inherits = function(childCtor, parentCtor) {
     childCtor.prototype.constructor = childCtor;
 };
 
+/* helper function to access superclass */
+var superClass = function(cls) {
+    return cls.superClass_;
+};
+
 /** wrapper around jQuery object
  * @constructor
  * the top level "class" for other elements
@@ -512,6 +602,37 @@ WrappedElement.prototype.makeElement = function(html_tag){
 WrappedElement.prototype.dispose = function(){
     this._element.remove();
     this._in_document = false;
+};
+
+
+/**
+ * @constructor
+ * @param {object} data (keys: src, contents)
+ */
+var ScriptElement = function(data) {
+    WrappedElement.call(this);
+    this._src = data['src'] || undefined;
+    this._contents = data['contents'] || undefined;
+    if (this._src === undefined && this._contents === undefined) {
+        debug('Error! either contents or src must be defined');
+    }
+};
+inherits(ScriptElement, WrappedElement);
+
+ScriptElement.prototype.activate = function() {
+    var element = this.getElement();
+    $('head').append(element);
+};
+
+ScriptElement.prototype.createDom = function() {
+    this._element = this.makeElement('script');
+    this._element.attr('type', 'text/javascript');
+    if (this._src) {
+        this._element.attr('src', this._src);
+    }
+    if (this._contents) {
+        this._element.html(this._contents);
+    }
 };
 
 /** 
@@ -802,71 +923,6 @@ Paginator.prototype.decorate = function(element) {
 };
 
 /**
- * makes images never take more spaces then they can take
- * @param {<Array>} breakPoints
- * @param {number} maxWidth
- * an array of array values like (min-width, width-offset) 
- * where min-width is screen minimum width
- * width-offset - difference between the actual screen width and
- * max-width of the image.
- * width-offset may be undefined - this way we know that this is
- * the widest breakpoint and we apply the default max-width
- * instead.
- * We use this offset to calculate max-width in order to
- * have the images fit the layout no matter the size of the image
- */
-var LimitedWidthImage = function(breakPoints, maxWidth) {
-    /**
-     * breakPoints must be sorted in decreasing
-     * order of min-width
-     */
-    this._breakPoints = breakPoints;
-    /**
-     * this is width for the fully stretched
-     * window, above the first widest breakpoint
-     */
-    this._maxWidth = maxWidth;
-    WrappedElement.call(this);
-};
-inherits(LimitedWidthImage, WrappedElement);
-
-LimitedWidthImage.prototype.getImageWidthOffset = function(width) {
-    var numBreaks = this._breakPoints.length;
-    var offset = this._breakPoints[0][1];
-    for (var i = 0; i < numBreaks; i++) {
-        var point = this._breakPoints[i];
-        var minWidth = point[0];
-        if (width >= minWidth) {
-            break;
-        } else {
-            offset = point[1];
-        }
-    }
-    return offset;
-};
-
-LimitedWidthImage.prototype.autoResize = function() {
-    var windowWidth = $(window).width();
-    //1) find the offset for the nearest breakpoint
-    var widthOffset = this.getImageWidthOffset(windowWidth);
-    var maxWidth = '100%';
-    if (widthOffset !== undefined) {
-        maxWidth = windowWidth - widthOffset;
-    } else {
-        maxWidth = this._maxWidth;
-    }
-    this._element.css('max-width', maxWidth);
-    this._element.css('height', 'auto');
-};
-
-LimitedWidthImage.prototype.decorate = function(element) {
-    this._element = element;
-    this.autoResize();
-    var me = this;
-    $(window).resize(function() { me.autoResize(); });
-};
-
-/**
  * @contsructor
  * a form helper that disables submit button
  * after it is submitted the first time
@@ -957,6 +1013,890 @@ Widget.prototype.makeButton = function(label, handler) {
 };
 
 /**
+ * @constructor
+ * A button that allows to validate email
+ * associated with some text that advises user to validate
+ * email address
+ */
+var EmailValidator = function() {
+    Widget.call(this);
+    this._waitInterval = undefined;
+};
+inherits(EmailValidator, Widget);
+
+EmailValidator.prototype.setCloseHandler = function(handler) {
+    this._closeHandler = handler;
+};
+
+EmailValidator.prototype.close = function() {
+    if (this._closeHandler) {
+        this._closeHandler();
+    };
+};
+
+EmailValidator.prototype.startWaiting = function() {
+    var state = this.getState();
+    if (state === 'waiting') {
+        return;
+    };
+    this._prompt.html(gettext(
+        'Thanks! An email with a validation link sent. ' +
+        'Please open your email account and click the link.'
+    ));
+    this._button.html(gettext('Check status or resend the link'));
+    this.setState('waiting');
+};
+
+EmailValidator.prototype.getStartValidationHandler = function() {
+    var me = this;
+    return function() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: askbot['urls']['validateEmail'],
+            success: function(data) {
+                if (data['success']) {
+                    if (data['status'] === 'done') {
+                        me.close();
+                        me.dispose();
+                    } else {
+                        me.startWaiting();
+                    }
+                }
+            }
+        });
+    };
+};
+
+EmailValidator.prototype.decorate = function(element) {
+    this._element = element;
+    this._prompt = element.find('.prompt');
+    var btn = element.find('button');
+    btn.removeAttr('disabled');
+    this._button = btn;
+    setupButtonEventHandlers(btn, this.getStartValidationHandler());
+};
+
+
+/**
+ * @constructor
+ * similar to TippedInput, but the label
+ * is the actual label element immediately preceding the
+ * input and placed over the input by css.
+ * When user has something typed,
+ * label goes above the input
+ */
+var LabeledInput = function() {
+    WrappedElement.call(this);
+};
+inherits(LabeledInput, WrappedElement);
+
+LabeledInput.prototype.setLabelText = function(text) {
+    this._label.html(text);
+};
+
+LabeledInput.prototype.setError = function(errorText) {
+    this._label.addClass('error');
+    if (errorText) {
+        this.setLabelText(errorText);
+    };
+};
+
+LabeledInput.prototype.putLabelInside = function() {
+    if (this._label === undefined) {
+        return;
+    }
+    if (this._label.hasClass('active') === false) {
+        return;
+    }
+    //tried using .offset but had hard time reproducing the position
+    this._label.css('top', 0);
+    this._label.removeClass('active');
+};
+
+LabeledInput.prototype.putLabelOutside = function() {
+    if (this._label.hasClass('active')) {
+        return;
+    }
+    var coor = this._element.offset();
+    coor.top = coor.top - this._label.outerHeight();
+    this._label.offset(coor);
+    this._label.addClass('active');
+};
+
+LabeledInput.prototype.reset = function() {
+    if (this._label === undefined) {
+        return;
+    }
+    this.putLabelInside();
+    this._label.removeClass('error');
+    this.setLabelText(this._originalLabelText);
+    this._element.val('');
+    this._element.blur();
+};
+
+LabeledInput.prototype.focus = function() {
+    this._element.focus();
+};
+
+LabeledInput.prototype.decorate = function(element) {
+    var label = $('label[for="' + element.attr('id') + '"]');
+    if (label.length !== 1) {
+        debug('could not find label!!!');
+        return;
+    }
+    this._element = element;
+    this._label = label;
+    this._originalLabelText = label.html();
+
+    element.attr('autocomplete', 'off');
+
+    var me = this;
+    element.keydown(function() {
+        me.putLabelOutside();//could be more complex
+    });
+    element.change(function() {
+        if (element.val().length > 0) {
+            me.putLabelOutside();
+        }
+    });
+};
+
+
+/**
+ * @constructor
+ * A form that is posted to some url
+ * Each field is labeled and errors show in
+ * place of the labels.
+ * When form is submitted either error messages
+ * are set/cleared or function handleSuccess is run.
+ * .handleSuccess() must be defined in the subclass.
+ */
+var AjaxForm = function() {
+    WrappedElement.call(this);
+    this._fieldNames = [];//define fields in subclasses
+    this._inputs = {};//all keyed by field name
+    this._labels = {};
+    this._labeledInputObjects = {};
+    this._labelDefaultTexts = {};
+    this._formPrefix = undefined;//set to string (folowed by dash in django)
+};
+inherits(AjaxForm, WrappedElement);
+
+/**
+ * returns value of the field by the name attribute
+ */
+AjaxForm.prototype.getValueByFieldName = function(name) {
+    var field = this._inputs[name];
+    if (field.attr('type') === 'checkbox') {
+        return field.is(':checked');
+    } else {
+        return field.val() || '';
+    }
+};
+
+AjaxForm.prototype.getValues = function() {
+    var fieldNames = this._fieldNames;
+    var data = {};
+    for (var i=0; i < fieldNames.length; i++) {
+        var name = fieldNames[i];
+        data[name] = this.getValueByFieldName(name);
+    }
+    return data;
+};
+
+AjaxForm.prototype.getSubmitHandler = function() {
+    var me = this;
+    var inputs = this._inputs;
+    var fieldNames = this._fieldNames;
+    var url = this._url;
+    return function (evt) {
+        var data = me.getValues();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function(data) {
+                if (data['success']) {
+                    if (data['errors']) {
+                        me.setErrors(data['errors']);
+                    } else {
+                        me.handleSuccess(data);
+                    }
+                }
+            }
+        });
+    };
+};
+
+AjaxForm.prototype.reset = function() {
+    this.setErrors();
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+        this._labeledInputObjects[fieldName].reset();
+    }
+};
+
+AjaxForm.prototype.setErrors = function(errors) {
+    errors = errors || {};
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+
+        var label = this._labels[fieldName];
+        if (errors[fieldName]) {
+            label.html(errors[fieldName][0]);
+            label.addClass('error');
+        } else {
+            var defaultText = this._labelDefaultTexts[fieldName];
+            label.html(defaultText);
+            label.removeClass('error');
+        }
+    };
+};
+
+AjaxForm.prototype.decorate = function(element) {
+    this._element = element;
+
+    //init labels, inputs and default texts
+    var formPrefix = this._formPrefix;
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+        var domFieldName = fieldName;
+        if (formPrefix) {
+            domFieldName = formPrefix + fieldName;
+        }
+        var input = element.find('input[name="' + domFieldName + '"]');
+        var label = element.find('label[for="' + input.attr('id') + '"]');
+        this._inputs[fieldName] = input;
+        this._labels[fieldName] = label;
+        this._labelDefaultTexts[fieldName] = label.html();
+        var activeLabel = new LabeledInput();
+        activeLabel.decorate(input);
+        this._labeledInputObjects[fieldName] = activeLabel;
+    }
+
+    this._button = element.find('input[type="submit"]');
+    this._url = this._button.data('url');
+
+    var submitHandler = this.getSubmitHandler();
+    var enterKeyHandler = makeKeyHandler(13, submitHandler);
+
+    $.each(this._inputs, function(idx, inputItem) {
+        $(inputItem).keyup(enterKeyHandler);
+    });
+
+    setupButtonEventHandlers(this._button, submitHandler);
+    this._submitHandler = submitHandler
+};
+
+AjaxForm.prototype.dispose = function() {
+    removeButtonEventHandlers(this._button);
+    this._button.remove();
+    $.each(this._inputs, function(idx, inputItem) {
+        $(inputItem).unbind('keyup');
+    });
+    for (var i = 0; i < this._fieldNames.length; i++) {
+        var fieldName = this._fieldNames[i];
+        this._labeledInputObjects[fieldName].dispose();
+    }
+    this._labels = null;
+    this._element.remove();
+};
+
+/**
+ * @constructor
+ * this makes login buttons e.g. Google work
+ */
+var FederatedLoginMenu = function() {
+    WrappedElement.call(this);
+    this._parent = undefined;
+};
+inherits(FederatedLoginMenu, WrappedElement);
+
+FederatedLoginMenu.prototype.setParent = function(parentMenu) {
+    this._parent = parentMenu;
+};
+
+FederatedLoginMenu.prototype.reset = function() {
+    this._openidLoginTokenLabeledInput.reset();
+    this._extraInfo.hide();
+};
+
+FederatedLoginMenu.prototype.getLoginHandler = function() {
+    var providerInput = this._providerNameElement;
+    return function(providerName) {
+        providerInput.val(providerName);
+    };
+};
+
+/**
+ * displays a field where user can enter username
+ * and a button activating the signing with the openid provier
+ */
+FederatedLoginMenu.prototype.getOpenidUsernameLoginHandler = function() {
+    var providerInput = this._providerNameElement;
+    var openidLoginTokenInput = this._openidLoginTokenInput;
+    var tokenLabeledInput = this._openidLoginTokenLabeledInput;
+    var extraInfo = this._extraInfo;
+    return function(providerName, providerNameText) {
+        providerInput.val(providerName);
+        //@todo: move selectors to the decorator function
+        var button = $('button[name="' + providerName + '"]')
+        var position = button.position();
+        extraInfo.css('position', 'absolute');
+        var offsetLeft = position.left - 20;
+        extraInfo.css('margin-left', offsetLeft + 'px');
+        extraInfo.css('background', 'white');
+        extraInfo.css('z-index', 1);
+        extraInfo.show();
+        //important - his must be after "show"
+        tokenLabeledInput.reset();//clear errors if any
+        //set the label text; important - must be after "reset"
+        if (providerName === 'openid') {
+            var labelText = gettext('enter OpenID url');
+        } else {
+            var formatStr = gettext('enter %s user name');
+            var labelText = interpolate(formatStr, [providerNameText]);
+        }
+        tokenLabeledInput.setLabelText(labelText);
+        openidLoginTokenInput.focus();
+    };
+};
+
+FederatedLoginMenu.prototype.getOpenidLoginWithTokenHandler = function() {
+    var tokenInput = this._openidLoginTokenInput;
+    var tokenLabeledInput = this._openidLoginTokenLabeledInput;
+    var form = this._form;
+    return function() {
+        if ($.trim(tokenInput.val()) === '') {
+            tokenLabeledInput.putLabelInside();
+            tokenLabeledInput.setError();
+            tokenLabeledInput.focus();
+            return false;
+        } else {
+            form.submit();
+        }
+    };
+};
+
+FederatedLoginMenu.prototype.setupMozillaPersona = function() {
+    var providerName = this._providerNameElement;
+    var form = this._form;
+    navigator.id.watch({
+        loggedInUser: askbot['data']['userEmail'],
+        onlogin: function(assertion) {
+            var assertionElement = signin_form.find('input[name=persona_assertion]');
+            assertionElement.val(assertion);
+            providerName.val('mozilla-persona');
+            form.submit();
+            return false;
+        },
+        onlogout: function() {
+            if (askbot['data']['userIsAuthenticated']) {
+                window.location.href = askbot['urls']['signOut'];
+            }
+        }
+    });
+}
+
+FederatedLoginMenu.prototype.getMozillaPersonaLoginHandler = function() {
+    return function() {
+        navigator.id.request();
+        return false;
+    };
+};
+
+FederatedLoginMenu.prototype.decorate = function(element) {
+    this._element = element;
+    this._providerNameElement = element.find('input[name="login-login_provider_name"]');
+    this._openidLoginTokenInput = $('input[name="login-openid_login_token"]');
+    this._form = element.find('form');
+    this._extraInfo = element.find('.extra-openid-info');
+
+    var labeledInput = new LabeledInput();
+    labeledInput.decorate(this._openidLoginTokenInput);
+    this._openidLoginTokenLabeledInput = labeledInput;
+
+
+    var buttons = element.find('li > button');
+    var me = this;
+    var loginWith = this.getLoginHandler();
+    var loginWithOpenidUsername = this.getOpenidUsernameLoginHandler();
+    $.each(buttons, function(idx, item) {
+        var button = $(item);
+        var providerName = button.attr('name');
+        var providerNameLabel = $('label[for="' + button.attr('id') + '"]');
+        if (button.hasClass('openid-username') || button.hasClass('openid-generic')) {
+            setupButtonEventHandlers(
+                button,
+                function() { 
+                    loginWithOpenidUsername(providerName, providerNameLabel.html());
+                    return false;
+                }
+            );
+        } else if (button.hasClass('mozilla-persona') {
+            this.setupMozillaPersonaProtocol();
+            setupButtonEventHandlers(button, this.getMozillaPersonaLoginHandler());
+        } else {
+            setupButtonEventHandlers(
+                                button,
+                                function() { loginWith(providerName) }
+                            );
+        }
+    });
+
+    //event handlers for the AOL type of openid (with extra token)
+    //1) enter key handler for the extra user name popup input
+    var openidLoginWithTokenHandler = this.getOpenidLoginWithTokenHandler();
+    var submitHandler = makeKeyHandler(13, openidLoginWithTokenHandler);
+    this._openidLoginTokenInput.keydown(submitHandler);
+
+    //2) submit button handler for the little popup form
+    setupButtonEventHandlers( 
+        this._extraInfo.find('input[type="submit"]'),
+        openidLoginWithTokenHandler
+    )
+    //3) prevent menu closure upon click (click on the big menu closes the popup)
+    this._extraInfo.click(function(evt){
+        evt.stopPropagation();
+    });
+
+    //4) update csrf token value so that "button logins" work
+    var csrfCookieValue = getCookie(askbot['settings']['csrfCookieName']);
+    element.find('input[name="csrfmiddlewaretoken"]').val(csrfCookieValue);
+};
+
+
+/**
+ * @constructor
+ * expects a specific response from the server
+ */
+var LoginOrRegisterForm = function() {
+    AjaxForm.call(this);
+    this._parent = undefined;
+    this._objectId = getNewUniqueInt();
+};
+inherits(LoginOrRegisterForm, AjaxForm);
+
+LoginOrRegisterForm.prototype.setParent = function(parentMenu) {
+    this._parent = parentMenu;
+};
+
+/*
+ * @note: this function is a hack and has no access to the modal
+ * menu object itself.
+ */
+LoginOrRegisterForm.prototype.closeModalMenu = function() {
+    if (this._parent) {
+        this._parent.closeModalMenu();
+    } else {
+        $('.modal').modal('hide');
+        $('.modal').hide();
+        $('.modal-backdrop').hide();
+    }
+};
+
+
+LoginOrRegisterForm.prototype.isModal = function() {
+    return ($('.modal').length > 0);
+};
+
+LoginOrRegisterForm.prototype.handleSuccess = function(data) {
+    if (this._successHandled) {
+        return;
+    }
+    this._successHandled = true;
+    /* two redirect conditions - in this case 
+     * we don't need to clean up any js-built objects */
+    if (data['redirectUrl']) {
+        window.location.href = data['redirectUrl'];
+    }
+    if (this.isModal() === false) {
+        //go to the next page
+        window.location.href = getNextUrl();
+        return;
+    }
+
+    // redraw the user link in the header
+    this._userToolsNav.html(data['userToolsNavHTML']);
+    /* if login form is not part of the modal menu, then
+     * redirect either based on the query part of the url
+     * or to the default post-login redirect page */
+    var logoutBtn = $('a.logout');
+    if (logoutBtn.length === 1) {
+        var logoutLink = new LogoutLink();
+        logoutLink.decorate(logoutBtn);
+    }
+
+    /* lastly - we need to destroy entire form
+     * if it is modal - including remove all event handlers */
+    if (this.isModal()) {
+        this.closeModalMenu();
+        if (this._parent) {
+            //this won't touch the modal, but only the contents
+            this._parent.dispose();
+            //now remove the modal menu itself
+            $('.modal').remove();
+            $('.modal-backdrop').remove();
+        }
+    };
+    askbot['controllers']['fullTextSearch'].refresh();
+};
+
+LoginOrRegisterForm.prototype.decorate = function(element) {
+    LoginOrRegisterForm.superClass_.decorate.call(this, element);
+    this._userToolsNav = $('#userToolsNav');
+};
+
+
+/**
+ * @constructor
+ */
+var PasswordLoginForm = function() {
+    LoginOrRegisterForm.call(this);
+    this._fieldNames = ['username', 'password'];
+    this._formPrefix = 'login-'
+};
+inherits(PasswordLoginForm, LoginOrRegisterForm);
+
+/**
+ * @contstructor
+ */
+var PasswordRegisterForm = function() {
+    LoginOrRegisterForm.call(this);
+    this._fieldNames = ['username', 'email', 'password1', 'password2'];
+    this._formPrefix = 'register-';
+};
+inherits(PasswordRegisterForm, LoginOrRegisterForm);
+
+/**
+ * @constructor
+ * makes images never take more spaces then they can take
+ * @param {<Array>} breakPoints
+ * @param {number} maxWidth
+ * an array of array values like (min-width, width-offset) 
+ * where min-width is screen minimum width
+ * width-offset - difference between the actual screen width and
+ * max-width of the image.
+ * width-offset may be undefined - this way we know that this is
+ * the widest breakpoint and we apply the default max-width
+ * instead.
+ * We use this offset to calculate max-width in order to
+ * have the images fit the layout no matter the size of the image
+ */
+var LimitedWidthImage = function(breakPoints, maxWidth) {
+    /**
+     * breakPoints must be sorted in decreasing
+     * order of min-width
+     */
+    this._breakPoints = breakPoints;
+    /**
+     * this is width for the fully stretched
+     * window, above the first widest breakpoint
+     */
+    this._maxWidth = maxWidth;
+    WrappedElement.call(this);
+};
+inherits(LimitedWidthImage, WrappedElement);
+
+LimitedWidthImage.prototype.getImageWidthOffset = function(width) {
+    var numBreaks = this._breakPoints.length;
+    var offset = this._breakPoints[0][1];
+    for (var i = 0; i < numBreaks; i++) {
+        var point = this._breakPoints[i];
+        var minWidth = point[0];
+        if (width >= minWidth) {
+            break;
+        } else {
+            offset = point[1];
+        }
+    }
+    return offset;
+};
+
+LimitedWidthImage.prototype.autoResize = function() {
+    var windowWidth = $(window).width();
+    //1) find the offset for the nearest breakpoint
+    var widthOffset = this.getImageWidthOffset(windowWidth);
+    var maxWidth = '100%';
+    if (widthOffset !== undefined) {
+        maxWidth = windowWidth - widthOffset;
+    } else {
+        maxWidth = this._maxWidth;
+    }
+    this._element.css('max-width', maxWidth);
+    this._element.css('height', 'auto');
+};
+
+LimitedWidthImage.prototype.decorate = function(element) {
+    this._element = element;
+    this.autoResize();
+    var me = this;
+    $(window).resize(function() { me.autoResize(); });
+};
+
+/**
+ * @contsructor
+ * a form helper that disables submit button
+ * after it is submitted the first time
+ * to prevent double submits
+ */
+var AccountRecoveryForm = function() {
+    AjaxForm.call(this);
+    this._fieldNames = ['email'];
+    this._formPrefix = 'recover-';
+};
+inherits(AccountRecoveryForm, AjaxForm);
+
+AccountRecoveryForm.prototype.show = function() {
+    this._prompt.hide();
+    this._form.show();
+    this._inputs['email'].focus();
+};
+
+AccountRecoveryForm.prototype.hide = function() {
+    this._prompt.show();
+    this._form.hide();
+    this._inputs['email'].blur();
+};
+
+AccountRecoveryForm.prototype.reset = function() {
+    this._inputs['email'].val('');
+    this.hide();
+};
+
+AccountRecoveryForm.prototype.handleSuccess = function() {
+    this._prompt.html(gettext('Email sent. Please follow the enclosed recovery link'));
+    this.hide();
+};
+
+AccountRecoveryForm.prototype.decorate = function(element) {
+    this._prompt = element.find('.prompt');
+    this._form = element.find('.form');
+    //this.show();
+    AccountRecoveryForm.superClass_.decorate.call(this, element);
+    this.hide();
+    var me = this;
+    setupButtonEventHandlers(this._prompt, function() { me.show() });
+};
+
+
+/**
+ * @constructor
+ */
+var CompleteRegistrationForm = function() {
+    LoginOrRegisterForm.call(this);
+    this._fieldNames = ['username', 'email'];
+};
+inherits(CompleteRegistrationForm, LoginOrRegisterForm);
+
+CompleteRegistrationForm.prototype.handleSuccess = function(data) {
+    CompleteRegistrationForm.superClass_.handleSuccess.call(this, data);
+    this.dispose();
+}
+
+CompleteRegistrationForm.prototype.dispose = function() {
+    $('.modal .close').unbind('click');
+    this.closeModalMenu();
+    this._element.remove();
+};
+
+CompleteRegistrationForm.prototype.restoreLoginMenu = function() {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: askbot['urls']['getLoginMenuHtml'],
+        success: function(data) {
+            if (data['success']) {
+                setModalMenuHtml(data['loginMenuHtml']);
+                var loginElement = $('#userToolsNav .login');
+                removeButtonEventHandlers(loginElement);
+                var loginLink = new LoginLink();
+                loginLink.decorate(loginElement);
+            }
+        }
+    });
+    return false;
+};
+
+CompleteRegistrationForm.prototype.decorate = function(element) {
+    CompleteRegistrationForm.superClass_.decorate.call(this, element);
+    //a hack that makes registration menu closable
+    var me = this;
+    $('#id_username').focus();
+    $('.modal .close').click(function() {
+        //todo - if not logged in - reinstall the login link
+        me.dispose();
+        me.restoreLoginMenu();
+    });
+    //todo: move this to the html template
+    var modal = $('.modal');
+    modal.find('h3').html(gettext('Finish registration'));
+    modal.find('.modal-footer').remove();
+};
+
+/**
+ * @constructor
+ * creates or changes password
+ */
+var SetPasswordForm = function() {
+    AjaxForm.call(this);
+    this._fieldNames = ['password1', 'password2'];
+    this._formPrefix = 'set_password-';
+};
+inherits(SetPasswordForm, AjaxForm);
+
+SetPasswordForm.prototype.setParent = function(parentMenu) {
+    this._parent = parentMenu;
+}
+
+SetPasswordForm.prototype.handleSuccess = function(data) {
+    if (this._parent.isModal()) {
+        this._parent.closeModalMenu();
+    }
+    if (data['message']) {
+        notify.show(data['message']);
+    }
+    if (this._parent) {
+        this._parent.dispose();
+    }
+};
+
+
+/**
+ * @constructor
+ * menu with forms, that may be inside
+ * a modal dialog or in a 'static' in page dialog
+ */
+var MaybeModalMenu = function() {
+    WrappedElement.call(this);
+};
+inherits(MaybeModalMenu, WrappedElement);
+
+MaybeModalMenu.prototype.isModal = function() {
+    var count = $('.modal').length;
+    if (count > 1) {
+        throw 'too many modal menues open!!!';
+    } else {
+        return count === 1;
+    }
+};
+
+MaybeModalMenu.prototype.dispose = function() {
+    if (this.isModal()) {
+        $('.modal').remove();
+        $('.modal-backdrop').remove();
+    }
+    MaybeModalMenu.superClass_.dispose.call(this);
+};
+
+MaybeModalMenu.prototype.closeModalMenu = function() {
+    $('.modal').modal('hide');
+    $('.modal').hide();
+    $('.modal-backdrop').hide();
+};
+
+
+/**
+ * @constructor
+ * Composite authentication menu with:
+ * - login buttons
+ * - password login form
+ * - password registration form
+ * - account recovery form
+ */
+var AuthMenu = function() {
+    MaybeModalMenu.call(this);
+};
+inherits(AuthMenu, MaybeModalMenu);
+
+AuthMenu.prototype.reset = function() {
+    this._federatedLogins.reset();
+    this._passwordLogin.reset();
+    this._passwordRegister.reset();
+    this._accountRecoveryForm.reset();
+    if (this.isModal()) {
+        this.closeModalMenu();
+    }
+};
+
+AuthMenu.prototype.decorate = function(element) {
+    this._element = element;
+
+    var federatedLogins = new FederatedLoginMenu();
+    federatedLogins.setParent(this);
+    federatedLogins.decorate($('.federated-login-methods'));
+    this._federatedLogins = federatedLogins;
+
+    var passwordLogin = new PasswordLoginForm();
+    passwordLogin.setParent(this);
+    passwordLogin.decorate($('.password-login'));
+    this._passwordLogin = passwordLogin;
+
+    var passwordRegister = new PasswordRegisterForm();
+    passwordRegister.setParent(this);
+    passwordRegister.decorate($('.password-registration'));
+    this._passwordRegister = passwordRegister;
+
+    var recoveryForm = new AccountRecoveryForm();
+    recoveryForm.decorate($('.account-recovery'));
+    //this one does not need setParent(), b/c it does not close on success
+    this._accountRecoveryForm = recoveryForm;
+
+    //need this to close the extra username popup
+    element.click(function(){ federatedLogins.reset(); });
+};
+
+AuthMenu.prototype.dispose = function() {
+    this._federatedLogins.dispose();
+    this._passwordLogin.dispose();
+    this._passwordRegister.dispose();
+    this._accountRecoveryForm.dispose();
+    this._element.unbind('click');
+    this._element.remove();
+};
+
+/**
+ * @constructor
+ * Composite menu for establishing login methods with:
+ * - login buttons
+ * - password change form
+ * @todo: add listing of existing login methods
+ */
+var EstablishLoginMenu = function() {
+    MaybeModalMenu.call(this);
+};
+inherits(EstablishLoginMenu, MaybeModalMenu);
+
+EstablishLoginMenu.prototype.reset = function() {
+    this._federatedLogins.reset();
+    this._setPasswordForm.reset();
+    if (this.isModal()) {
+        this.closeModalMenu();
+    }
+};
+
+EstablishLoginMenu.prototype.decorate = function(element) {
+    this._element = element;
+
+    var federatedLogins = new FederatedLoginMenu();
+    federatedLogins.setParent(this);
+    federatedLogins.decorate($('.federated-login-methods'));
+    this._federatedLogins = federatedLogins;
+
+    var setPasswordForm = new SetPasswordForm();
+    setPasswordForm.setParent(this);
+    setPasswordForm.decorate($('.set-password'));
+    this._setPasswordForm = setPasswordForm;
+
+    element.click(function(){ federatedLogins.reset(); });
+};
+
+
+
+/**
+ * @todo: probably decommission tis in favor of LabeledInput
  * Can be used for an input box or textarea.
  * The original value will be treated as an instruction.
  * When user focuses on the field, the tip will be gone,
@@ -1398,6 +2338,7 @@ CommentConvertLink.prototype.createDom = function(){
 
     var submit = this.makeElement('input');
     submit.attr('type', 'submit');
+    submit.addClass('convert-comment');
     submit.attr('value', gettext('convert to answer'));
     element.append(submit);
     this.decorate(element);
@@ -1449,16 +2390,23 @@ DeleteIcon.prototype.setContent = function(content){
  * @contstructor
  * Simple modal dialog with Ok/Cancel buttons by default
  */
-var ModalDialog = function() {
+var ModalDialog = function(customOptions) {
     WrappedElement.call(this);
+    this._options = {//@todo: move other vars below to options
+        useFooter: true,
+        headingText: 'Add heading via option headingText or setHeadingText()'
+    };
+    $.extend(this._options, customOptions);
+    this._useFooter = true;
     this._accept_button_text = gettext('Ok');
     this._reject_button_text = gettext('Cancel');
-    this._heading_text = 'Add heading by setHeadingText()';
     this._initial_content = undefined;
     this._accept_handler = function(){};
     var me = this;
     this._reject_handler = function() { me.hide(); };
     this._content_element = undefined;
+    askbot['vars'] = {} || askbot['vars'];
+    askbot['vars']['modalDialog'] = this;
     this._headerEnabled = true;
     this._className = undefined;
 };
@@ -1484,7 +2432,7 @@ ModalDialog.prototype.prependContent = function(content) {
 };
 
 ModalDialog.prototype.setHeadingText = function(text) {
-    this._heading_text = text;
+    this._options.headingText = text;
     if (this._headingTextElement) {
         this._headingTextElement.html(text);
     }
@@ -1519,6 +2467,38 @@ ModalDialog.prototype.setMessage = function(text, message_type) {
     this.prependContent(box.getElement());
 };
 
+/**
+ * this function is to be used to activate a pre-rendered
+ * modal menu
+ * @param {object} jQuery object of the modal menu
+ */
+ModalDialog.prototype.decorate = function(element) {
+    
+    if (element.length > 1) {
+        element = $(element[0]);
+        debug('strange too many modal menues found!!!');
+    } else if (element.length === 0) {
+        debug('no modal menues found, instead check for length of this selector outside');
+        return;
+    }
+
+    this._element = element;
+    this._content_element = element.find('.modal-body');
+
+    if (this._options.useFooter) {
+        var accept_btn = element.find('.btn.btn-primary');
+        setupButtonEventHandlers(accept_btn, this._accept_handler);
+
+        var cancel_btn = element.find('.btn.cancel');
+        if (cancel_btn.length) {
+            setupButtonEventHandlers(cancel_btn, this._reject_handler);
+        }
+    }
+};
+
+/** 
+ * creates a modal menu DOM programmatically
+ */
 ModalDialog.prototype.createDom = function() {
     this._element = this.makeElement('div')
     var element = this._element;
@@ -1539,8 +2519,8 @@ ModalDialog.prototype.createDom = function() {
         close_link.html('x');
         header.append(close_link);
         var title = this.makeElement('h3');
+        title.html(this._options.headingText);
         this._headingTextElement = title;
-        title.html(this._heading_text);
         header.append(title);
     }
 
@@ -1553,30 +2533,33 @@ ModalDialog.prototype.createDom = function() {
         this._content_element.append(this._initial_content);
     }
 
-    //3) create footer with accept and reject buttons (ok/cancel).
-    var footer = this.makeElement('div');
-    footer.addClass('modal-footer');
-    element.append(footer);
+    if (this._options.useFooter) {
+        //3) create footer with accept and reject buttons (ok/cancel).
+        var footer = this.makeElement('div');
+        footer.addClass('modal-footer');
+        element.append(footer);
 
-    var accept_btn = this.makeElement('button');
-    accept_btn.addClass('submit');
-    accept_btn.html(this._accept_button_text);
-    footer.append(accept_btn);
-    this._acceptButton = accept_btn;
+        var accept_btn = this.makeElement('button');
+        accept_btn.addClass('submit');
+        accept_btn.html(this._accept_button_text);
+        footer.append(accept_btn);
 
-    if (this._reject_button_text) {
-        var reject_btn = this.makeElement('button');
-        reject_btn.addClass('submit cancel');
-        reject_btn.html(this._reject_button_text);
-        footer.append(reject_btn);
-        this._rejectButton = reject_btn;
+        if (this._reject_button_text) {
+            var reject_btn = this.makeElement('button');
+            reject_btn.addClass('submit cancel');
+            reject_btn.html(this._reject_button_text);
+            footer.append(reject_btn);
+            this._rejectButton = reject_btn;
+        }
+
+        //4) attach event handlers to the buttons
+        setupButtonEventHandlers(accept_btn, this._accept_handler);
+        if (this._reject_button_text) {
+            setupButtonEventHandlers(reject_btn, this._reject_handler);
+        }
+        setupButtonEventHandlers(close_link, this._reject_handler);
     }
 
-    //4) attach event handlers to the buttons
-    setupButtonEventHandlers(accept_btn, this._accept_handler);
-    if (this._reject_button_text) {
-        setupButtonEventHandlers(reject_btn, this._reject_handler);
-    }
     if (this._headerEnabled) {
         setupButtonEventHandlers(close_link, this._reject_handler);
     }
@@ -1860,6 +2843,231 @@ FileUploadDialog.prototype.createDom = function() {
     this._spinner = spinner;
 
     upload_input.change(this.getStartUploadHandler());
+};
+
+
+/**
+ * @constructor
+ * NOTE: this class is just loading the dialog.
+ * the login functionality itself is part of
+ * the AuthMenu class defined elsewhere.
+ */
+var LoginDialog = function(customOpts) {
+    var opts = {
+        useFooter: false,
+        headingText: gettext('Login or Register'),
+        infoText: undefined
+    }
+    if (customOpts) {
+        $.extend(opts, customOpts);
+    }
+    ModalDialog.call(this, opts);
+};
+inherits(LoginDialog, ModalDialog);
+
+LoginDialog.prototype.decorate = function(element) {
+    superClass(LoginDialog).decorate.call(this, element);
+    var authMenu = new AuthMenu();
+    authMenu.decorate(element.find('.auth-menu'));
+};
+
+/**
+ * @constructor
+ */
+var ModalDialogTrigger = function() {
+    SimpleControl.call(this);
+    this._handler = this.getOpenDialogHandler();
+    this._dialog = undefined;
+    this._dialogClass = undefined;//assign this in the subclass's constructor
+    this._dialogOpts = {};
+};
+inherits(ModalDialogTrigger, SimpleControl);
+
+ModalDialogTrigger.prototype.setDialog = function(dialog) {
+    this._dialog = dialog;
+};
+
+ModalDialogTrigger.prototype.getDialog = function() {
+    this._dialog = new this._dialogClass();
+    this._dialog.decorate($('.modal'));
+    return this._dialog;
+};
+
+ModalDialogTrigger.prototype.getDialogClass = function() {
+    return this._dialogClass;
+};
+
+ModalDialogTrigger.prototype.getOpenDialogHandler = function() {
+    var me = this;
+    var dialogOpts = this._dialogOpts;
+    return function() {
+        var dialog = me.getDialog();
+        dialog.show();
+        return false;
+    };
+};
+
+var LoginLink = function() {
+    ModalDialogTrigger.call(this);
+    this._dialogClass = LoginDialog;
+};
+inherits(LoginLink, ModalDialogTrigger);
+
+/**
+ * @constructor
+ * base class for logged in and anonymous ask buttons
+ * todo: factor out the editor and consider merging
+ * with the editor class defined elsewhere
+ */
+var BaseAskBtn = function() {
+    SimpleControl.call(this);
+};
+inherits(BaseAskBtn, SimpleControl);
+
+/**
+ * @todo: display errors properly
+ */
+BaseAskBtn.prototype.setEditorErrors = function(errors) {
+    var html = '<ul>';
+    $.each(errors, function(idx, error) {
+        html += '<li>' + error + '</li>';
+    });
+    html += '</ul>';
+    notify.show(html);
+};
+
+BaseAskBtn.prototype.getEditorText = function() {
+    if (askbot['settings']['editorType'] == 'markdown') {
+        return $('#editor').val();
+    } else {
+        return tinyMCE.activeEditor.getContent();
+    }
+};
+
+BaseAskBtn.prototype.askQuestion = function(callback) {
+    //@todo: create js class for the question form
+    var data = {
+        title: $('#id_title').val(),
+        text: this.getEditorText(),
+        tags: $('#id_tags').val(),
+        wiki: $('#id_wiki').is(':checked'),
+        post_privately: $('#id_post_privately').is(':checked'),
+        group_id: $('#id_group_id').val(),
+        ask_anonymously: $('#id_ask_anonymously').is(':checked'),
+    };
+    var me = this;
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: this._url,
+        data: JSON.stringify(data),
+        cache: false,
+        success: function(data) {
+            if (data['errors']) {
+                me.setEditorErrors(data['errors']);
+            } else {
+                callback(data);
+            }
+        }
+    });
+};
+
+BaseAskBtn.prototype.decorate = function(element) {
+    BaseAskBtn.superClass_.decorate.call(this, element);
+    this._url = element.data('url');
+};
+
+/**
+ * @constructor
+ */
+var AskBtn = function() {
+    BaseAskBtn.call(this);
+    var me = this;
+    this._handler = function() {
+        me.askQuestion(function(data) {
+            window.location.href = data['redirectUrl'];
+        });
+    };
+};
+inherits(AskBtn, BaseAskBtn);
+
+var AskAnonBtn = function() {
+    BaseAskBtn.call(this);
+    this._dialogOpts = {
+        'infoText': gettext('Your question will be posted after you log in')
+    };
+    this._handler = this.getAskAnonHandler();
+};
+inherits(AskAnonBtn, BaseAskBtn);
+
+AskAnonBtn.prototype.getAskAnonHandler = function() {
+    var loginDialog = new LoginDialog();
+    $(document).append(loginDialog.getElement());
+    var me = this;
+    return function() {
+        me.askQuestion(function() { 
+            loginDialog.startOpening();
+        });
+    };
+};
+
+var LogoutLink = function() {
+    SimpleControl.call(this);
+    this._handler = this.getLogoutHandler();
+};
+inherits(LogoutLink, SimpleControl);
+
+LogoutLink.prototype.getUrl = function() {
+    return this._url;
+};
+
+LogoutLink.prototype.setUserToolsNavHtml = function(html) {
+    var nav = $('#userToolsNav');
+    nav.empty();
+    nav.html(html);
+};
+
+LogoutLink.prototype.activateLoginLink = function() {
+    var nav = $('#userToolsNav');
+    var loginLink = new LoginLink();
+    loginLink.decorate(nav.find('.login'));
+};
+
+LogoutLink.prototype.getLogoutHandler = function() {
+    var me = this;
+    var url = this._url;
+    return function() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: me.getUrl(),
+            success: function(data) {
+                if (data['success']) {
+                    //if we have closed mode we redirect to the login page
+                    if (askbot['settings']['closedForumMode']) {
+                        window.location.href = askbot['urls']['userSignin'];
+                        return;
+                    }
+                    //otherwise - repaint the login link and the login menu
+                    me.setUserToolsNavHtml(data['userToolsNavHtml']);
+                    setModalMenuHtml(data['loginMenuHtml']);
+                    //NOTE: no need to do below as dialog is inited on login link click
+                    //var loginDialog = new LoginDialog();
+                    //loginDialog.decorate($('.modal'));
+                    //activate the login menu
+                    me.activateLoginLink();
+                    askbot['controllers']['fullTextSearch'].refresh();
+                }
+            }
+        });
+        return false;
+    };
+};
+
+LogoutLink.prototype.decorate = function(element) {
+    this._element = element;
+    this._url = element.data('url');
+    this.setHandlerInternal();
 };
 
 /**
@@ -2985,21 +4193,118 @@ ShowPermsTrigger.prototype.decorate = function(element) {
 Hilite={elementid:"content",exact:true,max_nodes:1000,onload:true,style_name:"hilite",style_name_suffix:true,debug_referrer:""};Hilite.search_engines=[["local","q"],["cnprog\\.","q"],["google\\.","q"],["search\\.yahoo\\.","p"],["search\\.msn\\.","q"],["search\\.live\\.","query"],["search\\.aol\\.","userQuery"],["ask\\.com","q"],["altavista\\.","q"],["feedster\\.","q"],["search\\.lycos\\.","q"],["alltheweb\\.","q"],["technorati\\.com/search/([^\\?/]+)",1],["dogpile\\.com/info\\.dogpl/search/web/([^\\?/]+)",1,true]];Hilite.decodeReferrer=function(d){var g=null;var e=new RegExp("");for(var c=0;c<Hilite.search_engines.length;c++){var f=Hilite.search_engines[c];e.compile("^http://(www\\.)?"+f[0],"i");var b=d.match(e);if(b){var a;if(isNaN(f[1])){a=Hilite.decodeReferrerQS(d,f[1])}else{a=b[f[1]+1]}if(a){a=decodeURIComponent(a);if(f.length>2&&f[2]){a=decodeURIComponent(a)}a=a.replace(/\'|"/g,"");a=a.split(/[\s,\+\.]+/);return a}break}}return null};Hilite.decodeReferrerQS=function(f,d){var b=f.indexOf("?");var c;if(b>=0){var a=new String(f.substring(b+1));b=0;c=0;while((b>=0)&&((c=a.indexOf("=",b))>=0)){var e,g;e=a.substring(b,c);b=a.indexOf("&",c)+1;if(e==d){if(b<=0){return a.substring(c+1)}else{return a.substring(c+1,b-1)}}else{if(b<=0){return null}}}}return null};Hilite.hiliteElement=function(f,e){if(!e||f.childNodes.length==0){return}var c=new Array();for(var b=0;b<e.length;b++){e[b]=e[b].toLowerCase();if(Hilite.exact){c.push("\\b"+e[b]+"\\b")}else{c.push(e[b])}}c=new RegExp(c.join("|"),"i");var a={};for(var b=0;b<e.length;b++){if(Hilite.style_name_suffix){a[e[b]]=Hilite.style_name+(b+1)}else{a[e[b]]=Hilite.style_name}}var d=function(m){var j=c.exec(m.data);if(j){var n=j[0];var i="";var h=m.splitText(j.index);var g=h.splitText(n.length);var l=m.ownerDocument.createElement("SPAN");m.parentNode.replaceChild(l,h);l.className=a[n.toLowerCase()];l.appendChild(h);return l}else{return m}};Hilite.walkElements(f.childNodes[0],1,d)};Hilite.hilite=function(){var a=Hilite.debug_referrer?Hilite.debug_referrer:document.referrer;var b=null;a=Hilite.decodeReferrer(a);if(a&&((Hilite.elementid&&(b=document.getElementById(Hilite.elementid)))||(b=document.body))){Hilite.hiliteElement(b,a)}};Hilite.walkElements=function(d,f,e){var a=/^(script|style|textarea)/i;var c=0;while(d&&f>0){c++;if(c>=Hilite.max_nodes){var b=function(){Hilite.walkElements(d,f,e)};setTimeout(b,50);return}if(d.nodeType==1){if(!a.test(d.tagName)&&d.childNodes.length>0){d=d.childNodes[0];f++;continue}}else{if(d.nodeType==3){d=e(d)}}if(d.nextSibling){d=d.nextSibling}else{while(f>0){d=d.parentNode;f--;if(d.nextSibling){d=d.nextSibling;break}}}}};if(Hilite.onload){if(window.attachEvent){window.attachEvent("onload",Hilite.hilite)}else{if(window.addEventListener){window.addEventListener("load",Hilite.hilite,false)}else{var __onload=window.onload;window.onload=function(){Hilite.hilite();__onload()}}}};
 
 if(!this.JSON){this.JSON={}}(function(){function f(n){return n<10?"0"+n:n}if(typeof Date.prototype.toJSON!=="function"){Date.prototype.toJSON=function(key){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+f(this.getUTCMonth()+1)+"-"+f(this.getUTCDate())+"T"+f(this.getUTCHours())+":"+f(this.getUTCMinutes())+":"+f(this.getUTCSeconds())+"Z":null};String.prototype.toJSON=Number.prototype.toJSON=Boolean.prototype.toJSON=function(key){return this.valueOf()}}var cx=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,escapable=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},rep;function quote(string){escapable.lastIndex=0;return escapable.test(string)?'"'+string.replace(escapable,function(a){var c=meta[a];return typeof c==="string"?c:"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+string+'"'}function str(key,holder){var i,k,v,length,mind=gap,partial,value=holder[key];if(value&&typeof value==="object"&&typeof value.toJSON==="function"){value=value.toJSON(key)}if(typeof rep==="function"){value=rep.call(holder,key,value)}switch(typeof value){case"string":return quote(value);case"number":return isFinite(value)?String(value):"null";case"boolean":case"null":return String(value);case"object":if(!value){return"null"}gap+=indent;partial=[];if(Object.prototype.toString.apply(value)==="[object Array]"){length=value.length;for(i=0;i<length;i+=1){partial[i]=str(i,value)||"null"}v=partial.length===0?"[]":gap?"[\n"+gap+partial.join(",\n"+gap)+"\n"+mind+"]":"["+partial.join(",")+"]";gap=mind;return v}if(rep&&typeof rep==="object"){length=rep.length;for(i=0;i<length;i+=1){k=rep[i];if(typeof k==="string"){v=str(k,value);if(v){partial.push(quote(k)+(gap?": ":":")+v)}}}}else{for(k in value){if(Object.hasOwnProperty.call(value,k)){v=str(k,value);if(v){partial.push(quote(k)+(gap?": ":":")+v)}}}}v=partial.length===0?"{}":gap?"{\n"+gap+partial.join(",\n"+gap)+"\n"+mind+"}":"{"+partial.join(",")+"}";gap=mind;return v}}if(typeof JSON.stringify!=="function"){JSON.stringify=function(value,replacer,space){var i;gap="";indent="";if(typeof space==="number"){for(i=0;i<space;i+=1){indent+=" "}}else{if(typeof space==="string"){indent=space}}rep=replacer;if(replacer&&typeof replacer!=="function"&&(typeof replacer!=="object"||typeof replacer.length!=="number")){throw new Error("JSON.stringify")}return str("",{"":value})}}if(typeof JSON.parse!=="function"){JSON.parse=function(text,reviver){var j;function walk(holder,key){var k,v,value=holder[key];if(value&&typeof value==="object"){for(k in value){if(Object.hasOwnProperty.call(value,k)){v=walk(value,k);if(v!==undefined){value[k]=v}else{delete value[k]}}}}return reviver.call(holder,key,value)}text=String(text);cx.lastIndex=0;if(cx.test(text)){text=text.replace(cx,function(a){return"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)})}if(/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,"]").replace(/(?:^|:|,)(?:\s*\[)+/g,""))){j=eval("("+text+")");return typeof reviver==="function"?walk({"":j},""):j}throw new SyntaxError("JSON.parse")}}}());
+
 //jquery fieldselection
-(function(){var a={getSelection:function(){var b=this.jquery?this[0]:this;return(("selectionStart" in b&&function(){var c=b.selectionEnd-b.selectionStart;return{start:b.selectionStart,end:b.selectionEnd,length:c,text:b.value.substr(b.selectionStart,c)}})||(document.selection&&function(){b.focus();var d=document.selection.createRange();if(d==null){return{start:0,end:b.value.length,length:0}}var c=b.createTextRange();var e=c.duplicate();c.moveToBookmark(d.getBookmark());e.setEndPoint("EndToStart",c);return{start:e.text.length,end:e.text.length+d.text.length,length:d.text.length,text:d.text}})||function(){return{start:0,end:b.value.length,length:0}})()},replaceSelection:function(){var b=this.jquery?this[0]:this;var c=arguments[0]||"";return(("selectionStart" in b&&function(){b.value=b.value.substr(0,b.selectionStart)+c+b.value.substr(b.selectionEnd,b.value.length);return this})||(document.selection&&function(){b.focus();document.selection.createRange().text=c;return this})||function(){b.value+=c;return this})()}};jQuery.each(a,function(b){jQuery.fn[b]=this})})();
+/*
+ * jQuery plugin: fieldSelection - v0.1.0 - last change: 2006-12-16
+ * (c) 2006 Alex Brem <alex@0xab.cd> - http://blog.0xab.cd
+ */
+
+(function() {
+
+	var fieldSelection = {
+
+		getSelection: function() {
+
+			var e = this.jquery ? this[0] : this;
+            var isMoz = function() {
+                try {
+                    if ('selectionStart' in e) {
+                        e.selectionEnd;
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } catch (err) {
+                    return false;
+                }
+            };
+
+			return (
+
+				/* mozilla / dom 3.0 */
+				(isMoz() && function() {
+					var l = e.selectionEnd - e.selectionStart;
+					return { start: e.selectionStart, end: e.selectionEnd, length: l, text: e.value.substr(e.selectionStart, l) };
+				}) ||
+
+				/* exploder */
+				(document.selection && function() {
+
+					e.focus();
+
+					var r = document.selection.createRange();
+					if (r == null) {
+						return { start: 0, end: e.value.length, length: 0 }
+					}
+
+					var re = e.createTextRange();
+					var rc = re.duplicate();
+					re.moveToBookmark(r.getBookmark());
+					rc.setEndPoint('EndToStart', re);
+
+					return { start: rc.text.length, end: rc.text.length + r.text.length, length: r.text.length, text: r.text };
+				}) ||
+
+				/* browser not supported */
+				function() {
+					return { start: 0, end: e.value.length, length: 0 };
+				}
+
+			)();
+
+		},
+
+		replaceSelection: function() {
+
+			var e = this.jquery ? this[0] : this;
+			var text = arguments[0] || '';
+
+			return (
+
+				/* mozilla / dom 3.0 */
+				('selectionStart' in e && function() {
+					e.value = e.value.substr(0, e.selectionStart) + text + e.value.substr(e.selectionEnd, e.value.length);
+					return this;
+				}) ||
+
+				/* exploder */
+				(document.selection && function() {
+					e.focus();
+					document.selection.createRange().text = text;
+					return this;
+				}) ||
+
+				/* browser not supported */
+				function() {
+					e.value += text;
+					return this;
+				}
+
+			)();
+
+		}
+
+	};
+
+	jQuery.each(fieldSelection, function(i) { jQuery.fn[i] = this; });
+
+})();
 /**
  * AutoCompleter Object, refactored closure style from
  * jQuery autocomplete plugin
  * @param {Object=} options Settings
  * @constructor
+ * @inherits LabeledInput
  */
 var AutoCompleter = function(options) {
+
+    LabeledInput.call(this);
 
     /**
      * Default options for autocomplete plugin
      */
     var defaults = {
-        promptText: '',
         autocompleteMultiple: true,
         multipleSeparator: ' ',//a single character
         inputClass: 'acInput',
@@ -3124,9 +4429,11 @@ var AutoCompleter = function(options) {
         this.fetchRemoteData('', function(){});
     }
 };
-inherits(AutoCompleter, WrappedElement);
+inherits(AutoCompleter, LabeledInput);
 
 AutoCompleter.prototype.decorate = function(element){
+
+    AutoCompleter.superClass_.decorate.call(this, element);
 
     /**
      * Init DOM elements repository
@@ -3137,13 +4444,6 @@ AutoCompleter.prototype.decorate = function(element){
      * Switch off the native autocomplete
      */
     this._element.attr('autocomplete', 'off');
-
-    /**
-     * Set prompt text
-     */
-    if (this.options['promptText']) {
-        this.setPrompt();
-    }
 
     /**
      * Create DOM element to hold results
@@ -3160,21 +4460,6 @@ AutoCompleter.prototype.decorate = function(element){
     this.setEventHandlers();
 };
 
-AutoCompleter.prototype.setPrompt = function() {
-    this._element.val(this.options['promptText']);
-    this._element.addClass('prompt');
-};
-
-AutoCompleter.prototype.removePrompt = function() {
-    if (this._element.hasClass('prompt')) {
-        this._element.removeClass('prompt');
-        var val = this._element.val();
-        if (val === this.options['promptText']) {
-            this._element.val('');
-        }
-    }
-};
-
 AutoCompleter.prototype.setEventHandlers = function(){
     /**
      * Shortcut to self
@@ -3185,8 +4470,6 @@ AutoCompleter.prototype.setEventHandlers = function(){
      * Attach keyboard monitoring to $elem
      */
     self._element.keydown(function(e) {
-
-        self.removePrompt();
 
         self.lastKeyPressed_ = e.keyCode;
         switch(self.lastKeyPressed_) {
@@ -3237,12 +4520,8 @@ AutoCompleter.prototype.setEventHandlers = function(){
 
         }
     });
-    self._element.focus(function() {
-        self.removePrompt();
-    });
     self._element.blur(function() {
         if ($.trim(self._element.val()) === '') {
-            self.setPrompt();
             self._results.hide();
             return true;
         }

@@ -468,7 +468,6 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         })
         self.assertEqual(1, Post.objects.count())
         question = Post.objects.all()[0]
-        self.assertRedirects(response=response, expected_url=question.get_absolute_url())
 
         self.assertEqual('test title', question.thread.title)
         self.assertEqual('test body text', question.text)
@@ -700,4 +699,3 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 # TODO: (in spare time - those cases should pass without changing anything in code but we should have them eventually for completness)
 # - Publishing anonymous questions / answers
 # - Re-posting question as answer and vice versa
-# - Management commands (like post_emailed_questions)

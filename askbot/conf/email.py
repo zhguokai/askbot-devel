@@ -248,7 +248,7 @@ settings.register(
         EMAIL,
         'EMAIL_VALIDATION',
         default=False,
-        hidden=True,
+        hidden=False,
         description=_('Require email verification before allowing to post'),
         help_text=_('Active email verification is done by sending a verification key in email')
     )
@@ -274,6 +274,15 @@ settings.register(
             'Before enabling this setting - please fill out IMAP settings '
             'in the settings.py file'
         )
+    )
+)
+
+settings.register(
+    livesettings.LongStringValue(
+        EMAIL,
+        'ASK_BY_EMAIL_INSTRUCTIONS',
+        default='',
+        description=_('Instructions on how to ask by email (optional)'),
     )
 )
 

@@ -28,15 +28,6 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
-        'SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN',
-        default = True,
-        description=_('Always display local login form and hide "Askbot" button.'),
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
         'SIGNIN_WORDPRESS_SITE_ENABLED',
         default = False,
         description=_('Activate to allow login with self-hosted wordpress site'),

@@ -36,13 +36,13 @@ from askbot.models import Post, Thread, User, ReplyAddress
 from askbot.models.badges import award_badges_signal
 from askbot.models import get_reply_to_addresses, format_instant_notification_email
 from askbot import exceptions as askbot_exceptions
+from askbot.utils.debug import debug as _debug
 from askbot.utils.twitter import Twitter
 
 DEBUG_CELERY = True
-
 def debug(message):
     if DEBUG_CELERY:
-        print >>sys.stderr, unicode(message).encode('utf-8')
+        _debug(message)
 
 # TODO: Make exceptions raised inside record_post_update_celery_task() ...
 #       ... propagate upwards to test runner, if only CELERY_ALWAYS_EAGER = True
@@ -110,7 +110,7 @@ def notify_author_of_published_revision_celery_task(revision):
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,
             'post': revision.post,
-            'author_email_signature': revision.author.email_signature,
+            'author_email_signature': '\n\n' + revision.author.email_signature,
             'replace_content_address': replace_content_address,
             'reply_separator_line': reply_separator_line,
             'mailto_link_subject': mailto_link_subject,
@@ -279,12 +279,14 @@ def send_instant_notifications_about_activity_in_post(
         else:
             debug('success %s, logId=%s' % (user.email, log_id))
 
-def run_test_task():
+def run_test_post_update_task():
     from askbot import tasks
     import datetime
+    post = Post.objects.all()[0]
+    user = User.objects.all()[0]
     return tasks.record_post_update_celery_task.delay(
-                                post_id=12056,
-                                updated_by_id=2445,
+                                post_id=1,
+                                updated_by_id=1,
                                 diff='this is a test, please ignore',
                                 timestamp=datetime.datetime.now(),
                                 newly_mentioned_user_id_list=list()

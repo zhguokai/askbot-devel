@@ -1,0 +1,9 @@
+{% extends "two_column_body.html" %}
+{% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
+{% block content %}
+    <h1 class="section-title">{% trans %}Login or Register{% endtrans %}</h1>
+    {% include "authopenid/signin.html" %}
+{% endblock %}
+{% block endjs %}
+    {% include "authopenid/providers_javascript.html" %}
+{% endblock %}

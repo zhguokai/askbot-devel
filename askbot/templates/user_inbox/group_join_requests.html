@@ -5,12 +5,23 @@
 {% endblock %}
 {% block inbox_content %}
     <table>
-    {% for join_request in join_requests %}
+    {% for membership in join_requests %}
         <tr>
+            {% set user = membership.user %}
+            {% set user_token = user.username %}
+            {% if user.real_name %}
+                {% set user_token = user_token ~ ' / ' ~ user.real_name %}
+            {% endif %}
+            {% if user.email %}
+                {% set user_token = user_token ~ ' / ' ~ user.email %}
+            {% endif %}
             <td>{% trans 
-                    user=join_request.user,
-                    group=groups_dict[join_request.object_id].name
-                %}{{ user }} wants to join group {{ group }}{% endtrans %}
+                    user=user_token,
+                    group=membership.group.name
+                %}{{ user }} asked to join "{{ group }}"{% endtrans %}
+            </td>
+            <td>
+                {{ macros.timeago(membership.requested_at) }}
             </td>
             <td>{# forms with accept and reject buttons #}
                 <form action="{% url moderate_group_join_request %}" method="post"
@@ -18,7 +29,7 @@
                     <input 
                         type="hidden"
                         name="request_id"
-                        value="{{join_request.id}}"
+                        value="{{ membership.id }}"
                     />
                     <input type="hidden" name="action" value="approve"/>
                     <input
@@ -33,7 +44,7 @@
                     <input 
                         type="hidden"
                         name="request_id"
-                        value="{{join_request.id}}"
+                        value="{{ membership.id }}"
                     />
                     <input type="hidden" name="action" value="deny"/>
                     <input

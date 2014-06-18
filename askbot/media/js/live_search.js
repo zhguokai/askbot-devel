@@ -217,7 +217,18 @@ SearchDropMenu.prototype.createDom = function() {
         footer.addClass('footer');
         var button = this.makeElement('button');
         button.addClass('submit');
-        button.html(gettext('Ask Your Question'))
+        var buttonText = '';
+        var defaultAskGroupName = askbot['settings']['defaultAskGroupName'];
+        if (defaultAskGroupName) {
+            buttonText = interpolate(
+                gettext('Ask %(group_name)s'),
+                {'group_name': defaultAskGroupName },
+                true
+            );
+        } else {
+            buttonText = gettext('Ask Your Question');
+        }
+        button.html(buttonText);
         footer.append(button);
         var handler = this._askHandler;
         setupButtonEventHandlers(button, handler);
@@ -592,11 +603,13 @@ FullTextSearch.prototype.renderFullTextSearchResult = function(data) {
 
     // Patch "Ask your question"
     var askButton = $('#askButton');
-    var askHrefBase = askButton.attr('href').split('?')[0];
-    askButton.attr(
-        'href',
-        askHrefBase + data['query_data']['ask_query_string']
-    ); /* INFO: ask_query_string should already be URL-encoded! */
+    if (askButton.length) {
+        var askHrefBase = askButton.attr('href').split('?')[0];
+        askButton.attr(
+            'href',
+            askHrefBase + data['query_data']['ask_query_string']
+        ); /* INFO: ask_query_string should already be URL-encoded! */
+    }
 
     this._query.focus();
 
@@ -668,13 +681,14 @@ FullTextSearch.prototype.renderRelatedTags = function(tags, query_string){
         tag.setName(tags[i]['name']);
         tag.setDeletable(false);
         tag.setLinkable(true);
+        tag.setHtmlTag('div');
         tag.setUrlParams(query_string);
 
-        html_list.push(tag.getElement().outerHTML());
-        html_list.push('<span class="tag-number">&#215; ');
-        html_list.push(tags[i]['used_count']);
-        html_list.push('</span>');
-        html_list.push('<br />');
+        var listItem = '<li>' + tag.getElement().outerHTML();
+        listItem = listItem + '<span class="tag-number">&#215; ' + tags[i]['used_count'] +  '</span>';
+        listItem = listItem + '</li>';
+
+        html_list.push(listItem);
     }
     $('#related-tags').html(html_list.join(''));
 };
@@ -753,13 +767,15 @@ FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string){
     var arrow = (sense == 'asc' ? ' &#9650;':' &#9660;');
     var active_tab = $('#by_' + name);
     active_tab.attr('class', 'on');
-    active_tab.attr(
-        'title',
-        askbot['data']['sortButtonData'][name][antisense + '_tooltip']
-    );
-    active_tab.html(
-        askbot['data']['sortButtonData'][name]['label'] + arrow
-    );
+    if (askbot['data']['sortButtonData'][name]) {
+        active_tab.attr(
+            'title',
+            askbot['data']['sortButtonData'][name][antisense + '_tooltip']
+        );
+        active_tab.html(
+            askbot['data']['sortButtonData'][name]['label'] + arrow
+        );
+    }
 };
 
 FullTextSearch.prototype.renderRelevanceSortTab = function(query_string) {
@@ -784,7 +800,12 @@ FullTextSearch.prototype.makeAskHandler = function() {
     var me = this;
     return function() {
         var query = me.getSearchQuery();
-        window.location.href = askbot['urls']['ask'] + '?title=' + query;
+        var askHref = askbot['urls']['ask'] + '?title=' + query;
+        var defaultAskGroupId = askbot['settings']['defaultAskGroupId'];
+        if (defaultAskGroupId) {
+            askHref += '&group_id=' + defaultAskGroupId;
+        }
+        window.location.href = askHref;
         return false;
     };
 };

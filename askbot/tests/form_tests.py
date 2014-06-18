@@ -47,7 +47,8 @@ class AskByEmailFormTests(AskbotTestCase):
         self.data = {
             'sender': 'someone@example.com',
             'subject': '[tag-one] where is titanic?',
-            'body_text': 'where is titanic?'
+            'body_text': 'where is titanic?',
+            'email_host': '127.0.0.1'
         }
 
     def test_subject_line(self):

@@ -37,22 +37,48 @@
     </div> 
 </div>
 
+{% if repost_form %}
+<div class="clearfix"></div>
+<div class="box multisite-repost-thread">
+    <h2>{% trans %}Post at partner sites{% endtrans %}</h2>
+    <form method="POST" action="{% url multisite_repost_thread %}">{% csrf_token %}
+        <table>{{ repost_form.as_table() }}</table>
+        <input type="submit" value="{% trans %}Save{% endtrans %}"/>
+    </form>
+</div>
+{% endif %}
+
 <div class="clearfix"></div>
 {% if settings.GROUPS_ENABLED %}
 <div class="box sharing-widget">
     {% if thread.is_private() %}
-        <h2>{% trans %}Invite{% endtrans %}</h2>
-        <p style="margin: 16px 0">{{ settings.WORDS_INVITE_OTHERS_TO_HELP_ANSWER_THIS_QUESTION|escape }}</p>
+        <h2>{% trans %}Share with others{% endtrans %}</h2>
         <form action="{% url share_question_with_user %}" method="post">{% csrf_token %}
-            <input id="share_user_name" type="text" class="groups-input" name="recipient_name" />
+            <div class="labeled-input">
+                <label for="share_user_name">{% trans %}Enter user name{% endtrans %}</label>
+                <input
+                    id="share_user_name"
+                    type="text"
+                    class="groups-input"
+                    name="recipient_name"
+                />
+            </div>
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
-            <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
+            <input type="submit" class="add-groups" value="{% trans %}share{% endtrans %}"/>
         </form>
         <p class="share-input-col">{% trans %}- or -{% endtrans %}</p>
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
-            <input id="share_group_name" type="text" class="groups-input" name="recipient_name" />
+            <div class="labeled-input">
+                <label for="share_group_name">{% trans %}Enter group name{% endtrans %}</label>
+                <input 
+                    id="share_group_name"
+                    type="text"
+                    class="groups-input"
+                    name="recipient_name"
+                />
+            </div>
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
-            <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
+            <input type="submit" class="add-groups" value="{% trans %}share{% endtrans %}"/>
         </form>
         <p class="share-input-col">{% trans %}- or -{% endtrans %}</p>
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
@@ -63,12 +89,13 @@
             />
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
             <p class="share-input-col">
-            <input 
-                type="submit"
-                class="add-groups add-everyone-group"
-                value="{% trans %}share with everyone{% endtrans %}"
-            />
+                <input 
+                    type="submit"
+                    class="add-groups add-everyone-group"
+                    value="{% trans %}share with everyone{% endtrans %}"
+                />
             </p>
+            <div class="clearfix"></div>
         </form>
 
         {% set shared_users_count = sharing_info['users'].count() %}
@@ -77,15 +104,22 @@
         {% if shared_users_count or shared_groups_count %}
             <p 
                 style="margin:16px 0 4px 0"
+<<<<<<< HEAD
             >{{ settings.WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH|escape }}</p>
+=======
+            >{% trans %}This question is shared with:{% endtrans %}</p>
+>>>>>>> modal
         {% endif %}
         <h3>{% trans %}Individual users{% endtrans %}</h3>
             {% set comma = joiner(',') %}
             {{ comma() }}
         <p>
+        {%- if request.user.is_authenticated() %}
         <a href="{{ request.user.get_profile_url() }}">
             {% trans %}You{% endtrans -%}
-        </a>{%- if shared_users_count -%}
+        </a>
+        {%- endif -%}
+        {%- if shared_users_count -%}
                 {%- for user in sharing_info['users'] %}{{ comma() }}
                     {{ user.get_profile_link() }}
                 {%- endfor -%}

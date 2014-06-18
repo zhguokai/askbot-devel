@@ -27,7 +27,6 @@ from askbot.utils.pluralization import py_pluralize as _py_pluralize
 from askbot.shims.django_shims import ResolverMatch
 
 from django_countries import countries
-from django_countries import settings as countries_settings
 
 register = coffin_template.Library()
 
@@ -141,12 +140,8 @@ def truncate_html_post(post_html):
 
 @register.filter
 def country_display_name(country_code):
-    country_dict = dict(countries.COUNTRIES)
+    country_dict = dict(countries)
     return country_dict[country_code]
-
-@register.filter
-def country_flag_url(country_code):
-    return countries_settings.FLAG_URL % country_code
 
 @register.filter
 def collapse(input):

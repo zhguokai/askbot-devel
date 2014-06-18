@@ -1,9 +1,9 @@
+<div class="clearfix"></div>
 <form
     id="fmanswer"
     action="{% url answer question.id %}"
     method="post"
 >{% csrf_token %}
-    <div style="clear:both"></div>
     {% if request.user.is_anonymous() and settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False %}
         {% if not thread.closed %}
             <a
@@ -49,9 +49,8 @@
                     <script type="text/javascript">
                         askbot['functions']['renderAddAnswerButton']();
                     </script>
-                    {% if settings.WIKI_ON %}
-                        {{ macros.checkbox_in_div(answer.wiki) }}
-                    {% endif %}
+                    <div class="clearfix"></div>
+                    {{ macros.post_options(answer, request.user, settings) }}
                     {% if settings.GROUPS_ENABLED and 
                         request.user.is_authenticated() and 
                         request.user.can_make_group_private_posts()

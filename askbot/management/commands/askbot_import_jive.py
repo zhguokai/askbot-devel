@@ -202,7 +202,7 @@ For your reference, the original is [available here|%s]{quote}"""
         transaction.commit()
 
     @transaction.commit_manually
-    def make_redirects(self):
+    def make_redirects(self, filename):
         """todo: implement this when needed"""
         pass
             

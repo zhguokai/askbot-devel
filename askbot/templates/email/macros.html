@@ -15,12 +15,12 @@
             {% if recipient|can_see_private_user_data(post.author) %}
                 {% set author = post.author.username|escape ~ '/(' ~ mailto_link(post.author) ~ ')' %}
             {% elif post.is_anonymous %}
-                {% set author = post.author.get_name_of_anonymous_user()|escape %}
+                {% set author = post.author.get_anonymous_name()|escape %}
             {% else %}
                 {% set author = post.author.username|escape %}
             {% endif %}
 
-            {% if post.post_type == 'question' %}
+            {% if post.is_question() %}
                 {% if quote_level > 0 %}
                 <p style="font-size:10px; font-weight: bold;">
                 {% else %}

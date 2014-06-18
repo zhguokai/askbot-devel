@@ -18,11 +18,7 @@ import askbot.deps.django_authopenid.models as askbot_openid
 import askbot.importers.stackexchange.models as se
 from askbot.forms import EditUserEmailFeedsForm
 from askbot.conf import settings as askbot_settings
-
-try:
-    from django.contrib.auth.models import Message as DjangoMessage
-except ImportError:
-    from askbot.models.message import Message as DjangoMessage
+from askbot.models.message import Message as DjangoMessage
 
 from django.utils.translation import ugettext_lazy as _
 from askbot.utils.console import ProgressBar

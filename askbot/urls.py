@@ -167,11 +167,6 @@ urlpatterns = patterns('',
     ),
     # END main page urls
     service_url(
-        r'^api/get_questions/',
-        views.commands.api_get_questions,
-        name='api_get_questions'
-    ),
-    service_url(
         r'^get-thread-shared-users/',
         views.commands.get_thread_shared_users,
         name='get_thread_shared_users'
@@ -415,6 +410,11 @@ urlpatterns = patterns('',
         name = 'save_group_logo_url'
     ),
     service_url(#ajax only
+        r'^validate-email/',
+        views.commands.validate_email,
+        name='validate_email'
+    ),
+    service_url(#ajax only
         r'^delete-group-logo/',
         views.commands.delete_group_logo,
         name = 'delete_group_logo'
@@ -500,8 +500,8 @@ urlpatterns = patterns('',
         views.widgets.ask_widget,
         name = 'ask_by_widget'
     ),
-    service_url(
-        r'^%s%s(?P<widget_id>\d+).js$' % (_('widgets/'), _('ask/')),
+    service_url(#url is versioned so that we can change the widget js
+        r'^%s%s(?P<widget_id>\d+)_v1.js$' % (_('widgets/'), _('ask/')),
         views.widgets.render_ask_widget_js,
         name = 'render_ask_widget'
     ),
@@ -561,7 +561,12 @@ urlpatterns = patterns('',
         name='change_social_sharing_mode'
     ),
     #upload url is ajax only
-    service_url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
+    service_url(r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
+    service_url(
+        r'^multisite-repost-thread/',
+        views.commands.multisite_repost_thread,
+        name='multisite_repost_thread'
+    ),
     service_url(
         r'^doc/(?P<path>.*)$',
         'django.views.static.serve',
@@ -623,6 +628,7 @@ urlpatterns += (
             r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
             r'(%s)?' % r'/author:(?P<author>\d+)' +
             r'(%s)?' % r'/page:(?P<page>\d+)' +
+            r'(%s)?' % r'/page-size:(?P<page_size>\d+)' +
             r'(%s)?' % r'/query:(?P<query>.+)' +  # INFO: query is last, b/c it can contain slash!!!
         r'/$'),
         views.readers.questions,
@@ -637,6 +643,11 @@ urlpatterns += (
         r'^(?P<feed>\w+)/(?P<id>\d+)/',
         views.readers.question,
         name='question'
+    ),
+    url(
+        r'^(?P<feed>\w+)/get_questions/',
+        views.commands.api_get_questions,
+        name='api_get_questions'
     ),
 )
 

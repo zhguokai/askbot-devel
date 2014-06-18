@@ -95,12 +95,13 @@ class SearchState(object):
     def get_empty(cls):
         return cls(feed=None, scope=None, sort=None, query=None, tags=None, author=None, page=None, page_size=None, user_logged_in=None)
 
-    def __init__(self, 
-        feed=None, scope=None, sort=None, query=None, tags=None,
-        author=None, page=None, page_size=None, user_logged_in=False
+    def __init__(
+        self, feed=None, scope='all', sort=None, query=None,
+        tags=None, author=None, page=1, page_size=None, user_logged_in=False
     ):
         # INFO: zip(*[('a', 1), ('b', 2)])[0] == ('a', 'b')
-        self.feed = feed
+        self.feed = feed or Feed.objects.get_default().name
+
         if (scope not in zip(*const.POST_SCOPE_LIST)[0]) or (scope == 'followed' and not user_logged_in):
             if user_logged_in:
                 self.scope = askbot_settings.DEFAULT_SCOPE_AUTHENTICATED
@@ -149,8 +150,7 @@ class SearchState(object):
         if self.page == 0:  # in case someone likes jokes :)
             self.page = 1
 
-        default_page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
-        self.page_size = int(page_size) if page_size else default_page_size
+        self.page_size = int(page_size or askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
 
         self._questions_url = get_feed_url('questions', self.feed)
 
@@ -163,15 +163,21 @@ class SearchState(object):
     def base_url(self):
         return self._questions_url
 
-    def ask_query_string(self): # TODO: test me
+    def ask_query_string(self, group_id=None): # TODO: test me
         """returns string to prepopulate title field on the "Ask your question" page"""
         ask_title = self.stripped_query or self.query or ''
-        if not ask_title:
+        query_data = dict()
+        if ask_title:
+            query_data['title'] = ask_title
+        if group_id:
+            query_data['group_id'] = group_id
+        if query_data:
+            return '?' + urlencode(query_data)
+        else:
             return ''
-        return '?' + urlencode({'title': ask_title})
 
-    def full_ask_url(self):
-        return get_feed_url('ask', self.feed) + self.ask_query_string()
+    def full_ask_url(self, group_id=None):
+        return get_feed_url('ask', self.feed) + self.ask_query_string(group_id=group_id)
 
     def unified_tags(self):
         "Returns tags both from tag selector and extracted from query"

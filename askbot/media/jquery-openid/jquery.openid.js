@@ -1,3 +1,8 @@
+/* todo:
+    Implement these changes in the new approach to login
+    2) Port Mozilla Persona
+    3) If Ldap is used for password - hide the password change form
+*/
 var renderGooglePlusBtn = function() {
     gapi.signin.render('google-plus-btn-id', {
         'clientid': askbot['settings']['googlePlusPublicKey'],
@@ -391,33 +396,10 @@ $.fn.authenticator = function() {
         $('#id_email').focus();
     };
 
-    var start_mozilla_persona_login = function() {
-        navigator.id.request();
-        return false;
-    };
-
     var clear_password_fields = function(){
         $('#id_password').val('');
         $('#id_new_password').val('');
         $('#id_new_password_retyped').val('');
-    };
-
-    var setupMozillaPersonaListeners = function() {
-        navigator.id.watch({
-            loggedInUser: askbot['data']['userEmail'],
-            onlogin: function(assertion) {
-                var assertionElement = signin_form.find('input[name=persona_assertion]');
-                assertionElement.val(assertion);
-                provider_name_input.val('mozilla-persona');
-                signin_form.submit();
-                return false;
-            },
-            onlogout: function() {
-                if (askbot['data']['userIsAuthenticated']) {
-                    window.location.href = askbot['urls']['signOut'];
-                }
-            }
-        });
     };
 
     var activateGooglePlusBtn = function(btn) {
@@ -449,15 +431,6 @@ $.fn.authenticator = function() {
             start_login_with_extra_openid_token
         );
 
-        var mozillaPersonaBtn = signin_page.find('input.mozilla-persona');
-
-        if (mozillaPersonaBtn.length) {
-            setupMozillaPersonaListeners();
-            setup_event_handlers(
-                signin_page.find('input.mozilla-persona'),
-                start_mozilla_persona_login
-            );
-        }
 
         /*var googlePlusBtn = signin_page.find('input.google-plus');
         if (googlePlusBtn.length) {

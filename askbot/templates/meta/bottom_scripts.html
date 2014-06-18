@@ -20,19 +20,30 @@
     askbot['urls']['get_tag_list'] = '{% url "get_tag_list" %}';
     askbot['urls']['follow_user'] = '/followit/follow/user/{{'{{'}}userId{{'}}'}}/';
     askbot['urls']['unfollow_user'] = '/followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
-    askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
+    askbot['urls']['userSignin'] = '{{ settings.LOGIN_URL }}';
     askbot['urls']['getEditor'] = '{% url "get_editor" %}';
-    askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
+    {% if feed.name %}
+    askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" feed.name %}';
+    {% endif %}
+    askbot['urls']['validateEmail'] = '{% url "validate_email" %}';
+    askbot['urls']['getLoginMenuHtml'] = '{% url "get_login_menu_html" %}';
+    askbot['settings']['csrfCookieName'] = '{{ settings.CSRF_COOKIE_NAME }}';
     {% set search_state=search_state or dummy_search_state %}
     askbot['urls']['ask'] = '{{ search_state.full_ask_url() }}';
 	askbot['urls']['questions'] = '{{ search_state.base_url() }}';
     askbot['settings']['groupsEnabled'] = {{ settings.GROUPS_ENABLED|as_js_bool }};
     askbot['settings']['static_url'] = '{{ settings.STATIC_URL }}';
-    askbot['settings']['minSearchWordLength'] = {{ min_search_word_length }};
-    askbot['settings']['mathjaxEnabled'] = {{ settings.ENABLE_MATHJAX|as_js_bool }};
-    askbot['settings']['sharingSuffixText'] = '{{ settings.SHARING_SUFFIX_TEXT|escape }}';
-    askbot['data']['maxCommentLength'] = {{ settings.MAX_COMMENT_LENGTH }};
+    askbot['settings']['minSearchWordLength'] = {{ settings.MIN_SEARCH_WORD_LENGTH }};
     askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
+    askbot['settings']['sharingSuffixText'] = '{{ settings.SHARING_SUFFIX_TEXT|escape }}';
+    askbot['settings']['closedForumMode'] = {{ settings.ASKBOT_CLOSED_FORUM_MODE|as_js_bool }};
+    askbot['settings']['groupsEnabled'] = {{ settings.GROUPS_ENABLED|as_js_bool }};
+    askbot['settings']['mathjaxEnabled'] = {{ settings.ENABLE_MATHJAX|as_js_bool }};
+    {% if settings.GROUPS_ENABLED %}
+        askbot['settings']['defaultAskGroupId'] = {{ default_ask_group_id }};
+        askbot['settings']['defaultAskGroupName'] = '{{ default_ask_group_name }}';
+    {% endif %}
+    askbot['data']['maxCommentLength'] = {{ settings.MAX_COMMENT_LENGTH }};
     askbot['settings']['commentsEditorType'] = '{{ settings.COMMENTS_EDITOR_TYPE }}';
     askbot['messages']['askYourQuestion'] = '{{ settings.WORDS_ASK_YOUR_QUESTION }}';
     {% if settings.ALLOWED_UPLOAD_FILE_TYPES %}
@@ -62,6 +73,14 @@
 {% endcompress %}
 <script type="text/javascript">
     /*<![CDATA[*/
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                var csrfToken = getCookie(askbot['settings']['csrfCookieName']);
+                xhr.setRequestHeader('X-CSRFToken', csrfToken);
+            }
+        }
+    });
     $('.mceStatusbar').remove();//a hack to remove the tinyMCE status bar
     $(document).ready(function(){
         // focus input on the search bar endcomment
@@ -75,10 +94,12 @@
             animateHashes();
         }
 
+        {% if 'modal_menu' not in request.session %}
         if (searchInput) {
             searchInput.focus();
             putCursorAtEnd(searchInput);
         }
+        {% endif %}
 
         var haveFullTextSearchTab = inArray(activeTab, ['questions', 'badges', 'ask']);
         var haveUserProfilePage = $('body').hasClass('user-profile-page');
@@ -99,6 +120,17 @@
         if (askbot['data']['userIsAdminOrMod']) {
             $('body').addClass('admin');
         }
+        var loginLink = $('a.login');
+        var closedModeOn = askbot['settings']['closedForumMode'];
+        if (closedModeOn === false && loginLink.length === 1) {
+            var loginBtn = new LoginLink();
+            loginBtn.decorate(loginLink);
+        }
+        var logoutLink = $('a.logout');
+        if (logoutLink.length === 1) {
+            var logoutBtn = new LogoutLink();
+            logoutBtn.decorate(logoutLink);
+        };
         if (askbot['settings']['groupsEnabled']) {
             askbot['urls']['add_group'] = "{% url add_group %}";
             var group_dropdown = new GroupDropdown({{ group_list }});

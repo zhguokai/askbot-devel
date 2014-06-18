@@ -275,7 +275,12 @@ class Command(NoArgsCommand):
         # Create Questions, vote for questions by all other users
         active_question = self.create_questions(users)
 
+        # post a bunch of answers by admin now - that active_question is
+        # posted by someone else
+        setting = askbot_settings.LIMIT_ONE_ANSWER_PER_USER
+        askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', False)
         active_answer = self.create_answers(users[0:1], active_question)
+        askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', setting)
 
         # Create Answers, vote for the answers, vote for the active question
         # vote for the active answer

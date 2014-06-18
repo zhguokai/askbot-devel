@@ -32,19 +32,23 @@ def clean_next(next, default = None):
 
 def get_feed(request):
     from askbot.models import Feed
-    return request.session.get('askbot_feed', Feed.objects.get_default())
+    feed_name = request.session.get('askbot_feed')
+    if feed_name:
+        feeds = Feed.objects.filter(name=feed_name)
+        if len(feeds):
+            return feeds[0]
+    return Feed.objects.get_default()
 
-def get_next_url(request, default = None):
+def get_next_url(request, default = None, form_prefix=None):
     #todo: clean this up - the "space" parameter is new
     from askbot.models import get_feed_url
     feed = get_feed(request)
-    if feed:
-        #default to the space root url for now
-        default_next_url = get_feed_url('questions', feed)
-    else:
-        default_next_url = None
-    #otherwise use the old way of passing next url
-    return clean_next(request.REQUEST.get('next'), default_next_url)
+    default = get_feed_url('questions', feed) or default
+    if form_prefix:
+        default = request.REQUEST.get(form_prefix + '-next', default)
+
+    raw_url = request.REQUEST.get('next', default)
+    return clean_next(raw_url)
 
 def get_db_object_or_404(params):
     """a utility function that returns an object
@@ -95,8 +99,6 @@ class NextUrlField(forms.CharField):
     def clean(self,value):
         return clean_next(value)
 
-login_form_widget_attrs = { 'class': 'required login' }
-
 class UserNameField(StrippedNonEmptyCharField):
     RESERVED_NAMES = (u'fuck', u'shit', u'ass', u'sex', u'add',
                        u'edit', u'save', u'delete', u'manage', u'update', 'remove', 'new')
@@ -117,8 +119,8 @@ class UserNameField(StrippedNonEmptyCharField):
         self.user_instance = None
         error_messages={
             'required': _('user name is required'),
-            'taken': _('sorry, this name is taken, please choose another'),
-            'forbidden': _('sorry, this name is not allowed, please choose another'),
+            'taken': _('this name is not available'),
+            'forbidden': _('this name is not allowed'),
             'missing': _('sorry, there is no user with this name'),
             'multiple-taken': _('sorry, we have a serious error - user name is taken by several users'),
             'invalid': _('user name can only consist of letters, empty space and underscore'),
@@ -128,11 +130,6 @@ class UserNameField(StrippedNonEmptyCharField):
         if 'error_messages' in kw:
             error_messages.update(kw['error_messages'])
             del kw['error_messages']
-
-        if widget_attrs:
-            widget_attrs.update(login_form_widget_attrs)
-        else:
-            widget_attrs = login_form_widget_attrs
 
         max_length = MAX_USERNAME_LENGTH()
         super(UserNameField,self).__init__(
@@ -208,16 +205,16 @@ def email_is_allowed(
     if allowed_emails:
         email_list = split_list(allowed_emails)
         allowed_emails = ' ' + ' '.join(email_list) + ' '
-        email_match_re = re.compile(r'\s%s\s' % email)
+        email_match_re = re.compile(r'\s%s\s' % email, re.I)
         if email_match_re.search(allowed_emails):
             return True
 
     if allowed_email_domains:
         email_domain = email.split('@')[1]
         domain_list = split_list(allowed_email_domains)
-        domain_match_re = re.compile(r'\s%s\s' % email_domain)
+        domain_match_re = re.compile(r'\s%s\s' % email_domain, re.I)
         allowed_email_domains = ' ' + ' '.join(domain_list) + ' '
-        return domain_match_re.search(allowed_email_domains)
+        return bool(domain_match_re.search(allowed_email_domains))
 
     return False
 
@@ -231,17 +228,21 @@ class UserEmailField(forms.EmailField):
         else:
             widget_class = forms.TextInput
 
+        error_messages={
+            'required':_('email address is required'),
+            'invalid':_('enter a valid email address'),
+            'taken':_('this email is already used'),
+            'unauthorized':_('this email is unauthorized')
+        }
+        custom_error_messages = kw.pop('error_messages', {})
+        error_messages.update(custom_error_messages)
+
         super(UserEmailField,self).__init__(
             widget=widget_class(
-                    attrs=dict(login_form_widget_attrs, maxlength=200)
+                    attrs=dict(maxlength=200)
                 ),
             label=mark_safe(_('Your email <i>(never shared)</i>')),
-            error_messages={
-                'required':_('email address is required'),
-                'invalid':_('please enter a valid email address'),
-                'taken':_('this email is already used by someone else, please choose another'),
-                'unauthorized':_('this email address is not authorized')
-            },
+            error_messages=error_messages,
             **kw
         )
 
@@ -274,34 +275,3 @@ class UserEmailField(forms.EmailField):
         except User.MultipleObjectsReturned:
             logging.critical('email taken many times over')
             raise forms.ValidationError(self.error_messages['taken'])
-
-class SetPasswordForm(forms.Form):
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
-                                label=_('Password'),
-                                error_messages={'required':_('password is required')},
-                                )
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
-                                label=mark_safe(_('Password <i>(please retype)</i>')),
-                                error_messages={'required':_('please, retype your password'),
-                                                'nomatch':_('entered passwords did not match, please try again')},
-                                )
-
-    def __init__(self, data=None, user=None, *args, **kwargs):
-        super(SetPasswordForm, self).__init__(data, *args, **kwargs)
-
-    def clean_password2(self):
-        """
-        Validates that the two password inputs match.
-
-        """
-        if 'password1' in self.cleaned_data:
-            if self.cleaned_data['password1'] == self.cleaned_data['password2']:
-                self.password = self.cleaned_data['password2']
-                self.cleaned_data['password'] = self.cleaned_data['password2']
-                return self.cleaned_data['password2']
-            else:
-                del self.cleaned_data['password2']
-                raise forms.ValidationError(self.fields['password2'].error_messages['nomatch'])
-        else:
-            return self.cleaned_data['password2']
-

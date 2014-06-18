@@ -8,9 +8,10 @@ from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 from lamson.routing import route, stateless
 from lamson.server import Relay
-from askbot.models import ReplyAddress, Group, Tag
+from askbot.models import ReplyAddress, Group
 from askbot import mail
 from askbot.models import get_feed_url
+from askbot.models.signals import email_validated
 from askbot.conf import settings as askbot_settings
 from askbot.utils.html import site_url
 from askbot.mail import DEBUG_EMAIL
@@ -145,8 +146,8 @@ def process_reply(func):
 
         try:
             reply_address = ReplyAddress.objects.get(
-                                            address = address,
-                                            allowed_from_email = message.From
+                                            address__iexact = address,
+                                            #allowed_from_email = message.From
                                         )
 
             #here is the business part of this function
@@ -205,23 +206,25 @@ def ASK(message, host = None, addr = None):
     body_text, stored_files, unused = mail.process_parts(parts)
     if addr == 'ask':
         mail.process_emailed_question(
-            from_address, subject, body_text, stored_files
+            from_address,
+            subject,
+            body_text,
+            stored_files,
+            email_host=host
         )
     else:
         #this is the Ask the group branch
         if askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED == False:
             return
-        try:
-            group = Group.objects.get(name__iexact=addr)
-            mail.process_emailed_question(
-                from_address, subject, body_text, stored_files,
-                group_id = group.id
-            )
-        except Group.DoesNotExist:
-            #do nothing because this handler will match all emails
-            return
-        except Tag.MultipleObjectsReturned:
-            return
+
+        mail.process_emailed_question(
+            from_address,
+            subject,
+            body_text,
+            stored_files,
+            space_name=addr,
+            email_host=host
+        )
 
 @route('welcome-(address)@(host)', address='.+')
 @stateless
@@ -252,12 +255,14 @@ def VALIDATE_EMAIL(
 
         user.email_isvalid = True
         user.save()
+        email_validated.send(None, user=user)
 
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,
             'site_url': site_url(get_feed_url('questions')),
             'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
-            'can_post_by_email': user.can_post_by_email()
+            'can_post_by_email': user.can_post_by_email(),
+            'alt_content': askbot_settings.ASK_BY_EMAIL_INSTRUCTIONS.strip()
         }
         template = get_template('email/re_welcome_lamson_on.html')
 
@@ -299,7 +304,7 @@ def PROCESS(
     #2) process body text and email signature
     user = reply_address_object.user
 
-    if signature != user.email_signature:
+    if signature != None and signature != user.email_signature:
         user.email_signature = signature
 
     #3) validate email address and save user along with maybe new signature

@@ -2,9 +2,8 @@
 these automatically catch email-related exceptions
 """
 from django.conf import settings as django_settings
-DEBUG_EMAIL = getattr(django_settings, 'ASKBOT_DEBUG_INCOMING_EMAIL', False)
+DEBUG_EMAIL = getattr(django_settings, 'ASKBOT_DEBUG_EMAIL', False)
 
-import logging
 import os
 import re
 import smtplib
@@ -14,18 +13,23 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.mail import parsing
 from askbot.utils import url_utils
+from askbot.utils.debug import debug
 from askbot.utils.file_utils import store_file
 from askbot.utils.html import absolutize_urls
 from askbot.utils.html import get_text_from_html
 from bs4 import BeautifulSoup
+from django.contrib.sites.models import Site
 from django.core import mail
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
 from django.forms import ValidationError
+from django.template import Context
+from django.template.loader import get_template
+from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.utils.translation import string_concat
-from django.template import Context
-from django.utils.html import strip_tags
+from urlparse import urlparse
 
 #todo: maybe send_mail functions belong to models
 #or the future API
@@ -148,9 +152,11 @@ def send_mail(
             [recipient_address,],
             headers=headers
         )
-        logging.debug('sent update to %s' % recipient_address)
+        if DEBUG_EMAIL:
+            debug('sent update to %s' % recipient_address)
     except Exception, error:
-        sys.stderr.write('\n' + unicode(error).encode('utf-8') + '\n')
+        if DEBUG_EMAIL:
+            debug(error)
         if raise_on_failure == True:
             raise exceptions.EmailNotSent(unicode(error))
 
@@ -318,6 +324,13 @@ def extract_user_signature(text, reply_code):
 
         signature = '\n'.join(tail)
 
+    #another hack: remove the inline images from the attachment
+    #a better solution is to refactor the code to allow inclusion
+    #of images in the signatures. The issue is images are "re-uploaded"
+    #every time effectively changing the signature.
+    img_re = re.compile(r'\[[^]]+\]\(/upfiles/[^)]+\)')
+    signature = img_re.sub('', signature)
+
     #patch signature to a sentinel value if it is truly empty, because we
     #cannot allow empty signature field, which indicates no
     #signature at all and in that case we ask user to create one
@@ -336,38 +349,42 @@ def process_parts(parts, reply_code=None, from_address=None):
     attachments_markdown = ''
 
     if DEBUG_EMAIL:
-        sys.stderr.write('--- MESSAGE PARTS:\n\n')
+        debug('--- MESSAGE PARTS:\n\n')
 
     for (part_type, content) in parts:
         if part_type == 'attachment':
             if DEBUG_EMAIL:
-                sys.stderr.write('REGULAR ATTACHMENT:\n')
+                debug('REGULAR ATTACHMENT:\n')
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
             attachments_markdown += '\n\n' + markdown
         elif part_type == 'body':
             if DEBUG_EMAIL:
-                sys.stderr.write('BODY:\n')
-                sys.stderr.write(content.encode('utf-8'))
-                sys.stderr.write('\n')
+                debug('BODY:\n' + content)
             body_text += '\n\n' + content.strip('\n\t ')
         elif part_type == 'inline':
             if DEBUG_EMAIL:
-                sys.stderr.write('INLINE ATTACHMENT:\n')
+                debug('INLINE ATTACHMENT:\n')
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
             body_text += markdown
 
     if DEBUG_EMAIL:
-        sys.stderr.write('--- THE END\n')
+        debug('--- THE END\n')
 
     #if the response separator is present -
     #split the body with it, and discard the "so and so wrote:" part
-    if reply_code:
+    if reply_code and reply_code in body_text:
         #todo: maybe move this part out
         signature = extract_user_signature(body_text, reply_code)
         body_text = extract_reply(body_text)
     else:
+        #1) signature cannot be detected, b/c there is no reply code
+        #   to designate what text comes after as a signature
+        #2) we will not attempt to extract reply that comes 
+        #   before the reply separator line (above the quote)
+        #   presense of this will usually coincide with the presence
+        #   of the reply_code in the email body
         signature = None
 
     body_text += attachments_markdown
@@ -383,7 +400,7 @@ def process_parts(parts, reply_code=None, from_address=None):
 
 def process_emailed_question(
     from_address, subject, body_text, stored_files,
-    tags=None, group_id=None
+    tags=None, space_name=None, email_host=None
 ):
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
@@ -397,7 +414,9 @@ def process_emailed_question(
         data = {
             'sender': from_address,
             'subject': subject,
-            'body_text': body_text
+            'body_text': body_text,
+            'email_host': email_host,
+            'space': space_name
         }
         user = User.objects.get(email__iexact=from_address)
         form = AskByEmailForm(data, user=user)
@@ -429,6 +448,11 @@ def process_emailed_question(
             #validated yet or if email signature could not be found
             if need_new_signature:
 
+                if DEBUG_EMAIL:
+                    debug('FAILED SIGNATURE IN:\n%s\n' % body_text)
+                    debug('CURRENT SIGNATURE:\n%s\n' % user.email_signature)
+                    debug('USER ID %d\n' % user.id)
+
                 reply_to = ReplyAddress.objects.create_new(
                     user = user,
                     reply_action = 'validate_email'
@@ -437,20 +461,21 @@ def process_emailed_question(
                 raise PermissionDenied(message)
 
             tagnames = form.cleaned_data['tagnames']
-            title = form.cleaned_data['title']
 
             #defect - here we might get "too many tags" issue
             if tags:
                 tagnames += ' ' + ' '.join(tags)
 
+            space = form.cleaned_data['space']
 
             user.post_question(
-                title=title,
+                title=form.cleaned_data['title'],
                 tags=tagnames.strip(),
+                space=space,
                 body_text=stripped_body_text,
                 by_email=True,
                 email_address=from_address,
-                group_id=group_id
+                group_id=space.get_default_ask_group_id()
             )
         else:
             raise ValidationError()
@@ -474,3 +499,21 @@ def process_emailed_question(
                 subject,
                 reason = 'problem_posting',
             )
+
+
+def send_email_key(email, key, handler_url_name='user_account_recover'):
+    """private function. sends email containing validation key
+    to user's email address
+    """
+    subject = _("Recover your %(site)s account") % \
+                {'site': askbot_settings.APP_SHORT_NAME}
+
+    url = urlparse(askbot_settings.APP_URL)
+    data = {
+        'validation_link': url.scheme + '://' + url.netloc + \
+                            reverse(handler_url_name) +\
+                            '?validation_code=' + key
+    }
+    template = get_template('authopenid/email_validation.html')
+    message = template.render(data)#todo: inject language preference
+    send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])

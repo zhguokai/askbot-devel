@@ -47,6 +47,14 @@ Subject: "One more test question from email."^M
 """
 
 
+"""below is a samle in Dutch:
+----- Oorspronkelijk bericht -----
+Van: "Evgeny Fadeev" <evgeny.fadeev@gmail.com>
+Aan: "Rick van Es" <email@example.com>
+Verzonden: Maandag 14 januari 2013 15:58:52
+Onderwerp: Re: tag subscriptions
+"""
+
 def compile_quote_regexes():
     compiled_regexes = list()
     for regex in QUOTE_REGEXES:

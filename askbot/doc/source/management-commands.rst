@@ -145,13 +145,6 @@ Any configurable options, related to these commands are accessible via "Email" s
 |                                     | command is "daily", therefore running `send_email_alerts`   |
 |                                     | more than twice a day is not necessary.                     |
 +-------------------------------------+-------------------------------------------------------------+
-| `post_emailed_questions`            | (experimental feature) posts questions sent by email        |
-|                                     | to enable this feature - please follow the instructions     |
-|                                     | on :doc:`sending email to askbot <sending-email-to-askbot>`.|
-|                                     | This command uses :ref:`live settings <live-settings>`      |
-|                                     | "allow posting by email" and "replace spaces in tags        |
-|                                     | with dash".                                                 |
-+-------------------------------------+-------------------------------------------------------------+
 | `send_unanswered_question_reminders`| Sends periodic reminders about unanswered questions.        |
 |                                     | This command may be disabled from the "email" section       |
 |                                     | of :ref:`live settings <live-settings>`, as well as         |

@@ -22,7 +22,7 @@ def patch_django():
 
     if major == 1 and minor > 4:
         # This shouldn't be required with django < 1.4.x
-        # And not after kee_lazy lands in django.utils.functional
+        # And not after keep_lazy lands in django.utils.functional
         try:
             from django.utils.functional import keep_lazy
         except ImportError:

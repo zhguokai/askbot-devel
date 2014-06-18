@@ -218,17 +218,20 @@ def ask(request, feed=None):#view used to ask a new question
     must login/register in order for the question go be shown
     """
     request.session['askbot_feed'] = feed
+    search_state = SearchState(feed=feed)
     if request.user.is_authenticated():
         if request.user.is_read_only():
-            referer = request.META.get("HTTP_REFERER", reverse('questions'))
+            referer = request.META.get("HTTP_REFERER", search_state.base_url())
             request.user.message_set.create(message=_('Sorry, but you have only read access'))
             return HttpResponseRedirect(referer)
 
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         return HttpResponseRedirect(reverse('index'))
 
+    form_class = forms.select_custom_form_class('ASKBOT_NEW_QUESTION_FORM', forms.AskForm)
+
     if request.method == 'POST':
-        form = forms.AskForm(request.POST, user=request.user)
+        form = form_class(request.POST, feed=feed, user=request.user)
         if form.is_valid():
             timestamp = datetime.datetime.now()
             space = form.cleaned_data['space']
@@ -270,11 +273,18 @@ def ask(request, feed=None):#view used to ask a new question
                         user=user,
                         form_data=form.cleaned_data
                     )
-                    return HttpResponseRedirect(question.get_absolute_url())
+                    if request.is_ajax():
+                        response = simplejson.dumps({
+                            'success': True,
+                            'redirectUrl': question.get_absolute_url()
+                        })
+                        return HttpResponse(response, mimetype='application/json')
+                    else:
+                        return HttpResponseRedirect(question.get_absolute_url())
                 except exceptions.PermissionDenied, e:
-                    request.user.message_set.create(message = unicode(e))
-                    return HttpResponseRedirect(reverse('index'))
-
+                    if request.is_ajax():
+                        response = simplejson.dumps({'success': True, 'errors': unicode(e)})
+                        return HttpResponse(response, mimetype='application/json')
             else:
                 request.session.flush()
                 session_key = request.session.session_key
@@ -288,10 +298,19 @@ def ask(request, feed=None):#view used to ask a new question
                     added_at = timestamp,
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
-                return HttpResponseRedirect(url_utils.get_login_url())
+                if request.is_ajax():
+                    response = simplejson.dumps({'success': True})
+                    return HttpResponse(response, mimetype='application/json')
+                else:
+                    return HttpResponseRedirect(reverse('user_signin'))
+        else:
+            if request.is_ajax():
+                errors  = form.errors.values()
+                response = simplejson.dumps({'errors': errors, 'success': True})
+                return HttpResponse(response, mimetype='application/json')
 
     if request.method == 'GET':
-        form = forms.AskForm(user=request.user)
+        form = form_class(user=request.user, feed=feed)
 
     draft_title = ''
     draft_text = ''
@@ -313,12 +332,15 @@ def ask(request, feed=None):#view used to ask a new question
         'language': get_language(),
         'wiki': request.REQUEST.get('wiki', False),
     }
-    if 'group_id' in request.REQUEST:
-        try:
-            group_id = int(request.GET.get('group_id', None))
-            form.initial['group_id'] = group_id
-        except Exception:
-            pass
+
+    try:
+        group_id = int(request.REQUEST.get('group_id', None))
+        group = models.Group.objects.get(id=group_id)
+        group_name = group.name
+        form.initial['group_id'] = group_id
+    except (ValueError, TypeError, models.Group.DoesNotExist):
+        group_id = None
+        group_name = None
 
     data = {
         'active_tab': 'ask',
@@ -327,14 +349,16 @@ def ask(request, feed=None):#view used to ask a new question
         'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
         'category_tree_data': askbot_settings.CATEGORY_TREE,
-        'search_state': SearchState(feed=feed),
-        'tag_names': list()#need to keep context in sync with edit_question for tag editor
+        'search_state': search_state,
+        'tag_names': list(),#need to keep context in sync with edit_question for tag editor
+        'group_id': group_id,
+        'group_name': group_name
     }
     data.update(context.get_for_tag_editor())
     return render(request, 'ask.html', data)
 
 @login_required
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def retag_question(request, id):
     """retag question view
     """
@@ -406,12 +430,21 @@ def edit_question(request, id):
     revision = question.get_latest_revision()
     revision_form = None
 
+    edit_form_class = forms.select_custom_form_class(
+                                    'ASKBOT_EDIT_QUESTION_FORM',
+                                    forms.EditQuestionForm
+                                )
+    revision_form_class = forms.select_custom_form_class(
+                                    'ASKBOT_SELECT_QUESTION_REVISION_FORM',
+                                    forms.RevisionForm
+                                )
+
     try:
         request.user.assert_can_edit_question(question)
         if request.method == 'POST':
             if request.POST['select_revision'] == 'true':
                 #revert-type edit - user selected previous revision
-                revision_form = forms.RevisionForm(
+                revision_form = revision_form_class(
                                                 question,
                                                 revision,
                                                 request.POST
@@ -420,13 +453,13 @@ def edit_question(request, id):
                     # Replace with those from the selected revision
                     rev_id = revision_form.cleaned_data['revision']
                     revision = question.revisions.get(revision = rev_id)
-                    form = forms.EditQuestionForm(
-                                            question=question,
-                                            user=request.user,
-                                            revision=revision
-                                        )
+                    form = edit_form_class(
+                                        question=question,
+                                        user=request.user,
+                                        revision=revision
+                                    )
                 else:
-                    form = forms.EditQuestionForm(
+                    form = edit_form_class(
                                             request.POST,
                                             question=question,
                                             user=question.user,
@@ -434,13 +467,13 @@ def edit_question(request, id):
                                         )
             else:#new content edit
                 # Always check modifications against the latest revision
-                form = forms.EditQuestionForm(
+                form = edit_form_class(
                                         request.POST,
                                         question=question,
                                         revision=revision,
                                         user=request.user,
                                     )
-                revision_form = forms.RevisionForm(question, revision)
+                revision_form = revision_form_class(question, revision)
                 if form.is_valid():
                     if form.has_changed():
                         if form.cleaned_data['reveal_identity']:
@@ -468,21 +501,26 @@ def edit_question(request, id):
                         if 'language' in form.cleaned_data:
                             question.thread.set_language_code(form.cleaned_data['language'])
 
+                        signals.question_edited.send(None,
+                            question=question,
+                            user=user,
+                            form_data=form.cleaned_data
+                        )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
             #request type was "GET"
-            revision_form = forms.RevisionForm(question, revision)
+            revision_form = revision_form_class(question, revision)
             initial = {
                 'language': question.thread.language_code,
                 'post_privately': question.is_private(),
                 'wiki': question.wiki
             }
-            form = forms.EditQuestionForm(
-                                    question=question,
-                                    revision=revision,
-                                    user=request.user,
-                                    initial=initial
-                                )
+            form = edit_form_class(
+                        question=question,
+                        revision=revision,
+                        user=request.user,
+                        initial=initial
+                    )
 
         data = {
             'page_class': 'edit-question-page',
@@ -514,18 +552,21 @@ def edit_answer(request, id):
 
     revision = answer.get_latest_revision()
 
-    class_path = getattr(settings, 'ASKBOT_EDIT_ANSWER_FORM', None)
-    if class_path:
-        edit_answer_form_class = load_module(class_path)
-    else:
-        edit_answer_form_class = forms.EditAnswerForm
+    edit_answer_form_class = forms.select_custom_form_class(
+                                        'ASKBOT_EDIT_ANSWER_FORM',
+                                        forms.EditAnswerForm
+                                    )
+    revision_form_class = forms.select_custom_form_class(
+                                        'ASKBOT_SELECT_ANSWER_REVISION_FORM',
+                                        forms.RevisionForm
+                                    )
 
     try:
         request.user.assert_can_edit_answer(answer)
         if request.method == "POST":
             if request.POST['select_revision'] == 'true':
                 # user has changed revistion number
-                revision_form = forms.RevisionForm(
+                revision_form = revision_form_class(
                                                 answer,
                                                 revision,
                                                 request.POST
@@ -548,7 +589,7 @@ def edit_answer(request, id):
                 form = edit_answer_form_class(
                     answer, revision, request.POST, user=request.user
                 )
-                revision_form = forms.RevisionForm(answer, revision)
+                revision_form = revision_form_class(answer, revision)
 
                 if form.is_valid():
                     if form.has_changed():
@@ -572,7 +613,7 @@ def edit_answer(request, id):
 
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
-            revision_form = forms.RevisionForm(answer, revision)
+            revision_form = revision_form_class(answer, revision)
             form = edit_answer_form_class(answer, revision, user=request.user)
             if request.user.can_make_group_private_posts():
                 form.initial['post_privately'] = answer.is_private()
@@ -602,6 +643,7 @@ def edit_answer(request, id):
 @decorators.check_authorization_to_post(ugettext_lazy('Please log in to make posts'))
 @decorators.check_spam('text')
 @fix_recaptcha_remote_ip
+@csrf.csrf_protect
 def answer(request, id, form_class=forms.AnswerForm):#process a new answer
     """view that posts new answer
 
@@ -715,7 +757,7 @@ def __generate_comments_json(obj, user, comment_type='comment'):#non-view genera
     data = simplejson.dumps(json_comments)
     return HttpResponse(data, content_type="application/json")
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.check_spam('comment')
 def post_comments(request):#generic ajax handler to load comments to an object
     """todo: fixme: post_comments is ambigous:
@@ -781,7 +823,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
 
     return response
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 #@decorators.check_spam('comment')
 def edit_comment(request):
@@ -829,8 +871,7 @@ def edit_comment(request):
         'voted': comment_post.is_upvoted_by(request.user),
     }
 
-
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def delete_comment(request):
     """ajax handler to delete comment
     """
@@ -881,13 +922,12 @@ def comment_to_answer(request):
     if form.is_valid() == False:
         raise Http404
 
-    comment = get_object_or_404(
-                    models.Post,
-                    post_type='comment',
-                    id=form.cleaned_data['comment_id']
-                )
-
     if askbot_settings.READ_ONLY_MODE_ENABLED is False:
+        comment = get_object_or_404(
+                            models.Post,
+                            post_type='comment',
+                            id=form.cleaned_data['comment_id']
+                        )
         request.user.repost_comment_as_answer(comment)
 
     return HttpResponseRedirect(comment.get_absolute_url())

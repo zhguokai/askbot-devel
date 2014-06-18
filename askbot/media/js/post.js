@@ -505,6 +505,7 @@ var Vote = function(){
     var imgIdPrefixAccept = 'answer-img-accept-';
     var classPrefixFollow= 'button follow';
     var classPrefixFollowed= 'button followed';
+    var imgClassPostVote = 'post-vote';
     var imgIdPrefixQuestionVoteup = 'question-img-upvote-';
     var imgIdPrefixQuestionVotedown = 'question-img-downvote-';
     var imgIdPrefixAnswerVoteup = 'answer-img-upvote-';
@@ -1024,6 +1025,7 @@ var Vote = function(){
         },
 
         vote: function(object, voteType){
+            object = object.closest('.'+imgClassPostVote)
             if (!currentUserId || currentUserId.toUpperCase() == "NONE") {
                 if (voteType == VoteType.questionSubscribeUpdates || voteType == VoteType.questionUnsubscribeUpdates){
                     getquestionSubscribeSidebarCheckbox().removeAttr('checked');
@@ -1522,6 +1524,7 @@ DeletePostLink.prototype.decorate = function(element){
     this._post_deleted = this.getPostElement().hasClass('deleted');
     this.setHandler(this.getDeleteHandler());
 }
+
 
 /**
  * Form for editing and posting new comment
@@ -4773,6 +4776,7 @@ $(document).ready(function() {
 
         var userSelectHandler = function(data) {
             proxyUserEmailInput.val(data['data'][0]);
+            proxyUserEmailInput.change();
         };
 
         var fakeUserAc = new AutoCompleter({
@@ -4787,11 +4791,17 @@ $(document).ready(function() {
         });
 
         fakeUserAc.decorate(proxyUserNameInput);
+
         if (proxyUserEmailInput.length === 1) {
-            var tip = new TippedInput();
+            var tip = new LabeledInput();
             tip.decorate(proxyUserEmailInput);
         }
         
+    }
+    var editSummaryInput = $('#id_summary');
+    if (editSummaryInput.length > 0) {
+        var summary = new LabeledInput();
+        summary.decorate(editSummaryInput);
     }
     //if groups are enabled - activate share functions
     var groupsInput = $('#share_group_name');
@@ -4834,6 +4844,69 @@ $(document).ready(function() {
         groupsPopup.decorate(showSharedGroups);
     }
 
+    if ($('#id_tags').length === 1) {
+        var tagAc = new AutoCompleter({
+            url: askbot['urls']['get_tag_list'],
+            preloadData: true,
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10
+        });
+        tagAc.decorate($("#id_tags"));
+    }
+
+    //initialize the ask page
+    if ($('body').hasClass('ask-page')) {
+        $('#editor').TextAreaResizer();
+        //highlight code synctax when editor has new text
+        $("#editor").typeWatch({
+            highlight: false,
+            wait: 3000,
+            captureLength: 5,
+            callback: lanai.highlightSyntax}
+        );
+
+        //toggle preview of editor
+        //todo: apply this to the question page (for the answer answer) too
+        var display = true;
+        var hidePreviewText = "[" + gettext('hide preview') + "]";
+        var showPreviewText = "[" + gettext('show preview') + "]";
+        $('#pre-collapse').text(hidePreviewText);
+        $('#pre-collapse').bind('click', function(){
+            $('#pre-collapse').text(
+                display ? showPreviewText: hidePreviewText
+            );
+            display = !display;
+            $('#previewer').toggle();
+        });
+        //Tags autocomplete
+
+        lanai.highlightSyntax();
+
+        if (askbot['data']['userIsAuthenticated']) {
+            var draftHandler = new DraftQuestion();
+            draftHandler.decorate($(document));
+            window.onbeforeunload = function() {
+                var saveHandler = draftHandler.getSaveHandler();
+                saveHandler(true);
+                //var msg = gettext("%s, we've saved your draft, but...");
+                //return interpolate(msg, [askbot['data']['userName']]);
+            };
+
+            var validatorElement = $('.email-validator');
+            if (validatorElement.length === 1) {
+                var validator = new EmailValidator();
+                validator.setCloseHandler(function() {
+                    $('.question-instructions .cannot-post').show();
+                    enableAllInputs();
+                });
+                disableAllInputs();
+                validator.decorate(validatorElement);
+            }
+        }
+    }
     var askButton = new AskButton();
     askButton.decorate($("#askButton"));
 });

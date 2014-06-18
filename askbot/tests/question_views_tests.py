@@ -1,10 +1,11 @@
-from bs4 import BeautifulSoup
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
+from bs4 import BeautifulSoup
 from askbot.models import get_feed_url, Feed
 from django.core.urlresolvers import reverse
+from django.utils import simplejson
 
 
 class PrivateQuestionViewsTests(AskbotTestCase):
@@ -161,7 +162,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
         )
         self.assertEqual(checkbox['checked'], 'checked')
 
-    def test_privaet_checkbox_is_off_when_editing_public_answer(self):
+    def test_private_checkbox_is_off_when_editing_public_answer(self):
         answer = self.post_answer(question=self.question, user=self.user)
         response = self.client.get(
             reverse('edit_answer', kwargs={'id': answer.id})

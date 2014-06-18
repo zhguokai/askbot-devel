@@ -844,7 +844,7 @@ class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
         )
 
     @with_settings(SUBSCRIBED_TAG_SELECTOR_ENABLED=True)
-    def test_tag_based_subscription_on_new_question_works1(self):
+    def test_tag_based_subscription_on_new_question_works2(self):
         """someone subscribes for an pre-existing tag
         then another user asks a question with that tag
         and the subcriber receives an alert

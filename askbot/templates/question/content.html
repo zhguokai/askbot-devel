@@ -3,13 +3,12 @@
 {% include "question/question_card.html" %}
 
 {% if answers %}
-    <div class="clean"></div>
-
+    <div class="clearfix"></div>
     {% include "question/answer_tab_bar.html" %}
 
-    <div class="clean"></div>
+    <div class="clearfix"></div>
     {{ macros.paginator(paginator_context, anchor='#sort-top') }}
-    <div class="clean"></div>
+    <div class="clearfix"></div>
 
     {% for answer in answers %}
         {% include "question/answer_card.html" %}
@@ -19,7 +18,7 @@
     {% endfor %}
 
     {{ macros.paginator(paginator_context, anchor='#sort-top') }}
-    <div class="clean"></div>
+    <div class="clearfix"></div>
 {% elif settings.QUESTION_PAGE_ALWAYS_SHOW_ANSWER_BANNER %}
     <div class="clearfix"></div>
     {% if 'QUESTION_PAGE_ANSWER_BANNER'|show_block_to(request.user) %}

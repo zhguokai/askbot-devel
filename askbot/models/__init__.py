@@ -21,6 +21,7 @@ from celery.task import task
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.core.paginator import Paginator
 from django.db.models import signals as django_signals
+from django.db.models import Q
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import get_language
@@ -44,7 +45,7 @@ from askbot.models.spaces import Feed
 from askbot.models.spaces import get_feed_url
 from askbot.models.spaces import FeedToSpace
 #from askbot.models.spaces import AskbotSite
-from askbot.models.question import Thread
+from askbot.models.question import Thread, ThreadToGroup
 from askbot.skins import utils as skin_utils
 from askbot.mail import messages
 from askbot.models.question import QuestionView, AnonymousQuestion
@@ -68,6 +69,7 @@ from askbot.models.repute import Award, Repute, Vote, BadgeData
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot.models.meta import ImportRun, ImportedObjectInfo
 from askbot import auth
+from askbot.utils.functions import generate_random_key
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
@@ -325,20 +327,21 @@ def user_get_top_answers_paginator(self, visitor=None):
     specific visitor"""
     answers_filter = {
         'deleted': False,
-        'thread__posts__deleted': False,
-        'thread__posts__post_type': 'question',
+        'thread__deleted': False,
     }
     if askbot_settings.SPACES_ENABLED:
+        site_spaces = Space.objects.get_for_site()
         answers_filter['thread__spaces__in'] = site_spaces
 
-    answers = self.posts.get_answers(self).filter(
-                                        **answers_filter
-                                    ).select_related(
-                                        'thread'
-                                    ).order_by(
-                                        '-points', '-added_at'
-                                    )
-
+    answers = self.posts.get_answers(
+                                visitor
+                            ).filter(
+                                **answers_filter
+                            ).select_related(
+                                'thread'
+                            ).order_by(
+                                '-points', '-added_at'
+                            )
     return Paginator(answers, const.USER_POSTS_PAGE_SIZE)
 
 def user_update_avatar_type(self):
@@ -360,13 +363,33 @@ def user_update_avatar_type(self):
 
 def user_strip_email_signature(self, text):
     """strips email signature from the end of the text"""
-    if self.email_signature.strip() == '':
+    def _strip(text):
+        signature = self.email_signature.strip()
+        if signature == '':
+            return text
+
+        text = '\n'.join(text.splitlines())#normalize the line endings
+        while text.endswith(signature):
+            text = text[0:-len(signature)]
         return text
 
-    text = '\n'.join(text.splitlines())#normalize the line endings
-    while text.endswith(self.email_signature):
-        text = text[0:-len(self.email_signature)]
-    return text
+    text0 = text
+    text1 = _strip(text)
+    #we do this monkey business because email parsing does not
+    #accomodate email signatures with inline images
+    if text1 == text0:
+        #try removing latest image and strip signature again
+        img_re = re.compile(r'\[[^]]+\]\(/upfiles/[^)]+\).*$')
+        text2 = img_re.sub('', text1)
+        #if substitution worked, try stipping signature again
+        if text2 != text1:
+            text3 = _strip(text2)
+            #if strip worked - return the result
+            if text3 != text2:
+                return text3
+    #otherwise return result of first stripping
+    return text1
+
 
 def _check_gravatar(gravatar):
     return 'n'
@@ -1302,10 +1325,17 @@ def user_post_anonymous_askbot_content(user, session_key):
                 'your_account_is': account_status
             })
         else:
+            new_post = None
             for aq in aq_list:
-                aq.publish(user)
+                new_post = aq.publish(user)
             for aa in aa_list:
-                aa.publish(user)
+                new_post = aa.publish(user)
+            #monkeypatching with a variable to pass this url in response
+            if new_post:
+                user._askbot_new_post_url = new_post.get_absolute_url()
+                from askbot.skins.loaders import get_askbot_template
+                message = get_askbot_template('tutorials/new_post.html').render()
+                user.message_set.create(message=message)
 
 
 def user_mark_tags(
@@ -2007,13 +2037,10 @@ def user_visit_question(self, question = None, timestamp = None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
-    try:
-        QuestionView.objects.filter(
-            who=self, question=question
-        ).update(
-            when = timestamp
-        )
-    except QuestionView.DoesNotExist:
+    qvs = QuestionView.objects.filter(who=self, question=question)
+    if qvs:
+        qvs.update(when = timestamp)
+    else:
         QuestionView(
             who=self,
             question=question,
@@ -2073,6 +2100,13 @@ def user_remove_admin_status(self):
 def user_set_admin_status(self):
     self.is_staff = True
     self.is_superuser = True
+
+def user_reset_email_validation_key(self):
+    """generates the new email key and marks it 
+    as invalid"""
+    self.email_key = generate_random_key()
+    self.email_isvalid = False
+    self.save()
 
 def user_add_missing_askbot_subscriptions(self):
     from askbot import forms#need to avoid circular dependency
@@ -2402,6 +2436,22 @@ def user_get_groups(self, private=False):
     #todo: maybe cache this query
     return Group.objects.get_for_user(self, private=private)
 
+def user_get_group_join_requests(self):
+    """get pending group membership requests
+    to the groups where this user belongs.
+    If user is not admin or groups are disabled,
+    returns empty list"""
+    if not self.is_administrator_or_moderator():
+        return GroupMembership.objects.none()
+    if not askbot_settings.GROUPS_ENABLED:
+        return GroupMembership.objects.none()
+
+    groups = self.get_groups()
+    return GroupMembership.objects.filter(
+                                    group__in=groups,
+                                    level=GroupMembership.PENDING
+                                ).order_by('-id')
+
 def user_get_personal_group(self):
     group_name = format_personal_group_name(self)
     return Group.objects.get(name=group_name)
@@ -2422,7 +2472,9 @@ def user_get_primary_group(self):
         for group in groups:
             if group.is_personal():
                 continue
-            return group
+            membership = self.get_group_membership(group)
+            if membership.level == GroupMembership.FULL:
+                return group
     return None
 
 def user_can_make_group_private_posts(self):
@@ -2869,6 +2921,8 @@ def user_edit_group_membership(self, user=None, group=None,
         openness = group.get_openness_level_for_user(user)
 
         #let people join these special groups, but not leave
+        approved_at = None
+        level = None
         if not force:
             if group.name == askbot_settings.GLOBAL_GROUP_NAME:
                 openness = 'open'
@@ -2877,16 +2931,27 @@ def user_edit_group_membership(self, user=None, group=None,
 
             if openness == 'open':
                 level = GroupMembership.FULL
+                approved_at = datetime.datetime.now()
             elif openness == 'moderated':
                 level = GroupMembership.PENDING
             elif openness == 'closed':
                 raise django_exceptions.PermissionDenied()
         else:
             level = GroupMembership.FULL
+            approved_at = datetime.datetime.now()
 
         membership, created = GroupMembership.objects.get_or_create(
-                        user=user, group=group, level=level
+                        user=user,
+                        group=group
                     )
+        if approved_at != None:
+            membership.approved_at = approved_at
+        if level != None:
+            membership.level = level
+
+        if approved_at != None or level != None:
+            membership.save()
+
         return membership
 
     elif action == 'remove':
@@ -2944,6 +3009,7 @@ User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
 User.add_to_class('get_marked_tags', user_get_marked_tags)
 User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('get_groups', user_get_groups)
+User.add_to_class('get_group_join_requests', user_get_group_join_requests)
 User.add_to_class('get_foreign_groups', user_get_foreign_groups)
 User.add_to_class('get_group_membership', user_get_group_membership)
 User.add_to_class('get_personal_group', user_get_personal_group)
@@ -3006,6 +3072,7 @@ User.add_to_class('can_make_group_private_posts', user_can_make_group_private_po
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
+User.add_to_class('reset_email_validation_key', user_reset_email_validation_key)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
 User.add_to_class('join_group', user_join_group)
 User.add_to_class('leave_group', user_leave_group)
@@ -3679,6 +3746,64 @@ def init_askbot_user_profile(user, **kwargs):
     user.save()
 
 
+def join_preapproved_groups(user, **kwargs):
+    """User will be joined all groups for which he/she
+    is preapproved via preapproved email addresses or
+    preapproved email domains"""
+    if not askbot_settings.GROUPS_ENABLED == False:
+        return
+
+    groups = Group.objects.exclude_personal()
+    for group in groups:
+        if group.email_is_preapproved(user.email):
+            user.join_group(group, force=True)
+
+
+def add_preapproved_users(instance=None, **kwargs):
+    """A symmetric method to above. When group has changed
+    preapproved emails or domains we auto-join all matching users"""
+    group = instance
+    if askbot_settings.GROUPS_ENABLED == False:
+        return
+    if group.is_personal():
+        return
+
+    current_emails = group.get_preapproved_emails()
+    current_domains = group.get_preapproved_email_domains()
+    if group.id:
+        #for pre-existing groups we use only new values
+        old_group = Group.objects.get(id=group.id)
+        old_emails = old_group.get_preapproved_emails()
+        old_domains = old_group.get_preapproved_email_domains()
+
+        emails = set(current_emails) - set(old_emails)
+        domains = set(current_domains) - set(old_domains)
+    else:
+        #for new groups we use current values
+        emails = current_emails
+        domains = current_domains
+
+    #auto-join all users by new email addresses
+    if len(emails):
+        email_filter = Q()
+        for email in emails:
+            email_filter |= Q(email__iexact=email)
+        for user in User.objects.filter(email_filter):
+            user.join_group(group, force=True)
+
+    #auto-join users by domain names
+    if len(domains):
+        domain_filter = Q()
+        for domain in domains:
+            domain_filter |= Q(email__icontains=domain)
+        users = User.objects.filter(domain_filter)
+        cleaned_domains = [domain.lower() for domain in domains]
+        for user in users:
+            user_domain = user.email.split('@')[1].lower()
+            if user_domain in cleaned_domains:
+                user.join_group(group, force=True)
+
+
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
     """save pending tag subscriptions saved in the session"""
     if 'subscribe_for_tags' in request.session:
@@ -3719,13 +3844,7 @@ def add_missing_tag_subscriptions(sender, instance, created, **kwargs):
                                 reason='subscribed', action='add')
 
 def post_anonymous_askbot_content(
-                                sender,
-                                request,
-                                user,
-                                session_key,
-                                signal,
-                                *args,
-                                **kwargs):
+                                sender, request, user, session_key, signal, *args, **kwargs):
     """signal handler, unfortunately extra parameters
     are necessary for the signal machinery, even though
     they are not used in this function"""
@@ -3780,6 +3899,7 @@ django_signals.post_syncdb.connect(init_badge_data)
 
 #signal for User model save changes
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
+django_signals.pre_save.connect(add_preapproved_users, sender=Group)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(add_user_to_global_group, sender=User)
 django_signals.post_save.connect(add_user_to_personal_group, sender=User)
@@ -3801,6 +3921,7 @@ django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
 #change this to real m2m_changed with Django1.2
 from askbot.models import signals
 signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
+signals.email_validated.connect(join_preapproved_groups)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)

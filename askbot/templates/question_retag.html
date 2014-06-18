@@ -45,7 +45,6 @@
         $().ready(function(){
             $("#nav_questions").attr('className',"on");
             {% import "macros.html" as macros %}
-            {{ macros.tag_autocomplete_js(id = '#id_tags') }}
             $("#fmretag").validate({
                rules: {
                    tags: {

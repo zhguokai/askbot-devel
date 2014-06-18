@@ -2961,7 +2961,6 @@ input[type="submit"].btn.btn-mini {
 }
 .pager a {
   display: inline-block;
-  padding: 5px 14px;
   background-color: #fff;
   /*border: 1px solid #ddd;
   -webkit-border-radius: 15px;
@@ -3468,8 +3467,8 @@ a.thumbnail:hover {
 }
 .modal-backdrop,
 .modal-backdrop.fade.in {
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+  opacity: 0.3;
+  filter: alpha(opacity=30);
 }
 .modal {
   position: fixed;
@@ -3477,7 +3476,7 @@ a.thumbnail:hover {
   left: 50%;
   z-index: 1050;
   overflow: auto;
-  width: 560px;
+  width: auto;
   margin: -250px 0 0 -280px;
   background-color: #ffffff;
   border: 1px solid #999;
@@ -3507,16 +3506,21 @@ a.thumbnail:hover {
   top: 50%;
 }
 .modal-header {
-  padding: 9px 15px;
-  border-bottom: 1px solid #eee;
+  padding: 12px 20px 0;
+  /*border-bottom: 1px solid #eee;*/
 }
 .modal-header .close {
-  margin-top: 2px;
+  margin: 4px -1px;
 }
 .modal-body {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
   overflow-y: auto;
-  max-height: 400px;
-  padding: 15px;
+  max-height: 600px;
+  padding: 20px;
+  width: 100%;
 }
 .modal-form {
   margin-bottom: 0;
@@ -3820,7 +3824,7 @@ a.thumbnail:hover {
 }
 .close {
   float: right;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   line-height: 18px;
   color: #000000;

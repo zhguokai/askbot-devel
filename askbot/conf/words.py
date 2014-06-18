@@ -625,15 +625,6 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_INVITE_OTHERS_TO_HELP_ANSWER_THIS_QUESTION',
-        default=_('invite other to help answer this question'),
-        description=_('invite other to help answer this question'),
-    )
-)
-
-settings.register(
-    values.StringValue(
-        WORDS,
         'WORDS_RELATED_QUESTIONS',
         default=_('Related questions'),
         description=_('Related questions'),

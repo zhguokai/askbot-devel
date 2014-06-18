@@ -3,8 +3,10 @@ used in AskBot"""
 import re
 import datetime
 from django import forms
+from django.forms.widgets import HiddenInput
 from askbot import const
 from askbot.const import message_keys
+from askbot.utils.loading import load_module
 from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
 from django.forms.util import ErrorList
@@ -15,13 +17,14 @@ from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.translation import get_language
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
-from django_countries import countries
+from django_countries import countries 
 from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 from askbot.conf import get_tag_display_filter_strategy_choices
 from tinymce.widgets import TinyMCE
+import inspect
 import logging
 
 def should_use_recaptcha(user):
@@ -133,6 +136,19 @@ def mandatory_tag_missing_in_list(tag_strings):
     return True
 
 
+def select_custom_form_class(custom_form, default_form):
+    """Returns form class. Custom form may be python dotted path
+    to form or class object. Custom form takes precedence.
+    If the custom form is not defined, then default is returned."""
+    if custom_form:
+        if inspect.isclass(custom_form):
+            return custom_form
+        form_python_path = getattr(django_settings, custom_form, None)
+        if form_python_path:
+            return load_module(form_python_path)
+    return default_form
+
+
 def tag_strings_match(tag_string, mandatory_tag):
     """true if tag string matches the mandatory tag,
     the comparison is not symmetric if tag_string ends with a
@@ -153,7 +169,7 @@ def get_integer_parameter(data, name, default=1):
 
 
 
-COUNTRY_CHOICES = (('unknown', _('select country')),) + countries.COUNTRIES
+COUNTRY_CHOICES = (('unknown', _('select country')),) + tuple(countries)
 
 
 class CountryField(forms.ChoiceField):
@@ -437,10 +453,10 @@ class TagNamesField(forms.CharField):
                         )
         self.label = kwargs.get('label') or _('tags')
         self.help_text = kwargs.get('help_text') or ungettext_lazy(
-            'Tags are short keywords, with no spaces within. '
-            'Up to %(max_tags)d tag can be used.',
-            'Tags are short keywords, with no spaces within. '
-            'Up to %(max_tags)d tags can be used.',
+            '<strong>Add tags</strong> (short keywords, with no spaces within. '
+            'Up to %(max_tags)d tag can be used)',
+            '<strong>Add tags</strong> (short keywords, with no spaces within. '
+            'Up to %(max_tags)d tags can be used)',
             askbot_settings.MAX_TAGS_PER_POST
         ) % {'max_tags': askbot_settings.MAX_TAGS_PER_POST}
         self.initial = ''
@@ -516,12 +532,7 @@ class SummaryField(forms.CharField):
             attrs={'size': 50, 'autocomplete': 'off'}
         )
         self.max_length = 300
-        self.label = _('update summary:')
-        self.help_text = _(
-            'enter a brief summary of your revision (e.g. '
-            'fixed spelling, grammar, improved style, this '
-            'field is optional)'
-        )
+        self.help_text = _('enter a brief description of your revision')
 
 class EditorForm(forms.Form):
     """form with one field - `editor`
@@ -859,16 +870,10 @@ class DraftAnswerForm(forms.Form):
 
 class PostAsSomeoneForm(forms.Form):
     post_author_username = forms.CharField(
-        initial=_('User name:'),
-        help_text=_(
-            'Enter name to post on behalf of someone else. '
-            'Can create new accounts.'
-        ),
         required=False,
         widget=forms.TextInput(attrs={'class': 'tipped-input blank'})
     )
     post_author_email = forms.CharField(
-        initial=_('Email address:'),
         required=False,
         widget=forms.TextInput(attrs={'class': 'tipped-input'})
     )
@@ -918,12 +923,12 @@ class PostAsSomeoneForm(forms.Form):
                                     'post_author_username',
                                     ErrorList()
                                 )
-            username_errors.append(_('User name is required with the email'))
+            username_errors.append(_('required with the email'))
             self._errors['post_author_username'] = username_errors
             raise forms.ValidationError('missing user name')
         elif email == '' and username:
             email_errors = self._errors.get('post_author_email', ErrorList())
-            email_errors.append(_('Email is required if user name is added'))
+            email_errors.append(_('required with user name'))
             self._errors['post_author_email'] = email_errors
             raise forms.ValidationError('missing email')
 
@@ -941,10 +946,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     tags = TagNamesField()
     wiki = WikiField()
     group_id = forms.IntegerField(required = False, widget = forms.HiddenInput)
-    openid = forms.CharField(
-        required=False, max_length=255,
-        widget=forms.TextInput(attrs={'size': 40, 'class': 'openid-input'})
-    )
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -955,7 +956,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         self.fields['text'] = QuestionEditorField(user=user)
 
         self.fields['ask_anonymously'] = forms.BooleanField(
-            label=_('post anonymously'),
+            label=_('hide my name'),
             required=False
         )
 
@@ -1025,6 +1026,25 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
         if should_use_recaptcha(user):
             self.fields['recaptcha'] = AskbotRecaptchaField()
 
+    def clean_space(self):
+        """this is not a real clean code as we don't have field for space
+        in this form, it is called from the general "clean" method
+        """
+        if askbot_settings.SPACES_ENABLED:
+            from askbot.models import Feed
+            from django.contrib.sites.models import Site
+            current_site = Site.objects.get_current()
+            feed_name = askbot_settings.DEFAULT_FEED_NAME
+            feed = Feed.objects.get(name=feed_name, site=current_site)
+            return feed.default_space
+        else:
+            from askbot.models import Space
+            return Space.objects.get_default()
+
+    def clean(self):
+        self.cleaned_data['space'] = self.clean_space()
+        return self.cleaned_data
+
 class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
     title =  forms.CharField(max_length=100)
     include_text_field = forms.BooleanField(required=False)
@@ -1080,7 +1100,6 @@ class AskByEmailForm(forms.Form):
     by email.
 
     It is ivoked by the management command
-    :mod:`~askbot.management.commands.post_emailed_questions`
 
     Input is text data with attributes:
 
@@ -1102,6 +1121,8 @@ class AskByEmailForm(forms.Form):
             'required': ASK_BY_EMAIL_SUBJECT_HELP
         }
     )
+    email_host = forms.CharField()
+    space = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -1157,6 +1178,38 @@ class AskByEmailForm(forms.Form):
         else:
             raise forms.ValidationError(ASK_BY_EMAIL_SUBJECT_HELP)
         return self.cleaned_data['subject']
+
+    def clean_space(self):
+        """this is not a real clean code as we don't have field for space
+        in this form, it is called from the general "clean" method
+        """
+        space_name = self.cleaned_data['space']
+        if space_name:
+            from askbot.models import Space
+            try:
+                space = Space.objects.get(name__iexact=space_name)
+            except Space.DoesNotExist:
+                raise forms.ValidationError('Unknown space %s' % space_name)
+        else:
+            #todo: replace this with "askbot.is_multisite()"
+            if hasattr(django_settings, 'ASKBOT_SITE_IDS'):
+                from askbot.models import Feed
+                from django.contrib.sites.models import Site
+                email_host = self.cleaned_data['email_host']
+                try:
+                    current_site = Site.objects.get(domain=email_host)
+                except Site.DoesNotExist:
+                    raise forms.ValidationError('Unknown domain name %s' % email_host)
+                #todo!!! should be Site.--> default feed here we cheat - only one feed works
+                feed = Feed.objects.filter(site=current_site)[0]
+                space = feed.default_space
+            else:
+                from askbot.models import Space
+                space = Space.objects.get_default()
+
+        self.cleaned_data['space'] = space
+        return space
+
 
 
 class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
@@ -1776,3 +1829,36 @@ class EditCommentForm(forms.Form):
 
 class ProcessCommentForm(forms.Form):
     comment_id = forms.IntegerField()
+
+class MultiSiteRepostThreadForm(forms.Form):
+    thread_id = forms.IntegerField(widget=HiddenInput)
+
+    def __init__(self, *args, **kwargs):
+        super(MultiSiteRepostThreadForm, self).__init__(*args, **kwargs)
+        from askbot.models.spaces import get_site_ids, get_site_name
+        for site_id in get_site_ids():
+            field = forms.BooleanField(
+                label=get_site_name(site_id),
+                required=False
+            )
+            self.fields['site_%d' % site_id] = field
+
+    def clean(self):
+        from askbot.models.spaces import get_site_ids
+        all_site_ids = get_site_ids()
+
+        #1) collect site ids with which thread is shared
+        shared_site_ids = list()
+        for site_id in all_site_ids:
+            key = 'site_%d' % site_id 
+            if self.cleaned_data.get(key):
+                shared_site_ids.append(site_id)
+
+        #2) for each site find default sharing space
+        from askbot.models.spaces import get_default_space
+        shared_spaces = set()
+        for site_id in shared_site_ids:
+            shared_spaces.add(get_default_space(site_id))
+
+        self.cleaned_data['spaces'] = shared_spaces
+        return self.cleaned_data

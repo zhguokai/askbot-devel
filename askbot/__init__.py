@@ -26,7 +26,7 @@ REQUIREMENTS = {
     'robots': 'django-robots',
     'sanction': 'sanction==0.3.1',
     'unidecode': 'unidecode',
-    'django_countries': 'django-countries==1.0.5',
+    'django_countries': 'django-countries==2.1.2',
     'djcelery': 'django-celery>=3.0.11',
     'djkombu': 'django-kombu==0.9.4',
     'followit': 'django-followit',
@@ -66,16 +66,6 @@ def get_site_protocol(site):
     from django.conf import settings as django_settings
     return django_settings.ASKBOT_SITE_PROTOCOLS[site.id]
 
-
-def is_multisite():
-    from django.conf import settings as django_settings
-    site_ids = getattr(django_settings, 'ASKBOT_SITE_IDS', None)
-    if site_ids is None:
-        return False
-    else:
-        return len(site_ids) > 1
-
-
 def get_path_to(relative_path):
     """returns absolute path to a file
     relative to ``askbot`` directory
@@ -111,3 +101,16 @@ def get_database_engine_name():
             return django_settings.DATABASES['default']['ENGINE']
         else:
             return django_settings.DATABASE_ENGINE
+
+#todo: which to use??
+def is_multisite():
+    from django.conf import settings as django_settings
+    site_ids = getattr(django_settings, 'ASKBOT_SITE_IDS', None)
+    if site_ids is None:
+        return False
+    else:
+        return len(site_ids) > 1
+
+def is_multisite():
+    from django.conf import settings as django_settings
+    return hasattr(django_settings, 'ASKBOT_SITES') and len(django_settings.ASKBOT_SITES)

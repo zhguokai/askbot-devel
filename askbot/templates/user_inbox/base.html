@@ -31,11 +31,11 @@
                 {% trans %}flagged items ({{flags_count}}){% endtrans %}
             </a>
         {% endif %}
-        {% if group_join_requests_count %}{{ sep() }}
+        {% if join_requests|length %}{{ sep() }}
         <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=join_requests"
-            {% if inbox_section == 'join_requests' %}class="on"{% endif %}
+            {% if inbox_section == 'group-join-requests' %}class="on"{% endif %}
         >
-            {% trans %}group join requests{% endtrans %}
+            {% trans count = join_requests|length %}group join requests ({{count}}){% endtrans %}
         </a>
         {% endif %}
     </div>

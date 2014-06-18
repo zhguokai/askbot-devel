@@ -317,8 +317,7 @@ which file is called is in the following table.
 +----------------------------+-----------------------------+--------------------------------+
 | /questions/<id>/revisions  | revisions.html              | post_contributor_info          |
 +----------------------------+-----------------------------+--------------------------------+
-| /questions/<id>/edit       | question-edit.html          | tag_autocomplete_js,           |
-|                            |                             | checkbox_in_div,               |
+| /questions/<id>/edit       | question-edit.html          | checkbox_in_div,               |
 |                            |                             | edit_post                      |
 +----------------------------+-----------------------------+--------------------------------+
 | /answers/<id>/revisions    | revisions.html              | post_contributor_info          |

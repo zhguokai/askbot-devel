@@ -53,10 +53,18 @@
 </script>
 {%- endmacro -%}
 
+{%- macro thread_last_activity_user_avatar(thread, size=32) -%}
+    {% set question_post = thread._question_post() %}
+    {% if question_post.is_anonymous %}
+        {{ gravatar(question_post.author, size, anonymous=True) }}
+    {% else %}
+        {{ gravatar(question_post.author, size) }}
+    {% endif %}
+{%- endmacro -%}
+
 {%- macro post_contributor_avatar_and_credentials(post, user, karma_mode = None, badges_mode = None) -%}
     {% if post.is_anonymous %}
-        <img alt="{% trans %}anonymous user{% endtrans %}" src="{{ '/images/anon.png'|media }} " class="gravatar" width="32" height="32" />
-        <p>{{ user.get_anonymous_name() }}</p>
+        {{ gravatar(user, 32, anonymous=True) }}
     {% else %}
         {{ user_card(user, karma_mode=karma_mode, badges_mode=badges_mode) }}
     {% endif %}
@@ -454,7 +462,7 @@ for the purposes of the AJAX comment editor #}
                                 accept-charset="utf-8"
                                 class='convert-comment'
                             >
-                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                {{ csrf_middleware_token(csrf_token) }}
                                 <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
                                 <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
                             </form>
@@ -560,6 +568,57 @@ for the purposes of the AJAX comment editor #}
 {%include "widgets/edit_post.html" %}
 {%- endmacro -%}
 
+{%- macro post_options(post_form, user, settings) -%}
+    {% if user and user.is_authenticated() and user.is_administrator() %}
+        <p>{% trans %}Extra options:{% endtrans %}</p>
+        {# 1 - post on behalf of someone else #}
+        <div class="clearfix"></div>
+        <div class="labeled-input">
+            {% set username_errors=post_form.post_author_username.errors %}
+            <label 
+                for="id_post_author_username"
+                {% if username_errors %}class="error"{% endif %}
+            >
+                {% if username_errors %}
+                    {% trans %}{{ username_errors }}{% endtrans %}
+                {% else %}
+                    {% trans %}Post as other user (optional){% endtrans %}
+                {% endif %}
+            </label>
+            {{ post_form.post_author_username }}
+        </div>
+        <div class="labeled-input">
+            {% set email_errors=post_form.post_author_email.errors %}
+            <label
+                for="id_post_author_email"
+                {% if email_errors %}class="error"{% endif %}
+            >
+                {% if email_errors %}
+                    {{ email_errors }}
+                {% else %}
+                    {% trans %}Email address{% endtrans %}
+                {% endif %}
+            </label>
+            {{ post_form.post_author_email }}
+        </div>
+    {% endif %}
+    <div class="clearfix"></div>
+    {# 2 - some checkbox options #}
+
+    {% if settings.WIKI_ON and post_form.wiki == False %}
+        {{ checkbox_in_div(post_form.wiki) }}
+    {% endif %}
+    {% if settings.GROUPS_ENABLED and 
+        user.is_authenticated() and
+        user.can_make_group_private_posts()
+    %}
+        {{ checkbox_in_div(post_form.post_privately) }}
+    {% endif %}
+    {% if settings.ENABLE_EMAIL_ALERTS and post_form.suppress_email %}
+        {{ checkbox_in_div(post_form.suppress_email) }}
+    {% endif %}
+{% endmacro %}
+
 {%- macro tag_autocomplete_js(id = '#id_tags') -%}
     var tagAc = new AutoCompleter({
             url: '{% url "get_tag_list" %}',
@@ -660,16 +719,38 @@ for the purposes of the AJAX comment editor #}
 {%- endmacro -%}
 
 {#todo: rename this to avatar #}
-{%- macro gravatar(user, size) -%}
+{%- macro gravatar(user, size, anonymous=False) -%}
 {% spaceless %}
-<a class="avatar-box"
-    href="{{ user.get_absolute_url() }}"
-><img class="gravatar" 
-    width="{{size}}" height="{{size}}"
-    src="{{ user.get_avatar_url(size) }}"
-    title="{{user.username|escape}}" 
-    alt="{% trans username=user.username|escape %}{{username}} gravatar image{% endtrans %}" 
-/></a>
+    {% if anonymous == True %}
+        <span class="avatar-box">
+        <img 
+            alt="{% trans %}Anonymous{% endtrans %}"{#{ user.get_anonymous_name() }#}
+            src="{{ '/images/anon.png'|media }} "
+            class="gravatar"
+            width="{{ size }}"
+            height="{{ size }}"
+        />
+        </span>
+    {% else %}
+        <a class="avatar-box"
+            href="{{ user.get_absolute_url() }}"
+        >
+        <img class="gravatar" 
+            width="{{ size }}" height="{{ size }}"
+            src="{{ user.get_avatar_url(size) }}"
+            title="{{ user.username|escape }}" 
+            alt="{% trans username=user.username|escape %}{{username}} gravatar image{% endtrans %}" 
+        />
+        {% set primary_group = user.get_primary_group() %}
+        {% if primary_group and primary_group.logo_url %}
+        <img class="group-logo" 
+            width="{{ size - 2 }}"
+            src="{{ primary_group.logo_url }}"
+            alt="{% trans group_name=primary_group.name|escape %}{{group_name}} logo{% endtrans %}" 
+        />
+        {% endif %}
+        </a>
+    {% endif %}
 {% endspaceless %}
 {%- endmacro -%}
 

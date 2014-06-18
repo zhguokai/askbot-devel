@@ -1724,6 +1724,9 @@ class Post(models.Model):
     def assert_is_visible_to(self, user):
         if self.is_comment() == False and askbot_settings.GROUPS_ENABLED:
             self.assert_is_visible_to_user_groups(user)
+
+        self.thread.assert_is_visible_to_user_groups(user)
+
         if self.is_question():
             return self._question__assert_is_visible_to(user)
         elif self.is_answer():
@@ -1853,7 +1856,8 @@ class Post(models.Model):
 
         if edited_at is None:
             edited_at = datetime.datetime.now()
-        self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
+        if suppress_email == False:
+            self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def _question__apply_edit(self, edited_at=None, edited_by=None, title=None,\
                               text=None, comment=None, tags=None, wiki=False,\
@@ -1903,7 +1907,9 @@ class Post(models.Model):
             suppress_email=suppress_email
         )
 
-        self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
+        if suppress_email == False:
+            #for minor edit don't bump thread
+            self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def apply_edit(self, *args, **kwargs):
         #todo: unify this, here we have unnecessary indirection
@@ -2364,6 +2370,9 @@ class PostFlagReason(models.Model):
     class Meta:
         app_label = 'askbot'
 
+    def __unicode__(self):
+        return self.title
+
 
 class DraftAnswer(models.Model):
     """Provides space for draft answers,
@@ -2384,7 +2393,7 @@ class AnonymousAnswer(DraftContent):
 
     def publish(self, user):
         added_at = datetime.datetime.now()
-        Post.objects.create_new_answer(
+        answer = Post.objects.create_new_answer(
             thread=self.question.thread,
             author=user,
             added_at=added_at,
@@ -2393,3 +2402,4 @@ class AnonymousAnswer(DraftContent):
         )
         self.question.thread.invalidate_cached_data()
         self.delete()
+        return answer

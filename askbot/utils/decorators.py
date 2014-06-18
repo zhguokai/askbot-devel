@@ -17,6 +17,7 @@ from django.utils.encoding import smart_str
 from askbot import exceptions as askbot_exceptions
 from askbot.conf import settings as askbot_settings
 from askbot.utils import url_utils
+from askbot.utils.http import render_to_json_response
 from askbot.utils.html import site_url
 from askbot import get_version
 from askbot.models import get_feed_url
@@ -109,14 +110,8 @@ def ajax_only(view_func):
                 'success': 0
             }
             return HttpResponse(simplejson.dumps(data), content_type='application/json')
+        return render_to_json_response(data)
 
-        if isinstance(data, HttpResponse):#is this used?
-            data.mimetype = 'application/json'
-            return data
-        else:
-            data['success'] = 1
-            json = simplejson.dumps(data)
-            return HttpResponse(json, content_type='application/json')
     return wrapper
 
 def check_authorization_to_post(func_or_message):

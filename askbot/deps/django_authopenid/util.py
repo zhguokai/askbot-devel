@@ -216,12 +216,6 @@ class LoginMethod(object):
         return attr_value
 
     def read_params(self):
-        self.is_major = getattr(self.mod, 'BIG_BUTTON', True)
-        if not isinstance(self.is_major, bool):
-            raise ImproperlyConfigured(
-                'Boolean value expected for %s.BIG_BUTTON' % self.mod_path
-            )
-
         self.order_number = getattr(self.mod, 'ORDER_NUMBER', 1)
         if not isinstance(self.order_number, int):
             raise ImproperlyConfigured(
@@ -250,12 +244,6 @@ class LoginMethod(object):
                 "%s.TYPE must be a string "
                 "and the possible values are : 'password', 'oauth', "
                 "'openid-direct', 'openid-username'." % self.mod_path
-            )
-        self.icon_media_path = getattr(self.mod, 'ICON_MEDIA_PATH', None)
-        if self.icon_media_path is None:
-            raise ImproperlyConfigured(
-                '%s.ICON_MEDIA_PATH is required and must be a url '
-                'to the image used as login button' % self.mod_path
             )
 
         self.create_password_prompt = getattr(self.mod, 'CREATE_PASSWORD_PROMPT', None)
@@ -300,7 +288,7 @@ class LoginMethod(object):
         can be inserted into one of the provider data dictionaries
         for the use in the UI"""
         params = (
-            'name', 'display_name', 'type', 'icon_media_path',
+            'name', 'display_name', 'type',
             'extra_token_name', 'create_password_prompt',
             'change_password_prompt', 'consumer_key', 'consumer_secret',
             'request_token_url', 'access_token_url', 'authorize_url',
@@ -336,13 +324,12 @@ def add_custom_provider(func):
         login_module_path = getattr(settings, 'ASKBOT_CUSTOM_AUTH_MODULE', None)
         if login_module_path:
             mod = LoginMethod(login_module_path)
-            if mod.is_major != func.is_major:
-                return providers#only patch the matching provider set
             providers.insert(mod.order_number - 1, mod.name, mod.as_dict())
         return providers
     return wrapper
 
-def get_enabled_major_login_providers():
+@add_custom_provider
+def get_enabled_login_providers():
     """returns a dictionary with data about login providers
     whose icons are to be shown in large format
 
@@ -352,7 +339,6 @@ def get_enabled_major_login_providers():
 
     * name
     * display_name
-    * icon_media_path (relative to /media directory)
     * type (oauth|openid-direct|openid-generic|openid-username|password)
 
     Fields dependent on type of the login provider type
@@ -440,7 +426,6 @@ def get_enabled_major_login_providers():
             'authorize_url': 'https://api.twitter.com/oauth/authorize',
             'authenticate_url': 'https://api.twitter.com/oauth/authenticate',
             'get_user_id_url': 'https://twitter.com/account/verify_credentials.json',
-            'icon_media_path': '/jquery-openid/images/twitter.gif',
             'get_user_id_function': lambda data: data['user_id'],
         }
     def get_identica_user_id(data):
@@ -460,7 +445,6 @@ def get_enabled_major_login_providers():
             'access_token_url': 'https://identi.ca/api/oauth/access_token',
             'authorize_url': 'https://identi.ca/api/oauth/authorize',
             'authenticate_url': 'https://identi.ca/api/oauth/authorize',
-            'icon_media_path': '/jquery-openid/images/identica.png',
             'get_user_id_function': get_identica_user_id,
         }
     def get_linked_in_user_id(data):
@@ -480,7 +464,6 @@ def get_enabled_major_login_providers():
         data['wordpress_site'] = {
             'name': 'wordpress_site',
             'display_name': 'Self hosted wordpress blog', #need to be added as setting.
-            'icon_media_path': askbot_settings.WORDPRESS_SITE_ICON,
             'type': 'wordpress_site',
         }
     if askbot_settings.LINKEDIN_KEY and askbot_settings.LINKEDIN_SECRET:
@@ -492,7 +475,6 @@ def get_enabled_major_login_providers():
             'access_token_url': 'https://api.linkedin.com/uas/oauth/accessToken',
             'authorize_url': 'https://www.linkedin.com/uas/oauth/authorize',
             'authenticate_url': 'https://www.linkedin.com/uas/oauth/authenticate',
-            'icon_media_path': '/jquery-openid/images/linkedin.gif',
             'get_user_id_function': get_linked_in_user_id
         }
 
@@ -521,7 +503,6 @@ def get_enabled_major_login_providers():
         'name': 'yahoo',
         'display_name': 'Yahoo',
         'type': 'openid-direct',
-        'icon_media_path': '/jquery-openid/images/yahoo.gif',
         'tooltip_text': _('Sign in with Yahoo'),
         'openid_endpoint': 'http://yahoo.com',
     }
@@ -530,7 +511,6 @@ def get_enabled_major_login_providers():
         'display_name': 'AOL',
         'type': 'openid-username',
         'extra_token_name': _('AOL screen name'),
-        'icon_media_path': '/jquery-openid/images/aol.gif',
         'openid_endpoint': 'http://openid.aol.com/%(username)s'
     }
     data['launchpad'] = {
@@ -546,36 +526,21 @@ def get_enabled_major_login_providers():
         'display_name': 'OpenID',
         'type': 'openid-generic',
         'extra_token_name': _('OpenID url'),
-        'icon_media_path': '/jquery-openid/images/openid.gif',
         'openid_endpoint': None,
     }
-    return filter_enabled_providers(data)
-get_enabled_major_login_providers.is_major = True
-get_enabled_major_login_providers = add_custom_provider(get_enabled_major_login_providers)
-
-def get_enabled_minor_login_providers():
-    """same as get_enabled_major_login_providers
-    but those that are to be displayed with small buttons
-
-    disabled providers are excluded
-
-    structure of dictionary values is the same as in get_enabled_major_login_providers
+    data['livejournal'] = {
+        'name': 'livejournal',
+        'display_name': 'LiveJournal',
+        'type': 'openid-username',
+        'extra_token_name': _('LiveJournal blog name'),
+        'openid_endpoint': 'http://%(username)s.livejournal.com'
+    }
     """
-    data = SortedDict()
-    #data['myopenid'] = {
-    #    'name': 'myopenid',
-    #    'display_name': 'MyOpenid',
-    #    'type': 'openid-username',
-    #    'extra_token_name': _('MyOpenid user name'),
-    #    'icon_media_path': '/jquery-openid/images/myopenid-2.png',
-    #    'openid_endpoint': 'http://%(username)s.myopenid.com'
-    #}
     data['flickr'] = {
         'name': 'flickr',
         'display_name': 'Flickr',
         'type': 'openid-username',
         'extra_token_name': _('Flickr user name'),
-        'icon_media_path': '/jquery-openid/images/flickr.png',
         'openid_endpoint': 'http://flickr.com/%(username)s/'
     }
     data['technorati'] = {
@@ -583,7 +548,6 @@ def get_enabled_minor_login_providers():
         'display_name': 'Technorati',
         'type': 'openid-username',
         'extra_token_name': _('Technorati user name'),
-        'icon_media_path': '/jquery-openid/images/technorati-1.png',
         'openid_endpoint': 'http://technorati.com/people/technorati/%(username)s/'
     }
     data['wordpress'] = {
@@ -591,7 +555,6 @@ def get_enabled_minor_login_providers():
         'display_name': 'WordPress',
         'type': 'openid-username',
         'extra_token_name': _('WordPress blog name'),
-        'icon_media_path': '/jquery-openid/images/wordpress.png',
         'openid_endpoint': 'http://%(username)s.wordpress.com'
     }
     data['blogger'] = {
@@ -599,23 +562,13 @@ def get_enabled_minor_login_providers():
         'display_name': 'Blogger',
         'type': 'openid-username',
         'extra_token_name': _('Blogger blog name'),
-        'icon_media_path': '/jquery-openid/images/blogger-1.png',
         'openid_endpoint': 'http://%(username)s.blogspot.com'
-    }
-    data['livejournal'] = {
-        'name': 'livejournal',
-        'display_name': 'LiveJournal',
-        'type': 'openid-username',
-        'extra_token_name': _('LiveJournal blog name'),
-        'icon_media_path': '/jquery-openid/images/livejournal-1.png',
-        'openid_endpoint': 'http://%(username)s.livejournal.com'
     }
     data['claimid'] = {
         'name': 'claimid',
         'display_name': 'ClaimID',
         'type': 'openid-username',
         'extra_token_name': _('ClaimID user name'),
-        'icon_media_path': '/jquery-openid/images/claimid-0.png',
         'openid_endpoint': 'http://claimid.com/%(username)s/'
     }
     data['vidoop'] = {
@@ -623,7 +576,6 @@ def get_enabled_minor_login_providers():
         'display_name': 'Vidoop',
         'type': 'openid-username',
         'extra_token_name': _('Vidoop user name'),
-        'icon_media_path': '/jquery-openid/images/vidoop.png',
         'openid_endpoint': 'http://%(username)s.myvidoop.com/'
     }
     data['verisign'] = {
@@ -631,35 +583,25 @@ def get_enabled_minor_login_providers():
         'display_name': 'Verisign',
         'type': 'openid-username',
         'extra_token_name': _('Verisign user name'),
-        'icon_media_path': '/jquery-openid/images/verisign-2.png',
         'openid_endpoint': 'http://%(username)s.pip.verisignlabs.com/'
     }
+    """
     return filter_enabled_providers(data)
-get_enabled_minor_login_providers.is_major = False
-get_enabled_minor_login_providers = add_custom_provider(get_enabled_minor_login_providers)
 
 def have_enabled_federated_login_methods():
-    providers = get_enabled_major_login_providers()
-    providers.update(get_enabled_minor_login_providers())
+    providers = get_enabled_login_providers()
     provider_types = [provider['type'] for provider in providers.values()]
     for provider_type in provider_types:
         if provider_type.startswith('openid') or provider_type == 'oauth':
             return True
     return False
 
-def get_enabled_login_providers():
-    """return all login providers in one sorted dict
-    """
-    data = get_enabled_major_login_providers()
-    data.update(get_enabled_minor_login_providers())
-    return data
-
-def set_login_provider_tooltips(provider_dict, active_provider_names = None):
+def set_login_provider_tooltips(provider_dict, active_provider_names):
     """adds appropriate tooltip_text field to each provider
     record, if second argument is None, then tooltip is of type
     signin with ..., otherwise it's more elaborate - 
     depending on the type of provider and whether or not it's one of 
-    currently used
+    currently used by the current user
     """
     for provider in provider_dict.values():
         if active_provider_names:

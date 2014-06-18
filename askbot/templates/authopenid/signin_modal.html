@@ -1,0 +1,5 @@
+{% extends "widgets/modal_menu.html" %}
+{% block modal_title %}{% trans %}Login or register{% endtrans %}{% endblock %}
+{% block modal_body %}
+    {% include "authopenid/signin.html" %}
+{% endblock %}

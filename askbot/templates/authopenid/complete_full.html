@@ -1,0 +1,10 @@
+{% extends "two_column_body.html" %}
+{% block title %}{% spaceless %}{% trans %}Register{% endtrans %}{% endspaceless %}{% endblock %}
+{% block body_class %}complete-federated-registration{% endblock %}
+{% block content %}
+    <h1 class="section-title">{% trans %}Register{% endtrans %}</h1>
+    {% include "authopenid/complete.html" %}
+{% endblock %}
+{% block endjs %}
+    {% include "authopenid/providers_javascript.html" %}
+{% endblock %}

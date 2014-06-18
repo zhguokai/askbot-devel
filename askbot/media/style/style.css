@@ -235,6 +235,9 @@ body.user-messages {
   line-height: 34px;
   margin: 0 !important;
 }
+.notify ul {
+  list-style: none;
+}
 .wait-icon-box {
   text-align: center;
   margin: 5px 0 8px;
@@ -502,6 +505,32 @@ body.user-messages {
 .scope-selector.ask-message {
   font-size: 24px;
 }
+.labeled-input label {
+  display: block;
+  line-height: 1em;
+  height: 1em;
+  margin-bottom: -1.5em;
+  padding-left: .5em;
+}
+.labeled-input input {
+  display: block;
+}
+.labeled-input label.error {
+  font-size: inherit;
+  color: #e6661f;
+}
+.labeled-input label.active,
+.labeled-input label.active.error {
+  padding-left: 3px;
+  font-size: 12px;
+}
+.box .labeled-input {
+  margin: 24px 0 10px 0;
+}
+.box .labeled-input label,
+.box .labeled-input input {
+  display: block;
+}
 .validate-email-page label {
   color: #707070;
   line-height: 1.35;
@@ -584,6 +613,7 @@ body.user-messages {
   top: 0;
 }
 .search-drop-menu {
+  -ms-box-sizing: border-box;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -1059,8 +1089,15 @@ body.anon.ask-page .search-drop-menu {
   margin-bottom: 10px;
   width: 100%;
 }
+.question-instructions .cannot-post {
+  display: none;
+}
+.question-instructions .email-validator button {
+  display: block;
+  margin: 5px auto;
+}
 .question-instructions ul {
-  margin: 0 0 0 27px;
+  margin: 0 0 0 15px;
 }
 #markdownHelp li {
   color: #707070;
@@ -1632,11 +1669,13 @@ ul#related-tags li {
   padding-right: 15px;
 }
 /* ----- Ask and Edit Question Form template----- */
-.section-title {
+.section-title,
+.modal-header h3 {
   color: #7ea9b3;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
   font-weight: bold;
   font-size: 24px;
+  padding: 0;
 }
 #fmask {
   margin-bottom: 30px;
@@ -1715,10 +1754,13 @@ ul#related-tags li {
 .edit-question-page label[for="editor"],
 .ask-page label[for="id_title"],
 .edit-question-page label[for="id_title"],
+.ask-page label[for="id_tags"] strong,
+.edit-question-page label[for="id_tags"] strong,
 .ask-page span.form-error,
 .edit-question-page span.form-error {
   font-size: 16px;
   font-style: italic;
+  font-weight: normal;
 }
 .ask-page label,
 .edit-question-page label {
@@ -1727,6 +1769,9 @@ ul#related-tags li {
 }
 .ask-page #id_tags,
 .edit-question-page #id_tags {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
   box-sizing: border-box;
   height: 31px;
   padding-left: 5px;
@@ -1741,6 +1786,32 @@ ul#related-tags li {
 .ask-page .lang-selector select,
 .edit-question-page .lang-selector select {
   margin: 3px 0;
+}
+.post-opts {
+  margin-top: 12px;
+}
+.post-opts .checkbox {
+  margin-left: 0;
+}
+.post-opts .labeled-input {
+  float: left;
+  margin: 20px 10px 10px 0;
+}
+.post-opts .labeled-input label,
+.post-opts .labeled-input input {
+  display: block;
+}
+.post-opts .labeled-input label {
+  margin-bottom: -1.8em;
+}
+.post-opts .labeled-input input[type="text"] {
+  color: #707070;
+  border: #cce6ec 3px solid;
+  height: 25px;
+  line-height: 25px;
+  padding-left: 5px;
+  font-size: 14px;
+  width: 186px;
 }
 .ask-page #id_post_author_username,
 .question-page #id_post_author_username,
@@ -1895,6 +1966,7 @@ ul#related-tags li {
 .edit-answer-page #editor {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -2482,7 +2554,7 @@ ul#related-tags li {
 .question-page .comments a.author {
   background-color: inherit;
   color: #1b79bd;
-  padding: 0;
+  padding: 0 4px 0 0;
 }
 .question-page .comments a.author:hover {
   text-decoration: underline;
@@ -2644,9 +2716,6 @@ ul#related-tags li {
 .question-page .answered-by-owner .comments .button {
   background-color: #E6ECFF;
 }
-.question-page .answered-by-owner .comments {
-  background-color: #E6ECFF;
-}
 .question-page .answer-img-accept {
   background: url(../images/vote-accepted.png);
   width: 23px;
@@ -2778,46 +2847,9 @@ ul#related-tags li {
   background-position: -52px 0px;
 }
 /* -----Content pages, Login, About, FAQ, Users----- */
-.openid-signin input[type="text"],
-.openid-signin input[type="password"] {
-  color: #525252;
-  font-size: 12px;
-  line-height: 25px;
-  height: 25px;
-  margin: 0px;
-  padding: 0 5px;
-  width: 200px;
-}
-.registration-page .login input[type="text"] {
-  height: 22px;
-  font-size: 12px;
-  line-height: 22px;
-  color: #525252;
-  padding: 0 5px;
-  width: 200px;
-}
-.openid-signin,
-.meta,
-.user-profile-edit-page {
-  font-size: 13px;
-  line-height: 1.3;
-  color: #525252;
-}
-.openid-signin p,
-.meta p,
-.user-profile-edit-page p {
-  font-size: 13px;
-  color: #707070;
-  line-height: 1.3;
-  font-family: Arial;
-  color: #525252;
-  margin-bottom: 12px;
-}
-.openid-signin h2,
 .meta h2,
 .user-profile-edit-page h2 {
-  color: #525252;
-  padding-left: 0px;
+  padding-left: 0;
   font-size: 16px;
 }
 .meta form,
@@ -3454,9 +3486,6 @@ table.form-as-table th {
   text-align: left;
   font-weight: normal;
 }
-table.ab-subscr-form {
-  width: 45em;
-}
 .submit-row {
   line-height: 30px;
   padding-top: 10px;
@@ -3467,16 +3496,12 @@ table.ab-subscr-form {
   line-height: 20px;
   color: #990000;
 }
-.error,
-.openid-signin p.error {
+.error {
   color: darkred;
   margin: 0;
   font-size: 12px;
   font-weight: bold;
   text-align: left;
-}
-.openid-signin p.error {
-  text-align: center;
 }
 label.retag-error {
   color: darkred;
@@ -3919,7 +3944,26 @@ p.signup_p {
 .avatar-page li {
   display: inline;
 }
-.userList {
+.user-profile-page .avatar p {
+  margin-bottom: 0px;
+}
+.user-profile-page .tabBar a#stats {
+  margin-left: 0;
+}
+.user-profile-page img.gravatar {
+  margin: 2px 0 3px 0;
+}
+.user-profile-page h3 {
+  padding: 0;
+  margin-top: -3px;
+}
+.user-profile-page .vote-notification h3 {
+  padding: 10px;
+}
+.user-profile-page ul.tags {
+  margin-left: 5px;
+}
+.user-list {
   font-size: 13px;
 }
 .user-list {
@@ -4109,21 +4153,21 @@ img.group-logo {
   /* important to align with the line spacing */
 
 }
-#groups-list {
+.groups-list {
   margin-left: 0px;
 }
-#groups-list .group-name {
+.groups-list .group-name {
   padding-right: 20px;
 }
-.groups-page #groups-list th,
-.groups-page #groups-list td {
+.groups-page .groups-list th,
+.groups-page .groups-list td {
   padding-right: 20px;
 }
-.groups-page #groups-list th {
+.groups-page .groups-list th {
   font-weight: bold;
 }
-.groups-page #groups-list th:nth-child(2),
-.groups-page #groups-list td:nth-child(2) {
+.groups-page .groups-list th:nth-child(2),
+.groups-page .groups-list td:nth-child(2) {
   text-align: center;
 }
 #reject-edit-modal input,
@@ -4213,8 +4257,8 @@ textarea.tipped-input {
   margin-left: 0;
 }
 .editor-status {
-  float: right;
-  margin: 8px 350px 0 0;
+  float: left;
+  margin: -22px 0 0 5px;
   font-weight: bold;
 }
 .editor-status span {
@@ -4511,12 +4555,6 @@ td.setting-input textarea {
   .ask-page .preview-toggle,
   .edit-answer-page .preview-toggle,
   .edit-question-page .preview-toggle,
-  .ask-page .proxy-user-info,
-  .edit-answer-page .proxy-user-info,
-  .edit-question-page .proxy-user-info,
-  .ask-page .answer-options,
-  .edit-answer-page .answer-options,
-  .edit-question-page .answer-options,
   .ask-page .question-options,
   .edit-answer-page .question-options,
   .edit-question-page .question-options,
@@ -4627,6 +4665,279 @@ td.setting-input textarea {
   .question-page div.comments.empty {
     margin-top: 0;
   }
+}
+/* signin form styles */
+.federated-login-methods {
+  margin-bottom: 30px;
+}
+.federated-login-methods button {
+  background: 0 0 url(../jquery-openid/images/login-provider-logos-small.png) no-repeat;
+  border: none;
+  -webkit-box-shadow: 0 0 0 #929292;
+  -moz-box-shadow: 0 0 0 #929292;
+  box-shadow: 0 0 0 #929292;
+  height: 45px;
+  text-indent: -10000px;
+  width: 48px;
+}
+.federated-login-methods li {
+  float: left;
+  margin: 0 10px 0 0;
+}
+.federated-login-methods li label {
+  text-align: center;
+}
+.federated-login-methods p {
+  margin-bottom: 1.5em;
+}
+.federated-login-methods ul {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+.federated-login-methods .aol {
+  background-position: -40px 0;
+}
+.federated-login-methods .aol:hover {
+  background-position: -40px 0;
+}
+.federated-login-methods .facebook {
+  background-position: -237px 0;
+  margin-left: 10px;
+}
+.federated-login-methods .facebook:hover {
+  background-position: -237px 0;
+}
+.federated-login-methods .google {
+  background-position: 5px 0;
+  width: 40px;
+}
+.federated-login-methods .google:hover {
+  background-position: 5px 0;
+}
+.federated-login-methods .identi-ca {
+  background-position: -333px 0;
+  margin-left: 2px;
+}
+.federated-login-methods .identi-ca:hover {
+  background-position: -333px 0;
+}
+.federated-login-methods .linkedin {
+  background-position: -183px 0;
+}
+.federated-login-methods .linkedin:hover {
+  background-position: -183px 0;
+}
+.federated-login-methods .livejournal {
+  background-position: -379px 0;
+  margin-left: 10px;
+}
+.federated-login-methods .livejournal:hover {
+  background-position: -379px 0;
+}
+.federated-login-methods .openid {
+  background-position: -287px 0;
+}
+.federated-login-methods .openid:hover {
+  background-position: -287px 0;
+}
+.federated-login-methods .twitter {
+  background-position: -138px 0;
+}
+.federated-login-methods .twitter:hover {
+  background-position: -138px 0;
+}
+.federated-login-methods .yahoo {
+  background-position: -87px 0;
+  margin: 0 5px;
+}
+.federated-login-methods .yahoo:hover {
+  background-position: -87px 0;
+}
+.extra-openid-info {
+  display: none;
+}
+.account-recovery {
+  margin: 2.5em 0 0 0;
+}
+.auth-menu button,
+.complete-registration button,
+.establish-login-menu button,
+.auth-menu input,
+.complete-registration input,
+.establish-login-menu input,
+.auth-menu label,
+.complete-registration label,
+.establish-login-menu label,
+.auth-menu li,
+.complete-registration li,
+.establish-login-menu li {
+  display: block;
+}
+.auth-menu .submit,
+.complete-registration .submit,
+.establish-login-menu .submit {
+  margin: -9px 0 0 0;
+}
+.auth-menu {
+  min-width: 430px;
+}
+.auth-menu .col1,
+.auth-menu .col2 {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 50%;
+  float: left;
+}
+.auth-menu .col1 {
+  padding-right: 19px;
+}
+.auth-menu .col2 {
+  padding-left: 20px;
+  border-left: 1px solid #aaa;
+}
+.auth-menu .col1.single-column {
+  width: 100%;
+  padding: 0;
+}
+.extra-openid-info {
+  padding: 20px;
+  padding-top: 30px;
+  border: 1px solid #aaa;
+  border-top: 1px dashed #ccc;
+  -moz-box-shadow: -1px 3px 5px 2px #cccccc;
+  -webkit-box-shadow: -1px 3px 5px 2px #cccccc;
+  box-shadow: -1px 3px 5px 2px #cccccc;
+  margin-top: 10px;
+}
+.openid-signin .password-login input[type="text"],
+.complete-federated-registration .password-login input[type="text"],
+.modal .password-login input[type="text"],
+.openid-signin .password-registration input[type="text"],
+.complete-federated-registration .password-registration input[type="text"],
+.modal .password-registration input[type="text"],
+.openid-signin .complete-registration input[type="text"],
+.complete-federated-registration .complete-registration input[type="text"],
+.modal .complete-registration input[type="text"],
+.openid-signin .extra-openid-info input[type="text"],
+.complete-federated-registration .extra-openid-info input[type="text"],
+.modal .extra-openid-info input[type="text"],
+.openid-signin .establish-login-menu input[type="text"],
+.complete-federated-registration .establish-login-menu input[type="text"],
+.modal .establish-login-menu input[type="text"],
+.openid-signin .account-recovery input[type="text"],
+.complete-federated-registration .account-recovery input[type="text"],
+.modal .account-recovery input[type="text"],
+.openid-signin .password-login input[type="password"],
+.complete-federated-registration .password-login input[type="password"],
+.modal .password-login input[type="password"],
+.openid-signin .password-registration input[type="password"],
+.complete-federated-registration .password-registration input[type="password"],
+.modal .password-registration input[type="password"],
+.openid-signin .complete-registration input[type="password"],
+.complete-federated-registration .complete-registration input[type="password"],
+.modal .complete-registration input[type="password"],
+.openid-signin .extra-openid-info input[type="password"],
+.complete-federated-registration .extra-openid-info input[type="password"],
+.modal .extra-openid-info input[type="password"],
+.openid-signin .establish-login-menu input[type="password"],
+.complete-federated-registration .establish-login-menu input[type="password"],
+.modal .establish-login-menu input[type="password"],
+.openid-signin .account-recovery input[type="password"],
+.complete-federated-registration .account-recovery input[type="password"],
+.modal .account-recovery input[type="password"] {
+  color: #707070;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 2em;
+  line-height: 1.5em;
+  margin-bottom: 2.5em;
+  padding-left: .3em;
+  width: 100%;
+}
+.openid-signin .password-login p,
+.complete-federated-registration .password-login p,
+.modal .password-login p,
+.openid-signin .password-registration p,
+.complete-federated-registration .password-registration p,
+.modal .password-registration p,
+.openid-signin .complete-registration p,
+.complete-federated-registration .complete-registration p,
+.modal .complete-registration p,
+.openid-signin .extra-openid-info p,
+.complete-federated-registration .extra-openid-info p,
+.modal .extra-openid-info p,
+.openid-signin .establish-login-menu p,
+.complete-federated-registration .establish-login-menu p,
+.modal .establish-login-menu p,
+.openid-signin .account-recovery p,
+.complete-federated-registration .account-recovery p,
+.modal .account-recovery p {
+  color: #7ea9b3;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1em;
+  margin-bottom: 2em;
+}
+.openid-signin .password-registration input[type="text"],
+.complete-federated-registration .password-registration input[type="text"],
+.modal .password-registration input[type="text"],
+.openid-signin .account-recovery input[type="text"],
+.complete-federated-registration .account-recovery input[type="text"],
+.modal .account-recovery input[type="text"],
+.openid-signin .password-registration input[type="password"],
+.complete-federated-registration .password-registration input[type="password"],
+.modal .password-registration input[type="password"],
+.openid-signin .account-recovery input[type="password"],
+.complete-federated-registration .account-recovery input[type="password"],
+.modal .account-recovery input[type="password"] {
+  width: 100%;
+}
+.openid-signin .complete-registration,
+.complete-federated-registration .complete-registration,
+.modal .complete-registration {
+  margin-top: 1em;
+  width: 250px;
+}
+.openid-signin .complete-registration input[type="text"],
+.complete-federated-registration .complete-registration input[type="text"],
+.modal .complete-registration input[type="text"],
+.openid-signin .complete-registration input[type="password"],
+.complete-federated-registration .complete-registration input[type="password"],
+.modal .complete-registration input[type="password"] {
+  width: 80%;
+}
+.openid-signin .auth-menu,
+.complete-federated-registration .auth-menu,
+.openid-signin .complete-registration,
+.complete-federated-registration .complete-registration {
+  margin: 20px 0;
+  width: 280px;
+}
+.tag-subscriptions {
+  border-spacing: 10px;
+  border-collapse: separate;
+}
+.tag-subscriptions form {
+  display: inline-block;
+  margin-bottom: 0;
+}
+.tag-subscriptions td {
+  vertical-align: middle;
+}
+.tag-subscriptions .action {
+  cursor: pointer;
+  color: #4A757F;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  text-decoration: none;
+}
+.tag-subscriptions ul.tags li {
+  margin: 2px 5px;
 }
 @media screen and (max-width: 480px) {
   .openid-signin h1,

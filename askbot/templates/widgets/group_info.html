@@ -22,21 +22,23 @@
         }}
     {% if request.user.is_authenticated() and request.user.is_administrator() %}
     <div class="controls">
-        <a class="edit-description"
-        >{% trans %}edit description{% endtrans %}</a>
-        {% if group.logo_url %}
-            <span>|</span>
-            <a class="change-logo"
-            >{% trans %}change logo{% endtrans %}</a>
-            <span>|</span>
-            <a class="delete-logo">{% trans %}delete logo{% endtrans %}</a>
-        {% else %}
-            <span>|</span>
-            <a class="change-logo"
-            >{% trans %}add logo{% endtrans %}</a>
-        {% endif %}
-        <br/>
+        <p>
+            <a class="edit-description"
+            >{% trans %}edit description{% endtrans %}</a>
+            {% if group.logo_url %}
+                <span>|</span>
+                <a class="change-logo"
+                >{% trans %}change logo{% endtrans %}</a>
+                <span>|</span>
+                <a class="delete-logo">{% trans %}delete logo{% endtrans %}</a>
+            {% else %}
+                <span>|</span>
+                <a class="change-logo"
+                >{% trans %}add logo{% endtrans %}</a>
+            {% endif %}
+        </p>
         {% if group_email_moderation_enabled %}
+        <p>
             <input type="checkbox"
                 id="moderate-email"
                 {% if group.moderate_email %}checked="checked"{% endif %}
@@ -45,77 +47,84 @@
             <label for="moderate-email">
                 {% trans %}moderate emailed content{% endtrans %}
             </label>
-            <br/>
+        </p>
         {% endif %}
 
-        <input
-            type="checkbox"
-            id="moderate-answers-to-enquirers"
-            {% if group.moderate_answers_to_enquirers %}checked="checked"{% endif %}
-            data-toggle-url="{% url toggle_group_profile_property %}"
-        />
-        <label for="moderate-answers-to-enquirers">
-            {{ settings.WORDS_SHOW_ONLY_SELECTED_ANSWERS_TO_ENQUIRERS|escape }}
-        </label>
-        <br/>
+        <p>
+            <input
+                type="checkbox"
+                id="moderate-answers-to-enquirers"
+                {% if group.moderate_answers_to_enquirers %}checked="checked"{% endif %}
+                data-toggle-url="{% url toggle_group_profile_property %}"
+            />
+            <label for="moderate-answers-to-enquirers">
+                {{ settings.WORDS_SHOW_ONLY_SELECTED_ANSWERS_TO_ENQUIRERS|escape }}
+            </label>
+        </p>
 
-        <label for="group-openness-selector">
-            {% trans %}How users join this group?{% endtrans %}
-        </label>
-        <br/>
-        <select 
-            id="group-openness-selector"
-            data-url="{% url set_group_openness %}"
-        >
-            {% for choice in group_openness_choices %}
-            <option 
-                {% if choice[0] == group.openness %}
-                selected="selected"
-                {% endif %}
-                value="{{choice[0]}}"
-            >{{ choice[1] }}</option>
-            {% endfor %}
-        </select>
-        <br/>
-        <input
-            type="checkbox"
-            id="vip-toggle"
-            {% if group.is_vip %}checked="checked"{% endif %}
-            data-toggle-url="{% url toggle_group_profile_property %}"
-        />
-        <label for="vip-toggle">
-            {% trans %}Can moderate site{% endtrans %}
-        </label>
-        <br/>
-        <input
-            type="checkbox"
-            id="read-only-toggle"
-            {% if group.read_only %}checked="checked"{% endif %}
-            data-toggle-url="{% url toggle_group_profile_property %}"
-        />
-        <label for="read-only-toggle">
-            {% trans %}Allow only read access{% endtrans %}
-        </label>
-        <br/>
-        <a 
-            id="preapproved-emails"
-            data-object-id="{{group.group_ptr_id}}"
-            data-model-name="Group"
-            data-property-name="preapproved_emails"
-            data-url="{% url edit_object_property_text %}"
-            data-editor-heading="{% trans %}List of preapproved email addresses{% endtrans %}"
-            data-help-text="{% trans %}Users with these email adderesses will be added to the group automatically.{% endtrans %}"
-        >{% trans %}edit preapproved emails{% endtrans %}</a>
-        <br/>
-        <a 
-            id="preapproved-email-domains"
-            data-object-id="{{group.group_ptr_id}}"
-            data-model-name="Group"
-            data-property-name="preapproved_email_domains"
-            data-url="{% url edit_object_property_text %}"
-            data-editor-heading="{% trans %}List of preapproved email domain names{% endtrans %}"
-            data-help-text="{% trans %}Users whose email adderesses belong to these domains will be added to the group automatically.{% endtrans %}"
-        >{% trans %}edit preapproved email domains{% endtrans %}</a>
+        <p>
+            <label for="group-openness-selector">
+                {% trans %}How users join this group?{% endtrans %}
+            </label>
+            <br/>
+            <select 
+                id="group-openness-selector"
+                data-url="{% url set_group_openness %}"
+            >
+                {% for choice in group_openness_choices %}
+                <option 
+                    {% if choice[0] == group.openness %}
+                    selected="selected"
+                    {% endif %}
+                    value="{{choice[0]}}"
+                >{{ choice[1] }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <input
+                type="checkbox"
+                id="vip-toggle"
+                {% if group.is_vip %}checked="checked"{% endif %}
+                data-toggle-url="{% url toggle_group_profile_property %}"
+            />
+            <label for="vip-toggle">
+                {% trans %}Can moderate site{% endtrans %}
+            </label>
+        </p>
+        <p>
+            <input
+                type="checkbox"
+                id="read-only-toggle"
+                {% if group.read_only %}checked="checked"{% endif %}
+                data-toggle-url="{% url toggle_group_profile_property %}"
+            />
+            <label for="read-only-toggle">
+                {% trans %}Allow only read access{% endtrans %}
+            </label>
+        </p>
+        <p>
+            <a 
+                id="preapproved-emails"
+                data-object-id="{{group.group_ptr_id}}"
+                data-model-name="Group"
+                data-property-name="preapproved_emails"
+                data-url="{% url edit_object_property_text %}"
+                data-editor-heading="{% trans %}List of preapproved email addresses{% endtrans %}"
+                data-help-text="{% trans %}Users with these email addresses will be added to the group automatically.{% endtrans %}"
+            >{% trans %}edit preapproved emails{% endtrans %}</a>
+        </p>
+        <p>
+            <a 
+                id="preapproved-email-domains"
+                data-object-id="{{group.group_ptr_id}}"
+                data-model-name="Group"
+                data-property-name="preapproved_email_domains"
+                data-url="{% url edit_object_property_text %}"
+                data-editor-heading="{% trans %}List of preapproved email domain names{% endtrans %}"
+                data-help-text="{% trans %}Users whose email addresses belong to these domains will be added to the group automatically.{% endtrans %}"
+            >{% trans %}edit preapproved email domains{% endtrans %}</a>
+        </p>
     </div>
     {% endif %}
 </div>

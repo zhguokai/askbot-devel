@@ -9,7 +9,7 @@
               tag.name,
               html_tag = 'div',
               extra_content = '<span class="tag-number">&#215; ' ~
-              tag.local_used_count|intcomma ~ '</span>',
+              (tag.local_used_count or tag.used_count)|intcomma ~ '</span>',
               search_state = search_state
         )}}
         </li>

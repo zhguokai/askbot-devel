@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot import models
+from askbot.models import signals
 from askbot import forms
 
 WIDGETS_MODELS = {
@@ -51,12 +52,6 @@ def widgets(request):
 @csrf.csrf_protect
 def ask_widget(request, widget_id):
 
-    def post_question(data, request):
-        thread = models.Thread.objects.create_new(**data)
-        question = thread._question_post()
-        request.session['widget_question_url'] = question.get_absolute_url()
-        return question
-
     widget = get_object_or_404(models.AskWidget, id=widget_id)
 
     if request.method == "POST":
@@ -90,37 +85,52 @@ def ask_widget(request, widget_id):
 
             data_dict = {
                 'title': title,
-                'added_at': datetime.now(),
+                'body_text': text,
+                'space': form.cleaned_data['space'],
+                'tags': tagnames,
                 'wiki': False,
-                'text': text,
-                'tagnames': tagnames,
-                'group_id': group_id,
-                'is_anonymous': ask_anonymously
+                'is_anonymous': ask_anonymously,
+                'timestamp': datetime.now(),
+                'group_id': group_id
             }
+
             if request.user.is_authenticated():
-                data_dict['author'] = request.user
-                #question = post_question(data_dict, request)
+                question = request.user.post_question(**data_dict)
+                request.session['widget_thread_id'] = question.thread.id
+                request.session['widget_id'] = widget_id
+                signals.new_question_posted.send(None,
+                    question=question,
+                    user=request.user,
+                    form_data=form.cleaned_data
+                )
                 return redirect('ask_by_widget_complete')
             else:
                 request.session['widget_question'] = data_dict
                 next_url = '%s?next=%s' % (
                         reverse('widget_signin'),
-                        reverse('ask_by_widget', args=(widget.id,))
+                        reverse('ask_by_widget', kwargs={'widget_id': widget_id})
                 )
                 return redirect(next_url)
     else:
-        if 'widget_question' in request.session and \
-                request.GET.get('action', 'post-after-login'):
+        if 'widget_question' in request.session:
             if request.user.is_authenticated():
                 data_dict = request.session['widget_question']
-                data_dict['author'] = request.user
-                question = post_question(request.session['widget_question'], request)
+                question = request.user.post_question(**data_dict)
+                request.session['widget_thread_id'] = question.thread.id
+                request.session['widget_id'] = widget_id
+                #signals.new_question_posted.send(None,
+                #    question=question,
+                #    user=request.user,
+                #    form_data=data_dict
+                #)
                 del request.session['widget_question']
                 return redirect('ask_by_widget_complete')
             else:
                 #FIXME: this redirect is temporal need to create the correct view
-                next_url = '%s?next=%s' % (reverse('widget_signin'),
-                                           reverse('ask_by_widget', args=(widget_id,)))
+                next_url = '%s?next=%s' % (
+                    reverse('widget_signin'),
+                    reverse('ask_by_widget', kwargs={'widget_id': widget_id})
+                )
                 return redirect(next_url)
 
         form = forms.AskWidgetForm(
@@ -137,17 +147,15 @@ def ask_widget(request, widget_id):
 
 @login_required
 def ask_widget_complete(request):
-    question_url = request.session.get('widget_question_url')
-    custom_css = request.session.get('widget_css')
-    if question_url:
-        del request.session['widget_question_url']
-    else:
-        question_url = '#'
-
-    if custom_css:
-        del request.session['widget_css']
-
-    data = {'question_url': question_url, 'custom_css': custom_css}
+    thread_id = request.session.pop('widget_thread_id')
+    thread = models.Thread.objects.get(id=thread_id)
+    data = {
+        'question_url': thread.get_absolute_url(),
+        'question_title': thread.title,
+        'question_body_html': thread._question_post().html,
+        'custom_css': request.session.pop('widget_css', ''),
+        'widget_id': request.session.pop('widget_id')
+    }
     return render(request, 'embed/ask_widget_complete.html', data)
 
 

@@ -1,0 +1,10 @@
+{% extends "widgets/modal_menu.html" %}
+{% block modal_title %}{% trans %}Establish a login method{% endtrans %}{% endblock %}
+{% block modal_body %}
+    <p>
+        {% 
+            trans app_name=settings.APP_SHORT_NAME 
+        %}At least one active login method is required to use {{ app_name }}{% endtrans %}
+    </p>
+    {% include "authopenid/establish_login.html" %}
+{% endblock %}

@@ -38,21 +38,6 @@ EMAIL_PORT=''
 EMAIL_USE_TLS=False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-#incoming mail settings
-#after filling out these settings - please
-#go to the site's live settings and enable the feature
-#"Email settings" -> "allow asking by email"
-#
-#   WARNING: command post_emailed_questions DELETES all
-#            emails from the mailbox each time
-#            do not use your personal mail box here!!!
-#
-IMAP_HOST = ''
-IMAP_HOST_USER = ''
-IMAP_HOST_PASSWORD = ''
-IMAP_PORT = ''
-IMAP_USE_TLS = False
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -230,7 +215,7 @@ ASKBOT_URL = '' #no leading slash, default = '' empty string
 ASKBOT_TRANSLATE_URL = True #translate specific URLs
 _ = lambda v:v #fake translation function for the login url
 LOGIN_URL = '/%s%s%s' % (ASKBOT_URL,_('account/'),_('signin/'))
-LOGIN_REDIRECT_URL = ASKBOT_URL #adjust if needed
+LOGIN_REDIRECT_URL = '/' + ASKBOT_URL #adjust if needed
 #note - it is important that upload dir url is NOT translated!!!
 #also, this url must not have the leading slash
 ALLOW_UNICODE_SLUGS = False
@@ -295,8 +280,8 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme_advanced_resizing': True,
     'theme_advanced_resize_horizontal': False,
     'theme_advanced_statusbar_location': 'bottom',
-    'width': '730',
-    'height': '250'
+    'height': '250',
+    'width': '100%'
 }
 
 #delayed notifications, time in seconds, 15 mins by default

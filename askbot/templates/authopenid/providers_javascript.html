@@ -2,7 +2,7 @@
 {% if settings.SIGNIN_MOZILLA_PERSONA_ENABLED %}
 <script type="text/javascript" src="https://login.persona.org/include.js"></script>
 {% endif %}
-<script type="text/javascript" src="{{ "/jquery-openid/jquery.openid.js"|media }}"></script>
+<script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
 <script type="text/javascript">
     askbot['urls']['changePassword'] = '{% url change_password %}';
     askbot['urls']['deleteLoginMethod'] = '{% url delete_login_method %}';
@@ -12,7 +12,7 @@
     var siteName = '{{settings.APP_SHORT_NAME}}';
     var provider_count = {{existing_login_methods|length}};
     {% for login_provider in major_login_providers %}
-        {%if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True %}
+        {% if settings['SIGNIN_' + login_provider.name.upper() + '_ENABLED'] == True %}
           {% if login_provider.extra_token_name %}
               extra_token_name['{{login_provider.name}}'] = '{{ login_provider.extra_token_name|escapejs }}';
           {% endif %}
@@ -38,11 +38,27 @@
     {% else %}
         var userIsAuthenticated = false;
     {% endif %}
-    askbot['settings']['signin_always_show_local_login'] = {% if settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}true{% else %}false{% endif %};
     askbot['settings']['useLdapForPasswordLogin'] = {{ settings.USE_LDAP_FOR_PASSWORD_LOGIN|as_js_bool}};
-    $("body").authenticator();
+    askbot['settings']['loginRedirectUrl'] = '{{ settings.LOGIN_REDIRECT_URL }}';
     (function() {
-        var form = new ChangePasswordForm();
-        form.decorate($('body'));//a hack
+        var menuElement = $('.auth-menu');
+        if (menuElement.length) {
+            var authMenu = new AuthMenu();
+            authMenu.decorate(menuElement);
+        }
+        menuElement = $('.establish-login-menu');
+        if (menuElement.length) {
+            var establishLoginMenu = new EstablishLoginMenu();
+            establishLoginMenu.decorate(menuElement);
+        }
     })();
+    $(document).ready(function() {
+        var completeRegistrationForm = $('.complete-registration');
+        if (completeRegistrationForm.length === 1) {
+            //enables the registration form
+            var form = new CompleteRegistrationForm();
+            form.decorate(completeRegistrationForm);
+        }
+    });
+    //@ sourceURL=init_login_methods
 </script>
