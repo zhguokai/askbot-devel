@@ -84,7 +84,7 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'logo_url', 'description', 'moderate_email', 'moderate_answers_to_enquirers', 'openness', 'is_vip', 'read_only')
     list_display_links = ('id', 'name')
     list_filter = (IsPersonal, 'moderate_email', 'moderate_answers_to_enquirers', 'openness', 'is_vip', 'read_only')
-    search_fields = ('name', 'logo_url', 'description')
+    search_fields = ('name', 'logo_url')
 admin.site.register(models.Group, GroupAdmin)
 
 class GroupMembershipAdmin(admin.ModelAdmin):
