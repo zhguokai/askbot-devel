@@ -164,13 +164,15 @@ class LoginForm(forms.Form):
         if field_name not in self.cleaned_data:
             self._errors[field_name] = self.error_class([error_message])
 
-    def set_password_login_error(self):
+    def set_password_login_error(self, message=None):
         """sets a parameter flagging that login with
         password had failed
         """
+        message = message or _('Login failed, please try again')
         #add monkey-patch parameter
         #this is used in the signin.html template
         self.password_login_failed = True
+        self.password_login_error_message = message
 
     def set_password_change_error(self):
         """sets a parameter flagging that

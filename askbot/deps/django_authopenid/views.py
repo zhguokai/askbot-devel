@@ -503,7 +503,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                 auth_fail_func = load_module(auth_fail_func_path)
                                 auth_fail_func(user_info, login_form)
                             else:
-                                login_form.set_password_login_error()
+                                login_form.set_password_login_error(user_info.get('error_info'))
                             #return HttpResponseRedirect(request.path)
                 else:
                     if password_action == 'login':
