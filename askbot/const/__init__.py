@@ -134,7 +134,7 @@ TAG_LIST_FORMAT_CHOICES = (
     ('cloud', _('cloud')),
 )
 
-PAGE_SIZE_CHOICES = (('10', '10',), ('30', '30',), ('50', '50',),)
+PAGE_SIZE_CHOICES = (('10', '10',), ('20', '20',), ('30', '30',), ('50', '50',),)
 ANSWERS_PAGE_SIZE = 10
 USER_POSTS_PAGE_SIZE = 10
 QUESTIONS_PER_PAGE_USER_CHOICES = ((10, u'10'), (30, u'30'), (50, u'50'),)
