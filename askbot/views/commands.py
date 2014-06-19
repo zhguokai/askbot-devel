@@ -1660,3 +1660,14 @@ def multisite_repost_thread(request):
         request.user.message_set.create(message=message)
 
     return HttpResponseRedirect(thread.get_absolute_url())
+
+@csrf.csrf_protect
+@decorators.post_only
+@login_required
+def thread_make_private(request, id=None):
+    thread = get_object_or_404(models.Thread, id=id)
+    if thread.has_moderator(request.user):
+        thread.make_private(user=request.user)
+    else:
+        raise exceptions.PermissionDenied()
+    return HttpResponseRedirect(thread.get_absolute_url())

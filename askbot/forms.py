@@ -1835,8 +1835,8 @@ class MultiSiteRepostThreadForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(MultiSiteRepostThreadForm, self).__init__(*args, **kwargs)
-        from askbot.models.spaces import get_site_ids, get_site_name
-        for site_id in get_site_ids():
+        from askbot.models.spaces import get_site_name
+        for site_id in getattr(django_settings, 'ASKBOT_PARTNER_SITE_IDS', list()):
             field = forms.BooleanField(
                 label=get_site_name(site_id),
                 required=False
