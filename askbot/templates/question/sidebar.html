@@ -154,6 +154,11 @@
     {% else %}
         <h2>{% trans %}Public thread{% endtrans %}</h2>
         <p>{% trans site_name=settings.APP_SHORT_NAME %}This thread is public, all members of {{ site_name }} can read this page.{% endtrans %}</p>
+        {% if user_is_thread_moderator %}
+        <form method="post" action="{% url thread_make_private thread.id %}">{% csrf_token %}
+            <p><input type="submit" name="go" value="{% trans %}Make private{% endtrans %}" /></p>
+        </form>
+        {% endif %}
     {% endif %}
 </div>
 {% endif %}
