@@ -3821,7 +3821,7 @@ def join_preapproved_groups(user, **kwargs):
     """User will be joined all groups for which he/she
     is preapproved via preapproved email addresses or
     preapproved email domains"""
-    if not askbot_settings.GROUPS_ENABLED == False:
+    if askbot_settings.GROUPS_ENABLED == False:
         return
 
     groups = Group.objects.exclude_personal()
