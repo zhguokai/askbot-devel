@@ -14,7 +14,6 @@ import shutil
 import imp
 from askbot.utils import console
 from askbot.deployment.template_loader import SettingsTemplate
-from askbot.deployment import messages
 
 
 FILES_TO_CREATE = ('__init__.py', 'manage.py', 'urls.py', 'django.wsgi')
@@ -51,6 +50,7 @@ def clean_directory(directory):
 
     if os.path.isfile(directory):
         if os.path.isfile(directory):
+            from askbot.deployment import messages
             print messages.CANT_INSTALL_INTO_FILE % {'path':directory}
         sys.exit(1)
 
