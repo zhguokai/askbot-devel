@@ -3019,6 +3019,9 @@ a:hover.medal {
   padding: 0;
   margin-top: -3px;
 }
+.user-profile-page table.form-as-table {
+  margin: 5px 0 12px;
+}
 .user-profile-page .submit-row {
   margin-bottom: 0;
 }
