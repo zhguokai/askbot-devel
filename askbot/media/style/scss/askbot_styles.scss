@@ -324,10 +324,10 @@ ul.off-canvas-list {
   //Div containing Home button, scope navigation, search form and ask button, check widgets/secondary_header.html
   font-family: $main-font;
   height: $sec-header-height;
-  background: #e9e9e1;
+  background: $sec-header-color;
   border-bottom: lighten($sec-header-text-color, 30%) 1px solid;
   border-top: lighten($sec-header-text-color, 30%) 1px solid;
-  margin-bottom: .7rem;
+  margin-bottom: .3rem;
   
   a {
     color: $sec-header-text-color;
@@ -373,6 +373,7 @@ ul.off-canvas-list {
 
 div.search-bar {
     width: 100%;
+    position: relative;
     input {
       width: 100%;
       //border: 3px solid lighten($sec-header-text-color, 30%);
@@ -382,7 +383,6 @@ div.search-bar {
       margin: 0;
       @include rounded-corners-left();
       @include rounded-corners-right(0);
-
     }
   }
 
@@ -424,14 +424,15 @@ button.searchBtn {
   }
 }
 
+
 .search-drop-menu {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   background: whitesmoke;
   border-top: none;
-  top: 42px;
-  margin: 0;
+  top: 0;
+  margin:$sec-header-height 0;
   outline: 1px solid #dadad4;
   position: absolute;
   z-index: 10000;
@@ -473,13 +474,6 @@ button.searchBtn {
   }
 }
 
-.input-tool-tip {
-  color: #999;
-}
-
-.input-tool-tip.dimmed {
-  color: #ccc;
-}
 
 .ask-page {
   button[type="submit"].searchBtn {
@@ -2550,8 +2544,7 @@ ul#related-tags li {
   form {
     margin-bottom: 15px;
   }
-  input[type="text"],
-  input[type="password"],
+input[type="password"],
   select {
     height: 25px;
     line-height: 25px;

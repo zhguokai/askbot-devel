@@ -56,6 +56,10 @@ Programming, bug fixes and documentation
 * `Hamdi <https://github.com/Hamdy>`_
 * `michas2 <https://github.com/michas2>`_
 * `Francis Devereux <https://github.com/frankoid>`_
+* `Andrew Chen <https://github.com/yongjhih>`_
+* `Egil Moeller <https://github.com/redhog>`_
+* `Jerry Zhenlei Cai <https://github.com/jerryzhenleicai>`_
+* `Dmitry <https://github.com/dmzio>`_
 
 Translations
 ------------

@@ -6,7 +6,6 @@ from askbot.conf import settings as askbot_settings
 import sys
 
 class Command(NoArgsCommand):
-    @transaction.commit_manually
     def handle_noargs(self, **options):
         tags = models.Tag.objects.all()
         message = 'Searching for unused tags:'
@@ -17,7 +16,6 @@ class Command(NoArgsCommand):
             if not tag.threads.exists():
                 deleted_tags.append(tag.name)
                 tag.delete()
-            transaction.commit()
 
         if deleted_tags:
             found_count = len(deleted_tags)

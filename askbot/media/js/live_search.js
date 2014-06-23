@@ -342,7 +342,7 @@ InputToolTip.prototype.createDom = function() {
     var element = this.makeElement('div');
     this._element = element;
     element.addClass('input-tool-tip');
-    element.html(this._promptText);
+    //element.html(this._promptText);
     this.decorate(element);
 };
 
@@ -1077,16 +1077,8 @@ TagSearch.prototype.decorate = function(element) {
 
     var me = this;
     this._xButton.click(function(){ me.reset() });
-
-    var toolTip = new InputToolTip();
-    toolTip.setPromptText(askbot['data']['tagSearchPromptText']);
-    toolTip.setClickHandler(function() {
-        element.focus();
-    });
-    element.after(toolTip.getElement());
-    //below is called after getElement, b/c element must be defined
-    if (this.getQuery() !== '') {
-        toolTip.hide();//hide if search query is not empty
-    }
-    this._toolTip = toolTip;
 };
+
+$("input.searchInput").attr("placeholder", gettext('search or ask your question'));
+$("input.search-tag").attr("placeholder", gettext('search for tags'));
+$("input.search-user").attr("placeholder", gettext('search for users'));

@@ -1,14 +1,17 @@
 {% if active_tab !="ask" %}
     {% spaceless %}
-    <div  class="search-bar" id="searchBar" class="{% if query %}cancelable{% endif %}">
+    <div class="search-bar" id="searchBar" class="{% if query %}cancelable{% endif %}">
         {# url action depends on which tab is active #}
         {% if active_tab == "tags" %}
         <input type="hidden" name="t" value="tag" />
+        <input class="search-tag" type="text" autocomplete="off" value="{{ query|default_if_none('')|escape }}" name="query" id="keywords" />
         {% set query=stag %}
         {% elif active_tab == "users" %}
         <input type="hidden" name="t" value="user" />
-        {% endif %}
+        <input class="search-user" type="text" autocomplete="off" value="{{ query|default_if_none('')|escape }}" name="query" id="keywords" />
+        {% else %}
         <input class="searchInput" type="text" autocomplete="off" value="{{ query|default_if_none('')|escape }}" name="query" id="keywords" />
+        {% endif %}
     </div>
     <div>
         <button type="submit" value="" name="search" class="searchBtn postfix" />
@@ -22,4 +25,4 @@
         />
     </div>
     {% endspaceless %}
-{% endif %}
+    {% endif %}
