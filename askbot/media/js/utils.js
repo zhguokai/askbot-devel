@@ -553,9 +553,9 @@ WaitIcon.prototype.createDom = function() {
     var box = this.makeElement('div');
     box.addClass('wait-icon-box');
     this._element = box;
-    var img = this.makeElement('img');
-    img.attr('src', mediaUrl('media/images/ajax-loader.gif'));
-    box.append(img);
+    var icon = this.makeElement('i');
+    icon.addClass('fa fa-spinner fa-spin');
+    box.append(icon);
     this.setVisible(this._isVisible);
 };
 

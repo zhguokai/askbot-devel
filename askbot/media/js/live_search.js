@@ -68,7 +68,7 @@ SearchDropMenu.prototype.selectItem = function(idx) {
     var item = this.getItem(idx);
     if (item && idx > 0) {
         item.addClass('selected');
-        var itemTopY = item.position().top;//relative to visible area
+        var itemTopY = item.position().top; //relative to visible area
         var curScrollTop = list.scrollTop();
 
         /* if item is clipped on top, scroll down */
@@ -84,7 +84,7 @@ SearchDropMenu.prototype.selectItem = function(idx) {
         var itemSinkHeight = item.outerHeight() - itemPeepHeight;
         if (itemSinkHeight > 0) {
             list.scrollTop(curScrollTop + itemSinkHeight);
-        } 
+        }
     }
 
 };
@@ -112,7 +112,7 @@ SearchDropMenu.prototype.makeKeyHandler = function() {
     var me = this;
     return function(e) {
         var keyCode = getKeyCode(e);
-        if (keyCode === 27) {//escape
+        if (keyCode === 27) { //escape
             me.hide();
             return false;
         }
@@ -123,15 +123,15 @@ SearchDropMenu.prototype.makeKeyHandler = function() {
         if (itemCount > 0) {
             //count is 0 with no title matches, curItem is 0 when none is selected
             var curItem = me.getSelectedItemIndex();
-            if (keyCode === 38) {//upArrow
+            if (keyCode === 38) { //upArrow
                 if (curItem > 0) {
                     curItem = curItem - 1;
                 }
-            } else if (keyCode === 40) {//downArrow
+            } else if (keyCode === 40) { //downArrow
                 if (curItem < itemCount) {
                     curItem = curItem + 1;
                 }
-            } else if (keyCode === 13) {//enter
+            } else if (keyCode === 13) { //enter
                 if (curItem === 0) {
                     return true;
                 } else {
@@ -234,7 +234,7 @@ SearchDropMenu.prototype.show = function() {
     var searchBar = this._element.prev();
     var searchBarHeight = searchBar.outerHeight();
     var topOffset = searchBar.offset().top + searchBarHeight;
-    this._element.show();//show so that size calcs work
+    this._element.show(); //show so that size calcs work
     var footerHeight = this._footer.outerHeight();
     var windowHeight = $(window).height();
     this._resultsList.css(
@@ -254,13 +254,13 @@ SearchDropMenu.prototype.reset = function() {
     this._element.hide();
 };
 
-var TagWarningBox = function(){
+var TagWarningBox = function() {
     WrappedElement.call(this);
     this._tags = [];
 };
 inherits(TagWarningBox, WrappedElement);
 
-TagWarningBox.prototype.createDom = function(){
+TagWarningBox.prototype.createDom = function() {
     this._element = this.makeElement('div');
     this._element.css('display', 'block');
     this._element.css('margin', '0 0 13px 2px');
@@ -274,28 +274,28 @@ TagWarningBox.prototype.createDom = function(){
     this._element.hide();
 };
 
-TagWarningBox.prototype.clear = function(){
+TagWarningBox.prototype.clear = function() {
     this._tags = [];
-    if (this._tag_container){
+    if (this._tag_container) {
         this._tag_container.empty();
     }
     this._warning.hide();
     this._element.hide();
 };
 
-TagWarningBox.prototype.addTag = function(tag_name){
-   var tag = new Tag();
-   tag.setName(tag_name);
-   tag.setLinkable(false);
-   tag.setDeletable(false);
-   var elem = this.getElement();
-   this._tag_container.append(tag.getElement());
-   this._tag_container.css('display', 'block');
-   this._tags.push(tag);
-   elem.show();
+TagWarningBox.prototype.addTag = function(tag_name) {
+    var tag = new Tag();
+    tag.setName(tag_name);
+    tag.setLinkable(false);
+    tag.setDeletable(false);
+    var elem = this.getElement();
+    this._tag_container.append(tag.getElement());
+    this._tag_container.css('display', 'block');
+    this._tags.push(tag);
+    elem.show();
 };
 
-TagWarningBox.prototype.showWarning = function(){
+TagWarningBox.prototype.showWarning = function() {
     this._warning.html(
         ngettext(
             'Sorry, this tag does not exist',
@@ -306,62 +306,6 @@ TagWarningBox.prototype.showWarning = function(){
     this._warning.show();
 };
 
-/**
- * @constructor
- * tool tip to be shown on top of the search input
- */
-var InputToolTip = function() {
-    WrappedElement.call(this);
-    this._promptText = gettext('search or ask your question');
-};
-inherits(InputToolTip, WrappedElement);
-
-InputToolTip.prototype.show = function() {
-    this._element.removeClass('dimmed');
-    this._element.show();
-};
-
-InputToolTip.prototype.hide = function() {
-    this._element.removeClass('dimmed');
-    this._element.hide();
-};
-
-InputToolTip.prototype.dim = function() {
-    this._element.addClass('dimmed');
-};
-
-InputToolTip.prototype.setPromptText = function(text) {
-    this._promptText = text;
-};
-
-InputToolTip.prototype.setClickHandler = function(handler) {
-    this._clickHandler = handler;
-};
-
-InputToolTip.prototype.createDom = function() {
-    var element = this.makeElement('div');
-    this._element = element;
-    element.addClass('input-tool-tip');
-    //element.html(this._promptText);
-    this.decorate(element);
-};
-
-InputToolTip.prototype.decorate = function(element) {
-    this._element = element;
-    var handler = this._clickHandler;
-    var me = this;
-    element.click(function() { 
-        handler();
-        me.dim();
-        return false;
-    });
-    $(document).click(function() {
-        if (element.css('display') === 'block') {
-            element.removeClass('dimmed');
-        }
-    });
-};
-    
 
 /**
  * @constructor
@@ -373,7 +317,7 @@ var FullTextSearch = function() {
     WrappedElement.call(this);
     this._running = false;
     this._baseUrl = askbot['urls']['questions'];
-    this._q_list_sel = 'question-list';//id of question listing div
+    this._q_list_sel = 'question-list'; //id of question listing div
     /** @todo: the questions/ needs translation... */
     this._searchUrl = '/scope:all/sort:activity-desc/page:1/'
     this._askButtonEnabled = true;
@@ -409,13 +353,13 @@ FullTextSearch.prototype.getSearchUrl = function() {
     return this._searchUrl;
 };
 
-FullTextSearch.prototype.renderTagWarning = function(tag_list){
-    if ( !tag_list ) {
+FullTextSearch.prototype.renderTagWarning = function(tag_list) {
+    if (!tag_list) {
         return;
     }
     var tagWarningBox = this._tag_warning_box;
     tagWarningBox.clear();
-    $.each(tag_list, function(idx, tag_name){
+    $.each(tag_list, function(idx, tag_name) {
         tagWarningBox.addTag(tag_name);
     });
     tagWarningBox.showWarning();
@@ -434,7 +378,7 @@ FullTextSearch.prototype.runTagSearch = function() {
     $.ajax({
         url: url,
         dataType: 'json',
-        success: function(data, text_status, xhr){
+        success: function(data, text_status, xhr) {
             me.renderFullTextSearchResult(data, text_status, xhr);
             $('#ab-tag-search').val('');
         },
@@ -443,9 +387,12 @@ FullTextSearch.prototype.runTagSearch = function() {
 };
 
 FullTextSearch.prototype.updateHistory = function(url) {
-    var context = { state:1, rand:Math.random() };
-    History.pushState( context, "Questions", url );
-    setTimeout(function(){
+    var context = {
+        state: 1,
+        rand: Math.random()
+    };
+    History.pushState(context, "Questions", url);
+    setTimeout(function() {
             /* HACK: For some weird reson, sometimes 
              * overrides the above pushState so we re-aplly it
              * This might be caused by some other JS plugin.
@@ -460,7 +407,7 @@ FullTextSearch.prototype.updateHistory = function(url) {
 FullTextSearch.prototype.activateTagSearchInput = function() {
     //the autocomplete is set up in tag_selector.js
     var button = $('#ab-tag-search-add');
-    if (button.length === 0){//may be absent
+    if (button.length === 0) { //may be absent
         return;
     }
     var me = this;
@@ -471,29 +418,35 @@ FullTextSearch.prototype.activateTagSearchInput = function() {
         matchInside: true,
         maxCacheLength: 100,
         maxItemsToShow: 20,
-        onItemSelect: function(){ me.runTagSearch(); },
+        onItemSelect: function() {
+            me.runTagSearch();
+        },
         delay: 10
     });
     ac.decorate($('#ab-tag-search'));
     setupButtonEventHandlers(
         button,
-        function() { me.runTagSearch() }
+        function() {
+            me.runTagSearch()
+        }
     );
 };
 
 FullTextSearch.prototype.sendTitleSearchQuery = function(query_text) {
     this.isRunning(true);
     this._prevText = query_text;
-    var data = {query_text: query_text};
+    var data = {
+        query_text: query_text
+    };
     var me = this;
     $.ajax({
         url: askbot['urls']['apiGetQuestions'],
         data: data,
         dataType: 'json',
-        success: function(data, text_status, xhr){
+        success: function(data, text_status, xhr) {
             me.renderTitleSearchResult(data, text_status, xhr);
         },
-        complete: function(){
+        complete: function() {
             me.isRunning(false);
             me.evalTitleSearchQuery();
         },
@@ -506,14 +459,14 @@ FullTextSearch.prototype.sendFullTextSearchQuery = function(query_text) {
     this.isRunning(true);
     var searchUrl = this.getSearchUrl();
     var prevText = this._prevText;
-    if(!prevText && query_text && askbot['settings']['showSortByRelevance']) {
+    if (!prevText && query_text && askbot['settings']['showSortByRelevance']) {
         /* If there was no query but there is some
          * query now - and we support relevance search
          * - then switch to it
          */
         searchUrl = QSutils.patch_query_string(
-                        searchUrl, 'sort:relevance-desc'
-                    );
+            searchUrl, 'sort:relevance-desc'
+        );
     }
     this._prevText = this.updateQueryString(query_text);
 
@@ -524,10 +477,10 @@ FullTextSearch.prototype.sendFullTextSearchQuery = function(query_text) {
     $.ajax({
         url: url,
         dataType: 'json',
-        success: function(data, text_status, xhr){
+        success: function(data, text_status, xhr) {
             me.renderFullTextSearchResult(data, text_status, xhr);
         },
-        complete: function(){
+        complete: function() {
             me.isRunning(false);
         },
         cache: false
@@ -536,7 +489,7 @@ FullTextSearch.prototype.sendFullTextSearchQuery = function(query_text) {
 };
 
 FullTextSearch.prototype.refresh = function() {
-    this.sendFullTextSearchQuery();/* used for tag search, maybe not necessary */
+    this.sendFullTextSearchQuery(); /* used for tag search, maybe not necessary */
 };
 
 FullTextSearch.prototype.getSearchQuery = function() {
@@ -565,7 +518,7 @@ FullTextSearch.prototype.renderFullTextSearchResult = function(data) {
     $('#pager').toggle(data['paginator'] !== '').html(data['paginator']);
     $('#questionCount').html(data['question_counter']);
     this.renderSearchTags(data['query_data']['tags'], data['query_string']);
-    if(data['faces'].length > 0) {
+    if (data['faces'].length > 0) {
         $('#contrib-users > a').remove();
         $('#contrib-users').append(data['faces'].join(''));
     }
@@ -576,7 +529,7 @@ FullTextSearch.prototype.renderFullTextSearchResult = function(data) {
         data['query_data']['sort_order'],
         data['query_string']
     );
-    if(data['feed_url']){
+    if (data['feed_url']) {
         // Change RSS URL
         $("#ContentLeft a.rss:first").attr("href", data['feed_url']);
     }
@@ -609,17 +562,17 @@ FullTextSearch.prototype.renderFullTextSearchResult = function(data) {
         //show new div with a fadeIn effect
         old_list.remove();
         new_list.attr('id', q_list_sel);
-        new_list.fadeIn(400);            
+        new_list.fadeIn(400);
     });
 };
 
 FullTextSearch.prototype.evalTitleSearchQuery = function() {
     var cur_query = this.getSearchQuery();
     var prevText = this._prevText;
-    if (cur_query !== prevText && this.isRunning() === false){
-        if (cur_query.length >= askbot['settings']['minSearchWordLength']){
+    if (cur_query !== prevText && this.isRunning() === false) {
+        if (cur_query.length >= askbot['settings']['minSearchWordLength']) {
             this.sendTitleSearchQuery(cur_query);
-        } else if (cur_query.length === 0){
+        } else if (cur_query.length === 0) {
             this.reset();
         }
     }
@@ -631,12 +584,11 @@ FullTextSearch.prototype.reset = function() {
     this._element.val('');
     this._element.focus();
     this._xButton.hide();
-    this._toolTip.show();
 };
 
 FullTextSearch.prototype.refreshXButton = function() {
-    if(this.getSearchQuery().length > 0){
-        if (this._query.hasClass('searchInput')){
+    if (this.getSearchQuery().length > 0) {
+        if (this._query.hasClass('searchInput')) {
             $('#searchBar').addClass('cancelable');
             this._xButton.show();
         }
@@ -653,17 +605,17 @@ FullTextSearch.prototype.updateQueryString = function(query_text) {
     var newUrl = QSutils.patch_query_string(
         this._searchUrl,
         'query:' + encodeURIComponent(query_text),
-        query_text === ''   // remove if empty
+        query_text === '' // remove if empty
     );
     this.setSearchUrl(newUrl);
     return query_text;
 };
 
-FullTextSearch.prototype.renderRelatedTags = function(tags, query_string){
+FullTextSearch.prototype.renderRelatedTags = function(tags, query_string) {
     if (tags.length === 0) return;
 
     var html_list = [];
-    for (var i=0; i<tags.length; i++){
+    for (var i = 0; i < tags.length; i++) {
         var tag = new Tag();
         tag.setName(tags[i]['name']);
         tag.setDeletable(false);
@@ -679,23 +631,23 @@ FullTextSearch.prototype.renderRelatedTags = function(tags, query_string){
     $('#related-tags').html(html_list.join(''));
 };
 
-FullTextSearch.prototype.renderSearchTags = function(tags, query_string){
+FullTextSearch.prototype.renderSearchTags = function(tags, query_string) {
     var search_tags = $('#searchTags');
     search_tags.empty();
     var me = this;
-    if (tags.length === 0){
+    if (tags.length === 0) {
         $('#listSearchTags').hide();
-        $('#search-tips').hide();//wrong - if there are search users
+        $('#search-tips').hide(); //wrong - if there are search users
     } else {
         $('#listSearchTags').show();
         $('#search-tips').show();
-        $.each(tags, function(idx, tag_name){
+        $.each(tags, function(idx, tag_name) {
             var tag = new Tag();
             tag.setName(tag_name);
             tag.setLinkable(false);
             tag.setDeletable(true);
             tag.setDeleteHandler(
-                function(){
+                function() {
                     me.removeSearchTag(tag_name, query_string);
                 }
             );
@@ -704,7 +656,7 @@ FullTextSearch.prototype.renderSearchTags = function(tags, query_string){
     }
 };
 
-FullTextSearch.prototype.createRelevanceTab = function(query_string){
+FullTextSearch.prototype.createRelevanceTab = function(query_string) {
     var relevance_tab = $('<a></a>');
     href = this._baseUrl + QSutils.patch_query_string(query_string, 'sort:relevance-desc');
     relevance_tab.attr('href', href);
@@ -716,25 +668,25 @@ FullTextSearch.prototype.createRelevanceTab = function(query_string){
 };
 
 FullTextSearch.prototype.removeSearchTag = function(tag) {
-    var searchUrl = this.getSearchUrl()
+    var searchUrl = this.getSearchUrl();
     searchUrl = QSutils.remove_search_tag(searchUrl, tag);
     this.setSearchUrl(searchUrl);
     this.sendFullTextSearchQuery();
 };
 
-FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string){
+FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string) {
     var tabs = $('#sort_tabs > a');
     tabs.attr('class', 'off');
     var baseUrl = this._baseUrl;
-    tabs.each(function(index, element){
+    tabs.each(function(index, element) {
         var tab = $(element);
-        if ( tab.attr('id') ) {
-            var tab_name = tab.attr('id').replace(/^by_/,'');
-            if (tab_name in askbot['data']['sortButtonData']){
+        if (tab.attr('id')) {
+            var tab_name = tab.attr('id').replace(/^by_/, '');
+            if (tab_name in askbot['data']['sortButtonData']) {
                 href = baseUrl + QSutils.patch_query_string(
-                                        query_string,
-                                        'sort:' + tab_name + '-desc'
-                                    );
+                    query_string,
+                    'sort:' + tab_name + '-desc'
+                );
                 tab.attr('href', href);
                 tab.attr(
                     'title',
@@ -748,9 +700,9 @@ FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string){
     });
     var bits = sort_method.split('-', 2);
     var name = bits[0];
-    var sense = bits[1];//sense of sort
-    var antisense = (sense == 'asc' ? 'desc':'asc');
-    var arrow = (sense == 'asc' ? ' &#9650;':' &#9660;');
+    var sense = bits[1]; //sense of sort
+    var antisense = (sense == 'asc' ? 'desc' : 'asc');
+    var arrow = (sense == 'asc' ? ' &#9650;' : ' &#9660;');
     var active_tab = $('#by_' + name);
     active_tab.attr('class', 'on');
     active_tab.attr(
@@ -763,18 +715,18 @@ FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string){
 };
 
 FullTextSearch.prototype.renderRelevanceSortTab = function(query_string) {
-    if (askbot['settings']['showSortByRelevance'] === false){
+    if (askbot['settings']['showSortByRelevance'] === false) {
         return;
     }
     var relevance_tab = $('#by_relevance');
     var prevText = this._prevText;
-    if (prevText && prevText.length > 0){
-        if (relevance_tab.length == 0){
+    if (prevText && prevText.length > 0) {
+        if (relevance_tab.length == 0) {
             relevance_tab = this.createRelevanceTab(query_string);
             $('#sort_tabs>span').after(relevance_tab);
         }
     } else {
-        if (relevance_tab.length > 0){
+        if (relevance_tab.length > 0) {
             relevance_tab.remove();
         }
     }
@@ -789,15 +741,6 @@ FullTextSearch.prototype.makeAskHandler = function() {
     };
 };
 
-FullTextSearch.prototype.updateToolTip = function() {
-    var query = this.getSearchQuery();
-    if (query === '') {
-        this._toolTip.show();
-    } else {
-        this._toolTip.hide();
-    }
-};
-
 FullTextSearch.prototype.setFullTextSearchEnabled = function(enabled) {
     this._fullTextSearchEnabled = enabled;
 };
@@ -807,21 +750,19 @@ FullTextSearch.prototype.getFullTextSearchEnabled = function() {
 };
 
 /**
- * keydown handler operates on the tooltip and the X button
+ * keydown handler operates on the X button
  * also opens and closes drop menu according to the min search word threshold
  * keyup is not good enough, because in that case
- * tooltip will be displayed with the input box simultaneously
  */
 FullTextSearch.prototype.makeKeyDownHandler = function() {
     var me = this;
-    var toolTip = this._toolTip;
     var xButton = this._xButton;
     var dropMenu = this._dropMenu;
     var formSubmitHandler = this.makeFormSubmitHandler();
-    return function(e) {//don't like the keyup delay to
+    return function(e) { //don't like the keyup delay to
         var keyCode = getKeyCode(e);
 
-        if (keyCode === 27) {//escape key
+        if (keyCode === 27) { //escape key
             if (dropMenu.isOpen() === false) {
                 me.reset();
                 return false;
@@ -836,16 +777,11 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
         }
 
         var query = me.getSearchQuery();
-        if (query.length === 0) {
-            if (keyCode !== 8 && keyCode !== 48) {//del and backspace
-                toolTip.hide();//hide tooltip
-            }
-        } else {
-            me.updateToolTip();
+        if (query.length !== 0) {
             me.refreshXButton();
             var minQueryLength = askbot['settings']['minSearchWordLength'];
             if (query.length === minQueryLength) {
-                if (keyCode !== 8 && keyCode !== 48) {//del and backspace
+                if (keyCode !== 8 && keyCode !== 48) { //del and backspace
                     /* we get here if we were expanding the query
                        past the minimum length to trigger search */
                     dropMenu.show();
@@ -874,24 +810,11 @@ FullTextSearch.prototype.makeFormSubmitHandler = function() {
 };
 
 FullTextSearch.prototype.decorate = function(element) {
-    this._element = element;/* this is a bit artificial we don't use _element */
+    this._element = element; /* this is a bit artificial we don't use _element */
     this._query = element;
-    this._xButton = $('input[name=reset_query]');
+    this._xButton = $('div.cancelSearchBtn');
     this._prevText = this.getSearchQuery();
     this._tag_warning_box = new TagWarningBox();
-
-    var toolTip = new InputToolTip();
-    toolTip.setClickHandler(function() {
-        element.focus();
-    });
-
-    element.after(toolTip.getElement());
-
-    //below is called after getElement, b/c element must be defined
-    if (this._prevText !== '') {
-        toolTip.hide();//hide if search query is not empty
-    }
-    this._toolTip = toolTip;
 
     var dropMenu = new SearchDropMenu();
     dropMenu.setSearchWidget(this);
@@ -900,8 +823,12 @@ FullTextSearch.prototype.decorate = function(element) {
     this._dropMenu = dropMenu;
     element.parent().append(this._dropMenu.getElement());
 
-    $(element).click(function(e) { return false });
-    $(document).click(function() { dropMenu.reset(); });
+    $(element).click(function(e) {
+        return false
+    });
+    $(document).click(function() {
+        dropMenu.reset();
+    });
 
     //the tag search input is optional in askbot
     $('#ab-tag-search').parent().before(
@@ -912,19 +839,19 @@ FullTextSearch.prototype.decorate = function(element) {
     var search_tags = $('#searchTags .tag-left');
     var searchUrl = this.getSearchUrl();
     var me = this;
-    $.each(search_tags, function(idx, element){
+    $.each(search_tags, function(idx, element) {
         var tag = new Tag();
         tag.decorate($(element));
         //todo: setDeleteHandler and setHandler
         //must work after decorate & must have getName
         tag.setDeleteHandler(
-            function(){
+            function() {
                 me.removeSearchTag(tag.getName(), searchUrl);
             }
         );
     });
     // enable x button (search reset)
-    this._xButton.click(function () {
+    this._xButton.click(function() {
         /* wrapped in closure because it's not yet defined at this point */
         me.reset();
     });
@@ -933,13 +860,14 @@ FullTextSearch.prototype.decorate = function(element) {
     // enable query box
     var main_page_eval_handle;
     this._query.keydown(this.makeKeyDownHandler());
-    this._query.keyup(function(e){
-        me.updateToolTip();
+    this._query.keyup(function(e) {
         me.refreshXButton();
-        if (me.isRunning() === false){
+        if (me.isRunning() === false) {
             clearTimeout(main_page_eval_handle);
             main_page_eval_handle = setTimeout(
-                function() { me.evalTitleSearchQuery() },
+                function() {
+                    me.evalTitleSearchQuery()
+                },
                 400
             );
         }
@@ -1014,13 +942,11 @@ TagSearch.prototype.runSearch = function() {
                 }
             }
         },
-        error: function() { me.setIsRunning(false); }
+        error: function() {
+            me.setIsRunning(false);
+        }
     });
     me.setIsRunning(true);
-};
-
-TagSearch.prototype.getToolTip = function() {
-    return this._toolTip;
 };
 
 TagSearch.prototype.makeKeyUpHandler = function() {
@@ -1039,20 +965,16 @@ TagSearch.prototype.makeKeyDownHandler = function() {
     return function(evt) {
         var query = me.getQuery();
         var keyCode = getKeyCode(evt);
-        var toolTip = me.getToolTip();
-        if (keyCode === 27) {//escape
+        if (keyCode === 27) { //escape
             me.setQuery('');
-            toolTip.show();
             xButton.hide();
             return;
         }
-        if (keyCode === 8 || keyCode === 48) {//del or backspace
+        if (keyCode === 8 || keyCode === 48) { //del or backspace
             if (query.length === 1) {
-                toolTip.show();
                 xButton.hide();
             }
         } else {
-            toolTip.hide();
             xButton.show();
         }
     };
@@ -1061,7 +983,6 @@ TagSearch.prototype.makeKeyDownHandler = function() {
 TagSearch.prototype.reset = function() {
     if (this.getIsRunning() === false) {
         this.setQuery('');
-        this._toolTip.show();
         this._xButton.hide();
         this.runSearch();
         this._element.focus();
@@ -1071,14 +992,16 @@ TagSearch.prototype.reset = function() {
 TagSearch.prototype.decorate = function(element) {
     this._element = element;
     this._contentBox = $('#ContentLeft');
-    this._xButton = $('input[name=reset_query]');
+    this._xButton = $('div.cancelSearchBtn');
     element.keyup(this.makeKeyUpHandler());
     element.keydown(this.makeKeyDownHandler());
 
     var me = this;
-    this._xButton.click(function(){ me.reset() });
+    this._xButton.click(function() {
+        me.reset()
+    });
 };
 
-$("input.searchInput").attr("placeholder", gettext('search or ask your question'));
-$("input.search-tag").attr("placeholder", gettext('search for tags'));
-$("input.search-user").attr("placeholder", gettext('search for users'));
+$('input.searchInput').attr('placeholder', gettext('search or ask your question'));
+$('input.search-tag').attr('placeholder', gettext('search for tags'));
+$('input.search-user').attr('placeholder', gettext('search for users'));

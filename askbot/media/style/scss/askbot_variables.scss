@@ -19,6 +19,13 @@ $info-text-dark: #525252;
 $header-height: 65px;
 $sec-header-height: 57px;
 $width-content-right: 200px;
+
+//Variables for fonts
+
+$body-font: Arial;
+$main-font: Open Sans Condensed, Arial, sans-serif;
+$secondary-font:Arial;
+
 //
 // FONT-AWESOME VARIABLES
 //
@@ -39,9 +46,19 @@ $topbar-height: $header-height;
 $tabbar-bg: $topbar-bg;
 $tabbar-height: rem-calc($topbar-height);
 $tabbar-line-height: $tabbar-height;
+$tabbar-menu-icon-color: #d0e296;
 
 // Foundation grid
-$row-width: 960px;
+//$row-width: 960px;
+
+// Media Query Ranges
+$small-range: (0em, 40em);
+$medium-range: (40.063em, 60em);
+$large-range: (60.063em, 80em);
+$xlarge-range: (80.063em, 120em);
+$medium-down: "screen and (max-width:#{lower-bound($medium-range)})";
+$large-down: "screen and (max-width:#{lower-bound($large-range)})";
+$xlarge-down: "screen and (max-width:#{lower-bound($xlarge-range)})";
 
 //Variables for fonts
 $body-font: Arial;
