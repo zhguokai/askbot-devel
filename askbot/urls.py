@@ -220,6 +220,11 @@ urlpatterns = patterns('',
         name='reopen'
     ),
     service_url(
+        r'^%s(?P<id>\d+)/make-private$' % _('questions/'),
+        views.commands.thread_make_private,
+        name='thread_make_private'
+    ),
+    service_url(
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')),
         views.writers.answer,
         name='answer'
