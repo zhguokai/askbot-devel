@@ -1413,19 +1413,6 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
             #takes care of 8 possibilities - first row of the table
             return False
 
-    def clean(self):
-        """Purpose of this function is to determine whether
-        it is ok to apply edit anonymously in the synthetic
-        field edit_anonymously. It relies on correct cleaning
-        if the "reveal_identity" field
-        """
-        super(EditQuestionForm, self).clean()
-        reveal_identity = self.cleaned_data.get('reveal_identity', False)
-        stay_anonymous = False
-        if reveal_identity is False and self.can_stay_anonymous():
-            stay_anonymous = True
-        self.cleaned_data['stay_anonymous'] = stay_anonymous
-        return self.cleaned_data
 
 class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     summary = SummaryField()
