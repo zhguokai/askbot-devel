@@ -476,11 +476,11 @@ def edit_question(request, id):
                 revision_form = revision_form_class(question, revision)
                 if form.is_valid():
                     if form.has_changed():
-                        if form.cleaned_data['reveal_identity']:
-                            question.thread.remove_author_anonymity()
+                        
+                        reveal_identity = form.cleaned_data['reveal_identity']
 
-                        is_anon_edit = form.cleaned_data['stay_anonymous']
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
+                        #post privately applies to the sharing groups, not anonymity
                         post_privately = form.cleaned_data['post_privately']
                         suppress_email = form.cleaned_data['suppress_email']
 
@@ -493,13 +493,17 @@ def edit_question(request, id):
                             revision_comment = form.cleaned_data['summary'],
                             tags = form.cleaned_data['tags'],
                             wiki = is_wiki,
-                            edit_anonymously = is_anon_edit,
+                            edit_anonymously = form.can_stay_anonymous() and not reveal_identity,
                             is_private = post_privately,
                             suppress_email=suppress_email
                         )
 
                         if 'language' in form.cleaned_data:
                             question.thread.set_language_code(form.cleaned_data['language'])
+
+                        if reveal_identity:
+                            #applies to whole thread!!!
+                            question.thread.remove_author_anonymity()
 
                         signals.question_edited.send(None,
                             question=question,

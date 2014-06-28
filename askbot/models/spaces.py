@@ -102,7 +102,7 @@ class Space(models.Model):
             if spaces_settings:
                 space_settings = spaces_settings.get(self.id, None)
                 if space_settings:
-                    if len(space_settings) > 0:
+                    if len(space_settings) > 1:
                         return space_settings[1]
         return None
 
