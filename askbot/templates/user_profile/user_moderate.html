@@ -8,16 +8,18 @@
     <h3>{% trans username=view_user.username|escape, status=view_user.get_status_display() %}{{username}}'s current status is "{{status}}"{% endtrans %}
     </h3>
     {% if user_status_changed %}
-        <p class="action-status"><span>{% trans %}User status changed{% endtrans %}</span></p>
+        <p class="action-status"><span>{{ user_status_changed_message }}</span></p>
     {% endif %}
     <form method="post">{% csrf_token %}
         <input type="hidden" name="sort" value="moderate"/>
         <table class="form-as-table">
         {{ change_user_status_form.as_table() }}
         </table>
-        <p id="id_user_status_info">
+        <p id="id_user_status_info"></p>
+        <p>
+            <input type="submit" name="change_status" value="{% trans %}Change status{% endtrans %}" />
+            <input type="submit" name="hard_block" value="{% trans %}Block user and delete all content{% endtrans %}" />
         </p>
-        <input type="submit" name="change_status" value="{% trans %}Save{% endtrans %}" />
     </form>
 {% endif %}
 <h3>
@@ -75,5 +77,9 @@
                 $('#id_user_status_info').hide('slow');
             }
         })
+        $('input[name="hard_block"]').click(function() {
+            $('input[name="delete_content"]').val('true');
+            $('select[name="user_status"]').val('b');
+        });
     </script>
 {% endblock %}

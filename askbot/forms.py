@@ -675,6 +675,7 @@ class ChangeUserStatusForm(forms.Form):
     """
 
     user_status = forms.ChoiceField(label=_('Change status to'))
+    delete_content = forms.CharField(widget=forms.HiddenInput, initial='false')
 
     def __init__(self, *arg, **kwarg):
 
@@ -710,6 +711,15 @@ class ChangeUserStatusForm(forms.Form):
         self.fields['user_status'].default = 'select'
         self.moderator = moderator
         self.subject = subject
+
+    def clean_delete_content(self):
+        delete = self.cleaned_data.get('delete_content', False)
+        if delete == 'true':
+            delete = True
+        else:
+            delete = False
+        self.cleaned_data['delete_content'] = delete
+        return self.cleaned_data['delete_content']
 
     def clean(self):
         #if moderator is looking at own profile - do not
@@ -751,6 +761,10 @@ class ChangeUserStatusForm(forms.Form):
                         'please make a meaningful selection.'
                     ) % {'username': self.subject.username}
                 raise forms.ValidationError(msg)
+
+            if user_status not in ('s', 'b'):#not blocked or suspended
+                if self.cleaned_data['delete_content'] == True:
+                    self.cleaned_data['delete_content'] = False
 
         return self.cleaned_data
 
