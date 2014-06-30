@@ -45,7 +45,6 @@ from askbot.skins.loaders import render_text_into_skin
 from askbot.models.tag import get_tags_by_names
 
 
-
 @csrf.csrf_exempt
 def manage_inbox(request):
     """delete, mark as new or seen user's

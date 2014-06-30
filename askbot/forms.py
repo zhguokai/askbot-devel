@@ -1157,7 +1157,7 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         return len(stripped_text) > 0
 
     #People can override this function to save their additional fields to db
-    def save(self, question, user):
+    def save(self, question, user, ip_addr=None):
         wiki = self.cleaned_data['wiki']
         text = self.cleaned_data['text']
         is_private = self.cleaned_data['post_privately']        
@@ -1168,6 +1168,7 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
             wiki = wiki,
             is_private = is_private,
             timestamp = datetime.datetime.now(),
+            ip_addr=ip_addr
         )
 
 class VoteForm(forms.Form):

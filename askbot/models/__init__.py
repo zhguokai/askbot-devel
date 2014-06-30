@@ -557,6 +557,12 @@ def get_or_create_anonymous_user():
         user.save()
     return user
 
+def user_needs_moderation(self):
+    """True, if user needs moderation"""
+    if askbot_settings.ENABLE_CONTENT_MODERATION:
+        return not (self.is_administrator_or_moderator() or self.is_approved())
+    return False
+
 def user_notify_users(
     self, notification_type=None, recipients=None, content_object=None
 ):
@@ -1199,10 +1205,11 @@ def user_get_unused_votes_today(self):
 
 def user_post_comment(
                     self,
-                    parent_post = None,
-                    body_text = None,
-                    timestamp = None,
-                    by_email = False
+                    parent_post=None,
+                    body_text=None,
+                    timestamp=None,
+                    by_email=False,
+                    ip_addr=None,
                 ):
     """post a comment on behalf of the user
     to parent_post
@@ -1218,10 +1225,11 @@ def user_post_comment(
     self.assert_can_post_comment(parent_post = parent_post)
 
     comment = parent_post.add_comment(
-                    user = self,
-                    comment = body_text,
-                    added_at = timestamp,
-                    by_email = by_email
+                    user=self,
+                    comment=body_text,
+                    added_at=timestamp,
+                    by_email=by_email,
+                    ip_addr=ip_addr,
                 )
     comment.add_to_groups([self.get_personal_group()])
 
@@ -1661,17 +1669,18 @@ def user_restore_post(
 
 def user_post_question(
                     self,
-                    title = None,
-                    body_text = '',
-                    tags = None,
-                    wiki = False,
-                    is_anonymous = False,
-                    is_private = False,
-                    group_id = None,
-                    timestamp = None,
-                    by_email = False,
-                    email_address = None,
-                    language = None
+                    title=None,
+                    body_text='',
+                    tags=None,
+                    wiki=False,
+                    is_anonymous=False,
+                    is_private=False,
+                    group_id=None,
+                    timestamp=None,
+                    by_email=False,
+                    email_address=None,
+                    language=None,
+                    ip_addr=None,
                 ):
     """makes an assertion whether user can post the question
     then posts it and returns the question object"""
@@ -1702,7 +1711,8 @@ def user_post_question(
                                     group_id=group_id,
                                     by_email=by_email,
                                     email_address=email_address,
-                                    language=language
+                                    language=language,
+                                    ip_addr=ip_addr
                                 )
     question = thread._question_post()
     if question.author != self:
@@ -1722,7 +1732,8 @@ def user_edit_comment(
                     body_text=None,
                     timestamp=None,
                     by_email=False,
-                    suppress_email=False
+                    suppress_email=False,
+                    ip_addr=None,
                 ):
     """apply edit to a comment, the method does not
     change the comments timestamp and no signals are sent
@@ -1735,7 +1746,8 @@ def user_edit_comment(
                         edited_at=timestamp,
                         edited_by=self,
                         by_email=by_email,
-                        suppress_email=suppress_email
+                        suppress_email=suppress_email,
+                        ip_addr=ip_addr,
                     )
     comment_post.thread.invalidate_cached_data()
 
@@ -1747,6 +1759,7 @@ def user_edit_post(self,
                 by_email=False,
                 is_private=False,
                 suppress_email=False,
+                ip_addr=None
             ):
     """a simple method that edits post body
     todo: unify it in the style of just a generic post
@@ -1758,7 +1771,8 @@ def user_edit_post(self,
                 comment_post=post,
                 body_text=body_text,
                 by_email=by_email,
-                suppress_email=suppress_email
+                suppress_email=suppress_email,
+                ip_addr=ip_addr
             )
     elif post.post_type == 'answer':
         self.edit_answer(
@@ -1767,7 +1781,8 @@ def user_edit_post(self,
             timestamp=timestamp,
             revision_comment=revision_comment,
             by_email=by_email,
-            suppress_email=suppress_email
+            suppress_email=suppress_email,
+            ip_addr=ip_addr
         )
     elif post.post_type == 'question':
         self.edit_question(
@@ -1778,6 +1793,7 @@ def user_edit_post(self,
             by_email=by_email,
             is_private=is_private,
             suppress_email=suppress_email,
+            ip_addr=ip_addr
         )
     elif post.post_type == 'tag_wiki':
         post.apply_edit(
@@ -1787,7 +1803,8 @@ def user_edit_post(self,
             #todo: summary name clash in question and question revision
             comment=revision_comment,
             wiki=True,
-            by_email=False
+            by_email=False,
+            ip_addr=ip_addr,
         )
     else:
         raise NotImplementedError()
@@ -1806,24 +1823,26 @@ def user_edit_question(
                 timestamp=None,
                 force=False,#if True - bypass the assert
                 by_email=False,
-                suppress_email=False
+                suppress_email=False,
+                ip_addr=None,
             ):
     if force == False:
         self.assert_can_edit_question(question)
 
     question.apply_edit(
-        edited_at = timestamp,
-        edited_by = self,
-        title = title,
-        text = body_text,
+        edited_at=timestamp,
+        edited_by=self,
+        title=title,
+        text=body_text,
         #todo: summary name clash in question and question revision
-        comment = revision_comment,
-        tags = tags,
-        wiki = wiki,
-        edit_anonymously = edit_anonymously,
-        is_private = is_private,
-        by_email = by_email,
-        suppress_email=suppress_email
+        comment=revision_comment,
+        tags=tags,
+        wiki=wiki,
+        edit_anonymously=edit_anonymously,
+        is_private=is_private,
+        by_email=by_email,
+        suppress_email=suppress_email,
+        ip_addr=ip_addr
     )
 
     question.thread.invalidate_cached_data()
@@ -1847,6 +1866,7 @@ def user_edit_answer(
                     force=False,#if True - bypass the assert
                     by_email=False,
                     suppress_email=False,
+                    ip_addr=None,
                 ):
     if force == False:
         self.assert_can_edit_answer(answer)
@@ -1859,7 +1879,8 @@ def user_edit_answer(
         wiki=wiki,
         is_private=is_private,
         by_email=by_email,
-        suppress_email=suppress_email
+        suppress_email=suppress_email,
+        ip_addr=ip_addr,
     )
 
     answer.thread.invalidate_cached_data()
@@ -1914,13 +1935,14 @@ def user_edit_post_reject_reason(
 
 def user_post_answer(
                     self,
-                    question = None,
-                    body_text = None,
-                    follow = False,
-                    wiki = False,
-                    is_private = False,
-                    timestamp = None,
-                    by_email = False
+                    question=None,
+                    body_text=None,
+                    follow=False,
+                    wiki=False,
+                    is_private=False,
+                    timestamp=None,
+                    by_email=False,
+                    ip_addr=None,
                 ):
 
     #todo: move this to assertion - user_assert_can_post_answer
@@ -1982,14 +2004,15 @@ def user_post_answer(
 #        wiki = wiki
 #    )
     answer_post = Post.objects.create_new_answer(
-        thread = question.thread,
-        author = self,
-        text = body_text,
-        added_at = timestamp,
-        email_notify = follow,
-        wiki = wiki,
-        is_private = is_private,
-        by_email = by_email
+        thread=question.thread,
+        author=self,
+        text=body_text,
+        added_at=timestamp,
+        email_notify=follow,
+        wiki=wiki,
+        is_private=is_private,
+        by_email=by_email,
+        ip_addr=ip_addr,
     )
     #add to the answerer's group
     answer_post.add_to_groups([self.get_personal_group()])
@@ -2695,9 +2718,13 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
     post_revision.approved_by = user
     post_revision.approved_at = timestamp
 
+    post = post_revision.post
+
+    assert(post_revision.revision == 0)
+    post_revision.revision = post.get_latest_revision_number() + 1
+
     post_revision.save()
 
-    post = post_revision.post
     post.approved = True
     post.save()
 
@@ -3035,6 +3062,7 @@ User.add_to_class(
     user_update_wildcard_tag_selections
 )
 User.add_to_class('approve_post_revision', user_approve_post_revision)
+User.add_to_class('needs_moderation', user_needs_moderation)
 User.add_to_class('notify_users', user_notify_users)
 User.add_to_class('is_read_only', user_is_read_only)
 

@@ -153,6 +153,7 @@ class ThreadManager(BaseQuerySetManager):
                 by_email=False,
                 email_address=None,
                 language=None,
+                ip_addr=None,
             ):
         """creates new thread"""
         # TODO: Some of this code will go to Post.objects.create_new
@@ -204,7 +205,8 @@ class ThreadManager(BaseQuerySetManager):
             comment=unicode(const.POST_STATUS['default_version']),
             revised_at=added_at,
             by_email=by_email,
-            email_address=email_address
+            email_address=email_address,
+            ip_addr=ip_addr
         )
 
         author_group = author.get_personal_group()

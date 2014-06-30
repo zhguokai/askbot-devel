@@ -1088,7 +1088,7 @@ class PostApprovalTests(utils.AskbotTestCase):
         self.assertEquals(outbox[0].recipients(), [self.u1.email])
 
     def test_moderated_question_answerable_approval_notification(self):
-        u1 = self.create_user('user1', status = 'a')
+        u1 = self.create_user('user1', status = 'w')
         question = self.post_question(user = u1, by_email = True)
 
         self.assertEquals(question.approved, False)

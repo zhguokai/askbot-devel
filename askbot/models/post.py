@@ -194,12 +194,13 @@ class PostManager(BaseQuerySetManager):
                 author,
                 added_at,
                 text,
-                parent = None,
-                wiki = False,
-                is_private = False,
-                email_notify = False,
-                post_type = None,
-                by_email = False
+                parent=None,
+                wiki=False,
+                is_private=False,
+                email_notify=False,
+                post_type=None,
+                by_email=False,
+                ip_addr=None,
             ):
         # TODO: Some of this code will go to Post.objects.create_new
 
@@ -262,20 +263,22 @@ class PostManager(BaseQuerySetManager):
                         author,
                         added_at,
                         text,
-                        wiki = False,
-                        is_private = False,
-                        email_notify = False,
-                        by_email = False
+                        wiki=False,
+                        is_private=False,
+                        email_notify=False,
+                        by_email=False,
+                        ip_addr=None,
                     ):
         answer = self.create_new(
                             thread,
                             author,
                             added_at,
                             text,
-                            wiki = wiki,
-                            is_private = is_private,
-                            post_type = 'answer',
-                            by_email = by_email
+                            wiki=wiki,
+                            is_private=is_private,
+                            post_type='answer',
+                            by_email=by_email,
+                            ip_addr=ip_addr
                         )
         #set notification/delete
         if email_notify:
@@ -792,8 +795,7 @@ class Post(models.Model):
         ``self.approved is False``
         """
         if askbot_settings.ENABLE_CONTENT_MODERATION:
-            if self.approved == False:
-                return False
+            return self.approved
         return True
 
     def needs_moderation(self):
@@ -1031,7 +1033,9 @@ class Post(models.Model):
                 comment=None,
                 user=None,
                 added_at=None,
-                by_email = False):
+                by_email=False,
+                ip_addr=None,
+            ):
 
         if added_at is None:
             added_at = datetime.datetime.now()
@@ -1043,9 +1047,10 @@ class Post(models.Model):
                                                 user,
                                                 added_at,
                                                 comment,
-                                                parent = self,
-                                                post_type = 'comment',
-                                                by_email = by_email
+                                                parent=self,
+                                                post_type='comment',
+                                                by_email=by_email,
+                                                ip_addr=ip_addr,
                                             )
         self.comment_count = self.comment_count + 1
         self.save()
@@ -1428,10 +1433,13 @@ class Post(models.Model):
 
 
     def get_latest_revision(self):
-        return self.revisions.order_by('-revised_at')[0]
+        return self.revisions.order_by('-revision')[0]
 
     def get_latest_revision_number(self):
-        return self.get_latest_revision().revision
+        try:
+            return self.get_latest_revision().revision
+        except IndexError:
+            return 0
 
     def get_time_of_last_edit(self):
         if self.is_comment():
@@ -1738,7 +1746,8 @@ class Post(models.Model):
                     edit_anonymously=False,
                     is_private=False,
                     by_email=False,
-                    suppress_email=False
+                    suppress_email=False,
+                    ip_addr=None,
                 ):
         if text is None:
             text = self.get_latest_revision().text
@@ -1759,11 +1768,12 @@ class Post(models.Model):
 
         #must add revision before saving the answer
         self.add_revision(
-            author = edited_by,
-            revised_at = edited_at,
-            text = text,
-            comment = comment,
-            by_email = by_email
+            author=edited_by,
+            revised_at=edited_at,
+            text=text,
+            comment=comment,
+            by_email=by_email,
+            ip_addr=ip_addr,
         )
 
         parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
@@ -1791,6 +1801,7 @@ class Post(models.Model):
                         is_private=False,
                         by_email=False,
                         suppress_email=False,
+                        ip_addr=None,
                     ):
 
         ##it is important to do this before __apply_edit b/c of signals!!!
@@ -1808,18 +1819,28 @@ class Post(models.Model):
             wiki=wiki,
             by_email=by_email,
             is_private=is_private,
-            suppress_email=suppress_email
+            suppress_email=suppress_email,
+            ip_addr=ip_addr,
         )
 
         if edited_at is None:
             edited_at = datetime.datetime.now()
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
-    def _question__apply_edit(self, edited_at=None, edited_by=None, title=None,\
-                              text=None, comment=None, tags=None, wiki=False,\
-                              edit_anonymously=False, is_private=False,\
-                              by_email=False, suppress_email=False
-                            ):
+    def _question__apply_edit(
+                            self, 
+                            edited_at=None,
+                            edited_by=None,
+                            title=None,
+                            text=None, 
+                            comment=None, 
+                            tags=None, 
+                            wiki=False,
+                            edit_anonymously=False,
+                            is_private=False,
+                            by_email=False, suppress_email=False,
+                            ip_addr=None
+                        ):
 
         #todo: the thread editing should happen outside of this
         #method, then we'll be able to unify all the *__apply_edit
@@ -1860,7 +1881,8 @@ class Post(models.Model):
             edit_anonymously=edit_anonymously,
             is_private=is_private,
             by_email=by_email,
-            suppress_email=suppress_email
+            suppress_email=suppress_email,
+            ip_addr=ip_addr
         )
 
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
@@ -1880,53 +1902,42 @@ class Post(models.Model):
 
     def __add_revision(
                     self,
-                    author = None,
-                    revised_at = None,
-                    text = None,
-                    comment = None,
-                    by_email = False
+                    author=None,
+                    revised_at=None,
+                    text=None,
+                    comment=None,
+                    by_email=False,
+                    ip_addr=None
                 ):
         #todo: this may be identical to Question.add_revision
         if None in (author, revised_at, text):
             raise Exception('arguments author, revised_at and text are required')
-        rev_no = self.revisions.all().count() + 1
-        if comment in (None, ''):
-            if rev_no == 1:
-                comment = unicode(const.POST_STATUS['default_version'])
-            else:
-                comment = 'No.%s Revision' % rev_no
         return PostRevision.objects.create(
-            post = self,
-            author = author,
-            revised_at = revised_at,
-            text = text,
-            summary = comment,
-            revision = rev_no,
-            by_email = by_email
+            post=self,
+            author=author,
+            revised_at=revised_at,
+            text=text,
+            summary=comment,
+            by_email=by_email,
+            ip_addr=ip_addr
         )
 
     def _question__add_revision(
             self,
-            author = None,
-            is_anonymous = False,
-            text = None,
-            comment = None,
-            revised_at = None,
-            by_email = False,
-            email_address = None
+            author=None,
+            is_anonymous=False,
+            text=None,
+            comment=None,
+            revised_at=None,
+            by_email=False,
+            email_address=None,
+            ip_addr=None,
     ):
         if None in (author, text):
             raise Exception('author, text and comment are required arguments')
-        rev_no = self.revisions.all().count() + 1
-        if comment in (None, ''):
-            if rev_no == 1:
-                comment = unicode(const.POST_STATUS['default_version'])
-            else:
-                comment = 'No.%s Revision' % rev_no
 
         return PostRevision.objects.create(
             post=self,
-            revision=rev_no,
             title=self.thread.title,
             author=author,
             is_anonymous=is_anonymous,
@@ -1935,7 +1946,8 @@ class Post(models.Model):
             summary=unicode(comment),
             text=text,
             by_email=by_email,
-            email_address=email_address
+            email_address=email_address,
+            ip_addr=ip_addr
         )
 
     def add_revision(self, *kargs, **kwargs):
@@ -2089,9 +2101,41 @@ class Post(models.Model):
 
 
 class PostRevisionManager(models.Manager):
-    def create(self, *kargs, **kwargs):
-        revision = super(PostRevisionManager, self).create(*kargs, **kwargs)
-        revision.moderate_or_publish()
+    def create(self, *args, **kwargs):
+        #clean the "summary" field
+        kwargs.setdefault('summary', '')
+        if kwargs['summary'] is None:
+            kwargs['summary'] = ''
+
+        author = kwargs['author']
+
+        moderate_email = False
+        if kwargs.get('email') and kwargs.get('email'):
+            from askbot.models.reply_by_email import emailed_content_needs_moderation
+            moderate_email = emailed_content_needs_moderation(kwargs['email'])
+
+        #in the moderate_or_publish() we determine the revision number
+        #0 revision belongs to the moderation queue
+        if author.needs_moderation() or moderate_email:
+            kwargs['revision'] = 0
+            revision = super(PostRevisionManager, self).create(*args, **kwargs)
+            revision.place_on_moderation_queue()
+        else:
+            post = kwargs['post']
+            kwargs['revision'] = post.get_latest_revision_number() + 1
+            revision = super(PostRevisionManager, self).create(*args, **kwargs)
+
+            #set default summary
+            if revision.summary == '':
+                if revision.revision == 1:
+                    revision.summary = unicode(const.POST_STATUS['default_version'])
+                else:
+                    revision.summary = 'No.%s Revision' % revision.revision
+            revision.save()
+
+            from askbot.models import signals
+            signals.post_revision_published.send(None, revision=revision)
+
         return revision
 
 class PostRevision(models.Model):
@@ -2118,6 +2162,7 @@ class PostRevision(models.Model):
     title = models.CharField(max_length=300, blank=True, default='')
     tagnames = models.CharField(max_length=125, blank=True, default='')
     is_anonymous = models.BooleanField(default=False)
+    ip_addr = models.IPAddressField(max_length=21, default='0.0.0.0')
 
     objects = PostRevisionManager()
 
@@ -2129,53 +2174,47 @@ class PostRevision(models.Model):
         ordering = ('-revision',)
         app_label = 'askbot'
 
-    def needs_moderation(self):
-        """``True`` if post needs moderation"""
-        if askbot_settings.ENABLE_CONTENT_MODERATION:
-            #todo: needs a lot of details
-            if self.author.is_administrator_or_moderator():
-                return False
-            if self.approved:
-                return False
-
-            #if sent by email to group and group does not want moderation
-            if self.by_email and self.email_address:
-                group_name = self.email_address.split('@')[0]
-                from askbot.models.user import Group
-                try:
-                    group = Group.objects.get(name = group_name, deleted = False)
-                    return group.group.profile.moderate_email
-                except Group.DoesNotExist:
-                    pass
-            return True
-        return False
-
 
     def place_on_moderation_queue(self):
-        """If revision is the first one,
-        keeps the post invisible until the revision
-        is aprroved.
-        If the revision is an edit, will autoapprove
-        but will still add it to the moderation queue.
+        """Revision has number 0, which is 
+        reserved for the moderated revisions.
 
-        Eventually we might find a way to moderate every
-        edit as well."""
+        Flag Post.is_approved = False is used only
+        for posts that have only one revision - the 
+        moderated one - i.e. for the new posts
+
+        The same applies to the brand new Threads
+        Thread.is_approved = False is set to brand new
+        threads, whose first revision is moderated
+
+        If post has > 1 revision and one on moderation
+        the Post(and Thread).is_approved will be True,
+        but the latest displayed revision will be
+        the one with != 0 revision number.
+
+        This allows us to moderate every revision
+        """
+
+        #moderated revisions have number 0
+        self.revision = 0
+        self.approved = False #todo: we probably don't need this field any more
+        self.approved_by = None
+        self.approved_at = None
+        if self.summary == '':
+            self.summary = _('Suggested edit')
+        self.save()
+
         #this is run on "post-save" so for a new post
         #we'll have just one revision
         if self.post.revisions.count() == 1:
-            activity_type = const.TYPE_ACTIVITY_MODERATED_NEW_POST
-
-            self.approved = False
-            self.approved_by = None
-            self.approved_at = None
-
             self.post.approved = False
             self.post.save()
 
             if self.post.is_question():
                 self.post.thread.approved = False
                 self.post.thread.save()
-            #above changes will hide post from the public display
+
+            #give message to the poster
             if self.by_email:
                 #todo: move this to the askbot.mail module
                 from askbot.mail import send_mail
@@ -2198,13 +2237,10 @@ class PostRevision(models.Model):
                     'and will be published after the moderator approval.'
                 )
                 self.author.message_set.create(message = message)
+
+            activity_type = const.TYPE_ACTIVITY_MODERATED_NEW_POST
         else:
-            #In this case, for now we just flag the edit
-            #for the moderators.
-            #Ideally we'd need to hide the edit itself,
-            #but the complication is that when we have more
-            #than one edit in a row and then we'll need to deal with
-            #merging multiple edits. We don't have a solution for this yet.
+            #In this case, use different activity type, but perhaps there is no real need
             activity_type = const.TYPE_ACTIVITY_MODERATED_POST_EDIT
 
         from askbot.models import Activity
@@ -2215,17 +2251,8 @@ class PostRevision(models.Model):
                         question = self.get_origin_post()
                     )
         activity.save()
-        #todo: make this group-sensitive
-        activity.add_recipients(self.post.get_moderators())
 
-    def moderate_or_publish(self):
-        """either place on moderation queue or announce
-        that this revision is published"""
-        if self.needs_moderation():#moderate
-            self.place_on_moderation_queue()
-        else:#auto-approve
-            from askbot.models import signals
-            signals.post_revision_published.send(None, revision = self)
+        activity.add_recipients(self.post.get_moderators())
 
     def should_notify_author_about_publishing(self, was_approved = False):
         """True if author should get email about making own post"""
@@ -2257,12 +2284,8 @@ class PostRevision(models.Model):
             raise ValidationError('Post field has to be set.')
 
     def save(self, **kwargs):
-        # Determine the revision number, if not set
-        if not self.revision:
-            # TODO: Maybe use Max() aggregation? Or `revisions.count() + 1`
-            self.revision = self.parent().revisions.values_list(
-                                                'revision', flat=True
-                                            )[0] + 1
+        if self.ip_addr is None:
+            self.ip_addr = '0.0.0.0'
         self.full_clean()
         super(PostRevision, self).save(**kwargs)
 
@@ -2345,7 +2368,8 @@ class AnonymousAnswer(DraftContent):
             author=user,
             added_at=added_at,
             wiki=self.wiki,
-            text=self.text
+            text=self.text,
+            ip_addr=self.ip_addr,
         )
         self.question.thread.invalidate_cached_data()
         self.delete()
