@@ -6,12 +6,25 @@
 
 $header-color: #16160f;
 $header-text-color: #d0e296;
+$sec-header-color: #e9e9e1;
+$sec-header-text-color: #7a7a6b;
 $link: #1b79bd;
 $question-link: #464646;
 $button-label: #4a757f;
 $section-title: #7ea9b3;
 $info-text: #707070;
 $info-text-dark: #525252;
+
+//Variable for lengths
+$header-height: 65px;
+$sec-header-height: 57px;
+$width-content-right: 200px;
+
+//Variables for fonts
+
+$body-font: Arial;
+$main-font: Open Sans Condensed, Arial, sans-serif;
+$secondary-font:Arial;
 
 //
 // FONT-AWESOME VARIABLES
@@ -26,16 +39,26 @@ $fa-font-path: "../bower_components/components-font-awesome/fonts";
 
 // Foundation Top bar
 $topbar-bg: $header-color;
-$topbar-height: 65px;
+$topbar-height: $header-height;
 
 // OFF CANVAS VARIABLES
 // Off Canvas Tab Bar Variables
 $tabbar-bg: $topbar-bg;
 $tabbar-height: rem-calc($topbar-height);
 $tabbar-line-height: $tabbar-height;
+$tabbar-menu-icon-color: #d0e296;
 
 // Foundation grid
-$row-width: 960px;
+//$row-width: 960px;
+
+// Media Query Ranges
+$small-range: (0em, 40em);
+$medium-range: (40.063em, 60em);
+$large-range: (60.063em, 80em);
+$xlarge-range: (80.063em, 120em);
+$medium-down: "screen and (max-width:#{lower-bound($medium-range)})";
+$large-down: "screen and (max-width:#{lower-bound($large-range)})";
+$xlarge-down: "screen and (max-width:#{lower-bound($xlarge-range)})";
 
 //Variables for fonts
 $body-font: Arial;
@@ -97,4 +120,13 @@ $secondary-font: Arial;
   -moz-border-radius-bottomright: $radio;
   -webkit-border-bottom-right-radius: $radio;
   -webkit-border-top-right-radius: $radio;
+}
+
+@mixin rounded-corners-left($radio: 5px) {
+  border-top-left-radius: $radio;
+  border-bottom-left-radius: $radio;
+  -moz-border-radius-topleft: $radio;
+  -moz-border-radius-bottomleft: $radio;
+  -webkit-border-bottom-left-radius: $radio;
+  -webkit-border-top-left-radius: $radio;
 }

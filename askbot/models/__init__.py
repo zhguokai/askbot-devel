@@ -1560,6 +1560,35 @@ def user_delete_question(
             )
 
 
+def user_delete_all_content_authored_by_user(self, author, timestamp=None):
+    """Deletes all questions, answers and comments made by the user"""
+    count = 0
+
+    #delete answers
+    answers = Post.objects.get_answers().filter(author=author)
+    timestamp = timestamp or datetime.datetime.now()
+    count += answers.update(deleted_at=timestamp, deleted_by=self, deleted=True)
+
+    #delete questions
+    questions = Post.objects.get_questions().filter(author=author)
+    count += questions.update(deleted_at=timestamp, deleted_by=self, deleted=True)
+
+    #delete threads
+    thread_ids = questions.values_list('thread_id', flat=True)
+    #load second time b/c threads above are not quite real
+    threads = Thread.objects.filter(id__in=thread_ids)
+    threads.update(deleted=True)
+    for thread in threads:
+        thread.invalidate_cached_data()
+
+    #delete comments
+    comments = Post.objects.get_comments().filter(author=author)
+    count += comments.count()
+    comments.delete()
+
+    return count
+
+
 @auto_now_timestamp
 def user_close_question(
                     self,
@@ -2992,6 +3021,10 @@ User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)
 User.add_to_class('delete_comment', user_delete_comment)
 User.add_to_class('delete_question', user_delete_question)
 User.add_to_class('delete_answer', user_delete_answer)
+User.add_to_class(
+    'delete_all_content_authored_by_user',
+    user_delete_all_content_authored_by_user
+)
 User.add_to_class('restore_post', user_restore_post)
 User.add_to_class('close_question', user_close_question)
 User.add_to_class('reopen_question', user_reopen_question)
