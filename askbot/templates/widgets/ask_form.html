@@ -65,10 +65,10 @@
         <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
         <div class="clearfix"></div>
     {% endif %}
-    {% if not request.user.is_authenticated() %}
-    <input type="submit" name="post_anon" value="{% trans %}Login/Signup to Post{% endtrans %}" class="submit" />
+    {% if request.user.is_anonymous() and not settings.ALLOW_ASK_UNREGISTERED %}
+        <input type="submit" name="post_anon" value="{% trans %}Login/Signup to Post{% endtrans %}" />
     {% else %}
-    <input type="submit" name="post" value="{{ settings.WORDS_ASK_YOUR_QUESTION|escape }}" class="submit" />
+      <input type="submit" name="post" value="{{ settings.WORDS_ASK_YOUR_QUESTION|escape }}" />
     {% endif %}
     <div class="clean"></div>
 </form>

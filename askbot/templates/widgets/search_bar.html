@@ -1,33 +1,29 @@
-{% if active_tab != "ask" %}
-{% spaceless %}
-<div 
-    id="searchBar"
-    class="{% if query %}cancelable{% endif %}"
->
-    {# url action depends on which tab is active #}
-    {% if active_tab == "tags" %}
-        <input type="hidden" name="t" value="tag"/>
+{% if active_tab !="ask" %}
+    {% spaceless %}
+    <div class="search-bar" id="searchBar" class="{% if query %}cancelable{% endif %}">
+        {# url action depends on which tab is active #}
+        {% if active_tab == "tags" %}
+        <input class="search-tag" type="text" autocomplete="off" value="{{ query|default_if_none('')|escape }}" name="query" id="keywords" />
         {% set query=stag %}
-    {% elif active_tab == "users" %}
-        <input type="hidden" name="t" value="user"/>
-    {% endif %}
-    <input 
-        class="searchInput" 
-        type="text" 
-        autocomplete="off"
-        value="{{ query|default_if_none('')|escape }}" 
-        name="query" 
-        id="keywords"
-    />
-    <input type="submit" value="" name="search" class="searchBtn" />
-    <input type="button"
-        value="X"
-        name="reset_query"
-        class="cancelSearchBtn"
-        {% if not query %}{# query is only defined by questions view (active_tab) #}
-            style="display: none;"
+        {% elif active_tab == "users" %}
+        <input class="search-user" type="text" autocomplete="off" value="{{ query|default_if_none('')|escape }}" name="query" id="keywords" />
+        {% else %}
+        <input class="searchInput" type="text" autocomplete="off" value="{{ query|default_if_none('')|escape }}" name="query" id="keywords" />
         {% endif %}
-    />
-</div>
-{% endspaceless %}
-{% endif %}
+    </div>
+    <div class="cancelSearchBtn"
+        {% if not query %}
+        {# query is only defined by questions view (active_tab) #}
+        style="display: none;"
+        {% endif %}
+        >
+        <button type="submit" name="reset_query" class="postfix">
+            <i class="fa fa-eraser"></i>
+        </button>
+    </div>
+    <div class="searchBtn">
+        <button type="submit" value="" name="search" class="postfix" />
+        <i class="fa fa-search"></i>
+    </div>
+    {% endspaceless %}
+    {% endif %}

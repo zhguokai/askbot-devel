@@ -105,7 +105,7 @@
         if (askbot['settings']['groupsEnabled']) {
             askbot['urls']['add_group'] = "{% url add_group %}";
             var group_dropdown = new GroupDropdown({{ group_list }});
-            $('.f-dropdown').append(group_dropdown.getElement());
+            $('.f-dropdown:first').append(group_dropdown.getElement());
         }
         var userRep = $('#userToolsNav .reputation');
         if (userRep.length) {

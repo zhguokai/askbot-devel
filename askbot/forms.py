@@ -640,6 +640,7 @@ class ChangeUserStatusForm(forms.Form):
     """
 
     user_status = forms.ChoiceField(label=_('Change status to'))
+    delete_content = forms.CharField(widget=forms.HiddenInput, initial='false')
 
     def __init__(self, *arg, **kwarg):
 
@@ -675,6 +676,15 @@ class ChangeUserStatusForm(forms.Form):
         self.fields['user_status'].default = 'select'
         self.moderator = moderator
         self.subject = subject
+
+    def clean_delete_content(self):
+        delete = self.cleaned_data.get('delete_content', False)
+        if delete == 'true':
+            delete = True
+        else:
+            delete = False
+        self.cleaned_data['delete_content'] = delete
+        return self.cleaned_data['delete_content']
 
     def clean(self):
         #if moderator is looking at own profile - do not
@@ -716,6 +726,10 @@ class ChangeUserStatusForm(forms.Form):
                         'please make a meaningful selection.'
                     ) % {'username': self.subject.username}
                 raise forms.ValidationError(msg)
+
+            if user_status not in ('s', 'b'):#not blocked or suspended
+                if self.cleaned_data['delete_content'] == True:
+                    self.cleaned_data['delete_content'] = False
 
         return self.cleaned_data
 
@@ -931,15 +945,14 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
 
         self.fields['ask_anonymously'] = forms.BooleanField(
             label=_('post anonymously'),
-            required=False,
+            required=False
         )
 
-        #hide ask_anonymously field
+        if user.is_anonymous() or not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
+            self.hide_field('ask_anonymously')
+
         if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
             self.fields['language'] = LanguageField()
-
-        if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
-            self.hide_field('ask_anonymously')
 
         if should_use_recaptcha(user):
             self.fields['recaptcha'] = AskbotRecaptchaField()
@@ -950,7 +963,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
             self.cleaned_data['ask_anonymously'] = False
         return self.cleaned_data['ask_anonymously']
-
 
 ASK_BY_EMAIL_SUBJECT_HELP = _(
     'Subject line is expected in the format: '
@@ -971,7 +983,7 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
         super(AskWidgetForm, self).__init__(*args, **kwargs)
         self.fields['title'] = TitleField()
         #hide ask_anonymously field
-        if not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
+        if user.is_anonymous() or not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
         self.fields['text'] = QuestionEditorField(user=user)
         if not include_text:

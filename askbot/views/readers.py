@@ -298,7 +298,7 @@ def get_top_answers(request):
                             'html': answers_html,
                             'num_answers': paginator.count}
                         )
-        return HttpResponse(json_string, mimetype='application/json')
+        return HttpResponse(json_string, content_type='application/json')
     else:
         return HttpResponseBadRequest()
 
@@ -374,7 +374,7 @@ def tags(request):#view showing a listing of available tags - plain list
         template_context = RequestContext(request, data)
         json_data = {'success': True, 'html': template.render(template_context)}
         json_string = simplejson.dumps(json_data)
-        return HttpResponse(json_string, mimetype='application/json')
+        return HttpResponse(json_string, content_type='application/json')
     else:
         return render(request, 'tags.html', data)
 

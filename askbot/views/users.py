@@ -27,7 +27,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import get_language
+from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.utils import simplejson
 from django.utils.html import strip_tags as strip_all_tags
 from django.views.decorators import csrf
@@ -214,13 +216,14 @@ def user_moderate(request, subject, context):
 
     user_rep_changed = False
     user_status_changed = False
+    user_status_changed_message = _('User status changed')
     message_sent = False
     email_error_message = None
 
     user_rep_form = forms.ChangeUserReputationForm()
     send_message_form = forms.SendMessageForm()
     if request.method == 'POST':
-        if 'change_status' in request.POST:
+        if 'change_status' in request.POST or 'hard_block' in request.POST:
             user_status_form = forms.ChangeUserStatusForm(
                                                     request.POST,
                                                     moderator = moderator,
@@ -228,6 +231,11 @@ def user_moderate(request, subject, context):
                                                 )
             if user_status_form.is_valid():
                 subject.set_status( user_status_form.cleaned_data['user_status'] )
+                if user_status_form.cleaned_data['delete_content'] == True:
+                    num_deleted = request.user.delete_all_content_authored_by_user(subject)
+                    if num_deleted:
+                        num_deleted_message = ungettext('%d post deleted', '%d posts deleted', num_deleted) % num_deleted
+                        user_status_changed_message = string_concat(user_status_changed_message, ', ', num_deleted_message)
             user_status_changed = True
         elif 'send_message' in request.POST:
             send_message_form = forms.SendMessageForm(request.POST)
@@ -291,7 +299,8 @@ def user_moderate(request, subject, context):
         'message_sent': message_sent,
         'email_error_message': email_error_message,
         'user_rep_changed': user_rep_changed,
-        'user_status_changed': user_status_changed
+        'user_status_changed': user_status_changed,
+        'user_status_changed_message': user_status_changed_message
     }
     context.update(data)
     return render(request, 'user_profile/user_moderate.html', context)

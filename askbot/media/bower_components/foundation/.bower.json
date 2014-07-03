@@ -25,6 +25,6 @@
     "commit": "dae38f0132f585be76b7b5b4f131f69eeb894908"
   },
   "_source": "git://github.com/zurb/bower-foundation.git",
-  "_target": "*",
+  "_target": "5.2.2",
   "_originalSource": "foundation"
 }
