@@ -1054,9 +1054,9 @@ class PostApprovalTests(utils.AskbotTestCase):
     def setUp(self):
         self.reply_by_email = askbot_settings.REPLY_BY_EMAIL
         askbot_settings.update('REPLY_BY_EMAIL', True)
-        self.enable_content_moderation = \
-            askbot_settings.ENABLE_CONTENT_MODERATION
-        askbot_settings.update('ENABLE_CONTENT_MODERATION', True)
+        self.content_moderation_mode = \
+            askbot_settings.CONTENT_MODERATION_MODE
+        askbot_settings.update('CONTENT_MODERATION_MODE', 'premoderation')
         self.self_notify_when = \
             askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
         when = const.FOR_FIRST_REVISION
@@ -1070,8 +1070,8 @@ class PostApprovalTests(utils.AskbotTestCase):
             'REPLY_BY_EMAIL', self.reply_by_email
         )
         askbot_settings.update(
-            'ENABLE_CONTENT_MODERATION',
-            self.enable_content_moderation
+            'CONTENT_MODERATION_MODE',
+            self.content_moderation_mode
         )
         askbot_settings.update(
             'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN',

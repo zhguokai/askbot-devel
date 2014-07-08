@@ -15,7 +15,7 @@ def emailed_content_needs_moderation(email):
     is marked for moderation
     todo: maybe this belongs to a separate "moderation" module
     """
-    if askbot_settings.ENABLE_CONTENT_MODERATION:
+    if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
         group_name = email.split('@')[0]
         from askbot.models.user import Group
         try:

@@ -1,4 +1,5 @@
 //todo: refactor this into "Inbox" object or more specialized
+/*
 var setup_inbox = function(){
 
     var getSelected = function(){
@@ -113,20 +114,6 @@ var setup_inbox = function(){
                     }
     );
 
-    var rejectPostDialog = new RejectPostDialog();
-    rejectPostDialog.decorate($('#reject-edit-modal'));
-    rejectPostDialog.setSelectedEditDataReader(function(){
-        return getSelected();
-    });
-    setupButtonEventHandlers(
-        $('#re_delete_post'),
-        function(){
-            if (rejectPostDialog.readSelectedEditData()) {
-                rejectPostDialog.show();
-            }
-        }
-    );
-
     if ($('body').hasClass('inbox-flags')) {
         var responses = $('.response-parent');
         responses.each(function(idx, response) {
@@ -136,6 +123,14 @@ var setup_inbox = function(){
             rejectPostDialog.addPostModerationControl(control);
             $(response).append(control.getElement());
         });
+    }
+};
+*/
+var setup_inbox = function(){
+    var page = $('.inbox-flags');
+    if (page.length) {
+        var modControls = new PostModerationControls();
+        modControls.decorate(page);
     }
 };
 
@@ -157,52 +152,34 @@ var setup_badge_details_toggle = function(){
     });
 };
 
-var PostModerationControls = function() {
+/**
+* response notifications
+*/
+var Inbox = function() {
     WrappedElement.call(this);
 };
-inherits(PostModerationControls, WrappedElement);
+inherits(Inbox, WrappedElement);
 
-PostModerationControls.prototype.setParent = function(parent_element) {
-    this._parent_element = parent_element;
-};
-
-PostModerationControls.prototype.setReasonsDialog = function(dialog) {
-    this._reasonsDialog = dialog;
-};
-
-PostModerationControls.prototype.getMemoId = function() {
+Inbox.prototype.getMemoId = function() {
     return this._parent_element.data('responseId');
 };
 
-PostModerationControls.prototype.getMemoElement = function() {
+Inbox.prototype.getMemoElement = function() {
     var reId = this.getMemoId();
     return $('#re_' + reId);
 };
 
-PostModerationControls.prototype.removeMemo = function() {
+Inbox.prototype.removeMemo = function() {
     this.getMemoElement().remove();
 };
 
-PostModerationControls.prototype.markMemo = function() {
+Inbox.prototype.markMemo = function() {
     var memo = this.getMemoElement();
     var checkbox = memo.find('input[type="checkbox"]');
     checkbox.attr('checked', true);
 };
 
-PostModerationControls.prototype.addReason = function(id, title) {
-    var li = this.makeElement('li');
-    var anchor = this.makeElement('a');
-    anchor.html(title);
-    anchor.data('postId', id);
-    li.append(anchor);
-    var adderLink = this._reasonList.children().last();
-    adderLink.before(li);
-    //attach event handler
-    var me = this;
-    setupButtonEventHandlers(anchor, function() { me.moderatePost(id, 'delete_post') });
-};
-
-PostModerationControls.prototype.moderatePost = function(reasonId, actionType){
+Inbox.prototype.moderatePost = function(reasonId, actionType){
     var me = this;
     var data = {
         reject_reason_id: reasonId,
@@ -232,68 +209,205 @@ PostModerationControls.prototype.moderatePost = function(reasonId, actionType){
 };
 
 
-PostModerationControls.prototype.createDom = function() {
-    var toolbar = this.makeElement('div');
-    toolbar.addClass('btn-toolbar post-moderation-controls');
-    this._element = toolbar;
-
-    var div = this.makeElement('div');
-    div.addClass('btn-group');
-    toolbar.append(div);
-
-    var acceptBtn = this.makeElement('a');
-    acceptBtn.addClass('btn save-reason');
-    acceptBtn.html(gettext('Accept'));
-    div.append(acceptBtn);
-
-    div = this.makeElement('div');
-    div.addClass('btn-group dropdown');
-    toolbar.append(div);
-
-    var toggle = this.makeElement('button');
-    toggle.addClass('btn btn-danger dropdown-toggle');
-    toggle.append($('<span>' + gettext('Reject') + '</span>'));
-    toggle.append($('<span class="caret"></span>'));
-    div.append(toggle);
-
-    toggle.dropdown();
-
-    var ul = this.makeElement('ul');
-    ul.addClass('dropdown-menu');
-    div.append(ul);
-
-    this._reasonList = ul;
-
-    //reason adder
-    var li = this.makeElement('li');
-    var anchor = this.makeElement('a');
-    anchor.html(gettext('add new reject reason'));
-    li.append(anchor);
-    ul.append(li);
-
-    //append menu items
-    var me = this;
-    $.each(askbot['data']['postRejectReasons'], function(idx, reason) {
-        me.addReason(reason['id'], reason['title']);
-    });
-
-    var reasonsDlg = this._reasonsDialog;
-    setupButtonEventHandlers(anchor, function() {
-        me.markMemo();//mark current post
-        reasonsDlg.readSelectedEditData();//read data of selected edits
-        reasonsDlg.show();//open the "big" dialog
-    });
-    setupButtonEventHandlers(acceptBtn, function() { 
-        me.moderatePost(null, 'remove_flag');
-    });
+/**
+* the dropdown menu with selection of reasons
+* to reject posts and a button that starts menu to 
+* manage the list of reasons
+*/
+var DeclineAndExplainMenu = function() {
+    WrappedElement.call(this);
 };
+inherits(DeclineAndExplainMenu, WrappedElement);
+
+DeclineAndExplainMenu.prototype.setupDeclinePostHandler = function(button) {
+    var me = this;
+    var reasonId = button.data('reasonId');
+    var controls = this.getControls();
+    var handler = controls.getModHandler('decline-with-reason', ['posts'], reasonId);
+    setupButtonEventHandlers(button, handler);
+};
+
+DeclineAndExplainMenu.prototype.addReason = function(id, title) {
+    var li = this.makeElement('li');
+    var button = this.makeElement('a');
+    li.append(button);
+    button.html(title);
+    button.data('reasonId', id);
+    this._addReasonBtn.parent().before(li);
+
+    this.setupDeclinePostHandler(button);
+};
+
+DeclineAndExplainMenu.prototype.setControls = function(controls) {
+    this._controls = controls;
+};
+
+DeclineAndExplainMenu.prototype.getControls = function() {
+    return this._controls;
+};
+
+DeclineAndExplainMenu.prototype.decorate = function(element) {
+    this._element = element;
+    //activate dropdown menu
+    element.dropdown();
+
+    var declineBtns = element.find('.decline-with-reason');
+    var me = this;
+    declineBtns.each(function(idx, elem) {
+        me.setupDeclinePostHandler($(elem));
+    });
+
+    this._reasonList = element.find('ul');
+
+    var addReasonBtn = element.find('.manage-reasons');
+    this._addReasonBtn = addReasonBtn;
+
+    var manageReasonsDialog = new ManageRejectReasonsDialog();
+    manageReasonsDialog.decorate($('#manage-reject-reasons-modal'));
+    this._manageReasonsDialog = manageReasonsDialog;
+    manageReasonsDialog.setMenu(this);
+};
+
+/**
+* Buttons to moderate posts 
+* and the list of edits
+*/
+var PostModerationControls = function() {
+    WrappedElement.call(this);
+};
+inherits(PostModerationControls, WrappedElement);
+
+/**
+* displays feedback message
+*/
+PostModerationControls.prototype.showMessage = function(message) {
+    this._notification.html(message);
+    this._notification.parent().fadeIn('fast');
+};
+
+PostModerationControls.prototype.hideMessage = function() {
+    this._notification.parent().hide();
+};
+
+/**
+* removes entries from the moderation screen
+*/
+PostModerationControls.prototype.removeEntries = function(entryIds) {
+    for (var i = 0; i < entryIds.length; i++) {
+        var id = entryIds[i];
+        var elem = this._element.find('.message[data-message-id="' + id + '"]');
+        if (elem.length) {
+            elem.fadeOut('fast');
+        }
+    }
+};
+
+PostModerationControls.prototype.getCheckBoxes = function() {
+    return this._element.find('.messages input[type="checkbox"]');
+};
+
+PostModerationControls.prototype.getSelectedEditIds = function() {
+    var checkBoxes = this.getCheckBoxes();
+    var num = checkBoxes.length;
+    var idList = [];
+    for (var i = 0; i < num; i++) {
+        var cb = $(checkBoxes[i]);
+        if (cb.is(':checked')) {
+            var msg = cb.closest('.message-details');
+            var msgId = msg.data('messageId');
+            idList.push(msgId);
+        }
+    }
+    return idList;
+};
+
+/**
+* action - one of 'decline-with-reason', 'approve', 'block'
+* items - a list of items ['posts', 'users', 'ips']
+* not all combinations of action and items are supported
+* optReason must be used with 'decline-with-reason' action
+*/
+PostModerationControls.prototype.getModHandler = function(action, items, optReason) {
+    var me = this;
+    return function() {
+        var selectedEditIds = me.getSelectedEditIds();
+        if (selectedEditIds.length == 0) {
+            me.showMessage(gettext('Please select at least one item'));
+            return;
+        }
+        //@todo: implement undo
+        var postData = {
+            'edit_ids': selectedEditIds,//revision ids
+            'action': action,
+            'items': items,//affected items - users, posts, ips
+            'reason': optReason || 'none'
+        };
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            data: JSON.stringify(postData),
+            url: askbot['urls']['moderatePostEdits'],
+            success: function(response_data){
+                if (response_data['success'] == true){
+                    me.removeEntries(selectedEditIds);
+                }
+                if (response_data['message']) {
+                    me.showMessage(response_data['message']);
+                }
+            }
+        });
+    };
+};
+
+PostModerationControls.prototype.getSelectAllHandler = function(selected) {
+    var me = this;
+    return function() {
+        var cb = me.getCheckBoxes();
+        cb.prop('checked', selected);
+    };
+};
+
+PostModerationControls.prototype.decorate = function(element) {
+    this._element = element;
+    this._notification = element.find('.action-status span');
+    this.hideMessage();
+    //approve posts button
+    var button = $('.approve-posts');
+    setupButtonEventHandlers(button, this.getModHandler('approve', ['posts']));
+
+    //approve posts and users
+    button = $('.approve-posts-users');
+    setupButtonEventHandlers(button, this.getModHandler('approve', ['posts', 'users']));
+
+    //decline and explain why
+    var reasonsMenuElem = $('.decline-reasons-menu');
+    var declineAndExplainMenu = new DeclineAndExplainMenu();
+    declineAndExplainMenu.setControls(this);
+    declineAndExplainMenu.decorate(reasonsMenuElem);
+
+    //delete posts and block users
+    button = element.find('.decline-block-users');
+    setupButtonEventHandlers(button, this.getModHandler('block', ['posts', 'users']));
+
+    //delete posts, block users and ips
+    button = element.find('.decline-block-users-ips');
+    setupButtonEventHandlers(button, this.getModHandler('block', ['posts', 'users', 'ips']));
+
+    button = element.find('.sel-all');
+    setupButtonEventHandlers(button, this.getSelectAllHandler(true));
+
+    button = element.find('.sel-none');
+    setupButtonEventHandlers(button, this.getSelectAllHandler(false));
+};
+
 
 /**
  * @constructor
  * manages post/edit reject reasons
  * in the post moderation view
  */
-var RejectPostDialog = function(){
+var ManageRejectReasonsDialog = function(){
     WrappedElement.call(this);
     this._selected_edit_ids = null;
     this._selected_reason_id = null;
@@ -301,27 +415,31 @@ var RejectPostDialog = function(){
     this._postModerationControls = [];
     this._selectedEditDataReader = undefined;
 };
-inherits(RejectPostDialog, WrappedElement);
+inherits(ManageRejectReasonsDialog, WrappedElement);
 
-RejectPostDialog.prototype.setSelectedEditDataReader = function(func) {
+ManageRejectReasonsDialog.prototype.setMenu = function(menu) {
+    this._reasonsMenu = menu;
+};
+
+ManageRejectReasonsDialog.prototype.setSelectedEditDataReader = function(func) {
     this._selectedEditDataReader = func;
 };
 
-RejectPostDialog.prototype.readSelectedEditData = function() {
+ManageRejectReasonsDialog.prototype.readSelectedEditData = function() {
     var data = this._selectedEditDataReader();
     this.setSelectedEditData(data);
     return data['id_list'].length > 0;
 };
 
-RejectPostDialog.prototype.setSelectedEditData = function(data){
+ManageRejectReasonsDialog.prototype.setSelectedEditData = function(data){
     this._selected_edit_data = data;
 };
 
-RejectPostDialog.prototype.addPostModerationControl = function(control) {
+ManageRejectReasonsDialog.prototype.addPostModerationControl = function(control) {
     this._postModerationControls.push(control);
 };
 
-RejectPostDialog.prototype.setState = function(state){
+ManageRejectReasonsDialog.prototype.setState = function(state){
     this._state = state;
     this.clearErrors();
     if (this._element){
@@ -338,15 +456,15 @@ RejectPostDialog.prototype.setState = function(state){
     }
 };
 
-RejectPostDialog.prototype.show = function(){
+ManageRejectReasonsDialog.prototype.show = function(){
     $(this._element).modal('show');
 };
 
-RejectPostDialog.prototype.hide = function(){
+ManageRejectReasonsDialog.prototype.hide = function(){
     $(this._element).modal('hide');
 };
 
-RejectPostDialog.prototype.resetInputs = function(){
+ManageRejectReasonsDialog.prototype.resetInputs = function(){
     if (this._title_input){
         this._title_input.reset();
     }
@@ -357,12 +475,12 @@ RejectPostDialog.prototype.resetInputs = function(){
     selected.removeClass('selected');
 };
 
-RejectPostDialog.prototype.clearErrors = function(){
+ManageRejectReasonsDialog.prototype.clearErrors = function(){
     var error = this._element.find('.alert');
     error.remove();
 };
 
-RejectPostDialog.prototype.makeAlertBox = function(errors){
+ManageRejectReasonsDialog.prototype.makeAlertBox = function(errors){
     //construct the alert box
     var alert_box = new AlertBox();
     alert_box.setClass('alert-error');
@@ -393,7 +511,7 @@ RejectPostDialog.prototype.makeAlertBox = function(errors){
     return alert_box;
 };
 
-RejectPostDialog.prototype.setAdderErrors = function(errors){
+ManageRejectReasonsDialog.prototype.setAdderErrors = function(errors){
     //clear previous errors
     this.clearErrors();
     var alert_box = this.makeAlertBox(errors);
@@ -402,7 +520,7 @@ RejectPostDialog.prototype.setAdderErrors = function(errors){
         .prepend(alert_box.getElement());
 };
 
-RejectPostDialog.prototype.setSelectorErrors = function(errors){
+ManageRejectReasonsDialog.prototype.setSelectorErrors = function(errors){
     this.clearErrors();
     var alert_box = this.makeAlertBox(errors);
     this._element
@@ -410,7 +528,7 @@ RejectPostDialog.prototype.setSelectorErrors = function(errors){
         .prepend(alert_box.getElement());
 };
 
-RejectPostDialog.prototype.setErrors = function(errors){
+ManageRejectReasonsDialog.prototype.setErrors = function(errors){
     this.clearErrors();
     var alert_box = this.makeAlertBox(errors);
     var current_state = this._state;
@@ -419,7 +537,7 @@ RejectPostDialog.prototype.setErrors = function(errors){
         .prepend(alert_box.getElement());
 };
 
-RejectPostDialog.prototype.addSelectableReason = function(data){
+ManageRejectReasonsDialog.prototype.addSelectableReason = function(data){
     var id = data['reason_id'];
     var title = data['title'];
     var details = data['details'];
@@ -433,7 +551,7 @@ RejectPostDialog.prototype.addSelectableReason = function(data){
     });
 };
 
-RejectPostDialog.prototype.startSavingReason = function(callback){
+ManageRejectReasonsDialog.prototype.startSavingReason = function(callback){
 
     var title_input = this._title_input;
     var details_input = this._details_input;
@@ -483,7 +601,7 @@ RejectPostDialog.prototype.startSavingReason = function(callback){
     });
 };
 
-RejectPostDialog.prototype.rejectPost = function(reason_id){
+ManageRejectReasonsDialog.prototype.rejectPost = function(reason_id){
     var me = this;
     var memos = this._selected_edit_data['elements'];
     var memo_ids = this._selected_edit_data['id_list'];
@@ -513,13 +631,13 @@ RejectPostDialog.prototype.rejectPost = function(reason_id){
     });
 };
 
-RejectPostDialog.prototype.setPreviewerData = function(data){
+ManageRejectReasonsDialog.prototype.setPreviewerData = function(data){
     this._selected_reason_id = data['id'];
     this._element.find('.selected-reason-title').html(data['title']);
     this._element.find('.selected-reason-details').html(data['details']);
 };
 
-RejectPostDialog.prototype.startEditingReason = function(){
+ManageRejectReasonsDialog.prototype.startEditingReason = function(){
     var title = this._element.find('.selected-reason-title').html();
     var details = this._element.find('.selected-reason-details').html();
     this._title_input.setVal(title);
@@ -527,15 +645,15 @@ RejectPostDialog.prototype.startEditingReason = function(){
     this.setState('add-new');
 };
 
-RejectPostDialog.prototype.resetSelectedReasonId = function(){
+ManageRejectReasonsDialog.prototype.resetSelectedReasonId = function(){
     this._selected_reason_id = null;
 };
 
-RejectPostDialog.prototype.getSelectedReasonId = function(){
+ManageRejectReasonsDialog.prototype.getSelectedReasonId = function(){
     return this._selected_reason_id;
 };
 
-RejectPostDialog.prototype.startDeletingReason = function(){
+ManageRejectReasonsDialog.prototype.startDeletingReason = function(){
     var select_box = this._select_box;
     var data = select_box.getSelectedItemData();
     var reason_id = data['id'];
@@ -562,7 +680,7 @@ RejectPostDialog.prototype.startDeletingReason = function(){
     }
 };
 
-RejectPostDialog.prototype.decorate = function(element){
+ManageRejectReasonsDialog.prototype.decorate = function(element){
     this._element = element;
     //set default state according to the # of available reasons
     this._selector = $(element).find('#reject-edit-modal-select');

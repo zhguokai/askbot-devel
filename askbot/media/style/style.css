@@ -2871,17 +2871,49 @@ ul#related-tags li {
 .user-profile-page.inbox-group-join-requests td {
   padding-right: 10px;
 }
-.inbox-flags.user-profile-page .re {
+.user-profile-page.inbox-forum h2,
+.user-profile-page.inbox-flags h2 {
+  line-height: 24px;
+  padding-bottom: 6px;
+}
+.user-profile-page.inbox-forum input[type="checkbox"] {
+  display: none;
+}
+.user-profile-page.inbox-forum .new {
+  background: #FFF8C6;
+}
+.reject-reason-title {
+  margin-bottom: 12px;
+}
+.user-profile-page.inbox-flags .re {
   width: 810px;
 }
-.inbox-flags.user-profile-page .post-moderation-controls {
+.user-profile-page.inbox-flags .post-moderation-controls {
   float: left;
   width: 150px;
   margin-top: 23px;
   text-align: right;
 }
-.inbox-flags.user-profile-page .dropdown:hover ul.dropdown-menu {
+.user-profile-page.inbox-flags .dropdown {
+  display: -moz-inline-stack;
+  display: inline-block;
+  height: 17px;
+}
+.user-profile-page.inbox-flags .dropdown:hover ul.dropdown-menu {
   display: block;
+  margin-top: 9px;
+}
+.user-profile-page.inbox-flags .highlight {
+  background: transparent;
+}
+.user-profile-page.inbox-flags .messages {
+  margin-bottom: 14px;
+}
+.user-profile-page.inbox-flags .select-items {
+  margin-bottom: 10px;
+}
+.user-profile-page.inbox-flags #responses div.face {
+  display: none;
 }
 .openid-signin form {
   margin-bottom: 5px;
@@ -3699,6 +3731,10 @@ button::-moz-focus-inner {
   font-size: 12px;
   padding: 0;
 }
+.inbox-flags .action-status {
+  line-height: 38px;
+  height: 24px;
+}
 .action-status span {
   padding: 3px 5px 3px 5px;
   background-color: #fff380;
@@ -3861,6 +3897,7 @@ p.signup_p {
   margin-bottom: 15px;
 }
 #responses h2 {
+  line-height: 24px;
   margin: 0;
   padding: 0;
 }

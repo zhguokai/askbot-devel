@@ -1,0 +1,56 @@
+{% extends "user_inbox/base.html" %}
+{% import "macros.html" as macros %}
+{% block profilesection %}
+    {% trans %}moderation queue{% endtrans %}
+{% endblock %}
+{% block inbox_content %}
+    <div class="tools">
+        <div class="select-items">
+            <strong>{% trans %}Select:{% endtrans %}</strong>
+            <a class="sel-all">{% trans %}all{% endtrans %}</a> |
+            <a class="sel-none">{% trans %}none{% endtrans %}</a>
+        </div>
+        <a class="btn approve-posts">{% trans %}approve posts{% endtrans %}</a>
+        <a class="btn approve-posts-users" id="re_approve_posts_users">{% trans %}approve posts and users{% endtrans %}</a>
+        <!--div class="btn-group dropdown decline-reasons-menu">
+            <span class="btn btn-info dropdown-toggle">
+                <span>{% trans %}decline and explain why{% endtrans %}</span>
+                <span class="caret"></span>
+            </span>
+            <ul class="dropdown-menu">
+                {% for reason in post_reject_reasons %}
+                <li>
+                    <a class="decline-with-reason" data-reason-id="{{ reason.id }}">{{ reason.title|escape }}</a>
+                </li>
+                {% endfor %}
+                <li>
+                    <a class="manage-reasons">{% trans %}add/manage reject reasons{% endtrans %}</a>
+                </li>
+            </ul>
+        </div-->
+        <a class="btn btn-danger decline-block-users">{% trans %}delete posts and block users{% endtrans %}</a>
+        {% if settings.IP_MODERATION_ENABLED %}
+        <a class="btn btn-danger decline-block-users-ips">{% trans %}delete posts, block users and IPs{% endtrans %}</a>
+        {% endif %}
+    </div>
+    <p style="margin-top: 12px;">Attention: approval of users removes them from the queue and approves ALL of their posts, blocking of the users 
+    DELETES ALL OF THEIR POSTS. There is no easy undo at the moment.</p>
+    {% include "moderation/reject_post_dialog.html" %}
+    <div class="action-status"><span></span></div>
+    <div class="messages">
+    {% for message in messages %}{# messages are grouped by question, using the "nested_messages" #}
+        <div 
+            class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
+            data-message-id="{{ message.id }}"
+        >
+            {#<h2>"{{ message.title.strip()|escape}}"</h2>#}
+            {{ macros.inbox_message_snippet(message) }}
+            {# "nested" messages are further response messages to the same question #}
+            {% for followup_message in message.followup_messages %}
+                {{ macros.inbox_message_snippet(followup_message) }}
+            {% endfor %}
+        </div>
+        <div class="clearfix"></div>
+    {% endfor %}
+    </div>
+{% endblock %}

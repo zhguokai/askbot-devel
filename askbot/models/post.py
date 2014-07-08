@@ -235,6 +235,14 @@ class PostManager(BaseQuerySetManager):
 
         parse_results = post.parse_and_save(author=author, is_private=is_private)
 
+        post.add_revision(
+            author = author,
+            revised_at = added_at,
+            text = text,
+            comment = unicode(const.POST_STATUS['default_version']),
+            by_email = by_email
+        )
+
         from askbot.models import signals
         signals.post_updated.send(
             post=post,
@@ -246,13 +254,6 @@ class PostManager(BaseQuerySetManager):
             sender=post.__class__
         )
 
-        post.add_revision(
-            author = author,
-            revised_at = added_at,
-            text = text,
-            comment = unicode(const.POST_STATUS['default_version']),
-            by_email = by_email
-        )
 
         return post
 
@@ -288,9 +289,10 @@ class PostManager(BaseQuerySetManager):
 
         #update thread data
         #todo: this totally belongs to some `Thread` class method
-        thread.answer_count += 1
-        thread.save()
-        thread.set_last_activity(last_activity_at=added_at, last_activity_by=author) # this should be here because it regenerates cached thread summary html
+        if answer.is_approved():
+            thread.answer_count += 1
+            thread.save()
+            thread.set_last_activity(last_activity_at=added_at, last_activity_by=author) # this should be here because it regenerates cached thread summary html
         return answer
 
 
@@ -794,13 +796,16 @@ class Post(models.Model):
         """``False`` only when moderation is ``True`` and post
         ``self.approved is False``
         """
-        if askbot_settings.ENABLE_CONTENT_MODERATION:
-            return self.approved
+        if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
+            if self.approved:
+                return True
+            if self.revisions.filter(revision=0).count() == 1:
+                return False
         return True
 
     def needs_moderation(self):
         #todo: do we need this, can't we just use is_approved()?
-        return self.approved is False
+        return self.is_approved() is False
 
     def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
         from askbot.utils.slug import slugify
@@ -1052,8 +1057,9 @@ class Post(models.Model):
                                                 by_email=by_email,
                                                 ip_addr=ip_addr,
                                             )
-        self.comment_count = self.comment_count + 1
-        self.save()
+        if comment_post.is_approved():
+            self.comment_count = self.comment_count + 1
+            self.save()
 
         #tried to add this to bump updated question
         #in most active list, but it did not work
@@ -2110,16 +2116,22 @@ class PostRevisionManager(models.Manager):
         author = kwargs['author']
 
         moderate_email = False
-        if kwargs.get('email') and kwargs.get('email'):
+        if kwargs.get('email'):
             from askbot.models.reply_by_email import emailed_content_needs_moderation
             moderate_email = emailed_content_needs_moderation(kwargs['email'])
 
-        #in the moderate_or_publish() we determine the revision number
-        #0 revision belongs to the moderation queue
-        if author.needs_moderation() or moderate_email:
-            kwargs['revision'] = 0
+        needs_moderation = author.needs_moderation() or moderate_email
+
+        #0 revision is not shown to the users
+        if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' and needs_moderation:
+            kwargs.update({
+                'approved': False,
+                'approved_by': None,
+                'approved_at': None,
+                'revision': 0,
+                'summary': kwargs['summary'] or _('Suggested edit')
+            })
             revision = super(PostRevisionManager, self).create(*args, **kwargs)
-            revision.place_on_moderation_queue()
         else:
             post = kwargs['post']
             kwargs['revision'] = post.get_latest_revision_number() + 1
@@ -2135,6 +2147,10 @@ class PostRevisionManager(models.Manager):
 
             from askbot.models import signals
             signals.post_revision_published.send(None, revision=revision)
+
+        #audit or pre-moderation modes require placement of the post on the moderation queue
+        if needs_moderation:
+            revision.place_on_moderation_queue()
 
         return revision
 
@@ -2194,16 +2210,6 @@ class PostRevision(models.Model):
 
         This allows us to moderate every revision
         """
-
-        #moderated revisions have number 0
-        self.revision = 0
-        self.approved = False #todo: we probably don't need this field any more
-        self.approved_by = None
-        self.approved_at = None
-        if self.summary == '':
-            self.summary = _('Suggested edit')
-        self.save()
-
         #this is run on "post-save" so for a new post
         #we'll have just one revision
         if self.post.revisions.count() == 1:
@@ -2243,6 +2249,7 @@ class PostRevision(models.Model):
             #In this case, use different activity type, but perhaps there is no real need
             activity_type = const.TYPE_ACTIVITY_MODERATED_POST_EDIT
 
+        #Activity instance is the actual queue item
         from askbot.models import Activity
         activity = Activity(
                         user = self.author,
@@ -2251,7 +2258,6 @@ class PostRevision(models.Model):
                         question = self.get_origin_post()
                     )
         activity.save()
-
         activity.add_recipients(self.post.get_moderators())
 
     def should_notify_author_about_publishing(self, was_approved = False):

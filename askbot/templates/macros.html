@@ -6,31 +6,15 @@
     >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
 {%- endmacro -%}
 
-{%- macro inbox_post_snippet(response, inbox_section) -%}
-<div id="re_{{response.id}}" class="re{% if response.is_new %} new highlight{% else %} seen{% endif %}">
+{%- macro inbox_message_snippet(message) -%}
+<div class="message-details" data-message-id="{{ message.id }}">
     <input type="checkbox" />
-    <div class="face">
-    {{ gravatar(response.user, 48) }}
-    </div>
-    <div class="content">
-        <a 
-            style="font-size:12px"
-            href="{{ response.user.get_absolute_url() }}"
-        >{{ response.user.username|escape }}</a>
-        <a style="text-decoration:none;" href="{{ response.response_url }}">
-             {{ response.response_type }}
-             ({{ timeago(response.timestamp) }}):<br/>
-             {% if inbox_section != 'flags' %}
-                 {{ response.response_snippet }}
-             {% endif %}
-        </a>
-        {% if inbox_section == 'flags' %}
-             <a class="re_expand" href="{{ response.response_url }}">
-                  <!--div class="re_snippet">{{ response.response_snippet|escape }}</div-->
-                  <div class="re_content">{{ response.response_content }}</div>
-             </a>
-        {% endif %}
-    </div>
+    {{ gravatar(message.user, 24) }}
+    <a class="username" href="{{ message.user.get_absolute_url() }}">{{ message.user.username|escape }}</a>
+    <a class="forum-post-link" href="{{ message.url }}">{{ message.message_type }}</a>
+    ({{ timeago(message.timestamp) }})
+    {#<div class="snippet">{{ message.snippet }}</div>#}
+    <div class="post-content">{{ message.content }}</div>
 </div>
 {%- endmacro -%}
 

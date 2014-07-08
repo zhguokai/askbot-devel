@@ -289,7 +289,7 @@ class ThreadManager(BaseQuerySetManager):
         # TODO: add a possibility to see deleted questions
         qs = self.filter(**primary_filter)
 
-        if askbot_settings.ENABLE_CONTENT_MODERATION:
+        if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
             qs = qs.filter(approved = True)
 
         #if groups feature is enabled, filter out threads

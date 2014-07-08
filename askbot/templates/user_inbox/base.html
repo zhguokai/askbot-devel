@@ -10,35 +10,37 @@
     {% set re_count = request.user.new_response_count +
             request.user.seen_response_count
     %}
-    <div id="re_sections">
-        {% trans %}Sections:{% endtrans %}
-        {% set sep = joiner('|') %}
-        {#{{ sep() }}
-        <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=messages"
-            {% if inbox_section == 'messages' %}class="on"{% endif %}
-        >{% trans %}messages{% endtrans %}</a>#}
-        {% if re_count > 0 %}{{ sep() }}
-            <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=forum"
-                {% if inbox_section == 'forum' %}class="on"{% endif %}
+    {% if need_inbox_sections_nav %}
+        <div id="re_sections">
+            {% trans %}Sections:{% endtrans %}
+            {% set sep = joiner('|') %}
+            {#{{ sep() }}
+            <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=messages"
+                {% if inbox_section == 'messages' %}class="on"{% endif %}
+            >{% trans %}messages{% endtrans %}</a>#}
+            {% if re_count > 0 %}{{ sep() }}
+                <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=forum"
+                    {% if inbox_section == 'forum' %}class="on"{% endif %}
+                >
+                    {% trans %}forum responses ({{re_count}}){% endtrans -%}
+                </a>
+            {% endif %}
+            {% if flags_count > 0 %}{{ sep() }}
+                <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=flags"
+                    {% if inbox_section == 'flags' %}class="on"{% endif %}
+                >
+                    {% trans %}flagged items ({{flags_count}}){% endtrans %}
+                </a>
+            {% endif %}
+            {% if group_join_requests_count %}{{ sep() }}
+            <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=join_requests"
+                {% if inbox_section == 'join_requests' %}class="on"{% endif %}
             >
-                {% trans %}forum responses ({{re_count}}){% endtrans -%}
+                {% trans %}group join requests{% endtrans %}
             </a>
-        {% endif %}
-        {% if flags_count > 0 %}{{ sep() }}
-            <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=flags"
-                {% if inbox_section == 'flags' %}class="on"{% endif %}
-            >
-                {% trans %}flagged items ({{flags_count}}){% endtrans %}
-            </a>
-        {% endif %}
-        {% if group_join_requests_count %}{{ sep() }}
-        <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=join_requests"
-            {% if inbox_section == 'join_requests' %}class="on"{% endif %}
-        >
-            {% trans %}group join requests{% endtrans %}
-        </a>
-        {% endif %}
-    </div>
+            {% endif %}
+        </div>
+    {% endif %}
     {% block inbox_content %}
     {% endblock %}
 </div>
@@ -48,6 +50,7 @@
         var askbot = askbot || {};
         askbot['urls'] = askbot['urls'] || {};
         askbot['urls']['manageInbox'] = '{% url manage_inbox %}';
+        askbot['urls']['moderatePostEdits'] = '{% url moderate_post_edits %}';
         askbot['urls']['save_post_reject_reason'] = '{% url save_post_reject_reason %}';
         askbot['urls']['delete_post_reject_reason'] = '{% url delete_post_reject_reason %}';
         {% if request.user.is_administrator_or_moderator() %}

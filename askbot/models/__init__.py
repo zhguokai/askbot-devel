@@ -558,9 +558,9 @@ def get_or_create_anonymous_user():
     return user
 
 def user_needs_moderation(self):
-    """True, if user needs moderation"""
-    if askbot_settings.ENABLE_CONTENT_MODERATION:
-        return not (self.is_administrator_or_moderator() or self.is_approved())
+    if self.status not in ('a', 'm', 'd'):
+        choices = ('audit', 'premoderation')
+        return askbot_settings.CONTENT_MODERATION_MODE in choices
     return False
 
 def user_notify_users(
@@ -2720,24 +2720,34 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
 
     post = post_revision.post
 
-    assert(post_revision.revision == 0)
-    post_revision.revision = post.get_latest_revision_number() + 1
+    #approval of unpublished revision
+    if post_revision.revision == 0:
+        post_revision.revision = post.get_latest_revision_number() + 1
 
-    post_revision.save()
+        post_revision.save()
 
-    post.approved = True
-    post.save()
+        if post.approved == False:
+            if post.is_comment():
+                post.parent.comment_count += 1
+                post.parent.save()
+            elif post.is_answer():
+                post.thread.answer_count += 1
+                post.thread.save()
 
-    if post_revision.post.post_type == 'question':
-        thread = post.thread
-        thread.approved = True
-        thread.save()
-    post.thread.invalidate_cached_data()
+        post.approved = True
+        post.save()
 
-    #send the signal of published revision
-    signals.post_revision_published.send(
-        None, revision = post_revision, was_approved = True
-    )
+        if post_revision.post.post_type == 'question':
+            thread = post.thread
+            thread.approved = True
+            thread.save()
+
+        post.thread.invalidate_cached_data()
+
+        #send the signal of published revision
+        signals.post_revision_published.send(
+            None, revision = post_revision, was_approved = True
+        )
 
 @auto_now_timestamp
 def flag_post(
