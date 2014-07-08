@@ -8,13 +8,6 @@ from askbot.deps.livesettings import StringValue
 from django.core.cache import cache
 from django.utils.translation import ugettext_lazy as _
 
-def empty_cache_callback(old_value, new_value):
-    """used to clear cache on change of certain values"""
-    if old_value != new_value:
-        #todo: change this to warmup cache
-        cache.clear()
-    return new_value
-
 MODERATION = ConfigurationGroup(
                     'MODERATION',
                     _('Content moderation'),
@@ -34,7 +27,6 @@ settings.register(
         choices=CONTENT_MODERATION_MODE_CHOICES,
         default='flags',
         description=_('Content moderation method'),
-        update_callback=empty_cache_callback,
         help_text=_("Audit is made after the posts are published, pre-moderation prevents publishing before moderator's decision.")
     )
 )
