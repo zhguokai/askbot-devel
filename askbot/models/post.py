@@ -1748,7 +1748,8 @@ class Post(models.Model):
         self.last_edited_by = edited_by
         #self.html is denormalized in save()
         self.text = text
-        self.is_anonymous = edit_anonymously
+        #Post.is_anonymous field is denorm for the first edit only
+        #self.is_anonymous = edit_anonymously 
 
         #wiki is an eternal trap whence there is no exit
         if self.wiki == False and wiki == True:
@@ -1760,7 +1761,8 @@ class Post(models.Model):
             revised_at = edited_at,
             text = text,
             comment = comment,
-            by_email = by_email
+            by_email = by_email,
+            is_anonymous = edit_anonymously
         )
 
         parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
@@ -1880,11 +1882,12 @@ class Post(models.Model):
 
     def __add_revision(
                     self,
-                    author = None,
-                    revised_at = None,
-                    text = None,
-                    comment = None,
-                    by_email = False
+                    author=None,
+                    revised_at=None,
+                    text=None,
+                    comment=None,
+                    is_anonymous=False,
+                    by_email=False
                 ):
         #todo: this may be identical to Question.add_revision
         if None in (author, revised_at, text):

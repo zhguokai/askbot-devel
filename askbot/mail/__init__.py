@@ -474,7 +474,7 @@ def process_emailed_question(
 
             space = form.cleaned_data['space']
 
-            user.post_question(
+            question = user.post_question(
                 title=form.cleaned_data['title'],
                 tags=tagnames.strip(),
                 space=space,
@@ -482,6 +482,12 @@ def process_emailed_question(
                 by_email=True,
                 email_address=from_address,
                 group_id=space.get_default_ask_group_id()
+            )
+            from askbot.models import signals
+            signals.new_question_posted.send(None,
+                question=question,
+                user=user,
+                form_data=form.cleaned_data
             )
         else:
             raise ValidationError()
