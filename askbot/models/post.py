@@ -2221,28 +2221,29 @@ class PostRevision(models.Model):
                 self.post.thread.save()
 
             #give message to the poster
-            if self.by_email:
-                #todo: move this to the askbot.mail module
-                from askbot.mail import send_mail
-                email_context = {
-                    'site': askbot_settings.APP_SHORT_NAME
-                }
-                body_text = _(
-                    'Thank you for your post to %(site)s. '
-                    'It will be published after the moderators review.'
-                ) % email_context
-                send_mail(
-                    subject_line = _('your post to %(site)s') % email_context,
-                    body_text = body_text,
-                    recipient_list = [self.author.email,],
-                )
+            if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
+                if self.by_email:
+                    #todo: move this to the askbot.mail module
+                    from askbot.mail import send_mail
+                    email_context = {
+                        'site': askbot_settings.APP_SHORT_NAME
+                    }
+                    body_text = _(
+                        'Thank you for your post to %(site)s. '
+                        'It will be published after the moderators review.'
+                    ) % email_context
+                    send_mail(
+                        subject_line = _('your post to %(site)s') % email_context,
+                        body_text = body_text,
+                        recipient_list = [self.author.email,],
+                    )
 
-            else:
-                message = _(
-                    'Your post was placed on the moderation queue '
-                    'and will be published after the moderator approval.'
-                )
-                self.author.message_set.create(message = message)
+                else:
+                    message = _(
+                        'Your post was placed on the moderation queue '
+                        'and will be published after the moderator approval.'
+                    )
+                    self.author.message_set.create(message = message)
 
             activity_type = const.TYPE_ACTIVITY_MODERATED_NEW_POST
         else:
@@ -2333,7 +2334,7 @@ class PostRevision(models.Model):
                 'title': self.title,
                 'html': sanitized_html
             }
-        elif self.post.is_answer():
+        else:
             return sanitized_html
 
     def get_snippet(self, max_length = 120):

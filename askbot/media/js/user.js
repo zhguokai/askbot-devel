@@ -1,131 +1,3 @@
-//todo: refactor this into "Inbox" object or more specialized
-/*
-var setup_inbox = function(){
-
-    var getSelected = function(){
-
-        var id_list = new Array();
-        var elements = $('#responses input:checked').parent();
-
-        elements.each(function(index, element){
-            var id = $(element).attr('id').replace(/^re_/,'');
-            id_list.push(id);
-        });
-
-        if (id_list.length === 0){
-            alert(gettext('Please select at least one item'));
-        }
-
-        return {id_list: id_list, elements: elements};
-    };
-
-    var submit = function(id_list, elements, action_type){
-        if (action_type == 'delete' || action_type == 'mark_new' || action_type == 'mark_seen' || action_type == 'remove_flag' || action_type == 'delete_post'){
-            $.ajax({
-                type: 'POST',
-                cache: false,
-                dataType: 'json',
-                data: JSON.stringify({memo_list: id_list, action_type: action_type}),
-                url: askbot['urls']['manageInbox'],
-                success: function(response_data){
-                    if (response_data['success'] == true){
-                        if (action_type == 'delete' || action_type == 'remove_flag' || action_type == 'delete_post'){
-                            elements.remove();
-                        }
-                        else if (action_type == 'mark_new'){
-                            elements.addClass('highlight');
-                            elements.addClass('new');
-                            elements.removeClass('seen');
-                        }
-                        else if (action_type == 'mark_seen'){
-                            elements.removeClass('highlight');
-                            elements.addClass('seen');
-                            elements.removeClass('new');
-                        }
-                    }
-                    else {
-                        showMessage($('#responses'), response_data['message']);
-                    }
-                }
-            });
-        }
-    };
-
-    var startAction = function(action_type){
-        var data = getSelected();
-        if (data['id_list'].length === 0){
-            return;
-        }
-        if (action_type == 'delete'){
-            msg = ngettext('Delete this notification?',
-					'Delete these notifications?', data['id_list'].length);
-            if (confirm(msg) === false){
-                return;
-            }
-        }
-        if (action_type == 'close'){
-            msg = ngettext('Close this entry?',
-                    'Close these entries?', data['id_list'].length);
-            if (confirm(msg) === false){
-                return;
-            }
-        }
-        if (action_type == 'remove_flag'){
-            msg = ngettext(
-                    'Remove all flags and approve this entry?',
-                    'Remove all flags and approve these entries?',
-                    data['id_list'].length
-                );
-            if (confirm(msg) === false){
-                return;
-            }
-        }
-        submit(data['id_list'], data['elements'], action_type);
-    };
-    setupButtonEventHandlers($('#re_mark_seen'), function(){startAction('mark_seen')});
-    setupButtonEventHandlers($('#re_mark_new'), function(){startAction('mark_new')});
-    setupButtonEventHandlers($('#re_dismiss'), function(){startAction('delete')});
-    setupButtonEventHandlers($('#re_remove_flag'), function(){startAction('remove_flag')});
-    //setupButtonEventHandlers($('#re_close'), function(){startAction('close')});
-    setupButtonEventHandlers(
-                    $('#sel_all'),
-                    function(){
-                        setCheckBoxesIn('#responses .new', true);
-                        setCheckBoxesIn('#responses .seen', true);
-                    }
-    );
-    setupButtonEventHandlers(
-                    $('#sel_seen'),
-                    function(){
-                        setCheckBoxesIn('#responses .seen', true);
-                    }
-    );
-    setupButtonEventHandlers(
-                    $('#sel_new'),
-                    function(){
-                        setCheckBoxesIn('#responses .new', true);
-                    }
-    );
-    setupButtonEventHandlers(
-                    $('#sel_none'),
-                    function(){
-                        setCheckBoxesIn('#responses .new', false);
-                        setCheckBoxesIn('#responses .seen', false);
-                    }
-    );
-
-    if ($('body').hasClass('inbox-flags')) {
-        var responses = $('.response-parent');
-        responses.each(function(idx, response) {
-            var control = new PostModerationControls();
-            control.setParent($(response));
-            control.setReasonsDialog(rejectPostDialog);
-            rejectPostDialog.addPostModerationControl(control);
-            $(response).append(control.getElement());
-        });
-    }
-};
-*/
 var setup_inbox = function(){
     var page = $('.inbox-flags');
     if (page.length) {
@@ -153,63 +25,6 @@ var setup_badge_details_toggle = function(){
 };
 
 /**
-* response notifications
-*/
-var Inbox = function() {
-    WrappedElement.call(this);
-};
-inherits(Inbox, WrappedElement);
-
-Inbox.prototype.getMemoId = function() {
-    return this._parent_element.data('responseId');
-};
-
-Inbox.prototype.getMemoElement = function() {
-    var reId = this.getMemoId();
-    return $('#re_' + reId);
-};
-
-Inbox.prototype.removeMemo = function() {
-    this.getMemoElement().remove();
-};
-
-Inbox.prototype.markMemo = function() {
-    var memo = this.getMemoElement();
-    var checkbox = memo.find('input[type="checkbox"]');
-    checkbox.attr('checked', true);
-};
-
-Inbox.prototype.moderatePost = function(reasonId, actionType){
-    var me = this;
-    var data = {
-        reject_reason_id: reasonId,
-        memo_list: [me.getMemoId()],
-        action_type: actionType
-    };
-    $.ajax({
-        type: 'POST',
-        dataType: 'json',
-        cache: false,
-        data: JSON.stringify(data),
-        url: askbot['urls']['manageInbox'],
-        success: function(data){
-            if (data['success']){
-                me.removeMemo();
-                me.dispose();
-                if (actionType === 'delete') {
-                    notify.show(gettext('Post deleted'));
-                } else if (actionType === 'remove_flag') {
-                    notify.show(gettext('Post approved'));
-                }
-            } else {
-                notify.show(data['message']);
-            }
-        }
-    });
-};
-
-
-/**
 * the dropdown menu with selection of reasons
 * to reject posts and a button that starts menu to 
 * manage the list of reasons
@@ -233,9 +48,15 @@ DeclineAndExplainMenu.prototype.addReason = function(id, title) {
     li.append(button);
     button.html(title);
     button.data('reasonId', id);
+    button.attr('data-reason-id', id);
     this._addReasonBtn.parent().before(li);
 
     this.setupDeclinePostHandler(button);
+};
+
+DeclineAndExplainMenu.prototype.removeReason = function(id) {
+    var btn = this._element.find('a[data-reason-id="' + id + '"]');
+    btn.parent().remove();
 };
 
 DeclineAndExplainMenu.prototype.setControls = function(controls) {
@@ -266,6 +87,8 @@ DeclineAndExplainMenu.prototype.decorate = function(element) {
     manageReasonsDialog.decorate($('#manage-reject-reasons-modal'));
     this._manageReasonsDialog = manageReasonsDialog;
     manageReasonsDialog.setMenu(this);
+
+    setupButtonEventHandlers(addReasonBtn, function() { manageReasonsDialog.show(); });
 };
 
 /**
@@ -350,7 +173,7 @@ PostModerationControls.prototype.getModHandler = function(action, items, optReas
             url: askbot['urls']['moderatePostEdits'],
             success: function(response_data){
                 if (response_data['success'] == true){
-                    me.removeEntries(selectedEditIds);
+                    me.removeEntries(response_data['memo_ids']);
                 }
                 if (response_data['message']) {
                     me.showMessage(response_data['message']);
@@ -411,7 +234,7 @@ var ManageRejectReasonsDialog = function(){
     WrappedElement.call(this);
     this._selected_edit_ids = null;
     this._selected_reason_id = null;
-    this._state = null;//'select', 'preview', 'add-new'
+    this._state = null;//'select', 'add-new'
     this._postModerationControls = [];
     this._selectedEditDataReader = undefined;
 };
@@ -419,6 +242,10 @@ inherits(ManageRejectReasonsDialog, WrappedElement);
 
 ManageRejectReasonsDialog.prototype.setMenu = function(menu) {
     this._reasonsMenu = menu;
+};
+
+ManageRejectReasonsDialog.prototype.getMenu = function() {
+    return this._reasonsMenu;
 };
 
 ManageRejectReasonsDialog.prototype.setSelectedEditDataReader = function(func) {
@@ -445,11 +272,8 @@ ManageRejectReasonsDialog.prototype.setState = function(state){
     if (this._element){
         this._selector.hide();
         this._adder.hide();
-        this._previewer.hide();
         if (state === 'select'){
             this._selector.show();
-        } else if (state === 'preview'){
-            this._previewer.show();
         } else if (state === 'add-new'){
             this._adder.show();
         }
@@ -573,8 +397,10 @@ ManageRejectReasonsDialog.prototype.startSavingReason = function(callback){
         title: title_input.getVal(),
         details: details_input.getVal()
     };
+    var reasonIsNew = true;
     if (this._selected_reason_id){
         data['reason_id'] = this._selected_reason_id;
+        reasonIsNew = false;
     }
 
     var me = this;
@@ -589,6 +415,9 @@ ManageRejectReasonsDialog.prototype.startSavingReason = function(callback){
             if (data['success']){
                 //show current reason data and focus on it
                 me.addSelectableReason(data);
+                if (reasonIsNew) {
+                    me.getMenu().addReason(data['reason_id'], data['title']);
+                }
                 if (callback){
                     callback(data);
                 } else {
@@ -601,47 +430,13 @@ ManageRejectReasonsDialog.prototype.startSavingReason = function(callback){
     });
 };
 
-ManageRejectReasonsDialog.prototype.rejectPost = function(reason_id){
-    var me = this;
-    var memos = this._selected_edit_data['elements'];
-    var memo_ids = this._selected_edit_data['id_list'];
-    var data = {
-        reject_reason_id: reason_id,
-        memo_list: memo_ids,
-        action_type: 'delete_post'
-    };
-    $.ajax({
-        type: 'POST',
-        dataType: 'json',
-        cache: false,
-        data: JSON.stringify(data),
-        url: askbot['urls']['manageInbox'],
-        success: function(data){
-            if (data['success']){
-                $.each(memos, function(idx, memo) {
-                    $(memo).next('.post-moderation-controls').remove();
-                    $(memo).remove();
-                });
-                me.hide();
-            } else {
-                //only fatal errors here
-                me.setErrors(data['message']);
-            }
-        }
-    });
-};
-
-ManageRejectReasonsDialog.prototype.setPreviewerData = function(data){
-    this._selected_reason_id = data['id'];
-    this._element.find('.selected-reason-title').html(data['title']);
-    this._element.find('.selected-reason-details').html(data['details']);
-};
-
 ManageRejectReasonsDialog.prototype.startEditingReason = function(){
-    var title = this._element.find('.selected-reason-title').html();
-    var details = this._element.find('.selected-reason-details').html();
+    var data = this._select_box.getSelectedItemData();
+    var title = $(data['title']).text();
+    var details = data['details'];
     this._title_input.setVal(title);
     this._details_input.setVal(details);
+    this._selected_reason_id = data['id'];
     this.setState('add-new');
 };
 
@@ -668,6 +463,8 @@ ManageRejectReasonsDialog.prototype.startDeletingReason = function(){
             success: function(data){
                 if (data['success']){
                     select_box.removeItem(reason_id);
+                    me.hideEditButtons();
+                    me.getMenu().removeReason(reason_id);
                 } else {
                     me.setSelectorErrors(data['message']);
                 }
@@ -680,12 +477,21 @@ ManageRejectReasonsDialog.prototype.startDeletingReason = function(){
     }
 };
 
+ManageRejectReasonsDialog.prototype.hideEditButtons = function() {
+    this._editButton.hide();
+    this._deleteButton.hide();
+};
+
+ManageRejectReasonsDialog.prototype.showEditButtons = function() {
+    this._editButton.show();
+    this._deleteButton.show();
+};
+
 ManageRejectReasonsDialog.prototype.decorate = function(element){
     this._element = element;
     //set default state according to the # of available reasons
     this._selector = $(element).find('#reject-edit-modal-select');
     this._adder = $(element).find('#reject-edit-modal-add-new');
-    this._previewer = $(element).find('#reject-edit-modal-preview');
     if (this._selector.find('li').length > 0){
         this.setState('select');
         this.resetInputs();
@@ -694,10 +500,9 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
         this.resetInputs();
     }
 
-    $(this._element).find('.dropdown-toggle').dropdown();
-
     var select_box = new SelectBox();
     select_box.decorate($(this._selector.find('.select-box')));
+    select_box.setSelectHandler(function() { me.showEditButtons() });
     this._select_box = select_box;
 
     //setup tipped-inputs
@@ -706,8 +511,7 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
     title_input.decorate($(reject_title_input));
     this._title_input = title_input;
 
-    var reject_details_input = $(this._element)
-        .find('textarea.reject-reason-details');
+    var reject_details_input = $(this._element).find('textarea.reject-reason-details');
 
     var details_input = new TippedInput();
     details_input.decorate($(reject_details_input));
@@ -722,6 +526,7 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
             me.resetInputs();
             me.resetSelectedReasonId();
             me.setState('select');
+            me.hideEditButtons();
         }
     );
 
@@ -731,64 +536,25 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
     );
 
     setupButtonEventHandlers(
-        $(this._element).find('.save-reason-and-reject'),
-        function(){
-            me.startSavingReason(
-                function(data){
-                    me.rejectPost(data['reason_id']);
-                }
-            );
-        }
-    );
-
-    setupButtonEventHandlers(
-        $(this._element).find('.reject'),
-        function(){
-            me.rejectPost(me.getSelectedReasonId());
-        }
-    );
-
-    setupButtonEventHandlers(
-        element.find('.select-other-reason'),
-        function(){ 
-            me.resetInputs();
-            me.setState('select');
-        }
-    )
-
-    setupButtonEventHandlers(
         element.find('.add-new-reason'),
         function(){ 
             me.resetSelectedReasonId();
             me.resetInputs();
-            me.setState('add-new') 
+            me.setState('add-new') ;
         }
     );
 
+    this._editButton = element.find('.edit-this-reason');
     setupButtonEventHandlers(
-        element.find('.select-this-reason'),
-        function(){
-            var data = select_box.getSelectedItemData();
-            if (data['id']){
-                me.setState('preview');
-                me.setPreviewerData(data);
-            } else {
-                me.setSelectorErrors(
-                    gettext('A reason must be selected to reject post.')
-                )
-            }
-        }
-    );
-
-    setupButtonEventHandlers(
-        element.find('.edit-reason'),
+        this._editButton,
         function(){
             me.startEditingReason();
         }
     );
 
+    this._deleteButton = element.find('.delete-this-reason');
     setupButtonEventHandlers(
-        element.find('.delete-this-reason'),
+        this._deleteButton,
         function(){
             me.startDeletingReason();
         }

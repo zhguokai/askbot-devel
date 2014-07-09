@@ -787,7 +787,8 @@ def user_responses(request, user, context):
     #3) "package" data for the output
     response_list = list()
     for memo in memo_set:
-        if memo.activity.content_object is None:
+        obj = memo.activity.content_object
+        if obj is None:
             continue#a temp plug due to bug in the comment deletion
         response = {
             'id': memo.id,
@@ -800,7 +801,7 @@ def user_responses(request, user, context):
             'message_type': memo.activity.get_activity_type_display(),
             'question_id': memo.activity.question.id,
             'followup_messages': list(),
-            'content': memo.activity.content_object.html,
+            'content': obj.html or obj.text,
         }
         response_list.append(response)
 

@@ -58,7 +58,10 @@ def moderate_post_edits(request):
     memo_set = models.ActivityAuditStatus.objects.filter(
                                         id__in=post_data['edit_ids']
                                     ).select_related('activity')
-    result = {'message': ''}
+    result = {
+        'message': '',
+        'memo_ids': set()
+    }
 
     if post_data['action'] == 'decline-with-reason':
         num_posts = 0
@@ -125,6 +128,8 @@ def moderate_post_edits(request):
                                         activity_type__in=mod_activity_types
                                     )
             num_posts = items.count()
+            memo_set = models.ActivityAuditStatus.objects.filter(user=request.user, activity__in=items)
+            result['memo_ids'].update(memo_set.values_list('id', flat=True))
             items.delete()
 
         if num_posts > 0:
@@ -135,8 +140,23 @@ def moderate_post_edits(request):
         editors = get_editors(memo_set, exclude=request.user)
         num_posts = 0
         for editor in editors:
+            #block user
             editor.set_status('b')
+            #delete all content by the user
             num_posts += request.user.delete_all_content_authored_by_user(editor)
+            #delete all moderation queue items
+            mod_activity_types = (
+                const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+                const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+                const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+            )
+            items = models.Activity.objects.filter(
+                                        activity_type__in=mod_activity_types,
+                                        user=editor
+                                    )
+            memo_set = models.ActivityAuditStatus.objects.filter(user=request.user, activity__in=items)
+            result['memo_ids'].update(memo_set.values_list('id', flat=True))
+            items.delete()
 
         if num_posts:
             posts_message = ungettext('%d post deleted', '%d posts deleted', num_posts) % num_posts
@@ -148,7 +168,8 @@ def moderate_post_edits(request):
             result['message'] = concat_messages(result['message'], users_message)
 
     moderate_ips = getattr(django_settings, 'ASKBOT_IP_MODERATION_ENABLED', False)
-    if moderate_ips and 'ips' in post_data and post_data['action'] == 'block':
+    if moderate_ips and 'ips' in post_data['items'] and post_data['action'] == 'block':
+        ips = set()
         for memo in memo_set:
             obj = memo.activity.content_object
             if isinstance(obj, models.PostRevision):
@@ -157,7 +178,9 @@ def moderate_post_edits(request):
         #to make sure to not block the admin and 
         #in case REMOTE_ADDR is a proxy server - not
         #block access to the site
-        ips.remove(request.META['REMOTE_ADDR'])
+        my_ip = request.META['REMOTE_ADDR']
+        if my_ip in ips:
+            ips.remove(request.META['REMOTE_ADDR'])
 
         from stopforumspam.models import Cache
         already_blocked = Cache.objects.filter(ip__in=ips)
@@ -173,6 +196,8 @@ def moderate_post_edits(request):
             ips_message = ungettext('%d ip blocked', '%d ips blocked', num_ips) % num_ips
             result['message'] = concat_messages(result['message'], ips_message)
 
+    result['memo_ids'].update(set(memo_set.values_list('id', flat=True)))
+    result['memo_ids'] = list(result['memo_ids'])
     memo_set.delete()
     request.user.update_response_counts()
     if result['message']:
