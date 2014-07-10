@@ -541,7 +541,6 @@ def user_stats(request, user, context):
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'tab_name' : 'stats',
         'page_title' : _('user profile overview'),
-        'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
         'question_count': question_count,
         'q_paginator_context': q_paginator_context,

@@ -2272,21 +2272,19 @@ def user_moderate_user_reputation(
         repute.positive = reputation_change
     repute.save()
 
-def user_get_status_display(self, soft = False):
-    if self.is_administrator():
-        return _('Site Adminstrator')
+def user_get_status_display(self):
+    if self.is_approved():
+        return _('Registered User')
+    elif self.is_administrator():
+        return _('Adminstrator')
     elif self.is_moderator():
-        return _('Forum Moderator')
+        return _('Moderator')
     elif self.is_suspended():
         return  _('Suspended User')
     elif self.is_blocked():
         return _('Blocked User')
-    elif soft == True:
-        return _('Registered User')
     elif self.is_watched():
-        return _('Watched User')
-    elif self.is_approved():
-        return _('Approved User')
+        return _('New User')
     else:
         raise ValueError('Unknown user status')
 
