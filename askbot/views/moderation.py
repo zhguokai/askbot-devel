@@ -9,12 +9,19 @@ from django.utils.translation import ugettext as _
 from django.template.loader import get_template
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from django.utils.encoding import force_text
 from django.template import RequestContext
 from django.views.decorators import csrf
 from django.utils.encoding import force_text
 from django.core import exceptions
 from django.utils import simplejson
+
+EDIT_ACTIVITY_TYPES = (
+    const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+    const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+)
+MOD_ACTIVITY_TYPES = EDIT_ACTIVITY_TYPES + (const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
 
 #some utility functions
 def get_object(memo):
@@ -25,15 +32,39 @@ def get_object(memo):
         return content_object
 
 
-def get_editors(memo_set, exclude=None):
-        editors = set()
-        for memo in memo_set:
-            post = get_object(memo)
-            editors.add(post.author)
+def get_editors(memo_set):
+    """returns editors corresponding to the memo set
+    some memos won't yeild editors - if the related object
+    is post and it has > 1 editor (in which case we don't know
+    who was the editor that we want to block!!! 
+    this applies to flagged posts.
 
-        if exclude in editors:
-            editors.remove(exclude)#make sure not to block yourself
-        return editors
+    todo: an inconvenience is that "offensive flags" are stored
+    differently in the Activity vs. "new moderated posts" or "post edits"
+    """
+    editors = set()
+    for memo in memo_set:
+        obj = memo.activity.content_object
+        if isinstance(obj, models.PostRevision):
+            editors.add(obj.author)
+        elif isinstance(obj, models.Post):
+            rev_authors = set()
+            for rev in obj.revisions.all():
+                rev_authors.add(rev.author)
+
+            #if we have > 1 author we skip, b/c don't know
+            #which user we want to block
+            if len(rev_authors) == 1:
+                editors.update(rev_authors)
+    return editors
+
+def filter_admins(users):
+    filtered = set()
+    for user in users:
+        if not user.is_administrator_or_moderator():
+            filtered.add(user)
+    return filtered
+            
 
 def concat_messages(message1, message2):
     if message1:
@@ -55,15 +86,27 @@ def moderate_post_edits(request):
     post_data = simplejson.loads(request.raw_post_data)
     #{'action': 'decline-with-reason', 'items': ['posts'], 'reason': 1, 'edit_ids': [827]}
 
-    memo_set = models.ActivityAuditStatus.objects.filter(
-                                        id__in=post_data['edit_ids']
-                                    ).select_related('activity')
+    memo_set = models.ActivityAuditStatus.objects.filter(id__in=post_data['edit_ids'])
     result = {
         'message': '',
         'memo_ids': set()
     }
 
+    #if we are approving or declining users we need to expand the memo_set
+    #to all of their edits of those users
+    if post_data['action'] in ('block', 'approve') and 'users' in post_data['items']:
+        editors = filter_admins(get_editors(memo_set))
+        items = models.Activity.objects.filter(
+                                activity_type__in=EDIT_ACTIVITY_TYPES,
+                                user__in=editors
+                            )
+        memo_filter = Q(id__in=post_data['edit_ids']) | Q(user=request.user, activity__in=items)
+        memo_set = models.ActivityAuditStatus.objects.filter(memo_filter)
+
+    memo_set.select_related('activity')
+
     if post_data['action'] == 'decline-with-reason':
+        #todo: bunch notifications - one per recipient
         num_posts = 0
         for memo in memo_set:
             post = get_object(memo)
@@ -82,11 +125,12 @@ def moderate_post_edits(request):
             )
             num_posts += 1
 
+        #message to moderator
         if num_posts:
             posts_message = ungettext('%d post deleted', '%d posts deleted', num_posts) % num_posts
             result['message'] = concat_messages(result['message'], posts_message)
 
-    if post_data['action'] == 'approve':
+    elif post_data['action'] == 'approve':
         num_posts = 0
         if 'posts' in post_data['items']:
             for memo in memo_set:
@@ -101,9 +145,13 @@ def moderate_post_edits(request):
                         request.user.approve_post_revision(revision)
                         num_posts += 1
 
+            if num_posts > 0:
+                posts_message = ungettext('%d post approved', '%d posts approved', num_posts) % num_posts
+                result['message'] = concat_messages(result['message'], posts_message)
 
         if 'users' in post_data['items']:
-            editors = get_editors(memo_set)
+            editors = filter_admins(get_editors(memo_set))
+            assert(request.user not in editors)
             for editor in editors:
                 editor.set_status('a')
 
@@ -112,94 +160,65 @@ def moderate_post_edits(request):
                 users_message = ungettext('%d user approved', '%d users approved', num_editors) % num_editors
                 result['message'] = concat_messages(result['message'], users_message)
             
-            #approve revisions by the authors
-            revisions = models.PostRevision.objects.filter(author__in=editors)
-            now = datetime.now()
-            revisions.update(approved=True, approved_at=now, approved_by=request.user)
-            ct = ContentType.objects.get_for_model(models.PostRevision)
-            mod_activity_types = (
-                const.TYPE_ACTIVITY_MARK_OFFENSIVE,
-                const.TYPE_ACTIVITY_MODERATED_NEW_POST,
-                const.TYPE_ACTIVITY_MODERATED_POST_EDIT
-            )
-            items = models.Activity.objects.filter(
-                                        content_type=ct,
-                                        object_id__in=revisions.values_list('id', flat=True),
-                                        activity_type__in=mod_activity_types
-                                    )
-            num_posts = items.count()
-            memo_set = models.ActivityAuditStatus.objects.filter(user=request.user, activity__in=items)
-            result['memo_ids'].update(memo_set.values_list('id', flat=True))
-            items.delete()
+    elif post_data['action'] == 'block':
+        if 'users' in post_data['items']:
+            editors = filter_admins(get_editors(memo_set))
+            assert(request.user not in editors)
+            num_posts = 0
+            for editor in editors:
+                #block user
+                editor.set_status('b')
+                #delete all content by the user
+                num_posts += request.user.delete_all_content_authored_by_user(editor)
 
-        if num_posts > 0:
-            posts_message = ungettext('%d post approved', '%d posts approved', num_posts) % num_posts
-            result['message'] = concat_messages(result['message'], posts_message)
+            if num_posts:
+                posts_message = ungettext('%d post deleted', '%d posts deleted', num_posts) % num_posts
+                result['message'] = concat_messages(result['message'], posts_message)
 
-    if 'users' in post_data['items'] and post_data['action'] == 'block':
-        editors = get_editors(memo_set, exclude=request.user)
-        num_posts = 0
-        for editor in editors:
-            #block user
-            editor.set_status('b')
-            #delete all content by the user
-            num_posts += request.user.delete_all_content_authored_by_user(editor)
-            #delete all moderation queue items
-            mod_activity_types = (
-                const.TYPE_ACTIVITY_MARK_OFFENSIVE,
-                const.TYPE_ACTIVITY_MODERATED_NEW_POST,
-                const.TYPE_ACTIVITY_MODERATED_POST_EDIT
-            )
-            items = models.Activity.objects.filter(
-                                        activity_type__in=mod_activity_types,
-                                        user=editor
-                                    )
-            memo_set = models.ActivityAuditStatus.objects.filter(user=request.user, activity__in=items)
-            result['memo_ids'].update(memo_set.values_list('id', flat=True))
-            items.delete()
+            num_editors = len(editors)
+            if num_editors:
+                users_message = ungettext('%d user blocked', '%d users blocked', num_editors) % num_editors
+                result['message'] = concat_messages(result['message'], users_message)
 
-        if num_posts:
-            posts_message = ungettext('%d post deleted', '%d posts deleted', num_posts) % num_posts
-            result['message'] = concat_messages(result['message'], posts_message)
+        moderate_ips = getattr(django_settings, 'ASKBOT_IP_MODERATION_ENABLED', False)
+        if moderate_ips and 'ips' in post_data['items']:
+            ips = set()
+            for memo in memo_set:
+                obj = memo.activity.content_object
+                if isinstance(obj, models.PostRevision):
+                    ips.add(obj.ip_addr)
 
-        num_editors = len(editors)
-        if num_editors:
-            users_message = ungettext('%d user blocked', '%d users blocked', num_editors) % num_editors
-            result['message'] = concat_messages(result['message'], users_message)
+            #to make sure to not block the admin and 
+            #in case REMOTE_ADDR is a proxy server - not
+            #block access to the site
+            my_ip = request.META['REMOTE_ADDR']
+            if my_ip in ips:
+                ips.remove(request.META['REMOTE_ADDR'])
 
-    moderate_ips = getattr(django_settings, 'ASKBOT_IP_MODERATION_ENABLED', False)
-    if moderate_ips and 'ips' in post_data['items'] and post_data['action'] == 'block':
-        ips = set()
-        for memo in memo_set:
-            obj = memo.activity.content_object
-            if isinstance(obj, models.PostRevision):
-                ips.add(obj.ip_addr)
+            from stopforumspam.models import Cache
+            already_blocked = Cache.objects.filter(ip__in=ips)
+            already_blocked.update(permanent=True)
+            already_blocked_ips = already_blocked.values_list('ip', flat=True)
+            ips = ips - set(already_blocked_ips)
+            for ip in ips:
+                cache = Cache(ip=ip, permanent=True)
+                cache.save()
 
-        #to make sure to not block the admin and 
-        #in case REMOTE_ADDR is a proxy server - not
-        #block access to the site
-        my_ip = request.META['REMOTE_ADDR']
-        if my_ip in ips:
-            ips.remove(request.META['REMOTE_ADDR'])
+            num_ips = len(ips)
+            if num_ips:
+                ips_message = ungettext('%d ip blocked', '%d ips blocked', num_ips) % num_ips
+                result['message'] = concat_messages(result['message'], ips_message)
 
-        from stopforumspam.models import Cache
-        already_blocked = Cache.objects.filter(ip__in=ips)
-        already_blocked.update(permanent=True)
-        already_blocked_ips = already_blocked.values_list('ip', flat=True)
-        ips = ips - set(already_blocked_ips)
-        for ip in ips:
-            cache = Cache(ip=ip, permanent=True)
-            cache.save()
+    result['memo_ids'] = list(memo_set.values_list('id', flat=True))
+    result['message'] = force_text(result['message'])
 
-        num_ips = len(ips)
-        if num_ips:
-            ips_message = ungettext('%d ip blocked', '%d ips blocked', num_ips) % num_ips
-            result['message'] = concat_messages(result['message'], ips_message)
-
-    result['memo_ids'].update(set(memo_set.values_list('id', flat=True)))
-    result['memo_ids'] = list(result['memo_ids'])
+    #delete items from the moderation queue
+    act_ids = memo_set.values_list('activity_id', flat=True)
+    acts = models.Activity.objects.filter(
+                            id__in=act_ids,
+                            activity_type__in=MOD_ACTIVITY_TYPES
+                        )
     memo_set.delete()
+    acts.delete()
     request.user.update_response_counts()
-    if result['message']:
-        result['message'] = force_text(result['message'])
     return result
