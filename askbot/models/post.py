@@ -292,7 +292,10 @@ class PostManager(BaseQuerySetManager):
         if answer.is_approved():
             thread.answer_count += 1
             thread.save()
-            thread.set_last_activity(last_activity_at=added_at, last_activity_by=author) # this should be here because it regenerates cached thread summary html
+            thread.set_last_activity_info(
+                        last_activity_at=added_at,
+                        last_activity_by=author
+                    ) # this should be here because it regenerates cached thread summary html
         return answer
 
 
@@ -1831,7 +1834,10 @@ class Post(models.Model):
 
         if edited_at is None:
             edited_at = datetime.datetime.now()
-        self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
+        self.thread.set_last_activity_info(
+                        last_activity_at=edited_at,
+                        last_activity_by=edited_by
+                    )
 
     def _question__apply_edit(
                             self, 
@@ -1891,7 +1897,10 @@ class Post(models.Model):
             ip_addr=ip_addr
         )
 
-        self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
+        self.thread.set_last_activity_info(
+                        last_activity_at=edited_at,
+                        last_activity_by=edited_by
+                    )
 
     def apply_edit(self, *args, **kwargs):
         #todo: unify this, here we have unnecessary indirection

@@ -18,7 +18,9 @@
         <p id="id_user_status_info"></p>
         <p>
             <input type="submit" name="change_status" value="{% trans %}Change status{% endtrans %}" />
+            {% if not view_user.is_blocked() %}
             <input type="submit" name="hard_block" value="{% trans %}Block user and delete all content{% endtrans %}" />
+            {% endif %}
         </p>
     </form>
 {% endif %}

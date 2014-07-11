@@ -1514,6 +1514,7 @@ def user_delete_answer(
     answer.save()
 
     answer.thread.update_answer_count()
+    answer.thread.update_last_activity_info()
     answer.thread.invalidate_cached_data()
     logging.debug('updated answer count to %d' % answer.thread.answer_count)
 
@@ -1580,6 +1581,10 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
     #delete questions
     questions = Post.objects.get_questions().filter(author=author)
     count += questions.update(deleted_at=timestamp, deleted_by=self, deleted=True)
+
+    threads = Thread.objects.filter(last_activity_by=author)
+    for thread in threads:
+        thread.update_last_activity_info()
 
     #delete threads
     thread_ids = questions.values_list('thread_id', flat=True)
@@ -1654,6 +1659,7 @@ def user_restore_post(
         post.thread.invalidate_cached_data()
         if post.post_type == 'answer':
             post.thread.update_answer_count()
+            post.thread.update_last_activity_info()
         else:
             #todo: make sure that these tags actually exist
             #some may have since been deleted for good

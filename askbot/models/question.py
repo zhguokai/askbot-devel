@@ -898,13 +898,30 @@ class Thread(models.Model):
         self.answer_accepted_at = timestamp
         self.save()
 
-    def set_last_activity(self, last_activity_at, last_activity_by):
+    def set_last_activity_info(self, last_activity_at, last_activity_by):
         self.last_activity_at = last_activity_at
         self.last_activity_by = last_activity_by
         self.save()
         ####################################################################
         self.update_summary_html() # regenerate question/thread summary html
         ####################################################################
+
+    def get_last_activity_info(self):
+        post_ids = self.get_answers().values_list('id', flat=True)
+        question = self._question_post()
+        post_ids = list(post_ids)
+        post_ids.append(question.id)
+        from askbot.models import PostRevision
+        revs = PostRevision.objects.filter(
+                            post__id__in=post_ids,
+                            revision__gt=0
+                        ).order_by('-id')
+        rev = revs[0]
+        return rev.revised_at, rev.author
+
+    def update_last_activity_info(self):
+        timestamp, user = self.get_last_activity_info()
+        self.set_last_activity_info(timestamp, user)
 
     def get_tag_names(self):
         "Creates a list of Tag names from the ``tagnames`` attribute."
