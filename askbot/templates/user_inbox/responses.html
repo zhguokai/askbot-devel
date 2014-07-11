@@ -6,18 +6,20 @@
 {% block inbox_content %}
     <div class="messages">
     {% for message in messages %}{# messages are grouped by question, using the "nested_messages" #}
-        <div 
-            class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
+        <div class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
             data-message-id="{{ message.id }}"
         >
             <h2>"{{ message.title.strip()|escape}}"</h2>
             {{ macros.inbox_message_snippet(message) }}
-            {# "nested" messages are further response messages to the same question #}
-            {% for followup_message in message.followup_messages %}
-                {{ macros.inbox_message_snippet(followup_message) }}
-            {% endfor %}
         </div>
-        <div class="clearfix"></div>
+        {# "nested" messages are further response messages to the same question #}
+        {% for followup_message in message.followup_messages %}
+            <div class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
+                data-message-id="{{ message.id }}"
+            >
+                {{ macros.inbox_message_snippet(followup_message) }}
+            </div>
+        {% endfor %}
     {% endfor %}
     </div>
 {% endblock %}

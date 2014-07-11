@@ -2876,6 +2876,15 @@ ul#related-tags li {
   line-height: 24px;
   padding-bottom: 6px;
 }
+.user-profile-page.inbox-forum .message,
+.user-profile-page.inbox-flags .message {
+  border-bottom: 1px solid #ccc;
+  padding: 12px 0;
+}
+.user-profile-page.inbox-forum .message:last-child,
+.user-profile-page.inbox-flags .message:last-child {
+  border: none;
+}
 .user-profile-page.inbox-forum input[type="checkbox"] {
   display: none;
 }
@@ -2908,13 +2917,6 @@ ul#related-tags li {
 }
 .user-profile-page.inbox-flags .messages {
   margin-bottom: 14px;
-}
-.user-profile-page.inbox-flags .message {
-  border-bottom: 1px solid #ccc;
-  padding: 12px 0;
-}
-.user-profile-page.inbox-flags .message:last-child {
-  border: none;
 }
 .user-profile-page.inbox-flags .select-items {
   margin-bottom: 10px;

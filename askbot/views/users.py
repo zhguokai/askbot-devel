@@ -792,6 +792,7 @@ def user_responses(request, user, context):
             continue#a temp plug due to bug in the comment deletion
 
         act = memo.activity
+        ip_addr = None
         if act.activity_type == const.TYPE_ACTIVITY_MARK_OFFENSIVE:
             #todo: two issues here - flags are stored differently
             #from activity of new posts and edits
@@ -799,12 +800,12 @@ def user_responses(request, user, context):
             act_user = act.content_object.author
             act_message = _('post was flagged as offensive')
             act_type = 'flag'
-            ip_addr = None
         else:
             act_user = act.user
             act_message = act.get_activity_type_display()
             act_type = 'edit'
-            ip_addr = act.content_object.ip_addr
+            if section == 'flags':
+                ip_addr = act.content_object.ip_addr
 
         response = {
             'id': memo.id,
