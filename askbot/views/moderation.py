@@ -209,7 +209,7 @@ def moderate_post_edits(request):
                 ips_message = ungettext('%d ip blocked', '%d ips blocked', num_ips) % num_ips
                 result['message'] = concat_messages(result['message'], ips_message)
 
-    result['memo_ids'] = list(memo_set.values_list('id', flat=True))
+    result['memo_ids'] = [memo.id for memo in memo_set]#why values_list() fails here?
     result['message'] = force_text(result['message'])
 
     #delete items from the moderation queue
@@ -221,4 +221,5 @@ def moderate_post_edits(request):
     memo_set.delete()
     acts.delete()
     request.user.update_response_counts()
+    result['memo_count'] = request.user.get_notifications(MOD_ACTIVITY_TYPES).count()
     return result

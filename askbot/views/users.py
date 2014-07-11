@@ -788,17 +788,36 @@ def user_responses(request, user, context):
     for memo in memo_set:
         obj = memo.activity.content_object
         if obj is None:
+            memo.activity.delete()
             continue#a temp plug due to bug in the comment deletion
+
+        act = memo.activity
+        if act.activity_type == const.TYPE_ACTIVITY_MARK_OFFENSIVE:
+            #todo: two issues here - flags are stored differently
+            #from activity of new posts and edits
+            #second issue: on posts with many edits we don't know whom to block
+            act_user = act.content_object.author
+            act_message = _('post was flagged as offensive')
+            act_type = 'flag'
+            ip_addr = None
+        else:
+            act_user = act.user
+            act_message = act.get_activity_type_display()
+            act_type = 'edit'
+            ip_addr = act.content_object.ip_addr
+
         response = {
             'id': memo.id,
-            'timestamp': memo.activity.active_at,
-            'user': memo.activity.user,
+            'timestamp': act.active_at,
+            'user': act_user,
+            'ip_addr': ip_addr,
             'is_new': memo.is_new(),
-            'url': memo.activity.get_absolute_url(),
-            'snippet': memo.activity.get_snippet(),
-            'title': memo.activity.question.thread.title,
-            'message_type': memo.activity.get_activity_type_display(),
-            'question_id': memo.activity.question.id,
+            'url': act.get_absolute_url(),
+            'snippet': act.get_snippet(),
+            'title': act.question.thread.title,
+            'message_type': act_message,
+            'memo_type': act_type,
+            'question_id': act.question.id,
             'followup_messages': list(),
             'content': obj.html or obj.text,
         }

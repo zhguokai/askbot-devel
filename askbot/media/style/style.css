@@ -2909,6 +2909,13 @@ ul#related-tags li {
 .user-profile-page.inbox-flags .messages {
   margin-bottom: 14px;
 }
+.user-profile-page.inbox-flags .message {
+  border-bottom: 1px solid #ccc;
+  padding: 12px 0;
+}
+.user-profile-page.inbox-flags .message:last-child {
+  border: none;
+}
 .user-profile-page.inbox-flags .select-items {
   margin-bottom: 10px;
 }
@@ -4289,6 +4296,9 @@ textarea.tipped-input {
 .modal-body > input[type="text"] {
   width: 515px;
   font-style: normal;
+}
+.alert .close {
+  right: -38px;
 }
 .tag-subscriptions {
   border-spacing: 10px;

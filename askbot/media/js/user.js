@@ -120,9 +120,13 @@ PostModerationControls.prototype.removeEntries = function(entryIds) {
         var id = entryIds[i];
         var elem = this._element.find('.message[data-message-id="' + id + '"]');
         if (elem.length) {
-            elem.fadeOut('fast');
+            elem.fadeOut('fast', function() { elem.remove() });
         }
     }
+};
+
+PostModerationControls.prototype.setEntryCount = function(count) {
+    this._entryCount.html(count);
 };
 
 PostModerationControls.prototype.getCheckBoxes = function() {
@@ -174,6 +178,7 @@ PostModerationControls.prototype.getModHandler = function(action, items, optReas
             success: function(response_data){
                 if (response_data['success'] == true){
                     me.removeEntries(response_data['memo_ids']);
+                    me.setEntryCount(response_data['memo_count']);
                 }
                 if (response_data['message']) {
                     me.showMessage(response_data['message']);
@@ -195,6 +200,8 @@ PostModerationControls.prototype.decorate = function(element) {
     this._element = element;
     this._notification = element.find('.action-status span');
     this.hideMessage();
+
+    this._entryCount = $('.mod-memo-count');
     //approve posts button
     var button = $('.approve-posts');
     setupButtonEventHandlers(button, this.getModHandler('approve', ['posts']));

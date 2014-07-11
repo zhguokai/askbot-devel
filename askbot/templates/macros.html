@@ -18,6 +18,22 @@
 </div>
 {%- endmacro -%}
 
+{%- macro moderation_queue_message(message) -%}
+<div class="message-details" data-message-id="{{ message.id }}">
+    <input type="checkbox" />
+    {{ gravatar(message.user, 24) }}
+    <a class="username" href="{{ message.user.get_absolute_url() }}">{{ message.user.username|escape }}</a> |
+    {% if message['memo_type'] == 'edit' %}
+        <a href="mailto:{{ message.user.email }}">{{ message.user.email }}</a> |
+        ip=<span class="ip-addr">{{ message.ip_addr }}</span> |
+    {% endif %}
+    <a class="forum-post-link" href="{{ message.url }}">{{ message.message_type }}</a>
+    ({{ timeago(message.timestamp) }})
+    {#<div class="snippet">{{ message.snippet }}</div>#}
+    <div class="post-content">{{ message.content }}</div>
+</div>
+{%- endmacro -%}
+
 {%- macro post_vote_buttons(post = None) -%}
 <div id="{{post.post_type}}-img-upvote-{{ post.id }}"
     class="{{post.post_type}}-img-upvote post-vote upvote">
