@@ -1036,6 +1036,11 @@ class Post(models.Model):
             self._cached_comments = list()
             return self._cached_comments
 
+    def add_cached_comment(self, comment):
+        comments = self.get_cached_comments()
+        if comment not in comments:
+            comments.append(comment)
+
     def add_comment(
                 self,
                 comment=None,
