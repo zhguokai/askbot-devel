@@ -4,6 +4,9 @@
     {% trans %}inbox - moderation queue{% endtrans %}
 {% endblock %}
 {% block inbox_content %}
+    {% if request.user.new_response_count %}
+        <p class="clear-messages"><a>{% trans %}Clear new notifications{% endtrans %}</a></p>
+    {% endif %}
     <div class="messages">
     {% for message in messages %}{# messages are grouped by question, using the "nested_messages" #}
         <div class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"

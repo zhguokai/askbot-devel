@@ -38,6 +38,7 @@ from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.mail import send_mail
 from askbot.utils.http import get_request_info
+from askbot.utils import decorators
 from askbot.utils import functions
 from askbot import forms
 from askbot import const
@@ -65,6 +66,23 @@ def owner_or_moderator_required(f):
         return f(request, profile_owner, context)
     return wrapped_func
 
+@decorators.ajax_only
+def clear_new_notifications(request):
+    """clears all new notifications for logged in user"""
+    user = request.user
+    if user.is_anonymous():
+        raise django_exceptions.PermissionDenied
+
+    activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+    activity_types += (
+        const.TYPE_ACTIVITY_MENTION,
+    )
+    memo_set = models.ActivityAuditStatus.objects.filter(
+        activity__activity_type__in=activity_types,
+        user=user
+    )
+    memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
+    user.update_response_counts()
 
 def show_users(request, by_group=False, group_id=None, group_slug=None):
     """Users view, including listing of users by group"""
