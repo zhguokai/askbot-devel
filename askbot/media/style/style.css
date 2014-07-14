@@ -2052,8 +2052,9 @@ ul#related-tags li {
 /* ----- Question template ----- */
 .answer .moderated,
 .question .moderated {
-  background: url(../images/dialog-warning.png) 2px 0 no-repeat;
   font-weight: bold;
+  background: url(../images/dialog-warning.png) 2px 0 no-repeat;
+  text-decoration: underline;
   line-height: 16px !important;
   margin-bottom: -2px !important;
   padding-left: 24px !important;
@@ -3752,6 +3753,9 @@ button::-moz-focus-inner {
   line-height: 10px;
   font-size: 12px;
   padding: 0;
+}
+.action-status a {
+  font-weight: bold;
 }
 .inbox-flags .action-status {
   line-height: 38px;

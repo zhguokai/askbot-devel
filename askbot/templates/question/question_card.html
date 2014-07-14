@@ -14,7 +14,7 @@
                 {% include "question/question_author_info.html" %}
             </div>
             {% if question.needs_moderation() %}
-                <p class="moderated">{% trans %}This post awaiting moderation{% endtrans %}</p>
+                <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
             {% endif %}
             {{ question.summary }}
         </div>

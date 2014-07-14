@@ -129,6 +129,10 @@ PostModerationControls.prototype.setEntryCount = function(count) {
     this._entryCount.html(count);
 };
 
+PostModerationControls.prototype.getEntryCount = function() {
+    return this.getCheckBoxes().length;
+};
+
 PostModerationControls.prototype.getCheckBoxes = function() {
     return this._element.find('.messages input[type="checkbox"]');
 };
@@ -180,8 +184,27 @@ PostModerationControls.prototype.getModHandler = function(action, items, optReas
                     me.removeEntries(response_data['memo_ids']);
                     me.setEntryCount(response_data['memo_count']);
                 }
-                if (response_data['message']) {
-                    me.showMessage(response_data['message']);
+
+                var message = response_data['message'] || '';
+                if (me.getEntryCount() < 10 && response_data['memo_count'] > 9) {
+                    if (message) {
+                        message += '. '
+                    }
+                    var junk = $('#junk-mod');
+                    if (junk.length == 0) {
+                        junk = me.makeElement('div');
+                        junk.attr('id', 'junk-mod');
+                        junk.hide();
+                        $(document).append(junk);
+                    }
+                    var a = me.makeElement('a');
+                    a.attr('href', window.location.href);
+                    a.text(gettext('Load more items.'));
+                    junk.append(a);
+                    message += a[0].outerHTML;
+                }
+                if (message) {
+                    me.showMessage(message);
                 }
             }
         });

@@ -1108,12 +1108,26 @@ class Thread(models.Model):
                     post_to_author[post_id] = rev.author_id
                     post.set_runtime_needs_moderation()
 
+                def post_type_ord(p):
+                    """need to sort by post type"""
+                    if p.is_question():
+                        return 0
+                    elif p.is_answer():
+                        return 1
+                    return 2
+
+                def cmp_post_types(a, b):
+                    """need to sort by post type"""
+                    at = post_type_ord(a)
+                    bt = post_type_ord(b)
+                    return cmp(at, bt)
+
                 if len(post_id_set):
                     #brand new suggested posts
                     from askbot.models import Post
                     #order by insures that
-                    posts = Post.objects.filter(id__in=post_id_set).order_by('post_type')
-                    for post in posts:
+                    posts = list(Post.objects.filter(id__in=post_id_set))
+                    for post in sorted(posts, cmp=cmp_post_types):
                         rev = rev_map[post.id]
                         post.text = rev.text
                         post.html = post.parse_post_text()['html']
@@ -1127,6 +1141,7 @@ class Thread(models.Model):
                             all_posts.append(post)#add b/c there may be self-comments
                         if post.is_question():
                             post_data[0] = post
+                            all_posts.append(post)
 
         return post_data
 
