@@ -1058,6 +1058,9 @@ class Thread(models.Model):
         """loads post data for use in the question details view
         """
         post_data = self.get_cached_post_data(user=user, sort_method=sort_method)
+        if user.is_anonymous():
+            return post_data
+
         if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' and user.is_watched():
             #in this branch we patch post_data with the edits suggested by the 
             #watched user
