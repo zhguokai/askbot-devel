@@ -775,8 +775,9 @@ class FeedbackForm(forms.Form):
     def clean(self):
         super(FeedbackForm, self).clean()
         if self.user and self.user.is_anonymous():
-            if not self.cleaned_data['no_email'] \
-                and not self.cleaned_data['email']:
+            need_email = not bool(self.cleaned_data.get('no_email', False))
+            email = self.cleaned_data.get('email', '').strip()
+            if need_email and email == '':
                 msg = _('Please mark "I dont want to give my mail" field.')
                 self._errors['email'] = self.error_class([msg])
 
