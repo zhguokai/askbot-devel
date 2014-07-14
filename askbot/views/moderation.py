@@ -191,9 +191,9 @@ def moderate_post_edits(request):
             #to make sure to not block the admin and 
             #in case REMOTE_ADDR is a proxy server - not
             #block access to the site
-            my_ip = request.META['REMOTE_ADDR']
+            my_ip = request.META.get('REMOTE_ADDR')
             if my_ip in ips:
-                ips.remove(request.META['REMOTE_ADDR'])
+                ips.remove(my_ip)
 
             from stopforumspam.models import Cache
             already_blocked = Cache.objects.filter(ip__in=ips)

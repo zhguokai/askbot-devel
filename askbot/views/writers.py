@@ -283,7 +283,7 @@ def ask(request):#view used to ask a new question
                     is_anonymous = ask_anonymously,
                     text = text,
                     added_at = timestamp,
-                    ip_addr = request.META['REMOTE_ADDR'],
+                    ip_addr = request.META.get('REMOTE_ADDR'),
                 )
                 return HttpResponseRedirect(url_utils.get_login_url())
 
@@ -660,7 +660,7 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
                     wiki=form.cleaned_data['wiki'],
                     text=form.cleaned_data['text'],
                     session_key=request.session.session_key,
-                    ip_addr=request.META['REMOTE_ADDR'],
+                    ip_addr=request.META.get('REMOTE_ADDR'),
                 )
                 return HttpResponseRedirect(url_utils.get_login_url())
 
@@ -797,7 +797,7 @@ def edit_comment(request):
         comment_post=comment_post,
         body_text=form.cleaned_data['comment'],
         suppress_email=form.cleaned_data['suppress_email'],
-        ip_addr=request.META['REMOTE_ADDR']
+        ip_addr=request.META.get('REMOTE_ADDR'),
     )
 
     is_deletable = template_filters.can_delete_comment(

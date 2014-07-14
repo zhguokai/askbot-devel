@@ -236,11 +236,12 @@ class PostManager(BaseQuerySetManager):
         parse_results = post.parse_and_save(author=author, is_private=is_private)
 
         post.add_revision(
-            author = author,
-            revised_at = added_at,
-            text = text,
-            comment = unicode(const.POST_STATUS['default_version']),
-            by_email = by_email
+            author=author,
+            revised_at=added_at,
+            text=text,
+            comment=unicode(const.POST_STATUS['default_version']),
+            by_email=by_email,
+            ip_addr=ip_addr
         )
 
         from askbot.models import signals
