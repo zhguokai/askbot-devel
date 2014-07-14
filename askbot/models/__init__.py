@@ -24,6 +24,7 @@ from django.db.models import signals as django_signals
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import get_language
+from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.safestring import mark_safe
@@ -628,6 +629,7 @@ def _assert_user_can(
             'perform_action': action_display,
             'your_account_is': _('your account is blocked')
         }
+        error_message = string_concat(error_message, '.</br> ', message_keys.PUNISHED_USER_INFO)
     elif post and owner_can and user == post.get_owner():
         if user.is_suspended() and suspended_owner_cannot:
             error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
@@ -1283,20 +1285,10 @@ def user_post_anonymous_askbot_content(user, session_key):
             aa.save()
         #maybe add pending posts message?
     else:
-        if user.is_blocked() or user.is_suspended():
-            if user.is_blocked():
-                account_status = _('your account is blocked')
-            elif user.is_suspended():
-                account_status = _('your account is suspended')
-            user.message_set.create(message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
-                'perform_action': _('make posts'),
-                'your_account_is': account_status
-            })
-        else:
-            for aq in aq_list:
-                aq.publish(user)
-            for aa in aa_list:
-                aa.publish(user)
+        for aq in aq_list:
+            aq.publish(user)
+        for aa in aa_list:
+            aa.publish(user)
 
 
 def user_mark_tags(
@@ -3745,6 +3737,16 @@ def add_missing_tag_subscriptions(sender, instance, created, **kwargs):
                 instance.mark_tags(tagnames = tag_list,
                                 reason='subscribed', action='add')
 
+def notify_punished_users(user, **kwargs):
+    try:
+        _assert_user_can(
+                    user=user,
+                    blocked_user_cannot=True,
+                    suspended_user_cannot=True
+                )
+    except django_exceptions.PermissionDenied, e:
+        user.message_set.create(message = unicode(e))
+
 def post_anonymous_askbot_content(
                                 sender,
                                 request,
@@ -3756,7 +3758,10 @@ def post_anonymous_askbot_content(
     """signal handler, unfortunately extra parameters
     are necessary for the signal machinery, even though
     they are not used in this function"""
-    user.post_anonymous_askbot_content(session_key)
+    if user.is_blocked() or user.is_suspended():
+        pass
+    else:
+        user.post_anonymous_askbot_content(session_key)
 
 def set_user_avatar_type_flag(instance, created, **kwargs):
     instance.user.update_avatar_type()
@@ -3834,6 +3839,7 @@ signals.user_registered.connect(greet_new_user)
 signals.user_registered.connect(make_admin_if_first_user)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
+signals.user_logged_in.connect(notify_punished_users)
 signals.user_logged_in.connect(post_anonymous_askbot_content)
 signals.post_updated.connect(record_post_update_activity)
 signals.new_answer_posted.connect(tweet_new_post)

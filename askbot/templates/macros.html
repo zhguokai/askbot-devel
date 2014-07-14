@@ -393,18 +393,19 @@ for the purposes of the AJAX comment editor #}
     )
 -%}
     {% spaceless %}
-    {% if post.comment_count > 0 %}
+    {% if show_post == post and show_comment and show_comment_position > max_comments %}
+        {% set comments = post.get_cached_comments()[:show_comment_position] %}
+    {% else %}
+        {% set comments = post.get_cached_comments()[:max_comments] %}
+    {% endif %}
+    {% set comments_count = comments|length %}
+    {% if comments_count > 0 %}
         <h2 class="comment-title">{% trans %}Comments{% endtrans %}</h2>
         <div class="clean"></div> 
     {% endif %}
     {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
-    <div class="comments{% if post.comment_count == 0 %} empty{% endif %}" id="{{ widget_id }}">
+    <div class="comments{% if comments_count == 0 %} empty{% endif %}" id="{{ widget_id }}">
         <div class="content">
-            {% if show_post == post and show_comment and show_comment_position > max_comments %}
-                {% set comments = post.get_cached_comments()[:show_comment_position] %}
-            {% else %}
-                {% set comments = post.get_cached_comments()[:max_comments] %}
-            {% endif %}
             {% for comment in comments %}
                 {# Warning! Any changes to the comment markup IN THIS `FOR` LOOP must be duplicated in post.js
                    for the purposes of the AJAX comment editor #}
@@ -435,6 +436,9 @@ for the purposes of the AJAX comment editor #}
                                 title="{% trans %}delete this comment{% endtrans %}"
                             ></span>
                         </div>
+                        {% if comment.needs_moderation() %}
+                            <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
+                        {% endif %}
                         <div class="comment-body">
                             {{ comment.summary }}
                             <a 

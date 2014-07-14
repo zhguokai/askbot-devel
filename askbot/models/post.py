@@ -778,7 +778,7 @@ class Post(models.Model):
             self.remove_from_groups((Group.objects.get_global_group(),))
 
         if len(groups) == 0:
-            message = 'Sharing did not work, because group is unknown'
+            message = _('Sharing did not work, because group is unknown')
             user.message_set.create(message=message)
 
     def make_public(self):
@@ -795,10 +795,18 @@ class Post(models.Model):
             return not self.groups.filter(id=group.id).exists()
         return False
 
+    def set_runtime_needs_moderation(self):
+        """Used at runtime only, the value is not
+        stored in the database"""
+        self._is_approved = False
+
     def is_approved(self):
         """``False`` only when moderation is ``True`` and post
         ``self.approved is False``
         """
+        if getattr(self, '_is_approved', True) == False:
+            return False
+
         if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
             if self.approved:
                 return True
@@ -1642,7 +1650,8 @@ class Post(models.Model):
     def _question__assert_is_visible_to(self, user):
         """raises QuestionHidden"""
         if self.is_approved() is False:
-            raise exceptions.QuestionHidden()
+            if user != self.author:
+                raise exceptions.QuestionHidden(_('Sorry, this content is not available'))
         if self.deleted:
             message = _('Sorry, this content is no longer available')
             if user.is_anonymous():
@@ -1763,8 +1772,11 @@ class Post(models.Model):
                     suppress_email=False,
                     ip_addr=None,
                 ):
+
+        latest_rev = self.get_latest_revision()
+
         if text is None:
-            text = self.get_latest_revision().text
+            text = latest_rev.text
         if edited_at is None:
             edited_at = datetime.datetime.now()
         if edited_by is None:
@@ -1780,15 +1792,23 @@ class Post(models.Model):
         if self.wiki == False and wiki == True:
             self.wiki = True
 
-        #must add revision before saving the answer
-        self.add_revision(
-            author=edited_by,
-            revised_at=edited_at,
-            text=text,
-            comment=comment,
-            by_email=by_email,
-            ip_addr=ip_addr,
-        )
+        #must add or update revision before saving the answer
+        if latest_rev.revision == 0:
+            #if post has only 0 revision, we just update the
+            #latest revision data
+            latest_rev.text = text
+            latest_rev.revised_at = edited_at
+            latest_rev.save()
+        else:
+            #otherwise we create a new revision
+            self.add_revision(
+                author=edited_by,
+                revised_at=edited_at,
+                text=text,
+                comment=comment,
+                by_email=by_email,
+                ip_addr=ip_addr,
+            )
 
         parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
 

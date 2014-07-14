@@ -530,7 +530,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #we can avoid making this query by iterating through
         #already loaded posts
         user_post_id_list = [
-            id for id in post_to_author if post_to_author[id] == request.user.id
+            post_id for post_id in post_to_author if post_to_author[post_id] == request.user.id
         ]
 
     #resolve page number and comment number for permalinks

@@ -237,7 +237,6 @@ body.user-messages {
     .notification {
         color: #424242;
         font-size: 16px;
-        height: 34px;
         line-height: 34px;
         margin: 0 !important;
     }
@@ -2160,6 +2159,24 @@ ul#related-tags li {
 }
 
 /* ----- Question template ----- */
+
+.moderated {
+}
+
+.answer, .question {
+    .moderated {
+        background: url(../images/dialog-warning.png) 2px 0 no-repeat;
+        font-weight: bold;
+        line-height: 16px !important;
+        margin-bottom: -2px !important;
+        padding-left: 24px !important;
+    }
+    .comment .moderated {
+        background-position: 4px 0;
+        margin-bottom: -5px !important;
+        padding-left: 24px !important;
+    }
+}
 
 .question-page {
 

@@ -917,12 +917,16 @@ class Thread(models.Model):
                             post__id__in=post_ids,
                             revision__gt=0
                         ).order_by('-id')
-        rev = revs[0]
-        return rev.revised_at, rev.author
+        try:
+            rev = revs[0]
+            return rev.revised_at, rev.author
+        except IndexError:
+            return None, None
 
     def update_last_activity_info(self):
         timestamp, user = self.get_last_activity_info()
-        self.set_last_activity_info(timestamp, user)
+        if timestamp:
+            self.set_last_activity_info(timestamp, user)
 
     def get_tag_names(self):
         "Creates a list of Tag names from the ``tagnames`` attribute."
@@ -1057,6 +1061,7 @@ class Thread(models.Model):
         if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' and user.is_watched():
             #in this branch we patch post_data with the edits suggested by the 
             #watched user
+            post_data = list(post_data)
             post_ids = self.posts.filter(author=user).values_list('id', flat=True)
             from askbot.models import PostRevision
             suggested_revs = PostRevision.objects.filter(
@@ -1089,7 +1094,8 @@ class Thread(models.Model):
                 post_id_set = set(suggested_post_ids)
 
                 all_posts = copy(answers)
-                all_posts.append(question)
+                if question:
+                    all_posts.append(question)
                 posts = find_posts(all_posts, post_id_set)
 
                 rev_map = dict(zip(suggested_post_ids, suggested_revs))
@@ -1099,6 +1105,8 @@ class Thread(models.Model):
                     #patching work
                     post.text = rev.text
                     post.html = post.parse_post_text()['html']
+                    post_to_author[post_id] = rev.author_id
+                    post.set_runtime_needs_moderation()
 
                 if len(post_id_set):
                     #brand new suggested posts
@@ -1109,6 +1117,7 @@ class Thread(models.Model):
                         rev = rev_map[post.id]
                         post.text = rev.text
                         post.html = post.parse_post_text()['html']
+                        post_to_author[post.id] = rev.author_id
                         if post.is_comment():
                             parents = find_posts(all_posts, set([post.parent_id]))
                             parent = parents.values()[0]
@@ -1439,7 +1448,7 @@ class Thread(models.Model):
         self._question_post().make_private(user, group_id)
 
         if len(groups) == 0:
-            message = 'Sharing did not work, because group is unknown'
+            message = _('Sharing did not work, because group is unknown')
             user.message_set.create(message=message)
 
     def is_private(self):
