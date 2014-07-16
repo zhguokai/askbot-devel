@@ -259,7 +259,8 @@ def ask(request):#view used to ask a new question
                         is_private=post_privately,
                         timestamp=timestamp,
                         group_id=group_id,
-                        language=language
+                        language=language,
+                        ip_addr=request.META.get('REMOTE_ADDR')
                     )
                     signals.new_question_posted.send(None,
                         question=question,
@@ -282,7 +283,7 @@ def ask(request):#view used to ask a new question
                     is_anonymous = ask_anonymously,
                     text = text,
                     added_at = timestamp,
-                    ip_addr = request.META['REMOTE_ADDR'],
+                    ip_addr = request.META.get('REMOTE_ADDR'),
                 )
                 return HttpResponseRedirect(url_utils.get_login_url())
 
@@ -457,7 +458,8 @@ def edit_question(request, id):
                             wiki = is_wiki,
                             edit_anonymously = is_anon_edit,
                             is_private = post_privately,
-                            suppress_email=suppress_email
+                            suppress_email=suppress_email,
+                            ip_addr=request.META.get('REMOTE_ADDR')
                         )
 
                         if 'language' in form.cleaned_data:
@@ -556,7 +558,8 @@ def edit_answer(request, id):
                             revision_comment=form.cleaned_data['summary'],
                             wiki=form.cleaned_data.get('wiki', answer.wiki),
                             is_private=is_private,
-                            suppress_email=suppress_email
+                            suppress_email=suppress_email,
+                            ip_addr=request.META.get('REMOTE_ADDR')
                         )
 
                         signals.answer_edited.send(None,
@@ -631,7 +634,11 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
                 drafts.delete()
                 user = form.get_post_user(request.user)
                 try:
-                    answer = form.save(question, user)
+                    answer = form.save(
+                                    question,
+                                    user,
+                                    ip_addr=request.META.get('REMOTE_ADDR')
+                                )
 
                     signals.new_answer_posted.send(None,
                         answer=answer,
@@ -653,7 +660,7 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
                     wiki=form.cleaned_data['wiki'],
                     text=form.cleaned_data['text'],
                     session_key=request.session.session_key,
-                    ip_addr=request.META['REMOTE_ADDR'],
+                    ip_addr=request.META.get('REMOTE_ADDR'),
                 )
                 return HttpResponseRedirect(url_utils.get_login_url())
 
@@ -752,7 +759,9 @@ def post_comments(request):#generic ajax handler to load comments to an object
                 raise exceptions.PermissionDenied(askbot_settings.READ_ONLY_MESSAGE)
 
             comment = user.post_comment(
-                parent_post=post, body_text=form.cleaned_data['comment']
+                parent_post=post, 
+                body_text=form.cleaned_data['comment'],
+                ip_addr=request.META.get('REMOTE_ADDR')
             )
             signals.new_comment_posted.send(None,
                 comment=comment,
@@ -787,7 +796,8 @@ def edit_comment(request):
     request.user.edit_comment(
         comment_post=comment_post,
         body_text=form.cleaned_data['comment'],
-        suppress_email=form.cleaned_data['suppress_email']
+        suppress_email=form.cleaned_data['suppress_email'],
+        ip_addr=request.META.get('REMOTE_ADDR'),
     )
 
     is_deletable = template_filters.can_delete_comment(

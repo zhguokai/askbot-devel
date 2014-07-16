@@ -237,7 +237,6 @@ body.user-messages {
     .notification {
         color: #424242;
         font-size: 16px;
-        height: 34px;
         line-height: 34px;
         margin: 0 !important;
     }
@@ -2161,6 +2160,22 @@ ul#related-tags li {
 
 /* ----- Question template ----- */
 
+.answer, .question {
+    .moderated {
+        font-weight: bold;
+        background: url(../images/dialog-warning.png) 2px 0 no-repeat;
+        text-decoration: underline;
+        line-height: 16px !important;
+        margin-bottom: -2px !important;
+        padding-left: 24px !important;
+    }
+    .comment .moderated {
+        background-position: 4px 0;
+        margin-bottom: -5px !important;
+        padding-left: 24px !important;
+    }
+}
+
 .question-page {
 
     h1 {
@@ -2993,7 +3008,35 @@ ul#related-tags li {
     }
 }
 
-.inbox-flags.user-profile-page {
+.user-profile-page.inbox-forum,
+.user-profile-page.inbox-flags {
+    h2 {
+        line-height: 24px;
+        padding-bottom: 6px;
+    }
+    .message {
+        border-bottom: 1px solid #ccc;
+        padding: 12px 0;
+    }
+    .message:last-child {
+        border: none;
+    }
+}
+
+.user-profile-page.inbox-forum {
+    input[type="checkbox"] {
+        display: none;
+    }
+    .new {
+        background: #FFF8C6;
+    }
+}
+
+.reject-reason-title {
+    margin-bottom: 12px;
+}
+
+.user-profile-page.inbox-flags {
     .re {
         width: 810px;
     }
@@ -3003,10 +3046,28 @@ ul#related-tags li {
         margin-top: 23px;
         text-align: right;
     }
+    .dropdown {
+        display: -moz-inline-stack;
+        display: inline-block;
+        height: 17px;
+    }
     .dropdown:hover {
         ul.dropdown-menu {
             display: block;
+            margin-top: 9px;
         }
+    }
+    .highlight {
+        background: transparent;
+    }
+    .messages {
+        margin-bottom: 14px;
+    }
+    .select-items {
+        margin-bottom: 10px;
+    }
+    #responses div.face {
+        display: none;
     }
 }
 
@@ -3170,6 +3231,10 @@ a:hover.medal {
     h3 {
         padding: 0;
         margin-top: -3px;
+    }
+
+    table.form-as-table {
+        margin: 5px 0 12px;
     }
 
     .submit-row {
@@ -3923,6 +3988,14 @@ button::-moz-focus-inner {
     line-height: 10px;
     font-size: 12px;
     padding: 0;
+    a {
+        font-weight: bold;
+    }
+}
+
+.inbox-flags .action-status {
+    line-height: 38px;
+    height: 24px;
 }
 
 .action-status span {
@@ -4118,6 +4191,7 @@ p.signup_p {
     line-height:18px;
     margin-bottom:15px;
     h2 {
+        line-height: 24px;
         margin: 0;
         padding: 0;
     }
@@ -4452,6 +4526,13 @@ textarea.tipped-input {
 .modal-body > textarea {
     width: 515px;
     margin-bottom: 0px;
+}
+.modal-body > input[type="text"] {
+    width: 515px;
+    font-style: normal;
+}
+.alert .close {
+    right: -38px;
 }
 
 .tag-subscriptions {

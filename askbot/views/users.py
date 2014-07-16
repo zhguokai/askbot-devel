@@ -27,7 +27,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import get_language
+from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.utils import simplejson
 from django.utils.html import strip_tags as strip_all_tags
 from django.views.decorators import csrf
@@ -36,6 +38,7 @@ from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.mail import send_mail
 from askbot.utils.http import get_request_info
+from askbot.utils import decorators
 from askbot.utils import functions
 from askbot import forms
 from askbot import const
@@ -63,6 +66,23 @@ def owner_or_moderator_required(f):
         return f(request, profile_owner, context)
     return wrapped_func
 
+@decorators.ajax_only
+def clear_new_notifications(request):
+    """clears all new notifications for logged in user"""
+    user = request.user
+    if user.is_anonymous():
+        raise django_exceptions.PermissionDenied
+
+    activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
+    activity_types += (
+        const.TYPE_ACTIVITY_MENTION,
+    )
+    memo_set = models.ActivityAuditStatus.objects.filter(
+        activity__activity_type__in=activity_types,
+        user=user
+    )
+    memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
+    user.update_response_counts()
 
 def show_users(request, by_group=False, group_id=None, group_slug=None):
     """Users view, including listing of users by group"""
@@ -88,11 +108,10 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
             else:
                 try:
                     group = models.Group.objects.get(id = group_id)
-                    group_email_moderation_enabled = \
-                        (
-                            askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED \
-                            and askbot_settings.ENABLE_CONTENT_MODERATION
-                        )
+                    group_email_moderation_enabled = (
+                        askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED \
+                        and askbot_settings.CONTENT_MODERATION_MODE == 'premoderation'
+                    )
                     user_acceptance_level = group.get_openness_level_for_user(
                                                                     request.user
                                                                 )
@@ -214,13 +233,14 @@ def user_moderate(request, subject, context):
 
     user_rep_changed = False
     user_status_changed = False
+    user_status_changed_message = _('User status changed')
     message_sent = False
     email_error_message = None
 
     user_rep_form = forms.ChangeUserReputationForm()
     send_message_form = forms.SendMessageForm()
     if request.method == 'POST':
-        if 'change_status' in request.POST:
+        if 'change_status' in request.POST or 'hard_block' in request.POST:
             user_status_form = forms.ChangeUserStatusForm(
                                                     request.POST,
                                                     moderator = moderator,
@@ -228,6 +248,11 @@ def user_moderate(request, subject, context):
                                                 )
             if user_status_form.is_valid():
                 subject.set_status( user_status_form.cleaned_data['user_status'] )
+                if user_status_form.cleaned_data['delete_content'] == True:
+                    num_deleted = request.user.delete_all_content_authored_by_user(subject)
+                    if num_deleted:
+                        num_deleted_message = ungettext('%d post deleted', '%d posts deleted', num_deleted) % num_deleted
+                        user_status_changed_message = string_concat(user_status_changed_message, ', ', num_deleted_message)
             user_status_changed = True
         elif 'send_message' in request.POST:
             send_message_form = forms.SendMessageForm(request.POST)
@@ -291,7 +316,8 @@ def user_moderate(request, subject, context):
         'message_sent': message_sent,
         'email_error_message': email_error_message,
         'user_rep_changed': user_rep_changed,
-        'user_status_changed': user_status_changed
+        'user_status_changed': user_status_changed,
+        'user_status_changed_message': user_status_changed_message
     }
     context.update(data)
     return render(request, 'user_profile/user_moderate.html', context)
@@ -387,7 +413,7 @@ def user_stats(request, user, context):
     if request.user != user:
         question_filter['is_anonymous'] = False
 
-    if askbot_settings.ENABLE_CONTENT_MODERATION:
+    if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
         question_filter['approved'] = True
 
     #
@@ -533,7 +559,6 @@ def user_stats(request, user, context):
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'tab_name' : 'stats',
         'page_title' : _('user profile overview'),
-        'user_status_for_display': user.get_status_display(soft = True),
         'questions' : questions,
         'question_count': question_count,
         'q_paginator_context': q_paginator_context,
@@ -722,7 +747,7 @@ def user_responses(request, user, context):
         activity_types += (const.TYPE_ACTIVITY_MENTION,)
     elif section == 'flags':
         activity_types = (const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
-        if askbot_settings.ENABLE_CONTENT_MODERATION:
+        if askbot_settings.CONTENT_MODERATION_MODE in ('premoderation', 'audit'):
             activity_types += (
                 const.TYPE_ACTIVITY_MODERATED_NEW_POST,
                 const.TYPE_ACTIVITY_MODERATED_POST_EDIT
@@ -779,41 +804,62 @@ def user_responses(request, user, context):
     #3) "package" data for the output
     response_list = list()
     for memo in memo_set:
-        if memo.activity.content_object is None:
+        obj = memo.activity.content_object
+        if obj is None:
+            memo.activity.delete()
             continue#a temp plug due to bug in the comment deletion
+
+        act = memo.activity
+        ip_addr = None
+        if act.activity_type == const.TYPE_ACTIVITY_MARK_OFFENSIVE:
+            #todo: two issues here - flags are stored differently
+            #from activity of new posts and edits
+            #second issue: on posts with many edits we don't know whom to block
+            act_user = act.content_object.author
+            act_message = _('post was flagged as offensive')
+            act_type = 'flag'
+        else:
+            act_user = act.user
+            act_message = act.get_activity_type_display()
+            act_type = 'edit'
+            if section == 'flags':
+                ip_addr = act.content_object.ip_addr
+
         response = {
             'id': memo.id,
-            'timestamp': memo.activity.active_at,
-            'user': memo.activity.user,
+            'timestamp': act.active_at,
+            'user': act_user,
+            'ip_addr': ip_addr,
             'is_new': memo.is_new(),
-            'response_url': memo.activity.get_absolute_url(),
-            'response_snippet': memo.activity.get_snippet(),
-            'response_title': memo.activity.question.thread.title,
-            'response_type': memo.activity.get_activity_type_display(),
-            'response_id': memo.activity.question.id,
-            'nested_responses': [],
-            'response_content': memo.activity.content_object.html,
+            'url': act.get_absolute_url(),
+            'snippet': act.get_snippet(),
+            'title': act.question.thread.title,
+            'message_type': act_message,
+            'memo_type': act_type,
+            'question_id': act.question.id,
+            'followup_messages': list(),
+            'content': obj.html or obj.text,
         }
         response_list.append(response)
 
     #4) sort by response id
-    response_list.sort(lambda x,y: cmp(y['response_id'], x['response_id']))
+    response_list.sort(lambda x,y: cmp(y['question_id'], x['question_id']))
 
     #5) group responses by thread (response_id is really the question post id)
-    last_response_id = None #flag to know if the response id is different
-    filtered_response_list = list()
-    for i, response in enumerate(response_list):
+    last_question_id = None #flag to know if the question id is different
+    filtered_message_list = list()
+    for message in response_list:
         #todo: group responses by the user as well
-        if response['response_id'] == last_response_id:
-            original_response = dict.copy(filtered_response_list[len(filtered_response_list)-1])
-            original_response['nested_responses'].append(response)
-            filtered_response_list[len(filtered_response_list)-1] = original_response
+        if message['question_id'] == last_question_id:
+            original_message = dict.copy(filtered_message_list[-1])
+            original_message['followup_messages'].append(message)
+            filtered_message_list[-1] = original_message
         else:
-            filtered_response_list.append(response)
-            last_response_id = response['response_id']
+            filtered_message_list.append(message)
+            last_question_id = message['question_id']
 
     #6) sort responses by time
-    filtered_response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
+    filtered_message_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
     reject_reasons = models.PostFlagReason.objects.all().order_by('title')
     data = {
@@ -823,10 +869,14 @@ def user_responses(request, user, context):
         'inbox_section': section,
         'page_title' : _('profile - responses'),
         'post_reject_reasons': reject_reasons,
-        'responses' : filtered_response_list,
+        'messages' : filtered_message_list,
     }
     context.update(data)
-    return render(request, 'user_inbox/responses_and_flags.html', context)
+    if section == 'flags':
+        template = 'moderation/queue.html'
+    else:
+        template = 'user_inbox/responses.html'
+    return render(request, template, context)
 
 def user_network(request, user, context):
     if 'followit' not in django_settings.INSTALLED_APPS:

@@ -195,7 +195,7 @@ def check_spam(field):
 
             if askbot_settings.USE_AKISMET and request.method == "POST":
                 comment = smart_str(request.POST[field])
-                data = {'user_ip': request.META["REMOTE_ADDR"],
+                data = {'user_ip': request.META.get('REMOTE_ADDR'),
                         'user_agent': request.environ['HTTP_USER_AGENT'],
                         'comment_author': smart_str(request.user.username),
                         }

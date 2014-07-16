@@ -24,9 +24,11 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from django.views.decorators import csrf
 from django.utils import simplejson
-from django.utils.html import escape
 from django.utils import translation
+from django.utils.encoding import force_text
+from django.utils.html import escape
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.utils.translation import string_concat
 from askbot.utils.slug import slugify
 from askbot import models
@@ -45,7 +47,6 @@ from askbot.skins.loaders import render_text_into_skin
 from askbot.models.tag import get_tags_by_names
 
 
-
 @csrf.csrf_exempt
 def manage_inbox(request):
     """delete, mark as new or seen user's
@@ -53,7 +54,6 @@ def manage_inbox(request):
     request data is memo_list  - list of integer id's of the ActivityAuditStatus items
     and action_type - string - one of delete|mark_new|mark_seen
     """
-
     response_data = dict()
     try:
         if request.is_ajax():

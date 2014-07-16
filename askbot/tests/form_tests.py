@@ -263,7 +263,7 @@ class AskFormTests(AskbotTestCase):
 class UserStatusFormTest(AskbotTestCase):
 
     def setup_data(self, status):
-        data = {'user_status': status}
+        data = {'user_status': status, 'delete_content': False}
         self.moderator = self.create_user('moderator_user')
         self.moderator.set_status('m')
         self.subject = self.create_user('normal_user')

@@ -46,7 +46,7 @@
             {% endif %}
             <tr>
                 <th colspan="2" align="left">
-                <h3>{{user_status_for_display}}</h3>
+                <h3>{{ view_user.get_status_display() }}</h3>
                 </th>
             </tr>
             {% if view_user.real_name %}

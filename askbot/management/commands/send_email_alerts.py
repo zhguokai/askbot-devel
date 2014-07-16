@@ -143,7 +143,7 @@ class Command(NoArgsCommand):
                                 thread__closed=True
                             ).order_by('-thread__last_activity_at')
 
-        if askbot_settings.ENABLE_CONTENT_MODERATION:
+        if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
             base_qs = base_qs.filter(approved = True)
         #todo: for some reason filter on did not work as expected ~Q(viewed__who=user) | 
         #      Q(viewed__who=user,viewed__when__lt=F('thread__last_activity_at'))

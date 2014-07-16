@@ -206,6 +206,11 @@ urlpatterns = patterns('',
         name='moderate_group_join_request'
     ),
     service_url(
+        r'^moderate-post-edits/',
+        views.moderation.moderate_post_edits,
+        name='moderate_post_edits'
+    ),
+    service_url(
         r'^save-draft-question/',
         views.commands.save_draft_question,
         name = 'save_draft_question'
@@ -487,6 +492,11 @@ urlpatterns = patterns('',
         r'^manage-inbox/$',
         views.commands.manage_inbox,
         name='manage_inbox'
+    ),
+    service_url(#ajax only
+        r'^clear-new-notifications/$',
+        views.users.clear_new_notifications,
+        name='clear_new_notifications'
     ),
     service_url(#ajax only
         r'^save-post-reject-reason/$',
