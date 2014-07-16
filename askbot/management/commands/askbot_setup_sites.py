@@ -24,6 +24,8 @@ that you must take as well. These are detailed below:
     means you should use "|10|"):
     * add the new sub-site's domain (sitename.main-domain) to the ALLOWED_HOSTS list
     * add the id for the new Site object to ASKBOT_SITE_IDS
+    * add the id for the new Site object to ASKBOT_PARTNER_SITE_IDS (so that the new site
+        will appear in "Post at partner sites" list)
     * add this to the ASKBOT_SITES dict: 
         * <site_id>: ('<site_name>', '<site_domain>')
     * add this to the ASKBOT_SPACES dict: 
