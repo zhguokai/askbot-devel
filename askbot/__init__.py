@@ -38,6 +38,7 @@ REQUIREMENTS = {
     'longerusername': 'longerusername',
     'bs4': 'beautifulsoup4',
     'picklefield': 'django-picklefield==0.3.0',
+    #'stopforumspam': 'stopforumspam'
 }
 
 if platform.system() != 'Windows':

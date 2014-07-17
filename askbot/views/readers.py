@@ -435,6 +435,8 @@ def tags(request):#view showing a listing of available tags - plain list
 def question(request, feed=None, id=None):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and
     all answers to it
+
+    todo: convert this view into class
     """
     request.session['askbot_feed'] = feed
     feed = get_object_or_404(models.Feed, name=feed,
@@ -566,7 +568,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
 
     #load answers and post id's->athor_id mapping
     #posts are pre-stuffed with the correctly ordered comments
-    updated_question_post, answers, post_to_author, published_answer_ids = thread.get_cached_post_data(
+    updated_question_post, answers, post_to_author, published_answer_ids = thread.get_post_data_for_question_view(
                                 sort_method=answer_sort_method,
                                 user=request.user
                             )
@@ -574,7 +576,6 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     question_post.set_cached_comments(
         updated_question_post.get_cached_comments()
     )
-
 
     #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
 
@@ -590,7 +591,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
         #we can avoid making this query by iterating through
         #already loaded posts
         user_post_id_list = [
-            id for id in post_to_author if post_to_author[id] == request.user.id
+            post_id for post_id in post_to_author if post_to_author[post_id] == request.user.id
         ]
 
     #resolve page number and comment number for permalinks

@@ -6,31 +6,31 @@
     >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
 {%- endmacro -%}
 
-{%- macro inbox_post_snippet(response, inbox_section) -%}
-<div id="re_{{response.id}}" class="re{% if response.is_new %} new highlight{% else %} seen{% endif %}">
+{%- macro inbox_message_snippet(message) -%}
+<div class="message-details" data-message-id="{{ message.id }}">
     <input type="checkbox" />
-    <div class="face">
-    {{ gravatar(response.user, 48) }}
-    </div>
-    <div class="content">
-        <a 
-            style="font-size:12px"
-            href="{{ response.user.get_absolute_url() }}"
-        >{{ response.user.username|escape }}</a>
-        <a style="text-decoration:none;" href="{{ response.response_url }}">
-             {{ response.response_type }}
-             ({{ timeago(response.timestamp) }}):<br/>
-             {% if inbox_section != 'flags' %}
-                 {{ response.response_snippet }}
-             {% endif %}
-        </a>
-        {% if inbox_section == 'flags' %}
-             <a class="re_expand" href="{{ response.response_url }}">
-                  <!--div class="re_snippet">{{ response.response_snippet|escape }}</div-->
-                  <div class="re_content">{{ response.response_content }}</div>
-             </a>
-        {% endif %}
-    </div>
+    {{ gravatar(message.user, 24) }}
+    <a class="username" href="{{ message.user.get_absolute_url() }}">{{ message.user.username|escape }}</a>
+    <a class="forum-post-link" href="{{ message.url }}">{{ message.message_type }}</a>
+    ({{ timeago(message.timestamp) }})
+    {#<div class="snippet">{{ message.snippet }}</div>#}
+    <div class="post-content">{{ message.content }}</div>
+</div>
+{%- endmacro -%}
+
+{%- macro moderation_queue_message(message) -%}
+<div class="message-details" data-message-id="{{ message.id }}">
+    <input type="checkbox" />
+    {{ gravatar(message.user, 24) }}
+    <a class="username" href="{{ message.user.get_absolute_url() }}">{{ message.user.username|escape }}</a> |
+    {% if message['memo_type'] == 'edit' %}
+        <a href="mailto:{{ message.user.email }}">{{ message.user.email }}</a> |
+        ip=<span class="ip-addr">{{ message.ip_addr }}</span> |
+    {% endif %}
+    <a class="forum-post-link" href="{{ message.url }}">{{ message.message_type }}</a>
+    ({{ timeago(message.timestamp) }})
+    {#<div class="snippet">{{ message.snippet }}</div>#}
+    <div class="post-content">{{ message.content }}</div>
 </div>
 {%- endmacro -%}
 
@@ -398,18 +398,19 @@ for the purposes of the AJAX comment editor #}
     )
 -%}
     {% spaceless %}
-    {% if post.comment_count > 0 %}
+    {% if show_post == post and show_comment and show_comment_position > max_comments %}
+        {% set comments = post.get_cached_comments()[:show_comment_position] %}
+    {% else %}
+        {% set comments = post.get_cached_comments()[:max_comments] %}
+    {% endif %}
+    {% set comments_count = comments|length %}
+    {% if comments_count > 0 %}
         <h2 class="comment-title">{% trans %}Comments{% endtrans %}</h2>
         <div class="clean"></div> 
     {% endif %}
     {% set widget_id = 'comments-for-' + post.get_base_post_type() + '-' + post.id|string %}
-    <div class="comments{% if post.comment_count == 0 %} empty{% endif %}" id="{{ widget_id }}">
+    <div class="comments{% if comments_count == 0 %} empty{% endif %}" id="{{ widget_id }}">
         <div class="content">
-            {% if show_post == post and show_comment and show_comment_position > max_comments %}
-                {% set comments = post.get_cached_comments()[:show_comment_position] %}
-            {% else %}
-                {% set comments = post.get_cached_comments()[:max_comments] %}
-            {% endif %}
             {% for comment in comments %}
                 {# Warning! Any changes to the comment markup IN THIS `FOR` LOOP must be duplicated in post.js
                    for the purposes of the AJAX comment editor #}
@@ -440,6 +441,9 @@ for the purposes of the AJAX comment editor #}
                                 title="{% trans %}delete this comment{% endtrans %}"
                             ></span>
                         </div>
+                        {% if comment.needs_moderation() %}
+                            <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
+                        {% endif %}
                         <div class="comment-body">
                             {{ comment.summary }}
                             <a 
@@ -870,17 +874,12 @@ for the purposes of the AJAX comment editor #}
 
 
 {%- macro inbox_link(user) -%}
-    {% if user.new_response_count > 0 or user.seen_response_count > 0 %}
+    {% if user.new_response_count %}
     <a id='ab-responses' href="{{user.get_absolute_url()}}?sort=inbox&section=forum">
         <img 
             alt="{% trans username=user.username|escape %}responses for {{username}}{% endtrans %}"
-            {% if user.new_response_count > 0 %}
-                src="{{ "/images/mail-envelope-full.png"|media }}"
-                title="{% trans response_count=user.new_response_count %}you have {{response_count}} new response{% pluralize %}you have {{response_count}} new responses{% endtrans %}"
-            {% elif user.seen_response_count > 0 %}
-                src="{{ "/images/mail-envelope-empty.png"|media }}"
-                title="{% trans %}no new responses yet{% endtrans %}"
-            {% endif %}
+            src="{{ "/images/mail-envelope-full.png"|media }}"
+            title="{% trans response_count=user.new_response_count %}you have {{response_count}} new response{% pluralize %}you have {{response_count}} new responses{% endtrans %}"
         />
     </a>
     {% endif %}

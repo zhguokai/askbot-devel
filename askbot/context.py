@@ -43,6 +43,7 @@ def application_settings(request):
             settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES
     my_settings['ASKBOT_URL'] = settings.ASKBOT_URL
     my_settings['STATIC_URL'] = settings.STATIC_URL
+    my_settings['IP_MODERATION_ENABLED'] = getattr(settings, 'ASKBOT_IP_MODERATION_ENABLED', False)
     my_settings['ASKBOT_CSS_DEVEL'] = getattr(
                                         settings,
                                         'ASKBOT_CSS_DEVEL',

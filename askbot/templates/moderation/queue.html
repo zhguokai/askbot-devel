@@ -1,0 +1,65 @@
+{% extends "user_inbox/base.html" %}
+{% import "macros.html" as macros %}
+{% block profilesection %}
+    {% trans %}moderation queue{% endtrans %}
+{% endblock %}
+{% block inbox_content %}
+    <div class="tools">
+        {#<div class="select-items">
+            <strong>{% trans %}Select:{% endtrans %}</strong>
+            <a class="sel-all">{% trans %}all{% endtrans %}</a> |
+            <a class="sel-none">{% trans %}none{% endtrans %}</a>
+        </div>#}
+        <a class="btn approve-posts">{% trans %}approve posts{% endtrans %}</a>
+        <a class="btn approve-posts-users" id="re_approve_posts_users">{% trans %}approve posts and users{% endtrans %}</a>
+        <div class="btn-group dropdown decline-reasons-menu">
+            <span class="btn btn-info dropdown-toggle">
+                <span>{% trans %}decline and explain why{% endtrans %}</span>
+                <span class="caret"></span>
+            </span>
+            <ul class="dropdown-menu">
+                {% for reason in post_reject_reasons %}
+                <li>
+                    <a class="decline-with-reason" data-reason-id="{{ reason.id }}">{{ reason.title|escape }}</a>
+                </li>
+                {% endfor %}
+                <li>
+                    <a class="manage-reasons">{% trans %}add/manage reject reasons{% endtrans %}</a>
+                </li>
+            </ul>
+        </div>
+        <a class="btn btn-danger decline-block-users">{% trans %}block spammers{% endtrans %}</a>
+        {% if settings.IP_MODERATION_ENABLED %}
+        <a class="btn btn-danger decline-block-users-ips">{% trans %}block spammers and IPs{% endtrans %}</a>
+        {% endif %}
+    </div>
+    <ul style="margin-top: 12px">
+        <li>Approval of users removes them from the queue and approves ALL of their posts.</li>
+        <li>Blocking spammers denies them future access and deletes ALL their posts.</li>
+        {% if settings.IP_MODERATION_ENABLED %}
+        <li>Blocking IPs denies access by IP address and blocks all accounts using those IPs (and mass deletes content as above).</li>
+        {% endif %}
+    <ul>
+    {% include "moderation/manage_reject_reasons_dialog.html" %}
+    <div class="action-status"><span></span></div>
+    <div class="messages">
+    {% for message in messages %}{# messages are grouped by question, using the "nested_messages" #}
+        <div 
+            class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
+            data-message-id="{{ message.id }}"
+        >
+            {#<h2>"{{ message.title.strip()|escape}}"</h2>#}
+            {{ macros.moderation_queue_message(message) }}
+        </div>
+        {# "nested" messages are further response messages to the same question #}
+        {% for followup_message in message.followup_messages %}
+            <div 
+                class="message{% if followup_message.is_new %} highlight new{% else %} seen{% endif %}"
+                data-message-id="{{ followup_message.id }}"
+            >
+                {{ macros.moderation_queue_message(followup_message) }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    </div>
+{% endblock %}

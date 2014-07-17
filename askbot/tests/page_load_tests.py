@@ -561,7 +561,7 @@ class PageLoadTestCase(AskbotTestCase):
             'user_profile',
             kwargs={'id': asker.id, 'slug': slugify(asker.username)},
             data={'sort':'inbox'},
-            template='user_inbox/responses_and_flags.html',
+            template='user_inbox/responses.html',
         )
 
     @with_settings(GROUPS_ENABLED=True)

@@ -540,8 +540,6 @@ var Vote = function(){
     var subscribeAnonymousMessage = gettext('anonymous users cannot subscribe to questions') + pleaseLogin;
     var voteAnonymousMessage = gettext('anonymous users cannot vote') + pleaseLogin;
     //there were a couple of more messages...
-    var offensiveConfirmation = gettext('please confirm offensive');
-    var removeOffensiveConfirmation = gettext('please confirm removal of offensive flag');
     var offensiveAnonymousMessage = gettext('anonymous users cannot flag offensive posts') + pleaseLogin;
     var removeConfirmation = gettext('confirm delete');
     var removeAnonymousMessage = gettext('anonymous users cannot delete/undelete') + pleaseLogin;
@@ -1071,10 +1069,8 @@ var Vote = function(){
                 );
                 return false;
             }
-            if (confirm(offensiveConfirmation)){
-                postId = object.id.substr(object.id.lastIndexOf('-') + 1);
-                submit(object, voteType, callback_offensive);
-            }
+            postId = object.id.substr(object.id.lastIndexOf('-') + 1);
+            submit(object, voteType, callback_offensive);
         },
         //remove flag offensive
         remove_offensive: function(object, voteType){
@@ -1091,10 +1087,8 @@ var Vote = function(){
                 );
                 return false;
             }
-            if (confirm(removeOffensiveConfirmation)){
-                postId = object.id.substr(object.id.lastIndexOf('-') + 1);
-                submit(object, voteType, callback_remove_offensive);
-            }
+            postId = object.id.substr(object.id.lastIndexOf('-') + 1);
+            submit(object, voteType, callback_remove_offensive);
         },
         remove_all_offensive: function(object, voteType){
             if (!currentUserId || currentUserId.toUpperCase() == "NONE"){
@@ -1110,10 +1104,8 @@ var Vote = function(){
                 );
                 return false;
             }
-            if (confirm(removeOffensiveConfirmation)){
-                postId = object.id.substr(object.id.lastIndexOf('-') + 1);
-                submit(object, voteType, callback_remove_all_offensive);
-            }
+            postId = object.id.substr(object.id.lastIndexOf('-') + 1);
+            submit(object, voteType, callback_remove_all_offensive);
         },
         //delete question or answer (comments are deleted separately)
         remove: function(object, voteType){

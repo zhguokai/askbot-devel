@@ -3699,11 +3699,15 @@ SelectBox.prototype.setSelectHandler = function(handler) {
     this._select_handler = handler;
 };
 
+SelectBox.prototype.getSelectHandlerInternal = function() {
+    return this._select_handler;
+};
+
 SelectBox.prototype.getSelectHandler = function(item) {
     var me = this;
-    var handler = this._select_handler;
     return function(){
         me.selectItem(item);
+        var handler = me.getSelectHandlerInternal();
         handler(item.getData());
     };
 };
