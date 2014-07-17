@@ -873,7 +873,7 @@ def user_responses(request, user, context):
         'inbox_section': section,
         'page_title' : _('profile - responses'),
         'post_reject_reasons': reject_reasons,
-        'join_requests': join_requests
+        'join_requests': join_requests,
         'messages' : filtered_message_list,
     }
     context.update(data)

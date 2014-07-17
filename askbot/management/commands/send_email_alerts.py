@@ -549,7 +549,7 @@ class Command(NoArgsCommand):
                         'name': user.username,
                         'admin_email': askbot_settings.ADMIN_EMAIL,
                         'site_name': askbot_settings.APP_SHORT_NAME,
-                        'is_multilingual': django_settings.ASKBOT_MULTILINGUAL
+                        'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
                     })
 
                     if DEBUG_THIS_COMMAND == True:

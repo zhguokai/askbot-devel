@@ -1991,6 +1991,8 @@ class Post(models.Model):
                     text=None,
                     comment=None,
                     is_anonymous=False,
+                    by_email=False,
+                    email_address=None,
                     ip_addr=None
                 ):
         #todo: this may be identical to Question.add_revision
@@ -2003,6 +2005,7 @@ class Post(models.Model):
             text=text,
             summary=comment,
             by_email=by_email,
+            email_address=email_address,
             ip_addr=ip_addr
         )
 
@@ -2314,9 +2317,9 @@ class PostRevision(models.Model):
                         'It will be published after the moderators review.'
                     ) % email_context
                     send_mail(
-                        subject_line = _('your post to %(site)s') % email_context,
-                        body_text = body_text,
-                        recipient_list = [self.author.email,],
+                        subject_line=_('your post to %(site)s') % email_context,
+                        body_text=body_text,
+                        recipient=self.author,
                     )
 
                 else:

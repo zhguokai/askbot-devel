@@ -198,30 +198,30 @@ class ThreadTagModelsTests(AskbotTestCase):
         self.q4 = self.post_question(tags='tag1 tag2 tag3 tag4 tag5 tag6', user=user3)
 
     def test_related_tags(self):
-        tags = Tag.objects.get_related_to_search(threads=[self.q1.thread, self.q2.thread], ignored_tag_names=[])
+        tags = Tag.objects.get_related_to_search(thread_ids=[self.q1.thread.id, self.q2.thread.id], ignored_tag_names=[])
         self.assertListEqual(['tag3', 'tag1', 'tag2', 'tag4', 'tag5'], [t.name for t in tags])
         self.assertListEqual([2, 1, 1, 1, 1], [t.local_used_count for t in tags])
         self.assertListEqual([3, 2, 2, 2, 2], [t.used_count for t in tags])
 
-        tags = Tag.objects.get_related_to_search(threads=[self.q1.thread, self.q2.thread], ignored_tag_names=['tag3', 'tag5'])
+        tags = Tag.objects.get_related_to_search(thread_ids=[self.q1.thread.id, self.q2.thread.id], ignored_tag_names=['tag3', 'tag5'])
         self.assertListEqual(['tag1', 'tag2', 'tag4'], [t.name for t in tags])
         self.assertListEqual([1, 1, 1], [t.local_used_count for t in tags])
         self.assertListEqual([2, 2, 2], [t.used_count for t in tags])
 
-        tags = Tag.objects.get_related_to_search(threads=[self.q3.thread], ignored_tag_names=[])
+        tags = Tag.objects.get_related_to_search(thread_ids=[self.q3.thread.id], ignored_tag_names=[])
         self.assertListEqual(['tag6'], [t.name for t in tags])
         self.assertListEqual([1], [t.local_used_count for t in tags])
         self.assertListEqual([2], [t.used_count for t in tags])
 
-        tags = Tag.objects.get_related_to_search(threads=[self.q3.thread], ignored_tag_names=['tag1'])
+        tags = Tag.objects.get_related_to_search(thread_ids=[self.q3.thread.id], ignored_tag_names=['tag1'])
         self.assertListEqual(['tag6'], [t.name for t in tags])
         self.assertListEqual([1], [t.local_used_count for t in tags])
         self.assertListEqual([2], [t.used_count for t in tags])
 
-        tags = Tag.objects.get_related_to_search(threads=[self.q3.thread], ignored_tag_names=['tag6'])
+        tags = Tag.objects.get_related_to_search(thread_ids=[self.q3.thread.id], ignored_tag_names=['tag6'])
         self.assertListEqual([], [t.name for t in tags])
 
-        tags = Tag.objects.get_related_to_search(threads=[self.q1.thread, self.q2.thread, self.q4.thread], ignored_tag_names=['tag2'])
+        tags = Tag.objects.get_related_to_search(thread_ids=[self.q1.thread.id, self.q2.thread.id, self.q4.thread.id], ignored_tag_names=['tag2'])
         self.assertListEqual(['tag3', 'tag1', 'tag4', 'tag5', 'tag6'], [t.name for t in tags])
         self.assertListEqual([3, 2, 2, 2, 1], [t.local_used_count for t in tags])
         self.assertListEqual([3, 2, 2, 2, 2], [t.used_count for t in tags])

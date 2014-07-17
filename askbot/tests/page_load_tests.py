@@ -170,7 +170,7 @@ class PageLoadTestCase(AskbotTestCase):
     @with_settings(GROUPS_ENABLED=False)
     def test_title_search_groups_disabled(self):
         data = {'query_text': 'Question'}
-        response = self.client.get(reverse('api_get_questions'), data)
+        response = self.client.get(reverse('api_get_questions', kwargs={'feed': 'questions'}), data)
         data = simplejson.loads(response.content)
         self.assertTrue(len(data) > 1)
 
@@ -185,13 +185,13 @@ class PageLoadTestCase(AskbotTestCase):
 
         #ask for data anonymously - should get nothing
         query_data = {'query_text': 'alibaba'}
-        response = self.client.get(reverse('api_get_questions'), query_data)
+        response = self.client.get(reverse('api_get_questions', kwargs={'feed': 'questions'}), query_data)
         response_data = simplejson.loads(response.content)
         self.assertEqual(len(response_data), 0)
 
         #log in - should get the question
         self.client.login(method='force', user_id=user.id)
-        response = self.client.get(reverse('api_get_questions'), query_data)
+        response = self.client.get(reverse('api_get_questions', kwargs={'feed': 'questions'}), query_data)
         response_data = simplejson.loads(response.content)
         self.assertEqual(len(response_data), 1)
 

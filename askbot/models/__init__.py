@@ -1249,7 +1249,7 @@ def user_post_comment(
                     body_text = None,
                     timestamp = None,
                     by_email = False,
-                    comment_type='comment'
+                    comment_type='comment',
                     ip_addr=None,
                 ):
     """post a comment on behalf of the user
