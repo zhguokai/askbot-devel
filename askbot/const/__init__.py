@@ -225,6 +225,7 @@ TYPE_ACTIVITY = (
     (TYPE_ACTIVITY_USER_FULL_UPDATED, _('completed user profile')),
     (TYPE_ACTIVITY_EMAIL_UPDATE_SENT, _('email update sent to user')),
     (TYPE_ACTIVITY_POST_SHARED, _('a post was shared')),
+    (TYPE_ACTIVITY_ASK_TO_JOIN_GROUP, _('asked to join group')),
     (
         TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT,
         _('reminder about unanswered questions sent'),

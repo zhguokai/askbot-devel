@@ -1928,11 +1928,12 @@ class Post(models.Model):
 
     def __add_revision(
                     self,
-                    author = None,
-                    revised_at = None,
-                    text = None,
-                    comment = None,
-                    by_email = False
+                    author=None,
+                    revised_at=None,
+                    text=None,
+                    comment=None,
+                    is_anonymous=False,
+                    by_email=False
                 ):
         #todo: this may be identical to Question.add_revision
         if None in (author, revised_at, text):
