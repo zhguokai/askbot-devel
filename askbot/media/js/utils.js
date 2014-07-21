@@ -1436,8 +1436,8 @@ FederatedLoginMenu.prototype.decorate = function(element) {
                 }
             );
         } else if (button.hasClass('mozilla-persona')) {
-            this.setupMozillaPersonaProtocol();
-            setupButtonEventHandlers(button, this.getMozillaPersonaLoginHandler());
+            me.setupMozillaPersonaProtocol();
+            setupButtonEventHandlers(button, me.getMozillaPersonaLoginHandler());
         } else {
             setupButtonEventHandlers(
                                 button,
