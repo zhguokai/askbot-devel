@@ -1,6 +1,5 @@
 <!-- question_edit_tips.html -->
-{% set can_post = request.user.is_authenticated() and settings.EMAIL_VALIDATION and not request.user.email_isvalid %}
-{% if can_post == False %}
+{% if settings.EMAIL_VALIDATION and (request.user.is_authenticated() and not request.user.email_isvalid) %}
     <div class="email-validator">
         <p class="prompt">{% trans email=request.user.email %}Your email address, {{ email }} has not yet been validated and your posts cannot be published.{% endtrans %}</p>
         <button class="submit">{% trans %}Validate your email now{% endtrans %}</button>

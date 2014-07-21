@@ -1084,7 +1084,7 @@ body.anon.ask-page .search-drop-menu {
   -webkit-box-shadow: 1px 1px 3px #999999;
   -moz-box-shadow: 1px 1px 3px #999999;
   box-shadow: 1px 1px 3px #999999;
-  padding: 7px 10px 9px 0;
+  padding: 7px 10px 9px 13px;
   margin-bottom: 10px;
   width: 100%;
 }
@@ -3134,9 +3134,6 @@ a:hover.medal {
 .user-profile-page table.form-as-table {
   margin: 5px 0 12px;
 }
-.user-profile-page .submit-row {
-  margin-bottom: 0;
-}
 .user-profile-page .user-stats-table h2 {
   padding-top: 10px;
 }
@@ -3337,9 +3334,6 @@ a:hover.medal {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   -khtml-border-radius: 3px;
-}
-.submit-row {
-  margin-bottom: 10px;
 }
 /*-----  Revision pages ----- */
 .revision {
@@ -3544,9 +3538,15 @@ table.form-as-table th {
   text-align: left;
   font-weight: normal;
 }
+table.form-as-table.ab-subscr-form {
+  margin-bottom: 0;
+}
+table.form-as-table.ab-tag-filter-form {
+  margin: 0;
+}
 .submit-row {
   line-height: 30px;
-  padding-top: 10px;
+  margin: 0;
   display: block;
   clear: both;
 }
@@ -4022,6 +4022,9 @@ p.signup_p {
 .user-profile-page h3 {
   padding: 0;
   margin-top: -3px;
+}
+.user-profile-page .submit-row {
+  margin-bottom: 10px;
 }
 .user-profile-page .vote-notification h3 {
   padding: 10px;
@@ -4781,11 +4784,11 @@ td.setting-input textarea {
 .federated-login-methods .facebook:hover {
   background-position: -237px 0;
 }
-.federated-login-methods .google {
+.federated-login-methods .google-plus {
   background-position: 5px 0;
   width: 40px;
 }
-.federated-login-methods .google:hover {
+.federated-login-methods .google-plus:hover {
   background-position: 5px 0;
 }
 .federated-login-methods .identi-ca {

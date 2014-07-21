@@ -49,7 +49,6 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
         name='change_password'
     ),
     url(r'^%s$' % _('logout/'), 'logout_page', name='logout'),
-    #these two commeted out urls should work only with EMAIL_VALIDATION=True
     #but the setting is disabled right now
     #url(r'^%s%s$' % (_('email/'), _('sendkey/')), 'send_email_key', name='send_email_key'),
     #url(r'^%s%s(?P<id>\d+)/(?P<key>[\dabcdef]{32})/$' % (_('email/'), _('verify/')), 'verifyemail', name='user_verifyemail'),

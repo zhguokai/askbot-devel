@@ -10,9 +10,9 @@
         <label for="id_email">{% trans %}Your email address{% endtrans %}</label>
         {{ register_form.email }}
     </div>
-    {% if openid_register_form.recaptcha %}
+    {% if register_form.recaptcha %}
     <div>
-        {{ macros.form_field_with_errors(openid_register_form.recaptcha ) }}
+        {{ macros.form_field_with_errors(register_form.recaptcha ) }}
     </div>
     {% endif %}
     <input 

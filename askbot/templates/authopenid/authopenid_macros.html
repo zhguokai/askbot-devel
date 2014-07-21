@@ -1,15 +1,17 @@
 {% macro provider_buttons(login_providers) %}
 <ul class="login-icons">
     {% for provider in login_providers %}
-    <li>
-        <button
-          id="{{ provider.name }}_id"
-          name="{{ provider.name }}"
-          class="{{ provider.type }} {{provider.name|replace('.', '-')}}"
-          title="{{ provider.tooltip_text }}"
-        >{{ provider.tooltip_text}}</button>
-        <label for="{{ provider.name }}_id">{{ provider.display_name }}</label>
-    </li>
+        {% if provider.name != 'local' %}
+        <li>
+            <button
+              id="{{ provider.name }}_id"
+              name="{{ provider.name }}"
+              class="{{ provider.type }} {{provider.name|replace('.', '-')}}"
+              title="{{ provider.tooltip_text }}"
+            >{{ provider.tooltip_text}}</button>
+            <label for="{{ provider.name }}_id">{{ provider.display_name }}</label>
+        </li>
+        {% endif %}
     {% endfor %}
 </ul>
 <div class="clearfix"></div>
