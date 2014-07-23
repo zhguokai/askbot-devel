@@ -49,7 +49,7 @@ Subject: "One more test question from email."^M
 
 ________________________________
  From: "nobody@example.com" <nobody@example.com>
-To: fadeev@rocketmail.com
+To: someone@rocketmail.com
 Sent: Wednesday, April 24, 2013 3:37 AM
 Subject: Welcome to Askbot
 
@@ -70,7 +70,7 @@ On Wed, Jul 3, 2013 at 10:40 AM, <ask@example.org> wrote:
 >   ------------------------------
 >
 > Sincerely,
-> Gigaspaces XAP forum Administrator
+> forum Administrator
 >
 > welcome-gofrnegwnwxgl9@example.org
 >
@@ -80,7 +80,7 @@ On Wed, Jul 3, 2013 at 10:40 AM, <ask@example.org> wrote:
 --
 Askbot
 Valparaiso, Chile
-skype: evgeny-fadeev
+skype: aou aeu a u
 
 ############
 Test from email
