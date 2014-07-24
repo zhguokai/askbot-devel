@@ -788,6 +788,13 @@ class Post(models.Model):
         groups = (Group.objects.get_global_group(),)
         self.add_to_groups(groups)
 
+    def merge_post(self, post):
+        """merge with other post"""
+        #take latest revision of current post R1
+        #for each revision of other post Ri
+        #append content of Ri to R1 and use author 
+
+
     def is_private(self):
         """true, if post belongs to the global group"""
         if askbot_settings.GROUPS_ENABLED:
