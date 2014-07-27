@@ -100,17 +100,13 @@
 
         {% set shared_users_count = sharing_info['users'].count() %}
         {% set shared_groups_count = sharing_info['groups'].count() %}
+        {% set is_mod = thread.has_moderator(request.user) %}
 
         {% if shared_users_count or shared_groups_count %}
-            <p 
-                style="margin:16px 0 4px 0"
-<<<<<<< HEAD
+            <p style="margin:16px 0 4px 0"
             >{{ settings.WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH|escape }}</p>
-=======
-            >{% trans %}This question is shared with:{% endtrans %}</p>
->>>>>>> modal
         {% endif %}
-        <h3>{% trans %}Individual users{% endtrans %}</h3>
+        <h3>{% trans %}Individual users{% endtrans %}{% if is_mod %} <span>(<span id="unshare-thread-users">edit</span>)</span>{% endif %}</h3>
             {% set comma = joiner(',') %}
             {{ comma() }}
         <p>
@@ -130,15 +126,13 @@
                     class="see-related-users"
                     data-url="{% url get_thread_shared_users %}"
                     data-thread-id="{{ thread.id }}"
-                >{% trans 
-                        more_count=sharing_info['more_users_count'] 
-                    %}{{ more_count }} more{% endtrans %}
+                >{% trans more_count=sharing_info['more_users_count'] %}{{ more_count }} more{% endtrans %}
                 </a>
             {% endif %}
         </p>
 
         {% if shared_groups_count %}
-            <h3>{% trans %}Groups{% endtrans %}</h3>
+            <h3>{% trans %}Groups{% endtrans %}{% if is_mod %} <span>(<span id="unshare-thread-groups">edit</span>)</span>{% endif %}</h3>
             <p>
                 {% set comma = joiner(',') %}
                 {%- for group in sharing_info['groups'] -%}{{ comma() }}

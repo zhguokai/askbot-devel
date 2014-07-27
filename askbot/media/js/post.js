@@ -197,6 +197,10 @@ ThreadUsersDialog.prototype.setHeadingText = function(text) {
     this._heading_text = text;
 };  
 
+ThreadUsersDialog.prototype.setDeletable = function(isDeletable) {
+    this._isDeletable = isDeletable;
+};
+
 ThreadUsersDialog.prototype.showUsers = function(html) {
     this._dialog.setContent(html);
     this._dialog.show();
@@ -237,8 +241,9 @@ ThreadUsersDialog.prototype.decorate = function(element) {
     $(document).append(dialog_element);
     this._dialog = dialog;
     var me = this;
-    this.setHandler(function(){
+    this.setHandler(function(evt){
         me.startShowingUsers();
+        evt.preventDefault();
     });
 };
 
@@ -4823,17 +4828,34 @@ $(document).ready(function() {
         usersAc.decorate(usersInput);
     }
 
+    var unshareUsers = $('#unshare-thread-users');
+    var unshareGroups = $('#unshare-thread-groups');
+
     var showSharedUsers = $('.see-related-users');
     if (showSharedUsers.length) {
         var usersPopup = new ThreadUsersDialog();
-        usersPopup.setHeadingText(gettext('Shared with the following users:'));
+        usersPopup.setHeadingText(gettext('Shared with users:'));
+        usersPopup.setDeletable(unshareUsers.length == 1);
         usersPopup.decorate(showSharedUsers);
+        if (unshareUsers.length) {
+            var usersPopup = new ThreadUsersDialog();
+            usersPopup.setHeadingText(gettext('Shared with users:'));
+            usersPopup.setDeletable(true);
+            usersPopup.decorate(unshareUsers);
+        }
     }
     var showSharedGroups = $('.see-related-groups');
     if (showSharedGroups.length) {
         var groupsPopup = new ThreadUsersDialog();
-        groupsPopup.setHeadingText(gettext('Shared with the following groups:'));
+        groupsPopup.setHeadingText(gettext('Shared with groups:'));
+        groupsPopup.setDeletable(unshareGroups.length == 1);
         groupsPopup.decorate(showSharedGroups);
+        if (unshareGroups.length) {
+            var groupsPopup = new ThreadUsersDialog();
+            groupsPopup.setHeadingText(gettext('Shared with groups:'));
+            groupsPopup.setDeletable(true);
+            groupsPopup.decorate(unshareGroups);
+        }
     }
 
     if ($('#id_tags').length === 1) {

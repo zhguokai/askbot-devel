@@ -886,16 +886,18 @@ class Thread(models.Model):
 
         return User.objects.filter(id__in=user_ids)
 
-    def get_groups_shared_with(self, max_count=None):
+    def get_groups_shared_with(self, max_count=None, with_personal=False):
         """returns query set of groups with whom thread is shared"""
-        thread_groups = ThreadToGroup.objects.filter(
-                            models.Q(
-                                thread=self,
-                                visibility=ThreadToGroup.SHOW_ALL_RESPONSES
-                            ) & ~models.Q(
-                                group__name__startswith=PERSONAL_GROUP_NAME_PREFIX
-                            )
+        link_filter = models.Q(
+                            thread=self,
+                            visibility=ThreadToGroup.SHOW_ALL_RESPONSES
                         )
+        if with_personal is False:
+            link_filter = link_filter & ~ models.Q(
+                        group__name__startswith=PERSONAL_GROUP_NAME_PREFIX
+                    )
+
+        thread_groups = ThreadToGroup.objects.filter(link_filter)
         if max_count:
             thread_groups = thread_groups[:max_count]
 
@@ -1075,8 +1077,8 @@ class Thread(models.Model):
             return False
         elif askbot_settings.GROUPS_ENABLED:
             if user.is_administrator_or_moderator():
-                user_groups = user.get_groups()#private=True)
-                thread_groups = self.get_groups_shared_with()
+                user_groups = user.get_groups(private=True)
+                thread_groups = self.get_groups_shared_with(with_personal=True)
                 return bool(set(user_groups) & set(thread_groups))
         return False
 
