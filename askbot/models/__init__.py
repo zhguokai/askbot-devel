@@ -2274,7 +2274,7 @@ def user_get_status_display(self):
     if self.is_approved():
         return _('Registered User')
     elif self.is_administrator():
-        return _('Adminstrator')
+        return _('Administrator')
     elif self.is_moderator():
         return _('Moderator')
     elif self.is_suspended():
