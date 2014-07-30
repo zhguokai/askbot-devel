@@ -2291,6 +2291,10 @@ ul#related-tags li {
 .question-page .answer-controls .question-close {
   background: url(../images/close.png) no-repeat center left;
 }
+.question-page .post-controls .question-merge,
+.question-page .answer-controls .question-merge {
+  background: url(../images/merge.png) no-repeat;
+}
 .question-page .post-controls .permant-link,
 .question-page .answer-controls .permant-link {
   background: url(../images/link.png) no-repeat 2px 1px;
@@ -4305,8 +4309,28 @@ textarea.tipped-input {
 .modal-footer {
   text-align: left;
 }
+.modal h3 {
+  padding: 0;
+}
 .modal p {
   font-size: 14px;
+}
+.modal.merge-questions .modal-body label {
+  padding-right: 8px;
+}
+.modal.merge-questions .modal-body .body,
+.modal.merge-questions .modal-body .tags {
+  clear: both;
+}
+.modal.merge-questions .modal-body h3 {
+  line-height: 22px;
+  margin-top: 12px;
+}
+.modal.merge-questions .modal-body .tags {
+  margin-top: 12px;
+}
+.modal.merge-questions .modal-body .body {
+  margin-top: 16px;
 }
 .modal-body > textarea {
   width: 515px;

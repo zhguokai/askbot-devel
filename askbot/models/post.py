@@ -788,6 +788,41 @@ class Post(models.Model):
         groups = (Group.objects.get_global_group(),)
         self.add_to_groups(groups)
 
+    def merge_post(self, post):
+        """merge with other post"""
+        #take latest revision of current post R1
+        rev = self.get_latest_revision()
+        orig_text = rev.text
+        for rev in post.revisions.all().order_by('revision'):
+            #for each revision of other post Ri
+            #append content of Ri to R1 and use author 
+            new_text = orig_text + '\n\n' + rev.text
+            author = rev.author
+            self.apply_edit(
+                edited_by=rev.author,
+                text=new_text, 
+                comment=_('merged revision'),
+                by_email=False,
+                edit_anonymously=rev.is_anonymous,
+                suppress_email=True,
+                ip_addr=rev.ip_addr
+            )
+        if post.is_question() or post.is_answer():
+            comments = Post.objects.get_comments().filter(parent=post)
+            comments.update(parent=self)
+
+        #todo: implement redirects
+        if post.is_question():
+            self.old_question_id = post.id
+        elif post.is_answer():
+            self.old_answer_id = post.id
+        elif post.is_comment():
+            self.old_comment_id = post.id
+
+        self.save()
+        post.delete()
+
+
     def is_private(self):
         """true, if post belongs to the global group"""
         if askbot_settings.GROUPS_ENABLED:
@@ -1834,6 +1869,7 @@ class Post(models.Model):
                         comment=None,
                         wiki=False,
                         is_private=False,
+                        edit_anonymously=False,
                         by_email=False,
                         suppress_email=False,
                         ip_addr=None,

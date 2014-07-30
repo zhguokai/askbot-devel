@@ -787,6 +787,14 @@ def user_assert_can_upload_file(request_user):
     )
 
 
+def user_assert_can_merge_questions(self):
+    _assert_user_can(
+        user=self,
+        action_display=_('merge duplicate questions'),
+        admin_or_moderator_required=True
+    )
+
+
 def user_assert_can_post_text(self, text):
     """Raises exceptions.PermissionDenied, if user does not have
     privilege to post given text, depending on the contents
@@ -1384,6 +1392,38 @@ def user_mark_tags(
             cleaned_tagnames = tagnames
 
     return cleaned_tagnames, cleaned_wildcards
+
+def user_merge_duplicate_questions(self, from_q, to_q):
+    """merges content from the ``from_thread`` to the ``to-thread``"""
+    #todo: maybe assertion will depend on which questions are merged
+    self.assert_can_merge_questions()
+    to_q.merge_post(from_q)
+    from_thread = from_q.thread
+    to_thread = to_q.thread
+    #set new thread value to all posts
+    posts = from_thread.posts.all()
+    posts.update(thread=to_thread)
+
+    if askbot_settings.LIMIT_ONE_ANSWER_PER_USER:
+        #merge answers if only one is allowed per user
+        answers = to_thread.all_answers()
+        answer_map = collections.defaultdict(list)
+        #compile all answers by user
+        for answer in answers:
+            author = answer.author
+            answer_map[author].append(answer)
+
+        for author in answer_map:
+            author_answers = answer_map[author]
+            if author_answers > 1:
+                first_answer = author_answers.pop(0)
+                for answer in author_answers:
+                    first_answer.merge_post(answer)
+
+    from_thread.spaces.clear()
+    from_thread.delete()
+    to_thread.invalidate_cached_data()
+
 
 @auto_now_timestamp
 def user_retag_question(
@@ -3018,6 +3058,7 @@ User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
+User.add_to_class('merge_duplicate_questions', user_merge_duplicate_questions)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_create_tags', user_can_create_tags)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
@@ -3076,6 +3117,7 @@ User.add_to_class('is_read_only', user_is_read_only)
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
 User.add_to_class('assert_can_revoke_old_vote', user_assert_can_revoke_old_vote)
 User.add_to_class('assert_can_upload_file', user_assert_can_upload_file)
+User.add_to_class('assert_can_merge_questions', user_assert_can_merge_questions)
 User.add_to_class('assert_can_post_question', user_assert_can_post_question)
 User.add_to_class('assert_can_post_answer', user_assert_can_post_answer)
 User.add_to_class('assert_can_post_comment', user_assert_can_post_comment)
