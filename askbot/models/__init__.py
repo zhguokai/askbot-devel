@@ -1393,14 +1393,13 @@ def user_mark_tags(
 
     return cleaned_tagnames, cleaned_wildcards
 
-def user_merge_duplicate_threads(self, from_thread, to_thread):
+def user_merge_duplicate_questions(self, from_q, to_q):
     """merges content from the ``from_thread`` to the ``to-thread``"""
     #todo: maybe assertion will depend on which questions are merged
     self.assert_can_merge_questions()
-    from_q = from_thread._question_post()
-    to_q = to_thread._question_post()
     to_q.merge_post(from_q)
-    from_q.delete()
+    from_thread = from_q.thread
+    to_thread = to_q.thread
     #set new thread value to all posts
     posts = from_thread.posts.all()
     posts.update(thread=to_thread)
@@ -1415,13 +1414,15 @@ def user_merge_duplicate_threads(self, from_thread, to_thread):
             answer_map[author].append(answer)
 
         for author in answer_map:
-            if len(answer_map[author]) > 1:
-                answers = answer_map[author]
-                first_answer = answers.pop(0)
-                for answer in answers:
+            author_answers = answer_map[author]
+            if author_answers > 1:
+                first_answer = author_answers.pop(0)
+                for answer in author_answers:
                     first_answer.merge_post(answer)
 
+    from_thread.spaces.clear()
     from_thread.delete()
+    to_thread.invalidate_cached_data()
 
 
 @auto_now_timestamp
@@ -3057,7 +3058,7 @@ User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
-User.add_to_class('merge_duplicate_threads', user_merge_duplicate_threads)
+User.add_to_class('merge_duplicate_questions', user_merge_duplicate_questions)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_create_tags', user_can_create_tags)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)

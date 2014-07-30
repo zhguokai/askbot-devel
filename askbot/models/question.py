@@ -980,11 +980,12 @@ class Thread(models.Model):
         """true if ``user`` is also a thread moderator"""
         if user.is_anonymous():
             return False
-        elif askbot_settings.GROUPS_ENABLED:
-            if user.is_administrator_or_moderator():
+        if user.is_administrator_or_moderator():
+            if askbot_settings.GROUPS_ENABLED:
                 user_groups = user.get_groups(private=True)
                 thread_groups = self.get_groups_shared_with()
                 return bool(set(user_groups) & set(thread_groups))
+            return True
         return False
 
     def requires_response_moderation(self, author):

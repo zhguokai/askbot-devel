@@ -32,6 +32,7 @@
     <a class="question-delete"
     >{% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
 </span>
+{% if thread.is_moderated() %}
 <span 
     id="post-{{answer.id}}-publish"
     class="action-link"
@@ -48,6 +49,7 @@
         >{% trans %}publish{% endtrans %}</a>
     {% endif %}
 </span>
+{% endif %}
 <span class="action-link">
     <a  class="permant-link"
         href="{{ answer.get_absolute_url(question_post=question) }}"
