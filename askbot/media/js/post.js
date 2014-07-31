@@ -221,29 +221,17 @@ ThreadUsersDialog.prototype.getUnshareHandler = function(itemId, item) {
     };
 };
 
-ThreadUsersDialog.prototype.makeUsersDeletable = function() {
-    var users = this._dialog.getElement().find('li');
-    for (var i=0; i<users.length; i++) {
-        var userItem = $(users[i]);
-        var userLink = userItem.find('a').last();
-        var userId = userLink.attr('href').split('/')[2];
+ThreadUsersDialog.prototype.makeItemsDeletable = function(tag) {
+    var items = this._dialog.getElement().find(tag);
+    for (var i=0; i<items.length; i++) {
+        var item = $(items[i]);
+        var link = item.find('a').last();
+        var bits = link.attr('href').split('/');
+        var itemId = bits[bits.length - 3];
         var del = new DeleteIcon();
         del.setContent('x')
-        del.setHandler(this.getUnshareHandler(userId, userItem));
-        $(userLink).after(del.getElement());
-    }
-};
-
-ThreadUsersDialog.prototype.makeGroupsDeletable = function() {
-    var groups = this._dialog.getElement().find('p');
-    for (var i=0; i<groups.length; i++) {
-        var groupItem = $(groups[i]);
-        var groupLink = groupItem.find('a').first();
-        var groupId = groupLink.attr('href').split('/')[3];
-        var del = new DeleteIcon();
-        del.setContent('x');
-        del.setHandler(this.getUnshareHandler(groupId, groupItem));
-        $(groupLink).after(del.getElement());
+        del.setHandler(this.getUnshareHandler(itemId, item));
+        $(link).after(del.getElement());
     }
 };
 
@@ -252,9 +240,9 @@ ThreadUsersDialog.prototype.showUsers = function(html) {
     this._dialog.show();
     if (this._isDeletable) {
         if (this._sharingEntities === 'users') {
-            this.makeUsersDeletable();
+            this.makeItemsDeletable('li');
         } else {
-            this.makeGroupsDeletable();
+            this.makeItemsDeletable('p');
         }
     }
 };
