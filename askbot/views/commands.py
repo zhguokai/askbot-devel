@@ -1462,6 +1462,21 @@ def share_question_with_group(request):
         return HttpResponseRedirect(thread.get_absolute_url())
 
 @csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def unshare_question_with_group(request):
+    form = forms.UnShareQuestionForm(request.POST)
+    if form.is_valid():
+        thread_id = form.cleaned_data['thread_id']
+        group_id = form.cleaned_data['recipient_id']
+
+        thread = models.Thread.objects.get(id=thread_id)
+        question_post = thread._question_post()
+        group = models.Group.objects.get(id=group_id)
+        thread.remove_from_groups((group,), recursive=True)
+
+
+@csrf.csrf_protect
 def share_question_with_user(request):
     form = forms.ShareQuestionForm(request.POST)
     try:
@@ -1493,6 +1508,26 @@ def share_question_with_user(request):
         error_message = _('Sorry, looks like sharing request was invalid')
         request.user.message_set.create(message=error_message)
         return HttpResponseRedirect(thread.get_absolute_url())
+
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def unshare_question_with_user(request):
+    form = forms.UnShareQuestionForm(request.POST)
+    if form.is_valid():
+
+        thread_id = form.cleaned_data['thread_id']
+        user_id = form.cleaned_data['recipient_id']
+
+        user = models.User.objects.get(id=user_id)
+        if request.user == user:
+            return
+
+        thread = models.Thread.objects.get(id=thread_id)
+        group = user.get_personal_group()
+        thread.remove_from_groups([group], recursive=True)
+
 
 @csrf.csrf_protect
 def moderate_group_join_request(request):

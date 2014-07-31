@@ -187,8 +187,9 @@ var CPValidator = function() {
 /**
  * @constructor
  */
-var ThreadUsersDialog = function() {
+var ThreadUsersDialog = function(sharingEntities) {
     SimpleControl.call(this);
+    this._sharingEntities = sharingEntities;
     this._heading_text = 'Add heading with the setHeadingText()';
 };
 inherits(ThreadUsersDialog, SimpleControl);
@@ -201,20 +202,88 @@ ThreadUsersDialog.prototype.setDeletable = function(isDeletable) {
     this._isDeletable = isDeletable;
 };
 
+ThreadUsersDialog.prototype.getUnshareHandler = function(itemId, item) {
+    var me = this;
+    return function() {
+        $.ajax({
+            type: "POST",
+            cache: false,
+            dataType: "json",
+            url: me.getUnshareUrl(),
+            data: {
+                'thread_id': askbot['data']['threadId'],
+                'recipient_id': itemId
+            },
+            success: function(data) {
+                item.remove();
+            }
+        });
+    };
+};
+
+ThreadUsersDialog.prototype.makeUsersDeletable = function() {
+    var users = this._dialog.getElement().find('li');
+    for (var i=0; i<users.length; i++) {
+        var userItem = $(users[i]);
+        var userLink = userItem.find('a').last();
+        var userId = userLink.attr('href').split('/')[2];
+        var del = new DeleteIcon();
+        del.setContent('x')
+        del.setHandler(this.getUnshareHandler(userId, userItem));
+        $(userLink).append(del.getElement());
+    }
+};
+
+ThreadUsersDialog.prototype.makeGroupsDeletable = function() {
+    var groups = this._dialog.getElement().find('p');
+    for (var i=0; i<groups.length; i++) {
+        var groupItem = $(groups[i]);
+        var groupLink = groupItem.find('a').first();
+        var groupId = groupLink.attr('href').split('/')[3];
+        var del = new DeleteIcon();
+        del.setContent('x');
+        del.setHandler(this.getUnshareHandler(groupId, groupItem));
+        $(groupLink).append(del.getElement());
+    }
+};
+
 ThreadUsersDialog.prototype.showUsers = function(html) {
     this._dialog.setContent(html);
     this._dialog.show();
+    if (this._isDeletable) {
+        if (this._sharingEntities === 'users') {
+            this.makeUsersDeletable();
+        } else {
+            this.makeGroupsDeletable();
+        }
+    }
+};
+
+ThreadUsersDialog.prototype.getLoadDataUrl = function() {
+    var shareWith = this._sharingEntities;
+    if (shareWith === 'users') {
+        return askbot['urls']['getThreadSharedUsers'];
+    } else {
+        return askbot['urls']['getThreadSharedGroups'];
+    }
+};
+
+ThreadUsersDialog.prototype.getUnshareUrl = function() {
+    var shareWith = this._sharingEntities;
+    if (shareWith === 'users') {
+        return askbot['urls']['unshareQuestionWithUser'];
+    } else {
+        return askbot['urls']['unshareQuestionWithGroup'];
+    }
 };
 
 ThreadUsersDialog.prototype.startShowingUsers = function() {
     var me = this;
-    var threadId = this._threadId;
-    var url = this._url;
     $.ajax({
         type: 'GET',
-        data: {'thread_id': threadId},
+        data: {'thread_id': askbot['data']['threadId']},
         dataType: 'json',
-        url: url,
+        url: this.getLoadDataUrl(),
         cache: false,
         success: function(data){
             if (data['success'] == true){
@@ -229,8 +298,6 @@ ThreadUsersDialog.prototype.startShowingUsers = function() {
 ThreadUsersDialog.prototype.decorate = function(element) {
     this._element = element;
     ThreadUsersDialog.superClass_.decorate.call(this, element);
-    this._threadId = element.data('threadId');
-    this._url = element.data('url');
     var dialog = new ModalDialog();
     dialog.setRejectButtonText('');
     dialog.setAcceptButtonText(gettext('Back to the question'));
@@ -240,6 +307,7 @@ ThreadUsersDialog.prototype.decorate = function(element) {
     $(dialog_element).find('.modal-footer').css('text-align', 'center');
     $(document).append(dialog_element);
     this._dialog = dialog;
+    dialog_element.addClass('unshare-question');
     var me = this;
     this.setHandler(function(evt){
         me.startShowingUsers();
@@ -4829,33 +4897,34 @@ $(document).ready(function() {
     }
 
     var unshareUsers = $('#unshare-thread-users');
+    if (unshareUsers.length) {
+        var usersPopup = new ThreadUsersDialog('users');
+        usersPopup.setHeadingText(gettext('Shared with users:'));
+        usersPopup.setDeletable(true);
+        usersPopup.decorate(unshareUsers);
+    }
+
     var unshareGroups = $('#unshare-thread-groups');
+    if (unshareGroups.length) {
+        var groupsPopup = new ThreadUsersDialog('groups');
+        groupsPopup.setHeadingText(gettext('Shared with groups:'));
+        groupsPopup.setDeletable(true);
+        groupsPopup.decorate(unshareGroups);
+    }
 
     var showSharedUsers = $('.see-related-users');
     if (showSharedUsers.length) {
-        var usersPopup = new ThreadUsersDialog();
+        var usersPopup = new ThreadUsersDialog('users');
         usersPopup.setHeadingText(gettext('Shared with users:'));
         usersPopup.setDeletable(unshareUsers.length == 1);
         usersPopup.decorate(showSharedUsers);
-        if (unshareUsers.length) {
-            var usersPopup = new ThreadUsersDialog();
-            usersPopup.setHeadingText(gettext('Shared with users:'));
-            usersPopup.setDeletable(true);
-            usersPopup.decorate(unshareUsers);
-        }
     }
     var showSharedGroups = $('.see-related-groups');
     if (showSharedGroups.length) {
-        var groupsPopup = new ThreadUsersDialog();
+        var groupsPopup = new ThreadUsersDialog('groups');
         groupsPopup.setHeadingText(gettext('Shared with groups:'));
         groupsPopup.setDeletable(unshareGroups.length == 1);
         groupsPopup.decorate(showSharedGroups);
-        if (unshareGroups.length) {
-            var groupsPopup = new ThreadUsersDialog();
-            groupsPopup.setHeadingText(gettext('Shared with groups:'));
-            groupsPopup.setDeletable(true);
-            groupsPopup.decorate(unshareGroups);
-        }
     }
 
     if ($('#id_tags').length === 1) {

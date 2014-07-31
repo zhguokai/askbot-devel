@@ -106,7 +106,9 @@
             <p style="margin:16px 0 4px 0"
             >{{ settings.WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH|escape }}</p>
         {% endif %}
-        <h3>{% trans %}Individual users{% endtrans %}{% if is_mod %} <span>(<span id="unshare-thread-users">edit</span>)</span>{% endif %}</h3>
+        <h3>{% trans %}Individual users{% endtrans %}{% if is_mod %}
+            <span>(<a id="unshare-thread-users">edit</a>)</span>
+        {% endif %}</h3>
             {% set comma = joiner(',') %}
             {{ comma() }}
         <p>
@@ -122,17 +124,16 @@
             {% endif -%}
             {%- if sharing_info['more_users_count'] > 0 %}
                 {% trans %}and{% endtrans %}
-                <a 
-                    class="see-related-users"
-                    data-url="{% url get_thread_shared_users %}"
-                    data-thread-id="{{ thread.id }}"
+                <a class="see-related-users"
                 >{% trans more_count=sharing_info['more_users_count'] %}{{ more_count }} more{% endtrans %}
                 </a>
             {% endif %}
         </p>
 
         {% if shared_groups_count %}
-            <h3>{% trans %}Groups{% endtrans %}{% if is_mod %} <span>(<span id="unshare-thread-groups">edit</span>)</span>{% endif %}</h3>
+            <h3>{% trans %}Groups{% endtrans %}{% if is_mod %} 
+                <span>(<a id="unshare-thread-groups">edit</a>)</span>
+            {% endif %}</h3>
             <p>
                 {% set comma = joiner(',') %}
                 {%- for group in sharing_info['groups'] -%}{{ comma() }}
@@ -140,10 +141,7 @@
                 {%- endfor -%}
                 {% if sharing_info['more_groups_count'] > 0 %}
                     {% trans %}and{% endtrans %}
-                    <a 
-                        class="see-related-groups"
-                        data-url="{% url get_thread_shared_groups %}"
-                        data-thread-id="{{ thread.id }}"
+                    <a class="see-related-groups"
                     >{% trans more_count=sharing_info['more_groups_count'] %}{{ more_count }} more{% endtrans %}
                     </a>
                 {% endif %}

@@ -363,11 +363,16 @@
         askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
         askbot['urls']['publishAnswer'] = '{% url publish_answer %}';
         askbot['urls']['getAdminCommentCounts'] = '{% url get_admin_comment_counts %}';
+        askbot['urls']['getThreadSharedUsers'] = '{% url get_thread_shared_users %}';
+        askbot['urls']['getThreadSharedGroups'] = '{% url get_thread_shared_groups %}';
+        askbot['urls']['unshareQuestionWithUser'] = '{% url unshare_question_with_user %}';
+        askbot['urls']['unshareQuestionWithGroup'] = '{% url unshare_question_with_group %}';
         askbot['data']['userIsThreadModerator'] = {{ user_is_thread_moderator|as_js_bool }};
         askbot['data']['questionAuthorId'] = {{ question.author_id }};
         askbot['data']['threadIsClosed'] = {{ thread.closed|as_js_bool }};
         askbot['data']['answersSortTab'] = '{{ tab_id }}';
         askbot['data']['questionId'] = {{ question.id }};
+        askbot['data']['threadId'] = {{ thread.id }};
         askbot['data']['threadSlug'] = '{{ thread.title|slugify }}';
         askbot['messages']['addComment'] = "{% trans %}add a comment{% endtrans %}";
         askbot['messages']['userNamePrompt'] = "{% trans %}User name:{% endtrans %}";

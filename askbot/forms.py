@@ -1794,6 +1794,10 @@ class ShareQuestionForm(forms.Form):
     thread_id = forms.IntegerField()
     recipient_name = forms.CharField()
 
+class UnShareQuestionForm(forms.Form):
+    thread_id = forms.IntegerField()
+    recipient_id = forms.IntegerField()
+
 class BulkTagSubscriptionForm(forms.Form):
     date_added = forms.DateField(required=False, widget=forms.HiddenInput())
     tags = TagNamesField(label=_("Tags"), help_text=' ')

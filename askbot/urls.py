@@ -207,6 +207,16 @@ urlpatterns = patterns('',
         name='share_question_with_user'
     ),
     service_url(
+        r'^unshare-question-with-group/',
+        views.commands.unshare_question_with_group,
+        name='unshare_question_with_group'
+    ),
+    service_url(
+        r'^unshare-question-with-user/',
+        views.commands.unshare_question_with_user,
+        name='unshare_question_with_user'
+    ),
+    service_url(
         r'^get-users-info/',
         views.commands.get_users_info,
         name='get_users_info'
