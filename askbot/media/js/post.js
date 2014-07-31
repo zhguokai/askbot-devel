@@ -230,7 +230,7 @@ ThreadUsersDialog.prototype.makeUsersDeletable = function() {
         var del = new DeleteIcon();
         del.setContent('x')
         del.setHandler(this.getUnshareHandler(userId, userItem));
-        $(userLink).append(del.getElement());
+        $(userLink).after(del.getElement());
     }
 };
 
@@ -243,7 +243,7 @@ ThreadUsersDialog.prototype.makeGroupsDeletable = function() {
         var del = new DeleteIcon();
         del.setContent('x');
         del.setHandler(this.getUnshareHandler(groupId, groupItem));
-        $(groupLink).append(del.getElement());
+        $(groupLink).after(del.getElement());
     }
 };
 
@@ -285,7 +285,7 @@ ThreadUsersDialog.prototype.startShowingUsers = function() {
         dataType: 'json',
         url: this.getLoadDataUrl(),
         cache: false,
-        success: function(data){
+        success: function(data) {
             if (data['success'] == true){
                 me.showUsers(data['html']);
             } else {
