@@ -2201,13 +2201,18 @@ Comment.prototype.setContent = function(data){
         this._comment_added_at.detach();
         this._comment_added_at = undefined;
     }
-    this._comment_body.append(' (');
+
+    var timestamp = this.makeElement('span');
+    timestamp.addClass('age');
+    this._comment_body.append(timestamp);
+
+    timestamp.append(' (');
     this._comment_added_at = $('<abbr class="timeago"></abbr>');
     this._comment_added_at.html(this._data['comment_added_at']);
     this._comment_added_at.attr('title', this._data['comment_added_at']);
     this._comment_added_at.timeago();
-    this._comment_body.append(this._comment_added_at);
-    this._comment_body.append(')');
+    timestamp.append(this._comment_added_at);
+    timestamp.append(')');
 
     if (this._editable) {
         if (this._edit_link !== undefined) {
