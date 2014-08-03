@@ -78,11 +78,6 @@
         {% include "meta/markdown_javascript.html" %}
     {% endif %}
     <script type="text/javascript">
-    {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
-        var codeFriendlyMarkdown = true;
-    {% else %}
-        var codeFriendlyMarkdown = false;
-    {% endif %}
     //todo move javascript out
     $().ready(function(){
         $("#nav_questions").attr('className',"on");

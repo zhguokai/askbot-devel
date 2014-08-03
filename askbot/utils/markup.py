@@ -20,9 +20,9 @@ def get_parser():
     """
     extras = ['link-patterns', 'video']  
 
-    if askbot_settings.ENABLE_MATHJAX or \
-        askbot_settings.MARKUP_CODE_FRIENDLY:
-        extras.append('code-friendly')
+    #if askbot_settings.ENABLE_MATHJAX or \
+    #    askbot_settings.MARKUP_CODE_FRIENDLY:
+    extras.append('code-friendly')
 
     if askbot_settings.ENABLE_VIDEO_EMBEDDING:
         #note: this requires a forked version of markdown2 module

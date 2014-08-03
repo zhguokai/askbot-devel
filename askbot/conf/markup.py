@@ -34,22 +34,25 @@ def regex_settings_validation(*args):
         return ""
 
 
-settings.register(
-    BooleanValue(
-        MARKUP,
-        'MARKUP_CODE_FRIENDLY',
-        description = _('Enable code-friendly Markdown'),
-        help_text = _(
-            'If checked, underscore characters will not '
-            'trigger italic or bold formatting - '
-            'bold and italic text can still be marked up '
-            'with asterisks. Note that "MathJax support" '
-            'implicitly turns this feature on, because '
-            'underscores are heavily used in LaTeX input.'
-        ),
-        default = False
-    )
-)
+# removed as it's better to disable underscores by default
+# to fix issues in urls with the undrescores
+#
+#settings.register(
+#    BooleanValue(
+#        MARKUP,
+#        'MARKUP_CODE_FRIENDLY',
+#        description = _('Enable code-friendly Markdown'),
+#        help_text = _(
+#            'If checked, underscore characters will not '
+#            'trigger italic or bold formatting - '
+#            'bold and italic text can still be marked up '
+#            'with asterisks. Note that "MathJax support" '
+#            'implicitly turns this feature on, because '
+#            'underscores are heavily used in LaTeX input.'
+#        ),
+#        default = False
+#    )
+#)
 
 settings.register(
     BooleanValue(

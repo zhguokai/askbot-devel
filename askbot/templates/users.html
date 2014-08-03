@@ -100,11 +100,6 @@
     <script src='{{"/js/post.js"|media}}' type='text/javascript'></script>
     <script type="text/javascript">
         //todo move javascript out
-        {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
-            var codeFriendlyMarkdown = true;
-        {% else %}
-            var codeFriendlyMarkdown = false;
-        {% endif %}
         {% if group and request.user.is_authenticated() %}
             $().ready(function(){
                 var group_join_btn = new GroupJoinButton();

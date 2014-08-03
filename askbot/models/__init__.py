@@ -2999,6 +2999,7 @@ def user_edit_group_membership(self, user=None, group=None,
                         user=user,
                         group=group
                     )
+
         if approved_at != None:
             membership.approved_at = approved_at
         if level != None:
@@ -3006,6 +3007,9 @@ def user_edit_group_membership(self, user=None, group=None,
 
         if approved_at != None or level != None:
             membership.save()
+
+        if created and action == 'add' and level == GroupMembership.PENDING:
+            signals.user_joined_group.send(None, membership=membership)
 
         return membership
 
@@ -3940,10 +3944,10 @@ def make_admin_if_first_user(user, **kwargs):
     if user_count == 1:
         user.set_status('d')
 
-def moderate_group_joining(sender, instance=None, created=False, **kwargs):
-    if created and instance.level == GroupMembership.PENDING:
-        user = instance.user
-        group = instance.group
+def moderate_group_joining(sender, membership=None, **kwargs):
+    if membership.level == GroupMembership.PENDING:
+        user = membership.user
+        group = membership.group
         user.notify_users(
                 notification_type=const.TYPE_ACTIVITY_ASK_TO_JOIN_GROUP,
                 recipients = group.get_moderators(),
@@ -3982,7 +3986,6 @@ django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Post)
 django_signals.post_save.connect(record_vote, sender=Vote)
 django_signals.post_save.connect(record_favorite_question, sender=FavoriteQuestion)
-django_signals.post_save.connect(moderate_group_joining, sender=GroupMembership)
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
@@ -4009,6 +4012,7 @@ signals.post_updated.connect(record_post_update_activity)
 signals.new_answer_posted.connect(tweet_new_post)
 signals.new_question_posted.connect(tweet_new_post)
 signals.reputation_received.connect(autoapprove_reputable_user)
+signals.user_joined_group.connect(moderate_group_joining)
 
 #probably we cannot use post-save here the point of this is
 #to tell when the revision becomes publicly visible, not when it is saved

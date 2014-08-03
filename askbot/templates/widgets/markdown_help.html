@@ -1,21 +1,8 @@
 <div class="box">
     <h2>{% trans %}Markdown basics{% endtrans %}</h2>
     <ul>
-        {% if settings.MARKUP_CODE_FRIENDLY or settings.ENABLE_MATHJAX %}
-        <li>
-            {% trans %}*italic*{% endtrans %}
-        </li>
-        <li>
-            {% trans %}**bold**{% endtrans %}
-        </li>
-        {% else %}
-        <li>
-            {% trans %}*italic* or _italic_{% endtrans %}
-        </li>
-        <li>
-            {% trans %}**bold** or __bold__{% endtrans %}
-        </li>
-        {% endif %}
+        <li>{% trans %}*italic*{% endtrans %}</li>
+        <li>{% trans %}**bold**{% endtrans %}</li>
         <li>
             <b>{% trans %}link{% endtrans %}</b>:[{% trans %}text{% endtrans %}](http://example.com/ "{% trans %}title{% endtrans %}")
 
@@ -26,8 +13,7 @@
         </li>
         <li>
         {% trans %}numbered list:{% endtrans %}
-            1.  Foo
-            2.  Bar
+        <p>1.  Foo<br>2.  Bar</p>
         </li>
         <li>
         {% trans %}basic HTML tags are also supported{% endtrans %}

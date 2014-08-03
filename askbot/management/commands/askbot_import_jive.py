@@ -155,7 +155,7 @@ class Command(BaseCommand):
         askbot_settings.update('MIN_REP_TO_INSERT_LINK', 1)
         askbot_settings.update('MIN_REP_TO_SUGGEST_LINK', 1)
         askbot_settings.update('COMMENTS_EDITOR_TYPE', 'rich-text')
-        askbot_settings.update('MARKUP_CODE_FRIENDLY', True)
+        #askbot_settings.update('MARKUP_CODE_FRIENDLY', True)
         self.bad_email_count = 0
         self.attachments_path = ''
         self.soup = None
