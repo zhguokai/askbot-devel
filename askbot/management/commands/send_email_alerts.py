@@ -199,7 +199,7 @@ class Command(NoArgsCommand):
         Q_set_A = not_seen_qs
         Q_set_B = seen_before_last_mod_qs
 
-        if getattr(django_settings,'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             languages = user.languages.split()
         else:
             languages = None
@@ -549,7 +549,7 @@ class Command(NoArgsCommand):
                         'name': user.username,
                         'admin_email': askbot_settings.ADMIN_EMAIL,
                         'site_name': askbot_settings.APP_SHORT_NAME,
-                        'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+                        'is_multilingual': askbot.is_multilingual(),
                     })
 
                     if DEBUG_THIS_COMMAND == True:

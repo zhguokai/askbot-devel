@@ -38,6 +38,7 @@ from django.core import cache
 from django.core import exceptions as django_exceptions
 from django_countries.fields import CountryField
 from askbot import exceptions as askbot_exceptions
+import askbot
 from askbot import const
 from askbot.const import message_keys
 from askbot.conf import settings as askbot_settings
@@ -2446,10 +2447,10 @@ def user_get_absolute_url(self):
     return self.get_profile_url()
 
 def user_get_primary_language(self):
-    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-        return django_settings.LANGUAGE_CODE
-    else:
+    if askbot.is_multilingual():
         return self.languages.split()[0]
+    else:
+        return django_settings.LANGUAGE_CODE
 
 def get_profile_link(self):
     profile_link = u'<a href="%s">%s</a>' \
@@ -3360,7 +3361,7 @@ def format_instant_notification_email(
         'user_subscriptions_url': user_subscriptions_url,
         'reply_separator': reply_separator,
         'reply_address': reply_address,
-        'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+        'is_multilingual': askbot.is_multilingual()
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
 

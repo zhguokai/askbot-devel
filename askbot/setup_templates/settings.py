@@ -292,7 +292,7 @@ GROUP_MESSAGING = {
     'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'}
 }
 
-ASKBOT_MULTILINGUAL = False
+ASKBOT_LANGUAGE_MODE = 'single-lang'
 
 ASKBOT_CSS_DEVEL = False
 if 'ASKBOT_CSS_DEVEL' in locals() and ASKBOT_CSS_DEVEL == True:

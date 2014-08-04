@@ -96,7 +96,7 @@ class ThreadQuerySet(models.query.QuerySet):
             else:
                 filter_parameters['title__icontains'] = search_query
 
-            if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+            if askbot.is_multilingual():
                 filter_parameters['language_code'] = get_language()
 
             return self.filter(**filter_parameters)
@@ -297,8 +297,15 @@ class ThreadManager(BaseQuerySetManager):
             'posts__deleted': False
         }
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        lang_mode = askbot.get_lang_mode()
+        if lang_mode == 'url-lang':
             primary_filter['language_code'] = get_language()
+        elif lang_mode == 'user-lang':
+            if request_user.is_authenticated():
+                language_codes = request_user.languages.split()
+            else:
+                language_codes = dict(django_settings.LANGUAGES).keys()
+            primary_filter['language_code__in'] = language_codes
 
         # TODO: add a possibility to see deleted questions
         qs = self.filter(**primary_filter)
@@ -1910,7 +1917,13 @@ class Thread(models.Model):
         }
         from askbot.views.context import get_extra as get_extra_context
         context.update(get_extra_context('ASKBOT_QUESTION_SUMMARY_EXTRA_CONTEXT', None, context))
-        activate_language(self.language_code)
+
+        if askbot.get_lang_mode() == 'user-lang':
+            language_code = get_language()
+        else:
+            language_code = self.language_code
+
+        activate_language(language_code)
         html = get_template('widgets/question_summary.html').render(context)
         # INFO: Timeout is set to 30 days:
         # * timeout=0/None is not a reliable cross-backend way to set infinite timeout

@@ -1,4 +1,5 @@
 """Procedures to initialize the full text search in PostgresQL"""
+import askbot
 from django.db import connection
 from django.conf import settings as django_settings
 from django.utils.translation import get_language
@@ -71,8 +72,7 @@ def run_full_text_search(query_set, query_text, text_search_vector_name):
         query_text = (query_text + ' ')*mul
 
     #the table name is a hack, because user does not have the language code
-    is_multilingual = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
-    if is_multilingual and table_name == 'askbot_thread':
+    if askbot.is_multilingual() and table_name == 'askbot_thread':
         where_clause += " AND " + table_name + \
                         '.' + "language_code='" + language_code + "'"
 

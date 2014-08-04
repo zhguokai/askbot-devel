@@ -4,6 +4,7 @@ import re
 import datetime
 from django import forms
 from django.forms.widgets import HiddenInput
+import askbot
 from askbot import const
 from askbot.const import message_keys
 from askbot.utils.loading import load_module
@@ -978,7 +979,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         if user.is_anonymous() or not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             self.fields['language'] = LanguageField()
 
         if should_use_recaptcha(user):
@@ -1354,7 +1355,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
         if not self.can_stay_anonymous():
             self.hide_field('reveal_identity')
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             self.fields['language'] = LanguageField()
 
         if should_use_recaptcha(self.user):
@@ -1368,7 +1369,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
             if was_private != self.cleaned_data['post_privately']:
                 return True
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             old_language = self.question.thread.language_code
             if old_language != self.cleaned_data['language']:
                 return True

@@ -656,7 +656,7 @@ def test_haystack():
                     }"""
                 errors.append(message)
 
-            if getattr(django_settings, 'ASKBOT_MULTILINGUAL'):
+            if askbot.is_multilingual():
                 if not hasattr(django_settings, "HAYSTACK_ROUTERS"):
                     message = "Please add HAYSTACK_ROUTERS = ['askbot.search.haystack.routers.LanguageRouter',] to settings.py"
                     errors.append(message)
@@ -925,7 +925,7 @@ def test_secret_key():
         ])
 
 def test_locale_middlewares():
-    is_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+    is_multilang = askbot.is_multilingual()
     django_locale_middleware = 'django.middleware.locale.LocaleMiddleware'
     askbot_locale_middleware = 'askbot.middleware.locale.LocaleMiddleware'
     errors = list()
@@ -938,14 +938,19 @@ def test_locale_middlewares():
 
     print_errors(errors)
 
+def test_language_mode():
+    lang_mode = askbot.get_lang_mode()
+    if lang_mode not in ('single-lang', 'url-lang', 'user-lang'):
+        print_errors("ASKBOT_LANGUAGE_MODE must be one of: 'single-lang', 'url-lang', 'user-lang'")
+
 def test_multilingual():
-    is_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+    is_multilang = (askbot.get_lang_mode() == 'url-lang')
 
     errors = list()
 
     django_version = django.VERSION
     if is_multilang and django_version[0] == 1 and django_version[1] < 4:
-        errors.append('ASKBOT_MULTILINGUAL=True works only with django >= 1.4')
+        errors.append('url-lang multilingual mode works only with django >= 1.4')
 
     if is_multilang:
         middleware = 'django.middleware.locale.LocaleMiddleware'
@@ -1029,6 +1034,7 @@ def run_startup_tests():
     #test_postgres()
     test_messages_framework()
     test_middleware()
+    test_language_mode()
     test_multilingual()
     test_locale_middlewares()
     #test_csrf_cookie_domain()

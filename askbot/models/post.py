@@ -821,7 +821,7 @@ class Post(models.Model):
         if not hasattr(self, '_thread_cache') and thread:
             self._thread_cache = thread
 
-        is_multilingual = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+        is_multilingual = askbot.is_multilingual()
         if is_multilingual:
             request_language = get_language()
             activate_language(self.thread.language_code)
@@ -1460,7 +1460,7 @@ class Post(models.Model):
         subscribers = self.filter_authorized_users(subscribers)
 
         #filter subscribers by language
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             language = self.thread.language_code
             filtered_subscribers = list()
             for subscriber in subscribers:
@@ -2382,7 +2382,7 @@ class PostRevision(models.Model):
 
     def get_absolute_url(self):
 
-        is_multilingual = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+        is_multilingual = askbot.is_multilingual()
 
         if is_multilingual:
             request_language = get_language()

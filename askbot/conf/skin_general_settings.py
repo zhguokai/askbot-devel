@@ -11,6 +11,7 @@ from django.core.exceptions import ValidationError
 from askbot.skins import utils as skin_utils
 from askbot import const
 from askbot.conf.super_groups import CONTENT_AND_UI
+import askbot
 
 GENERAL_SKIN_SETTINGS = ConfigurationGroup(
                     'GENERAL_SKIN_SETTINGS',
@@ -59,7 +60,7 @@ settings.register(
 )
 
 #cannot use HAS_ASKBOT_LOCALE_MIDDLEWARE due to circular import error
-if not getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) and \
+if askbot.get_lang_mode() == 'single-lang' and \
         'askbot.middleware.locale.LocaleMiddleware' in django_settings.MIDDLEWARE_CLASSES:
     settings.register(
         values.StringValue(

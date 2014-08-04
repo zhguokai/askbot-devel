@@ -409,6 +409,7 @@ def edit_user(request, id):
         'marked_tags_setting': askbot_settings.MARKED_TAGS_ARE_PUBLIC_WHEN,
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'view_user': user,
+        'user_languages': user.languages.split()
     }
     return render(request, 'user_profile/user_edit.html', data)
 
@@ -1004,8 +1005,8 @@ def user_select_languages(request, id=None, slug=None):
     user.save()
 
     redirect_url = reverse(
-        'user_subscriptions',
-        kwargs={'id': user.id, 'slug': slugify(user.username)}
+        'edit_user',
+        kwargs={'id': user.id}
     )
     return HttpResponseRedirect(redirect_url)
 
@@ -1056,7 +1057,6 @@ def user_email_subscriptions(request, user, context):
         'email_feeds_form': email_feeds_form,
         'tag_filter_selection_form': tag_filter_form,
         'action_status': action_status,
-        'user_languages': user.languages.split()
     }
     context.update(data)
     #todo: really need only if subscribed tags are enabled

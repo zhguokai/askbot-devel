@@ -115,3 +115,14 @@ def is_multisite():
 def is_multisite():
     from django.conf import settings as django_settings
     return hasattr(django_settings, 'ASKBOT_SITES') and len(django_settings.ASKBOT_SITES)
+
+def get_lang_mode():
+    from django.conf import settings as django_settings
+    #possible modes:
+    # single-lang
+    # url-lang
+    # user-lang
+    return getattr(django_settings, 'ASKBOT_LANGUAGE_MODE', 'single-lang')
+
+def is_multilingual():
+    return get_lang_mode() != 'single-lang'

@@ -1,4 +1,5 @@
 import os.path
+import askbot
 from django.template.loader import BaseLoader
 from django.template import RequestContext
 from django.template import TemplateDoesNotExist
@@ -95,8 +96,7 @@ def load_skins(language_code):
     return skins
 
 SKINS = dict()
-if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) or\
-        HAS_ASKBOT_LOCALE_MIDDLEWARE:
+if askbot.is_multilingual() or HAS_ASKBOT_LOCALE_MIDDLEWARE:
     for lang in dict(django_settings.LANGUAGES).keys():
         SKINS.update(load_skins(lang))
 else:

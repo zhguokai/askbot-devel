@@ -1,3 +1,4 @@
+import askbot
 from django.conf import settings
 from django.utils.translation import get_language
 
@@ -18,7 +19,7 @@ class ThreadIndex(indexes.SearchIndex, indexes.Indexable):
         return Thread
 
     def index_queryset(self, using=None):
-        if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
+        if askbot.is_multilingual():
             lang_code = get_language()[:2]
             return self.get_model().objects.filter(language_code__startswith=lang_code,
                                                    deleted=False)
@@ -42,7 +43,7 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         ALLOWED_TYPES = ('question', 'answer', 'comment')
         model_cls = self.get_model()
-        if getattr(settings, 'ASKBOT_MULTILINGUAL', True):
+        if askbot.is_multilingual():
             lang_code = get_language()[:2]
             return model_cls.objects.filter(
                                     language_code__startswith=lang_code,

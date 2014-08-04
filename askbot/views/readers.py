@@ -560,7 +560,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
 
     thread = question_post.thread
 
-    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+    if askbot.get_lang_mode() == 'url-lang':
         if thread.language_code != translation.get_language():
             return HttpResponseRedirect(thread.get_absolute_url())
 
