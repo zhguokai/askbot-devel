@@ -100,44 +100,51 @@
 
         {% set shared_users_count = sharing_info['users'].count() %}
         {% set shared_groups_count = sharing_info['groups'].count() %}
+        {% set is_hidden = (shared_users_count + shared_groups_count == 0) %}
         {% set is_mod = thread.has_moderator(request.user) %}
 
-        {% if shared_users_count or shared_groups_count %}
-            <p style="margin:16px 0 4px 0"
-            >{{ settings.WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH|escape }}</p>
-        {% endif %}
-        <h3>{% trans %}Individual users{% endtrans %}{% if is_mod %}
-            <span>(<a id="unshare-thread-users">edit</a>)</span>
-        {% endif %}</h3>
+        <h2>{{ settings.WORDS_WHO_CAN_SEE_THIS_QUESTION|escape }}</h2>
+
+        <div class="shared-sublist users">
             {% set comma = joiner(',') %}
-            {{ comma() }}
-        <p>
-        {%- if request.user.is_authenticated() %}
-        <a href="{{ request.user.get_profile_url() }}">
-            {% trans %}You{% endtrans -%}
-        </a>
-        {%- endif -%}
-        {%- if shared_users_count -%}
-                {%- for user in sharing_info['users'] %}{{ comma() }}
-                    {{ user.get_profile_link() }}
-                {%- endfor -%}
-            {% endif -%}
-            {%- if sharing_info['more_users_count'] > 0 %}
-                {% trans %}and{% endtrans %}
-                <a class="see-related-users"
-                >{% trans more_count=sharing_info['more_users_count'] %}{{ more_count }} more{% endtrans %}
-                </a>
+            {% if not is_hidden %}
+            <h3>{% trans %}Individual users{% endtrans %}
+                {% if is_mod and shared_users_count %}
+                    <span class="edit-btn">(<a id="unshare-thread-users">edit</a>)</span>
+                {% endif %}
+            </h3>{{ comma() }}
             {% endif %}
-        </p>
+            <p>
+                {%- if request.user.is_authenticated() %}
+                <a {% if is_hidden %}class="warning"{% endif %} href="{{ request.user.get_profile_url() }}">
+                    {% if is_hidden %}
+                        {% trans %}Only You{% endtrans %}
+                    {% else %}
+                        {% trans %}You{% endtrans -%}
+                    {% endif %}
+                </a>
+                {%- endif -%}
+                {%- for user in sharing_info['users'] -%}
+                    <span class="item">{{ comma() }} {{ user.get_profile_link() }}</span>
+                {%- endfor -%}
+                {%- if sharing_info['more_users_count'] > 0 %}
+                    {% trans %}and{% endtrans %}
+                    <a class="see-related-users"
+                    >{% trans more_count=sharing_info['more_users_count'] %}{{ more_count }} more{% endtrans %}
+                    </a>
+                {% endif %}
+            </p>
+        </div>
 
         {% if shared_groups_count %}
+        <div class="shared-sublist">
             <h3>{% trans %}Groups{% endtrans %}{% if is_mod %} 
                 <span>(<a id="unshare-thread-groups">edit</a>)</span>
             {% endif %}</h3>
             <p>
-                {% set comma = joiner(',') %}
-                {%- for group in sharing_info['groups'] -%}{{ comma() }}
-                    {{ macros.user_group_link(group) }}
+                {% set comma = joiner('<span class="sep">,</span>') %}
+                {%- for group in sharing_info['groups'] -%}
+                    <span class="item">{{ comma () }} {{ macros.user_group_link(group) }}</span>
                 {%- endfor -%}
                 {% if sharing_info['more_groups_count'] > 0 %}
                     {% trans %}and{% endtrans %}
@@ -146,6 +153,7 @@
                     </a>
                 {% endif %}
             </p>
+        </div>
         {% endif %}
     {% else %}
         <h2>{% trans %}Public thread{% endtrans %}</h2>

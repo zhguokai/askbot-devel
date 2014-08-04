@@ -837,6 +837,9 @@ class Thread(models.Model):
         * more_users_count - remaining count of shared-with users
         * more_groups_count - remaining count of shared-with groups
         """
+        if visitor and visitor.is_anonymous():
+            visitor = None
+
         shared_users = self.get_users_shared_with(
                                             max_count=2,#"visitor" is implicit
                                             exclude_user=visitor

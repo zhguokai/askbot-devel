@@ -202,6 +202,38 @@ ThreadUsersDialog.prototype.setDeletable = function(isDeletable) {
     this._isDeletable = isDeletable;
 };
 
+/**
+ * cleans up the list of shared with users or groups
+ * 1) removes the item
+ * 2) deletes list if left empty
+ */
+ThreadUsersDialog.prototype.updateOnPageItemsList = function(url, removeSublist) {
+    var item = $('.sharing-widget a[href="' + url + '"]').closest('.item');
+    if (item.length) {
+        var sublist = item.closest('.shared-sublist');
+        if (removeSublist) {
+            item = sublist;
+        }
+        item.fadeOut(function() {
+            var isSublist = item.hasClass('.shared-sublist');
+            item.remove();
+            if (!isSublist) {
+                var first = sublist.find('.item').first();
+                first.find('.sep').remove();
+            }
+            if (sublist.hasClass('users')) {
+                if (sublist.find('.item').length === 0) {
+                    sublist.find('.edit-btn').hide();
+                }
+            }
+        });
+    }
+};
+
+ThreadUsersDialog.prototype.hideDialog = function() {
+    this._dialog.hide();
+};
+
 ThreadUsersDialog.prototype.getUnshareHandler = function(itemId, item) {
     var me = this;
     return function() {
@@ -215,23 +247,38 @@ ThreadUsersDialog.prototype.getUnshareHandler = function(itemId, item) {
                 'recipient_id': itemId
             },
             success: function(data) {
-                item.remove();
+                //remove the link in the popup and in the page, if present
+                var itemUrl = item.find('a').attr('href');
+                var removeSublist = (item.siblings().length === 0);
+                item.fadeOut(function () { item.remove(); });
+                me.updateOnPageItemsList(itemUrl, removeSublist);
+                if (removeSublist) {
+                    me.hideDialog();
+                }
             }
         });
     };
 };
 
-ThreadUsersDialog.prototype.makeItemsDeletable = function(tag) {
+ThreadUsersDialog.prototype.makeItemsDeletable = function() {
+    var ent = this._sharingEntities;
+    if (ent === 'users') {
+        var tag = 'li';
+    } else {
+        var tag = 'p';
+    }
     var items = this._dialog.getElement().find(tag);
     for (var i=0; i<items.length; i++) {
         var item = $(items[i]);
         var link = item.find('a').last();
         var bits = link.attr('href').split('/');
         var itemId = bits[bits.length - 3];
-        var del = new DeleteIcon();
-        del.setContent('x')
-        del.setHandler(this.getUnshareHandler(itemId, item));
-        $(link).after(del.getElement());
+        if (ent === 'groups' || (ent === 'users' && parseInt(itemId) != askbot['data']['userId'])) {
+            var del = new DeleteIcon();
+            del.setContent('x')
+            del.setHandler(this.getUnshareHandler(itemId, item));
+            $(link).after(del.getElement());
+        }
     }
 };
 
@@ -239,11 +286,7 @@ ThreadUsersDialog.prototype.showUsers = function(html) {
     this._dialog.setContent(html);
     this._dialog.show();
     if (this._isDeletable) {
-        if (this._sharingEntities === 'users') {
-            this.makeItemsDeletable('li');
-        } else {
-            this.makeItemsDeletable('p');
-        }
+        this.makeItemsDeletable();
     }
 };
 

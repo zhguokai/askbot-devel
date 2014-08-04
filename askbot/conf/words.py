@@ -643,9 +643,9 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
-        'WORDS_THIS_QUESTION_IS_CURRENTLY_SHARED_ONLY_WITH',
-        default=_('Phrase: this question is currently shared only with:'),
-        description=_('Phrase: this question is currently shared only with:'),
+        'WORDS_WHO_CAN_SEE_THIS_QUESTION',
+        default=_('Who can see this question'),
+        description=_('Who can see this question'),
     )
 )
 
@@ -681,8 +681,8 @@ settings.register(
     values.StringValue(
         WORDS,
         'WORDS_COMMENTS_AND_ANSWERS_TO_OTHERS_QUESTIONS',
-        default = '',
-        description = _('Phrase: comments and answers to others questions'),
+        default = _('comments and answers to others questions'),
+        description = _('comments and answers to others questions'),
     )
 )
 

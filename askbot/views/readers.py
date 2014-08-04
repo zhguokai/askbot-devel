@@ -735,7 +735,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     }
     #shared with ...
     if askbot_settings.GROUPS_ENABLED:
-        data['sharing_info'] = thread.get_sharing_info()
+        data['sharing_info'] = thread.get_sharing_info(visitor=request.user)
 
     if askbot.is_multisite() and thread.has_moderator(request.user):
         initial = {'thread_id': thread.id}
