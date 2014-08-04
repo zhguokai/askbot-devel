@@ -1,4 +1,5 @@
-<span class="lang-nav dropdown-toggle">
+<span class="lang-nav dropdown">
+    <span>{{ settings.LANGUAGES_DICT[current_language_code] }}</span>
     <ul class="dropdown-menu">
     {% for lang in settings.LANGUAGES_DICT %}
         {% if lang != current_language_code %}
@@ -10,5 +11,4 @@
         {% endif %}
     {% endfor %}
     </ul>
-    <span>{{ settings.LANGUAGES_DICT[current_language_code] }}</span>
 </span>
