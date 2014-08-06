@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
+# Valentin Laskov <laskov@festa.bg>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-13 19:08+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2014-03-06 15:25+0000\n"
+"Last-Translator: Valentin Laskov <laskov@festa.bg>\n"
 "Language-Team: Bulgarian (Bulgaria) (http://www.transifex.com/projects/p/askbot/language/bg_BG/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,11 +20,11 @@ msgstr ""
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr ""
+msgstr "Съжаляваме, анонимни посетители не могат да ползват тази функция"
 
 #: feed.py:34 feed.py:108
 msgid " - "
-msgstr ""
+msgstr " - "
 
 #: feed.py:35 feed.py:109
 msgid "Individual question feed"
@@ -31,15 +32,15 @@ msgstr ""
 
 #: forms.py:140
 msgid "select country"
-msgstr ""
+msgstr "изберете държава"
 
 #: forms.py:150
 msgid "Country"
-msgstr ""
+msgstr "Държава"
 
 #: forms.py:158
 msgid "Country field is required"
-msgstr ""
+msgstr "Полето Държава се изисква"
 
 #: forms.py:188
 #, python-format
@@ -62,7 +63,7 @@ msgstr ""
 #: forms.py:247 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
-msgstr ""
+msgstr "заглавие"
 
 #: forms.py:249 templates/embed/ask_by_widget.html:170
 msgid "Please enter your question"
@@ -87,14 +88,14 @@ msgstr ""
 
 #: forms.py:309
 msgid "content"
-msgstr ""
+msgstr "съдържание"
 
 #: forms.py:370
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "всеки етикет трябва да е по-къс от %(max_chars)d буква"
+msgstr[1] "всеки етикет трябва да е по-къс от %(max_chars)d букви"
 
 #: forms.py:407
 msgid ""
@@ -105,7 +106,7 @@ msgstr ""
 #: forms.py:410 forms.py:1006 models/widgets.py:27
 #: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
-msgstr ""
+msgstr "етикети"
 
 #: forms.py:412
 #, python-format
@@ -122,100 +123,100 @@ msgstr[1] ""
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "моля, ползвайте %(tag_count)d етикет или по-малко"
+msgstr[1] "моля, ползвайте %(tag_count)d или по-малко етикета"
 
 #: forms.py:447
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
-msgstr ""
+msgstr "Изисква се поне един от следните етикети : %(tags)s"
 
 #: forms.py:475
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
-msgstr ""
+msgstr "уики въпрос (Вие няма да получите точки за репутация и всички участници ще могат да го редактират)"
 
 #: forms.py:479
 msgid ""
 "if you choose community wiki option, the question and answer do not generate"
 " points and name of author will not be shown"
-msgstr ""
+msgstr "ако изберете опцията уики общество, въпросът и отговорът няма да генерират точки за репутация и името на автора няма да се показва"
 
 #: forms.py:496
 msgid "update summary:"
-msgstr ""
+msgstr "информация за обновлението:"
 
 #: forms.py:498
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style, this field is optional)"
-msgstr ""
+msgstr "въведете кратко обобщение на редакцията Ви (напр. коригиран синтаксис, граматика, подобрен стил, това поле не е задължително)"
 
 #: forms.py:585
 msgid "Enter number of points to add or subtract"
-msgstr ""
+msgstr "Въведете броя точки, които да добавите или извадите"
 
 #: forms.py:600 const/__init__.py:375
 msgid "approved"
-msgstr ""
+msgstr "одобрен"
 
 #: forms.py:601 const/__init__.py:376
 msgid "watched"
-msgstr ""
+msgstr "наблюдаван"
 
 #: forms.py:602 const/__init__.py:377
 msgid "suspended"
-msgstr ""
+msgstr "ограничен"
 
 #: forms.py:603 const/__init__.py:378
 msgid "blocked"
-msgstr ""
+msgstr "блокиран"
 
 #: forms.py:605
 msgid "administrator"
-msgstr ""
+msgstr "администратор"
 
 #: forms.py:606 const/__init__.py:374
 msgid "moderator"
-msgstr ""
+msgstr "модератор"
 
 #: forms.py:625
 msgid "Change status to"
-msgstr ""
+msgstr "Смени статуса на"
 
 #: forms.py:652
 msgid "which one?"
-msgstr ""
+msgstr "кой от тях?"
 
 #: forms.py:673
 msgid "Cannot change own status"
-msgstr ""
+msgstr "Не можете да смените собствения си статус"
 
 #: forms.py:679
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "Не можете да направите друг потребител модератор"
 
 #: forms.py:686
 msgid "Cannot change status of another moderator"
-msgstr ""
+msgstr "Не можете да смените статуса на друг модератор"
 
 #: forms.py:692
 msgid "Cannot change status to admin"
-msgstr ""
+msgstr "Не можете да смените статуса до админ"
 
 #: forms.py:698
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
-msgstr ""
+msgstr "Ако искате да смените статуса на %(username)s, моля, направете Вашия избор."
 
 #: forms.py:708
 msgid "Subject line"
-msgstr ""
+msgstr "Ред за темата"
 
 #: forms.py:713
 msgid "Message text"
-msgstr ""
+msgstr "Текст на съобщението"
 
 #: forms.py:727
 msgid "Your name (optional):"
@@ -227,7 +228,7 @@ msgstr ""
 
 #: forms.py:730
 msgid "Your message:"
-msgstr ""
+msgstr "Вашето съобщение:"
 
 #: forms.py:735
 msgid "I don't want to give my email or receive a response:"
@@ -263,11 +264,11 @@ msgstr ""
 
 #: forms.py:914 forms.py:957
 msgid "ask anonymously"
-msgstr ""
+msgstr "питане анонимно"
 
 #: forms.py:916 forms.py:959
 msgid "Check if you do not want to reveal your name when asking this question"
-msgstr ""
+msgstr "Отбележете, ако не искате да разкриете името си, задавайки този въпрос"
 
 #: forms.py:947
 msgid ""
@@ -279,40 +280,40 @@ msgstr ""
 msgid ""
 "You have asked this question anonymously, if you decide to reveal your "
 "identity, please check this box."
-msgstr ""
+msgstr "Задали сте този въпрос анонимно. Ако решите да разкриете самоличността си, моля, поставете отметка тук."
 
 #: forms.py:1217
 msgid "reveal identity"
-msgstr ""
+msgstr "разкриване на самоличността"
 
 #: forms.py:1296
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
-msgstr ""
+msgstr "Съжаляваме, но само авторът на анонимен въпрос може да разкрие самоличността си, моля, отмаркирайте кутийката"
 
 #: forms.py:1309
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
-msgstr ""
+msgstr "Съжаляваме, но изглежда правилата току-що са били променени - вече не е възможно да се пита анонимно. Молим, или маркирайте кутийката \"разкриване на идентичността\", или презаредете тази страница и опитайте да редактирате въпроса отново."
 
 #: forms.py:1373
 msgid "Real name"
-msgstr ""
+msgstr "Истинско име"
 
 #: forms.py:1380
 msgid "Website"
-msgstr ""
+msgstr "Уебсайт"
 
 #: forms.py:1387
 msgid "City"
-msgstr ""
+msgstr "Град"
 
 #: forms.py:1396
 msgid "Show country"
-msgstr ""
+msgstr "Показвай държавата"
 
 #: forms.py:1401
 msgid "Show tag choices"
@@ -320,55 +321,55 @@ msgstr ""
 
 #: forms.py:1406
 msgid "Date of birth"
-msgstr ""
+msgstr "Рождена дата"
 
 #: forms.py:1408
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr ""
+msgstr "няма да се показва. Ползва се за изчисление на възрастта. Формат: ГГГГ-ММ-ДД"
 
 #: forms.py:1416
 msgid "Profile"
-msgstr ""
+msgstr "Профил"
 
 #: forms.py:1425
 msgid "Screen name"
-msgstr ""
+msgstr "Име на екрана"
 
 #: forms.py:1457 forms.py:1461
 msgid "this email has already been registered, please use another one"
-msgstr ""
+msgstr "този имейл вече е регистриран. Моля, ползвайте друг."
 
 #: forms.py:1470
 msgid "Choose email tag filter"
-msgstr ""
+msgstr "Изберете филтър по етикети  за имейл"
 
 #: forms.py:1522
 msgid "Asked by me"
-msgstr ""
+msgstr "Мои запитвания"
 
 #: forms.py:1525
 msgid "Answered by me"
-msgstr ""
+msgstr "Мои отговори"
 
 #: forms.py:1528
 msgid "Individually selected"
-msgstr ""
+msgstr "Конкретно избрани"
 
 #: forms.py:1531
 msgid "Entire forum (tag filtered)"
-msgstr ""
+msgstr "Целият форум (филтрирано с етикети)"
 
 #: forms.py:1535
 msgid "Comments and posts mentioning me"
-msgstr ""
+msgstr "Коментари и публикации, в които съм споменат"
 
 #: forms.py:1619
 msgid "please choose one of the options above"
-msgstr ""
+msgstr "моля, изберете една от горните опции"
 
 #: forms.py:1622
 msgid "okay, let's try!"
-msgstr ""
+msgstr "добре, да пробваме!"
 
 #: forms.py:1625
 #, python-format
@@ -409,15 +410,15 @@ msgstr ""
 
 #: urls.py:56
 msgid "question/"
-msgstr ""
+msgstr "въпрос/"
 
 #: urls.py:61
 msgid "tags/"
-msgstr ""
+msgstr "етикети/"
 
 #: urls.py:66 urls.py:71 urls.py:78 urls.py:84 urls.py:93 urls.py:100
 msgid "users/"
-msgstr ""
+msgstr "потребители/"
 
 #: urls.py:71
 msgid "by-group/"
@@ -425,11 +426,11 @@ msgstr ""
 
 #: urls.py:78 urls.py:159 urls.py:226 urls.py:520
 msgid "edit/"
-msgstr ""
+msgstr "редактиране/"
 
 #: urls.py:85
 msgid "subscriptions/"
-msgstr ""
+msgstr "регистрации/"
 
 #: urls.py:94
 msgid "select_languages/"
@@ -445,23 +446,23 @@ msgstr ""
 
 #: urls.py:115 urls.py:120
 msgid "badges/"
-msgstr ""
+msgstr "отличителни белези/"
 
 #: urls.py:133
 msgid "feedback/"
-msgstr ""
+msgstr "отзив/"
 
 #: urls.py:154
 msgid "about/"
-msgstr ""
+msgstr "относно/"
 
 #: urls.py:155
 msgid "faq/"
-msgstr ""
+msgstr "чзв/"
 
 #: urls.py:156
 msgid "privacy/"
-msgstr ""
+msgstr "лично/"
 
 #: urls.py:157
 msgid "help/"
@@ -469,36 +470,36 @@ msgstr ""
 
 #: urls.py:159 urls.py:164
 msgid "answers/"
-msgstr ""
+msgstr "отговори/"
 
 #: urls.py:164 urls.py:256
 msgid "revisions/"
-msgstr ""
+msgstr "редакции/"
 
 #: urls.py:221 urls.py:226 urls.py:231 urls.py:236 urls.py:241 urls.py:246
 #: urls.py:256
 msgid "questions/"
-msgstr ""
+msgstr "въпроси/"
 
 #: urls.py:221 urls.py:495 urls.py:500 urls.py:505 urls.py:510
 msgid "ask/"
-msgstr ""
+msgstr "питане/"
 
 #: urls.py:231
 msgid "retag/"
-msgstr ""
+msgstr "преетикиране/"
 
 #: urls.py:236
 msgid "close/"
-msgstr ""
+msgstr "затваряне/"
 
 #: urls.py:241
 msgid "reopen/"
-msgstr ""
+msgstr "преотваряне/"
 
 #: urls.py:246
 msgid "answer/"
-msgstr ""
+msgstr "отговор/"
 
 #: urls.py:314
 msgid "tags/subscriptions/"
@@ -522,11 +523,11 @@ msgstr ""
 
 #: urls.py:459
 msgid "messages/"
-msgstr ""
+msgstr "съобщения/"
 
 #: urls.py:459
 msgid "markread/"
-msgstr ""
+msgstr "марк-прочетено/"
 
 #: urls.py:490 urls.py:495 urls.py:500 urls.py:505 urls.py:510 urls.py:515
 #: urls.py:520 urls.py:525 urls.py:530
@@ -547,12 +548,12 @@ msgstr ""
 
 #: urls.py:560
 msgid "upload/"
-msgstr ""
+msgstr "качване/"
 
 #: urls.py:585 setup_templates/settings.py:229
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
-msgstr ""
+msgstr "регистрация/"
 
 #: conf/access_control.py:8
 msgid "Access control settings"
@@ -592,117 +593,117 @@ msgstr ""
 
 #: conf/badges.py:13
 msgid "Badge settings"
-msgstr ""
+msgstr "Настройки на отличителен белег"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
-msgstr ""
+msgstr "Disciplined: минимум одобрения за изтрито мнение"
 
 #: conf/badges.py:32
 msgid "Peer Pressure: minimum downvotes for deleted post"
-msgstr ""
+msgstr "Peer Pressure: минимум упреци за изтрито мнение"
 
 #: conf/badges.py:41
 msgid "Teacher: minimum upvotes for the answer"
-msgstr ""
+msgstr "Учител: минимум одобрения за отговора"
 
 #: conf/badges.py:50
 msgid "Nice Answer: minimum upvotes for the answer"
-msgstr ""
+msgstr "Хубав отговор: минимум одобрения на отговора"
 
 #: conf/badges.py:59
 msgid "Good Answer: minimum upvotes for the answer"
-msgstr ""
+msgstr "Добър отговор: минимум одобрения на отговора"
 
 #: conf/badges.py:68
 msgid "Great Answer: minimum upvotes for the answer"
-msgstr ""
+msgstr "Много добър отговор: минимум одобрения на отговора"
 
 #: conf/badges.py:77
 msgid "Nice Question: minimum upvotes for the question"
-msgstr ""
+msgstr "Хубав въпрос: минимум одобрения на въпроса"
 
 #: conf/badges.py:86
 msgid "Good Question: minimum upvotes for the question"
-msgstr ""
+msgstr "Добър въпрос: минимум одобрения на въпроса"
 
 #: conf/badges.py:95
 msgid "Great Question: minimum upvotes for the question"
-msgstr ""
+msgstr "Много добър въпрос: минимум одобрения на въпроса"
 
 #: conf/badges.py:104
 msgid "Popular Question: minimum views"
-msgstr ""
+msgstr "Популярен въпрос: минимум прегледи"
 
 #: conf/badges.py:113
 msgid "Notable Question: minimum views"
-msgstr ""
+msgstr "Забележим въпрос: минимум прегледи"
 
 #: conf/badges.py:122
 msgid "Famous Question: minimum views"
-msgstr ""
+msgstr "Знаменит въпрос: минимум прегледи"
 
 #: conf/badges.py:131
 msgid "Self-Learner: minimum answer upvotes"
-msgstr ""
+msgstr "Самообучаващ: минимум одобрения на отговор"
 
 #: conf/badges.py:140
 msgid "Civic Duty: minimum votes"
-msgstr ""
+msgstr "Активист: минимум гласове"
 
 #: conf/badges.py:149
 msgid "Enlightened Duty: minimum upvotes"
-msgstr ""
+msgstr "Просветител: минимум одобрения"
 
 #: conf/badges.py:158
 msgid "Guru: minimum upvotes"
-msgstr ""
+msgstr "Гуру: минимум одобрения"
 
 #: conf/badges.py:167
 msgid "Necromancer: minimum upvotes"
-msgstr ""
+msgstr "Магьосник: минимум одобрения"
 
 #: conf/badges.py:176
 msgid "Necromancer: minimum delay in days"
-msgstr ""
+msgstr "Магьосник: минимум закъснение в дни"
 
 #: conf/badges.py:185
 msgid "Associate Editor: minimum number of edits"
-msgstr ""
+msgstr "Щатен редактор: минимум брой редакции"
 
 #: conf/badges.py:194
 msgid "Favorite Question: minimum stars"
-msgstr ""
+msgstr "Любим въпрос: минимум звезди"
 
 #: conf/badges.py:203
 msgid "Stellar Question: minimum stars"
-msgstr ""
+msgstr "Звезден въпрос: минимум звезди"
 
 #: conf/badges.py:212
 msgid "Commentator: minimum comments"
-msgstr ""
+msgstr "Коментатор: минимум коментари"
 
 #: conf/badges.py:221
 msgid "Taxonomist: minimum tag use count"
-msgstr ""
+msgstr "Етикетаджия: минимум използвани етикети"
 
 #: conf/badges.py:230
 msgid "Enthusiast: minimum days"
-msgstr ""
+msgstr "Ентусиаст: минимум дни"
 
 #: conf/email.py:15
 msgid "Email and email alert settings"
-msgstr ""
+msgstr "Имейл и настройки на уведомления"
 
 #: conf/email.py:24
 msgid "Prefix for the email subject line"
-msgstr ""
+msgstr "Префикс за темите на писмата"
 
 #: conf/email.py:26
 msgid ""
 "This setting takes default from the django settingEMAIL_SUBJECT_PREFIX. A "
 "value entered here will overridethe default."
-msgstr ""
+msgstr "Тази настройка е подразбиращата се django настройка settingEMAIL_SUBJECT_PREFIX. Въведената тук стойност заменя подразбиращата се."
 
 #: conf/email.py:44
 msgid "Site administrator email address"
@@ -714,7 +715,7 @@ msgstr ""
 
 #: conf/email.py:62
 msgid "Maximum number of news entries in an email alert"
-msgstr ""
+msgstr "Максимален брой новини в уведомление по имейл"
 
 #: conf/email.py:72
 msgid "Default notification frequency all questions"
@@ -769,7 +770,7 @@ msgstr ""
 
 #: conf/email.py:143
 msgid "Send periodic reminders about unanswered questions"
-msgstr ""
+msgstr "Периодично изпращай напомняния за въпроси без отговор"
 
 #: conf/email.py:145
 msgid ""
@@ -780,17 +781,17 @@ msgstr ""
 
 #: conf/email.py:158
 msgid "Days before starting to send reminders about unanswered questions"
-msgstr ""
+msgstr "Дни преди да започне изпращането на напомняния за въпроси без отговор"
 
 #: conf/email.py:169
 msgid ""
 "How often to send unanswered question reminders (in days between the "
 "reminders sent)."
-msgstr ""
+msgstr "Колко често да се изпраща напомняне за въпроси без отговор (в дни между напомнянията)."
 
 #: conf/email.py:181
 msgid "Max. number of reminders to send about unanswered questions"
-msgstr ""
+msgstr "Максимален брой на изпратените напомняния за въпроси без отговор"
 
 #: conf/email.py:192
 msgid "Send periodic reminders to accept the best answer"
@@ -819,40 +820,40 @@ msgstr ""
 
 #: conf/email.py:242
 msgid "Require email verification before allowing to post"
-msgstr ""
+msgstr "Изисква проверка на имейл преди разрешаване на публикуването"
 
 #: conf/email.py:243
 msgid ""
 "Active email verification is done by sending a verification key in email"
-msgstr ""
+msgstr "Проверката за активна поща става чрез изпращането на проверяващ код по имейл"
 
 #: conf/email.py:252
 msgid "Fake email for anonymous user"
-msgstr ""
+msgstr "Фалшив имейл за анонимен потребител"
 
 #: conf/email.py:253
 msgid "Use this setting to control gravatar for email-less user"
-msgstr ""
+msgstr "Използвайте тази настройка за аватар на потребители, невъвели имейл"
 
 #: conf/email.py:262
 msgid "Allow posting questions by email"
-msgstr ""
+msgstr "Позволено публикуване на въпроси чрез имейл"
 
 #: conf/email.py:264
 msgid ""
 "Before enabling this setting - please fill out IMAP settings in the "
 "settings.py file"
-msgstr ""
+msgstr "Преди да разрешите това, моля, попълнете IMAP настройките във файла settings.py"
 
 #: conf/email.py:275
 msgid "Replace space in emailed tags with dash"
-msgstr ""
+msgstr "Замени в имейла интервалите в етикетите с тире"
 
 #: conf/email.py:277
 msgid ""
 "This setting applies to tags written in the subject line of questions asked "
 "by email"
-msgstr ""
+msgstr "Тази настройка се прилага към етикетите, написани в темата на имейл със зададен въпрос"
 
 #: conf/email.py:288
 msgid "Enable posting answers and comments by email"
@@ -882,37 +883,37 @@ msgstr ""
 
 #: conf/external_keys.py:19
 msgid "Google site verification key"
-msgstr ""
+msgstr "Идентификационен ключ на Google"
 
 #: conf/external_keys.py:21
 #, python-format
 msgid ""
 "This key helps google index your site please obtain is at <a "
 "href=\"%(url)s?hl=%(lang)s\">google webmasters tools site</a>"
-msgstr ""
+msgstr "Този ключ, който можете да си набавите от <a href=\"%(url)s?hl=%(lang)s\">google инструменти за уеб администратори</a>, позволява на google да индексира Вашия сайт"
 
 #: conf/external_keys.py:36
 msgid "Google Analytics key"
-msgstr ""
+msgstr "Google Analytics key"
 
 #: conf/external_keys.py:38
 #, python-format
 msgid ""
 "Obtain is at <a href=\"%(url)s\">Google Analytics</a> site, if you wish to "
 "use Google Analytics to monitor your site"
-msgstr ""
+msgstr "Набавете си го от сайта <a href=\"%(url)s\">Google Analytics</a>, ако желаете да използвате Google Analytics за статистики за сайта Ви"
 
 #: conf/external_keys.py:51
 msgid "Enable recaptcha (keys below are required)"
-msgstr ""
+msgstr "Разреши recaptcha (нужни са ключовете по-долу)"
 
 #: conf/external_keys.py:62
 msgid "Recaptcha public key"
-msgstr ""
+msgstr "Recaptcha публичен ключ"
 
 #: conf/external_keys.py:70
 msgid "Recaptcha private key"
-msgstr ""
+msgstr "Recaptcha частен ключ"
 
 #: conf/external_keys.py:72
 #, python-format
@@ -920,11 +921,11 @@ msgid ""
 "Recaptcha is a tool that helps distinguish real people from annoying spam "
 "robots. Please get this and a public key at the <a "
 "href=\"%(url)s\">%(url)s</a>"
-msgstr ""
+msgstr "Recaptcha е инструмент, позволяващ различаването на реални потребители от досадните SPAM роботи. Моля, набавете си този и публичния ключ от <a href=\"%(url)s\">%(url)s</a>"
 
 #: conf/external_keys.py:84
 msgid "Facebook public API key"
-msgstr ""
+msgstr "Публичен Facebook API ключ"
 
 #: conf/external_keys.py:86
 #, python-format
@@ -932,56 +933,56 @@ msgid ""
 "Facebook API key and Facebook secret allow to use Facebook Connect login "
 "method at your site. Please obtain these keys at <a "
 "href=\"%(url)s\">facebook create app</a> site"
-msgstr ""
+msgstr "Facebook API ключът и Facebook secret позволяват да ползвате Facebook Connect login метода в сайта Ви. Моля, набавете си тези ключове от сайта <a href=\"%(url)s\">facebook create app</a>"
 
 #: conf/external_keys.py:99
 msgid "Facebook secret key"
-msgstr ""
+msgstr "Facebook secret ключ"
 
 #: conf/external_keys.py:107
 msgid "Twitter consumer key"
-msgstr ""
+msgstr "Twitter клиентски ключ"
 
 #: conf/external_keys.py:109
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">twitter applications "
 "site</a>"
-msgstr ""
+msgstr "Моля, регистрирайте Вашия форум на <a href=\"%(url)s\">twitter applications site</a>"
 
 #: conf/external_keys.py:120
 msgid "Twitter consumer secret"
-msgstr ""
+msgstr "Twitter consumer secret"
 
 #: conf/external_keys.py:128
 msgid "LinkedIn consumer key"
-msgstr ""
+msgstr "LinkedIn consumer key"
 
 #: conf/external_keys.py:130
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">LinkedIn developer "
 "site</a>"
-msgstr ""
+msgstr "Моля, регистрирайте Вашия форум на <a href=\"%(url)s\">LinkedIn developer site</a>"
 
 #: conf/external_keys.py:141
 msgid "LinkedIn consumer secret"
-msgstr ""
+msgstr "LinkedIn consumer secret"
 
 #: conf/external_keys.py:149
 msgid "ident.ca consumer key"
-msgstr ""
+msgstr "ident.ca consumer key"
 
 #: conf/external_keys.py:151
 #, python-format
 msgid ""
 "Please register your forum at <a href=\"%(url)s\">Identi.ca applications "
 "site</a>"
-msgstr ""
+msgstr "Моля, регистрирайте Вашия форум на <a href=\"%(url)s\">Identi.ca applications site</a>"
 
 #: conf/external_keys.py:162
 msgid "ident.ca consumer secret"
-msgstr ""
+msgstr "ident.ca consumer secret"
 
 #: conf/flatpages.py:11
 msgid "Messages and pages - about, privacy policy, etc."
@@ -989,23 +990,23 @@ msgstr ""
 
 #: conf/flatpages.py:19
 msgid "Text of the Q&A forum About page (html format)"
-msgstr ""
+msgstr "Текст на страницата Относно във В&О форума (html формат)"
 
 #: conf/flatpages.py:22
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"about\" page to check your input."
-msgstr ""
+msgstr "Запишете и след това използвайте <a href=\"http://validator.w3.org/\">HTML validator</a> на страницата \"about\" за да я проверите."
 
 #: conf/flatpages.py:32
 msgid "Text of the Q&A forum FAQ page (html format)"
-msgstr ""
+msgstr "Текст на страницата ЧЗВ във В&О форума (html формат)"
 
 #: conf/flatpages.py:35
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"faq\" page to check your input."
-msgstr ""
+msgstr "Запишете и след това използвайте <a href=\"http://validator.w3.org/\">HTML validator</a> на страницата \"faq\" за да я проверите."
 
 #: conf/flatpages.py:45
 msgid "Instructions on how to ask questions"
@@ -1019,13 +1020,13 @@ msgstr ""
 
 #: conf/flatpages.py:59
 msgid "Text of the Q&A forum Privacy Policy (html format)"
-msgstr ""
+msgstr "Текст на страницата Политика за лични данни във В&О форума (html формат)"
 
 #: conf/flatpages.py:62
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"privacy\" page to check your input."
-msgstr ""
+msgstr "Запишете и след това използвайте <a href=\"http://validator.w3.org/\">HTML validator</a> на страницата \"privacy\" за да я проверите."
 
 #: conf/flatpages.py:75
 msgid "Do not edit this field manually!!!"
@@ -1064,21 +1065,21 @@ msgstr ""
 
 #: conf/forum_data_rules.py:78
 msgid "Check to enable community wiki feature"
-msgstr ""
+msgstr "Отбележете, за да разрешите функционалността уики общност"
 
 #: conf/forum_data_rules.py:87
 msgid "Allow asking questions anonymously"
-msgstr ""
+msgstr "Позволено анонимно питане"
 
 #: conf/forum_data_rules.py:89
 msgid ""
 "Users do not accrue reputation for anonymous questions and their identity is"
 " not revealed until they change their mind"
-msgstr ""
+msgstr "Потребителите не натрупват репутация за анонимни въпроси и тяхната самоличност не се разкрива, докато те не решат да го направят"
 
 #: conf/forum_data_rules.py:101
 msgid "Allow posting before logging in"
-msgstr ""
+msgstr "Позволено публикуване преди влизане"
 
 #: conf/forum_data_rules.py:103
 msgid ""
@@ -1086,7 +1087,7 @@ msgid ""
 "logging in. Enabling this may require adjustments in the user login system "
 "to check for pending posts every time the user logs in. The builtin Askbot "
 "login system supports this feature."
-msgstr ""
+msgstr "Отбележете ако искате да разрешите потребителите да питат или отговарят преди да са влезли. Това може да наложи настройки на системата за вход на потребителите, да проверява за изчакващи публикации всеки път, при влизане на потребител. Вградената в Askbot система за вход поддържа това."
 
 #: conf/forum_data_rules.py:118
 msgid "Auto-follow questions by the Author"
@@ -1112,17 +1113,17 @@ msgstr ""
 
 #: conf/forum_data_rules.py:147
 msgid "Allow swapping answer with question"
-msgstr ""
+msgstr "Позволена замяна на отговор с въпрос"
 
 #: conf/forum_data_rules.py:149
 msgid ""
 "This setting will help import data from other forums such as zendesk, when "
 "automatic data import fails to detect the original question correctly."
-msgstr ""
+msgstr "Тази настройка помага за импортирането на данни от форуми като zendesk, когато автоматичното импортиране на данни не успее да определи правилно въпроса."
 
 #: conf/forum_data_rules.py:161
 msgid "Maximum length of tag (number of characters)"
-msgstr ""
+msgstr "Максимална дължина на етикет (брой букви)"
 
 #: conf/forum_data_rules.py:170
 msgid "Minimum length of title (number of characters)"
@@ -1166,24 +1167,24 @@ msgstr ""
 
 #: conf/forum_data_rules.py:256
 msgid "Mandatory tags"
-msgstr ""
+msgstr "Задължителни етикети"
 
 #: conf/forum_data_rules.py:259
 msgid ""
 "At least one of these tags will be required for any new or newly edited "
 "question. A mandatory tag may be wildcard, if the wildcard tags are active."
-msgstr ""
+msgstr "Поне един от тези етикети ще се изисква за всеки нов или тепърва редактиран въпрос. Задължителен етикет може да е заместващ символ (wildcard), ако тези етикети са активни."
 
 #: conf/forum_data_rules.py:271
 msgid "Force lowercase the tags"
-msgstr ""
+msgstr "Етикетите принудително с малки букви"
 
 #: conf/forum_data_rules.py:273
 msgid ""
 "Attention: after checking this, please back up the database, and run a "
 "management command: <code>python manage.py fix_question_tags</code> to "
 "globally rename the tags"
-msgstr ""
+msgstr "Внимание: след отбелязването на това, моля, архивирайте базата, и стартирайте командата за управление: <code>python manage.py fix_question_tags</code> за глобално преименуване на етикетите"
 
 #: conf/forum_data_rules.py:287
 msgid "Format of tag list"
@@ -1237,32 +1238,32 @@ msgstr ""
 
 #: conf/forum_data_rules.py:354
 msgid "Default max number of comments to display under posts"
-msgstr ""
+msgstr "По подразбиране, максимален брой коментари, показвани под публикации"
 
 #: conf/forum_data_rules.py:365
 #, python-format
 msgid "Maximum comment length, must be < %(max_len)s"
-msgstr ""
+msgstr "Максимална дължина на коментар. Трябва да е < %(max_len)s"
 
 #: conf/forum_data_rules.py:375
 msgid "Limit time to edit comments"
-msgstr ""
+msgstr "Ограничение на времето за редактиране на коментари"
 
 #: conf/forum_data_rules.py:377
 msgid "If unchecked, there will be no time limit to edit the comments"
-msgstr ""
+msgstr "Ако не е маркирано, няма да има ограничение на времето за редактиране на коментарите"
 
 #: conf/forum_data_rules.py:388
 msgid "Minutes allowed to edit a comment"
-msgstr ""
+msgstr "Позволено време за редактиране на коментар в минути"
 
 #: conf/forum_data_rules.py:389
 msgid "To enable this setting, check the previous one"
-msgstr ""
+msgstr "За да разрешите тази настройка, маркирайте предишната"
 
 #: conf/forum_data_rules.py:398
 msgid "Save comment by pressing <Enter> key"
-msgstr ""
+msgstr "Запис на коментар при натискането на клавиша <Enter>"
 
 #: conf/forum_data_rules.py:400
 msgid ""
@@ -1291,15 +1292,15 @@ msgstr ""
 
 #: conf/forum_data_rules.py:436
 msgid "Maximum number of tags per question"
-msgstr ""
+msgstr "Максимален брой етикети към въпрос"
 
 #: conf/forum_data_rules.py:448
 msgid "Number of questions to list by default"
-msgstr ""
+msgstr "По подразбиране, брой показвани въпроси"
 
 #: conf/forum_data_rules.py:458
 msgid "What should \"unanswered question\" mean?"
-msgstr ""
+msgstr "Какво ще означава \"въпрос без отговор\"?"
 
 #: conf/group_settings.py:9
 msgid "Group settings"
@@ -1355,7 +1356,7 @@ msgstr ""
 
 #: conf/ldap.py:17
 msgid "Use LDAP authentication for the password login"
-msgstr ""
+msgstr "Ползвай LDAP удостоверяване за влизането с парола"
 
 #: conf/ldap.py:26
 msgid "Automatically create user accounts when possible"
@@ -1504,39 +1505,39 @@ msgstr ""
 
 #: conf/license.py:21
 msgid "Show license clause in the site footer"
-msgstr ""
+msgstr "Показвай клаузата за Лиценз най-долу в сайта"
 
 #: conf/license.py:30
 msgid "Short name for the license"
-msgstr ""
+msgstr "Кратко име за Лиценза"
 
 #: conf/license.py:39
 msgid "Full name of the license"
-msgstr ""
+msgstr "Пълно име на Лиценза"
 
 #: conf/license.py:40
 msgid "Creative Commons Attribution Share Alike 3.0"
-msgstr ""
+msgstr "Creative Commons Attribution Share Alike 3.0"
 
 #: conf/license.py:48
 msgid "Add link to the license page"
-msgstr ""
+msgstr "Добавяне на препратка към страницата на Лиценза"
 
 #: conf/license.py:57
 msgid "License homepage"
-msgstr ""
+msgstr "Страница на Лиценза"
 
 #: conf/license.py:59
 msgid "URL of the official page with all the license legal clauses"
-msgstr ""
+msgstr "URL на официалната страница с всички клаузи на Лиценза"
 
 #: conf/license.py:69
 msgid "Use license logo"
-msgstr ""
+msgstr "Използвай логото на Лиценза"
 
 #: conf/license.py:78
 msgid "License logo image"
-msgstr ""
+msgstr "Изображение-лого на Лиценза"
 
 #: conf/login_providers.py:13
 msgid "Login provider setings"
@@ -1574,7 +1575,7 @@ msgstr ""
 
 #: conf/login_providers.py:60
 msgid "Upload your icon"
-msgstr ""
+msgstr "Качване на Ваша икона"
 
 #: conf/login_providers.py:93
 msgid "local password"
@@ -1673,7 +1674,7 @@ msgstr ""
 
 #: conf/minimum_reputation.py:22
 msgid "Upvote"
-msgstr ""
+msgstr "Одобрение"
 
 #: conf/minimum_reputation.py:31
 msgid "Downvote"
@@ -1697,15 +1698,15 @@ msgstr ""
 
 #: conf/minimum_reputation.py:88
 msgid "Delete comments posted by others"
-msgstr ""
+msgstr "Изтриване на коментари, публикувани от други"
 
 #: conf/minimum_reputation.py:97
 msgid "Delete questions and answers posted by others"
-msgstr ""
+msgstr "Изтриване на въпроси и отговори, публикувани от други"
 
 #: conf/minimum_reputation.py:106
 msgid "Upload files"
-msgstr ""
+msgstr "Качване на файлове"
 
 #: conf/minimum_reputation.py:115
 msgid "Insert clickable links"
@@ -1723,19 +1724,19 @@ msgstr ""
 
 #: conf/minimum_reputation.py:137
 msgid "Close own questions"
-msgstr ""
+msgstr "Затваряне на собствени въпроси"
 
 #: conf/minimum_reputation.py:146
 msgid "Retag questions posted by other people"
-msgstr ""
+msgstr "Преетикетиране на въпроси, публикувани от други"
 
 #: conf/minimum_reputation.py:155
 msgid "Reopen own questions"
-msgstr ""
+msgstr "Преотваряне на собствени въпроси"
 
 #: conf/minimum_reputation.py:164
 msgid "Edit community wiki posts"
-msgstr ""
+msgstr "Редактиране на уики общност публикациите"
 
 #: conf/minimum_reputation.py:173
 msgid "Edit posts authored by other people"
@@ -1747,7 +1748,7 @@ msgstr ""
 
 #: conf/minimum_reputation.py:191
 msgid "Close questions asked by others"
-msgstr ""
+msgstr "Затваряне на въпроси, зададени от други"
 
 #: conf/minimum_reputation.py:200
 msgid "Remove rel=nofollow from own homepage"
@@ -1918,15 +1919,15 @@ msgstr ""
 
 #: conf/sidebar_main.py:45
 msgid "Show avatar block in sidebar"
-msgstr ""
+msgstr "Показване полето за аватар в страничната лента"
 
 #: conf/sidebar_main.py:47
 msgid "Uncheck this if you want to hide the avatar block from the sidebar "
-msgstr ""
+msgstr "Отмаркирайте за да скриете полето за аватар в страничната лента"
 
 #: conf/sidebar_main.py:58
 msgid "Limit how many avatars will be displayed on the sidebar"
-msgstr ""
+msgstr "Лимит на броя аватари, показвани в страничната лента"
 
 #: conf/sidebar_main.py:68
 msgid "Show tag selector in sidebar"
@@ -2724,7 +2725,7 @@ msgstr ""
 
 #: const/__init__.py:203
 msgid "upvoted"
-msgstr ""
+msgstr "одобрено"
 
 #: const/__init__.py:204
 msgid "downvoted"
@@ -3017,7 +3018,7 @@ msgstr ""
 
 #: const/message_keys.py:39 templates/question_retag.html:58
 msgid "tags are required"
-msgstr ""
+msgstr "етикетите се изискват"
 
 #: const/message_keys.py:41
 msgid "please use letters, numbers and characters \"-+.#\""
@@ -3509,7 +3510,7 @@ msgstr ""
 #: models/__init__.py:716
 #, python-format
 msgid ">%(points)s points required to upvote"
-msgstr ""
+msgstr ">%(points)s точки, необходими за одобрение"
 
 #: models/__init__.py:722
 #, python-format
@@ -3963,7 +3964,7 @@ msgstr ""
 
 #: models/badges.py:219
 msgid "First upvote"
-msgstr ""
+msgstr "Първото одобрение"
 
 #: models/badges.py:227
 msgid "Critic"
@@ -4725,7 +4726,7 @@ msgstr ""
 
 #: templates/faq_static.html:32 templates/user_profile/user_votes.html:14
 msgid "upvote"
-msgstr ""
+msgstr "одобрение"
 
 #: templates/faq_static.html:37
 msgid "add comments"
@@ -5938,7 +5939,7 @@ msgstr ""
 #, python-format
 msgid ""
 "To make posts by email, you need to receive about %(min_upvotes)s upvotes."
-msgstr ""
+msgstr "За да изпращате постове с имейл трябва да получите около %(min_upvotes)s одобрения."
 
 #: templates/email/insufficient_rep_to_post_by_email.html:15
 #, python-format

@@ -6,14 +6,14 @@
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2013
-# kelemeng <kelemeng@gnome.hu>, 2013
+# kelemeng <kelemeng@ubuntu.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-13 22:29+0000\n"
-"Last-Translator: kelemeng <kelemeng@gnome.hu>\n"
+"PO-Revision-Date: 2013-11-19 16:44+0000\n"
+"Last-Translator: kelemeng <kelemeng@ubuntu.com>\n"
 "Language-Team: Hungarian (http://www.transifex.com/projects/p/askbot/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

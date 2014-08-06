@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Γιάννης Ανθυμίδης <yannanth@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-08-02 05:01+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2014-04-28 03:49+0000\n"
+"Last-Translator: Γιάννης Ανθυμίδης <yannanth@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/askbot/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -319,7 +320,7 @@ msgstr ""
 
 #: media/js/post.js:2560
 msgid "Please enter question title (>10 characters)"
-msgstr "παρακαλώ εισάγετε τίτλο ερώτησης (>10 χαρακτήρες)"
+msgstr "Παρακαλώ εισάγετε τίτλο ερώτησης (>10 χαρακτήρες)"
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
@@ -470,22 +471,22 @@ msgstr ""
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr "Παρακαλώ <a href=\"%(signin_url)s\">συνδεθείτε </a> για παρακολούθηση του %(username)s"
+msgstr "Παρακαλώ <a href=\"%(signin_url)s\">συνδεθείτε</a> για να ακολουθήσετε τον χρήστη %(username)s"
 
 #: media/js/user.js:740
 #, c-format
 msgid "unfollow %s"
-msgstr "μη παρακολούθηση %s"
+msgstr "κατάργηση ακολούθησης %s"
 
 #: media/js/user.js:743
 #, c-format
 msgid "following %s"
-msgstr "παρακολούθηση %s"
+msgstr "%s ακολουθείται"
 
 #: media/js/user.js:749
 #, c-format
 msgid "follow %s"
-msgstr "παρακολούθηση %s"
+msgstr "ακολούθηση %s"
 
 #: media/js/user.js:883
 msgid "add group"
@@ -513,11 +514,11 @@ msgstr ""
 
 #: media/js/utils.js:958
 msgid "Ok"
-msgstr ""
+msgstr "Εντάξει"
 
 #: media/js/utils.js:959 media/js/utils.js.c:1407
 msgid "Cancel"
-msgstr ""
+msgstr "Άκυρο"
 
 #: media/js/utils.js:1219
 #, c-format
@@ -555,19 +556,19 @@ msgstr ""
 
 #: media/js/utils.js:1406
 msgid "Save"
-msgstr ""
+msgstr "Αποθήκευση"
 
 #: media/js/utils.js:1478
 msgid "saved"
-msgstr ""
+msgstr "αποθηκεύτηκε"
 
 #: media/js/utils.js:1602
 msgid "enabled"
-msgstr ""
+msgstr "ενεργοποιήθηκε"
 
 #: media/js/utils.js:1604
 msgid "disabled"
-msgstr ""
+msgstr "απενεργοποιήθηκε"
 
 #: media/js/utils.js:2038
 msgid "group name"
@@ -584,7 +585,7 @@ msgstr ""
 #: media/js/utils.js:2311
 #, c-format
 msgid "see questions tagged '%s'"
-msgstr "δείτε ερωτήσεις με ετικέτα '%s'"
+msgstr "δείτε ερωτήσεις με την ετικέτα «%s»"
 
 #: media/js/utils.js:3358
 msgid "ago"
@@ -601,7 +602,7 @@ msgstr ""
 #: media/js/utils.js:3362
 #, c-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d λεπτά"
 
 #: media/js/utils.js:3363
 msgid "about an hour"
@@ -628,7 +629,7 @@ msgstr ""
 #: media/js/utils.js:3368
 #, c-format
 msgid "%d months"
-msgstr ""
+msgstr "%d μήνες"
 
 #: media/js/utils.js:3369
 msgid "about a year"
@@ -637,77 +638,77 @@ msgstr ""
 #: media/js/utils.js:3370
 #, c-format
 msgid "%d years"
-msgstr ""
+msgstr "%d χρόνια"
 
 #: media/js/utils.js:3468
 msgid "Jan"
-msgstr ""
+msgstr "Ιαν"
 
 #: media/js/utils.js:3469
 msgid "Feb"
-msgstr ""
+msgstr "Φεβ"
 
 #: media/js/utils.js:3470
 msgid "Mar"
-msgstr ""
+msgstr "Μάρ"
 
 #: media/js/utils.js:3471
 msgid "Apr"
-msgstr ""
+msgstr "Απρ"
 
 #: media/js/utils.js:3472
 msgid "May"
-msgstr ""
+msgstr "Μάι"
 
 #: media/js/utils.js:3473
 msgid "Jun"
-msgstr ""
+msgstr "Ιούν"
 
 #: media/js/utils.js:3474
 msgid "Jul"
-msgstr ""
+msgstr "Ιούλ"
 
 #: media/js/utils.js:3475
 msgid "Aug"
-msgstr ""
+msgstr "Αύγ"
 
 #: media/js/utils.js:3476
 msgid "Sep"
-msgstr ""
+msgstr "Σεπ"
 
 #: media/js/utils.js:3477
 msgid "Oct"
-msgstr ""
+msgstr "Οκτ"
 
 #: media/js/utils.js:3478
 msgid "Nov"
-msgstr ""
+msgstr "Νοέ"
 
 #: media/js/utils.js:3479
 msgid "Dec"
-msgstr ""
+msgstr "Δεκ"
 
 #: media/js/utils.js:3491
 msgid "2 days ago"
-msgstr ""
+msgstr "2 ημέρες πριν"
 
 #: media/js/utils.js:3498
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s ώρα πριν"
+msgstr[1] "%s ώρες πριν"
 
 #: media/js/utils.js:3508
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s λεπτό πριν"
+msgstr[1] "%s λεπτά πριν"
 
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:71
 msgid "Insert a file"
-msgstr ""
+msgstr "Εισάγετε ένα αρχείο"
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
 msgid "Insert image"

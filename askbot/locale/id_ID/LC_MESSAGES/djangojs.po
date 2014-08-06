@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Tommy Albert Surbakti, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-07-13 19:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2014-01-26 03:02+0000\n"
+"Last-Translator: Tommy Albert Surbakti\n"
 "Language-Team: Indonesian (Indonesia) (http://www.transifex.com/projects/p/askbot/language/id_ID/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,11 +21,11 @@ msgstr ""
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr ""
+msgstr "Anda yakin menghapus login %s ?"
 
 #: media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Tambahkan satu atau beberapa cara untuk login"
 
 #: media/jquery-openid/jquery.openid.js:93
 msgid ""
@@ -34,16 +35,16 @@ msgstr ""
 
 #: media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
-msgstr ""
+msgstr "password tidak sesuai"
 
 #: media/jquery-openid/jquery.openid.js:162
 msgid "Show/change current login methods"
-msgstr ""
+msgstr "Tampilkan metode login saat ini"
 
 #: media/jquery-openid/jquery.openid.js:227
 #, c-format
 msgid "Please enter your %s, then proceed"
-msgstr ""
+msgstr "Masukkan %s, lalu proses"
 
 #: media/jquery-openid/jquery.openid.js:229
 msgid "Connect your %(provider_name)s account to %(site)s"
@@ -52,24 +53,24 @@ msgstr ""
 #: media/jquery-openid/jquery.openid.js:323
 #, c-format
 msgid "Change your %s password"
-msgstr ""
+msgstr "Ganti sandi %s"
 
 #: media/jquery-openid/jquery.openid.js:324
 msgid "Change password"
-msgstr ""
+msgstr "Ganti sandi"
 
 #: media/jquery-openid/jquery.openid.js:327
 #, c-format
 msgid "Create a password for %s"
-msgstr ""
+msgstr "Buat sandi %s"
 
 #: media/jquery-openid/jquery.openid.js:328
 msgid "Create password"
-msgstr ""
+msgstr "Buat sandi"
 
 #: media/jquery-openid/jquery.openid.js:344
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "Buat akun yang diproteksi dengan sandi"
 
 #: media/js/group_messaging.js:102 media/js/group_messaging.js.c:293
 msgid "required"
@@ -128,7 +129,7 @@ msgstr ""
 
 #: media/js/post.js:28
 msgid "loading..."
-msgstr ""
+msgstr "tunggu..."
 
 #: media/js/post.js:100
 msgid "must be shorter than %(max_chars)s character"
@@ -183,15 +184,15 @@ msgstr ""
 
 #: media/js/post.js:549
 msgid "cannot pick own answer as best"
-msgstr ""
+msgstr "maaf, anda tidak bisa menyetujui jawaban anda sendiri"
 
 #: media/js/post.js:552 media/js/post.js.c:1416
 msgid "please login"
-msgstr ""
+msgstr "silahkan login"
 
 #: media/js/post.js:554
 msgid "anonymous users cannot follow questions"
-msgstr ""
+msgstr "Pengguna yang belum mendaftar tidak bisa mengikuti pertanyaan"
 
 #: media/js/post.js:555
 msgid "anonymous users cannot subscribe to questions"
@@ -199,7 +200,7 @@ msgstr ""
 
 #: media/js/post.js:556 media/js/post.js.c:1426
 msgid "anonymous users cannot vote"
-msgstr ""
+msgstr "maaf, pengguna tak terdaftar tidak bisa voting"
 
 #: media/js/post.js:558
 msgid "please confirm offensive"
@@ -215,7 +216,7 @@ msgstr ""
 
 #: media/js/post.js:561
 msgid "confirm delete"
-msgstr ""
+msgstr "yakin mau menghapus?"
 
 #: media/js/post.js:562
 msgid "anonymous users cannot delete/undelete"
@@ -227,7 +228,7 @@ msgstr ""
 
 #: media/js/post.js:564
 msgid "post deleted"
-msgstr ""
+msgstr "Posting anda telah dihapus"
 
 #: media/js/post.js:831
 msgid "Follow"
@@ -265,11 +266,11 @@ msgstr ""
 
 #: media/js/post.js:1665
 msgid "add comment"
-msgstr ""
+msgstr "tambahkan komentar"
 
 #: media/js/post.js:1671
 msgid "save comment"
-msgstr ""
+msgstr "simpan komentar"
 
 #: media/js/post.js:1711
 #, c-format
@@ -312,7 +313,7 @@ msgstr ""
 
 #: media/js/post.js:2560
 msgid "Please enter question title (>10 characters)"
-msgstr ""
+msgstr "Judul pertanyaan harus lebih dari 10 karakter"
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
@@ -391,21 +392,21 @@ msgstr ""
 
 #: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
-msgstr ""
+msgstr "Tag \"<span></span>\" sesuai:"
 
 #: media/js/tag_selector.js:84
 #, c-format
 msgid "and %s more, not shown..."
-msgstr ""
+msgstr "dan %s , tidak ditampilkan..."
 
 #: media/js/user.js:15
 msgid "Please select at least one item"
-msgstr ""
+msgstr "Pilih paling tidak satu item"
 
 #: media/js/user.js:59
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] ""
+msgstr[0] "Hapus pemberitahuan ini?"
 
 #: media/js/user.js:66
 msgid "Close this entry?"
@@ -459,7 +460,7 @@ msgstr ""
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr ""
+msgstr "Silahkan <a href=\"%(signin_url)s\">signin</a> untuk mengikuti %(username)s"
 
 #: media/js/user.js:740
 #, c-format
@@ -490,7 +491,7 @@ msgstr ""
 
 #: media/js/utils.js:117
 msgid "click to close"
-msgstr ""
+msgstr "klik untuk menutup"
 
 #: media/js/utils.js:880
 msgid "click to edit this comment"
@@ -702,19 +703,19 @@ msgstr ""
 
 #: media/js/wmd/wmd.js:31
 msgid "bold"
-msgstr ""
+msgstr "tebal"
 
 #: media/js/wmd/wmd.js:32
 msgid "italic"
-msgstr ""
+msgstr "miring"
 
 #: media/js/wmd/wmd.js:33
 msgid "link"
-msgstr ""
+msgstr "link"
 
 #: media/js/wmd/wmd.js:34
 msgid "quote"
-msgstr ""
+msgstr "kuote"
 
 #: media/js/wmd/wmd.js:35
 msgid "preformatted text"
@@ -722,7 +723,7 @@ msgstr ""
 
 #: media/js/wmd/wmd.js:36
 msgid "image"
-msgstr ""
+msgstr "gambar"
 
 #: media/js/wmd/wmd.js:37
 msgid "attachment"

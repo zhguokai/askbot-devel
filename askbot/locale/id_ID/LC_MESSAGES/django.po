@@ -3,14 +3,16 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-# isulaiman <iman_sl02@yahoo.com>, 2013
+# Andika Triwidada <andika@gmail.com>, 2014
+# Iman Sulaiman <iman_sl02@yahoo.com>, 2013
+# Tommy Albert Surbakti, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-13 19:08+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2014-03-05 08:15+0000\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian (Indonesia) (http://www.transifex.com/projects/p/askbot/language/id_ID/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +22,7 @@ msgstr ""
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr "Maaf, pengunjung anonim tidak dapat mengakses fungsi ini"
+msgstr "Anda harus terdaftar untuk mengakses fitur ini"
 
 #: feed.py:34 feed.py:108
 msgid " - "
@@ -28,7 +30,7 @@ msgstr " - "
 
 #: feed.py:35 feed.py:109
 msgid "Individual question feed"
-msgstr "Feed Pertanyaan individu"
+msgstr "Feed Pertanyaan personal"
 
 #: forms.py:140
 msgid "select country"
@@ -91,7 +93,7 @@ msgstr "isi"
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
-msgstr[0] ""
+msgstr[0] "setiap tag mesti kurang dari %(max_chars)d karakter"
 
 #: forms.py:407
 msgid ""
@@ -118,16 +120,16 @@ msgstr[0] ""
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] ""
+msgstr[0] "harap gunakan %(tag_count)d tag atau kurang"
 
 #: forms.py:447
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
-msgstr "At least one of the following tags is required : %(tags)s"
+msgstr "Paling tidak satu dari tag berikut diperlukan : %(tags)s"
 
 #: forms.py:475
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
-msgstr "community wiki (karma is not awarded & many others can edit wiki post)"
+msgstr "wiki komunitas (karma tidak diberikan & banyak orang bisa menyunting tulisan wiki)"
 
 #: forms.py:479
 msgid ""
@@ -137,7 +139,7 @@ msgstr "jika Anda memilih opsi komunitas wiki, pertanyaan dan jawaban tidak meng
 
 #: forms.py:496
 msgid "update summary:"
-msgstr "memperbarui ringkasan:"
+msgstr "ringkasan pemutakhiran:"
 
 #: forms.py:498
 msgid ""
@@ -147,7 +149,7 @@ msgstr "enter a brief summary of your revision (e.g. fixed spelling, grammar, im
 
 #: forms.py:585
 msgid "Enter number of points to add or subtract"
-msgstr "Masukkan jumlah poin untuk menambah atau mengurangi"
+msgstr "Masukkan jumlah poin untuk ditambahkan atau dikurangkan"
 
 #: forms.py:600 const/__init__.py:375
 msgid "approved"
@@ -155,7 +157,7 @@ msgstr "disetujui"
 
 #: forms.py:601 const/__init__.py:376
 msgid "watched"
-msgstr ""
+msgstr "dipantau"
 
 #: forms.py:602 const/__init__.py:377
 msgid "suspended"
@@ -175,19 +177,19 @@ msgstr "moderator"
 
 #: forms.py:625
 msgid "Change status to"
-msgstr ""
+msgstr "Ganti status ke"
 
 #: forms.py:652
 msgid "which one?"
-msgstr ""
+msgstr "yang mana?"
 
 #: forms.py:673
 msgid "Cannot change own status"
-msgstr ""
+msgstr "Tidak bisa mengganti status sendiri"
 
 #: forms.py:679
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "Tidak bisa mengangkat moderator"
 
 #: forms.py:686
 msgid "Cannot change status of another moderator"
@@ -210,7 +212,7 @@ msgstr "Baris subjek"
 
 #: forms.py:713
 msgid "Message text"
-msgstr "Pesan teks"
+msgstr "Teks pesan"
 
 #: forms.py:727
 msgid "Your name (optional):"
@@ -222,7 +224,7 @@ msgstr "Email:"
 
 #: forms.py:730
 msgid "Your message:"
-msgstr ""
+msgstr "Pesan Anda:"
 
 #: forms.py:735
 msgid "I don't want to give my email or receive a response:"
@@ -258,11 +260,11 @@ msgstr ""
 
 #: forms.py:914 forms.py:957
 msgid "ask anonymously"
-msgstr ""
+msgstr "tanya secara anonim"
 
 #: forms.py:916 forms.py:959
 msgid "Check if you do not want to reveal your name when asking this question"
-msgstr ""
+msgstr "Centang bila nama Anda tidak ingin ditampilkan ketika menanyakan hal ini"
 
 #: forms.py:947
 msgid ""
@@ -331,7 +333,7 @@ msgstr "Nama layar"
 
 #: forms.py:1457 forms.py:1461
 msgid "this email has already been registered, please use another one"
-msgstr ""
+msgstr "Email ini sudah terdaftar, gunakan yang lain"
 
 #: forms.py:1470
 msgid "Choose email tag filter"
@@ -1290,7 +1292,7 @@ msgstr "Maksimum jumlah tag per pertanyaan"
 
 #: conf/forum_data_rules.py:448
 msgid "Number of questions to list by default"
-msgstr ""
+msgstr "Daftar pertanyaan standar"
 
 #: conf/forum_data_rules.py:458
 msgid "What should \"unanswered question\" mean?"
@@ -2811,7 +2813,7 @@ msgstr ""
 
 #: const/__init__.py:308
 msgid "[deleted]"
-msgstr ""
+msgstr "[dihapus]"
 
 #: const/__init__.py:309 views/readers.py:642
 msgid "initial version"
@@ -3766,19 +3768,19 @@ msgstr "besok"
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
-msgstr[0] ""
+msgstr[0] "dalam %(hr)d jam"
 
 #: models/__init__.py:2003
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
-msgstr[0] ""
+msgstr[0] "dalam %(min)d menit"
 
 #: models/__init__.py:2004
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
-msgstr[0] ""
+msgstr[0] "%(days)d hari"
 
 #: models/__init__.py:2006
 #, python-format
@@ -3828,13 +3830,13 @@ msgstr "%(username)s karma is %(reputation)s"
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
-msgstr[0] ""
+msgstr[0] "%(count)d lencana emas"
 
 #: models/__init__.py:2515
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
-msgstr[0] ""
+msgstr[0] "%(count)d lencana perak"
 
 #: models/__init__.py:2522
 #, python-format
@@ -6232,7 +6234,7 @@ msgstr "Un Tutup semua"
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
-msgstr[0] ""
+msgstr[0] "%(q_num)s pertanyaan"
 
 #: templates/main_page/headline.html:6
 #, python-format
@@ -7684,13 +7686,13 @@ msgstr "kemarin"
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
-msgstr[0] ""
+msgstr[0] "%(hr)d jam lalu"
 
 #: utils/functions.py:113
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
-msgstr[0] ""
+msgstr[0] "%(min)d menit lalu"
 
 #: views/avatar_views.py:103
 msgid "Successfully uploaded a new avatar."
@@ -7922,7 +7924,7 @@ msgstr "Maaf, pengguna anonim tidak dapat meng-upload file"
 #: views/writers.py:91
 #, python-format
 msgid "allowed file types are '%(file_types)s'"
-msgstr ""
+msgstr "ekstensi yang diijinkan  '%(file_types)s'"
 
 #: views/writers.py:104
 #, python-format

@@ -6,14 +6,14 @@
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # Hannu Sehm <hannu@kipax.fi>, 2012
 # Otto Nuoranne <otto.nuoranne@hotmail.com>, 2012
-# Pekka Järvinen <pekka.jarvinen@gmail.com>, 2013
+# Pekka Järvinen <pekka.jarvinen@gmail.com>, 2013-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-08-02 05:32+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2014-03-13 00:09+0000\n"
+"Last-Translator: Pekka Järvinen <pekka.jarvinen@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/projects/p/askbot/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +61,7 @@ msgstr[1] ""
 
 #: forms.py:220
 msgid "minor edit (don't send alerts)"
-msgstr ""
+msgstr "pieni muokkaus (älä lähetä hälytyksiä)"
 
 #: forms.py:247 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
@@ -710,7 +710,7 @@ msgstr "Vakioasetus django-asetuksen EMAIL_SUBJECT_PREFIX mukaan.  Tähän kentt
 
 #: conf/email.py:44
 msgid "Site administrator email address"
-msgstr ""
+msgstr "Sivuston ylläpitäjän sähköpostiosoite"
 
 #: conf/email.py:53
 msgid "Enable email alerts"
@@ -1311,7 +1311,7 @@ msgstr "Ryhmän asetukset"
 
 #: conf/group_settings.py:18
 msgid "Enable user groups"
-msgstr ""
+msgstr "Salli käyttäjäryhmät"
 
 #: conf/group_settings.py:41
 msgid "everyone"
@@ -1477,7 +1477,7 @@ msgstr ""
 
 #: conf/ldap.py:178
 msgid "LDAP Server EMAIL field name"
-msgstr ""
+msgstr "LDAP-palvelimen EMAIL-kentän nimi"
 
 #: conf/ldap.py:180
 msgid "This field is required"
@@ -1582,7 +1582,7 @@ msgstr "Lataa kuvasi"
 
 #: conf/login_providers.py:93
 msgid "local password"
-msgstr ""
+msgstr "Paikallinen salasana"
 
 #: conf/login_providers.py:98
 #, python-format
@@ -2072,11 +2072,11 @@ msgstr "Lyhyt nimi sivustolle"
 
 #: conf/site_settings.py:70
 msgid "Please enter url of your site"
-msgstr ""
+msgstr "Syötä sivustosi URL-osoite"
 
 #: conf/site_settings.py:73
 msgid "Url must start either from http or https"
-msgstr ""
+msgstr "URL-osoitteen tulee alkaa \"http\" tai \"https\""
 
 #: conf/site_settings.py:92
 msgid "Base URL for your Q&A forum, must start with http or https"
@@ -2602,13 +2602,13 @@ msgstr "ota jakaminen pois päältä"
 #: templates/user_profile/twitter_sharing_controls.html:13
 #: templates/user_profile/twitter_sharing_controls.html:17
 msgid "my posts"
-msgstr ""
+msgstr "merkintäni"
 
 #: const/__init__.py:31
 #: templates/user_profile/twitter_sharing_controls.html:14
 #: templates/user_profile/twitter_sharing_controls.html:16
 msgid "all posts"
-msgstr ""
+msgstr "kaikki merkinnät"
 
 #: const/__init__.py:54 templates/question/answer_tab_bar.html:18
 msgid "newest"
@@ -3160,7 +3160,7 @@ msgstr "AOL-ruutunimi"
 
 #: deps/django_authopenid/util.py:502
 msgid "Sign in with LaunchPad"
-msgstr ""
+msgstr "Kirjaudu sisään LaunchPad-palvelua käyttäen"
 
 #: deps/django_authopenid/util.py:509
 msgid "OpenID url"
@@ -3464,7 +3464,7 @@ msgstr ""
 
 #: models/__init__.py:573
 msgid "Sorry, this operation is not allowed"
-msgstr ""
+msgstr "Tämä toiminto ei ole sallittu"
 
 #: models/__init__.py:623
 msgid ""
@@ -4537,7 +4537,7 @@ msgstr ""
 #: templates/ask.html:30 templates/widgets/answer_edit_tips.html:12
 #: templates/widgets/question_edit_tips.html:8
 msgid "provide enough details"
-msgstr ""
+msgstr "lisää tarpeeksi yksityiskohtia"
 
 #: templates/ask.html:31 templates/widgets/answer_edit_tips.html:15
 #: templates/widgets/question_edit_tips.html:11
@@ -5279,7 +5279,7 @@ msgstr "Jätä vastauksesi"
 
 #: templates/question.html:256 templates/widgets/ask_form.html:65
 msgid "Login/Signup to Post"
-msgstr ""
+msgstr "Kirjaudu sisään tai rekisteröidy vastataksesi"
 
 #: templates/question_edit.html:4 templates/question_edit.html.py:9
 msgid "Edit question"
@@ -5537,7 +5537,7 @@ msgstr "Kirjaudu täällä:"
 msgid ""
 "Sincerely,\n"
 "Q&A Forum Administrator"
-msgstr ""
+msgstr "Terveisin,\nQ&A-foorumin ylläpito"
 
 #: templates/authopenid/email_validation.html:2
 #: templates/authopenid/email_validation.html:3
@@ -6637,7 +6637,7 @@ msgstr "tämä kysymys on jaettu vain seuraaville:"
 
 #: templates/question/sidebar.html:83
 msgid "Individual users"
-msgstr ""
+msgstr "Yksittäiset käyttäjät"
 
 #: templates/question/sidebar.html:88
 msgid "You"
@@ -6845,7 +6845,7 @@ msgstr ""
 #: templates/user_profile/reject_post_dialog.html:27
 #: templates/user_profile/reject_post_dialog.html:95
 msgid "Use other reason"
-msgstr ""
+msgstr "Käytä muuta syytä"
 
 #: templates/user_profile/reject_post_dialog.html:33
 msgid "Save reason, but do not reject"
@@ -7286,7 +7286,7 @@ msgstr ""
 
 #: templates/widgets/ask_form.html:26
 msgid "Add details"
-msgstr ""
+msgstr "Lisää yksityiskohtia"
 
 #: templates/widgets/ask_form.html:59
 msgid "Select language"
@@ -7791,7 +7791,7 @@ msgstr "sähköpostien päivitysväli on vaihdettu päivittäiseksi"
 
 #: views/commands.py:628
 msgid "Sorry, could not delete tag"
-msgstr ""
+msgstr "Ei voitu poistaa tagia"
 
 #: views/commands.py:701
 #, python-format
@@ -7813,7 +7813,7 @@ msgstr "Kirjaudu sisään äänestääksesi"
 
 #: views/commands.py:980
 msgid "Please sign in to delete/restore posts"
-msgstr ""
+msgstr "Kirjaudu sisään poistaaksesi tai palauttaaksesi merkintöjä"
 
 #: views/commands.py:1042
 #, python-format
@@ -7933,7 +7933,7 @@ msgstr "käyttäjän mainepisteet"
 
 #: views/users.py:884
 msgid "Profile - User's Karma"
-msgstr ""
+msgstr "Profiili - Käyttäjän mainepisteet"
 
 #: views/users.py:902
 msgid "users favorite questions"

@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the CNPROG package.
 # 
 # Translators:
-# mohsenb <basirat@gmail.com>, 2013
+# Ali Javadi <rohamn@hotmail.com>, 2014
+# mb <basirat@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-07-19 00:07+0000\n"
-"Last-Translator: mohsenb <basirat@gmail.com>\n"
+"PO-Revision-Date: 2014-03-02 09:53+0000\n"
+"Last-Translator: Ali Javadi <rohamn@hotmail.com>\n"
 "Language-Team: Persian (Iran) (http://www.transifex.com/projects/p/askbot/language/fa_IR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,15 +21,15 @@ msgstr ""
 
 #: exceptions.py:13
 msgid "Sorry, but anonymous visitors cannot access this function"
-msgstr ""
+msgstr "شرمنده، اما بازدیدکنندگان ناشناس نمی‌تواندد به این عملیات دسترسی داشته باشند"
 
 #: feed.py:34 feed.py:108
 msgid " - "
-msgstr ""
+msgstr "-"
 
 #: feed.py:35 feed.py:109
 msgid "Individual question feed"
-msgstr ""
+msgstr "خوراک سوالات فردی"
 
 #: forms.py:140
 msgid "select country"
@@ -40,7 +41,7 @@ msgstr "کشور"
 
 #: forms.py:158
 msgid "Country field is required"
-msgstr ""
+msgstr "فیلد انتخاب کشور الزامی است."
 
 #: forms.py:188
 #, python-format
@@ -91,7 +92,7 @@ msgstr "محتوا"
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
-msgstr[0] ""
+msgstr[0] "یک برچسب باید کمتر از %(max_chars)d حرف داشته باشد"
 
 #: forms.py:407
 msgid ""
@@ -118,12 +119,12 @@ msgstr[0] ""
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
-msgstr[0] ""
+msgstr[0] "لطفاً از %(tag_count)d  یا کمتر استفاده کنید"
 
 #: forms.py:447
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
-msgstr ""
+msgstr "حداقل یکی از این برچسب‌ها الزامی است: %(tags)s"
 
 #: forms.py:475
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
@@ -137,7 +138,7 @@ msgstr ""
 
 #: forms.py:496
 msgid "update summary:"
-msgstr ""
+msgstr "خلاصه‌ی بروزرسانی:"
 
 #: forms.py:498
 msgid ""
@@ -147,7 +148,7 @@ msgstr ""
 
 #: forms.py:585
 msgid "Enter number of points to add or subtract"
-msgstr ""
+msgstr "امتیازاتی را که می‌خواهید افزوده یا کاسته شود وارد کنید"
 
 #: forms.py:600 const/__init__.py:375
 msgid "approved"
@@ -163,11 +164,11 @@ msgstr "معلق شده"
 
 #: forms.py:603 const/__init__.py:378
 msgid "blocked"
-msgstr ""
+msgstr "بلوکه"
 
 #: forms.py:605
 msgid "administrator"
-msgstr ""
+msgstr "مدیر اصلی"
 
 #: forms.py:606 const/__init__.py:374
 msgid "moderator"
@@ -175,7 +176,7 @@ msgstr "ویراستار"
 
 #: forms.py:625
 msgid "Change status to"
-msgstr ""
+msgstr "تغییر وضعیت به"
 
 #: forms.py:652
 msgid "which one?"
@@ -183,26 +184,26 @@ msgstr "کدامیک؟"
 
 #: forms.py:673
 msgid "Cannot change own status"
-msgstr ""
+msgstr "نمی‌تواند وضعیت خود را عوض کند"
 
 #: forms.py:679
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "نمی‌تواند دیگر کاربران را به مدیر تبدیل کند"
 
 #: forms.py:686
 msgid "Cannot change status of another moderator"
-msgstr ""
+msgstr "نمی‌تواند وضعیت مدیر دیگری را تغییر دهد"
 
 #: forms.py:692
 msgid "Cannot change status to admin"
-msgstr ""
+msgstr "نمی‌تواند وضعیت را به مدیر اصلی تغییر دهد"
 
 #: forms.py:698
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
-msgstr ""
+msgstr "اگر علاقه‌مند هستید که وضعیت کاربر %(username)s را تغییر دهید لطفاً یک انتخاب معنادار انجام دهید."
 
 #: forms.py:708
 msgid "Subject line"
@@ -210,7 +211,7 @@ msgstr "موضوع"
 
 #: forms.py:713
 msgid "Message text"
-msgstr ""
+msgstr "متن پیام"
 
 #: forms.py:727
 msgid "Your name (optional):"
@@ -222,7 +223,7 @@ msgstr ""
 
 #: forms.py:730
 msgid "Your message:"
-msgstr ""
+msgstr "پیام شما:"
 
 #: forms.py:735
 msgid "I don't want to give my email or receive a response:"
@@ -258,7 +259,7 @@ msgstr ""
 
 #: forms.py:914 forms.py:957
 msgid "ask anonymously"
-msgstr ""
+msgstr "پرسش به صورت ناشناس"
 
 #: forms.py:916 forms.py:959
 msgid "Check if you do not want to reveal your name when asking this question"
@@ -299,7 +300,7 @@ msgstr "نام واقعی"
 
 #: forms.py:1380
 msgid "Website"
-msgstr ""
+msgstr "وب‌سایت"
 
 #: forms.py:1387
 msgid "City"
@@ -307,7 +308,7 @@ msgstr "شهر"
 
 #: forms.py:1396
 msgid "Show country"
-msgstr ""
+msgstr "نمایش کشور"
 
 #: forms.py:1401
 msgid "Show tag choices"
@@ -315,11 +316,11 @@ msgstr ""
 
 #: forms.py:1406
 msgid "Date of birth"
-msgstr ""
+msgstr "روز تولد"
 
 #: forms.py:1408
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr ""
+msgstr "نمایش داده نخواهد شد و صرفاً برای محاسبه سن است، به فرمت: YYYY-MM-DD"
 
 #: forms.py:1416
 msgid "Profile"
@@ -331,11 +332,11 @@ msgstr "نام صفحه"
 
 #: forms.py:1457 forms.py:1461
 msgid "this email has already been registered, please use another one"
-msgstr ""
+msgstr "این آدرس ایمیل پیش از این ثبت شده است. لطفاً از یک ایمیل دیگر استفاده کنید"
 
 #: forms.py:1470
 msgid "Choose email tag filter"
-msgstr ""
+msgstr "فیلتر برچسب ایمیل را انتخاب کنید"
 
 #: forms.py:1522
 msgid "Asked by me"
@@ -343,27 +344,27 @@ msgstr "پرسش از من"
 
 #: forms.py:1525
 msgid "Answered by me"
-msgstr ""
+msgstr "پاسخ داده شده توسط من"
 
 #: forms.py:1528
 msgid "Individually selected"
-msgstr ""
+msgstr "به صورت فردی انتخاب شده"
 
 #: forms.py:1531
 msgid "Entire forum (tag filtered)"
-msgstr ""
+msgstr "کل انجمن (فیلتر شده با برچسب)"
 
 #: forms.py:1535
 msgid "Comments and posts mentioning me"
-msgstr ""
+msgstr "نظرات و پست‌هایی که به من اشاره دارد"
 
 #: forms.py:1619
 msgid "please choose one of the options above"
-msgstr ""
+msgstr "لطفاً یکی از حالت‌های بالا را انتخاب کنید"
 
 #: forms.py:1622
 msgid "okay, let's try!"
-msgstr ""
+msgstr "اوکی، بییاید امتحان کنیم"
 
 #: forms.py:1625
 #, python-format
@@ -404,11 +405,11 @@ msgstr ""
 
 #: urls.py:56
 msgid "question/"
-msgstr ""
+msgstr "question/"
 
 #: urls.py:61
 msgid "tags/"
-msgstr ""
+msgstr "tags/"
 
 #: urls.py:66 urls.py:71 urls.py:78 urls.py:84 urls.py:93 urls.py:100
 msgid "users/"
@@ -420,11 +421,11 @@ msgstr ""
 
 #: urls.py:78 urls.py:159 urls.py:226 urls.py:520
 msgid "edit/"
-msgstr ""
+msgstr "edit/"
 
 #: urls.py:85
 msgid "subscriptions/"
-msgstr ""
+msgstr "subscriptions/"
 
 #: urls.py:94
 msgid "select_languages/"
@@ -436,27 +437,27 @@ msgstr ""
 
 #: urls.py:110
 msgid "users/update_has_custom_avatar/"
-msgstr ""
+msgstr "users/update_has_custom_avatar/"
 
 #: urls.py:115 urls.py:120
 msgid "badges/"
-msgstr "نشانها/"
+msgstr "badges/"
 
 #: urls.py:133
 msgid "feedback/"
-msgstr ""
+msgstr "feedback/"
 
 #: urls.py:154
 msgid "about/"
-msgstr "درباره/"
+msgstr "about/"
 
 #: urls.py:155
 msgid "faq/"
-msgstr "سوالات متداول"
+msgstr "faq/"
 
 #: urls.py:156
 msgid "privacy/"
-msgstr ""
+msgstr "privacy/"
 
 #: urls.py:157
 msgid "help/"
@@ -464,36 +465,36 @@ msgstr ""
 
 #: urls.py:159 urls.py:164
 msgid "answers/"
-msgstr "سوالات"
+msgstr "answers/"
 
 #: urls.py:164 urls.py:256
 msgid "revisions/"
-msgstr ""
+msgstr "revisions/"
 
 #: urls.py:221 urls.py:226 urls.py:231 urls.py:236 urls.py:241 urls.py:246
 #: urls.py:256
 msgid "questions/"
-msgstr ""
+msgstr "questions/"
 
 #: urls.py:221 urls.py:495 urls.py:500 urls.py:505 urls.py:510
 msgid "ask/"
-msgstr "سوال/"
+msgstr "ask/"
 
 #: urls.py:231
 msgid "retag/"
-msgstr ""
+msgstr "retag/"
 
 #: urls.py:236
 msgid "close/"
-msgstr "بسته/"
+msgstr "close/"
 
 #: urls.py:241
 msgid "reopen/"
-msgstr "بازکردن مجدد/"
+msgstr "reopen/"
 
 #: urls.py:246
 msgid "answer/"
-msgstr ""
+msgstr "answer/"
 
 #: urls.py:314
 msgid "tags/subscriptions/"
@@ -517,11 +518,11 @@ msgstr ""
 
 #: urls.py:459
 msgid "messages/"
-msgstr "پیامها/"
+msgstr "messages/"
 
 #: urls.py:459
 msgid "markread/"
-msgstr ""
+msgstr "markread/"
 
 #: urls.py:490 urls.py:495 urls.py:500 urls.py:505 urls.py:510 urls.py:515
 #: urls.py:520 urls.py:525 urls.py:530
@@ -542,12 +543,12 @@ msgstr ""
 
 #: urls.py:560
 msgid "upload/"
-msgstr "بارگذاری/"
+msgstr "upload/"
 
 #: urls.py:585 setup_templates/settings.py:229
 #: templates/authopenid/providers_javascript.html:7
 msgid "account/"
-msgstr "حساب کاربری/"
+msgstr "account/"
 
 #: conf/access_control.py:8
 msgid "Access control settings"
@@ -3012,7 +3013,7 @@ msgstr ""
 
 #: const/message_keys.py:39 templates/question_retag.html:58
 msgid "tags are required"
-msgstr ""
+msgstr "برچسب‌ها الزامی هستند."
 
 #: const/message_keys.py:41
 msgid "please use letters, numbers and characters \"-+.#\""

@@ -9,20 +9,20 @@
 # gjmveloso <gjmveloso@gmail.com>, 2012
 # gjmveloso <gjmveloso@gmail.com>, 2012
 # marcusbraga <tereshop@hotmail.com>, 2012
-# ohallot <olivier.hallot@libreoffice.org>, 2012-2013
+# Olivier Hallot <olivier.hallot@libreoffice.org>, 2012-2014
 # Rafael Ferreira <rafael.f.f1@gmail.com>, 2012
-# ReyX <regis.sabino@gmail.com>, 2013
-# ReyX <regis.sabino@gmail.com>, 2013
+# Regis Sabino da Silva <regis.sabino@gmail.com>, 2013
+# Regis Sabino da Silva <regis.sabino@gmail.com>, 2013
 # Sandro <sandrossv@hotmail.com>, 2011-2012
 # Sandro <sandrossv@hotmail.com>, 2011-2012
 # marcusbraga <tereshop@hotmail.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 14:06-0500\n"
-"PO-Revision-Date: 2013-08-22 17:15+0000\n"
-"Last-Translator: ohallot <olivier.hallot@libreoffice.org>\n"
+"PO-Revision-Date: 2014-04-04 13:46+0000\n"
+"Last-Translator: Olivier Hallot <olivier.hallot@libreoffice.org>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/askbot/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -337,7 +337,7 @@ msgstr "Data de nascimento"
 
 #: forms.py:1408
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
-msgstr "não será mostrado, usado para calcular a idade formato: AAAA-MM-DD"
+msgstr "não será mostrada, usado para calcular a idade formato: AAAA-MM-DD"
 
 #: forms.py:1416
 msgid "Profile"
@@ -605,7 +605,7 @@ msgstr "Utilize espaço para separar as entradas, não utilize o símbolo @!"
 
 #: conf/badges.py:13
 msgid "Badge settings"
-msgstr "Configuração das insígnias"
+msgstr "Configuração das medalhas"
 
 #: conf/badges.py:23
 msgid "Disciplined: minimum upvotes for deleted post"
@@ -681,7 +681,7 @@ msgstr "Pajé: Nº mínimo de dias de atraso"
 
 #: conf/badges.py:185
 msgid "Associate Editor: minimum number of edits"
-msgstr "Editor associado: número mínimo de edições"
+msgstr "Editor associado: Nº mínimo de edições"
 
 #: conf/badges.py:194
 msgid "Favorite Question: minimum stars"
@@ -689,7 +689,7 @@ msgstr "Pergunta favorita: Nº mínimo de estrelas"
 
 #: conf/badges.py:203
 msgid "Stellar Question: minimum stars"
-msgstr "Pergunta galáctica: Nº minimo de estrelas"
+msgstr "Pergunta galáctica: Nº mínimo de estrelas"
 
 #: conf/badges.py:212
 msgid "Commentator: minimum comments"
@@ -697,7 +697,7 @@ msgstr "Palpiteiro: Nº mínimo de comentários"
 
 #: conf/badges.py:221
 msgid "Taxonomist: minimum tag use count"
-msgstr "Taxonomista: contagem mínima de utilização de tags"
+msgstr "Taxonomista: Nº mínimo de utilização de tags"
 
 #: conf/badges.py:230
 msgid "Enthusiast: minimum days"
@@ -902,7 +902,7 @@ msgstr "Chave de verificação do site do Google"
 msgid ""
 "This key helps google index your site please obtain is at <a "
 "href=\"%(url)s?hl=%(lang)s\">google webmasters tools site</a>"
-msgstr "Esta chave ajuda o google a indexar seu site. Consulte as <a href=\"%(url)s?hl=%(lang)s\">ferramentas para webmasters do google </a>"
+msgstr "Esta chave ajuda o Google a indexar seu site. Consulte as <a href=\"%(url)s?hl=%(lang)s\">ferramentas para webmasters do Google </a>"
 
 #: conf/external_keys.py:36
 msgid "Google Analytics key"
@@ -1135,7 +1135,7 @@ msgstr "Esta configuração ajudará a importar dados de outros fóruns tais com
 
 #: conf/forum_data_rules.py:161
 msgid "Maximum length of tag (number of characters)"
-msgstr "Tamanho máximo do tag (em quantidade de caracteres)"
+msgstr "Tamanho máximo da tag (em quantidade de caracteres)"
 
 #: conf/forum_data_rules.py:170
 msgid "Minimum length of title (number of characters)"
@@ -1344,7 +1344,7 @@ msgstr "Se selecionado, os usuários poderão postar nos grupos pelo e-mail \"no
 
 #: conf/karma_and_badges_visibility.py:12
 msgid "Karma & Badge visibility"
-msgstr "Visibilidade de Karma e de Insígnias"
+msgstr "Visibilidade do karma e de medalhas"
 
 #: conf/karma_and_badges_visibility.py:27
 msgid "Visibility of karma"
@@ -1356,11 +1356,11 @@ msgstr "O karma do usuário pode ser público ou mostrado somente a ele"
 
 #: conf/karma_and_badges_visibility.py:44
 msgid "Visibility of badges"
-msgstr "Visibilidade das insígnias"
+msgstr "Visibilidade das medalhas"
 
 #: conf/karma_and_badges_visibility.py:47
 msgid "Badges can be either publicly shown or completely hidden"
-msgstr "Insígnias podem tanto ser públicas quanto completamente ocultas"
+msgstr "Medalhas podem ser mostradas publicamente ou completamente ocultas"
 
 #: conf/ldap.py:9
 msgid "LDAP login configuration"
@@ -2053,7 +2053,7 @@ msgid ""
 "values, more suitable for the larger communities, <strong>WARNING:</strong> "
 "your current values for Minimum reputation, Badge Settings and Vote Rules "
 "will be changed after you modify this setting."
-msgstr "O modo \"site grande\" aumenta a reputação e certos limiares de insígnias, para valores mais adequados para grandes comunidades. <strong>CUIDADO</strong> seus valores atuais de reputação mínima, configuração de insígnias e regras de votação mudarão depois que modificar esta configuração."
+msgstr "O modo \"site grande\" aumenta a reputação e certos limiares de medalhas, para valores mais adequados para grandes comunidades. <strong>CUIDADO</strong> seus valores atuais de reputação mínima, configuração de medalhas e regras de votação mudarão depois que modificar esta configuração."
 
 #: conf/site_settings.py:14
 msgid "URLS, keywords & greetings"
@@ -2430,7 +2430,7 @@ msgstr "Chave Akismet para detecção de spam"
 
 #: conf/super_groups.py:5
 msgid "Reputation, Badges, Votes & Flags"
-msgstr "Reputação, Insígnias, Votos e Sinalizadores"
+msgstr "Reputação, Medalhas, Votos e Sinalizadores"
 
 #: conf/super_groups.py:6
 msgid "Static Content, URLS & UI"
@@ -2729,7 +2729,7 @@ msgstr "Resposta editada"
 
 #: const/__init__.py:201
 msgid "received badge"
-msgstr "Insígnia recebida"
+msgstr "Medalha recebida"
 
 #: const/__init__.py:202
 msgid "marked best answer"
@@ -3855,21 +3855,21 @@ msgstr "O karma de %(username)s é %(reputation)s"
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] "uma insígnia de ouro"
-msgstr[1] "%(count)d insígnias de ouro"
+msgstr[1] "%(count)d medalhas de ouro"
 
 #: models/__init__.py:2515
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] "uma insígnia de prata"
-msgstr[1] "%(count)d insígnias de prata"
+msgstr[1] "%(count)d medalhas de prata"
 
 #: models/__init__.py:2522
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] "uma insígnia de bronze"
-msgstr[1] "%(count)d insígnias de bronze"
+msgstr[1] "%(count)d medalhas de bronze"
 
 #: models/__init__.py:2533
 #, python-format
@@ -3932,7 +3932,7 @@ msgstr "\"%(title)s\""
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
-msgstr "Parabéns, você recebeu uma insígnia '%(badge_name)s'. Pode vê-la no <a href=\"%(user_profile)s\">seu perfil</a>."
+msgstr "Parabéns, você recebeu uma medalha '%(badge_name)s'. Pode vê-la no <a href=\"%(user_profile)s\">seu perfil</a>."
 
 #: models/__init__.py:3657
 #, python-format
@@ -4573,12 +4573,12 @@ msgstr "%(name)s"
 
 #: templates/badge.html:5
 msgid "Badge"
-msgstr "Insígnia"
+msgstr "Medalha"
 
 #: templates/badge.html:7
 #, python-format
 msgid "Badge \"%(name)s\""
-msgstr "Insígnia \"%(name)s\""
+msgstr "Medalha \"%(name)s\""
 
 #: templates/badge.html:9 templates/user_profile/user_recent.html:16
 #: templates/user_profile/user_stats.html:71
@@ -4590,11 +4590,11 @@ msgstr "%(description)s"
 msgid "user received this badge:"
 msgid_plural "users received this badge:"
 msgstr[0] "usuário recebeu esta insígnia:"
-msgstr[1] "usuários receberam esta insígnia:"
+msgstr[1] "usuários receberam esta medalha:"
 
 #: templates/badges.html:3 templates/badges.html.py:5
 msgid "Badges"
-msgstr "Insígnias"
+msgstr "Medalhas"
 
 #: templates/badges.html:7
 msgid "Community gives you awards for your questions, answers and votes."
@@ -4604,30 +4604,30 @@ msgstr "A comunidade lhe dará prêmios pelas perguntas, respostas e votos."
 msgid ""
 "Below is the list of available badges and number of times each type of badge"
 " has been awarded."
-msgstr "Abaixo está a lista das insígnias disponíveis e o número de vezes que cada tipo de insígnia foi outorgada"
+msgstr "Segue abaixo a lista de medalhas disponíveis e o número de vezes que cada tipo de medalha foi outorgada"
 
 #: templates/badges.html:31
 msgid "Community badges"
-msgstr "Insígnias da comunidade"
+msgstr "Medalhas da comunidade"
 
 #: templates/badges.html:33
 msgid "gold badge: the highest honor and is very rare"
-msgstr "insígnia de ouro: a maior honra e é bastante rara"
+msgstr "Medalha de ouro: a maior honraria e bastante rara"
 
 #: templates/badges.html:36
 msgid ""
 "Gold badge is the highest award in this community. To obtain it you have to show \n"
 "profound knowledge and ability in addition to your active participation."
-msgstr "A insígnia de ouro é a maior distinção desta comunidade. Para obtê-la, deve mostrar conhecimento\nprofundo e competência, além da sua participação ativa."
+msgstr "A medalha de ouro é a maior distinção desta comunidade. Para obtê-la, deve mostrar conhecimento\nprofundo e competência, além da sua participação ativa."
 
 #: templates/badges.html:42 templates/badges.html.py:46
 msgid ""
 "silver badge: occasionally awarded for the very high quality contributions"
-msgstr "insígnia de prata: oferecida de vez em quando às contribuições de qualidade muito elevada"
+msgstr "Medalha de prata: oferecida ocasionalmente para contribuições de alta qualidade"
 
 #: templates/badges.html:49 templates/badges.html.py:53
 msgid "bronze badge: often given as a special honor"
-msgstr "insígnia de bronze: dada muitas vezes como honra especial"
+msgstr "Medalha de bronze: oferecida como honraria especial"
 
 #: templates/base.html:23
 #, python-format
@@ -7217,7 +7217,7 @@ msgstr[1] "<span class=\"count\">%(counter)s</span> Tags"
 msgid "<span class=\"count\">%(counter)s</span> Badge"
 msgid_plural "<span class=\"count\">%(counter)s</span> Badges"
 msgstr[0] "<span class=\"count\">%(counter)s</span> Insígnia"
-msgstr[1] "<span class=\"count\">%(counter)s</span> Insígnias"
+msgstr[1] "<span class=\"count\">%(counter)s</span> Medalhas"
 
 #: templates/user_profile/user_stats.html:85
 msgid "Answer to:"
@@ -7483,7 +7483,7 @@ msgstr "usuários"
 
 #: templates/widgets/meta_nav.html:27
 msgid "badges"
-msgstr "Insígnias"
+msgstr "Medalhas"
 
 #: templates/widgets/question_edit_tips.html:5
 msgid "ask a question interesting to this community"
@@ -7582,7 +7582,7 @@ msgstr "karma:"
 
 #: templates/widgets/user_long_score_and_badge_summary.html:15
 msgid "badges:"
-msgstr "Insígnias:"
+msgstr "Medalhas:"
 
 #: templates/widgets/user_navigation.html:17
 msgid "sign out"
