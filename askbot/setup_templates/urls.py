@@ -16,7 +16,7 @@ from django.contrib import admin
 
 admin.autodiscover()
 
-if askbot.get_lang_mode() == 'url-lang':
+if askbot.is_multilingual():
     from django.conf.urls.i18n import i18n_patterns
     urlpatterns = i18n_patterns('',
         (r'%s' % settings.ASKBOT_URL, include('askbot.urls'))
