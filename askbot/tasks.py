@@ -176,9 +176,10 @@ def record_post_update_celery_task(
 
 @task(ignore_result = True)
 def record_question_visit(
-    question_post = None,
-    user_id = None,
-    update_view_count = False):
+    question_post=None,
+    language_code=None,
+    user_id=None,
+    update_view_count=False):
     """celery task which records question visit by a person
     updates view counter, if necessary,
     and awards the badges associated with the
@@ -188,7 +189,7 @@ def record_question_visit(
     #question_post = Post.objects.filter(
     #    id = question_post_id
     #).select_related('thread')[0]
-    activate_language(django_settings.LANGUAGE_CODE)
+    activate_language(language_code)
     if update_view_count:
         question_post.thread.increase_view_count()
 
