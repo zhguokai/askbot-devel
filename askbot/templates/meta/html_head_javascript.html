@@ -23,6 +23,12 @@
     askbot['urls'] = {};
     askbot['settings'] = {};
     askbot['messages'] = {};
+    askbot['data']['postImageMaxWidth'] = 685;
+    askbot['data']['postImageWidthBreakpoints'] = [
+                                                    [980, undefined],
+                                                    [800, 55]
+                                                ];
 </script>
+{% include 'meta/custom_html_head_javascript.html' ignore missing %}
 <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
 {# avoid adding javascript here so that pages load faster #}

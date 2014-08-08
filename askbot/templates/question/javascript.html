@@ -4,11 +4,8 @@
         var images = $('.question-page .post-body img');
         //these breakpoints must match those in css
         //for explanation see utils.js:LimitedWidthImage
-        var breakpoints = [
-            [980, undefined],
-            [800, 55]
-        ];
-        var maxWidth = 685;
+        var breakpoints = askbot['data']['postImageWidthBreakpoints'];
+        var maxWidth = askbot['data']['postImageMaxWidth'];
         images.each(function(idx, item) {
             var img = new LimitedWidthImage(breakpoints, maxWidth);
             img.decorate($(item));
