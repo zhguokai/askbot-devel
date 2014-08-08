@@ -7,6 +7,7 @@ To make more models accessible in the Django admin interface, add more classes s
 Names of the classes must be like `SomeModelAdmin`, where `SomeModel` must
 exactly match name of the model used in the project
 """
+from django.conf import settings as django_settings
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from askbot import models
@@ -123,10 +124,13 @@ class PostToGroupInline(admin.TabularInline):
     extra = 1
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post_type', 'thread', 'author', 'added_at', 'deleted', 'in_groups', 'is_published', 'is_private', 'vote_up_count')
-    list_filter = ('deleted', 'post_type', 'author', 'vote_up_count')
+    list_display = ('id', 'post_type', 'thread', 'author', 'text_30', 'added_at', 'deleted', 'in_groups', 'is_published', 'is_private', 'vote_up_count', 'language_code')
+    list_filter = ('deleted', 'post_type', 'language_code', 'vote_up_count', 'author')
     search_fields = ('id', 'thread__title', 'text', 'author__username')
     inlines = (PostToGroupInline,)
+
+    def text_30(self, obj):
+        return obj.text[:30]
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
@@ -156,8 +160,8 @@ class SpacesInline(admin.TabularInline):
     extra = 1
 
 class ThreadAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'in_spaces', 'in_groups', 'is_private')
-    list_filter = ('deleted', 'closed', 'last_activity_by')
+    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'site', 'in_spaces', 'in_groups', 'is_private', 'language_code')
+    list_filter = ('deleted', 'closed', 'language_code', 'site', 'last_activity_by')
     search_fields = ('title',)
     inlines = (ThreadToGroupInline, SpacesInline)
 
@@ -205,7 +209,6 @@ finally:
 
         def queryset(self, request, queryset):
             if self.value():
-                print "*"*10, self.method
                 target_boolean = self.value() == 'true'
                 admin_ids = []
                 for user in User.objects.all():
@@ -225,16 +228,29 @@ finally:
         title = 'is moderator'
         parameter_name = 'is_moderator'
 
+    class SeesThreadsInLanguage(SimpleListFilter):
+        title = "sees Threads in language"
+        parameter_name = "sees_threads_in_lang"
+        
+        def lookups(self, request, model_admin):
+            return django_settings.LANGUAGES
+
+        def queryset(self, request, queryset):
+            if self.value():
+                return queryset.filter(languages__icontains=self.value())
+            return queryset
+
     from django.contrib.auth.admin import UserAdmin as OrigUserAdmin
     class UserAdmin(OrigUserAdmin):
-        list_display = OrigUserAdmin.list_display + ('date_joined', 'reputation', 
+        list_display = OrigUserAdmin.list_display + ('languages', 
+            'date_joined', 'reputation', 
             'is_administrator', 'is_moderator',
             'my_interesting_tags', 'interesting_tag_wildcards',
             'my_ignored_tags', 'ignored_tag_wildcards', 
             'my_subscribed_tags', 'subscribed_tag_wildcards',
             'email_tag_filter_strategy', 'display_tag_filter_strategy', 
             'get_groups', 'get_primary_group', 'get_default_site')
-        list_filter = (IsAdministrator, IsModerator, InGroup, 'email_tag_filter_strategy', 'display_tag_filter_strategy') + OrigUserAdmin.list_filter
+        list_filter = OrigUserAdmin.list_filter + (IsAdministrator, IsModerator, 'email_tag_filter_strategy', 'display_tag_filter_strategy', SeesThreadsInLanguage, InGroup)
 
         def interesting_tag_wildcards(self, obj):
             return ', '.join(obj.interesting_tags.strip().split())
