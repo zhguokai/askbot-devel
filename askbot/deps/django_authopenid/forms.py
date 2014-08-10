@@ -146,6 +146,16 @@ class LoginForm(forms.Form):
         if value.strip() == '':
             self._errors[field_name] = self.error_class([error_message])
 
+    def set_password_login_error(self, message=None):
+        """sets a parameter flagging that login with
+        password had failed
+        """
+        message = message or _('Login failed, please try again')
+        #add monkey-patch parameter
+        #this is used in the signin.html template
+        self.password_login_failed = True
+        self.password_login_error_message = message
+
     def clean(self):
         """besides input data takes data from the
         login provider settings

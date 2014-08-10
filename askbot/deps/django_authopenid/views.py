@@ -522,7 +522,7 @@ def ldap_signin(request):
                 auth_fail_func = load_module(auth_fail_func_path)
                 auth_fail_func(user_info, login_form)
             else:
-                login_form.set_password_login_error()
+                login_form.set_password_login_error(user_info.get('error_info'))
 
 
 @csrf.csrf_protect
@@ -626,7 +626,6 @@ def signin(request, template_name='authopenid/signin_full.html'):
                     if user:
                         login(request, user)
                         return HttpResponseRedirect(next_url)
-
                     #else - create new user account
                     #pre-fill email address with persona registration
                     request.session['email'] = email

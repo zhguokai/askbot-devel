@@ -1,8 +1,10 @@
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
+from django.core.mail import send_mail
 from django.template.loader import get_template
 from askbot.models import Thread
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from django.conf import settings as django_settings
 from django.utils.translation import ungettext
 from askbot import mail
 from askbot.utils.classes import ReminderSchedule
@@ -11,16 +13,32 @@ from askbot.utils.html import site_url
 from django.template import Context
 from datetime import datetime, timedelta
 from collections import defaultdict
+from optparse import make_option
 
-DEBUG_THIS_COMMAND = False
-
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     """management command that sends reminders
     about unanswered questions to all users
     """
-    def handle_noargs(self, **options):
+    option_list = BaseCommand.option_list + (
+        make_option('--extra-emails',
+            action='store',
+            type='str',
+            dest='emails',
+            default=None,
+            help='additional email addresses, comma-separated'
+        ),
+        make_option('--days',
+            action='store',
+            type='int',
+            dest='days',
+            default=1,
+            help='interval in days to count the users activity'
+        )
+    )
 
-        cutoff = datetime.now() - timedelta(1)
+    def handle(self, **options):
+
+        cutoff = datetime.now() - timedelta(options['days'])
 
         user_threads = defaultdict(set)
         for thread in Thread.objects.filter(added_at__gt=cutoff):
@@ -41,8 +59,8 @@ class Command(NoArgsCommand):
         body_text = template.render(Context(data))#todo: set lang
         subject_line = 'Users who asked more than 5 questions in last 24 hours'
 
-        if DEBUG_THIS_COMMAND:
-            print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \
-                (user.email, subject_line, body_text)
-        else:
-            mail.mail_admins(subject_line=subject_line, body_text=body_text)
+        mail.mail_moderators(subject_line=subject_line, body_text=body_text)
+        if options['emails']:
+            emails = map(lambda v: v.strip(), options['emails'].split())
+            from_email = django_settings.DEFAULT_FROM_EMAIL
+            send_mail(subject_line, body_text, from_email, emails)
