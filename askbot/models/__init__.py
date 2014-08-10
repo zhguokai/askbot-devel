@@ -3422,7 +3422,8 @@ def notify_author_of_published_revision(
     #only email about first revision
     if revision.should_notify_author_about_publishing(was_approved):
         from askbot.tasks import notify_author_of_published_revision_celery_task
-        notify_author_of_published_revision_celery_task.delay(revision)
+        language_code = get_language()
+        notify_author_of_published_revision_celery_task.delay(revision, language_code)
 
 
 #todo: move to utils

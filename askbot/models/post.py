@@ -738,9 +738,10 @@ class Post(models.Model):
 
         from askbot.tasks import send_instant_notifications_about_activity_in_post
         send_instant_notifications_about_activity_in_post(
-                                update_activity,
-                                self,
-                                notify_sets['for_email']
+                                update_activity=update_activity,
+                                post=self,
+                                recipients=notify_sets['for_email'],
+                                language_code=get_language()
                             )
 
     def make_private(self, user, group_id=None):

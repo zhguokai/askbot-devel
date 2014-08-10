@@ -1081,7 +1081,7 @@ class PostApprovalTests(utils.AskbotTestCase):
         )
 
     def test_emailed_question_answerable_approval_notification(self):
-        self.u1 = self.create_user('user1', status = 'a')#regular user
+        self.u1 = self.create_user('user1', status = 'w')#regular user
         question = self.post_question(user = self.u1, by_email = True)
         outbox = django.core.mail.outbox
         #here we should get just the notification of the post

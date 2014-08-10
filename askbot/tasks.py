@@ -77,7 +77,11 @@ def tweet_new_post_task(post_id):
         
 
 @task(ignore_result = True)
-def notify_author_of_published_revision_celery_task(revision):
+def notify_author_of_published_revision_celery_task(revision, language_code):
+    """language_code - is the current language code
+    it must be restored after the notification is sent in the 
+    users primary language
+    """
     #todo: move this to ``askbot.mail`` module
     #for answerable email only for now, because
     #we don't yet have the template for the read-only notification
@@ -118,14 +122,19 @@ def notify_author_of_published_revision_celery_task(revision):
         }
 
         #load the template
-        activate_language(revision.post.language_code)
+        activate_language(revision.author.get_primary_language())
         template = get_template('email/notify_author_about_approved_post.html')
+        body_text = template.render(Context(data))
+
+        #restore the language
+        activate_language(language_code)
+
         #todo: possibly add headers to organize messages in threads
         headers = {'Reply-To': append_content_address}
         #send the message
         mail.send_mail(
             subject_line=_('Your post at %(site_name)s is now published') % data,
-            body_text=template.render(Context(data)),
+            body_text=body_text,
             recipient=revision.author,
             headers=headers
         )
@@ -215,9 +224,10 @@ def record_question_visit(
 
 @task(ignore_result=False)
 def send_instant_notifications_about_activity_in_post(
-                                                update_activity = None,
-                                                post = None,
-                                                recipients = None,
+                                                update_activity=None,
+                                                post=None,
+                                                recipients=None,
+                                                language_code=None
                                             ):
     #reload object from the database
     post = Post.objects.get(id=post.id)
@@ -255,7 +265,7 @@ def send_instant_notifications_about_activity_in_post(
 
         reply_address, alt_reply_address = get_reply_to_addresses(user, post)
 
-        activate_language(post.language_code)
+        activate_language(user.get_primary_language())
         subject_line, body_text = format_instant_notification_email(
                             to_user = user,
                             from_user = update_activity.user,
@@ -265,6 +275,7 @@ def send_instant_notifications_about_activity_in_post(
                             update_type = update_type,
                             template = get_template('email/instant_notification.html')
                         )
+        activate_language(language_code)
 
         headers['Reply-To'] = reply_address
         try:
