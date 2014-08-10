@@ -346,6 +346,157 @@ ThreadUsersDialog.prototype.decorate = function(element) {
     });
 };
 
+var MergeQuestionsDialog = function() {
+    ModalDialog.call(this);
+    this._tags = [];
+    this._prevQuestionId = undefined;
+};
+inherits(MergeQuestionsDialog, ModalDialog);
+
+MergeQuestionsDialog.prototype.show = function() {
+    MergeQuestionsDialog.superClass_.show.call(this);
+    this._idInput.focus();
+};
+
+MergeQuestionsDialog.prototype.getStartMergingHandler = function() {
+    var me = this;
+    return function() {
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: askbot['urls']['mergeQuestions'],
+            data: JSON.stringify({
+                from_id: me.getFromId(),
+                to_id: me.getToId() 
+            }),
+            success: function(data) {
+                window.location.reload();
+            }
+        });
+    };
+};
+
+MergeQuestionsDialog.prototype.setPreview = function(data) {
+    this._previewTitle.html(data['title']);
+    this._previewBody.html(data['summary']);
+    for (var i=0; i<this._tags.length; i++) {
+        this._tags[i].dispose();
+    }
+    for (i=0; i<data['tags'].length; i++) {
+        var tag = new Tag();
+        tag.setLinkable(false);
+        tag.setName(data['tags'][i]);
+        this._previewTags.append(tag.getElement());
+        this._tags.push(tag);
+    }
+    this._preview.fadeIn();
+};
+
+MergeQuestionsDialog.prototype.clearPreview = function() {
+    for (var i=0; i<this._tags.length; i++) {
+        this._tags[i].dispose();
+    }
+    this._previewTitle.html('');
+    this._previewBody.html('');
+    this._previewTags.html('');
+    this._preview.hide();
+};
+
+MergeQuestionsDialog.prototype.getFromId = function() {
+    return this._fromId;
+};
+
+MergeQuestionsDialog.prototype.getToId = function() {
+    return this._idInput.val();
+};
+
+MergeQuestionsDialog.prototype.getPrevToId = function() {
+    return this._prevQuestionId;
+};
+
+MergeQuestionsDialog.prototype.setPrevToId = function(toId) {
+    this._prevQuestionId = toId;
+};
+
+MergeQuestionsDialog.prototype.getLoadPreviewHandler = function() {
+    var me = this;
+    return function() {
+        var prevId = me.getPrevToId();
+        var curId = me.getToId();
+        if (curId && curId != prevId) {
+            $.ajax({
+                type: 'GET',
+                cache: false,
+                dataType: 'json',
+                url: askbot['urls']['apiV1Questions'] + curId + '/',
+                success: function(data) {
+                    me.setPreview(data);
+                    me.setPrevToId(curId);
+                    me.setAcceptButtonText(gettext('Merge'));
+                },
+                error: function() {
+                    me.clearPreview();
+                    me.setAcceptButtonText(gettext('Load preview'));
+                }
+            });
+        }
+    };
+};
+
+MergeQuestionsDialog.prototype.createDom = function() {
+    //make content
+    var content = this.makeElement('div');
+    var label = this.makeElement('label');
+    label.attr('for', 'question_id');
+    label.html(gettext(askbot['messages']['enterDuplicateQuestionId']));
+    content.append(label);
+    var input = this.makeElement('input');
+    input.attr('type', 'text');
+    input.attr('name', 'question_id');
+    content.append(input);
+    this._idInput = input;
+
+    var preview = this.makeElement('div');
+    content.append(preview);
+    this._preview = preview;
+    preview.hide();
+
+    var title = this.makeElement('h3');
+    preview.append(title);
+    this._previewTitle = title;
+
+    var tags = this.makeElement('div');
+    tags.addClass('tags');
+    this._preview.append(tags);
+    this._previewTags = tags;
+
+    var clr = this.makeElement('div');
+    clr.addClass('clearfix');
+    this._preview.append(clr);
+
+    var body = this.makeElement('div');
+    body.addClass('body');
+    this._preview.append(body);
+    this._previewBody = body;
+
+    var previewHandler = this.getLoadPreviewHandler();
+    var enterHandler = makeKeyHandler(13, previewHandler);
+    input.keydown(enterHandler);
+    input.blur(previewHandler);
+
+    this.setContent(content);
+
+    this.setClass('merge-questions');
+    this.setRejectButtonText(gettext('Cancel'));
+    this.setAcceptButtonText(gettext('Load preview'));
+    this.setHeadingText(askbot['messages']['mergeQuestions']);
+    this.setAcceptHandler(this.getStartMergingHandler());
+
+    MergeQuestionsDialog.superClass_.createDom.call(this);
+
+    this._fromId = $('.post.question').data('postId');
+};
 
 /**
  * @constructor
@@ -5028,6 +5179,15 @@ $(document).ready(function() {
     }
     var askButton = new AskButton();
     askButton.decorate($("#askButton"));
+
+    if (askbot['data']['userIsThreadModerator']) {
+        var mergeQuestions = new MergeQuestionsDialog();
+        $(document).append(mergeQuestions.getElement());
+        var mergeBtn = $('.question-merge');
+        setupButtonEventHandlers(mergeBtn, function() { 
+            mergeQuestions.show(); 
+        });
+    }
 });
 
 (function() {

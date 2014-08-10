@@ -3,15 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# jianghaitao <jianghaitao@gmail.com>, 2013
+# leonfeng <chaofeng111@gmail.com>, 2014
+# Haitao Jiang <jianghaitao@gmail.com>, 2013
 # ianwu <ian.wu@163.com>, 2013
+# Haitao Jiang <jianghaitao@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
-"Report-Msgid-Bugs-To: http://askbot.org/\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-13 14:07-0500\n"
-"PO-Revision-Date: 2013-08-12 02:14+0000\n"
-"Last-Translator: ianwu <ian.wu@163.com>\n"
+"PO-Revision-Date: 2014-03-22 11:51+0000\n"
+"Last-Translator: leonfeng <chaofeng111@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/askbot/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +24,17 @@ msgstr ""
 #: media/jquery-openid/jquery.openid.js:73
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr "您是否确定要移除您的 %s 登录?"
+msgstr "是否确定要移除您的 %s 登录?"
 
 #: media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr "请添加一或多种登录方式。"
+msgstr "请添加登录方式。"
 
 #: media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
-msgstr "您目前还没有登录方式，请点击下列任一图标添加。"
+msgstr "您目前还没有登录方式，请点击下列任一图标进行添加。"
 
 #: media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
@@ -101,7 +103,7 @@ msgstr "消息已发"
 #: media/js/group_messaging.js:271
 msgid "user {{str}} does not exist"
 msgid_plural "users {{str}} do not exist"
-msgstr[0] "用户{{STR}}不存在"
+msgstr[0] "用户{{str}}不存在"
 
 #: media/js/group_messaging.js:278
 msgid "cannot send message to yourself"
@@ -139,49 +141,49 @@ msgstr[0] "标签最多只能有%(max_chars)s个字符"
 
 #: media/js/post.js:154 media/js/post.js.c:1269
 msgid "tags cannot be empty"
-msgstr "标签不能为空。"
+msgstr "标签不能为空"
 
 #: media/js/post.js:160
 msgid "details are required"
-msgstr "细节是必须的"
+msgstr "必须提供详情"
 
 #: media/js/post.js:163
 #, c-format
 msgid "details must have > %s character"
 msgid_plural "details must have > %s characters"
-msgstr[0] "还有%s个字符才够"
+msgstr[0] "详情至少需要 %s 个字符"
 
 #: media/js/post.js:171
 msgid "enter your question"
-msgstr "输入你的问题"
+msgstr "请输入您的问题"
 
 #: media/js/post.js:174
 #, c-format
 msgid "question must have > %s character"
 msgid_plural "question must have > %s characters"
-msgstr[0] "还有%s个字符才够"
+msgstr[0] "问题至少需要 %s 个字符"
 
 #: media/js/post.js:193
 msgid "content cannot be empty"
-msgstr "内容不能为空。"
+msgstr "内容不能为空"
 
 #: media/js/post.js:196
 #, c-format
 msgid "answer must be > %s character"
 msgid_plural "answer must be > %s characters"
-msgstr[0] "请再输入至少 %s 个字符"
+msgstr[0] "答案至少需要 %s 个字符"
 
 #: media/js/post.js:253
 msgid "Back to the question"
-msgstr "回到原来的问题"
+msgstr "回到问题"
 
 #: media/js/post.js:303
 msgid "draft saved..."
-msgstr "草稿已存"
+msgstr "草稿已存..."
 
 #: media/js/post.js:548
 msgid "insufficient privilege"
-msgstr "用户权限不在操作范围"
+msgstr "权限不足"
 
 #: media/js/post.js:549
 msgid "cannot pick own answer as best"
@@ -189,19 +191,19 @@ msgstr "不能设置自己的回答为最佳答案"
 
 #: media/js/post.js:552 media/js/post.js.c:1416
 msgid "please login"
-msgstr "注册或者登录"
+msgstr "请登录"
 
 #: media/js/post.js:554
 msgid "anonymous users cannot follow questions"
-msgstr "匿名用户可跟踪提问"
+msgstr "匿名用户无法关注问题"
 
 #: media/js/post.js:555
 msgid "anonymous users cannot subscribe to questions"
-msgstr "匿名用户不能订阅提问"
+msgstr "匿名用户无法订阅提问"
 
 #: media/js/post.js:556 media/js/post.js.c:1426
 msgid "anonymous users cannot vote"
-msgstr "匿名用户不能投票"
+msgstr "匿名用户无法投票"
 
 #: media/js/post.js:558
 msgid "please confirm offensive"
@@ -209,27 +211,27 @@ msgstr "确定要归类该帖为广告、人身攻击、恶意言论吗？"
 
 #: media/js/post.js:559
 msgid "please confirm removal of offensive flag"
-msgstr "你确定该帖是恶意言论，含垃圾邮件，广告，恶意言论，等等吗？"
+msgstr "请确认是否删除违禁标记"
 
 #: media/js/post.js:560
 msgid "anonymous users cannot flag offensive posts"
-msgstr "匿名用户不能操作，请先"
+msgstr "匿名用户无法标记违禁帖"
 
 #: media/js/post.js:561
 msgid "confirm delete"
-msgstr "确定要删除/撤销删除该帖吗？"
+msgstr "确认删除"
 
 #: media/js/post.js:562
 msgid "anonymous users cannot delete/undelete"
-msgstr "匿名用户不能删除或撤销删除帖子"
+msgstr "匿名用户无法删除或撤销删除帖子"
 
 #: media/js/post.js:563
 msgid "post recovered"
-msgstr "操作成功！该帖子已被恢复。"
+msgstr "帖子已恢复"
 
 #: media/js/post.js:564
 msgid "post deleted"
-msgstr "操作成功！该帖子已删除。"
+msgstr "帖子已删除"
 
 #: media/js/post.js:831
 msgid "Follow"
@@ -251,11 +253,11 @@ msgstr "删除标志"
 
 #: media/js/post.js:935 media/js/post.js.c:964
 msgid "flag offensive"
-msgstr "你确定该帖是违规的，包含垃圾邮件，广告，恶意言论，等等？"
+msgstr "标记违禁"
 
 #: media/js/post.js:990 media/js/post.js.c:1497
 msgid "undelete"
-msgstr "取消"
+msgstr "取消删除"
 
 #: media/js/post.js:995 media/js/post.js.c:1501
 msgid "delete"
@@ -263,7 +265,7 @@ msgstr "删除"
 
 #: media/js/post.js:1218 media/js/post.js.c:1445
 msgid "sorry, something is not right here"
-msgstr "对不起，有些东西不对。"
+msgstr "对不起，有些东西不对"
 
 #: media/js/post.js:1665
 msgid "add comment"
@@ -276,25 +278,25 @@ msgstr "保存评论"
 #: media/js/post.js:1711
 #, c-format
 msgid "enter at least %s characters"
-msgstr "请输入至少 %s 字符。"
+msgstr "请输入至少 %s 个字符"
 
 #: media/js/post.js:1713
 #, c-format
 msgid "enter at least %s more characters"
-msgstr "还有%s个字符才够"
+msgstr "还需要 %s个字符"
 
 #: media/js/post.js:1723
 #, c-format
 msgid "%s characters left"
-msgstr "还可写%s字符"
+msgstr "还可写 %s 个字符"
 
 #: media/js/post.js:1823
 msgid "minor edit (don't send alerts)"
-msgstr "次要的修改(不发送警报)"
+msgstr "小修改(不发送通知)"
 
 #: media/js/post.js:1855
 msgid "Are you sure you don't want to post this comment?"
-msgstr "你确定你不想发表评论？"
+msgstr "你确定不想发表此评论？"
 
 #: media/js/post.js:1890 media/js/utils.js:3360 media/js/utils.js.c:3515
 msgid "just now"
@@ -306,19 +308,19 @@ msgstr "删除此评论"
 
 #: media/js/post.js:2271
 msgid "confirm delete comment"
-msgstr "真要删除此评论吗？"
+msgstr "确认删除评论"
 
 #: media/js/post.js:2409
 msgid "please sign in or register to post comments"
-msgstr "请登录或注册后的评论"
+msgstr "请登录或注册后再进行评论"
 
 #: media/js/post.js:2560
 msgid "Please enter question title (>10 characters)"
-msgstr "请输入提问标题 (>10 字符)"
+msgstr "请输入提问标题 (至少 10 个字符)"
 
 #: media/js/post.js:2612 media/js/post.js.c:4626
 msgid "Sorry, you have only read access"
-msgstr "对不起，你只有访问的权限"
+msgstr "对不起，你只有阅读权限"
 
 #: media/js/post.js:3075 media/js/post.js.c:3869 media/js/post.js.c:4058
 msgid "save"
@@ -330,7 +332,7 @@ msgstr "输入logo的URL或上传一张图片"
 
 #: media/js/post.js:3225
 msgid "Do you really want to remove the image?"
-msgstr "你真的想删除这张图像吗？"
+msgstr "你真的想删除这张图片吗？"
 
 #: media/js/post.js:3341
 msgid "change logo"
@@ -343,13 +345,13 @@ msgstr "添加 logo"
 #: media/js/post.js:3444
 #, c-format
 msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
-msgstr "标签“%s”已添加，无需重复(按“”删除)"
+msgstr "标签“%s”已添加，无需重复(按“Esc”删除)"
 
 #: media/js/post.js:3453
 #, c-format
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
-msgstr[0] "最大允许%s个标签"
+msgstr[0] "最多允许 %s 个标签"
 
 #: media/js/post.js:3799
 msgid "Delete category?"
@@ -361,7 +363,7 @@ msgstr "编辑"
 
 #: media/js/post.js:3975
 msgid "category name cannot be empty"
-msgstr "请输入至少一个标签"
+msgstr "类别名不能为空"
 
 #: media/js/post.js:4011
 msgid "already exists at the current level!"
@@ -377,7 +379,7 @@ msgstr "保存标签"
 
 #: media/js/post.js:4689 media/js/post.js.c:4723
 msgid "User name:"
-msgstr "用户名"
+msgstr "用户名："
 
 #: media/js/post.js:4710
 msgid "Group name:"
@@ -385,11 +387,11 @@ msgstr "组名："
 
 #: media/js/post.js:4736
 msgid "Shared with the following users:"
-msgstr "下列用户共享："
+msgstr "与下列用户共享："
 
 #: media/js/post.js:4742
 msgid "Shared with the following groups:"
-msgstr "下列用户组共享："
+msgstr "与下列群组共享："
 
 #: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
@@ -417,15 +419,15 @@ msgstr[0] "要关闭这些问题吗？"
 #: media/js/user.js:74
 msgid "Remove all flags and approve this entry?"
 msgid_plural "Remove all flags and approve these entries?"
-msgstr[0] "删除所有的标签和赞成这些文章吗？"
+msgstr[0] "删除所有的标记并允许这些文章吗？"
 
 #: media/js/user.js:223
 msgid "Post deleted"
-msgstr "你的文章已经被删除"
+msgstr "帖子已经被删除"
 
 #: media/js/user.js:225
 msgid "Post approved"
-msgstr "你的文章现在已经恢复！"
+msgstr "帖子通过审核"
 
 #: media/js/user.js:246
 msgid "Accept"
@@ -453,11 +455,11 @@ msgstr "请提供细节。"
 
 #: media/js/user.js:560
 msgid "A reason must be selected to delete one."
-msgstr "要选择一个理由来删除。"
+msgstr "删除时必须给出一个理由。"
 
 #: media/js/user.js:659
 msgid "A reason must be selected to reject post."
-msgstr "拒绝发布前必须选择一个理由"
+msgstr "拒绝发布时必须给出一个理由"
 
 #: media/js/user.js:708
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
@@ -504,7 +506,7 @@ msgstr "转为答案"
 
 #: media/js/utils.js:958
 msgid "Ok"
-msgstr "好"
+msgstr "确定"
 
 #: media/js/utils.js:959 media/js/utils.js.c:1407
 msgid "Cancel"
@@ -513,15 +515,15 @@ msgstr "取消"
 #: media/js/utils.js:1219
 #, c-format
 msgid "Uploaded file: %s"
-msgstr "更新文件：%s"
+msgstr "上传的文件：%s"
 
 #: media/js/utils.js:1234
 msgid "Choose a different image"
-msgstr "选一个不同的图片"
+msgstr "选择其它图片"
 
 #: media/js/utils.js:1236
 msgid "Choose a different file"
-msgstr "选一个不同的文件"
+msgstr "选择其它文件"
 
 #: media/js/utils.js:1250
 msgid "Oops, looks like we had an error. Sorry."
@@ -570,7 +572,7 @@ msgstr "创建一个新组"
 
 #: media/js/utils.js:2138
 msgid "Group %(name)s already exists. Group names are case-insensitive."
-msgstr "组%(name)s已经存在。组名不区分大小写。"
+msgstr "群组%(name)s已经存在。组名不区分大小写。"
 
 #: media/js/utils.js:2311
 #, c-format
@@ -696,7 +698,7 @@ msgstr[0] "%s 分钟前"
 
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:71
 msgid "Insert a file"
-msgstr "插入一个文件"
+msgstr "插入文件"
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:70
 msgid "Insert image"

@@ -30,6 +30,7 @@
 {% else %}
     <a class="question-close" href="{% url close question.id %}">{% trans %}close{% endtrans %}</a>
 {% endif %}
+<a class="question-merge">{% trans %}merge{% endtrans %}</a>
 <a
     id="post-{{question.id}}-delete"
     class="question-delete"

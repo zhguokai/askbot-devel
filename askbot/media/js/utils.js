@@ -2399,6 +2399,7 @@ var ModalDialog = function(customOptions) {
     $.extend(this._options, customOptions);
     this._useFooter = true;
     this._accept_button_text = gettext('Ok');
+    this._acceptBtnEnabled = true;
     this._reject_button_text = gettext('Cancel');
     this._initial_content = undefined;
     this._accept_handler = function(){};
@@ -2418,6 +2419,13 @@ ModalDialog.prototype.show = function() {
 
 ModalDialog.prototype.hide = function() {
     this._element.modal('hide');
+};
+
+ModalDialog.prototype.setClass = function(cls) {
+    this._cssClass = cls;
+    if (this._element) {
+        this._element.addClass(cls);
+    };
 };
 
 ModalDialog.prototype.setContent = function(content) {
@@ -2440,10 +2448,21 @@ ModalDialog.prototype.setHeadingText = function(text) {
 
 ModalDialog.prototype.setAcceptButtonText = function(text) {
     this._accept_button_text = text;
+    if (this._acceptBtn) {
+        this._acceptBtn.html(text);
+    }
 };
 
 ModalDialog.prototype.setRejectButtonText = function(text) {
     this._reject_button_text = text;
+};
+
+ModalDialog.prototype.hideRejectButton = function() {
+    this._rejectBtn.hide();
+};
+
+ModalDialog.prototype.hideAcceptButton = function() {
+    this._acceptButton.hide();
 };
 
 ModalDialog.prototype.setAcceptHandler = function(handler) {
@@ -2465,6 +2484,20 @@ ModalDialog.prototype.setMessage = function(text, message_type) {
         box.setError(true);
     }
     this.prependContent(box.getElement());
+};
+
+ModalDialog.prototype.disableAcceptButton = function() {
+    this._acceptBtnEnabled = false;
+    if (this._acceptBtn) {
+        this._acceptBtn.prop('disabled', true);
+    }
+};
+
+ModalDialog.prototype.enableAcceptButton = function() {
+    this._acceptBtnEnabled = true;
+    if (this._acceptBtn) {
+        this._acceptBtn.prop('disabled', false);
+    }
 };
 
 /**
@@ -2503,6 +2536,10 @@ ModalDialog.prototype.createDom = function() {
     this._element = this.makeElement('div')
     var element = this._element;
 
+    if (this._cssClass) {
+        element.addClass(this._cssClass);
+    }
+
     element.addClass('modal');
     if (this._className) {
         element.addClass(this._className);
@@ -2540,16 +2577,20 @@ ModalDialog.prototype.createDom = function() {
         element.append(footer);
 
         var accept_btn = this.makeElement('button');
+        if (this._acceptBtnEnabled === false) {
+            accept_btn.prop('disabled', true);
+        }
         accept_btn.addClass('submit');
         accept_btn.html(this._accept_button_text);
         footer.append(accept_btn);
+        this._acceptBtn = accept_btn;
 
         if (this._reject_button_text) {
             var reject_btn = this.makeElement('button');
             reject_btn.addClass('submit cancel');
             reject_btn.html(this._reject_button_text);
             footer.append(reject_btn);
-            this._rejectButton = reject_btn;
+            this._rejectBtn = reject_btn;
         }
 
         //4) attach event handlers to the buttons

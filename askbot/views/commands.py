@@ -1707,3 +1707,20 @@ def thread_make_private(request, id=None):
     else:
         raise exceptions.PermissionDenied()
     return HttpResponseRedirect(thread.get_absolute_url())
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def merge_questions(request):
+    post_data = simplejson.loads(request.raw_post_data)
+    if request.user.is_anonymous():
+        denied_msg = _('Sorry, only thread moderators can use this function')
+        raise exceptions.PermissionDenied(denied_msg)
+
+    form_class = forms.GetDataForPostForm
+    from_form = form_class({'post_id': post_data['from_id']})
+    to_form = form_class({'post_id': post_data['to_id']})
+    if from_form.is_valid() and to_form.is_valid():
+        from_question = get_object_or_404(models.Post, id=from_form.cleaned_data['post_id'])
+        to_question = get_object_or_404(models.Post, id=to_form.cleaned_data['post_id'])
+        request.user.merge_duplicate_questions(from_question, to_question)

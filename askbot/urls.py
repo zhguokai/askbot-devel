@@ -261,6 +261,11 @@ urlpatterns = patterns('',
         views.writers.answer,
         name='answer'
     ),
+    service_url(
+        r'^merge-questions/',
+        views.commands.merge_questions,
+        name='merge_questions'
+    ),
     service_url(#ajax only
         r'^vote$',
         views.commands.vote,
