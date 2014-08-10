@@ -142,7 +142,7 @@ providers = (
     'LaunchPad',
 )
 
-DISABLED_BY_DEFAULT = ('LaunchPad',)
+DISABLED_BY_DEFAULT = ('LaunchPad', 'Mozilla Persona')
 
 NEED_EXTRA_SETUP = ('Twitter', 'Facebook', 'LinkedIn', 'identi.ca',)
 

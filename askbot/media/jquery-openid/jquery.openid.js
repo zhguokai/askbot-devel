@@ -394,18 +394,13 @@ $.fn.authenticator = function() {
 
     var setupMozillaPersonaListeners = function() {
         navigator.id.watch({
-            loggedInUser: askbot['data']['userEmail'],
+            //loggedInUser: askbot['data']['userEmail'],
             onlogin: function(assertion) {
                 var assertionElement = signin_form.find('input[name=persona_assertion]');
                 assertionElement.val(assertion);
                 provider_name_input.val('mozilla-persona');
                 signin_form.submit();
                 return false;
-            },
-            onlogout: function() {
-                if (askbot['data']['userIsAuthenticated']) {
-                    window.location.href = askbot['urls']['signOut'];
-                }
             }
         });
     };
@@ -429,13 +424,20 @@ $.fn.authenticator = function() {
         var mozillaPersonaBtn = signin_page.find('input.mozilla-persona');
 
         if (mozillaPersonaBtn.length) {
-            setupMozillaPersonaListeners();
+            var mozillaPersonaInitiated = false;
+            var personaListener = function() {
+                if (mozillaPersonaInitiated === false) {
+                    setupMozillaPersonaListeners();
+                    mozillaPersonaInitiated = true;
+                }
+                start_mozilla_persona_login();
+                return false;
+            };
             setup_event_handlers(
                 signin_page.find('input.mozilla-persona'),
-                start_mozilla_persona_login
+                personaListener
             );
         }
-
 
         setup_event_handlers(
             signin_page.find('input.oauth,input.oauth2'),
