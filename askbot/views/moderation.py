@@ -216,9 +216,6 @@ def moderate_post_edits(request):
     act_ids = list(memo_set.values_list('activity_id', flat=True))
     acts = models.Activity.objects.filter(id__in=act_ids)
 
-    import pdb
-    pdb.set_trace()
-
     memos = models.ActivityAuditStatus.objects.filter(activity__id__in=act_ids)
     memos.delete()
 
