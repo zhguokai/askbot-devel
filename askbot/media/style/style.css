@@ -1532,6 +1532,10 @@ ul#related-tags li {
 .moderate-tags-page h1 {
   float: left;
 }
+.mod-queue-info {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
 .moderate-tags-page button {
   line-height: 18px;
 }
