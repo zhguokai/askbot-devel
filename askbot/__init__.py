@@ -65,7 +65,8 @@ def get_install_directory():
 
 def get_site_protocol(site):
     from django.conf import settings as django_settings
-    return django_settings.ASKBOT_SITE_PROTOCOLS[site.id]
+    protocol_settings = getattr(django_settings, 'ASKBOT_SITE_PROTOCOLS', {})
+    return protocol_settings.get(site.id, 'http://')
 
 def get_path_to(relative_path):
     """returns absolute path to a file
