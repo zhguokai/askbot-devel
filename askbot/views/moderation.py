@@ -119,9 +119,9 @@ def moderate_post_edits(request):
                    }
             body_text = template.render(RequestContext(request, data))
             mail.send_mail(
-                subject_line = _('your post was not accepted'),
-                body_text = unicode(body_text),
-                recipient_list = [post.author.email,]
+                subject_line=_('your post was not accepted'),
+                body_text=unicode(body_text),
+                recipient=post.author
             )
             num_posts += 1
 
@@ -218,7 +218,6 @@ def moderate_post_edits(request):
                             id__in=act_ids,
                             activity_type__in=MOD_ACTIVITY_TYPES
                         )
-    memo_set.delete()
     acts.delete()
     request.user.update_response_counts()
     result['memo_count'] = request.user.get_notifications(MOD_ACTIVITY_TYPES).count()
