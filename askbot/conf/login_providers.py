@@ -133,7 +133,7 @@ providers = (
     'LaunchPad',
 )
 
-DISABLED_BY_DEFAULT = ('LaunchPad', 'Google Plus')
+DISABLED_BY_DEFAULT = ('LaunchPad', 'Google Plus', 'Mozilla Persona')
 
 NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'Facebook', 'LinkedIn', 'identi.ca',)
 
