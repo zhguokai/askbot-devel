@@ -213,11 +213,15 @@ def moderate_post_edits(request):
     result['message'] = force_text(result['message'])
 
     #delete items from the moderation queue
-    act_ids = memo_set.values_list('activity_id', flat=True)
+    act_ids = list(memo_set.values_list('activity_id', flat=True))
     acts = models.Activity.objects.filter(
                             id__in=act_ids,
                             activity_type__in=MOD_ACTIVITY_TYPES
                         )
+
+    memos = models.ActivityAuditStatus.objects.filter(activity__id__in=act_ids)
+    memos.delete()
+
     acts.delete()
     request.user.update_response_counts()
     result['memo_count'] = request.user.get_notifications(MOD_ACTIVITY_TYPES).count()
