@@ -1298,8 +1298,6 @@ def account_recover(request):
 
     url name 'user_account_recover'
     """
-    import pdb
-    pdb.set_trace()
     if not askbot_settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL:
         raise Http404
     if request.method == 'POST':
