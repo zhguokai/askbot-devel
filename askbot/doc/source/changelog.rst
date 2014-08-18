@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development master branch (only on github)
 ------------------------------------------
+* Allowed localized site settings
 * Added management command `askbot_clear_moderation_queue`
 * Admins and Moderators can merge questions.
 * Improved moderation modes: flags, audit, premoderation. 

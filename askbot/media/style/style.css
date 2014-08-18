@@ -4442,6 +4442,9 @@ table.settings td {
 td.setting-label {
   width: 30%;
 }
+td.setting-label span.lang {
+  color: #ff4747;
+}
 td.setting-input {
   padding-left: 10px;
   width: 70%;
