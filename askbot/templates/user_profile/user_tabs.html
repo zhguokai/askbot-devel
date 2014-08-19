@@ -9,6 +9,11 @@
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=inbox"
         ><span>{% trans %}inbox{% endtrans %}</span></a>
         {% endif %}
+        {% if settings.MULTILINGUAL %}
+        <a id="langs" {% if tab_name=="langs" %}class="on"{% endif %} 
+            href="{% url user_select_languages view_user.id, view_user.username|slugify %}"
+        ><span>{% trans %}languages{% endtrans %}</span></a>
+        {% endif %}
         {% if user_follow_feature_on %}
         <a id="network" {% if tab_name=="network" %}class="on"{% endif %} 
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=network"

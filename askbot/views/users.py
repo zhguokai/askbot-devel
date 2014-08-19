@@ -35,6 +35,7 @@ from django.utils import simplejson
 from django.utils.html import strip_tags as strip_all_tags
 from django.views.decorators import csrf
 
+import askbot
 from askbot.utils.slug import slugify
 from askbot.utils.forms import get_feed
 from askbot.utils.html import sanitize_html
@@ -992,23 +993,34 @@ def user_favorites(request, user, context):
 
 @csrf.csrf_protect
 def user_select_languages(request, id=None, slug=None):
-    if request.method != 'POST':
+    if request.user.is_anonymous():
         raise django_exceptions.PermissionDenied
 
     user = get_object_or_404(models.User, id=id)
 
-    if not(request.user.id == user.id or request.user.is_administrator()):
+    if not askbot.is_multilingual() or \
+        not(request.user.id == user.id or request.user.is_administrator()):
         raise django_exceptions.PermissionDenied
 
-    languages = request.POST.getlist('languages')
-    user.languages = ' '.join(languages)
-    user.save()
+    if request.method == 'POST':
+        #todo: add form to clean languages
+        languages = request.POST.getlist('languages')
+        user.languages = ' '.join(languages)
+        user.save()
 
-    redirect_url = reverse(
-        'edit_user',
-        kwargs={'id': user.id}
-    )
-    return HttpResponseRedirect(redirect_url)
+        redirect_url = reverse(
+            'edit_user',
+            kwargs={'id': user.id}
+        )
+        return HttpResponseRedirect(redirect_url)
+    else:
+        data = {
+            'view_user': user,
+            'user_languages': user.languages.split(),
+            'tab_name': 'langs',
+            'page_class': 'user-profile-page',
+        }
+        return render(request, 'user_profile/user_languages.html', data)
 
 
 @owner_or_moderator_required
