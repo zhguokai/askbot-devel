@@ -1541,6 +1541,7 @@ LoginOrRegisterForm.prototype.handleSuccess = function(data) {
             $('.modal-backdrop').remove();
         }
     };
+    $('body').removeClass('anon');
     askbot['controllers']['fullTextSearch'].refresh();
 };
 
@@ -3098,6 +3099,7 @@ LogoutLink.prototype.getLogoutHandler = function() {
                     //activate the login menu
                     me.activateLoginLink();
                     askbot['controllers']['fullTextSearch'].refresh();
+                    $('body').addClass('anon');
                 }
             }
         });
