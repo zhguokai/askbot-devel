@@ -1580,7 +1580,8 @@ def user_delete_question(
     question.thread.save()
 
     for tag in list(question.thread.tags.all()):
-        if tag.used_count == 1:
+        if tag.used_count <= 1:
+            tag.used_count = 0
             tag.deleted = True
             tag.deleted_by = self
             tag.deleted_at = timestamp
@@ -1612,7 +1613,9 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
 
     #delete questions
     questions = Post.objects.get_questions().filter(author=author)
-    count += questions.update(deleted_at=timestamp, deleted_by=self, deleted=True)
+    count += questions.count()
+    for question in questions:
+        self.delete_question(question=question, timestamp=timestamp)
 
     threads = Thread.objects.filter(last_activity_by=author)
     for thread in threads:
@@ -1630,6 +1633,14 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
     comments = Post.objects.get_comments().filter(author=author)
     count += comments.count()
     comments.delete()
+
+    #delete all unused tags created by this user
+    #tags = author.created_tags.all()
+    #tag_ids = list()
+    #for tag in tags:
+    #    if tag.used_count == 0:
+    #        tag_ids.append(tag.id)
+    #Tag.objects.filter(id__in=tag_ids).delete()
 
     return count
 
