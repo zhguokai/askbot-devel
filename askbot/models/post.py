@@ -1489,9 +1489,22 @@ class Post(models.Model):
                                         )
         return result
 
+    def cache_latest_revision(self, rev):
+        setattr(self, '_last_rev_cache', rev)
 
     def get_latest_revision(self):
-        return self.revisions.order_by('-revision')[0]
+        if hasattr(self, '_last_rev_cache'):
+            return self._last_rev_cache
+        rev = self.revisions.order_by('-revision')[0]
+        self.cache_latest_revision(rev)
+        return rev
+
+    def get_earliest_revision(self):
+        if hasattr(self, '_first_rev_cache'):
+            return self._first_rev_cache
+        rev = self.revisions.order_by('revision')[0]
+        setattr(self, '_first_rev_cache', rev)
+        return rev
 
     def get_latest_revision_number(self):
         try:
@@ -2222,6 +2235,8 @@ class PostRevisionManager(models.Manager):
         #audit or pre-moderation modes require placement of the post on the moderation queue
         if needs_moderation:
             revision.place_on_moderation_queue()
+
+        revision.post.cache_latest_revision(revision)
 
         return revision
 

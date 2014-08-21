@@ -1209,6 +1209,13 @@ class Thread(models.Model):
         post_to_author = dict()
         question_post = None
         for post in thread_posts:
+
+            #precache some revision data
+            first_rev = post.get_earliest_revision()
+            last_rev = post.get_latest_revision()
+            first_rev.post = post
+            last_rev.post = post
+
             #pass through only deleted question posts
             if post.deleted and post.post_type != 'question':
                 continue
