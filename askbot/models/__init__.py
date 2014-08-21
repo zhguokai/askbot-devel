@@ -3738,6 +3738,7 @@ def greet_new_user(user, **kwargs):
         template_name = 'email/welcome_lamson_off.html'
 
     data = {
+        'recipient_user': user,
         'site_name': askbot_settings.APP_SHORT_NAME,
         'site_url': site_url(reverse('questions')),
         'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
