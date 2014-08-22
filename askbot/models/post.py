@@ -2419,9 +2419,8 @@ class PostRevision(models.Model):
 
     def get_absolute_url(self):
 
-        is_multilingual = askbot.is_multilingual()
-
-        if is_multilingual:
+        lang_mode = askbot.get_lang_mode()
+        if lang_mode == 'url-lang':
             request_language = get_language()
             activate_language(self.post.thread.language_code)
 
@@ -2432,7 +2431,7 @@ class PostRevision(models.Model):
         else:
             url = self.post.get_absolute_url()
 
-        if is_multilingual:
+        if lang_mode == 'url-lang':
             activate_language(request_language)
 
         return url
