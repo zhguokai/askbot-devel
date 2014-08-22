@@ -1009,8 +1009,11 @@ def user_select_languages(request, id=None, slug=None):
         user.save()
 
         redirect_url = reverse(
-            'edit_user',
-            kwargs={'id': user.id}
+            'user_select_languages',
+            kwargs={
+                'id': user.id,
+                'slug': slugify(user.username)
+            }
         )
         return HttpResponseRedirect(redirect_url)
     else:
