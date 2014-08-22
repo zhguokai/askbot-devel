@@ -12,8 +12,8 @@ EMAIL_TEXT = livesettings.ConfigurationGroup(
 settings.register(
     livesettings.StringValue(
         EMAIL_TEXT,
-        'EMAIL_TEXT_SHORT_WELCOME_TO_SITE',
-        description = _('Short welcome message'),
+        'EMAIL_TEXT_SHORT_WELCOME',
+        description = _('Short welcome message, for subject line'),
         default = _('Welcome to {{ SITE_NAME }}!'),
         help_text = _(
             '<b>NOTE: All email text settings allow placeholders: {{ USER_NAME }}, {{ SITE_NAME }} and {{ SITE_LINK }}.</b>'
@@ -24,8 +24,8 @@ settings.register(
 settings.register(
     livesettings.LongStringValue(
         EMAIL_TEXT,
-        'EMAIL_TEXT_LONG_WELCOME_TO_SITE_NORESP',
-        description = _('Longer welcome message, not respondable'),
+        'EMAIL_TEXT_LONG_WELCOME',
+        description = _('Longer welcome message, for email body'),
         default = _('<p>Please visit {{ SITE_NAME }} at {{ SITE_LINK }}, we look forward to your posts.</p>'),
     )
 )
