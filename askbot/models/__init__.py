@@ -1018,16 +1018,20 @@ def user_assert_can_delete_question(self, question = None):
             if self.is_administrator() or self.is_moderator():
                 return
             else:
+                if answer_count > 1:
+                    upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWERS
+                else:
+                    upvated_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWER
+
                 msg = ungettext(
                     'Sorry, cannot %(delete_your_question)s since it '
-                    'has an %(upvoted_answer)s posted by someone else',
+                    'has an %(upvoted_answers)s posted by someone else',
                     'Sorry, cannot %(delete_your_question)s since it '
                     'has some %(upvoted_answers)s posted by other users',
                     answer_count
                 ) % {
                     'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION,
-                    'upvoted_answer': askbot_settings.WORDS_UPVOTED_ANSWER,
-                    'upvoted_answers': askbot_settings.WORDS_UPVOTED_ANSWERS
+                    'upvoted_answers': upvoted_answers_phrase
                 }
                 raise django_exceptions.PermissionDenied(msg)
 
