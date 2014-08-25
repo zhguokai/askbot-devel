@@ -1025,7 +1025,7 @@ def user_assert_can_delete_question(self, question = None):
                 if answer_count > 1:
                     upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWERS
                 else:
-                    upvated_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWER
+                    upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWER
 
                 msg = ungettext(
                     'Sorry, cannot %(delete_your_question)s since it '
