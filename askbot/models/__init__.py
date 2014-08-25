@@ -863,6 +863,10 @@ def user_assert_can_edit_comment(self, comment = None):
             else:
                 return
 
+    if not (self.is_blocked() or self.is_suspended()):
+        if self.reputation >= askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS:
+            return
+
     error_message = _(
         'Sorry, but only post owners or moderators can edit comments'
     )
