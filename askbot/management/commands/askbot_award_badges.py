@@ -32,5 +32,6 @@ class Command(NoArgsCommand):
                             context_object=vote.voted_post,
                             timestamp=now
                         )
+                awarded_count += int(awarded)
 
         print 'Awarded %d badges' % awarded_count
