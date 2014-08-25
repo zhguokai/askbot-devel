@@ -3,8 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class BaseQuerySetManager(models.Manager):
-    """a base class that allows chainable qustom filters
-    on the query sets
+    """Base class for chainable custom filters on the query sets.
 
     pattern from http://djangosnippets.org/snippets/562/
 
