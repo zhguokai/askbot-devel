@@ -252,6 +252,7 @@ class CivicDuty(Badge):
             return False
         if actor.votes.count() >= askbot_settings.CIVIC_DUTY_BADGE_MIN_VOTES:
             return self.award(actor, obj, timestamp)
+        return False
 
 class SelfLearner(Badge):
     def __init__(self):
