@@ -274,16 +274,16 @@ def ask(request):#view used to ask a new question
 
             else:
                 request.session.flush()
-                session_key = request.session.session_key
+                session_key=request.session.session_key
                 models.AnonymousQuestion.objects.create(
-                    session_key = session_key,
-                    title       = title,
-                    tagnames = tagnames,
-                    wiki = wiki,
-                    is_anonymous = ask_anonymously,
-                    text = text,
-                    added_at = timestamp,
-                    ip_addr = request.META.get('REMOTE_ADDR'),
+                    session_key=session_key,
+                    title=title,
+                    tagnames=tagnames,
+                    wiki=wiki,
+                    is_anonymous=ask_anonymously,
+                    text=text,
+                    added_at=timestamp,
+                    ip_addr=request.META.get('REMOTE_ADDR'),
                 )
                 return HttpResponseRedirect(url_utils.get_login_url())
 
@@ -439,10 +439,11 @@ def edit_question(request, id):
                 revision_form = forms.RevisionForm(question, revision)
                 if form.is_valid():
                     if form.has_changed():
-                        if form.cleaned_data['reveal_identity']:
-                            question.thread.remove_author_anonymity()
 
-                        is_anon_edit = form.cleaned_data['stay_anonymous']
+                        if form.can_edit_anonymously() and form.cleaned_data['reveal_identity']:
+                            question.thread.remove_author_anonymity()
+                            question.is_anonymous = False
+
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
                         post_privately = form.cleaned_data['post_privately']
                         suppress_email = form.cleaned_data['suppress_email']
@@ -453,11 +454,11 @@ def edit_question(request, id):
                             question=question,
                             title=form.cleaned_data['title'],
                             body_text=form.cleaned_data['text'],
-                            revision_comment = form.cleaned_data['summary'],
-                            tags = form.cleaned_data['tags'],
-                            wiki = is_wiki,
-                            edit_anonymously = is_anon_edit,
-                            is_private = post_privately,
+                            revision_comment=form.cleaned_data['summary'],
+                            tags=form.cleaned_data['tags'],
+                            wiki=is_wiki,
+                            edit_anonymously=form.cleaned_data['edit_anonymously'],
+                            is_private=post_privately,
                             suppress_email=suppress_email,
                             ip_addr=request.META.get('REMOTE_ADDR')
                         )

@@ -449,7 +449,7 @@ class GroupQuerySet(models.query.QuerySet):
                         user=user
                     ).exclude(id=global_group.id)
         else:
-            return self.filter(user = user)
+            return self.filter(user=user)
 
     def get_by_name(self, group_name = None):
         from askbot.models.tag import clean_group_name#todo - delete this

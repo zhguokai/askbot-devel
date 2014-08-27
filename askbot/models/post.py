@@ -1835,7 +1835,10 @@ class Post(models.Model):
         self.last_edited_by = edited_by
         #self.html is denormalized in save()
         self.text = text
-        self.is_anonymous = edit_anonymously
+        if edit_anonymously:
+            self.is_anonymous = edit_anonymously
+        #else:
+        #pass - we remove anonymity via separate function call
 
         #wiki is an eternal trap whence there is no exit
         if self.wiki == False and wiki == True:
@@ -1857,6 +1860,7 @@ class Post(models.Model):
                 comment=comment,
                 by_email=by_email,
                 ip_addr=ip_addr,
+                is_anonymous=edit_anonymously
             )
 
         parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
@@ -1997,7 +2001,8 @@ class Post(models.Model):
                     text=None,
                     comment=None,
                     by_email=False,
-                    ip_addr=None
+                    ip_addr=None,
+                    is_anonymous=False
                 ):
         #todo: this may be identical to Question.add_revision
         if None in (author, revised_at, text):
@@ -2009,7 +2014,8 @@ class Post(models.Model):
             text=text,
             summary=comment,
             by_email=by_email,
-            ip_addr=ip_addr
+            ip_addr=ip_addr,
+            is_anonymous=is_anonymous
         )
 
     def _question__add_revision(
