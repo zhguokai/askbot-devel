@@ -473,11 +473,11 @@ class Value(object):
     def get_editor_value(self, language_code):
         try:
             setting = self.get_setting(language_code)
-            return setting.value
+            return self.to_python(setting.value)
         except SettingNotSet:
             if language_code == django_settings.LANGUAGE_CODE:
                 try:
-                    return find_setting(self.group.key, self.key).value
+                    return self.to_python(find_setting(self.group.key, self.key).value)
                 except SettingNotSet:
                     pass
 

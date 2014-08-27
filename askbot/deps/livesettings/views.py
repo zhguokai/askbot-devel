@@ -28,7 +28,6 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
         #editor = forms.customized_editor(settings)
 
         if request.method == 'POST':
-
             # Populate the form with user-submitted data
             data = request.POST.copy()
             form = forms.SettingsEditor(data, request.FILES, settings=settings)
