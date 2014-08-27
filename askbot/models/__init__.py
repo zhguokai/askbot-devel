@@ -863,6 +863,10 @@ def user_assert_can_edit_comment(self, comment = None):
             else:
                 return
 
+    if not (self.is_blocked() or self.is_suspended()):
+        if self.reputation >= askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS:
+            return
+
     error_message = _(
         'Sorry, but only post owners or moderators can edit comments'
     )
@@ -1018,16 +1022,20 @@ def user_assert_can_delete_question(self, question = None):
             if self.is_administrator() or self.is_moderator():
                 return
             else:
+                if answer_count > 1:
+                    upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWERS
+                else:
+                    upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWER
+
                 msg = ungettext(
                     'Sorry, cannot %(delete_your_question)s since it '
-                    'has an %(upvoted_answer)s posted by someone else',
+                    'has an %(upvoted_answers)s posted by someone else',
                     'Sorry, cannot %(delete_your_question)s since it '
                     'has some %(upvoted_answers)s posted by other users',
                     answer_count
                 ) % {
                     'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION,
-                    'upvoted_answer': askbot_settings.WORDS_UPVOTED_ANSWER,
-                    'upvoted_answers': askbot_settings.WORDS_UPVOTED_ANSWERS
+                    'upvoted_answers': upvoted_answers_phrase
                 }
                 raise django_exceptions.PermissionDenied(msg)
 
@@ -1580,7 +1588,8 @@ def user_delete_question(
     question.thread.save()
 
     for tag in list(question.thread.tags.all()):
-        if tag.used_count == 1:
+        if tag.used_count <= 1:
+            tag.used_count = 0
             tag.deleted = True
             tag.deleted_by = self
             tag.deleted_at = timestamp
@@ -1612,7 +1621,9 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
 
     #delete questions
     questions = Post.objects.get_questions().filter(author=author)
-    count += questions.update(deleted_at=timestamp, deleted_by=self, deleted=True)
+    count += questions.count()
+    for question in questions:
+        self.delete_question(question=question, timestamp=timestamp)
 
     threads = Thread.objects.filter(last_activity_by=author)
     for thread in threads:
@@ -1630,6 +1641,14 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
     comments = Post.objects.get_comments().filter(author=author)
     count += comments.count()
     comments.delete()
+
+    #delete all unused tags created by this user
+    #tags = author.created_tags.all()
+    #tag_ids = list()
+    #for tag in tags:
+    #    if tag.used_count == 0:
+    #        tag_ids.append(tag.id)
+    #Tag.objects.filter(id__in=tag_ids).delete()
 
     return count
 
@@ -3727,6 +3746,7 @@ def greet_new_user(user, **kwargs):
         template_name = 'email/welcome_lamson_off.html'
 
     data = {
+        'recipient_user': user,
         'site_name': askbot_settings.APP_SHORT_NAME,
         'site_url': site_url(reverse('questions')),
         'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,

@@ -145,16 +145,24 @@ def tag_strings_match(tag_string, mandatory_tag):
 
 
 
-COUNTRY_CHOICES = (('unknown', _('select country')),) + countries.COUNTRIES
-
-
 class CountryField(forms.ChoiceField):
     """this is better placed into the django_coutries app"""
 
     def __init__(self, *args, **kwargs):
         """sets label and the country choices
         """
-        kwargs['choices'] = kwargs.pop('choices', COUNTRY_CHOICES)
+        try:
+            country_choices = countries.COUNTRIES
+        except AttributeError:
+            from django_countries import data
+            country_choices = list()
+            for key, name in data.COUNTRIES.items():
+                country_choices.append((key, name))
+
+        country_choices = sorted(country_choices, cmp=lambda a,b: cmp(a[1], b[1]))
+
+        country_choices = (('unknown', _('select country')),) + tuple(country_choices)
+        kwargs['choices'] = kwargs.pop('choices', country_choices)
         kwargs['label'] = kwargs.pop('label', _('Country'))
         super(CountryField, self).__init__(*args, **kwargs)
 
@@ -1730,8 +1738,13 @@ class GetUserItemsForm(forms.Form):
     user_id = forms.IntegerField()
 
 class NewCommentForm(forms.Form):
-    comment = forms.CharField()
+    comment = forms.CharField(max)
     post_id = forms.IntegerField()
+    def __init__(self, *args, **kwargs):
+        super(NewCommentForm, self).__init__(*args, **kwargs)
+        self.fields['comment'] = forms.CharField(
+                                    max_length=askbot_settings.MAX_COMMENT_LENGTH
+                                )
 
 class EditCommentForm(forms.Form):
     comment_id = forms.IntegerField()
