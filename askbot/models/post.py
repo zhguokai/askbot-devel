@@ -864,7 +864,7 @@ class Post(models.Model):
         is_multilingual = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
         if is_multilingual:
             request_language = get_language()
-            activate_language(self.thread.language_code)
+            activate_language(self.language_code)
 
         if self.is_answer():
             if not question_post:
