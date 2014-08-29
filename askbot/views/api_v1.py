@@ -27,14 +27,16 @@ def get_user_data(user):
 
 def get_question_data(thread):
     """returns data dictionary for a given thread"""
+    question_post = thread._question_post()
     datum = {
         'added_at': thread.added_at.strftime('%s'),
-        'id': thread._question_post().id,
+        'id': question_post.id,
         'answer_count': thread.answer_count,
         'view_count': thread.view_count,
         'score': thread.score,
         'last_activity_at': thread.last_activity_at.strftime('%s'),
         'title': thread.title,
+        'summary': question_post.summary,
         'tags': thread.tagnames.strip().split(),
         'url': site_url(thread.get_absolute_url()),
     }

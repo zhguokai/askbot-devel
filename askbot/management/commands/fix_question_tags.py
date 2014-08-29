@@ -27,7 +27,7 @@ def get_valid_tag_name(tag):
     first_char_regex = re.compile('^%s+' % const.TAG_FORBIDDEN_FIRST_CHARS)
     return first_char_regex.sub('', name)
 
-class Command(Command):
+class Command(NoArgsCommand):
     def handle_noargs(self, *args, **options):
         signal_data = signals.pop_all_db_signal_receivers()
         languages = models.Tag.objects.values_list('language_code').distinct()

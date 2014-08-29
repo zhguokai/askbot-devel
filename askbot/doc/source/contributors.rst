@@ -60,6 +60,7 @@ Programming, bug fixes and documentation
 * `Egil Moeller <https://github.com/redhog>`_
 * `Jerry Zhenlei Cai <https://github.com/jerryzhenleicai>`_
 * `Dmitry <https://github.com/dmzio>`_
+* `Ruslan Keba <https://github.com/rukeba>`_
 
 Translations
 ------------

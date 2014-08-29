@@ -788,6 +788,41 @@ class Post(models.Model):
         groups = (Group.objects.get_global_group(),)
         self.add_to_groups(groups)
 
+    def merge_post(self, post):
+        """merge with other post"""
+        #take latest revision of current post R1
+        rev = self.get_latest_revision()
+        orig_text = rev.text
+        for rev in post.revisions.all().order_by('revision'):
+            #for each revision of other post Ri
+            #append content of Ri to R1 and use author 
+            new_text = orig_text + '\n\n' + rev.text
+            author = rev.author
+            self.apply_edit(
+                edited_by=rev.author,
+                text=new_text, 
+                comment=_('merged revision'),
+                by_email=False,
+                edit_anonymously=rev.is_anonymous,
+                suppress_email=True,
+                ip_addr=rev.ip_addr
+            )
+        if post.is_question() or post.is_answer():
+            comments = Post.objects.get_comments().filter(parent=post)
+            comments.update(parent=self)
+
+        #todo: implement redirects
+        if post.is_question():
+            self.old_question_id = post.id
+        elif post.is_answer():
+            self.old_answer_id = post.id
+        elif post.is_comment():
+            self.old_comment_id = post.id
+
+        self.save()
+        post.delete()
+
+
     def is_private(self):
         """true, if post belongs to the global group"""
         if askbot_settings.GROUPS_ENABLED:
@@ -1454,9 +1489,22 @@ class Post(models.Model):
                                         )
         return result
 
+    def cache_latest_revision(self, rev):
+        setattr(self, '_last_rev_cache', rev)
 
     def get_latest_revision(self):
-        return self.revisions.order_by('-revision')[0]
+        if hasattr(self, '_last_rev_cache'):
+            return self._last_rev_cache
+        rev = self.revisions.order_by('-revision')[0]
+        self.cache_latest_revision(rev)
+        return rev
+
+    def get_earliest_revision(self):
+        if hasattr(self, '_first_rev_cache'):
+            return self._first_rev_cache
+        rev = self.revisions.order_by('revision')[0]
+        setattr(self, '_first_rev_cache', rev)
+        return rev
 
     def get_latest_revision_number(self):
         try:
@@ -1787,7 +1835,10 @@ class Post(models.Model):
         self.last_edited_by = edited_by
         #self.html is denormalized in save()
         self.text = text
-        self.is_anonymous = edit_anonymously
+        if edit_anonymously:
+            self.is_anonymous = edit_anonymously
+        #else:
+        #pass - we remove anonymity via separate function call
 
         #wiki is an eternal trap whence there is no exit
         if self.wiki == False and wiki == True:
@@ -1809,6 +1860,7 @@ class Post(models.Model):
                 comment=comment,
                 by_email=by_email,
                 ip_addr=ip_addr,
+                is_anonymous=edit_anonymously
             )
 
         parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
@@ -1834,6 +1886,7 @@ class Post(models.Model):
                         comment=None,
                         wiki=False,
                         is_private=False,
+                        edit_anonymously=False,
                         by_email=False,
                         suppress_email=False,
                         ip_addr=None,
@@ -1948,7 +2001,8 @@ class Post(models.Model):
                     text=None,
                     comment=None,
                     by_email=False,
-                    ip_addr=None
+                    ip_addr=None,
+                    is_anonymous=False
                 ):
         #todo: this may be identical to Question.add_revision
         if None in (author, revised_at, text):
@@ -1960,7 +2014,8 @@ class Post(models.Model):
             text=text,
             summary=comment,
             by_email=by_email,
-            ip_addr=ip_addr
+            ip_addr=ip_addr,
+            is_anonymous=is_anonymous
         )
 
     def _question__add_revision(
@@ -2187,6 +2242,8 @@ class PostRevisionManager(models.Manager):
         if needs_moderation:
             revision.place_on_moderation_queue()
 
+        revision.post.cache_latest_revision(revision)
+
         return revision
 
 class PostRevision(models.Model):
@@ -2337,7 +2394,8 @@ class PostRevision(models.Model):
 
         if is_multilingual:
             request_language = get_language()
-            activate_language(self.post.thread.language_code)
+            if self.post.thread:
+                activate_language(self.post.thread.language_code)
 
         if self.post.is_question():
             url = reverse('question_revisions', args = (self.post.id,))

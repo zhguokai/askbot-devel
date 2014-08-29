@@ -731,11 +731,32 @@ class Thread(models.Model):
             return answers[0].id
         return None
 
-    def get_latest_post(self):
-        """returns latest non-deleted post"""
-        if askbot_settings.GROUPS_ENABLED:
-            raise NotImplementedError()
-        return self.posts.filter(deleted=False).order_by('-added_at')[0]
+    def get_latest_revision(self, user=None):
+        #todo: add denormalized field to Thread model
+        from askbot.models import Post, PostRevision
+        posts_filter = {
+            'thread': self,
+            'post_type__in': ('question', 'answer'),
+            'deleted': False
+        }
+
+        if user and askbot_settings.GROUPS_ENABLED:
+            #get post with groups shared with having at least 
+            #one of the user groups
+            #of those posts return the latest revision
+            posts_filter['groups__in'] = user.get_groups()
+
+        posts = Post.objects.filter(**posts_filter)
+        post_ids = list(posts.values_list('id', flat=True))
+
+        revs = PostRevision.objects.filter(
+                                post__id__in=post_ids,
+                                revision__gt=0
+                            )
+        try:
+            return revs.order_by('-id')[0]
+        except IndexError:
+            return None
 
     def get_sharing_info(self, visitor=None):
         """returns a dictionary with abbreviated thread sharing info:
@@ -980,11 +1001,12 @@ class Thread(models.Model):
         """true if ``user`` is also a thread moderator"""
         if user.is_anonymous():
             return False
-        elif askbot_settings.GROUPS_ENABLED:
-            if user.is_administrator_or_moderator():
+        if user.is_administrator_or_moderator():
+            if askbot_settings.GROUPS_ENABLED:
                 user_groups = user.get_groups(private=True)
                 thread_groups = self.get_groups_shared_with()
                 return bool(set(user_groups) & set(thread_groups))
+            return True
         return False
 
     def requires_response_moderation(self, author):
@@ -1034,6 +1056,9 @@ class Thread(models.Model):
 
     def invalidate_cached_thread_content_fragment(self):
         cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
+
+    def get_summary_cache_key(self, lang, group_id=0):
+        return self.SUMMARY_CACHE_KEY_TPL % (self.id, lang, group_id)
 
     def get_post_data_cache_key(self, sort_method = None):
         return 'thread-data-%s-%s' % (self.id, sort_method)
@@ -1208,6 +1233,13 @@ class Thread(models.Model):
         post_to_author = dict()
         question_post = None
         for post in thread_posts:
+
+            #precache some revision data
+            first_rev = post.get_earliest_revision()
+            last_rev = post.get_latest_revision()
+            first_rev.post = post
+            last_rev.post = post
+
             #pass through only deleted question posts
             if post.deleted and post.post_type != 'question':
                 continue
@@ -1251,7 +1283,7 @@ class Thread(models.Model):
         #put published answers first
         #todo: there may be > 1 enquirers
         published_answer_ids = list()
-        if self.is_moderated() and user != question_post.author:
+        if question_post and question_post.is_approved() == False and user != question_post.author:
             #if moderated - then author is guaranteed to be the
             #limited visibility enquirer
             published_answer_ids = self.posts.get_answers(
@@ -1684,7 +1716,7 @@ class Thread(models.Model):
 
         return last_updated_at, last_updated_by
 
-    def get_summary_html(self, search_state=None, visitor = None):
+    def get_summary_html(self, search_state=None, visitor=None):
         html = self.get_cached_summary_html(visitor)
         if not html:
             html = self.update_summary_html(visitor)

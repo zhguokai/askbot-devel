@@ -113,7 +113,9 @@ settings.register(
         'SIGNIN_CUSTOM_OPENID_ENDPOINT',
         default='http://example.com',
         description=_('Custom OpenID endpoint'),
-        help_text=_('Important: with the "username" mode must have a %%(username)s placeholder e.g. http://example.com/%%(username)s/'),
+        help_text=_('Important: with the "username" mode there must be a '
+                    '%%(username)s placeholder e.g. '
+                    'http://example.com/%%(username)s/'),
     )
 )
 
@@ -140,7 +142,7 @@ providers = (
     'LaunchPad',
 )
 
-DISABLED_BY_DEFAULT = ('LaunchPad',)
+DISABLED_BY_DEFAULT = ('LaunchPad', 'Mozilla Persona')
 
 NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'Facebook', 'LinkedIn', 'identi.ca',)
 

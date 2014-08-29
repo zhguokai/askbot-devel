@@ -1621,6 +1621,11 @@ ul#related-tags li {
     }
 }
 
+.mod-queue-info {
+    margin-top: 12px;
+    margin-bottom: 0;
+}
+
 .moderate-tags-page {
     button {
         line-height: 18px;
@@ -2404,6 +2409,9 @@ ul#related-tags li {
         }
         .question-close{
             background: url(../images/close.png) no-repeat center left;
+        }
+        .question-merge {
+            background: url(../images/merge.png) no-repeat;
         }
         .permant-link{
             background: url(../images/link.png) no-repeat 2px 1px;
@@ -4520,8 +4528,34 @@ textarea.tipped-input {
 .modal-footer {
     text-align: left;
 }
-.modal p {
-    font-size: 14px;
+.modal {
+    h3 {
+        padding: 0;
+    }
+    p {
+        font-size: 14px;
+    }
+}
+.modal.merge-questions {
+    .modal-body {
+        label {
+            padding-right: 8px;
+        }
+        .body,
+        .tags {
+            clear: both;
+        }
+        h3 {
+            line-height: 22px;
+            margin-top: 12px;
+        }
+        .tags {
+            margin-top: 12px;
+        }
+        .body {
+            margin-top: 16px;
+        }
+    }
 }
 .modal-body > textarea {
     width: 515px;
@@ -4637,6 +4671,9 @@ table.settings {
 }
 td.setting-label {
     width: 30%;
+    span.lang {
+        color: rgb(273, 71, 71);
+    }
 }
 td.setting-input {
     padding-left: 10px;
