@@ -2204,13 +2204,15 @@ class PostRevisionManager(models.Manager):
             kwargs['summary'] = ''
 
         author = kwargs['author']
+        post = kwargs['post']
 
         moderate_email = False
         if kwargs.get('email'):
             from askbot.models.reply_by_email import emailed_content_needs_moderation
             moderate_email = emailed_content_needs_moderation(kwargs['email'])
 
-        needs_moderation = author.needs_moderation() or moderate_email
+        is_content = post.is_question() or post.is_answer() or post.is_comment()
+        needs_moderation = is_content and (author.needs_moderation() or moderate_email)
 
         #0 revision is not shown to the users
         if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' and needs_moderation:
@@ -2223,7 +2225,6 @@ class PostRevisionManager(models.Manager):
             })
             revision = super(PostRevisionManager, self).create(*args, **kwargs)
         else:
-            post = kwargs['post']
             kwargs['revision'] = post.get_latest_revision_number() + 1
             revision = super(PostRevisionManager, self).create(*args, **kwargs)
 
