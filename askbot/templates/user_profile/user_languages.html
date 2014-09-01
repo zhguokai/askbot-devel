@@ -9,14 +9,12 @@
         method="post" 
         action="{% url user_select_languages view_user.id, view_user.username|slugify %}"
     >{% csrf_token %}
-        <select multiple name="languages">
-        {% for lang in settings.LANGUAGES_DICT %}
-            <option 
-                value="{{ lang }}"
-                {% if lang in user_languages %}selected="selected"{% endif %}
-            >{{ settings.LANGUAGES_DICT[lang] }}</option>
-        {% endfor %}
-        </select><br/>
+        <div class="user-lang-selector">
+            <p>{% trans %}You can view questions made in other languages.  By selecting below, you will receive posts that are written in those languages.{% endtrans %}</p>
+            <p>{% trans %}I would like to see posts made in:{% endtrans %}</p>
+            {{ languages_form.languages }}
+            <label for="primary_language_id">{% trans %}My primary language is:{% endtrans %}</label>{{ languages_form.primary_language }}
+        </div>
         <input type="submit" class="select-language" value="{% trans %}Save languages{% endtrans %}" />
     </form>
 {% endblock %}

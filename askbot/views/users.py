@@ -998,28 +998,42 @@ def user_select_languages(request, id=None, slug=None):
 
     user = get_object_or_404(models.User, id=id)
 
+
     if not askbot.is_multilingual() or \
         not(request.user.id == user.id or request.user.is_administrator()):
         raise django_exceptions.PermissionDenied
 
     if request.method == 'POST':
         #todo: add form to clean languages
-        languages = request.POST.getlist('languages')
-        user.languages = ' '.join(languages)
-        user.save()
+        form = forms.LanguagePrefsForm(request.POST)
+        if form.is_valid():
+            languages = form.cleaned_data['languages']
+            primary_language = form.cleaned_data['primary_language']
+            if primary_language in languages:
+                languages.remove(primary_language)
+            languages.insert(0, primary_language)
 
-        redirect_url = reverse(
-            'user_select_languages',
-            kwargs={
-                'id': user.id,
-                'slug': slugify(user.username)
-            }
-        )
+            user.languages = ' '.join(languages)
+            user.save()
+
+            redirect_url = reverse(
+                'user_select_languages',
+                kwargs={
+                    'id': user.id,
+                    'slug': slugify(user.username)
+                }
+            )
         return HttpResponseRedirect(redirect_url)
     else:
+        languages = user.languages.split()
+        initial={
+            'languages': languages,
+            'primary_language': languages[0]
+        }
+        form = forms.LanguagePrefsForm(initial=initial)
         data = {
             'view_user': user,
-            'user_languages': user.languages.split(),
+            'languages_form': form,
             'tab_name': 'langs',
             'page_class': 'user-profile-page',
         }

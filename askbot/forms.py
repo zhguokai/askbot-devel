@@ -253,7 +253,6 @@ class LanguageField(forms.ChoiceField):
         kwargs['choices'] = django_settings.LANGUAGES
         super(LanguageField, self).__init__(*args, **kwargs)
 
-
 class SuppressEmailField(forms.BooleanField):
     def __init__(self):
         super(SuppressEmailField, self).__init__()
@@ -534,6 +533,16 @@ class SummaryField(forms.CharField):
         )
         self.max_length = 300
         self.help_text = _('enter a brief description of your revision')
+
+class LanguagePrefsForm(forms.Form):
+    languages = forms.MultipleChoiceField(
+                        widget=forms.CheckboxSelectMultiple,
+                        choices=django_settings.LANGUAGES,
+                        required=False
+                    )
+    primary_language = forms.ChoiceField(
+                        choices=django_settings.LANGUAGES
+                    )
 
 class EditorForm(forms.Form):
     """form with one field - `editor`

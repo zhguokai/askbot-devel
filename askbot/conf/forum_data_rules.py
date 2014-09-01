@@ -68,13 +68,13 @@ def forum_default_space_callback(old_value, new_value):
         bad_list = ', '.join(bad_values)
         if len(bad_values) > 1:
             raise Exception(_(
-                    'Spaces %s are invalid: must not be one of %s '
+                    'Spaces %(spaces)s are invalid: must not be one of %(forbidden)s '
                     'and must be single words of letters and numbers only'
                 ) % (bad_list, forbidden_list)
             )
         else:
             raise Exception(_(
-                    'Space %s is invalid: must not be one of %s '
+                    'Space %(spaces)s is invalid: must not be one of %(forbidden)s '
                     'and must be a single word of letters and numbers only'
                 ) % (bad_list, forbidden_list)
             )
@@ -101,13 +101,13 @@ def forum_default_feed_callback(old_value, new_value):
         bad_list = ', '.join(bad_values)
         if len(bad_values) > 1:
             raise Exception(_(
-                    'Feeds %s are invalid: must not be one of %s '
+                    'Feeds %(feeds)s are invalid: must not be one of %(forbidden)s '
                     'and must be single words of letters and numbers only'
                 ) % (bad_list, forbidden_list)
             )
         else:
             raise Exception(_(
-                    'Feeds %s is invalid: must not be one of %s '
+                    'Feeds %(feed)s is invalid: must not be one of %(forbidden)s '
                     'and must be a single word of letters and numbers only'
                 ) % (bad_list, forbidden_list)
             )
