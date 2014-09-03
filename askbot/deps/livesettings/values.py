@@ -471,17 +471,22 @@ class Value(object):
         return ''
 
     def get_editor_value(self, language_code):
+        setting = None
         try:
             setting = self.get_setting(language_code)
-            return self.to_python(setting.value)
         except SettingNotSet:
             if language_code == django_settings.LANGUAGE_CODE:
                 try:
-                    return self.to_python(find_setting(self.group.key, self.key).value)
+                    setting = find_setting(self.group.key, self.key)
                 except SettingNotSet:
                     pass
 
-            return self.get_default_editor_value(language_code)
+        if setting:
+            raw_value = setting.value
+        else:
+            raw_value = self.get_default_editor_value(language_code)
+
+        return self.to_python(raw_value)
             
 
     # Subclasses should override the following methods where applicable
