@@ -363,6 +363,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 
             var startUploadHandler = function(){
                 localUploadFileName = $(this).val();//this is a local var
+                // Fix for fakepath issue - just remove it if it's there!
+                localUploadFileName = localUploadFileName.replace("C:\\fakepath\\", "");
                 /* 
                  * startUploadHandler is passed into the ajaxFileUpload
                  * in order to re-install the onchange handler
