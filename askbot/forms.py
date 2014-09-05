@@ -534,6 +534,11 @@ class SummaryField(forms.CharField):
         self.max_length = 300
         self.help_text = _('enter a brief description of your revision')
 
+
+class LanguageForm(forms.Form):
+    language = LanguageField()
+
+
 class LanguagePrefsForm(forms.Form):
     languages = forms.MultipleChoiceField(
                         widget=forms.CheckboxSelectMultiple,
@@ -543,6 +548,12 @@ class LanguagePrefsForm(forms.Form):
     primary_language = forms.ChoiceField(
                         choices=django_settings.LANGUAGES
                     )
+
+
+class TranslateUrlForm(forms.Form):
+    language = LanguageField()
+    url = forms.CharField(max_length=2048)
+
 
 class EditorForm(forms.Form):
     """form with one field - `editor`

@@ -2486,9 +2486,23 @@ def user_get_profile_url(self, profile_section=None):
 def user_get_absolute_url(self):
     return self.get_profile_url()
 
+def user_set_languages(self, langs):
+    self.languages = ' '.join(langs)
+
+def user_set_primary_language(self, lang):
+    """primary language is the first in the list of languages"""
+    langs = self.get_languages()
+    if lang in langs:
+        langs.remove(lang)
+    langs.insert(0, lang)
+    self.set_languages(langs)
+
+def user_get_languages(self):
+    return self.languages.split()
+
 def user_get_primary_language(self):
     if askbot.is_multilingual():
-        return self.languages.split()[0]
+        return self.get_languages()[0]
     else:
         return django_settings.LANGUAGE_CODE
 
@@ -3194,7 +3208,10 @@ User.add_to_class('has_badge', user_has_badge)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)
 User.add_to_class('get_badge_summary', user_get_badge_summary)
+User.add_to_class('get_languages', user_get_languages)
+User.add_to_class('set_languages', user_set_languages)
 User.add_to_class('get_primary_language', user_get_primary_language)
+User.add_to_class('set_primary_language', user_set_primary_language)
 User.add_to_class('get_status_display', user_get_status_display)
 User.add_to_class('get_old_vote_for_post', user_get_old_vote_for_post)
 User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)

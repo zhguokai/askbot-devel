@@ -34,6 +34,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.translation import string_concat
 from askbot.utils.slug import slugify
+import askbot
 from askbot import models
 from askbot import forms
 from askbot import conf
@@ -1724,3 +1725,32 @@ def merge_questions(request):
         from_question = get_object_or_404(models.Post, id=from_form.cleaned_data['post_id'])
         to_question = get_object_or_404(models.Post, id=to_form.cleaned_data['post_id'])
         request.user.merge_duplicate_questions(from_question, to_question)
+
+@decorators.ajax_only
+@decorators.get_only
+def translate_url(request):
+    form = forms.TranslateUrlForm(request.GET)
+    match = None
+    if form.is_valid():
+        from django.core.urlresolvers import resolve, Resolver404, NoReverseMatch
+        try:
+            match = resolve(form.cleaned_data['url'])
+        except Resolver404:
+            pass
+
+    url = None
+    if match:
+        lang = form.cleaned_data['language']
+        site_lang = translation.get_language()
+        translation.activate(lang)
+
+        if match.url_name == 'questions' and None in match.kwargs.values():
+            url = models.get_feed_url(match.kwargs['feed'])
+        else:
+            try:
+                url = reverse(match.url_name, args=match.args, kwargs=match.kwargs)
+            except:
+                pass
+        translation.activate(site_lang)
+
+    return {'url': url}

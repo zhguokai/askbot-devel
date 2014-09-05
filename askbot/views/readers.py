@@ -496,8 +496,9 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     #redirect if slug in the url is wrong
     if request.path.split('/')[-2] != question_post.slug:
         logging.debug('no slug match!')
+        lang = translation.get_language()
         question_url = '?'.join((
-                            question_post.get_absolute_url(),
+                            question_post.get_absolute_url(language=lang),
                             urllib.urlencode(request.GET)
                         ))
         return HttpResponseRedirect(question_url)

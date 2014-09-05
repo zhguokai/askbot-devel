@@ -302,7 +302,7 @@ class ThreadManager(BaseQuerySetManager):
             primary_filter['language_code'] = get_language()
         elif lang_mode == 'user-lang':
             if request_user.is_authenticated():
-                language_codes = request_user.languages.split()
+                language_codes = request_user.get_languages()
             else:
                 language_codes = dict(django_settings.LANGUAGES).keys()
             primary_filter['language_code__in'] = language_codes

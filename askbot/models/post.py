@@ -849,7 +849,7 @@ class Post(models.Model):
     def get_absolute_url(self,
             feed=None, no_slug = False,
             question_post=None, thread=None,
-            as_full_url=False
+            as_full_url=False, language=None
         ):
         from askbot.utils.slug import slugify
         #todo: the url generation function is pretty bad -
@@ -860,7 +860,7 @@ class Post(models.Model):
         is_multilingual = askbot.is_multilingual()
         if is_multilingual:
             request_language = get_language()
-            activate_language(self.thread.language_code)
+            activate_language(language or self.thread.language_code)
 
         if feed is None:
             feed = self.thread.get_default_feed().name
@@ -1500,7 +1500,7 @@ class Post(models.Model):
             language = self.thread.language_code
             filtered_subscribers = list()
             for subscriber in subscribers:
-                subscriber_languages = subscriber.languages.split()
+                subscriber_languages = subscriber.get_languages()
                 if language in subscriber_languages:
                     filtered_subscribers.append(subscriber)
             return filtered_subscribers
