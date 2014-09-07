@@ -1202,6 +1202,7 @@ class Thread(models.Model):
                                                 post__id__in=post_ids,
                                                 revision=0
                                             )
+
             #get ids of posts that we need to patch with suggested data
             if len(suggested_revs):
                 #find posts that we need to patch
@@ -1218,7 +1219,7 @@ class Thread(models.Model):
                             found.update(find_posts(comments, need_ids))
                     return found
 
-                suggested_post_ids = set([rev.post_id for rev in suggested_revs])
+                suggested_post_ids = [rev.post_id for rev in suggested_revs]
 
                 question = post_data[0]
                 answers = post_data[1]
@@ -1237,7 +1238,10 @@ class Thread(models.Model):
                     rev = rev_map[post_id]
                     #patching work
                     post.text = rev.text
-                    post.html = post.parse_post_text()['html']
+                    parse_data = post.parse_post_text()
+                    post.html = parse_data['html']
+                    post.summary = post.get_snippet()
+
                     post_to_author[post_id] = rev.author_id
                     post.set_runtime_needs_moderation()
 
@@ -1264,6 +1268,7 @@ class Thread(models.Model):
                         rev = rev_map[post.id]
                         post.text = rev.text
                         post.html = post.parse_post_text()['html']
+                        post.summary = post.get_snippet()
                         post_to_author[post.id] = rev.author_id
                         if post.is_comment():
                             parents = find_posts(all_posts, set([post.parent_id]))

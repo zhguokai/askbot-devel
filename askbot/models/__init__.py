@@ -1828,7 +1828,7 @@ def user_edit_comment(
     todo: add timestamp
     """
     self.assert_can_edit_comment(comment_post)
-    comment_post.apply_edit(
+    revision = comment_post.apply_edit(
                         text=body_text,
                         edited_at=timestamp,
                         edited_by=self,
@@ -1837,6 +1837,7 @@ def user_edit_comment(
                         ip_addr=ip_addr,
                     )
     comment_post.thread.invalidate_cached_data()
+    return revision
 
 def user_edit_post(self,
                 post=None,
@@ -1854,7 +1855,7 @@ def user_edit_post(self,
     because we cannot bypass the permissions checks set within
     """
     if post.is_comment():
-        self.edit_comment(
+        return self.edit_comment(
                 comment_post=post,
                 body_text=body_text,
                 by_email=by_email,
@@ -1862,7 +1863,7 @@ def user_edit_post(self,
                 ip_addr=ip_addr
             )
     elif post.is_answer():
-        self.edit_answer(
+        return self.edit_answer(
             answer=post,
             body_text=body_text,
             timestamp=timestamp,
@@ -1872,7 +1873,7 @@ def user_edit_post(self,
             ip_addr=ip_addr
         )
     elif post.is_question():
-        self.edit_question(
+        return self.edit_question(
             question=post,
             body_text=body_text,
             timestamp=timestamp,
@@ -1883,7 +1884,7 @@ def user_edit_post(self,
             ip_addr=ip_addr
         )
     elif post.is_tag_wiki():
-        post.apply_edit(
+        return post.apply_edit(
             edited_at=timestamp,
             edited_by=self,
             text=body_text,
@@ -1916,7 +1917,7 @@ def user_edit_question(
     if force == False:
         self.assert_can_edit_question(question)
 
-    question.apply_edit(
+    revision = question.apply_edit(
         edited_at=timestamp,
         edited_by=self,
         title=title,
@@ -1940,6 +1941,7 @@ def user_edit_question(
         context_object = question,
         timestamp = timestamp
     )
+    return revision
 
 @auto_now_timestamp
 def user_edit_answer(
@@ -1958,7 +1960,7 @@ def user_edit_answer(
     if force == False:
         self.assert_can_edit_answer(answer)
 
-    answer.apply_edit(
+    revision = answer.apply_edit(
         edited_at=timestamp,
         edited_by=self,
         text=body_text,
@@ -1977,6 +1979,7 @@ def user_edit_answer(
         context_object = answer,
         timestamp = timestamp
     )
+    return revision
 
 @auto_now_timestamp
 def user_create_post_reject_reason(
@@ -2014,7 +2017,7 @@ def user_edit_post_reject_reason(
 ):
     reason.title = title
     reason.save()
-    reason.details.apply_edit(
+    return reason.details.apply_edit(
         edited_by = self,
         edited_at = timestamp,
         text = details

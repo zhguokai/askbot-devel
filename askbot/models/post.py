@@ -510,7 +510,7 @@ class Post(models.Model):
             'html': post_html,
             'newly_mentioned_users': mentioned_authors,
             'removed_mentions': removed_mentions,
-            }
+        }
         return data
 
     #todo: when models are merged, it would be great to remove author parameter
@@ -1880,7 +1880,7 @@ class Post(models.Model):
             latest_rev.save()
         else:
             #otherwise we create a new revision
-            self.add_revision(
+            latest_rev = self.add_revision(
                 author=edited_by,
                 revised_at=edited_at,
                 text=text,
@@ -1889,19 +1889,22 @@ class Post(models.Model):
                 ip_addr=ip_addr,
             )
 
-        parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
+        if latest_rev.revision > 0:
+            parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
 
-        from askbot.models import signals
-        signals.post_updated.send(
-            post=self,
-            updated_by=edited_by,
-            newly_mentioned_users=parse_results['newly_mentioned_users'],
-            suppress_email=suppress_email,
-            timestamp=edited_at,
-            created=False,
-            diff=parse_results['diff'],
-            sender=self.__class__
-        )
+            from askbot.models import signals
+            signals.post_updated.send(
+                post=self,
+                updated_by=edited_by,
+                newly_mentioned_users=parse_results['newly_mentioned_users'],
+                suppress_email=suppress_email,
+                timestamp=edited_at,
+                created=False,
+                diff=parse_results['diff'],
+                sender=self.__class__
+            )
+
+        return latest_rev
 
 
     def _answer__apply_edit(
@@ -1925,7 +1928,7 @@ class Post(models.Model):
             else:
                 self.make_public()
 
-        self.__apply_edit(
+        revision = self.__apply_edit(
             edited_at=edited_at,
             edited_by=edited_by,
             text=text,
@@ -1944,6 +1947,7 @@ class Post(models.Model):
                         last_activity_at=edited_at,
                         last_activity_by=edited_by
                     )
+        return revision
 
     def _question__apply_edit(
                             self, 
@@ -1990,7 +1994,7 @@ class Post(models.Model):
             else:
                 self.thread.make_public(recursive=False)
 
-        self.__apply_edit(
+        revision = self.__apply_edit(
             edited_at=edited_at,
             edited_by=edited_by,
             text=text,
@@ -2007,6 +2011,7 @@ class Post(models.Model):
                         last_activity_at=edited_at,
                         last_activity_by=edited_by
                     )
+        return revision
 
     def apply_edit(self, *args, **kwargs):
         #todo: unify this, here we have unnecessary indirection
@@ -2233,6 +2238,7 @@ class PostRevisionManager(models.Manager):
             kwargs['summary'] = ''
 
         author = kwargs['author']
+        post = kwargs['post']
 
         moderate_email = False
         if kwargs.get('email'):
@@ -2250,9 +2256,16 @@ class PostRevisionManager(models.Manager):
                 'revision': 0,
                 'summary': kwargs['summary'] or _('Suggested edit')
             })
-            revision = super(PostRevisionManager, self).create(*args, **kwargs)
+
+            #see if we have earlier revision with number 0
+            try:
+                pending_revs = post.revisions.filter(revision=0)
+                assert(len(pending_revs) == 1)
+                pending_revs.update(**kwargs)
+                revision = pending_revs[0]
+            except AssertionError:
+                revision = super(PostRevisionManager, self).create(*args, **kwargs)
         else:
-            post = kwargs['post']
             kwargs['revision'] = post.get_latest_revision_number() + 1
             revision = super(PostRevisionManager, self).create(*args, **kwargs)
 
@@ -2373,14 +2386,23 @@ class PostRevision(models.Model):
 
         #Activity instance is the actual queue item
         from askbot.models import Activity
-        activity = Activity(
-                        user = self.author,
-                        content_object = self,
-                        activity_type = activity_type,
-                        question = self.get_origin_post()
-                    )
-        activity.save()
-        activity.add_recipients(self.post.get_moderators())
+        content_type = ContentType.objects.get_for_model(self)
+        #try
+        try:
+            activity = Activity.objects.get(
+                                        activity_type=activity_type,
+                                        object_id=self.id,
+                                        content_type=content_type
+                                    )
+        except Activity.DoesNotExist:
+            activity = Activity(
+                            user = self.author,
+                            content_object = self,
+                            activity_type = activity_type,
+                            question = self.get_origin_post()
+                        )
+            activity.save()
+            activity.add_recipients(self.post.get_moderators())
 
     def should_notify_author_about_publishing(self, was_approved = False):
         """True if author should get email about making own post"""
