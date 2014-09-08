@@ -2871,8 +2871,23 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
                 post.thread.answer_count += 1
                 post.thread.save()
 
+
+
         post.approved = True
-        post.save()
+        post.text = post_revision.text
+
+        post_is_new = (post.revisions.count() == 1)
+        parse_results = post.parse_and_save(author=post_revision.author)
+        signals.post_updated.send(
+            post=post,
+            updated_by=post_revision.author,
+            newly_mentioned_users=parse_results['newly_mentioned_users'],
+            #suppress_email=suppress_email,
+            timestamp=timestamp,
+            created=post_is_new,
+            diff=parse_results['diff'],
+            sender=post.__class__
+        )
 
         if post_revision.post.post_type == 'question':
             thread = post.thread
@@ -2883,8 +2898,10 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
 
         #send the signal of published revision
         signals.post_revision_published.send(
-            None, revision = post_revision, was_approved = True
-        )
+                                        None, 
+                                        revision=post_revision,
+                                        was_approved=True
+                                    )
 
 @auto_now_timestamp
 def flag_post(
@@ -3475,9 +3492,7 @@ def get_reply_to_addresses(user, post):
     return primary_addr, secondary_addr
 
 
-def notify_author_of_published_revision(
-    revision = None, was_approved = None, **kwargs
-):
+def notify_author_of_published_revision(revision=None, was_approved=False, **kwargs):
     """notifies author about approved post revision,
     assumes that we have the very first revision
     """
@@ -3512,12 +3527,6 @@ def record_post_update_activity(
 
     this handler will set notifications about the post
     """
-    if post.needs_moderation():
-        #do not give notifications yet
-        #todo: it is possible here to trigger
-        #moderation email alerts
-        return
-
     assert(timestamp != None)
     assert(updated_by != None)
     if newly_mentioned_users is None:

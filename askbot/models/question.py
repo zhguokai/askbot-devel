@@ -237,15 +237,16 @@ class ThreadManager(BaseQuerySetManager):
 
         #todo: this is handled in signal because models for posts
         #are too spread out
-        signals.post_updated.send(
-            post=question,
-            updated_by=author,
-            newly_mentioned_users=parse_results['newly_mentioned_users'],
-            timestamp=added_at,
-            created=True,
-            diff=parse_results['diff'],
-            sender=question.__class__
-        )
+        if revision.revision > 0:
+            signals.post_updated.send(
+                post=question,
+                updated_by=author,
+                newly_mentioned_users=parse_results['newly_mentioned_users'],
+                timestamp=added_at,
+                created=True,
+                diff=parse_results['diff'],
+                sender=question.__class__
+            )
 
         return thread
 

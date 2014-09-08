@@ -235,7 +235,7 @@ class PostManager(BaseQuerySetManager):
 
         parse_results = post.parse_and_save(author=author, is_private=is_private)
 
-        post.add_revision(
+        revision = post.add_revision(
             author=author,
             revised_at=added_at,
             text=text,
@@ -244,16 +244,17 @@ class PostManager(BaseQuerySetManager):
             ip_addr=ip_addr
         )
 
-        from askbot.models import signals
-        signals.post_updated.send(
-            post=post,
-            updated_by=author,
-            newly_mentioned_users=parse_results['newly_mentioned_users'],
-            timestamp=added_at,
-            created=True,
-            diff=parse_results['diff'],
-            sender=post.__class__
-        )
+        if revision.revision > 0:
+            from askbot.models import signals
+            signals.post_updated.send(
+                post=post,
+                updated_by=author,
+                newly_mentioned_users=parse_results['newly_mentioned_users'],
+                timestamp=added_at,
+                created=True,
+                diff=parse_results['diff'],
+                sender=post.__class__
+            )
 
 
         return post
@@ -2404,23 +2405,20 @@ class PostRevision(models.Model):
             activity.save()
             activity.add_recipients(self.post.get_moderators())
 
-    def should_notify_author_about_publishing(self, was_approved = False):
+    def should_notify_author_about_publishing(self, was_approved=False):
         """True if author should get email about making own post"""
-        if self.by_email:
-            schedule = askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
-            if schedule == const.NEVER:
-                return False
-            elif schedule == const.FOR_FIRST_REVISION:
-                return self.revision == 1
-            elif schedule == const.FOR_ANY_REVISION:
-                return True
-            else:
-                raise ValueError()
-        else:
-            #logic not implemented yet
-            #the ``was_approved`` argument will be used here
-            #schedule = askbot_settings.SELF_NOTIFY_WEB_POST_AUTHOR_WHEN
+        if was_approved and self.by_email == False:
             return False
+
+        schedule = askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
+        if schedule == const.NEVER:
+            return False
+        elif schedule == const.FOR_FIRST_REVISION:
+            return self.revision == 1
+        elif schedule == const.FOR_ANY_REVISION:
+            return True
+        else:
+            raise ValueError()
 
     def __unicode__(self):
         return u'%s - revision %s of %s' % (self.post.post_type, self.revision, self.title)
