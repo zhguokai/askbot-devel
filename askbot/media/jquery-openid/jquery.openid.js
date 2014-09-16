@@ -460,12 +460,6 @@ $.fn.authenticator = function() {
             );
         }
 
-        /*var googlePlusBtn = signin_page.find('input.google-plus');
-        if (googlePlusBtn.length) {
-            activateGooglePlusBtn(googlePlusBtn);
-        }*/
-
-
         setup_event_handlers(
             signin_page.find('input.oauth,input.oauth2'),
             start_simple_login

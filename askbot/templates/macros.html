@@ -57,7 +57,7 @@
         <img alt="{% trans %}anonymous user{% endtrans %}" src="{{ '/images/anon.png'|media }} " class="gravatar" width="32" height="32" />
         <p>{{ revision.author.get_anonymous_name() }}</p>
     {% else %}
-        {{ user_card(revision.author, karma_mode=karma_mode, badges_mode=badges_mode) }}
+        {{ user_card(revision.author) }}
     {% endif %}
     {% if settings.GROUPS_ENABLED %}
         {{ user_primary_group(revision.author) }}
@@ -582,9 +582,7 @@ for the purposes of the AJAX comment editor #}
     {% endif %}
 {%- endmacro -%}
 
-{%- macro user_long_score_and_badge_summary(
-    user, karma_mode=None, badges_mode = None
-) -%}
+{%- macro user_long_score_and_badge_summary(user) -%}
   {%- include "widgets/user_long_score_and_badge_summary.html" -%}
 {%- endmacro -%}
 
@@ -626,11 +624,11 @@ for the purposes of the AJAX comment editor #}
     {{ user_country_name_and_flag(user) }}
 {%- endmacro -%}
 
-{% macro user_card(user, karma_mode=None, badges_mode=None) %}
+{% macro user_card(user) %}
     {% include "widgets/user_card.html" %}
 {% endmacro %}
 
-{%- macro user_list(users, karma_mode=None, badges_mode=None) -%}
+{%- macro user_list(users) -%}
     {% include "widgets/user_list.html" %}
 {%- endmacro -%}
 

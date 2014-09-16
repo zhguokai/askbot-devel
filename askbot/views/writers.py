@@ -302,7 +302,7 @@ def ask(request):#view used to ask a new question
             draft_tagnames = draft.tagnames
 
     form.initial = {
-        'ask_anonymously': request.REQUEST.get('ask_anonymousy', False),
+        'ask_anonymously': request.REQUEST.get('ask_anonymously', False),
         'tags': request.REQUEST.get('tags', draft_tagnames),
         'text': request.REQUEST.get('text', draft_text),
         'title': request.REQUEST.get('title', draft_title),
@@ -399,7 +399,11 @@ def edit_question(request, id):
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         return HttpResponseRedirect(question.get_absolute_url())
 
-    revision = question.get_latest_revision()
+    try:
+        revision = question.revisions.get(revision=0)
+    except models.PostRevision.DoesNotExist:
+        revision = question.get_latest_revision()
+
     revision_form = None
 
     try:
@@ -510,7 +514,10 @@ def edit_answer(request, id):
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         return HttpResponseRedirect(answer.get_absolute_url())
 
-    revision = answer.get_latest_revision()
+    try:
+        revision = answer.revisions.get(revision=0)
+    except models.PostRevision.DoesNotExist:
+        revision = answer.get_latest_revision()
 
     class_path = getattr(settings, 'ASKBOT_EDIT_ANSWER_FORM', None)
     if class_path:
@@ -794,7 +801,7 @@ def edit_comment(request):
                     id=form.cleaned_data['comment_id']
                 )
 
-    request.user.edit_comment(
+    revision = request.user.edit_comment(
         comment_post=comment_post,
         body_text=form.cleaned_data['comment'],
         suppress_email=form.cleaned_data['suppress_email'],
@@ -811,6 +818,11 @@ def edit_comment(request):
 
     tz = template_filters.TIMEZONE_STR
     timestamp = str(comment_post.added_at.replace(microsecond=0)) + tz
+
+    #need this because the post.text is due to the latest approved
+    #revision, but we may need the suggested revision
+    comment_post.text = revision.text
+    comment_post.html = comment_post.parse_post_text()['html']
 
     return {
         'id' : comment_post.id,
