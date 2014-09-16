@@ -509,7 +509,7 @@ def get_enabled_major_login_providers():
             'resource_endpoint': 'https://www.googleapis.com/plus/v1/people/',
             'icon_media_path': '/jquery-openid/images/google.gif',
             'get_user_id_function': get_google_user_id,
-            'extra_auth_params': {'scope': ('profile',)}# 'email', 'openid')}#, 'openid.realm': 'http://127.0.0.1:8000'}
+            'extra_auth_params': {'scope': ('profile', 'email', 'openid'), 'openid.realm': askbot_settings.APP_URL}
         }
     data['mozilla-persona'] = {
         'name': 'mozilla-persona',
@@ -900,3 +900,9 @@ def mozilla_persona_get_email_from_assertion(assertion):
             raise ImproperlyConfigured(message)
     #todo: nead more feedback to help debug fail cases
     return None
+
+def google_migrate_from_openid_to_gplus(openid_url, gplus_id):
+    from askbot.deps.django_authopenid.models import UserAssociation
+    assoc = UserAssociation.object.filter(openid_url=openid_url)
+    assoc.update(openid_url=str(gplus_id), provider_name='google-plus')
+
