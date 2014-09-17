@@ -1088,7 +1088,7 @@ class Thread(models.Model):
             return False
         if user.is_administrator_or_moderator():
             if askbot_settings.GROUPS_ENABLED:
-                user_groups = user.get_groups(private=True)
+                user_groups = user.get_groups()
                 thread_groups = self.get_groups_shared_with(with_personal=True)
                 return bool(set(user_groups) & set(thread_groups))
             return True
