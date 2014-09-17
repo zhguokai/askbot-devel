@@ -1828,7 +1828,7 @@ def user_edit_comment(
     todo: add timestamp
     """
     self.assert_can_edit_comment(comment_post)
-    comment_post.apply_edit(
+    revision = comment_post.apply_edit(
                         text=body_text,
                         edited_at=timestamp,
                         edited_by=self,
@@ -1837,6 +1837,7 @@ def user_edit_comment(
                         ip_addr=ip_addr,
                     )
     comment_post.thread.invalidate_cached_data()
+    return revision
 
 def user_edit_post(self,
                 post=None,
@@ -1854,7 +1855,7 @@ def user_edit_post(self,
     because we cannot bypass the permissions checks set within
     """
     if post.is_comment():
-        self.edit_comment(
+        return self.edit_comment(
                 comment_post=post,
                 body_text=body_text,
                 by_email=by_email,
@@ -1862,7 +1863,7 @@ def user_edit_post(self,
                 ip_addr=ip_addr
             )
     elif post.is_answer():
-        self.edit_answer(
+        return self.edit_answer(
             answer=post,
             body_text=body_text,
             timestamp=timestamp,
@@ -1872,7 +1873,7 @@ def user_edit_post(self,
             ip_addr=ip_addr
         )
     elif post.is_question():
-        self.edit_question(
+        return self.edit_question(
             question=post,
             body_text=body_text,
             timestamp=timestamp,
@@ -1883,7 +1884,7 @@ def user_edit_post(self,
             ip_addr=ip_addr
         )
     elif post.is_tag_wiki():
-        post.apply_edit(
+        return post.apply_edit(
             edited_at=timestamp,
             edited_by=self,
             text=body_text,
@@ -1916,7 +1917,7 @@ def user_edit_question(
     if force == False:
         self.assert_can_edit_question(question)
 
-    question.apply_edit(
+    revision = question.apply_edit(
         edited_at=timestamp,
         edited_by=self,
         title=title,
@@ -1940,6 +1941,7 @@ def user_edit_question(
         context_object = question,
         timestamp = timestamp
     )
+    return revision
 
 @auto_now_timestamp
 def user_edit_answer(
@@ -1958,7 +1960,7 @@ def user_edit_answer(
     if force == False:
         self.assert_can_edit_answer(answer)
 
-    answer.apply_edit(
+    revision = answer.apply_edit(
         edited_at=timestamp,
         edited_by=self,
         text=body_text,
@@ -1977,6 +1979,7 @@ def user_edit_answer(
         context_object = answer,
         timestamp = timestamp
     )
+    return revision
 
 @auto_now_timestamp
 def user_create_post_reject_reason(
@@ -2014,7 +2017,7 @@ def user_edit_post_reject_reason(
 ):
     reason.title = title
     reason.save()
-    reason.details.apply_edit(
+    return reason.details.apply_edit(
         edited_by = self,
         edited_at = timestamp,
         text = details
@@ -2486,9 +2489,23 @@ def user_get_profile_url(self, profile_section=None):
 def user_get_absolute_url(self):
     return self.get_profile_url()
 
+def user_set_languages(self, langs):
+    self.languages = ' '.join(langs)
+
+def user_set_primary_language(self, lang):
+    """primary language is the first in the list of languages"""
+    langs = self.get_languages()
+    if lang in langs:
+        langs.remove(lang)
+    langs.insert(0, lang)
+    self.set_languages(langs)
+
+def user_get_languages(self):
+    return self.languages.split()
+
 def user_get_primary_language(self):
     if askbot.is_multilingual():
-        return self.languages.split()[0]
+        return self.get_languages()[0]
     else:
         return django_settings.LANGUAGE_CODE
 
@@ -2854,8 +2871,23 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
                 post.thread.answer_count += 1
                 post.thread.save()
 
+
+
         post.approved = True
-        post.save()
+        post.text = post_revision.text
+
+        post_is_new = (post.revisions.count() == 1)
+        parse_results = post.parse_and_save(author=post_revision.author)
+        signals.post_updated.send(
+            post=post,
+            updated_by=post_revision.author,
+            newly_mentioned_users=parse_results['newly_mentioned_users'],
+            #suppress_email=suppress_email,
+            timestamp=timestamp,
+            created=post_is_new,
+            diff=parse_results['diff'],
+            sender=post.__class__
+        )
 
         if post_revision.post.post_type == 'question':
             thread = post.thread
@@ -2866,8 +2898,10 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
 
         #send the signal of published revision
         signals.post_revision_published.send(
-            None, revision = post_revision, was_approved = True
-        )
+                                        None, 
+                                        revision=post_revision,
+                                        was_approved=True
+                                    )
 
 @auto_now_timestamp
 def flag_post(
@@ -3194,7 +3228,10 @@ User.add_to_class('has_badge', user_has_badge)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
 User.add_to_class('set_status', user_set_status)
 User.add_to_class('get_badge_summary', user_get_badge_summary)
+User.add_to_class('get_languages', user_get_languages)
+User.add_to_class('set_languages', user_set_languages)
 User.add_to_class('get_primary_language', user_get_primary_language)
+User.add_to_class('set_primary_language', user_set_primary_language)
 User.add_to_class('get_status_display', user_get_status_display)
 User.add_to_class('get_old_vote_for_post', user_get_old_vote_for_post)
 User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)
@@ -3455,9 +3492,7 @@ def get_reply_to_addresses(user, post):
     return primary_addr, secondary_addr
 
 
-def notify_author_of_published_revision(
-    revision = None, was_approved = None, **kwargs
-):
+def notify_author_of_published_revision(revision=None, was_approved=False, **kwargs):
     """notifies author about approved post revision,
     assumes that we have the very first revision
     """
@@ -3492,12 +3527,6 @@ def record_post_update_activity(
 
     this handler will set notifications about the post
     """
-    if post.needs_moderation():
-        #do not give notifications yet
-        #todo: it is possible here to trigger
-        #moderation email alerts
-        return
-
     assert(timestamp != None)
     assert(updated_by != None)
     if newly_mentioned_users is None:

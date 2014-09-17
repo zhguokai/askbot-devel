@@ -409,8 +409,7 @@ def edit_user(request, id):
         'form' : form,
         'marked_tags_setting': askbot_settings.MARKED_TAGS_ARE_PUBLIC_WHEN,
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
-        'view_user': user,
-        'user_languages': user.languages.split()
+        'view_user': user
     }
     return render(request, 'user_profile/user_edit.html', data)
 
@@ -992,6 +991,19 @@ def user_favorites(request, user, context):
 
 
 @csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def user_set_primary_language(request):
+    if request.user.is_anonymous():
+        raise django_exceptions.PermissionDenied
+
+    form = forms.LanguageForm(request.POST)
+    if form.is_valid():
+        request.user.set_primary_language(form.cleaned_data['language'])
+        request.user.save()
+
+
+@csrf.csrf_protect
 def user_select_languages(request, id=None, slug=None):
     if request.user.is_anonymous():
         raise django_exceptions.PermissionDenied
@@ -1007,13 +1019,8 @@ def user_select_languages(request, id=None, slug=None):
         #todo: add form to clean languages
         form = forms.LanguagePrefsForm(request.POST)
         if form.is_valid():
-            languages = form.cleaned_data['languages']
-            primary_language = form.cleaned_data['primary_language']
-            if primary_language in languages:
-                languages.remove(primary_language)
-            languages.insert(0, primary_language)
-
-            user.languages = ' '.join(languages)
+            user.set_languages(form.cleaned_data['languages'])
+            user.set_primary_language(form.cleaned_data['primary_language'])
             user.save()
 
             redirect_url = reverse(

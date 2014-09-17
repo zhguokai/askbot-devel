@@ -237,15 +237,16 @@ class ThreadManager(BaseQuerySetManager):
 
         #todo: this is handled in signal because models for posts
         #are too spread out
-        signals.post_updated.send(
-            post=question,
-            updated_by=author,
-            newly_mentioned_users=parse_results['newly_mentioned_users'],
-            timestamp=added_at,
-            created=True,
-            diff=parse_results['diff'],
-            sender=question.__class__
-        )
+        if revision.revision > 0:
+            signals.post_updated.send(
+                post=question,
+                updated_by=author,
+                newly_mentioned_users=parse_results['newly_mentioned_users'],
+                timestamp=added_at,
+                created=True,
+                diff=parse_results['diff'],
+                sender=question.__class__
+            )
 
         return thread
 
@@ -302,7 +303,7 @@ class ThreadManager(BaseQuerySetManager):
             primary_filter['language_code'] = get_language()
         elif lang_mode == 'user-lang':
             if request_user.is_authenticated():
-                language_codes = request_user.languages.split()
+                language_codes = request_user.get_languages()
             else:
                 language_codes = dict(django_settings.LANGUAGES).keys()
             primary_filter['language_code__in'] = language_codes
@@ -1087,7 +1088,7 @@ class Thread(models.Model):
             return False
         if user.is_administrator_or_moderator():
             if askbot_settings.GROUPS_ENABLED:
-                user_groups = user.get_groups(private=True)
+                user_groups = user.get_groups()
                 thread_groups = self.get_groups_shared_with(with_personal=True)
                 return bool(set(user_groups) & set(thread_groups))
             return True
@@ -1202,6 +1203,7 @@ class Thread(models.Model):
                                                 post__id__in=post_ids,
                                                 revision=0
                                             )
+
             #get ids of posts that we need to patch with suggested data
             if len(suggested_revs):
                 #find posts that we need to patch
@@ -1218,7 +1220,7 @@ class Thread(models.Model):
                             found.update(find_posts(comments, need_ids))
                     return found
 
-                suggested_post_ids = set([rev.post_id for rev in suggested_revs])
+                suggested_post_ids = [rev.post_id for rev in suggested_revs]
 
                 question = post_data[0]
                 answers = post_data[1]
@@ -1237,7 +1239,10 @@ class Thread(models.Model):
                     rev = rev_map[post_id]
                     #patching work
                     post.text = rev.text
-                    post.html = post.parse_post_text()['html']
+                    parse_data = post.parse_post_text()
+                    post.html = parse_data['html']
+                    post.summary = post.get_snippet()
+
                     post_to_author[post_id] = rev.author_id
                     post.set_runtime_needs_moderation()
 
@@ -1264,6 +1269,7 @@ class Thread(models.Model):
                         rev = rev_map[post.id]
                         post.text = rev.text
                         post.html = post.parse_post_text()['html']
+                        post.summary = post.get_snippet()
                         post_to_author[post.id] = rev.author_id
                         if post.is_comment():
                             parents = find_posts(all_posts, set([post.parent_id]))

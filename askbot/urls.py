@@ -78,6 +78,11 @@ urlpatterns = patterns('',
         views.users.edit_user,
         name ='edit_user'
     ),
+    service_url(#ajax post only
+        r'^users/set-primary-language$',
+        views.users.user_set_primary_language,
+        name='user_set_primary_language'
+    ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
             _('users/'),
@@ -144,6 +149,7 @@ urlpatterns = patterns('',
         name = 'custom_js'
     ),
     #no translation for this url!!
+    service_url('^translate-url/', views.commands.translate_url, name='translate_url'),
     service_url(r'^import-data/$', views.writers.import_data, name='import_data'),
     service_url(r'^%s$' % _('about/'), views.meta.about, name='about'),
     service_url(r'^%s$' % _('faq/'), views.meta.faq, name='faq'),

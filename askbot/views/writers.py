@@ -428,7 +428,11 @@ def edit_question(request, id):
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         return HttpResponseRedirect(question.get_absolute_url())
 
-    revision = question.get_latest_revision()
+    try:
+        revision = question.revisions.get(revision=0)
+    except models.PostRevision.DoesNotExist:
+        revision = question.get_latest_revision()
+
     revision_form = None
 
     edit_form_class = forms.select_custom_form_class(
@@ -556,7 +560,10 @@ def edit_answer(request, id):
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         return HttpResponseRedirect(answer.get_absolute_url())
 
-    revision = answer.get_latest_revision()
+    try:
+        revision = answer.revisions.get(revision=0)
+    except models.PostRevision.DoesNotExist:
+        revision = answer.get_latest_revision()
 
     edit_answer_form_class = forms.select_custom_form_class(
                                         'ASKBOT_EDIT_ANSWER_FORM',
@@ -851,7 +858,7 @@ def edit_comment(request):
 
     comment_post = models.Post.objects.get(id=form.cleaned_data['comment_id'])
 
-    request.user.edit_comment(
+    revision = request.user.edit_comment(
         comment_post=comment_post,
         body_text=form.cleaned_data['comment'],
         suppress_email=form.cleaned_data['suppress_email'],
@@ -868,6 +875,11 @@ def edit_comment(request):
 
     tz = template_filters.TIMEZONE_STR
     timestamp = str(comment_post.added_at.replace(microsecond=0)) + tz
+
+    #need this because the post.text is due to the latest approved
+    #revision, but we may need the suggested revision
+    comment_post.text = revision.text
+    comment_post.html = comment_post.parse_post_text()['html']
 
     return {
         'id' : comment_post.id,
