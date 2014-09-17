@@ -981,7 +981,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     """
     tags = TagNamesField()
     wiki = WikiField()
-    group_id = forms.IntegerField(required = False, widget = forms.HiddenInput)
+    group_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -1028,6 +1028,11 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def clean(self):
         self.cleaned_data['space'] = self.clean_space()
+        if 'group_id' not in self.cleaned_data:
+            default = getattr(django_settings, 'DEFAULT_ASK_GROUP_ID', None)
+            if default:
+                self.cleaned_data['group_id'] = default
+
         return self.cleaned_data
 
 
