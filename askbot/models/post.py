@@ -1940,10 +1940,11 @@ class Post(models.Model):
         if edited_at is None:
             edited_at = datetime.datetime.now()
 
-        self.thread.set_last_activity_info(
-                        last_activity_at=edited_at,
-                        last_activity_by=edited_by
-                    )
+        if not suppress_email:
+            self.thread.set_last_activity_info(
+                            last_activity_at=edited_at,
+                            last_activity_by=edited_by
+                        )
 
     def _question__apply_edit(
                             self, 
@@ -2003,10 +2004,11 @@ class Post(models.Model):
             ip_addr=ip_addr
         )
 
-        self.thread.set_last_activity_info(
-                        last_activity_at=edited_at,
-                        last_activity_by=edited_by
-                    )
+        if not suppress_email:
+            self.thread.set_last_activity_info(
+                            last_activity_at=edited_at,
+                            last_activity_by=edited_by
+                        )
 
     def apply_edit(self, *args, **kwargs):
         #todo: unify this, here we have unnecessary indirection
