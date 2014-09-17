@@ -529,7 +529,7 @@ def get_enabled_major_login_providers():
             'name': 'google',
             'display_name': 'Google',
             'type': 'openid-direct',
-            'icon_media_path': '/jquery-openid/images/google.gif',
+            'icon_media_path': '/jquery-openid/images/google-openid.gif',
             'openid_endpoint': 'https://www.google.com/accounts/o8/id',
         }
 
