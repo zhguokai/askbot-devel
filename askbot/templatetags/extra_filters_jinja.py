@@ -385,5 +385,5 @@ def sub_vars(text, user=None):
 
     site_name = askbot_settings.APP_SHORT_NAME
     text = sitename_re.sub(site_name, text)
-    text = sitename_re.sub(site_link('index', site_name), text)
+    text = sitelink_re.sub(site_link('index', site_name), text)
     return text
