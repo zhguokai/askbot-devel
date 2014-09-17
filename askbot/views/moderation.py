@@ -1,27 +1,25 @@
 from askbot.utils import decorators
 from askbot import const
+from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import mail
 from datetime import datetime
+from django.http import Http404
 from django.utils.translation import string_concat
 from django.utils.translation import ungettext
 from django.utils.translation import ugettext as _
 from django.template.loader import get_template
 from django.conf import settings as django_settings
+from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.utils.encoding import force_text
+from django.shortcuts import render
 from django.template import RequestContext
 from django.views.decorators import csrf
 from django.utils.encoding import force_text
 from django.core import exceptions
 from django.utils import simplejson
-
-EDIT_ACTIVITY_TYPES = (
-    const.TYPE_ACTIVITY_MODERATED_NEW_POST,
-    const.TYPE_ACTIVITY_MODERATED_POST_EDIT
-)
-MOD_ACTIVITY_TYPES = EDIT_ACTIVITY_TYPES + (const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
 
 #some utility functions
 def get_object(memo):
@@ -74,6 +72,83 @@ def concat_messages(message1, message2):
         return message2
 
 
+@login_required
+def moderation_queue(request):
+    """Lists moderation queue items"""
+    if not request.user.is_administrator_or_moderator():
+        raise Http404
+
+    activity_types = (const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
+    if askbot_settings.CONTENT_MODERATION_MODE in ('premoderation', 'audit'):
+        activity_types += (
+            const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+            const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+        )
+
+    #2) load the activity notifications according to activity types
+    #todo: insert pagination code here
+    memo_set = request.user.get_notifications(activity_types)
+    memo_set = memo_set.select_related(
+                    'activity',
+                    'activity__content_type',
+                    'activity__question__thread',
+                    'activity__user',
+                    'activity__user__gravatar',
+                ).order_by(
+                    '-activity__active_at'
+                )[:const.USER_VIEW_DATA_SIZE]
+
+    #3) "package" data for the output
+    queue = list()
+    for memo in memo_set:
+        obj = memo.activity.content_object
+        if obj is None:
+            memo.activity.delete()
+            continue#a temp plug due to bug in the comment deletion
+
+        act = memo.activity
+        if act.activity_type == const.TYPE_ACTIVITY_MARK_OFFENSIVE:
+            #todo: two issues here - flags are stored differently
+            #from activity of new posts and edits
+            #second issue: on posts with many edits we don't know whom to block
+            act_user = act.content_object.author
+            act_message = _('post was flagged as offensive')
+            act_type = 'flag'
+            ip_addr = None
+        else:
+            act_user = act.user
+            act_message = act.get_activity_type_display()
+            act_type = 'edit'
+            ip_addr = act.content_object.ip_addr
+
+        item = {
+            'id': memo.id,
+            'timestamp': act.active_at,
+            'user': act_user,
+            'ip_addr': ip_addr,
+            'is_new': memo.is_new(),
+            'url': act.get_absolute_url(),
+            'snippet': act.get_snippet(),
+            'title': act.question.thread.title,
+            'message_type': act_message,
+            'memo_type': act_type,
+            'question_id': act.question.id,
+            'content': obj.html or obj.text,
+        }
+        queue.append(item)
+
+    queue.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
+    reject_reasons = models.PostFlagReason.objects.all().order_by('title')
+    data = {
+        'active_tab': 'users',
+        'page_class': 'moderation-queue-page',
+        'post_reject_reasons': reject_reasons,
+        'messages' : queue,
+    }
+    template = 'moderation/queue.html'
+    return render(request, template, data)
+
+
 @csrf.csrf_exempt
 @decorators.post_only
 @decorators.ajax_only
@@ -97,7 +172,7 @@ def moderate_post_edits(request):
     if post_data['action'] in ('block', 'approve') and 'users' in post_data['items']:
         editors = filter_admins(get_editors(memo_set))
         items = models.Activity.objects.filter(
-                                activity_type__in=EDIT_ACTIVITY_TYPES,
+                                activity_type__in=const.MODERATED_EDIT_ACTIVITY_TYPES,
                                 user__in=editors
                             )
         memo_filter = Q(id__in=post_data['edit_ids']) | Q(user=request.user, activity__in=items)
@@ -222,5 +297,5 @@ def moderate_post_edits(request):
     acts.delete()
 
     request.user.update_response_counts()
-    result['memo_count'] = request.user.get_notifications(MOD_ACTIVITY_TYPES).count()
+    result['memo_count'] = request.user.get_notifications(const.MODERATED_ACTIVITY_TYPES).count()
     return result

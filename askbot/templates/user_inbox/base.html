@@ -51,16 +51,6 @@
         askbot['urls'] = askbot['urls'] || {};
         askbot['urls']['manageInbox'] = '{% url manage_inbox %}';
         askbot['urls']['clearNewNotifications'] = '{% url clear_new_notifications %}';
-        askbot['urls']['moderatePostEdits'] = '{% url moderate_post_edits %}';
-        askbot['urls']['save_post_reject_reason'] = '{% url save_post_reject_reason %}';
-        askbot['urls']['delete_post_reject_reason'] = '{% url delete_post_reject_reason %}';
-        {% if request.user.is_administrator_or_moderator() %}
-            askbot['data']['postRejectReasons'] = [
-                {% for reason in post_reject_reasons %}
-                {'id': {{reason.id}}, 'title': '{{reason.title|escapejs}}'},
-                {% endfor %}
-            ];
-        {% endif %}
         $(document).ready(function(){
             $('body').addClass('inbox-{{ inbox_section }}');
             setup_inbox();

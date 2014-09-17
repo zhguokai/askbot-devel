@@ -166,6 +166,9 @@ Any configurable options, related to these commands are accessible via "Email" s
 |                                     | of the live settings, as well as the appropriate delay      |
 |                                     | parameters may be set.                                      |
 +-------------------------------------+-------------------------------------------------------------+
+| `askbot_send_moderation_alerts`     | Sends alerts to moderators when there are items on the      |
+|                                     | queue.                                                      |
++-------------------------------------+-------------------------------------------------------------+
 
 Data repair commands
 ====================

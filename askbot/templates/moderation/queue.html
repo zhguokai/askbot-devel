@@ -1,9 +1,10 @@
-{% extends "user_inbox/base.html" %}
+{% extends "one_column_body.html" %}
 {% import "macros.html" as macros %}
-{% block profilesection %}
-    {% trans %}moderation queue{% endtrans %}
+{% block title %}
+    {% trans %}Moderation queue{% endtrans %}
 {% endblock %}
-{% block inbox_content %}
+{% block body %}
+    <h1 class="section-title">{% trans %}Moderation queue{% endtrans %}</h1>
     <div class="tools">
         {#<div class="select-items">
             <strong>{% trans %}Select:{% endtrans %}</strong>
@@ -43,23 +44,33 @@
     {% include "moderation/manage_reject_reasons_dialog.html" %}
     <div class="action-status"><span></span></div>
     <div class="messages">
-    {% for message in messages %}{# messages are grouped by question, using the "nested_messages" #}
+    {% for message in messages %}
         <div 
             class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
             data-message-id="{{ message.id }}"
         >
-            {#<h2>"{{ message.title.strip()|escape}}"</h2>#}
             {{ macros.moderation_queue_message(message) }}
         </div>
-        {# "nested" messages are further response messages to the same question #}
-        {% for followup_message in message.followup_messages %}
-            <div 
-                class="message{% if followup_message.is_new %} highlight new{% else %} seen{% endif %}"
-                data-message-id="{{ followup_message.id }}"
-            >
-                {{ macros.moderation_queue_message(followup_message) }}
-            </div>
-        {% endfor %}
     {% endfor %}
     </div>
+{% endblock %}
+{% block endjs %}
+    {# todo: factor out moderation.js file #}
+    <script type="text/javascript" src="{{ '/js/user.js'|media }}"></script>
+    <script type="text/javascript">
+        (function() {
+            askbot['urls']['save_post_reject_reason'] = '{% url save_post_reject_reason %}';
+            askbot['urls']['delete_post_reject_reason'] = '{% url delete_post_reject_reason %}';
+            {% if request.user.is_administrator_or_moderator() %}
+                askbot['data']['postRejectReasons'] = [
+                    {% for reason in post_reject_reasons %}
+                    {'id': {{reason.id}}, 'title': '{{reason.title|escapejs}}'},
+                    {% endfor %}
+                ];
+            {% endif %}
+            askbot['urls']['moderatePostEdits'] = '{% url moderate_post_edits %}';
+            var modControls = new PostModerationControls();
+            modControls.decorate($('body'));
+        })();
+    </script>
 {% endblock %}

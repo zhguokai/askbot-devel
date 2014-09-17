@@ -738,20 +738,9 @@ def user_responses(request, user, context):
 
     #1) select activity types according to section
     section = request.GET.get('section', 'forum')
-    if section == 'flags' and not\
-        (request.user.is_moderator() or request.user.is_administrator()):
-        raise Http404
-
     if section == 'forum':
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
         activity_types += (const.TYPE_ACTIVITY_MENTION,)
-    elif section == 'flags':
-        activity_types = (const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
-        if askbot_settings.CONTENT_MODERATION_MODE in ('premoderation', 'audit'):
-            activity_types += (
-                const.TYPE_ACTIVITY_MODERATED_NEW_POST,
-                const.TYPE_ACTIVITY_MODERATED_POST_EDIT
-            )
     elif section == 'join_requests':
         return show_group_join_requests(request, user, context)
     elif section == 'messages':
@@ -810,26 +799,14 @@ def user_responses(request, user, context):
             continue#a temp plug due to bug in the comment deletion
 
         act = memo.activity
-        ip_addr = None
-        if act.activity_type == const.TYPE_ACTIVITY_MARK_OFFENSIVE:
-            #todo: two issues here - flags are stored differently
-            #from activity of new posts and edits
-            #second issue: on posts with many edits we don't know whom to block
-            act_user = act.content_object.author
-            act_message = _('post was flagged as offensive')
-            act_type = 'flag'
-        else:
-            act_user = act.user
-            act_message = act.get_activity_type_display()
-            act_type = 'edit'
-            if section == 'flags':
-                ip_addr = act.content_object.ip_addr
+        act_user = act.user
+        act_message = act.get_activity_type_display()
+        act_type = 'edit'
 
         response = {
             'id': memo.id,
             'timestamp': act.active_at,
             'user': act_user,
-            'ip_addr': ip_addr,
             'is_new': memo.is_new(),
             'url': act.get_absolute_url(),
             'snippet': act.get_snippet(),
@@ -872,10 +849,7 @@ def user_responses(request, user, context):
         'messages' : filtered_message_list,
     }
     context.update(data)
-    if section == 'flags':
-        template = 'moderation/queue.html'
-    else:
-        template = 'user_inbox/responses.html'
+    template = 'user_inbox/responses.html'
     return render(request, template, context)
 
 def user_network(request, user, context):

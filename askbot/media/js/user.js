@@ -1,9 +1,4 @@
 var setup_inbox = function(){
-    var page = $('.inbox-flags');
-    if (page.length) {
-        var modControls = new PostModerationControls();
-        modControls.decorate(page);
-    }
     var page = $('.inbox-forum');
     if (page.length) {
         var clearNotifs = $('.clear-messages');
