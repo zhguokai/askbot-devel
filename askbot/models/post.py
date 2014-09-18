@@ -1944,10 +1944,11 @@ class Post(models.Model):
         if edited_at is None:
             edited_at = datetime.datetime.now()
 
-        self.thread.set_last_activity_info(
-                        last_activity_at=edited_at,
-                        last_activity_by=edited_by
-                    )
+        if not suppress_email:
+            self.thread.set_last_activity_info(
+                            last_activity_at=edited_at,
+                            last_activity_by=edited_by
+                        )
         return revision
 
     def _question__apply_edit(
@@ -2008,10 +2009,11 @@ class Post(models.Model):
             ip_addr=ip_addr
         )
 
-        self.thread.set_last_activity_info(
-                        last_activity_at=edited_at,
-                        last_activity_by=edited_by
-                    )
+        if not suppress_email:
+            self.thread.set_last_activity_info(
+                            last_activity_at=edited_at,
+                            last_activity_by=edited_by
+                        )
         return revision
 
     def apply_edit(self, *args, **kwargs):
