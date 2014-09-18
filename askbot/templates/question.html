@@ -202,7 +202,7 @@
             };
                     
 
-            function render_post_controls(post_id){
+            function render_post_controls(post_id, is_wiki){
 
                 //in this case remove all post controls
                 if (askbot['settings']['readOnlyModeEnabled'] === true) {
@@ -246,10 +246,10 @@
                 ) {
                     removeNode(closeBtn[0]);
                 }
-
-                var repLow = (data['userReputation'] < {{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}});
+                var enoughRep = (data['userReputation'] >= {{settings.MIN_REP_TO_EDIT_OTHERS_POSTS}} ||
+                        (is_wiki && data['userReputation'] >= {{ settings.MIN_REP_TO_EDIT_WIKI }}));
                 if (//maybe remove "edit" button
-                    repLow || data['userIsReadOnly']//only authors edit comments
+                    !enoughRep || data['userIsReadOnly']//only authors edit comments
                 ){
                     var edit_btn = document.getElementById(
                         'post-' + post_id + '-edit'

@@ -36,5 +36,5 @@
     class="question-delete"
 >{% if question.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
 <script type="text/javascript">
-    askbot['functions']['renderPostControls']('{{question.id}}');
+    askbot['functions']['renderPostControls']('{{question.id}}'{{ ', true' if question.wiki }});
 </script>
