@@ -632,6 +632,7 @@ def signin(request, template_name='authopenid/signin.html'):
                     redirect_url = util.get_oauth2_starter_url(provider_name, csrf_token)
                     request.session['oauth2_csrf_token'] = csrf_token
                     request.session['provider_name'] = provider_name
+                    request.session['next_url'] = next_url
                     return HttpResponseRedirect(redirect_url)
                 except util.OAuthError, e:
                     logging.critical(unicode(e))
