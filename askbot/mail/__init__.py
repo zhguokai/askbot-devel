@@ -174,14 +174,13 @@ def mail_moderators(
         from_email = django_settings.DEFAULT_FROM_EMAIL
 
     try:
-        msg = mail.EmailMessage(
+        msg = mail.EmailMultiAlternatives(
                         subject_line,
-                        body_text,
+                        clean_html_email(body_text),
                         from_email,
-                        recipient_list,
-                        headers = headers or {}
+                        headers = headers
                     )
-        msg.content_subtype = 'html'
+        msg.attach_alternative(body_text, "text/html")
         msg.send()
     except smtplib.SMTPException, error:
         sys.stderr.write('\n' + unicode(error).encode('utf-8') + '\n')
