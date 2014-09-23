@@ -774,7 +774,7 @@ class UserProfilePageTests(AskbotTestCase):
     def setUp(self):
         self.user = self.create_user('user')
 
-    @with_settings(EDITABLE_EMAIL=False)
+    @with_settings(EDITABLE_EMAIL=False, EDITABLE_SCREEN_NAME=True)
     def test_user_cannot_change_email(self):
         #log in
         self.client.login(user_id=self.user.id, method='force')
@@ -791,7 +791,7 @@ class UserProfilePageTests(AskbotTestCase):
         self.assertEqual(user.username, 'edited')
         self.assertEqual(user.email, email_before)
 
-    @with_settings(EDITABLE_EMAIL=True)
+    @with_settings(EDITABLE_EMAIL=True, EDITABLE_SCREEN_NAME=True)
     def test_user_can_change_email(self):
         self.client.login(user_id=self.user.id, method='force')
         email_before = self.user.email
