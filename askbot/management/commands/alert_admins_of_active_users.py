@@ -6,6 +6,7 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
 from django.utils.translation import ungettext
+from django.utils.translation import activate as activate_language
 from askbot import mail
 from askbot.utils.classes import ReminderSchedule
 from askbot.models.question import Thread
@@ -55,9 +56,10 @@ class Command(BaseCommand):
 
         data = {'user_threads': user_threads}
 
+        activate_language(django_settings.LANGUAGE_CODE)
         template = get_template('email/active_users_alert.html')
         body_text = template.render(Context(data))#todo: set lang
-        subject_line = 'Users who asked more than 5 questions in last 24 hours'
+        subject_line = 'Users who asked more than 5 questions in last %d days' % options['days']
 
         mail.mail_moderators(subject_line=subject_line, body_text=body_text)
         if options['emails']:
