@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot-knowledgepoint\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-08 02:18-0500\n"
-"PO-Revision-Date: 2014-09-24 14:49+0000\n"
+"POT-Creation-Date: 2014-09-25 02:06-0500\n"
+"PO-Revision-Date: 2014-09-25 10:53+0000\n"
 "Last-Translator: timkent <tim.kent@knowledgepoint.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/askbot-knowledgepoint/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -124,7 +124,7 @@ msgid ""
 " them."
 msgstr "Nous avons manqué d'espace pour enregistrer les étiquettes. Veuillez s'il vous plaît réduire ou supprimer certains d'entre eux."
 
-#: forms.py:454 forms.py:1112 models/widgets.py:27
+#: forms.py:454 forms.py:1117 models/widgets.py:27
 #: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
 msgstr "Mots-clés (tags)"
@@ -253,7 +253,7 @@ msgstr "Veuillez cocher le champ \"Je ne veux pas donner mon mail\"."
 
 #: forms.py:870
 msgid "keep private"
-msgstr ""
+msgstr "garder privé"
 
 #: forms.py:962
 msgid "required with the email"
@@ -265,113 +265,113 @@ msgstr ""
 
 #: forms.py:995
 msgid "hide my name"
-msgstr ""
+msgstr "cacher mon nom"
 
-#: forms.py:1035
+#: forms.py:1040
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr "La ligne du sujet doit respecter le format : [tag1, tag2, tag3,...] titre de la question"
 
-#: forms.py:1044
+#: forms.py:1049
 msgid "ask anonymously"
 msgstr "être anonyme"
 
-#: forms.py:1355
+#: forms.py:1360
 msgid "reveal identity"
 msgstr "Révéler son identité"
 
-#: forms.py:1438
+#: forms.py:1443
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr "Désolé, seul les propriétaires des questions anonymes peuvent révélés leurs identités, veuillez décocher cette case"
 
-#: forms.py:1451
+#: forms.py:1456
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr "Désolé, apparemment les règles viennent juste de changer - il n'est plus possible de poser une question anonymement. Merci de cocher la case \"révéler l'identité\" ou alors recharger cette page et essayez de modifier de nouveau la question."
 
-#: forms.py:1505
+#: forms.py:1510
 msgid "Real name"
 msgstr "Nom réel"
 
-#: forms.py:1512
+#: forms.py:1517
 msgid "Website"
 msgstr "Site web"
 
-#: forms.py:1519
+#: forms.py:1524
 msgid "City"
 msgstr "Ville"
 
-#: forms.py:1528
+#: forms.py:1533
 msgid "Show country"
 msgstr "Montrer votre pays"
 
-#: forms.py:1533
+#: forms.py:1538
 msgid "Show tag choices"
 msgstr "Montrer les étiquettes choisis"
 
-#: forms.py:1538
+#: forms.py:1543
 msgid "Date of birth"
 msgstr "Date de naissance"
 
-#: forms.py:1540
+#: forms.py:1545
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "ne sera pas affichée; utilisée pour calculer votre âge. Format: AAAA-MM-JJPar exemple: 1980-12-25 pour le 25 décembre 1980"
 
-#: forms.py:1548
+#: forms.py:1553
 msgid "Profile"
 msgstr "Profil"
 
-#: forms.py:1557
+#: forms.py:1562
 msgid "Screen name"
 msgstr "Pseudo"
 
-#: forms.py:1589 forms.py:1593
+#: forms.py:1594 forms.py:1598
 msgid "this email has already been registered, please use another one"
 msgstr "Cet email a déjà été enregistré; merci d'utiliser une autre adresse"
 
-#: forms.py:1602
+#: forms.py:1607
 msgid "Choose email tag filter"
 msgstr "Choisissez un tag pour filtrer les emails"
 
-#: forms.py:1658
+#: forms.py:1663
 msgid "Individually selected"
 msgstr "Sélectionnées individuellement"
 
-#: forms.py:1659
+#: forms.py:1664
 msgid "Entire forum (tag filtered)"
 msgstr "Forum entier (filtré par tag)"
 
-#: forms.py:1660
+#: forms.py:1665
 msgid "Comments and posts mentioning me"
 msgstr "Commentaires et messages me mentionnant"
 
-#: forms.py:1744
+#: forms.py:1749
 msgid "please choose one of the options above"
 msgstr "Veuillez choisir une des options ci-dessus"
 
-#: forms.py:1747
+#: forms.py:1752
 msgid "okay, let's try!"
 msgstr "D'accord, j'essaye !"
 
-#: forms.py:1750
+#: forms.py:1755
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr "non s'il vous plait pas de courriel pour %(sitename)s, merci"
 
-#: forms.py:1798 templates/reopen.html:7
+#: forms.py:1803 templates/reopen.html:7
 msgid "Title"
 msgstr "Titre"
 
-#: forms.py:1801 templates/groups.html:32
+#: forms.py:1806 templates/groups.html:32
 msgid "Description"
 msgstr "Descriptif"
 
-#: forms.py:1824 templates/tags.html:3 templates/tags/header.html:9
+#: forms.py:1829 templates/tags.html:3 templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
@@ -4548,7 +4548,7 @@ msgstr "Très actif dans une catégorie de questions"
 msgid "message"
 msgstr "méssage"
 
-#: models/post.py:775 models/question.py:1606
+#: models/post.py:775 models/question.py:1600
 msgid "Sharing did not work, because group is unknown"
 msgstr ""
 
@@ -4573,27 +4573,27 @@ msgstr ""
 msgid "Sorry, this comment is no longer available"
 msgstr ""
 
-#: models/post.py:1783 models/question.py:1624
+#: models/post.py:1783 models/question.py:1618
 msgid "This post is temporarily not available"
 msgstr "Cette publication est temporairement indisponible"
 
-#: models/post.py:2258
+#: models/post.py:2260
 msgid "Suggested edit"
 msgstr ""
 
-#: models/post.py:2367
+#: models/post.py:2369
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
 msgstr "Merci pour cette publication a %(site)s. elle sera publiée après modération."
 
-#: models/post.py:2371
+#: models/post.py:2373
 #, python-format
 msgid "your post to %(site)s"
 msgstr "votre publication pour %(site)s"
 
-#: models/post.py:2378
+#: models/post.py:2380
 msgid ""
 "Your post was placed on the moderation queue and will be published after the"
 " moderator approval."
@@ -4619,12 +4619,12 @@ msgid_plural "%(count)d answers:"
 msgstr[0] "%(count)d réponse:"
 msgstr[1] "%(count)d réponses:"
 
-#: models/question.py:1774
+#: models/question.py:1768
 #, python-format
 msgid "Tag %s is new and will be submitted for the moderators approval"
 msgstr "L'étiquette %s est nouvelle et sera soumise à modération"
 
-#: models/question.py:1779 models/tag.py:243
+#: models/question.py:1773 models/tag.py:243
 #, python-format
 msgid "Tags %s are new and will be submitted for the moderators approval"
 msgstr "Les étiquettes %s sont nouvelles et seront soumises à modération"
