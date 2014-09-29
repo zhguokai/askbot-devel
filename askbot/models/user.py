@@ -400,6 +400,21 @@ class AuthUserGroups(models.Model):
     def __unicode__(self):
         return "%s: member of %s" % (self.user.username, self.group.name)
 
+class GroupMembershipManager(models.Manager):
+    def create(self, **kwargs):
+        user = kwargs['user']
+        group = kwargs['group']
+        try:
+            #need this for the cases where auth User_groups is there,
+            #but ours is not
+            auth_gm = AuthUserGroups.objects.get(user=user, group=group)
+            #use this as link for the One to One relation
+            kwargs['authusergroups_ptr'] = auth_gm
+        except AuthUserGroups.DoesNotExist:
+            pass
+        super(GroupMembershipManager, self).create(**kwargs)
+
+
 class GroupMembership(AuthUserGroups):
     """contains one-to-one relation to ``auth_user_group``
     and extra membership profile fields"""
@@ -419,6 +434,8 @@ class GroupMembership(AuthUserGroups):
                     )
     requested_at = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now)
     approved_at = models.DateTimeField(null=True, default=None)
+
+    objects = GroupMembershipManager()
 
     class Meta:
         app_label = 'askbot'
@@ -465,7 +482,7 @@ class GroupQuerySet(models.query.QuerySet):
                         user=user
                     ).exclude(id=global_group.id)
         else:
-            return self.filter(user = user)
+            return self.filter(user=user)
 
     def get_by_name(self, group_name = None):
         from askbot.models.tag import clean_group_name#todo - delete this

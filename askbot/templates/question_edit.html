@@ -41,9 +41,9 @@
     <input id="edit_post_form_submit_button" type="submit" value="{% trans %}Save edit{% endtrans %}"/>
     <input type="button" value="{% trans %}Cancel{% endtrans %}" onclick="history.back(-1);" />
     <div class="clearfix"></div>
-    <div class="post-opts">
+    <div class="post-opts question-options">
         {{ macros.post_options(form, request.user, settings) }}
-        {% if form.can_stay_anonymous() %}
+        {% if form.can_edit_anonymously() %}
             {{ macros.checkbox_in_div(form.reveal_identity) }}
         {% endif %}
         {% if settings.MULTILINGUAL %}
