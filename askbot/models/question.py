@@ -303,7 +303,7 @@ class ThreadManager(BaseQuerySetManager):
             primary_filter['language_code'] = get_language()
         elif lang_mode == 'user-lang':
             if request_user.is_authenticated():
-                language_codes = request_user.languages.split()
+                language_codes = request_user.get_languages()
             else:
                 language_codes = dict(django_settings.LANGUAGES).keys()
             primary_filter['language_code__in'] = language_codes
@@ -1109,7 +1109,7 @@ class Thread(models.Model):
             return False
         if user.is_administrator_or_moderator():
             if askbot_settings.GROUPS_ENABLED:
-                user_groups = user.get_groups(private=True)
+                user_groups = user.get_groups()
                 thread_groups = self.get_groups_shared_with(with_personal=True)
                 return bool(set(user_groups) & set(thread_groups))
             return True
@@ -1341,21 +1341,15 @@ class Thread(models.Model):
             thread_posts = thread_posts.filter(groups__in=groups)
             thread_posts = thread_posts.distinct()#important for >1 group
 
-        order_by_method = {
-                        'latest':'-added_at',
-                        'oldest':'added_at',
-                        'votes':'-points'
+        # For each sort method, include an appropriate secondary method to help 
+        # break ties
+        order_by_map = {
+                        'latest': ('-added_at', '-points'),
+                        'oldest': ('added_at', '-points'),
+                        'votes': ('-points', '-added_at')
                     }
-
-        default_answer_sort_method = askbot_settings.DEFAULT_ANSWER_SORT_METHOD
-        default_order_by_method = order_by_method[default_answer_sort_method]
-        order_by = order_by_method.get(sort_method, default_order_by_method)
-        #we add secondary sort method for the answers to make
-        #discussion more coherent
-        if order_by != default_order_by_method:
-            order_by = (order_by, default_order_by_method)
-        else:
-            order_by = (order_by,)
+        default_order_by = order_by_map[askbot_settings.DEFAULT_ANSWER_SORT_METHOD]
+        order_by = order_by_map.get(sort_method, default_order_by)
 
         thread_posts = thread_posts.order_by(*order_by)
         #1) collect question, answer and comment posts and list of post id's

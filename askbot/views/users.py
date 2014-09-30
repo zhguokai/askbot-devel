@@ -35,6 +35,7 @@ from django.utils import simplejson
 from django.utils.html import strip_tags as strip_all_tags
 from django.views.decorators import csrf
 
+import askbot
 from askbot.utils.slug import slugify
 from askbot.utils.forms import get_feed
 from askbot.utils.html import sanitize_html
@@ -408,8 +409,7 @@ def edit_user(request, id):
         'form' : form,
         'marked_tags_setting': askbot_settings.MARKED_TAGS_ARE_PUBLIC_WHEN,
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
-        'view_user': user,
-        'user_languages': user.languages.split()
+        'view_user': user
     }
     return render(request, 'user_profile/user_edit.html', data)
 
@@ -965,24 +965,60 @@ def user_favorites(request, user, context):
 
 
 @csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def user_set_primary_language(request):
+    if request.user.is_anonymous():
+        raise django_exceptions.PermissionDenied
+
+    form = forms.LanguageForm(request.POST)
+    if form.is_valid():
+        request.user.set_primary_language(form.cleaned_data['language'])
+        request.user.save()
+
+
+@csrf.csrf_protect
 def user_select_languages(request, id=None, slug=None):
-    if request.method != 'POST':
+    if request.user.is_anonymous():
         raise django_exceptions.PermissionDenied
 
     user = get_object_or_404(models.User, id=id)
 
-    if not(request.user.id == user.id or request.user.is_administrator()):
+
+    if not askbot.is_multilingual() or \
+        not(request.user.id == user.id or request.user.is_administrator()):
         raise django_exceptions.PermissionDenied
 
-    languages = request.POST.getlist('languages')
-    user.languages = ' '.join(languages)
-    user.save()
+    if request.method == 'POST':
+        #todo: add form to clean languages
+        form = forms.LanguagePrefsForm(request.POST)
+        if form.is_valid():
+            user.set_languages(form.cleaned_data['languages'])
+            user.set_primary_language(form.cleaned_data['primary_language'])
+            user.save()
 
-    redirect_url = reverse(
-        'edit_user',
-        kwargs={'id': user.id}
-    )
-    return HttpResponseRedirect(redirect_url)
+            redirect_url = reverse(
+                'user_select_languages',
+                kwargs={
+                    'id': user.id,
+                    'slug': slugify(user.username)
+                }
+            )
+        return HttpResponseRedirect(redirect_url)
+    else:
+        languages = user.languages.split()
+        initial={
+            'languages': languages,
+            'primary_language': languages[0]
+        }
+        form = forms.LanguagePrefsForm(initial=initial)
+        data = {
+            'view_user': user,
+            'languages_form': form,
+            'tab_name': 'langs',
+            'page_class': 'user-profile-page',
+        }
+        return render(request, 'user_profile/user_languages.html', data)
 
 
 @owner_or_moderator_required

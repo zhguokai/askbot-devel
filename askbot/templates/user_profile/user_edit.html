@@ -109,25 +109,6 @@
                 <input type="submit" value="{% trans %}Update{% endtrans %}"/>
                 <input id="cancel" type="button" value="{% trans %}Cancel{% endtrans %}"/>
             </div>
-
-            {% if settings.MULTILINGUAL %}
-            <h2>{% trans %}Languages{% endtrans %}</h2>
-            <form
-                method="post" 
-                action="{% url user_select_languages view_user.id, view_user.username|slugify %}"
-            >{% csrf_token %}
-                <select multiple name="languages">
-                {% for lang in settings.LANGUAGES_DICT %}
-                    <option 
-                        value="{{ lang }}"
-                        {% if lang in user_languages %}selected="selected"{% endif %}
-                    >{{ settings.LANGUAGES_DICT[lang] }}</option>
-                {% endfor %}
-                </select><br/>
-                <input type="submit" class="select-language" value="{% trans %}Save languages{% endtrans %}" />
-            </form>
-            {% endif %}
-
         </div>
     </form>
 </div>

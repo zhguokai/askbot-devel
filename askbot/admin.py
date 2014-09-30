@@ -143,6 +143,7 @@ class PostRevisionAdmin(admin.ModelAdmin):
     list_display = ('id', 'post_id', 'thread_name', 'revision', 'revised_at', 'author', 'approved')
     list_filter = ('approved',)
     search_fields = ('post__id',)
+    ordering = ('-id',)
 
     def post_id(self, obj):
         return obj.post.id

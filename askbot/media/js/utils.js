@@ -1436,7 +1436,7 @@ FederatedLoginMenu.prototype.decorate = function(element) {
                 }
             );
         } else if (button.hasClass('mozilla-persona')) {
-            me.setupMozillaPersonaProtocol();
+            me.setupMozillaPersona();
             setupButtonEventHandlers(button, me.getMozillaPersonaLoginHandler());
         } else {
             setupButtonEventHandlers(
@@ -1541,6 +1541,7 @@ LoginOrRegisterForm.prototype.handleSuccess = function(data) {
             $('.modal-backdrop').remove();
         }
     };
+    $('body').removeClass('anon');
     askbot['controllers']['fullTextSearch'].refresh();
 };
 
@@ -3098,6 +3099,7 @@ LogoutLink.prototype.getLogoutHandler = function() {
                     //activate the login menu
                     me.activateLoginLink();
                     askbot['controllers']['fullTextSearch'].refresh();
+                    $('body').addClass('anon');
                 }
             }
         });
@@ -4232,6 +4234,60 @@ ShowPermsTrigger.prototype.decorate = function(element) {
     var onClose = hoverCard.getImmediateCloseHandler();
     $('body').click(onClose);
 };
+
+/**
+ * Switches the UI language while keeping user on the same 
+ * page
+ */
+var LangNav = function() {
+    WrappedElement.call(this);
+};
+inherits(LangNav, WrappedElement);
+
+LangNav.prototype.translateUrl = function(url, lang) {
+    var result = undefined;
+    $.ajax({
+        type: 'GET',
+        url: askbot['urls']['translateUrl'],
+        data: {'url': url, 'language': lang },
+        async: false,
+        cache: false,
+        dataType: 'json',
+        success: function(data) {
+            if (data['url']) {
+                result = data['url'];
+            }
+        }
+    });
+    return result;
+};
+
+LangNav.prototype.handleUrl = function(url) {
+    window.location.href = url;
+};
+
+LangNav.prototype.getNavHandler = function(link) {
+    var me = this;
+    return function() {
+        var lang = link.data('lang');
+        var url = window.location.pathname
+        //resolve url in current language
+        var url = me.translateUrl(url, lang) || link.attr('href');
+        me.handleUrl(url, lang);
+        //if resolution is successful, redirect to that url
+        return false;
+    };
+};
+
+LangNav.prototype.decorate = function(element) {
+    this._element = element;
+    var links = element.find('li>a');
+    var len = links.length
+    for (var i=0; i<len; i++) {
+        var link = $(links[i]);
+        setupButtonEventHandlers(link, this.getNavHandler(link));
+    }
+}
 
 //Search Engine Keyword Highlight with Javascript
 //http://scott.yang.id.au/code/se-hilite/

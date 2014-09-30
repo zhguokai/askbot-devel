@@ -850,7 +850,7 @@ class Post(models.Model):
     def get_absolute_url(self,
             feed=None, no_slug = False,
             question_post=None, thread=None,
-            as_full_url=False
+            as_full_url=False, language=None
         ):
         from askbot.utils.slug import slugify
         #todo: the url generation function is pretty bad -
@@ -861,7 +861,7 @@ class Post(models.Model):
         is_multilingual = askbot.is_multilingual()
         if is_multilingual:
             request_language = get_language()
-            activate_language(self.language_code)
+            activate_language(language or self.language_code)
 
         if feed is None:
             feed = self.thread.get_default_feed().name
@@ -1501,7 +1501,7 @@ class Post(models.Model):
             language = self.thread.language_code
             filtered_subscribers = list()
             for subscriber in subscribers:
-                subscriber_languages = subscriber.languages.split()
+                subscriber_languages = subscriber.get_languages()
                 if language in subscriber_languages:
                     filtered_subscribers.append(subscriber)
             return filtered_subscribers
@@ -1960,10 +1960,11 @@ class Post(models.Model):
         if edited_at is None:
             edited_at = datetime.datetime.now()
 
-        self.thread.set_last_activity_info(
-                        last_activity_at=edited_at,
-                        last_activity_by=edited_by
-                    )
+        if not suppress_email:
+            self.thread.set_last_activity_info(
+                            last_activity_at=edited_at,
+                            last_activity_by=edited_by
+                        )
         return revision
 
     def _question__apply_edit(
@@ -2024,10 +2025,11 @@ class Post(models.Model):
             ip_addr=ip_addr
         )
 
-        self.thread.set_last_activity_info(
-                        last_activity_at=edited_at,
-                        last_activity_by=edited_by
-                    )
+        if not suppress_email:
+            self.thread.set_last_activity_info(
+                            last_activity_at=edited_at,
+                            last_activity_by=edited_by
+                        )
         return revision
 
     def apply_edit(self, *args, **kwargs):
@@ -2440,6 +2442,16 @@ class PostRevision(models.Model):
         else:
             raise ValueError()
 
+        schedule = askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
+        if schedule == const.NEVER:
+            return False
+        elif schedule == const.FOR_FIRST_REVISION:
+            return self.revision == 1
+        elif schedule == const.FOR_ANY_REVISION:
+            return True
+        else:
+            raise ValueError()
+
     def __unicode__(self):
         return u'%s - revision %s of %s' % (self.post.post_type, self.revision, self.title)
 
@@ -2459,9 +2471,8 @@ class PostRevision(models.Model):
 
     def get_absolute_url(self):
 
-        is_multilingual = askbot.is_multilingual()
-
-        if is_multilingual:
+        lang_mode = askbot.get_lang_mode()
+        if lang_mode == 'url-lang':
             request_language = get_language()
             activate_language(self.post.language_code)
 
@@ -2472,7 +2483,7 @@ class PostRevision(models.Model):
         else:
             url = self.post.get_absolute_url()
 
-        if is_multilingual:
+        if lang_mode == 'url-lang':
             activate_language(request_language)
 
         return url

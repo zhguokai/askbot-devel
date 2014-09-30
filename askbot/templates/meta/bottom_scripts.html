@@ -22,6 +22,9 @@
     askbot['urls']['unfollow_user'] = '/followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
     askbot['urls']['userSignin'] = '{{ settings.LOGIN_URL }}';
     askbot['urls']['getEditor'] = '{% url "get_editor" %}';
+    {% if settings.MULTILINGUAL %}
+        askbot['urls']['translateUrl'] = '{% url "translate_url" %}';
+    {% endif %}
     {% if feed.name %}
     askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" feed.name %}';
     {% endif %}
@@ -66,6 +69,9 @@
         askbot['data']['searchUrl'] = '';
     {% endif %}
 </script>
+{% if settings.SIGNIN_MOZILLA_PERSONA_ENABLED %}
+<script type="text/javascript" src="https://login.persona.org/include.js"></script>
+{% endif %}
 {# everything below until the custom js and google analytics is compressable #}
 {% compress js %}
 <script type="text/javascript" src="{{"/js/jquery-1.7.2.min.js"|media}}"></script>
@@ -151,6 +157,12 @@
         notify.show();
     }
     $('abbr.timeago').timeago();
+
+    var langNav = $('.lang-nav');
+    if (langNav.length) {
+        var nav = new LangNav();
+        nav.decorate(langNav);
+    }
     /*]]>*/
 </script>
 {% include "meta/custom_javascript.html" ignore missing %}

@@ -296,7 +296,7 @@
                 } else {
                     add_answer_btn.setAttribute(
                         'value',
-                        '{% trans %}Login/Signup to Post{% endtrans %}'
+                        '{{ gettext("Login/Signup to Post")|escapejs }}'
                     );
                 }
             }

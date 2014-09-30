@@ -194,9 +194,9 @@ def moderate_post_edits(request):
                    }
             body_text = template.render(RequestContext(request, data))
             mail.send_mail(
-                subject_line = _('your post was not accepted'),
-                body_text = unicode(body_text),
-                recipient_list = [post.author.email,]
+                subject_line=_('your post was not accepted'),
+                body_text=unicode(body_text),
+                recipient=post.author
             )
             num_posts += 1
 

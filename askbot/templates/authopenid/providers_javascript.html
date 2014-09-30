@@ -1,7 +1,4 @@
 <script type='text/javascript' src='{{ "/js/jquery.validate.min.js"|media }}'></script>
-{% if settings.SIGNIN_MOZILLA_PERSONA_ENABLED %}
-<script type="text/javascript" src="https://login.persona.org/include.js"></script>
-{% endif %}
 <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
 <script type="text/javascript">
     askbot['urls']['changePassword'] = '{% url change_password %}';

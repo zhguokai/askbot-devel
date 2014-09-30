@@ -530,4 +530,4 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
     }
     template = get_template('authopenid/email_validation.html')
     message = template.render(data)#todo: inject language preference
-    send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])
+    send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, email)

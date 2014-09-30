@@ -1,0 +1,20 @@
+{% extends "user_profile/user.html" %}
+{% block profilesection %}
+    {% trans %}languages{% endtrans %}
+{% endblock %}
+{% block usercontent %}
+    <div class="clearfix"></div>
+    <h2>{% trans %}Languages{% endtrans %}</h2>
+    <form
+        method="post" 
+        action="{% url user_select_languages view_user.id, view_user.username|slugify %}"
+    >{% csrf_token %}
+        <div class="user-lang-selector">
+            <p>{% trans %}You can view questions made in other languages.  By selecting below, you will receive posts that are written in those languages.{% endtrans %}</p>
+            <p>{% trans %}I would like to see posts made in:{% endtrans %}</p>
+            {{ languages_form.languages }}
+            <label for="primary_language_id">{% trans %}My primary language is:{% endtrans %}</label>{{ languages_form.primary_language }}
+        </div>
+        <input type="submit" class="select-language" value="{% trans %}Save languages{% endtrans %}" />
+    </form>
+{% endblock %}
