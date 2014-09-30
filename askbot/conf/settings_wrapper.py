@@ -152,7 +152,7 @@ class ConfigSettings(object):
 
 def get_bulk_cache_key():
     from askbot.utils.translation import get_language
-    return 'askbot-settings-%s-%d' % (get_language(), django_settings.SITE_ID)
+    return 'askbot-settings-%d' % django_settings.SITE_ID
 
 
 def prime_cache_handler(*args, **kwargs):
