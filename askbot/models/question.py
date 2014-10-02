@@ -384,11 +384,11 @@ class ThreadManager(BaseQuerySetManager):
                 #in postgresql, plus it is most likely that there will be
                 #only one or two search tags anyway
                 for tag in tags:
-                    try:
-                        tag_record = Tag.objects.get(name__iexact=tag)
-                        existing_tags.add(tag_record.name)
-                    except Tag.DoesNotExist:
+                    tag_records = Tag.objects.filter(name__iexact=tag)
+                    if len(tag_records) == 0:
                         non_existing_tags.add(tag)
+                    else:
+                        existing_tags.add(tag_record.name)
 
                 meta_data['non_existing_tags'] = list(non_existing_tags)
                 tags = existing_tags
