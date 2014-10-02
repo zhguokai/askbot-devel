@@ -346,9 +346,9 @@ def complete_oauth2_signin(request):
     user_id = params['get_user_id_function'](client)
 
     user = authenticate(
-                oauth_user_id = user_id,
-                provider_name = provider_name,
-                method = 'oauth'
+                oauth_user_id=user_id,
+                provider_name=provider_name,
+                method='oauth'
             )
 
     logging.debug('finalizing oauth signin')
@@ -356,10 +356,20 @@ def complete_oauth2_signin(request):
     request.session['email'] = ''#todo: pull from profile
     request.session['username'] = ''#todo: pull from profile
 
-    if (provider_name == 'facebook'):
+    if provider_name == 'facebook':
         profile = client.request("me")
         request.session['email'] = profile.get('email', '')
         request.session['username'] = profile.get('username', '')
+    elif provider_name == 'google-plus' and user is None:
+        #attempt to migrate user from the old OpenId protocol
+        openid_url = getattr(client, 'openid_id', None)
+        if openid_url:
+            msg_tpl = 'trying to migrate user %d from OpenID %s to g-plus %s'
+            logging.critical(msg_tpl, (user.id, str(openid_url), str(user_id)))
+            user = authenticate(openid_url=openid_url)
+            if user:
+                util.google_migrate_from_openid_to_gplus(openid_url, user_id)
+                logging.critical('migrated login from OpenID to g-plus')
 
     return finalize_generic_signin(
                         request = request,
@@ -1001,7 +1011,7 @@ def finalize_generic_signin(
         assert(None not in (login_provider_name, user_identifier))
         request.session['login_provider_name'] = login_provider_name
         request.session['user_identifier'] = user_identifier
-        if urlparse(redirect_url).path == reverse('user_signin'):
+        if urlparse(redirect_url).path == reverse('user_signin') or askbot_settings.ASKBOT_CLOSED_FORUM_MODE:
             #this branch is for signin in full-page version
             #here we need to redirect to the full-page verion
             #of the registration page

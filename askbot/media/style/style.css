@@ -1569,6 +1569,9 @@ ul#related-tags li {
 .moderate-tags-page h1 {
   float: left;
 }
+.mod-queue-info {
+  margin: 12px 0 12px 20px;
+}
 .moderate-tags-page button {
   line-height: 18px;
 }
@@ -2969,34 +2972,37 @@ ul#related-tags li {
 .reject-reason-title {
   margin-bottom: 12px;
 }
-.user-profile-page.inbox-flags .re {
+.moderation-queue-page .re {
   width: 810px;
 }
-.user-profile-page.inbox-flags .post-moderation-controls {
+.moderation-queue-page .post-moderation-controls {
   float: left;
   width: 150px;
   margin-top: 23px;
   text-align: right;
 }
-.user-profile-page.inbox-flags .dropdown {
+.moderation-queue-page .dropdown {
   display: -moz-inline-stack;
   display: inline-block;
   height: 17px;
 }
-.user-profile-page.inbox-flags .dropdown:hover ul.dropdown-menu {
+.moderation-queue-page .dropdown:hover ul.dropdown-menu {
   display: block;
   margin-top: 9px;
 }
-.user-profile-page.inbox-flags .highlight {
+.moderation-queue-page .highlight {
   background: transparent;
 }
-.user-profile-page.inbox-flags .messages {
+.moderation-queue-page .messages {
   margin-bottom: 14px;
 }
-.user-profile-page.inbox-flags .select-items {
+.moderation-queue-page .message {
+  margin: 12px 0;
+}
+.moderation-queue-page .select-items {
   margin-bottom: 10px;
 }
-.user-profile-page.inbox-flags #responses div.face {
+.moderation-queue-page #responses div.face {
   display: none;
 }
 .openid-signin form {
@@ -3877,7 +3883,7 @@ ul.form-horizontal-rows ul.errorlist {
   font-size: 10px;
   line-height: 10px;
   position: absolute;
-  top: 2px;
+  top: -4px;
   left: 180px;
   text-align: left;
   margin: 0;
@@ -4513,6 +4519,9 @@ table.settings td {
 }
 td.setting-label {
   width: 30%;
+}
+td.setting-label span.lang {
+  color: #ff4747;
 }
 td.setting-input {
   padding-left: 10px;

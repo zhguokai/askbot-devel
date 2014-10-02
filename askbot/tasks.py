@@ -24,8 +24,9 @@ import uuid
 from django.contrib.contenttypes.models import ContentType
 from django.template import Context
 from django.template.loader import get_template
-from django.utils.translation import ugettext as _
 from django.utils.translation import activate as activate_language
+from django.utils.translation import get_language
+from django.utils.translation import ugettext as _
 from django.utils import simplejson
 from celery.decorators import task
 from django.conf import settings as django_settings
@@ -128,20 +129,15 @@ def notify_author_of_published_revision_celery_task(revision, language_code):
     #load the template
     activate_language(revision.author.get_primary_language())
     template = get_template('email/notify_author_about_approved_post.html')
-    body_text = template.render(Context(data))
-
-    #restore the language
-    activate_language(language_code)
-
     #todo: possibly add headers to organize messages in threads
-    headers = {'Reply-To': append_content_address}
     #send the message
     mail.send_mail(
         subject_line=_('Your post at %(site_name)s is now published') % data,
-        body_text=body_text,
-        recipient=revision.author,
+        body_text=template.render(Context(data)),
+        recipient=revision.author.email,
         headers=headers
     )
+    activate_language(language_code)
 
 @task(ignore_result = False)
 def record_post_update_celery_task(

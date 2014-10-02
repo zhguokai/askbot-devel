@@ -188,6 +188,11 @@ urlpatterns = patterns('',
         name='moderate_group_join_request'
     ),
     service_url(
+        r'^%s$' % _('moderation-queue/'),
+        views.moderation.moderation_queue,
+        name='moderation_queue'
+    ),
+    service_url(
         r'^moderate-post-edits/',
         views.moderation.moderate_post_edits,
         name='moderate_post_edits'

@@ -573,6 +573,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
                                 sort_method=answer_sort_method,
                                 user=request.user
                             )
+    #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
 
     user_votes = {}
     user_post_id_list = list()
@@ -745,6 +746,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
     extra = context.get_extra('ASKBOT_QUESTION_PAGE_EXTRA_CONTEXT', request, data)
     data.update(extra)
 
+    #print 'generated in ', datetime.datetime.now() - before
     return render(request, 'question.html', data)
 
 def revisions(request, id, post_type = None):

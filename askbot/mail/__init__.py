@@ -101,11 +101,19 @@ def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=No
     else:
         message_class = mail.EmailMessage
 
+    from askbot.models import User
+    email_list = list()
+    for recipient in recipient_list:
+        if isinstance(recipient, User):
+            email_list.append(recipient.email)
+        else:
+            email_list.append(recipient)
+
     msg = message_class(
                 subject_line,
                 get_text_from_html(body_text),
                 sender_email,
-                recipient_list,
+                email_list,
                 headers = headers
             )
     if html_enabled:

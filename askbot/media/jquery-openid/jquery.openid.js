@@ -413,6 +413,19 @@ $.fn.authenticator = function() {
         po.src = 'https://apis.google.com/js/client:plusone.js?onload=renderGooglePlusBtn';
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(po, s);
+    }
+
+    var setupMozillaPersonaListeners = function() {
+        navigator.id.watch({
+            //loggedInUser: askbot['data']['userEmail'],
+            onlogin: function(assertion) {
+                var assertionElement = signin_form.find('input[name=persona_assertion]');
+                assertionElement.val(assertion);
+                provider_name_input.val('mozilla-persona');
+                signin_form.submit();
+                return false;
+            }
+        });
     };
 
     var setup_default_handlers = function(){
@@ -436,7 +449,21 @@ $.fn.authenticator = function() {
         if (googlePlusBtn.length) {
             activateGooglePlusBtn(googlePlusBtn);
         }*/
-
+        if (mozillaPersonaBtn.length) {
+            var mozillaPersonaInitiated = false;
+            var personaListener = function() {
+                if (mozillaPersonaInitiated === false) {
+                    setupMozillaPersonaListeners();
+                    mozillaPersonaInitiated = true;
+                }
+                start_mozilla_persona_login();
+                return false;
+            };
+            setup_event_handlers(
+                signin_page.find('input.mozilla-persona'),
+                personaListener
+            );
+        }
 
         setup_event_handlers(
             signin_page.find('input.oauth,input.oauth2'),

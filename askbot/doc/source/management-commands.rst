@@ -43,6 +43,10 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | The command does not create associations with               |
 |                                 | any of the external login providers.                        |
 +---------------------------------+-------------------------------------------------------------+
+| `askbot_clear_moderation_queue` | Clear all items from the moderation queue                   |
++---------------------------------+-------------------------------------------------------------+
+| `askbot_award_badges`           | Awards badges to users (only some badges are supported)     |
++---------------------------------+-------------------------------------------------------------+
 | `merge_users <from_id>          | Merges user accounts and all related data from one user     |
 | <to_id>`                        | to another, the "from user" account is deleted.             |
 +---------------------------------+-------------------------------------------------------------+
@@ -154,6 +158,9 @@ Any configurable options, related to these commands are accessible via "Email" s
 |                                     | This command may be disabled from the "email" section       |
 |                                     | of the live settings, as well as the appropriate delay      |
 |                                     | parameters may be set.                                      |
++-------------------------------------+-------------------------------------------------------------+
+| `askbot_send_moderation_alerts`     | Sends alerts to moderators when there are items on the      |
+|                                     | queue.                                                      |
 +-------------------------------------+-------------------------------------------------------------+
 
 Data repair commands

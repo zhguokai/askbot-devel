@@ -907,6 +907,10 @@ def user_assert_can_edit_comment(self, comment = None):
             else:
                 return
 
+    if not (self.is_blocked() or self.is_suspended()):
+        if self.reputation >= askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS:
+            return
+
     error_message = _(
         'Sorry, but only post owners or moderators can edit comments'
     )
@@ -1059,16 +1063,20 @@ def user_assert_can_delete_question(self, question = None):
             if self.is_administrator() or self.is_moderator():
                 return
             else:
+                if answer_count > 1:
+                    upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWERS
+                else:
+                    upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWER
+
                 msg = ungettext(
                     'Sorry, cannot %(delete_your_question)s since it '
-                    'has an %(upvoted_answer)s posted by someone else',
+                    'has an %(upvoted_answers)s posted by someone else',
                     'Sorry, cannot %(delete_your_question)s since it '
                     'has some %(upvoted_answers)s posted by other users',
                     answer_count
                 ) % {
                     'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION,
-                    'upvoted_answer': askbot_settings.WORDS_UPVOTED_ANSWER,
-                    'upvoted_answers': askbot_settings.WORDS_UPVOTED_ANSWERS
+                    'upvoted_answers': upvoted_answers_phrase
                 }
                 raise django_exceptions.PermissionDenied(msg)
 
@@ -1624,7 +1632,8 @@ def user_delete_question(
     question.thread.save()
 
     for tag in list(question.thread.tags.all()):
-        if tag.used_count == 1:
+        if tag.used_count <= 1:
+            tag.used_count = 0
             tag.deleted = True
             tag.deleted_by = self
             tag.deleted_at = timestamp
@@ -1656,7 +1665,9 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
 
     #delete questions
     questions = Post.objects.get_questions().filter(author=author)
-    count += questions.update(deleted_at=timestamp, deleted_by=self, deleted=True)
+    count += questions.count()
+    for question in questions:
+        self.delete_question(question=question, timestamp=timestamp)
 
     threads = Thread.objects.filter(last_activity_by=author)
     for thread in threads:
@@ -1674,6 +1685,14 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
     comments = Post.objects.get_comments().filter(author=author)
     count += comments.count()
     comments.delete()
+
+    #delete all unused tags created by this user
+    #tags = author.created_tags.all()
+    #tag_ids = list()
+    #for tag in tags:
+    #    if tag.used_count == 0:
+    #        tag_ids.append(tag.id)
+    #Tag.objects.filter(id__in=tag_ids).delete()
 
     return count
 
@@ -3036,7 +3055,9 @@ def user_update_wildcard_tag_selections(
 
 
 def user_edit_group_membership(self, user=None, group=None,
-                               action=None, force=False):
+                               action=None, force=False,
+                               level=None
+                            ):
     """allows one user to add another to a group
     or remove user from group.
 
@@ -3060,20 +3081,21 @@ def user_edit_group_membership(self, user=None, group=None,
                 openness = 'open'
 
             if openness == 'open':
-                level = GroupMembership.FULL
-                approved_at = datetime.datetime.now()
+                level = level or GroupMembership.FULL
             elif openness == 'moderated':
-                level = GroupMembership.PENDING
+                level = level or GroupMembership.PENDING
             elif openness == 'closed':
                 raise django_exceptions.PermissionDenied()
         else:
-            level = GroupMembership.FULL
-            approved_at = datetime.datetime.now()
+            level = level or GroupMembership.FULL
 
         membership, created = GroupMembership.objects.get_or_create(
                         user=user,
                         group=group
                     )
+
+        if level == GroupMembership.FULL:
+            approved_at = datetime.datetime.now()
 
         if approved_at != None:
             membership.approved_at = approved_at
@@ -3094,9 +3116,10 @@ def user_edit_group_membership(self, user=None, group=None,
     else:
         raise ValueError('invalid action')
 
-def user_join_group(self, group, force=False):
+def user_join_group(self, group, force=False, level=None):
     return self.edit_group_membership(group=group, user=self,
-                                      action='add', force=force)
+                                      action='add', force=force,
+                                      level=level)
 
 def user_leave_group(self, group):
     self.edit_group_membership(group=group, user=self, action='remove')
@@ -3862,6 +3885,7 @@ def greet_new_user(user, **kwargs):
 
     home_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', '/')
     data = {
+        'recipient_user': user,
         'site_name': askbot_settings.APP_SHORT_NAME,
         'site_url': site_url(home_url),
         'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
@@ -4027,6 +4051,49 @@ def moderate_group_joining(sender, membership=None, **kwargs):
                 content_object = group
             )
 
+#this variable and the signal handler below is
+#needed to work around the issue in the django admin
+#where auth_user table editing affects group memberships
+GROUP_MEMBERSHIP_LEVELS = dict()
+def group_membership_changed(**kwargs):
+    sender = kwargs['sender']
+    user = kwargs['instance']
+    action = kwargs['action']
+    reverse = kwargs['reverse']
+    model = kwargs['model']
+    pk_set = kwargs['pk_set']
+
+    if reverse:
+        raise NotImplementedError()
+
+    #store group memberships info
+    #and then delete group memberships
+    if action == 'pre_clear':
+        #get membership info, if exists, save
+        memberships = GroupMembership.objects.filter(user=user)
+        for gm in memberships:
+            GROUP_MEMBERSHIP_LEVELS[(user.id, gm.group.id)] = gm.level
+        memberships.delete()
+    elif action == 'post_add':
+        group_ids = pk_set
+        for group_id in group_ids:
+            gm_key = (user.id, group_id)
+            #mend group membership if it does not exist
+            if not GroupMembership.objects.filter(user=user, group__id=group_id).exists():
+                try:
+                    group = Group.objects.get(id=group_id)
+                except Group.DoesNotExist:
+                    #this is not an Askbot group, no group profile
+                    #so we don't add anything here
+                    pass
+                else:
+                    #restore group membership here
+                    level = GROUP_MEMBERSHIP_LEVELS.get(gm_key)
+                    GroupMembership.objects.create(user=user, group=group, level=level)
+
+            GROUP_MEMBERSHIP_LEVELS.pop(gm_key, None)
+
+
 def tweet_new_post(sender, user=None, question=None, answer=None, form_data=None, **kwargs):
     """seends out tweets about the new post"""
     from askbot.tasks import tweet_new_post_task
@@ -4059,6 +4126,7 @@ django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Post)
 django_signals.post_save.connect(record_vote, sender=Vote)
 django_signals.post_save.connect(record_favorite_question, sender=FavoriteQuestion)
+django_signals.m2m_changed.connect(group_membership_changed, sender=User.groups.through)
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar

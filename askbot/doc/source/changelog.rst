@@ -3,6 +3,10 @@ Changes in Askbot
 
 Development master branch (only on github)
 ------------------------------------------
+* Added email alert for moderators `askbot_send_moderation_alerts`
+* Implemented Google Plus login
+* Allowed localized site settings
+* Added management command `askbot_clear_moderation_queue`
 * Admins and Moderators can merge questions.
 * Improved moderation modes: flags, audit, premoderation. 
   Watched user status, IP blocking, mass content removal.

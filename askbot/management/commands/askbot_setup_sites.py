@@ -49,7 +49,7 @@ that you must take as well. These are detailed below:
     * LIVESETTINGS_OPTIONS
 * prepare an askbot livesettings module (you can base it on one you've extracted 
     from your main Site at maindomain/settings/export/ - remember to change the key 
-    for the top-level dictionary to your new Site's id! Assign the entire dictionary
+    for the top-level dictionary to your new Site's id! Assign the entire dictionary 
     to the variable name 'settings' and give the file a .py extension)
 * load the livesettings for your new site:
     * python manage.py askbot_import_livesettings --settings=<site_name>_settings settings_import

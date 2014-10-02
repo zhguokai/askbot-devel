@@ -288,16 +288,16 @@ def ask(request, feed=None):#view used to ask a new question
                         return HttpResponse(response, mimetype='application/json')
             else:
                 request.session.flush()
-                session_key = request.session.session_key
+                session_key=request.session.session_key
                 models.AnonymousQuestion.objects.create(
-                    session_key = session_key,
-                    title       = title,
-                    tagnames = tagnames,
-                    wiki = wiki,
-                    is_anonymous = ask_anonymously,
-                    text = text,
-                    added_at = timestamp,
-                    ip_addr = request.META.get('REMOTE_ADDR'),
+                    session_key=session_key,
+                    title=title,
+                    tagnames=tagnames,
+                    wiki=wiki,
+                    is_anonymous=ask_anonymously,
+                    text=text,
+                    added_at=timestamp,
+                    ip_addr=request.META.get('REMOTE_ADDR'),
                 )
                 if request.is_ajax():
                     response = simplejson.dumps({'success': True})
@@ -325,7 +325,7 @@ def ask(request, feed=None):#view used to ask a new question
             draft_tagnames = draft.tagnames
 
     form.initial = {
-        'ask_anonymously': request.REQUEST.get('ask_anonymousy', False),
+        'ask_anonymously': request.REQUEST.get('ask_anonymously', False),
         'tags': request.REQUEST.get('tags', draft_tagnames),
         'text': request.REQUEST.get('text', draft_text),
         'title': request.REQUEST.get('title', draft_title),
@@ -481,8 +481,10 @@ def edit_question(request, id):
                 revision_form = revision_form_class(question, revision)
                 if form.is_valid():
                     if form.has_changed():
-                        
-                        reveal_identity = form.cleaned_data['reveal_identity']
+
+                        if form.can_edit_anonymously() and form.cleaned_data['reveal_identity']:
+                            question.thread.remove_author_anonymity()
+                            question.is_anonymous = False
 
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
                         #post privately applies to the sharing groups, not anonymity
@@ -495,11 +497,11 @@ def edit_question(request, id):
                             question=question,
                             title=form.cleaned_data['title'],
                             body_text=form.cleaned_data['text'],
-                            revision_comment = form.cleaned_data['summary'],
-                            tags = form.cleaned_data['tags'],
-                            wiki = is_wiki,
-                            edit_anonymously = form.can_stay_anonymous() and not reveal_identity,
-                            is_private = post_privately,
+                            revision_comment=form.cleaned_data['summary'],
+                            tags=form.cleaned_data['tags'],
+                            wiki=is_wiki,
+                            edit_anonymously=form.cleaned_data['edit_anonymously'],
+                            is_private=post_privately,
                             suppress_email=suppress_email,
                             ip_addr=request.META.get('REMOTE_ADDR')
                         )
@@ -507,7 +509,7 @@ def edit_question(request, id):
                         if 'language' in form.cleaned_data:
                             question.thread.set_language_code(form.cleaned_data['language'])
 
-                        if reveal_identity:
+                        if form.cleaned_data.get('reveal_identity') == True:
                             #applies to whole thread!!!
                             question.thread.remove_author_anonymity()
 

@@ -1667,6 +1667,10 @@ ul#related-tags li {
     }
 }
 
+.mod-queue-info {
+    margin: 12px 0 12px 20px;
+}
+
 .moderate-tags-page {
     button {
         line-height: 18px;
@@ -3099,7 +3103,7 @@ ul#related-tags li {
     margin-bottom: 12px;
 }
 
-.user-profile-page.inbox-flags {
+.moderation-queue-page {
     .re {
         width: 810px;
     }
@@ -3125,6 +3129,9 @@ ul#related-tags li {
     }
     .messages {
         margin-bottom: 14px;
+    }
+    .message {
+        margin: 12px 0;
     }
     .select-items {
         margin-bottom: 10px;
@@ -4123,7 +4130,7 @@ ul.form-horizontal-rows ul.errorlist {
     font-size: 10px;
     line-height: 10px;
     position: absolute;
-    top: 2px;
+    top: -4px;
     left: 180px;
     text-align: left;
     margin: 0;
@@ -4748,6 +4755,9 @@ table.settings {
 }
 td.setting-label {
     width: 30%;
+    span.lang {
+        color: rgb(273, 71, 71);
+    }
 }
 td.setting-input {
     padding-left: 10px;

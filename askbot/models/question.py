@@ -384,11 +384,11 @@ class ThreadManager(BaseQuerySetManager):
                 #in postgresql, plus it is most likely that there will be
                 #only one or two search tags anyway
                 for tag in tags:
-                    try:
-                        tag_record = Tag.objects.get(name__iexact=tag)
-                        existing_tags.add(tag_record.name)
-                    except Tag.DoesNotExist:
+                    tag_records = Tag.objects.filter(name__iexact=tag)
+                    if len(tag_records) == 0:
                         non_existing_tags.add(tag)
+                    else:
+                        existing_tags.add(tag_record.name)
 
                 meta_data['non_existing_tags'] = list(non_existing_tags)
                 tags = existing_tags
@@ -819,11 +819,32 @@ class Thread(models.Model):
             return answers[0].id
         return None
 
-    def get_latest_post(self):
-        """returns latest non-deleted post"""
-        if askbot_settings.GROUPS_ENABLED:
-            raise NotImplementedError()
-        return self.posts.filter(deleted=False).order_by('-added_at')[0]
+    def get_latest_revision(self, user=None):
+        #todo: add denormalized field to Thread model
+        from askbot.models import Post, PostRevision
+        posts_filter = {
+            'thread': self,
+            'post_type__in': ('question', 'answer'),
+            'deleted': False
+        }
+
+        if user and askbot_settings.GROUPS_ENABLED:
+            #get post with groups shared with having at least 
+            #one of the user groups
+            #of those posts return the latest revision
+            posts_filter['groups__in'] = user.get_groups()
+
+        posts = Post.objects.filter(**posts_filter)
+        post_ids = list(posts.values_list('id', flat=True))
+
+        revs = PostRevision.objects.filter(
+                                post__id__in=post_ids,
+                                revision__gt=0
+                            )
+        try:
+            return revs.order_by('-id')[0]
+        except IndexError:
+            return None
 
     def get_primary_site_ids(self):
         """takes threads spaces and returns site ids
@@ -1338,6 +1359,13 @@ class Thread(models.Model):
         post_to_author = dict()
         question_post = None
         for post in thread_posts:
+
+            #precache some revision data
+            first_rev = post.get_earliest_revision()
+            last_rev = post.get_latest_revision()
+            first_rev.post = post
+            last_rev.post = post
+
             #pass through only deleted question posts
             if post.deleted and (not post.is_question()):
                 continue
@@ -1865,7 +1893,7 @@ class Thread(models.Model):
 
         return last_updated_at, last_updated_by
 
-    def get_summary_html(self, search_state=None, visitor = None):
+    def get_summary_html(self, search_state=None, visitor=None):
         html = self.get_cached_summary_html(visitor)
         if not html:
             html = self.update_summary_html(visitor)

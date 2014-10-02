@@ -117,7 +117,7 @@ providers = (
     'ClaimID',
     'Facebook',
     'Flickr',
-    'Google Plus',
+    #'Google Plus',
     'Mozilla Persona',
     'Twitter',
     'LinkedIn',
@@ -133,9 +133,15 @@ providers = (
     'LaunchPad',
 )
 
-DISABLED_BY_DEFAULT = ('LaunchPad', 'Google Plus')
+DISABLED_BY_DEFAULT = ('LaunchPad', 'Mozilla Persona')
 
 NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'Facebook', 'LinkedIn', 'identi.ca',)
+
+GOOGLE_METHOD_CHOICES = (
+    ('openid', 'OpenID (deprecated)'),
+    ('google-plus', 'Google Plus'),
+    ('disabled', _('disable')),
+)
 
 for provider in providers:
     if provider == 'local':
@@ -162,3 +168,18 @@ for provider in providers:
             **kwargs
         )
     )
+
+    if provider == 'local':
+        #add Google settings here as one-off
+        settings.register(
+            livesettings.StringValue(
+                LOGIN_PROVIDERS,
+                'SIGNIN_GOOGLE_METHOD',
+                default='openid',
+                choices=GOOGLE_METHOD_CHOICES,
+                description=_('Google login'),
+                help_text=_(
+                    'To enable Google-Plus login, OAuth keys are required in the "External keys" section'
+                )
+            )
+        )

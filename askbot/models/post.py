@@ -861,7 +861,7 @@ class Post(models.Model):
         is_multilingual = askbot.is_multilingual()
         if is_multilingual:
             request_language = get_language()
-            activate_language(language or self.thread.language_code)
+            activate_language(language or self.language_code)
 
         if feed is None:
             feed = self.thread.get_default_feed().name
@@ -1535,9 +1535,22 @@ class Post(models.Model):
                                         )
         return result
 
+    def cache_latest_revision(self, rev):
+        setattr(self, '_last_rev_cache', rev)
 
     def get_latest_revision(self):
-        return self.revisions.order_by('-revision')[0]
+        if hasattr(self, '_last_rev_cache'):
+            return self._last_rev_cache
+        rev = self.revisions.order_by('-revision')[0]
+        self.cache_latest_revision(rev)
+        return rev
+
+    def get_earliest_revision(self):
+        if hasattr(self, '_first_rev_cache'):
+            return self._first_rev_cache
+        rev = self.revisions.order_by('revision')[0]
+        setattr(self, '_first_rev_cache', rev)
+        return rev
 
     def get_latest_revision_number(self):
         try:
@@ -1865,8 +1878,10 @@ class Post(models.Model):
         self.last_edited_by = edited_by
         #self.html is denormalized in save()
         self.text = text
-        #Post.is_anonymous field is denorm for the first edit only
-        #self.is_anonymous = edit_anonymously 
+        if edit_anonymously:
+            self.is_anonymous = edit_anonymously
+        #else:
+        #pass - we remove anonymity via separate function call
 
         #wiki is an eternal trap whence there is no exit
         if self.wiki == False and wiki == True:
@@ -1888,6 +1903,7 @@ class Post(models.Model):
                 comment=comment,
                 by_email=by_email,
                 ip_addr=ip_addr,
+                is_anonymous=edit_anonymously
             )
 
         if latest_rev.revision > 0:
@@ -2051,7 +2067,8 @@ class Post(models.Model):
             summary=comment,
             by_email=by_email,
             email_address=email_address,
-            ip_addr=ip_addr
+            ip_addr=ip_addr,
+            is_anonymous=is_anonymous
         )
 
     def _question__add_revision(
@@ -2248,7 +2265,8 @@ class PostRevisionManager(models.Manager):
             from askbot.models.reply_by_email import emailed_content_needs_moderation
             moderate_email = emailed_content_needs_moderation(kwargs['email'])
 
-        needs_moderation = author.needs_moderation() or moderate_email
+        is_content = post.is_question() or post.is_answer() or post.is_comment()
+        needs_moderation = is_content and (author.needs_moderation() or moderate_email)
 
         #0 revision is not shown to the users
         if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' and needs_moderation:
@@ -2286,6 +2304,8 @@ class PostRevisionManager(models.Manager):
         #audit or pre-moderation modes require placement of the post on the moderation queue
         if needs_moderation:
             revision.place_on_moderation_queue()
+
+        revision.post.cache_latest_revision(revision)
 
         return revision
 
@@ -2422,6 +2442,16 @@ class PostRevision(models.Model):
         else:
             raise ValueError()
 
+        schedule = askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
+        if schedule == const.NEVER:
+            return False
+        elif schedule == const.FOR_FIRST_REVISION:
+            return self.revision == 1
+        elif schedule == const.FOR_ANY_REVISION:
+            return True
+        else:
+            raise ValueError()
+
     def __unicode__(self):
         return u'%s - revision %s of %s' % (self.post.post_type, self.revision, self.title)
 
@@ -2444,7 +2474,7 @@ class PostRevision(models.Model):
         lang_mode = askbot.get_lang_mode()
         if lang_mode == 'url-lang':
             request_language = get_language()
-            activate_language(self.post.thread.language_code)
+            activate_language(self.post.language_code)
 
         if self.post.is_question():
             url = reverse('question_revisions', args = (self.post.id,))
