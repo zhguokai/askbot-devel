@@ -186,7 +186,7 @@ class NonPersonalGroupFilter(SimpleListFilter):
             return queryset
 
 class AskWidgetAdmin(admin.ModelAdmin):
-    list_display = ('title', 'group', 'tag', 'include_text_field', 'has_inner_style', 'has_outer_style')
+    list_display = ('id', 'title', 'group', 'tag', 'include_text_field', 'has_inner_style', 'has_outer_style')
     list_filter = ('include_text_field', NonPersonalGroupFilter)
     search_fields = ('title', 'tag')
 
@@ -196,6 +196,18 @@ class AskWidgetAdmin(admin.ModelAdmin):
     def has_outer_style(self, obj):
         return obj.outer_style.strip() != u''
 admin.site.register(models.AskWidget, AskWidgetAdmin)
+
+class QuestionWidgetAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'question_number', 'tagnames', 'group', 'has_search_query', 'order_by', 'has_style')
+    list_filter = (NonPersonalGroupFilter,)
+    search_fields = ('title', 'tagnames')
+
+    def has_style(self, obj):
+        return obj.style.strip() != u''
+
+    def has_search_query(self, obj):
+        return obj.search_query.strip() != u''
+admin.site.register(models.QuestionWidget, QuestionWidgetAdmin)
 
 
 from django.contrib.sites.models import Site
