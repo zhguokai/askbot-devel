@@ -371,7 +371,6 @@ def complete_oauth2_signin(request):
                 util.google_migrate_from_openid_to_gplus(openid_url, user_id)
                 logging.critical('migrated login from OpenID to g-plus')
 
-
     return finalize_generic_signin(
                         request = request,
                         user = user,
@@ -1012,7 +1011,7 @@ def finalize_generic_signin(
         assert(None not in (login_provider_name, user_identifier))
         request.session['login_provider_name'] = login_provider_name
         request.session['user_identifier'] = user_identifier
-        if urlparse(redirect_url).path == reverse('user_signin'):
+        if urlparse(redirect_url).path == reverse('user_signin') or askbot_settings.ASKBOT_CLOSED_FORUM_MODE:
             #this branch is for signin in full-page version
             #here we need to redirect to the full-page verion
             #of the registration page
