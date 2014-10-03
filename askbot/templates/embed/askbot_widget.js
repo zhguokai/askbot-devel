@@ -31,7 +31,7 @@ var {{variable_name}} = {
     {% endif %}
 
     var title = document.createElement('h1');
-    title.innerText = '{{ widget.title }}';
+    title.innerHTML = '{{ widget.title }}';
 
     containerDiv.appendChild(title);
 

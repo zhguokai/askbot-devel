@@ -173,6 +173,42 @@ class ThreadAdmin(admin.ModelAdmin):
         return ', '.join(obj.spaces.all().values_list('name', flat=True))
 admin.site.register(models.Thread, ThreadAdmin)
 
+class NonPersonalGroupFilter(SimpleListFilter):
+    title = 'non-personal group'
+    parameter_name = 'non_personal_group'
+
+    def lookups(self, request, model_admin):
+        return tuple([(group.id, "%s group"%group.name) for group in models.Group.objects.exclude(name__contains=models.user.PERSONAL_GROUP_NAME_PREFIX)])
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(group__id=self.value())
+        else:
+            return queryset
+
+class AskWidgetAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'group', 'tag', 'include_text_field', 'has_inner_style', 'has_outer_style')
+    list_filter = ('include_text_field', NonPersonalGroupFilter)
+    search_fields = ('title', 'tag')
+
+    def has_inner_style(self, obj):
+        return obj.inner_style.strip() != u''
+
+    def has_outer_style(self, obj):
+        return obj.outer_style.strip() != u''
+admin.site.register(models.AskWidget, AskWidgetAdmin)
+
+class QuestionWidgetAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'question_number', 'tagnames', 'group', 'has_search_query', 'order_by', 'has_style')
+    list_filter = (NonPersonalGroupFilter,)
+    search_fields = ('title', 'tagnames')
+
+    def has_style(self, obj):
+        return obj.style.strip() != u''
+
+    def has_search_query(self, obj):
+        return obj.search_query.strip() != u''
+admin.site.register(models.QuestionWidget, QuestionWidgetAdmin)
+
 
 from django.contrib.sites.models import Site
 try:

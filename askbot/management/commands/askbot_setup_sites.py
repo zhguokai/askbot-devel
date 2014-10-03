@@ -13,8 +13,10 @@ This command sets up the necessary objects and relationships for a new askbot
 sub-site (eg. http://sitename.domain). However, there are some other steps
 that you must take as well. These are detailed below:
 
-* note the id of the Group that's going to be the sub-site's default ask Group
-    (creating one via the web UI if necessary)
+* note the id of the Group that's going to be the sub-site's default ask Group,
+    creating one via the web UI if necessary. If you create a Group, consider 
+    adding an admin/mod user to it so that there's someone to cover the 
+    moderation queue for that Group.
 * for each of the following tables, determine what the next free id is as
     this will be the id of the corresponding object created by this command
     * Site
