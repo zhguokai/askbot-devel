@@ -50,7 +50,7 @@ class Vote(models.Model):
         db_table = u'vote'
 
     def __unicode__(self):
-        return '[%s] voted at %s: %s' %(self.user, self.voted_at, self.vote)
+        return u'[%s] voted at %s: %s' %(self.user, self.voted_at, self.vote)
 
     def __int__(self):
         """1 if upvote -1 if downvote"""
