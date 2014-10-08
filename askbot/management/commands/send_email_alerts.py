@@ -13,12 +13,15 @@ from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from askbot import const
 from askbot import mail
 from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
+import traceback
 
 DEBUG_THIS_COMMAND = False
+SITE_ID = Site.objects.get_current().id
 
 def get_all_origin_posts(mentions):
     origin_posts = set()
@@ -87,9 +90,37 @@ class Command(NoArgsCommand):
             for user in User.objects.all():
                 try:
                     self.send_email_alerts(user, template)
-                except Exception, e:
-                    print e
+                except Exception:
+                    self.report_exception(user)
             connection.close()
+
+    def format_debug_msg(self, user, content):
+        msg = u"%s site_id=%d user=%s: %s" % ( 
+            datetime.datetime.now().strftime('%y-%m-%d %h:%m:%s'),
+            SITE_ID,
+            repr(user.username),
+            content
+        )
+        return msg.encode('utf-8')
+
+    def report_exception(self, user):
+        """reports exception that happened during sending email alert to user"""
+        message = self.format_debug_msg(user, traceback.format_exc())
+        print message
+        admin_email = askbot_settings.ADMIN_EMAIL 
+        try:
+            subject_line = u"Error processing daily/weekly notification for User '%s' for Site '%s'" % (user.username, SITE_ID)
+            mail.send_mail(
+                subject_line=subject_line.encode('utf-8'),
+                body_text=message,
+                recipient_list=[admin_email,]
+            )
+        except:
+            message = u"ERROR: was unable to report this exception to %s: %s" % (admin_email, traceback.format_exc())
+            print self.format_debug_msg(user, message)
+        else: 
+            message = u"Sent email reporting this exception to %s" % admin_email
+            print self.format_debug_msg(user, message)
 
     def get_updated_questions_for_user(self, user):
         """
