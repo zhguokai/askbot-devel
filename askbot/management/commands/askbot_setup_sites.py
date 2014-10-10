@@ -34,7 +34,8 @@ that you must take as well. These are detailed below:
         * <space_id>: ('<space_name>', '<group_id>')
     * add this to the ASKBOT_FEEDS dict: 
         * <feed_id>: ('<feed_name>', <site_id>, <space_ids>)
-        * where <space_ids> is a list of Space ids, the first one being the primary
+        * where <space_ids> is a list of ids of Spaces whose questions should aggregate to this Feed (and hence to the referenced Site). The first ID identifies the primary Space.
+    * if you want questions from your new Site to aggregate to the main KP Site, you should add the ID of your new Space to the list of Space IDs of the main Site's Feed in ASKBOT_FEEDS.
     * add this to the ASKBOT_SITE_TO_DEFAULT_ASK_GROUP:
         * <site_id>: <group_id>
 * run this managment command to create the objects and their relationships:
