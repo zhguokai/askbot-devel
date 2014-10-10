@@ -98,9 +98,11 @@ class Command(NoArgsCommand):
             feed.site = get_object_by_id(Site, site_id)
             feed.save()
 
-            #remove all spaces from feed
-            FeedToSpace.objects.filter(feed__id=feed_id).delete()
-
+            #remove spaces that don't belong to the feed any more
+            for space in feed.get_spaces():
+                if space.id not in space_ids:
+                    feed.remove_space(space)
+                    
             #add spaces to feed
             for space_id in space_ids:
                 space = get_object_by_id(Space, space_id)
