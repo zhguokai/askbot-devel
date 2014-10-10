@@ -13,8 +13,10 @@ This command sets up the necessary objects and relationships for a new askbot
 sub-site (eg. http://sitename.domain). However, there are some other steps
 that you must take as well. These are detailed below:
 
-* note the id of the Group that's going to be the sub-site's default ask Group
-    (creating one via the web UI if necessary)
+* note the id of the Group that's going to be the sub-site's default ask Group,
+    creating one via the web UI if necessary. If you create a Group, consider 
+    adding an admin/mod user to it so that there's someone to cover the 
+    moderation queue for that Group.
 * for each of the following tables, determine what the next free id is as
     this will be the id of the corresponding object created by this command
     * Site
@@ -32,7 +34,8 @@ that you must take as well. These are detailed below:
         * <space_id>: ('<space_name>', '<group_id>')
     * add this to the ASKBOT_FEEDS dict: 
         * <feed_id>: ('<feed_name>', <site_id>, <space_ids>)
-        * where <space_ids> is a list of Space ids, the first one being the primary
+        * where <space_ids> is a list of ids of Spaces whose questions should aggregate to this Feed (and hence to the referenced Site). The first ID identifies the primary Space.
+    * if you want questions from your new Site to aggregate to the main KP Site, you should add the ID of your new Space to the list of Space IDs of the main Site's Feed in ASKBOT_FEEDS.
     * add this to the ASKBOT_SITE_TO_DEFAULT_ASK_GROUP:
         * <site_id>: <group_id>
 * run this managment command to create the objects and their relationships:
@@ -44,6 +47,7 @@ that you must take as well. These are detailed below:
     * STATICFILES_DIRS += (ASKBOT_EXTRA_SKINS_DIR,)
     * DEBUG
     * DEFAULT_ASK_GROUP_ID
+    * ASKBOT_LANGUAGE_MODE ('single-lang' or 'user-lang')
     * LIVESETTINGS_OPTIONS
 * prepare an askbot livesettings module (you can base it on one you've extracted 
     from your main Site at maindomain/settings/export/ - remember to change the key 
