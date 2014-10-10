@@ -1,5 +1,6 @@
 from askbot.models import Feed
 from askbot.models import Space
+from askbot.models import FeedToSpace
 from askbot.models import Thread
 from askbot.utils.console import ProgressBar
 from django.conf import settings as django_settings
@@ -97,6 +98,10 @@ class Command(NoArgsCommand):
             feed.site = get_object_by_id(Site, site_id)
             feed.save()
 
+            #remove all spaces from feed
+            FeedToSpace.objects.filter(feed__id=feed_id).delete()
+
+            #add spaces to feed
             for space_id in space_ids:
                 space = get_object_by_id(Space, space_id)
                 feed.add_space(space)
