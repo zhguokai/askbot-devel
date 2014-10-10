@@ -46,6 +46,7 @@ that you must take as well. These are detailed below:
     * STATICFILES_DIRS += (ASKBOT_EXTRA_SKINS_DIR,)
     * DEBUG
     * DEFAULT_ASK_GROUP_ID
+    * ASKBOT_LANGUAGE_MODE ('single-lang' or 'user-lang')
     * LIVESETTINGS_OPTIONS
 * prepare an askbot livesettings module (you can base it on one you've extracted 
     from your main Site at maindomain/settings/export/ - remember to change the key 
