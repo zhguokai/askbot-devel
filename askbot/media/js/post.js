@@ -1420,8 +1420,10 @@ var questionRetagger = function(){
     var drawNewTags = function(new_tags){
         tagsDiv.empty();
         if (new_tags === ''){
+            tagsDiv.addClass('empty');
             return;
         }
+        tagsDiv.removeClass('empty');
         new_tags = new_tags.split(/\s+/);
         var tags_html = ''
         $.each(new_tags, function(index, name){

@@ -2,7 +2,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
-from bs4 import BeautifulSoup
+from askbot.utils.html import get_soup
 from askbot.models import get_feed_url, Feed
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
@@ -32,7 +32,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         data['post_privately'] = 'checked'
         response1 = self.client.post(get_feed_url('ask'), data=data)
         response2 = self.client.get(response1['location'])
-        dom = BeautifulSoup(response2.content)
+        dom = get_soup(response2.content)
         title = dom.find('h1').text
         self.assertTrue(unicode(const.POST_STATUS['private']) in title)
         question = models.Thread.objects.get()
@@ -66,7 +66,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
             data=data
         )
         response2 = self.client.get(question.get_absolute_url())
-        dom = BeautifulSoup(response2.content)
+        dom = get_soup(response2.content)
         title = dom.find('h1').text
         self.assertTrue(models.Group.objects.get_global_group() in set(question.groups.all()))
         self.assertEqual(title, self.qdata['title'])
@@ -87,7 +87,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
             data=data
         )
         response2 = self.client.get(question.get_absolute_url())
-        dom = BeautifulSoup(response2.content)
+        dom = get_soup(response2.content)
         title = dom.find('h1').text
         self.assertFalse(models.Group.objects.get_global_group() in set(question.groups.all()))
         self.assertTrue(unicode(const.POST_STATUS['private']) in title)
@@ -97,7 +97,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         response = self.client.get(
             reverse('edit_question', kwargs={'id':question.id})
         )
-        dom = BeautifulSoup(response.content)
+        dom = get_soup(response.content)
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )
@@ -108,7 +108,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         response = self.client.get(
             reverse('edit_question', kwargs={'id':question.id})
         )
-        dom = BeautifulSoup(response.content)
+        dom = get_soup(response.content)
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )
@@ -156,7 +156,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
         response = self.client.get(
             reverse('edit_answer', kwargs={'id': answer.id})
         )
-        dom = BeautifulSoup(response.content)
+        dom = get_soup(response.content)
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )
@@ -167,7 +167,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
         response = self.client.get(
             reverse('edit_answer', kwargs={'id': answer.id})
         )
-        dom = BeautifulSoup(response.content)
+        dom = get_soup(response.content)
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )

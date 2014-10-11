@@ -7,7 +7,6 @@ is not always very clean.
 """
 import datetime
 import logging
-from bs4 import BeautifulSoup
 from django.conf import settings as django_settings
 from django.core import exceptions
 #from django.core.management import call_command

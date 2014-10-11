@@ -11,6 +11,11 @@ from django.utils.html import strip_tags as strip_all_tags
 from django.utils.html import urlize
 from askbot.conf import settings as askbot_settings
 
+def get_soup(text):
+    if isinstance(text, unicode):
+        text = text.encode('utf-8')
+    return BeautifulSoup(text, 'html5lib')
+
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
     acceptable_elements = ('a', 'abbr', 'acronym', 'address', 'b', 'big',
         'blockquote', 'br', 'caption', 'center', 'cite', 'code', 'col',
@@ -80,7 +85,7 @@ def urlize_html(html, trim_url_limit=40):
     """will urlize html, while ignoring link
     patterns inside anchors, <pre> and <code> tags
     """
-    soup = BeautifulSoup(html, 'html5lib')
+    soup = get_soup(html)
     extract_nodes = list()
     for node in soup.findAll(text=True):
         parent_tags = [p.name for p in node.parents]
@@ -94,7 +99,7 @@ def urlize_html(html, trim_url_limit=40):
         if unicode(node) == urlized_text:
             continue
 
-        sub_soup = BeautifulSoup(urlized_text, 'html5lib')
+        sub_soup = get_soup(urlized_text)
         contents = sub_soup.find('body').contents
         num_items = len(contents)
         for i in range(num_items):
@@ -124,7 +129,7 @@ def replace_links_with_text(html):
     """any absolute links will be replaced with the
     url in plain text, same with any img tags
     """
-    soup = BeautifulSoup(html, 'html5lib')
+    soup = get_soup(html)
     abs_url_re = r'^http(s)?://'
 
     images = soup.find_all('img')
@@ -150,7 +155,7 @@ def get_text_from_html(html_text):
     """Returns the content part from an HTML document
     retains links and references to images and line breaks.
     """
-    soup = BeautifulSoup(html_text, 'html5lib')
+    soup = get_soup(html_text)
 
     #replace <a> links with plain text
     links = soup.find_all('a')
@@ -183,7 +188,7 @@ def strip_tags(html, tags=None):
 
     assert(tags != None)
 
-    soup = BeautifulSoup(html.encode('utf-8'), 'html5lib')
+    soup = get_soup(html)
     for tag in tags:
         tag_matches = soup.find_all(tag)
         map(lambda v: v.replaceWith(''), tag_matches)
@@ -218,7 +223,7 @@ def split_contents_and_scripts(html):
     """returns script-less html markup and a list of dictionaries
     for each script element with keys: 'src', 'contents'
     """
-    html_soup = BeautifulSoup(html)
+    html_soup = get_soup(html)
 
     parsed_scripts = list()
     for script in html_soup.find_all('script'):

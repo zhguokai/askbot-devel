@@ -4,7 +4,6 @@ import re
 import time
 import urllib
 from coffin import template as coffin_template
-from bs4 import BeautifulSoup
 from django.core import exceptions as django_exceptions
 from django.utils.translation import ugettext as _
 from django.utils.translation import get_language as django_get_language
@@ -20,6 +19,7 @@ from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
 from askbot.utils.html import site_link
 from askbot.utils.html import site_url as site_url_func
+from askbot.utils.html import get_soup
 from askbot.utils import functions
 from askbot.utils import url_utils
 from askbot.utils import markup
@@ -67,7 +67,7 @@ def is_empty_editor_value(value):
         return True
     #tinymce uses a weird sentinel placeholder
     if askbot_settings.EDITOR_TYPE == 'tinymce':
-        soup = BeautifulSoup(value, 'html5lib')
+        soup = get_soup(value)
         return soup.getText().strip() == ''
     return False
 

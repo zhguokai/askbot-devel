@@ -1,4 +1,3 @@
-import bs4
 import copy
 import datetime
 import functools
@@ -16,6 +15,7 @@ from askbot.tests.utils import with_settings
 from askbot import models
 from askbot import mail
 from askbot.conf import settings as askbot_settings
+from askbot.utils.html import get_soup
 from askbot import const
 from askbot.models.question import Thread
 
@@ -1125,7 +1125,7 @@ class AbsolutizeUrlsInEmailsTests(utils.AskbotTestCase):
         content_type = outbox[0].alternatives[0][1]
         self.assertEqual(content_type, 'text/html')
 
-        soup = bs4.BeautifulSoup(html_message)
+        soup = get_soup(html_message)
         links = soup.find_all('a')
         url_bits = {}
         for link in links:

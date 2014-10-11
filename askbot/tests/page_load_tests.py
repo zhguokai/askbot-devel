@@ -10,11 +10,11 @@ from django.utils.translation import activate as activate_language
 
 import coffin
 import coffin.template
-from bs4 import BeautifulSoup
 
 import askbot
 from askbot import models
 from askbot.utils.slug import slugify
+from askbot.utils.html import get_soup
 from askbot.deployment import package_utils
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
@@ -589,7 +589,7 @@ class QuestionViewTests(AskbotTestCase):
         text = 'this is a question'
         question = self.post_question(user=user, body_text=text)
         response = self.client.get(question.get_absolute_url())
-        soup = BeautifulSoup(response.content)
+        soup = get_soup(response.content)
         meta_descr = soup.find_all('meta', attrs={'name': 'description'})[0]
         self.assertTrue(text in meta_descr.attrs['content'])
 
@@ -737,7 +737,7 @@ class CommandViewTests(AskbotTestCase):
 
     def test_load_object_description_fails(self):
         response = self.client.get(reverse('load_object_description'))
-        soup = BeautifulSoup(response.content)
+        soup = get_soup(response.content)
         title = soup.find_all('h1')[0].contents[0].strip()
         self.assertEqual(title, 'Page not found')
 
