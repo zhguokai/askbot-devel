@@ -36,7 +36,7 @@ REQUIREMENTS = {
     'pytz': 'pytz==2013b',
     'tinymce': 'django-tinymce==1.5.1b2',
     'longerusername': 'longerusername',
-    'bs4': 'beautifulsoup4',
+    'bs4': 'beautifulsoup4>=4.3.2',
     'picklefield': 'django-picklefield==0.3.0',
     #'stopforumspam': 'stopforumspam'
 }

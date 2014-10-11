@@ -12,8 +12,6 @@ from django.utils.html import urlize
 from askbot.conf import settings as askbot_settings
 
 def get_soup(text):
-    if isinstance(text, unicode):
-        text = text.encode('utf-8')
     return BeautifulSoup(text, 'html5lib')
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
