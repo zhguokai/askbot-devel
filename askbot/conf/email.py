@@ -159,6 +159,21 @@ settings.register(
     )
 )
 
+UNANSWERED_REMINDER_RECIPIENTS_CHOICES = (
+    ('everyone', _('everyone')),
+    ('admins', _('moderators & administrators'))
+)
+
+settings.register(
+    livesettings.StringValue(
+        EMAIL,
+        'UNANSWERED_REMINDER_RECIPIENTS',
+        default='everyone',
+        choices=UNANSWERED_REMINDER_RECIPIENTS_CHOICES,
+        description=_('Whom to remind about unanswered questions')
+    )
+)
+
 settings.register(
     livesettings.IntegerValue(
         EMAIL,
