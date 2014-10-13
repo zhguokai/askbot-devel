@@ -2029,7 +2029,6 @@ class AnonymousQuestion(DraftContent):
                 from django.contrib.sites.models import Site
                 current_site = Site.objects.get_current()
                 site_feeds = Feed.objects.filter(site=current_site)
-                feed = Feed.objects.get(name=self._feed, site=current_site)
                 #todo: danger - we are takin a random feed!!!
                 space = site_feeds[0].default_space
             else:
