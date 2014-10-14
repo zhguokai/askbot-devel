@@ -265,19 +265,6 @@ settings.register(
 )
 
 settings.register(
-    livesettings.BooleanValue(
-        EMAIL,
-        'ALLOW_ASKING_BY_EMAIL',
-        default = False,
-        description=_('Allow posting questions by email'),
-        help_text=_(
-            'Before enabling this setting - please fill out IMAP settings '
-            'in the settings.py file'
-        )
-    )
-)
-
-settings.register(
     livesettings.LongStringValue(
         EMAIL,
         'ASK_BY_EMAIL_INSTRUCTIONS',
@@ -304,10 +291,10 @@ settings.register(
          EMAIL,
         'REPLY_BY_EMAIL',
         default = False,
-        description=_('Enable posting answers and comments by email'),
+        description=_('Enable posting by email'),
         #TODO give a better explanation depending on lamson startup procedure
         help_text=_(
-            'To enable this feature make sure lamson is running'
+            "To enable this feature make sure Askbot's lamson mail server is running"
             
         )
     )
