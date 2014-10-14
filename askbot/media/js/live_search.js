@@ -37,6 +37,10 @@ SearchDropMenu.prototype.render = function() {
         var listItem = me.makeElement('li');
         var link = me.makeElement('a');
         link.attr('href', item['url']);
+        // If we're inside a widget iframe, open in new tab
+        if (window.location.href.indexOf("widgets/ask") > -1) {
+            link.attr('target', '_blank');
+        }
         link.html(item['title']);
         listItem.append(link);
         list.append(listItem);
