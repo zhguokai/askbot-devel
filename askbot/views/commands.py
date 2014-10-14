@@ -1617,6 +1617,7 @@ def publish_answer(request):
         message = _('The answer is now published')
         #todo: notify enquirer by email about the post
     request.user.message_set.create(message=message)
+    answer.thread.invalidate_cached_post_data()
     return {'redirect_url': answer.get_absolute_url()}
 
 @decorators.ajax_only
