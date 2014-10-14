@@ -18,7 +18,7 @@
                 {% include "question/answer_author_info.html" %}
             </div>
             {% if answer.id not in published_answer_ids %}
-                <p><strong>{% trans %}This response is not published for the inquirer{% endtrans %}</strong></p>
+                <p><strong>{% trans %}This response is not published for the enquirer{% endtrans %}</strong></p>
             {% endif %}
             {% if answer.needs_moderation() %}
                 <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>

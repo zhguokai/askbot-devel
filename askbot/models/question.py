@@ -1604,6 +1604,9 @@ class Thread(models.Model):
         if recursive == False:
             self._question_post().make_public()
 
+        thread_groups = ThreadToGroup.objects.filter(thread=self)
+        thread_groups.update(visibility=ThreadToGroup.SHOW_ALL_RESPONSES)
+
     def make_private(self, user, group_id = None):
         """adds thread to all user's groups, excluding
         the global, or to a group given by id.

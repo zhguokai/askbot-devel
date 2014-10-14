@@ -1443,9 +1443,9 @@ def share_question_with_group(request):
                                 )
 
             notify_sets = {
-                'for_mentions': sets2['for_mentions'] - sets1['for_mentions'],
-                'for_email': sets2['for_email'] - sets1['for_email'],
-                'for_inbox': sets2['for_inbox'] - sets1['for_inbox']
+                'for_mentions': set(sets2['for_mentions']) - set(sets1['for_mentions']),
+                'for_email': set(sets2['for_email']) - set(sets1['for_email']),
+                'for_inbox': set(sets2['for_inbox']) - set(sets1['for_inbox'])
             }
 
             question_post.issue_update_notifications(
