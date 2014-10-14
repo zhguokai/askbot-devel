@@ -1409,7 +1409,7 @@ class Thread(models.Model):
         #put published answers first
         #todo: there may be > 1 enquirers
         published_answer_ids = list()
-        if question_post and question_post.is_approved() == False and user != question_post.author:
+        if question_post and user != question_post.author:
             #if moderated - then author is guaranteed to be the
             #limited visibility enquirer
             published_answer_ids = self.posts.get_answers(
