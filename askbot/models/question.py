@@ -388,7 +388,7 @@ class ThreadManager(BaseQuerySetManager):
                     if len(tag_records) == 0:
                         non_existing_tags.add(tag)
                     else:
-                        existing_tags.add(tag.name)
+                        existing_tags.add(tag_records[0].name)
 
                 meta_data['non_existing_tags'] = list(non_existing_tags)
                 tags = existing_tags
