@@ -30,4 +30,7 @@ site_id -> value
         livesettings = mod.settings.values()[0]
         for settings_group in livesettings.values():
             for name, value in settings_group.items():
-                askbot_settings.update(name, value)
+                try:
+                    askbot_settings.update(name, value)
+                except:
+                    print "Failed to set %s" % name
