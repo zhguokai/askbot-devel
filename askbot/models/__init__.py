@@ -3431,7 +3431,7 @@ def format_instant_notification_email(
     if can_reply:
         reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
                     _('To reply, PLEASE WRITE ABOVE THIS LINE.')
-        if post.is_question() and alt_reply_address:
+        if post.is_question() and alt_reply_address and askbot_settings.ALLOW_COMMENTING_QUESTIONS_BY_EMAIL:
             data = {
                 'addr': alt_reply_address,
                 'subject': urllib.quote(
