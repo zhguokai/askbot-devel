@@ -38,7 +38,7 @@ SearchDropMenu.prototype.render = function() {
         var link = me.makeElement('a');
         link.attr('href', item['url']);
         // If we're inside a widget iframe, open in new tab
-        if (window.location.href.indexOf("widgets/ask") > -1) {
+        if (askbot['data']['isWidget']) {
             link.attr('target', '_blank');
         }
         link.html(item['title']);

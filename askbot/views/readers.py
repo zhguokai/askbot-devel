@@ -832,7 +832,7 @@ def get_perms_data(request):
         'MIN_REP_TO_VIEW_OFFENSIVE_FLAGS',
     )
 
-    if askbot_settings.ALLOW_ASKING_BY_EMAIL or askbot_settings.REPLY_BY_EMAIL:
+    if askbot_settings.REPLY_BY_EMAIL:
         items += (
             'MIN_REP_TO_POST_BY_EMAIL',
             'MIN_REP_TO_TWEET_ON_OTHERS_ACCOUNTS',

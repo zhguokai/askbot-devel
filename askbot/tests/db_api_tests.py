@@ -3,7 +3,6 @@ functions that happen on behalf of users
 
 e.g. ``some_user.do_something(...)``
 """
-from bs4 import BeautifulSoup
 from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.test.client import Client
@@ -13,8 +12,9 @@ from django import forms
 from askbot import exceptions as askbot_exceptions
 from askbot.tests.utils import AskbotTestCase
 from askbot.tests.utils import with_settings
-from askbot import models
 from askbot import const
+from askbot import models
+from askbot.utils.html import get_soup
 from askbot.conf import settings as askbot_settings
 import datetime
 
@@ -726,12 +726,12 @@ class GroupTests(AskbotTestCase):
 class LinkPostingTests(AskbotTestCase):
 
     def assert_no_link(self, html):
-        soup = BeautifulSoup(html)
+        soup = get_soup(html)
         links = soup.findAll('a')
         self.assertEqual(len(links), 0)
 
     def assert_has_link(self, html, url):
-        soup = BeautifulSoup(html)
+        soup = get_soup(html)
         links = soup.findAll('a')
         self.assertTrue(len(links) > 0)
         self.assertEqual(links[0]['href'], url)

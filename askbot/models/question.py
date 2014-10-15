@@ -388,7 +388,7 @@ class ThreadManager(BaseQuerySetManager):
                     if len(tag_records) == 0:
                         non_existing_tags.add(tag)
                     else:
-                        existing_tags.add(tag_record.name)
+                        existing_tags.add(tag_records[0].name)
 
                 meta_data['non_existing_tags'] = list(non_existing_tags)
                 tags = existing_tags
@@ -1409,7 +1409,7 @@ class Thread(models.Model):
         #put published answers first
         #todo: there may be > 1 enquirers
         published_answer_ids = list()
-        if question_post and question_post.is_approved() == False and user != question_post.author:
+        if question_post and user != question_post.author:
             #if moderated - then author is guaranteed to be the
             #limited visibility enquirer
             published_answer_ids = self.posts.get_answers(
@@ -1603,6 +1603,9 @@ class Thread(models.Model):
         self.add_to_groups(groups, recursive=recursive)
         if recursive == False:
             self._question_post().make_public()
+
+        thread_groups = ThreadToGroup.objects.filter(thread=self)
+        thread_groups.update(visibility=ThreadToGroup.SHOW_ALL_RESPONSES)
 
     def make_private(self, user, group_id = None):
         """adds thread to all user's groups, excluding
@@ -2019,21 +2022,37 @@ class AnonymousQuestion(DraftContent):
     is_anonymous = models.BooleanField(default=False)
 
     def publish(self, user):
-        added_at = datetime.datetime.now()
-        #todo: wrong - use User.post_question() instead
         try:
             user.assert_can_post_text(self.text)
-            thread = Thread.objects.create_new(
-                title = self.title,
-                added_at = added_at,
-                author = user,
-                wiki = self.wiki,
-                is_anonymous = self.is_anonymous,
-                tagnames = self.tagnames,
-                text = self.text,
+
+            #todo - fix this to save the space and group id
+            #in the AnonymousQuestion object
+            if askbot_settings.SPACES_ENABLED:
+                from askbot.models import Feed
+                from django.contrib.sites.models import Site
+                current_site = Site.objects.get_current()
+                site_feeds = Feed.objects.filter(site=current_site)
+                #todo: danger - we are takin a random feed!!!
+                space = site_feeds[0].default_space
+            else:
+                from askbot.models import Space
+                return Space.objects.get_default()
+
+            question = user.post_question(
+                title=self.title,
+                body_text=self.text,
+                space=space,
+                tags=self.tagnames,
+                wiki=self.wiki,
+                is_anonymous=self.is_anonymous,
+                timestamp=datetime.datetime.now(),
+                #todo: save group id in the AnonymousQuestion object
+                group_id=getattr(django_settings, 'DEFAULT_ASK_GROUP_ID', None),
+                #language=language,#todo: add language_code to DraftContent
+                ip_addr=self.ip_addr
             )
             self.delete()
-            return thread
+            return question.thread
         except django_exceptions.PermissionDenied, error:
             #delete previous draft questions (only one is allowed anyway)
             prev_drafts = DraftQuestion.objects.filter(author=user)

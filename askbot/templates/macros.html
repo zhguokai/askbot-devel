@@ -176,18 +176,18 @@
     )
 -%}
 <ul {% if id %}id="{{ id }}"{% endif %}
-    class="tags{% if css_class %} {{css_class}}{% endif %}"
+    class="tags{% if css_class %} {{css_class}}{% endif %}{% if not tags %} empty{% endif %}"
 >
     {% if tags %}
         {% for tag in tags %}
             {{ tag_widget(
                 tag,
-                css_class = tag_css_class,
-                deletable = deletable,
-                is_link = make_links,
-                search_state = search_state,
-                html_tag = tag_html_tag,
-                truncate_long_tag = False
+                css_class=tag_css_class,
+                deletable=deletable,
+                is_link=make_links,
+                search_state=search_state,
+                html_tag=tag_html_tag,
+                truncate_long_tag=False
             )}}
         {% endfor %}
     {% endif %}

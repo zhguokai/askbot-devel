@@ -133,6 +133,14 @@ class Feed(models.Model):
         link, created = FeedToSpace.objects.get_or_create(feed=self, space=space)
         self.space_links.add(link)
 
+    def remove_space(self, space):
+        if not isinstance(space, Space):
+            raise TypeError('space argument must be of type askbot.models.Space')
+        if space == self.default_space:
+            raise ValueError('Cannot remove default space from feed %s' % self.name)
+        links = FeedToSpace.objects.filter(feed=self, space=space)
+        links.delete()
+
     def thread_belongs_to_feed(self, thread):
         feed_spaces = set(self.get_spaces())
         thread_spaces = set(thread.spaces.all())

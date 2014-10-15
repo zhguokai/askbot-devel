@@ -1,7 +1,7 @@
 import datetime
 import time
 import urlparse
-from bs4 import BeautifulSoup
+from askbot.utils.html import get_soup
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 from group_messaging.models import Message
@@ -160,13 +160,13 @@ class ViewsTests(GroupMessagingTests):
         root = self.create_thread_for_user(self.sender, self.recipient)
         from django.core.mail import outbox
         html_message = get_html_message(outbox[0])
-        link = BeautifulSoup(html_message).find('a', attrs={'class': 'thread-link'})
+        link = get_soup(html_message).find('a', attrs={'class': 'thread-link'})
         url = link['href'].replace('&amp;', '&')
         parsed_url = urlparse.urlparse(url)
         url_data = urlparse.parse_qsl(parsed_url.query)
         self.client.login(user_id=self.recipient.id, method='force')
         response = self.client.get(parsed_url.path, url_data)
-        dom = BeautifulSoup(response.content)
+        dom = get_soup(response.content)
         threads = dom.find_all('ul', attrs={'class': 'thread'})
         self.assertEquals(len(threads), 1)
         thread_lists = dom.find_all('table', attrs={'class': 'threads-list'})
@@ -318,7 +318,7 @@ class ModelsTests(GroupMessagingTests):
         self.assertEqual(outbox[0].recipients()[0], self.recipient.email)
         html_message = get_html_message(outbox[0])
         self.assertTrue(root.text in html_message)
-        soup = BeautifulSoup(html_message)
+        soup = get_soup(html_message)
         links = soup.find_all('a', attrs={'class': 'thread-link'})
         self.assertEqual(len(links), 1)
         parse_result = urlparse.urlparse(links[0]['href'])

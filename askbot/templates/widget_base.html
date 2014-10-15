@@ -7,6 +7,9 @@
         {% block before_css %}{% endblock %}
         {% block forestyle %}{% endblock %}
         {% block forejs %}{% endblock %}
+        <script type="text/javascript">
+            askbot['data']['isWidget'] = true;
+        </script>
     </head>
     {% endspaceless %}
     <body class="lang-{{ current_language_code }}">
