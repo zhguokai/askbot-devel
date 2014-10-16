@@ -301,6 +301,18 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'ALLOW_COMMENTING_QUESTIONS_BY_EMAIL',
+        default=True,
+        description=_('Allow commenting questions by email'),
+        help_text=_(
+            'This feature requires "posting by email" enabled'
+        )
+    )
+)
+
+settings.register(
     livesettings.StringValue(
         EMAIL,
         'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN',

@@ -254,9 +254,16 @@ User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
 User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
 #list of languages for which user should receive email alerts
+
+DEFAULT_USER_LANGS = getattr(
+    django_settings, 
+    'ASKBOT_DEFAULT_USER_LANGUAGES', 
+    (django_settings.LANGUAGE_CODE,)
+)
+
 User.add_to_class(
     'languages',
-    models.CharField(max_length=128, default=django_settings.LANGUAGE_CODE)
+    models.CharField(max_length=128, default=' '.join(DEFAULT_USER_LANGS))
 )
 
 User.add_to_class(
@@ -3424,7 +3431,7 @@ def format_instant_notification_email(
     if can_reply:
         reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
                     _('To reply, PLEASE WRITE ABOVE THIS LINE.')
-        if post.is_question() and alt_reply_address:
+        if post.is_question() and alt_reply_address and askbot_settings.ALLOW_COMMENTING_QUESTIONS_BY_EMAIL:
             data = {
                 'addr': alt_reply_address,
                 'subject': urllib.quote(
