@@ -2749,6 +2749,7 @@ ul#related-tags li {
   -moz-border-radius: 5px;
   -khtml-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 .question-page .message .cannot-post,
 .ask-page .message .cannot-post {

@@ -4,6 +4,7 @@
     {% spaceless %}
     <head>
         {% include "meta/html_head_javascript.html" %}
+        {% include "meta/widget_html_head_stylesheets.html" ignore missing %}
         {% block before_css %}{% endblock %}
         {% block forestyle %}{% endblock %}
         {% block forejs %}{% endblock %}
