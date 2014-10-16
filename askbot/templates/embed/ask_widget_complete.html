@@ -19,7 +19,7 @@
         "{{ question_title|escape }}"
     </h2>
     {% if settings.UNANSWERED_QUESTION_DISCLAIMER %}
-        <div class="message">{{ settings.UNANSWERED_QUESTION_DISCLAIMER|save }}</div>
+        <div class="message">{{ settings.UNANSWERED_QUESTION_DISCLAIMER|safe }}</div>
     {% endif %}
     <a href="{{ question_url }}"
         class="question-link"
