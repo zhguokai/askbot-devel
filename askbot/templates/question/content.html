@@ -1,5 +1,9 @@
 {% import "macros.html" as macros %}
 
+{% if answer_count == 0 and settings.UNANSWERED_QUESTION_DISCLAIMER and request.user == question.author %}
+    <div class="message">{{ settings.UNANSWERED_QUESTION_DISCLAIMER|safe }}</div>
+{% endif %}
+
 {% include "question/question_card.html" %}
 
 {% if answers %}

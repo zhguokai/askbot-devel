@@ -56,6 +56,17 @@ settings.register(
 settings.register(
     LongStringValue(
         FLATPAGES,
+        'UNANSWERED_QUESTION_DISCLAIMER',
+        description=_('Message to the enquirer on unanswered questions'),
+        help_text=_('This message may also be emailed to the user'),
+        localized=True,
+        default=''
+    )
+)
+
+settings.register(
+    LongStringValue(
+        FLATPAGES,
         'FORUM_PRIVACY',
         description=_('Text of the Q&A forum Privacy Policy (html format)'),
         localized=True,

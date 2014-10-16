@@ -1117,33 +1117,6 @@ body.anon.ask-page .search-drop-menu {
 }
 /* tips and markdown help are widgets for ask template */
 
-.question-instructions {
-    background: #e9e9e1;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    .box-shadow(1px, 1px, 3px, #999);
-    padding: 7px 10px 9px 13px;
-    margin-bottom: 10px;
-    width: 100%;
-
-    .cannot-post {
-        display: none;
-    }
-
-    .email-validator button {
-        display: block;
-        margin: 5px auto;
-    }
-
-    ul {
-        margin: 0 0 0 15px;
-    }
-}
-
 #markdownHelp{
     li{
         color:@info-text;
@@ -2010,6 +1983,9 @@ ul#related-tags li {
 }
 
 .folded-editor {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     box-shadow: inset 0 0 3px 1px #aaa;
     -moz-box-shadow: inset 0 0 3px 1px #aaa;
     -webkit-box-shadow: inset 0 0 3px 1px #aaa;
@@ -2904,12 +2880,35 @@ ul#related-tags li {
           font-size:13px;
         }
     }
+
+}
+
+.question-page, .ask-page {
     .message {
-        padding: 5px;
+        padding: 7px 10px 9px 10px;
         margin: 0px 0 10px 0;
+        width: 100%;
+        background: #e9e9e1;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-border-radius: 5px;
+        -khtml-border-radius: 5px;
+        -webkit-border-radius: 5px;
 
+        .cannot-post {
+            display: none;
+        }
+
+        .email-validator button {
+            display: block;
+            margin: 5px auto;
+        }
+
+        ul {
+            margin: 0 0 0 15px;
+        }
     }
-
 }
 
 .admin-comments-btn {
