@@ -1062,7 +1062,7 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
         super(AskWidgetForm, self).__init__(*args, **kwargs)
         self.fields['title'] = TitleField()
         #hide ask_anonymously field
-        if user.is_anonymous() or not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
+        if not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
         self.fields['text'] = QuestionEditorField(user=user)
         if not include_text:
