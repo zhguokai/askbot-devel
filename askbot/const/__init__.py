@@ -329,7 +329,7 @@ POST_STATUS = {
     'deleted': _('[deleted]'),
     'default_version': _('initial version'),
     'retagged': _('retagged'),
-    'private': _('[private]')
+    'private': _('[under moderation]')
 }
 
 #choices used in email and display filters
