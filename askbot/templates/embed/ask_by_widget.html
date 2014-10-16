@@ -151,9 +151,7 @@
   </div>
   {% endif %}
   <input type="submit" value="{{ settings.WORDS_ASK_YOUR_QUESTION|escape }}" id="submit" />
-  {% if settings.ALLOW_ASK_ANONYMOUSLY %}
-    <p class="opts">{{ form.ask_anonymously }} {{ form.ask_anonymously.label_tag() }}</p>
-  {% endif %}
+  <p class="opts">{{ form.ask_anonymously }} {{ form.ask_anonymously.label_tag() }}</p>
 </form>
 {%endblock%}
 {% block endjs %}
