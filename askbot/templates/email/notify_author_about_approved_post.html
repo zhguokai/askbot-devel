@@ -37,10 +37,10 @@
     {% set snippet=post.truncated_html(max_length=30) %}
 {% endif %}
 
-<div>{% trans %}Thank you for your {{ post_type }}{% endtrans %}: {{snippet}}</div>
+<div style="margin-bottom: 8px">{% trans %}Thank you for your {{ post_type }}{% endtrans %}: {{snippet}}</div>
 
 {% if post.is_question() and settings.UNANSWERED_QUESTION_DISCLAIMER.strip() %}
-    <div>{{ settings.UNANSWERED_QUESTION_DISCLAIMER }}</div>
+    <div style="margin-bottom: 8px;">{{ settings.UNANSWERED_QUESTION_DISCLAIMER }}</div>
 {% endif %}
 
 {% endblock %}
