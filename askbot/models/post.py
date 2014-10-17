@@ -973,7 +973,7 @@ class Post(models.Model):
         return slugify(self.thread.title)
     slug = property(_get_slug)
 
-    def get_snippet(self, max_length=None):
+    def get_truncated_html(self, max_length=None):
         """returns an abbreviated HTML snippet of the content
         or full content, depending on how long it is
         todo: remove the max_length parameter
@@ -990,7 +990,12 @@ class Post(models.Model):
         #the issue is that code blocks have few words
         #but very tall, while paragraphs can be dense on words
         #and fit into fewer lines
-        truncated = truncate_html_words(self.html, max_words)
+        return truncate_html_words(self.html, max_words)
+
+    def get_snippet(self, max_length=None):
+        """takes the post snippet and possibly appends
+        the expander tag"""
+        truncated = self.get_truncated_html(max_length)
         new_count = get_word_count(truncated)
         orig_count = get_word_count(self.html)
         if new_count + 1 < orig_count:
@@ -2432,20 +2437,12 @@ class PostRevision(models.Model):
             activity.add_recipients(self.post.get_moderators())
 
     def should_notify_author_about_publishing(self, was_approved=False):
-        """True if author should get email about making own post"""
-        if was_approved and self.by_email == False:
-            return False
-
-        schedule = askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
-        if schedule == const.NEVER:
-            return False
-        elif schedule == const.FOR_FIRST_REVISION:
-            return self.revision == 1
-        elif schedule == const.FOR_ANY_REVISION:
-            return True
-        else:
-            raise ValueError()
-
+        """True if author should get email about post being published,
+        either due to modrators approval or simply published right away"""
+        #todo: personalize this setting, possibly add if statements
+        #by post type and event type
+        #if was_approved and self.by_email == False:
+        #    return False
         schedule = askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
         if schedule == const.NEVER:
             return False

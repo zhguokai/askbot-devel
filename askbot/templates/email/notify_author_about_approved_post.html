@@ -20,14 +20,32 @@
     %}If you would like to edit by email, please
     <a href="mailto:{{ replace_content_address }}?body={{ post_text }}{{ author_email_signature}}&subject={{ subject }}">click here</a>{% endtrans %}</p>
 {% endif %}
-<p>{% trans %}Below is a copy of your post:{% endtrans %}</p>
+
 {% if post.is_question() %}
-    <p style="font-size:16px">{{ post.thread.title }}</p>
+    {% set post_type=settings.WORDS_QUESTION_SINGULAR %}
+{% elif post.is_answer() %}
+    {% set post_type=settings.WORDS_ANSWER_SINGULAR %}
+{% elif post.is_comment() %}
+    {% set post_type=gettext('comment') %}
+{% else %}
+    {% set post_type=gettext('post') %}
 {% endif %}
-{{ post.html }}
+
+{% if post.is_question() %}
+    {% set snippet=post.thread.title %}
+{% else %}
+    {% set snippet=post.truncated_html(max_length=30) %}
+{% endif %}
+
+<div>{% trans %}Thank you for your {{ post_type }}{% endtrans %}: {{snippet}}</div>
+
+{% if post.is_question() and settings.UNANSWERED_QUESTION_DISCLAIMER.strip() %}
+    <div>{{ settings.UNANSWERED_QUESTION_DISCLAIMER }}</div>
+{% endif %}
+
 {% endblock %}
 
-{%block footer %}
+{% block footer %}
 {% include "email/footer.html" %}
 {% if email_code %}
     <p style="{{ macros.fine_print_style() }}">{{ email_code }}</p>{# important #}

@@ -131,12 +131,12 @@ def notify_author_of_published_revision_celery_task(revision, language_code):
     template = get_template('email/notify_author_about_approved_post.html')
     #todo: possibly add headers to organize messages in threads
     #send the message
-    #mail.send_mail(
-    #    subject_line=_('Your post at %(site_name)s is now published') % data,
-    #    body_text=template.render(Context(data)),
-    #    recipient=revision.author.email,
-    #    headers=headers
-    #)
+    mail.send_mail(
+        subject_line=_('Your post at %(site_name)s is now published') % data,
+        body_text=template.render(Context(data)),
+        recipient=revision.author.email,
+        headers=headers
+    )
     activate_language(language_code)
 
 @task(ignore_result = False)
