@@ -2,7 +2,7 @@
 {% import "macros.html" as macros %}
 {% block forestyle %}
   {% if editor_type == 'markdown' %}
-  <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
+    <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
   {%else %}
     <link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
   {%endif%}
@@ -121,7 +121,7 @@
     }
     {{widget.inner_style}}
   </style>
-{%endblock%}
+{% endblock %}
 
 {% block body %}
 <form action="." method="POST" accept-charset="utf-8">
