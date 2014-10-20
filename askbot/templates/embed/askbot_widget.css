@@ -11,15 +11,15 @@
 
 #{{variable_name}} div{
      width:596px;
-     {%if widget.include_text_field%}
+     {% if widget.include_text_field %}
      {% if editor_type == 'markdown' %}
-     height: 436px;
-     {%else%}
+     height: 443px;
+     {% else %}
      height:520px;
-     {%endif%}
-     {%else%}
+     {% endif %}
+     {% else %}
      height:220px;
-     {%endif%}
+     {% endif %}
      margin: 100px auto;
      background-color: #fff;
      border: 1px solid #aaa;
@@ -37,19 +37,18 @@
     text-align: left;
 }
 
-#{{variable_name}} a {
-     padding: 5px;
-     display: block;
-     margin-top: -30px;
-     float: right;
-}
-
 #{{variable_name}} iframe{
      width: 600px;
-     height: 430px;
+     height: 100%;
 }
 
 .AskbotClosePopup {
     text-decoration: none;
     font-size: 24px;
+    position: absolute;
+    top: 18px;
+    right: 18px;
+}
+.AskbotWidgetContainer {
+    position: relative;
 }

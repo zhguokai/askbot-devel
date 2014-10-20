@@ -5,19 +5,22 @@
             font-family: Verdana, Arial, sans-serif;
         }
         h2 {
-            color: #333;
         }
         a,
         a:visited {
             color: #08c;
         }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin: 0 0 0.65em 0;
+            max-width: 565px;
+        }
     </style>
 {% endblock %}
 
 {% block body %}
-    <h2>{% trans %}Thanks for asking:{% endtrans %}
-        "{{ question_title|escape }}"
-    </h2>
+    <h1>{% trans %}Thanks for asking:{% endtrans %} "{{ question_title|escape }}"</h1>
     {% if settings.UNANSWERED_QUESTION_DISCLAIMER %}
         <div class="message">{{ settings.UNANSWERED_QUESTION_DISCLAIMER|safe }}</div>
     {% endif %}

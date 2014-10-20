@@ -26,6 +26,7 @@ var {{variable_name}} = {
         motherDiv.style.visibility = "hidden";
 
         var containerDiv = document.createElement('div');
+        containerDiv.setAttribute('class', 'AskbotWidgetContainer');
         motherDiv.appendChild(containerDiv);
 
         {% if widget.outer_style %}
@@ -33,11 +34,6 @@ var {{variable_name}} = {
         outerStyle.innerText = "{{widget.outer_style}}";
         motherDiv.appendChild(outerStyle);
         {% endif %}
-
-        var title = document.createElement('h1');
-        title.innerHTML = '{{ widget.title }}';
-
-        containerDiv.appendChild(title);
 
         var closeButton = document.createElement('a');
         closeButton.setAttribute('href', '#');
