@@ -33,7 +33,7 @@ var {{variable_name}} = {
         {% if widget.outer_style %}
         var outerStyle = document.createElement('style');
         outerStyle.setAttribute('type', 'text/css');
-        outerStyle.innerText = {{widget.outer_style|replace('\n\r', ' ')|replace('\n', ' ')|as_json}};
+        outerStyle.innerText = {{widget.outer_style|replace('\r\n', ' ')|replace('\n', ' ')|as_json}};
         motherDiv.appendChild(outerStyle);
         {% endif %}
 
