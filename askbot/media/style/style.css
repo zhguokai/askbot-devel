@@ -90,6 +90,9 @@ textarea,
   font-size: 13px;
   padding: 0 5px;
 }
+.setting-input textarea {
+  padding: 4px 6px;
+}
 iframe {
   border: none;
 }
