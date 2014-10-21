@@ -14,7 +14,7 @@ var {{variable_name}} = {
     toHtml: function() {
         var html = {{ variable_name }}.createButton();
         var link = document.createElement('link');
-        var protocol = 'http:'//document.location.protocol;
+        var protocol = document.location.protocol;
 
         //widget css
         link.setAttribute("rel", "stylesheet");
@@ -23,6 +23,7 @@ var {{variable_name}} = {
         //creating the div
         var motherDiv = document.createElement('div');
         motherDiv.setAttribute("id", {{ variable_name }}.element_id);
+        motherDiv.setAttribute('class', 'AskbotAskWidget');
         motherDiv.style.visibility = "hidden";
 
         var containerDiv = document.createElement('div');
@@ -45,6 +46,7 @@ var {{variable_name}} = {
 
         var iframe = document.createElement('iframe');
         iframe.setAttribute('id', {{ variable_name }}.element_id + 'iframe');
+        iframe.setAttribute('class', 'AskbotAskWidgetIFrame');
         iframe.setAttribute('frameBorder', '0');
         iframe.setAttribute('src', protocol + '//{{host}}{% url ask_by_widget widget.id %}');
 
@@ -60,6 +62,7 @@ var {{variable_name}} = {
         var label="{{ widget.title }}"; //TODO: add to the model
         var buttonDiv = document.createElement('div');
         buttonDiv.setAttribute('id', "AskbotAskButton" + '{{ widget.id }}');
+        buttonDiv.setAttribute('class', 'AskbotWidget');
 
         var closeButton = document.createElement('input');
         closeButton.setAttribute('onClick', '{{variable_name}}.widgetToggle();');

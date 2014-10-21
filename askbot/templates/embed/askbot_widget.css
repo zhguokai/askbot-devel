@@ -1,4 +1,4 @@
-#{{variable_name}} {
+.AskbotAskWidget {
      visibility: hidden;
      position: fixed;
      left: 0px;
@@ -9,7 +9,7 @@
      z-index: 99999;
 }
 
-#{{variable_name}} div{
+.AskbotAskWidget div{
      width:596px;
      {% if widget.include_text_field %}
      {% if editor_type == 'markdown' %}
@@ -29,15 +29,7 @@
      text-align: right;
 }
 
-#{{variable_name}} h1 {
-    color: #333;
-    font-family: 'Open Sans Condensed', Arial, sans-serif; 
-    font-size: 25px;
-    margin: 0 0 -5px 10px;
-    text-align: left;
-}
-
-#{{variable_name}} iframe{
+.AskbotAskWidgetIFrame {
      width: 600px;
      height: 100%;
 }
@@ -49,6 +41,7 @@
     top: 18px;
     right: 18px;
 }
+
 .AskbotWidgetContainer {
     position: relative;
 }
