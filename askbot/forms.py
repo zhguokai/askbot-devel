@@ -879,13 +879,13 @@ class PostPrivatelyForm(forms.Form, FormWithHideableFields):
     )
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
-        self._user = user
+        self.user = user
         super(PostPrivatelyForm, self).__init__(*args, **kwargs)
         if self.allows_post_privately() == False:
             self.hide_field('post_privately')
 
     def allows_post_privately(self):
-        user = self._user
+        user = self.user
         return (
             askbot_settings.GROUPS_ENABLED and \
             user and user.is_authenticated() and \
@@ -991,25 +991,25 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     group_id = forms.IntegerField(required=False, widget=forms.HiddenInput)
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        self.user = kwargs.pop('user', None)
         self._feed = kwargs.pop('feed', None)
-        super(AskForm, self).__init__(*args, **kwargs)
+        super(AskForm, self).__init__(*args, user=self.user, **kwargs)
         #it's important that this field is set up dynamically
         self.fields['title'] = TitleField()
-        self.fields['text'] = QuestionEditorField(user=user)
+        self.fields['text'] = QuestionEditorField(user=self.user)
 
         self.fields['ask_anonymously'] = forms.BooleanField(
             label=_('hide my name'),
             required=False
         )
 
-        if user.is_anonymous() or not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
+        if self.user.is_anonymous() or not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
 
         if askbot.is_multilingual():
             self.fields['language'] = LanguageField()
 
-        if should_use_recaptcha(user):
+        if should_use_recaptcha(self.user):
             self.fields['recaptcha'] = AskbotRecaptchaField()
 
     def clean_space(self):
@@ -1269,10 +1269,10 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
-        user = kwargs['user']
-        self.fields['text'] = AnswerEditorField(user=user)
+        self.user = kwargs['user']
+        self.fields['text'] = AnswerEditorField(user=self.user)
 
-        if should_use_recaptcha(user):
+        if should_use_recaptcha(self.user):
             self.fields['recaptcha'] = AskbotRecaptchaField()
 
     def has_data(self):
@@ -1371,7 +1371,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
         self.question = kwargs.pop('question')
         self.user = kwargs.pop('user')#preserve for superclass
         revision = kwargs.pop('revision')
-        super(EditQuestionForm, self).__init__(*args, **kwargs)
+        super(EditQuestionForm, self).__init__(user=self.user, *args, **kwargs)
         #it is important to add this field dynamically
         self.fields['text'] = QuestionEditorField(user=self.user)
         self.fields['title'] = TitleField()
@@ -1396,6 +1396,14 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
     def clean(self):
         edit_anonymously = not self.cleaned_data.get('reveal_identity', True)
         self.cleaned_data['edit_anonymously'] = edit_anonymously
+
+        #todo: a hack below! Need to explicitly specify group ids to post question into
+        default_ask_group_id = getattr(django_settings, 'DEFAULT_ASK_GROUP_ID', None)
+        if self.cleaned_data['post_privately'] == False and default_ask_group_id:
+            if self.user.is_authenticated() and \
+                self.user.can_make_group_private_posts() == False:
+                self.cleaned_data['post_privately'] = True
+
         return self.cleaned_data
 
 
@@ -1432,14 +1440,14 @@ class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def __init__(self, answer, revision, *args, **kwargs):
         self.answer = answer
-        user = kwargs.pop('user', None)
-        super(EditAnswerForm, self).__init__(*args, **kwargs)
+        self.user = kwargs.pop('user', None)
+        super(EditAnswerForm, self).__init__(user=self.user, *args, **kwargs)
         #it is important to add this field dynamically
-        self.fields['text'] = AnswerEditorField(user=user)
+        self.fields['text'] = AnswerEditorField(user=self.user)
         self.fields['text'].initial = revision.text
         self.fields['wiki'].initial = answer.wiki
 
-        if should_use_recaptcha(user):
+        if should_use_recaptcha(self.user):
             self.fields['recaptcha'] = AskbotRecaptchaField()
 
     def has_changed(self):
