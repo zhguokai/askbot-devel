@@ -31,7 +31,7 @@ var {{variable_name}} = {
 
         {% if widget.outer_style %}
         var outerStyle = document.createElement('style');
-        outerStyle.innerText = "{{widget.outer_style}}";
+        outerStyle.innerText = {{widget.outer_style|as_json}};
         motherDiv.appendChild(outerStyle);
         {% endif %}
 
