@@ -24,6 +24,8 @@ from django.conf import settings as django_settings
 from django.core.cache import cache
 from django.contrib.sites.models import Site
 from django.utils.translation import get_language
+from django.utils.translation import activate as activate_language
+import askbot
 from askbot.deps.livesettings import SortedDotDict, config_register
 from askbot.deps.livesettings.functions import config_get
 from askbot.deps.livesettings import signals
@@ -136,9 +138,13 @@ class ConfigSettings(object):
             return cache.get(cache_key)
 
     @classmethod
-    def prime_cache(cls, cache_key, **kwargs):
+    def prime_cache(cls, cache_key, language_code=None, **kwargs):
         """reload all settings into cache as dictionary
         """
+        from askbot.utils.translation import get_language
+        language_code = language_code or get_language()
+        activate_language(language_code)
+
         out = dict()
         for key in cls.__instance.keys():
             #todo: this is odd that I could not use self.__instance.items() mapping here
@@ -150,14 +156,26 @@ class ConfigSettings(object):
         cache.set(cache_key, out)
 
 
-def get_bulk_cache_key():
+def get_bulk_cache_key(language_code=None):
     from askbot.utils.translation import get_language
-    return 'askbot-settings-%d' % django_settings.SITE_ID
+    language_code = language_code or get_language()
+    return 'askbot-settings-%d-%s' % (django_settings.SITE_ID, language_code)
 
 
 def prime_cache_handler(*args, **kwargs):
-    cache_key = get_bulk_cache_key()
-    ConfigSettings.prime_cache(cache_key)
+    from askbot.utils.translation import get_language
+    current_language_code = get_language()
+
+    if askbot.is_multilingual():
+        language_codes = dict(django_settings.LANGUAGES).keys()
+    else:
+        language_codes = (django_settings.LANGUAGE_CODE,)
+    
+    for language_code in language_codes:
+        cache_key = get_bulk_cache_key(language_code)
+        ConfigSettings.prime_cache(cache_key, language_code)
+
+    activate_language(current_language_code)
 
 signals.configuration_value_changed.connect(prime_cache_handler)
 #settings instance to be used elsewhere in the project
