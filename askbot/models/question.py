@@ -11,6 +11,7 @@ from django.core import cache  # import cache, not from cache import cache, to b
 from django.core import exceptions as django_exceptions
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
+from django.template import Context
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -1776,7 +1777,7 @@ class Thread(models.Model):
         from askbot.views.context import get_extra as get_extra_context
         context.update(get_extra_context('ASKBOT_QUESTION_SUMMARY_EXTRA_CONTEXT', None, context))
         activate_language(self.language_code)
-        html = get_template('widgets/question_summary.html').render(context)
+        html = get_template('widgets/question_summary.html').render(Context(context))
         # INFO: Timeout is set to 30 days:
         # * timeout=0/None is not a reliable cross-backend way to set infinite timeout
         # * We probably don't need to pollute the cache with threads older than 30 days
