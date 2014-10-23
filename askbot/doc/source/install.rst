@@ -14,13 +14,13 @@ Would like to use the package as is?
 If so - then the best tool for that is `pip`, the second best choice is `easy_install`::
 
  pip install askbot
- easy_install askbot #if you prefer easy_install
+ easy_install askbot # If you prefer easy_install
 
 Both commands automatically install Askbot and the dependency packages. `Pip` is a significant improvement upon `easy_install` and is strongly recommended.
 
 If you do not have either of those tools - download the `askbot archive from PyPI <http://pypi.python.org/pypi/askbot/>`_, unzip and untar it, then run::
 
- python setup.py install #this is actually equivalent to running easy_install
+ python setup.py install # This is actually equivalent to running easy_install
 
 Intend to customize the forum?
 ==============================
@@ -33,7 +33,7 @@ where `<project_name>` should be some very distinct name.
 
 Then jump into the new directory and run::
 
- python setup.py develop #the develop option will not install askbot into the python site packages directory
+ python setup.py develop # The develop option will now install askbot.egg-link (pointing to the git clone) into the python site packages directory
 
 .. note::
 
