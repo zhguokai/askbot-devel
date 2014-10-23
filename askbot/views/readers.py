@@ -221,10 +221,17 @@ def questions(request, **kwargs):
             'questions': questions_html.replace('\n',''),
             'non_existing_tags': meta_data['non_existing_tags'],
         }
-        ajax_data['related_tags'] = [{
-            'name': escape(tag.name),
-            'used_count': humanize.intcomma(tag.local_used_count)
-        } for tag in related_tags]
+
+        related_tags_data = list()
+        for tag in related_tags:
+            datum = {'name': escape(tag.name)}
+            if hasattr(tag, 'local_used_count'):
+                datum['used_count'] = tag.local_used_count
+            else:
+                datum['used_count'] = tag.used_count
+            related_tags_data.append(datum)
+
+        ajax_data['related_tags'] = related_tags_data
 
         #here we add and then delete some items
         #to allow extra context processor to work

@@ -168,13 +168,22 @@ class TagQuerySet(models.query.QuerySet):
         primary_filter = {
             'deleted': False
         }
-        if thread_ids:
-            primary_filter['threads__id__in'] = thread_ids
-            annotate = {'local_used_count': models.Count('id')}
-            order_by = '-local_used_count'
+        if isinstance(thread_ids, (list, tuple, set)):
+            if len(thread_ids) == 0:
+                #no thrads matched search, so no related tags
+                return list()
+            else:
+                #look for tags related to the matched threads
+                primary_filter['threads__id__in'] = thread_ids
+                annotate = {'local_used_count': models.Count('id')}
+                order_by = '-local_used_count'
         else:
+            #here the query is empty and we should get all
+            #most frequently used tags
+
             #if askbot.is_multisite():
             #    primary_filter['sites'] = Site.objects.get_current()
+            #todo: possibly filter by site
             annotate = {}
             order_by = '-used_count'
 
