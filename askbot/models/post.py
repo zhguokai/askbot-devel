@@ -858,10 +858,10 @@ class Post(models.Model):
         if not hasattr(self, '_thread_cache') and thread:
             self._thread_cache = thread
 
-        is_multilingual = askbot.is_multilingual()
-        if is_multilingual:
+        if language:
             request_language = get_language()
-            activate_language(language or self.language_code)
+            if language != request_language:
+                activate_language(language)
 
         if feed is None:
             feed = self.thread.get_default_feed().name
@@ -905,7 +905,7 @@ class Post(models.Model):
         else:
             raise NotImplementedError
 
-        if is_multilingual:
+        if language and language != request_language:
             activate_language(request_language)
 
         if as_full_url:
@@ -2471,23 +2471,12 @@ class PostRevision(models.Model):
         super(PostRevision, self).save(**kwargs)
 
     def get_absolute_url(self):
-
-        lang_mode = askbot.get_lang_mode()
-        if lang_mode == 'url-lang':
-            request_language = get_language()
-            activate_language(self.post.language_code)
-
         if self.post.is_question():
-            url = reverse('question_revisions', args = (self.post.id,))
+            return reverse('question_revisions', args = (self.post.id,))
         elif self.post.is_answer():
-            url = reverse('answer_revisions', kwargs = {'id':self.post.id})
+            return reverse('answer_revisions', kwargs = {'id':self.post.id})
         else:
-            url = self.post.get_absolute_url()
-
-        if lang_mode == 'url-lang':
-            activate_language(request_language)
-
-        return url
+            return self.post.get_absolute_url()
 
     def get_question_title(self):
         #INFO: ack-grepping shows that it's only used for Questions, so there's no code for Answers
