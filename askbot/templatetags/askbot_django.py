@@ -1,6 +1,8 @@
 from django import template
 from django.core.urlresolvers import reverse
 from django.contrib.humanize.templatetags.humanize import intcomma
+from django.utils.safestring import mark_safe
+
 from askbot.conf import settings as askbot_settings
 from askbot.utils.pluralization import py_pluralize as _py_pluralize
 from askbot.utils import functions
@@ -18,7 +20,7 @@ def as_js_bool(some_object):
 @register.filter
 def set_sort_method(search_state, sort_method):
     """sets sort method on search state"""
-    return search_state.change_sort(sort_method).full_url()
+    return search_state.change_sort(sort_method)
 
 @register.filter
 def remove_author(search_state):
@@ -29,20 +31,52 @@ def remove_tags(search_state):
     return search_state.remove_tags()
 
 @register.filter
+def add_tag(search_state, tag):
+    return search_state.add_tag(tag)
+
+@register.filter
 def change_page(search_state, page):
     return search_state.change_page(page)
 
 @register.filter
+def change_scope(search_state, scope):
+    return search_state.change_scope(scope)
+
+@register.filter
 def get_url(search_state):
-    return search_state.full_url()
+    return mark_safe(search_state.full_url())
+
+@register.filter
+def full_ask_url(search_state):
+    return mark_safe(search_state.full_ask_url())
 
 @register.filter
 def get_answer_count(thread, visitor):
     return thread.get_answer_count(visitor)
 
 @register.filter
+def get_value(obj, key):
+    return obj[key]
+
+@register.filter
+def trim(text):
+    return text.strip()
+
+@register.filter
 def get_latest_revision(thread, visitor):
     return thread.get_latest_revision(visitor)
+
+@register.filter
+def render_asterisk(text):
+    return text.replace('*', '&#10045;')
+
+@register.filter
+def remove_dots(text):
+    return text.replace('.', '')
+
+@register.filter
+def endswith(text, what):
+    return text.endswith(what)
 
 setup_paginator = register.filter(functions.setup_paginator)
 
@@ -100,11 +134,15 @@ def avatar(user, size):
 @register.inclusion_tag('widgets/tag_list.html')
 def tag_list_widget(tags, **kwargs):
     kwargs['tags'] = tags
+    kwargs.setdefault('tag_html_tag', 'li')
+    kwargs.setdefault('make_links', True)
     return kwargs
 
 @register.inclusion_tag('widgets/tag.html')
 def tag_widget(tag, **kwargs):
     kwargs['tag'] = tag
+    kwargs.setdefault('html_tag', 'div')
+    kwargs.setdefault('is_link', True)
     if kwargs.get('search_state') is None:
         kwargs['search_state'] = SearchState.get_empty()
     return kwargs
@@ -157,3 +195,10 @@ def user_primary_group(user):
         'group_name': group_name,
         'group_url': group_url
     }
+
+@register.inclusion_tag('widgets/reversible_sort_button.html')
+def reversible_sort_button(**kwargs):
+    key_name = kwargs['key_name']
+    kwargs['key_name_asc'] = key_name + '-asc'
+    kwargs['key_name_desc'] = key_name + '-desc'
+    return kwargs

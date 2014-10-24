@@ -337,7 +337,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'active_tab': 'tags',
         'page_class': 'tags-page',
         'tag_list_type' : tag_list_type,
-        'stag' : query,
+        'query' : query,
         'tab_id' : sortby,
         'keywords' : query,
         'search_state': SearchState(*[None for x in range(8)])
