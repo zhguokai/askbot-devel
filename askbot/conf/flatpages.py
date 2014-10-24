@@ -58,7 +58,7 @@ settings.register(
         FLATPAGES,
         'UNANSWERED_QUESTION_DISCLAIMER',
         description=_('Message to the enquirer on unanswered questions'),
-        help_text=_('This message may also be emailed to the user'),
+        help_text=_('Will also be shown in the Ask Widget confirmation page, and included in confirmation email if the question was asked via email.'),
         localized=True,
         default=''
     )

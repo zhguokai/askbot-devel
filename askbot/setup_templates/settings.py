@@ -15,6 +15,8 @@ INTERNAL_IPS = ('127.0.0.1',)
 ALLOWED_HOSTS = ['*',]#change this for better security on your site
 
 ADMINS = (
+    # The first one becomes the default value for askbot setting ADMIN_EMAIL (see
+    # "Site administrator email address" at /settings/EMAIL/ (available to admin users)
     ('Your Name', 'your_email@domain.com'),
 )
 
