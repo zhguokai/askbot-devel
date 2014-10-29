@@ -318,7 +318,7 @@ var putCursorAtEnd = function(element){
 };
 
 var setCheckBoxesIn = function(selector, value){
-    return $(selector + '> input[type=checkbox]').attr('checked', value);
+    return $(selector + '> input[type=checkbox]').prop('checked', value);
 };
 
 var removeModalMenu = function() {
@@ -3293,20 +3293,32 @@ TwoStateToggle.prototype.resetStyles = function(){
 };
 
 TwoStateToggle.prototype.isOn = function(){
+    if (this.isCheckBox()) {
+        if (this._element.is(':checked')) {
+            this.setState('on-state');
+        } else {
+            this.setState('off-state');
+        }
+    }
     return this._element.hasClass('on');
+};
+
+TwoStateToggle.prototype.isOff = function(){
+    return !this.isOn();
 };
 
 TwoStateToggle.prototype.getDefaultHandler = function(){
     var me = this;
     return function(){
         var data = me.getPostData();
-        data['disable'] = me.isOn();
+        /* checkbox is toggled before the response */
+        data['disable'] = me.isCheckBox() ? me.isOff() : me.isOn();
         $.ajax({
             type: 'POST',
             dataType: 'json',
             cache: false,
             url: me.toggleUrl,
-            data: data,
+            data: JSON.stringify(data),
             success: function(data) {
                 if (data['success']) {
                     if ( data['is_enabled'] ) {
@@ -3340,9 +3352,9 @@ TwoStateToggle.prototype.setState = function(state){
         }
         if ( this.isCheckBox() ) {
             if (state === 'on-state') {
-                element.attr('checked', true);
+                element.prop('checked', true);
             } else if (state === 'off-state') {
-                element.attr('checked', false);
+                element.prop('checked', false);
             }
         } else {
             this._element.html(this._state_messages[state]);
@@ -3364,11 +3376,11 @@ TwoStateToggle.prototype.decorate = function(element){
         element.attr('data-off-prompt-text') || messages['off-state'];
     this._state_messages = messages;
 
-    this.toggleUrl = element.attr('data-toggle-url');
+    this.toggleUrl = this.toggleUrl || element.attr('data-toggle-url');
 
     //detect state and save it
     if (this.isCheckBox()) {
-        this._state = element.attr('checked') ? 'state-on' : 'state-off';
+        this._state = element.is(':checked') ? 'state-on' : 'state-off';
     } else {
         var text = $.trim(element.html());
         for (var i = 0; i < this._states.length; i++){

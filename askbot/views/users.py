@@ -1065,6 +1065,7 @@ def user_email_subscriptions(request, user, context):
         'tab_name': 'email_subscriptions',
         'page_title': _('profile - email subscriptions'),
         'email_feeds_form': email_feeds_form,
+        'subscribe_for_sites_form': forms.SubscribeForSitesForm(user=user),
         'tag_filter_selection_form': tag_filter_form,
         'action_status': action_status,
     }

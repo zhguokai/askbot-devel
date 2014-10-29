@@ -1049,22 +1049,12 @@ class Post(models.Model):
         if askbot_settings.SPACES_ENABLED is False:
             return filtered_candidates
         
-        #EF: this is not useful, we intentionally don't assign users to
-        # specific site on multisite setups
-        # todo: this below filter will be replaced by the per-group
-        # enabling or disabling of email subscriptions
-        if askbot.is_multisite():
-            #filter out recipients who don't belong to sites where
-            #this post is made
+        if askbot.is_multisite() and self.thread:
+            thread_site = self.thread.site
+
             double_filtered_candidates = set()
             for user in filtered_candidates:
-                try:
-                    user_spaces = set(user.askbot_profile.get_spaces())
-                except:
-                    logging.critical('User without profile? %d' % user.id)
-                    continue
-                post_spaces = set(self.thread.spaces.all())
-                if user_spaces & post_spaces:
+                if user.askbot_profile.is_subscribed_for_site(thread_site):
                     double_filtered_candidates.add(user)
             filtered_candidates = double_filtered_candidates
 

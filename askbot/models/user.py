@@ -764,3 +764,6 @@ class UserProfile(models.Model):
         feeds = self.default_site.askbot_feeds.all()
         from askbot.models.spaces import Space
         return Space.objects.filter(feed_links__feed__in=feeds)
+
+    def is_subscribed_for_site(self, site):
+        return self.subscribed_sites.filter(id=site.id).count() == 1

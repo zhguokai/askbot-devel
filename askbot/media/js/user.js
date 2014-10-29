@@ -1063,6 +1063,37 @@ UserAnswersPaginator.prototype.getPageDataUrlParams = function(pageNo) {
     }
 };
 
+var SubscribeForSiteToggle = function() {
+    TwoStateToggle.call(this);
+    this.toggleUrl = askbot['urls']['toggleSubscribedSite'];
+};
+inherits(SubscribeForSiteToggle, TwoStateToggle);
+
+SubscribeForSiteToggle.prototype.decorate = function(element) {
+    SubscribeForSiteToggle.superClass_.decorate.call(this, element);
+    var siteId = element.attr('name').split('_')[1];
+    var postData = {
+        'site_id': siteId,
+        'user_id': askbot['data']['viewUserId'] || askbot['data']['userId']
+    };
+    this.setPostData(postData);
+};
+
+var SubscribeForSitesForm = function() {
+    WrappedElement.call(this);
+};
+inherits(SubscribeForSitesForm, WrappedElement);
+
+SubscribeForSitesForm.prototype.decorate = function(element) {
+    this._element = element;
+    var toggles = element.find('.subscribe-for-site-toggle');
+    var count = toggles.length;
+    for (var i=0; i<count; i++) {
+        var toggle = new SubscribeForSiteToggle();
+        toggle.decorate($(toggles[i]));
+    }
+};
+
 (function(){
     var fbtn = $('.follow-user-toggle');
     if (fbtn.length === 1){
@@ -1072,8 +1103,11 @@ UserAnswersPaginator.prototype.getPageDataUrlParams = function(pageNo) {
     }
     if (askbot['data']['userId'] !== askbot['data']['viewUserId']) {
         if (askbot['data']['userIsAdminOrMod']){
-            var group_editor = new UserGroupsEditor();
-            group_editor.decorate($('#user-groups'));
+            var userGroups = $('#user-groups');
+            if (userGroups.length) {
+                var group_editor = new UserGroupsEditor();
+                group_editor.decorate(userGroups);
+            }
         } else {
             $('#add-group').remove();
         }
@@ -1099,4 +1133,9 @@ UserAnswersPaginator.prototype.getPageDataUrlParams = function(pageNo) {
         aPaginator.decorate(aPager);
     }
 
+    var subscribeForSites = $('#ContentFull .subscribe-for-sites');
+    if (subscribeForSites.length) {
+        var form = new SubscribeForSitesForm();
+        form.decorate(subscribeForSites);
+    }
 })();

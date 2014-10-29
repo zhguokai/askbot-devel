@@ -3690,7 +3690,7 @@ GroupJoinButton.prototype.getHandler = function(){
             type: 'POST',
             dataType: 'json',
             cache: false,
-            data: me.getPostData(),
+            data: JSON.stringify(me.getPostData()),
             url: askbot['urls']['join_or_leave_group'],
             success: function(data){
                 if (data['success']){

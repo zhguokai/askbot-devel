@@ -26,6 +26,9 @@
         askbot['urls']['edit_group_membership'] = '{% url edit_group_membership %}';
         askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
         askbot['urls']['getTopAnswers'] = '{% url get_top_answers %}';
+        {% if settings.MULTISITE %}
+            askbot['urls']['toggleSubscribedSite'] = '{% url toggle_subscribed_site %}';
+        {% endif %}
     </script>
     {% if request.user|can_moderate_user(view_user) %}
         <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>

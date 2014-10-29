@@ -3909,8 +3909,10 @@ def greet_new_user(user, **kwargs):
 def init_askbot_user_profile(user, **kwargs):
     """adds default site record to the askbot user profile"""
     user.askbot_profile = UserProfile()
-    user.askbot_profile.default_site = Site.objects.get_current()
+    default_site = Site.objects.get_current()
+    user.askbot_profile.default_site = default_site
     user.askbot_profile.save()
+    user.askbot_profile.subscribed_sites.add(default_site)
     user.save()
 
 

@@ -38,6 +38,7 @@ def application_settings(request):
     my_settings = askbot_settings.as_dict()
     my_settings['LANGUAGE_CODE'] = getattr(request, 'LANGUAGE_CODE', settings.LANGUAGE_CODE)
     my_settings['MULTILINGUAL'] = askbot.is_multilingual()
+    my_settings['MULTISITE'] = askbot.is_multisite()
     my_settings['LANGUAGES_DICT'] = dict(getattr(settings, 'LANGUAGES', []))
     my_settings['ALLOWED_UPLOAD_FILE_TYPES'] = \
             settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES

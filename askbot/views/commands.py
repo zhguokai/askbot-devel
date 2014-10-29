@@ -1160,8 +1160,9 @@ def delete_post_reject_reason(request):
 @decorators.admins_only
 def toggle_group_profile_property(request):
     #todo: this might be changed to more general "toggle object property"
-    group_id = IntegerField().clean(int(request.POST['group_id']))
-    property_name = CharField().clean(request.POST['property_name'])
+    post_data = simplejson.loads(request.raw_post_data)
+    group_id = IntegerField().clean(int(post_data['group_id']))
+    property_name = CharField().clean(post_data['property_name'])
     assert property_name in (
                         'moderate_email',
                         'moderate_answers_to_enquirers',
@@ -1230,7 +1231,9 @@ def join_or_leave_group(request):
     Group = models.Group
     Membership = models.GroupMembership
 
-    group_id = IntegerField().clean(request.POST['group_id'])
+    post_data = simplejson.loads(request.raw_post_data)
+    group_id = IntegerField().clean(post_data['group_id'])
+
     group = Group.objects.get(id=group_id)
 
     membership = request.user.get_group_membership(group)
@@ -1754,3 +1757,39 @@ def translate_url(request):
         translation.activate(site_lang)
 
     return {'url': url}
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def toggle_subscribed_site(request):
+    #works only for the multisite deployments
+    if askbot.is_multisite() is False:
+        raise Http404
+
+    #user must be logged in
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied()
+
+    post_data = simplejson.loads(request.raw_post_data)
+    form = forms.SubscribeForSiteForm(post_data)
+
+    if form.is_valid():
+        user = models.User.objects.get(id=form.cleaned_data['user_id'])
+
+        #only admins or owners can do this
+        authorized = request.user.is_administrator_or_moderator() or request.user == user
+        if not authorized:
+            raise exceptions.PermissionDenied()
+
+        profile = user.askbot_profile
+        site = Site.objects.get(id=form.cleaned_data['site_id'])
+
+        if form.cleaned_data['disable']:
+            profile.subscribed_sites.remove(site)
+            is_subscribed = False
+        else:
+            profile.subscribed_sites.add(site)
+            is_subscribed = True
+        return {'is_enabled': is_subscribed}
+    else:
+        raise HttpResponseBadRequest('bad post data')

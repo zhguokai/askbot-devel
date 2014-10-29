@@ -609,6 +609,11 @@ urlpatterns = patterns('',
         name='multisite_repost_thread'
     ),
     service_url(
+        '^toggle-subscribed-site/',
+        views.commands.toggle_subscribed_site,
+        name='toggle_subscribed_site'
+    ),
+    service_url(
         r'^doc/(?P<path>.*)$',
         'django.views.static.serve',
         {'document_root': os.path.join(APP_PATH,'doc','build','html').replace('\\','/')},

@@ -3,7 +3,7 @@ used in AskBot"""
 import re
 import datetime
 from django import forms
-from django.forms.widgets import HiddenInput
+from django.forms.widgets import HiddenInput, CheckboxInput
 import askbot
 from askbot import const
 from askbot.const import message_keys
@@ -18,6 +18,7 @@ from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.translation import get_language
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django_countries import countries 
 from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.mail import extract_first_email_address
@@ -1018,7 +1019,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         """
         if askbot_settings.SPACES_ENABLED:
             from askbot.models import Feed
-            from django.contrib.sites.models import Site
             current_site = Site.objects.get_current()
             feed = Feed.objects.get(name=self._feed, site=current_site)
             return feed.default_space
@@ -1080,7 +1080,6 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
         """
         if askbot_settings.SPACES_ENABLED:
             from askbot.models import Feed
-            from django.contrib.sites.models import Site
             current_site = Site.objects.get_current()
             feed_name = askbot_settings.DEFAULT_FEED_NAME
             feed = Feed.objects.get(name=feed_name, site=current_site)
@@ -1242,7 +1241,6 @@ class AskByEmailForm(forms.Form):
             #todo: replace this with "askbot.is_multisite()"
             if hasattr(django_settings, 'ASKBOT_SITE_IDS'):
                 from askbot.models import Feed
-                from django.contrib.sites.models import Site
                 email_host = self.cleaned_data['email_host']
                 try:
                     current_site = Site.objects.get(domain=email_host)
@@ -1870,3 +1868,40 @@ class MultiSiteRepostThreadForm(forms.Form):
 
         self.cleaned_data['spaces'] = shared_spaces
         return self.cleaned_data
+
+class SubscribeForSitesForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user') 
+        site_ids = kwargs.pop('site_ids', None)
+        super(SubscribeForSitesForm, self).__init__(*args, **kwargs)
+
+        if site_ids == None:
+            site_ids = getattr(django_settings, 'ASKBOT_PARTNER_SITE_IDS', list())
+            current_id = Site.objects.get_current().id
+            if current_id in site_ids:
+                site_ids.remove(current_id)
+            site_ids.insert(0, current_id)
+            
+        from askbot.models.spaces import get_site_name
+        for site_id in site_ids:
+            #create fields for each site
+            field = forms.BooleanField(
+                label=get_site_name(site_id),
+                required=False,
+                widget=CheckboxInput(attrs={'class': 'subscribe-for-site-toggle'})
+            )
+            self.fields['site_%d' % site_id] = field
+
+        if self.user.is_authenticated():
+            profile = self.user.askbot_profile
+            subscribed_site_ids = profile.subscribed_sites.values_list('id', flat=True)
+            initial = dict()
+            for site_id in subscribed_site_ids:
+                initial['site_%d' % site_id] = True
+            self.initial = initial
+
+class SubscribeForSiteForm(forms.Form):
+    """this form is only for one site, unlike the SubscribeForSitesForm"""
+    site_id = forms.IntegerField()
+    user_id = forms.IntegerField()
+    disable = forms.BooleanField(required=False)
