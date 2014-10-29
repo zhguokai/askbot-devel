@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: askbot-knowledgepoint\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-25 02:06-0500\n"
-"PO-Revision-Date: 2014-09-25 10:53+0000\n"
+"PO-Revision-Date: 2014-10-01 10:00+0000\n"
 "Last-Translator: timkent <tim.kent@knowledgepoint.org>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/askbot-knowledgepoint/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -2783,7 +2783,7 @@ msgstr ""
 
 #: conf/words.py:282
 msgid "unanswered question"
-msgstr ""
+msgstr "Question en suspens"
 
 #: conf/words.py:283
 msgid "unanswered question (singular)"
@@ -2791,7 +2791,7 @@ msgstr ""
 
 #: conf/words.py:291
 msgid "unanswered questions"
-msgstr ""
+msgstr "Questions en suspens"
 
 #: conf/words.py:292
 msgid "unanswered questions (plural)"
