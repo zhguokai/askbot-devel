@@ -753,6 +753,7 @@ class BulkTagSubscription(models.Model):
 class UserProfile(models.Model):
     auth_user = models.OneToOneField(User, related_name='askbot_profile')
     default_site = models.ForeignKey(Site)
+    subscribed_sites = models.ManyToManyField(Site, related_name='subscriber_profile_set')
 
     class Meta:
         app_label = 'askbot'
