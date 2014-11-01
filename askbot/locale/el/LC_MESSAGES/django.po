@@ -7,14 +7,14 @@
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # jiannis bonatakis <jbonatakis@gmail.com>, 2014
 # Nikos Roussos <nikos@roussos.cc>, 2014
-# Nik Thom <nickth@openmailbox.org>, 2014
+# Nick Thom <nickth@openmailbox.org>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-06 02:32-0500\n"
-"PO-Revision-Date: 2014-08-10 12:10+0000\n"
-"Last-Translator: jiannis bonatakis <jbonatakis@gmail.com>\n"
+"POT-Creation-Date: 2014-08-25 01:13-0500\n"
+"PO-Revision-Date: 2014-08-25 06:34+0000\n"
+"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/askbot/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,93 +40,93 @@ msgstr ""
 msgid "Latest %(question)s feed"
 msgstr ""
 
-#: forms.py:148
+#: forms.py:164
 msgid "select country"
 msgstr "Επιλογή χώρας"
 
-#: forms.py:158
+#: forms.py:166
 msgid "Country"
 msgstr "Χώρα"
 
-#: forms.py:166
+#: forms.py:174
 msgid "Country field is required"
 msgstr "Απαιτείται το πεδίο χώρας"
 
-#: forms.py:196
+#: forms.py:204
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
 msgstr[0] "πρέπει να είναι > %d λέξεων"
 msgstr[1] "πρέπει να είναι > %d λέξεων"
 
-#: forms.py:207
+#: forms.py:215
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
 msgstr[0] "πρέπει να είναι < %d λέξεων"
 msgstr[1] "πρέπει να είναι > %d λέξεων"
 
-#: forms.py:236
+#: forms.py:244
 msgid "minor edit (don't send alerts)"
 msgstr ""
 
-#: forms.py:263 templates/widgets/markdown_help.html:20
+#: forms.py:271 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
 msgstr "τίτλος"
 
-#: forms.py:274
+#: forms.py:282
 #, python-format
 msgid "must have > %d character"
 msgid_plural "must have > %d characters"
 msgstr[0] "πρέπει να έχει > %d γράμματα"
 msgstr[1] "must have > %d characters"
 
-#: forms.py:285
+#: forms.py:293
 #, python-format
 msgid ""
 "The %(question)s is too long, maximum allowed size is %(length)d characters"
 msgstr "Η %(question)s είναι μεγάλη, το μέγιστο επιτρεπτό μέγεθος είναι %(length)d χαρακτήρες"
 
-#: forms.py:292
+#: forms.py:300
 #, python-format
 msgid "The %(question)s is too long, maximum allowed size is %(length)d bytes"
 msgstr "Η %(question)s είναι μεγάλη, το μέγιστο επιτρεπτό μέγεθος είναι %(length)d bytes"
 
-#: forms.py:321
+#: forms.py:329
 msgid "content"
 msgstr "περιεχόμενο"
 
-#: forms.py:325
+#: forms.py:333
 msgid "post"
 msgstr ""
 
-#: forms.py:332
+#: forms.py:340
 #, python-format
 msgid "%(post)s content must be > %(count)d character"
 msgid_plural "%(post)s content must be > %(count)d characters"
 msgstr[0] ""
 msgstr[1] ""
 
-#: forms.py:380
+#: forms.py:388
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
 msgstr[0] "κάθε ετικέτα πρέπει να είναι μικρότερη από %(max_chars)d χαρακτήρα"
 msgstr[1] "κάθε ετικέτα πρέπει να είναι μικρότερη από %(max_chars)d χαρακτήρες"
 
-#: forms.py:427
+#: forms.py:435
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
 msgstr ""
 
-#: forms.py:430 forms.py:1027 models/widgets.py:27
+#: forms.py:438 forms.py:1035 models/widgets.py:27
 #: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
 msgstr "ετικέτες"
 
-#: forms.py:432
+#: forms.py:440
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -137,256 +137,256 @@ msgid_plural ""
 msgstr[0] "Ετικέτες είναι σύντομες λέξεις-κλειδιά, χωρίς κενά ανάμεσά τους. Μπορεί να χρησιμοποιηθεί μέχρι %(max_tags)d ετικέτα."
 msgstr[1] "Ετικέτες είναι σύντομες λέξεις-κλειδιά, χωρίς κενά ανάμεσά τους. Μπορούν να χρησιμοποιηθούν μέχρι %(max_tags)d ετικέτες."
 
-#: forms.py:459
+#: forms.py:467
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
 msgstr[0] "παρακαλώ χρησιμοποιήστε %(tag_count)d ετικέτα ή λιγότερο"
 msgstr[1] "παρακαλώ χρησιμοποιήστε %(tag_count)d ετικέτες ή λιγότερο"
 
-#: forms.py:467
+#: forms.py:475
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr "Τουλάχιστον μία από τις ακόλουθες ετικέτες απαιτείται: %(tags)s"
 
-#: forms.py:495
+#: forms.py:503
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr "κοινότητα βίκι (το κάρμα δεν απονέμεται & πολλοί άλλοι μπορούν να επεξεργαστούν το ταχυδρομείο βίκι)"
 
-#: forms.py:511
+#: forms.py:519
 msgid "update summary:"
 msgstr "περίληψη ενημέρωσης:"
 
-#: forms.py:513
+#: forms.py:521
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style...), this field is optional"
 msgstr ""
 
-#: forms.py:602
+#: forms.py:610
 msgid "Enter number of points to add or subtract"
 msgstr "Εισαγωγή αριθμού σημείων για προσθήκη ή αφαίρεση"
 
-#: forms.py:617 const/__init__.py:380
+#: forms.py:625 const/__init__.py:380
 msgid "approved"
 msgstr "εγκεκριμένο"
 
-#: forms.py:618 const/__init__.py:381
+#: forms.py:626 const/__init__.py:381
 msgid "watched"
 msgstr "επιτηρούμενο"
 
-#: forms.py:619 const/__init__.py:382
+#: forms.py:627 const/__init__.py:382
 msgid "suspended"
 msgstr "σε αναστολή"
 
-#: forms.py:620 const/__init__.py:383
+#: forms.py:628 const/__init__.py:383
 msgid "blocked"
 msgstr "μπλοκαρισμένο"
 
-#: forms.py:622
+#: forms.py:630
 msgid "administrator"
 msgstr "διαχειριστής"
 
-#: forms.py:623 const/__init__.py:379
+#: forms.py:631 const/__init__.py:379
 msgid "moderator"
 msgstr "συντονιστής"
 
-#: forms.py:642
+#: forms.py:650
 msgid "Change status to"
 msgstr "αλλαγή κατάστασης σε"
 
-#: forms.py:670
+#: forms.py:678
 msgid "which one?"
 msgstr "ποιο;"
 
-#: forms.py:700
+#: forms.py:708
 msgid "Cannot change own status"
 msgstr "Αδυναμία αλλαγής της δικής του κατάστασης"
 
-#: forms.py:706
+#: forms.py:714
 msgid "Cannot turn other user to moderator"
 msgstr "Αδυναμία αλλαγής άλλου χρήστη σε συντονιστή"
 
-#: forms.py:713
+#: forms.py:721
 msgid "Cannot change status of another moderator"
 msgstr "Η αλλαγή κατάστασης άλλου συντονιστή είναι αδύνατη"
 
-#: forms.py:719
+#: forms.py:727
 msgid "Cannot change status to admin"
 msgstr "Αδυναμία αλλαγής κατάστασης σε διαχειριστή"
 
-#: forms.py:725
+#: forms.py:733
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr "Εάν επιθυμείτε να αλλάξετε την κατάσταση του %(username)s, παρακαλώ κάντε μια λογική επιλογή."
 
-#: forms.py:739
+#: forms.py:747
 msgid "Subject line"
 msgstr "Γραμμή θέματος"
 
-#: forms.py:744
+#: forms.py:752
 msgid "Message text"
 msgstr "Κείμενο μηνύματος"
 
-#: forms.py:751
+#: forms.py:759
 msgid "Your name (optional):"
 msgstr "Το όνομά σας (προαιρετικό):"
 
-#: forms.py:752
+#: forms.py:760
 msgid "Email:"
 msgstr "Ηλ. διεύθυνση:"
 
-#: forms.py:754
+#: forms.py:762
 msgid "Your message:"
 msgstr "Το μήνυμα σας:"
 
-#: forms.py:758
+#: forms.py:766
 msgid "I don't want to give my email or receive a response:"
 msgstr "Δεν θέλω να δώσω το ηλ. ταχυδρομείο μου ή να πάρω απάντηση:"
 
-#: forms.py:772
+#: forms.py:780
 msgid "Message is required"
 msgstr "Μύνημα απαιτείται"
 
-#: forms.py:781
+#: forms.py:789
 msgid "Please mark \"I dont want to give my mail\" field."
 msgstr "Παρακαλώ σημειώστε το πεδίο \"Δεν θέλω να δώσω την ηλ. διεύθυνση μου\"."
 
-#: forms.py:814
+#: forms.py:822
 msgid "keep private within your groups"
 msgstr ""
 
-#: forms.py:853 templates/ask.html:36 templates/question.html:380
+#: forms.py:861 templates/ask.html:36 templates/question.html:380
 msgid "User name:"
 msgstr "Σύνδεση χρήστη"
 
-#: forms.py:855
+#: forms.py:863
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
 msgstr ""
 
-#: forms.py:862 templates/question.html:381
+#: forms.py:870 templates/question.html:381
 msgid "Email address:"
 msgstr "Ηλ. διεύθυνση:"
 
-#: forms.py:912
+#: forms.py:920
 msgid "User name is required with the email"
 msgstr ""
 
-#: forms.py:917
+#: forms.py:925
 msgid "Email is required if user name is added"
 msgstr ""
 
-#: forms.py:948
+#: forms.py:956
 msgid "post anonymously"
 msgstr ""
 
-#: forms.py:969
+#: forms.py:977
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr "Subject line is expected in the format: [tag1, tag2, tag3,...] question title"
 
-#: forms.py:978
+#: forms.py:986
 msgid "ask anonymously"
 msgstr "ανώνυμη ερώτηση"
 
-#: forms.py:1237
+#: forms.py:1245
 msgid "reveal identity"
 msgstr "αποκάλυψη ταυτότητας"
 
-#: forms.py:1320
+#: forms.py:1328
 msgid ""
 "Sorry, only owner of the anonymous question can reveal his or her identity, "
 "please uncheck the box"
 msgstr "Συγνώμη, μόνο αυτός που υπέβαλε την ανώνυμη ερώτηση μπορεί να αποκαλύψει την ταυτότητά του, παρακαλώ μην επιλέγετε το πλαίσιο"
 
-#: forms.py:1333
+#: forms.py:1341
 msgid ""
 "Sorry, apparently rules have just changed - it is no longer possible to ask "
 "anonymously. Please either check the \"reveal identity\" box or reload this "
 "page and try editing the question again."
 msgstr "Συγνώμη, προφανώς οι κανόνες άλλαξαν - δεν είναι δυνατό πια να ρωτήσετε ανώνυμα. Παρακαλώ είτε επιλέξτε το πλαίσιο \"αποκάλυψη ταυτότητας\" ή ξαναφορτώστε αυτή τη σελίδα και προσπαθήστε να επεξεργαστείτε την ερώτηση ξανά."
 
-#: forms.py:1400
+#: forms.py:1408
 msgid "Real name"
 msgstr "Πραγματικό όνομα"
 
-#: forms.py:1407
+#: forms.py:1415
 msgid "Website"
 msgstr "Ιστοσελίδα"
 
-#: forms.py:1414
+#: forms.py:1422
 msgid "City"
 msgstr "Πόλη"
 
-#: forms.py:1423
+#: forms.py:1431
 msgid "Show country"
 msgstr "Προβολή χώρας"
 
-#: forms.py:1428
+#: forms.py:1436
 msgid "Show tag choices"
 msgstr ""
 
-#: forms.py:1433
+#: forms.py:1441
 msgid "Date of birth"
 msgstr "Ημερομηνία γέννησης"
 
-#: forms.py:1435
+#: forms.py:1443
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "δεν θα προβληθεί, χρησιμοποιείται για υπολογισμό ηλικίας, μορφή ΕΕΕΕ-ΜΜ-ΗΗ"
 
-#: forms.py:1443
+#: forms.py:1451
 msgid "Profile"
 msgstr "Προφίλ"
 
-#: forms.py:1452
+#: forms.py:1460
 msgid "Screen name"
 msgstr "Όνομα χρήστη"
 
-#: forms.py:1484 forms.py:1488
+#: forms.py:1492 forms.py:1496
 msgid "this email has already been registered, please use another one"
 msgstr "αυτό το email έχει ήδη χρησιμοποιηθεί, παρακαλώ χρησιμοποιήστε κάποιο άλλο"
 
-#: forms.py:1497
+#: forms.py:1505
 msgid "Choose email tag filter"
 msgstr "Επιλέξτε φίλτρο ετικέτας email"
 
-#: forms.py:1553
+#: forms.py:1561
 msgid "Individually selected"
 msgstr "Μεμονωμένη επιλογή"
 
-#: forms.py:1554
+#: forms.py:1562
 msgid "Entire forum (tag filtered)"
 msgstr "Συνολική συζήτηση (φιλτραρισμένη ετικέτα)"
 
-#: forms.py:1555
+#: forms.py:1563
 msgid "Comments and posts mentioning me"
 msgstr "Σχόλια και αναρτήσεις που με αναφέρουν"
 
-#: forms.py:1639
+#: forms.py:1647
 msgid "please choose one of the options above"
 msgstr "παρακαλώ επιλέξτε μια από τις παραπάνω επιλογές"
 
-#: forms.py:1642
+#: forms.py:1650
 msgid "okay, let's try!"
 msgstr "Εντάξει, ας προσπαθήσουμε!"
 
-#: forms.py:1645
+#: forms.py:1653
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr ""
 
-#: forms.py:1693 templates/reopen.html:7
+#: forms.py:1701 templates/reopen.html:7
 msgid "Title"
 msgstr "Τίτλος"
 
-#: forms.py:1696 templates/groups.html:32
+#: forms.py:1704 templates/groups.html:32
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: forms.py:1715 templates/tags.html:3 templates/tags/header.html:9
+#: forms.py:1723 templates/tags.html:3 templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
@@ -887,6 +887,52 @@ msgid ""
 " instead of answers"
 msgstr "Οι απαντήσεις email που έχουν λιγότερες λέξεις απο αυτόν τον αριθμό θα αποστέλοντε ως σχόλια αντί για απαντήσεις"
 
+#: conf/email_text.py:8
+msgid "Email template phrases"
+msgstr ""
+
+#: conf/email_text.py:16
+msgid "Short welcome message, for subject line"
+msgstr ""
+
+#: conf/email_text.py:17
+msgid "Welcome to {{ SITE_NAME }}!"
+msgstr ""
+
+#: conf/email_text.py:19
+msgid ""
+"<b>NOTE: All email text settings allow placeholders: {{ USER_NAME }}, {{ "
+"SITE_NAME }} and {{ SITE_LINK }}.</b>"
+msgstr ""
+
+#: conf/email_text.py:28
+msgid "Longer welcome message, for email body"
+msgstr ""
+
+#: conf/email_text.py:29
+msgid ""
+"<p>Please visit {{ SITE_NAME }} at {{ SITE_LINK }}, we look forward to your "
+"posts.</p>"
+msgstr ""
+
+#: conf/email_text.py:37
+msgid "Email footer"
+msgstr ""
+
+#: conf/email_text.py:38
+msgid "<p>Sincerely,<br>{{ SITE_NAME }} Administrator</p>"
+msgstr ""
+
+#: conf/email_text.py:46
+msgid "Header for the batch email alerts"
+msgstr ""
+
+#: conf/email_text.py:47
+msgid ""
+"<p>Dear {{ USER_NAME }},</p>\n"
+"<p>{{ SITE_NAME }} has these updates, please have a look:</p>"
+msgstr ""
+
 #: conf/external_keys.py:11
 msgid "Keys for external services"
 msgstr "Κλειδιά για εξωτερικές υπηρεσίες"
@@ -1002,43 +1048,43 @@ msgstr ""
 msgid "Text of the Q&A forum About page (html format)"
 msgstr "Κείμενο του φόρουμ Q&A για τη σελίδα (μορφή html)"
 
-#: conf/flatpages.py:22
+#: conf/flatpages.py:23
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"about\" page to check your input."
 msgstr "Αποθήκευση, έπειτα <a href=\"http://validator.w3.org/\">χρήση επικύρωσης  HTML</a> στη σελίδα \"σχετικά\" για έλεγχο της καταχώρισης σας."
 
-#: conf/flatpages.py:32
+#: conf/flatpages.py:33
 msgid "Text of the Q&A forum FAQ page (html format)"
 msgstr "Κείμενο του φόρουμ Q&A για τη σελίδα συχνών ερωτήσεων (μορφή html)"
 
-#: conf/flatpages.py:35
+#: conf/flatpages.py:37
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"faq\" page to check your input."
 msgstr "Αποθήκευση, μετά <a href=\"http://validator.w3.org/\">χρήση επικύρωσης HTML</a> στη σελίδα \"συχνές ερωτήσεις\" για έλεγχο της καταχώρισής σας."
 
-#: conf/flatpages.py:45
+#: conf/flatpages.py:47
 msgid "Instructions on how to ask questions"
 msgstr ""
 
-#: conf/flatpages.py:48
+#: conf/flatpages.py:51
 msgid ""
 "HTML is allowed. Save, then <a href=\"http://validator.w3.org/\">use HTML "
 "validator</a> on the \"ask\" page to check your input."
 msgstr ""
 
-#: conf/flatpages.py:59
+#: conf/flatpages.py:62
 msgid "Text of the Q&A forum Privacy Policy (html format)"
 msgstr "Κείμενο του φόρουμ Q&A για ιδιωτική πολιτική (μορφή html)"
 
-#: conf/flatpages.py:62
+#: conf/flatpages.py:66
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"privacy\" page to check your input."
 msgstr "Αποθήκευση, έπειτα <a href=\"http://validator.w3.org/\">χρήση επικύρωσης HTML</a> στην σελίδα \"ιδιωτικότητα\" για έλεγχο της καταχώρισή σας."
 
-#: conf/flatpages.py:75
+#: conf/flatpages.py:80
 msgid "Do not edit this field manually!!!"
 msgstr ""
 
@@ -1978,11 +2024,11 @@ msgstr "Απώλεια για κάτοχο αλληλογραφίας όταν �
 msgid "Main page sidebar"
 msgstr "Πλευρική περιοχή κύριας σελίδας"
 
-#: conf/sidebar_main.py:20 conf/sidebar_question.py:76
+#: conf/sidebar_main.py:20 conf/sidebar_question.py:78
 msgid "Custom sidebar header"
 msgstr "Προσαρμοσμένη κεφαλίδα πλευρικής περιοχής"
 
-#: conf/sidebar_main.py:23 conf/sidebar_profile.py:23
+#: conf/sidebar_main.py:24 conf/sidebar_profile.py:24
 msgid ""
 "Use this area to enter content at the TOP of the sidebarin HTML format.   "
 "When using this option (as well as the sidebar footer), please use the HTML "
@@ -1990,48 +2036,48 @@ msgid ""
 "all browsers."
 msgstr "Χρησιμοποιήστε αυτήν την περιοχή για εισαγωγή περιεχομένου στην ΚΟΡΥΦΗ της πλευρικής περιοχής σε μορφή HTML. Όταν χρησιμοποιείτε αυτήν την επιλογή (καθώς και το υποσέλιδο πλευρικής περιοχής), παρακαλώ χρησιμοποιήστε την υπηρεσία επικύρωσης HTML για να βεβαιωθείτε ότι η καταχώρισή σας είναι έγκυρη και δουλεύει καλά σε όλους τους περιηγητές."
 
-#: conf/sidebar_main.py:36 conf/sidebar_main.py:111 conf/sidebar_profile.py:37
-#: conf/sidebar_question.py:34 conf/sidebar_question.py:58
-#: conf/sidebar_question.py:93 conf/sidebar_question.py:158
+#: conf/sidebar_main.py:37 conf/sidebar_main.py:113 conf/sidebar_profile.py:38
+#: conf/sidebar_question.py:35 conf/sidebar_question.py:60
+#: conf/sidebar_question.py:96 conf/sidebar_question.py:162
 msgid "Show above only to anonymous users"
 msgstr ""
 
-#: conf/sidebar_main.py:45
+#: conf/sidebar_main.py:46
 msgid "Show avatar block in sidebar"
 msgstr "Εμφάνιση ομάδας απεικόνισης σε πλευρική περιοχή"
 
-#: conf/sidebar_main.py:47
+#: conf/sidebar_main.py:48
 msgid "Uncheck this if you want to hide the avatar block from the sidebar "
 msgstr "Ξεσημειώστε αυτό εάν θέλετε να αποκρύψετε την ομάδα απεικόνισης από την πλευρική περιοχή"
 
-#: conf/sidebar_main.py:58
+#: conf/sidebar_main.py:59
 msgid "Limit how many avatars will be displayed on the sidebar"
 msgstr "Όριο απεικονίσεων που θα εμφανίζονται στην πλευρική περιοχή"
 
-#: conf/sidebar_main.py:68
+#: conf/sidebar_main.py:69
 msgid "Show tag selector in sidebar"
 msgstr "Εμφάνιση επιλογέα ετικέτας σε πλευρική περιοχή"
 
-#: conf/sidebar_main.py:70
+#: conf/sidebar_main.py:71
 msgid ""
 "Uncheck this if you want to hide the options for choosing interesting and "
 "ignored tags "
 msgstr "Ξεσημειώστε αυτό εάν θέλετε να κρύψετε τις επιλογές προτίμησης ενδιαφερουσών και αγνοημένων ετικετών "
 
-#: conf/sidebar_main.py:81
+#: conf/sidebar_main.py:82
 msgid "Show tag list/cloud in sidebar"
 msgstr "Εμφάνιση ετικέτας λίστας/σύννεφου σε πλευρική περιοχή"
 
-#: conf/sidebar_main.py:83
+#: conf/sidebar_main.py:84
 msgid ""
 "Uncheck this if you want to hide the tag cloud or tag list from the sidebar "
 msgstr "Αποεπιλέξτε αυτό εάν θέλετε να κρύψετε σύννεφο ή λίστα ετικέτας από την πλευρική περιοχή"
 
-#: conf/sidebar_main.py:94 conf/sidebar_question.py:141
+#: conf/sidebar_main.py:95 conf/sidebar_question.py:144
 msgid "Custom sidebar footer"
 msgstr "Προσαρμοσμένη υποσημείωση πλευρικής περιοχής"
 
-#: conf/sidebar_main.py:97 conf/sidebar_question.py:144
+#: conf/sidebar_main.py:99 conf/sidebar_question.py:148
 msgid ""
 "Use this area to enter content at the BOTTOM of the sidebarin HTML format."
 "   When using this option (as well as the sidebar header), please use the "
@@ -2055,28 +2101,28 @@ msgstr ""
 msgid "Top banner"
 msgstr ""
 
-#: conf/sidebar_question.py:22
+#: conf/sidebar_question.py:23
 msgid ""
 "When using this option, please use the HTML validation service to make sure "
 "that your input is valid and works well in all browsers."
 msgstr ""
 
-#: conf/sidebar_question.py:42
+#: conf/sidebar_question.py:43
 msgid "Answers banner"
 msgstr ""
 
-#: conf/sidebar_question.py:45
+#: conf/sidebar_question.py:47
 msgid ""
 "This banner will show under the first answer. When using this option, please"
 " use the HTML validation service to make sure that your input is valid and "
 "works well in all browsers."
 msgstr ""
 
-#: conf/sidebar_question.py:67
+#: conf/sidebar_question.py:69
 msgid "Show answers banner even if there are no answers"
 msgstr ""
 
-#: conf/sidebar_question.py:79
+#: conf/sidebar_question.py:82
 msgid ""
 "Use this area to enter content at the TOP of the sidebar in HTML format. "
 "When using this option (as well as the sidebar footer), please use the HTML "
@@ -2084,29 +2130,29 @@ msgid ""
 "all browsers."
 msgstr ""
 
-#: conf/sidebar_question.py:101
+#: conf/sidebar_question.py:104
 msgid "Show tag list in sidebar"
 msgstr "Εμφάνιση λίστας ετικέτας σε πλευρική περιοχή"
 
-#: conf/sidebar_question.py:103
+#: conf/sidebar_question.py:106
 msgid "Uncheck this if you want to hide the tag list from the sidebar "
 msgstr "Αποεπιλέξτε το εάν επιθυμείτε να κρύψετε τη λίστα ετικέτας από την πλευρική περιοχή"
 
-#: conf/sidebar_question.py:114
+#: conf/sidebar_question.py:117
 msgid "Show meta information in sidebar"
 msgstr "Εμφάνιση μέτα πληροφοριών στην πλευρική περιοχή"
 
-#: conf/sidebar_question.py:116
+#: conf/sidebar_question.py:119
 msgid ""
 "Uncheck this if you want to hide the meta information about the question "
 "(post date, views, last updated). "
 msgstr "Αποεπιλέξτε το εάν θέλετε να κρύψετε την μέτα πληροφορία σχετικά με την ερώτηση (ημερομηνία ταχυδρόμησης, προβολές, τελευταία ενημέρωση)."
 
-#: conf/sidebar_question.py:128
+#: conf/sidebar_question.py:131
 msgid "Show related questions in sidebar"
 msgstr "Εμφάνιση σχετικών ερωτήσεων στην πλευρική περιοχή"
 
-#: conf/sidebar_question.py:130
+#: conf/sidebar_question.py:133
 msgid "Uncheck this if you want to hide the list of related questions. "
 msgstr "Αποεπιλογή του εάν θέλετε να κρύψετε τη λίστα των σχετικών ερωτήσεων."
 
@@ -2129,6 +2175,10 @@ msgstr ""
 #: conf/site_settings.py:17
 msgid "URLS, keywords & greetings"
 msgstr "URLS, λέξεις-κλειδιά & χαιρετίσματα"
+
+#: conf/site_settings.py:25
+msgid "My site"
+msgstr ""
 
 #: conf/site_settings.py:26
 msgid "Site title for the Q&A forum"
@@ -2166,32 +2216,36 @@ msgstr "Το βασικό URL για το φόρουμ σας Q&A, πρέπει 
 msgid "Check to enable greeting for anonymous user"
 msgstr "Σημειώστε για ενεργοποίηση χαιρετισμού για ανώνυμο χρήστη"
 
-#: conf/site_settings.py:118
+#: conf/site_settings.py:115
+msgid "First time here? Check out the FAQ!"
+msgstr ""
+
+#: conf/site_settings.py:119
 msgid "Text shown in the greeting message shown to the anonymous user"
 msgstr "Εμφανιζόμενο κείμενο στο μήνυμα χαιρετισμού που εμφανίζεται στον ανώνυμο χρήστη"
 
-#: conf/site_settings.py:122
+#: conf/site_settings.py:123
 msgid "Use HTML to format the message "
 msgstr "Χρήση HTML για μορφοποίηση του μηνύματος"
 
-#: conf/site_settings.py:131
+#: conf/site_settings.py:132
 msgid "Feedback site URL"
 msgstr "URL τόπου ανάδρασης"
 
-#: conf/site_settings.py:133
+#: conf/site_settings.py:134
 msgid "If left empty, a simple internal feedback form will be used instead"
 msgstr "Εάν αφεθεί κενό, μια απλή εσωτερική φόρμα ανάδρασης θα χρησιμοποιηθεί στη θέση του"
 
-#: conf/site_settings.py:150
+#: conf/site_settings.py:151
 #, python-format
 msgid "'%(value)s' is not a valid email"
 msgstr ""
 
-#: conf/site_settings.py:157
+#: conf/site_settings.py:158
 msgid "Internal feedback form email recipients"
 msgstr ""
 
-#: conf/site_settings.py:159
+#: conf/site_settings.py:160
 msgid ""
 "Comma separated list. If left empty, feedback mails are sent to admins and "
 "moderators"
@@ -3833,23 +3887,19 @@ msgstr "Παρακαλώ επιλέξτε το ηλ. ταχυδρομείο σα
 msgid "Re: "
 msgstr ""
 
-#: deps/livesettings/models.py:107 deps/livesettings/models.py:153
+#: deps/livesettings/models.py:106 deps/livesettings/models.py:152
 msgid "Site"
 msgstr "Τόπος"
 
-#: deps/livesettings/values.py:72
+#: deps/livesettings/values.py:75
 msgid "Main"
 msgstr "Κύριος"
 
-#: deps/livesettings/values.py:133
+#: deps/livesettings/values.py:136
 msgid "Base Settings"
 msgstr "Ρυθμίσεις βάσης"
 
-#: deps/livesettings/values.py:244
-msgid "Default value: \"\""
-msgstr "Προεπιλεγμένη τιμή: \"\""
-
-#: deps/livesettings/values.py:251
+#: deps/livesettings/values.py:252 deps/livesettings/values.py:286
 msgid "Default value: "
 msgstr "Προεπιλεγμένη τιμή:"
 
@@ -3858,7 +3908,7 @@ msgstr "Προεπιλεγμένη τιμή:"
 msgid "Default value: %s"
 msgstr "Προεπιλεγμένη τιμή: %s"
 
-#: deps/livesettings/values.py:641
+#: deps/livesettings/values.py:740
 #, python-format
 msgid "Allowed image file types are %(types)s"
 msgstr "Οι επιτρεπόμενοι τύποι αρχείων εικόνας είναι %(types)s"
@@ -3976,7 +4026,7 @@ msgstr "Παρακαλώ συνδεθείτε για χρήση του %s"
 msgid "perform this action"
 msgstr ""
 
-#: models/__init__.py:624 models/__init__.py:1285 views/writers.py:222
+#: models/__init__.py:624 models/__init__.py:1289 views/writers.py:222
 msgid "Sorry, but you have only read access"
 msgstr ""
 
@@ -4074,10 +4124,10 @@ msgstr ""
 msgid "edit posts"
 msgstr ""
 
-#: models/__init__.py:1022
+#: models/__init__.py:1027
 #, python-format
 msgid ""
-"Sorry, cannot %(delete_your_question)s since it has an %(upvoted_answer)s "
+"Sorry, cannot %(delete_your_question)s since it has an %(upvoted_answers)s "
 "posted by someone else"
 msgid_plural ""
 "Sorry, cannot %(delete_your_question)s since it has some %(upvoted_answers)s"
@@ -4085,217 +4135,217 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:1044
+#: models/__init__.py:1048
 msgid "delete posts"
 msgstr ""
 
-#: models/__init__.py:1072
+#: models/__init__.py:1076
 msgid "reopen questions"
 msgstr ""
 
-#: models/__init__.py:1086
+#: models/__init__.py:1090
 msgid "You have flagged this post before and cannot do it more than once"
 msgstr ""
 
-#: models/__init__.py:1098
+#: models/__init__.py:1102
 msgid "flag posts as offensive"
 msgstr ""
 
-#: models/__init__.py:1110
+#: models/__init__.py:1114
 #, python-format
 msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 msgstr "Συγγνώμη, έχετε εξαντλήσει τον μέγιστο επιτρεπόμενο αριθμό των %(max_flags_per_day)s προσβλητικών επισημάνσεων ανά ημέρα."
 
-#: models/__init__.py:1122
+#: models/__init__.py:1126
 msgid "cannot remove non-existing flag"
 msgstr "αδυναμία αφαίρεσης μη υπάρχουσας σημαίας"
 
-#: models/__init__.py:1131
+#: models/__init__.py:1135
 msgid "remove flags"
 msgstr ""
 
-#: models/__init__.py:1142
+#: models/__init__.py:1146
 msgid "you don't have the permission to remove all flags"
 msgstr "δεν έχετε την άδεια αφαίρεσης όλων των σημαιών"
 
-#: models/__init__.py:1143
+#: models/__init__.py:1147
 msgid "no flags for this entry"
 msgstr "χωρίς σημαίες για αυτήν την καταχώριση"
 
-#: models/__init__.py:1183
+#: models/__init__.py:1187
 msgid "delete comments"
 msgstr ""
 
-#: models/__init__.py:1198
+#: models/__init__.py:1202
 msgid "sorry, but older votes cannot be revoked"
 msgstr "συγγνώμη, αλλά οι παλαιότερες ψήφοι δεν μπορούν να ανακαλεστούν"
 
-#: models/__init__.py:2007 utils/functions.py:98
+#: models/__init__.py:2022 utils/functions.py:98
 #, python-format
 msgid "on %(date)s"
 msgstr "σε %(date)s"
 
-#: models/__init__.py:2009
+#: models/__init__.py:2024
 msgid "in two days"
 msgstr "σε δύο ημέρες"
 
-#: models/__init__.py:2011
+#: models/__init__.py:2026
 msgid "tomorrow"
 msgstr "αύριο"
 
-#: models/__init__.py:2013
+#: models/__init__.py:2028
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] "σε μία %(hr)d ώρα"
 msgstr[1] "σε %(hr)d ώρες"
 
-#: models/__init__.py:2015
+#: models/__init__.py:2030
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] "σε τουλάχιστον %(min)d λεπτό"
 msgstr[1] "σε τουλάχιστον %(min)d λεπτά"
 
-#: models/__init__.py:2016
+#: models/__init__.py:2031
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] "%(days)d ημέρα"
 msgstr[1] "%(days)d ημέρες"
 
-#: models/__init__.py:2018
+#: models/__init__.py:2033
 #, python-format
 msgid ""
 "New users must wait %(days)s to %(answer_own_questions)s.  You can post an "
 "answer %(left)s"
 msgstr ""
 
-#: models/__init__.py:2211 templates/email/feedback_email.txt:9
+#: models/__init__.py:2226
 msgid "Anonymous"
 msgstr "Ανώνυμος"
 
-#: models/__init__.py:2315
+#: models/__init__.py:2330
 msgid "Registered User"
 msgstr "Καταχωρημένος χρήστης"
 
-#: models/__init__.py:2317
+#: models/__init__.py:2332
 msgid "Administrator"
 msgstr ""
 
-#: models/__init__.py:2319
+#: models/__init__.py:2334
 msgid "Moderator"
 msgstr ""
 
-#: models/__init__.py:2321
+#: models/__init__.py:2336
 msgid "Suspended User"
 msgstr "Χρήστης σε αναστολή"
 
-#: models/__init__.py:2323
+#: models/__init__.py:2338
 msgid "Blocked User"
 msgstr "Φραγμένος χρήστης"
 
-#: models/__init__.py:2325
+#: models/__init__.py:2340
 msgid "New User"
 msgstr ""
 
-#: models/__init__.py:2521
+#: models/__init__.py:2536
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr "Το κάρμα του %(username)s είναι %(reputation)s"
 
-#: models/__init__.py:2534
+#: models/__init__.py:2549
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] "μία χρυσή διάκριση"
 msgstr[1] "%(count)d χρυσές διακρίσεις"
 
-#: models/__init__.py:2541
+#: models/__init__.py:2556
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] "μια ασημένια διάκριση"
 msgstr[1] "%(count)d ασημένιες διακρίσεις"
 
-#: models/__init__.py:2548
+#: models/__init__.py:2563
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] "μια χάλκινη διάκριση"
 msgstr[1] "%(count)d χάλκινες διακρίσεις"
 
-#: models/__init__.py:2559
+#: models/__init__.py:2574
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr "%(item1)s και %(item2)s"
 
-#: models/__init__.py:2561
+#: models/__init__.py:2576
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr "Ο %(user)s έχει %(badges)s"
 
-#: models/__init__.py:2708
+#: models/__init__.py:2723
 #, python-format
 msgid "At least %d karma point is required to post links"
 msgid_plural "At least %d karma points is required to post links"
 msgstr[0] ""
 msgstr[1] ""
 
-#: models/__init__.py:3217
+#: models/__init__.py:3232
 #, python-format
 msgid "%(user)s shared a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3220 models/__init__.py:3230
+#: models/__init__.py:3235 models/__init__.py:3245
 #, python-format
 msgid "%(user)s edited a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3222
+#: models/__init__.py:3237
 #, python-format
 msgid "%(user)s posted a %(post_link)s"
 msgstr ""
 
-#: models/__init__.py:3225
+#: models/__init__.py:3240
 #, python-format
 msgid "%(user)s edited an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3227
+#: models/__init__.py:3242
 #, python-format
 msgid "%(user)s posted an %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3232
+#: models/__init__.py:3247
 #, python-format
 msgid "%(user)s posted a %(post_link)s."
 msgstr ""
 
-#: models/__init__.py:3260
+#: models/__init__.py:3275
 msgid "To reply, PLEASE WRITE ABOVE THIS LINE."
 msgstr ""
 
-#: models/__init__.py:3302
+#: models/__init__.py:3317
 #, python-format
 msgid "\"%(title)s\""
 msgstr "\"%(title)s\""
 
-#: models/__init__.py:3454
+#: models/__init__.py:3469
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
 "href=\"%(user_profile)s\">your profile</a>."
 msgstr "Συγχαρητήρια, δεχθήκατε ένα σήμα '%(badge_name)s'. Ελέγξτε την <a href=\"%(user_profile)s\">κατατομή σας</a>."
 
-#: models/__init__.py:3737
+#: models/__init__.py:3753
 #, python-format
 msgid "Welcome to %(site_name)s"
 msgstr ""
 
-#: models/__init__.py:3758 views/commands.py:704
+#: models/__init__.py:3774 views/commands.py:704
 msgid "Your tag subscription was saved, thanks!"
 msgstr "Η εγγραφή ετικέτας αποθηκεύτηκε, ευχαριστώ!"
 
@@ -5628,33 +5678,6 @@ msgstr ""
 msgid "Signup"
 msgstr "Εγγραφή"
 
-#: templates/authopenid/confirm_email.txt:1
-msgid "Thank you for registering at our Q&A forum!"
-msgstr "Σας ευχαριστούμε για την εγγραφή στο φόρουμ Q&A!"
-
-#: templates/authopenid/confirm_email.txt:3
-msgid "Your account details are:"
-msgstr "Οι λεπτομέρειες του λογαριασμού σας είναι:"
-
-#: templates/authopenid/confirm_email.txt:5
-msgid "Username:"
-msgstr "Όνομα χρήστη:"
-
-#: templates/authopenid/confirm_email.txt:6
-msgid "Password:"
-msgstr "Κωδικός πρόσβασης:"
-
-#: templates/authopenid/confirm_email.txt:8
-msgid "Please sign in here:"
-msgstr "Παρακαλώ συνδεθείτε εδώ:"
-
-#: templates/authopenid/confirm_email.txt:11
-#: templates/authopenid/email_validation.txt:13
-msgid ""
-"Sincerely,\n"
-"Q&A Forum Administrator"
-msgstr "Με εκτίμηση\nΟ Διαχειριστής"
-
 #: templates/authopenid/email_validation.html:2
 #: templates/authopenid/email_validation.html:3
 #, python-format
@@ -5662,26 +5685,19 @@ msgid "Greetings from the %(site_name)s"
 msgstr ""
 
 #: templates/authopenid/email_validation.html:7
-#: templates/authopenid/email_validation.txt:3
 msgid "To make use of the Forum, please follow the link below:"
 msgstr "Για να χρησιμοποιήσετε το φόρουμ, παρακαλώ ακολουθήστε τον παρακάτω σύνδεσμο:"
 
 #: templates/authopenid/email_validation.html:11
-#: templates/authopenid/email_validation.txt:7
 msgid "Following the link above will help us verify your email address."
 msgstr "Ακολουθώντας τον παραπάνω σύνδεσμο θα σας βοηθήσει να επιβεβαιώσετε την ηλεκτρονική διεύθυνσή σας."
 
 #: templates/authopenid/email_validation.html:13
-#: templates/authopenid/email_validation.txt:9
 msgid ""
 "If you believe that this message was sent in mistake - \n"
 "no further action is needed. Just ignore this email, we apologize\n"
 "for any inconvenience"
 msgstr "Αν πιστεύεις οτι αυτο το μήνυμα σταλθηκε απο λάθος - \nδεν χρειάζεται να κάνεις κατι. Απλά αγνόησε αυτό το email και απολογούμαστε για καθε αναστάτωση"
-
-#: templates/authopenid/email_validation.txt:1
-msgid "Greetings from the Q&A forum"
-msgstr "Χαιρετίσματα από το φόρουμ Q&A"
 
 #: templates/authopenid/logout.html:3
 msgid "Logout"
@@ -5802,50 +5818,45 @@ msgstr "πάροχος"
 msgid "last used"
 msgstr "τελευταία χρησιμοποιημένο"
 
-#: templates/authopenid/signin.html:161
-#: templates/authopenid/widget_signin.html:154
-msgid "delete, if you like"
-msgstr "διαγραφή, εάν θέλετε"
-
-#: templates/authopenid/signin.html:175
-#: templates/authopenid/widget_signin.html:168
+#: templates/authopenid/signin.html:174
+#: templates/authopenid/widget_signin.html:167
 #: templates/question/answer_controls.html:33
 #: templates/question/question_controls.html:37
 msgid "delete"
 msgstr "διαγραφή"
 
-#: templates/authopenid/signin.html:177
-#: templates/authopenid/widget_signin.html:170
+#: templates/authopenid/signin.html:176
+#: templates/authopenid/widget_signin.html:169
 msgid "cannot be deleted"
 msgstr "αδυναμία διαγραφής"
 
-#: templates/authopenid/signin.html:190
-#: templates/authopenid/widget_signin.html:183
+#: templates/authopenid/signin.html:189
+#: templates/authopenid/widget_signin.html:182
 msgid "Still have trouble signing in?"
 msgstr "Έχετε ακόμα πρόβλημα σύνδεσης;"
 
-#: templates/authopenid/signin.html:195
-#: templates/authopenid/widget_signin.html:188
+#: templates/authopenid/signin.html:194
+#: templates/authopenid/widget_signin.html:187
 msgid "Enter your email address below and obtain a new key"
 msgstr ""
 
-#: templates/authopenid/signin.html:197
-#: templates/authopenid/widget_signin.html:190
+#: templates/authopenid/signin.html:196
+#: templates/authopenid/widget_signin.html:189
 msgid "Enter your email address below to recover your account"
 msgstr ""
 
-#: templates/authopenid/signin.html:200
-#: templates/authopenid/widget_signin.html:193
+#: templates/authopenid/signin.html:199
+#: templates/authopenid/widget_signin.html:192
 msgid "recover your account via email"
 msgstr "ανάκτηση του λογαριασμού σας μέσω ηλ. ταχυδρομείου"
 
-#: templates/authopenid/signin.html:211
-#: templates/authopenid/widget_signin.html:203
+#: templates/authopenid/signin.html:210
+#: templates/authopenid/widget_signin.html:202
 msgid "Send a new recovery key"
 msgstr "Αποστολή νέου κλειδιού πρόσβασης"
 
-#: templates/authopenid/signin.html:213
-#: templates/authopenid/widget_signin.html:205
+#: templates/authopenid/signin.html:212
+#: templates/authopenid/widget_signin.html:204
 msgid "Recover your account via email"
 msgstr "Ανάκτηση του λογαριασμού σας μέσω ηλ. ταχυδρομείου"
 
@@ -6004,28 +6015,6 @@ msgid ""
 "href=\"mailto:%(admin_email)s\">%(admin_email)s</a>."
 msgstr ""
 
-#: templates/email/delayed_email_alert.html:2
-#, python-format
-msgid "Dear %(name)s,"
-msgstr ""
-
-#: templates/email/delayed_email_alert.html:3
-#, python-format
-msgid "%(site_name)s has these updates, please have a look:"
-msgstr ""
-
-#: templates/email/feedback_email.txt:2
-#, python-format
-msgid ""
-"\n"
-"Hello, this is a %(site_title)s forum feedback message.\n"
-msgstr "\nΓεια σας, αυτό είναι ένα μήνυμα ανάδρασης του φόρουμ %(site_title)s.\n"
-
-#: templates/email/footer.html:1
-#, python-format
-msgid "Sincerely,<br>%(site_name)s Administrator"
-msgstr ""
-
 #: templates/email/insufficient_rep_to_post_by_email.html:10
 #, python-format
 msgid "%(username)s, your content could not be posted by email just yet."
@@ -6141,7 +6130,6 @@ msgid ""
 msgstr ""
 
 #: templates/email/re_welcome_lamson_on.html:11
-#: templates/email/welcome_lamson_off.html:10
 #, python-format
 msgid ""
 "Please visit %(site_name)s at <a href=\"%(site_url)s\">%(site_url)s</a>, we "
@@ -6166,8 +6154,6 @@ msgid ""
 "<p>The system was unable to process your message successfully, the reason being:<p>\n"
 msgstr ""
 
-#: templates/email/welcome_lamson_off.html:6
-#: templates/email/welcome_lamson_off.html:7
 #: templates/email/welcome_lamson_on.html:3
 #: templates/email/welcome_lamson_on.html:4
 #, python-format
