@@ -216,7 +216,7 @@ SearchDropMenu.prototype.createDom = function() {
     if (this._askButtonEnabled) {
         footer.addClass('footer');
         var button = this.makeElement('button');
-        button.addClass('submit');
+        button.addClass('submit btn btn-default');
         button.html(gettext('Ask Your Question'))
         footer.append(button);
         var handler = this._askHandler;
@@ -631,7 +631,6 @@ FullTextSearch.prototype.reset = function() {
     this._element.val('');
     this._element.focus();
     this._xButton.hide();
-    this._toolTip.show();
 };
 
 FullTextSearch.prototype.refreshXButton = function() {
@@ -789,15 +788,6 @@ FullTextSearch.prototype.makeAskHandler = function() {
     };
 };
 
-FullTextSearch.prototype.updateToolTip = function() {
-    var query = this.getSearchQuery();
-    if (query === '') {
-        this._toolTip.show();
-    } else {
-        this._toolTip.hide();
-    }
-};
-
 FullTextSearch.prototype.setFullTextSearchEnabled = function(enabled) {
     this._fullTextSearchEnabled = enabled;
 };
@@ -814,7 +804,6 @@ FullTextSearch.prototype.getFullTextSearchEnabled = function() {
  */
 FullTextSearch.prototype.makeKeyDownHandler = function() {
     var me = this;
-    var toolTip = this._toolTip;
     var xButton = this._xButton;
     var dropMenu = this._dropMenu;
     var formSubmitHandler = this.makeFormSubmitHandler();
@@ -836,12 +825,7 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
         }
 
         var query = me.getSearchQuery();
-        if (query.length === 0) {
-            if (keyCode !== 8 && keyCode !== 48) {//del and backspace
-                toolTip.hide();//hide tooltip
-            }
-        } else {
-            me.updateToolTip();
+        if (query.length) {
             me.refreshXButton();
             var minQueryLength = askbot['settings']['minSearchWordLength'];
             if (query.length === minQueryLength) {
@@ -880,25 +864,12 @@ FullTextSearch.prototype.decorate = function(element) {
     this._prevText = this.getSearchQuery();
     this._tag_warning_box = new TagWarningBox();
 
-    var toolTip = new InputToolTip();
-    toolTip.setClickHandler(function() {
-        element.focus();
-    });
-
-    element.after(toolTip.getElement());
-
-    //below is called after getElement, b/c element must be defined
-    if (this._prevText !== '') {
-        toolTip.hide();//hide if search query is not empty
-    }
-    this._toolTip = toolTip;
-
     var dropMenu = new SearchDropMenu();
     dropMenu.setSearchWidget(this);
     dropMenu.setAskHandler(this.makeAskHandler());
     dropMenu.setAskButtonEnabled(this._askButtonEnabled);
     this._dropMenu = dropMenu;
-    element.parent().append(this._dropMenu.getElement());
+    $('div.search-bar').append(this._dropMenu.getElement());
 
     $(element).click(function(e) { return false });
     $(document).click(function() { dropMenu.reset(); });
@@ -934,7 +905,6 @@ FullTextSearch.prototype.decorate = function(element) {
     var main_page_eval_handle;
     this._query.keydown(this.makeKeyDownHandler());
     this._query.keyup(function(e){
-        me.updateToolTip();
         me.refreshXButton();
         if (me.isRunning() === false){
             clearTimeout(main_page_eval_handle);
