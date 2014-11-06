@@ -499,6 +499,7 @@ class Command(NoArgsCommand):
     def send_email_alerts(self, user, template):
         """sends delayed email alerts for user"""
         user.add_missing_askbot_subscriptions()
+        activate_language(user.get_primary_language())
 
         #todo: q_list is a dictionary, not a list
         q_list = self.get_updated_questions_for_user(user)
@@ -561,7 +562,6 @@ class Command(NoArgsCommand):
                     })
                     self.print_debug_msg(user, "including: q=%s, meta_data=%s" % (repr(q), repr(meta_data)))
 
-            activate_language(user.get_primary_language())
             text = template.render({
                 'recipient_user': user,
                 'questions': questions_data,
