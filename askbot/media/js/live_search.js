@@ -989,10 +989,6 @@ TagSearch.prototype.runSearch = function() {
     me.setIsRunning(true);
 };
 
-TagSearch.prototype.getToolTip = function() {
-    return this._toolTip;
-};
-
 TagSearch.prototype.makeKeyUpHandler = function() {
     var me = this;
     return function(evt) {
@@ -1009,20 +1005,16 @@ TagSearch.prototype.makeKeyDownHandler = function() {
     return function(evt) {
         var query = me.getQuery();
         var keyCode = getKeyCode(evt);
-        var toolTip = me.getToolTip();
         if (keyCode === 27) {//escape
             me.setQuery('');
-            toolTip.show();
             xButton.hide();
             return;
         }
         if (keyCode === 8 || keyCode === 48) {//del or backspace
             if (query.length === 1) {
-                toolTip.show();
                 xButton.hide();
             }
         } else {
-            toolTip.hide();
             xButton.show();
         }
     };
@@ -1031,7 +1023,6 @@ TagSearch.prototype.makeKeyDownHandler = function() {
 TagSearch.prototype.reset = function() {
     if (this.getIsRunning() === false) {
         this.setQuery('');
-        this._toolTip.show();
         this._xButton.hide();
         this.runSearch();
         this._element.focus();
@@ -1047,16 +1038,4 @@ TagSearch.prototype.decorate = function(element) {
 
     var me = this;
     this._xButton.click(function(){ me.reset() });
-
-    var toolTip = new InputToolTip();
-    toolTip.setPromptText(askbot['data']['tagSearchPromptText']);
-    toolTip.setClickHandler(function() {
-        element.focus();
-    });
-    element.after(toolTip.getElement());
-    //below is called after getElement, b/c element must be defined
-    if (this.getQuery() !== '') {
-        toolTip.hide();//hide if search query is not empty
-    }
-    this._toolTip = toolTip;
 };
