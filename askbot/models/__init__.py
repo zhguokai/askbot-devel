@@ -3793,6 +3793,11 @@ def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
             message = _('Your tag subscription was saved, thanks!')
         )
 
+def set_administrator_flag(sender, instance, *args, **kwargs):
+    user = instance
+    if user.is_superuser and instance.status != 'd':
+        instance.status = 'd'
+
 def add_missing_subscriptions(sender, instance, created, **kwargs):
     """``sender`` is instance of ``User``. When the ``User``
     is created, any required email subscription settings will be
@@ -3932,6 +3937,7 @@ django_signals.post_syncdb.connect(init_badge_data)
 
 #signal for User model save changes
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
+django_signals.pre_save.connect(set_administrator_flag, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(add_user_to_global_group, sender=User)
 django_signals.post_save.connect(add_user_to_personal_group, sender=User)
