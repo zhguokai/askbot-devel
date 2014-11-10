@@ -12,6 +12,7 @@ from askbot import api
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot.search.state_manager import SearchState
 from askbot.skins.loaders import get_skin
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
@@ -75,13 +76,19 @@ def application_settings(request):
     else:   
         min_search_word_length = my_settings['MIN_SEARCH_WORD_LENGTH']
 
+    need_scope_links = askbot_settings.ALL_SCOPE_ENABLED or \
+                    askbot_settings.UNANSWERED_SCOPE_ENABLED or \
+                    (request.user.is_authenticated() and askbot_settings.FOLLOWED_SCOPE_ENABLED)
+
     context = {
         'base_url': site_url(''),
+        'empty_search_state': SearchState.get_empty(),
         'min_search_word_length': min_search_word_length,
         'current_language_code': current_language,
         'settings': my_settings,
         'skin': get_skin(),
         'moderation_items': api.get_info_on_moderation_items(request.user),
+        'need_scope_links': need_scope_links,
         'noscript_url': const.DEPENDENCY_URLS['noscript'],
     }
 

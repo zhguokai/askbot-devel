@@ -1,8 +1,8 @@
 Changes in Askbot
 =================
 
-Development master branch (only on github)
-------------------------------------------
+0.7.50 (Nov 1, 2014)
+--------------------
 * Added email alert for moderators `askbot_send_moderation_alerts`
 * Implemented Google Plus login
 * Allowed localized site settings
