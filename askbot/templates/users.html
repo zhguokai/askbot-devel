@@ -66,7 +66,7 @@
     <p>{% trans search_query=search_query|escape %}users matching query {{search_query}}:{% endtrans %}</p>
 {% endif %}
 {% if not users.object_list %}
-    <p><span>{% trans %}Nothing found.{% endtrans %}</span></p>
+    <p><span>{% trans %}No users found.{% endtrans %}</span></p>
 {% endif %}
 {{ macros.user_list(users.object_list) }}
 <div class="pager">
