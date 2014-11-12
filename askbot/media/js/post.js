@@ -4896,7 +4896,6 @@ $(document).ready(function() {
 
         var fakeUserAc = new AutoCompleter({
             url: '/get-users-info/',//askbot['urls']['get_users_info'],
-            promptText: askbot['messages']['userNamePrompt'],
             minChars: 1,
             useCache: true,
             matchInside: true,
@@ -4904,13 +4903,7 @@ $(document).ready(function() {
             delay: 10,
             onItemSelect: userSelectHandler
         });
-
         fakeUserAc.decorate(proxyUserNameInput);
-        if (proxyUserEmailInput.length === 1) {
-            var tip = new TippedInput();
-            tip.decorate(proxyUserEmailInput);
-        }
-        
     }
     //if groups are enabled - activate share functions
     var groupsInput = $('#share_group_name');

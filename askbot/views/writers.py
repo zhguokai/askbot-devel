@@ -317,10 +317,15 @@ def ask(request):#view used to ask a new question
         except Exception:
             pass
 
+    editor_is_folded = (askbot_settings.QUESTION_BODY_EDITOR_MODE=='folded' and \
+                        askbot_settings.MIN_QUESTION_BODY_LENGTH==0 and \
+                        form.initial['text'] == '')
+
     data = {
         'active_tab': 'ask',
         'page_class': 'ask-page',
         'form' : form,
+        'editor_is_folded': editor_is_folded,
         'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
         'category_tree_data': askbot_settings.CATEGORY_TREE,

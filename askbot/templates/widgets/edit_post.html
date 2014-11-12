@@ -89,10 +89,12 @@
             <tr>
                 <td>
                     <div class="form-item">
-                        {{ post_form.post_author_username }}
+                        <input id="id_post_author_username" name="post_author_username" type="text" 
+                            placeholder="{% trans %}User name{% endtrans %}" autocomplete="off"/>
                     </div>
                     <div class="form-item">
-                        {{ post_form.post_author_email }}
+                        <input id="id_post_author_email" name="post_author_email" type="text" 
+                            placeholder="{% trans %}Email address{% endtrans %}">
                     </div>
                 </td>
             </tr>
