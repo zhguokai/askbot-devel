@@ -30,7 +30,7 @@
             {% elif request.user==question.author  %}
                 {{ settings.WORDS_INSTRUCTION_TO_ANSWER_OWN_QUESTION }}
             {% endif %}
-                {{ settings.WORDS_INSTRUCTION_TO_GIVE_ANSWER }}
+                {{ settings.WORDS_INSTRUCTION_TO_GIVE_ANSWERS }}
             </div>
             <div class="folded-editor{% if editor_is_unfolded %}unfolded{% endif %}" tabindex="6">
               <p class="prompt"><a>{{ settings.WORDS_ADD_ANSWER|escape }}</a></p>
