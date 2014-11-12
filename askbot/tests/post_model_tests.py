@@ -17,7 +17,7 @@ from askbot.models import Thread
 from askbot.models import Tag
 from askbot.models import Group
 from askbot.search.state_manager import DummySearchState
-from django.utils import simplejson
+from django.utils import simplejson, timezone
 from askbot.conf import settings as askbot_settings
 
 
@@ -39,7 +39,7 @@ class PostModelTests(AskbotTestCase):
             **{
                 'text': 'blah',
                 'author': self.u1,
-                'revised_at': datetime.datetime.now()
+                'revised_at': timezone.now()
             }
         )
 
@@ -47,7 +47,7 @@ class PostModelTests(AskbotTestCase):
         post_revision = PostRevision(
             text='blah',
             author=self.u1,
-            revised_at=datetime.datetime.now(),
+            revised_at=timezone.now(),
             revision=1,
         )
 
@@ -62,7 +62,7 @@ class PostModelTests(AskbotTestCase):
 
         rev2 = PostRevision(
             post=question, text='blah', author=self.u1,
-            revised_at=datetime.datetime.now(), revision=2
+            revised_at=timezone.now(), revision=2
         )
         rev2.save()
         self.assertFalse(rev2.id is None)

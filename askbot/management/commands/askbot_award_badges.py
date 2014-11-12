@@ -7,12 +7,12 @@ from askbot.models import badges
 from askbot.models import User
 from askbot.models import Vote
 from askbot.utils.console import ProgressBar
-import datetime
 from django.core.management.base import NoArgsCommand
+from django.utils import timezone
 
 class Command(NoArgsCommand):
     def handle_noargs(self, *args, **kwargs):
-        now = datetime.datetime.now()
+        now = timezone.now()
         awarded_count = 0
 
         users = User.objects.all()

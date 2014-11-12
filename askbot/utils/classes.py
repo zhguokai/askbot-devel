@@ -1,4 +1,5 @@
 """various utility classes"""
+from django.utils import timezone
 import datetime
 
 class ReminderSchedule(object):
@@ -26,7 +27,7 @@ class ReminderSchedule(object):
         * ``max_reminders`` - maximum number of reminders to send
         """
         self.wait_period = datetime.timedelta(days_before_starting)
-        self.end_cutoff_date = datetime.datetime.now() - self.wait_period
+        self.end_cutoff_date = timezone.now() - self.wait_period
 
         self.recurrence_delay = datetime.timedelta(frequency_days)
         self.max_reminders = max_reminders

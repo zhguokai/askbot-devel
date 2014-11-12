@@ -1,7 +1,6 @@
 import hotshot
 import time
 import os
-import datetime
 import functools
 import inspect
 import logging
@@ -213,7 +212,7 @@ def check_spam(field):
                     logging.debug(
                         'Spam detected in %s post at: %s',
                         request.user.username,
-                        datetime.datetime.now()
+                        timezone.now()
                     )
                     spam_message = _(
                         'Spam was detected on your post, sorry '

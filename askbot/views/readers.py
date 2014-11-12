@@ -6,7 +6,6 @@ By main textual content is meant - text of Questions, Answers and Comments.
 The "read-only" requirement here is not 100% strict, as for example "question" view does
 allow adding new comments via Ajax form post.
 """
-import datetime
 import logging
 import urllib
 import operator
@@ -81,7 +80,7 @@ def questions(request, **kwargs):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
-    #before = datetime.datetime.now()
+    #before = timezone.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
@@ -387,7 +386,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """
     #process url parameters
     #todo: fix inheritance of sort method from questions
-    #before = datetime.datetime.now()
+    #before = timezone.now()
     form = ShowQuestionForm(request.GET)
     form.full_clean()#always valid
     show_answer = form.cleaned_data['show_answer']
@@ -668,7 +667,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     extra = context.get_extra('ASKBOT_QUESTION_PAGE_EXTRA_CONTEXT', request, data)
     data.update(extra)
 
-    #print 'generated in ', datetime.datetime.now() - before
+    #print 'generated in ', timezone.now() - before
     return render(request, 'question.html', data)
 
 def revisions(request, id, post_type = None):

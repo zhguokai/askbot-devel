@@ -17,7 +17,7 @@ from django.forms import IntegerField
 from django.http import HttpResponse
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseForbidden
-from django.utils import simplejson
+from django.utils import simplejson, timezone
 from group_messaging.models import Message
 from group_messaging.models import MessageMemo
 from group_messaging.models import SenderList
@@ -139,7 +139,7 @@ class PostReply(InboxView):
                                         message=message.root,
                                         user=request.user
                                     )
-        last_visit.at = datetime.datetime.now()
+        last_visit.at = timezone.now()
         last_visit.save()
         return self.render_to_response(
             {'post': message, 'user': request.user},
@@ -281,6 +281,6 @@ class ThreadDetails(InboxView):
                                                             user=request.user
                                                         )
         if created is False:
-            last_visit.at = datetime.datetime.now()
+            last_visit.at = timezone.now()
             last_visit.save()
         return {'root_message': root, 'responses': responses, 'request': request}
