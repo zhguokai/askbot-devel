@@ -5118,6 +5118,11 @@ AutoCompleter.prototype.getValue = function(){
     }
     var sel = this._element.getSelection();
     var text = this._element.val();
+
+    if (!this.options.autocompleteMultiple) {
+        return text;
+    }
+
     var pos = sel.start;//estimated start
     //find real start
     var start = pos;
@@ -5154,9 +5159,13 @@ AutoCompleter.prototype.getValue = function(){
  * with the value from the autocompleter
  */
 AutoCompleter.prototype.setValue = function(val){
-    var prefix = this._element.val().substring(0, this._selection_start);
-    var postfix = this._element.val().substring(this._selection_end + 1);
-    this._element.val(prefix + val + postfix);
+    if (this.options.autocompleteMultiple) {
+        var prefix = this._element.val().substring(0, this._selection_start);
+        var postfix = this._element.val().substring(this._selection_end + 1);
+        this._element.val(prefix + val + postfix);
+    } else {
+        this._element.val(val);
+    }
 };
 
 AutoCompleter.prototype.displayValue = function(value, data) {

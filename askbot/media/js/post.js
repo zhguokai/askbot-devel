@@ -5064,10 +5064,11 @@ $(document).ready(function() {
 
         var fakeUserAc = new AutoCompleter({
             url: '/get-users-info/',//askbot['urls']['get_users_info'],
+            autocompleteMultiple: false,
             promptText: askbot['messages']['userNamePrompt'],
             minChars: 1,
             useCache: true,
-            matchInside: true,
+            matchInside: false,
             maxCacheLength: 100,
             delay: 10,
             onItemSelect: userSelectHandler
