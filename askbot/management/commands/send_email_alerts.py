@@ -375,7 +375,9 @@ class Command(NoArgsCommand):
                                         content_object=q, 
                                         activity_type=EMAIL_UPDATE_ACTIVITY
                                     )
-                emailed_at = timezone.make_aware(datetime.datetime(1970, 1, 1), timezone.utc)#long time ago
+                emailed_at = datetime.datetime(1970, 1, 1)  #long time ago
+                if django_settings.USE_TZ:
+                    emailed_at = timezone.make_aware(emailed_at, timezone.utc)
             except Activity.MultipleObjectsReturned:
                 raise Exception(
                                 'server error - multiple question email activities '
