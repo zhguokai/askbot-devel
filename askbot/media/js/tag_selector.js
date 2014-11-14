@@ -260,7 +260,7 @@ function pickedTags(){
             return;
         }
 
-        var tags_input =$.trim($(input_sel).attr('value'));
+        var tags_input =$.trim($(input_sel).val());
         if (tags_input === '') {
             return;
         }
