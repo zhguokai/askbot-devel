@@ -87,11 +87,11 @@ $.fn.authenticator = function() {
                                 success: function(data, text_status, xhr){
                                     $(provider_row).remove();
                                     delete existing_login_methods[provider_name];
-                                    provider_count -=1;
-                                    if (provider_count < 0){
-                                        provider_count === 0;
+                                    askbot['auth']['providerCount'] -= 1;
+                                    if (askbot['auth']['providerCount'] < 0) {
+                                        askbot['auth']['providerCount'] === 0;
                                     }
-                                    if (provider_count === 0){
+                                    if (askbot['auth']['providerCount'] === 0) {
                                         $('#ab-existing-login-methods').remove();
                                         $('#ab-show-login-methods').remove();
                                         $('h1').html(
@@ -185,7 +185,7 @@ $.fn.authenticator = function() {
     };
 
     var reset_password_input_fields = function(){
-        if (userIsAuthenticated){
+        if (askbot['data']['userIsAuthenticated']){
             $('#id_new_password').val('');
             $('#id_new_password_retyped').val('');
         }
@@ -201,7 +201,7 @@ $.fn.authenticator = function() {
             password_input_fields.hide();
         }
         reset_password_input_fields();
-        if (userIsAuthenticated === false){
+        if (askbot['data']['userIsAuthenticated'] === false){
             email_input_fields.hide();
             account_recovery_heading.hide();
             account_recovery_link.show();
@@ -229,15 +229,15 @@ $.fn.authenticator = function() {
 
     var show_openid_input_fields = function(provider_name){
         reset_form_and_errors();
-        var token_name = extra_token_name[provider_name]
-        if (userIsAuthenticated){
+        var token_name = askbot['auth']['extraTokenName'][provider_name]
+        if (askbot['data']['userIsAuthenticated']){
             $('#openid-heading').html(
                 interpolate(gettext('Please enter your %s, then proceed'), [token_name])
             );
             var button_text = gettext('Connect your %(provider_name)s account to %(site)s');
 			var data = {
 				provider_name: provider_name,
-				site: siteName
+				site: askbot['settings']['siteName'];
 			}
 			button_text = interpolate(button_text, data, true);
             openid_submit_button.val(button_text);
@@ -316,13 +316,13 @@ $.fn.authenticator = function() {
     };
 
     var setup_password_login_or_change = function(provider_name){
-        var token_name = extra_token_name[provider_name]
+        var token_name = askbot['auth']['extraTokenName'][provider_name]
         var password_action_input = $('input[name=password_action]');
-        if (userIsAuthenticated === true && askbot['settings']['useLdapForPasswordLogin'] == false){
+        if (askbot['data']['userIsAuthenticated'] === true && askbot['settings']['useLdapForPasswordLogin'] == false){
             var password_button = $('input[name=change_password]');
             var submit_action = submit_change_password;
             if (provider_name === 'local'){
-                var provider_cleaned_name = siteName;
+                var provider_cleaned_name = askbot['settings']['siteName'];
             }
             else {
                 var provider_cleaned_name = provider_name;
@@ -476,7 +476,7 @@ $.fn.authenticator = function() {
 
         setup_event_handlers(account_recovery_link, start_account_recovery);
 
-        if (userIsAuthenticated){
+        if (askbot['data']['userIsAuthenticated']){
             read_existing_login_methods();
             setup_login_method_deleters();
         }
