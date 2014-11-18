@@ -11,7 +11,7 @@
     <h1 class="section-title">{{page_title}}</h1>
 {% endif %}
     {% if not (view_subtype == 'default' and have_buttons) %}
-    <p id='login-intro'>
+    <p class="js-login-intro">
         {% if view_subtype == 'add_openid' and have_buttons %}
             {% if existing_login_methods %}
                 {% trans %}It's a good idea to make sure that your existing login methods still work, or add a new one. Please click any of the icons below to check/change or add new login methods.{% endtrans %}

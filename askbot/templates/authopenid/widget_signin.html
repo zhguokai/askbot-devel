@@ -14,7 +14,7 @@
 {% if have_buttons or view_subtype == 'email_sent' %}
     <h1 class="section-title">{{page_title}}</h1>
 {% endif %}
-    <p id='login-intro'>
+    <p class='js-login-intro'>
     {% if view_subtype == 'default' and have_buttons %}
         {% trans %}Choose your favorite service below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one.{% endtrans %}
     {% elif view_subtype == 'add_openid' and have_buttons %}

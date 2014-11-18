@@ -97,7 +97,7 @@ $.fn.authenticator = function() {
                                         $('h1').html(
                                             gettext("Please add one or more login methods.")
                                         );
-                                        $('#login-intro').html(
+                                        $('.js-login-intro').html(
                                             gettext("You don\'t have a method to log in right now, please add one or more by clicking any of the icons below.")
                                         );
                                         existing_login_methods = null;
