@@ -22,6 +22,14 @@
                         user = request.user
                     )
         }}
+        <div class="post-opts">
+            {{ macros.post_options(form, request.user, settings) }}
+            <div class="labeled-input">
+                <label for="id_summary">{{ form.summary.help_text }}</label>
+                {{ form.summary }}
+            </div>
+        </div>
+        <div class="clearfix"></div>
         {% if form.recaptcha %}
             <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
             <div class="clearfix"></div>
@@ -29,13 +37,6 @@
         <div>
             <input id="edit_post_form_submit_button" type="submit" value="{% trans %}Save edit{% endtrans %}" class="submit" />&nbsp;
             <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
-        </div>
-        <div class="post-opts">
-            {{ macros.post_options(form, request.user, settings) }}
-            <div class="labeled-input">
-                <label for="id_summary">{{ form.summary.help_text }}</label>
-                {{ form.summary }}
-            </div>
         </div>
     </form>
 </div>
