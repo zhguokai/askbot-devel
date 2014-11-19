@@ -2069,12 +2069,6 @@ EditCommentForm.prototype.createDom = function(){
     this._text_counter = $('<span></span>').attr('class', 'counter');
     this._controlsBox.append(this._text_counter);
 
-    this._submit_btn = $('<button class="submit"></button>');
-    this._controlsBox.append(this._submit_btn);
-    this._cancel_btn = $('<button class="submit cancel"></button>');
-    this._cancel_btn.html(gettext('cancel'));
-    this._controlsBox.append(this._cancel_btn);
-
     //if email alerts are enabled, add a checkbox "suppress_email"
     if (askbot['settings']['enableEmailAlerts'] === true) {
         this._minorEditBox = this.makeElement('div');
@@ -2089,6 +2083,12 @@ EditCommentForm.prototype.createDom = function(){
         label.html(gettext("minor edit (don't send alerts)"));
         this._minorEditBox.append(label);
     }
+
+    this._submit_btn = $('<button class="submit"></button>');
+    this._controlsBox.append(this._submit_btn);
+    this._cancel_btn = $('<button class="submit cancel"></button>');
+    this._cancel_btn.html(gettext('cancel'));
+    this._controlsBox.append(this._cancel_btn);
 
 };
 
