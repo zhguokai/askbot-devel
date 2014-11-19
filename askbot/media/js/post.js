@@ -2090,6 +2090,7 @@ EditCommentForm.prototype.createDom = function(){
     this._cancel_btn.html(gettext('cancel'));
     this._controlsBox.append(this._cancel_btn);
 
+    runAskbotCallback('editCommentFormCreateDom', this);
 };
 
 EditCommentForm.prototype.isEnabled = function() {

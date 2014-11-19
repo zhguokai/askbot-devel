@@ -21,6 +21,12 @@ var getCookie = function(name) {
     return cookieValue;
 };
 
+var runAskbotCallback = function(name, object) {
+    if (askbot['callbacks'] && askbot['callbacks'][name]) {
+        askbot['callbacks'][name](object);
+    }
+};
+
 var disableAllInputs = function() {
     $('input').attr('disabled', 'disabled');
     $('button').attr('disabled', 'disabled');

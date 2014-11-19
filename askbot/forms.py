@@ -261,6 +261,7 @@ class LanguageField(forms.ChoiceField):
         kwargs['choices'] = django_settings.LANGUAGES
         super(LanguageField, self).__init__(*args, **kwargs)
 
+
 class SuppressEmailField(forms.BooleanField):
     def __init__(self):
         super(SuppressEmailField, self).__init__()
