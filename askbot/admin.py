@@ -219,9 +219,22 @@ finally:
         list_display = ('id',) + OrigSiteAdmin.list_display
     admin.site.register(Site, SiteAdmin)
 
+class SubscribedToSite(InSite):
+    title = 'subscribed to site'
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(subscribed_sites__id=self.value())
+        else: 
+            return queryset
+
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('auth_user', 'default_site')
-    list_filter = ('default_site', 'auth_user')
+    list_display = ('auth_user', 'default_site', 'subs_sites')
+    list_filter = ('default_site', SubscribedToSite, 'auth_user')
+    search_fields = ('auth_user__username',)
+
+    def subs_sites(self, obj):
+        return ', '.join(obj.subscribed_sites.all().values_list('name', flat=True))
 admin.site.register(models.UserProfile, UserProfileAdmin)
 
 from django.contrib.auth.models import User
