@@ -2048,6 +2048,10 @@ EditCommentForm.prototype.detach = function(){
     removeButtonEventHandlers(this._cancel_btn);
 };
 
+EditCommentForm.prototype.getCheckBox = function() {
+    return this._checkBox;
+};
+
 EditCommentForm.prototype.createDom = function(){
     this._element = $('<form></form>');
     this._element.attr('class', 'post-comments');
@@ -2077,6 +2081,7 @@ EditCommentForm.prototype.createDom = function(){
         var checkBox = this.makeElement('input');
         checkBox.attr('type', 'checkbox');
         checkBox.attr('name', 'suppress_email');
+        this._checkBox = checkBox;
         this._minorEditBox.append(checkBox);
         var label = this.makeElement('label');
         label.attr('for', 'suppress_email');
@@ -2100,6 +2105,7 @@ EditCommentForm.prototype.isEnabled = function() {
 EditCommentForm.prototype.enableForm = function() {
     this._submit_btn.attr('disabled', false);
     this._cancel_btn.attr('disabled', false);
+    runAskbotCallback('editCommentFormActivated', this);
 };
 
 EditCommentForm.prototype.disableForm = function() {

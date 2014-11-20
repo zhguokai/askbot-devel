@@ -1,6 +1,7 @@
 <script type="text/javascript" src="{{"/js/modernizr.custom.js"|media }}"></script>
 <script type="text/javascript">
     var askbot = {};
+    askbot['callbacks'] = {};//placeholder
     askbot['data'] = {};
     askbot['data']['userIsAuthenticated'] = {{ request.user.is_authenticated()|as_js_bool }};
     askbot['data']['languageCode'] = '{{ current_language_code }}';
