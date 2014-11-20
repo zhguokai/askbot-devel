@@ -237,7 +237,7 @@ $.fn.authenticator = function() {
             var button_text = gettext('Connect your %(provider_name)s account to %(site)s');
 			var data = {
 				provider_name: provider_name,
-				site: askbot['settings']['siteName'];
+				site: askbot['settings']['siteName']
 			}
 			button_text = interpolate(button_text, data, true);
             openid_submit_button.val(button_text);
@@ -483,7 +483,7 @@ $.fn.authenticator = function() {
     };
 
     setup_default_handlers();
-    if (askbot['settings']['signin_always_show_local_login'] === true){
+    if (askbot['settings']['signinAlwaysShowLocalLogin'] === true){
         init_always_visible_password_login();
     }
     clear_password_fields();
