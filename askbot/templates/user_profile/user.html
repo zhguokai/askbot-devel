@@ -20,7 +20,6 @@
 {% endblock %}<!-- end user.html -->
 {% block endjs %}
     <script type="text/javascript">
-        var viewUserID = {{view_user.id}};
         askbot['data']['viewUserName'] = '{{ view_user.username|escape }}';
         askbot['data']['viewUserId'] = {{ view_user.id }};
         askbot['urls']['edit_group_membership'] = '{% url edit_group_membership %}';

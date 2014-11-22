@@ -348,11 +348,6 @@
 {% block endjs %}
     <script type='text/javascript'>
         {# not compressable #}
-        {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
-        var codeFriendlyMarkdown = true;
-        {% else %}
-        var codeFriendlyMarkdown = false;
-        {% endif %}
         var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
         askbot['urls']['postComments'] = '{% url post_comments %}';
         askbot['urls']['editComment'] = '{% url edit_comment %}';

@@ -66,13 +66,6 @@
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
-    <script type='text/javascript'>
-        {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
-            var codeFriendlyMarkdown = true;
-        {% else %}
-            var codeFriendlyMarkdown = false;
-        {% endif %}
-    </script>
     {% if settings.EDITOR_TYPE == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}
     {% endif %}
