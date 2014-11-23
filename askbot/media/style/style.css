@@ -2906,11 +2906,11 @@ ul#related-tags li {
 .user-profile-page.inbox-flags .message:last-child {
   border: none;
 }
-.user-profile-page.inbox-forum input[type="checkbox"] {
-  display: none;
-}
 .user-profile-page.inbox-forum .new {
   background: #FFF8C6;
+}
+.user-profile-page.inbox-forum .js-delete {
+  margin-right: 12px;
 }
 .reject-reason-title {
   margin-bottom: 12px;
@@ -3759,6 +3759,7 @@ button::-moz-focus-inner {
 .action-status {
   margin: 0;
   border: none;
+  display: none;
   text-align: center;
   line-height: 10px;
   font-size: 12px;

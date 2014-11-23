@@ -499,14 +499,14 @@ urlpatterns = patterns('',
         name='read_message'
     ),
     service_url(#ajax only
-        r'^manage-inbox/$',
-        views.commands.manage_inbox,
-        name='manage_inbox'
-    ),
-    service_url(#ajax only
         r'^clear-new-notifications/$',
         views.users.clear_new_notifications,
         name='clear_new_notifications'
+    ),
+    service_url(#ajax_only
+        r'^delete-notifications/$',
+        views.users.delete_notifications,
+        name='delete_notifications'
     ),
     service_url(#ajax only
         r'^save-post-reject-reason/$',
