@@ -1324,6 +1324,13 @@ class Thread(models.Model):
     def has_accepted_answer(self):
         return self.accepted_answer_id != None
 
+    def get_accepted_answer_id(self):
+        answer_id = self.accepted_answer_id
+        if answer_id is None:
+            return -1
+        else:
+            return answer_id 
+
     def get_similarity(self, other_thread = None):
         """return number of tags in the other question
         that overlap with the current question (self)
