@@ -232,6 +232,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('auth_user', 'default_site', 'subs_sites')
     list_filter = ('default_site', SubscribedToSite, 'auth_user')
     search_fields = ('auth_user__username',)
+    filter_horizontal = ('subscribed_sites',)
 
     def subs_sites(self, obj):
         return ', '.join(obj.subscribed_sites.all().values_list('name', flat=True))
