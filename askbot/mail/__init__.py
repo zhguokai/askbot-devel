@@ -374,7 +374,7 @@ def process_parts(parts, reply_code=None, from_address=None):
                 debug('INLINE ATTACHMENT:\n')
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
-            body_text += markdown
+            attachments_markdown += '\n\n' + markdown
 
     if DEBUG_EMAIL:
         debug('--- THE END\n')
@@ -394,19 +394,17 @@ def process_parts(parts, reply_code=None, from_address=None):
         #   of the reply_code in the email body
         signature = None
 
-    body_text += attachments_markdown
-
     if from_address:
         body_text = parsing.strip_trailing_sender_references(
                                                         body_text,
                                                         from_address
                                                     )
 
-    return body_text.strip(), stored_files, signature
+    return body_text.strip(), stored_files, attachments_markdown, signature
 
 
 def process_emailed_question(
-    from_address, subject, body_text, stored_files,
+    from_address, subject, body_text, stored_files, stored_files_body_text,
     tags=None, space_name=None, email_host=None
 ):
     """posts question received by email or bounces the message"""
@@ -479,7 +477,7 @@ def process_emailed_question(
                 title=form.cleaned_data['title'],
                 tags=tagnames.strip(),
                 space=space,
-                body_text=stripped_body_text,
+                body_text=stripped_body_text + stored_files_body_text,
                 by_email=True,
                 email_address=from_address,
                 group_id=space.get_default_ask_group_id()

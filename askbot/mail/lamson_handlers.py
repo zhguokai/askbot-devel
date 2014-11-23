@@ -203,13 +203,14 @@ def ASK(message, host = None, addr = None):
 
     #why lamson does not give it normally?
     subject = message['Subject'].strip('\n\t ')
-    body_text, stored_files, unused = mail.process_parts(parts)
+    body_text, stored_files, stored_files_body_text, unused = mail.process_parts(parts)
     if addr == 'ask':
         mail.process_emailed_question(
             from_address,
             subject,
             body_text,
             stored_files,
+            stored_files_body_text,
             email_host=host
         )
     else:
@@ -222,6 +223,7 @@ def ASK(message, host = None, addr = None):
             subject,
             body_text,
             stored_files,
+            stored_files_body_text,
             space_name=addr,
             email_host=host
         )
@@ -246,7 +248,7 @@ def VALIDATE_EMAIL(
         sys.stderr.write(msg.encode('utf-8'))
 
     try:
-        content, stored_files, signature = mail.process_parts(parts, reply_code)
+        content, unused, unused, signature = mail.process_parts(parts, reply_code)
 
         user = reply_address_object.user
 
@@ -299,7 +301,7 @@ def PROCESS(
     #1) get actual email content
     #   todo: factor this out into the process_reply decorator
     reply_code = reply_address_object.address
-    body_text, stored_files, signature = mail.process_parts(parts, reply_code, from_address)
+    body_text, stored_files, stored_files_body_text, signature = mail.process_parts(parts, reply_code, from_address)
 
     #2) process body text and email signature
     user = reply_address_object.user
@@ -315,6 +317,9 @@ def PROCESS(
     #message is body text ends with a legitimate text coinciding with
     #the user's email signature
     body_text = user.strip_email_signature(body_text)
+
+    #add this part after stripping signature
+    body_text += stored_files_body_text
 
     #4) actually make an edit in the forum
     robj = reply_address_object
