@@ -33,7 +33,7 @@ def get_question_data(thread):
         'id': question_post.id,
         'answer_count': thread.answer_count,
         'answer_ids': thread.get_answer_ids(),
-        'accepted_answer_id': thread.get_accepted_answer_id(),
+        'accepted_answer_id': thread.accepted_answer_id,
         'view_count': thread.view_count,
         'score': thread.score,
         'last_activity_at': thread.last_activity_at.strftime('%s'),
