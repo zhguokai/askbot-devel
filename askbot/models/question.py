@@ -732,6 +732,11 @@ class Thread(models.Model):
         if len(answers) > 0:
             return answers[0].id
         return None
+        
+    def get_answer_ids(self, user=None):
+        """give the ids to all the answers for the user"""
+        answers = self.get_answers(user=user)
+        return [answer.id for answer in answers]
 
     def get_latest_revision(self, user=None):
         #todo: add denormalized field to Thread model
