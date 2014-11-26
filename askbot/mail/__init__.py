@@ -110,14 +110,11 @@ def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=No
                 get_text_from_html(body_text),
                 sender_email,
                 email_list,
-                headers=headers
+                headers=headers,
+                attachments=attachments
             )
     if html_enabled:
         msg.attach_alternative(body_text, "text/html")
-
-    if attachments:
-        for attachment in attachments:
-            msg.attach(attachment)
 
     msg.send()
 
