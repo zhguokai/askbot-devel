@@ -108,6 +108,7 @@ def send_mail(
             recipient=None,
             headers=None,
             raise_on_failure=False,
+            attachments=None
         ):
     """
     todo: remove parameters not relevant to the function
@@ -140,7 +141,8 @@ def send_mail(
                         clean_html_email(body_text),
                         from_email,
                         [recipient_address,],
-                        headers = headers
+                        headers=headers,
+                        attachments=attachments
                     )
         msg.attach_alternative(body_text, "text/html")
         msg.send()
