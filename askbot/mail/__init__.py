@@ -88,7 +88,7 @@ def thread_headers(post, orig_post, update):
 
     return headers
 
-def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=None):
+def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=None, attachments=None):
     """base send_mail function, which will attach email in html format
     if html email is enabled"""
     html_enabled = askbot_settings.HTML_EMAIL_ENABLED
@@ -110,10 +110,15 @@ def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=No
                 get_text_from_html(body_text),
                 sender_email,
                 email_list,
-                headers = headers
+                headers=headers
             )
     if html_enabled:
         msg.attach_alternative(body_text, "text/html")
+
+    if attachments:
+        for attachment in attachments:
+            msg.attach(attachment)
+
     msg.send()
 
 def send_mail(
@@ -125,6 +130,7 @@ def send_mail(
             related_object=None,
             headers=None,
             raise_on_failure=False,
+            attachments=None
         ):
     """
     todo: remove parameters not relevant to the function
@@ -138,6 +144,7 @@ def send_mail(
     the activity record)
 
     if raise_on_failure is True, exceptions.EmailNotSent is raised
+    `attachments` is a tuple of triples ((filename, filedata, mimetype), ...)
     """
     from_email = from_email or askbot_settings.ADMIN_EMAIL or \
                                     django_settings.DEFAULT_FROM_EMAIL
@@ -150,7 +157,8 @@ def send_mail(
             body_text,
             from_email,
             recipient_list,
-            headers=headers
+            headers=headers,
+            attachments=attachments
         )
         logging.debug('sent update to %s' % ','.join(recipient_list))
         if related_object is not None:
