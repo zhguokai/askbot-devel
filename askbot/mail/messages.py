@@ -27,9 +27,10 @@ def ask_for_signature(user, footer_code = None):
     the message will ask to make a simple response
     """
     return {
-        'username': user.username,
+        'footer_code': footer_code,
+        'recipient_user': user,
         'site_name': askbot_settings.APP_SHORT_NAME,
-        'footer_code': footer_code
+        'username': user.username,
     }
 
 @message(template = 'email/notify_admins_about_new_tags.html')

@@ -11,8 +11,11 @@ class EmailParsingTests(utils.AskbotTestCase):
 
     def setUp(self):
         self.template_name = 'email/welcome_lamson_on.html'
-        self.context = {'site_name': 'askbot.com',
-                        'email_code': 'DwFwndQty'}
+        self.context = {
+            'site_name': 'askbot.com',
+            'email_code': 'DwFwndQty',
+            'recipient_user': self.create_user()
+        }
         template = get_template(self.template_name)
         self.rendered_template = template.render(Context(self.context))
         self.expected_output = 'Welcome to askbot.com!\n\nImportant: Please reply to this message, without editing it. We need this to determine your email signature and that the email address is valid and was typed correctly.\n\nUntil we receive the response from you, you will not be able ask or answer questions on askbot.com by email.\n\nSincerely,askbot.com Administrator\n\nDwFwndQty'

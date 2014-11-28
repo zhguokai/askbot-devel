@@ -6,6 +6,7 @@ from django.db.models import Q, F
 from askbot.models import User, Post, PostRevision, Thread
 from askbot.models import Activity, EmailFeedSetting
 from django.template.loader import get_template
+from django.template import Context
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.translation import activate as activate_language
@@ -503,14 +504,14 @@ class Command(NoArgsCommand):
                     })
 
             activate_language(user.get_primary_language())
-            text = template.render({
+            text = template.render(Context({
                 'recipient_user': user,
                 'questions': questions_data,
                 'name': user.username,
                 'admin_email': askbot_settings.ADMIN_EMAIL,
                 'site_name': askbot_settings.APP_SHORT_NAME,
                 'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
-            })
+            }))
 
             if DEBUG_THIS_COMMAND == True:
                 recipient_email = askbot_settings.ADMIN_EMAIL

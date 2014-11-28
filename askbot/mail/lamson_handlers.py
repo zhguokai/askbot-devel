@@ -254,10 +254,11 @@ def VALIDATE_EMAIL(
         user.save()
 
         data = {
+            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
+            'can_post_by_email': user.can_post_by_email(),
+            'recipient_user': user,
             'site_name': askbot_settings.APP_SHORT_NAME,
             'site_url': site_url(reverse('questions')),
-            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
-            'can_post_by_email': user.can_post_by_email()
         }
         template = get_template('email/re_welcome_lamson_on.html')
 

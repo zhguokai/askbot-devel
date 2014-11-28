@@ -98,10 +98,11 @@ class Command(NoArgsCommand):
             }
 
             data = {
-                    'site_url': site_url(''),
-                    'questions': final_question_list,
-                    'subject_line': subject_line
-                   }
+                'recipient_user': user,
+                'site_url': site_url(''),
+                'subject_line': subject_line,
+                'questions': final_question_list,
+            }
 
             template = get_template('email/unanswered_question_reminder.html')
             body_text = template.render(Context(data))#todo: set lang

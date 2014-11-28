@@ -62,7 +62,8 @@ class Command(NoArgsCommand):
             data = {
                     'site_url': site_url(''),#here we need only the domain name
                     'questions': final_question_list,
-                    'reminder_phrase': reminder_phrase
+                    'reminder_phrase': reminder_phrase,
+                    'recipient_user': user
                    }
 
             template = get_template('email/accept_answer_reminder.html')
