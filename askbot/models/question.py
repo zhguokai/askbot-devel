@@ -747,7 +747,7 @@ class Thread(models.Model):
             'deleted': False
         }
 
-        if user and askbot_settings.GROUPS_ENABLED:
+        if user and user.is_authenticated() and askbot_settings.GROUPS_ENABLED:
             #get post with groups shared with having at least 
             #one of the user groups
             #of those posts return the latest revision
