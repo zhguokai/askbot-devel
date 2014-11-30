@@ -7,15 +7,15 @@
 <div class="box vote-buttons">
   <h2>{{ settings.WORDS_QUESTION_TOOLS|escape }}</h2>
     {% if favorited %}
-        <a class="button followed" 
+        <a class="button js-follow followed" 
             alt="{% trans %}click to unfollow {% endtrans %}">
-            <div>{% trans %}Following{% endtrans %}</div>
-            <div class='unfollow'>{% trans %}Unfollow{% endtrans %}</div>
+            <div class="following">{% trans %}Following{% endtrans %}</div>
+            <div class="unfollow">{% trans %}Unfollow{% endtrans %}</div>
         </a>
     {% else %}
-        <a class="button followed"
+        <a class="button js-follow followed"
             alt="{% trans %}click to follow {% endtrans %}">
-            {%trans %}Follow{%endtrans%}
+            {% trans %}Follow{% endtrans %}
         </a>
     {% endif %}
     <div class="clearfix"></div>

@@ -654,8 +654,6 @@ var Vote = function(){
     var answerContainerIdPrefix = 'post-id-';
     var voteContainerId = 'vote-buttons';
     var imgIdPrefixAccept = 'answer-img-accept-';
-    var classPrefixFollow= 'button follow';
-    var classPrefixFollowed= 'button followed';
     var imgIdPrefixQuestionVoteup = 'question-img-upvote-';
     var imgIdPrefixQuestionVotedown = 'question-img-downvote-';
     var imgIdPrefixAnswerVoteup = 'answer-img-upvote-';
@@ -716,9 +714,7 @@ var Vote = function(){
     };
 
     var getFavoriteButton = function(){
-        var favoriteButton = 'div.'+ voteContainerId +' a[class="'+ classPrefixFollow +'"]';
-        favoriteButton += ', div.'+ voteContainerId +' a[class="'+ classPrefixFollowed +'"]';
-        return $(favoriteButton);
+        return $('.js-follow');
     };
     var getFavoriteNumber = function(){
         var favoriteNumber = '#'+ divIdFavorite ;
@@ -796,16 +792,15 @@ var Vote = function(){
         var flag = undo ? false : true;
         if (object.hasClass("on")) {
           object.removeClass("on");
-        }else{
+        } else {
           object.addClass("on");
         }
 
         if(undo){
-            if(voteType == VoteType.questionUpVote || voteType == VoteType.questionDownVote){
+            if(voteType == VoteType.questionUpVote || voteType == VoteType.questionDownVote) {
                 $(getQuestionVoteUpButton()).removeClass("on");
                 $(getQuestionVoteDownButton()).removeClass("on");
-            }
-            else{
+            } else {
                 $(getAnswerVoteUpButton(postId)).removeClass("on");
                 $(getAnswerVoteDownButton(postId)).removeClass("on");
             }
@@ -926,20 +921,17 @@ var Vote = function(){
     var callback_accept = function(object, voteType, data){
         if(data.allowed == "0" && data.success == "0"){
             showMessage(object, acceptAnonymousMessage);
-        }
-        else if(data.allowed == "-1"){
+        } else if (data.allowed == "-1") {
             var message = interpolate(
                 gettext('sorry, you cannot %(accept_own_answer)s'),
                 {'accept_own_answer': askbot['messages']['acceptOwnAnswer']},
                 true
             );
             showMessage(object, message);
-        }
-        else if(data.status == "1"){
+        } else if (data.status == "1") {
             $("#"+answerContainerIdPrefix+postId).removeClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).removeClass("comment-link-accepted");
-        }
-        else if(data.success == "1"){
+        } else if (data.success == "1") {
             var answers = ('div[id^="'+answerContainerIdPrefix +'"]');
             $(answers).removeClass('accepted-answer');
             var commentLinks = ('div[id^="'+answerContainerIdPrefix +'"] div[id^="'+ commentLinkIdPrefix +'"]');
@@ -947,8 +939,7 @@ var Vote = function(){
 
             $("#"+answerContainerIdPrefix+postId).addClass("accepted-answer");
             $("#"+commentLinkIdPrefix+postId).addClass("comment-link-accepted");
-        }
-        else{
+        } else {
             showMessage(object, data.message);
         }
     };
@@ -964,10 +955,10 @@ var Vote = function(){
                         ''
                     )
             );
-        }
-        else if(data.status == "1"){
+        } else if (data.status == "1") {
             var follow_html = gettext('Follow');
-            object.attr("class", 'button follow');
+            object.addClass('button follow');
+            addExtraCssClasses(object, 'defaultButtonClasses');
             object.html(follow_html);
             var fav = getFavoriteNumber();
             fav.removeClass("my-favorite-number");
@@ -978,17 +969,16 @@ var Vote = function(){
                 var fmts = ngettext('%s follower', '%s followers', data.count);
                 fav.text(interpolate(fmts, [data.count]));
             }
-        }
-        else if(data.success == "1"){
-            var followed_html = gettext('<div>Following</div><div class="unfollow">Unfollow</div>');
+        } else if (data.success == "1") {
+            var followed_html = gettext('<div class="following">Following</div><div class="unfollow">Unfollow</div>');
             object.html(followed_html);
-            object.attr("class", 'button followed');
+            object.addClass('button followed');
+            addExtraCssClasses(object, 'defaultButtonClasses');
             var fav = getFavoriteNumber();
             var fmts = ngettext('%s follower', '%s followers', data.count);
             fav.text(interpolate(fmts, [data.count]));
             fav.addClass("my-favorite-number");
-        }
-        else{
+        } else {
             showMessage(object, data.message);
         }
     };
@@ -1150,6 +1140,7 @@ var Vote = function(){
 
         //accept answer
         accept: function(object){
+            object = object.closest('.answer-img-accept');
             postId = object.attr("id").substring(imgIdPrefixAccept.length);
             submit(object, VoteType.acceptAnswer, callback_accept);
         },
@@ -1173,6 +1164,7 @@ var Vote = function(){
         },
 
         vote: function(object, voteType){
+            object = object.closest('.post-vote');
             if (!currentUserId || currentUserId.toUpperCase() == "NONE") {
                 if (voteType == VoteType.questionSubscribeUpdates || voteType == VoteType.questionUnsubscribeUpdates){
                     getquestionSubscribeSidebarCheckbox().removeAttr('checked');
@@ -1367,6 +1359,7 @@ var questionRetagger = function(){
     var createRetagForm = function(old_tags_string){
         var div = $('<form method="post"></form>');
         tagInput = $('<input id="retag_tags" type="text" autocomplete="off" name="tags" size="30"/>');
+        addExtraCssClasses(tagInput, 'textInputClasses');
         //var tagLabel = $('<label for="retag_tags" class="error"></label>');
         //populate input
         var tagAc = new AutoCompleter({
@@ -1412,7 +1405,7 @@ var questionRetagger = function(){
     };
 
     var getTagsAsString = function(tags_div){
-        var links = tags_div.find('a');
+        var links = tags_div.find('.tag');
         var tags_str = '';
         links.each(function(index, element){
             if (index === 0){
@@ -1964,9 +1957,11 @@ EditCommentForm.prototype.createDom = function(){
     this._text_counter = $('<span></span>').attr('class', 'counter');
     this._controlsBox.append(this._text_counter);
 
-    this._submit_btn = $('<button class="submit"></button>');
+    this._submit_btn = $('<button></button>');
+    addExtraCssClasses(this._submit_btn, 'primaryButtonClasses');
     this._controlsBox.append(this._submit_btn);
-    this._cancel_btn = $('<button class="submit cancel"></button>');
+    this._cancel_btn = $('<button class="cancel"></button>');
+    addExtraCssClasses(this._cancel_btn, 'cancelButtonClasses');
     this._cancel_btn.html(gettext('cancel'));
     this._controlsBox.append(this._cancel_btn);
 
@@ -2895,6 +2890,7 @@ SimpleEditor.prototype.createDom = function() {
     this._element = this.makeElement('div');
     this._element.addClass('wmd-container');
     var textarea = this.makeElement('textarea');
+    addExtraCssClasses(textarea, 'editorClasses');
     this._element.append(textarea);
     this._textarea = textarea;
     if (this._text) {
@@ -2950,6 +2946,8 @@ WMD.prototype.createDom = function(){
 
     var editor = this.makeElement('textarea')
                         .attr('id', this.makeId('editor'));
+    addExtraCssClasses(editor, 'editorClasses');
+    
     wmd_container.append(editor);
     this._textarea = editor;
 
