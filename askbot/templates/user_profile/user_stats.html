@@ -1,6 +1,10 @@
 {% extends "user_profile/user.html" %}
 {% import "macros.html" as macros %}
 {% import "user_profile/macros.html" as user_profile_macros %}
+{% block forestyle %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
+{% endblock %}
 <!-- user_stats.html -->
 {% block profilesection %}
     {% trans %}overview{% endtrans %}
@@ -100,15 +104,35 @@
 {% endblock %}
 {% block endjs %}
     {{ super() }}
+    {% include "meta/editor_data.html" %}
+    <script type='text/javascript' src='{{"/js/editor.js"|media }}'></script>
+    {% if settings.EDITOR_TYPE == 'markdown' %}
+        <script type="text/javascript">
+            var Attacklab = Attacklab || {};
+            Attacklab.wmd = 1;{# a trick to launch wmd manually #}
+        </script>
+        {% include "meta/markdown_javascript.html" %}
+    {% endif %}
     <script type="text/javascript">
         askbot['data']['userPostsPageSize'] = {{ page_size }};
         askbot['urls']['join_or_leave_group'] = '{% url join_or_leave_group %}';
+        askbot['urls']['load_object_description'] = '{% url load_object_description %}';
+        askbot['urls']['save_object_description'] = '{% url save_object_description %}';
         $(document).ready(function(){
             setup_badge_details_toggle();
             $.each($('.group-join-btn'), function(idx, elem){
                 var group_join_btn = new GroupJoinButton();
                 group_join_btn.decorate($(elem));
             });
+            if (askbot['settings']['editorType'] == 'markdown') {
+                WMDDynamicPreInit();
+            }
+            var userAbout = $('.user-about');
+            if (userAbout.length) {
+                var editable = new EditableTextAttribute();
+                editable.setEnabledEditorButtons('bold italic link ol ul');
+                editable.decorate(userAbout);
+            }
         });
     </script>
     <script type='text/javascript' src='{{"/js/tag_selector.js"|media}}'></script>

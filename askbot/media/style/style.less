@@ -2033,9 +2033,46 @@ ul#related-tags li {
         border: none;
     }
 }
-.users-page .wmd-container {
-    width: auto;
+.users-page, .user-profile-page {
+    .wmd-container {
+        height: auto;
+        padding: 0;
+        width: auto;
+        textarea {
+            box-sizing: border-box;
+            height: 75px;
+            width: 100%;
+        }
+    }
 }
+
+.user-profile-page .wmd-container {
+    textarea {
+        height: 150px;
+    }
+}
+
+.user-about {
+    .text p:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.group-profile {
+    .description {
+        margin-bottom: 10px;
+    }
+    .text p:last-child {
+        margin-bottom: 0;
+    }
+    .edit-btn,
+    .cancel-btn,
+    .save-btn {
+        font-family: 'Open Sans Condensed', Arial, sans-serif;
+    }
+}
+
+
 .ask-page,
 .question-page,
 .edit-question-page,
@@ -3826,7 +3863,7 @@ label.retag-error {
         text-align: center;
     }
     .col2 {
-        padding: 0 0 0 10px;
+        padding: 0 0 0 14px;
         width: 400px;
     }
     .col3 {
@@ -4168,6 +4205,7 @@ ul.form-horizontal-rows li input {
 
 .user-profile-tool-links {
     font-weight: bold;
+    padding-top: 7px;
     vertical-align: top;
 }
 

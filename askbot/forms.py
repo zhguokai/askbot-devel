@@ -1515,12 +1515,6 @@ class EditUserForm(forms.Form):
                         widget=forms.TextInput(attrs={'size': 35})
                     )
 
-    about = forms.CharField(
-                        label=_('Profile'),
-                        required=False,
-                        widget=forms.Textarea(attrs={'cols': 60})
-                    )
-
     def __init__(self, user, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
         logging.debug('initializing the form')
@@ -1543,7 +1537,6 @@ class EditUserForm(forms.Form):
         if user.date_of_birth is not None:
             self.fields['birthday'].initial = user.date_of_birth
 
-        self.fields['about'].initial = user.about
         self.user = user
 
     def clean_email(self):

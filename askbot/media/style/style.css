@@ -1921,8 +1921,34 @@ ul#related-tags li {
 .wmd-container textarea {
   border: none;
 }
-.users-page .wmd-container {
+.users-page .wmd-container,
+.user-profile-page .wmd-container {
+  height: auto;
+  padding: 0;
   width: auto;
+}
+.users-page .wmd-container textarea,
+.user-profile-page .wmd-container textarea {
+  box-sizing: border-box;
+  height: 75px;
+  width: 100%;
+}
+.user-profile-page .wmd-container textarea {
+  height: 150px;
+}
+.user-about .text p:last-child {
+  margin-bottom: 0;
+}
+.group-profile .description {
+  margin-bottom: 10px;
+}
+.group-profile .text p:last-child {
+  margin-bottom: 0;
+}
+.group-profile .edit-btn,
+.group-profile .cancel-btn,
+.group-profile .save-btn {
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .ask-page .wmd-container,
 .question-page .wmd-container,
@@ -3620,7 +3646,7 @@ label.retag-error {
   text-align: center;
 }
 .user-info-table .col2 {
-  padding: 0 0 0 10px;
+  padding: 0 0 0 14px;
   width: 400px;
 }
 .user-info-table .col3 {
@@ -3914,6 +3940,7 @@ ul.form-horizontal-rows li input {
 }
 .user-profile-tool-links {
   font-weight: bold;
+  padding-top: 7px;
   vertical-align: top;
 }
 ul.post-tags {

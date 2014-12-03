@@ -45,7 +45,10 @@ from askbot.utils import html as html_utils
 from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
-from askbot.utils.forms import get_db_object_or_404
+from askbot.utils.db import get_db_object_or_404
+from askbot.utils.db import get_attribute_by_lookup_path
+from askbot.utils.db import assert_user_can_access_object_property
+from askbot.utils.markup import convert_text
 from django.template import RequestContext
 from askbot.skins.loaders import render_to_string
 from askbot.skins.loaders import render_text_into_skin
@@ -577,25 +580,35 @@ def get_tag_list(request):
 @decorators.get_only
 def load_object_description(request):
     """returns text of the object description in text"""
-    obj = get_db_object_or_404(request.GET)#askbot forms utility
-    text = getattr(obj.description, 'text', '').strip()
+    obj = get_db_object_or_404(request.GET)
+    assert_user_can_access_object_property(request.user, obj, request.GET)
+    text = get_attribute_by_lookup_path(obj, request.GET['attribute_name']).strip()
     return HttpResponse(text, mimetype = 'text/plain')
 
 @csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
-@decorators.admins_only
 def save_object_description(request):
     """if object description does not exist,
     creates a new record, otherwise edits an existing
     one"""
-    obj = get_db_object_or_404(request.POST)
-    text = request.POST['text']
-    if obj.description:
+    params = request.POST
+    obj = get_db_object_or_404(params)
+
+    #check access permissions
+    assert_user_can_access_object_property(request.user, obj, params)
+
+    model_name = params['model_name']
+    attr_name = params['attribute_name']
+    text = params['text']
+
+    if model_name == 'Group' and attr_name == 'description__text':
         request.user.edit_post(obj.description, body_text=text)
-    else:
-        request.user.post_object_description(obj, body_text=text)
-    return {'html': obj.description.html}
+        return {'html': obj.description.html}
+    elif model_name == 'auth.User' and attr_name == 'about':
+        obj.about = text
+        obj.save()
+        return {'html': convert_text(obj.about)}
 
 @csrf.csrf_protect
 @decorators.ajax_only

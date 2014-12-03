@@ -1,5 +1,5 @@
 {% import "macros.html" as macros %}
-<div id="group-wiki-{{group.id}}" class="box group-wiki">
+<div class="box group-profile" data-group-id="{{ group.id }}">
     <h2>{% trans %}Group info{% endtrans %}</h2>
     <img class="group-logo" 
         {% if group.logo_url %}
@@ -8,10 +8,32 @@
             style="display:none"
         {% endif %}
     />
-    <div class="content">
+    <div class="controls">
+        <p>
+            {% if group.logo_url %}
+                <a class="change-logo"
+                >{% trans %}change logo{% endtrans %}</a>
+                <span>|</span>
+                <a class="delete-logo">{% trans %}delete logo{% endtrans %}</a>
+            {% else %}
+                <a class="change-logo"
+                >{% trans %}add logo{% endtrans %}</a>
+            {% endif %}
+        </p>
+    </div>
+    <div class="description" data-object-name="Group" data-object-id="{{ group.id }}" data-attribute-name="description__text">
+        <div class="text">
         {% if group.description %}
-            {{ group.description.html }}
+            {{ group.description.html|safe }}
         {% endif %}
+        </div>
+        <a class="edit-btn">
+        {% if group.description.text|trim %}
+            {% trans %}edit description{% endtrans %}
+        {% else %}
+            {% trans %}add description{% endtrans %}
+        {% endif %}
+        </a>
     </div>
     <div class="clearfix"></div>
         {{ macros.group_join_button(
@@ -22,21 +44,6 @@
         }}
     {% if request.user.is_authenticated() and request.user.is_administrator() %}
     <div class="controls">
-        <p>
-            <a class="edit-description"
-            >{% trans %}edit description{% endtrans %}</a>
-            {% if group.logo_url %}
-                <span>|</span>
-                <a class="change-logo"
-                >{% trans %}change logo{% endtrans %}</a>
-                <span>|</span>
-                <a class="delete-logo">{% trans %}delete logo{% endtrans %}</a>
-            {% else %}
-                <span>|</span>
-                <a class="change-logo"
-                >{% trans %}add logo{% endtrans %}</a>
-            {% endif %}
-        </p>
         {% if group_email_moderation_enabled %}
         <p>
             <input type="checkbox"

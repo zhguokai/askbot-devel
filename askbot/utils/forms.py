@@ -2,8 +2,6 @@ import re
 from django import forms
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.http import Http404
-from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from askbot.conf import settings as askbot_settings
@@ -49,23 +47,6 @@ def get_next_url(request, default = None, form_prefix=None):
 
     raw_url = request.REQUEST.get('next', default)
     return clean_next(raw_url)
-
-def get_db_object_or_404(params):
-    """a utility function that returns an object
-    in return to the model_name and object_id
-
-    only specific models are accessible
-    """
-    from askbot import models
-    try:
-        model_name = params['model_name']
-        assert(model_name=='Group')
-        model = models.get_model(model_name)
-        obj_id = forms.IntegerField().clean(params['object_id'])
-        return get_object_or_404(model, id=obj_id)
-    except Exception:
-        #need catch-all b/c of the nature of the function
-        raise Http404
 
 def format_errors(error_list):
     """If there is only one error - returns a string

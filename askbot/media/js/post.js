@@ -3272,84 +3272,102 @@ TinyMCE.prototype.decorate = function(element) {
 
 /**
  * @constructor
- * @todo: change this to generic object description editor
+ * Adds in-place text editor for a text value
+ * of a database object. Whether editing is
+ * permissible is to be enforced in the backend
  */
-var TagWikiEditor = function(){
+var EditableTextAttribute = function(){
     WrappedElement.call(this);
     this._state = 'display';//'edit' or 'display'
-    this._content_backup  = '';
-    this._is_editor_loaded = false;
-    this._enabled_editor_buttons = null;
-    this._is_previewer_enabled = false;
+    this._contentBackup  = '';
+    this._isEditorLoaded = false;
+    this._enabledEditorButtons = null;
+    this._isPreviewerEnabled = false;
+    this._objectId = undefined;
+    this._objectName = undefined;
+    this._attributeName = undefined;
 };
-inherits(TagWikiEditor, WrappedElement);
+inherits(EditableTextAttribute, WrappedElement);
 
-TagWikiEditor.prototype.backupContent = function(){
-    this._content_backup = this._content_box.contents();
+EditableTextAttribute.prototype.backupContent = function(){
+    this._contentBackup = this._contentBox.contents();
 };
 
-TagWikiEditor.prototype.setEnabledEditorButtons = function(buttons){
-    this._enabled_editor_buttons = buttons;
+EditableTextAttribute.prototype.setEnabledEditorButtons = function(buttons){
+    this._enabledEditorButtons = buttons;
 };
 
-TagWikiEditor.prototype.setPreviewerEnabled = function(state){
-    this._is_previewer_enabled = state;
+EditableTextAttribute.prototype.setPreviewerEnabled = function(state){
+    this._isPreviewerEnabled = state;
     if (this.isEditorLoaded()){
-        this._editor.setPreviewerEnabled(this._is_previewer_enabled);
+        this._editor.setPreviewerEnabled(state);
     }
 };
 
-TagWikiEditor.prototype.setContent = function(content){
-    this._content_box.empty();
-    this._content_box.append(content);
+EditableTextAttribute.prototype.setContent = function(content){
+    this._contentBox.empty();
+    this._contentBox.append(content);
 };
 
-TagWikiEditor.prototype.setState = function(state){
+EditableTextAttribute.prototype.setState = function(state){
     if (state === 'edit'){
         this._state = state;
-        this._edit_btn.hide();
-        this._cancel_btn.show();
-        this._save_btn.show();
-        this._cancel_sep.show();
+        this._editBtn.hide();
+        this._cancelBtn.show();
+        this._saveBtn.show();
+        this._cancelSep.show();
     } else if (state === 'display'){
         this._state = state;
-        this._edit_btn.show();
-        this._cancel_btn.hide();
-        this._cancel_sep.hide();
-        this._save_btn.hide();
+        this._editBtn.show();
+        this._cancelBtn.hide();
+        this._cancelSep.hide();
+        this._saveBtn.hide();
     }
 };
 
-TagWikiEditor.prototype.restoreContent = function(){
-    var content_box = this._content_box;
+EditableTextAttribute.prototype.restoreContent = function(){
+    var content_box = this._contentBox;
     content_box.empty();
-    $.each(this._content_backup, function(idx, element){
+    $.each(this._contentBackup, function(idx, element){
         content_box.append(element);
     });
 };
 
-TagWikiEditor.prototype.getTagId = function(){
-    return this._tag_id;
+EditableTextAttribute.prototype.getObjectId = function(){
+    return this._objectId;
 };
 
-TagWikiEditor.prototype.isEditorLoaded = function(){
-    return this._is_editor_loaded;
+EditableTextAttribute.prototype.isEditorLoaded = function(){
+    return this._isEditorLoaded;
 };
 
-TagWikiEditor.prototype.setEditorLoaded = function(){
-    return this._is_editor_loaded = true;
+EditableTextAttribute.prototype.setEditorLoaded = function(){
+    return this._isEditorLoaded = true;
+};
+
+EditableTextAttribute.prototype.getObjectId = function() {
+    return this._objectId;
+};
+
+EditableTextAttribute.prototype.getObjectName = function() {
+    return this._objectName;
+};
+
+EditableTextAttribute.prototype.getAttributeName = function() {
+    return this._attributeName;
 };
 
 /**
  * loads initial data for the editor input and activates
  * the editor
  */
-TagWikiEditor.prototype.startActivatingEditor = function(){
+EditableTextAttribute.prototype.startActivatingEditor = function(){
     var editor = this._editor;
     var me = this;
     var data = {
-        object_id: me.getTagId(),
-        model_name: 'Group'
+        object_id: me.getObjectId(),
+        model_name: me.getObjectName(),
+        attribute_name: me.getAttributeName()
     };
     $.ajax({
         type: 'GET',
@@ -3369,12 +3387,13 @@ TagWikiEditor.prototype.startActivatingEditor = function(){
     });
 };
 
-TagWikiEditor.prototype.saveData = function(){
+EditableTextAttribute.prototype.saveData = function(){
     var me = this;
     var text = this._editor.getText();
     var data = {
-        object_id: me.getTagId(),
-        model_name: 'Group',//todo: fixme
+        object_id: me.getObjectId(),
+        model_name: me.getObjectName(),
+        attribute_name: me.getAttributeName(),
         text: text
     };
     $.ajax({
@@ -3394,56 +3413,72 @@ TagWikiEditor.prototype.saveData = function(){
     });
 };
 
-TagWikiEditor.prototype.cancelEdit = function(){
+EditableTextAttribute.prototype.cancelEdit = function(){
     this.restoreContent(); 
     this.setState('display');
 };
 
-TagWikiEditor.prototype.decorate = function(element){
-    //expect <div id='group-wiki-{{id}}'><div class="content"/><a class="edit"/></div>
+EditableTextAttribute.prototype.decorate = function(element){
+    /* expect structure: 
+     *   <div data-object-name="Group" data-object-id="5" data-attribute-name="description__text">
+     *       <div class="text"/>
+     *       <a class="edit-btn"/>
+     *   </div>
+     * and in this case in the database backend we use object 
+     * models.Group with id=5 and property models.Group.description.text
+     * save and cancel buttons are added by js
+     */
     this._element = element;
-    var edit_btn = element.find('.edit-description');
-    this._edit_btn = edit_btn;
+    var editBtn = element.find('.edit-btn');
+    this._editBtn = editBtn;
+    this._objectId = element.data('objectId');
+    this._objectName = element.data('objectName');
+    this._attributeName = element.data('attributeName');
 
     //adding two buttons...
-    var save_btn = this.makeElement('a');
-    save_btn.html(gettext('save'));
-    edit_btn.after(save_btn);
-    save_btn.hide();
-    this._save_btn = save_btn;
+    var saveBtn = this.makeElement('a');
+    saveBtn.addClass('save-btn');
+    saveBtn.html(gettext('save'));
+    editBtn.after(saveBtn);
+    saveBtn.hide();
+    this._saveBtn = saveBtn;
 
-    var cancel_btn = this.makeElement('a');
-    cancel_btn.html(gettext('cancel'));
-    save_btn.after(cancel_btn);
-    cancel_btn.hide();
-    this._cancel_btn = cancel_btn;
+    var cancelBtn = this.makeElement('a');
+    cancelBtn.html(gettext('cancel'));
+    cancelBtn.addClass('cancel-btn');
+    saveBtn.after(cancelBtn);
+    cancelBtn.hide();
+    this._cancelBtn = cancelBtn;
 
-    this._cancel_sep = $('<span> | </span>');
-    cancel_btn.before(this._cancel_sep);
-    this._cancel_sep.hide();
+    this._cancelSep = $('<span> | </span>');
+    cancelBtn.before(this._cancelSep);
+    this._cancelSep.hide();
 
-    this._content_box = element.find('.content');
-    this._tag_id = element.attr('id').split('-').pop();
+    this._contentBox = element.find('.text');
 
     var me = this;
-    if (askbot['settings']['editorType'] === 'markdown') {
+    var editorType = askbot['settings']['editorType'];
+    if (editorType === 'markdown') {
         var editor = new WMD();
-    } else {
+    } else if (editorType === 'tinymce') {
         var editor = new TinyMCE({//override defaults
             theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',
             theme_advanced_buttons2: '',
             theme_advanced_path: false,
             plugins: ''
         });
+    } else {
+        var editor = new SimpleEditor();
     }
-    if (this._enabled_editor_buttons){
-        editor.setEnabledButtons(this._enabled_editor_buttons);
+
+    if (this._enabledEditorButtons){
+        editor.setEnabledButtons(this._enabledEditorButtons);
     }
-    editor.setPreviewerEnabled(this._is_previewer_enabled);
+    editor.setPreviewerEnabled(this._isPreviewerEnabled);
     this._editor = editor;
-    setupButtonEventHandlers(edit_btn, function(){ me.startActivatingEditor() });
-    setupButtonEventHandlers(cancel_btn, function(){me.cancelEdit()});
-    setupButtonEventHandlers(save_btn, function(){me.saveData()});
+    setupButtonEventHandlers(editBtn, function(){ me.startActivatingEditor() });
+    setupButtonEventHandlers(cancelBtn, function(){me.cancelEdit()});
+    setupButtonEventHandlers(saveBtn, function(){me.saveData()});
 };
 
 var ImageChanger = function(){
@@ -3588,18 +3623,18 @@ ImageChanger.prototype.decorate = function(element){
 };
 
 var UserGroupProfileEditor = function(){
-    TagWikiEditor.call(this);
+    WrappedElement.call(this);
 };
-inherits(UserGroupProfileEditor, TagWikiEditor);
+inherits(UserGroupProfileEditor, WrappedElement);
 
 UserGroupProfileEditor.prototype.toggleEmailModeration = function(){
     var btn = this._moderate_email_btn;
-    var group_id = this.getTagId();
+    var groupId = this._groupId;
     $.ajax({
         type: 'POST',
         dataType: 'json',
         cache: false,
-        data: {group_id: group_id},
+        data: {group_id: groupId},
         url: askbot['urls']['toggle_group_email_moderation'],
         success: function(data){
             if (data['success']){
@@ -3612,15 +3647,21 @@ UserGroupProfileEditor.prototype.toggleEmailModeration = function(){
 };
 
 UserGroupProfileEditor.prototype.decorate = function(element){
-    this.setEnabledEditorButtons('bold italic link ol ul');
-    this.setPreviewerEnabled(false);
-    UserGroupProfileEditor.superClass_.decorate.call(this, element);
+    var editor = new EditableTextAttribute();
+    editor.setEnabledEditorButtons('bold italik link ol ul');
+    var editorDom = element.find('.description');
+    editor.decorate(editorDom);
+    this._descrEditor = editor;
+
     var change_logo_btn = element.find('.change-logo');
     this._change_logo_btn = change_logo_btn;
 
     var moderate_email_toggle = new TwoStateToggle();
+    var groupId = element.data('groupId');
+
+    this._groupId = groupId;
     moderate_email_toggle.setPostData({
-        group_id: this.getTagId(),
+        group_id: groupId,
         property_name: 'moderate_email'
     });
     var moderate_email_btn = element.find('#moderate-email');
@@ -3629,7 +3670,7 @@ UserGroupProfileEditor.prototype.decorate = function(element){
 
     var moderate_publishing_replies_toggle = new TwoStateToggle();
     moderate_publishing_replies_toggle.setPostData({
-        group_id: this.getTagId(),
+        group_id: groupId,
         property_name: 'moderate_answers_to_enquirers'
     });
     var btn = element.find('#moderate-answers-to-enquirers');
@@ -3637,7 +3678,7 @@ UserGroupProfileEditor.prototype.decorate = function(element){
 
     var vip_toggle = new TwoStateToggle();
     vip_toggle.setPostData({
-        group_id: this.getTagId(),
+        group_id: groupId,
         property_name: 'is_vip'
     });
     var btn = element.find('#vip-toggle');
@@ -3645,7 +3686,7 @@ UserGroupProfileEditor.prototype.decorate = function(element){
 
     var readOnlyToggle = new TwoStateToggle();
     readOnlyToggle.setPostData({
-        group_id: this.getTagId(),
+        group_id: groupId,
         property_name: 'read_only'
     });
     var btn = element.find('#read-only-toggle');
@@ -3654,7 +3695,7 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     var opennessSelector = new DropdownSelect();
     var selectorElement = element.find('#group-openness-selector');
     opennessSelector.setPostData({
-        group_id: this.getTagId(),
+        group_id: groupId,
         property_name: 'openness'
     });
     opennessSelector.decorate(selectorElement);
@@ -3668,7 +3709,7 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     var logo_changer = new ImageChanger();
     logo_changer.setImageElement(element.find('.group-logo'));
     logo_changer.setAjaxData({
-        group_id: this.getTagId()
+        group_id: groupId,
     });
     logo_changer.setSaveUrl(askbot['urls']['save_group_logo_url']);
     logo_changer.setDeleteUrl(askbot['urls']['delete_group_logo_url']);
