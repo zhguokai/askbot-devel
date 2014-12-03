@@ -27,13 +27,15 @@
             {{ group.description.html|safe }}
         {% endif %}
         </div>
-        <a class="edit-btn">
-        {% if group.description.text|trim %}
-            {% trans %}edit description{% endtrans %}
-        {% else %}
-            {% trans %}add description{% endtrans %}
+        {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
+            <a class="edit-btn">
+            {% if group.description.text|trim %}
+                {% trans %}edit description{% endtrans %}
+            {% else %}
+                {% trans %}add description{% endtrans %}
+            {% endif %}
+            </a>
         {% endif %}
-        </a>
     </div>
     <div class="clearfix"></div>
         {{ macros.group_join_button(
