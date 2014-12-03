@@ -685,24 +685,33 @@ class CommandViewTests(AskbotTestCase):
         group = models.Group(name='somegroup')
         group.save()
 
+        admin = self.create_user('admin', status='d')
+        self.client.login(user_id=admin.id, method='force')
+
         response = self.client.get(
             reverse('load_object_description'),
-            data = {'object_id': group.id,'model_name': 'Group'},
+            data = {
+                'object_id': group.id,
+                'model_name': 'Group',
+                'attribute_name': 'description__text'
+            },
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, '')
 
     def test_load_full_object_description_works(self):
         group = models.Group(name='somegroup')
-        user = self.create_user('someuser')
-        post_params = {'author': user, 'text':'some text'}
-        post = models.Post.objects.create_new_tag_wiki(**post_params)
-        group.description = post
-        group.save()
+        user = self.create_user('someuser', status='d')
+        user.post_group_description(group=group, body_text='some text')
 
+        self.client.login(user_id=user.id, method='force')
         response = self.client.get(
             reverse('load_object_description'),
-            data = {'object_id': group.id,'model_name': 'Group'},
+            data={
+                'object_id': group.id,
+                'model_name': 'Group',
+                'attribute_name': 'description__text'
+            },
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, 'some text')
@@ -715,6 +724,7 @@ class CommandViewTests(AskbotTestCase):
         post_data = {
             'object_id': group.id,
             'model_name': 'Group',
+            'attribute_name': 'description__text',
             'text': 'some description'
         }
         self.client.post(#ajax post

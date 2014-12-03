@@ -201,6 +201,8 @@ def plain_text_input_converter(text):
 
 def markdown_input_converter(text):
     """markdown to html converter"""
+    if text == '':
+        return ''
     text = get_parser().convert(text)
     text = sanitize_html(text)
     return urlize_html(text)

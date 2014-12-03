@@ -124,16 +124,16 @@
         </table>
     </div>
     <div class="col3">
-       <div class="user-about" data-object-name="auth.User" data-object-id="{{ view_user.id }}" data-attribute-name="about">
+       <div class="user-about" 
+            data-object-name="auth.User"
+            data-object-id="{{ view_user.id }}"
+            data-attribute-name="about"
+            data-empty-btn-text="{% if request.user == view_user %}{% trans %}tell about yourself{% endtrans %}{% else %}{% trans %}add description{% endtrans %}{% endif %}"
+            data-full-btn-text="{% trans %}edit details{% endtrans %}"
+        >
            <div class="text">{% if view_user.about|trim %}{{ view_user.about|convert_text|safe }}{% endif %}</div>
            {% if view_user == request.user or (request.user.is_authenticated() and request.user.is_administrator_or_moderator()) %}
-               <a class="edit-btn">
-               {% if view_user.about|trim %}
-                    {% trans %}edit details{% endtrans %}
-               {% else %}
-                    {% trans %}add details{% endtrans %}
-               {% endif %}
-               </a>
+               <a class="edit-btn"/>
            {% endif %}
        </div>
     </div>

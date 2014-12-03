@@ -603,8 +603,14 @@ def save_object_description(request):
     text = params['text']
 
     if model_name == 'Group' and attr_name == 'description__text':
-        request.user.edit_post(obj.description, body_text=text)
-        return {'html': obj.description.html}
+        group = obj
+        if group.description:
+            request.user.edit_post(obj.description, body_text=text)
+        else:
+            request.user.post_group_description(group=group, body_text=text)
+
+        #work around the bug where '' text makes <p></p> in markdown
+        return {'html': group.description.html}
     elif model_name == 'auth.User' and attr_name == 'about':
         obj.about = text
         obj.save()

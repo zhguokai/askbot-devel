@@ -2128,6 +2128,20 @@ def user_post_answer(
     )
     return answer_post
 
+
+def user_post_group_description(self, group=None, body_text=None):
+    post = Post.objects.create_new(
+                        None,#this post type is threadless
+                        self,
+                        datetime.datetime.now(),
+                        body_text,
+                        wiki=True,
+                        post_type='tag_wiki'#todo: change #to group_description
+                    )
+    group.description = post
+    group.save()
+    return post
+
 def user_visit_question(self, question = None, timestamp = None):
     """create a QuestionView record
     on behalf of the user represented by the self object
@@ -3187,6 +3201,7 @@ User.add_to_class(
 )
 User.add_to_class('post_comment', user_post_comment)
 User.add_to_class('edit_comment', user_edit_comment)
+User.add_to_class('post_group_description', user_post_group_description)
 User.add_to_class('create_post_reject_reason', user_create_post_reject_reason)
 User.add_to_class('edit_post_reject_reason', user_edit_post_reject_reason)
 User.add_to_class('delete_post', user_delete_post)

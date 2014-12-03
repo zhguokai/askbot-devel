@@ -8,6 +8,7 @@
             style="display:none"
         {% endif %}
     />
+    {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
     <div class="controls">
         <p>
             {% if group.logo_url %}
@@ -21,20 +22,21 @@
             {% endif %}
         </p>
     </div>
-    <div class="description" data-object-name="Group" data-object-id="{{ group.id }}" data-attribute-name="description__text">
+    {% endif %}
+    <div class="description" 
+        data-object-name="Group"
+        data-object-id="{{ group.id }}"
+        data-attribute-name="description__text"
+        data-empty-btn-text="{% trans %}add description{% endtrans %}"
+        data-full-btn-text="{% trans %}edit description{% endtrans %}"
+    >
         <div class="text">
-        {% if group.description %}
+        {% if group.description and group.description.text|trim %}
             {{ group.description.html|safe }}
         {% endif %}
         </div>
         {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
-            <a class="edit-btn">
-            {% if group.description.text|trim %}
-                {% trans %}edit description{% endtrans %}
-            {% else %}
-                {% trans %}add description{% endtrans %}
-            {% endif %}
-            </a>
+            <a class="edit-btn"></a>
         {% endif %}
     </div>
     <div class="clearfix"></div>

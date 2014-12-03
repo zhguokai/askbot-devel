@@ -3286,6 +3286,8 @@ var EditableTextAttribute = function(){
     this._objectId = undefined;
     this._objectName = undefined;
     this._attributeName = undefined;
+    this._emptyBtnText = undefined;//edit btn on empty text
+    this._fullBtnText = undefined;//edit btn on present text
 };
 inherits(EditableTextAttribute, WrappedElement);
 
@@ -3406,6 +3408,7 @@ EditableTextAttribute.prototype.saveData = function(){
             if (data['success']){
                 me.setState('display');
                 me.setContent(data['html']);
+                me.updateEditBtnText();
             } else {
                 showMessage(me.getElement(), data['message']);
             }
@@ -3418,11 +3421,28 @@ EditableTextAttribute.prototype.cancelEdit = function(){
     this.setState('display');
 };
 
+EditableTextAttribute.prototype.updateEditBtnText = function() {
+    if (!this._editBtn) {
+        return;
+    }
+    if ($.trim(this._contentBox.html()) == '') {
+        this._editBtn.text(this._emptyBtnText);
+    } else {
+        this._editBtn.text(this._fullBtnText);
+    }
+};
+
 EditableTextAttribute.prototype.decorate = function(element){
-    /* expect structure: 
-     *   <div data-object-name="Group" data-object-id="5" data-attribute-name="description__text">
-     *       <div class="text"/>
-     *       <a class="edit-btn"/>
+    /* expect markup structure: 
+     *   <div data-object-name="Group" #db object name, assuming askbot app, otherwise use e.g. auth.User
+     *      data-object-id="5" #db object id 
+     *      data-attribute-name="description__text" #django lookup path relative to model
+     *      data-empty-btn-text="add description" #show on edit button when text content is empty
+     *      data-full-btn-text="edit description" #show on edit button when content is not empty
+     *   >
+     *       <div class="text"/> #this element is for the content
+     *       <a class="edit-btn"/> #if button is missing field is not editable
+     *       #do not add text to the button, it's added by js
      *   </div>
      * and in this case in the database backend we use object 
      * models.Group with id=5 and property models.Group.description.text
@@ -3430,10 +3450,17 @@ EditableTextAttribute.prototype.decorate = function(element){
      */
     this._element = element;
     var editBtn = element.find('.edit-btn');
+
+    if (editBtn.length == 0) {
+        return;
+    }
+
     this._editBtn = editBtn;
     this._objectId = element.data('objectId');
     this._objectName = element.data('objectName');
     this._attributeName = element.data('attributeName');
+    this._emptyBtnText = element.data('emptyBtnText') || gettext('edit');
+    this._fullBtnText = element.data('fullBtnText') || gettext('edit');
 
     //adding two buttons...
     var saveBtn = this.makeElement('a');
@@ -3455,6 +3482,7 @@ EditableTextAttribute.prototype.decorate = function(element){
     this._cancelSep.hide();
 
     this._contentBox = element.find('.text');
+    this.updateEditBtnText();
 
     var me = this;
     var editorType = askbot['settings']['editorType'];

@@ -42,4 +42,4 @@ def get_attribute_by_lookup_path(obj, path):
     attr_name = path_bits.pop()
     if len(path_bits):
         obj = get_attribute_by_lookup_path(obj, '__'.join(path_bits))
-    return getattr(obj, attr_name)
+    return getattr(obj, attr_name, '')
