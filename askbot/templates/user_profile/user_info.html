@@ -129,9 +129,7 @@
            {% if view_user == request.user or (request.user.is_authenticated() and request.user.is_administrator_or_moderator()) %}
                <a class="edit-btn">
                {% if view_user.about|trim %}
-                    {% trans %}edit{% endtrans %}
-               {% elif view_user == request.user  %}
-                    {% trans %}tell about yourself{% endtrans %}
+                    {% trans %}edit details{% endtrans %}
                {% else %}
                     {% trans %}add details{% endtrans %}
                {% endif %}
