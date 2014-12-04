@@ -16,7 +16,7 @@ settings.register(
     LongStringValue(
         FLATPAGES,
         'FORUM_ABOUT',
-        description=_('Text of the Q&A forum About page (html format)'),
+        description=_('Text of the Q&amp;A forum About page (html format)'),
         localized=True,
         help_text=\
         _(
@@ -30,7 +30,7 @@ settings.register(
     LongStringValue(
         FLATPAGES,
         'FORUM_FAQ',
-        description=_('Text of the Q&A forum FAQ page (html format)'),
+        description=_('Text of the Q&amp;A forum FAQ page (html format)'),
         localized=True,
         help_text=\
         _(
@@ -59,7 +59,7 @@ settings.register(
     LongStringValue(
         FLATPAGES,
         'FORUM_PRIVACY',
-        description=_('Text of the Q&A forum Privacy Policy (html format)'),
+        description=_('Text of the Q&amp;A forum Privacy Policy (html format)'),
         localized=True,
         help_text=\
         _(

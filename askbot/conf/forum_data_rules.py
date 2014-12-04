@@ -382,7 +382,7 @@ settings.register(
         'MAX_COMMENT_LENGTH',
         default=300,
         description=_(
-                'Maximum comment length, must be < %(max_len)s'
+                'Maximum comment length, must be &lt; %(max_len)s'
             ) % {'max_len': const.COMMENT_HARD_MAX_LENGTH }
     )
 )
@@ -415,7 +415,7 @@ settings.register(
         FORUM_DATA_RULES,
         'SAVE_COMMENT_ON_ENTER',
         default=False,
-        description=_('Save comment by pressing <Enter> key'),
+        description=_('Save comment by pressing &lt;Enter&gt; key'),
         help_text=_(
             'This may be useful when only one-line comments '
             'are desired. Will not work with TinyMCE editor.'

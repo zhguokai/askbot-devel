@@ -868,9 +868,10 @@ def user_network(request, user, context):
     if 'followit' not in django_settings.INSTALLED_APPS:
         raise Http404
     data = {
-        'tab_name': 'network',
         'followed_users': user.get_followed_users(),
         'followers': user.get_followers(),
+        'page_title' : _('profile - network'),
+        'tab_name': 'network',
     }
     context.update(data)
     return render(request, 'user_profile/user_network.html', context)

@@ -430,7 +430,7 @@ for the purposes of the AJAX comment editor #}
                                 class='convert-comment'
                             >
                                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
+                                <input type="hidden" value="{{comment.id}}" name="comment_id">
                                 <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
                             </form>
                         </div>

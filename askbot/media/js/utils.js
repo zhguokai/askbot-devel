@@ -1394,7 +1394,6 @@ CommentConvertLink.prototype.createDom = function(){
     hidden_input.attr('type', 'hidden');
     hidden_input.attr('value', this._comment_id);
     hidden_input.attr('name', 'comment_id');
-    hidden_input.attr('id', 'id_comment_id');
     element.append(hidden_input);
 
     var csrf_token = this.makeElement('input');

@@ -48,7 +48,7 @@ settings.register(
     values.ImageValue(
         GENERAL_SKIN_SETTINGS,
         'SITE_LOGO_URL',
-        description = _('Q&A site logo'),
+        description = _('Q&amp;A site logo'),
         help_text = _(
                         'To change the logo, select new file, '
                         'then submit this whole form.'
