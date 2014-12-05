@@ -5,6 +5,7 @@ import datetime
 import urllib
 from askbot.mail import send_mail #todo: remove dependency?
 from django.template.loader import get_template
+from django.template import Context
 from django.db import models
 from django.db.models import signals
 from django.conf import settings as django_settings
@@ -160,16 +161,16 @@ class MessageManager(models.Manager):
 
         user_thread_filter = models.Q(**filter_kwargs)
 
-        filter = user_thread_filter
+        message_filter = user_thread_filter
         if sender:
-            filter = filter & models.Q(sender=sender)
+            message_filter = message_filter & models.Q(sender=sender)
 
         if deleted:
             deleted_filter = models.Q(
                 memos__status=MessageMemo.ARCHIVED,
                 memos__user=recipient
             )
-            return self.filter(filter & deleted_filter)
+            return self.filter(message_filter & deleted_filter)
         else:
             #rather a tricky query (may need to change the idea to get rid of this)
             #select threads that have a memo for the user, but the memo is not ARCHIVED
@@ -179,9 +180,9 @@ class MessageManager(models.Manager):
                                             memos__user=recipient
                                         )
             #part1 - marked as non-archived
-            part1 = self.filter(filter & marked_as_non_deleted_filter)
+            part1 = self.filter(message_filter & marked_as_non_deleted_filter)
             #part2 - messages for the user without an attached memo
-            part2 = self.filter(filter & ~models.Q(memos__user=recipient))
+            part2 = self.filter(message_filter & ~models.Q(memos__user=recipient))
             return (part1 | part2).distinct()
 
     def create(self, **kwargs):
@@ -384,7 +385,6 @@ class Message(models.Model):
         root_message = self.get_root_message()
         data = {'messages': self.get_timeline()}
         template = get_template('group_messaging/email_alert.html')
-        body_text = template.render(data)
         subject = self.get_email_subject_line()
         for user in self.get_recipients_users():
             #todo change url scheme so that all users have the same
@@ -393,6 +393,8 @@ class Message(models.Model):
             thread_url = root_message.get_absolute_url(user)
             thread_url = thread_url.replace('&', '&amp;')
             #in the template we have a placeholder to be replaced like this:
+            data['recipient_user'] = user
+            body_text = template.render(Context(data))
             body_text = body_text.replace('THREAD_URL_HOLE', thread_url)
             send_mail(
                 subject,

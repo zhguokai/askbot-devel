@@ -11,6 +11,7 @@ and turns them into complete views
 import copy
 import datetime
 from django.template.loader import get_template
+from django.template import Context
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import IntegerField
@@ -43,7 +44,7 @@ class InboxView(object):
         if template_name is None:
             template_name = self.template_name
         template = get_template(template_name)
-        html = template.render(context)
+        html = template.render(Context(context))
         json = simplejson.dumps({'html': html, 'success': True})
         return HttpResponse(json, content_type='application/json')
             
@@ -142,7 +143,7 @@ class PostReply(InboxView):
         last_visit.at = datetime.datetime.now()
         last_visit.save()
         return self.render_to_response(
-            {'post': message, 'user': request.user},
+            Context({'post': message, 'user': request.user}),
             template_name='group_messaging/stored_message.html'
         )
 
@@ -251,7 +252,7 @@ class DeleteOrRestoreThread(ThreadsList):
         memo.save()
 
         context = self.get_context(request)
-        return self.render_to_response(context)
+        return self.render_to_response(Context(context))
 
 
 class SendersList(InboxView):
@@ -275,7 +276,7 @@ class ThreadDetails(InboxView):
         """shows individual thread"""
         #todo: assert that current thread is the root
         root = Message.objects.get(id=thread_id)
-        responses = Message.objects.filter(root__id=thread_id)
+        responses = Message.objects.filter(root__id=thread_id).order_by('sent_at')
         last_visit, created = LastVisitTime.objects.get_or_create(
                                                             message=root,
                                                             user=request.user

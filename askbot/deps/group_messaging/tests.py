@@ -1,6 +1,7 @@
 import datetime
 import time
 import urlparse
+from askbot.tests.utils import with_settings
 from bs4 import BeautifulSoup
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
@@ -156,6 +157,7 @@ class ViewsTests(GroupMessagingTests):
         thread_data = context['threads_data'][thread_id]
         self.assertEqual(thread_data['status'], 'new')
 
+    @with_settings(APP_URL='http://localhost/')
     def test_emailed_message_url_works_for_post_recipient(self):
         root = self.create_thread_for_user(self.sender, self.recipient)
         from django.core.mail import outbox

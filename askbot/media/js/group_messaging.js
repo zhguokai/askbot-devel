@@ -695,8 +695,8 @@ MessageCenter.prototype.loadThreadsForSender = function(senderId) {
 
 MessageCenter.prototype.decorate = function(element) {
     this._element = element;
-    this._firstCol = element.find('.first-col');
-    this._secondCol = element.find('.second-col');
+    this._firstCol = element.find('.pm-nav');
+    this._secondCol = element.find('.pm-main');
 
     this._urls = {
         getThreads: element.data('getThreadsUrl'),
