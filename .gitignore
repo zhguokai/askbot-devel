@@ -20,6 +20,7 @@ env
 .vagrant
 /Vagrantfile
 /custom_settings
+/custom
 /static
 django
 lamson
