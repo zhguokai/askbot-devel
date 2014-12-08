@@ -2463,9 +2463,9 @@ def user_get_primary_language(self):
     else:
         return self.languages.split()[0]
 
-def get_profile_link(self):
+def get_profile_link(self, text=None):
     profile_link = u'<a href="%s">%s</a>' \
-        % (self.get_profile_url(), escape(self.username))
+        % (self.get_profile_url(), escape(text or self.username))
 
     return mark_safe(profile_link)
 
