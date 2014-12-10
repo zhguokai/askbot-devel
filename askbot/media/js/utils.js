@@ -400,6 +400,10 @@ var inherits = function(childCtor, parentCtor) {
     childCtor.prototype.constructor = childCtor;
 };
 
+var getSuperClass = function(cls) {
+    return cls.superClass_;
+};
+
 /** wrapper around jQuery object
  * @constructor
  * the top level "class" for other elements
@@ -517,7 +521,9 @@ WrappedElement.prototype.makeElement = function(html_tag){
  * as well as any other included sub-elements
  */
 WrappedElement.prototype.dispose = function(){
-    this._element.remove();
+    if (this._element) {
+        this._element.remove();
+    }
     this._in_document = false;
 };
 
@@ -3909,9 +3915,9 @@ AutoCompleter.prototype.setCaret = function(pos) {
         suffixFromNow: gettext("from now"),
         seconds: gettext("just now"),
         minute: gettext("about a minute"),
-        minutes: gettext("%d minutes"),
+        minutes: gettext("%d min"),
         hour: gettext("about an hour"),
-        hours: gettext("%d hours"),
+        hours: gettext("%d h"),
         day: gettext("yesterday"),
         days: gettext("%d days"),
         month: gettext("about a month"),
