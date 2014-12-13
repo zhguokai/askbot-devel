@@ -9,6 +9,7 @@ from askbot import models
 from askbot.conf import settings as askbot_settings
 from askbot.search.state_manager import SearchState
 from askbot.utils.html import site_url
+from askbot.utils.functions import get_epoch_str
 
 def get_user_data(user):
     """get common data about the user"""
@@ -20,8 +21,8 @@ def get_user_data(user):
         'id': user.id,
         'avatar': avatar_url,
         'username': user.username,
-        'joined_at': user.date_joined.strftime('%s'),
-        'last_seen_at': user.last_seen.strftime('%s'),
+        'joined_at': get_epoch_str(user.date_joined),
+        'last_seen_at': get_epoch_str(user.last_seen),
         'reputation': user.reputation,
     }
 
@@ -29,13 +30,13 @@ def get_question_data(thread):
     """returns data dictionary for a given thread"""
     question_post = thread._question_post()
     datum = {
-        'added_at': thread.added_at.strftime('%s'),
+        'added_at': get_epoch_str(thread.added_at),
         'id': question_post.id,
         'answer_count': thread.answer_count,
         'answer_ids': thread.get_answer_ids(),
         'view_count': thread.view_count,
         'score': thread.score,
-        'last_activity_at': thread.last_activity_at.strftime('%s'),
+        'last_activity_at': get_epoch_str(thread.last_activity_at),
         'title': thread.title,
         'summary': question_post.summary,
         'tags': thread.tagnames.strip().split(),

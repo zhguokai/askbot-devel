@@ -1,9 +1,14 @@
+import datetime
 import re
 import random
-import datetime
+import time
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.html import escape
+
+def get_epoch_str(dt):
+    """returns epoch as string to datetime"""
+    return str(int(time.mktime(dt.timetuple())))
 
 def get_from_dict_or_object(source, key):
     try:
