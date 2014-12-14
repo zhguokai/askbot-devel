@@ -440,7 +440,8 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         self.user2.save()
 
         self.old_cache = cache.cache
-        cache.cache = LocMemCache('', {})  # Enable local caching
+        cache.cache = LocMemCache('', {'OPTIONS':{'MAX_ENTRIES': 1000000}})  # Enable local caching
+        cache.cache.clear()
 
     def tearDown(self):
         cache.cache = self.old_cache  # Restore caching
@@ -452,8 +453,9 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
             'search_state': DummySearchState(),
             'visitor': None
         }
-        html = get_template('widgets/question_summary.html').render(Context(context))
-        return html
+        return get_template(
+            'widgets/question_summary.html'
+        ).render(Context(context))
 
     def test_post_question(self):
         self.assertEqual(0, Post.objects.count())
@@ -610,6 +612,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         self.assertEqual(0, question.thread.view_count)
         self.assertEqual(0, Thread.objects.all()[0].view_count)
         self.client.logout()
+
         # INFO: We need to pass some headers to make question() view believe we're not a robot
         self.client.get(
             urlresolvers.reverse('question', kwargs={'id': question.id}),

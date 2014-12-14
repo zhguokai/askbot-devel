@@ -562,7 +562,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
         request.session['question_view_times'][question_post.id] = \
                                                     datetime.datetime.now()
-
         #2) run the slower jobs in a celery task
         from askbot import tasks
         tasks.record_question_visit.delay(
