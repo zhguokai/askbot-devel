@@ -448,7 +448,7 @@ body.user-messages {
 }
 #header.without-logo #userToolsNav {
   float: left;
-  margin-top: 7px;
+  margin-top: 9px;
 }
 #secondaryHeader {
   /* Div containing Home button, scope navigation, search form and ask button, check blocks/secondary_header.html */
