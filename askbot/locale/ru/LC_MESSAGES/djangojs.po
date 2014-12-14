@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-06 02:35-0500\n"
-"PO-Revision-Date: 2014-08-06 08:34+0000\n"
+"POT-Creation-Date: 2014-11-01 12:01-0500\n"
+"PO-Revision-Date: 2014-11-01 17:05+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/askbot/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -21,57 +21,57 @@ msgstr ""
 "Language: ru\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: media/jquery-openid/jquery.openid.js:73
+#: media/jquery-openid/jquery.openid.js:81
 #, c-format
 msgid "Are you sure you want to remove your %s login?"
 msgstr "Вы действительно хотите удалить логин через %s?"
 
-#: media/jquery-openid/jquery.openid.js:90
+#: media/jquery-openid/jquery.openid.js:98
 msgid "Please add one or more login methods."
 msgstr "Пожалуйста, добавьте хотя бы один постоянный метод для авторизации."
 
-#: media/jquery-openid/jquery.openid.js:93
+#: media/jquery-openid/jquery.openid.js:101
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
 msgstr "У Вас сейчас нет постоянного метода авторизации, пожалуйста выберите хотя бы один, нажав на любую из предложеных ниже кнопок."
 
-#: media/jquery-openid/jquery.openid.js:135
+#: media/jquery-openid/jquery.openid.js:143
 msgid "passwords do not match"
 msgstr "пароли не совпадают"
 
-#: media/jquery-openid/jquery.openid.js:162
+#: media/jquery-openid/jquery.openid.js:170
 msgid "Show/change current login methods"
 msgstr "Просмотреть, изменить существующие методы авторизации."
 
-#: media/jquery-openid/jquery.openid.js:227
+#: media/jquery-openid/jquery.openid.js:235
 #, c-format
 msgid "Please enter your %s, then proceed"
 msgstr "Чтобы продолжить, пожалуйста введите %s"
 
-#: media/jquery-openid/jquery.openid.js:229
+#: media/jquery-openid/jquery.openid.js:237
 msgid "Connect your %(provider_name)s account to %(site)s"
 msgstr "Соедините %(site)s с Вашим аккаунтом от %(provider_name)s"
 
-#: media/jquery-openid/jquery.openid.js:323
+#: media/jquery-openid/jquery.openid.js:331
 #, c-format
 msgid "Change your %s password"
 msgstr "Измените Ваш пароль для %s"
 
-#: media/jquery-openid/jquery.openid.js:324
+#: media/jquery-openid/jquery.openid.js:332
 msgid "Change password"
 msgstr "Изменить пароль"
 
-#: media/jquery-openid/jquery.openid.js:327
+#: media/jquery-openid/jquery.openid.js:335
 #, c-format
 msgid "Create a password for %s"
 msgstr "Создать пароль для %s"
 
-#: media/jquery-openid/jquery.openid.js:328
+#: media/jquery-openid/jquery.openid.js:336
 msgid "Create password"
 msgstr "Создать пароль"
 
-#: media/jquery-openid/jquery.openid.js:343
+#: media/jquery-openid/jquery.openid.js:351
 msgid "Create a password-protected account"
 msgstr "Создать аккаунт, защищенный паролем"
 
@@ -87,8 +87,8 @@ msgstr "Ваше сообщение:"
 msgid "send"
 msgstr "отправить"
 
-#: media/js/group_messaging.js:164 media/js/post.js:1941
-#: media/js/post.js.c:3216 media/js/post.js.c:4779 media/js/user.js:846
+#: media/js/group_messaging.js:164 media/js/post.js:1970
+#: media/js/post.js.c:3245 media/js/post.js.c:4808 media/js/user.js:841
 msgid "cancel"
 msgstr "отмена"
 
@@ -280,87 +280,91 @@ msgstr "удалить"
 msgid "sorry, something is not right here"
 msgstr ""
 
-#: media/js/post.js:1797
+#: media/js/post.js:1808
 msgid "add comment"
 msgstr "добавить комментарий"
 
-#: media/js/post.js:1803
+#: media/js/post.js:1814
 msgid "save comment"
 msgstr "сохранить комментарий"
 
-#: media/js/post.js:1843
+#: media/js/post.js:1854
 #, c-format
 msgid "enter at least %s characters"
 msgstr "пожалуйста, введите больше чем %s символов"
 
-#: media/js/post.js:1845
+#: media/js/post.js:1856
 #, c-format
 msgid "enter at least %s more characters"
 msgstr "пожалуйста, введите больше чем %s символов"
 
-#: media/js/post.js:1855
+#: media/js/post.js:1868
 #, c-format
 msgid "%s characters left"
 msgstr "осталось место для %s символов"
 
-#: media/js/post.js:1955
+#: media/js/post.js:1870
+msgid "maximum comment length reached"
+msgstr ""
+
+#: media/js/post.js:1984
 msgid "minor edit (don't send alerts)"
 msgstr "небольшое изменение (не посылать уведомления)"
 
-#: media/js/post.js:1987
+#: media/js/post.js:2016
 msgid "Are you sure you don't want to post this comment?"
 msgstr "Вы действительно уверены, что не хотите добавлять этот комментарий?"
 
-#: media/js/post.js:2022 media/js/utils.js:3904 media/js/utils.js.c:4059
+#: media/js/post.js:2051 media/js/utils.js:3904 media/js/utils.js.c:4059
 msgid "just now"
 msgstr "прямо сейчас"
 
-#: media/js/post.js:2088
+#: media/js/post.js:2117
 msgid "delete this comment"
 msgstr "удалить этот комментарий"
 
-#: media/js/post.js:2403
+#: media/js/post.js:2432
 msgid "confirm delete comment"
 msgstr "Удалить комментарий?"
 
-#: media/js/post.js:2544
+#: media/js/post.js:2573
 msgid "please sign in or register to post comments"
 msgstr "пожалуйста, войдите или зарегистрируйтесь, чтобы оставить комментарий"
 
-#: media/js/post.js:2695
+#: media/js/post.js:2724
 msgid "Please enter question title (>10 characters)"
 msgstr "Пожалуйста, добавьте заглавие к вопросу (>10 букв)"
 
-#: media/js/post.js:2747 media/js/post.js.c:4807
+#: media/js/post.js:2776 media/js/post.js.c:4836
 msgid "Sorry, you have only read access"
 msgstr ""
 
-#: media/js/post.js:3210 media/js/post.js.c:4050 media/js/post.js.c:4239
+#: media/js/post.js:3239 media/js/post.js.c:4079 media/js/post.js.c:4268
 msgid "save"
 msgstr "сохранить"
 
-#: media/js/post.js:3334
+#: media/js/post.js:3363
 msgid "Enter the logo url or upload an image"
 msgstr "Указать путь до логотипа или загрузить изображение"
 
-#: media/js/post.js:3360
+#: media/js/post.js:3389
 msgid "Do you really want to remove the image?"
 msgstr "Вы действительно хотите удалить это изображение?"
 
-#: media/js/post.js:3476
+#: media/js/post.js:3505
 msgid "change logo"
 msgstr "изменить логотип"
 
-#: media/js/post.js:3477
+#: media/js/post.js:3506
 msgid "add logo"
 msgstr "добавить логотип"
 
-#: media/js/post.js:3625
+#: media/js/post.js:3654
 #, c-format
 msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr "тэг \"%s\" уже есть, не стоит повторять его (нажмите \"escape\" чтобы удалить)"
 
-#: media/js/post.js:3634
+#: media/js/post.js:3663
 #, c-format
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
@@ -368,39 +372,39 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: media/js/post.js:3980
+#: media/js/post.js:4009
 msgid "Delete category?"
 msgstr "Удалить категорию?"
 
-#: media/js/post.js:4069 media/js/utils.js:1371
+#: media/js/post.js:4098 media/js/utils.js:1371
 msgid "edit"
 msgstr "редактировать"
 
-#: media/js/post.js:4156
+#: media/js/post.js:4185
 msgid "category name cannot be empty"
 msgstr "пожалуйста, введите хотя бы один тэг"
 
-#: media/js/post.js:4192
+#: media/js/post.js:4221
 msgid "already exists at the current level!"
 msgstr "уже есть на этом уровне!"
 
-#: media/js/post.js:4228
+#: media/js/post.js:4257
 msgid "add category"
 msgstr "добавить категорию"
 
-#: media/js/post.js:4775
+#: media/js/post.js:4804
 msgid "save tags"
 msgstr "сохранить тэги"
 
-#: media/js/post.js:4891
+#: media/js/post.js:4920
 msgid "Group name:"
 msgstr "Название группы:"
 
-#: media/js/post.js:4917
+#: media/js/post.js:4946
 msgid "Shared with the following users:"
 msgstr "Сделать доступным для следующих пользователей:"
 
-#: media/js/post.js:4923
+#: media/js/post.js:4952
 msgid "Shared with the following groups:"
 msgstr "Сделать доступным для следующих групп:"
 
@@ -413,54 +417,54 @@ msgstr "Тег \"<span></span>\" подходит для:"
 msgid "and %s more, not shown..."
 msgstr "и ещё %s, не показано..."
 
-#: media/js/user.js:210
+#: media/js/user.js:205
 msgid "Please select at least one item"
 msgstr "Пожалуйста, отметьте хотя бы одно извещение"
 
-#: media/js/user.js:246
+#: media/js/user.js:241
 msgid "Load more items."
 msgstr ""
 
-#: media/js/user.js:391
+#: media/js/user.js:386
 msgid "Looks there are some things to fix:"
 msgstr "Взгляните, среди этих вопросов может быть ответ на ваш:"
 
-#: media/js/user.js:459
+#: media/js/user.js:454
 msgid "Please provide description."
 msgstr "Пожалуйста, дайте описание."
 
-#: media/js/user.js:462
+#: media/js/user.js:457
 msgid "Please provide details."
 msgstr "Пожалуйста, укажите детали."
 
-#: media/js/user.js:549
+#: media/js/user.js:544
 msgid "A reason must be selected to delete one."
 msgstr "Для удаления необходимо выбрать причину."
 
-#: media/js/user.js:666
+#: media/js/user.js:661
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
 msgstr "Пожалуйста <a href=\"%(signin_url)s\">авторизуйтесь</a> чтобы отметить профиль %(username)s"
 
-#: media/js/user.js:698
+#: media/js/user.js:693
 #, c-format
 msgid "unfollow %s"
 msgstr "перестать следить за %s"
 
-#: media/js/user.js:701
+#: media/js/user.js:696
 #, c-format
 msgid "following %s"
 msgstr "отслеживаем за %s"
 
-#: media/js/user.js:707
+#: media/js/user.js:702
 #, c-format
 msgid "follow %s"
 msgstr "отслеживать %s"
 
-#: media/js/user.js:841
+#: media/js/user.js:836
 msgid "add group"
 msgstr "добавить группу"
 
-#: media/js/user.js:921
+#: media/js/user.js:916
 msgid "add"
 msgstr "добавить"
 
