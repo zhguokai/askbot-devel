@@ -758,9 +758,11 @@ button,
 input[type="submit"],
 input[type="button"],
 input[type="reset"],
-.button {
+.button,
+.btn {
     border: 0 !important;
     border-top: #eaf2f3 1px solid;
+    .border-box;
     cursor: pointer;
     color: @button-label;
     font-family: @main-font;
@@ -788,10 +790,16 @@ input[type="reset"].large,
 
 button:hover, 
 input[type="submit"]:hover,
-.button:hover {
+.button:hover,
+.btn:hover {
+    background-position: 0 0 !important;
     .linear-gradient(#cde5e9,#94b3ba);
     text-decoration:none;
     .text-shadow(0px, 1px, 0px, #c6d9dd);
+}
+
+.user-profile-page input[name="send_message"] {
+    margin: 10px 0 20px;
 }
 
 input[type="submit"].link {
@@ -863,17 +871,21 @@ body.anon.ask-page .search-drop-menu {
 
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
 
+#ContentLeft,
+#ContentRight,
+#ContentFull {
+    padding-bottom: 20px;
+}
+
 #ContentLeft {
     width: 730px;
     float: left;
     position: relative;
-    padding-bottom:10px;
 }
 
 #ContentRight {
     width: 200px;
     float: right;
-    padding: 0 0px 10px 0px;
 }
 
 #ContentFull {
@@ -1402,8 +1414,10 @@ ul#searchTags {
 }
 
 .pager {
-    margin-top: 10px;
-    margin-bottom: 16px;
+    margin: 10px 0;
+}
+.main-page .pager {
+    margin-bottom: 0;
 }
 
 .pagesize {
@@ -1413,15 +1427,14 @@ ul#searchTags {
 }
 
 .paginator {
-    padding: 5px 0 10px 0;
+    padding-top: 5px;
     font-size:13px;
-    margin-bottom:10px;
 
     .prev a, .prev a:visited,
     .next a, .next a:visited {
         background-color: #fff;
         color: #777;
-        padding: 2px 4px 3px 4px;
+        padding: 0 0.25em;
     }
     a {
         color: @section-title;

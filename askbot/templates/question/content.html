@@ -8,7 +8,9 @@
     {% include "question/answer_tab_bar.html" %}
 
     <div class="clean"></div>
-    {{ macros.paginator(paginator_context, anchor='#sort-top') }}
+    <div class="pager">
+        {{ macros.paginator(paginator_context, anchor='#sort-top') }}
+    </div>
     <div class="clean"></div>
 
     {% for answer in answers %}
@@ -18,7 +20,9 @@
         {% endif %}
     {% endfor %}
 
-    {{ macros.paginator(paginator_context, anchor='#sort-top') }}
+    <div class="pager">
+        {{ macros.paginator(paginator_context, anchor='#sort-top') }}
+    </div>
     <div class="clean"></div>
 {% elif settings.QUESTION_PAGE_ALWAYS_SHOW_ANSWER_BANNER %}
     <div class="clearfix"></div>
