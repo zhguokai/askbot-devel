@@ -2140,7 +2140,7 @@ Comment.prototype.startEditing = function() {
 
 Comment.prototype.decorate = function(element){
     this._element = $(element);
-    var parent_type = this._element.closest('comments').data('parentPostType');
+    var parent_type = this._element.closest('.comments').data('parentPostType');
     var comment_id = this._element.data('commentId');
     this._data = {id: comment_id};
 
@@ -2186,7 +2186,7 @@ Comment.prototype.decorate = function(element){
     var vote = new CommentVoteButton(this);
     vote.decorate(this._element.find('.upvote'));
 
-    this._blank = false;
+    this._blank = (this.getId() === undefined);
 };
 
 Comment.prototype.setDraftStatus = function(isDraft) {
@@ -2536,13 +2536,16 @@ PostCommentsWidget.prototype.startNewComment = function() {
         'is_deletable': true,
         'is_editable': true
     };
+    //find comment template, clone it's dom
     var comment = new Comment(this, opts);
-    var commentElem = comment.getElement();
+    var template = $('.comment-template').first();
+    var commentElem = template.clone(false);
     if (this._commentsReversed) {
         this._cbox.prepend(commentElem);
     } else {
         this._cbox.append(commentElem);
     }
+    comment.decorate(commentElem);
     this._element.removeClass('empty');
     this._element.trigger('askbot.beforeCommentStart');
     comment.startEditing();

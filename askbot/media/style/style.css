@@ -2311,14 +2311,14 @@ ul#related-tags li {
   padding-left: 0;
   width: 200px;
 }
+.question-page .comments.empty.ordering-forward {
+  margin-top: -35px;
+  float: left;
+}
 .question-page .comments {
   font-size: 12px;
   clear: both;
   padding: 0;
-}
-.question-page .comments .empty.ordering-forward {
-  margin-top: -34px;
-  float: left;
 }
 .question-page .comments .truncated-post:nth-last-child(3) {
   float: left;
