@@ -84,7 +84,8 @@ select,
 textarea,
 #askFormBar .questionTitleInput,
 .wmd-container,
-.folded-editor {
+.folded-editor,
+.mock-editor {
   border: #cce6ec 3px solid;
   height: 22px;
   font-size: 13px;
@@ -1809,7 +1810,7 @@ ul#related-tags li {
   margin-top: 3px;
   margin-right: 7px;
 }
-.folded-editor {
+.folded-editor, .mock-editor {
   box-shadow: inset 0 0 3px 1px #aaa;
   -moz-box-shadow: inset 0 0 3px 1px #aaa;
   -webkit-box-shadow: inset 0 0 3px 1px #aaa;
@@ -1818,17 +1819,17 @@ ul#related-tags li {
   outline: none;
   width: 100%;
 }
-.folded-editor .editor-proper {
+.folded-editor .editor-proper, .mock-editor .editor-proper {
   display: none;
 }
-.folded-editor.unfolded {
+.folded-editor.unfolded, .mock-editor.unfolded {
   cursor: default;
   box-shadow: 0 0 0 0;
   -moz-box-shadow: 0 0 0 0;
   -webkit-box-shadow: 0 0 0 0;
 }
-.folded-editor p.prompt {
-  margin: 5px 8px;
+.folded-editor p.prompt, .mock-editor p.prompt {
+  margin: 5px 4px;
   display: block;
 }
 .ask-page .folded-editor {
@@ -2301,13 +2302,6 @@ ul#related-tags li {
 .question-page .question-img-favorite:hover {
   background: url(../images/vote-favorite-on.png);
 }
-.question-page div.comments {
-  padding: 0;
-}
-.question-page div.comments.empty {
-  margin-top: -34px;
-  float: left;
-}
 .question-page h2.comment-title {
   color: #7ea9b3;
   font-weight: bold;
@@ -2320,6 +2314,11 @@ ul#related-tags li {
 .question-page .comments {
   font-size: 12px;
   clear: both;
+  padding: 0;
+}
+.question-page .comments .empty.ordering-forward {
+  margin-top: -34px;
+  float: left;
 }
 .question-page .comments .truncated-post:nth-last-child(3) {
   float: left;
@@ -2353,11 +2352,17 @@ ul#related-tags li {
 .question-page .comments .controls a:hover {
   text-decoration: none;
 }
-.question-page .comments .button {
+.question-page .comments .js-open-editor-btn, .question-page .comments .js-load-comments-btn {
   color: #988e4c;
   font-size: 11px;
   padding: 3px;
   cursor: pointer;
+}
+.question-page .comments .js-open-editor-btn.new-comment-box {
+  padding: 0 14px 0 29px;
+}
+.question-page .comments .js-open-editor-btn.new-comment-box .mock-editor {
+  height: 50px;
 }
 .question-page .comments a {
   background-color: inherit;
@@ -2376,14 +2381,17 @@ ul#related-tags li {
   font-size: 13px;
   height: 54px;
   line-height: 1.3;
-  margin: -1px 0 0 1px;
+  margin: 0;
   outline: none;
   overflow: auto;
-  padding: 5px 19px 2px 3px;
-  width: 99.6%;
+  padding: 5px 19px 2px 6px;
+  width: 100%;
 }
 .question-page .comments .wmd-container textarea {
   border: none;
+  box-shadow: inset 0 0 3px 1px #aaa;
+  -moz-box-shadow: inset 0 0 3px 1px #aaa;
+  -webkit-box-shadow: inset 0 0 3px 1px #aaaaaa;
 }
 .question-page .comments .transient-comment {
   margin-bottom: 3px;
@@ -2604,10 +2612,10 @@ ul#related-tags li {
 .question-page .answered-by-owner {
   background: #F1F1FF;
 }
-.question-page .answered-by-owner .comments .button {
+.question-page .answered-by-owner .comments {
   background-color: #E6ECFF;
 }
-.question-page .answered-by-owner .comments {
+.question-page .answered-by-owner .comments .js-load-comments-btn, .question-page .answered-by-owner .comments .js-open-editor-btn {
   background-color: #E6ECFF;
 }
 .question-page .answer-img-accept {

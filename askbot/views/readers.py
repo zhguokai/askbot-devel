@@ -42,6 +42,7 @@ from askbot.forms import GetDataForPostForm
 from askbot.utils.loading import load_module
 from askbot import conf
 from askbot import models
+from askbot.models.post import MockPost
 from askbot.models.tag import Tag
 from askbot import const
 from askbot.startup_procedures import domain_is_bad
@@ -512,7 +513,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
                                 sort_method=answer_sort_method,
                                 user=request.user
                             )
-
     user_votes = {}
     user_post_id_list = list()
     #todo: cache this query set, but again takes only 3ms!
@@ -628,35 +628,36 @@ def question(request, id):#refactor - long subroutine. display question body, an
         group_read_only = False
 
     data = {
-        'is_cacheable': False,#is_cacheable, #temporary, until invalidation fix
-        'long_time': const.LONG_TIME,#"forever" caching
-        'page_class': 'question-page',
         'active_tab': 'questions',
+        'answer' : answer_form,
+        'answers' : page_objects.object_list,
+        'answer_count': thread.get_answer_count(request.user),
+        'blank_comment': MockPost(post_type='comment', author=request.user),#data for the js comment template
+        'category_tree_data': askbot_settings.CATEGORY_TREE,
+        'editor_is_unfolded': answer_form.has_data(),
+        'favorited' : favorited,
+        'group_read_only': group_read_only,
+        'is_cacheable': False,#is_cacheable, #temporary, until invalidation fix
+        'language_code': translation.get_language(),
+        'long_time': const.LONG_TIME,#"forever" caching
+        'new_answer_allowed': new_answer_allowed,
+        'oldest_answer_id': thread.get_oldest_answer_id(request.user),
+        'page_class': 'question-page',
+        'paginator_context' : paginator_context,
+        'previous_answer': previous_answer,
+        'published_answer_ids': published_answer_ids,
         'question' : question_post,
+        'show_comment': show_comment,
+        'show_comment_position': show_comment_position,
+        'show_post': show_post,
+        'similar_threads' : thread.get_similar_threads(),
+        'tab_id' : answer_sort_method,
         'thread': thread,
         'thread_is_moderated': thread.is_moderated(),
         'user_is_thread_moderator': thread.has_moderator(request.user),
-        'published_answer_ids': published_answer_ids,
-        'answer' : answer_form,
-        'editor_is_unfolded': answer_form.has_data(),
-        'answers' : page_objects.object_list,
-        'answer_count': thread.get_answer_count(request.user),
-        'category_tree_data': askbot_settings.CATEGORY_TREE,
         'user_votes': user_votes,
         'user_post_id_list': user_post_id_list,
         'user_can_post_comment': user_can_post_comment,#in general
-        'new_answer_allowed': new_answer_allowed,
-        'oldest_answer_id': thread.get_oldest_answer_id(request.user),
-        'previous_answer': previous_answer,
-        'tab_id' : answer_sort_method,
-        'favorited' : favorited,
-        'similar_threads' : thread.get_similar_threads(),
-        'language_code': translation.get_language(),
-        'paginator_context' : paginator_context,
-        'show_post': show_post,
-        'show_comment': show_comment,
-        'show_comment_position': show_comment_position,
-        'group_read_only': group_read_only,
     }
     #shared with ...
     if askbot_settings.GROUPS_ENABLED:

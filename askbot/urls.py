@@ -322,7 +322,7 @@ urlpatterns = patterns('',
         name='delete_comment'
     ),
     service_url(#ajax only
-        r'^comment/get_text/$',
+        r'^comment/get-text/$',
         views.readers.get_comment,
         name='get_comment'
     ),
