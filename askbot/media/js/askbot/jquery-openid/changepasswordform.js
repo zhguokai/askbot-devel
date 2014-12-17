@@ -21,14 +21,14 @@ ChangePasswordForm.prototype.clearErrors = function() {
 };
 
 ChangePasswordForm.prototype.showErrors = function(errors) {
-    if (errors['new_password']) {
-        this._pwInput1Errors.html(errors['new_password'][0]);
+    if (errors.new_password) {
+        this._pwInput1Errors.html(errors.new_password[0]);
     }
-    if (errors['new_password_retyped']) {
-        this._pwInput2Errors.html(errors['new_password_retyped'][0]);
+    if (errors.new_password_retyped) {
+        this._pwInput2Errors.html(errors.new_password_retyped[0]);
     }
-    if (errors['__all__']) {
-        this._pwInput2Errors.html(errors['__all__'][0]);
+    if (errors.__all__) {
+        this._pwInput2Errors.html(errors.__all__[0]);
     }
 };
 
@@ -46,22 +46,22 @@ ChangePasswordForm.prototype.getSubmitHandler = function() {
             type: 'POST',
             dataType: 'json',
             data: me.getData(),
-            url: askbot['urls']['changePassword'],
+            url: askbot.urls.changePassword,
             success: function(data) {
-                if (data['message']) {
+                if (data.message) {
                     if (me.inAccountRecovery()) {
                         var callback = function() {
-                            window.location.href = askbot['urls']['questions'];
+                            window.location.href = askbot.urls.questions;
                         };
-                        me.showMessage(data['message'], callback);
+                        me.showMessage(data.message, callback);
                     } else {
-                        me.showMessage(data['message']);
+                        me.showMessage(data.message);
                     }
                     me.clearErrors();
                 }
-                if (data['errors']) {
+                if (data.errors) {
                     me.clearErrors();
-                    me.showErrors(data['errors']);
+                    me.showErrors(data.errors);
                 }
             }
         });
