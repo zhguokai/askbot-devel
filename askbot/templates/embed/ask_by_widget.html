@@ -206,7 +206,7 @@
     {% include "meta/tinymce_css.html" %}{# todo - maybe move to form media? #}
 {% endif %}
 
-<script type="text/javascript" src='{{"/js/live_search_new_thread.js"|media}}'></script>
+<script type="text/javascript" src='{{"/js/askbot/live_search_new_thread.js"|media}}'></script>
 <script type="text/javascript" charset="utf-8">
     askbot['settings']['minSearchWordLength'] = {{ min_search_word_length }};
     askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
