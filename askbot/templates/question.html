@@ -7,7 +7,7 @@
 {% block keywords %}{{thread.tagname_meta_generator()}}{% endblock %}
 {% block forestyle %}
     <link rel="canonical" href="{{ base_url }}{{question.get_absolute_url()}}" />
-    <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
+    <link rel="stylesheet" type="text/css" href="{{'/js/plugins/wmd/wmd.css'|media}}" />
 {% endblock %}
 {% block forejs %}
     <script type="text/javascript">
@@ -200,7 +200,7 @@
                     }
                 }
             };
-                    
+
 
             function render_post_controls(post_id, is_wiki){
 
@@ -225,7 +225,7 @@
                     return;
                 }
                 if (//maybe remove "delete" button
-                    (data['userReputation'] < 
+                    (data['userReputation'] <
                     {{settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}}) || data['userIsReadOnly']
                 ) {
                     removeNode(deleteBtn);
@@ -317,7 +317,7 @@
                     }
                 }
             }
-            
+
             askbot['functions'] = askbot['functions'] || {};
             askbot['functions']['renderPostVoteButtons'] = render_vote_buttons;
             askbot['functions']['renderPostControls'] = render_post_controls;

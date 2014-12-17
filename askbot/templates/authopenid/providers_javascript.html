@@ -1,8 +1,8 @@
-<script type='text/javascript' src='{{ "/js/jquery.validate.min.js"|media }}'></script>
+<script type='text/javascript' src='{{ "/js/libs/jquery.validate.min.js"|media }}'></script>
 {% if settings.SIGNIN_MOZILLA_PERSONA_ENABLED %}
 <script type="text/javascript" src="https://login.persona.org/include.js"></script>
 {% endif %}
-<script type="text/javascript" src="{{ "/jquery-openid/jquery.openid.js"|media }}"></script>
+<script type="text/javascript" src="{{ "/askbot/jquery-openid/jquery.openid.js"|media }}"></script>
 <script type="text/javascript">
     askbot['urls']['changePassword'] = '{% url change_password %}';
     askbot['urls']['deleteLoginMethod'] = '{% url delete_login_method %}';

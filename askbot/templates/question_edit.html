@@ -3,7 +3,7 @@
 <!-- question_edit.html -->
 {% block title %}{% spaceless %}{{ settings.WORDS_EDIT_QUESTION|escape }}{% endspaceless %}{% endblock %}
 {% block forestyle %}
-    <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
+    <link rel="stylesheet" type="text/css" href="{{"/js/plugins/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}
 <div class="section-title">{{ settings.WORDS_EDIT_QUESTION|escape }} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</div>
@@ -49,8 +49,8 @@
             {% if form.can_edit_anonymously() %}
                 {{ macros.checkbox_in_div(form.reveal_identity) }}
             {% endif %}
-            {% if settings.GROUPS_ENABLED and 
-                request.user.is_authenticated() and 
+            {% if settings.GROUPS_ENABLED and
+                request.user.is_authenticated() and
                 request.user.can_make_group_private_posts()
             %}
                 {{ macros.checkbox_in_div(form.post_privately) }}
@@ -81,11 +81,11 @@
 
 {% block endjs %}
     {% include "meta/editor_data.html" %}
-    <script type='text/javascript' src='{{"/js/editor.js"|media }}'></script>
+    <script type='text/javascript' src='{{"/js/plugins/editor.js"|media }}'></script>
     {% if mandatory_tags %}
         {% include "meta/mandatory_tags_js.html" %}
     {% endif %}
-    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/libs/jquery.validate.min.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
     {% if settings.EDITOR_TYPE == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}
@@ -99,7 +99,7 @@
         //highlight code synctax when editor has new text
         $("#editor").typeWatch({highlight: false, wait: 3000,
                          captureLength: 5, callback: lanai.highlightSyntax});
-                         
+
         //toggle preview of editor
         var display = true;
         var txt = "[{% trans %}hide preview{% endtrans %}]";
@@ -110,9 +110,9 @@
             $('#previewer').toggle();
             $('#pre-collapse').text(txt);
         });
-        
+
         {{ macros.tag_autocomplete_js(id = '#id_tags') }}
-        
+
         setupFormValidation(
                     $("#fmedit"),
                     CPValidator.getQuestionFormRules(),
@@ -124,7 +124,7 @@
             $('#edit_post_form_submit_button').click();
         });
         lanai.highlightSyntax();
-        
+
     });
     </script>
     {% if settings.TAG_SOURCE == 'category-tree' %}

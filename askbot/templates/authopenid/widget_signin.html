@@ -4,7 +4,7 @@
 <!-- signin.html -->
 {% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forestyle %}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{"/jquery-openid/openid.css"|media}}"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="{{"/askbot/jquery-openid/openid.css"|media}}"/>
 {% endblock %}
 {% block forejs %}
     {% include "meta/bottom_scripts.html" %}
@@ -45,7 +45,7 @@
         #}
         {{ login_form.login_provider_name }}
         {{ login_form.next }}
-        {{ 
+        {{
             login_macros.provider_buttons(
                 login_form = login_form,
                 major_login_providers = major_login_providers,
@@ -57,7 +57,7 @@
             )
         }}
           {% if use_password_login == True %}
-        <fieldset 
+        <fieldset
             id="password-fs"
             {% if user.is_anonymous() %}
                 {% if not login_form.username.errors and not login_form.password_login_failed %}
@@ -138,7 +138,7 @@
         {% endif %}
     </form>
     {% if user.is_authenticated() and existing_login_methods and settings.ALLOW_ADD_REMOVE_LOGIN_METHODS %}
-    <div 
+    <div
         id='existing-login-methods'
         {% if login_form.password_change_failed %}
             style="display:none";

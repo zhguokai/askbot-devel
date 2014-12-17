@@ -15,7 +15,15 @@ var paths = {
 };
 
 var patterns = {
-    'js': [paths.js + '*.js', paths.js + '**/*.js', '!' + paths.js + '*.min.js', '!' + paths.js + '**/*.min.js']
+    'js': [
+        paths.js + '*.js',
+        paths.js + '**/*.js',
+        '!' + paths.js + '*.min.js',
+        '!' + paths.js + '**/*.min.js',
+        '!' + paths.js + 'libs/*.js',
+        '!' + paths.js + 'plugins/*.js',
+        '!' + paths.js + 'plugins/**/*.js'
+    ]
 };
 
 // TASKS

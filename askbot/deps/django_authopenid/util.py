@@ -48,17 +48,17 @@ class OpenID:
         self.attrs = attrs or {}
         self.sreg = sreg_ or {}
         self.is_iname = (xri.identifierScheme(openid_) == 'XRI')
-    
+
     def __repr__(self):
         return '<OpenID: %s>' % self.openid
-    
+
     def __str__(self):
         return self.openid
 
 class DjangoOpenIDStore(OpenIDStore):
     def __init__(self):
         self.max_nonce_age = 6 * 60 * 60 # Six hours
-    
+
     def storeAssociation(self, server_url, association):
         assoc = Association(
             server_url = server_url,
@@ -69,7 +69,7 @@ class DjangoOpenIDStore(OpenIDStore):
             assoc_type = association.assoc_type
         )
         assoc.save()
-    
+
     def getAssociation(self, server_url, handle=None):
         assocs = []
         if handle is not None:
@@ -95,7 +95,7 @@ class DjangoOpenIDStore(OpenIDStore):
         if not associations:
             return None
         return associations[-1][1]
-    
+
     def removeAssociation(self, server_url, handle):
         assocs = list(Association.objects.filter(
             server_url = server_url, handle = handle
@@ -108,7 +108,7 @@ class DjangoOpenIDStore(OpenIDStore):
     def useNonce(self, server_url, timestamp, salt):
         if abs(timestamp - time.time()) > openid_store.nonce.SKEW:
             return False
-        
+
         query = [
                 Q(server_url__exact=server_url),
                 Q(timestamp__exact=timestamp),
@@ -124,18 +124,18 @@ class DjangoOpenIDStore(OpenIDStore):
             )
             ononce.save()
             return True
-        
+
         ononce.delete()
 
         return False
-   
+
     def cleanupAssociations(self):
         Association.objects.extra(where=['issued + lifetimeint<(%s)' % time.time()]).delete()
 
     def getAuthKey(self):
         # Use first AUTH_KEY_LEN characters of md5 hash of SECRET_KEY
         return hashlib.md5(settings.SECRET_KEY).hexdigest()[:self.AUTH_KEY_LEN]
-    
+
     def isDumb(self):
         return False
 
@@ -144,9 +144,9 @@ def from_openid_response(openid_response):
     issued = int(time.time())
     sreg_resp = sreg.SRegResponse.fromSuccessResponse(openid_response) \
             or []
-    
+
     return OpenID(
-        openid_response.identity_url, issued, openid_response.signed_fields, 
+        openid_response.identity_url, issued, openid_response.signed_fields,
          dict(sreg_resp)
     )
 
@@ -238,7 +238,7 @@ class LoginMethod(object):
             raise ImproperlyConfigured(
                 'Integer value expected for %s.ORDER_NUMBER' % self.mod_path
             )
-            
+
         self.name = getattr(self.mod, 'NAME', None)
         if self.name is None or not isinstance(self.name, basestring):
             raise ImproperlyConfigured(
@@ -358,7 +358,7 @@ def get_enabled_major_login_providers():
     whose icons are to be shown in large format
 
     disabled providers are excluded
-    
+
     items of the dictionary are dictionaries with keys:
 
     * name
@@ -436,7 +436,7 @@ def get_enabled_major_login_providers():
             'auth_endpoint': 'https://www.facebook.com/dialog/oauth/',
             'token_endpoint': 'https://graph.facebook.com/oauth/access_token',
             'resource_endpoint': 'https://graph.facebook.com/',
-            'icon_media_path': '/jquery-openid/images/facebook.gif',
+            'icon_media_path': '/askbot/jquery-openid/images/facebook.gif',
             'get_user_id_function': get_facebook_user_id,
             'response_parser': lambda data: dict(urlparse.parse_qsl(data)),
             'scope': ['email',],
@@ -451,7 +451,7 @@ def get_enabled_major_login_providers():
             'authorize_url': 'https://api.twitter.com/oauth/authorize',
             'authenticate_url': 'https://api.twitter.com/oauth/authenticate',
             'get_user_id_url': 'https://twitter.com/account/verify_credentials.json',
-            'icon_media_path': '/jquery-openid/images/twitter.gif',
+            'icon_media_path': '/askbot/jquery-openid/images/twitter.gif',
             'get_user_id_function': lambda data: data['user_id'],
         }
     def get_identica_user_id(data):
@@ -471,7 +471,7 @@ def get_enabled_major_login_providers():
             'access_token_url': 'https://identi.ca/api/oauth/access_token',
             'authorize_url': 'https://identi.ca/api/oauth/authorize',
             'authenticate_url': 'https://identi.ca/api/oauth/authorize',
-            'icon_media_path': '/jquery-openid/images/identica.png',
+            'icon_media_path': '/askbot/jquery-openid/images/identica.png',
             'get_user_id_function': get_identica_user_id,
         }
     def get_linked_in_user_id(data):
@@ -503,7 +503,7 @@ def get_enabled_major_login_providers():
             'access_token_url': 'https://api.linkedin.com/uas/oauth/accessToken',
             'authorize_url': 'https://www.linkedin.com/uas/oauth/authorize',
             'authenticate_url': 'https://www.linkedin.com/uas/oauth/authenticate',
-            'icon_media_path': '/jquery-openid/images/linkedin.gif',
+            'icon_media_path': '/askbot/jquery-openid/images/linkedin.gif',
             'get_user_id_function': get_linked_in_user_id
         }
 
@@ -520,7 +520,7 @@ def get_enabled_major_login_providers():
                 'auth_endpoint': 'https://accounts.google.com/o/oauth2/auth',
                 'token_endpoint': 'https://accounts.google.com/o/oauth2/token',
                 'resource_endpoint': 'https://www.googleapis.com/plus/v1/people/',
-                'icon_media_path': '/jquery-openid/images/google.gif',
+                'icon_media_path': '/askbot/jquery-openid/images/google.gif',
                 'get_user_id_function': get_google_user_id,
                 'extra_auth_params': {'scope': ('profile', 'email', 'openid'), 'openid.realm': askbot_settings.APP_URL}
             }
@@ -529,7 +529,7 @@ def get_enabled_major_login_providers():
             'name': 'google',
             'display_name': 'Google',
             'type': 'openid-direct',
-            'icon_media_path': '/jquery-openid/images/google-openid.gif',
+            'icon_media_path': '/askbot/jquery-openid/images/google-openid.gif',
             'openid_endpoint': 'https://www.google.com/accounts/o8/id',
         }
 
@@ -537,13 +537,13 @@ def get_enabled_major_login_providers():
         'name': 'mozilla-persona',
         'display_name': 'Mozilla Persona',
         'type': 'mozilla-persona',
-        'icon_media_path': '/jquery-openid/images/mozilla-persona.gif',
+        'icon_media_path': '/askbot/jquery-openid/images/mozilla-persona.gif',
     }
     data['yahoo'] = {
         'name': 'yahoo',
         'display_name': 'Yahoo',
         'type': 'openid-direct',
-        'icon_media_path': '/jquery-openid/images/yahoo.gif',
+        'icon_media_path': '/askbot/jquery-openid/images/yahoo.gif',
         'tooltip_text': _('Sign in with Yahoo'),
         'openid_endpoint': 'http://yahoo.com',
     }
@@ -552,14 +552,14 @@ def get_enabled_major_login_providers():
         'display_name': 'AOL',
         'type': 'openid-username',
         'extra_token_name': _('AOL screen name'),
-        'icon_media_path': '/jquery-openid/images/aol.gif',
+        'icon_media_path': '/askbot/jquery-openid/images/aol.gif',
         'openid_endpoint': 'http://openid.aol.com/%(username)s'
     }
     data['launchpad'] = {
         'name': 'launchpad',
         'display_name': 'LaunchPad',
         'type': 'openid-direct',
-        'icon_media_path': '/jquery-openid/images/launchpad.gif',
+        'icon_media_path': '/askbot/jquery-openid/images/launchpad.gif',
         'tooltip_text': _('Sign in with LaunchPad'),
         'openid_endpoint': 'https://login.launchpad.net/'
     }
@@ -568,7 +568,7 @@ def get_enabled_major_login_providers():
         'display_name': 'OpenID',
         'type': 'openid-generic',
         'extra_token_name': _('OpenID url'),
-        'icon_media_path': '/jquery-openid/images/openid.gif',
+        'icon_media_path': '/askbot/jquery-openid/images/openid.gif',
         'openid_endpoint': None,
     }
     return filter_enabled_providers(data)
@@ -589,7 +589,7 @@ def get_enabled_minor_login_providers():
     #    'display_name': 'MyOpenid',
     #    'type': 'openid-username',
     #    'extra_token_name': _('MyOpenid user name'),
-    #    'icon_media_path': '/jquery-openid/images/myopenid-2.png',
+    #    'icon_media_path': '/askbot/jquery-openid/images/myopenid-2.png',
     #    'openid_endpoint': 'http://%(username)s.myopenid.com'
     #}
     data['flickr'] = {
@@ -597,7 +597,7 @@ def get_enabled_minor_login_providers():
         'display_name': 'Flickr',
         'type': 'openid-username',
         'extra_token_name': _('Flickr user name'),
-        'icon_media_path': '/jquery-openid/images/flickr.png',
+        'icon_media_path': '/askbot/jquery-openid/images/flickr.png',
         'openid_endpoint': 'http://flickr.com/%(username)s/'
     }
     data['technorati'] = {
@@ -605,7 +605,7 @@ def get_enabled_minor_login_providers():
         'display_name': 'Technorati',
         'type': 'openid-username',
         'extra_token_name': _('Technorati user name'),
-        'icon_media_path': '/jquery-openid/images/technorati-1.png',
+        'icon_media_path': '/askbot/jquery-openid/images/technorati-1.png',
         'openid_endpoint': 'http://technorati.com/people/technorati/%(username)s/'
     }
     data['wordpress'] = {
@@ -613,7 +613,7 @@ def get_enabled_minor_login_providers():
         'display_name': 'WordPress',
         'type': 'openid-username',
         'extra_token_name': _('WordPress blog name'),
-        'icon_media_path': '/jquery-openid/images/wordpress.png',
+        'icon_media_path': '/askbot/jquery-openid/images/wordpress.png',
         'openid_endpoint': 'http://%(username)s.wordpress.com'
     }
     data['blogger'] = {
@@ -621,7 +621,7 @@ def get_enabled_minor_login_providers():
         'display_name': 'Blogger',
         'type': 'openid-username',
         'extra_token_name': _('Blogger blog name'),
-        'icon_media_path': '/jquery-openid/images/blogger-1.png',
+        'icon_media_path': '/askbot/jquery-openid/images/blogger-1.png',
         'openid_endpoint': 'http://%(username)s.blogspot.com'
     }
     data['livejournal'] = {
@@ -629,7 +629,7 @@ def get_enabled_minor_login_providers():
         'display_name': 'LiveJournal',
         'type': 'openid-username',
         'extra_token_name': _('LiveJournal blog name'),
-        'icon_media_path': '/jquery-openid/images/livejournal-1.png',
+        'icon_media_path': '/askbot/jquery-openid/images/livejournal-1.png',
         'openid_endpoint': 'http://%(username)s.livejournal.com'
     }
     data['claimid'] = {
@@ -637,7 +637,7 @@ def get_enabled_minor_login_providers():
         'display_name': 'ClaimID',
         'type': 'openid-username',
         'extra_token_name': _('ClaimID user name'),
-        'icon_media_path': '/jquery-openid/images/claimid-0.png',
+        'icon_media_path': '/askbot/jquery-openid/images/claimid-0.png',
         'openid_endpoint': 'http://claimid.com/%(username)s/'
     }
     data['vidoop'] = {
@@ -645,7 +645,7 @@ def get_enabled_minor_login_providers():
         'display_name': 'Vidoop',
         'type': 'openid-username',
         'extra_token_name': _('Vidoop user name'),
-        'icon_media_path': '/jquery-openid/images/vidoop.png',
+        'icon_media_path': '/askbot/jquery-openid/images/vidoop.png',
         'openid_endpoint': 'http://%(username)s.myvidoop.com/'
     }
     data['verisign'] = {
@@ -653,7 +653,7 @@ def get_enabled_minor_login_providers():
         'display_name': 'Verisign',
         'type': 'openid-username',
         'extra_token_name': _('Verisign user name'),
-        'icon_media_path': '/jquery-openid/images/verisign-2.png',
+        'icon_media_path': '/askbot/jquery-openid/images/verisign-2.png',
         'openid_endpoint': 'http://%(username)s.pip.verisignlabs.com/'
     }
     return filter_enabled_providers(data)
@@ -679,8 +679,8 @@ def get_enabled_login_providers():
 def set_login_provider_tooltips(provider_dict, active_provider_names = None):
     """adds appropriate tooltip_text field to each provider
     record, if second argument is None, then tooltip is of type
-    signin with ..., otherwise it's more elaborate - 
-    depending on the type of provider and whether or not it's one of 
+    signin with ..., otherwise it's more elaborate -
+    depending on the type of provider and whether or not it's one of
     currently used
     """
     for provider in provider_dict.values():
@@ -787,7 +787,7 @@ class OAuthConnection(object):
 
         if callback_url is None:
             callback_url = self.callback_url
-        
+
         client = oauth.Client(self.consumer)
         request_url = self.parameters['request_token_url']
 
@@ -799,7 +799,7 @@ class OAuthConnection(object):
                                             client = client,
                                             url = request_url,
                                             method = 'POST',
-                                            body = request_body 
+                                            body = request_body
                                         )
         else:
             self.request_token = self.send_request(

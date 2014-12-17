@@ -273,9 +273,9 @@ ENABLE_HAYSTACK_SEARCH = False
 
 TINYMCE_COMPRESSOR = True
 TINYMCE_SPELLCHECKER = False
-TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'default/media/js/tinymce/')
+TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'default/media/js/plugins/tinymce/')
 
-#TINYMCE_JS_URL = STATIC_URL + 'default/media/js/tinymce/tiny_mce.js'
+#TINYMCE_JS_URL = STATIC_URL + 'default/media/js/plugins/tinymce/tiny_mce.js'
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': 'askbot_imageuploader,askbot_attachment',
     'convert_urls': False,

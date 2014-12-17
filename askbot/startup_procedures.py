@@ -721,7 +721,7 @@ def test_tinymce():
     if compressor_on is False:
         errors.append('add line: TINYMCE_COMPRESSOR = True')
         #todo: add pointer to instructions on how to debug tinymce:
-        #1) add ('tiny_mce', os.path.join(ASKBOT_ROOT, 'media/js/tinymce')),
+        #1) add ('tiny_mce', os.path.join(ASKBOT_ROOT, 'media/js/plugins/tinymce')),
         #   to STATIFILES_DIRS
         #2) add this to the main urlconf:
         #    (
@@ -749,8 +749,8 @@ def test_tinymce():
     #check js root setting - before version 0.7.44 we used to have
     #"common" skin and after we combined it into the default
     js_root = getattr(django_settings, 'TINYMCE_JS_ROOT', '')
-    old_relative_js_path = 'common/media/js/tinymce/'
-    relative_js_path = 'default/media/js/tinymce/'
+    old_relative_js_path = 'common/media/js/plugins/tinymce/'
+    relative_js_path = 'default/media/js/plugins/tinymce/'
     expected_js_root = os.path.join(django_settings.STATIC_ROOT, relative_js_path)
     old_expected_js_root = os.path.join(django_settings.STATIC_ROOT, old_relative_js_path)
     if os.path.normpath(js_root) != os.path.normpath(expected_js_root):

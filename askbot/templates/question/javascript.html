@@ -16,10 +16,10 @@
     })();
 </script>
 {% compress js %}
-<script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
+<script type='text/javascript' src='{{"/js/plugins/editor.js"|media}}'></script>
 <script type="text/javascript" src='{{"/bootstrap/js/bootstrap.js"|media}}'></script>
 {% include "meta/markdown_javascript.html" %}
-<script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
+<script type='text/javascript' src='{{"/js/libs/jquery.validate.min.js"|media}}'></script>
 <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
 {% endcompress %}
 <script type="text/javascript">
@@ -28,18 +28,18 @@
     $(document).ready(function(){
         $("#nav_questions").attr('className',"on");
         $("#" + askbot['data']['answersSortTab']).attr('className',"on");
-        
+
         Vote.init(
             askbot['data']['questionId'],
             askbot['data']['threadSlug'],
             askbot['data']['questionAuthorId'],
             askbot['data']['userId']
         );
-        
+
         if ((askbot['data']['threadIsClosed'] === false) && askbot['data']['userIsAuthenticated']) {
             initEditor();
         }
-        
+
         lanai.highlightSyntax();
         $('#btLogin').bind('click', function(){
             window.location.href='{{ settings.LOGIN_URL }}';
@@ -92,13 +92,13 @@
       }
     }
 
-    
+
     function initEditor(){
         $('#editor').TextAreaResizer();
         //highlight code synctax when editor has new text
         $("#editor").typeWatch({highlight: false, wait: 3000,
                          captureLength: 5, callback: lanai.highlightSyntax});
-                         
+
         var display = true;
         var txt = "[{% trans %}hide preview{% endtrans %}]";
         $('#pre-collapse').text(txt);

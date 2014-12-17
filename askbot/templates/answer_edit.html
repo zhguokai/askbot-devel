@@ -3,7 +3,7 @@
 <!-- template answer_edit.html -->
 {% block title %}{% spaceless %}{{ settings.WORDS_EDIT_ANSWER|escape }}{% endspaceless %}{% endblock %}
 {% block forestyle %}
-    <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
+    <link rel="stylesheet" type="text/css" href="{{"/js/plugins/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}
 <div class="section-title">
@@ -32,7 +32,7 @@
         {% if settings.ENABLE_EMAIL_ALERTS %}
             {{ macros.checkbox_in_div(form.suppress_email) }}
         {% endif %}
-        {% if settings.GROUPS_ENABLED and 
+        {% if settings.GROUPS_ENABLED and
             request.user.is_authenticated() and
             request.user.can_make_group_private_posts()
         %}
@@ -40,12 +40,12 @@
         {% endif %}
         </div>
         <div class="after-editor">
-            <input 
+            <input
                 id="edit_post_form_submit_button"
                 type="submit"
                 value="{% trans %}Save edit{% endtrans %}"
             />&nbsp;
-            <input 
+            <input
                 type="button"
                 value="{% trans %}Cancel{% endtrans %}"
                 class="cancel"
@@ -63,8 +63,8 @@
 
 {% block endjs %}
     {% include "meta/editor_data.html" %}
-    <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/plugins/editor.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/libs/jquery.validate.min.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
     {% if settings.EDITOR_TYPE == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}
@@ -73,11 +73,11 @@
         $().ready(function(){
             $("#nav_questions").attr('className',"on");
             $('#editor').TextAreaResizer();
-            
+
             //highlight code synctax when editor has new text
             $("#editor").typeWatch({highlight: false, wait: 3000,
                              captureLength: 5, callback: lanai.highlightSyntax});
-                             
+
             //toggle preview of editor
             var display = true;
             var txt = "{% trans %}hide preview{% endtrans %}";
@@ -94,14 +94,14 @@
                 CPValidator.getAnswerFormRules(),
                 CPValidator.getAnswerFormMessages()
             );
-            
+
             $('#id_revision').unbind().change(function(){
                 $("#select_revision").val('true');
                 $('#edit_post_form_submit_button').click();
             });
-            
+
             lanai.highlightSyntax();
-            
+
         });
     </script>
 {% endblock %}
