@@ -700,7 +700,7 @@ AutoCompleter.prototype.isContentChar = function(symbol){
  * and saves _selection_start and _selection_end coordinates
  * respects settings autocompleteMultiple and
  * multipleSeparator
- * @return {string} the current word in the 
+ * @return {string} the current word in the
  * autocompletable word
  */
 AutoCompleter.prototype.getValue = function(){
@@ -736,7 +736,7 @@ AutoCompleter.prototype.getValue = function(){
     return text.substring(start, end);
 }
 
-/** 
+/**
  * sets value of the input box
  * by replacing the previous selection
  * with the value from the autocompleter

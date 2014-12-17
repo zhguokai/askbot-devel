@@ -84,7 +84,7 @@ SearchDropMenu.prototype.selectItem = function(idx) {
         var itemSinkHeight = item.outerHeight() - itemPeepHeight;
         if (itemSinkHeight > 0) {
             list.scrollTop(curScrollTop + itemSinkHeight);
-        } 
+        }
     }
 
 };
@@ -350,7 +350,7 @@ InputToolTip.prototype.decorate = function(element) {
     this._element = element;
     var handler = this._clickHandler;
     var me = this;
-    element.click(function() { 
+    element.click(function() {
         handler();
         me.dim();
         return false;
@@ -361,7 +361,7 @@ InputToolTip.prototype.decorate = function(element) {
         }
     });
 };
-    
+
 
 /**
  * @constructor
@@ -446,7 +446,7 @@ FullTextSearch.prototype.updateHistory = function(url) {
     var context = { state:1, rand:Math.random() };
     History.pushState( context, "Questions", url );
     setTimeout(function(){
-            /* HACK: For some weird reson, sometimes 
+            /* HACK: For some weird reson, sometimes
              * overrides the above pushState so we re-aplly it
              * This might be caused by some other JS plugin.
              * The delay of 10msec allows the other plugin to override the URL.
@@ -609,7 +609,7 @@ FullTextSearch.prototype.renderFullTextSearchResult = function(data) {
         //show new div with a fadeIn effect
         old_list.remove();
         new_list.attr('id', q_list_sel);
-        new_list.fadeIn(400);            
+        new_list.fadeIn(400);
     });
 };
 

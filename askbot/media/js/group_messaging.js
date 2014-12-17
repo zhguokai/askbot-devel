@@ -113,7 +113,7 @@ MessageComposer.prototype.dataIsValid = function() {
     return result;
 };
 
-/** override these two 
+/** override these two
  * @param {object} data - the response data
  * these functions will run after .send() receives
  * the response
@@ -636,9 +636,9 @@ MessageCenter.prototype.decorate = function(element) {
     //activate compose button
     var btn = element.find('.js-compose-btn');
     var me = this;
-    setupButtonEventHandlers(btn, function(){ 
+    setupButtonEventHandlers(btn, function(){
         editor.setEditorType('new-thread');
-        me.setState('compose') 
+        me.setState('compose')
     });
     this._composeBtn = btn;
 };
