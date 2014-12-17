@@ -19,15 +19,15 @@
                     <span class="karma-lost">{{ rep.negative }}</span>
                     {{ rep.get_explanation_snippet() }}
                     <span class="small">({{ timeago(rep.reputed_at) }})</span>
-                    <div class="clean"></div>                  
+                    <div class="clean"></div>
                 </p>
                 {% endfor %}
             </div>
         </div>
 {% endblock %}
 {% block userjs %}
-       <script type='text/javascript' src='{{"/js/excanvas.min.js"|media}}'></script>
-       <script type='text/javascript' src='{{"/js/jquery.flot.min.js"|media}}'></script>
+       <script type='text/javascript' src='{{"/js/libs/excanvas.min.js"|media}}'></script>
+       <script type='text/javascript' src='{{"/js/libs/jquery.flot.min.js"|media}}'></script>
        <script type="text/javascript">
             $().ready(function(){
                 var d = {{ reps }};
