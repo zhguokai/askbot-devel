@@ -29,12 +29,12 @@
     {% if settings.MULTILINGUAL %}
     <h2>{% trans %}Subscribed languages{% endtrans %}</h2>
     <form
-        method="post" 
+        method="post"
         action="{% url user_select_languages view_user.id, view_user.username|slugify %}"
     >{% csrf_token %}
         <select multiple name="languages">
         {% for lang in settings.LANGUAGES_DICT %}
-            <option 
+            <option
                 value="{{ lang }}"
                 {% if lang in user_languages %}selected="selected"{% endif %}
             >{{ settings.LANGUAGES_DICT[lang] }}</option>
@@ -70,6 +70,6 @@
         askbot['urls']['unmark_tag'] = '{% url unmark_tag %}';
         askbot['settings']['tag_editor'] = '{{ tag_editor_settings|escapejs }}';
     </script>
-    <script type='text/javascript' src='{{"/js/tag_selector.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/askbot/tag_selector.js"|media}}'></script>
 {% endblock %}
 <!-- end user_email_subscriptions.html -->

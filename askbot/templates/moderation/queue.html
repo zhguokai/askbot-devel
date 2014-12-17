@@ -45,7 +45,7 @@
     <div class="action-status"><span></span></div>
     <div class="messages">
     {% for message in messages %}
-        <div 
+        <div
             class="message{% if message.is_new %} highlight new{% else %} seen{% endif %}"
             data-message-id="{{ message.id }}"
         >
@@ -56,7 +56,7 @@
 {% endblock %}
 {% block endjs %}
     {# todo: factor out moderation.js file #}
-    <script type="text/javascript" src="{{ '/js/user.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/askbot/user.js'|media }}"></script>
     <script type="text/javascript">
         (function() {
             askbot['urls']['save_post_reject_reason'] = '{% url save_post_reject_reason %}';
