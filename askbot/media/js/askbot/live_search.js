@@ -3,7 +3,7 @@ var SearchDropMenu = function() {
     this._data = undefined;
     this._selectedItemIndex = 0;
     this._askButtonEnabled = true;
-}
+};
 inherits(SearchDropMenu, WrappedElement);
 
 SearchDropMenu.prototype.setData = function(data) {
@@ -36,8 +36,8 @@ SearchDropMenu.prototype.render = function() {
     $.each(this._data, function(idx, item) {
         var listItem = me.makeElement('li');
         var link = me.makeElement('a');
-        link.attr('href', item['url']);
-        link.html(item['title']);
+        link.attr('href', item.url);
+        link.html(item.title);
         listItem.append(link);
         list.append(listItem);
     });
@@ -53,7 +53,7 @@ SearchDropMenu.prototype.render = function() {
 SearchDropMenu.prototype.clearSelectedItem = function() {
     this._selectedItemIndex = 0;
     this._resultsList.find('li').removeClass('selected');
-}
+};
 
 /**
  * @param {number} idx position of item starting from 1 for the topmost
@@ -150,7 +150,7 @@ SearchDropMenu.prototype.makeKeyHandler = function() {
                 widget.setFullTextSearchEnabled(false);
                 me.selectItem(curItem);
             }
-            return false
+            return false;
         }
     };
 };
@@ -191,7 +191,7 @@ SearchDropMenu.prototype.createDom = function() {
     this._element.addClass('search-drop-menu');
     this._element.hide();
 
-    if (askbot['data']['languageCode'] === 'ja') {
+    if (askbot.data.languageCode === 'ja') {
         var warning = this.makeElement('p');
         this._header = warning;
         warning.addClass('header');
@@ -217,7 +217,7 @@ SearchDropMenu.prototype.createDom = function() {
         footer.addClass('footer');
         var button = this.makeElement('button');
         button.addClass('submit btn btn-default');
-        button.html(gettext('Ask Your Question'))
+        button.html(gettext('Ask Your Question'));
         footer.append(button);
         var handler = this._askHandler;
         setupButtonEventHandlers(button, handler);
@@ -372,10 +372,10 @@ InputToolTip.prototype.decorate = function(element) {
 var FullTextSearch = function() {
     WrappedElement.call(this);
     this._running = false;
-    this._baseUrl = askbot['urls']['questions'];
+    this._baseUrl = askbot.urls.questions;
     this._q_list_sel = 'question-list';//id of question listing div
     /** @todo: the questions/ needs translation... */
-    this._searchUrl = '/scope:all/sort:activity-desc/page:1/'
+    this._searchUrl = '/scope:all/sort:activity-desc/page:1/';
     this._askButtonEnabled = true;
     this._fullTextSearchEnabled = true;
 };
@@ -396,7 +396,7 @@ FullTextSearch.prototype.isRunning = function(val) {
 
 FullTextSearch.prototype.setAskButtonEnabled = function(isEnabled) {
     this._askButtonEnabled = isEnabled;
-}
+};
 
 /**
  * @param {{string}} url for the page displaying search results
@@ -444,14 +444,14 @@ FullTextSearch.prototype.runTagSearch = function() {
 
 FullTextSearch.prototype.updateHistory = function(url) {
     var context = { state:1, rand:Math.random() };
-    History.pushState( context, "Questions", url );
+    History.pushState(context, 'Questions', url);
     setTimeout(function(){
             /* HACK: For some weird reson, sometimes
              * overrides the above pushState so we re-aplly it
              * This might be caused by some other JS plugin.
              * The delay of 10msec allows the other plugin to override the URL.
              */
-            History.replaceState(context, "Questions", url);
+            History.replaceState(context, 'Questions', url);
         },
         10
     );
@@ -465,7 +465,7 @@ FullTextSearch.prototype.activateTagSearchInput = function() {
     }
     var me = this;
     var ac = new AutoCompleter({
-        url: askbot['urls']['get_tag_list'],
+        url: askbot.urls.get_tag_list,
         minChars: 1,
         useCache: true,
         matchInside: true,
@@ -477,7 +477,7 @@ FullTextSearch.prototype.activateTagSearchInput = function() {
     ac.decorate($('#ab-tag-search'));
     setupButtonEventHandlers(
         button,
-        function() { me.runTagSearch() }
+        function() { me.runTagSearch(); }
     );
 };
 
@@ -487,7 +487,7 @@ FullTextSearch.prototype.sendTitleSearchQuery = function(query_text) {
     var data = {query_text: query_text};
     var me = this;
     $.ajax({
-        url: askbot['urls']['apiGetQuestions'],
+        url: askbot.urls.apiGetQuestions,
         data: data,
         dataType: 'json',
         success: function(data, text_status, xhr){
@@ -506,7 +506,7 @@ FullTextSearch.prototype.sendFullTextSearchQuery = function(query_text) {
     this.isRunning(true);
     var searchUrl = this.getSearchUrl();
     var prevText = this._prevText;
-    if(!prevText && query_text && askbot['settings']['showSortByRelevance']) {
+    if(!prevText && query_text && askbot.settings.showSortByRelevance) {
         /* If there was no query but there is some
          * query now - and we support relevance search
          * - then switch to it
@@ -558,27 +558,27 @@ FullTextSearch.prototype.renderTitleSearchResult = function(data) {
 };
 
 FullTextSearch.prototype.renderFullTextSearchResult = function(data) {
-    if (data['questions'].length === 0) {
+    if (data.questions.length === 0) {
         return;
     }
 
-    $('#pager').toggle(data['paginator'] !== '').html(data['paginator']);
-    $('#questionCount').html(data['question_counter']);
-    this.renderSearchTags(data['query_data']['tags'], data['query_string']);
-    if(data['faces'].length > 0) {
+    $('#pager').toggle(data.paginator !== '').html(data.paginator);
+    $('#questionCount').html(data.question_counter);
+    this.renderSearchTags(data.query_data.tags, data.query_string);
+    if(data.faces.length > 0) {
         $('#contrib-users > a').remove();
-        $('#contrib-users').append(data['faces'].join(''));
+        $('#contrib-users').append(data.faces.join(''));
     }
-    this.renderRelatedTags(data['related_tags'], data['query_string']);
-    this.renderRelevanceSortTab(data['query_string']);
-    this.renderTagWarning(data['non_existing_tags']);
+    this.renderRelatedTags(data.related_tags, data.query_string);
+    this.renderRelevanceSortTab(data.query_string);
+    this.renderTagWarning(data.non_existing_tags);
     this.setActiveSortTab(
-        data['query_data']['sort_order'],
-        data['query_string']
+        data.query_data.sort_order,
+        data.query_string
     );
-    if(data['feed_url']){
+    if(data.feed_url){
         // Change RSS URL
-        $("#ContentLeft a.rss:first").attr("href", data['feed_url']);
+        $('#ContentLeft a.rss:first').attr('href', data.feed_url);
     }
 
     // Patch scope selectors
@@ -586,7 +586,7 @@ FullTextSearch.prototype.renderFullTextSearchResult = function(data) {
     $('#scopeWrapper > a.scope-selector').each(function(index) {
         var old_qs = $(this).attr('href').replace(baseUrl, '');
         var scope = QSutils.get_query_string_selector_value(old_qs, 'scope');
-        qs = QSutils.patch_query_string(data['query_string'], 'scope:' + scope);
+        qs = QSutils.patch_query_string(data.query_string, 'scope:' + scope);
         $(this).attr('href', baseUrl + qs);
     });
 
@@ -595,13 +595,13 @@ FullTextSearch.prototype.renderFullTextSearchResult = function(data) {
     var askHrefBase = askButton.attr('href').split('?')[0];
     askButton.attr(
         'href',
-        askHrefBase + data['query_data']['ask_query_string']
+        askHrefBase + data.query_data.ask_query_string
     ); /* INFO: ask_query_string should already be URL-encoded! */
 
     this._query.focus();
 
     var old_list = $('#' + this._q_list_sel);
-    var new_list = $('<div></div>').hide().html(data['questions']);
+    var new_list = $('<div></div>').hide().html(data.questions);
     new_list.find('.timeago').timeago();
 
     var q_list_sel = this._q_list_sel;
@@ -617,7 +617,7 @@ FullTextSearch.prototype.evalTitleSearchQuery = function() {
     var cur_query = this.getSearchQuery();
     var prevText = this._prevText;
     if (cur_query !== prevText && this.isRunning() === false){
-        if (cur_query.length >= askbot['settings']['minSearchWordLength']){
+        if (cur_query.length >= askbot.settings.minSearchWordLength){
             this.sendTitleSearchQuery(cur_query);
         } else if (cur_query.length === 0){
             this.reset();
@@ -659,19 +659,21 @@ FullTextSearch.prototype.updateQueryString = function(query_text) {
 };
 
 FullTextSearch.prototype.renderRelatedTags = function(tags, query_string){
-    if (tags.length === 0) return;
+    if (tags.length === 0) {
+        return;
+    }
 
     var html_list = [];
     for (var i=0; i<tags.length; i++){
         var tag = new Tag();
-        tag.setName(tags[i]['name']);
+        tag.setName(tags[i].name);
         tag.setDeletable(false);
         tag.setLinkable(true);
         tag.setUrlParams(query_string);
 
         html_list.push(tag.getElement().outerHTML());
         html_list.push('<span class="tag-number">&#215; ');
-        html_list.push(tags[i]['used_count']);
+        html_list.push(tags[i].used_count);
         html_list.push('</span>');
         html_list.push('<br />');
     }
@@ -709,13 +711,13 @@ FullTextSearch.prototype.createRelevanceTab = function(query_string){
     relevance_tab.attr('href', href);
     relevance_tab.attr('id', 'by_relevance');
     relevance_tab.html(
-        '<span>' + askbot['data']['sortButtonData']['relevance']['label'] + '</span>'
+        '<span>' + askbot.data.sortButtonData.relevance.label + '</span>'
     );
     return relevance_tab;
 };
 
 FullTextSearch.prototype.removeSearchTag = function(tag) {
-    var searchUrl = this.getSearchUrl()
+    var searchUrl = this.getSearchUrl();
     searchUrl = QSutils.remove_search_tag(searchUrl, tag);
     this.setSearchUrl(searchUrl);
     this.sendFullTextSearchQuery();
@@ -729,7 +731,7 @@ FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string){
         var tab = $(element);
         if ( tab.attr('id') ) {
             var tab_name = tab.attr('id').replace(/^by_/,'');
-            if (tab_name in askbot['data']['sortButtonData']){
+            if (tab_name in askbot.data.sortButtonData){
                 href = baseUrl + QSutils.patch_query_string(
                                         query_string,
                                         'sort:' + tab_name + '-desc'
@@ -737,10 +739,10 @@ FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string){
                 tab.attr('href', href);
                 tab.attr(
                     'title',
-                    askbot['data']['sortButtonData'][tab_name]['desc_tooltip']
+                    askbot.data.sortButtonData[tab_name].desc_tooltip
                 );
                 tab.html(
-                    askbot['data']['sortButtonData'][tab_name]['label']
+                    askbot.data.sortButtonData[tab_name].label
                 );
             }
         }
@@ -748,27 +750,27 @@ FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string){
     var bits = sort_method.split('-', 2);
     var name = bits[0];
     var sense = bits[1];//sense of sort
-    var antisense = (sense == 'asc' ? 'desc':'asc');
-    var arrow = (sense == 'asc' ? ' &#9650;':' &#9660;');
+    var antisense = (sense === 'asc' ? 'desc':'asc');
+    var arrow = (sense === 'asc' ? ' &#9650;':' &#9660;');
     var active_tab = $('#by_' + name);
     active_tab.attr('class', 'on');
     active_tab.attr(
         'title',
-        askbot['data']['sortButtonData'][name][antisense + '_tooltip']
+        askbot.data.sortButtonData[name][antisense + '_tooltip']
     );
     active_tab.html(
-        askbot['data']['sortButtonData'][name]['label'] + arrow
+        askbot.data.sortButtonData[name].label + arrow
     );
 };
 
 FullTextSearch.prototype.renderRelevanceSortTab = function(query_string) {
-    if (askbot['settings']['showSortByRelevance'] === false){
+    if (askbot.settings.showSortByRelevance === false){
         return;
     }
     var relevance_tab = $('#by_relevance');
     var prevText = this._prevText;
     if (prevText && prevText.length > 0){
-        if (relevance_tab.length == 0){
+        if (relevance_tab.length === 0){
             relevance_tab = this.createRelevanceTab(query_string);
             $('#sort_tabs>span').after(relevance_tab);
         }
@@ -783,7 +785,7 @@ FullTextSearch.prototype.makeAskHandler = function() {
     var me = this;
     return function() {
         var query = me.getSearchQuery();
-        window.location.href = askbot['urls']['ask'] + '?title=' + query;
+        window.location.href = askbot.urls.ask + '?title=' + query;
         return false;
     };
 };
@@ -827,7 +829,7 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
         var query = me.getSearchQuery();
         if (query.length) {
             me.refreshXButton();
-            var minQueryLength = askbot['settings']['minSearchWordLength'];
+            var minQueryLength = askbot.settings.minSearchWordLength;
             if (query.length === minQueryLength) {
                 if (keyCode !== 8 && keyCode !== 48) {//del and backspace
                     /* we get here if we were expanding the query
@@ -871,7 +873,7 @@ FullTextSearch.prototype.decorate = function(element) {
     this._dropMenu = dropMenu;
     $('div.search-bar').append(this._dropMenu.getElement());
 
-    $(element).click(function(e) { return false });
+    $(element).click(function(e) { return false; });
     $(document).click(function() { dropMenu.reset(); });
 
     //the tag search input is optional in askbot
@@ -909,7 +911,7 @@ FullTextSearch.prototype.decorate = function(element) {
         if (me.isRunning() === false){
             clearTimeout(main_page_eval_handle);
             main_page_eval_handle = setTimeout(
-                function() { me.evalTitleSearchQuery() },
+                function() { me.evalTitleSearchQuery(); },
                 400
             );
         }
@@ -917,7 +919,7 @@ FullTextSearch.prototype.decorate = function(element) {
 
     this.activateTagSearchInput();
 
-    $("form#searchForm").submit(me.makeFormSubmitHandler());
+    $('form#searchForm').submit(me.makeFormSubmitHandler());
 };
 
 /**
@@ -973,10 +975,10 @@ TagSearch.prototype.runSearch = function() {
         dataType: 'json',
         data: data,
         cache: false,
-        url: askbot['urls']['tags'],
+        url: askbot.urls.tags,
         success: function(data) {
-            if (data['success']) {
-                me.renderResult(data['html']);
+            if (data.success) {
+                me.renderResult(data.html);
                 me.setIsRunning(false);
                 //rerun if query changed meanwhile
                 if (query !== me.getQuery()) {
@@ -1037,5 +1039,5 @@ TagSearch.prototype.decorate = function(element) {
     element.keydown(this.makeKeyDownHandler());
 
     var me = this;
-    this._xButton.click(function(){ me.reset() });
+    this._xButton.click(function(){ me.reset(); });
 };
