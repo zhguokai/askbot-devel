@@ -1,4 +1,4 @@
-var setup_inbox = function(){
+var setup_inbox = function () {
     var page = $('.inbox-forum');
     if (page.length) {
         var clearNotifs = $('.js-manage-messages');
@@ -9,13 +9,13 @@ var setup_inbox = function(){
     }
 };
 
-var setup_badge_details_toggle = function(){
-    $('.badge-context-toggle').each(function(idx, elem){
+var setup_badge_details_toggle = function () {
+    $('.badge-context-toggle').each(function (idx, elem) {
         var context_list = $(elem).parent().next('ul');
-        if (context_list.children().length > 0){
+        if (context_list.children().length > 0) {
             $(elem).addClass('active');
-            var toggle_display = function(){
-                if (context_list.css('display') == 'none'){
+            var toggle_display = function () {
+                if (context_list.css('display') === 'none') {
                     $('.badge-context-list').hide();
                     context_list.show();
                 } else {
@@ -27,33 +27,33 @@ var setup_badge_details_toggle = function(){
     });
 };
 
-var ResponseNotifs = function() {
+var ResponseNotifs = function () {
     WrappedElement.call(this);
 };
 inherits(ResponseNotifs, WrappedElement);
 
-ResponseNotifs.prototype.showMessage = function(text) {
+ResponseNotifs.prototype.showMessage = function (text) {
     this._actionStatus.html(text);
     this._actionStatus.parent().fadeIn('fast');
 };
 
-ResponseNotifs.prototype.hideMessage = function() {
+ResponseNotifs.prototype.hideMessage = function () {
     this._actionStatus.fadeOut('fast');
 };
 
-ResponseNotifs.prototype.uncheckNotifs = function(memoIds) {
+ResponseNotifs.prototype.uncheckNotifs = function (memoIds) {
     var snippets = this.getSnippets(memoIds);
     snippets.find('input[type="checkbox"]').prop('checked', false);
 };
 
-ResponseNotifs.prototype.clearNewNotifs = function(memoIds) {
+ResponseNotifs.prototype.clearNewNotifs = function (memoIds) {
     var snippets = this.getSnippets(memoIds);
     snippets.removeClass('new highlight');
 };
 
-ResponseNotifs.prototype.makeMarkAsSeenHandler = function() {
+ResponseNotifs.prototype.makeMarkAsSeenHandler = function () {
     var me = this;
-    return function() {
+    return function () {
         var memoIds = me.getCheckedMemoIds();
         if (memoIds.length == 0) {
             me.showMessage(gettext('Please select at least one item'));
@@ -64,9 +64,9 @@ ResponseNotifs.prototype.makeMarkAsSeenHandler = function() {
             cache: false,
             dataType: 'json',
             data: JSON.stringify({'memo_ids': memoIds}),
-            url: askbot['urls']['clearNewNotifications'],
-            success: function(response_data){
-                if (response_data['success']) {
+            url: askbot.urls.clearNewNotifications,
+            success: function (response_data) {
+                if (response_data.success) {
                     me.hideMessage();
                     me.clearNewNotifs(memoIds);
                     me.uncheckNotifs(memoIds);
@@ -76,19 +76,19 @@ ResponseNotifs.prototype.makeMarkAsSeenHandler = function() {
     };
 };
 
-ResponseNotifs.prototype.makeSelectAllHandler = function() {
-    return function() {
+ResponseNotifs.prototype.makeSelectAllHandler = function () {
+    return function () {
         $('.messages input[type="checkbox"]').prop('checked', true);
     }
 };
 
-ResponseNotifs.prototype.makeSelectNoneHandler = function() {
-    return function() {
+ResponseNotifs.prototype.makeSelectNoneHandler = function () {
+    return function () {
         $('.messages input[type="checkbox"]').prop('checked', false);
     }
 };
 
-ResponseNotifs.prototype.getSnippets = function(memoIds) {
+ResponseNotifs.prototype.getSnippets = function (memoIds) {
     var snippets = $();
     for (var i = 0; i < memoIds.length; i++) {
         var memoId = memoIds[i];
@@ -97,12 +97,12 @@ ResponseNotifs.prototype.getSnippets = function(memoIds) {
     return snippets;
 };
 
-ResponseNotifs.prototype.deleteSnippets = function(memoIds) {
+ResponseNotifs.prototype.deleteSnippets = function (memoIds) {
     var snippets = this.getSnippets(memoIds);
     snippets.fadeOut();
 };
 
-ResponseNotifs.prototype.getCheckedMemoIds = function() {
+ResponseNotifs.prototype.getCheckedMemoIds = function () {
     var memoIds = [];
     var checkedCb = $('.messages :checked');
     for (var i = 0; i < checkedCb.length; i++) {
@@ -113,9 +113,9 @@ ResponseNotifs.prototype.getCheckedMemoIds = function() {
     return memoIds;
 };
 
-ResponseNotifs.prototype.makeDeleteHandler = function() {
+ResponseNotifs.prototype.makeDeleteHandler = function () {
     var me = this;
-    return function() {
+    return function () {
         var memoIds = me.getCheckedMemoIds();
         if (memoIds.length == 0) {
             me.showMessage(gettext('Please select at least one item'));
@@ -126,9 +126,9 @@ ResponseNotifs.prototype.makeDeleteHandler = function() {
             cache: false,
             dataType: 'json',
             data: JSON.stringify({'memo_ids': memoIds}),
-            url: askbot['urls']['deleteNotifications'],
-            success: function(response_data){
-                if (response_data['success']) {
+            url: askbot.urls.deleteNotifications,
+            success: function (response_data) {
+                if (response_data.success) {
                     me.hideMessage();
                     me.deleteSnippets(memoIds);
                 }
@@ -138,7 +138,7 @@ ResponseNotifs.prototype.makeDeleteHandler = function() {
     };
 };
 
-ResponseNotifs.prototype.decorate = function(element) {
+ResponseNotifs.prototype.decorate = function (element) {
     this._element = element;
 
     this._actionStatus = $('.action-status span');
@@ -158,23 +158,23 @@ ResponseNotifs.prototype.decorate = function(element) {
 
 /**
 * the dropdown menu with selection of reasons
-* to reject posts and a button that starts menu to 
+* to reject posts and a button that starts menu to
 * manage the list of reasons
 */
-var DeclineAndExplainMenu = function() {
+var DeclineAndExplainMenu = function () {
     WrappedElement.call(this);
 };
 inherits(DeclineAndExplainMenu, WrappedElement);
 
-DeclineAndExplainMenu.prototype.setupDeclinePostHandler = function(button) {
+DeclineAndExplainMenu.prototype.setupDeclinePostHandler = function (button) {
     var me = this;
     var reasonId = button.data('reasonId');
     var controls = this.getControls();
-    var handler = controls.getModHandler('decline-with-reason', ['posts'], reasonId);
+    var handler = controls.getModHandler('decline-with-reason', .posts, reasonId);
     setupButtonEventHandlers(button, handler);
 };
 
-DeclineAndExplainMenu.prototype.addReason = function(id, title) {
+DeclineAndExplainMenu.prototype.addReason = function (id, title) {
     var li = this.makeElement('li');
     var button = this.makeElement('a');
     li.append(button);
@@ -186,27 +186,27 @@ DeclineAndExplainMenu.prototype.addReason = function(id, title) {
     this.setupDeclinePostHandler(button);
 };
 
-DeclineAndExplainMenu.prototype.removeReason = function(id) {
+DeclineAndExplainMenu.prototype.removeReason = function (id) {
     var btn = this._element.find('a[data-reason-id="' + id + '"]');
     btn.parent().remove();
 };
 
-DeclineAndExplainMenu.prototype.setControls = function(controls) {
+DeclineAndExplainMenu.prototype.setControls = function (controls) {
     this._controls = controls;
 };
 
-DeclineAndExplainMenu.prototype.getControls = function() {
+DeclineAndExplainMenu.prototype.getControls = function () {
     return this._controls;
 };
 
-DeclineAndExplainMenu.prototype.decorate = function(element) {
+DeclineAndExplainMenu.prototype.decorate = function (element) {
     this._element = element;
     //activate dropdown menu
     element.dropdown();
 
     var declineBtns = element.find('.decline-with-reason');
     var me = this;
-    declineBtns.each(function(idx, elem) {
+    declineBtns.each(function (idx, elem) {
         me.setupDeclinePostHandler($(elem));
     });
 
@@ -220,14 +220,14 @@ DeclineAndExplainMenu.prototype.decorate = function(element) {
     this._manageReasonsDialog = manageReasonsDialog;
     manageReasonsDialog.setMenu(this);
 
-    setupButtonEventHandlers(addReasonBtn, function() { manageReasonsDialog.show(); });
+    setupButtonEventHandlers(addReasonBtn, function () { manageReasonsDialog.show(); });
 };
 
 /**
-* Buttons to moderate posts 
+* Buttons to moderate posts
 * and the list of edits
 */
-var PostModerationControls = function() {
+var PostModerationControls = function () {
     WrappedElement.call(this);
 };
 inherits(PostModerationControls, WrappedElement);
@@ -235,41 +235,41 @@ inherits(PostModerationControls, WrappedElement);
 /**
 * displays feedback message
 */
-PostModerationControls.prototype.showMessage = function(message) {
+PostModerationControls.prototype.showMessage = function (message) {
     this._notification.html(message);
     this._notification.parent().fadeIn('fast');
 };
 
-PostModerationControls.prototype.hideMessage = function() {
+PostModerationControls.prototype.hideMessage = function () {
     this._notification.parent().hide();
 };
 
 /**
 * removes entries from the moderation screen
 */
-PostModerationControls.prototype.removeEntries = function(entryIds) {
+PostModerationControls.prototype.removeEntries = function (entryIds) {
     for (var i = 0; i < entryIds.length; i++) {
         var id = entryIds[i];
         var elem = this._element.find('.message[data-message-id="' + id + '"]');
         if (elem.length) {
-            elem.fadeOut('fast', function() { elem.remove() });
+            elem.fadeOut('fast', function () { elem.remove() });
         }
     }
 };
 
-PostModerationControls.prototype.setEntryCount = function(count) {
+PostModerationControls.prototype.setEntryCount = function (count) {
     this._entryCount.html(count);
 };
 
-PostModerationControls.prototype.getEntryCount = function() {
+PostModerationControls.prototype.getEntryCount = function () {
     return this.getCheckBoxes().length;
 };
 
-PostModerationControls.prototype.getCheckBoxes = function() {
+PostModerationControls.prototype.getCheckBoxes = function () {
     return this._element.find('.messages input[type="checkbox"]');
 };
 
-PostModerationControls.prototype.getSelectedEditIds = function() {
+PostModerationControls.prototype.getSelectedEditIds = function () {
     var checkBoxes = this.getCheckBoxes();
     var num = checkBoxes.length;
     var idList = [];
@@ -290,9 +290,9 @@ PostModerationControls.prototype.getSelectedEditIds = function() {
 * not all combinations of action and items are supported
 * optReason must be used with 'decline-with-reason' action
 */
-PostModerationControls.prototype.getModHandler = function(action, items, optReason) {
+PostModerationControls.prototype.getModHandler = function (action, items, optReason) {
     var me = this;
-    return function() {
+    return function () {
         var selectedEditIds = me.getSelectedEditIds();
         if (selectedEditIds.length == 0) {
             me.showMessage(gettext('Please select at least one item'));
@@ -310,15 +310,15 @@ PostModerationControls.prototype.getModHandler = function(action, items, optReas
             cache: false,
             dataType: 'json',
             data: JSON.stringify(postData),
-            url: askbot['urls']['moderatePostEdits'],
-            success: function(response_data){
-                if (response_data['success'] == true){
-                    me.removeEntries(response_data['memo_ids']);
-                    me.setEntryCount(response_data['memo_count']);
+            url: askbot.urls.moderatePostEdits,
+            success: function (response_data) {
+                if (response_data.success == true) {
+                    me.removeEntries(response_data.memo_ids);
+                    me.setEntryCount(response_data.memo_count);
                 }
 
-                var message = response_data['message'] || '';
-                if (me.getEntryCount() < 10 && response_data['memo_count'] > 9) {
+                var message = response_data.message || '';
+                if (me.getEntryCount() < 10 && response_data.memo_count > 9) {
                     if (message) {
                         message += '. '
                     }
@@ -343,15 +343,15 @@ PostModerationControls.prototype.getModHandler = function(action, items, optReas
     };
 };
 
-PostModerationControls.prototype.getSelectAllHandler = function(selected) {
+PostModerationControls.prototype.getSelectAllHandler = function (selected) {
     var me = this;
-    return function() {
+    return function () {
         var cb = me.getCheckBoxes();
         cb.prop('checked', selected);
     };
 };
 
-PostModerationControls.prototype.decorate = function(element) {
+PostModerationControls.prototype.decorate = function (element) {
     this._element = element;
     this._notification = element.find('.action-status span');
     this.hideMessage();
@@ -359,7 +359,7 @@ PostModerationControls.prototype.decorate = function(element) {
     this._entryCount = $('.mod-memo-count');
     //approve posts button
     var button = $('.approve-posts');
-    setupButtonEventHandlers(button, this.getModHandler('approve', ['posts']));
+    setupButtonEventHandlers(button, this.getModHandler('approve', .posts));
 
     //approve posts and users
     button = $('.approve-posts-users');
@@ -392,7 +392,7 @@ PostModerationControls.prototype.decorate = function(element) {
  * manages post/edit reject reasons
  * in the post moderation view
  */
-var ManageRejectReasonsDialog = function(){
+var ManageRejectReasonsDialog = function () {
     WrappedElement.call(this);
     this._selected_edit_ids = null;
     this._selected_reason_id = null;
@@ -402,94 +402,94 @@ var ManageRejectReasonsDialog = function(){
 };
 inherits(ManageRejectReasonsDialog, WrappedElement);
 
-ManageRejectReasonsDialog.prototype.setMenu = function(menu) {
+ManageRejectReasonsDialog.prototype.setMenu = function (menu) {
     this._reasonsMenu = menu;
 };
 
-ManageRejectReasonsDialog.prototype.getMenu = function() {
+ManageRejectReasonsDialog.prototype.getMenu = function () {
     return this._reasonsMenu;
 };
 
-ManageRejectReasonsDialog.prototype.setSelectedEditDataReader = function(func) {
+ManageRejectReasonsDialog.prototype.setSelectedEditDataReader = function (func) {
     this._selectedEditDataReader = func;
 };
 
-ManageRejectReasonsDialog.prototype.readSelectedEditData = function() {
+ManageRejectReasonsDialog.prototype.readSelectedEditData = function () {
     var data = this._selectedEditDataReader();
     this.setSelectedEditData(data);
-    return data['id_list'].length > 0;
+    return data.id_list.length > 0;
 };
 
-ManageRejectReasonsDialog.prototype.setSelectedEditData = function(data){
+ManageRejectReasonsDialog.prototype.setSelectedEditData = function (data) {
     this._selected_edit_data = data;
 };
 
-ManageRejectReasonsDialog.prototype.addPostModerationControl = function(control) {
+ManageRejectReasonsDialog.prototype.addPostModerationControl = function (control) {
     this._postModerationControls.push(control);
 };
 
-ManageRejectReasonsDialog.prototype.setState = function(state){
+ManageRejectReasonsDialog.prototype.setState = function (state) {
     this._state = state;
     this.clearErrors();
-    if (this._element){
+    if (this._element) {
         this._selector.hide();
         this._adder.hide();
-        if (state === 'select'){
+        if (state === 'select') {
             this._selector.show();
-        } else if (state === 'add-new'){
+        } else if (state === 'add-new') {
             this._adder.show();
         }
     }
 };
 
-ManageRejectReasonsDialog.prototype.show = function(){
+ManageRejectReasonsDialog.prototype.show = function () {
     $(this._element).modal('show');
 };
 
-ManageRejectReasonsDialog.prototype.hide = function(){
+ManageRejectReasonsDialog.prototype.hide = function () {
     $(this._element).modal('hide');
 };
 
-ManageRejectReasonsDialog.prototype.resetInputs = function(){
-    if (this._title_input){
+ManageRejectReasonsDialog.prototype.resetInputs = function () {
+    if (this._title_input) {
         this._title_input.reset();
     }
-    if (this._details_input){
+    if (this._details_input) {
         this._details_input.reset();
     }
     var selected = this._element.find('.selected');
     selected.removeClass('selected');
 };
 
-ManageRejectReasonsDialog.prototype.clearErrors = function(){
+ManageRejectReasonsDialog.prototype.clearErrors = function () {
     var error = this._element.find('.alert');
     error.remove();
 };
 
-ManageRejectReasonsDialog.prototype.makeAlertBox = function(errors){
+ManageRejectReasonsDialog.prototype.makeAlertBox = function (errors) {
     //construct the alert box
     var alert_box = new AlertBox();
     alert_box.setClass('alert-error');
-    if (typeof errors === "string"){
+    if (typeof errors === "string") {
         alert_box.setText(errors);
-    } else if (errors.constructor === [].constructor){
-        if (errors.length > 1){
+    } else if (errors.constructor === [].constructor) {
+        if (errors.length > 1) {
             alert_box.setContent(
-                '<div>' + 
+                '<div>' +
                 gettext('Looks there are some things to fix:') +
                 '</div>'
             )
             var list = this.makeElement('ul');
-            $.each(errors, function(idx, item){
+            $.each(errors, function (idx, item) {
                 list.append('<li>' + item + '</li>');
             });
             alert_box.addContent(list);
-        } else if (errors.length == 1){
+        } else if (errors.length == 1) {
             alert_box.setContent(errors[0]);
-        } else if (errors.length == 0){
+        } else if (errors.length == 0) {
             return;
         }
-    } else if ('html' in errors){
+    } else if ('html' in errors) {
         alert_box.setContent(errors);
     } else {
         return;//don't know what to do
@@ -497,7 +497,7 @@ ManageRejectReasonsDialog.prototype.makeAlertBox = function(errors){
     return alert_box;
 };
 
-ManageRejectReasonsDialog.prototype.setAdderErrors = function(errors){
+ManageRejectReasonsDialog.prototype.setAdderErrors = function (errors) {
     //clear previous errors
     this.clearErrors();
     var alert_box = this.makeAlertBox(errors);
@@ -506,7 +506,7 @@ ManageRejectReasonsDialog.prototype.setAdderErrors = function(errors){
         .prepend(alert_box.getElement());
 };
 
-ManageRejectReasonsDialog.prototype.setSelectorErrors = function(errors){
+ManageRejectReasonsDialog.prototype.setSelectorErrors = function (errors) {
     this.clearErrors();
     var alert_box = this.makeAlertBox(errors);
     this._element
@@ -514,7 +514,7 @@ ManageRejectReasonsDialog.prototype.setSelectorErrors = function(errors){
         .prepend(alert_box.getElement());
 };
 
-ManageRejectReasonsDialog.prototype.setErrors = function(errors){
+ManageRejectReasonsDialog.prototype.setErrors = function (errors) {
     this.clearErrors();
     var alert_box = this.makeAlertBox(errors);
     var current_state = this._state;
@@ -523,34 +523,34 @@ ManageRejectReasonsDialog.prototype.setErrors = function(errors){
         .prepend(alert_box.getElement());
 };
 
-ManageRejectReasonsDialog.prototype.addSelectableReason = function(data){
-    var id = data['reason_id'];
-    var title = data['title'];
-    var details = data['details'];
+ManageRejectReasonsDialog.prototype.addSelectableReason = function (data) {
+    var id = data.reason_id;
+    var title = data.title;
+    var details = data.details;
     this._select_box.addItem(id, title, details);
 
-    askbot['data']['postRejectReasons'].push(
-        {id: data['reason_id'], title: data['title']}
+    askbot.data.postRejectReasons.push(
+        {id: data.reason_id, title: data.title}
     );
-    $.each(this._postModerationControls, function(idx, control) {
-        control.addReason(data['reason_id'], data['title']);
+    $.each(this._postModerationControls, function (idx, control) {
+        control.addReason(data.reason_id, data.title);
     });
 };
 
-ManageRejectReasonsDialog.prototype.startSavingReason = function(callback){
+ManageRejectReasonsDialog.prototype.startSavingReason = function (callback) {
 
     var title_input = this._title_input;
     var details_input = this._details_input;
 
     var errors = [];
-    if (title_input.isBlank()){
+    if (title_input.isBlank()) {
         errors.push(gettext('Please provide description.'));
     }
-    if (details_input.isBlank()){
+    if (details_input.isBlank()) {
         errors.push(gettext('Please provide details.'));
     }
 
-    if (errors.length > 0){
+    if (errors.length > 0) {
         this.setAdderErrors(errors);
         return;//just show errors and quit
     }
@@ -560,8 +560,8 @@ ManageRejectReasonsDialog.prototype.startSavingReason = function(callback){
         details: details_input.getVal()
     };
     var reasonIsNew = true;
-    if (this._selected_reason_id){
-        data['reason_id'] = this._selected_reason_id;
+    if (this._selected_reason_id) {
+        data.reason_id = this._selected_reason_id;
         reasonIsNew = false;
     }
 
@@ -571,64 +571,64 @@ ManageRejectReasonsDialog.prototype.startSavingReason = function(callback){
         type: 'POST',
         dataType: 'json',
         cache: false,
-        url: askbot['urls']['save_post_reject_reason'],
+        url: askbot.urls.save_post_reject_reason,
         data: data,
-        success: function(data){
-            if (data['success']){
+        success: function (data) {
+            if (data.success) {
                 //show current reason data and focus on it
                 me.addSelectableReason(data);
                 if (reasonIsNew) {
-                    me.getMenu().addReason(data['reason_id'], data['title']);
+                    me.getMenu().addReason(data.reason_id, data.title);
                 }
-                if (callback){
+                if (callback) {
                     callback(data);
                 } else {
                     me.setState('select');
                 }
             } else {
-                me.setAdderErrors(data['message']);
+                me.setAdderErrors(data.message);
             }
         }
     });
 };
 
-ManageRejectReasonsDialog.prototype.startEditingReason = function(){
+ManageRejectReasonsDialog.prototype.startEditingReason = function () {
     var data = this._select_box.getSelectedItemData();
-    var title = $(data['title']).text();
-    var details = data['details'];
+    var title = $(data.title).text();
+    var details = data.details;
     this._title_input.setVal(title);
     this._details_input.setVal(details);
-    this._selected_reason_id = data['id'];
+    this._selected_reason_id = data.id;
     this.setState('add-new');
 };
 
-ManageRejectReasonsDialog.prototype.resetSelectedReasonId = function(){
+ManageRejectReasonsDialog.prototype.resetSelectedReasonId = function () {
     this._selected_reason_id = null;
 };
 
-ManageRejectReasonsDialog.prototype.getSelectedReasonId = function(){
+ManageRejectReasonsDialog.prototype.getSelectedReasonId = function () {
     return this._selected_reason_id;
 };
 
-ManageRejectReasonsDialog.prototype.startDeletingReason = function(){
+ManageRejectReasonsDialog.prototype.startDeletingReason = function () {
     var select_box = this._select_box;
     var data = select_box.getSelectedItemData();
-    var reason_id = data['id'];
+    var reason_id = data.id;
     var me = this;
-    if (data['id']){
+    if (data.id) {
         $.ajax({
             type: 'POST',
             dataType: 'json',
             cache: false,
-            url: askbot['urls']['delete_post_reject_reason'],
+            url: askbot.urls.delete_post_reject_reason,
             data: {reason_id: reason_id},
-            success: function(data){
-                if (data['success']){
+            success: function (data) {
+                if (data.success) {
                     select_box.removeItem(reason_id);
                     me.hideEditButtons();
                     me.getMenu().removeReason(reason_id);
                 } else {
-                    me.setSelectorErrors(data['message']);
+                    me.setSelectorErrors(data.message);
                 }
             }
         });
@@ -639,22 +639,22 @@ ManageRejectReasonsDialog.prototype.startDeletingReason = function(){
     }
 };
 
-ManageRejectReasonsDialog.prototype.hideEditButtons = function() {
+ManageRejectReasonsDialog.prototype.hideEditButtons = function () {
     this._editButton.hide();
     this._deleteButton.hide();
 };
 
-ManageRejectReasonsDialog.prototype.showEditButtons = function() {
+ManageRejectReasonsDialog.prototype.showEditButtons = function () {
     this._editButton.show();
     this._deleteButton.show();
 };
 
-ManageRejectReasonsDialog.prototype.decorate = function(element){
+ManageRejectReasonsDialog.prototype.decorate = function (element) {
     this._element = element;
     //set default state according to the # of available reasons
     this._selector = $(element).find('#reject-edit-modal-select');
     this._adder = $(element).find('#reject-edit-modal-add-new');
-    if (this._selector.find('li').length > 0){
+    if (this._selector.find('li').length > 0) {
         this.setState('select');
         this.resetInputs();
     } else {
@@ -664,7 +664,7 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
 
     var select_box = new SelectBox();
     select_box.decorate($(this._selector.find('.select-box')));
-    select_box.setSelectHandler(function() { me.showEditButtons() });
+    select_box.setSelectHandler(function () { me.showEditButtons() });
     this._select_box = select_box;
 
     //setup tipped-inputs
@@ -682,7 +682,7 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
     var me = this;
     setupButtonEventHandlers(
         element.find('.cancel, .modal-header .close'),
-        function() {
+        function () {
             me.hide();
             me.clearErrors();
             me.resetInputs();
@@ -694,12 +694,12 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
 
     setupButtonEventHandlers(
         $(this._element).find('.save-reason'),
-        function(){ me.startSavingReason() }
+        function () { me.startSavingReason() }
     );
 
     setupButtonEventHandlers(
         element.find('.add-new-reason'),
-        function(){ 
+        function () {
             me.resetSelectedReasonId();
             me.resetInputs();
             me.setState('add-new') ;
@@ -709,7 +709,7 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
     this._editButton = element.find('.edit-this-reason');
     setupButtonEventHandlers(
         this._editButton,
-        function(){
+        function () {
             me.startEditingReason();
         }
     );
@@ -717,7 +717,7 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
     this._deleteButton = element.find('.delete-this-reason');
     setupButtonEventHandlers(
         this._deleteButton,
-        function(){
+        function () {
             me.startDeletingReason();
         }
     )
@@ -727,7 +727,7 @@ ManageRejectReasonsDialog.prototype.decorate = function(element){
  * @constructor
  * allows to follow/unfollow users
  */
-var FollowUser = function(){
+var FollowUser = function () {
     WrappedElement.call(this);
     this._user_id = null;
     this._user_name = null;
@@ -737,23 +737,23 @@ inherits(FollowUser, WrappedElement);
 /**
  * @param {string} user_name
  */
-FollowUser.prototype.setUserName = function(user_name){
+FollowUser.prototype.setUserName = function (user_name) {
     this._user_name = user_name;
 };
 
-FollowUser.prototype.decorate = function(element){
+FollowUser.prototype.decorate = function (element) {
     this._element = element;
     this._user_id = parseInt(element.attr('id').split('-').pop());
     this._available_action = element.children().hasClass('follow') ? 'follow':'unfollow';
     var me = this;
-    setupButtonEventHandlers(this._element, function(){ me.go() });
+    setupButtonEventHandlers(this._element, function () { me.go() });
 };
 
-FollowUser.prototype.go = function(){
-    if (askbot['data']['userIsAuthenticated'] === false){
+FollowUser.prototype.go = function () {
+    if (askbot.data.userIsAuthenticated === false) {
         var message = gettext('Please <a href="%(signin_url)s">signin</a> to follow %(username)s');
         var message_data = {
-            signin_url: askbot['urls']['user_signin'] + '?next=' + window.location.href,
+            signin_url: askbot.urls.user_signin + '?next=' + window.location.href,
             username: this._user_name
         }
         message = interpolate(message, message_data, true);
@@ -761,10 +761,10 @@ FollowUser.prototype.go = function(){
         return;
     }
     var user_id = this._user_id;
-    if (this._available_action === 'follow'){
-        var url = askbot['urls']['follow_user'];
+    if (this._available_action === 'follow') {
+        var url = askbot.urls.follow_user;
     } else {
-        var url = askbot['urls']['unfollow_user'];
+        var url = askbot.urls.unfollow_user;
     }
     var me = this;
     $.ajax({
@@ -772,14 +772,14 @@ FollowUser.prototype.go = function(){
         cache: false,
         dataType: 'json',
         url: url.replace('{{userId}}', user_id),
-        success: function(){ me.toggleState() }
+        success: function () { me.toggleState() }
     });
 };
 
-FollowUser.prototype.toggleState = function(){
-    if (this._available_action === 'follow'){
+FollowUser.prototype.toggleState = function () {
+    if (this._available_action === 'follow') {
         this._available_action = 'unfollow';
-        var unfollow_div = document.createElement('div'); 
+        var unfollow_div = document.createElement('div');
         unfollow_div.setAttribute('class', 'unfollow');
         var red_div = document.createElement('div');
         red_div.setAttribute('class', 'unfollow-red');
@@ -791,7 +791,7 @@ FollowUser.prototype.toggleState = function(){
         unfollow_div.appendChild(green_div);
         this._element.html(unfollow_div);
     } else {
-        var follow_div = document.createElement('div'); 
+        var follow_div = document.createElement('div');
         follow_div.innerHTML = interpolate(gettext('follow %s'), [this._user_name]);
         follow_div.setAttribute('class', 'follow');
         this._available_action = 'follow';
@@ -803,20 +803,20 @@ FollowUser.prototype.toggleState = function(){
  * @constructor
  * @param {string} name
  */
-var UserGroup = function(name){
+var UserGroup = function (name) {
     WrappedElement.call(this);
     this._name = name;
     this._content = null;
 };
 inherits(UserGroup, WrappedElement);
 
-UserGroup.prototype.getDeleteHandler = function(){
+UserGroup.prototype.getDeleteHandler = function () {
     var group_name = this._name;
     var me = this;
     var groups_container = me._groups_container;
-    return function(){
+    return function () {
         var data = {
-            user_id: askbot['data']['viewUserId'],
+            user_id: askbot.data.viewUserId,
             group_name: group_name,
             action: 'remove'
         };
@@ -825,27 +825,27 @@ UserGroup.prototype.getDeleteHandler = function(){
             dataType: 'json',
             data: data,
             cache: false,
-            url: askbot['urls']['edit_group_membership'],
-            success: function(){
+            url: askbot.urls.edit_group_membership,
+            success: function () {
                 groups_container.removeGroup(me);
             }
         });
     };
 };
 
-UserGroup.prototype.setContent = function(content){
+UserGroup.prototype.setContent = function (content) {
     this._content = content;
 };
 
-UserGroup.prototype.getName = function(){
+UserGroup.prototype.getName = function () {
     return this._name;
 };
 
-UserGroup.prototype.setGroupsContainer = function(container){
+UserGroup.prototype.setGroupsContainer = function (container) {
     this._groups_container = container;
 };
 
-UserGroup.prototype.decorate = function(element){
+UserGroup.prototype.decorate = function (element) {
     this._element = element;
     this._name = $.trim(element.find('a').html());
     var deleter = new DeleteIcon();
@@ -855,14 +855,14 @@ UserGroup.prototype.decorate = function(element){
     this._delete_icon = deleter;
 };
 
-UserGroup.prototype.createDom = function(){
+UserGroup.prototype.createDom = function () {
     var element = this.makeElement('tr');
     element.html(this._content);
     this._element = element;
     this.decorate(element);
 };
 
-UserGroup.prototype.dispose = function(){
+UserGroup.prototype.dispose = function () {
     this._delete_icon.dispose();
     this._element.remove();
 };
@@ -870,18 +870,18 @@ UserGroup.prototype.dispose = function(){
 /**
  * @constructor
  */
-var GroupsContainer = function(){
+var GroupsContainer = function () {
     WrappedElement.call(this);
 };
 inherits(GroupsContainer, WrappedElement);
 
-GroupsContainer.prototype.decorate = function(element){
+GroupsContainer.prototype.decorate = function (element) {
     this._element = element;
     var groups = [];
     var group_names = [];
     var me = this;
     //collect list of groups
-    $.each(element.find('tr'), function(idx, li){
+    $.each(element.find('tr'), function (idx, li) {
         var group = new UserGroup();
         group.setGroupsContainer(me);
         group.decorate($(li));
@@ -892,22 +892,22 @@ GroupsContainer.prototype.decorate = function(element){
     this._group_names = group_names;
 };
 
-GroupsContainer.prototype.addGroup = function(group_data){
-    var group_name = group_data['name'];
-    if ($.inArray(group_name, this._group_names) > -1){
+GroupsContainer.prototype.addGroup = function (group_data) {
+    var group_name = group_data.name;
+    if ($.inArray(group_name, this._group_names) > -1) {
         return;
     }
     var group = new UserGroup(group_name);
-    group.setContent(group_data['html']);
+    group.setContent(group_data.html);
     group.setGroupsContainer(this);
     this._groups.push(group);
     this._group_names.push(group_name);
     this._element.append(group.getElement());
 };
 
-GroupsContainer.prototype.removeGroup = function(group){
-    var idx = $.inArray(group, this._groups);    
-    if (idx === -1){
+GroupsContainer.prototype.removeGroup = function (group) {
+    var idx = $.inArray(group, this._groups);
+    if (idx === -1) {
         return;
     }
     this._groups.splice(idx, 1);
@@ -915,7 +915,7 @@ GroupsContainer.prototype.removeGroup = function(group){
     group.dispose();
 };
 
-var GroupAdderWidget = function(){
+var GroupAdderWidget = function () {
     WrappedElement.call(this);
     this._state = 'display';//display or edit
 };
@@ -924,13 +924,13 @@ inherits(GroupAdderWidget, WrappedElement);
 /**
  * @param {string} state
  */
-GroupAdderWidget.prototype.setState = function(state){
-    if (state === 'display'){
+GroupAdderWidget.prototype.setState = function (state) {
+    if (state === 'display') {
         this._element.html(gettext('add group'));
         this._input.hide();
         this._input.val('');
         this._button.hide();
-    } else if (state === 'edit'){
+    } else if (state === 'edit') {
         this._element.html(gettext('cancel'));
         this._input.show();
         this._input.focus();
@@ -941,21 +941,21 @@ GroupAdderWidget.prototype.setState = function(state){
     this._state = state;
 };
 
-GroupAdderWidget.prototype.getValue = function(){
+GroupAdderWidget.prototype.getValue = function () {
     return this._input.val();
 };
 
-GroupAdderWidget.prototype.addGroup = function(group_data){
+GroupAdderWidget.prototype.addGroup = function (group_data) {
     this._groups_container.addGroup(group_data);
 };
 
-GroupAdderWidget.prototype.getAddGroupHandler = function(){
+GroupAdderWidget.prototype.getAddGroupHandler = function () {
     var me = this;
-    return function(){
+    return function () {
         var group_name = me.getValue();
         var data = {
             group_name: group_name,
-            user_id: askbot['data']['viewUserId'],
+            user_id: askbot.data.viewUserId,
             action: 'add'
         };
         $.ajax({
@@ -963,13 +963,13 @@ GroupAdderWidget.prototype.getAddGroupHandler = function(){
             dataType: 'json',
             data: data,
             cache: false,
-            url: askbot['urls']['edit_group_membership'],
-            success: function(data){
-                if (data['success'] == true){
+            url: askbot.urls.edit_group_membership,
+            success: function (data) {
+                if (data.success == true) {
                     me.addGroup(data);
                     me.setState('display');
                 } else {
-                    var message = data['message'];
+                    var message = data.message;
                     showMessage(me.getElement(), message, 'after');
                 }
             }
@@ -977,26 +977,26 @@ GroupAdderWidget.prototype.getAddGroupHandler = function(){
     };
 };
 
-GroupAdderWidget.prototype.setGroupsContainer = function(container){
+GroupAdderWidget.prototype.setGroupsContainer = function (container) {
     this._groups_container = container;
 };
 
-GroupAdderWidget.prototype.toggleState = function(){
-    if (this._state === 'display'){
+GroupAdderWidget.prototype.toggleState = function () {
+    if (this._state === 'display') {
         this.setState('edit');
-    } else if (this._state === 'edit'){
+    } else if (this._state === 'edit') {
         this.setState('display');
     }
 };
 
-GroupAdderWidget.prototype.decorate = function(element){
+GroupAdderWidget.prototype.decorate = function (element) {
     this._element = element;
     var input = this.makeElement('input');
     input.attr('type', 'text');
     this._input = input;
 
     var groupsAc = new AutoCompleter({
-        url: askbot['urls']['getGroupsList'],
+        url: askbot.urls.getGroupsList,
         minChars: 1,
         useCache: false,
         matchInside: false,
@@ -1015,7 +1015,7 @@ GroupAdderWidget.prototype.decorate = function(element){
     var me = this;
     setupButtonEventHandlers(
         element,
-        function(){ me.toggleState() }
+        function () { me.toggleState() }
     );
 };
 
@@ -1023,12 +1023,12 @@ GroupAdderWidget.prototype.decorate = function(element){
  * @constructor
  * allows editing user groups
  */
-var UserGroupsEditor = function(){
+var UserGroupsEditor = function () {
     WrappedElement.call(this);
 };
 inherits(UserGroupsEditor, WrappedElement);
 
-UserGroupsEditor.prototype.decorate = function(element){
+UserGroupsEditor.prototype.decorate = function (element) {
     this._element = element;
     var add_link = element.find('#add-group');
     var adder = new GroupAdderWidget();
@@ -1043,26 +1043,26 @@ UserGroupsEditor.prototype.decorate = function(element){
 /**
  * controls that set up automatic tweeting to the user account
  */
-var Tweeting = function() {
+var Tweeting = function () {
     WrappedElement.call(this);
 };
 inherits(Tweeting, WrappedElement);
 
-Tweeting.prototype.getStartHandler = function() {
+Tweeting.prototype.getStartHandler = function () {
     var url = this._startUrl;
-    return function() {
+    return function () {
         window.location.href = url;
     };
 };
 
-Tweeting.prototype.getMode = function() {
+Tweeting.prototype.getMode = function () {
     return this._modeSelector.val();
 };
 
-Tweeting.prototype.getModeSelectorHandler = function() {
+Tweeting.prototype.getModeSelectorHandler = function () {
     var me = this;
     var url = this._changeModeUrl;
-    return function() {
+    return function () {
         $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -1073,15 +1073,15 @@ Tweeting.prototype.getModeSelectorHandler = function() {
     };
 };
 
-Tweeting.prototype.getAccount = function() {
+Tweeting.prototype.getAccount = function () {
     return this._accountSelector.val();
 };
 
-Tweeting.prototype.getAccountSelectorHandler = function() {
+Tweeting.prototype.getAccountSelectorHandler = function () {
     var selectAccountUrl = this._changeModeUrl;
     var startUrl = this._startUrl;
     var me = this;
-    return function() {
+    return function () {
         var account = me.getAccount();
         if (account === 'existing-handle') {
             $.ajax({
@@ -1097,7 +1097,7 @@ Tweeting.prototype.getAccountSelectorHandler = function() {
     }
 };
 
-Tweeting.prototype.decorate = function(element) {
+Tweeting.prototype.decorate = function (element) {
     this._element = element;
     this._changeModeUrl = element.data('changeModeUrl');
     this._startUrl = element.data('startUrl');
@@ -1115,56 +1115,56 @@ Tweeting.prototype.decorate = function(element) {
     }
 };
 
-var UserQuestionsPaginator = function() {
+var UserQuestionsPaginator = function () {
     Paginator.call(this);
 };
 inherits(UserQuestionsPaginator, Paginator);
 
-UserQuestionsPaginator.prototype.renderPage = function(data) {
-    $('.users-questions').html(data['questions']);
+UserQuestionsPaginator.prototype.renderPage = function (data) {
+    $('.users-questions').html(data.questions);
     $('.timeago').timeago();
 };
 
-UserQuestionsPaginator.prototype.getPageDataUrl = function(pageNo) {
-    var userId = askbot['data']['viewUserId'];
-    var pageSize = askbot['data']['userPostsPageSize'];
+UserQuestionsPaginator.prototype.getPageDataUrl = function (pageNo) {
+    var userId = askbot.data.viewUserId;
+    var pageSize = askbot.data.userPostsPageSize;
     var url = QSutils.patch_query_string('', 'author:' + userId);
     url = QSutils.patch_query_string(url, 'sort:votes-desc');
     url = QSutils.patch_query_string(url, 'page:' + pageNo);
     url = QSutils.patch_query_string(url, 'page-size:'+ pageSize);
-    return askbot['urls']['questions'] + url;
+    return askbot.urls.questions + url;
 };
 
-var UserAnswersPaginator = function() {
+var UserAnswersPaginator = function () {
     Paginator.call(this);
 };
 inherits(UserAnswersPaginator, Paginator);
 
-UserAnswersPaginator.prototype.renderPage = function(data) {
-    $('.users-answers').html(data['html']);
+UserAnswersPaginator.prototype.renderPage = function (data) {
+    $('.users-answers').html(data.html);
     $('.timeago').timeago();
 };
 
-UserAnswersPaginator.prototype.getPageDataUrl = function() {
-    return askbot['urls']['getTopAnswers'];
+UserAnswersPaginator.prototype.getPageDataUrl = function () {
+    return askbot.urls.getTopAnswers;
 };
 
-UserAnswersPaginator.prototype.getPageDataUrlParams = function(pageNo) {
+UserAnswersPaginator.prototype.getPageDataUrlParams = function (pageNo) {
     return {
-        user_id: askbot['data']['viewUserId'],
+        user_id: askbot.data.viewUserId,
         page_number: pageNo
     }
 };
 
-(function(){
+(function () {
     var fbtn = $('.follow-user-toggle');
-    if (fbtn.length === 1){
+    if (fbtn.length === 1) {
         var follow_user = new FollowUser();
         follow_user.decorate(fbtn);
-        follow_user.setUserName(askbot['data']['viewUserName']);
+        follow_user.setUserName(askbot.data.viewUserName);
     }
-    if (askbot['data']['userId'] !== askbot['data']['viewUserId']) {
-        if (askbot['data']['userIsAdminOrMod']){
+    if (askbot.data.userId !== askbot.data.viewUserId) {
+        if (askbot.data.userIsAdminOrMod) {
             var group_editor = new UserGroupsEditor();
             group_editor.decorate($('#user-groups'));
         } else {
@@ -1179,7 +1179,7 @@ UserAnswersPaginator.prototype.getPageDataUrlParams = function(pageNo) {
         var tweetingControl = new Tweeting();
         tweetingControl.decorate(tweeting);
     }
-    
+
     var qPager = $('.user-questions-pager');
     if (qPager.length) {
         var qPaginator = new UserQuestionsPaginator();

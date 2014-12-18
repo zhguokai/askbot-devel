@@ -1,4 +1,4 @@
-var TagDetailBox = function(box_type){
+var TagDetailBox = function (box_type) {
     WrappedElement.call(this);
     this.box_type = box_type;
     this._is_blank = true;
@@ -7,7 +7,7 @@ var TagDetailBox = function(box_type){
 };
 inherits(TagDetailBox, WrappedElement);
 
-TagDetailBox.prototype.createDom = function(){
+TagDetailBox.prototype.createDom = function () {
     this._element = this.makeElement('div');
     this._element.addClass('wildcard-tags');
     this._headline = this.makeElement('p');
@@ -22,54 +22,54 @@ TagDetailBox.prototype.createDom = function(){
     this._element.hide();
 };
 
-TagDetailBox.prototype.belongsTo = function(wildcard){
+TagDetailBox.prototype.belongsTo = function (wildcard) {
     return (this.wildcard === wildcard);
 };
 
-TagDetailBox.prototype.isBlank = function(){
+TagDetailBox.prototype.isBlank = function () {
     return this._is_blank;
 };
 
-TagDetailBox.prototype.clear = function(){
-    if (this.isBlank()){
+TagDetailBox.prototype.clear = function () {
+    if (this.isBlank()) {
         return;
     }
     this._is_blank = true;
     this.getElement().hide();
     this.wildcard = null;
-    $.each(this._tags, function(idx, item){
+    $.each(this._tags, function (idx, item) {
         item.dispose();
     });
     this._tags = new Array();
 };
 
-TagDetailBox.prototype.loadTags = function(wildcard, callback){
+TagDetailBox.prototype.loadTags = function (wildcard, callback) {
     var me = this;
     $.ajax({
         type: 'GET',
         dataType: 'json',
         cache: false,
-        url: askbot['urls']['get_tags_by_wildcard'],
+        url: askbot.urls.get_tags_by_wildcard,
         data: { wildcard: wildcard },
         success: callback,
-        failure: function(){ me._loading = false; }
+        failure: function () { me._loading = false; }
     });
 };
 
-TagDetailBox.prototype.renderFor = function(wildcard){
+TagDetailBox.prototype.renderFor = function (wildcard) {
     var me = this;
-    if (this._loading === true){
+    if (this._loading === true) {
         return;
     }
     this._loading = true;
     this.loadTags(
         wildcard,
-        function(data, text_status, xhr){
-            me._tag_names = data['tag_names'];
-            if (data['tag_count'] > 0){
+        function (data, text_status, xhr) {
+            me._tag_names = data.tag_names;
+            if (data.tag_count > 0) {
                 var wildcard_display = wildcard.replace(/\*$/, '&#10045;');
                 me._headline.find('span').html(wildcard_display);
-                $.each(me._tag_names, function(idx, name){
+                $.each(me._tag_names, function (idx, name) {
                     var tag = new Tag();
                     tag.setName(name);
                     tag.setUrlParams(name)
@@ -79,8 +79,8 @@ TagDetailBox.prototype.renderFor = function(wildcard){
                 });
                 me._is_blank = false;
                 me.wildcard = wildcard;
-                var tag_count = data['tag_count'];
-                if (tag_count > 20){
+                var tag_count = data.tag_count;
+                if (tag_count > 20) {
                     var fmts = gettext('and %s more, not shown...');
                     var footer_text = interpolate(fmts, [tag_count - 20]);
                     me._footer.html(footer_text);
@@ -97,8 +97,8 @@ TagDetailBox.prototype.renderFor = function(wildcard){
     );
 }
 
-function pickedTags(){
-    
+function pickedTags() {
+
     var interestingTags = {};
     var ignoredTags = {};
     var subscribedTags = {};
@@ -106,25 +106,25 @@ function pickedTags(){
     var ignoredTagDetailBox = new TagDetailBox('ignored');
     var subscribedTagDetailBox = new TagDetailBox('subscribed');
 
-    var sendAjax = function(tagnames, reason, action, callback){
+    var sendAjax = function (tagnames, reason, action, callback) {
         var url = '';
         if (action == 'add') {
             if (reason == 'good') {
-                url = askbot['urls']['mark_interesting_tag'];
+                url = askbot.urls.mark_interesting_tag;
             } else  if (reason == 'bad') {
-                url = askbot['urls']['mark_ignored_tag'];
+                url = askbot.urls.mark_ignored_tag;
             } else {
-                url = askbot['urls']['mark_subscribed_tag'];
+                url = askbot.urls.mark_subscribed_tag;
             }
         }
         else {
-            url = askbot['urls']['unmark_tag'];
+            url = askbot.urls.unmark_tag;
         }
 
         var data = JSON.stringify({
             tagnames: tagnames,
             reason: reason,
-            user: askbot['data']['viewUserId'] 
+            user: askbot.data.viewUserId
         });
         var call_settings = {
             type:'POST',
@@ -132,27 +132,27 @@ function pickedTags(){
             data: data,
             dataType: 'json'
         };
-        if (callback !== false){
+        if (callback !== false) {
             call_settings.success = callback;
         }
         $.ajax(call_settings);
     };
 
-    var unpickTag = function(from_target, tagname, reason, send_ajax){
+    var unpickTag = function (from_target, tagname, reason, send_ajax) {
         //send ajax request to delete tag
-        var deleteTagLocally = function(){
+        var deleteTagLocally = function () {
             from_target[tagname].remove();
             delete from_target[tagname];
         };
-        if (send_ajax){
+        if (send_ajax) {
             sendAjax(
                 [tagname],
                 reason,
                 'remove',
-                function(){
+                function () {
                     deleteTagLocally();
                     if ($('body').hasClass('main-page')) {
-                      askbot['controllers']['fullTextSearch'].refresh();
+                      askbot.controllers.fullTextSearch.refresh();
                     }
                 }
             );
@@ -162,7 +162,7 @@ function pickedTags(){
         }
     };
 
-    var getTagList = function(reason){
+    var getTagList = function (reason) {
         var base_selector = '.marked-tags';
         if (reason === 'good') {
             var extra_selector = '.interesting';
@@ -174,7 +174,7 @@ function pickedTags(){
         return $(base_selector + extra_selector);
     };
 
-    var getWildcardTagDetailBox = function(reason){
+    var getWildcardTagDetailBox = function (reason) {
         if (reason === 'good') {
             return interestingTagDetailBox;
         } else if (reason === 'bad') {
@@ -184,55 +184,55 @@ function pickedTags(){
         }
     };
 
-    var handleWildcardTagClick = function(tag_name, reason){
+    var handleWildcardTagClick = function (tag_name, reason) {
         var detail_box = getWildcardTagDetailBox(reason);
         var tag_box = getTagList(reason);
-        if (detail_box.isBlank()){
+        if (detail_box.isBlank()) {
             detail_box.renderFor(tag_name);
-        } else if (detail_box.belongsTo(tag_name)){
+        } else if (detail_box.belongsTo(tag_name)) {
             detail_box.clear();//toggle off
         } else {
             detail_box.clear();//redraw with new data
             detail_box.renderFor(tag_name);
         }
-        if (!detail_box.inDocument()){
+        if (!detail_box.inDocument()) {
             tag_box.after(detail_box.getElement());
             detail_box.enterDocument();
         }
     };
 
-    var renderNewTags = function(
+    var renderNewTags = function (
                         clean_tag_names,
                         reason,
                         to_target,
                         to_tag_container
-                    ){
-        $.each(clean_tag_names, function(idx, tag_name){
+                    ) {
+        $.each(clean_tag_names, function (idx, tag_name) {
             var tag = new Tag();
             tag.setName(tag_name);
             tag.setDeletable(true);
 
-            if (/\*$/.test(tag_name)){
+            if (/\*$/.test(tag_name)) {
                 tag.setLinkable(false);
                 var detail_box = getWildcardTagDetailBox(reason);
-                tag.setHandler(function(){
+                tag.setHandler(function () {
                     handleWildcardTagClick(tag_name, reason);
-                    if (detail_box.belongsTo(tag_name)){
+                    if (detail_box.belongsTo(tag_name)) {
                         detail_box.clear();
                     }
                 });
-                var delete_handler = function(){
+                var delete_handler = function () {
                     unpickTag(to_target, tag_name, reason, true);
-                    if (detail_box.belongsTo(tag_name)){
+                    if (detail_box.belongsTo(tag_name)) {
                         detail_box.clear();
                     }
                 }
             } else {
-                var delete_handler = function(){
+                var delete_handler = function () {
                     unpickTag(to_target, tag_name, reason, true);
                 }
             }
-            
+
             tag.setDeleteHandler(delete_handler);
             var tag_element = tag.getElement();
             to_tag_container.append(tag_element);
@@ -240,7 +240,7 @@ function pickedTags(){
         });
     };
 
-    var handlePickedTag = function(reason){
+    var handlePickedTag = function (reason) {
         var to_target = interestingTags;
         var from_target = ignoredTags;
         var to_tag_container;
@@ -267,17 +267,17 @@ function pickedTags(){
         var tagnames = getUniqueWords(tags_input);
 
         if (reason !== 'subscribed') {//for "subscribed" we do not remove
-            $.each(tagnames, function(idx, tagname) {
+            $.each(tagnames, function (idx, tagname) {
                 if (tagname in from_target) {
                     unpickTag(from_target, tagname, reason, false);
                 }
             });
         }
 
-        var tagSettings = JSON.parse(askbot['settings']['tag_editor']);
+        var tagSettings = JSON.parse(askbot.settings.tag_editor);
         var clean_tagnames = [];
-        $.each(tagnames, function(idx, tagname){
-            if (!(tagname in to_target)){
+        $.each(tagnames, function (idx, tagname) {
+            if (!(tagname in to_target)) {
                 try {
                     cleanTag(tagname, tagSettings);
                     clean_tagnames.push(tagname);
@@ -287,14 +287,14 @@ function pickedTags(){
             }
         });
 
-        if (clean_tagnames.length > 0){
+        if (clean_tagnames.length > 0) {
             //send ajax request to pick this tag
 
             sendAjax(
                 clean_tagnames,
                 reason,
                 'add',
-                function(){ 
+                function () {
                     renderNewTags(
                         clean_tagnames,
                         reason,
@@ -302,13 +302,13 @@ function pickedTags(){
                         to_tag_container
                     );
                     $(input_sel).val('');
-                    askbot['controllers']['fullTextSearch'].refresh();
+                    askbot.controllers.fullTextSearch.refresh();
                 }
             );
         }
     };
 
-    var collectPickedTags = function(section){
+    var collectPickedTags = function (section) {
         if (section === 'interesting') {
             var reason = 'good';
             var tag_store = interestingTags;
@@ -322,10 +322,10 @@ function pickedTags(){
             return;
         }
         $('.' + section + '.tags.marked-tags .tag-left').each(
-            function(i,item){
+            function (i,item) {
                 var tag = new Tag();
                 tag.decorate($(item));
-                tag.setDeleteHandler(function(){
+                tag.setDeleteHandler(function () {
                     unpickTag(
                         tag_store,
                         tag.getName(),
@@ -333,8 +333,8 @@ function pickedTags(){
                         true
                     )
                 });
-                if (tag.isWildcard()){
-                    tag.setHandler(function(){
+                if (tag.isWildcard()) {
+                    tag.setHandler(function () {
                         handleWildcardTagClick(tag.getName(), reason)
                     });
                 }
@@ -343,41 +343,41 @@ function pickedTags(){
         );
     };
 
-    var setupTagFilterControl = function(control_type){
+    var setupTagFilterControl = function (control_type) {
         $('#' + control_type + 'TagFilterControl input')
         .unbind('click')
-        .click(function(){
+        .click(function () {
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
                 cache: false,
-                url: askbot['urls']['set_tag_filter_strategy'],
+                url: askbot.urls.set_tag_filter_strategy,
                 data: {
                     filter_type: control_type,
                     filter_value: $(this).val()
                 },
-                success: function(){
-                    askbot['controllers']['fullTextSearch'].refresh();
+                success: function () {
+                    askbot.controllers.fullTextSearch.refresh();
                 }
             });
         });
     };
 
-    var getResultCallback = function(reason){
-        return function(){ 
+    var getResultCallback = function (reason) {
+        return function () {
             handlePickedTag(reason);
         };
     };
 
     return {
-        init: function(){
+        init: function () {
             collectPickedTags('interesting');
             collectPickedTags('ignored');
             collectPickedTags('subscribed');
             setupTagFilterControl('display');
             setupTagFilterControl('email');
             var ac = new AutoCompleter({
-                url: askbot['urls']['get_tag_list'],
+                url: askbot.urls.get_tag_list,
                 minChars: 1,
                 useCache: true,
                 matchInside: true,
@@ -405,6 +405,6 @@ function pickedTags(){
     };
 }
 
-$(document).ready( function(){
+$(document).ready( function () {
     pickedTags().init();
 });
