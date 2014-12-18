@@ -56,12 +56,49 @@
 </script>
 {# everything below until the custom js and google analytics is compressable #}
 {% compress js %}
-<script type="text/javascript" src="{{"/js/libs/jquery-1.7.2.min.js"|media}}"></script>
-<script type="text/javascript" src='{{"/bootstrap/js/bootstrap.js"|media}}'></script>
+<script type="text/javascript" src="{{ '/js/libs/jquery-1.7.2.min.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/bootstrap/js/bootstrap.js'|media }}"></script>
 <!-- History.js -->
-<script type='text/javascript' src="{{"/js/jquery.history.js"|media }}"></script>
-<script type='text/javascript' src="{{"/js/askbot/utils.js"|media }}"></script>
-<script type="text/javascript" src="{{'/js/askbot/live_search.js'|media}}"></script>
+<script type='text/javascript' src="{{ '/js/jquery.history.js'|media }}"></script>
+<!-- Utils.js -->
+<script type='text/javascript' src="{{ '/js/askbot/utils.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/q_sutils.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/wrapped_element.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/wait_icon.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/paginator.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/limited_width_image.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/one_shot_form.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/link.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/widget.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/tipped_input.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/flash_alert.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/alert_box.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/simple_content.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/simple_control.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/post_expander.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/edit_link.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/comment_convert_link.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/delete_icon.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/modal_dialog.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/file_upload_dialog.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/text_property_editor.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/two_state_toggle.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/dropdown_select.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/select_box_item.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/select_box.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/group_dropdown.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/tag.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/perms_hover_card.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/show_perms_trigger.js'|media }}"></script>
+
+<script type='text/javascript' src="{{ '/js/libs/se_hilite.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/askbot/utils/json.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/libs/jquery-fieldselection.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/libs/autocompleter.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/libs/timeago.js'|media }}"></script>
+
+<!-- End Utils.js -->
+<script type="text/javascript" src="{{ '/js/askbot/live_search.js'|media }}"></script>
 {% endcompress %}
 <script type="text/javascript">
     /*<![CDATA[*/
