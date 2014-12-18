@@ -1,12 +1,12 @@
 /**
  * @constructor
  */
-var ChangePasswordForm = function() {
+var ChangePasswordForm = function () {
     WrappedElement.call(this);
 };
 inherits(ChangePasswordForm, WrappedElement);
 
-ChangePasswordForm.prototype.showMessage = function(message, callback) {
+ChangePasswordForm.prototype.showMessage = function (message, callback) {
     var flash = new FlashAlert('...saved, thanks');
     if (callback) {
         flash.setPostRunHandler(callback);
@@ -15,12 +15,12 @@ ChangePasswordForm.prototype.showMessage = function(message, callback) {
     flash.run();
 };
 
-ChangePasswordForm.prototype.clearErrors = function() {
+ChangePasswordForm.prototype.clearErrors = function () {
     this._pwInput1Errors.html('');
     this._pwInput2Errors.html('');
 };
 
-ChangePasswordForm.prototype.showErrors = function(errors) {
+ChangePasswordForm.prototype.showErrors = function (errors) {
     if (errors.new_password) {
         this._pwInput1Errors.html(errors.new_password[0]);
     }
@@ -32,25 +32,25 @@ ChangePasswordForm.prototype.showErrors = function(errors) {
     }
 };
 
-ChangePasswordForm.prototype.getData = function() {
+ChangePasswordForm.prototype.getData = function () {
     return {
         'new_password': this._pwInput1.val(),
         'new_password_retyped': this._pwInput2.val()
     };
 };
 
-ChangePasswordForm.prototype.getSubmitHandler = function() {
+ChangePasswordForm.prototype.getSubmitHandler = function () {
     var me = this;
-    return function() {
+    return function () {
         $.ajax({
             type: 'POST',
             dataType: 'json',
             data: me.getData(),
             url: askbot.urls.changePassword,
-            success: function(data) {
+            success: function (data) {
                 if (data.message) {
                     if (me.inAccountRecovery()) {
-                        var callback = function() {
+                        var callback = function () {
                             window.location.href = askbot.urls.questions;
                         };
                         me.showMessage(data.message, callback);
@@ -69,11 +69,11 @@ ChangePasswordForm.prototype.getSubmitHandler = function() {
     };
 };
 
-ChangePasswordForm.prototype.inAccountRecovery = function() {
+ChangePasswordForm.prototype.inAccountRecovery = function () {
     return ($('input[name="in_recovery"]').length === 1);
 };
 
-ChangePasswordForm.prototype.decorate = function(element) {
+ChangePasswordForm.prototype.decorate = function (element) {
     this._element = element;
     this._pwInput1 = element.find('#id_new_password');
     this._pwInput2 = element.find('#id_new_password_retyped');
