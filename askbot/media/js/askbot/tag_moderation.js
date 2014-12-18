@@ -27,7 +27,7 @@ TagModerator.prototype.getThreadId = function () {
 };
 
 TagModerator.prototype.afterActionHandler = function () {
-    throw "Implement me";
+    throw 'Implement me';
 };
 
 /**
@@ -82,10 +82,10 @@ PerThreadTagModerator.prototype.afterActionHandler = function () {
     var ancestor = this._parent;
     ancestor.removeChild(this);
     var childCount = ancestor.getChildCount();
-    if (childCount == 1) {
+    if (childCount === 1) {
         ancestor.hideButtons();
         this.dispose();
-    } else if (childCount == 0) {
+    } else if (childCount === 0) {
         //this does not work with the fade-out of table rows...
         /* var callback = function () {
             var table = $('.suggested-tags-table');
@@ -147,7 +147,7 @@ AllThreadsTagModerator.prototype.getChildCount = function () {
 
 AllThreadsTagModerator.prototype.removeChild = function (child) {
     var idx = $.inArray(child, this._children);
-    if (idx == -1) {
+    if (idx === -1) {
         return;
     }
     this._children.splice(idx, 1);
@@ -165,7 +165,7 @@ AllThreadsTagModerator.prototype.setTagEntryElement = function (element) {
 AllThreadsTagModerator.prototype.afterActionHandler = function () {
     var me = this;
     this._tag_entry_element.fadeOut('fast');
-    this._element.fadeOut('fast', function () { me.dispose() });
+    this._element.fadeOut('fast', function () { me.dispose(); });
 };
 
 AllThreadsTagModerator.prototype.dispose = function () {

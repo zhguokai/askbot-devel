@@ -2,7 +2,7 @@ var TagDetailBox = function (box_type) {
     WrappedElement.call(this);
     this.box_type = box_type;
     this._is_blank = true;
-    this._tags = new Array();
+    this._tags = [];
     this.wildcard = undefined;
 };
 inherits(TagDetailBox, WrappedElement);
@@ -40,7 +40,7 @@ TagDetailBox.prototype.clear = function () {
     $.each(this._tags, function (idx, item) {
         item.dispose();
     });
-    this._tags = new Array();
+    this._tags = [];
 };
 
 TagDetailBox.prototype.loadTags = function (wildcard, callback) {
@@ -72,7 +72,7 @@ TagDetailBox.prototype.renderFor = function (wildcard) {
                 $.each(me._tag_names, function (idx, name) {
                     var tag = new Tag();
                     tag.setName(name);
-                    tag.setUrlParams(name)
+                    tag.setUrlParams(name);
                     //tag.setLinkable(false);
                     me._tags.push(tag);
                     me._tag_list_element.append(tag.getElement());
@@ -95,7 +95,7 @@ TagDetailBox.prototype.renderFor = function (wildcard) {
             me._loading = false;
         }
     );
-}
+};
 
 function pickedTags() {
 
@@ -108,10 +108,10 @@ function pickedTags() {
 
     var sendAjax = function (tagnames, reason, action, callback) {
         var url = '';
-        if (action == 'add') {
-            if (reason == 'good') {
+        if (action === 'add') {
+            if (reason === 'good') {
                 url = askbot.urls.mark_interesting_tag;
-            } else  if (reason == 'bad') {
+            } else  if (reason === 'bad') {
                 url = askbot.urls.mark_ignored_tag;
             } else {
                 url = askbot.urls.mark_subscribed_tag;
@@ -164,12 +164,13 @@ function pickedTags() {
 
     var getTagList = function (reason) {
         var base_selector = '.marked-tags';
+        var extra_selector = '';
         if (reason === 'good') {
-            var extra_selector = '.interesting';
+            extra_selector = '.interesting';
         } else if (reason === 'bad') {
-            var extra_selector = '.ignored';
+            extra_selector = '.ignored';
         } else if (reason === 'subscribed') {
-            var extra_selector = '.subscribed';
+            extra_selector = '.subscribed';
         }
         return $(base_selector + extra_selector);
     };
@@ -209,6 +210,7 @@ function pickedTags() {
                     ) {
         $.each(clean_tag_names, function (idx, tag_name) {
             var tag = new Tag();
+            var delete_handler = function () {};
             tag.setName(tag_name);
             tag.setDeletable(true);
 
@@ -221,16 +223,16 @@ function pickedTags() {
                         detail_box.clear();
                     }
                 });
-                var delete_handler = function () {
+                delete_handler = function () {
                     unpickTag(to_target, tag_name, reason, true);
                     if (detail_box.belongsTo(tag_name)) {
                         detail_box.clear();
                     }
-                }
+                };
             } else {
-                var delete_handler = function () {
+                delete_handler = function () {
                     unpickTag(to_target, tag_name, reason, true);
-                }
+                };
             }
 
             tag.setDeleteHandler(delete_handler);
@@ -244,16 +246,17 @@ function pickedTags() {
         var to_target = interestingTags;
         var from_target = ignoredTags;
         var to_tag_container;
+        var input_sel = '';
         if (reason === 'bad') {
-            var input_sel = '#ignoredTagInput';
+            input_sel = '#ignoredTagInput';
             to_target = ignoredTags;
             from_target = interestingTags;
             to_tag_container = $('div .tags.ignored');
         } else if (reason === 'good') {
-            var input_sel = '#interestingTagInput';
+            input_sel = '#interestingTagInput';
             to_tag_container = $('div .tags.interesting');
         } else if (reason === 'subscribed') {
-            var input_sel = '#subscribedTagInput';
+            input_sel = '#subscribedTagInput';
             to_target = subscribedTags;
             to_tag_container = $('div .tags.subscribed');
         } else {
@@ -309,15 +312,17 @@ function pickedTags() {
     };
 
     var collectPickedTags = function (section) {
+        var reason = '';
+        var tag_store;
         if (section === 'interesting') {
-            var reason = 'good';
-            var tag_store = interestingTags;
+            reason = 'good';
+            tag_store = interestingTags;
         } else if (section === 'ignored') {
-            var reason = 'bad';
-            var tag_store = ignoredTags;
+            reason = 'bad';
+            tag_store = ignoredTags;
         } else if (section === 'subscribed') {
-            var reason = 'subscribed';
-            var tag_store = subscribedTags;
+            reason = 'subscribed';
+            tag_store = subscribedTags;
         } else {
             return;
         }
@@ -331,11 +336,11 @@ function pickedTags() {
                         tag.getName(),
                         reason,
                         true
-                    )
+                    );
                 });
                 if (tag.isWildcard()) {
                     tag.setHandler(function () {
-                        handleWildcardTagClick(tag.getName(), reason)
+                        handleWildcardTagClick(tag.getName(), reason);
                     });
                 }
                 tag_store[tag.getName()] = $(item);
@@ -398,9 +403,9 @@ function pickedTags() {
             subscribedTagAc.decorate($('#subscribedTagInput'));
             subscribedTagAc.setOption('onItemSelect', getResultCallback('subscribed'));
 
-            $("#interestingTagAdd").click(getResultCallback('good'));
-            $("#ignoredTagAdd").click(getResultCallback('bad'));
-            $("#subscribedTagAdd").click(getResultCallback('subscribed'));
+            $('#interestingTagAdd').click(getResultCallback('good'));
+            $('#ignoredTagAdd').click(getResultCallback('bad'));
+            $('#subscribedTagAdd').click(getResultCallback('subscribed'));
         }
     };
 }
