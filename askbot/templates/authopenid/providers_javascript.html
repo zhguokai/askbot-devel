@@ -2,8 +2,8 @@
 {% if settings.SIGNIN_MOZILLA_PERSONA_ENABLED %}
 <script type="text/javascript" src="https://login.persona.org/include.js"></script>
 {% endif %}
-<script type="text/javascript" src="{{ "/askbot/jquery-openid/jquery.authenticator.js"|media }}"></script>
-<script type="text/javascript" src="{{ "/askbot/jquery-openid/changepasswordform.js"|media }}"></script>
+<script type="text/javascript" src="{{ "js/askbot/jquery-openid/jquery.authenticator.js"|media }}"></script>
+<script type="text/javascript" src="{{ "js/askbot/jquery-openid/changepasswordform.js"|media }}"></script>
 <script type="text/javascript">
     askbot['urls']['changePassword'] = '{% url change_password %}';
     askbot['urls']['deleteLoginMethod'] = '{% url delete_login_method %}';
