@@ -23,6 +23,7 @@ PostModerationControls.prototype.hideMessage = function () {
 * removes entries from the moderation screen
 */
 PostModerationControls.prototype.removeEntries = function (entryIds) {
+    /* jshint loopfunc:true */
     for (var i = 0; i < entryIds.length; i++) {
         var id = entryIds[i];
         var elem = this._element.find('.message[data-message-id="' + id + '"]');
@@ -32,6 +33,7 @@ PostModerationControls.prototype.removeEntries = function (entryIds) {
             });
         }
     }
+    /* jshint loopfunc:false */
 };
 
 PostModerationControls.prototype.setEntryCount = function (count) {
