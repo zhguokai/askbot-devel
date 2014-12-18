@@ -45,6 +45,7 @@
 {% endblock %}
 {% block endjs %}
     <script type='text/javascript' src='{{"/js/libs/jquery.validate.min.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/libs/prettify.js"|media}}'></script>
     <script src='{{"/js/askbot/post.js"|media}}' type='text/javascript'></script>
     {% if request.user.is_authenticated() %}
     <script type="text/javascript">
