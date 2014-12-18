@@ -3,7 +3,7 @@ var SearchDropMenu = function () {
     this._data = undefined;
     this._selectedItemIndex = 0;
     this._askButtonEnabled = true;
-}
+};
 inherits(SearchDropMenu, WrappedElement);
 
 SearchDropMenu.prototype.setData = function (data) {
@@ -53,7 +53,7 @@ SearchDropMenu.prototype.render = function () {
 SearchDropMenu.prototype.clearSelectedItem = function () {
     this._selectedItemIndex = 0;
     this._resultsList.find('li').removeClass('selected');
-}
+};
 
 /**
  * @param {number} idx position of item starting from 1 for the topmost
@@ -150,7 +150,7 @@ SearchDropMenu.prototype.makeKeyHandler = function () {
                 widget.setFullTextSearchEnabled(false);
                 me.selectItem(curItem);
             }
-            return false
+            return false;
         }
     };
 };
@@ -217,7 +217,7 @@ SearchDropMenu.prototype.createDom = function () {
         footer.addClass('footer');
         var button = this.makeElement('button');
         button.addClass('submit btn btn-default');
-        button.html(gettext('Ask Your Question'))
+        button.html(gettext('Ask Your Question'));
         footer.append(button);
         var handler = this._askHandler;
         setupButtonEventHandlers(button, handler);
@@ -375,7 +375,7 @@ var FullTextSearch = function () {
     this._baseUrl = askbot.urls.questions;
     this._q_list_sel = 'question-list';//id of question listing div
     /** @todo: the questions/ needs translation... */
-    this._searchUrl = '/scope:all/sort:activity-desc/page:1/'
+    this._searchUrl = '/scope:all/sort:activity-desc/page:1/';
     this._askButtonEnabled = true;
     this._fullTextSearchEnabled = true;
 };
@@ -396,7 +396,7 @@ FullTextSearch.prototype.isRunning = function (val) {
 
 FullTextSearch.prototype.setAskButtonEnabled = function (isEnabled) {
     this._askButtonEnabled = isEnabled;
-}
+};
 
 /**
  * @param {{string}} url for the page displaying search results
@@ -444,14 +444,14 @@ FullTextSearch.prototype.runTagSearch = function () {
 
 FullTextSearch.prototype.updateHistory = function (url) {
     var context = { state:1, rand:Math.random() };
-    History.pushState( context, "Questions", url );
+    History.pushState(context, 'Questions', url);
     setTimeout(function () {
             /* HACK: For some weird reson, sometimes
              * overrides the above pushState so we re-aplly it
              * This might be caused by some other JS plugin.
              * The delay of 10msec allows the other plugin to override the URL.
              */
-            History.replaceState(context, "Questions", url);
+            History.replaceState(context, 'Questions', url);
         },
         10
     );
@@ -477,7 +477,7 @@ FullTextSearch.prototype.activateTagSearchInput = function () {
     ac.decorate($('#ab-tag-search'));
     setupButtonEventHandlers(
         button,
-        function () { me.runTagSearch() }
+        function () { me.runTagSearch(); }
     );
 };
 
@@ -576,9 +576,9 @@ FullTextSearch.prototype.renderFullTextSearchResult = function (data) {
         data.query_data.sort_order,
         data.query_string
     );
-    if(data.feed_url) {
+    if (data.feed_url) {
         // Change RSS URL
-        $("#ContentLeft a.rss:first").attr("href", data.feed_url);
+        $('#ContentLeft a.rss:first').attr('href', data.feed_url);
     }
 
     // Patch scope selectors
@@ -659,7 +659,9 @@ FullTextSearch.prototype.updateQueryString = function (query_text) {
 };
 
 FullTextSearch.prototype.renderRelatedTags = function (tags, query_string) {
-    if (tags.length === 0) return;
+    if (tags.length === 0) {
+        return;
+    }
 
     var html_list = [];
     for (var i=0; i<tags.length; i++) {
@@ -715,7 +717,7 @@ FullTextSearch.prototype.createRelevanceTab = function (query_string) {
 };
 
 FullTextSearch.prototype.removeSearchTag = function (tag) {
-    var searchUrl = this.getSearchUrl()
+    var searchUrl = this.getSearchUrl();
     searchUrl = QSutils.remove_search_tag(searchUrl, tag);
     this.setSearchUrl(searchUrl);
     this.sendFullTextSearchQuery();
@@ -748,8 +750,8 @@ FullTextSearch.prototype.setActiveSortTab = function (sort_method, query_string)
     var bits = sort_method.split('-', 2);
     var name = bits[0];
     var sense = bits[1];//sense of sort
-    var antisense = (sense == 'asc' ? 'desc':'asc');
-    var arrow = (sense == 'asc' ? ' &#9650;':' &#9660;');
+    var antisense = (sense === 'asc' ? 'desc':'asc');
+    var arrow = (sense === 'asc' ? ' &#9650;':' &#9660;');
     var active_tab = $('#by_' + name);
     active_tab.attr('class', 'on');
     active_tab.attr(
@@ -768,7 +770,7 @@ FullTextSearch.prototype.renderRelevanceSortTab = function (query_string) {
     var relevance_tab = $('#by_relevance');
     var prevText = this._prevText;
     if (prevText && prevText.length > 0) {
-        if (relevance_tab.length == 0) {
+        if (relevance_tab.length === 0) {
             relevance_tab = this.createRelevanceTab(query_string);
             $('#sort_tabs>span').after(relevance_tab);
         }
@@ -871,7 +873,7 @@ FullTextSearch.prototype.decorate = function (element) {
     this._dropMenu = dropMenu;
     $('div.search-bar').append(this._dropMenu.getElement());
 
-    $(element).click(function (e) { return false });
+    $(element).click(function (e) { return false; });
     $(document).click(function () { dropMenu.reset(); });
 
     //the tag search input is optional in askbot
@@ -909,7 +911,7 @@ FullTextSearch.prototype.decorate = function (element) {
         if (me.isRunning() === false) {
             clearTimeout(main_page_eval_handle);
             main_page_eval_handle = setTimeout(
-                function () { me.evalTitleSearchQuery() },
+                function () { me.evalTitleSearchQuery(); },
                 400
             );
         }
@@ -917,7 +919,7 @@ FullTextSearch.prototype.decorate = function (element) {
 
     this.activateTagSearchInput();
 
-    $("form#searchForm").submit(me.makeFormSubmitHandler());
+    $('form#searchForm').submit(me.makeFormSubmitHandler());
 };
 
 /**
@@ -1037,5 +1039,5 @@ TagSearch.prototype.decorate = function (element) {
     element.keydown(this.makeKeyDownHandler());
 
     var me = this;
-    this._xButton.click(function () { me.reset() });
+    this._xButton.click(function () { me.reset(); });
 };
