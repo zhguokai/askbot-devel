@@ -231,9 +231,9 @@ SearchDropMenu.prototype.isOpen = function() {
 };
 
 SearchDropMenu.prototype.show = function() {
-    var searchBar = this._element.prev();
-    var searchBarHeight = searchBar.outerHeight();
-    var topOffset = searchBar.offset().top + searchBarHeight;
+    var searchBar = this.getSearchWidget();
+    var searchBarHeight = searchBar.getWidgetHeight();
+    var topOffset = searchBar.getElement().offset().top + searchBarHeight;
     this._element.show();//show so that size calcs work
     var footerHeight = this._footer.outerHeight();
     var windowHeight = $(window).height();
@@ -541,6 +541,10 @@ FullTextSearch.prototype.refresh = function() {
 
 FullTextSearch.prototype.getSearchQuery = function() {
     return $.trim(this._query.val());
+};
+
+FullTextSearch.prototype.getWidgetHeight = function() {
+    return this._element.outerHeight();
 };
 
 /**

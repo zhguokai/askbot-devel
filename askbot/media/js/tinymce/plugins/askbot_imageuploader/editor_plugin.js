@@ -32,7 +32,7 @@
         dialog.setPostUploadHandler(insertIntoDom);
         dialog.setUrlInputTooltip('Or paste image url here');
         dialog.setInputId('askbot_imageuploader_input');
-        $(document).append(dialog.getElement());
+        $('body').append(dialog.getElement());
         return dialog;
     };
 

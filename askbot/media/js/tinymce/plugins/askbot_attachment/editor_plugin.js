@@ -33,7 +33,7 @@
         dialog.setPostUploadHandler(insertIntoDom);
         dialog.setInputId('askbot_attachment_input');
         dialog.setUrlInputTooltip(gettext('Or paste file url here'));
-        $(document).append(dialog.getElement());
+        $('body').append(dialog.getElement());
         return dialog;
     };
 

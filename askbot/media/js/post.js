@@ -234,7 +234,7 @@ ThreadUsersDialog.prototype.decorate = function(element) {
     dialog.setAcceptHandler(function(){ dialog.hide(); });
     var dialog_element = dialog.getElement();
     $(dialog_element).find('.modal-footer').css('text-align', 'center');
-    $(document).append(dialog_element);
+    $('body').append(dialog_element);
     this._dialog = dialog;
     var me = this;
     this.setHandler(function(){
@@ -390,6 +390,7 @@ MergeQuestionsDialog.prototype.createDom = function() {
     this.setAcceptHandler(this.getStartMergingHandler());
 
     MergeQuestionsDialog.superClass_.createDom.call(this);
+    this._element.hide();
 
     this._fromId = $('.post.question').data('postId');
 };
@@ -563,7 +564,7 @@ inherits(CommentVoteButton, SimpleControl);
 CommentVoteButton.prototype.setScore = function(score){
     this._score = score;
     if (this._element){
-        this._element.html(score);
+        this._element.html(score || '');
     }
 };
 /**
@@ -2142,11 +2143,12 @@ Comment.prototype.decorate = function(element){
     this._element = $(element);
     var parent_type = this._element.closest('.comments').data('parentPostType');
     var comment_id = this._element.data('commentId');
-    this._data = {id: comment_id};
+    this._data = {'id': comment_id};
 
     this._contentBox = this._element.find('.comment-content');
 
-    var timestamp = this._element.find('abbr.timeago');
+    var timestamp = this._element.find('.timeago');
+    this._dateElement = timestamp;
     this._data['comment_added_at'] = timestamp.attr('title');
     var userLink = this._element.find('.author');
     this._data['user_display_name'] = userLink.html();
@@ -2185,6 +2187,9 @@ Comment.prototype.decorate = function(element){
 
     var vote = new CommentVoteButton(this);
     vote.decorate(this._element.find('.upvote'));
+    this._voteButton = vote;
+
+    this._userLink = this._element.find('.author');
 
     this._blank = (this.getId() === undefined);
 };
@@ -2234,108 +2239,56 @@ Comment.prototype.getParentId = function(){
 
 /**
  * this function is basically an "updateDom"
- * for which we don't have the convention
  */
 Comment.prototype.setContent = function(data){
     this._data = $.extend(this._data, data);
-    this._element.addClass('comment');
-    this._element.css('display', 'table');//@warning: hardcoded
-    //display is set to "block" if .show() is called, but we need table.
-    this._element.data('commentId', this._data['id']);
+    data = this._data;
+    this._element.data('commentId', data['id']);
 
     // 1) create the votes element if it is not there
-    var votesBox = this._element.find('.comment-votes');
-    if (votesBox.length === 0) {
-        votesBox = this.makeElement('div');
-        votesBox.addClass('comment-votes');
-        this._element.append(votesBox);
+    var vote = this._voteButton;
+    vote.setVoted(data['upvoted_by_user']);
+    vote.setScore(data['score']);
 
-        var vote = new CommentVoteButton(this);
-        if (this._data['upvoted_by_user']){
-            vote.setVoted(true);
-        }
-        vote.setScore(this._data['score']);
-        var voteElement = vote.getElement();
+    // 2) maybe adjust deletable status
 
-        votesBox.append(vote.getElement());
-    } 
-
-    // 2) create the comment content container
-    if (this._contentBox === undefined) {
-        var contentBox = this.makeElement('div');
-        contentBox.addClass('comment-content');
-        this._contentBox = contentBox;
-        this._element.append(contentBox);
-    }
-
-    // 2) create the comment deleter if it is not there
-    if (this._comment_delete === undefined) {
-        this._comment_delete = $('<div class="comment-delete"></div>');
-        if (this._deletable){
-            this._delete_icon = new DeleteIcon(this._delete_prompt);
-            this._delete_icon.setHandler(this.getDeleteHandler());
-            this._comment_delete.append(this._delete_icon.getElement());
-        }
-        this._contentBox.append(this._comment_delete);
-    }
-
-    // 3) create or replace the comment body
-    if (this._comment_body === undefined) {
-        this._comment_body = $('<div class="comment-body"></div>');
-        this._contentBox.append(this._comment_body);
-    }
+    // 3) set the comment html
     if (EditCommentForm.prototype.getEditorType() === 'tinymce') {
         var theComment = $('<div/>');
-        theComment.html(this._data['html']);
+        theComment.html(data['html']);
         //sanitize, just in case
         this._comment_body.empty();
         this._comment_body.append(theComment);
-        this._data['text'] = this._data['html'];
+        this._data['text'] = data['html'];
     } else {
         this._comment_body.empty();
-        this._comment_body.html(this._data['html']);
+        this._comment_body.html(data['html']);
     }
-    //this._comment_body.append(' &ndash; ');
 
-    // 4) create user link if absent
-    if (this._user_link !== undefined) {
-        this._user_link.detach();
-        this._user_link = undefined;
-    }
-    this._user_link = $('<a></a>').attr('class', 'author');
-    this._user_link.attr('href', this._data['user_url']);
-    this._user_link.html(this._data['user_display_name']);
-    this._comment_body.append(' ');
-    this._comment_body.append(this._user_link);
+    // 4) update user info
+    this._userLink.attr('href', data['user_url']);
+    this._userLink.html(data['user_display_name']);
 
-    // 5) create or update the timestamp
-    if (this._comment_added_at !== undefined) {
-        this._comment_added_at.detach();
-        this._comment_added_at = undefined;
-    }
-    this._comment_body.append(' (');
-    this._comment_added_at = $('<abbr class="timeago"></abbr>');
-    this._comment_added_at.html(this._data['comment_added_at']);
-    this._comment_added_at.attr('title', this._data['comment_added_at']);
-    this._comment_added_at.timeago();
-    this._comment_body.append(this._comment_added_at);
-    this._comment_body.append(')');
+    // 5) update the timestamp
+    this._dateElement.html(data['comment_added_at']);
+    this._dateElement.attr('title', data['comment_added_at']);
+    this._dateElement.timeago();
 
     if (this._editable) {
-        if (this._edit_link !== undefined) {
-            this._edit_link.dispose();
-        }
+        var oldEditLink = this._edit_link;
         this._edit_link = new EditLink();
         this._edit_link.setHandler(this.getEditHandler())
-        this._comment_body.append(this._edit_link.getElement());
+        oldEditLink.getElement().replaceWith(this._edit_link.getElement());
+        oldEditLink.dispose();
     }
 
     if (this._is_convertible) {
         if (this._convert_link !== undefined) {
             this._convert_link.dispose();
         }
+        var oldConvertLink = this._convert_link;
         this._convert_link = new CommentConvertLink(this._data['id']); 
-        this._comment_body.append(this._convert_link.getElement());
+        oldConvertLink.getElement().replaceWith(this._convert_link.getElement());
     }
     this._blank = false;
 };
@@ -2532,19 +2485,16 @@ PostCommentsWidget.prototype.showOpenEditorButton = function() {
 };
 
 PostCommentsWidget.prototype.startNewComment = function() {
-    var opts = {
-        'is_deletable': true,
-        'is_editable': true
-    };
     //find comment template, clone it's dom
-    var comment = new Comment(this, opts);
-    var template = $('.comment-template').first();
+    var comment = new Comment(this);
+    var template = $($('.comment-template').children()[0]);
     var commentElem = template.clone(false);
     if (this._commentsReversed) {
         this._cbox.prepend(commentElem);
     } else {
         this._cbox.append(commentElem);
     }
+    commentElem.show();
     comment.decorate(commentElem);
     this._element.removeClass('empty');
     this._element.trigger('askbot.beforeCommentStart');
@@ -2628,11 +2578,16 @@ PostCommentsWidget.prototype.reRenderComments = function(json){
     $.each(this._comments, function(i, item){
         item.dispose();
     });
-    this._comments = new Array();
+    this._comments = [];
     var me = this;
     $.each(json, function(i, item){
-        var comment = new Comment(me, item);
-        me._cbox.append(comment.getElement());
+        var comment = new Comment(me);
+        var template = $($('.comment-template').children()[0]);
+        var commentElem = template.clone(false);
+        me._cbox.append(commentElem);
+        commentElem.show();
+        comment.decorate(commentElem);
+        comment.setContent(item);
         me._comments.push(comment);
     });
 };
@@ -4975,7 +4930,7 @@ $(document).ready(function() {
 
     if (askbot['data']['userIsThreadModerator']) {
         var mergeQuestions = new MergeQuestionsDialog();
-        $(document).append(mergeQuestions.getElement());
+        $('body').append(mergeQuestions.getElement());
         var mergeBtn = $('.question-merge');
         setupButtonEventHandlers(mergeBtn, function() { 
             mergeQuestions.show(); 

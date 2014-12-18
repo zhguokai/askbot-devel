@@ -69,7 +69,7 @@
 
             if (askbot['data']['userIsAuthenticated']) {
                 var draftHandler = new DraftQuestion();
-                draftHandler.decorate($(document));
+                draftHandler.decorate($('body'));
                 window.onbeforeunload = function() {
                     var saveHandler = draftHandler.getSaveHandler();
                     saveHandler(true);

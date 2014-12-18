@@ -63,7 +63,7 @@
         if (askbot['data']['userIsAuthenticated']) {
             var draftHandler = new DraftAnswer();
             draftHandler.setThreadId({{ thread.id }});
-            draftHandler.decorate($(document));
+            draftHandler.decorate($('body'));
         }
 
         var expanders = $('.expander');

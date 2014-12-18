@@ -382,6 +382,8 @@ for the purposes of the AJAX comment editor #}
             {% endif %}
             <div class="comment-body">
                 {{ comment.summary }}
+            </div>
+            <div class="comment-controls">
                 <a 
                     class="author"
                     href="{{ comment.author.get_profile_url() }}"

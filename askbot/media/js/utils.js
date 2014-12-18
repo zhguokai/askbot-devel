@@ -1964,7 +1964,7 @@ TextPropertyEditor.prototype.makeEditor = function(){
         me.saveData();
     });
 
-    $(document).append(editor.getElement());
+    $('body').append(editor.getElement());
     return editor;
 };
 
