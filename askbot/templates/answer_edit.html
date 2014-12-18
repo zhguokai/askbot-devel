@@ -65,6 +65,7 @@
     {% include "meta/editor_data.html" %}
     <script type='text/javascript' src='{{"/js/plugins/editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/libs/jquery.validate.min.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/libs/prettify.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/askbot/post.js"|media}}'></script>
     {% if settings.EDITOR_TYPE == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}

@@ -20,6 +20,7 @@
 {% block endjs %}
     <script type='text/javascript' src='{{"/js/plugins/editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/libs/jquery.validate.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/libs/prettify.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/askbot/post.js"|media}}'></script>
     {% if settings.EDITOR_TYPE == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}
