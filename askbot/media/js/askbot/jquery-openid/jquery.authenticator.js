@@ -1,6 +1,6 @@
 var renderGooglePlusBtn = function() {
     gapi.signin.render('google-plus-btn-id', {
-        'clientid': askbot['settings']['googlePlusPublicKey'],
+        'clientid': askbot.settings.googlePlusPublicKey,
         'cookiepolicy': 'single_host_origin',
         'scope': 'https://www.googleapis.com/auth/plus.login'
     });
@@ -15,7 +15,7 @@ $.fn.authenticator = function() {
     var email_input_fields = $('#email-input-fs');
     var account_recovery_heading = $('#account-recovery-heading');
     var account_recovery_hint = $('#account-recovery-form>.hint');
-    var account_recovery_link = $('#account-recovery-form>.hint>span.link'); 
+    var account_recovery_link = $('#account-recovery-form>.hint>span.link');
     var account_recovery_text_span = $('#account-recovery-form>.hint>span.text');
     var password_input_fields = $('#password-fs');
     var existing_login_methods_div = $('#existing-login-methods');
@@ -26,7 +26,7 @@ $.fn.authenticator = function() {
     var account_recovery_prompt_text = account_recovery_text_span.html();
 
     var setup_click_handler = function(elements, handler_function){
-        elements.unbind('click').click(handler_function); 
+        elements.unbind('click').click(handler_function);
     };
 
     var setup_enter_key_handler = function(elements, handler_function){
@@ -34,11 +34,10 @@ $.fn.authenticator = function() {
             function(index, element){
                 $(element).unbind('keypress').keypress(
                     function(e){
-                        if ((e.which && e.which == 13)||(e.keyCode && e.keyCode == 13)){
+                        if ((e.which && e.which === 13)||(e.keyCode && e.keyCode === 13)){
                             if (handler_function){
                                 return handler_function();
-                            }
-                            else {
+                            } else {
                                 element.click();
                                 return false;
                             }
@@ -57,7 +56,8 @@ $.fn.authenticator = function() {
     var get_provider_name = function(row_el){
         var row = $(row_el);
         var name_span = row.find('.ab-provider-name');
-        return provider_name = $.trim(name_span.html());
+        var provider_name = $.trim(name_span.html());
+        return provider_name;
     };
 
     var read_existing_login_methods = function(){
@@ -82,23 +82,23 @@ $.fn.authenticator = function() {
                         if (confirm(message)){
                             $.ajax({
                                 type: 'POST',
-                                url: askbot['urls']['deleteLoginMethod'],
+                                url: askbot.urls.deleteLoginMethod,
                                 data: {provider_name: provider_name},
                                 success: function(data, text_status, xhr){
                                     $(provider_row).remove();
                                     delete existing_login_methods[provider_name];
-                                    askbot['auth']['providerCount'] -= 1;
-                                    if (askbot['auth']['providerCount'] < 0) {
-                                        askbot['auth']['providerCount'] === 0;
+                                    askbot.auth.providerCount -= 1;
+                                    if (askbot.auth.providerCount < 0) {
+                                        askbot.auth.providerCount === 0;
                                     }
-                                    if (askbot['auth']['providerCount'] === 0) {
+                                    if (askbot.auth.providerCount === 0) {
                                         $('#ab-existing-login-methods').remove();
                                         $('#ab-show-login-methods').remove();
                                         $('h1').html(
-                                            gettext("Please add one or more login methods.")
+                                            gettext('Please add one or more login methods.')
                                         );
                                         $('.js-login-intro').html(
-                                            gettext("You don\'t have a method to log in right now, please add one or more by clicking any of the icons below.")
+                                            gettext('You don\'t have a method to log in right now, please add one or more by clicking any of the icons below.')
                                         );
                                         existing_login_methods = null;
                                     }
@@ -109,7 +109,7 @@ $.fn.authenticator = function() {
                 );
             }
         );
-    }
+    };
 
     var submit_login_with_password = function(){
         var username = $('#id_username');
@@ -131,7 +131,7 @@ $.fn.authenticator = function() {
         var newpass_retyped = $('#id_new_password_retyped');
         if (newpass.val().length < 1){
             newpass.focus();
-            return false
+            return false;
         }
         if (newpass_retyped.val().length < 1){
             newpass_retyped.focus();
@@ -140,7 +140,7 @@ $.fn.authenticator = function() {
         if (newpass.val() !== newpass_retyped.val()){
             newpass_retyped.after(
                     '<span class="error">' +
-                    gettext('passwords do not match') + 
+                    gettext('passwords do not match') +
                     '</span>'
                 );
             newpass.val('').focus();
@@ -172,7 +172,7 @@ $.fn.authenticator = function() {
             setup_event_handlers(
                 enabler,
                 function(){
-                    if (askbot['settings']['signin_always_show_local_login'] === false){
+                    if (askbot.settings.signin_always_show_local_login === false){
                         password_input_fields.hide();
                     }
                     openid_login_token_input_fields.hide();
@@ -185,7 +185,7 @@ $.fn.authenticator = function() {
     };
 
     var reset_password_input_fields = function(){
-        if (askbot['data']['userIsAuthenticated']){
+        if (askbot.data.userIsAuthenticated){
             $('#id_new_password').val('');
             $('#id_new_password_retyped').val('');
         }
@@ -197,11 +197,11 @@ $.fn.authenticator = function() {
 
     var reset_form = function(){
         openid_login_token_input_fields.hide();
-        if (askbot['settings']['signin_always_show_local_login'] === false){
+        if (askbot.settings.signin_always_show_local_login === false){
             password_input_fields.hide();
         }
         reset_password_input_fields();
-        if (askbot['data']['userIsAuthenticated'] === false){
+        if (askbot.data.userIsAuthenticated === false){
             email_input_fields.hide();
             account_recovery_heading.hide();
             account_recovery_link.show();
@@ -220,7 +220,7 @@ $.fn.authenticator = function() {
     var reset_form_and_errors = function(){
         reset_form();
         $('.error').remove();
-    }
+    };
 
     var set_provider_name = function(element){
         var provider_name = element.attr('name');
@@ -229,19 +229,19 @@ $.fn.authenticator = function() {
 
     var show_openid_input_fields = function(provider_name){
         reset_form_and_errors();
-        var token_name = askbot['auth']['extraTokenName'][provider_name]
-        if (askbot['data']['userIsAuthenticated']){
+        var token_name = askbot.auth.extraTokenName[provider_name];
+        if (askbot.data.userIsAuthenticated){
             $('#openid-heading').html(
                 interpolate(gettext('Please enter your %s, then proceed'), [token_name])
             );
             var button_text = gettext('Connect your %(provider_name)s account to %(site)s');
 			var data = {
 				provider_name: provider_name,
-				site: askbot['settings']['siteName']
-			}
+				site: askbot.settings.siteName
+			};
 			button_text = interpolate(button_text, data, true);
             openid_submit_button.val(button_text);
-        } 
+        }
         else {
             $('#openid-heading>span').html(token_name);
         }
@@ -260,7 +260,7 @@ $.fn.authenticator = function() {
     var start_login_with_extra_openid_token = function() {
         show_openid_input_fields($(this).attr('name'));
         set_provider_name($(this));
-        
+
         setup_enter_key_handler(
             openid_login_token_input,
             function(){
@@ -284,7 +284,7 @@ $.fn.authenticator = function() {
 
     var start_facebook_login = function(){
         set_provider_name($(this));
-        if (typeof FB != 'undefined'){
+        if (typeof FB !== 'undefined'){
             FB.getLoginStatus(function(response){
                 if (response.authResponse){
                     signin_form.submit();
@@ -301,7 +301,7 @@ $.fn.authenticator = function() {
     };
 
     var start_password_login_or_change = function(){
-        //called upon clicking on one of the password login buttons 
+        //called upon clicking on one of the password login buttons
         reset_form_and_errors();
         set_provider_name($(this));
         var provider_name = $(this).attr('name');
@@ -316,37 +316,38 @@ $.fn.authenticator = function() {
     };
 
     var setup_password_login_or_change = function(provider_name){
-        var token_name = askbot['auth']['extraTokenName'][provider_name]
+        var token_name = askbot.auth.extraTokenName[provider_name];
         var password_action_input = $('input[name=password_action]');
-        if (askbot['data']['userIsAuthenticated'] === true && askbot['settings']['useLdapForPasswordLogin'] == false){
-            var password_button = $('input[name=change_password]');
-            var submit_action = submit_change_password;
+        var provider_cleaned_name;
+        var password_heading_text;
+        var password_button_text;
+        var password_button = $('input[name=change_password]');
+        var submit_action = submit_change_password;
+        var focus_input = $('#id_new_password');
+        var submittable_input = $('#id_new_password_retyped');
+
+        if (askbot.data.userIsAuthenticated && !askbot.settings.useLdapForPasswordLogin) {
+
             if (provider_name === 'local'){
-                var provider_cleaned_name = askbot['settings']['siteName'];
-            }
-            else {
-                var provider_cleaned_name = provider_name;
+                provider_cleaned_name = askbot.settings.siteName;
+            } else {
+                provider_cleaned_name = provider_name;
             }
             if (existing_login_methods && existing_login_methods[provider_name]){
-                var password_heading_text = interpolate(gettext('Change your %s password'), [provider_cleaned_name])
-                var password_button_text = gettext('Change password')
+                password_heading_text = interpolate(gettext('Change your %s password'), [provider_cleaned_name]);
+                password_button_text = gettext('Change password');
+            } else {
+                password_heading_text = interpolate(gettext('Create a password for %s'), [provider_cleaned_name]);
+                password_button_text = gettext('Create password');
             }
-            else {
-                var password_heading_text = interpolate(gettext('Create a password for %s'), [provider_cleaned_name])
-                var password_button_text = gettext('Create password')
-            }
-            $('#password-heading').html(
-                password_heading_text
-            )
+            $('#password-heading').html(password_heading_text);
             password_button.val(password_button_text);
             password_action_input.val('change_password');
-            var focus_input = $('#id_new_password');
-            var submittable_input = $('#id_new_password_retyped');
         } else {
             $('#password-heading>span').html(token_name);
-            var password_button = $('input[name=login_with_password]');
-            var submit_action = submit_login_with_password;
-            var create_pw_link = $('a.create-password-account')
+            password_button = $('input[name=login_with_password]');
+            submit_action = submit_login_with_password;
+            var create_pw_link = $('a.create-password-account');
             if (create_pw_link.length > 0){
                 create_pw_link.html(gettext('Create a password-protected account'));
                 var url = create_pw_link.attr('href');
@@ -359,8 +360,8 @@ $.fn.authenticator = function() {
                 create_pw_link.attr('href', url);
             }
             password_action_input.val('login');
-            var focus_input = $('#id_username');
-            var submittable_input = $('#id_password');
+            focus_input = $('#id_username');
+            submittable_input = $('#id_password');
         }
         password_input_fields.show();
         focus_input.focus();
@@ -382,7 +383,7 @@ $.fn.authenticator = function() {
 
     var start_account_recovery = function(){
         reset_form_and_errors();
-        account_recovery_hint.hide(); 
+        account_recovery_hint.hide();
         account_recovery_heading.css('margin-bottom', '0px');
         account_recovery_heading.html(account_recovery_prompt_text).show();
         email_input_fields.show();
@@ -402,7 +403,7 @@ $.fn.authenticator = function() {
 
     var setupMozillaPersonaListeners = function() {
         navigator.id.watch({
-            //loggedInUser: askbot['data']['userEmail'],
+            //loggedInUser: askbot.data.userEmail,
             onlogin: function(assertion) {
                 var assertionElement = signin_form.find('input[name=persona_assertion]');
                 assertionElement.val(assertion);
@@ -465,113 +466,28 @@ $.fn.authenticator = function() {
             start_simple_login
         );
 
-        setup_event_handlers( 
+        setup_event_handlers(
             signin_page.find('input.password'),
             start_password_login_or_change
         );
-        setup_event_handlers( 
+        setup_event_handlers(
             signin_page.find('input.wordpress_site'),
             start_password_login_or_change
         );
 
         setup_event_handlers(account_recovery_link, start_account_recovery);
 
-        if (askbot['data']['userIsAuthenticated']){
+        if (askbot.data.userIsAuthenticated){
             read_existing_login_methods();
             setup_login_method_deleters();
         }
     };
 
     setup_default_handlers();
-    if (askbot['settings']['signinAlwaysShowLocalLogin'] === true){
+    if (askbot.settings.signinAlwaysShowLocalLogin === true){
         init_always_visible_password_login();
     }
     clear_password_fields();
     return this;
 };
 
-/** 
- * @constructor
- */
-var ChangePasswordForm = function() {
-    WrappedElement.call(this);
-};
-inherits(ChangePasswordForm, WrappedElement);
-
-ChangePasswordForm.prototype.showMessage = function(message, callback) {
-    var flash = new FlashAlert('...saved, thanks');
-    if (callback) {
-        flash.setPostRunHandler(callback);
-    }
-    this._passwordHeading.append(flash.getElement());
-    flash.run();
-};
-
-ChangePasswordForm.prototype.clearErrors = function() {
-    this._pwInput1Errors.html('');
-    this._pwInput2Errors.html('');
-};
-
-ChangePasswordForm.prototype.showErrors = function(errors) {
-    if (errors['new_password']) {
-        this._pwInput1Errors.html(errors['new_password'][0]);
-    }
-    if (errors['new_password_retyped']) {
-        this._pwInput2Errors.html(errors['new_password_retyped'][0]);
-    }
-    if (errors['__all__']) {
-        this._pwInput2Errors.html(errors['__all__'][0]);
-    }
-};
-
-ChangePasswordForm.prototype.getData = function() {
-    return {
-        'new_password': this._pwInput1.val(),
-        'new_password_retyped': this._pwInput2.val()
-    };
-};
-
-ChangePasswordForm.prototype.getSubmitHandler = function() {
-    var me = this;
-    return function() {
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            data: me.getData(),
-            url: askbot['urls']['changePassword'],
-            success: function(data) {
-                if (data['message']) {
-                    if (me.inAccountRecovery()) {
-                        var callback = function() {
-                            window.location.href = askbot['urls']['questions'];
-                        };
-                        me.showMessage(data['message'], callback);
-                    } else {
-                        me.showMessage(data['message']);
-                    }
-                    me.clearErrors();
-                }
-                if (data['errors']) {
-                    me.clearErrors();
-                    me.showErrors(data['errors']);
-                }
-            }
-        });
-        return false;
-    };
-};
-
-ChangePasswordForm.prototype.inAccountRecovery = function() {
-    return ($('input[name="in_recovery"]').length === 1);
-};
-
-ChangePasswordForm.prototype.decorate = function(element) {
-    this._element = element;
-    this._pwInput1 = element.find('#id_new_password');
-    this._pwInput2 = element.find('#id_new_password_retyped');
-    this._pwInput1Errors = element.find('.new-password-errors');
-    this._pwInput2Errors = element.find('.new-password-retyped-errors');
-    this._button = element.find('input[name="change_password"]');
-    this._passwordHeading = element.find('#password-heading');
-    setupButtonEventHandlers(this._button, this.getSubmitHandler());
-};
