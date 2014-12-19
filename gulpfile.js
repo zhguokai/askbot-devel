@@ -17,12 +17,23 @@ var paths = {
 var patterns = {
     'js': [
         paths.js + '*.js',
-        paths.js + '**/*.js',
-        '!' + paths.js + '*.min.js',
-        '!' + paths.js + '**/*.min.js',
-        '!' + paths.js + 'libs/*.js',
-        '!' + paths.js + 'plugins/*.js',
-        '!' + paths.js + 'plugins/**/*.js'
+        paths.js + '**/*.js'
+    ]
+};
+
+var ignore = {
+    'js': [
+        './gulpfile.js',
+        paths.js + '*.min.js',
+        paths.js + '**/*.min.js',
+        paths.js + 'libs/*.js',
+        paths.js + 'plugins/*.js',
+        paths.js + 'plugins/**/*.js',
+        // these look like they are not used anywhere but we keep em for now
+        paths.js + 'output-words.js',
+        paths.js + 'jquery.form.js',
+        paths.js + 'jquery.ajaxfileupload.js',
+        paths.js + 'jquery.history.js'
     ]
 };
 
@@ -30,7 +41,7 @@ var patterns = {
 //##########################################################
 // TASKS/linting
 gulp.task('lint', function () {
-    gulp.src(patterns.js.concat(['!' + paths.js + 'libs/*.js', './gulpfile.js']))
+    gulp.src(patterns.js.concat(ignore.js.map(function (f) { return '!' + f; })))
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jscs()).on('error', function (error) {
