@@ -52,11 +52,6 @@ var providers_small = {
         label: 'Your Blogger account',
         url: 'http://{username}.blogspot.com/'
     },
-    verisign: {
-        name: 'Verisign',
-        label: 'Your Verisign username',
-        url: 'http://{username}.pip.verisignlabs.com/'
-    },
     vidoop: {
         name: 'Vidoop',
         label: 'Your Vidoop username',
@@ -95,7 +90,7 @@ var openid = {
         //$('#openid_input_area').empty();
 
         // add box for each provider
-        for (id in providers_large) {
+        for (var id in providers_large) {
            	openid_btns.append(this.getBoxHTML(providers_large[id], 'large', '.gif'));
         }
         if (providers_small) {
@@ -112,8 +107,8 @@ var openid = {
     },
     getBoxHTML: function(provider, box_size, image_ext) {
 
-        var box_id = provider["name"].toLowerCase();
-        return '<a title="'+provider["name"]+'" href="javascript: openid.signin(\''+ box_id +'\');"' +
+        var box_id = provider.name.toLowerCase();
+        return '<a title="'+provider.name +'" href="javascript: openid.signin(\''+ box_id +'\');"' +
         		' style="background: #FFF url(' + this.img_path + box_id + image_ext+') no-repeat center center" ' + 'class="' + box_id + ' openid_' + box_size + '_btn"></a>';
 
     },
@@ -126,18 +121,18 @@ var openid = {
 		this.highlight(box_id);
 		this.setCookie(box_id);
 
-        $('#'+this.input_id).val(provider['url']);
+        $('#'+this.input_id).val(provider.url);
         var input = $('#'+this.input_id);
         if(document.selection){
             var r = document.all.openid_url.createTextRange();
-            var res = r.findText("{username}");
-            if(res)
+            var res = r.findText('{username}');
+            if(res) {
                 r.select();
-
+            }
         }
         else {
             var text  = input.val();
-            var searchText = "{username}";
+            var searchText = '{username}';
             var posStart = text.indexOf(searchText);
             if(posStart > -1){
                 input.focus();
@@ -159,17 +154,17 @@ var openid = {
     setCookie: function (value) {
 		var date = new Date();
 		date.setTime(date.getTime()+(this.cookie_expires*24*60*60*1000));
-		var expires = "; expires="+date.toGMTString();
-		document.cookie = this.cookie_name+"="+value+expires+"; path=" + this.cookie_path;
+		var expires = '; expires='+date.toGMTString();
+		document.cookie = this.cookie_name+'='+value+expires+'; path=' + this.cookie_path;
     },
 
     readCookie: function () {
-		var nameEQ = this.cookie_name + "=";
+		var nameEQ = this.cookie_name + '=';
 		var ca = document.cookie.split(';');
 		for(var i=0;i < ca.length;i++) {
 			var c = ca[i];
-			while (c.charAt(0)==' ') c = c.substring(1,c.length);
-			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+			while (c.charAt(0)===' ') { c = c.substring(1,c.length); }
+			if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length,c.length); }
 		}
 		return null;
     }
