@@ -309,8 +309,13 @@ class PostManager(BaseQuerySetManager):
         """
         qs = Post.objects.get_comments().filter(parent__in=for_posts).select_related('author')
 
+        comments_reversed = askbot_settings.COMMENTS_REVERSED
+
         if visitor.is_anonymous():
-            comments = list(qs.order_by('added_at'))
+            if comments_reversed:
+                comments = list(qs.order_by('-added_at'))
+            else:
+                comments = list(qs.order_by('added_at'))
         else:
             upvoted_by_user = list(qs.filter(votes__user=visitor).distinct())
             not_upvoted_by_user = list(qs.exclude(votes__user=visitor).distinct())
@@ -319,7 +324,7 @@ class PostManager(BaseQuerySetManager):
                 c.upvoted_by_user = 1  # numeric value to maintain compatibility with previous version of this code
 
             comments = upvoted_by_user + not_upvoted_by_user
-            comments.sort(key=operator.attrgetter('added_at'))
+            comments.sort(key=operator.attrgetter('added_at'), reverse=comments_reversed)
 
         post_map = defaultdict(list)
         for cm in comments:
@@ -342,7 +347,20 @@ class PostManager(BaseQuerySetManager):
         #
         #            return comments
 
+class MockPost(object):
+    """Used for special purposes, e.g. to fill
+    out the js templates for the posts made via ajax
+    """
+    def __init__(self, post_type=None, author=None):
+        self.post_type = post_type
+        self.score = 0
+        self.id = 0
+        self.author = author
+        self.summary = ''
+        self.added_at = datetime.datetime.now()
 
+    def needs_moderation(self):
+        return False
 
 class Post(models.Model):
     post_type = models.CharField(max_length=255, db_index=True)
@@ -1085,6 +1103,9 @@ class Post(models.Model):
         comments = self.get_cached_comments()
         if comment not in comments:
             comments.append(comment)
+
+    def reverse_cached_comments(self):
+        self.get_cached_comments().reverse()
 
     def add_comment(
                 self,

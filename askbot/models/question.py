@@ -1089,8 +1089,44 @@ class Thread(models.Model):
     def get_post_data_for_question_view(self, user=None, sort_method=None):
         """loads post data for use in the question details view
         """
+        def reverse_comments(post_data):
+            question = post_data[0]
+            answers = post_data[1]
+            question.reverse_cached_comments()
+            map(lambda v: v.reverse_cached_comments(), answers)
+            return post_data
+
+        def find_posts(posts, need_ids):
+            """posts - is source list
+            need_ids - set of post ids
+            """
+            found = dict()
+            for post in posts:
+                if post.id in need_ids:
+                    found[post.id] = post
+                    need_ids.remove(post.id)
+                    comments = post.get_cached_comments()
+                    found.update(find_posts(comments, need_ids))
+            return found
+
+        def post_type_ord(p):
+            """need to sort by post type"""
+            if p.is_question():
+                return 0
+            elif p.is_answer():
+                return 1
+            return 2
+
+        def cmp_post_types(a, b):
+            """need to sort by post type"""
+            at = post_type_ord(a)
+            bt = post_type_ord(b)
+            return cmp(at, bt)
+
         post_data = self.get_cached_post_data(user=user, sort_method=sort_method)
         if user.is_anonymous():
+            if askbot_settings.COMMENTS_REVERSED:
+                reverse_comments(post_data)
             return post_data
 
         if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' and user.is_watched():
@@ -1108,19 +1144,6 @@ class Thread(models.Model):
             #get ids of posts that we need to patch with suggested data
             if len(suggested_revs):
                 #find posts that we need to patch
-                def find_posts(posts, need_ids):
-                    """posts - is source list
-                    need_ids - set of post ids
-                    """
-                    found = dict()
-                    for post in posts:
-                        if post.id in need_ids:
-                            found[post.id] = post
-                            need_ids.remove(post.id)
-                            comments = post.get_cached_comments()
-                            found.update(find_posts(comments, need_ids))
-                    return found
-
                 suggested_post_ids = [rev.post_id for rev in suggested_revs]
 
                 question = post_data[0]
@@ -1147,20 +1170,6 @@ class Thread(models.Model):
                     post_to_author[post_id] = rev.author_id
                     post.set_runtime_needs_moderation()
 
-                def post_type_ord(p):
-                    """need to sort by post type"""
-                    if p.is_question():
-                        return 0
-                    elif p.is_answer():
-                        return 1
-                    return 2
-
-                def cmp_post_types(a, b):
-                    """need to sort by post type"""
-                    at = post_type_ord(a)
-                    bt = post_type_ord(b)
-                    return cmp(at, bt)
-
                 if len(post_id_set):
                     #brand new suggested posts
                     from askbot.models import Post
@@ -1183,6 +1192,8 @@ class Thread(models.Model):
                             post_data[0] = post
                             all_posts.append(post)
 
+        if askbot_settings.COMMENTS_REVERSED:
+            reverse_comments(post_data)
         return post_data
 
 

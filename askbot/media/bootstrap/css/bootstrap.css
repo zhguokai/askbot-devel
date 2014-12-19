@@ -3516,6 +3516,7 @@ a.thumbnail:hover {
 }
 .modal-body {
   overflow-y: auto;
+  overflow-x: hidden;
   max-height: 400px;
   padding: 15px;
 }

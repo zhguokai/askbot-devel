@@ -1,5 +1,6 @@
 <script type='text/javascript'>
     (function() {
+        askbot['settings']['commentsReversed'] = {{ settings.COMMENTS_REVERSED|as_js_bool }};
         //make images always fit the screen
         var images = $('.question-page .post-body img');
         //these breakpoints must match those in css
@@ -63,7 +64,7 @@
         if (askbot['data']['userIsAuthenticated']) {
             var draftHandler = new DraftAnswer();
             draftHandler.setThreadId({{ thread.id }});
-            draftHandler.decorate($(document));
+            draftHandler.decorate($('body'));
         }
 
         var expanders = $('.expander');

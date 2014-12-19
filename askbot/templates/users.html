@@ -102,7 +102,7 @@
                 var group_join_btn = new GroupJoinButton();
                 group_join_btn.decorate($('.group-join-btn'));
                 //setup WMD editor
-                if (askbot['data']['userIsAdminOrMod'] === true){
+                if (askbot['data']['userIsAdminOrMod']){
                     //todo: this is kind of Attacklab.init ... should not be here
                     Attacklab.wmd = function(){
                         Attacklab.loadEnv = function(){

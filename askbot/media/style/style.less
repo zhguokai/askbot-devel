@@ -68,7 +68,8 @@ select,
 textarea,
 #askFormBar .questionTitleInput,
 .wmd-container,
-.folded-editor {
+.folded-editor,
+.mock-editor {
     border: #cce6ec 3px solid;
     height: 22px;
     font-size: 13px;
@@ -683,7 +684,7 @@ input[type="submit"].searchBtn {
     text-align: center;
     margin: 0;
     width: 48px;
-    .sprites(-98px,-37px);
+    .sprites(-98px,-36px);
     .rounded-corners(0);
     .box-shadow(0, 0, 0);
     cursor:pointer;
@@ -732,7 +733,7 @@ input[type="submit"].searchBtn:hover {
     background-image: none;
     background-image: none;
     background-image: none;
-    .sprites(-98px-48,-37px);
+    background: url(../images/sprites.png) no-repeat -146px -36px !important;
 }
 
 input[type="button"].cancelSearchBtn {
@@ -1942,7 +1943,8 @@ ul#related-tags li {
     margin-right:7px;
 }
 
-.folded-editor {
+.folded-editor,
+.mock-editor {
     box-shadow: inset 0 0 3px 1px #aaa;
     -moz-box-shadow: inset 0 0 3px 1px #aaa;
     -webkit-box-shadow: inset 0 0 3px 1px #aaa;
@@ -1962,7 +1964,7 @@ ul#related-tags li {
         -webkit-box-shadow: 0 0 0 0;
     }
     p.prompt {
-        margin: 5px 8px;
+        margin: 5px 4px;
         display: block;
     }
 }
@@ -2475,13 +2477,6 @@ ul#related-tags li {
     .question-img-favorite:hover {
         background: url(../images/vote-favorite-on.png)
     }
-    div.comments {
-        padding: 0;
-    }
-    div.comments.empty {
-        margin-top: -34px;
-        float: left;
-    }
     h2.comment-title {
        color: @section-title;
        font-weight: bold;
@@ -2491,9 +2486,14 @@ ul#related-tags li {
        padding-left: 0;
        width:200px;
     }
+    .comments.empty.ordering-forward {
+        margin-top: -35px;
+        float: left;
+    }
     .comments {
         font-size: 12px;    
         clear: both;
+        padding: 0;
 
         .truncated-post:nth-last-child(3) {
             float: left;
@@ -2528,12 +2528,22 @@ ul#related-tags li {
             text-decoration: none;
         }
 
-        .button {
+        .js-open-editor-btn,
+        .js-load-comments-btn {
             color: #988e4c;
             font-size: 11px;
             padding: 3px;
             cursor: pointer;
         }
+
+        .js-open-editor-btn.new-comment-box {
+            padding: 0 14px 0 29px;
+            .mock-editor {
+                height: 50px;
+            }
+        }
+
+
         a {
             background-color: inherit;
             color: @link;
@@ -2553,14 +2563,17 @@ ul#related-tags li {
             font-size: 13px;
             height: 54px;
             line-height: 1.3;
-            margin: -1px 0 0 1px;
+            margin: 0;
             outline: none;
             overflow:auto;
-            padding: 5px 19px 2px 3px;
-            width: 99.6%;
+            padding: 5px 19px 2px 6px;
+            width: 100%;
         }
         .wmd-container textarea {
             border: none;
+            box-shadow: inset 0 0 3px 1px #aaa;
+            -moz-box-shadow: inset 0 0 3px 1px #aaa;
+            -webkit-box-shadow: inset 0 0 3px 1px #aaa
         }
         .transient-comment {
             margin-bottom: 3px; /* match paragraph style */
@@ -2653,48 +2666,53 @@ ul#related-tags li {
         .comment-body {
             line-height: 1.3;
             margin: 3px 26px 0 0;
-            padding: 5px 3px;
+            padding: 5px 3px 0;
             color: #666;
             font-size:13px;
-
-            .edit{
-                padding-left:6px;
+            p {
+                font-size:13px;
+                line-height:1.3;
+                margin-bottom: 3px;
+                padding: 0;
             }
-
-            .convert-comment {
-                display: inline;
-                white-space: nowrap;
-                padding-left: 0px;
-                input {
-                    background: none;
-                    padding: 0px;
-                    color: #1B79BD;
-                    border:none;
-                    height: 13px;
-                    width:auto;
-                    font-family: Arial;
-                    font-size: 13px;
-                    font-weight: normal;
-                    line-height: 13px;
-                    margin: 0 0 3px 8px;
-                    vertical-align: middle;
-                    .box-shadow(0, 0, 0);
-                    .text-shadow(0, 0, 0);
-                }
-
-                input:hover {
-                    text-decoration: underline;
-                    cursor: pointer;
-                }
+            p:last-child {
+                margin-bottom: 0;
             }
-
         }
 
-        .comment-body p{
-            font-size:13px;
-            line-height:1.3;
-            margin-bottom: 3px;
-            padding: 0;
+        .comment-controls {
+            padding-left: 3px;
+        }
+
+        .edit {
+            padding-left:6px;
+        }
+
+        .convert-comment {
+            display: inline;
+            white-space: nowrap;
+            padding-left: 0px;
+            input {
+                background: none;
+                padding: 0px;
+                color: #1B79BD;
+                border:none;
+                height: 13px;
+                width:auto;
+                font-family: Arial;
+                font-size: 11px;
+                font-weight: normal;
+                line-height: 15px;
+                margin: 0 0 3px 8px;
+                vertical-align: middle;
+                .box-shadow(0, 0, 0);
+                .text-shadow(0, 0, 0);
+            }
+
+            input:hover {
+                text-decoration: underline;
+                cursor: pointer;
+            }
         }
 
         .comment-delete {
@@ -2800,11 +2818,12 @@ ul#related-tags li {
     .answered-by-owner {
         background: #F1F1FF;
 
-        .comments .button {
-            background-color: #E6ECFF;
-        }
         .comments {
             background-color: #E6ECFF;
+            .js-load-comments-btn,
+            .js-open-editor-btn {
+                background-color: #E6ECFF;
+            }
         }
     }
 

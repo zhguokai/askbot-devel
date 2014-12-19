@@ -7,7 +7,7 @@
                 <span class="form-error">{{ form.title.errors }}</span>
             {% endif %}
         </label>
-        <div id="askFormBar">
+        <div id="askFormBar" class="search-bar">
             <input id="id_title" class="questionTitleInput" name="title" autocomplete="off"
                 value="{% if form.initial.title %}{{form.initial.title|escape}}{% endif %}"/>
         </div>

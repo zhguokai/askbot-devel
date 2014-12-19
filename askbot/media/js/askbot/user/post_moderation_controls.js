@@ -106,7 +106,7 @@ PostModerationControls.prototype.getModHandler = function (action, items, optRea
                         junk = me.makeElement('div');
                         junk.attr('id', 'junk-mod');
                         junk.hide();
-                        $(document).append(junk);
+                        $('body').append(junk);
                     }
                     var a = me.makeElement('a');
                     a.attr('href', window.location.href);

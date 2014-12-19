@@ -331,28 +331,85 @@
 {# Warning! Any changes to the comment markup here must be duplicated in post.js
 for the purposes of the AJAX comment editor #}
 
-{%- macro add_or_show_comments_button(post = None, max_comments = None, widget_id = None) -%}
+{%- macro comments_widget_buttons(post = None, max_comments = None) -%}
     {% if post.comment_count > max_comments %}
-        {% set remaining_comment_count = post.comment_count - max_comments %}
+        {% if settings.COMMENTS_REVERSED == False %}
+            <a class="hidden js-open-editor-btn">{% trans %}add a comment{% endtrans %}</a>
+        {% endif %}
+        <a class="js-load-comments-btn">
+            {% if settings.COMMENTS_REVERSED %}
+                {% trans %}load older comments{% endtrans %}
+            {% else %}
+                {% trans %}see more comments{% endtrans %}
+            {% endif %}
+        </a>
     {% else %}
-        {% set remaining_comment_count = 0 %}
+        {% if settings.COMMENTS_REVERSED == False %}
+            <a class="js-open-editor-btn">{% trans %}add a comment{% endtrans %}</a>
+        {% endif %}
     {% endif %}
-    <a id="add-comment-to-post-{{post.id}}" class="button"></a>
-    <script type="text/javascript">
-        askbot['data']['{{widget_id}}'] = {
-            truncated: {% if post.comment_count > max_comments %}true{% else %}false{% endif %}
-        };
-        askbot['functions']['renderAddCommentButton'](
-                                                '{{post.id}}',
-                                                {{remaining_comment_count}}
-                                            );
-    </script>
 {%- endmacro -%}
 
 {%- macro csrf_middleware_token(csrf_token) -%}
     <div style="display: none;">
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
     </div>
+{%- endmacro -%}
+
+{%- macro comment_widget(comment) -%}
+    {# Warning! Any changes to the comment markup must be duplicated in post.js
+       for the purposes of the AJAX comment editor #}
+    <div class="comment" data-comment-id="{{ comment.id }}">
+        <div class="comment-votes">
+            {% if comment.score > 0 %}
+                <div 
+                    id="comment-img-upvote-{{ comment.id }}" 
+                    class="upvote"
+                >{{ comment.score }}</div>
+                <script type="text/javascript">
+                    askbot['functions']['renderPostVoteButtons']('comment', '{{ comment.id }}');
+                </script>
+            {% else %}
+                <div class="upvote"></div>
+            {% endif %}
+        </div>
+        <div class="comment-content">
+            <div id="post-{{ comment.id }}-delete" class="comment-delete">
+                <span class="delete-icon" title="{% trans %}delete this comment{% endtrans %}"></span>
+            </div>
+            {% if comment.needs_moderation() %}
+                <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
+            {% endif %}
+            <div class="comment-body">
+                {{ comment.summary }}
+            </div>
+            <div class="comment-controls">
+                <a 
+                    class="author"
+                    href="{{ comment.author.get_profile_url() }}"
+                >{{ comment.author.username|escape }}</a>
+                <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
+                <a 
+                    id="post-{{ comment.id }}-edit"
+                    class="edit"
+                >{% trans %}edit{% endtrans %}</a>
+                <form 
+                    action="{% url comment_to_answer %}"
+                    method="POST"
+                    accept-charset="utf-8"
+                    class='convert-comment'
+                >
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    <input type="hidden" value="{{ comment.id }}" name="comment_id">
+                    <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        askbot['functions']['hideConvertLinks']();
+        askbot['functions']['renderPostControls']('{{ comment.id }}');
+    </script>
 {%- endmacro -%}
 
 {%- macro post_comments_widget(
@@ -372,103 +429,30 @@ for the purposes of the AJAX comment editor #}
         {% set comments = post.get_cached_comments()[:max_comments] %}
     {% endif %}
     {% set comments_count = comments|length %}
-    {% if comments_count > 0 %}
+    {% if comments_count > 0 or settings.COMMENTS_REVERSED %}
         <h2 class="comment-title">{% trans %}Comments{% endtrans %}</h2>
         <div class="clean"></div> 
     {% endif %}
-    {% set widget_id = 'comments-for-' + post.post_type + '-' + post.id|string %}
-    <div class="comments{% if comments_count == 0 %} empty{% endif %}" id="{{ widget_id }}">
+    <div class="comments{% if comments_count == 0 %} empty{% endif %} ordering-{% if settings.COMMENTS_REVERSED %}reversed{% else %}forward{% endif %}" 
+        data-parent-post-type="{{ post.post_type }}"
+        data-parent-post-id="{{ post.id }}"
+    >
+        {% if settings.COMMENTS_REVERSED %}
+            <div class="js-open-editor-btn new-comment-box">
+                {% set prompt=gettext('add a comment...') %}
+                {% include "widgets/mock_editor.html" %}
+            </div>
+        {% endif %}
         <div class="content">
             {% for comment in comments %}
-                {# Warning! Any changes to the comment markup IN THIS `FOR` LOOP must be duplicated in post.js
-                   for the purposes of the AJAX comment editor #}
-                <div class="comment" 
-                    id="comment-{{comment.id}}"
-                    data-post-id="{{ comment.id }}"
-                >
-                    <div class="comment-votes">
-                        {% if comment.score > 0 %}
-                            <div 
-                                id="comment-img-upvote-{{comment.id}}" 
-                                class="upvote"
-                            >{{comment.score}}</div>
-                            <script type="text/javascript">
-                                askbot['functions']['renderPostVoteButtons']('comment', '{{comment.id}}');
-                            </script>
-                        {% else %}
-                            <div class="upvote"></div>
-                        {% endif %}
-                    </div>
-                    <div class="comment-content">
-                        <div 
-                            id="post-{{comment.id}}-delete"
-                            class="comment-delete"
-                        >
-                            <span 
-                                class="delete-icon"
-                                title="{% trans %}delete this comment{% endtrans %}"
-                            ></span>
-                        </div>
-                        {% if comment.needs_moderation() %}
-                            <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
-                        {% endif %}
-                        <div class="comment-body">
-                            {{ comment.summary }}
-                            <a 
-                                class="author"
-                                href="{{comment.author.get_profile_url()}}"
-                            >{{comment.author.username|escape}}</a>
-                            <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
-                            <a 
-                                id="post-{{comment.id}}-edit"
-                                class="edit"
-                            >{% trans %}edit{% endtrans %}</a>
-                            <form 
-                                action="{% url comment_to_answer %}"
-                                method="POST"
-                                accept-charset="utf-8"
-                                class='convert-comment'
-                            >
-                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                                <input type="hidden" value="{{comment.id}}" name="comment_id">
-                                <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <script type="text/javascript">
-                    askbot['functions']['hideConvertLinks']();
-                    askbot['functions']['renderPostControls']('{{comment.id}}');
-                </script>
+                {{ comment_widget(comment) }}
             {% endfor %}
         </div>
         <div class="controls">
-            {% if show_post == post and show_comment %}
-                {% if show_comment_position > max_comments %}
-                    {{
-                        add_or_show_comments_button(
-                                            post = post,
-                                            max_comments = show_comment_position,
-                                            widget_id = widget_id
-                                        )
-                    }}
-                {% else %}
-                    {{
-                        add_or_show_comments_button(
-                                            post = post,
-                                            max_comments = max_comments,
-                                            widget_id = widget_id
-                                        )
-                    }}
-                {% endif %}
+            {% if show_post == post and show_comment and show_comment_position > max_comments %}
+                {{ comments_widget_buttons(post=post, max_comments=show_comment_position) }}
             {% else %}
-                {{
-                    add_or_show_comments_button(
-                                        post = post,
-                                        max_comments = max_comments,
-                                        widget_id = widget_id
-                                    )
-                }}
+                {{ comments_widget_buttons(post=post, max_comments=max_comments) }}
             {% endif %}
         </div>
     </div>

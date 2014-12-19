@@ -1,6 +1,14 @@
 Changes in Askbot
 =================
 
+Development version (only in the repository)
+--------------------------------------------
+* Allowed reverse ordering of comments
+
+0.7.51 (Dec 15, 2014)
+---------------------
+* Bug fixes
+
 0.7.50 (Nov 1, 2014)
 --------------------
 * Added email alert for moderators `askbot_send_moderation_alerts`
