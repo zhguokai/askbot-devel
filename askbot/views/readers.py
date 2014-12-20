@@ -271,11 +271,7 @@ def questions(request, **kwargs):
         #todo: move this out to a separate middleware
         if request.user.is_authenticated() and request.user.is_administrator():
             if domain_is_bad():
-                url = reverse(
-                    'group_settings',
-                    kwargs = {'group': 'QA_SITE_SETTINGS'}
-                )
-                url = url + '#id_QA_SITE_SETTINGS__APP_URL'
+                url = askbot_settings.get_setting_url('QA_SITE_SETTINGS', 'APP_URL')
                 msg = _(
                     'Please go to '
                     '<a href="%s">"settings->URLs, keywords and greetings"</a> '

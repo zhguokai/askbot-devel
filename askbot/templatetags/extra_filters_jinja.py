@@ -22,6 +22,7 @@ from askbot.utils.html import absolutize_urls, site_link
 from askbot.utils.html import site_url as site_url_func
 from askbot.utils import functions
 from askbot.utils import url_utils
+from askbot.utils.markup import markdown_input_converter
 from askbot.utils.slug import slugify
 from askbot.utils.pluralization import py_pluralize as _py_pluralize
 from askbot.shims.django_shims import ResolverMatch
@@ -390,3 +391,7 @@ def sub_vars(text, user=None):
     text = sitename_re.sub(site_name, text)
     text = sitelink_re.sub(site_link('index', site_name), text)
     return text
+
+@register.filter
+def convert_markdown(text):
+    return markdown_input_converter(text)

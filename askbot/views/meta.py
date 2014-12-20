@@ -7,7 +7,9 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.shortcuts import render
-from django.template import RequestContext, Template
+from django.template import RequestContext
+from django.template import Template
+from django.template import Context
 from django.template.loader import get_template
 from django.http import Http404
 from django.http import HttpResponse
@@ -32,15 +34,31 @@ from askbot.skins.loaders import render_text_into_skin
 from askbot.utils.decorators import admins_only
 from askbot.utils.forms import get_next_url
 from askbot.utils import functions
+from askbot.utils.markup import markdown_input_converter
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 
 import re
 
-def generic_view(request, template = None, page_class = None):
+def generic_view(request, template=None, page_class=None, context=None):
     """this may be not necessary, since it is just a rewrite of render"""
     if request is None:  # a plug for strange import errors in django startup
         return render_to_response('django_error.html')
-    return render(request, template, {'page_class': page_class})
+    context = context or {}
+    context['page_class'] = page_class
+    return render(request, template, Context(context))
+
+def markdown_flatpage(request, page_class=None, setting_name=None):
+    value = getattr(askbot_settings, setting_name)
+    content = markdown_input_converter(value)
+    context = {
+        'content': content,
+        'title': askbot_settings.get_description(setting_name)
+    }
+    return generic_view(
+        request, template='askbot_flatpage.html',
+        page_class=page_class, context=context
+    )
+
 
 PUBLIC_VARIABLES = ('CUSTOM_CSS', 'CUSTOM_JS')
 
@@ -55,14 +73,14 @@ def config_variable(request, variable_name = None, mimetype = None):
     else:
         return HttpResponseForbidden()
 
-def about(request, template='about.html'):
+def about(request, template='static_page.html'):
     title = _('About %(site)s') % {'site': askbot_settings.APP_SHORT_NAME}
     data = {
         'title': title,
         'page_class': 'meta',
         'content': askbot_settings.FORUM_ABOUT
     }
-    return render(request, 'static_page.html', data)
+    return render(request, template, data)
 
 def page_not_found(request, template='404.html'):
     return generic_view(request, template)

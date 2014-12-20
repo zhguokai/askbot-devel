@@ -63,6 +63,9 @@ anyone, must be valid</i>)
                 {% endif %}
                 {{ openid_register_form.email }}
             </div>
+            {% set tos_field = openid_register_form.terms_accepted %}
+            {% import "authopenid/tos_field.html" %}
+
             {% if openid_register_form.recaptcha %}
             <div class="form-row-vertical">
                 {{ macros.form_field_with_errors(openid_register_form.recaptcha ) }}

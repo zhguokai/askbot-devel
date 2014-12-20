@@ -5,6 +5,7 @@ from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup, LongStringValue
 from askbot.conf.super_groups import CONTENT_AND_UI
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
 
 FLATPAGES = ConfigurationGroup(
                 'FLATPAGES',
@@ -65,6 +66,23 @@ settings.register(
         _(
             'Save, then <a href="http://validator.w3.org/">'
             'use HTML validator</a> on the "privacy" page to check your input.'
+        )
+    )
+)
+
+settings.register(
+    LongStringValue(
+        FLATPAGES,
+        'TERMS',
+        description=_('Terms and conditions'),
+        localized=True,
+        help_text=string_concat(
+            _(
+                'Save, then <a href="http://validator.w3.org/">'
+                'use HTML validator</a> on the "terms" page to check your input.'
+            ),
+            ' ',
+            settings.get_related_settings_info( ('LOGIN_PROVIDERS' , 'TERMS_ACCEPTANCE_REQUIRED', False))
         )
     )
 )
