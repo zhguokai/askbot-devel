@@ -2431,7 +2431,7 @@ Comment.prototype.startEditing = function () {
 Comment.prototype.decorate = function (element) {
     this._element = $(element);
     var parent_type = this._element.closest('.comments').data('parentPostType');
-    var comment_id = this._element.data('commentId');
+    var comment_id = this._element.data('commentId') || undefined;
     this._data = {'id': comment_id};
 
     this._contentBox = this._element.find('.comment-content');
