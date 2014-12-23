@@ -61,6 +61,8 @@ Programming, bug fixes and documentation
 * `Jerry Zhenlei Cai <https://github.com/jerryzhenleicai>`_
 * `Dmitry <https://github.com/dmzio>`_
 * `Ruslan Keba <https://github.com/rukeba>`_
+* `Vanessa Hänni <https://github.com/n3ssi3>`_
+* `Vadim Sikora <https://github.com/vxsx>`_
 
 Translations
 ------------
