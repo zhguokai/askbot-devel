@@ -14,6 +14,6 @@ UserQuestionsPaginator.prototype.getPageDataUrl = function (pageNo) {
     var url = QSutils.patch_query_string('', 'author:' + userId);
     url = QSutils.patch_query_string(url, 'sort:votes-desc');
     url = QSutils.patch_query_string(url, 'page:' + pageNo);
-    url = QSutils.patch_query_string(url, 'page-size:'+ pageSize);
+    url = QSutils.patch_query_string(url, 'page-size:' + pageSize);
     return askbot.urls.questions + url;
 };

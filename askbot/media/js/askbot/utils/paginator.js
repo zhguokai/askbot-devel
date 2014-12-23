@@ -100,7 +100,7 @@ Paginator.prototype.getWindowStart = function (pageNo) {
         return lastWindowStart;
     }
 
-    return pageNo - Math.floor(activePages/2);
+    return pageNo - Math.floor(activePages / 2);
 };
 
 Paginator.prototype.renderPaginatorWindow = function (windowStart) {

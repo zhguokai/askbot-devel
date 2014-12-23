@@ -24,7 +24,7 @@ var liveSearchNewThreadInit = function (auto_focus_out) {
 
     var restart_query = function () {
         /* restart query */
-        $('#' + q_list_sel).css('height',0).children().remove();
+        $('#' + q_list_sel).css('height', 0).children().remove();
         running = false;
         prev_text = '';
     };
@@ -66,9 +66,9 @@ var liveSearchNewThreadInit = function (auto_focus_out) {
             container.hide();//now hide
             if (data.length > 5) {
                 container.css('overflow-y', 'scroll');
-                container.css('height', unit_height*5 + 'px');
+                container.css('height', unit_height * 5 + 'px');
             } else {
-                container.css('height', data.length*unit_height + 'px');
+                container.css('height', data.length * unit_height + 'px');
                 container.css('overflow-y', 'hidden');
             }
             container.fadeIn();

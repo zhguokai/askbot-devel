@@ -19,7 +19,7 @@ FollowUser.prototype.setUserName = function (user_name) {
 FollowUser.prototype.decorate = function (element) {
     this._element = element;
     this._user_id = parseInt(element.attr('id').split('-').pop());
-    this._available_action = element.children().hasClass('follow') ? 'follow':'unfollow';
+    this._available_action = element.children().hasClass('follow') ? 'follow' : 'unfollow';
     var me = this;
     setupButtonEventHandlers(this._element, function () { me.go(); });
 };

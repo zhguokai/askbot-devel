@@ -8,9 +8,9 @@ QSutils.TAG_SEP = ','; // should match const.TAG_SEP; TODO: maybe prepopulate th
 
 QSutils.get_query_string_selector_value = function (query_string, selector) {
     var params = query_string.split('/');
-    for(var i=0; i<params.length; i++) {
+    for (var i = 0; i < params.length; i++) {
         var param_split = params[i].split(':');
-        if(param_split[0] === selector) {
+        if (param_split[0] === selector) {
             return param_split[1];
         }
     }
@@ -24,20 +24,20 @@ QSutils.patch_query_string = function (query_string, patch, remove) {
     var new_query_string = '';
     var mapping = {};
 
-    if(!remove) {
+    if (!remove) {
         // prepopulate the patched selector if it's not meant to be removed
         mapping[patch_split[0]] = patch_split[1];
     }
 
     for (var i = 0; i < params.length; i++) {
         var param_split = params[i].split(':');
-        if(param_split[0] !== patch_split[0] && param_split[1]) {
+        if (param_split[0] !== patch_split[0] && param_split[1]) {
             mapping[param_split[0]] = param_split[1];
         }
     }
 
     var add_selector = function (name) {
-        if(name in mapping) {
+        if (name in mapping) {
             new_query_string += name + ':' + mapping[name] + '/';
         }
     };
@@ -56,18 +56,18 @@ QSutils.patch_query_string = function (query_string, patch, remove) {
 
 QSutils.remove_search_tag = function (query_string, tag) {
     var tag_string = this.get_query_string_selector_value(query_string, 'tags');
-    if(!tag_string) {
+    if (!tag_string) {
         return query_string;
     }
 
     var tags = tag_string.split(this.TAG_SEP);
 
     var pos = $.inArray(encodeURIComponent(tag), tags);
-    if(pos > -1) {
+    if (pos > -1) {
         tags.splice(pos, 1); /* array.splice() works in-place */
     }
 
-    if(tags.length === 0) {
+    if (tags.length === 0) {
         return this.patch_query_string(query_string, 'tags:', true);
     } else {
         return this.patch_query_string(query_string, 'tags:' + tags.join(this.TAG_SEP));
@@ -77,7 +77,7 @@ QSutils.remove_search_tag = function (query_string, tag) {
 QSutils.add_search_tag = function (query_string, tag) {
     var tag_string = this.get_query_string_selector_value(query_string, 'tags');
     tag = encodeURIComponent(tag);
-    if(!tag_string) {
+    if (!tag_string) {
         tag_string = tag;
     } else {
         tag_string = [tag_string, tag].join(this.TAG_SEP);

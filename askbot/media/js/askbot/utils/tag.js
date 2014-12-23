@@ -127,7 +127,7 @@ Tag.prototype.createDom = function () {
     this._inner_element.attr('rel', 'tag');
     if (this._title === null) {
         var name = this.getName();
-        this.setTitle(interpolate(gettext('see questions tagged \'%s\''), [name,]));
+        this.setTitle(interpolate(gettext('see questions tagged \'%s\''), [name]));
     }
     this._inner_element.attr('title', this._title);
     this._inner_element.html(this.getDisplayTagName());
