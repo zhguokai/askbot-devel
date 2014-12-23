@@ -2719,7 +2719,7 @@ PostCommentsWidget.prototype.decorate = function(element){
     if (this._openEditorButton.length) {
         setupButtonEventHandlers(
             this._openEditorButton,
-            this.getOpenEditorHandler()
+            this.getOpenEditorHandler(this._openEditorButton)
         );
     }
 
@@ -2819,7 +2819,7 @@ PostCommentsWidget.prototype.getAllowEditHandler = function() {
     };
 };
 
-PostCommentsWidget.prototype.getOpenEditorHandler = function() {
+PostCommentsWidget.prototype.getOpenEditorHandler = function(button) {
     var me = this;
     return function() {
         //if user can't post, we tell him something and refuse
