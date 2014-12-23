@@ -9,7 +9,6 @@ from urlparse import urlparse
 from django.core.urlresolvers import reverse
 from django.utils.html import strip_tags as strip_all_tags
 from django.utils.html import urlize
-from askbot.conf import settings as askbot_settings
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
     acceptable_elements = ('a', 'abbr', 'acronym', 'address', 'b', 'big',
@@ -205,13 +204,21 @@ def site_url(url):
     base_url = urlparse(settings.APP_URL)
     return base_url.scheme + '://' + base_url.netloc + url
 
-def site_link(url_name, title):
+def internal_link(url_name, title, kwargs=None, anchor=None):
     """returns html for the link to the given url
     todo: may be improved to process url parameters, keyword
     and other arguments
+
+    link url does not have domain
     """
-    url = site_url(reverse(url_name))
+    url = reverse(url_name, kwargs=kwargs)
+    if anchor:
+        url += '#' + anchor
     return '<a href="%s">%s</a>' % (url, title)
+
+def site_link(url_name, title, kwargs=None, anchor=None):
+    """same as internal_link, but with the site domain"""
+    return site_url(internal_link(url_name, title, kwargs=kwargs, anchor=anchor))
 
 def unescape(text):
     """source: http://effbot.org/zone/re-sub.htm#unescape-html

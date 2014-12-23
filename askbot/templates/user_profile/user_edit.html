@@ -7,7 +7,7 @@
     {{ request.user.username|escape }} - {% trans %}edit profile{% endtrans %}
 </h1>
 <div id="main-body" style="width:100%;padding-top:10px">
-    <form name="" action="{% url edit_user request.user.id %}" method="post">{% csrf_token %}
+    <form name="" action="{% url edit_user view_user.id %}" method="post">{% csrf_token %}
         <div id="left" style="float:left;width:180px">
             <div class='avatar'>
                 {{ macros.gravatar(view_user, 128) }}

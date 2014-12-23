@@ -57,6 +57,15 @@ __all__ = [
     'ChangeEmailForm', 'EmailPasswordForm', 'DeleteForm',
 ]
 
+class ConsentField(forms.BooleanField):
+    def __init__(self, *args, **kwargs):
+        super(ConsentField, self).__init__(*args, **kwargs)
+        self.label = _('I have read and agree with the terms of service')
+        self.required = True
+        self.error_messages['required'] = _(
+            'In order to register, you must accept the terms of service'
+        )
+
 class LoginProviderField(forms.CharField):
     """char field where value must 
     be one of login providers
@@ -320,6 +329,11 @@ class OpenidRegisterForm(forms.Form):
     username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
 
+    def __init__(self, *args, **kwargs):
+        super(OpenidRegisterForm, self).__init__(*args, **kwargs)
+        if askbot_settings.TERMS_CONSENT_REQUIRED:
+            self.fields['terms_accepted'] = ConsentField()
+
 class SafeOpenidRegisterForm(OpenidRegisterForm):
     """this form uses recaptcha in addition
     to the base register form
@@ -336,6 +350,11 @@ class ClassicRegisterForm(SetPasswordForm):
     email = UserEmailField()
     login_provider = PasswordLoginProviderField()
     #fields password1 and password2 are inherited
+
+    def __init__(self, *args, **kwargs):
+        super(ClassicRegisterForm, self).__init__(*args, **kwargs)
+        if askbot_settings.TERMS_CONSENT_REQUIRED:
+            self.fields['terms_accepted'] = ConsentField()
 
 class SafeClassicRegisterForm(ClassicRegisterForm):
     """this form uses recaptcha in addition

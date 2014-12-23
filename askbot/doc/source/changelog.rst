@@ -3,6 +3,10 @@ Changes in Askbot
 
 Development version (only in the repository)
 --------------------------------------------
+* Added optional checkbox "accept terms of service"
+  which being enabled, requires users to read and agree
+  with the terms before signing up.
+* Added terms of service page
 * Allowed reverse ordering of comments
 
 0.7.51 (Dec 15, 2014)

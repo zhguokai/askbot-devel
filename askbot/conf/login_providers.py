@@ -17,8 +17,18 @@ LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
 settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
+        'TERMS_CONSENT_REQUIRED',
+        default=False,
+        description=_('Acceptance of terms required at registration'),
+        help_text=settings.get_related_settings_info(('FLATPAGES', 'TERMS', True))
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        LOGIN_PROVIDERS,
         'PASSWORD_REGISTER_SHOW_PROVIDER_BUTTONS',
-        default = True,
+        default=True,
         description=_('Show alternative login provider buttons on the password "Sign Up" page'),
     )
 )

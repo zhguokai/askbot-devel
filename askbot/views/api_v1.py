@@ -57,9 +57,10 @@ def info(request):
        Returns general data about the forum
     '''
     data = {}
-    data['answers'] = models.Post.objects.get_answers().count()
-    data['questions'] = models.Post.objects.get_questions().count()
-    data['comments'] = models.Post.objects.get_comments().count()
+    posts = models.Post.objects.filter(deleted=False)
+    data['answers'] = posts.filter(post_type='answer').count()
+    data['questions'] = posts.filter(post_type='question').count()
+    data['comments'] = posts.filter(post_type='comment').count()
     data['users'] = User.objects.filter(is_active=True).count()
 
     if askbot_settings.GROUPS_ENABLED:
@@ -76,9 +77,10 @@ def user(request, user_id):
     '''
     user = get_object_or_404(User, pk=user_id)
     data = get_user_data(user)
-    data['questions'] = models.Post.objects.get_questions(user).count()
-    data['answers'] = models.Post.objects.get_answers(user).count()
-    data['comments'] = models.Post.objects.filter(post_type='comment').count()
+    posts = models.Post.objects.filter(author=user, deleted=False)
+    data['answers'] = posts.filter(post_type='answer').count()
+    data['questions'] = posts.filter(post_type='question').count()
+    data['comments'] = posts.filter(post_type='comment').count()
     json_string = simplejson.dumps(data)
     return HttpResponse(json_string, content_type='application/json')
 
