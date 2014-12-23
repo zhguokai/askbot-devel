@@ -1007,17 +1007,17 @@ var Vote = (function () {
             return;
         }
         //may need to take a look at this again
-        if (data.status == '1') {
-            setVoteImage(voteType, true, object);
-            setVoteNumber(object, data.count);
-        }
-        else if (data.success == '1') {
-            setVoteImage(voteType, false, object);
-            setVoteNumber(object, data.count);
-            if (data.message.length > 0) {
-                showMessage(object, data.message);
-            }
-        }
+        // if (data.status == '1') {
+        //     setVoteImage(voteType, true, object);
+        //     setVoteNumber(object, data.count);
+        // }
+        // else if (data.success == '1') {
+        //     setVoteImage(voteType, false, object);
+        //     setVoteNumber(object, data.count);
+        //     if (data.message.length > 0) {
+        //         showMessage(object, data.message);
+        //     }
+        // }
         /*jshint eqeqeq:true */
     };
 

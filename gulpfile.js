@@ -28,6 +28,7 @@ var ignore = {
     'js': [
         './gulpfile.js',
         'bower_components/**/*.js',
+        'node_modules/**/*.js',
         paths.js + '*.min.js',
         paths.js + '**/*.min.js',
         paths.js + 'libs/*.js',
@@ -61,14 +62,14 @@ gulp.task('compile', function () {
             compilerPath: 'bower_components/closure-compiler/compiler.jar',
             fileName: 'build.js',
             compilerFlags: {
-                // externs: [
-                //     'askbot/media/js/libs',
-                //     'askbot/media/js/plugins',
-                //     'askbot/media/js/output-words.js',
-                //     'askbot/media/js/jquery.form.js',
-                //     'askbot/media/js/jquery.ajaxfileupload.js',
-                //     'askbot/media/js/jquery.history.js'
-                // ],
+                externs: [
+                    // 'askbot/media/js/libs',
+                    // 'askbot/media/js/plugins',
+                    // 'askbot/media/js/output-words.js',
+                    // 'askbot/media/js/jquery.form.js',
+                    // 'askbot/media/js/jquery.ajaxfileupload.js',
+                    // 'askbot/media/js/jquery.history.js'
+                ],
                 jscomp_off: 'internetExplorerChecks'
             }
         }))

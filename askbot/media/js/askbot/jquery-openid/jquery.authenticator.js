@@ -88,8 +88,8 @@ $.fn.authenticator = function () {
                                     $(provider_row).remove();
                                     delete existing_login_methods[provider_name];
                                     askbot.auth.providerCount -= 1;
-                                    if (askbot.auth.providerCount < 0) {
-                                        askbot.auth.providerCount === 0;
+                                    if (askbot.auth.providerCount <= 0) {
+                                        askbot.auth.providerCount = 0;
                                     }
                                     if (askbot.auth.providerCount === 0) {
                                         $('#ab-existing-login-methods').remove();
