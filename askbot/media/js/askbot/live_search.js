@@ -284,15 +284,15 @@ TagWarningBox.prototype.clear = function () {
 };
 
 TagWarningBox.prototype.addTag = function (tag_name) {
-   var tag = new Tag();
-   tag.setName(tag_name);
-   tag.setLinkable(false);
-   tag.setDeletable(false);
-   var elem = this.getElement();
-   this._tag_container.append(tag.getElement());
-   this._tag_container.css('display', 'block');
-   this._tags.push(tag);
-   elem.show();
+    var tag = new Tag();
+    tag.setName(tag_name);
+    tag.setLinkable(false);
+    tag.setDeletable(false);
+    var elem = this.getElement();
+    this._tag_container.append(tag.getElement());
+    this._tag_container.css('display', 'block');
+    this._tags.push(tag);
+    elem.show();
 };
 
 TagWarningBox.prototype.showWarning = function () {
@@ -410,7 +410,7 @@ FullTextSearch.prototype.getSearchUrl = function () {
 };
 
 FullTextSearch.prototype.renderTagWarning = function (tag_list) {
-    if ( !tag_list ) {
+    if (!tag_list) {
         return;
     }
     var tagWarningBox = this._tag_warning_box;
@@ -437,7 +437,7 @@ FullTextSearch.prototype.runTagSearch = function () {
         success: function (data, text_status, xhr) {
             me.renderFullTextSearchResult(data, text_status, xhr);
             $('#ab-tag-search').val('');
-        },
+        }
     });
     this.updateHistory(url);
 };
@@ -506,7 +506,7 @@ FullTextSearch.prototype.sendFullTextSearchQuery = function (query_text) {
     this.isRunning(true);
     var searchUrl = this.getSearchUrl();
     var prevText = this._prevText;
-    if(!prevText && query_text && askbot.settings.showSortByRelevance) {
+    if (!prevText && query_text && askbot.settings.showSortByRelevance) {
         /* If there was no query but there is some
          * query now - and we support relevance search
          * - then switch to it
@@ -543,7 +543,7 @@ FullTextSearch.prototype.getSearchQuery = function () {
     return $.trim(this._query.val());
 };
 
-FullTextSearch.prototype.getWidgetHeight = function() {
+FullTextSearch.prototype.getWidgetHeight = function () {
     return this._element.outerHeight();
 };
 
@@ -569,7 +569,7 @@ FullTextSearch.prototype.renderFullTextSearchResult = function (data) {
     $('#pager').toggle(data.paginator !== '').html(data.paginator);
     $('#questionCount').html(data.question_counter);
     this.renderSearchTags(data.query_data.tags, data.query_string);
-    if(data.faces.length > 0) {
+    if (data.faces.length > 0) {
         $('#contrib-users > a').remove();
         $('#contrib-users').append(data.faces.join(''));
     }
@@ -638,7 +638,7 @@ FullTextSearch.prototype.reset = function () {
 };
 
 FullTextSearch.prototype.refreshXButton = function () {
-    if(this.getSearchQuery().length > 0) {
+    if (this.getSearchQuery().length > 0) {
         if (this._query.hasClass('searchInput')) {
             $('#searchBar').addClass('cancelable');
             this._xButton.show();
@@ -668,7 +668,7 @@ FullTextSearch.prototype.renderRelatedTags = function (tags, query_string) {
     }
 
     var html_list = [];
-    for (var i=0; i<tags.length; i++) {
+    for (var i = 0; i < tags.length; i++) {
         var tag = new Tag();
         tag.setName(tags[i].name);
         tag.setDeletable(false);
@@ -733,8 +733,8 @@ FullTextSearch.prototype.setActiveSortTab = function (sort_method, query_string)
     var baseUrl = this._baseUrl;
     tabs.each(function (index, element) {
         var tab = $(element);
-        if ( tab.attr('id') ) {
-            var tab_name = tab.attr('id').replace(/^by_/,'');
+        if (tab.attr('id')) {
+            var tab_name = tab.attr('id').replace(/^by_/, '');
             if (tab_name in askbot.data.sortButtonData) {
                 href = baseUrl + QSutils.patch_query_string(
                                         query_string,
@@ -754,8 +754,8 @@ FullTextSearch.prototype.setActiveSortTab = function (sort_method, query_string)
     var bits = sort_method.split('-', 2);
     var name = bits[0];
     var sense = bits[1];//sense of sort
-    var antisense = (sense === 'asc' ? 'desc':'asc');
-    var arrow = (sense === 'asc' ? ' &#9650;':' &#9660;');
+    var antisense = (sense === 'asc' ? 'desc' : 'asc');
+    var arrow = (sense === 'asc' ? ' &#9650;' : ' &#9660;');
     var active_tab = $('#by_' + name);
     active_tab.attr('class', 'on');
     active_tab.attr(

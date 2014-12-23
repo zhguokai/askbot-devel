@@ -111,13 +111,12 @@ function pickedTags() {
         if (action === 'add') {
             if (reason === 'good') {
                 url = askbot.urls.mark_interesting_tag;
-            } else  if (reason === 'bad') {
+            } else if (reason === 'bad') {
                 url = askbot.urls.mark_ignored_tag;
             } else {
                 url = askbot.urls.mark_subscribed_tag;
             }
-        }
-        else {
+        } else {
             url = askbot.urls.unmark_tag;
         }
 
@@ -152,12 +151,11 @@ function pickedTags() {
                 function () {
                     deleteTagLocally();
                     if ($('body').hasClass('main-page')) {
-                      askbot.controllers.fullTextSearch.refresh();
+                        askbot.controllers.fullTextSearch.refresh();
                     }
                 }
             );
-        }
-        else {
+        } else {
             deleteTagLocally();
         }
     };
@@ -263,7 +261,7 @@ function pickedTags() {
             return;
         }
 
-        var tags_input =$.trim($(input_sel).val());
+        var tags_input = $.trim($(input_sel).val());
         if (tags_input === '') {
             return;
         }
@@ -327,7 +325,7 @@ function pickedTags() {
             return;
         }
         $('.' + section + '.tags.marked-tags .tag-left').each(
-            function (i,item) {
+            function (i, item) {
                 var tag = new Tag();
                 tag.decorate($(item));
                 tag.setDeleteHandler(function () {
@@ -410,6 +408,6 @@ function pickedTags() {
     };
 }
 
-$(document).ready( function () {
+$(document).ready(function () {
     pickedTags().init();
 });

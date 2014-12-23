@@ -46,7 +46,7 @@ FileUploadDialog.prototype.setErrorText = function (text) {
     this._label.addClass('error');
 };
 
-FileUploadDialog.prototype.setLabelText= function (text) {
+FileUploadDialog.prototype.setLabelText = function (text) {
     this._label.html(text);
     this._label.removeClass('error');
 };
@@ -142,7 +142,7 @@ FileUploadDialog.prototype.startFileUpload = function (startUploadHandler) {
             * hopefully a fix for the "fakepath" issue
             * https://www.mediawiki.org/wiki/Special:Code/MediaWiki/83225
             */
-            fileURL = fileURL.replace(/\w:.*\\(.*)$/,'$1');
+            fileURL = fileURL.replace(/\w:.*\\(.*)$/, '$1');
             var error = $(data).find('error').text();
             if (error !== '') {
                 me.setErrorText(error);

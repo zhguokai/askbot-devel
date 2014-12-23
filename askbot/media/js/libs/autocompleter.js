@@ -675,7 +675,7 @@ AutoCompleter.prototype.selectItem = function($li) {
 
     this.setValue(displayValue);
 
-    this.setCaret(displayValue.length);
+    this.setCaret(this._element.val().length);
     this.callHook('onItemSelect', { value: value, data: data });
     this.finish();
 };

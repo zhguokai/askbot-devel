@@ -75,8 +75,7 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
 
             if (onSubmitCallback) {
                 onSubmitCallback();
-            }
-            else{
+            } else {
                 form_dom.submit();
             }
         }
@@ -103,7 +102,7 @@ $.validator.addMethod('limit_tag_length', validateTagLength);
 
 var CPValidator = (function () {
     return {
-        getQuestionFormRules : function () {
+        getQuestionFormRules: function () {
             return {
                 tags: {
                     required: askbot.settings.tagsAreRequired,
@@ -135,7 +134,7 @@ var CPValidator = (function () {
                                         'details must have > %s characters',
                                         askbot.settings.minQuestionBodyLength
                                     ),
-                                    [askbot.settings.minQuestionBodyLength, ]
+                                    [askbot.settings.minQuestionBodyLength]
                                 )
                 },
                 title: {
@@ -155,11 +154,11 @@ var CPValidator = (function () {
                 }
             };
         },
-        getAnswerFormRules : function () {
+        getAnswerFormRules: function () {
             return {
                 text: {
                     minlength: askbot.settings.minAnswerBodyLength
-                },
+                }
             };
         },
         getAnswerFormMessages: function () {
@@ -178,7 +177,7 @@ var CPValidator = (function () {
                                     },
                                     true
                                 )
-                },
+                }
             };
         }
     };
@@ -276,10 +275,10 @@ MergeQuestionsDialog.prototype.getStartMergingHandler = function () {
 MergeQuestionsDialog.prototype.setPreview = function (data) {
     this._previewTitle.html(data.title);
     this._previewBody.html(data.summary);
-    for (var i=0; i<this._tags.length; i++) {
+    for (var i = 0; i < this._tags.length; i++) {
         this._tags[i].dispose();
     }
-    for (i=0; i<data.tags.length; i++) {
+    for (i = 0; i < data.tags.length; i++) {
         var tag = new Tag();
         tag.setLinkable(false);
         tag.setName(data.tags[i]);
@@ -290,7 +289,7 @@ MergeQuestionsDialog.prototype.setPreview = function (data) {
 };
 
 MergeQuestionsDialog.prototype.clearPreview = function () {
-    for (var i=0; i<this._tags.length; i++) {
+    for (var i = 0; i < this._tags.length; i++) {
         this._tags[i].dispose();
     }
     this._previewTitle.html('');
@@ -588,7 +587,7 @@ CommentVoteButton.prototype.getVoteHandler = function () {
         var voted = me._voted;
         var post_id = me._comment.getId();
         var data = {
-            cancel_vote: voted ? true:false,
+            cancel_vote: voted ? true : false,
             post_id: post_id
         };
         $.ajax({
@@ -675,7 +674,7 @@ var Vote = (function () {
     var questionControlsId = 'question-controls';
     var removeAnswerLinkIdPrefix = 'answer-delete-link-';
     var questionSubscribeUpdates = 'question-subscribe-updates';
-    var questionSubscribeSidebar= 'question-subscribe-sidebar';
+    var questionSubscribeSidebar = 'question-subscribe-sidebar';
 
     var acceptAnonymousMessage = gettext('insufficient privilege');
 
@@ -698,83 +697,83 @@ var Vote = (function () {
     var deletedMessage = gettext('post deleted');
 
     var VoteType = {
-        acceptAnswer : 0,
-        questionUpVote : 1,
-        questionDownVote : 2,
-        favorite : 4,
+        acceptAnswer: 0,
+        questionUpVote: 1,
+        questionDownVote: 2,
+        favorite: 4,
         answerUpVote: 5,
         answerDownVote:6,
-        offensiveQuestion : 7,
-        removeOffensiveQuestion : 7.5,
-        removeAllOffensiveQuestion : 7.6,
-        offensiveAnswer:8,
-        removeOffensiveAnswer:8.5,
-        removeAllOffensiveAnswer:8.6,
+        offensiveQuestion: 7,
+        removeOffensiveQuestion: 7.5,
+        removeAllOffensiveQuestion: 7.6,
+        offensiveAnswer: 8,
+        removeOffensiveAnswer: 8.5,
+        removeAllOffensiveAnswer: 8.6,
         removeQuestion: 9,//deprecate
-        removeAnswer:10,//deprecate
-        questionSubscribeUpdates:11,
-        questionUnsubscribeUpdates:12
+        removeAnswer: 10,//deprecate
+        questionSubscribeUpdates: 11,
+        questionUnsubscribeUpdates: 12
     };
 
     var getFavoriteButton = function () {
         return $('.js-follow');
     };
     var getFavoriteNumber = function () {
-        var favoriteNumber = '#'+ divIdFavorite ;
+        var favoriteNumber = '#' + divIdFavorite ;
         return $(favoriteNumber);
     };
     var getQuestionVoteUpButton = function () {
-        var questionVoteUpButton = 'div.'+ voteContainerId +' div[id^="'+ imgIdPrefixQuestionVoteup +'"]';
+        var questionVoteUpButton = 'div.' + voteContainerId + ' div[id^="' + imgIdPrefixQuestionVoteup + '"]';
         return $(questionVoteUpButton);
     };
     var getQuestionVoteDownButton = function () {
-        var questionVoteDownButton = 'div.'+ voteContainerId +' div[id^="'+ imgIdPrefixQuestionVotedown +'"]';
+        var questionVoteDownButton = 'div.' + voteContainerId + ' div[id^="' + imgIdPrefixQuestionVotedown + '"]';
         return $(questionVoteDownButton);
     };
     var getAnswerVoteUpButtons = function () {
-        var answerVoteUpButton = 'div.'+ voteContainerId +' div[id^="'+ imgIdPrefixAnswerVoteup +'"]';
+        var answerVoteUpButton = 'div.' + voteContainerId + ' div[id^="' + imgIdPrefixAnswerVoteup + '"]';
         return $(answerVoteUpButton);
     };
     var getAnswerVoteDownButtons = function () {
-        var answerVoteDownButton = 'div.'+ voteContainerId +' div[id^="'+ imgIdPrefixAnswerVotedown +'"]';
+        var answerVoteDownButton = 'div.' + voteContainerId + ' div[id^="' + imgIdPrefixAnswerVotedown + '"]';
         return $(answerVoteDownButton);
     };
     var getAnswerVoteUpButton = function (id) {
-        var answerVoteUpButton = 'div.'+ voteContainerId +' div[id="'+ imgIdPrefixAnswerVoteup + id + '"]';
+        var answerVoteUpButton = 'div.' + voteContainerId + ' div[id="' + imgIdPrefixAnswerVoteup + id + '"]';
         return $(answerVoteUpButton);
     };
     var getAnswerVoteDownButton = function (id) {
-        var answerVoteDownButton = 'div.'+ voteContainerId +' div[id="'+ imgIdPrefixAnswerVotedown + id + '"]';
+        var answerVoteDownButton = 'div.' + voteContainerId + ' div[id="' + imgIdPrefixAnswerVotedown + id + '"]';
         return $(answerVoteDownButton);
     };
 
     var getOffensiveQuestionFlag = function () {
-        var offensiveQuestionFlag = 'div.question span[id^="'+ offensiveIdPrefixQuestionFlag +'"]';
+        var offensiveQuestionFlag = 'div.question span[id^="' + offensiveIdPrefixQuestionFlag + '"]';
         return $(offensiveQuestionFlag);
     };
 
     var getRemoveOffensiveQuestionFlag = function () {
-        var removeOffensiveQuestionFlag = 'div.question span[id^="'+ removeOffensiveIdPrefixQuestionFlag +'"]';
+        var removeOffensiveQuestionFlag = 'div.question span[id^="' + removeOffensiveIdPrefixQuestionFlag + '"]';
         return $(removeOffensiveQuestionFlag);
     };
 
     var getRemoveAllOffensiveQuestionFlag = function () {
-        var removeAllOffensiveQuestionFlag = 'div.question span[id^="'+ removeAllOffensiveIdPrefixQuestionFlag +'"]';
+        var removeAllOffensiveQuestionFlag = 'div.question span[id^="' + removeAllOffensiveIdPrefixQuestionFlag + '"]';
         return $(removeAllOffensiveQuestionFlag);
     };
 
     var getOffensiveAnswerFlags = function () {
-        var offensiveQuestionFlag = 'div.answer span[id^="'+ offensiveIdPrefixAnswerFlag +'"]';
+        var offensiveQuestionFlag = 'div.answer span[id^="' + offensiveIdPrefixAnswerFlag + '"]';
         return $(offensiveQuestionFlag);
     };
 
     var getRemoveOffensiveAnswerFlag = function () {
-        var removeOffensiveAnswerFlag = 'div.answer span[id^="'+ removeOffensiveIdPrefixAnswerFlag +'"]';
+        var removeOffensiveAnswerFlag = 'div.answer span[id^="' + removeOffensiveIdPrefixAnswerFlag + '"]';
         return $(removeOffensiveAnswerFlag);
     };
 
     var getRemoveAllOffensiveAnswerFlag = function () {
-        var removeAllOffensiveAnswerFlag = 'div.answer span[id^="'+ removeAllOffensiveIdPrefixAnswerFlag +'"]';
+        var removeAllOffensiveAnswerFlag = 'div.answer span[id^="' + removeAllOffensiveIdPrefixAnswerFlag + '"]';
         return $(removeAllOffensiveAnswerFlag);
     };
 
@@ -782,25 +781,25 @@ var Vote = (function () {
         return $('#' + questionSubscribeUpdates);
     };
 
-    var getquestionSubscribeSidebarCheckbox= function () {
+    var getquestionSubscribeSidebarCheckbox = function () {
         return $('#' + questionSubscribeSidebar);
     };
 
     var getremoveAnswersLinks = function () {
-        var removeAnswerLinks = 'div.answer-controls a[id^="'+ removeAnswerLinkIdPrefix +'"]';
+        var removeAnswerLinks = 'div.answer-controls a[id^="' + removeAnswerLinkIdPrefix + '"]';
         return $(removeAnswerLinks);
     };
 
     var setVoteImage = function (voteType, undo, object) {
         var flag = undo ? false : true;
         if (object.hasClass('on')) {
-          object.removeClass('on');
+            object.removeClass('on');
         } else {
-          object.addClass('on');
+            object.addClass('on');
         }
 
-        if(undo) {
-            if(voteType === VoteType.questionUpVote || voteType === VoteType.questionDownVote) {
+        if (undo) {
+            if (voteType === VoteType.questionUpVote || voteType === VoteType.questionDownVote) {
                 $(getQuestionVoteUpButton()).removeClass('on');
                 $(getQuestionVoteDownButton()).removeClass('on');
             } else {
@@ -811,66 +810,66 @@ var Vote = (function () {
     };
 
     var setVoteNumber = function (object, number) {
-        var voteNumber = object.parent('div.'+ voteContainerId).find('div.'+ voteNumberClass);
+        var voteNumber = object.parent('div.' + voteContainerId).find('div.' + voteNumberClass);
         $(voteNumber).text(number);
     };
 
     var bindEvents = function () {
         // accept answers
-        var acceptedButtons = 'div.'+ voteContainerId +' div[id^="'+ imgIdPrefixAccept +'"]';
+        var acceptedButtons = 'div.' + voteContainerId + ' div[id^="' + imgIdPrefixAccept + '"]';
         $(acceptedButtons).unbind('click').click(function (event) {
-           Vote.accept($(event.target));
+            Vote.accept($(event.target));
         });
         // set favorite question
         var favoriteButton = getFavoriteButton();
         favoriteButton.unbind('click').click(function (event) {
-           //Vote.favorite($(event.target));
-           Vote.favorite(favoriteButton);
+            //Vote.favorite($(event.target));
+            Vote.favorite(favoriteButton);
         });
 
         // question vote up
         var questionVoteUpButton = getQuestionVoteUpButton();
         questionVoteUpButton.unbind('click').click(function (event) {
-           Vote.vote($(event.target), VoteType.questionUpVote);
+            Vote.vote($(event.target), VoteType.questionUpVote);
         });
 
         var questionVoteDownButton = getQuestionVoteDownButton();
         questionVoteDownButton.unbind('click').click(function (event) {
-           Vote.vote($(event.target), VoteType.questionDownVote);
+            Vote.vote($(event.target), VoteType.questionDownVote);
         });
 
         var answerVoteUpButton = getAnswerVoteUpButtons();
         answerVoteUpButton.unbind('click').click(function (event) {
-           Vote.vote($(event.target), VoteType.answerUpVote);
+            Vote.vote($(event.target), VoteType.answerUpVote);
         });
 
         var answerVoteDownButton = getAnswerVoteDownButtons();
         answerVoteDownButton.unbind('click').click(function (event) {
-           Vote.vote($(event.target), VoteType.answerDownVote);
+            Vote.vote($(event.target), VoteType.answerDownVote);
         });
 
         getOffensiveQuestionFlag().unbind('click').click(function (event) {
-           Vote.offensive(this, VoteType.offensiveQuestion);
+            Vote.offensive(this, VoteType.offensiveQuestion);
         });
 
         getRemoveOffensiveQuestionFlag().unbind('click').click(function (event) {
-           Vote.remove_offensive(this, VoteType.removeOffensiveQuestion);
+            Vote.remove_offensive(this, VoteType.removeOffensiveQuestion);
         });
 
         getRemoveAllOffensiveQuestionFlag().unbind('click').click(function (event) {
-           Vote.remove_all_offensive(this, VoteType.removeAllOffensiveQuestion);
+            Vote.remove_all_offensive(this, VoteType.removeAllOffensiveQuestion);
         });
 
         getOffensiveAnswerFlags().unbind('click').click(function (event) {
-           Vote.offensive(this, VoteType.offensiveAnswer);
+            Vote.offensive(this, VoteType.offensiveAnswer);
         });
 
         getRemoveOffensiveAnswerFlag().unbind('click').click(function (event) {
-           Vote.remove_offensive(this, VoteType.removeOffensiveAnswer);
+            Vote.remove_offensive(this, VoteType.removeOffensiveAnswer);
         });
 
         getRemoveAllOffensiveAnswerFlag().unbind('click').click(function (event) {
-           Vote.remove_all_offensive(this, VoteType.removeAllOffensiveAnswer);
+            Vote.remove_all_offensive(this, VoteType.removeAllOffensiveAnswer);
         });
 
         getquestionSubscribeUpdatesCheckbox().unbind('click').click(function (event) {
@@ -878,8 +877,7 @@ var Vote = (function () {
             if (this.checked) {
                 getquestionSubscribeSidebarCheckbox().attr({'checked': true});
                 Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
-            }
-            else {
+            } else {
                 getquestionSubscribeSidebarCheckbox().attr({'checked': false});
                 Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
             }
@@ -889,8 +887,7 @@ var Vote = (function () {
             if (this.checked) {
                 getquestionSubscribeUpdatesCheckbox().attr({'checked': true});
                 Vote.vote($(event.target), VoteType.questionSubscribeUpdates);
-            }
-            else {
+            } else {
                 getquestionSubscribeUpdatesCheckbox().attr({'checked': false});
                 Vote.vote($(event.target), VoteType.questionUnsubscribeUpdates);
             }
@@ -935,7 +932,7 @@ var Vote = (function () {
         } else if (data.status == '1') {
             $('#' + answerContainerIdPrefix + postId).removeClass('accepted-answer');
         } else if (data.success == '1') {
-            var answers = ('div[id^="'+answerContainerIdPrefix +'"]');
+            var answers = ('div[id^="' + answerContainerIdPrefix + '"]');
             $(answers).removeClass('accepted-answer');
             $('#' + answerContainerIdPrefix + postId).addClass('accepted-answer');
         } else {
@@ -965,10 +962,10 @@ var Vote = (function () {
             object.html(follow_html);
             fav = getFavoriteNumber();
             fav.removeClass('my-favorite-number');
-            if(data.count === 0) {
+            if (data.count === 0) {
                 data.count = '';
                 fav.text('');
-            }else{
+            } else {
                 fmts = ngettext('%s follower', '%s followers', data.count);
                 fav.text(interpolate(fmts, [data.count]));
             }
@@ -992,12 +989,10 @@ var Vote = (function () {
         if (data.success == '0') {
             showMessage(object, data.message);
             return;
-        }
-        else {
+        } else {
             if (data.status == '1') {
                 setVoteImage(voteType, true, object);
-            }
-            else {
+            } else {
                 setVoteImage(voteType, false, object);
             }
             setVoteNumber(object, data.count);
@@ -1010,8 +1005,7 @@ var Vote = (function () {
         if (data.status == '1') {
             setVoteImage(voteType, true, object);
             setVoteNumber(object, data.count);
-        }
-        else if (data.success == '1') {
+        } else if (data.success == '1') {
             setVoteImage(voteType, false, object);
             setVoteNumber(object, data.count);
             if (data.message.length > 0) {
@@ -1027,7 +1021,7 @@ var Vote = (function () {
         //to django.po files
         //_('anonymous users cannot flag offensive posts') + pleaseLogin;
         if (data.success == '1') {
-            if(data.count > 0) {
+            if (data.count > 0) {
                 $(object).children('span[class="darkred"]').text('(' + data.count + ')');
             } else {
                 $(object).children('span[class="darkred"]').text('');
@@ -1039,14 +1033,13 @@ var Vote = (function () {
             $(object).attr('id', obj_id.replace('flag-', 'remove-flag-'));
 
             getRemoveOffensiveQuestionFlag().unbind('click').click(function (event) {
-               Vote.remove_offensive(this, VoteType.removeOffensiveQuestion);
+                Vote.remove_offensive(this, VoteType.removeOffensiveQuestion);
             });
 
             getRemoveOffensiveAnswerFlag().unbind('click').click(function (event) {
-               Vote.remove_offensive(this, VoteType.removeOffensiveAnswer);
+                Vote.remove_offensive(this, VoteType.removeOffensiveAnswer);
             });
-        }
-        else {
+        } else {
             object = $(object);
             showMessage(object, data.message);
         }
@@ -1059,10 +1052,9 @@ var Vote = (function () {
         //to django.po files
         //_('anonymous users cannot flag offensive posts') + pleaseLogin;
         if (data.success == '1') {
-            if(data.count > 0) {
-                $(object).children('span[class="darkred"]').text('('+ data.count +')');
-            }
-            else{
+            if (data.count > 0) {
+                $(object).children('span[class="darkred"]').text('(' + data.count + ')');
+            } else {
                 $(object).children('span[class="darkred"]').text('');
                 // Remove "remove all flags link" since there are no more flags to remove
                 var remove_all = $(object).siblings('span.offensive-flag[id*="-offensive-remove-all-flag-"]');
@@ -1074,15 +1066,14 @@ var Vote = (function () {
             var obj_id = $(object).attr('id');
             $(object).attr('id', obj_id.replace('remove-flag-', 'flag-'));
 
-             getOffensiveQuestionFlag().unbind('click').click(function (event) {
-               Vote.offensive(this, VoteType.offensiveQuestion);
+            getOffensiveQuestionFlag().unbind('click').click(function (event) {
+                Vote.offensive(this, VoteType.offensiveQuestion);
             });
 
             getOffensiveAnswerFlags().unbind('click').click(function (event) {
-               Vote.offensive(this, VoteType.offensiveAnswer);
+                Vote.offensive(this, VoteType.offensiveAnswer);
             });
-        }
-        else {
+        } else {
             object = $(object);
             showMessage(object, data.message);
         }
@@ -1096,7 +1087,7 @@ var Vote = (function () {
         //_('anonymous users cannot flag offensive posts') + pleaseLogin;
         if (data.success == '1') {
             if (data.count > 0) {
-                $(object).children('span[class="darkred"]').text('('+ data.count +')');
+                $(object).children('span[class="darkred"]').text('(' + data.count + ')');
             } else {
                 $(object).children('span[class="darkred"]').text('');
             }
@@ -1108,17 +1099,14 @@ var Vote = (function () {
             $(object).next('span.sep').remove();
             $(object).remove();
 
-
-
-             getOffensiveQuestionFlag().unbind('click').click(function (event) {
-               Vote.offensive(this, VoteType.offensiveQuestion);
+            getOffensiveQuestionFlag().unbind('click').click(function (event) {
+                Vote.offensive(this, VoteType.offensiveQuestion);
             });
 
             getOffensiveAnswerFlags().unbind('click').click(function (event) {
-               Vote.offensive(this, VoteType.offensiveAnswer);
+                Vote.offensive(this, VoteType.offensiveAnswer);
             });
-        }
-        else {
+        } else {
             object = $(object);
             showMessage(object, data.message);
         }
@@ -1132,21 +1120,19 @@ var Vote = (function () {
                 postNode.addClass('deleted');
                 postRemoveLink.innerHTML = gettext('undelete');
                 showMessage(object, deletedMessage);
-            }
-            else if (removeActionType == 'undelete') {
+            } else if (removeActionType == 'undelete') {
                 postNode.removeClass('deleted');
                 postRemoveLink.innerHTML = gettext('delete');
                 showMessage(object, recoveredMessage);
             }
-        }
-        else {
+        } else {
             showMessage(object, data.message);
         }
         /*jshint eqeqeq:true */
     };
 
     return {
-        init : function (qId, qSlug, questionAuthor, userId) {
+        init: function (qId, qSlug, questionAuthor, userId) {
             questionId = qId;
             questionSlug = qSlug;
             questionAuthorId = questionAuthor;
@@ -1348,8 +1334,7 @@ var questionRetagger = (function () {
                     if (json.message) {
                         notify.show(json.message);
                     }
-                }
-                else {
+                } else {
                     cancelRetag();
                     showMessage(tagsDiv, json.message);
                 }
@@ -1427,8 +1412,7 @@ var questionRetagger = (function () {
             if (index === 0) {
                 //this is pretty bad - we should use Tag.getName()
                 tags_str = $(element).data('tagName');
-            }
-            else {
+            } else {
                 tags_str += ' ' + $(element).data('tagName');
             }
         });
@@ -1651,7 +1635,7 @@ DeletePostLink.prototype.getDeleteHandler = function () {
         var data = {
             'post_id': me.getPostId(),
             //todo rename cancel_vote -> undo
-            'cancel_vote': me.isPostDeleted() ? true: false
+            'cancel_vote': me.isPostDeleted() ? true : false
         };
         $.ajax({
             type: 'POST',
@@ -1856,7 +1840,7 @@ TinyMCE.prototype.start = function () {
     var me = this;
     var extraOpts = {
         'mode': 'exact',
-        'elements': this._id,
+        'elements': this._id
     };
     opts = $.extend(opts, extraOpts);
     tinyMCE.init(opts);
@@ -1895,7 +1879,7 @@ TinyMCE.prototype.focus = function (onFocus) {
             var isAbove = (edY < winY);
             if (isBelow || isAbove) {
                 //then center on screen
-                $(window).scrollTop(edY - edH/2 - winY/2);
+                $(window).scrollTop(edY - edH / 2 - winY / 2);
             }
             if (onFocus) {
                 onFocus();
@@ -2071,7 +2055,7 @@ EditCommentForm.prototype.getCommentsWidget = function () {
 /**
  * attaches comment editor to a particular comment
  */
-EditCommentForm.prototype.attachTo = function(comment, mode){
+EditCommentForm.prototype.attachTo = function (comment, mode) {
     this._comment = comment;
     this._type = mode;//action: 'add' or 'edit'
     this._commentsWidget = comment.getContainerWidget();
@@ -2080,13 +2064,12 @@ EditCommentForm.prototype.attachTo = function(comment, mode){
     comment.getElement().hide();
     this._commentsWidget.hideOpenEditorButton();//hide add comment button
     //fix up the comment submit button, depending on the mode
-    if (this._type === 'add'){
+    if (this._type === 'add') {
         this._submit_btn.html(gettext('add comment'));
         if (this._minorEditBox) {
             this._minorEditBox.hide();
         }
-    }
-    else {
+    } else {
         this._submit_btn.html(gettext('save comment'));
         if (this._minorEditBox) {
             this._minorEditBox.show();
@@ -2115,11 +2098,11 @@ EditCommentForm.prototype.getCounterUpdater = function () {
         var length1 = maxCommentLength - 100;
 
         if (length1 < 0) {
-            length1 = Math.round(0.7*maxCommentLength);
+            length1 = Math.round(0.7 * maxCommentLength);
         }
         var length2 = maxCommentLength - 30;
         if (length2 < 0) {
-            length2 = Math.round(0.9*maxCommentLength);
+            length2 = Math.round(0.9 * maxCommentLength);
         }
 
         /* todo make smooth color transition, from gray to red
@@ -2139,7 +2122,7 @@ EditCommentForm.prototype.getCounterUpdater = function () {
             } else {
                 color = '#999';
             }
-			chars = maxCommentLength - length;
+            chars = maxCommentLength - length;
             feedback = '';
             if (chars > 0) {
                 feedback = interpolate(gettext('%s characters left'), [chars]);
@@ -2400,14 +2383,12 @@ var Comment = function (widget, data) {
     this._editorForm = undefined;
     if (data && data.is_deletable) {
         this._deletable = data.is_deletable;
-    }
-    else {
+    } else {
         this._deletable = false;
     }
     if (data && data.is_editable) {
         this._editable = data.is_deletable;
-    }
-    else {
+    } else {
         this._editable = false;
     }
 };
@@ -2690,7 +2671,7 @@ var PostCommentsWidget = function () {
 };
 inherits(PostCommentsWidget, WrappedElement);
 
-PostCommentsWidget.prototype.decorate = function(element){
+PostCommentsWidget.prototype.decorate = function (element) {
     this._element = element;
     this._post_id = element.data('parentPostId');
     this._post_type = element.data('parentPostType');
@@ -2702,7 +2683,7 @@ PostCommentsWidget.prototype.decorate = function(element){
     this._loadCommentsButton = element.find('.js-load-comments-btn');
 
     if (this._loadCommentsButton.length) {
-        if (this._commentsReversed/* || this._userCanPost */){
+        if (this._commentsReversed/* || this._userCanPost */) {
             setupButtonEventHandlers(
                 this._loadCommentsButton,
                 this.getLoadCommentsHandler()
@@ -2739,6 +2720,7 @@ PostCommentsWidget.prototype.decorate = function(element){
 PostCommentsWidget.prototype.handleDeletedComment = function () {
     /* if the widget does not have any comments, set
     the 'empty' class on the widget element */
+    var x, y;
     if (this._cbox.children('.comment').length === 0) {
         if (this._commentsReversed === false) {
             this._element.siblings('.comment-title').hide();
@@ -2747,33 +2729,33 @@ PostCommentsWidget.prototype.handleDeletedComment = function () {
     }
 };
 
-PostCommentsWidget.prototype.getPostType = function() {
+PostCommentsWidget.prototype.getPostType = function () {
     return this._post_type;
 };
 
-PostCommentsWidget.prototype.getPostId = function() {
+PostCommentsWidget.prototype.getPostId = function () {
     return this._post_id;
 };
 
-PostCommentsWidget.prototype.getLoadCommentsButton = function() {
+PostCommentsWidget.prototype.getLoadCommentsButton = function () {
     return this._loadCommentsButton;
 };
 
-PostCommentsWidget.prototype.getOpenEditorButton = function() {
+PostCommentsWidget.prototype.getOpenEditorButton = function () {
     return this._openEditorButton;
 };
 
-PostCommentsWidget.prototype.hideOpenEditorButton = function() {
+PostCommentsWidget.prototype.hideOpenEditorButton = function () {
     this._openEditorButton.hide();
     this._openEditorButton.addClass('hidden');
 };
 
-PostCommentsWidget.prototype.showOpenEditorButton = function() {
+PostCommentsWidget.prototype.showOpenEditorButton = function () {
     this._openEditorButton.show();
     this._openEditorButton.removeClass('hidden');
 };
 
-PostCommentsWidget.prototype.startNewComment = function() {
+PostCommentsWidget.prototype.startNewComment = function () {
     //find comment template, clone it's dom
     var comment = new Comment(this);
     var template = $($('.comment-template').children()[0]);
@@ -2790,7 +2772,7 @@ PostCommentsWidget.prototype.startNewComment = function() {
     comment.startEditing();
 };
 
-PostCommentsWidget.prototype.needToReload = function(){
+PostCommentsWidget.prototype.needToReload = function () {
     return this._commentsReversed === false && this._isTruncated;
 };
 
@@ -2807,10 +2789,10 @@ PostCommentsWidget.prototype.userCanPost = function () {
     return false;
 };
 
-PostCommentsWidget.prototype.getAllowEditHandler = function() {
+PostCommentsWidget.prototype.getAllowEditHandler = function () {
     var me = this;
-    return function() {
-        me.reloadAllComments(function(json) {
+    return function () {
+        me.reloadAllComments(function (json) {
             me.reRenderComments(json);
             //2) change button text to "post a comment"
             me.getLoadCommentsButton().remove();
@@ -2820,8 +2802,9 @@ PostCommentsWidget.prototype.getAllowEditHandler = function() {
 };
 
 PostCommentsWidget.prototype.getOpenEditorHandler = function(button) {
+PostCommentsWidget.prototype.getOpenEditorHandler = function () {
     var me = this;
-    return function() {
+    return function () {
         //if user can't post, we tell him something and refuse
         var message;
         if (askbot.settings.readOnlyModeEnabled === true) {
@@ -2838,10 +2821,10 @@ PostCommentsWidget.prototype.getOpenEditorHandler = function(button) {
     };
 };
 
-PostCommentsWidget.prototype.getLoadCommentsHandler = function() {
+PostCommentsWidget.prototype.getLoadCommentsHandler = function () {
     var me = this;
-    return function() {
-        me.reloadAllComments(function(json) {
+    return function () {
+        me.reloadAllComments(function (json) {
             me.reRenderComments(json);
             me.getLoadCommentsButton().remove();
         });
@@ -2870,7 +2853,7 @@ PostCommentsWidget.prototype.reRenderComments = function (json) {
     });
     this._comments = [];
     var me = this;
-    $.each(json, function(i, item){
+    $.each(json, function (i, item) {
         var comment = new Comment(me);
         var template = $($('.comment-template').children()[0]);
         var commentElem = template.clone(false);
@@ -2914,7 +2897,7 @@ var socialSharing = (function () {
             url = url.replace('{URL}', URL);
             var params = SERVICE_DATA[service_name].params;
             if (!window.open(url, 'sharing', params)) {
-                window.location.href=url;
+                window.location.href = url;
             }
             return false;
             //@todo: change to some other url shortening service
@@ -2931,7 +2914,7 @@ var socialSharing = (function () {
             //     complete: function (data) {
             //         url = url.replace('{TEXT}', TEXT);
             //         var params = SERVICE_DATA[service_name].params;
-            //         if(!window.open(url, "sharing", params)) {
+            //         if (!window.open(url, "sharing", params)) {
             //             window.location.href=url;
             //         }
             //     }
@@ -3935,7 +3918,7 @@ Category.prototype.getPath = function () {
 
 Category.prototype.setState = function (state) {
     this._state = state;
-    if ( !this._element ) {
+    if (!this._element) {
         return;
     }
     this._input_box.val('');
@@ -4530,7 +4513,7 @@ CategorySelector.prototype.selectPath = function (path) {
         this.populateCategoryLevel(path.slice(0, i));
     }
     for (i = 1; i < path.length; i++) {
-        var sel_box = this._selectors[i-1];
+        var sel_box = this._selectors[i - 1];
         var category = sel_box.getItemByIndex(path[i]);
         sel_box.selectItem(category);
     }
@@ -4779,8 +4762,7 @@ CategorySelectorLoader.prototype.getSaveHandler = function () {
                     oldTagsHtml = '';
                     me.closeEditor();
                     me.drawNewTags(new_tags.join(' '));
-                }
-                else {
+                } else {
                     me.closeEditor();
                     showMessage(me.getElement(), json.message);
                 }
@@ -4849,8 +4831,8 @@ var AskButton = function () {
 inherits(AskButton, SimpleControl);
 
 
-$(document).ready(function() {
-    $('.comments').each(function(index, element){
+$(document).ready(function () {
+    $('.comments').each(function (index, element) {
         var comments = new PostCommentsWidget();
         comments.decorate($(element));
     });

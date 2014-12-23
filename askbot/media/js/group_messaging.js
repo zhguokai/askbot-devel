@@ -1,9 +1,9 @@
-var HideableWidget = function() {
+var HideableWidget = function () {
     Widget.call(this);
 };
 inherits(HideableWidget, Widget);
 
-HideableWidget.prototype.setState = function(state) {
+HideableWidget.prototype.setState = function (state) {
     this._state = state;
     if (this._element) {
         if (state === 'shown') {
@@ -14,34 +14,34 @@ HideableWidget.prototype.setState = function(state) {
     }
 };
 
-HideableWidget.prototype.onAfterShow = function() {};
+HideableWidget.prototype.onAfterShow = function () {};
 
-HideableWidget.prototype.show = function() {
+HideableWidget.prototype.show = function () {
     this.setState('shown');
     this.onAfterShow();
 };
 
-HideableWidget.prototype.hide = function() {
+HideableWidget.prototype.hide = function () {
     this.setState('hidden');
 };
 
-HideableWidget.prototype.decorate = function(element) {
+HideableWidget.prototype.decorate = function (element) {
     this._element = element;
 };
 
 /**
  * @constructor
  */
-var Message = function() {
+var Message = function () {
     Widget.call(this);
 };
 inherits(Message, Widget);
 
-Message.prototype.getId = function() {
+Message.prototype.getId = function () {
     return this._id;
 };
 
-Message.prototype.decorate = function(element) {
+Message.prototype.decorate = function (element) {
     this._element = element;
     this._id = element.data('messageId');
     element.find('abbr.timeago').timeago();
@@ -54,21 +54,21 @@ Message.prototype.decorate = function(element) {
  * and possibly recipients (if _editorType is 'new-thread')
  * supports editing new thread and reply
  */
-var MessageComposer = function() {
+var MessageComposer = function () {
     HideableWidget.call(this);
     this._editorType = undefined;//'new-thread', 'reply'
 };
 inherits(MessageComposer, WrappedElement);
 
-MessageComposer.prototype.setMessageCenter = function(ctr) {
+MessageComposer.prototype.setMessageCenter = function (ctr) {
     this._messageCenter = ctr;
 };
 
-MessageComposer.prototype.setEditorType = function(type) {
+MessageComposer.prototype.setEditorType = function (type) {
     this._editorType = type;
 };
 
-MessageComposer.prototype.show = function() {
+MessageComposer.prototype.show = function () {
     this._textarea.show();
     this._textareaLabel.show();
     if (this._editorType === 'new-thread') {
@@ -77,7 +77,7 @@ MessageComposer.prototype.show = function() {
         this._cancelBtn.show();
         this._sendBtn.val(this._createThreadBtnText);
         var toInput = this._toInput;
-        this._element.fadeIn('fast', function() {
+        this._element.fadeIn('fast', function () {
             toInput.focus();
         });
     } else if (this._editorType === 'reply') {
@@ -90,11 +90,11 @@ MessageComposer.prototype.show = function() {
     }
 };
 
-MessageComposer.prototype.hide = function() {
+MessageComposer.prototype.hide = function () {
     this._element.hide();
 };
 
-MessageComposer.prototype.cancel = function() {
+MessageComposer.prototype.cancel = function () {
     this._textarea.val('');
     this._textareaLabel.html('');
     this._toInput.val('');
@@ -104,7 +104,7 @@ MessageComposer.prototype.cancel = function() {
     }
 };
 
-MessageComposer.prototype.getSubmitData = function() {
+MessageComposer.prototype.getSubmitData = function () {
     var data = {'text': this._textarea.val()};
     if (this._editorType === 'reply') {
         var thread = this._messageCenter.getThread();
@@ -115,7 +115,7 @@ MessageComposer.prototype.getSubmitData = function() {
     return data;
 };
 
-MessageComposer.prototype.dataIsValid = function() {
+MessageComposer.prototype.dataIsValid = function () {
     var text = $.trim(this._textarea.val());
     var result = true;
     if (text === '') {
@@ -137,7 +137,7 @@ MessageComposer.prototype.dataIsValid = function() {
  * these functions will run after .send() receives
  * the response
  */
-MessageComposer.prototype.onSendSuccess = function(data) {
+MessageComposer.prototype.onSendSuccess = function (data) {
     var ctr = this._messageCenter;
     if (this._editorType === 'new-thread') {
         var count = ctr.getThreadList().getThreadsCount();
@@ -157,7 +157,7 @@ MessageComposer.prototype.onSendSuccess = function(data) {
 };
 
 
-MessageComposer.prototype.onSendError = function(data) {
+MessageComposer.prototype.onSendError = function (data) {
     if (this._editorType === 'reply') {
         return;
     }
@@ -185,7 +185,7 @@ MessageComposer.prototype.getSendUrl = function () {
     }
 };
 
-MessageComposer.prototype.send = function() {
+MessageComposer.prototype.send = function () {
     var me = this;
     $.ajax({
         type: 'POST',
@@ -193,7 +193,7 @@ MessageComposer.prototype.send = function() {
         url: this.getSendUrl(),
         data: this.getSubmitData(),
         cache: false,
-        success: function(data) {
+        success: function (data) {
             if (data.success) {
                 me.onSendSuccess(data);
             } else {
@@ -203,7 +203,7 @@ MessageComposer.prototype.send = function() {
     });
 };
 
-MessageComposer.prototype.decorate = function(element) {
+MessageComposer.prototype.decorate = function (element) {
     this._element = element;
 
     //textarea
@@ -217,7 +217,7 @@ MessageComposer.prototype.decorate = function(element) {
     var toInput = element.find('input[name="recipients"]');
     this._toInput = toInput;
 
-    var userSelectHandler = function() {};
+    var userSelectHandler = function () {};
 
     var usersAc = new AutoCompleter({
         url: '/get-users-info/',//askbot.urls['get_users_info'],
@@ -240,15 +240,15 @@ MessageComposer.prototype.decorate = function(element) {
     var me = this;
     var cancelBtn = element.find('.js-cancel-btn');
     this._cancelBtn = cancelBtn;
-    var cancelHandler = function() { me.cancel(); };
-    setupButtonEventHandlers(cancelBtn, function() { me.cancel(); });
+    var cancelHandler = function () { me.cancel(); };
+    setupButtonEventHandlers(cancelBtn, function () { me.cancel(); });
 
     //send button
-    var sendHandler = function() {
-                            if (me.dataIsValid()){
-                                me.send();
-                            }
-                        };
+    var sendHandler = function () {
+        if (me.dataIsValid()) {
+            me.send();
+        }
+    };
     var sendBtn = element.find('.js-send-btn');
     this._sendBtn = sendBtn;
     setupButtonEventHandlers(sendBtn, sendHandler);
@@ -258,29 +258,29 @@ MessageComposer.prototype.decorate = function(element) {
     this.setEditorType(element.data('editorType'));
 };
 
-var ThreadHeading = function() {
+var ThreadHeading = function () {
     SimpleControl.call(this);
 };
 inherits(ThreadHeading, SimpleControl);
 
-ThreadHeading.prototype.setParent = function(elem) {
+ThreadHeading.prototype.setParent = function (elem) {
     this._threadList = elem;
 };
 
-ThreadHeading.prototype.getParent = function() {
+ThreadHeading.prototype.getParent = function () {
     return this._threadList;
 };
 
-ThreadHeading.prototype.getId = function() {
+ThreadHeading.prototype.getId = function () {
     return this._id;
 };
 
-ThreadHeading.prototype.decorate = function(element) {
+ThreadHeading.prototype.decorate = function (element) {
     this._element = element;
     this._id = element.data('threadId');
     var deleter = element.find('.delete-or-restore');
     var me = this;
-    setupButtonEventHandlers($(deleter), function() {
+    setupButtonEventHandlers($(deleter), function () {
         me.getParent().deleteOrRestoreThread(me.getId());
         return false;
     });
@@ -289,28 +289,28 @@ ThreadHeading.prototype.decorate = function(element) {
 /**
  * @constructor
  */
-var ThreadList = function() {
+var ThreadList = function () {
     WrappedElement.call(this);
 };
 inherits(ThreadList, WrappedElement);
 
-ThreadList.prototype.setMessageCenter = function(ctr) {
+ThreadList.prototype.setMessageCenter = function (ctr) {
     this._messageCenter = ctr;
 };
 
-ThreadList.prototype.getOpenThreadHandler = function(threadId) {
+ThreadList.prototype.getOpenThreadHandler = function (threadId) {
     var messageCenter = this._messageCenter;
-    return function() {
+    return function () {
         messageCenter.openThread(threadId);
     };
 };
 
-ThreadList.prototype.deleteOrRestoreThread = function(threadId) {
+ThreadList.prototype.deleteOrRestoreThread = function (threadId) {
     var ctr = this._messageCenter;
     ctr.deleteOrRestoreThread(threadId, this._senderId);
 };
 
-ThreadList.prototype.getThreadsCount = function() {
+ThreadList.prototype.getThreadsCount = function () {
     if (self._threads) {
         return self._threads.length;
     } else {
@@ -318,7 +318,7 @@ ThreadList.prototype.getThreadsCount = function() {
     }
 };
 
-ThreadList.prototype.decorate = function(element) {
+ThreadList.prototype.decorate = function (element) {
     if (!element || element.length === 0) {
         return;
     }
@@ -326,7 +326,7 @@ ThreadList.prototype.decorate = function(element) {
     var headingElements = element.find('.js-thread-heading');
     var me = this;
     var threads = [];
-    $.each(headingElements, function(idx, headingElement) {
+    $.each(headingElements, function (idx, headingElement) {
         var heading = new ThreadHeading();
         heading.setParent(me);
         heading.decorate($(headingElement));
@@ -343,29 +343,29 @@ ThreadList.prototype.decorate = function(element) {
 /**
  * @constructor
  */
-var Thread = function() {
+var Thread = function () {
     WrappedElement.call(this);
 };
 inherits(Thread, WrappedElement);
 
-Thread.prototype.getId = function() {
+Thread.prototype.getId = function () {
     return this._id;
 };
 
-Thread.prototype.getLastMessageId = function() {
+Thread.prototype.getLastMessageId = function () {
     return this._messages.slice(-1)[0].getId();
 };
 
-Thread.prototype.dispose = function() {
+Thread.prototype.dispose = function () {
     if (this._messages) {
-        $.each(this._messages, function(idx, message) {
+        $.each(this._messages, function (idx, message) {
             message.dispose();
         });
     }
     Thread.superClass_.dispose.call(this);
 };
 
-Thread.prototype.addMessage = function(message) {
+Thread.prototype.addMessage = function (message) {
     var msgElement = message.getElement();
     if (this._ordering === 'reverse') {
         this._element.prepend(msgElement);
@@ -376,13 +376,13 @@ Thread.prototype.addMessage = function(message) {
     }
 };
 
-Thread.prototype.decorate = function(element) {
+Thread.prototype.decorate = function (element) {
     if (!element || element.length === 0) {
         return;
     }
     this._element = element;
     var messages = [];
-    $.each(element.find('.js-message'), function(idx, item) {
+    $.each(element.find('.js-message'), function (idx, item) {
         var message = new Message();
         message.decorate($(item));
         messages.push(message);
@@ -402,24 +402,24 @@ Thread.prototype.decorate = function(element) {
  * all other users (incoming messages)
  * sent by specific users
  */
-var Sender = function() {
+var Sender = function () {
     SimpleControl.call(this);
 };
 inherits(Sender, SimpleControl);
 
-Sender.prototype.getId = function() {
+Sender.prototype.getId = function () {
     return this._id;
 };
 
-Sender.prototype.select = function() {
+Sender.prototype.select = function () {
     this._element.addClass('selected');
 };
 
-Sender.prototype.unselect = function() {
+Sender.prototype.unselect = function () {
     this._element.removeClass('selected');
 };
 
-Sender.prototype.decorate = function(element) {
+Sender.prototype.decorate = function (element) {
     Sender.superClass_.decorate.call(this, element);
     this._id = element.data('senderId');
 };
@@ -429,34 +429,34 @@ Sender.prototype.decorate = function(element) {
  * @constructor
  * list of senders in the first column of inbox
  */
-var SendersList = function() {
+var SendersList = function () {
     WrappedElement.call(this);
     this._messageCenter = undefined;
 };
 inherits(SendersList, WrappedElement);
 
-SendersList.prototype.setMessageCenter = function(ctr) {
+SendersList.prototype.setMessageCenter = function (ctr) {
     this._messageCenter = ctr;
 };
 
-SendersList.prototype.getSenders = function() {
+SendersList.prototype.getSenders = function () {
     return this._senders;
 };
 
-SendersList.prototype.getSenderSelectHandler = function(sender) {
+SendersList.prototype.getSenderSelectHandler = function (sender) {
     var messageCenter = this._messageCenter;
     var me = this;
-    return function() {
-        $.map(me.getSenders(), function(s){ s.unselect(); });
+    return function () {
+        $.map(me.getSenders(), function (s) { s.unselect(); });
         sender.select();
         messageCenter.loadThreadsForSender(sender.getId());
     };
 };
 
-SendersList.prototype.decorate = function(element) {
+SendersList.prototype.decorate = function (element) {
     this._element = element;
     var senders = [];
-    $.each(element.find('a'), function(idx, item) {
+    $.each(element.find('a'), function (idx, item) {
         var sender = new Sender();
         sender.decorate($(item));
         senders.push(sender);
@@ -465,7 +465,7 @@ SendersList.prototype.decorate = function(element) {
     this._senders = senders;
 
     var me = this;
-    $.each(senders, function(idx, sender) {
+    $.each(senders, function (idx, sender) {
         sender.setHandler(me.getSenderSelectHandler(sender));
     });
 };
@@ -474,13 +474,13 @@ SendersList.prototype.decorate = function(element) {
 /**
  * @contsructor
  */
-var MessageCenter = function() {
+var MessageCenter = function () {
     Widget.call(this);
     this._loadingStatus = false;//true when loading in is process
 };
 inherits(MessageCenter, Widget);
 
-MessageCenter.prototype.setState = function(state) {
+MessageCenter.prototype.setState = function (state) {
     if (state === 'compose') {
         this._editor.show();
         this._threadListBox.hide();
@@ -498,7 +498,7 @@ MessageCenter.prototype.setState = function(state) {
     }
 };
 
-MessageCenter.prototype.openThread = function(threadId) {
+MessageCenter.prototype.openThread = function (threadId) {
     var url = this._urls.getThreads + threadId + '/';
     var me = this;
     var thread = this._thread;
@@ -507,7 +507,7 @@ MessageCenter.prototype.openThread = function(threadId) {
         dataType: 'json',
         url: url,
         cache: false,
-        success: function(data) {
+        success: function (data) {
             if (data.success) {
                 me.clearThread();
                 var thread = new Thread();
@@ -519,41 +519,41 @@ MessageCenter.prototype.openThread = function(threadId) {
     });
 };
 
-MessageCenter.prototype.setThreadList = function(list) {
+MessageCenter.prototype.setThreadList = function (list) {
     this._threadList = list;
     this._threadListBox.append(list.getElement());
 };
 
-MessageCenter.prototype.clearThreadList = function() {
+MessageCenter.prototype.clearThreadList = function () {
     if (this._threadList) {
         this._threadList.dispose();
     }
 };
 
-MessageCenter.prototype.getThreadList = function() {
+MessageCenter.prototype.getThreadList = function () {
     return this._threadList;
 };
 
-MessageCenter.prototype.setThread = function(thread) {
+MessageCenter.prototype.setThread = function (thread) {
     this._thread = thread;
     this._threadDetailsBox.append(thread.getElement());
 };
 
-MessageCenter.prototype.getThread = function() {
+MessageCenter.prototype.getThread = function () {
     return this._thread;
 };
 
-MessageCenter.prototype.clearThread = function() {
+MessageCenter.prototype.clearThread = function () {
     if (this._thread) {
         this._thread.dispose();
     }
 };
 
-MessageCenter.prototype.setLoadingStatus = function(loadingStatus) {
+MessageCenter.prototype.setLoadingStatus = function (loadingStatus) {
     this._loadingStatus = loadingStatus;
 };
 
-MessageCenter.prototype.hitThreadList = function(url, senderId, requestMethod) {
+MessageCenter.prototype.hitThreadList = function (url, senderId, requestMethod) {
     if (this._loadingStatus === true) {
         return;
     }
@@ -564,7 +564,7 @@ MessageCenter.prototype.hitThreadList = function(url, senderId, requestMethod) {
         url: url,
         cache: false,
         data: {sender_id: senderId},
-        success: function(data) {
+        success: function (data) {
             if (data.success) {
                 me.clearThreadList();
                 var threads = new ThreadList();
@@ -575,24 +575,24 @@ MessageCenter.prototype.hitThreadList = function(url, senderId, requestMethod) {
                 me.setLoadingStatus(false);
             }
         },
-        error: function() {
+        error: function () {
             me.setLoadingStatus(false);
         }
     });
     this.setLoadingStatus(true);
 };
 
-MessageCenter.prototype.deleteOrRestoreThread = function(threadId, senderId) {
+MessageCenter.prototype.deleteOrRestoreThread = function (threadId, senderId) {
     var url = this._urls.getThreads + threadId + '/delete-or-restore/';
     this.hitThreadList(url, senderId, 'POST');
 };
 
-MessageCenter.prototype.loadThreadsForSender = function(senderId) {
+MessageCenter.prototype.loadThreadsForSender = function (senderId) {
     var url = this._urls.getThreads;
     this.hitThreadList(url, senderId, 'GET');
 };
 
-MessageCenter.prototype.decorate = function(element) {
+MessageCenter.prototype.decorate = function (element) {
     this._element = element;
     this._navBox = element.find('.pm-nav');
     this._mainBox = element.find('.pm-main');
@@ -636,7 +636,7 @@ MessageCenter.prototype.decorate = function(element) {
     //activate compose button
     var btn = element.find('.js-compose-btn');
     var me = this;
-    setupButtonEventHandlers(btn, function(){
+    setupButtonEventHandlers(btn, function () {
         editor.setEditorType('new-thread');
         me.setState('compose');
     });
