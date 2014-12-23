@@ -55,3 +55,4 @@ recaptcha
 *.DS_Store
 htmlcov
 node_modules
+bower_components/
