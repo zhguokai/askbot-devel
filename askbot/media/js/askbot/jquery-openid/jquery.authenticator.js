@@ -34,7 +34,7 @@ $.fn.authenticator = function () {
             function (index, element) {
                 $(element).unbind('keypress').keypress(
                     function (e) {
-                        if ((e.which && e.which === 13)||(e.keyCode && e.keyCode === 13)) {
+                        if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
                             if (handler_function) {
                                 return handler_function ();
                             } else {
@@ -163,8 +163,7 @@ $.fn.authenticator = function () {
         var enabler = $('#login-list-enabler');
         if (enabler.is('p#login-list-enabler')) {
             enabler.show();
-        }
-        else {
+        } else {
             enabler = $(
                     '<p id="login-list-enabler"><a href="#">' +
                     gettext('Show/change current login methods') +
@@ -188,8 +187,7 @@ $.fn.authenticator = function () {
         if (askbot.data.userIsAuthenticated) {
             $('#id_new_password').val('');
             $('#id_new_password_retyped').val('');
-        }
-        else {
+        } else {
             $('#id_username').val('');
             $('#id_password').val('');
         }
@@ -206,10 +204,9 @@ $.fn.authenticator = function () {
             account_recovery_heading.hide();
             account_recovery_link.show();
             account_recovery_hint.show();
-            $('#account-recovery-form>p.hint').css('margin-top','10px');
+            $('#account-recovery-form>p.hint').css('margin-top', '10px');
             account_recovery_text_span.html(account_recovery_question_text).show();
-        }
-        else {
+        } else {
             if (existing_login_methods !== null) {
                 existing_login_methods_div.hide();
                 insert_login_list_enabler();
@@ -235,14 +232,13 @@ $.fn.authenticator = function () {
                 interpolate(gettext('Please enter your %s, then proceed'), [token_name])
             );
             var button_text = gettext('Connect your %(provider_name)s account to %(site)s');
-			var data = {
-				provider_name: provider_name,
-				site: askbot.settings.siteName
-			};
-			button_text = interpolate(button_text, data, true);
+            var data = {
+                provider_name: provider_name,
+                site: askbot.settings.siteName
+            };
+            button_text = interpolate(button_text, data, true);
             openid_submit_button.val(button_text);
-        }
-        else {
+        } else {
             $('#openid-heading>span').html(token_name);
         }
         openid_login_token_input_fields.show();
@@ -288,10 +284,9 @@ $.fn.authenticator = function () {
             FB.getLoginStatus(function (response) {
                 if (response.authResponse) {
                     signin_form.submit();
-                }
-                else {
+                } else {
                     if (FB.getAuthResponse()) {
-                      signin_form.submit();
+                        signin_form.submit();
                     }
                     FB.login();
                 }
@@ -352,9 +347,8 @@ $.fn.authenticator = function () {
                 create_pw_link.html(gettext('Create a password-protected account'));
                 var url = create_pw_link.attr('href');
                 if (url.indexOf('?') !== -1) {
-                    url = url.replace(/\?.*$/,'?login_provider=' + provider_name);
-                }
-                else{
+                    url = url.replace(/\?.*$/, '?login_provider=' + provider_name);
+                } else {
                     url += '?login_provider=' + provider_name;
                 }
                 create_pw_link.attr('href', url);

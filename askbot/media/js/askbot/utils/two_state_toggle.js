@@ -58,7 +58,7 @@ TwoStateToggle.prototype.getDefaultHandler = function () {
             data: data,
             success: function (data) {
                 if (data.success) {
-                    if ( data.is_enabled ) {
+                    if (data.is_enabled) {
                         me.setState('on-state');
                     } else {
                         me.setState('off-state');
@@ -87,7 +87,7 @@ TwoStateToggle.prototype.setState = function (state) {
         } else if (state === 'off-state') {
             element.removeClass('on');
         }
-        if ( this.isCheckBox() ) {
+        if (this.isCheckBox()) {
             if (state === 'on-state') {
                 element.attr('checked', true);
             } else if (state === 'off-state') {

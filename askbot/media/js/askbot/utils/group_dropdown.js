@@ -25,7 +25,7 @@ GroupDropdown.prototype.createDom =  function () {
     this._add_link.attr('class', 'group-name');
     this._add_link.text(gettext('add new group'));
 
-    for (var i=0; i<this._group_list.length; i++) {
+    for (var i = 0; i < this._group_list.length; i++) {
         var li = this.makeElement('li');
         var a = this.makeElement('a');
         a.text(this._group_list[i].name);
@@ -68,7 +68,7 @@ GroupDropdown.prototype.insertGroup = function (group_name, url) {
         function (a, b) {
             var valA = $(a).find('a').text().toLowerCase();
             var valB = $(b).find('a').text().toLowerCase();
-            return (valA < valB) ? -1: (valA > valB) ? 1: 0;
+            return (valA < valB) ? -1 : (valA > valB) ? 1 : 0;
         }
     );
 
@@ -90,7 +90,7 @@ GroupDropdown.prototype.setState = function (state) {
 
 GroupDropdown.prototype.hasGroup = function (groupName) {
     var items = this._element.find('li');
-    for (var i=1; i < items.length - 1; i++) {
+    for (var i = 1; i < items.length - 1; i++) {
         var cGroupName = $(items[i]).find('a').text();
         if (cGroupName.toLowerCase() === groupName.toLowerCase()) {
             return true;
@@ -125,7 +125,7 @@ GroupDropdown.prototype._add_group_handler = function () {
                     me.setState('display');
                     return true;
                 }
-            } else{
+            } else {
                 notify.show(data.message);
                 return false;
             }

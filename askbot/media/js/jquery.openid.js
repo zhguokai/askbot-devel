@@ -72,7 +72,7 @@ var providers = $.extend({}, providers_large, providers_small);
 
 var openid = {
 
-    cookie_expires: 6*30,   // 6 months.
+    cookie_expires: 6 * 30,   // 6 months.
     cookie_name: 'openid_provider',
     cookie_path: '/',
 
@@ -81,7 +81,7 @@ var openid = {
     input_id: null,
     provider_url: null,
 
-    init: function(input_id) {
+    init: function (input_id) {
 
         var openid_btns = $('#openid_btns');
         this.input_id = input_id;
@@ -105,36 +105,35 @@ var openid = {
             this.signin(box_id, true);
         }
     },
-    getBoxHTML: function(provider, box_size, image_ext) {
+    getBoxHTML: function (provider, box_size, image_ext) {
 
         var box_id = provider.name.toLowerCase();
-        return '<a title="'+provider.name +'" href="javascript: openid.signin(\''+ box_id +'\');"' +
-                ' style="background: #FFF url(' + this.img_path + box_id + image_ext+') no-repeat center center" ' + 'class="' + box_id + ' openid_' + box_size + '_btn"></a>';
+        return '<a title="' + provider.name + '" href="javascript: openid.signin(\'' + box_id + '\');"' +
+                ' style="background: #FFF url(' + this.img_path + box_id + image_ext + ') no-repeat center center" ' + 'class="' + box_id + ' openid_' + box_size + '_btn"></a>';
 
     },
     /* Provider image click */
-    signin: function(box_id, onload) {
+    signin: function (box_id, onload) {
         var provider = providers[box_id];
-        if (! provider) {
+        if (!provider) {
             return;
         }
         this.highlight(box_id);
         this.setCookie(box_id);
 
-        $('#'+this.input_id).val(provider.url);
-        var input = $('#'+this.input_id);
-        if(document.selection){
+        $('#' + this.input_id).val(provider.url);
+        var input = $('#' + this.input_id);
+        if (document.selection) {
             var r = document.all.openid_url.createTextRange();
             var res = r.findText('{username}');
-            if(res) {
+            if (res) {
                 r.select();
             }
-        }
-        else {
+        } else {
             var text  = input.val();
             var searchText = '{username}';
             var posStart = text.indexOf(searchText);
-            if(posStart > -1){
+            if (posStart > -1) {
                 input.focus();
                 document.getElementById(this.input_id).setSelectionRange(posStart, posStart + searchText.length);
             }
@@ -148,23 +147,23 @@ var openid = {
             highlight.replaceWith($('#openid_highlight a')[0]);
         }
         // add new highlight.
-        $('.'+box_id).wrap('<div id="openid_highlight"></div>');
+        $('.' + box_id).wrap('<div id="openid_highlight"></div>');
     },
 
     setCookie: function (value) {
         var date = new Date();
-        date.setTime(date.getTime()+(this.cookie_expires*24*60*60*1000));
-        var expires = '; expires='+date.toGMTString();
-        document.cookie = this.cookie_name+'='+value+expires+'; path=' + this.cookie_path;
+        date.setTime(date.getTime() + (this.cookie_expires * 24 * 60 * 60 * 1000));
+        var expires = '; expires=' + date.toGMTString();
+        document.cookie = this.cookie_name + '=' + value + expires + '; path=' + this.cookie_path;
     },
 
     readCookie: function () {
         var nameEQ = this.cookie_name + '=';
         var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
+        for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
-            while (c.charAt(0)===' ') { c = c.substring(1,c.length); }
-            if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length,c.length); }
+            while (c.charAt(0) === ' ') { c = c.substring(1, c.length); }
+            if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length, c.length); }
         }
         return null;
     }

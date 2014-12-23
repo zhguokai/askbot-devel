@@ -194,8 +194,8 @@ var showMessage = function (element, msg, where) {
         var elem = this[0],
         tmp;
         return !elem ? null
-        : typeof ( tmp = elem.outerHTML ) === 'string' ? tmp
-        : ( div = div || $('<div/>') ).html( this.eq(0).clone() ).html();
+        : typeof (tmp = elem.outerHTML) === 'string' ? tmp
+        : (div = div || $('<div/>')).html(this.eq(0).clone()).html();
     };
 })(jQuery);
 
@@ -243,8 +243,7 @@ var putCursorAtEnd = function (element) {
     if (el.setSelectionRange) {
         var len = jEl.val().length * 2;
         el.setSelectionRange(len, len);
-    }
-    else{
+    } else {
         jEl.val(jEl.val());
     }
     jEl.scrollTop(999999);
@@ -284,10 +283,10 @@ var notify = (function () {
         },
         close: function (doPostback) {
             if (doPostback) {
-               $.post(
-                   askbot.urls.mark_read_message,
-                   { formdata: 'required' }
-               );
+                $.post(
+                    askbot.urls.mark_read_message,
+                    { formdata: 'required' }
+                );
             }
             $('.notify').fadeOut('fast');
             $('body').removeClass('user-messages');

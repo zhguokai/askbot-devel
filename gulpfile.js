@@ -42,11 +42,11 @@ var ignore = {
 // TASKS/linting
 gulp.task('lint', function () {
     gulp.src(patterns.js.concat(ignore.js.map(function (f) { return '!' + f; })))
-        .pipe(jshint())
-        .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jscs()).on('error', function (error) {
             gutil.log('\n' + error.message);
-        });
+        })
+        .pipe(jshint())
+        .pipe(jshint.reporter('jshint-stylish'));
 });
 
 // // TASK/watchers
