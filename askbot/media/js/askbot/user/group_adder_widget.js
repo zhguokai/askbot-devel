@@ -48,7 +48,7 @@ GroupAdderWidget.prototype.getAddGroupHandler = function () {
             cache: false,
             url: askbot.urls.edit_group_membership,
             success: function (data) {
-                if (data.success === true) {
+                if (data.success) {
                     me.addGroup(data);
                     me.setState('display');
                 } else {

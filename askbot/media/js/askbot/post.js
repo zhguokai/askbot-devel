@@ -1340,7 +1340,7 @@ var questionRetagger = (function () {
             dataType: 'json',
             data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function (json) {
-                if (json.success === true) {
+                if (json.success) {
                     new_tags = getUniqueWords(json.new_tags);
                     oldTagsHtml = '';
                     cancelRetag();
@@ -3336,7 +3336,7 @@ ImageChanger.prototype.deleteImage = function () {
         data: data,
         cache: false,
         success: function (data) {
-            if (data.success === true) {
+            if (data.success) {
                 showMessage(me.getElement(), data.message, 'after');
             }
         }
@@ -3585,7 +3585,7 @@ inherits(TagEditor, WrappedElement);
             dataType: 'json',
             data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function (json) {
-                if (json.success === true) {
+                if (json.success) {
                     new_tags = getUniqueWords(json.new_tags);
                     oldTagsHtml = '';
                     cancelRetag();
@@ -3593,8 +3593,7 @@ inherits(TagEditor, WrappedElement);
                     if (json.message) {
                         notify.show(json.message);
                     }
-                }
-                else {
+                } else {
                     cancelRetag();
                     showMessage(tagsDiv, json.message);
                 }
@@ -4775,7 +4774,7 @@ CategorySelectorLoader.prototype.getSaveHandler = function () {
             dataType: 'json',
             data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function (json) {
-                if (json.success === true) {
+                if (json.success) {
                     var new_tags = getUniqueWords(json.new_tags);
                     oldTagsHtml = '';
                     me.closeEditor();

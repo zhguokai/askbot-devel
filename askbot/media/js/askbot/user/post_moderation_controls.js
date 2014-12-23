@@ -91,7 +91,7 @@ PostModerationControls.prototype.getModHandler = function (action, items, optRea
             data: JSON.stringify(postData),
             url: askbot.urls.moderatePostEdits,
             success: function (response_data) {
-                if (response_data.success === true) {
+                if (response_data.success) {
                     me.removeEntries(response_data.memo_ids);
                     me.setEntryCount(response_data.memo_count);
                 }
