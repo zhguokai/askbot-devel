@@ -90,6 +90,7 @@ def server_error(request, template='500.html'):
 
 def help(request):
     data = {
+        'active_tab': 'help',
         'app_name': askbot_settings.APP_SHORT_NAME,
         'page_class': 'meta'
     }
@@ -101,6 +102,7 @@ def faq(request):
             'title': _('FAQ'),
             'content': askbot_settings.FORUM_FAQ,
             'page_class': 'meta',
+            'active_tab': 'faq',
         }
         return render(request, 'static_page.html', data)
     else:
@@ -108,6 +110,7 @@ def faq(request):
             'gravatar_faq_url': reverse('faq') + '#gravatar',
             'ask_question_url': reverse('ask'),
             'page_class': 'meta',
+            'active_tab': 'faq',
         }
         return render(request, 'faq_static.html', data)
 

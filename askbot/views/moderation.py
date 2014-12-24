@@ -34,7 +34,7 @@ def get_editors(memo_set):
     """returns editors corresponding to the memo set
     some memos won't yeild editors - if the related object
     is post and it has > 1 editor (in which case we don't know
-    who was the editor that we want to block!!! 
+    who was the editor that we want to block!!!
     this applies to flagged posts.
 
     todo: an inconvenience is that "offensive flags" are stored
@@ -62,7 +62,7 @@ def filter_admins(users):
         if not user.is_administrator_or_moderator():
             filtered.add(user)
     return filtered
-            
+
 
 def concat_messages(message1, message2):
     if message1:
@@ -234,7 +234,7 @@ def moderate_post_edits(request):
             if num_editors:
                 users_message = ungettext('%d user approved', '%d users approved', num_editors) % num_editors
                 result['message'] = concat_messages(result['message'], users_message)
-            
+
     elif post_data['action'] == 'block':
         if 'users' in post_data['items']:
             editors = filter_admins(get_editors(memo_set))
@@ -263,7 +263,7 @@ def moderate_post_edits(request):
                 if isinstance(obj, models.PostRevision):
                     ips.add(obj.ip_addr)
 
-            #to make sure to not block the admin and 
+            #to make sure to not block the admin and
             #in case REMOTE_ADDR is a proxy server - not
             #block access to the site
             my_ip = request.META.get('REMOTE_ADDR')
