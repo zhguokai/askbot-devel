@@ -1707,11 +1707,9 @@ SimpleEditor.prototype.setText = function (text) {
  * in WMD, and that one requires a more complex structure
  */
 SimpleEditor.prototype.createDom = function () {
-    this._element = this.makeElement('div');
-    this._element.addClass('wmd-container');
-    var textarea = this.makeElement('textarea');
+    this._element = getTemplate('.js-simple-editor');
+    var textarea = this._element.find('textarea');
     addExtraCssClasses(textarea, 'editorClasses');
-    this._element.append(textarea);
     this._textarea = textarea;
     if (this._text) {
         textarea.val(this._text);
@@ -1938,14 +1936,18 @@ EditCommentForm.prototype.setWaitingStatus = function (isWaiting) {
         this._editor.getElement().hide();
         this._submit_btn.hide();
         this._cancel_btn.hide();
-        this._minorEditBox.hide();
+        if (this._minorEditBox) {
+            this._minorEditBox.hide();
+        }
         this._element.hide();
     } else {
         this._element.show();
         this._editor.getElement().show();
         this._submit_btn.show();
         this._cancel_btn.show();
-        this._minorEditBox.show();
+        if (this._minorEditBox) {
+            this._minorEditBox.show();
+        }
     }
 };
 
@@ -2083,6 +2085,7 @@ EditCommentForm.prototype.getCounterUpdater = function () {
     var counter = this._text_counter;
     var editor = this._editor;
     var handler = function () {
+        var maxCommentLength = askbot.data.maxCommentLength;
         var length = editor.getText().length;
         var length1 = maxCommentLength - 100;
 
@@ -2709,7 +2712,6 @@ PostCommentsWidget.prototype.decorate = function (element) {
 PostCommentsWidget.prototype.handleDeletedComment = function () {
     /* if the widget does not have any comments, set
     the 'empty' class on the widget element */
-    var x, y;
     if (this._cbox.children('.comment').length === 0) {
         if (this._commentsReversed === false) {
             this._element.siblings('.comment-title').hide();
@@ -2747,14 +2749,12 @@ PostCommentsWidget.prototype.showOpenEditorButton = function () {
 PostCommentsWidget.prototype.startNewComment = function () {
     //find comment template, clone it's dom
     var comment = new Comment(this);
-    var template = $($('.comment-template').children()[0]);
-    var commentElem = template.clone(false);
+    var commentElem = getTemplate('.js-comment');
     if (this._commentsReversed) {
         this._cbox.prepend(commentElem);
     } else {
         this._cbox.append(commentElem);
     }
-    commentElem.show();
     comment.decorate(commentElem);
     this._element.removeClass('empty');
     this._element.trigger('askbot.beforeCommentStart');
@@ -2791,7 +2791,6 @@ PostCommentsWidget.prototype.getAllowEditHandler = function () {
 };
 
 PostCommentsWidget.prototype.getOpenEditorHandler = function(button) {
-PostCommentsWidget.prototype.getOpenEditorHandler = function () {
     var me = this;
     return function () {
         //if user can't post, we tell him something and refuse
@@ -2844,10 +2843,8 @@ PostCommentsWidget.prototype.reRenderComments = function (json) {
     var me = this;
     $.each(json, function (i, item) {
         var comment = new Comment(me);
-        var template = $($('.comment-template').children()[0]);
-        var commentElem = template.clone(false);
+        var commentElem = getTemplate('.js-comment');
         me._cbox.append(commentElem);
-        commentElem.show();
         comment.decorate(commentElem);
         comment.setContent(item);
         me._comments.push(comment);

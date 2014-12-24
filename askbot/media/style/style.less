@@ -68,6 +68,7 @@ select,
 textarea,
 #askFormBar .questionTitleInput,
 .wmd-container,
+.js-simple-editor,
 .folded-editor,
 .mock-editor {
     border: #cce6ec 3px solid;
@@ -1999,19 +2000,24 @@ ul#related-tags li {
     }
 }
 
-.wmd-container {
+.wmd-container,
+.js-simple-editor {
     textarea {
         border: none;
     }
 }
-.users-page .wmd-container {
-    width: auto;
+.users-page {
+    .wmd-container,
+    .js-simple-editor {
+        width: auto;
+    }
 }
 .ask-page,
 .question-page,
 .edit-question-page,
 .edit-answer-page {
-    .wmd-container {
+    .wmd-container,
+    .js-simple-editor {
         box-sizing: border-box;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
@@ -2020,9 +2026,12 @@ ul#related-tags li {
         width: 723px;
         width: 100%;
     }
-    .post-comments .wmd-container {
-        margin-bottom: 8px;
-        margin-left: -2px;
+    .post-comments {
+        .wmd-container,
+        .js-simple-editor {
+            margin-bottom: 8px;
+            margin-left: -2px;
+        }
     }
     #editor {
         -webkit-box-sizing: border-box;
@@ -2040,7 +2049,8 @@ ul#related-tags li {
 }
 
 .edit-answer-page {
-    .wmd-container {
+    .wmd-container,
+    .js-simple-editor {
         margin-top: 13px;
     }
 }
@@ -2587,12 +2597,15 @@ ul#related-tags li {
             padding: 5px 19px 2px 6px;
             width: 100%;
         }
-        .wmd-container textarea {
-            border: none;
-            box-shadow: inset 0 0 3px 1px #aaa;
-            -moz-box-shadow: inset 0 0 3px 1px #aaa;
-            -webkit-box-shadow: inset 0 0 3px 1px #aaa
-        }
+        .wmd-container,
+        .js-simple-editor {
+            textarea {
+                border: none;
+                box-shadow: inset 0 0 3px 1px #aaa;
+                -moz-box-shadow: inset 0 0 3px 1px #aaa;
+                -webkit-box-shadow: inset 0 0 3px 1px #aaa
+            }
+        } 
         .transient-comment {
             margin-bottom: 3px; /* match paragraph style */
         }

@@ -84,6 +84,7 @@ select,
 textarea,
 #askFormBar .questionTitleInput,
 .wmd-container,
+.js-simple-editor,
 .folded-editor,
 .mock-editor {
   border: #cce6ec 3px solid;
@@ -1861,16 +1862,20 @@ ul#related-tags li {
 .folded-editor.unfolded .editor-proper {
   display: block;
 }
-.wmd-container textarea {
+.wmd-container textarea, .js-simple-editor textarea {
   border: none;
 }
-.users-page .wmd-container {
+.users-page .wmd-container, .users-page .js-simple-editor {
   width: auto;
 }
 .ask-page .wmd-container,
 .question-page .wmd-container,
 .edit-question-page .wmd-container,
-.edit-answer-page .wmd-container {
+.edit-answer-page .wmd-container,
+.ask-page .js-simple-editor,
+.question-page .js-simple-editor,
+.edit-question-page .js-simple-editor,
+.edit-answer-page .js-simple-editor {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -1882,7 +1887,11 @@ ul#related-tags li {
 .ask-page .post-comments .wmd-container,
 .question-page .post-comments .wmd-container,
 .edit-question-page .post-comments .wmd-container,
-.edit-answer-page .post-comments .wmd-container {
+.edit-answer-page .post-comments .wmd-container,
+.ask-page .post-comments .js-simple-editor,
+.question-page .post-comments .js-simple-editor,
+.edit-question-page .post-comments .js-simple-editor,
+.edit-answer-page .post-comments .js-simple-editor {
   margin-bottom: 8px;
   margin-left: -2px;
 }
@@ -1903,7 +1912,7 @@ ul#related-tags li {
 .edit-answer-page .retagger-buttons button {
   margin: 8px 10px 5px 0;
 }
-.edit-answer-page .wmd-container {
+.edit-answer-page .wmd-container, .edit-answer-page .js-simple-editor {
   margin-top: 13px;
 }
 #editor {
@@ -2404,7 +2413,7 @@ ul#related-tags li {
   padding: 5px 19px 2px 6px;
   width: 100%;
 }
-.question-page .comments .wmd-container textarea {
+.question-page .comments .wmd-container textarea, .question-page .comments .js-simple-editor textarea {
   border: none;
   box-shadow: inset 0 0 3px 1px #aaa;
   -moz-box-shadow: inset 0 0 3px 1px #aaa;

@@ -339,8 +339,9 @@
     {% if request.user.is_authenticated() %}
         {% from "macros.html" import comment_widget %}
         {% spaceless %}
-        <div class="comment-template" style="display: none">
+        <div class="js-templates" style="display: none;">
             {{ comment_widget(blank_comment) }}
+            {% include "editors/simple.html" %}
         </div>
         {% endspaceless %}
     {% endif %}

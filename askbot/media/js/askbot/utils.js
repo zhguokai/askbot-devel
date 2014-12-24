@@ -21,6 +21,16 @@ var getCookie = function (name) {
     return cookieValue;
 };
 
+/**
+ * Selects template by class
+ * template selector must be a simple class selector
+ * e.g. .comment
+ */
+var getTemplate = function (templateSelector) {
+    var templates = $('.js-templates');
+    return templates.find(templateSelector).clone(false);
+};
+
 var cleanUrl = function (url) {
     var re = new RegExp('//', 'g');
     return url.replace(re, '/');
