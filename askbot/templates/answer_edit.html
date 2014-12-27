@@ -3,7 +3,7 @@
 <!-- template answer_edit.html -->
 {% block title %}{% spaceless %}{{ settings.WORDS_EDIT_ANSWER|escape }}{% endspaceless %}{% endblock %}
 {% block forestyle %}
-    <link rel="stylesheet" type="text/css" href="{{"/js/plugins/wmd/wmd.css"|media}}" />
+    <link rel="stylesheet" type="text/css" href="{{ '/wmd/wmd.css'|media }}" />
 {% endblock %}
 {% block content %}
 <div class="section-title">
@@ -63,21 +63,26 @@
 
 {% block endjs %}
     {% include "meta/editor_data.html" %}
-    <script type='text/javascript' src='{{"/js/plugins/editor.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/libs/jquery.validate.min.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/libs/prettify.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/askbot/post.js"|media}}'></script>
+    {% compress js %}
+    <script type="text/javascript" src="{{ '/jslib/editor.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/jslib/jquery.validate.min.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/jslib/prettify.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
+    {% endcompress %}
     {% if settings.EDITOR_TYPE == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}
     {% endif %}
     <script type="text/javascript">
-        $().ready(function(){
-            $("#nav_questions").attr('className',"on");
+        $(document).ready(function(){
             $('#editor').TextAreaResizer();
 
             //highlight code synctax when editor has new text
-            $("#editor").typeWatch({highlight: false, wait: 3000,
-                             captureLength: 5, callback: lanai.highlightSyntax});
+            $("#editor").typeWatch({
+                highlight: false,
+                wait: 3000,
+                captureLength: 5,
+                callback: lanai.highlightSyntax
+            });
 
             //toggle preview of editor
             var display = true;

@@ -111,6 +111,8 @@
             });
         });
     </script>
-    <script type='text/javascript' src='{{"/js/askbot/tag_selector.js"|media}}'></script>
+    {% compress js %}
+    <script type='text/javascript' src='{{ "/js/tag_selector.js"|media }}'></script>
+    {% endcompress %}
 {% endblock %}
 <!-- end user_stats.html -->

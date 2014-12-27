@@ -38,16 +38,17 @@
 </div>
 {% endblock %}
 {% block endjs %}
-    <script type='text/javascript' src='{{"/js/plugins/editor.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/libs/prettify.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/askbot/post.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/libs/jquery.validate.min.js"|media}}'></script>
+    {% compress js %}
+    <script type="text/javascript" src="{{ '/jslib/editor.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/jslib/prettify.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/jslib/jquery.validate.min.js'|media }}"></script>
+    {% endcompress %}
     <script type="text/javascript">
-        $().ready(function(){
-            $("#nav_questions").attr('className',"on");
+        $(document).ready(function(){
             {% import "macros.html" as macros %}
             {{ macros.tag_autocomplete_js(id = '#id_tags') }}
-            $("#fmretag").validate({
+            $('fmretag').validate({
                rules: {
                    tags: {
                        required: true,
@@ -56,8 +57,8 @@
                },
                messages: {
                    tags: {
-                           required: "{% trans %}tags are required{% endtrans %}",
-                           maxlength: "{% trans %}up to 5 tags, less than 20 characters each{% endtrans %}"
+                           required: '{% trans %}tags are required{% endtrans %}',
+                           maxlength: '{% trans %}up to 5 tags, less than 20 characters each{% endtrans %}'
                        }
                    }
 

@@ -26,25 +26,25 @@
         askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
         askbot['urls']['getTopAnswers'] = '{% url get_top_answers %}';
     </script>
-    {% if request.user|can_moderate_user(view_user) %}
-        <script type='text/javascript' src="{{ '/js/jquery.form.js'|media }}"></script>
-    {% endif %}
-    <script type="text/javascript" src="{{ '/js/askbot/user/response_notifs.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/decline_and_explain_menu.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/post_moderation_controls.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/manage_reject_reasons_dialog.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/follow_user.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/user_group.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/groups_container.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/group_adder_widget.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/user_groups_editor.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/tweeting.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/user_questions_paginator.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user/user_answer_paginator.js'|media }}"></script>
-    <script type="text/javascript" src="{{ '/js/askbot/user.js'|media }}"></script>
-    <script type='text/javascript' src="{{ '/js/libs/jquery.validate.min.js'|media }}"></script>
-    <script type='text/javascript' src='{{"/js/libs/prettify.js"|media}}'></script>
-    <script type="text/javascript" src="{{ '/js/askbot/post.js'|media }}"></script>
+    {% compress js %}
+    <script type='text/javascript' src="{{ '/jslib/jquery.form.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/response_notifs.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/decline_and_explain_menu.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/post_moderation_controls.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/manage_reject_reasons_dialog.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/follow_user.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/user_group.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/groups_container.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/group_adder_widget.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/user_groups_editor.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/tweeting.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/user_questions_paginator.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user/user_answer_paginator.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/user.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/jslib/jquery.validate.min.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/jslib/prettify.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
+    {% endcompress %}
     {% block userjs %}
     {% endblock %}
 {% endblock %}
