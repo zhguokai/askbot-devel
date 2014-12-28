@@ -21,6 +21,13 @@ from collections import defaultdict
 
 PERSONAL_GROUP_NAME_PREFIX = '_personal_'
 
+class MockUser(object):
+    def __init__(self):
+        self.username = 'Mock User'
+
+    def get_profile_url(self):
+        return ''
+
 class ResponseAndMentionActivityManager(models.Manager):
     def get_query_set(self):
         response_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY

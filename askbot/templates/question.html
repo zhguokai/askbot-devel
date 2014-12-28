@@ -338,15 +338,13 @@
     {% include "question/sidebar.html" %}
 {% endblock %}
 {% block endjs %}
-    {% if request.user.is_authenticated() %}
-        {% from "macros.html" import comment_widget %}
-        {% spaceless %}
-        <div class="js-templates" style="display: none;">
-            {{ comment_widget(blank_comment) }}
-            {% include "editors/simple.html" %}
-        </div>
-        {% endspaceless %}
-    {% endif %}
+    {% from "macros.html" import comment_widget %}
+    {% spaceless %}
+    <div class="js-templates" style="display: none;">
+        {{ comment_widget(blank_comment) }}
+        {% include "editors/simple.html" %}
+    </div>
+    {% endspaceless %}
     <script type='text/javascript'>
         {# not compressable #}
         var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
