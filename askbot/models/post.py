@@ -352,10 +352,11 @@ class MockPost(object):
     out the js templates for the posts made via ajax
     """
     def __init__(self, post_type=None, author=None):
+        from askbot.models.user import MockUser
         self.post_type = post_type
         self.score = 0
         self.id = 0
-        self.author = author
+        self.author = MockUser()
         self.summary = ''
         self.added_at = datetime.datetime.now()
 

@@ -1311,7 +1311,7 @@ var questionRetagger = (function () {
     var doRetag = function () {
         $.ajax({
             type: 'POST',
-            url: retagUrl,//todo add this url to askbot.urls
+            url: askbot.urls.retag,
             dataType: 'json',
             data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function (json) {
@@ -3550,7 +3550,7 @@ inherits(TagEditor, WrappedElement);
     var doRetag = function () {
         $.ajax({
             type: 'POST',
-            url: retagUrl,//todo add this url to askbot.urls
+            url: askbot.urls.retag,
             dataType: 'json',
             data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function (json) {
@@ -4739,7 +4739,7 @@ CategorySelectorLoader.prototype.getSaveHandler = function () {
         var tagInput = $('input[name="tags"]');
         $.ajax({
             type: 'POST',
-            url: retagUrl,//add to askbot.urls
+            url: askbot.urls.retag,
             dataType: 'json',
             data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function (json) {

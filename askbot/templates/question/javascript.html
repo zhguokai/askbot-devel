@@ -17,16 +17,17 @@
     })();
 </script>
 {% compress js %}
-<script type='text/javascript' src='{{"/js/plugins/editor.js"|media}}'></script>
-<script type="text/javascript" src='{{"/bootstrap/js/bootstrap.js"|media}}'></script>
+<script type="text/javascript" src="{{ '/jslib/editor.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/bootstrap/js/bootstrap.js'|media }}"></script>
 {% include "meta/markdown_javascript.html" %}
-<script type='text/javascript' src='{{"/js/libs/jquery.validate.min.js"|media}}'></script>
-<script type='text/javascript' src='{{"/js/libs/prettify.js"|media}}'></script>
-<script type='text/javascript' src='{{"/js/askbot/post.js"|media}}'></script>
+<script type="text/javascript" src="{{ '/jslib/jquery.validate.min.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/jslib/prettify.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
 {% endcompress %}
 <script type="text/javascript">
     // define reputation needs for comments
     askbot['urls']['getPostHtml'] = '{% url get_post_html %}';
+    askbot['urls']['retag'] = "{% url retag_question question.id %}";
     $(document).ready(function(){
         $("#nav_questions").attr('className',"on");
         $("#" + askbot['data']['answersSortTab']).attr('className',"on");

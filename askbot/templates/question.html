@@ -2,12 +2,12 @@
 <!-- question.html -->
 {% block title %}{% spaceless %}{{ question.get_question_title()|escape }}{% endspaceless %}{% endblock %}
 {% block meta_description %}
-        <meta name="description" content="{{question.summary|striptags|escape}}" />
+    <meta name="description" content="{{ question.summary|striptags|escape }}" />
 {% endblock %}
 {% block keywords %}{{thread.tagname_meta_generator()}}{% endblock %}
 {% block forestyle %}
-    <link rel="canonical" href="{{ base_url }}{{question.get_absolute_url()}}" />
-    <link rel="stylesheet" type="text/css" href="{{'/js/plugins/wmd/wmd.css'|media}}" />
+    <link rel="canonical" href="{{ base_url }}{{ question.get_absolute_url() }}" />
+    <link rel="stylesheet" type="text/css" href="{{ '/wmd/wmd.css'|media }}" />
 {% endblock %}
 {% block forejs %}
     <script type="text/javascript">
@@ -234,7 +234,9 @@
                 var canFlagPosts = data['userReputation'] >= {{ settings.MIN_REP_TO_FLAG_OFFENSIVE }};
                 var flags = findChildrenByClassName(controls, 'question-flag');
                 if (flags.length > 0 && !canFlagPosts) {
-                    removeNode(flags[0]);
+                    for (var i = 0; i < flags.length; i++) {
+                        removeNode(flags[i]);
+                    }
                 }
                 var closeBtn = findChildrenByClassName(controls, 'question-close');
                 if (
@@ -336,15 +338,13 @@
     {% include "question/sidebar.html" %}
 {% endblock %}
 {% block endjs %}
-    {% if request.user.is_authenticated() %}
-        {% from "macros.html" import comment_widget %}
-        {% spaceless %}
-        <div class="js-templates" style="display: none;">
-            {{ comment_widget(blank_comment) }}
-            {% include "editors/simple.html" %}
-        </div>
-        {% endspaceless %}
-    {% endif %}
+    {% from "macros.html" import comment_widget %}
+    {% spaceless %}
+    <div class="js-templates" style="display: none;">
+        {{ comment_widget(blank_comment) }}
+        {% include "editors/simple.html" %}
+    </div>
+    {% endspaceless %}
     <script type='text/javascript'>
         {# not compressable #}
         var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
@@ -389,21 +389,4 @@
         {% include "meta/category_tree_js.html" %}
     {% endif %}
     {% include "question/custom_javascript.html" ignore missing %}
-    {#
-    <script type="text/javascript">
-        var messages = askbot['messages'];
-        messages['upvote_question'] = gettext(
-            'I like this question (click again to cancel)'
-        );
-        messages['upvote_answer'] = gettext(
-            'I like this answer (click again to cancel)'
-        );
-        messages['downvote_question'] = gettext(
-            "I don't like this question (click again to cancel)"
-        );
-        messages['downvote_answer'] = gettext(
-            "I don't like this answer (click again to cancel)"
-        );
-    </script>
-    #}
 {% endblock %}
