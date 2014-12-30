@@ -2552,7 +2552,11 @@ Comment.prototype.setContent = function (data) {
         this._convert_link = new CommentConvertLink(this._data.id);
         oldConvertLink.getElement().replaceWith(this._convert_link.getElement());
     }
-    this._blank = false;
+    if (this.getId()) {
+        this._blank = false;
+    } else {
+        this._blank = true;
+    }
 };
 
 Comment.prototype.dispose = function () {
@@ -2790,7 +2794,7 @@ PostCommentsWidget.prototype.getAllowEditHandler = function () {
     };
 };
 
-PostCommentsWidget.prototype.getOpenEditorHandler = function(button) {
+PostCommentsWidget.prototype.getOpenEditorHandler = function (button) {
     var me = this;
     return function () {
         //if user can't post, we tell him something and refuse
