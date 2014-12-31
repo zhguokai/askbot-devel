@@ -1691,7 +1691,7 @@ SimpleEditor.prototype.getText = function () {
 };
 
 SimpleEditor.prototype.getHtml = function () {
-    return '<div class="transient-comment">' + this.getText() + '</div>';
+    return '<div class="transient-comment"><p>' + this.getText() + '</p></div>';
 };
 
 SimpleEditor.prototype.setText = function (text) {
@@ -1931,24 +1931,12 @@ var EditCommentForm = function () {
 };
 inherits(EditCommentForm, WrappedElement);
 
-EditCommentForm.prototype.setWaitingStatus = function (isWaiting) {
-    if (isWaiting === true) {
-        this._editor.getElement().hide();
-        this._submit_btn.hide();
-        this._cancel_btn.hide();
-        if (this._minorEditBox) {
-            this._minorEditBox.hide();
-        }
-        this._element.hide();
-    } else {
-        this._element.show();
-        this._editor.getElement().show();
-        this._submit_btn.show();
-        this._cancel_btn.show();
-        if (this._minorEditBox) {
-            this._minorEditBox.show();
-        }
-    }
+EditCommentForm.prototype.hide = function () {
+    this._element.hide();
+};
+
+EditCommentForm.prototype.show = function () {
+    this._element.show();
 };
 
 EditCommentForm.prototype.getEditor = function () {
@@ -2285,6 +2273,7 @@ EditCommentForm.prototype.getSaveHandler = function () {
     var me = this;
     var editor = this._editor;
     return function () {
+        var commentData, timestamp, userName;
         if (me.isEnabled() === false) {//prevent double submits
             return false;
         }
@@ -2298,11 +2287,15 @@ EditCommentForm.prototype.getSaveHandler = function () {
         }
 
         //display the comment and show that it is not yet saved
-        me.setWaitingStatus(true);
+        me.hide();
         me._comment.getElement().show();
-        var commentData = me._comment.getData();
-        var timestamp = commentData.comment_added_at || gettext('just now');
-        var userName = commentData.user_display_name || askbot.data.userName;
+        commentData = me._comment.getData();
+        timestamp = commentData.comment_added_at || gettext('just now');
+        if (me._comment.isBlank()) {
+            userName = askbot.data.userName;
+        } else {
+            userName = commentData.user_display_name;
+        }
 
         me._comment.setContent({
             'html': editor.getHtml(),
@@ -2345,7 +2338,6 @@ EditCommentForm.prototype.getSaveHandler = function () {
                 } else {
                     me._comment.setContent(json);
                 }
-                me.setWaitingStatus(false);
                 me.detach();
                 commentsElement.trigger('askbot.afterCommentSubmitSuccess');
             },
@@ -2353,7 +2345,6 @@ EditCommentForm.prototype.getSaveHandler = function () {
                 me._comment.getElement().show();
                 showMessage(me._comment.getElement(), xhr.responseText, 'after');
                 me._comment.setDraftStatus(false);
-                me.setWaitingStatus(false);
                 me.detach();
                 me.enableForm();
                 commentsElement.trigger('askbot.afterCommentSubmitError');
@@ -2367,7 +2358,6 @@ var Comment = function (widget, data) {
     WrappedElement.call(this);
     this._container_widget = widget;
     this._data = data || {};
-    this._blank = true;//set to false by setContent
     this._element = null;
     this._is_convertible = askbot.data.userIsAdminOrMod;
     this.convert_link = null;
@@ -2399,6 +2389,7 @@ Comment.prototype.startEditing = function () {
     } else {
         form.attachTo(this, 'edit');
     }
+    form.show();
 };
 
 Comment.prototype.decorate = function (element) {
@@ -2452,8 +2443,6 @@ Comment.prototype.decorate = function (element) {
     this._voteButton = vote;
 
     this._userLink = this._element.find('.author');
-
-    this._blank = (this.getId() === undefined);
 };
 
 Comment.prototype.setDraftStatus = function (isDraft) {
@@ -2471,7 +2460,7 @@ Comment.prototype.setDraftStatus = function (isDraft) {
 
 
 Comment.prototype.isBlank = function () {
-    return this._blank;
+    return this.getId() === undefined;
 };
 
 Comment.prototype.getId = function () {
@@ -2551,11 +2540,6 @@ Comment.prototype.setContent = function (data) {
         var oldConvertLink = this._convert_link;
         this._convert_link = new CommentConvertLink(this._data.id);
         oldConvertLink.getElement().replaceWith(this._convert_link.getElement());
-    }
-    if (this.getId()) {
-        this._blank = false;
-    } else {
-        this._blank = true;
     }
 };
 
