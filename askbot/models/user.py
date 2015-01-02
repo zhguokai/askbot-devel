@@ -23,7 +23,10 @@ PERSONAL_GROUP_NAME_PREFIX = '_personal_'
 
 class MockUser(object):
     def __init__(self):
-        self.username = 'Mock User'
+        self.username = ''
+
+    def get_avatar_url(self):
+        return ''
 
     def get_profile_url(self):
         return ''

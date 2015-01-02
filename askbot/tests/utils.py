@@ -160,17 +160,17 @@ class AskbotTestCase(TestCase):
 
     def post_question(
                     self,
-                    user = None,
-                    title = 'test question title',
-                    body_text = 'test question body text',
-                    tags = 'test',
-                    by_email = False,
-                    wiki = False,
-                    is_anonymous = False,
-                    is_private = False,
-                    group_id = None,
-                    follow = False,
-                    timestamp = None,
+                    user=None,
+                    title='test question title',
+                    body_text='test question body text',
+                    tags='test',
+                    by_email=False,
+                    wiki=False,
+                    is_anonymous=False,
+                    is_private=False,
+                    group_id=None,
+                    follow=False,
+                    timestamp=None,
                 ):
         """posts and returns question on behalf
         of user. If user is not given, it will be self.user

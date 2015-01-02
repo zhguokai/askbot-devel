@@ -75,7 +75,7 @@ def to_int(value):
     return int(value)
 
 @register.filter
-def safe_urlquote(text, quote_plus = False):
+def safe_urlquote(text, quote_plus=False):
     if quote_plus:
         return urllib.quote_plus(text.encode('utf8'))
     else:

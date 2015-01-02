@@ -63,12 +63,14 @@
 {% endblock %}
 {% block userjs %}
     <script type='text/javascript'>
-        search = new FullTextSearch();
-        askbot['controllers'] = askbot['controllers'] || {}
-        askbot['controllers']['fullTextSearch'] = search;
-        askbot['urls']['mark_subscribed_tag'] = '{% url mark_subscribed_tag %}';
-        askbot['urls']['unmark_tag'] = '{% url unmark_tag %}';
-        askbot['settings']['tag_editor'] = '{{ tag_editor_settings|escapejs }}';
+        (function () {
+            var search = new FullTextSearch();
+            askbot['controllers'] = askbot['controllers'] || {};
+            askbot['controllers']['fullTextSearch'] = search;
+            askbot['urls']['mark_subscribed_tag'] = '{% url mark_subscribed_tag %}';
+            askbot['urls']['unmark_tag'] = '{% url unmark_tag %}';
+            askbot['settings']['tag_editor'] = '{{ tag_editor_settings|escapejs }}';
+        })();
     </script>
     {% compress js %}
     <script type='text/javascript' src='{{ "/js/tag_selector.js"|media }}'></script>

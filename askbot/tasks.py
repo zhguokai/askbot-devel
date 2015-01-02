@@ -78,7 +78,8 @@ def notify_author_of_published_revision_celery_task(revision):
 
     data = {
         'site_name': askbot_settings.APP_SHORT_NAME,
-        'post': revision.post
+        'post': revision.post,
+        'recipient_user': revision.author,
     }
     headers = None
 
@@ -121,12 +122,12 @@ def notify_author_of_published_revision_celery_task(revision):
     #todo: possibly add headers to organize messages in threads
     #send the message
     mail.send_mail(
-        subject_line = _('Your post at %(site_name)s is now published') % data,
-        body_text = template.render(Context(data)),
-        recipient_list = [revision.author.email,],
-        related_object = revision,
-        activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
-        headers = headers
+        subject_line=_('Your post at %(site_name)s is now published') % data,
+        body_text=template.render(Context(data)),
+        recipient_list=[revision.author.email,],
+        related_object=revision,
+        activity_type=const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+        headers=headers
     )
 
 @task(ignore_result = True)

@@ -384,6 +384,7 @@ class ThreadRenderLowLevelCachingTests(AskbotTestCase):
             'thread': thread,
             'question': self.q,
             'search_state': DummySearchState(),
+            'visitor': None
         }
         html = get_template('widgets/question_summary.html').render(Context(context))
         filled_html = html.replace('<<<tag1>>>', SearchState.get_empty().add_tag('tag1').full_url())\
