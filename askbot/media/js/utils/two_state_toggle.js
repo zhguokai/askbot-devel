@@ -1,7 +1,7 @@
 /**
  * A button on which user can click
- * and become added to some group (followers, group members, etc.)
- * or toggle some state on/off
+ * and change status with regard to certain item (follow/unfollow something,
+ * join/leave group, or toggle some state)
  * The button has four states on-prompt, off-prompt, on-state and off-state
  * on-prompt is activated on mouseover, when user is not part of group
  * off-prompt - on mouseover, when user is part of group
@@ -11,7 +11,7 @@
 var TwoStateToggle = function () {
     SimpleControl.call(this);
     this._state = null;
-    this._state_messages = {};
+    this._messages = {};
     this._states = [
         'on-state',
         'off-state',
@@ -19,17 +19,17 @@ var TwoStateToggle = function () {
         'off-prompt'
     ];
     this._handler = this.getDefaultHandler();
-    this._post_data = {};
+    this._postData = {};
     this.toggleUrl = '';//public property
 };
 inherits(TwoStateToggle, SimpleControl);
 
 TwoStateToggle.prototype.setPostData = function (data) {
-    this._post_data = data;
+    this._postData = data;
 };
 
 TwoStateToggle.prototype.getPostData = function () {
-    return this._post_data;
+    return this._postData;
 };
 
 TwoStateToggle.prototype.resetStyles = function () {
@@ -42,7 +42,7 @@ TwoStateToggle.prototype.resetStyles = function () {
 };
 
 TwoStateToggle.prototype.isOn = function () {
-    return this._element.hasClass('on');
+    return this._element.data('isOn');
 };
 
 TwoStateToggle.prototype.getDefaultHandler = function () {
@@ -50,6 +50,12 @@ TwoStateToggle.prototype.getDefaultHandler = function () {
     return function () {
         var data = me.getPostData();
         data.disable = me.isOn();
+        /* @todo: need ability to prevent the ajax call
+         * and do something else in certain conditions.
+         * For example - invite an unauthenticated user to log in.
+         * This functionality can be better 
+         * defined in the "SimpleControl".
+         */
         $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -63,8 +69,10 @@ TwoStateToggle.prototype.getDefaultHandler = function () {
                     } else {
                         me.setState('off-state');
                     }
+                    me.getElement().trigger('askbot.two-state-toggle.success', data);
                 } else {
                     showMessage(me.getElement(), data.message);
+                    me.getElement().trigger('askbot.two-state-toggle.error', data);
                 }
             }
         });
@@ -83,9 +91,9 @@ TwoStateToggle.prototype.setState = function (state) {
         this.resetStyles();
         element.addClass(state);
         if (state === 'on-state') {
-            element.addClass('on');
+            element.data('isOn', true);
         } else if (state === 'off-state') {
-            element.removeClass('on');
+            element.data('isOn', false);
         }
         if (this.isCheckBox()) {
             if (state === 'on-state') {
@@ -94,7 +102,7 @@ TwoStateToggle.prototype.setState = function (state) {
                 element.attr('checked', false);
             }
         } else {
-            this._element.html(this._state_messages[state]);
+            this._element.html(this._messages[state]);
         }
     }
 };
@@ -103,30 +111,19 @@ TwoStateToggle.prototype.decorate = function (element) {
     this._element = element;
     //read messages for all states
     var messages = {};
-    messages['on-state'] =
-        element.attr('data-on-state-text') || gettext('enabled');
-    messages['off-state'] =
-        element.attr('data-off-state-text') || gettext('disabled');
-    messages['on-prompt'] =
-        element.attr('data-on-prompt-text') || messages['on-state'];
-    messages['off-prompt'] =
-        element.attr('data-off-prompt-text') || messages['off-state'];
-    this._state_messages = messages;
+    messages['on-state'] = element.data('onStateText') || gettext('enabled');
+    messages['off-state'] = element.data('offStateText') || gettext('disabled');
+    messages['on-prompt'] = element.data('onPromptText') || messages['on-state'];
+    messages['off-prompt'] = element.data('offPromptText') || messages['off-state'];
+    this._messages = messages;
 
-    this.toggleUrl = element.attr('data-toggle-url');
+    this.toggleUrl = element.data('toggleUrl');
 
     //detect state and save it
     if (this.isCheckBox()) {
-        this._state = element.attr('checked') ? 'state-on' : 'state-off';
+        this._state = element.is(':checked') ? 'on-state': 'off-state';
     } else {
-        var text = $.trim(element.html());
-        for (var i = 0; i < this._states.length; i++) {
-            var state = this._states[i];
-            if (text === messages[state]) {
-                this._state = state;
-                break;
-            }
-        }
+        this._state = element.data('isOn') ? 'on-state' : 'off-state';
     }
 
     //set mouseover handler only for non-checkbox version
@@ -139,7 +136,6 @@ TwoStateToggle.prototype.decorate = function (element) {
             } else {
                 me.setState('on-prompt');
             }
-            //element.css('background-color', 'red');
             return false;
         });
         element.mouseout(function () {
@@ -149,7 +145,6 @@ TwoStateToggle.prototype.decorate = function (element) {
             } else {
                 me.setState('off-state');
             }
-            //element.css('background-color', 'white');
             return false;
         });
     }

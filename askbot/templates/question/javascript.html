@@ -78,6 +78,14 @@
                 expander.decorate(expanderElement);
             }
         });
+
+        var followBtn = $('.js-follow-question');
+        if (followBtn.length) {
+            var toggle = new TwoStateToggle();
+            toggle.setPostData({'question_id': {{ question.id }} });
+            toggle.decorate(followBtn);
+            followBtn.bind('askbot.two-state-toggle.success', updateQuestionFollowerCount);
+        }
     });
 
     $(window).bind('hashchange', animate_hashes);

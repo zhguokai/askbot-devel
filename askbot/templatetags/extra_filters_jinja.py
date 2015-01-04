@@ -170,6 +170,14 @@ def get_age(birthday):
     return diff.days / 365
 
 @register.filter
+def equal(one, other):
+    return one == other
+
+@register.filter
+def not_equal(one, other):
+    return one != other
+
+@register.filter
 def media(url):
     """media filter - same as media tag, but
     to be used as a filter in jinja templates

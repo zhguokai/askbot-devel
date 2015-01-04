@@ -9,6 +9,7 @@ from urlparse import urlparse
 from django.core.urlresolvers import reverse
 from django.utils.html import strip_tags as strip_all_tags
 from django.utils.html import urlize
+from django.utils.translation import ugettext as _
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
     acceptable_elements = ('a', 'abbr', 'acronym', 'address', 'b', 'big',
@@ -219,6 +220,11 @@ def internal_link(url_name, title, kwargs=None, anchor=None):
 def site_link(url_name, title, kwargs=None, anchor=None):
     """same as internal_link, but with the site domain"""
     return site_url(internal_link(url_name, title, kwargs=kwargs, anchor=anchor))
+
+def get_login_link(text=None):
+    from askbot.utils.url_utils import get_login_url
+    text = text or _('please login')
+    return '<a href="%s">%s</a>' % (get_login_url(), text)
 
 def unescape(text):
     """source: http://effbot.org/zone/re-sub.htm#unescape-html

@@ -643,6 +643,20 @@ CommentVoteButton.prototype.createDom = function () {
 };
 
 /**
+ * an updater of the follower count
+ */
+var updateQuestionFollowerCount = function (evt, data) {
+    var fav = $('.js-question-follower-count');
+    var count = data['num_followers'];
+    if (count === 0) {
+        fav.text('');
+    } else {
+        var fmt = ngettext('%s follower', '%s followers', count);
+        fav.text(interpolate(fmt, [count]));
+    }
+};
+
+/**
  * legacy Vote class
  * handles all sorts of vote-like operations
  */
@@ -662,7 +676,6 @@ var Vote = (function () {
     var imgIdPrefixQuestionVotedown = 'question-img-downvote-';
     var imgIdPrefixAnswerVoteup = 'answer-img-upvote-';
     var imgIdPrefixAnswerVotedown = 'answer-img-downvote-';
-    var divIdFavorite = 'favorite-number';
     var voteNumberClass = 'vote-number';
     var offensiveIdPrefixQuestionFlag = 'question-offensive-flag-';
     var removeOffensiveIdPrefixQuestionFlag = 'question-offensive-remove-flag-';
@@ -680,12 +693,6 @@ var Vote = (function () {
 
     var pleaseLogin = ' <a href="' + askbot.urls.user_signin + '">' + gettext('please login') + '</a>';
 
-    var tmpMsg = interpolate(
-        gettext('anonymous users cannot %(follow_questions)s'),
-        {'follow_questions': askbot.messages.followQuestions},
-        true
-    );
-    var favoriteAnonymousMessage = tmpMsg + pleaseLogin;
     //todo: this below is probably not used
     var subscribeAnonymousMessage = gettext('anonymous users cannot subscribe to questions') + pleaseLogin;
     var voteAnonymousMessage = gettext('anonymous users cannot vote') + pleaseLogin;
@@ -700,7 +707,6 @@ var Vote = (function () {
         acceptAnswer: 0,
         questionUpVote: 1,
         questionDownVote: 2,
-        favorite: 4,
         answerUpVote: 5,
         answerDownVote:6,
         offensiveQuestion: 7,
@@ -715,13 +721,6 @@ var Vote = (function () {
         questionUnsubscribeUpdates: 12
     };
 
-    var getFavoriteButton = function () {
-        return $('.js-follow');
-    };
-    var getFavoriteNumber = function () {
-        var favoriteNumber = '#' + divIdFavorite ;
-        return $(favoriteNumber);
-    };
     var getQuestionVoteUpButton = function () {
         var questionVoteUpButton = 'div.' + voteContainerId + ' div[id^="' + imgIdPrefixQuestionVoteup + '"]';
         return $(questionVoteUpButton);
@@ -819,12 +818,6 @@ var Vote = (function () {
         var acceptedButtons = 'div.' + voteContainerId + ' div[id^="' + imgIdPrefixAccept + '"]';
         $(acceptedButtons).unbind('click').click(function (event) {
             Vote.accept($(event.target));
-        });
-        // set favorite question
-        var favoriteButton = getFavoriteButton();
-        favoriteButton.unbind('click').click(function (event) {
-            //Vote.favorite($(event.target));
-            Vote.favorite(favoriteButton);
         });
 
         // question vote up
@@ -935,49 +928,6 @@ var Vote = (function () {
             var answers = ('div[id^="' + answerContainerIdPrefix + '"]');
             $(answers).removeClass('accepted-answer');
             $('#' + answerContainerIdPrefix + postId).addClass('accepted-answer');
-        } else {
-            showMessage(object, data.message);
-        }
-        /*jshint eqeqeq:true */
-    };
-
-    var callback_favorite = function (object, voteType, data) {
-        /*jshint eqeqeq:false */
-        var fav;
-        var fmts;
-        if (data.allowed == '0' && data.success == '0') {
-            showMessage(
-                object,
-                favoriteAnonymousMessage.replace(
-                        '{{QuestionID}}',
-                        questionId).replace(
-                        '{{questionSlug}}',
-                        ''
-                    )
-            );
-        } else if (data.status == '1') {
-            var follow_html = gettext('Follow');
-            object.addClass('button follow');
-            addExtraCssClasses(object, 'defaultButtonClasses');
-            object.html(follow_html);
-            fav = getFavoriteNumber();
-            fav.removeClass('my-favorite-number');
-            if (data.count === 0) {
-                data.count = '';
-                fav.text('');
-            } else {
-                fmts = ngettext('%s follower', '%s followers', data.count);
-                fav.text(interpolate(fmts, [data.count]));
-            }
-        } else if (data.success == '1') {
-            var followed_html = gettext('<div class="following">Following</div><div class="unfollow">Unfollow</div>');
-            object.html(followed_html);
-            object.addClass('button followed');
-            addExtraCssClasses(object, 'defaultButtonClasses');
-            fav = getFavoriteNumber();
-            fmts = ngettext('%s follower', '%s followers', data.count);
-            fav.text(interpolate(fmts, [data.count]));
-            fav.addClass('my-favorite-number');
         } else {
             showMessage(object, data.message);
         }
@@ -1134,24 +1084,6 @@ var Vote = (function () {
             object = object.closest('.answer-img-accept');
             postId = object.attr('id').substring(imgIdPrefixAccept.length);
             submit(object, VoteType.acceptAnswer, callback_accept);
-        },
-        //mark question as favorite
-        favorite: function (object) {
-            if (!currentUserId || currentUserId.toUpperCase() === 'NONE') {
-                showMessage(
-                    object,
-                    favoriteAnonymousMessage.replace(
-                            '{{QuestionID}}',
-                            questionId
-                        ).replace(
-                            '{{questionSlug}}',
-                            questionSlug
-                        )
-                );
-                return false;
-            }
-            postId = questionId;
-            submit(object, VoteType.favorite, callback_favorite);
         },
 
         vote: function (object, voteType) {

@@ -485,6 +485,11 @@ urlpatterns = patterns('',
         name = 'get_groups_list'
     ),
     service_url(
+        r'^toggle-follow-question/',
+        views.commands.toggle_follow_question,
+        name='toggle_follow_question'
+    ),
+    service_url(
         r'^swap-question-with-answer/',
         views.commands.swap_question_with_answer,
         name = 'swap_question_with_answer'

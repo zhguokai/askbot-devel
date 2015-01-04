@@ -41,6 +41,7 @@ from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot.utils.forms import get_db_object_or_404
+from askbot.utils.html import get_login_link
 from django.template import RequestContext
 from askbot.skins.loaders import render_into_skin_as_string
 from askbot.skins.loaders import render_text_into_skin
@@ -274,14 +275,7 @@ def vote(request):
             question = get_object_or_404(models.Post, post_type='question', id=id)
             vote_type = request.POST.get('type')
 
-            if vote_type == '4':
-                #follow question
-                fave = request.user.toggle_favorite_question(question)
-                response_data['count'] = models.FavoriteQuestion.objects.filter(thread = question.thread).count()
-                if fave == False:
-                    response_data['status'] = 1
-
-            elif vote_type == '11':#subscribe q updates
+            if vote_type == '11':#subscribe q updates
                 #todo: this branch is not used anymore
                 #now we just follow question, we don't have the
                 #separate "subscribe" function
@@ -712,6 +706,23 @@ def edit_bulk_tag_subscription(request, pk):
                    })
 
     return render(request, 'tags/form_bulk_tag_subscription.html', data)
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def toggle_follow_question(request):
+    result = dict()
+
+    if request.user.is_anonymous():
+        msg = _('anonymous users cannot %(perform_action)s') % \
+            {'perform_action': askbot_settings.WORDS_FOLLOW_QUESTIONS}
+        raise exceptions.PermissionDenied(msg + ' ' + get_login_link())
+    else:
+        q_id = request.POST['question_id']
+        question = get_object_or_404(models.Post, id=q_id)
+        result['is_enabled'] = request.user.toggle_favorite_question(question)
+        result['num_followers'] = models.FavoriteQuestion.objects.filter(thread=question.thread).count()
+    return result
 
 @decorators.admins_only
 @decorators.post_only

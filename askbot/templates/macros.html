@@ -230,8 +230,9 @@
 -%}
     {% if acceptance_level in ('open', 'moderated') %}
         <button 
-            class="group-join-btn button follow-toggle {% if membership_level != 'none' %}on on-state{% endif %}"
+            class="group-join-btn button follow-toggle"
             data-group-id="{{group_id}}"
+            data-is-on="{{ membership_level|not_equal('none')|as_js_bool }}"
             {% if acceptance_level == 'open' %}
                 data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
                 data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
@@ -538,11 +539,8 @@ for the purposes of the AJAX comment editor #}
 {%- endmacro -%}
 
 {%- macro follow_toggle(follow, name, alias, id) -%}
-    {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
-    <div 
-        class="button follow-toggle follow-user-toggle" 
-        id="follow-{{ name|escape }}-{{ id }}"
-    >
+    <div class="button follow-toggle follow-user-toggle" 
+        id="follow-{{ name|escape }}-{{ id }}">
         {% if follow %}
         <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
         {% else %}
@@ -554,7 +552,7 @@ for the purposes of the AJAX comment editor #}
     </div>
 {%- endmacro -%}
 
-{%- macro follow_user_toggle(visitor = None, subject = None) -%}
+{%- macro follow_user_toggle(visitor=None, subject=None) -%}
     {% if visitor.is_anonymous() %}
         {{ follow_toggle(True, 'user', subject.username|escape, subject.id) }}
     {% else %}
