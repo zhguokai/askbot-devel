@@ -1844,7 +1844,14 @@ ul#related-tags li {
   border: none;
 }
 .users-page .wmd-container, .users-page .js-simple-editor {
+  height: 120px;
+  padding: 0;
   width: auto;
+}
+.users-page .wmd-container textarea, .users-page .js-simple-editor textarea {
+  box-sizing: border-box;
+  height: 90px;
+  width: 100%;
 }
 .ask-page .wmd-container,
 .question-page .wmd-container,
@@ -2950,7 +2957,7 @@ ul#related-tags li {
     width:375px;
 }*/
 .users-page #group-openness-selector {
-  width: 200px;
+  width: 100%;
 }
 .user {
   padding: 5px 10px 5px 0;
