@@ -38,7 +38,7 @@ TwoStateToggle.prototype.resetStyles = function () {
     $.each(states, function (idx, state) {
         element.removeClass(state);
     });
-    this._element.html('');
+    this.setText('');
 };
 
 TwoStateToggle.prototype.isOn = function () {
@@ -102,9 +102,15 @@ TwoStateToggle.prototype.setState = function (state) {
                 element.attr('checked', false);
             }
         } else {
-            this._element.html(this._messages[state]);
+            this.setText(this._messages[state]);
         }
     }
+};
+
+TwoStateToggle.prototype.setText = function (text) {
+    var btnText = this._element.find('.js-btn-text');
+    var where  = btnText.length ? btnText : this._element;
+    where.html(text);
 };
 
 TwoStateToggle.prototype.decorate = function (element) {
