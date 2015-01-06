@@ -569,6 +569,7 @@ CommentVoteButton.prototype.setScore = function (score) {
     if (this._element) {
         this._element.html(score || '');
     }
+    this._element.trigger('askbot.afterSetScore', [this, score]);
 };
 /**
  * @param {boolean} voted
@@ -2375,6 +2376,8 @@ Comment.prototype.decorate = function (element) {
     this._voteButton = vote;
 
     this._userLink = this._element.find('.author');
+
+    this._element.trigger('askbot.afterCommentDecorate', [this]);
 };
 
 Comment.prototype.setDraftStatus = function (isDraft) {
@@ -2769,6 +2772,7 @@ PostCommentsWidget.prototype.reRenderComments = function (json) {
         comment.setContent(item);
         me._comments.push(comment);
     });
+    me._cbox.trigger('askbot.afterReRenderComments', [this, json]);
 };
 
 
