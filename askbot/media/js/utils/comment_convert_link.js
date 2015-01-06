@@ -31,4 +31,5 @@ CommentConvertLink.prototype.createDom = function () {
 
 CommentConvertLink.prototype.decorate = function (element) {
     this._element = element;
+    this._element.trigger('askbot.afterCommentConvertLinkDecorate', [this]);
 };
