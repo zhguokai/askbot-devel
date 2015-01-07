@@ -543,7 +543,7 @@ class Group(AuthGroup):
         (MODERATED, 'moderated'),
         (CLOSED, 'closed'),
     )
-    logo_url = models.URLField(null=True)
+    logo_url = models.URLField(null=True, blank=True)
     description = models.OneToOneField(
                     'Post', related_name='described_group',
                     null=True, blank=True
