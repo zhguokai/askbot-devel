@@ -270,7 +270,6 @@
             tag,
             deletable = False,
             is_link = True,
-            delete_link_title = None,
             css_class = None,
             search_state = None,
             html_tag = 'div',
@@ -282,7 +281,7 @@
       {% set search_state=search_state|get_empty_search_state %}
   {% endif %}
   {% spaceless %}
-    <{{ html_tag }} class="tag-left{% if deletable %} deletable-tag{% endif %}">
+    <{{ html_tag }} class="js-tag tag-left{% if deletable %} deletable-tag{% endif %}">
     <{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
             {% if is_link %}
@@ -296,11 +295,7 @@
             {{ tag|replace('*', '&#10045;')|escape }}
         {%- endif %}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
-            <div class="delete-icon"
-                {% if delete_link_title %}
-                    title="{{ delete_link_title }}"
-                {% endif %}
-            >x</div>
+            <div class="delete-icon">x</div>
         {% endif %}
     </{{ html_tag }}>
     {{ extra_content }}

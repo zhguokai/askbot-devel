@@ -105,16 +105,31 @@ Tag.prototype.decodeTagName = function (encoded_name) {
 };
 
 Tag.prototype.createDom = function () {
-    this._element = this.makeElement(this._html_tag);
+    this._element = getTemplate('.js-tag');
+    this._element = setHtmlTag(this._element, this._html_tag);
     //render the outer element
-    if (this._deletable) {
-        this._element.addClass('deletable-tag');
+    var deleter = this._element.find('.delete-icon');
+    if (!this._deletable) {
+        this._element.removeClass('deletable-tag');
+        deleter.remove();
+    } else {
+        var del = new DeleteIcon();
+        del.setHandler(this.getDeleteHandler());
+        if (this._delete_icon_title !== null) {
+            del.setTitle(this._delete_icon_title);
+        }
+        del.decorate(deleter);
+        this._delete_icon = del;
     }
-    this._element.addClass('tag-left');
-
     //render the inner element
-    this._inner_element = this.makeElement(this._inner_html_tag);
+    this._inner_element = this._element.find('.tag-right');
+    if (this._title === null) {
+        var name = this.getName();
+        this.setTitle(interpolate(gettext('see questions tagged \'%s\''), [name]));
+    }
     if (this.isLinkable()) {
+        //"replace" tag to 'a'
+        this._inner_element = setHtmlTag(this._inner_element, 'a');
         var url = askbot.urls.questions;
         var flag = false;
         var author = '';
@@ -123,30 +138,12 @@ Tag.prototype.createDom = function () {
         }
         this._inner_element.attr('href', url);
     }
-    this._inner_element.addClass('tag tag-right');
-    this._inner_element.attr('rel', 'tag');
-    if (this._title === null) {
-        var name = this.getName();
-        this.setTitle(interpolate(gettext('see questions tagged \'%s\''), [name]));
-    }
     this._inner_element.attr('title', this._title);
     this._inner_element.html(this.getDisplayTagName());
     this._inner_element.data('tagName', this.getName());
 
-    this._element.append(this._inner_element);
 
     if (!this.isLinkable() && this._handler !== null) {
         this.setHandlerInternal();
-    }
-
-    if (this._deletable) {
-        this._delete_icon = new DeleteIcon();
-        this._delete_icon.setHandler(this.getDeleteHandler());
-        if (this._delete_icon_title !== null) {
-            this._delete_icon.setTitle(this._delete_icon_title);
-        }
-        var del_icon_elem = this._delete_icon.getElement();
-        del_icon_elem.text('x'); // HACK by Tomasz
-        this._element.append(del_icon_elem);
     }
 };
