@@ -576,8 +576,10 @@ CommentVoteButton.prototype.setScore = function (score) {
  */
 CommentVoteButton.prototype.setVoted = function (voted) {
     this._voted = voted;
-    if (this._element) {
+    if (this._element && voted) {
         this._element.addClass('upvoted');
+    } else if (this._element) {
+        this._element.removeClass('upvoted');
     }
 };
 
