@@ -247,7 +247,7 @@ var makeKeyHandler = function (key, callback) {
     return function (e) {
         if ((e.which && e.which === key) || (e.keyCode && e.keyCode === key)) {
             if (!e.shiftKey) {
-                callback();
+                callback(e);
                 return false;
             }
         }
