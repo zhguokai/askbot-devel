@@ -2157,6 +2157,7 @@ EditCommentForm.prototype.createDom = function () {
         var checkBox = this.makeElement('input');
         checkBox.attr('type', 'checkbox');
         checkBox.attr('name', 'suppress_email');
+        checkBox.attr('id', 'suppress_email');
         this._minorEditBox.append(checkBox);
         var label = this.makeElement('label');
         label.attr('for', 'suppress_email');
