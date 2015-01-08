@@ -2234,7 +2234,9 @@ EditCommentForm.prototype.getSaveHandler = function () {
             'html': editor.getHtml(),
             'text': text,
             'user_display_name': userName,
-            'comment_added_at': timestamp
+            'comment_added_at': timestamp,
+            'user_profile_url': askbot.data.userProfileUrl,
+            'user_avatar_url': askbot.data.userAvatarUrl
         });
         me._comment.setDraftStatus(true);
         var postCommentsWidget = me._comment.getContainerWidget();
@@ -2399,7 +2401,7 @@ Comment.prototype.isBlank = function () {
 };
 
 Comment.prototype.getId = function () {
-    return this._data.id;
+    return this._data ? this._data.id : undefined;
 };
 
 Comment.prototype.hasContent = function () {
@@ -2455,7 +2457,15 @@ Comment.prototype.setContent = function (data) {
     this._userLink.attr('href', data.user_profile_url);
     this._userLink.html(data.user_display_name);
 
-    // 5) update the timestamp
+    // 5) update avatar
+    var avatar = this._element.find('.js-avatar-box');
+    if (avatar.length) {
+        avatar.attr('href', data.user_profile_url);
+        var img = avatar.find('.js-avatar');
+        img.attr('src', data.user_avatar_url);
+    }
+
+    // 6) update the timestamp
     this._dateElement.html(data.comment_added_at);
     this._dateElement.attr('title', data.comment_added_at);
     this._dateElement.timeago();

@@ -25,10 +25,13 @@ class MockUser(object):
     def __init__(self):
         self.username = ''
 
-    def get_avatar_url(self):
+    def get_avatar_url(self, size):
         return ''
 
     def get_profile_url(self):
+        return ''
+
+    def get_absolute_url(self):
         return ''
 
 class ResponseAndMentionActivityManager(models.Manager):
