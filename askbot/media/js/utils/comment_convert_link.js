@@ -26,10 +26,10 @@ CommentConvertLink.prototype.createDom = function () {
     submit.attr('value', gettext('convert to answer'));
     element.append(submit);
     this.decorate(element);
+    this.getElement().trigger('askbot.afterCommentConvertLinkDecorate', [this]);
 };
 
 
 CommentConvertLink.prototype.decorate = function (element) {
     this._element = element;
-    this._element.trigger('askbot.afterCommentConvertLinkDecorate', [this]);
 };

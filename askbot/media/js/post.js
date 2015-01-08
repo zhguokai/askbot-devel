@@ -1958,6 +1958,8 @@ EditCommentForm.prototype.startEditor = function () {
         var save_handler = makeKeyHandler(13, this.getSaveHandler());
         editor.getElement().keydown(save_handler);
     }
+
+    editorElement.trigger('askbot.afterStartEditor', [editor]);
 };
 
 EditCommentForm.prototype.getCommentsWidget = function () {
@@ -1999,6 +2001,8 @@ EditCommentForm.prototype.attachTo = function (comment, mode) {
     this._editor.focus(onFocus);
     setupButtonEventHandlers(this._submit_btn, this.getSaveHandler());
     setupButtonEventHandlers(this._cancel_btn, this.getCancelHandler());
+
+    this.getElement().trigger('askbot.afterEditCommentFormAttached', [this, mode]);
 };
 
 EditCommentForm.prototype.getCounterUpdater = function () {
@@ -2476,6 +2480,7 @@ Comment.prototype.setContent = function (data) {
         this._convert_link = new CommentConvertLink(this._data.id);
         oldConvertLink.getElement().replaceWith(this._convert_link.getElement());
     }
+    this._element.trigger('askbot.afterCommentSetData', [this, data]);
 };
 
 Comment.prototype.dispose = function () {
@@ -2759,11 +2764,12 @@ PostCommentsWidget.prototype.reloadAllComments = function (callback) {
 };
 
 PostCommentsWidget.prototype.reRenderComments = function (json) {
+    var me = this;
+    me._cbox.trigger('askbot.beforeReRenderComments', [this, json]);
     $.each(this._comments, function (i, item) {
         item.dispose();
     });
     this._comments = [];
-    var me = this;
     $.each(json, function (i, item) {
         var comment = new Comment(me);
         var commentElem = getTemplate('.js-comment');
