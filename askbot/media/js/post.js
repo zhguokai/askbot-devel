@@ -2203,7 +2203,7 @@ EditCommentForm.prototype.getSuppressEmail = function () {
 };
 
 EditCommentForm.prototype.setSuppressEmail = function (bool) {
-    this._element.find('input[name="suppress_email"]').prop('checked', bool);
+    this._element.find('input[name="suppress_email"]').prop('checked', bool).trigger('change');
 };
 
 EditCommentForm.prototype.getSaveHandler = function () {
