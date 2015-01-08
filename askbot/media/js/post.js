@@ -2404,7 +2404,7 @@ Comment.prototype.getId = function () {
 
 Comment.prototype.hasContent = function () {
     return ('id' in this._data);
-    //shortcut for 'user_url' 'html' 'user_display_name' 'comment_age'
+    //shortcut for 'user_profile_url' 'html' 'user_display_name' 'comment_age'
 };
 
 Comment.prototype.hasText = function () {
@@ -2452,7 +2452,7 @@ Comment.prototype.setContent = function (data) {
     }
 
     // 4) update user info
-    this._userLink.attr('href', data.user_url);
+    this._userLink.attr('href', data.user_profile_url);
     this._userLink.html(data.user_display_name);
 
     // 5) update the timestamp
