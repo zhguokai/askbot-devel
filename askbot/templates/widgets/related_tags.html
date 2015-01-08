@@ -2,7 +2,7 @@
   <div class="box">
     <h2>{% trans %}Tags{% endtrans %}</h2>
     {% if tag_list_type == 'list' %}
-      <ul id="related-tags" class="tags">
+      <ul class="tags js-related-tags">
         {% for tag in tags %}
         <li>
         {{ macros.tag_widget(

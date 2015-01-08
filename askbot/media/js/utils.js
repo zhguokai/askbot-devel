@@ -40,6 +40,28 @@ var copyAltToTitle = function (sel) {
     sel.attr('title', sel.attr('alt'));
 };
 
+/**
+ * @returns jQuery with same content and classes,
+ * but different tag name (DOM node name)
+ */
+var setHtmlTag = function(fromElement, toTagName) {
+    if (fromElement.attr('tagName') == toTagName.toUpperCase()) {
+        return fromElement;
+    }
+    var newElement = $('<' + toTagName + '></' + toTagName + '>');
+    //copy classes
+    newElement.attr('class', fromElement.attr('class'));
+    //move contents
+    fromElement.children().detach().appendTo(newElement);
+    //@todo: maybe copy event handlers
+    //if element is in dom, insert new element and detach old element
+    if ($(document).find(fromElement)) {
+        fromElement.after(newElement);
+        fromElement.remove();
+    }
+    return newElement;
+};
+
 var animateHashes = function () {
     var id_value = window.location.hash;
     if (id_value !== '') {

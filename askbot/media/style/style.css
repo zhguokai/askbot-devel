@@ -1423,7 +1423,7 @@ ul#searchTags {
 .tag-size-10 {
   font-size: 21px;
 }
-ul.tags, ul.tags.marked-tags, ul#related-tags {
+ul.tags, ul.tags.marked-tags, ul.js-related-tags {
   list-style: none;
   margin: 0;
   padding: 0 0 0 1px;
@@ -1454,7 +1454,7 @@ ul.tags.marked-tags li, .wildcard-tags ul.tags li {
 .tags-page ul.tags {
   margin-left: 5px;
 }
-ul#related-tags li {
+ul.js-related-tags li {
   margin: 0 5px 8px 0;
   float: left;
   clear: left;
@@ -3829,7 +3829,7 @@ ul.post-retag input {
   padding-bottom: 2px;
   margin-bottom: 0;
 }
-#related-tags {
+.js-related-tags {
   padding-left: 3px;
 }
 #hideIgnoredTagsControl {

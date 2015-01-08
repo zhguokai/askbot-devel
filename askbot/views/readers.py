@@ -254,7 +254,7 @@ def questions(request, **kwargs):
             'email_tag_filter_strategy_choices': conf.get_tag_email_filter_strategy_choices(),
             'query_string': search_state.query_string(),
             'search_state': search_state,
-            'feed_url': context_feed_url,
+            'feed_url': context_feed_url
         }
 
         extra_context = context.get_extra(

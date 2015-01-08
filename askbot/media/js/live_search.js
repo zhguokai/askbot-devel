@@ -681,7 +681,7 @@ FullTextSearch.prototype.renderRelatedTags = function (tags, query_string) {
         html_list.push('</span>');
         html_list.push('<br />');
     }
-    $('#related-tags').html(html_list.join(''));
+    $('.js-related-tags').html(html_list.join(''));
 };
 
 FullTextSearch.prototype.renderSearchTags = function (tags, query_string) {
