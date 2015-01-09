@@ -380,6 +380,7 @@ for the purposes of the AJAX comment editor #}
                 {{ comment.summary }}
             </div>
             <div class="comment-controls">
+                {{ gravatar(comment.author, 16) }}
                 <a 
                     class="author"
                     href="{{ comment.author.get_profile_url() }}"
@@ -614,9 +615,9 @@ for the purposes of the AJAX comment editor #}
 {#todo: rename this to avatar #}
 {%- macro gravatar(user, size) -%}
 {% spaceless %}
-<a class="avatar-box"
+<a class="js-avatar-box"
     href="{{ user.get_absolute_url() }}"
-><img class="gravatar" 
+><img class="js-avatar gravatar" 
     width="{{size}}" height="{{size}}"
     src="{{ user.get_avatar_url(size) }}"
     title="{{user.username|escape}}" 

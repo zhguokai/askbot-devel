@@ -198,7 +198,7 @@ html {
 a:hover {
   text-decoration: underline;
 }
-.avatar-box {
+.js-avatar-box {
   text-decoration: none;
   width: 32px;
   height: 32px;
@@ -2505,6 +2505,9 @@ ul.js-related-tags li {
 .question-page .comments .comment-controls {
   padding-left: 3px;
 }
+.question-page .comments .comment-controls .js-avatar-box {
+  margin-right: 4px;
+}
 .question-page .comments .edit {
   padding-left: 6px;
 }
@@ -3930,7 +3933,7 @@ p.signup_p {
   width: 166px;
   overflow: hidden;
 }
-.user-card .avatar-box {
+.user-card .js-avatar-box {
   float: left;
   margin: 0px 6px 0 2px;
 }
