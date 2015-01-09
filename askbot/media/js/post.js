@@ -576,8 +576,10 @@ CommentVoteButton.prototype.setScore = function (score) {
  */
 CommentVoteButton.prototype.setVoted = function (voted) {
     this._voted = voted;
-    if (this._element) {
+    if (this._element && voted) {
         this._element.addClass('upvoted');
+    } else if (this._element) {
+        this._element.removeClass('upvoted');
     }
 };
 
@@ -1958,6 +1960,8 @@ EditCommentForm.prototype.startEditor = function () {
         var save_handler = makeKeyHandler(13, this.getSaveHandler());
         editor.getElement().keydown(save_handler);
     }
+
+    editorElement.trigger('askbot.afterStartEditor', [editor]);
 };
 
 EditCommentForm.prototype.getCommentsWidget = function () {
@@ -1999,6 +2003,8 @@ EditCommentForm.prototype.attachTo = function (comment, mode) {
     this._editor.focus(onFocus);
     setupButtonEventHandlers(this._submit_btn, this.getSaveHandler());
     setupButtonEventHandlers(this._cancel_btn, this.getCancelHandler());
+
+    this.getElement().trigger('askbot.afterEditCommentFormAttached', [this, mode]);
 };
 
 EditCommentForm.prototype.getCounterUpdater = function () {
@@ -2153,6 +2159,7 @@ EditCommentForm.prototype.createDom = function () {
         var checkBox = this.makeElement('input');
         checkBox.attr('type', 'checkbox');
         checkBox.attr('name', 'suppress_email');
+        checkBox.attr('id', 'suppress_email');
         this._minorEditBox.append(checkBox);
         var label = this.makeElement('label');
         label.attr('for', 'suppress_email');
@@ -2199,7 +2206,7 @@ EditCommentForm.prototype.getSuppressEmail = function () {
 };
 
 EditCommentForm.prototype.setSuppressEmail = function (bool) {
-    this._element.find('input[name="suppress_email"]').prop('checked', bool);
+    this._element.find('input[name="suppress_email"]').prop('checked', bool).trigger('change');
 };
 
 EditCommentForm.prototype.getSaveHandler = function () {
@@ -2366,6 +2373,8 @@ Comment.prototype.decorate = function (element) {
     if (this._is_convertible) {
         this._convert_link = new CommentConvertLink(comment_id);
         this._convert_link.decorate(convert_link);
+    } else {
+        convert_link.remove();
     }
 
     var deleter = this._element.find('.comment-delete');
@@ -2479,13 +2488,15 @@ Comment.prototype.setContent = function (data) {
     }
 
     if (this._is_convertible) {
-        if (this._convert_link !== undefined) {
-            this._convert_link.dispose();
-        }
         var oldConvertLink = this._convert_link;
         this._convert_link = new CommentConvertLink(this._data.id);
         oldConvertLink.getElement().replaceWith(this._convert_link.getElement());
+        //this has to be here, because if we trigger events inside of the
+        //CommentConvertLink functions since the element is not yet in the dom we
+        //will never catch the event
+        this._convert_link.getElement().trigger('askbot.afterCommentConvertLinkInserted', [this._convert_link]);
     }
+    this._element.trigger('askbot.afterCommentSetData', [this, data]);
 };
 
 Comment.prototype.dispose = function () {
@@ -2769,11 +2780,12 @@ PostCommentsWidget.prototype.reloadAllComments = function (callback) {
 };
 
 PostCommentsWidget.prototype.reRenderComments = function (json) {
+    var me = this;
+    me._cbox.trigger('askbot.beforeReRenderComments', [this, json]);
     $.each(this._comments, function (i, item) {
         item.dispose();
     });
     this._comments = [];
-    var me = this;
     $.each(json, function (i, item) {
         var comment = new Comment(me);
         var commentElem = getTemplate('.js-comment');
