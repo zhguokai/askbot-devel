@@ -2243,7 +2243,7 @@ EditCommentForm.prototype.getSaveHandler = function () {
             'user_display_name': userName,
             'comment_added_at': timestamp,
             'user_profile_url': askbot.data.userProfileUrl,
-            'user_avatar_url': askbot.data.userAvatarUrl
+            'user_avatar_url': askbot.data.userCommentAvatarUrl
         });
         me._comment.setDraftStatus(true);
         var postCommentsWidget = me._comment.getContainerWidget();
@@ -2252,7 +2252,8 @@ EditCommentForm.prototype.getSaveHandler = function () {
         commentsElement.trigger('askbot.beforeCommentSubmit');
 
         var post_data = {
-            comment: text
+            comment: text,
+            avatar_size: askbot.settings.commentAvatarSize
         };
 
         if (me._type === 'edit') {
@@ -2471,7 +2472,7 @@ Comment.prototype.setContent = function (data) {
     if (avatar.length) {
         avatar.attr('href', data.user_profile_url);
         var img = avatar.find('.js-avatar');
-        img.attr('src', data.user_avatar_url);
+        img.attr('src', decodeHtml(data.user_avatar_url));//with decoded &amp;
     }
 
     // 6) update the timestamp
@@ -2766,7 +2767,11 @@ PostCommentsWidget.prototype.getLoadCommentsHandler = function () {
 
 
 PostCommentsWidget.prototype.reloadAllComments = function (callback) {
-    var post_data = {post_id: this._post_id, post_type: this._post_type};
+    var post_data = {
+        post_id: this._post_id,
+        post_type: this._post_type,
+        avatar_size: askbot.settings.commentAvatarSize
+    };
     var me = this;
     $.ajax({
         type: 'GET',

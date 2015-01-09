@@ -679,7 +679,7 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
 
     return HttpResponseRedirect(question.get_absolute_url())
 
-def __generate_comments_json(obj, user):#non-view generates json data for the post comments
+def __generate_comments_json(obj, user, avatar_size):
     """non-view generates json data for the post comments
     """
     models.Post.objects.precache_comments(for_posts=[obj], visitor=user)
@@ -711,7 +711,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
             'html': comment.html,
             'user_display_name': escape(comment_owner.username),
             'user_profile_url': comment_owner.get_profile_url(),
-            'user_avatar_url': comment_owner.get_avatar_url(),
+            'user_avatar_url': comment_owner.get_avatar_url(avatar_size),
             'user_id': comment_owner.id,
             'is_deletable': is_deletable,
             'is_editable': is_editable,
@@ -732,7 +732,6 @@ def post_comments(request):#generic ajax handler to load comments to an object
     add a new comment to post
     """
     # only support get post comments by ajax now
-
     post_type = request.REQUEST.get('post_type', '')
     if not request.is_ajax() or post_type not in ('question', 'answer'):
         raise Http404  # TODO: Shouldn't be 404! More like 400, 403 or sth more specific
@@ -742,7 +741,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
     if request.method == 'POST':
         form = forms.NewCommentForm(request.POST)
     elif request.method == 'GET':
-        form = forms.GetDataForPostForm(request.GET)
+        form = forms.GetCommentDataForPostForm(request.GET)
 
     if form.is_valid() == False:
         return HttpResponseBadRequest(
@@ -751,6 +750,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
         )
 
     post_id = form.cleaned_data['post_id']
+    avatar_size = form.cleaned_data['avatar_size']
     try:
         post = models.Post.objects.get(id=post_id)
     except models.Post.DoesNotExist:
@@ -759,7 +759,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
         )
 
     if request.method == "GET":
-        response = __generate_comments_json(post, user)
+        response = __generate_comments_json(post, user, avatar_size)
     elif request.method == "POST":
         try:
             if user.is_anonymous():
@@ -782,7 +782,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
                 user=user,
                 form_data=form.cleaned_data
             )
-            response = __generate_comments_json(post, user)
+            response = __generate_comments_json(post, user, avatar_size)
         except exceptions.PermissionDenied, e:
             response = HttpResponseForbidden(unicode(e), content_type="application/json")
 
