@@ -528,7 +528,15 @@ class ThreadManager(BaseQuerySetManager):
         """Returns query set of Thread contributors"""
         # INFO: Evaluate this query to avoid subquery in the subsequent query below (At least MySQL can be awfully slow on subqueries)
         from askbot.models.post import Post
-        u_id = list(Post.objects.filter(post_type__in=('question', 'answer'), thread__in=thread_list).values_list('author', flat=True))
+        u_id = list(
+            Post.objects.filter(
+                post_type__in=('question', 'answer'),
+                thread__in=thread_list
+            ).values_list(
+                'author',
+                flat=True
+            ).distinct()
+        )
 
         #todo: this does not belong gere - here we select users with real faces
         #first and limit the number of users in the result for display
