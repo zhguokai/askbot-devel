@@ -1089,6 +1089,11 @@ def user(request, id, slug=None, tab_name=None):
     """
     profile_owner = get_object_or_404(models.User, id = id)
 
+    if slugify(profile_owner.username) != slug:
+        view_url = profile_owner.get_profile_url() + '?' \
+                                + urllib.urlencode(request.REQUEST)
+        return HttpResponseRedirect(view_url)
+
     if not tab_name:
         tab_name = request.GET.get('sort', 'stats')
 
