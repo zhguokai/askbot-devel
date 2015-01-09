@@ -2495,6 +2495,7 @@ Comment.prototype.setContent = function (data) {
         //CommentConvertLink functions since the element is not yet in the dom we
         //will never catch the event
         this._convert_link.getElement().trigger('askbot.afterCommentConvertLinkInserted', [this._convert_link]);
+        oldConvertLink.dispose();
     }
     this._element.trigger('askbot.afterCommentSetData', [this, data]);
 };
