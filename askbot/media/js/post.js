@@ -2373,6 +2373,8 @@ Comment.prototype.decorate = function (element) {
     if (this._is_convertible) {
         this._convert_link = new CommentConvertLink(comment_id);
         this._convert_link.decorate(convert_link);
+    } else {
+        convert_link.remove();
     }
 
     var deleter = this._element.find('.comment-delete');
@@ -2486,12 +2488,13 @@ Comment.prototype.setContent = function (data) {
     }
 
     if (this._is_convertible) {
-        if (this._convert_link !== undefined) {
-            this._convert_link.dispose();
-        }
         var oldConvertLink = this._convert_link;
         this._convert_link = new CommentConvertLink(this._data.id);
         oldConvertLink.getElement().replaceWith(this._convert_link.getElement());
+        //this has to be here, because if we trigger events inside of the
+        //CommentConvertLink functions since the element is not yet in the dom we
+        //will never catch the event
+        this._convert_link.getElement().trigger('askbot.afterCommentConvertLinkInserted', [this._convert_link]);
     }
     this._element.trigger('askbot.afterCommentSetData', [this, data]);
 };
