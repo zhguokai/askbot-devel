@@ -94,11 +94,14 @@ class HaystackSearchTests(AskbotTestCase):
         '''makes a query that can return multiple models and test
         get_django_queryset() method from AskbotSearchQuerySet'''
         #gepeto is present in profile and in question
-        from askbot.search.haystack import AskbotSearchQuerySet
-        qs = AskbotSearchQuerySet().filter(content='gepeto').get_django_queryset(User)
+        from askbot.search.haystack.helpers import get_threads_from_query, get_users_from_query
+
+        qs = get_users_from_query(query='gepeto')
+
         for instance in qs:
            self.assertTrue(isinstance(instance, User))
 
-        qs = AskbotSearchQuerySet().filter(content='gepeto').get_django_queryset(models.Thread)
+        qs = get_threads_from_query(query='gepeto')
+
         for instance in qs:
            self.assertTrue(isinstance(instance, models.Thread))
