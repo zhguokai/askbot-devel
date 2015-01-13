@@ -1075,7 +1075,7 @@ class Thread(models.Model):
     def get_summary_cache_key(self, lang, group_id=0):
         return self.SUMMARY_CACHE_KEY_TPL % (self.id, lang, group_id)
 
-    def get_post_data_cache_key(self, sort_method = None):
+    def get_post_data_cache_key(self, sort_method=None):
         return 'thread-data-%s-%s' % (self.id, sort_method)
 
     def invalidate_cached_post_data(self):
