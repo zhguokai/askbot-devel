@@ -58,6 +58,12 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
         messages: (validationMessages ? validationMessages : {}),
         errorElement: 'span',
         errorClass: 'form-error',
+        highlight: function (element) {
+            $(element).parent('.form-group').addClass('has-error');
+        },
+        unhighlight: function (element) {
+            $(element).parent('.form-group').removeClass('has-error');
+        },
         errorPlacement: function (error, element) {
             var span = element.next().find('span.form-error');
             if (span.length === 0) {
@@ -65,10 +71,11 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
                 if (span.length === 0) {
                     //for resizable textarea
                     var element_id = element.attr('id');
-                    span = $('label[for="' + element_id + '"]');
+                    $('label[for="' + element_id + '"]').after(error);
                 }
+            } else {
+                span.replaceWith(error);
             }
-            span.replaceWith(error);
         },
         submitHandler: function (form_dom) {
             disableSubmitButton($(form_dom));
