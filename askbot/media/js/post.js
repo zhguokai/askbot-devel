@@ -657,7 +657,7 @@ CommentVoteButton.prototype.createDom = function () {
  */
 var updateQuestionFollowerCount = function (evt, data) {
     var fav = $('.js-question-follower-count');
-    var count = data['num_followers'];
+    var count = data.num_followers;
     if (count === 0) {
         fav.text('');
     } else {
