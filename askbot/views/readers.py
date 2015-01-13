@@ -273,8 +273,7 @@ def questions(request, **kwargs):
             if domain_is_bad():
                 url = askbot_settings.get_setting_url('QA_SITE_SETTINGS', 'APP_URL')
                 msg = _(
-                    'Please go to Settings -> '
-                    '%s '
+                    'Please go to Settings -> %s '
                     'and set the base url for your site to function properly'
                 ) % url
                 request.user.message_set.create(message=msg)
