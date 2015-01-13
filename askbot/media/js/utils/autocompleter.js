@@ -196,7 +196,7 @@ AutoCompleter.prototype.setEventHandlers = function () {
         self.removePrompt();
 
         self.lastKeyPressed_ = e.keyCode;
-        switch(self.lastKeyPressed_) {
+        switch (self.lastKeyPressed_) {
 
             case 38: // up
                 e.preventDefault();
@@ -223,7 +223,7 @@ AutoCompleter.prototype.setEventHandlers = function () {
                     self.selectCurrent();
                     return false;
                 }
-            break;
+                break;
 
             case 27: // escape
                 if ($.trim(self._element.val()) === '') {
@@ -235,7 +235,7 @@ AutoCompleter.prototype.setEventHandlers = function () {
                     self.finish();
                     return false;
                 }
-            break;
+                break;
 
             default:
                 self.activate();
@@ -296,7 +296,8 @@ AutoCompleter.prototype.cacheWrite = function (filter, data) {
         if (this.cacheData_[filter] !== undefined) {
             this.cacheLength_++;
         }
-        return this.cacheData_[filter] = data;
+        this.cacheData_[filter] = data;
+        return this.cacheData_[filter];
     }
     return false;
 };
@@ -555,14 +556,6 @@ AutoCompleter.prototype.showResults = function (results, filter) {
         $li = $('<li>' + this.showResult(result.value, result.data) + '</li>');
         $li.data('value', result.value);
         $li.data('data', result.data);
-        $li.click(function () {
-            var $this = $(this);
-            self.selectItem($this);
-        }).mousedown(function () {
-            self.finishOnBlur_ = false;
-        }).mouseup(function () {
-            self.finishOnBlur_ = true;
-        });
         $ul.append($li);
         if (first === false) {
             first = String(result.value);
@@ -573,6 +566,15 @@ AutoCompleter.prototype.showResults = function (results, filter) {
             $li.addClass(this.options.lastItemClass);
         }
     }
+
+    $ul.children('li').click(function () {
+        var $this = $(this);
+        self.selectItem($this);
+    }).mousedown(function () {
+        self.finishOnBlur_ = false;
+    }).mouseup(function () {
+        self.finishOnBlur_ = true;
+    });
 
     // Alway recalculate position before showing since window size or
     // input element location may have changed. This fixes #14
