@@ -1672,6 +1672,9 @@ class BulkTagSubscriptionForm(forms.Form):
 class GetDataForPostForm(forms.Form):
     post_id = forms.IntegerField()
 
+class GetCommentDataForPostForm(GetDataForPostForm):
+    avatar_size = forms.IntegerField()
+
 class GetUserItemsForm(forms.Form):
     page_size = forms.IntegerField(required=False)
     page_number = forms.IntegerField(min_value=1)
@@ -1680,6 +1683,7 @@ class GetUserItemsForm(forms.Form):
 class NewCommentForm(forms.Form):
     comment = forms.CharField(max)
     post_id = forms.IntegerField()
+    avatar_size = forms.IntegerField()
     def __init__(self, *args, **kwargs):
         super(NewCommentForm, self).__init__(*args, **kwargs)
         self.fields['comment'] = forms.CharField(
@@ -1689,6 +1693,7 @@ class NewCommentForm(forms.Form):
 class EditCommentForm(forms.Form):
     comment_id = forms.IntegerField()
     comment = forms.CharField()
+    avatar_size = forms.IntegerField()
     suppress_email = SuppressEmailField()
 
 

@@ -177,7 +177,7 @@ def logout_page(request):
         'page_class': 'meta',
         'have_federated_login_methods': util.have_enabled_federated_login_methods()
     }
-    return render(request, 'authopenid/logout.html', data)
+    return render(request, 'authopenid/logout.html', Context(data))
 
 def get_url_host(request):
     if request.is_secure():
@@ -837,7 +837,7 @@ def show_signin_view(
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
 
-    return render(request, template_name, data)
+    return render(request, template_name, Context(data))
 
 @csrf.csrf_exempt
 @askbot_decorators.post_only
@@ -1128,7 +1128,7 @@ def register(request, login_provider_name=None, user_identifier=None):
         'login_type':'openid',
         'gravatar_faq_url':reverse('faq') + '#gravatar',
     }
-    return render(request, 'authopenid/complete.html', data)
+    return render(request, 'authopenid/complete.html', Context(data))
 
 def signin_failure(request, message):
     """
@@ -1193,7 +1193,7 @@ def verify_email_and_register(request):
             return HttpResponseRedirect(reverse('index'))
     else:
         data = {'page_class': 'validate-email-page'}
-        return render(request, 'authopenid/verify_email.html', data)
+        return render(request, 'authopenid/verify_email.html', Context(data))
 
 @not_authenticated
 @decorators.valid_password_login_provider_required
@@ -1281,7 +1281,7 @@ def signup_with_password(request):
     return render(
                 request,
                 'authopenid/signup_with_password.html',
-                context_data
+                Context(context_data)
             )
     #what if request is not posted?
 
@@ -1336,11 +1336,12 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
 
     data = {
         'site_name': askbot_settings.APP_SHORT_NAME,
+        'recipient_user': None,#needed for the Django template
         'validation_link': site_url(reverse(handler_url_name)) + \
                             '?validation_code=' + key
     }
     template = get_template('authopenid/email_validation.html')
-    message = template.render(data)#todo: inject language preference
+    message = template.render(Context(data))#todo: inject language preference
     send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])
 
 def send_user_new_email_key(user):

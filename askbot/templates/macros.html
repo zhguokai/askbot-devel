@@ -380,6 +380,7 @@ for the purposes of the AJAX comment editor #}
                 {{ comment.summary }}
             </div>
             <div class="comment-controls">
+                {# important - the same number for avatar size must be in question/javascript.html #}
                 {{ gravatar(comment.author, 16) }}
                 <a 
                     class="author"
