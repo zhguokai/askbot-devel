@@ -4,13 +4,12 @@ from django.db.models import get_model
 
 from haystack import indexes
 
-from .base import BaseIndex
-
+from .utils import get_base_index
 
 ENABLE_HAYSTACK_SEARCH = getattr(settings, 'ENABLE_HAYSTACK_SEARCH', False)
 
 
-class ThreadIndex(BaseIndex):
+class ThreadIndex(get_base_index()):
     haystack_use_for_indexing = ENABLE_HAYSTACK_SEARCH
 
     title = indexes.CharField()
@@ -33,7 +32,7 @@ class ThreadIndex(BaseIndex):
         return [tag.name for tag in obj.tags.all()]
 
 
-class UserIndex(BaseIndex):
+class UserIndex(get_base_index()):
 
     haystack_use_for_indexing = ENABLE_HAYSTACK_SEARCH
 
