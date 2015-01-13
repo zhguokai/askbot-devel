@@ -91,8 +91,7 @@ class HaystackSearchTests(AskbotTestCase):
     @skipIf('haystack' not in settings.INSTALLED_APPS,
         'Haystack not setup')
     def test_get_django_queryset(self):
-        '''makes a query that can return multiple models and test
-        get_django_queryset() method from AskbotSearchQuerySet'''
+        '''makes a query that can return multiple models'''
         #gepeto is present in profile and in question
         from askbot.search.haystack.helpers import get_threads_from_query, get_users_from_query
 
