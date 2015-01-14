@@ -3,6 +3,7 @@
 *.log
 *~
 db
+/custom
 rebuild-locales.pl
 /src
 /static
