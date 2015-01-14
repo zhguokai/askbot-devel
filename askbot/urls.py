@@ -21,11 +21,10 @@ from askbot.utils.url_utils import service_url
 
 admin.autodiscover()
 #update_media_revision()#needs to be run once, so put it here
-
 if getattr(settings, "ASKBOT_TRANSLATE_URL", False):
-    from django.utils.translation import ugettext as _
+    from django.utils.translation import pgettext
 else:
-    _ = lambda s:s
+    pgettext = lambda context, value: value
 
 feeds = {
     'rss': RssLastestQuestionsFeed,
@@ -44,12 +43,12 @@ PREFIX = getattr(settings, 'ASKBOT_SERVICE_URL_PREFIX', '')
 MAIN_PAGE_BASE_URL = getattr(
                         settings, 
                         'ASKBOT_MAIN_PAGE_BASE_URL',
-                        _('questions')
+                        pgettext('urls', 'questions')
                     ).strip('/') + '/'
 QUESTION_PAGE_BASE_URL = getattr(
                         settings,
                         'ASKBOT_QUESTION_PAGE_BASE_URL',
-                        _('question')
+                        pgettext('urls', 'question')
                     ).strip('/') + '/'
 
 APP_PATH = os.path.dirname(__file__)
@@ -76,31 +75,34 @@ urlpatterns = patterns('',
         name='question'
     ),
     url(
-        r'^%s$' % _('tags/'),
+        r'^%s$' % pgettext('urls', 'tags/'),
         views.readers.tags,
         name='tags'
     ),
     url(
-        r'^%s$' % _('users/'),
+        r'^%s$' % pgettext('urls', 'users/'),
         views.users.show_users,
         name='users'
     ),
     url(
-        r'^%s%s(?P<group_id>\d+)/(?P<group_slug>.*)/$' % (_('users/'), _('by-group/')),
+        r'^%s%s(?P<group_id>\d+)/(?P<group_slug>.*)/$' % (
+                                            pgettext('urls', 'users/'), 
+                                            pgettext('urls', 'by-group/')
+                                        ),
         views.users.show_users,
         kwargs = {'by_group': True},
         name = 'users_by_group'
     ),
     #todo: rename as user_edit, b/c that's how template is named
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')),
+        r'^%s(?P<id>\d+)/%s$' % (pgettext('urls', 'users/'), pgettext('urls', 'edit/')),
         views.users.edit_user,
         name ='edit_user'
     ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
-            _('users/'),
-            _('subscriptions/'),
+            pgettext('urls', 'users/'),
+            pgettext('urls', 'subscriptions/'),
         ),
         views.users.user,
         kwargs = {'tab_name': 'email_subscriptions'},
@@ -108,29 +110,29 @@ urlpatterns = patterns('',
     ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
-            _('users/'),
-            _('select_languages/'),
+            pgettext('urls', 'users/'),
+            pgettext('urls', 'select_languages/'),
         ),
         views.users.user_select_languages,
         name = 'user_select_languages'
     ),
     url(
-        r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
+        r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % pgettext('urls', 'users/'),
         views.users.user,
         name='user_profile'
     ),
     url(
-        r'^%s$' % _('groups/'),
+        r'^%s$' % pgettext('urls', 'groups/'),
         views.users.groups,
         name='groups'
     ),
     url(
-        r'^%s$' % _('badges/'),
+        r'^%s$' % pgettext('urls', 'badges/'),
         views.meta.badges,
         name='badges'
     ),
     url(
-        r'^%s(?P<id>\d+)//*' % _('badges/'),
+        r'^%s(?P<id>\d+)//*' % pgettext('urls', 'badges/'),
         views.meta.badge,
         name='badge'
     ),
@@ -143,7 +145,7 @@ urlpatterns = patterns('',
     #feeds
     url(r'^feeds/rss/$', RssLastestQuestionsFeed(), name="latest_questions_feed"),
     url(r'^feeds/question/(?P<pk>\d+)/$', RssIndividualQuestionFeed(), name="individual_question_feed"),
-    url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
+    url(r'^%s$' % pgettext('urls', 'feedback/'), views.meta.feedback, name='feedback'),
     url(
         '^custom\.css$',
         views.meta.config_variable,
@@ -164,23 +166,23 @@ urlpatterns = patterns('',
     ),
     #no translation for this url!!
     service_url(r'^import-data/$', views.writers.import_data, name='import_data'),
-    service_url(r'^%s$' % _('about/'), views.meta.about, name='about'),
-    service_url(r'^%s$' % _('faq/'), views.meta.faq, name='faq'),
-    service_url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
+    service_url(r'^%s$' % pgettext('urls', 'about/'), views.meta.about, name='about'),
+    service_url(r'^%s$' % pgettext('urls', 'faq/'), views.meta.faq, name='faq'),
+    service_url(r'^%s$' % pgettext('urls', 'privacy/'), views.meta.privacy, name='privacy'),
     service_url(
-        r'^%s$' % _('terms/'),
+        r'^%s$' % pgettext('urls', 'terms/'),
         views.meta.markdown_flatpage,
         kwargs={'setting_name': 'TERMS', 'page_class': 'terms-page'},
         name='terms'
     ),
-    service_url(r'^%s$' % _('help/'), views.meta.help, name='help'),
+    service_url(r'^%s$' % pgettext('urls', 'help/'), views.meta.help, name='help'),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')),
+        r'^%s(?P<id>\d+)/%s$' % (pgettext('urls', 'answers/'), pgettext('urls', 'edit/')),
         views.writers.edit_answer,
         name='edit_answer'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')),
+        r'^%s(?P<id>\d+)/%s$' % (pgettext('urls', 'answers/'), pgettext('urls', 'revisions/')),
         views.readers.revisions,
         kwargs = {'post_type': 'answer'},
         name='answer_revisions'
@@ -212,7 +214,7 @@ urlpatterns = patterns('',
         name='moderate_group_join_request'
     ),
     service_url(
-        r'^%s$' % _('moderation-queue/'),
+        r'^%s$' % pgettext('urls', 'moderation-queue/'),
         views.moderation.moderation_queue,
         name='moderation_queue'
     ),
@@ -257,32 +259,32 @@ urlpatterns = patterns('',
         name='get_post_html'
     ),
     service_url(
-        r'^%s%s$' % (MAIN_PAGE_BASE_URL, _('ask/')),
+        r'^%s%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'ask/')),
         views.writers.ask,
         name='ask'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('edit/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'edit/')),
         views.writers.edit_question,
         name='edit_question'
     ),
     service_url(#this url is both regular and ajax
-        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('retag/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'retag/')),
         views.writers.retag_question,
         name='retag_question'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('close/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'close/')),
         views.commands.close,
         name='close'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('reopen/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'reopen/')),
         views.commands.reopen,
         name='reopen'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('answer/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'answer/')),
         views.writers.answer,
         name='answer'
     ),
@@ -297,7 +299,7 @@ urlpatterns = patterns('',
         name='vote'
     ),
     service_url(
-        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, _('revisions/')),
+        r'^%s(?P<id>\d+)/%s$' % (MAIN_PAGE_BASE_URL, pgettext('urls', 'revisions/')),
         views.readers.revisions,
         kwargs = {'post_type': 'question'},
         name='question_revisions'
@@ -355,27 +357,39 @@ urlpatterns = patterns('',
         name='publish_answer'
     ),
     service_url(
-        r'^%s$' % _('tags/subscriptions/'),
+        r'^%s%s$' % (pgettext('urls', 'tags/'), pgettext('urls', 'subscriptions/')),
         views.commands.list_bulk_tag_subscription,
         name='list_bulk_tag_subscription'
     ),
     service_url(#post only
-        r'^%s$' % _('tags/subscriptions/delete/'),
+        r'^%s%s%s$' % (
+            pgettext('urls', 'tags/'), 
+            pgettext('urls', 'subscriptions/'), 
+            pgettext('urls', 'delete/')
+        ),
         views.commands.delete_bulk_tag_subscription,
         name='delete_bulk_tag_subscription'
     ),
     service_url(
-        r'^%s$' % _('tags/subscriptions/create/'),
+        r'^%s%s%s$' % (
+            pgettext('urls', 'tags/'), 
+            pgettext('urls', 'subscriptions/'), 
+            pgettext('urls', 'create/')
+        ),
         views.commands.create_bulk_tag_subscription,
         name='create_bulk_tag_subscription'
     ),
     service_url(
-        r'^%s(?P<pk>\d+)/$' % _('tags/subscriptions/edit/'),
+        r'^%s%s%s(?P<pk>\d+)/$' % (
+            pgettext('urls', 'tags/'), 
+            pgettext('urls', 'subscriptions/'), 
+            pgettext('urls', 'edit/')
+        ),
         views.commands.edit_bulk_tag_subscription,
         name='edit_bulk_tag_subscription'
     ),
     service_url(
-        r'^%s$' % _('suggested-tags/'),
+        r'^%s$' % pgettext('urls', 'suggested-tags/'),
         views.meta.list_suggested_tags,
         name = 'list_suggested_tags'
     ),
@@ -505,7 +519,7 @@ urlpatterns = patterns('',
         name='get_html_template'
     ),
     service_url(#ajax only
-        r'^%s%s$' % (_('messages/'), _('markread/')),
+        r'^messages/markread/$',
         views.commands.read_message,
         name='read_message'
     ),
@@ -541,47 +555,69 @@ urlpatterns = patterns('',
     ),
     #widgets url!
     service_url(
-        r'^%s$' % (_('widgets/')),
+        r'^%s$' % (pgettext('urls', 'widgets/')),
         views.widgets.widgets,
         name = 'widgets'
     ),
     service_url(
-        r'^%s%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('ask/')),
+        r'^%s%s(?P<widget_id>\d+)/$' % (
+            pgettext('urls', 'widgets/'),
+            pgettext('urls', 'ask/')
+        ),
         views.widgets.ask_widget,
         name = 'ask_by_widget'
     ),
     service_url(
-        r'^%s%s(?P<widget_id>\d+).js$' % (_('widgets/'), _('ask/')),
+        r'^%s%s(?P<widget_id>\d+).js$' % (
+            pgettext('urls', 'widgets/'),
+            pgettext('urls', 'ask/')
+        ),
         views.widgets.render_ask_widget_js,
         name = 'render_ask_widget'
     ),
     service_url(
-        r'^%s%s(?P<widget_id>\d+).css$' % (_('widgets/'), _('ask/')),
+        r'^%s%s(?P<widget_id>\d+).css$' % (
+            pgettext('urls', 'widgets/'), 
+            pgettext('urls', 'ask/')
+        ),
         views.widgets.render_ask_widget_css,
         name = 'render_ask_widget_css'
     ),
     service_url(
-        r'^%s%s%s$' % (_('widgets/'), _('ask/'), _('complete/')),
+        r'^%s%s%s$' % (
+            pgettext('urls', 'widgets/'),
+            pgettext('urls', 'ask/'),
+            pgettext('urls', 'complete/')
+        ),
         views.widgets.ask_widget_complete,
         name = 'ask_by_widget_complete'
     ),
     service_url(
-        r'^%s(?P<model>\w+)/%s$' % (_('widgets/'), _('create/')),
+        r'^%s(?P<model>\w+)/%s$' % (
+            pgettext('urls', 'widgets/'),
+            pgettext('urls', 'create/')
+        ),
         views.widgets.create_widget,
         name = 'create_widget'
     ),
     service_url(
-        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('edit/')),
+        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (
+            pgettext('urls', 'widgets/'),
+            pgettext('urls', 'edit/')
+        ),
         views.widgets.edit_widget,
         name = 'edit_widget'
     ),
     service_url(
-        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('delete/')),
+        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (
+            pgettext('urls', 'widgets/'),
+            pgettext('urls', 'delete/')
+        ),
         views.widgets.delete_widget,
         name = 'delete_widget'
     ),
     service_url(
-        r'^%s(?P<model>\w+)/$' % (_('widgets/')),
+        r'^%s(?P<model>\w+)/$' % (pgettext('urls', 'widgets/')),
         views.widgets.list_widgets,
         name = 'list_widgets'
     ),
@@ -611,7 +647,11 @@ urlpatterns = patterns('',
         name='change_social_sharing_mode'
     ),
     #upload url is ajax only
-    service_url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
+    service_url(
+        r'^%s$' % pgettext('urls', 'upload/'),
+        views.writers.upload,
+        name='upload'
+    ),
     service_url(
         r'^doc/(?P<path>.*)$',
         'django.views.static.serve',
@@ -636,7 +676,10 @@ urlpatterns = patterns('',
 
 if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
     urlpatterns += (
-        service_url(r'^%s' % _('account/'), include('askbot.deps.django_authopenid.urls')),
+        service_url(
+            r'^%s' % pgettext('urls', 'account/'),
+            include('askbot.deps.django_authopenid.urls')
+        ),
     )
 
 if 'avatar' in settings.INSTALLED_APPS:
