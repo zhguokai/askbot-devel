@@ -110,10 +110,8 @@ def get_users_by_text_query(search_query, users_query_set = None):
     For postgres, search also runs against user group names.
     """
     if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
-        from askbot.search.haystack.searchquery import AskbotSearchQuerySet
-        qs = AskbotSearchQuerySet().filter(content=search_query)
-        qs = qs.models(User).get_django_queryset(User)
-        return qs
+        from askbot.search.haystack.helpers import get_users_from_query
+        return get_users_from_query(search_query)
     else:
         import askbot
         if users_query_set is None:
