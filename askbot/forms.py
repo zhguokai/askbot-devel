@@ -607,6 +607,7 @@ class ChangeUserReputationForm(forms.Form):
 
     user_reputation_delta = forms.IntegerField(
                             min_value=1,
+                            max_value=32767,
                             label=_(
                                 'Enter number of points to add or subtract'
                             )
@@ -1170,7 +1171,7 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     def save(self, question, user, ip_addr=None):
         wiki = self.cleaned_data['wiki']
         text = self.cleaned_data['text']
-        is_private = self.cleaned_data['post_privately']        
+        is_private = self.cleaned_data['post_privately']
 
         return user.post_answer(
             question = question,
