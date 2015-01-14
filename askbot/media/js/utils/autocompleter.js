@@ -4,7 +4,7 @@
  * @param {Object=} options Settings
  * @constructor
  */
-var AutoCompleter = function(options) {
+var AutoCompleter = function (options) {
 
     /**
      * Default options for autocomplete plugin
@@ -129,13 +129,13 @@ var AutoCompleter = function(options) {
         this.options.maxCacheLength = 10;
     }
 
-    if (this.options['preloadData'] === true){
-        this.fetchRemoteData('', function(){});
+    if (this.options.preloadData === true) {
+        this.fetchRemoteData('', function () {});
     }
 };
 inherits(AutoCompleter, WrappedElement);
 
-AutoCompleter.prototype.decorate = function(element){
+AutoCompleter.prototype.decorate = function (element) {
 
     /**
      * Init DOM elements repository
@@ -167,22 +167,22 @@ AutoCompleter.prototype.decorate = function(element){
     this.setEventHandlers();
 };
 
-AutoCompleter.prototype.setPrompt = function() {
-    this._element.val(this.options['promptText']);
+AutoCompleter.prototype.setPrompt = function () {
+    this._element.val(this.options.promptText);
     this._element.addClass('prompt');
 };
 
-AutoCompleter.prototype.removePrompt = function() {
+AutoCompleter.prototype.removePrompt = function () {
     if (this._element.hasClass('prompt')) {
         this._element.removeClass('prompt');
         var val = this._element.val();
-        if (val === this.options['promptText']) {
+        if (val === this.options.promptText) {
             this._element.val('');
         }
     }
 };
 
-AutoCompleter.prototype.setEventHandlers = function(){
+AutoCompleter.prototype.setEventHandlers = function () {
     /**
      * Shortcut to self
      */
@@ -191,12 +191,12 @@ AutoCompleter.prototype.setEventHandlers = function(){
     /**
      * Attach keyboard monitoring to $elem
      */
-    self._element.keydown(function(e) {
+    self._element.keydown(function (e) {
 
         self.removePrompt();
 
         self.lastKeyPressed_ = e.keyCode;
-        switch(self.lastKeyPressed_) {
+        switch (self.lastKeyPressed_) {
 
             case 38: // up
                 e.preventDefault();
@@ -206,7 +206,6 @@ AutoCompleter.prototype.setEventHandlers = function(){
                     self.activate();
                 }
                 return false;
-            break;
 
             case 40: // down
                 e.preventDefault();
@@ -216,7 +215,6 @@ AutoCompleter.prototype.setEventHandlers = function(){
                     self.activate();
                 }
                 return false;
-            break;
 
             case 9: // tab
             case 13: // return
@@ -225,7 +223,7 @@ AutoCompleter.prototype.setEventHandlers = function(){
                     self.selectCurrent();
                     return false;
                 }
-            break;
+                break;
 
             case 27: // escape
                 if ($.trim(self._element.val()) === '') {
@@ -237,21 +235,21 @@ AutoCompleter.prototype.setEventHandlers = function(){
                     self.finish();
                     return false;
                 }
-            break;
+                break;
 
             default:
                 self.activate();
 
         }
     });
-    self._element.blur(function() {
+    self._element.blur(function () {
         if (self.finishOnBlur_) {
-            setTimeout(function() { self.finish(); }, 200);
+            setTimeout(function () { self.finish(); }, 200);
         }
     });
 };
 
-AutoCompleter.prototype.position = function() {
+AutoCompleter.prototype.position = function () {
     var offset = this._element.offset();
     this._results.css({
         top: offset.top + this._element.outerHeight(),
@@ -259,7 +257,7 @@ AutoCompleter.prototype.position = function() {
     });
 };
 
-AutoCompleter.prototype.cacheRead = function(filter) {
+AutoCompleter.prototype.cacheRead = function (filter) {
     var filterLength, searchLength, search, maxPos, pos;
     if (this.options.useCache) {
         filter = String(filter);
@@ -289,7 +287,7 @@ AutoCompleter.prototype.cacheRead = function(filter) {
     return false;
 };
 
-AutoCompleter.prototype.cacheWrite = function(filter, data) {
+AutoCompleter.prototype.cacheWrite = function (filter, data) {
     if (this.options.useCache) {
         if (this.cacheLength_ >= this.options.maxCacheLength) {
             this.cacheFlush();
@@ -298,17 +296,18 @@ AutoCompleter.prototype.cacheWrite = function(filter, data) {
         if (this.cacheData_[filter] !== undefined) {
             this.cacheLength_++;
         }
-        return this.cacheData_[filter] = data;
+        this.cacheData_[filter] = data;
+        return this.cacheData_[filter];
     }
     return false;
 };
 
-AutoCompleter.prototype.cacheFlush = function() {
+AutoCompleter.prototype.cacheFlush = function () {
     this.cacheData_ = {};
     this.cacheLength_ = 0;
 };
 
-AutoCompleter.prototype.callHook = function(hook, data) {
+AutoCompleter.prototype.callHook = function (hook, data) {
     var f = this.options[hook];
     if (f && $.isFunction(f)) {
         return f(data, this);
@@ -316,9 +315,9 @@ AutoCompleter.prototype.callHook = function(hook, data) {
     return false;
 };
 
-AutoCompleter.prototype.activate = function() {
+AutoCompleter.prototype.activate = function () {
     var self = this;
-    var activateNow = function() {
+    var activateNow = function () {
         self.activateNow();
     };
     var delay = parseInt(this.options.delay, 10);
@@ -331,7 +330,7 @@ AutoCompleter.prototype.activate = function() {
     this.keyTimeout_ = setTimeout(activateNow, delay);
 };
 
-AutoCompleter.prototype.activateNow = function() {
+AutoCompleter.prototype.activateNow = function () {
     var value = this.getValue();
     if (value !== this.lastProcessedValue_ && value !== this.lastSelectedValue_) {
         if (value.length >= this.options.minChars) {
@@ -342,34 +341,34 @@ AutoCompleter.prototype.activateNow = function() {
     }
 };
 
-AutoCompleter.prototype.fetchData = function(value) {
+AutoCompleter.prototype.fetchData = function (value) {
     if (this.options.data) {
         this.filterAndShowResults(this.options.data, value);
     } else {
         var self = this;
-        this.fetchRemoteData(value, function(remoteData) {
+        this.fetchRemoteData(value, function (remoteData) {
             self.filterAndShowResults(remoteData, value);
         });
     }
 };
 
-AutoCompleter.prototype.fetchRemoteData = function(filter, callback) {
+AutoCompleter.prototype.fetchRemoteData = function (filter, callback) {
     var data = this.cacheRead(filter);
     if (data) {
         callback(data);
     } else {
         var self = this;
-        if (this._element){
+        if (this._element) {
             this._element.addClass(this.options.loadingClass);
         }
-        var ajaxCallback = function(data) {
+        var ajaxCallback = function (data) {
             var parsed = false;
             if (data !== false) {
                 parsed = self.parseRemoteData(data);
                 self.options.data = parsed;//cache data forever - E.F.
                 self.cacheWrite(filter, parsed);
             }
-            if (self._element){
+            if (self._element) {
                 self._element.removeClass(self.options.loadingClass);
             }
             callback(parsed);
@@ -377,18 +376,18 @@ AutoCompleter.prototype.fetchRemoteData = function(filter, callback) {
         $.ajax({
             url: this.makeUrl(filter),
             success: ajaxCallback,
-            error: function() {
+            error: function () {
                 ajaxCallback(false);
             }
         });
     }
 };
 
-AutoCompleter.prototype.setOption = function(name, value){
+AutoCompleter.prototype.setOption = function (name, value) {
     this.options[name] = value;
 };
 
-AutoCompleter.prototype.setExtraParam = function(name, value) {
+AutoCompleter.prototype.setExtraParam = function (name, value) {
     var index = $.trim(String(name));
     if (index) {
         if (!this.options.extraParams) {
@@ -401,7 +400,7 @@ AutoCompleter.prototype.setExtraParam = function(name, value) {
     }
 };
 
-AutoCompleter.prototype.makeUrl = function(param) {
+AutoCompleter.prototype.makeUrl = function (param) {
     var self = this;
     var url = this.options.url;
     var params = $.extend({}, this.options.extraParams);
@@ -418,29 +417,29 @@ AutoCompleter.prototype.makeUrl = function(param) {
     }
 
     var urlAppend = [];
-    $.each(params, function(index, value) {
+    $.each(params, function (index, value) {
         urlAppend.push(self.makeUrlParam(index, value));
     });
     if (urlAppend.length) {
-        url += url.indexOf('?') == -1 ? '?' : '&';
+        url += url.indexOf('?') === -1 ? '?' : '&';
         url += urlAppend.join('&');
     }
     return url;
 };
 
-AutoCompleter.prototype.makeUrlParam = function(name, value) {
+AutoCompleter.prototype.makeUrlParam = function (name, value) {
     return String(name) + '=' + encodeURIComponent(value);
 };
 
 /**
  * Sanitize CR and LF, then split into lines
  */
-AutoCompleter.prototype.splitText = function(text) {
+AutoCompleter.prototype.splitText = function (text) {
     return String(text).replace(/(\r\n|\r|\n)/g, '\n').split(this.options.lineSeparator);
 };
 
-AutoCompleter.prototype.parseRemoteData = function(remoteData) {
-    var value, lines, i, j, data;
+AutoCompleter.prototype.parseRemoteData = function (remoteData) {
+    var value, i, j, data;
     var results = [];
     var lines = this.splitText(remoteData);
     for (i = 0; i < lines.length; i++) {
@@ -455,11 +454,11 @@ AutoCompleter.prototype.parseRemoteData = function(remoteData) {
     return results;
 };
 
-AutoCompleter.prototype.filterAndShowResults = function(results, filter) {
+AutoCompleter.prototype.filterAndShowResults = function (results, filter) {
     this.showResults(this.filterResults(results, filter), filter);
 };
 
-AutoCompleter.prototype.filterResults = function(results, filter) {
+AutoCompleter.prototype.filterResults = function (results, filter) {
 
     var filtered = [];
     var value, data, i, result, type, include;
@@ -517,21 +516,21 @@ AutoCompleter.prototype.filterResults = function(results, filter) {
 
 };
 
-AutoCompleter.prototype.sortResults = function(results, filter) {
+AutoCompleter.prototype.sortResults = function (results, filter) {
     var self = this;
     var sortFunction = this.options.sortFunction;
     if (!$.isFunction(sortFunction)) {
-        sortFunction = function(a, b, f) {
+        sortFunction = function (a, b, f) {
             return self.sortValueAlpha(a, b, f);
         };
     }
-    results.sort(function(a, b) {
+    results.sort(function (a, b) {
         return sortFunction(a, b, filter);
     });
     return results;
 };
 
-AutoCompleter.prototype.sortValueAlpha = function(a, b, filter) {
+AutoCompleter.prototype.sortValueAlpha = function (a, b, filter) {
     a = String(a.value);
     b = String(b.value);
     if (!this.options.matchCase) {
@@ -547,7 +546,7 @@ AutoCompleter.prototype.sortValueAlpha = function(a, b, filter) {
     return 0;
 };
 
-AutoCompleter.prototype.showResults = function(results, filter) {
+AutoCompleter.prototype.showResults = function (results, filter) {
     var self = this;
     var $ul = $('<ul></ul>');
     var i, result, $li, extraWidth, first = false, $first = false;
@@ -557,24 +556,25 @@ AutoCompleter.prototype.showResults = function(results, filter) {
         $li = $('<li>' + this.showResult(result.value, result.data) + '</li>');
         $li.data('value', result.value);
         $li.data('data', result.data);
-        $li.click(function() {
-            var $this = $(this);
-            self.selectItem($this);
-        }).mousedown(function() {
-            self.finishOnBlur_ = false;
-        }).mouseup(function() {
-            self.finishOnBlur_ = true;
-        });
         $ul.append($li);
         if (first === false) {
             first = String(result.value);
             $first = $li;
             $li.addClass(this.options.firstItemClass);
         }
-        if (i == numResults - 1) {
+        if (i === numResults - 1) {
             $li.addClass(this.options.lastItemClass);
         }
     }
+
+    $ul.children('li').click(function () {
+        var $this = $(this);
+        self.selectItem($this);
+    }).mousedown(function () {
+        self.finishOnBlur_ = false;
+    }).mouseup(function () {
+        self.finishOnBlur_ = true;
+    });
 
     // Alway recalculate position before showing since window size or
     // input element location may have changed. This fixes #14
@@ -584,15 +584,15 @@ AutoCompleter.prototype.showResults = function(results, filter) {
     extraWidth = this._results.outerWidth() - this._results.width();
     this._results.width(this._element.outerWidth() - extraWidth);
     $('li', this._results).hover(
-        function() { self.focusItem(this); },
-        function() { /* void */ }
+        function () { self.focusItem(this); },
+        function () { /* void */ }
     );
     if (this.autoFill(first, filter)) {
         this.focusItem($first);
     }
 };
 
-AutoCompleter.prototype.showResult = function(value, data) {
+AutoCompleter.prototype.showResult = function (value, data) {
     if ($.isFunction(this.options.showResult)) {
         return this.options.showResult(value, data);
     } else {
@@ -600,9 +600,9 @@ AutoCompleter.prototype.showResult = function(value, data) {
     }
 };
 
-AutoCompleter.prototype.autoFill = function(value, filter) {
+AutoCompleter.prototype.autoFill = function (value, filter) {
     var lcValue, lcFilter, valueLength, filterLength;
-    if (this.options.autoFill && this.lastKeyPressed_ != 8) {
+    if (this.options.autoFill && this.lastKeyPressed_ !== 8) {
         lcValue = String(value).toLowerCase();
         lcFilter = String(filter).toLowerCase();
         valueLength = value.length;
@@ -616,16 +616,16 @@ AutoCompleter.prototype.autoFill = function(value, filter) {
     return false;
 };
 
-AutoCompleter.prototype.focusNext = function() {
+AutoCompleter.prototype.focusNext = function () {
     this.focusMove(+1);
 };
 
-AutoCompleter.prototype.focusPrev = function() {
+AutoCompleter.prototype.focusPrev = function () {
     this.focusMove(-1);
 };
 
-AutoCompleter.prototype.focusMove = function(modifier) {
-    var i, $items = $('li', this._results);
+AutoCompleter.prototype.focusMove = function (modifier) {
+    var $items = $('li', this._results);
     modifier = parseInt(modifier, 10);
     for (var i = 0; i < $items.length; i++) {
         if ($($items[i]).hasClass(this.selectClass_)) {
@@ -636,7 +636,7 @@ AutoCompleter.prototype.focusMove = function(modifier) {
     this.focusItem(0);
 };
 
-AutoCompleter.prototype.focusItem = function(item) {
+AutoCompleter.prototype.focusItem = function (item) {
     var $item, $items = $('li', this._results);
     if ($items.length) {
         $items.removeClass(this.selectClass_).removeClass(this.options.selectClass);
@@ -657,16 +657,16 @@ AutoCompleter.prototype.focusItem = function(item) {
     }
 };
 
-AutoCompleter.prototype.selectCurrent = function() {
+AutoCompleter.prototype.selectCurrent = function () {
     var $item = $('li.' + this.selectClass_, this._results);
-    if ($item.length == 1) {
+    if ($item.length === 1) {
         this.selectItem($item);
     } else {
         this.finish();
     }
 };
 
-AutoCompleter.prototype.selectItem = function($li) {
+AutoCompleter.prototype.selectItem = function ($li) {
     var value = $li.data('value');
     var data = $li.data('data');
     var displayValue = this.displayValue(value, data);
@@ -685,10 +685,10 @@ AutoCompleter.prototype.selectItem = function($li) {
  *                   considered content and false otherwise
  * @param {string} symbol - a single char string
  */
-AutoCompleter.prototype.isContentChar = function(symbol){
-    if (symbol.match(this.options['stopCharRegex'])){
+AutoCompleter.prototype.isContentChar = function (symbol) {
+    if (symbol.match(this.options.stopCharRegex)) {
         return false;
-    } else if (symbol === this.options['multipleSeparator']){
+    } else if (symbol === this.options.multipleSeparator) {
         return false;
     } else {
         return true;
@@ -703,30 +703,30 @@ AutoCompleter.prototype.isContentChar = function(symbol){
  * @return {string} the current word in the
  * autocompletable word
  */
-AutoCompleter.prototype.getValue = function(){
+AutoCompleter.prototype.getValue = function () {
     var sel = this._element.getSelection();
     var text = this._element.val();
     var pos = sel.start;//estimated start
     //find real start
     var start = pos;
-    for (cpos = pos; cpos >= 0; cpos = cpos - 1){
-        if (cpos === text.length){
+    for (cpos = pos; cpos >= 0; cpos = cpos - 1) {
+        if (cpos === text.length) {
             continue;
         }
-        var symbol = text.charAt(cpos);
-        if (!this.isContentChar(symbol)){
+        var symbol_start = text.charAt(cpos);
+        if (!this.isContentChar(symbol_start)) {
             break;
         }
         start = cpos;
     }
     //find real end
     var end = pos;
-    for (cpos = pos; cpos < text.length; cpos = cpos + 1){
-        if (cpos === 0){
+    for (cpos = pos; cpos < text.length; cpos = cpos + 1) {
+        if (cpos === 0) {
             continue;
         }
-        var symbol = text.charAt(cpos);
-        if (!this.isContentChar(symbol)){
+        var symbol_end = text.charAt(cpos);
+        if (!this.isContentChar(symbol_end)) {
             break;
         }
         end = cpos;
@@ -734,20 +734,20 @@ AutoCompleter.prototype.getValue = function(){
     this._selection_start = start;
     this._selection_end = end;
     return text.substring(start, end);
-}
+};
 
 /**
  * sets value of the input box
  * by replacing the previous selection
  * with the value from the autocompleter
  */
-AutoCompleter.prototype.setValue = function(val){
+AutoCompleter.prototype.setValue = function (val) {
     var prefix = this._element.val().substring(0, this._selection_start);
     var postfix = this._element.val().substring(this._selection_end + 1);
     this._element.val(prefix + val + postfix);
 };
 
-AutoCompleter.prototype.displayValue = function(value, data) {
+AutoCompleter.prototype.displayValue = function (value, data) {
     if ($.isFunction(this.options.displayValue)) {
         return this.options.displayValue(value, data);
     } else {
@@ -755,7 +755,7 @@ AutoCompleter.prototype.displayValue = function(value, data) {
     }
 };
 
-AutoCompleter.prototype.finish = function() {
+AutoCompleter.prototype.finish = function () {
     if (this.keyTimeout_) {
         clearTimeout(this.keyTimeout_);
     }
@@ -774,7 +774,7 @@ AutoCompleter.prototype.finish = function() {
     this.active_ = false;
 };
 
-AutoCompleter.prototype.selectRange = function(start, end) {
+AutoCompleter.prototype.selectRange = function (start, end) {
     var input = this._element.get(0);
     if (input.setSelectionRange) {
         input.focus();
@@ -788,7 +788,7 @@ AutoCompleter.prototype.selectRange = function(start, end) {
     }
 };
 
-AutoCompleter.prototype.setCaret = function(pos) {
+AutoCompleter.prototype.setCaret = function (pos) {
     this.selectRange(pos, pos);
 };
 

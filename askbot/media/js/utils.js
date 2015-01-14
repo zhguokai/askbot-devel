@@ -44,8 +44,8 @@ var copyAltToTitle = function (sel) {
  * @returns jQuery with same content and classes,
  * but different tag name (DOM node name)
  */
-var setHtmlTag = function(fromElement, toTagName) {
-    if (fromElement.attr('tagName') == toTagName.toUpperCase()) {
+var setHtmlTag = function (fromElement, toTagName) {
+    if (fromElement.attr('tagName') === toTagName.toUpperCase()) {
         return fromElement;
     }
     var newElement = $('<' + toTagName + '></' + toTagName + '>');
