@@ -347,9 +347,10 @@ function pickedTags() {
     };
 
     var setupTagFilterControl = function (control_type) {
-        $('#' + control_type + 'TagFilterControl input')
-        .unbind('click')
-        .click(function () {
+        var radioButtons = $('#' + control_type + 'TagFilterControl input');
+        radioButtons.unbind('click');
+        radioButtons.click(function () {
+            var clickedBtn = $(this);
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
@@ -357,12 +358,14 @@ function pickedTags() {
                 url: askbot.urls.set_tag_filter_strategy,
                 data: {
                     filter_type: control_type,
-                    filter_value: $(this).val()
+                    filter_value: clickedBtn.val()
                 },
                 success: function () {
+                    clickedBtn.prop('checked', 'checked');//why?
                     askbot.controllers.fullTextSearch.refresh();
                 }
             });
+            return false;
         });
     };
 
