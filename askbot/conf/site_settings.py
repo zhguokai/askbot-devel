@@ -100,6 +100,17 @@ settings.register(
 )
 
 settings.register(
+    livesettings.StringValue(
+        QA_SITE_SETTINGS,
+        'LOGIN_SIGNUP_LINK_TEXT',
+        default=_('Hi there! Please sign in'),
+        description=_('Log in/Sign up text'),
+        help_text=_('Text for the link to log in/sign up.'),
+        localized=True
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         QA_SITE_SETTINGS,
         'ENABLE_GREETING_FOR_ANON_USER',
