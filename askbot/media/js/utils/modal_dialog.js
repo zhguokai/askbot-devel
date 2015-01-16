@@ -173,4 +173,6 @@ ModalDialog.prototype.createDom = function () {
     }
 
     this.hide();
+    //have to do this on document since _element is not in the DOM yet
+    $(document).trigger('askbot.afterModalDialogCreateDom', [this]);
 };
