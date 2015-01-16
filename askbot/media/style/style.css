@@ -1166,16 +1166,20 @@ form.ajax-file-upload img.spinner {
   font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 #listSearchTags {
-  float: left;
   margin-top: 3px;
   color: #707070;
   font-size: 16px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
+#listSearchTags ul.tags li {
+  margin: 0 5px 0 0;
+  padding: 0;
+  float: none;
+  display: inline-block;
+}
 ul#searchTags {
-  margin-left: 10px;
-  float: right;
-  padding: 8px 6px 0px 6px;
+  display: inline-block;
+  margin-left: 6px;
   min-width: 43px;
 }
 .search-tips {
@@ -1459,27 +1463,41 @@ ul.js-related-tags li {
   float: left;
   clear: left;
 }
-/* .tag-left and .tag-right are for the sliding doors decoration of tags */
-.tag-left {
-  cursor: pointer;
+.js-tag {
   display: block;
-  float: left;
   height: 17px;
   margin: 0 5px 0 0;
   padding: 0;
+}
+.js-tag .js-delete-icon {
   -webkit-box-shadow: 0px 0px 5px #d3d6d7;
   -moz-box-shadow: 0px 0px 5px #d3d6d7;
   box-shadow: 0px 0px 5px #d3d6d7;
+  border-top: none;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  -moz-border-radius-bottomright: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  -webkit-border-top-right-radius: 4px;
 }
-.tag-right {
+.js-tag .tag-number {
+  float: none;
+}
+.js-tag-extra-content {
+  padding-left: 4px;
+  vertical-align: text-top;
+}
+.js-tag-name {
+  cursor: pointer;
   background: #f3f6f6;
   border: #fff 1px solid ;
   border-top: #fff 2px solid;
   outline: #cfdbdb 1px solid !important;
-  /* .box-shadow(0px,1px,0px,#88a8a8);*/
-
-  display: block;
-  float: left;
+  -webkit-box-shadow: 0px 0px 5px #d3d6d7;
+  -moz-box-shadow: 0px 0px 5px #d3d6d7;
+  box-shadow: 0px 0px 5px #d3d6d7;
+  display: inline-block;
   height: 17px;
   line-height: 17px;
   font-weight: normal;
@@ -1492,17 +1510,11 @@ ul.js-related-tags li {
   font-family: Arial;
   color: #717179;
 }
-.deletable-tag {
+.js-deletable-tag {
   margin-right: 3px;
   white-space: nowrap;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-  -moz-border-radius-bottomright: 4px;
-  -webkit-border-bottom-right-radius: 4px;
-  -webkit-border-top-right-radius: 4px;
 }
-.tags a.tag-right, .tags span.tag-right {
+.tags a.js-tag-name, .tags span.js-tag-name {
   color: #585858;
   text-decoration: none;
 }
@@ -1576,12 +1588,10 @@ ul.js-related-tags li {
 .main-page h1 {
   margin-right: 5px;
 }
-.delete-icon {
-  margin-top: -1px;
-  float: left;
+.js-delete-icon {
   height: 21px;
   width: 18px;
-  display: block;
+  display: inline-block;
   line-height: 20px;
   text-align: center;
   background: #bbcdcd;
@@ -1599,7 +1609,7 @@ ul.js-related-tags li {
   -moz-text-shadow: 0px 1px 0px #7ea0a0;
   -webkit-text-shadow: 0px 1px 0px #7ea0a0;
 }
-.delete-icon:hover {
+.js-delete-icon:hover {
   background: #b32f2f;
 }
 .expander .wait-icon-box {
@@ -2464,13 +2474,13 @@ ul.js-related-tags li {
 .question-page .comments a.author:hover {
   text-decoration: underline;
 }
-.question-page .comments span.delete-icon {
+.question-page .comments span.js-delete-icon {
   background: url(../images/close-small.png) no-repeat;
   border: 0;
   width: 14px;
   height: 14px;
 }
-.question-page .comments span.delete-icon:hover {
+.question-page .comments span.js-delete-icon:hover {
   border: #BC564B 2px solid;
   border-radius: 10px;
   -ms-border-radius: 10px;
@@ -4060,7 +4070,7 @@ li.L9 {
 #user-groups ul {
   margin-bottom: 0px;
 }
-#user-groups .delete-icon {
+#user-groups .js-delete-icon {
   background: url(../images/close-small.png) no-repeat;
   border: none;
   display: inline-block;
@@ -4068,7 +4078,7 @@ li.L9 {
   margin-top: 4px;
   width: 14px;
 }
-#user-groups .delete-icon:hover {
+#user-groups .js-delete-icon:hover {
   background: url(../images/close-small-hover.png) no-repeat;
 }
 .question-page .post-update-info a.primary-group-name, a.primary-group-name {
@@ -4466,7 +4476,7 @@ td.setting-input textarea {
   .question-page .vote-buttons {
     margin-right: 2px;
   }
-  .tag-right {
+  .js-tag-name {
     height: 20px;
   }
 }

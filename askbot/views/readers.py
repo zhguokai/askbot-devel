@@ -200,10 +200,21 @@ def questions(request, **kwargs):
             'questions': questions_html.replace('\n',''),
             'non_existing_tags': meta_data['non_existing_tags'],
         }
-        ajax_data['related_tags'] = [{
-            'name': escape(tag.name),
-            'used_count': humanize.intcomma(tag.local_used_count)
-        } for tag in related_tags]
+
+        related_tags_tpl = get_template('widgets/related_tags.html')
+        related_tags_data = {
+            'tags': related_tags,
+            'tag_list_type': tag_list_type,
+            'query_string': search_state.query_string(),
+            'search_state': search_state,
+            'language_code': translation.get_language(),
+        }
+        if tag_list_type == 'cloud':
+            related_tags_data['font_size'] = extra_tags.get_tag_font_size(related_tags)
+
+        ajax_data['related_tags_html'] = related_tags_tpl.render(
+            RequestContext(request, related_tags_data)
+        )
 
         #here we add and then delete some items
         #to allow extra context processor to work

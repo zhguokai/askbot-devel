@@ -2355,7 +2355,7 @@ Comment.prototype.decorate = function (element) {
         this._comment_body = commentBody;
     }
 
-    var delete_img = this._element.find('.delete-icon');
+    var delete_img = this._element.find('.js-delete-icon');
     if (delete_img.length > 0) {
         this._deletable = true;
         this._delete_icon = new DeleteIcon(this.deletePrompt);

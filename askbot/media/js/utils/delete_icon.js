@@ -7,7 +7,7 @@ inherits(DeleteIcon, SimpleControl);
 
 DeleteIcon.prototype.decorate = function (element) {
     this._element = element;
-    this._element.attr('class', 'delete-icon');
+    this._element.attr('class', 'js-delete-icon');
     this._element.attr('title', this._title);
     if (this._handler !== null) {
         this.setHandlerInternal();

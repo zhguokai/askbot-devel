@@ -7,7 +7,6 @@ var Tag = function () {
     this._name = null;
     this._url_params = null;
     this._inner_html_tag = 'a';
-    this._html_tag = 'li';
 };
 inherits(Tag, SimpleControl);
 
@@ -17,10 +16,6 @@ Tag.prototype.setName = function (name) {
 
 Tag.prototype.getName = function () {
     return this._name;
-};
-
-Tag.prototype.setHtmlTag = function (html_tag) {
-    this._html_tag = html_tag;
 };
 
 Tag.prototype.setDeletable = function (is_deletable) {
@@ -52,7 +47,7 @@ Tag.prototype.setUrlParams = function (url_params) {
 };
 
 Tag.prototype.setHandlerInternal = function () {
-    setupButtonEventHandlers(this._element.find('.tag'), this._handler);
+    setupButtonEventHandlers(this._element.find('.js-tag-name'), this._handler);
 };
 
 /* delete handler will be specific to the task */
@@ -73,7 +68,7 @@ Tag.prototype.setDeleteIconTitle = function (title) {
 
 Tag.prototype.decorate = function (element) {
     this._element = element;
-    var del = element.find('.delete-icon');
+    var del = element.find('.js-delete-icon');
     if (del.length === 1) {
         this.setDeletable(true);
         this._delete_icon = new DeleteIcon();
@@ -83,7 +78,7 @@ Tag.prototype.decorate = function (element) {
         //do not set the delete handler here
         this._delete_icon.decorate(del);
     }
-    this._inner_element = this._element.find('.tag');
+    this._inner_element = this._element.find('.js-tag-name');
     this._name = this.decodeTagName(
         $.trim(this._inner_element.attr('data-tag-name'))
     );
@@ -106,11 +101,10 @@ Tag.prototype.decodeTagName = function (encoded_name) {
 
 Tag.prototype.createDom = function () {
     this._element = getTemplate('.js-tag');
-    this._element = setHtmlTag(this._element, this._html_tag);
     //render the outer element
-    var deleter = this._element.find('.delete-icon');
+    var deleter = this._element.find('.js-delete-icon');
     if (!this._deletable) {
-        this._element.removeClass('deletable-tag');
+        this._element.removeClass('js-deletable-tag');
         deleter.remove();
     } else {
         var del = new DeleteIcon();
@@ -122,7 +116,7 @@ Tag.prototype.createDom = function () {
         this._delete_icon = del;
     }
     //render the inner element
-    this._inner_element = this._element.find('.tag-right');
+    this._inner_element = this._element.find('.js-tag-name');
     if (this._title === null) {
         var name = this.getName();
         this.setTitle(interpolate(gettext('see questions tagged \'%s\''), [name]));

@@ -573,7 +573,7 @@ FullTextSearch.prototype.renderFullTextSearchResult = function (data) {
         $('#contrib-users > a').remove();
         $('#contrib-users').append(data.faces.join(''));
     }
-    this.renderRelatedTags(data.related_tags, data.query_string);
+    this.renderRelatedTags(data.related_tags_html);
     this.renderRelevanceSortTab(data.query_string);
     this.renderTagWarning(data.non_existing_tags);
     this.setActiveSortTab(
@@ -662,26 +662,8 @@ FullTextSearch.prototype.updateQueryString = function (query_text) {
     return query_text;
 };
 
-FullTextSearch.prototype.renderRelatedTags = function (tags, query_string) {
-    if (tags.length === 0) {
-        return;
-    }
-
-    var html_list = [];
-    for (var i = 0; i < tags.length; i++) {
-        var tag = new Tag();
-        tag.setName(tags[i].name);
-        tag.setDeletable(false);
-        tag.setLinkable(true);
-        tag.setUrlParams(query_string);
-
-        html_list.push(tag.getElement().outerHTML());
-        html_list.push('<span class="tag-number">&#215; ');
-        html_list.push(tags[i].used_count);
-        html_list.push('</span>');
-        html_list.push('<br />');
-    }
-    $('.js-related-tags').html(html_list.join(''));
+FullTextSearch.prototype.renderRelatedTags = function (tags_html) {
+    $('.js-related-tags').html(tags_html);
 };
 
 FullTextSearch.prototype.renderSearchTags = function (tags, query_string) {
@@ -886,7 +868,7 @@ FullTextSearch.prototype.decorate = function (element) {
     );
 
     // make search tags functional
-    var search_tags = $('#searchTags .tag-left');
+    var search_tags = $('#searchTags .js-tag');
     var searchUrl = this.getSearchUrl();
     var me = this;
     $.each(search_tags, function (idx, element) {
