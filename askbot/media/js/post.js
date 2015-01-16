@@ -58,6 +58,12 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
         messages: (validationMessages ? validationMessages : {}),
         errorElement: 'span',
         errorClass: 'form-error',
+        highlight: function (element) {
+            $(element).parent('.form-group').addClass('has-error');
+        },
+        unhighlight: function (element) {
+            $(element).parent('.form-group').removeClass('has-error');
+        },
         errorPlacement: function (error, element) {
             var span = element.next().find('span.form-error');
             if (span.length === 0) {
@@ -65,10 +71,11 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
                 if (span.length === 0) {
                     //for resizable textarea
                     var element_id = element.attr('id');
-                    span = $('label[for="' + element_id + '"]');
+                    $('label[for="' + element_id + '"]').after(error);
                 }
+            } else {
+                span.replaceWith(error);
             }
-            span.replaceWith(error);
         },
         submitHandler: function (form_dom) {
             disableSubmitButton($(form_dom));
@@ -396,6 +403,8 @@ MergeQuestionsDialog.prototype.createDom = function () {
     this._element.hide();
 
     this._fromId = $('.post.question').data('postId');
+    //have to do this on document since _element is not in the DOM yet
+    $(document).trigger('askbot.afterMergeQuestionsDialogCreateDom', [this]);
 };
 
 /**
@@ -650,7 +659,7 @@ CommentVoteButton.prototype.createDom = function () {
  */
 var updateQuestionFollowerCount = function (evt, data) {
     var fav = $('.js-question-follower-count');
-    var count = data['num_followers'];
+    var count = data.num_followers;
     if (count === 0) {
         fav.text('');
     } else {
@@ -970,7 +979,7 @@ var Vote = (function () {
             }
 
             // Change the link text and rebind events
-            $(object).find('a.question-flag').html(gettext('remove flag'));
+            $(object).find('.question-flag').html(gettext('remove flag'));
             var obj_id = $(object).attr('id');
             $(object).attr('id', obj_id.replace('flag-', 'remove-flag-'));
 
@@ -1004,7 +1013,7 @@ var Vote = (function () {
                 $(remove_all).remove();
             }
             // Change the link text and rebind events
-            $(object).find('a.question-flag').html(gettext('flag offensive'));
+            $(object).find('.question-flag').html(gettext('flag offensive'));
             var obj_id = $(object).attr('id');
             $(object).attr('id', obj_id.replace('remove-flag-', 'flag-'));
 
@@ -1035,7 +1044,7 @@ var Vote = (function () {
             }
             // remove the link. All flags are gone
             var remove_own = $(object).siblings('span.offensive-flag[id*="-offensive-remove-flag-"]');
-            $(remove_own).find('a.question-flag').html(gettext('flag offensive'));
+            $(remove_own).find('.question-flag').html(gettext('flag offensive'));
             $(remove_own).attr('id', $(remove_own).attr('id').replace('remove-flag-', 'flag-'));
 
             $(object).next('span.sep').remove();

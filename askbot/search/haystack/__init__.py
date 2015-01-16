@@ -3,10 +3,6 @@ from django.utils.translation import get_language
 
 from haystack import indexes
 
-try:
-    from searchquery import AskbotSearchQuerySet
-except:
-    pass
 
 class ThreadIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
