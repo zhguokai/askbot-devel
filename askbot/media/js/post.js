@@ -1223,7 +1223,7 @@ var questionRetagger = (function () {
 
     var oldTagsHTML = '';
     var tagInput = null;
-    var tagsDiv = null;
+    var tagsList = null;
     var retagLink = null;
 
     var restoreEventHandlers = function () {
@@ -1231,15 +1231,15 @@ var questionRetagger = (function () {
     };
 
     var cancelRetag = function () {
-        tagsDiv.html(oldTagsHTML);
-        tagsDiv.removeClass('post-retag');
-        tagsDiv.addClass('post-tags');
+        tagsList.html(oldTagsHTML);
+        tagsList.removeClass('post-retag');
+        tagsList.addClass('post-tags');
         restoreEventHandlers();
         initRetagger();
     };
 
     var drawNewTags = function (new_tags) {
-        tagsDiv.empty();
+        tagsList.empty();
         if (new_tags === '') {
             return;
         }
@@ -1248,7 +1248,9 @@ var questionRetagger = (function () {
         $.each(new_tags, function (index, name) {
             var tag = new Tag();
             tag.setName(name);
-            tagsDiv.append(tag.getElement());
+            var li = $('<li></li>');
+            tagsList.append(li);
+            li.append(tag.getElement());
         });
     };
 
@@ -1269,11 +1271,11 @@ var questionRetagger = (function () {
                     }
                 } else {
                     cancelRetag();
-                    showMessage(tagsDiv, json.message);
+                    showMessage(tagsList, json.message);
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
-                showMessage(tagsDiv, gettext('sorry, something is not right here'));
+                showMessage(tagsList, gettext('sorry, something is not right here'));
                 cancelRetag();
             }
         });
@@ -1339,7 +1341,7 @@ var questionRetagger = (function () {
     };
 
     var getTagsAsString = function (tags_div) {
-        var links = tags_div.find('.tag');
+        var links = tags_div.find('.js-tag-name');
         var tags_str = '';
         links.each(function (index, element) {
             if (index === 0) {
@@ -1363,14 +1365,14 @@ var questionRetagger = (function () {
     };
 
     var startRetag = function () {
-        tagsDiv = $('#question-tags');
-        oldTagsHTML = tagsDiv.html();//save to restore on cancel
-        var old_tags_string = getTagsAsString(tagsDiv);
+        tagsList = $('#question-tags');
+        oldTagsHTML = tagsList.html();//save to restore on cancel
+        var old_tags_string = getTagsAsString(tagsList);
         var retag_form = createRetagForm(old_tags_string);
-        tagsDiv.html('');
-        tagsDiv.append(retag_form);
-        tagsDiv.removeClass('post-tags');
-        tagsDiv.addClass('post-retag');
+        tagsList.html('');
+        tagsList.append(retag_form);
+        tagsList.removeClass('post-tags');
+        tagsList.addClass('post-retag');
         tagInput.focus();
         deactivateRetagLink();
         return false;

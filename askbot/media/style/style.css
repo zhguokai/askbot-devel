@@ -3835,6 +3835,11 @@ ul.post-retag input {
   margin: 3px 0 0 -5px;
   padding: 0 5px;
 }
+.post-retag input.prompt {
+  /* shim bc retagger input uses autocompleter */
+
+  font-style: normal;
+}
 #question-controls .tags {
   margin: 0 0 3px 0;
 }
