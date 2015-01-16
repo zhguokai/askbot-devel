@@ -11,7 +11,9 @@ var ModalDialog = function () {
     this._initial_content = undefined;
     this._accept_handler = function () {};
     var me = this;
-    this._reject_handler = function () { me.hide(); };
+    this._reject_handler = function () {
+        me.hide();
+    };
     this._content_element = undefined;
     this._headerEnabled = true;
     this._className = undefined;
@@ -171,4 +173,6 @@ ModalDialog.prototype.createDom = function () {
     }
 
     this.hide();
+    //have to do this on document since _element is not in the DOM yet
+    $(document).trigger('askbot.afterModalDialogCreateDom', [this]);
 };

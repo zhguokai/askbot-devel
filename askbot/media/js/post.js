@@ -403,6 +403,8 @@ MergeQuestionsDialog.prototype.createDom = function () {
     this._element.hide();
 
     this._fromId = $('.post.question').data('postId');
+    //have to do this on document since _element is not in the DOM yet
+    $(document).trigger('askbot.afterMergeQuestionsDialogCreateDom', [this]);
 };
 
 /**
@@ -977,7 +979,7 @@ var Vote = (function () {
             }
 
             // Change the link text and rebind events
-            $(object).find('a.question-flag').html(gettext('remove flag'));
+            $(object).find('.question-flag').html(gettext('remove flag'));
             var obj_id = $(object).attr('id');
             $(object).attr('id', obj_id.replace('flag-', 'remove-flag-'));
 
@@ -1011,7 +1013,7 @@ var Vote = (function () {
                 $(remove_all).remove();
             }
             // Change the link text and rebind events
-            $(object).find('a.question-flag').html(gettext('flag offensive'));
+            $(object).find('.question-flag').html(gettext('flag offensive'));
             var obj_id = $(object).attr('id');
             $(object).attr('id', obj_id.replace('remove-flag-', 'flag-'));
 
@@ -1042,7 +1044,7 @@ var Vote = (function () {
             }
             // remove the link. All flags are gone
             var remove_own = $(object).siblings('span.offensive-flag[id*="-offensive-remove-flag-"]');
-            $(remove_own).find('a.question-flag').html(gettext('flag offensive'));
+            $(remove_own).find('.question-flag').html(gettext('flag offensive'));
             $(remove_own).attr('id', $(remove_own).attr('id').replace('remove-flag-', 'flag-'));
 
             $(object).next('span.sep').remove();
