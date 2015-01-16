@@ -59,6 +59,7 @@ def clean_tagnames(tagnames):
 
 
 class ThreadQuerySet(models.query.QuerySet):
+
     def get_visible(self, user):
         """filters out threads not belonging to the user groups"""
         if user.is_authenticated():
@@ -74,9 +75,9 @@ class ThreadQuerySet(models.query.QuerySet):
         """
 
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
-            from askbot.search.haystack.searchquery import AskbotSearchQuerySet
-            hs_qs = AskbotSearchQuerySet().filter(content=search_query).models(self.model)
-            return self & hs_qs.get_django_queryset()
+            from askbot.search.haystack.helpers import get_threads_from_query
+
+            return self & get_threads_from_query(search_query)
         else:
             db_engine_name = askbot.get_database_engine_name()
             filter_parameters = {'deleted': False}
@@ -244,9 +245,8 @@ class ThreadManager(BaseQuerySetManager):
         todo: move to query set
         """
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
-            from askbot.search.haystack.searchquery import AskbotSearchQuerySet
-            hs_qs = AskbotSearchQuerySet().filter(content=search_query)
-            return hs_qs.get_django_queryset()
+            from askbot.search.haystack.helpers import get_threads_from_query
+            return get_threads_from_query(search_query)
         else:
             if not qs:
                 qs = self.all()
@@ -1219,6 +1219,15 @@ class Thread(models.Model):
             post_data = self.get_post_data(sort_method)
             cache.cache.set(key, post_data, const.LONG_TIME)
         return post_data
+
+    def get_public_posts(self):
+        kwargs = {
+            'deleted': False,
+            'post_type__in': ('question', 'answer', 'comment'),
+        }
+        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+            kwargs['language_code'] = self.language_code or get_language()
+        return self.posts.filter(**kwargs)
 
     def get_post_data(self, sort_method=None, user=None):
         """returns question, answers as list and a list of post ids

@@ -53,7 +53,7 @@ TwoStateToggle.prototype.getDefaultHandler = function () {
         /* @todo: need ability to prevent the ajax call
          * and do something else in certain conditions.
          * For example - invite an unauthenticated user to log in.
-         * This functionality can be better 
+         * This functionality can be better
          * defined in the "SimpleControl".
          */
         $.ajax({
@@ -127,7 +127,7 @@ TwoStateToggle.prototype.decorate = function (element) {
 
     //detect state and save it
     if (this.isCheckBox()) {
-        this._state = element.is(':checked') ? 'on-state': 'off-state';
+        this._state = element.is(':checked') ? 'on-state' : 'off-state';
     } else {
         this._state = element.data('isOn') ? 'on-state' : 'off-state';
     }

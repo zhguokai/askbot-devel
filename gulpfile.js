@@ -30,15 +30,7 @@ var ignore = {
         'bower_components/**/*.js',
         'node_modules/**/*.js',
         paths.js + '*.min.js',
-        paths.js + '**/*.min.js',
-        paths.js + 'libs/*.js',
-        paths.js + 'plugins/*.js',
-        paths.js + 'plugins/**/*.js',
-        // these look like they are not used anywhere but we keep em for now
-        paths.js + 'output-words.js',
-        paths.js + 'jquery.form.js',
-        paths.js + 'jquery.ajaxfileupload.js',
-        paths.js + 'jquery.history.js'
+        paths.js + '**/*.min.js'
     ]
 };
 
@@ -63,12 +55,7 @@ gulp.task('compile', function () {
             fileName: 'build.js',
             compilerFlags: {
                 externs: [
-                    // 'askbot/media/js/libs',
-                    // 'askbot/media/js/plugins',
-                    // 'askbot/media/js/output-words.js',
-                    // 'askbot/media/js/jquery.form.js',
-                    // 'askbot/media/js/jquery.ajaxfileupload.js',
-                    // 'askbot/media/js/jquery.history.js'
+                //     'askbot/media/jslib'
                 ],
                 jscomp_off: 'internetExplorerChecks'
             }

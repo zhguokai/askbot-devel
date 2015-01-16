@@ -105,7 +105,10 @@ MessageComposer.prototype.cancel = function () {
 };
 
 MessageComposer.prototype.getSubmitData = function () {
-    var data = {'text': this._textarea.val()};
+    var data = {
+        'text': this._textarea.val(),
+        'csrfmiddlewaretoken': this._tokenInput.val()
+    };
     if (this._editorType === 'reply') {
         var thread = this._messageCenter.getThread();
         data.parent_id = thread.getId();
@@ -216,6 +219,9 @@ MessageComposer.prototype.decorate = function (element) {
 
     var toInput = element.find('input[name="recipients"]');
     this._toInput = toInput;
+
+    var tokenInput = element.find('input[name="csrfmiddlewaretoken"]');
+    this._tokenInput = tokenInput;
 
     var userSelectHandler = function () {};
 
