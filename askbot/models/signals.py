@@ -11,10 +11,6 @@ tags_updated = django.dispatch.Signal(
                         providing_args=['tags', 'user', 'timestamp']
                     )
 
-#todo: this one seems to be unused
-edit_question_or_answer = django.dispatch.Signal(
-                                    providing_args=['instance', 'modified_by']
-                                )
 delete_question_or_answer = django.dispatch.Signal(
                                     providing_args=['instance', 'deleted_by']
                                 )
@@ -80,7 +76,6 @@ def pop_all_db_signal_receivers():
     signals = (
         #askbot signals
         tags_updated,
-        edit_question_or_answer,
         delete_question_or_answer,
         flag_offensive,
         remove_flag_offensive,
