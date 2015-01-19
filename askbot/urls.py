@@ -1,5 +1,5 @@
 """
-askbot askbot url configuraion file
+askbot url configuraion file
 """
 import os.path
 import django

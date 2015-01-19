@@ -606,6 +606,9 @@ class Post(models.Model):
     def is_comment(self):
         return self.post_type == 'comment'
 
+    def is_qa_content(self):
+        return self.post_type in ('question', 'answer', 'comment')
+
     def is_tag_wiki(self):
         return self.post_type == 'tag_wiki'
 
