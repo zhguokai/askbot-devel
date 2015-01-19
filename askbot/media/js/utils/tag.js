@@ -5,7 +5,7 @@ var Tag = function () {
     this._delete_icon_title = null;
     this._tag_title = null;
     this._name = null;
-    this._url_params = null;
+    this._url_params = '';
     this._inner_html_tag = 'a';
 };
 inherits(Tag, SimpleControl);
@@ -125,11 +125,7 @@ Tag.prototype.createDom = function () {
         //"replace" tag to 'a'
         this._inner_element = setHtmlTag(this._inner_element, 'a');
         var url = askbot.urls.questions;
-        var flag = false;
-        var author = '';
-        if (this._url_params) {
-            url += QSutils.add_search_tag(this._url_params, this.getName());
-        }
+        url += QSutils.add_search_tag(this._url_params, this.getName());
         this._inner_element.attr('href', url);
     }
     this._inner_element.attr('title', this._title);

@@ -6,6 +6,8 @@ var QSutils = QSutils || {};  // TODO: unit-test me
 
 QSutils.TAG_SEP = ','; // should match const.TAG_SEP; TODO: maybe prepopulate this in javascript.html ?
 
+QSutils.DEFAULT_QUERY_STRING = 'scope:all/sort:activity-desc/page:1/';
+
 QSutils.get_query_string_selector_value = function (query_string, selector) {
     var params = query_string.split('/');
     for (var i = 0; i < params.length; i++) {
