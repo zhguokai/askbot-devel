@@ -118,18 +118,35 @@ MessageComposer.prototype.getSubmitData = function () {
     return data;
 };
 
+MessageComposer.prototype.styleError = function (element, state, msg) {
+    var parent = element.parent('.form-group');
+    if (state) {
+        parent.addClass('has-error');
+        element.after('<span generated="true" class="form-error">' + msg + '</span>');
+    } else if (parent.hasClass('has-error')) {
+        parent.removeClass('has-error');
+        element.siblings('.form-error').remove();
+    }
+}
+
 MessageComposer.prototype.dataIsValid = function () {
     var text = $.trim(this._textarea.val());
     var result = true;
+
     if (text === '') {
-        this._textareaLabel.html(gettext('required'));
+        this.styleError(this._textareaLabel, true, gettext('required'));
         result = false;
+    } else {
+        this.styleError(this._textareaLabel, false);
     }
+
     if (this._editorType === 'new-thread') {
         var to = $.trim(this._toInput.val());
         if (to === '') {
-            this._toInputLabel.html(gettext('required'));
+            this.styleError(this._toInputLabel, true, gettext('required'));
             result = false;
+        } else {
+            this.styleError(this._toInputLabel, false);
         }
     }
     return result;
@@ -177,7 +194,8 @@ MessageComposer.prototype.onSendError = function (data) {
     if (data.self_message) {
         errors.push(gettext('cannot send message to yourself'));
     }
-    this._toInputLabel.html(errors.join(', '));
+
+    this.styleError(this._toInputLabel, true, errors.join(', '));
 };
 
 MessageComposer.prototype.getSendUrl = function () {

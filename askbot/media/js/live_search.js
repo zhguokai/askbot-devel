@@ -677,6 +677,7 @@ FullTextSearch.prototype.renderSearchTags = function (tags, query_string) {
         $('#listSearchTags').show();
         $('#search-tips').show();
         $.each(tags, function (idx, tag_name) {
+            var el;
             var tag = new Tag();
             tag.setName(tag_name);
             tag.setLinkable(false);
@@ -686,7 +687,13 @@ FullTextSearch.prototype.renderSearchTags = function (tags, query_string) {
                     me.removeSearchTag(tag_name, query_string);
                 }
             );
-            search_tags.append(tag.getElement());
+            el = tag.getElement();
+            // test if the Tag gets appended to a list
+            if (search_tags.prop('tagName') == "UL") {
+                // wrap returns original element
+                el = el.wrap('<li></li>').parent();
+            }
+            search_tags.append(el);
         });
     }
 };
