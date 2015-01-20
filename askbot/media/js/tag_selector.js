@@ -368,7 +368,7 @@ function pickedTags() {
                     filter_value: clickedBtn.val()
                 },
                 success: function () {
-                    clickedBtn.prop('checked', 'checked');//why?
+                    clickedBtn.prop('checked', true).trigger('change'); // trigger other listeners on the radio
                     askbot.controllers.fullTextSearch.refresh();
                 }
             });
