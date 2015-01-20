@@ -689,7 +689,7 @@ FullTextSearch.prototype.renderSearchTags = function (tags, query_string) {
             );
             el = tag.getElement();
             // test if the Tag gets appended to a list
-            if (search_tags.prop('tagName') == "UL") {
+            if (search_tags.prop('tagName') === 'UL') {
                 // wrap returns original element
                 el = el.wrap('<li></li>').parent();
             }
