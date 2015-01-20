@@ -365,7 +365,10 @@ AutoCompleter.prototype.fetchRemoteData = function (filter, callback) {
             var parsed = false;
             if (data !== false) {
                 parsed = self.parseRemoteData(data);
-                self.options.data = parsed;//cache data forever - E.F.
+                // only cache when cache is enabled
+                if (self.options.useCache) {
+                    self.options.data = parsed;//cache data forever - E.F.
+                }
                 self.cacheWrite(filter, parsed);
             }
             if (self._element) {
