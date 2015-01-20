@@ -1,6 +1,9 @@
 .group-messaging {
     padding-top: 25px;
 }
+.group-messaging td {
+    vertical-align: top;
+}
 ul.senders-list {
     padding: 0px;
     margin-left: 1em;
@@ -70,8 +73,7 @@ button.compose {
     margin-left: 20px;
 }
 .pm-editor {
-    padding-bottom: 10px;
-    margin-top: -25px;
+    padding: 0 0 10px 15px;
 }
 .pm-editor input[type="text"],
 .pm-editor textarea {
@@ -83,5 +85,7 @@ button.compose {
 }
 .pm-editor textarea {
     height: 200px;
+}
+.form-group {
     margin-bottom: 10px;
 }

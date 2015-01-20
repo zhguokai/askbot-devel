@@ -664,7 +664,7 @@ urlpatterns = patterns('',
         {'domain': 'djangojs','packages': ('askbot',)},
         name = 'askbot_jsi18n'
     ),
-    service_url('^messages/', include('group_messaging.urls')),
+    service_url('^private-messages/', include('group_messaging.urls')),
     service_url('^settings/', include('livesettings.urls')),
 
     service_url('^api/v1/info/$', views.api_v1.info, name='api_v1_info'),

@@ -72,7 +72,6 @@ select {
   -webkit-appearance: menulist-button;
 }
 input[type="text"].prompt, input[type="password"].prompt, input.tipped-input.blank {
-  font-style: italic;
   color: #707070;
 }
 textarea:focus, input:focus {
@@ -3834,11 +3833,6 @@ ul.post-retag input {
   height: 22px;
   margin: 3px 0 0 -5px;
   padding: 0 5px;
-}
-.post-retag input.prompt {
-  /* shim bc retagger input uses autocompleter */
-
-  font-style: normal;
 }
 #question-controls .tags {
   margin: 0 0 3px 0;

@@ -100,7 +100,7 @@ MessageComposer.prototype.cancel = function () {
     this._toInput.val('');
     this._toInputLabel.html('');
     if (this._editorType === 'new-thread') {
-        this.hide();
+        this._messageCenter.setState('show-list');
     }
 };
 
@@ -119,13 +119,13 @@ MessageComposer.prototype.getSubmitData = function () {
 };
 
 MessageComposer.prototype.styleError = function (element, state, msg) {
-    var parent = element.parent('.form-group');
+    var formGroup = element.parent('.form-group');
+    formGroup.find('.form-error').remove();
     if (state) {
-        parent.addClass('has-error');
+        formGroup.addClass('has-error');
         element.after('<span generated="true" class="form-error">' + msg + '</span>');
-    } else if (parent.hasClass('has-error')) {
-        parent.removeClass('has-error');
-        element.siblings('.form-error').remove();
+    } else if (formGroup.hasClass('has-error')) {
+        formGroup.removeClass('has-error');
     }
 }
 
@@ -134,7 +134,7 @@ MessageComposer.prototype.dataIsValid = function () {
     var result = true;
 
     if (text === '') {
-        this.styleError(this._textareaLabel, true, gettext('required'));
+        this.styleError(this._textareaLabel, true, gettext('Type a message'));
         result = false;
     } else {
         this.styleError(this._textareaLabel, false);
@@ -143,7 +143,7 @@ MessageComposer.prototype.dataIsValid = function () {
     if (this._editorType === 'new-thread') {
         var to = $.trim(this._toInput.val());
         if (to === '') {
-            this.styleError(this._toInputLabel, true, gettext('required'));
+            this.styleError(this._toInputLabel, true, gettext('Add a recipient'));
             result = false;
         } else {
             this.styleError(this._toInputLabel, false);
@@ -265,7 +265,7 @@ MessageComposer.prototype.decorate = function (element) {
     var cancelBtn = element.find('.js-cancel-btn');
     this._cancelBtn = cancelBtn;
     var cancelHandler = function () { me.cancel(); };
-    setupButtonEventHandlers(cancelBtn, function () { me.cancel(); });
+    setupButtonEventHandlers(cancelBtn, cancelHandler);
 
     //send button
     var sendHandler = function () {
