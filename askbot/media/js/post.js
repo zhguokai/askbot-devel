@@ -59,10 +59,10 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
         errorElement: 'span',
         errorClass: 'form-error',
         highlight: function (element) {
-            $(element).parent('.form-group').addClass('has-error');
+            $(element).closest('.form-group').addClass('has-error');
         },
         unhighlight: function (element) {
-            $(element).parent('.form-group').removeClass('has-error');
+            $(element).closest('.form-group').removeClass('has-error');
         },
         errorPlacement: function (error, element) {
             var span = element.next().find('span.form-error');
