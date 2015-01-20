@@ -88,24 +88,6 @@ class LoginProviderField(forms.CharField):
             logging.critical(error_message)
             raise forms.ValidationError(error_message)
 
-class PasswordLoginProviderField(LoginProviderField):
-    """char field where value must 
-    be one of login providers using username/password
-    method for authentication
-    """
-    def clean(self, value):
-        """make sure that value is name of
-        one of the known password login providers
-        """
-        value = super(PasswordLoginProviderField, self).clean(value)
-        providers = util.get_enabled_login_providers()
-        if providers[value]['type'] != 'password':
-            raise forms.ValidationError(
-                    'provider %s must accept password' % value
-                )
-        return value
-
-
 class OpenidSigninForm(forms.Form):
     """ signin form """
     openid_url = forms.CharField(max_length=255, widget=forms.widgets.TextInput(attrs={'class': 'openid-login-input', 'size':80}))
@@ -348,7 +330,6 @@ class ClassicRegisterForm(SetPasswordForm):
     next = NextUrlField()
     username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
-    login_provider = PasswordLoginProviderField()
     #fields password1 and password2 are inherited
 
     def __init__(self, *args, **kwargs):

@@ -3427,8 +3427,17 @@ span.form-error {
   color: #990000;
   font-weight: normal;
 }
+.checkbox .errorlist {
+  margin-bottom: -5px;
+}
 ul.errorlist {
   margin-bottom: 0;
+  list-style: none;
+  font-size: 10px;
+  color: darkred;
+}
+ul.errorlist li {
+  line-height: 16px;
 }
 p.form-item {
   margin: 0px;

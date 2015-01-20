@@ -304,7 +304,7 @@ $.fn.authenticator = function () {
     };
 
     var init_always_visible_password_login = function () {
-        reset_form();
+        //reset_form();
         //will break wordpress and ldap
         provider_name_input.val('local');
         setup_password_login_or_change('local');

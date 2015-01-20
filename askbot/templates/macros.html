@@ -499,9 +499,9 @@ for the purposes of the AJAX comment editor #}
 {%- macro checkbox_in_div(checkbox_field, class = 'checkbox') -%}
     <div{% if class %} class="{{class}}"{% endif %}
         title="{{checkbox_field.help_text}}">
+        {{ checkbox_field.errors }}
         {{ checkbox_field }} 
         {{ checkbox_field.label_tag() }} 
-        {{ checkbox_field.errors }}
     </div>
 {%- endmacro -%}
 

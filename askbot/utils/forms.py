@@ -260,15 +260,23 @@ class UserEmailField(forms.EmailField):
             raise forms.ValidationError(self.error_messages['taken'])
 
 class SetPasswordForm(forms.Form):
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
-                                label=_('Password'),
-                                error_messages={'required':_('password is required')},
-                                )
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=login_form_widget_attrs),
+    password1 = forms.CharField(
+                            widget=forms.PasswordInput(
+                                attrs=login_form_widget_attrs,
+                                render_value=True
+                            ),
+                            label=_('Password'),
+                            error_messages={'required':_('password is required')},
+                        )
+    password2 = forms.CharField(
+                                widget=forms.PasswordInput(
+                                    attrs=login_form_widget_attrs,
+                                    render_value=True
+                                ),
                                 label=mark_safe(_('Password <i>(please retype)</i>')),
                                 error_messages={'required':_('please, retype your password'),
                                                 'nomatch':_('entered passwords did not match, please try again')},
-                                )
+                            )
 
     def __init__(self, data=None, user=None, *args, **kwargs):
         super(SetPasswordForm, self).__init__(data, *args, **kwargs)
@@ -288,4 +296,3 @@ class SetPasswordForm(forms.Form):
                 raise forms.ValidationError(self.fields['password2'].error_messages['nomatch'])
         else:
             return self.cleaned_data['password2']
-

@@ -20,7 +20,7 @@ settings.register(
     livesettings.LongStringValue(
         USER_SETTINGS,
         'NEW_USER_GREETING',
-        default='',
+        default=_('Welcome to our community!'),
         description=_('On-screen greeting shown to the new users')
     )
 )

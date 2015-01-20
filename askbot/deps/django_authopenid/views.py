@@ -1196,7 +1196,6 @@ def verify_email_and_register(request):
         return render(request, 'authopenid/verify_email.html', Context(data))
 
 @not_authenticated
-@decorators.valid_password_login_provider_required
 @csrf.csrf_protect
 @fix_recaptcha_remote_ip
 def signup_with_password(request):
@@ -1207,7 +1206,6 @@ def signup_with_password(request):
     logging.debug(get_request_info(request))
     login_form = forms.LoginForm(initial = {'next': get_next_url(request)})
     #this is safe because second decorator cleans this field
-    provider_name = request.REQUEST['login_provider']
 
     if askbot_settings.USE_RECAPTCHA:
         RegisterForm = forms.SafeClassicRegisterForm
@@ -1218,16 +1216,7 @@ def signup_with_password(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
 
-        #validation outside if to remember form values
-        logging.debug('validating classic register form')
-        form1_is_valid = form.is_valid()
-        if form1_is_valid:
-            logging.debug('classic register form validated')
-        else:
-            logging.debug('classic register form is not valid')
-
-        if form1_is_valid:
-            logging.debug('both forms are valid')
+        if form.is_valid():
             next = form.cleaned_data['next']
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
@@ -1245,45 +1234,35 @@ def signup_with_password(request):
             else:
                 email_verifier = UserEmailVerifier(key=generate_random_key())
                 email_verifier.value = {'username': username,
-                                        'login_provider_name': provider_name,
+                                        'login_provider_name': 'local',
                                         'email': email, 'password': password}
                 email_verifier.save()
-                send_email_key(email, email_verifier.key,
-                               handler_url_name='verify_email_and_register')
+                send_email_key(
+                    email, email_verifier.key,
+                    handler_url_name='verify_email_and_register'
+                )
                 redirect_url = reverse('verify_email_and_register') + \
                                 '?next=' + get_next_url(request)
                 return HttpResponseRedirect(redirect_url)
-
-        else:
-            #todo: this can be solved with a decorator, maybe
-            form.initial['login_provider'] = provider_name
-            logging.debug('create classic account forms were invalid')
     else:
         #todo: here we have duplication of get_password_login_provider...
-        form = RegisterForm(
-                        initial={
-                            'next': get_next_url(request),
-                            'login_provider': provider_name
-                        }
-                    )
-    logging.debug('printing legacy signup form')
+        form = RegisterForm(initial={'next': get_next_url(request)})
 
     major_login_providers = util.get_enabled_major_login_providers()
     minor_login_providers = util.get_enabled_minor_login_providers()
 
     context_data = {
-                'form': form,
-                'page_class': 'openid-signin',
-                'major_login_providers': major_login_providers.values(),
-                'minor_login_providers': minor_login_providers.values(),
-                'login_form': login_form
-            }
+        'form': form,
+        'page_class': 'openid-signin',
+        'major_login_providers': major_login_providers.values(),
+        'minor_login_providers': minor_login_providers.values(),
+        'login_form': login_form
+    }
     return render(
-                request,
-                'authopenid/signup_with_password.html',
-                Context(context_data)
-            )
-    #what if request is not posted?
+        request,
+        'authopenid/signup_with_password.html',
+        Context(context_data)
+    )
 
 @login_required
 def signout(request):
