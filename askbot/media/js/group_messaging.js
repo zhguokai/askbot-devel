@@ -545,7 +545,7 @@ MessageCenter.prototype.openThread = function (threadId) {
 
 MessageCenter.prototype.setThreadList = function (list) {
     this._threadList = list;
-    this._threadListBox.append(list.getElement());
+    this._threadListBox.empty().append(list.getElement());
 };
 
 MessageCenter.prototype.clearThreadList = function () {
