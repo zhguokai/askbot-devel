@@ -8,9 +8,10 @@
         {% include "group_messaging/senders_list.html" %}
     </div>
     <div class="pm-main">
-        <div><div>{# need two nested divs to match dom of ThreadContainer #}
+        <div class="js-thread-details-container">
         {% include "group_messaging/thread_details.html" %}
-        </div></div>
+        </div>
+        <div class="js-thread-list-container"></div>
     </div>
     <div class="clear-fix"></div>
 </div>
