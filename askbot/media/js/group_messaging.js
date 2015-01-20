@@ -127,7 +127,7 @@ MessageComposer.prototype.styleError = function (element, state, msg) {
     } else if (formGroup.hasClass('has-error')) {
         formGroup.removeClass('has-error');
     }
-}
+};
 
 MessageComposer.prototype.dataIsValid = function () {
     var text = $.trim(this._textarea.val());
@@ -181,8 +181,16 @@ MessageComposer.prototype.onSendError = function (data) {
     if (this._editorType === 'reply') {
         return;
     }
-    var missingUsers = data.missing_users;
     var errors = [];
+    var res;
+    var missingUsers = data.missing_users;
+
+    if (missingUsers.length === 1) {
+        res = missingUsers[0].split(' ');
+        if (res.length > 1) {
+            errors.push(gettext('Did you mean to send your message to muliple users? Use comma instead of whitespaces'));
+        }
+    }
     if (missingUsers) {
         var errorTpl = ngettext(
                             'user {{str}} does not exist',
