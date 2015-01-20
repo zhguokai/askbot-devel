@@ -135,29 +135,6 @@ class SkinEnvironment(MultilingualEnvironment):
         loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
         return loaders
 
-    def get_extra_css_link(self):
-        """returns either the link tag (to be inserted in the html head element)
-        or empty string - depending on the existence of file
-        SKIN_PATH/media/style/extra.css
-        """
-        url = None
-
-        if django_settings.ASKBOT_CSS_DEVEL is True:
-            url = utils.get_media_url('style/extra.less', ignore_missing=True)
-            rel = "stylesheet/less"
-            link_type = "text/less"
-
-        #second try - if there is no extra.less in devel mode - try css
-        if url is None:
-            url = utils.get_media_url('style/extra.css', ignore_missing=True)
-            rel = "stylesheet"
-            link_type = "text/css"
-
-        if url is not None:
-            return '<link href="%s" rel="%s" type="%s" />' % \
-                (url, rel, link_type)
-
-        return ''
 
 def load_skins(language_code):
     skins = dict()

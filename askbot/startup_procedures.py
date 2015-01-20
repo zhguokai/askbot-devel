@@ -314,23 +314,6 @@ def test_compressor():
     """test settings for django compressor"""
     errors = list()
 
-    if getattr(django_settings, 'ASKBOT_CSS_DEVEL', False):
-        precompilers = getattr(django_settings, 'COMPRESS_PRECOMPILERS', None)
-        lessc_item = ('text/less', 'lessc {infile} {outfile}')
-        if precompilers is None:
-            errors.append(
-                'Please add to your settings.py file: \n'
-                'COMPRESS_PRECOMPILERS = (\n'
-                "    ('%s', '%s'),\n"
-                ')' % lessc_item
-            )
-        else:
-            if lessc_item not in precompilers:
-                errors.append(
-                    'Please add to the COMPRESS_PRECOMPILERS the following item:\n'
-                    "('%s', '%s')," % lessc_item
-                )
-
     js_filters = getattr(django_settings, 'COMPRESS_JS_FILTERS', [])
     if len(js_filters) > 0:
         errors.append(

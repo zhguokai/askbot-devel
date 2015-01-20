@@ -13,7 +13,6 @@ from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.search.state_manager import SearchState
-from askbot.skins.loaders import get_skin
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
@@ -39,11 +38,6 @@ def application_settings(request):
     my_settings['ASKBOT_URL'] = settings.ASKBOT_URL
     my_settings['STATIC_URL'] = settings.STATIC_URL
     my_settings['IP_MODERATION_ENABLED'] = getattr(settings, 'ASKBOT_IP_MODERATION_ENABLED', False)
-    my_settings['ASKBOT_CSS_DEVEL'] = getattr(
-                                        settings,
-                                        'ASKBOT_CSS_DEVEL',
-                                        False
-                                    )
     my_settings['USE_LOCAL_FONTS'] = getattr(
                                         settings,
                                         'ASKBOT_USE_LOCAL_FONTS',
@@ -86,7 +80,6 @@ def application_settings(request):
         'min_search_word_length': min_search_word_length,
         'current_language_code': current_language,
         'settings': my_settings,
-        'skin': get_skin(),
         'moderation_items': api.get_info_on_moderation_items(request.user),
         'need_scope_links': need_scope_links,
         'noscript_url': const.DEPENDENCY_URLS['noscript'],
