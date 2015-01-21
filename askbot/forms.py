@@ -1700,3 +1700,4 @@ class EditCommentForm(forms.Form):
 
 class ProcessCommentForm(forms.Form):
     comment_id = forms.IntegerField()
+    avatar_size = forms.IntegerField()

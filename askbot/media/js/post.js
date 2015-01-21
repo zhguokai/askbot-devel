@@ -2598,7 +2598,10 @@ Comment.prototype.getDeleteHandler = function () {
             $.ajax({
                 type: 'POST',
                 url: askbot.urls.deleteComment,
-                data: { comment_id: comment.getId() },
+                data: {
+                    comment_id: comment.getId(),
+                    avatar_size: askbot.settings.commentAvatarSize
+                },
                 success: function (json, textStatus, xhr) {
                     var widget = comment.getContainerWidget();
                     comment.dispose();

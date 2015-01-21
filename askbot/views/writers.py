@@ -877,7 +877,8 @@ def delete_comment(request):
             parent.save()
             parent.thread.invalidate_cached_data()
 
-            return __generate_comments_json(parent, request.user)
+            avatar_size = form.cleaned_data['avatar_size']
+            return __generate_comments_json(parent, request.user, avatar_size)
 
         raise exceptions.PermissionDenied(
                     _('sorry, we seem to have some technical difficulties')
