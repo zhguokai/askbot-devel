@@ -34,7 +34,7 @@ class NewThread(PjaxView):
 
     def post(self, request):
         """creates a new thread on behalf of the user
-        response is blank, because on the client side we just 
+        response is blank, because on the client side we just
         need to go back to the thread listing view whose
         content should be cached in the client'
         """
@@ -93,27 +93,28 @@ class PostReply(PjaxView):
 
 
 class ThreadsList(PjaxView):
-    """shows list of threads for a given user"""  
+    """shows list of threads for a given user"""
     template_name = 'group_messaging/threads_list.html'
     http_method_list = ('GET',)
 
-    def get_context(self, request):
+    def get_context(self, request, user):
         """returns thread list data"""
         #get threads and the last visit time
         sender_id = IntegerField().clean(request.REQUEST.get('sender_id', '-1'))
+
         if sender_id == -2:
             threads = Message.objects.get_threads(
-                                            recipient=request.user,
+                                            recipient=user,
                                             deleted=True
                                         )
         elif sender_id == -1:
-            threads = Message.objects.get_threads(recipient=request.user)
-        elif sender_id == request.user.id:
-            threads = Message.objects.get_sent_threads(sender=request.user)
+            threads = Message.objects.get_threads(recipient=user)
+        elif sender_id == user.id:
+            threads = Message.objects.get_sent_threads(sender=user)
         else:
             sender = User.objects.get(id=sender_id)
             threads = Message.objects.get_threads(
-                                            recipient=request.user,
+                                            recipient=user,
                                             sender=sender
                                         )
 
@@ -128,8 +129,8 @@ class ThreadsList(PjaxView):
             thread_data['status'] = 'new'
             #determine the senders info
             senders_names = thread.senders_info.split(',')
-            if request.user.username in senders_names:
-                senders_names.remove(request.user.username)
+            if user.username in senders_names:
+                senders_names.remove(user.username)
             thread_data['senders_info'] = ', '.join(senders_names)
             thread_data['thread'] = thread
             threads_data[thread.id] = thread_data
@@ -146,7 +147,7 @@ class ThreadsList(PjaxView):
             threads_data[thread_id]['responses_count'] = responses_count
 
         last_visit_times = LastVisitTime.objects.filter(
-                                            user=request.user,
+                                            user=user,
                                             message__in=threads
                                         )
         for last_visit in last_visit_times:

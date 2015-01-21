@@ -656,7 +656,7 @@ def user_recent(request, user, context):
     # the return value is dictionary where activity id's are keys
     content_objects_by_activity = activity_objects.fetch_content_objects_dict()
 
-        
+
     #a list of digest objects, suitable for display
     #the number of activities to show is not guaranteed to be
     #const.USER_VIEW_DATA_TYPE, because we don't show activity
@@ -750,6 +750,7 @@ def user_responses(request, user, context):
 
     #1) select activity types according to section
     section = request.GET.get('section', 'forum')
+
     if section == 'forum':
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
         activity_types += (const.TYPE_ACTIVITY_MENTION,)
@@ -757,11 +758,14 @@ def user_responses(request, user, context):
         return show_group_join_requests(request, user, context)
     elif section == 'messages':
         if request.user != user:
-            raise Http404
+            if askbot_settings.ADMIN_INBOX_ACCESS_ENABLED == False:
+                raise Http404
+            elif not(request.user.is_moderator() or request.user.is_administrator()):
+                raise Http404
 
         from group_messaging.views import SendersList, ThreadsList
         context.update(SendersList().get_context(request))
-        context.update(ThreadsList().get_context(request))
+        context.update(ThreadsList().get_context(request, user))
         data = {
             'inbox_threads_count': context['threads_count'],#a hackfor the inbox count
             'active_tab':'users',
