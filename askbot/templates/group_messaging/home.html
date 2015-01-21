@@ -11,6 +11,12 @@
             </div>
         </td>
         <td>
+            <div class="pm-main">
+                <div class="js-thread-list-container">
+                    {% include "group_messaging/threads_list.html" %}
+                </div>
+                <div class="js-thread-details-container"></div>
+            </div>
             <div class="pm-editor"
                 style="display: none"
                 data-create-thread-url="{% url "create_thread" %}"
@@ -35,12 +41,6 @@
 
                 <input class="btn btn-primary js-send-btn" type="submit" value="{% trans %}Send{% endtrans %}">
                 <input class="btn btn-cancel js-cancel-btn" type="submit" value="{% trans %}Cancel{% endtrans %}" />
-            </div>
-            <div class="pm-main">
-                <div class="js-thread-list-container">
-                    {% include "group_messaging/threads_list.html" %}
-                </div>
-                <div class="js-thread-details-container"></div>
             </div>
         </td>
     </tr>

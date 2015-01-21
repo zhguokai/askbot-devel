@@ -398,11 +398,20 @@ Thread.prototype.dispose = function () {
 };
 
 Thread.prototype.addMessage = function (message) {
+    var newElement;
     var msgElement = message.getElement();
+
+    if (this._element.prop('tagName') === 'UL') {
+        var newElement = this.makeElement('li');
+        newElement.append(msgElement);
+    } else {
+        newElement = msgElement;
+    }
+
     if (this._ordering === 'reverse') {
-        this._element.prepend(msgElement);
+        this._element.prepend(newElement);
     } else if (this._ordering === 'forward') {
-        this._element.append(msgElement);
+        this._element.append(newElement);
     } else {
         throw 'Set data-thread-ordering either "forward" or "reverse"';
     }
@@ -546,6 +555,7 @@ MessageCenter.prototype.openThread = function (threadId) {
                 thread.decorate($(data.html));
                 me.setThread(thread);
                 me.setState('show-thread');
+                //me.setUnreadInboxCount(data.unread_inbox_count);
             }
         }
     });
@@ -583,6 +593,10 @@ MessageCenter.prototype.clearThread = function () {
 
 MessageCenter.prototype.setLoadingStatus = function (loadingStatus) {
     this._loadingStatus = loadingStatus;
+};
+
+MessageCenter.prototype.setUnreadInboxCount = function(count) {
+    this._unreadInboxCount.html(count);
 };
 
 MessageCenter.prototype.hitThreadList = function (url, senderId, requestMethod) {
@@ -635,6 +649,8 @@ MessageCenter.prototype.decorate = function (element) {
         getThreadDetails: element.data('getThreadDetailsUrl'),
         reply: element.data('replyUrl')
     };
+
+    this._unreadInboxCount = $('js-group-messaging-unread-inbox-count');
 
     //set up PM inbox navigaion, inaptly called SendersList
     var nav = new SendersList();

@@ -83,7 +83,6 @@ except ImportError:
 import urllib
 from askbot import forms as askbot_forms
 from askbot.deps.django_authopenid import util
-from askbot.deps.django_authopenid import decorators
 from askbot.deps.django_authopenid.models import UserAssociation, UserEmailVerifier
 from askbot.deps.django_authopenid import forms
 from askbot.deps.django_authopenid.backends import AuthBackend

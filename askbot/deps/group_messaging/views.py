@@ -20,12 +20,12 @@ from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseForbidden
 from django.utils import simplejson
 from askbot.utils.views import PjaxView
-from group_messaging.models import Message
-from group_messaging.models import MessageMemo
-from group_messaging.models import SenderList
-from group_messaging.models import LastVisitTime
-from group_messaging.models import get_personal_group_by_user_id
-from group_messaging.models import get_personal_groups_for_users
+from .models import Message
+from .models import MessageMemo
+from .models import SenderList
+from .models import LastVisitTime
+from .models import get_personal_group_by_user_id
+from .models import get_personal_groups_for_users
 
 
 class NewThread(PjaxView):
@@ -225,7 +225,13 @@ class ThreadDetails(PjaxView):
                                                             message=root,
                                                             user=request.user
                                                         )
+        root.mark_as_seen(request.user)
         if created is False:
             last_visit.at = datetime.datetime.now()
             last_visit.save()
-        return {'root_message': root, 'responses': responses, 'request': request}
+
+        return {
+            'root_message': root, 
+            'responses': responses, 
+            'request': request
+        }
