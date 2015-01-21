@@ -97,8 +97,14 @@ class ThreadsList(PjaxView):
     template_name = 'group_messaging/threads_list.html'
     http_method_list = ('GET',)
 
-    def get_context(self, request, user):
+    def get_context(self, request, *args):
         """returns thread list data"""
+
+        if len(args):
+            user = args[0]
+        else:
+            user = request.user
+
         #get threads and the last visit time
         sender_id = IntegerField().clean(request.REQUEST.get('sender_id', '-1'))
 
