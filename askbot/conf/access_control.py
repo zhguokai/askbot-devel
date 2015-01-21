@@ -81,7 +81,7 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         ACCESS_CONTROL,
-        'ADMIN_USER_ACCESS',
+        'ADMIN_INBOX_ACCESS_ENABLED',
         default=False,
         description=_("Allow moderators to access each other's inbox"),
     )

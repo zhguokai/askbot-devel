@@ -758,7 +758,7 @@ def user_responses(request, user, context):
         return show_group_join_requests(request, user, context)
     elif section == 'messages':
         if request.user != user:
-            if askbot_settings.ADMIN_USER_ACCESS == False:
+            if askbot_settings.ADMIN_INBOX_ACCESS_ENABLED == False:
                 raise Http404
             elif not(request.user.is_moderator() or request.user.is_administrator()):
                 raise Http404
