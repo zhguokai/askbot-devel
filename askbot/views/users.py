@@ -757,8 +757,11 @@ def user_responses(request, user, context):
     elif section == 'join_requests':
         return show_group_join_requests(request, user, context)
     elif section == 'messages':
-        if not request.user.is_administrator() and request.user != user:
-            raise Http404
+        if request.user != user:
+            if django_settings.GROUP_MESSAGING['ADMIN_USER_ACCESS'] == False:
+                raise Http404
+            elif not(request.user.is_moderator() or request.user.is_administrator()):
+                raise Http404
 
         from group_messaging.views import SendersList, ThreadsList
         context.update(SendersList().get_context(request))

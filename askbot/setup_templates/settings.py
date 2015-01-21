@@ -304,7 +304,8 @@ NOTIFICATION_DELAY_TIME = 60 * 15
 
 GROUP_MESSAGING = {
     'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',
-    'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'}
+    'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'},
+    'ADMIN_USER_ACCESS': False
 }
 
 ASKBOT_MULTILINGUAL = False
