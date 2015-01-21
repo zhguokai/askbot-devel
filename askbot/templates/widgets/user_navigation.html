@@ -1,11 +1,6 @@
 {%- if request.user.is_authenticated() -%}
     <a href="{{ request.user.get_absolute_url() }}">{{ request.user.username|escape }}</a> 
     <span class="user-info">
-        <span style="padding: 0 5px; background: yellow; color: black; font-weight: bold;">
-            <a class="js-group-messaging-unread-inbox-count" href="{{user.get_absolute_url()}}?sort=inbox&section=messages">
-                {{ group_messaging_unread_inbox_count }}
-            </a>
-        </span>
     {{ macros.inbox_link(request.user) }}
     {{ macros.moderation_items_link(request.user, moderation_items) }}
     {%- if settings.KARMA_MODE != 'hidden' or settings.BADGES_MODE != 'hidden' -%}
