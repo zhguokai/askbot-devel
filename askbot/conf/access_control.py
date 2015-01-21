@@ -83,6 +83,6 @@ settings.register(
         ACCESS_CONTROL,
         'ADMIN_INBOX_ACCESS_ENABLED',
         default=False,
-        description=_("Allow moderators to access each other's inbox"),
+        description=_("Allow moderators to access other's messages"),
     )
 )
