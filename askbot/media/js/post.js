@@ -1227,7 +1227,7 @@ var questionRetagger = (function () {
     var retagLink = null;
 
     var restoreEventHandlers = function () {
-        $(document).unbind('click');
+        $(document).unbind('click', cancelRetag);
     };
 
     var cancelRetag = function () {
@@ -1288,8 +1288,10 @@ var questionRetagger = (function () {
                 cancelRetag();
             }
         });
-        $(document).unbind('click').click(cancelRetag, false);
-        input.click(function () { return false; });
+        $(document).unbind('click', cancelRetag).click(cancelRetag);
+        input.closest('form').click(function (e) {
+            e.stopPropagation();
+        });
     };
 
     var createRetagForm = function (old_tags_string) {
@@ -1307,6 +1309,10 @@ var questionRetagger = (function () {
             delay: 10
         });
         tagAc.decorate(tagInput);
+        tagAc._results.on('click', function (e) {
+            //click on results should not trigger cancelRetag
+            e.stopPropagation();
+        });
         tagInput.val(old_tags_string);
         div.append(tagInput);
         //div.append(tagLabel);
@@ -1316,6 +1322,8 @@ var questionRetagger = (function () {
         //button.val(gettext('save tags'));
         //div.append(button);
         //setupButtonEventHandlers(button);
+        $(document).trigger('askbot.afterCreateRetagForm', [div]);
+
         div.validate({//copy-paste from utils.js
             rules: {
                 tags: {
