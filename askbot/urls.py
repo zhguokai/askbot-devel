@@ -708,14 +708,11 @@ if 'avatar' in settings.INSTALLED_APPS:
 
 #HACK: to register the haystack signals correclty due to import errors
 # http://i.qkme.me/3uuvs7.jpg
-if getattr(settings, 'HAYSTACK_SIGNAL_PROCESSOR',
-           ' ').endswith('AskbotRealtimeSignalProcessor'):
-    from haystack import signal_processor
-    signal_processor.teardown()
-    signal_processor.setup()
-
-if getattr(settings, 'HAYSTACK_SIGNAL_PROCESSOR',
-           ' ').endswith('AskbotCelerySignalProcessor'):
-    from haystack import signal_processor
-    signal_processor.teardown()
-    signal_processor.setup()
+HAYSTACK_ENABLED = settings.ENABLE_HAYSTACK_SEARCH
+HAYSTACK_SIGNAL_PROCESSOR = getattr(settings, 'HAYSTACK_SIGNAL_PROCESSOR', '')
+if HAYSTACK_ENABLED:
+    if HAYSTACK_SIGNAL_PROCESSOR.endswith('AskbotRealtimeSignalProcessor') \
+            or HAYSTACK_SIGNAL_PROCESSOR.endswith('AskbotCelerySignalProcessor'):
+        from haystack import signal_processor
+        signal_processor.teardown()
+        signal_processor.setup()
