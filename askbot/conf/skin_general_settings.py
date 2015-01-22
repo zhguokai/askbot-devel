@@ -15,7 +15,7 @@ import askbot
 
 GENERAL_SKIN_SETTINGS = ConfigurationGroup(
                     'GENERAL_SKIN_SETTINGS',
-                    _('Skin, logos and HTML <head> parts'),
+                    _('Skin, logos and HTML &lt;head&gt; parts'),
                     super_group = CONTENT_AND_UI
                 )
 
@@ -151,7 +151,7 @@ settings.register(
         GENERAL_SKIN_SETTINGS,
         'USE_CUSTOM_HTML_HEAD',
         default = False,
-        description = _('Customize HTML <HEAD>')
+        description = _('Customize HTML &lt;HEAD&gt;')
     )
 )
 
@@ -160,7 +160,7 @@ settings.register(
         GENERAL_SKIN_SETTINGS,
         'CUSTOM_HTML_HEAD',
         default = '',
-        description = _('Custom portion of the HTML <HEAD>'),
+        description = _('Custom portion of the HTML &lt;HEAD&gt;'),
         help_text = _(
                     '<strong>To use this option</strong>, '
                     'check "Customize HTML &lt;HEAD&gt;" '
