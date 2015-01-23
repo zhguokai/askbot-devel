@@ -107,7 +107,7 @@ MessageComposer.prototype.cancel = function () {
 MessageComposer.prototype.getSubmitData = function () {
     var data = {
         'text': this._textarea.val(),
-        'csrfmiddlewaretoken': this._tokenInput.val()
+        'csrfmiddlewaretoken': getCookie(askbot.settings.csrfCookieName)
     };
     if (this._editorType === 'reply') {
         var thread = this._messageCenter.getThread();
@@ -245,9 +245,6 @@ MessageComposer.prototype.decorate = function (element) {
 
     var toInput = element.find('input[name="recipients"]');
     this._toInput = toInput;
-
-    var tokenInput = element.find('input[name="csrfmiddlewaretoken"]');
-    this._tokenInput = tokenInput;
 
     var userSelectHandler = function () {};
 
@@ -613,11 +610,8 @@ MessageCenter.prototype.hitThreadList = function (url, senderId, requestMethod) 
     var me = this;
     var data = {
         sender_id: senderId,
+        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName)
     };
-    var tokenInput = me._element.find('input[name="csrfmiddlewaretoken"]');
-    if (tokenInput) {
-        data.csrfmiddlewaretoken = tokenInput.val();
-    }
     $.ajax({
         type: requestMethod,
         dataType: 'json',
