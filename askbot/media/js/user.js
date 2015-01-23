@@ -39,6 +39,21 @@ var setup_badge_details_toggle = function () {
             'enabled',
             function(data) { return data.following; }
         );
+        toggle.setBeforeSubmitHandler(function(data) {
+            if (!askbot.data.userIsAuthenticated) {
+                var message = gettext(
+                    'Please <a href="%(signin_url)s">signin</a> to follow %(username)s'
+                );
+                var message_data = {
+                    signin_url: askbot.urls.user_signin + '?next=' + window.location.href,
+                    username: askbot.data.viewUserName
+                };
+                message = interpolate(message, message_data, true);
+                showMessage(toggle.getElement(), message);
+                return false;
+            }
+            return true;
+        });
         toggle.decorate(fbtn);
     }
     if (askbot.data.userId !== askbot.data.viewUserId) {

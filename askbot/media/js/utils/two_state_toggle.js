@@ -61,6 +61,18 @@ TwoStateToggle.prototype.setDataValidator = function (name, func) {
     }
 };
 
+/**
+ * func must either return `true` or `false`
+ * if `false` is returned, data submission will be canceled
+ */
+TwoStateToggle.prototype.setBeforeSubmitHandler = function(func) {
+    this._beforeSubmitHandler = func;
+};
+
+TwoStateToggle.prototype.getBeforeSubmitHandler = function () {
+    return this._beforeSubmitHandler;
+};
+
 TwoStateToggle.prototype.datumIsValid = function (validatorName, data) {
     return this._validators[validatorName](data);
 };
@@ -68,6 +80,10 @@ TwoStateToggle.prototype.datumIsValid = function (validatorName, data) {
 TwoStateToggle.prototype.getDefaultHandler = function () {
     var me = this;
     return function () {
+        var handler = me.getBeforeSubmitHandler();
+        if (handler && handler() === false) {
+            return;
+        }
         var data = me.getPostData();
         data.disable = me.isOn();
         /* @todo: need ability to prevent the ajax call
