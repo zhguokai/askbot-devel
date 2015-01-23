@@ -26,13 +26,13 @@
                 data-editor-type="new-thread"
             >
                 {% csrf_token %}
-                <div class="form-group">
+                <div class="form-group js-to-container">
                     <label for="id_recipients" class="control-label"></label>
                     <input class="form-control" id="id_recipients" 
                         name="recipients" placeholder="{% trans %}Recipient{% endtrans %}"
                         type="text" autocomplete="off">
                 </div>
-                <div class="form-group">
+                <div class="form-group js-text-container">
                     <label for="id_message_text" class="control-label"></label>
                     <textarea class="form-control" id="id_message_text" 
                         placeholder="{% trans %}Write your message{% endtrans %}"

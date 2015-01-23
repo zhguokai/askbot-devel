@@ -151,7 +151,10 @@ def load_skins(language_code):
     return skins
 
 def get_app_dir_env(language_code):
-    env = AppDirectoryEnvironment()
+    env = AppDirectoryEnvironment(
+                            extensions=['jinja2.ext.i18n',],
+                            globals={'settings': askbot_settings}
+                        )
     env.set_language(language_code)
     return env
 

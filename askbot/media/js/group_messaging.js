@@ -72,8 +72,7 @@ MessageComposer.prototype.show = function () {
     this._textarea.show();
     this._textareaLabel.show();
     if (this._editorType === 'new-thread') {
-        this._toInput.show();
-        this._toInputLabel.show();
+        this._toInputContainer.show();
         this._cancelBtn.show();
         this._sendBtn.val(this._createThreadBtnText);
         var toInput = this._toInput;
@@ -81,8 +80,7 @@ MessageComposer.prototype.show = function () {
             toInput.focus();
         });
     } else if (this._editorType === 'reply') {
-        this._toInput.hide();
-        this._toInputLabel.hide();
+        this._toInputContainer.hide();
         this._cancelBtn.hide();
         this._sendBtn.val(this._replyBtnText);
         this._element.show();
@@ -245,6 +243,8 @@ MessageComposer.prototype.decorate = function (element) {
 
     var toInput = element.find('input[name="recipients"]');
     this._toInput = toInput;
+
+    this._toInputContainer = element.find('.js-to-container');
 
     var userSelectHandler = function () {};
 
