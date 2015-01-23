@@ -104,8 +104,8 @@ MessageComposer.prototype.cancel = function () {
 
 MessageComposer.prototype.getSubmitData = function () {
     var data = {
-        'text': this._textarea.val(),
-        'csrfmiddlewaretoken': this._tokenInput.val()
+        text: this._textarea.val(),
+        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName)
     };
     if (this._editorType === 'reply') {
         var thread = this._messageCenter.getThread();
@@ -245,9 +245,6 @@ MessageComposer.prototype.decorate = function (element) {
     this._toInput = toInput;
 
     this._toInputContainer = element.find('.js-to-container');
-
-    var tokenInput = element.find('input[name="csrfmiddlewaretoken"]');
-    this._tokenInput = tokenInput;
 
     var userSelectHandler = function () {};
 
@@ -401,8 +398,9 @@ Thread.prototype.addMessage = function (message) {
     var newElement;
     var msgElement = message.getElement();
 
+    var newElement;
     if (this._element.prop('tagName') === 'UL') {
-        var newElement = this.makeElement('li');
+        newElement = this.makeElement('li');
         newElement.append(msgElement);
     } else {
         newElement = msgElement;
@@ -563,7 +561,14 @@ MessageCenter.prototype.openThread = function (threadId) {
 
 MessageCenter.prototype.setThreadList = function (list) {
     this._threadList = list;
-    this._threadListBox.empty().append(list.getElement());
+    var elements = list.getElement();
+    var count = '';
+    this._threadListBox.empty().append(elements);
+
+    if (elements.find('.js-thread-heading').length) {
+        count = '(' + elements.find('.js-thread-heading').length + ')';
+    }
+    $('.js-senders-list .selected .js-count').html(count);
 };
 
 MessageCenter.prototype.clearThreadList = function () {
@@ -595,7 +600,7 @@ MessageCenter.prototype.setLoadingStatus = function (loadingStatus) {
     this._loadingStatus = loadingStatus;
 };
 
-MessageCenter.prototype.setUnreadInboxCount = function(count) {
+MessageCenter.prototype.setUnreadInboxCount = function (count) {
     this._unreadInboxCount.html(count);
 };
 
@@ -604,12 +609,16 @@ MessageCenter.prototype.hitThreadList = function (url, senderId, requestMethod) 
         return;
     }
     var me = this;
+    var data = {
+        sender_id: senderId,
+        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName)
+    };
     $.ajax({
         type: requestMethod,
         dataType: 'json',
         url: url,
         cache: false,
-        data: {sender_id: senderId},
+        data: data,
         success: function (data) {
             if (data.success) {
                 me.clearThreadList();
