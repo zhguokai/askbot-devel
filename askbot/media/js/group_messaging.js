@@ -104,8 +104,8 @@ MessageComposer.prototype.cancel = function () {
 
 MessageComposer.prototype.getSubmitData = function () {
     var data = {
-        'text': this._textarea.val(),
-        'csrfmiddlewaretoken': getCookie(askbot.settings.csrfCookieName)
+        text: this._textarea.val(),
+        askbot.settings.csrfCookieName: getCookie(askbot.settings.csrfCookieName)
     };
     if (this._editorType === 'reply') {
         var thread = this._messageCenter.getThread();
@@ -610,7 +610,7 @@ MessageCenter.prototype.hitThreadList = function (url, senderId, requestMethod) 
     var me = this;
     var data = {
         sender_id: senderId,
-        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName)
+        askbot.settings.csrfCookieName: getCookie(askbot.settings.csrfCookieName)
     };
     $.ajax({
         type: requestMethod,
