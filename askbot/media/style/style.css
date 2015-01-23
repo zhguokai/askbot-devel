@@ -770,6 +770,14 @@ input[type="reset"],
   -moz-box-shadow: 1px 1px 2px #636363;
   box-shadow: 1px 1px 2px #636363;
 }
+button:focus,
+input[type="submit"]:focus,
+input[type="button"]:focus,
+input[type="reset"]:focus,
+.button:focus,
+.btn:focus {
+  outline: none !important;
+}
 button.large,
 input[type="submit"].large,
 input[type="button"].large,

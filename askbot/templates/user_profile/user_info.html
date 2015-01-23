@@ -25,14 +25,14 @@
             <p><b style="color:#777;">{% trans %}karma{% endtrans %}</b></p>
         {% endif %}
 
-        {% if request.user != view_user %}
+        {% if user_follow_feature_on and request.user != view_user %}
             {# User follow button #}
             {% if request.user.is_authenticated() %}
                 {% set is_following = request.user.is_following(view_user) %}
             {% else %}
                 {% set is_following = False %}
             {% endif %}
-            {% set alias = view_user.username|escape %}
+            {% set alias=view_user.username|escape %}
             <button class="js-follow-user button large"
                 data-is-on="{{ is_following|as_js_bool }}"
                 data-off-prompt-text="{% trans %}unfollow {{ alias }}{% endtrans %}"
