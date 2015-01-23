@@ -183,13 +183,13 @@ MessageComposer.prototype.onSendError = function (data) {
     var res;
     var missingUsers = data.missing_users;
 
-    if (missingUsers.length === 1) {
-        res = missingUsers[0].split(' ');
-        if (res.length > 1) {
-            errors.push(gettext('Did you mean to send your message to muliple users? Use comma instead of whitespaces'));
-        }
-    }
     if (missingUsers) {
+        if (missingUsers.length === 1) {
+            res = missingUsers[0].split(' ');
+            if (res.length > 1) {
+                errors.push(gettext('Did you mean to send your message to muliple users? Use comma instead of whitespaces'));
+            }
+        }
         var errorTpl = ngettext(
                             'user {{str}} does not exist',
                             'users {{str}} do not exist',
