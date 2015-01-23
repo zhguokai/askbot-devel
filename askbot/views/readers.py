@@ -703,7 +703,6 @@ def revisions(request, id, post_type = None):
     }
     return render(request, 'revisions.html', data)
 
-@csrf.csrf_exempt
 @ajax_only
 @anonymous_forbidden
 @get_only
@@ -717,14 +716,13 @@ def get_comment(request):
     request.user.assert_can_edit_comment(comment)
 
     try:
+        #try to get suggested edit
         rev = comment.revisions.get(revision=0)
     except models.PostRevision.DoesNotExist:
         rev = comment.get_latest_revision()
-
     return {'text': rev.text}
 
 
-@csrf.csrf_exempt
 @ajax_only
 @anonymous_forbidden
 @get_only

@@ -209,7 +209,7 @@ def moderation_queue(request):
     return render(request, template, data)
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.post_only
 @decorators.ajax_only
 def moderate_post_edits(request):

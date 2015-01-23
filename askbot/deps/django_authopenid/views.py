@@ -838,7 +838,7 @@ def show_signin_view(
 
     return render(request, template_name, Context(data))
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @askbot_decorators.post_only
 @askbot_decorators.ajax_login_required
 def change_password(request):

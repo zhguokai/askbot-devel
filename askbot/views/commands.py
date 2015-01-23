@@ -100,7 +100,7 @@ def process_vote(user=None, vote_direction=None, post=None):
     return response_data
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def vote(request):
     """
     todo: this subroutine needs serious refactoring it's too long and is hard to understand
@@ -328,7 +328,7 @@ def vote(request):
     return HttpResponse(data, content_type="application/json")
 
 #internally grouped views - used by the tagging system
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.post_only
 @decorators.ajax_login_required
 def mark_tag(request, **kwargs):#tagging system
@@ -460,7 +460,7 @@ def load_object_description(request):
     text = getattr(obj.description, 'text', '').strip()
     return HttpResponse(text, mimetype = 'text/plain')
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -476,7 +476,7 @@ def save_object_description(request):
         request.user.post_object_description(obj, body_text=text)
     return {'html': obj.description.html}
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def rename_tag(request):
@@ -500,7 +500,7 @@ def rename_tag(request):
     )
     category_tree.save_data(tree)
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def delete_tag(request):
@@ -525,7 +525,7 @@ def delete_tag(request):
         raise exceptions.PermissionDenied(_('Sorry, could not delete tag'))
     return {'tree_data': tree}
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def add_tag_category(request):
@@ -707,7 +707,7 @@ def edit_bulk_tag_subscription(request, pk):
 
     return render(request, 'tags/form_bulk_tag_subscription.html', data)
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def toggle_follow_question(request):
@@ -773,7 +773,7 @@ def api_get_questions(request):
     return HttpResponse(json_data, mimetype = "application/json")
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.post_only
 @decorators.ajax_login_required
 def set_tag_filter_strategy(request):
@@ -856,7 +856,7 @@ def reopen(request, id):#re-open question
         return HttpResponseRedirect(question.get_absolute_url())
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 def swap_question_with_answer(request):
     """receives two json parameters - answer id
@@ -875,7 +875,7 @@ def swap_question_with_answer(request):
             return {'question_url': new_question.get_absolute_url() }
     raise Http404
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def upvote_comment(request):
@@ -896,7 +896,7 @@ def upvote_comment(request):
     #FIXME: rename js
     return {'score': comment.points}
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def delete_post(request):
@@ -919,7 +919,7 @@ def delete_post(request):
     return {'is_deleted': post.deleted}
 
 #askbot-user communication system
-@csrf.csrf_exempt
+@csrf.csrf_protect
 def read_message(request):#marks message a read
     if request.method == "POST":
         if request.POST.get('formdata') == 'required':
@@ -929,7 +929,7 @@ def read_message(request):#marks message a read
     return HttpResponse('')
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -978,6 +978,7 @@ def edit_group_membership(request):
         raise exceptions.PermissionDenied()
 
 
+#todo - enable csrf protection for this function
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
@@ -994,7 +995,7 @@ def save_group_logo_url(request):
     else:
         raise ValueError('invalid data found when saving group logo')
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1013,7 +1014,7 @@ def add_group(request):
                              url = url )
         return response_dict
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1024,7 +1025,7 @@ def delete_group_logo(request):
     group.save()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1034,7 +1035,7 @@ def delete_post_reject_reason(request):
     reason.delete()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1055,7 +1056,7 @@ def toggle_group_profile_property(request):
     return {'is_enabled': new_value}
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1067,7 +1068,7 @@ def set_group_openness(request):
     group.save()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.admins_only
 def edit_object_property_text(request):
@@ -1094,7 +1095,7 @@ def edit_object_property_text(request):
         raise exceptions.PermissionDenied()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def join_or_leave_group(request):
@@ -1124,7 +1125,7 @@ def join_or_leave_group(request):
     return {'membership_level': new_level}
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1155,7 +1156,7 @@ def save_post_reject_reason(request):
     else:
         raise Exception(forms.format_form_errors(form))
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
@@ -1213,7 +1214,7 @@ def moderate_suggested_tag(request):
         raise Exception(forms.format_form_errors(form))
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def save_draft_question(request):
@@ -1240,7 +1241,7 @@ def save_draft_question(request):
             draft.save()
 
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def save_draft_answer(request):
@@ -1443,7 +1444,7 @@ def get_editor(request):
     }
     return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def publish_answer(request):
@@ -1474,7 +1475,7 @@ def publish_answer(request):
     request.user.message_set.create(message=message)
     return {'redirect_url': answer.get_absolute_url()}
 
-@csrf.csrf_exempt
+@csrf.csrf_protect
 @decorators.ajax_only
 @decorators.post_only
 def merge_questions(request):
