@@ -103,10 +103,7 @@ MessageComposer.prototype.cancel = function () {
 };
 
 MessageComposer.prototype.getSubmitData = function () {
-    var data = {
-        text: this._textarea.val(),
-        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName)
-    };
+    var data = { text: this._textarea.val() };
     if (this._editorType === 'reply') {
         var thread = this._messageCenter.getThread();
         data.parent_id = thread.getId();
@@ -609,10 +606,7 @@ MessageCenter.prototype.hitThreadList = function (url, senderId, requestMethod) 
         return;
     }
     var me = this;
-    var data = {
-        sender_id: senderId,
-        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName)
-    };
+    var data = { sender_id: senderId };
     $.ajax({
         type: requestMethod,
         dataType: 'json',

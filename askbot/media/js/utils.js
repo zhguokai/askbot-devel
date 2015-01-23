@@ -21,6 +21,36 @@ var getCookie = function (name) {
     return cookieValue;
 };
 
+var csrfSafeMethod = function(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+};
+
+var sameOrigin = function(url) {
+    var host = document.location.host;
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    return (
+        (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        !(/^(\/\/|http:|https:).*/.test(url))
+
+    );
+};
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            // Send the token to same-origin, relative URLs only.
+            // Send the token only if the method warrants CSRF protection
+            // Using the CSRFToken value acquired earlier
+            var csrfCookieName = askbot['settings']['csrfCookieName'];
+            xhr.setRequestHeader("X-CSRFToken", getCookie(csrfCookieName));
+        }
+    }
+});
+
+
 /**
  * Selects template by class
  * template selector must be a simple class selector
