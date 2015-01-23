@@ -21,6 +21,7 @@ var TwoStateToggle = function () {
     this._handler = this.getDefaultHandler();
     this._postData = {};
     this.toggleUrl = '';//public property
+    this.setupDefaultDataValidators();
 };
 inherits(TwoStateToggle, SimpleControl);
 
@@ -45,6 +46,25 @@ TwoStateToggle.prototype.isOn = function () {
     return this._element.data('isOn');
 };
 
+TwoStateToggle.prototype.setupDefaultDataValidators = function () {
+    this._validators = {
+        'success': function (data) { return data.success; },
+        'enabled': function (data) { return data.is_enabled; }
+    }
+};
+
+TwoStateToggle.prototype.setDataValidator = function (name, func) {
+    if (name === 'success' || name === 'enabled') {
+        this._validators[name] = func;
+    } else {
+        throw 'unknown validator name ' + name;
+    }
+};
+
+TwoStateToggle.prototype.datumIsValid = function (validatorName, data) {
+    return this._validators[validatorName](data);
+};
+
 TwoStateToggle.prototype.getDefaultHandler = function () {
     var me = this;
     return function () {
@@ -63,15 +83,17 @@ TwoStateToggle.prototype.getDefaultHandler = function () {
             url: me.toggleUrl,
             data: data,
             success: function (data) {
-                if (data.success) {
-                    if (data.is_enabled) {
+                if (me.datumIsValid('success', data)) {
+                    if (me.datumIsValid('enabled', data)) {
                         me.setState('on-state');
                     } else {
                         me.setState('off-state');
                     }
                     me.getElement().trigger('askbot.two-state-toggle.success', data);
                 } else {
-                    showMessage(me.getElement(), data.message);
+                    if (data.message) {
+                        showMessage(me.getElement(), data.message);
+                    }
                     me.getElement().trigger('askbot.two-state-toggle.error', data);
                 }
             }

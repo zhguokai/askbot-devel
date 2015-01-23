@@ -3125,32 +3125,13 @@ a:hover.medal {
 .user-about p {
   font-size: 13px;
 }
-.follow-toggle {
-  height: auto;
-}
-.follow-toggle, .submit {
+.submit {
   font-weight: bold;
   line-height: 26px;
   margin-top: -2px;
 }
-.follow-toggle:hover, .submit:hover {
+.submit:hover {
   text-decoration: none !important;
-}
-.follow-toggle .follow {
-  font-color: #000;
-  font-style: normal;
-}
-.follow-toggle .unfollow div.unfollow-red {
-  display: none;
-}
-.follow-toggle .unfollow:hover div.unfollow-red {
-  display: inline;
-  color: #fff;
-  font-weight: bold;
-  color: #A05736;
-}
-.follow-toggle .unfollow:hover div.unfollow-green {
-  display: none;
 }
 .count {
   font-family: 'Open Sans Condensed', Arial, sans-serif;
@@ -4105,10 +4086,6 @@ li.L9 {
 .group-wiki .group-logo {
   float: left;
   margin: 0 5px 3px 0;
-}
-.group-wiki .follow-toggle.group-join-btn {
-  margin: 4px auto 10px auto;
-  display: block;
 }
 .group-wiki .controls {
   margin: 0 0 10px 0;

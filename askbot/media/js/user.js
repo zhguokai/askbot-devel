@@ -28,11 +28,18 @@ var setup_badge_details_toggle = function () {
 };
 
 (function () {
-    var fbtn = $('.follow-user-toggle');
+    var fbtn = $('.js-follow-user');
     if (fbtn.length === 1) {
-        var follow_user = new FollowUser();
-        follow_user.decorate(fbtn);
-        follow_user.setUserName(askbot.data.viewUserName);
+        var toggle = new TwoStateToggle();
+        toggle.setDataValidator(
+            'success',
+            function(data) { return data.status === 'success'; }
+        );
+        toggle.setDataValidator(
+            'enabled',
+            function(data) { return data.following; }
+        );
+        toggle.decorate(fbtn);
     }
     if (askbot.data.userId !== askbot.data.viewUserId) {
         if (askbot.data.userIsAdminOrMod) {

@@ -228,7 +228,7 @@
 -%}
     {% if acceptance_level in ('open', 'moderated') %}
         <button 
-            class="group-join-btn button follow-toggle"
+            class="group-join-btn button"
             data-group-id="{{group_id}}"
             data-is-on="{{ membership_level|not_equal('none')|as_js_bool }}"
             {% if acceptance_level == 'open' %}
@@ -533,34 +533,6 @@ for the purposes of the AJAX comment editor #}
 
 {%- macro answer_classes(answer, question) -%}
  {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_id==question.author_id %} answered-by-owner{% endif %} {% if answer.deleted %}deleted{% endif -%}
-{%- endmacro -%}
-
-{%- macro follow_toggle(follow, name, alias, id) -%}
-    <div class="button follow-toggle follow-user-toggle" 
-        id="follow-{{ name|escape }}-{{ id }}">
-        {% if follow %}
-        <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
-        {% else %}
-        <div class="unfollow">
-          <div class="unfollow-red">{% trans %}unfollow {{alias}}{% endtrans %}</div>
-          <div class="unfollow-green">{% trans %}following {{alias}}{% endtrans %}</div>
-        </div>
-        {% endif %}
-    </div>
-{%- endmacro -%}
-
-{%- macro follow_user_toggle(visitor=None, subject=None) -%}
-    {% if visitor.is_anonymous() %}
-        {{ follow_toggle(True, 'user', subject.username|escape, subject.id) }}
-    {% else %}
-        {% if visitor != subject %}
-            {% if visitor.is_following(subject) %}
-                {{ follow_toggle(False, 'user', subject.username|escape, subject.id) }}
-            {% else %}
-                {{ follow_toggle(True, 'user', subject.username|escape, subject.id) }}
-            {% endif %}
-        {% endif %}
-    {% endif %}
 {%- endmacro -%}
 
 {%- macro user_long_score_and_badge_summary(user) -%}
