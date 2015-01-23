@@ -105,7 +105,7 @@ MessageComposer.prototype.cancel = function () {
 MessageComposer.prototype.getSubmitData = function () {
     var data = {
         text: this._textarea.val(),
-        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName);
+        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName)
     };
     if (this._editorType === 'reply') {
         var thread = this._messageCenter.getThread();
@@ -398,8 +398,9 @@ Thread.prototype.addMessage = function (message) {
     var newElement;
     var msgElement = message.getElement();
 
+    var newElement;
     if (this._element.prop('tagName') === 'UL') {
-        var newElement = this.makeElement('li');
+        newElement = this.makeElement('li');
         newElement.append(msgElement);
     } else {
         newElement = msgElement;
@@ -599,7 +600,7 @@ MessageCenter.prototype.setLoadingStatus = function (loadingStatus) {
     this._loadingStatus = loadingStatus;
 };
 
-MessageCenter.prototype.setUnreadInboxCount = function(count) {
+MessageCenter.prototype.setUnreadInboxCount = function (count) {
     this._unreadInboxCount.html(count);
 };
 
@@ -610,7 +611,7 @@ MessageCenter.prototype.hitThreadList = function (url, senderId, requestMethod) 
     var me = this;
     var data = {
         sender_id: senderId,
-        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName);
+        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName)
     };
     $.ajax({
         type: requestMethod,
