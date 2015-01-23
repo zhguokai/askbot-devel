@@ -104,9 +104,9 @@ MessageComposer.prototype.cancel = function () {
 
 MessageComposer.prototype.getSubmitData = function () {
     var data = {
-        text: this._textarea.val()
+        text: this._textarea.val(),
+        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName);
     };
-    data[askbot.settings.csrfCookieName] = getCookie(askbot.settings.csrfCookieName);
     if (this._editorType === 'reply') {
         var thread = this._messageCenter.getThread();
         data.parent_id = thread.getId();
@@ -609,9 +609,9 @@ MessageCenter.prototype.hitThreadList = function (url, senderId, requestMethod) 
     }
     var me = this;
     var data = {
-        sender_id: senderId
+        sender_id: senderId,
+        csrfmiddlewaretoken: getCookie(askbot.settings.csrfCookieName);
     };
-    data[askbot.settings.csrfCookieName] = getCookie(askbot.settings.csrfCookieName);
     $.ajax({
         type: requestMethod,
         dataType: 'json',
