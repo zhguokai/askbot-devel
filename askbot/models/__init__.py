@@ -2137,15 +2137,6 @@ def user_visit_question(self, question = None, timestamp = None):
         )
 
 
-def user_is_username_taken(cls,username):
-    try:
-        cls.objects.get(username=username)
-        return True
-    except cls.MultipleObjectsReturned:
-        return True
-    except cls.DoesNotExist:
-        return False
-
 def user_is_administrator(self):
     """checks whether user in the forum site administrator
     the admin must be both superuser and staff member
@@ -3023,10 +3014,6 @@ def user_is_group_member(self, group=None):
 User.add_to_class(
     'add_missing_askbot_subscriptions',
     user_add_missing_askbot_subscriptions
-)
-User.add_to_class(
-    'is_username_taken',
-    classmethod(user_is_username_taken)
 )
 User.add_to_class(
     'get_followed_question_alert_frequency',
