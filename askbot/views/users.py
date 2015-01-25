@@ -57,8 +57,13 @@ def owner_or_moderator_required(f):
     def wrapped_func(request, profile_owner, context):
         if profile_owner == request.user:
             pass
-        elif request.user.is_authenticated() and request.user.can_moderate_user(profile_owner):
-            pass
+        elif request.user.is_authenticated():
+            if request.user.can_moderate_user(profile_owner):
+                pass
+            else:
+                #redirect to the user profile homepage
+                #as this one should be accessible to all
+                return HttpResponseRedirect(request.path)
         else:
             next_url = request.path + '?' + urllib.urlencode(request.REQUEST)
             params = '?next=%s' % urllib.quote(next_url)
