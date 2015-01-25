@@ -1010,32 +1010,38 @@ def user_assert_can_delete_question(self, question = None):
     #cheating here. can_delete_answer wants argument named
     #"question", so the argument name is skipped
     self.assert_can_delete_answer(question)
+    if self.is_administrator() or self.is_moderator():
+        return
     if self == question.get_owner():
         #if there are answers by other people,
-        #then deny, unless user in admin or moderator
+
+        answer_count = question.thread.all_answers().exclude(author=self).count()
+        min_karma = askbot_settings.MIN_REP_TO_DELETE_OWN_QUESTIONS
+        if answer_count and self.reputation < min_karma:
+            msg = _('At least %d karma point is required to delete own questions') \
+                                                                            % min_karma
+            raise django_exceptions.PermissionDenied(msg)
+
         answer_count = question.thread.all_answers()\
                         .exclude(author=self).exclude(points__lte=0).count()
 
         if answer_count > 0:
-            if self.is_administrator() or self.is_moderator():
-                return
+            if answer_count > 1:
+                upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWERS
             else:
-                if answer_count > 1:
-                    upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWERS
-                else:
-                    upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWER
+                upvoted_answers_phrase = askbot_settings.WORDS_UPVOTED_ANSWER
 
-                msg = ungettext(
-                    'Sorry, cannot %(delete_your_question)s since it '
-                    'has an %(upvoted_answers)s posted by someone else',
-                    'Sorry, cannot %(delete_your_question)s since it '
-                    'has some %(upvoted_answers)s posted by other users',
-                    answer_count
-                ) % {
-                    'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION,
-                    'upvoted_answers': upvoted_answers_phrase
-                }
-                raise django_exceptions.PermissionDenied(msg)
+            msg = ungettext(
+                'Sorry, cannot %(delete_your_question)s since it '
+                'has an %(upvoted_answers)s posted by someone else',
+                'Sorry, cannot %(delete_your_question)s since it '
+                'has some %(upvoted_answers)s posted by other users',
+                answer_count
+            ) % {
+                'delete_your_question': askbot_settings.WORDS_DELETE_YOUR_QUESTION,
+                'upvoted_answers': upvoted_answers_phrase
+            }
+            raise django_exceptions.PermissionDenied(msg)
 
 
 def user_assert_can_delete_answer(self, answer = None):

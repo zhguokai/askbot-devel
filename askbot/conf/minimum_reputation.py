@@ -111,6 +111,15 @@ settings.register(
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
+        'MIN_REP_TO_DELETE_OWN_QUESTIONS',
+        default=1,
+        description=_('Delete own questions')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
         'MIN_REP_TO_UPLOAD_FILES',
         default=10,
         description=_('Upload files')

@@ -30,6 +30,17 @@
                 return false;
             }
 
+            var findClosestParentByClassName = function(node, className) {
+                if (hasClass(node, className)) {
+                    return node;
+                }
+                if (node.nodeName === 'BODY') {
+                    return false;
+                } else {
+                    return findClosestParentByClassName(node.parentNode, className);
+                }
+            };
+
             var findChildrenByClassName = function(node, className) {
                 var nodes = [];
                 var walk = function(node) {
@@ -77,6 +88,17 @@
             var postIsComment = function(postId) {
                 if (document.getElementById('comment-' + postId)) {
                     return true;
+                }
+                return false;
+            };
+
+            var postIsQuestion = function(postId) {
+                var content = document.getElementById('post-id-' + postId);
+                if (content) {
+                    var post = findClosestParentByClassName(content, 'post');
+                    if (post) {
+                        return hasClass(post, 'question');
+                    }
                 }
                 return false;
             };
@@ -201,7 +223,6 @@
                 }
             };
 
-
             function render_post_controls(post_id, is_wiki){
 
                 //in this case remove all post controls
@@ -221,9 +242,17 @@
                     return;//all remaining functions stay on
                 }
                 if (data['user_posts'] && post_id in data['user_posts']){
+                    if (postIsQuestion(post_id) && {{ answers|length }}) {
+                        if (data['userReputation'] < {{ settings.MIN_REP_TO_DELETE_OWN_QUESTIONS }}) {
+                            if (!data['userIsAdminOrMod']) {
+                                removeNode(deleteBtn);
+                            }
+                        }
+                    }
                     //todo: remove edit button from older comments
                     return;
                 }
+
                 if (//maybe remove "delete" button
                     (data['userReputation'] <
                     {{settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS}}) || data['userIsReadOnly']

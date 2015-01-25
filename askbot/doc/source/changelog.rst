@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version (only in the repository)
 --------------------------------------------
+* Added minimum reputation to delete own questions with answers
 * Added optional checkbox "accept terms of service"
   which being enabled, requires users to read and agree
   with the terms before signing up.
