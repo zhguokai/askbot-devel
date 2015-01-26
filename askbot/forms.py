@@ -1408,7 +1408,7 @@ class EditUserForm(forms.Form):
         if user.country is None:
             country = 'unknown'
         else:
-            country = user.country
+            country = user.country.code
         self.fields['country'].initial = country
         self.fields['show_country'].initial = user.show_country
         self.fields['show_marked_tags'].initial = user.show_marked_tags
