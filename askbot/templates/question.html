@@ -95,9 +95,8 @@
             var postIsQuestion = function(postId) {
                 var content = document.getElementById('post-id-' + postId);
                 if (content) {
-                    var post = findClosestParentByClassName(content, 'post');
-                    if (post) {
-                        return hasClass(post, 'question');
+                    if (findClosestParentByClassName(content, 'question')) {
+                        return true;
                     }
                 }
                 return false;
