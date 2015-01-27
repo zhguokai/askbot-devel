@@ -3,6 +3,9 @@ Changes in Askbot
 
 Development version (only in the repository)
 --------------------------------------------
+* Added "forbidden phrases" for the content moderation.
+  Posts containing these will be rejected outright, without placement
+  on the moderation queue.
 * Added minimum reputation to delete own questions with answers
 * Added optional checkbox "accept terms of service"
   which being enabled, requires users to read and agree

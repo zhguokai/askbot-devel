@@ -44,6 +44,13 @@ def split_list(text):
     text = text.replace(',', ' ').replace(';', ' ')
     return text.strip().split()
 
+def split_phrases(text):
+    """splits text by semicolon (;), comma(,) and 
+    end of line
+    """
+    text = text.replace(';', ',').replace('\n', ',')
+    return map(lambda v: v.strip(), text.split(','))
+
 def is_iterable(thing):
     if hasattr(thing, '__iter__'):
         return True

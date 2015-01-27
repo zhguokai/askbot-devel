@@ -245,3 +245,43 @@ def admins_only(view_func):
         return view_func(request, *args, **kwargs)
     return decorator
 
+
+def reject_forbidden_phrases(func):
+    """apply to functions that make posts
+    assuming kwargs (all optional): 
+        title, tags, body_text, ip_addr
+
+    assumes that first of *args is User
+
+    todo: this might be factored out into
+    moderation module
+    """
+
+    @functools.wraps(func)
+    def wrapped(*args, **kwargs):
+        
+        user = args[0]
+        if not user.is_administrator_or_moderator():
+            text_bits = list()
+            if 'title' in kwargs:
+                text_bits.append(kwargs['title'])
+            if 'tags' in kwargs:
+                text_bits.append(kwargs['tags'])
+            if 'body_text' in kwargs:
+                text_bits.append(kwargs['body_text'])
+            
+            combined_text = ' '.join(text_bits)
+            from askbot.utils.markup import find_forbidden_phrase
+            from askbot.models import signals
+            phrase = find_forbidden_phrase(combined_text)
+            if phrase:
+                signals.spam_rejected.send(None,
+                    spam=phrase,
+                    text=combined_text,
+                    user=user,
+                    ip_addr=kwargs.get('ip_addr', 'unknown')
+                )
+                raise ValueError #cause 500
+        return func(*args, **kwargs)
+
+    return wrapped

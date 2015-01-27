@@ -2508,13 +2508,34 @@ class AnonymousAnswer(DraftContent):
 
     def publish(self, user):
         added_at = datetime.datetime.now()
-        Post.objects.create_new_answer(
-            thread=self.question.thread,
-            author=user,
-            added_at=added_at,
-            wiki=self.wiki,
-            text=self.text,
-            ip_addr=self.ip_addr,
-        )
-        self.question.thread.invalidate_cached_data()
-        self.delete()
+        try:
+            user.assert_can_post_text(self.text)
+
+        except django_exceptions.PermissionDenied, e:
+            #delete previous draft questions (only one is allowed anyway)
+            thread = self.question.thread
+            prev_drafts = DraftAnswer.objects.filter(   
+                                                author=user,
+                                                thread=thread
+                                            )
+            prev_drafts.delete()
+            #convert this question to draft
+            DraftAnswer.objects.create(
+                            thread=thread,
+                            author=user,
+                            text=self.text
+                        )
+
+        else:
+            Post.objects.create_new_answer(
+                thread=self.question.thread,
+                author=user,
+                added_at=added_at,
+                wiki=self.wiki,
+                text=self.text,
+                ip_addr=self.ip_addr,
+            )
+            self.question.thread.invalidate_cached_data()
+
+        finally:
+            self.delete()

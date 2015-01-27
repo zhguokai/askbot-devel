@@ -47,6 +47,16 @@ post_revision_published = django.dispatch.Signal(
                                     'was_approved'
                                 ]
                             )
+
+spam_rejected = django.dispatch.Signal(
+                                providing_args = [
+                                    'text',
+                                    'spam',
+                                    'user',
+                                    'ip_addr'
+                                ]
+                            )
+
 site_visited = django.dispatch.Signal(providing_args=['user', 'timestamp'])
 reputation_received = django.dispatch.Signal(providing_args=['user', 'reputation_before'])
 

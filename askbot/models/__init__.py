@@ -62,6 +62,7 @@ from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot.models.meta import ImportRun, ImportedObjectInfo
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
+from askbot.utils.decorators import reject_forbidden_phrases
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
 from askbot.utils.html import replace_links_with_text
@@ -1225,6 +1226,7 @@ def user_get_unused_votes_today(self):
     available_votes = askbot_settings.MAX_VOTES_PER_USER_PER_DAY - used_votes
     return max(0, available_votes)
 
+@reject_forbidden_phrases
 def user_post_comment(
                     self,
                     parent_post=None,
@@ -1728,6 +1730,7 @@ def user_restore_post(
     else:
         raise NotImplementedError()
 
+@reject_forbidden_phrases
 def user_post_question(
                     self,
                     title=None,
@@ -1787,6 +1790,7 @@ def user_post_question(
     return question
 
 @auto_now_timestamp
+@reject_forbidden_phrases
 def user_edit_comment(
                     self,
                     comment_post=None,
@@ -1872,6 +1876,7 @@ def user_edit_post(self,
         raise NotImplementedError()
 
 @auto_now_timestamp
+@reject_forbidden_phrases
 def user_edit_question(
                 self,
                 question=None,
@@ -1918,6 +1923,7 @@ def user_edit_question(
     return revision
 
 @auto_now_timestamp
+@reject_forbidden_phrases
 def user_edit_answer(
                     self,
                     answer=None,
@@ -1997,6 +2003,7 @@ def user_edit_post_reject_reason(
         text = details
     )
 
+@reject_forbidden_phrases
 def user_post_answer(
                     self,
                     question=None,
@@ -3924,6 +3931,37 @@ def init_badge_data(sender, created_models=None, **kwargs):
         from askbot.models import badges
         badges.init_badges()
 
+def record_spam_rejection(
+    sender, spam=None, text=None, user=None, ip_addr='unknown', **kwargs
+):
+    """Record spam autorejection activity
+    Only one record per user kept
+
+    todo: this might be factored out into the moderation app
+    and data might be tracked in some other record
+    """
+    now = datetime.datetime.now()
+    summary = 'Found spam text: %s, posted from ip=%s in\n%s' % \
+                        (spam, ip_addr, text)
+
+    spam_type = const.TYPE_ACTIVITY_FORBIDDEN_PHRASE_FOUND
+    act_list = Activity.objects.filter(user=user, activity_type=spam_type)
+    if len(act_list) == 0:
+        activity = Activity(
+                        activity_type=spam_type,
+                        user=user,
+                        active_at=datetime.datetime.now(),
+                        content_object=user,
+                        summary=summary
+                    )
+        activity.save()
+    else:
+        activity = act_list[0]
+        activity.active_at = now
+        activity.summary = summary
+        activity.save()
+    
+
 django_signals.post_syncdb.connect(init_badge_data)
 
 #signal for User model save changes
@@ -3963,6 +4001,7 @@ signals.post_updated.connect(record_post_update_activity)
 signals.new_answer_posted.connect(tweet_new_post)
 signals.new_question_posted.connect(tweet_new_post)
 signals.reputation_received.connect(autoapprove_reputable_user)
+signals.spam_rejected.connect(record_spam_rejection)
 
 #probably we cannot use post-save here the point of this is
 #to tell when the revision becomes publicly visible, not when it is saved
