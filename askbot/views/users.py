@@ -164,18 +164,15 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     if askbot_settings.KARMA_MODE == 'private' and sortby == 'reputation':
         sortby = 'newest'
 
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
+    page = forms.PageField().clean(request.GET.get('page'))
 
-    search_query = request.GET.get('query',  "")
-    if search_query == "":
-        if sortby == "newest":
+    search_query = request.GET.get('query',  '')
+    if search_query == '':
+        if sortby == 'newest':
             order_by_parameter = '-date_joined'
-        elif sortby == "last":
+        elif sortby == 'last':
             order_by_parameter = 'date_joined'
-        elif sortby == "user":
+        elif sortby == 'user':
             order_by_parameter = 'username'
         else:
             # default
@@ -185,15 +182,15 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                             users.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?sort=%s&amp;' % sortby
+        base_url = request.path + '?sort=%s&' % sortby
     else:
-        sortby = "reputation"
+        sortby = 'reputation'
         matching_users = models.get_users_by_text_query(search_query, users)
         objects_list = Paginator(
                             matching_users.order_by('-reputation'),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?name=%s&amp;sort=%s&amp;' % (search_query, sortby)
+        base_url = request.path + '?name=%s&sort=%s&' % (search_query, sortby)
 
     try:
         users_page = objects_list.page(page)
@@ -949,15 +946,17 @@ def user_favorites(request, user, context):
                             )[:const.USER_VIEW_DATA_SIZE]
 
     q_paginator = Paginator(questions_qs, const.USER_POSTS_PAGE_SIZE)
-    questions = q_paginator.page(1).object_list
+
+    page = forms.PageField().clean(request.GET.get('page'))
+    questions = q_paginator.page(page).object_list
     question_count = q_paginator.count
 
     q_paginator_context = functions.setup_paginator({
                     'is_paginated' : (question_count > const.USER_POSTS_PAGE_SIZE),
                     'pages': q_paginator.num_pages,
-                    'current_page_number': 1,
-                    'page_object': q_paginator.page(1),
-                    'base_url' : '?' #this paginator will be ajax
+                    'current_page_number': page,
+                    'page_object': q_paginator.page(page),
+                    'base_url' : request.path + '?sort=favorites&' #this paginator will be ajax
                 })
 
     data = {

@@ -508,6 +508,21 @@ class WikiField(forms.BooleanField):
     def clean(self, value):
         return value and askbot_settings.WIKI_ON
 
+
+class PageField(forms.IntegerField):
+
+    def __init__(self, *args, **kwargs):
+        self.required = False
+        super(PageField, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        try:
+            value = int(value)
+            return value if value > 0 else 1
+        except (TypeError, ValueError):
+            return 1
+
+
 class SummaryField(forms.CharField):
 
     def __init__(self, *args, **kwargs):
@@ -523,6 +538,7 @@ class SummaryField(forms.CharField):
             'fixed spelling, grammar, improved style...), this '
             'field is optional'
         )
+
 
 class EditorForm(forms.Form):
     """form with one field - `editor`

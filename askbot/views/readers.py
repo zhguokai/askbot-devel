@@ -39,6 +39,7 @@ from askbot.forms import AnswerForm
 from askbot.forms import ShowQuestionForm
 from askbot.forms import GetUserItemsForm
 from askbot.forms import GetDataForPostForm
+from askbot.forms import PageField
 from askbot.utils.loading import load_module
 from askbot import conf
 from askbot import models
@@ -316,10 +317,7 @@ def tags(request):#view showing a listing of available tags - plain list
     #1) Get parameters. This normally belongs to form cleaning.
     post_data = request.GET
     sortby = post_data.get('sort', 'used')
-    try:
-        page = int(post_data.get('page', '1'))
-    except ValueError:
-        page = 1
+    page = PageField().clean(post_data.get('page'))
 
     if sortby == 'name':
         order_by = 'name'
@@ -365,7 +363,7 @@ def tags(request):#view showing a listing of available tags - plain list
             'pages': objects_list.num_pages,
             'current_page_number': page,
             'page_object': tags,
-            'base_url' : reverse('tags') + '?sort=%s&amp;' % sortby
+            'base_url' : reverse('tags') + '?sort=%s&' % sortby
         }
         paginator_context = functions.setup_paginator(paginator_data)
         data['paginator_context'] = paginator_context
@@ -583,7 +581,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'pages': objects_list.num_pages,
         'current_page_number': show_page,
         'page_object': page_objects,
-        'base_url' : request.path + '?sort=%s&amp;' % answer_sort_method,
+        'base_url' : request.path + '?sort=%s&' % answer_sort_method,
     }
     paginator_context = functions.setup_paginator(paginator_data)
 

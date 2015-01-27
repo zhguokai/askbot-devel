@@ -25,6 +25,7 @@ from django.db.models import Max, Count
 from askbot import skins
 from askbot.conf import settings as askbot_settings
 from askbot.forms import FeedbackForm
+from askbot.forms import PageField
 from askbot.utils.url_utils import get_login_url
 from askbot.utils.forms import get_next_url
 from askbot.mail import mail_moderators, send_mail
@@ -238,7 +239,7 @@ def list_suggested_tags(request):
     #paginate moderated tags
     paginator = Paginator(tags, 20)
 
-    page_no = request.GET.get('page', '1')
+    page_no = PageField().clean(request.GET.get('page'))
 
     try:
         page = paginator.page(page_no)
