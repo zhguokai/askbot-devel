@@ -395,7 +395,6 @@ Thread.prototype.addMessage = function (message) {
     var newElement;
     var msgElement = message.getElement();
 
-    var newElement;
     if (this._element.prop('tagName') === 'UL') {
         newElement = this.makeElement('li');
         newElement.append(msgElement);
@@ -560,10 +559,13 @@ MessageCenter.prototype.setThreadList = function (list) {
     this._threadList = list;
     var elements = list.getElement();
     var count = '';
+    var newMessagesCount = 0;
     this._threadListBox.empty().append(elements);
 
-    if (elements.find('.js-thread-heading').length) {
-        count = '(' + elements.find('.js-thread-heading').length + ')';
+    newMessagesCount = elements.find('.js-thread-heading.new').length;
+
+    if (newMessagesCount) {
+        count = '(' + newMessagesCount + ')';
     }
     $('.js-senders-list .selected .js-count').html(count);
 };
