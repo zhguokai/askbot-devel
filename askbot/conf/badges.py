@@ -5,8 +5,11 @@ users or others
 """
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import REP_AND_BADGES
-from askbot.deps.livesettings import ConfigurationGroup, IntegerValue
+from askbot.deps.livesettings import ConfigurationGroup
+from askbot.deps.livesettings import IntegerValue
+from askbot.deps.livesettings import BooleanValue
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
 
 BADGES = ConfigurationGroup(
                     'BADGES',
@@ -15,103 +18,124 @@ BADGES = ConfigurationGroup(
                     super_group = REP_AND_BADGES
                 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'DISCIPLINED_BADGE_MIN_UPVOTES',
-        default=3,
-        description=_('Disciplined: minimum upvotes for deleted post')
+def register_badge_settings(badge_slug=None, badge_name=None, params=None):
+    settings.register(
+        BooleanValue(
+            BADGES,
+            badge_slug + '_BADGE_ENABLED',
+            default=True,
+            description=_('Enable "%s" badge') % badge_name
+        )
     )
+    for param_slug, param_data in params.items():
+        param_description = param_data[0]
+        param_default = param_data[1]
+        settings.register(
+                IntegerValue(
+                BADGES,
+                badge_slug + '_BADGE_' + param_slug,
+                description=string_concat(badge_name, ': ', param_description),
+                default=param_default
+            )
+        )
+        
+
+register_badge_settings(
+    'DISCIPLINED',
+    _('Disciplined')),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for deleted post'), 3)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'PEER_PRESSURE_BADGE_MIN_DOWNVOTES',
-        default=3,
-        description=_('Peer Pressure: minimum downvotes for deleted post')
-    )
+
+register_badge_settings(
+    'PEER_PRESSURE',
+    _('Peer pressure'),
+    params={
+        'MIN_DOWNVOTES': (_('minimum downvotes for deleted post'), 3)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'TEACHER_BADGE_MIN_UPVOTES',
-        default=1,
-        description=_('Teacher: minimum upvotes for the answer')
-    )
+
+register_badge_settings(
+    'TEACHER',
+    _('Teacher'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 1)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'NICE_ANSWER_BADGE_MIN_UPVOTES',
-        default=2,
-        description=_('Nice Answer: minimum upvotes for the answer')
-    )
+
+register_badge_settings(
+    'NICE_ANSWER',
+    _('Nice Answer'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 2)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'GOOD_ANSWER_BADGE_MIN_UPVOTES',
-        default=3,
-        description=_('Good Answer: minimum upvotes for the answer')
-    )
+
+register_badge_settings(
+    'GOOD_ANSWER',
+    _('Good Answer'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 3)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'GREAT_ANSWER_BADGE_MIN_UPVOTES',
-        default=5,
-        description=_('Great Answer: minimum upvotes for the answer')
-    )
+
+register_badge_settings(
+    'GREAT_ANSWER',
+    _('Great Answer'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 5)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'NICE_QUESTION_BADGE_MIN_UPVOTES',
-        default=2,
-        description=_('Nice Question: minimum upvotes for the question')
-    )
+
+register_badge_settings(
+    'NICE_QUESTION',
+    _('Nice Question'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the question'), 2)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'GOOD_QUESTION_BADGE_MIN_UPVOTES',
-        default=3,
-        description=_('Good Question: minimum upvotes for the question')
-    )
+
+register_badge_settings(
+    'GOOD_QUESTION',
+    _('Good Question'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the question'), 3)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'GREAT_QUESTION_BADGE_MIN_UPVOTES',
-        default=5,
-        description=_('Great Question: minimum upvotes for the question')
-    )
+
+register_badge_settings(
+    'GREAT_QUESTION',
+    _('Great Question'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the question'), 5)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'POPULAR_QUESTION_BADGE_MIN_VIEWS',
-        default=15,
-        description=_('Popular Question: minimum views')
-    )
+
+register_badge_settings(
+    'POPULAR_QUESTION',
+    _('Popular Question'),
+    params={
+        'MIN_VIEWS': (_('minimum views'), 15)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'NOTABLE_QUESTION_BADGE_MIN_VIEWS',
-        default=25,
-        description=_('Notable Question: minimum views')
-    )
+
+register_badge_settings(
+    'NOTABLE_QUESTION',
+    _('Notable Question'),
+    params={
+        'MIN_VIEWS': (_('minimum views'), 25)
+    }
 )
 
 settings.register(
