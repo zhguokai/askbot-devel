@@ -89,7 +89,7 @@ from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
 from askbot.utils.forms import get_next_url
 from askbot.utils.http import get_request_info
-from askbot.models.signals import user_logged_in, user_registered
+from askbot.signals import user_logged_in, user_registered
 
 def create_authenticated_user_account(
     username=None, email=None, password=None,

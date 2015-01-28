@@ -272,7 +272,7 @@ def reject_forbidden_phrases(func):
             
             combined_text = ' '.join(text_bits)
             from askbot.utils.markup import find_forbidden_phrase
-            from askbot.models import signals
+            from askbot import signals
             phrase = find_forbidden_phrase(combined_text)
             if phrase:
                 signals.spam_rejected.send(None,

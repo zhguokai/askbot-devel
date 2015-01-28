@@ -25,6 +25,7 @@ import askbot
 
 from askbot.utils.slug import slugify
 from askbot import const
+from askbot import signals
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
@@ -245,7 +246,6 @@ class PostManager(BaseQuerySetManager):
         )
 
         if revision.revision > 0:
-            from askbot.models import signals
             signals.post_updated.send(
                 post=post,
                 updated_by=author,
@@ -1892,7 +1892,6 @@ class Post(models.Model):
         if latest_rev.revision > 0:
             parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
 
-            from askbot.models import signals
             signals.post_updated.send(
                 post=self,
                 updated_by=edited_by,
@@ -2275,7 +2274,6 @@ class PostRevisionManager(models.Manager):
                     revision.summary = 'No.%s Revision' % revision.revision
             revision.save()
 
-            from askbot.models import signals
             signals.post_revision_published.send(None, revision=revision)
 
         #audit or pre-moderation modes require placement of the post on the moderation queue

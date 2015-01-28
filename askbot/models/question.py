@@ -30,7 +30,7 @@ from askbot.models.tag import separate_unused_tags
 from askbot.models.base import BaseQuerySetManager
 from askbot.models.base import DraftContent
 from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
-from askbot.models import signals
+from askbot import signals
 from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.search import mysql

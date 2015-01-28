@@ -14,8 +14,8 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.utils.importlib import import_module
 from django.utils.translation import ugettext as _
-from .signals import thread_created
-from .signals import response_created
+from group_messaging.signals import thread_created
+from group_messaging.signals import response_created
 
 MAX_HEADLINE_LENGTH = 80
 MAX_SENDERS_INFO_LENGTH = 64
