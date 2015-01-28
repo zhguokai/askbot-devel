@@ -84,18 +84,19 @@ class ConfigSettings(object):
                 return None
         return setting.value
 
-    def update(self, key, value):
+    def update(self, key, value, lang=None):
         try:
             setting = config_get(self.__group_map[key], key)
             if setting.localized:
-                lang = get_language()
+                lang = lang or get_language()
             else:
                 lang = None
             setting.update(value, lang)
 
         except:
             from askbot.deps.livesettings.models import Setting
-            lang_postfix = '_' + get_language().upper()
+            lang = lang or get_language()
+            lang_postfix = '_' + lang.upper()
             #first try localized setting
             try:
                 setting = Setting.objects.get(key=key + lang_postfix)
