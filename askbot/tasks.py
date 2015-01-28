@@ -197,7 +197,7 @@ def record_post_update_celery_task(
         print >>sys.stderr, unicode(traceback.format_exc()).encode('utf-8')
         raise
 
-@task(ignore_result = True)
+@task(ignore_result=True)
 def record_question_visit(
     question_post_id = None,
     user_id = None,
