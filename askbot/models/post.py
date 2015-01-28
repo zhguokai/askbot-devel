@@ -23,9 +23,9 @@ from django.contrib.contenttypes.models import ContentType
 
 import askbot
 
+from askbot import signals
 from askbot.utils.slug import slugify
 from askbot import const
-from askbot import signals
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
@@ -769,8 +769,8 @@ class Post(models.Model):
 
         from askbot.tasks import send_instant_notifications_about_activity_in_post
         send_instant_notifications_about_activity_in_post.apply_async((
-                                update_activity,
-                                self,
+                                update_activity.pk,
+                                self.id,
                                 notify_sets['for_email']),
                                 countdown = django_settings.NOTIFICATION_DELAY_TIME
                             )
