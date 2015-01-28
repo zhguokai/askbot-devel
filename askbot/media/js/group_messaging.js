@@ -568,6 +568,7 @@ MessageCenter.prototype.setThreadList = function (list) {
         count = '(' + newMessagesCount + ')';
     }
     $('.js-senders-list .selected .js-count').html(count);
+    $('.js-senders-list .selected').trigger('askbot.afterSetThreadList', [this, newMessagesCount]);
 };
 
 MessageCenter.prototype.clearThreadList = function () {
