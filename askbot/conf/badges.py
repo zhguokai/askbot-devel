@@ -48,7 +48,6 @@ register_badge_settings(
     }
 )
 
-
 register_badge_settings(
     'PEER_PRESSURE',
     _('Peer pressure'),
@@ -56,7 +55,6 @@ register_badge_settings(
         'MIN_DOWNVOTES': (_('minimum downvotes for deleted post'), 3)
     }
 )
-
 
 register_badge_settings(
     'TEACHER',
@@ -66,7 +64,6 @@ register_badge_settings(
     }
 )
 
-
 register_badge_settings(
     'NICE_ANSWER',
     _('Nice Answer'),
@@ -74,7 +71,6 @@ register_badge_settings(
         'MIN_UPVOTES': (_('minimum upvotes for the answer'), 2)
     }
 )
-
 
 register_badge_settings(
     'GOOD_ANSWER',
@@ -84,7 +80,6 @@ register_badge_settings(
     }
 )
 
-
 register_badge_settings(
     'GREAT_ANSWER',
     _('Great Answer'),
@@ -92,7 +87,6 @@ register_badge_settings(
         'MIN_UPVOTES': (_('minimum upvotes for the answer'), 5)
     }
 )
-
 
 register_badge_settings(
     'NICE_QUESTION',
@@ -102,7 +96,6 @@ register_badge_settings(
     }
 )
 
-
 register_badge_settings(
     'GOOD_QUESTION',
     _('Good Question'),
@@ -110,7 +103,6 @@ register_badge_settings(
         'MIN_UPVOTES': (_('minimum upvotes for the question'), 3)
     }
 )
-
 
 register_badge_settings(
     'GREAT_QUESTION',
@@ -120,7 +112,6 @@ register_badge_settings(
     }
 )
 
-
 register_badge_settings(
     'POPULAR_QUESTION',
     _('Popular Question'),
@@ -128,7 +119,6 @@ register_badge_settings(
         'MIN_VIEWS': (_('minimum views'), 15)
     }
 )
-
 
 register_badge_settings(
     'NOTABLE_QUESTION',
@@ -138,41 +128,37 @@ register_badge_settings(
     }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'FAMOUS_QUESTION_BADGE_MIN_VIEWS',
-        default=50,
-        description=_('Famous Question: minimum views')
-    )
+register_badge_settings(
+    'FAMOUS_QUESTION',
+    _('Famous Question') 
+    params={
+        'MIN_VIEWS': (_('minimum views'), 50)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'SELF_LEARNER_BADGE_MIN_UPVOTES',
-        default=1,
-        description=_('Self-Learner: minimum answer upvotes')
-    )
+register_badge_settings(
+    'SELF_LEARNER',
+    _('Self-Learner'),
+    params={
+        'MIN_UPVOTES': (_('minimum answer upvotes'), 1)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'CIVIC_DUTY_BADGE_MIN_VOTES',
-        default=100,
-        description=_('Civic Duty: minimum votes')
-    )
+register_badge_settings(
+    'CIVIC_DUTY',
+    _('Civic Duty'),
+    params={
+        'MIN_VOTES': (_('minimum votes'), 100)
+    }
 )
 
-settings.register(
-    IntegerValue(
-        BADGES,
-        'ENLIGHTENED_BADGE_MIN_UPVOTES',
-        default=3,
-        description=_('Enlightened Duty: minimum upvotes')
-    )
+register_badge_settings(
 )
+    'ENLIGHTENED',
+    'MIN_UPVOTES',
+    3,
+    _('Enlightened Duty'),
+    _('minimum upvotes')
 
 settings.register(
     IntegerValue(
