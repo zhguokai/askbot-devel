@@ -45,8 +45,8 @@ Values can be strings, numbers or booleans (True/False)
 
         translation.activate(django_settings.LANGUAGE_CODE)
         for key, value in data.items():
-            if isinstance(value, basestring):
-                update_setting(key, value)
-            elif isinstance(value, dict):
+            if isinstance(value, dict):
                 for lang, value in value.items():
                     update_setting(key, value, lang)
+            else:
+                update_setting(key, value)
