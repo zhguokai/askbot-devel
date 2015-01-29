@@ -1605,7 +1605,7 @@ class Post(models.Model):
             for c in comments:
                 if c.added_at > when:
                     when = c.added_at
-                    who = c.user
+                    who = c.author
         return when, who
 
     def tagname_meta_generator(self):
