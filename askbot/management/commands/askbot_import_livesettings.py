@@ -15,26 +15,44 @@ def update_setting(key, value, lang=None):
 
 class Command(BaseCommand):
     args = '<settings file in yaml format>'
-    help = """Imports settings from a yaml file.
-There are some requirements on the file, read below.
+    help = """
+Imports askbot livesettings from a yaml file.
 
-Example of the file:
+example.yaml:
 
-APP_URL: http://example.com
-WORDS_ASK_YOUR_QUESTION:
-    en: Create issue
-    de: 
-WORDS_POST_YOUR_ANSWER: Add solution 
-
-In the example above localized values are set
-for the settings WORDS_ASK_YOUR_QUESTION for 
-languages 'en' and 'de'
-
-For WORDS_POST_YOUR_ANSWER only value
-for the default language is set (given by the LANGUAGE_CODE in
-the settings.py file).
-
-Values can be strings, numbers or booleans (True/False)
+# This is a comment
+# Use utf-8 throughout 
+# Quote string values (just in case your string contains a yaml special character)
+#
+# Booleans:
+# ------------------
+#
+GROUPS_ENABLED: True
+#
+#
+# Integers:
+# ------------------
+#
+MAX_VOTES_PER_USER_PER_DAY: 10
+#
+#
+# Non-localized strings:
+# ----------------------
+#
+GLOBAL_GROUP_NAME: "All"
+#
+#
+# Localized strings:
+# ------------------
+#
+# Set a string in default language (django settings.LANGUAGE_CODE):
+QUESTION_INSTRUCTIONS: "Please use this page to ask a question to the group"
+#
+# Set a string in specific languages:
+QUESTION_INSTRUCTIONS:
+    en: "Please use this page to ask a question to the group"
+    fr: "Se il vous pla\xeet utiliser cette page pour poser une question au groupe"
+#
 """
 
     def handle(self, *args, **kwargs):
