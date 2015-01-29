@@ -23,7 +23,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.dispatch import Signal
-from askbot.models.post import Post
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils.decorators import auto_now_timestamp
@@ -794,6 +793,7 @@ class Commentator(Badge):
 
     def consider_award(self, actor = None,
             context_object = None, timestamp = None):
+        from askbot.models import Post
         num_comments = Post.objects.get_comments().filter(author=actor).count()
         if num_comments >= askbot_settings.COMMENTATOR_BADGE_MIN_COMMENTS:
             return self.award(actor, context_object, timestamp)
@@ -952,8 +952,8 @@ award_badges_signal = Signal(
 #context_object - database object related to the event, e.g. question
 
 @auto_now_timestamp
-def award_badges(event = None, actor = None,
-                context_object = None, timestamp = None, **kwargs):
+def award_badges(event=None, actor=None,
+                context_object=None, timestamp=None, **kwargs):
     """function that is called when signal `award_badges_signal` is sent
     """
     try:
@@ -963,6 +963,10 @@ def award_badges(event = None, actor = None,
 
     for badge in consider_badges:
         badge_instance = badge()
-        badge_instance.consider_award(actor, context_object, timestamp)
+        enabled_setting = badge_instance.key.upper() + '_BADGE_ENABLED' 
+        enabled_setting = enabled_setting.replace('-', '_')
+
+        if getattr(askbot_settings, enabled_setting, False):
+            badge_instance.consider_award(actor, context_object, timestamp)
 
 award_badges_signal.connect(award_badges)

@@ -19,6 +19,7 @@ BADGES = ConfigurationGroup(
                 )
 
 def register_badge_settings(badge_slug=None, badge_name=None, params=None):
+    print badge_slug
     settings.register(
         BooleanValue(
             BADGES,
@@ -27,6 +28,9 @@ def register_badge_settings(badge_slug=None, badge_name=None, params=None):
             description=_('Enable "%s" badge') % badge_name
         )
     )
+    if params is None:
+        return
+
     for param_slug, param_data in params.items():
         param_description = param_data[0]
         param_default = param_data[1]
@@ -39,36 +43,79 @@ def register_badge_settings(badge_slug=None, badge_name=None, params=None):
             )
         )
         
+register_badge_settings(
+    'ASSOCIATE_EDITOR',
+    _('Associate Editor'),
+    params={
+        'MIN_EDITS': (_('minimum number of edits'), 20)
+    }
+)
+
+register_badge_settings('AUTOBIOGRAPHER', _('Autobiographer'))
+
+register_badge_settings('CITIZEN_PATROL', _('Citizen Patrol'))
+
+register_badge_settings(
+    'CIVIC_DUTY',
+    _('Civic Duty'),
+    params={
+        'MIN_VOTES': (_('minimum votes'), 100)
+    }
+)
+
+register_badge_settings('CLEANUP', _('Cleanup'))
+
+register_badge_settings(
+    'COMMENTATOR',
+    _('Commentator'),
+    params={
+        'MIN_COMMENTS': (_('minimum comments'), 10)
+    }
+)
+
+register_badge_settings('CRITIC', _('Critic'))
 
 register_badge_settings(
     'DISCIPLINED',
-    _('Disciplined')),
+    _('Disciplined'),
     params={
         'MIN_UPVOTES': (_('minimum upvotes for deleted post'), 3)
     }
 )
 
+register_badge_settings('EDITOR', _('Editor'))
+
 register_badge_settings(
-    'PEER_PRESSURE',
-    _('Peer pressure'),
+    'ENLIGHTENED',
+    _('Enlightened Duty'),
     params={
-        'MIN_DOWNVOTES': (_('minimum downvotes for deleted post'), 3)
+        'MIN_UPVOTES': (_('minimum upvotes'), 3)
     }
 )
 
 register_badge_settings(
-    'TEACHER',
-    _('Teacher'),
+    'ENTHUSIAST',
+    _('Enthusiast'),
     params={
-        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 1)
+        'MIN_DAYS': (_('minimum days'), 5)
+    }
+)
+
+register_badge_settings('EXPERT', _('Expert'))
+
+register_badge_settings(
+    'FAMOUS_QUESTION',
+    _('Famous Question') ,
+    params={
+        'MIN_VIEWS': (_('minimum views'), 50)
     }
 )
 
 register_badge_settings(
-    'NICE_ANSWER',
-    _('Nice Answer'),
+    'FAVORITE_QUESTION',
+    _('Favorite Question'),
     params={
-        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 2)
+        'MIN_STARS': (_('minimum followers'), 3)
     }
 )
 
@@ -81,26 +128,18 @@ register_badge_settings(
 )
 
 register_badge_settings(
-    'GREAT_ANSWER',
-    _('Great Answer'),
-    params={
-        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 5)
-    }
-)
-
-register_badge_settings(
-    'NICE_QUESTION',
-    _('Nice Question'),
-    params={
-        'MIN_UPVOTES': (_('minimum upvotes for the question'), 2)
-    }
-)
-
-register_badge_settings(
     'GOOD_QUESTION',
     _('Good Question'),
     params={
         'MIN_UPVOTES': (_('minimum upvotes for the question'), 3)
+    }
+)
+
+register_badge_settings(
+    'GREAT_ANSWER',
+    _('Great Answer'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 5)
     }
 )
 
@@ -113,10 +152,35 @@ register_badge_settings(
 )
 
 register_badge_settings(
-    'POPULAR_QUESTION',
-    _('Popular Question'),
+    'GURU',
+    _('Guru'),
     params={
-        'MIN_VIEWS': (_('minimum views'), 15)
+        'MIN_UPVOTES': (_('minimum upvotes'), 5)
+    }
+)
+
+register_badge_settings(
+    'NECROMANCER',
+    _('Necromancer'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes'), 1),
+        'MIN_DELAY': (_('minimum delay in days'), 30)
+    }
+)
+
+register_badge_settings(
+    'NICE_QUESTION',
+    _('Nice Question'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the question'), 2)
+    }
+)
+
+register_badge_settings(
+    'NICE_ANSWER',
+    _('Nice Answer'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 2)
     }
 )
 
@@ -128,13 +192,27 @@ register_badge_settings(
     }
 )
 
+register_badge_settings('ORGANIZER', _('Organizer'))
+
 register_badge_settings(
-    'FAMOUS_QUESTION',
-    _('Famous Question') 
+    'PEER_PRESSURE',
+    _('Peer pressure'),
     params={
-        'MIN_VIEWS': (_('minimum views'), 50)
+        'MIN_DOWNVOTES': (_('minimum downvotes for deleted post'), 3)
     }
 )
+
+register_badge_settings(
+    'POPULAR_QUESTION',
+    _('Popular Question'),
+    params={
+        'MIN_VIEWS': (_('minimum views'), 15)
+    }
+)
+
+register_badge_settings('PUNDIT', _('Pundit'))
+
+register_badge_settings('SCHOLAR', _('Scholar'))
 
 register_badge_settings(
     'SELF_LEARNER',
@@ -145,98 +223,29 @@ register_badge_settings(
 )
 
 register_badge_settings(
-    'CIVIC_DUTY',
-    _('Civic Duty'),
+    'STELLAR_QUESTION',
+    _('Stellar Question'),
     params={
-        'MIN_VOTES': (_('minimum votes'), 100)
+        'MIN_STARS': (_('minimum followers'), 5)
+    }
+)
+
+register_badge_settings('STUDENT', _('Student'))
+
+register_badge_settings('SUPPORTER', _('Supporter'))
+
+register_badge_settings(
+    'TAXONOMIST',
+    _('Taxonomist'),
+    params={
+        'MIN_USE_COUNT': (_('minimum tag use count'), 5)
     }
 )
 
 register_badge_settings(
-)
-    'ENLIGHTENED',
-    'MIN_UPVOTES',
-    3,
-    _('Enlightened Duty'),
-    _('minimum upvotes')
-
-settings.register(
-    IntegerValue(
-        BADGES,
-        'GURU_BADGE_MIN_UPVOTES',
-        default=5,
-        description=_('Guru: minimum upvotes')
-    )
-)
-
-settings.register(
-    IntegerValue(
-        BADGES,
-        'NECROMANCER_BADGE_MIN_UPVOTES',
-        default=1,
-        description=_('Necromancer: minimum upvotes')
-    )
-)
-
-settings.register(
-    IntegerValue(
-        BADGES,
-        'NECROMANCER_BADGE_MIN_DELAY',
-        default=30,
-        description=_('Necromancer: minimum delay in days')
-    )
-)
-
-settings.register(
-    IntegerValue(
-        BADGES,
-        'ASSOCIATE_EDITOR_BADGE_MIN_EDITS',
-        default=20,
-        description=_('Associate Editor: minimum number of edits')
-    )
-)
-
-settings.register(
-    IntegerValue(
-        BADGES,
-        'FAVORITE_QUESTION_BADGE_MIN_STARS',
-        default=3,
-        description=_('Favorite Question: minimum stars')
-    )
-)
-
-settings.register(
-    IntegerValue(
-        BADGES,
-        'STELLAR_QUESTION_BADGE_MIN_STARS',
-        default=5,
-        description=_('Stellar Question: minimum stars')
-    )
-)
-
-settings.register(
-    IntegerValue(
-        BADGES,
-        'COMMENTATOR_BADGE_MIN_COMMENTS',
-        default=10,
-        description=_('Commentator: minimum comments')
-    )
-)
-
-settings.register(
-    IntegerValue(
-        BADGES,
-        'TAXONOMIST_BADGE_MIN_USE_COUNT',
-        default = 5,
-        description = _('Taxonomist: minimum tag use count')
-    )
-)
-
-settings.register(
-    IntegerValue(
-        BADGES,
-        'ENTHUSIAST_BADGE_MIN_DAYS',
-        default = 5,
-        description = _('Enthusiast: minimum days')
-    )
+    'TEACHER',
+    _('Teacher'),
+    params={
+        'MIN_UPVOTES': (_('minimum upvotes for the answer'), 1)
+    }
 )
