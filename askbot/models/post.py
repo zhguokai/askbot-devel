@@ -23,6 +23,7 @@ from django.contrib.contenttypes.models import ContentType
 
 import askbot
 
+from askbot import signals
 from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.tag import Tag, MarkedTag
@@ -245,7 +246,6 @@ class PostManager(BaseQuerySetManager):
         )
 
         if revision.revision > 0:
-            from askbot.models import signals
             signals.post_updated.send(
                 post=post,
                 updated_by=author,
@@ -769,8 +769,8 @@ class Post(models.Model):
 
         from askbot.tasks import send_instant_notifications_about_activity_in_post
         send_instant_notifications_about_activity_in_post.apply_async((
-                                update_activity,
-                                self,
+                                update_activity.pk,
+                                self.id,
                                 notify_sets['for_email']),
                                 countdown = django_settings.NOTIFICATION_DELAY_TIME
                             )
@@ -1605,7 +1605,7 @@ class Post(models.Model):
             for c in comments:
                 if c.added_at > when:
                     when = c.added_at
-                    who = c.user
+                    who = c.author
         return when, who
 
     def tagname_meta_generator(self):
@@ -1892,7 +1892,6 @@ class Post(models.Model):
         if latest_rev.revision > 0:
             parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
 
-            from askbot.models import signals
             signals.post_updated.send(
                 post=self,
                 updated_by=edited_by,
@@ -2275,7 +2274,6 @@ class PostRevisionManager(models.Manager):
                     revision.summary = 'No.%s Revision' % revision.revision
             revision.save()
 
-            from askbot.models import signals
             signals.post_revision_published.send(None, revision=revision)
 
         #audit or pre-moderation modes require placement of the post on the moderation queue

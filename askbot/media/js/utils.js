@@ -214,7 +214,7 @@ var joinAsPhrase = function (values) {
     } else {
         var last = values.pop();
         var prev = values.pop();
-        return values.join(', ') + prev + gettext('and') + last;
+        return values.join(', ') + prev + ' ' + gettext('and') + ' ' + last;
     }
 };
 

@@ -13,7 +13,7 @@ from askbot.deps.django_authopenid import util
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.conf import settings as askbot_settings
-from askbot.models.signals import user_registered
+from askbot.signals import user_registered
 
 LOG = logging.getLogger(__name__)
 

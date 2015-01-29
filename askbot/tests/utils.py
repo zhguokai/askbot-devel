@@ -4,7 +4,7 @@ from django.core.cache import cache
 from django.test import TestCase
 from functools import wraps
 from askbot import models
-from askbot.models import signals
+from askbot import signals
 
 def with_settings(**settings_dict):
     """a decorator that will run function with settings

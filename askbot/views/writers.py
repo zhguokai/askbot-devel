@@ -35,7 +35,7 @@ from django.contrib.auth.models import User
 from askbot import exceptions as askbot_exceptions
 from askbot import forms
 from askbot import models
-from askbot.models import signals
+from askbot import signals
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot.utils.forms import format_errors

@@ -71,7 +71,7 @@ from askbot.utils.html import site_url
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
 from askbot import mail
-from askbot.models import signals
+from askbot import signals
 
 from django import VERSION
 
@@ -3396,7 +3396,7 @@ def notify_author_of_published_revision(revision=None, was_approved=False, **kwa
     #only email about first revision
     if revision.should_notify_author_about_publishing(was_approved):
         from askbot.tasks import notify_author_of_published_revision_celery_task
-        notify_author_of_published_revision_celery_task.delay(revision)
+        notify_author_of_published_revision_celery_task.delay(revision.pk)
 
 
 #todo: move to utils

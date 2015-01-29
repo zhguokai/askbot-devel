@@ -1,6 +1,6 @@
 from django.db.models import signals as django_signals
-
 from haystack.signals import BaseSignalProcessor
+from askbot import signals as askbot_signals
 
 
 class AskbotRealtimeSignalProcessor(BaseSignalProcessor):
@@ -14,7 +14,6 @@ class AskbotRealtimeSignalProcessor(BaseSignalProcessor):
         django_signals.post_delete.connect(self.handle_delete)
 
         try:
-            from askbot.models import signals as askbot_signals
             askbot_signals.delete_question_or_answer.connect(self.handle_delete)
         except ImportError:
             pass
@@ -24,7 +23,6 @@ class AskbotRealtimeSignalProcessor(BaseSignalProcessor):
         django_signals.post_delete.disconnect(self.handle_delete)
         #askbot signals
         try:
-            from askbot.models import signals as askbot_signals
             askbot_signals.delete_question_or_answer.disconnect(self.handle_delete)
         except ImportError:
             pass
@@ -40,7 +38,6 @@ try:
             django_signals.post_save.connect(self.enqueue_save)
             django_signals.post_delete.connect(self.enqueue_delete)
             try:
-                from askbot.models import signals as askbot_signals
                 askbot_signals.delete_question_or_answer.connect(self.enqueue_delete)
             except ImportError:
                 pass
@@ -51,7 +48,6 @@ try:
             django_signals.post_delete.disconnect(self.enqueue_delete)
 
             try:
-                from askbot.models import signals as askbot_signals
                 askbot_signals.delete_question_or_answer.disconnect(self.enqueue_delete)
             except ImportError:
                 pass
