@@ -1787,6 +1787,13 @@ def user_post_question(
     if askbot_settings.AUTO_FOLLOW_QUESTION_BY_OP:
         self.toggle_favorite_question(question)
 
+    award_badges_signal.send(None,
+        event='post_question',
+        actor=self,
+        context_object=question,
+        timestamp=timestamp
+    )
+
     return question
 
 @auto_now_timestamp
@@ -3927,9 +3934,8 @@ def autoapprove_reputable_user(user=None, reputation_before=None, *args, **kwarg
         user.set_status('a')
 
 def init_badge_data(sender, created_models=None, **kwargs):
-    if BadgeData in created_models:
-        from askbot.models import badges
-        badges.init_badges()
+    from askbot.models import badges
+    badges.init_badges()
 
 def record_spam_rejection(
     sender, spam=None, text=None, user=None, ip_addr='unknown', **kwargs

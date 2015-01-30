@@ -6,6 +6,16 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.html import escape
 
+def timedelta_total_seconds(obj):
+    """returns total seconds for the timedelta object
+    supports python < 2.7
+    """
+    if hasattr(obj, 'total_seconds'):
+        return obj.total_seconds()
+    from future import __division__
+    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
+
+
 def get_epoch_str(dt):
     """returns epoch as string to datetime"""
     return str(int(time.mktime(dt.timetuple())))
