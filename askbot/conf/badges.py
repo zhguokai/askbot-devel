@@ -19,7 +19,6 @@ BADGES = ConfigurationGroup(
                 )
 
 def register_badge_settings(badge_slug=None, badge_name=None, params=None):
-    print badge_slug
     settings.register(
         BooleanValue(
             BADGES,

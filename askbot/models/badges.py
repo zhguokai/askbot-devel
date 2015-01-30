@@ -19,6 +19,7 @@ corresponding event name, actor (user object), context_object and optionally
 """
 import datetime
 from django.template.defaultfilters import slugify
+from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -26,6 +27,7 @@ from django.dispatch import Signal
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils.decorators import auto_now_timestamp
+from askbot.utils.loading import load_module
 
 class Badge(object):
     """base class for the badges
@@ -38,15 +40,14 @@ class Badge(object):
     upon correct event, i.e. it is the responsibility of
     the caller to try awarding badges at appropriate times
     """
+    key = 'base-badge' #override this
     def __init__(self,
-                key = '',
                 name = '',
                 level = None,
                 description = None,
                 multiple = False):
 
         #key - must be an ASCII only word
-        self.key = key
         self.name = name
         self.level = level
         self.description = description
@@ -55,7 +56,7 @@ class Badge(object):
 
     def get_stored_data(self):
         from askbot.models.repute import BadgeData
-        data, created = BadgeData.objects.get_or_create(slug = self.key)
+        data, created = BadgeData.objects.get_or_create(slug=self.key)
         return data
 
     @property
@@ -77,6 +78,12 @@ class Badge(object):
         and vice versa
         """
         return self.get_stored_data().award_badge
+
+    @classmethod
+    def is_enabled(cls):
+        setting_name = cls.key.upper() + '_BADGE_ENABLED' 
+        setting_name = setting_name.replace('-', '_')
+        return getattr(askbot_settings, setting_name, False)
 
     def get_level_display(self):
         """display name for the level of the badge"""
@@ -124,12 +131,13 @@ class Badge(object):
         return self.award(actor, context_object, timestamp)
 
 class Disciplined(Badge):
+    key = 'disciplined'
+
     def __init__(self):
         description = _(
             'Deleted own post with %(votes)s or more upvotes'
         ) % {'votes': askbot_settings.DISCIPLINED_BADGE_MIN_UPVOTES}
         super(Disciplined, self).__init__(
-            key = 'disciplined',
             name = _('Disciplined'),
             description = description,
             level = const.BRONZE_BADGE,
@@ -146,12 +154,13 @@ class Disciplined(Badge):
             return self.award(actor, context_object, timestamp)
 
 class PeerPressure(Badge):
+    key = 'peer-pressure'
+
     def __init__(self):
         description = _(
             u'Deleted own post with %(votes)s or more downvotes'
         ) % {'votes': askbot_settings.PEER_PRESSURE_BADGE_MIN_DOWNVOTES}
         super(PeerPressure, self).__init__(
-            key = 'peer-pressure',
             name = _('Peer Pressure'),
             description = description,
             level = const.BRONZE_BADGE,
@@ -169,6 +178,8 @@ class PeerPressure(Badge):
         return False
 
 class Teacher(Badge):
+    key = 'teacher'
+
     def __init__(self):
         description = _(
             'Gave an %(answer_voted_up)s at least %(votes)s times for the first time'
@@ -177,7 +188,6 @@ class Teacher(Badge):
             'answer_voted_up': askbot_settings.WORDS_ANSWER_VOTED_UP
         }
         super(Teacher, self).__init__(
-            key = 'teacher',
             name = _('Teacher'),
             description = description,
             level = const.BRONZE_BADGE,
@@ -198,9 +208,10 @@ class FirstVote(Badge):
     Supporter and Critic, which must provide
     * key, name and description properties through __new__ call
     """
+    key = 'first-vote'
+
     def __init__(self):
         super(FirstVote, self).__init__(
-            key = self.key,
             name = self.name,
             description = self.description,
             level = const.BRONZE_BADGE,
@@ -215,28 +226,31 @@ class FirstVote(Badge):
 
 class Supporter(FirstVote):
     """first upvote"""
+    key = 'supporter'
+
     def __new__(cls):
         self = super(Supporter, cls).__new__(cls)
-        self.key = 'supporter'
         self.name = _('Supporter')
         self.description = _('First upvote')
         return self
 
 class Critic(FirstVote):
     """like supporter, but for downvote"""
+    key = 'critic'
+
     def __new__(cls):
         self = super(Critic, cls).__new__(cls)
-        self.key = 'critic'
         self.name = _('Critic')
         self.description = _('First downvote')
         return self
 
 class CivicDuty(Badge):
     """awarded once after a certain number of votes"""
+    key = 'civic-duty'
+
     def __init__(self):
         min_votes = askbot_settings.CIVIC_DUTY_BADGE_MIN_VOTES
         super(CivicDuty, self).__init__(
-            key = 'civic-duty',
             name = _('Civic Duty'),
             description = _('Voted %(num)s times') % {'num': min_votes},
             level = const.SILVER_BADGE,
@@ -254,13 +268,14 @@ class CivicDuty(Badge):
         return False
 
 class SelfLearner(Badge):
+    key='self-learner'
+
     def __init__(self):
         description = _('%(answered_own_question)s with at least %(num)s up votes') % {
             'num': askbot_settings.SELF_LEARNER_BADGE_MIN_UPVOTES,
             'answered_own_question': askbot_settings.WORDS_ANSWERED_OWN_QUESTION
         }
         super(SelfLearner, self).__init__(
-            key='self-learner',
             name=_('Self-Learner'),
             description=description,
             level=const.BRONZE_BADGE,
@@ -289,9 +304,10 @@ class QualityPost(Badge):
     * post_type - string 'question' or 'answer'
     * key, name, description, level and multiple - as intended in the Badge
     """
+    key = 'quality-post'
+
     def __init__(self):
         super(QualityPost, self).__init__(
-            key = self.key,
             name = self.name,
             description = self.description,
             level = self.level,
@@ -307,10 +323,11 @@ class QualityPost(Badge):
         return False
 
 class NiceAnswer(QualityPost):
+    key = 'nice-answer'
+
     def __new__(cls):
         self = super(NiceAnswer, cls).__new__(cls)
         self.name = askbot_settings.WORDS_NICE_ANSWER
-        self.key = 'nice-answer'
         self.level = const.BRONZE_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.NICE_ANSWER_BADGE_MIN_UPVOTES
@@ -322,10 +339,11 @@ class NiceAnswer(QualityPost):
         return self
 
 class GoodAnswer(QualityPost):
+    key = 'good-answer'
+
     def __new__(cls):
         self = super(GoodAnswer, cls).__new__(cls)
         self.name = askbot_settings.WORDS_GOOD_ANSWER
-        self.key = 'good-answer'
         self.level = const.SILVER_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.GOOD_ANSWER_BADGE_MIN_UPVOTES
@@ -337,10 +355,11 @@ class GoodAnswer(QualityPost):
         return self
 
 class GreatAnswer(QualityPost):
+    key = 'great-answer'
+
     def __new__(cls):
         self = super(GreatAnswer, cls).__new__(cls)
         self.name = askbot_settings.WORDS_GREAT_ANSWER
-        self.key = 'great-answer'
         self.level = const.GOLD_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.GREAT_ANSWER_BADGE_MIN_UPVOTES
@@ -352,10 +371,11 @@ class GreatAnswer(QualityPost):
         return self
 
 class NiceQuestion(QualityPost):
+    key = 'nice-question'
+
     def __new__(cls):
         self = super(NiceQuestion, cls).__new__(cls)
         self.name = askbot_settings.WORDS_NICE_QUESTION
-        self.key = 'nice-question'
         self.level = const.BRONZE_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.NICE_QUESTION_BADGE_MIN_UPVOTES
@@ -367,10 +387,11 @@ class NiceQuestion(QualityPost):
         return self
 
 class GoodQuestion(QualityPost):
+    key = 'good-question'
+
     def __new__(cls):
         self = super(GoodQuestion, cls).__new__(cls)
         self.name = askbot_settings.WORDS_GOOD_QUESTION
-        self.key = 'good-question'
         self.level = const.SILVER_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.GOOD_QUESTION_BADGE_MIN_UPVOTES
@@ -382,10 +403,11 @@ class GoodQuestion(QualityPost):
         return self
 
 class GreatQuestion(QualityPost):
+    key = 'great-question'
+
     def __new__(cls):
         self = super(GreatQuestion, cls).__new__(cls)
         self.name = askbot_settings.WORDS_GREAT_QUESTION
-        self.key = 'great-question'
         self.level = const.GOLD_BADGE
         self.multiple = True
         self.min_votes = askbot_settings.GREAT_QUESTION_BADGE_MIN_UPVOTES
@@ -397,10 +419,11 @@ class GreatQuestion(QualityPost):
         return self
 
 class Student(QualityPost):
+    key = 'student'
+
     def __new__(cls):
         self = super(Student , cls).__new__(cls)
         self.name = _('Student')
-        self.key = 'student'
         self.level = const.BRONZE_BADGE
         self.multiple = False
         self.min_votes = 1
@@ -419,9 +442,10 @@ class FrequentedQuestion(Badge):
     * min_views - a value from live settings
     * key, name, description and level and multiple - as intended in the Badge
     """
+    key = 'frequented-question'
+
     def __init__(self):
         super(FrequentedQuestion, self).__init__(
-            key = self.key,
             name = self.name,
             description = self.description,
             level = self.level,
@@ -437,10 +461,11 @@ class FrequentedQuestion(Badge):
         return False
 
 class PopularQuestion(FrequentedQuestion):
+    key = 'popular-question'
+
     def __new__(cls):
         self = super(PopularQuestion, cls).__new__(cls)
         self.name = askbot_settings.WORDS_POPULAR_QUESTION
-        self.key = 'popular-question'
         self.level = const.BRONZE_BADGE
         self.min_views = askbot_settings.POPULAR_QUESTION_BADGE_MIN_VIEWS
         self.description = _('%(asked_a_question)s with %(views)s views') % {
@@ -450,10 +475,11 @@ class PopularQuestion(FrequentedQuestion):
         return self
 
 class NotableQuestion(FrequentedQuestion):
+    key = 'notable-question'
+
     def __new__(cls):
         self = super(NotableQuestion, cls).__new__(cls)
         self.name = askbot_settings.WORDS_NOTABLE_QUESTION
-        self.key = 'notable-question'
         self.level = const.SILVER_BADGE
         self.min_views = askbot_settings.NOTABLE_QUESTION_BADGE_MIN_VIEWS
         self.description = _('%(asked_a_question)s with %(views)s views') % {
@@ -463,10 +489,11 @@ class NotableQuestion(FrequentedQuestion):
         return self
 
 class FamousQuestion(FrequentedQuestion):
+    key = 'famous-question'
+
     def __new__(cls):
         self = super(FamousQuestion, cls).__new__(cls)
         self.name = askbot_settings.WORDS_FAMOUS_QUESTION
-        self.key = 'famous-question'
         self.level = const.GOLD_BADGE
         self.multiple = True
         self.min_views = askbot_settings.FAMOUS_QUESTION_BADGE_MIN_VIEWS
@@ -480,13 +507,14 @@ class Scholar(Badge):
     """scholar badge is awarded to the asker when
     he/she accepts an answer for the first time
     """
+    key = 'scholar'
+
     def __init__(self):
         description = _('%(asked_a_question)s and %(accepted_an_answer)s') % {
                             'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION,
                             'accepted_an_answer': askbot_settings.WORDS_ACCEPTED_AN_ANSWER
                         }
         super(Scholar, self).__init__(
-            key = 'scholar',
             name = _('Scholar'),
             level = const.BRONZE_BADGE,
             multiple = False,
@@ -508,9 +536,10 @@ class VotedAcceptedAnswer(Badge):
 
     Subclasses must define __new__ function
     """
+    key = 'voted-accepted-answer'
+
     def __init__(self):
         super(VotedAcceptedAnswer, self).__init__(
-            key = self.key,
             name = self.name,
             level = self.level,
             multiple = self.multiple,
@@ -526,9 +555,10 @@ class VotedAcceptedAnswer(Badge):
             return self.award(answer.author, answer, timestamp)
 
 class Enlightened(VotedAcceptedAnswer):
+    key = 'enlightened'
+
     def __new__(cls):
         self = super(Enlightened, cls).__new__(cls)
-        self.key = 'enlightened'
         self.name = _('Enlightened')
         self.level = const.SILVER_BADGE
         self.multiple = False
@@ -541,9 +571,10 @@ class Enlightened(VotedAcceptedAnswer):
         return self
 
 class Guru(VotedAcceptedAnswer):
+    key = 'guru'
+
     def __new__(cls):
         self = super(Guru, cls).__new__(cls)
-        self.key = 'guru'
         self.name = _('Guru')
         self.level = const.GOLD_BADGE
         self.multiple = True
@@ -556,6 +587,8 @@ class Guru(VotedAcceptedAnswer):
         return self
 
 class Necromancer(Badge):
+    key = 'necromancer'
+
     def __init__(self):
         days = askbot_settings.NECROMANCER_BADGE_MIN_DELAY
         votes = askbot_settings.NECROMANCER_BADGE_MIN_UPVOTES
@@ -568,7 +601,6 @@ class Necromancer(Badge):
             'answered_a_question': askbot_settings.WORDS_ANSWERED_A_QUESTION
         }
         super(Necromancer, self).__init__(
-            key = 'necromancer',
             name = _('Necromancer'),
             level = const.SILVER_BADGE,
             description = description,
@@ -589,9 +621,10 @@ class Necromancer(Badge):
         return False
 
 class CitizenPatrol(Badge):
+    key = 'citizen-patrol'
+
     def __init__(self):
         super(CitizenPatrol, self).__init__(
-            key = 'citizen-patrol',
             name = _('Citizen Patrol'),
             level = const.BRONZE_BADGE,
             multiple = False,
@@ -604,9 +637,10 @@ class Cleanup(Badge):
     detect "undo" actions or rewrite the view
     correspondingly
     """
+    key = 'cleanup'
+
     def __init__(self):
         super(Cleanup, self).__init__(
-            key = 'cleanup',
             name = _('Cleanup'),
             level = const.BRONZE_BADGE,
             multiple = False,
@@ -618,9 +652,10 @@ class Pundit(Badge):
     for comments.
     Pundit is someone who makes good comments.
     """
+    key = 'pundit'
+
     def __init__(self):
         super(Pundit, self).__init__(
-            key = 'pundit',
             name = _('Pundit'),
             level = const.SILVER_BADGE,
             multiple = False,
@@ -632,9 +667,10 @@ class EditorTypeBadge(Badge):
     must provide usual parameters + min_edits
     via __new__ function
     """
+    key = 'editor-type-badge'
+
     def __init__(self):
         super(EditorTypeBadge, self).__init__(
-            key = self.key,
             name = self.name,
             level = self.level,
             multiple = False,
@@ -654,9 +690,10 @@ class EditorTypeBadge(Badge):
             return self.award(actor, context_object, timestamp)
 
 class Editor(EditorTypeBadge):
+    key = 'editor'
+
     def __new__(cls):
         self = super(Editor, cls).__new__(cls)
-        self.key = 'editor'
         self.name = _('Editor')
         self.level = const.BRONZE_BADGE
         self.multiple = False
@@ -665,9 +702,10 @@ class Editor(EditorTypeBadge):
         return self
 
 class AssociateEditor(EditorTypeBadge):
+    key = 'associate-editor'#legacy copycat name from stackoverflow
+
     def __new__(cls):
         self = super(AssociateEditor, cls).__new__(cls)
-        self.key = 'strunk-and-white'#legacy copycat name from stackoverflow
         self.name = _('Associate Editor')
         self.level = const.SILVER_BADGE
         self.multiple = False
@@ -676,9 +714,10 @@ class AssociateEditor(EditorTypeBadge):
         return self
 
 class Organizer(Badge):
+    key = 'organizer'
+
     def __init__(self):
         super(Organizer, self).__init__(
-            key = 'organizer',
             name = _('Organizer'),
             level = const.BRONZE_BADGE,
             multiple = False,
@@ -686,9 +725,10 @@ class Organizer(Badge):
         )
 
 class Autobiographer(Badge):
+    key = 'autobiographer'
+
     def __init__(self):
         super(Autobiographer, self).__init__(
-            key = 'autobiographer',
             name = _('Autobiographer'),
             level = const.BRONZE_BADGE,
             multiple = False,
@@ -707,6 +747,8 @@ class FavoriteTypeBadge(Badge):
     """subclass must use __new__ and in addition
     must provide min_stars property for the badge
     """
+    key = 'favorite-type-badge'
+
     def __init__(self):
         description = _(
             '%(asked_a_question)s with %(num)s followers'
@@ -715,7 +757,6 @@ class FavoriteTypeBadge(Badge):
             'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
         }
         super(FavoriteTypeBadge, self).__init__(
-            key=self.key,
             name=self.name,
             level=self.level,
             multiple=True,
@@ -737,18 +778,20 @@ class FavoriteTypeBadge(Badge):
         return False
 
 class StellarQuestion(FavoriteTypeBadge):
+    key = 'stellar-question'
+
     def __new__(cls):
         self = super(StellarQuestion, cls).__new__(cls)
-        self.key = 'stellar-question'
         self.name = askbot_settings.WORDS_STELLAR_QUESTION
         self.level = const.GOLD_BADGE
         self.min_stars = askbot_settings.STELLAR_QUESTION_BADGE_MIN_STARS
         return self
 
 class FavoriteQuestion(FavoriteTypeBadge):
+    key = 'favorite-question'
+
     def __new__(cls):
         self = super(FavoriteQuestion, cls).__new__(cls)
-        self.key = 'favorite-question'
         self.name = askbot_settings.WORDS_FAVORITE_QUESTION
         self.level = const.SILVER_BADGE
         self.min_stars = askbot_settings.FAVORITE_QUESTION_BADGE_MIN_STARS
@@ -758,9 +801,10 @@ class Enthusiast(Badge):
     """Awarded to a user who visits the site
     for a certain number of days in a row
     """
+    key = 'enthusiast'
+
     def __init__(self):
         super(Enthusiast, self).__init__(
-            key = 'enthusiast',
             name = _('Enthusiast'),
             level = const.SILVER_BADGE,
             multiple = False,
@@ -780,9 +824,10 @@ class Commentator(Badge):
     """Commentator is a bronze badge that is
     awarded once when user posts a certain number of
     comments"""
+    key = 'commentator'
+
     def __init__(self):
         super(Commentator, self).__init__(
-            key = 'commentator',
             name = _('Commentator'),
             level = const.BRONZE_BADGE,
             multiple = False,
@@ -800,10 +845,10 @@ class Commentator(Badge):
         return False
 
 class Taxonomist(Badge):
-    """Stub badge"""
+    key = 'taxonomist'
+
     def __init__(self):
         super(Taxonomist, self).__init__(
-            key = 'taxonomist',
             name = _('Taxonomist'),
             level = const.SILVER_BADGE,
             multiple = False,
@@ -825,9 +870,10 @@ class Taxonomist(Badge):
 
 class Expert(Badge):
     """Stub badge"""
+    key = 'expert'
+
     def __init__(self):
         super(Expert, self).__init__(
-            key = 'expert',
             name = _('Expert'),
             level = const.SILVER_BADGE,
             multiple = False,
@@ -850,43 +896,46 @@ extra badges from stackexchange
     (_('Beta'), 2, _('beta'), _('Actively participated in the private beta'), False, 0),
     (_('Alpha'), 2, _('alpha'), _('Actively participated in the private alpha'), False, 0),
 """
+def get_badge_keys(badges):
+    """returns list of badge keys for the list, 
+    tuple, or set of badges"""
+    return set([badge.key for badge in badges])
 
-BADGES = {
-    'strunk-and-white': AssociateEditor,#legacy slug name
-    'autobiographer': Autobiographer,
-    'cleanup': Cleanup,
-    'citizen-patrol': CitizenPatrol,
-    'civic-duty': CivicDuty,
-    'commentator': Commentator,
-    'critic': Critic,
-    'disciplined': Disciplined,
-    'editor': Editor,
-    'enlightened': Enlightened,
-    'enthusiast': Enthusiast,
-    'expert': Expert,
-    'famous-question': FamousQuestion,
-    'favorite-question': FavoriteQuestion,
-    'good-answer': GoodAnswer,
-    'good-question': GoodQuestion,
-    'great-answer': GreatAnswer,
-    'great-question': GreatQuestion,
-    'guru': Guru,
-    'necromancer': Necromancer,
-    'nice-answer': NiceAnswer,
-    'nice-question': NiceQuestion,
-    'notable-question': NotableQuestion,
-    'organizer': Organizer,
-    'peer-pressure': PeerPressure,
-    'popular-question': PopularQuestion,
-    'pundit': Pundit,
-    'scholar': Scholar,
-    'self-learner': SelfLearner,
-    'stellar-question': StellarQuestion,
-    'student': Student,
-    'supporter': Supporter,
-    'teacher': Teacher,
-    'taxonomist': Taxonomist,
-}
+
+def get_badges_dict(e_to_b):
+    badges = set()
+    for event_badges in e_to_b.values():
+        badges.update(set(event_badges))
+
+    badges_dict = dict()
+    for badge in badges:
+        badges_dict[badge.key] = badge
+
+    return badges_dict 
+        
+
+def extend_badge_events(e_to_b):
+    mod_path = getattr(django_settings, 'ASKBOT_CUSTOM_BADGES', None)
+    if mod_path:
+        extra_e_to_b = load_module(mod_path)
+        events = set(extra_e_to_b.keys())
+        for event in events:
+            if event not in e_to_b:
+                raise ValueError('unkown badge event %s' % event)
+            event_badges = set(e_to_b[event])
+            extra_event_badges = set(extra_e_to_b[event])
+
+            badge_keys = get_badge_keys(event_badges)
+            extra_badge_keys = get_badge_keys(extra_event_badges)
+            common_badge_keys = badge_keys & extra_badge_keys
+            if len(common_badge_keys):
+                info = ', '.join(common_badge_keys)
+                raise ValueError('change key values of custom badges: %s' % info)
+
+            event_badges.update(extra_event_badges)
+            e_to_b[event] = event_badges
+    return e_to_b
+
 
 #events are sent as a parameter via signal award_badges_signal
 #from appropriate locations in the code of askbot application
@@ -900,6 +949,7 @@ EVENTS_TO_BADGES = {
     'flag_post': (CitizenPatrol,),
     'post_answer': (Necromancer,),
     'post_comment': (Commentator,),
+    'post_question': (),
     'retag_question': (Organizer,),
     'select_favorite_question': (FavoriteQuestion, StellarQuestion,),
     'site_visit': (Enthusiast,),
@@ -916,7 +966,12 @@ EVENTS_TO_BADGES = {
                 ),
     'upvote_comment':(),#todo - add some badges here
     'view_question': (PopularQuestion, NotableQuestion, FamousQuestion,),
+    'manually_triggered': ()
 }
+
+EVENT_TO_BADGES = extend_badge_events(EVENTS_TO_BADGES)
+BADGES = get_badges_dict(EVENTS_TO_BADGES)
+
 
 def get_badge(name = None):
     """Get badge object by name, if none matches the name
@@ -963,10 +1018,7 @@ def award_badges(event=None, actor=None,
 
     for badge in consider_badges:
         badge_instance = badge()
-        enabled_setting = badge_instance.key.upper() + '_BADGE_ENABLED' 
-        enabled_setting = enabled_setting.replace('-', '_')
-
-        if getattr(askbot_settings, enabled_setting, False):
+        if badge_instance.is_enabled():
             badge_instance.consider_award(actor, context_object, timestamp)
 
 award_badges_signal.connect(award_badges)

@@ -186,7 +186,9 @@ def badges(request):#user status/reputation system
     if askbot_settings.BADGES_MODE != 'public':
         raise Http404
     known_badges = badge_data.BADGES.keys()
-    badges = BadgeData.objects.filter(slug__in = known_badges).order_by('slug')
+    badges = BadgeData.objects.filter(slug__in=known_badges).order_by('slug')
+    badges = filter(lambda v: v.is_enabled(), badges)
+
     my_badge_ids = list()
     if request.user.is_authenticated():
         my_badge_ids = Award.objects.filter(

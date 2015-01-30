@@ -536,6 +536,9 @@ def user_stats(request, user, context):
     badges_dict = collections.defaultdict(list)
 
     for award in user_awards:
+        if award.badge.is_enabled() == False:
+            continue
+
         # Fetch content object
         if award.content_type_id == post_type.id:
             #here we go around a possibility of awards
