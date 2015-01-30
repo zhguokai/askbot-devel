@@ -535,7 +535,22 @@ def send_email(sender, message, **kwargs):
     message.send_email_alert()
 
 
-thread_created.connect(send_email)
-thread_created.connect(increment_unread_inbox_counters)
-response_created.connect(send_email)
-response_created.connect(increment_unread_inbox_counters)
+thread_created.connect(
+    receiver=send_email,
+    dispatch_uid="thread_send_email"
+)
+
+thread_created.connect(
+    receiver=increment_unread_inbox_counters,
+    dispatch_uid="thread_increment_unread_inbox_counters"
+)
+
+response_created.connect(
+    receiver=send_email,
+    dispatch_uid="message_reply_send_email"
+)
+
+response_created.connect(
+    receiver=increment_unread_inbox_counters,
+    dispatch_uid="message_reply_increment_unread_inbox_counters"
+)
