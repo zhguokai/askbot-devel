@@ -43,10 +43,10 @@ class Badge(object):
     """
     key = 'base-badge' #override this
     def __init__(self,
-                name = '',
-                level = None,
-                description = None,
-                multiple = False):
+                name='',
+                level=None,
+                description=None,
+                multiple=False):
 
         #key - must be an ASCII only word
         self.name = name
@@ -969,11 +969,11 @@ EVENTS_TO_BADGES = {
     'manually_triggered': ()
 }
 
-EVENT_TO_BADGES = extend_badge_events(EVENTS_TO_BADGES)
+EVENTS_TO_BADGES = extend_badge_events(EVENTS_TO_BADGES)
 BADGES = get_badges_dict(EVENTS_TO_BADGES)
 
 
-def get_badge(name = None):
+def get_badge(name=None):
     """Get badge object by name, if none matches the name
     raise KeyError
     """
