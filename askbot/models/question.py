@@ -486,7 +486,10 @@ class ThreadManager(BaseQuerySetManager):
         # qs = qs.extra(select={'ordering_key': orderby.lstrip('-')}, order_by=['-ordering_key' if orderby.startswith('-') else 'ordering_key'])
         # qs = qs.distinct()
 
-        qs = qs.only('id', 'title', 'view_count', 'answer_count', 'last_activity_at', 'last_activity_by', 'closed', 'tagnames', 'accepted_answer')
+        qs = qs.only(
+            'id', 'title', 'view_count', 'answer_count', 'last_activity_at', 
+            'last_activity_by', 'closed', 'tagnames', 'accepted_answer'
+        )
 
         #print qs.query
 
@@ -928,12 +931,16 @@ class Thread(models.Model):
         self.set_tags_language_code(language_code)
             
 
-    def set_accepted_answer(self, answer, timestamp):
+    def set_accepted_answer(self, answer, actor, timestamp):
         if answer and answer.thread != self:
             raise ValueError("Answer doesn't belong to this thread")
         self.accepted_answer = answer
         self.answer_accepted_at = timestamp
         self.save()
+        answer.endorsed = True
+        answer.endorsed_at = timestamp
+        answer.endorsed_by = actor
+        answer.save()
 
     def set_last_activity_info(self, last_activity_at, last_activity_by):
         self.last_activity_at = last_activity_at

@@ -683,7 +683,7 @@ def user_assert_can_approve_post_revision(self, post_revision = None):
         admin_or_moderator_required=True
     )
 
-def user_assert_can_unaccept_best_answer(self, answer = None):
+def user_assert_can_unaccept_best_answer(self, answer=None):
     assert getattr(answer, 'post_type', '') == 'answer'
     suspended_error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
         'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
@@ -737,7 +737,7 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
 
     raise django_exceptions.PermissionDenied(error_message)
 
-def user_assert_can_accept_best_answer(self, answer = None):
+def user_assert_can_accept_best_answer(self, answer=None):
     assert getattr(answer, 'post_type', '') == 'answer'
     self.assert_can_unaccept_best_answer(answer)
 
@@ -1492,22 +1492,23 @@ def user_repost_comment_as_answer(self, comment):
 
 @auto_now_timestamp
 def user_accept_best_answer(
-                self, answer = None,
-                timestamp = None,
-                cancel = False,
-                force = False
+                self, answer=None,
+                timestamp=None,
+                cancel=False,
+                force=False
             ):
     if cancel:
         return self.unaccept_best_answer(
-                                answer = answer,
-                                timestamp = timestamp,
-                                force = force
+                                answer=answer,
+                                timestamp=timestamp,
+                                force=force
                             )
     if force == False:
         self.assert_can_accept_best_answer(answer)
-    if answer.accepted() == True:
+    if answer.endorsed:
         return
 
+    #todo: optionally allow accepting >1 answer
     prev_accepted_answer = answer.thread.accepted_answer
     if prev_accepted_answer:
         auth.onAnswerAcceptCanceled(prev_accepted_answer, self)
@@ -1522,13 +1523,13 @@ def user_accept_best_answer(
 
 @auto_now_timestamp
 def user_unaccept_best_answer(
-                self, answer = None,
-                timestamp = None,
-                force = False
+                self, answer=None,
+                timestamp=None,
+                force=False
             ):
     if force == False:
         self.assert_can_unaccept_best_answer(answer)
-    if not answer.accepted():
+    if not answer.endorsed:
         return
     auth.onAnswerAcceptCanceled(answer, self)
 
@@ -3509,10 +3510,12 @@ def record_answer_accepted(instance, created, **kwargs):
 
     question = instance.thread._question_post()
 
-    if not created and instance.accepted():
+    if not created and instance.endorsed:
         activity = Activity(
+                        #pretty bad: user must be actor
                         user=question.author,
                         active_at=datetime.datetime.now(),
+                        #content object must be answer!
                         content_object=question,
                         activity_type=const.TYPE_ACTIVITY_MARK_ANSWER,
                         question=question

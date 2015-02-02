@@ -183,7 +183,11 @@ def onUnFlaggedItem(post, user, timestamp=None):
 
 @transaction.commit_on_success
 def onAnswerAccept(answer, user, timestamp=None):
-    answer.thread.set_accepted_answer(answer=answer, timestamp=timestamp)
+    answer.thread.set_accepted_answer(
+                            answer=answer,
+                            actor=user,
+                            timestamp=timestamp
+                        )
     question = answer.thread._question_post()
 
     if answer.author != user:
@@ -218,7 +222,11 @@ def onAnswerAccept(answer, user, timestamp=None):
 def onAnswerAcceptCanceled(answer, user, timestamp=None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
-    answer.thread.set_accepted_answer(answer=None, timestamp=None)
+    answer.thread.set_accepted_answer(
+                                answer=None,
+                                actor=user,
+                                timestamp=None
+                            )
     question = answer.thread._question_post()
 
     if user != answer.author:

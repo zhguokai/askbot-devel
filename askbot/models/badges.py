@@ -551,7 +551,7 @@ class VotedAcceptedAnswer(Badge):
         if context_object.post_type != 'answer':
             return None
         answer = context_object
-        if answer.points >= self.min_votes and answer.accepted():
+        if answer.points >= self.min_votes and answer.endorsed:
             return self.award(answer.author, answer, timestamp)
 
 class Enlightened(VotedAcceptedAnswer):

@@ -169,7 +169,7 @@ def vote(request):
                 answer_id = request.POST.get('postId')
                 answer = get_object_or_404(models.Post, post_type='answer', id = answer_id)
                 # make sure question author is current user
-                if answer.accepted():
+                if answer.endorsed:
                     request.user.unaccept_best_answer(answer)
                     response_data['status'] = 1 #cancelation
                 else:

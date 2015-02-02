@@ -378,6 +378,14 @@ class Post(models.Model):
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
 
+    #endorsed == accepted as best in the case of answer
+    #use word 'endorsed' to differentiate from 'approved', which
+    #is used for the moderation
+    #note: accepted answer is also denormalized on the Thread model
+    endorsed = models.BooleanField(default=False, db_index=True)
+    endorsed_by = models.ForeignKey(User, null=True, blank=True, related_name='endorsed_posts')
+    endorsed_at = models.DateTimeField(null=True, blank=True)
+
     #denormalized data: the core approval of the posts is made
     #in the revisions. In the revisions there is more data about
     #approvals - by whom and when
@@ -2175,11 +2183,6 @@ class Post(models.Model):
                 return u'%s %s' % (self.thread.title, unicode(attr))
             else:
                 return self.thread.title
-        raise NotImplementedError
-
-    def accepted(self):
-        if self.is_answer():
-            return self.thread.accepted_answer_id == self.id
         raise NotImplementedError
 
     def get_page_number(self, answer_posts):

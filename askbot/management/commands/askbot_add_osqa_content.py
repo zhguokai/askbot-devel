@@ -417,9 +417,12 @@ class Command(BaseImportXMLCommand):
             post.save()
 
             #mark accepted answer
+            now = datetime.now()
             if osqa_node.node_type == 'answer':
                 if '(accepted)' in osqa_node.state_string:
                     post.thread.accepted_answer = post
+                    post.endorsed = True
+                    post.endorsed_at = now
                     post.thread.save()
 
 
