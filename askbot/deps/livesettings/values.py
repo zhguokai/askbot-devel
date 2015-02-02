@@ -21,6 +21,7 @@ from askbot.deps.livesettings.models import find_setting, LongSetting, Setting, 
 from askbot.deps.livesettings.overrides import get_overrides
 from askbot.deps.livesettings.utils import load_module, is_string_like, is_list_or_tuple
 from askbot.deps.livesettings.widgets import ImageInput
+from askbot.utils.functions import format_setting_name
 import datetime
 import logging
 import signals
@@ -318,13 +319,13 @@ class Value(object):
         log.debug('new setting %s.%s', self.group.key, self.key)
         key = self.key
         if self.localized and language_code:
-            key += '_' + language_code.upper()
+            key += '_' + format_setting_name(language_code)
         return Setting(group=self.group.key, key=key, value=db_value)
 
     def _setting(self):
         key = self.key
         if self.localized:
-            key += '_' + get_language().upper()
+            key += '_' + format_setting_name(get_language())
         return find_setting(self.group.key, key)
 
     #here we have duplicationg with get_setting function
@@ -333,7 +334,7 @@ class Value(object):
     def get_setting(self, language_code=None):
         key = self.key
         if self.localized and language_code:
-            key += '_' + language_code.upper()
+            key += '_' + format_setting_name(language_code)
         return find_setting(self.group.key, key)
 
     def _value(self):
@@ -343,7 +344,7 @@ class Value(object):
 
         key = self.key
         if self.localized:
-            key += '_' + lang.upper()
+            key += '_' + format_setting_name(lang)
 
         if not use_db:
             try:
@@ -699,7 +700,7 @@ class LongStringValue(Value):
         log.debug('new long setting %s.%s', self.group.key, self.key)
         key = self.key
         if self.localized and language_code:
-            key = self.key + '_' + language_code.upper()
+            key = self.key + '_' + format_setting_name(language_code)
         return LongSetting(group=self.group.key, key=key, value=db_value)
 
     def to_python(self, value):

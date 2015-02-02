@@ -54,6 +54,7 @@ from django.utils.safestring import mark_safe
 from django.utils import simplejson
 from askbot.mail import send_mail
 from askbot.utils import decorators as askbot_decorators
+from askbot.utils.functions import format_setting_name
 from askbot.utils.html import site_url
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
@@ -291,7 +292,7 @@ def complete_oauth2_signin(request):
     params = providers[provider_name]
     assert(params['type'] == 'oauth2')
 
-    name_token = provider_name.replace('-', '_').upper()
+    name_token = format_setting_name(provider_name)
     client_id = getattr(
             askbot_settings,
             name_token + '_KEY',

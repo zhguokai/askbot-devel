@@ -7,6 +7,7 @@ import functools
 import re
 import random
 from askbot.utils.html import site_url
+from askbot.utils.functions import format_setting_name
 from openid.store.interface import OpenIDStore
 from openid.association import Association as OIDAssociation
 from openid.extensions import sreg
@@ -177,7 +178,7 @@ def use_password_login():
     return False
 
 def is_login_method_enabled(name):
-    name_key = name.upper().replace('-', '_')
+    name_key = format_setting_name(name)
     setting = getattr(askbot_settings, 'SIGNIN_' + name_key + '_ENABLED', None)
     if setting is not None:
         return setting
@@ -879,7 +880,7 @@ def get_oauth2_starter_url(provider_name, csrf_token):
 
     providers = get_enabled_login_providers()
     params = providers[provider_name]
-    client_id = getattr(askbot_settings, provider_name.replace('-', '_').upper() + '_KEY')
+    client_id = getattr(askbot_settings, format_setting_name(provider_name) + '_KEY')
     redirect_uri = site_url(reverse('user_complete_oauth2_signin'))
     client = Client(
         auth_endpoint=params['auth_endpoint'],

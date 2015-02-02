@@ -6,12 +6,12 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.html import escape
 
-def timedelta_total_seconds(obj):
+def timedelta_total_seconds(td):
     """returns total seconds for the timedelta object
     supports python < 2.7
     """
-    if hasattr(obj, 'total_seconds'):
-        return obj.total_seconds()
+    if hasattr(td, 'total_seconds'):
+        return td.total_seconds()
     from future import __division__
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
 
@@ -19,6 +19,7 @@ def timedelta_total_seconds(obj):
 def get_epoch_str(dt):
     """returns epoch as string to datetime"""
     return str(int(time.mktime(dt.timetuple())))
+
 
 def get_from_dict_or_object(source, key):
     try:
@@ -33,6 +34,14 @@ def enumerate_string_list(strings):
     """
     numbered_strings = enumerate(strings, start = 1)
     return [ '%d) %s' % item for item in numbered_strings ]
+
+
+def format_setting_name(token):
+    token = token.replace(' ', '_')
+    token = token.replace('-', '_')
+    bits = token.split('_')
+    return '_'.join(bits).upper()
+
 
 def pad_string(text):
     """Inserts one space between words,

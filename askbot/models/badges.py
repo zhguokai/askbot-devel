@@ -27,6 +27,7 @@ from django.dispatch import Signal
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils.decorators import auto_now_timestamp
+from askbot.utils.functions import format_setting_name
 from askbot.utils.loading import load_module
 
 class Badge(object):
@@ -81,8 +82,7 @@ class Badge(object):
 
     @classmethod
     def is_enabled(cls):
-        setting_name = cls.key.upper() + '_BADGE_ENABLED' 
-        setting_name = setting_name.replace('-', '_')
+        setting_name = format_setting_name(cls.key) + '_BADGE_ENABLED' 
         return getattr(askbot_settings, setting_name, False)
 
     def get_level_display(self):
