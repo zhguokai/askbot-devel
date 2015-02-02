@@ -635,7 +635,6 @@ class Thread(models.Model):
     approved = models.BooleanField(default=True, db_index=True)
 
     accepted_answer = models.ForeignKey('Post', null=True, blank=True, related_name='+')
-    answer_accepted_at = models.DateTimeField(null=True, blank=True)
     added_at = models.DateTimeField(auto_now_add=True)
 
     #db_column will be removed later
@@ -934,8 +933,8 @@ class Thread(models.Model):
     def set_accepted_answer(self, answer, actor, timestamp):
         if answer and answer.thread != self:
             raise ValueError("Answer doesn't belong to this thread")
+        #todo: in the future there may be >1 accepted answer
         self.accepted_answer = answer
-        self.answer_accepted_at = timestamp
         self.save()
         answer.endorsed = True
         answer.endorsed_at = timestamp

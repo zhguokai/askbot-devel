@@ -223,9 +223,9 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
     answer.thread.set_accepted_answer(
-                                answer=None,
+                                answer=answer,
                                 actor=user,
-                                timestamp=None
+                                timestamp=timestamp
                             )
     question = answer.thread._question_post()
 

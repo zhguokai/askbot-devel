@@ -1,40 +1,23 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
-from askbot.utils.console import ProgressBar
 
-class Migration(DataMigration):
 
-    @classmethod
-    def get_first_admin(cls, orm):
-        admins = orm['auth.User'].objects.filter(status='d')
-        if len(admins) == 0:
-            return None
-        return admins.order_by('-id')[0]
-        
-        
+class Migration(SchemaMigration):
+
     def forwards(self, orm):
-        "Write your forwards methods here."
-        # Note: Don't use "from appname.models import ModelName". 
-        # Use orm.ModelName to refer to models in this application,
-        # and orm['appname.ModelName'] for models in other applications.
-        threads = orm['askbot.Thread'].objects.exclude(accepted_answer=None)
-        count = threads.count()
-        message = 'Applying accepted answer data to answer posts'
-        now = datetime.datetime.now()
-        admin = self.get_first_admin(orm)
-        for thread in ProgressBar(threads.iterator(), count, message):
-            answer = thread.accepted_answer
-            answer.endorsed = True
-            answer.endorsed_at = thread.answer_accepted_at
-            answer.endorsed_by = admin #may be none
-            answer.save()
+        # Deleting field 'Thread.answer_accepted_at'
+        db.delete_column(u'askbot_thread', 'answer_accepted_at')
 
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        # Adding field 'Thread.answer_accepted_at'
+        db.add_column(u'askbot_thread', 'answer_accepted_at',
+                      self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True),
+                      keep_default=False)
+
 
     models = {
         'askbot.activity': {
@@ -328,7 +311,6 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'Thread'},
             'accepted_answer': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': "orm['askbot.Post']"}),
             'added_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'answer_accepted_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'answer_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'approved': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'db_index': 'True'}),
             'close_reason': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True', 'blank': 'True'}),
@@ -443,4 +425,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['askbot']
-    symmetrical = True
