@@ -161,11 +161,11 @@ def login(request, user):
     logging.debug('logged in user %s with session key %s' % (user.username, session_key))
     #todo: move to auth app
     user_logged_in.send(
-                        request = request,
-                        user = user,
-                        session_key=session_key,
-                        sender=None
-                    )
+                    request=request,
+                    user=user,
+                    session_key=session_key,
+                    sender=None
+                )
 
 #todo: uncouple this from askbot
 def logout(request):
