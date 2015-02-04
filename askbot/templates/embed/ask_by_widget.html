@@ -201,7 +201,7 @@ body{
 {% endblock %}
 {% block endjs %}
     {% compress js %}
-    <script type="text/javascript" src="{{ '/js/editor.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/jslib/editor.js'|media }}"></script>
     {% endcompress %}
     {% if editor_type == 'markdown' %}
         {% include "meta/markdown_javascript.html" %}
