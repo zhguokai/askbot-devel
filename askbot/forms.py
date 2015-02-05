@@ -238,6 +238,26 @@ class LanguageField(forms.ChoiceField):
         super(LanguageField, self).__init__(*args, **kwargs)
 
 
+class LanguageForm(forms.Form):
+    language = LanguageField()
+
+
+class LanguagePrefsForm(forms.Form):
+    languages = forms.MultipleChoiceField(
+                        widget=forms.CheckboxSelectMultiple,
+                        choices=django_settings.LANGUAGES,
+                        required=False
+                    )
+    primary_language = forms.ChoiceField(
+                        choices=django_settings.LANGUAGES
+                    )
+
+
+class TranslateUrlForm(forms.Form):
+    language = LanguageField()
+    url = forms.CharField(max_length=2048)
+
+
 class SuppressEmailField(forms.BooleanField):
     def __init__(self):
         super(SuppressEmailField, self).__init__()

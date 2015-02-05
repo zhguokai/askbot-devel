@@ -22,6 +22,9 @@
     askbot['urls']['unfollow_user'] = '/followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
     askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
     askbot['urls']['getEditor'] = '{% url "get_editor" %}';
+    {% if settings.MULTILINGUAL %}
+        askbot['urls']['translateUrl'] = '{% url "translate_url" %}';
+    {% endif %}
     askbot['urls']['apiGetQuestions'] = '{% url "api_get_questions" %}';
     askbot['urls']['ask'] = '{% url "ask" %}';
 	askbot['urls']['questions'] = '{% url "questions" %}';
@@ -92,6 +95,7 @@
 <script type='text/javascript' src="{{ '/js/utils/perms_hover_card.js'|media }}"></script>
 <script type='text/javascript' src="{{ '/js/utils/show_perms_trigger.js'|media }}"></script>
 <script type='text/javascript' src="{{ '/js/utils/autocompleter.js'|media }}"></script>
+<script type='text/javascript' src="{{ '/js/utils/lang_nav.js'|media }}"></script>
 
 <script type='text/javascript' src="{{ '/jslib/se_hilite.js'|media }}"></script>
 <script type='text/javascript' src="{{ '/jslib/json.js'|media }}"></script>
@@ -155,6 +159,13 @@
         $('#validate_email_alert').click(function(){notify.close(true)})
         notify.show();
     }
+
+    var langNav = $('.lang-nav');
+    if (langNav.length) {
+        var nav = new LangNav();
+        nav.decorate(langNav);
+    }
+
     $('abbr.timeago').timeago();
     /*]]>*/
 </script>

@@ -978,18 +978,32 @@ def user_favorites(request, user, context):
 
 
 @csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def user_set_primary_language(request):
+    if request.user.is_anonymous():
+        raise django_exceptions.PermissionDenied
+
+    form = forms.LanguageForm(request.POST)
+    if form.is_valid():
+        request.user.set_primary_language(form.cleaned_data['language'])
+        request.user.save()
+
+
+@csrf.csrf_protect
 def user_select_languages(request, id=None, slug=None):
     if request.method != 'POST':
         raise django_exceptions.PermissionDenied
 
     user = get_object_or_404(models.User, id=id)
-
     if not(request.user.id == user.id or request.user.is_administrator()):
         raise django_exceptions.PermissionDenied
 
-    languages = request.POST.getlist('languages')
-    user.languages = ' '.join(languages)
-    user.save()
+    form = forms.LanguagePrefsForm(request.POST)
+    if form.is_valid():
+        user.set_languages(form.cleaned_data['languages'])
+        user.set_primary_language(form.cleaned_data['primary_language'])
+        user.save()
 
     redirect_url = reverse(
         'user_subscriptions',

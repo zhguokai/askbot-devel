@@ -885,7 +885,12 @@ class Post(models.Model):
         #todo: do we need this, can't we just use is_approved()?
         return self.is_approved() is False
 
-    def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
+    def get_absolute_url(self, 
+                    no_slug=False,
+                    question_post=None,
+                    language=None,
+                    thread=None
+                ):
         from askbot.utils.slug import slugify
         #todo: the url generation function is pretty bad -
         #the trailing slash is entered in three places here + in urls.py
@@ -895,7 +900,7 @@ class Post(models.Model):
         is_multilingual = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
         if is_multilingual:
             request_language = get_language()
-            activate_language(self.language_code)
+            activate_language(language or self.language_code)
 
         if self.is_answer():
             if not question_post:
@@ -1489,7 +1494,7 @@ class Post(models.Model):
             language = self.thread.language_code
             filtered_subscribers = list()
             for subscriber in subscribers:
-                subscriber_languages = subscriber.languages.split()
+                subscriber_languages = subscriber.get_languages()
                 if language in subscriber_languages:
                     filtered_subscribers.append(subscriber)
             return filtered_subscribers
