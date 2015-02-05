@@ -221,17 +221,18 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
 
     data = {
         'active_tab': 'users',
-        'page_class': 'users-page',
-        'users' : users_page,
         'group': group,
+        'group_email_moderation_enabled': group_email_moderation_enabled,
+        'group_openness_choices': group_openness_choices
+        'page_class': 'users-page',
+        'paginator_context' : paginator_context,
         'search_query' : search_query,
         'tab_id' : sortby,
-        'paginator_context' : paginator_context,
-        'group_email_moderation_enabled': group_email_moderation_enabled,
         'user_acceptance_level': user_acceptance_level,
-        'user_membership_level': user_membership_level,
+        'user_count': users.count(),
         'user_groups': user_groups,
-        'group_openness_choices': group_openness_choices
+        'user_membership_level': user_membership_level,
+        'users' : users_page,
     }
 
     return render(request, 'users.html', data)
