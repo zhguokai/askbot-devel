@@ -223,7 +223,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'active_tab': 'users',
         'group': group,
         'group_email_moderation_enabled': group_email_moderation_enabled,
-        'group_openness_choices': group_openness_choices
+        'group_openness_choices': group_openness_choices,
         'page_class': 'users-page',
         'paginator_context' : paginator_context,
         'search_query' : search_query,
