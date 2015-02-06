@@ -52,12 +52,14 @@ function disableSubmitButton(form) {
 
 function setupFormValidation(form, validationRules, validationMessages, onSubmitCallback) {
     enableSubmitButton(form);
+    var placementLocation = askbot.settings.errorPlacement;
+    var placementClass = placementLocation ? ' ' + placementLocation : '';
     form.validate({
         debug: true,
         rules: (validationRules ? validationRules : {}),
         messages: (validationMessages ? validationMessages : {}),
         errorElement: 'span',
-        errorClass: 'form-error',
+        errorClass: 'form-error' + placementClass,
         highlight: function (element) {
             $(element).closest('.form-group').addClass('has-error');
         },
@@ -65,9 +67,20 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
             $(element).closest('.form-group').removeClass('has-error');
         },
         errorPlacement: function (error, element) {
-            var span = element.next().find('span.form-error');
+            //bs3 error placement
+            var label = element.closest('.form-group').find('label');
+            if (placementLocation === 'in-label') {
+                label.html(error);
+                return;
+            } else if (placementLocation === 'after-label') {
+                label.after(error);
+                return;
+            }
+
+            //old askbot error placement
+            var span = element.next().find('.form-error');
             if (span.length === 0) {
-                span = element.parent().find('span.form-error');
+                span = element.parent().find('.form-error');
                 if (span.length === 0) {
                     //for resizable textarea
                     var element_id = element.attr('id');
