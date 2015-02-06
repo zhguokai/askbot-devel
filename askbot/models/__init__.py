@@ -30,6 +30,7 @@ from django.utils.translation import ungettext
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 from django.db import models
+from django.db.models import Count
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core import cache
@@ -1437,6 +1438,31 @@ def user_merge_duplicate_questions(self, from_q, to_q):
     #from_thread.spaces.clear()
     from_thread.delete()
     to_thread.invalidate_cached_data()
+
+
+def user_recount_badges(self):
+    bronze, silver, gold = 0, 0, 0
+
+    awards = Award.objects.filter(
+                            user=self
+                        ).annotate(
+                            count=Count('badge')
+                        )
+    for award in awards:
+        badge = award.badge
+        if badge.is_enabled():
+            level = badge.get_level()
+            if level == const.BRONZE_BADGE:
+                bronze += award.count
+            elif level == const.SILVER_BADGE:
+                silver += award.count
+            elif level == const.GOLD_BADGE:
+                gold += award.count
+
+    self.bronze = bronze
+    self.silver = silver
+    self.gold = gold
+    self.save()
 
 
 @auto_now_timestamp
@@ -3087,6 +3113,7 @@ User.add_to_class('get_social_sharing_status', user_get_social_sharing_status)
 User.add_to_class('update_avatar_type', user_update_avatar_type)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
+User.add_to_class('recount_badges', user_recount_badges)
 User.add_to_class('retag_question', user_retag_question)
 User.add_to_class('repost_comment_as_answer', user_repost_comment_as_answer)
 User.add_to_class('post_answer', user_post_answer)
