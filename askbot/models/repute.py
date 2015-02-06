@@ -107,6 +107,9 @@ class BadgeData(models.Model):
     def is_multiple(self):
         return self._get_meta_data().multiple
 
+    def get_level(self):
+        return self._get_meta_data().level
+
     def get_name(self):
         return self._get_meta_data().name
 
