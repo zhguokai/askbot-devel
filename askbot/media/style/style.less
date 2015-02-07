@@ -351,10 +351,16 @@ body.user-messages {
         vertical-align: middle;
     }
 
+    a:hover {
+        background: #666 !important;
+    }
+
     a {
+        background: grey;
         height: 22px !important;
     }
     ul {
+        background: grey;
         display: none;
         left: -16px;
         list-style: none;
@@ -368,11 +374,16 @@ body.user-messages {
         position: absolute;
     }
     li {
-        background: white;
+        background: grey;
         color: @info-text;
         display: block;
     }
 }
+
+.lang-de .lang-nav {
+    text-transform: capitalize;
+}
+
 .select-language {
     margin-top: 6px;
 }

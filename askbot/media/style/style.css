@@ -338,10 +338,15 @@ body.user-messages {
   font-size: 10px;
   vertical-align: middle;
 }
+.lang-nav a:hover {
+  background: #666 !important;
+}
 .lang-nav a {
+  background: grey;
   height: 22px !important;
 }
 .lang-nav ul {
+  background: grey;
   display: none;
   left: -16px;
   list-style: none;
@@ -354,9 +359,12 @@ body.user-messages {
   position: absolute;
 }
 .lang-nav li {
-  background: white;
+  background: grey;
   color: #707070;
   display: block;
+}
+.lang-de .lang-nav {
+  text-transform: capitalize;
 }
 .select-language {
   margin-top: 6px;
