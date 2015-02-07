@@ -344,6 +344,7 @@ body.user-messages {
 .lang-nav a {
   background: grey;
   height: 22px !important;
+  text-align: left !important;
 }
 .lang-nav ul {
   background: grey;
