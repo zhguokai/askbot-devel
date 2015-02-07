@@ -326,21 +326,36 @@ body.user-messages {
 }
 .lang-nav {
   position: relative;
+  text-align: right;
+  margin-left: 20px;
+  text-transform: lowercase;
+  color: #d0e296;
+}
+.lang-nav .curr-lang {
+  text-decoration: underline;
+}
+.lang-nav .toggle {
+  font-size: 10px;
+  vertical-align: middle;
+}
+.lang-nav a {
+  height: 22px !important;
 }
 .lang-nav ul {
   display: none;
+  left: -16px;
   list-style: none;
-  z-index: 10000;
   margin: 0;
+  min-width: initial !important;
+  z-index: 10000;
 }
 .lang-nav:hover ul, .lang-nav ul:hover {
   display: block;
   position: absolute;
-  width: 100px;
 }
 .lang-nav li {
-  color: #707070;
   background: white;
+  color: #707070;
   display: block;
 }
 .select-language {

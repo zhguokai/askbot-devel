@@ -338,21 +338,38 @@ body.user-messages {
 
 .lang-nav {
     position: relative;
+    text-align: right;
+    margin-left: 20px;
+    text-transform: lowercase;
+    color:#d0e296;
+
+    .curr-lang {
+        text-decoration: underline;
+    }
+    .toggle {
+        font-size: 10px;
+        vertical-align: middle;
+    }
+
+    a {
+        height: 22px !important;
+    }
     ul {
         display: none;
+        left: -16px;
         list-style: none;
-        z-index: 10000;
         margin: 0;
+        min-width: initial !important;
+        z-index: 10000;
     }
     &:hover ul,
     ul:hover {
         display: block;
         position: absolute;
-        width: 100px;
     }
     li {
-        color: @info-text;
         background: white;
+        color: @info-text;
         display: block;
     }
 }
