@@ -1317,13 +1317,14 @@ class Thread(models.Model):
             except KeyError:
                 pass#comment to deleted answer - don't want it
 
-        if self.has_accepted_answer() and self.accepted_answer.deleted == False:
-            #Put the accepted answer to front
-            #the second check is for the case when accepted answer is deleted
-            if self.accepted_answer_id in post_map:
-                accepted_answer = post_map[self.accepted_answer_id]
-                answers.remove(accepted_answer)
-                answers.insert(0, accepted_answer)
+        if askbot_settings.SHOW_ACCEPTED_ANSWER_FIRST:
+            if self.has_accepted_answer() and self.accepted_answer.deleted == False:
+                #Put the accepted answer to front
+                #the second check is for the case when accepted answer is deleted
+                if self.accepted_answer_id in post_map:
+                    accepted_answer = post_map[self.accepted_answer_id]
+                    answers.remove(accepted_answer)
+                    answers.insert(0, accepted_answer)
 
         #if user is not an inquirer, and thread is moderated,
         #put published answers first

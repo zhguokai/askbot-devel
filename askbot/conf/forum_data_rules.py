@@ -235,6 +235,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'SHOW_ACCEPTED_ANSWER_FIRST',
+        default=True,
+        description=_('Show accepted answer first')
+    )
+)
+
+settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'DEFAULT_ANSWER_SORT_METHOD',

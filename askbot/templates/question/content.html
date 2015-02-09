@@ -13,6 +13,14 @@
     </div>
     <div class="clean"></div>
 
+    {% if settings.SHOW_ACCEPTED_ANSWER_FIRST == False %}
+        {% if thread.has_accepted_answer() and answers and thread.accepted_answer != answers[0] %}
+            <a class="best-answer-link" href="{{ thread.accepted_answer.get_absolute_url() }}">
+                {% trans %}See the accepted answer{% endtrans %}
+            </a>
+        {% endif %}
+    {% endif %} 
+
     {% for answer in answers %}
         {% include "question/answer_card.html" %}
         {% if loop.index == 1 and 'QUESTION_PAGE_ANSWER_BANNER'|show_block_to(request.user) %}
