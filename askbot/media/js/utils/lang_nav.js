@@ -1,5 +1,5 @@
 /**
- * Switches the UI language while keeping user on the same 
+ * Switches the UI language while keeping user on the same
  * page
  */
 var LangNav = function() {
@@ -8,7 +8,7 @@ var LangNav = function() {
 inherits(LangNav, WrappedElement);
 
 LangNav.prototype.translateUrl = function(url, lang) {
-    var result = undefined;
+    var result;
     $.ajax({
         type: 'GET',
         url: askbot['urls']['translateUrl'],
@@ -33,9 +33,9 @@ LangNav.prototype.getNavHandler = function(link) {
     var me = this;
     return function() {
         var lang = link.data('lang');
-        var url = window.location.pathname
+        var url = window.location.pathname;
         //resolve url in current language
-        var url = me.translateUrl(url, lang) || link.attr('href');
+        url = me.translateUrl(url, lang) || link.attr('href');
         me.handleUrl(url, lang);
         //if resolution is successful, redirect to that url
         return false;
@@ -45,9 +45,9 @@ LangNav.prototype.getNavHandler = function(link) {
 LangNav.prototype.decorate = function(element) {
     this._element = element;
     var links = element.find('li>a');
-    var len = links.length
+    var len = links.length;
     for (var i=0; i<len; i++) {
         var link = $(links[i]);
         setupButtonEventHandlers(link, this.getNavHandler(link));
     }
-}
+};
