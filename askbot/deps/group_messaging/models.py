@@ -1,21 +1,21 @@
 """models for the ``group_messaging`` app
 """
-import copy
-import datetime
-import urllib
 from askbot.mail import send_mail #todo: remove dependency?
-from django.template.loader import get_template
-from django.template import Context
-from django.db import models
-from django.db.models import signals
 from django.conf import settings as django_settings
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.db import models
+from django.db.models import signals
+from django.template import Context
+from django.template.loader import get_template
 from django.utils.importlib import import_module
 from django.utils.translation import ugettext as _
-from group_messaging.signals import thread_created
 from group_messaging.signals import response_created
+from group_messaging.signals import thread_created
+import copy
+import datetime
+import urllib
 
 MAX_HEADLINE_LENGTH = 80
 MAX_SENDERS_INFO_LENGTH = 64
@@ -513,6 +513,18 @@ class UnreadInboxCounter(models.Model):
 
     def increment(self):
         self.count += 1
+
+    def reset(self):
+        self.count = 0
+
+    def recalculate(self):
+        """recalculates count of unread messages
+        for the user and sets the updated value.
+        Does not call .save()"""
+        self.reset()
+        for thread in Message.objects.get_threads(recipient=self.user):
+            if thread.is_unread_by_user(self.user):
+                self.increment()
 
 
 def increment_unread_inbox_counters(sender, message, **kwargs):
