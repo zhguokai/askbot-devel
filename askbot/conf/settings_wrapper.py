@@ -205,6 +205,9 @@ def prime_cache_handler(*args, **kwargs):
     cache_key = get_bulk_cache_key()
     ConfigSettings.prime_cache(cache_key)
 
-signals.configuration_value_changed.connect(prime_cache_handler)
+signals.configuration_value_changed.connect(
+    prime_cache_handler,
+    dispatch_uid='prime_cache_handler_upon_config_change'
+)
 #settings instance to be used elsewhere in the project
 settings = ConfigSettings()

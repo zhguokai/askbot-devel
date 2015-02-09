@@ -4022,48 +4022,167 @@ def record_spam_rejection(
 django_signals.post_syncdb.connect(init_badge_data)
 
 #signal for User model save changes
-django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
-django_signals.pre_save.connect(set_administrator_flag, sender=User)
-django_signals.post_save.connect(add_missing_subscriptions, sender=User)
-django_signals.post_save.connect(add_user_to_global_group, sender=User)
-django_signals.post_save.connect(add_user_to_personal_group, sender=User)
-django_signals.post_save.connect(add_missing_tag_subscriptions, sender=User)
-django_signals.post_save.connect(record_award_event, sender=Award)
-django_signals.post_save.connect(notify_award_message, sender=Award)
-django_signals.post_save.connect(record_answer_accepted, sender=Post)
-django_signals.post_save.connect(record_vote, sender=Vote)
-django_signals.post_save.connect(record_favorite_question, sender=FavoriteQuestion)
-django_signals.post_save.connect(moderate_group_joining, sender=GroupMembership)
-django_signals.m2m_changed.connect(group_membership_changed, sender=User.groups.through)
+django_signals.pre_save.connect(
+    calculate_gravatar_hash,
+    sender=User,
+    dispatch_uid='calculate_gravatar_hash_on_user_save'
+)
+django_signals.pre_save.connect(
+    set_administrator_flag,
+    sender=User,
+    dispatch_uid='set_administrator_flag_on_user_save'
+)
+django_signals.post_save.connect(
+    add_missing_subscriptions,
+    sender=User,
+    dispatch_uid='add_missing_subscriptions_on_user_save'
+)
+django_signals.post_save.connect(
+    add_user_to_global_group,
+    sender=User,
+    dispatch_uid='add_user_to_global_group_on_user_save'
+)
+django_signals.post_save.connect(
+    add_user_to_personal_group,
+    sender=User,
+    dispatch_uid='add_user_to_personal_group_on_user_save'
+)
+django_signals.post_save.connect(
+    add_missing_tag_subscriptions,
+    sender=User,
+    dispatch_uid='add_missing_tag_subscriptions_on_user_save'
+)
+django_signals.post_save.connect(
+    record_award_event,
+    sender=Award,
+    dispatch_uid='record_award_event_on_user_save'
+)
+django_signals.post_save.connect(
+    notify_award_message,
+    sender=Award,
+    dispatch_uid='notify_user_on_award_save'
+)
+django_signals.post_save.connect(
+    record_answer_accepted,
+    sender=Post,
+    dispatch_uid='record_answer_accepted_on_answer_save'
+)
+django_signals.post_save.connect(
+    record_vote,
+    sender=Vote,
+    dispatch_uid='record_vote_activity_on_vote_save'
+)
+django_signals.post_save.connect(
+    record_favorite_question,
+    sender=FavoriteQuestion,
+    dispatch_uid='record_favorite_question_on_fave_save'
+)
+django_signals.post_save.connect(
+    moderate_group_joining, 
+    sender=GroupMembership,
+    dispatch_uid='moderate_group_joining_on_gm_save'
+)
+django_signals.m2m_changed.connect(
+    group_membership_changed,
+    sender=User.groups.through,
+    dispatch_uid='record_group_membership_change_on_group_change'
+)
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar
-    django_signals.post_save.connect(set_user_avatar_type_flag, sender=Avatar)
-    django_signals.post_delete.connect(update_user_avatar_type_flag, sender=Avatar)
+    django_signals.post_save.connect(
+        set_user_avatar_type_flag,
+        sender=Avatar,
+        dispatch_uid='set_avatar_type_flag_on_avatar_save'
+    )
+    django_signals.post_delete.connect(
+        update_user_avatar_type_flag,
+        sender=Avatar,
+        dispatch_uid='update_avatar_type_flag_on_avatar_delete'
+    )
 
-django_signals.post_delete.connect(record_cancel_vote, sender=Vote)
+django_signals.post_delete.connect(
+    record_cancel_vote,
+    sender=Vote,
+    dispatch_uid='record_cancel_vote_on_vote_delete'
+)
 
 #change this to real m2m_changed with Django1.2
-signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
-signals.flag_offensive.connect(record_flag_offensive, sender=Post)
-signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
-signals.tags_updated.connect(record_update_tags)
-signals.user_registered.connect(greet_new_user)
-signals.user_registered.connect(make_admin_if_first_user)
-signals.user_updated.connect(record_user_full_updated, sender=User)
-signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
-signals.user_logged_in.connect(notify_punished_users)
-signals.user_logged_in.connect(post_anonymous_askbot_content)
-signals.post_updated.connect(record_post_update_activity)
-signals.new_answer_posted.connect(tweet_new_post)
-signals.new_question_posted.connect(tweet_new_post)
-signals.reputation_received.connect(autoapprove_reputable_user)
-signals.spam_rejected.connect(record_spam_rejection)
+signals.delete_question_or_answer.connect(
+    record_delete_question,
+    sender=Post,
+    dispatch_uid='record_delete_question_on_delete_post'
+)
+signals.flag_offensive.connect(
+    record_flag_offensive,
+    sender=Post,
+    dispatch_uid='record_flag_offensive_on_post_flag'
+)
+signals.remove_flag_offensive.connect(
+    remove_flag_offensive,
+    sender=Post,
+    dispatch_uid='remove_flag_offensive_on_post_unflag'
+)
+signals.tags_updated.connect(
+    record_update_tags,
+    dispatch_uid='record_tag_update'
+)
+signals.user_registered.connect(
+    greet_new_user,
+    dispatch_uid='greet_user_upon_registration'
+)
+signals.user_registered.connect(
+    make_admin_if_first_user,
+    dispatch_uid='make_amin_first_registrant'
+)
+signals.user_updated.connect(
+    record_user_full_updated,
+    sender=User,
+    dispatch_uid='record_full_profile_upon_user_update'
+)
+signals.user_logged_in.connect(
+    complete_pending_tag_subscriptions,
+    dispatch_uid='complete_pending_tag_subs_on_user_login'
+)#todo: add this to fake onlogin middleware
+signals.user_logged_in.connect(
+    notify_punished_users,
+    dispatch_uid='notify_punished_users_on_login'
+)
+signals.user_logged_in.connect(
+    post_anonymous_askbot_content,
+    dispatch_uid='post_anon_content_on_login'
+)
+signals.post_updated.connect(
+    record_post_update_activity,
+    dispatch_uid='record_post_update_activity'
+)
+signals.new_answer_posted.connect(
+    tweet_new_post,
+    dispatch_uid='tweet_on_new_answer'
+)
+signals.new_question_posted.connect(
+    tweet_new_post,
+    dispatch_uid='tweet_on_new_question'
+)
+signals.reputation_received.connect(
+    autoapprove_reputable_user,
+    dispatch_uid='autoapprove_reputable_user'
+)
+signals.spam_rejected.connect(
+    record_spam_rejection,
+    dispatch_uid='record_spam_rejection'
+)
 
 #probably we cannot use post-save here the point of this is
 #to tell when the revision becomes publicly visible, not when it is saved
-signals.post_revision_published.connect(notify_author_of_published_revision)
-signals.site_visited.connect(record_user_visit)
+signals.post_revision_published.connect(
+    notify_author_of_published_revision,
+    dispatch_uid='notify_authon_of_published_revision'
+)
+signals.site_visited.connect(
+    record_user_visit,
+    dispatch_uid='record_user_visit'
+)
 
 __all__ = [
         'signals',
