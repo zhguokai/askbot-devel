@@ -1358,6 +1358,8 @@ var questionRetagger = (function () {
             errorClass: 'retag-error'
         });
 
+        $(document).trigger('askbot.afterSetupValidationRetagForm', [div]);
+
         return div;
     };
 
