@@ -266,7 +266,9 @@ MessageComposer.prototype.decorate = function (element) {
     var me = this;
     var cancelBtn = element.find('.js-cancel-btn');
     this._cancelBtn = cancelBtn;
-    var cancelHandler = function () { me.cancel(); };
+    var cancelHandler = function () {
+        me.cancel();
+    };
     setupButtonEventHandlers(cancelBtn, cancelHandler);
 
     //send button
@@ -482,7 +484,9 @@ SendersList.prototype.getSenderSelectHandler = function (sender) {
     var messageCenter = this._messageCenter;
     var me = this;
     return function () {
-        $.map(me.getSenders(), function (s) { s.unselect(); });
+        $.map(me.getSenders(), function (s) {
+            s.unselect();
+        });
         sender.select();
         messageCenter.loadThreadsForSender(sender.getId());
     };
@@ -520,9 +524,11 @@ MessageCenter.prototype.setState = function (state) {
         this._editor.show();
         this._threadListBox.hide();
         this._threadDetailsBox.hide();
+        this._backBtn.show();
     } else if (state === 'show-list') {
         this._editor.setEditorType('new-thread');
         this._editor.hide();
+        this._backBtn.hide();
         this._threadListBox.show();
         this._threadDetailsBox.hide();
     } else if (state === 'show-thread') {
@@ -530,6 +536,7 @@ MessageCenter.prototype.setState = function (state) {
         this._threadDetailsBox.show();
         this._editor.setEditorType('reply');
         this._editor.show();
+        this._backBtn.show();
     }
 };
 
@@ -695,6 +702,12 @@ MessageCenter.prototype.decorate = function (element) {
         me.setState('compose');
     });
     this._composeBtn = btn;
+
+    var backBtn = element.find('.js-back-btn');
+    setupButtonEventHandlers(backBtn, function () {
+        me.setState('show-list');
+    });
+    this._backBtn = backBtn;
 };
 
 var msgCtr = new MessageCenter();
