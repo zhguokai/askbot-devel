@@ -64,7 +64,9 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
             $(element).closest('.form-group').addClass('has-error');
         },
         unhighlight: function (element) {
-            $(element).closest('.form-group').removeClass('has-error');
+            var formGroup = $(element).closest('.form-group');
+            formGroup.removeClass('has-error');
+            formGroup.find('.form-error').remove();
         },
         errorPlacement: function (error, element) {
             //bs3 error placement
@@ -73,7 +75,12 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
                 label.html(error);
                 return;
             } else if (placementLocation === 'after-label') {
-                label.after(error);
+                var errorLabel = element.closest('.form-group').find('.form-error');
+                if (errorLabel.length) {
+                    errorLabel.replaceWith(error);
+                } else {
+                    label.after(error);
+                }
                 return;
             }
 
