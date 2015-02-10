@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version (only in the repository)
 --------------------------------------------
+* Added option to disable comments under questions or answers
 * Added management command `askbot_recount_badges`
 * Allowed adding custom badges via `ASKBOT_CUSTOM_BADGES` setting
 * Allowed enabling and disabling individual badges

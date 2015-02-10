@@ -369,8 +369,26 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'TAG_SEARCH_INPUT_ENABLED',
-        default = False,
-        description = _('Enable separate tag search box on main page')
+        default=False,
+        description=_('Enable separate tag search box on main page')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'QUESTION_COMMENTS_ENABLED',
+        default=True,
+        description=_('Enable comments under questions')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+       FORUM_DATA_RULES,
+       'ANSWER_COMMENTS_ENABLED',
+       default=True,
+       description=_('Enable comments under answers')
     )
 )
 

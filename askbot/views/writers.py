@@ -737,6 +737,13 @@ def post_comments(request):#generic ajax handler to load comments to an object
     if not request.is_ajax() or post_type not in ('question', 'answer'):
         raise Http404  # TODO: Shouldn't be 404! More like 400, 403 or sth more specific
 
+    if post_type == 'question' \
+        and askbot_settings.QUESTION_COMMENTS_ENABLED == False:
+        raise Http404
+    elif post_type == 'answer' \
+        and askbot_settings.ANSWER_COMMENTS_ENABLED == False:
+        raise Http404
+
     user = request.user
 
     if request.method == 'POST':
