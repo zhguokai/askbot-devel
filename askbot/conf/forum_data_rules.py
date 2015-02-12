@@ -150,20 +150,6 @@ settings.register(
 )
 
 settings.register(
-    livesettings.BooleanValue(
-        FORUM_DATA_RULES,
-        'ALLOW_SWAPPING_QUESTION_WITH_ANSWER',
-        default = False,
-        description = _('Allow swapping answer with question'),
-        help_text = _(
-            'This setting will help import data from other forums '
-            'such as zendesk, when automatic '
-            'data import fails to detect the original question correctly.'
-        )
-    )
-)
-
-settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_TAG_LENGTH',
@@ -218,10 +204,19 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'LIMIT_ONE_ANSWER_PER_USER',
-        default = True,
-        description = _(
+        default=True,
+        description=_(
             'Limit one answer per question per user'
         )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'COMMENTING_CLOSED_QUESTIONS_ENABLED',
+        default=True,
+        description=_('Allow commenting in closed questions')
     )
 )
 
@@ -551,3 +546,18 @@ settings.register(
         description=_('What should "unanswered question" mean?')
     )
 )
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ALLOW_SWAPPING_QUESTION_WITH_ANSWER',
+        default = False,
+        description = _('Allow swapping answer with question'),
+        help_text = _(
+            'This setting will help import data from other forums '
+            'such as zendesk, when automatic '
+            'data import fails to detect the original question correctly.'
+        )
+    )
+)
+

@@ -840,7 +840,7 @@ def user_assert_can_post_answer(self, thread=None):
     )
 
 
-def user_assert_can_edit_comment(self, comment = None):
+def user_assert_can_edit_comment(self, comment=None):
     """raises exceptions.PermissionDenied if user
     cannot edit comment with the reason given as message
 
@@ -848,6 +848,11 @@ def user_assert_can_edit_comment(self, comment = None):
     """
     if self.is_administrator() or self.is_moderator():
         return
+
+    if comment.thread and comment.thread.closed:
+        if askbot_settings.COMMENTING_CLOSED_QUESTIONS_ENABLED == False:
+            error_message = _('Sorry, commenting closed entries is not allowed')
+            raise django_exceptions.PermissionDenied(error_message)
 
     if comment.author == self:
         if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
@@ -892,11 +897,16 @@ def user_assert_can_convert_post(self, post = None):
     raise django_exceptions.PermissionDenied(error_message)
 
 
-def user_can_post_comment(self, parent_post = None):
+def user_can_post_comment(self, parent_post=None):
     """a simplified method to test ability to comment
     """
     if self.is_administrator_or_moderator():
         return True
+
+    elif parent_post.thread and parent_post.thread.closed:
+        if askbot_settings.COMMENTING_CLOSED_QUESTIONS_ENABLED == False:
+            return False
+
     elif self.is_suspended():
         if parent_post and self == parent_post.author:
             return True
@@ -907,7 +917,7 @@ def user_can_post_comment(self, parent_post = None):
 
     return True
 
-def user_assert_can_post_comment(self, parent_post = None):
+def user_assert_can_post_comment(self, parent_post=None):
     """raises exceptions.PermissionDenied if
     user cannot post comment
 
@@ -921,6 +931,14 @@ def user_assert_can_post_comment(self, parent_post = None):
         blocked_user_cannot=True,
         suspended_user_cannot=True,
     )
+
+    if self.is_administrator_or_moderator():
+        return
+
+    if parent_post.thread and parent_post.thread.closed:
+        if askbot_settings.COMMENTING_CLOSED_QUESTIONS_ENABLED == False:
+            error_message = _('Sorry, commenting closed entries is not allowed')
+            raise django_exceptions.PermissionDenied(error_message)
 
 def user_assert_can_see_deleted_post(self, post=None):
 
@@ -1287,7 +1305,7 @@ def user_post_comment(
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
-    self.assert_can_post_comment(parent_post = parent_post)
+    self.assert_can_post_comment(parent_post=parent_post)
 
     comment = parent_post.add_comment(
                     user=self,

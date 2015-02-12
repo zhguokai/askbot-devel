@@ -616,7 +616,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
     answer_form = answer_form_class(initial=initial, user=request.user)
 
     user_can_post_comment = (
-        request.user.is_authenticated() and request.user.can_post_comment()
+        request.user.is_authenticated() \
+        and request.user.can_post_comment(question_post)
     )
 
     new_answer_allowed = True

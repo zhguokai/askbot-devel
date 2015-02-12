@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version (only in the repository)
 --------------------------------------------
+* Added option to forbid commenting in closed questions
 * Added separate optional time limits to edit questions and answers
 * Added option to disable comments under questions or answers
 * Added management command `askbot_recount_badges`
