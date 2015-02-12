@@ -1744,8 +1744,8 @@ ul.js-related-tags li {
 .edit-question-page label[for="editor"],
 .ask-page label[for="id_title"],
 .edit-question-page label[for="id_title"],
-.ask-page span.form-error,
-.edit-question-page span.form-error {
+.ask-page .form-error,
+.edit-question-page .form-error {
   font-size: 16px;
   font-style: italic;
 }
@@ -3438,10 +3438,13 @@ body.question-page ins, body.main-page ins {
 span.text-counter {
   margin-right: 20px;
 }
-span.form-error {
+.form-error {
   color: #990000;
   font-weight: normal;
   vertical-align: bottom;
+}
+label + .form-error {
+  padding-left: 8px;
 }
 .checkbox .errorlist {
   margin-bottom: -5px;

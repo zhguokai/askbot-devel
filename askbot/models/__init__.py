@@ -820,7 +820,7 @@ def user_assert_can_post_question(self):
     )
 
 
-def user_assert_can_post_answer(self, thread = None):
+def user_assert_can_post_answer(self, thread=None):
     """same as user_can_post_question
     """
     limit_answers = askbot_settings.LIMIT_ONE_ANSWER_PER_USER
@@ -832,7 +832,12 @@ def user_assert_can_post_answer(self, thread = None):
         }
         raise askbot_exceptions.AnswerAlreadyGiven(message)
 
-    self.assert_can_post_question()
+    _assert_user_can(
+        user=self,
+        action_display=askbot_settings.WORDS_POST_ANSWERS,
+        blocked_user_cannot=True,
+        suspended_user_cannot=True,
+    )
 
 
 def user_assert_can_edit_comment(self, comment = None):
@@ -843,25 +848,25 @@ def user_assert_can_edit_comment(self, comment = None):
     """
     if self.is_administrator() or self.is_moderator():
         return
-    else:
-        if comment.author == self:
-            if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
-                now = datetime.datetime.now()
-                delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
-                if now - comment.added_at > datetime.timedelta(0, delta_seconds):
-                    if comment.is_last():
-                        return
-                    error_message = ungettext(
-                        'Sorry, comments (except the last one) are editable only '
-                        'within %(minutes)s minute from posting',
-                        'Sorry, comments (except the last one) are editable only '
-                        'within %(minutes)s minutes from posting',
-                        askbot_settings.MINUTES_TO_EDIT_COMMENT
-                    ) % {'minutes': askbot_settings.MINUTES_TO_EDIT_COMMENT}
-                    raise django_exceptions.PermissionDenied(error_message)
-                return
-            else:
-                return
+
+    if comment.author == self:
+        if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
+            now = datetime.datetime.now()
+            delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
+            if now - comment.added_at > datetime.timedelta(0, delta_seconds):
+                if comment.is_last():
+                    return
+                error_message = ungettext(
+                    'Sorry, comments (except the last one) are editable only '
+                    'within %(minutes)s minute from posting',
+                    'Sorry, comments (except the last one) are editable only '
+                    'within %(minutes)s minutes from posting',
+                    askbot_settings.MINUTES_TO_EDIT_COMMENT
+                ) % {'minutes': askbot_settings.MINUTES_TO_EDIT_COMMENT}
+                raise django_exceptions.PermissionDenied(error_message)
+            return
+        else:
+            return
 
     if not (self.is_blocked() or self.is_suspended()):
         if self.reputation >= askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS:
@@ -949,7 +954,8 @@ def user_assert_can_edit_deleted_post(self, post = None):
         )
         raise django_exceptions.PermissionDenied(error_message)
 
-def user_assert_can_edit_post(self, post = None):
+
+def user_assert_can_edit_post(self, post=None):
     """assertion that raises exceptions.PermissionDenied
     when user is not authorised to edit this post
     """
@@ -957,7 +963,6 @@ def user_assert_can_edit_post(self, post = None):
     if post.deleted == True:
         self.assert_can_edit_deleted_post(post)
         return
-
 
     if post.wiki == True:
         action_display=_('edit wiki posts')
@@ -973,8 +978,43 @@ def user_assert_can_edit_post(self, post = None):
         owner_can=True,
         blocked_user_cannot=True,
         suspended_user_cannot=True,
-        min_rep_setting = min_rep_setting
+        min_rep_setting=min_rep_setting
     )
+
+    #mods can edit posts without time limit
+    if self.is_administrator() or self.is_moderator():
+        return
+
+    #question is editable without limit as long as there are no answers
+    if post.is_question():
+        if post.thread.answer_count == 0:
+            return
+
+    if post.is_answer():
+        use_limit = askbot_settings.USE_TIME_LIMIT_TO_EDIT_ANSWER
+        minutes_limit = askbot_settings.MINUTES_TO_EDIT_ANSWER
+    elif post.is_question():
+        use_limit = askbot_settings.USE_TIME_LIMIT_TO_EDIT_QUESTION
+        minutes_limit = askbot_settings.MINUTES_TO_EDIT_QUESTION
+    else:
+        return
+
+    if use_limit == False:
+        return
+
+    now = datetime.datetime.now()
+    delta_seconds = 60 * minutes_limit
+    if now - post.added_at > datetime.timedelta(0, delta_seconds):
+        #vague message because it is hard to add
+        #these phrases to askbot.conf.words as parameters
+        error_message = ungettext(
+            'Sorry, posts like this are editable only '
+            'within %(minutes)s minute from posting',
+            'Sorry, posts like this are editable only '
+            'within %(minutes)s minutes from posting',
+            minutes_limit
+        ) % {'minutes': minutes_limit}
+        raise django_exceptions.PermissionDenied(error_message)
 
 
 def user_assert_can_edit_question(self, question = None):

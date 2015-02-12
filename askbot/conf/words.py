@@ -140,6 +140,15 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_POST_ANSWERS',
+        default=_('post answers'),
+        description=_('post answers')
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_MERGE_QUESTIONS',
         default=_('Merge duplicate questions'),
         description=_('Merge duplicate questions')

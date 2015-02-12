@@ -1,12 +1,10 @@
 {% import "macros.html" as macros %}
 <form id="fmask" action="{% url "ask" %}" method="post" >{% csrf_token %}
     <div class="form-item ask-form-bar">
-        <label for="id_title">
-            {{ form.title.help_text }}
-            {% if form.title.errors %}
-                <span class="form-error">{{ form.title.errors }}</span>
-            {% endif %}
-        </label>
+        <label for="id_title">{{ form.title.help_text }}</label>
+        {% if form.title.errors %}
+            <span class="form-error">{{ form.title.errors }}</span>
+        {% endif %}
         <div id="askFormBar" class="search-bar">
             <input id="id_title" class="questionTitleInput" name="title" autocomplete="off"
                 value="{% if form.initial.title %}{{form.initial.title|escape}}{% endif %}"/>

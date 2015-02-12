@@ -727,7 +727,7 @@ class Thread(models.Model):
         #question_id = self._question_post().id
         #return reverse('question', args = [question_id]) + slugify(self.title)
 
-    def get_answer_count(self, user = None):
+    def get_answer_count(self, user=None):
         """returns answer count depending on who the user is.
         When user groups are enabled and some answers are hidden,
         the answer count to show must be reflected accordingly"""

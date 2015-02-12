@@ -1869,7 +1869,7 @@ ul.js-related-tags li {
 
     label[for="editor"],
     label[for="id_title"],
-    span.form-error {
+    .form-error {
         font-size: 16px;
         font-style: italic;
     }
@@ -3708,10 +3708,13 @@ span.text-counter {
     margin-right: 20px;
 }
 
-span.form-error {
+.form-error {
     color: #990000;
     font-weight: normal;
     vertical-align: bottom;
+}
+label + .form-error {
+    padding-left: 8px;
 }
 
 .checkbox .errorlist {

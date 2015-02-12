@@ -428,11 +428,8 @@ settings.register(
         FORUM_DATA_RULES,
         'USE_TIME_LIMIT_TO_EDIT_COMMENT',
         default = True,
-        description = _('Limit time to edit comments'),
-        help_text = _(
-                        'If unchecked, there will be no time '
-                        'limit to edit the comments'
-                    )
+        description=_('Limit time to edit comments'),
+        help_text=_('If unchecked, there will be no time limit')
     )
 )
 
@@ -440,9 +437,9 @@ settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MINUTES_TO_EDIT_COMMENT',
-        default = 10,
-        description = _('Minutes allowed to edit a comment'),
-        help_text = _('To enable this setting, check the previous one')
+        default=10,
+        description=_('Minutes allowed to edit a comment'),
+        help_text=_('To enable this setting, check the previous one')
     )
 )
 
@@ -456,6 +453,46 @@ settings.register(
             'This may be useful when only one-line comments '
             'are desired. Will not work with TinyMCE editor.'
         )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'USE_TIME_LIMIT_TO_EDIT_ANSWER',
+        defualt=False,
+        description=_('Limit time to edit answers'),
+        help_text=_('If unchecked, there will be no time limit')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MINUTES_TO_EDIT_ANSWER',
+        default = 300,
+        description=_('Minutes allowed to edit answers'),
+        help_text=_('To enable this setting, check the previous one')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'USE_TIME_LIMIT_TO_EDIT_QUESTION',
+        defualt=False,
+        description=_('Limit time to edit questions'),
+        help_text=_('If unchecked, there will be no time limit')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MINUTES_TO_EDIT_QUESTION',
+        default = 300,
+        description = _('Minutes allowed to edit questions'),
+        help_text = _('To enable this setting, check the previous one')
     )
 )
 
