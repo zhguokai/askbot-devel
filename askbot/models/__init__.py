@@ -4079,7 +4079,10 @@ def record_spam_rejection(
         activity.save()
     
 
-django_signals.post_syncdb.connect(init_badge_data)
+django_signals.post_syncdb.connect(
+    init_badge_data,
+    dispatch_uid='init_badge_data_on_post_syncdb'
+)
 
 #signal for User model save changes
 django_signals.pre_save.connect(
