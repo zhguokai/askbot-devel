@@ -12,7 +12,8 @@ class Migration(DataMigration):
         # Note: Don't use "from appname.models import ModelName". 
         # Use orm.ModelName to refer to models in this application,
         # and orm['appname.ModelName'] for models in other applications.
-        call_command('generate_post_snippets')
+        if orm['askbot.Post'].objects.count() > 0:
+            call_command('generate_post_snippets')
 
     def backwards(self, orm):
         "Write your backwards methods here."

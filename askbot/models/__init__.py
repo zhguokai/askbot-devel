@@ -70,6 +70,7 @@ from askbot.utils.html import replace_links_with_text
 from askbot.utils.html import sanitize_html
 from askbot.utils.html import site_url
 from askbot.utils.diff import textDiff as htmldiff
+from askbot.utils.db import table_exists
 from askbot.utils.url_utils import strip_path
 from askbot import mail
 from askbot import signals
@@ -4044,7 +4045,8 @@ def autoapprove_reputable_user(user=None, reputation_before=None, *args, **kwarg
 
 def init_badge_data(sender, created_models=None, **kwargs):
     from askbot.models import badges
-    badges.init_badges()
+    if table_exists('askbot_badgedata'):
+        badges.init_badges()
 
 def record_spam_rejection(
     sender, spam=None, text=None, user=None, ip_addr='unknown', **kwargs
