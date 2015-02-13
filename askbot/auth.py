@@ -222,11 +222,15 @@ def onAnswerAccept(answer, user, timestamp=None):
 def onAnswerAcceptCanceled(answer, user, timestamp=None):
     if timestamp is None:
         timestamp = datetime.datetime.now()
-    answer.thread.set_accepted_answer(
-                                answer=answer,
-                                actor=user,
-                                timestamp=timestamp
-                            )
+
+    answer.endorsed = False
+    answer.endorsed_by = None
+    answer.endorsed_at = None
+    answer.save()
+
+    answer.thread.accepted_answer = None
+    answer.thread.save()
+
     question = answer.thread._question_post()
 
     if user != answer.author:

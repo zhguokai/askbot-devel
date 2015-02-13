@@ -706,10 +706,10 @@ def user_assert_can_unaccept_best_answer(self, answer=None):
                 #check rep
                 _assert_user_can(
                     user=self,
-                    action_display=askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_OWN_ANSWER,
+                    #action_display=askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_OWN_ANSWER,
                     blocked_user_cannot=True,
                     suspended_owner_cannot=True,
-                    min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
+                    #min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
                 )
         return # success
 
@@ -724,7 +724,7 @@ def user_assert_can_unaccept_best_answer(self, answer=None):
 
         if datetime.datetime.now() < will_be_able_at:
             error_message = _(message_keys.CANNOT_PERFORM_ACTION_UNTIL) % {
-                'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_OWN_ANSWER,
+                'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
                 'until': will_be_able_at.strftime('%d/%m/%Y')
             }
         else:
@@ -1594,11 +1594,15 @@ def user_accept_best_answer(
         return
 
     #todo: optionally allow accepting >1 answer
-    prev_accepted_answer = answer.thread.accepted_answer
-    if prev_accepted_answer:
-        auth.onAnswerAcceptCanceled(prev_accepted_answer, self)
+    #but for now only one
+    prev_accepted_answers = answer.thread.posts.filter(
+                                        post_type='answer',
+                                        endorsed=True
+                                    )
+    for accepted_answer in prev_accepted_answers:
+        auth.onAnswerAcceptCanceled(accepted_answer, self)
 
-    auth.onAnswerAccept(answer, self, timestamp = timestamp)
+    auth.onAnswerAccept(answer, self, timestamp=timestamp)
     award_badges_signal.send(None,
         event = 'accept_best_answer',
         actor = self,
