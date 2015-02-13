@@ -1,4 +1,5 @@
 import datetime
+import logging
 import operator
 import re
 
@@ -17,7 +18,6 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.translation import string_concat
 from django.utils.translation import get_language
-from django.utils.translation import activate as activate_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
@@ -35,7 +35,10 @@ from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.search import mysql
 from askbot.utils.slug import slugify
+from askbot.utils import translation as translation_utils
 from askbot.search.state_manager import DummySearchState
+
+LOG = logging.getLogger('askbot.models.questions')
 
 
 def clean_tagnames(tagnames):
@@ -593,9 +596,6 @@ class ThreadToGroup(models.Model):
 
 
 class Thread(models.Model):
-    SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d-%s'
-    ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
-
     title = models.CharField(max_length=300)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
@@ -1076,10 +1076,20 @@ class Thread(models.Model):
             #            )
 
     def invalidate_cached_thread_content_fragment(self):
-        cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
+        """Deprecated alias to a new method"""
+        LOG.warning("""Thread.invalidate_cached_thread_content is 
+deprecated, use invalidate_cached_summary_html""")
+        self.invalidate_cached_summary_html()
 
-    def get_summary_cache_key(self, lang, group_id=0):
-        return self.SUMMARY_CACHE_KEY_TPL % (self.id, lang, group_id)
+    def invalidate_cached_summary_html(self):
+        """Invalidates cached summary html in all activated languages"""
+        langs = translation_utils.get_language_codes()
+        keys = map(lambda v: self.get_summary_cache_key(v), langs)
+        cache.cache.delete_many(keys)
+
+    def get_summary_cache_key(self, lang=None):
+        lang = lang or get_language()
+        return 'thread-question-summary-%d-%s' % (self.id, lang)
 
     def get_post_data_cache_key(self, sort_method=None):
         return 'thread-data-%s-%s' % (self.id, sort_method)
@@ -1090,8 +1100,8 @@ class Thread(models.Model):
         deleting, editing content"""
         #we can call delete_many() here if using Django > 1.2
         sort_methods = map(lambda v: v[0], const.ANSWER_SORT_METHODS)
-        for sort_method in sort_methods:
-            cache.cache.delete(self.get_post_data_cache_key(sort_method))
+        keys = map(lambda v: self.get_post_data_cache_key(v), sort_methods)
+        cache.cache.delete_many(keys)
 
     def invalidate_cached_data(self, lazy=False):
         self.invalidate_cached_post_data()
@@ -1798,7 +1808,7 @@ class Thread(models.Model):
         #parameter visitor is there to get summary out by the user groups
         if askbot_settings.GROUPS_ENABLED:
             return None
-        return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
+        return cache.cache.get(self.get_summary_cache_key())
 
     def update_summary_html(self, visitor = None):
         #todo: it is quite wrong that visitor is an argument here
@@ -1816,7 +1826,6 @@ class Thread(models.Model):
         }
         from askbot.views.context import get_extra as get_extra_context
         context.update(get_extra_context('ASKBOT_QUESTION_SUMMARY_EXTRA_CONTEXT', None, context))
-        activate_language(self.language_code)
         html = get_template('widgets/question_summary.html').render(Context(context))
         # INFO: Timeout is set to 30 days:
         # * timeout=0/None is not a reliable cross-backend way to set infinite timeout
@@ -1824,14 +1833,14 @@ class Thread(models.Model):
         # * Additionally, Memcached treats timeouts > 30day as dates (https://code.djangoproject.com/browser/django/tags/releases/1.3/django/core/cache/backends/memcached.py#L36),
         #   which probably doesn't break anything but if we can stick to 30 days then let's stick to it
         cache.cache.set(
-            self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()),
+            self.get_summary_cache_key(),
             html,
             timeout=const.LONG_TIME
         )
         return html
 
     def summary_html_cached(self):
-        return cache.cache.has_key(self.SUMMARY_CACHE_KEY_TPL % (self.id, get_language()))
+        return cache.cache.has_key(self.get_summary_cache_key())
 
 class QuestionView(models.Model):
     question = models.ForeignKey('Post', related_name='viewed')

@@ -15,3 +15,7 @@ def get_language():
 
 HAS_ASKBOT_LOCALE_MIDDLEWARE = 'askbot.middleware.locale.LocaleMiddleware' in \
                                    django_settings.MIDDLEWARE_CLASSES
+
+def get_language_codes():
+    """returns list of activated language codes"""
+    return dict(django_settings.LANGUAGES).keys()
