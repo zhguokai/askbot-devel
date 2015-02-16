@@ -43,7 +43,6 @@ from askbot.models import (
     ReplyAddress,
 )
 from askbot.models.badges import award_badges_signal
-from askbot.models import get_reply_to_addresses, format_instant_notification_email
 from askbot import exceptions as askbot_exceptions
 from askbot.utils.twitter import Twitter
 
@@ -148,8 +147,6 @@ def notify_author_of_published_revision_celery_task(revision_id):
         subject_line=_('Your post at %(site_name)s is now published') % data,
         body_text=template.render(Context(data)),
         recipient_list=[revision.author.email,],
-        related_object=revision,
-        activity_type=const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
         headers=headers
     )
 
@@ -239,16 +236,15 @@ def record_question_visit(
 
 @task()
 def send_instant_notifications_about_activity_in_post(
-                                                activity_id = None,
-                                                post_id = None,
-                                                recipients = None,
+                                                activity_id=None,
+                                                post_id=None,
+                                                recipients=None,
                                             ):
 
     if recipients is None:
         return
 
     acceptable_types = const.RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS
-
     try:
         update_activity = Activity.objects.filter(activity_type__in=acceptable_types).get(id=activity_id)
     except Activity.DoesNotExist:
@@ -264,16 +260,6 @@ def send_instant_notifications_about_activity_in_post(
     if post.is_approved() is False:
         return
 
-    #calculate some variables used in the loop below
-    update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
-    update_type = update_type_map[update_activity.activity_type]
-    origin_post = post.get_origin_post()
-    headers = mail.thread_headers(
-                            post,
-                            origin_post,
-                            update_activity.activity_type
-                        )
-
     if logger.getEffectiveLevel() <= logging.DEBUG:
         log_id = uuid.uuid1()
         message = 'email-alert %s, logId=%s' % (post.get_absolute_url(), log_id)
@@ -281,35 +267,22 @@ def send_instant_notifications_about_activity_in_post(
     else:
         log_id = None
 
+    from askbot.mail.messages import InstantEmailAlert
 
     for user in recipients:
         if user.is_blocked():
             continue
 
-        reply_address, alt_reply_address = get_reply_to_addresses(user, post)
-
         activate_language(post.language_code)
-        subject_line, body_text = format_instant_notification_email(
-                            to_user = user,
-                            from_user = update_activity.user,
-                            post = post,
-                            reply_address = reply_address,
-                            alt_reply_address = alt_reply_address,
-                            update_type = update_type,
-                            template = get_template('email/instant_notification.html')
-                        )
 
-        headers['Reply-To'] = reply_address
+        email = InstantEmailAlert({
+                        'to_user': user,
+                        'from_user': update_activity.user,
+                        'post': post,
+                        'update_activity': update_activity
+                    })
         try:
-            mail.send_mail(
-                subject_line=subject_line,
-                body_text=body_text,
-                recipient_list=[user.email],
-                related_object=origin_post,
-                activity_type=const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
-                headers=headers,
-                raise_on_failure=True
-            )
+            email.send([user.email])
         except askbot_exceptions.EmailNotSent, error:
             logger.debug(
                 '%s, error=%s, logId=%s' % (user.email, error, log_id)

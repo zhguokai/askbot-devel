@@ -67,9 +67,7 @@ from askbot.utils.decorators import reject_forbidden_phrases
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
 from askbot.utils.html import replace_links_with_text
-from askbot.utils.html import sanitize_html
 from askbot.utils.html import site_url
-from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.db import table_exists
 from askbot.utils.url_utils import strip_path
 from askbot import mail
@@ -2547,7 +2545,7 @@ def user_get_profile_url(self, profile_section=None):
     """Returns the URL for this User's profile."""
     url = reverse(
             'user_profile',
-            kwargs={'id':self.id, 'slug':slugify(self.username)}
+            kwargs={'id': self.id, 'slug': slugify(self.username)}
         )
     if profile_section:
         url += "?sort=" + profile_section
@@ -3311,159 +3309,6 @@ User.add_to_class(
     user_assert_can_approve_post_revision
 )
 
-#todo: move this to askbot/mail ?
-def format_instant_notification_email(
-                                        to_user = None,
-                                        from_user = None,
-                                        post = None,
-                                        reply_address = None,
-                                        alt_reply_address = None,
-                                        update_type = None,
-                                        template = None,
-                                    ):
-    """
-    returns text of the instant notification body
-    and subject line
-
-    that is built when post is updated
-    only update_types in const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
-    are supported
-    """
-    origin_post = post.get_origin_post()
-
-    if update_type == 'question_comment':
-        assert(isinstance(post, Post) and post.is_comment())
-        assert(post.parent and post.parent.is_question())
-    elif update_type == 'answer_comment':
-        assert(isinstance(post, Post) and post.is_comment())
-        assert(post.parent and post.parent.is_answer())
-    elif update_type == 'answer_update':
-        assert(isinstance(post, Post) and post.is_answer())
-    elif update_type == 'new_answer':
-        assert(isinstance(post, Post) and post.is_answer())
-    elif update_type == 'question_update':
-        assert(isinstance(post, Post) and post.is_question())
-    elif update_type == 'new_question':
-        assert(isinstance(post, Post) and post.is_question())
-    elif update_type == 'post_shared':
-        pass
-    else:
-        raise ValueError('unexpected update_type %s' % update_type)
-
-    if update_type.endswith('update'):
-        assert('comment' not in update_type)
-        revisions = post.revisions.all()[:2]
-        assert(len(revisions) == 2)
-        content_preview = htmldiff(
-                sanitize_html(revisions[1].html),
-                sanitize_html(revisions[0].html),
-                ins_start = '<b><u style="background-color:#cfc">',
-                ins_end = '</u></b>',
-                del_start = '<del style="color:#600;background-color:#fcc">',
-                del_end = '</del>'
-            )
-        #todo: remove hardcoded style
-    else:
-        content_preview = post.format_for_email(is_leaf_post=True, recipient=to_user)
-
-    #add indented summaries for the parent posts
-    content_preview += post.format_for_email_as_parent_thread_summary(recipient=to_user)
-
-    #content_preview += '<p>======= Full thread summary =======</p>'
-    #content_preview += post.thread.format_for_email(recipient=to_user)
-
-    if update_type == 'post_shared':
-        user_action = _('%(user)s shared a %(post_link)s.')
-    elif post.is_comment():
-        if update_type.endswith('update'):
-            user_action = _('%(user)s edited a %(post_link)s.')
-        else:
-            user_action = _('%(user)s posted a %(post_link)s')
-    elif post.is_answer():
-        if update_type.endswith('update'):
-            user_action = _('%(user)s edited an %(post_link)s.')
-        else:
-            user_action = _('%(user)s posted an %(post_link)s.')
-    elif post.is_question():
-        if update_type.endswith('update'):
-            user_action = _('%(user)s edited a %(post_link)s.')
-        else:
-            user_action = _('%(user)s posted a %(post_link)s.')
-    else:
-        raise ValueError('unrecognized post type')
-
-    post_url = site_url(post.get_absolute_url())
-    user_url = site_url(from_user.get_absolute_url())
-
-    if to_user.is_administrator_or_moderator() and askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA:
-        user_link_fmt = '<a href="%(profile_url)s">%(username)s</a> (<a href="mailto:%(email)s">%(email)s</a>)'
-        user_link = user_link_fmt % {
-            'profile_url': user_url,
-            'username': from_user.username,
-            'email': from_user.email
-        }
-    elif post.is_anonymous:
-        user_link = from_user.get_name_of_anonymous_user()
-    else:
-        user_link = '<a href="%s">%s</a>' % (user_url, from_user.username)
-
-    user_action = user_action % {
-        'user': user_link,
-        'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
-    }
-
-    can_reply = to_user.can_post_by_email()
-
-    if can_reply:
-        reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
-                    _('To reply, PLEASE WRITE ABOVE THIS LINE.')
-        if post.post_type == 'question' and alt_reply_address:
-            data = {
-                'addr': alt_reply_address,
-                'subject': urllib.quote(
-                        ('Re: ' + post.thread.title).encode('utf-8')
-                    )
-            }
-            reply_separator += '<p>' + \
-                const.REPLY_WITH_COMMENT_TEMPLATE % data
-            reply_separator += '</p>'
-        else:
-            reply_separator = '<p>%s</p>' % reply_separator
-
-        reply_separator += user_action
-    else:
-        reply_separator = user_action
-
-    user_subscriptions_url = reverse(
-                                    'user_subscriptions',
-                                    kwargs = {
-                                        'id': to_user.id,
-                                        'slug': slugify(to_user.username)
-                                    }
-                                )
-    update_data = {
-        'admin_email': askbot_settings.ADMIN_EMAIL,
-        'recipient_user': to_user,
-        'update_author_name': from_user.username,
-        'receiving_user_name': to_user.username,
-        'receiving_user_karma': to_user.reputation,
-        'reply_by_email_karma_threshold': askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
-        'can_reply': can_reply,
-        'content_preview': content_preview,
-        'update_type': update_type,
-        'post_url': post_url,
-        'origin_post_title': origin_post.thread.title,
-        'user_subscriptions_url': site_url(user_subscriptions_url),
-        'reply_separator': reply_separator,
-        'reply_address': reply_address,
-        'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
-    }
-    subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
-
-    content = template.render(Context(update_data))
-
-    return subject_line, content
-
 def get_reply_to_addresses(user, post):
     """Returns one or two email addresses that can be
     used by a given `user` to reply to the `post`
@@ -3826,7 +3671,6 @@ def send_respondable_email_validation_message(
         subject_line = subject_line,
         body_text = body_text,
         recipient_list = [user.email, ],
-        activity_type = const.TYPE_ACTIVITY_VALIDATION_EMAIL_SENT,
         headers = {'Reply-To': reply_to_address}
     )
 
