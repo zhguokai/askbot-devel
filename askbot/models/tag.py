@@ -194,35 +194,6 @@ class TagManager(BaseQuerySetManager):
 
         return super(TagManager, self).create(**kwargs)
 
-    def create_suggested_tag(self, tag_names = None, user = None):
-        """This function is not used, and will probably need
-        to be retired. In the previous version we were sending
-        email to admins when the new tags were created,
-        now we have a separate page where new tags are listed.
-        """
-        #todo: stuff below will probably go after
-        #tag moderation actions are implemented
-        from askbot import mail
-        from askbot.mail import messages
-        body_text = messages.notify_admins_about_new_tags(
-                                tags = tag_names,
-                                user = user,
-                                thread = self
-                            )
-        site_name = askbot_settings.APP_SHORT_NAME
-        subject_line = _('New tags added to %s') % site_name
-        mail.mail_moderators(
-            subject_line,
-            body_text,
-            headers = {'Reply-To': user.email}
-        )
-
-        msg = _(
-            'Tags %s are new and will be submitted for the '
-            'moderators approval'
-        ) % ', '.join(tag_names)
-        user.message_set.create(message = msg)
-
     def create_in_bulk(self, tag_names=None, user=None, language_code=None, auto_approve=False):
         """creates tags by names. If user can create tags,
         then they are set status ``STATUS_ACCEPTED``,

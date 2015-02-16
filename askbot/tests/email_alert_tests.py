@@ -842,7 +842,7 @@ class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
         )
 
     @with_settings(SUBSCRIBED_TAG_SELECTOR_ENABLED=True)
-    def test_tag_based_subscription_on_new_question_works1(self):
+    def test_tag_based_subscription_on_new_question_works2(self):
         """someone subscribes for an pre-existing tag
         then another user asks a question with that tag
         and the subcriber receives an alert
@@ -1145,7 +1145,10 @@ class AbsolutizeUrlsInEmailsTests(utils.AskbotTestCase):
 
 class MailMessagesTests(utils.AskbotTestCase):
     def test_ask_for_signature(self):
-        from askbot.mail import messages
+        from askbot.mail.messages import AskForSignature
         user = self.create_user('user')
-        message = messages.ask_for_signature(user, footer_code = 'nothing')
+        message = AskForSignature({
+                            'user': user,
+                            'footer_code': 'nothing'
+                        }).render_body()
         self.assertTrue(user.username in message)

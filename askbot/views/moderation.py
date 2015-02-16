@@ -277,17 +277,13 @@ def moderate_post_edits(request):
             post = get_object(memo)
             request.user.delete_post(post)
             reject_reason = models.PostFlagReason.objects.get(id=post_data['reason'])
-            template = get_template('email/rejected_post.html')
-            data = {
-                'post': post.html,
-                'reject_reason': reject_reason.details.html
-            }
-            body_text = template.render(RequestContext(request, data))
-            mail.send_mail(
-                subject_line = _('your post was not accepted'),
-                body_text = unicode(body_text),
-                recipient_list = [post.author.email,]
-            )
+
+            from askbot.mail.messages import RejectedPost
+            email = RejectedPost({
+                        'post': post.html,
+                        'reject_reason': reject_reason.details.html
+                    })
+            email.send([post.author.email,])
             num_posts += 1
 
         #message to moderator

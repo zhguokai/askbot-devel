@@ -12,64 +12,8 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import html as html_utils
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.utils.html import (sanitize_html, site_url)
+from askbot.utils.html import (sanitize_html, site_link, site_url)
 from askbot.utils.slug import slugify
-
-def message(template = None):
-    """a decorator that creates a function
-        which returns formatted message using the
-        template and data"""
-    def decorate(func):
-        @functools.wraps(func)
-        def wrapped(*args, **kwargs):
-            template_object = get_template(template)
-            data = func(*args, **kwargs)
-            return template_object.render(Context(data))#todo: set lang
-        return wrapped
-    return decorate
-
-@message(template = 'email/ask_for_signature.html')
-def ask_for_signature(user, footer_code = None):
-    """tells that we don't have user's signature
-    and because of that he/she cannot make posts
-    the message will ask to make a simple response
-    """
-    return {
-        'footer_code': footer_code,
-            'recipient_user': user,
-            'site_name': askbot_settings.APP_SHORT_NAME,
-            'username': user.username,
-    }
-
-@message(template = 'email/notify_admins_about_new_tags.html')
-def notify_admins_about_new_tags(
-        tags = None, thread = None, user = None
-        ):
-    thread_url = thread.get_absolute_url()
-    return {
-        'thread_url': html_utils.site_url(thread_url),
-            'tags': tags,
-            'user': user
-    }
-
-@message(template = 'email/insufficient_rep_to_post_by_email.html')
-def insufficient_reputation(user):
-    """tells user that he does not have
-    enough rep and suggests to ask on the web
-    """
-    min_rep = askbot_settings.MIN_REP_TO_POST_BY_EMAIL
-    min_upvotes = 1 + \
-                  (min_rep/askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE)
-    site_link = html_utils.site_link(
-            'ask',
-            askbot_settings.APP_SHORT_NAME
-            )
-    return {
-        'username': user.username,
-        'site_name': askbot_settings.APP_SHORT_NAME,
-        'site_link': site_link,
-        'min_upvotes': min_upvotes
-    }
 
 class BaseEmail(object):
     """Base class for templated emails.
@@ -370,3 +314,101 @@ class InstantEmailAlert(BaseEmail):
            'reply_address': reply_address,
            'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
         }
+
+
+class ReplyByEmailError(BaseEmail):
+    template_path = 'email/reply_by_email_error'
+    title = _('Error processing post sent by email')
+    description = _('Sent to the post author when error occurs when posting by email')
+    mock_context = {
+        'error': _('You were replying to an email address\
+             unknown to the system or you were replying from a different address from the one where you\
+             received the notification.')
+    }
+
+
+class ReWelcomeLamsonOn(BaseEmail):
+    template_path = 'email/re_welcome_lamson_on'
+    title = _('Reply to the user response to the welcome message')
+    description = _('Sent to freshly registered user who replied to the welcome message')
+    preview_error_message = _(
+        'At least one user on the site is necessary to generate the preview'
+    )
+
+    def get_mock_context(self):
+        from askbot.models import User
+        user = User.objects.all()[0]
+        return {
+            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
+            'can_post_by_email': True,
+            'recipient_user': user,
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'site_url': site_url(reverse('questions')),
+        }
+
+
+class AskForSignature(BaseEmail):
+    template_path = 'email/ask_for_signature'
+    title = _('Request to reply to get a sample of email the signature')
+    description = _(
+        'Sent when the system does not have a record of email signature '
+        'for the user'
+    )
+    preview_error_message = _(
+        'At least one user on the site is necessary to generate the preview'
+    )
+
+    def process_context(self, context):
+        user = context['user']
+        footer_code = context['footer_code']
+        return {
+            'footer_code': footer_code,
+            'recipient_user': user,
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'username': user.username,
+        }
+
+    def get_mock_context(self):
+        from askbot.models import User
+        user = User.objects.all()[0]
+        return {'user': user, 'footer_code': 'koeunt35keaxx'}
+
+
+class InsufficientReputation(BaseEmail):
+    template_path = 'email/insufficient_rep_to_post_by_email'
+    title = _('Insufficient karma to post by email')
+    description = _(
+        'Sent when user does not have enough '
+        'karma upon posting by email'
+    )
+    preview_error_message = _(
+        'At least one user on the site is necessary to generate the preview'
+    )
+
+    def get_mock_context(self):
+        from askbot.models import User
+        return {'user': User.objects.all()[0]}
+
+    def process_context(self, context):
+        user = context['user']
+        min_rep = askbot_settings.MIN_REP_TO_POST_BY_EMAIL
+        min_upvotes = 1 + \
+                      (min_rep/askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE)
+        return {
+            'username': user.username,
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'site_link': site_link('ask', askbot_settings.APP_SHORT_NAME),
+            'min_upvotes': min_upvotes
+        }
+
+
+class RejectedPost(BaseEmail):
+    template_path = 'email/rejected_post'
+    title = _('Post was rejected')
+    description = _(
+        'Sent when post was rejected by a moderator with a reason given'
+    )
+    mock_context = {
+        'post': 'How to substitute sugar with aspartame in the cupcakes',
+        'reject_reason': 'Questions must be on the subject of gardening'
+    }

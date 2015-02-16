@@ -10,11 +10,13 @@
     {% if error_message %}
         <div>{{ error_message }}</div>
     {% else %}
-        <div>{% trans %}Subject{% endtrans %}: "{{ subject }}"</div>
-        <div><iframe id="email-body" width="100%"></iframe></div>{# use iframe to render styling correctly #}
+        <div>{% trans %}Subject{% endtrans %}: <strong>"{{ subject }}"</strong></div>
+        <div>{% trans %}Body text (below, email styling preserved){% endtrans %}</div>
+        <div><iframe id="js-email-body" width="100%"></iframe></div>{# use iframe to render styling correctly #}
         <script type="text/javascript">
+            {# adds content of the email to the iframe #}
             (function() {
-                var iframe = document.getElementById('email-body');
+                var iframe = document.getElementById('js-email-body');
                 var doc = iframe.contentDocument ? 
                         iframe.contentDocument : 
                         (iframe.contentWindow ? iframe.contentWindow.document : iframe.document);
