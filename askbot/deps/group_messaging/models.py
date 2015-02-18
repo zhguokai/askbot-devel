@@ -1,6 +1,7 @@
 """models for the ``group_messaging`` app
 """
 from askbot.mail import send_mail #todo: remove dependency?
+from askbot.mail.messages import GroupMessagingEmailAlert
 from django.conf import settings as django_settings
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
@@ -428,10 +429,10 @@ class Message(models.Model):
     def send_email_alert(self):
         """signal handler for the message post-save"""
         root_message = self.get_root_message()
-        data = {'messages': self.get_timeline()}
-        template = get_template('group_messaging/email_alert.html')
-
-        subject = self.get_email_subject_line()
+        data = {
+            'messages': self.get_timeline(),
+            'message': self
+        }
         for user in self.get_recipients_users():
             #todo change url scheme so that all users have the same
             #urls within their personal areas of the user profile
@@ -440,10 +441,11 @@ class Message(models.Model):
             thread_url = thread_url.replace('&', '&amp;')
             #in the template we have a placeholder to be replaced like this:
             data['recipient_user'] = user
-            body_text = template.render(Context(data))
+            email = GroupMessagingEmailAlert(data)
+            body_text = email.render_body()
             body_text = body_text.replace('THREAD_URL_HOLE', thread_url)
             send_mail(
-                subject,
+                email.render_subject(),
                 body_text,
                 django_settings.DEFAULT_FROM_EMAIL,
                 [user.email,],

@@ -716,3 +716,22 @@ class ApprovedPostNotificationRespondable(BaseEmail):
             'reply_separator_line': const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % prompt,
         })
         return context
+
+
+class GroupMessagingEmailAlert(BaseEmail):
+    template_path = 'group_messaging/email_alert'
+    title = _('Private message notification')
+    description = _('Sent when a private message is sent to the user')
+    preview_error_message = _(
+        'At least one user and one personal message are required to '
+        'generate a preview'
+    )
+
+    def get_mock_context(self):
+        from askbot.deps.group_messaging.models import Message
+        message = Message.objects.all().order_by('-id')[0]
+        return {
+            'messages': message.get_timeline(),
+            'message': message,
+            'recipient_user': get_user()
+        }
