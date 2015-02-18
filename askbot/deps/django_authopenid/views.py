@@ -52,7 +52,7 @@ from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.utils import simplejson
-from askbot.mail import send_mail
+from askbot.mail.messages import EmailValidation
 from askbot.utils import decorators as askbot_decorators
 from askbot.utils.functions import format_setting_name
 from askbot.utils.html import site_url
@@ -1310,18 +1310,12 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
     """private function. sends email containing validation key
     to user's email address
     """
-    subject = _("Recover your %(site)s account") % \
-                {'site': askbot_settings.APP_SHORT_NAME}
+    email = EmailValidation({
+        'handler_url_name': handler_url_name,
+        'key': key
+    })
+    email.send([email,])
 
-    data = {
-        'site_name': askbot_settings.APP_SHORT_NAME,
-        'recipient_user': None,#needed for the Django template
-        'validation_link': site_url(reverse(handler_url_name)) + \
-                            '?validation_code=' + key
-    }
-    template = get_template('authopenid/email_validation.html')
-    message = template.render(Context(data))#todo: inject language preference
-    send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])
 
 def send_user_new_email_key(user):
     user.email_key = generate_random_key()

@@ -16,7 +16,8 @@ from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from askbot import const
-from askbot import mail
+from askbot.mail.messages import BatchEmailAlert
+from askbot.mail import send_mail
 from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
 import traceback
@@ -87,10 +88,9 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         if askbot_settings.ENABLE_EMAIL_ALERTS:
             activate_language(django_settings.LANGUAGE_CODE)
-            template = get_template('email/delayed_email_alert.html')
             for user in User.objects.all():
                 try:
-                    self.send_email_alerts(user, template)
+                    self.send_email_alerts(user)
                 except Exception:
                     self.report_exception(user)
             connection.close()
@@ -111,7 +111,7 @@ class Command(NoArgsCommand):
         admin_email = askbot_settings.ADMIN_EMAIL 
         try:
             subject_line = u"Error processing daily/weekly notification for User '%s' for Site '%s'" % (user.username, SITE_ID)
-            mail.send_mail(
+            send_mail(
                 subject_line=subject_line.encode('utf-8'),
                 body_text=message,
                 recipient_list=[admin_email,]
@@ -442,7 +442,7 @@ class Command(NoArgsCommand):
         #todo: sort question list by update time
         return q_list 
 
-    def send_email_alerts(self, user, template):
+    def send_email_alerts(self, user):
         #does not change the database, only sends the email
         #todo: move this to template
         user.add_missing_askbot_subscriptions()
@@ -461,24 +461,6 @@ class Command(NoArgsCommand):
             tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
 
             question_count = len(q_list.keys())
-
-            if tag_summary:
-                subject_line = ungettext(
-                    '%(question_count)d update about %(topics)s',
-                    '%(question_count)d updates about %(topics)s',
-                    question_count
-                ) % {
-                    'question_count': question_count,
-                    'topics': tag_summary
-                }
-            else:
-                subject_line = ungettext(
-                    '%(question_count)d update',
-                    '%(question_count)d updates',
-                    question_count
-                ) % {
-                    'question_count': question_count,
-                }
 
             items_added = 0
             items_unreported = 0
@@ -504,22 +486,16 @@ class Command(NoArgsCommand):
                     })
 
             activate_language(user.get_primary_language())
-            text = template.render(Context({
-                'recipient_user': user,
+            email = BatchEmailAlert({
                 'questions': questions_data,
-                'name': user.username,
-                'admin_email': askbot_settings.ADMIN_EMAIL,
-                'site_name': askbot_settings.APP_SHORT_NAME,
-                'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
-            }))
+                'question_count': question_count,
+                'tag_summary': tag_summary,
+                'user': user
+            })
 
             if DEBUG_THIS_COMMAND == True:
                 recipient_email = askbot_settings.ADMIN_EMAIL
             else:
                 recipient_email = user.email
 
-            mail.send_mail(
-                subject_line = subject_line,
-                body_text = text,
-                recipient_list = [recipient_email]
-            )
+            email.send([recipient_email,])

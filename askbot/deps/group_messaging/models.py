@@ -430,6 +430,7 @@ class Message(models.Model):
         root_message = self.get_root_message()
         data = {'messages': self.get_timeline()}
         template = get_template('group_messaging/email_alert.html')
+
         subject = self.get_email_subject_line()
         for user in self.get_recipients_users():
             #todo change url scheme so that all users have the same

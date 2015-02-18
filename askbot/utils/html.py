@@ -205,7 +205,7 @@ def site_url(url):
     base_url = urlparse(settings.APP_URL)
     return base_url.scheme + '://' + base_url.netloc + url
 
-def internal_link(url_name, title, kwargs=None, anchor=None):
+def internal_link(url_name, title, kwargs=None, anchor=None, absolute=False):
     """returns html for the link to the given url
     todo: may be improved to process url parameters, keyword
     and other arguments
@@ -215,11 +215,15 @@ def internal_link(url_name, title, kwargs=None, anchor=None):
     url = reverse(url_name, kwargs=kwargs)
     if anchor:
         url += '#' + anchor
+    if absolute:
+        url = site_url(url)
     return '<a href="%s">%s</a>' % (url, title)
 
 def site_link(url_name, title, kwargs=None, anchor=None):
     """same as internal_link, but with the site domain"""
-    return site_url(internal_link(url_name, title, kwargs=kwargs, anchor=anchor))
+    return internal_link(
+        url_name, title, kwargs=kwargs, anchor=anchor, absolute=True
+    )
 
 def get_login_link(text=None):
     from askbot.utils.url_utils import get_login_url

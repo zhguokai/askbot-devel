@@ -24,7 +24,9 @@ autodiscover()
 
 @admins_only
 def list_emails(request):
-    data = {'emails': REGISTRY}
+    #list only enabled emails
+    enabled = dict((k, v) for k, v in REGISTRY.items() if v().is_enabled())
+    data = {'emails': enabled}
     return render(request, 'email/list_emails.html', Context(data))
 
 
@@ -45,16 +47,22 @@ def preview_email(request, slug):
     }
 
     email = REGISTRY[slug]()
+    if email.is_enabled() == False:
+        raise Http404
+
     try:
         data['subject'] = email.render_subject()
         data['body'] = email.render_body()
     except Exception, e:
-        LOG.critical(unicode(e))
-        data['error_message'] = getattr(
+        tech_error = unicode(e)
+        LOG.critical(tech_error)
+        error_message = getattr(
                     email,
                     'preview_error_message',
                     DEFAULT_PREVIEW_ERROR_MESSAGE
                 )
+        error_message += u'</br> %s' % tech_error
+        data['error_message'] = error_message
         
     data['email'] = email
     return render(request, 'email/preview_email.html', Context(data))

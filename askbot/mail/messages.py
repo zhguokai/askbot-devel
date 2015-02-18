@@ -2,18 +2,33 @@
 of email messages for various occasions
 """
 import functools
+import logging
 import urllib
 from django.conf import settings as django_settings
 from django.core.urlresolvers import reverse
 from django.template import Context
 from django.template.loader import get_template
+from django.utils.encoding import force_str
 from django.utils.translation import ugettext_lazy as _
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import html as html_utils
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.utils.html import (sanitize_html, site_link, site_url)
+from askbot.utils.html import (absolutize_urls, sanitize_html, site_link, site_url)
 from askbot.utils.slug import slugify
+
+LOG = logging.getLogger(__name__)
+
+def get_user():
+    """returns a user object"""
+    from askbot.models import User
+    return User.objects.all()[0]
+
+
+def get_question():
+    from askbot.models import Post
+    return Post.objects.filter(post_type='question')[0]
+
 
 class BaseEmail(object):
     """Base class for templated emails.
@@ -68,25 +83,33 @@ class BaseEmail(object):
         from context"""
         return None
 
+    def is_enabled(self):
+        """override if necessary"""
+        return True
+
     def render_subject(self):
         template = get_template(self.template_path + '/subject.txt')
-        return template.render(self.get_context())
+        return ' '.join(template.render(self.get_context()).split())
 
     def render_body(self):
         template = get_template(self.template_path + '/body.html')
-        return template.render(self.get_context())
+        body = template.render(self.get_context())
+        return absolutize_urls(body)
 
     def send(self, recipient_list, raise_on_failure=False, headers=None, attachments=None):
-        from askbot.mail import send_mail
-        send_mail(
-            subject_line=self.render_subject(),
-            body_text=self.render_body(),
-            from_email=None,
-            recipient_list=recipient_list,
-            headers=headers or self.get_headers(),
-            raise_on_failure=raise_on_failure,
-            attachments=attachments or self.get_attachments()
-        )
+        if self.is_enabled():
+            from askbot.mail import send_mail
+            send_mail(
+                subject_line=self.render_subject(),
+                body_text=self.render_body(),
+                from_email=None,
+                recipient_list=recipient_list,
+                headers=headers or self.get_headers(),
+                raise_on_failure=raise_on_failure,
+                attachments=attachments or self.get_attachments()
+            )
+        else:
+            LOG.warning('Attempting to send disabled email "%s"' % self.title)
 
 class InstantEmailAlert(BaseEmail):
     template_path = 'email/instant_notification'
@@ -95,6 +118,9 @@ class InstantEmailAlert(BaseEmail):
     preview_error_message = _(
         'At least two users and one post are needed to generate the preview'
     )
+
+    def is_enabled(self):
+        return askbot_settings.ENABLE_EMAIL_ALERTS
 
     def get_mock_context(self):
         from askbot.models import (Activity, Post, User)
@@ -288,12 +314,6 @@ class InstantEmailAlert(BaseEmail):
         else:
             reply_separator = user_action
 
-        user_subscriptions_url = reverse('user_subscriptions',
-                                       kwargs={
-                                           'id': to_user.id,
-                                           'slug': slugify(to_user.username)
-                                       }
-                                    )
         return {
            'admin_email': askbot_settings.ADMIN_EMAIL,
            'recipient_user': to_user,
@@ -309,7 +329,6 @@ class InstantEmailAlert(BaseEmail):
            'post_url': post_url,
            'origin_post': origin_post,
            'thread_title': origin_post.thread.title,
-           'user_subscriptions_url': site_url(user_subscriptions_url),
            'reply_separator': reply_separator,
            'reply_address': reply_address,
            'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
@@ -326,25 +345,83 @@ class ReplyByEmailError(BaseEmail):
              received the notification.')
     }
 
+    def is_enabled(self):
+        return askbot_settings.REPLY_BY_EMAIL
 
-class ReWelcomeLamsonOn(BaseEmail):
-    template_path = 'email/re_welcome_lamson_on'
-    title = _('Reply to the user response to the welcome message')
-    description = _('Sent to freshly registered user who replied to the welcome message')
+
+class WelcomeEmail(BaseEmail):
+    template_path = 'email/welcome'
+    title = _('Welcome message')
+    description = _('Sent to newly registered user when replying by email is disabled')
+    preview_error_message = _(
+        'At least one user is required generate a preview'
+    )
+
+    def get_mock_context(self):
+        return {'user': get_user()}
+
+class WelcomeEmailRespondable(BaseEmail):
+    template_path = 'email/welcome_respondable'
+    title = _('Respondable "welcome" message')
+    description = _('Sent to newly registered user when replying by email is enabled')
+    preview_error_message = _(
+        'At least one user is required generate a preview'
+    )
+
+    def is_enabled(self):
+        return askbot_settings.REPLY_BY_EMAIL
+
+    def process_context(self, context):
+        user = context['recipient_user']
+        extra_data = {
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'site_url': reverse('questions'),
+            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
+            'can_post_by_email': user.can_post_by_email(),
+        }
+        extra_data.update(context)
+        return extra_data
+
+    def get_headers(self):
+        context = self.get_context()
+        return {'Reply-To': context['reply_to_address']}
+
+    def get_mock_context(self):
+        email_code = '5kxe4cyfkchv' 
+        return {
+            'recipient_user': get_user(),
+            'email_code': email_code,
+            'reply_to_address': 'welcome-' + email_code + '@example.com'
+        }
+
+
+class ReWelcomeEmail(BaseEmail):
+    template_path = 'email/re_welcome'
+    title = _('Reply to the user response to the "welcome" message')
+    description = _('Sent to newly registered user who replied to the welcome message')
     preview_error_message = _(
         'At least one user on the site is necessary to generate the preview'
     )
 
+    def is_enabled(self):
+        return askbot_settings.REPLY_BY_EMAIL
+
     def get_mock_context(self):
-        from askbot.models import User
-        user = User.objects.all()[0]
         return {
+            'recipient_user': get_user(),
+            'can_post_by_email': True
+        }
+
+    def process_context(self, context):
+        user = context['recipient_user']
+        extra_data = {
             'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
-            'can_post_by_email': True,
-            'recipient_user': user,
+            'can_post_by_email': user.can_post_by_email(),
             'site_name': askbot_settings.APP_SHORT_NAME,
             'site_url': site_url(reverse('questions')),
         }
+        extra_data.update(context)
+        return extra_data
 
 
 class AskForSignature(BaseEmail):
@@ -358,6 +435,9 @@ class AskForSignature(BaseEmail):
         'At least one user on the site is necessary to generate the preview'
     )
 
+    def is_enabled(self):
+        return askbot_settings.REPLY_BY_EMAIL
+
     def process_context(self, context):
         user = context['user']
         footer_code = context['footer_code']
@@ -369,9 +449,7 @@ class AskForSignature(BaseEmail):
         }
 
     def get_mock_context(self):
-        from askbot.models import User
-        user = User.objects.all()[0]
-        return {'user': user, 'footer_code': 'koeunt35keaxx'}
+        return {'user': get_user(), 'footer_code': 'koeunt35keaxx'}
 
 
 class InsufficientReputation(BaseEmail):
@@ -385,9 +463,11 @@ class InsufficientReputation(BaseEmail):
         'At least one user on the site is necessary to generate the preview'
     )
 
+    def is_enabled(self):
+        return askbot_settings.REPLY_BY_EMAIL
+
     def get_mock_context(self):
-        from askbot.models import User
-        return {'user': User.objects.all()[0]}
+        return {'user': get_user()}
 
     def process_context(self, context):
         user = context['user']
@@ -412,3 +492,227 @@ class RejectedPost(BaseEmail):
         'post': 'How to substitute sugar with aspartame in the cupcakes',
         'reject_reason': 'Questions must be on the subject of gardening'
     }
+
+    def is_enabled(self):
+        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation'
+
+
+class ModerationQueueNotification(BaseEmail):
+    template_path = 'email/moderation_queue_notification'
+    title = _('Moderation queue has items')
+    description = _(
+        'Sent to moderators when the moderation queue is not empty'
+    )
+    preview_error_message = _(
+        'At least one user on the site is necessary to generate the preview'
+    )
+
+    def is_enabled(self):
+        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation'
+
+    def process_context(self, context):
+        user = context['user']
+        context.update({
+            'recipient_user': user,
+            'site': askbot_settings.APP_SHORT_NAME,
+        })
+        return context
+
+    def get_mock_context(self):
+        return {'user': get_user()}
+
+
+class BatchEmailAlert(BaseEmail):
+    template_path = 'email/batch_email_alert'
+    title = _('Batch email alert')
+    description = _('Contains daily of weekly batches of email updates')
+    preview_error_message = _(
+        'At least one user on the site and two questions are '
+        'necessary to generate the preview'
+    )
+
+    def is_enabled(self):
+        return askbot_settings.ENABLE_EMAIL_ALERTS
+
+    def process_context(self, context):
+        user = context['user']
+        context.update({
+            'name': user.username,
+            'question_count': len(context['questions']),
+            'recipient_user': user,
+            'admin_email': askbot_settings.ADMIN_EMAIL,
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+        })
+        return context
+
+    def get_mock_context(self):
+        from askbot.models import Post, Thread
+        from askbot.management.commands.send_email_alerts import format_action_count
+
+        qdata = list()
+        qq = Post.objects.filter(post_type='question')[:2]
+
+        act_list = list()
+        act_list.append(force_str(_('new question')))
+        format_action_count('%(num)d rev', 3, act_list)
+        format_action_count('%(num)d ans', 2, act_list)
+        qdata.append({
+            'url': qq[0].get_absolute_url(),
+            'info': ', '.join(act_list),
+            'title': qq[0].thread.title
+        })
+
+        act_list = list()
+        format_action_count('%(num)d rev', 1, act_list)
+        format_action_count('%(num)d ans rev', 4, act_list)
+        qdata.append({
+            'url': qq[1].get_absolute_url(),
+            'info': ', '.join(act_list),
+            'title': qq[1].thread.title
+        })
+
+        threads = (qq[0].thread, qq[1].thread)
+        tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
+        return {
+            'user': get_user(),
+            'questions': qdata,
+            'tag_summary': tag_summary
+        }
+
+
+class AcceptAnswersReminder(BaseEmail):
+    template_path = 'email/accept_answers_reminder'
+    title = _('Accept answers reminder')
+    description = _('Sent to author of questions without accepted answers')
+    preview_error_message = _(
+        'At least one user and one question are required to '
+        'generate a preview'
+    )
+
+    def get_mock_context(self):
+        from askbot.models import Post
+        return {
+            'recipient_user': get_user(),
+            'questions': Post.objects.filter(post_type='question')[:7]
+        }
+
+
+class UnansweredQuestionsReminder(BaseEmail):
+    template_path = 'email/unanswered_questions_reminder'
+    title = _('Unanswered questions reminder')
+    description = _('Sent to users when there are unanswered questions')
+    preview_error_message = _(
+        'At least one user and one question are required to '
+        'generate a preview'
+    )
+
+    def process_context(self, context):
+        count = len(context['questions'])
+        context['question_count'] = count
+        if count == 1:
+            phrase = askbot_settings.WORDS_UNANSWERED_QUESTION_SINGULAR
+        else:
+            phrase = askbot_settings.WORDS_UNANSWERED_QUESTION_PLURAL
+        context['unanswered_questions_phrase'] = phrase
+        return context
+
+    def get_mock_context(self):
+        from askbot.models import Post, Thread
+        questions = Post.objects.filter(post_type='question')[:7]
+        threads = [q.thread for q in questions]
+        tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
+        return {
+            'recipient_user': get_user(),
+            'questions': questions,
+            'tag_summary': tag_summary
+        }
+
+
+class EmailValidation(BaseEmail):
+    template_path = 'authopenid/email_validation'
+    title = _('Email validation')
+    description = _('Sent when user validates email or recovers account')
+    mock_context = {
+        'key': 'a4umkaeuaousthsth',
+        'handler_url_name': 'user_account_recover',
+    }
+
+    def process_context(self, context):
+        url_name = context['handler_url_name']
+        context.update({
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'recipient_user': None,#needed for the Django template
+            'validation_link': site_url(reverse(url_name)) + \
+                                '?validation_code=' + context['key']
+        })
+        return context
+
+
+class ApprovedPostNotification(BaseEmail):
+    template_path = 'email/approved_post_notification'
+    title = _('Approved post notification')
+    description = _('Sent when post revision is approved by the moderator')
+    preview_error_message = _(
+        'At least one user and one question are required to '
+        'generate a preview'
+    )
+
+    def is_enabled(self):
+        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
+            and askbot_settings.REPLY_BY_EMAIL == False 
+
+    def get_mock_context(self):
+        question = get_question() 
+        return {
+            'recipient_user': question.author,
+            'post': question
+        }
+
+    def process_context(self, context): 
+        context['site_name'] = askbot_settings.APP_SHORT_NAME
+        return context
+
+
+class ApprovedPostNotificationRespondable(BaseEmail):
+    template_path = 'email/approved_post_notification_respondable'
+    title = _('Approved post notification')
+    description = _('Sent when post revision is approved by the moderator')
+    preview_error_message = _(
+        'At least one user and one question are required to '
+        'generate a preview'
+    )
+
+    def is_enabled(self):
+        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
+            and askbot_settings.REPLY_BY_EMAIL
+
+    def get_mock_context(self):
+        question = get_question() 
+        hostname = askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+        replace_content_address = 'reply-kot1jxx4@' + hostname
+        append_content_address = 'reply-kot1jxx4@' + hostname
+        return {
+            'revision': question.get_latest_revision(),
+            'mailto_link_subject': question.thread.title,
+            'reply_code': append_content_address + ',' + replace_content_address,
+            'append_content_address': append_content_address,
+            'replace_content_address': replace_content_address
+        }
+
+    def get_headers(self):
+        context = self.get_context()
+        #todo: possibly add more mailto thread headers to organize messages
+        return {'Reply-To': context['append_content_address']}
+
+    def process_context(self, context): 
+        revision = context['revision']
+        prompt = force_str(_('To add to your post EDIT ABOVE THIS LINE'))
+        context.update({
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'post': revision.post,
+            'recipient_user': revision.author,
+            'author_email_signature': revision.author.email_signature,
+            'reply_separator_line': const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % prompt,
+        })
+        return context

@@ -4,6 +4,7 @@ from django.utils.translation import ugettext as _
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot import mail
+from askbot.mail.messages import ModerationQueueNotification
 from askbot.models import Activity
 from askbot.models import User
 
@@ -78,17 +79,6 @@ def remember_last_moderator(user):
         act.save()
 
 
-
-def notify_moderator(user):
-    template = get_template('email/notify_moderator.html')
-    subject_line = _('%s moderation alert') % askbot_settings.APP_SHORT_NAME,
-    mail.send_mail(
-        subject_line=subject_line,
-        body_text=template.render({'user': user}),
-        recipient_list=[user,]
-    )
-
-
 class Command(NoArgsCommand):
     def handle_noargs(self, *args, **kwargs):
         #get size of moderation queue
@@ -107,7 +97,8 @@ class Command(NoArgsCommand):
             return
 
         for mod in mods:
-            notify_moderator(mod)
+            email = ModerationQueueNotification({'user': mod})
+            email.send([mod,])
 
         last_mod = select_last_moderator(mods)
         remember_last_moderator(last_mod)

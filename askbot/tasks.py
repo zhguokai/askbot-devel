@@ -35,6 +35,11 @@ from celery.utils.log import get_task_logger
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot import mail
+from askbot.mail.messages import (
+                        InstantEmailAlert,
+                        ApprovedPostNotification,
+                        ApprovedPostNotificationRespondable
+                    )
 from askbot.models import (
     Activity,
     Post,
@@ -94,15 +99,15 @@ def notify_author_of_published_revision_celery_task(revision_id):
         logger.error("Unable to fetch revision with id %s" % revision_id)
         return
 
-    data = {
-        'site_name': askbot_settings.APP_SHORT_NAME,
-        'post': revision.post,
-        'recipient_user': revision.author,
-    }
+    activate_language(revision.post.language_code)
 
-    headers = None
-
-    if askbot_settings.REPLY_BY_EMAIL:
+    if askbot_settings.REPLY_BY_EMAIL == False:
+        email = ApprovedPostNotification({
+            'post': revision.post,
+            'recipient_user': revision.author
+        })
+        email.send([revision.author.email,])
+    else:
         #generate two reply codes (one for edit and one for addition)
         #to format an answerable email or not answerable email
         reply_options = {
@@ -118,37 +123,19 @@ def notify_author_of_published_revision_celery_task(revision_id):
                                                         **reply_options
                                                     ).as_email_address()
 
-        #populate template context variables
-        reply_code = append_content_address + ',' + replace_content_address
-
         if revision.post.post_type == 'question':
             mailto_link_subject = revision.post.thread.title
         else:
             mailto_link_subject = _('make an edit by email')
-        #todo: possibly add more mailto thread headers to organize messages
 
-        prompt = _('To add to your post EDIT ABOVE THIS LINE')
-        reply_separator_line = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % prompt
-        data['reply_code'] = reply_code
-        data['author_email_signature'] = revision.author.email_signature
-        data['replace_content_address'] = replace_content_address
-        data['reply_separator_line'] = reply_separator_line
-        data['mailto_link_subject'] = mailto_link_subject
-        headers = {'Reply-To': append_content_address}
-
-    activate_language(revision.post.language_code)
-
-    #load the template
-    template = get_template('email/notify_author_about_approved_post.html')
-
-    #todo: possibly add headers to organize messages in threads
-    #send the message
-    mail.send_mail(
-        subject_line=_('Your post at %(site_name)s is now published') % data,
-        body_text=template.render(Context(data)),
-        recipient_list=[revision.author.email,],
-        headers=headers
-    )
+        email = ApprovedPostNotificationRespondable({
+            'revision': revision,
+            'mailto_link_subject': mailto_link_subject,
+            'reply_code': append_content_address + ',' + replace_content_address,
+            'append_content_address': append_content_address,
+            'replace_content_address': replace_content_address
+        })
+        email.send([revision.author.email,])
 
 
 @task(ignore_result=True)
@@ -266,8 +253,6 @@ def send_instant_notifications_about_activity_in_post(
         logger.debug(message)
     else:
         log_id = None
-
-    from askbot.mail.messages import InstantEmailAlert
 
     for user in recipients:
         if user.is_blocked():

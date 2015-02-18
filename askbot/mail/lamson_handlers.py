@@ -249,15 +249,8 @@ def VALIDATE_EMAIL(
         user.email_isvalid = True
         user.save()
 
-        from askbot.mail.messages import ReWelcomeLamsonOn
-        data = {
-            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
-            'can_post_by_email': user.can_post_by_email(),
-            'recipient_user': user,
-            'site_name': askbot_settings.APP_SHORT_NAME,
-            'site_url': site_url(reverse('questions')),
-        }
-        email = ReWelcomeLamsonOn(data)
+        from askbot.mail.messages import ReWelcomeEmail
+        email = ReWelcomeEmail({'recipient_user': user})
         email.send([from_address,])
 
     except ValueError:
@@ -319,13 +312,8 @@ def PROCESS(
             robj.create_reply(body_text)
     elif robj.reply_action == 'validate_email':
         #todo: this is copy-paste - factor it out to askbot.mail.messages
-        data = {
-            'site_name': askbot_settings.APP_SHORT_NAME,
-            'site_url': site_url(reverse('questions')),
-            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME
-        }
-        from askbot.mail.messages import ReWelcomeLamsonOn
-        email = ReWelcomeLamsonOn(data)
+        from askbot.mail.messages import ReWelcomeEmail
+        email = ReWelcomeEmail({'recipient_user': robj.user})
         email.send([from_address,])
 
         if DEBUG_EMAIL:

@@ -5,7 +5,7 @@ from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from django.utils.translation import ungettext
-from askbot import mail
+from askbot.mail.messages import UnansweredQuestionsReminder
 from askbot.utils.classes import ReminderSchedule
 from askbot.models.question import Thread
 from askbot.utils.html import site_url
@@ -79,41 +79,13 @@ class Command(NoArgsCommand):
             if question_count == 0:
                 continue
 
-            threads = Thread.objects.filter(id__in=[qq.thread_id for qq in final_question_list])
-            tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
-
-            if question_count == 1:
-                unanswered_questions_phrase = askbot_settings.WORDS_UNANSWERED_QUESTION_SINGULAR
-            else:
-                unanswered_questions_phrase = askbot_settings.WORDS_UNANSWERED_QUESTION_PLURAL
-
-            subject_line = ungettext(
-                '%(question_count)d %(unanswered_questions)s about %(topics)s',
-                '%(question_count)d %(unanswered_questions)s about %(topics)s',
-                question_count
-            ) % {
-                'question_count': question_count,
-                'unanswered_questions': unanswered_questions_phrase,
-                'topics': tag_summary
-            }
-
-            data = {
+            email = UnansweredQuestionsReminder({
                 'recipient_user': user,
-                'site_url': site_url(''),
-                'subject_line': subject_line,
-                'questions': final_question_list,
-            }
-
-            template = get_template('email/unanswered_question_reminder.html')
-            body_text = template.render(Context(data))#todo: set lang
-
+                'questions': final_question_list
+            })
 
             if DEBUG_THIS_COMMAND:
                 print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \
-                    (user.email, subject_line, body_text)
+                    (user.email, email.render_subject(), email.render_body())
             else:
-                mail.send_mail(
-                    subject_line = subject_line,
-                    body_text = body_text,
-                    recipient_list = (user.email,)
-                )
+                email.send([user.email,])

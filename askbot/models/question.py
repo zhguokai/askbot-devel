@@ -38,8 +38,7 @@ from askbot.utils.slug import slugify
 from askbot.utils import translation as translation_utils
 from askbot.search.state_manager import DummySearchState
 
-LOG = logging.getLogger('askbot.models.questions')
-
+LOG = logging.getLogger(__name__)
 
 def clean_tagnames(tagnames):
     """Cleans tagnames string so that the field fits the constraint of the

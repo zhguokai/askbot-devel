@@ -42,7 +42,7 @@ from askbot.const import message_keys
 from askbot.conf import settings as askbot_settings
 from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
-from askbot.mail import messages
+from askbot.mail.messages import WelcomeEmail, WelcomeEmailRespondable
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
@@ -3644,36 +3644,6 @@ def record_user_full_updated(instance, **kwargs):
                 )
     activity.save()
 
-def send_respondable_email_validation_message(
-    user = None, subject_line = None, data = None, template_name = None
-):
-    """sends email validation message to the user
-
-    We validate email by getting user's reply
-    to the validation message by email, which also gives
-    an opportunity to extract user's email signature.
-    """
-    reply_address = ReplyAddress.objects.create_new(
-                                    user = user,
-                                    reply_action = 'validate_email'
-                                )
-    data['email_code'] = reply_address.address
-
-    template = get_template(template_name)
-    body_text = template.render(Context(data))#todo: set lang
-
-    reply_to_address = 'welcome-%s@%s' % (
-                            reply_address.address,
-                            askbot_settings.REPLY_BY_EMAIL_HOSTNAME
-                        )
-
-    mail.send_mail(
-        subject_line = subject_line,
-        body_text = body_text,
-        recipient_list = [user.email, ],
-        headers = {'Reply-To': reply_to_address}
-    )
-
 
 def add_user_to_global_group(sender, instance, created, **kwargs):
     """auto-joins user to the global group
@@ -3719,23 +3689,25 @@ def greet_new_user(user, **kwargs):
         return
 
     if askbot_settings.REPLY_BY_EMAIL:#with this on we also collect signature
-        template_name = 'email/welcome_lamson_on.html'
+        reply_address = ReplyAddress.objects.create_new(
+                                        user=user,
+                                        reply_action='validate_email'
+                                    )
+        email = WelcomeEmailRespondable({
+            'recipient_user': user,
+            'email_code': reply_address.address,
+            'reply_to_address': reply_address.as_email_address(prefix='welcome-')
+        })
+        mail.send_mail(
+            subject_line = subject_line,
+            body_text = body_text,
+            recipient_list = [user.email, ],
+        )
     else:
-        template_name = 'email/welcome_lamson_off.html'
+        email = WelcomeEmail({'recipient_user': user})
 
-    data = {
-        'recipient_user': user,
-        'site_name': askbot_settings.APP_SHORT_NAME,
-        'site_url': site_url(reverse('questions')),
-        'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME,
-        'can_post_by_email': user.can_post_by_email()
-    }
-    send_respondable_email_validation_message(
-        user=user,
-        subject_line=_('Welcome to %(site_name)s') % data,
-        data=data,
-        template_name=template_name
-    )
+    email.send([user.email,])
+
 
 
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
