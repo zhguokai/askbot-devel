@@ -111,7 +111,11 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                         'group_slug': group_slug})
         return HttpResponseRedirect(new_url)
 
-    users = models.User.objects.exclude(status = 'b')
+    users = models.User.objects.exclude(
+                                    status='b'
+                                ).exclude(
+                                    is_active=False
+                                )
     group = None
     group_email_moderation_enabled = False
     user_acceptance_level = 'closed'
