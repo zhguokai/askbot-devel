@@ -623,7 +623,16 @@ def _assert_user_can(
             message = _('Sorry, but you have only read access')
             raise django_exceptions.PermissionDenied(message)
 
-    if blocked_user_cannot and user.is_blocked():
+    if user.is_active == False:
+        error_message = getattr(
+                            django_settings, 
+                            'ASKBOT_INACTIVE_USER_MESSAGE',
+                            _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+                                'perform_action': action_display,
+                                'your_account_is': _('your account is disabled')
+                            }
+                        )
+    elif blocked_user_cannot and user.is_blocked():
         error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
             'perform_action': action_display,
             'your_account_is': _('your account is blocked')
@@ -646,15 +655,6 @@ def _assert_user_can(
         return
     elif user.is_post_moderator(post):
         return
-    elif user.is_active == False:
-        error_message = getattr(
-                            django_settings, 
-                            'ASKBOT_INACTIVE_USER_MESSAGE',
-                            _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
-                                'perform_action': action_display,
-                                'your_account_is': _('your account is disabled')
-                            }
-                        )
     elif min_rep_setting and user.reputation < min_rep_setting:
         raise askbot_exceptions.InsufficientReputation(
             _(message_keys.MIN_REP_REQUIRED_TO_PERFORM_ACTION) % {
@@ -1195,8 +1195,18 @@ def user_assert_can_flag_offensive(self, post = None):
                 }
             raise django_exceptions.PermissionDenied(flags_exceeded_error_message)
 
-def user_assert_can_remove_flag_offensive(self, post = None):
 
+def user_assert_can_follow_question(self, question=None):
+    _assert_user_can(
+        user=self,
+        post=question, #related post (may be parent)
+        owner_can=True,
+        action_display=askbot_settings.WORDS_FOLLOW_QUESTIONS,
+        blocked_user_cannot=True
+    )
+
+
+def user_assert_can_remove_flag_offensive(self, post=None):
     assert(post is not None)
 
     non_existing_flagging_error_message = _('cannot remove non-existing flag')
@@ -1206,16 +1216,14 @@ def user_assert_can_remove_flag_offensive(self, post = None):
 
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
     _assert_user_can(
-        user = self,
-        post = post,
+        user=self,
+        post=post,
         action_display=_('remove flags'),
         blocked_user_cannot=True,
         suspended_user_cannot=True,
-        min_rep_setting = min_rep_setting
+        min_rep_setting=min_rep_setting
     )
-    #one extra assertion
-    if self.is_administrator() or self.is_moderator():
-        return
+
 
 def user_assert_can_remove_all_flags_offensive(self, post = None):
     assert(post is not None)
@@ -2714,7 +2722,7 @@ def user_get_badge_summary(self):
 #may be different
 #maybe if we do use business rule checks here - we should add
 #some flag allowing to bypass them for things like the data importers
-def toggle_favorite_question(
+def user_toggle_favorite_question(
                         self, question,
                         timestamp = None,
                         cancel = False,
@@ -2731,6 +2739,8 @@ def toggle_favorite_question(
     fully merged yet - see use of FavoriteQuestion and follow/unfollow question
     btw, names of the objects/methods is quite misleading ATM
     """
+    self.assert_can_follow_question(question)
+
     try:
         #this attempts to remove the on-screen follow
         fave = FavoriteQuestion.objects.get(thread=question.thread, user=self)
@@ -3215,7 +3225,7 @@ User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
-User.add_to_class('toggle_favorite_question', toggle_favorite_question)
+User.add_to_class('toggle_favorite_question', user_toggle_favorite_question)
 User.add_to_class('fix_html_links', user_fix_html_links)
 User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
@@ -3296,6 +3306,7 @@ User.add_to_class('assert_can_edit_answer', user_assert_can_edit_answer)
 User.add_to_class('assert_can_close_question', user_assert_can_close_question)
 User.add_to_class('assert_can_reopen_question', user_assert_can_reopen_question)
 User.add_to_class('assert_can_flag_offensive', user_assert_can_flag_offensive)
+User.add_to_class('assert_can_follow_question', user_assert_can_follow_question)
 User.add_to_class('assert_can_remove_flag_offensive', user_assert_can_remove_flag_offensive)
 User.add_to_class('assert_can_remove_all_flags_offensive', user_assert_can_remove_all_flags_offensive)
 User.add_to_class('assert_can_retag_question', user_assert_can_retag_question)
