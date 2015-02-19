@@ -25,8 +25,8 @@ autodiscover()
 @admins_only
 def list_emails(request):
     #list only enabled emails
-    enabled = dict((k, v) for k, v in REGISTRY.items() if v().is_enabled())
-    data = {'emails': enabled}
+    #enabled = dict((k, v) for k, v in REGISTRY.items() if v().is_enabled())
+    data = {'emails': REGISTRY}
     return render(request, 'email/list_emails.html', Context(data))
 
 
@@ -47,8 +47,8 @@ def preview_email(request, slug):
     }
 
     email = REGISTRY[slug]()
-    if email.is_enabled() == False:
-        raise Http404
+    #if email.is_enabled() == False:
+    #    raise Http404
 
     try:
         data['subject'] = email.render_subject()

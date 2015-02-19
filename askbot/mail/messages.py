@@ -74,9 +74,10 @@ class BaseEmail(object):
     def get_context(self):
         if self._cached_context:
             return self._cached_context
-        context = self.context or self.get_mock_context() or self.mock_context
+        context = self.context or self.get_mock_context() or self.mock_context or {}
         self._cached_context = self.process_context(context)
-        return Context(self._cached_context)
+        self._cached_context['settings'] = askbot_settings
+        return self._cached_context
 
     def get_headers(self):
         """override this method if headers need to be calculated
@@ -89,11 +90,11 @@ class BaseEmail(object):
 
     def render_subject(self):
         template = get_template(self.template_path + '/subject.txt')
-        return ' '.join(template.render(self.get_context()).split())
+        return ' '.join(template.render(Context(self.get_context())).split())
 
     def render_body(self):
         template = get_template(self.template_path + '/body.html')
-        body = template.render(self.get_context())
+        body = template.render(Context(self.get_context()))
         return absolutize_urls(body)
 
     def send(self, recipient_list, raise_on_failure=False, headers=None, attachments=None):
@@ -360,6 +361,10 @@ class WelcomeEmail(BaseEmail):
     def get_mock_context(self):
         return {'user': get_user()}
 
+    def process_context(self, context):
+        context['recipient_user'] = context['user']
+        return context
+
 class WelcomeEmailRespondable(BaseEmail):
     template_path = 'email/welcome_respondable'
     title = _('Respondable "welcome" message')
@@ -453,7 +458,7 @@ class AskForSignature(BaseEmail):
 
 
 class InsufficientReputation(BaseEmail):
-    template_path = 'email/insufficient_rep_to_post_by_email'
+    template_path = 'email/insufficient_reputation'
     title = _('Insufficient karma to post by email')
     description = _(
         'Sent when user does not have enough '
@@ -476,6 +481,7 @@ class InsufficientReputation(BaseEmail):
                       (min_rep/askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE)
         return {
             'username': user.username,
+            'recipient_user': user,
             'site_name': askbot_settings.APP_SHORT_NAME,
             'site_link': site_link('ask', askbot_settings.APP_SHORT_NAME),
             'min_upvotes': min_upvotes
@@ -495,6 +501,10 @@ class RejectedPost(BaseEmail):
 
     def is_enabled(self):
         return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation'
+
+    def process_context(self, context):
+        context.setdefault('recipient_user', None)
+        return context
 
 
 class ModerationQueueNotification(BaseEmail):
@@ -676,7 +686,7 @@ class ApprovedPostNotification(BaseEmail):
 
 class ApprovedPostNotificationRespondable(BaseEmail):
     template_path = 'email/approved_post_notification_respondable'
-    title = _('Approved post notification')
+    title = _('Respondable approved post notification')
     description = _('Sent when post revision is approved by the moderator')
     preview_error_message = _(
         'At least one user and one question are required to '

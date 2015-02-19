@@ -10,11 +10,11 @@
     {% trans user=username|escape %}{{ username }}, your content could not be posted by email just yet.{% endtrans %}
 {%endblock%}
 {% block content %}
-<p>
+    <p>
     {% trans %}To make posts by email, you need to receive about {{ min_upvotes }} upvotes.{% endtrans %}<br/>
     {% trans link=site_link|safe %}At this time, please post your content at {{ link }}{% endtrans %}
-</p>
+    </p>
 {% endblock %}
 {% block footer %}
-{% include "email/footer.html" %}
+    {% include "email/footer.html" %}
 {% endblock %}

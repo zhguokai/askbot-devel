@@ -1,13 +1,5 @@
 {% if tag_summary %}
-    {% trans topics=tag_summary, question_count=question_count -%}
-        {{ question_count }} {{ unanswered_questions_phrase }} about {{ topics }}
-    {%- pluralize question_count -%}
-        {{ question_count }} {{ unanswered_questions_phrase }} about {{ topics }}
-    {%- endtrans %}
+    {% trans %}{{ question_count }} {{ unanswered_questions_phrase }} about {{ tag_summary }}{% endtrans %}
 {% else %}
-    {% trans question_count=question_count -%}
-        {{ question_count }} {{ unanswered_questions_phrase }}
-    {%- pluralize question_count -%}
-        {{ question_count }} {{ unanswered_questions_phrase }}
-    {%- endtrans %}
+    {{ question_count }} {{ unanswered_questions_phrase }}
 {% endif %}

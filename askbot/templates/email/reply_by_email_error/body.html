@@ -1,4 +1,5 @@
-{% trans %}
-<p>The system was unable to process your message successfully, the reason being:<p>
-{% endtrans %}
-{{error}}
+{% extends "email/base_mail.html" %}
+{% block content %}
+    <p>{% trans %}The system was unable to process your message successfully{% endtrans %}</p>
+    <p>{{ error }}</p>
+{% endblock %}
