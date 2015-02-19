@@ -2,12 +2,6 @@ from askbot import startup_procedures
 startup_procedures.run()
 
 from django.contrib.auth.models import User
-#set up a possibility for the users to follow others
-try:
-    import followit
-    followit.register(User)
-except ImportError:
-    pass
 
 import collections
 import datetime
@@ -4081,6 +4075,14 @@ signals.site_visited.connect(
     record_user_visit,
     dispatch_uid='record_user_visit'
 )
+
+#set up a possibility for the users to follow others
+try:
+    import followit
+    followit.register(User)
+except ImportError:
+    pass
+
 
 __all__ = [
         'signals',
