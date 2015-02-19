@@ -646,6 +646,15 @@ def _assert_user_can(
         return
     elif user.is_post_moderator(post):
         return
+    elif user.is_active == False:
+        error_message = getattr(
+                            django_settings, 
+                            'ASKBOT_INACTIVE_USER_MESSAGE',
+                            _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+                                'perform_action': action_display,
+                                'your_account_is': _('your account is disabled')
+                            }
+                        )
     elif min_rep_setting and user.reputation < min_rep_setting:
         raise askbot_exceptions.InsufficientReputation(
             _(message_keys.MIN_REP_REQUIRED_TO_PERFORM_ACTION) % {
@@ -3698,11 +3707,6 @@ def greet_new_user(user, **kwargs):
             'email_code': reply_address.address,
             'reply_to_address': reply_address.as_email_address(prefix='welcome-')
         })
-        mail.send_mail(
-            subject_line = subject_line,
-            body_text = body_text,
-            recipient_list = [user.email, ],
-        )
     else:
         email = WelcomeEmail({'recipient_user': user})
 
