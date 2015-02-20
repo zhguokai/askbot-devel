@@ -1159,14 +1159,14 @@ def user_assert_can_close_question(self, question = None):
     assert(getattr(question, 'post_type', '') == 'question')
     min_rep_setting = askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS
     _assert_user_can(
-        user = self,
-        post = question,
+        user=self,
+        post=question,
         action_display=askbot_settings.WORDS_CLOSE_QUESTIONS,
-        owner_can = True,
-        suspended_owner_cannot = True,
+        owner_can=True,
+        suspended_owner_cannot=True,
         blocked_user_cannot=True,
         suspended_user_cannot=True,
-        min_rep_setting = min_rep_setting,
+        min_rep_setting=min_rep_setting,
     )
 
 
