@@ -330,9 +330,15 @@ def vote(request):
 
 #internally grouped views - used by the tagging system
 @csrf.csrf_protect
+@decorators.ajax_only
 @decorators.post_only
-@decorators.ajax_login_required
 def mark_tag(request, **kwargs):#tagging system
+
+    if request.user.is_anonymous():
+        msg = _('anonymous users cannot %(perform_action)s') % \
+            {'perform_action': _('mark or unmark tags')}
+        raise exceptions.PermissionDenied(msg + ' ' + get_login_link())
+
     action = kwargs['action']
     post_data = simplejson.loads(request.raw_post_data)
     raw_tagnames = post_data['tagnames']
@@ -347,11 +353,11 @@ def mark_tag(request, **kwargs):#tagging system
         user = request.user
 
     cleaned_tagnames, cleaned_wildcards = user.mark_tags(
-                                                         tagnames,
-                                                         wildcards,
-                                                         reason = reason,
-                                                         action = action
-                                                        )
+                                                     tagnames,
+                                                     wildcards,
+                                                     reason=reason,
+                                                     action=action
+                                                )
 
     #lastly - calculate tag usage counts
     tag_usage_counts = dict()
@@ -370,7 +376,7 @@ def mark_tag(request, **kwargs):#tagging system
         else:
             tag_usage_counts[name] = 0
 
-    return HttpResponse(simplejson.dumps(tag_usage_counts), content_type="application/json")
+    return tag_usage_counts
 
 #@decorators.ajax_only
 @decorators.get_only

@@ -801,6 +801,14 @@ def user_assert_can_upload_file(request_user):
     )
 
 
+def user_assert_can_mark_tags(self):
+    _assert_user_can(
+        user=self,
+        action_display=_('mark or unmark tags'),
+        blocked_user_cannot=True,
+    )
+
+
 def user_assert_can_merge_questions(self):
     _assert_user_can(
         user=self,
@@ -1408,6 +1416,8 @@ def user_mark_tags(
     * ``reason`` - either "good" or "bad"
     * ``action`` - eitrer "add" or "remove"
     """
+    self.assert_can_mark_tags()
+
     cleaned_wildcards = list()
     assert(action in ('add', 'remove'))
     if action == 'add':
@@ -3299,6 +3309,7 @@ User.add_to_class('is_read_only', user_is_read_only)
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
 User.add_to_class('assert_can_revoke_old_vote', user_assert_can_revoke_old_vote)
 User.add_to_class('assert_can_upload_file', user_assert_can_upload_file)
+User.add_to_class('assert_can_mark_tags', user_assert_can_mark_tags)
 User.add_to_class('assert_can_merge_questions', user_assert_can_merge_questions)
 User.add_to_class('assert_can_post_question', user_assert_can_post_question)
 User.add_to_class('assert_can_post_answer', user_assert_can_post_answer)
