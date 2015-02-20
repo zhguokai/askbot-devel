@@ -1248,7 +1248,12 @@ def save_draft_question(request):
 def save_draft_answer(request):
     """saves draft answers"""
     #todo: allow drafts for anonymous users
-    if request.user.is_anonymous():
+    if request.user.is_anonymous() \
+        or request.user.is_read_only() \
+        or askbot_settings.READ_ONLY_MODE_ENABLED \
+        or request.user.is_active == False \
+        or request.user.is_blocked() \
+        or request.user.is_suspended():
         return
 
     form = forms.DraftAnswerForm(request.POST)
