@@ -619,8 +619,8 @@ def _assert_user_can(
             'the site is temporarily read only'
         ) % {'perform_action': action_display}
 
-    elif askbot_settings.GROUPS_ENABLED and user.is_read_only():
-            message = _('Sorry, but you have only read access')
+    elif user.is_read_only():
+        error_message = _('Sorry, but you have only read access')
 
     elif user.is_active == False:
         error_message = getattr(
