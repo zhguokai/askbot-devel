@@ -916,19 +916,19 @@ def user_assert_can_edit_comment(self, comment=None):
     )
     raise django_exceptions.PermissionDenied(error_message)
 
-def user_assert_can_convert_post(self, post = None):
+
+def user_assert_can_convert_post(self, post=None):
     """raises exceptions.PermissionDenied if user is not allowed to convert the
     post to another type (comment -> answer, answer -> comment)
 
     only owners, moderators or admins can convert posts
     """
-    if self.is_administrator() or self.is_moderator() or post.author == self:
-        return
-
-    error_message = _(
-        'Sorry, but only post owners or moderators convert posts'
+    _assert_user_can(
+        user=self,
+        action_display=_('repost items'),
+        owner_can=True,
+        blocked_user_cannot=True,
     )
-    raise django_exceptions.PermissionDenied(error_message)
 
 
 def user_can_post_comment(self, parent_post=None):
