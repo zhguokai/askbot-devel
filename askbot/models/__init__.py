@@ -791,7 +791,6 @@ def user_assert_can_vote_for_post(
 
 
 def user_assert_can_upload_file(request_user):
-
     _assert_user_can(
         user=request_user,
         action_display=_('upload files'),
@@ -799,6 +798,19 @@ def user_assert_can_upload_file(request_user):
         suspended_user_cannot=True,
         min_rep_setting=askbot_settings.MIN_REP_TO_UPLOAD_FILES
     )
+
+
+def user_assert_can_join_or_leave_group(self):
+    _assert_user_can(
+        user=self,
+        action_display=_('join or leave groups'),
+        blocked_user_cannot=True,
+        suspended_user_cannot=True
+    )
+User.add_to_class(
+    'assert_can_join_or_leave_group',
+    user_assert_can_join_or_leave_group
+)
 
 
 def user_assert_can_mark_tags(self):
@@ -3119,6 +3131,7 @@ def user_edit_group_membership(self, user=None, group=None,
 
     returns instance of GroupMembership (if action is "add") or None
     """
+    self.assert_can_join_or_leave_group()
     if action == 'add':
         #calculate new level
         openness = group.get_openness_level_for_user(user)

@@ -1126,7 +1126,7 @@ def join_or_leave_group(request):
         membership = request.user.join_group(group)
         new_level = membership.get_level_display()
     else:
-        membership.delete()
+        request.user.leave_group(group)
         new_level = Membership.get_level_value_display(Membership.NONE)
 
     return {'membership_level': new_level}
