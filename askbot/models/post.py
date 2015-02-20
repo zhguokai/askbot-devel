@@ -20,6 +20,10 @@ from django.core import cache
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
+try:
+    from django.utils.module_loading import import_string
+except ImportError:
+    from django.utils.module_loading import import_by_path as import_string
 
 import askbot
 
@@ -202,6 +206,7 @@ class PostManager(BaseQuerySetManager):
                 post_type=None,
                 by_email=False,
                 ip_addr=None,
+                renderer=None,
             ):
         # TODO: Some of this code will go to Post.objects.create_new
 
@@ -220,7 +225,8 @@ class PostManager(BaseQuerySetManager):
             added_at=added_at,
             wiki=wiki,
             text=text,
-            language_code=language_code
+            language_code=language_code,
+            renderer=renderer,
             #.html field is denormalized by the save() call
         )
 
@@ -363,6 +369,25 @@ class MockPost(object):
     def needs_moderation(self):
         return False
 
+
+POST_RENDERERS_MAP = getattr(django_settings, 'ASKBOT_POST_RENDERERS', {
+    'plain-text': 'askbot.utils.markup.plain_text_input_converter',
+    'markdown': 'askbot.utils.markup.markdown_input_converter',
+    'tinymce': 'askbot.utils.markup.tinymce_input_converter',
+})
+
+
+def get_default_post_renderer(post_type):
+    have_simple_comment = (
+        post_type == 'comment' and
+        askbot_settings.COMMENTS_EDITOR_TYPE == 'plain-text'
+    )
+    if have_simple_comment:
+        return 'plain-text'
+    else:
+        return askbot_settings.EDITOR_TYPE
+
+
 class Post(models.Model):
     post_type = models.CharField(max_length=255, db_index=True)
 
@@ -431,6 +456,8 @@ class Post(models.Model):
     #the reason is that the title and tags belong to thread,
     #but the question body to Post
     is_anonymous = models.BooleanField(default=False)
+
+    renderer = models.CharField(max_length=255, null=True)
 
     objects = PostManager()
 
@@ -659,23 +686,14 @@ class Post(models.Model):
         return answer
 
     def get_text_converter(self):
-        have_simple_comment = (
-            self.is_comment() and 
-            askbot_settings.COMMENTS_EDITOR_TYPE == 'plain-text'
-        )
-        if have_simple_comment:
-            parser_type = 'plain-text'
-        else:
-            parser_type = askbot_settings.EDITOR_TYPE
+        renderer = self.renderer or get_default_post_renderer(self.post_type)
 
-        if parser_type == 'plain-text':
-            return markup.plain_text_input_converter
-        elif parser_type == 'markdown':
-            return markup.markdown_input_converter
-        elif parser_type == 'tinymce':
-            return markup.tinymce_input_converter
-        else:
+        try:
+            renderer_path = POST_RENDERERS_MAP[renderer]
+        except KeyError:
             raise NotImplementedError
+
+        return import_string(renderer_path)
 
     def has_group(self, group):
         """true if post belongs to the group"""
