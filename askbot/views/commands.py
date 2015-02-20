@@ -1226,8 +1226,13 @@ def moderate_suggested_tag(request):
 @decorators.post_only
 def save_draft_question(request):
     """saves draft questions"""
-    #todo: allow drafts for anonymous users
-    if request.user.is_anonymous():
+    #todo: maybe allow drafts for anonymous users
+    if request.user.is_anonymous() \
+        or request.user.is_read_only() \
+        or askbot_settings.READ_ONLY_MODE_ENABLED \
+        or request.user.is_active == False \
+        or request.user.is_blocked() \
+        or request.user.is_suspended():
         return
 
     form = forms.DraftQuestionForm(request.POST)
@@ -1253,7 +1258,7 @@ def save_draft_question(request):
 @decorators.post_only
 def save_draft_answer(request):
     """saves draft answers"""
-    #todo: allow drafts for anonymous users
+    #todo: maybe allow drafts for anonymous users
     if request.user.is_anonymous() \
         or request.user.is_read_only() \
         or askbot_settings.READ_ONLY_MODE_ENABLED \
