@@ -51,4 +51,5 @@ class Command(NoArgsCommand):
 
         self.remove_signals()
 
+        self.user.is_active = True
         self.user.set_status('d')

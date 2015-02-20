@@ -612,12 +612,17 @@ def _assert_user_can(
     with appropriate text as a payload
     """
     action_display = action_display or _('perform this action')
-    if askbot_settings.GROUPS_ENABLED:
-        if user.is_read_only():
-            message = _('Sorry, but you have only read access')
-            raise django_exceptions.PermissionDenied(message)
 
-    if user.is_active == False:
+    if askbot_settings.READ_ONLY_MODE_ENABLED:
+        error_message = _(
+            'Sorry, you cannot %(perform_action)s because '
+            'the site is temporarily read only'
+        ) % {'perform_action': action_display}
+
+    elif askbot_settings.GROUPS_ENABLED and user.is_read_only():
+            message = _('Sorry, but you have only read access')
+
+    elif user.is_active == False:
         error_message = getattr(
                             django_settings, 
                             'ASKBOT_INACTIVE_USER_MESSAGE',
@@ -626,12 +631,14 @@ def _assert_user_can(
                                 'your_account_is': _('your account is disabled')
                             }
                         )
+
     elif blocked_user_cannot and user.is_blocked():
         error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
             'perform_action': action_display,
             'your_account_is': _('your account is blocked')
         }
         error_message = string_concat(error_message, '.</br> ', message_keys.PUNISHED_USER_INFO)
+
     elif post and owner_can and user == post.get_owner():
         if user.is_suspended() and suspended_owner_cannot:
             error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
@@ -640,15 +647,19 @@ def _assert_user_can(
             }
         else:
             return
+
     elif suspended_user_cannot and user.is_suspended():
         error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
             'perform_action': action_display,
             'your_account_is': _('your account is suspended')
         }
+
     elif user.is_administrator() or user.is_moderator():
         return
+
     elif user.is_post_moderator(post):
         return
+
     elif min_rep_setting and user.reputation < min_rep_setting:
         raise askbot_exceptions.InsufficientReputation(
             _(message_keys.MIN_REP_REQUIRED_TO_PERFORM_ACTION) % {
@@ -656,6 +667,7 @@ def _assert_user_can(
                 'min_rep': min_rep_setting
             }
         )
+
     elif admin_or_moderator_required:
         if min_rep_setting is None:
             #message about admins only
