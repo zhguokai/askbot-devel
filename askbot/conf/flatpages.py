@@ -30,6 +30,20 @@ settings.register(
 settings.register(
     LongStringValue(
         FLATPAGES,
+        'FORUM_HELP',
+        description=_('Text of the Help page (html format)'),
+        localized=True,
+        help_text=\
+        _(
+            'Save, then <a href="http://validator.w3.org/">'
+            'use HTML validator</a> on the "help" page to check your input.'
+        )
+    )
+)
+
+settings.register(
+    LongStringValue(
+        FLATPAGES,
         'FORUM_FAQ',
         description=_('Text of the Q&amp;A forum FAQ page (html format)'),
         localized=True,

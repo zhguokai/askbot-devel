@@ -3749,7 +3749,7 @@ def greet_new_user(user, **kwargs):
             'reply_to_address': reply_address.as_email_address(prefix='welcome-')
         })
     else:
-        email = WelcomeEmail({'recipient_user': user})
+        email = WelcomeEmail({'user': user})
 
     email.send([user.email,])
 
