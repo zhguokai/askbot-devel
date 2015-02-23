@@ -330,9 +330,15 @@ def vote(request):
 
 #internally grouped views - used by the tagging system
 @csrf.csrf_protect
+@decorators.ajax_only
 @decorators.post_only
-@decorators.ajax_login_required
 def mark_tag(request, **kwargs):#tagging system
+
+    if request.user.is_anonymous():
+        msg = _('anonymous users cannot %(perform_action)s') % \
+            {'perform_action': _('mark or unmark tags')}
+        raise exceptions.PermissionDenied(msg + ' ' + get_login_link())
+
     action = kwargs['action']
     post_data = simplejson.loads(request.raw_post_data)
     raw_tagnames = post_data['tagnames']
@@ -347,11 +353,11 @@ def mark_tag(request, **kwargs):#tagging system
         user = request.user
 
     cleaned_tagnames, cleaned_wildcards = user.mark_tags(
-                                                         tagnames,
-                                                         wildcards,
-                                                         reason = reason,
-                                                         action = action
-                                                        )
+                                                     tagnames,
+                                                     wildcards,
+                                                     reason=reason,
+                                                     action=action
+                                                )
 
     #lastly - calculate tag usage counts
     tag_usage_counts = dict()
@@ -370,7 +376,7 @@ def mark_tag(request, **kwargs):#tagging system
         else:
             tag_usage_counts[name] = 0
 
-    return HttpResponse(simplejson.dumps(tag_usage_counts), content_type="application/json")
+    return tag_usage_counts
 
 #@decorators.ajax_only
 @decorators.get_only
@@ -1120,7 +1126,7 @@ def join_or_leave_group(request):
         membership = request.user.join_group(group)
         new_level = membership.get_level_display()
     else:
-        membership.delete()
+        request.user.leave_group(group)
         new_level = Membership.get_level_value_display(Membership.NONE)
 
     return {'membership_level': new_level}
@@ -1220,8 +1226,13 @@ def moderate_suggested_tag(request):
 @decorators.post_only
 def save_draft_question(request):
     """saves draft questions"""
-    #todo: allow drafts for anonymous users
-    if request.user.is_anonymous():
+    #todo: maybe allow drafts for anonymous users
+    if request.user.is_anonymous() \
+        or request.user.is_read_only() \
+        or askbot_settings.READ_ONLY_MODE_ENABLED \
+        or request.user.is_active == False \
+        or request.user.is_blocked() \
+        or request.user.is_suspended():
         return
 
     form = forms.DraftQuestionForm(request.POST)
@@ -1247,8 +1258,13 @@ def save_draft_question(request):
 @decorators.post_only
 def save_draft_answer(request):
     """saves draft answers"""
-    #todo: allow drafts for anonymous users
-    if request.user.is_anonymous():
+    #todo: maybe allow drafts for anonymous users
+    if request.user.is_anonymous() \
+        or request.user.is_read_only() \
+        or askbot_settings.READ_ONLY_MODE_ENABLED \
+        or request.user.is_active == False \
+        or request.user.is_blocked() \
+        or request.user.is_suspended():
         return
 
     form = forms.DraftAnswerForm(request.POST)

@@ -25,7 +25,7 @@
     </form>
 {% endif %}
 <h3>
-{% if request.user == view_user %}
+{% if request.user.pk == view_user.pk %}
     {% trans reputation=view_user.reputation %}Your current reputation is {{reputation}} points{% endtrans %}
 {% else %}
     {% trans reputation=view_user.reputation %}User's current reputation is {{reputation}} points{% endtrans %}

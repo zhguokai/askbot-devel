@@ -90,12 +90,21 @@ def server_error(request, template='500.html'):
     return generic_view(request, template)
 
 def help(request):
-    data = {
-        'active_tab': 'help',
-        'app_name': askbot_settings.APP_SHORT_NAME,
-        'page_class': 'meta'
-    }
-    return render(request, 'help.html', data)
+    if askbot_settings.FORUM_HELP.strip() != '':
+        data = {
+            'title': _('Help'),
+            'content': askbot_settings.FORUM_HELP,
+            'page_class': 'meta',
+            'active_tab': 'help',
+        }
+        return render(request, 'static_page.html', data)
+    else:
+        data = {
+            'active_tab': 'help',
+            'app_name': askbot_settings.APP_SHORT_NAME,
+            'page_class': 'meta'
+        }
+        return render(request, 'help_static.html', data)
 
 def faq(request):
     if askbot_settings.FORUM_FAQ.strip() != '':

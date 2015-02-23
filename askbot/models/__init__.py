@@ -2,12 +2,6 @@ from askbot import startup_procedures
 startup_procedures.run()
 
 from django.contrib.auth.models import User
-#set up a possibility for the users to follow others
-try:
-    import followit
-    followit.register(User)
-except ImportError:
-    pass
 
 import collections
 import datetime
@@ -618,34 +612,16 @@ def _assert_user_can(
     with appropriate text as a payload
     """
     action_display = action_display or _('perform this action')
-    if askbot_settings.GROUPS_ENABLED:
-        if user.is_read_only():
-            message = _('Sorry, but you have only read access')
-            raise django_exceptions.PermissionDenied(message)
 
-    if blocked_user_cannot and user.is_blocked():
-        error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
-            'perform_action': action_display,
-            'your_account_is': _('your account is blocked')
-        }
-        error_message = string_concat(error_message, '.</br> ', message_keys.PUNISHED_USER_INFO)
-    elif post and owner_can and user == post.get_owner():
-        if user.is_suspended() and suspended_owner_cannot:
-            error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
-                'perform_action': action_display,
-                'your_account_is': _('your account is suspended')
-            }
-        else:
-            return
-    elif suspended_user_cannot and user.is_suspended():
-        error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
-            'perform_action': action_display,
-            'your_account_is': _('your account is suspended')
-        }
-    elif user.is_administrator() or user.is_moderator():
-        return
-    elif user.is_post_moderator(post):
-        return
+    if askbot_settings.READ_ONLY_MODE_ENABLED:
+        error_message = _(
+            'Sorry, you cannot %(perform_action)s because '
+            'the site is temporarily read only'
+        ) % {'perform_action': action_display}
+
+    elif user.is_read_only():
+        error_message = _('Sorry, but you have only read access')
+
     elif user.is_active == False:
         error_message = getattr(
                             django_settings, 
@@ -655,6 +631,35 @@ def _assert_user_can(
                                 'your_account_is': _('your account is disabled')
                             }
                         )
+
+    elif blocked_user_cannot and user.is_blocked():
+        error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+            'perform_action': action_display,
+            'your_account_is': _('your account is blocked')
+        }
+        error_message = string_concat(error_message, '.</br> ', message_keys.PUNISHED_USER_INFO)
+
+    elif post and owner_can and user.pk == post.author_id:
+        if user.is_suspended() and suspended_owner_cannot:
+            error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+                'perform_action': action_display,
+                'your_account_is': _('your account is suspended')
+            }
+        else:
+            return
+
+    elif suspended_user_cannot and user.is_suspended():
+        error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
+            'perform_action': action_display,
+            'your_account_is': _('your account is suspended')
+        }
+
+    elif user.is_administrator() or user.is_moderator():
+        return
+
+    elif user.is_post_moderator(post):
+        return
+
     elif min_rep_setting and user.reputation < min_rep_setting:
         raise askbot_exceptions.InsufficientReputation(
             _(message_keys.MIN_REP_REQUIRED_TO_PERFORM_ACTION) % {
@@ -662,6 +667,7 @@ def _assert_user_can(
                 'min_rep': min_rep_setting
             }
         )
+
     elif admin_or_moderator_required:
         if min_rep_setting is None:
             #message about admins only
@@ -707,8 +713,8 @@ def user_assert_can_unaccept_best_answer(self, answer=None):
         error_message = blocked_error_message
     elif self.is_suspended():
         error_message = suspended_error_message
-    elif self == answer.thread._question_post().get_owner():
-        if self == answer.get_owner():
+    elif self.pk == answer.thread._question_post().author_id:
+        if self.pk == answer.author_id:
             if not self.is_administrator():
                 #check rep
                 _assert_user_can(
@@ -738,7 +744,7 @@ def user_assert_can_unaccept_best_answer(self, answer=None):
             return
 
     else:
-        question_owner = answer.thread._question_post().get_owner()
+        question_owner = answer.thread._question_post().author
         error_message = _(message_keys.MODERATORS_OR_AUTHOR_CAN_PEFROM_ACTION) % {
             'post_author': askbot_settings.WORDS_AUTHOR_OF_THE_QUESTION,
             'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
@@ -761,7 +767,7 @@ def user_assert_can_vote_for_post(
     :param:direction can be 'up' or 'down'
     :param:post can be instance of question or answer
     """
-    if self == post.author:
+    if self.pk == post.author_id:
         raise django_exceptions.PermissionDenied(
             _('Sorry, you cannot vote for your own posts')
         )
@@ -785,13 +791,33 @@ def user_assert_can_vote_for_post(
 
 
 def user_assert_can_upload_file(request_user):
-
     _assert_user_can(
         user=request_user,
         action_display=_('upload files'),
         blocked_user_cannot=True,
         suspended_user_cannot=True,
         min_rep_setting=askbot_settings.MIN_REP_TO_UPLOAD_FILES
+    )
+
+
+def user_assert_can_join_or_leave_group(self):
+    _assert_user_can(
+        user=self,
+        action_display=_('join or leave groups'),
+        blocked_user_cannot=True,
+        suspended_user_cannot=True
+    )
+User.add_to_class(
+    'assert_can_join_or_leave_group',
+    user_assert_can_join_or_leave_group
+)
+
+
+def user_assert_can_mark_tags(self):
+    _assert_user_can(
+        user=self,
+        action_display=_('mark or unmark tags'),
+        blocked_user_cannot=True,
     )
 
 
@@ -862,7 +888,7 @@ def user_assert_can_edit_comment(self, comment=None):
             error_message = _('Sorry, commenting closed entries is not allowed')
             raise django_exceptions.PermissionDenied(error_message)
 
-    if comment.author == self:
+    if comment.author_id == self.pk:
         if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
             now = datetime.datetime.now()
             delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
@@ -890,19 +916,19 @@ def user_assert_can_edit_comment(self, comment=None):
     )
     raise django_exceptions.PermissionDenied(error_message)
 
-def user_assert_can_convert_post(self, post = None):
+
+def user_assert_can_convert_post(self, post=None):
     """raises exceptions.PermissionDenied if user is not allowed to convert the
     post to another type (comment -> answer, answer -> comment)
 
     only owners, moderators or admins can convert posts
     """
-    if self.is_administrator() or self.is_moderator() or post.author == self:
-        return
-
-    error_message = _(
-        'Sorry, but only post owners or moderators convert posts'
+    _assert_user_can(
+        user=self,
+        action_display=_('repost items'),
+        owner_can=True,
+        blocked_user_cannot=True,
     )
-    raise django_exceptions.PermissionDenied(error_message)
 
 
 def user_can_post_comment(self, parent_post=None):
@@ -916,7 +942,7 @@ def user_can_post_comment(self, parent_post=None):
             return False
 
     elif self.is_suspended():
-        if parent_post and self == parent_post.author:
+        if parent_post and self.pk == parent_post.author_id:
             return True
         else:
             return False
@@ -1080,7 +1106,7 @@ def user_assert_can_delete_question(self, question = None):
     self.assert_can_delete_answer(question)
     if self.is_administrator() or self.is_moderator():
         return
-    if self == question.get_owner():
+    if self.pk == question.author_id:
         #if there are answers by other people,
 
         answer_count = question.thread.all_answers().exclude(author=self).count()
@@ -1133,14 +1159,14 @@ def user_assert_can_close_question(self, question = None):
     assert(getattr(question, 'post_type', '') == 'question')
     min_rep_setting = askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS
     _assert_user_can(
-        user = self,
-        post = question,
+        user=self,
+        post=question,
         action_display=askbot_settings.WORDS_CLOSE_QUESTIONS,
-        owner_can = True,
-        suspended_owner_cannot = True,
+        owner_can=True,
+        suspended_owner_cannot=True,
         blocked_user_cannot=True,
         suspended_user_cannot=True,
-        min_rep_setting = min_rep_setting,
+        min_rep_setting=min_rep_setting,
     )
 
 
@@ -1195,8 +1221,18 @@ def user_assert_can_flag_offensive(self, post = None):
                 }
             raise django_exceptions.PermissionDenied(flags_exceeded_error_message)
 
-def user_assert_can_remove_flag_offensive(self, post = None):
 
+def user_assert_can_follow_question(self, question=None):
+    _assert_user_can(
+        user=self,
+        post=question, #related post (may be parent)
+        owner_can=True,
+        action_display=askbot_settings.WORDS_FOLLOW_QUESTIONS,
+        blocked_user_cannot=True
+    )
+
+
+def user_assert_can_remove_flag_offensive(self, post=None):
     assert(post is not None)
 
     non_existing_flagging_error_message = _('cannot remove non-existing flag')
@@ -1206,16 +1242,14 @@ def user_assert_can_remove_flag_offensive(self, post = None):
 
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
     _assert_user_can(
-        user = self,
-        post = post,
+        user=self,
+        post=post,
         action_display=_('remove flags'),
         blocked_user_cannot=True,
         suspended_user_cannot=True,
-        min_rep_setting = min_rep_setting
+        min_rep_setting=min_rep_setting
     )
-    #one extra assertion
-    if self.is_administrator() or self.is_moderator():
-        return
+
 
 def user_assert_can_remove_all_flags_offensive(self, post = None):
     assert(post is not None)
@@ -1394,6 +1428,8 @@ def user_mark_tags(
     * ``reason`` - either "good" or "bad"
     * ``action`` - eitrer "add" or "remove"
     """
+    self.assert_can_mark_tags()
+
     cleaned_wildcards = list()
     assert(action in ('add', 'remove'))
     if action == 'add':
@@ -2121,7 +2157,7 @@ def user_post_answer(
                 ):
 
     #todo: move this to assertion - user_assert_can_post_answer
-    if self == question.author and not self.is_administrator():
+    if self.pk == question.author_id and not self.is_administrator():
 
         # check date and rep required to post answer to own question
 
@@ -2322,7 +2358,7 @@ def user_is_owner_of(self, obj):
     False otherwise
     """
     if isinstance(obj, Post) and obj.post_type == 'question':
-        return self == obj.author
+        return self.pk == obj.author_id
     else:
         raise NotImplementedError()
 
@@ -2714,7 +2750,7 @@ def user_get_badge_summary(self):
 #may be different
 #maybe if we do use business rule checks here - we should add
 #some flag allowing to bypass them for things like the data importers
-def toggle_favorite_question(
+def user_toggle_favorite_question(
                         self, question,
                         timestamp = None,
                         cancel = False,
@@ -2731,6 +2767,8 @@ def toggle_favorite_question(
     fully merged yet - see use of FavoriteQuestion and follow/unfollow question
     btw, names of the objects/methods is quite misleading ATM
     """
+    self.assert_can_follow_question(question)
+
     try:
         #this attempts to remove the on-screen follow
         fave = FavoriteQuestion.objects.get(thread=question.thread, user=self)
@@ -3093,6 +3131,7 @@ def user_edit_group_membership(self, user=None, group=None,
 
     returns instance of GroupMembership (if action is "add") or None
     """
+    self.assert_can_join_or_leave_group()
     if action == 'add':
         #calculate new level
         openness = group.get_openness_level_for_user(user)
@@ -3215,7 +3254,7 @@ User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
-User.add_to_class('toggle_favorite_question', toggle_favorite_question)
+User.add_to_class('toggle_favorite_question', user_toggle_favorite_question)
 User.add_to_class('fix_html_links', user_fix_html_links)
 User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
@@ -3283,6 +3322,7 @@ User.add_to_class('is_read_only', user_is_read_only)
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
 User.add_to_class('assert_can_revoke_old_vote', user_assert_can_revoke_old_vote)
 User.add_to_class('assert_can_upload_file', user_assert_can_upload_file)
+User.add_to_class('assert_can_mark_tags', user_assert_can_mark_tags)
 User.add_to_class('assert_can_merge_questions', user_assert_can_merge_questions)
 User.add_to_class('assert_can_post_question', user_assert_can_post_question)
 User.add_to_class('assert_can_post_answer', user_assert_can_post_answer)
@@ -3296,6 +3336,7 @@ User.add_to_class('assert_can_edit_answer', user_assert_can_edit_answer)
 User.add_to_class('assert_can_close_question', user_assert_can_close_question)
 User.add_to_class('assert_can_reopen_question', user_assert_can_reopen_question)
 User.add_to_class('assert_can_flag_offensive', user_assert_can_flag_offensive)
+User.add_to_class('assert_can_follow_question', user_assert_can_follow_question)
 User.add_to_class('assert_can_remove_flag_offensive', user_assert_can_remove_flag_offensive)
 User.add_to_class('assert_can_remove_all_flags_offensive', user_assert_can_remove_all_flags_offensive)
 User.add_to_class('assert_can_retag_question', user_assert_can_retag_question)
@@ -3708,7 +3749,7 @@ def greet_new_user(user, **kwargs):
             'reply_to_address': reply_address.as_email_address(prefix='welcome-')
         })
     else:
-        email = WelcomeEmail({'recipient_user': user})
+        email = WelcomeEmail({'user': user})
 
     email.send([user.email,])
 
@@ -4070,6 +4111,14 @@ signals.site_visited.connect(
     record_user_visit,
     dispatch_uid='record_user_visit'
 )
+
+#set up a possibility for the users to follow others
+try:
+    import followit
+    followit.register(User)
+except ImportError:
+    pass
+
 
 __all__ = [
         'signals',

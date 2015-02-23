@@ -366,7 +366,7 @@ def edit_user(request, id):
     This view is accessible to profile owners or site administrators
     """
     user = get_object_or_404(models.User, id=id)
-    if not(request.user == user or request.user.is_superuser):
+    if not(request.user.pk == user.pk or request.user.is_superuser):
         raise Http404
     if request.method == "POST":
         form = forms.EditUserForm(user, request.POST)
@@ -570,7 +570,7 @@ def user_stats(request, user, context):
     global_group = models.Group.objects.get_global_group()
     user_groups = user_groups.exclude(name=global_group.name)
 
-    if request.user == user:
+    if request.user.pk == user.pk:
         groups_membership_info = user.get_groups_membership_info(user_groups)
     else:
         groups_membership_info = collections.defaultdict()
@@ -1136,7 +1136,7 @@ def user(request, id, slug=None, tab_name=None):
             can_show_karma = False
         elif request.user.is_administrator_or_moderator():
             can_show_karma = True
-        elif request.user == profile_owner:
+        elif request.user.pk == profile_owner.pk:
             can_show_karma = True
         else:
             can_show_karma = False

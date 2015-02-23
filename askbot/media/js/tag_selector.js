@@ -149,14 +149,20 @@ function pickedTags() {
             delete from_target[tagname];
         };
         if (send_ajax) {
+            //unpick tag
             sendAjax(
                 [tagname],
                 reason,
                 'remove',
-                function () {
-                    deleteTagLocally();
-                    if ($('body').hasClass('main-page')) {
-                        askbot.controllers.fullTextSearch.refresh();
+                function (reData) {
+                    if (reData.success) {
+                        deleteTagLocally();
+                        if ($('body').hasClass('main-page')) {
+                            askbot.controllers.fullTextSearch.refresh();
+                        }
+                    } else if (reData.message) {
+                        var tag = from_target[tagname];
+                        showMessage(tag, reData.message, 'after');
                     }
                 }
             );
@@ -297,20 +303,23 @@ function pickedTags() {
 
         if (clean_tagnames.length > 0) {
             //send ajax request to pick this tag
-
             sendAjax(
                 clean_tagnames,
                 reason,
                 'add',
-                function () {
-                    renderNewTags(
-                        clean_tagnames,
-                        reason,
-                        to_target,
-                        to_tag_container
-                    );
-                    $(input_sel).val('');
-                    askbot.controllers.fullTextSearch.refresh();
+                function (reData) {
+                    if (reData.success) {
+                        renderNewTags(
+                            clean_tagnames,
+                            reason,
+                            to_target,
+                            to_tag_container
+                        );
+                        $(input_sel).val('');
+                        askbot.controllers.fullTextSearch.refresh();
+                    } else if (reData.message) {
+                        showMessage(to_tag_container, reData.message, 'after');
+                    }
                 }
             );
         }

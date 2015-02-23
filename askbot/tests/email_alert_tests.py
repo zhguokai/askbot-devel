@@ -333,7 +333,7 @@ class EmailAlertTests(TestCase):
     @email_alert_test
     def test_answer_delete_comment(self):
         comment = self.proto_post_answer_comment()
-        comment.get_owner().delete_comment(comment = comment)
+        comment.author.delete_comment(comment = comment)
 
     @email_alert_test
     def test_question_edit(self):
@@ -401,7 +401,7 @@ class EmailAlertTests(TestCase):
         in the base class user does not receive a notification
         """
         comment = self.proto_question_comment()
-        comment.get_owner().delete_comment(comment)
+        comment.author.delete_comment(comment)
 
     def proto_test_q_ask(self):
         """base method for tests that

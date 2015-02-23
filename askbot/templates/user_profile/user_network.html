@@ -15,7 +15,7 @@
             {{ macros.user_list(followed_users) }}
         {% endif %}
     {% else %}
-        {% if request.user == view_user %}
+        {% if request.user.pk == view_user.pk %}
             <p>{% trans %}Your network is empty. Would you like to follow someone? - Just visit their profiles and click "follow"{% endtrans %}</p>
         {% else %}
             <p>{% trans username = view_user.username|escape %}{{username}}'s network is empty{% endtrans %}</p>
