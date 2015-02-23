@@ -55,7 +55,7 @@
         </div>
     </div>
 {% endif %}
-{% if question.closed == False and request.user == question.author %}{# this is outside the form on purpose #}
+{% if question.closed == False and request.user.pk == question.author_id %}{# this is outside the form on purpose #}
 <input 
   type="button"
   class="submit after-editor answer-own-question"

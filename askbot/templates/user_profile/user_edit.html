@@ -11,7 +11,7 @@
         <div id="left" style="float:left;width:180px">
             <div class='avatar'>
                 {{ macros.gravatar(view_user, 128) }}
-                {% if request.user == view_user %}
+                {% if request.user.pk == view_user.pk %}
                     <p><a
                         {% if support_custom_avatars %}
                             href="{% url avatar_change %}"

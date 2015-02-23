@@ -203,7 +203,7 @@ def onAnswerAccept(answer, user, timestamp=None):
                    reputation=answer.author.reputation)
         reputation.save()
 
-    if answer.author == question.author and user == question.author:
+    if answer.author_id == question.author_id and user.pk == question.author_id:
         #a plug to prevent reputation gaming by posting a question
         #then answering and accepting as best all by the same person
         return
@@ -249,7 +249,7 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
         )
         reputation.save()
 
-    if answer.author == question.author and user == question.author:
+    if answer.author_id == question.author_id and user.pk == question.author_id:
         #a symmettric measure for the reputation gaming plug
         #as in the onAnswerAccept function
         #here it protects the user from uwanted reputation loss

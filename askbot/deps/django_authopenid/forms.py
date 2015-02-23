@@ -395,7 +395,7 @@ class ChangeEmailForm(forms.Form):
         if 'email' in self.cleaned_data:
             try:
                 user = User.objects.get(email = self.cleaned_data['email'])
-                if self.user and self.user == user:   
+                if self.user and self.user.pk == user.pk:   
                     return self.cleaned_data['email']
             except User.DoesNotExist:
                 return self.cleaned_data['email']

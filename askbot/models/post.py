@@ -1560,9 +1560,6 @@ class Post(models.Model):
         else:
             return self.added_at
 
-    def get_owner(self): # TODO: remove me
-        return self.author
-
     def get_author_list(
             self,
             include_comments = False,

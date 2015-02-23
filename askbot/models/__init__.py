@@ -639,7 +639,7 @@ def _assert_user_can(
         }
         error_message = string_concat(error_message, '.</br> ', message_keys.PUNISHED_USER_INFO)
 
-    elif post and owner_can and user == post.get_owner():
+    elif post and owner_can and user.pk == post.author_id:
         if user.is_suspended() and suspended_owner_cannot:
             error_message = _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
                 'perform_action': action_display,
@@ -713,8 +713,8 @@ def user_assert_can_unaccept_best_answer(self, answer=None):
         error_message = blocked_error_message
     elif self.is_suspended():
         error_message = suspended_error_message
-    elif self == answer.thread._question_post().get_owner():
-        if self == answer.get_owner():
+    elif self.pk == answer.thread._question_post().author_id:
+        if self.pk == answer.author_id:
             if not self.is_administrator():
                 #check rep
                 _assert_user_can(
@@ -744,7 +744,7 @@ def user_assert_can_unaccept_best_answer(self, answer=None):
             return
 
     else:
-        question_owner = answer.thread._question_post().get_owner()
+        question_owner = answer.thread._question_post().author
         error_message = _(message_keys.MODERATORS_OR_AUTHOR_CAN_PEFROM_ACTION) % {
             'post_author': askbot_settings.WORDS_AUTHOR_OF_THE_QUESTION,
             'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
@@ -767,7 +767,7 @@ def user_assert_can_vote_for_post(
     :param:direction can be 'up' or 'down'
     :param:post can be instance of question or answer
     """
-    if self == post.author:
+    if self.pk == post.author_id:
         raise django_exceptions.PermissionDenied(
             _('Sorry, you cannot vote for your own posts')
         )
@@ -888,7 +888,7 @@ def user_assert_can_edit_comment(self, comment=None):
             error_message = _('Sorry, commenting closed entries is not allowed')
             raise django_exceptions.PermissionDenied(error_message)
 
-    if comment.author == self:
+    if comment.author_id == self.pk:
         if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
             now = datetime.datetime.now()
             delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
@@ -942,7 +942,7 @@ def user_can_post_comment(self, parent_post=None):
             return False
 
     elif self.is_suspended():
-        if parent_post and self == parent_post.author:
+        if parent_post and self.pk == parent_post.author_id:
             return True
         else:
             return False
@@ -1106,7 +1106,7 @@ def user_assert_can_delete_question(self, question = None):
     self.assert_can_delete_answer(question)
     if self.is_administrator() or self.is_moderator():
         return
-    if self == question.get_owner():
+    if self.pk == question.author_id:
         #if there are answers by other people,
 
         answer_count = question.thread.all_answers().exclude(author=self).count()
@@ -2157,7 +2157,7 @@ def user_post_answer(
                 ):
 
     #todo: move this to assertion - user_assert_can_post_answer
-    if self == question.author and not self.is_administrator():
+    if self.pk == question.author_id and not self.is_administrator():
 
         # check date and rep required to post answer to own question
 
@@ -2358,7 +2358,7 @@ def user_is_owner_of(self, obj):
     False otherwise
     """
     if isinstance(obj, Post) and obj.post_type == 'question':
-        return self == obj.author
+        return self.pk == obj.author_id
     else:
         raise NotImplementedError()
 

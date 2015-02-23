@@ -291,7 +291,7 @@ class SelfLearner(Badge):
         question = context_object.thread._question_post()
         answer = context_object
 
-        if question.author == answer.author and answer.points >= min_upvotes:
+        if question.author_id == answer.author_id and answer.points >= min_upvotes:
             self.award(context_object.author, context_object, timestamp)
 
 class QualityPost(Badge):

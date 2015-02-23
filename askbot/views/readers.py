@@ -625,7 +625,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     if request.user.is_authenticated():
         if askbot_settings.LIMIT_ONE_ANSWER_PER_USER:
             for answer in answers:
-                if answer.author == request.user:
+                if answer.author_id == request.user.pk:
                     new_answer_allowed = False
                     previous_answer = answer
                     break
