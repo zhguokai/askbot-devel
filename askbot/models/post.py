@@ -35,10 +35,8 @@ from askbot.models.tag import tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
-from askbot.utils.html import get_word_count
-from askbot.utils.html import sanitize_html
-from askbot.utils.html import strip_tags
-from askbot.utils.html import site_url
+from askbot.utils.html import (get_word_count, has_moderated_tags,
+                moderate_tags, sanitize_html, strip_tags, site_url)
 from askbot.models.base import BaseQuerySetManager, DraftContent
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
@@ -205,8 +203,7 @@ class PostManager(BaseQuerySetManager):
                 email_notify=False,
                 post_type=None,
                 by_email=False,
-                ip_addr=None,
-                renderer=None,
+                ip_addr=None
             ):
         # TODO: Some of this code will go to Post.objects.create_new
 
@@ -225,8 +222,7 @@ class PostManager(BaseQuerySetManager):
             added_at=added_at,
             wiki=wiki,
             text=text,
-            language_code=language_code,
-            renderer=renderer,
+            language_code=language_code
             #.html field is denormalized by the save() call
         )
 
@@ -240,7 +236,7 @@ class PostManager(BaseQuerySetManager):
         is_private = is_private or \
             (thread and thread.requires_response_moderation(author))
 
-        parse_results = post.parse_and_save(author=author, is_private=is_private)
+        post.save() #saved so that revision can have post_id
 
         revision = post.add_revision(
             author=author,
@@ -250,6 +246,11 @@ class PostManager(BaseQuerySetManager):
             by_email=by_email,
             ip_addr=ip_addr
         )
+
+        #now we do actual parsing and saving
+        #we know the revision number so if it is 0, we generate html
+        #with sanitizing renderer
+        parse_results = post.parse_and_save(author=author, is_private=is_private)
 
         if revision.revision > 0:
             signals.post_updated.send(
@@ -397,7 +398,13 @@ class Post(models.Model):
     old_comment_id = models.PositiveIntegerField(null=True, blank=True, default=None, unique=True)
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
-    thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
+    thread = models.ForeignKey('Thread', blank=True, null=True, default=None, related_name='posts')
+    current_revision = models.ForeignKey(
+                                'PostRevision', 
+                                blank=True, 
+                                null=True, 
+                                related_name='rendered_posts'
+                            )# "rendered" revision
     groups = models.ManyToManyField('Group', through='PostToGroup', related_name = 'group_posts')#used for group-private posts
 
     author = models.ForeignKey(User, related_name='posts')
@@ -456,8 +463,6 @@ class Post(models.Model):
     #the reason is that the title and tags belong to thread,
     #but the question body to Post
     is_anonymous = models.BooleanField(default=False)
-
-    renderer = models.CharField(max_length=255, null=True)
 
     objects = PostManager()
 
@@ -540,6 +545,7 @@ class Post(models.Model):
                 anticipated_authors
             )
 
+            #todo: stuff below does not belong here
             #find mentions that were removed and identify any previously
             #entered mentions so that we can send alerts on only new ones
             from askbot.models.user import Activity
@@ -577,7 +583,16 @@ class Post(models.Model):
 
         last_revision = self.html
         data = self.parse_post_text()
+
+        #todo: possibly remove feature of posting links 
+        #depending on user's reputation
         self.html = author.fix_html_links(data['html'])
+
+        #if current revision is 0, that means images and links
+        #should be edited out
+        not_admin = not author.is_administrator_or_moderator()
+        if self.current_revision.revision == 0 and not_admin:
+            self.html = moderate_tags(self.html)
 
         newly_mentioned_users = set(data['newly_mentioned_users']) - set([author])
         removed_mentions = data['removed_mentions']
@@ -600,6 +615,7 @@ class Post(models.Model):
         #because generic relation needs primary key of the related object
         super(self.__class__, self).save(**kwargs)
 
+        #todo: move this group stuff out of this function
         if self.is_comment():
             #copy groups from the parent post into the comment
             groups = self.parent.groups.all()
@@ -686,8 +702,7 @@ class Post(models.Model):
         return answer
 
     def get_text_converter(self):
-        renderer = self.renderer or get_default_post_renderer(self.post_type)
-
+        renderer = get_default_post_renderer(self.post_type)
         try:
             renderer_path = POST_RENDERERS_MAP[renderer]
         except KeyError:
@@ -884,6 +899,15 @@ class Post(models.Model):
         """Used at runtime only, the value is not
         stored in the database"""
         self._is_approved = False
+
+    def set_is_approved(self, is_approved):
+        """sets denormalized value of whether post/thread is 
+        approved"""
+        self.approved = is_approved 
+        self.save()
+        if self.is_question():
+            self.thread.approved = is_approved
+            self.thread.save()
 
     def is_approved(self):
         """``False`` only when moderation is ``True`` and post
@@ -1919,8 +1943,10 @@ class Post(models.Model):
                 ip_addr=ip_addr,
                 is_anonymous=edit_anonymously
             )
+        
+        do_render = latest_rev.revision > 0 or self.current_revision == latest_rev
 
-        if latest_rev.revision > 0:
+        if do_render:
             parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
 
             signals.post_updated.send(
@@ -2270,8 +2296,19 @@ class PostRevisionManager(models.Manager):
         is_content = post.is_question() or post.is_answer() or post.is_comment()
         needs_moderation = is_content and (author.needs_moderation() or moderate_email)
 
+        needs_premoderation = askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
+                                and needs_moderation 
+
+        #soft moderation is needed when post html has links and/or images
+        #when images and/or links are moderated (per live settings)
+        #and when user is not admin (todo: define who can skip this moderation)
+        test_html = post.get_text_converter()(kwargs['text'])
+        has_links = has_moderated_tags(test_html)
+        not_a_mod = not author.is_administrator_or_moderator()
+        needs_soft_moderation = has_links and not_a_mod
+
         #0 revision is not shown to the users
-        if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' and needs_moderation:
+        if needs_premoderation or needs_soft_moderation:
             kwargs.update({
                 'approved': False,
                 'approved_by': None,
@@ -2304,7 +2341,20 @@ class PostRevisionManager(models.Manager):
 
         #audit or pre-moderation modes require placement of the post on the moderation queue
         if needs_moderation:
-            revision.place_on_moderation_queue()
+            revision.place_on_moderation_queue(needs_soft_moderation)
+
+        #set current "rendered" revision for soft moderation,
+        #for autoapproved revision and premoderated revision
+        #of new post
+        if not needs_premoderation:
+            post.current_revision = revision
+            post.save()
+        elif post.revisions.count() == 1:
+            post.current_revision = revision
+            post.save()
+        #don't advance current revision if we
+        #have premoderated revision and have previously 
+        #approved revisions
 
         revision.post.cache_latest_revision(revision)
 
@@ -2347,34 +2397,12 @@ class PostRevision(models.Model):
         app_label = 'askbot'
 
 
-    def place_on_moderation_queue(self):
-        """Revision has number 0, which is 
-        reserved for the moderated revisions.
-
-        Flag Post.is_approved = False is used only
-        for posts that have only one revision - the 
-        moderated one - i.e. for the new posts
-
-        The same applies to the brand new Threads
-        Thread.is_approved = False is set to brand new
-        threads, whose first revision is moderated
-
-        If post has > 1 revision and one on moderation
-        the Post(and Thread).is_approved will be True,
-        but the latest displayed revision will be
-        the one with != 0 revision number.
-
-        This allows us to moderate every revision
-        """
-        #this is run on "post-save" so for a new post
-        #we'll have just one revision
+    def place_on_moderation_queue(self, soft=True):
+        """`soft` moderation is when moderated revision is displayed"""
         if self.post.revisions.count() == 1:
-            self.post.approved = False
-            self.post.save()
-
-            if self.post.is_question():
-                self.post.thread.approved = False
-                self.post.thread.save()
+            #post is approved, but some parts may be quarantined
+            #e.g. images and links
+            self.post.set_is_approved(soft)
 
             #give message to the poster
             if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':

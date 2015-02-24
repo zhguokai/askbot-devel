@@ -703,7 +703,7 @@ class ApprovedPostNotificationRespondable(BaseEmail):
         replace_content_address = 'reply-kot1jxx4@' + hostname
         append_content_address = 'reply-kot1jxx4@' + hostname
         return {
-            'revision': question.get_latest_revision(),
+            'revision': question.current_revision,
             'mailto_link_subject': question.thread.title,
             'reply_code': append_content_address + ',' + replace_content_address,
             'append_content_address': append_content_address,

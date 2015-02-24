@@ -2075,6 +2075,18 @@ ul.js-related-tags li {
   margin-bottom: 10px;
 }
 /* ----- Question template ----- */
+.moderated-item {
+  background: #ccc;
+  border-radius: 4px;
+  -ms-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  padding: 3px;
+}
+.moderated-item .fa {
+  color: brown;
+}
 .answer .moderated, .question .moderated {
   font-weight: bold;
   background: url(../images/dialog-warning.png) 2px 0 no-repeat;
