@@ -190,7 +190,9 @@ def strip_tags(html, tags=None):
     return unicode(soup.find('body').renderContents(), 'utf-8')
 
 def sanitize_html(html):
-    """Sanitizes an HTML fragment."""
+    """Sanitizes an HTML fragment.
+    from forbidden markup
+    """
     p = html5lib.HTMLParser(tokenizer=HTMLSanitizer,
                             tree=treebuilders.getTreeBuilder("dom"))
     dom_tree = p.parseFragment(html)
@@ -205,9 +207,6 @@ def has_moderated_tags(html):
     """True, if html contains tags subject to moderation
     (images and/or links)"""
     from askbot.conf import settings
-    if not (settings.MODERATE_LINKS or settings.MODERATE_IMAGES):
-        return False
-
     soup = BeautifulSoup(html, 'html5lib')
     if settings.MODERATE_LINKS:
         links = soup.find_all('a')
@@ -226,9 +225,6 @@ def moderate_tags(html):
     with "item in moderation" alerts
     """
     from askbot.conf import settings
-    if not (settings.MODERATE_LINKS or settings.MODERATE_IMAGES):
-        return html
-
     soup = BeautifulSoup(html, 'html5lib')
     replaced = False
     if settings.MODERATE_LINKS:

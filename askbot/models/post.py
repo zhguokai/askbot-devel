@@ -43,6 +43,43 @@ from askbot.models.base import BaseQuerySetManager, DraftContent
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.search import mysql
 
+
+def default_html_moderator(post):
+    """Moderates inline HTML items: images and/or links
+    depending on what items are moderated per settings.
+    
+    Returns sanitized html with suspicious
+    content edited out and replaced with warning signs.
+    Moderators content is not sanitized.
+
+    Latest revision is placed on the moderation queue.
+
+    TODO: Make moderation work per-item: e.g. per link
+    or per image.
+
+    This function can be overridden by setting python path
+    to the alternative function as a value of `ASKBOT_HTML_MODERATOR`
+    in the settings.py, e.g:
+
+    ASKBOT_HTML_MODERATOR = 'my_extension.html_moderator'
+    """
+    if not (askbot_settings.MODERATE_LINKS or askbot_settings.MODERATE_IMAGES):
+        return post.html
+
+    rev = post.current_revision
+
+    author = rev.author
+    not_admin = not author.is_administrator_or_moderator()
+    if not_admin and has_moderated_tags(post.html):
+        before = post.html 
+        after = moderate_tags(before)
+        if after != before:
+            rev.place_on_moderation_queue()
+            return after
+
+    return post.html
+
+
 class PostToGroup(models.Model):
     post = models.ForeignKey('Post')
     group = models.ForeignKey('Group')
@@ -247,10 +284,11 @@ class PostManager(BaseQuerySetManager):
             ip_addr=ip_addr
         )
 
-        #now we do actual parsing and saving
-        #we know the revision number so if it is 0, we generate html
-        #with sanitizing renderer
+        #now we parse html
         parse_results = post.parse_and_save(author=author, is_private=is_private)
+
+        #moderate inline content
+        post.moderate_html()
 
         if revision.revision > 0:
             signals.post_updated.send(
@@ -378,7 +416,7 @@ POST_RENDERERS_MAP = getattr(django_settings, 'ASKBOT_POST_RENDERERS', {
 })
 
 
-def get_default_post_renderer(post_type):
+def get_post_renderer_type(post_type):
     have_simple_comment = (
         post_type == 'comment' and
         askbot_settings.COMMENTS_EDITOR_TYPE == 'plain-text'
@@ -402,7 +440,9 @@ class Post(models.Model):
     current_revision = models.ForeignKey(
                                 'PostRevision', 
                                 blank=True, 
-                                null=True, 
+                                null=True, #nullable b/c we have to first save post
+                                           #and then add link to current revision
+                                           #(which has a non-nullable fk to post)
                                 related_name='rendered_posts'
                             )# "rendered" revision
     groups = models.ManyToManyField('Group', through='PostToGroup', related_name = 'group_posts')#used for group-private posts
@@ -545,7 +585,7 @@ class Post(models.Model):
                 anticipated_authors
             )
 
-            #todo: stuff below does not belong here
+            #todo: stuff below possibly does not belong here
             #find mentions that were removed and identify any previously
             #entered mentions so that we can send alerts on only new ones
             from askbot.models.user import Activity
@@ -576,8 +616,9 @@ class Post(models.Model):
 
     #todo: when models are merged, it would be great to remove author parameter
     def parse_and_save(self, author=None, **kwargs):
-        """generic method to use with posts to be used prior to saving
-        post edit or addition
+        """converts .text version of post to .html
+        using appropriate converter.
+        @mentions are rendered as well as internal links.
         """
         assert(author is not None)
 
@@ -588,18 +629,12 @@ class Post(models.Model):
         #depending on user's reputation
         self.html = author.fix_html_links(data['html'])
 
-        #if current revision is 0, that means images and links
-        #should be edited out
-        not_admin = not author.is_administrator_or_moderator()
-        if self.current_revision.revision == 0 and not_admin:
-            self.html = moderate_tags(self.html)
-
-        newly_mentioned_users = set(data['newly_mentioned_users']) - set([author])
-        removed_mentions = data['removed_mentions']
-
         #a hack allowing to save denormalized .summary field for questions
         if hasattr(self, 'summary'):
             self.summary = self.get_snippet()
+
+        newly_mentioned_users = set(data['newly_mentioned_users']) - set([author])
+        removed_mentions = data['removed_mentions']
 
         #delete removed mentions
         for rm in removed_mentions:
@@ -702,13 +737,30 @@ class Post(models.Model):
         return answer
 
     def get_text_converter(self):
-        renderer = get_default_post_renderer(self.post_type)
+        """returns text converter, which may
+        be overridden by setting
+        ASKBOT_POST_RENDERERS (look for format in the source code)
+        """
+        renderer_type = get_post_renderer_type(self.post_type)
         try:
-            renderer_path = POST_RENDERERS_MAP[renderer]
+            renderer_path = POST_RENDERERS_MAP[renderer_type]
         except KeyError:
             raise NotImplementedError
 
         return import_string(renderer_path)
+
+    def get_html_moderator(self):
+        """returns 'moderating' sanitizer for HTML
+        which is expected to replace 'moderatable'
+        content with the corresponding inline
+        notifications and places item(s) on the mod queue
+        """
+        moderator_path = getattr(
+                            django_settings,
+                            'ASKBOT_HTML_MODERATOR',
+                            'askbot.models.post.default_html_moderator'
+                        )
+        return import_string(moderator_path)
 
     def has_group(self, group):
         """true if post belongs to the group"""
@@ -886,6 +938,16 @@ class Post(models.Model):
         self.save()
         post.delete()
 
+    def moderate_html(self):
+        """moderate inline content, such
+        as links and images"""
+        moderate = self.get_html_moderator()
+        before = self.html
+        after = moderate(self)
+        if after != before:
+            self.html = after
+            self.summary = self.get_snippet()
+            self.save()
 
     def is_private(self):
         """true, if post belongs to the global group"""
@@ -1579,6 +1641,8 @@ class Post(models.Model):
         rev = self.revisions.order_by('-revision')[0]
         self.cache_latest_revision(rev)
         return rev
+#        #todo: remove this method
+#        return self.current_revision
 
     def get_earliest_revision(self):
         if hasattr(self, '_first_rev_cache'):
@@ -1944,10 +2008,10 @@ class Post(models.Model):
                 is_anonymous=edit_anonymously
             )
         
-        do_render = latest_rev.revision > 0 or self.current_revision == latest_rev
-
-        if do_render:
+        if latest_rev.revision > 0:
             parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
+
+            self.moderate_html()
 
             signals.post_updated.send(
                 post=self,
@@ -2299,16 +2363,8 @@ class PostRevisionManager(models.Manager):
         needs_premoderation = askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
                                 and needs_moderation 
 
-        #soft moderation is needed when post html has links and/or images
-        #when images and/or links are moderated (per live settings)
-        #and when user is not admin (todo: define who can skip this moderation)
-        test_html = post.get_text_converter()(kwargs['text'])
-        has_links = has_moderated_tags(test_html)
-        not_a_mod = not author.is_administrator_or_moderator()
-        needs_soft_moderation = has_links and not_a_mod
-
         #0 revision is not shown to the users
-        if needs_premoderation or needs_soft_moderation:
+        if needs_premoderation:
             kwargs.update({
                 'approved': False,
                 'approved_by': None,
@@ -2341,7 +2397,7 @@ class PostRevisionManager(models.Manager):
 
         #audit or pre-moderation modes require placement of the post on the moderation queue
         if needs_moderation:
-            revision.place_on_moderation_queue(needs_soft_moderation)
+            revision.place_on_moderation_queue()
 
         #set current "rendered" revision for soft moderation,
         #for autoapproved revision and premoderated revision
@@ -2397,41 +2453,17 @@ class PostRevision(models.Model):
         app_label = 'askbot'
 
 
-    def place_on_moderation_queue(self, soft=True):
-        """`soft` moderation is when moderated revision is displayed"""
+    def place_on_moderation_queue(self):
+        """Creates moderation queue
+        Activity items with recipients
+        """
         if self.post.revisions.count() == 1:
-            #post is approved, but some parts may be quarantined
-            #e.g. images and links
-            self.post.set_is_approved(soft)
-
-            #give message to the poster
-            if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
-                if self.by_email:
-                    #todo: move this to the askbot.mail module
-                    from askbot.mail import send_mail
-                    email_context = {
-                        'site': askbot_settings.APP_SHORT_NAME
-                    }
-                    body_text = _(
-                        'Thank you for your post to %(site)s. '
-                        'It will be published after the moderators review.'
-                    ) % email_context
-                    send_mail(
-                        subject_line = _('your post to %(site)s') % email_context,
-                        body_text = body_text,
-                        recipient_list = [self.author.email,],
-                    )
-
-                else:
-                    message = _(
-                        'Your post was placed on the moderation queue '
-                        'and will be published after the moderator approval.'
-                    )
-                    self.author.message_set.create(message = message)
-
+            if self.revision == 0:
+                #call below hides post from the display to the
+                #general public
+                self.post.set_is_approved(False)
             activity_type = const.TYPE_ACTIVITY_MODERATED_NEW_POST
         else:
-            #In this case, use different activity type, but perhaps there is no real need
             activity_type = const.TYPE_ACTIVITY_MODERATED_POST_EDIT
 
         #Activity instance is the actual queue item
@@ -2446,13 +2478,40 @@ class PostRevision(models.Model):
                                     )
         except Activity.DoesNotExist:
             activity = Activity(
-                            user = self.author,
-                            content_object = self,
-                            activity_type = activity_type,
-                            question = self.get_origin_post()
+                            user=self.author,
+                            content_object=self,
+                            activity_type=activity_type,
+                            question=self.get_origin_post()
                         )
             activity.save()
-            activity.add_recipients(self.post.get_moderators())
+
+        activity.add_recipients(self.post.get_moderators())
+
+        #give message to the poster
+        #TODO: move this out as signal handler
+        if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
+            if self.by_email:
+                #todo: move this to the askbot.mail module
+                from askbot.mail import send_mail
+                email_context = {
+                    'site': askbot_settings.APP_SHORT_NAME
+                }
+                body_text = _(
+                    'Thank you for your post to %(site)s. '
+                    'It will be published after the moderators review.'
+                ) % email_context
+                send_mail(
+                    subject_line = _('your post to %(site)s') % email_context,
+                    body_text = body_text,
+                    recipient_list = [self.author.email,],
+                )
+
+            else:
+                message = _(
+                    'Your post was placed on the moderation queue '
+                    'and will be published after the moderator approval.'
+                )
+                self.author.message_set.create(message = message)
 
     def should_notify_author_about_publishing(self, was_approved=False):
         """True if author should get email about making own post"""
