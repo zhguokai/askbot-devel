@@ -2894,7 +2894,7 @@ def user_fix_html_links(self, text):
                 askbot_settings.MIN_REP_TO_INSERT_LINK
             ) % askbot_settings.MIN_REP_TO_INSERT_LINK
             self.message_set.create(message=message)
-        return result
+            return result
     return text
 
 def user_unfollow_question(self, question = None):
@@ -2941,7 +2941,11 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
     post = post_revision.post
 
     #approval of unpublished revision
-    if post_revision.revision == 0:
+    if post_revision.revision > 0:
+        post.parse_and_save(author=post_revision.author)
+        post.thread.invalidate_cached_data()
+        #todo: maybe add a notification here
+    else:
         post_revision.revision = post.get_latest_revision_number() + 1
 
         post_revision.save()
@@ -2954,13 +2958,14 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
                 post.thread.answer_count += 1
                 post.thread.save()
 
-
-
         post.approved = True
         post.text = post_revision.text
 
         post_is_new = (post.revisions.count() == 1)
-        parse_results = post.parse_and_save(author=post_revision.author)
+        parse_results = post.parse_and_save(
+                            author=post_revision.author
+                        )
+
         signals.post_updated.send(
             post=post,
             updated_by=post_revision.author,
@@ -3615,6 +3620,7 @@ def record_delete_question(instance, delete_by, **kwargs):
     activity.save()
 
 def record_flag_offensive(instance, mark_by, **kwargs):
+    """places flagged post on the moderation queue"""
     activity = Activity(
                     user=mark_by,
                     active_at=datetime.datetime.now(),

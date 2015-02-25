@@ -199,9 +199,8 @@ class ThreadManager(BaseQuerySetManager):
             question.last_edited_at = added_at
             question.wikified_at = added_at
 
-        #this is kind of bad, but we save assign privacy groups to posts and thread
-        #this call is rather heavy, we should split into several functions
-        parse_results = question.parse_and_save(author=author, is_private=is_private)
+        #save question to have id for revision
+        question.save()
 
         revision = question.add_revision(
             author=author,
@@ -213,6 +212,13 @@ class ThreadManager(BaseQuerySetManager):
             email_address=email_address,
             ip_addr=ip_addr
         )
+
+        #this is kind of bad, but we save assign privacy groups to posts and thread
+        #this call is rather heavy, we should split into several functions
+        parse_results = question.parse_and_save(author=author, is_private=is_private)
+
+        #moderate inline html items (e.g. links, images)
+        question.moderate_html()
 
         author_group = author.get_personal_group()
         thread.add_to_groups([author_group], visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES)

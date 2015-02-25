@@ -48,6 +48,24 @@ settings.register(
 settings.register(
     BooleanValue(
         MODERATION,
+        'MODERATE_IMAGES',
+        default=False,
+        description=_('Enable image moderation')
+    )
+)
+
+settings.register(
+    BooleanValue(
+        MODERATION,
+        'MODERATE_LINKS',
+        default=False,
+        description=_('Enable link moderation')
+    )
+)
+
+settings.register(
+    BooleanValue(
+        MODERATION,
         'ENABLE_TAG_MODERATION',
         default=False,
         description=_('Enable tag moderation'),
