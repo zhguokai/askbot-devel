@@ -301,13 +301,13 @@ finally:
     class UserAdmin(OrigUserAdmin):
         list_display = OrigUserAdmin.list_display + ('languages', 
             'date_joined', 'reputation', 
-            'is_administrator', 'is_moderator',
+            'is_administrator', 'is_moderator', 'email_isvalid',
             'my_interesting_tags', 'interesting_tag_wildcards',
             'my_ignored_tags', 'ignored_tag_wildcards', 
             'my_subscribed_tags', 'subscribed_tag_wildcards',
             'email_tag_filter_strategy', 'display_tag_filter_strategy', 
             'get_groups', 'get_primary_group', 'get_default_site')
-        list_filter = OrigUserAdmin.list_filter + (IsAdministrator, IsModerator, 'email_tag_filter_strategy', 'display_tag_filter_strategy', SeesThreadsInLanguage, InGroup)
+        list_filter = OrigUserAdmin.list_filter + (IsAdministrator, IsModerator, 'email_isvalid', 'email_tag_filter_strategy', 'display_tag_filter_strategy', SeesThreadsInLanguage, InGroup)
 
         def interesting_tag_wildcards(self, obj):
             return ', '.join(obj.interesting_tags.strip().split())
