@@ -57,7 +57,7 @@ def absolutize_urls(html):
     url_re3 = re.compile(r'(?P<prefix><a[^<]+href=)"(?P<url>/[^"]+)"', re.I)
     url_re4 = re.compile(r"(?P<prefix><a[^<]+href=)'(?P<url>/[^']+)'", re.I)
     base_url = site_url('')#important to have this without the slash
-    img_replacement = '\g<prefix>"%s/\g<url>" style="max-width:500px;"' % base_url
+    img_replacement = '\g<prefix>"%s/\g<url>"' % base_url
     replacement = '\g<prefix>"%s\g<url>"' % base_url
     html = url_re1.sub(img_replacement, html)
     html = url_re2.sub(img_replacement, html)
