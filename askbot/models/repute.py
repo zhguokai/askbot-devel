@@ -94,6 +94,10 @@ class BadgeData(models.Model):
     awarded_to = models.ManyToManyField(
                     User, through='Award', related_name='badges'
                 )
+    #use this field if badges should be sorted
+    #on the badges page in some specific ordering
+    #and add setting ASKBOT_BADGE_ORDERING = 'custom'
+    display_order = models.PositiveIntegerField(default=0)
 
     def _get_meta_data(self):
         """retrieves badge metadata stored
