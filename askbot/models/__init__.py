@@ -3914,9 +3914,15 @@ def autoapprove_reputable_user(user=None, reputation_before=None, *args, **kwarg
     if user.is_watched() and reputation_before < margin and user.reputation >= margin:
         user.set_status('a')
 
-def init_badge_data(sender, created_models=None, **kwargs):
-    from askbot.models import badges
-    if table_exists('askbot_badgedata'):
+def init_badge_data(sender, app=None, migration=None, method=None, **kwargs):
+    """initializes badge data from the hardcoded badge info,
+    e.g. in askbot/models/badges.py"""
+    #mig_name is the name of latest migration that changes model 
+    #askbot.models.BadgeData. It's important that we run this
+    #only after the `askbot_badgedata` table is fully constructed
+    mig_name = '0186_auto__add_field_badgedata_display_order'
+    if app == 'askbot' and method == 'forward' and migration.name() == mig_name:
+        from askbot.models import badges
         badges.init_badges()
 
 def record_spam_rejection(
@@ -3950,7 +3956,8 @@ def record_spam_rejection(
         activity.save()
     
 
-django_signals.post_syncdb.connect(
+from south.signals import ran_migration 
+ran_migration.connect(
     init_badge_data,
     dispatch_uid='init_badge_data_on_post_syncdb'
 )
