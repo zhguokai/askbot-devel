@@ -170,6 +170,7 @@ urlpatterns = patterns('',
         name = 'custom_js'
     ),
     service_url(r'^translate-url/', views.commands.translate_url, name='translate_url'),
+    service_url(r'^reorder-badges/', views.commands.reorder_badges, name='reorder_badges'),
     service_url(r'^import-data/$', views.writers.import_data, name='import_data'),
     service_url(r'^%s$' % pgettext('urls', 'about/'), views.meta.about, name='about'),
     service_url(r'^%s$' % pgettext('urls', 'faq/'), views.meta.faq, name='faq'),

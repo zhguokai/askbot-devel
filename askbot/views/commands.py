@@ -1538,3 +1538,31 @@ def translate_url(request):
         translation.activate(site_lang)
 
     return {'url': url}
+
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def reorder_badges(request):
+    """places given badge to desired position"""
+    if request.user.is_anonymous() \
+        or not request.user.is_administrator_or_moderator():
+        raise exceptions.PermisionDenied()
+
+    form = forms.ReorderBadgesForm(request.POST)
+    if form.is_valid():
+        badge_id = form.cleaned_data['badge_id']
+        position = form.cleaned_data['position']
+        badge = models.BadgeData.objects.get(id=badge_id)
+        badges = list(models.BadgeData.objects.all())
+        badges = filter(lambda v: v.is_enabled(), badges)
+        badges.remove(badge)
+        badges.insert(position, badge)
+        pos = 0
+        for badge in badges:
+            badge.display_order = 10 * pos
+            badge.save()
+            pos += 10
+        return
+
+    raise exceptions.PermissionDenied()

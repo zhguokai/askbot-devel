@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version (only in the repository)
 --------------------------------------------
+* Allowed reordering badges on the badges page via drag and drop
 * Added option to forbid commenting in closed questions
 * Added separate optional time limits to edit questions and answers
 * Added option to disable comments under questions or answers

@@ -129,7 +129,7 @@ class BadgeData(models.Model):
 
     class Meta:
         app_label = 'askbot'
-        ordering = ('slug',)
+        ordering = ('display_order', 'slug')
 
     def __unicode__(self):
         return u'%s: %s' % (self.get_type_display(), self.slug)

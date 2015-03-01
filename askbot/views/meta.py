@@ -198,13 +198,6 @@ def badges(request):#user status/reputation system
     known_badges = badge_data.BADGES.keys()
     badges = BadgeData.objects.filter(slug__in=known_badges)
 
-    if getattr(django_settings, 'ASKBOT_USE_CUSTOM_BADGE_ORDERING', False):
-        #custom sort order, adjust values of `display_order` as needed
-        badges = badges.order_by('display_order')
-    else:
-        #alphabetic sorting
-        badges = badges.order_by('slug')
-        
     badges = filter(lambda v: v.is_enabled(), badges)
 
     my_badge_ids = list()
