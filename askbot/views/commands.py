@@ -1562,7 +1562,7 @@ def reorder_badges(request):
         for badge in badges:
             badge.display_order = 10 * pos
             badge.save()
-            pos += 10
+            pos += 1
         return
 
     raise exceptions.PermissionDenied()
