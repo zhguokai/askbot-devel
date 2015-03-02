@@ -33,6 +33,7 @@ from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot import signals
 from askbot import const
 from askbot.utils.lists import LazyList
+from askbot.utils.loading import load_plugin
 from askbot.search import mysql
 from askbot.utils.slug import slugify
 from askbot.utils import translation as translation_utils
@@ -58,6 +59,25 @@ def clean_tagnames(tagnames):
             return ' '.join(tagnames)
         else:
             tagnames.pop()
+
+
+def default_title_renderer(thread):
+    """renders thread title,
+    can be overridden by setting
+    ASKBOT_QUESTION_TITLE_RENDERER
+    """
+    if thread.is_private():
+        attr = const.POST_STATUS['private']
+    elif thread.closed:
+        attr = const.POST_STATUS['closed']
+    elif thread.deleted:
+        attr = const.POST_STATUS['deleted']
+    else:
+        attr = None
+    if attr is not None:
+        return u'%s %s' % (thread.title, unicode(attr))
+    else:
+        return thread.title
 
 
 class ThreadQuerySet(models.query.QuerySet):
@@ -983,18 +1003,11 @@ class Thread(models.Model):
             return self.tagnames.split(u' ')
 
     def get_title(self):
-        if self.is_private():
-            attr = const.POST_STATUS['private']
-        elif self.closed:
-            attr = const.POST_STATUS['closed']
-        elif self.deleted:
-            attr = const.POST_STATUS['deleted']
-        else:
-            attr = None
-        if attr is not None:
-            return u'%s %s' % (self.title, unicode(attr))
-        else:
-            return self.title
+        title_renderer = load_plugin(
+                    'ASKBOT_QUESTION_TITLE_RENDERER',
+                    'askbot.models.question.default_title_renderer'
+                )
+        return title_renderer(self)
 
     def format_for_email(self, recipient=None):
         """experimental function: output entire thread for email"""

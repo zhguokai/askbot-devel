@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version (only in the repository)
 --------------------------------------------
+* Added option to specify `ASKBOT_QUESTION_TITLE_RENDERER` function
+* Added option to specify `ASKBOT_HTML_MODERATOR` function
 * Allowed reordering badges on the badges page via drag and drop
 * Added option to forbid commenting in closed questions
 * Added separate optional time limits to edit questions and answers

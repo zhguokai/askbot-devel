@@ -20,14 +20,11 @@ from django.core import cache
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
-try:
-    from django.utils.module_loading import import_string
-except ImportError:
-    from django.utils.module_loading import import_by_path as import_string
 
 import askbot
 
 from askbot import signals
+from askbot.utils.loading import load_module, load_plugin
 from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.tag import Tag, MarkedTag
@@ -747,20 +744,7 @@ class Post(models.Model):
         except KeyError:
             raise NotImplementedError
 
-        return import_string(renderer_path)
-
-    def get_html_moderator(self):
-        """returns 'moderating' sanitizer for HTML
-        which is expected to replace 'moderatable'
-        content with the corresponding inline
-        notifications and places item(s) on the mod queue
-        """
-        moderator_path = getattr(
-                            django_settings,
-                            'ASKBOT_HTML_MODERATOR',
-                            'askbot.models.post.default_html_moderator'
-                        )
-        return import_string(moderator_path)
+        return load_module(renderer_path)
 
     def has_group(self, group):
         """true if post belongs to the group"""
@@ -941,7 +925,11 @@ class Post(models.Model):
     def moderate_html(self):
         """moderate inline content, such
         as links and images"""
-        moderate = self.get_html_moderator()
+        moderate = load_plugin(
+                            'ASKBOT_HTML_MODERATOR',
+                            'askbot.models.post.default_html_moderator'
+                        )
+
         before = self.html
         after = moderate(self)
         if after != before:
