@@ -41,7 +41,7 @@ Attacklab.wmdBase = function(){
     var toolbar_horizontal_label = gettext('horizontal bar') + " <hr> Ctrl-R";
     var toolbar_undo_label = gettext('undo') + " Ctrl-Z";
     var toolbar_redo_label = gettext('redo') + " Ctrl-Y";
-    
+
 	// -------------------------------------------------------------------
 	//  YOUR CHANGES GO HERE
 	//
@@ -1676,11 +1676,11 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 	};
 	
 	command.doBold = function(chunk, postProcessing){
-		return command.doBorI(chunk, postProcessing, 2, "strong text");
+		return command.doBorI(chunk, postProcessing, 2, gettext("strong text"));
 	};
 	
 	command.doItalic = function(chunk, postProcessing){
-		return command.doBorI(chunk, postProcessing, 1, "emphasized text");
+		return command.doBorI(chunk, postProcessing, 1, gettext("emphasized text"));
 	};
 	
 	// chunk: The selected region that will be enclosed with */**
@@ -1852,7 +1852,6 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
         }
         postProcessing();
     };
-        
     if (itemType == 'image') {
         // add forth param to identify image window
         util.prompt(imageDialogText, imageDefaultText, makeLinkMarkdown, 'image');
@@ -2269,7 +2268,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			
 			if(!chunk.selection){
 				chunk.startTag = "    ";
-				chunk.selection = "enter code here";
+				chunk.selection = gettext("enter code here");
 			}
 			else {
 				if(/^[ ]{0,3}\S/m.test(chunk.selection)){
@@ -2289,7 +2288,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			if(!chunk.startTag && !chunk.endTag){
 				chunk.startTag = chunk.endTag="`";
 				if(!chunk.selection){
-					chunk.selection = "enter code here";
+					chunk.selection = gettext("enter code here");
 				}
 			}
 			else if(chunk.endTag && !chunk.startTag){
@@ -2383,7 +2382,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			});
 			
 		if(!chunk.selection){
-			chunk.selection = "List item";
+			chunk.selection = gettext("List item");
 		}
 		
 		var prefix = getItemPrefix();
@@ -2415,7 +2414,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		// make a level 2 hash header around some default text.
 		if(!chunk.selection){
 			chunk.startTag = "## ";
-			chunk.selection = "Heading";
+			chunk.selection = gettext("Heading");
 			chunk.endTag = " ##";
 			return;
 		}
