@@ -1,17 +1,18 @@
 from django.db.models import signals as django_signals
-from haystack.signals import BaseSignalProcessor
+
+from haystack.signals import RealtimeSignalProcessor
+
 from askbot import signals as askbot_signals
 
 
-class AskbotRealtimeSignalProcessor(BaseSignalProcessor):
+class AskbotRealtimeSignalProcessor(RealtimeSignalProcessor):
     '''
     Based on haystack RealTimeSignalProcessor with some
     modifications to work with askbot soft-delete models
     '''
 
     def setup(self):
-        django_signals.post_save.connect(self.handle_save)
-        django_signals.post_delete.connect(self.handle_delete)
+        super(AskbotRealtimeSignalProcessor, self).setup()
 
         try:
             askbot_signals.delete_question_or_answer.connect(self.handle_delete)
@@ -19,8 +20,7 @@ class AskbotRealtimeSignalProcessor(BaseSignalProcessor):
             pass
 
     def teardown(self):
-        django_signals.post_save.disconnect(self.handle_save)
-        django_signals.post_delete.disconnect(self.handle_delete)
+        super(AskbotRealtimeSignalProcessor, self).setup()
         #askbot signals
         try:
             askbot_signals.delete_question_or_answer.disconnect(self.handle_delete)
