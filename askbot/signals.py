@@ -1,11 +1,23 @@
 """Custom django signals defined for the askbot forum application.
 """
+from collections import namedtuple
+
 import django.dispatch
+
 from django.db.models.signals import pre_save, post_save, pre_delete, post_delete, post_syncdb
+
+
 try:
     from django.db.models.signals import m2m_changed
 except ImportError:
     pass
+
+
+GenericSignal = namedtuple(
+    'GenericSignal',
+    field_names=['signal', 'callback', 'dispatch_uid']
+)
+
 
 tags_updated = django.dispatch.Signal(
                         providing_args=['tags', 'user', 'timestamp']
@@ -109,6 +121,15 @@ def pop_all_db_signal_receivers():
         receiver_data[signal] = pop_signal_receivers(signal)
 
     return receiver_data
+
+
+def register_generic_signal(generic_signal, sender):
+    generic_signal.signal.connect(
+        receiver=generic_signal.callback,
+        sender=sender,
+        dispatch_uid=generic_signal.dispatch_uid
+    )
+
 
 def set_all_db_signal_receivers(receiver_data):
     """takes receiver data as an argument
