@@ -9,6 +9,7 @@ import hashlib
 import logging
 import re
 import urllib
+from functools import partial
 import uuid
 from celery import states
 from celery.task import task
@@ -76,6 +77,10 @@ if DJANGO_VERSION > (1, 3):
     from askbot.models.message import Message
 else:
     from django.contrib.messages.models import Message
+
+
+register_user_signal = partial(signals.register_generic_signal, sender=User)
+
 
 def get_model(model_name):
     """a shortcut for getting model for an askbot app"""
@@ -3957,42 +3962,57 @@ def record_spam_rejection(
     
 
 from south.signals import ran_migration 
+
 ran_migration.connect(
     init_badge_data,
     dispatch_uid='init_badge_data_on_post_syncdb'
 )
 
-#signal for User model save changes
-django_signals.pre_save.connect(
-    calculate_gravatar_hash,
-    sender=User,
-    dispatch_uid='calculate_gravatar_hash_on_user_save'
-)
-django_signals.pre_save.connect(
-    set_administrator_flag,
-    sender=User,
-    dispatch_uid='set_administrator_flag_on_user_save'
-)
-django_signals.post_save.connect(
-    add_missing_subscriptions,
-    sender=User,
-    dispatch_uid='add_missing_subscriptions_on_user_save'
-)
-django_signals.post_save.connect(
-    add_user_to_global_group,
-    sender=User,
-    dispatch_uid='add_user_to_global_group_on_user_save'
-)
-django_signals.post_save.connect(
-    add_user_to_personal_group,
-    sender=User,
-    dispatch_uid='add_user_to_personal_group_on_user_save'
-)
-django_signals.post_save.connect(
-    add_missing_tag_subscriptions,
-    sender=User,
-    dispatch_uid='add_missing_tag_subscriptions_on_user_save'
-)
+
+# signals for User model save changes
+user_signals = [
+    signals.GenericSignal(
+        django_signals.pre_save,
+        callback=calculate_gravatar_hash,
+        dispatch_uid='calculate_gravatar_hash_on_user_save',
+    ),
+    signals.GenericSignal(
+        django_signals.pre_save,
+        callback=set_administrator_flag,
+        dispatch_uid='set_administrator_flag_on_user_save',
+    ),
+    signals.GenericSignal(
+        django_signals.post_save,
+        callback=add_missing_subscriptions,
+        dispatch_uid='add_missing_subscriptions_on_user_save',
+    ),
+    signals.GenericSignal(
+        django_signals.post_save,
+        callback=add_user_to_global_group,
+        dispatch_uid='add_user_to_global_group_on_user_save',
+    ),
+    signals.GenericSignal(
+        django_signals.post_save,
+        callback=add_user_to_personal_group,
+        dispatch_uid='add_user_to_personal_group_on_user_save',
+    ),
+    signals.GenericSignal(
+        django_signals.post_save,
+        callback=add_missing_tag_subscriptions,
+        dispatch_uid='add_missing_tag_subscriptions_on_user_save',
+    ),
+    signals.GenericSignal(
+        signals.user_updated,
+        callback=record_user_full_updated,
+        dispatch_uid='record_full_profile_upon_user_update',
+    ),
+]
+
+
+for signal in user_signals:
+    register_user_signal(signal)
+
+
 django_signals.post_save.connect(
     record_award_event,
     sender=Award,
@@ -4076,11 +4096,7 @@ signals.user_registered.connect(
     make_admin_if_first_user,
     dispatch_uid='make_amin_first_registrant'
 )
-signals.user_updated.connect(
-    record_user_full_updated,
-    sender=User,
-    dispatch_uid='record_full_profile_upon_user_update'
-)
+
 signals.user_logged_in.connect(
     complete_pending_tag_subscriptions,
     dispatch_uid='complete_pending_tag_subs_on_user_login'
