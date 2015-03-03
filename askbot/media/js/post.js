@@ -2138,6 +2138,7 @@ EditCommentForm.prototype.getCancelHandler = function () {
             widget.handleDeletedComment();
             me.detach();
             evt.preventDefault();
+            $(document).trigger('askbot.afterEditCommentFormCancel', [me]);
         }
         return false;
     };
