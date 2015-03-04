@@ -1363,7 +1363,7 @@ def user_post_comment(
                 )
     comment.add_to_groups([self.get_personal_group()])
 
-    parent_post.thread.invalidate_cached_data()
+    parent_post.thread.reset_cached_data()
     award_badges_signal.send(
         None,
         event = 'post_comment',
@@ -1544,7 +1544,7 @@ def user_merge_duplicate_questions(self, from_q, to_q):
 
     #from_thread.spaces.clear()
     from_thread.delete()
-    to_thread.invalidate_cached_data()
+    to_thread.reset_cached_data()
 
 
 def user_recount_badges(self):
@@ -1587,7 +1587,7 @@ def user_retag_question(
         tagnames = tags,
         silent = silent
     )
-    question.thread.invalidate_cached_data()
+    question.thread.reset_cached_data()
     award_badges_signal.send(None,
         event = 'retag_question',
         actor = self,
@@ -1621,7 +1621,7 @@ def user_repost_comment_as_answer(self, comment):
         old_parent.comment_count = 0
 
     old_parent.save()
-    comment.thread.invalidate_cached_data()
+    comment.thread.reset_cached_data()
 
 @auto_now_timestamp
 def user_accept_best_answer(
@@ -1683,7 +1683,7 @@ def user_delete_comment(
     #comment.deleted_at = timestamp
     #comment.save()
     comment.delete()
-    comment.thread.invalidate_cached_data()
+    comment.thread.reset_cached_data()
 
 @auto_now_timestamp
 def user_delete_answer(
@@ -1699,7 +1699,7 @@ def user_delete_answer(
 
     answer.thread.update_answer_count()
     answer.thread.update_last_activity_info()
-    answer.thread.invalidate_cached_data()
+    answer.thread.reset_cached_data()
     logging.debug('updated answer count to %d' % answer.thread.answer_count)
 
     signals.delete_question_or_answer.send(
@@ -1779,7 +1779,7 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
     threads = Thread.objects.filter(id__in=thread_ids)
     threads.update(deleted=True)
     for thread in threads:
-        thread.invalidate_cached_data()
+        thread.reset_cached_data()
 
     #delete comments
     comments = Post.objects.get_comments().filter(author=author)
@@ -1834,7 +1834,7 @@ def user_delete_post(
         self.delete_question(question = post, timestamp = timestamp)
     else:
         raise TypeError('either Comment, Question or Answer expected')
-    post.thread.invalidate_cached_data()
+    post.thread.reset_cached_data()
 
 def user_restore_post(
                     self,
@@ -1851,7 +1851,7 @@ def user_restore_post(
         if post.post_type == 'question':
             post.thread.deleted = False
             post.thread.save()
-        post.thread.invalidate_cached_data()
+        post.thread.reset_cached_data()
         if post.post_type == 'answer':
             post.thread.update_answer_count()
             post.thread.update_last_activity_info()
@@ -1959,7 +1959,7 @@ def user_edit_comment(
                         suppress_email=suppress_email,
                         ip_addr=ip_addr,
                     )
-    comment_post.thread.invalidate_cached_data()
+    comment_post.thread.reset_cached_data()
     return revision
 
 def user_edit_post(self,
@@ -2057,7 +2057,7 @@ def user_edit_question(
         ip_addr=ip_addr
     )
 
-    question.thread.invalidate_cached_data()
+    question.thread.reset_cached_data()
 
     award_badges_signal.send(None,
         event = 'edit_question',
@@ -2097,7 +2097,7 @@ def user_edit_answer(
         ip_addr=ip_addr,
     )
 
-    answer.thread.invalidate_cached_data()
+    answer.thread.reset_cached_data()
     award_badges_signal.send(None,
         event = 'edit_answer',
         actor = self,
@@ -2233,7 +2233,7 @@ def user_post_answer(
     #add to the answerer's group
     answer_post.add_to_groups([self.get_personal_group()])
 
-    answer_post.thread.invalidate_cached_data()
+    answer_post.thread.reset_cached_data()
     award_badges_signal.send(None,
         event = 'post_answer',
         actor = self,
@@ -2862,13 +2862,12 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
         else:
             auth.onDownVoted(vote, post, user, timestamp)
 
-    post.thread.invalidate_cached_data()
+    post.thread.reset_cached_data()
 
     if post.post_type == 'question':
         #denormalize the question post score on the thread
         post.thread.points = post.points
         post.thread.save()
-        post.thread.update_summary_html()
 
     if cancel:
         return None
@@ -2948,7 +2947,7 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
     #approval of unpublished revision
     if post_revision.revision > 0:
         post.parse_and_save(author=post_revision.author)
-        post.thread.invalidate_cached_data()
+        post.thread.reset_cached_data()
         #todo: maybe add a notification here
     else:
         post_revision.revision = post.get_latest_revision_number() + 1
@@ -2987,7 +2986,7 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
             thread.approved = True
             thread.save()
 
-        post.thread.invalidate_cached_data()
+        post.thread.reset_cached_data()
 
         #send the signal of published revision
         signals.post_revision_published.send(
@@ -3368,6 +3367,11 @@ User.add_to_class(
     'assert_can_approve_post_revision',
     user_assert_can_approve_post_revision
 )
+
+
+def reset_cached_post_data(thread):
+    thread.reset_cached_data()
+
 
 def get_reply_to_addresses(user, post):
     """Returns one or two email addresses that can be
@@ -4108,6 +4112,11 @@ signals.user_logged_in.connect(
 signals.user_logged_in.connect(
     post_anonymous_askbot_content,
     dispatch_uid='post_anon_content_on_login'
+)
+signals.post_save.connect(
+    update_thread_summary_cache,
+    sender=Thread,
+    dispatch_uid='update_thread_summary_cache',
 )
 signals.post_updated.connect(
     record_post_update_activity,

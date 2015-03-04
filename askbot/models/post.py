@@ -2086,6 +2086,8 @@ class Post(models.Model):
                 tagnames = tags, user = edited_by, timestamp = edited_at
             )
 
+        import ipdb;ipdb.set_trace()
+
         self.thread.title = title
         self.thread.tagnames = tags
         self.thread.save()
@@ -2631,7 +2633,7 @@ class AnonymousAnswer(DraftContent):
                 text=self.text,
                 ip_addr=self.ip_addr,
             )
-            self.question.thread.invalidate_cached_data()
+            self.question.thread.reset_cached_data()
 
         finally:
             self.delete()
