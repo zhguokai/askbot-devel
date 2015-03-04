@@ -1117,7 +1117,7 @@ class Thread(models.Model):
         self.reset_cached_data()
         self.update_summary_html()
 
-    def reset_cached_data(self):
+    def clear_cached_data(self):
         self.invalidate_cached_post_data()
         self.invalidate_cached_summary_html()
 
