@@ -3369,8 +3369,8 @@ User.add_to_class(
 )
 
 
-def reset_cached_post_data(thread):
-    thread.reset_cached_data()
+def reset_cached_post_data(sender, instance, **kwargs):
+    instance.reset_cached_data()
 
 
 def get_reply_to_addresses(user, post):
