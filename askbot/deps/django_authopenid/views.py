@@ -364,6 +364,9 @@ def complete_oauth_signin(request):
     else:
         next_url = reverse('index')
 
+    import pdb
+    pdb.set_trace()
+
     if 'denied' in request.GET:
         return HttpResponseRedirect(next_url)
     if 'oauth_problem' in request.GET:
@@ -385,9 +388,9 @@ def complete_oauth_signin(request):
         oauth = util.OAuthConnection(oauth_provider_name)
 
         user_id = oauth.get_user_id(
-                                oauth_token = session_oauth_token,
-                                oauth_verifier = oauth_verifier
-                            )
+                            oauth_token=session_oauth_token,
+                            oauth_verifier=oauth_verifier
+                        )
         logging.debug('have %s user id=%s' % (oauth_provider_name, user_id))
 
         user = authenticate(
@@ -415,7 +418,7 @@ def complete_oauth_signin(request):
                 'connecting to the login provider, please try again '
                 'or use another login method'
             )
-        request.user.message_set.create(message = msg)
+        request.user.message_set.create(message=msg)
         return HttpResponseRedirect(next_url)
 
 #@not_authenticated
@@ -624,7 +627,7 @@ def signin(request, template_name='authopenid/signin.html'):
                             'connecting to %(provider)s, please try again '
                             'or use another provider'
                         ) % {'provider': provider_name}
-                    request.user.message_set.create(message = msg)
+                    request.user.message_set.create(message=msg)
 
             elif login_form.cleaned_data['login_type'] == 'oauth2':
                 try:
@@ -640,7 +643,7 @@ def signin(request, template_name='authopenid/signin.html'):
                             'connecting to %(provider)s, please try again '
                             'or use another provider'
                         ) % {'provider': provider_name}
-                    request.user.message_set.create(message = msg)
+                    request.user.message_set.create(message=msg)
 
             elif login_form.cleaned_data['login_type'] == 'wordpress_site':
                 #here wordpress_site means for a self hosted wordpress blog not a wordpress.com blog

@@ -139,6 +139,7 @@ providers = (
     #'Google Plus',
     'Mozilla Persona',
     'Twitter',
+    'MediaWiki',
     'LinkedIn',
     'LiveJournal',
     #'myOpenID',
@@ -154,7 +155,7 @@ providers = (
 
 DISABLED_BY_DEFAULT = ('LaunchPad', 'Mozilla Persona')
 
-NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'Facebook', 'LinkedIn', 'identi.ca',)
+NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'MediaWiki', 'Facebook', 'LinkedIn', 'identi.ca',)
 
 GOOGLE_METHOD_CHOICES = (
     ('openid', 'OpenID (deprecated)'),

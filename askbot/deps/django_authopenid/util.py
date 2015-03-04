@@ -455,6 +455,26 @@ def get_enabled_major_login_providers():
             'icon_media_path': 'images/jquery-openid/twitter.gif',
             'get_user_id_function': lambda data: data['user_id'],
         }
+
+    def get_mediawiki_user_id(data):
+        import pdb
+        pdb.set_trace()
+
+    if askbot_settings.MEDIAWIKI_KEY and askbot_settings.MEDIAWIKI_SECRET:
+        data['mediawiki'] = {
+            'name': 'mediawiki',
+            'callback_is_oob': True,
+            'display_name': 'MediaWiki',
+            'type': 'oauth',
+            'request_token_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/initiate',
+            'access_token_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/token',
+            'authorize_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/authorize',
+            'authenticate_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/authorize',
+            'get_user_id_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/identify',
+            'icon_media_path': 'images/jquery-openid/twitter.gif',
+            'get_user_id_function': get_mediawiki_user_id,
+        }
+
     def get_identica_user_id(data):
         consumer = oauth.Consumer(data['consumer_key'], data['consumer_secret'])
         token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
@@ -752,6 +772,9 @@ def get_oauth_parameters(provider_name):
     elif provider_name == 'facebook':
         consumer_key = askbot_settings.FACEBOOK_KEY
         consumer_secret = askbot_settings.FACEBOOK_SECRET
+    elif provider_name == 'mediawiki':
+        consumer_key = askbot_settings.MEDIAWIKI_KEY
+        consumer_secret = askbot_settings.MEDIAWIKI_SECRET
     else:
         raise ValueError('unexpected oauth provider %s' % provider_name)
 
@@ -771,7 +794,7 @@ class OAuthConnection(object):
     """a simple class wrapping oauth2 library
     """
 
-    def __init__(self, provider_name, callback_url = None):
+    def __init__(self, provider_name, callback_url=None):
         """initializes oauth connection
         """
         self.provider_name = provider_name
@@ -782,32 +805,59 @@ class OAuthConnection(object):
                             self.parameters['consumer_secret'],
                         )
 
-    def start(self, callback_url = None):
+    @classmethod
+    def parse_request_url(cls, url):
+        url, params = url.split('?')
+        if params:
+            kv = map(lambda v: v.split('='), params.split('&'))
+            if kv:
+                #kv must be list of two-element arrays
+                params = dict(kv)
+            else:
+                params = {}
+        else:
+            params = {}
+        return url, params
+
+    @classmethod
+    def format_request_params(cls, params, urlencode=True):
+        #convert to tuple
+        params = params.items()
+        #sort lexicographically by key
+        params = sorted(params, cmp=lambda x, y: cmp(x[0], y[0]))
+        #urlencode the tuples
+        if urlencode:
+            return urllib.urlencode(params)
+        return '&'.join(map(lambda v: '%s=%s' % (v[0], v[1]), params))
+        
+
+    def start(self, callback_url=None):
         """starts the OAuth protocol communication and
         saves request token as :attr:`request_token`"""
 
-        if callback_url is None:
-            callback_url = self.callback_url
+        callback_url = callback_url or self.callback_url
 
         client = oauth.Client(self.consumer)
         request_url = self.parameters['request_token_url']
 
-        if callback_url:
-            callback_url = site_url(callback_url)
-            request_body = urllib.urlencode(dict(oauth_callback=callback_url))
+        #if request url contains query string, we split them
+        request_url, query_params = self.parse_request_url(request_url)
 
-            self.request_token = self.send_request(
-                                            client = client,
-                                            url = request_url,
-                                            method = 'POST',
-                                            body = request_body
-                                        )
-        else:
-            self.request_token = self.send_request(
-                                            client,
-                                            request_url,
-                                            'GET'
-                                        )
+        if self.parameters.get('callback_is_oob', False):
+            query_params['oauth_callback'] = 'oob' #callback_url
+        elif callback_url:
+            query_params['oauth_callback'] = site_url(callback_url)
+
+        request_body = None
+        if query_params:
+            request_body = self.format_request_params(query_params)
+
+        self.request_token = self.send_request(
+                                        client=client,
+                                        url=request_url,
+                                        method='POST',
+                                        body=request_body
+                                    )
 
     def send_request(self, client=None, url=None, method='GET', **kwargs):
 
@@ -845,7 +895,7 @@ class OAuthConnection(object):
         data['consumer_secret'] = self.parameters['consumer_secret']
         return self.parameters['get_user_id_function'](data)
 
-    def get_auth_url(self, login_only = False):
+    def get_auth_url(self, login_only=False):
         """returns OAuth redirect url.
         if ``login_only`` is True, authentication
         endpoint will be used, if available, otherwise authorization
@@ -863,16 +913,14 @@ class OAuthConnection(object):
                                         'authenticate_url',
                                         endpoint_url
                                     )
+
+        endpoint_url, query_params = self.parse_request_url(endpoint_url)
+        query_params['oauth_token'] = self.request_token['oauth_token']
+
         if endpoint_url is None:
             raise ImproperlyConfigured('oauth parameters are incorrect')
 
-        auth_url =  '%s?oauth_token=%s' % \
-                    (
-                        endpoint_url,
-                        self.request_token['oauth_token'],
-                    )
-
-        return auth_url
+        return endpoint_url + '?' + self.format_request_params(query_params, urlencode=False)
 
 def get_oauth2_starter_url(provider_name, csrf_token):
     """returns redirect url for the oauth2 protocol for a given provider"""

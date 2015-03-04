@@ -138,6 +138,35 @@ settings.register(
 settings.register(
     livesettings.StringValue(
         EXTERNAL_KEYS,
+        'MEDIAWIKI_KEY',
+        description=_('MediaWiki consumer key'),
+        help_text=_(
+            'Please register your forum at '
+            '%(mw_page)s page of your Wiki. '
+            'Your wiki must have <a href="%(url)s">OAuth extension</a> '
+            'installed '
+            'installationSpecial:OAuthConsumerRegistration/propose '
+            '<a href="%(url)s">'
+        ) % {
+            'url': const.DEPENDENCY_URLS['mediawiki-oauth-extension'],
+            'mw_page': 'Special:OAuthConsumerRegistration/propose'
+        },
+
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
+        'MEDIAWIKI_SECRET',
+        description=_('MediaWiki consumer secret'),
+    )
+)
+
+
+settings.register(
+    livesettings.StringValue(
+        EXTERNAL_KEYS,
         'LINKEDIN_KEY',
         description=_('LinkedIn consumer key'),
         help_text=_(
