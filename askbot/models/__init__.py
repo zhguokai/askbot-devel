@@ -4114,9 +4114,9 @@ signals.user_logged_in.connect(
     dispatch_uid='post_anon_content_on_login'
 )
 signals.post_save.connect(
-    update_thread_summary_cache,
+    reset_cached_post_data,
     sender=Thread,
-    dispatch_uid='update_thread_summary_cache',
+    dispatch_uid='reset_cached_post_data',
 )
 signals.post_updated.connect(
     record_post_update_activity,
