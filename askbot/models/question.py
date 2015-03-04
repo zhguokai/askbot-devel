@@ -1114,7 +1114,7 @@ class Thread(models.Model):
         cache.cache.delete_many(keys)
 
     def reset_cached_data(self):
-        self.reset_cached_data()
+        self.clear_cached_data()
         self.update_summary_html()
 
     def clear_cached_data(self):
