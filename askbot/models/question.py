@@ -970,7 +970,6 @@ class Thread(models.Model):
     def set_last_activity_info(self, last_activity_at, last_activity_by):
         self.last_activity_at = last_activity_at
         self.last_activity_by = last_activity_by
-        self.save()
 
     def get_last_activity_info(self):
         post_ids = self.get_answers().values_list('id', flat=True)
@@ -990,8 +989,10 @@ class Thread(models.Model):
 
     def update_last_activity_info(self):
         timestamp, user = self.get_last_activity_info()
+
         if timestamp:
             self.set_last_activity_info(timestamp, user)
+            self.save()
 
     def get_tag_names(self):
         "Creates a list of Tag names from the ``tagnames`` attribute."
