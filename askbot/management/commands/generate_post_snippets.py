@@ -17,5 +17,5 @@ class Command(NoArgsCommand):
                 post.save()
                 transaction.commit()
                 if post.thread:
-                    post.thread.reset_cached_data()
+                    post.thread.clear_cached_data()
         transaction.commit()
