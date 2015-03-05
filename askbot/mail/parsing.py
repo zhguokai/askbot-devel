@@ -145,12 +145,12 @@ def strip_email_client_quote_separator(text):
     """
     for regex in CLIENT_SPECIFIC_QUOTE_REGEXES:
         if regex.search(text):
+            log_message = u'\nMatches pattern %s\n' % regex.pattern
+            sys.stderr.write(log_message.encode('utf-8'))
             return regex.sub('', text)
-    #did not find a quote separator!!! log it
-    log_message = u'\nno matching quote separator: %s\n' % text
+    log_message = u'\nNo line in this message matches any of our quote separator patterns so lets use entire message:\nSTART%sEND\n' % text
     sys.stderr.write(log_message.encode('utf-8'))
-    text_lines = text.splitlines(False)
-    return ''.join(text_lines[:-3])#strip 3 lines as a guess
+    return text
 
 def extract_reply_contents(text, reply_separator=None):
     """If reply_separator is given,
