@@ -118,22 +118,22 @@
                     {% trans %}To change your password - please enter the new one twice, then submit{% endtrans %}
                 </h2>
                 <table class="login">
-                    <tr>
+                    <tr class="js-new_password">
                         <td><label for="id_new_password">{% trans %}New password{% endtrans %}</label></td>
                         <td>
                             {{login_form.new_password}}
                         </td>
                         <td style="text-align: left">
-                            <span class="error new-password-errors">{{login_form.new_password.errors[0]}}</span>
+                            <span class="error form-error">{{login_form.new_password.errors[0]}}</span>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="js-new_password_retyped">
                         <td><label for="id_new_password_retyped">{% trans %}Please, retype{% endtrans %}</label></td>
                         <td>
                             {{login_form.new_password_retyped}}
                         </td>
                         <td style="text-align: left">
-                            <span class="error new-password-retyped-errors">{{login_form.new_password_retyped.errors[0]}}</span>
+                            <span class="error form-error">{{login_form.new_password_retyped.errors[0]}}</span>
                         </td>
                     </tr>
                 </table>
