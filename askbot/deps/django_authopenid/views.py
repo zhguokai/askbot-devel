@@ -1306,7 +1306,7 @@ def set_new_email(user, new_email):
         user.email_isvalid = False
         user.save()
 
-def send_email_key(email, key, handler_url_name='user_account_recover'):
+def send_email_key(address, key, handler_url_name='user_account_recover'):
     """private function. sends email containing validation key
     to user's email address
     """
@@ -1314,7 +1314,7 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
         'handler_url_name': handler_url_name,
         'key': key
     })
-    email.send([email,])
+    email.send([address,])
 
 
 def send_user_new_email_key(user):
