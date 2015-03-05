@@ -1739,6 +1739,10 @@ class ProcessCommentForm(forms.Form):
     avatar_size = forms.IntegerField()
 
 
+class ConvertCommentForm(forms.Form):
+    comment_id = forms.IntegerField()
+
+
 class ReorderBadgesForm(forms.Form):
     badge_id = forms.IntegerField()
     position = forms.IntegerField()
