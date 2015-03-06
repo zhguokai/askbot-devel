@@ -2041,6 +2041,22 @@ def user_edit_question(
     if force == False:
         self.assert_can_edit_question(question)
 
+    ##it is important to do this before __apply_edit b/c of signals!!!
+    if question.is_private() != is_private:
+        if is_private:
+            #todo: make private for author or for the editor?
+            self.thread.make_private(question.author)
+        else:
+            self.thread.make_public(recursive=False)
+
+    latest_revision = question.get_latest_revision()
+    #a hack to allow partial edits - important for SE loader
+    if title is None:
+        title = question.thread.title
+    if tags is None:
+        tags = latest_revision.tagnames
+
+    #revision has title and tags as well
     revision = question.apply_edit(
         edited_at=timestamp,
         edited_by=self,
@@ -2057,7 +2073,19 @@ def user_edit_question(
         ip_addr=ip_addr
     )
 
-    question.thread.reset_cached_data()
+    # Update the Question tag associations
+    if latest_revision.tagnames != tags:
+        self.thread.update_tags(
+            tagnames=tags, user=self, timestamp=timestamp
+        )
+
+    self.thread.title = title
+    self.thread.tagnames = tags
+    self.thread.set_last_activity_info(
+        last_activity_at=timestamp,
+        last_activity_by=self
+    )
+    self.thread.save()
 
     award_badges_signal.send(None,
         event = 'edit_question',
@@ -2097,7 +2125,12 @@ def user_edit_answer(
         ip_addr=ip_addr,
     )
 
-    answer.thread.reset_cached_data()
+    self.thread.set_last_activity_info(
+        ast_activity_at=timestamp,
+        last_activity_by=self
+    )
+    self.thread.save()
+
     award_badges_signal.send(None,
         event = 'edit_answer',
         actor = self,
@@ -4113,11 +4146,13 @@ signals.user_logged_in.connect(
     post_anonymous_askbot_content,
     dispatch_uid='post_anon_content_on_login'
 )
+"""
 signals.post_save.connect(
     reset_cached_post_data,
     sender=Thread,
     dispatch_uid='reset_cached_post_data',
 )
+"""
 signals.post_updated.connect(
     record_post_update_activity,
     dispatch_uid='record_post_update_activity'

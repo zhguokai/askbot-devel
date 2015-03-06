@@ -2036,11 +2036,6 @@ class Post(models.Model):
         if edited_at is None:
             edited_at = datetime.datetime.now()
 
-        self.thread.set_last_activity_info(
-            ast_activity_at=edited_at,
-            last_activity_by=edited_by
-        )
-
         revision = self.__apply_edit(
             edited_at=edited_at,
             edited_by=edited_by,
@@ -2068,40 +2063,6 @@ class Post(models.Model):
                             by_email=False, suppress_email=False,
                             ip_addr=None
                         ):
-
-        #todo: the thread editing should happen outside of this
-        #method, then we'll be able to unify all the *__apply_edit
-        #methods
-        latest_revision = self.get_latest_revision()
-        #a hack to allow partial edits - important for SE loader
-        if title is None:
-            title = self.thread.title
-        if tags is None:
-            tags = latest_revision.tagnames
-        if edited_at is None:
-            edited_at = datetime.datetime.now()
-
-        # Update the Question tag associations
-        if latest_revision.tagnames != tags:
-            self.thread.update_tags(
-                tagnames = tags, user = edited_by, timestamp = edited_at
-            )
-
-        self.thread.title = title
-        self.thread.tagnames = tags
-        self.thread.set_last_activity_info(
-            last_activity_at=edited_at,
-            last_activity_by=edited_by
-        )
-        self.thread.save()
-
-        ##it is important to do this before __apply_edit b/c of signals!!!
-        if self.is_private() != is_private:
-            if is_private:
-                #todo: make private for author or for the editor?
-                self.thread.make_private(self.author)
-            else:
-                self.thread.make_public(recursive=False)
 
         revision = self.__apply_edit(
             edited_at=edited_at,

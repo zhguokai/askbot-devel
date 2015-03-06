@@ -1676,7 +1676,6 @@ class Thread(models.Model):
                 ordered_final_tagnames.append(tagname)
 
         self.tagnames = ' '.join(ordered_final_tagnames)
-        self.save()#need to save here?
 
         #todo: factor out - tell author about suggested tags
         suggested_tags = filter_suggested_tags(added_tags)
