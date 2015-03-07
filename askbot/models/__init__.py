@@ -2045,9 +2045,9 @@ def user_edit_question(
     if question.is_private() != is_private:
         if is_private:
             #todo: make private for author or for the editor?
-            self.thread.make_private(question.author)
+            question.thread.make_private(question.author)
         else:
-            self.thread.make_public(recursive=False)
+            question.thread.make_public(recursive=False)
 
     latest_revision = question.get_latest_revision()
     #a hack to allow partial edits - important for SE loader
@@ -2075,23 +2075,23 @@ def user_edit_question(
 
     # Update the Question tag associations
     if latest_revision.tagnames != tags:
-        self.thread.update_tags(
+        question.thread.update_tags(
             tagnames=tags, user=self, timestamp=timestamp
         )
 
-    self.thread.title = title
-    self.thread.tagnames = tags
-    self.thread.set_last_activity_info(
+    question.thread.title = title
+    question.thread.tagnames = tags
+    question.thread.set_last_activity_info(
         last_activity_at=timestamp,
         last_activity_by=self
     )
-    self.thread.save()
+    question.thread.save()
 
     award_badges_signal.send(None,
-        event = 'edit_question',
-        actor = self,
-        context_object = question,
-        timestamp = timestamp
+        event='edit_question',
+        actor=self,
+        context_object=question,
+        timestamp=timestamp
     )
     return revision
 
@@ -2125,17 +2125,17 @@ def user_edit_answer(
         ip_addr=ip_addr,
     )
 
-    self.thread.set_last_activity_info(
-        ast_activity_at=timestamp,
+    answer.thread.set_last_activity_info(
+        last_activity_at=timestamp,
         last_activity_by=self
     )
-    self.thread.save()
+    answer.thread.save()
 
     award_badges_signal.send(None,
-        event = 'edit_answer',
-        actor = self,
-        context_object = answer,
-        timestamp = timestamp
+        event='edit_answer',
+        actor=self,
+        context_object=answer,
+        timestamp=timestamp
     )
     return revision
 
