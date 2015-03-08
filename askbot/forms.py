@@ -648,7 +648,7 @@ class ChangeUserReputationForm(forms.Form):
                                 'Enter number of points to add or subtract'
                             )
                         )
-    comment = forms.CharField(max_length=128)
+    comment = forms.CharField(label=_('Comment'), max_length=128)
 
     def clean_comment(self):
         if 'comment' in self.cleaned_data:
@@ -1737,6 +1737,10 @@ class EditCommentForm(forms.Form):
 class ProcessCommentForm(forms.Form):
     comment_id = forms.IntegerField()
     avatar_size = forms.IntegerField()
+
+
+class ConvertCommentForm(forms.Form):
+    comment_id = forms.IntegerField()
 
 
 class ReorderBadgesForm(forms.Form):

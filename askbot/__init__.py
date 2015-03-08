@@ -29,7 +29,7 @@ REQUIREMENTS = {
     'django_countries': 'django-countries==1.0.5',
     'djcelery': 'django-celery>=3.0.11',
     'djkombu': 'django-kombu==0.9.4',
-    'followit': 'django-followit==0.0.6',
+    'followit': 'django-followit==0.0.7',
     'recaptcha_works': 'django-recaptcha-works',
     'openid': 'python-openid',
     'pystache': 'pystache==0.3.1',

@@ -384,14 +384,20 @@ def complete_oauth_signin(request):
 
         oauth = util.OAuthConnection(oauth_provider_name)
 
-        import pdb
-        pdb.set_trace()
         user_id = oauth.get_user_id(
                             oauth_token=session_oauth_token,
                             oauth_verifier=oauth_verifier
                         )
         logging.debug('have %s user id=%s' % (oauth_provider_name, user_id))
-
+    except Exception, e:
+        logging.critical(e)
+        msg = _('Sorry, there was some problem '
+                'connecting to the login provider, please try again '
+                'or use another login method'
+            )
+        request.user.message_set.create(message = msg)
+        return HttpResponseRedirect(next_url)
+    else:
         user = authenticate(
                     oauth_user_id=user_id,
                     provider_name=oauth_provider_name,
@@ -404,21 +410,13 @@ def complete_oauth_signin(request):
         request.session['username'] = ''#todo: pull from profile
 
         return finalize_generic_signin(
-                            request = request,
-                            user = user,
-                            user_identifier = user_id,
-                            login_provider_name = oauth_provider_name,
-                            redirect_url = next_url
+                            request=request,
+                            user=user,
+                            user_identifier=user_id,
+                            login_provider_name=oauth_provider_name,
+                            redirect_url=next_url
                         )
 
-    except Exception, e:
-        logging.critical(e)
-        msg = _('Sorry, there was some problem '
-                'connecting to the login provider, please try again '
-                'or use another login method'
-            )
-        request.user.message_set.create(message=msg)
-        return HttpResponseRedirect(next_url)
 
 #@not_authenticated
 @csrf.csrf_protect
@@ -1308,7 +1306,7 @@ def set_new_email(user, new_email):
         user.email_isvalid = False
         user.save()
 
-def send_email_key(email, key, handler_url_name='user_account_recover'):
+def send_email_key(address, key, handler_url_name='user_account_recover'):
     """private function. sends email containing validation key
     to user's email address
     """
@@ -1316,7 +1314,7 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
         'handler_url_name': handler_url_name,
         'key': key
     })
-    email.send([email,])
+    email.send([address,])
 
 
 def send_user_new_email_key(user):

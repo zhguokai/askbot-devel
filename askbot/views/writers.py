@@ -907,7 +907,7 @@ def comment_to_answer(request):
                 {'sign_in_url': url_utils.get_login_url()}
         raise exceptions.PermissionDenied(msg)
 
-    form = forms.ProcessCommentForm(request.POST)
+    form = forms.ConvertCommentForm(request.POST)
     if form.is_valid() == False:
         raise Http404
 

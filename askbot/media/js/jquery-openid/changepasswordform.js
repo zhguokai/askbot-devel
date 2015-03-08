@@ -17,18 +17,23 @@ ChangePasswordForm.prototype.showMessage = function (message, callback) {
 
 ChangePasswordForm.prototype.clearErrors = function () {
     this._pwInput1Errors.html('');
+    this._pwInput1Group.removeClass('has-error');
     this._pwInput2Errors.html('');
+    this._pwInput2Group.removeClass('has-error');
 };
 
 ChangePasswordForm.prototype.showErrors = function (errors) {
     if (errors.new_password) {
         this._pwInput1Errors.html(errors.new_password[0]);
+        this._pwInput1Group.addClass('has-error');
     }
     if (errors.new_password_retyped) {
         this._pwInput2Errors.html(errors.new_password_retyped[0]);
+        this._pwInput2Group.addClass('has-error');
     }
     if (errors.__all__) {
         this._pwInput2Errors.html(errors.__all__[0]);
+        this._pwInput2Group.addClass('has-error');
     }
 };
 
@@ -63,6 +68,9 @@ ChangePasswordForm.prototype.getSubmitHandler = function () {
                     me.clearErrors();
                     me.showErrors(data.errors);
                 }
+            },
+            error: function (data) {
+                debugger;
             }
         });
         return false;
@@ -77,8 +85,10 @@ ChangePasswordForm.prototype.decorate = function (element) {
     this._element = element;
     this._pwInput1 = element.find('#id_new_password');
     this._pwInput2 = element.find('#id_new_password_retyped');
-    this._pwInput1Errors = element.find('.new-password-errors');
-    this._pwInput2Errors = element.find('.new-password-retyped-errors');
+    this._pwInput1Group = element.find('.js-new_password');
+    this._pwInput2Group = element.find('.js-new_password_retyped');
+    this._pwInput1Errors = element.find('.js-new_password .form-error');
+    this._pwInput2Errors = element.find('.js-new_password_retyped .form-error');
     this._button = element.find('input[name="change_password"]');
     this._passwordHeading = element.find('#password-heading');
     setupButtonEventHandlers(this._button, this.getSubmitHandler());
