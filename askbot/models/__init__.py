@@ -1916,6 +1916,7 @@ def user_post_question(
                                     language=language,
                                     ip_addr=ip_addr
                                 )
+    thread.reset_cached_data()
     question = thread._question_post()
     if question.author != self:
         raise ValueError('question.author != self')
@@ -2086,6 +2087,7 @@ def user_edit_question(
         last_activity_by=self
     )
     question.thread.save()
+    question.thread.reset_cached_data()
 
     award_badges_signal.send(None,
         event='edit_question',
@@ -2130,6 +2132,7 @@ def user_edit_answer(
         last_activity_by=self
     )
     answer.thread.save()
+    answer.thread.reset_cached_data()
 
     award_badges_signal.send(None,
         event='edit_answer',
