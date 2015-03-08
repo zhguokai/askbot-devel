@@ -364,9 +364,6 @@ def complete_oauth_signin(request):
     else:
         next_url = reverse('index')
 
-    import pdb
-    pdb.set_trace()
-
     if 'denied' in request.GET:
         return HttpResponseRedirect(next_url)
     if 'oauth_problem' in request.GET:
@@ -387,6 +384,8 @@ def complete_oauth_signin(request):
 
         oauth = util.OAuthConnection(oauth_provider_name)
 
+        import pdb
+        pdb.set_trace()
         user_id = oauth.get_user_id(
                             oauth_token=session_oauth_token,
                             oauth_verifier=oauth_verifier
@@ -394,9 +393,9 @@ def complete_oauth_signin(request):
         logging.debug('have %s user id=%s' % (oauth_provider_name, user_id))
 
         user = authenticate(
-                    oauth_user_id = user_id,
-                    provider_name = oauth_provider_name,
-                    method = 'oauth'
+                    oauth_user_id=user_id,
+                    provider_name=oauth_provider_name,
+                    method='oauth'
                 )
 
         logging.debug('finalizing oauth signin')
