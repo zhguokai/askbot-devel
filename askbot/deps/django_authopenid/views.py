@@ -389,26 +389,6 @@ def complete_oauth_signin(request):
                                 oauth_verifier = oauth_verifier
                             )
         logging.debug('have %s user id=%s' % (oauth_provider_name, user_id))
-
-        user = authenticate(
-                    oauth_user_id = user_id,
-                    provider_name = oauth_provider_name,
-                    method = 'oauth'
-                )
-
-        logging.debug('finalizing oauth signin')
-
-        request.session['email'] = ''#todo: pull from profile
-        request.session['username'] = ''#todo: pull from profile
-
-        return finalize_generic_signin(
-                            request = request,
-                            user = user,
-                            user_identifier = user_id,
-                            login_provider_name = oauth_provider_name,
-                            redirect_url = next_url
-                        )
-
     except Exception, e:
         logging.critical(e)
         msg = _('Sorry, there was some problem '
@@ -417,6 +397,26 @@ def complete_oauth_signin(request):
             )
         request.user.message_set.create(message = msg)
         return HttpResponseRedirect(next_url)
+    else:
+        user = authenticate(
+                    oauth_user_id=user_id,
+                    provider_name=oauth_provider_name,
+                    method='oauth'
+                )
+
+        logging.debug('finalizing oauth signin')
+
+        request.session['email'] = ''#todo: pull from profile
+        request.session['username'] = ''#todo: pull from profile
+
+        return finalize_generic_signin(
+                            request=request,
+                            user=user,
+                            user_identifier=user_id,
+                            login_provider_name=oauth_provider_name,
+                            redirect_url=next_url
+                        )
+
 
 #@not_authenticated
 @csrf.csrf_protect
