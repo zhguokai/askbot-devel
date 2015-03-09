@@ -608,7 +608,6 @@ def signin(request, template_name='authopenid/signin.html'):
                                     provider_name,
                                     callback_url=reverse('user_complete_oauth_signin')
                                 )
-
                     connection.start()
 
                     request.session['oauth_token'] = connection.get_token()

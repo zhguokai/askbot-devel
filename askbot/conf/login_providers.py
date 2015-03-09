@@ -69,7 +69,7 @@ settings.register(
         LOGIN_PROVIDERS,
         'WORDPRESS_SITE_ICON',
         default='/images/logo.gif',
-        description=_('Upload your icon'),
+        description=_('WordPress login button image'),
         url_resolver=skin_utils.get_media_url
     )
 )
@@ -188,6 +188,18 @@ for provider in providers:
             **kwargs
         )
     )
+
+    if provider == 'MediaWiki':
+        settings.register(
+            livesettings.ImageValue(
+                LOGIN_PROVIDERS,
+                'MEDIAWIKI_SITE_ICON',
+                default='/images/jquery-openid/mediawiki.png',
+                description=_('MediaWiki login button image'),
+                url_resolver=skin_utils.get_media_url
+            )
+        )
+
 
     if provider == 'local':
         #add Google settings here as one-off
