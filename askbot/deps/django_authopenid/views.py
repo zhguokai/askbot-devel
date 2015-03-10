@@ -1121,7 +1121,7 @@ def register(request, login_provider_name=None, user_identifier=None):
     data = {
         'openid_register_form': register_form,
         'default_form_action': django_settings.LOGIN_URL,
-        'provider':mark_safe(provider_logo),
+        'provider': mark_safe(provider_logo),
         'username': username,
         'email': email,
         'login_type':'openid',
