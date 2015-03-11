@@ -1,6 +1,6 @@
 {% import "macros.html" as macros %}
 <form id="fmask" action="{% url "ask" %}" method="post" >{% csrf_token %}
-    <div class="form-item ask-form-bar">
+    <div class="form-item form-group ask-form-bar">
         <label for="id_title">{{ form.title.help_text }}</label>
         {% if form.title.errors %}
             <span class="form-error">{{ form.title.errors }}</span>
@@ -10,6 +10,7 @@
                 value="{% if form.initial.title %}{{form.initial.title|escape}}{% endif %}"/>
         </div>
     </div>
+
     {% set editor_is_folded = (
             settings.QUESTION_BODY_EDITOR_MODE == 'folded' and
             settings.MIN_QUESTION_BODY_LENGTH == 0 and
@@ -18,28 +19,19 @@
     %}
     {% if editor_is_folded %}
         <a class="question-body-trigger">{% trans %}Add details (optional){% endtrans %}</a>
-    {% elif settings.MIN_QUESTION_BODY_LENGTH == 0 %}
-        <label for="editor">{% trans %}Add details (optional){% endtrans %}</label>
-    {% else %}
-        <label for="editor">{% trans %}Add details{% endtrans %}</label>
     {% endif %}
-
     <div class="folded-editor{% if editor_is_folded == False %} unfolded{% endif %}">
         <div class="editor-proper">
-        {{
-            macros.edit_post(
-                form,
-                post_type = 'question',
-                mandatory_tags = mandatory_tags,
-                use_category_selector = (settings.TAG_SOURCE == 'category-tree'),
-                editor_type = settings.EDITOR_TYPE,
-                user = request.user
-            )
-        }}
+            {{ macros.edit_post(form, user=request.user) }}
         </div>
     </div>
+
+    {% include "widgets/tags_field.html" %}
+    
     {{ form.group_id }}
+
     <div class="question-options">
+        {% include "widgets/proxy_author_fields.html" %}
         {% if settings.WIKI_ON %}
             {{ macros.checkbox_in_div(form.wiki) }}
         {% endif %}

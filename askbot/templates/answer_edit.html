@@ -15,30 +15,26 @@
         {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
         {{ revision_form.revision }}
         <input type="hidden" id="select_revision" name="select_revision" value="false"/>
-        {{ macros.edit_post(
-                        form,
-                        post_html = revision.text,
-                        editor_type = settings.EDITOR_TYPE
-                    )
-        }}
+        {{ macros.edit_post(form, post_html=revision.text) }}
+        <div class="answer-options">
+            {% if settings.WIKI_ON and answer.wiki == False %}
+                {{ macros.checkbox_in_div(form.wiki) }}
+            {% endif %}
+            {% if settings.ENABLE_EMAIL_ALERTS %}
+                {{ macros.checkbox_in_div(form.suppress_email) }}
+            {% endif %}
+            {% if settings.GROUPS_ENABLED and
+                request.user.is_authenticated() and
+                request.user.can_make_group_private_posts()
+            %}
+                {{ macros.checkbox_in_div(form.post_privately) }}
+            {% endif %}
+            {% include "widgets/proxy_author_fields.html" %}
+        </div>
         {% if form.recaptcha %}
             <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
             <div class="clearfix"></div>
         {% endif %}
-        <div class="answer-options">
-        {% if settings.WIKI_ON and answer.wiki == False %}
-            {{ macros.checkbox_in_div(form.wiki) }}
-        {% endif %}
-        {% if settings.ENABLE_EMAIL_ALERTS %}
-            {{ macros.checkbox_in_div(form.suppress_email) }}
-        {% endif %}
-        {% if settings.GROUPS_ENABLED and
-            request.user.is_authenticated() and
-            request.user.can_make_group_private_posts()
-        %}
-            {{ macros.checkbox_in_div(form.post_privately) }}
-        {% endif %}
-        </div>
         <div class="after-editor">
             <input
                 id="edit_post_form_submit_button"

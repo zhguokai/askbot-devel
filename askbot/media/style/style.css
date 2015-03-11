@@ -3476,14 +3476,6 @@ body.question-page ins, body.main-page ins {
 span.text-counter {
   margin-right: 20px;
 }
-.form-error {
-  color: #990000;
-  font-weight: normal;
-  vertical-align: bottom;
-}
-label + .form-error {
-  padding-left: 8px;
-}
 .checkbox .errorlist {
   margin-bottom: -5px;
 }
@@ -3495,6 +3487,22 @@ ul.errorlist {
 }
 ul.errorlist li {
   line-height: 16px;
+}
+.form-error {
+  color: #900;
+  font-weight: normal;
+  vertical-align: bottom;
+}
+label + .form-error {
+  padding-left: 8px;
+}
+.ask-page label + .form-error ul.errorlist, .edit-question-page label + .form-error ul.errorlist, .edit-answer-page label + .form-error ul.errorlist {
+  color: #900;
+  display: inline-block;
+  font-size: 16px;
+  margin-left: 0;
+  padding-bottom: 2px;
+  vertical-align: bottom;
 }
 p.form-item {
   margin: 0px;
