@@ -138,7 +138,7 @@ var CPValidator = (function () {
                     limit_tag_length: true
                 },
                 text: {
-                    required: true,
+                    required: !!askbot.settings.minQuestionBodyLength,
                     minlength: askbot.settings.minQuestionBodyLength
                 },
                 title: {
