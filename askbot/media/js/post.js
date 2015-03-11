@@ -138,9 +138,11 @@ var CPValidator = (function () {
                     limit_tag_length: true
                 },
                 text: {
+                    required: !!askbot.settings.minQuestionBodyLength,
                     minlength: askbot.settings.minQuestionBodyLength
                 },
                 title: {
+                    required: true,
                     minlength: askbot.settings.minTitleLength
                 }
             };
@@ -184,6 +186,7 @@ var CPValidator = (function () {
         getAnswerFormRules: function () {
             return {
                 text: {
+                    required: true,
                     minlength: askbot.settings.minAnswerBodyLength
                 }
             };
