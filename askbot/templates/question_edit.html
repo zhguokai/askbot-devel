@@ -12,7 +12,7 @@
     {{ revision_form.revision }}
     <input type="hidden" id="select_revision" name="select_revision" value="false"/>
 
-    <div class="form-item">
+    <div class="form-item form-group">
         <label for="id_title" >
             {{ settings.WORDS_QUESTION_IN_ONE_SENTENCE|escape }}
             {% if form.title.errors %}
@@ -22,7 +22,7 @@
         {{ form.title }}
     </div>
 
-    {{ macros.edit_post(form, post_html=revision.text, user=request.user) }}
+    {{ macros.edit_post(form, post_html=revision.text) }}
 
     {% include "widgets/tags_field.html" %}
     <div class="question-options">
