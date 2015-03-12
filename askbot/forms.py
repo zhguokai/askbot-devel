@@ -1189,7 +1189,8 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
         user = kwargs['user']
-        self.fields['text'] = AnswerEditorField(user=user)
+        #empty label on purpose
+        self.fields['text'] = AnswerEditorField(label='', user=user)
 
         if should_use_recaptcha(user):
             self.fields['recaptcha'] = AskbotRecaptchaField()
@@ -1355,7 +1356,8 @@ class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         user = kwargs.pop('user', None)
         super(EditAnswerForm, self).__init__(*args, **kwargs)
         #it is important to add this field dynamically
-        self.fields['text'] = AnswerEditorField(user=user)
+        #label is empty on purpose
+        self.fields['text'] = AnswerEditorField(label='', user=user)
         self.fields['text'].initial = revision.text
         self.fields['wiki'].initial = answer.wiki
 

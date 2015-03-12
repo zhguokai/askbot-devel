@@ -35,20 +35,17 @@
             <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
             <div class="clearfix"></div>
         {% endif %}
-        <div class="after-editor">
-            <input
-                id="edit_post_form_submit_button"
-                type="submit"
-                value="{% trans %}Save edit{% endtrans %}"
-            />&nbsp;
-            <input
-                type="button"
-                value="{% trans %}Cancel{% endtrans %}"
-                class="cancel"
-                onclick="history.back(-1);"
-            />
-        </div>
-
+        <input
+            id="edit_post_form_submit_button"
+            type="submit"
+            value="{% trans %}Save edit{% endtrans %}"
+        />&nbsp;
+        <input
+            type="button"
+            value="{% trans %}Cancel{% endtrans %}"
+            class="cancel"
+            onclick="history.back(-1);"
+        />
     </form>
 </div>
 {% endblock %}

@@ -1770,6 +1770,8 @@ ul.js-related-tags li {
 .edit-question-page label[for="editor"],
 .ask-page label[for="id_title"],
 .edit-question-page label[for="id_title"],
+.ask-page label[for="id_tags"],
+.edit-question-page label[for="id_tags"],
 .ask-page .form-error,
 .edit-question-page .form-error {
   font-size: 16px;
@@ -1967,9 +1969,6 @@ ul.js-related-tags li {
 .edit-answer-page .retagger-buttons button {
   margin: 8px 10px 5px 0;
 }
-.edit-answer-page .wmd-container, .edit-answer-page .js-simple-editor {
-  margin-top: 13px;
-}
 #editor {
   /* adjustment for editor preview */
 
@@ -1988,7 +1987,7 @@ ul.js-related-tags li {
 }
 .wmd-preview {
   color: #525252;
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
   padding: 5px;
   background-color: #F5F5F5;
   min-height: 20px;
@@ -2050,10 +2049,6 @@ ul.js-related-tags li {
 }
 .preview-toggle span:hover {
   cursor: pointer;
-}
-.after-editor {
-  margin-top: 15px;
-  margin-bottom: 15px;
 }
 .checkbox {
   margin-left: 5px;
@@ -4628,9 +4623,6 @@ td.setting-input textarea {
   }
   .edit-answer-page #fmedit #id_title, .edit-question-page #fmedit #id_title {
     margin: 15px 0 0 0;
-  }
-  .edit-answer-page .after-editor {
-    margin-top: 8px;
   }
   .question-page .comment-votes {
     display: none;

@@ -24,40 +24,37 @@
 
     {{ macros.edit_post(form, post_html=revision.text, user=request.user) }}
 
-    <div class="after-editor">
-        {% include "widgets/tags_field.html" %}
-        <div class="question-options">
-            {% if settings.WIKI_ON and question.wiki == False %}
-                {{ macros.checkbox_in_div(form.wiki) }}
-            {% endif %}
-            {% if settings.ENABLE_EMAIL_ALERTS %}
-                {{ macros.checkbox_in_div(form.suppress_email) }}
-            {% endif %}
-            {% if form.can_edit_anonymously() %}
-                {{ macros.checkbox_in_div(form.reveal_identity) }}
-            {% endif %}
-            {% if settings.GROUPS_ENABLED and
-                request.user.is_authenticated() and
-                request.user.can_make_group_private_posts()
-            %}
-                {{ macros.checkbox_in_div(form.post_privately) }}
-            {% endif %}
-            {% if settings.MULTILINGUAL %}
-            <div class="lang-selector">
-                <label for="id_language">{% trans %}Change language{% endtrans %}</label>
-                {{ form.language }}
-            </div>
-            {% endif %}
-            {% include "widgets/proxy_author_fields.html" %}
-        </div>
-        {% if form.recaptcha %}
-            <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
-            <div class="clearfix"></div>
+    {% include "widgets/tags_field.html" %}
+    <div class="question-options">
+        {% if settings.WIKI_ON and question.wiki == False %}
+            {{ macros.checkbox_in_div(form.wiki) }}
         {% endif %}
-        <input id="edit_post_form_submit_button" type="submit" value="{% trans %}Save edit{% endtrans %}" class="large submit" />
-        <input type="button" value="{% trans %}Cancel{% endtrans %}" class="large submit" onclick="history.back(-1);" />
-
+        {% if settings.ENABLE_EMAIL_ALERTS %}
+            {{ macros.checkbox_in_div(form.suppress_email) }}
+        {% endif %}
+        {% if form.can_edit_anonymously() %}
+            {{ macros.checkbox_in_div(form.reveal_identity) }}
+        {% endif %}
+        {% if settings.GROUPS_ENABLED and
+            request.user.is_authenticated() and
+            request.user.can_make_group_private_posts()
+        %}
+            {{ macros.checkbox_in_div(form.post_privately) }}
+        {% endif %}
+        {% if settings.MULTILINGUAL %}
+        <div class="lang-selector">
+            <label for="id_language">{% trans %}Change language{% endtrans %}</label>
+            {{ form.language }}
+        </div>
+        {% endif %}
+        {% include "widgets/proxy_author_fields.html" %}
     </div>
+    {% if form.recaptcha %}
+        <div>{{ macros.form_field_with_errors(form.recaptcha) }}</div>
+        <div class="clearfix"></div>
+    {% endif %}
+    <input id="edit_post_form_submit_button" type="submit" value="{% trans %}Save edit{% endtrans %}" class="large submit" />
+    <input type="button" value="{% trans %}Cancel{% endtrans %}" class="large submit" onclick="history.back(-1);" />
 </form>
 {% endblock %}
 

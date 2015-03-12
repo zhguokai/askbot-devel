@@ -58,7 +58,7 @@
 {% if question.closed == False and request.user.pk == question.author_id %}{# this is outside the form on purpose #}
 <input 
   type="button"
-  class="submit after-editor answer-own-question"
+  class="submit answer-own-question"
   id="fmanswer_button"
   value="{{ settings.WORDS_ANSWER_YOUR_OWN_QUESTION|escape }}"
 />
