@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version (only in the repository)
 --------------------------------------------
+* Improved support of uploadable avatars
 * Added authentication via MediaWiki
 * Added option to specify `ASKBOT_QUESTION_TITLE_RENDERER` function
 * Added option to specify `ASKBOT_HTML_MODERATOR` function

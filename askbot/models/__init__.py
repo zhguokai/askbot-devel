@@ -289,15 +289,11 @@ def user_get_avatar_url(self, size=48):
     """
     if 'avatar' in django_settings.INSTALLED_APPS:
         if self.avatar_type == 'n':
-            import avatar
-            if askbot_settings.ENABLE_GRAVATAR: #avatar.settings.AVATAR_GRAVATAR_BACKUP:
-                return self.get_gravatar_url(size)
-            else:
-                return self.get_default_avatar_url(size)
+            return self.get_default_avatar_url(size)
         elif self.avatar_type == 'a':
-            kwargs = {'user_id': self.id, 'size': size}
+            kwargs = {'user': self.username, 'size': size}
             try:
-                return reverse('avatar_render_primary', kwargs = kwargs)
+                return reverse('avatar_render_primary', kwargs=kwargs)
             except NoReverseMatch:
                 message = 'Please, make sure that avatar urls are in the urls.py '\
                           'or update your django-avatar app, '\

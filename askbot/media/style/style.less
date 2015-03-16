@@ -239,6 +239,10 @@ body.user-messages {
     padding: 0;
 }
 
+.sr-only {
+    display: none;
+}
+
 
 /* ----- Notify message bar , check blocks/system_messages.html ----- */
 
@@ -3144,6 +3148,46 @@ ul.js-related-tags li {
     .message:last-child {
         border: none;
     }
+}
+
+.user-profile-page ul.avatars {
+    list-style: none;
+    margin-left: 0;
+    li {
+        display: inline-block;
+        max-width: 128px;
+        position: relative;
+        vertical-align: top;
+    }
+    img {
+        height: 128px;
+        width: 128px;
+    }
+    .avatar-delete {
+        margin-right: 5px;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    form {
+        text-align: center;
+    }
+    label[for="id_avatar"] {
+        display: none;
+    }
+}
+.avatar-label {
+    background: black;
+    color: white !important;
+    cursor: help;
+    padding: 5px;
+    position: absolute;
+}
+.avatar-primary-label {
+    height: 28px;
+    line-height: 28px !important;
+    margin: 3px 0 0 0;
+    text-align: center;
 }
 
 .user-profile-page.inbox-forum {

@@ -8,6 +8,7 @@ oauth2
 Lamson
 markdown2
 html5lib==0.90
+django-avatar>=2.0
 django-appconf
 django-compressor==1.2
 django-keyedcache
