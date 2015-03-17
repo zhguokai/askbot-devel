@@ -444,6 +444,15 @@ def get_enabled_major_login_providers():
             'scope': ['email',],
         }
 
+    if askbot_settings.SIGNIN_FEDORA_ENABLED:
+        data['fedora'] = {
+            'name': 'fedora',
+            'display_name': 'Fedora',
+            'type': 'openid-direct',
+            'openid_endpoint': 'https://id.fedoraproject.org/openid/',
+            'icon_media_path': 'images/jquery-openid/fedora.gif'
+        }
+
     if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
         data['twitter'] = {
             'name': 'twitter',

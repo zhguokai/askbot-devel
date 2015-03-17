@@ -77,6 +77,15 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
+        'SIGNIN_FEDORA_ENABLED',
+        default=False,
+        description=_('Enable Fedora OpenID login')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        LOGIN_PROVIDERS,
         'SIGNIN_CUSTOM_OPENID_ENABLED',
         default=False,
         description=_('Enable custom OpenID login')
@@ -135,6 +144,7 @@ providers = (
     'Blogger',
     'ClaimID',
     'Facebook',
+    'Fedora',
     'Flickr',
     #'Google Plus',
     'Mozilla Persona',
