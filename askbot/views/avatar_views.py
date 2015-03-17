@@ -87,7 +87,8 @@ def get_avatar_data(user, avatar_size):
         avatar_data.remove(primary_avatar)
         avatar_data.insert(0, primary_avatar)
 
-    return avatar_data, bool(avatars.count())
+    can_upload = avatars.count() < avatar_settings.AVATAR_MAX_AVATARS_PER_USER
+    return avatar_data, bool(avatars.count()), can_upload
 
 
 def redirect_to_show_list(user_id):
@@ -100,11 +101,11 @@ def redirect_to_show_list(user_id):
 def show_list(request, user_id=None, extra_context=None, avatar_size=128):
     """lists user's avatars, including gravatar and the default avatar"""
     user = get_object_or_404(User, pk=user_id)
-    avatar_data, has_uploaded_avatar = get_avatar_data(user, avatar_size)
+    avatar_data, has_uploaded_avatar, can_upload = get_avatar_data(user, avatar_size)
     context = {
         'avatar_data': avatar_data,
         'has_uploaded_avatar': has_uploaded_avatar,
-        'max_avatars': avatar_settings.AVATAR_MAX_AVATARS_PER_USER,
+        'can_upload': can_upload,
         'page_class': 'user-profile-page',
         'upload_avatar_form': UploadAvatarForm(user=user),
         'view_user': user

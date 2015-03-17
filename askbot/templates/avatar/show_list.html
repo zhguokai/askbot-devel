@@ -55,7 +55,7 @@
             </li>
         {% endfor %}
         <li>
-        {% if avatars|length < max_avatars %}
+        {% if can_upload %}
             {% if not has_uploaded_avatar %}
                 <p>{% trans %}You haven't uploaded an avatar yet.{% endtrans %}</p>
             {% endif %}
