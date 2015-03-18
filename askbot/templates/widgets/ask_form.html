@@ -25,6 +25,7 @@
     {{ form.group_id }}
 
     <div class="question-options">
+        {% set post_form=form %}
         {% include "widgets/proxy_author_fields.html" %}
         {% if settings.WIKI_ON %}
             {{ macros.checkbox_in_div(form.wiki) }}

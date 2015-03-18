@@ -47,6 +47,7 @@
             {{ form.language }}
         </div>
         {% endif %}
+        {% set post_form=form %}
         {% include "widgets/proxy_author_fields.html" %}
     </div>
     {% if form.recaptcha %}

@@ -29,6 +29,7 @@
             %}
                 {{ macros.checkbox_in_div(form.post_privately) }}
             {% endif %}
+            {% set post_form=form %}
             {% include "widgets/proxy_author_fields.html" %}
         </div>
         {% if form.recaptcha %}
