@@ -362,11 +362,11 @@ MergeQuestionsDialog.prototype.getLoadPreviewHandler = function () {
                 success: function (data) {
                     me.setPreview(data);
                     me.setPrevToId(curId);
-                    me.setAcceptButtonText(gettext('Merge'));
+                    return false;
                 },
                 error: function () {
                     me.clearPreview();
-                    me.setAcceptButtonText(gettext('Load preview'));
+                    return false;
                 }
             });
         }
@@ -411,14 +411,14 @@ MergeQuestionsDialog.prototype.createDom = function () {
 
     var previewHandler = this.getLoadPreviewHandler();
     var enterHandler = makeKeyHandler(13, previewHandler);
-    input.keydown(enterHandler);
+    //input.keydown(enterHandler);
     input.blur(previewHandler);
 
     this.setContent(content);
 
     this.setClass('merge-questions');
     this.setRejectButtonText(gettext('Cancel'));
-    this.setAcceptButtonText(gettext('Load preview'));
+    this.setAcceptButtonText(gettext('Merge'));
     this.setHeadingText(askbot.messages.mergeQuestions);
     this.setAcceptHandler(this.getStartMergingHandler());
 
