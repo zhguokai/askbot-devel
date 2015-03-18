@@ -561,15 +561,19 @@ body.user-messages {
 
 #homeButton{
     border-right: #afaf9e 1px solid;
-    .sprites(-6px,-36px);
     height: 54px;
     width: 43px;
     display: block;
     float: left;
-}
-
-#homeButton:hover {
-    .sprites(-51px,-36px);
+    i {
+        color: #7a7a7b;
+        font-size: 26px;
+        line-height: 54px;
+        margin-left: 5px;
+        &:hover {
+            color: #444;
+        }
+    }
 }
 
 .scope-selector {
