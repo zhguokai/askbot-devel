@@ -8,28 +8,21 @@
 </h1>
 <div id="main-body" style="width:100%;padding-top:10px">
     <form name="" action="{% url edit_user view_user.id %}" method="post">{% csrf_token %}
-        <div id="left" style="float:left;width:180px">
+        <div id="left" style="float:left; width:180px">
             <div class='avatar'>
                 {{ macros.gravatar(view_user, 128) }}
                 {% if request.user.pk == view_user.pk %}
                     <p><a
                         {% if support_custom_avatars %}
-                            href="{% url avatar_change %}"
+                            href="{% url askbot_avatar_show_list view_user.pk %}"
                         {% else %}
                             href="{% url faq %}#gravatar"
                         {% endif %}
                     >{% trans %}change picture{% endtrans %}</a></p>
-                    {% if support_custom_avatars %}
-                    <p><a
-                        href="{% url avatar_delete %}"
-                        >{% trans %}remove{% endtrans %}</a>
-                    </p>
-                    {% endif %}
                 {% endif %}
             </div>
         </div>
-        <div style="float:right;width:750px;text-align:left;">
-            <h2>{% trans %}Registered user{% endtrans %}</h2>
+        <div style="float:right; width:750px; text-align:left;">
             <table class="user-details">
                 <tr>
                     <th width="100px"></th>

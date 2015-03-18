@@ -544,6 +544,11 @@ class PageLoadTestCase(AskbotTestCase):
             kwargs = {'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             template = 'user_profile/user_email_subscriptions.html'
         )
+        self.try_url(
+            'edit_user',
+            kwargs = {'id': 2},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+            template = 'user_profile/user_edit.html'
+        )
         self.client.logout()
 
     def test_inbox_page(self):
