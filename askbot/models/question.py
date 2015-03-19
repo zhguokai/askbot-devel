@@ -17,7 +17,7 @@ from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.translation import string_concat
-from django.utils.translation import get_language, activate
+from django.utils.translation import get_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
@@ -1106,7 +1106,7 @@ deprecated, use invalidate_cached_summary_html""")
         cache.cache.delete_many(keys)
 
     def get_summary_cache_key(self, lang=None):
-        lang = lang or self.language_code
+        lang = lang or get_language()
         return 'thread-question-summary-%d-%s' % (self.id, lang)
 
     def get_post_data_cache_key(self, sort_method=None):
@@ -1835,9 +1835,6 @@ deprecated, use invalidate_cached_summary_html""")
         #using the user id for cache is wrong, we could use group
         #memberships, but in that case we'd need to be more careful with
         #cache invalidation
-        current_language = get_language()
-        activate(self.language_code)
-
         context = {
             'thread': self,
             #fetch new question post to make sure we're up-to-date
@@ -1858,8 +1855,6 @@ deprecated, use invalidate_cached_summary_html""")
             html,
             timeout=const.LONG_TIME
         )
-
-        activate(current_language)
         return html
 
     def summary_html_cached(self):
