@@ -34,7 +34,6 @@ from django.conf import settings as django_settings
 
 import askbot
 from askbot import exceptions
-from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AnswerForm
 from askbot.forms import ShowQuestionForm
 from askbot.forms import GetUserItemsForm
@@ -48,8 +47,11 @@ from askbot.models.tag import Tag
 from askbot import const
 from askbot.startup_procedures import domain_is_bad
 from askbot.utils import functions
+from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
+from askbot.utils.translation import get_language_name
+from askbot.utils.url_utils import reverse_i18n
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.templatetags import extra_tags
 from askbot.conf import settings as askbot_settings
@@ -444,10 +446,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
     if request.path.split('/')[-2] != question_post.slug:
         logging.debug('no slug match!')
         lang = translation.get_language()
-        question_url = '?'.join((
-                        question_post.get_absolute_url(language=lang),
-                        urllib.urlencode(request.GET)
-                    ))
+        question_url = question_post.get_absolute_url(language=lang)
+        if request.GET:
+            question_url += '?' + urllib.urlencode(request.GET)
         return HttpResponseRedirect(question_url)
 
 
@@ -509,7 +510,17 @@ def question(request, id):#refactor - long subroutine. display question body, an
     thread = question_post.thread
 
     if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-        if thread.language_code != translation.get_language():
+        request_lang = translation.get_language()
+        if request_lang != thread.language_code:
+            lang = get_language_name(thread.language_code)
+            message = _('Sorry, this page is only available in %(post_lang)s. '
+                    'Go to the <a href="%(home_url)s">home page in %(request_lang)s</a>.'
+            ) % {
+                'post_lang': get_language_name(thread.language_code),
+                'request_lang': get_language_name(request_lang),
+                'home_url': reverse_i18n(request_lang, 'questions')
+            }
+            request.user.message_set.create(message=message)
             return HttpResponseRedirect(thread.get_absolute_url())
 
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))
