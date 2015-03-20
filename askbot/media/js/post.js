@@ -425,7 +425,7 @@ MergeQuestionsDialog.prototype.createDom = function () {
     MergeQuestionsDialog.superClass_.createDom.call(this);
     this._element.hide();
 
-    this._fromId = $('.post.question').data('postId');
+    this._fromId = $('.js-question').data('postId');
     //have to do this on document since _element is not in the DOM yet
     $(document).trigger('askbot.afterMergeQuestionsDialogCreateDom', [this]);
 };

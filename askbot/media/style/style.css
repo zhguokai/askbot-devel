@@ -2116,7 +2116,7 @@ ul.js-related-tags li {
 .moderated-item .fa {
   color: brown;
 }
-.answer .moderated, .question .moderated {
+.answer .moderated, .js-question .moderated {
   font-weight: bold;
   background: url(../images/dialog-warning.png) 2px 0 no-repeat;
   text-decoration: underline;
@@ -2124,7 +2124,7 @@ ul.js-related-tags li {
   margin-bottom: -2px !important;
   padding-left: 24px !important;
 }
-.answer .comment .moderated, .question .comment .moderated {
+.answer .comment .moderated, .js-question .comment .moderated {
   background-position: 4px 0;
   margin-bottom: -5px !important;
   padding-left: 24px !important;
@@ -2171,7 +2171,7 @@ ul.js-related-tags li {
   vertical-align: top;
   width: auto;
 }
-.question-page .question .post-content {
+.question-page .js-question .post-content {
   margin-bottom: 10px;
 }
 .question-page .answer .post-content {
@@ -2199,7 +2199,7 @@ ul.js-related-tags li {
   font-size: 14px;
   padding: 0px 5px 5px 0px;
 }
-.question-page .question .post-body {
+.question-page .js-question .post-body {
   margin-top: 8px;
   border-top: #f0f0f0 1px solid;
   padding-top: 10px;
