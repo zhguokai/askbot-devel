@@ -1552,6 +1552,9 @@ ul.js-related-tags li {
 .js-tag .tag-number {
   float: none;
 }
+.merge-questions .js-tag {
+  display: inline-block;
+}
 .js-tag-extra-content {
   padding-left: 4px;
   vertical-align: text-top;
