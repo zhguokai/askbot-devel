@@ -150,7 +150,12 @@ $.fn.authenticator = function () {
 
         if (username.val().length < 1) {
             username.focus();
-            setError(username, gettext('enter username'));
+            if (askbot.settings.useLdapForPasswordLogin) {
+                var text = gettext('enter username');
+            } else {
+                var text = gettext('enter username or email');
+            }
+            setError(username, text);
             ok = false;
         } else {
             clearError(username);
