@@ -19,7 +19,7 @@ from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template.loader import get_template
-from django.template import RequestContext
+from django.template import Context, RequestContext
 from django.utils import simplejson
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
@@ -512,14 +512,12 @@ def question(request, id):#refactor - long subroutine. display question body, an
     if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
         request_lang = translation.get_language()
         if request_lang != thread.language_code:
-            lang = get_language_name(thread.language_code)
-            message = _('Sorry, this page is only available in %(post_lang)s. '
-                    'Go to the <a href="%(home_url)s">home page in %(request_lang)s</a>.'
-            ) % {
+            template = get_template('question/lang_switch_message.html')
+            message = template.render(Context({
                 'post_lang': get_language_name(thread.language_code),
                 'request_lang': get_language_name(request_lang),
                 'home_url': reverse_i18n(request_lang, 'questions')
-            }
+            }))
             request.user.message_set.create(message=message)
             return HttpResponseRedirect(thread.get_absolute_url())
 
