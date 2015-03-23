@@ -111,19 +111,58 @@ $.fn.authenticator = function () {
         );
     };
 
+    /**
+     * field - jQuery element of input
+     * returns error label for this field
+     */
+    var getErrorLabel = function (field) {
+        var group = field.closest('.form-group');
+        var error = group.find('.form-error');
+        if (error.length) {
+            return error;
+        } else {
+            field.before('<span class="error form-error" generated="true""></span>');
+            return group.find('.form-error');
+        }
+    };
+
+    /**
+     * sets error text and .has-error class
+     * to the .form-group
+     * field - jQuery element of input field
+     * text - text of error label
+     */
+    var setError = function(field, text) {
+        var error = getErrorLabel(field);
+        error.text(text);
+        error.closest('.form-group').addClass('has-error');
+    }
+
+    var clearError = function(field) {
+        setError(field, '');
+        field.closest('.form-group').removeClass('has-error');
+    };
+
     var submit_login_with_password = function () {
         var username = $('#id_username');
         var password = $('#id_password');
+        var ok = true;
 
         if (username.val().length < 1) {
             username.focus();
-            return false;
+            setError(username, gettext('enter username'));
+            ok = false;
+        } else {
+            clearError(username);
         }
         if (password.val().length < 1) {
             password.focus();
-            return false;
+            setError(password, gettext('enter password'));
+            ok = false;
+        } else {
+            clearError(password);
         }
-        return true;
+        return ok;
     };
 
     var submit_change_password = function () {
