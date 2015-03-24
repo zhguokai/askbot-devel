@@ -437,12 +437,6 @@ BADGE_DISPLAY_SYMBOL = '&#9679;'
 
 MIN_REPUTATION = 1
 
-AVATAR_STATUS_CHOICE = (
-    ('n', _('None')),
-    ('g', _('Gravatar')),#only if user has real uploaded gravatar
-    ('a', _('Uploaded Avatar')),#avatar uploaded locally - with django-avatar app
-)
-
 SEARCH_ORDER_BY = (
                     ('-added_at', _('date descendant')),
                     ('added_at', _('date ascendant')),

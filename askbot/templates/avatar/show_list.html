@@ -3,6 +3,9 @@
     {% trans %}manage avatars{% endtrans %}
 {% endblock %}
 {% block usercontent %}
+    {% if status_message %}
+        <p class="action-status" style="display: block; line-height: 2.3"><span>{{ status_message }}</span></p>
+    {% endif %}
     <ul class="avatars">
         {% for avatar in avatar_data %}
             <li {% if avatar.is_primary %}class="avatar-primary"{% endif %}>

@@ -1,13 +1,20 @@
+from askbot.conf import settings as askbot_settings
+from askbot.conf import gravatar_enabled
+from askbot.models import User
+from askbot.utils.forms import get_error_list
 from avatar.conf import settings as avatar_settings
 from avatar.forms import PrimaryAvatarForm, UploadAvatarForm
 from avatar.models import Avatar
 from avatar.signals import avatar_updated
-from askbot.models import User
+from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.encoding import force_str
+from django.utils.translation import ugettext as _
 import functools
+
 
 def admin_or_owner_required(func):
     """decorator that allows admin or account owner to
@@ -33,52 +40,50 @@ def get_avatar_data(user, avatar_size):
     There will always be only one primary_avatar.
     List includes gravatar, default avatar and any uploaded avatars.
     """
+    avatar_type = user.get_avatar_type()
+
     #determine avatar data for the view
     avatar_data = list()
-    avatars = user.avatar_set.all()
-    #iterate through uploaded avatars
-    for avatar in avatars:
-        datum = {
-            'id': avatar.id,
-            'avatar_type': 'uploaded_avatar',
-            'url': avatar.avatar_url(avatar_size),
-            'is_primary': avatar.primary
-        }
-        avatar_data.append(datum)
 
-    #add gravatar datum
-    gravatar_datum = {
-        'avatar_type': 'gravatar',
-        'url': user.get_gravatar_url(avatar_size),
-        'is_primary': (user.avatar_type == 'g')
-    }
-    avatar_data.append(gravatar_datum)
+    if 'avatar' in django_settings.INSTALLED_APPS:
+        avatars = user.avatar_set.all()
+        #iterate through uploaded avatars
+        for avatar in avatars:
+            datum = {
+                'id': avatar.id,
+                'avatar_type': 'uploaded_avatar',
+                'url': avatar.avatar_url(avatar_size),
+                #avatar app always keeps one avatar as primary
+                #but we may want to allow user select gravatar
+                #and/or default fallback avatar!!!
+                'is_primary': avatar.primary and avatar_type == 'a'
+            }
+            avatar_data.append(datum)
+
+    if gravatar_enabled():
+        #add gravatar datum
+        gravatar_datum = {
+            'avatar_type': 'gravatar',
+            'url': user.get_gravatar_url(avatar_size),
+            'is_primary': (avatar_type == 'g')
+        }
+        avatar_data.append(gravatar_datum)
 
     #add default avatar datum
     default_datum = {
         'avatar_type': 'default_avatar',
         'url': user.get_default_avatar_url(avatar_size),
-        'is_primary': (user.avatar_type == 'n')
+        'is_primary': (avatar_type == 'n')
     }
     avatar_data.append(default_datum)
 
     #if there are >1 primary avatar, select just one
     primary_avatars = filter(lambda v: v['is_primary'], avatar_data)
-    #force just one primary avatar if there are >1
     if len(primary_avatars) > 1:
-        gravatars = filter(
-                        lambda v: v.type == 'gravatar',
-                        primary_avatars
-                    )
-
         def clear_primary(datum):
             datum['is_primary'] = False
         map(clear_primary, primary_avatars)
-
-        if len(gravatars):
-            gravatars[0]['is_primary'] = True
-        else:
-            primary_avatars[0]['is_primary'] = True
+        primary_avatars[0]['is_primary'] = True
             
     #insert primary avatar first
     primary_avatars = filter(lambda v: v['is_primary'], avatar_data)
@@ -102,12 +107,14 @@ def show_list(request, user_id=None, extra_context=None, avatar_size=128):
     """lists user's avatars, including gravatar and the default avatar"""
     user = get_object_or_404(User, pk=user_id)
     avatar_data, has_uploaded_avatar, can_upload = get_avatar_data(user, avatar_size)
+    status_message = request.session.pop('askbot_avatar_status_message', None)
     context = {
         'avatar_data': avatar_data,
         'has_uploaded_avatar': has_uploaded_avatar,
         'can_upload': can_upload,
         'page_class': 'user-profile-page',
         'upload_avatar_form': UploadAvatarForm(user=user),
+        'status_message': status_message,
         'view_user': user
     }
     context.update(extra_context or {})
@@ -136,17 +143,26 @@ def set_primary(request, user_id=None, extra_context=None, avatar_size=128):
 @admin_or_owner_required
 def upload(request, user_id=None):
     user = get_object_or_404(User, pk=user_id)
-    if request.method == 'POST' and 'avatar' in request.FILES:
-        form = UploadAvatarForm(
-                        request.POST,
-                        request.FILES,
-                        user=user)
-        if form.is_valid():
-            avatar = Avatar(user=user, primary=True)
-            image_file = request.FILES['avatar']
-            avatar.avatar.save(image_file.name, image_file)
-            avatar.save()
-            avatar_updated.send(sender=Avatar, user=user, avatar=avatar)
+    if request.method == 'POST':
+        if 'avatar' in request.FILES:
+            form = UploadAvatarForm(
+                            request.POST,
+                            request.FILES,
+                            user=user)
+            if form.is_valid():
+                avatar = Avatar(user=user, primary=True)
+                image_file = request.FILES['avatar']
+                avatar.avatar.save(image_file.name, image_file)
+                avatar.save()
+                avatar_updated.send(sender=Avatar, user=user, avatar=avatar)
+                message = _('Avatar uploaded and set as primary')
+            else:
+                errors = get_error_list(form)
+                message = ', '.join(map(lambda v: force_str(v), errors))
+        else:
+            message = _('Please choose file to upload')
+
+        request.session['askbot_avatar_status_message'] = message
 
     return redirect_to_show_list(user_id)
 

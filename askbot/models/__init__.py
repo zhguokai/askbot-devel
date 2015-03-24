@@ -188,11 +188,18 @@ User.add_to_class('reputation',
 )
 User.add_to_class('gravatar', models.CharField(max_length=32))
 #User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
+
 User.add_to_class(
     'avatar_type',
-    models.CharField(max_length=1,
-        choices=const.AVATAR_STATUS_CHOICE,
-        default='n')
+    models.CharField(
+        max_length=1,
+        choices=(
+            ('n', _('None')),
+            ('g', _('Gravatar')),#only if user has real uploaded gravatar
+            ('a', _('Uploaded Avatar')),#avatar uploaded locally - with django-avatar app
+        ),
+        default='n'
+    )
 )
 User.add_to_class('gold', models.SmallIntegerField(default=0))
 User.add_to_class('silver', models.SmallIntegerField(default=0))
@@ -282,30 +289,48 @@ def user_get_default_avatar_url(self, size):
     """
     return skin_utils.get_media_url(askbot_settings.DEFAULT_AVATAR_URL)
 
+def user_get_avatar_type(self):
+    """returns user avatar type, taking into account
+    avatar_type value and how use of avatar and/or gravatar
+    is configured
+    Value returned is one of 'n', 'a', 'g'.
+    """
+    if 'avatar' in django_settings.INSTALLED_APPS:
+        if self.avatar_type == 'g':
+            if askbot_settings.ENABLE_GRAVATAR:
+                return 'g'
+            else:
+                #fallback to default avatar if gravatar is disabled
+                return 'n'
+        assert(self.avatar_type in ('a', 'n'))#only these are allowed
+        return self.avatar_type
+
+    #if we don't have an uploaded avatar, always use gravatar
+    return 'g'
+
 def user_get_avatar_url(self, size=48):
     """returns avatar url - by default - gravatar,
     but if application django-avatar is installed
     it will use avatar provided through that app
     """
-    if 'avatar' in django_settings.INSTALLED_APPS:
-        if self.avatar_type == 'n':
-            return self.get_default_avatar_url(size)
-        elif self.avatar_type == 'a':
-            kwargs = {'user': self.username, 'size': size}
-            try:
-                return reverse('avatar_render_primary', kwargs=kwargs)
-            except NoReverseMatch:
-                message = 'Please, make sure that avatar urls are in the urls.py '\
-                          'or update your django-avatar app, '\
-                          'currently it is impossible to serve avatars.'
-                logging.critical(message)
-                raise django_exceptions.ImproperlyConfigured(message)
-        else:
-            return self.get_gravatar_url(size)
-    if askbot_settings.ENABLE_GRAVATAR:
-        return self.get_gravatar_url(size)
-    else:
+    avatar_type = self.get_avatar_type()
+
+    if avatar_type == 'n':
         return self.get_default_avatar_url(size)
+    elif avatar_type == 'a':
+        kwargs = {'user': self.username, 'size': size}
+        try:
+            return reverse('avatar_render_primary', kwargs=kwargs)
+        except NoReverseMatch:
+            message = 'Please, make sure that avatar urls are in the urls.py '\
+                      'or update your django-avatar app, '\
+                      'currently it is impossible to serve avatars.'
+            logging.critical(message)
+            raise django_exceptions.ImproperlyConfigured(message)
+
+    assert(avatar_type == 'g')
+    return self.get_gravatar_url(size)
+
 
 def user_get_top_answers_paginator(self, visitor=None):
     """get paginator for top answers by the user for a
@@ -3208,6 +3233,7 @@ User.add_to_class(
     user_subscribe_for_followed_question_alerts
 )
 User.add_to_class('get_absolute_url', user_get_absolute_url)
+User.add_to_class('get_avatar_type', user_get_avatar_type)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
@@ -3844,7 +3870,6 @@ def make_admin_if_first_user(user, **kwargs):
 
     function is run when user registers
     """
-    import sys
     user_count = User.objects.all().count()
     if user_count == 1:
         user.set_status('d')
