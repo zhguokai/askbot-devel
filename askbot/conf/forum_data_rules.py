@@ -190,6 +190,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'COMMENT_EDITING_BUMPS_THREAD',
+        default=False,
+        description=_('Show comment updates on the main page')
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MIN_COMMENT_BODY_LENGTH',
