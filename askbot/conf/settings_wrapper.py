@@ -178,8 +178,7 @@ class ConfigSettings(object):
         if settings:
             return settings
         else:
-            self.prime_cache(cache_key)
-            return cache.get(cache_key)
+            return self.prime_cache(cache_key)
 
     @classmethod
     def prime_cache(cls, cache_key, **kwargs):
@@ -194,6 +193,7 @@ class ConfigSettings(object):
             else:
                 out[key] = hardcoded_setting
         cache.set(cache_key, out)
+        return out
 
 
 def get_bulk_cache_key():
