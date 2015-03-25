@@ -28,7 +28,7 @@ from django.db import models
 from django.db.models import Count
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
-from django.core import cache
+from django.core.cache import cache
 from django.core import exceptions as django_exceptions
 from django_countries.fields import CountryField
 from askbot import exceptions as askbot_exceptions
@@ -59,6 +59,7 @@ from askbot.models.meta import ImportRun, ImportedObjectInfo
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.decorators import reject_forbidden_phrases
+from askbot.utils.cache import memoize, delete_memoized
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
 from askbot.utils.html import replace_links_with_text
@@ -308,6 +309,7 @@ def user_get_avatar_type(self):
     #if we don't have an uploaded avatar, always use gravatar
     return 'g'
 
+@memoize
 def user_get_avatar_url(self, size=48):
     """returns avatar url - by default - gravatar,
     but if application django-avatar is installed
@@ -318,6 +320,11 @@ def user_get_avatar_url(self, size=48):
     if avatar_type == 'n':
         return self.get_default_avatar_url(size)
     elif avatar_type == 'a':
+        from avatar.conf import settings as avatar_settings
+        sizes = avatar_settings.AUTO_GENERATE_AVATAR_SIZES
+        if size not in sizes:
+            logging.critical('add values %d to setting AUTO_GENERATE_AVATAR_SIZES')
+
         kwargs = {'user': self.username, 'size': size}
         try:
             return reverse('avatar_render_primary', kwargs=kwargs)
@@ -327,9 +334,15 @@ def user_get_avatar_url(self, size=48):
                       'currently it is impossible to serve avatars.'
             logging.critical(message)
             raise django_exceptions.ImproperlyConfigured(message)
-
     assert(avatar_type == 'g')
     return self.get_gravatar_url(size)
+
+
+def user_clear_avatar_cache(self):
+    from avatar.conf import settings as avatar_settings
+    sizes = avatar_settings.AUTO_GENERATE_AVATAR_SIZES
+    for size in sizes:
+        delete_memoized(user_get_avatar_url, self, size=size)
 
 
 def user_get_top_answers_paginator(self, visitor=None):
@@ -3235,6 +3248,7 @@ User.add_to_class(
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_type', user_get_avatar_type)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
+User.add_to_class('clear_avatar_cache', user_clear_avatar_cache)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
@@ -3980,7 +3994,7 @@ def record_spam_rejection(
         activity.active_at = now
         activity.summary = summary
         activity.save()
-    
+
 
 from south.signals import ran_migration 
 
@@ -4082,6 +4096,7 @@ if 'avatar' in django_settings.INSTALLED_APPS:
         sender=Avatar,
         dispatch_uid='update_avatar_type_flag_on_avatar_delete'
     )
+
 
 django_signals.post_delete.connect(
     record_cancel_vote,

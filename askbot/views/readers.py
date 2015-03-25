@@ -85,7 +85,7 @@ def questions(request, **kwargs):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
-    #before = datetime.datetime.now()
+    before = datetime.datetime.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
@@ -292,9 +292,9 @@ def questions(request, **kwargs):
                 ) % url
                 request.user.message_set.create(message=msg)
 
-        return render(request, 'main_page.html', template_data)
-        #print datetime.datetime.now() - before
-        #return res
+        res = render(request, 'main_page.html', template_data)
+        print datetime.datetime.now() - before
+        return res
 
 
 def get_top_answers(request):

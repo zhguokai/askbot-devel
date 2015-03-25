@@ -137,6 +137,7 @@ def set_primary(request, user_id=None, extra_context=None, avatar_size=128):
             avatar.primary = True
             avatar.save()
             avatar_updated.send(sender=Avatar, user=request.user, avatar=avatar)
+            user.clear_avatar_cache()
     return redirect_to_show_list(user_id)
 
 
@@ -155,6 +156,7 @@ def upload(request, user_id=None):
                 avatar.avatar.save(image_file.name, image_file)
                 avatar.save()
                 avatar_updated.send(sender=Avatar, user=user, avatar=avatar)
+                user.clear_avatar_cache()
                 message = _('Avatar uploaded and set as primary')
             else:
                 errors = get_error_list(form)
@@ -180,6 +182,7 @@ def delete(request, avatar_id):
         avatar.user.save()
         if avatar_type == 'g':
             avatar.user.avatar_set.update(primary=False)
+        user.clear_avatar_cache()
 
     return redirect_to_show_list(avatar.user_id)
 
@@ -191,6 +194,7 @@ def enable_gravatar(request, user_id=None):
         user.avatar_type = 'g'
         user.save()
         user.avatar_set.update(primary=False)
+        user.clear_avatar_cache()
     return redirect_to_show_list(user_id)
 
 
@@ -201,6 +205,7 @@ def enable_default_avatar(request, user_id=None):
         user.avatar_type = 'n'
         user.save()
         user.avatar_set.update(primary=False)
+        user.clear_avatar_cache()
     return redirect_to_show_list(user_id)
 
 
@@ -215,4 +220,5 @@ def disable_gravatar(request, user_id=None):
             avatar.primary = True
             avatar.save()
             avatar_updated.send(sender=Avatar, user=request.user, avatar=avatar)
+        user.clear_avatar_cache()
     return redirect_to_show_list(user_id)
