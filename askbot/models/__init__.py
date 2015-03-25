@@ -1345,8 +1345,10 @@ def user_assert_can_revoke_old_vote(self, vote):
     """raises exceptions.PermissionDenied if old vote
     cannot be revoked due to age of the vote
     """
-    if (datetime.datetime.now().day - vote.voted_at.day) \
-        >= askbot_settings.MAX_DAYS_TO_CANCEL_VOTE:
+    if askbot_settings.MAX_DAYS_TO_CANCEL_VOTE < 0:
+        return
+    if (datetime.datetime.now() - vote.voted_at).days \
+            >= askbot_settings.MAX_DAYS_TO_CANCEL_VOTE:
         raise django_exceptions.PermissionDenied(
             _('sorry, but older votes cannot be revoked')
         )
