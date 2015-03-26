@@ -221,6 +221,9 @@ def moderate_post_edits(request):
     post_data = simplejson.loads(request.raw_post_data)
     #{'action': 'decline-with-reason', 'items': ['posts'], 'reason': 1, 'edit_ids': [827]}
 
+    import pdb
+    pdb.set_trace()
+
     memo_set = models.ActivityAuditStatus.objects.filter(id__in=post_data['edit_ids'])
     result = {
         'message': '',
@@ -236,7 +239,7 @@ def moderate_post_edits(request):
                                 user__in=editors
                             )
         memo_filter = Q(user=request.user, activity__in=items)
-        memo_set = models.ActivityAuditStatus.objects.filter(memo_filter)
+        memo_set |= models.ActivityAuditStatus.objects.filter(memo_filter)
 
     memo_set.select_related('activity')
 

@@ -70,9 +70,9 @@ def process_vote(user=None, vote_direction=None, post=None):
     if vote != None:
         user.assert_can_revoke_old_vote(vote)
         score_delta = vote.cancel()
-        response_data['count'] = post.points+ score_delta
+        response_data['count'] = post.points + score_delta
+        post.points = response_data['count'] #assign here too for correctness
         response_data['status'] = 1 #this means "cancel"
-
     else:
         #this is a new vote
         votes_left = user.get_unused_votes_today()
@@ -95,6 +95,9 @@ def process_vote(user=None, vote_direction=None, post=None):
 
         response_data['count'] = post.points
         response_data['status'] = 0 #this means "not cancel", normal operation
+
+    if vote and post.thread_id:
+        post.thread.invalidate_cached_post_data()
 
     response_data['success'] = 1
 
@@ -169,7 +172,6 @@ def vote(request):
                 raise Exception(
                     _('Request mode is not supported. Please try again.'))
 
-            # make sure question author is current user
             if post.endorsed:
                 user.unaccept_best_answer(post)
                 response_data['status'] = 1  # cancelation
@@ -191,29 +193,9 @@ def vote(request):
                 user.restore_post(post=post)
             else:
                 user.delete_post(post=post)
-        elif vote_type == const.VOTE_SUBSCRIBE_QUESTION:
-            # TODO: this branch is not used anymore now we just follow
-            # question, we don't have the separate "subscribe" function
-            if user not in post.thread.followed_by.all():
-                user.follow_question(post)
-
-                if askbot_settings.EMAIL_VALIDATION and not user.email_isvalid:
-                    response_data['message'] = _(
-                        'Your subscription is saved, but email address '
-                        '%(email)s needs to be validated, please see '
-                        '<a href="%(details_url)s">more details here</a>'
-                    ) % {
-                        'email': user.email,
-                        'details_url': reverse('faq') + '#validate'
-                    }
-
-            if user.subscribe_for_followed_question_alerts():
-                if response_data['message']:
-                    response_data['message'] += '<br/>'
-                response_data['message'] += _(
-                    'email update frequency has been set to daily')
-        elif vote_type == const.VOTE_UNSUBSCRIBE_QUESTION:
-            user.unfollow_question(post)
+        else:
+            raise ValueError('unexpected vote type %d' % vote_type)
+            
 
         if vote_type in const.VOTE_TYPES_INVALIDATE_CACHE:
             post.thread.invalidate_cached_data()
@@ -790,9 +772,9 @@ def upvote_comment(request):
         cancel_vote = form.cleaned_data['cancel_vote']
         comment = get_object_or_404(models.Post, post_type='comment', id=comment_id)
         process_vote(
-            post = comment,
-            vote_direction = 'up',
-            user = request.user
+            post=comment,
+            vote_direction='up',
+            user=request.user
         )
     else:
         raise ValueError
