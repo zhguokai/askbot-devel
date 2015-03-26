@@ -484,25 +484,15 @@ class EditQuestionPermissionAssertionTests(utils.AskbotTestCase):
         self.min_rep = askbot_settings.MIN_REP_TO_EDIT_OTHERS_POSTS
         self.min_rep_wiki = askbot_settings.MIN_REP_TO_EDIT_WIKI
 
-    def assert_user_can(
-                    self,
-                    user = None,
-                ):
-        if user is None:
-            user = self.user
-
+    def assert_user_can(self, user=None):
+        user = user or self.user
         user.assert_can_edit_post(self.post)
         self.assertTrue(
             template_filters.can_edit_post(user, self.post)
         )
 
-    def assert_user_cannot(
-                    self,
-                    user = None,
-                ):
-        if user is None:
-            user = self.user
-
+    def assert_user_cannot(self, user=None):
+        user = user or self.user
         self.assertRaises(
                     exceptions.PermissionDenied,
                     user.assert_can_edit_post,
@@ -1335,13 +1325,13 @@ class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
             user = self.user
         user.assert_can_accept_best_answer(self.answer)
 
-    def assert_user_cannot(self, user = None):
+    def assert_user_cannot(self, user=None):
         if user is None:
             user = self.user
         self.assertRaises(
             exceptions.PermissionDenied,
             user.assert_can_accept_best_answer,
-            answer = self.answer
+            answer=self.answer
         )
 
     def test_question_owner_can_accept_others_answer(self):
@@ -1360,7 +1350,7 @@ class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
 
     def test_answer_owner_cannot_accept_answer(self):
         self.other_post_answer()
-        self.assert_user_cannot(user = self.other_user)
+        self.assert_user_cannot(user=self.other_user)
 
     def test_question_and_answer_owner_cannot_accept_answer(self):
         self.user_post_answer()

@@ -758,10 +758,10 @@ def user_assert_can_unaccept_best_answer(self, answer=None):
                 #check rep
                 _assert_user_can(
                     user=self,
-                    #action_display=askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_OWN_ANSWER,
+                    action_display=askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_OWN_ANSWER,
                     blocked_user_cannot=True,
                     suspended_owner_cannot=True,
-                    #min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
+                    min_rep_setting = askbot_settings.MIN_REP_TO_ACCEPT_OWN_ANSWER
                 )
         return # success
 

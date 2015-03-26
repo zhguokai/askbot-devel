@@ -15,9 +15,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
-from django.utils.translation import string_concat
-from django.utils.translation import get_language
+from django.utils.translation import ungettext, string_concat, get_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
@@ -885,8 +883,11 @@ class Thread(models.Model):
         qset.update(view_count=models.F('view_count') + increment)
         # get the new view_count back because other pieces of code relies on such behaviour
         self.view_count = qset.values('view_count')[0]['view_count']
+
         ####################################################################
-        self.invalidate_cached_summary_html() # regenerate question/thread summary html
+        self.invalidate_cached_summary_html()
+        if django_settings.CELERY_ALWAYS_EAGER == False:
+            self.update_summary_html() #proactively regenerate thread summary html
         ####################################################################
 
     def set_closed_status(self, closed, closed_by, closed_at, close_reason):
@@ -1781,10 +1782,7 @@ class Thread(models.Model):
         return last_updated_at, last_updated_by
 
     def get_summary_html(self, search_state=None, visitor=None):
-        html = self.get_cached_summary_html(visitor)
-        if not html:
-            html = self.update_summary_html(visitor)
-
+        html = self.get_cached_summary_html(visitor) or self.update_summary_html(visitor)
         # todo: this work may be pushed onto javascript we post-process tag names
         # in the snippet so that tag urls match the search state
         # use `<<<` and `>>>` because they cannot be confused with user input
@@ -1817,7 +1815,7 @@ class Thread(models.Model):
             return None
         return cache.cache.get(self.get_summary_cache_key())
 
-    def update_summary_html(self, visitor = None):
+    def update_summary_html(self, visitor=None):
         #todo: it is quite wrong that visitor is an argument here
         #because we do not include any visitor-related info in the cache key
         #ideally cache should be shareable between users, so straight up
@@ -1833,7 +1831,8 @@ class Thread(models.Model):
         }
         from askbot.views.context import get_extra as get_extra_context
         context.update(get_extra_context('ASKBOT_QUESTION_SUMMARY_EXTRA_CONTEXT', None, context))
-        html = get_template('widgets/question_summary.html').render(Context(context))
+        template = get_template('widgets/question_summary.html')
+        html = template.render(Context(context))
         # INFO: Timeout is set to 30 days:
         # * timeout=0/None is not a reliable cross-backend way to set infinite timeout
         # * We probably don't need to pollute the cache with threads older than 30 days

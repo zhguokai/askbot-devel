@@ -85,7 +85,7 @@ def questions(request, **kwargs):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
-    before = datetime.datetime.now()
+    #before = datetime.datetime.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
@@ -292,9 +292,9 @@ def questions(request, **kwargs):
                 ) % url
                 request.user.message_set.create(message=msg)
 
-        res = render(request, 'main_page.html', template_data)
-        print datetime.datetime.now() - before
-        return res
+        return render(request, 'main_page.html', template_data)
+        #print datetime.datetime.now() - before
+        #return res
 
 
 def get_top_answers(request):
@@ -581,6 +581,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #2) run the slower jobs in a celery task
         from askbot import tasks
         tasks.record_question_visit.delay(
+            language_code=translation.get_language(),
             question_post_id=question_post.id,
             user_id=request.user.id,
             update_view_count=update_view_count
