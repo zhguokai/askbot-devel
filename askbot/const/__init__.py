@@ -328,7 +328,93 @@ POST_STATUS = {
     'private': _('[private]')
 }
 
-#choices used in email and display filters
+# codes used in the askbot.views.commands.vote view
+VOTE_ACCEPT_ANSWER = '0'
+VOTE_FAVORITE = '4'
+
+VOTE_UPVOTE_QUESTION, VOTE_DOWNVOTE_QUESTION = '1', '2'
+VOTE_UPVOTE_ANSWER, VOTE_DOWNVOTE_ANSWER = '5', '6'
+
+VOTE_REPORT_QUESTION = '7'
+VOTE_CANCEL_REPORT_QUESTION = '7.5'
+VOTE_CANCEL_REPORT_QUESTION_ALL = '7.6'
+
+VOTE_REPORT_ANSWER = '8'
+VOTE_CANCEL_REPORT_ANSWER = '8.5'
+VOTE_CANCEL_REPORT_ANSWER_ALL = '8.6'
+
+VOTE_REMOVE_QUESTION, VOTE_REMOVE_ANSWER = '9', '10'
+VOTE_SUBSCRIBE_QUESTION, VOTE_UNSUBSCRIBE_QUESTION = '11', '12'
+
+# list of vote commands to manage posts voting
+VOTE_TYPES_VOTING = (
+    VOTE_UPVOTE_QUESTION,
+    VOTE_DOWNVOTE_QUESTION,
+    VOTE_UPVOTE_ANSWER,
+    VOTE_DOWNVOTE_ANSWER,
+)
+
+# list of vote commands to manage posts flagging
+VOTE_TYPES_REPORTING = (
+    VOTE_REPORT_QUESTION,
+    VOTE_CANCEL_REPORT_QUESTION,
+    VOTE_CANCEL_REPORT_QUESTION_ALL,
+    VOTE_REPORT_ANSWER,
+    VOTE_CANCEL_REPORT_ANSWER,
+    VOTE_CANCEL_REPORT_ANSWER_ALL,
+)
+
+# list of vote commands which cause post deletion
+VOTE_TYPES_REMOVAL = (
+    VOTE_REMOVE_QUESTION,
+    VOTE_REMOVE_ANSWER,
+)
+
+# list of vote commands which shall cause the thread cache to be invalidated
+VOTE_TYPES_INVALIDATE_CACHE = (
+    VOTE_ACCEPT_ANSWER,
+    VOTE_REPORT_QUESTION,
+    VOTE_CANCEL_REPORT_QUESTION,
+    VOTE_CANCEL_REPORT_QUESTION_ALL,
+    VOTE_REPORT_ANSWER,
+    VOTE_CANCEL_REPORT_ANSWER,
+    VOTE_CANCEL_REPORT_ANSWER_ALL,
+    VOTE_REMOVE_QUESTION,
+    VOTE_REMOVE_ANSWER,
+)
+
+# mapping of VOTE commands to command specific arguments in the form:
+#
+#    (post_type, *command_specific_args)
+#
+VOTE_TYPES = {
+    VOTE_ACCEPT_ANSWER: ('answer', ),
+
+    VOTE_FAVORITE: None,  # TODO: not handled in the view
+
+    # args: (post_type, vote_directiom)
+    VOTE_UPVOTE_QUESTION: ('question', 'up'),
+    VOTE_DOWNVOTE_QUESTION: ('question', 'down'),
+    VOTE_UPVOTE_ANSWER: ('answer', 'up'),
+    VOTE_DOWNVOTE_ANSWER: ('answer', 'down'),
+
+    # args: (post_type, cancel, cancel_all)
+    VOTE_REPORT_QUESTION: ('question', False, False),
+    VOTE_CANCEL_REPORT_QUESTION: ('question', True, False),
+    VOTE_CANCEL_REPORT_QUESTION_ALL: ('question', False, True),
+    VOTE_REPORT_ANSWER: ('answer', False, False),
+    VOTE_CANCEL_REPORT_ANSWER: ('answer', True, False),
+    VOTE_CANCEL_REPORT_ANSWER_ALL: ('answer', False, True),
+
+    VOTE_REMOVE_QUESTION: ('question', ),
+    VOTE_REMOVE_ANSWER: ('answer', ),
+
+    VOTE_SUBSCRIBE_QUESTION: ('question', ),
+    VOTE_UNSUBSCRIBE_QUESTION: ('question', ),
+}
+
+
+# choices used in email and display filters
 INCLUDE_ALL = 0
 EXCLUDE_IGNORED = 1
 INCLUDE_INTERESTING = 2
