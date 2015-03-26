@@ -7,17 +7,11 @@
             {% if request.user.pk == view_user.pk %}
                 <p><a 
                     {% if support_custom_avatars %}
-                        href="{% url avatar_change %}"
+                        href="{% url askbot_avatar_show_list view_user.id %}"
                     {% else %}
                         href="{% url faq %}#gravatar"
                     {% endif %}
                 >{% trans %}change picture{% endtrans %}</a></p>
-                {% if support_custom_avatars %}
-                <p><a 
-                    href="{% url avatar_delete %}"
-                    >{% trans %}remove{% endtrans %}</a>
-                </p>
-                {% endif %}
             {% endif %}
         </div>
         {% if can_show_karma %}

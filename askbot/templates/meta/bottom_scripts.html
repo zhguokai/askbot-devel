@@ -33,6 +33,7 @@
     askbot['settings']['minSearchWordLength'] = {{ min_search_word_length }};
     askbot['settings']['mathjaxEnabled'] = {{ settings.ENABLE_MATHJAX|as_js_bool }};
     askbot['settings']['sharingSuffixText'] = '{{ settings.SHARING_SUFFIX_TEXT|escape }}';
+    askbot['settings']['errorPlacement'] = 'after-label';
     askbot['data']['maxCommentLength'] = {{ settings.MAX_COMMENT_LENGTH }};
     askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
     askbot['settings']['commentsEditorType'] = '{{ settings.COMMENTS_EDITOR_TYPE }}';
@@ -127,7 +128,7 @@
 
         var haveFullTextSearchTab = inArray(activeTab, ['questions', 'badges', 'ask']);
         var haveUserProfilePage = $('body').hasClass('user-profile-page');
-        if ((haveUserProfilePage || haveFullTextSearchTab) && searchInput.length) {
+        if ((haveUserProfilePage || haveFullTextSearchTab) && searchInput && searchInput.length) {
             var search = new FullTextSearch();
             askbot['controllers'] = askbot['controllers'] || {};
             askbot['controllers']['fullTextSearch'] = search;

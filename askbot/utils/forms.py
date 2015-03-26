@@ -27,6 +27,14 @@ def clean_next(next, default = None):
     logging.debug('next url is %s' % next)
     return next
 
+def get_error_list(form_instance):
+    """return flat list of error values for the form"""
+    lists = form_instance.errors.values()
+    errors = list()
+    for error_list in lists:
+        errors.extend(list(error_list))
+    return errors
+
 def get_next_url(request, default = None):
     return clean_next(request.REQUEST.get('next'), default)
 
@@ -273,7 +281,7 @@ class SetPasswordForm(forms.Form):
                                     attrs=login_form_widget_attrs,
                                     render_value=True
                                 ),
-                                label=mark_safe(_('Password <i>(please retype)</i>')),
+                                label=_('Password retyped'),
                                 error_messages={'required':_('please, retype your password'),
                                                 'nomatch':_('entered passwords did not match, please try again')},
                             )

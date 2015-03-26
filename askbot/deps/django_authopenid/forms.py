@@ -38,7 +38,6 @@ from django.utils.translation import ugettext_lazy
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
-from django.utils.safestring import mark_safe
 from askbot.forms import AskbotRecaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
 from askbot.utils.loading import load_module
@@ -464,9 +463,7 @@ class EmailPasswordForm(forms.Form):
     """ send new password form """
     username = UserNameField(
                     skip_clean=True,
-                    label=mark_safe(
-                            ugettext_lazy('Your user name (<i>required</i>)')
-                        )
+                    label=ugettext_lazy('Your user name')
                 )
 
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, 

@@ -20,6 +20,7 @@ from askbot.utils import url_utils
 from askbot.utils.html import site_url
 from askbot import get_version
 
+
 def auto_now_timestamp(func):
     """decorator that will automatically set
     argument named timestamp to the "now" value if timestamp == None
@@ -27,12 +28,12 @@ def auto_now_timestamp(func):
     if there is no timestamp argument, then exception is raised
     """
     @functools.wraps(func)
-    def decorated_func(*arg, **kwarg):
+    def decorating_func(*arg, **kwarg):
         timestamp = kwarg.get('timestamp', None)
         if timestamp is None:
             kwarg['timestamp'] = datetime.datetime.now()
         return func(*arg, **kwarg)
-    return decorated_func
+    return decorating_func
 
 
 def ajax_login_required(view_func):

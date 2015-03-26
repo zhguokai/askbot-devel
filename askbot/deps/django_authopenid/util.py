@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import cgi
+import functools
 import httplib
+import jwt
+import random
+import re
 import urllib
 import urlparse
-import functools
-import re
-import random
 from askbot.utils.html import site_url
 from askbot.utils.functions import format_setting_name
 from openid.store.interface import OpenIDStore
@@ -442,6 +443,16 @@ def get_enabled_major_login_providers():
             'response_parser': lambda data: dict(urlparse.parse_qsl(data)),
             'scope': ['email',],
         }
+
+    if askbot_settings.SIGNIN_FEDORA_ENABLED:
+        data['fedora'] = {
+            'name': 'fedora',
+            'display_name': 'Fedora',
+            'type': 'openid-direct',
+            'openid_endpoint': 'https://id.fedoraproject.org/openid/',
+            'icon_media_path': 'images/jquery-openid/fedora.gif'
+        }
+
     if askbot_settings.TWITTER_KEY and askbot_settings.TWITTER_SECRET:
         data['twitter'] = {
             'name': 'twitter',
@@ -455,6 +466,35 @@ def get_enabled_major_login_providers():
             'icon_media_path': 'images/jquery-openid/twitter.gif',
             'get_user_id_function': lambda data: data['user_id'],
         }
+
+    def get_mediawiki_user_id(data):
+        """returns facebook user id given the access token"""
+        connection = data['oauth1_connection'] 
+        client = connection.get_client(data)
+        url = 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/identify'
+        url, body = connection.normalize_url_and_params(url, {})
+        response, content = client.request(url, 'POST', body=body)
+        data = jwt.decode(
+                    content,
+                    connection.parameters['consumer_secret'],
+                    audience=connection.parameters['consumer_key']
+                )
+        return data['sub']
+
+    if askbot_settings.MEDIAWIKI_KEY and askbot_settings.MEDIAWIKI_SECRET:
+        data['mediawiki'] = {
+            'name': 'mediawiki',
+            'callback_is_oob': True,
+            'display_name': 'MediaWiki',
+            'type': 'oauth',
+            'request_token_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/initiate',
+            'access_token_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/token',
+            'authorize_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/authorize',
+            'authenticate_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/authorize',
+            'icon_media_path': askbot_settings.MEDIAWIKI_SITE_ICON,
+            'get_user_id_function': get_mediawiki_user_id,
+        }
+
     def get_identica_user_id(data):
         consumer = oauth.Consumer(data['consumer_key'], data['consumer_secret'])
         token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
@@ -463,6 +503,7 @@ def get_enabled_major_login_providers():
         response, content = client.request(url, 'GET')
         json = simplejson.loads(content)
         return json['id']
+
     if askbot_settings.IDENTICA_KEY and askbot_settings.IDENTICA_SECRET:
         data['identi.ca'] = {
             'name': 'identi.ca',
@@ -475,6 +516,15 @@ def get_enabled_major_login_providers():
             'icon_media_path': 'images/jquery-openid/identica.png',
             'get_user_id_function': get_identica_user_id,
         }
+
+    if askbot_settings.SIGNIN_WORDPRESS_SITE_ENABLED and askbot_settings.WORDPRESS_SITE_URL:
+        data['wordpress_site'] = {
+            'name': 'wordpress_site',
+            'display_name': 'Self hosted wordpress blog', #need to be added as setting.
+            'icon_media_path': askbot_settings.WORDPRESS_SITE_ICON,
+            'type': 'wordpress_site',
+        }
+
     def get_linked_in_user_id(data):
         consumer = oauth.Consumer(data['consumer_key'], data['consumer_secret'])
         token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
@@ -488,13 +538,6 @@ def get_enabled_major_login_providers():
                 return matches.group(1)
         raise OAuthError()
 
-    if askbot_settings.SIGNIN_WORDPRESS_SITE_ENABLED and askbot_settings.WORDPRESS_SITE_URL:
-        data['wordpress_site'] = {
-            'name': 'wordpress_site',
-            'display_name': 'Self hosted wordpress blog', #need to be added as setting.
-            'icon_media_path': askbot_settings.WORDPRESS_SITE_ICON,
-            'type': 'wordpress_site',
-        }
     if askbot_settings.LINKEDIN_KEY and askbot_settings.LINKEDIN_SECRET:
         data['linkedin'] = {
             'name': 'linkedin',
@@ -752,6 +795,9 @@ def get_oauth_parameters(provider_name):
     elif provider_name == 'facebook':
         consumer_key = askbot_settings.FACEBOOK_KEY
         consumer_secret = askbot_settings.FACEBOOK_SECRET
+    elif provider_name == 'mediawiki':
+        consumer_key = askbot_settings.MEDIAWIKI_KEY
+        consumer_secret = askbot_settings.MEDIAWIKI_SECRET
     else:
         raise ValueError('unexpected oauth provider %s' % provider_name)
 
@@ -771,7 +817,7 @@ class OAuthConnection(object):
     """a simple class wrapping oauth2 library
     """
 
-    def __init__(self, provider_name, callback_url = None):
+    def __init__(self, provider_name, callback_url=None):
         """initializes oauth connection
         """
         self.provider_name = provider_name
@@ -782,36 +828,71 @@ class OAuthConnection(object):
                             self.parameters['consumer_secret'],
                         )
 
-    def start(self, callback_url = None):
+    @classmethod
+    def parse_request_url(cls, url):
+        """returns url and the url parameters dict
+        """
+        if '?' not in url:
+            return url, dict()
+
+        url, params = url.split('?')
+        if params:
+            kv = map(lambda v: v.split('='), params.split('&'))
+            if kv:
+                #kv must be list of two-element arrays
+                params = dict(kv)
+            else:
+                params = {}
+        else:
+            params = {}
+        return url, params
+
+    @classmethod
+    def format_request_params(cls, params):
+        #convert to tuple
+        params = params.items()
+        #sort lexicographically by key
+        params = sorted(params, cmp=lambda x, y: cmp(x[0], y[0]))
+        #urlencode the tuples
+        return urllib.urlencode(params)
+
+    @classmethod
+    def normalize_url_and_params(cls, url, params):
+        #if request url contains query string, we split them
+        url, url_params = cls.parse_request_url(url)
+        #merge parameters with the query parameters in the url
+        #NOTE: there may be a collision
+        params = params or dict()
+        params.update(url_params)
+        #put all of the parameters into the request body
+        #sorted as specified by the OAuth1 protocol
+        encoded_params = cls.format_request_params(params)
+        return url, encoded_params
+
+    def start(self):
         """starts the OAuth protocol communication and
         saves request token as :attr:`request_token`"""
-
-        if callback_url is None:
-            callback_url = self.callback_url
 
         client = oauth.Client(self.consumer)
         request_url = self.parameters['request_token_url']
 
-        if callback_url:
-            callback_url = site_url(callback_url)
-            request_body = urllib.urlencode(dict(oauth_callback=callback_url))
-
-            self.request_token = self.send_request(
-                                            client = client,
-                                            url = request_url,
-                                            method = 'POST',
-                                            body = request_body
-                                        )
+        params = dict()
+        if self.parameters.get('callback_is_oob', False):
+            params['oauth_callback'] = 'oob' #callback_url
         else:
-            self.request_token = self.send_request(
-                                            client,
-                                            request_url,
-                                            'GET'
-                                        )
+            params['oauth_callback'] = site_url(self.callback_url)
 
-    def send_request(self, client=None, url=None, method='GET', **kwargs):
+        self.request_token = self.send_request(
+                                        client=client,
+                                        url=request_url,
+                                        method='POST',
+                                        params=params
+                                    )
 
-        response, content = client.request(url, method, **kwargs)
+    def send_request(self, client=None, url=None, method='GET', params=None, **kwargs):
+
+        url, body = self.normalize_url_and_params(url, params)
+        response, content = client.request(url, method, body=body, **kwargs)
         if response['status'] == '200':
             return dict(cgi.parse_qsl(content))
         else:
@@ -834,18 +915,19 @@ class OAuthConnection(object):
         client = self.get_client(oauth_token, oauth_verifier)
         url = self.parameters['access_token_url']
         #there must be some provider-specific post-processing
-        return self.send_request(client = client, url=url, method='GET')
+        return self.send_request(client=client, url=url, method='POST')
 
-    def get_user_id(self, oauth_token = None, oauth_verifier = None):
+    def get_user_id(self, oauth_token=None, oauth_verifier=None):
         """Returns user ID within the OAuth provider system,
         based on ``oauth_token`` and ``oauth_verifier``
         """
         data = self.get_access_token(oauth_token, oauth_verifier)
         data['consumer_key'] = self.parameters['consumer_key']
         data['consumer_secret'] = self.parameters['consumer_secret']
+        data['oauth1_connection'] = self
         return self.parameters['get_user_id_function'](data)
 
-    def get_auth_url(self, login_only = False):
+    def get_auth_url(self, login_only=False):
         """returns OAuth redirect url.
         if ``login_only`` is True, authentication
         endpoint will be used, if available, otherwise authorization
@@ -863,16 +945,13 @@ class OAuthConnection(object):
                                         'authenticate_url',
                                         endpoint_url
                                     )
+
+        endpoint_url, query_params = self.parse_request_url(endpoint_url)
+        query_params['oauth_token'] = self.request_token['oauth_token']
+
         if endpoint_url is None:
             raise ImproperlyConfigured('oauth parameters are incorrect')
-
-        auth_url =  '%s?oauth_token=%s' % \
-                    (
-                        endpoint_url,
-                        self.request_token['oauth_token'],
-                    )
-
-        return auth_url
+        return endpoint_url + '?' + self.format_request_params(query_params)
 
 def get_oauth2_starter_url(provider_name, csrf_token):
     """returns redirect url for the oauth2 protocol for a given provider"""

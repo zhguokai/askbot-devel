@@ -691,24 +691,43 @@ if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
     )
 
 if 'avatar' in settings.INSTALLED_APPS:
-    #unforturately we have to wire avatar urls here,
-    #because views add and change are adapted to
-    #use jinja2 templates
     urlpatterns += (
-        service_url('^avatar/add/$', views.avatar_views.add, name='avatar_add'),
+        #avatar views are added here, because some need
+        #either dynamic extra context or custom redirect
+        #or extra parameter in the urls
         service_url(
-            '^avatar/change/$',
-            views.avatar_views.change,
-            name='avatar_change'
+            '^avatar/upload/(?P<user_id>\d+)/$', 
+            views.avatar_views.upload,
+            name='askbot_avatar_upload'
         ),
         service_url(
-            '^avatar/delete/$',
+            '^avatar/list/(?P<user_id>\d+)/$',
+            views.avatar_views.show_list,
+            name='askbot_avatar_show_list'
+        ),
+        service_url(
+            '^avatar/set-primary/(?P<user_id>\d+)/$',
+            views.avatar_views.set_primary,
+            name='askbot_avatar_set_primary'
+        ),
+        service_url(
+            '^avatar/delete/(?P<avatar_id>\d+)/$',
             views.avatar_views.delete,
-            name='avatar_delete'
+            name='askbot_avatar_delete'
         ),
-        service_url(#this urs we inherit from the original avatar app
-            '^avatar/render_primary/(?P<user_id>[\+\d]+)/(?P<size>[\d]+)/$',
-            views.avatar_views.render_primary,
+        service_url(#this url is used without changes as in the avatar app
+            '^avatar/render-primary/(?P<user>[\w\d\.\-_]+)/(?P<size>[\d]+)/$',
+            'avatar.views.render_primary',
             name='avatar_render_primary'
         ),
+        service_url(
+            '^avatar/enable-gravatar/(?P<user_id>[\d]+)/$',
+            views.avatar_views.enable_gravatar,
+            name='askbot_avatar_enable_gravatar'
+        ),
+        service_url(
+            '^avatar/enable-default-avatar/(?P<user_id>[\d]+)/$',
+            views.avatar_views.enable_default_avatar,
+            name='askbot_avatar_enable_default_avatar'
+        )
     )

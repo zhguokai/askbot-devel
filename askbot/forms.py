@@ -347,9 +347,6 @@ class EditorField(forms.CharField):
             self.widget = forms.Textarea(attrs=widget_attrs)
         elif askbot_settings.EDITOR_TYPE == 'tinymce':
             self.widget = TinyMCE(attrs=widget_attrs, mce_attrs=editor_attrs)
-        self.label  = _('content')
-        self.help_text = u''
-        self.initial = ''
         self.min_length = 10
         self.post_term_name = _('post')
 
@@ -988,7 +985,13 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
         self.fields['title'] = TitleField()
-        self.fields['text'] = QuestionEditorField(user=user)
+
+        if askbot_settings.MIN_QUESTION_BODY_LENGTH == 0:
+            label = _('Add details (optional)')
+        else:
+            label = _('Add details')
+
+        self.fields['text'] = QuestionEditorField(user=user, label=label)
 
         self.fields['ask_anonymously'] = forms.BooleanField(
             label=_('post anonymously'),
@@ -1186,7 +1189,8 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
     def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
         user = kwargs['user']
-        self.fields['text'] = AnswerEditorField(user=user)
+        #empty label on purpose
+        self.fields['text'] = AnswerEditorField(label='', user=user)
 
         if should_use_recaptcha(user):
             self.fields['recaptcha'] = AskbotRecaptchaField()
@@ -1293,6 +1297,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
         self.fields['title'] = TitleField()
         self.fields['title'].initial = revision.title
         self.fields['text'].initial = revision.text
+        self.fields['text'].label = _('Details')
         self.fields['tags'].initial = revision.tagnames
         self.fields['wiki'].initial = self.question.wiki
         #hide the reveal identity field
@@ -1351,7 +1356,8 @@ class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
         user = kwargs.pop('user', None)
         super(EditAnswerForm, self).__init__(*args, **kwargs)
         #it is important to add this field dynamically
-        self.fields['text'] = AnswerEditorField(user=user)
+        #label is empty on purpose
+        self.fields['text'] = AnswerEditorField(label='', user=user)
         self.fields['text'].initial = revision.text
         self.fields['wiki'].initial = answer.wiki
 
@@ -1737,6 +1743,10 @@ class EditCommentForm(forms.Form):
 class ProcessCommentForm(forms.Form):
     comment_id = forms.IntegerField()
     avatar_size = forms.IntegerField()
+
+
+class ConvertCommentForm(forms.Form):
+    comment_id = forms.IntegerField()
 
 
 class ReorderBadgesForm(forms.Form):

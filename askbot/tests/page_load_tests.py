@@ -544,6 +544,11 @@ class PageLoadTestCase(AskbotTestCase):
             kwargs = {'id': 2, 'slug': name_slug},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
             template = 'user_profile/user_email_subscriptions.html'
         )
+        self.try_url(
+            'edit_user',
+            kwargs = {'id': 2},   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
+            template = 'user_profile/user_edit.html'
+        )
         self.client.logout()
 
     def test_inbox_page(self):
@@ -577,12 +582,11 @@ class PageLoadTestCase(AskbotTestCase):
 class AvatarTests(AskbotTestCase):
 
     def test_avatar_for_two_word_user_works(self):
-        if 'avatar' in settings.INSTALLED_APPS:
-            self.user = self.create_user('john doe')
-            response = self.client.get(
-                                'avatar_render_primary',
-                                kwargs = {'user': 'john doe', 'size': 48}
-                            )
+        self.user = self.create_user('john doe')
+        response = self.client.get(
+                            'avatar_render_primary',
+                            kwargs = {'user': 'john doe', 'size': 48}
+                        )
 
 
 class QuestionViewTests(AskbotTestCase):

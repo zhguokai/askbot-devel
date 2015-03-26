@@ -886,7 +886,7 @@ class Thread(models.Model):
         # get the new view_count back because other pieces of code relies on such behaviour
         self.view_count = qset.values('view_count')[0]['view_count']
         ####################################################################
-        self.update_summary_html() # regenerate question/thread summary html
+        self.invalidate_cached_summary_html() # regenerate question/thread summary html
         ####################################################################
 
     def set_closed_status(self, closed, closed_by, closed_at, close_reason):

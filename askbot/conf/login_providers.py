@@ -69,8 +69,17 @@ settings.register(
         LOGIN_PROVIDERS,
         'WORDPRESS_SITE_ICON',
         default='/images/logo.gif',
-        description=_('Upload your icon'),
+        description=_('WordPress login button image'),
         url_resolver=skin_utils.get_media_url
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        LOGIN_PROVIDERS,
+        'SIGNIN_FEDORA_ENABLED',
+        default=False,
+        description=_('Enable Fedora OpenID login')
     )
 )
 
@@ -135,10 +144,12 @@ providers = (
     'Blogger',
     'ClaimID',
     'Facebook',
+    'Fedora',
     'Flickr',
     #'Google Plus',
     'Mozilla Persona',
     'Twitter',
+    'MediaWiki',
     'LinkedIn',
     'LiveJournal',
     #'myOpenID',
@@ -154,7 +165,7 @@ providers = (
 
 DISABLED_BY_DEFAULT = ('LaunchPad', 'Mozilla Persona')
 
-NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'Facebook', 'LinkedIn', 'identi.ca',)
+NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'MediaWiki', 'Facebook', 'LinkedIn', 'identi.ca',)
 
 GOOGLE_METHOD_CHOICES = (
     ('openid', 'OpenID (deprecated)'),
@@ -187,6 +198,18 @@ for provider in providers:
             **kwargs
         )
     )
+
+    if provider == 'MediaWiki':
+        settings.register(
+            livesettings.ImageValue(
+                LOGIN_PROVIDERS,
+                'MEDIAWIKI_SITE_ICON',
+                default='/images/jquery-openid/mediawiki.png',
+                description=_('MediaWiki login button image'),
+                url_resolver=skin_utils.get_media_url
+            )
+        )
+
 
     if provider == 'local':
         #add Google settings here as one-off

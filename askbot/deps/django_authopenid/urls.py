@@ -28,7 +28,7 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
         'complete_signin',
         name='user_complete_signin'),
     url(
-        r'^%s%s$' % (pgettext('urls', 'signin/'), pgettext('urls', 'complete-oauth/')),
+        r'^signin/complete-oauth/',# % (pgettext('urls', 'signin/'), pgettext('urls', 'complete-oauth/')),
         'complete_oauth_signin',
         name='user_complete_oauth_signin'
     ),

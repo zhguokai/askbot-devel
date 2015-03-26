@@ -92,7 +92,7 @@
                 {% endif %}
                 <table class="login">
                     <tr>
-                        <td><label for="id_username">{% trans %}Login or email{% endtrans %}</label></td>
+                        <td><label for="id_username">{% trans %}Username or email{% endtrans %}</label></td>
                         <td>{{login_form.username}}</td>
                     </tr>
                     <tr>
@@ -179,7 +179,7 @@
         {% if user.is_anonymous() and settings.ALLOW_ACCOUNT_RECOVERY_BY_EMAIL %}
         <form id="account-recovery-form" action="{% url user_account_recover %}" method="post">{% csrf_token %}
             {% if view_subtype != 'bad_key' %}
-                <h2 id='account-recovery-heading'>{% trans %}Still have trouble signing in?{% endtrans %}</h2>
+                <h2 id='account-recovery-heading'>{% trans %}Having trouble signing in?{% endtrans %}</h2>
             {% endif %}
             <p class="hint">
                 <span class="text">

@@ -25,7 +25,9 @@
         askbot['urls']['edit_group_membership'] = '{% url edit_group_membership %}';
         askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
         askbot['urls']['getTopAnswers'] = '{% url get_top_answers %}';
-        askbot['data']['userPostsPageSize'] = {{ page_size }};
+        {% if page_size %}
+            askbot['data']['userPostsPageSize'] = {{ page_size }};
+        {% endif %}
     </script>
     {% compress js %}
     <script type='text/javascript' src="{{ '/jslib/jquery.form.js'|media }}"></script>

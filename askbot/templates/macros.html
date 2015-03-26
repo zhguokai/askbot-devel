@@ -352,7 +352,7 @@ for the purposes of the AJAX comment editor #}
     </div>
 {%- endmacro -%}
 
-{%- macro comment_widget(comment) -%}
+{%- macro comment_widget(comment, csrf_token=None) -%}
     {# Warning! Any changes to the comment markup must be duplicated in post.js
        for the purposes of the AJAX comment editor #}
     <div class="comment js-comment" data-comment-id="{{ comment.id }}">
@@ -414,9 +414,9 @@ for the purposes of the AJAX comment editor #}
 
 {%- macro post_comments_widget(
         post=None,
-        show_post = None,
-        show_comment = None,
-        show_comment_position = None,
+        show_post=None,
+        show_comment=None,
+        show_comment_position=None,
         user=None,
         max_comments=None,
         csrf_token=None
@@ -445,7 +445,7 @@ for the purposes of the AJAX comment editor #}
         {% endif %}
         <div class="content">
             {% for comment in comments %}
-                {{ comment_widget(comment) }}
+                {{ comment_widget(comment, csrf_token) }}
             {% endfor %}
         </div>
         <div class="controls">
@@ -505,18 +505,10 @@ for the purposes of the AJAX comment editor #}
     </div>
 {%- endmacro -%}
 
-{%- macro edit_post(
-                post_form,
-                post_type = None,
-                post_html = None,
-                mandatory_tags = None,
-                use_category_selector = False,
-                tag_names = None,
-                editor_type = None,
-                user = None
-            )
--%}
-{%include "widgets/edit_post.html" %}
+{%- macro edit_post(post_form, post_html=None) -%}
+    {# todo: retire this macro, this will require renaming
+    or using "set" on some template variables #}
+    {% include "editors/rich_text.html" %}
 {%- endmacro -%}
 
 {%- macro tag_autocomplete_js(id = '#id_tags') -%}

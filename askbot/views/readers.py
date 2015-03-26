@@ -19,7 +19,7 @@ from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template.loader import get_template
-from django.template import RequestContext
+from django.template import Context, RequestContext
 from django.utils import simplejson
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
@@ -34,7 +34,6 @@ from django.conf import settings as django_settings
 
 import askbot
 from askbot import exceptions
-from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AnswerForm
 from askbot.forms import ShowQuestionForm
 from askbot.forms import GetUserItemsForm
@@ -48,8 +47,11 @@ from askbot.models.tag import Tag
 from askbot import const
 from askbot.startup_procedures import domain_is_bad
 from askbot.utils import functions
+from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
+from askbot.utils.translation import get_language_name
+from askbot.utils.url_utils import reverse_i18n
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.templatetags import extra_tags
 from askbot.conf import settings as askbot_settings
@@ -83,7 +85,7 @@ def questions(request, **kwargs):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
-    #before = datetime.datetime.now()
+    before = datetime.datetime.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
@@ -109,7 +111,7 @@ def questions(request, **kwargs):
     models.Thread.objects.precache_view_data_hack(threads=page.object_list)
 
     related_tags = Tag.objects.get_related_to_search(
-                        threads=page.object_list,
+                        threads=qs,
                         ignored_tag_names=meta_data.get('ignored_tag_names',[])
                     )
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
@@ -290,9 +292,9 @@ def questions(request, **kwargs):
                 ) % url
                 request.user.message_set.create(message=msg)
 
-        return render(request, 'main_page.html', template_data)
-        #print datetime.datetime.now() - before
-        #return res
+        res = render(request, 'main_page.html', template_data)
+        print datetime.datetime.now() - before
+        return res
 
 
 def get_top_answers(request):
@@ -444,10 +446,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
     if request.path.split('/')[-2] != question_post.slug:
         logging.debug('no slug match!')
         lang = translation.get_language()
-        question_url = '?'.join((
-                        question_post.get_absolute_url(language=lang),
-                        urllib.urlencode(request.GET)
-                    ))
+        question_url = question_post.get_absolute_url(language=lang)
+        if request.GET:
+            question_url += '?' + urllib.urlencode(request.GET)
         return HttpResponseRedirect(question_url)
 
 
@@ -509,7 +510,15 @@ def question(request, id):#refactor - long subroutine. display question body, an
     thread = question_post.thread
 
     if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-        if thread.language_code != translation.get_language():
+        request_lang = translation.get_language()
+        if request_lang != thread.language_code:
+            template = get_template('question/lang_switch_message.html')
+            message = template.render(Context({
+                'post_lang': get_language_name(thread.language_code),
+                'request_lang': get_language_name(request_lang),
+                'home_url': reverse_i18n(request_lang, 'questions')
+            }))
+            request.user.message_set.create(message=message)
             return HttpResponseRedirect(thread.get_absolute_url())
 
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))

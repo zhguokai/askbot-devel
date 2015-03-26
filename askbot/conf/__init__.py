@@ -55,3 +55,9 @@ def get_tag_email_filter_strategy_choices():
         return const.TAG_EMAIL_FILTER_ADVANCED_STRATEGY_CHOICES
     else:
         return const.TAG_EMAIL_FILTER_SIMPLE_STRATEGY_CHOICES
+
+def gravatar_enabled():
+    from askbot.conf import settings as askbot_settings
+    if 'avatar' in django_settings.INSTALLED_APPS:
+        return askbot_settings.ENABLE_GRAVATAR
+    return True

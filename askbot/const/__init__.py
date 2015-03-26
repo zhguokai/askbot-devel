@@ -415,6 +415,7 @@ DEPENDENCY_URLS = {
     'mathjax': 'http://www.mathjax.org/resources/docs/?installation.html',
     'recaptcha': 'http://google.com/recaptcha',
     'twitter-apps': 'http://dev.twitter.com/apps/',
+    'mediawiki-oauth-extension': 'https://www.mediawiki.org/wiki/Extension:OAuth'
 }
 
 PASSWORD_MIN_LENGTH = 8
@@ -435,12 +436,6 @@ BADGE_CSS_CLASSES = {
 BADGE_DISPLAY_SYMBOL = '&#9679;'
 
 MIN_REPUTATION = 1
-
-AVATAR_STATUS_CHOICE = (
-    ('n', _('None')),
-    ('g', _('Gravatar')),#only if user has real uploaded gravatar
-    ('a', _('Uploaded Avatar')),#avatar uploaded locally - with django-avatar app
-)
 
 SEARCH_ORDER_BY = (
                     ('-added_at', _('date descendant')),
