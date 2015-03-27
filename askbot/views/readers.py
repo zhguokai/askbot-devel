@@ -32,30 +32,27 @@ from django.contrib.humanize.templatetags import humanize
 from django.http import QueryDict
 from django.conf import settings as django_settings
 
-import askbot
-from askbot import exceptions
+from askbot import conf, const, exceptions, models, signals
+from askbot.conf import settings as askbot_settings
 from askbot.forms import AnswerForm
-from askbot.forms import ShowQuestionForm
-from askbot.forms import GetUserItemsForm
 from askbot.forms import GetDataForPostForm
+from askbot.forms import GetUserItemsForm
 from askbot.forms import PageField
-from askbot.utils.loading import load_module
-from askbot import conf
-from askbot import models
+from askbot.forms import ShowQuestionForm
 from askbot.models.post import MockPost
 from askbot.models.tag import Tag
-from askbot import const
+from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.startup_procedures import domain_is_bad
+from askbot.templatetags import extra_tags
 from askbot.utils import functions
+from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.html import sanitize_html
-from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
+from askbot.utils.loading import load_module
 from askbot.utils.translation import get_language_name
 from askbot.utils.url_utils import reverse_i18n
-from askbot.search.state_manager import SearchState, DummySearchState
-from askbot.templatetags import extra_tags
-from askbot.conf import settings as askbot_settings
 from askbot.views import context
+import askbot
 
 # used in index page
 #todo: - take these out of const or settings
@@ -558,33 +555,10 @@ def question(request, id):#refactor - long subroutine. display question body, an
     page_objects = objects_list.page(show_page)
 
     #count visits
-    #import ipdb; ipdb.set_trace()
-    if functions.not_a_robot_request(request):
-        #todo: split this out into a subroutine
-        #todo: merge view counts per user and per session
-        #1) view count per session
-        update_view_count = False
-        if 'question_view_times' not in request.session:
-            request.session['question_view_times'] = {}
-
-        last_seen = request.session['question_view_times'].get(question_post.id, None)
-
-        if thread.last_activity_by_id != request.user.id:
-            if last_seen:
-                if last_seen < thread.last_activity_at:
-                    update_view_count = True
-            else:
-                update_view_count = True
-
-        request.session['question_view_times'][question_post.id] = \
-                                                    datetime.datetime.now()
-        #2) run the slower jobs in a celery task
-        from askbot import tasks
-        tasks.record_question_visit.delay(
-            question_post_id=question_post.id,
-            user_id=request.user.id,
-            update_view_count=update_view_count
-        )
+    signals.question_visited.send(None,
+                    request=request,
+                    question=question_post,
+                )
 
     paginator_data = {
         'is_paginated' : (objects_list.count > const.ANSWERS_PAGE_SIZE),

@@ -24,7 +24,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Count
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
@@ -66,6 +66,7 @@ from askbot.utils.html import replace_links_with_text
 from askbot.utils.html import site_url
 from askbot.utils.db import table_exists
 from askbot.utils.url_utils import strip_path
+from askbot.utils import functions
 from askbot import mail
 from askbot import signals
 
@@ -3451,6 +3452,7 @@ def get_reply_to_addresses(user, post):
     return primary_addr, secondary_addr
 
 
+@transaction.commit_manually
 def notify_author_of_published_revision(revision=None, was_approved=False, **kwargs):
     """notifies author about approved post revision,
     assumes that we have the very first revision
@@ -3458,7 +3460,9 @@ def notify_author_of_published_revision(revision=None, was_approved=False, **kwa
     #only email about first revision
     if revision.should_notify_author_about_publishing(was_approved):
         from askbot.tasks import notify_author_of_published_revision_celery_task
+        transaction.commit()
         notify_author_of_published_revision_celery_task.delay(revision.pk)
+    transaction.commit()
 
 
 #todo: move to utils
@@ -3470,6 +3474,7 @@ def calculate_gravatar_hash(instance, **kwargs):
     instance.gravatar = hashlib.md5(clean_email).hexdigest()
 
 
+@transaction.commit_manually
 def record_post_update_activity(
         post,
         newly_mentioned_users=None,
@@ -3492,16 +3497,19 @@ def record_post_update_activity(
 
     from askbot import tasks
 
+    mentioned_ids = [u.id for u in newly_mentioned_users]
+
+    transaction.commit()
     tasks.record_post_update_celery_task.delay(
         post_id=post.id,
-        post_content_type_id=ContentType.objects.get_for_model(post).id,
-        newly_mentioned_user_id_list=[u.id for u in newly_mentioned_users],
+        newly_mentioned_user_id_list=mentioned_ids,
         updated_by_id=updated_by.id,
         suppress_email=suppress_email,
         timestamp=timestamp,
         created=created,
         diff=diff,
     )
+    transaction.commit()
 
 
 def record_award_event(instance, created, **kwargs):
@@ -3604,6 +3612,37 @@ def record_user_visit(user, timestamp, **kwargs):
     }
     User.objects.filter(id=user.id).update(**update_data)
 
+
+@transaction.commit_manually
+def record_question_visit(request, question, **kwargs):
+    if functions.not_a_robot_request(request):
+        #todo: split this out into a subroutine
+        #todo: merge view counts per user and per session
+        #1) view count per session
+        if 'question_view_times' not in request.session:
+            request.session['question_view_times'] = {}
+
+        last_seen = request.session['question_view_times'].get(question.id, None)
+
+        update_view_count = False
+        if question.thread.last_activity_by_id != request.user.id:
+            if last_seen:
+                if last_seen < question.thread.last_activity_at:
+                    update_view_count = True
+            else:
+                update_view_count = True
+
+        request.session['question_view_times'][question.id] = \
+                                                    datetime.datetime.now()
+        #2) run the slower jobs in a celery task
+        from askbot import tasks
+        transaction.commit()
+        tasks.record_question_visit.delay(
+            question_post_id=question.id,
+            user_id=request.user.id,
+            update_view_count=update_view_count
+        )
+    transaction.commit()
 
 def record_vote(instance, created, **kwargs):
     """
@@ -3943,11 +3982,14 @@ def group_membership_changed(**kwargs):
             GROUP_MEMBERSHIP_LEVELS.pop(gm_key, None)
 
 
+@transaction.commit_manually
 def tweet_new_post(sender, user=None, question=None, answer=None, form_data=None, **kwargs):
     """seends out tweets about the new post"""
     from askbot.tasks import tweet_new_post_task
     post = question or answer
+    transaction.commit()
     tweet_new_post_task.delay(post.id)
+    transaction.commit()
 
 def autoapprove_reputable_user(user=None, reputation_before=None, *args, **kwargs):
     """if user is 'watched' we change status to 'approved'
@@ -4177,6 +4219,10 @@ signals.post_revision_published.connect(
 signals.site_visited.connect(
     record_user_visit,
     dispatch_uid='record_user_visit'
+)
+signals.question_visited.connect(
+    record_question_visit,
+    dispatch_uid='record_question_visit'
 )
 
 #set up a possibility for the users to follow others

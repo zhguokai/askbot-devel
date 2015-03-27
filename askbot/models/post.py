@@ -8,7 +8,7 @@ from django.utils import html
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User
 from django.core import urlresolvers
-from django.db import models
+from django.db import models, transaction
 from django.utils import html as html_utils
 from django.utils.text import truncate_html_words
 from django.utils.translation import activate as activate_language
@@ -778,6 +778,7 @@ class Post(models.Model):
                     ).delete()
 
 
+    @transaction.commit_manually
     def issue_update_notifications(
                                 self,
                                 updated_by=None,
@@ -845,12 +846,14 @@ class Post(models.Model):
             cache.cache.set(cache_key, True, django_settings.NOTIFICATION_DELAY_TIME)
 
         from askbot.tasks import send_instant_notifications_about_activity_in_post
+        transaction.commit()
         send_instant_notifications_about_activity_in_post.apply_async((
                                 update_activity.pk,
                                 self.id,
                                 notify_sets['for_email']),
-                                countdown = django_settings.NOTIFICATION_DELAY_TIME
+                                countdown=django_settings.NOTIFICATION_DELAY_TIME
                             )
+        transaction.commit()
 
     def make_private(self, user, group_id=None):
         """makes post private within user's groups
