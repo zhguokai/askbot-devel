@@ -8,7 +8,7 @@ from django.utils import html
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User
 from django.core import urlresolvers
-from django.db import models, transaction
+from django.db import models
 from django.utils import html as html_utils
 from django.utils.text import truncate_html_words
 from django.utils.translation import activate as activate_language
@@ -34,6 +34,7 @@ from askbot import exceptions
 from askbot.utils import markup
 from askbot.utils.html import (get_word_count, has_moderated_tags,
                 moderate_tags, sanitize_html, strip_tags, site_url)
+from askbot.utils.transaction import defer_celery_task
 from askbot.models.base import BaseQuerySetManager, DraftContent
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
@@ -778,7 +779,6 @@ class Post(models.Model):
                     ).delete()
 
 
-    @transaction.commit_manually
     def issue_update_notifications(
                                 self,
                                 updated_by=None,
@@ -846,14 +846,15 @@ class Post(models.Model):
             cache.cache.set(cache_key, True, django_settings.NOTIFICATION_DELAY_TIME)
 
         from askbot.tasks import send_instant_notifications_about_activity_in_post
-        transaction.commit()
-        send_instant_notifications_about_activity_in_post.apply_async((
-                                update_activity.pk,
-                                self.id,
-                                notify_sets['for_email']),
-                                countdown=django_settings.NOTIFICATION_DELAY_TIME
-                            )
-        transaction.commit()
+        defer_celery_task(
+            send_instant_notifications_about_activity_in_post,
+            args=(
+                update_activity.pk,
+                self.id,
+                notify_sets['for_email']
+            ),
+            countdown=django_settings.NOTIFICATION_DELAY_TIME
+        )
 
     def make_private(self, user, group_id=None):
         """makes post private within user's groups
