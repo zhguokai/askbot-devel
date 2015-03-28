@@ -1,7 +1,7 @@
 import re
 from django import forms
 from django.contrib.auth.models import User
-from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
@@ -14,13 +14,13 @@ from longerusername import MAX_USERNAME_LENGTH
 import logging
 import urllib
 
-DEFAULT_NEXT = '/' + getattr(settings, 'ASKBOT_URL')
-def clean_next(next, default = None):
+
+def clean_next(next, default=None):
     if next is None or not next.startswith('/'):
         if default:
             return default
         else:
-            return DEFAULT_NEXT
+            return reverse('index')
     if isinstance(next, str):
         next = unicode(urllib.unquote(next), 'utf-8', 'replace')
     next = next.strip()
