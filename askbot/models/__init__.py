@@ -2663,9 +2663,9 @@ def user_get_languages(self):
 
 def user_get_primary_language(self):
     if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-        return django_settings.LANGUAGE_CODE
-    else:
         return self.get_languages()[0]
+    else:
+        return django_settings.LANGUAGE_CODE
 
 def get_profile_link(self, text=None):
     profile_link = u'<a href="%s">%s</a>' \
