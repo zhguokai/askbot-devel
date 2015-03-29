@@ -5,6 +5,13 @@ import time
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.html import escape
+from django.utils import six
+from django.utils.functional import lazy
+from django.utils.safestring import mark_safe
+
+
+mark_safe_lazy = lazy(mark_safe, six.text_type)
+
 
 def timedelta_total_seconds(td):
     """returns total seconds for the timedelta object

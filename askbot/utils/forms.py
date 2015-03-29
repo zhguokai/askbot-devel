@@ -227,7 +227,7 @@ class UserEmailField(forms.EmailField):
             widget=widget_class(
                     attrs=dict(login_form_widget_attrs, maxlength=200)
                 ),
-            label=mark_safe(_('Your email <i>(never shared)</i>')),
+            label=mark_safe_lazy(_('Your email <i>(never shared)</i>')),
             error_messages={
                 'required':_('email address is required'),
                 'invalid':_('please enter a valid email address'),
