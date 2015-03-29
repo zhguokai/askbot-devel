@@ -120,10 +120,9 @@ def ajax_only(view_func):
     return wrapper
 
 def check_authorization_to_post(func_or_message):
-
     message = _('Please login to post')
     if not inspect.isfunction(func_or_message):
-        message = unicode(func_or_message)
+        message = func_or_message
 
     def decorator(view_func):
         @functools.wraps(view_func)
@@ -131,7 +130,7 @@ def check_authorization_to_post(func_or_message):
             if request.user.is_anonymous():
                 #todo: expand for handling ajax responses
                 if askbot_settings.ALLOW_POSTING_BEFORE_LOGGING_IN == False:
-                    request.user.message_set.create(message = message)
+                    request.user.message_set.create(message=unicode(message))
                     params = 'next=%s' % request.path
                     return HttpResponseRedirect(url_utils.get_login_url() + '?' + params)
             return view_func(request, *args, **kwargs)

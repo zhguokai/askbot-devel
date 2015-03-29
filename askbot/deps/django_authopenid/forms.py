@@ -349,13 +349,13 @@ class ChangePasswordForm(forms.Form):
     new_password = forms.CharField(
                         widget=forms.PasswordInput(),
                         error_messages = {
-                            'required': _('password is required'),
+                            'required': ugettext_lazy('password is required'),
                         }
                     )
     new_password_retyped = forms.CharField(
                         widget=forms.PasswordInput(),
                         error_messages = {
-                            'required': _('retype your password'),
+                            'required': ugettext_lazy('retype your password'),
                         }
                     )
 
