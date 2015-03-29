@@ -5,10 +5,9 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import mark_safe
 from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify
-from askbot.utils.functions import split_list
+from askbot.utils.functions import split_list, mark_safe_lazy
 from askbot import const
 from longerusername import MAX_USERNAME_LENGTH
 import logging
