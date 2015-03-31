@@ -1,26 +1,25 @@
 import re
 from django import forms
 from django.contrib.auth.models import User
-from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import mark_safe
 from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify
-from askbot.utils.functions import split_list
+from askbot.utils.functions import split_list, mark_safe_lazy
 from askbot import const
 from longerusername import MAX_USERNAME_LENGTH
 import logging
 import urllib
 
-DEFAULT_NEXT = '/' + getattr(settings, 'ASKBOT_URL')
-def clean_next(next, default = None):
+
+def clean_next(next, default=None):
     if next is None or not next.startswith('/'):
         if default:
             return default
         else:
-            return DEFAULT_NEXT
+            return reverse('index')
     if isinstance(next, str):
         next = unicode(urllib.unquote(next), 'utf-8', 'replace')
     next = next.strip()
@@ -227,7 +226,7 @@ class UserEmailField(forms.EmailField):
             widget=widget_class(
                     attrs=dict(login_form_widget_attrs, maxlength=200)
                 ),
-            label=mark_safe(_('Your email <i>(never shared)</i>')),
+            label=mark_safe_lazy(_('Your email <i>(never shared)</i>')),
             error_messages={
                 'required':_('email address is required'),
                 'invalid':_('please enter a valid email address'),
