@@ -1119,6 +1119,11 @@ def user(request, id, slug=None, tab_name=None):
     """
     profile_owner = get_object_or_404(models.User, id = id)
 
+    if profile_owner.is_blocked():
+        if request.user.is_anonymous() \
+            or not request.user.is_administrator_or_moderator():
+            raise Http404
+
     if slugify(profile_owner.username) != slug:
         view_url = profile_owner.get_profile_url() + '?' \
                                 + urllib.urlencode(request.REQUEST)
