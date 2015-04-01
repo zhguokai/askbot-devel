@@ -785,7 +785,8 @@ class UserProfilePageTests(AskbotTestCase):
             reverse('edit_user', kwargs={'id': self.user.id}),
             data={
                 'username': 'edited',
-                'email': 'fake@example.com'
+                'email': 'fake@example.com',
+                'country': 'unknown'
             }
         )
         self.assertEqual(response.status_code, 302)
@@ -801,7 +802,8 @@ class UserProfilePageTests(AskbotTestCase):
             reverse('edit_user', kwargs={'id': self.user.id}),
             data={
                 'username': 'edited',
-                'email': 'new@example.com'
+                'email': 'new@example.com',
+                'country': 'unknown'
             }
         )
         self.assertEqual(response.status_code, 302)
