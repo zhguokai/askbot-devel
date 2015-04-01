@@ -57,8 +57,8 @@ admin.site.register(models.FeedToSpace, FeedToSpaceAdmin)
 
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('user', 'active_at', 'activity_type', 'question', 'content_type', 'object_id', 'content_object', 'recipients_list', 'receiving_users_list')
-    list_filter = ('activity_type', 'content_type', 'user')
-    search_fields = ('object_id', 'question__id', 'question__thread__id', 'question__thread__title')
+    list_filter = ('activity_type', 'content_type')
+    search_fields = ('user__username', 'object_id', 'question__id', 'question__thread__id', 'question__thread__title')
 
     def recipients_list(self, obj):
         return ', '.join(obj.recipients.all().values_list('username', flat=True))
@@ -90,12 +90,14 @@ admin.site.register(models.Group, GroupAdmin)
 
 class GroupMembershipAdmin(admin.ModelAdmin):
     list_display = ('group', 'user', 'level')
-    list_filter = ('level', 'user')
+    list_filter = ('level',)
+    search_fields = ('user__username',)
 admin.site.register(models.GroupMembership, GroupMembershipAdmin)
 
 class EmailFeedSettingAdmin(admin.ModelAdmin):
     list_display = ('id', 'subscriber', 'email_tag_filter_strategy', 'feed_type', 'frequency', 'added_at', 'reported_at' )
-    list_filter = ('frequency', 'feed_type', 'subscriber')
+    list_filter = ('frequency', 'feed_type')
+    search_fields = ('subscriber__username',)
     
     def email_tag_filter_strategy(self, obj):
         if obj.feed_type == 'q_all':
@@ -116,7 +118,7 @@ admin.site.register(models.EmailFeedSetting, EmailFeedSettingAdmin)
 
 class QuestionViewAdmin(admin.ModelAdmin):
     list_display = ('who', 'question', 'when')
-    list_filter = ('who',)
+    search_fields = ('who__username',)
 admin.site.register(models.QuestionView, QuestionViewAdmin)
 
 class PostToGroupInline(admin.TabularInline):
@@ -125,7 +127,7 @@ class PostToGroupInline(admin.TabularInline):
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'post_type', 'thread', 'author', 'text_30', 'added_at', 'deleted', 'in_groups', 'is_published', 'is_private', 'vote_up_count', 'language_code')
-    list_filter = ('deleted', 'post_type', 'language_code', 'vote_up_count', 'author')
+    list_filter = ('deleted', 'post_type', 'language_code', 'vote_up_count')
     search_fields = ('id', 'thread__title', 'text', 'author__username')
     inlines = (PostToGroupInline,)
 
@@ -141,8 +143,8 @@ admin.site.register(models.Post, PostAdmin)
 
 class PostRevisionAdmin(admin.ModelAdmin):
     list_display = ('id', 'post_id', 'thread_name', 'revision', 'revised_at', 'author', 'approved')
-    list_filter = ('approved', 'author')
-    search_fields = ('post__id', 'post__thread__title')
+    list_filter = ('approved',)
+    search_fields = ('author__username', 'post__id', 'post__thread__title')
     ordering = ('-id',)
 
     def post_id(self, obj):
@@ -162,8 +164,8 @@ class SpacesInline(admin.TabularInline):
 
 class ThreadAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'site', 'in_spaces', 'in_groups', 'is_private', 'language_code')
-    list_filter = ('deleted', 'closed', 'language_code', 'site', 'last_activity_by')
-    search_fields = ('title',)
+    list_filter = ('deleted', 'closed', 'language_code', 'site')
+    search_fields = ('last_activity_by__username', 'title')
     inlines = (ThreadToGroupInline, SpacesInline)
 
     def in_groups(self, obj):
@@ -211,8 +213,7 @@ admin.site.register(models.QuestionWidget, QuestionWidgetAdmin)
 
 class DraftQuestionAdmin(admin.ModelAdmin):
     list_display = ('id', 'author', 'title', 'tagnames')
-    list_filter = ('author',)
-    search_fields = ('title', 'tagnames')
+    search_fields = ('author__username', 'title', 'tagnames')
 admin.site.register(models.DraftQuestion, DraftQuestionAdmin)
 
 
@@ -236,7 +237,7 @@ class SubscribedToSite(InSite):
 
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('auth_user', 'default_site', 'subs_sites')
-    list_filter = ('default_site', SubscribedToSite, 'auth_user')
+    list_filter = ('default_site', SubscribedToSite)
     search_fields = ('auth_user__username',)
     filter_horizontal = ('subscribed_sites',)
 
