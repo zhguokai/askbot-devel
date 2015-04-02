@@ -540,7 +540,7 @@ for the purposes of the AJAX comment editor #}
 {%- endmacro -%}
 
 {%- macro user_country_flag(user) -%}
-    {% if user.country and user.show_country %}
+    {% if user.country and user.country.code != 'none' and user.show_country %}
         <img class="flag" 
             src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"
             alt="{% trans 
