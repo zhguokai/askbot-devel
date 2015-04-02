@@ -610,6 +610,15 @@ class ShowQuestionForm(forms.Form):
                 del self.cleaned_data['sort']
         return self.cleaned_data
 
+    def clean_sort(self):
+        sort = self.cleaned_data.get(
+                        'sort',
+                        askbot_settings.DEFAULT_ANSWER_SORT_METHOD
+                    )
+        if sort not in dict(const.ANSWER_SORT_METHODS).keys():
+            self.cleaned_data['sort'] = askbot_settings.DEFAULT_ANSWER_SORT_METHOD
+        return self.cleaned_data['sort']
+
     def clean(self):
         """this form must always be valid
         should use defaults if the data is incomplete
