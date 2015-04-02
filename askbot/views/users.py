@@ -164,19 +164,18 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
 
     is_paginated = True
 
-    sortby = request.GET.get('sort', 'reputation')
-    if askbot_settings.KARMA_MODE == 'private' and sortby == 'reputation':
-        sortby = 'newest'
+    form = forms.ShowUsersForm(request.REQUEST)
+    form.full_clean()#always valid
+    sort_method = form.cleaned_data['sort_method']
+    page = form.cleaned_data['page']
+    search_query = form.cleaned_data['query']
 
-    page = forms.PageField().clean(request.GET.get('page'))
-
-    search_query = request.GET.get('query',  '')
     if search_query == '':
-        if sortby == 'newest':
+        if sort_method == 'newest':
             order_by_parameter = '-date_joined'
-        elif sortby == 'last':
+        elif sort_method == 'last':
             order_by_parameter = 'date_joined'
-        elif sortby == 'user':
+        elif sort_method == 'user':
             order_by_parameter = 'username'
         else:
             # default
@@ -186,15 +185,15 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                             users.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?sort=%s&' % sortby
+        base_url = request.path + '?sort=%s&' % sort_method 
     else:
-        sortby = 'reputation'
+        sort_method = 'reputation'
         matching_users = models.get_users_by_text_query(search_query, users)
         objects_list = Paginator(
                             matching_users.order_by('-reputation'),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?name=%s&sort=%s&' % (search_query, sortby)
+        base_url = request.path + '?name=%s&sort=%s&' % (search_query, sort_method)
 
     try:
         users_page = objects_list.page(page)
@@ -231,7 +230,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'page_class': 'users-page',
         'paginator_context' : paginator_context,
         'search_query' : search_query,
-        'tab_id' : sortby,
+        'tab_id' : sort_method,
         'user_acceptance_level': user_acceptance_level,
         'user_count': users.count(),
         'user_groups': user_groups,

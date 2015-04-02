@@ -37,7 +37,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.forms import AnswerForm
 from askbot.forms import GetDataForPostForm
 from askbot.forms import GetUserItemsForm
-from askbot.forms import PageField
+from askbot.forms import ShowTagsForm
 from askbot.forms import ShowQuestionForm
 from askbot.models.post import MockPost
 from askbot.models.tag import Tag
@@ -313,17 +313,12 @@ def get_top_answers(request):
 
 def tags(request):#view showing a listing of available tags - plain list
 
-    #1) Get parameters. This normally belongs to form cleaning.
-    post_data = request.GET
-    sortby = post_data.get('sort', 'used')
-    page = PageField().clean(post_data.get('page'))
+    form = ShowTagsForm(request.REQUEST)
+    form.full_clean() #always valid
+    page = form.cleaned_data['page']
+    sort_method = form.cleaned_data['sort_method']
+    query = form.cleaned_data['query']
 
-    if sortby == 'name':
-        order_by = 'name'
-    else:
-        order_by = '-used_count'
-
-    query = post_data.get('query', '').strip()
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
 
     #2) Get query set for the tags.
@@ -336,6 +331,12 @@ def tags(request):#view showing a listing of available tags - plain list
 
     tags_qs = Tag.objects.filter(**query_params).exclude(used_count=0)
 
+    if sort_method == 'name':
+        order_by = 'name'
+    else:
+        order_by = '-used_count'
+
+
     tags_qs = tags_qs.order_by(order_by)
 
     #3) Start populating the template context.
@@ -344,7 +345,7 @@ def tags(request):#view showing a listing of available tags - plain list
         'page_class': 'tags-page',
         'tag_list_type' : tag_list_type,
         'query' : query,
-        'tab_id' : sortby,
+        'tab_id' : sort_method,
         'keywords' : query,
         'search_state': SearchState(*[None for x in range(8)])
     }
@@ -362,7 +363,7 @@ def tags(request):#view showing a listing of available tags - plain list
             'pages': objects_list.num_pages,
             'current_page_number': page,
             'page_object': tags,
-            'base_url' : reverse('tags') + '?sort=%s&' % sortby
+            'base_url' : reverse('tags') + '?sort=%s&' % sort_method
         }
         paginator_context = functions.setup_paginator(paginator_data)
         data['paginator_context'] = paginator_context
@@ -394,7 +395,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #process url parameters
     #todo: fix inheritance of sort method from questions
     #before = datetime.datetime.now()
-    form = ShowQuestionForm(request.GET)
+    form = ShowQuestionForm(request.REQUEST)
     form.full_clean()#always valid
     show_answer = form.cleaned_data['show_answer']
     show_comment = form.cleaned_data['show_comment']

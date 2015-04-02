@@ -118,6 +118,20 @@ ANSWER_SORT_METHODS = (
 )
 DEFAULT_ANSWER_SORT_METHOD = 'votes'
 
+TAGS_SORT_METHODS = (
+    ('used', _('sorted by frequency of tag use')),
+    ('name', _('sorted alphabetically'))
+)
+DEFAULT_TAGS_SORT_METHOD = 'used'
+
+USER_SORT_METHODS = (
+    ('reputation', _('see people with the highest reputation')),
+    ('newest', _('see people who joined most recently')),
+    ('last', _('see people who joined the site first')),
+    ('name', _('see people sorted by name'))
+)
+DEFAULT_USER_SORT_METHOD = 'reputation'
+
 #todo: add assertion here that all sort methods are unique
 #because they are keys to the hash used in implementations
 #of Q.run_advanced_search
