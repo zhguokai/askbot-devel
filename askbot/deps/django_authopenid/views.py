@@ -337,11 +337,14 @@ def complete_oauth2_signin(request):
         request.session['username'] = profile.get('username', '')
     elif provider_name == 'google-plus' and user is None:
         #attempt to migrate user from the old OpenId protocol
-        openid_url = getattr(client, 'openid_id', None)
+        openid_url = util.google_gplus_get_openid_url(client)
         if openid_url:
-            msg_tpl = 'trying to migrate user %d from OpenID %s to g-plus %s'
-            logging.critical(msg_tpl, (user.id, str(openid_url), str(user_id)))
-            user = authenticate(openid_url=openid_url)
+            msg_tpl = 'trying to migrate user from OpenID %s to g-plus %s'
+            logging.critical(msg_tpl, str(openid_url), str(user_id))
+            user = authenticate(
+                        openid_url=openid_url,
+                        method='openid'
+                   )
             if user:
                 util.google_migrate_from_openid_to_gplus(openid_url, user_id)
                 logging.critical('migrated login from OpenID to g-plus')
