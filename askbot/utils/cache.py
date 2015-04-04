@@ -41,7 +41,7 @@ def make_cache_key(func, *args, **kwargs):
     kwargs_key = get_kwargs_key(**kwargs)
     if kwargs_key:
         bits.append(kwargs_key)
-    return ':'.join(bits)
+    return ':'.join(bits).replace(' ', '')
 
 
 def get_recached(key, func, *args, **kwargs):
