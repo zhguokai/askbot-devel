@@ -149,7 +149,7 @@ def from_openid_response(openid_response):
 
     return OpenID(
         openid_response.identity_url, issued, openid_response.signed_fields,
-         dict(sreg_resp)
+        dict(sreg_resp)
     )
 
 def get_provider_name(openid_url):
@@ -479,6 +479,7 @@ def get_enabled_major_login_providers():
                     connection.parameters['consumer_secret'],
                     audience=connection.parameters['consumer_key']
                 )
+        #'username' here is the MW user name
         return data['sub']
 
     if askbot_settings.MEDIAWIKI_KEY and askbot_settings.MEDIAWIKI_SECRET:

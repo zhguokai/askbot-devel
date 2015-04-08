@@ -351,16 +351,16 @@ def complete_oauth2_signin(request):
 
 
     return finalize_generic_signin(
-                        request = request,
-                        user = user,
-                        user_identifier = user_id,
-                        login_provider_name = provider_name,
-                        redirect_url = next_url
+                        request=request,
+                        user=user,
+                        user_identifier=user_id,
+                        login_provider_name=provider_name,
+                        redirect_url=next_url
                     )
 
 
 
-def complete_oauth_signin(request):
+def complete_oauth1_signin(request):
     if 'next_url' in request.session:
         next_url = request.session['next_url']
         del request.session['next_url']
@@ -579,9 +579,9 @@ def signin(request, template_name='authopenid/signin.html'):
                     request.session['email'] = email
                     return finalize_generic_signin(
                         request,
-                        login_provider_name = 'mozilla-persona',
-                        user_identifier = email,
-                        redirect_url = next_url
+                        login_provider_name='mozilla-persona',
+                        user_identifier=email,
+                        redirect_url=next_url
                     )
                     
             elif login_form.cleaned_data['login_type'] == 'openid':
@@ -609,7 +609,7 @@ def signin(request, template_name='authopenid/signin.html'):
                     #this url may need to have "next" piggibacked onto
                     connection = util.OAuthConnection(
                                     provider_name,
-                                    callback_url=reverse('user_complete_oauth_signin')
+                                    callback_url=reverse('user_complete_oauth1_signin')
                                 )
                     connection.start()
 
@@ -655,16 +655,16 @@ def signin(request, template_name='authopenid/signin.html'):
                     wp_user = wp.call(GetUserInfo())
                     custom_wp_openid_url = '%s?user_id=%s' % (wp.url, wp_user.user_id)
                     user = authenticate(
-                            method = 'wordpress_site',
-                            wordpress_url = wp.url,
-                            wp_user_id = wp_user.user_id
+                            method='wordpress_site',
+                            wordpress_url=wp.url,
+                            wp_user_id=wp_user.user_id
                            )
                     return finalize_generic_signin(
-                                    request = request,
-                                    user = user,
-                                    user_identifier = custom_wp_openid_url,
-                                    login_provider_name = provider_name,
-                                    redirect_url = next_url
+                                    request=request,
+                                    user=user,
+                                    user_identifier=custom_wp_openid_url,
+                                    login_provider_name=provider_name,
+                                    redirect_url=next_url
                                 )
                 except WpFault, e:
                     logging.critical(unicode(e))
@@ -920,19 +920,19 @@ def signin_success(request, identity_url, openid_response):
     request.session['username'] = openid_data.sreg.get('nickname', '')
 
     return finalize_generic_signin(
-                        request = request,
-                        user = user,
-                        user_identifier = openid_url,
-                        login_provider_name = provider_name,
-                        redirect_url = next_url
+                        request=request,
+                        user=user,
+                        user_identifier=openid_url,
+                        login_provider_name=provider_name,
+                        redirect_url=next_url
                     )
 
 def finalize_generic_signin(
-                    request = None,
-                    user = None,
-                    login_provider_name = None,
-                    user_identifier = None,
-                    redirect_url = None
+                    request=None,
+                    user=None,
+                    login_provider_name=None,
+                    user_identifier=None,
+                    redirect_url=None
                 ):
     """non-view function
     generic signin, run after all protocol-dependent details
@@ -1001,8 +1001,7 @@ def finalize_generic_signin(
     else:
         #need to register
         request.method = 'GET'#this is not a good thing to do
-        #but necessary at the moment to reuse the register()
-        #method
+        #but necessary at the moment to reuse the register() method
         return register(
                     request,
                     login_provider_name=login_provider_name,
