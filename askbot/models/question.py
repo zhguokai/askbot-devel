@@ -372,8 +372,10 @@ class ThreadManager(BaseQuerySetManager):
                 #only one or two search tags anyway
                 for tag in tags:
                     try:
-                        tag_record = Tag.objects.get(name__iexact=tag,
-                                                     language_code__iexact=get_language())
+                        tag_record = Tag.objects.get(
+                                            name__iexact=tag,
+                                            language_code=get_language()
+                                        )
                         existing_tags.add(tag_record.name)
                     except Tag.DoesNotExist:
                         non_existing_tags.add(tag)
