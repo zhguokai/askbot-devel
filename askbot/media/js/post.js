@@ -2333,7 +2333,9 @@ EditCommentForm.prototype.getSaveHandler = function () {
         });
         me._comment.setDraftStatus(true);
         var postCommentsWidget = me._comment.getContainerWidget();
-        postCommentsWidget.showOpenEditorButton();
+        if (me.canAddComment()) {
+            postCommentsWidget.showOpenEditorButton();
+        }
         var commentsElement = postCommentsWidget.getElement();
         commentsElement.trigger('askbot.beforeCommentSubmit');
 
@@ -2796,8 +2798,8 @@ PostCommentsWidget.prototype.startNewComment = function () {
     comment.startEditing();
 };
 
-PostCommentsWidget.prototype.needToReload = function () {
-    return this._commentsReversed === false && this._isTruncated;
+PostCommentsWidget.prototype.canAddComment = function () {
+    return this._commentsReversed || this._isTruncated === false;
 };
 
 PostCommentsWidget.prototype.userCanPost = function () {
