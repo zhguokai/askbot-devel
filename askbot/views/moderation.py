@@ -236,7 +236,7 @@ def moderate_post_edits(request):
                                 user__in=editors
                             )
         memo_filter = Q(user=request.user, activity__in=items)
-        memo_set = models.ActivityAuditStatus.objects.filter(memo_filter)
+        memo_set |= models.ActivityAuditStatus.objects.filter(memo_filter)
 
     memo_set.select_related('activity')
 

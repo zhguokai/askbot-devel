@@ -149,7 +149,7 @@ def from_openid_response(openid_response):
 
     return OpenID(
         openid_response.identity_url, issued, openid_response.signed_fields,
-         dict(sreg_resp)
+        dict(sreg_resp)
     )
 
 def get_provider_name(openid_url):
@@ -479,6 +479,7 @@ def get_enabled_major_login_providers():
                     connection.parameters['consumer_secret'],
                     audience=connection.parameters['consumer_key']
                 )
+        #'username' here is the MW user name
         return data['sub']
 
     if askbot_settings.MEDIAWIKI_KEY and askbot_settings.MEDIAWIKI_SECRET:
@@ -1003,8 +1004,18 @@ def mozilla_persona_get_email_from_assertion(assertion):
     #todo: nead more feedback to help debug fail cases
     return None
 
+def google_gplus_get_openid_url(client):
+    """no jwt validation since token comes directly from google"""
+    if hasattr(client, 'id_token'):
+        token = client.id_token.split('.')[1]
+        token = token.encode('ascii')
+        token = token + '='*(4 - len(token)%4)
+        token = base64.urlsafe_b64decode(token)
+        data = simplejson.loads(token)
+        return data.get('openid_id')
+    return None
+
 def google_migrate_from_openid_to_gplus(openid_url, gplus_id):
     from askbot.deps.django_authopenid.models import UserAssociation
-    assoc = UserAssociation.object.filter(openid_url=openid_url)
+    assoc = UserAssociation.objects.filter(openid_url=openid_url)
     assoc.update(openid_url=str(gplus_id), provider_name='google-plus')
-

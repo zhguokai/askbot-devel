@@ -660,10 +660,10 @@ CommentVoteButton.prototype.getVoteHandler = function () {
     var me = this;
     var comment = this._comment;
     return function () {
-        var voted = me._voted;
+        var cancelVote = me._voted;
         var post_id = me._comment.getId();
         var data = {
-            cancel_vote: voted ? true : false,
+            cancel_vote: cancelVote,
             post_id: post_id
         };
         $.ajax({
@@ -675,7 +675,7 @@ CommentVoteButton.prototype.getVoteHandler = function () {
             success: function (data) {
                 if (data.success) {
                     me.setScore(data.score);
-                    me.setVoted(true);
+                    me.setVoted(!cancelVote);
                 } else {
                     showMessage(comment.getElement(), data.message, 'after');
                 }
@@ -823,32 +823,32 @@ var Vote = (function () {
     };
 
     var getOffensiveQuestionFlag = function () {
-        var offensiveQuestionFlag = 'div.question span[id^="' + offensiveIdPrefixQuestionFlag + '"]';
+        var offensiveQuestionFlag = 'span[id^="' + offensiveIdPrefixQuestionFlag + '"]';
         return $(offensiveQuestionFlag);
     };
 
     var getRemoveOffensiveQuestionFlag = function () {
-        var removeOffensiveQuestionFlag = 'div.question span[id^="' + removeOffensiveIdPrefixQuestionFlag + '"]';
+        var removeOffensiveQuestionFlag = 'span[id^="' + removeOffensiveIdPrefixQuestionFlag + '"]';
         return $(removeOffensiveQuestionFlag);
     };
 
     var getRemoveAllOffensiveQuestionFlag = function () {
-        var removeAllOffensiveQuestionFlag = 'div.question span[id^="' + removeAllOffensiveIdPrefixQuestionFlag + '"]';
+        var removeAllOffensiveQuestionFlag = 'span[id^="' + removeAllOffensiveIdPrefixQuestionFlag + '"]';
         return $(removeAllOffensiveQuestionFlag);
     };
 
     var getOffensiveAnswerFlags = function () {
-        var offensiveQuestionFlag = 'div.answer span[id^="' + offensiveIdPrefixAnswerFlag + '"]';
+        var offensiveQuestionFlag = 'span[id^="' + offensiveIdPrefixAnswerFlag + '"]';
         return $(offensiveQuestionFlag);
     };
 
     var getRemoveOffensiveAnswerFlag = function () {
-        var removeOffensiveAnswerFlag = 'div.answer span[id^="' + removeOffensiveIdPrefixAnswerFlag + '"]';
+        var removeOffensiveAnswerFlag = 'span[id^="' + removeOffensiveIdPrefixAnswerFlag + '"]';
         return $(removeOffensiveAnswerFlag);
     };
 
     var getRemoveAllOffensiveAnswerFlag = function () {
-        var removeAllOffensiveAnswerFlag = 'div.answer span[id^="' + removeAllOffensiveIdPrefixAnswerFlag + '"]';
+        var removeAllOffensiveAnswerFlag = 'span[id^="' + removeAllOffensiveIdPrefixAnswerFlag + '"]';
         return $(removeAllOffensiveAnswerFlag);
     };
 
@@ -861,7 +861,7 @@ var Vote = (function () {
     };
 
     var getremoveAnswersLinks = function () {
-        var removeAnswerLinks = 'div.answer-controls a[id^="' + removeAnswerLinkIdPrefix + '"]';
+        var removeAnswerLinks = 'a[id^="' + removeAnswerLinkIdPrefix + '"]';
         return $(removeAnswerLinks);
     };
 
@@ -2333,7 +2333,9 @@ EditCommentForm.prototype.getSaveHandler = function () {
         });
         me._comment.setDraftStatus(true);
         var postCommentsWidget = me._comment.getContainerWidget();
-        postCommentsWidget.showOpenEditorButton();
+        if (me.canAddComment()) {
+            postCommentsWidget.showOpenEditorButton();
+        }
         var commentsElement = postCommentsWidget.getElement();
         commentsElement.trigger('askbot.beforeCommentSubmit');
 
@@ -2796,8 +2798,8 @@ PostCommentsWidget.prototype.startNewComment = function () {
     comment.startEditing();
 };
 
-PostCommentsWidget.prototype.needToReload = function () {
-    return this._commentsReversed === false && this._isTruncated;
+PostCommentsWidget.prototype.canAddComment = function () {
+    return this._commentsReversed || this._isTruncated === false;
 };
 
 PostCommentsWidget.prototype.userCanPost = function () {

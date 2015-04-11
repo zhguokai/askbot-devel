@@ -4791,7 +4791,7 @@ td.setting-input textarea {
     width: 100%;
     margin: 6px 0;
   }
-  .question-page .post-controls .offensive-flag {
+  .question-page .post-controls .js-offensive-flag {
     display: none;
   }
 }

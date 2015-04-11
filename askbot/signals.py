@@ -45,6 +45,9 @@ new_comment_posted = django.dispatch.Signal(
 answer_edited = django.dispatch.Signal(
     providing_args=['answer', 'user', 'form_data']
 )
+question_visited = django.dispatch.Signal(
+    providing_args=['request', 'question']
+)
 
 post_updated = django.dispatch.Signal(
                                 providing_args=[
@@ -112,6 +115,7 @@ def pop_all_db_signal_receivers():
         pre_delete,
         post_delete,
         post_syncdb,
+        question_visited,
     )
     if 'm2m_changed' in globals():
         signals += (m2m_changed, )

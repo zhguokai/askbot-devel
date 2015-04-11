@@ -1,5 +1,6 @@
 from askbot import startup_procedures
 startup_procedures.run()
+import django_transaction_signals
 
 from django.contrib.auth.models import User
 
@@ -62,10 +63,12 @@ from askbot.utils.decorators import reject_forbidden_phrases
 from askbot.utils.cache import memoize, delete_memoized
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
+from askbot.utils.transaction import defer_celery_task
 from askbot.utils.html import replace_links_with_text
 from askbot.utils.html import site_url
 from askbot.utils.db import table_exists
 from askbot.utils.url_utils import strip_path
+from askbot.utils import functions
 from askbot import mail
 from askbot import signals
 
@@ -218,8 +221,8 @@ User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
 User.add_to_class('website', models.URLField(max_length=200, blank=True))
 #location field is actually city
 User.add_to_class('location', models.CharField(max_length=100, blank=True))
-User.add_to_class('country', CountryField(blank = True))
-User.add_to_class('show_country', models.BooleanField(default = False))
+User.add_to_class('country', CountryField(blank=True))
+User.add_to_class('show_country', models.BooleanField(default=False))
 
 User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
 User.add_to_class('about', models.TextField(blank=True))
@@ -2696,9 +2699,9 @@ def user_get_languages(self):
 
 def user_get_primary_language(self):
     if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-        return django_settings.LANGUAGE_CODE
-    else:
         return self.get_languages()[0]
+    else:
+        return django_settings.LANGUAGE_CODE
 
 def get_profile_link(self, text=None):
     profile_link = u'<a href="%s">%s</a>' \
@@ -3498,7 +3501,10 @@ def notify_author_of_published_revision(revision=None, was_approved=False, **kwa
     #only email about first revision
     if revision.should_notify_author_about_publishing(was_approved):
         from askbot.tasks import notify_author_of_published_revision_celery_task
-        notify_author_of_published_revision_celery_task.delay(revision.pk)
+        defer_celery_task(
+            notify_author_of_published_revision_celery_task,
+            args=(revision.pk,)
+        )
 
 
 #todo: move to utils
@@ -3532,15 +3538,19 @@ def record_post_update_activity(
 
     from askbot import tasks
 
-    tasks.record_post_update_celery_task.delay(
-        post_id=post.id,
-        post_content_type_id=ContentType.objects.get_for_model(post).id,
-        newly_mentioned_user_id_list=[u.id for u in newly_mentioned_users],
-        updated_by_id=updated_by.id,
-        suppress_email=suppress_email,
-        timestamp=timestamp,
-        created=created,
-        diff=diff,
+    mentioned_ids = [u.id for u in newly_mentioned_users]
+
+    defer_celery_task(
+        tasks.record_post_update_celery_task,
+        kwargs = {
+            'post_id': post.id,
+            'newly_mentioned_user_id_list': mentioned_ids,
+            'updated_by_id': updated_by.id,
+            'suppress_email': suppress_email,
+            'timestamp': timestamp,
+            'created': created,
+            'diff': diff,
+        }
     )
 
 
@@ -3644,6 +3654,37 @@ def record_user_visit(user, timestamp, **kwargs):
     }
     User.objects.filter(id=user.id).update(**update_data)
 
+
+def record_question_visit(request, question, **kwargs):
+    if functions.not_a_robot_request(request):
+        #todo: split this out into a subroutine
+        #todo: merge view counts per user and per session
+        #1) view count per session
+        if 'question_view_times' not in request.session:
+            request.session['question_view_times'] = {}
+
+        last_seen = request.session['question_view_times'].get(question.id, None)
+
+        update_view_count = False
+        if question.thread.last_activity_by_id != request.user.id:
+            if last_seen:
+                if last_seen < question.thread.last_activity_at:
+                    update_view_count = True
+            else:
+                update_view_count = True
+
+        request.session['question_view_times'][question.id] = \
+                                                    datetime.datetime.now()
+        #2) run the slower jobs in a celery task
+        from askbot import tasks
+        defer_celery_task(
+            tasks.record_question_visit,
+            kwargs={
+                'question_post_id': question.id,
+                'user_id': request.user.id,
+                'update_view_count': update_view_count
+            }
+        )
 
 def record_vote(instance, created, **kwargs):
     """
@@ -3987,7 +4028,7 @@ def tweet_new_post(sender, user=None, question=None, answer=None, form_data=None
     """seends out tweets about the new post"""
     from askbot.tasks import tweet_new_post_task
     post = question or answer
-    tweet_new_post_task.delay(post.id)
+    defer_celery_task(tweet_new_post_task, args=(post.id,))
 
 def autoapprove_reputable_user(user=None, reputation_before=None, *args, **kwargs):
     """if user is 'watched' we change status to 'approved'
@@ -4224,6 +4265,10 @@ signals.post_revision_published.connect(
 signals.site_visited.connect(
     record_user_visit,
     dispatch_uid='record_user_visit'
+)
+signals.question_visited.connect(
+    record_question_visit,
+    dispatch_uid='record_question_visit'
 )
 
 #set up a possibility for the users to follow others

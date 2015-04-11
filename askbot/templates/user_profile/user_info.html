@@ -117,7 +117,7 @@
             %}
                 {% include "user_profile/twitter_sharing_controls.html" %}
             {% endif %}
-            {% if view_user.location or view_user.country %}
+            {% if view_user.location or (view_user.country and view_user.country.code != 'none') %}
             <tr>
                 <td>{% trans %}location{% endtrans %}</td>
                 <td>{{ macros.user_full_location(view_user) }}</td>

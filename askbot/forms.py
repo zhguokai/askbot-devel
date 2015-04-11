@@ -173,7 +173,14 @@ class CountryField(forms.ChoiceField):
             if value == 'unknown':
                 raise forms.ValidationError(_('Country field is required'))
         if value == 'unknown':
-            return None
+            try:
+                from django_countries import fields
+                if hasattr(fields, 'Country'):
+                    return fields.Country(code='none')
+                else:
+                    return None
+            except ImportError:
+                return None
         return value
 
 
@@ -540,6 +547,18 @@ class PageField(forms.IntegerField):
             return 1
 
 
+class SortField(forms.ChoiceField):
+    def __init__(self, *args, **kwargs):
+        self.default = kwargs.pop('default', '')
+        super(SortField, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        value = value or self.default
+        if value not in dict(self.choices).keys():
+            value = self.default
+        return value
+
+
 class SummaryField(forms.CharField):
 
     def __init__(self, *args, **kwargs):
@@ -589,8 +608,11 @@ class ShowQuestionForm(forms.Form):
     """
     answer = forms.IntegerField(required=False)
     comment = forms.IntegerField(required=False)
-    page = forms.IntegerField(required=False)
-    sort = forms.CharField(required=False)
+    page = PageField()
+    sort_method = SortField(
+                        choices=const.ANSWER_SORT_METHODS,
+                        default=const.DEFAULT_ANSWER_SORT_METHOD
+                    )
 
     def get_pruned_data(self):
         nones = ('answer', 'comment', 'page')
@@ -598,9 +620,9 @@ class ShowQuestionForm(forms.Form):
             if key in self.cleaned_data:
                 if self.cleaned_data[key] is None:
                     del self.cleaned_data[key]
-        if 'sort' in self.cleaned_data:
-            if self.cleaned_data['sort'] == '':
-                del self.cleaned_data['sort']
+        if 'sort_method' in self.cleaned_data:
+            if self.cleaned_data['sort_method'] == '':
+                del self.cleaned_data['sort_method']
         return self.cleaned_data
 
     def clean(self):
@@ -628,6 +650,31 @@ class ShowQuestionForm(forms.Form):
             out_data['show_answer'] = None
         self.cleaned_data = out_data
         return out_data
+
+
+class ShowTagsForm(forms.Form):
+    page = PageField()
+    sort_method = SortField(
+                    choices=const.TAGS_SORT_METHODS,
+                    default=const.DEFAULT_TAGS_SORT_METHOD
+                )
+    query = forms.CharField(required=False)
+
+
+class ShowUsersForm(forms.Form):
+    page = PageField()
+    sort_method = SortField(
+                    choices=const.USER_SORT_METHODS,
+                    default=const.DEFAULT_USER_SORT_METHOD
+                )
+    query = forms.CharField(required=False)
+
+    def clean_sort_method(self):
+        sort_method = self.cleaned_data['sort_method'] 
+        if sort_method == 'reputation' and askbot_settings.KARMA_MODE == 'private':
+            self.cleaned_data['sort_method'] = 'newest'
+        return self.cleaned_data['sort_method']
+
 
 
 class ChangeUserReputationForm(forms.Form):

@@ -70,9 +70,9 @@ def process_vote(user=None, vote_direction=None, post=None):
     if vote != None:
         user.assert_can_revoke_old_vote(vote)
         score_delta = vote.cancel()
-        response_data['count'] = post.points+ score_delta
+        response_data['count'] = post.points + score_delta
+        post.points = response_data['count'] #assign here too for correctness
         response_data['status'] = 1 #this means "cancel"
-
     else:
         #this is a new vote
         votes_left = user.get_unused_votes_today()
@@ -96,6 +96,9 @@ def process_vote(user=None, vote_direction=None, post=None):
         response_data['count'] = post.points
         response_data['status'] = 0 #this means "not cancel", normal operation
 
+    if vote and post.thread_id:
+        post.thread.invalidate_cached_post_data()
+
     response_data['success'] = 1
 
     return response_data
@@ -104,30 +107,17 @@ def process_vote(user=None, vote_direction=None, post=None):
 @csrf.csrf_protect
 def vote(request):
     """
-    todo: this subroutine needs serious refactoring it's too long and is hard to understand
-
-    vote_type:
-        acceptAnswer : 0,
-        questionUpVote : 1,
-        questionDownVote : 2,
-        favorite : 4,
-        answerUpVote: 5,
-        answerDownVote:6,
-        offensiveQuestion : 7,
-        remove offensiveQuestion flag : 7.5,
-        remove all offensiveQuestion flag : 7.6,
-        offensiveAnswer:8,
-        remove offensiveAnswer flag : 8.5,
-        remove all offensiveAnswer flag : 8.6,
-        removeQuestion: 9,
-        removeAnswer:10
-        questionSubscribeUpdates:11
-        questionUnSubscribeUpdates:12
+    TODO: This subroutine needs serious refactoring it's too long and is
+          hard to understand.
 
     accept answer code:
-        response_data['allowed'] = -1, Accept his own answer   0, no allowed - Anonymous    1, Allowed - by default
-        response_data['success'] =  0, failed                                               1, Success - by default
-        response_data['status']  =  0, By default                       1, Answer has been accepted already(Cancel)
+        response_data['allowed'] = -1, Accept his own answer
+                                    0, no allowed - Anonymous
+                                    1, Allowed - by default
+        response_data['success'] =  0, failed
+                                    1, Success - by default
+        response_data['status']  =  0, By default
+                                    1, Answer has been accepted already(Cancel)
 
     vote code:
         allowed = -3, Don't have enough votes left
@@ -147,176 +137,73 @@ def vote(request):
         status  =  0, by default
                    1, can't do it again
     """
+
     response_data = {
-        "allowed": 1,
-        "success": 1,
-        "status" : 0,
-        "count"  : 0,
-        "message" : ''
+        'allowed': 1,
+        'success': 1,
+        'status': 0,
+        'count': 0,
+        'message': '',
     }
 
     try:
-        if request.is_ajax() and request.method == 'POST':
-            vote_type = request.POST.get('type')
-        else:
+        if not request.is_ajax() or not request.method == 'POST':
             raise Exception(_('Sorry, something is not right here...'))
 
-        id = request.POST.get('postId')
+        if not request.user.is_authenticated():
+            raise exceptions.PermissionDenied(
+                _('Sorry, but anonymous users cannot perform this action.'))
 
-        if vote_type == '0':
-            if askbot_settings.ACCEPTING_ANSWERS_ENABLED is False:
-                return
-            if request.user.is_authenticated():
-                answer_id = request.POST.get('postId')
-                answer = get_object_or_404(models.Post, post_type='answer', id = answer_id)
-                # make sure question author is current user
-                if answer.endorsed:
-                    request.user.unaccept_best_answer(answer)
-                    response_data['status'] = 1 #cancelation
-                else:
-                    request.user.accept_best_answer(answer)
+        vote_type = request.POST.get('type')
+        if (vote_type not in const.VOTE_TYPES
+                or vote_type == const.VOTE_FAVORITE):
+            # TODO: Favoriting a question is not handled!
+            raise Exception(
+                _('Request mode is not supported. Please try again.'))
+
+        vote_args = const.VOTE_TYPES[vote_type]
+        user = request.user
+        post_id = request.POST.get('postId')
+        post = get_object_or_404(
+            models.Post, post_type=vote_args[0], pk=post_id)
+
+        if vote_type == const.VOTE_ACCEPT_ANSWER:
+            if not askbot_settings.ACCEPTING_ANSWERS_ENABLED:
+                raise Exception(
+                    _('Request mode is not supported. Please try again.'))
+
+            if post.endorsed:
+                user.unaccept_best_answer(post)
+                response_data['status'] = 1  # cancelation
             else:
-                raise exceptions.PermissionDenied(
-                    _('Sorry, but anonymous users cannot %(perform_action)s') % {
-                        'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER
-                    }
-                )
-        elif vote_type in ('1', '2', '5', '6'):#Q&A up/down votes
+                user.accept_best_answer(post)
 
-            ###############################
-            # all this can be avoided with
-            # better query parameters
-            vote_direction = 'up'
-            if vote_type in ('2','6'):
-                vote_direction = 'down'
-
-            if vote_type in ('5', '6'):
-                #todo: fix this weirdness - why postId here
-                #and not with question?
-                post_id = request.POST.get('postId')
-                post = get_object_or_404(models.Post, post_type='answer', id=post_id)
-            else:
-                post = get_object_or_404(models.Post, post_type='question', id=id)
-            #
-            ######################
-
+            post.thread.update_summary_html()
+        elif vote_type in const.VOTE_TYPES_VOTING:
             response_data = process_vote(
-                                        user = request.user,
-                                        vote_direction = vote_direction,
-                                        post = post
-                                    )
+                user=user, vote_direction=vote_args[1], post=post)
 
-        elif vote_type in ['7', '8']:
-            #flag question or answer
-            if vote_type == '7':
-                post = get_object_or_404(models.Post, post_type='question', id=id)
-            if vote_type == '8':
-                id = request.POST.get('postId')
-                post = get_object_or_404(models.Post, post_type='answer', id=id)
-
-            request.user.flag_post(post)
-
+            if vote_args[0] == 'question':
+                post.thread.update_summary_html()
+        elif vote_type in const.VOTE_TYPES_REPORTING:
+            user.flag_post(post, cancel=vote_args[1], cancel_all=vote_args[2])
             response_data['count'] = post.offensive_flag_count
-            response_data['success'] = 1
-
-        elif vote_type in ['7.5', '8.5']:
-            #flag question or answer
-            if vote_type == '7.5':
-                post = get_object_or_404(models.Post, post_type='question', id=id)
-            if vote_type == '8.5':
-                id = request.POST.get('postId')
-                post = get_object_or_404(models.Post, post_type='answer', id=id)
-
-            request.user.flag_post(post, cancel = True)
-
-            response_data['count'] = post.offensive_flag_count
-            response_data['success'] = 1
-
-        elif vote_type in ['7.6', '8.6']:
-            #flag question or answer
-            if vote_type == '7.6':
-                post = get_object_or_404(models.Post, id=id)
-            if vote_type == '8.6':
-                id = request.POST.get('postId')
-                post = get_object_or_404(models.Post, id=id)
-
-            request.user.flag_post(post, cancel_all = True)
-
-            response_data['count'] = post.offensive_flag_count
-            response_data['success'] = 1
-
-        elif vote_type in ['9', '10']:
-            #delete question or answer
-            post = get_object_or_404(models.Post, post_type='question', id=id)
-            if vote_type == '10':
-                id = request.POST.get('postId')
-                post = get_object_or_404(models.Post, post_type='answer', id=id)
-
-            if post.deleted == True:
-                request.user.restore_post(post = post)
+        elif vote_type in const.VOTE_TYPES_REMOVAL:
+            if post.deleted:
+                user.restore_post(post=post)
             else:
-                request.user.delete_post(post = post)
-
-        elif request.is_ajax() and request.method == 'POST':
-
-            if not request.user.is_authenticated():
-                response_data['allowed'] = 0
-                response_data['success'] = 0
-
-            question = get_object_or_404(models.Post, post_type='question', id=id)
-            vote_type = request.POST.get('type')
-
-            if vote_type == '11':#subscribe q updates
-                #todo: this branch is not used anymore
-                #now we just follow question, we don't have the
-                #separate "subscribe" function
-                user = request.user
-                if user.is_authenticated():
-                    if user not in question.thread.followed_by.all():
-                        user.follow_question(question)
-                        if askbot_settings.EMAIL_VALIDATION == True \
-                            and user.email_isvalid == False:
-
-                            response_data['message'] = \
-                                    _(
-                                        'Your subscription is saved, but email address '
-                                        '%(email)s needs to be validated, please see '
-                                        '<a href="%(details_url)s">more details here</a>'
-                                    ) % {'email':user.email,'details_url':reverse('faq') + '#validate'}
-
-                    subscribed = user.subscribe_for_followed_question_alerts()
-                    if subscribed:
-                        if 'message' in response_data:
-                            response_data['message'] += '<br/>'
-                        response_data['message'] += _('email update frequency has been set to daily')
-                    #response_data['status'] = 1
-                    #responst_data['allowed'] = 1
-                else:
-                    pass
-                    #response_data['status'] = 0
-                    #response_data['allowed'] = 0
-            elif vote_type == '12':#unsubscribe q updates
-                user = request.user
-                if user.is_authenticated():
-                    user.unfollow_question(question)
+                user.delete_post(post=post)
         else:
-            response_data['success'] = 0
-            response_data['message'] = u'Request mode is not supported. Please try again.'
-
-        if vote_type not in (1, 2, 4, 5, 6, 11, 12):
-            #favorite or subscribe/unsubscribe
-            #upvote or downvote question or answer - those
-            #are handled within user.upvote and user.downvote
-            post = models.Post.objects.get(id = id)
-            post.thread.reset_cached_data()
-
-        data = simplejson.dumps(response_data)
-
+            raise ValueError('unexpected vote type %d' % vote_type)
+            
+        if vote_type in const.VOTE_TYPES_INVALIDATE_CACHE:
+            post.thread.invalidate_cached_data()
     except Exception, e:
         response_data['message'] = unicode(e)
         response_data['success'] = 0
-        data = simplejson.dumps(response_data)
-    return HttpResponse(data, content_type="application/json")
+
+    data = simplejson.dumps(response_data)
+    return HttpResponse(data, content_type='application/json')
 
 #internally grouped views - used by the tagging system
 @csrf.csrf_protect
@@ -884,9 +771,9 @@ def upvote_comment(request):
         cancel_vote = form.cleaned_data['cancel_vote']
         comment = get_object_or_404(models.Post, post_type='comment', id=comment_id)
         process_vote(
-            post = comment,
-            vote_direction = 'up',
-            user = request.user
+            post=comment,
+            vote_direction='up',
+            user=request.user
         )
     else:
         raise ValueError
