@@ -2333,7 +2333,7 @@ EditCommentForm.prototype.getSaveHandler = function () {
         });
         me._comment.setDraftStatus(true);
         var postCommentsWidget = me._comment.getContainerWidget();
-        if (me.canAddComment()) {
+        if (postCommentsWidget.canAddComment()) {
             postCommentsWidget.showOpenEditorButton();
         }
         var commentsElement = postCommentsWidget.getElement();
