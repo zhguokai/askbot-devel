@@ -679,7 +679,7 @@ def _assert_user_can(
             'perform_action': action_display,
             'your_account_is': _('your account is blocked')
         }
-        error_message = string_concat(error_message, '.</br> ', message_keys.PUNISHED_USER_INFO)
+        error_message = string_concat(error_message, '.</br> ', _(message_keys.PUNISHED_USER_INFO))
 
     elif post and owner_can and user.pk == post.author_id:
         if user.is_suspended() and suspended_owner_cannot:
