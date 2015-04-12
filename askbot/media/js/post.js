@@ -660,7 +660,7 @@ CommentVoteButton.prototype.getVoteHandler = function () {
     var me = this;
     var comment = this._comment;
     return function () {
-        var cancelVote = me._voted;
+        var cancelVote =  me._voted ? true: false;
         var post_id = me._comment.getId();
         var data = {
             cancel_vote: cancelVote,
@@ -2450,7 +2450,7 @@ Comment.prototype.decorate = function (element) {
         this._delete_icon.setHandler(this.getDeleteHandler());
         this._delete_icon.decorate(delete_img);
     }
-    var edit_link = this._element.find('.edit');
+    var edit_link = this._element.find('.js-edit');
     if (edit_link.length > 0) {
         this._editable = true;
         this._edit_link = new EditLink();
@@ -2530,6 +2530,7 @@ Comment.prototype.setContent = function (data) {
     this._data = $.extend(this._data, data);
     data = this._data;
     this._element.data('commentId', data.id);
+    this._element.attr('data-comment-id', data.id);
 
     // 1) create the votes element if it is not there
     var vote = this._voteButton;
@@ -2537,6 +2538,11 @@ Comment.prototype.setContent = function (data) {
     vote.setScore(data.score);
 
     // 2) maybe adjust deletable status
+    //set id of the comment deleter
+    if (data.id) {
+        var deleter = this._element.find('.comment-delete');
+        deleter.attr('id', 'post-' + data.id.toString() + '-delete');
+    }
 
     // 3) set the comment html
     if (EditCommentForm.prototype.getEditorType() === 'tinymce') {
@@ -2568,6 +2574,14 @@ Comment.prototype.setContent = function (data) {
     this._dateElement.attr('title', data.comment_added_at);
     this._dateElement.timeago();
 
+    // 7) set comment score
+    if (data.score) {
+        var votes = this._element.find('.js-score');
+        votes.text(data.score);
+        votes.attr('id', 'comment-img-upvote-' + data.id.toString());
+    }
+
+    // 8) possibly add edit link
     if (this._editable) {
         var oldEditLink = this._edit_link;
         this._edit_link = new EditLink();
@@ -2585,6 +2599,11 @@ Comment.prototype.setContent = function (data) {
         //will never catch the event
         this._convert_link.getElement().trigger('askbot.afterCommentConvertLinkInserted', [this._convert_link]);
         oldConvertLink.dispose();
+    }
+    //maybe hide edit/delete buttons
+    if (data.id) {
+        askbot['functions']['renderPostControls'](data.id.toString());
+        askbot['functions']['renderPostVoteButtons']('comment', data.id.toString());
     }
     this._element.trigger('askbot.afterCommentSetData', [this, data]);
 };

@@ -5,7 +5,7 @@ inherits(EditLink, SimpleControl);
 
 EditLink.prototype.createDom = function () {
     var element = $('<a></a>');
-    element.addClass('edit');
+    element.addClass('edit js-edit');
     this.decorate(element);
 };
 

@@ -2596,7 +2596,7 @@ ul.js-related-tags li {
 .question-page .comments .comment-controls .js-avatar-box {
   margin-right: 4px;
 }
-.question-page .comments .edit {
+.question-page .comments .js-edit {
   padding-left: 6px;
 }
 .question-page .comments .convert-comment {
