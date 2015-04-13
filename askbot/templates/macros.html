@@ -9,7 +9,7 @@
 {%- macro inbox_message_snippet(message) -%}
 <div class="message-details" data-message-id="{{ message.id }}">
     <input type="checkbox" />
-    {{ gravatar(message.user, 24) }}
+    {{ gravatar(message.user, 16) }}
     <a class="username" href="{{ message.user.get_absolute_url() }}">{{ message.user.username|escape }}</a>
     <a class="forum-post-link" href="{{ message.url }}">{{ message.message_type }}</a>
     ({{ timeago(message.timestamp) }})
