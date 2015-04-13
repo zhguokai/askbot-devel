@@ -2295,6 +2295,16 @@ EditCommentForm.prototype.setSuppressEmail = function (bool) {
     this._element.find('input[name="suppress_email"]').prop('checked', bool).trigger('change');
 };
 
+EditCommentForm.prototype.updateUserPostsData = function(json) {
+    //add any posts by the user to the list
+    var data = askbot.data.user_posts;
+    $.each(json, function(idx, item) {
+        if (item.user_id === askbot.data.userId && !data[item.id]) {
+            data[item.id] = 1;
+        }
+    });
+};
+
 EditCommentForm.prototype.getSaveHandler = function () {
     var me = this;
     var editor = this._editor;
@@ -2365,6 +2375,7 @@ EditCommentForm.prototype.getSaveHandler = function () {
                 me._comment.setDraftStatus(false);
                 if (me._type === 'add') {
                     me._comment.dispose();
+                    me.updateUserPostsData(json);
                     me._comment.getContainerWidget().reRenderComments(json);
                 } else {
                     me._comment.setContent(json);
