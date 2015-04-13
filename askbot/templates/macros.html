@@ -21,7 +21,7 @@
 {%- macro moderation_queue_message(message) -%}
 <div class="message-details" data-message-id="{{ message.id }}">
     <input type="checkbox" />
-    {{ gravatar(message.user, 24) }}
+    {{ gravatar(message.user, 16) }}
     <a class="username" href="{{ message.user.get_absolute_url() }}">{{ message.user.username|escape }}</a> |
     {% if message['memo_type'] == 'edit' %}
         <a href="mailto:{{ message.user.email }}">{{ message.user.email }}</a> |
