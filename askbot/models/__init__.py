@@ -1734,6 +1734,13 @@ def user_delete_answer(
     answer.deleted = True
     answer.deleted_by = self
     answer.deleted_at = timestamp
+
+    if answer.endorsed and answer.thread.accepted_answer == answer:
+        #forget about the accepted answer,
+        #but do not erase the "endorsement" info on
+        #the answer post itself, to allow restoring
+        answer.thread.accepted_answer = None
+
     answer.save()
 
     answer.thread.update_answer_count()
@@ -1892,6 +1899,8 @@ def user_restore_post(
             post.thread.save()
         post.thread.invalidate_cached_data()
         if post.post_type == 'answer':
+            if post.endorsed and post.thread.accepted_answer == None:
+                post.thread.accepted_answer = post
             post.thread.update_answer_count()
             post.thread.update_last_activity_info()
         else:
