@@ -387,7 +387,6 @@
     {% endspaceless %}
     <script type='text/javascript'>
         {# not compressable #}
-        var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
         askbot['urls']['postComments'] = '{% url post_comments %}';
         askbot['urls']['editComment'] = '{% url edit_comment %}';
         askbot['urls']['deleteComment'] = '{% url delete_comment %}';

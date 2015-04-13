@@ -2112,11 +2112,11 @@ EditCommentForm.prototype.getCounterUpdater = function () {
         /* todo make smooth color transition, from gray to red
          * or rather - from start color to end color */
         var color = 'maroon';
-        var chars = 10;
+        var chars = askbot.settings.minCommentBodyLength;
         var feedback = '';
         if (length === 0) {
             feedback = interpolate(gettext('enter at least %s characters'), [chars]);
-        } else if (length < 10) {
+        } else if (length < chars) {
             feedback = interpolate(gettext('enter at least %s more characters'), [chars - length]);
         } else {
             if (length > length2) {
