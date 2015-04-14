@@ -31,6 +31,10 @@ class ThreadIndex(get_base_index()):
     def prepare_tags(self, obj):
         return [tag.name for tag in obj.tags.all()]
 
+    def should_update(self, instance, **kwargs):
+        # Update only if thread is not deleted
+        return not instance.deleted
+
 
 class UserIndex(get_base_index()):
 
