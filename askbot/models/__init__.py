@@ -326,17 +326,19 @@ def user_get_avatar_url(self, size=48):
         from avatar.conf import settings as avatar_settings
         sizes = avatar_settings.AUTO_GENERATE_AVATAR_SIZES
         if size not in sizes:
-            logging.critical('add values %d to setting AUTO_GENERATE_AVATAR_SIZES')
+            logging.critical('add values %d to setting AUTO_GENERATE_AVATAR_SIZES', size)
 
         kwargs = {'user': self.username, 'size': size}
         try:
             return reverse('avatar_render_primary', kwargs=kwargs)
-        except NoReverseMatch:
+        except NoReverseMatch, e:
             message = 'Please, make sure that avatar urls are in the urls.py '\
                       'or update your django-avatar app, '\
                       'currently it is impossible to serve avatars.'
             logging.critical(message)
-            raise django_exceptions.ImproperlyConfigured(message)
+            logging.critical(unicode(e).encode('utf-8'))
+            return self.get_default_avatar_url(size)
+            #raise django_exceptions.ImproperlyConfigured(message)
     assert(avatar_type == 'g')
     return self.get_gravatar_url(size)
 
