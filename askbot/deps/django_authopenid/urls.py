@@ -55,7 +55,7 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     #url(r'^%s%s(?P<id>\d+)/(?P<key>[\dabcdef]{32})/$' % (pgettext('email/'), pgettext('verify/')), 'verifyemail', name='user_verifyemail'),
     url(
         r'^%s$' % pgettext('urls', 'recover/'),
-        'account_recover',
+        'recover_account',
         name='user_account_recover'
     ),
     url(

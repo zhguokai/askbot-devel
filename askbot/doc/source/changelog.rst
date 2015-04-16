@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version (only in the repository)
 --------------------------------------------
+* Added account recovery form to the "complete registration" page
+  to help prevent accidental creation of duplicate accounts
 * Support migration of Google OpenID accounts to G+
 * Added setting to allow comment updates show on the main page
 * Improved support of uploadable avatars

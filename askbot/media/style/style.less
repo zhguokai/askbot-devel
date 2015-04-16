@@ -3886,10 +3886,6 @@ table.ab-subscr-form {
     text-align: left;
 }
 
-.openid-signin p.error {
-    text-align: center;
-}
-
 label.retag-error {
     color: darkred;
     padding-left: 5px;
@@ -4216,13 +4212,10 @@ table.form-as-table th {
 }
 
 .form-row-vertical {
-    margin-top: 8px;
     display: block;
-}
-
-.form-row-vertical label {
-    margin-bottom: 3px;
-    display: block;
+    label {
+        display: block;
+    }
 }
 
 /* above stuff needs to go */
@@ -4736,6 +4729,22 @@ textarea.tipped-input {
 }
 .alert .close {
     right: -38px;
+}
+
+.flip-content,
+.flip-tab {
+    display: none;
+}
+.flip-content-active,
+.flip-tab-active {
+    display: block;
+}
+
+.complete-registration,
+.recover-account {
+    form {
+        margin: 0 0 10px;
+    }
 }
 
 .tag-subscriptions {

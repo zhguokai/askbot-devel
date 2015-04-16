@@ -12,18 +12,10 @@ $.fn.authenticator = function () {
     var openid_login_token_input = $('input[name=openid_login_token]');
     var openid_login_token_input_fields = $('#openid-fs');
     var provider_name_input = $('input[name=login_provider_name]');
-    var email_input_fields = $('#email-input-fs');
-    var account_recovery_heading = $('#account-recovery-heading');
-    var account_recovery_hint = $('#account-recovery-form>.hint');
-    var account_recovery_link = $('#account-recovery-form>.hint>span.link');
-    var account_recovery_text_span = $('#account-recovery-form>.hint>span.text');
     var password_input_fields = $('#password-fs');
     var existing_login_methods_div = $('#existing-login-methods');
     var openid_submit_button = $('input[name=openid_login_with_extra_token]');
     var existing_login_methods = {};
-
-    var account_recovery_question_text = account_recovery_heading.html();
-    var account_recovery_prompt_text = account_recovery_text_span.html();
 
     var setup_click_handler = function (elements, handler_function) {
         elements.unbind('click').click(handler_function);
@@ -244,12 +236,6 @@ $.fn.authenticator = function () {
         }
         reset_password_input_fields();
         if (askbot.data.userIsAuthenticated === false) {
-            email_input_fields.hide();
-            account_recovery_heading.hide();
-            account_recovery_link.show();
-            account_recovery_hint.show();
-            $('#account-recovery-form>p.hint').css('margin-top', '10px');
-            account_recovery_text_span.html(account_recovery_question_text).show();
         } else {
             if (existing_login_methods !== null) {
                 existing_login_methods_div.hide();
@@ -419,15 +405,6 @@ $.fn.authenticator = function () {
         return false;
     };
 
-    var start_account_recovery = function () {
-        reset_form_and_errors();
-        account_recovery_hint.hide();
-        account_recovery_heading.css('margin-bottom', '0px');
-        account_recovery_heading.html(account_recovery_prompt_text).show();
-        email_input_fields.show();
-        $('#id_email').focus();
-    };
-
     var start_mozilla_persona_login = function () {
         navigator.id.request();
         return false;
@@ -512,8 +489,6 @@ $.fn.authenticator = function () {
             signin_page.find('input.wordpress_site'),
             start_password_login_or_change
         );
-
-        setup_event_handlers(account_recovery_link, start_account_recovery);
 
         if (askbot.data.userIsAuthenticated) {
             read_existing_login_methods();
