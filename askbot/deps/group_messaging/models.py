@@ -155,7 +155,7 @@ class MessageManager(models.Manager):
         based on recipient, sender and whether to
         load deleted messages or not"""
 
-        if sender and sender.pk == recipient.pk:
+        if sender and recipient and sender.pk == recipient.pk:
             raise ValueError('sender cannot be the same as recipient')
 
         filter_kwargs = {
