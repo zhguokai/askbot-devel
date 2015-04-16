@@ -251,7 +251,7 @@ MessageComposer.prototype.decorate = function (element) {
         useCache: false,
         matchInside: true,
         maxCacheLength: 100,
-        delay: 10,
+        delay: 500,
         onItemSelect: userSelectHandler
     });
     usersAc.decorate(toInput);
