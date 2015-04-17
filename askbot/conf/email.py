@@ -57,6 +57,62 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         EMAIL,
+        'INSTANT_EMAIL_ALERT_ENABLED',
+        description=_('Enable instant email alert'),
+        default=True
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'WELCOME_EMAIL_ENABLED',
+        description=_('Enable welcome email'),
+        default=True
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'REJECTED_POST_EMAIL_ENABLED',
+        description=_('Enable rejected post alert'),
+        help_text=_('Also, premoderation mode must be enabled'),
+        default=True
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'APPROVED_POST_NOTIFICATION_ENABLED',
+        description=_('Enable approved post alert'),
+        help_text=_('Also, premoderation mode must be enabled'),
+        default=True
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'BATCH_EMAIL_ALERT_ENABLED',
+        description=_('Enable batch email alert'),
+        default=True
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'GROUP_MESSAGING_EMAIL_ALERT_ENABLED',
+        description=_('Private messaging alert'),
+        default=True
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
         'HTML_EMAIL_ENABLED',
         default=True,
         description=_('Enable HTML-formatted email'),

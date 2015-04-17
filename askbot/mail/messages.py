@@ -121,7 +121,8 @@ class InstantEmailAlert(BaseEmail):
     )
 
     def is_enabled(self):
-        return askbot_settings.ENABLE_EMAIL_ALERTS
+        return askbot_settings.ENABLE_EMAIL_ALERTS \
+            and askbot_settings.INSTANT_EMAIL_ALERT_ENABLED
 
     def get_mock_context(self):
         from askbot.models import (Activity, Post, User)
@@ -358,6 +359,11 @@ class WelcomeEmail(BaseEmail):
         'At least one user is required generate a preview'
     )
 
+    def is_enabled(self):
+        return askbot_settings.ENABLE_EMAIL_ALERTS \
+            and askbot_settings.WELCOME_EMAIL_ENABLED
+
+
     def get_mock_context(self):
         return {'user': get_user()}
 
@@ -500,7 +506,8 @@ class RejectedPost(BaseEmail):
     }
 
     def is_enabled(self):
-        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation'
+        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
+            and askbot_settings.REJECTED_POST_EMAIL_ENABLED
 
     def process_context(self, context):
         context.setdefault('recipient_user', None)
@@ -542,7 +549,8 @@ class BatchEmailAlert(BaseEmail):
     )
 
     def is_enabled(self):
-        return askbot_settings.ENABLE_EMAIL_ALERTS
+        return askbot_settings.ENABLE_EMAIL_ALERTS \
+            and askbot_settings.BATCH_EMAIL_ALERT_ENABLED
 
     def process_context(self, context):
         user = context['user']
@@ -670,7 +678,7 @@ class ApprovedPostNotification(BaseEmail):
 
     def is_enabled(self):
         return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
-            and askbot_settings.REPLY_BY_EMAIL == False 
+            and askbot_settings.APPROVED_POST_NOTIFICATION_ENABLED
 
     def get_mock_context(self):
         question = get_question() 
@@ -736,6 +744,10 @@ class GroupMessagingEmailAlert(BaseEmail):
         'At least one user and one personal message are required to '
         'generate a preview'
     )
+
+    def is_enabled(self):
+        return askbot_settings.ENABLE_EMAIL_ALERTS \
+            and askbot_settings.GROUP_MESSAGING_EMAIL_ALERT_ENABLED
 
     def get_mock_context(self):
         from askbot.deps.group_messaging.models import Message
