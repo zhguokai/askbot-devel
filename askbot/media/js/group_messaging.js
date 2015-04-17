@@ -248,8 +248,8 @@ MessageComposer.prototype.decorate = function (element) {
     var usersAc = new AutoCompleter({
         url: '/get-users-info/',//askbot.urls['get_users_info'],
         minChars: 1,
-        useCache: false,
-        matchInside: true,
+        useCache: true,
+        matchInside: false,
         maxCacheLength: 100,
         delay: 500,
         onItemSelect: userSelectHandler
