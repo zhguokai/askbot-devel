@@ -345,7 +345,7 @@ def user_get_avatar_url(self, size=48):
 
 def user_clear_avatar_cache(self):
     from avatar.conf import settings as avatar_settings
-    sizes = avatar_settings.AUTO_GENERATE_AVATAR_SIZES
+    sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
     for size in sizes:
         delete_memoized(user_get_avatar_url, self, size=size)
 

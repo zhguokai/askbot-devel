@@ -155,6 +155,9 @@ def upload(request, user_id=None):
                 image_file = request.FILES['avatar']
                 avatar.avatar.save(image_file.name, image_file)
                 avatar.save()
+                sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
+                for size in sizes:
+                    avatar.create_thumbnail(size)
                 avatar_updated.send(sender=Avatar, user=user, avatar=avatar)
                 user.clear_avatar_cache()
                 message = _('Avatar uploaded and set as primary')
