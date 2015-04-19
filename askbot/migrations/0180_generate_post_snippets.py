@@ -9,11 +9,16 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
+        # this migration failed, because command
+        # fails as the db is incomplete at the time of migration
+        # to properly impelement there has to be replicated frozen logic
+        # of rendering posts
+
         # Note: Don't use "from appname.models import ModelName". 
         # Use orm.ModelName to refer to models in this application,
         # and orm['appname.ModelName'] for models in other applications.
-        if orm['askbot.Post'].objects.count() > 0:
-            call_command('generate_post_snippets')
+        #if orm['askbot.Post'].objects.count() > 0:
+        #    call_command('generate_post_snippets')
 
     def backwards(self, orm):
         "Write your backwards methods here."

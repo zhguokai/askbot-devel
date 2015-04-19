@@ -1,8 +1,8 @@
 Changes in Askbot
 =================
 
-Development version (only in the repository)
---------------------------------------------
+0.7.52 (Apr 19, 2014)
+---------------------
 * Added account recovery form to the "complete registration" page
   to help prevent accidental creation of duplicate accounts
 * Support migration of Google OpenID accounts to G+
