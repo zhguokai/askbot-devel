@@ -486,8 +486,7 @@ COMMENT_HARD_MAX_LENGTH = 2048
 
 #user status ch
 USER_STATUS_CHOICES = (
-        #in addition to these there is administrator
-        #admin status is determined by the User.is_superuser() call
+        ('d', _('administrator')), #admin = moderator + access to settings
         ('m', _('moderator')), #user with moderation privilege
         ('a', _('approved')), #regular user
         ('w', _('watched')), #regular user placed on the moderation watch
