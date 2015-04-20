@@ -101,7 +101,7 @@ function setupFormValidation(form, validationRules, validationMessages, onSubmit
             disableSubmitButton($(form_dom));
 
             if (onSubmitCallback) {
-                onSubmitCallback();
+                onSubmitCallback(form_dom);
             } else {
                 form_dom.submit();
             }
@@ -393,10 +393,11 @@ MergeQuestionsDialog.prototype.isPreviewLoaded = function() {
 MergeQuestionsDialog.prototype.getAcceptHandler = function() {
     var me = this;
     return function() {
+        var handler;
         if (me.isPreviewLoaded()) {
-            var handler = me.getStartMergingHandler();
+            handler = me.getStartMergingHandler();
         } else {
-            var handler = me.getLoadPreviewHandler();
+            handler = me.getLoadPreviewHandler();
         }
         handler();
         return false;
@@ -977,9 +978,9 @@ var Vote = (function () {
             data: { type: voteType, postId: postId },
             error: handleFail,
             success: function (data) {
-                    callback(object, voteType, data);
-                }
-            });
+                callback(object, voteType, data);
+            }
+        });
     };
 
     var handleFail = function (xhr, msg) {
@@ -1000,10 +1001,12 @@ var Vote = (function () {
             showMessage(object, message);
         } else if (data.status == '1') {
             $('#' + answerContainerIdPrefix + postId).removeClass('accepted-answer');
+            object.trigger('askbot.unacceptAnswer', [object, data]);
         } else if (data.success == '1') {
             var answers = ('div[id^="' + answerContainerIdPrefix + '"]');
             $(answers).removeClass('accepted-answer');
             $('#' + answerContainerIdPrefix + postId).addClass('accepted-answer');
+            object.trigger('askbot.acceptAnswer', [object, data]);
         } else {
             showMessage(object, data.message);
         }
@@ -1018,8 +1021,10 @@ var Vote = (function () {
         } else {
             if (data.status == '1') {
                 setVoteImage(voteType, true, object);
+                object.trigger('askbot.voteDown', [object, data]);
             } else {
                 setVoteImage(voteType, false, object);
+                object.trigger('askbot.voteUp', [object, data]);
             }
             setVoteNumber(object, data.count);
             if (data.message && data.message.length > 0) {
