@@ -2528,7 +2528,7 @@ class PostRevision(models.Model):
             raise ValidationError('Post field has to be set.')
 
     def save(self, **kwargs):
-        if self.ip_addr is None:
+        if not self.ip_addr:
             self.ip_addr = '0.0.0.0'
         self.full_clean()
         super(PostRevision, self).save(**kwargs)

@@ -1900,6 +1900,9 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		var loadListener = function(){
 
 			wmd.panels = new wmd.PanelCollection();
+			if (!wmd.panels.input) {
+				return;
+			}
 
 			previewMgr = new wmd.previewManager();
 			var previewRefreshCallback = previewMgr.refresh;
@@ -2110,6 +2113,9 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		};
 
 		var init = function(){
+			if (!wmd.panels.input) {
+				return;
+			}
 
 			setupEvents(wmd.panels.input, applyTimeout);
 			makePreviewHtml();
