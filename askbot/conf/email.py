@@ -49,8 +49,8 @@ settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'ENABLE_EMAIL_ALERTS',
-        default = True,
-        description = _('Enable email alerts'),
+        default=True,
+        description=_('Enable email alerts'),
     )
 )
 
@@ -106,6 +106,15 @@ settings.register(
         EMAIL,
         'GROUP_MESSAGING_EMAIL_ALERT_ENABLED',
         description=_('Private messaging alert'),
+        default=True
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'MODERATION_QUEUE_NOTIFICATION_ENABLED',
+        description=_('Moderation queue alert (sent to moderators)'),
         default=True
     )
 )

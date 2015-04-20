@@ -28,15 +28,6 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         USER_SETTINGS,
-        'ALLOW_ANONYMOUS_FEEDBACK',
-        default=True,
-        description=_('Allow anonymous users send feedback')
-    )
-)
-
-settings.register(
-    livesettings.BooleanValue(
-        USER_SETTINGS,
         'EDITABLE_SCREEN_NAME',
         default=True,
         description=_('Allow editing user screen name')

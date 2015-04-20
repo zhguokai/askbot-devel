@@ -128,15 +128,17 @@ def faq(request):
 @csrf.csrf_protect
 @fix_recaptcha_remote_ip
 def feedback(request):
-    data = {'page_class': 'meta'}
-    form = None
-
-    if askbot_settings.ALLOW_ANONYMOUS_FEEDBACK is False:
+    if askbot_settings.FEEDBACK_MODE == 'auth-only':
         if request.user.is_anonymous():
             message = _('Please sign in or register to send your feedback')
             request.user.message_set.create(message=message)
             redirect_url = get_login_url() + '?next=' + request.path
             return HttpResponseRedirect(redirect_url)
+    elif askbot_settings.FEEDBACK_MODE == 'disabled':
+        raise Http404
+
+    data = {'page_class': 'meta'}
+    form = None
 
     if request.method == "POST":
         form = FeedbackForm(user=request.user, data=request.POST)

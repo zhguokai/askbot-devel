@@ -525,7 +525,8 @@ class ModerationQueueNotification(BaseEmail):
     )
 
     def is_enabled(self):
-        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation'
+        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
+            and askbot_settings.MODERATION_QUEUE_NOTIFICATION_ENABLED
 
     def process_context(self, context):
         user = context['user']

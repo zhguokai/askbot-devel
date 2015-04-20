@@ -4510,9 +4510,12 @@ td.setting-input {
 }
 td.setting-input input[type="text"] {
   font-size: 13px;
-  height: 25px;
-  line-height: 25px;
+  height: 28px;
+  line-height: 28px;
   padding-left: 5px;
+  width: 50%;
+}
+td.setting-input select {
   width: 50%;
 }
 td.setting-input textarea {

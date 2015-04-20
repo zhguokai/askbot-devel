@@ -125,6 +125,23 @@ settings.register(
     )
 )
 
+FEEDBACK_MODE_CHOICES = (
+    ('open', _('Anyone')),
+    ('auth-only', _('Only authenticated users')),
+    ('disabled', _('Nobody, disable feedback form'))
+)
+
+settings.register(
+    livesettings.StringValue(
+        QA_SITE_SETTINGS,
+        'FEEDBACK_MODE',
+        default='open',
+        choices=FEEDBACK_MODE_CHOICES,
+        description=_('Who can use feedback form')
+    )
+)
+
+
 settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
