@@ -242,7 +242,7 @@
                     data-on-state-text="{% trans %}You are a member{% endtrans %}"
                 {% else %}
                     data-off-prompt-text="{% trans %}Cancel application{% endtrans %}"
-                    data-on-state-text="{% trans %}Waiting approval{% endtrans %}"
+                    data-on-state-text="{% trans %}Awaiting approval{% endtrans %}"
                 {% endif %}
                 data-on-prompt-text="{% trans %}Ask to join{% endtrans %}"
                 data-off-state-text="{% trans %}Ask to join{% endtrans %}"
@@ -251,7 +251,7 @@
             {% if membership_level == 'full' %}
                 {% trans %}You are a member{% endtrans %}
             {% elif membership_level == 'pending' %}
-                {% trans %}Waiting approval{% endtrans %}
+                {% trans %}Awaiting approval{% endtrans %}
             {% else %}
                 {% if acceptance_level == 'open' %}
                     {% trans %}Join this group{% endtrans %}
