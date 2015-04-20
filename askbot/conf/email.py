@@ -58,7 +58,7 @@ settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'INSTANT_EMAIL_ALERT_ENABLED',
-        description=_('Enable instant email alert'),
+        description=_('Enable instant email alerts'),
         default=True
     )
 )
@@ -105,7 +105,7 @@ settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'GROUP_MESSAGING_EMAIL_ALERT_ENABLED',
-        description=_('Private messaging alert'),
+        description=_('Enable private messaging alerts'),
         default=True
     )
 )
@@ -114,7 +114,7 @@ settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'MODERATION_QUEUE_NOTIFICATION_ENABLED',
-        description=_('Moderation queue alert (sent to moderators)'),
+        description=_('Enable moderation queue alerts'),
         default=True
     )
 )
@@ -215,7 +215,7 @@ settings.register(
         EMAIL,
         'ENABLE_UNANSWERED_REMINDERS',
         default = False,
-        description = _('Send periodic reminders about unanswered questions'),
+        description = _('Enable reminders about unanswered questions'),
         help_text = _(
             'NOTE: in order to use this feature, it is necessary to '
             'run the management command "send_unanswered_question_reminders" '
@@ -279,7 +279,7 @@ settings.register(
         EMAIL,
         'ENABLE_ACCEPT_ANSWER_REMINDERS',
         default = False,
-        description = _('Send periodic reminders to accept the best answer'),
+        description = _('Enable accept the best answer reminders'),
         help_text = _(
             'NOTE: in order to use this feature, it is necessary to '
             'run the management command "send_accept_answer_reminders" '
