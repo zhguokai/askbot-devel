@@ -529,18 +529,11 @@ for the purposes of the AJAX comment editor #}
   {%- include "widgets/user_long_score_and_badge_summary.html" -%}
 {%- endmacro -%}
 
-{%- macro country_flag(country_code, flag_label) -%}
-    <img 
-        class="flag"
-        src="{{ ('/images/flags/' ~ country_code|lower ~ '.gif')|media }}"
-        alt="{{ flag_label }}"
-    />
-{%- endmacro -%}
-
 {%- macro user_country_flag(user) -%}
     {% if user.country and user.country.code != 'none' and user.show_country %}
         <img class="flag" 
-            src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"
+            {# src="{{ user.country.flag }}" this is better but not compatible with v 1.0.5 #}
+            src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}" {# use 'local' copy of flags #}
             alt="{% trans 
                     country=user.country.name 
                     %}flag of {{country}}{% 

@@ -221,7 +221,7 @@ User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
 User.add_to_class('website', models.URLField(max_length=200, blank=True))
 #location field is actually city
 User.add_to_class('location', models.CharField(max_length=100, blank=True))
-User.add_to_class('country', CountryField(blank=True))
+User.add_to_class('country', CountryField(blank=True, null=True))
 User.add_to_class('show_country', models.BooleanField(default=False))
 
 User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
@@ -324,9 +324,9 @@ def user_get_avatar_url(self, size=48):
         return self.get_default_avatar_url(size)
     elif avatar_type == 'a':
         from avatar.conf import settings as avatar_settings
-        sizes = avatar_settings.AUTO_GENERATE_AVATAR_SIZES
+        sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
         if size not in sizes:
-            logging.critical('add values %d to setting AUTO_GENERATE_AVATAR_SIZES', size)
+            logging.critical('add values %d to setting AVATAR_AUTO_GENERATE_SIZES', size)
 
         kwargs = {'user': self.username, 'size': size}
         try:

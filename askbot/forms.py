@@ -169,18 +169,10 @@ class CountryField(forms.ChoiceField):
     def clean(self, value):
         """Handles case of 'unknown' country selection
         """
-        if self.required:
-            if value == 'unknown':
-                raise forms.ValidationError(_('Country field is required'))
+        if self.required and value == 'unknown':
+            raise forms.ValidationError(_('Country field is required'))
         if value == 'unknown':
-            try:
-                from django_countries import fields
-                if hasattr(fields, 'Country'):
-                    return fields.Country(code='none')
-                else:
-                    return None
-            except ImportError:
-                return None
+            return None
         return value
 
 
