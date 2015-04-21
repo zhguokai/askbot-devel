@@ -758,3 +758,26 @@ class GroupMessagingEmailAlert(BaseEmail):
             'message': message,
             'recipient_user': get_user()
         }
+
+class FeedbackEmail(BaseEmail):
+    template_path = 'email/feedback'
+    title = _('Feedback email')
+    description = _('Sent when users submits feedback form')
+
+    def process_context(self, context):
+        context['site_name'] = askbot_settings.APP_SHORT_NAME
+        return context
+
+    def get_mock_context(self):
+        return {
+            'name': 'Joe',
+            'email': 'joe@example.com',
+            'message': 'Your site is pretty good.\n\nThank you',
+            'ip_addr': '127.0.0.1'
+        }
+
+    def get_headers(self):
+        context = self.get_context()
+        if 'email' in context:
+            return {'Reply-To': context['email']}
+        return {}

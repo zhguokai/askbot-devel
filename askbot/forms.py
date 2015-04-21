@@ -854,6 +854,13 @@ class FeedbackForm(forms.Form):
             raise forms.ValidationError(_('Message is required'))
         return message
 
+    def clean_name(self):
+        name = self.cleaned_data.get('name', '').strip()
+        if not name:
+            name = _('Anonymous')
+        self.cleaned_data['name'] = name
+        return name
+
     def clean(self):
         super(FeedbackForm, self).clean()
         if self.user and self.user.is_anonymous():

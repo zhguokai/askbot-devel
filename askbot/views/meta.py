@@ -30,7 +30,8 @@ from askbot.forms import PageField
 from askbot.utils.url_utils import get_login_url
 from askbot.utils.forms import get_next_url
 from askbot.mail import mail_moderators, send_mail
-from askbot.models import BadgeData, Award, User, Tag
+from askbot.mail.messages import FeedbackEmail
+from askbot.models import get_moderators, BadgeData, Award, User, Tag
 from askbot.models import badges as badge_data
 from askbot.skins.loaders import render_text_into_skin
 from askbot.utils.decorators import admins_only
@@ -144,36 +145,28 @@ def feedback(request):
         form = FeedbackForm(user=request.user, data=request.POST)
         if form.is_valid():
 
-            if not request.user.is_authenticated():
-                data['email'] = form.cleaned_data.get('email', None)
-            else:
+            data = {
+                'message': form.cleaned_data['message'],
+                'name': form.cleaned_data.get('name'),
+                'ip_addr': request.META.get('REMOTE_ADDR', _('unknown')),
+                'user': request.user
+            }
+
+            if request.user.is_authenticated():
                 data['email'] = request.user.email
+            else:
+                data['email'] = form.cleaned_data.get('email', None)
 
-            data['message'] = form.cleaned_data['message']
-            data['name'] = form.cleaned_data.get('name', None)
-            template = get_template('email/feedback_email.txt')
-            message = template.render(RequestContext(request, data))
+            email = FeedbackEmail(data)
 
-            headers = {}
-            if data['email']:
-                headers = {'Reply-To': data['email']}
-            subject = _('Q&A forum feedback')
             if askbot_settings.FEEDBACK_EMAILS:
                 recipients = re.split('\s*,\s*', askbot_settings.FEEDBACK_EMAILS)
-                send_mail(
-                    subject_line=subject,
-                    body_text=message,
-                    headers=headers,
-                    recipient_list=recipients,
-                )
+                email.send(recipients)
             else:
-                mail_moderators(
-                    subject_line=subject,
-                    body_text=message,
-                    headers=headers
-                )
-            msg = _('Thanks for the feedback!')
-            request.user.message_set.create(message=msg)
+                email.send(get_moderators())
+
+            message = _('Thanks for the feedback!')
+            request.user.message_set.create(message=message)
             return HttpResponseRedirect(get_next_url(request))
     else:
         form = FeedbackForm(

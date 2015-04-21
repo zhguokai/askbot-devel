@@ -26,7 +26,7 @@ from django.utils.translation import ungettext
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.cache import cache
@@ -108,6 +108,14 @@ def get_admin():
             return admin
         else:
             raise User.DoesNotExist
+
+
+def get_moderators():
+    return User.objects.filter(
+            Q(status='m') | Q(is_superuser=True)
+        ).filter(
+            is_active = True
+        )
 
 def get_users_by_text_query(search_query, users_query_set = None):
     """Runs text search in user names and profile.

@@ -18,13 +18,17 @@
 </div>
 {%- endmacro -%}
 
+{%- macro mailto_link(email) -%}
+    <a href="mailto:{{ email }}">{{ email }}</a>
+{%- endmacro -%}
+
 {%- macro moderation_queue_message(message) -%}
 <div class="message-details" data-message-id="{{ message.id }}">
     <input type="checkbox" />
     {{ gravatar(message.user, 16) }}
     <a class="username" href="{{ message.user.get_absolute_url() }}">{{ message.user.username|escape }}</a> |
     {% if message['memo_type'] == 'edit' %}
-        <a href="mailto:{{ message.user.email }}">{{ message.user.email }}</a> |
+        {{ mailto_link(message.user.email) }} |
         ip=<span class="ip-addr">{{ message.ip_addr }}</span> |
     {% endif %}
     <a class="forum-post-link" href="{{ message.url }}">{{ message.message_type }}</a>
