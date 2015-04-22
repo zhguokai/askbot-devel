@@ -14,6 +14,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Q
 from django.forms import IntegerField
 from django.http import HttpResponse
 from django.http import HttpResponseNotAllowed
@@ -109,10 +110,9 @@ class ThreadsList(PjaxView):
         sender_id = IntegerField().clean(request.REQUEST.get('sender_id', '-1'))
 
         if sender_id == -2:
-            threads = Message.objects.get_threads(
-                                            recipient=user,
-                                            deleted=True
-                                        )
+            received = Message.objects.get_threads(recipient=user, deleted=True)
+            sent = Message.objects.get_threads(sender=user, deleted=True)
+            threads = (received | sent).distinct()
         elif sender_id == -1:
             threads = Message.objects.get_threads(recipient=user)
         elif sender_id == user.id:
