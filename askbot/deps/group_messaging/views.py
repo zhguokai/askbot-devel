@@ -176,6 +176,10 @@ class DeleteOrRestoreThread(ThreadsList):
 
     http_method_list = ('POST',)
 
+    def __init__(self, action, *args, **kwargs):
+        self.thread_action = action or 'delete'
+        super(DeleteOrRestoreThread, self).__init__(*args, **kwargs)
+
     def post(self, request, thread_id=None):
         """process the post request:
         * delete or restore thread
@@ -185,21 +189,26 @@ class DeleteOrRestoreThread(ThreadsList):
         #part of the threads list context
         sender_id = IntegerField().clean(request.POST['sender_id'])
 
-        #a little cryptic, but works - sender_id==-2 means deleted post
-        if sender_id == -2:
-            action = 'restore'
+        #sender_id==-2 means deleted post
+        if self.thread_action == 'delete':
+            if sender_id == -2:
+                action = 'delete'
+            else:
+                action = 'archive'
         else:
-            action = 'delete'
+            action = 'restore'
 
         thread = Message.objects.get(id=thread_id)
         memo, created = MessageMemo.objects.get_or_create(
                                     user=request.user,
                                     message=thread
                                 )
-        if action == 'delete':
+        if action == 'archive':
             memo.status = MessageMemo.ARCHIVED
-        else:
+        elif action == 'restore':
             memo.status = MessageMemo.SEEN
+        else:
+            memo.status = MessageMemo.DELETED
         memo.save()
 
         context = self.get_context(request)

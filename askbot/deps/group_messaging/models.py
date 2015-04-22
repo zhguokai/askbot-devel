@@ -115,9 +115,11 @@ class MessageMemo(models.Model):
     """
     SEEN = 0
     ARCHIVED = 1
+    DELETED = 2
     STATUS_CHOICES = (
         (SEEN, 'seen'),
-        (ARCHIVED, 'archived')
+        (ARCHIVED, 'archived'),
+        (DELETED, 'deleted')
     )
     user = models.ForeignKey(User)
     message = models.ForeignKey('Message', related_name='memos')
