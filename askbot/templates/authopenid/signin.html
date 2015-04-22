@@ -8,7 +8,7 @@
 {% endblock %}
 {% block content %}
 {% if have_buttons or view_subtype == 'email_sent' %}
-    <h1 class="section-title">{{page_title}}</h1>
+    <h1 class="section-title">{{ page_title }}</h1>
 {% endif %}
     {% if not (view_subtype == 'default' and have_buttons) %}
     <p class="js-login-intro">
@@ -57,8 +57,7 @@
             )
         }}
           {% if use_password_login == True %}
-        <fieldset
-            id="password-fs"
+        <fieldset id="password-fs"
             {% if user.is_anonymous() %}
                 {% if not login_form.username.errors and not login_form.password_login_failed %}
                     {% if not settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}
@@ -84,59 +83,64 @@
                         {% trans %}Please, sign in{% endtrans %}
                     </h1>
                 {% endif %}
-                <table class="login">
+                <div class="login">
                     {% if login_form.password_login_failed %}
-                    <tr>
-                        <td colspan="2">
-                            <p class="error">{% trans %}Login failed, please try again{% endtrans %}</p>
-                        </td>
-                    </tr>
+                        <p class="error">{% trans %}Login failed, please try again{% endtrans %}</p>
                     {% endif %}
-                    <tr class="form-group">
-                        <td><label for="id_username">
-                        {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN %}
-                            {% trans %}Username{% endtrans %}
-                        {% else %}
-                            {% trans %}Username or email{% endtrans %}
-                        {% endif %}
-                        </label></td>
-                        <td class="input">{{ login_form.username }}</td>
-                    </tr>
-                    <tr class="form-group">
-                        <td><label for="id_password">{% trans %}Password{% endtrans %}</label></td>
-                        <td class="input">{{ login_form.password }}</td>
-                    </tr>
-                </table>
+                    <div class="form-group">
+                        <input class="required login" id="id_username" 
+                            maxlength="255" name="username" type="text"
+                            {% if login_form.username.value() %}
+                                value="{{ login_form.username.value() }}"
+                            {% endif %}
+                            {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN %}
+                                placeholder="{% trans %}Username{% endtrans %}"
+                            {% else %}
+                                placeholder="{% trans %}Username or email{% endtrans %}"
+                            {% endif %}
+                        >
+                    </div>
+                    <div class="form-group">
+                        <input class="required login" id="id_password" 
+                            maxlength="128" name="password" type="password"
+                            {% if login_form.password.value() %}
+                                value="{{ login_form.possword.value() }}"
+                            {% endif %}
+                            placeholder="{% trans %}Password{% endtrans %}">
+                    </div>
+                </div>
                 <p id="local_login_buttons">
                     <input class="button" name="login_with_password" type="submit" value="{% trans %}Sign in{% endtrans %}" />
                     {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
-                    <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}?login_provider=local">{% trans %}Create a password-protected account{% endtrans %}</a>
+                    <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}">{% trans %}Create a password-protected account{% endtrans %}</a>
                     {% endif %}
                 </p>
             {% else %}{# change password form #}
                 <h2 id="password-heading">
                     {% trans %}To change your password - please enter the new one twice, then submit{% endtrans %}
                 </h2>
-                <table class="login">
-                    <tr class="js-new_password">
-                        <td><label for="id_new_password">{% trans %}New password{% endtrans %}</label></td>
-                        <td>
-                            {{login_form.new_password}}
-                        </td>
-                        <td style="text-align: left">
-                            <span class="error form-error">{{login_form.new_password.errors[0]}}</span>
-                        </td>
-                    </tr>
-                    <tr class="js-new_password_retyped">
-                        <td><label for="id_new_password_retyped">{% trans %}Please, retype{% endtrans %}</label></td>
-                        <td>
-                            {{login_form.new_password_retyped}}
-                        </td>
-                        <td style="text-align: left">
-                            <span class="error form-error">{{login_form.new_password_retyped.errors[0]}}</span>
-                        </td>
-                    </tr>
-                </table>
+                <div class="login">
+                    <div class="form-group js-new_password">
+                        <span class="error form-error">{{login_form.new_password.errors[0]}}</span>
+                        <input class="required login" id="id_new_password" 
+                            maxlength="128" name="new_password" type="password"
+                            {% if login_form.new_password.value() %}
+                                value="{{ login_form.new_method.value() }}"
+                            {% endif %}
+                            placeholder="{% trans %}New password{% endtrans %}"
+                        >
+                    </div>
+                    <div class="form-group js-new_password_retyped">
+                        <span class="error form-error">{{login_form.new_password_retyped.errors[0]}}</span>
+                        <input class="required login" id="id_new_password_retyped" maxlength="128" 
+                            name="new_password_retyped" type="password"
+                            {% if login_form.new_password_retyped.value() %}
+                                value="{{ login_form.new_password_retype.value() }}"
+                            {% endif %}
+                            placeholder="{% trans %}Please, retype{% endtrans %}"
+                        >
+                    </div>
+                </div>
                 <p id="local_login_buttons">
                     <input class="button" name="change_password" type="submit" value="{% trans %}Change password{% endtrans %}" />
                 </p>

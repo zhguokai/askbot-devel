@@ -1,7 +1,13 @@
 Changes in Askbot
 =================
 
-0.7.52 (Apr 19, 2014)
+0.7.53 (Apr 22, 2015)
+---------------------
+* Use prompt placeholders on all registration forms
+* Disable Google login by default because it is now OAuth2
+
+
+0.7.52 (Apr 19, 2015)
 ---------------------
 * Added account recovery form to the "complete registration" page
   to help prevent accidental creation of duplicate accounts

@@ -209,6 +209,29 @@ a:hover {
     height: 32px;
 }
 
+.box .js-avatar {
+    height: 48px;
+    width: 48px;
+}
+
+.user-card .js-avatar {
+    height: 32px !important;
+    width: 32px;
+}
+
+.comment-controls,
+.message {
+    .js-avatar {
+        height: 16px;
+        width: 16px;
+    }
+}
+
+.user-info-table .js-avatar {
+    height: 128px;
+    width: 128px;
+}
+
 .badge-context-toggle.active {
     cursor: pointer;
     text-decoration: underline;
@@ -526,6 +549,13 @@ body.user-messages {
         }
     }
 
+}
+
+#userToolsNav,
+#metaNav {
+    a:hover {
+        color: #ebff88;
+    }
 }
 
 #header.with-logo #userToolsNav {
@@ -959,6 +989,9 @@ body.anon.ask-page .search-drop-menu {
     height: 54px;
     display: inline-block;
     white-space: nowrap;
+    a:hover {
+        color: #5a5a5a;
+    }
 }
 
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
@@ -3052,6 +3085,17 @@ ul.js-related-tags li {
     }
 }
 
+.openid-signin,
+.registration-page {
+    .form-group {
+        margin-bottom: 10px;
+    }
+}
+
+.form-group .error {
+    display: block;
+}
+
 .registration-page {
     .login {
         input[type="text"] {
@@ -3062,6 +3106,9 @@ ul.js-related-tags li {
             padding: 0 5px;
             width: 200px;
         }
+    }
+    .submit-row {
+        padding: 0;
     }
 }
 
@@ -3150,7 +3197,7 @@ ul.js-related-tags li {
     }
     .message {
         border-bottom: 1px solid #ccc;
-        padding: 12px 0;
+        padding: 6px;
     }
     .message:last-child {
         border: none;
@@ -3269,10 +3316,9 @@ ul.js-related-tags li {
 }
 
 #email-input-fs,
-#local_login_buttons,
 #password-fs,
 #openid-fs {
-    margin-top:10px;
+    margin-top: 10px;
 }
 
 .openid-input {
@@ -3737,6 +3783,10 @@ body.main-page ins {
     font-size:16px;
     font-family:@main-font;
 
+    a:hover {
+        color: #ebff88;
+    }
+
     p {
         margin-bottom:0;
     }
@@ -3791,9 +3841,9 @@ span.text-counter {
 }
 
 ul.errorlist {
-    margin-bottom: 0;
+    margin: 0;
     list-style: none;
-    font-size: 10px;
+    font-size: 12px;
     color: darkred;
     li {
         line-height: 16px;

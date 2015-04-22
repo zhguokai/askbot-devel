@@ -202,6 +202,22 @@ a:hover {
   width: 32px;
   height: 32px;
 }
+.box .js-avatar {
+  height: 48px;
+  width: 48px;
+}
+.user-card .js-avatar {
+  height: 32px !important;
+  width: 32px;
+}
+.comment-controls .js-avatar, .message .js-avatar {
+  height: 16px;
+  width: 16px;
+}
+.user-info-table .js-avatar {
+  height: 128px;
+  width: 128px;
+}
 .badge-context-toggle.active {
   cursor: pointer;
   text-decoration: underline;
@@ -488,6 +504,9 @@ body.user-messages {
 #metaNav .dropdown-menu a {
   color: #666;
   height: 25px;
+}
+#userToolsNav a:hover, #metaNav a:hover {
+  color: #ebff88;
 }
 #header.with-logo #userToolsNav {
   position: absolute;
@@ -936,6 +955,9 @@ form.ajax-file-upload img.spinner {
   height: 54px;
   display: inline-block;
   white-space: nowrap;
+}
+#scopeNav a:hover {
+  color: #5a5a5a;
 }
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
 #ContentLeft, #ContentRight, #ContentFull {
@@ -2838,6 +2860,12 @@ ul.js-related-tags li {
   padding: 0 5px;
   width: 200px;
 }
+.openid-signin .form-group, .registration-page .form-group {
+  margin-bottom: 10px;
+}
+.form-group .error {
+  display: block;
+}
 .registration-page .login input[type="text"] {
   height: 22px;
   font-size: 12px;
@@ -2845,6 +2873,9 @@ ul.js-related-tags li {
   color: #525252;
   padding: 0 5px;
   width: 200px;
+}
+.registration-page .submit-row {
+  padding: 0;
 }
 .openid-signin, .meta, .user-profile-edit-page {
   font-size: 13px;
@@ -2946,7 +2977,7 @@ ul.js-related-tags li {
 }
 .user-profile-page.inbox-forum .message, .user-profile-page.inbox-flags .message {
   border-bottom: 1px solid #ccc;
-  padding: 12px 0;
+  padding: 6px;
 }
 .user-profile-page.inbox-forum .message:last-child, .user-profile-page.inbox-flags .message:last-child {
   border: none;
@@ -3051,10 +3082,7 @@ ul.js-related-tags li {
   padding: 0 5px;
   width: 200px;
 }
-#email-input-fs,
-#local_login_buttons,
-#password-fs,
-#openid-fs {
+#email-input-fs, #password-fs, #openid-fs {
   margin-top: 10px;
 }
 .openid-input {
@@ -3482,6 +3510,9 @@ body.question-page ins, body.main-page ins {
   font-size: 16px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
+#ground a:hover {
+  color: #ebff88;
+}
 #ground p {
   margin-bottom: 0;
 }
@@ -3525,9 +3556,9 @@ span.text-counter {
   margin-bottom: -5px;
 }
 ul.errorlist {
-  margin-bottom: 0;
+  margin: 0;
   list-style: none;
-  font-size: 10px;
+  font-size: 12px;
   color: darkred;
 }
 ul.errorlist li {
