@@ -4,11 +4,13 @@ of email messages for various occasions
 import functools
 import logging
 import urllib
+from copy import copy
 from django.conf import settings as django_settings
 from django.core.urlresolvers import reverse
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.encoding import force_str
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -90,7 +92,13 @@ class BaseEmail(object):
 
     def render_subject(self):
         template = get_template(self.template_path + '/subject.txt')
-        return ' '.join(template.render(Context(self.get_context())).split())
+
+        context = copy(self.get_context()) #copy context
+        for key in context:
+            if isinstance(context[key], basestring):
+                context[key] = mark_safe(context[key])
+
+        return ' '.join(template.render(Context(context)).split())
 
     def render_body(self):
         template = get_template(self.template_path + '/body.html')
