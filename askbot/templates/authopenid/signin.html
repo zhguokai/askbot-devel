@@ -104,7 +104,7 @@
                         <input class="required login" id="id_password" 
                             maxlength="128" name="password" type="password"
                             {% if login_form.password.value() %}
-                                value="{{ login_form.possword.value() }}"
+                                value="{{ login_form.password.value() }}"
                             {% endif %}
                             placeholder="{% trans %}Password{% endtrans %}">
                     </div>
