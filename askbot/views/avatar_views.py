@@ -198,6 +198,7 @@ def enable_gravatar(request, user_id=None):
         user.save()
         user.avatar_set.update(primary=False)
         user.clear_avatar_cache()
+        user.save()
     return redirect_to_show_list(user_id)
 
 

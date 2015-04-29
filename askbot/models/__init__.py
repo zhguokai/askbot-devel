@@ -60,7 +60,6 @@ from askbot.models.meta import ImportRun, ImportedObjectInfo
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.decorators import reject_forbidden_phrases
-from askbot.utils.cache import memoize, delete_memoized
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
 from askbot.utils.transaction import defer_celery_task
@@ -71,6 +70,7 @@ from askbot.utils.url_utils import strip_path
 from askbot.utils import functions
 from askbot import mail
 from askbot import signals
+from jsonfield import JSONField
 
 from django import VERSION
 
@@ -181,6 +181,11 @@ def user_get_and_delete_messages(self):
 if DJANGO_VERSION > (1, 3):
     User.add_to_class('message_set', user_message_set)
     User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
+
+User.add_to_class(
+            'avatar_urls',
+            JSONField(default={})
+        )
 
 User.add_to_class(
             'status',
@@ -320,8 +325,21 @@ def user_get_avatar_type(self):
     #if we don't have an uploaded avatar, always use gravatar
     return 'g'
 
-@memoize
+
 def user_get_avatar_url(self, size=48):
+    """returns avatar url for a given size
+    JSONField .avatar_urls is used as "cache"
+    to avoid multiple db hits to fetch avatar urls
+    """
+    url = self.avatar_urls.get(size)
+    if not url:
+        url = self.calculate_avatar_url(size)
+        self.avatar_urls[size] = url
+        self.save()
+    return url
+        
+
+def user_calculate_avatar_url(self, size=48):
     """returns avatar url - by default - gravatar,
     but if application django-avatar is installed
     it will use avatar provided through that app
@@ -334,28 +352,25 @@ def user_get_avatar_url(self, size=48):
         from avatar.conf import settings as avatar_settings
         sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
         if size not in sizes:
-            logging.critical('add values %d to setting AVATAR_AUTO_GENERATE_SIZES', size)
+            logging.critical(
+                'add values %d to setting AVATAR_AUTO_GENERATE_SIZES', 
+                size
+            )
 
-        kwargs = {'user': self.username, 'size': size}
-        try:
-            return reverse('avatar_render_primary', kwargs=kwargs)
-        except NoReverseMatch, e:
-            message = 'Please, make sure that avatar urls are in the urls.py '\
-                      'or update your django-avatar app, '\
-                      'currently it is impossible to serve avatars.'
-            logging.critical(message)
-            logging.critical(unicode(e).encode('utf-8'))
-            return self.get_default_avatar_url(size)
-            #raise django_exceptions.ImproperlyConfigured(message)
+        from avatar.util import get_primary_avatar
+        avatar = get_primary_avatar(self, size=size)
+        if avatar:
+            logging.critical('user %d has avatar type "a" but uploaded avatar is missing')
+            return avatar.avatar_url(size)
+        return self.get_default_avatar_url(size)
+
     assert(avatar_type == 'g')
     return self.get_gravatar_url(size)
 
 
 def user_clear_avatar_cache(self):
     from avatar.conf import settings as avatar_settings
-    sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
-    for size in sizes:
-        delete_memoized(user_get_avatar_url, self, size=size)
+    self.avatar_urls = {}
 
 
 def user_get_top_answers_paginator(self, visitor=None):
@@ -3272,6 +3287,7 @@ User.add_to_class(
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_type', user_get_avatar_type)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
+User.add_to_class('calculate_avatar_url', user_calculate_avatar_url)
 User.add_to_class('clear_avatar_cache', user_clear_avatar_cache)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
