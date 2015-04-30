@@ -336,8 +336,6 @@ def user_get_avatar_url(self, size=48):
     if not url:
         url = self.calculate_avatar_url(size)
         self.avatar_urls[size] = url
-        user = User.objects.filter(id=self.id)
-        user.update(avatar_urls=self.avatar_urls)
     return url
 
 
@@ -369,11 +367,10 @@ def user_calculate_avatar_url(self, size=48):
     return self.get_gravatar_url(size)
 
 
-def user_reset_avatar_urls(self):
+def user_clear_avatar_urls(self):
     """Assigns avatar urls for each required size.
     """
     self.avatar_urls = {}
-    self.init_avatar_urls()
 
 def user_init_avatar_urls(self):
     """Assigns missing avatar urls,
@@ -3301,7 +3298,7 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_type', user_get_avatar_type)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('calculate_avatar_url', user_calculate_avatar_url)
-User.add_to_class('reset_avatar_urls', user_reset_avatar_urls)
+User.add_to_class('clear_avatar_urls', user_clear_avatar_urls)
 User.add_to_class('init_avatar_urls', user_init_avatar_urls)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)

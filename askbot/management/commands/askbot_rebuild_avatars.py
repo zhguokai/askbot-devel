@@ -20,5 +20,6 @@ class Command(NoArgsCommand):
         count = users.count()
         message = 'Rebuilding cached avatar urls'
         for user in ProgressBar(users.iterator(), count, message):
-            user.reset_avatar_urls()
+            #recalculate is done on pre_save
+            user.clear_avatar_urls()
             user.save()
