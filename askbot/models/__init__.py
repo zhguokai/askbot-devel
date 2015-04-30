@@ -371,14 +371,19 @@ def user_calculate_avatar_url(self, size=48):
 
 def user_reset_avatar_urls(self):
     """Assigns avatar urls for each required size.
-    Does not save the user object
     """
+    self.avatar_urls = {}
+    self.init_avatar_urls()
+
+def user_init_avatar_urls(self):
+    """Assigns missing avatar urls,
+    assumes that remaining avatars are correct"""
     from avatar.conf import settings as avatar_settings
     sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
-    self.avatar_urls = {}
     for size in sizes:
         size = int(size)
-        self.avatar_urls[size] = self.calculate_avatar_url(size)
+        if size not in self.avatar_urls:
+            self.avatar_urls[size] = self.calculate_avatar_url(size)
 
 
 def user_get_top_answers_paginator(self, visitor=None):
@@ -3297,6 +3302,7 @@ User.add_to_class('get_avatar_type', user_get_avatar_type)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('calculate_avatar_url', user_calculate_avatar_url)
 User.add_to_class('reset_avatar_urls', user_reset_avatar_urls)
+User.add_to_class('init_avatar_urls', user_init_avatar_urls)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
@@ -3911,6 +3917,9 @@ def set_administrator_flag(sender, instance, *args, **kwargs):
     if user.is_superuser and instance.status != 'd':
         instance.status = 'd'
 
+def init_avatar_urls(sender, instance, *args, **kwargs):
+    instance.init_avatar_urls()
+
 def add_missing_subscriptions(sender, instance, created, **kwargs):
     """``sender`` is instance of ``User``. When the ``User``
     is created, any required email subscription settings will be
@@ -4095,6 +4104,11 @@ user_signals = [
         django_signals.pre_save,
         callback=set_administrator_flag,
         dispatch_uid='set_administrator_flag_on_user_save',
+    ),
+    signals.GenericSignal(
+        django_signals.pre_save,
+        callback=init_avatar_urls,
+        dispatch_uid='init_avatar_urls_on_user_save',
     ),
     signals.GenericSignal(
         django_signals.post_save,
