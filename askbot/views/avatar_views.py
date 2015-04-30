@@ -179,17 +179,17 @@ def upload(request, user_id=None):
 def delete(request, avatar_id):
     """deletes uploded avatar"""
     avatar = get_object_or_404(Avatar, pk=avatar_id)
-    user = avatar.user
     if request.method == 'POST' \
         and request.user.is_authenticated() \
         and (request.user.is_administrator_or_moderator() \
-            or avatar.user_id == user.id):
+            or avatar.user_id == request.user.id):
+        user = avatar.user
         avatar.delete()
         if user.avatar_set.count() == 0:
             if user.avatar_type == 'a':
                 user.avatar_type = 'n'
         elif user.avatar_type != 'a':
-            avatar.user.avatar_set.update(primary=False)
+            user.avatar_set.update(primary=False)
         user.clear_avatar_urls()
         user.save()
 
