@@ -336,7 +336,8 @@ def user_get_avatar_url(self, size=48):
     if not url:
         url = self.calculate_avatar_url(size)
         self.avatar_urls[size] = url
-        self.save()
+        user = User.objects.filter(id=self.id)
+        user.update(avatar_urls=self.avatar_urls)
     return url
 
 
@@ -2573,7 +2574,7 @@ def user_get_status_display(self):
     elif self.is_watched():
         return _('New User')
     else:
-        raise ValueError('Unknown user status')
+        raise ValueError('Unknown user status %s' % self.status)
 
 
 def user_can_moderate_user(self, other):
