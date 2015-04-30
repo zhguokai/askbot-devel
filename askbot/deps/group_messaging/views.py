@@ -27,6 +27,7 @@ from .models import SenderList
 from .models import LastVisitTime
 from .models import get_personal_group_by_user_id
 from .models import get_personal_groups_for_users
+from .models import get_unread_inbox_counter
 
 
 class NewThread(PjaxView):
@@ -123,7 +124,6 @@ class ThreadsList(PjaxView):
                                             recipient=user,
                                             sender=sender
                                         )
-
         threads = threads.order_by('-last_active_at')
 
         #for each thread we need to know if there is something
@@ -203,6 +203,13 @@ class DeleteOrRestoreThread(ThreadsList):
                                     user=request.user,
                                     message=thread
                                 )
+
+        if created and action == 'archive':
+            #unfortunately we lose "unseen" status when archiving
+            counter = get_unread_inbox_counter(request.user)
+            counter.decrement()
+            counter.save()
+
         if action == 'archive':
             memo.status = MessageMemo.ARCHIVED
         elif action == 'restore':

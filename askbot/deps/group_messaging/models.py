@@ -195,7 +195,10 @@ class MessageManager(models.Manager):
             part1 = self.filter(message_filter & marked_as_non_deleted_filter)
             #part2 - messages for the user without an attached memo
             part2 = self.filter(message_filter & ~models.Q(memos__user=recipient))
-            return (part1 | part2).distinct()
+            #strange that (part1 | part2).distinct() sometimes gives wrong result
+            threads = list(set(part1) | set(part2)) 
+            thread_ids = [thread.id for thread in threads]
+            return Message.objects.filter(id__in=thread_ids).distinct()
 
     def create(self, **kwargs):
         """creates a message"""
@@ -265,10 +268,10 @@ class MessageManager(models.Manager):
         message.root.last_active_at = datetime.datetime.now()
         #update senders info - stuff that is shown in the thread heading
         message.root.update_senders_info()
-        #unarchive the thread for all recipients
-        message.root.unarchive()
-
+        #signal response as created, upon signal increment counters
         response_created.send(None, message=message)
+        #move the thread to inboxes of all recipients
+        message.root.move_to_inbox()
         return message
 
 
@@ -404,6 +407,15 @@ class Message(models.Model):
         return (root.descendants.all() | root_qs).order_by('-sent_at')
 
 
+    def is_archived_or_deleted(self, user):
+        memos = MessageMemo.objects.filter(
+                                    user=user,
+                                    message=self,
+                                    status__gt=MessageMemo.SEEN
+                                )
+        return bool(memos.count())
+
+
     def is_unread_by_user(self, user, ignore_message=None):
         """True, if there is no "last visit timestamp"
         or if there are new child messages created after
@@ -467,13 +479,13 @@ class Message(models.Model):
         self.senders_info = (','.join(senders_names))[:64]
         self.save()
 
-    def unarchive(self, user=None):
+    def move_to_inbox(self, user=None):
         """unarchive message for all recipients"""
-        archived_filter = {'status': MessageMemo.ARCHIVED}
+        archived_filter = {}
         if user:
             archived_filter['user'] = user
         memos = self.memos.filter(**archived_filter)
-        memos.update(status=MessageMemo.SEEN)
+        memos.delete()
 
     def set_status_for_user(self, status, user):
         """set specific status to the message for the user"""
@@ -535,14 +547,18 @@ class UnreadInboxCounter(models.Model):
 def increment_unread_inbox_counters(sender, message, **kwargs):
     root_message = message.get_root_message()
     for user in message.get_recipients_users():
-        if message == root_message or \
-            not root_message.is_unread_by_user(user, ignore_message=message):
-            # if message is root - we have new thread,
+        if message == root_message \
+            or not root_message.is_unread_by_user(user, ignore_message=message) \
+            or root_message.is_archived_or_deleted(user):
+
+            # 1) if message is root - we have new thread,
             # so it's safe to increment the inbox counter
-            # if the message is a reply - the counter might
+            # 2) if the message is a reply - the counter might
             # have already been incremented. Therefore - we check
             # whether the message was unread by the user,
             # excluding the current message, which is obviously unread
+            # 3) if root message is deleted or archived then increment
+
             counter = get_unread_inbox_counter(user)
             counter.increment()
             counter.save()
@@ -569,5 +585,5 @@ response_created.connect(
 
 response_created.connect(
     receiver=increment_unread_inbox_counters,
-    dispatch_uid="message_reply_increment_unread_inbox_counters"
+    dispatch_uid="response_increment_unread_inbox_counters"
 )
