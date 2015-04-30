@@ -331,13 +331,14 @@ def user_get_avatar_url(self, size=48):
     JSONField .avatar_urls is used as "cache"
     to avoid multiple db hits to fetch avatar urls
     """
+    size = int(size)
     url = self.avatar_urls.get(size)
     if not url:
         url = self.calculate_avatar_url(size)
         self.avatar_urls[size] = url
         self.save()
     return url
-        
+
 
 def user_calculate_avatar_url(self, size=48):
     """returns avatar url - by default - gravatar,
@@ -368,9 +369,16 @@ def user_calculate_avatar_url(self, size=48):
     return self.get_gravatar_url(size)
 
 
-def user_clear_avatar_cache(self):
+def user_reset_avatar_urls(self):
+    """Assigns avatar urls for each required size.
+    Does not save the user object
+    """
     from avatar.conf import settings as avatar_settings
+    sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
     self.avatar_urls = {}
+    for size in sizes:
+        size = int(size)
+        self.avatar_urls[size] = self.calculate_avatar_url(size)
 
 
 def user_get_top_answers_paginator(self, visitor=None):
@@ -3288,7 +3296,7 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_type', user_get_avatar_type)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('calculate_avatar_url', user_calculate_avatar_url)
-User.add_to_class('clear_avatar_cache', user_clear_avatar_cache)
+User.add_to_class('reset_avatar_urls', user_reset_avatar_urls)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
@@ -3950,12 +3958,6 @@ def post_anonymous_askbot_content(
     else:
         user.post_anonymous_askbot_content(session_key)
 
-def set_user_avatar_type_flag(instance, created, **kwargs):
-    instance.user.update_avatar_type()
-
-def update_user_avatar_type_flag(instance, **kwargs):
-    instance.user.update_avatar_type()
-
 def make_admin_if_first_user(user, **kwargs):
     """first user automatically becomes an administrator
     the function is run only once in the interpreter session
@@ -4161,20 +4163,6 @@ django_signals.m2m_changed.connect(
     sender=User.groups.through,
     dispatch_uid='record_group_membership_change_on_group_change'
 )
-
-if 'avatar' in django_settings.INSTALLED_APPS:
-    from avatar.models import Avatar
-    django_signals.post_save.connect(
-        set_user_avatar_type_flag,
-        sender=Avatar,
-        dispatch_uid='set_avatar_type_flag_on_avatar_save'
-    )
-    django_signals.post_delete.connect(
-        update_user_avatar_type_flag,
-        sender=Avatar,
-        dispatch_uid='update_avatar_type_flag_on_avatar_delete'
-    )
-
 
 django_signals.post_delete.connect(
     record_cancel_vote,

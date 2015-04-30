@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+Development version (not released)
+----------------------------------
+* Added management command `askbot_rebuild_avatars`
+
 0.7.53 (Apr 22, 2015)
 ---------------------
 * Use prompt placeholders on all registration forms
