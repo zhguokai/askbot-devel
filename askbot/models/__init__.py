@@ -361,7 +361,6 @@ def user_calculate_avatar_url(self, size=48):
         from avatar.util import get_primary_avatar
         avatar = get_primary_avatar(self, size=size)
         if avatar:
-            logging.critical('user %d has avatar type "a" but uploaded avatar is missing')
             return avatar.avatar_url(size)
         return self.get_default_avatar_url(size)
 
