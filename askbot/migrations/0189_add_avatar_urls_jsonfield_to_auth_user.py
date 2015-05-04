@@ -3,12 +3,13 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from askbot.migrations_api import safe_add_column
 
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        db.add_column('auth_user', 'avatar_urls',
+        safe_add_column('auth_user', 'avatar_urls',
                       self.gf('jsonfield.fields.JSONField')(default={}),
                       keep_default=False)
 
