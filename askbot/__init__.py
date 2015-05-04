@@ -17,7 +17,7 @@ REQUIREMENTS = {
     'bs4': 'beautifulsoup4',
     'coffin': 'Coffin>=0.3,<=0.3.8',
     'compressor': 'django-compressor==1.2',
-    'django': 'django>=1.3.1,<1.6',
+    'django': 'django>=1.5,<1.6',
     'django_countries': 'django-countries==3.3',
     'django_transaction_signals': 'django-transaction-signals',
     'djcelery': 'django-celery>=3.0.11',
