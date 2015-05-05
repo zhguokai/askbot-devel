@@ -316,7 +316,7 @@ def tags(request):#view showing a listing of available tags - plain list
     form = ShowTagsForm(request.REQUEST)
     form.full_clean() #always valid
     page = form.cleaned_data['page']
-    sort_method = form.cleaned_data['sort_method']
+    sort_method = form.cleaned_data['sort']
     query = form.cleaned_data['query']
 
     tag_list_type = askbot_settings.TAG_LIST_FORMAT

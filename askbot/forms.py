@@ -646,7 +646,7 @@ class ShowQuestionForm(forms.Form):
 
 class ShowTagsForm(forms.Form):
     page = PageField()
-    sort_method = SortField(
+    sort = SortField(
                     choices=const.TAGS_SORT_METHODS,
                     default=const.DEFAULT_TAGS_SORT_METHOD
                 )
