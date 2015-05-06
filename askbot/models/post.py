@@ -918,6 +918,7 @@ class Post(models.Model):
         if post.is_question() or post.is_answer():
             comments = Post.objects.get_comments().filter(parent=post)
             comments.update(parent=self)
+            self.comment_count = self.comments.filter(deleted=False).count()
 
         #todo: implement redirects
         if post.is_question():
