@@ -655,17 +655,17 @@ class ShowTagsForm(forms.Form):
 
 class ShowUsersForm(forms.Form):
     page = PageField()
-    sort_method = SortField(
+    sort = SortField(
                     choices=const.USER_SORT_METHODS,
                     default=const.DEFAULT_USER_SORT_METHOD
                 )
     query = forms.CharField(required=False)
 
-    def clean_sort_method(self):
-        sort_method = self.cleaned_data['sort_method'] 
+    def clean_sort(self):
+        sort_method = self.cleaned_data['sort'] 
         if sort_method == 'reputation' and askbot_settings.KARMA_MODE == 'private':
-            self.cleaned_data['sort_method'] = 'newest'
-        return self.cleaned_data['sort_method']
+            self.cleaned_data['sort'] = 'newest'
+        return self.cleaned_data['sort']
 
 
 
