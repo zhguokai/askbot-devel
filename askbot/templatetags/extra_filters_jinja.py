@@ -20,6 +20,7 @@ from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
 from askbot.utils.html import absolutize_urls, site_link
 from askbot.utils.html import site_url as site_url_func
+from askbot.utils import html as html_utils
 from askbot.utils import functions
 from askbot.utils import url_utils
 from askbot.utils.markup import markdown_input_converter
@@ -94,6 +95,11 @@ def show_block_to(block_name, user):
 def strip_path(url):
     """removes path part of the url"""
     return url_utils.strip_path(url)
+
+@register.filter
+def strip_tags(text):
+    """remove html tags"""
+    return html_utils.strip_tags(text)
 
 @register.filter
 def can_see_private_user_data(viewer, target):

@@ -4,11 +4,13 @@ of email messages for various occasions
 import functools
 import logging
 import urllib
+from copy import copy
 from django.conf import settings as django_settings
 from django.core.urlresolvers import reverse
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.encoding import force_str
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -90,7 +92,13 @@ class BaseEmail(object):
 
     def render_subject(self):
         template = get_template(self.template_path + '/subject.txt')
-        return ' '.join(template.render(Context(self.get_context())).split())
+
+        context = copy(self.get_context()) #copy context
+        for key in context:
+            if isinstance(context[key], basestring):
+                context[key] = mark_safe(context[key])
+
+        return ' '.join(template.render(Context(context)).split())
 
     def render_body(self):
         template = get_template(self.template_path + '/body.html')
@@ -121,7 +129,8 @@ class InstantEmailAlert(BaseEmail):
     )
 
     def is_enabled(self):
-        return askbot_settings.ENABLE_EMAIL_ALERTS
+        return askbot_settings.ENABLE_EMAIL_ALERTS \
+            and askbot_settings.INSTANT_EMAIL_ALERT_ENABLED
 
     def get_mock_context(self):
         from askbot.models import (Activity, Post, User)
@@ -358,6 +367,11 @@ class WelcomeEmail(BaseEmail):
         'At least one user is required generate a preview'
     )
 
+    def is_enabled(self):
+        return askbot_settings.ENABLE_EMAIL_ALERTS \
+            and askbot_settings.WELCOME_EMAIL_ENABLED
+
+
     def get_mock_context(self):
         return {'user': get_user()}
 
@@ -500,7 +514,8 @@ class RejectedPost(BaseEmail):
     }
 
     def is_enabled(self):
-        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation'
+        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
+            and askbot_settings.REJECTED_POST_EMAIL_ENABLED
 
     def process_context(self, context):
         context.setdefault('recipient_user', None)
@@ -518,7 +533,8 @@ class ModerationQueueNotification(BaseEmail):
     )
 
     def is_enabled(self):
-        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation'
+        return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
+            and askbot_settings.MODERATION_QUEUE_NOTIFICATION_ENABLED
 
     def process_context(self, context):
         user = context['user']
@@ -542,7 +558,8 @@ class BatchEmailAlert(BaseEmail):
     )
 
     def is_enabled(self):
-        return askbot_settings.ENABLE_EMAIL_ALERTS
+        return askbot_settings.ENABLE_EMAIL_ALERTS \
+            and askbot_settings.BATCH_EMAIL_ALERT_ENABLED
 
     def process_context(self, context):
         user = context['user']
@@ -670,7 +687,7 @@ class ApprovedPostNotification(BaseEmail):
 
     def is_enabled(self):
         return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
-            and askbot_settings.REPLY_BY_EMAIL == False 
+            and askbot_settings.APPROVED_POST_NOTIFICATION_ENABLED
 
     def get_mock_context(self):
         question = get_question() 
@@ -737,6 +754,10 @@ class GroupMessagingEmailAlert(BaseEmail):
         'generate a preview'
     )
 
+    def is_enabled(self):
+        return askbot_settings.ENABLE_EMAIL_ALERTS \
+            and askbot_settings.GROUP_MESSAGING_EMAIL_ALERT_ENABLED
+
     def get_mock_context(self):
         from askbot.deps.group_messaging.models import Message
         message = Message.objects.all().order_by('-id')[0]
@@ -745,3 +766,26 @@ class GroupMessagingEmailAlert(BaseEmail):
             'message': message,
             'recipient_user': get_user()
         }
+
+class FeedbackEmail(BaseEmail):
+    template_path = 'email/feedback'
+    title = _('Feedback email')
+    description = _('Sent when users submits feedback form')
+
+    def process_context(self, context):
+        context['site_name'] = askbot_settings.APP_SHORT_NAME
+        return context
+
+    def get_mock_context(self):
+        return {
+            'name': 'Joe',
+            'email': 'joe@example.com',
+            'message': 'Your site is pretty good.\n\nThank you',
+            'ip_addr': '127.0.0.1'
+        }
+
+    def get_headers(self):
+        context = self.get_context()
+        if 'email' in context:
+            return {'Reply-To': context['email']}
+        return {}

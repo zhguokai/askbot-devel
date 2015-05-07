@@ -7,7 +7,7 @@ basic actions on behalf of the forum application
 import os
 import platform
 
-VERSION = (0, 7, 51)
+VERSION = (0, 7, 53)
 
 #keys are module names used by python imports,
 #values - the package qualifier to use for pip
@@ -17,7 +17,7 @@ REQUIREMENTS = {
     'bs4': 'beautifulsoup4',
     'coffin': 'Coffin>=0.3,<=0.3.8',
     'compressor': 'django-compressor==1.2',
-    'django': 'django>=1.3.1,<1.6',
+    'django': 'django>=1.5,<1.6',
     'django_countries': 'django-countries==3.3',
     'django_transaction_signals': 'django-transaction-signals',
     'djcelery': 'django-celery>=3.0.11',
@@ -25,6 +25,7 @@ REQUIREMENTS = {
     'followit': 'django-followit==0.0.7',
     'html5lib': 'html5lib==0.90',
     'jinja2': 'Jinja2',
+    'jsonfield': 'jsonfield',
     'keyedcache': 'django-keyedcache',
     'longerusername': 'longerusername',
     'markdown2': 'markdown2',

@@ -54,8 +54,8 @@
             ><span>{% trans %}oldest{% endtrans %}</span></a>
             <a
                 id="sort_user"
-                href="{{ request.path|escape }}?sort=user"
-                {% if tab_id == 'user' %}class="on"{% endif %}
+                href="{{ request.path|escape }}?sort=name"
+                {% if tab_id == 'name' %}class="on"{% endif %}
                 title="{% trans %}see people sorted by name{% endtrans %}"
             ><span>{% trans %}by username{% endtrans %}</span></a>
         </div>

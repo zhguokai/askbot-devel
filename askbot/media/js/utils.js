@@ -236,6 +236,9 @@ var showMessage = function (element, msg, where) {
     where = where || 'parent';
 
     div.click(function (event) {
+        if (event.target.nodeName === 'A') {
+            return true;
+        }
         $('.vote-notification').fadeOut('fast', function () { $(this).remove(); });
         return false;
     });

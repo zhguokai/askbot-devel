@@ -239,6 +239,14 @@ AutoCompleter.prototype.setEventHandlers = function () {
                 }
                 break;
 
+            case 8: //backspace
+                if ($.trim(self._element.val()).length === 1) {
+                    self.setValue('');
+                    self.finish();
+                    return false;
+                } else {
+                    self.activate();
+                }
             default:
                 self.activate();
 
@@ -344,14 +352,10 @@ AutoCompleter.prototype.activateNow = function () {
 };
 
 AutoCompleter.prototype.fetchData = function (value) {
-    if (this.options.data) {
-        this.filterAndShowResults(this.options.data, value);
-    } else {
-        var self = this;
-        this.fetchRemoteData(value, function (remoteData) {
-            self.filterAndShowResults(remoteData, value);
-        });
-    }
+    var self = this;
+    this.fetchRemoteData(value, function (remoteData) {
+        self.filterAndShowResults(remoteData, value);
+    });
 };
 
 AutoCompleter.prototype.fetchRemoteData = function (filter, callback) {

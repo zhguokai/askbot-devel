@@ -166,7 +166,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
 
     form = forms.ShowUsersForm(request.REQUEST)
     form.full_clean()#always valid
-    sort_method = form.cleaned_data['sort_method']
+    sort_method = form.cleaned_data['sort']
     page = form.cleaned_data['page']
     search_query = form.cleaned_data['query']
 
@@ -175,7 +175,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
             order_by_parameter = '-date_joined'
         elif sort_method == 'last':
             order_by_parameter = 'date_joined'
-        elif sort_method == 'user':
+        elif sort_method == 'name':
             order_by_parameter = 'username'
         else:
             # default

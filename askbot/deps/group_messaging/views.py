@@ -14,6 +14,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Q
 from django.forms import IntegerField
 from django.http import HttpResponse
 from django.http import HttpResponseNotAllowed
@@ -26,6 +27,7 @@ from .models import SenderList
 from .models import LastVisitTime
 from .models import get_personal_group_by_user_id
 from .models import get_personal_groups_for_users
+from .models import get_unread_inbox_counter
 
 
 class NewThread(PjaxView):
@@ -109,10 +111,9 @@ class ThreadsList(PjaxView):
         sender_id = IntegerField().clean(request.REQUEST.get('sender_id', '-1'))
 
         if sender_id == -2:
-            threads = Message.objects.get_threads(
-                                            recipient=user,
-                                            deleted=True
-                                        )
+            received = Message.objects.get_threads(recipient=user, deleted=True)
+            sent = Message.objects.get_threads(sender=user, deleted=True)
+            threads = (received | sent).distinct()
         elif sender_id == -1:
             threads = Message.objects.get_threads(recipient=user)
         elif sender_id == user.id:
@@ -123,7 +124,6 @@ class ThreadsList(PjaxView):
                                             recipient=user,
                                             sender=sender
                                         )
-
         threads = threads.order_by('-last_active_at')
 
         #for each thread we need to know if there is something
@@ -176,6 +176,10 @@ class DeleteOrRestoreThread(ThreadsList):
 
     http_method_list = ('POST',)
 
+    def __init__(self, action, *args, **kwargs):
+        self.thread_action = action or 'delete'
+        super(DeleteOrRestoreThread, self).__init__(*args, **kwargs)
+
     def post(self, request, thread_id=None):
         """process the post request:
         * delete or restore thread
@@ -185,21 +189,33 @@ class DeleteOrRestoreThread(ThreadsList):
         #part of the threads list context
         sender_id = IntegerField().clean(request.POST['sender_id'])
 
-        #a little cryptic, but works - sender_id==-2 means deleted post
-        if sender_id == -2:
-            action = 'restore'
+        #sender_id==-2 means deleted post
+        if self.thread_action == 'delete':
+            if sender_id == -2:
+                action = 'delete'
+            else:
+                action = 'archive'
         else:
-            action = 'delete'
+            action = 'restore'
 
         thread = Message.objects.get(id=thread_id)
         memo, created = MessageMemo.objects.get_or_create(
                                     user=request.user,
                                     message=thread
                                 )
-        if action == 'delete':
+
+        if created and action == 'archive':
+            #unfortunately we lose "unseen" status when archiving
+            counter = get_unread_inbox_counter(request.user)
+            counter.decrement()
+            counter.save()
+
+        if action == 'archive':
             memo.status = MessageMemo.ARCHIVED
-        else:
+        elif action == 'restore':
             memo.status = MessageMemo.SEEN
+        else:
+            memo.status = MessageMemo.DELETED
         memo.save()
 
         context = self.get_context(request)

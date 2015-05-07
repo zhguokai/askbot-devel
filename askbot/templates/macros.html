@@ -9,7 +9,7 @@
 {%- macro inbox_message_snippet(message) -%}
 <div class="message-details" data-message-id="{{ message.id }}">
     <input type="checkbox" />
-    {{ gravatar(message.user, 24) }}
+    {{ gravatar(message.user, 16) }}
     <a class="username" href="{{ message.user.get_absolute_url() }}">{{ message.user.username|escape }}</a>
     <a class="forum-post-link" href="{{ message.url }}">{{ message.message_type }}</a>
     ({{ timeago(message.timestamp) }})
@@ -18,13 +18,17 @@
 </div>
 {%- endmacro -%}
 
+{%- macro mailto_link(email) -%}
+    <a href="mailto:{{ email }}">{{ email }}</a>
+{%- endmacro -%}
+
 {%- macro moderation_queue_message(message) -%}
 <div class="message-details" data-message-id="{{ message.id }}">
     <input type="checkbox" />
-    {{ gravatar(message.user, 24) }}
+    {{ gravatar(message.user, 16) }}
     <a class="username" href="{{ message.user.get_absolute_url() }}">{{ message.user.username|escape }}</a> |
     {% if message['memo_type'] == 'edit' %}
-        <a href="mailto:{{ message.user.email }}">{{ message.user.email }}</a> |
+        {{ mailto_link(message.user.email) }} |
         ip=<span class="ip-addr">{{ message.ip_addr }}</span> |
     {% endif %}
     <a class="forum-post-link" href="{{ message.url }}">{{ message.message_type }}</a>
@@ -242,7 +246,7 @@
                     data-on-state-text="{% trans %}You are a member{% endtrans %}"
                 {% else %}
                     data-off-prompt-text="{% trans %}Cancel application{% endtrans %}"
-                    data-on-state-text="{% trans %}Waiting approval{% endtrans %}"
+                    data-on-state-text="{% trans %}Awaiting approval{% endtrans %}"
                 {% endif %}
                 data-on-prompt-text="{% trans %}Ask to join{% endtrans %}"
                 data-off-state-text="{% trans %}Ask to join{% endtrans %}"
@@ -251,7 +255,7 @@
             {% if membership_level == 'full' %}
                 {% trans %}You are a member{% endtrans %}
             {% elif membership_level == 'pending' %}
-                {% trans %}Waiting approval{% endtrans %}
+                {% trans %}Awaiting approval{% endtrans %}
             {% else %}
                 {% if acceptance_level == 'open' %}
                     {% trans %}Join this group{% endtrans %}
@@ -357,16 +361,14 @@ for the purposes of the AJAX comment editor #}
        for the purposes of the AJAX comment editor #}
     <div class="comment js-comment" data-comment-id="{{ comment.id }}">
         <div class="comment-votes">
-            {% if comment.score > 0 %}
-                <div 
-                    id="comment-img-upvote-{{ comment.id }}" 
-                    class="upvote"
-                >{{ comment.score }}</div>
-                <script type="text/javascript">
-                    askbot['functions']['renderPostVoteButtons']('comment', '{{ comment.id }}');
-                </script>
-            {% else %}
-                <div class="upvote"></div>
+            <div 
+                id="comment-img-upvote-{{ comment.id }}" 
+                class="upvote js-score"
+            >{% if comment.score > 0 %}{{ comment.score }}{% endif %}</div>
+            {% if comment.id %}
+            <script type="text/javascript">
+                askbot['functions']['renderPostVoteButtons']('comment', '{{ comment.id }}');
+            </script>
             {% endif %}
         </div>
         <div class="comment-content">
@@ -389,7 +391,7 @@ for the purposes of the AJAX comment editor #}
                 <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
                 <a 
                     id="post-{{ comment.id }}-edit"
-                    class="edit"
+                    class="js-edit"
                 >{% trans %}edit{% endtrans %}</a>
                 <form 
                     action="{% url comment_to_answer %}"
@@ -531,18 +533,11 @@ for the purposes of the AJAX comment editor #}
   {%- include "widgets/user_long_score_and_badge_summary.html" -%}
 {%- endmacro -%}
 
-{%- macro country_flag(country_code, flag_label) -%}
-    <img 
-        class="flag"
-        src="{{ ('/images/flags/' ~ country_code|lower ~ '.gif')|media }}"
-        alt="{{ flag_label }}"
-    />
-{%- endmacro -%}
-
 {%- macro user_country_flag(user) -%}
     {% if user.country and user.country.code != 'none' and user.show_country %}
         <img class="flag" 
-            src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}"
+            {# src="{{ user.country.flag }}" this is better but not compatible with v 1.0.5 #}
+            src="{{ ('/images/flags/' ~ user.country.code|lower ~ '.gif')|media }}" {# use 'local' copy of flags #}
             alt="{% trans 
                     country=user.country.name 
                     %}flag of {{country}}{% 

@@ -714,6 +714,8 @@ def __generate_comments_json(obj, user, avatar_size):
             'user_profile_url': comment_owner.get_profile_url(),
             'user_avatar_url': comment_owner.get_avatar_url(avatar_size),
             'user_id': comment_owner.id,
+            'user_is_administrator': comment_owner.is_administrator(),
+            'user_is_moderator': comment_owner.is_moderator(),
             'is_deletable': is_deletable,
             'is_editable': is_editable,
             'points': comment.points,
@@ -781,7 +783,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
                 raise exceptions.PermissionDenied(askbot_settings.READ_ONLY_MESSAGE)
 
             comment = user.post_comment(
-                parent_post=post, 
+                parent_post=post,
                 body_text=form.cleaned_data['comment'],
                 ip_addr=request.META.get('REMOTE_ADDR')
             )

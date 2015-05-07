@@ -832,6 +832,10 @@ class Post(models.Model):
         #shortcircuit if the email alerts are disabled
         if suppress_email == True or askbot_settings.ENABLE_EMAIL_ALERTS == False:
             return
+
+        if askbot_settings.INSTANT_EMAIL_ALERT_ENABLED == False:
+            return
+
         #todo: fix this temporary spam protection plug
         if askbot_settings.MIN_REP_TO_TRIGGER_EMAIL:
             if not (updated_by.is_administrator() or updated_by.is_moderator()):
@@ -914,6 +918,7 @@ class Post(models.Model):
         if post.is_question() or post.is_answer():
             comments = Post.objects.get_comments().filter(parent=post)
             comments.update(parent=self)
+            self.comment_count = self.comments.filter(deleted=False).count()
 
         #todo: implement redirects
         if post.is_question():
@@ -2485,7 +2490,7 @@ class PostRevision(models.Model):
             raise ValidationError('Post field has to be set.')
 
     def save(self, **kwargs):
-        if self.ip_addr is None:
+        if not self.ip_addr:
             self.ip_addr = '0.0.0.0'
         self.full_clean()
         super(PostRevision, self).save(**kwargs)

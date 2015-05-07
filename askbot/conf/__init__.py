@@ -23,6 +23,7 @@ import askbot.conf.leading_sidebar
 import askbot.conf.spam_and_moderation
 import askbot.conf.user_settings
 import askbot.conf.group_settings
+import askbot.conf.feedback
 import askbot.conf.markup
 import askbot.conf.social_sharing
 import askbot.conf.badges

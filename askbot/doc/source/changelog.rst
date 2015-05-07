@@ -1,8 +1,20 @@
 Changes in Askbot
 =================
 
-Development version (only in the repository)
---------------------------------------------
+Development version (not released)
+----------------------------------
+* Added management command `askbot_rebuild_avatars`
+
+0.7.53 (Apr 22, 2015)
+---------------------
+* Use prompt placeholders on all registration forms
+* Disable Google login by default because it is now OAuth2
+
+
+0.7.52 (Apr 19, 2015)
+---------------------
+* Added account recovery form to the "complete registration" page
+  to help prevent accidental creation of duplicate accounts
 * Support migration of Google OpenID accounts to G+
 * Added setting to allow comment updates show on the main page
 * Improved support of uploadable avatars

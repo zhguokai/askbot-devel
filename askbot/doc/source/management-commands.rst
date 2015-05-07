@@ -81,6 +81,8 @@ The bulk of the management commands fall into this group and will probably be th
 |                                 | This data is used to display preferentially real faces      |
 |                                 | on the main page.                                           |
 +---------------------------------+-------------------------------------------------------------+
+| `askbot_rebuild_avatars`        | Rebuilds avatar urls and creates avatar thumbnails          |
++---------------------------------+-------------------------------------------------------------+
 | `build_thread_summary_cache`    | Rebuilds cache for the question summary snippet.            |
 +---------------------------------+-------------------------------------------------------------+
 | `build_livesettings_cache`      | Rebuilds cache for the live settings.                       |

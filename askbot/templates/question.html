@@ -292,10 +292,10 @@
                 if (//maybe remove "edit" button
                     !enoughRep || data['userIsReadOnly']//only authors edit comments
                 ){
-                    var edit_btn = document.getElementById(
-                        'post-' + post_id + '-edit'
-                    )
-                    edit_btn.parentNode.removeChild(edit_btn);
+                    var editBtns = findChildrenByClassName(controls, 'js-edit');
+                    if (editBtns.length) {
+                        removeNode(editBtns[0]);
+                    }
                 }
                 if (//maybe remove retag button
                     (data['userReputation'] <
@@ -387,7 +387,6 @@
     {% endspaceless %}
     <script type='text/javascript'>
         {# not compressable #}
-        var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
         askbot['urls']['postComments'] = '{% url post_comments %}';
         askbot['urls']['editComment'] = '{% url edit_comment %}';
         askbot['urls']['deleteComment'] = '{% url delete_comment %}';

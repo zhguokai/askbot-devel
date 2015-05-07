@@ -248,10 +248,10 @@ MessageComposer.prototype.decorate = function (element) {
     var usersAc = new AutoCompleter({
         url: '/get-users-info/',//askbot.urls['get_users_info'],
         minChars: 1,
-        useCache: false,
-        matchInside: true,
+        useCache: true,
+        matchInside: false,
         maxCacheLength: 100,
-        delay: 10,
+        delay: 500,
         onItemSelect: userSelectHandler
     });
     usersAc.decorate(toInput);
@@ -306,12 +306,19 @@ ThreadHeading.prototype.getId = function () {
 ThreadHeading.prototype.decorate = function (element) {
     this._element = element;
     this._id = element.data('threadId');
-    var deleter = element.find('.delete-or-restore');
+    var deleter = element.find('.delete');
     var me = this;
     setupButtonEventHandlers($(deleter), function () {
-        me.getParent().deleteOrRestoreThread(me.getId());
+        me.getParent().deleteThread(me.getId());
         return false;
     });
+    var restorer = element.find('.restore');
+    if (restorer.length) {
+        setupButtonEventHandlers($(deleter), function () {
+            me.getParent().restoreThread(me.getId());
+            return false;
+        });
+    }
 };
 
 /**
@@ -333,10 +340,16 @@ ThreadList.prototype.getOpenThreadHandler = function (threadId) {
     };
 };
 
-ThreadList.prototype.deleteOrRestoreThread = function (threadId) {
+ThreadList.prototype.deleteThread = function (threadId) {
     var ctr = this._messageCenter;
-    ctr.deleteOrRestoreThread(threadId, this._senderId);
+    ctr.deleteThread(threadId, this._senderId);
 };
+
+ThreadList.prototype.restoreThread = function (threadId) {
+    var ctr = this._messageCenter;
+    ctr.restoreThread(threadId, this._senderId);
+};
+
 
 ThreadList.prototype.getThreadsCount = function () {
     if (self._threads) {
@@ -641,8 +654,13 @@ MessageCenter.prototype.hitThreadList = function (url, senderId, requestMethod) 
     this.setLoadingStatus(true);
 };
 
-MessageCenter.prototype.deleteOrRestoreThread = function (threadId, senderId) {
-    var url = this._urls.getThreads + threadId + '/delete-or-restore/';
+MessageCenter.prototype.deleteThread = function (threadId, senderId) {
+    var url = this._urls.getThreads + threadId + '/delete/';
+    this.hitThreadList(url, senderId, 'POST');
+};
+
+MessageCenter.prototype.restoreThread = function (threadId, senderId) {
+    var url = this._urls.getThreads + threadId + '/restore/';
     this.hitThreadList(url, senderId, 'POST');
 };
 

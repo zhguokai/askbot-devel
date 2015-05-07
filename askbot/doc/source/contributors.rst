@@ -63,6 +63,7 @@ Programming, bug fixes and documentation
 * `Ruslan Keba <https://github.com/rukeba>`_
 * `Vanessa Hänni <https://github.com/n3ssi3>`_
 * `Vadim Sikora <https://github.com/vxsx>`_
+* `Zhe Li <https://github.com/zheli>`_
 
 Translations
 ------------

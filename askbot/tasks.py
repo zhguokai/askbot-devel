@@ -22,7 +22,6 @@ import sys
 import traceback
 import uuid
 
-from django.contrib.contenttypes.models import ContentType
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
@@ -173,11 +172,7 @@ def record_post_update_celery_task(
         )
 
     except Exception:
-        # HACK: exceptions from Celery job don't propagate upwards
-        # to the Django test runner
-        # so at least let's print tracebacks
-        print >>sys.stderr, unicode(traceback.format_exc()).encode('utf-8')
-        raise
+        logger.error(unicode(traceback.format_exc()).encode('utf-8'))
 
 @task(ignore_result=True)
 def record_question_visit(

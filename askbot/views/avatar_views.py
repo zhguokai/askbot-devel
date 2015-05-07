@@ -137,7 +137,9 @@ def set_primary(request, user_id=None, extra_context=None, avatar_size=128):
             avatar.primary = True
             avatar.save()
             avatar_updated.send(sender=Avatar, user=request.user, avatar=avatar)
-            user.clear_avatar_cache()
+            user.avatar_type = 'a'
+            user.clear_avatar_urls()
+            user.save()
     return redirect_to_show_list(user_id)
 
 
@@ -155,8 +157,13 @@ def upload(request, user_id=None):
                 image_file = request.FILES['avatar']
                 avatar.avatar.save(image_file.name, image_file)
                 avatar.save()
+                sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
+                for size in sizes:
+                    avatar.create_thumbnail(size)
                 avatar_updated.send(sender=Avatar, user=user, avatar=avatar)
-                user.clear_avatar_cache()
+                user.avatar_type = 'a'
+                user.clear_avatar_urls()
+                user.save()
                 message = _('Avatar uploaded and set as primary')
             else:
                 errors = get_error_list(form)
@@ -170,21 +177,23 @@ def upload(request, user_id=None):
 
 
 def delete(request, avatar_id):
+    """deletes uploded avatar"""
     avatar = get_object_or_404(Avatar, pk=avatar_id)
-    user = request.user
     if request.method == 'POST' \
-        and user.is_authenticated() \
-        and (user.is_administrator_or_moderator() \
-            or avatar.user_id == user.id):
-        avatar_type = avatar.user.avatar_type
+        and request.user.is_authenticated() \
+        and (request.user.is_administrator_or_moderator() \
+            or avatar.user_id == request.user.id):
+        user = avatar.user
         avatar.delete()
-        avatar.user.avatar_type = avatar_type
-        avatar.user.save()
-        if avatar_type == 'g':
-            avatar.user.avatar_set.update(primary=False)
-        user.clear_avatar_cache()
+        if user.avatar_set.count() == 0:
+            if user.avatar_type == 'a':
+                user.avatar_type = 'n'
+        elif user.avatar_type != 'a':
+            user.avatar_set.update(primary=False)
+        user.clear_avatar_urls()
+        user.save()
 
-    return redirect_to_show_list(avatar.user_id)
+    return redirect_to_show_list(user.id)
 
 
 @admin_or_owner_required
@@ -192,9 +201,9 @@ def enable_gravatar(request, user_id=None):
     if request.method == 'POST':
         user = get_object_or_404(User, pk=user_id)
         user.avatar_type = 'g'
-        user.save()
         user.avatar_set.update(primary=False)
-        user.clear_avatar_cache()
+        user.clear_avatar_urls()
+        user.save()
     return redirect_to_show_list(user_id)
 
 
@@ -203,9 +212,9 @@ def enable_default_avatar(request, user_id=None):
     if request.method == 'POST':
         user = get_object_or_404(User, pk=user_id)
         user.avatar_type = 'n'
-        user.save()
         user.avatar_set.update(primary=False)
-        user.clear_avatar_cache()
+        user.clear_avatar_urls()
+        user.save()
     return redirect_to_show_list(user_id)
 
 
@@ -214,11 +223,11 @@ def disable_gravatar(request, user_id=None):
     if request.method == 'POST':
         user = get_object_or_404(User, pk=user_id)
         user.avatar_type = 'a'
-        user.save()
         if user.avatar_set.count():
             avatar = user.avatar_set.all()[0]
             avatar.primary = True
             avatar.save()
             avatar_updated.send(sender=Avatar, user=request.user, avatar=avatar)
-        user.clear_avatar_cache()
+        user.clear_avatar_urls()
+        user.save()
     return redirect_to_show_list(user_id)

@@ -169,18 +169,10 @@ class CountryField(forms.ChoiceField):
     def clean(self, value):
         """Handles case of 'unknown' country selection
         """
-        if self.required:
-            if value == 'unknown':
-                raise forms.ValidationError(_('Country field is required'))
+        if self.required and value == 'unknown':
+            raise forms.ValidationError(_('Country field is required'))
         if value == 'unknown':
-            try:
-                from django_countries import fields
-                if hasattr(fields, 'Country'):
-                    return fields.Country(code='none')
-                else:
-                    return None
-            except ImportError:
-                return None
+            return None
         return value
 
 
@@ -654,7 +646,7 @@ class ShowQuestionForm(forms.Form):
 
 class ShowTagsForm(forms.Form):
     page = PageField()
-    sort_method = SortField(
+    sort = SortField(
                     choices=const.TAGS_SORT_METHODS,
                     default=const.DEFAULT_TAGS_SORT_METHOD
                 )
@@ -663,17 +655,17 @@ class ShowTagsForm(forms.Form):
 
 class ShowUsersForm(forms.Form):
     page = PageField()
-    sort_method = SortField(
+    sort = SortField(
                     choices=const.USER_SORT_METHODS,
                     default=const.DEFAULT_USER_SORT_METHOD
                 )
     query = forms.CharField(required=False)
 
-    def clean_sort_method(self):
-        sort_method = self.cleaned_data['sort_method'] 
+    def clean_sort(self):
+        sort_method = self.cleaned_data['sort'] 
         if sort_method == 'reputation' and askbot_settings.KARMA_MODE == 'private':
-            self.cleaned_data['sort_method'] = 'newest'
-        return self.cleaned_data['sort_method']
+            self.cleaned_data['sort'] = 'newest'
+        return self.cleaned_data['sort']
 
 
 
@@ -861,6 +853,13 @@ class FeedbackForm(forms.Form):
         if not message:
             raise forms.ValidationError(_('Message is required'))
         return message
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name', '').strip()
+        if not name:
+            name = _('Anonymous')
+        self.cleaned_data['name'] = name
+        return name
 
     def clean(self):
         super(FeedbackForm, self).clean()

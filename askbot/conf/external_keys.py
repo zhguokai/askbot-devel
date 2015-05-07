@@ -79,7 +79,8 @@ settings.register(
     livesettings.StringValue(
         EXTERNAL_KEYS,
         'GOOGLE_PLUS_KEY',
-        description=_('Google+ public API key')
+        description=_('Google+ public API key'),
+        localized=True,
     )
 )
 
@@ -87,7 +88,8 @@ settings.register(
     livesettings.StringValue(
         EXTERNAL_KEYS,
         'GOOGLE_PLUS_SECRET',
-        description=_('Google+ secret API key')
+        description=_('Google+ secret API key'),
+        localized=True,
     )
 )
 

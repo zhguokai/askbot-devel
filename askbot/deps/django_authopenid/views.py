@@ -707,8 +707,7 @@ def show_signin_view(
 
     allowed_subtypes = (
                     'default', 'add_openid',
-                    'email_sent', 'change_openid',
-                    'bad_key'
+                    'email_sent', 'change_openid'
                 )
 
     assert(view_subtype in allowed_subtypes)
@@ -777,13 +776,14 @@ def show_signin_view(
         page_title = _('Account recovery email sent')
     elif view_subtype == 'change_openid':
         if len(existing_login_methods) == 0:
-            page_title = _('Please add one or more login methods.')
+            page_title = _('Add at least one login method')
         else:
             page_title = _('If you wish, please add, remove or re-validate your login methods')
     elif view_subtype == 'add_openid':
-        page_title = _('Please wait a second! Your account is recovered, but ...')
-    elif view_subtype == 'bad_key':
-        page_title = _('Sorry, this account recovery key has expired or is invalid')
+        if len(existing_login_methods) == 0:
+            page_title = _('Add at least one login method')
+        else:
+            page_title = _('Please wait a second! Your account is recovered, but ...')
 
     logging.debug('showing signin view')
     data = {
@@ -1122,6 +1122,7 @@ def register(request, login_provider_name=None, user_identifier=None):
     logging.debug('printing authopenid/complete.html output')
     data = {
         'openid_register_form': register_form,
+        'account_recovery_form': forms.AccountRecoveryForm(),
         'default_form_action': django_settings.LOGIN_URL,
         'provider': mark_safe(provider_logo),
         'username': username,
@@ -1323,7 +1324,7 @@ def send_user_new_email_key(user):
     user.save()
     send_email_key(user.email, user.email_key)
 
-def account_recover(request):
+def recover_account(request):
     """view similar to send_email_key, except
     it allows user to recover an account by entering
     his/her email address
@@ -1374,10 +1375,15 @@ def account_recover(request):
             request.session['in_recovery'] = True
             return show_signin_view(
                                 request,
-                                view_subtype = 'add_openid',
-                                sticky = True
+                                view_subtype='add_openid',
+                                sticky=True
                             )
         else:
-            return show_signin_view(request, view_subtype = 'bad_key')
+            data = {
+                'account_recovery_form': forms.AccountRecoveryForm(),
+                'message': _('Sorry, this account recovery key has expired or is invalid'),
+                'bad_key': True
+            }
+            return render(request, 'authopenid/recover_account.html', data)
 
         return HttpResponseRedirect(get_next_url(request))

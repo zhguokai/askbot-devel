@@ -7396,14 +7396,14 @@ msgstr ""
 #: templates/widgets/question_summary.html:12
 msgid "view"
 msgid_plural "views"
-msgstr[0] "view"
-msgstr[1] "views"
+msgstr[0] "Ansicht"
+msgstr[1] "Ansichten"
 
 #: templates/widgets/question_summary.html:41
 msgid "vote"
 msgid_plural "votes"
-msgstr[0] "vote"
-msgstr[1] "votes"
+msgstr[0] "Bewertung"
+msgstr[1] "Bewertungen"
 
 #: templates/widgets/scope_nav.html:10
 msgid "ALL"

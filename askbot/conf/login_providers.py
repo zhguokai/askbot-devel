@@ -24,15 +24,6 @@ settings.register(
     )
 )
 
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'PASSWORD_REGISTER_SHOW_PROVIDER_BUTTONS',
-        default=True,
-        description=_('Show alternative login provider buttons on the password "Sign Up" page'),
-    )
-)
-
 #todo: remove this - we don't want the local login button
 #but instead always show the login/password field when used
 settings.register(
@@ -146,7 +137,7 @@ providers = (
     'Facebook',
     'Fedora',
     'Flickr',
-    #'Google Plus',
+    #'Google',
     'Mozilla Persona',
     'Twitter',
     'MediaWiki',
@@ -217,7 +208,7 @@ for provider in providers:
             livesettings.StringValue(
                 LOGIN_PROVIDERS,
                 'SIGNIN_GOOGLE_METHOD',
-                default='openid',
+                default='disabled',
                 choices=GOOGLE_METHOD_CHOICES,
                 description=_('Google login'),
                 help_text=_(

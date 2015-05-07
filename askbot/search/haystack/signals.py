@@ -11,6 +11,19 @@ class AskbotRealtimeSignalProcessor(RealtimeSignalProcessor):
     modifications to work with askbot soft-delete models
     '''
 
+    def handle_delete(self, sender, instance, **kwargs):
+        # avoid circular imports
+        from askbot.models import Post, Thread
+
+        if isinstance(instance, Post) and instance.thread_id:
+            # instance becomes the thread instance
+            # sender becomes the Thread class
+            # this is because we don't index Post instances, only Thread
+            # but still need to update/remove thread when post is removed.
+            instance, sender = (instance.thread, Thread)
+
+        super(AskbotRealtimeSignalProcessor, self).handle_delete(sender, instance, **kwargs)
+
     def setup(self):
         super(AskbotRealtimeSignalProcessor, self).setup()
 

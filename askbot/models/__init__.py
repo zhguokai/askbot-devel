@@ -26,7 +26,7 @@ from django.utils.translation import ungettext
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.cache import cache
@@ -60,7 +60,6 @@ from askbot.models.meta import ImportRun, ImportedObjectInfo
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.decorators import reject_forbidden_phrases
-from askbot.utils.cache import memoize, delete_memoized
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
 from askbot.utils.transaction import defer_celery_task
@@ -71,6 +70,7 @@ from askbot.utils.url_utils import strip_path
 from askbot.utils import functions
 from askbot import mail
 from askbot import signals
+from jsonfield import JSONField
 
 from django import VERSION
 
@@ -108,6 +108,14 @@ def get_admin():
             return admin
         else:
             raise User.DoesNotExist
+
+
+def get_moderators():
+    return User.objects.filter(
+            Q(status='m') | Q(is_superuser=True)
+        ).filter(
+            is_active = True
+        )
 
 def get_users_by_text_query(search_query, users_query_set = None):
     """Runs text search in user names and profile.
@@ -175,6 +183,11 @@ if DJANGO_VERSION > (1, 3):
     User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
 
 User.add_to_class(
+            'avatar_urls',
+            JSONField(default={})
+        )
+
+User.add_to_class(
             'status',
             models.CharField(
                         max_length = 2,
@@ -221,7 +234,7 @@ User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
 User.add_to_class('website', models.URLField(max_length=200, blank=True))
 #location field is actually city
 User.add_to_class('location', models.CharField(max_length=100, blank=True))
-User.add_to_class('country', CountryField(blank=True))
+User.add_to_class('country', CountryField(blank=True, null=True))
 User.add_to_class('show_country', models.BooleanField(default=False))
 
 User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
@@ -312,8 +325,21 @@ def user_get_avatar_type(self):
     #if we don't have an uploaded avatar, always use gravatar
     return 'g'
 
-@memoize
+
 def user_get_avatar_url(self, size=48):
+    """returns avatar url for a given size
+    JSONField .avatar_urls is used as "cache"
+    to avoid multiple db hits to fetch avatar urls
+    """
+    size = int(size)
+    url = self.avatar_urls.get(size)
+    if not url:
+        url = self.calculate_avatar_url(size)
+        self.avatar_urls[size] = url
+    return url
+
+
+def user_calculate_avatar_url(self, size=48):
     """returns avatar url - by default - gravatar,
     but if application django-avatar is installed
     it will use avatar provided through that app
@@ -324,28 +350,37 @@ def user_get_avatar_url(self, size=48):
         return self.get_default_avatar_url(size)
     elif avatar_type == 'a':
         from avatar.conf import settings as avatar_settings
-        sizes = avatar_settings.AUTO_GENERATE_AVATAR_SIZES
+        sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
         if size not in sizes:
-            logging.critical('add values %d to setting AUTO_GENERATE_AVATAR_SIZES')
+            logging.critical(
+                'add values %d to setting AVATAR_AUTO_GENERATE_SIZES', 
+                size
+            )
 
-        kwargs = {'user': self.username, 'size': size}
-        try:
-            return reverse('avatar_render_primary', kwargs=kwargs)
-        except NoReverseMatch:
-            message = 'Please, make sure that avatar urls are in the urls.py '\
-                      'or update your django-avatar app, '\
-                      'currently it is impossible to serve avatars.'
-            logging.critical(message)
-            raise django_exceptions.ImproperlyConfigured(message)
+        from avatar.util import get_primary_avatar
+        avatar = get_primary_avatar(self, size=size)
+        if avatar:
+            return avatar.avatar_url(size)
+        return self.get_default_avatar_url(size)
+
     assert(avatar_type == 'g')
     return self.get_gravatar_url(size)
 
 
-def user_clear_avatar_cache(self):
+def user_clear_avatar_urls(self):
+    """Assigns avatar urls for each required size.
+    """
+    self.avatar_urls = {}
+
+def user_init_avatar_urls(self):
+    """Assigns missing avatar urls,
+    assumes that remaining avatars are correct"""
     from avatar.conf import settings as avatar_settings
-    sizes = avatar_settings.AUTO_GENERATE_AVATAR_SIZES
+    sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
     for size in sizes:
-        delete_memoized(user_get_avatar_url, self, size=size)
+        size = int(size)
+        if size not in self.avatar_urls:
+            self.avatar_urls[size] = self.calculate_avatar_url(size)
 
 
 def user_get_top_answers_paginator(self, visitor=None):
@@ -679,7 +714,7 @@ def _assert_user_can(
             'perform_action': action_display,
             'your_account_is': _('your account is blocked')
         }
-        error_message = string_concat(error_message, '.</br> ', message_keys.PUNISHED_USER_INFO)
+        error_message = string_concat(error_message, '.</br> ', _(message_keys.PUNISHED_USER_INFO))
 
     elif post and owner_can and user.pk == post.author_id:
         if user.is_suspended() and suspended_owner_cannot:
@@ -1734,6 +1769,13 @@ def user_delete_answer(
     answer.deleted = True
     answer.deleted_by = self
     answer.deleted_at = timestamp
+
+    if answer.endorsed and answer.thread.accepted_answer == answer:
+        #forget about the accepted answer,
+        #but do not erase the "endorsement" info on
+        #the answer post itself, to allow restoring
+        answer.thread.accepted_answer = None
+
     answer.save()
 
     answer.thread.update_answer_count()
@@ -1892,6 +1934,8 @@ def user_restore_post(
             post.thread.save()
         post.thread.reset_cached_data()
         if post.post_type == 'answer':
+            if post.endorsed and post.thread.accepted_answer == None:
+                post.thread.accepted_answer = post
             post.thread.update_answer_count()
             post.thread.update_last_activity_info()
         else:
@@ -2568,7 +2612,7 @@ def user_get_status_display(self):
     elif self.is_watched():
         return _('New User')
     else:
-        raise ValueError('Unknown user status')
+        raise ValueError('Unknown user status %s' % self.status)
 
 
 def user_can_moderate_user(self, other):
@@ -3288,7 +3332,9 @@ User.add_to_class(
 User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_type', user_get_avatar_type)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
-User.add_to_class('clear_avatar_cache', user_clear_avatar_cache)
+User.add_to_class('calculate_avatar_url', user_calculate_avatar_url)
+User.add_to_class('clear_avatar_urls', user_clear_avatar_urls)
+User.add_to_class('init_avatar_urls', user_init_avatar_urls)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
@@ -3908,6 +3954,9 @@ def set_administrator_flag(sender, instance, *args, **kwargs):
     if user.is_superuser and instance.status != 'd':
         instance.status = 'd'
 
+def init_avatar_urls(sender, instance, *args, **kwargs):
+    instance.init_avatar_urls()
+
 def add_missing_subscriptions(sender, instance, created, **kwargs):
     """``sender`` is instance of ``User``. When the ``User``
     is created, any required email subscription settings will be
@@ -3954,12 +4003,6 @@ def post_anonymous_askbot_content(
         pass
     else:
         user.post_anonymous_askbot_content(session_key)
-
-def set_user_avatar_type_flag(instance, created, **kwargs):
-    instance.user.update_avatar_type()
-
-def update_user_avatar_type_flag(instance, **kwargs):
-    instance.user.update_avatar_type()
 
 def make_admin_if_first_user(user, **kwargs):
     """first user automatically becomes an administrator
@@ -4100,6 +4143,11 @@ user_signals = [
         dispatch_uid='set_administrator_flag_on_user_save',
     ),
     signals.GenericSignal(
+        django_signals.pre_save,
+        callback=init_avatar_urls,
+        dispatch_uid='init_avatar_urls_on_user_save',
+    ),
+    signals.GenericSignal(
         django_signals.post_save,
         callback=add_missing_subscriptions,
         dispatch_uid='add_missing_subscriptions_on_user_save',
@@ -4166,20 +4214,6 @@ django_signals.m2m_changed.connect(
     sender=User.groups.through,
     dispatch_uid='record_group_membership_change_on_group_change'
 )
-
-if 'avatar' in django_settings.INSTALLED_APPS:
-    from avatar.models import Avatar
-    django_signals.post_save.connect(
-        set_user_avatar_type_flag,
-        sender=Avatar,
-        dispatch_uid='set_avatar_type_flag_on_avatar_save'
-    )
-    django_signals.post_delete.connect(
-        update_user_avatar_type_flag,
-        sender=Avatar,
-        dispatch_uid='update_avatar_type_flag_on_avatar_delete'
-    )
-
 
 django_signals.post_delete.connect(
     record_cancel_vote,
