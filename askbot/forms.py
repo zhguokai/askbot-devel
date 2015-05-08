@@ -601,10 +601,10 @@ class ShowQuestionForm(forms.Form):
     answer = forms.IntegerField(required=False)
     comment = forms.IntegerField(required=False)
     page = PageField()
-    sort_method = SortField(
-                        choices=const.ANSWER_SORT_METHODS,
-                        default=const.DEFAULT_ANSWER_SORT_METHOD
-                    )
+    sort = SortField(
+                choices=const.ANSWER_SORT_METHODS,
+                default=const.DEFAULT_ANSWER_SORT_METHOD
+            )
 
     def get_pruned_data(self):
         nones = ('answer', 'comment', 'page')
@@ -612,9 +612,9 @@ class ShowQuestionForm(forms.Form):
             if key in self.cleaned_data:
                 if self.cleaned_data[key] is None:
                     del self.cleaned_data[key]
-        if 'sort_method' in self.cleaned_data:
-            if self.cleaned_data['sort_method'] == '':
-                del self.cleaned_data['sort_method']
+        if 'sort' in self.cleaned_data:
+            if self.cleaned_data['sort'] == '':
+                del self.cleaned_data['sort']
         return self.cleaned_data
 
     def clean(self):
