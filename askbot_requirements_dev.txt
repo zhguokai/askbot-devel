@@ -28,5 +28,6 @@ pytz
 sanction
 django-tinymce
 longerusername
+mock==1.0.1
 beautifulsoup4
 django-picklefield==0.3.0
