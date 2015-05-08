@@ -278,6 +278,12 @@ def get_login_link(text=None):
     text = text or _('please login')
     return '<a href="%s">%s</a>' % (get_login_url(), text)
 
+def get_visible_text(html):
+    """returns visible text from html"""
+    soup = BeautifulSoup(html, 'html5lib')
+    [s.extract() for s in soup(['style', 'script', '[document]', 'head', 'title'])]
+    return soup.get_text()
+
 def unescape(text):
     """source: http://effbot.org/zone/re-sub.htm#unescape-html
     Removes HTML or XML character references and entities from a text string.
