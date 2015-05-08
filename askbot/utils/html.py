@@ -279,7 +279,9 @@ def get_login_link(text=None):
     return '<a href="%s">%s</a>' % (get_login_url(), text)
 
 def get_visible_text(html):
-    """returns visible text from html"""
+    """returns visible text from html
+    http://stackoverflow.com/a/19760007/110274
+    """
     soup = BeautifulSoup(html, 'html5lib')
     [s.extract() for s in soup(['style', 'script', '[document]', 'head', 'title'])]
     return soup.get_text()
