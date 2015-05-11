@@ -1948,11 +1948,11 @@ def user_restore_post(
                     tag.deleted_by = None
                     tag.deleted_at = None
                     tag.save()
-            signals.after_post_restored.send(
-                sender=post.__class__,
-                instance=post,
-                restored_by=self,
-            )
+        signals.after_post_restored.send(
+            sender=post.__class__,
+            instance=post,
+            restored_by=self,
+        )
     else:
         raise NotImplementedError()
 
@@ -3733,7 +3733,7 @@ def record_cancel_vote(instance, **kwargs):
 
 #todo: weird that there is no record delete answer or comment
 #is this even necessary to keep track of?
-def record_delete_question(instance, delete_by, **kwargs):
+def record_delete_question(instance, deleted_by, **kwargs):
     """
     when user deleted the question
     """
@@ -3745,7 +3745,7 @@ def record_delete_question(instance, delete_by, **kwargs):
         return
 
     activity = Activity(
-                    user=delete_by,
+                    user=deleted_by,
                     active_at=datetime.datetime.now(),
                     content_object=instance,
                     activity_type=activity_type,
