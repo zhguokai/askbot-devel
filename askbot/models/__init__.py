@@ -1618,6 +1618,8 @@ def user_merge_duplicate_questions(self, from_q, to_q):
 
     #from_thread.spaces.clear()
     from_thread.delete()
+    to_thread.answer_count = to_thread.get_answers().count()
+    to_thread.save()
     to_thread.invalidate_cached_data()
 
 
