@@ -336,8 +336,9 @@ def complete_oauth2_signin(request):
         request.session['email'] = profile.get('email', '')
         request.session['username'] = profile.get('username', '')
     elif provider_name == 'google-plus' and user is None:
+        #todo: factor this out into separate function
         #attempt to migrate user from the old OpenId protocol
-        openid_url = util.google_gplus_get_openid_url(client)
+        openid_url, email = util.google_gplus_get_openid_data(client)
         if openid_url:
             msg_tpl = 'trying to migrate user from OpenID %s to g-plus %s'
             logging.critical(msg_tpl, str(openid_url), str(user_id))
@@ -348,6 +349,21 @@ def complete_oauth2_signin(request):
             if user:
                 util.google_migrate_from_openid_to_gplus(openid_url, user_id)
                 logging.critical('migrated login from OpenID to g-plus')
+            elif email:
+                user = authenticate(
+                            email=email,
+                            method='any_email'
+                            #don't check whether email was validated
+                        )
+                if user:
+                    #create association
+                    assoc = UserAssociation(
+                                        user=user,
+                                        openid_url=user_id,
+                                        provider_name='google-plus'
+                                    )
+                    assoc.save()
+
 
 
     return finalize_generic_signin(

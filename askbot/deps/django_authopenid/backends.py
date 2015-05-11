@@ -158,7 +158,7 @@ class AuthBackend(object):
             except User.DoesNotExist:
                 return None
 
-        elif method == 'valid_email':
+        elif method in ('valid_email', 'any_email'):
             try:
                 user = User.objects.get(email=email)
             except User.DoesNotExist:
@@ -171,7 +171,7 @@ class AuthBackend(object):
                 )
                 return None
 
-            if user.email_isvalid == False:
+            if method == 'valid_email' and user.email_isvalid == False:
                 return None
 
             return user

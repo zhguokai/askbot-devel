@@ -1004,7 +1004,7 @@ def mozilla_persona_get_email_from_assertion(assertion):
     #todo: nead more feedback to help debug fail cases
     return None
 
-def google_gplus_get_openid_url(client):
+def google_gplus_get_openid_data(client):
     """no jwt validation since token comes directly from google"""
     if hasattr(client, 'id_token'):
         token = client.id_token.split('.')[1]
@@ -1012,7 +1012,7 @@ def google_gplus_get_openid_url(client):
         token = token + '='*(4 - len(token)%4)
         token = base64.urlsafe_b64decode(token)
         data = simplejson.loads(token)
-        return data.get('openid_id')
+        return data.get('openid_id'), data.get('email')
     return None
 
 def google_migrate_from_openid_to_gplus(openid_url, gplus_id):
