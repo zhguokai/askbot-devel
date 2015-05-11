@@ -1783,10 +1783,10 @@ def user_delete_answer(
     answer.thread.invalidate_cached_data()
     logging.debug('updated answer count to %d' % answer.thread.answer_count)
 
-    signals.delete_question_or_answer.send(
+    signals.after_post_removed.send(
         sender = answer.__class__,
         instance = answer,
-        delete_by = self
+        deleted_by = self
     )
     award_badges_signal.send(None,
                 event = 'delete_post',
@@ -1822,10 +1822,10 @@ def user_delete_question(
             tag.used_count = tag.used_count - 1
         tag.save()
 
-    signals.delete_question_or_answer.send(
+    signals.after_post_removed.send(
         sender = question.__class__,
         instance = question,
-        delete_by = self
+        deleted_by = self
     )
     award_badges_signal.send(None,
                 event = 'delete_post',
@@ -1948,6 +1948,11 @@ def user_restore_post(
                     tag.deleted_by = None
                     tag.deleted_at = None
                     tag.save()
+            signals.after_post_restored.send(
+                sender=post.__class__,
+                instance=post,
+                restored_by=self,
+            )
     else:
         raise NotImplementedError()
 
@@ -4182,7 +4187,7 @@ django_signals.post_delete.connect(
 )
 
 #change this to real m2m_changed with Django1.2
-signals.delete_question_or_answer.connect(
+signals.after_post_removed.connect(
     record_delete_question,
     sender=Post,
     dispatch_uid='record_delete_question_on_delete_post'

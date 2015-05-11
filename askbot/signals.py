@@ -23,9 +23,10 @@ tags_updated = django.dispatch.Signal(
                         providing_args=['tags', 'user', 'timestamp']
                     )
 
-delete_question_or_answer = django.dispatch.Signal(
-                                    providing_args=['instance', 'deleted_by']
-                                )
+after_post_removed = django.dispatch.Signal(
+    providing_args=['instance', 'deleted_by'])
+after_post_restored = django.dispatch.Signal(
+    providing_args=['instance', 'restored_by'])
 flag_offensive = django.dispatch.Signal(providing_args=['instance', 'mark_by'])
 remove_flag_offensive = django.dispatch.Signal(providing_args=['instance', 'mark_by'])
 user_updated = django.dispatch.Signal(providing_args=['instance', 'updated_by'])
@@ -101,7 +102,8 @@ def pop_all_db_signal_receivers():
     signals = (
         #askbot signals
         tags_updated,
-        delete_question_or_answer,
+        after_post_removed,
+        after_post_restored,
         flag_offensive,
         remove_flag_offensive,
         user_updated,
