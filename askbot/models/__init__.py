@@ -1593,7 +1593,7 @@ def user_merge_duplicate_questions(self, from_q, to_q):
     """merges content from the ``from_thread`` to the ``to-thread``"""
     #todo: maybe assertion will depend on which questions are merged
     self.assert_can_merge_questions()
-    to_q.merge_post(from_q)
+    to_q.merge_post(from_q, user=self)
     from_thread = from_q.thread
     to_thread = to_q.thread
     #set new thread value to all posts
@@ -1614,10 +1614,14 @@ def user_merge_duplicate_questions(self, from_q, to_q):
             if author_answers > 1:
                 first_answer = author_answers.pop(0)
                 for answer in author_answers:
-                    first_answer.merge_post(answer)
+                    first_answer.merge_post(answer, user=self)
 
     #from_thread.spaces.clear()
     from_thread.delete()
+    to_thread.answer_count = to_thread.get_answers().count()
+    to_thread.last_activity_by = self
+    to_thread.last_activity_at = datetime.datetime.now()
+    to_thread.save()
     to_thread.invalidate_cached_data()
 
 
