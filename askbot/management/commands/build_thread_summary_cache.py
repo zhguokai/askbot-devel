@@ -14,13 +14,12 @@ class Command(BaseCommand):
             '-l',
             '--language',
             action='append',
-            default=(django_settings.LANGUAGE_CODE,),
             help='Specify the languages for which the cache has to be rebuilt.'
         ),
     )
 
     def handle(self, **options):
-        languages = options['language']
+        languages = options['language'] or (django_settings.LANGUAGE_CODE,)
         for l in languages:
             translation.activate(l)
             message = 'Rebuilding {} thread summary cache'.format(l.upper())
