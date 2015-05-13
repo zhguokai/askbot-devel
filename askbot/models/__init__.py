@@ -574,6 +574,20 @@ def user_can_post_by_email(self):
         return False
 
 
+def user_can_see_karma(self, karma_owner):
+    """True, if user can see other users karma"""
+    if askbot_settings.KARMA_MODE == 'public':
+        return True
+    elif askbot_settings.KARMA_MODE == 'private':
+        if self.is_anonymous():
+            return False
+        elif self.is_administrator_or_moderator():
+            return True
+        elif self.pk == karma_owner.pk:
+            return True
+    return False
+
+
 def user_get_social_sharing_mode(self):
     """returns what user wants to share on his/her channels"""
     mode = self.social_sharing_mode
@@ -3391,6 +3405,7 @@ User.add_to_class('is_owner_of', user_is_owner_of)
 User.add_to_class('has_interesting_wildcard_tags', user_has_interesting_wildcard_tags)
 User.add_to_class('has_ignored_wildcard_tags', user_has_ignored_wildcard_tags)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
+User.add_to_class('can_see_karma', user_can_see_karma)
 User.add_to_class('has_affinity_to_question', user_has_affinity_to_question)
 User.add_to_class('has_badge', user_has_badge)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
