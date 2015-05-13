@@ -1,6 +1,7 @@
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
+from django.conf import settings as django_settings
 from django.utils import translation
 
 from askbot.models import Thread
@@ -13,15 +14,13 @@ class Command(BaseCommand):
             '-l',
             '--language',
             action='append',
+            default=(django_settings.LANGUAGE_CODE,),
             help='Specify the languages for which the cache has to be rebuilt.'
         ),
     )
 
     def handle(self, **options):
         languages = options['language']
-        if not languages:
-            languages = [translation.get_language()]
-
         for l in languages:
             translation.activate(l)
             message = 'Rebuilding {} thread summary cache'.format(l.upper())
