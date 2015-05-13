@@ -99,6 +99,12 @@ def onFlaggedItem(post, user, timestamp=None):
         #post.deleted_by = Admin
         post.save()
 
+        signals.after_post_removed.send(
+            sender=post.__class__,
+            instance=post,
+            deleted_by=user,
+        )
+
 
 @transaction.commit_on_success
 def onUnFlaggedItem(post, user, timestamp=None):
@@ -180,6 +186,13 @@ def onUnFlaggedItem(post, user, timestamp=None):
 
         post.deleted = False
         post.save()
+
+        signals.after_post_restored.send(
+            sender=post.__class__,
+            instance=post,
+            restored_by=user,
+        )
+
 
 @transaction.commit_on_success
 def onAnswerAccept(answer, user, timestamp=None):

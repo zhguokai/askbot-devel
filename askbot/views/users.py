@@ -1131,20 +1131,7 @@ def user(request, id, slug=None, tab_name=None):
     if not tab_name:
         tab_name = request.GET.get('sort', 'stats')
 
-    if askbot_settings.KARMA_MODE == 'public':
-        can_show_karma = True
-    elif askbot_settings.KARMA_MODE == 'hidden':
-        can_show_karma = False
-    else:
-        if request.user.is_anonymous():
-            can_show_karma = False
-        elif request.user.is_administrator_or_moderator():
-            can_show_karma = True
-        elif request.user.pk == profile_owner.pk:
-            can_show_karma = True
-        else:
-            can_show_karma = False
-
+    can_show_karma = request.user.can_see_karma(profile_owner)
     if can_show_karma == False and tab_name == 'reputation':
         raise Http404
 

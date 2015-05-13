@@ -28,7 +28,7 @@ class AskbotRealtimeSignalProcessor(RealtimeSignalProcessor):
         super(AskbotRealtimeSignalProcessor, self).setup()
 
         try:
-            askbot_signals.delete_question_or_answer.connect(self.handle_delete)
+            askbot_signals.after_post_removed.connect(self.handle_delete)
         except ImportError:
             pass
 
@@ -36,7 +36,7 @@ class AskbotRealtimeSignalProcessor(RealtimeSignalProcessor):
         super(AskbotRealtimeSignalProcessor, self).setup()
         #askbot signals
         try:
-            askbot_signals.delete_question_or_answer.disconnect(self.handle_delete)
+            askbot_signals.after_post_removed.disconnect(self.handle_delete)
         except ImportError:
             pass
 
@@ -51,7 +51,7 @@ try:
             django_signals.post_save.connect(self.enqueue_save)
             django_signals.post_delete.connect(self.enqueue_delete)
             try:
-                askbot_signals.delete_question_or_answer.connect(self.enqueue_delete)
+                askbot_signals.after_post_removed.connect(self.enqueue_delete)
             except ImportError:
                 pass
 
@@ -61,7 +61,7 @@ try:
             django_signals.post_delete.disconnect(self.enqueue_delete)
 
             try:
-                askbot_signals.delete_question_or_answer.disconnect(self.enqueue_delete)
+                askbot_signals.after_post_removed.disconnect(self.enqueue_delete)
             except ImportError:
                 pass
 

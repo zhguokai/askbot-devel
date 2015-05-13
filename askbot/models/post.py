@@ -896,7 +896,7 @@ class Post(models.Model):
         groups = (Group.objects.get_global_group(),)
         self.add_to_groups(groups)
 
-    def merge_post(self, post):
+    def merge_post(self, post, user=None):
         """merge with other post"""
         #take latest revision of current post R1
         rev = self.get_latest_revision()
@@ -905,9 +905,8 @@ class Post(models.Model):
             #for each revision of other post Ri
             #append content of Ri to R1 and use author 
             new_text = orig_text + '\n\n' + rev.text
-            author = rev.author
             self.apply_edit(
-                edited_by=rev.author,
+                edited_by=user,
                 text=new_text, 
                 comment=_('merged revision'),
                 by_email=False,

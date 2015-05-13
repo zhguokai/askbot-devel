@@ -108,7 +108,12 @@ def show_list(request, user_id=None, extra_context=None, avatar_size=128):
     user = get_object_or_404(User, pk=user_id)
     avatar_data, has_uploaded_avatar, can_upload = get_avatar_data(user, avatar_size)
     status_message = request.session.pop('askbot_avatar_status_message', None)
+
     context = {
+        #these are user profile context vars
+        'can_show_karma': request.user.can_see_karma(user),
+        'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
+        #below are pure avatar view context vars
         'avatar_data': avatar_data,
         'has_uploaded_avatar': has_uploaded_avatar,
         'can_upload': can_upload,

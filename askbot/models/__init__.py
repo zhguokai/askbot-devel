@@ -574,6 +574,20 @@ def user_can_post_by_email(self):
         return False
 
 
+def user_can_see_karma(self, karma_owner):
+    """True, if user can see other users karma"""
+    if askbot_settings.KARMA_MODE == 'public':
+        return True
+    elif askbot_settings.KARMA_MODE == 'private':
+        if self.is_anonymous():
+            return False
+        elif self.is_administrator_or_moderator():
+            return True
+        elif self.pk == karma_owner.pk:
+            return True
+    return False
+
+
 def user_get_social_sharing_mode(self):
     """returns what user wants to share on his/her channels"""
     mode = self.social_sharing_mode
@@ -1593,7 +1607,7 @@ def user_merge_duplicate_questions(self, from_q, to_q):
     """merges content from the ``from_thread`` to the ``to-thread``"""
     #todo: maybe assertion will depend on which questions are merged
     self.assert_can_merge_questions()
-    to_q.merge_post(from_q)
+    to_q.merge_post(from_q, user=self)
     from_thread = from_q.thread
     to_thread = to_q.thread
     #set new thread value to all posts
@@ -1614,10 +1628,14 @@ def user_merge_duplicate_questions(self, from_q, to_q):
             if author_answers > 1:
                 first_answer = author_answers.pop(0)
                 for answer in author_answers:
-                    first_answer.merge_post(answer)
+                    first_answer.merge_post(answer, user=self)
 
     #from_thread.spaces.clear()
     from_thread.delete()
+    to_thread.answer_count = to_thread.get_answers().count()
+    to_thread.last_activity_by = self
+    to_thread.last_activity_at = datetime.datetime.now()
+    to_thread.save()
     to_thread.reset_cached_data()
 
 
@@ -1783,10 +1801,10 @@ def user_delete_answer(
     answer.thread.reset_cached_data()
     logging.debug('updated answer count to %d' % answer.thread.answer_count)
 
-    signals.delete_question_or_answer.send(
+    signals.after_post_removed.send(
         sender = answer.__class__,
         instance = answer,
-        delete_by = self
+        deleted_by = self
     )
     award_badges_signal.send(None,
                 event = 'delete_post',
@@ -1822,10 +1840,10 @@ def user_delete_question(
             tag.used_count = tag.used_count - 1
         tag.save()
 
-    signals.delete_question_or_answer.send(
+    signals.after_post_removed.send(
         sender = question.__class__,
         instance = question,
-        delete_by = self
+        deleted_by = self
     )
     award_badges_signal.send(None,
                 event = 'delete_post',
@@ -1948,6 +1966,11 @@ def user_restore_post(
                     tag.deleted_by = None
                     tag.deleted_at = None
                     tag.save()
+        signals.after_post_restored.send(
+            sender=post.__class__,
+            instance=post,
+            restored_by=self,
+        )
     else:
         raise NotImplementedError()
 
@@ -3417,6 +3440,7 @@ User.add_to_class('is_owner_of', user_is_owner_of)
 User.add_to_class('has_interesting_wildcard_tags', user_has_interesting_wildcard_tags)
 User.add_to_class('has_ignored_wildcard_tags', user_has_ignored_wildcard_tags)
 User.add_to_class('can_moderate_user', user_can_moderate_user)
+User.add_to_class('can_see_karma', user_can_see_karma)
 User.add_to_class('has_affinity_to_question', user_has_affinity_to_question)
 User.add_to_class('has_badge', user_has_badge)
 User.add_to_class('moderate_user_reputation', user_moderate_user_reputation)
@@ -3768,7 +3792,7 @@ def record_cancel_vote(instance, **kwargs):
 
 #todo: weird that there is no record delete answer or comment
 #is this even necessary to keep track of?
-def record_delete_question(instance, delete_by, **kwargs):
+def record_delete_question(instance, deleted_by, **kwargs):
     """
     when user deleted the question
     """
@@ -3780,7 +3804,7 @@ def record_delete_question(instance, delete_by, **kwargs):
         return
 
     activity = Activity(
-                    user=delete_by,
+                    user=deleted_by,
                     active_at=datetime.datetime.now(),
                     content_object=instance,
                     activity_type=activity_type,
@@ -4222,7 +4246,7 @@ django_signals.post_delete.connect(
 )
 
 #change this to real m2m_changed with Django1.2
-signals.delete_question_or_answer.connect(
+signals.after_post_removed.connect(
     record_delete_question,
     sender=Post,
     dispatch_uid='record_delete_question_on_delete_post'
