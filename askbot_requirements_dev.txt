@@ -13,7 +13,7 @@ django-appconf
 django-compressor==1.2
 django-keyedcache
 django-threaded-multihost
-django-robots
+django-robots==1.0
 unidecode
 django-countries==3.3
 django-celery>=3.0.11

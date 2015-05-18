@@ -13,7 +13,7 @@ django-keyedcache
 django-kombu==0.9.4
 django-picklefield==0.3.0
 django-recaptcha-works
-django-robots
+django-robots==1.0
 django-threaded-multihost
 django-tinymce==1.5.1b2
 django>=1.5,<1.6
