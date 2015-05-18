@@ -574,16 +574,16 @@ def user_can_post_by_email(self):
         return False
 
 
-def user_can_see_karma(self, karma_owner):
+def user_can_see_karma(user, karma_owner):
     """True, if user can see other users karma"""
     if askbot_settings.KARMA_MODE == 'public':
         return True
     elif askbot_settings.KARMA_MODE == 'private':
-        if self.is_anonymous():
+        if user.is_anonymous():
             return False
-        elif self.is_administrator_or_moderator():
+        elif user.is_administrator_or_moderator():
             return True
-        elif self.pk == karma_owner.pk:
+        elif user.pk == karma_owner.pk:
             return True
     return False
 

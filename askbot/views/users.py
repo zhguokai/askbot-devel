@@ -1131,7 +1131,7 @@ def user(request, id, slug=None, tab_name=None):
     if not tab_name:
         tab_name = request.GET.get('sort', 'stats')
 
-    can_show_karma = request.user.can_see_karma(profile_owner)
+    can_show_karma = models.user_can_see_karma(request.user, profile_owner)
     if can_show_karma == False and tab_name == 'reputation':
         raise Http404
 
