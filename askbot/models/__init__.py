@@ -22,7 +22,7 @@ from django.template.loader import get_template
 from django.utils.translation import get_language
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import ungettext, override
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 from django.db import models
@@ -3638,16 +3638,17 @@ def notify_award_message(instance, created, **kwargs):
     if created:
         user = instance.user
 
-        badge = get_badge(instance.badge.slug)
+        with override(user.get_primary_language()):
+            badge = get_badge(instance.badge.slug)
 
-        msg = _(u"Congratulations, you have received a badge '%(badge_name)s'. "
-                u"Check out <a href=\"%(user_profile)s\">your profile</a>.") \
-                % {
-                    'badge_name':badge.name,
-                    'user_profile':user.get_profile_url()
-                }
+            msg = _(u"Congratulations, you have received a badge '%(badge_name)s'. "
+                    u"Check out <a href=\"%(user_profile)s\">your profile</a>.") \
+                    % {
+                        'badge_name':badge.name,
+                        'user_profile':user.get_profile_url()
+                    }
 
-        user.message_set.create(message=msg)
+            user.message_set.create(message=msg)
 
 def record_answer_accepted(instance, created, **kwargs):
     """
