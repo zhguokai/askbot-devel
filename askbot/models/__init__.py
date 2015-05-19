@@ -2424,14 +2424,12 @@ def user_is_administrator(self):
     the admin must be both superuser and staff member
     the latter is because staff membership is required
     to access the live settings"""
-    return (self.is_superuser and self.is_staff)
+    return self.is_superuser
 
 def user_remove_admin_status(self):
-    self.is_staff = False
     self.is_superuser = False
 
 def user_set_admin_status(self):
-    self.is_staff = True
     self.is_superuser = True
 
 def user_add_missing_askbot_subscriptions(self):
@@ -3954,8 +3952,12 @@ def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
 
 def set_administrator_flag(sender, instance, *args, **kwargs):
     user = instance
-    if user.is_superuser and instance.status != 'd':
-        instance.status = 'd'
+    if user.is_superuser:
+        if instance.status != 'd':
+            instance.status = 'd'
+    elif instance.status == 'd':
+        instance.status = 'a'
+        
 
 def init_avatar_urls(sender, instance, *args, **kwargs):
     instance.init_avatar_urls()
