@@ -1392,6 +1392,9 @@ def user_assert_can_delete_comment(self, comment = None):
         min_rep_setting = min_rep_setting,
     )
 
+    if self.is_administrator_or_moderator():
+        return
+
     if comment.author_id == self.pk:
         if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
             now = datetime.datetime.now()
