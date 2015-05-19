@@ -12,9 +12,9 @@ class Command(NoArgsCommand):
                  .update(status='d'))
 
         # Make sure all normal users have their status not set to 'd'
-        fixed = (User.objects
-                 .filter(status='d')
-                 .exclude(is_superuser=True)
-                 .update(status='a'))
+        fixed += (User.objects
+                  .filter(status='d')
+                  .exclude(is_superuser=True)
+                  .update(status='a'))
 
         self.stdout.write('Fixed the status of {} users.'.format(fixed))
