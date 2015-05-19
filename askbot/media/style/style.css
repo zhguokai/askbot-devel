@@ -3467,6 +3467,7 @@ body.question-page ins, body.main-page ins {
   font-family: Arial;
   font-size: 14px;
   font-weight: normal;
+  min-width: 200px;
   padding-bottom: 10px;
   position: absolute;
   text-align: center;

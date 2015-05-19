@@ -1235,6 +1235,7 @@ def user_assert_can_delete_answer(self, answer = None):
     assert on deleting question (in addition to some special rules)
     """
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS
+
     _assert_user_can(
         user=self,
         post=answer,
@@ -1381,7 +1382,6 @@ def user_assert_can_retag_question(self, question = None):
 def user_assert_can_delete_comment(self, comment = None):
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS
 
-
     _assert_user_can(
         user = self,
         post = comment,
@@ -1391,6 +1391,21 @@ def user_assert_can_delete_comment(self, comment = None):
         suspended_user_cannot=True,
         min_rep_setting = min_rep_setting,
     )
+
+    if comment.author_id == self.pk:
+        if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
+            now = datetime.datetime.now()
+            delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
+            if now - comment.added_at > datetime.timedelta(0, delta_seconds):
+                if not comment.is_last():
+                    error_message = ungettext(
+                        'Sorry, comments (except the last one) are deletable only '
+                        'within %(minutes)s minute from posting',
+                        'Sorry, comments (except the last one) are deletable only '
+                        'within %(minutes)s minutes from posting',
+                        askbot_settings.MINUTES_TO_EDIT_COMMENT
+                    ) % {'minutes': askbot_settings.MINUTES_TO_EDIT_COMMENT}
+                    raise django_exceptions.PermissionDenied(error_message)
 
 
 def user_assert_can_revoke_old_vote(self, vote):
