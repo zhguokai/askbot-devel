@@ -14,17 +14,12 @@ import logging
 import urllib
 
 
-def clean_next(next, default=None):
-    if next is None or not next.startswith('/'):
-        if default:
-            return default
-        else:
-            return reverse('index')
-    if isinstance(next, str):
-        next = unicode(urllib.unquote(next), 'utf-8', 'replace')
-    next = next.strip()
-    logging.debug('next url is %s' % next)
-    return next
+def clean_next(next_url, default=None):
+    if next_url is None or not next_url.startswith('/'):
+        return default or reverse('index')
+    if isinstance(next_url, str):
+        next_url = unicode(urllib.unquote(next_url), 'utf-8', 'replace')
+    return next_url.strip()
 
 def get_error_list(form_instance):
     """return flat list of error values for the form"""
@@ -34,7 +29,7 @@ def get_error_list(form_instance):
         errors.extend(list(error_list))
     return errors
 
-def get_next_url(request, default = None):
+def get_next_url(request, default=None):
     return clean_next(request.REQUEST.get('next'), default)
 
 def get_db_object_or_404(params):

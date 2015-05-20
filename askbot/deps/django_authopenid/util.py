@@ -420,7 +420,7 @@ def get_enabled_major_login_providers():
             'display_name': askbot_settings.SIGNIN_CUSTOM_OPENID_NAME,
             'type': askbot_settings.SIGNIN_CUSTOM_OPENID_MODE,
             'icon_media_path': askbot_settings.SIGNIN_CUSTOM_OPENID_LOGIN_BUTTON,
-            'tooltip_text': _('Login with %(login_name)s') % context_dict,
+            'tooltip_text': _('Sign in via %(login_name)s') % context_dict,
             'openid_endpoint': askbot_settings.SIGNIN_CUSTOM_OPENID_ENDPOINT,
             'extra_token_name': _('%(login_name)s username') % context_dict
         }
@@ -595,10 +595,10 @@ def get_enabled_major_login_providers():
     data['aol'] = {
         'name': 'aol',
         'display_name': 'AOL',
-        'type': 'openid-username',
+        'type': 'openid-direct',
         'extra_token_name': _('AOL screen name'),
         'icon_media_path': 'images/jquery-openid/aol.gif',
-        'openid_endpoint': 'http://openid.aol.com/%(username)s'
+        'openid_endpoint': 'http://openid.aol.com'
     }
     data['launchpad'] = {
         'name': 'launchpad',
@@ -721,6 +721,25 @@ def get_enabled_login_providers():
     data.update(get_enabled_minor_login_providers())
     return data
 
+def get_the_only_login_provider():
+    """Returns login provider datum if:
+    * only one provider is enabled
+    * this provider is a third party provider
+    Otherwise returns `None`
+    """
+    providers = get_enabled_login_providers()
+    if len(providers) == 1:
+        provider = providers.values()[0]
+        if not provider_requires_login_page(provider):
+            return provider
+    return None
+
+def provider_requires_login_page(provider):
+    """requires login page if password needs to be
+    entered or username or openid url"""
+    #todo: test with mozilla persona openid-username openid-generic
+    return provider['type'] not in ('openid-direct', 'oauth', 'oauth2')
+
 def set_login_provider_tooltips(provider_dict, active_provider_names = None):
     """adds appropriate tooltip_text field to each provider
     record, if second argument is None, then tooltip is of type
@@ -765,8 +784,8 @@ def set_login_provider_tooltips(provider_dict, active_provider_names = None):
                     }
             else:
                 tooltip = _(
-                        'Sign in with your %(provider)s account'
-                    ) % {'provider': provider['display_name']}
+                        'Sign in via %(login_name)s'
+                    ) % {'login_name': provider['display_name']}
         provider['tooltip_text'] = tooltip
 
 

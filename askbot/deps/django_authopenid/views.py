@@ -457,7 +457,7 @@ def signin(request, template_name='authopenid/signin.html'):
     #2) url from django setting LOGIN_REDIRECT_URL
     #3) home page of the forum
     login_redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
-    next_url = get_next_url(request, default = login_redirect_url)
+    next_url = get_next_url(request, default=login_redirect_url)
     logging.debug('next url is %s' % next_url)
 
     if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
@@ -467,7 +467,7 @@ def signin(request, template_name='authopenid/signin.html'):
     if next_url == reverse('user_signin'):
         next_url = '%(next)s?next=%(next)s' % {'next': next_url}
 
-    login_form = forms.LoginForm(initial = {'next': next_url})
+    login_form = forms.LoginForm(initial={'next': next_url})
 
     #todo: get next url make it sticky if next is 'user_signin'
     if request.method == 'POST':
