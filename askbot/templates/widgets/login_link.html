@@ -1,5 +1,6 @@
 {% if unique_login_provider %}
-    <form id="signin-form" method="post" action="{{ settings.LOGIN_URL }}">{% csrf_token %}
+    <form id="signin-form" method="post" action="{{ settings.LOGIN_URL }}">
+        {{ macros.csrf_middleware_token(csrf_token) }}
         {{ login_form.next }}
         {{ login_form.persona_assertion }}
         <input 
