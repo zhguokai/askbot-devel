@@ -210,12 +210,9 @@ User.add_to_class(
     'avatar_type',
     models.CharField(
         max_length=1,
-        choices=(
-            ('n', _('None')),
-            ('g', _('Gravatar')),#only if user has real uploaded gravatar
-            ('a', _('Uploaded Avatar')),#avatar uploaded locally - with django-avatar app
-        ),
-        default='n'
+        choices=const.AVATAR_TYPE_CHOICES,
+        default='n' #for real set by the init_avatar_type based
+        #on the livesetting value
     )
 )
 User.add_to_class('gold', models.SmallIntegerField(default=0))
@@ -3957,6 +3954,13 @@ def set_administrator_flag(sender, instance, *args, **kwargs):
             instance.status = 'd'
     elif instance.status == 'd':
         instance.status = 'a'
+
+
+def init_avatar_type(sender, instance, *args, **kwargs):
+    user = instance
+    #if user is new, set avatar type
+    if not user.pk:
+        user.avatar_type = askbot_settings.AVATAR_TYPE_FOR_NEW_USERS
         
 
 def init_avatar_urls(sender, instance, *args, **kwargs):
@@ -4146,6 +4150,11 @@ user_signals = [
         django_signals.pre_save,
         callback=set_administrator_flag,
         dispatch_uid='set_administrator_flag_on_user_save',
+    ),
+    signals.GenericSignal(
+        django_signals.pre_save,
+        callback=init_avatar_type,
+        dispatch_uid='init_avatar_type_on_user_create'
     ),
     signals.GenericSignal(
         django_signals.pre_save,

@@ -4,6 +4,7 @@ Changes in Askbot
 Development version (not released)
 ----------------------------------
 * Added management command `askbot_rebuild_avatars`
+* Added option to choose gravatar or default avatar for new users
 
 0.7.53 (Apr 22, 2015)
 ---------------------

@@ -473,11 +473,21 @@ USERNAME_REGEX_STRING = r'^[\w \-.@+\']+$'
 
 GRAVATAR_TYPE_CHOICES = (
                             ('identicon',_('identicon')),
-                            ('mm',_('mystery-man')),
                             ('monsterid',_('monsterid')),
                             ('wavatar',_('wavatar')),
                             ('retro',_('retro')),
+                            ('mm',_('mystery-man')),
                         )
+
+AVATAR_TYPE_CHOICES_FOR_NEW_USERS = (
+    ('n', _('Default avatar')),
+    ('g', _('Gravatar')),#only if user has real uploaded gravatar
+)
+
+AVATAR_TYPE_CHOICES = AVATAR_TYPE_CHOICES_FOR_NEW_USERS + (
+                    #avatar uploaded locally - with django-avatar app
+                    ('a', _('Uploaded Avatar')),
+                )
 
 #chars that can go before or after @mention
 TWITTER_STYLE_MENTION_TERMINATION_CHARS = '\n ;:,.!?<>"\''
