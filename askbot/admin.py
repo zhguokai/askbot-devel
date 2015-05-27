@@ -125,9 +125,24 @@ class PostToGroupInline(admin.TabularInline):
     model = models.PostToGroup
     extra = 1
 
+class IsPrivate(SimpleListFilter):
+    title = 'is private'
+    parameter_name = 'is_private'
+
+    def lookups(self, request, model_admin):
+        return (('1', 'Yes'), ('0', 'No'))
+    def queryset(self, request, queryset):
+        global_group = models.Group.objects.get_global_group()
+        if self.value() == '1':
+            return queryset.exclude(groups__id=global_group.id)
+        elif self.value() == '0':
+            return queryset.filter(groups__id=global_group.id)
+        else:
+            return queryset
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'post_type', 'thread', 'author', 'text_30', 'added_at', 'deleted', 'in_groups', 'is_published', 'is_private', 'vote_up_count', 'language_code')
-    list_filter = ('deleted', 'post_type', 'language_code', 'vote_up_count')
+    list_filter = ('deleted', IsPrivate, 'post_type', 'language_code', 'vote_up_count')
     search_fields = ('id', 'thread__title', 'text', 'author__username')
     inlines = (PostToGroupInline,)
 
