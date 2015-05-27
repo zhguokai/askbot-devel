@@ -2,11 +2,11 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.cache import never_cache
 from askbot.deps.livesettings import ConfigurationSettings, forms
 from askbot.deps.livesettings import ImageValue
 from askbot.deps.livesettings.overrides import get_overrides
+from askbot.utils.decorators import admins_only
 from django.contrib import messages
 import logging
 
@@ -65,7 +65,7 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
         'form': form,
         'use_db' : use_db
     }, context_instance=RequestContext(request))
-group_settings = never_cache(staff_member_required(group_settings))
+group_settings = never_cache(admins_only(group_settings))
 
 # Site-wide setting editor is identical, but without a group
 # staff_member_required is implied, since it calls group_settings
@@ -101,4 +101,4 @@ def export_as_python(request):
 
     return render_to_response('livesettings/text.txt', { 'text' : pretty }, mimetype='text/plain')
 
-export_as_python = never_cache(staff_member_required(export_as_python))
+export_as_python = never_cache(admins_only(export_as_python))

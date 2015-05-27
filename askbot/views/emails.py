@@ -1,6 +1,6 @@
 from askbot.mail import messages
 from askbot.mail.messages import BaseEmail
-from askbot.utils.decorators import admins_only
+from askbot.utils.decorators import moderators_only
 from django.http import Http404
 from django.shortcuts import render
 from django.template import Context
@@ -22,7 +22,7 @@ def autodiscover():
 
 autodiscover()
 
-@admins_only
+@moderators_only
 def list_emails(request):
     #list only enabled emails
     enabled = dict((k, v) for k, v in REGISTRY.items() if v().is_enabled())
@@ -35,7 +35,7 @@ DEFAULT_PREVIEW_ERROR_MESSAGE = _(
     'or an error during the rendering'
 )
 
-@admins_only
+@moderators_only
 def preview_email(request, slug):
     if slug not in REGISTRY:
         raise Http404

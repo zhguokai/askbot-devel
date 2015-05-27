@@ -34,7 +34,7 @@ from askbot.mail.messages import FeedbackEmail
 from askbot.models import get_moderators, BadgeData, Award, User, Tag
 from askbot.models import badges as badge_data
 from askbot.skins.loaders import render_text_into_skin
-from askbot.utils.decorators import admins_only
+from askbot.utils.decorators import moderators_only
 from askbot.utils.forms import get_next_url
 from askbot.utils import functions
 from askbot.utils.markup import markdown_input_converter
@@ -232,7 +232,7 @@ def badge(request, id):
     }
     return render(request, 'badge.html', data)
 
-@admins_only
+@moderators_only
 def list_suggested_tags(request):
     """moderators and administrators can list tags that are
     in the moderation queue, apply suggested tag to questions
