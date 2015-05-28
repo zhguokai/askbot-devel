@@ -15,7 +15,7 @@ NOTE that at the moment there is distinction between settings
 
 the value will be taken from askbot.deps.livesettings database or cache
 note that during compilation phase database is not accessible
-for the most part, so actual values are reliably available only 
+for the most part, so actual values are reliably available only
 at run time
 
 askbot.deps.livesettings is a module developed for satchmo project

@@ -518,7 +518,7 @@ class ThreadManager(BaseQuerySetManager):
         # qs = qs.distinct()
 
         qs = qs.only(
-            'id', 'title', 'view_count', 'answer_count', 'last_activity_at', 
+            'id', 'title', 'view_count', 'answer_count', 'last_activity_at',
             'last_activity_by', 'closed', 'tagnames', 'accepted_answer'
         )
 
@@ -770,7 +770,7 @@ class Thread(models.Model):
         if len(answers) > 0:
             return answers[0].id
         return None
-        
+
     def get_answer_ids(self, user=None):
         """give the ids to all the answers for the user"""
         answers = self.get_answers(user=user)
@@ -786,7 +786,7 @@ class Thread(models.Model):
         }
 
         if user and user.is_authenticated() and askbot_settings.GROUPS_ENABLED:
-            #get post with groups shared with having at least 
+            #get post with groups shared with having at least
             #one of the user groups
             #of those posts return the latest revision
             posts_filter['groups__in'] = user.get_groups()
@@ -956,7 +956,7 @@ class Thread(models.Model):
 
         #make sure that tags have correct language code
         self.set_tags_language_code(language_code)
-            
+
 
     def set_accepted_answer(self, answer, actor, timestamp):
         if answer and answer.thread != self:
@@ -1098,7 +1098,7 @@ class Thread(models.Model):
 
     def invalidate_cached_thread_content_fragment(self):
         """Deprecated alias to a new method"""
-        LOG.warning("""Thread.invalidate_cached_thread_content is 
+        LOG.warning("""Thread.invalidate_cached_thread_content is
 deprecated, use invalidate_cached_summary_html""")
         self.invalidate_cached_summary_html()
 
@@ -1175,7 +1175,7 @@ deprecated, use invalidate_cached_summary_html""")
             return post_data
 
         if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' and user.is_watched():
-            #in this branch we patch post_data with the edits suggested by the 
+            #in this branch we patch post_data with the edits suggested by the
             #watched user
             post_data = list(post_data)
             post_ids = self.posts.filter(author=user).values_list('id', flat=True)

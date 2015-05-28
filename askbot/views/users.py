@@ -185,7 +185,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                             users.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?sort=%s&' % sort_method 
+        base_url = request.path + '?sort=%s&' % sort_method
     else:
         sort_method = 'reputation'
         matching_users = models.get_users_by_text_query(search_query, users)

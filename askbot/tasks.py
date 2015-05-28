@@ -84,7 +84,7 @@ def tweet_new_post_task(post_id):
     if post.author.social_sharing_mode != const.SHARE_NOTHING:
         token = simplejson.loads(post.author.twitter_access_token)
         twitter.tweet(tweet_text, access_token=token)
-        
+
 
 @task(ignore_result=True)
 def notify_author_of_published_revision_celery_task(revision_id):

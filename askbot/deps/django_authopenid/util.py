@@ -469,7 +469,7 @@ def get_enabled_major_login_providers():
 
     def get_mediawiki_user_id(data):
         """returns facebook user id given the access token"""
-        connection = data['oauth1_connection'] 
+        connection = data['oauth1_connection']
         client = connection.get_client(data)
         url = 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/identify'
         url, body = connection.normalize_url_and_params(url, {})

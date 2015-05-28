@@ -195,7 +195,7 @@ def vote(request):
                 user.delete_post(post=post)
         else:
             raise ValueError('unexpected vote type %d' % vote_type)
-            
+
 
         if vote_type in const.VOTE_TYPES_INVALIDATE_CACHE:
             post.thread.invalidate_cached_data()

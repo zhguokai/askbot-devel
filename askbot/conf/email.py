@@ -12,7 +12,7 @@ EMAIL_SUBJECT_PREFIX = getattr(django_settings, 'EMAIL_SUBJECT_PREFIX', '')
 
 EMAIL = livesettings.ConfigurationGroup(
             'EMAIL',
-            _('Email and email alert settings'), 
+            _('Email and email alert settings'),
             super_group = LOGIN_USERS_COMMUNICATION
         )
 
@@ -379,7 +379,7 @@ settings.register(
         #TODO give a better explanation depending on lamson startup procedure
         help_text=_(
             'To enable this feature make sure lamson is running'
-            
+
         )
     )
 )
@@ -416,7 +416,7 @@ settings.register(
         default = "",
         description=_('Reply by email hostname'),
         #TODO give a better explanation depending on lamson startup procedure
-        
+
     )
 )
 

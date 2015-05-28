@@ -16,7 +16,7 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
      # manage account registration
     url(r'^%s$' % pgettext('urls', 'signin/'), 'signin', name='user_signin'),
     url(
-        r'^%s%s$' % (pgettext('urls', 'widget/'), pgettext('urls', 'signin/')), 
+        r'^%s%s$' % (pgettext('urls', 'widget/'), pgettext('urls', 'signin/')),
         'signin',
         {'template_name': 'authopenid/widget_signin.html'},
         name='widget_signin'

@@ -662,7 +662,7 @@ class ShowUsersForm(forms.Form):
     query = forms.CharField(required=False)
 
     def clean_sort(self):
-        sort_method = self.cleaned_data['sort'] 
+        sort_method = self.cleaned_data['sort']
         if sort_method == 'reputation' and askbot_settings.KARMA_MODE == 'private':
             self.cleaned_data['sort'] = 'newest'
         return self.cleaned_data['sort']

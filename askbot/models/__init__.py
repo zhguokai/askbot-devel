@@ -350,7 +350,7 @@ def user_calculate_avatar_url(self, size=48):
         sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
         if size not in sizes:
             logging.critical(
-                'add values %d to setting AVATAR_AUTO_GENERATE_SIZES', 
+                'add values %d to setting AVATAR_AUTO_GENERATE_SIZES',
                 size
             )
 
@@ -712,7 +712,7 @@ def _assert_user_can(
 
     elif user.is_active == False:
         error_message = getattr(
-                            django_settings, 
+                            django_settings,
                             'ASKBOT_INACTIVE_USER_MESSAGE',
                             _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
                                 'perform_action': action_display,
@@ -3110,7 +3110,7 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
 
         #send the signal of published revision
         signals.post_revision_published.send(
-                                        None, 
+                                        None,
                                         revision=post_revision,
                                         was_approved=True
                                     )
@@ -3961,7 +3961,7 @@ def init_avatar_type(sender, instance, *args, **kwargs):
     #if user is new, set avatar type
     if not user.pk:
         user.avatar_type = askbot_settings.AVATAR_TYPE_FOR_NEW_USERS
-        
+
 
 def init_avatar_urls(sender, instance, *args, **kwargs):
     instance.init_avatar_urls()
@@ -4092,7 +4092,7 @@ def autoapprove_reputable_user(user=None, reputation_before=None, *args, **kwarg
 def init_badge_data(sender, app=None, migration=None, method=None, **kwargs):
     """initializes badge data from the hardcoded badge info,
     e.g. in askbot/models/badges.py"""
-    #mig_name is the name of latest migration that changes model 
+    #mig_name is the name of latest migration that changes model
     #askbot.models.BadgeData. It's important that we run this
     #only after the `askbot_badgedata` table is fully constructed
     mig_name = '0186_auto__add_field_badgedata_display_order'
@@ -4131,7 +4131,7 @@ def record_spam_rejection(
         activity.save()
 
 
-from south.signals import ran_migration 
+from south.signals import ran_migration
 
 ran_migration.connect(
     init_badge_data,
@@ -4219,7 +4219,7 @@ django_signals.post_save.connect(
     dispatch_uid='record_favorite_question_on_fave_save'
 )
 django_signals.post_save.connect(
-    moderate_group_joining, 
+    moderate_group_joining,
     sender=GroupMembership,
     dispatch_uid='moderate_group_joining_on_gm_save'
 )
@@ -4356,7 +4356,7 @@ __all__ = [
         'User',
 
         'ReplyAddress',
-        
+
         'ImportRun',
         'ImportedObjectInfo',
 
