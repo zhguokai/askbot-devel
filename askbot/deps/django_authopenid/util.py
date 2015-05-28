@@ -468,7 +468,7 @@ def get_enabled_major_login_providers():
         }
 
     def get_mediawiki_user_id(data):
-        """returns facebook user id given the access token"""
+        """returns mediawiki user id given the access token"""
         connection = data['oauth1_connection'] 
         client = connection.get_client(data)
         url = 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/identify'
@@ -483,7 +483,8 @@ def get_enabled_major_login_providers():
         return data['sub']
 
     if askbot_settings.MEDIAWIKI_KEY and askbot_settings.MEDIAWIKI_SECRET:
-        data['mediawiki'] = {
+        data['mediawiki'] = oauth1.mediawiki.Provider()
+        {
             'name': 'mediawiki',
             'callback_is_oob': True,
             'display_name': 'MediaWiki',
@@ -494,6 +495,7 @@ def get_enabled_major_login_providers():
             'authenticate_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/authorize',
             'icon_media_path': askbot_settings.MEDIAWIKI_SITE_ICON,
             'get_user_id_function': get_mediawiki_user_id,
+            'get_username_function': get_mediawiki_username
         }
 
     def get_identica_user_id(data):
@@ -835,6 +837,7 @@ class OAuthError(Exception):
 
 class OAuthConnection(object):
     """a simple class wrapping oauth2 library
+    Which is actually implementing the Oauth1 protocol (version 1)
     """
 
     def __init__(self, provider_name, callback_url=None):
