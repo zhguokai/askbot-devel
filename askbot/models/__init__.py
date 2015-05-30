@@ -1581,10 +1581,10 @@ def user_unaccept_best_answer(
 @auto_now_timestamp
 def user_delete_comment(
                     self,
-                    comment = None,
-                    timestamp = None
+                    comment= None,
+                    timestamp=None
                 ):
-    self.assert_can_delete_comment(comment = comment)
+    self.assert_can_delete_comment(comment=comment)
     #todo: we want to do this
     #comment.deleted = True
     #comment.deleted_by = self
@@ -1592,14 +1592,15 @@ def user_delete_comment(
     #comment.save()
     comment.delete()
     comment.thread.invalidate_cached_data()
+    signals.post_deleted.send(None, post=comment, deleted_by=self)
 
 @auto_now_timestamp
 def user_delete_answer(
                     self,
-                    answer = None,
-                    timestamp = None
+                    answer=None,
+                    timestamp=None
                 ):
-    self.assert_can_delete_answer(answer = answer)
+    self.assert_can_delete_answer(answer=answer)
     answer.deleted = True
     answer.deleted_by = self
     answer.deleted_at = timestamp
@@ -1610,25 +1611,26 @@ def user_delete_answer(
     logging.debug('updated answer count to %d' % answer.thread.answer_count)
 
     signals.delete_question_or_answer.send(
-        sender = answer.__class__,
-        instance = answer,
-        delete_by = self
+        sender=answer.__class__,
+        instance=answer,
+        delete_by=self
     )
+    signals.post_deleted.send(None, post=answer, deleted_by=self)
     award_badges_signal.send(None,
-                event = 'delete_post',
-                actor = self,
-                context_object = answer,
-                timestamp = timestamp
+                event='delete_post',
+                actor=self,
+                context_object=answer,
+                timestamp=timestamp
             )
 
 
 @auto_now_timestamp
 def user_delete_question(
                     self,
-                    question = None,
-                    timestamp = None
+                    question=None,
+                    timestamp=None
                 ):
-    self.assert_can_delete_question(question = question)
+    self.assert_can_delete_question(question=question)
 
     question.deleted = True
     question.deleted_by = self
@@ -1648,15 +1650,16 @@ def user_delete_question(
         tag.save()
 
     signals.delete_question_or_answer.send(
-        sender = question.__class__,
-        instance = question,
-        delete_by = self
+        sender=question.__class__,
+        instance=question,
+        delete_by=self
     )
+    signals.post_deleted.send(None, post=question, deleted_by=self)
     award_badges_signal.send(None,
-                event = 'delete_post',
-                actor = self,
-                context_object = question,
-                timestamp = timestamp
+                event='delete_post',
+                actor=self,
+                context_object=question,
+                timestamp=timestamp
             )
 
 
@@ -1682,19 +1685,19 @@ def user_reopen_question(
 @auto_now_timestamp
 def user_delete_post(
                     self,
-                    post = None,
-                    timestamp = None
+                    post=None,
+                    timestamp=None
                 ):
     """generic delete method for all kinds of posts
 
     if there is no use cases for it, the method will be removed
     """
     if post.is_comment():
-        self.delete_comment(comment = post, timestamp = timestamp)
+        self.delete_comment(comment=post, timestamp=timestamp)
     elif post.is_answer():
-        self.delete_answer(answer = post, timestamp = timestamp)
+        self.delete_answer(answer=post, timestamp=timestamp)
     elif post.is_question():
-        self.delete_question(question = post, timestamp = timestamp)
+        self.delete_question(question=post, timestamp=timestamp)
     else:
         raise TypeError('either Comment, Question or Answer expected')
     post.thread.invalidate_cached_data()

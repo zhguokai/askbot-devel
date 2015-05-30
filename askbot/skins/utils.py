@@ -23,6 +23,9 @@ def get_skins_from_dir(directory):
     """
     skins = SortedDict()
     for item in sorted(os.listdir(directory)):
+        #do not use "hidden" directories
+        if item.startswith('.'):
+            continue
         item_dir = os.path.join(directory, item)
         if os.path.isdir(item_dir):
             skins[item] = item_dir

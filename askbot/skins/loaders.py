@@ -43,7 +43,7 @@ class SkinEnvironment(CoffinEnvironment):
         the loader for the skin templates
         """
         loaders = list()
-        skin_dirs = utils.get_available_skins(selected = self.skin).values()
+        skin_dirs = utils.get_available_skins(selected=self.skin).values()
         template_dirs = [os.path.join(skin_dir, 'templates') for skin_dir in skin_dirs]
         loaders.append(jinja_loaders.FileSystemLoader(template_dirs))
         return loaders
