@@ -419,16 +419,29 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
         if show_answer:
             try:
                 old_answer = models.Post.objects.get_answers().get(old_answer_id=show_answer)
-                return HttpResponseRedirect(old_answer.get_absolute_url())
             except models.Post.DoesNotExist:
                 pass
+            finally:
+                return HttpResponseRedirect(old_answer.get_absolute_url())
 
         elif show_comment:
             try:
                 old_comment = models.Post.objects.get_comments().get(old_comment_id=show_comment)
-                return HttpResponseRedirect(old_comment.get_absolute_url())
             except models.Post.DoesNotExist:
                 pass
+            finally:
+                return HttpResponseRedirect(old_comment.get_absolute_url())
+
+    if show_comment or show_answer:
+        try:
+            show_post = models.Post.objects.get(pk=(show_comment or show_answer))
+        except models.Post.DoesNotExist:
+            #missing target post will be handled later
+            pass
+        finally:
+            if (show_comment and not show_post.is_comment()) \
+                or (show_answer and not show_post.is_answer()):
+                return HttpResponseRedirect(show_post.get_absolute_url())
 
     try:
         question_post.assert_is_visible_to(request.user)
