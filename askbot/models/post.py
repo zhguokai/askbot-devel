@@ -1024,7 +1024,7 @@ class Post(models.Model):
                 url += django_urlquote(self.slug) + '/'
         elif self.is_comment():
             origin_post = self.get_origin_post()
-            url = '%(url)s?comment=%(id)d#comment-%(id)d' % \
+            url = '%(url)s?comment=%(id)d#post-id-%(id)d' % \
                 {'url': origin_post.get_absolute_url(thread=thread), 'id':self.id}
         else:
             raise NotImplementedError
@@ -2296,6 +2296,9 @@ class Post(models.Model):
 
         if self.is_comment():
             post = self.parent
+            if post.is_question():
+                #first page of answers since it's the question comment
+                return 1
         else:
             post = self
 
