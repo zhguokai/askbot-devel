@@ -421,7 +421,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
                 old_answer = models.Post.objects.get_answers().get(old_answer_id=show_answer)
             except models.Post.DoesNotExist:
                 pass
-            finally:
+            else:
                 return HttpResponseRedirect(old_answer.get_absolute_url())
 
         elif show_comment:
@@ -429,7 +429,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
                 old_comment = models.Post.objects.get_comments().get(old_comment_id=show_comment)
             except models.Post.DoesNotExist:
                 pass
-            finally:
+            else:
                 return HttpResponseRedirect(old_comment.get_absolute_url())
 
     if show_comment or show_answer:
@@ -438,7 +438,7 @@ def question(request, feed=None, id=None):#refactor - long subroutine. display q
         except models.Post.DoesNotExist:
             #missing target post will be handled later
             pass
-        finally:
+        else:
             if (show_comment and not show_post.is_comment()) \
                 or (show_answer and not show_post.is_answer()):
                 return HttpResponseRedirect(show_post.get_absolute_url())
