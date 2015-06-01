@@ -59,6 +59,7 @@ from askbot.utils.html import site_url
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
+from askbot.deps.django_authopenid.exceptions import OAuthError
 from askbot.utils.loading import load_module
 from sanction.client import Client as OAuth2Client
 from urlparse import urlparse
@@ -402,19 +403,22 @@ def complete_oauth1_signin(request):
         del request.session['oauth_provider_name']
 
         oauth = util.OAuthConnection(oauth_provider_name)
-
-        user_id = oauth.get_user_id(
+        oauth.obtain_access_token(
                             oauth_token=session_oauth_token,
                             oauth_verifier=oauth_verifier
                         )
+        user_id = oauth.get_user_id()
+        request.session['email'] = oauth.get_user_email()
+        request.session['username'] = oauth.get_username()
+
         logging.debug('have %s user id=%s' % (oauth_provider_name, user_id))
     except Exception, e:
         logging.critical(e)
-        msg = _('Sorry, there was some problem '
-                'connecting to the login provider, please try again '
-                'or use another login method'
-            )
-        request.user.message_set.create(message = msg)
+        msg = _('Unfortunately, there was some problem when '
+                'connecting to %(provider)s, please try again '
+                'or use another provider'
+            ) % {'provider': request.session['oauth_provider_name']}
+        request.user.message_set.create(message=msg)
         return HttpResponseRedirect(next_url)
     else:
         user = authenticate(
@@ -424,9 +428,6 @@ def complete_oauth1_signin(request):
                 )
 
         logging.debug('finalizing oauth signin')
-
-        request.session['email'] = ''#todo: pull from profile
-        request.session['username'] = ''#todo: pull from profile
 
         return finalize_generic_signin(
                             request=request,
@@ -623,11 +624,10 @@ def signin(request, template_name='authopenid/signin.html'):
             elif login_form.cleaned_data['login_type'] == 'oauth':
                 try:
                     #this url may need to have "next" piggibacked onto
-                    connection = util.OAuthConnection(
-                                    provider_name,
-                                    callback_url=reverse('user_complete_oauth1_signin')
-                                )
-                    connection.start()
+                    connection = util.OAuthConnection(provider_name)
+                    connection.start(
+                        callback_url=reverse('user_complete_oauth1_signin')
+                    )
 
                     request.session['oauth_token'] = connection.get_token()
                     request.session['oauth_provider_name'] = provider_name
