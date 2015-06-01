@@ -10,3 +10,4 @@ base classes. Currently the only one available is
 
 `protocols.oauth1.OAuth1Provider`
 """
+from . import mediawiki
