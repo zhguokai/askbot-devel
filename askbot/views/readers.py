@@ -282,7 +282,7 @@ def questions(request, **kwargs):
         #todo: move this out to a separate middleware
         if request.user.is_authenticated() and request.user.is_administrator():
             if domain_is_bad():
-                url = askbot_settings.get_setting_url('QA_SITE_SETTINGS', 'APP_URL')
+                url = askbot_settings.get_setting_url(('QA_SITE_SETTINGS', 'APP_URL'))
                 msg = _(
                     'Please go to Settings -> %s '
                     'and set the base url for your site to function properly'

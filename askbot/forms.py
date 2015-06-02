@@ -1484,6 +1484,7 @@ class EditUserForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
+
         logging.debug('initializing the form')
         if askbot_settings.EDITABLE_SCREEN_NAME:
             self.fields['username'] = UserNameField(label=_('Screen name'))
@@ -1509,22 +1510,26 @@ class EditUserForm(forms.Form):
 
     def clean_email(self):
         """For security reason one unique email in database"""
-        if self.user.email != self.cleaned_data['email']:
+        email = self.cleaned_data['email']
+        if email.strip() == '' and askbot_settings.BLANK_EMAIL_ALLOWED:
+            self.cleaned_data['email'] = ''
+            return self.cleaned_data['email']
+
+        if email != self.user.email:
             #todo dry it, there is a similar thing in openidauth
-            if 'email' in self.cleaned_data:
-                try:
-                    User.objects.get(email=self.cleaned_data['email'])
-                except User.DoesNotExist:
-                    return self.cleaned_data['email']
-                except User.MultipleObjectsReturned:
-                    raise forms.ValidationError(_(
-                        'this email has already been registered, '
-                        'please use another one')
-                    )
+            try:
+                User.objects.get(email=email)
+            except User.DoesNotExist:
+                return self.cleaned_data['email']
+            except User.MultipleObjectsReturned:
                 raise forms.ValidationError(_(
                     'this email has already been registered, '
                     'please use another one')
                 )
+            raise forms.ValidationError(_(
+                'this email has already been registered, '
+                'please use another one')
+            )
         return self.cleaned_data['email']
 
 
