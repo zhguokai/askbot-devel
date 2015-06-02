@@ -41,6 +41,22 @@ settings.register(
     )
 )
 
+settings.register(
+    livesettings.LongStringValue(
+        FEEDBACK,
+        'FEEDBACK_PAGE_MESSAGE',
+        description=_('Message on the feedback page'),
+        default=_(
+            '*{{ USER_NAME }}*, we look forward to hearing your feedback. '
+            'Please type and send us your message below.'
+        ),
+        help_text=_(
+            'Save, then <a href="http://validator.w3.org/">'
+            'use HTML validator</a> on the "terms" page to check your input.'
+        )
+    )
+)
+
 def feedback_emails_callback(old_value, new_value):
     """validates the fedback emails list"""
     emails = []
