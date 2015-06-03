@@ -328,7 +328,7 @@ settings.register(
     livesettings.BooleanValue(
         EMAIL,
         'BLANK_EMAIL_ALLOWED',
-        default=True,
+        default=False,
         description=_('Allow blank email'),
         help_text=string_concat(
             _('DANGER: makes impossible account recovery by email.'),
