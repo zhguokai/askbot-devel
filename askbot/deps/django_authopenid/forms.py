@@ -308,10 +308,11 @@ class OpenidRegisterForm(forms.Form):
     """ openid signin form """
     next = NextUrlField()
     username = UserNameField(widget_attrs={'tabindex': 0})
-    email = UserEmailField()
 
     def __init__(self, *args, **kwargs):
         super(OpenidRegisterForm, self).__init__(*args, **kwargs)
+        email_required = not askbot_settings.BLANK_EMAIL_ALLOWED
+        self.fields['email'] = UserEmailField(required=email_required)
         if askbot_settings.TERMS_CONSENT_REQUIRED:
             self.fields['terms_accepted'] = ConsentField()
 
@@ -328,11 +329,12 @@ class ClassicRegisterForm(SetPasswordForm):
 
     next = NextUrlField()
     username = UserNameField(widget_attrs={'tabindex': 0})
-    email = UserEmailField()
     #fields password1 and password2 are inherited
 
     def __init__(self, *args, **kwargs):
         super(ClassicRegisterForm, self).__init__(*args, **kwargs)
+        email_required = not askbot_settings.BLANK_EMAIL_ALLOWED
+        self.fields['email'] = UserEmailField(required=email_required)
         if askbot_settings.TERMS_CONSENT_REQUIRED:
             self.fields['terms_accepted'] = ConsentField()
 
@@ -381,12 +383,12 @@ class ChangePasswordForm(forms.Form):
 
 class ChangeEmailForm(forms.Form):
     """ change email form """
-    email = UserEmailField(skip_clean=True)
-
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, \
             initial=None, user=None):
         super(ChangeEmailForm, self).__init__(data, files, auto_id, 
                 prefix, initial)
+        email_required = not askbot_settings.BLANK_EMAIL_ALLOWED
+        self.fields['email'] = UserEmailField(skip_clean=True, required=email_required)
         self.user = user
 
     def clean_email(self):
