@@ -137,9 +137,15 @@ class OAuth1Provider(object):
         url, body = self.normalize_url_and_params(url, params)
         response, content = client.request(url, method, body=body, **kwargs)
         if response['status'] == '200':
-            return dict(cgi.parse_qsl(content))
+            parsed_response = dict(cgi.parse_qsl(content))
+            #todo: validate parsed response. For now
+            #a simple check for the dictionary emptiness
+            if parsed_response:
+                return parsed_response
+            else:
+                raise OAuthError('error obtaining request token {}'.format(content))
         else:
-            raise OAuthError('response is %s' % response)
+            raise OAuthError('response is {}'.format(response))
 
     def get_token(self):
         return self.request_token
