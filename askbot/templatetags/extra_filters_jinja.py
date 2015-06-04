@@ -398,8 +398,12 @@ def sub_vars(text, user=None):
     sitelink_re = re.compile(r'\{\{\s*SITE_LINK\s*\}\}')
 
     if user:
+        if user.is_anonymous():
+            username = _('Visitor')
+        else:
+            username = user.username
         username_re = re.compile(r'\{\{\s*USER_NAME\s*\}\}')
-        text = username_re.sub(user.username, text)
+        text = username_re.sub(username, text)
 
     site_name = askbot_settings.APP_SHORT_NAME
     text = sitename_re.sub(site_name, text)

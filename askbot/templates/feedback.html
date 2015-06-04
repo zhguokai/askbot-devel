@@ -10,20 +10,8 @@
 </span>
 {%endif%}
 <form method="post" action="{% url feedback %}" accept-charset="utf-8">{% csrf_token %}
-    {% if user.is_authenticated() %}
-        <p class="message">
-        {% trans user_name=user.username|escape %}
-        <span class='big strong'>Dear {{user_name}}</span>, we look forward to hearing your feedback. 
-        Please type and send us your message below.
-        {% endtrans %}
-        <p>
-    {% else %}
-        <p class="message">
-        {% trans %}
-        <span class='big strong'>Dear visitor</span>, we look forward to hearing your feedback.
-        Please type and send us your message below.
-        {% endtrans %}
-        </p>
+    <div class="message">{{ settings.FEEDBACK_PAGE_MESSAGE|sub_vars(user)|convert_markdown }}</div>
+    {% if user.is_anonymous() %}
         <div class="form-row"><label>{{form.name.label}}</label><br/>{{form.name}}</div>
         <div class="form-row">
             <label>{{form.email.label}} 

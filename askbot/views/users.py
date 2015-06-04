@@ -346,8 +346,6 @@ def set_new_email(user, new_email, nomessage=False):
         user.email = new_email
         user.email_isvalid = False
         user.save()
-        #if askbot_settings.EMAIL_VALIDATION == True:
-        #    send_new_email_key(user,nomessage=nomessage)
 
 
 def need_to_invalidate_post_caches(user, form):

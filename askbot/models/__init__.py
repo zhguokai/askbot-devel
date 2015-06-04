@@ -1499,27 +1499,15 @@ def user_post_anonymous_askbot_content(user, session_key):
 
     this function is used by the signal handler with a similar name
     """
-    aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
-    aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
-
-
     is_on_read_only_group = user.get_groups().filter(read_only=True).count()
-    if is_on_read_only_group:
+    if askbot_settings.READ_ONLY_MODE_ENABLED or is_on_read_only_group:
         user.message_set.create(message = _('Sorry, but you have only read access'))
-    #from askbot.conf import settings as askbot_settings
-    if askbot_settings.EMAIL_VALIDATION == True:#add user to the record
-        for aq in aq_list:
-            aq.author = user
-            aq.save()
-        for aa in aa_list:
-            aa.author = user
-            aa.save()
-        #maybe add pending posts message?
-    else:
-        for aq in aq_list:
-            aq.publish(user)
-        for aa in aa_list:
-            aa.publish(user)
+        return
+
+    for aq in AnonymousQuestion.objects.filter(session_key=session_key):
+        aq.publish(user)
+    for aa in AnonymousAnswer.objects.filter(session_key=session_key):
+        aa.publish(user)
 
 
 def user_mark_tags(

@@ -21,6 +21,8 @@ from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured
+from askbot.deps.django_authopenid import providers
+from askbot.deps.django_authopenid.exceptions import OAuthError
 
 try:
     from hashlib import md5
@@ -467,34 +469,8 @@ def get_enabled_major_login_providers():
             'get_user_id_function': lambda data: data['user_id'],
         }
 
-    def get_mediawiki_user_id(data):
-        """returns facebook user id given the access token"""
-        connection = data['oauth1_connection']
-        client = connection.get_client(data)
-        url = 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/identify'
-        url, body = connection.normalize_url_and_params(url, {})
-        response, content = client.request(url, 'POST', body=body)
-        data = jwt.decode(
-                    content,
-                    connection.parameters['consumer_secret'],
-                    audience=connection.parameters['consumer_key']
-                )
-        #'username' here is the MW user name
-        return data['sub']
-
     if askbot_settings.MEDIAWIKI_KEY and askbot_settings.MEDIAWIKI_SECRET:
-        data['mediawiki'] = {
-            'name': 'mediawiki',
-            'callback_is_oob': True,
-            'display_name': 'MediaWiki',
-            'type': 'oauth',
-            'request_token_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/initiate',
-            'access_token_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/token',
-            'authorize_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/authorize',
-            'authenticate_url': 'https://www.mediawiki.org/w/index.php?title=Special:OAuth/authorize',
-            'icon_media_path': askbot_settings.MEDIAWIKI_SITE_ICON,
-            'get_user_id_function': get_mediawiki_user_id,
-        }
+        data['mediawiki'] = providers.mediawiki.Provider()
 
     def get_identica_user_id(data):
         consumer = oauth.Consumer(data['consumer_key'], data['consumer_secret'])
@@ -815,34 +791,33 @@ def get_oauth_parameters(provider_name):
     elif provider_name == 'facebook':
         consumer_key = askbot_settings.FACEBOOK_KEY
         consumer_secret = askbot_settings.FACEBOOK_SECRET
-    elif provider_name == 'mediawiki':
-        consumer_key = askbot_settings.MEDIAWIKI_KEY
-        consumer_secret = askbot_settings.MEDIAWIKI_SECRET
-    else:
+    elif provider_name != 'mediawiki':
         raise ValueError('unexpected oauth provider %s' % provider_name)
 
-    data['consumer_key'] = consumer_key
-    data['consumer_secret'] = consumer_secret
+    #dict are old style providers
+    if isinstance(data, dict):
+        data['consumer_key'] = consumer_key
+        data['consumer_secret'] = consumer_secret
 
     return data
 
 
-class OAuthError(Exception):
-    """Error raised by the OAuthConnection class
-    """
-    pass
-
-
 class OAuthConnection(object):
     """a simple class wrapping oauth2 library
+    Which is actually implementing the Oauth1 protocol (version 1)
     """
 
-    def __init__(self, provider_name, callback_url=None):
+    def __new__(cls, provider_name):
+        if provider_name == 'mediawiki':
+            return providers.mediawiki.Provider()
+        else:
+            return super(OAuthConnection, cls).__new__(cls, provider_name)
+
+    def __init__(self, provider_name):
         """initializes oauth connection
         """
         self.provider_name = provider_name
         self.parameters = get_oauth_parameters(provider_name)
-        self.callback_url = callback_url
         self.consumer = oauth.Consumer(
                             self.parameters['consumer_key'],
                             self.parameters['consumer_secret'],
@@ -889,7 +864,7 @@ class OAuthConnection(object):
         encoded_params = cls.format_request_params(params)
         return url, encoded_params
 
-    def start(self):
+    def start(self, callback_url=None):
         """starts the OAuth protocol communication and
         saves request token as :attr:`request_token`"""
 
@@ -900,7 +875,7 @@ class OAuthConnection(object):
         if self.parameters.get('callback_is_oob', False):
             params['oauth_callback'] = 'oob' #callback_url
         else:
-            params['oauth_callback'] = site_url(self.callback_url)
+            params['oauth_callback'] = site_url(callback_url)
 
         self.request_token = self.send_request(
                                         client=client,
@@ -930,22 +905,40 @@ class OAuthConnection(object):
             token.set_verifier(oauth_verifier)
         return oauth.Client(self.consumer, token=token)
 
-    def get_access_token(self, oauth_token=None, oauth_verifier=None):
+    def obtain_access_token(self, oauth_token=None, oauth_verifier=None):
         """returns data as returned upon visiting te access_token_url"""
         client = self.get_client(oauth_token, oauth_verifier)
         url = self.parameters['access_token_url']
         #there must be some provider-specific post-processing
-        return self.send_request(client=client, url=url, method='POST')
+        self.access_token = self.send_request(client=client, url=url, method='POST')
 
-    def get_user_id(self, oauth_token=None, oauth_verifier=None):
-        """Returns user ID within the OAuth provider system,
-        based on ``oauth_token`` and ``oauth_verifier``
-        """
-        data = self.get_access_token(oauth_token, oauth_verifier)
+    def _get_access_token_data(self):
+        data = self.access_token
         data['consumer_key'] = self.parameters['consumer_key']
         data['consumer_secret'] = self.parameters['consumer_secret']
         data['oauth1_connection'] = self
+        return data
+
+    def get_user_id(self):
+        """Returns user ID within the OAuth provider system,
+        based on ``oauth_token`` and ``oauth_verifier``
+        """
+        data = self._get_access_token_data()
         return self.parameters['get_user_id_function'](data)
+
+    def get_user_email(self):
+        func = self.parameters.get('get_user_email_function')
+        if func:
+            data = self._get_access_token_data()
+            return func(data)
+        return ''
+
+    def get_username(self):
+        func = self.parameters.get('get_username_function')
+        if func:
+            data = self._get_access_token_data()
+            return func(data)
+        return ''
 
     def get_auth_url(self, login_only=False):
         """returns OAuth redirect url.

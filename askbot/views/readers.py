@@ -282,7 +282,7 @@ def questions(request, **kwargs):
         #todo: move this out to a separate middleware
         if request.user.is_authenticated() and request.user.is_administrator():
             if domain_is_bad():
-                url = askbot_settings.get_setting_url('QA_SITE_SETTINGS', 'APP_URL')
+                url = askbot_settings.get_setting_url(('QA_SITE_SETTINGS', 'APP_URL'))
                 msg = _(
                     'Please go to Settings -> %s '
                     'and set the base url for your site to function properly'
@@ -423,16 +423,29 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if show_answer:
             try:
                 old_answer = models.Post.objects.get_answers().get(old_answer_id=show_answer)
-                return HttpResponseRedirect(old_answer.get_absolute_url())
             except models.Post.DoesNotExist:
                 pass
+            finally:
+                return HttpResponseRedirect(old_answer.get_absolute_url())
 
         elif show_comment:
             try:
                 old_comment = models.Post.objects.get_comments().get(old_comment_id=show_comment)
-                return HttpResponseRedirect(old_comment.get_absolute_url())
             except models.Post.DoesNotExist:
                 pass
+            finally:
+                return HttpResponseRedirect(old_comment.get_absolute_url())
+
+    if show_comment or show_answer:
+        try:
+            show_post = models.Post.objects.get(pk=(show_comment or show_answer))
+        except models.Post.DoesNotExist:
+            #missing target post will be handled later
+            pass
+        finally:
+            if (show_comment and not show_post.is_comment()) \
+                or (show_answer and not show_post.is_answer()):
+                return HttpResponseRedirect(show_post.get_absolute_url())
 
     try:
         question_post.assert_is_visible_to(request.user)

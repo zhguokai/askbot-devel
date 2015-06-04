@@ -6,6 +6,7 @@ from askbot.conf.super_groups import LOGIN_USERS_COMMUNICATION
 from askbot.deps import livesettings
 from askbot import const
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import string_concat
 from django.conf import settings as django_settings
 
 EMAIL_SUBJECT_PREFIX = getattr(django_settings, 'EMAIL_SUBJECT_PREFIX', '')
@@ -326,11 +327,16 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         EMAIL,
-        'EMAIL_VALIDATION',
+        'BLANK_EMAIL_ALLOWED',
         default=False,
-        hidden=True,
-        description=_('Require email verification before allowing to post'),
-        help_text=_('Active email verification is done by sending a verification key in email')
+        description=_('Allow blank email'),
+        help_text=string_concat(
+            _('DANGER: makes impossible account recovery by email.'),
+            ' ',
+            settings.get_related_settings_info(
+                ('ACCESS_CONTROL', 'REQUIRE_VALID_EMAIL_FOR', True, _('Must be not be required')),
+            )
+        )
     )
 )
 
