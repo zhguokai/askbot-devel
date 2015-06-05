@@ -185,17 +185,14 @@ def email_is_allowed(
     domain"""
     if allowed_emails:
         email_list = split_list(allowed_emails)
-        allowed_emails = ' ' + ' '.join(email_list) + ' '
-        email_match_re = re.compile(r'\s%s\s' % email, re.I)
-        if email_match_re.search(allowed_emails):
+        if email in email_list:
             return True
 
     if allowed_email_domains:
         email_domain = email.split('@')[1]
         domain_list = split_list(allowed_email_domains)
-        domain_match_re = re.compile(r'\s%s\s' % email_domain, re.I)
-        allowed_email_domains = ' ' + ' '.join(domain_list) + ' '
-        return bool(domain_match_re.search(allowed_email_domains))
+        if email_domain in domain_list:
+            return True
 
     return False
 
