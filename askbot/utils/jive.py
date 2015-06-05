@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # Copyright (c) Askbot S.p.A. 2013
 # License: MIT (http://www.opensource.org/licenses/mit-license.php)
 r"""Converter of Jive markup to markdown,
