@@ -1,3 +1,4 @@
+import datetime
 import functools
 import re
 import sys
@@ -15,6 +16,15 @@ from askbot.models.signals import email_validated
 from askbot.conf import settings as askbot_settings
 from askbot.utils.html import site_url
 from askbot.mail import DEBUG_EMAIL
+
+sys.stderr.write(
+    (
+        u'%s Lamson is running with DEBUG_EMAIL=%s\n' % (
+            datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            DEBUG_EMAIL
+        )
+    ).encode('utf-8')
+)
 
 #we might end up needing to use something like this
 #to distinguish the reply text from the quoted original message
@@ -244,7 +254,7 @@ def VALIDATE_EMAIL(
     reply_code = reply_address_object.address
 
     if DEBUG_EMAIL:
-        msg = u'Received email validation from %s\n' % from_address
+        msg = u'Received email validation from %s for user %s\n' % (from_address, reply_address_object.user)
         sys.stderr.write(msg.encode('utf-8'))
 
     try:
