@@ -601,9 +601,14 @@ class ShowQuestionForm(forms.Form):
     answer = forms.IntegerField(required=False)
     comment = forms.IntegerField(required=False)
     page = PageField()
-    sort = SortField(
+
+    def __init__(self, *args, **kwargs):
+        super(ShowQuestionForm, self).__init__(*args, **kwargs)
+        #uses livesettings for the default so the 'sort' field
+        #must be added in the __init__
+        self.fields['sort'] = SortField(
                 choices=const.ANSWER_SORT_METHODS,
-                default=const.DEFAULT_ANSWER_SORT_METHOD
+                default=askbot_settings.DEFAULT_ANSWER_SORT_METHOD
             )
 
     def get_pruned_data(self):
