@@ -36,7 +36,7 @@ REQUIREMENTS = {
     'pystache': 'pystache==0.3.1',
     'pytz': 'pytz==2013b',
     'recaptcha_works': 'django-recaptcha-works',
-    'robots': 'django-robots',
+    'robots': 'django-robots==1.0',
     'sanction': 'sanction==0.3.1',
     'south': 'South>=0.7.1',
     'threaded_multihost': 'django-threaded-multihost',

@@ -185,7 +185,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                             users.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?sort=%s&' % sort_method 
+        base_url = request.path + '?sort=%s&' % sort_method
     else:
         sort_method = 'reputation'
         matching_users = models.get_users_by_text_query(search_query, users)
@@ -346,8 +346,6 @@ def set_new_email(user, new_email, nomessage=False):
         user.email = new_email
         user.email_isvalid = False
         user.save()
-        #if askbot_settings.EMAIL_VALIDATION == True:
-        #    send_new_email_key(user,nomessage=nomessage)
 
 
 def need_to_invalidate_post_caches(user, form):
@@ -1131,7 +1129,7 @@ def user(request, id, slug=None, tab_name=None):
     if not tab_name:
         tab_name = request.GET.get('sort', 'stats')
 
-    can_show_karma = request.user.can_see_karma(profile_owner)
+    can_show_karma = models.user_can_see_karma(request.user, profile_owner)
     if can_show_karma == False and tab_name == 'reputation':
         raise Http404
 

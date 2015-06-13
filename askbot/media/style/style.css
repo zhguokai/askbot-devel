@@ -424,6 +424,30 @@ body.user-messages {
   margin: 0;
   text-decoration: none;
 }
+#userToolsNav #signin-form {
+  display: inline-block;
+  margin: 0;
+}
+#userToolsNav #signin-form input {
+  background: transparent;
+  box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  color: #d0e296;
+  font-size: 16px;
+  height: 21px;
+  line-height: 21px;
+  margin: 0;
+  outline: none;
+  text-shadow: none;
+  -moz-text-shadow: none;
+  -webkit-text-shadow: none;
+  text-decoration: underline;
+  vertical-align: text-top;
+}
+#userToolsNav #signin-form input:hover {
+  color: #ebff88;
+}
 #metaNav {
   /* Top Navigation bar containing links for tags, people and badges, check widgets/header.html */
 
@@ -3467,6 +3491,7 @@ body.question-page ins, body.main-page ins {
   font-family: Arial;
   font-size: 14px;
   font-weight: normal;
+  min-width: 200px;
   padding-bottom: 10px;
   position: absolute;
   text-align: center;

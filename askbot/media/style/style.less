@@ -454,6 +454,31 @@ body.user-messages {
         margin: 0;
         text-decoration: none;
     }
+
+    #signin-form {
+        display: inline-block;
+        margin: 0;
+        input {
+            background: transparent;
+            box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+            color:#d0e296;
+            font-size: 16px;
+            height: 21px;
+            line-height: 21px;
+            margin: 0;
+            outline: none;
+            text-shadow: none;
+            -moz-text-shadow: none;
+            -webkit-text-shadow: none;
+            text-decoration: underline;
+            vertical-align: text-top;
+            &:hover {
+                color: #ebff88;
+            }
+        }
+    }
 }
 
 #metaNav {/* Top Navigation bar containing links for tags, people and badges, check widgets/header.html */
@@ -3743,16 +3768,17 @@ body.main-page ins {
     color: white;
     cursor: pointer;
     display: none;
-    font-family:@secondary-font;
-    font-size:14px;
-    font-weight:normal;
-    padding-bottom:10px;
+    font-family: @secondary-font;
+    font-size: 14px;
+    font-weight: normal;
+    min-width: 200px;
+    padding-bottom: 10px;
     position: absolute;
     text-align: center;
     .box-shadow(0px, 2px, 4px, #370000);
     .rounded-corners(4px);
 
-    h3{
+    h3 {
         background:url(../images/notification.png) repeat-x top;
         padding:10px 10px 10px 10px;
         font-size:13px;

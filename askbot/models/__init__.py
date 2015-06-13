@@ -22,7 +22,7 @@ from django.template.loader import get_template
 from django.utils.translation import get_language
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import ungettext, override
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 from django.db import models
@@ -210,12 +210,9 @@ User.add_to_class(
     'avatar_type',
     models.CharField(
         max_length=1,
-        choices=(
-            ('n', _('None')),
-            ('g', _('Gravatar')),#only if user has real uploaded gravatar
-            ('a', _('Uploaded Avatar')),#avatar uploaded locally - with django-avatar app
-        ),
-        default='n'
+        choices=const.AVATAR_TYPE_CHOICES,
+        default='n' #for real set by the init_avatar_type based
+        #on the livesetting value
     )
 )
 User.add_to_class('gold', models.SmallIntegerField(default=0))
@@ -353,7 +350,7 @@ def user_calculate_avatar_url(self, size=48):
         sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
         if size not in sizes:
             logging.critical(
-                'add values %d to setting AVATAR_AUTO_GENERATE_SIZES', 
+                'add values %d to setting AVATAR_AUTO_GENERATE_SIZES',
                 size
             )
 
@@ -574,16 +571,16 @@ def user_can_post_by_email(self):
         return False
 
 
-def user_can_see_karma(self, karma_owner):
+def user_can_see_karma(user, karma_owner):
     """True, if user can see other users karma"""
     if askbot_settings.KARMA_MODE == 'public':
         return True
     elif askbot_settings.KARMA_MODE == 'private':
-        if self.is_anonymous():
+        if user.is_anonymous():
             return False
-        elif self.is_administrator_or_moderator():
+        elif user.is_administrator_or_moderator():
             return True
-        elif self.pk == karma_owner.pk:
+        elif user.pk == karma_owner.pk:
             return True
     return False
 
@@ -715,7 +712,7 @@ def _assert_user_can(
 
     elif user.is_active == False:
         error_message = getattr(
-                            django_settings, 
+                            django_settings,
                             'ASKBOT_INACTIVE_USER_MESSAGE',
                             _(message_keys.ACCOUNT_CANNOT_PERFORM_ACTION) % {
                                 'perform_action': action_display,
@@ -1235,6 +1232,7 @@ def user_assert_can_delete_answer(self, answer = None):
     assert on deleting question (in addition to some special rules)
     """
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS
+
     _assert_user_can(
         user=self,
         post=answer,
@@ -1381,7 +1379,6 @@ def user_assert_can_retag_question(self, question = None):
 def user_assert_can_delete_comment(self, comment = None):
     min_rep_setting = askbot_settings.MIN_REP_TO_DELETE_OTHERS_COMMENTS
 
-
     _assert_user_can(
         user = self,
         post = comment,
@@ -1391,6 +1388,24 @@ def user_assert_can_delete_comment(self, comment = None):
         suspended_user_cannot=True,
         min_rep_setting = min_rep_setting,
     )
+
+    if self.is_administrator_or_moderator():
+        return
+
+    if comment.author_id == self.pk:
+        if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
+            now = datetime.datetime.now()
+            delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
+            if now - comment.added_at > datetime.timedelta(0, delta_seconds):
+                if not comment.is_last():
+                    error_message = ungettext(
+                        'Sorry, comments (except the last one) are deletable only '
+                        'within %(minutes)s minute from posting',
+                        'Sorry, comments (except the last one) are deletable only '
+                        'within %(minutes)s minutes from posting',
+                        askbot_settings.MINUTES_TO_EDIT_COMMENT
+                    ) % {'minutes': askbot_settings.MINUTES_TO_EDIT_COMMENT}
+                    raise django_exceptions.PermissionDenied(error_message)
 
 
 def user_assert_can_revoke_old_vote(self, vote):
@@ -1484,27 +1499,15 @@ def user_post_anonymous_askbot_content(user, session_key):
 
     this function is used by the signal handler with a similar name
     """
-    aq_list = AnonymousQuestion.objects.filter(session_key = session_key)
-    aa_list = AnonymousAnswer.objects.filter(session_key = session_key)
-
-
     is_on_read_only_group = user.get_groups().filter(read_only=True).count()
-    if is_on_read_only_group:
+    if askbot_settings.READ_ONLY_MODE_ENABLED or is_on_read_only_group:
         user.message_set.create(message = _('Sorry, but you have only read access'))
-    #from askbot.conf import settings as askbot_settings
-    if askbot_settings.EMAIL_VALIDATION == True:#add user to the record
-        for aq in aq_list:
-            aq.author = user
-            aq.save()
-        for aa in aa_list:
-            aa.author = user
-            aa.save()
-        #maybe add pending posts message?
-    else:
-        for aq in aq_list:
-            aq.publish(user)
-        for aa in aa_list:
-            aa.publish(user)
+        return
+
+    for aq in AnonymousQuestion.objects.filter(session_key=session_key):
+        aq.publish(user)
+    for aa in AnonymousAnswer.objects.filter(session_key=session_key):
+        aa.publish(user)
 
 
 def user_mark_tags(
@@ -2442,14 +2445,12 @@ def user_is_administrator(self):
     the admin must be both superuser and staff member
     the latter is because staff membership is required
     to access the live settings"""
-    return (self.is_superuser and self.is_staff)
+    return self.is_superuser
 
 def user_remove_admin_status(self):
-    self.is_staff = False
     self.is_superuser = False
 
 def user_set_admin_status(self):
-    self.is_staff = True
     self.is_superuser = True
 
 def user_add_missing_askbot_subscriptions(self):
@@ -3132,7 +3133,7 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
 
         #send the signal of published revision
         signals.post_revision_published.send(
-                                        None, 
+                                        None,
                                         revision=post_revision,
                                         was_approved=True
                                     )
@@ -3663,16 +3664,17 @@ def notify_award_message(instance, created, **kwargs):
     if created:
         user = instance.user
 
-        badge = get_badge(instance.badge.slug)
+        with override(user.get_primary_language()):
+            badge = get_badge(instance.badge.slug)
 
-        msg = _(u"Congratulations, you have received a badge '%(badge_name)s'. "
-                u"Check out <a href=\"%(user_profile)s\">your profile</a>.") \
-                % {
-                    'badge_name':badge.name,
-                    'user_profile':user.get_profile_url()
-                }
+            msg = _(u"Congratulations, you have received a badge '%(badge_name)s'. "
+                    u"Check out <a href=\"%(user_profile)s\">your profile</a>.") \
+                    % {
+                        'badge_name':badge.name,
+                        'user_profile':user.get_profile_url()
+                    }
 
-        user.message_set.create(message=msg)
+            user.message_set.create(message=msg)
 
 def record_answer_accepted(instance, created, **kwargs):
     """
@@ -3752,7 +3754,8 @@ def record_question_visit(request, question, **kwargs):
             kwargs={
                 'question_post_id': question.id,
                 'user_id': request.user.id,
-                'update_view_count': update_view_count
+                'update_view_count': update_view_count,
+                'language_code': get_language()
             }
         )
 
@@ -3975,8 +3978,19 @@ def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
 
 def set_administrator_flag(sender, instance, *args, **kwargs):
     user = instance
-    if user.is_superuser and instance.status != 'd':
-        instance.status = 'd'
+    if user.is_superuser:
+        if instance.status != 'd':
+            instance.status = 'd'
+    elif instance.status == 'd':
+        instance.status = 'a'
+
+
+def init_avatar_type(sender, instance, *args, **kwargs):
+    user = instance
+    #if user is new, set avatar type
+    if not user.pk:
+        user.avatar_type = askbot_settings.AVATAR_TYPE_FOR_NEW_USERS
+
 
 def init_avatar_urls(sender, instance, *args, **kwargs):
     instance.init_avatar_urls()
@@ -4107,7 +4121,7 @@ def autoapprove_reputable_user(user=None, reputation_before=None, *args, **kwarg
 def init_badge_data(sender, app=None, migration=None, method=None, **kwargs):
     """initializes badge data from the hardcoded badge info,
     e.g. in askbot/models/badges.py"""
-    #mig_name is the name of latest migration that changes model 
+    #mig_name is the name of latest migration that changes model
     #askbot.models.BadgeData. It's important that we run this
     #only after the `askbot_badgedata` table is fully constructed
     mig_name = '0186_auto__add_field_badgedata_display_order'
@@ -4146,7 +4160,7 @@ def record_spam_rejection(
         activity.save()
 
 
-from south.signals import ran_migration 
+from south.signals import ran_migration
 
 ran_migration.connect(
     init_badge_data,
@@ -4165,6 +4179,11 @@ user_signals = [
         django_signals.pre_save,
         callback=set_administrator_flag,
         dispatch_uid='set_administrator_flag_on_user_save',
+    ),
+    signals.GenericSignal(
+        django_signals.pre_save,
+        callback=init_avatar_type,
+        dispatch_uid='init_avatar_type_on_user_create'
     ),
     signals.GenericSignal(
         django_signals.pre_save,
@@ -4229,7 +4248,7 @@ django_signals.post_save.connect(
     dispatch_uid='record_favorite_question_on_fave_save'
 )
 django_signals.post_save.connect(
-    moderate_group_joining, 
+    moderate_group_joining,
     sender=GroupMembership,
     dispatch_uid='moderate_group_joining_on_gm_save'
 )
@@ -4373,7 +4392,7 @@ __all__ = [
         'User',
 
         'ReplyAddress',
-        
+
         'ImportRun',
         'ImportedObjectInfo',
 

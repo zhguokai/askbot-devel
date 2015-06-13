@@ -14,6 +14,7 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
+from askbot.utils.csrf import get_or_create_csrf_token
 from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
 from askbot.utils.translation import get_language
@@ -57,9 +58,7 @@ def application_settings(request):
         my_settings['TINYMCE_PLUGINS'] = [];
 
     my_settings['LOGOUT_REDIRECT_URL'] = url_utils.get_logout_redirect_url()
-    my_settings['USE_ASKBOT_LOGIN_SYSTEM'] = 'askbot.deps.django_authopenid' \
-        in settings.INSTALLED_APPS
-    
+
     current_language = get_language()
 
     #for some languages we will start searching for shorter words
@@ -67,7 +66,7 @@ def application_settings(request):
         #we need to open the search box and show info message about
         #the japanese lang search
         min_search_word_length = 1
-    else:   
+    else:
         min_search_word_length = my_settings['MIN_SEARCH_WORD_LENGTH']
 
     need_scope_links = askbot_settings.ALL_SCOPE_ENABLED or \
@@ -76,6 +75,7 @@ def application_settings(request):
 
     context = {
         'base_url': site_url(''),
+        'csrf_token': get_or_create_csrf_token(request),
         'empty_search_state': SearchState.get_empty(),
         'min_search_word_length': min_search_word_length,
         'current_language_code': current_language,
@@ -84,6 +84,12 @@ def application_settings(request):
         'need_scope_links': need_scope_links,
         'noscript_url': const.DEPENDENCY_URLS['noscript'],
     }
+
+    use_askbot_login = 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS
+    my_settings['USE_ASKBOT_LOGIN_SYSTEM'] = use_askbot_login
+    if use_askbot_login and request.user.is_anonymous():
+        from askbot.deps.django_authopenid import context as login_context
+        context.update(login_context.login_context(request))
 
     if askbot_settings.GROUPS_ENABLED:
         #calculate context needed to list all the groups

@@ -45,7 +45,7 @@ from askbot.search import mysql
 def default_html_moderator(post):
     """Moderates inline HTML items: images and/or links
     depending on what items are moderated per settings.
-    
+
     Returns sanitized html with suspicious
     content edited out and replaced with warning signs.
     Moderators content is not sanitized.
@@ -69,7 +69,7 @@ def default_html_moderator(post):
     author = rev.author
     not_admin = not author.is_administrator_or_moderator()
     if not_admin and has_moderated_tags(post.html):
-        before = post.html 
+        before = post.html
         after = moderate_tags(before)
         if after != before:
             rev.place_on_moderation_queue()
@@ -436,8 +436,8 @@ class Post(models.Model):
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default=None, related_name='posts')
     current_revision = models.ForeignKey(
-                                'PostRevision', 
-                                blank=True, 
+                                'PostRevision',
+                                blank=True,
                                 null=True, #nullable b/c we have to first save post
                                            #and then add link to current revision
                                            #(which has a non-nullable fk to post)
@@ -623,7 +623,7 @@ class Post(models.Model):
         last_revision = self.html
         data = self.parse_post_text()
 
-        #todo: possibly remove feature of posting links 
+        #todo: possibly remove feature of posting links
         #depending on user's reputation
         self.html = author.fix_html_links(data['html'])
 
@@ -903,11 +903,11 @@ class Post(models.Model):
         orig_text = rev.text
         for rev in post.revisions.all().order_by('revision'):
             #for each revision of other post Ri
-            #append content of Ri to R1 and use author 
+            #append content of Ri to R1 and use author
             new_text = orig_text + '\n\n' + rev.text
             self.apply_edit(
                 edited_by=user,
-                text=new_text, 
+                text=new_text,
                 comment=_('merged revision'),
                 by_email=False,
                 edit_anonymously=rev.is_anonymous,
@@ -959,9 +959,9 @@ class Post(models.Model):
         self._is_approved = False
 
     def set_is_approved(self, is_approved):
-        """sets denormalized value of whether post/thread is 
+        """sets denormalized value of whether post/thread is
         approved"""
-        self.approved = is_approved 
+        self.approved = is_approved
         self.save()
         if self.is_question():
             self.thread.approved = is_approved
@@ -985,7 +985,7 @@ class Post(models.Model):
         #todo: do we need this, can't we just use is_approved()?
         return self.is_approved() is False
 
-    def get_absolute_url(self, 
+    def get_absolute_url(self,
                     no_slug=False,
                     question_post=None,
                     language=None,
@@ -1024,7 +1024,7 @@ class Post(models.Model):
                 url += django_urlquote(self.slug) + '/'
         elif self.is_comment():
             origin_post = self.get_origin_post()
-            url = '%(url)s?comment=%(id)d#comment-%(id)d' % \
+            url = '%(url)s?comment=%(id)d#post-id-%(id)d' % \
                 {'url': origin_post.get_absolute_url(thread=thread), 'id':self.id}
         else:
             raise NotImplementedError
@@ -1989,7 +1989,7 @@ class Post(models.Model):
                 ip_addr=ip_addr,
                 is_anonymous=edit_anonymously
             )
-        
+
         if latest_rev.revision > 0:
             parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
 
@@ -2053,13 +2053,13 @@ class Post(models.Model):
         return revision
 
     def _question__apply_edit(
-                            self, 
+                            self,
                             edited_at=None,
                             edited_by=None,
                             title=None,
-                            text=None, 
-                            comment=None, 
-                            tags=None, 
+                            text=None,
+                            comment=None,
+                            tags=None,
                             wiki=False,
                             edit_anonymously=False,
                             is_private=False,
@@ -2257,6 +2257,9 @@ class Post(models.Model):
 
         if self.is_comment():
             post = self.parent
+            if post.is_question():
+                #first page of answers since it's the question comment
+                return 1
         else:
             post = self
 
@@ -2310,7 +2313,7 @@ class PostRevisionManager(models.Manager):
         needs_moderation = is_content and (author.needs_moderation() or moderate_email)
 
         needs_premoderation = askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
-                                and needs_moderation 
+                                and needs_moderation
 
         #0 revision is not shown to the users
         if needs_premoderation:
@@ -2358,7 +2361,7 @@ class PostRevisionManager(models.Manager):
             post.current_revision = revision
             post.save()
         #don't advance current revision if we
-        #have premoderated revision and have previously 
+        #have premoderated revision and have previously
         #approved revisions
 
         revision.post.cache_latest_revision(revision)
@@ -2574,7 +2577,7 @@ class AnonymousAnswer(DraftContent):
         except django_exceptions.PermissionDenied, e:
             #delete previous draft questions (only one is allowed anyway)
             thread = self.question.thread
-            prev_drafts = DraftAnswer.objects.filter(   
+            prev_drafts = DraftAnswer.objects.filter(
                                                 author=user,
                                                 thread=thread
                                             )

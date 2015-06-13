@@ -2706,7 +2706,7 @@ Comment.prototype.getDeleteHandler = function () {
     var del_icon = this._delete_icon;
     return function () {
         if (confirm(gettext('confirm delete comment'))) {
-            comment.getElement().hide();
+            //comment.getElement().hide();
             $.ajax({
                 type: 'POST',
                 url: askbot.urls.deleteComment,

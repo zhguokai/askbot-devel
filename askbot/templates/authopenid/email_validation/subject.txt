@@ -1,1 +1,1 @@
-{% trans %}Recover your {{ site_name }} account{% endtrans %}
+{% trans %}Validate your {{ site_name }} email{% endtrans %}

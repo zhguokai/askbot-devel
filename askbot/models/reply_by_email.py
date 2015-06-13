@@ -35,7 +35,7 @@ class ReplyAddressManager(BaseQuerySetManager):
             allowed_from_email = allowed_from_email,
             used_at__isnull = True
         )
-    
+
     def create_new(self, **kwargs):
         """creates a new reply address"""
         kwargs['allowed_from_email'] = kwargs['user'].email
@@ -47,7 +47,7 @@ class ReplyAddressManager(BaseQuerySetManager):
                 break
         reply_address.save()
         return reply_address
-			
+
 
 REPLY_ACTION_CHOICES = (
     ('post_answer', 'Post an answer'),

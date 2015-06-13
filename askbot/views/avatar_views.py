@@ -1,6 +1,6 @@
 from askbot.conf import settings as askbot_settings
 from askbot.conf import gravatar_enabled
-from askbot.models import User
+from askbot.models import User, user_can_see_karma
 from askbot.utils.forms import get_error_list
 from avatar.conf import settings as avatar_settings
 from avatar.forms import PrimaryAvatarForm, UploadAvatarForm
@@ -84,7 +84,7 @@ def get_avatar_data(user, avatar_size):
             datum['is_primary'] = False
         map(clear_primary, primary_avatars)
         primary_avatars[0]['is_primary'] = True
-            
+
     #insert primary avatar first
     primary_avatars = filter(lambda v: v['is_primary'], avatar_data)
     if len(primary_avatars):
@@ -100,7 +100,7 @@ def redirect_to_show_list(user_id):
     return HttpResponseRedirect(
         reverse('askbot_avatar_show_list', kwargs={'user_id': user_id})
     )
-   
+
 
 @admin_or_owner_required
 def show_list(request, user_id=None, extra_context=None, avatar_size=128):
@@ -111,7 +111,7 @@ def show_list(request, user_id=None, extra_context=None, avatar_size=128):
 
     context = {
         #these are user profile context vars
-        'can_show_karma': request.user.can_see_karma(user),
+        'can_show_karma': user_can_see_karma(request.user, user),
         'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
         #below are pure avatar view context vars
         'avatar_data': avatar_data,

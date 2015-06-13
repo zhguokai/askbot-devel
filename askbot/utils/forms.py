@@ -14,17 +14,12 @@ import logging
 import urllib
 
 
-def clean_next(next, default=None):
-    if next is None or not next.startswith('/'):
-        if default:
-            return default
-        else:
-            return reverse('index')
-    if isinstance(next, str):
-        next = unicode(urllib.unquote(next), 'utf-8', 'replace')
-    next = next.strip()
-    logging.debug('next url is %s' % next)
-    return next
+def clean_next(next_url, default=None):
+    if next_url is None or not next_url.startswith('/'):
+        return default or reverse('index')
+    if isinstance(next_url, str):
+        next_url = unicode(urllib.unquote(next_url), 'utf-8', 'replace')
+    return next_url.strip()
 
 def get_error_list(form_instance):
     """return flat list of error values for the form"""
@@ -34,7 +29,7 @@ def get_error_list(form_instance):
         errors.extend(list(error_list))
     return errors
 
-def get_next_url(request, default = None):
+def get_next_url(request, default=None):
     return clean_next(request.REQUEST.get('next'), default)
 
 def get_db_object_or_404(params):
@@ -103,7 +98,7 @@ class UserNameField(StrippedNonEmptyCharField):
     ):
         self.must_exist = must_exist
         self.skip_clean = skip_clean
-        self.db_model = db_model 
+        self.db_model = db_model
         self.db_field = db_field
         self.user_instance = None
         error_messages={
@@ -240,10 +235,14 @@ class UserEmailField(forms.EmailField):
         """ validate if email exist in database
         from legacy register
         return: raise error if it exist """
-        email = super(UserEmailField,self).clean(email.strip())
+        email = email.strip()
+        if askbot_settings.BLANK_EMAIL_ALLOWED and email == '':
+            return ''
+
+        email = super(UserEmailField,self).clean(email)
         if self.skip_clean:
             return email
-        
+
         allowed_domains = askbot_settings.ALLOWED_EMAIL_DOMAINS.strip()
         allowed_emails = askbot_settings.ALLOWED_EMAILS.strip()
 
@@ -291,7 +290,7 @@ class SetPasswordForm(forms.Form):
     def clean_password2(self):
         """
         Validates that the two password inputs match.
-        
+
         """
         if 'password1' in self.cleaned_data:
             if self.cleaned_data['password1'] == self.cleaned_data['password2']:

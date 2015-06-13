@@ -108,7 +108,7 @@ def can_see_private_user_data(viewer, target):
             return True
         if viewer.is_administrator_or_moderator():
             #todo: take into account intersection of viewer and target user groups
-            return askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA 
+            return askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA
     return False
 
 @register.filter
@@ -398,8 +398,12 @@ def sub_vars(text, user=None):
     sitelink_re = re.compile(r'\{\{\s*SITE_LINK\s*\}\}')
 
     if user:
+        if user.is_anonymous():
+            username = _('Visitor')
+        else:
+            username = user.username
         username_re = re.compile(r'\{\{\s*USER_NAME\s*\}\}')
-        text = username_re.sub(user.username, text)
+        text = username_re.sub(username, text)
 
     site_name = askbot_settings.APP_SHORT_NAME
     text = sitename_re.sub(site_name, text)

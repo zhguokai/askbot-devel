@@ -59,6 +59,7 @@ from askbot.utils.html import site_url
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
+from askbot.deps.django_authopenid.exceptions import OAuthError
 from askbot.utils.loading import load_module
 from sanction.client import Client as OAuth2Client
 from urlparse import urlparse
@@ -402,19 +403,22 @@ def complete_oauth1_signin(request):
         del request.session['oauth_provider_name']
 
         oauth = util.OAuthConnection(oauth_provider_name)
-
-        user_id = oauth.get_user_id(
+        oauth.obtain_access_token(
                             oauth_token=session_oauth_token,
                             oauth_verifier=oauth_verifier
                         )
+        user_id = oauth.get_user_id()
+        request.session['email'] = oauth.get_user_email()
+        request.session['username'] = oauth.get_username()
+
         logging.debug('have %s user id=%s' % (oauth_provider_name, user_id))
     except Exception, e:
         logging.critical(e)
-        msg = _('Sorry, there was some problem '
-                'connecting to the login provider, please try again '
-                'or use another login method'
-            )
-        request.user.message_set.create(message = msg)
+        msg = _('Unfortunately, there was some problem when '
+                'connecting to %(provider)s, please try again '
+                'or use another provider'
+            ) % {'provider': request.session['oauth_provider_name']}
+        request.user.message_set.create(message=msg)
         return HttpResponseRedirect(next_url)
     else:
         user = authenticate(
@@ -424,9 +428,6 @@ def complete_oauth1_signin(request):
                 )
 
         logging.debug('finalizing oauth signin')
-
-        request.session['email'] = ''#todo: pull from profile
-        request.session['username'] = ''#todo: pull from profile
 
         return finalize_generic_signin(
                             request=request,
@@ -457,7 +458,7 @@ def signin(request, template_name='authopenid/signin.html'):
     #2) url from django setting LOGIN_REDIRECT_URL
     #3) home page of the forum
     login_redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
-    next_url = get_next_url(request, default = login_redirect_url)
+    next_url = get_next_url(request, default=login_redirect_url)
     logging.debug('next url is %s' % next_url)
 
     if askbot_settings.ALLOW_ADD_REMOVE_LOGIN_METHODS == False \
@@ -467,7 +468,7 @@ def signin(request, template_name='authopenid/signin.html'):
     if next_url == reverse('user_signin'):
         next_url = '%(next)s?next=%(next)s' % {'next': next_url}
 
-    login_form = forms.LoginForm(initial = {'next': next_url})
+    login_form = forms.LoginForm(initial={'next': next_url})
 
     #todo: get next url make it sticky if next is 'user_signin'
     if request.method == 'POST':
@@ -599,7 +600,7 @@ def signin(request, template_name='authopenid/signin.html'):
                         user_identifier=email,
                         redirect_url=next_url
                     )
-                    
+
             elif login_form.cleaned_data['login_type'] == 'openid':
                 #initiate communication process
                 logging.debug('processing signin with openid submission')
@@ -623,11 +624,10 @@ def signin(request, template_name='authopenid/signin.html'):
             elif login_form.cleaned_data['login_type'] == 'oauth':
                 try:
                     #this url may need to have "next" piggibacked onto
-                    connection = util.OAuthConnection(
-                                    provider_name,
-                                    callback_url=reverse('user_complete_oauth1_signin')
-                                )
-                    connection.start()
+                    connection = util.OAuthConnection(provider_name)
+                    connection.start(
+                        callback_url=reverse('user_complete_oauth1_signin')
+                    )
 
                     request.session['oauth_token'] = connection.get_token()
                     request.session['oauth_provider_name'] = provider_name
@@ -1021,13 +1021,15 @@ def finalize_generic_signin(
         return register(
                     request,
                     login_provider_name=login_provider_name,
-                    user_identifier=user_identifier
+                    user_identifier=user_identifier,
+                    redirect_url=redirect_url
                 )
 
 @not_authenticated
 @csrf.csrf_protect
 @fix_recaptcha_remote_ip
-def register(request, login_provider_name=None, user_identifier=None):
+def register(request, login_provider_name=None, 
+    user_identifier=None, redirect_url=None):
     """
     this function is used via it's own url with request.method=POST
     or as a simple function call from "finalize_generic_signin"
@@ -1044,11 +1046,43 @@ def register(request, login_provider_name=None, user_identifier=None):
 
     logging.debug('')
 
-    next_url = get_next_url(request)
+    next_url = redirect_url or get_next_url(request)
 
-    user = None
     username = request.session.get('username', '')
     email = request.session.get('email', '')
+
+    #1) handle "one-click registration"
+    providers = util.get_enabled_login_providers()
+    provider_data = providers[login_provider_name]
+
+    def email_is_acceptable(email):
+        return bool(email or (
+                askbot_settings.BLANK_EMAIL_ALLOWED \
+                and askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing'
+            ))
+
+    def username_is_acceptable(username):
+        if username.strip() == '':
+            return False
+        return User.objects.filter(username=username).count() == 0
+
+    #new style login providers support one click registration
+    if hasattr(provider_data, 'one_click_registration') and provider_data.one_click_registration:
+        if username_is_acceptable(username) and email_is_acceptable(email):
+            #try auto-registration and redirect to the next_url
+            user = create_authenticated_user_account(
+                        username=username,
+                        email=email,
+                        user_identifier=user_identifier,
+                        login_provider_name=login_provider_name,
+                    )
+            login(request, user)
+            cleanup_post_register_session(request)
+            return HttpResponseRedirect(next_url)
+    #end of one-click registration
+        
+
+    user = None
     logging.debug('request method is %s' % request.method)
 
     form_class = forms.get_registration_form_class()

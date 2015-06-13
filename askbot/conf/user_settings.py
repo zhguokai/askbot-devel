@@ -99,6 +99,26 @@ settings.register(
     )
 )
 
+def avatar_type_callback(old, new):
+    """strips trailing slash"""
+    if settings.ENABLE_GRAVATAR:
+        return new
+    elif new == 'g':
+        #can't use gravatar because it is disabled
+        return 'n'
+    return new
+
+settings.register(
+    livesettings.StringValue(
+        USER_SETTINGS,
+        'AVATAR_TYPE_FOR_NEW_USERS',
+        description=_('Avatar type for new users'),
+        default='g',
+        choices=const.AVATAR_TYPE_CHOICES_FOR_NEW_USERS,
+        update_callback=avatar_type_callback
+    )
+)
+
 settings.register(
     livesettings.ImageValue(
         USER_SETTINGS,
@@ -135,10 +155,10 @@ settings.register(
         USER_SETTINGS,
         'ENABLE_GRAVATAR',
         default = True,
-        description = _('Use automatic avatars from gravatar.com'),
+        description = _('Use automatic avatars from gravatar service'),
         help_text=_(
             'Check this option if you want to allow the use of gravatar.com for avatars. Please, note that this feature might take about 10 minutes to become fully effective. You will have to enable uploaded avatars as well. For more information, please visit <a href="http://askbot.org/doc/optional-modules.html#uploaded-avatars">this page</a>.'
-        ) 
+        )
     )
 )
 
@@ -151,7 +171,7 @@ settings.register(
         description=_('Default Gravatar icon type'),
         help_text=_(
                     'This option allows you to set the default avatar type for email addresses without associated gravatar images.  For more information, please visit <a href="http://en.gravatar.com/site/implement/images/">this page</a>.'
-                    ) 
+                    )
     )
 )
 
