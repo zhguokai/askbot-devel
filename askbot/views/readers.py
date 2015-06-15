@@ -394,7 +394,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """
     #process url parameters
     #todo: fix inheritance of sort method from questions
-    #before = datetime.datetime.now()
+    before = datetime.datetime.now()
     form = ShowQuestionForm(request.REQUEST)
     form.full_clean()#always valid
     show_answer = form.cleaned_data['show_answer']
@@ -673,9 +673,9 @@ def question(request, id):#refactor - long subroutine. display question body, an
     extra = context.get_extra('ASKBOT_QUESTION_PAGE_EXTRA_CONTEXT', request, data)
     data.update(extra)
 
-    return render(request, 'question.html', data)
-    #print datetime.datetime.now() - before
-    #return res
+    res = render(request, 'question.html', data)
+    print datetime.datetime.now() - before
+    return res
 
 def revisions(request, id, post_type = None):
     assert post_type in ('question', 'answer')

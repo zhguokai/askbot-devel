@@ -1,4 +1,3 @@
-import hotshot
 import time
 import os
 import datetime
@@ -162,6 +161,7 @@ def profile(log_file):
     http://code.djangoproject.com/wiki/ProfilingDjango
     """
 
+    import hotshot
     if not os.path.isabs(log_file):
         log_file = os.path.join(PROFILE_LOG_BASE, log_file)
 
