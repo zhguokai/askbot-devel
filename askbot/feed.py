@@ -16,10 +16,12 @@ from django.contrib.syndication.views import Feed
 
 import itertools
 
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext as _
+from django.conf import settings as django_settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from django.http import Http404
+from django.utils.translation import ugettext as _
+from django.utils.translation import get_language
 
 from askbot.conf import settings as askbot_settings
 from askbot.models import Post
@@ -154,8 +156,13 @@ class RssLastestQuestionsFeed(Feed):
         """
         if askbot_settings.RSS_ENABLED is False:
             raise Http404
+
         #initial filtering
-        qs = Post.objects.get_questions().filter(deleted=False)
+        filters = {'deleted': False}
+        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+            filters['language_code'] = get_language()
+            
+        qs = Post.objects.get_questions().filter(**filters)
 
         #get search string and tags from GET
         query = self.request.GET.get("q", None)

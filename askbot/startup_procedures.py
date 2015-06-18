@@ -397,6 +397,8 @@ def test_new_skins():
     because we've moved skin files a few levels up"""
     askbot_root = askbot.get_install_directory()
     for item in os.listdir(os.path.join(askbot_root, 'skins')):
+        if item == '__pycache__':
+            continue
         item_path = os.path.join(askbot_root, 'skins', item)
         if os.path.isdir(item_path):
             raise AskbotConfigError(

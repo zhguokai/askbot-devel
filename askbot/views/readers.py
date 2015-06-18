@@ -130,6 +130,8 @@ def questions(request, **kwargs):
         'page_size' : search_state.page_size,
     }
 
+    #get url for the rss feed
+    context_feed_url = reverse('latest_questions_feed')
     # We need to pass the rss feed url based
     # on the search state to the template.
     # We use QueryDict to get a querystring
@@ -140,14 +142,12 @@ def questions(request, **kwargs):
         # We have search string in session - pass it to
         # the QueryDict
         rss_query_dict.update({"q": search_state.query})
+
     if search_state.tags:
         # We have tags in session - pass it to the
         # QueryDict but as a list - we want tags+
-        rss_query_dict.setlist("tags", search_state.tags)
-    context_feed_url = '/%sfeeds/rss/?%s' % (
-                            django_settings.ASKBOT_URL,
-                            rss_query_dict.urlencode()
-                        ) # Format the url with the QueryDict
+        rss_query_dict.setlist('tags', search_state.tags)
+        context_feed_url += '?' + rss_query_dict.urlencode()
 
     reset_method_count = len(filter(None, [search_state.query, search_state.tags, meta_data.get('author_name', None)]))
 
