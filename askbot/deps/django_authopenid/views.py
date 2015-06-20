@@ -195,12 +195,9 @@ def ask_openid(
             request,
             openid_url,
             redirect_to,
-            on_failure=None,
             sreg_request=None
         ):
     """ basic function to ask openid and return response """
-    on_failure = on_failure or signin_failure
-
     trust_root = getattr(
         django_settings, 'OPENID_TRUST_ROOT', get_url_host(request) + '/'
     )
@@ -209,7 +206,7 @@ def ask_openid(
     ):
         msg = _("i-names are not supported")
         logging.debug('openid failed because i-names are not supported')
-        return on_failure(request, msg)
+        return signin_failure(request, msg)
     consumer = Consumer(request.session, util.DjangoOpenIDStore())
     try:
         auth_request = consumer.begin(openid_url)
@@ -217,7 +214,7 @@ def ask_openid(
         openid_url = cgi.escape(openid_url)
         msg = _(u"OpenID %(openid_url)s is invalid" % {'openid_url':openid_url})
         logging.debug(msg)
-        return on_failure(request, msg)
+        return signin_failure(request, msg)
 
     logging.debug('openid seemed to work')
     if sreg_request:
@@ -227,42 +224,6 @@ def ask_openid(
     logging.debug('redirecting to %s' % redirect_url)
     return HttpResponseRedirect(redirect_url)
 
-def complete(request, on_success=None, on_failure=None, return_to=None):
-    """ complete openid signin """
-    assert(on_success is not None)
-    assert(on_failure is not None)
-
-    logging.debug('in askbot.deps.django_authopenid.complete')
-
-    consumer = Consumer(request.session, util.DjangoOpenIDStore())
-    # make sure params are encoded in utf8
-    params = dict((k,smart_unicode(v)) for k, v in request.GET.items())
-    openid_response = consumer.complete(params, return_to)
-
-    try:
-        logging.debug(u'returned openid parameters were: %s' % unicode(params))
-    except Exception, e:
-        logging.critical(u'fix logging statement above ' + unicode(e))
-
-    if openid_response.status == SUCCESS:
-        logging.debug('openid response status is SUCCESS')
-        return on_success(
-                    request,
-                    openid_response.identity_url,
-                    openid_response
-                )
-    elif openid_response.status == CANCEL:
-        logging.debug('CANCEL')
-        return on_failure(request, 'The request was canceled')
-    elif openid_response.status == FAILURE:
-        logging.debug('FAILURE')
-        return on_failure(request, openid_response.message)
-    elif openid_response.status == SETUP_NEEDED:
-        logging.debug('SETUP NEEDED')
-        return on_failure(request, 'Setup needed')
-    else:
-        logging.debug('BAD OPENID STATUS')
-        assert False, "Bad openid status: %s" % openid_response.status
 
 def not_authenticated(func):
     """ decorator that redirect user to next page if
@@ -610,14 +571,13 @@ def signin(request, template_name='authopenid/signin.html'):
                 sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
                 redirect_to = "%s%s?%s" % (
                         get_url_host(request),
-                        reverse('user_complete_signin'),
+                        reverse('user_complete_openid_signin'),
                         urllib.urlencode({'next':next_url})
                 )
                 return ask_openid(
                             request,
                             login_form.cleaned_data['openid_url'],
                             redirect_to,
-                            on_failure=signin_failure,
                             sreg_request=sreg_req
                         )
 
@@ -897,15 +857,38 @@ def delete_login_method(request):
     else:
         raise Http404
 
-def complete_signin(request):
+def complete_openid_signin(request):
     """ in case of complete signin with openid """
-    logging.debug('')#blank log just for the trace
-    return complete(
-                request,
-                on_success = signin_success,
-                on_failure = signin_failure,
-                return_to = get_url_host(request) + reverse('user_complete_signin')
-            )
+    logging.debug('in askbot.deps.django_authopenid.complete')
+    consumer = Consumer(request.session, util.DjangoOpenIDStore())
+    # make sure params are encoded in utf8
+    params = dict((k,smart_unicode(v)) for k, v in request.GET.items())
+    return_to = get_url_host(request) + reverse('user_complete_openid_signin')
+    openid_response = consumer.complete(params, return_to)
+
+    logging.debug(u'returned openid parameters were: %s' % unicode(params))
+
+    if openid_response.status == SUCCESS:
+        logging.debug('openid response status is SUCCESS')
+        return signin_success(
+                    request,
+                    openid_response.identity_url,
+                    openid_response
+                )
+
+    elif openid_response.status == CANCEL:
+        logging.debug('CANCEL')
+        return signin_failure(request, 'The request was canceled')
+    elif openid_response.status == FAILURE:
+        logging.debug('FAILURE')
+        return signin_failure(request, openid_response.message)
+    elif openid_response.status == SETUP_NEEDED:
+        logging.debug('SETUP NEEDED')
+        return signin_failure(request, 'Setup needed')
+    else:
+        logging.debug('BAD OPENID STATUS')
+        assert False, "Bad openid status: %s" % openid_response.status
+
 
 def signin_success(request, identity_url, openid_response):
     """
@@ -1052,35 +1035,35 @@ def register(request, login_provider_name=None,
     email = request.session.get('email', '')
 
     #1) handle "one-click registration"
-    providers = util.get_enabled_login_providers()
-    provider_data = providers[login_provider_name]
+    if login_provider_name:
+        providers = util.get_enabled_login_providers()
+        provider_data = providers[login_provider_name]
 
-    def email_is_acceptable(email):
-        return bool(email or (
-                askbot_settings.BLANK_EMAIL_ALLOWED \
-                and askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing'
-            ))
+        def email_is_acceptable(email):
+            return bool(email or (
+                    askbot_settings.BLANK_EMAIL_ALLOWED \
+                    and askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing'
+                ))
 
-    def username_is_acceptable(username):
-        if username.strip() == '':
-            return False
-        return User.objects.filter(username=username).count() == 0
+        def username_is_acceptable(username):
+            if username.strip() == '':
+                return False
+            return User.objects.filter(username=username).count() == 0
 
-    #new style login providers support one click registration
-    if hasattr(provider_data, 'one_click_registration') and provider_data.one_click_registration:
-        if username_is_acceptable(username) and email_is_acceptable(email):
-            #try auto-registration and redirect to the next_url
-            user = create_authenticated_user_account(
-                        username=username,
-                        email=email,
-                        user_identifier=user_identifier,
-                        login_provider_name=login_provider_name,
-                    )
-            login(request, user)
-            cleanup_post_register_session(request)
-            return HttpResponseRedirect(next_url)
-    #end of one-click registration
-        
+        #new style login providers support one click registration
+        if hasattr(provider_data, 'one_click_registration') and provider_data.one_click_registration:
+            if username_is_acceptable(username) and email_is_acceptable(email):
+                #try auto-registration and redirect to the next_url
+                user = create_authenticated_user_account(
+                            username=username,
+                            email=email,
+                            user_identifier=user_identifier,
+                            login_provider_name=login_provider_name,
+                        )
+                login(request, user)
+                cleanup_post_register_session(request)
+                return HttpResponseRedirect(next_url)
+        #end of one-click registration
 
     user = None
     logging.debug('request method is %s' % request.method)
@@ -1349,7 +1332,7 @@ XRDF_TEMPLATE = """<?xml version='1.0' encoding='UTF-8'?>
 
 def xrdf(request):
     url_host = get_url_host(request)
-    return_to = "%s%s" % (url_host, reverse('user_complete_signin'))
+    return_to = "%s%s" % (url_host, reverse('user_complete_openid_signin'))
     return HttpResponse(XRDF_TEMPLATE % {'return_to': return_to})
 
 def set_new_email(user, new_email):
