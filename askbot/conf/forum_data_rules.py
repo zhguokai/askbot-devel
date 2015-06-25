@@ -15,7 +15,8 @@ FORUM_DATA_RULES = livesettings.ConfigurationGroup(
 
 EDITOR_CHOICES = (
     ('markdown', 'markdown'),
-    ('tinymce', 'WYSIWYG (tinymce)')
+    ('ckeditor', 'CKEditor (wysiwyg)'),
+    ('tinymce', 'TinyMCE (wysiwyg)')
 )
 
 settings.register(

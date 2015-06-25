@@ -72,6 +72,7 @@
 
             if (askbot['data']['userIsAuthenticated']) {
                 var draftHandler = new DraftQuestion();
+                draftHandler.setEditorId('{{ form.text.field.widget.attrs.id }}');
                 draftHandler.decorate($('body'));
                 window.onbeforeunload = function() {
                     var saveHandler = draftHandler.getSaveHandler();

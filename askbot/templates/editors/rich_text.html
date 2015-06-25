@@ -1,7 +1,8 @@
 <div class="form-group">
-    <label for="editor">{{ post_form.text.label }}</label>
+    {% set textarea_id=post_form.text.field.widget.attrs.id %}
+    <label for="{{ textarea_id }}" class="editor-label">{{ post_form.text.label }}</label>
     {% if post_form.text.errors %}
-        <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
+        <label for="{{ textarea_id }}" class="form-error">{{ post_form.text.errors }}</label>
     {% endif %}
     {% if settings.EDITOR_TYPE == 'markdown' %}
         <div class="wmd-container">
@@ -21,7 +22,7 @@
         </div>
         <div class="clearfix"></div>
         <div id="previewer" class="wmd-preview"></div>
-    {% else %}
+    {% elif settings.EDITOR_TYPE == 'tinymce' %}
         <div class="wmd-container">
             {{ post_form.media }}
             {{ post_form.text }}
@@ -34,5 +35,13 @@
         <div class="form-item">
             <p class="editor-status action-status"><span></span></p>
         </div>
+    {% elif settings.EDITOR_TYPE == 'ckeditor' %}
+        <div class="wmd-container">
+            {{ post_form.media }}
+            {{ post_form.text }}
+        </div>
+        <script type="text/javascript">
+            CKEDITOR.replace('{{ textarea_id }}');
+        </script>
     {% endif %}
 </div>

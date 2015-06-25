@@ -480,6 +480,10 @@ var DraftPost = function () {
 };
 inherits(DraftPost, WrappedElement);
 
+DraftPost.prototype.setEditorId = function(id) {
+    this._editorId = id;
+};
+
 /**
  * @return {string}
  */
@@ -581,7 +585,7 @@ DraftQuestion.prototype.getData = function () {
 
 DraftQuestion.prototype.assignContentElements = function () {
     this._title_element = $('#id_title');
-    this._text_element = $('#editor');
+    this._text_element = $(this._editorId);
     this._tagnames_element = $('#id_tags');
 };
 
@@ -610,7 +614,7 @@ DraftAnswer.prototype.getData = function () {
 };
 
 DraftAnswer.prototype.assignContentElements = function () {
-    this._textElement = $('#editor');
+    this._textElement = $(this._editorId);
 };
 
 
@@ -1930,7 +1934,7 @@ TinyMCE.prototype.createDom = function () {
     this._element = editorBox;
     var textarea = this.makeElement('textarea');
     textarea.attr('id', this._id);
-    textarea.addClass('editor');
+    textarea.addClass('js-editor');
     this._element.append(textarea);
 };
 
@@ -1938,6 +1942,94 @@ TinyMCE.prototype.decorate = function (element) {
     this._element = element;
     this._id = element.attr('id');
 };
+
+/**
+ * @constructor
+ */
+var CKEditor = function (config) {
+    WrappedElement.call(this);
+    this._id = 'editor';//desired id of the textarea
+};
+inherits(CKEditor, WrappedElement);
+
+CKEditor.prototype.setEnabledButtons = function () {};
+CKEditor.prototype.setPreviewerEnabled = function () {};
+CKEditor.prototype.setHighlight = function () {};
+
+CKEditor.prototype.start = function () {
+    //@todo: add options
+    this._CKEditor = CKEDITOR.replace(this._id);
+};
+
+/**
+ * CKEditor specific function
+ * runs immediately if editor is ready
+ * or runs callback when editor becomes ready
+ */
+CKEditor.prototype.CKEditorOnReady = function (callback) {
+    var ed = this._CKEditor;
+    if (ed.status === 'ready') {
+        callback();
+    } else {
+        ed.on('instanceReady', callback)
+    }
+};
+
+/**
+ * CKEditor specific function
+ * assumes that editor is ready
+ */
+CKEditor.prototype.CKEditorPutCursorAtEnd = function () {
+    var ed = this._CKEditor;
+    var selection = ed.getSelection();
+    var bookmarks = selection.createBookmarks(true);
+    var range = selection.getRanges()[0];
+    range.moveToBookmark(bookmarks[0]);
+    range.select();
+};
+
+
+CKEditor.prototype.putCursorAtEnd = function () {
+    var ed = this._CKEditor;
+    var me = this;
+    ed.CKEditorOnReady(function() { me.CKEditorPutCursorAtEnd(); });
+};
+
+CKEditor.prototype.focus = function (onFocus) {
+    var ed = this._CKEditor;
+    this.CKEditorOnReady(function () { ed.focus(); });
+};
+
+CKEditor.prototype.setId = function (id) {
+    this._id = id;
+};
+
+CKEditor.prototype.setText = function (text) {
+    var ed = this._CKEditor;
+    this.CKEditorOnReady(function () { ed.setData(text); });
+};
+
+CKEditor.prototype.getText = function () {
+    return this._CKEditor.getData();
+};
+
+CKEditor.prototype.getHtml = CKEditor.prototype.getText;
+
+CKEditor.prototype.createDom = function () {
+    var editorBox = this.makeElement('div');
+    editorBox.addClass('wmd-container');
+    this._element = editorBox;
+    var textarea = this.makeElement('textarea');
+    textarea.attr('id', this._id);
+    textarea.addClass('js-editor');
+    this._element.append(textarea);
+};
+
+CKEditor.prototype.decorate = function (element) {
+    this._element = element;
+    this._id = element.attr('id');
+};
+
 
 /**
  * Form for editing and posting new comment
@@ -2000,6 +2092,16 @@ EditCommentForm.prototype.startTinyMCEEditor = function () {
     this._editor = editor;
 };
 
+EditCommentForm.prototype.startCKEditor = function () {
+    var editorId = this.makeId('comment-editor');
+    var editor = new CKEditor(opts);
+    editor.setId(editorId);
+    editor.setText(this._text);
+    this._editorBox.prepend(editor.getElement());
+    editor.start();
+    this._editor = editor;
+};
+
 EditCommentForm.prototype.startWMDEditor = function () {
     var editor = new WMD();
     editor.setEnabledButtons('bold italic link code ol ul');
@@ -2021,6 +2123,10 @@ EditCommentForm.prototype.startEditor = function () {
         this.startTinyMCEEditor();
         //@todo: implement save on enter and character counter in tinyMCE
         return;
+    } else if (editorType === 'ckeditor') {
+        this.startCKEditor();
+        return;
+    }
     } else if (editorType === 'markdown') {
         this.startWMDEditor();
     } else {
@@ -3136,6 +3242,10 @@ FoldedEditor.prototype.decorate = function (element) {
         editor = new TinyMCE();
         editor.decorate(element.find('textarea'));
         this._editor = editor;
+    } else if (editorType === 'ckeditor') {
+        editor = new CKEditor();
+        editor.decorate(element.find('textarea'));
+        this._editor = editor;
     } else if (editorType === 'markdown') {
         editor = new WMD();
         editor.decorate(element);
@@ -3310,15 +3420,18 @@ TagWikiEditor.prototype.decorate = function (element) {
 
     var me = this;
     var editor;
-    if (askbot.settings.editorType === 'markdown') {
+    var editorType = askbot.settings.editorType;
+    if (editorType === 'markdown') {
         editor = new WMD();
-    } else {
+    } elif (editorType === 'tinymce') {
         editor = new TinyMCE({//override defaults
             theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',
             theme_advanced_buttons2: '',
             theme_advanced_path: false,
             plugins: ''
         });
+    } elif (editorType === 'ckeditor') {
+        editor = new CKEditor();
     }
     if (this._enabled_editor_buttons) {
         editor.setEnabledButtons(this._enabled_editor_buttons);

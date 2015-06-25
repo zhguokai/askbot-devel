@@ -2,6 +2,7 @@
 used in AskBot"""
 import re
 import datetime
+import uuid
 from django import forms
 from askbot import const
 from askbot.const import message_keys
@@ -143,6 +144,9 @@ def tag_strings_match(tag_string, mandatory_tag):
     else:
         return tag_string == mandatory_tag
 
+       
+class CKEditorWidget(forms.Textarea):
+    media = forms.Media(js='//cdn.ckeditor.com/4.4.7/standard/ckeditor.js')
 
 
 class CountryField(forms.ChoiceField):
@@ -338,14 +342,25 @@ class EditorField(forms.CharField):
 
         editor_attrs = kwargs.pop('editor_attrs', {})
         widget_attrs = kwargs.pop('attrs', {})
-        widget_attrs.setdefault('id', 'editor')
+        #editor widget id value, default to uuid
+        widget_attrs.setdefault('id', uuid.uuid4())
+
+        #add js-editor class to the widgets
+        classnames = set(widget_attrs.get('class', '').split())
+        classnames.add('.js-editor')
+        widget_attrs['class'] = ' '.join(classnames)
 
         super(EditorField, self).__init__(*args, **kwargs)
         self.required = True
-        if askbot_settings.EDITOR_TYPE == 'markdown':
+
+        editor_type = askbot_settings.EDITOR_TYPE
+        if editor_type == 'markdown':
             self.widget = forms.Textarea(attrs=widget_attrs)
-        elif askbot_settings.EDITOR_TYPE == 'tinymce':
+        elif editor_type == 'tinymce':
             self.widget = TinyMCE(attrs=widget_attrs, mce_attrs=editor_attrs)
+        elif editor_type == 'ckeditor':
+            self.widget = CKEditorWidget(attrs=widget_attrs)
+
         self.min_length = 10
         self.post_term_name = _('post')
 

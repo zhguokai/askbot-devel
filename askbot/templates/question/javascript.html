@@ -73,6 +73,7 @@
         if (askbot['data']['userIsAuthenticated']) {
             var draftHandler = new DraftAnswer();
             draftHandler.setThreadId({{ thread.id }});
+            draftHandler.setEditorId('{{ answer.text.field.widget.attrs.id }}');
             draftHandler.decorate($('body'));
         }
 
