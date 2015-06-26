@@ -231,6 +231,13 @@ class DraftQuestionAdmin(admin.ModelAdmin):
     search_fields = ('author__username', 'title', 'tagnames')
 admin.site.register(models.DraftQuestion, DraftQuestionAdmin)
 
+class ReplyAddressAdmin(admin.ModelAdmin):
+    list_display = ('id', 'address', 'user', 'reply_action')
+    list_display_links = ('id', 'address')
+    search_fields = ('address', 'user__username')
+    list_filter = ('reply_action',)
+admin.site.register(models.ReplyAddress, ReplyAddressAdmin)
+
 
 from django.contrib.sites.models import Site
 try:
