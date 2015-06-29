@@ -235,7 +235,7 @@ class UserEmailField(forms.EmailField):
         """ validate if email exist in database
         from legacy register
         return: raise error if it exist """
-        email = email.strip()
+        email = (email or '').strip()
         if askbot_settings.BLANK_EMAIL_ALLOWED and email == '':
             return ''
 
