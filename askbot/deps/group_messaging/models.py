@@ -19,7 +19,6 @@ import datetime
 import urllib
 
 MAX_HEADLINE_LENGTH = 80
-MAX_SENDERS_INFO_LENGTH = 64
 MAX_SUBJECT_LINE_LENGTH = 30
 
 #dummy parse message function
@@ -296,10 +295,8 @@ class Message(models.Model):
 
     sender = models.ForeignKey(User, related_name='group_messaging_sent_messages')
 
-    senders_info = models.CharField(
-        max_length=MAX_SENDERS_INFO_LENGTH,
-        default=''
-    )#comma-separated list of a few names
+    #comma-separated list of a few names
+    senders_info = models.TextField(default='')
 
     recipients = models.ManyToManyField(Group)
 
