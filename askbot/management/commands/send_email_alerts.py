@@ -1,29 +1,28 @@
 import datetime
-from django.core.management.base import NoArgsCommand
-from django.core.urlresolvers import reverse
-from django.db import connection
-from django.db.models import Q, F
-from askbot.models import User, Post, PostRevision, Thread
-from askbot.models import Activity, EmailFeedSetting
-from django.template.loader import get_template
-from django.template import Context
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
-from django.utils.translation import activate as activate_language
+import traceback
+
 from django.conf import settings as django_settings
-from askbot.conf import settings as askbot_settings
-from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
+from django.core.management.base import NoArgsCommand
+from django.db import connection
+from django.db.models import Q, F
+from django.utils.datastructures import SortedDict
+from django.utils.translation import ugettext as _
+from django.utils.translation import activate as activate_language
+
 from askbot import const
+from askbot.conf import settings as askbot_settings
+from askbot.models import User, Post, PostRevision, Thread
+from askbot.models import Activity, EmailFeedSetting
 from askbot.mail.messages import BatchEmailAlert
 from askbot.mail import send_mail
-from askbot.utils.slug import slugify
 from askbot.utils.html import site_url
-import traceback
+
 
 DEBUG_THIS_COMMAND = False
 SITE_ID = Site.objects.get_current().id
+
 
 def get_all_origin_posts(mentions):
     origin_posts = set()
@@ -31,6 +30,7 @@ def get_all_origin_posts(mentions):
         post = mention.content_object
         origin_posts.add(post.get_origin_post())
     return list(origin_posts)
+
 
 #todo: refactor this as class
 def extend_question_list(
@@ -80,9 +80,11 @@ def extend_question_list(
             else:
                 meta_data['comments'] = 1
 
+
 def format_action_count(string, number, output):
     if number > 0:
         output.append(_(string) % {'num':number})
+
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
@@ -131,10 +133,8 @@ class Command(NoArgsCommand):
         """
 
         user_feeds = EmailFeedSetting.objects.filter(
-                                                subscriber=user
-                                            ).exclude(
-                                                frequency__in=('n', 'i')
-                                            )
+            subscriber=user
+        ).exclude(frequency__in=('n', 'i'))
 
         should_proceed = False
         for feed in user_feeds:
@@ -167,14 +167,14 @@ class Command(NoArgsCommand):
         #basic things - not deleted, not closed, not too old
         #not last edited by the same user
         base_qs = Post.objects.get_questions().exclude(
-                                thread__last_activity_by=user
-                            ).exclude(
-                                thread__last_activity_at__lt=user.date_joined#exclude old stuff
-                            ).exclude(
-                                deleted=True
-                            ).exclude(
-                                thread__closed=True
-                            ).order_by('-thread__last_activity_at')
+            thread__last_activity_by=user
+        ).exclude(
+            thread__last_activity_at__lt=user.date_joined#exclude old stuff
+        ).exclude(
+            deleted=True
+        ).exclude(
+            thread__closed=True
+        ).order_by('-thread__last_activity_at')
 
         if askbot_settings.CONTENT_MODERATION_MODE == 'premoderation':
             base_qs = base_qs.filter(approved = True)
@@ -190,17 +190,14 @@ class Command(NoArgsCommand):
         not_seen_qs = base_qs.filter(~Q(viewed__who=user))
         #questions that were seen, but before last modification
         seen_before_last_mod_qs = base_qs.filter(
-                                    Q(
-                                        viewed__who=user,
-                                        viewed__when__lt=F('thread__last_activity_at')
-                                    )
-                                )
+            Q(viewed__who=user, viewed__when__lt=F('thread__last_activity_at'))
+        )
 
         #shorten variables for convenience
         Q_set_A = not_seen_qs
         Q_set_B = seen_before_last_mod_qs
 
-        if getattr(django_settings,'ASKBOT_MULTILINGUAL', False):
+        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
             languages = user.languages.split()
         else:
             languages = None
@@ -273,11 +270,10 @@ class Command(NoArgsCommand):
             if feed.should_send_now():
                 cutoff_time = feed.get_previous_report_cutoff_time()
                 comments = Post.objects.get_comments().filter(
-                                            added_at__lt = cutoff_time,
-                                        ).exclude(
-                                            author = user
-                                        )
+                    added_at__lt=cutoff_time
+                ).exclude(author=user)
                 q_commented = list()
+
                 for c in comments:
                     post = c.parent
                     if post.author != user:
@@ -288,17 +284,17 @@ class Command(NoArgsCommand):
                     q_commented.append(post.get_origin_post())
 
                 extend_question_list(
-                                q_commented,
-                                q_list,
-                                cutoff_time=cutoff_time,
-                                add_comment=True,
-                                languages=languages
-                            )
+                    q_commented,
+                    q_list,
+                    cutoff_time=cutoff_time,
+                    add_comment=True,
+                    languages=languages
+                )
 
                 mentions = Activity.objects.get_mentions(
-                                                    mentioned_at__lt = cutoff_time,
-                                                    mentioned_whom = user
-                                                )
+                    mentioned_at__lt=cutoff_time,
+                    mentioned_whom=user
+                )
 
                 #print 'have %d mentions' % len(mentions)
                 #MM = Activity.objects.filter(activity_type = const.TYPE_ACTIVITY_MENTION)
@@ -363,18 +359,18 @@ class Command(NoArgsCommand):
                 #todo: is it possible to use content_object here, instead of
                 #content type and object_id pair?
                 update_info = Activity.objects.get(
-                                            user=user,
-                                            content_type=ctype,
-                                            object_id=q.id,
-                                            activity_type=EMAIL_UPDATE_ACTIVITY
-                                        )
+                    user=user,
+                    content_type=ctype,
+                    object_id=q.id,
+                    activity_type=EMAIL_UPDATE_ACTIVITY
+                )
                 emailed_at = update_info.active_at
             except Activity.DoesNotExist:
                 update_info = Activity(
-                                        user=user,
-                                        content_object=q,
-                                        activity_type=EMAIL_UPDATE_ACTIVITY
-                                    )
+                    user=user,
+                    content_object=q,
+                    activity_type=EMAIL_UPDATE_ACTIVITY
+                )
                 emailed_at = datetime.datetime(1970, 1, 1)#long time ago
             except Activity.MultipleObjectsReturned:
                 raise Exception(
@@ -405,22 +401,22 @@ class Command(NoArgsCommand):
                 meta_data['new_q'] = False
 
             new_ans = Post.objects.get_answers(user).filter(
-                                            thread=q.thread,
-                                            added_at__gt=emailed_at,
-                                            deleted=False,
-                                        )
+                thread=q.thread,
+                added_at__gt=emailed_at,
+                deleted=False,
+            )
             new_ans = new_ans.exclude(author=user)
             meta_data['new_ans'] = len(new_ans)
 
             ans_ids = Post.objects.get_answers(user).filter(
-                                            thread=q.thread,
-                                            added_at__gt=emailed_at,
-                                            deleted=False,
-                                        ).values_list(
-                                            'id', flat = True
-                                        )
+                thread=q.thread,
+                added_at__gt=emailed_at,
+                deleted=False,
+            ).values_list('id', flat=True)
+
             ans_rev = PostRevision.objects.filter(post__id__in = ans_ids)
             ans_rev = ans_rev.exclude(author=user).distinct()
+
             meta_data['ans_rev'] = len(ans_rev)
 
             comments = meta_data.get('comments', 0)
@@ -448,9 +444,12 @@ class Command(NoArgsCommand):
         user.add_missing_askbot_subscriptions()
         #todo: q_list is a dictionary, not a list
         q_list = self.get_updated_questions_for_user(user)
+
         if len(q_list.keys()) == 0:
             return
+
         num_q = 0
+
         for question, meta_data in q_list.items():
             if meta_data['skip']:
                 del q_list[question]
@@ -498,4 +497,4 @@ class Command(NoArgsCommand):
             else:
                 recipient_email = user.email
 
-            email.send([recipient_email,])
+            email.send([recipient_email])
