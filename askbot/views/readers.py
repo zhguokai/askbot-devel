@@ -459,7 +459,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         lang = translation.get_language()
         question_url = question_post.get_absolute_url(language=lang)
         if request.GET:
-            question_url += '?' + urllib.urlencode(request.GET)
+            question_url += u'?' + urllib.urlencode(request.GET)
         return HttpResponseRedirect(question_url)
 
 
