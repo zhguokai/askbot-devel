@@ -271,12 +271,13 @@ class Command(NoArgsCommand):
                 cutoff_time = feed.get_previous_report_cutoff_time()
                 comments = Post.objects.get_comments().filter(
                     added_at__lt=cutoff_time
-                ).exclude(author=user)
+                ).exclude(author=user).select_related('parent')
                 q_commented = list()
 
                 for c in comments:
                     post = c.parent
-                    if post.author != user:
+
+                    if post.author_id != user.pk:
                         continue
 
                     #skip is post was seen by the user after
@@ -442,6 +443,7 @@ class Command(NoArgsCommand):
         #does not change the database, only sends the email
         #todo: move this to template
         user.add_missing_askbot_subscriptions()
+
         #todo: q_list is a dictionary, not a list
         q_list = self.get_updated_questions_for_user(user)
 
