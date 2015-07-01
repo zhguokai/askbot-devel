@@ -497,4 +497,5 @@ class Command(NoArgsCommand):
             else:
                 recipient_email = user.email
 
-            email.send([recipient_email])
+            if recipient_email:
+                email.send([recipient_email])
