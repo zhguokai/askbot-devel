@@ -1883,19 +1883,6 @@ class Thread(models.Model):
 
         return FavoriteQuestion.objects.filter(thread=self, user=user).exists()
 
-    def get_last_update_info(self):
-        posts = list(self.posts.select_related('author', 'last_edited_by'))
-
-        last_updated_at = posts[0].added_at
-        last_updated_by = posts[0].author
-
-        for post in posts:
-            last_updated_at, last_updated_by = max((last_updated_at, last_updated_by), (post.added_at, post.author))
-            if post.last_edited_at:
-                last_updated_at, last_updated_by = max((last_updated_at, last_updated_by), (post.last_edited_at, post.last_edited_by))
-
-        return last_updated_at, last_updated_by
-
     def get_summary_html(self, search_state=None, visitor=None):
         html = self.get_cached_summary_html(visitor)
         if not html:
