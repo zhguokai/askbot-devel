@@ -1136,29 +1136,7 @@ class Thread(models.Model):
         """returns query set for answers to this question
         that may be shown to the given user
         """
-        if user is None or user.is_anonymous():
-            return self.posts.get_answers().filter(deleted=False)
-        else:
-            return self.posts.get_answers(
-                                    user=user
-                                ).filter(deleted=False)
-            #    return self.posts.get_answers(user=user).filter(
-            #                models.Q(deleted=False) \
-            #                | models.Q(author=user) \
-            #                | models.Q(deleted_by=user)
-            #            )
-            #we used to show deleted answers to admins,
-            #users who deleted those answers and answer owners
-            #but later decided to not show deleted answers at all
-            #because it makes caching the post lists for thread easier
-            #if user.is_administrator() or user.is_moderator():
-            #    return self.posts.get_answers(user=user)
-            #else:
-            #    return self.posts.get_answers(user=user).filter(
-            #                models.Q(deleted=False) \
-            #                | models.Q(author=user) \
-            #                | models.Q(deleted_by=user)
-            #            )
+        return self.posts.get_answers(user=user).filter(deleted=False)
 
     def invalidate_cached_thread_content_fragment(self):
         site_id = django_settings.SITE_ID
