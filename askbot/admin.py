@@ -347,3 +347,17 @@ finally:
         def my_subscribed_tags(self, obj):
             return ', '.join(obj.get_marked_tags('subscribed').values_list('name', flat=True))
     admin.site.register(User, UserAdmin)
+
+from avatar.models import Avatar
+from django.contrib.admin.sites import NotRegistered
+try:
+    admin.site.unregister(Avatar)
+except NotRegistered:
+    print u"Move 'avatar' above 'askbot' in INSTALLED_APPS to get a more useful admin view for Avatar model" 
+else:
+    class AvatarAdmin(admin.ModelAdmin):
+        list_display = ('id', 'user', 'avatar', 'primary', 'date_uploaded')
+        list_filter = ('primary', 'date_uploaded')
+        search_fields = ('user__username', 'user__email', 'avatar')
+    admin.site.register(Avatar, AvatarAdmin)
+
