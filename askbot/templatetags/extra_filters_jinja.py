@@ -175,6 +175,12 @@ def media(url):
         return ''
 
 @register.filter
+def static(url):
+    """prepends static url"""
+    static_url = django_settings.STATIC_URL.strip('/')
+    return '/' + static_url + '/' + url.lstrip('/')
+
+@register.filter
 def fullmedia(url):
     return site_url_func(media(url))
 
