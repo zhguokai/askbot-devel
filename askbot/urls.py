@@ -668,7 +668,7 @@ urlpatterns += (
     # BEGIN Questions (main page) urls. All this urls work both normally and through ajax
     url(
         # Note that all parameters, even if optional, are provided to the view. Non-present ones have None value.
-        (r'^(?P<feed>\w+)' + 
+        (r'^(?P<feed>[\w-]+)' + 
             r'(%s)?' % r'/scope:(?P<scope>\w+)' +
             r'(%s)?' % r'/sort:(?P<sort>[\w\-]+)' +
             r'(%s)?' % r'/tags:(?P<tags>[\w+.#,-]+)' + # Should match: const.TAG_CHARS + ','; TODO: Is `#` char decoded by the time URLs are processed ??
@@ -681,17 +681,17 @@ urlpatterns += (
         name='questions'
     ),
     url(
-        r'^(?P<feed>\w+)/%s$' % _('ask/'),
+        r'^(?P<feed>[\w-]+)/%s$' % _('ask/'),
         views.writers.ask,
         name='ask'
     ),
     url(
-        r'^(?P<feed>\w+)/(?P<id>\d+)/',
+        r'^(?P<feed>[\w-]+)/(?P<id>\d+)/',
         views.readers.question,
         name='question'
     ),
     url(
-        r'^(?P<feed>\w+)/get_questions/',
+        r'^(?P<feed>[\w-]+)/get_questions/',
         views.commands.api_get_questions,
         name='api_get_questions'
     ),

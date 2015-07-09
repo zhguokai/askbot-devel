@@ -277,11 +277,11 @@ def ask(request, feed=None):#view used to ask a new question
                     if request.is_ajax():
                         response = simplejson.dumps({
                             'success': True,
-                            'redirectUrl': question.get_absolute_url()
+                            'redirectUrl': question.get_absolute_url(feed=feed)
                         })
                         return HttpResponse(response, mimetype='application/json')
                     else:
-                        return HttpResponseRedirect(question.get_absolute_url())
+                        return HttpResponseRedirect(question.get_absolute_url(feed=feed))
                 except exceptions.PermissionDenied, e:
                     if request.is_ajax():
                         response = simplejson.dumps({'success': True, 'errors': unicode(e)})
