@@ -178,7 +178,7 @@ class SpacesInline(admin.TabularInline):
     extra = 1
 
 class ThreadAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'deleted', 'closed', 'site', 'in_spaces', 'in_groups', 'is_private', 'language_code')
+    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'answer_count', 'deleted', 'closed', 'site', 'in_spaces', 'in_groups', 'is_private', 'language_code')
     list_filter = ('deleted', 'closed', 'language_code', 'site')
     search_fields = ('last_activity_by__username', 'title')
     inlines = (ThreadToGroupInline, SpacesInline)
