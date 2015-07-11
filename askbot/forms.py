@@ -17,6 +17,7 @@ from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
+from askbot.utils.slug import slugify
 from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
@@ -297,13 +298,16 @@ class TitleField(forms.CharField):
         also is supposed to work for unicode non-ascii characters"""
         if value is None:
             value = ''
-        if len(value) < askbot_settings.MIN_TITLE_LENGTH:
+
+        chars = slugify(value).replace('-', '')
+        if len(chars) < askbot_settings.MIN_TITLE_LENGTH:
             msg = ungettext_lazy(
-                'must have > %d character',
-                'must have > %d characters',
+                'must have > %d non-punctuation character',
+                'must have > %d non-punctuation characters',
                 askbot_settings.MIN_TITLE_LENGTH
             ) % askbot_settings.MIN_TITLE_LENGTH
             raise forms.ValidationError(msg)
+
         encoded_value = value.encode('utf-8')
         question_term = askbot_settings.WORDS_QUESTION_SINGULAR
         if len(value) == len(encoded_value):
