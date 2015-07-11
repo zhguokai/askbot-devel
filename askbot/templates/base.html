@@ -3,6 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE|escape }}</title>
+        {% block meta_description %}
+        <meta name="description" content="{{settings.APP_DESCRIPTION|escape}}" />
+        {% endblock %}
         {% include "meta/html_head_meta.html" %}
         {% if settings.SITE_FAVICON %}
         <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />

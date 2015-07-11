@@ -54,45 +54,6 @@ settings.register(
 settings.register(
     IntegerValue(
         REP_CHANGES,
-        'REP_GAIN_FOR_RECEIVING_DOWNVOTE_CANCELATION',
-        default=2,
-        description=_('Gain for post owner on canceled downvote')
-    )
-)
-
-settings.register(
-    IntegerValue(
-        REP_CHANGES,
-        'REP_GAIN_FOR_CANCELING_DOWNVOTE',
-        default=1,
-        description=_('Gain for voter on canceling downvote')
-    )
-)
-#'gain_by_canceling_downvote',
-
-settings.register(
-    IntegerValue(
-        REP_CHANGES,
-        'REP_LOSS_FOR_CANCELING_ANSWER_ACCEPTANCE',
-        default=-2,
-        description=_('Loss for voter for canceling of answer acceptance')
-    )
-)
-#'lose_by_canceling_accepted_answer',
-
-settings.register(
-    IntegerValue(
-        REP_CHANGES,
-        'REP_LOSS_FOR_RECEIVING_CANCELATION_OF_ANSWER_ACCEPTANCE',
-        default=-5,
-        description=_('Loss for author whose answer was "un-accepted"')
-    )
-)
-#'lose_by_accepted_answer_cancled',
-
-settings.register(
-    IntegerValue(
-        REP_CHANGES,
         'REP_LOSS_FOR_DOWNVOTING',
         default=-2,
         description=_('Loss for giving a downvote')
@@ -139,13 +100,3 @@ settings.register(
     )
 )
 #'lose_by_flagged_lastrevision_5_times',
-
-settings.register(
-    IntegerValue(
-        REP_CHANGES,
-        'REP_LOSS_FOR_RECEIVING_UPVOTE_CANCELATION',
-        default=-10,
-        description=_('Loss for post owner when upvote is canceled')
-    )
-)
-#'lose_by_upvote_canceled',
