@@ -2298,7 +2298,7 @@ ul.js-related-tags li {
   float: right;
   font-size: 11px;
   height: 18px;
-  line-height: 12px;
+  line-height: 18px;
   margin-top: 10px;
   margin-bottom: 8px;
   min-width: 200px;
@@ -4633,12 +4633,6 @@ td.setting-input textarea {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
   }
-  #homeButton {
-    background: 1px -36px url(../images/sprites.png) no-repeat;
-  }
-  #homeButton:hover {
-    background: -44px -36px url(../images/sprites.png) no-repeat;
-  }
   #ContentLeft, #ContentFull {
     padding-left: 6px;
   }
@@ -4656,6 +4650,12 @@ td.setting-input textarea {
   }
   .js-tag-name {
     height: 20px;
+  }
+  .question-page .comments .comment-controls {
+    padding-left: 8px;
+  }
+  .question-page .comments div.controls {
+    margin-left: 2px;
   }
 }
 @media screen and (max-width: 800px) {
@@ -4802,6 +4802,7 @@ td.setting-input textarea {
 @media screen and (max-width: 540px) {
   .question-page .post-controls {
     float: left;
+    height: 32px;
     margin-left: -8px;
     padding-left: 0;
     text-align: left;
@@ -4810,7 +4811,7 @@ td.setting-input textarea {
     display: none;
   }
   .question-page div.comments.empty {
-    margin-top: 0;
+    margin-top: 8px !important;
   }
 }
 @media screen and (max-width: 480px) {
