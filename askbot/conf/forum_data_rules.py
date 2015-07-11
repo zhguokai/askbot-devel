@@ -547,6 +547,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'USERS_PAGE_SIZE',
+        default=30,
+        description=_('Maximum users per users page')
+    )
+)
+
+settings.register(
     livesettings.StringValue(
         FORUM_DATA_RULES,
         'UNANSWERED_QUESTION_MEANING',

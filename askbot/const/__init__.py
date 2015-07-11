@@ -468,7 +468,6 @@ NOTIFICATION_DELIVERY_SCHEDULE_CHOICES = (
                             ('n',_('no email')),
                         )
 
-USERS_PAGE_SIZE = 28#todo: move it to settings?
 USERNAME_REGEX_STRING = r'^[\w \-.@+\']+$'
 
 GRAVATAR_TYPE_CHOICES = (

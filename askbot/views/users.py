@@ -183,7 +183,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
 
         objects_list = Paginator(
                             users.order_by(order_by_parameter),
-                            const.USERS_PAGE_SIZE
+                            askbot_settings.USERS_PAGE_SIZE
                         )
         base_url = request.path + '?sort=%s&' % sort_method
     else:
@@ -191,7 +191,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         matching_users = models.get_users_by_text_query(search_query, users)
         objects_list = Paginator(
                             matching_users.order_by('-reputation'),
-                            const.USERS_PAGE_SIZE
+                            askbot_settings.USERS_PAGE_SIZE
                         )
         base_url = request.path + '?name=%s&sort=%s&' % (search_query, sort_method)
 
