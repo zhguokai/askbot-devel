@@ -202,7 +202,7 @@ def deploy_askbot(options):
 def collect_missing_options(options_dict):
     options_dict['secret_key'] = generate_random_key()
     if options_dict['database_engine'] == '2':#sqlite
-        if 'database_name' in options_dict:
+        if options_dict['database_name']:
             return options_dict
         while True:
             value = console.simple_dialog(
