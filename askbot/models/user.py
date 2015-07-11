@@ -233,7 +233,6 @@ class Activity(models.Model):
     We keep some history data for user activities
     """
     user = models.ForeignKey(User)
-    receiving_users = models.ManyToManyField(User, related_name='received_activity')
     recipients = models.ManyToManyField(User, through=ActivityAuditStatus, related_name='incoming_activity')
     activity_type = models.SmallIntegerField(choices = const.TYPE_ACTIVITY)
     active_at = models.DateTimeField(default=datetime.datetime.now)
