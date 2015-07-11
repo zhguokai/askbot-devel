@@ -1078,8 +1078,11 @@ def register(request, login_provider_name=None,
             )
 
     if request.method == 'GET':
-        assert(login_provider_name is not None)
-        assert(user_identifier is not None)
+        try:
+            assert(login_provider_name is not None)
+            assert(user_identifier is not None)
+        except AssertionError:
+            return HttpResponseRedirect(reverse('user_signin'))
         #store this data into the session
         #to persist for the post request
         request.session['login_provider_name'] = login_provider_name
