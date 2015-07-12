@@ -273,7 +273,7 @@ settings.register(
     values.LongStringValue(
         WORDS,
         'WORDS_QUESTIONS_COUNTABLE_FORMS',
-        default='question\nquestions',
+        default=_('question\nquestions'),
         description=_('Countable plural forms for "question"'),
         help_text=_('Enter one form per line, pay attention'),
         localized=True
@@ -284,7 +284,7 @@ settings.register(
     values.LongStringValue(
         WORDS,
         'WORDS_ANSWERS_COUNTABLE_FORMS',
-        default='answer\nanswers',
+        default=_('answer\nanswers'),
         description=_('Countable plural forms for "answer"'),
         help_text=_('Enter one form per line, pay attention'),
         localized=True
