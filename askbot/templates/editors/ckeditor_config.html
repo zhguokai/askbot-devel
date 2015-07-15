@@ -1,0 +1,19 @@
+<script type="text/javascript">
+    askbot['settings']['CKEditorConfig'] = {
+        uiColor: '#dddddd',
+        contentsCss: '{{ "/style/ckeditor/contents.css"|media }}',
+        language: '{{ (current_language_code|replace('_', '-')|split('-'))[0] }}',
+        removePlugins: 'elementspath',
+        toolbarGroups: [
+            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+            { name: 'links' },
+            { name: 'insert' },
+            { name: 'tools' },
+            { name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
+            '/',
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
+            { name: 'colors' },
+        ]
+    }
+</script>

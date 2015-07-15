@@ -411,6 +411,8 @@ POST_RENDERERS_MAP = getattr(django_settings, 'ASKBOT_POST_RENDERERS', {
     'plain-text': 'askbot.utils.markup.plain_text_input_converter',
     'markdown': 'askbot.utils.markup.markdown_input_converter',
     'tinymce': 'askbot.utils.markup.tinymce_input_converter',
+    #ckeditor is the same as tinymce as both are HTML editors
+    'ckeditor': 'askbot.utils.markup.tinymce_input_converter'
 })
 
 

@@ -22,5 +22,8 @@
     askbot['settings'] = {};
     askbot['messages'] = {};
 </script>
+{% if settings.EDITOR_TYPE == 'ckeditor' %}
+    {% include "editors/ckeditor_config.html" %}
+{% endif %}
 <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
 {# avoid adding javascript here so that pages load faster #}

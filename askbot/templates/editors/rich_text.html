@@ -41,7 +41,18 @@
             {{ post_form.text }}
         </div>
         <script type="text/javascript">
-            CKEDITOR.replace('{{ textarea_id }}');
+            (function() {
+                var ed = CKEDITOR.replace('{{ textarea_id }}', askbot['settings']['CKEditorConfig']);
+                var updateField = function() {
+                    var textArea = document.getElementById('{{ textarea_id }}');
+                    textArea.value = ed.getData();
+                }
+                ed.on('keyup', updateField);
+                ed.on('keypress', updateField);
+                ed.on('blur', updateField);
+                ed.on('change', updateField);
+                ed.on('paste', updateField);
+            })();
         </script>
     {% endif %}
 </div>

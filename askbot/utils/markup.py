@@ -217,7 +217,7 @@ def convert_text(text):
         return plain_text_input_converter(text)
     elif parser_type == 'markdown':
         return markdown_input_converter(text)
-    elif parser_type == 'tinymce':
+    elif parser_type in ('tinymce', 'ckeditor'):
         return tinymce_input_converter(text)
     else:
         raise NotImplementedError

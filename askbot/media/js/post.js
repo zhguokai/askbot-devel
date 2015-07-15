@@ -585,7 +585,7 @@ DraftQuestion.prototype.getData = function () {
 
 DraftQuestion.prototype.assignContentElements = function () {
     this._title_element = $('#id_title');
-    this._text_element = $(this._editorId);
+    this._text_element = $('#' + this._editorId);
     this._tagnames_element = $('#id_tags');
 };
 
@@ -614,7 +614,7 @@ DraftAnswer.prototype.getData = function () {
 };
 
 DraftAnswer.prototype.assignContentElements = function () {
-    this._textElement = $(this._editorId);
+    this._textElement = $('#' + this._editorId);
 };
 
 
@@ -1946,7 +1946,7 @@ TinyMCE.prototype.decorate = function (element) {
 /**
  * @constructor
  */
-var CKEditor = function (config) {
+var CKEditor = function () {
     WrappedElement.call(this);
     this._id = 'editor';//desired id of the textarea
 };
@@ -1958,7 +1958,20 @@ CKEditor.prototype.setHighlight = function () {};
 
 CKEditor.prototype.start = function () {
     //@todo: add options
-    this._CKEditor = CKEDITOR.replace(this._id);
+    var ed = CKEDITOR.replace(
+        this._id,
+        askbot['settings']['CKEditorConfig']
+    );
+    this._CKEditor = ed;
+    var textArea = this._element;
+    var updateField = function() {
+        textArea.val(ed.getData());
+    }
+    ed.on('keyup', updateField);
+    ed.on('keypress', updateField);
+    ed.on('blur', updateField);
+    ed.on('change', updateField);
+    ed.on('paste', updateField);
 };
 
 /**
@@ -2094,11 +2107,11 @@ EditCommentForm.prototype.startTinyMCEEditor = function () {
 
 EditCommentForm.prototype.startCKEditor = function () {
     var editorId = this.makeId('comment-editor');
-    var editor = new CKEditor(opts);
+    var editor = new CKEditor();
     editor.setId(editorId);
-    editor.setText(this._text);
     this._editorBox.prepend(editor.getElement());
     editor.start();
+    editor.setText(this._text);
     this._editor = editor;
 };
 
@@ -2126,7 +2139,6 @@ EditCommentForm.prototype.startEditor = function () {
     } else if (editorType === 'ckeditor') {
         this.startCKEditor();
         return;
-    }
     } else if (editorType === 'markdown') {
         this.startWMDEditor();
     } else {
@@ -3423,14 +3435,14 @@ TagWikiEditor.prototype.decorate = function (element) {
     var editorType = askbot.settings.editorType;
     if (editorType === 'markdown') {
         editor = new WMD();
-    } elif (editorType === 'tinymce') {
+    } else if (editorType === 'tinymce') {
         editor = new TinyMCE({//override defaults
             theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',
             theme_advanced_buttons2: '',
             theme_advanced_path: false,
             plugins: ''
         });
-    } elif (editorType === 'ckeditor') {
+    } else if (editorType === 'ckeditor') {
         editor = new CKEditor();
     }
     if (this._enabled_editor_buttons) {

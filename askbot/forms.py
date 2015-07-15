@@ -146,7 +146,7 @@ def tag_strings_match(tag_string, mandatory_tag):
 
        
 class CKEditorWidget(forms.Textarea):
-    media = forms.Media(js='//cdn.ckeditor.com/4.4.7/standard/ckeditor.js')
+    media = forms.Media(js=('//cdn.ckeditor.com/4.5.1/standard/ckeditor.js',))
 
 
 class CountryField(forms.ChoiceField):
