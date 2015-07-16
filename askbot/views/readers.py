@@ -58,14 +58,6 @@ import askbot
 #todo: - take these out of const or settings
 from askbot.models import Post, Vote
 
-INDEX_PAGE_SIZE = 30
-INDEX_AWARD_SIZE = 15
-INDEX_TAGS_SIZE = 25
-# used in tags list
-DEFAULT_PAGE_SIZE = 60
-# used in questions
-# used in answers
-
 #refactor? - we have these
 #views that generate a listing of questions in one way or another:
 #index, unanswered, questions, search, tag
@@ -352,7 +344,7 @@ def tags(request):#view showing a listing of available tags - plain list
 
     if tag_list_type == 'list':
         #plain listing is paginated
-        objects_list = Paginator(tags_qs, DEFAULT_PAGE_SIZE)
+        objects_list = Paginator(tags_qs, const.TAGS_PAGE_SIZE)
         try:
             tags = objects_list.page(page)
         except (EmptyPage, InvalidPage):

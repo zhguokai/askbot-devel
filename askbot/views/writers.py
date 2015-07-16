@@ -49,17 +49,6 @@ from askbot.importers.stackexchange import management as stackexchange#todo: may
 from askbot.utils.slug import slugify
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 
-# used in index page
-INDEX_PAGE_SIZE = 20
-INDEX_AWARD_SIZE = 15
-INDEX_TAGS_SIZE = 100
-# used in tags list
-DEFAULT_PAGE_SIZE = 60
-# used in questions
-QUESTIONS_PAGE_SIZE = 10
-# used in answers
-ANSWERS_PAGE_SIZE = 10
-
 #todo: make this work with csrf
 @csrf.csrf_exempt
 def upload(request):#ajax upload file to a question or answer
