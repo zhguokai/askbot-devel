@@ -79,11 +79,11 @@ class ConfigSettings(object):
         """returns setting to the default value"""
         self.update(key, self.get_default(key))
 
-    def update(self, key, value):
+    def update(self, key, value, language_code=None):
         try:
             setting = config_get(self.__group_map[key], key)
             if setting.localized:
-                lang = get_language()
+                lang = language_code or get_language()
             else:
                 lang = None
             setting.update(value, lang)
@@ -202,18 +202,30 @@ class ConfigSettings(object):
         return out
 
 
-def get_bulk_cache_key():
+def get_bulk_cache_key(lang=None):
     from askbot.utils.translation import get_language
-    return 'askbot-settings-' + get_language()
+    return 'askbot-settings-' + (lang or get_language())
 
 
-def prime_cache_handler(*args, **kwargs):
-    cache_key = get_bulk_cache_key()
-    ConfigSettings.prime_cache(cache_key)
+def update_cached_value(key, value, language_code=None):
+    cache_key = get_bulk_cache_key(language_code or get_language())
+    settings_dict = cache.get(cache_key)
+    if settings_dict:
+        settings_dict[key] = value
+        cache.set(cache_key, settings_dict)
+
+def cached_value_update_handler(setting=None, new_value=None, language_code=None, *args, **kwargs):
+    key=setting.key
+    if setting.localized == False and django_settings.ASKBOT_MULTILINGUAL:
+        languages = dict(django_settings.LANGUAGES).keys()
+        for lang in languages:
+            update_cached_value(key, new_value, lang)
+    else:
+        update_cached_value(key, new_value, language_code)
 
 signals.configuration_value_changed.connect(
-    prime_cache_handler,
-    dispatch_uid='prime_cache_handler_upon_config_change'
+    cached_value_update_handler,
+    dispatch_uid='update_cached_value_upon_config_change'
 )
 #settings instance to be used elsewhere in the project
 settings = ConfigSettings()

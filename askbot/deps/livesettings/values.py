@@ -437,7 +437,10 @@ class Value(object):
                     except SettingNotSet:
                         pass
 
-                signals.configuration_value_changed.send(self, old_value=current_value, new_value=new_value, setting=self)
+                signals.configuration_value_changed.send(self,
+                        old_value=current_value,
+                        new_value=new_value, setting=self,
+                        language_code=language_code)
 
                 if self.clear_cache:
                     cache.clear()
