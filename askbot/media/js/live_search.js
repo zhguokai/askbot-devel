@@ -848,6 +848,7 @@ FullTextSearch.prototype.makeFormSubmitHandler = function () {
         me.updateQueryString();
         var searchUrl = me.getSearchUrl();
         evt.preventDefault();
+        $(document).trigger('askbot.liveSearchSubmit', [me._element]);
         window.location.href = baseUrl + searchUrl;
     };
 };
