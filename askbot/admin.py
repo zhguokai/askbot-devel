@@ -157,8 +157,8 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(models.Post, PostAdmin)
 
 class PostRevisionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post_id', 'thread_name', 'revision', 'revised_at', 'author', 'approved')
-    list_filter = ('approved',)
+    list_display = ('id', 'post_id', 'thread_name', 'revision', 'revised_at', 'author', 'approved', 'is_minor')
+    list_filter = ('approved', 'is_minor')
     search_fields = ('author__username', 'post__id', 'post__thread__title')
     ordering = ('-id',)
 

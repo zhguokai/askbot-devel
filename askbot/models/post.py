@@ -2320,6 +2320,7 @@ class PostRevision(models.Model):
     revised_at = models.DateTimeField()
     summary = models.CharField(max_length=300, blank=True)
     text = models.TextField(blank=True)
+    is_minor = models.NullBooleanField(default=None)
 
     approved = models.BooleanField(default=False, db_index=True)
     approved_by = models.ForeignKey(User, null = True, blank = True)
