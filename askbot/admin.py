@@ -141,7 +141,7 @@ class IsPrivate(SimpleListFilter):
             return queryset
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post_type', 'thread', 'author', 'text_30', 'added_at', 'deleted', 'in_groups', 'is_published', 'is_private', 'vote_up_count', 'language_code')
+    list_display = ('id', 'post_type', 'thread', 'author', 'text_30', 'added_at', 'last_edited_at', 'last_edited_by', 'deleted', 'in_groups', 'is_published', 'is_private', 'vote_up_count', 'language_code')
     list_filter = ('deleted', IsPrivate, 'post_type', 'language_code', 'vote_up_count')
     search_fields = ('id', 'thread__title', 'text', 'author__username')
     inlines = (PostToGroupInline,)

@@ -1902,7 +1902,8 @@ class Post(models.Model):
                 comment=comment,
                 by_email=by_email,
                 ip_addr=ip_addr,
-                is_anonymous=edit_anonymously
+                is_anonymous=edit_anonymously,
+                suppress_email=suppress_email,
             )
 
         if latest_rev.revision > 0:
@@ -2053,7 +2054,8 @@ class Post(models.Model):
                     is_anonymous=False,
                     by_email=False,
                     email_address=None,
-                    ip_addr=None
+                    ip_addr=None,
+                    suppress_email=None
                 ):
         #todo: this may be identical to Question.add_revision
         if None in (author, revised_at, text):
@@ -2067,7 +2069,8 @@ class Post(models.Model):
             by_email=by_email,
             email_address=email_address,
             ip_addr=ip_addr,
-            is_anonymous=is_anonymous
+            is_anonymous=is_anonymous,
+            is_minor=suppress_email
         )
 
     def _question__add_revision(
@@ -2080,6 +2083,7 @@ class Post(models.Model):
             by_email=False,
             email_address=None,
             ip_addr=None,
+            suppress_email=None
     ):
         if None in (author, text):
             raise Exception('author, text and comment are required arguments')
@@ -2095,7 +2099,8 @@ class Post(models.Model):
             text=text,
             by_email=by_email,
             email_address=email_address,
-            ip_addr=ip_addr
+            ip_addr=ip_addr,
+            is_minor=suppress_email
         )
 
     def add_revision(self, *kargs, **kwargs):

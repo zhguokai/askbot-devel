@@ -1834,7 +1834,7 @@ def user_edit_comment(
                     body_text=None,
                     timestamp=None,
                     by_email=False,
-                    suppress_email=False,
+                    suppress_email=False, # but we need to default is_minor to None
                     ip_addr=None,
                 ):
     """apply edit to a comment, the method does not

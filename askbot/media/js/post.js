@@ -2085,7 +2085,7 @@ EditCommentForm.prototype.createDom = function(){
         this._minorEditBox.append(checkBox);
         var label = this.makeElement('label');
         label.attr('for', 'suppress_email');
-        label.html(gettext("minor edit (don't send alerts)"));
+        label.html(gettext("minor edit comment (don't send alerts)"));
         this._minorEditBox.append(label);
     }
 
