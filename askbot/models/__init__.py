@@ -2596,13 +2596,7 @@ def user_get_primary_group(self):
     works only for one real private group per-person
     """
     if askbot_settings.GROUPS_ENABLED:
-        groups = self.get_groups(private=True)
-        for group in groups:
-            if group.is_personal():
-                continue
-            membership = self.get_group_membership(group)
-            if membership.level == GroupMembership.FULL:
-                return group
+        return self.askbot_profile.primary_group
     return None
 
 def user_can_make_group_private_posts(self):

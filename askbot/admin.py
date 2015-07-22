@@ -258,10 +258,20 @@ class SubscribedToSite(InSite):
             return queryset
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('auth_user', 'default_site', 'subs_sites')
+    list_display = ('auth_user', 'default_site', 'subs_sites', 'primary_group')
     list_filter = ('default_site', SubscribedToSite)
     search_fields = ('auth_user__username',)
     filter_horizontal = ('subscribed_sites',)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'primary_group':
+            global_group = models.Group.objects.get_global_group()
+            groups = models.Group.objects.exclude(pk=global_group.id)
+            groups = groups.exclude_personal()
+
+            kwargs['queryset'] = groups
+
+        return super(UserProfileAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
     def subs_sites(self, obj):
         return ', '.join(obj.subscribed_sites.all().values_list('name', flat=True))
