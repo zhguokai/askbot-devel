@@ -51,7 +51,7 @@ parameters:
                 <input class="required login" id="id_username" 
                     maxlength="255" name="username" tabindex="0" type="text"
                     {% if openid_register_form.username.value() %}
-                        value="{{ openid_register_form.username.value() }}"
+                        value="{{ openid_register_form.username.value()|escape }}"
                     {% endif %}
                     placeholder="{% trans %}Choose a screen name{% endtrans %}"
                 >
@@ -63,7 +63,7 @@ parameters:
                 <input class="required login" id="id_email" maxlength="200" 
                     name="email" type="text"
                     {% if openid_register_form.email.value() %}
-                        value="{{ openid_register_form.email.value() }}"
+                        value="{{ openid_register_form.email.value()|escape }}"
                     {% endif %}
                     placeholder="{% trans %}Email address{% endtrans %}"
                 >

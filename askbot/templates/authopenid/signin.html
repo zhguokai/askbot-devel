@@ -91,7 +91,7 @@
                         <input class="required login" id="id_username" 
                             maxlength="255" name="username" type="text"
                             {% if login_form.username.value() %}
-                                value="{{ login_form.username.value() }}"
+                                value="{{ login_form.username.value()|escape }}"
                             {% endif %}
                             {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN %}
                                 placeholder="{% trans %}Username{% endtrans %}"
@@ -104,7 +104,7 @@
                         <input class="required login" id="id_password" 
                             maxlength="128" name="password" type="password"
                             {% if login_form.password.value() %}
-                                value="{{ login_form.password.value() }}"
+                                value="{{ login_form.password.value()|escape }}"
                             {% endif %}
                             placeholder="{% trans %}Password{% endtrans %}">
                     </div>
@@ -125,7 +125,7 @@
                         <input class="required login" id="id_new_password" 
                             maxlength="128" name="new_password" type="password"
                             {% if login_form.new_password.value() %}
-                                value="{{ login_form.new_method.value() }}"
+                                value="{{ login_form.new_method.value()|escape }}"
                             {% endif %}
                             placeholder="{% trans %}New password{% endtrans %}"
                         >
@@ -135,7 +135,7 @@
                         <input class="required login" id="id_new_password_retyped" maxlength="128" 
                             name="new_password_retyped" type="password"
                             {% if login_form.new_password_retyped.value() %}
-                                value="{{ login_form.new_password_retype.value() }}"
+                                value="{{ login_form.new_password_retype.value()|escape }}"
                             {% endif %}
                             placeholder="{% trans %}Please, retype{% endtrans %}"
                         >
