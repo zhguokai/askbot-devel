@@ -25,7 +25,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponseBadRequest
 from django.utils.translation import get_language
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
@@ -612,6 +612,45 @@ def user_stats(request, user, context):
     context.update(extra_context)
 
     return render(request, 'user_profile/user_stats.html', context)
+
+
+@decorators.ajax_only
+def get_user_description(request):
+    if request.user.is_anonymous():
+        if askbot_settings.CLOSED_FORUM_MODE:
+            raise django_exceptions.PermissionDenied
+
+    form = forms.UserForm(request.GET)
+    if not form.is_valid():
+        raise ValueError('bad data')
+
+    user_id = form.cleaned_data['user_id']
+    user = models.User.objects.get(pk=user_id)
+    return {'description': user.about}
+
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def set_user_description(request):
+    if request.user.is_anonymous():
+        raise django_exceptions.PermissionDenied
+
+    if askbot_settings.READ_ONLY_MODE_ENABLED:
+        message = askbot_settings.READ_ONLY_MESSAGE
+        raise django_exceptions.PermissionDenied(message)
+    
+    form = forms.UserDescriptionForm(request.POST)
+    if not form.is_valid():
+        raise ValueError('bad data')
+
+    user_id = form.cleaned_data['user_id']
+    description = form.cleaned_data['description']
+        
+    if user_id == request.user.pk or request.user.is_admin_or_mod():
+        user = models.User.objects.filter(pk=user_id)
+        user.update(about=description)
+
 
 def user_recent(request, user, context):
 

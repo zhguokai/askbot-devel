@@ -104,6 +104,16 @@ urlpatterns = patterns('',
         views.users.user_set_primary_language,
         name='user_set_primary_language'
     ),
+    service_url(
+        r'^users/get-description$',
+        views.users.get_user_description,
+        name='get_user_description'
+    ),
+    service_url(
+        r'^users/set-description$',
+        views.users.set_user_description,
+        name='set_user_description',
+    ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
             pgettext('urls', 'users/'),
