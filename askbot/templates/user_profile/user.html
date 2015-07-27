@@ -5,6 +5,7 @@
 <style type="text/css">
     .history-table td { padding: 5px; }
 </style>
+<link rel="stylesheet" type="text/css" href="{{ '/wmd/wmd.css'|media }}" />
 {% endblock %}
 {% block content %}
     <h1 class="section-title">
@@ -45,7 +46,10 @@
     <script type="text/javascript" src="{{ '/js/user.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/jslib/jquery.validate.min.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/jslib/prettify.js'|media }}"></script>
+    {% include "meta/markdown_javascript.html" %}
+    <script type="text/javascript" src="{{ '/jslib/editor.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/utils/editable.js'|media }}"></script>
     {% endcompress %}
     {% block userjs %}
     {% endblock %}

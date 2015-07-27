@@ -40,6 +40,7 @@ from askbot.mail import send_mail
 from askbot.utils.http import get_request_info
 from askbot.utils import decorators
 from askbot.utils import functions
+from askbot.utils.markup import convert_text
 from askbot import forms
 from askbot import const
 from askbot.views import context as view_context
@@ -639,7 +640,7 @@ def set_user_description(request):
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         message = askbot_settings.READ_ONLY_MESSAGE
         raise django_exceptions.PermissionDenied(message)
-    
+
     form = forms.UserDescriptionForm(request.POST)
     if not form.is_valid():
         raise ValueError('bad data')
@@ -650,6 +651,9 @@ def set_user_description(request):
     if user_id == request.user.pk or request.user.is_admin_or_mod():
         user = models.User.objects.filter(pk=user_id)
         user.update(about=description)
+        return {'description_html': convert_text(description)}
+
+    raise django_exceptions.PermissionDenied
 
 
 def user_recent(request, user, context):

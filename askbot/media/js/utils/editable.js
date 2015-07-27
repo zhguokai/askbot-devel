@@ -39,9 +39,15 @@ Editable.prototype.setState = function(state){
         this._state = state;
         this._editorBox.show();
         this._editBtn.hide();
+        this._saveBtn.show();
+        this._cancelBtn.show();
+        this._content.hide();
     } else if (state === 'display'){
         this._editorBox.hide();
+        this._saveBtn.hide();
+        this._cancelBtn.hide();
         this._editBtn.show();
+        this._content.show();
     }
 };
 
@@ -107,6 +113,7 @@ Editable.prototype.startActivatingEditor = function () {
 Editable.prototype.saveText = function () {
     var me = this;
     //optimistic update
+    var editorText = this._editor.getText();
     if (this._editorType === 'markdown') {
         var converter = getAskbotMarkdownConverter();
         editorText = converter.makeHtml(editorText);
@@ -114,7 +121,7 @@ Editable.prototype.saveText = function () {
     this.setContent(editorText);
     this.setState('display');
     
-    var data = this._saveTextParams;
+    var data = this._saveTextUrlParams;
     var editorText = this._editor.getText();
     data[this._saveTextParamName] = editorText;
     var validatedParamName = this._validatedTextParamName;
@@ -183,10 +190,11 @@ Editable.prototype.decorate = function(element){
     this._content = element.find('.js-editable-content');
     this._initialContent = this._content.html();
     //must be defined
-    var editBtn = document.getElementById('js-edit-btn-' + this._id);
+    var editBtn = $(document.getElementById('js-edit-btn-' + this._id));
     if ( !editBtn ) {
         throw "edit button with id js-edit-btn-" + this._id + " is required";
     }
+    this._editBtn = editBtn;
 
     //parse these two urls and separate url and the params
     var parsed = parseUrl(element.data('getTextUrl'));
@@ -198,25 +206,25 @@ Editable.prototype.decorate = function(element){
     this._saveTextUrlParams = parsed[1];
 
     this._saveTextParamName = element.data('saveTextParamName');
-    this._validatedTextParamName = element.data('validatedTextParamName') \
-                                || this._saveTextParamName;
+    this._validatedTextParamName = element.data('validatedTextParamName') || this._saveTextParamName;
 
     this._useCompactEditor = element.data('editorCompact');
 
     //create container for the editor and buttons
     var editorBox = this.makeElement('div');
-    editorBox.hide();
     this._content.after(editorBox);
     this._editorBox = editorBox;
 
     //create editor
     var editorType = element.data('editorType') || askbot['settings']['editorType'];
-    this._editorType == editorType;
+    this._editorType = editorType;
     if (editorType === 'markdown') {
         var editor = new WMD();
         if (this._useCompactEditor) {
             editor.setEnabledButtons('bold italic link code ol ul');
         }
+        var preview = element.data('previewerEnabled');
+        editor.setPreviewerEnabled(preview);
     } else if (editorType === 'tinymce') {
         if (this._useCompactEditor) {
             var editor = new TinyMCE({//override defaults
@@ -233,20 +241,27 @@ Editable.prototype.decorate = function(element){
     }
     this._editor = editor;
     editorBox.append(editor.getElement());
+    editorBox.hide();
 
     //adding two buttons...
-    var formControls = this.makeElement('div');
-    editorBox.append(formControls);
+    var formControls = element.find('.js-editable-controls');
+    if (formControls.length === 0) {
+        formControls = this.makeElement('div');
+        formControls.addClass('.js-editable-controls');
+        editorBox.append(formControls);
+    }
 
     var saveBtn = this.makeElement('button');
-    saveBtn.addClass('btn btn-primary');
+    //saveBtn.addClass('btn btn-primary');
     saveBtn.html(gettext('save'));
     formControls.append(saveBtn);
+    this._saveBtn = saveBtn;
 
     var cancelBtn = this.makeElement('button');
     cancelBtn.html(gettext('cancel'));
-    cancelBtn.addClass('btn');
+    //cancelBtn.addClass('btn');
     formControls.append(cancelBtn);
+    this._cancelBtn = cancelBtn;
 
     this.setState('display');
 
@@ -255,3 +270,11 @@ Editable.prototype.decorate = function(element){
     setupButtonEventHandlers(cancelBtn, function(){ me.setState('display') });
     setupButtonEventHandlers(saveBtn, function(){ me.saveText() });
 };
+
+(function () {
+    var items = $('.js-editable');
+    $.each(items, function(idx, item) {
+        var editable = new Editable();
+        editable.decorate($(item));
+    });
+})();

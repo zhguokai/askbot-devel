@@ -76,6 +76,18 @@ textarea,
     padding: 0 5px;
 }
 
+.js-editable {
+    .wmd-container {
+        height: auto;
+        background: white;
+        padding: 0;
+        margin-bottom: 8px;
+    }
+    textarea {
+        width: 100% !important;
+    }
+}
+
 .tos {
     margin: 20px 0 10px 0;
     .tos-content {
@@ -3182,7 +3194,6 @@ ul.js-related-tags li {
     textarea{
         padding-left:5px;
         padding-top:5px;
-        width:395px;
         font-size:14px;
     }
     input.submit{
@@ -3542,6 +3553,15 @@ a:hover.medal {
     }
     .vote-notification h3 {
         padding: 10px;
+    }
+
+    .js-editable {
+        .wmd-container {
+            min-height: 162px;
+            textarea {
+                min-height: 125px;
+            }
+        }
     }
 }
 

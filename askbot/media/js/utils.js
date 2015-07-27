@@ -13,19 +13,19 @@ var mediaUrl = function (resource) {
  * (1) - path, (2) - dictionary of params
  */
 var parseUrl = function (url) {
-    var parts = url.split('?');
-    if (parts.length == 1) {
+    var urlParts = url.split('?');
+    if (urlParts.length == 1) {
         return [url, undefined];
     } else {
-        var params_string = parts[1];
-        var parts = params_string.split('&');
-        var numParts = parts.length;
+        var paramsString = urlParts[1];
+        var paramsParts = paramsString.split('&');
+        var numParts = paramsParts.length;
         var params = {};
         for (var i=0; i<numParts; i++) {
-            var pair = params_string[i].split('=');
+            var pair = paramsParts[i].split('=');
             params[pair[0]] = pair[1];
         }
-        return [url, params];
+        return [urlParts[0], params];
     }
 };
 
