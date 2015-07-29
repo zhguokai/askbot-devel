@@ -139,7 +139,7 @@
         </table>
     </div>
     <div class="col3 user-about">
-    {% if view_user.about and (not view_user.is_blocked()) %}
+    {% if not view_user.is_blocked() %}
         {% set editable=(request.user.is_authenticated() 
             and (
                 (request.user == view_user) or request.user.is_admin_or_mod()

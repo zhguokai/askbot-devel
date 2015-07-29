@@ -99,6 +99,7 @@ textarea,
 }
 .js-editable textarea {
   width: 100% !important;
+  box-sizing: border-box;
 }
 .tos {
   margin: 20px 0 10px 0;
