@@ -11,11 +11,11 @@ CLOSE_REASONS = (
     (1, _('duplicate question')),
     (2, _('question is off-topic or not relevant')),
     (3, _('too subjective and argumentative')),
-    (4, _('not a real question')),
+    (4, _('assumed as answered')),
     (5, _('the question is answered, right answer was accepted')),
     (6, _('question is not relevant or outdated')),
     (7, _('question contains offensive or malicious remarks')),
-    (8, _('spam or advertising')),
+    (8, _('issue closed as inactive')),
     (9, _('too localized')),
 )
 
