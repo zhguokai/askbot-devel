@@ -25,6 +25,9 @@ delete_question_or_answer = django.dispatch.Signal(
 post_deleted = django.dispatch.Signal(
                         providing_args=['post', 'deleted_by']
                     )
+question_closed = django.dispatch.Signal(providing_args=['thread',])
+question_reopened = django.dispatch.Signal(providing_args=['thread', 'close_reason', 'reopened_by',])
+
 flag_offensive = django.dispatch.Signal(providing_args=['instance', 'mark_by'])
 remove_flag_offensive = django.dispatch.Signal(providing_args=['instance', 'mark_by'])
 user_updated = django.dispatch.Signal(providing_args=['instance', 'updated_by'])
