@@ -101,6 +101,9 @@ textarea,
   width: 100% !important;
   box-sizing: border-box;
 }
+.js-editable img {
+  max-width: 100%;
+}
 .tos {
   margin: 20px 0 10px 0;
 }
@@ -2096,6 +2099,12 @@ ul.js-related-tags li {
   height: 5px;
   background: #fff;
 }
+tr.mceLast {
+  height: 0;
+}
+.defaultSkin td.mceIframeContainer {
+  vertical-align: top;
+}
 .defaultSkin span.mce_askbot_imageuploader {
   background-position: -380px 0px;
 }
@@ -3287,6 +3296,9 @@ a:hover.medal {
 }
 .user-profile-page .js-editable .wmd-container textarea {
   min-height: 125px;
+}
+.user-profile-page .js-editable .js-editable-content {
+  margin-bottom: 8px;
 }
 .user-details {
   font-size: 13px;

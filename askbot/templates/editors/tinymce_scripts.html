@@ -1,0 +1,5 @@
+<script type="text/javascript">
+    askbot['settings']['tinyMCEPlugins'] = JSON.parse('{{ settings.TINYMCE_PLUGINS|as_json }}');
+</script>
+{{ tinymce.media }}
+{{ tinymce.render('junk', '', attrs={'id': 'junk', 'style': 'display: none'}) }}

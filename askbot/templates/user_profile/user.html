@@ -31,6 +31,9 @@
             askbot['data']['userPostsPageSize'] = {{ page_size }};
         {% endif %}
     </script>
+    {% if settings.EDITOR_TYPE == 'tinymce' %}
+        {% include "editors/tinymce_scripts.html" %}
+    {% endif %}
     {% compress js %}
     <script type='text/javascript' src="{{ '/jslib/jquery.form.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/user/response_notifs.js'|media }}"></script>
