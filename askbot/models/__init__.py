@@ -1672,6 +1672,7 @@ def user_close_question(
                 ):
     self.assert_can_close_question(question)
     question.thread.set_closed_status(closed=True, closed_by=self, closed_at=timestamp, close_reason=reason)
+    signals.question_closed.send(None, thread=question.thread)
 
 @auto_now_timestamp
 def user_reopen_question(
@@ -1680,7 +1681,13 @@ def user_reopen_question(
                     timestamp = None
                 ):
     self.assert_can_reopen_question(question)
+    close_reason = question.thread.close_reason
     question.thread.set_closed_status(closed=False, closed_by=self, closed_at=timestamp, close_reason=None)
+    signals.question_reopened.send(None,
+                    thread=question.thread,
+                    reopened_by=self,
+                    close_reason=close_reason
+                )
 
 @auto_now_timestamp
 def user_delete_post(
