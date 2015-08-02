@@ -859,6 +859,16 @@ settings.register(
 settings.register(
     values.StringValue(
         WORDS,
+        'WORDS_EDIT_QUESTIONS',
+        default=_('Edit questions'),
+        description=_('Edit questions'),
+        localized=True
+    )
+)
+
+settings.register(
+    values.StringValue(
+        WORDS,
         'WORDS_QUESTION_IN_ONE_SENTENCE',
         default=_('Question - in one sentence'),
         description=_('Question - in one sentence'),

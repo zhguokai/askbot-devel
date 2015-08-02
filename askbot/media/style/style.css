@@ -2198,14 +2198,50 @@ tr.mceLast {
   padding-left: 24px !important;
 }
 .question-page h1 {
+  display: inline-block;
   padding-top: 0px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
+  width: 100%;
 }
 .question-page h1 a {
   color: #464646;
   font-size: 26px;
   font-weight: normal;
   line-height: 1;
+}
+.question-page h1 .js-editable-controls, .question-page h1 .js-editable-content {
+  display: inline;
+}
+.question-page h1 .btn-link {
+  background-image: none;
+  background-color: transparent;
+  border: none !important;
+  box-shadow: none;
+  font-family: arial;
+  font-weight: normal;
+  height: 16px;
+  text-shadow: none;
+  line-height: 16px;
+  color: #888;
+  padding: 0;
+}
+.question-page h1 .btn-link:hover {
+  text-decoration: underline;
+}
+.question-page h1 .js-simple-editor {
+  margin-bottom: 8px;
+}
+.question-page h1 .js-simple-editor textarea {
+  color: #666;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  font-size: 30px;
+  line-height: 30px;
+  height: 66px;
+  width: 100% !important;
+}
+.question-page h1 .js-error {
+  font-size: 16px;
+  font-family: Arial;
 }
 .question-page p.rss {
   float: none;
@@ -3616,7 +3652,7 @@ ul.errorlist {
 ul.errorlist li {
   line-height: 16px;
 }
-.form-error {
+.js-error, .form-error {
   color: #900;
   font-weight: normal;
   vertical-align: bottom;

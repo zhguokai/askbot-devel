@@ -240,6 +240,11 @@ urlpatterns = patterns('',
         name='moderate_post_edits'
     ),
     service_url(
+        r'^set-question-title/',
+        views.commands.set_question_title,
+        name='set_question_title'
+    ),
+    service_url(
         r'^save-draft-question/',
         views.commands.save_draft_question,
         name = 'save_draft_question'

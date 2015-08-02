@@ -29,6 +29,16 @@ var parseUrl = function (url) {
     }
 };
 
+var getObjectByPath = function (path) {
+    var bits = path.split('.');
+    var obj = window;
+    var numBits = bits.length;
+    for (var i=0; i<numBits; i++) {
+        obj = obj[bits[i]];
+    }
+    return obj;
+};
+
 var getCookie = function (name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {

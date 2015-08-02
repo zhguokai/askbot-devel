@@ -2372,14 +2372,51 @@ tr.mceLast {
 .question-page {
 
     h1 {
+        display: inline-block;
         padding-top:0px;
         font-family:@main-font;
+        width: 100%;
 
         a {
             color:@question-link;
             font-size:26px;
             font-weight:normal;
             line-height:1;
+        }
+        .js-editable-controls,
+        .js-editable-content {
+            display: inline;
+        }
+        .btn-link {
+            background-image: none;
+            background-color: transparent;
+            border: none !important;
+            box-shadow: none;
+            font-family: arial;
+            font-weight: normal;
+            height: 16px;
+            text-shadow: none;
+            line-height: 16px;
+            color: #888;
+            padding: 0;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+        .js-simple-editor {
+            margin-bottom: 8px;
+            textarea {
+                color: #666;
+                font-family: @main-font;
+                font-size: 30px;
+                line-height: 30px;
+                height: 66px;
+                width: 100% !important;
+            }
+        }
+        .js-error {
+            font-size: 16px;
+            font-family: @body-font;
         }
     }
 
@@ -3910,11 +3947,13 @@ ul.errorlist {
 }
 
 
+.js-error,
 .form-error {
     color: #900;
     font-weight: normal;
     vertical-align: bottom;
 }
+
 label + .form-error {
     padding-left: 8px;
 }

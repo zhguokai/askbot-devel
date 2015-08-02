@@ -295,6 +295,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme_advanced_resizing': True,
     'theme_advanced_resize_horizontal': False,
     'theme_advanced_statusbar_location': 'bottom',
+    'editor_deselector': 'mceNoEditor',
     'width': '100%',
     'height': '250'
 }

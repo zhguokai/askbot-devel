@@ -127,6 +127,32 @@ var validateTagCount = function (value) {
 $.validator.addMethod('limit_tag_count', validateTagCount);
 $.validator.addMethod('limit_tag_length', validateTagLength);
 
+askbot.validators = askbot.validators || {};
+
+askbot.validators.titleValidator = function (text) {
+    text = $.trim(text);
+    if (text === '') {
+        throw interpolate(
+                gettext('enter your %(question)'),
+                {'question': askbot.messages.questionSingular},
+                true
+            );
+    } else if (text.length < askbot.settings.minTitleLength) {
+        throw interpolate(
+                        ngettext(
+                            '%(question)s must have > %(length)s character',
+                            '%(question)s must have > %(length)s characters',
+                            askbot.settings.minTitleLength
+                        ),
+                        {
+                            'question': askbot.messages.questionSingular,
+                            'length': askbot.settings.minTitleLength
+                        },
+                        true
+                    );
+    }
+};
+
 var CPValidator = (function () {
     return {
         getQuestionFormRules: function () {
@@ -1734,6 +1760,9 @@ SimpleEditor.prototype.setText = function (text) {
 SimpleEditor.prototype.createDom = function () {
     this._element = getTemplate('.js-simple-editor');
     var textarea = this._element.find('textarea');
+    if (askbot.settings.tinymceEditorDeselector) {
+        textarea.addClass(askbot.settings.tinymceEditorDeselector);//suppress tinyMCE
+    }
     addExtraCssClasses(textarea, 'editorClasses');
     this._textarea = textarea;
     if (this._text) {

@@ -718,6 +718,10 @@ def test_tinymce():
 
     config = getattr(django_settings, 'TINYMCE_DEFAULT_CONFIG', None)
     if config:
+        if 'editor_deselector' not in config:
+            message = "add to TINYMCE_DEFAULT_CONFIG\n'editor_deselector': 'mceNoEditor',"
+            errors.append(message)
+        
         if 'convert_urls' in config:
             if config['convert_urls'] is not False:
                 message = "set 'convert_urls':False in TINYMCE_DEFAULT_CONFIG"
@@ -731,7 +735,7 @@ def test_tinymce():
     #"common" skin and after we combined it into the default
     js_root = getattr(django_settings, 'TINYMCE_JS_ROOT', '')
     old_relative_js_path = 'common/media/js/tinymce/'
-    relative_js_path = 'default/media/js/tinymce/'
+    relative_js_path = 'default/media/tinymce/'
     expected_js_root = os.path.join(django_settings.STATIC_ROOT, relative_js_path)
     old_expected_js_root = os.path.join(django_settings.STATIC_ROOT, old_relative_js_path)
     if os.path.normpath(js_root) != os.path.normpath(expected_js_root):

@@ -7,7 +7,6 @@
 var Editable = function(){
     WrappedElement.call(this);
     this._state = 'display';//'edit' or 'display'
-    this._initialContent = '';
     this._isEditorLoaded = false;
     this._enabledEditorButtons = null;
     this._isPreviewerEnabled = false;
@@ -77,6 +76,7 @@ Editable.prototype.getAttributeName = function() {
 
 Editable.prototype.startEditingText = function (text) {
     this._editor.setText(text);
+    this._editor.putCursorAtEnd();
     this.setState('edit');
     if (this.isEditorLoaded() === false){
         this._editor.start();
@@ -92,7 +92,7 @@ Editable.prototype.startActivatingEditor = function () {
     var editor = this._editor;
 
     if (this._editorType != 'markdown') {//take shortcut
-        this.startEditingText(this._initialContent);
+        this.startEditingText(this._content.html());
         return false;
     }
 
@@ -110,10 +110,29 @@ Editable.prototype.startActivatingEditor = function () {
     });
 };
 
+Editable.prototype.setError = function (text) {
+    this._error.html(text);
+};
+
+Editable.prototype.clearError = function () {
+    this._error.html('');
+};
+
 Editable.prototype.saveText = function () {
     var me = this;
-    //optimistic update
     var editorText = this._editor.getText();
+
+    if (this._validator) {
+        try {
+            this._validator(editorText);
+            this.clearError();
+        } catch (e) {
+            this.setError(e);
+            return;
+        }
+    }
+
+    //optimistic update
     if (this._editorType === 'markdown') {
         var converter = getAskbotMarkdownConverter();
         editorText = converter.makeHtml(editorText);
@@ -188,7 +207,6 @@ Editable.prototype.decorate = function(element){
     }
     this._id = id.substr(3);
     this._content = element.find('.js-editable-content');
-    this._initialContent = this._content.html();
     //must be defined
     var editBtn = $(document.getElementById('js-edit-btn-' + this._id));
     if ( !editBtn ) {
@@ -196,10 +214,24 @@ Editable.prototype.decorate = function(element){
     }
     this._editBtn = editBtn;
 
+    var error = element.find('.js-error');
+    if (error.length === 0) {
+        error = this.makeElement('div');
+        error.addClass('js-error');
+        this._element.prepend(error);
+    }
+    this._error = error;
+
     //parse these two urls and separate url and the params
-    var parsed = parseUrl(element.data('getTextUrl'));
-    this._getTextUrl = parsed[0];
-    this._getTextUrlParams = parsed[1];
+    var getTextUrl = element.data('getTextUrl');
+    if (getTextUrl) {
+        var parsed = parseUrl(element.data('getTextUrl'));
+        this._getTextUrl = parsed[0];
+        this._getTextUrlParams = parsed[1];
+    } else {
+        this._getTextUrl = undefined;
+        this._getTextUrlParams = undefined;
+    }
 
     var parsed = parseUrl(element.data('saveTextUrl'));
     this._saveTextUrl = parsed[0];
@@ -209,6 +241,11 @@ Editable.prototype.decorate = function(element){
     this._validatedTextParamName = element.data('validatedTextParamName') || this._saveTextParamName;
 
     this._useCompactEditor = element.data('editorCompact');
+
+    var validatorPath = element.data('validator');
+    if (validatorPath) {
+        this._validator = getObjectByPath(validatorPath);
+    }
 
     //create container for the editor and buttons
     var editorBox = this.makeElement('div');

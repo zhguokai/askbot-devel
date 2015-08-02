@@ -612,6 +612,23 @@ def toggle_follow_question(request):
         result['num_followers'] = models.FavoriteQuestion.objects.filter(thread=question.thread).count()
     return result
 
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def set_question_title(request):
+    if request.user.is_anonymous():
+        message = _('anonymous users cannot %(perform_action)s') % \
+            {'perform_action': askbot_settings.WORDS_EDIT_QUESTIONS}
+        raise exceptions.PermissionDenied(message)
+
+    question_id = request.POST['question_id']
+    title = request.POST['title']
+    question = get_object_or_404(models.Post, pk=question_id)
+    user = request.user
+    user.edit_question(question, title=title)
+    return {'title': title}
+
 @decorators.moderators_only
 @decorators.post_only
 def delete_bulk_tag_subscription(request):
