@@ -619,7 +619,7 @@ def toggle_follow_question(request):
 def set_question_title(request):
     if request.user.is_anonymous():
         message = _('anonymous users cannot %(perform_action)s') % \
-            {'perform_action': askbot_settings.WORDS_EDIT_QUESTIONS}
+            {'perform_action': _('make edits')}
         raise exceptions.PermissionDenied(message)
 
     question_id = request.POST['question_id']
@@ -628,6 +628,32 @@ def set_question_title(request):
     user = request.user
     user.edit_question(question, title=title)
     return {'title': title}
+
+
+@decorators.ajax_only
+@decorators.get_only
+def get_post_body(request):
+    post_id = request.GET['post_id']
+    post = get_object_or_404(models.Post, pk=post_id)
+    return {'body_text': post.text}
+
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def set_post_body(request):
+    post_id = request.POST['post_id']
+    body_text = request.POST['body_text']
+    post = get_object_or_404(models.Post, pk=post_id)
+
+    if request.user.is_anonymous():
+        message = _('anonymous users cannot %(perform_action)s') % \
+            {'perform_action': _('make edits')}
+        raise exceptions.PermissionDenied(message)
+
+    request.user.edit_post(post, body_text=body_text)
+    return {'body_html': post.html}
+
 
 @decorators.moderators_only
 @decorators.post_only

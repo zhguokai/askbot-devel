@@ -40,12 +40,14 @@ Editable.prototype.setState = function(state){
         this._editBtn.hide();
         this._saveBtn.show();
         this._cancelBtn.show();
+        this._hideables.hide();
         this._content.hide();
     } else if (state === 'display'){
         this._editorBox.hide();
         this._saveBtn.hide();
         this._cancelBtn.hide();
         this._editBtn.show();
+        this._hideables.show();
         this._content.show();
     }
 };
@@ -76,19 +78,20 @@ Editable.prototype.getAttributeName = function() {
 
 Editable.prototype.startEditingText = function (text) {
     this._editor.setText(text);
-    this._editor.putCursorAtEnd();
     this.setState('edit');
     if (this.isEditorLoaded() === false){
         this._editor.start();
         this.setEditorLoaded();
     }
+    this._editor.putCursorAtEnd();
 }
 
 /**
  * loads initial data for the editor input and activates
  * the editor
  */
-Editable.prototype.startActivatingEditor = function () {
+Editable.prototype.startActivatingEditor = function (evt) {
+    evt.preventDefault();
     var editor = this._editor;
 
     if (this._editorType != 'markdown') {//take shortcut
@@ -108,6 +111,7 @@ Editable.prototype.startActivatingEditor = function () {
             me.startEditingText(data[paramName]);
         }
     });
+    return false;
 };
 
 Editable.prototype.setError = function (text) {
@@ -273,6 +277,7 @@ Editable.prototype.decorate = function(element){
         } else {
             var editor = new TinyMCE();
         }
+        editor.setId('tinyMCE-' + this._id);
     } else {
         var editor = new SimpleEditor();
     }
@@ -287,6 +292,8 @@ Editable.prototype.decorate = function(element){
         formControls.addClass('.js-editable-controls');
         editorBox.append(formControls);
     }
+
+    this._hideables = $('.js-editable-hide-' + this._id);
 
     var saveBtn = this.makeElement('button');
     //saveBtn.addClass('btn btn-primary');
@@ -303,7 +310,7 @@ Editable.prototype.decorate = function(element){
     this.setState('display');
 
     var me = this;
-    setupButtonEventHandlers(editBtn, function(){ me.startActivatingEditor() });
+    setupButtonEventHandlers(editBtn, function(evt){ me.startActivatingEditor(evt) });
     setupButtonEventHandlers(cancelBtn, function(){ me.setState('display') });
     setupButtonEventHandlers(saveBtn, function(){ me.saveText() });
 };

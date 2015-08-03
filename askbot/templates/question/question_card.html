@@ -24,13 +24,26 @@
         <div class="clearfix"></div>
 
         <div class="post-body">
-            <div class="post-update-info-container">
-                {% include "question/question_author_info.html" %}
+            <div class="js-editable-hide-post-body-{{ question.pk }}">
+                <div class="post-update-info-container">
+                    {% include "question/question_author_info.html" %}
+                </div>
+                {% if question.needs_moderation() %}
+                    <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
+                {% endif %}
             </div>
-            {% if question.needs_moderation() %}
-                <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
-            {% endif %}
-            {{ question.summary }}
+            <div class="js-editable"
+                id="js-post-body-{{ question.pk }}"
+                data-get-text-url="{% url get_post_body %}?post_id={{ question.pk }}"
+                data-save-text-url="{% url set_post_body %}?post_id={{ question.pk }}"
+                data-save-text-param-name="body_text"
+                data-validated-text-param-name="body_html"
+                data-editor-type="{{ settings.EDITOR_TYPE }}"
+                data-validator="askbot.validators.questionDetailsValidator"
+            >
+                <div class="js-editable-content">{{ question.summary }}</div>
+                <div class="js-editable-controls"></div>
+            </div>
         </div>
         <div id="question-controls" class="post-controls">
             {% include "question/question_controls.html" %}

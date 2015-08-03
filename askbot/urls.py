@@ -245,6 +245,16 @@ urlpatterns = patterns('',
         name='set_question_title'
     ),
     service_url(
+        r'^get-post-body/',
+        views.commands.get_post_body,
+        name='get_post_body'
+    ),
+    service_url(
+        r'^set-post-body/',
+        views.commands.set_post_body,
+        name='set_post_body'
+    ),
+    service_url(
         r'^save-draft-question/',
         views.commands.save_draft_question,
         name = 'save_draft_question'

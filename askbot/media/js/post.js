@@ -153,6 +153,40 @@ askbot.validators.titleValidator = function (text) {
     }
 };
 
+askbot.validators.questionDetailsValidator = function (text) {
+    text = $.trim(text);
+    var minLength = askbot.settings.minQuestionBodyLength;
+    if (minLength && (text.length < minLength)) {
+        throw interpolate(
+                    ngettext(
+                        'details must have > %s character',
+                        'details must have > %s characters',
+                        minLength
+                    ),
+                    [minLength]
+                );
+    }
+};
+
+askbot.validators.answerValidator = function (text) {
+    text = $.trim(text);
+    var minLength = askbot.settings.minAnswerBodyLength;
+    if (minLength && (text.length < minLength)) {
+        throw interpolate(
+                ngettext(
+                    '%(answer)s must be > %(length)s character',
+                    '%(answer)s must be > %(length)s characters',
+                    minLength
+                ),
+                {
+                    'answer': askbot.messages.answerSingular,
+                    'length': minLength
+                },
+                true
+            );
+    }
+};
+
 var CPValidator = (function () {
     return {
         getQuestionFormRules: function () {
@@ -1960,6 +1994,7 @@ TinyMCE.prototype.createDom = function () {
     var textarea = this.makeElement('textarea');
     textarea.attr('id', this._id);
     textarea.addClass('editor');
+    //textarea.addClass(askbot.settings.tinymceEditorDeselector);
     this._element.append(textarea);
 };
 
