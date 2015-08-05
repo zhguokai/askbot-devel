@@ -108,6 +108,11 @@ def _send_mail(subject_line, body_text, sender_email, recipient_list, headers=No
         else:
             email_list.append(recipient)
 
+    exclude_set = set(getattr(django_settings, 'ASKBOT_NO_EMAIL_ADDRESSES', ()))
+    email_set = set(email_list)
+    email_set = email_set - exclude_set
+    email_list = list(email_set)
+
     msg = message_class(
                 subject_line,
                 get_text_from_html(body_text),
