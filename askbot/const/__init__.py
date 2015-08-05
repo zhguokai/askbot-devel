@@ -106,8 +106,7 @@ SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN_CHOICES = (
 
 REPLY_SEPARATOR_TEMPLATE = '==== %(user_action)s %(instruction)s -=-=='
 REPLY_WITH_COMMENT_TEMPLATE = _(
-    'Note: to reply with a comment, '
-    'please use <a href="mailto:%(addr)s?subject=%(subject)s">this link</a>'
+    'To answer this question, simply reply to this email.'
 )
 REPLY_SEPARATOR_REGEX = re.compile(r'==== .* -=-==', re.MULTILINE|re.DOTALL)
 
