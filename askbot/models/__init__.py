@@ -3120,6 +3120,15 @@ def user_edit_group_membership(self, user=None, group=None,
     else:
         raise ValueError('invalid action')
 
+    signals.group_membership_changed.send(None,
+        actor=self,
+        user=user,
+        group=group,
+        action=action,
+        level=level
+    )
+
+
 def user_join_group(self, group, force=False, level=None):
     return self.edit_group_membership(group=group, user=self,
                                       action='add', force=force,
