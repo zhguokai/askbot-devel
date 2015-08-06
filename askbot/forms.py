@@ -266,7 +266,7 @@ class SuppressEmailField(forms.BooleanField):
     def __init__(self):
         super(SuppressEmailField, self).__init__()
         self.required = False
-        self.label = _("minor edit (don't send alerts or update question change details)")
+        self.label = _("minor edit (don't send alerts)")
 
 
 class DomainNameField(forms.CharField):

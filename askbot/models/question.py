@@ -1040,7 +1040,6 @@ class Thread(models.Model):
         post_ids = list(post_ids)
         post_ids.append(question.id)
         from askbot.models import PostRevision
-        # What we could do though, is is ignore edits (rev>=1?) whose is_minor in [True, None]
         revs = PostRevision.objects.filter(
                             post__id__in=post_ids,
                             revision__gt=0
@@ -1053,7 +1052,7 @@ class Thread(models.Model):
 
     def update_last_activity_info(self):
         timestamp, user = self.get_last_activity_info()
-        if timestamp: # don't avoid updating based on current timestamp because if it got set wrongly it would never get corrected
+        if timestamp:
             self.set_last_activity_info(timestamp, user)
 
     def get_tag_names(self):
