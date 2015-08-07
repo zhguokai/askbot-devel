@@ -193,13 +193,20 @@ INSTALLED_APPS = (
 
 
 #setup memcached for production use!
-#see http://docs.djangoproject.com/en/1.1/topics/cache/ for details
-CACHE_BACKEND = 'locmem://'
-#needed for django-keyedcache
-CACHE_TIMEOUT = 6000
+# See http://docs.djangoproject.com/en/1.8/topics/cache/ for details.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'askbot',
+        'TIMEOUT': 6000,
+        # Chose a unique KEY_PREFIX to avoid clashes with other applications
+        # using the same cache (e.g. a shared memcache instance).
+        'KEY_PREFIX': 'askbot',
+    }
+}
+
 #sets a special timeout for livesettings if you want to make them different
-LIVESETTINGS_CACHE_TIMEOUT = CACHE_TIMEOUT
-CACHE_PREFIX = 'askbot' #make this unique
+LIVESETTINGS_CACHE_TIMEOUT = CACHES['default']['TIMEOUT']
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
 #SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
