@@ -32,6 +32,7 @@ tmp/*
 /manage.py
 /urls.py
 /log
+/logs/
 /prof
 load
 askbot/skins/default/media/js/flot
