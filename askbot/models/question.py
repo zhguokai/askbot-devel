@@ -1043,6 +1043,8 @@ class Thread(models.Model):
         revs = PostRevision.objects.filter(
                             post__id__in=post_ids,
                             revision__gt=0
+                        ).exclude(
+                            is_minor=True
                         ).order_by('-id')
         try:
             rev = revs[0]
