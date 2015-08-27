@@ -157,16 +157,22 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(models.Post, PostAdmin)
 
 class PostRevisionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post_id', 'thread_name', 'revision', 'revised_at', 'author', 'approved')
-    list_filter = ('approved',)
-    search_fields = ('author__username', 'post__id', 'post__thread__title')
+    list_display = ('id', 'post_id', 'post_type', 'thread_name', 'revision', 'revised_at', 'author', 'approved', 'is_minor', 'text_start')
+    list_filter = ('approved', 'is_minor', 'revision')
+    search_fields = ('text', 'author__username', 'post__id', 'post__thread__title')
     ordering = ('-id',)
 
     def post_id(self, obj):
         return obj.post.id
 
+    def post_type(self, obj):
+        return obj.post.post_type
+
     def thread_name(self, obj):
         return obj.post.thread.title
+
+    def text_start(self, obj):
+        return obj.text[:30]
 admin.site.register(models.PostRevision, PostRevisionAdmin)
 
 class ThreadToGroupInline(admin.TabularInline):
