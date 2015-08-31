@@ -21,7 +21,7 @@ class Command(BaseCommand):
                             action='store_true',
                             dest='delete',
                             default=False,
-                            help='Delete poll instead of closing it',
+                            help='Permanently delete bodyless questions',
                         ),
                     )
     def handle(self, *arguments, **options):
