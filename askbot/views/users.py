@@ -1018,12 +1018,13 @@ def user_select_languages(request, id=None, slug=None):
 def user_email_subscriptions(request, user, context):
 
     logging.debug(get_request_info(request))
+    action_status = None
+
     if request.method == 'POST':
         email_feeds_form = forms.EditUserEmailFeedsForm(request.POST)
         tag_filter_form = forms.TagFilterSelectionForm(request.POST, instance=user)
         if email_feeds_form.is_valid() and tag_filter_form.is_valid():
 
-            action_status = None
             tag_filter_saved = tag_filter_form.save()
             if tag_filter_saved:
                 action_status = _('changes saved')
@@ -1048,7 +1049,6 @@ def user_email_subscriptions(request, user, context):
         email_feeds_form = forms.EditUserEmailFeedsForm()
         email_feeds_form.set_initial_values(user)
         tag_filter_form = forms.TagFilterSelectionForm(instance=user)
-        action_status = None
 
     data = {
         'active_tab': 'users',
