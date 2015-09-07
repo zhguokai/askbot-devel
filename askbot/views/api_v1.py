@@ -24,6 +24,9 @@ def get_user_data(user):
         'joined_at': get_epoch_str(user.date_joined),
         'last_seen_at': get_epoch_str(user.last_seen),
         'reputation': user.reputation,
+        'gold': user.gold,
+        'silver': user.silver,
+        'bronze': user.bronze,
     }
 
 def get_question_data(thread):

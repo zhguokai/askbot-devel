@@ -8,7 +8,8 @@ class ApiV1Tests(AskbotTestCase):
         response = self.client.get(reverse('api_v1_user', args=(user.id,)))
         response_data = simplejson.loads(response.content)
         expected_keys = set(['id', 'username', 'reputation', 'questions', 'comments',
-                'avatar', 'joined_at', 'last_seen_at', 'answers'])
+                'avatar', 'joined_at', 'last_seen_at', 'answers', 'gold', 'silver',
+                'bronze'])
         self.assertEqual(expected_keys, set(response_data.keys()))
 
     def test_api_v1_info(self):
@@ -25,7 +26,8 @@ class ApiV1Tests(AskbotTestCase):
         self.assertEqual(expected_keys, set(response_data.keys()))
 
         expected_keys = set(['id', 'avatar', 'username',
-                            'joined_at', 'last_seen_at', 'reputation'])
+                            'joined_at', 'last_seen_at', 'reputation',
+                            'gold', 'silver', 'bronze'])
         self.assertEqual(expected_keys, set(response_data['users'][0].keys()))
 
     def test_api_v1_questions(self):
