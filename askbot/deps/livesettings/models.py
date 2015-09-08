@@ -133,7 +133,7 @@ class Setting(models.Model, CachedObjectMixin):
     def cache_set(self, *args, **kwargs):
         val = kwargs.pop('value', self)
         key = self.cache_key(*args, **kwargs)
-        if 'CACHES' in settings:
+        if hasattr(settings, 'CACHES'):
             length = getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', settings.CACHES['default']['TIMEOUT'])
         else:
             length = getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', settings.CACHE_TIMEOUT)
