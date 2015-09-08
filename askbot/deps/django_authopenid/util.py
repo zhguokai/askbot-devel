@@ -592,6 +592,15 @@ def get_enabled_major_login_providers():
         'icon_media_path': 'images/jquery-openid/openid.gif',
         'openid_endpoint': None,
     }
+    if askbot_settings.SIGNIN_OPENSTACKID_ENABLED and askbot_settings.OPENSTACKID_ENDPOINT_URL:
+        data['openstackid'] = {
+            'name': 'openstackid',
+            'display_name': 'OpenStackID',
+            'type': 'openid-direct',
+            'openid_endpoint': askbot_settings.OPENSTACKID_ENDPOINT_URL,
+            'icon_media_path': 'images/jquery-openid/openstackid.png',
+            'sreg_required': True
+        }
     return filter_enabled_providers(data)
 get_enabled_major_login_providers.is_major = True
 get_enabled_major_login_providers = add_custom_provider(get_enabled_major_login_providers)

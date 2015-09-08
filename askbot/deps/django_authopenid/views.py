@@ -567,8 +567,10 @@ def signin(request, template_name='authopenid/signin.html'):
                 logging.debug('processing signin with openid submission')
 
                 #todo: make a simple-use wrapper for openid protocol
-
-                sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
+                if login_form.cleaned_data['sreg_required']:
+                    sreg_req = sreg.SRegRequest(required=['nickname', 'email'])
+                else:
+                    sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
                 redirect_to = "%s%s?%s" % (
                         get_url_host(request),
                         reverse('user_complete_openid_signin'),
