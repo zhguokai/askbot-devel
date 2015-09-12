@@ -1,3 +1,4 @@
+from askbot.deps.livesettings.compat import get_cache_timeout
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
@@ -133,10 +134,7 @@ class Setting(models.Model, CachedObjectMixin):
     def cache_set(self, *args, **kwargs):
         val = kwargs.pop('value', self)
         key = self.cache_key(*args, **kwargs)
-        if hasattr(settings, 'CACHES'):
-            length = getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', settings.CACHES['default']['TIMEOUT'])
-        else:
-            length = getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', settings.CACHE_TIMEOUT)
+        length = get_cache_timeout()
         cache_set(key, value=val, length=length)
 
     class Meta:
@@ -182,8 +180,7 @@ class LongSetting(models.Model, CachedObjectMixin):
     def cache_set(self, *args, **kwargs):
         val = kwargs.pop('value', self)
         key = self.cache_key(*args, **kwargs)
-        #TODO: fix this with Django's > 1.3 CACHE dict setting support
-        length = getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', settings.CACHE_TIMEOUT)
+        length = get_cache_timeout()
         cache_set(key, value=val, length=length)
 
     class Meta:
