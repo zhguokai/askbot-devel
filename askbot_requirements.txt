@@ -20,6 +20,7 @@ django>=1.5,<1.6
 html5lib==0.90
 longerusername
 markdown2
+mock==1.0.1
 oauth2
 pyjwt
 pystache==0.3.1
