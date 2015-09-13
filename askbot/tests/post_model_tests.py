@@ -463,7 +463,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
     def test_post_question(self):
         self.assertEqual(0, Post.objects.count())
         response = self.client.post(urlresolvers.reverse('ask'), data={
-            'title': 'test title',
+            'title': 'test question title',
             'text': 'test body text',
             'tags': 'tag1 tag2',
         })
@@ -471,7 +471,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         question = Post.objects.all()[0]
         self.assertRedirects(response=response, expected_url=question.get_absolute_url())
 
-        self.assertEqual('test title', question.thread.title)
+        self.assertEqual('test question title', question.thread.title)
         self.assertEqual('test body text', question.text)
         self.assertItemsEqual(['tag1', 'tag2'], list(question.thread.tags.values_list('name', flat=True)))
         self.assertEqual(0, question.thread.answer_count)
