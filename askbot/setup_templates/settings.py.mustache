@@ -1,9 +1,10 @@
 ## Django settings for ASKBOT enabled project.
 import os.path
 import logging
-import sys
 import askbot
 import site
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 #this line is added so that we can import pre-packaged askbot dependencies
 ASKBOT_ROOT = os.path.abspath(os.path.dirname(askbot.__file__))
@@ -124,6 +125,7 @@ MIDDLEWARE_CLASSES = (
     'askbot.middleware.spaceless.SpacelessMiddleware',
 )
 
+ATOMIC_REQUESTS = True
 
 ROOT_URLCONF = os.path.basename(os.path.dirname(__file__)) + '.urls'
 
@@ -332,3 +334,7 @@ SOUTH_TESTS_MIGRATE = False
 
 VERIFIER_EXPIRE_DAYS = 3
 AVATAR_AUTO_GENERATE_SIZES = (16, 32, 48, 128) #change if avatars are sized differently
+
+# compatibility with django1.5
+TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner'
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'

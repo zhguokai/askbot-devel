@@ -3,7 +3,7 @@ import datetime
 import sys
 from south.db import db
 from south.v2 import DataMigration
-from django.db import models
+from django.db import models, transaction
 
 from askbot.migrations import TERM_RED_BOLD, TERM_GREEN, TERM_RESET
 from askbot.utils.console import ProgressBar
@@ -33,7 +33,9 @@ class Migration(DataMigration):
 
         # ContentType for Post model might not yet be present in the database
         # (if migrations are applied in a row then contenttypes update is not called between them)
+        #transaction.set_autocommit(True)
         ct_post, c = orm['contenttypes.ContentType'].objects.get_or_create(app_label='askbot', model='post', defaults={'name': 'post'})
+        #transaction.set_autocommit(False)
 
         abandoned_activities = []
 

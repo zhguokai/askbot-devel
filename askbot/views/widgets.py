@@ -1,10 +1,9 @@
-from datetime import datetime
-
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.views.decorators import csrf
+from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
 
@@ -90,7 +89,7 @@ def ask_widget(request, widget_id):
 
             data_dict = {
                 'title': title,
-                'added_at': datetime.now(),
+                'added_at': timezone.now(),
                 'wiki': False,
                 'text': text,
                 'tagnames': tagnames,

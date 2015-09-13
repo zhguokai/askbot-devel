@@ -5,9 +5,9 @@ import re
 import sys
 from unidecode import unidecode
 import zipfile
-from datetime import datetime
 from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand, CommandError
+from django.utils import timezone
 import askbot.importers.stackexchange.parse_models as se_parser
 from xml.etree import ElementTree as et
 from django.db.models import fields
@@ -346,10 +346,10 @@ it may be helpful to split this procedure in two:\n
             self.zipfile = self.open_dump(arg[0])
             #read the data into SE tables
             for item in xml_read_order:
-                time_before = datetime.now()
+                time_before = timezone.now()
                 self.load_xml_file(item)
                 transaction.commit()
-                time_after = datetime.now()
+                time_after = timezone.now()
                 if DEBUGME == True:
                     print time_after - time_before
                     print HEAP.heap()

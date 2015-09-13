@@ -1,7 +1,6 @@
 import hotshot
 import time
 import os
-import datetime
 import functools
 import inspect
 import logging
@@ -11,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.http import HttpResponseRedirect
-from django.utils import simplejson
+from django.utils import simplejson, timezone
 from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_str
 from askbot import exceptions as askbot_exceptions
@@ -31,7 +30,7 @@ def auto_now_timestamp(func):
     def decorating_func(*arg, **kwarg):
         timestamp = kwarg.get('timestamp', None)
         if timestamp is None:
-            kwarg['timestamp'] = datetime.datetime.now()
+            kwarg['timestamp'] = timezone.now()
         return func(*arg, **kwarg)
     return decorating_func
 
@@ -213,7 +212,7 @@ def check_spam(field):
                     logging.debug(
                         'Spam detected in %s post at: %s',
                         request.user.username,
-                        datetime.datetime.now()
+                        timezone.now()
                     )
                     spam_message = _(
                         'Spam was detected on your post, sorry '

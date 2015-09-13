@@ -5,8 +5,6 @@ This module contains most (but not all) processors for Ajax requests.
 Not so clear if this subdivision was necessary as separation of Ajax and non-ajax views
 is not always very clean.
 """
-import askbot
-import datetime
 import logging
 from bs4 import BeautifulSoup
 from django.conf import settings as django_settings
@@ -24,7 +22,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.template.loader import get_template
 from django.views.decorators import csrf
-from django.utils import simplejson
+from django.utils import simplejson, timezone
 from django.utils import translation
 from django.utils.encoding import force_text
 from django.utils.html import escape
@@ -49,7 +47,7 @@ from askbot.skins.loaders import render_text_into_skin
 from askbot.models.tag import get_tags_by_names
 
 
-def process_vote(user=None, vote_direction=None, post=None):
+def process_vote(user = None, vote_direction = None, post = None):
     """function (non-view) that actually processes user votes
     - i.e. up- or down- votes
 
@@ -221,7 +219,7 @@ def mark_tag(request, **kwargs):#tagging system
         raise exceptions.PermissionDenied(msg + ' ' + get_login_link())
 
     action = kwargs['action']
-    post_data = simplejson.loads(request.raw_post_data)
+    post_data = simplejson.loads(request.body)
     raw_tagnames = post_data['tagnames']
     reason = post_data['reason']
     assert reason in ('good', 'bad', 'subscribed')
@@ -371,7 +369,7 @@ def rename_tag(request):
     if request.user.is_anonymous() \
         or not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied()
-    post_data = simplejson.loads(request.raw_post_data)
+    post_data = simplejson.loads(request.body)
     to_name = forms.clean_tag(post_data['to_name'])
     from_name = forms.clean_tag(post_data['from_name'])
     path = post_data['path']
@@ -399,7 +397,7 @@ def delete_tag(request):
         raise exceptions.PermissionDenied()
 
     try:
-        post_data = simplejson.loads(request.raw_post_data)
+        post_data = simplejson.loads(request.body)
         tag_name = post_data['tag_name']
         path = post_data['path']
         tree = category_tree.get_data()
@@ -409,7 +407,7 @@ def delete_tag(request):
         if 'tag_name' in locals():
             logging.critical('could not delete tag %s' % tag_name)
         else:
-            logging.critical('failed to parse post data %s' % request.raw_post_data)
+            logging.critical('failed to parse post data %s' % request.body)
         raise exceptions.PermissionDenied(_('Sorry, could not delete tag'))
     return {'tree_data': tree}
 
@@ -432,7 +430,7 @@ def add_tag_category(request):
         or not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied()
 
-    post_data = simplejson.loads(request.raw_post_data)
+    post_data = simplejson.loads(request.body)
     category_name = forms.clean_tag(post_data['new_category_name'])
     path = post_data['path']
 
@@ -1085,10 +1083,10 @@ def moderate_suggested_tag(request):
             tag.save()
             for thread in threads:
                 thread.add_tag(
-                    tag_name = tag.name,
-                    user = tag.created_by,
-                    timestamp = datetime.datetime.now(),
-                    silent = True
+                    tag_name=tag.name,
+                    user=tag.created_by,
+                    timestamp=timezone.now(),
+                    silent=True
                 )
         else:
             if tag.threads.count() > len(threads):
@@ -1231,7 +1229,7 @@ def share_question_with_group(request):
                 updated_by=request.user,
                 notify_sets=notify_sets,
                 activity_type=const.TYPE_ACTIVITY_POST_SHARED,
-                timestamp=datetime.datetime.now()
+                timestamp=timezone.now()
             )
 
             return HttpResponseRedirect(thread.get_absolute_url())
@@ -1264,7 +1262,7 @@ def share_question_with_user(request):
                 updated_by=request.user,
                 notify_sets=notify_sets,
                 activity_type=const.TYPE_ACTIVITY_POST_SHARED,
-                timestamp=datetime.datetime.now()
+                timestamp=timezone.now()
             )
 
             return HttpResponseRedirect(thread.get_absolute_url())
@@ -1377,7 +1375,7 @@ def publish_answer(request):
 @decorators.ajax_only
 @decorators.post_only
 def merge_questions(request):
-    post_data = simplejson.loads(request.raw_post_data)
+    post_data = simplejson.loads(request.body)
     if request.user.is_anonymous():
         denied_msg = _('Sorry, only thread moderators can use this function')
         raise exceptions.PermissionDenied(denied_msg)

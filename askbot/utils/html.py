@@ -250,7 +250,7 @@ def moderate_tags(html):
 
 def site_url(url):
     from askbot.conf import settings
-    base_url = urlparse(settings.APP_URL)
+    base_url = urlparse(settings.APP_URL or 'http://localhost/')
     return base_url.scheme + '://' + base_url.netloc + url
 
 def internal_link(url_name, title, kwargs=None, anchor=None, absolute=False):

@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as AuthGroup
 from django.core import exceptions
 from django.forms import EmailField, URLField
-from django.utils import translation
+from django.utils import translation, timezone
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.utils.html import strip_tags
@@ -401,11 +401,11 @@ class EmailFeedSetting(models.Model):
         super(EmailFeedSetting,self).save(*args,**kwargs)
 
     def get_previous_report_cutoff_time(self):
-        now = datetime.datetime.now()
+        now = timezone.now()
         return now - self.DELTA_TABLE[self.frequency]
 
     def should_send_now(self):
-        now = datetime.datetime.now()
+        now = timezone.now()
         cutoff_time = self.get_previous_report_cutoff_time()
         if self.reported_at == None or self.reported_at <= cutoff_time:
             return True
@@ -413,7 +413,7 @@ class EmailFeedSetting(models.Model):
             return False
 
     def mark_reported_now(self):
-        self.reported_at = datetime.datetime.now()
+        self.reported_at = timezone.now()
         self.save()
 
 

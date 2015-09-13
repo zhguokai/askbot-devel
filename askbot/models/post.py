@@ -10,7 +10,8 @@ from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.db import models
 from django.utils import html as html_utils
-from django.utils.text import truncate_html_words
+from django.utils import timezone
+from django.utils.text import Truncator
 from django.utils.translation import activate as activate_language
 from django.utils.translation import get_language
 from django.utils.translation import ugettext as _
@@ -172,7 +173,7 @@ class PostQuerySet(models.query.QuerySet):
                     question = question,
                     activity_type = activity_type
                 )
-                now = datetime.datetime.now()
+                now = timezone.now()
                 if now < activity.active_at + recurrence_delay:
                     continue
             except Activity.DoesNotExist:
@@ -182,7 +183,7 @@ class PostQuerySet(models.query.QuerySet):
                     activity_type = activity_type,
                     content_object = question,
                 )
-            activity.active_at = datetime.datetime.now()
+            activity.active_at = timezone.now()
             activity.save()
             question_list.append(question)
         return question_list
@@ -220,7 +221,7 @@ class PostManager(BaseQuerySetManager):
         return self.create_new(
                             None,#this post type is threadless
                             author,
-                            datetime.datetime.now(),
+                            timezone.now(),
                             text,
                             wiki = True,
                             post_type = 'tag_wiki'
@@ -1105,7 +1106,7 @@ class Post(models.Model):
         #the issue is that code blocks have few words
         #but very tall, while paragraphs can be dense on words
         #and fit into fewer lines
-        truncated = truncate_html_words(self.html, max_words)
+        truncated = Truncator(self.html).words(max_words, truncate=' ...', html=True)
         new_count = get_word_count(truncated)
         orig_count = get_word_count(self.html)
         if new_count + 1 < orig_count:
@@ -1234,7 +1235,7 @@ class Post(models.Model):
             ):
 
         if added_at is None:
-            added_at = datetime.datetime.now()
+            added_at = timezone.now()
         if None in (comment, user):
             raise Exception('arguments comment and user are required')
 
@@ -1954,7 +1955,7 @@ class Post(models.Model):
         if text is None:
             text = latest_rev.text
         if edited_at is None:
-            edited_at = datetime.datetime.now()
+            edited_at = timezone.now()
         if edited_by is None:
             raise Exception('edited_by is required')
 
@@ -2570,7 +2571,7 @@ class AnonymousAnswer(DraftContent):
     question = models.ForeignKey(Post, related_name='anonymous_answers')
 
     def publish(self, user):
-        added_at = datetime.datetime.now()
+        added_at = timezone.now()
         try:
             user.assert_can_post_text(self.text)
 
