@@ -14,6 +14,7 @@ from django.db.models import Q
 from django.utils import translation
 from django.conf import settings as django_settings
 from django.utils.http import urlquote  as django_urlquote
+from django.utils import timezone
 from django.template.defaultfilters import slugify
 from HTMLParser import HTMLParser
 
@@ -417,7 +418,7 @@ class Command(BaseImportXMLCommand):
             post.save()
 
             #mark accepted answer
-            now = datetime.now()
+            now = timezone.now()
             if osqa_node.node_type == 'answer':
                 if '(accepted)' in osqa_node.state_string:
                     post.thread.accepted_answer = post

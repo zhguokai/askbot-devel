@@ -15,6 +15,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat, get_language
+from django.utils import timezone
 
 import askbot
 from askbot.conf import settings as askbot_settings
@@ -741,7 +742,7 @@ class Thread(models.Model):
 
         self.retag(
             retagged_by=user,
-            retagged_at=timestamp or datetime.datetime.now(),
+            retagged_at=timestamp or timezone.now(),
             tagnames =' '.join(existing_tags + add_tags),
             silent=silent
         )

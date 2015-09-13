@@ -402,7 +402,7 @@ class MockPost(object):
         self.id = 0
         self.author = MockUser()
         self.summary = ''
-        self.added_at = datetime.datetime.now()
+        self.added_at = timezone.now()
 
     def needs_moderation(self):
         return False
@@ -2038,7 +2038,7 @@ class Post(models.Model):
                 self.make_public()
 
         if edited_at is None:
-            edited_at = datetime.datetime.now()
+            edited_at = timezone.now()
 
         revision = self.__apply_edit(
             edited_at=edited_at,

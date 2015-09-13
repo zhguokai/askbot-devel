@@ -1143,7 +1143,7 @@ def user_assert_can_edit_post(self, post=None):
     if use_limit == False:
         return
 
-    now = datetime.datetime.now()
+    now = timezone.now()
     delta_seconds = 60 * minutes_limit
     if now - post.added_at > datetime.timedelta(0, delta_seconds):
         #vague message because it is hard to add
@@ -1395,7 +1395,7 @@ def user_assert_can_delete_comment(self, comment = None):
 
     if comment.author_id == self.pk:
         if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
-            now = datetime.datetime.now()
+            now = timezone.now()
             delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
             if now - comment.added_at > datetime.timedelta(0, delta_seconds):
                 if not comment.is_last():
@@ -1638,7 +1638,7 @@ def user_merge_duplicate_questions(self, from_q, to_q):
     from_thread.delete()
     to_thread.answer_count = to_thread.get_answers().count()
     to_thread.last_activity_by = self
-    to_thread.last_activity_at = datetime.datetime.now()
+    to_thread.last_activity_at = timezone.now()
     to_thread.save()
     to_thread.reset_cached_data()
 
@@ -3738,6 +3738,9 @@ def record_question_visit(request, question, **kwargs):
 
         last_seen = request.session['question_view_times'].get(question.id, None)
 
+        if last_seen and timezone.is_naive(last_seen):
+            last_seen = timezone.make_aware(last_seen, timezone.utc)
+
         update_view_count = False
         if question.thread.last_activity_by_id != request.user.id:
             if last_seen:
@@ -3746,8 +3749,7 @@ def record_question_visit(request, question, **kwargs):
             else:
                 update_view_count = True
 
-        request.session['question_view_times'][question.id] = \
-                                                    datetime.datetime.now()
+        request.session['question_view_times'][question.id] = timezone.now()
         #2) run the slower jobs in a celery task
         from askbot import tasks
         defer_celery_task(
@@ -4139,7 +4141,7 @@ def record_spam_rejection(
     todo: this might be factored out into the moderation app
     and data might be tracked in some other record
     """
-    now = datetime.datetime.now()
+    now = timezone.now()
     summary = 'Found spam text: %s, posted from ip=%s in\n%s' % \
                         (spam, ip_addr, text)
 
@@ -4149,7 +4151,7 @@ def record_spam_rejection(
         activity = Activity(
                         activity_type=spam_type,
                         user=user,
-                        active_at=datetime.datetime.now(),
+                        active_at=now,
                         content_object=user,
                         summary=summary
                     )

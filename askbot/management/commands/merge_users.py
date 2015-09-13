@@ -19,20 +19,38 @@ class MergeUsersBaseCommand(BaseCommand):
         self.parse_arguments(*arguments)
 
         for rel in User._meta.get_all_related_objects():
+            sid = transaction.savepoint()
             try:
-                with transaction.atomic():
-                    self.process_field(rel.model, rel.field.name)
+                self.process_field(rel.model, rel.field.name)
+                transaction.savepoint_commit(sid)
             except Exception, error:
                 self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
+                transaction.savepoint_rollback(sid)
             transaction.commit()
+            #use atomic context manager with django > 1.5
+            #try:
+            #    with transaction.atomic():
+            #        self.process_field(rel.model, rel.field.name)
+            #except Exception, error:
+            #    self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
+            #transaction.commit()
 
         for rel in User._meta.get_all_related_many_to_many_objects():
+            sid = transaction.savepoint()
             try:
-                with transaction.atomic():
-                    self.process_m2m_field(rel.model, rel.field.name)
+                self.process_m2m_field(rel.model, rel.field.name)
+                transaction.savepoint_commit(sid)
             except Exception, error:
                 self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
+                transaction.savepoint_rollback(sid)
             transaction.commit()
+            #use atomic context manager with django > 1.5
+            #try:
+            #    with transaction.atomic():
+            #        self.process_m2m_field(rel.model, rel.field.name)
+            #except Exception, error:
+            #    self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
+            #transaction.commit()
 
         self.process_custom_user_fields()
         self.cleanup()

@@ -99,8 +99,8 @@ def get_media_url(url, ignore_missing = False):
 
     todo: move this to the skin environment class
     """
-    #import datetime
-    #before = datetime.datetime.now()
+    #from django.utils import timezone
+    #before = timezone.now()
     url = urllib.unquote(unicode(url))
     while url[0] == '/': url = url[1:]
 
@@ -165,7 +165,7 @@ def get_media_url(url, ignore_missing = False):
     if resource_revision:
         url +=  '?v=%d' % resource_revision
 
-    #after = datetime.datetime.now()
+    #after = timezone.now()
     #print after - before
     return url
 

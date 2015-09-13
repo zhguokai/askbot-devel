@@ -281,7 +281,7 @@ def questions(request, **kwargs):
                 request.user.message_set.create(message=msg)
 
         return render(request, 'main_page.html', template_data)
-        #print datetime.datetime.now() - before
+        #print timezone.now() - before
         #return res
 
 
