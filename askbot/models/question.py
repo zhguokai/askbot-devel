@@ -632,7 +632,7 @@ class Thread(models.Model):
     view_count = models.PositiveIntegerField(default=0)
     favourite_count = models.PositiveIntegerField(default=0)
     answer_count = models.PositiveIntegerField(default=0)
-    last_activity_at = models.DateTimeField(default=datetime.datetime.now)
+    last_activity_at = models.DateTimeField(default=timezone.now)
     last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
     language_code = models.CharField(
                             choices=django_settings.LANGUAGES,
@@ -1863,7 +1863,7 @@ class FavoriteQuestion(models.Model):
     """A favorite Question of a User."""
     thread        = models.ForeignKey(Thread)
     user          = models.ForeignKey(User, related_name='user_favorite_questions')
-    added_at      = models.DateTimeField(default=datetime.datetime.now)
+    added_at      = models.DateTimeField(default=timezone.now)
 
     class Meta:
         app_label = 'askbot'
@@ -1900,7 +1900,7 @@ class AnonymousQuestion(DraftContent):
     is_anonymous = models.BooleanField(default=False)
 
     def publish(self, user):
-        added_at = datetime.datetime.now()
+        added_at = timezone.now()
         #todo: wrong - use User.post_question() instead
         try:
             user.assert_can_post_text(self.text)

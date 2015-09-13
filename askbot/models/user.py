@@ -235,7 +235,7 @@ class Activity(models.Model):
     user = models.ForeignKey(User)
     recipients = models.ManyToManyField(User, through=ActivityAuditStatus, related_name='incoming_activity')
     activity_type = models.SmallIntegerField(choices = const.TYPE_ACTIVITY)
-    active_at = models.DateTimeField(default=datetime.datetime.now)
+    active_at = models.DateTimeField(default=timezone.now)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')

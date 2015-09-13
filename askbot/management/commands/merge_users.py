@@ -1,5 +1,6 @@
 from django.core.management.base import CommandError, BaseCommand
 from django.db import transaction
+from askbot.deployment import package_utils
 from askbot.models import User
 
 # TODO: this command is broken - doesn't take into account UNIQUE constraints
@@ -18,39 +19,19 @@ class MergeUsersBaseCommand(BaseCommand):
     def handle(self, *arguments, **options):
         self.parse_arguments(*arguments)
 
+        django_version = package_utils.get_django_version()
+
         for rel in User._meta.get_all_related_objects():
-            sid = transaction.savepoint()
-            try:
-                self.process_field(rel.model, rel.field.name)
-                transaction.savepoint_commit(sid)
-            except Exception, error:
-                self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
-                transaction.savepoint_rollback(sid)
-            transaction.commit()
-            #use atomic context manager with django > 1.5
-            #try:
-            #    with transaction.atomic():
-            #        self.process_field(rel.model, rel.field.name)
-            #except Exception, error:
-            #    self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
-            #transaction.commit()
+            if django_version > (1, 5):
+                self.process_relation(rel)
+            else:
+                self.process_relation_legacy(rel)
 
         for rel in User._meta.get_all_related_many_to_many_objects():
-            sid = transaction.savepoint()
-            try:
-                self.process_m2m_field(rel.model, rel.field.name)
-                transaction.savepoint_commit(sid)
-            except Exception, error:
-                self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
-                transaction.savepoint_rollback(sid)
-            transaction.commit()
-            #use atomic context manager with django > 1.5
-            #try:
-            #    with transaction.atomic():
-            #        self.process_m2m_field(rel.model, rel.field.name)
-            #except Exception, error:
-            #    self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
-            #transaction.commit()
+            if django_version > (1, 5):
+                self.process_m2m(rel)
+            else:
+                self.process_m2m_legacy(rel)
 
         self.process_custom_user_fields()
         self.cleanup()
@@ -68,6 +49,42 @@ class MergeUsersBaseCommand(BaseCommand):
             raise CommandError('Arguments are <from_user_id> to <to_user_id>')
         self.from_user = User.objects.get(id = arguments[0])
         self.to_user = User.objects.get(id = arguments[1])
+
+    def process_relation_legacy(self, rel):
+        sid = transaction.savepoint()
+        try:
+            self.process_field(rel.model, rel.field.name)
+            transaction.savepoint_commit(sid)
+        except Exception, error:
+            self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
+            transaction.savepoint_rollback(sid)
+        transaction.commit()
+
+    def process_relation(self, rel):
+        try:
+            with transaction.atomic():
+                self.process_field(rel.model, rel.field.name)
+        except Exception, error:
+            self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
+        transaction.commit()
+
+    def process_m2m_legacy(self, rel):
+        sid = transaction.savepoint()
+        try:
+            self.process_m2m_field(rel.model, rel.field.name)
+            transaction.savepoint_commit(sid)
+        except Exception, error:
+            self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
+            transaction.savepoint_rollback(sid)
+        transaction.commit()
+
+    def process_m2m(self, rel):
+        try:
+            with transaction.atomic():
+                self.process_m2m_field(rel.model, rel.field.name)
+        except Exception, error:
+            self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
+        transaction.commit()
 
     def process_field(self, model, field_name):
         """reassigns the related object to the new user"""

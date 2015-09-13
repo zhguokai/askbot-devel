@@ -447,7 +447,7 @@ class Post(models.Model):
     groups = models.ManyToManyField('Group', through='PostToGroup', related_name = 'group_posts')#used for group-private posts
 
     author = models.ForeignKey(User, related_name='posts')
-    added_at = models.DateTimeField(default=datetime.datetime.now)
+    added_at = models.DateTimeField(default=timezone.now)
 
     #endorsed == accepted as best in the case of answer
     #use word 'endorsed' to differentiate from 'approved', which
