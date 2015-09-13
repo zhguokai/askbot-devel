@@ -29,6 +29,7 @@ REQUIREMENTS = {
     'keyedcache': 'django-keyedcache',
     'longerusername': 'longerusername',
     'markdown2': 'markdown2',
+    'mock': 'mock==1.0.1',
     'oauth2': 'oauth2',
     'openid': 'python-openid',
     'picklefield': 'django-picklefield==0.3.0',
