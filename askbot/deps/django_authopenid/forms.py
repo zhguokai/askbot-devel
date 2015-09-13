@@ -217,6 +217,8 @@ class LoginForm(forms.Form):
         elif provider_type == 'mozilla-persona':
             self.cleaned_data['login_type'] = 'mozilla-persona'
 
+        self.cleaned_data['sreg_required'] = 'sreg_required' in provider_data
+
         return self.cleaned_data
 
     def do_clean_openid_fields(self, provider_data):

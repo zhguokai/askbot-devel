@@ -118,6 +118,7 @@ MIDDLEWARE_CLASSES = (
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'askbot.middleware.view_log.ViewLogMiddleware',
     'askbot.middleware.spaceless.SpacelessMiddleware',
+    'askbot.middleware.csrf.CsrfViewMiddleware',
 )
 
 JINJA2_EXTENSIONS = (
