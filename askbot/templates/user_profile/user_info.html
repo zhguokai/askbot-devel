@@ -112,7 +112,12 @@
             {% if view_user.website and show_profile_info %}
             <tr>
                 <td>{% trans %}website{% endtrans %}</td>
-                <td>{{ macros.user_website_link(view_user, max_display_length = 30) }}</td>
+                <td>{{ macros.user_website_link(
+                                        view_user,
+                                        max_display_length=30,
+                                        force_show=show_profile_info
+                                    )
+                    }}</td>
             </tr>
             {% endif  %}
             {% if request.user == view_user and 
