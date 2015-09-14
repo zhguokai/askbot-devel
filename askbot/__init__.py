@@ -41,7 +41,7 @@ REQUIREMENTS = {
     'sanction': 'sanction==0.3.1',
     'south': 'South>=0.7.1',
     'threaded_multihost': 'django-threaded-multihost',
-    'tinymce': 'django-tinymce==1.5.1b2',
+    'tinymce': 'django-tinymce==1.5.3',
     'unidecode': 'unidecode',
     #'stopforumspam': 'stopforumspam'
 }
