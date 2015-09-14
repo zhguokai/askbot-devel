@@ -587,7 +587,7 @@ for the purposes of the AJAX comment editor #}
 {%- endmacro -%}
 
 {%- macro user_website_link(user, max_display_length=25) -%}
-    {% if user.website and (not user.is_blocked()) %}
+    {% if user.website and (not (user.is_blocked() or user.is_watched())) %}
         <a 
             href="{{user.website|escape}}"
             title="{% trans username=user.username|escape, url=user.website|escape %}{{username}}'s website is {{url}}{% endtrans %}"

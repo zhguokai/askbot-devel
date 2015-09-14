@@ -730,8 +730,8 @@ def test_tinymce():
     #check js root setting - before version 0.7.44 we used to have
     #"common" skin and after we combined it into the default
     js_root = getattr(django_settings, 'TINYMCE_JS_ROOT', '')
-    old_relative_js_path = 'common/media/js/tinymce/'
-    relative_js_path = 'default/media/js/tinymce/'
+    old_relative_js_path = 'common/media/tinymce/'
+    relative_js_path = 'default/media/tinymce/'
     expected_js_root = os.path.join(django_settings.STATIC_ROOT, relative_js_path)
     old_expected_js_root = os.path.join(django_settings.STATIC_ROOT, old_relative_js_path)
     if os.path.normpath(js_root) != os.path.normpath(expected_js_root):
