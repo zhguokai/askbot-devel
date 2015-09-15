@@ -20,7 +20,8 @@ from django.http import HttpResponseBadRequest
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseRedirect
 from django.http import Http404
-from django.utils import simplejson, timezone
+import simplejson
+from django.utils import timezone
 from django.utils.html import strip_tags, escape
 from django.utils.translation import get_language
 from django.utils.translation import ugettext as _

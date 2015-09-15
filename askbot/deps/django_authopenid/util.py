@@ -17,7 +17,7 @@ import oauth2 as oauth # OAuth1 protocol
 from django.db.models.query import Q
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.utils import simplejson
+import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ImproperlyConfigured

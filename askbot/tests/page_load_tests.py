@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core import management
 from django.core.cache.backends.dummy import DummyCache
 from django.core import cache
-from django.utils import simplejson
+import simplejson
 from django.utils.translation import activate as activate_language
 
 import coffin

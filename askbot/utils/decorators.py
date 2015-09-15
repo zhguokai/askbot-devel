@@ -10,7 +10,8 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.http import HttpResponseRedirect
-from django.utils import simplejson, timezone
+import simplejson
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_str
 from askbot import exceptions as askbot_exceptions

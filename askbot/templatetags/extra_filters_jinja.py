@@ -12,7 +12,8 @@ from django.contrib.humanize.templatetags import humanize
 from django.template import defaultfilters
 from django.core.urlresolvers import reverse, resolve
 from django.http import Http404
-from django.utils import simplejson, timezone
+import simplejson
+from django.utils import timezone
 from django.utils.text import Truncator
 from askbot import exceptions as askbot_exceptions
 from askbot.conf import settings as askbot_settings

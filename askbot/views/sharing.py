@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.views.decorators import csrf
-from django.utils import simplejson
+import simplejson
 
 @login_required
 def start_sharing_twitter(request):

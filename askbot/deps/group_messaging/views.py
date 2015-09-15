@@ -18,7 +18,8 @@ from django.forms import IntegerField
 from django.http import HttpResponse
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseForbidden
-from django.utils import simplejson, timezone
+import simplejson
+from django.utils import timezone
 from askbot.utils.views import PjaxView
 from .models import Message
 from .models import MessageMemo

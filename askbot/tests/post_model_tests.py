@@ -20,7 +20,8 @@ from askbot.models import Tag
 from askbot.models import Group
 from askbot.search.state_manager import DummySearchState
 from askbot.tests.utils import skipIf
-from django.utils import simplejson, timezone
+import simplejson
+from django.utils import timezone
 from askbot.conf import settings as askbot_settings
 
 

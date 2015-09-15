@@ -954,9 +954,9 @@ def test_versions():
 
     #if django version is >= 1.5, require python 2.6.5 or higher
     dj_ver = django.VERSION
-    if dj_ver[:2] > (1, 6):
+    if dj_ver[:2] > (1, 7):
         errors.append(
-            'Highest major version of django supported is 1.6 '
+            'Highest major version of django supported is 1.7 '
             'if you would like to try newer version add setting.'
         )
     elif dj_ver[0:2] == (1, 6) and py_ver[:3] < (2, 7, 1):
@@ -965,6 +965,13 @@ def test_versions():
             'version 2.7.1 or higher, please see release notes.\n'
             'https://docs.djangoproject.com/en/dev/releases/1.6/'
         )
+    elif dj_ver[0:2] == (1, 7) and py_ver[:3] < (2, 7, 0):
+            errors.append(
+                'Django 1.7 and higher requires Python '
+                'version 2.7 or higher, please see release notes.\n'
+                'https://docs.djangoproject.com/en/dev/releases/1.7/'
+            )
+
 
     print_errors(errors)
 

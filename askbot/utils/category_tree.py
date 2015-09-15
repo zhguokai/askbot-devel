@@ -26,7 +26,7 @@ example of desired structure, when input is parsed
     ]
 """
 from askbot.conf import settings as askbot_settings
-from django.utils import simplejson
+import simplejson
 
 def get_leaf_index(tree, leaf_name):
     children = tree[1]
