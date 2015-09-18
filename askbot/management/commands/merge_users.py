@@ -22,16 +22,16 @@ class MergeUsersBaseCommand(BaseCommand):
         django_version = package_utils.get_django_version()
 
         for rel in User._meta.get_all_related_objects():
-            if django_version > (1, 5):
-                self.process_relation(rel)
-            else:
+            if django_version < (1, 6):
                 self.process_relation_legacy(rel)
+            else:
+                self.process_relation(rel)
 
         for rel in User._meta.get_all_related_many_to_many_objects():
-            if django_version > (1, 5):
-                self.process_m2m(rel)
-            else:
+            if django_version < (1, 6):
                 self.process_m2m_legacy(rel)
+            else:
+                self.process_m2m(rel)
 
         self.process_custom_user_fields()
         self.cleanup()

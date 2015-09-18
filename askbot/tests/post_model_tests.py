@@ -19,9 +19,9 @@ from askbot.models import Thread
 from askbot.models import Tag
 from askbot.models import Group
 from askbot.search.state_manager import DummySearchState
-from askbot.tests.utils import skipIf
 import simplejson
 from django.utils import timezone
+from askbot.tests.utils import skipIf, with_settings
 from askbot.conf import settings as askbot_settings
 
 
@@ -149,9 +149,8 @@ class PostModelTests(AskbotTestCase):
         self.assertTrue(p._thread_cache is th)
         self.assertEqual(expected_url, p.get_absolute_url(thread=th))
 
+    @with_settings(GROUPS_ENABLED=True)
     def test_get_moderators_with_groups(self):
-        groups_enabled_backup = askbot_settings.GROUPS_ENABLED
-        askbot_settings.update('GROUPS_ENABLED', True)
         #create group
         group = Group(name='testers', openness=Group.OPEN)
         group.save()
@@ -177,7 +176,6 @@ class PostModelTests(AskbotTestCase):
             set(mods)
         )
         #moderator are in the set of moderators
-        askbot_settings.update('GROUPS_ENABLED', groups_enabled_backup)
 
 
 class ThreadTagModelsTests(AskbotTestCase):
@@ -372,6 +370,8 @@ class ThreadRenderLowLevelCachingTests(AskbotTestCase):
         cache.cache = LocMemCache('', {})  # Enable local caching
 
         thread = self.q.thread
+        thread.get_summary_html(search_state=SearchState.get_empty())
+
         key = thread.get_summary_cache_key()
 
         self.assertTrue(thread.summary_html_cached())
