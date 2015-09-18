@@ -103,7 +103,7 @@ class PostQuerySet(models.query.QuerySet):
                 groups = [Group.objects.get_global_group()]
             else:
                 groups = user.get_groups()
-            return self.filter(groups__in = groups).distinct()
+            return self.filter(groups__in=groups).distinct()
         else:
             return self
 
@@ -710,7 +710,10 @@ class Post(models.Model):
         and moderators"""
         user_filter = models.Q(is_superuser=True) | models.Q(status='m')
         if askbot_settings.GROUPS_ENABLED:
-            user_filter = user_filter & models.Q(groups__in=self.groups.all())
+            post_groups = self.groups.all()
+            user_filter = user_filter & models.Q(
+                                        group_membership__group__in=post_groups
+                                    )
         return User.objects.filter(user_filter).distinct()
 
     def get_previous_answer(self, user=None):

@@ -389,7 +389,7 @@ class Message(models.Model):
 
         groups = self.recipients.all()
         recipients_users = User.objects.filter(
-                                    groups__in=groups
+                                    group_membership__group__in=groups
                                 ).exclude(
                                     id=self.sender.id
                                 ).distinct()

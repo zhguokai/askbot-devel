@@ -3738,7 +3738,8 @@ def record_question_visit(request, question, **kwargs):
 
         last_seen = request.session['question_view_times'].get(question.id, None)
 
-        if last_seen and timezone.is_naive(last_seen):
+        if last_seen and timezone.is_naive(last_seen) \
+            and getattr(django_settings, 'USE_TZ', False):
             last_seen = timezone.make_aware(last_seen, timezone.utc)
 
         update_view_count = False
@@ -4014,7 +4015,7 @@ def add_missing_tag_subscriptions(sender, instance, created, **kwargs):
         if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED and \
                 askbot_settings.GROUPS_ENABLED:
             user_groups = instance.get_groups()
-            for subscription in BulkTagSubscription.objects.filter(groups__in = user_groups):
+            for subscription in BulkTagSubscription.objects.filter(groups__in=user_groups):
                 tag_list = subscription.tag_list()
                 instance.mark_tags(tagnames = tag_list,
                                 reason='subscribed', action='add')

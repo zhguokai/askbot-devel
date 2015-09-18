@@ -67,7 +67,7 @@ class Command(NoArgsCommand):
 
             if askbot_settings.GROUPS_ENABLED:
                 user_groups = user.get_groups()
-                user_questions = user_questions.filter(groups__in = user_groups)
+                user_questions = user_questions.filter(groups__in=user_groups)
 
             final_question_list = user_questions.get_questions_needing_reminder(
                 user = user,

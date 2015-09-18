@@ -263,7 +263,7 @@ class Activity(models.Model):
         """
         for recipient in recipients:
             #todo: may optimize for bulk addition
-            aas = ActivityAuditStatus(user = recipient, activity = self)
+            aas = ActivityAuditStatus(user=recipient, activity=self)
             aas.save()
 
     def get_mentioned_user(self):
@@ -417,19 +417,6 @@ class EmailFeedSetting(models.Model):
         self.save()
 
 
-class AuthUserGroups(models.Model):
-    """explicit model for the auth_user_groups bridge table.
-    """
-    group = models.ForeignKey(AuthGroup)
-    user = models.ForeignKey(User)
-
-    class Meta:
-        app_label = 'auth'
-        unique_together = ('group', 'user')
-        db_table = 'auth_user_groups'
-        managed = False
-
-
 class GroupMembership(models.Model):
     NONE = -1#not part of the choices as for this records should be just missing
     PENDING = 0
@@ -440,8 +427,8 @@ class GroupMembership(models.Model):
     )
     ALL_LEVEL_CHOICES = LEVEL_CHOICES + ((NONE, 'none'),)
 
-    group = models.ForeignKey(AuthGroup)
-    user = models.ForeignKey(User)
+    group = models.ForeignKey(AuthGroup, related_name='user_membership')
+    user = models.ForeignKey(User, related_name='group_membership')
     level = models.SmallIntegerField(
                         default=FULL,
                         choices=LEVEL_CHOICES,
@@ -477,13 +464,12 @@ class GroupQuerySet(models.query.QuerySet):
         )
 
     def get_for_user(self, user=None, private=False):
+        gms = GroupMembership.objects.filter(user=user)
         if private:
             global_group = Group.objects.get_global_group()
-            return self.filter(
-                        user=user
-                    ).exclude(id=global_group.id)
-        else:
-            return self.filter(user=user)
+            gms = gms.exclude(group=global_group)
+        group_ids = gms.values_list('group_id', flat=True)
+        return Group.objects.filter(pk__in=group_ids)
 
     def get_by_name(self, group_name = None):
         from askbot.models.tag import clean_group_name#todo - delete this
@@ -582,7 +568,7 @@ class Group(AuthGroup):
     def get_moderators(self):
         """returns group moderators"""
         user_filter = models.Q(is_superuser=True) | models.Q(status='m')
-        user_filter = user_filter & models.Q(groups__in=[self])
+        user_filter = user_filter & models.Q(group_membership__group__in=[self])
         return User.objects.filter(user_filter)
 
     def has_moderator(self, user):

@@ -44,10 +44,7 @@ class ManagementCommandTests(AskbotTestCase):
         user_two_pk = user_two.pk
         management.call_command('merge_users', user_one.id, user_two.id)
         # Check that the first user was deleted
-        self.assertEqual(
-            models.User.objects.get(pk=user_one.id).status,
-            'b'
-        )
+        self.assertEqual(models.User.objects.get(pk=user_one.id).status, 'b')
         # Explicitly check that the values assigned to user_one are now user_two's
         self.assertEqual(user_two.posts.get_questions().filter(pk=question.id).count(), 1)
         self.assertEqual(user_two.posts.get_comments().filter(pk=comment.id).count(), 1)
