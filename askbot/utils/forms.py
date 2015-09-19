@@ -246,6 +246,11 @@ class UserEmailField(forms.EmailField):
         allowed_domains = askbot_settings.ALLOWED_EMAIL_DOMAINS.strip()
         allowed_emails = askbot_settings.ALLOWED_EMAILS.strip()
 
+        from askbot.deps.django_authopenid.util import email_is_blacklisted
+        if email_is_blacklisted(email):
+            raise forms.ValidationError(self.error_messages['unauthorized'])
+
+
         if allowed_emails or allowed_domains:
             if not email_is_allowed(
                     email,

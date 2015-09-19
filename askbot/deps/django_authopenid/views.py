@@ -1042,7 +1042,7 @@ def register(request, login_provider_name=None,
         provider_data = providers[login_provider_name]
 
         def email_is_acceptable(email):
-            return bool(email or (
+            return bool((not util.email_is_blacklisted(email)) or (
                     askbot_settings.BLANK_EMAIL_ALLOWED \
                     and askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing'
                 ))
@@ -1257,7 +1257,6 @@ def signup_with_password(request):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
-            next = form.cleaned_data['next']
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
