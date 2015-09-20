@@ -90,7 +90,7 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         if askbot_settings.ENABLE_EMAIL_ALERTS:
             activate_language(django_settings.LANGUAGE_CODE)
-            for user in User.objects.all():
+            for user in User.objects.exclude(status='b').iterator():
                 try:
                     self.send_email_alerts(user)
                 except Exception:
