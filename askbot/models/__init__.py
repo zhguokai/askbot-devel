@@ -701,10 +701,18 @@ def _assert_user_can(
     """
     action_display = action_display or _('perform this action')
 
+    from askbot.deps.django_authopenid.util import email_is_blacklisted
+
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         error_message = _(
             'Sorry, you cannot %(perform_action)s because '
             'the site is temporarily read only'
+        ) % {'perform_action': action_display}
+
+    elif email_is_blacklisted(user.email):
+        error_message = _(
+            'Sorry, you cannot %(perform_action)s because '
+            'your email address has been blacklisted'
         ) % {'perform_action': action_display}
 
     elif user.is_read_only():
