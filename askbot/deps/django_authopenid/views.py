@@ -1042,10 +1042,16 @@ def register(request, login_provider_name=None,
         provider_data = providers[login_provider_name]
 
         def email_is_acceptable(email):
-            return bool((not util.email_is_blacklisted(email)) or (
-                    askbot_settings.BLANK_EMAIL_ALLOWED \
-                    and askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing'
-                ))
+            email = email.strip()
+
+            blacklisting_on = askbot_settings.BLACKLISTED_EMAIL_PATTERNS_MODE != 'disabled'
+
+            is_blacklisted = email and blacklisting_on and util.email_is_blacklisted(email)
+            is_blank_and_ok = (email == '') \
+                                and askbot_settings.BLANK_EMAIL_ALLOWED \
+                                and askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing'
+
+            return bool((not is_blacklisted) or is_blank_and_ok)
 
         def username_is_acceptable(username):
             if username.strip() == '':

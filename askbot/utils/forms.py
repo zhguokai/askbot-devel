@@ -247,7 +247,8 @@ class UserEmailField(forms.EmailField):
         allowed_emails = askbot_settings.ALLOWED_EMAILS.strip()
 
         from askbot.deps.django_authopenid.util import email_is_blacklisted
-        if email_is_blacklisted(email):
+        blacklisting_on = askbot_settings.BLACKLISTED_EMAIL_PATTERNS_MODE != 'disabled'
+        if blacklisting_on and email_is_blacklisted(email):
             raise forms.ValidationError(self.error_messages['unauthorized'])
 
 

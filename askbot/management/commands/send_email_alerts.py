@@ -93,7 +93,8 @@ class Command(NoArgsCommand):
             activate_language(django_settings.LANGUAGE_CODE)
             for user in User.objects.exclude(status='b').iterator():
                 try:
-                    if email_is_blacklisted(user.email):
+                    if email_is_blacklisted(user.email) \
+                        and askbot_settings.BLACKLISTED_EMAIL_PATTERNS_MODE == 'strict':
                         continue
                     self.send_email_alerts(user)
                 except Exception:

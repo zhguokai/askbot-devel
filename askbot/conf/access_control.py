@@ -87,6 +87,28 @@ settings.register(
     )
 )
 
+BLACKLISTED_EMAIL_PATTERNS_MODE_CHOICES = (
+    ('disabled', _('disable')),
+    ('medium', 
+            string_concat(
+                            _('block user registrations'),
+                            ', ',
+                            _('allow existing users to post')
+                        )
+    ),
+    ('strict', _('block completely')),
+)
+
+settings.register(
+    livesettings.StringValue(
+        ACCESS_CONTROL,
+        'BLACKLISTED_EMAIL_PATTERNS_MODE',
+        default='strict',
+        choices=BLACKLISTED_EMAIL_PATTERNS_MODE_CHOICES,
+        description=_('Blacklisted email address patterns mode'),
+    )
+)
+
 settings.register(
     livesettings.LongStringValue(
         ACCESS_CONTROL,
