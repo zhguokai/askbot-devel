@@ -709,12 +709,19 @@ def _assert_user_can(
             'the site is temporarily read only'
         ) % {'perform_action': action_display}
 
-    elif email_is_blacklisted(user.email) \
+    elif ('@' in user.email) and email_is_blacklisted(user.email) \
         and askbot_settings.BLACKLISTED_EMAIL_PATTERNS_MODE == 'strict':
-        error_message = _(
-            'Sorry, you cannot %(perform_action)s because '
-            'your email address has been blacklisted'
-        ) % {'perform_action': action_display}
+        error_message = string_concat(
+            _('Sorry, you cannot %(perform_action)s because '
+              '%(domain)s emails have been blacklisted.'
+            ),
+            ' ',
+            _('Please <a href="%(url)s">change your email</a>.')
+        ) % {
+            'perform_action': action_display,
+            'domain': user.email.split('@')[1],
+            'url': reverse('edit_user', args=(user.id,))
+        }
 
     elif user.is_read_only():
         error_message = _('Sorry, but you have only read access')
