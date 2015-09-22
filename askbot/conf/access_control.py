@@ -66,6 +66,10 @@ settings.register(
 #        description=_('Require valid email address to register')
 #    )
 #)
+def update_email_callback(old, new):
+    if new.strip():
+        settings.update('BLACKLISTED_EMAIL_PATTERNS_MODE', 'disabled')
+    return new
 
 settings.register(
     livesettings.LongStringValue(
@@ -73,7 +77,12 @@ settings.register(
         'ALLOWED_EMAILS',
         default='',
         description=_('Allowed email addresses'),
-        help_text=_('Please use space to separate the entries')
+        help_text=string_concat(
+            _('Please use space to separate the entries'),
+            '. ',
+            _('Entry disables blacklisted email patterns')
+        ),
+        update_callback=update_email_callback
     )
 )
 
@@ -83,7 +92,12 @@ settings.register(
         'ALLOWED_EMAIL_DOMAINS',
         default='',
         description=_('Allowed email domain names'),
-        help_text=_('Please use space to separate the entries, do not use the @ symbol!')
+        help_text=string_concat(
+            _('Please use space to separate the entries, do not use the @ symbol!'),
+            '. ',
+            _('Entry disables blacklisted email patterns')
+        ),
+        update_callback=update_email_callback
     )
 )
 

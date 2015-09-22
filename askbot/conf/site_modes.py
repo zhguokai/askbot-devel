@@ -80,6 +80,6 @@ settings.register(
             "Vote Rules will "
             "be changed after you modify this setting."
         ),
-        update_callback = bootstrap_callback
+        update_callback=bootstrap_callback
     )
 )
