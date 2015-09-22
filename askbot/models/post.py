@@ -2392,7 +2392,7 @@ class PostRevision(models.Model):
     title = models.CharField(max_length=300, blank=True, default='')
     tagnames = models.CharField(max_length=125, blank=True, default='')
     is_anonymous = models.BooleanField(default=False)
-    ip_addr = models.GenericIPAddressField(max_length=45, default='0.0.0.0')
+    ip_addr = models.GenericIPAddressField(max_length=45, default='0.0.0.0', db_index=True)
 
     objects = PostRevisionManager()
 
