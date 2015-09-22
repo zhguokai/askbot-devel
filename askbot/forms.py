@@ -17,6 +17,7 @@ from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
+from askbot.utils.forms import moderated_email_validator
 from askbot.utils.slug import slugify
 from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
@@ -1519,10 +1520,12 @@ class EditUserForm(forms.Form):
 
     def clean_email(self):
         """For security reason one unique email in database"""
-        email = self.cleaned_data['email']
-        if email.strip() == '' and askbot_settings.BLANK_EMAIL_ALLOWED:
+        email = self.cleaned_data.get('email', '').strip()
+        if email == '' and askbot_settings.BLANK_EMAIL_ALLOWED:
             self.cleaned_data['email'] = ''
             return self.cleaned_data['email']
+
+        moderated_email_validator(email)
 
         if email != self.user.email:
             #todo dry it, there is a similar thing in openidauth
