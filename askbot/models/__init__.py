@@ -58,6 +58,7 @@ from askbot.models.badges import award_badges_signal, get_badge
 from askbot.models.repute import Award, Repute, Vote, BadgeData
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot.models.meta import ImportRun, ImportedObjectInfo
+from askbot.models.user_profile import UserProfile
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.decorators import reject_forbidden_phrases
