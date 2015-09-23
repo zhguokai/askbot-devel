@@ -44,6 +44,20 @@ __all__ = ['OpenID', 'DjangoOpenIDStore', 'from_openid_response']
 
 ALLOWED_LOGIN_TYPES = ('password', 'oauth', 'oauth2', 'openid-direct', 'openid-username', 'wordpress')
 
+def email_is_blacklisted(email):
+    patterns = askbot_settings.BLACKLISTED_EMAIL_PATTERNS
+    patterns = patterns.strip().split()
+    for pattern in patterns:
+        try:
+            regex = re.compile(r'{}'.format(pattern))
+        except:
+            pass
+        else:
+            if regex.search(email):
+                return True
+    return False
+
+
 class OpenID:
     def __init__(self, openid_, issued, attrs=None, sreg_=None):
         logging.debug('init janrain openid object')

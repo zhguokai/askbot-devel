@@ -7,9 +7,7 @@ def get_cache_timeout():
         timeout = settings.CACHES['default'].get('TIMEOUT', DEFAULT_CACHE_TIMEOUT)
         return getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', timeout)
     return getattr(
-        settings, 
-        'LIVESETTINGS_CACHE_TIMEOUT', 
-        getattr(settings, 'CACHE_TIMEOUT', DEFAULT_CACHE_TIMEOUT)
-    )
-
-
+                settings, 
+                'LIVESETTINGS_CACHE_TIMEOUT', 
+                getattr(settings, 'CACHE_TIMEOUT', DEFAULT_CACHE_TIMEOUT)
+            )
