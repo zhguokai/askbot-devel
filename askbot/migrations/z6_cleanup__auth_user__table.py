@@ -1,99 +1,115 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
-from askbot.utils.console import ProgressBar
+from askbot import const
+from askbot.migrations_api import safe_add_column
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        users = orm['auth.User'].objects.all()
-        count = users.count()
-        message = 'Transferring user profile data to a new db table'
-
-        for user in ProgressBar(users.iterator(), count, message):
-            profile = orm['askbot.UserProfile']()
-            profile.auth_user_ptr = user
-            profile.avatar_urls = user.avatar_urls
-            profile.status = user.status
-            profile.is_fake = user.is_fake
-            profile.email_isvalid = user.email_isvalid
-            profile.email_key = user.email_key
-            profile.reputation = user.reputation
-            profile.gravatar = user.gravatar
-            profile.avatar_type = user.avatar_type
-            profile.gold = user.gold
-            profile.silver = user.silver
-            profile.bronze = user.bronze
-            profile.last_seen = user.last_seen
-            profile.real_name = user.real_name
-            profile.website = user.website
-            profile.location = user.location
-            profile.country = user.country
-            profile.show_country = user.show_country
-            profile.date_of_birth = user.date_of_birth
-            profile.about = user.about
-            profile.interesting_tags = user.interesting_tags
-            profile.ignored_tags = user.ignored_tags
-            profile.subscribed_tags = user.subscribed_tags
-            profile.email_signature = user.email_signature
-            profile.show_marked_tags = user.show_marked_tags
-            profile.email_tag_filter_strategy = user.email_tag_filter_strategy
-            profile.display_tag_filter_strategy = user.display_tag_filter_strategy
-            profile.new_response_count = user.new_response_count
-            profile.seen_response_count = user.seen_response_count
-            profile.consecutive_days_visit_count = user.consecutive_days_visit_count
-            profile.languages = user.languages
-            profile.twitter_access_token = user.twitter_access_token
-            profile.twitter_handle = user.twitter_handle
-            profile.social_sharing_mode = user.social_sharing_mode
-            profile.save()
-
+        db.delete_column('auth_user', 'about')
+        db.delete_column(u'auth_user', 'avatar_type')
+        db.delete_column('auth_user', 'avatar_urls')
+        db.delete_column('auth_user', 'bronze')
+        db.delete_column(u'auth_user', 'consecutive_days_visit_count')
+        db.delete_column(u'auth_user', 'country')
+        db.delete_column('auth_user', 'date_of_birth')
+        db.delete_column(u'auth_user', 'display_tag_filter_strategy')
+        db.delete_column('auth_user', 'email_isvalid')
+        db.delete_column('auth_user', 'email_key')
+        db.delete_column(u'auth_user', 'email_signature')
+        db.delete_column(u'auth_user', 'email_tag_filter_strategy')
+        db.delete_column('auth_user', 'gold')
+        db.delete_column('auth_user', 'gravatar')
+        db.delete_column(u'auth_user', 'ignored_tags')
+        db.delete_column(u'auth_user', 'interesting_tags')
+        db.delete_column(u'auth_user', 'is_fake')
+        db.delete_column('auth_user', 'languages')
+        db.delete_column('auth_user', 'last_seen')
+        db.delete_column('auth_user', 'location')
+        db.delete_column('auth_user', 'new_response_count')
+        db.delete_column('auth_user', 'questions_per_page')
+        db.delete_column('auth_user', 'real_name')
+        db.delete_column('auth_user', 'reputation')
+        db.delete_column('auth_user', 'seen_response_count')
+        db.delete_column(u'auth_user', 'show_country')
+        db.delete_column(u'auth_user', 'show_marked_tags')
+        db.delete_column('auth_user', 'silver')
+        db.delete_column('auth_user', 'social_sharing_mode')
+        db.delete_column(u'auth_user', 'status')
+        db.delete_column(u'auth_user', 'subscribed_tags')
+        db.delete_column('auth_user', 'twitter_access_token')
+        db.delete_column('auth_user', 'twitter_handle')
+        db.delete_column('auth_user', 'website')
 
     def backwards(self, orm):
-        "Write your backwards methods here."
-        profiles = orm['askbot.UserProfile'].objects.all()
-        count = profiles.count()
-        message = 'Transferring user profile data to auth_user table'
+        safe_add_column('auth_user', 'about', self.gf('django.db.models.fields.TextField')(blank=True, null=True), keep_default = False)
+        safe_add_column(u'auth_user', 'avatar_type', self.gf('django.db.models.fields.CharField')(max_length=1, default='n'), keep_default=False)
+        safe_add_column('auth_user', 'avatar_urls',
+                        self.gf('jsonfield.fields.JSONField')(default={}),
+                        keep_default=False)
+        safe_add_column('auth_user', 'bronze', self.gf('django.db.models.fields.SmallIntegerField')(default=0), keep_default=False)
 
-        for profile in ProgressBar(profiles.iterator(), count, message):
-            user = profile.auth_user_ptr
-            user.avatar_urls = profile.avatar_urls
-            user.status = profile.status
-            user.is_fake = profile.is_fake
-            user.email_isvalid = profile.email_isvalid
-            user.email_key = profile.email_key
-            user.reputation = profile.reputation
-            user.gravatar = profile.gravatar
-            user.avatar_type = profile.avatar_type
-            user.gold = profile.gold
-            user.silver = profile.silver
-            user.bronze = profile.bronze
-            user.last_seen = profile.last_seen
-            user.real_name = profile.real_name
-            user.website = profile.website
-            user.location = profile.location
-            user.country = profile.country
-            user.show_country = profile.show_country
-            user.date_of_birth = profile.date_of_birth
-            user.about = profile.about
-            user.interesting_tags = profile.interesting_tags
-            user.ignored_tags = profile.ignored_tags
-            user.subscribed_tags = profile.subscribed_tags
-            user.email_signature = profile.email_signature
-            user.show_marked_tags = profile.show_marked_tags
-            user.email_tag_filter_strategy = profile.email_tag_filter_strategy
-            user.display_tag_filter_strategy = profile.display_tag_filter_strategy
-            user.new_response_count = profile.new_response_count
-            user.seen_response_count = profile.seen_response_count
-            user.consecutive_days_visit_count = profile.consecutive_days_visit_count
-            user.languages = profile.languages
-            user.twitter_access_token = profile.twitter_access_token
-            user.twitter_handle = profile.twitter_handle
-            user.social_sharing_mode = profile.social_sharing_mode
-            user.save()
+        safe_add_column(u'auth_user', 'consecutive_days_visit_count',
+            self.gf('django.db.models.fields.IntegerField')(default = 0, max_length = 2),
+            keep_default=False
+        )
+        safe_add_column(u'auth_user', 'country', self.gf('django_countries.fields.CountryField')(max_length=2, blank=True, null=True))
+        safe_add_column('auth_user', 'date_of_birth', self.gf('django.db.models.fields.DateField')(null=True, blank=True), keep_default=False)
+        safe_add_column(u'auth_user', 'display_tag_filter_strategy',
+            self.gf(
+                'django.db.models.fields.SmallIntegerField'
+            )(default = const.INCLUDE_ALL)
+        )
+        safe_add_column('auth_user', 'email_isvalid', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default=False)
+        safe_add_column('auth_user', 'email_key', self.gf('django.db.models.fields.CharField')(max_length=32, null=True), keep_default=False)
+        safe_add_column(u'auth_user', 'email_signature', self.gf('django.db.models.fields.TextField')(blank=True, default=''), keep_default=False)
+        safe_add_column(u'auth_user', 'email_tag_filter_strategy',
+            self.gf(
+                'django.db.models.fields.SmallIntegerField'
+            )(default = const.EXCLUDE_IGNORED)
+        )
+        safe_add_column('auth_user', 'gold', self.gf('django.db.models.fields.SmallIntegerField')(default=0), keep_default=False)
+        safe_add_column('auth_user', 'gravatar', self.gf('django.db.models.fields.CharField')(max_length=32, null=True), keep_default=False)
+        safe_add_column(u'auth_user', 'ignored_tags', self.gf('django.db.models.fields.TextField')(blank=True, default=''), keep_default=False)
+        safe_add_column(u'auth_user', 'interesting_tags', self.gf('django.db.models.fields.TextField')(blank=True, default=''), keep_default=False)
+        safe_add_column(u'auth_user', 'is_fake',
+            self.gf('django.db.models.fields.BooleanField')(default=False), keep_default=False)
+        safe_add_column('auth_user', 'languages',
+                          self.gf('django.db.models.fields.CharField')(default='en', max_length=128),
+                          keep_default=False)
+        safe_add_column('auth_user', 'last_seen', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now), keep_default = False)
+        safe_add_column('auth_user', 'location', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True, null=True), keep_default = False)
+        safe_add_column('auth_user', 'new_response_count', self.gf('django.db.models.fields.IntegerField')(default=0), keep_default=False)
+        safe_add_column('auth_user', 'questions_per_page', self.gf('django.db.models.fields.SmallIntegerField')(default=10), keep_default = False)
+        safe_add_column('auth_user', 'real_name', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True, null=True), keep_default = False)
+        safe_add_column('auth_user', 'reputation', self.gf('django.db.models.fields.PositiveIntegerField')(default=1), keep_default = False)
+        safe_add_column('auth_user', 'seen_response_count', self.gf('django.db.models.fields.IntegerField')(default=0), keep_default=False)
+        safe_add_column(u'auth_user', 'show_country', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True))
+        safe_add_column(u'auth_user', 'show_marked_tags',
+            self.gf(
+                'django.db.models.fields.BooleanField'
+            )(default=True, blank=True)
+        )
+        safe_add_column('auth_user', 'silver', self.gf('django.db.models.fields.SmallIntegerField')(default=0), keep_default = False)
+        safe_add_column('auth_user', 'social_sharing_mode',
+            self.gf('django.db.models.fields.IntegerField')(default=0)
+        )
+        safe_add_column(u'auth_user', 'status',
+                self.gf('django.db.models.fields.CharField')(default ='w', max_length = 2),
+                keep_default=False
+        )
+        safe_add_column(u'auth_user', 'subscribed_tags', self.gf('django.db.models.fields.TextField')(blank=True, default = ''), keep_default=False)
+        safe_add_column('auth_user', 'twitter_access_token',
+            self.gf('django.db.models.fields.CharField')(default='', max_length=256)
+        )
+        safe_add_column('auth_user', 'twitter_handle',
+            self.gf('django.db.models.fields.CharField')(default='', max_length=32)
+        )
+        safe_add_column('auth_user', 'website', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True, null=True), keep_default = False)
 
     models = {
         'askbot.activity': {
@@ -536,4 +552,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['askbot']
-    symmetrical = True

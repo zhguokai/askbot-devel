@@ -11,9 +11,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
 
         # Adding model show_marked_tags fields to the model auth_user
-        safe_add_column(
-            u'auth_user',
-            'show_marked_tags',
+        safe_add_column(u'auth_user', 'show_marked_tags',
             self.gf(
                 'django.db.models.fields.BooleanField'
             )(default=True, blank=True)
