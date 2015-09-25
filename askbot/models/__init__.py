@@ -1655,7 +1655,7 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
     count = 0
 
     #delete answers
-    answers = Post.objects.get_answers().filter(author=author)
+    answers = Post.objects.get_all_answers().filter(author=author)
     timestamp = timestamp or datetime.datetime.now()
     count += answers.update(deleted_at=timestamp, deleted_by=self, deleted=True)
 

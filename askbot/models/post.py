@@ -168,11 +168,19 @@ class PostManager(BaseQuerySetManager):
         questions = self.filter(post_type='question')
         return questions.get_for_user(user)
 
+    def get_all_answers(self):
+        """
+        Returns 'answer' Posts (regardless of any user). 
+        Use get_answers if you want them filtered by accessibility for an user.
+        """
+        return self.filter(post_type='answer')
+
     def get_answers(self, user=None):
-        """returns query set of answer posts,
-        optionally filtered to exclude posts of groups
-        to which user does not belong"""
-        answers = self.filter(post_type='answer')
+        """
+        Returns only 'answer' Posts, further filtered by accessibility for 
+        given user (where user=None is interpreted as anonymous user).
+        """
+        answers = self.get_all_answers()
         return answers.get_for_user(user)
 
     def get_comments(self):

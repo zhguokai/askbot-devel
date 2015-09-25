@@ -1035,7 +1035,7 @@ class Thread(models.Model):
         ####################################################################
 
     def get_last_activity_info(self):
-        post_ids = self.get_answers().values_list('id', flat=True)
+        post_ids = self.get_all_answers().exclude(deleted=True).values_list('id', flat=True)
         question = self._question_post()
         post_ids = list(post_ids)
         post_ids.append(question.id)
@@ -1131,12 +1131,24 @@ class Thread(models.Model):
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
 
+    def get_all_answers(self):
+        """
+        All 'answer' Posts (regardless of any user). Calling code is responsible 
+        for further excluding deleted Posts from result if necessary.
+        Method only necessary because get_answers interprets user=None as 
+        anonymous user (not logged in).
+        """
+        return self.posts.get_all_answers()
+
     def all_answers(self):
+        # TODO: check that anything using this method expects to get only 
+        # answers visible to non-logged-in users.
         return self.posts.get_answers()
 
     def get_answers(self, user=None):
-        """returns query set for answers to this question
-        that may be shown to the given user
+        """
+        All non-deleted 'answer' Posts accessible to the specified user, where
+        user=None is interpreted as anonymous user.
         """
         return self.posts.get_answers(user=user).filter(deleted=False)
 
