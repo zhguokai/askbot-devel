@@ -708,7 +708,7 @@ class Post(models.Model):
     def get_moderators(self):
         """returns query set of users who are site administrators
         and moderators"""
-        user_filter = models.Q(is_superuser=True) | models.Q(status='m')
+        user_filter = models.Q(is_superuser=True) | models.Q(askbot_profile__status='m')
         if askbot_settings.GROUPS_ENABLED:
             post_groups = self.groups.all()
             user_filter = user_filter & models.Q(
@@ -1279,7 +1279,7 @@ class Post(models.Model):
             user_set_getter = User.objects.filter
         elif tag_mark_reason == 'bad':
             email_tag_filter_strategy = const.EXCLUDE_IGNORED
-            user_set_getter = User.objects.exclude
+            _user_set_getter = User.objects.exclude
         elif tag_mark_reason == 'subscribed':
             email_tag_filter_strategy = const.INCLUDE_SUBSCRIBED
             user_set_getter = User.objects.filter
@@ -1289,16 +1289,16 @@ class Post(models.Model):
         #part 1 - find users who follow or not ignore the set of tags
         tag_names = self.get_tag_names()
         tag_selections = MarkedTag.objects.filter(
-            tag__name__in = tag_names,
-            tag__language_code=get_language(),
-            reason = tag_mark_reason
-        )
+                                        tag__name__in=tag_names,
+                                        tag__language_code=get_language(),
+                                        reason = tag_mark_reason
+                                    )
         subscribers = set(
             user_set_getter(
-                tag_selections__in = tag_selections
+                tag_selections__in=tag_selections
             ).filter(
-                email_tag_filter_strategy = email_tag_filter_strategy,
-                notification_subscriptions__in = subscription_records
+                askbot_profile__email_tag_filter_strategy=email_tag_filter_strategy,
+                notification_subscriptions__in=subscription_records
             )
         )
 
@@ -1310,15 +1310,15 @@ class Post(models.Model):
             #because we have to loop through the list of users
             #in python
             if tag_mark_reason == 'good':
-                empty_wildcard_filter = {'interesting_tags__exact': ''}
+                empty_wildcard_filter = {'askbot_profile__interesting_tags__exact': ''}
                 wildcard_tags_attribute = 'interesting_tags'
                 update_subscribers = lambda the_set, item: the_set.add(item)
             elif tag_mark_reason == 'bad':
-                empty_wildcard_filter = {'ignored_tags__exact': ''}
+                empty_wildcard_filter = {'askbot_profile__ignored_tags__exact': ''}
                 wildcard_tags_attribute = 'ignored_tags'
                 update_subscribers = lambda the_set, item: the_set.discard(item)
             elif tag_mark_reason == 'subscribed':
-                empty_wildcard_filter = {'subscribed_tags__exact': ''}
+                empty_wildcard_filter = {'askbot_profile__subscribed_tags__exact': ''}
                 wildcard_tags_attribute = 'subscribed_tags'
                 update_subscribers = lambda the_set, item: the_set.add(item)
 

@@ -53,6 +53,7 @@ from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostFlagReason, AnonymousAnswer
 from askbot.models.post import PostToGroup
 from askbot.models.post import DraftAnswer
+from askbot.models.user_profile import add_profile_properties, UserProfile
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models.badges import award_badges_signal, get_badge
 from askbot.models.repute import Award, Repute, Vote, BadgeData
@@ -184,108 +185,9 @@ if DJANGO_VERSION > (1, 3):
     User.add_to_class('message_set', user_message_set)
     User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
 
-User.add_to_class(
-            'avatar_urls',
-            JSONField(default={})
-        )
-
-User.add_to_class(
-            'status',
-            models.CharField(
-                        max_length = 2,
-                        default = const.DEFAULT_USER_STATUS,
-                        choices = const.USER_STATUS_CHOICES
-                    )
-        )
-User.add_to_class('is_fake', models.BooleanField(default=False))
-
-User.add_to_class('email_isvalid', models.BooleanField(default=False)) #@UndefinedVariable
-User.add_to_class('email_key', models.CharField(max_length=32, null=True))
-#hardcoded initial reputaion of 1, no setting for this one
-User.add_to_class('reputation',
-    models.PositiveIntegerField(default=const.MIN_REPUTATION)
-)
-User.add_to_class('gravatar', models.CharField(max_length=32))
-#User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
-
-User.add_to_class(
-    'avatar_type',
-    models.CharField(
-        max_length=1,
-        choices=const.AVATAR_TYPE_CHOICES,
-        default='n' #for real set by the init_avatar_type based
-        #on the livesetting value
-    )
-)
-User.add_to_class('gold', models.SmallIntegerField(default=0))
-User.add_to_class('silver', models.SmallIntegerField(default=0))
-User.add_to_class('bronze', models.SmallIntegerField(default=0))
-User.add_to_class(
-    'questions_per_page',  # TODO: remove me and const.QUESTIONS_PER_PAGE_USER_CHOICES, we're no longer used!
-    models.SmallIntegerField(
-        choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
-        default=10
-    )
-)
-User.add_to_class('last_seen',
-                  models.DateTimeField(default=timezone.now))
-User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
-User.add_to_class('website', models.URLField(max_length=200, blank=True))
-#location field is actually city
-User.add_to_class('location', models.CharField(max_length=100, blank=True))
-User.add_to_class('country', CountryField(blank=True, null=True))
-User.add_to_class('show_country', models.BooleanField(default=False))
-
-User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
-User.add_to_class('about', models.TextField(blank=True))
-#interesting tags and ignored tags are to store wildcard tag selections only
-User.add_to_class('interesting_tags', models.TextField(blank = True))
-User.add_to_class('ignored_tags', models.TextField(blank = True))
-User.add_to_class('subscribed_tags', models.TextField(blank = True))
-User.add_to_class('email_signature', models.TextField(blank = True))
-User.add_to_class('show_marked_tags', models.BooleanField(default = True))
-
-User.add_to_class(
-    'email_tag_filter_strategy',
-    models.SmallIntegerField(
-        choices=const.TAG_EMAIL_FILTER_FULL_STRATEGY_CHOICES,
-        default=const.EXCLUDE_IGNORED
-    )
-)
-User.add_to_class(
-    'display_tag_filter_strategy',
-    models.SmallIntegerField(
-        choices=const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
-        default=const.INCLUDE_ALL
-    )
-)
-
-User.add_to_class('new_response_count', models.IntegerField(default=0))
-User.add_to_class('seen_response_count', models.IntegerField(default=0))
-User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
-#list of languages for which user should receive email alerts
-User.add_to_class(
-    'languages',
-    models.CharField(max_length=128, default=django_settings.LANGUAGE_CODE)
-)
-
-User.add_to_class(
-    'twitter_access_token',
-    models.CharField(max_length=256, default='')
-)
-
-User.add_to_class(
-    'twitter_handle',
-    models.CharField(max_length=32, default='')
-)
-
-User.add_to_class(
-    'social_sharing_mode',
-    models.IntegerField(
-        default=const.SHARE_NOTHING,
-        choices = const.SOCIAL_SHARING_MODE_CHOICES
-    )
-)
+#monkeypatches the auth.models.User class with properties
+#that access properties of the askbot.models.UserProfile
+add_profile_properties(User)
 
 GRAVATAR_TEMPLATE = "%(gravatar_url)s/%(gravatar)s?" + \
     "s=%(size)d&amp;d=%(type)s&amp;r=PG"
@@ -331,6 +233,8 @@ def user_get_avatar_url(self, size=48):
     to avoid multiple db hits to fetch avatar urls
     """
     size = int(size)
+    import pdb
+    pdb.set_trace()
     url = self.avatar_urls.get(size)
     if not url:
         url = self.calculate_avatar_url(size)
@@ -3328,7 +3232,7 @@ def user_edit_group_membership(self, user=None, group=None,
         return membership
 
     elif action == 'remove':
-        GroupMembership.objects.get(user = user, group = group).delete()
+        GroupMembership.objects.get(user=user, group=group).delete()
         return None
     else:
         raise ValueError('invalid action')
@@ -3599,10 +3503,11 @@ def notify_author_of_published_revision(revision=None, was_approved=False, **kwa
 #todo: move to utils
 def calculate_gravatar_hash(instance, **kwargs):
     """Calculates a User's gravatar hash from their email address."""
+    user = instance
     if kwargs.get('raw', False):
         return
-    clean_email = instance.email.strip().lower()
-    instance.gravatar = hashlib.md5(clean_email).hexdigest()
+    clean_email = user.email.strip().lower()
+    user.gravatar = hashlib.md5(clean_email).hexdigest()
 
 
 def record_post_update_activity(
@@ -3742,7 +3647,7 @@ def record_user_visit(user, timestamp, **kwargs):
         'last_seen': timestamp,
         'consecutive_days_visit_count': consecutive_days
     }
-    User.objects.filter(id=user.id).update(**update_data)
+    UserProfile.objects.filter(pk=user.id).update(**update_data)
 
 
 def record_question_visit(request, question, **kwargs):
@@ -4192,22 +4097,22 @@ ran_migration.connect(
 # signals for User model save changes
 user_signals = [
     signals.GenericSignal(
-        django_signals.pre_save,
+        django_signals.post_save,
         callback=calculate_gravatar_hash,
         dispatch_uid='calculate_gravatar_hash_on_user_save',
     ),
     signals.GenericSignal(
-        django_signals.pre_save,
+        django_signals.post_save,
         callback=set_administrator_flag,
         dispatch_uid='set_administrator_flag_on_user_save',
     ),
     signals.GenericSignal(
-        django_signals.pre_save,
+        django_signals.post_save,
         callback=init_avatar_type,
         dispatch_uid='init_avatar_type_on_user_create'
     ),
     signals.GenericSignal(
-        django_signals.pre_save,
+        django_signals.post_save,
         callback=init_avatar_urls,
         dispatch_uid='init_avatar_urls_on_user_save',
     ),
@@ -4379,7 +4284,6 @@ except ImportError:
 
 __all__ = [
         'signals',
-
         'Thread',
 
         'QuestionView',
@@ -4411,6 +4315,7 @@ __all__ = [
         'Group',
 
         'User',
+        'UserProfile',
 
         'ReplyAddress',
 

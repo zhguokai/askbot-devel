@@ -547,7 +547,10 @@ class ThreadManager(BaseQuerySetManager):
             thread._question_cache = page_question_map[thread.id]
 
         last_activity_by_users = User.objects.filter(id__in=[obj.last_activity_by_id for obj in threads])\
-                                    .only('id', 'username', 'country', 'show_country')
+                                    .only('id', 'username',
+                                          'askbot_profile__country',
+                                          'askbot_profile__show_country'
+                                         )
         user_map = {}
         for la_user in last_activity_by_users:
             user_map[la_user.id] = la_user
@@ -577,7 +580,7 @@ class ThreadManager(BaseQuerySetManager):
         #a real image and try to prompt him/her to upload a picture
         from askbot.conf import settings as askbot_settings
         avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
-        contributors = User.objects.filter(id__in=u_id).order_by('avatar_type')[:avatar_limit]
+        contributors = User.objects.filter(id__in=u_id).order_by('askbot_profile__avatar_type')[:avatar_limit]
         return contributors
 
     def get_for_user(self, user):

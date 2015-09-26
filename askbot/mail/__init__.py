@@ -131,7 +131,7 @@ def mail_moderators(
     from django.db.models import Q
     from askbot.models import User
     recipient_list = User.objects.filter(
-                    Q(status='m') | Q(is_superuser=True)
+                    Q(askbot_profile__status='m') | Q(is_superuser=True)
                 ).filter(
                     is_active = True
                 ).values_list('email', flat=True)

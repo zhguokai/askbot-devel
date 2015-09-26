@@ -1,10 +1,82 @@
 from askbot import const
 from django.conf import settings as django_settings
+from django.core.cache import cache
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
 from django_countries.fields import CountryField
+
+
+def get_profile(user):
+    try:
+        return user.askbot_profile
+    except UserProfile.DoesNotExist:
+        if not user.pk:
+            raise ValueError('auth.models.User is not saved, cant make UserProfile')
+        profile = UserProfile.objects.create(auth_user_ptr=user)
+        setattr(user, 'askbot_profile', profile)
+        return profile
+
+
+def user_profile_property(field_name):
+    """returns property that will access Askbot UserProfile
+    of auth_user by field name"""
+    def getter(user):
+        profile = get_profile(user)
+        return getattr(profile, field_name)
+
+    def setter(user, value):
+        profile = get_profile(user)
+        setattr(profile, field_name, value)
+
+    return property(getter, setter)
+
+
+def add_profile_property(cls, name):
+    cls.add_to_class(name, user_profile_property(name))
+
+
+def add_profile_properties(cls):
+    names = (
+        'about',
+        'avatar_type',
+        'avatar_urls',
+        'bronze',
+        'consecutive_days_visit_count',
+        'country',
+        'date_of_birth',
+        'display_tag_filter_strategy',
+        'email_isvalid',
+        'email_key',
+        'email_signature',
+        'email_tag_filter_strategy',
+        'gold',
+        'gravatar',
+        'ignored_tags',
+        'interesting_tags',
+        'is_fake',
+        'languages',
+        'last_seen',
+        'location',
+        'new_response_count',
+        'real_name',
+        'reputation',
+        'seen_response_count',
+        'show_country',
+        'show_marked_tags',
+        'silver',
+        'social_sharing_mode',
+        'status',
+        'subscribed_tags',
+        'twitter_access_token',
+        'twitter_handle',
+        'website',
+    )
+    for name in names:
+        add_profile_property(cls, name)
+
 
 class UserProfile(models.Model):
     #text_search_vector           | tsvector                 | 
@@ -79,3 +151,15 @@ class UserProfile(models.Model):
 
     class Meta:
         app_label = 'askbot'
+
+
+def update_user_profile(instance, **kwargs):
+    profile = get_profile(instance)
+    profile.save()
+
+
+post_save.connect(
+    update_user_profile,
+    sender=User,
+    dispatch_uid='update_profile_on_authuser_save'
+)
