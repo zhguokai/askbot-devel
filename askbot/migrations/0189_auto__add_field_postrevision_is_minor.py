@@ -380,6 +380,7 @@ class Migration(SchemaMigration):
             'auth_user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'askbot_profile'", 'unique': 'True', 'to': "orm['auth.User']"}),
             'default_site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'primary_group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Group']", 'null': 'True', 'blank': 'True'}),
             'subscribed_sites': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'subscriber_profile_set'", 'symmetrical': 'False', 'to': "orm['sites.Site']"})
         },
         'askbot.vote': {
@@ -435,7 +436,7 @@ class Migration(SchemaMigration):
             'is_fake': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'languages': ('django.db.models.fields.CharField', [], {'default': "'en'", 'max_length': '128'}),
+            'languages': ('django.db.models.fields.CharField', [], {'default': "'en fr'", 'max_length': '128'}),
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'last_seen': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
