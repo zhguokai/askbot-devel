@@ -12,17 +12,18 @@ class Message(models.Model):
     actions. For example, "The poll Foo was created successfully." is a
     message.
     """
-    user = models.ForeignKey(User, related_name='_message_set')
+    user = models.ForeignKey(User)#, related_name='_message_set')
     message = models.TextField(ugettext_lazy('message'))
 
     class Meta:
         '''Added for backwards compatibility with databases
            migrated from django 1.3'''
-        app_label = 'auth'
-        db_table = 'auth_message'
+        app_label = 'askbot'
+        db_table = 'askbot_message'
 
     def __unicode__(self):
         return self.message
 
     def __str__(self):
         return self.message.encode('utf-8')
+

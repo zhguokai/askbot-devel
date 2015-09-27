@@ -43,6 +43,7 @@ from askbot.mail.messages import WelcomeEmail, WelcomeEmailRespondable
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
+from askbot.models.message import Message
 from askbot.models.tag import Tag, MarkedTag, TagSynonym
 from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
@@ -78,14 +79,6 @@ from jsonfield import JSONField
 from django import VERSION
 
 #stores the 1.X version not the security release numbers
-DJANGO_VERSION = VERSION[:2]
-
-if DJANGO_VERSION > (1, 3):
-    from askbot.models.message import Message
-else:
-    from django.contrib.messages.models import Message
-
-
 register_user_signal = partial(signals.register_generic_signal, sender=User)
 
 
@@ -181,6 +174,7 @@ def user_get_and_delete_messages(self):
         message.delete()
     return messages
 
+DJANGO_VERSION = VERSION[:2]
 if DJANGO_VERSION > (1, 3):
     User.add_to_class('message_set', user_message_set)
     User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
