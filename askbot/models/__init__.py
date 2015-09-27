@@ -233,8 +233,6 @@ def user_get_avatar_url(self, size=48):
     to avoid multiple db hits to fetch avatar urls
     """
     size = int(size)
-    import pdb
-    pdb.set_trace()
     url = self.avatar_urls.get(size)
     if not url:
         url = self.calculate_avatar_url(size)
