@@ -144,10 +144,8 @@ def process_reply(func):
         error = None
 
         try:
-            reply_address = ReplyAddress.objects.get(
-                                            address = address,
-                                            allowed_from_email = message.From
-                                        )
+            reply_address = ReplyAddress.objects.get(address = address)
+            #allowed_from_email = message.From <- used to have this filter too
 
             #here is the business part of this function
             parts = get_parts(message)

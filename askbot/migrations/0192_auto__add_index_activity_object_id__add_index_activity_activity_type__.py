@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
+import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
@@ -8,36 +8,36 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'NewGroupMembership'
-        db.create_table(u'askbot_newgroupmembership', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.Group'])),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('level', self.gf('django.db.models.fields.SmallIntegerField')(default=1)),
-        ))
-        db.send_create_signal('askbot', ['NewGroupMembership'])
+        # Adding index on 'Activity', fields ['object_id']
+        db.create_index(u'activity', ['object_id'])
 
-        # Adding unique constraint on 'NewGroupMembership', fields ['group', 'user']
-        db.create_unique(u'askbot_newgroupmembership', ['group_id', 'user_id'])
+        # Adding index on 'Activity', fields ['activity_type']
+        db.create_index(u'activity', ['activity_type'])
+
+        # Adding index on 'PostRevision', fields ['ip_addr']
+        db.create_index(u'askbot_postrevision', ['ip_addr'])
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'NewGroupMembership', fields ['group', 'user']
-        db.delete_unique(u'askbot_newgroupmembership', ['group_id', 'user_id'])
+        # Removing index on 'PostRevision', fields ['ip_addr']
+        db.delete_index(u'askbot_postrevision', ['ip_addr'])
 
-        # Deleting model 'NewGroupMembership'
-        db.delete_table(u'askbot_newgroupmembership')
+        # Removing index on 'Activity', fields ['activity_type']
+        db.delete_index(u'activity', ['activity_type'])
+
+        # Removing index on 'Activity', fields ['object_id']
+        db.delete_index(u'activity', ['object_id'])
 
 
     models = {
         'askbot.activity': {
             'Meta': {'object_name': 'Activity', 'db_table': "u'activity'"},
             'active_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'activity_type': ('django.db.models.fields.SmallIntegerField', [], {}),
+            'activity_type': ('django.db.models.fields.SmallIntegerField', [], {'db_index': 'True'}),
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_auditted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'question': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Post']", 'null': 'True'}),
             'recipients': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'incoming_activity'", 'symmetrical': 'False', 'through': "orm['askbot.ActivityAuditStatus']", 'to': u"orm['auth.User']"}),
             'summary': ('django.db.models.fields.TextField', [], {'default': "''"}),
@@ -181,13 +181,6 @@ class Migration(SchemaMigration):
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_selections'", 'to': "orm['askbot.Tag']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tag_selections'", 'to': u"orm['auth.User']"})
         },
-        'askbot.newgroupmembership': {
-            'Meta': {'unique_together': "(('group', 'user'),)", 'object_name': 'NewGroupMembership'},
-            'group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.Group']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'level': ('django.db.models.fields.SmallIntegerField', [], {'default': '1'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
-        },
         'askbot.post': {
             'Meta': {'object_name': 'Post'},
             'added_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
@@ -243,7 +236,7 @@ class Migration(SchemaMigration):
             'by_email': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'email_address': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ip_addr': ('django.db.models.fields.GenericIPAddressField', [], {'default': "'0.0.0.0'", 'max_length': '39'}),
+            'ip_addr': ('django.db.models.fields.GenericIPAddressField', [], {'default': "'0.0.0.0'", 'max_length': '39', 'db_index': 'True'}),
             'is_anonymous': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'post': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'revisions'", 'null': 'True', 'to': "orm['askbot.Post']"}),
             'revised_at': ('django.db.models.fields.DateTimeField', [], {}),

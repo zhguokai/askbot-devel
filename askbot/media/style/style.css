@@ -218,6 +218,11 @@ a:hover {
   height: 128px;
   width: 128px;
 }
+.user-memo {
+  font-size: 13px;
+  font-weight: bold;
+  padding-top: 5px;
+}
 .badge-context-toggle.active {
   cursor: pointer;
   text-decoration: underline;

@@ -110,7 +110,10 @@ def questions(request, **kwargs):
     contributors = list(
         models.Thread.objects.get_thread_contributors(
                                         thread_list=page.object_list
-                                    ).only('id', 'username', 'gravatar')
+                                    ).only(
+                                           'id', 'username',
+                                           'askbot_profile__gravatar'
+                                          )
                         )
 
     paginator_context = {

@@ -112,10 +112,10 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         return HttpResponseRedirect(new_url)
 
     users = models.User.objects.exclude(
-                                    status='b'
+                                    askbot_profile__status='b'
                                 ).exclude(
                                     is_active=False
-                                )
+                                ).select_related('askbot_profile')
     group = None
     group_email_moderation_enabled = False
     user_acceptance_level = 'closed'
@@ -179,7 +179,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
             order_by_parameter = 'username'
         else:
             # default
-            order_by_parameter = '-reputation'
+            order_by_parameter = '-askbot_profile__reputation'
 
         objects_list = Paginator(
                             users.order_by(order_by_parameter),
@@ -190,7 +190,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         sort_method = 'reputation'
         matching_users = models.get_users_by_text_query(search_query, users)
         objects_list = Paginator(
-                            matching_users.order_by('-reputation'),
+                            matching_users.order_by('-askbot_profile__reputation'),
                             askbot_settings.USERS_PAGE_SIZE
                         )
         base_url = request.path + '?name=%s&sort=%s&' % (search_query, sort_method)
@@ -572,10 +572,25 @@ def user_stats(request, user, context):
     else:
         groups_membership_info = collections.defaultdict()
 
+    show_moderation_warning = (request.user.is_authenticated()
+                                and request.user.pk == user.pk
+                                and (user.is_watched() or user.is_blocked())
+                                and (user.about or user.website)
+                              )
+    show_profile_info = ((not (user.is_watched() or user.is_blocked()))
+                          or (request.user.is_authenticated()
+                              and (request.user.is_administrator_or_moderator()
+                                   or user.pk == request.user.pk
+                                  )
+                             )
+                        )
+
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
+        'show_moderation_warning': show_moderation_warning,
+        'show_profile_info': show_profile_info,
         'tab_name' : 'stats',
         'page_title' : _('user profile overview'),
         'questions' : questions,

@@ -1,5 +1,10 @@
 <!-- user_info.html -->
 {% import "macros.html" as macros %}
+{% if show_moderation_warning %}
+<div class="user-memo">
+    {% trans %}Note: the homepage link and the about section won't be shown to other users until your profile is approved by the moderators.{% endtrans %}
+</div>
+{% endif %}
 <div class="user-info-table">
     <div class="col1">
         <div class='avatar'>
@@ -104,10 +109,15 @@
                 <td><strong title="{{ view_user.last_seen }}">{{ macros.timeago(view_user.last_seen) }}</strong></td>
             </tr>
             {% endif %}
-            {% if view_user.website and (not view_user.is_blocked()) %}
+            {% if view_user.website and show_profile_info %}
             <tr>
                 <td>{% trans %}website{% endtrans %}</td>
-                <td>{{ macros.user_website_link(view_user, max_display_length = 30) }}</td>
+                <td>{{ macros.user_website_link(
+                                        view_user,
+                                        max_display_length=30,
+                                        force_show=show_profile_info
+                                    )
+                    }}</td>
             </tr>
             {% endif  %}
             {% if request.user == view_user and 
@@ -139,7 +149,7 @@
         </table>
     </div>
     <div class="col3 user-about">
-    {% if view_user.about and (not view_user.is_blocked()) %}
+    {% if view_user.about and show_profile_info %}
         {{view_user.about|linebreaks}}
     {% endif %}
     </div>

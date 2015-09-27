@@ -207,6 +207,27 @@ def email_is_allowed(
 
     return False
 
+
+def moderated_email_validator(email):
+    allowed_domains = askbot_settings.ALLOWED_EMAIL_DOMAINS.strip()
+    allowed_emails = askbot_settings.ALLOWED_EMAILS.strip()
+
+    error_msg = _('this email address is not authorized')
+
+    if allowed_emails or allowed_domains:
+        if not email_is_allowed(
+                email,
+                allowed_emails=allowed_emails,
+                allowed_email_domains=allowed_domains
+            ):
+            raise forms.ValidationError(error_msg)
+    else:
+        from askbot.deps.django_authopenid.util import email_is_blacklisted
+        blacklisting_on = askbot_settings.BLACKLISTED_EMAIL_PATTERNS_MODE != 'disabled'
+        if blacklisting_on and email_is_blacklisted(email):
+            raise forms.ValidationError(error_msg)
+
+
 class UserEmailField(forms.EmailField):
     def __init__(self, skip_clean=False, **kw):
         self.skip_clean = skip_clean
@@ -226,7 +247,6 @@ class UserEmailField(forms.EmailField):
                 'required':_('email address is required'),
                 'invalid':_('please enter a valid email address'),
                 'taken':_('this email is already used by someone else, please choose another'),
-                'unauthorized':_('this email address is not authorized')
             },
             **kw
         )
@@ -239,20 +259,11 @@ class UserEmailField(forms.EmailField):
         if askbot_settings.BLANK_EMAIL_ALLOWED and email == '':
             return ''
 
+        moderated_email_validator(email)
+
         email = super(UserEmailField,self).clean(email)
         if self.skip_clean:
             return email
-
-        allowed_domains = askbot_settings.ALLOWED_EMAIL_DOMAINS.strip()
-        allowed_emails = askbot_settings.ALLOWED_EMAILS.strip()
-
-        if allowed_emails or allowed_domains:
-            if not email_is_allowed(
-                    email,
-                    allowed_emails=allowed_emails,
-                    allowed_email_domains=allowed_domains
-                ):
-                raise forms.ValidationError(self.error_messages['unauthorized'])
 
         try:
             user = User.objects.get(email__iexact=email)

@@ -234,10 +234,10 @@ class Activity(models.Model):
     """
     user = models.ForeignKey(User)
     recipients = models.ManyToManyField(User, through=ActivityAuditStatus, related_name='incoming_activity')
-    activity_type = models.SmallIntegerField(choices = const.TYPE_ACTIVITY)
+    activity_type = models.SmallIntegerField(choices=const.TYPE_ACTIVITY, db_index=True)
     active_at = models.DateTimeField(default=timezone.now)
     content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField(db_index=True)
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     #todo: remove this denorm question field when Post model is set up
@@ -505,7 +505,7 @@ class GroupManager(BaseQuerySetManager):
             pass
         return super(GroupManager, self).create(**kwargs)
 
-    def get_or_create(self, name = None, user = None, openness=None):
+    def get_or_create(self, name=None, user=None, openness=None):
         """creates a group tag or finds one, if exists"""
         #todo: here we might fill out the group profile
         try:
@@ -567,7 +567,7 @@ class Group(AuthGroup):
 
     def get_moderators(self):
         """returns group moderators"""
-        user_filter = models.Q(is_superuser=True) | models.Q(status='m')
+        user_filter = models.Q(is_superuser=True) | models.Q(askbot_profile__status='m')
         user_filter = user_filter & models.Q(group_membership__group__in=[self])
         return User.objects.filter(user_filter)
 

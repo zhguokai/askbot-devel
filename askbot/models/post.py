@@ -708,7 +708,7 @@ class Post(models.Model):
     def get_moderators(self):
         """returns query set of users who are site administrators
         and moderators"""
-        user_filter = models.Q(is_superuser=True) | models.Q(status='m')
+        user_filter = models.Q(is_superuser=True) | models.Q(askbot_profile__status='m')
         if askbot_settings.GROUPS_ENABLED:
             post_groups = self.groups.all()
             user_filter = user_filter & models.Q(
@@ -809,12 +809,12 @@ class Post(models.Model):
 
         from askbot.models import Activity
         update_activity = Activity(
-                        user = updated_by,
-                        active_at = timestamp,
-                        content_object = self,
-                        activity_type = activity_type,
-                        question = self.get_origin_post(),
-                        summary = summary
+                        user=updated_by,
+                        active_at=timestamp,
+                        content_object=self,
+                        activity_type=activity_type,
+                        question=self.get_origin_post(),
+                        summary=summary
                     )
         update_activity.save()
 
@@ -824,10 +824,10 @@ class Post(models.Model):
         from askbot.models import Activity
         for u in notify_sets['for_mentions'] - notify_sets['for_inbox']:
             Activity.objects.create_new_mention(
-                                    mentioned_whom = u,
-                                    mentioned_in = self,
-                                    mentioned_by = updated_by,
-                                    mentioned_at = timestamp
+                                    mentioned_whom=u,
+                                    mentioned_in=self,
+                                    mentioned_by=updated_by,
+                                    mentioned_at=timestamp
                                 )
 
         for user in (notify_sets['for_inbox'] | notify_sets['for_mentions']):
@@ -1289,16 +1289,16 @@ class Post(models.Model):
         #part 1 - find users who follow or not ignore the set of tags
         tag_names = self.get_tag_names()
         tag_selections = MarkedTag.objects.filter(
-            tag__name__in = tag_names,
-            tag__language_code=get_language(),
-            reason = tag_mark_reason
-        )
+                                        tag__name__in=tag_names,
+                                        tag__language_code=get_language(),
+                                        reason = tag_mark_reason
+                                    )
         subscribers = set(
             user_set_getter(
-                tag_selections__in = tag_selections
+                tag_selections__in=tag_selections
             ).filter(
-                email_tag_filter_strategy = email_tag_filter_strategy,
-                notification_subscriptions__in = subscription_records
+                askbot_profile__email_tag_filter_strategy=email_tag_filter_strategy,
+                notification_subscriptions__in=subscription_records
             )
         )
 
@@ -1310,22 +1310,22 @@ class Post(models.Model):
             #because we have to loop through the list of users
             #in python
             if tag_mark_reason == 'good':
-                empty_wildcard_filter = {'interesting_tags__exact': ''}
+                empty_wildcard_filter = {'askbot_profile__interesting_tags__exact': ''}
                 wildcard_tags_attribute = 'interesting_tags'
                 update_subscribers = lambda the_set, item: the_set.add(item)
             elif tag_mark_reason == 'bad':
-                empty_wildcard_filter = {'ignored_tags__exact': ''}
+                empty_wildcard_filter = {'askbot_profile__ignored_tags__exact': ''}
                 wildcard_tags_attribute = 'ignored_tags'
                 update_subscribers = lambda the_set, item: the_set.discard(item)
             elif tag_mark_reason == 'subscribed':
-                empty_wildcard_filter = {'subscribed_tags__exact': ''}
+                empty_wildcard_filter = {'askbot_profile__subscribed_tags__exact': ''}
                 wildcard_tags_attribute = 'subscribed_tags'
                 update_subscribers = lambda the_set, item: the_set.add(item)
 
             potential_wildcard_subscribers = User.objects.filter(
-                notification_subscriptions__in = subscription_records
+                notification_subscriptions__in=subscription_records
             ).filter(
-                email_tag_filter_strategy = email_tag_filter_strategy
+                askbot_profile__email_tag_filter_strategy=email_tag_filter_strategy
             ).exclude(
                 **empty_wildcard_filter #need this to limit size of the loop
             )
@@ -1354,13 +1354,13 @@ class Post(models.Model):
 
         from askbot.models.user import EmailFeedSetting
         global_subscriptions = EmailFeedSetting.objects.filter(
-            feed_type = 'q_all',
-            frequency = 'i'
+            feed_type='q_all',
+            frequency='i'
         )
 
         #segment of users who have tag filter turned off
         global_subscribers = User.objects.filter(
-            models.Q(email_tag_filter_strategy=const.INCLUDE_ALL)
+            models.Q(askbot_profile__email_tag_filter_strategy=const.INCLUDE_ALL)
             & models.Q(
                 notification_subscriptions__feed_type='q_all',
                 notification_subscriptions__frequency='i'
@@ -1375,8 +1375,8 @@ class Post(models.Model):
             good_mark_reason = 'good'
         subscriber_set.update(
             self.get_global_tag_based_subscribers(
-                subscription_records = global_subscriptions,
-                tag_mark_reason = good_mark_reason
+                subscription_records=global_subscriptions,
+                tag_mark_reason=good_mark_reason
             )
         )
 
@@ -1384,7 +1384,7 @@ class Post(models.Model):
         subscriber_set.update(
             self.get_global_tag_based_subscribers(
                 subscription_records = global_subscriptions,
-                tag_mark_reason = 'bad'
+                tag_mark_reason='bad'
             )
         )
         return subscriber_set
@@ -1392,9 +1392,9 @@ class Post(models.Model):
 
     def _qa__get_instant_notification_subscribers(
             self,
-            potential_subscribers = None,
-            mentioned_users = None,
-            exclude_list = None,
+            potential_subscribers=None,
+            mentioned_users=None,
+            exclude_list=None,
             ):
         """get list of users who have subscribed to
         receive instant notifications for a given post
@@ -1433,9 +1433,9 @@ class Post(models.Model):
         from askbot.models.user import EmailFeedSetting
         if mentioned_users:
             mention_subscribers = EmailFeedSetting.objects.filter_subscribers(
-                potential_subscribers = mentioned_users,
-                feed_type = 'm_and_c',
-                frequency = 'i'
+                potential_subscribers=mentioned_users,
+                feed_type='m_and_c',
+                frequency='i'
             )
             subscriber_set.update(mention_subscribers)
 
@@ -1450,9 +1450,9 @@ class Post(models.Model):
         #print 'question followers are ', [s for s in selective_subscribers]
         if selective_subscribers:
             selective_subscribers = EmailFeedSetting.objects.filter_subscribers(
-                potential_subscribers = selective_subscribers,
-                feed_type = 'q_sel',
-                frequency = 'i'
+                potential_subscribers=selective_subscribers,
+                feed_type='q_sel',
+                frequency='i'
             )
             subscriber_set.update(selective_subscribers)
             #print 'selective subscribers: ', selective_subscribers
@@ -1464,9 +1464,9 @@ class Post(models.Model):
         #4) question asked by me (todo: not "edited_by_me" ???)
         question_author = origin_post.author
         if EmailFeedSetting.objects.filter(
-            subscriber = question_author,
-            frequency = 'i',
-            feed_type = 'q_ask'
+            subscriber=question_author,
+            frequency='i',
+            feed_type='q_ask'
         ).exists():
             subscriber_set.add(question_author)
 
@@ -1480,9 +1480,9 @@ class Post(models.Model):
 
         if answer_authors:
             answer_subscribers = EmailFeedSetting.objects.filter_subscribers(
-                potential_subscribers = answer_authors,
-                frequency = 'i',
-                feed_type = 'q_ans',
+                potential_subscribers=answer_authors,
+                frequency='i',
+                feed_type='q_ans',
             )
             subscriber_set.update(answer_subscribers)
             #print 'answer subscribers: ', answer_subscribers
@@ -2396,7 +2396,7 @@ class PostRevision(models.Model):
     title = models.CharField(max_length=300, blank=True, default='')
     tagnames = models.CharField(max_length=125, blank=True, default='')
     is_anonymous = models.BooleanField(default=False)
-    ip_addr = models.GenericIPAddressField(max_length=45, default='0.0.0.0')
+    ip_addr = models.GenericIPAddressField(max_length=45, default='0.0.0.0', db_index=True)
 
     objects = PostRevisionManager()
 

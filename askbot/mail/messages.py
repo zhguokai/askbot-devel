@@ -123,6 +123,7 @@ class BaseEmail(object):
                 force_unicode(self.title)
             )
 
+
 class InstantEmailAlert(BaseEmail):
     template_path = 'email/instant_notification'
     title = _('Instant email notification')

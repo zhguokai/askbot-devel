@@ -16,6 +16,6 @@ class ViewLogMiddleware(object):
         #send the site_visited signal for the authenticated users
         if request.user.is_authenticated():
             signals.site_visited.send(None, #this signal has no sender
-                user = request.user,
-                timestamp = timezone.now()
+                user=request.user,
+                timestamp=timezone.now()
             )
