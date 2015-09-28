@@ -1,16 +1,16 @@
+from askbot.deps.group_messaging.models import LastVisitTime
+from askbot.deps.group_messaging.models import Message
+from askbot.deps.group_messaging.models import MessageMemo
+from askbot.deps.group_messaging.models import SenderList
+from askbot.deps.group_messaging.models import create_personal_group
+from askbot.deps.group_messaging.models import get_personal_group
+from askbot.deps.group_messaging.models import get_unread_inbox_counter
+from askbot.deps.group_messaging.views import ThreadsList
 from askbot.tests.utils import with_settings
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User, Group
 from django.test import TestCase
-from group_messaging.models import LastVisitTime
 from django.utils import timezone
-from group_messaging.models import Message
-from group_messaging.models import MessageMemo
-from group_messaging.models import SenderList
-from group_messaging.models import create_personal_group
-from group_messaging.models import get_personal_group
-from group_messaging.models import get_unread_inbox_counter
-from group_messaging.views import ThreadsList
 from mock import Mock
 import time
 import urlparse

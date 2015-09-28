@@ -21,13 +21,13 @@ from django.http import HttpResponseForbidden
 import simplejson
 from django.utils import timezone
 from askbot.utils.views import PjaxView
-from .models import Message
-from .models import MessageMemo
-from .models import SenderList
-from .models import LastVisitTime
-from .models import get_personal_group_by_user_id
-from .models import get_personal_groups_for_users
-from .models import get_unread_inbox_counter
+from askbot.deps.group_messaging.models import Message
+from askbot.deps.group_messaging.models import MessageMemo
+from askbot.deps.group_messaging.models import SenderList
+from askbot.deps.group_messaging.models import LastVisitTime
+from askbot.deps.group_messaging.models import get_personal_group_by_user_id
+from askbot.deps.group_messaging.models import get_personal_groups_for_users
+from askbot.deps.group_messaging.models import get_unread_inbox_counter
 
 
 class NewThread(PjaxView):

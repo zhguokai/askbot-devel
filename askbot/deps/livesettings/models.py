@@ -1,4 +1,5 @@
 from askbot.deps.livesettings.compat import get_cache_timeout
+from askbot.deps.livesettings.overrides import get_overrides
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
@@ -6,7 +7,6 @@ from django.db.models import loading
 from django.utils.translation import ugettext_lazy
 from keyedcache import cache_key, cache_get, cache_set, NotCachedError
 from keyedcache.models import CachedObjectMixin
-from askbot.deps.livesettings.overrides import get_overrides
 import logging
 
 log = logging.getLogger('configuration.models')
@@ -139,6 +139,7 @@ class Setting(models.Model, CachedObjectMixin):
 
     class Meta:
         unique_together = ('site', 'group', 'key')
+        app_label = 'livesettings'
 
 
 class LongSettingManager(models.Manager):
@@ -185,3 +186,4 @@ class LongSetting(models.Model, CachedObjectMixin):
 
     class Meta:
         unique_together = ('site', 'group', 'key')
+        app_label = 'livesettings'

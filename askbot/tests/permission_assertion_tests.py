@@ -1595,7 +1595,7 @@ class ClosedForumTests(utils.AskbotTestCase):
     @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
         not in settings.MIDDLEWARE_CLASSES,
         'no ForumModeMiddleware set')
-    def test_login_page_accessable(self):
+    def test_login_page_accessible(self):
         # futher see in page_load_tests.py
         response = self.client.get(reverse('user_signin'))
         self.assertEquals(response.status_code, 200)

@@ -689,7 +689,7 @@ class CommandViewTests(AskbotTestCase):
 
         response = self.client.get(
             reverse('load_object_description'),
-            data = {'object_id': group.id,'model_name': 'Group'},
+            data = {'object_id': group.id, 'model_name': 'Group'},
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, '')

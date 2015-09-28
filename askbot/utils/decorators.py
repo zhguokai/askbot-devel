@@ -111,7 +111,7 @@ def ajax_only(view_func):
             return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
         if isinstance(data, HttpResponse):#is this used?
-            data.mimetype = 'application/json'
+            data.content_type = 'application/json'
             return data
         else:
             data['success'] = 1
@@ -222,7 +222,7 @@ def check_spam(field):
                     if request.is_ajax():
                         return HttpResponseForbidden(
                                 spam_message,
-                                mimetype="application/json"
+                                content_type="application/json"
                             )
                     else:
                         request.user.message_set.create(message=spam_message)

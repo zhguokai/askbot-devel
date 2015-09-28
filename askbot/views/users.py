@@ -785,7 +785,7 @@ def user_responses(request, user, context):
             elif not(request.user.is_moderator() or request.user.is_administrator()):
                 raise Http404
 
-        from group_messaging.views import SendersList, ThreadsList
+        from askbot.deps.group_messaging.views import SendersList, ThreadsList
         context.update(SendersList().get_context(request))
         context.update(ThreadsList().get_context(request, user))
         data = {
@@ -798,8 +798,8 @@ def user_responses(request, user, context):
         }
         context.update(data)
         if 'thread_id' in request.GET:
-            from group_messaging.models import Message
-            from group_messaging.views import ThreadDetails
+            from askbot.deps.group_messaging.models import Message
+            from askbot.deps.group_messaging.views import ThreadDetails
             try:
                 thread_id = request.GET['thread_id']
                 context.update(ThreadDetails().get_context(request, thread_id))

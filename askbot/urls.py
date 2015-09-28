@@ -156,7 +156,7 @@ urlpatterns = patterns('',
         views.meta.config_variable,
         kwargs = {
             'variable_name': 'CUSTOM_CSS',
-            'mimetype': 'text/css'
+            'content_type': 'text/css'
         },
         name = 'custom_css'
     ),
@@ -165,7 +165,7 @@ urlpatterns = patterns('',
         views.meta.config_variable,
         kwargs = {
             'variable_name': 'CUSTOM_JS',
-            'mimetype': 'text/javascript'
+            'content_type': 'text/javascript'
         },
         name = 'custom_js'
     ),
@@ -670,7 +670,7 @@ urlpatterns = patterns('',
         {'domain': 'djangojs','packages': ('askbot',)},
         name = 'askbot_jsi18n'
     ),
-    service_url(r'^private-messages/', include('group_messaging.urls')),
+    service_url(r'^private-messages/', include('askbot.deps.group_messaging.urls')),
     service_url(r'^settings/', include('livesettings.urls')),
     service_url(r'^preview-emails/$', views.emails.list_emails, name='list_emails'),
     service_url(r'^preview-emails/(?P<slug>.+)/$', views.emails.preview_email, name='preview_email'),

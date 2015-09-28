@@ -10,7 +10,6 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.shortcuts import render
 from django.template import RequestContext
 from django.template import Template
-from django.template import Context
 from django.template.loader import get_template
 from django.http import Http404
 from django.http import HttpResponse
@@ -48,7 +47,7 @@ def generic_view(request, template=None, page_class=None, context=None):
         return render_to_response('django_error.html')
     context = context or {}
     context['page_class'] = page_class
-    return render(request, template, Context(context))
+    return render(request, template, context)
 
 def markdown_flatpage(request, page_class=None, setting_name=None):
     value = getattr(askbot_settings, setting_name)
@@ -65,14 +64,14 @@ def markdown_flatpage(request, page_class=None, setting_name=None):
 
 PUBLIC_VARIABLES = ('CUSTOM_CSS', 'CUSTOM_JS')
 
-def config_variable(request, variable_name = None, mimetype = None):
+def config_variable(request, variable_name = None, content_type=None):
     """Print value from the configuration settings
     as response content. All parameters are required.
     """
     if variable_name in PUBLIC_VARIABLES:
         #todo add http header-based caching here!!!
         output = getattr(askbot_settings, variable_name, '')
-        return HttpResponse(output, mimetype = mimetype)
+        return HttpResponse(output, content_type=content_type)
     else:
         return HttpResponseForbidden()
 

@@ -850,8 +850,11 @@ see outdated content on your site.
 def test_group_messaging():
     """tests correctness of the "group_messaging" app configuration"""
     errors = list()
-    if 'group_messaging' not in django_settings.INSTALLED_APPS:
+    if 'askbot.deps.group_messaging' not in django_settings.INSTALLED_APPS:
         errors.append("add to the INSTALLED_APPS:\n'group_messaging'")
+
+    if 'group_messaging' in django_settings.INSTALLED_APPS:
+        errors.append("remove from the INSTALLED_APPS:\n'group_messaging'")
 
     settings_sample = ("GROUP_MESSAGING = {\n"
     "    'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',\n"
@@ -993,7 +996,7 @@ def run_startup_tests():
     test_group_messaging()
     test_haystack()
     test_jinja2()
-    test_longerusername()
+    #test_longerusername()
     test_new_skins()
     test_media_url()
     #test_postgres()

@@ -13,8 +13,8 @@ from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.importlib import import_module
 from django.utils.translation import ugettext as _
-from group_messaging.signals import response_created
-from group_messaging.signals import thread_created
+from askbot.deps.group_messaging.signals import response_created
+from askbot.deps.group_messaging.signals import thread_created
 import copy
 import datetime
 import urllib
@@ -77,6 +77,7 @@ class LastVisitTime(models.Model):
 
     class Meta:
         unique_together = ('user', 'message')
+        app_label = 'group_messaging'
 
 
 class SenderListManager(models.Manager):
@@ -101,6 +102,9 @@ class SenderList(models.Model):
     recipient = models.ForeignKey(Group, unique=True)
     senders = models.ManyToManyField(User)
     objects = SenderListManager()
+
+    class Meta:
+        app_label = 'group_messaging'
 
 
 class MessageMemo(models.Model):
@@ -129,6 +133,7 @@ class MessageMemo(models.Model):
 
     class Meta:
         unique_together = ('user', 'message')
+        app_label = 'group_messaging'
 
 
 class MessageManager(models.Manager):
@@ -505,6 +510,9 @@ class Message(models.Model):
             inbox_counter.decrement()
             inbox_counter.save()
 
+    class Meta:
+        app_label = 'group_messaging'
+
 
 class UnreadInboxCounter(models.Model):
     """Stores number of unread messages
@@ -540,6 +548,9 @@ class UnreadInboxCounter(models.Model):
         for thread in Message.objects.get_threads(recipient=self.user):
             if thread.is_unread_by_user(self.user):
                 self.increment()
+
+    class Meta:
+        app_label = 'group_messaging'
 
 
 def increment_unread_inbox_counters(sender, message, **kwargs):

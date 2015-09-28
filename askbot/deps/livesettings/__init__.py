@@ -11,6 +11,6 @@ Inappropriate: The keyedcache timeout for the store.
 
 """
 
-from functions import *
-from models import *
-from values import *
+from askbot.deps.livesettings.functions import *
+from askbot.deps.livesettings.models import *
+from askbot.deps.livesettings.values import *

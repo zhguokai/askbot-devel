@@ -30,6 +30,7 @@ def patch_django():
 
     if major == 1 and minor > 5:
         django_patches.add_hashcompat()
+        django_patches.add_simplejson()
 
 def patch_coffin():
     """coffin before version 0.3.4

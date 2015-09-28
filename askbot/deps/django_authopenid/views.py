@@ -35,7 +35,7 @@ import datetime
 from django.http import HttpResponseRedirect, Http404
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from django.contrib.auth.models import User
@@ -179,7 +179,7 @@ def logout_page(request):
         'page_class': 'meta',
         'have_federated_login_methods': util.have_enabled_federated_login_methods()
     }
-    return render(request, 'authopenid/logout.html', Context(data))
+    return render(request, 'authopenid/logout.html', data)
 
 def get_url_host(request):
     if request.is_secure():
@@ -818,7 +818,7 @@ def show_signin_view(
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
 
-    return render(request, template_name, Context(data))
+    return render(request, template_name, data)
 
 @csrf.csrf_protect
 @askbot_decorators.post_only
@@ -846,17 +846,17 @@ def delete_login_method(request):
                                                 provider_name = provider_name
                                             )
             login_method.delete()
-            return HttpResponse('', mimetype = 'application/json')
+            return HttpResponse('', content_type='application/json')
         except UserAssociation.DoesNotExist:
             #error response
             message = _('Login method %(provider_name)s does not exist')
-            return HttpResponse(message, status=500, mimetype = 'application/json')
+            return HttpResponse(message, status=500, content_type='application/json')
         except UserAssociation.MultipleObjectsReturned:
             logging.critical(
                     'have multiple %(provider)s logins for user %(id)s'
                 ) % {'provider':provider_name, 'id': request.user.id}
             message = _('Oops, sorry - there was some error - please try again')
-            return HttpResponse(message, status=500, mimetype = 'application/json')
+            return HttpResponse(message, status=500, content_type='application/json')
     else:
         raise Http404
 
@@ -1175,7 +1175,7 @@ def register(request, login_provider_name=None,
         'login_type':'openid',
         'gravatar_faq_url':reverse('faq') + '#gravatar',
     }
-    return render(request, 'authopenid/complete.html', Context(data))
+    return render(request, 'authopenid/complete.html', data)
 
 def signin_failure(request, message):
     """
@@ -1240,7 +1240,7 @@ def verify_email_and_register(request):
             return HttpResponseRedirect(reverse('index'))
     else:
         data = {'page_class': 'validate-email-page'}
-        return render(request, 'authopenid/verify_email.html', Context(data))
+        return render(request, 'authopenid/verify_email.html', data)
 
 @not_authenticated
 @csrf.csrf_protect
@@ -1307,7 +1307,7 @@ def signup_with_password(request):
     return render(
         request,
         'authopenid/signup_with_password.html',
-        Context(context_data)
+        context_data
     )
 
 @login_required
