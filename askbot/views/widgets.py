@@ -5,6 +5,7 @@ from django.template.loader import get_template
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django.views.decorators import csrf
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
 
@@ -42,9 +43,13 @@ def _get_form(key):
 
 @decorators.admins_only
 def widgets(request):
+    site = Site.objects.get_current()
+    fltr = {'site__in': (site, None)}
+    ask_widgets = models.AskWidget.objects.filter(**fltr)
+    question_widgets = models.QuestionWidget.objects.filter(**fltr)
     data = {
-        'ask_widgets': models.AskWidget.objects.all().count(),
-        'question_widgets': models.QuestionWidget.objects.all().count(),
+        'ask_widgets': ask_widgets.count(),
+        'question_widgets': question_widgets.count(),
         'page_class': 'widgets'
     }
     return render(request, 'embed/widgets.html', data)
@@ -162,7 +167,8 @@ def ask_widget_complete(request):
 @decorators.admins_only
 def list_widgets(request, model):
     model_class = _get_model(model)
-    widgets = model_class.objects.all()
+    site = Site.objects.get_current()
+    widgets = model_class.objects.filter(site__in=(site, None))
     data = {
             'widgets': widgets,
             'widget_name': model
@@ -178,6 +184,7 @@ def create_widget(request, model):
         form = form_class(request.POST)
         if form.is_valid():
             instance = model_class(**form.cleaned_data)
+            instance.site = Site.objects.get_current()
             instance.save()
             return redirect('list_widgets', model=model)
     else:

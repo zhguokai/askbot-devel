@@ -209,7 +209,7 @@ class NonPersonalGroupFilter(SimpleListFilter):
             return queryset
 
 class AskWidgetAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'group', 'tag', 'include_text_field', 'has_inner_style', 'has_outer_style')
+    list_display = ('id', 'site', 'title', 'group', 'tag', 'include_text_field', 'has_inner_style', 'has_outer_style')
     list_filter = ('include_text_field', NonPersonalGroupFilter)
     search_fields = ('title', 'tag')
 
@@ -221,7 +221,7 @@ class AskWidgetAdmin(admin.ModelAdmin):
 admin.site.register(models.AskWidget, AskWidgetAdmin)
 
 class QuestionWidgetAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'question_number', 'tagnames', 'group', 'has_search_query', 'order_by', 'has_style')
+    list_display = ('id', 'site', 'title', 'question_number', 'tagnames', 'group', 'has_search_query', 'order_by', 'has_style')
     list_filter = (NonPersonalGroupFilter,)
     search_fields = ('title', 'tagnames')
 

@@ -1,13 +1,15 @@
+from askbot.const import DEFAULT_QUESTION_WIDGET_STYLE, SEARCH_ORDER_BY
+from askbot.models import Tag, Group
+from django.contrib.sites.models import Site
 from django.db import models
 from django.utils.translation import ugettext_lazy
-from askbot.models import Tag, Group
-from askbot.const import DEFAULT_QUESTION_WIDGET_STYLE, SEARCH_ORDER_BY
 
 class AskWidget(models.Model):
     '''stores widgets styles and options'''
     title = models.CharField(max_length=100)
     group = models.ForeignKey(Group, null=True, blank=True)
     tag = models.ForeignKey(Tag, null=True, blank=True)
+    site = models.ForeignKey(Site, null=True, blank=True)
 
     include_text_field = models.BooleanField(default=False, blank=True)
 
@@ -29,6 +31,7 @@ class QuestionWidget(models.Model):
     search_query = models.CharField(
         max_length=50, null=True, blank=True, default=''
     )
+    site = models.ForeignKey(Site, null=True, blank=True)
     order_by = models.CharField(max_length=18,
             choices=SEARCH_ORDER_BY, default='-added_at')
     style = models.TextField(ugettext_lazy('css for the widget'),
