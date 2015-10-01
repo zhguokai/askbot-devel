@@ -185,11 +185,13 @@ def get_app_dir_env(language_code):
     return env
 
 
+LANG_MODE = getattr(django_settings, 'ASKBOT_LANGUAGE_MODE', 'single-lang')
+IS_SINGLE_LANG = (LANG_MODE == 'single-lang')
+IS_MULTILINGUAL = HAS_ASKBOT_LOCALE_MIDDLEWARE or not IS_SINGLE_LANG
 LOADERS = django_settings.TEMPLATE_LOADERS
 SKINS = dict()
 if 'askbot.skins.loaders.Loader' in LOADERS:
-    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) or\
-            HAS_ASKBOT_LOCALE_MIDDLEWARE:
+    if IS_MULTILINGUAL:
         for lang in dict(django_settings.LANGUAGES).keys():
             SKINS.update(load_skins(lang))
     else:
@@ -198,13 +200,33 @@ if 'askbot.skins.loaders.Loader' in LOADERS:
 
 APP_DIR_ENVS = dict()
 if 'askbot.skins.loaders.JinjaAppDirectoryLoader' in LOADERS:
-    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) or\
-            HAS_ASKBOT_LOCALE_MIDDLEWARE:
+    if IS_MULTILINGUAL:
         for lang in dict(django_settings.LANGUAGES).keys():
             APP_DIR_ENVS[lang] = get_app_dir_env(lang)
     else:
         lang = django_settings.LANGUAGE_CODE
         APP_DIR_ENVS[lang] = get_app_dir_env(lang)
+
+LOADERS = django_settings.TEMPLATE_LOADERS
+SKINS = dict()
+if 'askbot.skins.loaders.Loader' in LOADERS:
+    #if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) or\
+    #        HAS_ASKBOT_LOCALE_MIDDLEWARE:
+    for lang in dict(django_settings.LANGUAGES).keys():
+        SKINS.update(load_skins(lang))
+    #else:
+    #    SKINS = load_skins(django_settings.LANGUAGE_CODE)
+
+
+APP_DIR_ENVS = dict()
+if 'askbot.skins.loaders.JinjaAppDirectoryLoader' in LOADERS:
+    #if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) or\
+    #        HAS_ASKBOT_LOCALE_MIDDLEWARE:
+    for lang in dict(django_settings.LANGUAGES).keys():
+        APP_DIR_ENVS[lang] = get_app_dir_env(lang)
+    #else:
+    #    lang = django_settings.LANGUAGE_CODE
+    #    APP_DIR_ENVS[lang] = get_app_dir_env(lang)
 
 
 
