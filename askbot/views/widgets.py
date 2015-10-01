@@ -44,9 +44,8 @@ def _get_form(key):
 @decorators.admins_only
 def widgets(request):
     site = Site.objects.get_current()
-    fltr = {'site__in': (site, None)}
-    ask_widgets = models.AskWidget.objects.filter(**fltr)
-    question_widgets = models.QuestionWidget.objects.filter(**fltr)
+    ask_widgets = models.AskWidget.objects.filter(site=site)
+    question_widgets = models.QuestionWidget.objects.filter(site=site)
     data = {
         'ask_widgets': ask_widgets.count(),
         'question_widgets': question_widgets.count(),
@@ -168,7 +167,7 @@ def ask_widget_complete(request):
 def list_widgets(request, model):
     model_class = _get_model(model)
     site = Site.objects.get_current()
-    widgets = model_class.objects.filter(site__in=(site, None))
+    widgets = model_class.objects.filter(site=site))
     data = {
             'widgets': widgets,
             'widget_name': model
