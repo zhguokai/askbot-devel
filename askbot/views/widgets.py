@@ -167,7 +167,7 @@ def ask_widget_complete(request):
 def list_widgets(request, model):
     model_class = _get_model(model)
     site = Site.objects.get_current()
-    widgets = model_class.objects.filter(site=site))
+    widgets = model_class.objects.filter(site=site)
     data = {
             'widgets': widgets,
             'widget_name': model
