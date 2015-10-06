@@ -601,6 +601,7 @@ def user_get_or_create_fake_user(self, username, email):
         user.is_fake = True
         user.set_unusable_password()
         user.save()
+        init_askbot_user_profile(user)
     return user
 
 def get_or_create_anonymous_user():
@@ -615,6 +616,7 @@ def get_or_create_anonymous_user():
         user.is_fake = True
         user.set_unusable_password()
         user.save()
+        init_askbot_user_profile(user)
     return user
 
 def user_needs_moderation(self):
