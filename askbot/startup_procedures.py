@@ -10,7 +10,9 @@ the main function is run_startup_tests
 import askbot
 import django
 import os
+import pkg_resources
 import re
+import requirements
 import south
 import sys
 import urllib
@@ -212,11 +214,75 @@ def try_import(module_name, pypi_package_name, short_message = False):
         message += '\n\nType ^C to quit.'
         raise AskbotConfigError(message)
 
+
+def unparse_requirement(req):
+    line = req.name
+    if req.specs:
+        specs = ['%s%s' % spec for spec in req.specs]
+        line += ','.join(specs) 
+    if req.extras:
+        line += ' [%s]' % ','.join(req.extras)
+    return line
+
+
+def test_specs(req):
+    if not req.specs:
+        return
+    mod_ver = pkg_resources.get_distribution(req.name).version
+    mod_ver = mod_ver.split('.')
+    try:
+        for spec in req.specs:
+            op = spec[0]
+            spec_ver = spec[1].split('.')
+            if op == '==':
+                assert mod_ver == spec_ver
+            elif op == '>':
+                assert mod_ver > spec_ver
+            elif op == '<':
+                assert mod_ver < spec_ver
+            elif op == '<=':
+                assert mod_ver <= spec_ver
+            elif op == '>=':
+                assert mod_ver >= spec_ver
+            else:
+                raise ValueError('Unsupported pip dependency version operator %s' % op)
+    except AssertionError:
+        data = {
+            'name': req.name,
+            'need_spec': unparse_requirement(req),
+            'mod_ver': '.'.join(mod_ver)
+        }
+        message = """Unsupported version of module {name},
+found version {mod_ver}, {need_spec} required.
+please run:
+> pip uninstall {name} && pip install {need_spec}""".format(**data)
+        raise AskbotConfigError(message)
+
+
+def get_req_name_from_spec(spec):
+    spec = spec.replace('>', '=').replace('>', '=')
+    bits = spec.split('=')
+    return bits[0]
+
+
+def find_mod_name(req_name):
+    from askbot import REQUIREMENTS
+    req2mod = dict([(get_req_name_from_spec(v), k) for (k, v) in REQUIREMENTS.items()])
+    return req2mod[req_name]
+
+
 def test_modules():
     """tests presence of required modules"""
     from askbot import REQUIREMENTS
-    for module_name, pip_path in REQUIREMENTS.items():
-        try_import(module_name, pip_path)
+    #flatten requirements into file-like string
+    req_text = '\n'.join(REQUIREMENTS.values())
+    parsed_requirements = requirements.parse(req_text)
+    for req in parsed_requirements:
+        pip_path = unparse_requirement(req)
+        mod_name = find_mod_name(req.name)
+        try_import(mod_name, pip_path)
+        test_specs(req)
+
 
 def test_postgres():
     """Checks for the postgres buggy driver, version 2.4.2"""
