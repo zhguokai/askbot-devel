@@ -8,17 +8,17 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'AskbotMessage'
+        # Adding model 'Message'
         db.create_table('askbot_message', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('message', self.gf('django.db.models.fields.TextField')()),
         ))
-        db.send_create_signal('askbot', ['AskbotMessage'])
+        db.send_create_signal('askbot', ['Message'])
 
 
     def backwards(self, orm):
-        # Deleting model 'AskbotMessage'
+        # Deleting model 'Message'
         db.delete_table('askbot_message')
 
 
@@ -66,12 +66,6 @@ class Migration(SchemaMigration):
             'text': ('django.db.models.fields.TextField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
             'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
-        },
-        'askbot.askbotmessage': {
-            'Meta': {'object_name': 'AskbotMessage', 'db_table': "'askbot_message'"},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'message': ('django.db.models.fields.TextField', [], {}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         'askbot.askwidget': {
             'Meta': {'object_name': 'AskWidget'},
@@ -181,6 +175,12 @@ class Migration(SchemaMigration):
             'reason': ('django.db.models.fields.CharField', [], {'max_length': '16'}),
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_selections'", 'to': "orm['askbot.Tag']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tag_selections'", 'to': u"orm['auth.User']"})
+        },
+        'askbot.message': {
+            'Meta': {'object_name': 'Message'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'message': ('django.db.models.fields.TextField', [], {}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         'askbot.post': {
             'Meta': {'object_name': 'Post'},

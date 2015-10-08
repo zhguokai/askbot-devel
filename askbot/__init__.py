@@ -39,6 +39,7 @@ REQUIREMENTS = {
     'recaptcha_works': 'django-recaptcha-works',
     'robots': 'django-robots==1.0',
     'sanction': 'sanction==0.3.1',
+    'simplejson': 'simplejson',
     'south': 'South>=0.7.1',
     'threaded_multihost': 'django-threaded-multihost',
     'tinymce': 'django-tinymce==1.5.3',
