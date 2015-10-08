@@ -12,8 +12,6 @@ import django
 import os
 import pkg_resources
 import re
-import requirements
-import south
 import sys
 import urllib
 from django.db import connection
@@ -276,6 +274,7 @@ def test_modules():
     from askbot import REQUIREMENTS
     #flatten requirements into file-like string
     req_text = '\n'.join(REQUIREMENTS.values())
+    import requirements
     parsed_requirements = requirements.parse(req_text)
     for req in parsed_requirements:
         pip_path = unparse_requirement(req)
@@ -1039,6 +1038,7 @@ def run_startup_tests():
     all startup tests, mainly checking settings config so far
     """
     #this is first because it gives good info on what to install
+    try_import('requirements', 'requirements')
     test_modules()
 
     #todo: refactor this when another test arrives
