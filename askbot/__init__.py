@@ -36,7 +36,7 @@ REQUIREMENTS = {
     'jwt': 'pyjwt',
     'pystache': 'pystache==0.3.1',
     'pytz': 'pytz==2013b',
-    'recaptcha_works': 'django-recaptcha-works',
+    'captcha': 'django-recaptcha>=1.0.3',
     'requirements': 'requirements-parser',
     'robots': 'django-robots==1.0',
     'sanction': 'sanction==0.3.1',
