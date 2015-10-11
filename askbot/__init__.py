@@ -9,6 +9,8 @@ import platform
 
 VERSION = (0, 7, 53)
 
+default_app_config = 'askbot.apps.AskbotConfig'
+
 #keys are module names used by python imports,
 #values - the package qualifier to use for pip
 REQUIREMENTS = {

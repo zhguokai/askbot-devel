@@ -43,6 +43,8 @@ if CMAJOR == 0 and CMINOR == 3 and CMICRO < 4:
 
 class PageLoadTestCase(AskbotTestCase):
 
+    serialized_rollback = True
+
     #############################################
     #
     # INFO: We load test data once for all tests in this class (setUpClass + cleanup in tearDownClass)
@@ -57,7 +59,7 @@ class PageLoadTestCase(AskbotTestCase):
         super(PageLoadTestCase, cls).setUpClass()
         management.call_command('flush', verbosity=0, interactive=False)
         activate_language(settings.LANGUAGE_CODE)
-        management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
+        management.call_command('askbot_add_test_content', nospam=True, verbosity=0, interactive=False)
 
     @classmethod
     def tearDownClass(self):
