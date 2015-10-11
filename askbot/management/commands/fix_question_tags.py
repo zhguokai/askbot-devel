@@ -30,7 +30,9 @@ def get_valid_tag_name(tag):
 class Command(NoArgsCommand):
     def handle_noargs(self, *args, **options):
         signal_data = signals.pop_all_db_signal_receivers()
-        languages = models.Tag.objects.values_list('language_code').distinct()
+        languages = set(models.Tag.objects.values_list(
+                                    'language_code', flat=True
+                                ).distinct())
         for lang in languages:
             self.run_command(lang)
         signals.set_all_db_signal_receivers(signal_data)
