@@ -310,7 +310,9 @@ def moderate_post_edits(request):
             revs = get_revision_set(memo_set)
             revs = expand_revision_set(revs)
             ips, users = get_revision_ips_and_authors(revs)
-            memo_set = get_memos_by_revisions(revs, request.user)
+            #important: evaluate the query here b/c some memos related to
+            #comments will be lost when blocking users
+            memo_set = set(get_memos_by_revisions(revs, request.user))
 
             #to make sure to not block the admin and
             #in case REMOTE_ADDR is a proxy server - not
@@ -340,6 +342,7 @@ def moderate_post_edits(request):
             num_users = len(users)
 
         elif 'users' in post_data['items']:
+            memo_set = set(memo_set)#evaluate memo_set before deleting content
             editors = exclude_admins(get_editors(memo_set))
             assert(request.user not in editors)
             for editor in editors:
@@ -361,11 +364,11 @@ def moderate_post_edits(request):
             posts_message = ungettext('%d post deleted', '%d posts deleted', num_posts) % num_posts
             result['message'] = concat_messages(result['message'], posts_message)
 
-    result['memo_ids'] = [memo.id for memo in memo_set]#why values_list() fails here?
+    result['memo_ids'] = [memo.id for memo in memo_set]
     result['message'] = force_text(result['message'])
 
     #delete items from the moderation queue
-    act_ids = list(memo_set.values_list('activity_id', flat=True))
+    act_ids = [memo.activity_id for memo in memo_set]
     acts = models.Activity.objects.filter(id__in=act_ids)
 
     memos = models.ActivityAuditStatus.objects.filter(activity__id__in=act_ids)
