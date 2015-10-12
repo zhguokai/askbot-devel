@@ -333,24 +333,28 @@ def moderate_post_edits(request):
 
             #block users and all their content
             users = exclude_admins(users)
+            num_users = 0
             for user in users:
-                user.set_status('b')
+                if user.status != 'b':
+                    user.set_status('b')
+                    num_users += 1
                 #delete all content by the user
                 num_posts += request.user.delete_all_content_authored_by_user(user)
 
             num_ips = len(ips)
-            num_users = len(users)
 
         elif 'users' in post_data['items']:
             memo_set = set(memo_set)#evaluate memo_set before deleting content
             editors = exclude_admins(get_editors(memo_set))
             assert(request.user not in editors)
+            num_users = 0
             for editor in editors:
                 #block user
-                editor.set_status('b')
+                if editor.status != 'b':
+                    editor.set_status('b')
+                    num_users += 1
                 #delete all content by the user
                 num_posts += request.user.delete_all_content_authored_by_user(editor)
-            num_users = len(editors)
 
         if num_ips:
             ips_message = ungettext('%d ip blocked', '%d ips blocked', num_ips) % num_ips
