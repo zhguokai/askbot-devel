@@ -1,6 +1,6 @@
-# English translation for CNPROG package.
-# Copyright (C) 2009 Gang Chen, 2010 Askbot
-# This file is distributed under the same license as the CNPROG package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
 # Ahmad Harthi <aalharthi@kacst.edu.sa>, 2013
@@ -10,18 +10,18 @@
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # fahadaaf <fahadaaf@gmail.com>, 2012
 # husamfarra <husamfarra@gmail.com>, 2013
-# kifcaliph <kifcaliph@hotmail.com>, 2012
-# kifcaliph <kifcaliph@hotmail.com>, 2013
+# Khaled Menof <kifcaliph@hotmail.com>, 2012
+# Khaled Menof <kifcaliph@hotmail.com>, 2013
 # Mustafa Albazy <mustafa@albazy.com>, 2013
 # Ratnadeep Debnath <rtnpro@indifex.com>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-01 12:00-0500\n"
-"PO-Revision-Date: 2014-11-01 17:05+0000\n"
+"POT-Creation-Date: 2015-01-13 18:08-0600\n"
+"PO-Revision-Date: 2015-01-14 02:17+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
-"Language-Team: Arabic (http://www.transifex.com/projects/p/askbot/language/ar/)\n"
+"Language-Team: Arabic (http://www.transifex.com/askbot/askbot/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -80,16 +80,20 @@ msgstr[3] "يجب أن تكون < %d كلمة"
 msgstr[4] "يجب أن تكون < %d كلمة"
 msgstr[5] "يجب أن تكون < %d كلمة"
 
-#: forms.py:244
+#: forms.py:237 templates/widgets/ask_form.html:59
+msgid "Select language"
+msgstr "إختيار اللغة"
+
+#: forms.py:245
 msgid "minor edit (don't send alerts)"
 msgstr "تعديل بسيط (لا ترسل تنبيهات)"
 
-#: forms.py:271 templates/widgets/markdown_help.html:20
+#: forms.py:272 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
 msgid "title"
 msgstr "العنوان"
 
-#: forms.py:282
+#: forms.py:283
 #, python-format
 msgid "must have > %d character"
 msgid_plural "must have > %d characters"
@@ -100,26 +104,26 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: forms.py:293
+#: forms.py:294
 #, python-format
 msgid ""
 "The %(question)s is too long, maximum allowed size is %(length)d characters"
 msgstr ""
 
-#: forms.py:300
+#: forms.py:301
 #, python-format
 msgid "The %(question)s is too long, maximum allowed size is %(length)d bytes"
 msgstr ""
 
-#: forms.py:329
+#: forms.py:330
 msgid "content"
 msgstr "المحتوى"
 
-#: forms.py:333
+#: forms.py:334
 msgid "post"
 msgstr ""
 
-#: forms.py:340
+#: forms.py:341
 #, python-format
 msgid "%(post)s content must be > %(count)d character"
 msgid_plural "%(post)s content must be > %(count)d characters"
@@ -130,7 +134,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: forms.py:388
+#: forms.py:389
 #, python-format
 msgid "each tag must be shorter than %(max_chars)d character"
 msgid_plural "each tag must be shorter than %(max_chars)d characters"
@@ -141,18 +145,18 @@ msgstr[3] "يجب أن تتكون كل بطاقة من %(max_chars)d أحرف ع
 msgstr[4] "يجب أن تتكون كل بطاقة من %(max_chars)d حرفاً على الأكثر"
 msgstr[5] "يجب أن تتكون كل بطاقة من %(max_chars)d حرفاً على الأكثر"
 
-#: forms.py:435
+#: forms.py:436
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
 msgstr "لقد تجاوزت المساحة المسموح بها للموضوع، فضلاً قصرهم او احذف بعضهم."
 
-#: forms.py:438 forms.py:1035 models/widgets.py:27
+#: forms.py:439 forms.py:1036 models/widgets.py:27
 #: templates/widgets/edit_post.html:32 templates/widgets/meta_nav.html:6
 msgid "tags"
 msgstr "البطاقات"
 
-#: forms.py:440
+#: forms.py:441
 #, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
@@ -167,7 +171,7 @@ msgstr[3] "العلامات هي كلمات قصيرة، دون وجود مسا�
 msgstr[4] "العلامات هي كلمات قصيرة، دون وجود مسافات داخلها. و يمكن إستخدام ما يصل إلي %(max_tags)d علامة."
 msgstr[5] "العلامات هي كلمات قصيرة، دون وجود مسافات داخلها. و يمكن إستخدام ما يصل إلي %(max_tags)d علامة."
 
-#: forms.py:467
+#: forms.py:468
 #, python-format
 msgid "please use %(tag_count)d tag or less"
 msgid_plural "please use %(tag_count)d tags or less"
@@ -178,399 +182,410 @@ msgstr[3] "من فضلك استخدم علامات  %(tag_count)d أو أقل"
 msgstr[4] "من فضلك استخدم علامات  %(tag_count)d أو أقل"
 msgstr[5] "من فضلك استخدم علامات  %(tag_count)d أو أقل"
 
-#: forms.py:475
+#: forms.py:476
 #, python-format
 msgid "At least one of the following tags is required : %(tags)s"
 msgstr "لا بد من استخدام بطاقة واحدة على الأقل من البطاقات التالية: %(tags)s"
 
-#: forms.py:503
+#: forms.py:504
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
 msgstr "ويكي مجتمع (لا يتم منح كارما ويمكن للآخرين تعديل مشاركتك) "
 
-#: forms.py:519
+#: forms.py:520
 msgid "update summary:"
 msgstr "ملخص التعديل:"
 
-#: forms.py:521
+#: forms.py:522
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style...), this field is optional"
 msgstr ""
 
-#: forms.py:610
+#: forms.py:611
 msgid "Enter number of points to add or subtract"
 msgstr "أدخل عدد النقاط للإضافة أو الحذف"
 
-#: forms.py:625 const/__init__.py:391
+#: forms.py:626 const/__init__.py:391
 msgid "approved"
 msgstr "مقبول"
 
-#: forms.py:626 const/__init__.py:392
+#: forms.py:627 const/__init__.py:392
 msgid "watched"
 msgstr "تحت المراقبة"
 
-#: forms.py:627 const/__init__.py:393
+#: forms.py:628 const/__init__.py:393
 msgid "suspended"
 msgstr "موقف مؤقتاً"
 
-#: forms.py:628 const/__init__.py:394
+#: forms.py:629 const/__init__.py:394
 msgid "blocked"
 msgstr "محجوب"
 
-#: forms.py:630
+#: forms.py:631
 msgid "administrator"
 msgstr "مشرف"
 
-#: forms.py:631 const/__init__.py:390
+#: forms.py:632 const/__init__.py:390
 msgid "moderator"
 msgstr "منسق"
 
-#: forms.py:650
+#: forms.py:651
 msgid "Change status to"
 msgstr "تغيير المرتبة إلى"
 
-#: forms.py:678
+#: forms.py:679
 msgid "which one?"
 msgstr "أي واحدة؟"
 
-#: forms.py:708
+#: forms.py:709
 msgid "Cannot change own status"
 msgstr "لا بمكنك تغيير مرتبتك"
 
-#: forms.py:714
+#: forms.py:715
 msgid "Cannot turn other user to moderator"
 msgstr "لا يمكنك تغيير مرتبة مستخدم آخر إلى منسق"
 
-#: forms.py:721
+#: forms.py:722
 msgid "Cannot change status of another moderator"
 msgstr "لا يمكنك نغيير مرتبة منسق آخر"
 
-#: forms.py:727
+#: forms.py:728
 msgid "Cannot change status to admin"
 msgstr "لا يمكنك تغيير المرتبة إلى مشرف"
 
-#: forms.py:733
+#: forms.py:734
 #, python-format
 msgid ""
 "If you wish to change %(username)s's status, please make a meaningful "
 "selection."
 msgstr "إذا كنت تريد تغيير مرتبة %(username)s، فضلاً قم باختيارمرتبة"
 
-#: forms.py:747
+#: forms.py:748
 msgid "Subject line"
 msgstr "العنوان"
 
-#: forms.py:752
+#: forms.py:753
 msgid "Message text"
 msgstr "نص الرسالة"
 
-#: forms.py:759
+#: forms.py:760
 msgid "Your name (optional):"
 msgstr "أسمك (إختياري):"
 
-#: forms.py:760
+#: forms.py:761
 msgid "Email:"
 msgstr "البريد الإلكتروني:"
 
-#: forms.py:762
+#: forms.py:763
 msgid "Your message:"
 msgstr "رسالتك"
 
-#: forms.py:766
+#: forms.py:767
 msgid "I don't want to give my email or receive a response:"
 msgstr "لا أريد أعطاء بريدي او أستقبال رد:"
 
-#: forms.py:780
+#: forms.py:781
 msgid "Message is required"
 msgstr ""
 
-#: forms.py:789
-msgid "Please mark \"I dont want to give my mail\" field."
-msgstr "فضلاً حدد حقل \"لا أريد أعطاء بريدي\""
+#: forms.py:790
+msgid "Either provide email address or mark \"I dont want to give email below\""
+msgstr ""
 
-#: forms.py:822
+#: forms.py:823
 msgid "keep private within your groups"
 msgstr "الحفاظ على خصوصيتك داخل مجموعاتك"
 
-#: forms.py:861 templates/ask.html:36 templates/question.html:380
+#: forms.py:862 templates/ask.html:39 templates/question.html:375
 msgid "User name:"
 msgstr "أسم المستخدم"
 
-#: forms.py:863
+#: forms.py:864
 msgid "Enter name to post on behalf of someone else. Can create new accounts."
 msgstr "ادخل اسما للمشاركة بالنيابة عن شخص آخر. يمكن انشاء حسابات جديدة."
 
-#: forms.py:870 templates/question.html:381
+#: forms.py:871 templates/question.html:376
 msgid "Email address:"
 msgstr "عنوان البريد"
 
-#: forms.py:920
+#: forms.py:921
 msgid "User name is required with the email"
 msgstr "أسمك مطلوب مع البريد"
 
-#: forms.py:925
+#: forms.py:926
 msgid "Email is required if user name is added"
 msgstr "البريد مطلوب إذا كان الاسم مضافاً"
 
-#: forms.py:956
+#: forms.py:957
 msgid "post anonymously"
 msgstr ""
 
-#: forms.py:977
+#: forms.py:978
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
 msgstr "سطر العنوان يتوقع أن يكون بالصيغة: [وسم1, وسم2, وسم3,...] عنوان السؤال"
 
-#: forms.py:986
+#: forms.py:987
 msgid "ask anonymously"
 msgstr "اسأل دون تعريف هويتك"
 
-#: forms.py:1263
+#: forms.py:1264
 msgid "remove anonymity"
 msgstr ""
 
-#: forms.py:1347
+#: forms.py:1348
 msgid "Real name"
 msgstr "الاسم الحقيقي"
 
-#: forms.py:1354
+#: forms.py:1355
 msgid "Website"
 msgstr "الموقع الإلكتروني"
 
-#: forms.py:1361
+#: forms.py:1362
 msgid "City"
 msgstr "المدينة"
 
-#: forms.py:1370
+#: forms.py:1371
 msgid "Show country"
 msgstr "إظهار الدولة"
 
-#: forms.py:1375
+#: forms.py:1376
 msgid "Show tag choices"
 msgstr "اظهر خيارات الوسوم"
 
-#: forms.py:1380
+#: forms.py:1381
 msgid "Date of birth"
 msgstr "تاريخ الميلاد"
 
-#: forms.py:1382
+#: forms.py:1383
 msgid "will not be shown, used to calculate age, format: YYYY-MM-DD"
 msgstr "لن يتم عرضه. يستخدم لحساب العمر. التنسيق: العام (٤ خانات)-الشهر (خانتان)-اليوم (خانتان)"
 
-#: forms.py:1390
+#: forms.py:1391
 msgid "Profile"
 msgstr "الملف الشخصي"
 
-#: forms.py:1399
+#: forms.py:1400
 msgid "Screen name"
 msgstr "اسم الشاشة"
 
-#: forms.py:1431 forms.py:1435
+#: forms.py:1432 forms.py:1436
 msgid "this email has already been registered, please use another one"
 msgstr "تم تسجيل هذا البريد الإلكتروني من قبل، فضلاً استخدم عنواناً آخر"
 
-#: forms.py:1444
+#: forms.py:1445
 msgid "Choose email tag filter"
 msgstr "اختر طريقة ترشيح الوسوم للبريد إلكتروني"
 
-#: forms.py:1500
+#: forms.py:1501
 msgid "Individually selected"
 msgstr "تم اختيارها مفردة"
 
-#: forms.py:1501
+#: forms.py:1502
 msgid "Entire forum (tag filtered)"
 msgstr "المنتدى بالكامل (مع ترشيح الوسوم)"
 
-#: forms.py:1502
+#: forms.py:1503
 msgid "Comments and posts mentioning me"
 msgstr "تعليقات ومشاركات تذكرني"
 
-#: forms.py:1586
+#: forms.py:1587
 msgid "please choose one of the options above"
 msgstr "فضلاً اختر أحد الخيارات أعلاه"
 
-#: forms.py:1589
+#: forms.py:1590
 msgid "okay, let's try!"
 msgstr "حسناً، فلنجرب!"
 
-#: forms.py:1592
+#: forms.py:1593
 #, python-format
 msgid "no %(sitename)s email please, thanks"
 msgstr "لا %(sitename)s بريد رجاء, شكرا"
 
-#: forms.py:1640 templates/reopen.html:7
+#: forms.py:1641 templates/reopen.html:7
 msgid "Title"
 msgstr "العنوان"
 
-#: forms.py:1643 templates/groups.html:32
+#: forms.py:1644 templates/groups.html:32
 msgid "Description"
 msgstr "الوصف"
 
-#: forms.py:1662 templates/tags.html:3 templates/tags/header.html:9
+#: forms.py:1663 templates/tags.html:3 templates/tags/header.html:9
 #: templates/tags/list_bulk_tag_subscription.html:12
 #: templates/widgets/edit_post.html:26 templates/widgets/related_tags.html:3
 #: templates/widgets/tag_category_selector.html:2
 msgid "Tags"
 msgstr "المواضيع"
 
-#: tasks.py:106
+#: tasks.py:107
 msgid "make an edit by email"
 msgstr ""
 
-#: tasks.py:109
+#: tasks.py:110
 msgid "To add to your post EDIT ABOVE THIS LINE"
 msgstr "لتضيف إلى مشاركتك \"اكتب فوق هذا الخط\""
 
-#: tasks.py:124
+#: tasks.py:125
 #, python-format
 msgid "Your post at %(site_name)s is now published"
 msgstr "تم نشرك مشاركتك في %(site_name)s"
 
-#: urls.py:47 conf/words.py:273
+#: urls.py:46
+msgctxt "urls"
 msgid "questions"
 msgstr ""
 
-#: urls.py:52 conf/words.py:264
+#: urls.py:51
+msgctxt "urls"
 msgid "question"
 msgstr ""
 
-#: urls.py:79
+#: urls.py:78 urls.py:360 urls.py:366 urls.py:375 urls.py:384
+msgctxt "urls"
 msgid "tags/"
-msgstr "tags/"
+msgstr ""
 
-#: urls.py:84 urls.py:89 urls.py:96 urls.py:102 urls.py:111 urls.py:118
+#: urls.py:83 urls.py:89 urls.py:98 urls.py:104 urls.py:113 urls.py:120
+msgctxt "urls"
 msgid "users/"
-msgstr "users/"
+msgstr ""
 
-#: urls.py:89
+#: urls.py:90
+msgctxt "urls"
 msgid "by-group/"
-msgstr "by-group/"
+msgstr ""
 
-#: urls.py:96 urls.py:172 urls.py:259 urls.py:563
+#: urls.py:98 urls.py:180 urls.py:267 urls.py:386 urls.py:606
+msgctxt "urls"
 msgid "edit/"
-msgstr "edit/"
+msgstr ""
 
-#: urls.py:103
+#: urls.py:105 urls.py:360 urls.py:367 urls.py:376 urls.py:385
+msgctxt "urls"
 msgid "subscriptions/"
-msgstr "subscriptions/"
+msgstr ""
 
-#: urls.py:112
+#: urls.py:114
+msgctxt "urls"
 msgid "select_languages/"
-msgstr "select_languages/"
+msgstr ""
 
-#: urls.py:123
+#: urls.py:125
+msgctxt "urls"
 msgid "groups/"
-msgstr "groups/"
+msgstr ""
 
-#: urls.py:128 urls.py:133
+#: urls.py:130 urls.py:135
+msgctxt "urls"
 msgid "badges/"
-msgstr "badges/"
+msgstr ""
 
-#: urls.py:146
+#: urls.py:148
+msgctxt "urls"
 msgid "feedback/"
-msgstr "feedback/"
-
-#: urls.py:167
-msgid "about/"
-msgstr "about/"
-
-#: urls.py:168
-msgid "faq/"
-msgstr "faq/"
+msgstr ""
 
 #: urls.py:169
-msgid "privacy/"
-msgstr "privacy/"
+msgctxt "urls"
+msgid "about/"
+msgstr ""
 
 #: urls.py:170
+msgctxt "urls"
+msgid "faq/"
+msgstr ""
+
+#: urls.py:171
+msgctxt "urls"
+msgid "privacy/"
+msgstr ""
+
+#: urls.py:173
+msgctxt "urls"
+msgid "terms/"
+msgstr ""
+
+#: urls.py:178
+msgctxt "urls"
 msgid "help/"
-msgstr "help/"
+msgstr ""
 
-#: urls.py:172 urls.py:177
+#: urls.py:180 urls.py:185
+msgctxt "urls"
 msgid "answers/"
-msgstr "answers/"
+msgstr ""
 
-#: urls.py:177 urls.py:294
+#: urls.py:185 urls.py:302
+msgctxt "urls"
 msgid "revisions/"
-msgstr "revisions/"
+msgstr ""
 
-#: urls.py:209
+#: urls.py:217
+msgctxt "urls"
 msgid "moderation-queue/"
 msgstr ""
 
-#: urls.py:254 urls.py:538 urls.py:543 urls.py:548 urls.py:553
+#: urls.py:262 urls.py:565 urls.py:573 urls.py:581 urls.py:589
+msgctxt "urls"
 msgid "ask/"
-msgstr "ask/"
+msgstr ""
 
-#: urls.py:264
+#: urls.py:272
+msgctxt "urls"
 msgid "retag/"
-msgstr "retag/"
+msgstr ""
 
-#: urls.py:269
+#: urls.py:277
+msgctxt "urls"
 msgid "close/"
-msgstr "close/"
+msgstr ""
 
-#: urls.py:274
+#: urls.py:282
+msgctxt "urls"
 msgid "reopen/"
-msgstr "reopen/"
+msgstr ""
 
-#: urls.py:279
+#: urls.py:287
+msgctxt "urls"
 msgid "answer/"
-msgstr "answer/"
+msgstr ""
 
-#: urls.py:352
-msgid "tags/subscriptions/"
-msgstr "topcis/subscriptions/"
-
-#: urls.py:357
-msgid "tags/subscriptions/delete/"
-msgstr "topics/subscriptions/delete/"
-
-#: urls.py:362
-msgid "tags/subscriptions/create/"
-msgstr "topics/subscriptions/create/"
-
-#: urls.py:367
-msgid "tags/subscriptions/edit/"
-msgstr "topics/subscriptions/edit/"
-
-#: urls.py:372
-msgid "suggested-tags/"
-msgstr "suggested-topics/"
-
-#: urls.py:497
-msgid "messages/"
-msgstr "messages/"
-
-#: urls.py:497
-msgid "markread/"
-msgstr "markread/"
-
-#: urls.py:533 urls.py:538 urls.py:543 urls.py:548 urls.py:553 urls.py:558
-#: urls.py:563 urls.py:568 urls.py:573
-msgid "widgets/"
-msgstr "widgets/"
-
-#: urls.py:553 deps/django_authopenid/urls.py:23
-msgid "complete/"
-msgstr "complete/"
-
-#: urls.py:558
-msgid "create/"
-msgstr "create/"
-
-#: urls.py:568
+#: urls.py:368 urls.py:614
+msgctxt "urls"
 msgid "delete/"
-msgstr "delete/"
+msgstr ""
 
-#: urls.py:603
+#: urls.py:377 urls.py:598
+msgctxt "urls"
+msgid "create/"
+msgstr ""
+
+#: urls.py:392
+msgctxt "urls"
+msgid "suggested-tags/"
+msgstr ""
+
+#: urls.py:558 urls.py:564 urls.py:572 urls.py:580 urls.py:588 urls.py:597
+#: urls.py:605 urls.py:613 urls.py:620
+msgctxt "urls"
+msgid "widgets/"
+msgstr ""
+
+#: urls.py:590 deps/django_authopenid/urls.py:27
+msgctxt "urls"
+msgid "complete/"
+msgstr ""
+
+#: urls.py:651
+msgctxt "urls"
 msgid "upload/"
-msgstr "upload/"
+msgstr ""
 
-#: urls.py:628 setup_templates/settings.py:232
+#: urls.py:680
+msgctxt "urls"
 msgid "account/"
-msgstr "account/"
+msgstr ""
 
 #: conf/access_control.py:10
 msgid "Access control settings"
@@ -1085,51 +1100,61 @@ msgstr ""
 msgid "ident.ca consumer secret"
 msgstr ""
 
-#: conf/flatpages.py:11
+#: conf/flatpages.py:12
 msgid "Messages and pages - about, privacy policy, etc."
 msgstr "الرسائل والصفحات - عن الموقع، الخصوصية...الخ."
 
-#: conf/flatpages.py:19
-msgid "Text of the Q&A forum About page (html format)"
+#: conf/flatpages.py:20
+msgid "Text of the Q&amp;A forum About page (html format)"
 msgstr ""
 
-#: conf/flatpages.py:23
+#: conf/flatpages.py:24
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"about\" page to check your input."
 msgstr ""
 
-#: conf/flatpages.py:33
-msgid "Text of the Q&A forum FAQ page (html format)"
+#: conf/flatpages.py:34
+msgid "Text of the Q&amp;A forum FAQ page (html format)"
 msgstr ""
 
-#: conf/flatpages.py:37
+#: conf/flatpages.py:38
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"faq\" page to check your input."
 msgstr ""
 
-#: conf/flatpages.py:47
+#: conf/flatpages.py:48
 msgid "Instructions on how to ask questions"
 msgstr "Instructions on how to ask questions"
 
-#: conf/flatpages.py:51
+#: conf/flatpages.py:52
 msgid ""
 "HTML is allowed. Save, then <a href=\"http://validator.w3.org/\">use HTML "
 "validator</a> on the \"ask\" page to check your input."
 msgstr "HTML is allowed. Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on the \"ask\" page to check your input."
 
-#: conf/flatpages.py:62
-msgid "Text of the Q&A forum Privacy Policy (html format)"
+#: conf/flatpages.py:63
+msgid "Text of the Q&amp;A forum Privacy Policy (html format)"
 msgstr ""
 
-#: conf/flatpages.py:66
+#: conf/flatpages.py:67
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"privacy\" page to check your input."
 msgstr ""
 
-#: conf/flatpages.py:80
+#: conf/flatpages.py:77
+msgid "Terms and conditions"
+msgstr ""
+
+#: conf/flatpages.py:81
+msgid ""
+"Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
+"the \"terms\" page to check your input."
+msgstr ""
+
+#: conf/flatpages.py:98
 msgid "Do not edit this field manually!!!"
 msgstr "Do not edit this field manually!!!"
 
@@ -1353,65 +1378,69 @@ msgstr "Enable separate tag search box on main page"
 msgid "Default max number of comments to display under posts"
 msgstr "العدد الأقصى الافتراضي للتعليقات المعروضة أسفل المشاركات"
 
-#: conf/forum_data_rules.py:385
-#, python-format
-msgid "Maximum comment length, must be < %(max_len)s"
-msgstr "طول التعليقات الأقصى. يجب أن يكون أقل من %(max_len)s"
+#: conf/forum_data_rules.py:384
+msgid "Reverse ordering of comments"
+msgstr ""
 
-#: conf/forum_data_rules.py:395
+#: conf/forum_data_rules.py:394
+#, python-format
+msgid "Maximum comment length, must be &lt; %(max_len)s"
+msgstr ""
+
+#: conf/forum_data_rules.py:404
 msgid "Limit time to edit comments"
 msgstr "تقييد وقت تعديل التعليقات"
 
-#: conf/forum_data_rules.py:397
+#: conf/forum_data_rules.py:406
 msgid "If unchecked, there will be no time limit to edit the comments"
 msgstr "في حالة عدم الاختيار، لن يكون هناك قيد زمني على تعديل التعليقات"
 
-#: conf/forum_data_rules.py:408
+#: conf/forum_data_rules.py:417
 msgid "Minutes allowed to edit a comment"
 msgstr "عدد الدقائق المسموح خلالها بتعديل التعليقات"
 
-#: conf/forum_data_rules.py:409
+#: conf/forum_data_rules.py:418
 msgid "To enable this setting, check the previous one"
 msgstr "لتمكين هذا الإعداد، اختر الإعداد السابق"
 
-#: conf/forum_data_rules.py:418
-msgid "Save comment by pressing <Enter> key"
-msgstr "لحفظ التعليق، اضغظ على زر <Enter>"
+#: conf/forum_data_rules.py:427
+msgid "Save comment by pressing &lt;Enter&gt; key"
+msgstr ""
 
-#: conf/forum_data_rules.py:420
+#: conf/forum_data_rules.py:429
 msgid ""
 "This may be useful when only one-line comments are desired. Will not work "
 "with TinyMCE editor."
 msgstr "This may be useful when only one-line comments are desired. Will not work with TinyMCE editor."
 
-#: conf/forum_data_rules.py:431
+#: conf/forum_data_rules.py:440
 msgid "Minimum length of search term for Ajax search"
 msgstr ""
 
-#: conf/forum_data_rules.py:432
+#: conf/forum_data_rules.py:441
 msgid "Must match the corresponding database backend setting"
 msgstr ""
 
-#: conf/forum_data_rules.py:441
+#: conf/forum_data_rules.py:450
 msgid "Do not make text query sticky in search"
 msgstr ""
 
-#: conf/forum_data_rules.py:443
+#: conf/forum_data_rules.py:452
 msgid ""
 "Check to disable the \"sticky\" behavior of the search query. This may be "
 "useful if you want to move the search bar away from the default position or "
 "do not like the default sticky behavior of the text search query."
 msgstr ""
 
-#: conf/forum_data_rules.py:456
+#: conf/forum_data_rules.py:465
 msgid "Maximum number of tags per question"
 msgstr "العدد الأقصى من الوسوم لكل سؤال"
 
-#: conf/forum_data_rules.py:468
+#: conf/forum_data_rules.py:477
 msgid "Number of questions to list by default"
 msgstr "العدد الافتراضي للأسئلة المعروضة"
 
-#: conf/forum_data_rules.py:478
+#: conf/forum_data_rules.py:487
 msgid "What should \"unanswered question\" mean?"
 msgstr ""
 
@@ -1653,103 +1682,107 @@ msgid "Login provider setings"
 msgstr "إعدادات مقدم خدمة تسجيل الدخول"
 
 #: conf/login_providers.py:22
+msgid "Acceptance of terms required at registration"
+msgstr ""
+
+#: conf/login_providers.py:32
 msgid "Show alternative login provider buttons on the password \"Sign Up\" page"
 msgstr "عرض أزرار لمقدمي خدمة تسجيل الدخول الآخرين في صفحة الالتحاق بالموقع"
 
-#: conf/login_providers.py:33
+#: conf/login_providers.py:43
 msgid "Always display local login form and hide \"Askbot\" button."
 msgstr "عرض خيار تسجيل الدخول باستخدام حساب محلي بشكل دائم وإخفاء زر \"Askbot\"."
 
-#: conf/login_providers.py:42
+#: conf/login_providers.py:52
 msgid "Activate to allow login with self-hosted wordpress site"
 msgstr "تنشيط السماح بتسجيل الدخول باستخدام موقع wordpress خاص"
 
-#: conf/login_providers.py:43
+#: conf/login_providers.py:53
 msgid ""
 "to activate this feature you must fill out the wordpress xml-rpc setting "
 "bellow"
 msgstr ""
 
-#: conf/login_providers.py:52
+#: conf/login_providers.py:62
 msgid ""
 "Fill it with the wordpress url to the xml-rpc, normally "
 "http://mysite.com/xmlrpc.php"
 msgstr ""
 
-#: conf/login_providers.py:53
+#: conf/login_providers.py:63
 msgid ""
 "To enable, go to Settings->Writing->Remote Publishing and check the box for "
 "XML-RPC"
 msgstr ""
 
-#: conf/login_providers.py:62
+#: conf/login_providers.py:72
 msgid "Upload your icon"
 msgstr "رفع الأيقونة"
 
-#: conf/login_providers.py:72
+#: conf/login_providers.py:82
 msgid "Enable custom OpenID login"
 msgstr ""
 
-#: conf/login_providers.py:80
+#: conf/login_providers.py:90
 msgid "Custom OpenID"
 msgstr ""
 
-#: conf/login_providers.py:81
+#: conf/login_providers.py:91
 msgid "Short name for the custom OpenID provider"
 msgstr ""
 
-#: conf/login_providers.py:86
+#: conf/login_providers.py:96
 msgid "Direct button login"
 msgstr ""
 
-#: conf/login_providers.py:87
+#: conf/login_providers.py:97
 msgid "Requires username"
 msgstr ""
 
-#: conf/login_providers.py:95
+#: conf/login_providers.py:105
 msgid "Type of OpenID login"
 msgstr ""
 
-#: conf/login_providers.py:105
+#: conf/login_providers.py:115
 msgid "Upload custom OpenID icon"
 msgstr ""
 
-#: conf/login_providers.py:115
+#: conf/login_providers.py:125
 msgid "Custom OpenID endpoint"
 msgstr ""
 
-#: conf/login_providers.py:116
+#: conf/login_providers.py:126
 #, python-format
 msgid ""
 "Important: with the \"username\" mode there must be a %%(username)s "
 "placeholder e.g. http://example.com/%%(username)s/"
 msgstr ""
 
-#: conf/login_providers.py:152
+#: conf/login_providers.py:162
 msgid "disable"
 msgstr ""
 
-#: conf/login_providers.py:157
+#: conf/login_providers.py:167
 msgid "local password"
 msgstr "local password"
 
-#: conf/login_providers.py:162
+#: conf/login_providers.py:172
 #, python-format
 msgid "Activate %(provider)s login"
 msgstr "تنشيط تسجيل الدخول باستخدام %(provider)s"
 
-#: conf/login_providers.py:167
+#: conf/login_providers.py:177
 #, python-format
 msgid ""
 "Note: to really enable %(provider)s login some additional parameters will "
 "need to be set in the \"External keys\" section"
 msgstr "ملاحظة: لإتمام تنشيط تسجيل الدخول باستخدام %(provider)s، لا بد من تعريف بعض المعايير الإضافية في قسم \"المفاتيح الخارجية\""
 
-#: conf/login_providers.py:189
+#: conf/login_providers.py:199
 msgid "Google login"
 msgstr ""
 
-#: conf/login_providers.py:191
+#: conf/login_providers.py:201
 msgid ""
 "To enable Google-Plus login, OAuth keys are required in the \"External "
 "keys\" section"
@@ -2075,6 +2108,23 @@ msgstr ""
 msgid "Loss for post owner when upvote is canceled"
 msgstr ""
 
+#: conf/settings_wrapper.py:152
+#, python-format
+msgid ""
+"There are required related settings: %(required)s and some optional: "
+"%(optional)s."
+msgstr ""
+
+#: conf/settings_wrapper.py:161
+#, python-format
+msgid "There are required related settings: %(required)s."
+msgstr ""
+
+#: conf/settings_wrapper.py:167
+#, python-format
+msgid "There are optional related settings: %(optional)s."
+msgstr ""
+
 #: conf/sidebar_main.py:12
 msgid "Main page sidebar"
 msgstr ""
@@ -2319,7 +2369,7 @@ msgid "Custom destination URL for the logo"
 msgstr ""
 
 #: conf/skin_general_settings.py:51
-msgid "Q&A site logo"
+msgid "Q&amp;A site logo"
 msgstr ""
 
 #: conf/skin_general_settings.py:53
@@ -2841,8 +2891,16 @@ msgstr ""
 msgid "Countable plural forms for \"answer\""
 msgstr ""
 
+#: conf/words.py:264
+msgid "question"
+msgstr ""
+
 #: conf/words.py:265
 msgid "question (noun, singular)"
+msgstr ""
+
+#: conf/words.py:273
+msgid "questions"
 msgstr ""
 
 #: conf/words.py:274
@@ -3270,6 +3328,7 @@ msgid "most voted first"
 msgstr ""
 
 #: const/__init__.py:128 templates/moderation/queue.html:11
+#: templates/user_inbox/responses.html:12
 msgid "all"
 msgstr "الكل"
 
@@ -3417,7 +3476,7 @@ msgstr "[مغلق]"
 msgid "[deleted]"
 msgstr "[محذوف]"
 
-#: const/__init__.py:325 views/readers.py:682
+#: const/__init__.py:325 views/readers.py:681
 msgid "initial version"
 msgstr "النسخة الأولى"
 
@@ -3614,7 +3673,7 @@ msgstr "مهمل"
 msgid "subscribed"
 msgstr "مشترك"
 
-#: const/message_keys.py:33 templates/question_retag.html:58
+#: const/message_keys.py:33 templates/question_retag.html:60
 msgid "tags are required"
 msgstr "لا بد من تحديد البطاقات"
 
@@ -3660,96 +3719,113 @@ msgid ""
 "screen name, if necessary."
 msgstr "مرحباً! يرجى ضبط عنوان البريد (هام!) في سجلك وضبط اسم الشاشة، عند اللزوم."
 
-#: deps/django_authopenid/forms.py:112 deps/django_authopenid/views.py:209
+#: deps/django_authopenid/forms.py:63
+msgid "I have read and agree with the terms of service"
+msgstr ""
+
+#: deps/django_authopenid/forms.py:66
+msgid "In order to register, you must accept the terms of service"
+msgstr ""
+
+#: deps/django_authopenid/forms.py:121 deps/django_authopenid/views.py:209
 msgid "i-names are not supported"
 msgstr "خدمة i-names غير مدعمة"
 
-#: deps/django_authopenid/forms.py:242
+#: deps/django_authopenid/forms.py:251
 #, python-format
 msgid "Please enter your %(username_token)s"
 msgstr "يرجى إدخال %(username_token)s"
 
-#: deps/django_authopenid/forms.py:268
+#: deps/django_authopenid/forms.py:277
 msgid "Please, enter your user name"
 msgstr "فضلاً أدخل اسم المستخدم"
 
-#: deps/django_authopenid/forms.py:272
+#: deps/django_authopenid/forms.py:281
 msgid "Please, enter your password"
 msgstr "فضلاً أدخل كلمة السر"
 
-#: deps/django_authopenid/forms.py:279 deps/django_authopenid/forms.py:283
+#: deps/django_authopenid/forms.py:288 deps/django_authopenid/forms.py:292
 msgid "Please, enter your new password"
 msgstr "فضلاً أدخل كلمة السر الجديدة"
 
-#: deps/django_authopenid/forms.py:294
+#: deps/django_authopenid/forms.py:303
 msgid "Passwords did not match"
 msgstr "كلمات السر لم تتطابق"
 
-#: deps/django_authopenid/forms.py:306 deps/django_authopenid/forms.py:368
+#: deps/django_authopenid/forms.py:315 deps/django_authopenid/forms.py:387
 #, python-format
 msgid "choose password > %(len)s characters"
 msgstr ""
 
-#: deps/django_authopenid/forms.py:353 utils/forms.py:265
+#: deps/django_authopenid/forms.py:372 utils/forms.py:265
 msgid "password is required"
 msgstr "كلمة المرور مطلوبة"
 
-#: deps/django_authopenid/forms.py:359
+#: deps/django_authopenid/forms.py:378
 msgid "retype your password"
 msgstr ""
 
-#: deps/django_authopenid/forms.py:379 utils/forms.py:270
+#: deps/django_authopenid/forms.py:398 utils/forms.py:270
 msgid "entered passwords did not match, please try again"
 msgstr ""
 
-#: deps/django_authopenid/forms.py:429
+#: deps/django_authopenid/forms.py:448
 msgid "Sorry, we don't have this email address in the database"
 msgstr "عذراً، هذا البريد الإلكتروني غير موجود في قاعدة البيانات"
 
-#: deps/django_authopenid/forms.py:468
+#: deps/django_authopenid/forms.py:487
 msgid "Your user name (<i>required</i>)"
 msgstr "اسم المستخدم (<i>مطلوب</i>)"
 
-#: deps/django_authopenid/forms.py:485
+#: deps/django_authopenid/forms.py:504
 msgid "sorry, there is no such user name"
 msgstr "لا يوجد أسم مستخدم!"
 
-#: deps/django_authopenid/urls.py:17 deps/django_authopenid/urls.py:23
-#: deps/django_authopenid/urls.py:26 setup_templates/settings.py:232
+#: deps/django_authopenid/urls.py:17 deps/django_authopenid/urls.py:19
+#: deps/django_authopenid/urls.py:27 deps/django_authopenid/urls.py:31
+msgctxt "urls"
 msgid "signin/"
-msgstr "signin/"
+msgstr ""
 
-#: deps/django_authopenid/urls.py:18
-msgid "widget/signin/"
-msgstr "widget/signin/"
+#: deps/django_authopenid/urls.py:19
+msgctxt "urls"
+msgid "widget/"
+msgstr ""
 
-#: deps/django_authopenid/urls.py:21
+#: deps/django_authopenid/urls.py:24
+msgctxt "urls"
 msgid "signout/"
-msgstr "signout/"
+msgstr ""
 
-#: deps/django_authopenid/urls.py:26
+#: deps/django_authopenid/urls.py:31
+msgctxt "urls"
 msgid "complete-oauth/"
-msgstr "complete-oauth/"
+msgstr ""
 
-#: deps/django_authopenid/urls.py:35
+#: deps/django_authopenid/urls.py:40
+msgctxt "urls"
 msgid "register/"
-msgstr "register/"
+msgstr ""
 
-#: deps/django_authopenid/urls.py:37
+#: deps/django_authopenid/urls.py:42
+msgctxt "urls"
 msgid "signup/"
-msgstr "signup/"
-
-#: deps/django_authopenid/urls.py:46
-msgid "logout/"
-msgstr "logout/"
+msgstr ""
 
 #: deps/django_authopenid/urls.py:51
-msgid "recover/"
-msgstr "recover/"
+msgctxt "urls"
+msgid "logout/"
+msgstr ""
 
-#: deps/django_authopenid/urls.py:53
+#: deps/django_authopenid/urls.py:57
+msgctxt "urls"
+msgid "recover/"
+msgstr ""
+
+#: deps/django_authopenid/urls.py:62
+msgctxt "urls"
 msgid "verify-email/"
-msgstr "verify-email/"
+msgstr ""
 
 #: deps/django_authopenid/util.py:402
 #, python-format
@@ -3934,11 +4010,11 @@ msgstr ""
 msgid "Recover your %(site)s account"
 msgstr "إستعادة حساب في  %(site)s"
 
-#: deps/django_authopenid/views.py:1369
+#: deps/django_authopenid/views.py:1370
 msgid "Please check your email and visit the enclosed link."
 msgstr "راجع بريدك، وأضغط على الرابط المرسل بالبريد."
 
-#: deps/group_messaging/models.py:356
+#: deps/group_messaging/models.py:357
 msgid "Re: "
 msgstr "رد:"
 
@@ -3972,51 +4048,51 @@ msgstr "صيغ الصور المسموح بها: %(types)s"
 msgid "Congratulations, you are now an Administrator"
 msgstr "تهانياً، أنت الأن مشرف عام"
 
-#: mail/__init__.py:191
+#: mail/__init__.py:196
 msgid "<p>To post by email, please:</p>"
 msgstr ""
 
-#: mail/__init__.py:193
+#: mail/__init__.py:198
 msgid "<li>Type title in the subject line</li>"
 msgstr "<li>اكتب عنواناً في سطر العنوان</li>"
 
-#: mail/__init__.py:196
+#: mail/__init__.py:201
 msgid "<li>Type details into the email body</li>"
 msgstr ""
 
-#: mail/__init__.py:199
+#: mail/__init__.py:204
 msgid ""
 "<li>The beginning of the subject line can contain tags,\n"
 "<em>enclosed in the square brackets</em> like so: [Tag1; Tag2]</li>"
 msgstr "<li>بداية سطر العنوان يمكن أن تحتوي وسوماً،\n<em>محاطة بأقواس مربعة</em> مثل: [وسم1; وسم2]</li>"
 
-#: mail/__init__.py:203
+#: mail/__init__.py:208
 msgid ""
 "<li>In the beginning of the subject add at least one tag\n"
 "<em>enclosed in the brackets</em> like so: [Tag1; Tag2].</li>"
 msgstr "<li>في بداية العنوان أضف على الأقل وسماً واحداً\n<em>محاطاً بأقواس مربعة</em> مثل: [وسم1; وسم2].</li>"
 
-#: mail/__init__.py:207
+#: mail/__init__.py:212
 msgid ""
 "<p>Note that a tag may consist of more than one word, to separate\n"
 "the tags, use a semicolon or a comma, for example, [One tag; Other tag]</p>"
 msgstr "لاحظ أن الوسم قد يتألف من أكثر من كلمة، للفصل بين الوسوم، استخدم فاصلة منقوطة أو فاصلة عادية، مثل، [وسم واحد; وسم آخر]"
 
-#: mail/__init__.py:222
+#: mail/__init__.py:227
 #, python-format
 msgid ""
 "<p>Sorry, there was an error while processing your message please contact "
 "the %(site)s administrator</p>"
 msgstr ""
 
-#: mail/__init__.py:249
+#: mail/__init__.py:254
 #, python-format
 msgid ""
 "<p>Sorry, in order to make posts to %(site)s by email, please <a "
 "href=\"%(url)s\">register first</a></p>"
 msgstr ""
 
-#: mail/__init__.py:257
+#: mail/__init__.py:262
 msgid ""
 "<p>Sorry, your post could not be made by email due to insufficient "
 "privileges of your user account</p>"
@@ -4029,16 +4105,16 @@ msgid ""
 "             received the notification."
 msgstr "لقد كنت ترد على عنوان بريد غير معروف للنظام أو كنت ترد من عنوان مختلف عن الذي استلمت عليه التنبيه."
 
-#: mail/lamson_handlers.py:265
+#: mail/lamson_handlers.py:266
 #, python-format
 msgid "Re: Welcome to %(site_name)s"
 msgstr "رد: مرحباً في %(site_name)s"
 
-#: mail/lamson_handlers.py:272
+#: mail/lamson_handlers.py:273
 msgid "Please reply to the welcome email without editing it"
 msgstr "يرجى الرد على بريد الترحيب بدون تحريره"
 
-#: mail/lamson_handlers.py:340
+#: mail/lamson_handlers.py:341
 #, python-format
 msgid "Re: %s"
 msgstr "رد: %s"
@@ -4052,7 +4128,7 @@ msgstr ""
 msgid "Please select the best responses to:"
 msgstr ""
 
-#: management/commands/send_email_alerts.py:466
+#: management/commands/send_email_alerts.py:467
 #, python-format
 msgid "%(question_count)d update about %(topics)s"
 msgid_plural "%(question_count)d updates about %(topics)s"
@@ -4063,7 +4139,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: management/commands/send_email_alerts.py:475
+#: management/commands/send_email_alerts.py:476
 #, python-format
 msgid "%(question_count)d update"
 msgid_plural "%(question_count)d updates"
@@ -4074,7 +4150,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: management/commands/send_email_alerts.py:495
+#: management/commands/send_email_alerts.py:496
 msgid "new question"
 msgstr "سؤال جديد"
 
@@ -4262,7 +4338,7 @@ msgstr ""
 msgid "sorry, but older votes cannot be revoked"
 msgstr "الأصوات القديمة لا يمكن التراجع عنها"
 
-#: models/__init__.py:2029 utils/functions.py:98
+#: models/__init__.py:2029 utils/functions.py:103
 #, python-format
 msgid "on %(date)s"
 msgstr "في %(date)s"
@@ -4453,7 +4529,7 @@ msgstr "تهانينا، حصلت على وسام '%(badge_name)s'.\nراجع <a
 msgid "Welcome to %(site_name)s"
 msgstr "مرحباً في %(site_name)s"
 
-#: models/__init__.py:3793 views/commands.py:704
+#: models/__init__.py:3793 views/commands.py:594
 msgid "Your tag subscription was saved, thanks!"
 msgstr "تم حفظ اشتراكك في الوسم، شكراً!"
 
@@ -4688,52 +4764,52 @@ msgstr "نشط جداً في موضوع واحد"
 msgid "message"
 msgstr "رسالة"
 
-#: models/post.py:783 models/question.py:1508
+#: models/post.py:802 models/question.py:1532
 msgid "Sharing did not work, because group is unknown"
 msgstr ""
 
-#: models/post.py:805
+#: models/post.py:824
 msgid "merged revision"
 msgstr ""
 
-#: models/post.py:977 templates/question/answer_controls.html:60
-#: templatetags/extra_filters_jinja.py:136
+#: models/post.py:996 templates/question/answer_controls.html:60
+#: templatetags/extra_filters_jinja.py:140
 msgid "more"
 msgstr "المزيد"
 
-#: models/post.py:1704
+#: models/post.py:1726
 msgid "Sorry, this content is not available"
 msgstr ""
 
-#: models/post.py:1706 models/post.py:1719 models/post.py:1722
+#: models/post.py:1728 models/post.py:1741 models/post.py:1744
 msgid "Sorry, this content is no longer available"
 msgstr ""
 
-#: models/post.py:1735 models/post.py:1738
+#: models/post.py:1757 models/post.py:1760
 msgid "Sorry, this comment is no longer available"
 msgstr ""
 
-#: models/post.py:1757
+#: models/post.py:1779
 msgid "This post is temporarily not available"
 msgstr "هذه المشاركة غير متوفرة مؤقتاً"
 
-#: models/post.py:2230
+#: models/post.py:2252
 msgid "Suggested edit"
 msgstr ""
 
-#: models/post.py:2339
+#: models/post.py:2361
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
 "moderators review."
 msgstr "شكرا لمشاركتك في %(site)s. سيتم نشرها بعد مراجعة المراقبين."
 
-#: models/post.py:2343
+#: models/post.py:2365
 #, python-format
 msgid "your post to %(site)s"
 msgstr "مشاركتك في %(site)s"
 
-#: models/post.py:2350
+#: models/post.py:2372
 msgid ""
 "Your post was placed on the moderation queue and will be published after the"
 " moderator approval."
@@ -4748,7 +4824,7 @@ msgstr "\" و \"%s\""
 msgid "\" and more"
 msgstr "\" و المزيد "
 
-#: models/question.py:985
+#: models/question.py:998
 #, python-format
 msgid "%(count)d answer:"
 msgid_plural "%(count)d answers:"
@@ -4759,12 +4835,12 @@ msgstr[3] "%(count)d أجوبة:"
 msgstr[4] "%(count)d أجوبة:"
 msgstr[5] "%(count)d أجوبة:"
 
-#: models/question.py:1626
+#: models/question.py:1650
 #, python-format
 msgid "Tag %s is new and will be submitted for the moderators approval"
 msgstr "الوسم %s جديد وسيتم ارساله إلى المراقبين للموافقة"
 
-#: models/question.py:1631 models/tag.py:221
+#: models/question.py:1655 models/tag.py:221
 #, python-format
 msgid "Tags %s are new and will be submitted for the moderators approval"
 msgstr "الوسوم %s جديدة وسيتم ارسالها إلى المراقبين للموافقة"
@@ -4787,59 +4863,59 @@ msgstr "<em>تم التعديل بواسطة المشرف. السبب:</em> %(re
 msgid "New tags added to %s"
 msgstr "وسوم جديدة أضيفت إلى %s"
 
-#: models/user.py:313
+#: models/user.py:326
 msgid "Entire forum"
 msgstr "كامل المنتدى"
 
-#: models/user.py:314
+#: models/user.py:327
 msgid "Questions that I asked"
 msgstr "الأسئلة التي سألتها"
 
-#: models/user.py:315
+#: models/user.py:328
 msgid "Questions that I answered"
 msgstr "أسئلة جاوبت عليها"
 
-#: models/user.py:316
+#: models/user.py:329
 msgid "Individually selected questions"
 msgstr "اسئلة مختارة بشكل فردي"
 
-#: models/user.py:317
+#: models/user.py:330
 msgid "Mentions and comment responses"
 msgstr "التنبيهات والتعليقات"
 
-#: models/user.py:320
+#: models/user.py:333
 msgid "Instantly"
 msgstr "فوراً"
 
-#: models/user.py:321
+#: models/user.py:334
 msgid "Daily"
 msgstr "يومي"
 
-#: models/user.py:322
+#: models/user.py:335
 msgid "Weekly"
 msgstr "أسبوعي"
 
-#: models/user.py:323
+#: models/user.py:336
 msgid "No email"
 msgstr "بدون بريد"
 
-#: models/user.py:581
+#: models/user.py:594
 msgid "Can join when they want"
 msgstr "يمكنهم الإنضمام وقتما شاؤوا"
 
-#: models/user.py:582
+#: models/user.py:595
 msgid "Users ask permission"
 msgstr "المستخدمين يطلبون الإذن"
 
-#: models/user.py:583
+#: models/user.py:596
 msgid "Moderator adds users"
 msgstr "المشرف يضيف المستخدمين"
 
-#: models/user.py:633
+#: models/user.py:646
 msgid "Please give a list of valid email addresses."
 msgstr "Please give a list of valid email addresses."
 
-#: models/user.py:644
+#: models/user.py:657
 msgid "Please give a list of valid email domain names."
 msgstr "Please give a list of valid email domain names."
 
@@ -4847,41 +4923,49 @@ msgstr "Please give a list of valid email domain names."
 msgid "css for the widget"
 msgstr "css for the widget"
 
-#: templates/404.html:3 templates/404.html.py:10
+#: setup_templates/settings.py:232
+msgid "account/"
+msgstr "account/"
+
+#: setup_templates/settings.py:232
+msgid "signin/"
+msgstr "signin/"
+
+#: templates/404.html:3 templates/404.html.py:5
 msgid "Page not found"
 msgstr "لم يتم العثور على الصفحة"
 
-#: templates/404.html:13
+#: templates/404.html:7
 msgid "Sorry, could not find the page you requested."
 msgstr "عذراً، لم نجد الصفحة المطلوبة."
 
-#: templates/404.html:15
+#: templates/404.html:8
 msgid "This might have happened for the following reasons:"
 msgstr "قد يكون هذا حصل للأسباب التالية:"
 
-#: templates/404.html:17
+#: templates/404.html:11
 msgid "This page has been deleted"
 msgstr ""
 
-#: templates/404.html:18
+#: templates/404.html:12
 msgid "url has error - please check it;"
 msgstr "الرابط يحتوي أخطاء - فضلاً تأكد؛"
 
-#: templates/404.html:19
+#: templates/404.html:13
 msgid ""
 "the page you tried to visit is protected or you don't have sufficient "
 "points, see"
 msgstr "الصفحة التي تحاول طلبها تطلب صلاحيات خاصية او نقاط معينة، راجع"
 
-#: templates/404.html:19 templates/widgets/footer.html:39
+#: templates/404.html:14 templates/widgets/footer.html:39
 msgid "faq"
 msgstr "أشئلة شائعة"
 
-#: templates/404.html:20
+#: templates/404.html:16
 msgid "if you believe this error 404 should not have occured, please"
 msgstr "إذا كنت متأكد ان الخطأ 404 يجب أن لا يظهر لك، فضلاً"
 
-#: templates/404.html:21
+#: templates/404.html:17
 msgid "report this problem"
 msgstr "بلغ عن هذه المشكلة"
 
@@ -4906,7 +4990,7 @@ msgstr "رجوع"
 msgid "Save edit"
 msgstr "حفظ التعديلات"
 
-#: templates/answer_edit.html:50 templates/close.html:16
+#: templates/answer_edit.html:50 templates/close.html:17
 #: templates/feedback.html:61 templates/question_edit.html:66
 #: templates/question_retag.html:22 templates/reopen.html:26
 #: templates/subscribe_for_tags.html:16 templates/avatar/add.html:17
@@ -4916,16 +5000,16 @@ msgstr "حفظ التعديلات"
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: templates/answer_edit.html:90 templates/answer_edit.html.py:93
-#: templates/ask.html:60 templates/ask.html.py:63
-#: templates/question_edit.html:110 templates/question_edit.html.py:113
-#: templates/question/javascript.html:103
-#: templates/question/javascript.html:106 templates/widgets/edit_post.html:73
+#: templates/answer_edit.html:89 templates/answer_edit.html.py:92
+#: templates/ask.html:58 templates/ask.html.py:61
+#: templates/question_edit.html:111 templates/question_edit.html.py:114
+#: templates/question/javascript.html:122
+#: templates/question/javascript.html:125 templates/widgets/edit_post.html:73
 msgid "hide preview"
 msgstr "إخفاء العرض المسبق"
 
-#: templates/answer_edit.html:93 templates/ask.html:63
-#: templates/question_edit.html:113 templates/question/javascript.html:106
+#: templates/answer_edit.html:92 templates/ask.html:61
+#: templates/question_edit.html:114 templates/question/javascript.html:125
 msgid "show preview"
 msgstr "مشاهدة العرض المسبق"
 
@@ -4973,7 +5057,7 @@ msgstr "في الأسفل تجد قائمة الأوسمة المتاحة حال
 
 #: templates/badges.html:32
 msgid "Community badges"
-msgstr "رتب الأوسمة"
+msgstr ""
 
 #: templates/badges.html:34
 msgid "gold badge: the highest honor and is very rare"
@@ -4999,15 +5083,16 @@ msgstr "الوسام البرونزي: هو أول مستويات التكريم
 msgid "RSS feed from %(site_title)s"
 msgstr "خلاصات RSS لموقع %(site_title)s"
 
-#: templates/close.html:11
+#: templates/close.html:12
 msgid "Reasons"
 msgstr "الأسباب"
 
-#: templates/close.html:15
+#: templates/close.html:16
 msgid "OK to close"
 msgstr "نعم للإغلاق"
 
-#: templates/faq_static.html:3 templates/faq_static.html.py:5 views/meta.py:83
+#: templates/faq_static.html:3 templates/faq_static.html.py:5
+#: views/meta.py:102
 msgid "FAQ"
 msgstr "أسئلة شائعة"
 
@@ -5225,7 +5310,7 @@ msgid "Send Feedback"
 msgstr "إرسال المقترحات"
 
 #: templates/groups.html:3 templates/groups.html.py:6
-#: templates/question/sidebar.html:107
+#: templates/question/sidebar.html:109
 #: templates/tags/list_bulk_tag_subscription.html:15
 msgid "Groups"
 msgstr "المجموعات"
@@ -5474,110 +5559,123 @@ msgid ""
 "        Anyone with karma &gt;%(wiki_min_rep)s is welcome to improve it."
 msgstr "هذه المشاركة ويكي.\n        أي عضو مع قوة سمعة +%(wiki_min_rep)s  بإمكانة تحسين المحتوى."
 
-#: templates/macros.html:236 templates/macros.html.py:242
+#: templates/macros.html:237 templates/macros.html.py:243
 msgid "Leave this group"
 msgstr "ترك هذه المجموعة"
 
-#: templates/macros.html:237 templates/macros.html.py:239
-#: templates/macros.html:258
+#: templates/macros.html:238 templates/macros.html.py:240
+#: templates/macros.html:259
 msgid "Join this group"
 msgstr "الإنضمام لهذه المجموعة"
 
-#: templates/macros.html:238 templates/macros.html.py:243
-#: templates/macros.html:253
+#: templates/macros.html:239 templates/macros.html.py:244
+#: templates/macros.html:254
 msgid "You are a member"
 msgstr "انت عضو"
 
-#: templates/macros.html:245
+#: templates/macros.html:246
 msgid "Cancel application"
 msgstr "إلغاء تطبيق"
 
-#: templates/macros.html:246 templates/macros.html.py:255
+#: templates/macros.html:247 templates/macros.html.py:256
 msgid "Waiting approval"
 msgstr "بانتظار الموافقة"
 
-#: templates/macros.html:248 templates/macros.html.py:249
-#: templates/macros.html:260
+#: templates/macros.html:249 templates/macros.html.py:250
+#: templates/macros.html:261
 msgid "Ask to join"
 msgstr "طلب إنضمام"
 
-#: templates/macros.html:376
-msgid "Comments"
-msgstr "التعليقات"
+#: templates/macros.html:333 templates/macros.html.py:344
+#: templates/question.html:374
+msgid "add a comment"
+msgstr "أضف تعليق"
 
-#: templates/macros.html:409
+#: templates/macros.html:337
+msgid "load older comments"
+msgstr ""
+
+#: templates/macros.html:339
+msgid "see more comments"
+msgstr "المزيد من التعليقات"
+
+#: templates/macros.html:374
 msgid "delete this comment"
 msgstr "حذف هذا التعليق"
 
-#: templates/macros.html:413 templates/question/answer_card.html:24
+#: templates/macros.html:377 templates/question/answer_card.html:24
 #: templates/question/question_card.html:17
 msgid "This post is awaiting moderation"
 msgstr ""
 
-#: templates/macros.html:425 templates/revisions.html:38
+#: templates/macros.html:393 templates/revisions.html:38
 #: templates/revisions.html.py:41 templates/question/answer_controls.html:5
 #: templates/question/question_controls.html:1
 msgid "edit"
 msgstr "تعديل"
 
-#: templates/macros.html:434
+#: templates/macros.html:402
 msgid "convert to answer"
 msgstr "تحويل لإجابة"
 
-#: templates/macros.html:561
+#: templates/macros.html:433
+msgid "Comments"
+msgstr "التعليقات"
+
+#: templates/macros.html:542
 #, python-format
 msgid "follow %(alias)s"
 msgstr "تابع %(alias)s"
 
-#: templates/macros.html:564
+#: templates/macros.html:545
 #, python-format
 msgid "unfollow %(alias)s"
 msgstr "إلغاء متابعة %(alias)s"
 
-#: templates/macros.html:565
+#: templates/macros.html:546
 #, python-format
 msgid "following %(alias)s"
 msgstr "متابع %(alias)s"
 
-#: templates/macros.html:644 templatetags/extra_tags.py:45
+#: templates/macros.html:625 templatetags/extra_tags.py:45
 #, python-format
 msgid "%(username)s gravatar image"
 msgstr "الصورة الرمزية للعضو %(username)s"
 
-#: templates/macros.html:653
+#: templates/macros.html:634
 #, python-format
 msgid "%(username)s's website is %(url)s"
 msgstr "موقع %(username)s هو %(url)s"
 
-#: templates/macros.html:674 templates/macros.html.py:675
-#: templates/macros.html:736 templates/macros.html.py:737
+#: templates/macros.html:655 templates/macros.html.py:656
+#: templates/macros.html:717 templates/macros.html.py:718
 msgid "previous"
 msgstr "السابقة"
 
-#: templates/macros.html:693 templates/macros.html.py:748
+#: templates/macros.html:674 templates/macros.html.py:729
 msgid "current page"
 msgstr "الصفحة الحالية"
 
-#: templates/macros.html:699 templates/macros.html.py:712
-#: templates/macros.html:750 templates/macros.html.py:757
+#: templates/macros.html:680 templates/macros.html.py:693
+#: templates/macros.html:731 templates/macros.html.py:738
 #, python-format
 msgid "page %(num)s"
 msgstr "صفحة %(num)s"
 
-#: templates/macros.html:721 templates/macros.html.py:761
+#: templates/macros.html:702 templates/macros.html.py:742
 msgid "next page"
 msgstr "الصفحة التالية"
 
-#: templates/macros.html:722
+#: templates/macros.html:703
 msgid "next"
 msgstr ""
 
-#: templates/macros.html:773
+#: templates/macros.html:754
 #, python-format
 msgid "responses for %(username)s"
 msgstr "ردود من %(username)s"
 
-#: templates/macros.html:775
+#: templates/macros.html:756
 #, python-format
 msgid "you have %(response_count)s new response"
 msgid_plural "you have %(response_count)s new responses"
@@ -5588,34 +5686,26 @@ msgstr[3] "لديك %(response_count)s ردود جديد"
 msgstr[4] "لديك %(response_count)s ردود جديد"
 msgstr[5] "لديك %(response_count)s ردود جديد"
 
-#: templates/macros.html:787 templates/macros.html.py:788
+#: templates/macros.html:768 templates/macros.html.py:769
 #, python-format
 msgid "%(new)s new flagged posts and %(seen)s previous"
 msgstr "%(new)s مشاركات جديدة معلَّمة و %(seen)s مسبقاً"
 
-#: templates/macros.html:790 templates/macros.html.py:791
+#: templates/macros.html:771 templates/macros.html.py:772
 #, python-format
 msgid "%(new)s new flagged posts"
 msgstr "%(new)s مشاركات معلَّمة جديدة"
 
-#: templates/macros.html:796 templates/macros.html.py:797
+#: templates/macros.html:777 templates/macros.html.py:778
 #, python-format
 msgid "%(seen)s flagged posts"
 msgstr "%(seen)s مشاركات معلمة"
 
-#: templates/main_page.html:14
+#: templates/main_page.html:15
 msgid "Questions"
 msgstr "الأسئلة"
 
-#: templates/question.html:272
-msgid "see more comments"
-msgstr "المزيد من التعليقات"
-
-#: templates/question.html:274 templates/question.html.py:379
-msgid "add a comment"
-msgstr "أضف تعليق"
-
-#: templates/question.html:298 templates/widgets/ask_form.html:69
+#: templates/question.html:291 templates/widgets/ask_form.html:69
 msgid "Login/Signup to Post"
 msgstr "سجل دخول للنشر"
 
@@ -5647,7 +5737,7 @@ msgstr "الوسوم تساعد على ترتيب المحتوى والبحث ف
 msgid "tag editors receive special awards from the community"
 msgstr "محرري الوسوم يرسل لهم جوائز خاصة من الأعضاء"
 
-#: templates/question_retag.html:59
+#: templates/question_retag.html:61
 msgid "up to 5 tags, less than 20 characters each"
 msgstr "حتى 5 وسوم، أقل من 20 حرفاً لكل واحد منها"
 
@@ -5691,14 +5781,10 @@ msgstr "يرجى الاشتراك للوسوم التالية:"
 msgid "Subscribe"
 msgstr "أشترك"
 
-#: templates/tags.html:17
-msgid "search for tags"
-msgstr "البحث عن مواضيع"
-
 #: templates/users.html:8 templates/users.html.py:18
 #: templates/tags/list_bulk_tag_subscription.html:13
 msgid "Users"
-msgstr "الأعضاء"
+msgstr ""
 
 #: templates/users.html:16
 #, python-format
@@ -5724,8 +5810,8 @@ msgid "see people with the highest reputation"
 msgstr "مشاهدة الأعضاء حسب قوة عطائهم"
 
 #: templates/users.html:41 templates/user_profile/user_info.html:25
-#: templates/user_profile/user_reputation.html:5
-#: templates/user_profile/user_tabs.html:20
+#: templates/user_profile/user_reputation.html:4
+#: templates/user_profile/user_tabs.html:24
 msgid "karma"
 msgstr "قوة السمعة"
 
@@ -5755,8 +5841,8 @@ msgid "users matching query %(search_query)s:"
 msgstr "المستخدمين المطابقين للطلب %(search_query)s:"
 
 #: templates/users.html:69
-msgid "Nothing found."
-msgstr "لم يتم العثور على شيء."
+msgid "No users found."
+msgstr ""
 
 #: templates/authopenid/authopenid_macros.html:63
 msgid "Please enter your <span>user name</span>, then sign in"
@@ -5792,9 +5878,9 @@ msgid ""
 "                    "
 msgstr "<strong>البريد الإلكتروني</strong> (<i>مخفي، غير ظار للأعضاء والزوار، ويجب ان يكون صحيح</i>)"
 
-#: templates/authopenid/complete.html:76
+#: templates/authopenid/complete.html:79
 #: templates/authopenid/signup_with_password.html:5
-#: templates/authopenid/signup_with_password.html:44
+#: templates/authopenid/signup_with_password.html:46
 msgid "Signup"
 msgstr "تسجيل"
 
@@ -5855,7 +5941,7 @@ msgstr ""
 
 #: templates/authopenid/logout.html:3
 msgid "Logout"
-msgstr "تسجيل خروج"
+msgstr ""
 
 #: templates/authopenid/logout.html:5
 msgid "You have successfully logged out"
@@ -5975,7 +6061,8 @@ msgstr "آخر إستخدام"
 #: templates/authopenid/signin.html:174
 #: templates/authopenid/widget_signin.html:167
 #: templates/question/answer_controls.html:33
-#: templates/question/question_controls.html:37
+#: templates/question/question_controls.html:34
+#: templates/user_inbox/responses.html:10
 msgid "delete"
 msgstr "حذف"
 
@@ -6028,20 +6115,24 @@ msgstr "انشاء اسم تسجيل الدخول وكلمة المرور"
 
 #: templates/authopenid/signup_with_password.html:27
 msgid ""
-"<span class='strong big'>If you prefer, create your forum login name and \n"
-"password here. However</span>, please keep in mind that we also support \n"
-"<strong>OpenID</strong> login method. With <strong>OpenID</strong> you can \n"
-"simply reuse your external login (e.g. Gmail or AOL) without ever sharing \n"
+"<span class='strong big'>If you prefer, create your forum login name and\n"
+"password here. However</span>, please keep in mind that we also support\n"
+"<strong>OpenID</strong> login method. With <strong>OpenID</strong> you can\n"
+"simply reuse your external login (e.g. Gmail or AOL) without ever sharing\n"
 "your login details with anyone and having to remember yet another password."
-msgstr "<span class='strong big'>إذا كنت تفضل،, انشيء  اسم تسجيل دخول المنتدى و\nكلمة السر هنا. على كل حال</span>، يرجى العلم بأننا ندعم أيضا طريقة\n<strong>OpenID</strong> لتسجيل الدخول. مع <strong>OpenID</strong> يمكنك \nببساطة إعادة استخدام تسجيل دخولك الخارجي (مثل Gmail أو Yahoo) بدون أن تشارك \nتفاصيل دخول مع أي أحد وبدون أن تتذكر كلمة مرور أخرى أيضا."
+msgstr ""
 
-#: templates/authopenid/signup_with_password.html:46
+#: templates/authopenid/signup_with_password.html:48
 msgid "or"
 msgstr "أو"
 
-#: templates/authopenid/signup_with_password.html:47
+#: templates/authopenid/signup_with_password.html:49
 msgid "return to OpenID login"
 msgstr "العودة لتسجيل الدخول عن طريق OpenID"
+
+#: templates/authopenid/tos_field.html:4
+msgid "Terms of service:"
+msgstr ""
 
 #: templates/authopenid/verify_email.html:2
 #: templates/authopenid/verify_email.html:4
@@ -6347,16 +6438,42 @@ msgid ""
 " on %(site_name)s by email."
 msgstr ""
 
-#: templates/embed/list_widgets.html:44
+#: templates/embed/list_widgets.html:5
+#, python-format
+msgid "%(type)s widget list"
+msgstr ""
+
+#: templates/embed/list_widgets.html:8
+msgid "Widget Title"
+msgstr ""
+
+#: templates/embed/list_widgets.html:9
+msgid "Code"
+msgstr ""
+
+#: templates/embed/list_widgets.html:10
+msgid "Actions"
+msgstr ""
+
+#: templates/embed/list_widgets.html:23 templates/embed/list_widgets.html:34
+#: templates/tags/list_bulk_tag_subscription.html:49 views/commands.py:658
+msgid "Edit"
+msgstr "تعديل"
+
+#: templates/embed/list_widgets.html:24 templates/embed/list_widgets.html:35
+#: templates/tags/list_bulk_tag_subscription.html:53
+msgid "Delete"
+msgstr ""
+
+#: templates/embed/list_widgets.html:48
 msgid "How to use?"
 msgstr "How to use?"
 
-#: templates/embed/list_widgets.html:45
+#: templates/embed/list_widgets.html:50
 msgid ""
-"\n"
-"    Just copy the &lt;script&gt; tag provided and paste it in the site where you wan to put it.\n"
-"    "
-msgstr "\n    Just copy the &lt;script&gt; tag provided and paste it in the site where you wan to put it.\n    "
+"Just copy the &lt;script&gt; tag provided and paste it in the site where you"
+" wan to put it."
+msgstr ""
 
 #: templates/embed/widget_form.html:3 templates/embed/widget_form.html.py:5
 #, python-format
@@ -6366,6 +6483,7 @@ msgstr "%(action)s an %(widget_name)s widget"
 #: templates/embed/widget_form.html:14
 #: templates/livesettings/group_settings.html:47
 #: templates/livesettings/site_settings.html:93
+#: templates/tags/form_bulk_tag_subscription.html:10
 msgid "Save"
 msgstr "حفظ"
 
@@ -6412,7 +6530,7 @@ msgid "Messages by sender:"
 msgstr "الرسائل حسب المرسل:"
 
 #: templates/group_messaging/senders_list.html:5
-#: templates/user_inbox/base.html:6 templates/user_profile/user_tabs.html:10
+#: templates/user_inbox/base.html:5
 msgid "inbox"
 msgstr "الرسائل"
 
@@ -6642,7 +6760,7 @@ msgstr ""
 msgid "Select:"
 msgstr ""
 
-#: templates/moderation/queue.html:12
+#: templates/moderation/queue.html:12 templates/user_inbox/responses.html:13
 msgid "none"
 msgstr "لاشيء"
 
@@ -6679,28 +6797,28 @@ msgid "remove offensive flag"
 msgstr "إلغاء تبليغ الإساءة"
 
 #: templates/question/answer_controls.html:13
-#: templates/question/question_controls.html:12
+#: templates/question/question_controls.html:9
 msgid "remove flag"
 msgstr "إزالة التبليغ"
 
 #: templates/question/answer_controls.html:18
 #: templates/question/answer_controls.html:26
-#: templates/question/question_controls.html:10
-#: templates/question/question_controls.html:16
-#: templates/question/question_controls.html:23
+#: templates/question/question_controls.html:7
+#: templates/question/question_controls.html:13
+#: templates/question/question_controls.html:20
 msgid ""
 "report as offensive (i.e containing spam, advertising, malicious text, etc.)"
 msgstr "التبليغ على المحتوى (مثلا سبام، دعائي، يحتوي روابط ضارة، يحتوي مواد سيئة...الخ.)"
 
 #: templates/question/answer_controls.html:20
 #: templates/question/answer_controls.html:28
-#: templates/question/question_controls.html:18
-#: templates/question/question_controls.html:25
+#: templates/question/question_controls.html:15
+#: templates/question/question_controls.html:22
 msgid "flag offensive"
 msgstr "تبليغ إساءة"
 
 #: templates/question/answer_controls.html:33
-#: templates/question/question_controls.html:37
+#: templates/question/question_controls.html:34
 msgid "undelete"
 msgstr "إلغاء الحذف"
 
@@ -6742,43 +6860,36 @@ msgstr ""
 msgid "close date %(closed_at)s"
 msgstr "تاريخ الإغلاق %(closed_at)s"
 
-#: templates/question/question_controls.html:5
+#: templates/question/question_controls.html:2
 msgid "retag"
 msgstr "إعادة تعيين المواضيع"
 
-#: templates/question/question_controls.html:29
+#: templates/question/question_controls.html:26
 msgid "reopen"
 msgstr "إعادة فتح"
 
-#: templates/question/question_controls.html:31
+#: templates/question/question_controls.html:28
 msgid "close"
 msgstr "إغلاق"
 
-#: templates/question/question_controls.html:33
+#: templates/question/question_controls.html:30
 msgid "merge"
 msgstr ""
 
 #: templates/question/sidebar.html:11
-msgid "click to unfollow "
-msgstr ""
-
-#: templates/question/sidebar.html:12
-msgid "Following"
-msgstr "مُتابع"
-
-#: templates/question/sidebar.html:13
 msgid "Unfollow"
 msgstr "إلغاء المتابعة"
 
-#: templates/question/sidebar.html:17
-msgid "click to follow "
-msgstr ""
-
-#: templates/question/sidebar.html:18
+#: templates/question/sidebar.html:12 templates/question/sidebar.html.py:14
+#: templates/question/sidebar.html:20
 msgid "Follow"
 msgstr "تابع"
 
-#: templates/question/sidebar.html:25
+#: templates/question/sidebar.html:13 templates/question/sidebar.html.py:18
+msgid "Following"
+msgstr "مُتابع"
+
+#: templates/question/sidebar.html:27
 #, python-format
 msgid "%(count)s follower"
 msgid_plural "%(count)s followers"
@@ -6789,19 +6900,19 @@ msgstr[3] "%(count)s متابعين"
 msgstr[4] "%(count)s متابعين"
 msgstr[5] "%(count)s متابعين"
 
-#: templates/question/sidebar.html:33
+#: templates/question/sidebar.html:35
 msgid "subscribe to the rss feed"
 msgstr ""
 
-#: templates/question/sidebar.html:34
+#: templates/question/sidebar.html:36
 msgid "subscribe to rss feed"
 msgstr "الإشتراك بخلاصة RSS"
 
-#: templates/question/sidebar.html:44
+#: templates/question/sidebar.html:46
 msgid "Invite"
 msgstr "دعوة"
 
-#: templates/question/sidebar.html:49 templates/question/sidebar.html.py:55
+#: templates/question/sidebar.html:51 templates/question/sidebar.html.py:57
 #: templates/user_profile/user_email_subscriptions.html:59
 #: templates/widgets/tag_selector.html:20
 #: templates/widgets/tag_selector.html:37
@@ -6809,58 +6920,58 @@ msgstr "دعوة"
 msgid "add"
 msgstr "أضف"
 
-#: templates/question/sidebar.html:51 templates/question/sidebar.html.py:57
+#: templates/question/sidebar.html:53 templates/question/sidebar.html.py:59
 msgid "- or -"
 msgstr "- أو -"
 
-#: templates/question/sidebar.html:69
+#: templates/question/sidebar.html:71
 msgid "share with everyone"
 msgstr "مشاركة مع الجميع"
 
-#: templates/question/sidebar.html:82
+#: templates/question/sidebar.html:84
 msgid "Individual users"
 msgstr "المستخدمين الفرديين"
 
-#: templates/question/sidebar.html:87
+#: templates/question/sidebar.html:89
 msgid "You"
 msgstr "أنت"
 
-#: templates/question/sidebar.html:94 templates/question/sidebar.html:114
+#: templates/question/sidebar.html:96 templates/question/sidebar.html:116
 msgid "and"
 msgstr "و"
 
-#: templates/question/sidebar.html:119
+#: templates/question/sidebar.html:121
 #, python-format
 msgid "%(more_count)s more"
 msgstr "%(more_count)s المزيد"
 
-#: templates/question/sidebar.html:125
+#: templates/question/sidebar.html:127
 msgid "Public thread"
 msgstr "موضوع عام"
 
-#: templates/question/sidebar.html:126
+#: templates/question/sidebar.html:128
 #, python-format
 msgid ""
 "This thread is public, all members of %(site_name)s can read this page."
 msgstr "هذا الموضوع عام، جميع أعضاء %(site_name)s يمكنهم قراءة هذه الصفحة."
 
-#: templates/question/sidebar.html:134
+#: templates/question/sidebar.html:136
 msgid "Stats"
 msgstr "إحصاءات"
 
-#: templates/question/sidebar.html:136
+#: templates/question/sidebar.html:138
 msgid "Asked"
 msgstr "سأل"
 
-#: templates/question/sidebar.html:139
+#: templates/question/sidebar.html:141
 msgid "Seen"
 msgstr "شوهد"
 
-#: templates/question/sidebar.html:139
+#: templates/question/sidebar.html:141
 msgid "times"
 msgstr "مرة"
 
-#: templates/question/sidebar.html:142
+#: templates/question/sidebar.html:144
 msgid "Last updated"
 msgstr "آخر تعديل"
 
@@ -6905,11 +7016,11 @@ msgstr "إدارة الإشتراكات"
 msgid "Manage Tag subscriptions"
 msgstr "إدارة إشتراكات المواضيع"
 
-#: templates/tags/list_bulk_tag_subscription.html:6
-msgid "Manage Tag subscription</a> "
-msgstr "إدارة إشتراكات المواضيع</a> "
+#: templates/tags/list_bulk_tag_subscription.html:7
+msgid "Manage Tag subscription"
+msgstr ""
 
-#: templates/tags/list_bulk_tag_subscription.html:6
+#: templates/tags/list_bulk_tag_subscription.html:8
 msgid "Create New"
 msgstr "إنشاء جديد"
 
@@ -6921,29 +7032,25 @@ msgstr "التاريخ"
 msgid "Action"
 msgstr "الفعل"
 
-#: templates/tags/list_bulk_tag_subscription.html:48 views/commands.py:768
-msgid "Edit"
-msgstr "تعديل"
-
-#: templates/user_inbox/base.html:15
+#: templates/user_inbox/base.html:13
 msgid "Sections:"
 msgstr "الأقسام:"
 
-#: templates/user_inbox/base.html:20
+#: templates/user_inbox/base.html:18
 msgid "messages"
 msgstr "الرسائل"
 
-#: templates/user_inbox/base.html:25
+#: templates/user_inbox/base.html:23
 #, python-format
 msgid "forum responses (<span class=\"response-count\">%(re_count)s</span>)"
 msgstr ""
 
-#: templates/user_inbox/base.html:32
+#: templates/user_inbox/base.html:30
 #, python-format
 msgid "flagged items (<span class=\"mod-memo-count\">%(flags_count)s</span>)"
 msgstr ""
 
-#: templates/user_inbox/base.html:39
+#: templates/user_inbox/base.html:37
 msgid "group join requests"
 msgstr ""
 
@@ -6959,16 +7066,22 @@ msgstr "صرح"
 msgid "Deny"
 msgstr "أحجب"
 
-#: templates/user_inbox/messages.html:104
-msgid "inbox - messages"
-msgstr "صندوق الرسائل"
-
-#: templates/user_inbox/responses.html:4
-msgid "inbox - moderation queue"
+#: templates/user_inbox/messages.html:9
+#: templates/user_profile/user_tabs.html:13
+msgid "private messages"
 msgstr ""
 
-#: templates/user_inbox/responses.html:8
-msgid "Clear new notifications"
+#: templates/user_inbox/responses.html:4
+#: templates/user_profile/user_tabs.html:10
+msgid "notifications"
+msgstr ""
+
+#: templates/user_inbox/responses.html:9
+msgid "mark seen"
+msgstr ""
+
+#: templates/user_inbox/responses.html:11
+msgid "select:"
 msgstr ""
 
 #: templates/user_profile/twitter_sharing_controls.html:8
@@ -7041,7 +7154,7 @@ msgid "Update"
 msgstr "تحديث"
 
 #: templates/user_profile/user_email_subscriptions.html:5
-#: templates/user_profile/user_tabs.html:36
+#: templates/user_profile/user_tabs.html:40
 msgid "subscriptions"
 msgstr "النشرات والتنبيهات"
 
@@ -7131,7 +7244,7 @@ msgid "votes left"
 msgstr "صوت"
 
 #: templates/user_profile/user_moderate.html:4
-#: templates/user_profile/user_tabs.html:41
+#: templates/user_profile/user_tabs.html:45
 msgid "moderation"
 msgstr "الإشراف"
 
@@ -7217,7 +7330,7 @@ msgid ""
 msgstr ""
 
 #: templates/user_profile/user_network.html:5
-#: templates/user_profile/user_tabs.html:15
+#: templates/user_profile/user_tabs.html:19
 msgid "network"
 msgstr "شبكة المتابعة"
 
@@ -7255,7 +7368,7 @@ msgid "%(username)s's network is empty"
 msgstr "شبكة %(username)s فارغة"
 
 #: templates/user_profile/user_recent.html:5
-#: templates/user_profile/user_tabs.html:27
+#: templates/user_profile/user_tabs.html:31
 msgid "activity"
 msgstr "سجل التفاعل"
 
@@ -7264,11 +7377,11 @@ msgstr "سجل التفاعل"
 msgid "source"
 msgstr "مصدر"
 
-#: templates/user_profile/user_reputation.html:12
+#: templates/user_profile/user_reputation.html:10
 msgid "Your karma change log."
 msgstr "سجل تغيرات السمعة"
 
-#: templates/user_profile/user_reputation.html:14
+#: templates/user_profile/user_reputation.html:12
 #, python-format
 msgid "%(user_name)s's karma change log"
 msgstr "سجل تغيرات سمعة %(user_name)s"
@@ -7315,7 +7428,7 @@ msgstr[5] "<span class=\"count\">%(counter)s</span> شارات"
 msgid "Answer to:"
 msgstr "مجاب لـ:"
 
-#: templates/user_profile/user_tabs.html:31
+#: templates/user_profile/user_tabs.html:35
 #: templates/user_profile/user_votes.html:5
 msgid "votes"
 msgstr "الأصوات"
@@ -7337,10 +7450,6 @@ msgstr "أضافة التفاصيل (إختياري)"
 #: templates/widgets/ask_form.html:26
 msgid "Add details"
 msgstr "إضافة التفاصيل"
-
-#: templates/widgets/ask_form.html:59
-msgid "Select language"
-msgstr "إختيار اللغة"
 
 #: templates/widgets/contributors.html:3
 msgid "Contributors"
@@ -7368,6 +7477,14 @@ msgid ""
 "email below."
 msgstr "للنشر بالنيابة عن عضو أخر، يرجى كتابة أسم المستخدم والبريد بالأسفل."
 
+#: templates/widgets/edit_post.html:93
+msgid "User name"
+msgstr ""
+
+#: templates/widgets/edit_post.html:97
+msgid "Email address"
+msgstr ""
+
 #: templates/widgets/footer.html:33
 #, python-format
 msgid "Content on this site is licensed under a %(license)s"
@@ -7385,7 +7502,11 @@ msgstr "مساعدة"
 msgid "privacy policy"
 msgstr "بيان الخصوصية"
 
-#: templates/widgets/footer.html:51
+#: templates/widgets/footer.html:43
+msgid "terms of service"
+msgstr ""
+
+#: templates/widgets/footer.html:52
 msgid "give feedback"
 msgstr "مقترحات"
 
@@ -7417,38 +7538,38 @@ msgstr ""
 msgid "How users join this group?"
 msgstr "كيف ينضم الأعضاء لهذه المجموعة؟"
 
-#: templates/widgets/group_info.html:87
+#: templates/widgets/group_info.html:85
 msgid "Can moderate site"
 msgstr ""
 
-#: templates/widgets/group_info.html:97
+#: templates/widgets/group_info.html:95
 msgid "Allow only read access"
 msgstr "السماح فقط بالقراءة"
 
-#: templates/widgets/group_info.html:106
+#: templates/widgets/group_info.html:104
 msgid "List of preapproved email addresses"
 msgstr ""
 
-#: templates/widgets/group_info.html:107
+#: templates/widgets/group_info.html:105
 msgid ""
 "Users with these email adderesses will be added to the group automatically."
 msgstr ""
 
-#: templates/widgets/group_info.html:108
+#: templates/widgets/group_info.html:106
 msgid "edit preapproved emails"
 msgstr ""
 
-#: templates/widgets/group_info.html:116
+#: templates/widgets/group_info.html:114
 msgid "List of preapproved email domain names"
 msgstr ""
 
-#: templates/widgets/group_info.html:117
+#: templates/widgets/group_info.html:115
 msgid ""
 "Users whose email adderesses belong to these domains will be added to the "
 "group automatically."
 msgstr ""
 
-#: templates/widgets/group_info.html:118
+#: templates/widgets/group_info.html:116
 msgid "edit preapproved email domains"
 msgstr ""
 
@@ -7504,7 +7625,7 @@ msgstr "الأعضاء والمجموعات"
 
 #: templates/widgets/meta_nav.html:21
 msgid "users"
-msgstr "الأعضاء"
+msgstr ""
 
 #: templates/widgets/meta_nav.html:28
 msgid "badges"
@@ -7552,6 +7673,10 @@ msgstr "الكل"
 #: templates/widgets/scope_nav.html:20
 msgid "FOLLOWED"
 msgstr "المتابعة"
+
+#: templates/widgets/search_bar.html:20
+msgid "search or ask your question"
+msgstr ""
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
@@ -7640,11 +7765,11 @@ msgstr "حالياً، لديك الصلاحيات على"
 msgid "Make new posts"
 msgstr ""
 
-#: templatetags/extra_filters_jinja.py:350
+#: templatetags/extra_filters_jinja.py:362
 msgid "no"
 msgstr "0"
 
-#: utils/decorators.py:104 views/commands.py:147
+#: utils/decorators.py:104
 msgid "Oops, apologies - there was some error"
 msgstr "المعذرة - هناك خطأ ما"
 
@@ -7728,15 +7853,15 @@ msgstr "كلمة المرور  <i>(أعد كتابتها)</i>"
 msgid "please, retype your password"
 msgstr "فضلاً قم بإعادة كتابة كلمة المرور"
 
-#: utils/functions.py:102
+#: utils/functions.py:107
 msgid "2 days ago"
 msgstr "منذ يومين"
 
-#: utils/functions.py:104
+#: utils/functions.py:109
 msgid "yesterday"
 msgstr "البارحة"
 
-#: utils/functions.py:107
+#: utils/functions.py:112
 #, python-format
 msgid "%(hr)d hour ago"
 msgid_plural "%(hr)d hours ago"
@@ -7747,7 +7872,7 @@ msgstr[3] "منذ %(hr)d ساعات"
 msgstr[4] "منذ %(hr)d ساعات"
 msgstr[5] "منذ %(hr)d ساعات"
 
-#: utils/functions.py:113
+#: utils/functions.py:118
 #, python-format
 msgid "%(min)d min ago"
 msgid_plural "%(min)d mins ago"
@@ -7757,6 +7882,10 @@ msgstr[2] "منذ %(min)d دقيقتان"
 msgstr[3] "منذ %(min)d دقائق"
 msgstr[4] "منذ %(min)d دقائق"
 msgstr[5] "منذ %(min)d دقائق"
+
+#: utils/html.py:226
+msgid "please login"
+msgstr ""
 
 #: views/avatar_views.py:103
 msgid "Successfully uploaded a new avatar."
@@ -7770,144 +7899,130 @@ msgstr "تم بنجاح تعديل الصورة المصغرة."
 msgid "Successfully deleted the requested avatars."
 msgstr "تم بنجاح حذف الصورة الرمزية"
 
-#: views/commands.py:124 views/moderation.py:197
-msgid "your post was not accepted"
-msgstr "مشاركتك لم تقبل"
-
-#: views/commands.py:137
-msgid "Sorry, but anonymous users cannot access the inbox"
-msgstr "المعذرة، الزوار لا يمكنهم الوصول لصندوق الوارد"
-
-#: views/commands.py:166
+#: views/commands.py:63
 msgid "Sorry, anonymous users cannot vote"
 msgstr "الزوار لا يمكنهم التصويت"
 
-#: views/commands.py:183
+#: views/commands.py:80
 msgid "Sorry you ran out of votes for today"
 msgstr "لقد أستنفذت الحد الأقصى من الأصوات باليوم الواحد"
 
-#: views/commands.py:189
+#: views/commands.py:86
 #, python-format
 msgid "You have %(votes_left)s votes left for today"
 msgstr "تبقى لديك %(votes_left)s صوت لهذا اليوم"
 
-#: views/commands.py:264
+#: views/commands.py:161
 msgid "Sorry, something is not right here..."
 msgstr "المعذرة، شيء غير صحيح هنا..."
 
-#: views/commands.py:287
+#: views/commands.py:184
 #, python-format
 msgid "Sorry, but anonymous users cannot %(perform_action)s"
 msgstr ""
 
-#: views/commands.py:401
+#: views/commands.py:291
 #, python-format
 msgid ""
 "Your subscription is saved, but email address %(email)s needs to be "
 "validated, please see <a href=\"%(details_url)s\">more details here</a>"
 msgstr "تم حفظ اشتراكك، لكن عنون البريد %(email)s يحتاج إلى تأكيد، يرجى قرائة <a href=\"%(details_url)s\">المزيد من التفاصيل هنا</a>"
 
-#: views/commands.py:410
+#: views/commands.py:300
 msgid "email update frequency has been set to daily"
 msgstr "وتيرة تحديث البريد الإلكتروني تم ضبطها للتحديث بشكل يومي"
 
-#: views/commands.py:635
+#: views/commands.py:525
 msgid "Sorry, could not delete tag"
 msgstr "المعذرة، لا يمكن حذف الموضوع"
 
-#: views/commands.py:708
+#: views/commands.py:598
 #, python-format
 msgid "Tag subscription was canceled (<a href=\"%(url)s\">undo</a>)."
 msgstr "تم إلغاء الاشتراك في الوسم  (<a href=\"%(url)s\">\n\nتراجع\n</a>\n\n)."
 
-#: views/commands.py:717
+#: views/commands.py:607
 #, python-format
 msgid "Please sign in to subscribe for: %(tags)s"
 msgstr "يرجى تسجيل الدخول للإشتراك بالموضوع  %(tags)s"
 
-#: views/commands.py:736
+#: views/commands.py:626
 msgid "Create"
 msgstr ""
 
-#: views/commands.py:976
+#: views/commands.py:717
+#, python-format
+msgid "anonymous users cannot %(perform_action)s"
+msgstr ""
+
+#: views/commands.py:883
 msgid "Please sign in to vote"
 msgstr "يرجى تسجيل الدخول للتصويت"
 
-#: views/commands.py:997
+#: views/commands.py:904
 msgid "Please sign in to delete/restore posts"
 msgstr "يرجى تسجيل الدخول لحذف/إستعادة هذه المشاركة"
 
-#: views/commands.py:1059
+#: views/commands.py:966
 #, python-format
 msgid "Group %(name)s does not exist"
 msgstr "المجموعة %(name)s غير موجودة"
 
-#: views/commands.py:1433 views/commands.py:1466
+#: views/commands.py:1340 views/commands.py:1373
 msgid "Sorry, looks like sharing request was invalid"
 msgstr ""
 
-#: views/commands.py:1489
+#: views/commands.py:1396
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
 msgstr "%(user)s، مرحباً بك في مجموعة %(group)s"
 
-#: views/commands.py:1546 views/commands.py:1576
+#: views/commands.py:1453 views/commands.py:1483
 msgid "Sorry, only thread moderators can use this function"
 msgstr ""
 
-#: views/commands.py:1561
+#: views/commands.py:1468
 msgid "The answer is now unpublished"
 msgstr "هذه الإجابة الآن غير منشورة"
 
-#: views/commands.py:1565
+#: views/commands.py:1472
 msgid "The answer is now published"
 msgstr "هذه الإجابة الآن منشورة"
 
-#: views/meta.py:59
+#: views/meta.py:77
 #, python-format
 msgid "About %(site)s"
 msgstr "عن %(site)s"
 
-#: views/meta.py:104
+#: views/meta.py:125
 msgid "Please sign in or register to send your feedback"
 msgstr "فضلاً سجل دخول او سجل عضوية جديدة لإرسال مقترحاتك"
 
-#: views/meta.py:126
+#: views/meta.py:147
 msgid "Q&A forum feedback"
 msgstr "المقترحات"
 
-#: views/meta.py:141
+#: views/meta.py:162
 msgid "Thanks for the feedback!"
 msgstr "شكراً على مقترحاتك!"
 
-#: views/meta.py:152
+#: views/meta.py:173
 msgid "We look forward to hearing your feedback! Please, give it next time :)"
 msgstr "نتطلع إلى سماع تقييمك! رجاءً، اعطنا رأيك في المرة القادمة :)"
 
-#: views/meta.py:156
+#: views/meta.py:177
 msgid "Privacy policy"
 msgstr "بيان الخصوصية"
 
-#: views/meta.py:240
+#: views/meta.py:261
 msgid "Suggested tags"
 msgstr "المواضيع المقترحة"
 
-#: views/moderation.py:115
+#: views/moderation.py:175
 msgid "post was flagged as offensive"
 msgstr ""
 
-#: views/moderation.py:205 views/moderation.py:250 views/users.py:254
-#, python-format
-msgid "%d post deleted"
-msgid_plural "%d posts deleted"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: views/moderation.py:224
+#: views/moderation.py:259
 #, python-format
 msgid "%d post approved"
 msgid_plural "%d posts approved"
@@ -7918,7 +8033,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: views/moderation.py:235
+#: views/moderation.py:270
 #, python-format
 msgid "%d user approved"
 msgid_plural "%d users approved"
@@ -7929,10 +8044,14 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: views/moderation.py:255
+#: views/moderation.py:287
+msgid "your post was not accepted"
+msgstr "مشاركتك لم تقبل"
+
+#: views/moderation.py:295 views/moderation.py:364 views/users.py:266
 #, python-format
-msgid "%d user blocked"
-msgid_plural "%d users blocked"
+msgid "%d post deleted"
+msgid_plural "%d posts deleted"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
@@ -7940,7 +8059,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: views/moderation.py:284
+#: views/moderation.py:356
 #, python-format
 msgid "%d ip blocked"
 msgid_plural "%d ips blocked"
@@ -7951,7 +8070,18 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: views/readers.py:157
+#: views/moderation.py:360
+#, python-format
+msgid "%d user blocked"
+msgid_plural "%d users blocked"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: views/readers.py:158
 #, python-format
 msgid "%(q_num)s question"
 msgid_plural "%(q_num)s questions"
@@ -7962,72 +8092,76 @@ msgstr[3] "%(q_num)s اسئلة"
 msgstr[4] "%(q_num)s اسئلة"
 msgstr[5] "%(q_num)s اسئلة"
 
-#: views/readers.py:279
+#: views/readers.py:276
 #, python-format
 msgid ""
 "Please go to <a href=\"%s\">\"settings->URLs, keywords and greetings\"</a> "
 "and set the base url for your site to function properly"
 msgstr ""
 
-#: views/readers.py:466
+#: views/readers.py:465
 msgid ""
 "Sorry, the comment you are looking for has been deleted and is no longer "
 "accessible"
 msgstr "عفوأ، التعليق تم حذفه و لا يمكن الوصول إليه"
 
-#: views/users.py:236
+#: views/users.py:248
 msgid "User status changed"
 msgstr "تم تغيير حالة العضو"
 
-#: views/users.py:312
+#: views/users.py:324
 msgid "moderate user"
 msgstr "إدارة المستخدم"
 
-#: views/users.py:561
+#: views/users.py:573
 msgid "user profile overview"
 msgstr "نظرة عامة للملف الشخصي للعضو"
 
-#: views/users.py:683
+#: views/users.py:695
 msgid "profile - recent activity"
 msgstr "الملف الشخصي - أخر الأنشطة"
 
-#: views/users.py:714
+#: views/users.py:726
 msgid "profile - moderation"
 msgstr "الملف الشخصي - الإشراف"
 
-#: views/users.py:759
+#: views/users.py:771
 msgid "profile - messages"
 msgstr "الملف الشخصي -  الرسائل"
 
-#: views/users.py:847
+#: views/users.py:859
 msgid "profile - responses"
 msgstr "ملف شخصي - الردود"
 
-#: views/users.py:889
+#: views/users.py:873
+msgid "profile - network"
+msgstr ""
+
+#: views/users.py:902
 msgid "profile - votes"
 msgstr "الملف الشخصي - التصويت"
 
-#: views/users.py:910
+#: views/users.py:923
 msgid "Profile - User's Karma"
 msgstr "الملف الشخصي - قوة سمعة العضو"
 
-#: views/users.py:945
+#: views/users.py:958
 msgid "profile - favorites"
 msgstr ""
 
-#: views/users.py:989 views/users.py:993
+#: views/users.py:1002 views/users.py:1006
 msgid "changes saved"
 msgstr "تم حفظ التعديلات"
 
-#: views/users.py:999
+#: views/users.py:1012
 msgid "email updates canceled"
 msgstr "تحديثات البريد ألغيت"
 
-#: views/users.py:1018
+#: views/users.py:1031
 msgid "profile - email subscriptions"
 msgstr "الملف الشخصي - إشتراكات البريد"
 
-#: views/users.py:1041
+#: views/users.py:1054
 #, python-format
 msgid "profile - %(section)s"
 msgstr ""
@@ -8051,114 +8185,61 @@ msgid ""
 "Error uploading file. Please contact the site administrator. Thank you."
 msgstr "خطأ في رفع الملف، يرجى مراسلة إدارة المجتمع. شكراً."
 
-#: views/writers.py:210 views/writers.py:608
+#: views/writers.py:210 views/writers.py:613
 msgid "Please log in to make posts"
 msgstr ""
 
-#: views/writers.py:743
+#: views/writers.py:748
 msgid "This content is forbidden"
 msgstr ""
 
-#: views/writers.py:752
+#: views/writers.py:758
 msgid "Post not found"
 msgstr "لم يتم العثور على المشاركة"
 
-#: views/writers.py:760
+#: views/writers.py:766
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot post comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "عفواً، يبدو أنك قمت بتسجيل الخروج و لا يمكنك التعليق. من فضلك <a href=\"%(sign_in_url)s\">قم بالدخول</a>."
 
-#: views/writers.py:790
+#: views/writers.py:796
 msgid "Sorry, anonymous users cannot edit comments"
 msgstr "المستخدم المجهول لا يمكنه تحرير التعليقات"
 
-#: views/writers.py:848
+#: views/writers.py:854
 #, python-format
 msgid ""
 "Sorry, you appear to be logged out and cannot delete comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr "عذرا، يبدو انك قمت بتسجيل الخروج، ولا يمكن حذف التعليقات. من فضلك. من فضلك <a href=\"%(sign_in_url)s\">قم بالدخول</a>."
 
-#: views/writers.py:877
+#: views/writers.py:883
 msgid "sorry, we seem to have some technical difficulties"
 msgstr "عذرا، يبدو أن لدينا بعض الصعوبات التقنية"
 
-#: views/writers.py:890
+#: views/writers.py:896
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert comments to answers. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:921
+#: views/writers.py:927
 #, python-format
 msgid ""
 "Sorry, only logged in users can convert answers to comments. Please <a "
 "href=\"%(sign_in_url)s\">sign in</a>."
 msgstr ""
 
-#: views/writers.py:946
+#: views/writers.py:952
 msgid "Error - could not find the destination post"
 msgstr ""
 
-#: views/writers.py:970
+#: views/writers.py:976
 #, python-format
 msgid ""
 "Cannot convert, because text has more characters than %(max_chars)s - "
 "maximum allowed for comments"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "        Your answer to %(title)s will be posted once you log in\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "<span class=\"strong big\">Your answer to </span> <i>\"<strong>%(title)s</strong> %(summary)s...\"</i> <span class=\"strong big\">is saved and will be posted once you log in.</span>"
-
-#~ msgid ""
-#~ "Your question \n"
-#~ "        %(title)s will be posted once you log in\n"
-#~ "        "
-#~ msgstr ""
-#~ "<span class=\"strong big\">Your question</span> "
-#~ "<i>\"<strong>%(title)s</strong> %(summary)s...\"</i> <span class=\"strong "
-#~ "big\">is saved and will be posted once you log in.</span>"
-
-#~ msgid "your email needs to be validated see %(details_url)s"
-#~ msgstr ""
-#~ "Your email needs to be validated. Please see details <a "
-#~ "id='validate_email_alert' href='%(details_url)s'>here</a>."
-
-#~ msgid "logout"
-#~ msgstr "sign out"
-
-#~ msgid ""
-#~ "As a registered user you can login with your OpenID, log out of the site or "
-#~ "permanently remove your account."
-#~ msgstr ""
-#~ "Clicking <strong>Logout</strong> will log you out from the forum but will "
-#~ "not sign you off from your OpenID provider.</p><p>If you wish to sign off "
-#~ "completely - please make sure to log out from your OpenID provider as well."
-
-#~ msgid "Email verification subject line"
-#~ msgstr "Verification Email from Q&A forum"
-
-#~ msgid ""
-#~ "how to validate email info with %(send_email_key_url)s %(gravatar_faq_url)s"
-#~ msgstr ""
-#~ "<form style='margin:0;padding:0;' action='%(send_email_key_url)s'><p><span "
-#~ "class=\"bigger strong\">How?</span> If you have just set or changed your "
-#~ "email address - <strong>check your email and click the included "
-#~ "link</strong>.<br>The link contains a key generated specifically for you. "
-#~ "You can also <button style='display:inline' type='submit'><strong>get a new "
-#~ "key</strong></button> and check your email again.</p></form><span "
-#~ "class=\"bigger strong\">Why?</span> Email validation is required to make "
-#~ "sure that <strong>only you can post messages</strong> on your behalf and to "
-#~ "<strong>minimize spam</strong> posts.<br>With email you can "
-#~ "<strong>subscribe for updates</strong> on the most interesting questions. "
-#~ "Also, when you sign up for the first time - create a unique <a "
-#~ "href='%(gravatar_faq_url)s'><strong>gravatar</strong></a> personal "
-#~ "image.</p>"
