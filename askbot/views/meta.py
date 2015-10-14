@@ -38,8 +38,6 @@ from askbot.utils.decorators import moderators_only
 from askbot.utils.forms import get_next_url
 from askbot.utils import functions
 from askbot.utils.markup import markdown_input_converter
-from recaptcha_works.decorators import fix_recaptcha_remote_ip
-
 import re
 
 def generic_view(request, template=None, page_class=None, context=None):
@@ -127,7 +125,6 @@ def faq(request):
         return render(request, 'faq_static.html', data)
 
 @csrf.csrf_protect
-@fix_recaptcha_remote_ip
 def feedback(request):
     if askbot_settings.FEEDBACK_MODE == 'auth-only':
         if request.user.is_anonymous():

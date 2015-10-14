@@ -38,7 +38,7 @@ from django.utils.translation import ugettext_lazy
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
-from askbot.forms import AskbotRecaptchaField
+from askbot.forms import AskbotReCaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
 from askbot.utils.loading import load_module
 
@@ -327,7 +327,7 @@ class SafeOpenidRegisterForm(OpenidRegisterForm):
     """
     def __init__(self, *args, **kwargs):
         super(SafeOpenidRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['recaptcha'] = AskbotRecaptchaField()
+        self.fields['recaptcha'] = AskbotReCaptchaField()
 
 
 class ClassicRegisterForm(SetPasswordForm):
@@ -351,7 +351,7 @@ class SafeClassicRegisterForm(ClassicRegisterForm):
     """
     def __init__(self, *args, **kwargs):
         super(SafeClassicRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['recaptcha'] = AskbotRecaptchaField()
+        self.fields['recaptcha'] = AskbotReCaptchaField()
 
 
 class ChangePasswordForm(forms.Form):

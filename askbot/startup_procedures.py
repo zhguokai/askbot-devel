@@ -319,7 +319,26 @@ def test_template_loader():
     elif django_settings.TEMPLATE_LOADERS[0] != current_loader:
         errors.append(
             '"%s" must be the first element of TEMPLATE_LOADERS' % current_loader
+        ) 
+
+    app_dir_loader = 'askbot.skins.loaders.JinjaAppDirectoryLoader'
+    if app_dir_loader not in django_settings.TEMPLATE_LOADERS:
+        errors.append(
+            'add "%s" as second item of the TEMPLATE_LOADERS' % app_dir_loader
         )
+    elif django_settings.TEMPLATE_LOADERS.index(app_dir_loader) != 1:
+        errors.append(
+            'move "%s" to the second place in the TEMPLATE_LOADERS' % app_dir_loader
+        )
+
+    try:
+        jinja2_apps = getattr(django_settings, 'JINJA2_TEMPLATES')
+    except AttributeError:
+        errors.append("add to settings.py:\nJINJA2_TEMPLATES = ('captcha',)")
+    else:
+        if 'captcha' not in jinja2_apps:
+            errors.append("add to JINJA2_TEMPLATES in settings.py\n    'captcha',")
+
 
     print_errors(errors)
 
@@ -967,6 +986,22 @@ def test_locale_middlewares():
 
     print_errors(errors)
 
+
+def test_recaptcha():
+    errors = list()
+    if 'captcha' not in django_settings.INSTALLED_APPS:
+        errors.append("Please add to the INSTALLED_APPS:\n    'captcha',")
+
+    try:
+        nocaptcha = getattr(django_settings, 'NOCAPTCHA')
+    except AttributeError:
+        errors.append('Please add to settings.py:\nNOCAPTCHA = True')
+    else:
+        if nocaptcha != True:
+            errors.append('Please modify settings.py with:\nNOCAPTCHA = True')
+    print_errors(errors)
+
+
 def test_multilingual():
     is_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
 
@@ -1017,17 +1052,17 @@ def test_versions():
             'the latest release of Python 2.x'
         )
 
-    #if django version is >= 1.5, require python 2.6.5 or higher
+    upgrade_msg = 'About upgrades, please read http://askbot.org/doc/upgrade.html'
     dj_ver = django.VERSION
-    if dj_ver[:2] > (1, 6):
+    if dj_ver[:2] >= (1, 7):
         errors.append(
-            'Highest major version of django supported is 1.6 '
-            'if you would like to try newer version add setting.'
+            'Highest major version of django supported is 1.6. ' +
+            upgrade_msg
         )
-    elif dj_ver[0:2] == (1, 6) and py_ver[:3] < (2, 7, 1):
+    elif dj_ver[0:2] in ((1, 5), (1,6)) and py_ver[:3] < (2, 6, 5):
         errors.append(
-            'Django 1.6 and higher requires Python '
-            'version 2.7.1 or higher, please see release notes.\n'
+            'Django 1.5 and 1.6 higher require Python '
+            'version 2.6.5 or higher, please see release notes.\n'
             'https://docs.djangoproject.com/en/dev/releases/1.6/'
         )
 
@@ -1061,6 +1096,7 @@ def run_startup_tests():
     test_multilingual()
     test_locale_middlewares()
     #test_csrf_cookie_domain()
+    test_recaptcha()
     test_secret_key()
     test_service_url_prefix()
     test_staticfiles()
@@ -1093,9 +1129,9 @@ def run_startup_tests():
             'message': 'Please replace setting ASKBOT_UPLOADED_FILES_URL ',
             'replace_hint': "with MEDIA_URL = '/%s'"
         },
-        'RECAPTCHA_USE_SSL': {
+        'NOCAPTCHA': {
             'value': True,
-            'message': 'Please add: RECAPTCHA_USE_SSL = True'
+            'message': 'Please add: NOCAPTCHA = True'
         },
     })
     settings_tester.run()

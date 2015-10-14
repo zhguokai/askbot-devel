@@ -7,7 +7,7 @@ basic actions on behalf of the forum application
 import os
 import platform
 
-VERSION = (0, 7, 53)
+VERSION = (0, 7, 54)
 
 #keys are module names used by python imports,
 #values - the package qualifier to use for pip
@@ -36,7 +36,7 @@ REQUIREMENTS = {
     'picklefield': 'django-picklefield==0.3.0',
     'pystache': 'pystache==0.3.1',
     'pytz': 'pytz==2013b',
-    'recaptcha_works': 'django-recaptcha-works',
+    'captcha': 'django-recaptcha>=1.0.3',
     'requirements': 'requirements-parser',
     'robots': 'django-robots==1.0',
     'sanction': 'sanction==0.3.1',

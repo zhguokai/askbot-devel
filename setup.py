@@ -97,7 +97,7 @@ There are two apps to migrate - askbot and django_authopenid (a forked version o
 Limitations
 ===========
 
-There are some limitations that will be removed in the future. If any of these cause issues - please do not hesitate to contact admin@askbot.org.
+There are some limitations that will be removed in the future. If any of these cause issues - please do not hesitate to contact support@askbot.com.
 
 Askbot patches `auth_user` table. The migration script will automatically add missing columns, however it will not overwrite any existing columns. Please do back up your database before adding askbot to an existing site.
 
