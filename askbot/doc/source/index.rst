@@ -19,6 +19,7 @@ at the forum_ or by email at admin@askbot.org
    Create and configure the site files<initial-configuration>
    Initialize the database tables <initialize-database-tables>
    Deploy on a webserver <deployment>
+   Upgrades <upgrade>
    Import data (StackExchange & ZenDesk) <import-data>
    Moderation <moderation>
    Appendix A: Maintenance procedures <management-commands>
