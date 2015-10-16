@@ -218,32 +218,41 @@ class InstantEmailAlert(BaseEmail):
         update_activity = context.get('update_activity')
         update_type = self.get_update_type(update_activity)
 
-        origin_post = post.get_origin_post()
+        #unhandled update_type 'post_shared' 
+        #user_action = _('%(user)s shared a %(post_link)s.')
 
-        from askbot.models import Post
-        if update_type == 'question_comment':
-            assert(isinstance(post, Post) and post.is_comment())
-            assert(post.parent and post.parent.is_question())
-        elif update_type == 'answer_comment':
-            assert(isinstance(post, Post) and post.is_comment())
-            assert(post.parent and post.parent.is_answer())
-        elif update_type == 'answer_update':
-            assert(isinstance(post, Post) and post.is_answer())
-        elif update_type == 'new_answer':
-            assert(isinstance(post, Post) and post.is_answer())
-        elif update_type == 'question_update':
-            assert(isinstance(post, Post) and post.is_question())
-        elif update_type == 'new_question':
-            assert(isinstance(post, Post) and post.is_question())
-        elif update_type == 'post_shared':
-            pass
-        else:
-            raise ValueError('unexpected update_type %s' % update_type)
+        origin_post = post.get_origin_post()
+        post_url = site_url(post.get_absolute_url())
 
         if update_type.endswith('update'):
-            assert('comment' not in update_type)
+            user_url = site_url(from_user.get_absolute_url())
+            if to_user.is_administrator_or_moderator() and askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA:
+                user_link_fmt = '<a href="%(profile_url)s">%(username)s</a> (<a href="mailto:%(email)s">%(email)s</a>)'
+                user_link = user_link_fmt % {
+                    'profile_url': user_url,
+                    'username': from_user.username,
+                    'email': from_user.email
+                }
+            elif post.is_anonymous:
+                user_link = from_user.get_name_of_anonymous_user()
+            else:
+                user_link = '<a href="%s">%s</a>' % (user_url, from_user.username)
+
+            if post.is_comment():
+                user_action = _('%(user)s edited a %(post_link)s.')
+            elif post.is_answer():
+                user_action = _('%(user)s edited an %(post_link)s.')
+            elif post.is_question():
+                user_action = _('%(user)s edited a %(post_link)s.')
+            else:
+                raise ValueError('unrecognized post type')
+
+            user_action = user_action % {
+                'user': user_link,
+                'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
+            }
+
             revisions = post.revisions.all()[:2]
-            assert(len(revisions) == 2)
             content_preview = htmldiff(
                     sanitize_html(revisions[1].html),
                     sanitize_html(revisions[0].html),
@@ -257,50 +266,7 @@ class InstantEmailAlert(BaseEmail):
             content_preview = post.format_for_email(is_leaf_post=True, recipient=to_user)
 
         #add indented summaries for the parent posts
-        content_preview += post.format_for_email_as_parent_thread_summary(recipient=to_user)
-
-        #content_preview += '<p>======= Full thread summary =======</p>'
-        #content_preview += post.thread.format_for_email(recipient=to_user)
-
-        if update_type == 'post_shared':
-            user_action = _('%(user)s shared a %(post_link)s.')
-        elif post.is_comment():
-            if update_type.endswith('update'):
-                user_action = _('%(user)s edited a %(post_link)s.')
-            else:
-                user_action = _('%(user)s posted a %(post_link)s')
-        elif post.is_answer():
-            if update_type.endswith('update'):
-                user_action = _('%(user)s edited an %(post_link)s.')
-            else:
-                user_action = _('%(user)s posted an %(post_link)s.')
-        elif post.is_question():
-            if update_type.endswith('update'):
-                user_action = _('%(user)s edited a %(post_link)s.')
-            else:
-                user_action = _('%(user)s posted a %(post_link)s.')
-        else:
-            raise ValueError('unrecognized post type')
-
-        post_url = site_url(post.get_absolute_url())
-        user_url = site_url(from_user.get_absolute_url())
-
-        if to_user.is_administrator_or_moderator() and askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA:
-            user_link_fmt = '<a href="%(profile_url)s">%(username)s</a> (<a href="mailto:%(email)s">%(email)s</a>)'
-            user_link = user_link_fmt % {
-                'profile_url': user_url,
-                    'username': from_user.username,
-                    'email': from_user.email
-            }
-        elif post.is_anonymous:
-            user_link = from_user.get_name_of_anonymous_user()
-        else:
-            user_link = '<a href="%s">%s</a>' % (user_url, from_user.username)
-
-        user_action = user_action % {
-            'user': user_link,
-            'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
-        }
+        #content_preview += post.format_for_email_as_parent_thread_summary(recipient=to_user)
 
         can_reply = to_user.can_post_by_email()
         from askbot.models import get_reply_to_addresses
@@ -320,9 +286,8 @@ class InstantEmailAlert(BaseEmail):
                 reply_separator += '</p>'
             else:
                 reply_separator = '<p>%s</p>' % reply_separator
-                reply_separator += user_action
         else:
-            reply_separator = user_action
+            reply_separator = ''
 
         return {
            'admin_email': askbot_settings.ADMIN_EMAIL,

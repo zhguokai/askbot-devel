@@ -1171,38 +1171,6 @@ class Post(models.Model):
         }
         return template.render(Context(data))#todo: set lang
 
-    def format_for_email_as_parent_thread_summary(self, recipient=None):
-        """format for email as summary of parent posts
-        all the way to the original question"""
-        quote_level = 0
-        current_post = self
-        output = ''
-        while True:
-            parent_post = current_post.get_parent_post()
-            if parent_post is None:
-                break
-            quote_level += 1
-            output += parent_post.format_for_email(
-                quote_level=quote_level,
-                format='parent_subthread',
-                recipient=recipient
-            )
-            current_post = parent_post
-        return output
-
-    def format_for_email_as_subthread(self, recipient=None):
-        """outputs question or answer and all it's comments
-        returns empty string for all other post types
-        """
-        from django.template import Context
-        from django.template.loader import get_template
-        template = get_template('email/post_as_subthread.html')
-        data = {
-            'post': self,
-            'recipient': recipient
-        }
-        return template.render(Context(data))#todo: set lang
-
     def set_cached_comments(self, comments):
         """caches comments in the lifetime of the object
         does not talk to the actual cache system
@@ -1721,6 +1689,14 @@ class Post(models.Model):
             return self.get_origin_post()
         else:
             return None
+
+    def get_parent_post_chain(self):
+        parent = self.get_parent_post()
+        parents = list()
+        if parent:
+            parents.append(parent)
+            parents.extend(parent.get_parent_post_chain())
+        return parents
 
     def get_origin_post(self):
         if self.is_question():

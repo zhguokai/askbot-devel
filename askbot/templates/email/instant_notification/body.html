@@ -1,7 +1,22 @@
 {% extends "email/base_mail.html"%}
+{% from "email/macros.html" import quoted_post %}
 {% block content %}
-    {{ reply_separator|safe }}
-    <div>{{ content_preview }}</div>
+    {% if reply_separator %}{{ reply_separator|safe }}{% endif %}
+    <div>
+        {{ content_preview }}
+
+        {% set quote_level=1 %}
+        {% for parent_post in post.get_parent_post_chain() %}
+            {{ quoted_post(
+                            post=parent_post,
+                            format='parent_subthread',
+                            recipient=recipient_user,
+                            quote_level=quote_level
+                          )
+            }}
+            {% set quote_level=quote_level + 1 %}
+        {% endfor %}
+    </div>
     {% include "email/change_settings_info.html" %}
 {% endblock %}
 {% block footer %}
