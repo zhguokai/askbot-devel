@@ -11,61 +11,63 @@
     )
 %}
     {% spaceless %}
-        {{ start_quote(quote_level) }}
+    {{ start_quote(quote_level) }}
 
-            {% if recipient|can_see_private_user_data(post.author) %}
-                {% set author = post.author.username|escape ~ '/(' ~ mailto_link(post.author) ~ ')' %}
-            {% elif post.is_anonymous %}
-                {% set author = post.author.get_name_of_anonymous_user()|escape %}
-            {% else %}
-                {% set author = post.author.username|escape %}
-            {% endif %}
+        {% if recipient|can_see_private_user_data(post.author) %}
+            {% set author = post.author.username|escape ~ '/(' ~ mailto_link(post.author) ~ ')' %}
+        {% elif post.is_anonymous %}
+            {% set author = post.author.get_name_of_anonymous_user()|escape %}
+        {% else %}
+            {% set author = post.author.username|escape %}
+        {% endif %}
 
-            {% set post_url = post.get_absolute_url() %}
+        {% set post_url = post.get_absolute_url() %}
 
-            {% if post.post_type == 'question' %}
-                <p style="font-size: 10px; font-weight: bold">
-                    {% if format == 'parent_subthread' %}
-                        {% set post_type=settigs.WORDS_QUESTION_SINGULAR %}
-                        {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
-                    {% else %}
-                        {{ author }} {{ settings.WORDS_ASKED }}:
-                    {% endif %}
-                </p>
-
-                {% if quote_level > 0 %}
-                    <p style="font-size:10px; font-weight: bold;">
+        {% if post.post_type == 'question' %}
+            <p style="font-size: 10px; font-weight: bold">
+                {% if format == 'parent_subthread' %}
+                    {% set post_type=settings.WORDS_QUESTION_SINGULAR %}
+                    {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
                 {% else %}
-                    <p style="font-size:20px; font-weight: bold; margin: 10px 0">
+                    {{ author }} {{ settings.WORDS_ASKED }}:
                 {% endif %}
-                        <a href="{{ post_url }}">{{ post.thread.title }}</a>
-                    </p>
+            </p>
 
-                {% set tag_names = post.get_tag_names() %}
-                {% if tag_names %}
-                <p style="font-size:10px; font-style:italic;">
-                    {% trans %}Tags:{% endtrans %}
-                    {{ tag_names|join(', ') }}.
-                </p>
-                {% endif %}
-            {% elif post.post_type in ('answer', 'comment') %}
-                {% if post.post_type == 'comment' %}
-                    {% set post_type=gettext('comment') %}
-                    {% set acted=gettext('commented') %}
-                {% else %}
-                    {% set post_type=settings.WORDS_ANSWER_SINGULAR %}
-                    {% set acted=settings.WORDS_ANSWERED %}
-                {% endif %}
+            {% if quote_level > 0 %}
                 <p style="font-size:10px; font-weight: bold;">
-                    {% if format == 'parent_subthread' %}
-                        {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
-                    {% else %}
-                        {{ author }} <a href="{{ post_url }}">{{ acted }}</a>:
-                    {% endif %}
-                </p>
+            {% else %}
+                <p style="font-size:20px; font-weight: bold; margin: 10px 0">
             {% endif %}
-            {{ post.html }}
-        {{ end_quote(quote_level) }}
+                    <a href="{{ post_url }}">{{ post.thread.title }}</a>
+                </p>
+
+            {% set tag_names = post.get_tag_names() %}
+            {% if tag_names %}
+            <p style="font-size:10px; font-style:italic;">
+                {% trans %}Tags:{% endtrans %}
+                {{ tag_names|join(', ') }}.
+            </p>
+            {% endif %}
+        {% elif post.post_type in ('answer', 'comment') %}
+            {% if post.post_type == 'comment' %}
+                {% set post_type=gettext('comment') %}
+                {% set acted=gettext('commented') %}
+            {% else %}
+                {% set post_type=settings.WORDS_ANSWER_SINGULAR %}
+                {% set acted=settings.WORDS_ANSWERED %}
+            {% endif %}
+            <p style="font-size:10px; font-weight: bold;">
+                {% if format == 'parent_subthread' %}
+                    {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
+                {% else %}
+                    {{ author }} <a href="{{ post_url }}">{{ acted }}</a>:
+                {% endif %}
+            </p>
+        {% endif %}
+
+        {{ post.html }}
+
+    {{ end_quote(quote_level) }}
     {% endspaceless %}
 {% endmacro %}
 
