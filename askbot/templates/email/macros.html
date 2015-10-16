@@ -21,32 +21,26 @@
                 {% set author = post.author.username|escape %}
             {% endif %}
 
+            {% set post_url = post.get_absolute_url() %}
+
             {% if post.post_type == 'question' %}
+                <p style="font-size: 10px; font-weight: bold">
+                    {% if format == 'parent_subthread' %}
+                        {% set post_type=settigs.WORDS_QUESTION_SINGULAR %}
+                        {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
+                    {% else %}
+                        {{ author }} {{ settings.WORDS_ASKED }}:
+                    {% endif %}
+                </p>
+
                 {% if quote_level > 0 %}
-                <p style="font-size:10px; font-weight: bold;">
+                    <p style="font-size:10px; font-weight: bold;">
                 {% else %}
-                <p style="font-size:20px; font-weight: bold; margin: 10px 0">
+                    <p style="font-size:20px; font-weight: bold; margin: 10px 0">
                 {% endif %}
-                        {% if format == 'parent_subthread' %}
-                            {% if is_leaf_post %}
-                                {% trans %}Started by {{ author }}:{% endtrans %}
-                            {% else %}
-                                {% trans -%}
-                                    In reply to {{ author }}:
-                                {%- endtrans %}
-                            {% endif %}
-                        {% else %}
-                            {{ settings.WORDS_QUESTION_SINGULAR|title|escape }} :
-                        {% endif %}
-                        {{ post.thread.title }}
-                </p>
-                {% if quote_level > 0 %}
-                <p style="font-size:10px; font-weight: bold;">
-                        {% if format != 'parent_subthread' %}
-                            {% trans %}Started by {{ author }}:{% endtrans %}
-                        {% endif %}
-                </p>
-                {% endif %}
+                        <a href="{{ post_url }}">{{ post.thread.title }}</a>
+                    </p>
+
                 {% set tag_names = post.get_tag_names() %}
                 {% if tag_names %}
                 <p style="font-size:10px; font-style:italic;">
@@ -54,38 +48,19 @@
                     {{ tag_names|join(', ') }}.
                 </p>
                 {% endif %}
-            {% elif post.post_type == 'answer' %}
+            {% elif post.post_type in ('answer', 'comment') %}
+                {% if post.post_type == 'comment' %}
+                    {% set post_type=gettext('comment') %}
+                    {% set acted=gettext('commented') %}
+                {% else %}
+                    {% set post_type=settings.WORDS_ANSWER_SINGULAR %}
+                    {% set acted=settings.WORDS_ANSWERED %}
+                {% endif %}
                 <p style="font-size:10px; font-weight: bold;">
                     {% if format == 'parent_subthread' %}
-                        {% if is_leaf_post %}
-                            {% trans -%}
-                                {{ author }}'s response:
-                            {%- endtrans %}
-                        {% else %}
-                            {% trans -%}
-                                In reply to {{ author }}:
-                            {%- endtrans %}
-                        {% endif %}
+                        {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
                     {% else %}
-                        {% trans %}Replied by {{ author }}:{% endtrans %}
-                    {% endif %}
-                </p>
-            {% else %}
-                <p style="font-size:10px; font-weight: bold;">
-                    {% if format == 'parent_subthread' %}
-                        {% if is_leaf_post %}
-                            {% trans -%}
-                                {{ author }}'s comment:
-                            {%- endtrans %}
-                        {% else %}
-                            {% trans -%}
-                                In reply to {{ author }}'s comment:
-                            {%- endtrans %}
-                        {% endif %}
-                    {% else %}
-                        {% trans author -%}
-                            Commented by {{ author }}:
-                        {%- endtrans %}
+                        {{ author }} <a href="{{ post_url }}">{{ acted }}</a>:
                     {% endif %}
                 </p>
             {% endif %}

@@ -308,7 +308,7 @@ class InstantEmailAlert(BaseEmail):
 
         if can_reply:
             reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
-                          _('To reply, PLEASE WRITE ABOVE THIS LINE.')
+                          force_unicode(_('To reply, PLEASE WRITE ABOVE THIS LINE.'))
             if post.post_type == 'question' and alt_reply_address:
                 data = {
                   'addr': alt_reply_address,
