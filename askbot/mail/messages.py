@@ -45,8 +45,8 @@ class BaseEmail(object):
        files `subject.txt` and `body.txt`
     * `title` - a brief title for this email
     * `description` - string explaining why/when this email is sent
-    * `mock_context` - optional, may be replaced with custom method
-    get_mock_context(), see below
+    * `mock_contexts` - optional, may be replaced with custom methods
+    like get_mock_context1, etc.
 
     plain text version of the email is calculated from body.html
     by stripping tags
@@ -55,11 +55,23 @@ class BaseEmail(object):
     template_path = 'path/to/email/dir' #override in subclass
     title = 'A brief title for this email'
     description = 'In subclass, explain when/why this email might be sent'
-    mock_context = {}
+    mock_contexts = ({},)
 
     def __init__(self, context=None):
         self.context = context
-        self._cached_context = None
+        self._context_cache = dict()
+
+    @classmethod
+    def get_cache_key(cls, key):
+        return str(id(key))
+
+    def get_cached_context(self, key):
+        key = self.get_cache_key(key)
+        return self._context_cache.get(key)
+
+    def set_cached_context(self, key, val):
+        key = self.get_cache_key(key)
+        self._context_cache[key] = val
 
     def process_context(self, context):
         """override if context requires post-processing"""
@@ -69,17 +81,36 @@ class BaseEmail(object):
         """override if attachments need to be determined from context"""
         return None
 
-    def get_mock_context(self):
-        """override if need to fetch mock context dynamically"""
-        return self.mock_context
+    def get_mock_contexts(self):
+        """Do not override this method.
+        Add methods to subclass either called get_mock_context() and/or
+        get_mock_context_<xyz> to generate mock contexts programmatically
+        """
+        contexts = list()
+        for c in self.mock_contexts:
+            if c:
+                contexts.append(c)
 
-    def get_context(self):
-        if self._cached_context:
-            return self._cached_context
-        context = self.context or self.get_mock_context() or self.mock_context or {}
-        self._cached_context = self.process_context(context)
-        self._cached_context['settings'] = askbot_settings
-        return self._cached_context
+        for attr in dir(self):
+            if attr == 'get_mock_contexts':
+                continue
+            elif attr.startswith('get_mock_context'):
+                func = getattr(self, attr)
+                c = func()
+                if c:
+                    contexts.append(c)
+        return contexts
+
+    def get_context(self, pre_context=None):
+        cached_context = self.get_cached_context(pre_context)
+        if cached_context:
+            return cached_context
+
+        context = copy(pre_context or self.context or {})
+        context = self.process_context(context)
+        context['settings'] = askbot_settings
+        self.set_cached_context(pre_context, context)
+        return context
 
     def get_headers(self):
         """override this method if headers need to be calculated
@@ -90,19 +121,19 @@ class BaseEmail(object):
         """override if necessary"""
         return True
 
-    def render_subject(self):
+    def render_subject(self, context=None):
         template = get_template(self.template_path + '/subject.txt')
 
-        context = copy(self.get_context()) #copy context
+        context = copy(self.get_context(context)) #copy context
         for key in context:
             if isinstance(context[key], basestring):
                 context[key] = mark_safe(context[key])
 
         return ' '.join(template.render(Context(context)).split())
 
-    def render_body(self):
+    def render_body(self, context=None):
         template = get_template(self.template_path + '/body.html')
-        body = template.render(Context(self.get_context()))
+        body = template.render(Context(self.get_context(context)))
         return absolutize_urls(body)
 
     def send(self, recipient_list, raise_on_failure=False, headers=None, attachments=None):
@@ -132,30 +163,61 @@ class InstantEmailAlert(BaseEmail):
         return askbot_settings.ENABLE_EMAIL_ALERTS \
             and askbot_settings.INSTANT_EMAIL_ALERT_ENABLED
 
-    def get_mock_context(self):
+    def get_mock_context_sample1(self):
+        """New question alert"""
         from askbot.models import (Activity, Post, User)
-        post_types = ('question', 'answer', 'comment')
-        post = Post.objects.filter(post_type__in=post_types)[0]
+        posts = Post.objects.filter(post_type='question')
+        if posts.count() == 0:
+            return None
+        post = posts[0]
 
-        if post.is_question():
-            activity_type = const.TYPE_ACTIVITY_ASK_QUESTION
-        elif post.is_answer():
-            activity_type = const.TYPE_ACTIVITY_ANSWER
-        elif post.parent.is_question():
-            activity_type = const.TYPE_ACTIVITY_COMMENT_QUESTION
-        else:
-            activity_type = const.TYPE_ACTIVITY_COMMENT_ANSWER
+        to_users = User.objects.exclude(id=post.author_id)
+        if to_users.count() == 0:
+            return None
+        to_user = to_users[0]
 
         activity = Activity(
                     user=post.author,
                     content_object=post,
-                    activity_type=activity_type,
+                    activity_type=const.TYPE_ACTIVITY_ASK_QUESTION,
+                    question=post
+                )
+        return {
+            'post': post,
+            'from_user': post.author,
+            'to_user': to_user,
+            'update_activity': activity
+        }
+
+    def get_mock_context_sample2(self):
+        """answer edit alert"""
+        #get edited answer
+        from django.db.models import Count
+        from askbot.models import (Activity, Post, User)
+        posts = Post.objects.annotate(
+                        edit_count=Count('revisions')
+                    ).filter(post_type='answer', edit_count__gt=1)
+
+        try:
+            post = posts[0]
+        except IndexError:
+            return None
+
+        to_users = User.objects.exclude(id=post.author_id)
+        if to_users.count() == 0:
+            return None
+        to_user = to_users[0]
+
+        activity = Activity(
+                    user=post.author,
+                    content_object=post,
+                    activity_type=const.TYPE_ACTIVITY_UPDATE_ANSWER,
                     question=post.get_origin_post()
                 )
         return {
             'post': post,
             'from_user': post.author,
-            'to_user': User.objects.exclude(id=post.author_id)[0],
+            'to_user': to_user,
             'update_activity': activity
         }
 
@@ -314,11 +376,11 @@ class ReplyByEmailError(BaseEmail):
     template_path = 'email/reply_by_email_error'
     title = _('Error processing post sent by email')
     description = _('Sent to the post author when error occurs when posting by email')
-    mock_context = {
+    mock_contexts = ({
         'error': _('You were replying to an email address\
              unknown to the system or you were replying from a different address from the one where you\
              received the notification.')
-    }
+    },)
 
     def is_enabled(self):
         return askbot_settings.REPLY_BY_EMAIL
@@ -473,10 +535,10 @@ class RejectedPost(BaseEmail):
     description = _(
         'Sent when post was rejected by a moderator with a reason given'
     )
-    mock_context = {
+    mock_contexts = ({
         'post': 'How to substitute sugar with aspartame in the cupcakes',
         'reject_reason': 'Questions must be on the subject of gardening'
-    }
+    },)
 
     def is_enabled(self):
         return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
@@ -625,10 +687,10 @@ class EmailValidation(BaseEmail):
     template_path = 'authopenid/email_validation'
     title = _('Email validation')
     description = _('Sent when user validates email or recovers account')
-    mock_context = {
+    mock_contexts = ({
         'key': 'a4umkaeuaousthsth',
         'handler_url_name': 'user_account_recover',
-    }
+    },)
 
     def process_context(self, context):
         url_name = context['handler_url_name']
@@ -720,12 +782,18 @@ class GroupMessagingEmailAlert(BaseEmail):
     )
 
     def is_enabled(self):
+        from askbot.deps.group_messaging.models import Message
+        if Message.objects.count() == 0:
+            return False
         return askbot_settings.ENABLE_EMAIL_ALERTS \
             and askbot_settings.GROUP_MESSAGING_EMAIL_ALERT_ENABLED
 
     def get_mock_context(self):
         from askbot.deps.group_messaging.models import Message
-        message = Message.objects.all().order_by('-id')[0]
+        messages = Message.objects.all().order_by('-id')
+        if messages.count() == 0:
+            return None
+        message = messages[0]
         return {
             'messages': message.get_timeline(),
             'message': message,
