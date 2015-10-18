@@ -96,6 +96,7 @@ SECRET_KEY = '{{secret_key}}'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'askbot.skins.loaders.Loader',
+    'askbot.skins.loaders.JinjaAppDirectoryLoader',
     'django.template.loaders.app_directories.Loader',
     'django.template.loaders.filesystem.Loader',
     #'django.template.loaders.eggs.load_template_source',
@@ -192,6 +193,9 @@ INSTALLED_APPS = (
     'tinymce',
     'askbot.deps.group_messaging',
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
+    'group_messaging',
+    'captcha',
+    'avatar',
 )
 
 
@@ -266,7 +270,7 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-RECAPTCHA_USE_SSL = True
+NOCAPTCHA = True
 
 #HAYSTACK_SETTINGS
 ENABLE_HAYSTACK_SEARCH = False
@@ -329,6 +333,7 @@ if 'ASKBOT_CSS_DEVEL' in locals() and ASKBOT_CSS_DEVEL == True:
 COMPRESS_JS_FILTERS = []
 COMPRESS_PARSER = 'compressor.parser.HtmlParser'
 JINJA2_EXTENSIONS = ('compressor.contrib.jinja2ext.CompressorExtension',)
+JINJA2_TEMPLATES = ('captcha',)
 
 # Use syncdb for tests instead of South migrations. Without this, some tests
 # fail spuriously in MySQL.

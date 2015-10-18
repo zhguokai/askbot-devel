@@ -1015,25 +1015,6 @@ class Thread(models.Model):
                 )
         return title_renderer(self)
 
-    def format_for_email(self, recipient=None):
-        """experimental function: output entire thread for email"""
-
-        question, answers, junk, published_ans_ids = \
-                                self.get_cached_post_data(user=recipient)
-
-        output = question.format_for_email_as_subthread(recipient=recipient)
-        if answers:
-            #todo: words
-            answer_heading = ungettext(
-                                    '%(count)d answer:',
-                                    '%(count)d answers:',
-                                    len(answers)
-                                ) % {'count': len(answers)}
-            output += '<p>%s</p>' % answer_heading
-            for answer in answers:
-                output += answer.format_for_email_as_subthread(recipient=recipient)
-        return output
-
     def get_answers_by_user(self, user):
         """regardless - deleted or not"""
         return self.posts.filter(post_type='answer', author=user, deleted=False)

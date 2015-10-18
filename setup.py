@@ -47,7 +47,7 @@ setup(
         'Topic :: Communications',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
     ],
-    long_description = """Askbot will work alone or with other django apps (with some limitations, please see below), Django 1.5-1.6, PostgresQL(recommended) (>=8.3) and MySQL(**) (MyISAM backend only - see footnote **)
+    long_description = """Askbot will work alone or with other django apps (with some limitations, please see below), Django 1.7, PostgresQL(recommended) (>=8.3) and MySQL(**) (MyISAM backend only - see footnote **)
 
 Questions? Suggestions? Found a bug? -> please post at http://askbot.org/en/questions/
 
@@ -97,7 +97,7 @@ There are two apps to migrate - askbot and django_authopenid (a forked version o
 Limitations
 ===========
 
-There are some limitations that will be removed in the future. If any of these cause issues - please do not hesitate to contact admin@askbot.org.
+There are some limitations that will be removed in the future. If any of these cause issues - please do not hesitate to contact support@askbot.com.
 
 Askbot patches `auth_user` table. The migration script will automatically add missing columns, however it will not overwrite any existing columns. Please do back up your database before adding askbot to an existing site.
 

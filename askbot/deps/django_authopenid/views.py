@@ -57,7 +57,6 @@ from askbot.mail.messages import EmailValidation
 from askbot.utils import decorators as askbot_decorators
 from askbot.utils.functions import format_setting_name
 from askbot.utils.html import site_url
-from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
 from askbot.deps.django_authopenid.exceptions import OAuthError
@@ -916,7 +915,9 @@ def signin_success(request, identity_url, openid_response):
                 )
 
     next_url = get_next_url(request)
-    provider_name = util.get_provider_name(openid_url)
+    provider_name = util.get_provider_name_by_endpoint(openid_url)
+    if provider_name is None:
+        provider_name = util.get_provider_name(openid_url)
 
     request.session['email'] = openid_data.sreg.get('email', '')
     request.session['username'] = openid_data.sreg.get('nickname', '')
@@ -1013,7 +1014,6 @@ def finalize_generic_signin(
 
 @not_authenticated
 @csrf.csrf_protect
-@fix_recaptcha_remote_ip
 def register(request, login_provider_name=None, 
     user_identifier=None, redirect_url=None):
     """
@@ -1244,7 +1244,6 @@ def verify_email_and_register(request):
 
 @not_authenticated
 @csrf.csrf_protect
-@fix_recaptcha_remote_ip
 def signup_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html

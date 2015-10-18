@@ -177,6 +177,23 @@ def get_provider_name(openid_url):
     url_bits = base_url.split('.')
     return url_bits[-2].lower()
 
+def get_provider_name_by_endpoint(openid_url):
+    """returns the provider name by endpoint url
+
+    Pair the openid_url with endpoint urls defined for different openid
+    providers. Returns None if no matching url was found.
+    """
+    parsed_uri = urlparse.urlparse(openid_url)
+    base_url = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
+    providers = get_enabled_login_providers()
+    for provider_data in providers.itervalues():
+        openid_url_match = (provider_data['type'].startswith('openid') and
+            provider_data['openid_endpoint'] is not None and
+            provider_data['openid_endpoint'].startswith(base_url))
+        if openid_url_match:
+            return provider_data['name']
+    return None
+
 def use_password_login():
     """password login is activated
     if any of the login methods requiring user name

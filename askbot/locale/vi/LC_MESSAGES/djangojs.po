@@ -11,10 +11,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-01 12:01-0500\n"
-"PO-Revision-Date: 2014-11-01 17:05+0000\n"
+"POT-Creation-Date: 2014-12-14 16:06-0600\n"
+"PO-Revision-Date: 2014-12-14 22:11+0000\n"
 "Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/projects/p/askbot/language/vi/)\n"
+"Language-Team: Vietnamese (http://www.transifex.com/askbot/askbot/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -75,43 +75,22 @@ msgstr "Tạo mật khẩu"
 msgid "Create a password-protected account"
 msgstr "Tạo tài khoản mới"
 
-#: media/js/group_messaging.js:102 media/js/group_messaging.js.c:293
+#: media/js/group_messaging.js:103 media/js/group_messaging.js.c:109
 msgid "required"
 msgstr "bắt buộc"
 
-#: media/js/group_messaging.js:139
-msgid "Your message:"
-msgstr "Thông điệp của bạn:"
-
-#: media/js/group_messaging.js:152
-msgid "send"
-msgstr "gửi"
-
-#: media/js/group_messaging.js:164 media/js/post.js:1970
-#: media/js/post.js.c:3245 media/js/post.js.c:4808 media/js/user.js:841
-msgid "cancel"
-msgstr "hủy"
-
-#: media/js/group_messaging.js:227
-msgid "Reply"
-msgstr "Trả lời"
-
-#: media/js/group_messaging.js:236 media/js/group_messaging.js.c:743
+#: media/js/group_messaging.js:137
 msgid "message sent"
 msgstr "đã gửi"
 
-#: media/js/group_messaging.js:271
+#: media/js/group_messaging.js:149
 msgid "user {{str}} does not exist"
 msgid_plural "users {{str}} do not exist"
 msgstr[0] "thành viên {{str}} không tồn tại"
 
-#: media/js/group_messaging.js:278
+#: media/js/group_messaging.js:156
 msgid "cannot send message to yourself"
 msgstr "không thể gửi tin nhắn đến chính bạn"
-
-#: media/js/group_messaging.js:323
-msgid "Recipient:"
-msgstr "Người nhận:"
 
 #: media/js/live_search.js:198
 msgid "To see search results, 2 or more characters may be required"
@@ -134,7 +113,7 @@ msgstr "tìm hoặc đặt câu hỏi"
 msgid "loading..."
 msgstr "đang tải..."
 
-#: media/js/post.js:125 media/js/post.js.c:1401
+#: media/js/post.js:125 media/js/post.js.c:1394
 msgid "tags cannot be empty"
 msgstr "không thể dùng thẻ rỗng"
 
@@ -182,7 +161,7 @@ msgstr ""
 msgid "messages"
 msgstr ""
 
-#: media/js/post.js:387 media/js/utils.js:1456 media/js/utils.js.c:1948
+#: media/js/post.js:387 media/js/utils.js:1468 media/js/utils.js.c:1960
 msgid "Cancel"
 msgstr "hủy"
 
@@ -190,207 +169,212 @@ msgstr "hủy"
 msgid "draft saved..."
 msgstr "đã lưu bản nháp..."
 
-#: media/js/post.js:678
+#: media/js/post.js:676
 msgid "insufficient privilege"
 msgstr "không đủ quyền"
 
-#: media/js/post.js:681 media/js/post.js.c:1548
+#: media/js/post.js:679 media/js/post.js.c:1541
 msgid "please login"
 msgstr "vui lòng đăng nhập"
 
-#: media/js/post.js:684
+#: media/js/post.js:682
 msgid "anonymous users cannot %(follow_questions)s"
 msgstr ""
 
-#: media/js/post.js:690
+#: media/js/post.js:688
 msgid "anonymous users cannot subscribe to questions"
 msgstr "hãy đăng nhập để đăng ký theo dõi câu hỏi này"
 
-#: media/js/post.js:691 media/js/post.js.c:1558
+#: media/js/post.js:689 media/js/post.js.c:1551
 msgid "anonymous users cannot vote"
 msgstr "hãy đăng nhập để đánh giá"
 
-#: media/js/post.js:693
+#: media/js/post.js:691
 msgid "anonymous users cannot flag offensive posts"
 msgstr "người dùng nặc danh không thể thông báo vi phạm"
 
-#: media/js/post.js:694
+#: media/js/post.js:692
 msgid "confirm delete"
 msgstr "xác nhận xóa"
 
-#: media/js/post.js:695
+#: media/js/post.js:693
 msgid "anonymous users cannot delete/undelete"
 msgstr "người sử dụng ẩn danh không thể xóa/phục hồi"
 
-#: media/js/post.js:696
+#: media/js/post.js:694
 msgid "post recovered"
 msgstr "bài viết đã được khôi phục"
 
-#: media/js/post.js:697
+#: media/js/post.js:695
 msgid "post deleted"
 msgstr "đã xóa bài viết"
 
-#: media/js/post.js:932
+#: media/js/post.js:926
 msgid "sorry, you cannot %(accept_own_answer)s"
 msgstr ""
 
-#: media/js/post.js:969
+#: media/js/post.js:959
 msgid "Follow"
 msgstr "Theo sau"
 
-#: media/js/post.js:978 media/js/post.js.c:987
+#: media/js/post.js:969 media/js/post.js.c:978
 #, c-format
 msgid "%s follower"
 msgid_plural "%s followers"
 msgstr[0] "%s người theo"
 
-#: media/js/post.js:983
-msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr "<div>Đang theo</div><div class=\"unfollow\">Ngừng theo</div>"
+#: media/js/post.js:973
+msgid "<div class=\"following\">Following</div><div class=\"unfollow\">Unfollow</div>"
+msgstr ""
 
-#: media/js/post.js:1039
+#: media/js/post.js:1029
 msgid "remove flag"
 msgstr "loại bỏ cờ"
 
-#: media/js/post.js:1073 media/js/post.js.c:1102
+#: media/js/post.js:1063 media/js/post.js.c:1092
 msgid "flag offensive"
 msgstr "thông báo vi phạm"
 
-#: media/js/post.js:1128 media/js/post.js.c:1629
+#: media/js/post.js:1118 media/js/post.js.c:1622
 msgid "undelete"
 msgstr "Khôi phục"
 
-#: media/js/post.js:1133 media/js/post.js.c:1633
+#: media/js/post.js:1123 media/js/post.js.c:1626
 msgid "delete"
 msgstr "xóa"
 
-#: media/js/post.js:1350 media/js/post.js.c:1577
+#: media/js/post.js:1342 media/js/post.js.c:1570
 msgid "sorry, something is not right here"
 msgstr "xin lỗi, một cái gì đó không đúng ở đây"
 
-#: media/js/post.js:1808
+#: media/js/post.js:1801
 msgid "add comment"
 msgstr "Thêm ý kiến"
 
-#: media/js/post.js:1814
+#: media/js/post.js:1807
 msgid "save comment"
 msgstr "lưu ý kiến"
 
-#: media/js/post.js:1854
+#: media/js/post.js:1847
 #, c-format
 msgid "enter at least %s characters"
 msgstr "nhập ít nhất %s ký tự"
 
-#: media/js/post.js:1856
+#: media/js/post.js:1849
 #, c-format
 msgid "enter at least %s more characters"
 msgstr "nhập thêm ít nhất %s kí tự nữa"
 
-#: media/js/post.js:1868
+#: media/js/post.js:1861
 #, c-format
 msgid "%s characters left"
 msgstr "còn lại %s  ký tự"
 
-#: media/js/post.js:1870
+#: media/js/post.js:1863
 msgid "maximum comment length reached"
 msgstr ""
 
-#: media/js/post.js:1984
+#: media/js/post.js:1965 media/js/post.js.c:3243 media/js/post.js.c:4806
+#: media/js/user.js:934
+msgid "cancel"
+msgstr "hủy"
+
+#: media/js/post.js:1979
 msgid "minor edit (don't send alerts)"
 msgstr "sửa đổi nhỏ (không gửi thông báo)"
 
-#: media/js/post.js:2016
+#: media/js/post.js:2011
 msgid "Are you sure you don't want to post this comment?"
 msgstr "Bạn có chắc là bạn không muốn gửi bình luận này?"
 
-#: media/js/post.js:2051 media/js/utils.js:3904 media/js/utils.js.c:4059
+#: media/js/post.js:2046 media/js/utils.js:3916 media/js/utils.js.c:4071
 msgid "just now"
 msgstr "chỉ bây giờ"
 
-#: media/js/post.js:2117
+#: media/js/post.js:2112
 msgid "delete this comment"
 msgstr "xóa ý kiến này"
 
-#: media/js/post.js:2432
+#: media/js/post.js:2427
 msgid "confirm delete comment"
 msgstr "xác nhận xóa ye kiến này"
 
-#: media/js/post.js:2573
+#: media/js/post.js:2568
 msgid "please sign in or register to post comments"
 msgstr "vui lòng đăng nhập hoặc đăng ký để gửi ý kiến"
 
-#: media/js/post.js:2724
+#: media/js/post.js:2719
 msgid "Please enter question title (>10 characters)"
 msgstr "Làm ơn nhập tiêu đề của câu hỏi (>10 ký tự)"
 
-#: media/js/post.js:2776 media/js/post.js.c:4836
+#: media/js/post.js:2771 media/js/post.js.c:4834
 msgid "Sorry, you have only read access"
 msgstr "Xin lỗi, bạn chỉ có quyền xem bài"
 
-#: media/js/post.js:3239 media/js/post.js.c:4079 media/js/post.js.c:4268
+#: media/js/post.js:3237 media/js/post.js.c:4077 media/js/post.js.c:4266
 msgid "save"
 msgstr "Lưu"
 
-#: media/js/post.js:3363
+#: media/js/post.js:3361
 msgid "Enter the logo url or upload an image"
 msgstr "Nhập địa chỉ logo hoặc tải lên một hình ảnh"
 
-#: media/js/post.js:3389
+#: media/js/post.js:3387
 msgid "Do you really want to remove the image?"
 msgstr "Bạn có thực sự muốn xóa hình này?"
 
-#: media/js/post.js:3505
+#: media/js/post.js:3503
 msgid "change logo"
 msgstr "đổi logo"
 
-#: media/js/post.js:3506
+#: media/js/post.js:3504
 msgid "add logo"
 msgstr "thêm logo"
 
-#: media/js/post.js:3654
+#: media/js/post.js:3652
 #, c-format
 msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr "thẻ \"%s\" đã có,  không cần phải thêm vào (nhấn phím \"escape\" để xóa)"
 
-#: media/js/post.js:3663
+#: media/js/post.js:3661
 #, c-format
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
 msgstr[0] "tối đa %s thẻ có thể sử dụng"
 
-#: media/js/post.js:4009
+#: media/js/post.js:4007
 msgid "Delete category?"
 msgstr "Xóa danh mục?"
 
-#: media/js/post.js:4098 media/js/utils.js:1371
+#: media/js/post.js:4096 media/js/utils.js:1384
 msgid "edit"
 msgstr "sửa"
 
-#: media/js/post.js:4185
+#: media/js/post.js:4183
 msgid "category name cannot be empty"
 msgstr "tên danh mục không thể để trống"
 
-#: media/js/post.js:4221
+#: media/js/post.js:4219
 msgid "already exists at the current level!"
 msgstr "đã tồn tại ở cấp độ hiện tại!"
 
-#: media/js/post.js:4257
+#: media/js/post.js:4255
 msgid "add category"
 msgstr "thêm thể loại"
 
-#: media/js/post.js:4804
+#: media/js/post.js:4802
 msgid "save tags"
 msgstr "lưu thẻ đánh dấu"
 
-#: media/js/post.js:4920
+#: media/js/post.js:4911
 msgid "Group name:"
 msgstr "Tên nhóm:"
 
-#: media/js/post.js:4946
+#: media/js/post.js:4937
 msgid "Shared with the following users:"
 msgstr "Chia sẻ với người dùng sau đây:"
 
-#: media/js/post.js:4952
+#: media/js/post.js:4943
 msgid "Shared with the following groups:"
 msgstr "Chia sẻ với các nhóm sau:"
 
@@ -403,266 +387,266 @@ msgstr "Thẻ đánh dấu \"<span></span>\" phù hợp:"
 msgid "and %s more, not shown..."
 msgstr "và %s nhiều hơn, không được hiển thị..."
 
-#: media/js/user.js:205
+#: media/js/user.js:59 media/js/user.js.c:121 media/js/user.js.c:298
 msgid "Please select at least one item"
 msgstr "Vui lòng chọn ít nhất một mục"
 
-#: media/js/user.js:241
+#: media/js/user.js:334
 msgid "Load more items."
 msgstr ""
 
-#: media/js/user.js:386
+#: media/js/user.js:479
 msgid "Looks there are some things to fix:"
 msgstr "Có vẻ có một số điều phải sửa chữa:"
 
-#: media/js/user.js:454
+#: media/js/user.js:547
 msgid "Please provide description."
 msgstr "Vui lòng cung cấp mô tả."
 
-#: media/js/user.js:457
+#: media/js/user.js:550
 msgid "Please provide details."
 msgstr "Vui lòng cung cấp chi tiết."
 
-#: media/js/user.js:544
+#: media/js/user.js:637
 msgid "A reason must be selected to delete one."
 msgstr "Phải chọn một lý do để xóa 1."
 
-#: media/js/user.js:661
+#: media/js/user.js:754
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
 msgstr "Hãy <a href=\"%(signin_url)s\">tạo tài khoản</a> để theo dõi %(username)s"
 
-#: media/js/user.js:693
+#: media/js/user.js:786
 #, c-format
 msgid "unfollow %s"
 msgstr "ngừng theo dõi %s"
 
-#: media/js/user.js:696
+#: media/js/user.js:789
 #, c-format
 msgid "following %s"
 msgstr "đang theo dõi %s"
 
-#: media/js/user.js:702
+#: media/js/user.js:795
 #, c-format
 msgid "follow %s"
 msgstr "theo dõi %s"
 
-#: media/js/user.js:836
+#: media/js/user.js:929
 msgid "add group"
 msgstr "thêm nhóm"
 
-#: media/js/user.js:916
+#: media/js/user.js:1009
 msgid "add"
 msgstr "thêm"
 
-#: media/js/utils.js:81
+#: media/js/utils.js:87
 msgid "must be shorter than %(max_chars)s character"
 msgid_plural "must be shorter than %(max_chars)s characters"
 msgstr[0] "cần phải ngắn hơn %(max_chars)s kí tự"
 
-#: media/js/utils.js:149
+#: media/js/utils.js:155
 msgid "and"
 msgstr "và"
 
-#: media/js/utils.js:167
+#: media/js/utils.js:173
 msgid "click to close"
 msgstr "đóng"
 
-#: media/js/utils.js:670
+#: media/js/utils.js:683
 #, c-format
 msgid "page %s"
 msgstr ""
 
-#: media/js/utils.js:1370
+#: media/js/utils.js:1383
 msgid "click to edit this comment"
 msgstr "sửa ý kiến này"
 
-#: media/js/utils.js:1401
+#: media/js/utils.js:1413
 msgid "convert to answer"
 msgstr "chuyển thành câu trả lời"
 
-#: media/js/utils.js:1454
+#: media/js/utils.js:1466
 msgid "Ok"
 msgstr "Đồng ý"
 
-#: media/js/utils.js:1760
+#: media/js/utils.js:1772
 #, c-format
 msgid "Uploaded file: %s"
 msgstr "Đã tải lên tập tin: %s"
 
-#: media/js/utils.js:1775
+#: media/js/utils.js:1787
 msgid "Choose a different image"
 msgstr "Chọn một hình ảnh khác "
 
-#: media/js/utils.js:1777
+#: media/js/utils.js:1789
 msgid "Choose a different file"
 msgstr "Chọn một tập tin khác"
 
-#: media/js/utils.js:1791
+#: media/js/utils.js:1803
 msgid "Oops, looks like we had an error. Sorry."
 msgstr "Rất tiếc, có vẻ như chúng tôi đã có một lỗi. Xin lôi."
 
-#: media/js/utils.js:1852
+#: media/js/utils.js:1864
 msgid "Choose an image to insert"
 msgstr "Chọn hình để chèn vào"
 
-#: media/js/utils.js:1854
+#: media/js/utils.js:1866
 msgid "Choose a file to insert"
 msgstr "Chọn tập tin để chèn vào"
 
-#: media/js/utils.js:1867
+#: media/js/utils.js:1879
 msgid "Allowed file types are:"
 msgstr "Các loại tập tin cho phép là:"
 
-#: media/js/utils.js:1873
+#: media/js/utils.js:1885
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:35
 msgid "Or paste file url here"
 msgstr "Hoặc dán url tập tin ở đây"
 
-#: media/js/utils.js:1947
+#: media/js/utils.js:1959
 msgid "Save"
 msgstr "Lưu"
 
-#: media/js/utils.js:2019
+#: media/js/utils.js:2031
 msgid "saved"
 msgstr "Đã lưu"
 
-#: media/js/utils.js:2143
+#: media/js/utils.js:2155
 msgid "enabled"
 msgstr "đã bật"
 
-#: media/js/utils.js:2145
+#: media/js/utils.js:2157
 msgid "disabled"
 msgstr "bị vô hiệu hóa"
 
-#: media/js/utils.js:2583
+#: media/js/utils.js:2595
 msgid "group name"
 msgstr "tên nhóm"
 
-#: media/js/utils.js:2591
+#: media/js/utils.js:2603
 msgid "add new group"
 msgstr "thêm nhóm mới"
 
-#: media/js/utils.js:2683
+#: media/js/utils.js:2695
 msgid "Group %(name)s already exists. Group names are case-insensitive."
 msgstr "Nhóm %(name)s đã tồn tại. Tên nhóm có phân biệt dạng chữ"
 
-#: media/js/utils.js:2856
+#: media/js/utils.js:2868
 #, c-format
 msgid "see questions tagged '%s'"
 msgstr "xem các câu hỏi được gắn thẻ '%s'"
 
-#: media/js/utils.js:3902
+#: media/js/utils.js:3914
 msgid "ago"
 msgstr "trước"
 
-#: media/js/utils.js:3903
+#: media/js/utils.js:3915
 msgid "from now"
 msgstr "từ bây giờ"
 
-#: media/js/utils.js:3905
+#: media/js/utils.js:3917
 msgid "about a minute"
 msgstr "khoảng một phút"
 
-#: media/js/utils.js:3906
+#: media/js/utils.js:3918
 #, c-format
-msgid "%d minutes"
-msgstr "%d phút"
+msgid "%d min"
+msgstr ""
 
-#: media/js/utils.js:3907
+#: media/js/utils.js:3919
 msgid "about an hour"
 msgstr "Khoảng 1 giờ"
 
-#: media/js/utils.js:3908
+#: media/js/utils.js:3920
 #, c-format
-msgid "%d hours"
-msgstr "%d giờ"
+msgid "%d h"
+msgstr ""
 
-#: media/js/utils.js:3909 media/js/utils.js.c:4037
+#: media/js/utils.js:3921 media/js/utils.js.c:4049
 msgid "yesterday"
 msgstr "ngày hôm qua"
 
-#: media/js/utils.js:3910
+#: media/js/utils.js:3922
 #, c-format
 msgid "%d days"
 msgstr "%d ngày"
 
-#: media/js/utils.js:3911
+#: media/js/utils.js:3923
 msgid "about a month"
 msgstr "khoảng một tháng"
 
-#: media/js/utils.js:3912
+#: media/js/utils.js:3924
 #, c-format
 msgid "%d months"
 msgstr "%d tháng"
 
-#: media/js/utils.js:3913
+#: media/js/utils.js:3925
 msgid "about a year"
 msgstr "khoảng một năm"
 
-#: media/js/utils.js:3914
+#: media/js/utils.js:3926
 #, c-format
 msgid "%d years"
 msgstr "%d năm"
 
-#: media/js/utils.js:4012
+#: media/js/utils.js:4024
 msgid "Jan"
 msgstr "tháng giêng"
 
-#: media/js/utils.js:4013
+#: media/js/utils.js:4025
 msgid "Feb"
 msgstr "tháng 2"
 
-#: media/js/utils.js:4014
+#: media/js/utils.js:4026
 msgid "Mar"
 msgstr "tháng 3"
 
-#: media/js/utils.js:4015
+#: media/js/utils.js:4027
 msgid "Apr"
 msgstr "tháng 4"
 
-#: media/js/utils.js:4016
+#: media/js/utils.js:4028
 msgid "May"
 msgstr "tháng 5"
 
-#: media/js/utils.js:4017
+#: media/js/utils.js:4029
 msgid "Jun"
 msgstr "tháng 6"
 
-#: media/js/utils.js:4018
+#: media/js/utils.js:4030
 msgid "Jul"
 msgstr "tháng 7"
 
-#: media/js/utils.js:4019
+#: media/js/utils.js:4031
 msgid "Aug"
 msgstr "tháng 8"
 
-#: media/js/utils.js:4020
+#: media/js/utils.js:4032
 msgid "Sep"
 msgstr "tháng 9"
 
-#: media/js/utils.js:4021
+#: media/js/utils.js:4033
 msgid "Oct"
 msgstr "tháng 10"
 
-#: media/js/utils.js:4022
+#: media/js/utils.js:4034
 msgid "Nov"
 msgstr "tháng 11"
 
-#: media/js/utils.js:4023
+#: media/js/utils.js:4035
 msgid "Dec"
 msgstr "tháng 12"
 
-#: media/js/utils.js:4035
+#: media/js/utils.js:4047
 msgid "2 days ago"
 msgstr "2 ngày trước"
 
-#: media/js/utils.js:4042
+#: media/js/utils.js:4054
 #, c-format
 msgid "%s hour ago"
 msgid_plural "%s hours ago"
 msgstr[0] "%s giờ trước"
 
-#: media/js/utils.js:4052
+#: media/js/utils.js:4064
 #, c-format
 msgid "%s min ago"
 msgid_plural "%s mins ago"

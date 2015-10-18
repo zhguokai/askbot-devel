@@ -7,7 +7,7 @@ basic actions on behalf of the forum application
 import os
 import platform
 
-VERSION = (0, 7, 53)
+VERSION = (0, 9, 0)
 
 default_app_config = 'askbot.apps.AskbotConfig'
 
@@ -24,9 +24,9 @@ REQUIREMENTS = {
     'django_transaction_signals': 'django-transaction-signals',
     'djcelery': 'django-celery>=3.0.11',
     'djkombu': 'django-kombu==0.9.4',
-    'followit': 'django-followit==0.0.7',
+    'followit': 'django-followit==0.1.0',
     'html5lib': 'html5lib==0.90',
-    'jinja2': 'Jinja2',
+    'jinja2': 'Jinja2>=2.8',
     'jsonfield': 'jsonfield',
     'jwt': 'pyjwt',
     'keyedcache': 'django-keyedcache',
@@ -38,7 +38,8 @@ REQUIREMENTS = {
     'picklefield': 'django-picklefield==0.3.0',
     'pystache': 'pystache==0.3.1',
     'pytz': 'pytz==2013b',
-    'recaptcha_works': 'django-recaptcha-works',
+    'captcha': 'django-recaptcha>=1.0.3',
+    'requirements': 'requirements-parser',
     'robots': 'django-robots==1.0',
     'sanction': 'sanction==0.3.1',
     'simplejson': 'simplejson',

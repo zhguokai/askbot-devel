@@ -10,8 +10,8 @@ the main function is run_startup_tests
 import askbot
 import django
 import os
+import pkg_resources
 import re
-import south
 import sys
 import urllib
 from django.db import connection
@@ -212,11 +212,76 @@ def try_import(module_name, pypi_package_name, short_message = False):
         message += '\n\nType ^C to quit.'
         raise AskbotConfigError(message)
 
+
+def unparse_requirement(req):
+    line = req.name
+    if req.specs:
+        specs = ['%s%s' % spec for spec in req.specs]
+        line += ','.join(specs) 
+    if req.extras:
+        line += ' [%s]' % ','.join(req.extras)
+    return line
+
+
+def test_specs(req):
+    if not req.specs:
+        return
+    mod_ver = pkg_resources.get_distribution(req.name).version
+    mod_ver = mod_ver.split('.')
+    try:
+        for spec in req.specs:
+            op = spec[0]
+            spec_ver = spec[1].split('.')
+            if op == '==':
+                assert mod_ver == spec_ver
+            elif op == '>':
+                assert mod_ver > spec_ver
+            elif op == '<':
+                assert mod_ver < spec_ver
+            elif op == '<=':
+                assert mod_ver <= spec_ver
+            elif op == '>=':
+                assert mod_ver >= spec_ver
+            else:
+                raise ValueError('Unsupported pip dependency version operator %s' % op)
+    except AssertionError:
+        data = {
+            'name': req.name,
+            'need_spec': unparse_requirement(req),
+            'mod_ver': '.'.join(mod_ver)
+        }
+        message = """Unsupported version of module {name},
+found version {mod_ver}, {need_spec} required.
+please run:
+> pip uninstall {name} && pip install {need_spec}""".format(**data)
+        raise AskbotConfigError(message)
+
+
+def get_req_name_from_spec(spec):
+    spec = spec.replace('>', '=').replace('>', '=')
+    bits = spec.split('=')
+    return bits[0]
+
+
+def find_mod_name(req_name):
+    from askbot import REQUIREMENTS
+    req2mod = dict([(get_req_name_from_spec(v), k) for (k, v) in REQUIREMENTS.items()])
+    return req2mod[req_name]
+
+
 def test_modules():
     """tests presence of required modules"""
     from askbot import REQUIREMENTS
-    for module_name, pip_path in REQUIREMENTS.items():
-        try_import(module_name, pip_path)
+    #flatten requirements into file-like string
+    req_text = '\n'.join(REQUIREMENTS.values())
+    import requirements
+    parsed_requirements = requirements.parse(req_text)
+    for req in parsed_requirements:
+        pip_path = unparse_requirement(req)
+        mod_name = find_mod_name(req.name)
+        try_import(mod_name, pip_path)
+        test_specs(req)
+
 
 def test_postgres():
     """Checks for the postgres buggy driver, version 2.4.2"""
@@ -254,7 +319,26 @@ def test_template_loader():
     elif django_settings.TEMPLATE_LOADERS[0] != current_loader:
         errors.append(
             '"%s" must be the first element of TEMPLATE_LOADERS' % current_loader
+        ) 
+
+    app_dir_loader = 'askbot.skins.loaders.JinjaAppDirectoryLoader'
+    if app_dir_loader not in django_settings.TEMPLATE_LOADERS:
+        errors.append(
+            'add "%s" as second item of the TEMPLATE_LOADERS' % app_dir_loader
         )
+    elif django_settings.TEMPLATE_LOADERS.index(app_dir_loader) != 1:
+        errors.append(
+            'move "%s" to the second place in the TEMPLATE_LOADERS' % app_dir_loader
+        )
+
+    try:
+        jinja2_apps = getattr(django_settings, 'JINJA2_TEMPLATES')
+    except AttributeError:
+        errors.append("add to settings.py:\nJINJA2_TEMPLATES = ('captcha',)")
+    else:
+        if 'captcha' not in jinja2_apps:
+            errors.append("add to JINJA2_TEMPLATES in settings.py\n    'captcha',")
+
 
     print_errors(errors)
 
@@ -905,6 +989,22 @@ def test_locale_middlewares():
 
     print_errors(errors)
 
+
+def test_recaptcha():
+    errors = list()
+    if 'captcha' not in django_settings.INSTALLED_APPS:
+        errors.append("Please add to the INSTALLED_APPS:\n    'captcha',")
+
+    try:
+        nocaptcha = getattr(django_settings, 'NOCAPTCHA')
+    except AttributeError:
+        errors.append('Please add to settings.py:\nNOCAPTCHA = True')
+    else:
+        if nocaptcha != True:
+            errors.append('Please modify settings.py with:\nNOCAPTCHA = True')
+    print_errors(errors)
+
+
 def test_multilingual():
     is_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
 
@@ -955,10 +1055,10 @@ def test_versions():
             'the latest release of Python 2.x'
         )
 
-    if django.VERSION[:2] != (1, 7):
-        errors.append("""This version of Askbot supports only django 1.7
-For details please refer to
-http://askbot.org/doc/versions.html""")
+    dj_ver = django.VERSION
+    upgrade_msg = 'About upgrades, please read http://askbot.org/doc/upgrade.html'
+    if dj_ver[:2] != (1, 7):
+        errors.append('This version of Askbot supports only django 1.7. ' + upgrade_msg)
     elif py_ver[:3] < (2, 7, 0):
         errors.append(
             'Django 1.7 and higher requires Python 2.7'
@@ -973,6 +1073,7 @@ def run_startup_tests():
     all startup tests, mainly checking settings config so far
     """
     #this is first because it gives good info on what to install
+    try_import('requirements', 'requirements-parser')
     test_modules()
 
     #todo: refactor this when another test arrives
@@ -995,6 +1096,7 @@ def run_startup_tests():
     test_multilingual()
     test_locale_middlewares()
     #test_csrf_cookie_domain()
+    test_recaptcha()
     test_secret_key()
     test_service_url_prefix()
     test_staticfiles()
@@ -1027,9 +1129,9 @@ def run_startup_tests():
             'message': 'Please replace setting ASKBOT_UPLOADED_FILES_URL ',
             'replace_hint': "with MEDIA_URL = '/%s'"
         },
-        'RECAPTCHA_USE_SSL': {
+        'NOCAPTCHA': {
             'value': True,
-            'message': 'Please add: RECAPTCHA_USE_SSL = True'
+            'message': 'Please add: NOCAPTCHA = True'
         },
     })
     settings_tester.run()
