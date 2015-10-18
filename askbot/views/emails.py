@@ -26,7 +26,7 @@ autodiscover()
 @moderators_only
 def list_emails(request):
     #list only enabled emails
-    enabled = dict((k, v) for k, v in REGISTRY.items())# if v().is_enabled())
+    enabled = dict((k, v) for k, v in REGISTRY.items() if v().is_enabled())
     data = {'emails': enabled}#REGISTRY}
     return render(request, 'email/list_emails.html', Context(data))
 
