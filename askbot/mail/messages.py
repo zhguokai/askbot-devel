@@ -221,6 +221,67 @@ class InstantEmailAlert(BaseEmail):
             'update_activity': activity
         }
 
+    def get_mock_context_sample3(self):
+        """question edit alert"""
+        #get edited answer
+        from django.db.models import Count
+        from askbot.models import (Activity, Post, User)
+        posts = Post.objects.annotate(
+                        edit_count=Count('revisions')
+                    ).filter(post_type='question', edit_count__gt=1)
+
+        try:
+            post = posts[0]
+        except IndexError:
+            return None
+
+        to_users = User.objects.exclude(id=post.author_id)
+        if to_users.count() == 0:
+            return None
+        to_user = to_users[0]
+
+        activity = Activity(
+                    user=post.author,
+                    content_object=post,
+                    activity_type=const.TYPE_ACTIVITY_UPDATE_QUESTION,
+                    question=post
+                )
+        return {
+            'post': post,
+            'from_user': post.author,
+            'to_user': to_user,
+            'update_activity': activity
+        }
+
+    def get_mock_context_sample4(self):
+        """New question alert"""
+        from askbot.models import (Activity, Post, User)
+        posts = Post.objects.filter(
+                                    parent__post_type='answer',
+                                    post_type='comment'
+                                   )
+        if posts.count() == 0:
+            return None
+        post = posts[0]
+
+        to_users = User.objects.exclude(id=post.author_id)
+        if to_users.count() == 0:
+            return None
+        to_user = to_users[0]
+
+        activity = Activity(
+                    user=post.author,
+                    content_object=post,
+                    activity_type=const.TYPE_ACTIVITY_COMMENT_ANSWER,
+                    question=post
+                )
+        return {
+            'post': post,
+            'from_user': post.author,
+            'to_user': to_user,
+            'update_activity': activity
+        }
+
     def get_headers(self):
         context = self.get_context()
         post = context['post']
@@ -286,70 +347,10 @@ class InstantEmailAlert(BaseEmail):
         origin_post = post.get_origin_post()
         post_url = site_url(post.get_absolute_url())
 
-        if update_type.endswith('update'):
-            user_url = site_url(from_user.get_absolute_url())
-            if to_user.is_administrator_or_moderator() and askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA:
-                user_link_fmt = '<a href="%(profile_url)s">%(username)s</a> (<a href="mailto:%(email)s">%(email)s</a>)'
-                user_link = user_link_fmt % {
-                    'profile_url': user_url,
-                    'username': from_user.username,
-                    'email': from_user.email
-                }
-            elif post.is_anonymous:
-                user_link = from_user.get_name_of_anonymous_user()
-            else:
-                user_link = '<a href="%s">%s</a>' % (user_url, from_user.username)
-
-            if post.is_comment():
-                user_action = _('%(user)s edited a %(post_link)s.')
-            elif post.is_answer():
-                user_action = _('%(user)s edited an %(post_link)s.')
-            elif post.is_question():
-                user_action = _('%(user)s edited a %(post_link)s.')
-            else:
-                raise ValueError('unrecognized post type')
-
-            user_action = user_action % {
-                'user': user_link,
-                'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
-            }
-
-            revisions = post.revisions.all()[:2]
-            content_preview = htmldiff(
-                    sanitize_html(revisions[1].html),
-                    sanitize_html(revisions[0].html),
-                    ins_start = '<b><u style="background-color:#cfc">',
-                    ins_end = '</u></b>',
-                    del_start = '<del style="color:#600;background-color:#fcc">',
-                    del_end = '</del>'
-                )
-            #todo: remove hardcoded style
-        else:
-            content_preview = post.format_for_email(is_leaf_post=True, recipient=to_user)
-
-        #add indented summaries for the parent posts
-        #content_preview += post.format_for_email_as_parent_thread_summary(recipient=to_user)
-
         can_reply = to_user.can_post_by_email()
         from askbot.models import get_reply_to_addresses
         reply_address, alt_reply_address = get_reply_to_addresses(to_user, post)
-
-        if can_reply:
-            reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
-                          force_unicode(_('To reply, PLEASE WRITE ABOVE THIS LINE.'))
-            if post.post_type == 'question' and alt_reply_address:
-                data = {
-                  'addr': alt_reply_address,
-                  'subject': urllib.quote(
-                            ('Re: ' + post.thread.title).encode('utf-8')
-                          )
-                }
-                reply_separator += '<p>' + const.REPLY_WITH_COMMENT_TEMPLATE % data
-                reply_separator += '</p>'
-            else:
-                reply_separator = '<p>%s</p>' % reply_separator
-        else:
-            reply_separator = ''
+        alt_reply_subject = urllib.quote(('Re: ' + post.thread.title).encode('utf-8'))
 
         return {
            'admin_email': askbot_settings.ADMIN_EMAIL,
@@ -359,16 +360,17 @@ class InstantEmailAlert(BaseEmail):
            'receiving_user_karma': to_user.reputation,
            'reply_by_email_karma_threshold': askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
            'can_reply': can_reply,
-           'content_preview': content_preview,
            'update_type': update_type,
            'update_activity': update_activity,
            'post': post,
            'post_url': post_url,
            'origin_post': origin_post,
            'thread_title': origin_post.thread.title,
-           'reply_separator': reply_separator,
            'reply_address': reply_address,
-           'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+           'alt_reply_address': alt_reply_address,
+           'alt_reply_subject': alt_reply_subject,
+           'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False),
+           'reply_sep_tpl': const.SIMPLE_REPLY_SEPARATOR_TEMPLATE
         }
 
 

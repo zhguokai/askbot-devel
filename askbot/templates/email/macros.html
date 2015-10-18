@@ -2,6 +2,16 @@
     <a href="mailto:{{ user.email }}">{{ user.email }}</a>
 {%- endmacro -%}
 
+{%- macro emailed_user_info(recipient, user, is_anon) -%}
+    {% if recipient|can_see_private_user_data(user) %}
+        {{ user.get_profile_link() ~ '/(' ~ mailto_link(user) ~ ')' }}
+    {% elif is_anon %}
+        {{ user.get_name_of_anonymous_user()|escape }}
+    {% else %}
+        {{ user.get_profile_link() }}
+    {% endif %}
+{%- endmacro -%}
+
 {% macro quoted_post(
         post=None,
         recipient=None,
@@ -13,18 +23,12 @@
     {% spaceless %}
     {{ start_quote(quote_level) }}
 
-        {% if recipient|can_see_private_user_data(post.author) %}
-            {% set author = post.author.get_profile_link() ~ '/(' ~ mailto_link(post.author) ~ ')' %}
-        {% elif post.is_anonymous %}
-            {% set author = post.author.get_name_of_anonymous_user()|escape %}
-        {% else %}
-            {% set author = post.author.get_profile_link() %}
-        {% endif %}
+        {% set author %}{{ emailed_user_info(recipient, post.author, post.is_anonymous) }}{% endset %}
 
         {% set post_url = post.get_absolute_url() %}
 
         {% if post.post_type == 'question' %}
-            <p style="font-size: 10px; font-weight: bold">
+            <p style="{{ info_text_style() }}">
                 {% if format == 'parent_subthread' %}
                     {% set post_type=settings.WORDS_QUESTION_SINGULAR %}
                     {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
@@ -34,7 +38,7 @@
             </p>
 
             {% if quote_level > 0 %}
-                <p style="font-size:10px; font-weight: bold;">
+                <p style="{{ info_text_style() }}">
             {% else %}
                 <p style="font-size:20px; font-weight: bold; margin: 10px 0">
             {% endif %}
@@ -56,7 +60,7 @@
                 {% set post_type=settings.WORDS_ANSWER_SINGULAR %}
                 {% set acted=settings.WORDS_ANSWERED %}
             {% endif %}
-            <p style="font-size:10px; font-weight: bold;">
+            <p style="{{ info_text_style() }}">
                 {% if format == 'parent_subthread' %}
                     {% trans %}In reply to {{ author }}'s <a href="{{ post_url }}">{{ post_type }}</a>{% endtrans %}:
                 {% else %}
@@ -89,4 +93,8 @@ font-size:14px;font-weight:bold;margin-bottom:0px;
 
 {% macro fine_print_style() %}
 font-size:8px;color:#aaa;margin-bottom:0px;
+{% endmacro %}
+
+{% macro info_text_style() %}
+font-size: 10px;font-weight: bold;
 {% endmacro %}

@@ -24,7 +24,7 @@ REQUIREMENTS = {
     'djkombu': 'django-kombu==0.9.4',
     'followit': 'django-followit==0.0.7',
     'html5lib': 'html5lib==0.90',
-    'jinja2': 'Jinja2',
+    'jinja2': 'Jinja2>=2.8',
     'jsonfield': 'jsonfield',
     'keyedcache': 'django-keyedcache',
     'longerusername': 'longerusername',

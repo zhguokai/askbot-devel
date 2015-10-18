@@ -704,6 +704,20 @@ class Post(models.Model):
         if there were no edits"""
         return self.last_edited_at or self.added_at
 
+    def get_latest_revision_diff(self, ins_start=None, ins_end=None,
+                                  del_start=None, del_end=None
+                                 ):
+        #returns formatted html diff of the latest two revisions
+        revisions = self.revisions.order_by('-id')[:2]
+        return htmldiff(
+                sanitize_html(revisions[1].html),
+                sanitize_html(revisions[0].html),
+                ins_start=ins_start,
+                ins_end=ins_end,
+                del_start=del_start,
+                del_end=del_end
+            )
+
     def get_moderators(self):
         """returns query set of users who are site administrators
         and moderators"""
@@ -1150,26 +1164,6 @@ class Post(models.Model):
                     filtered_candidates.add(candidate)
 
             return filtered_candidates
-
-    def format_for_email(
-        self, quote_level=0, is_leaf_post=False, format=None,
-        recipient=None
-    ):
-        """format post for the output in email,
-        if quote_level > 0, the post will be indented that number of times
-        todo: move to views?
-        """
-        from django.template import Context
-        from django.template.loader import get_template
-        template = get_template('email/quoted_post.html')
-        data = {
-            'post': self,
-            'recipient': recipient,
-            'quote_level': quote_level,
-            'is_leaf_post': is_leaf_post,
-            'format': format
-        }
-        return template.render(Context(data))#todo: set lang
 
     def set_cached_comments(self, comments):
         """caches comments in the lifetime of the object
