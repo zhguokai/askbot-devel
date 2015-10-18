@@ -1,10 +1,13 @@
 """a module for patching django"""
 import imp
+import hashlib
 import os
 import sys
+import types
 from django.utils.safestring import mark_safe
 from django.utils.functional import lazy
 from django.template import Node
+
 try:
     from functools import WRAPPER_ASSIGNMENTS
 except ImportError:
@@ -121,7 +124,6 @@ import re
 import random
 from django.conf import settings
 from django.core.urlresolvers import get_callable
-from django.utils.hashcompat import md5_constructor
 from django.utils.safestring import mark_safe
 _POST_FORM_RE = \
     re.compile(r'(<form\W[^>]*\bmethod\s*=\s*(\'|"|)POST(\'|"|)\b[^>]*>)', re.IGNORECASE)
@@ -139,11 +141,11 @@ def _get_failure_view():
     return get_callable(settings.CSRF_FAILURE_VIEW)
 
 def _get_new_csrf_key():
-    return md5_constructor("%s%s"
+    return hashlib.md5("%s%s"
                 % (randrange(0, _MAX_CSRF_KEY), settings.SECRET_KEY)).hexdigest()
 
 def _make_legacy_session_token(session_id):
-    return md5_constructor(settings.SECRET_KEY + session_id).hexdigest()
+    return hashlib.md5(settings.SECRET_KEY + session_id).hexdigest()
 
 class CsrfViewMiddleware(object):
     """
@@ -352,6 +354,25 @@ def add_render_shortcut():
 
         import django.shortcuts
         django.shortcuts.render = render
+
+
+def add_hashcompat():
+    """adds hashcompat module where removed
+    todo: remove dependency on Coffin and then remove
+    this hack"""
+    import django.utils
+    hashcompat = types.ModuleType('hashcompat')
+    hashcompat.md5_constructor = hashlib.md5
+    sys.modules['django.utils.hashcompat'] = hashcompat
+
+
+def add_simplejson():
+    """adds back simplejson - which may be used
+    by the dependency libraries"""
+    import django.utils
+    import simplejson
+    django.utils.simplejson = simplejson
+    sys.modules['django.utils.simplejson'] = simplejson
 
 
 from django.utils import six

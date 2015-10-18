@@ -4,7 +4,7 @@ try:
 except ImportError:
     from django.conf.urls.defaults import patterns, url
 
-from group_messaging import views
+from askbot.deps.group_messaging import views
 
 urlpatterns = patterns('',
     url(

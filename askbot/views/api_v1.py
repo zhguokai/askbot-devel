@@ -2,7 +2,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
-from django.utils import simplejson
+import simplejson
 from django.db.models import Q
 from django.core.urlresolvers import reverse
 from askbot import models
@@ -105,16 +105,18 @@ def users(request):
         raise Http404
     else:
         if order_by == 'reputation':
-            users = models.User.objects.exclude(status='b').order_by('-reputation')
+            profiles = models.UserProfile.objects.exclude(status='b').order_by('-reputation')
         elif order_by == 'oldest':
-            users = models.User.objects.exclude(status='b').order_by('date_joined')
+            profiles = models.UserProfile.objects.exclude(status='b').order_by('pk__date_joined')
         elif order_by == 'recent':
-            users = models.User.objects.exclude(status='b').order_by('-date_joined')
+            profiles = models.UserProfile.objects.exclude(status='b').order_by('-pk__date_joined')
         elif order_by == 'username':
-            users = models.User.objects.exclude(status='b').order_by('username')
+            profiles = models.UserProfile.objects.exclude(status='b').order_by('pk__username')
         else:
             raise Exception("Order by method not allowed")
 
+        user_ids = models.UserProfile.objects.values_list('pk', flat=True)
+        users = User.objects.filter(id__in=user_ids)
 
         paginator = Paginator(users, 10)
 

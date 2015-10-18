@@ -13,9 +13,9 @@ from django.core import exceptions as django_exceptions
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.template import Context
-from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, string_concat, get_language
+from django.utils import timezone
 
 import askbot
 from askbot.conf import settings as askbot_settings
@@ -547,7 +547,10 @@ class ThreadManager(BaseQuerySetManager):
             thread._question_cache = page_question_map[thread.id]
 
         last_activity_by_users = User.objects.filter(id__in=[obj.last_activity_by_id for obj in threads])\
-                                    .only('id', 'username', 'country', 'show_country')
+                                    .only('id', 'username',
+                                          'askbot_profile__country',
+                                          'askbot_profile__show_country'
+                                         )
         user_map = {}
         for la_user in last_activity_by_users:
             user_map[la_user.id] = la_user
@@ -577,7 +580,7 @@ class ThreadManager(BaseQuerySetManager):
         #a real image and try to prompt him/her to upload a picture
         from askbot.conf import settings as askbot_settings
         avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
-        contributors = User.objects.filter(id__in=u_id).order_by('avatar_type')[:avatar_limit]
+        contributors = User.objects.filter(id__in=u_id).order_by('askbot_profile__avatar_type')[:avatar_limit]
         return contributors
 
     def get_for_user(self, user):
@@ -632,7 +635,7 @@ class Thread(models.Model):
     view_count = models.PositiveIntegerField(default=0)
     favourite_count = models.PositiveIntegerField(default=0)
     answer_count = models.PositiveIntegerField(default=0)
-    last_activity_at = models.DateTimeField(default=datetime.datetime.now)
+    last_activity_at = models.DateTimeField(default=timezone.now)
     last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
     language_code = models.CharField(
                             choices=django_settings.LANGUAGES,
@@ -742,7 +745,7 @@ class Thread(models.Model):
 
         self.retag(
             retagged_by=user,
-            retagged_at=timestamp or datetime.datetime.now(),
+            retagged_at=timestamp or timezone.now(),
             tagnames =' '.join(existing_tags + add_tags),
             silent=silent
         )
@@ -1844,7 +1847,7 @@ class FavoriteQuestion(models.Model):
     """A favorite Question of a User."""
     thread        = models.ForeignKey(Thread)
     user          = models.ForeignKey(User, related_name='user_favorite_questions')
-    added_at      = models.DateTimeField(default=datetime.datetime.now)
+    added_at      = models.DateTimeField(default=timezone.now)
 
     class Meta:
         app_label = 'askbot'
@@ -1881,7 +1884,7 @@ class AnonymousQuestion(DraftContent):
     is_anonymous = models.BooleanField(default=False)
 
     def publish(self, user):
-        added_at = datetime.datetime.now()
+        added_at = timezone.now()
         #todo: wrong - use User.post_question() instead
         try:
             user.assert_can_post_text(self.text)

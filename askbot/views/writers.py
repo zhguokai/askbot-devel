@@ -4,7 +4,6 @@
 
 This module contains views that allow adding, editing, and deleting main textual content.
 """
-import datetime
 import logging
 import os
 import os.path
@@ -21,7 +20,8 @@ from django.http import HttpResponseBadRequest
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseRedirect
 from django.http import Http404
-from django.utils import simplejson
+import simplejson
+from django.utils import timezone
 from django.utils.html import strip_tags, escape
 from django.utils.translation import get_language
 from django.utils.translation import ugettext as _
@@ -113,7 +113,7 @@ def upload(request):#ajax upload file to a question or answer
     #    'error': error,
     #    'file_url': file_url
     #})
-    #return HttpResponse(data, mimetype = 'application/json')
+    #return HttpResponse(data, content_type='application/json')
     xml_template = "<result><msg><![CDATA[%s]]></msg><error><![CDATA[%s]]></error><file_url>%s</file_url><orig_file_name><![CDATA[%s]]></orig_file_name></result>"
     xml = xml_template % (result, error, file_url, orig_file_name)
 
@@ -216,7 +216,7 @@ def ask(request):#view used to ask a new question
     if request.method == 'POST':
         form = forms.AskForm(request.POST, user=request.user)
         if form.is_valid():
-            timestamp = datetime.datetime.now()
+            timestamp = timezone.now()
             title = form.cleaned_data['title']
             wiki = form.cleaned_data['wiki']
             tagnames = form.cleaned_data['tags']
@@ -740,7 +740,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
     if form.is_valid() == False:
         return HttpResponseBadRequest(
             _('This content is forbidden'),
-            mimetype='application/json'
+            content_type='application/json'
         )
 
     post_id = form.cleaned_data['post_id']
@@ -749,7 +749,7 @@ def post_comments(request):#generic ajax handler to load comments to an object
         post = models.Post.objects.get(id=post_id)
     except models.Post.DoesNotExist:
         return HttpResponseBadRequest(
-            _('Post not found'), mimetype='application/json'
+            _('Post not found'), content_type='application/json'
         )
 
     if request.method == "GET":
@@ -880,7 +880,7 @@ def delete_comment(request):
     except exceptions.PermissionDenied, e:
         return HttpResponseForbidden(
                     unicode(e),
-                    mimetype = 'application/json'
+                    content_type='application/json'
                 )
 
 @login_required

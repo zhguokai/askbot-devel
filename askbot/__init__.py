@@ -7,7 +7,9 @@ basic actions on behalf of the forum application
 import os
 import platform
 
-VERSION = (0, 7, 54)
+VERSION = (0, 9, 0)
+
+default_app_config = 'askbot.apps.AskbotConfig'
 
 #keys are module names used by python imports,
 #values - the package qualifier to use for pip
@@ -16,16 +18,17 @@ REQUIREMENTS = {
     'avatar': 'django-avatar>=2.0',
     'bs4': 'beautifulsoup4',
     'coffin': 'Coffin>=0.3,<=0.3.8',
-    'compressor': 'django-compressor==1.2',
-    'django': 'django>=1.5,<1.6',
+    'compressor': 'django-compressor>=1.3,<=1.5',
+    'django': 'django>=1.5,<1.8',
     'django_countries': 'django-countries==3.3',
     'django_transaction_signals': 'django-transaction-signals',
     'djcelery': 'django-celery>=3.0.11',
     'djkombu': 'django-kombu==0.9.4',
-    'followit': 'django-followit==0.0.7',
+    'followit': 'django-followit==0.1.0',
     'html5lib': 'html5lib==0.90',
     'jinja2': 'Jinja2>=2.8',
     'jsonfield': 'jsonfield',
+    'jwt': 'pyjwt',
     'keyedcache': 'django-keyedcache',
     'longerusername': 'longerusername',
     'markdown2': 'markdown2',
@@ -33,16 +36,16 @@ REQUIREMENTS = {
     'oauth2': 'oauth2',
     'openid': 'python-openid',
     'picklefield': 'django-picklefield==0.3.0',
-    'jwt': 'pyjwt',
     'pystache': 'pystache==0.3.1',
     'pytz': 'pytz==2013b',
     'captcha': 'django-recaptcha>=1.0.3',
     'requirements': 'requirements-parser',
     'robots': 'django-robots==1.0',
     'sanction': 'sanction==0.3.1',
+    'simplejson': 'simplejson',
     'south': 'South>=0.7.1',
     'threaded_multihost': 'django-threaded-multihost',
-    'tinymce': 'django-tinymce==1.5.1b2',
+    'tinymce': 'django-tinymce==1.5.3',
     'unidecode': 'unidecode',
     #'stopforumspam': 'stopforumspam'
 }

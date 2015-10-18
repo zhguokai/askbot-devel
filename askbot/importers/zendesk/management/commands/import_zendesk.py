@@ -82,6 +82,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from django.db import transaction
 from django.db import connection
+from django.utils import timezone
 from askbot import models as askbot_models
 from askbot.utils import console
 from askbot.utils.html import unescape
@@ -108,7 +109,7 @@ except askbot_models.User.DoesNotExist:
             first_name = 'Phantom',
             last_name = 'Voter',
             real_name = 'Phantom Voter',
-            date_joined = datetime.now(),
+            date_joined = timezone.now(),
             is_active = False,
             about = 'Fake account for seeding vote counts during Zendesk import',
         ).save()
@@ -209,8 +210,8 @@ def seed_post_with_votes(post, votes_count):
     post.save()
     post.thread.points = votes_count
     post.thread.save()
-    askbot_models.Vote(user=PHANTOM_VOTER_USER, voted_post=post,
-                       vote=votes_count, voted_at=datetime.now()).save()
+    askbot_models.Vote(user=PHANTOM_VOTER_USER, voted_post=post, 
+                       vote=votes_count, voted_at=timezone.now()).save()
 
 def post_question(zendesk_entry):
     """Posts question to askbot from Zendesk Entry
@@ -240,9 +241,9 @@ def post_question(zendesk_entry):
         # reason of "question answered". Set default user to admin.
         if zendesk_entry.is_locked:
             askbot_post.thread.set_closed_status(
-                closed=True,
-                closed_by=ADMIN_USER,
-                closed_at=datetime.now(),
+                closed=True, 
+                closed_by=ADMIN_USER, 
+                closed_at=timezone.now(), 
                 close_reason=5)
             askbot_post.thread.save()
         return askbot_post
@@ -296,7 +297,7 @@ def post_comment(source_post, parent):
         return askbot_comment
     except Exception, e:
         msg = unicode(e)
-        print "Warning: post %d skipped: %s" % (zendesk_post.post_id, msg)
+        print "Warning: post %d skipped: %s" % (source_post.post_id, msg)
 
 def post_answer(zendesk_post, question):
     """Posts an answer to Askbot, from a Zendesk Post

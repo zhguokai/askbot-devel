@@ -4,7 +4,6 @@ from askbot.mail.messages import BaseEmail
 from askbot.utils.decorators import moderators_only
 from django.http import Http404
 from django.shortcuts import render
-from django.template import Context
 from django.utils.translation import ugettext_lazy as _
 import logging
 
@@ -28,7 +27,7 @@ def list_emails(request):
     #list only enabled emails
     enabled = dict((k, v) for k, v in REGISTRY.items() if v().is_enabled())
     data = {'emails': enabled}#REGISTRY}
-    return render(request, 'email/list_emails.html', Context(data))
+    return render(request, 'email/list_emails.html', data)
 
 
 DEFAULT_PREVIEW_ERROR_MESSAGE = _(
@@ -70,4 +69,4 @@ def preview_email(request, slug):
         data['samples'].append(sample)
 
     data['email'] = email
-    return render(request, 'email/preview_email.html', Context(data))
+    return render(request, 'email/preview_email.html', data)

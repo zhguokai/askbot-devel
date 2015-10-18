@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as AuthGroup
 from django.core import exceptions
 from django.forms import EmailField, URLField
-from django.utils import translation
+from django.utils import translation, timezone
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.utils.html import strip_tags
@@ -235,7 +235,7 @@ class Activity(models.Model):
     user = models.ForeignKey(User)
     recipients = models.ManyToManyField(User, through=ActivityAuditStatus, related_name='incoming_activity')
     activity_type = models.SmallIntegerField(choices=const.TYPE_ACTIVITY, db_index=True)
-    active_at = models.DateTimeField(default=datetime.datetime.now)
+    active_at = models.DateTimeField(default=timezone.now)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField(db_index=True)
     content_object = generic.GenericForeignKey('content_type', 'object_id')
@@ -263,7 +263,7 @@ class Activity(models.Model):
         """
         for recipient in recipients:
             #todo: may optimize for bulk addition
-            aas = ActivityAuditStatus(user = recipient, activity = self)
+            aas = ActivityAuditStatus(user=recipient, activity=self)
             aas.save()
 
     def get_mentioned_user(self):
@@ -401,11 +401,11 @@ class EmailFeedSetting(models.Model):
         super(EmailFeedSetting,self).save(*args,**kwargs)
 
     def get_previous_report_cutoff_time(self):
-        now = datetime.datetime.now()
+        now = timezone.now()
         return now - self.DELTA_TABLE[self.frequency]
 
     def should_send_now(self):
-        now = datetime.datetime.now()
+        now = timezone.now()
         cutoff_time = self.get_previous_report_cutoff_time()
         if self.reported_at == None or self.reported_at <= cutoff_time:
             return True
@@ -413,42 +413,11 @@ class EmailFeedSetting(models.Model):
             return False
 
     def mark_reported_now(self):
-        self.reported_at = datetime.datetime.now()
+        self.reported_at = timezone.now()
         self.save()
 
 
-class AuthUserGroups(models.Model):
-    """explicit model for the auth_user_groups bridge table.
-    """
-    group = models.ForeignKey(AuthGroup)
-    user = models.ForeignKey(User)
-
-    class Meta:
-        app_label = 'auth'
-        unique_together = ('group', 'user')
-        db_table = 'auth_user_groups'
-        managed = False
-
-
-class GroupMembershipManager(models.Manager):
-    def create(self, **kwargs):
-        user = kwargs['user']
-        group = kwargs['group']
-        try:
-            #need this for the cases where auth User_groups is there,
-            #but ours is not
-            auth_gm = AuthUserGroups.objects.get(user=user, group=group)
-            #use this as link for the One to One relation
-            kwargs['authusergroups_ptr'] = auth_gm
-        except AuthUserGroups.DoesNotExist:
-            pass
-        super(GroupMembershipManager, self).create(**kwargs)
-
-
-class GroupMembership(AuthUserGroups):
-    """contains one-to-one relation to ``auth_user_group``
-    and extra membership profile fields"""
-    #note: this may hold info on when user joined, etc
+class GroupMembership(models.Model):
     NONE = -1#not part of the choices as for this records should be just missing
     PENDING = 0
     FULL = 1
@@ -458,16 +427,17 @@ class GroupMembership(AuthUserGroups):
     )
     ALL_LEVEL_CHOICES = LEVEL_CHOICES + ((NONE, 'none'),)
 
+    group = models.ForeignKey(AuthGroup, related_name='user_membership')
+    user = models.ForeignKey(User, related_name='group_membership')
     level = models.SmallIntegerField(
                         default=FULL,
                         choices=LEVEL_CHOICES,
                     )
 
-    objects = GroupMembershipManager()
-
 
     class Meta:
         app_label = 'askbot'
+        unique_together = ('group', 'user')
 
     @classmethod
     def get_level_value_display(cls, level):
@@ -494,13 +464,12 @@ class GroupQuerySet(models.query.QuerySet):
         )
 
     def get_for_user(self, user=None, private=False):
+        gms = GroupMembership.objects.filter(user=user)
         if private:
             global_group = Group.objects.get_global_group()
-            return self.filter(
-                        user=user
-                    ).exclude(id=global_group.id)
-        else:
-            return self.filter(user=user)
+            gms = gms.exclude(group=global_group)
+        group_ids = gms.values_list('group_id', flat=True)
+        return Group.objects.filter(pk__in=group_ids)
 
     def get_by_name(self, group_name = None):
         from askbot.models.tag import clean_group_name#todo - delete this
@@ -536,7 +505,7 @@ class GroupManager(BaseQuerySetManager):
             pass
         return super(GroupManager, self).create(**kwargs)
 
-    def get_or_create(self, name = None, user = None, openness=None):
+    def get_or_create(self, name=None, user=None, openness=None):
         """creates a group tag or finds one, if exists"""
         #todo: here we might fill out the group profile
         try:
@@ -598,8 +567,8 @@ class Group(AuthGroup):
 
     def get_moderators(self):
         """returns group moderators"""
-        user_filter = models.Q(is_superuser=True) | models.Q(status='m')
-        user_filter = user_filter & models.Q(groups__in=[self])
+        user_filter = models.Q(is_superuser=True) | models.Q(askbot_profile__status='m')
+        user_filter = user_filter & models.Q(group_membership__group__in=[self])
         return User.objects.filter(user_filter)
 
     def has_moderator(self, user):

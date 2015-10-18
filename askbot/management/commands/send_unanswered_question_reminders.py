@@ -61,18 +61,18 @@ class Command(NoArgsCommand):
         #for all users, excluding blocked
         #for each user, select a tag filtered subset
         #format the email reminder and send it
-        for user in models.User.objects.filter(status__in=recipient_statuses):
+        for user in models.User.objects.filter(askbot_profile__status__in=recipient_statuses):
             user_questions = questions.exclude(author=user)
             user_questions = user.get_tag_filtered_questions(user_questions)
 
             if askbot_settings.GROUPS_ENABLED:
                 user_groups = user.get_groups()
-                user_questions = user_questions.filter(groups__in = user_groups)
+                user_questions = user_questions.filter(groups__in=user_groups)
 
             final_question_list = user_questions.get_questions_needing_reminder(
-                user = user,
-                activity_type = const.TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT,
-                recurrence_delay = schedule.recurrence_delay
+                user=user,
+                activity_type=const.TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT,
+                recurrence_delay=schedule.recurrence_delay
             )
 
             question_count = len(final_question_list)

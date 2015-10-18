@@ -1,7 +1,7 @@
 """functions, preparing parts of context for
 the templates in the various views"""
 from django.conf import settings as django_settings
-from django.utils import simplejson
+import simplejson
 from django.utils.translation import ugettext as _
 from askbot.conf import settings as askbot_settings
 from askbot import const

@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core import management
 from django.core.cache.backends.dummy import DummyCache
 from django.core import cache
-from django.utils import simplejson
+import simplejson
 from django.utils.translation import activate as activate_language
 
 import coffin
@@ -43,6 +43,8 @@ if CMAJOR == 0 and CMINOR == 3 and CMICRO < 4:
 
 class PageLoadTestCase(AskbotTestCase):
 
+    serialized_rollback = True
+
     #############################################
     #
     # INFO: We load test data once for all tests in this class (setUpClass + cleanup in tearDownClass)
@@ -57,7 +59,7 @@ class PageLoadTestCase(AskbotTestCase):
         super(PageLoadTestCase, cls).setUpClass()
         management.call_command('flush', verbosity=0, interactive=False)
         activate_language(settings.LANGUAGE_CODE)
-        management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
+        management.call_command('askbot_add_test_content', nospam=True, verbosity=0, interactive=False)
 
     @classmethod
     def tearDownClass(self):
@@ -689,7 +691,7 @@ class CommandViewTests(AskbotTestCase):
 
         response = self.client.get(
             reverse('load_object_description'),
-            data = {'object_id': group.id,'model_name': 'Group'},
+            data = {'object_id': group.id, 'model_name': 'Group'},
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, '')

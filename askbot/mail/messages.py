@@ -149,7 +149,11 @@ class BaseEmail(object):
                 attachments=attachments or self.get_attachments()
             )
         else:
-            LOG.warning(u'Attempting to send disabled email "%s"' % force_unicode(self.title))
+            LOG.warning(
+                'Attempting to send disabled email "%s"',
+                force_unicode(self.title)
+            )
+
 
 class InstantEmailAlert(BaseEmail):
     template_path = 'email/instant_notification'

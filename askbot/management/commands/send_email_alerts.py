@@ -8,6 +8,7 @@ from django.core.management.base import NoArgsCommand
 from django.db import connection
 from django.db.models import Q, F
 from django.utils.datastructures import SortedDict
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.utils.translation import activate as activate_language
 
@@ -91,7 +92,7 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         if askbot_settings.ENABLE_EMAIL_ALERTS:
             activate_language(django_settings.LANGUAGE_CODE)
-            for user in User.objects.exclude(status='b').iterator():
+            for user in User.objects.exclude(askbot_profile__status='b').iterator():
                 try:
                     if email_is_blacklisted(user.email) \
                         and askbot_settings.BLACKLISTED_EMAIL_PATTERNS_MODE == 'strict':
@@ -102,8 +103,8 @@ class Command(NoArgsCommand):
             connection.close()
 
     def format_debug_msg(self, user, content):
-        msg = u"%s site_id=%d user=%s: %s" % (
-            datetime.datetime.now().strftime('%y-%m-%d %h:%m:%s'),
+        msg = u"%s site_id=%d user=%s: %s" % ( 
+            timezone.now().strftime('%y-%m-%d %h:%m:%s'),
             SITE_ID,
             repr(user.username),
             content
@@ -372,11 +373,13 @@ class Command(NoArgsCommand):
                 emailed_at = update_info.active_at
             except Activity.DoesNotExist:
                 update_info = Activity(
-                    user=user,
-                    content_object=q,
-                    activity_type=EMAIL_UPDATE_ACTIVITY
-                )
-                emailed_at = datetime.datetime(1970, 1, 1)#long time ago
+                                    user=user, 
+                                    content_object=q, 
+                                    activity_type=EMAIL_UPDATE_ACTIVITY
+                                )
+                emailed_at = datetime.datetime(1970, 1, 1)  #long time ago
+                if django_settings.USE_TZ:
+                    emailed_at = timezone.make_aware(emailed_at, timezone.utc)
             except Activity.MultipleObjectsReturned:
                 raise Exception(
                                 'server error - multiple question email activities '
@@ -435,7 +438,7 @@ class Command(NoArgsCommand):
             else:
                 meta_data['skip'] = False
                 #print 'not skipping'
-                update_info.active_at = datetime.datetime.now()
+                update_info.active_at = timezone.now() 
                 if DEBUG_THIS_COMMAND == False:
                     update_info.save() #save question email update activity
         #q_list is actually an ordered dictionary

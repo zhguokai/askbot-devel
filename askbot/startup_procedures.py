@@ -18,7 +18,7 @@ from django.db import connection
 from django.conf import settings as django_settings
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
-from datetime import datetime
+from django.utils import timezone
 from askbot.utils.loading import load_module
 from askbot.utils.functions import enumerate_string_list
 from askbot.utils.url_utils import urls_equal
@@ -897,7 +897,7 @@ def test_cache_backend():
     #test that cache actually works
     errors = list()
 
-    test_value = 'test value %s' % datetime.now()
+    test_value = 'test value %s' % timezone.now()
     cache.set('askbot-cache-test', test_value)
     if cache.get('askbot-cache-test') != test_value:
         errors.append(
@@ -934,8 +934,11 @@ see outdated content on your site.
 def test_group_messaging():
     """tests correctness of the "group_messaging" app configuration"""
     errors = list()
-    if 'group_messaging' not in django_settings.INSTALLED_APPS:
+    if 'askbot.deps.group_messaging' not in django_settings.INSTALLED_APPS:
         errors.append("add to the INSTALLED_APPS:\n'group_messaging'")
+
+    if 'group_messaging' in django_settings.INSTALLED_APPS:
+        errors.append("remove from the INSTALLED_APPS:\n'group_messaging'")
 
     settings_sample = ("GROUP_MESSAGING = {\n"
     "    'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',\n"
@@ -1052,18 +1055,15 @@ def test_versions():
             'the latest release of Python 2.x'
         )
 
-    upgrade_msg = 'About upgrades, please read http://askbot.org/doc/upgrade.html'
     dj_ver = django.VERSION
-    if dj_ver[:2] >= (1, 7):
+    upgrade_msg = 'About upgrades, please read http://askbot.org/doc/upgrade.html'
+    if dj_ver[:2] != (1, 7):
+        errors.append('This version of Askbot supports only django 1.7. ' + upgrade_msg)
+    elif py_ver[:3] < (2, 7, 0):
         errors.append(
-            'Highest major version of django supported is 1.6. ' +
-            upgrade_msg
-        )
-    elif dj_ver[0:2] in ((1, 5), (1,6)) and py_ver[:3] < (2, 6, 5):
-        errors.append(
-            'Django 1.5 and 1.6 higher require Python '
-            'version 2.6.5 or higher, please see release notes.\n'
-            'https://docs.djangoproject.com/en/dev/releases/1.6/'
+            'Django 1.7 and higher requires Python 2.7'
+            'please see the release notes.\n'
+            'https://docs.djangoproject.com/en/dev/releases/1.7/'
         )
 
     print_errors(errors)
@@ -1087,7 +1087,7 @@ def run_startup_tests():
     test_group_messaging()
     test_haystack()
     test_jinja2()
-    test_longerusername()
+    #test_longerusername()
     test_new_skins()
     test_media_url()
     #test_postgres()

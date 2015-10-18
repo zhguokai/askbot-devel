@@ -35,7 +35,7 @@ import datetime
 from django.http import HttpResponseRedirect, Http404
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
-from django.template import RequestContext, Context
+from django.template import RequestContext
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from django.contrib.auth.models import User
@@ -46,12 +46,13 @@ from django.forms.util import ErrorList
 from django.shortcuts import render
 from django.template.loader import get_template
 from django.views.decorators import csrf
+from django.utils import timezone
 from django.utils.encoding import smart_unicode
 from askbot.utils.functions import generate_random_key
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
-from django.utils import simplejson
+import simplejson
 from askbot.mail.messages import EmailValidation
 from askbot.utils import decorators as askbot_decorators
 from askbot.utils.functions import format_setting_name
@@ -113,7 +114,7 @@ def create_authenticated_user_account(
             openid_url = user_identifier,
             user = user,
             provider_name = login_provider_name,
-            last_used_timestamp = datetime.datetime.now()
+            last_used_timestamp = timezone.now()
         ).save()
 
     subscribe_form = askbot_forms.SimpleEmailSubscribeForm({'subscribe': 'y'})
@@ -177,7 +178,7 @@ def logout_page(request):
         'page_class': 'meta',
         'have_federated_login_methods': util.have_enabled_federated_login_methods()
     }
-    return render(request, 'authopenid/logout.html', Context(data))
+    return render(request, 'authopenid/logout.html', data)
 
 def get_url_host(request):
     if request.is_secure():
@@ -544,7 +545,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                 openid_url=email,
                                 user=user,
                                 provider_name='mozilla-persona',
-                                last_used_timestamp=datetime.datetime.now()
+                                last_used_timestamp=timezone.now()
                             ).save()
 
                     if user:
@@ -816,7 +817,7 @@ def show_signin_view(
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
 
-    return render(request, template_name, Context(data))
+    return render(request, template_name, data)
 
 @csrf.csrf_protect
 @askbot_decorators.post_only
@@ -844,17 +845,17 @@ def delete_login_method(request):
                                                 provider_name = provider_name
                                             )
             login_method.delete()
-            return HttpResponse('', mimetype = 'application/json')
+            return HttpResponse('', content_type='application/json')
         except UserAssociation.DoesNotExist:
             #error response
             message = _('Login method %(provider_name)s does not exist')
-            return HttpResponse(message, status=500, mimetype = 'application/json')
+            return HttpResponse(message, status=500, content_type='application/json')
         except UserAssociation.MultipleObjectsReturned:
             logging.critical(
                     'have multiple %(provider)s logins for user %(id)s'
                 ) % {'provider':provider_name, 'id': request.user.id}
             message = _('Oops, sorry - there was some error - please try again')
-            return HttpResponse(message, status=500, mimetype = 'application/json')
+            return HttpResponse(message, status=500, content_type='application/json')
     else:
         raise Http404
 
@@ -971,7 +972,7 @@ def finalize_generic_signin(
                     user=request.user,
                     provider_name=login_provider_name,
                     openid_url=user_identifier,
-                    last_used_timestamp=datetime.datetime.now()
+                    last_used_timestamp=timezone.now()
                 ).save()
                 return HttpResponseRedirect(redirect_url)
 
@@ -1174,7 +1175,7 @@ def register(request, login_provider_name=None,
         'login_type':'openid',
         'gravatar_faq_url':reverse('faq') + '#gravatar',
     }
-    return render(request, 'authopenid/complete.html', Context(data))
+    return render(request, 'authopenid/complete.html', data)
 
 def signin_failure(request, message):
     """
@@ -1239,7 +1240,7 @@ def verify_email_and_register(request):
             return HttpResponseRedirect(reverse('index'))
     else:
         data = {'page_class': 'validate-email-page'}
-        return render(request, 'authopenid/verify_email.html', Context(data))
+        return render(request, 'authopenid/verify_email.html', data)
 
 @not_authenticated
 @csrf.csrf_protect
@@ -1305,7 +1306,7 @@ def signup_with_password(request):
     return render(
         request,
         'authopenid/signup_with_password.html',
-        Context(context_data)
+        context_data
     )
 
 @login_required

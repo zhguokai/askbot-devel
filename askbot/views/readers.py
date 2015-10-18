@@ -6,7 +6,6 @@ By main textual content is meant - text of Questions, Answers and Comments.
 The "read-only" requirement here is not 100% strict, as for example "question" view does
 allow adding new comments via Ajax form post.
 """
-import datetime
 import logging
 import urllib
 import operator
@@ -20,7 +19,8 @@ from django.http import HttpResponseBadRequest
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template.loader import get_template
 from django.template import Context, RequestContext
-from django.utils import simplejson
+import simplejson
+from django.utils import timezone
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -74,7 +74,7 @@ def questions(request, **kwargs):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
-    #before = datetime.datetime.now()
+    #before = timezone.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
@@ -110,7 +110,10 @@ def questions(request, **kwargs):
     contributors = list(
         models.Thread.objects.get_thread_contributors(
                                         thread_list=page.object_list
-                                    ).only('id', 'username', 'gravatar')
+                                    ).only(
+                                           'id', 'username',
+                                           'askbot_profile__gravatar'
+                                          )
                         )
 
     paginator_context = {
@@ -224,7 +227,7 @@ def questions(request, **kwargs):
 
         ajax_data.update(extra_context)
 
-        return HttpResponse(simplejson.dumps(ajax_data), mimetype = 'application/json')
+        return HttpResponse(simplejson.dumps(ajax_data), content_type='application/json')
 
     else: # non-AJAX branch
 
@@ -282,7 +285,7 @@ def questions(request, **kwargs):
                 request.user.message_set.create(message=msg)
 
         return render(request, 'main_page.html', template_data)
-        #print datetime.datetime.now() - before
+        #print timezone.now() - before
         #return res
 
 
@@ -386,7 +389,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """
     #process url parameters
     #todo: fix inheritance of sort method from questions
-    #before = datetime.datetime.now()
+    #before = timezone.now()
     form = ShowQuestionForm(request.REQUEST)
     form.full_clean()#always valid
     show_answer = form.cleaned_data['show_answer']
@@ -666,7 +669,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     data.update(extra)
 
     return render(request, 'question.html', data)
-    #print datetime.datetime.now() - before
+    #print 'generated in ', timezone.now() - before
     #return res
 
 def revisions(request, id, post_type = None):

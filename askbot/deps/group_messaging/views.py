@@ -9,7 +9,6 @@ Notice that :mod:`urls` module decorates all these functions
 and turns them into complete views
 """
 import copy
-import datetime
 from django.template.loader import get_template
 from django.template import Context
 from django.contrib.auth.models import User
@@ -19,15 +18,16 @@ from django.forms import IntegerField
 from django.http import HttpResponse
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseForbidden
-from django.utils import simplejson
+import simplejson
+from django.utils import timezone
 from askbot.utils.views import PjaxView
-from .models import Message
-from .models import MessageMemo
-from .models import SenderList
-from .models import LastVisitTime
-from .models import get_personal_group_by_user_id
-from .models import get_personal_groups_for_users
-from .models import get_unread_inbox_counter
+from askbot.deps.group_messaging.models import Message
+from askbot.deps.group_messaging.models import MessageMemo
+from askbot.deps.group_messaging.models import SenderList
+from askbot.deps.group_messaging.models import LastVisitTime
+from askbot.deps.group_messaging.models import get_personal_group_by_user_id
+from askbot.deps.group_messaging.models import get_personal_groups_for_users
+from askbot.deps.group_messaging.models import get_unread_inbox_counter
 
 
 class NewThread(PjaxView):
@@ -86,7 +86,7 @@ class PostReply(PjaxView):
                                         message=message.root,
                                         user=request.user
                                     )
-        last_visit.at = datetime.datetime.now()
+        last_visit.at = timezone.now()
         last_visit.save()
         return self.render_to_response(
             Context({'post': message, 'user': request.user}),
@@ -250,7 +250,7 @@ class ThreadDetails(PjaxView):
                                                         )
         root.mark_as_seen(request.user)
         if created is False:
-            last_visit.at = datetime.datetime.now()
+            last_visit.at = timezone.now()
             last_visit.save()
 
         return {

@@ -9,7 +9,6 @@ Also this module includes the view listing all forum users.
 import calendar
 import collections
 import functools
-import datetime
 import logging
 import operator
 import urllib
@@ -30,7 +29,8 @@ from django.utils.translation import get_language
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
-from django.utils import simplejson
+import simplejson
+from django.utils import timezone
 from django.utils.html import strip_tags as strip_all_tags
 from django.views.decorators import csrf
 
@@ -112,10 +112,10 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         return HttpResponseRedirect(new_url)
 
     users = models.User.objects.exclude(
-                                    status='b'
+                                    askbot_profile__status='b'
                                 ).exclude(
                                     is_active=False
-                                )
+                                ).select_related('askbot_profile')
     group = None
     group_email_moderation_enabled = False
     user_acceptance_level = 'closed'
@@ -179,7 +179,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
             order_by_parameter = 'username'
         else:
             # default
-            order_by_parameter = '-reputation'
+            order_by_parameter = '-askbot_profile__reputation'
 
         objects_list = Paginator(
                             users.order_by(order_by_parameter),
@@ -190,7 +190,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         sort_method = 'reputation'
         matching_users = models.get_users_by_text_query(search_query, users)
         objects_list = Paginator(
-                            matching_users.order_by('-reputation'),
+                            matching_users.order_by('-askbot_profile__reputation'),
                             askbot_settings.USERS_PAGE_SIZE
                         )
         base_url = request.path + '?name=%s&sort=%s&' % (search_query, sort_method)
@@ -311,7 +311,7 @@ def user_moderate(request, subject, context):
                                     user = subject,
                                     reputation_change = rep_delta,
                                     comment = comment,
-                                    timestamp = datetime.datetime.now(),
+                                    timestamp = timezone.now(),
                                 )
                 #reset form to preclude accidentally repeating submission
                 user_rep_form = forms.ChangeUserReputationForm()
@@ -785,7 +785,7 @@ def user_responses(request, user, context):
             elif not(request.user.is_moderator() or request.user.is_administrator()):
                 raise Http404
 
-        from group_messaging.views import SendersList, ThreadsList
+        from askbot.deps.group_messaging.views import SendersList, ThreadsList
         context.update(SendersList().get_context(request))
         context.update(ThreadsList().get_context(request, user))
         data = {
@@ -798,8 +798,8 @@ def user_responses(request, user, context):
         }
         context.update(data)
         if 'thread_id' in request.GET:
-            from group_messaging.models import Message
-            from group_messaging.views import ThreadDetails
+            from askbot.deps.group_messaging.models import Message
+            from askbot.deps.group_messaging.views import ThreadDetails
             try:
                 thread_id = request.GET['thread_id']
                 context.update(ThreadDetails().get_context(request, thread_id))
@@ -936,7 +936,7 @@ def user_reputation(request, user, context):
     reputes = models.Repute.objects.filter(user=user).select_related('question', 'question__thread', 'user').order_by('-reputed_at')
 
     # prepare data for the graph - last values go in first
-    rep_list = ['[%s,%s]' % (calendar.timegm(datetime.datetime.now().timetuple()) * 1000, user.reputation)]
+    rep_list = ['[%s,%s]' % (calendar.timegm(timezone.now().timetuple()) * 1000, user.reputation)]
     for rep in reputes:
         rep_list.append('[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation))
     reps = ','.join(rep_list)

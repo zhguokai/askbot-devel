@@ -19,6 +19,7 @@ from django.core.paginator import Paginator
 from django.db.models import signals as django_signals
 from django.template import Context
 from django.template.loader import get_template
+from django.utils import timezone
 from django.utils.translation import get_language
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
@@ -42,6 +43,7 @@ from askbot.mail.messages import WelcomeEmail, WelcomeEmailRespondable
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
+from askbot.models.message import Message
 from askbot.models.tag import Tag, MarkedTag, TagSynonym
 from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
@@ -52,11 +54,13 @@ from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostFlagReason, AnonymousAnswer
 from askbot.models.post import PostToGroup
 from askbot.models.post import DraftAnswer
+from askbot.models.user_profile import add_profile_properties, UserProfile
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models.badges import award_badges_signal, get_badge
 from askbot.models.repute import Award, Repute, Vote, BadgeData
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot.models.meta import ImportRun, ImportedObjectInfo
+from askbot.models.user_profile import UserProfile
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.decorators import reject_forbidden_phrases
@@ -75,14 +79,6 @@ from jsonfield import JSONField
 from django import VERSION
 
 #stores the 1.X version not the security release numbers
-DJANGO_VERSION = VERSION[:2]
-
-if DJANGO_VERSION > (1, 3):
-    from askbot.models.message import Message
-else:
-    from django.contrib.messages.models import Message
-
-
 register_user_signal = partial(signals.register_generic_signal, sender=User)
 
 
@@ -178,112 +174,14 @@ def user_get_and_delete_messages(self):
         message.delete()
     return messages
 
+DJANGO_VERSION = VERSION[:2]
 if DJANGO_VERSION > (1, 3):
     User.add_to_class('message_set', user_message_set)
     User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
 
-User.add_to_class(
-            'avatar_urls',
-            JSONField(default={})
-        )
-
-User.add_to_class(
-            'status',
-            models.CharField(
-                        max_length = 2,
-                        default = const.DEFAULT_USER_STATUS,
-                        choices = const.USER_STATUS_CHOICES
-                    )
-        )
-User.add_to_class('is_fake', models.BooleanField(default=False))
-
-User.add_to_class('email_isvalid', models.BooleanField(default=False)) #@UndefinedVariable
-User.add_to_class('email_key', models.CharField(max_length=32, null=True))
-#hardcoded initial reputaion of 1, no setting for this one
-User.add_to_class('reputation',
-    models.PositiveIntegerField(default=const.MIN_REPUTATION)
-)
-User.add_to_class('gravatar', models.CharField(max_length=32))
-#User.add_to_class('has_custom_avatar', models.BooleanField(default=False))
-
-User.add_to_class(
-    'avatar_type',
-    models.CharField(
-        max_length=1,
-        choices=const.AVATAR_TYPE_CHOICES,
-        default='n' #for real set by the init_avatar_type based
-        #on the livesetting value
-    )
-)
-User.add_to_class('gold', models.SmallIntegerField(default=0))
-User.add_to_class('silver', models.SmallIntegerField(default=0))
-User.add_to_class('bronze', models.SmallIntegerField(default=0))
-User.add_to_class(
-    'questions_per_page',  # TODO: remove me and const.QUESTIONS_PER_PAGE_USER_CHOICES, we're no longer used!
-    models.SmallIntegerField(
-        choices=const.QUESTIONS_PER_PAGE_USER_CHOICES,
-        default=10
-    )
-)
-User.add_to_class('last_seen',
-                  models.DateTimeField(default=datetime.datetime.now))
-User.add_to_class('real_name', models.CharField(max_length=100, blank=True))
-User.add_to_class('website', models.URLField(max_length=200, blank=True))
-#location field is actually city
-User.add_to_class('location', models.CharField(max_length=100, blank=True))
-User.add_to_class('country', CountryField(blank=True, null=True))
-User.add_to_class('show_country', models.BooleanField(default=False))
-
-User.add_to_class('date_of_birth', models.DateField(null=True, blank=True))
-User.add_to_class('about', models.TextField(blank=True))
-#interesting tags and ignored tags are to store wildcard tag selections only
-User.add_to_class('interesting_tags', models.TextField(blank = True))
-User.add_to_class('ignored_tags', models.TextField(blank = True))
-User.add_to_class('subscribed_tags', models.TextField(blank = True))
-User.add_to_class('email_signature', models.TextField(blank = True))
-User.add_to_class('show_marked_tags', models.BooleanField(default = True))
-
-User.add_to_class(
-    'email_tag_filter_strategy',
-    models.SmallIntegerField(
-        choices=const.TAG_EMAIL_FILTER_FULL_STRATEGY_CHOICES,
-        default=const.EXCLUDE_IGNORED
-    )
-)
-User.add_to_class(
-    'display_tag_filter_strategy',
-    models.SmallIntegerField(
-        choices=const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
-        default=const.INCLUDE_ALL
-    )
-)
-
-User.add_to_class('new_response_count', models.IntegerField(default=0))
-User.add_to_class('seen_response_count', models.IntegerField(default=0))
-User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
-#list of languages for which user should receive email alerts
-User.add_to_class(
-    'languages',
-    models.CharField(max_length=128, default=django_settings.LANGUAGE_CODE)
-)
-
-User.add_to_class(
-    'twitter_access_token',
-    models.CharField(max_length=256, default='')
-)
-
-User.add_to_class(
-    'twitter_handle',
-    models.CharField(max_length=32, default='')
-)
-
-User.add_to_class(
-    'social_sharing_mode',
-    models.IntegerField(
-        default=const.SHARE_NOTHING,
-        choices = const.SOCIAL_SHARING_MODE_CHOICES
-    )
-)
+#monkeypatches the auth.models.User class with properties
+#that access properties of the askbot.models.UserProfile
+add_profile_properties(User)
 
 GRAVATAR_TEMPLATE = "%(gravatar_url)s/%(gravatar)s?" + \
     "s=%(size)d&amp;d=%(type)s&amp;r=PG"
@@ -839,7 +737,7 @@ def user_assert_can_unaccept_best_answer(self, answer=None):
                 days=askbot_settings.MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER)
         )
 
-        if datetime.datetime.now() < will_be_able_at:
+        if timezone.now() < will_be_able_at:
             error_message = _(message_keys.CANNOT_PERFORM_ACTION_UNTIL) % {
                 'perform_action': askbot_settings.WORDS_ACCEPT_OR_UNACCEPT_THE_BEST_ANSWER,
                 'until': will_be_able_at.strftime('%d/%m/%Y')
@@ -994,7 +892,7 @@ def user_assert_can_edit_comment(self, comment=None):
 
     if comment.author_id == self.pk:
         if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
-            now = datetime.datetime.now()
+            now = timezone.now()
             delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
             if now - comment.added_at > datetime.timedelta(0, delta_seconds):
                 if comment.is_last():
@@ -1158,7 +1056,7 @@ def user_assert_can_edit_post(self, post=None):
     if use_limit == False:
         return
 
-    now = datetime.datetime.now()
+    now = timezone.now()
     delta_seconds = 60 * minutes_limit
     if now - post.added_at > datetime.timedelta(0, delta_seconds):
         #vague message because it is hard to add
@@ -1410,7 +1308,7 @@ def user_assert_can_delete_comment(self, comment = None):
 
     if comment.author_id == self.pk:
         if askbot_settings.USE_TIME_LIMIT_TO_EDIT_COMMENT:
-            now = datetime.datetime.now()
+            now = timezone.now()
             delta_seconds = 60 * askbot_settings.MINUTES_TO_EDIT_COMMENT
             if now - comment.added_at > datetime.timedelta(0, delta_seconds):
                 if not comment.is_last():
@@ -1428,10 +1326,10 @@ def user_assert_can_revoke_old_vote(self, vote):
     """raises exceptions.PermissionDenied if old vote
     cannot be revoked due to age of the vote
     """
-    if askbot_settings.MAX_DAYS_TO_CANCEL_VOTE < 0:
+    if askbot_settings.MAX_DAYS_TO_CANCEL_VOTE <= 0:
         return
-    if (datetime.datetime.now() - vote.voted_at).days \
-            >= askbot_settings.MAX_DAYS_TO_CANCEL_VOTE:
+    if (timezone.now() - vote.voted_at).days \
+        >= askbot_settings.MAX_DAYS_TO_CANCEL_VOTE:
         raise django_exceptions.PermissionDenied(
             _('sorry, but older votes cannot be revoked')
         )
@@ -1469,7 +1367,7 @@ def user_post_comment(
     if parent_post is None:
         raise ValueError('parent_post is required to post comment')
     if timestamp is None:
-        timestamp = datetime.datetime.now()
+        timestamp = timezone.now()
 
     self.assert_can_post_comment(parent_post=parent_post)
 
@@ -1653,7 +1551,7 @@ def user_merge_duplicate_questions(self, from_q, to_q):
     from_thread.delete()
     to_thread.answer_count = to_thread.get_answers().count()
     to_thread.last_activity_by = self
-    to_thread.last_activity_at = datetime.datetime.now()
+    to_thread.last_activity_at = timezone.now()
     to_thread.save()
     to_thread.reset_cached_data()
 
@@ -1878,7 +1776,7 @@ def user_delete_all_content_authored_by_user(self, author, timestamp=None):
 
     #delete answers
     answers = Post.objects.get_answers().filter(author=author, deleted=False)
-    timestamp = timestamp or datetime.datetime.now()
+    timestamp = timestamp or timezone.now()
     count += answers.update(deleted_at=timestamp, deleted_by=self, deleted=True)
 
     #delete questions
@@ -2022,7 +1920,7 @@ def user_post_question(
     if tags is None:
         raise ValueError('Tags are required to post question')
     if timestamp is None:
-        timestamp = datetime.datetime.now()
+        timestamp = timezone.now()
 
     #todo: split this into "create thread" + "add question", if text exists
     #or maybe just add a blank question post anyway
@@ -2329,7 +2227,7 @@ def user_post_answer(
 
         delta = datetime.timedelta(askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION)
 
-        now = datetime.datetime.now()
+        now = timezone.now()
         asked = question.added_at
         #todo: this is an assertion, must be moved out
         if (now - asked  < delta and self.reputation < askbot_settings.MIN_REP_TO_ANSWER_OWN_QUESTION):
@@ -2371,7 +2269,7 @@ def user_post_answer(
     if body_text is None:
         raise ValueError('Body text is required to post answer')
     if timestamp is None:
-        timestamp = datetime.datetime.now()
+        timestamp = timezone.now()
 #    answer = Answer.objects.create_new(
 #        thread = question.thread,
 #        author = self,
@@ -2411,7 +2309,7 @@ def user_visit_question(self, question = None, timestamp = None):
     the post - question, answer or comments
     """
     if timestamp is None:
-        timestamp = datetime.datetime.now()
+        timestamp = timezone.now()
 
     try:
         QuestionView.objects.filter(
@@ -2945,7 +2843,7 @@ def user_toggle_favorite_question(
 
     except FavoriteQuestion.DoesNotExist:
         if timestamp is None:
-            timestamp = datetime.datetime.now()
+            timestamp = timezone.now()
         fave = FavoriteQuestion(
             thread = question.thread,
             user = self,
@@ -3326,7 +3224,7 @@ def user_edit_group_membership(self, user=None, group=None,
         return membership
 
     elif action == 'remove':
-        GroupMembership.objects.get(user = user, group = group).delete()
+        GroupMembership.objects.get(user=user, group=group).delete()
         return None
     else:
         raise ValueError('invalid action')
@@ -3597,10 +3495,11 @@ def notify_author_of_published_revision(revision=None, was_approved=False, **kwa
 #todo: move to utils
 def calculate_gravatar_hash(instance, **kwargs):
     """Calculates a User's gravatar hash from their email address."""
+    user = instance
     if kwargs.get('raw', False):
         return
-    clean_email = instance.email.strip().lower()
-    instance.gravatar = hashlib.md5(clean_email).hexdigest()
+    clean_email = user.email.strip().lower()
+    user.gravatar = hashlib.md5(clean_email).hexdigest()
 
 
 def record_post_update_activity(
@@ -3706,7 +3605,7 @@ def record_answer_accepted(instance, created, **kwargs):
         activity = Activity(
                         #pretty bad: user must be actor
                         user=question.author,
-                        active_at=datetime.datetime.now(),
+                        active_at=timezone.now(),
                         #content object must be answer!
                         content_object=question,
                         activity_type=const.TYPE_ACTIVITY_MARK_ANSWER,
@@ -3723,7 +3622,7 @@ def record_user_visit(user, timestamp, **kwargs):
     when user visits any pages, we update the last_seen and
     consecutive_days_visit_count
     """
-    prev_last_seen = user.last_seen or datetime.datetime.now()
+    prev_last_seen = user.last_seen or timezone.now()
     user.last_seen = timestamp
     consecutive_days = user.consecutive_days_visit_count
     if (user.last_seen.date() - prev_last_seen.date()).days == 1:
@@ -3740,7 +3639,7 @@ def record_user_visit(user, timestamp, **kwargs):
         'last_seen': timestamp,
         'consecutive_days_visit_count': consecutive_days
     }
-    User.objects.filter(id=user.id).update(**update_data)
+    UserProfile.objects.filter(pk=user.id).update(**update_data)
 
 
 def record_question_visit(request, question, **kwargs):
@@ -3753,6 +3652,10 @@ def record_question_visit(request, question, **kwargs):
 
         last_seen = request.session['question_view_times'].get(question.id, None)
 
+        if last_seen and timezone.is_naive(last_seen) \
+            and getattr(django_settings, 'USE_TZ', False):
+            last_seen = timezone.make_aware(last_seen, timezone.utc)
+
         update_view_count = False
         if question.thread.last_activity_by_id != request.user.id:
             if last_seen:
@@ -3761,8 +3664,7 @@ def record_question_visit(request, question, **kwargs):
             else:
                 update_view_count = True
 
-        request.session['question_view_times'][question.id] = \
-                                                    datetime.datetime.now()
+        request.session['question_view_times'][question.id] = timezone.now()
         #2) run the slower jobs in a celery task
         from askbot import tasks
         defer_celery_task(
@@ -3801,7 +3703,7 @@ def record_cancel_vote(instance, **kwargs):
     """
     activity = Activity(
                     user=instance.user,
-                    active_at=datetime.datetime.now(),
+                    active_at=timezone.now(),
                     content_object=instance,
                     activity_type=const.TYPE_ACTIVITY_CANCEL_VOTE
                 )
@@ -3824,7 +3726,7 @@ def record_delete_question(instance, deleted_by, **kwargs):
 
     activity = Activity(
                     user=deleted_by,
-                    active_at=datetime.datetime.now(),
+                    active_at=timezone.now(),
                     content_object=instance,
                     activity_type=activity_type,
                     question = instance.get_origin_post()
@@ -3836,7 +3738,7 @@ def record_flag_offensive(instance, mark_by, **kwargs):
     """places flagged post on the moderation queue"""
     activity = Activity(
                     user=mark_by,
-                    active_at=datetime.datetime.now(),
+                    active_at=timezone.now(),
                     content_object=instance,
                     activity_type=const.TYPE_ACTIVITY_MARK_OFFENSIVE,
                     question=instance.get_origin_post()
@@ -3879,7 +3781,7 @@ def record_update_tags(thread, tags, user, timestamp, **kwargs):
 
     activity = Activity(
                     user=user,
-                    active_at=datetime.datetime.now(),
+                    active_at=timezone.now(),
                     content_object=question,
                     activity_type=const.TYPE_ACTIVITY_UPDATE_TAGS,
                     question = question
@@ -3893,7 +3795,7 @@ def record_favorite_question(instance, created, **kwargs):
     if created:
         activity = Activity(
                         user=instance.user,
-                        active_at=datetime.datetime.now(),
+                        active_at=timezone.now(),
                         content_object=instance,
                         activity_type=const.TYPE_ACTIVITY_FAVORITE,
                         question=instance.thread._question_post()
@@ -3907,7 +3809,7 @@ def record_favorite_question(instance, created, **kwargs):
 def record_user_full_updated(instance, **kwargs):
     activity = Activity(
                     user=instance,
-                    active_at=datetime.datetime.now(),
+                    active_at=timezone.now(),
                     content_object=instance,
                     activity_type=const.TYPE_ACTIVITY_USER_FULL_UPDATED
                 )
@@ -4027,7 +3929,7 @@ def add_missing_tag_subscriptions(sender, instance, created, **kwargs):
         if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED and \
                 askbot_settings.GROUPS_ENABLED:
             user_groups = instance.get_groups()
-            for subscription in BulkTagSubscription.objects.filter(groups__in = user_groups):
+            for subscription in BulkTagSubscription.objects.filter(groups__in=user_groups):
                 tag_list = subscription.tag_list()
                 instance.mark_tags(tagnames = tag_list,
                                 reason='subscribed', action='add')
@@ -4154,7 +4056,7 @@ def record_spam_rejection(
     todo: this might be factored out into the moderation app
     and data might be tracked in some other record
     """
-    now = datetime.datetime.now()
+    now = timezone.now()
     summary = 'Found spam text: %s, posted from ip=%s in\n%s' % \
                         (spam, ip_addr, text)
 
@@ -4164,7 +4066,7 @@ def record_spam_rejection(
         activity = Activity(
                         activity_type=spam_type,
                         user=user,
-                        active_at=datetime.datetime.now(),
+                        active_at=now,
                         content_object=user,
                         summary=summary
                     )
@@ -4187,22 +4089,22 @@ ran_migration.connect(
 # signals for User model save changes
 user_signals = [
     signals.GenericSignal(
-        django_signals.pre_save,
+        django_signals.post_save,
         callback=calculate_gravatar_hash,
         dispatch_uid='calculate_gravatar_hash_on_user_save',
     ),
     signals.GenericSignal(
-        django_signals.pre_save,
+        django_signals.post_save,
         callback=set_administrator_flag,
         dispatch_uid='set_administrator_flag_on_user_save',
     ),
     signals.GenericSignal(
-        django_signals.pre_save,
+        django_signals.post_save,
         callback=init_avatar_type,
         dispatch_uid='init_avatar_type_on_user_create'
     ),
     signals.GenericSignal(
-        django_signals.pre_save,
+        django_signals.post_save,
         callback=init_avatar_urls,
         dispatch_uid='init_avatar_urls_on_user_save',
     ),
@@ -4365,16 +4267,15 @@ signals.question_visited.connect(
 )
 
 #set up a possibility for the users to follow others
-try:
-    import followit
-    followit.register(User)
-except ImportError:
-    pass
+#try:
+#    import followit
+#    followit.register(User)
+#except ImportError:
+#    pass
 
 
 __all__ = [
         'signals',
-
         'Thread',
 
         'QuestionView',
@@ -4406,6 +4307,7 @@ __all__ = [
         'Group',
 
         'User',
+        'UserProfile',
 
         'ReplyAddress',
 

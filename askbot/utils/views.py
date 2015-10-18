@@ -3,7 +3,7 @@ from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseForbidden
 from django.template import Context
 from django.template.loader import get_template
-from django.utils import simplejson
+import simplejson
 
 class PjaxView(object):
     """custom class-based view

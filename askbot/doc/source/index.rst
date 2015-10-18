@@ -7,6 +7,12 @@ Documentation Home
 Askbot is an open source Question and Answer (Q&A) forum project inspired by StackOverflow 
 and YahooAnswers.
 
+This version of Askbot supports only Django 1.7.
+
+To upgrade, or select version of Askbot working with earlier versions of Django,
+please follow `the instructions`_.
+
+
 It is quick and easy to install and deploy askbot on your site.
 Have questions? - please ask
 at the forum_ or by email at admin@askbot.org
@@ -47,3 +53,4 @@ Mike Chen and Sailing Cai.
 .. _CNPROG: http://cnprog.com
 .. _forum: http://askbot.org
 .. _`development version`: http://github.com/ASKBOT/askbot-devel
+.. _`the instructions`: https://github.com/ASKBOT/askbot-devel/blob/master/askbot/doc/source/upgrade.rst

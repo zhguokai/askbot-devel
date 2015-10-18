@@ -1,17 +1,17 @@
+from askbot.deps.group_messaging.models import LastVisitTime
+from askbot.deps.group_messaging.models import Message
+from askbot.deps.group_messaging.models import MessageMemo
+from askbot.deps.group_messaging.models import SenderList
+from askbot.deps.group_messaging.models import create_personal_group
+from askbot.deps.group_messaging.models import get_personal_group
+from askbot.deps.group_messaging.models import get_unread_inbox_counter
+from askbot.deps.group_messaging.views import ThreadsList
 from askbot.tests.utils import with_settings
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User, Group
 from django.test import TestCase
-from group_messaging.models import LastVisitTime
-from group_messaging.models import Message
-from group_messaging.models import MessageMemo
-from group_messaging.models import SenderList
-from group_messaging.models import create_personal_group
-from group_messaging.models import get_personal_group
-from group_messaging.models import get_unread_inbox_counter
-from group_messaging.views import ThreadsList
+from django.utils import timezone
 from mock import Mock
-import datetime
 import time
 import urlparse
 
@@ -57,7 +57,7 @@ class GroupMessagingTests(TestCase):
                                                 user=user,
                                                 message=thread
                                             )
-        last_visit_time.at = datetime.datetime.now()
+        last_visit_time.at = timezone.now()
         last_visit_time.save()
         time.sleep(1.5)
         return last_visit_time

@@ -329,3 +329,7 @@ SOUTH_TESTS_MIGRATE = False
 
 VERIFIER_EXPIRE_DAYS = 3
 AVATAR_AUTO_GENERATE_SIZES = (16, 32, 48, 128)
+
+# compatibility with django1.5
+TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner'
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'

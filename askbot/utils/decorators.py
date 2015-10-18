@@ -1,7 +1,6 @@
 import hotshot
 import time
 import os
-import datetime
 import functools
 import inspect
 import logging
@@ -11,7 +10,8 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.http import HttpResponseRedirect
-from django.utils import simplejson
+import simplejson
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_str
 from askbot import exceptions as askbot_exceptions
@@ -31,7 +31,7 @@ def auto_now_timestamp(func):
     def decorating_func(*arg, **kwarg):
         timestamp = kwarg.get('timestamp', None)
         if timestamp is None:
-            kwarg['timestamp'] = datetime.datetime.now()
+            kwarg['timestamp'] = timezone.now()
         return func(*arg, **kwarg)
     return decorating_func
 
@@ -111,7 +111,7 @@ def ajax_only(view_func):
             return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
         if isinstance(data, HttpResponse):#is this used?
-            data.mimetype = 'application/json'
+            data.content_type = 'application/json'
             return data
         else:
             data['success'] = 1
@@ -213,7 +213,7 @@ def check_spam(field):
                     logging.debug(
                         'Spam detected in %s post at: %s',
                         request.user.username,
-                        datetime.datetime.now()
+                        timezone.now()
                     )
                     spam_message = _(
                         'Spam was detected on your post, sorry '
@@ -222,7 +222,7 @@ def check_spam(field):
                     if request.is_ajax():
                         return HttpResponseForbidden(
                                 spam_message,
-                                mimetype="application/json"
+                                content_type="application/json"
                             )
                     else:
                         request.user.message_set.create(message=spam_message)

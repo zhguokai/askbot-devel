@@ -18,27 +18,22 @@ NUM_COMMENTS = 20
 # karma. This can be calculated dynamically - max of MIN_REP_TO_... settings
 INITIAL_REPUTATION = 500
 
-if '--nospam' in sys.argv:
-    BAD_STUFF = ''
-else:
-    BAD_STUFF = "<script>alert('hohoho')</script>"
-
 # Defining template inputs.
-USERNAME_TEMPLATE = BAD_STUFF + "test_user_%s"
+USERNAME_TEMPLATE = "test_user_%s"
 PASSWORD_TEMPLATE = "test_password_%s"
 EMAIL_TEMPLATE = "test_user_%s@askbot.org"
-TITLE_TEMPLATE = "Question No.%s" + BAD_STUFF
+TITLE_TEMPLATE = "Question No.%s"
 LONG_TITLE_TEMPLATE = TITLE_TEMPLATE + 'a lot more text a lot more text a lot more text '*5
-TAGS_TEMPLATE = [BAD_STUFF + "tag-%s-0", BAD_STUFF + "tag-%s-1"] # len(TAGS_TEMPLATE) tags per question
+TAGS_TEMPLATE = ["tag-%s-0", "tag-%s-1"] # len(TAGS_TEMPLATE) tags per question
 
-CONTENT_TEMPLATE = BAD_STUFF + """Lorem lean startup ipsum product market fit customer
+CONTENT_TEMPLATE = """Lorem lean startup ipsum product market fit customer
                     development acquihire technical cofounder. User engagement
                     **A/B** testing *shrink* a market venture capital pitch."""
 
-ANSWER_TEMPLATE = BAD_STUFF + """Accelerator photo sharing business school drop out ramen
+ANSWER_TEMPLATE = """Accelerator photo sharing business school drop out ramen
                     hustle crush it revenue traction platforms."""
 
-COMMENT_TEMPLATE = BAD_STUFF + """Main differentiators business model micro economics
+COMMENT_TEMPLATE = """Main differentiators business model micro economics
                     marketplace equity augmented reality human computer"""
 
 ALERT_SETTINGS_KEYS = (
@@ -60,6 +55,11 @@ class Command(NoArgsCommand):
             help='Do not add XSS snippets'
         )
     )
+
+    def bad_stuff(self):
+        if self.options['nospam']:
+            return ''
+        return "<script>alert('hohoho')</script>"
 
     def backup_settings(self):
         settings = {}
@@ -106,7 +106,8 @@ class Command(NoArgsCommand):
         # several times, we don't want querying the model each and every time.
         for i in range(NUM_USERS):
             s_idx = str(i)
-            user = User.objects.create_user(USERNAME_TEMPLATE % s_idx,
+            username = self.bad_stuff() + USERNAME_TEMPLATE % s_idx
+            user = User.objects.create_user(username,
                                             EMAIL_TEMPLATE % s_idx)
             user.set_password(PASSWORD_TEMPLATE % s_idx)
             user.reputation = INITIAL_REPUTATION
@@ -143,18 +144,18 @@ class Command(NoArgsCommand):
                 last_vote = ~last_vote
 
             # len(TAGS_TEMPLATE) tags per question - each tag is different
-            tags = " ".join([t%user.id for t in TAGS_TEMPLATE])
+            tags = " ".join([(t + self.bad_stuff()) % user.id for t in TAGS_TEMPLATE])
             if i < NUM_QUESTIONS/2:
                 tags += ' one-tag'
 
             if i % 2 == 0:
-                question_template = TITLE_TEMPLATE
+                question_template = TITLE_TEMPLATE + self.bad_stuff()
             else:
-                question_template = LONG_TITLE_TEMPLATE
+                question_template = LONG_TITLE_TEMPLATE + self.bad_stuff()
 
             active_question = user.post_question(
                         title = question_template % user.id,
-                        body_text = CONTENT_TEMPLATE,
+                        body_text = self.bad_stuff() + CONTENT_TEMPLATE,
                         tags = tags,
                     )
 
@@ -191,7 +192,7 @@ class Command(NoArgsCommand):
 
                 active_answer = user.post_answer(
                         question = active_question,
-                        body_text = ANSWER_TEMPLATE,
+                        body_text = self.bad_stuff() + ANSWER_TEMPLATE,
                         follow = True
                     )
                 self.print_if_verbose("%s posted an answer to the active question"%(
@@ -223,12 +224,12 @@ class Command(NoArgsCommand):
             user = users[i % len(users)]
             active_question_comment = user.post_comment(
                                     parent_post = active_question,
-                                    body_text = COMMENT_TEMPLATE
+                                    body_text = self.bad_stuff() + COMMENT_TEMPLATE
                                 )
             self.print_if_verbose("%s posted a question comment"%user.username)
             active_answer_comment = user.post_comment(
                                     parent_post = active_answer,
-                                    body_text = COMMENT_TEMPLATE
+                                    body_text = self.bad_stuff() + COMMENT_TEMPLATE
                                 )
             self.print_if_verbose("%s posted an answer comment"%user.username)
 
@@ -246,6 +247,7 @@ class Command(NoArgsCommand):
 
 
     def handle_noargs(self, **options):
+        self.options = options
         self.verbosity = int(options.get("verbosity", 1))
         self.interactive = options.get("interactive")
 
@@ -285,7 +287,7 @@ class Command(NoArgsCommand):
         active_question.author.edit_question(
                             question = active_question,
                             title = TITLE_TEMPLATE % "EDITED",
-                            body_text = CONTENT_TEMPLATE,
+                            body_text = self.bad_stuff() + CONTENT_TEMPLATE,
                             revision_comment = "EDITED",
                             force = True
                         )
@@ -293,20 +295,20 @@ class Command(NoArgsCommand):
 
         active_answer.author.edit_answer(
                             answer = active_answer,
-                            body_text = COMMENT_TEMPLATE,
+                            body_text = self.bad_stuff() + COMMENT_TEMPLATE,
                             force = True
                         )
         self.print_if_verbose("User has edited the active answer")
 
         active_answer_comment.author.edit_comment(
                             comment_post = active_answer_comment,
-                            body_text = ANSWER_TEMPLATE
+                            body_text = self.bad_stuff() + ANSWER_TEMPLATE
                         )
         self.print_if_verbose("User has edited the active answer comment")
 
         active_question_comment.author.edit_comment(
                             comment_post = active_question_comment,
-                            body_text = ANSWER_TEMPLATE
+                            body_text = self.bad_stuff() + ANSWER_TEMPLATE
                         )
         self.print_if_verbose("User has edited the active question comment")
 
