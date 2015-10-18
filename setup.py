@@ -49,6 +49,12 @@ setup(
     ],
     long_description = """Askbot will work alone or with other django apps (with some limitations, please see below), Django 1.7, PostgresQL(recommended) (>=8.3) and MySQL(**) (MyISAM backend only - see footnote **)
 
+    This version of Askbot supports only Django 1.7.
+
+    To upgrade, or select version of Askbot working with earlier versions of Django,
+    please follow instructions at
+    https://github.com/ASKBOT/askbot-devel/blob/master/askbot/doc/source/upgrade.rst
+
 Questions? Suggestions? Found a bug? -> please post at http://askbot.org/en/questions/
 
 Features
