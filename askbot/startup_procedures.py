@@ -1073,7 +1073,7 @@ def run_startup_tests():
     all startup tests, mainly checking settings config so far
     """
     #this is first because it gives good info on what to install
-    try_import('requirements', 'requirements')
+    try_import('requirements', 'requirements-parser')
     test_modules()
 
     #todo: refactor this when another test arrives
