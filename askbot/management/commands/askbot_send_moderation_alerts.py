@@ -9,7 +9,7 @@ from askbot.models import Activity
 from askbot.models import User
 
 def get_moderators():
-    return User.objects.filter(status__in=('d', 'm'))
+    return User.objects.filter(askbot_profile__status__in=('d', 'm'))
 
 def get_last_mod_alert_activity():
     atype = const.TYPE_ACTIVITY_MODERATION_ALERT_SENT
