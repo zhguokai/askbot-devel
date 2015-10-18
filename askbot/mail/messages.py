@@ -45,8 +45,8 @@ class BaseEmail(object):
        files `subject.txt` and `body.txt`
     * `title` - a brief title for this email
     * `description` - string explaining why/when this email is sent
-    * `mock_context` - optional, may be replaced with custom method
-    get_mock_context(), see below
+    * `mock_contexts` - optional, may be replaced with custom methods
+    like get_mock_context1, etc.
 
     plain text version of the email is calculated from body.html
     by stripping tags
@@ -55,11 +55,23 @@ class BaseEmail(object):
     template_path = 'path/to/email/dir' #override in subclass
     title = 'A brief title for this email'
     description = 'In subclass, explain when/why this email might be sent'
-    mock_context = {}
+    mock_contexts = ({},)
 
     def __init__(self, context=None):
         self.context = context
-        self._cached_context = None
+        self._context_cache = dict()
+
+    @classmethod
+    def get_cache_key(cls, key):
+        return str(id(key))
+
+    def get_cached_context(self, key):
+        key = self.get_cache_key(key)
+        return self._context_cache.get(key)
+
+    def set_cached_context(self, key, val):
+        key = self.get_cache_key(key)
+        self._context_cache[key] = val
 
     def process_context(self, context):
         """override if context requires post-processing"""
@@ -69,17 +81,36 @@ class BaseEmail(object):
         """override if attachments need to be determined from context"""
         return None
 
-    def get_mock_context(self):
-        """override if need to fetch mock context dynamically"""
-        return self.mock_context
+    def get_mock_contexts(self):
+        """Do not override this method.
+        Add methods to subclass either called get_mock_context() and/or
+        get_mock_context_<xyz> to generate mock contexts programmatically
+        """
+        contexts = list()
+        for c in self.mock_contexts:
+            if c:
+                contexts.append(c)
 
-    def get_context(self):
-        if self._cached_context:
-            return self._cached_context
-        context = self.context or self.get_mock_context() or self.mock_context or {}
-        self._cached_context = self.process_context(context)
-        self._cached_context['settings'] = askbot_settings
-        return self._cached_context
+        for attr in dir(self):
+            if attr == 'get_mock_contexts':
+                continue
+            elif attr.startswith('get_mock_context'):
+                func = getattr(self, attr)
+                c = func()
+                if c:
+                    contexts.append(c)
+        return contexts
+
+    def get_context(self, pre_context=None):
+        cached_context = self.get_cached_context(pre_context)
+        if cached_context:
+            return cached_context
+
+        context = copy(pre_context or self.context or {})
+        context = self.process_context(context)
+        context['settings'] = askbot_settings
+        self.set_cached_context(pre_context, context)
+        return context
 
     def get_headers(self):
         """override this method if headers need to be calculated
@@ -90,19 +121,19 @@ class BaseEmail(object):
         """override if necessary"""
         return True
 
-    def render_subject(self):
+    def render_subject(self, context=None):
         template = get_template(self.template_path + '/subject.txt')
 
-        context = copy(self.get_context()) #copy context
+        context = copy(self.get_context(context)) #copy context
         for key in context:
             if isinstance(context[key], basestring):
                 context[key] = mark_safe(context[key])
 
         return ' '.join(template.render(Context(context)).split())
 
-    def render_body(self):
+    def render_body(self, context=None):
         template = get_template(self.template_path + '/body.html')
-        body = template.render(Context(self.get_context()))
+        body = template.render(Context(self.get_context(context)))
         return absolutize_urls(body)
 
     def send(self, recipient_list, raise_on_failure=False, headers=None, attachments=None):
@@ -136,30 +167,122 @@ class InstantEmailAlert(BaseEmail):
         return askbot_settings.ENABLE_EMAIL_ALERTS \
             and askbot_settings.INSTANT_EMAIL_ALERT_ENABLED
 
-    def get_mock_context(self):
+    def get_mock_context_sample1(self):
+        """New question alert"""
         from askbot.models import (Activity, Post, User)
-        post_types = ('question', 'answer', 'comment')
-        post = Post.objects.filter(post_type__in=post_types)[0]
+        posts = Post.objects.filter(post_type='question')
+        if posts.count() == 0:
+            return None
+        post = posts[0]
 
-        if post.is_question():
-            activity_type = const.TYPE_ACTIVITY_ASK_QUESTION
-        elif post.is_answer():
-            activity_type = const.TYPE_ACTIVITY_ANSWER
-        elif post.parent.is_question():
-            activity_type = const.TYPE_ACTIVITY_COMMENT_QUESTION
-        else:
-            activity_type = const.TYPE_ACTIVITY_COMMENT_ANSWER
+        to_users = User.objects.exclude(id=post.author_id)
+        if to_users.count() == 0:
+            return None
+        to_user = to_users[0]
 
         activity = Activity(
                     user=post.author,
                     content_object=post,
-                    activity_type=activity_type,
+                    activity_type=const.TYPE_ACTIVITY_ASK_QUESTION,
+                    question=post
+                )
+        return {
+            'post': post,
+            'from_user': post.author,
+            'to_user': to_user,
+            'update_activity': activity
+        }
+
+    def get_mock_context_sample2(self):
+        """answer edit alert"""
+        #get edited answer
+        from django.db.models import Count
+        from askbot.models import (Activity, Post, User)
+        posts = Post.objects.annotate(
+                        edit_count=Count('revisions')
+                    ).filter(post_type='answer', edit_count__gt=1)
+
+        try:
+            post = posts[0]
+        except IndexError:
+            return None
+
+        to_users = User.objects.exclude(id=post.author_id)
+        if to_users.count() == 0:
+            return None
+        to_user = to_users[0]
+
+        activity = Activity(
+                    user=post.author,
+                    content_object=post,
+                    activity_type=const.TYPE_ACTIVITY_UPDATE_ANSWER,
                     question=post.get_origin_post()
                 )
         return {
             'post': post,
             'from_user': post.author,
-            'to_user': User.objects.exclude(id=post.author_id)[0],
+            'to_user': to_user,
+            'update_activity': activity
+        }
+
+    def get_mock_context_sample3(self):
+        """question edit alert"""
+        #get edited answer
+        from django.db.models import Count
+        from askbot.models import (Activity, Post, User)
+        posts = Post.objects.annotate(
+                        edit_count=Count('revisions')
+                    ).filter(post_type='question', edit_count__gt=1)
+
+        try:
+            post = posts[0]
+        except IndexError:
+            return None
+
+        to_users = User.objects.exclude(id=post.author_id)
+        if to_users.count() == 0:
+            return None
+        to_user = to_users[0]
+
+        activity = Activity(
+                    user=post.author,
+                    content_object=post,
+                    activity_type=const.TYPE_ACTIVITY_UPDATE_QUESTION,
+                    question=post
+                )
+        return {
+            'post': post,
+            'from_user': post.author,
+            'to_user': to_user,
+            'update_activity': activity
+        }
+
+    def get_mock_context_sample4(self):
+        """New question alert"""
+        from askbot.models import (Activity, Post, User)
+        posts = Post.objects.filter(
+                                    parent__post_type='answer',
+                                    post_type='comment'
+                                   )
+        if posts.count() == 0:
+            return None
+        post = posts[0]
+
+        to_users = User.objects.exclude(id=post.author_id)
+        if to_users.count() == 0:
+            return None
+        to_user = to_users[0]
+
+        activity = Activity(
+                    user=post.author,
+                    content_object=post,
+                    activity_type=const.TYPE_ACTIVITY_COMMENT_ANSWER,
+                    question=post
+                )
+        return {
+            'post': post,
+            'from_user': post.author,
+            'to_user': to_user,
             'update_activity': activity
         }
 
@@ -222,111 +345,16 @@ class InstantEmailAlert(BaseEmail):
         update_activity = context.get('update_activity')
         update_type = self.get_update_type(update_activity)
 
+        #unhandled update_type 'post_shared' 
+        #user_action = _('%(user)s shared a %(post_link)s.')
+
         origin_post = post.get_origin_post()
-
-        from askbot.models import Post
-        if update_type == 'question_comment':
-            assert(isinstance(post, Post) and post.is_comment())
-            assert(post.parent and post.parent.is_question())
-        elif update_type == 'answer_comment':
-            assert(isinstance(post, Post) and post.is_comment())
-            assert(post.parent and post.parent.is_answer())
-        elif update_type == 'answer_update':
-            assert(isinstance(post, Post) and post.is_answer())
-        elif update_type == 'new_answer':
-            assert(isinstance(post, Post) and post.is_answer())
-        elif update_type == 'question_update':
-            assert(isinstance(post, Post) and post.is_question())
-        elif update_type == 'new_question':
-            assert(isinstance(post, Post) and post.is_question())
-        elif update_type == 'post_shared':
-            pass
-        else:
-            raise ValueError('unexpected update_type %s' % update_type)
-
-        if update_type.endswith('update'):
-            assert('comment' not in update_type)
-            revisions = post.revisions.all()[:2]
-            assert(len(revisions) == 2)
-            content_preview = htmldiff(
-                    sanitize_html(revisions[1].html),
-                    sanitize_html(revisions[0].html),
-                    ins_start = '<b><u style="background-color:#cfc">',
-                    ins_end = '</u></b>',
-                    del_start = '<del style="color:#600;background-color:#fcc">',
-                    del_end = '</del>'
-                )
-            #todo: remove hardcoded style
-        else:
-            content_preview = post.format_for_email(is_leaf_post=True, recipient=to_user)
-
-        #add indented summaries for the parent posts
-        content_preview += post.format_for_email_as_parent_thread_summary(recipient=to_user)
-
-        #content_preview += '<p>======= Full thread summary =======</p>'
-        #content_preview += post.thread.format_for_email(recipient=to_user)
-
-        if update_type == 'post_shared':
-            user_action = _('%(user)s shared a %(post_link)s.')
-        elif post.is_comment():
-            if update_type.endswith('update'):
-                user_action = _('%(user)s edited a %(post_link)s.')
-            else:
-                user_action = _('%(user)s posted a %(post_link)s')
-        elif post.is_answer():
-            if update_type.endswith('update'):
-                user_action = _('%(user)s edited an %(post_link)s.')
-            else:
-                user_action = _('%(user)s posted an %(post_link)s.')
-        elif post.is_question():
-            if update_type.endswith('update'):
-                user_action = _('%(user)s edited a %(post_link)s.')
-            else:
-                user_action = _('%(user)s posted a %(post_link)s.')
-        else:
-            raise ValueError('unrecognized post type')
-
         post_url = site_url(post.get_absolute_url())
-        user_url = site_url(from_user.get_absolute_url())
-
-        if to_user.is_administrator_or_moderator() and askbot_settings.SHOW_ADMINS_PRIVATE_USER_DATA:
-            user_link_fmt = '<a href="%(profile_url)s">%(username)s</a> (<a href="mailto:%(email)s">%(email)s</a>)'
-            user_link = user_link_fmt % {
-                'profile_url': user_url,
-                    'username': from_user.username,
-                    'email': from_user.email
-            }
-        elif post.is_anonymous:
-            user_link = from_user.get_name_of_anonymous_user()
-        else:
-            user_link = '<a href="%s">%s</a>' % (user_url, from_user.username)
-
-        user_action = user_action % {
-            'user': user_link,
-            'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
-        }
 
         can_reply = to_user.can_post_by_email()
         from askbot.models import get_reply_to_addresses
         reply_address, alt_reply_address = get_reply_to_addresses(to_user, post)
-
-        if can_reply:
-            reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
-                          _('To reply, PLEASE WRITE ABOVE THIS LINE.')
-            if post.post_type == 'question' and alt_reply_address:
-                data = {
-                  'addr': alt_reply_address,
-                  'subject': urllib.quote(
-                            ('Re: ' + post.thread.title).encode('utf-8')
-                          )
-                }
-                reply_separator += '<p>' + const.REPLY_WITH_COMMENT_TEMPLATE % data
-                reply_separator += '</p>'
-            else:
-                reply_separator = '<p>%s</p>' % reply_separator
-                reply_separator += user_action
-        else:
-            reply_separator = user_action
+        alt_reply_subject = urllib.quote(('Re: ' + post.thread.title).encode('utf-8'))
 
         return {
            'admin_email': askbot_settings.ADMIN_EMAIL,
@@ -336,16 +364,17 @@ class InstantEmailAlert(BaseEmail):
            'receiving_user_karma': to_user.reputation,
            'reply_by_email_karma_threshold': askbot_settings.MIN_REP_TO_POST_BY_EMAIL,
            'can_reply': can_reply,
-           'content_preview': content_preview,
            'update_type': update_type,
            'update_activity': update_activity,
            'post': post,
            'post_url': post_url,
            'origin_post': origin_post,
            'thread_title': origin_post.thread.title,
-           'reply_separator': reply_separator,
            'reply_address': reply_address,
-           'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+           'alt_reply_address': alt_reply_address,
+           'alt_reply_subject': alt_reply_subject,
+           'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False),
+           'reply_sep_tpl': const.SIMPLE_REPLY_SEPARATOR_TEMPLATE
         }
 
 
@@ -353,11 +382,11 @@ class ReplyByEmailError(BaseEmail):
     template_path = 'email/reply_by_email_error'
     title = _('Error processing post sent by email')
     description = _('Sent to the post author when error occurs when posting by email')
-    mock_context = {
+    mock_contexts = ({
         'error': _('You were replying to an email address\
              unknown to the system or you were replying from a different address from the one where you\
              received the notification.')
-    }
+    },)
 
     def is_enabled(self):
         return askbot_settings.REPLY_BY_EMAIL
@@ -512,10 +541,10 @@ class RejectedPost(BaseEmail):
     description = _(
         'Sent when post was rejected by a moderator with a reason given'
     )
-    mock_context = {
+    mock_contexts = ({
         'post': 'How to substitute sugar with aspartame in the cupcakes',
         'reject_reason': 'Questions must be on the subject of gardening'
-    }
+    },)
 
     def is_enabled(self):
         return askbot_settings.CONTENT_MODERATION_MODE == 'premoderation' \
@@ -664,10 +693,10 @@ class EmailValidation(BaseEmail):
     template_path = 'authopenid/email_validation'
     title = _('Email validation')
     description = _('Sent when user validates email or recovers account')
-    mock_context = {
+    mock_contexts = ({
         'key': 'a4umkaeuaousthsth',
         'handler_url_name': 'user_account_recover',
-    }
+    },)
 
     def process_context(self, context):
         url_name = context['handler_url_name']
@@ -759,12 +788,18 @@ class GroupMessagingEmailAlert(BaseEmail):
     )
 
     def is_enabled(self):
+        from askbot.deps.group_messaging.models import Message
+        if Message.objects.count() == 0:
+            return False
         return askbot_settings.ENABLE_EMAIL_ALERTS \
             and askbot_settings.GROUP_MESSAGING_EMAIL_ALERT_ENABLED
 
     def get_mock_context(self):
         from askbot.deps.group_messaging.models import Message
-        message = Message.objects.all().order_by('-id')[0]
+        messages = Message.objects.all().order_by('-id')
+        if messages.count() == 0:
+            return None
+        message = messages[0]
         return {
             'messages': message.get_timeline(),
             'message': message,

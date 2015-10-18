@@ -915,7 +915,9 @@ def signin_success(request, identity_url, openid_response):
                 )
 
     next_url = get_next_url(request)
-    provider_name = util.get_provider_name(openid_url)
+    provider_name = util.get_provider_name_by_endpoint(openid_url)
+    if provider_name is None:
+        provider_name = util.get_provider_name(openid_url)
 
     request.session['email'] = openid_data.sreg.get('email', '')
     request.session['username'] = openid_data.sreg.get('nickname', '')

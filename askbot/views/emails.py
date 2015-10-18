@@ -1,3 +1,4 @@
+from askbot.conf import settings as askbot_settings
 from askbot.mail import messages
 from askbot.mail.messages import BaseEmail
 from askbot.utils.decorators import moderators_only
@@ -50,19 +51,23 @@ def preview_email(request, slug):
     #if email.is_enabled() == False:
     #    raise Http404
 
-    try:
-        data['subject'] = email.render_subject()
-        data['body'] = email.render_body()
-    except Exception, e:
-        tech_error = unicode(e)
-        LOG.critical(tech_error)
-        error_message = getattr(
-                    email,
-                    'preview_error_message',
-                    DEFAULT_PREVIEW_ERROR_MESSAGE
-                )
-        error_message += u'</br> %s' % tech_error
-        data['error_message'] = error_message
+    data['samples'] = list()
+    for context in email.get_mock_contexts():
+        sample = dict()
+        try:
+            sample['subject'] = email.render_subject(context)
+            sample['body'] = email.render_body(context)
+        except Exception, e:
+            tech_error = unicode(e)
+            LOG.critical(tech_error)
+            error_message = getattr(
+                        email,
+                        'preview_error_message',
+                        DEFAULT_PREVIEW_ERROR_MESSAGE
+                    )
+            error_message += u'</br> %s' % tech_error
+            sample['error_message'] = error_message
+        data['samples'].append(sample)
 
     data['email'] = email
     return render(request, 'email/preview_email.html', Context(data))
