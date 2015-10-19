@@ -344,6 +344,12 @@ class ClassicRegisterForm(SetPasswordForm):
         if askbot_settings.TERMS_CONSENT_REQUIRED:
             self.fields['terms_accepted'] = ConsentField()
 
+    def clean(self):
+        if askbot_settings.NEW_REGISTRATIONS_DISABLED:
+            raise forms.ValidationError(askbot_settings.NEW_REGISTRATIONS_DISABLED_MESSAGE)
+        data = super(ClassicRegisterForm, self).clean()
+        return data
+
 
 class SafeClassicRegisterForm(ClassicRegisterForm):
     """this form uses recaptcha in addition

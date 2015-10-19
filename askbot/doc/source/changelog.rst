@@ -3,6 +3,10 @@ Changes in Askbot
 
 Development version (not released)
 ----------------------------------
+* Added option to close new account registrations
+
+0.7.54 (Oct 14, 2014
+----------------------------------
 * Added management command `askbot_rebuild_avatars`
 * Added option to choose gravatar or default avatar for new users
 * Message on the feedback page is editable

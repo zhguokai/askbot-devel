@@ -1029,6 +1029,8 @@ def register(request, login_provider_name=None,
     template : authopenid/complete.html
     """
 
+    registration_enabled = (not askbot_settings.NEW_REGISTRATIONS_DISABLED)
+
     logging.debug('')
 
     next_url = redirect_url or get_next_url(request)
@@ -1037,7 +1039,7 @@ def register(request, login_provider_name=None,
     email = request.session.get('email', '')
 
     #1) handle "one-click registration"
-    if login_provider_name:
+    if registration_enabled and login_provider_name:
         providers = util.get_enabled_login_providers()
         provider_data = providers[login_provider_name]
 
@@ -1085,7 +1087,7 @@ def register(request, login_provider_name=None,
                 }
             )
 
-    if request.method == 'GET':
+    if (not registration_enabled) or request.method == 'GET':
         try:
             assert(login_provider_name is not None)
             assert(user_identifier is not None)
