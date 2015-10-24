@@ -314,21 +314,21 @@ def test_template_loader():
     current_loader = 'askbot.skins.loaders.Loader'
     if current_loader not in django_settings.TEMPLATE_LOADERS:
         errors.append(
-            'add "%s" to the beginning of the TEMPLATE_LOADERS' % current_loader
+            'add "%s", to the beginning of the TEMPLATE_LOADERS' % current_loader
         )
     elif django_settings.TEMPLATE_LOADERS[0] != current_loader:
         errors.append(
-            '"%s" must be the first element of TEMPLATE_LOADERS' % current_loader
+            '"%s", must be the first element of TEMPLATE_LOADERS' % current_loader
         ) 
 
     app_dir_loader = 'askbot.skins.loaders.JinjaAppDirectoryLoader'
     if app_dir_loader not in django_settings.TEMPLATE_LOADERS:
         errors.append(
-            'add "%s" as second item of the TEMPLATE_LOADERS' % app_dir_loader
+            'add "%s", as second item of the TEMPLATE_LOADERS' % app_dir_loader
         )
     elif django_settings.TEMPLATE_LOADERS.index(app_dir_loader) != 1:
         errors.append(
-            'move "%s" to the second place in the TEMPLATE_LOADERS' % app_dir_loader
+            'move "%s", to the second place in the TEMPLATE_LOADERS' % app_dir_loader
         )
 
     try:
