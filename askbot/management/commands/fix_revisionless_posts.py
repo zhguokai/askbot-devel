@@ -13,14 +13,15 @@ def fix_revisionless_posts(post_class):
                                     ).filter(rev_count = 0)
         print 'have %d corrupted posts' % len(posts)
         for post in posts:
-            post.add_revision(
+            rev = post.add_revision(
                         author=post.author,
                         text=post.text,
                         comment=unicode(const.POST_STATUS['default_version']),
-                        revised_at = post.added_at
+                        revised_at=post.added_at
                     )
             post.last_edited_at = None
             post.last_edited_by = None
+            post.current_revision = rev
             post.save()
 
 class Command(NoArgsCommand):
