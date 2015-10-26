@@ -311,7 +311,6 @@ it may be helpful to split this procedure in two:\n
         )
     )
 
-    @transaction.commit_manually
     def handle(self, *arg, **kwarg):
 
         if django_settings.DEBUG:

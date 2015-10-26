@@ -15,7 +15,6 @@ class MergeUsersBaseCommand(BaseCommand):
     args = '<from_user_id> <to_user_id>'
     help = 'Merge an account and all information from a <user_id> to a <user_id>, deleting the <from_user>'
 
-    @transaction.commit_manually
     def handle(self, *arguments, **options):
         self.parse_arguments(*arguments)
 

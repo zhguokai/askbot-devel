@@ -114,7 +114,6 @@ class Command(BaseImportXMLCommand):
     def get_content_type_by_old_id(self, old_ctype_id):
         return self.content_types_map[old_ctype_id]
 
-    @transaction.commit_manually
     def import_groups(self):
         """imports askbot group profiles"""
 
@@ -150,9 +149,6 @@ class Command(BaseImportXMLCommand):
             #we will later populate memberships only in these groups
             self.log_action_with_old_id(old_group_id, group)
 
-        if transaction.is_dirty():
-            transaction.commit()
-
         #redirects_file.close()
 
         #2) we import askbot group profiles only for groups
@@ -179,8 +175,6 @@ class Command(BaseImportXMLCommand):
 
             transaction.commit()
 
-        if transaction.is_dirty():
-            transaction.commit()
 
     def import_users(self):
         redirects_file = self.open_unique_file('user_redirects')
@@ -328,7 +322,6 @@ class Command(BaseImportXMLCommand):
             </object>
             """
 
-    @transaction.commit_manually
     def import_user_logins(self):
         #logins_soup = self.soup.find_all('object', {'model': 'django_authopenid.userassociation'})
         #for login_info in self.get_objects_for_model('django_authopenid.userassociation'):

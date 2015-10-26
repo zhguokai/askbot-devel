@@ -93,7 +93,6 @@ ask you to confirm your action before making changes.
 
     )
 
-    #@transaction.commit_manually
     def handle(self, *args, **options):
         """command handle function. reads tag names, decodes
         them using the standard input encoding and attempts to find

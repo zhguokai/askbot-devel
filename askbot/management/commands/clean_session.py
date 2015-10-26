@@ -22,7 +22,6 @@ class Command(NoArgsCommand):
                 ),
             )
 
-    @transaction.commit_manually
     def handle_noargs(self, **options):
         """deletes old sessions"""
         quiet = options.get('quiet', False)

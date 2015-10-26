@@ -80,7 +80,6 @@ from datetime import datetime, date
 from lxml import etree
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-from django.db import transaction
 from django.db import connection
 from django.utils import timezone
 from askbot import models as askbot_models
@@ -675,7 +674,6 @@ class Command(BaseCommand):
         xml_file = self.tar.extractfile(file_info)
         return etree.parse(xml_file)
 
-    @transaction.autocommit
     def read_xml_file(self,
             file_name = None,
             entry_name = None,
@@ -903,7 +901,6 @@ class Command(BaseCommand):
             ]
         )
 
-    @transaction.autocommit
     def import_users(self):
         """Creates new Askbot users for each zendesk_models.User.
 
@@ -954,7 +951,6 @@ class Command(BaseCommand):
 
         console.print_action('%d users added' % added_users, nowipe = True)
 
-    @transaction.autocommit
     def _import_posts(self, question, entry):
         """Create Askbot answers from Zendesk Entries.
 
@@ -971,7 +967,6 @@ class Command(BaseCommand):
             post.ab_id = answer.id
             post.save()
 
-    @transaction.autocommit
     def _import_entry(self, entry):
         """Create an Askbot question and answers from a Zendesk Entry
 
@@ -1029,7 +1024,6 @@ class Command(BaseCommand):
                 console.print_action("%d threads" % thread_count)
             console.print_action("%d total threads" % thread_count, nowipe = True)
 
-    @transaction.autocommit
     def _import_comments(self, question, ticket):
         """Import Zendesk Ticket Comments into Askbot as answers.
 
@@ -1054,7 +1048,6 @@ class Command(BaseCommand):
             comment.ab_id = answer.id
             comment.save()
 
-    @transaction.autocommit
     def import_tickets(self, tags, date_filter):
         """Import Zendesk Tickets into Askbot as questions.
 

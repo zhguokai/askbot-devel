@@ -1,5 +1,4 @@
 from django.core.management.base import NoArgsCommand
-from django.db import transaction
 from askbot import models
 from askbot.utils.console import ProgressBar
 from askbot.conf import settings as askbot_settings

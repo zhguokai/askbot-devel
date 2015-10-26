@@ -6,6 +6,12 @@ class AskbotConfig(AppConfig):
     verbose_name = 'Askbot Q&A platform'
 
     def ready(self):
+        from askbot.models import badges
+        try:
+            badges.init_badges()
+        except:
+            pass
+
         import followit
         user_model = get_user_model()
         followit.register(user_model)

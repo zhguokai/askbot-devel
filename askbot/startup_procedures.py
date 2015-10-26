@@ -253,7 +253,7 @@ def test_specs(req):
         message = """Unsupported version of module {name},
 found version {mod_ver}, {need_spec} required.
 please run:
-> pip uninstall {name} && pip install {need_spec}""".format(**data)
+> pip uninstall {name} && pip install '{need_spec}'""".format(**data)
         raise AskbotConfigError(message)
 
 
@@ -1057,8 +1057,8 @@ def test_versions():
 
     dj_ver = django.VERSION
     upgrade_msg = 'About upgrades, please read http://askbot.org/doc/upgrade.html'
-    if dj_ver[:2] != (1, 7):
-        errors.append('This version of Askbot supports only django 1.7. ' + upgrade_msg)
+    if dj_ver < (1, 7) or dj_ver >= (1, 9):
+        errors.append('This version of Askbot supports only django 1.7 and 1.8 ' + upgrade_msg)
     elif py_ver[:3] < (2, 7, 0):
         errors.append(
             'Django 1.7 and higher requires Python 2.7'

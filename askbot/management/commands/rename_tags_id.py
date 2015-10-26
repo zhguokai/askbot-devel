@@ -10,7 +10,6 @@ import sys
 from optparse import make_option
 from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand, CommandError
-from django.db import transaction
 from django.utils import translation
 from askbot import const, models
 from askbot.utils import console
@@ -82,7 +81,6 @@ rename_tags, but using tag id's
         ),
     )
 
-    #@transaction.commit_manually
     def handle(self, *args, **options):
         """command handle function. retrieves tags by id
         """
@@ -182,7 +180,6 @@ or repost a bug, if that does not help"""
             sys.stdout.flush()
 
         sys.stdout.write('\n')
-        #transaction.commit()
 
         #may need to run assertions on that there are
         #print 'Searching for similar tags...',
@@ -200,7 +197,6 @@ or repost a bug, if that does not help"""
         #else:
         #    print "None found."
         #print "Done."
-        #transaction.commit()
 
         # A user wants to rename tag2->tag3 and tagsynonym tag1->tag2 exists.
         # we want to update tagsynonym (tag1->tag2) to (tag1->tag3)

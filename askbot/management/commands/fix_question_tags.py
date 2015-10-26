@@ -53,7 +53,6 @@ class Command(NoArgsCommand):
             )
 
 
-    @transaction.commit_manually
     def run_command(self, lang):
         """method that runs the actual command"""
         #go through tags and find character case duplicates and eliminate them

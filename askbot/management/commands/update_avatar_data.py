@@ -7,7 +7,6 @@ class Command(NoArgsCommand):
     help = 'updates data about currently used avatars, ' + \
         'necessary for display of avatars on the front page'
 
-    @transaction.commit_manually
     def handle_noargs(self, **options):
         users = User.objects.all()
         has_avatar = User.objects.exclude(avatar_type='n').count()

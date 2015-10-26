@@ -5,7 +5,7 @@ from askbot.utils.console import ProgressBar
 
 class Command(NoArgsCommand):
     help = 'Generates snippets for all posts'
-    @transaction.commit_manually
+
     def handle_noargs(self, *args, **kwargs):
         posts = Post.objects.all()
         count = posts.count()

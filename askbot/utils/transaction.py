@@ -1,6 +1,6 @@
 """Utilities for working with database transactions"""
-from django_transaction_signals import defer
 from django.conf import settings as django_settings
+from django.core.signals import request_finished
 
 class DummyTransaction(object):
     """Dummy transaction class
@@ -12,17 +12,12 @@ class DummyTransaction(object):
     def commit(cls):
         pass
 
-    @classmethod
-    def commit_manually(cls, func):
-        def decorated(*args, **kwargs):
-            func(*args, **kwargs)
-        return decorated
 
 #a utility instance to use instead of the normal transaction object
 dummy_transaction = DummyTransaction()
 
 def defer_celery_task(task, **kwargs):
     if django_settings.CELERY_ALWAYS_EAGER:
-        return task.apply_async(**kwargs)
-    else:
-        return defer(task.apply_async, **kwargs)
+        task.apply_async(**kwargs)
+    elif django_settings.ATOMIC_REQUESTS:
+        request_finished.connect(task.apply_async, **kwargs)

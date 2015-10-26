@@ -9,7 +9,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify
 from askbot.utils.functions import split_list, mark_safe_lazy
 from askbot import const
-from longerusername import MAX_USERNAME_LENGTH
+#from longerusername import MAX_USERNAME_LENGTH
 import logging
 import urllib
 
@@ -120,7 +120,7 @@ class UserNameField(StrippedNonEmptyCharField):
         else:
             widget_attrs = login_form_widget_attrs
 
-        max_length = MAX_USERNAME_LENGTH()
+        max_length = 30#todo: support custom length of user name MAX_USERNAME_LENGTH()
         super(UserNameField,self).__init__(
                 max_length=max_length,
                 widget=forms.TextInput(attrs=widget_attrs),

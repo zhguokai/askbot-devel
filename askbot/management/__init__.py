@@ -44,7 +44,6 @@ class NoArgsJob(NoArgsCommand):
         for batch in self.batches:
             self.run_batch(batch)
 
-    @transaction.commit_manually
     def run_batch(self, batch):
         """runs the single batch
         prints batch title
@@ -59,13 +58,12 @@ class NoArgsJob(NoArgsCommand):
         total_count = batch['query_set'].count()
 
         if total_count == 0:
-            transaction.commit()
             return
 
         for item in batch['query_set'].all():
 
-            item_changed = batch['function'](item)
-            transaction.commit()
+            with transaction.atomic():
+                item_changed = batch['function'](item)
 
             if item_changed:
                 changed_count += 1
