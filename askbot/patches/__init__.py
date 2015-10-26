@@ -32,6 +32,9 @@ def patch_django():
         django_patches.add_hashcompat()
         django_patches.add_simplejson()
 
+    if major == 1 and minor == 8:
+        django_patches.patch_django_template()
+
 def patch_coffin():
     """coffin before version 0.3.4
     does not have csrf_token template tag.

@@ -403,3 +403,19 @@ def wrap_escape(func):
     def wrapped(*args, **kwargs):
         return mark_safe(func(*args, **kwargs))
     return wrapped
+
+
+def patch_django_template():
+    import django.template
+    django.template.add_to_builtins = django.template.base.add_to_builtins
+    django.template.builtins = django.template.base.builtins
+    django.template.get_library = django.template.base.get_library
+    django.template.import_library = django.template.base.import_library
+    django.template.Origin = django.template.base.Origin
+    django.template.InvalidTemplateLibrary = django.template.base.InvalidTemplateLibrary
+
+    from django.template.loaders import app_directories
+    app_directories.app_template_dirs = list() #dummy value
+    # from django.template.utils import get_app_template_dirs
+    # later must be set to get_app_template_dirs('templates')
+

@@ -153,7 +153,7 @@ def test_middleware():
         'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
         'askbot.middleware.forum_mode.ForumModeMiddleware',
         'askbot.middleware.cancel.CancelActionMiddleware',
-        'django.middleware.transaction.TransactionMiddleware',
+        #'django.middleware.transaction.TransactionMiddleware',
     ]
     if 'debug_toolbar' in django_settings.INSTALLED_APPS:
         required_middleware.append(
