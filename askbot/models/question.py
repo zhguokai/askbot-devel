@@ -121,7 +121,7 @@ class ThreadQuerySet(models.query.QuerySet):
 
 class ThreadManager(BaseQuerySetManager):
 
-    def get_query_set(self):
+    def get_queryset(self):
         return ThreadQuerySet(self.model)
 
     def get_tag_summary_from_threads(self, threads):

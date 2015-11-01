@@ -20,7 +20,7 @@ class BaseQuerySetManager(models.Manager):
     >>>    #add more custom filters here
     >>>
     >>>class SomeManager(askbot.models.base.BaseQuerySetManager)
-    >>>    def get_query_set(self):
+    >>>    def get_queryset(self):
     >>>        return SomeQuerySet(self.model)
     >>>
     >>>class SomeModel(django.db.models.Model)
@@ -38,7 +38,7 @@ class BaseQuerySetManager(models.Manager):
         try:
             return getattr(self.__class__, attr, *args)
         except AttributeError:
-            return getattr(self.get_query_set(), attr, *args)
+            return getattr(self.get_queryset(), attr, *args)
 
 
 class DraftContent(models.Model):

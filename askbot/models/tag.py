@@ -174,7 +174,7 @@ class TagManager(BaseQuerySetManager):
     """chainable custom filter query set manager
     for :class:``~askbot.models.Tag`` objects
     """
-    def get_query_set(self):
+    def get_queryset(self):
         return TagQuerySet(self.model)
 
     def get_content_tags(self):

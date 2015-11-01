@@ -200,7 +200,7 @@ class PostQuerySet(models.query.QuerySet):
 
 
 class PostManager(BaseQuerySetManager):
-    def get_query_set(self):
+    def get_queryset(self):
         return PostQuerySet(self.model)
 
     def get_questions(self, user=None):

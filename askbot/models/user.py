@@ -57,13 +57,13 @@ class MockUser(object):
 
 
 class ResponseAndMentionActivityManager(models.Manager):
-    def get_query_set(self):
+    def get_queryset(self):
         response_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
         response_types += (const.TYPE_ACTIVITY_MENTION, )
         return super(
                     ResponseAndMentionActivityManager,
                     self
-                ).get_query_set().filter(
+                ).get_queryset().filter(
                     activity_type__in = response_types
                 )
 
@@ -110,7 +110,7 @@ class ActivityQuerySet(models.query.QuerySet):
 
 class ActivityManager(BaseQuerySetManager):
     """manager class for the `Activity` model"""
-    def get_query_set(self):
+    def get_queryset(self):
         return ActivityQuerySet(self.model)
 
     def create_new_mention(
@@ -479,7 +479,7 @@ class GroupQuerySet(models.query.QuerySet):
 class GroupManager(BaseQuerySetManager):
     """model manager for askbot groups"""
 
-    def get_query_set(self):
+    def get_queryset(self):
         return GroupQuerySet(self.model)
 
     def get_global_group(self):
@@ -492,9 +492,9 @@ class GroupManager(BaseQuerySetManager):
         #todo: change groups to django groups
         group_name = askbot_settings.GLOBAL_GROUP_NAME
         try:
-            return self.get_query_set().get(name=group_name)
+            return self.get_queryset().get(name=group_name)
         except Group.DoesNotExist:
-            return self.get_query_set().create(name=group_name)
+            return self.get_queryset().create(name=group_name)
 
     def create(self, **kwargs):
         name = kwargs['name']
