@@ -56,13 +56,14 @@ class PageLoadTestCase(AskbotTestCase):
     #
     @classmethod
     def setUpClass(cls):
-        super(PageLoadTestCase, cls).setUpClass()
         management.call_command('flush', verbosity=0, interactive=False)
         activate_language(settings.LANGUAGE_CODE)
         management.call_command('askbot_add_test_content', nospam=True, verbosity=0, interactive=False)
+        super(PageLoadTestCase, cls).setUpClass()
 
     @classmethod
-    def tearDownClass(self):
+    def tearDownClass(cls):
+        super(PageLoadTestCase, cls).tearDownClass()
         management.call_command('flush', verbosity=0, interactive=False)
 
     def _fixture_setup(self):

@@ -109,7 +109,8 @@ class SubjectLineTests(TestCase):
         subj = mail.prefix_the_subject_line('hahah')
         self.assertEquals(subj, 'hahah')
 
-class EmailAlertTests(TestCase):
+from django.test import TransactionTestCase
+class EmailAlertTests(TransactionTestCase):
     """Base class for testing delayed Email notifications
     that are triggered by the send_email_alerts
     command

@@ -102,6 +102,7 @@ class AskbotTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         cache.clear()
+        super(AskbotTestCase, cls).setUpClass()
 
     def create_user(
                 self,
