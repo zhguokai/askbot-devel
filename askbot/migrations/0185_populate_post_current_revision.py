@@ -13,9 +13,13 @@ class Migration(DataMigration):
         count = posts.count()
         message = 'Populating Post.current_revision'
         for post in ProgressBar(posts.iterator(), count, message):
-            rev = post.revisions.order_by('-revision')[0]
-            post.current_revision = rev
-            post.save()
+            try:
+                rev = post.revisions.order_by('-revision')[0]
+            except:
+                continue
+            else:
+                post.current_revision = rev
+                post.save()
 
     def backwards(self, orm):
         "Write your backwards methods here."
