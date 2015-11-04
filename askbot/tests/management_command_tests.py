@@ -43,7 +43,7 @@ class ManagementCommandTests(AskbotTestCase):
         # Create a second user and transfer all objects from 'user_one' to 'user_two'
         user_two = self.create_user(username='unique')
         user_two_pk = user_two.pk
-        management.call_command('merge_users', user_one.id, user_two.id)
+        management.call_command('merge_users', str(user_one.id), str(user_two.id))
         # Check that the first user was deleted
         self.assertEqual(models.User.objects.get(pk=user_one.id).status, 'b')
         # Explicitly check that the values assigned to user_one are now user_two's

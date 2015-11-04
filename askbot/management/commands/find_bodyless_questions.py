@@ -6,7 +6,6 @@ from django.core.management.base import BaseCommand
 from askbot import models
 from askbot import const
 from askbot.utils.console import ProgressBar
-from optparse import make_option
 
 def print_results(items):
     template = 'id=%d, title=%s'
@@ -16,14 +15,14 @@ def print_results(items):
 class Command(BaseCommand):
     """Command class for "fix_bodyless_questions"
     """
-    option_list = BaseCommand.option_list + (
-                        make_option('--delete',
-                            action='store_true',
-                            dest='delete',
-                            default=False,
-                            help='Permanently delete bodyless questions',
-                        ),
-                    )
+    def add_arguments(self, parser):
+        parser.add_argument('--delete',
+            action='store_true',
+            dest='delete',
+            default=False,
+            help='Permanently delete bodyless questions',
+        )
+
     def handle(self, *arguments, **options):
         """function that handles the command job
         """

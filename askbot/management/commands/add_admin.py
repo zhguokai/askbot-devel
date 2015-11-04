@@ -1,16 +1,15 @@
-from optparse import make_option
-
 from django.core.management.base import NoArgsCommand
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save
 import sys
 
 class Command(NoArgsCommand):
-    option_list = NoArgsCommand.option_list + (
-        make_option('--noinput', action='store_false', dest='interactive', default=True,
-            help='Tells to NOT prompt the user for input of any kind.'),
-    )
     help = "Turn user into an administrator <user_id> is a numeric user id of the account"
+    args = '<user id>'
+
+    def add_arguments(self, parser):
+        parser.add_argument('--noinput', action='store_false', dest='interactive', default=True,
+            help='Tells to NOT prompt the user for input of any kind.')
 
     def get_user(self, uid_str):
         try:

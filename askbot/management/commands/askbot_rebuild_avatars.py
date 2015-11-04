@@ -1,6 +1,7 @@
 """Replaces django-avatar 'rebuild_avatars'
 and saves cached active avatar urls for each user"""
 from askbot.models import User
+from askbot.models.user_profile import UserProfile
 from askbot.utils.console import ProgressBar
 from avatar.conf import settings as avatar_settings
 from avatar.models import Avatar
@@ -22,4 +23,4 @@ class Command(NoArgsCommand):
         for user in ProgressBar(users.iterator(), count, message):
             #recalculate is done on pre_save
             user.init_avatar_urls()
-            User.objects.filter(id=user.id).update(avatar_urls=user.avatar_urls)
+            UserProfile.objects.filter(auth_user_ptr=user).update(avatar_urls=user.avatar_urls)

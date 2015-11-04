@@ -3,7 +3,6 @@ it to another, all corresponding questions are automatically
 retagged
 """
 import sys
-from optparse import make_option
 from django.conf import settings as django_settings
 from django.core import management
 from django.core.management.base import BaseCommand, CommandError
@@ -15,7 +14,7 @@ def get_admin(seed_user_id = None):
     """requests admin with an optional seeded user id
     """
     try:
-        admin = api.get_admin(seed_user_id = seed_user_id)
+        admin = api.get_admin(seed_user_id=seed_user_id)
     except models.User.DoesNotExist, e:
         raise CommandError(e)
 
@@ -61,37 +60,35 @@ list of questions that are to be affected before running this operation.
 The tag rename operation cannot be undone, but the command will
 ask you to confirm your action before making changes.
     """
-    option_list = BaseCommand.option_list + (
-        make_option('--from',
-            action = 'store',
-            type = 'str',
-            dest = 'from',
-            default = None,
-            help = 'list of tag names which needs to be replaced'
-        ),
-        make_option('--to',
-            action = 'store',
-            type = 'str',
-            dest = 'to',
-            default = None,
-            help = 'list of tag names that are to be used instead'
-        ),
-        make_option('--user-id',
-            action = 'store',
-            type = 'int',
-            dest = 'user_id',
-            default = None,
-            help = 'id of the user who will be marked as a performer of this operation'
-        ),
-        make_option('--lang',
-            action = 'store',
-            type = 'str',
-            dest = 'lang',
-            default = django_settings.LANGUAGE_CODE,
-            help = 'language code for the tags to rename e.g. "en"'
-        ),
-
-    )
+    def add_arguments(self, parser):
+        parser.add_argument('--from',
+            action='store',
+            type=str,
+            dest='from',
+            default=None,
+            help='list of tag names which needs to be replaced'
+        )
+        parser.add_argument('--to',
+            action='store',
+            type=str,
+            dest='to',
+            default=None,
+            help='list of tag names that are to be used instead'
+        )
+        parser.add_argument('--user-id',
+            action='store',
+            type=int,
+            dest='user_id',
+            default=None,
+            help='id of the user who will be marked as a performer of this operation'
+        )
+        parser.add_argument('--lang',
+            action='store',
+            type=str,
+            dest='lang',
+            default=django_settings.LANGUAGE_CODE,
+            help='language code for the tags to rename e.g. "en"'
+        )
 
     def handle(self, *args, **options):
         """command handle function. reads tag names, decodes

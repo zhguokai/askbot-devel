@@ -5,8 +5,6 @@ from django.db import connections, router, DEFAULT_DB_ALIAS
 from django.utils.datastructures import SortedDict
 from StringIO import StringIO
 
-from optparse import make_option
-
 class XMLExportSerializer(Serializer):
     def serialize(self, queryset, **options):
         """
@@ -42,23 +40,23 @@ class XMLExportSerializer(Serializer):
 
 
 class Command(BaseCommand):
-    option_list = BaseCommand.option_list + (
-        make_option('--indent', default=4, dest='indent', type='int',
-            help='Specifies the indent level to use when pretty-printing output'),
-        make_option('--database', action='store', dest='database',
-            default=DEFAULT_DB_ALIAS, help='Nominates a specific database to load '
-                'fixtures into. Defaults to the "default" database.'),
-        make_option('-e', '--exclude', dest='exclude',action='append', default=['sessions', 'contenttypes'],
-            help='An appname or appname.ModelName to exclude (use multiple --exclude to exclude multiple apps/models).'),
-        make_option('-n', '--natural', action='store_true', dest='use_natural_keys', default=False,
-            help='Use natural keys if they are available.'),
-        make_option('-a', '--all', action='store_true', dest='use_base_manager', default=False,
-            help="Use Django's base manager to dump all models stored in the database, including those that would otherwise be filtered or modified by a custom manager."),
-    )
     help = ("Output the contents of the OSQA database as XML fixture of the given "
             "format (using each model's default manager unless --all is "
             "specified).")
     args = '[appname appname.ModelName ...]'
+
+    def add_arguments(self, parser):
+        parser.add_argument('--indent', default=4, dest='indent', type=int,
+            help='Specifies the indent level to use when pretty-printing output')
+        parser.add_argument('--database', action='store', dest='database',
+            default=DEFAULT_DB_ALIAS, help='Nominates a specific database to load '
+                'fixtures into. Defaults to the "default" database.')
+        parser.add_argument('-e', '--exclude', dest='exclude',action='append', default=['sessions', 'contenttypes'],
+            help='An appname or appname.ModelName to exclude (use multiple --exclude to exclude multiple apps/models).')
+        parser.add_argument('-n', '--natural', action='store_true', dest='use_natural_keys', default=False,
+            help='Use natural keys if they are available.')
+        parser.add_argument('-a', '--all', action='store_true', dest='use_base_manager', default=False,
+            help="Use Django's base manager to dump all models stored in the database, including those that would otherwise be filtered or modified by a custom manager.")
 
     def handle(self, *app_labels, **options):
         from django.db.models import get_app, get_apps, get_models, get_model

@@ -1,6 +1,8 @@
+from django.conf import settings as django_settings
 from django.core.management.base import NoArgsCommand
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
+from django.utils import translation
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot import mail
@@ -81,6 +83,7 @@ def remember_last_moderator(user):
 
 class Command(NoArgsCommand):
     def handle_noargs(self, *args, **kwargs):
+        translation.activate(django_settings.LANGUAGE_CODE)
         #get size of moderation queue
         queue = Activity.objects.filter(activity_type__in=const.MODERATED_ACTIVITY_TYPES)
         if queue.count() == 0:

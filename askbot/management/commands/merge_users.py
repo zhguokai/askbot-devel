@@ -16,25 +16,18 @@ class MergeUsersBaseCommand(BaseCommand):
     help = 'Merge an account and all information from a <user_id> to a <user_id>, deleting the <from_user>'
 
     def handle(self, *arguments, **options):
-        self.parse_arguments(*arguments)
+        self.parse_positional_arguments(*arguments)
 
         django_version = package_utils.get_django_version()
 
         for rel in User._meta.get_all_related_objects():
-            if django_version < (1, 6):
-                self.process_relation_legacy(rel)
-            else:
-                self.process_relation(rel)
+            self.process_relation(rel)
 
         for rel in User._meta.get_all_related_many_to_many_objects():
-            if django_version < (1, 6):
-                self.process_m2m_legacy(rel)
-            else:
-                self.process_m2m(rel)
+            self.process_m2m(rel)
 
         self.process_custom_user_fields()
         self.cleanup()
-        transaction.commit()
 
     def cleanup(self):
         raise Exception, 'Not implemented'
@@ -43,21 +36,11 @@ class MergeUsersBaseCommand(BaseCommand):
         """Put app specific logic here."""
         raise Exception, 'Not implemented'
 
-    def parse_arguments(self, *arguments):
+    def parse_positional_arguments(self, *arguments):
         if len(arguments) != 2:
             raise CommandError('Arguments are <from_user_id> to <to_user_id>')
         self.from_user = User.objects.get(id = arguments[0])
         self.to_user = User.objects.get(id = arguments[1])
-
-    def process_relation_legacy(self, rel):
-        sid = transaction.savepoint()
-        try:
-            self.process_field(rel.model, rel.field.name)
-            transaction.savepoint_commit(sid)
-        except Exception, error:
-            self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
-            transaction.savepoint_rollback(sid)
-        transaction.commit()
 
     def process_relation(self, rel):
         try:
@@ -65,17 +48,6 @@ class MergeUsersBaseCommand(BaseCommand):
                 self.process_field(rel.model, rel.field.name)
         except Exception, error:
             self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
-        transaction.commit()
-
-    def process_m2m_legacy(self, rel):
-        sid = transaction.savepoint()
-        try:
-            self.process_m2m_field(rel.model, rel.field.name)
-            transaction.savepoint_commit(sid)
-        except Exception, error:
-            self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
-            transaction.savepoint_rollback(sid)
-        transaction.commit()
 
     def process_m2m(self, rel):
         try:
@@ -83,7 +55,6 @@ class MergeUsersBaseCommand(BaseCommand):
                 self.process_m2m_field(rel.model, rel.field.name)
         except Exception, error:
             self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
-        transaction.commit()
 
     def process_field(self, model, field_name):
         """reassigns the related object to the new user"""

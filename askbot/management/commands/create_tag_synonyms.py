@@ -3,7 +3,6 @@ all corresponding questions are retagged
 """
 
 import sys
-from optparse import make_option
 from django.conf import settings as django_settings
 from django.core import management
 from django.core.management.base import BaseCommand, CommandError
@@ -26,36 +25,36 @@ class Command(BaseCommand):
 retags questions from source_tag_name to target_tag_name,
 remove source_tag"""
 
-    option_list = BaseCommand.option_list + (
-        make_option('--from',
-            action = 'store',
-            type = 'str',
-            dest = 'from',
-            default = None,
-            help = 'a source tag name which needs to be replaced'
-        ),
-        make_option('--to',
-            action = 'store',
-            type = 'str',
-            dest = 'to',
-            default = None,
-            help = 'a target tag name that are to be used instead'
-        ),
-        make_option('--user-id',
-            action = 'store',
-            type = 'int',
-            dest = 'user_id',
-            default = None,
-            help = 'id of the user who will be marked as a performer of this operation'
-        ),
-        make_option('--lang',
-            action='store',
-            type='str',
-            dest='lang',
-            default=django_settings.LANGUAGE_CODE,
-            help='language code of the tag, e.g. "en"'
-        )
-    )
+    def add_arguments(self, parser):
+
+        parser.add_argument('--from',
+                            action='store',
+                            type=str,
+                            dest='from',
+                            default=None,
+                            help='a source tag name which needs to be replaced'
+                           )
+        parser.add_argument('--to',
+                            action='store',
+                            type=str,
+                            dest='to',
+                            default=None,
+                            help='a target tag name that are to be used instead'
+                           )
+        parser.add_argument('--user-id',
+                            action='store',
+                            type=int,
+                            dest='user_id',
+                            default=None,
+                            help='id of the user who will be marked as a performer of this operation'
+                           )
+        parser.add_argument('--lang',
+                            action='store',
+                            type=str,
+                            dest='lang',
+                            default=django_settings.LANGUAGE_CODE,
+                            help='language code of the tag, e.g. "en"'
+                           )
 
     def handle(self, *args, **options):
         """command handle function. reads tag names, decodes

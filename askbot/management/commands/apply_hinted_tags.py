@@ -2,7 +2,6 @@ from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
 from django.utils import translation, timezone
-from optparse import make_option
 from askbot.utils.console import ProgressBar
 from askbot.models import Thread
 from askbot.models import User
@@ -14,15 +13,15 @@ class Command(BaseCommand):
     will be applied. This command respects the maximum number of tags
     allowed per question.
     """
-    option_list = BaseCommand.option_list + (
-        make_option('--tags-file', '-t',
-            action = 'store',
-            type = 'str',
-            dest = 'tags_file',
-            default = None,
-            help = 'file containing tag names, one per line'
-        ),
-    )
+    def add_arguments(self, parser):
+        parser.add_argument('--tags-file', '-t',
+                            action='store',
+                            type=str,
+                            dest='tags_file',
+                            default=None,
+                            help='file containing tag names, one per line'
+                           )
+
     def handle(self, *args, **kwargs):
         """reads the tags file, parses it,
         then applies tags to questions by matching them

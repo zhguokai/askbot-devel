@@ -3,8 +3,9 @@ creates the askbot user account programmatically
 the command can add password, but it will not create
 associations with any of the federated login providers
 """
-from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings as django_settings
+from django.utils import translation
 from askbot import models, forms
 
 class Command(BaseCommand):
@@ -12,39 +13,38 @@ class Command(BaseCommand):
 
     help = """
     """
-    option_list = BaseCommand.option_list + (
-        make_option('--user-name',
-            action = 'store',
-            type = 'str',
-            dest = 'username',
-            default = None,
-            help = 'user name **required**, same as screen '
+    def add_arguments(self, parser):
+        parser.add_argument('--user-name',
+            action='store',
+            type=str,
+            dest='username',
+            default=None,
+            help='user name **required**, same as screen '
                     'name and django user name'
-        ),
-        make_option('--password',
-            action = 'store',
-            type = 'str',
-            dest = 'password',
-            default = None,
-            help = 'cleartext password. If not given, an unusable '
+        )
+        parser.add_argument('--password',
+            action='store',
+            type=str,
+            dest='password',
+            default=None,
+            help='cleartext password. If not given, an unusable '
                     'password will be set.'
-        ),
-        make_option('--email',
-            action = 'store',
-            type = 'str',
-            dest = 'email',
-            default = None,
-            help = 'email address - **required**'
-        ),
-        make_option('--email-frequency',
-            action = 'store',
-            type = 'str',
-            dest = 'frequency',
-            default = None,
-            help = 'email subscription frequency (n - never, i - '
+        )
+        parser.add_argument('--email',
+            action='store',
+            type=str,
+            dest='email',
+            default=None,
+            help='email address - **required**'
+        )
+        parser.add_argument('--email-frequency',
+            action='store',
+            type=str,
+            dest='frequency',
+            default=None,
+            help='email subscription frequency (n - never, i - '
                     'instant, d - daily, w - weekly, default - w)'
-        ),
-    )
+        )
 
     def handle(self, *args, **options):
         """create an askbot user account, given email address,
@@ -52,6 +52,8 @@ class Command(BaseCommand):
         and (also optionally) - the
         default email delivery schedule
         """
+        translation.activate(django_settings.LANGUAGE_CODE)
+
         if options['email'] is None:
             raise CommandError('the --email argument is required')
         if options['username'] is None:

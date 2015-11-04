@@ -137,14 +137,6 @@ Any configurable options, related to these commands are accessible via "Email" s
 +-------------------------------------+-------------------------------------------------------------+
 | command                             | purpose                                                     |
 +=====================================+=============================================================+
-| `send_respondable_welcome_email`    | Will send a respondable welcome email to **all** registered |
-|                                     | users whose email address was not validated.                |
-|                                     | This feature requires "reply by email" enabled and "lamson" |
-|                                     | email processor installed on the system.                    |
-|                                     | The email will be respondable. When the user responds,      |
-|                                     | askbot will validate the email and capture the signature in |
-|                                     | the end of the message.                                     |
-+-------------------------------------+-------------------------------------------------------------+
 | `send_email_alerts`                 | Dispatches email alerts to the users according to           |
 |                                     | their subscription settings. This command does not          |
 |                                     | send instant" alerts because those are sent automatically   |
@@ -152,13 +144,6 @@ Any configurable options, related to these commands are accessible via "Email" s
 |                                     | The most frequent alert setting that can be served by this  |
 |                                     | command is "daily", therefore running `send_email_alerts`   |
 |                                     | more than twice a day is not necessary.                     |
-+-------------------------------------+-------------------------------------------------------------+
-| `post_emailed_questions`            | (experimental feature) posts questions sent by email        |
-|                                     | to enable this feature - please follow the instructions     |
-|                                     | on :doc:`sending email to askbot <sending-email-to-askbot>`.|
-|                                     | This command uses :ref:`live settings <live-settings>`      |
-|                                     | "allow posting by email" and "replace spaces in tags        |
-|                                     | with dash".                                                 |
 +-------------------------------------+-------------------------------------------------------------+
 | `send_unanswered_question_reminders`| Sends periodic reminders about unanswered questions.        |
 |                                     | This command may be disabled from the "email" section       |

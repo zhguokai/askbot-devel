@@ -2,12 +2,15 @@
 from askbot import const
 from askbot.models import User
 from askbot.utils.console import ProgressBar
+from django.conf import settings as django_settings
 from django.core.management.base import NoArgsCommand
 from django.db import transaction
+from django.utils import translation
 
 class Command(NoArgsCommand):
 
     def handle_noargs(self, *args, **kwargs):
+        translation.activate(django_settings.LANGUAGE_CODE)
         users = User.objects.all()
         count = users.count()
         msg = 'Counting user badges'

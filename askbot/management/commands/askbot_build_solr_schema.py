@@ -1,4 +1,3 @@
-from optparse import make_option
 import sys
 
 from django.utils.translation import activate as activate_language
@@ -14,15 +13,14 @@ SUPPORTED_LANGUAGES = ['en', 'es', 'ru', 'cn', \
 
 class Command(BaseCommand):
     help = "Generates a Solr schema that reflects the indexes."
-    base_options = (
-        make_option("-f", "--filename", action="store", type="string", dest="filename",
-                    help='If provided, directs output to a file instead of stdout.'),
-        make_option("-u", "--using", action="store", type="string", dest="using", default=DEFAULT_ALIAS,
-                    help='If provided, chooses a connection to work with.'),
-        make_option("-l", "--language", action="store", type="string", dest="language", default='en',
+
+    def add_arguments(self, parser):
+        parser.add_argument("-f", "--filename", action="store", type=str, dest="filename",
+                    help='If provided, directs output to a file instead of stdout.')
+        parser.add_argument("-u", "--using", action="store", type=str, dest="using", default=DEFAULT_ALIAS,
+                    help='If provided, chooses a connection to work with.')
+        parser.add_argument("-l", "--language", action="store", type=str, dest="language", default='en',
                     help='Language to user, in language code format')
-    )
-    option_list = BaseCommand.option_list + base_options
 
     def handle(self, *args, **options):
         """Generates a Solr schema that reflects the indexes."""

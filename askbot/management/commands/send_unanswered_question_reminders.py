@@ -1,6 +1,8 @@
 from django.core.management.base import NoArgsCommand
+from django.conf import settings as django_settings
 from django.db.models import Q
 from django.template.loader import get_template
+from django.utils import translation
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -18,6 +20,8 @@ class Command(NoArgsCommand):
     about unanswered questions to all users
     """
     def handle_noargs(self, **options):
+
+        translation.activate(django_settings.LANGUAGE_CODE)
         if askbot_settings.ENABLE_EMAIL_ALERTS == False:
             return
         if askbot_settings.ENABLE_UNANSWERED_REMINDERS == False:

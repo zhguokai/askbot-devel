@@ -6,8 +6,8 @@ from askbot.models import UserProfile
 class Command(NoArgsCommand):
     def handle_noargs(self, *args, **kwargs):
         # Make sure all superusers have their status set to 'd'
-        fixed = (UserProfile.objects.
-                 .filter(auth_user__is_superuser=True)
+        fixed = (UserProfile.objects
+                 .filter(pk__is_superuser=True)
                  .exclude(status='d')
                  .update(status='d'))
 

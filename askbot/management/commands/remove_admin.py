@@ -4,6 +4,8 @@ from django.db.models.signals import pre_save, post_save
 import sys
 
 class Command(NoArgsCommand):
+    args = '<user_id>'
+
     def get_user(self, uid_str):
         try:
             uid = int(uid_str)

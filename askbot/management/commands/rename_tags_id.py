@@ -7,7 +7,6 @@ also, corresponding questions are retagged
 """
 import re
 import sys
-from optparse import make_option
 from django.conf import settings as django_settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import translation
@@ -57,29 +56,28 @@ rename_tags, but using tag id's
 
 
 """
-    option_list = BaseCommand.option_list + (
-        make_option('--from',
-            action = 'store',
-            type = 'str',
-            dest = 'from',
-            default = None,
-            help = 'list of tag IDs which needs to be replaced'
-        ),
-        make_option('--to',
-            action = 'store',
-            type = 'str',
-            dest = 'to',
-            default = None,
-            help = 'list of tag IDs that are to be used instead'
-        ),
-        make_option('--user-id',
-            action = 'store',
-            type = 'int',
-            dest = 'user_id',
-            default = None,
-            help = 'id of the user who will be marked as a performer of this operation'
-        ),
-    )
+    def add_arguments(self, parser):
+        parser.add_argument('--from',
+                            action='store',
+                            type=str,
+                            dest='from',
+                            default=None,
+                            help='list of tag IDs which needs to be replaced'
+                           )
+        parser.add_argument('--to',
+                            action='store',
+                            type=str,
+                            dest='to',
+                            default=None,
+                            help='list of tag IDs that are to be used instead'
+                          )
+        parser.add_argument('--user-id',
+                            action='store',
+                            type=int,
+                            dest='user_id',
+                            default=None,
+                            help='id of the user who will be marked as a performer of this operation'
+                           )
 
     def handle(self, *args, **options):
         """command handle function. retrieves tags by id
@@ -205,4 +203,4 @@ or repost a bug, if that does not help"""
             models.TagSynonym.objects.filter(
                                 target_tag_name=from_tag_name,
                                 language_code=lang
-                            ).update(target_tag_name = to_tag_name)
+                            ).update(target_tag_name=to_tag_name)

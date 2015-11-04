@@ -9,7 +9,6 @@ from collections import defaultdict
 from django.core import serializers
 from django.utils.encoding import smart_str
 from django.utils.translation import activate as activate_language
-from optparse import make_option
 import os
 import sys
 from tempfile import mkstemp
@@ -17,14 +16,14 @@ from tempfile import mkstemp
 class BaseImportXMLCommand(BaseCommand):
     help = 'Base command for adding XML data from other forums to Askbot'
 
-    option_list = BaseCommand.option_list + (
-            make_option('--redirect-format',
-                action = 'store',
-                dest = 'redirect_format',
-                default = 'none',
-                help = 'Format for the redirect files (apache|nginx|none)'
-            ),
-    )
+    def add_argument(self, parser):
+        parser.add_argument('--redirect-format',
+            action='store',
+            type=str,
+            dest='redirect_format',
+            default='none',
+            help='Format for the redirect files (apache|nginx|none)'
+        )
 
     def handle(self, *args, **kwargs):
 

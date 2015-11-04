@@ -5,7 +5,6 @@ from askbot.utils.console import choice_dialog
 from django.core.management.base import NoArgsCommand
 from django.conf import settings as django_settings
 from django.utils import translation
-from optparse import make_option
 
 
 NUM_USERS = 40
@@ -45,16 +44,16 @@ ALERT_SETTINGS_KEYS = (
 )
 
 class Command(NoArgsCommand):
-    option_list = NoArgsCommand.option_list + (
-        make_option(
+
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--noinput', action='store_false', dest='interactive', default=True,
             help='Do not prompt the user for input of any kind.'
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--nospam', action='store_true', dest='nospam', default=False,
             help='Do not add XSS snippets'
         )
-    )
 
     def bad_stuff(self):
         if self.options['nospam']:

@@ -1,5 +1,4 @@
 import sys
-import optparse
 from django.core.management.base import BaseCommand, CommandError
 from askbot import models
 from askbot import const
@@ -47,32 +46,32 @@ def format_table_row(*cols, **kwargs):
 class Command(BaseCommand):
     help = 'Prints statistics of tag usage'
 
-    option_list = BaseCommand.option_list + (
-            optparse.make_option(
-                '-t',
-                '--sub-counts',
-                action = 'store_true',
-                default = False,
-                dest = 'sub_counts',
-                help = 'Print tag subscription statistics, for all tags, listed alphabetically'
-            ),
-            optparse.make_option(
-                '-u',
-                '--user-sub-counts',
-                action = 'store_true',
-                default = False,
-                dest = 'user_sub_counts',
-                help = 'Print tag subscription data per user, with users listed alphabetically'
-            ),
-            optparse.make_option(
-                '-e',
-                '--print-empty',
-                action = 'store_true',
-                default = False,
-                dest = 'print_empty',
-                help = 'Print empty records too (with zero counts)'
-            ),
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '-t',
+            '--sub-counts',
+            action='store_true',
+            default=False,
+            dest='sub_counts',
+            help='Print tag subscription statistics, for all tags, listed alphabetically'
         )
+        parser.add_argument(
+            '-u',
+            '--user-sub-counts',
+            action='store_true',
+            default=False,
+            dest='user_sub_counts',
+            help='Print tag subscription data per user, with users listed alphabetically'
+        )
+        parser.add_argument(
+            '-e',
+            '--print-empty',
+            action='store_true',
+            default=False,
+            dest='print_empty',
+            help='Print empty records too (with zero counts)'
+        )
+
     def handle(self, *args, **options):
         if not(options['sub_counts'] ^ options['user_sub_counts']):
             raise CommandError('Please use either -u or -t (but not both)')

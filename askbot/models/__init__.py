@@ -307,7 +307,6 @@ def user_update_avatar_type(self):
             self.avatar_type = _check_gravatar(self.gravatar)
     else:
             self.avatar_type = _check_gravatar(self.gravatar)
-    self.save()
 
 def user_strip_email_signature(self, text):
     """strips email signature from the end of the text"""
@@ -4035,20 +4034,6 @@ def autoapprove_reputable_user(user=None, reputation_before=None, *args, **kwarg
     if user.is_watched() and reputation_before < margin and user.reputation >= margin:
         user.set_status('a')
 
-def init_badge_data(sender, app_config=None, **kwargs):
-    """initializes badge data from the hardcoded badge info,
-    e.g. in askbot/models/badges.py"""
-    #mig_name is the name of latest migration that changes model
-    #askbot.models.BadgeData. It's important that we run this
-    #only after the `askbot_badgedata` table is fully constructed
-    return
-    if app_config.label == 'askbot':
-        import pdb
-        pdb.set_trace()
-
-        from askbot.models import badges
-        badges.init_badges()
-
 def record_spam_rejection(
     sender, spam=None, text=None, user=None, ip_addr='unknown', **kwargs
 ):
@@ -4078,12 +4063,6 @@ def record_spam_rejection(
         activity.active_at = now
         activity.summary = summary
         activity.save()
-
-
-django_signals.post_migrate.connect(
-    init_badge_data,
-    dispatch_uid='init_badge_data_on_post_syncdb'
-)
 
 
 # signals for User model save changes

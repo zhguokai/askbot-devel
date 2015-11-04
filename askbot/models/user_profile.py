@@ -30,6 +30,7 @@ def user_profile_property(field_name):
     def setter(user, value):
         profile = get_profile(user)
         setattr(profile, field_name, value)
+        UserProfile.objects.filter(pk=profile.pk).update(**{field_name: value})
 
     return property(getter, setter)
 

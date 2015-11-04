@@ -12,7 +12,6 @@ from django.db import transaction
 from django.forms import EmailField, ValidationError
 from django.utils import translation
 from datetime import datetime
-from optparse import make_option
 import re
 import os
 import shutil
@@ -129,22 +128,22 @@ posts to new"""
 
 class Command(BaseCommand):
     args = '<jive-dump.xml>'
-    option_list = BaseCommand.option_list + (
-        make_option('--company-domain',
+
+    def add_arguments(self, parser):
+        parser.add_argument('--company-domain',
             action='store',
-            type='str',
+            type=str,
             dest='company_domain',
             default=None,
             help=COMPANY_DOMAIN_HELP
-        ),
-        make_option('--redirects_file',
+        )
+        parser.add_argument('--redirects_file',
             action='store',
-            type='str',
+            type=str,
             dest='redirects_file',
             default='',
             help=JIVE_REDIRECTS_HELP
         )
-    )
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)

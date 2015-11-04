@@ -11,8 +11,8 @@ class Command(BaseCommand):
         tpl_file = open(askbot.get_path_to('search/sphinx/sphinx.conf'))
         tpl = Template(tpl_file.read())
         context = Context({
-            'db_name': settings.DATABASE_NAME,
-            'db_user': settings.DATABASE_USER,
-            'db_password': settings.DATABASE_PASSWORD
+            'db_name': settings.DATABASES['default']['NAME'],
+            'db_user': settings.DATABASES['default']['USER'],
+            'db_password': settings.DATABASES['default']['PASSWORD'],
         })
         print tpl.render(context)

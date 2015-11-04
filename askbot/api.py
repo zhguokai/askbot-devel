@@ -40,7 +40,7 @@ def get_info_on_moderation_items(user):
         'new_count': new_count
     }
 
-def get_admin(seed_user_id = None):
+def get_admin(seed_user_id=None):
     """returns user objects with id == seed_user_id
     if the user with that id is not an administrator,
     the function will try to find another admin or moderator
@@ -53,14 +53,13 @@ def get_admin(seed_user_id = None):
     the user object is because we still patch the django-auth User table
     and it's probably better not to patch the manager
     """
-
     if seed_user_id:
-        user = models.User.objects.get(id = seed_user_id)#let it raise error here
+        user = models.User.objects.get(id=seed_user_id)#let it raise error here
         if user.is_administrator() or user.is_moderator():
             return user
     try:
         return models.User.objects.filter(
-                        Q(is_superuser=True) | Q(status='m')
+                        Q(is_superuser=True) | Q(askbot_profile__status__in=('m', 'd'))
                     ).order_by('id')[0]
     except IndexError:
         raise models.User.DoesNotExist(

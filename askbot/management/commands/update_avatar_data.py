@@ -1,6 +1,5 @@
 from django.core.management.base import NoArgsCommand
 from django.contrib.auth.models import User
-from django.db import transaction
 from askbot.utils.console import print_action
 
 class Command(NoArgsCommand):
@@ -9,7 +8,7 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         users = User.objects.all()
-        has_avatar = User.objects.exclude(avatar_type='n').count()
+        has_avatar = User.objects.exclude(askbot_profile__avatar_type='n').count()
         total_users = users.count()
         print '%s users in total, %s have valid avatar' \
            % (total_users, has_avatar)
@@ -20,10 +19,8 @@ class Command(NoArgsCommand):
                 'Updating %s (%d users left)' % (user.username, users_left)
             )
             user.update_avatar_type()
-            transaction.commit()
 
         print 'Updated all the users'
-        has_avatar = User.objects.exclude(avatar_type='n').count()
-        transaction.commit()
-        print '%s users in total, %s have valid avatar' \
+        has_avatar = User.objects.exclude(askbot_profile__avatar_type='n').count()
+        print '%s users in total, %s have real avatar image' \
             % (total_users, has_avatar)
