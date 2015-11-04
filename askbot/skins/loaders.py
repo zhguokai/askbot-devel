@@ -158,15 +158,15 @@ def get_app_dir_env(language_code):
     env.set_language(language_code)
     return env
 
-LOADERS = django_settings.TEMPLATE_LOADERS
+LOADERS = django_settings.TEMPLATES
 SKINS = dict()
-if 'askbot.skins.loaders.Loader' in LOADERS:
-    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) or\
-            HAS_ASKBOT_LOCALE_MIDDLEWARE:
-        for lang in dict(django_settings.LANGUAGES).keys():
-            SKINS.update(load_skins(lang))
-    else:
-        SKINS = load_skins(django_settings.LANGUAGE_CODE)
+if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) or\
+        HAS_ASKBOT_LOCALE_MIDDLEWARE:
+    for lang in dict(django_settings.LANGUAGES).keys():
+        SKINS.update(load_skins(lang))
+else:
+    SKINS = load_skins(django_settings.LANGUAGE_CODE)
+
 
 APP_DIR_ENVS = dict()
 if 'askbot.skins.loaders.JinjaAppDirectoryLoader' in LOADERS:

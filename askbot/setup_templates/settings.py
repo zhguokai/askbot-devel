@@ -96,6 +96,32 @@ TEMPLATE_LOADERS = (
     #'django.template.loaders.eggs.load_template_source',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'askbot.context.application_settings',
+    #'django.core.context_processors.i18n',
+    'askbot.user_messages.context_processors.user_messages',#must be before auth
+    'django.contrib.auth.context_processors.auth', #this is required for admin
+    'django.core.context_processors.csrf', #necessary for csrf protection
+    'askbot.deps.group_messaging.context.group_messaging_context',
+)
+
+TEMPLATES = (
+    {
+        'BACKEND': 'askbot.skins.template_backends.AskbotSkinTemplates',
+    },
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.core.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+            ]
+        }
+    },
+)
 
 MIDDLEWARE_CLASSES = (
     #'django.middleware.gzip.GZipMiddleware',
@@ -151,16 +177,6 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 #TEMPLATE_DIRS = (,) #template have no effect in askbot, use the variable below
 #ASKBOT_EXTRA_SKINS_DIR = #path to your private skin collection
 #take a look here http://askbot.org/en/question/207/
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.request',
-    'askbot.context.application_settings',
-    #'django.core.context_processors.i18n',
-    'askbot.user_messages.context_processors.user_messages',#must be before auth
-    'django.contrib.auth.context_processors.auth', #this is required for admin
-    'django.core.context_processors.csrf', #necessary for csrf protection
-    'askbot.deps.group_messaging.context.group_messaging_context',
-)
 
 
 INSTALLED_APPS = (

@@ -297,40 +297,10 @@ def test_postgres():
         else:
             pass #everythin is ok
 
-def test_template_loader():
+def test_template_settings():
     """Sends a warning if you have an old style template
     loader that used to send a warning"""
-    old_loaders = (
-        'askbot.skins.loaders.load_template_source',
-        'askbot.skins.loaders.filesystem_load_template_source',
-    )
     errors = list()
-    for loader in old_loaders:
-        if loader in django_settings.TEMPLATE_LOADERS:
-            errors.append(
-                'remove "%s" from the TEMPLATE_LOADERS setting' % loader
-            )
-
-    current_loader = 'askbot.skins.loaders.Loader'
-    if current_loader not in django_settings.TEMPLATE_LOADERS:
-        errors.append(
-            'add "%s" to the beginning of the TEMPLATE_LOADERS' % current_loader
-        )
-    elif django_settings.TEMPLATE_LOADERS[0] != current_loader:
-        errors.append(
-            '"%s" must be the first element of TEMPLATE_LOADERS' % current_loader
-        ) 
-
-    app_dir_loader = 'askbot.skins.loaders.JinjaAppDirectoryLoader'
-    if app_dir_loader not in django_settings.TEMPLATE_LOADERS:
-        errors.append(
-            'add "%s" as second item of the TEMPLATE_LOADERS' % app_dir_loader
-        )
-    elif django_settings.TEMPLATE_LOADERS.index(app_dir_loader) != 1:
-        errors.append(
-            'move "%s" to the second place in the TEMPLATE_LOADERS' % app_dir_loader
-        )
-
     try:
         jinja2_apps = getattr(django_settings, 'JINJA2_TEMPLATES')
     except AttributeError:
@@ -849,48 +819,6 @@ def test_longerusername():
         errors.append('run "python manage.py migrate longerusername"')
         print_errors(errors)
 
-def test_template_context_processors():
-    """makes sure that all necessary template context processors
-    are in the settings.py"""
-
-    required_processors = [
-        'django.core.context_processors.request',
-        'askbot.context.application_settings',
-        'askbot.user_messages.context_processors.user_messages',
-        'django.core.context_processors.csrf',
-        'askbot.deps.group_messaging.context.group_messaging_context',
-    ]
-    old_auth_processor = 'django.core.context_processors.auth'
-    new_auth_processor = 'django.contrib.auth.context_processors.auth'
-
-    invalid_processors = list()
-    if django.VERSION[1] <= 3:
-        required_processors.append(old_auth_processor)
-        if new_auth_processor in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
-            invalid_processors.append(new_auth_processor)
-    elif django.VERSION[1] > 3:
-        required_processors.append(new_auth_processor)
-        if old_auth_processor in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
-            invalid_processors.append(old_auth_processor)
-
-    missing_processors = list()
-    for processor in required_processors:
-        if processor not in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
-            missing_processors.append(processor)
-
-    errors = list()
-    if invalid_processors:
-        message = 'remove from TEMPLATE_CONTEXT_PROCESSORS in settings.py:\n'
-        message += format_as_text_tuple_entries(invalid_processors)
-        errors.append(message)
-
-    if missing_processors:
-        message = 'add to TEMPLATE_CONTEXT_PROCESSORS in settings.py:\n'
-        message += format_as_text_tuple_entries(missing_processors)
-        errors.append(message)
-
-    print_errors(errors)
-
 
 def test_cache_backend():
     """prints a warning if cache backend is disabled or per-process"""
@@ -1100,8 +1028,7 @@ def run_startup_tests():
     test_secret_key()
     test_service_url_prefix()
     test_staticfiles()
-    test_template_loader()
-    test_template_context_processors()
+    test_template_settings()
     test_tinymce()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
