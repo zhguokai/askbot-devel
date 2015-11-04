@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.views.decorators.cache import never_cache
 from askbot.deps.livesettings import ConfigurationSettings, forms
@@ -58,13 +58,13 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
     else:
         form = None
 
-    return render_to_response(template, {
+    return render(request, template, {
         'all_super_groups': mgr.get_super_groups(),
         'title': title,
         'settings_group' : settings,
         'form': form,
         'use_db' : use_db
-    }, context_instance=RequestContext(request))
+    })
 group_settings = never_cache(admins_only(group_settings))
 
 # Site-wide setting editor is identical, but without a group
@@ -99,6 +99,6 @@ def export_as_python(request):
     pp = pprint.PrettyPrinter(indent=4)
     pretty = pp.pformat(work)
 
-    return render_to_response('livesettings/text.txt', { 'text' : pretty }, content_type='text/plain')
+    return render(request, 'livesettings/text.txt', { 'text' : pretty }, content_type='text/plain')
 
 export_as_python = never_cache(admins_only(export_as_python))
