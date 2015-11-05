@@ -14,6 +14,9 @@ from askbot import models
 from askbot import const
 
 
+TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+
 admin.site.register(models.Vote)
 admin.site.register(models.FavoriteQuestion)
 admin.site.register(models.Award)
@@ -141,13 +144,17 @@ class IsPrivate(SimpleListFilter):
             return queryset
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post_type', 'thread', 'author', 'text_30', 'added_at', 'deleted', 'in_groups', 'is_published', 'is_private', 'vote_up_count', 'language_code')
+    list_display = ('id', 'post_type', 'thread', 'author', 'text_30', 'added_at_with_seconds', 'deleted', 'in_groups', 'is_published', 'is_private', 'vote_up_count', 'language_code')
     list_filter = ('deleted', IsPrivate, 'post_type', 'language_code', 'vote_up_count')
     search_fields = ('id', 'thread__title', 'text', 'author__username')
     inlines = (PostToGroupInline,)
 
     def text_30(self, obj):
         return obj.text[:30]
+
+    def added_at_with_seconds(self, obj):
+        return obj.added_at.strftime(TIME_FORMAT)
+    added_at_with_seconds.admin_order_field = 'added_at'
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
@@ -157,7 +164,7 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(models.Post, PostAdmin)
 
 class PostRevisionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post_id', 'post_type', 'thread_name', 'revision', 'revised_at', 'author', 'approved', 'is_minor', 'text_start')
+    list_display = ('id', 'post_id', 'post_type', 'thread_name', 'revision', 'revised_at_with_seconds', 'author', 'approved', 'is_minor', 'text_start')
     list_filter = ('approved', 'is_minor', 'revision')
     search_fields = ('text', 'author__username', 'post__id', 'post__thread__title')
     ordering = ('-id',)
@@ -170,6 +177,10 @@ class PostRevisionAdmin(admin.ModelAdmin):
 
     def thread_name(self, obj):
         return obj.post.thread.title
+
+    def revised_at_with_seconds(self, obj):
+        return obj.revised_at.strftime(TIME_FORMAT)
+    revised_at_with_seconds.admin_order_field = 'revised_at'
 
     def text_start(self, obj):
         return obj.text[:30]
@@ -184,10 +195,18 @@ class SpacesInline(admin.TabularInline):
     extra = 1
 
 class ThreadAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'added_at', 'last_activity_at', 'last_activity_by', 'answer_count', 'deleted', 'closed', 'site', 'in_spaces', 'in_groups', 'is_private', 'language_code')
+    list_display = ('id', 'title', 'added_at_with_seconds', 'last_activity_at_with_seconds', 'last_activity_by', 'answer_count', 'deleted', 'closed', 'site', 'in_spaces', 'in_groups', 'is_private', 'language_code')
     list_filter = ('deleted', 'closed', 'language_code', 'site')
     search_fields = ('last_activity_by__username', 'title')
     inlines = (ThreadToGroupInline, SpacesInline)
+
+    def added_at_with_seconds(self, obj):
+        return obj.added_at.strftime(TIME_FORMAT)
+    added_at_with_seconds.admin_order_field = 'added_at'
+
+    def last_activity_at_with_seconds(self, obj):
+        return obj.last_activity_at.strftime(TIME_FORMAT)
+    last_activity_at_with_seconds.admin_order_field = 'last_activity_at'
 
     def in_groups(self, obj):
         return ', '.join(obj.groups.exclude(name__startswith=models.user.PERSONAL_GROUP_NAME_PREFIX).values_list('name', flat=True))
