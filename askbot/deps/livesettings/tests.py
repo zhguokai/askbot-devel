@@ -552,7 +552,7 @@ class OverrideTest(TestCase):
 
 
 class ExportTest(TestCase):
-    def testStringExported(self):
+    def setUp(self):
         GENERAL_SKIN_SETTINGS = ConfigurationGroup(
             'GENERAL_SKIN_SETTINGS',
             'Skins settings'
@@ -564,6 +564,7 @@ class ExportTest(TestCase):
             default='default'
         ))
 
+    def testStringExported(self):
         value = StringValue(
             BASE_GROUP,
             'REPLY_BY_EMAIL_HOSTNAME')
@@ -576,6 +577,22 @@ class ExportTest(TestCase):
 
         self.assertEqual(response.content,
                          'REPLY_BY_EMAIL_HOSTNAME: m.knowledgepoint.org\n')
+
+        config = yaml.load(response.content)
+
+        self.assertEqual(config['REPLY_BY_EMAIL_HOSTNAME'],
+                         'm.knowledgepoint.org')
+
+    def testLongStringExported(self):
+        value = LongStringValue(
+            BASE_GROUP,
+            'REPLY_BY_EMAIL_HOSTNAME')
+
+        setting = value.make_setting('m.knowledgepoint.org')
+        setting.save()
+
+        request = Mock()
+        response = export_as_yaml(request)
 
         config = yaml.load(response.content)
 

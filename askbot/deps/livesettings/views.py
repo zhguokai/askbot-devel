@@ -8,10 +8,12 @@ from askbot.deps.livesettings import ConfigurationSettings, forms
 from askbot.deps.livesettings import ImageValue
 from askbot.deps.livesettings.overrides import get_overrides
 from django.contrib import messages
+
 import logging
 import yaml
 
 log = logging.getLogger('configuration.views')
+
 
 def group_settings(request, group, template='livesettings/group_settings.html'):
     # Determine what set of settings this editor is used for
@@ -105,15 +107,11 @@ def export_as_python(request):
 
 
 def export_as_yaml(request):
-    from askbot.deps.livesettings.models import Setting
+    from askbot.deps.livesettings.models import Setting, LongSetting
 
-    # result = ''
-
-    # for ls in Setting.objects.all().values('group', 'key', 'value'):
-    #    result += u"{0}: \"{1}\"\n".format(ls['key'], ls['value'])
-
-    values = Setting.objects.all().values('group', 'key', 'value')
-    result = dump_yaml(values)
+    settings = list(Setting.objects.all().values('group', 'key', 'value'))
+    long_settings = list(LongSetting.objects.all().values('group', 'key', 'value'))
+    result = dump_yaml(settings + long_settings)
 
     return render_to_response(
         'livesettings/text.txt', {'text': result}, mimetype='text/plain'
