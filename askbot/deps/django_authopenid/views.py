@@ -92,6 +92,11 @@ from askbot.utils.forms import get_next_url
 from askbot.utils.http import get_request_info
 from askbot.signals import user_logged_in, user_registered
 
+
+def get_next_url_from_session(session):
+    return session.pop('next_url', None) or reverse('index')
+
+
 def create_authenticated_user_account(
     username=None, email=None, password=None,
     user_identifier=None, login_provider_name=None
@@ -233,12 +238,9 @@ def not_authenticated(func):
         return func(request, *args, **kwargs)
     return decorated
 
+
 def complete_oauth2_signin(request):
-    if 'next_url' in request.session:
-        next_url = request.session['next_url']
-        del request.session['next_url']
-    else:
-        next_url = reverse('index')
+    next_url = get_next_url_from_session(request.session)
 
     if 'error' in request.GET:
         return HttpResponseRedirect(reverse('index'))
@@ -335,13 +337,42 @@ def complete_oauth2_signin(request):
                     )
 
 
+def complete_cas_signin(request):
+    from askbot.deps.django_authopenid.providers.cas import CASLoginProvider
+    next_url = get_next_url_from_session(request.session)
+    provider = CASLoginProvider(success_redirect_url=next_url)
+    cas_login_url = provider.get_login_url()
+
+    ticket = request.GET.get('ticket')
+    if not ticket:
+        return HttpResponseRedirect(cas_login_url)
+
+    username, attributes, pgtiou = provider.verify_ticket(ticket)
+    if not username:
+        return HttpResponseRedirect(cas_login_url)
+
+    user_identifier = username + '@cas'
+
+    user = authenticate(
+                        method='identifier',
+                        identifier=user_identifier,
+                        provider_name='cas'
+                       )
+
+    #request.session['email'] = is is possible to get email from attributes?
+    request.session['username'] = username
+
+    return finalize_generic_signin(
+                        request=request,
+                        user=user,
+                        user_identifier=user_identifier,
+                        login_provider_name='cas',
+                        redirect_url=next_url
+                    )
+
 
 def complete_oauth1_signin(request):
-    if 'next_url' in request.session:
-        next_url = request.session['next_url']
-        del request.session['next_url']
-    else:
-        next_url = reverse('index')
+    next_url = get_next_url_from_session(request.session)
 
     if 'denied' in request.GET:
         return HttpResponseRedirect(next_url)
@@ -582,6 +613,12 @@ def signin(request, template_name='authopenid/signin.html'):
                             redirect_to,
                             sreg_request=sreg_req
                         )
+
+            elif login_form.cleaned_data['login_type'] == 'cas':
+                from askbot.deps.django_authopenid.providers.cas import CASLoginProvider
+                provider = CASLoginProvider(success_redirect_url=next_url)
+                request.session['next_url'] = next_url
+                return HttpResponseRedirect(provider.get_login_url())
 
             elif login_form.cleaned_data['login_type'] == 'oauth':
                 try:
