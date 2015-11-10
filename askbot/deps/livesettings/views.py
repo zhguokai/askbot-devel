@@ -123,7 +123,7 @@ def export_as_yaml(request):
 def dump_yaml(settings):
     objects = {s['key']: s['value'] for s in settings}
 
-    return yaml.dump(objects)
+    return yaml.dump(objects, default_flow_style=False, Dumper=yaml.SafeDumper)
 
 
 export_as_python = never_cache(staff_member_required(export_as_python))

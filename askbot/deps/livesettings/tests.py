@@ -573,6 +573,10 @@ class ExportTest(TestCase):
 
         request = Mock()
         response = export_as_yaml(request)
+
+        self.assertEqual(response.content,
+                         'REPLY_BY_EMAIL_HOSTNAME: m.knowledgepoint.org\n')
+
         config = yaml.load(response.content)
 
         self.assertEqual(config['REPLY_BY_EMAIL_HOSTNAME'],
