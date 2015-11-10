@@ -1,9 +1,15 @@
 from django.conf import settings as djangosettings
 from django.test import TestCase
+from django.utils.unittest.case import TestCase as UnitTestCase
 import keyedcache
 from askbot.deps.livesettings import *
+from askbot.deps.livesettings.views import export_as_yaml
 import logging
+from mock import Mock
+import yaml
+
 log = logging.getLogger('test');
+
 
 class ConfigurationFunctionTest(TestCase):
 
@@ -543,3 +549,31 @@ class OverrideTest(TestCase):
         self.assertEqual(v[0], "one")
         self.assertEqual(v[1], "two")
         self.assertEqual(v[2], "three")
+
+
+class ExportTest(TestCase):
+    def testStringExported(self):
+        GENERAL_SKIN_SETTINGS = ConfigurationGroup(
+            'GENERAL_SKIN_SETTINGS',
+            'Skins settings'
+        )
+
+        config_register(StringValue(
+            GENERAL_SKIN_SETTINGS,
+            'ASKBOT_DEFAULT_SKIN',
+            default='default'
+        ))
+
+        value = StringValue(
+            BASE_GROUP,
+            'REPLY_BY_EMAIL_HOSTNAME')
+
+        setting = value.make_setting('m.knowledgepoint.org')
+        setting.save()
+
+        request = Mock()
+        response = export_as_yaml(request)
+        config = yaml.load(response.content)
+
+        self.assertEqual(config['REPLY_BY_EMAIL_HOSTNAME'],
+                         'm.knowledgepoint.org')

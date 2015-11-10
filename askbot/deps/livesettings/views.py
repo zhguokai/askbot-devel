@@ -9,6 +9,7 @@ from askbot.deps.livesettings import ImageValue
 from askbot.deps.livesettings.overrides import get_overrides
 from django.contrib import messages
 import logging
+import yaml
 
 log = logging.getLogger('configuration.views')
 
@@ -102,4 +103,28 @@ def export_as_python(request):
 
     return render_to_response('livesettings/text.txt', { 'text' : pretty }, mimetype='text/plain')
 
+
+def export_as_yaml(request):
+    from askbot.deps.livesettings.models import Setting
+
+    # result = ''
+
+    # for ls in Setting.objects.all().values('group', 'key', 'value'):
+    #    result += u"{0}: \"{1}\"\n".format(ls['key'], ls['value'])
+
+    values = Setting.objects.all().values('group', 'key', 'value')
+    result = dump_yaml(values)
+
+    return render_to_response(
+        'livesettings/text.txt', {'text': result}, mimetype='text/plain'
+    )
+
+
+def dump_yaml(settings):
+    objects = {s['key']: s['value'] for s in settings}
+
+    return yaml.dump(objects)
+
+
 export_as_python = never_cache(staff_member_required(export_as_python))
+export_as_yaml = never_cache(staff_member_required(export_as_yaml))
