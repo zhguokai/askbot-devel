@@ -196,4 +196,3 @@ class OAuth1Provider(BaseProtocol):
         if endpoint_url is None:
             raise ImproperlyConfigured('oauth parameters are incorrect')
         return endpoint_url + '?' + self.format_request_params(query_params)
-

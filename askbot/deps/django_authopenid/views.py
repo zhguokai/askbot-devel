@@ -282,9 +282,9 @@ def complete_oauth2_signin(request):
     user_id = params['get_user_id_function'](client)
 
     user = authenticate(
-                oauth_user_id=user_id,
+                user_identifier=user_id,
                 provider_name=provider_name,
-                method='oauth'
+                method='identifier'
             )
 
     logging.debug('finalizing oauth signin')
@@ -304,16 +304,17 @@ def complete_oauth2_signin(request):
             msg_tpl = 'trying to migrate user from OpenID %s to g-plus %s'
             logging.critical(msg_tpl, str(openid_url), str(user_id))
             user = authenticate(
-                        openid_url=openid_url,
-                        method='openid'
+                        method='identifier',
+                        provider_name='google',
+                        user_identifier=openid_url
                    )
             if user:
                 util.google_migrate_from_openid_to_gplus(openid_url, user_id)
                 logging.critical('migrated login from OpenID to g-plus')
             elif email:
                 user = authenticate(
-                            email=email,
-                            method='any_email'
+                            method='email',
+                            email=email
                             #don't check whether email was validated
                         )
                 if user:
@@ -324,8 +325,6 @@ def complete_oauth2_signin(request):
                                         provider_name='google-plus'
                                     )
                     assoc.save()
-
-
 
     return finalize_generic_signin(
                         request=request,
@@ -382,10 +381,10 @@ def complete_oauth1_signin(request):
         return HttpResponseRedirect(next_url)
     else:
         user = authenticate(
-                    oauth_user_id=user_id,
-                    provider_name=oauth_provider_name,
-                    method='oauth'
-                )
+                            method='identifier',
+                            user_identifier=user_id,
+                            provider_name=oauth_provider_name,
+                           )
 
         logging.debug('finalizing oauth signin')
 
@@ -398,7 +397,6 @@ def complete_oauth1_signin(request):
                         )
 
 
-#@not_authenticated
 @csrf.csrf_protect
 def signin(request, template_name='authopenid/signin.html'):
     """
@@ -446,9 +444,9 @@ def signin(request, template_name='authopenid/signin.html'):
                     password = login_form.cleaned_data['password']
 
                     user = authenticate(
+                                    method = 'ldap',
                                     username=username,
                                     password=password,
-                                    method = 'ldap'
                                 )
 
                     if user:
@@ -498,11 +496,11 @@ def signin(request, template_name='authopenid/signin.html'):
                 else:
                     if password_action == 'login':
                         user = authenticate(
-                                username = login_form.cleaned_data['username'],
-                                password = login_form.cleaned_data['password'],
-                                provider_name = provider_name,
-                                method = 'password'
-                            )
+                                            method='password',
+                                            username=login_form.cleaned_data['username'],
+                                            password=login_form.cleaned_data['password'],
+                                            provider_name=provider_name
+                                           )
                         if user is None:
                             login_form.set_password_login_error()
                         else:
@@ -514,11 +512,8 @@ def signin(request, template_name='authopenid/signin.html'):
                         if request.user.is_authenticated():
                             new_password = \
                                 login_form.cleaned_data['new_password']
-                            AuthBackend.set_password(
-                                            user=request.user,
-                                            password=new_password,
-                                            provider_name=provider_name
-                                        )
+                            request.user.set_password(new_password)
+                            request.user.save()
                             request.user.message_set.create(
                                         message = _('Your new password is saved')
                                     )
@@ -533,9 +528,15 @@ def signin(request, template_name='authopenid/signin.html'):
                 assertion = login_form.cleaned_data['persona_assertion']
                 email = util.mozilla_persona_get_email_from_assertion(assertion)
                 if email:
-                    user = authenticate(email=email, method='mozilla-persona')
+                    user = authenticate(
+                                method='identifier',
+                                user_identifier=email,
+                                provider_name='mozilla-persona'
+                            )
                     if user is None:
-                        user = authenticate(email=email, method='valid_email')
+                        user = authenticate(email=email, method='email')
+                        if user and user.email_isvalid == False:
+                            user = None
                         if user:
                             #create mozilla persona user association
                             #because we trust the given email address belongs
@@ -624,22 +625,22 @@ def signin(request, template_name='authopenid/signin.html'):
             elif login_form.cleaned_data['login_type'] == 'wordpress_site':
                 #here wordpress_site means for a self hosted wordpress blog not a wordpress.com blog
                 wp = Client(
-                        askbot_settings.WORDPRESS_SITE_URL,
-                        login_form.cleaned_data['username'],
-                        login_form.cleaned_data['password']
-                    )
+                            askbot_settings.WORDPRESS_SITE_URL,
+                            login_form.cleaned_data['username'],
+                            login_form.cleaned_data['password']
+                        )
                 try:
                     wp_user = wp.call(GetUserInfo())
-                    custom_wp_openid_url = '%s?user_id=%s' % (wp.url, wp_user.user_id)
+                    wp_user_identifier = '%s?user_id=%s' % (wp.url, wp_user.user_id)
                     user = authenticate(
-                            method='wordpress_site',
-                            wordpress_url=wp.url,
-                            wp_user_id=wp_user.user_id
-                           )
+                                        method='identifier',
+                                        user_identifier=wp_user_identifier,
+                                        provider_name='wordpress_site'
+                                       )
                     return finalize_generic_signin(
                                     request=request,
                                     user=user,
-                                    user_identifier=custom_wp_openid_url,
+                                    user_identifier=wp_user_identifier,
                                     login_provider_name=provider_name,
                                     redirect_url=next_url
                                 )
@@ -661,11 +662,11 @@ def signin(request, template_name='authopenid/signin.html'):
         view_subtype = 'default'
 
     return show_signin_view(
-                        request,
-                        login_form = login_form,
-                        view_subtype = view_subtype,
-                        template_name=template_name
-                        )
+                            request,
+                            login_form=login_form,
+                            view_subtype=view_subtype,
+                            template_name=template_name
+                           )
 
 @csrf.csrf_protect
 def show_signin_view(
@@ -908,15 +909,17 @@ def signin_success(request, identity_url, openid_response):
     request.session['openid'] = openid_data
 
     openid_url = str(openid_data)
-    user = authenticate(
-                    openid_url = openid_url,
-                    method = 'openid'
-                )
-
-    next_url = get_next_url(request)
     provider_name = util.get_provider_name_by_endpoint(openid_url)
     if provider_name is None:
         provider_name = util.get_provider_name(openid_url)
+
+    user = authenticate(
+                    method='identifier',
+                    user_identifier=openid_url,
+                    provider_name=provider_name
+                )
+
+    next_url = get_next_url(request)
 
     request.session['email'] = openid_data.sreg.get('email', '')
     request.session['username'] = openid_data.sreg.get('nickname', '')
@@ -1403,7 +1406,7 @@ def recover_account(request):
         if key is None:
             return HttpResponseRedirect(reverse('user_signin'))
 
-        user = authenticate(email_key = key, method = 'email')
+        user = authenticate(email_key=key, method='email_key')
         if user:
             if request.user.is_authenticated():
                 if user != request.user:
