@@ -17,6 +17,7 @@ class OAuth1Provider(BaseProtocol):
         raise NotImplementedError
         #init function must have the following:
         self.name = 'provider-name'
+        self.protocol_type = 'oauth'
         self.display_name = 'Display Name'
         self.request_token_url = 'https://example.com/request_token'
         self.access_token_url = 'https://example.com/access_token'
@@ -50,28 +51,6 @@ class OAuth1Provider(BaseProtocol):
         """Optionally, override this method to read username 
         from the OAuth1 server"""
         return ''
-
-    def __getitem__(self, key):
-        """Method necessary to access parameters
-        as dictionary keys.
-        It is necessary to make the "old-style"
-        OAuth1 providers work. 
-        todo: remove after all OAuth1 providers
-        are migrated
-        """
-        if key == 'type':
-            return 'oauth'
-        return getattr(self, key)
-
-    def __setitem__(self, key, value):
-        """Method necessary to access parameters
-        as dictionary keys.
-        It is necessary to make the "old-style"
-        OAuth1 providers work. 
-        todo: remove after all OAuth1 providers
-        are migrated
-        """
-        setattr(self, key, value)
 
     @classmethod
     def parse_request_url(cls, url):

@@ -333,7 +333,7 @@ $.fn.authenticator = function () {
         return setup_password_login_or_change(provider_name);
     };
 
-    var init_always_visible_password_login = function () {
+    var init_password_login = function () {
         //reset_form();
         //will break wordpress and ldap
         provider_name_input.val('local');
@@ -443,10 +443,6 @@ $.fn.authenticator = function () {
     };
 
     var setup_default_handlers = function () {
-        setup_event_handlers(
-            signin_page.find('input.openid-direct'),
-            start_simple_login
-        );
 
         setup_event_handlers(
             signin_page.find('input.openid-username'),
@@ -477,7 +473,7 @@ $.fn.authenticator = function () {
         }
 
         setup_event_handlers(
-            signin_page.find('input.oauth,input.oauth2'),
+            signin_page.find('input.oauth, input.oauth2, input.openid-direct, input.cas'),
             start_simple_login
         );
 
@@ -497,9 +493,7 @@ $.fn.authenticator = function () {
     };
 
     setup_default_handlers();
-    if (askbot.settings.signinAlwaysShowLocalLogin === true) {
-        init_always_visible_password_login();
-    }
+    init_password_login();
     clear_password_fields();
     return this;
 };

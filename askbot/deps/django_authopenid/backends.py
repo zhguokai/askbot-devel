@@ -62,7 +62,8 @@ class AuthBackend(object):
         elif method == 'force':
             return self.get_user(kwargs['user_id'])
 
-        raise NotImplementedError('login method "%s" not supported' % method)
+        return None
+        #raise NotImplementedError('login method "%s" not supported' % method)
 
     def get_user(self, user_id):
         try:

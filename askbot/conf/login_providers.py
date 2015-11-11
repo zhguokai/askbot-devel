@@ -26,17 +26,6 @@ settings.register(
     )
 )
 
-#todo: remove this - we don't want the local login button
-#but instead always show the login/password field when used
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN',
-        default = True,
-        description=_('Always display local login form and hide "Askbot" button.'),
-    )
-)
-
 settings.register(
     livesettings.BooleanValue(
         LOGIN_PROVIDERS,
@@ -103,7 +92,7 @@ if module_exists('cas'):
         )
     )
     settings.register(
-        livesettings.ImageValue(
+        livesettings.StringValue(
             LOGIN_PROVIDERS,
             'CAS_PROTOCOL_VERSION',
             default='3',
@@ -115,7 +104,7 @@ if module_exists('cas'):
         livesettings.ImageValue(
             LOGIN_PROVIDERS,
             'CAS_LOGIN_BUTTON',
-            default='/images/logo.gif',
+            default='/images/jquery-openid/cas.png',
             description=_('Upload CAS login icon'),
             url_resolver=skin_utils.get_media_url
         )

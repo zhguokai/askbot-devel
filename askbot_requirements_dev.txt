@@ -21,6 +21,7 @@ django-kombu==0.9.2
 django-followit==0.0.7
 django-recaptcha-works
 python-openid
+python-cas
 pyjwt
 pystache==0.3.1
 pylint

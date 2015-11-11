@@ -504,8 +504,8 @@ def get_enabled_major_login_providers():
         data['mediawiki'] = providers.mediawiki.Provider()
 
     if module_exists('cas') and askbot_settings.SIGNIN_CAS_ENABLED \
-        and askbot_settings.SIGNIN_CAS_SERVER_URL:
-            data['cas'] = providers.cas.Provider()
+        and askbot_settings.CAS_SERVER_URL:
+            data['cas'] = providers.cas_provider.CASLoginProvider()
 
     def get_identica_user_id(data):
         consumer = oauth.Consumer(data['consumer_key'], data['consumer_secret'])
@@ -758,7 +758,7 @@ def provider_requires_login_page(provider):
     """requires login page if password needs to be
     entered or username or openid url"""
     #todo: test with mozilla persona openid-username openid-generic
-    return provider['type'] not in ('openid-direct', 'oauth', 'oauth2')
+    return provider['type'] not in ('openid-direct', 'oauth', 'oauth2', 'cas')
 
 def set_login_provider_tooltips(provider_dict, active_provider_names = None):
     """adds appropriate tooltip_text field to each provider

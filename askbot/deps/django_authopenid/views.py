@@ -338,7 +338,7 @@ def complete_oauth2_signin(request):
 
 
 def complete_cas_signin(request):
-    from askbot.deps.django_authopenid.providers.cas import CASLoginProvider
+    from askbot.deps.django_authopenid.providers.cas_provider import CASLoginProvider
     next_url = get_next_url_from_session(request.session)
     provider = CASLoginProvider(success_redirect_url=next_url)
     cas_login_url = provider.get_login_url()
@@ -355,7 +355,7 @@ def complete_cas_signin(request):
 
     user = authenticate(
                         method='identifier',
-                        identifier=user_identifier,
+                        user_identifier=user_identifier,
                         provider_name='cas'
                        )
 
@@ -464,7 +464,6 @@ def signin(request, template_name='authopenid/signin.html'):
 
         login_form = forms.LoginForm(request.POST)
         if login_form.is_valid():
-
             provider_name = login_form.cleaned_data['login_provider_name']
             if login_form.cleaned_data['login_type'] == 'password':
 
@@ -615,7 +614,7 @@ def signin(request, template_name='authopenid/signin.html'):
                         )
 
             elif login_form.cleaned_data['login_type'] == 'cas':
-                from askbot.deps.django_authopenid.providers.cas import CASLoginProvider
+                from askbot.deps.django_authopenid.providers.cas_provider import CASLoginProvider
                 provider = CASLoginProvider(success_redirect_url=next_url)
                 request.session['next_url'] = next_url
                 return HttpResponseRedirect(provider.get_login_url())
@@ -824,15 +823,12 @@ def show_signin_view(
 
     have_buttons = True
     if (len(active_provider_names) == 1 and active_provider_names[0] == 'local'):
-        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN == True:
-            #in this case the form is not using javascript, so set initial values
-            #here
-            have_buttons = False
-            login_form.initial['login_provider_name'] = 'local'
-            if request.user.is_authenticated():
-                login_form.initial['password_action'] = 'change_password'
-            else:
-                login_form.initial['password_action'] = 'login'
+        have_buttons = False
+        login_form.initial['login_provider_name'] = 'local'
+        if request.user.is_authenticated():
+            login_form.initial['password_action'] = 'change_password'
+        else:
+            login_form.initial['password_action'] = 'login'
 
     data['have_buttons'] = have_buttons
 
