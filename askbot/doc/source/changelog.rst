@@ -4,6 +4,7 @@ Changes in Askbot
 Development version (not released)
 ----------------------------------
 * Added option to close new account registrations
+* Added support of CAS protocol
 
 0.7.54 (Oct 14, 2014
 ----------------------------------
