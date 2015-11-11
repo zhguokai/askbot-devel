@@ -633,3 +633,30 @@ class DumpYamlTest(UnitTestCase):
         actual = yaml.splitlines()
 
         self.assertEqual(actual, expected)
+
+    def testLanguageSettingsSeparated(self):
+        settings = [
+            {
+                'group': 'QA_SITE_SETTINGS',
+                'key': 'LOGIN_SIGNUP_LINK_TEXT_EN',
+                'value': 'Click here to sign in or register',
+            },
+            {
+                'group': 'QA_SITE_SETTINGS',
+                'key': 'LOGIN_SIGNUP_LINK_TEXT_FR',
+                'value': 'Bonjour, veuillez vous connecter',
+            },
+        ]
+
+        yaml = dump_yaml(settings)
+
+        expected = [
+            '# QA_SITE_SETTINGS',
+            'LOGIN_SIGNUP_LINK_TEXT:',
+            '  en: Click here to sign in or register',
+            '  fr: Bonjour, veuillez vous connecter',
+        ]
+
+        actual = yaml.splitlines()
+
+        self.assertEqual(actual, expected)

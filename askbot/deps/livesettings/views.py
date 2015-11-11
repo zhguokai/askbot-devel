@@ -1,3 +1,4 @@
+from django.conf import settings as django_settings
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
@@ -131,6 +132,8 @@ def dump_yaml(settings):
 
         objects = {s['key']: s['value'] for s in grouped_settings[group]}
 
+        objects = _create_language_hierarchy(objects)
+
         buffer.write(yaml.dump(objects, default_flow_style=False,
                                Dumper=yaml.SafeDumper))
 
@@ -140,6 +143,23 @@ def dump_yaml(settings):
     buffer.close()
 
     return output
+
+
+def _create_language_hierarchy(objects):
+    # TODO: This is askbot specific so should be outside of livesettings
+    tree = {}
+
+    language_codes = [l[0].upper() for l in django_settings.LANGUAGES]
+
+    for (name, value) in objects.iteritems():
+        name_pieces = name.rsplit('_', 1)
+        if len(name_pieces) == 2 and name_pieces[1] in language_codes:
+            tree.setdefault(name_pieces[0], {})
+            tree[name_pieces[0]][name_pieces[1].lower()] = value
+        else:
+            tree[name] = value
+
+    return tree
 
 export_as_python = never_cache(staff_member_required(export_as_python))
 export_as_yaml = never_cache(staff_member_required(export_as_yaml))
