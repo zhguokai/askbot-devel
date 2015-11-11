@@ -10,6 +10,7 @@ from askbot.deps.livesettings.overrides import get_overrides
 from django.contrib import messages
 
 import logging
+import StringIO
 import yaml
 
 log = logging.getLogger('configuration.views')
@@ -119,10 +120,26 @@ def export_as_yaml(request):
 
 
 def dump_yaml(settings):
-    objects = {s['key']: s['value'] for s in settings}
+    grouped_settings = {}
+    for setting in settings:
+        grouped_settings.setdefault(setting['group'], []).append(setting)
 
-    return yaml.dump(objects, default_flow_style=False, Dumper=yaml.SafeDumper)
+    buffer = StringIO.StringIO()
 
+    for group in sorted(grouped_settings.keys()):
+        buffer.write('# %s\n' % group)
+
+        objects = {s['key']: s['value'] for s in grouped_settings[group]}
+
+        buffer.write(yaml.dump(objects, default_flow_style=False,
+                               Dumper=yaml.SafeDumper))
+
+        buffer.write('\n')
+
+    output = buffer.getvalue().rstrip()
+    buffer.close()
+
+    return output
 
 export_as_python = never_cache(staff_member_required(export_as_python))
 export_as_yaml = never_cache(staff_member_required(export_as_yaml))

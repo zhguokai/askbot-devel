@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.utils.unittest.case import TestCase as UnitTestCase
 import keyedcache
 from askbot.deps.livesettings import *
-from askbot.deps.livesettings.views import export_as_yaml
+from askbot.deps.livesettings.views import export_as_yaml, dump_yaml
 import logging
 from mock import Mock
 import yaml
@@ -575,9 +575,6 @@ class ExportTest(TestCase):
         request = Mock()
         response = export_as_yaml(request)
 
-        self.assertEqual(response.content,
-                         'REPLY_BY_EMAIL_HOSTNAME: m.knowledgepoint.org\n')
-
         config = yaml.load(response.content)
 
         self.assertEqual(config['REPLY_BY_EMAIL_HOSTNAME'],
@@ -598,3 +595,41 @@ class ExportTest(TestCase):
 
         self.assertEqual(config['REPLY_BY_EMAIL_HOSTNAME'],
                          'm.knowledgepoint.org')
+
+
+class DumpYamlTest(UnitTestCase):
+    def testOrderedByGroup(self):
+        settings = [
+            {
+                'group': 'EMAIL',
+                'key': 'REPLY_BY_EMAIL',
+                'value': True,
+            },
+            {
+                'group': 'EMAIL_TEXT',
+                'key': 'EMAIL_TEXT_SHORT_WELCOME',
+                'value': 'Welcome',
+            },
+            {
+                'group': 'EXTERNAL_KEYS',
+                'key': 'GOOGLE_ANALYTICS_KEY',
+                'value': 'abc1234567',
+            },
+        ]
+
+        yaml = dump_yaml(settings)
+
+        expected = [
+            '# EMAIL',
+            'REPLY_BY_EMAIL: true',
+            '',
+            '# EMAIL_TEXT',
+            'EMAIL_TEXT_SHORT_WELCOME: Welcome',
+            '',
+            '# EXTERNAL_KEYS',
+            'GOOGLE_ANALYTICS_KEY: abc1234567',
+        ]
+
+        actual = yaml.splitlines()
+
+        self.assertEqual(actual, expected)
