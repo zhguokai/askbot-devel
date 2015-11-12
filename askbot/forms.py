@@ -1137,6 +1137,10 @@ class CreateQuestionWidgetForm(forms.Form, FormWithHideableFields):
         required=False
     )
 
+    site = forms.ModelChoiceField(queryset=Site.objects.all(),
+                                  widget=HiddenInput,
+                                  required=False)
+
     def __init__(self, *args, **kwargs):
         from askbot.models import Group
         super(CreateQuestionWidgetForm, self).__init__(*args, **kwargs)
