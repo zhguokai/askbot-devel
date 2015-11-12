@@ -19,7 +19,7 @@ from django.utils.translation import get_language
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from django_countries import countries 
+from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
@@ -1106,6 +1106,10 @@ class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
                         required=False
                     )
 
+    site = forms.ModelChoiceField(queryset=Site.objects.all(),
+                                  widget=HiddenInput,
+                                  required=False)
+
     def __init__(self, *args, **kwargs):
         from askbot.models import Group, Tag
         super(CreateAskWidgetForm, self).__init__(*args, **kwargs)
@@ -1846,7 +1850,7 @@ class MultiSiteRepostThreadForm(forms.Form):
         #1) collect site ids with which thread is shared
         shared_site_ids = set()
         for site_id in all_site_ids:
-            key = 'site_%d' % site_id 
+            key = 'site_%d' % site_id
             if self.cleaned_data.get(key):
                 shared_site_ids.add(site_id)
 
@@ -1865,7 +1869,7 @@ class MultiSiteRepostThreadForm(forms.Form):
 
 class SubscribeForSitesForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user') 
+        self.user = kwargs.pop('user')
         site_ids = kwargs.pop('site_ids', None)
         super(SubscribeForSitesForm, self).__init__(*args, **kwargs)
 
@@ -1875,7 +1879,7 @@ class SubscribeForSitesForm(forms.Form):
             if current_id in site_ids:
                 site_ids.remove(current_id)
             site_ids.insert(0, current_id)
-            
+
         from askbot.models.spaces import get_site_name
         for site_id in site_ids:
             #create fields for each site
