@@ -1,3 +1,4 @@
+from django.conf import settings as django_settings
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
@@ -8,9 +9,13 @@ from askbot.deps.livesettings import ConfigurationSettings, forms
 from askbot.deps.livesettings import ImageValue
 from askbot.deps.livesettings.overrides import get_overrides
 from django.contrib import messages
+
 import logging
+import StringIO
+import yaml
 
 log = logging.getLogger('configuration.views')
+
 
 def group_settings(request, group, template='livesettings/group_settings.html'):
     # Determine what set of settings this editor is used for
@@ -102,4 +107,59 @@ def export_as_python(request):
 
     return render_to_response('livesettings/text.txt', { 'text' : pretty }, mimetype='text/plain')
 
+
+def export_as_yaml(request):
+    from askbot.deps.livesettings.models import Setting, LongSetting
+
+    settings = list(Setting.objects.all().values('group', 'key', 'value'))
+    long_settings = list(LongSetting.objects.all().values('group', 'key', 'value'))
+    result = dump_yaml(settings + long_settings)
+
+    return render_to_response(
+        'livesettings/text.txt', {'text': result}, mimetype='text/plain'
+    )
+
+
+def dump_yaml(settings):
+    grouped_settings = {}
+    for setting in settings:
+        grouped_settings.setdefault(setting['group'], []).append(setting)
+
+    buffer = StringIO.StringIO()
+
+    for group in sorted(grouped_settings.keys()):
+        buffer.write('# %s\n' % group)
+
+        objects = {s['key']: s['value'] for s in grouped_settings[group]}
+
+        objects = _create_language_hierarchy(objects)
+
+        buffer.write(yaml.dump(objects, default_flow_style=False,
+                               Dumper=yaml.SafeDumper))
+
+        buffer.write('\n')
+
+    output = buffer.getvalue().rstrip()
+    buffer.close()
+
+    return output
+
+
+def _create_language_hierarchy(objects):
+    # TODO: This is askbot specific so should be outside of livesettings
+    tree = {}
+
+    language_codes = [l[0].upper() for l in django_settings.LANGUAGES]
+
+    for (name, value) in objects.iteritems():
+        name_pieces = name.rsplit('_', 1)
+        if len(name_pieces) == 2 and name_pieces[1] in language_codes:
+            tree.setdefault(name_pieces[0], {})
+            tree[name_pieces[0]][name_pieces[1].lower()] = value
+        else:
+            tree[name] = value
+
+    return tree
+
 export_as_python = never_cache(staff_member_required(export_as_python))
+export_as_yaml = never_cache(staff_member_required(export_as_yaml))

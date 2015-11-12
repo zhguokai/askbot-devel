@@ -1,9 +1,15 @@
 from django.conf import settings as djangosettings
 from django.test import TestCase
+from django.utils.unittest.case import TestCase as UnitTestCase
 import keyedcache
 from askbot.deps.livesettings import *
+from askbot.deps.livesettings.views import export_as_yaml, dump_yaml
 import logging
+from mock import Mock
+import yaml
+
 log = logging.getLogger('test');
+
 
 class ConfigurationFunctionTest(TestCase):
 
@@ -543,3 +549,114 @@ class OverrideTest(TestCase):
         self.assertEqual(v[0], "one")
         self.assertEqual(v[1], "two")
         self.assertEqual(v[2], "three")
+
+
+class ExportTest(TestCase):
+    def setUp(self):
+        GENERAL_SKIN_SETTINGS = ConfigurationGroup(
+            'GENERAL_SKIN_SETTINGS',
+            'Skins settings'
+        )
+
+        config_register(StringValue(
+            GENERAL_SKIN_SETTINGS,
+            'ASKBOT_DEFAULT_SKIN',
+            default='default'
+        ))
+
+    def testStringExported(self):
+        value = StringValue(
+            BASE_GROUP,
+            'REPLY_BY_EMAIL_HOSTNAME')
+
+        setting = value.make_setting('m.knowledgepoint.org')
+        setting.save()
+
+        request = Mock()
+        response = export_as_yaml(request)
+
+        config = yaml.load(response.content)
+
+        self.assertEqual(config['REPLY_BY_EMAIL_HOSTNAME'],
+                         'm.knowledgepoint.org')
+
+    def testLongStringExported(self):
+        value = LongStringValue(
+            BASE_GROUP,
+            'REPLY_BY_EMAIL_HOSTNAME')
+
+        setting = value.make_setting('m.knowledgepoint.org')
+        setting.save()
+
+        request = Mock()
+        response = export_as_yaml(request)
+
+        config = yaml.load(response.content)
+
+        self.assertEqual(config['REPLY_BY_EMAIL_HOSTNAME'],
+                         'm.knowledgepoint.org')
+
+
+class DumpYamlTest(UnitTestCase):
+    def testOrderedByGroup(self):
+        settings = [
+            {
+                'group': 'EMAIL',
+                'key': 'REPLY_BY_EMAIL',
+                'value': True,
+            },
+            {
+                'group': 'EMAIL_TEXT',
+                'key': 'EMAIL_TEXT_SHORT_WELCOME',
+                'value': 'Welcome',
+            },
+            {
+                'group': 'EXTERNAL_KEYS',
+                'key': 'GOOGLE_ANALYTICS_KEY',
+                'value': 'abc1234567',
+            },
+        ]
+
+        yaml = dump_yaml(settings)
+
+        expected = [
+            '# EMAIL',
+            'REPLY_BY_EMAIL: true',
+            '',
+            '# EMAIL_TEXT',
+            'EMAIL_TEXT_SHORT_WELCOME: Welcome',
+            '',
+            '# EXTERNAL_KEYS',
+            'GOOGLE_ANALYTICS_KEY: abc1234567',
+        ]
+
+        actual = yaml.splitlines()
+
+        self.assertEqual(actual, expected)
+
+    def testLanguageSettingsSeparated(self):
+        settings = [
+            {
+                'group': 'QA_SITE_SETTINGS',
+                'key': 'LOGIN_SIGNUP_LINK_TEXT_EN',
+                'value': 'Click here to sign in or register',
+            },
+            {
+                'group': 'QA_SITE_SETTINGS',
+                'key': 'LOGIN_SIGNUP_LINK_TEXT_FR',
+                'value': 'Bonjour, veuillez vous connecter',
+            },
+        ]
+
+        yaml = dump_yaml(settings)
+
+        expected = [
+            '# QA_SITE_SETTINGS',
+            'LOGIN_SIGNUP_LINK_TEXT:',
+            '  en: Click here to sign in or register',
+            '  fr: Bonjour, veuillez vous connecter',
+        ]
+
+        actual = yaml.splitlines()
+
+        self.assertEqual(actual, expected)
