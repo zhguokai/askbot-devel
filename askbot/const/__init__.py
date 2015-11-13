@@ -201,8 +201,8 @@ TYPE_ACTIVITY_ASK_TO_JOIN_GROUP = 30
 TYPE_ACTIVITY_MODERATION_ALERT_SENT = 31
 #TYPE_ACTIVITY_EDIT_QUESTION = 17
 #TYPE_ACTIVITY_EDIT_ANSWER = 18
-TYPE_ACTIVITY_POST_SHARED_WITH_SPACE = 31
 TYPE_ACTIVITY_POST_UNSHARED_WITH_SPACE = 32
+TYPE_ACTIVITY_POST_SHARED_WITH_SPACE = 33
 
 #todo: rename this to TYPE_ACTIVITY_CHOICES
 TYPE_ACTIVITY = (
@@ -260,8 +260,8 @@ TYPE_ACTIVITY = (
         TYPE_ACTIVITY_VALIDATION_EMAIL_SENT,
         'sent email address validation message'#don't translate, internal
     ),
-    (TYPE_ACTIVITY_POST_SHARED_WITH_SPACE, _('a post was shared with Space')), 
-    (TYPE_ACTIVITY_POST_UNSHARED_WITH_SPACE, _('a post was un-shared with Space')), 
+    (TYPE_ACTIVITY_POST_SHARED_WITH_SPACE, _('a post was shared with Space')),
+    (TYPE_ACTIVITY_POST_UNSHARED_WITH_SPACE, _('a post was un-shared with Space')),
     (
         TYPE_ACTIVITY_MODERATION_ALERT_SENT,
         'sent moderation alert'#don't translate, internal
