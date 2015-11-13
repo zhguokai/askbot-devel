@@ -6,7 +6,6 @@ from askbot import const
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
         # There was a clash of Activity IDs when these two commits were merged:
         # 8734b76746eed5a09f6823b5bc1dc0950b7c2d29
         # 5d575b7dcd10c29c0d1946dd9a6d415501a90809
