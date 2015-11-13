@@ -246,7 +246,7 @@ def user_moderate(request, subject, context):
     """
     moderator = request.user
 
-    if moderator.is_authenticated() and not moderator.can_moderate_user(subject):
+    if not (moderator.is_authenticated() and moderator.can_moderate_user(subject)):
         raise Http404
 
     user_rep_changed = False
