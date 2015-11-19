@@ -22,6 +22,7 @@ from askbot.deps.livesettings.overrides import get_overrides
 from askbot.deps.livesettings.utils import load_module, is_string_like, is_list_or_tuple
 from askbot.deps.livesettings.widgets import ImageInput
 from askbot.utils.functions import format_setting_name
+from collections import OrderedDict
 import datetime
 import logging
 import signals
@@ -290,10 +291,10 @@ class Value(object):
 
     def make_fields(self, **kwargs):
         if self.localized:
-            langs_dict = SortedDict(django_settings.LANGUAGES)
+            langs_dict = OrderedDict(django_settings.LANGUAGES)
             default_code = django_settings.LANGUAGE_CODE
             default_name = langs_dict[default_code]
-            langs_dict.insert(0, default_code, default_name)
+            langs_dict[0] = default_code, default_name
             langs = langs_dict.keys()
         else:
             langs = (django_settings.LANGUAGE_CODE,)
