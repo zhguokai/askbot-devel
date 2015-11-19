@@ -26,6 +26,6 @@ pyjwt
 pystache==0.3.1
 python-cas
 python-openid
-pytz==2013b
+pytz
 sanction==0.3.1
 unidecode

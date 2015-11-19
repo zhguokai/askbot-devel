@@ -35,7 +35,7 @@ REQUIREMENTS = {
     'picklefield': 'django-picklefield==0.3.0',
     'jwt': 'pyjwt',
     'pystache': 'pystache==0.3.1',
-    'pytz': 'pytz==2013b',
+    'pytz': 'pytz',
     'captcha': 'django-recaptcha>=1.0.3',
     'cas': 'python-cas==1.1.0',
     'requirements': 'requirements-parser',
