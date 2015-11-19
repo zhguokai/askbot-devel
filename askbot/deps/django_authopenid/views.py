@@ -359,6 +359,20 @@ def complete_cas_signin(request):
                         provider_name='cas'
                        )
 
+    #additional user filtering is temporary, to be re-implemented
+    #after signin protocols are factored into specialized authentication
+    #backends
+    user_filter_path = getattr(django_settings, 'ASKBOT_CAS_USER_FILTER', None)
+    if user_filter_path:
+        user_filter_func = load_module(user_filter_path)
+        if user_filter_func(username) == False:
+            #de-authenticate the user
+            user = None
+            deny_msg = getattr(django_settings, 'ASKBOT_CAS_USER_FILTER_DENIED_MSG', None)
+            if deny_msg:
+                request.user.message_set.create(message=deny_msg)
+                return HttpResponseRedirect(next_url)
+
     #request.session['email'] = is is possible to get email from attributes?
     request.session['username'] = username
 
