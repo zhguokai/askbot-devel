@@ -2,6 +2,7 @@ from askbot.deps.django_authopenid.protocols.base import BaseProtocol
 from askbot.conf import settings as askbot_settings
 from askbot.utils.html import site_url
 from cas import CASClient
+from django.conf import settings as django_settings
 from django.core.urlresolvers import reverse
 import urllib
 
@@ -12,6 +13,11 @@ class CASLoginProvider(BaseProtocol):
         self.protocol_type = 'cas'
         self.display_name = askbot_settings.CAS_SERVER_NAME
         self.icon_media_path = askbot_settings.CAS_LOGIN_BUTTON
+        self.one_click_registration = getattr(
+                                        django_settings,
+                                        'ASKBOT_CAS_ONE_CLICK_REGISTRATION_ENABLED',
+                                        False
+                                             )
         self.client = CASClient(
                                 version=askbot_settings.CAS_PROTOCOL_VERSION,
                                 server_url=askbot_settings.CAS_SERVER_URL,

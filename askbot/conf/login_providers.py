@@ -117,6 +117,7 @@ if module_exists('cas'):
             url_resolver=skin_utils.get_media_url
         )
     )
+
 """
     settings.register(
         livesettings.BooleanValue(
