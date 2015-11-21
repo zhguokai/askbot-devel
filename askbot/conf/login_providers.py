@@ -94,6 +94,14 @@ if module_exists('cas'):
     settings.register(
         livesettings.StringValue(
             LOGIN_PROVIDERS,
+            'CAS_SERVER_NAME',
+            default='CAS Server',
+            description=_('CAS server name')
+        )
+    )
+    settings.register(
+        livesettings.StringValue(
+            LOGIN_PROVIDERS,
             'CAS_PROTOCOL_VERSION',
             default='3',
             choices=(('1', '1'), ('2', '2'), ('3', '3')),

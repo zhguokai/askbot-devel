@@ -10,7 +10,7 @@ class CASLoginProvider(BaseProtocol):
     def __init__(self, success_redirect_url=None):
         self.name = 'cas'
         self.protocol_type = 'cas'
-        self.display_name = 'CAS'
+        self.display_name = askbot_settings.CAS_SERVER_NAME
         self.icon_media_path = askbot_settings.CAS_LOGIN_BUTTON
         self.client = CASClient(
                                 version=askbot_settings.CAS_PROTOCOL_VERSION,
