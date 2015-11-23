@@ -115,7 +115,8 @@ var CPValidator = function() {
                     minlength: askbot['settings']['minQuestionBodyLength']
                 },
                 title: {
-                    minlength: askbot['settings']['minTitleLength']
+                    minlength: askbot['settings']['minTitleLength'],
+                    required: true
                 }
             };
         },
@@ -146,7 +147,7 @@ var CPValidator = function() {
                                         '%(question)s must have > %(length)s characters',
                                         askbot['settings']['minTitleLength']
                                     ),
-                                    { 
+                                    {
                                         'question': askbot['messages']['questionSingular'],
                                         'length': askbot['settings']['minTitleLength']
                                     },
@@ -196,7 +197,7 @@ inherits(ThreadUsersDialog, SimpleControl);
 
 ThreadUsersDialog.prototype.setHeadingText = function(text) {
     this._heading_text = text;
-};  
+};
 
 ThreadUsersDialog.prototype.setDeletable = function(isDeletable) {
     this._isDeletable = isDeletable;
@@ -368,7 +369,7 @@ MergeQuestionsDialog.prototype.getStartMergingHandler = function() {
             url: askbot['urls']['mergeQuestions'],
             data: JSON.stringify({
                 from_id: me.getFromId(),
-                to_id: me.getToId() 
+                to_id: me.getToId()
             }),
             success: function(data) {
                 window.location.reload();
@@ -1165,7 +1166,7 @@ var Vote = function(){
         //_('anonymous users cannot flag offensive posts') + pleaseLogin;
         if (data.success == "1"){
             if(data.count > 0){
-                $(object).children('span[class="darkred"]').text("("+ data.count +")");                
+                $(object).children('span[class="darkred"]').text("("+ data.count +")");
             }
             else{
                 $(object).children('span[class="darkred"]').text("");
@@ -1206,7 +1207,7 @@ var Vote = function(){
             var remove_own = $(object).siblings('span.offensive-flag[id*="-offensive-remove-flag-"]');
             $(remove_own).find("a.question-flag").html(gettext("flag offensive"));
             $(remove_own).attr("id", $(remove_own).attr("id").replace("remove-flag-", "flag-"));
-            
+
             $(object).next("span.sep").remove();
             $(object).remove();
 
@@ -1748,7 +1749,7 @@ DeletePostLink.prototype.getDeleteHandler = function(){
     return function(){
         var data = {
             'post_id': me.getPostId(),
-            //todo rename cancel_vote -> undo 
+            //todo rename cancel_vote -> undo
             'cancel_vote': me.isPostDeleted() ? true: false
         };
         $.ajax({
@@ -1779,7 +1780,7 @@ DeletePostLink.prototype.decorate = function(element){
  * Form for editing and posting new comment
  * supports 3 editors: markdown, tinymce and plain textarea.
  * There is only one instance of this form in use on the question page.
- * It can be attached to any comment on the page, or to a new blank 
+ * It can be attached to any comment on the page, or to a new blank
  * comment.
  */
 var EditCommentForm = function(){
@@ -2061,7 +2062,7 @@ EditCommentForm.prototype.createDom = function(){
 
     /** a stub container for the editor */
     this._editorBox = div;
-    /** 
+    /**
      * editor itself will live at this._editor
      * and will be initialized by the attachTo()
      */
@@ -2294,7 +2295,7 @@ Comment.prototype.decorate = function(element){
 
     var convert_link = this._element.find('form.convert-comment');
     if (this._is_convertible){
-        this._convert_link = new CommentConvertLink(comment_id); 
+        this._convert_link = new CommentConvertLink(comment_id);
         this._convert_link.decorate(convert_link);
     }
 
@@ -2378,7 +2379,7 @@ Comment.prototype.setContent = function(data){
         var voteElement = vote.getElement();
 
         votesBox.append(vote.getElement());
-    } 
+    }
 
     // 2) create the comment content container
     if (this._contentBox === undefined) {
@@ -2459,7 +2460,7 @@ Comment.prototype.setContent = function(data){
         if (this._convert_link !== undefined) {
             this._convert_link.dispose();
         }
-        this._convert_link = new CommentConvertLink(this._data['id']); 
+        this._convert_link = new CommentConvertLink(this._data['id']);
         this._comment_body.append(this._convert_link.getElement());
     }
     this._blank = false;
@@ -2965,7 +2966,7 @@ FoldedEditor.prototype.getOpenHandler = function() {
             /* external trigger is a clickable target
             * placed outside of the this._element
             * that will cause the editor to unfold
-            */       
+            */
             if (externalTrigger) {
                 var label = me.makeElement('label');
                 label.html(externalTrigger.html());
@@ -3212,7 +3213,7 @@ TinyMCE.prototype.focus = function(onFocus) {
     //@todo: the fallacy of this method is timeout - should instead use queue
     //because at the time of calling focus() the editor may not be initialized yet
     setTimeout(
-        function() { 
+        function() {
             tinyMCE.execCommand('mceFocus', false, editorId);
 
             //@todo: make this general to all editors
@@ -3417,7 +3418,7 @@ EditableTextAttribute.prototype.saveData = function(){
 };
 
 EditableTextAttribute.prototype.cancelEdit = function(){
-    this.restoreContent(); 
+    this.restoreContent();
     this.setState('display');
 };
 
@@ -3433,9 +3434,9 @@ EditableTextAttribute.prototype.updateEditBtnText = function() {
 };
 
 EditableTextAttribute.prototype.decorate = function(element){
-    /* expect markup structure: 
+    /* expect markup structure:
      *   <div data-object-name="Group" #db object name, assuming askbot app, otherwise use e.g. auth.User
-     *      data-object-id="5" #db object id 
+     *      data-object-id="5" #db object id
      *      data-attribute-name="description__text" #django lookup path relative to model
      *      data-empty-btn-text="add description" #show on edit button when text content is empty
      *      data-full-btn-text="edit description" #show on edit button when content is not empty
@@ -3444,7 +3445,7 @@ EditableTextAttribute.prototype.decorate = function(element){
      *       <a class="edit-btn"/> #if button is missing field is not editable
      *       #do not add text to the button, it's added by js
      *   </div>
-     * and in this case in the database backend we use object 
+     * and in this case in the database backend we use object
      * models.Group with id=5 and property models.Group.description.text
      * save and cancel buttons are added by js
      */
@@ -4061,7 +4062,7 @@ TagEditor.prototype.getTagInputKeyHandler = function() {
         } else {
             try {
                 /* do-nothing validation here
-                 * just to report any errors while 
+                 * just to report any errors while
                  * the user is typing */
                 me.cleanTag(text);
                 me.clearErrorMessage();
@@ -4069,7 +4070,7 @@ TagEditor.prototype.getTagInputKeyHandler = function() {
                 me.setErrorMessage(error);
             }
         }
-        
+
         //8 is backspace
         if (key == 8 && text.length == 0) {
             if (me.hasHotBackspace() === true) {
@@ -4336,7 +4337,7 @@ Category.prototype.addControls = function() {
 
     var edit_button = this.makeButton(
         gettext('edit'),
-        function(){ 
+        function(){
             //todo: I would like to make only one at a time editable
             //var tree = me.getCategoryTree();
             //tree.closeAllEditors();
@@ -4522,7 +4523,7 @@ CategoryAdder.prototype.createDom = function() {
     )
     setupButtonEventHandlers(
         save_button,
-        function() { 
+        function() {
             me.startAdding();
             return false;//prevent form submit
         }
@@ -4775,7 +4776,7 @@ CategorySelector.prototype.getSelectBox = function(level) {
 
 CategorySelector.prototype.getSelectedPath = function(selected_level) {
     var path = [0];//root, todo: better use names for path???
-    /* 
+    /*
      * upper limit capped by current clicked level
      * we ignore all selection above the current level
      */
@@ -5156,7 +5157,7 @@ $(document).ready(function() {
             var tip = new LabeledInput();
             tip.decorate(proxyUserEmailInput);
         }
-        
+
     }
     var editSummaryInput = $('#id_summary');
     if (editSummaryInput.length > 0) {
@@ -5292,8 +5293,8 @@ $(document).ready(function() {
         var mergeQuestions = new MergeQuestionsDialog();
         $(document).append(mergeQuestions.getElement());
         var mergeBtn = $('.question-merge');
-        setupButtonEventHandlers(mergeBtn, function() { 
-            mergeQuestions.show(); 
+        setupButtonEventHandlers(mergeBtn, function() {
+            mergeQuestions.show();
         });
     }
 });
