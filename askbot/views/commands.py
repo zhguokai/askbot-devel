@@ -1811,4 +1811,4 @@ def toggle_subscribed_site(request):
             is_subscribed = True
         return {'is_enabled': is_subscribed}
     else:
-        raise HttpResponseBadRequest('bad post data')
+        raise exceptions.ValidationError('bad post data')
