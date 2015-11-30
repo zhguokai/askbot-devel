@@ -27,7 +27,7 @@ oauth2
 pyjwt
 pystache==0.3.1
 python-openid
-pytz==2013b
+pytz
 requirements-parser
 sanction==0.3.1
 simplejson==simplejson
