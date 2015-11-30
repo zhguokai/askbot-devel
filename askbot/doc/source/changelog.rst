@@ -1,12 +1,12 @@
 Changes in Askbot
 =================
 
-Development version (not released)
-----------------------------------
+0.7.55 (Nov 30, 2015)
+---------------------
 * Added option to close new account registrations
 * Added support of CAS protocol
 
-0.7.54 (Oct 14, 2014
+0.7.54 (Oct 14, 2015)
 ----------------------------------
 * Added management command `askbot_rebuild_avatars`
 * Added option to choose gravatar or default avatar for new users
