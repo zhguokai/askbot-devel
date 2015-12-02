@@ -12,6 +12,7 @@ from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from askbot import models
 from askbot import const
+from askbot.deps.django_authopenid.models import UserEmailVerifier
 
 
 admin.site.register(models.Vote)
@@ -19,6 +20,10 @@ admin.site.register(models.FavoriteQuestion)
 admin.site.register(models.Award)
 admin.site.register(models.Repute)
 admin.site.register(models.BulkTagSubscription)
+
+class UserEmailVerifierAdmin(admin.ModelAdmin):
+    list_display = ('key', 'verified', 'expires_on')
+admin.site.register(UserEmailVerifier, UserEmailVerifierAdmin)
 
 class InSite(SimpleListFilter):
     title = 'site membership'
