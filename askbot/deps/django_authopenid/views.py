@@ -1219,7 +1219,7 @@ def register_with_password(request):
             request.session['username'] = username
             request.session['email'] = email
             request.session['password'] = password
-            #todo: generate a key and save it in the session
+            # Generate a key and save it in the session
             key = generate_random_key()
             email = request.session['email']
             send_email_key(email, key, handler_url_name='verify_email_and_register')

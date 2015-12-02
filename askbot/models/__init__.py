@@ -1012,11 +1012,9 @@ def user_assert_can_edit_post(self, post = None):
     """assertion that raises exceptions.PermissionDenied
     when user is not authorised to edit this post
     """
-
     if post.deleted == True:
         self.assert_can_edit_deleted_post(post)
         return
-
 
     if post.wiki == True:
         action_display=_('edit wiki posts')
@@ -2602,7 +2600,7 @@ def user_get_primary_group(self):
     return None
 
 def user_can_make_group_private_posts(self):
-    """simplest implementation: user belongs to at least one group"""
+    """Returns True only if user belongs to a custom group"""
     return (self.get_primary_group() != None)
 
 def user_get_group_membership(self, group):
