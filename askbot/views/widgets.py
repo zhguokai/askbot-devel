@@ -295,10 +295,12 @@ def question_widget(request, widget_id):
     if widget.search_query:
         filter_params['title__icontains'] = widget.search_query
 
-    if filter_params:
-        threads = models.Thread.objects.filter(**filter_params).order_by(widget.order_by)[:widget.question_number]
-    else:
-        threads = models.Thread.objects.all().order_by(widget.order_by)[:widget.question_number]
+    # Get all Threads that should be visible to the user ...
+    threads = models.Thread.objects.all().get_visible(request.user)
+    # filter by our widget parameters ...
+    threads = threads.filter(**filter_params)
+    # and then order and truncate the set.
+    threads = threads.order_by(widget.order_by)[:widget.question_number]
 
     data = {
              'threads': threads,
