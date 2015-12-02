@@ -1,9 +1,11 @@
 from askbot.conf import settings as askbot_settings
 from askbot import const
+from askbot import is_multilingual as askbot_is_multilingual
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
 from askbot.utils.html import get_soup
 from askbot.models import get_feed_url, Feed
+from django.conf import settings as django_settings
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
 
@@ -15,13 +17,21 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         askbot_settings.update('GROUPS_ENABLED', True)
         self.user = self.create_user('user')
         self.group = models.Group.objects.create(
-                        name='the group', openness=models.Group.OPEN
+                        name='user\'s group', openness=models.Group.OPEN
                     )
         self.user.join_group(self.group)
+        # Since May 2013, user must have a primary group in order to post privately
+        self.user.askbot_profile.primary_group = self.group
+        self.user.askbot_profile.save()
+        self.q_target_group = models.Group.objects.create(
+                        name='question target group', openness=models.Group.OPEN
+                    )
         self.qdata = {
             'title': 'test question title',
-            'text': 'test question text'
+            'text': 'test question text',
         }
+        if askbot_is_multilingual():
+            self.qdata['language'] = django_settings.LANGUAGE_CODE 
         self.client.login(user_id=self.user.id, method='force')
 
     def tearDown(self):
@@ -30,14 +40,14 @@ class PrivateQuestionViewsTests(AskbotTestCase):
     def test_post_private_question(self):
         data = self.qdata
         data['post_privately'] = 'checked'
-        response1 = self.client.post(get_feed_url('ask'), data=data)
-        response2 = self.client.get(response1['location'])
-        dom = get_soup(response2.content)
+        response = self.client.post(get_feed_url('ask'), data=data, follow=True)
+
+        question = models.Thread.objects.get()
+        self.assertTrue(question.is_private())
+        dom = get_soup(response.content)
         title = dom.find('h1').text
         self.assertTrue(unicode(const.POST_STATUS['private']) in title)
-        question = models.Thread.objects.get()
         self.assertEqual(question.title, self.qdata['title'])
-        self.assertFalse(models.Group.objects.get_global_group() in set(question.groups.all()))
 
         #private question is not accessible to unauthorized users
         self.client.logout()
@@ -53,22 +63,25 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         response = self.client.get(self.user.get_profile_url())
         self.assertFalse(self.qdata['title'] in response.content)
 
-    def test_publish_private_question(self):
+
+    def test_publicise_private_question(self):
         question = self.post_question(user=self.user, is_private=True)
+        self.assertTrue(question.is_private())
         title = question.thread.get_title()
         self.assertTrue(unicode(const.POST_STATUS['private']) in title)
+
         data = self.qdata
-        #data['post_privately'] = 'false'
         data['select_revision'] = 'false'
         data['text'] = 'edited question text'
         response1 = self.client.post(
             reverse('edit_question', kwargs={'id':question.id}),
             data=data
         )
+
+        self.assertFalse(question.is_private())
         response2 = self.client.get(question.get_absolute_url())
         dom = get_soup(response2.content)
         title = dom.find('h1').text
-        self.assertTrue(models.Group.objects.get_global_group() in set(question.groups.all()))
         self.assertEqual(title, self.qdata['title'])
 
         self.client.logout()
@@ -77,8 +90,10 @@ class PrivateQuestionViewsTests(AskbotTestCase):
 
     def test_privatize_public_question(self):
         question = self.post_question(user=self.user)
+        self.assertFalse(question.is_private())
         title = question.thread.get_title()
         self.assertFalse(unicode(const.POST_STATUS['private']) in title)
+
         data = self.qdata
         data['post_privately'] = 'checked'
         data['select_revision'] = 'false'
@@ -86,14 +101,17 @@ class PrivateQuestionViewsTests(AskbotTestCase):
             reverse('edit_question', kwargs={'id':question.id}),
             data=data
         )
+
+        self.assertTrue(question.is_private())
         response2 = self.client.get(question.get_absolute_url())
         dom = get_soup(response2.content)
         title = dom.find('h1').text
-        self.assertFalse(models.Group.objects.get_global_group() in set(question.groups.all()))
         self.assertTrue(unicode(const.POST_STATUS['private']) in title)
 
     def test_private_checkbox_is_on_when_editing_private_question(self):
         question = self.post_question(user=self.user, is_private=True)
+        self.assertTrue(question.is_private())
+        
         response = self.client.get(
             reverse('edit_question', kwargs={'id':question.id})
         )
@@ -101,10 +119,13 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )
+        self.assertNotEqual(checkbox, None, "post_privately checkbox not found in page")
         self.assertEqual(checkbox['checked'], 'checked')
 
     def test_private_checkbox_is_off_when_editing_public_question(self):
         question = self.post_question(user=self.user)
+        self.assertFalse(question.is_private())
+
         response = self.client.get(
             reverse('edit_question', kwargs={'id':question.id})
         )
@@ -112,6 +133,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         checkbox = dom.find(
             'input', attrs={'type': 'checkbox', 'name': 'post_privately'}
         )
+        self.assertNotEqual(checkbox, None, "post_privately checkbox not found in page")
         self.assertEqual(checkbox.get('checked', False), False)
 
 
@@ -125,6 +147,9 @@ class PrivateAnswerViewsTests(AskbotTestCase):
             name='the group', openness=models.Group.OPEN
         )
         self.user.join_group(group)
+        # Since May 2013, user must have a primary group in order to post privately
+        self.user.askbot_profile.primary_group = group
+        self.user.askbot_profile.save()
         self.question = self.post_question(user=self.user)
         self.client.login(user_id=self.user.id, method='force')
 
@@ -164,6 +189,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
 
     def test_private_checkbox_is_off_when_editing_public_answer(self):
         answer = self.post_answer(question=self.question, user=self.user)
+        self.assertTrue(models.Group.objects.get_global_group() in set(answer.groups.all()))
         response = self.client.get(
             reverse('edit_answer', kwargs={'id': answer.id})
         )
@@ -173,10 +199,11 @@ class PrivateAnswerViewsTests(AskbotTestCase):
         )
         self.assertEqual(checkbox.get('checked', False), False)
 
-    def test_publish_private_answer(self):
+    def test_publicise_private_answer(self):
         answer = self.post_answer(
             question=self.question, user=self.user, is_private=True
         )
+        self.assertFalse(models.Group.objects.get_global_group() in answer.groups.all())
         self.client.post(
             reverse('edit_answer', kwargs={'id': answer.id}),
             data={'text': 'edited answer text', 'select_revision': 'false'}
@@ -190,6 +217,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
 
     def test_privatize_public_answer(self):
         answer = self.post_answer(question=self.question, user=self.user)
+        self.assertTrue(models.Group.objects.get_global_group() in answer.groups.all())
         self.client.post(
             reverse('edit_answer', kwargs={'id': answer.id}),
             data={
