@@ -1,8 +1,8 @@
 Changes in Askbot
 =================
 
-Development version (not released)
-----------------------------------
+0.10.0 (Dec 7, 2015)
+--------------------
 * Added management command `askbot_rebuild_avatars`
 * Added option to choose gravatar or default avatar for new users
 * Message on the feedback page is editable

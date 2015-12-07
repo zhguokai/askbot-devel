@@ -6,29 +6,32 @@ Always back up the database before the upgrade.
 1) Django Version support.
 --------------------------
 
-Currently Askbot supports major versions of Django `1.5` and `1.6`.
+Currently Askbot supports major versions of Django `1.5`, `1.6`, `1.7` and `1.8`,
+however - a corresponding version of Askbot must be selected for
+each version of the Django framework as shown below::
 
-This section and the "Django version upgrade" section were written
-for the near future use.
++---------------------------------+-----------------------+
+| Version of the Django framework | Version of Askbot (*) |
++=================================+=======================+
+| `1.5.x`                         | `0.7.x`               |
++---------------------------------+-----------------------+
+| `1.6.x`                         | `0.8.x` (**)          |
++---------------------------------+-----------------------+
+| `1.7.x`                         | `0.9.x`               |
++---------------------------------+-----------------------+
+| `1.8.x`                         | `0.10.x`              |
++---------------------------------+-----------------------+
 
-All releases supporting these or lower versions of the Django
-framework have major release numbers `0.6` and `0.7`.
+Note (*): select latest version of the corresponding release series,
+x means the latest minor release number.
 
-Upcoming release of Askbot supporting Django `1.7` will have
-major version `0.9`. 
+To avoid looking up the latest version within the series, use the following
+shortcut, using pip: `pip install askbot<0.9`. Here `<0.9` will
+select the latest sub-version of `0.8` series.
 
-Releases of `0.8` series will be made to allow transition
-to higher versions of Django, not for production use although
-they might just work too.
-
-The reason for this is that starting Django `1.7` 
-there is a built-in database migrations system, while before
-an external application called ``South`` was used and
-the database migration files for these 
-two systems are not compatible.
-
-In order to migrate from Django `1.6` and below,
-please read section "Django version upgrade".
+Note (**): releases of series `0.8` must be used to migrate
+From Django `1.5` and below. Read section "Django version upgrade"
+for more information.
 
 2) Upgrade of the Askbot software.
 ----------------------------------
@@ -63,6 +66,11 @@ At this point you should have a new working version of Askbot.
 
 3) Django version upgrade.
 --------------------------
+Django `1.7` came with a backwards incompatible change
+in the database migrations. Previously `South` app was used
+to make changes in the database schema and in Django `1.7` and
+later Django has it's own database migrations system.
+
 If your current version of Django is below `1.5`,
 first install Django `1.5` or `1.6`, for example:
 ``pip uninstall django`` then ``pip install django<1.7``.
