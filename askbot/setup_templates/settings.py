@@ -87,25 +87,6 @@ ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'#must be this value
 SECRET_KEY = 'sdljdfjkldsflsdjkhsjkldgjlsdgfs s '
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    #below is askbot stuff for this tuple
-    #'askbot.skins.loaders.load_template_source', #changed due to bug 97
-    'askbot.skins.loaders.filesystem_load_template_source',
-    #'django.template.loaders.eggs.load_template_source',
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.request',
-    'askbot.context.application_settings',
-    #'django.core.context_processors.i18n',
-    'askbot.user_messages.context_processors.user_messages',#must be before auth
-    'django.contrib.auth.context_processors.auth', #this is required for admin
-    'django.core.context_processors.csrf', #necessary for csrf protection
-    'askbot.deps.group_messaging.context.group_messaging_context',
-)
-
 TEMPLATES = (
     {
         'BACKEND': 'askbot.skins.template_backends.AskbotSkinTemplates',
