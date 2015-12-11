@@ -260,7 +260,7 @@ User.add_to_class(
 
 User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
-User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
+User.add_to_class('consecutive_days_visit_count', models.IntegerField(default=0))
 #list of languages for which user should receive email alerts
 User.add_to_class(
     'languages',
