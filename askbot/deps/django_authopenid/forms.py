@@ -206,17 +206,8 @@ class LoginForm(forms.Form):
         elif provider_type.startswith('openid'):
             self.do_clean_openid_fields(provider_data)
             self.cleaned_data['login_type'] = 'openid'
-        elif provider_type == 'oauth':
-            self.cleaned_data['login_type'] = 'oauth'
-        elif provider_type == 'oauth2':
-            self.cleaned_data['login_type'] = 'oauth2'
-        elif provider_type == 'facebook':
-            self.cleaned_data['login_type'] = 'facebook'
-            #self.do_clean_oauth_fields()
-        elif provider_type == 'wordpress_site':
-            self.cleaned_data['login_type'] = 'wordpress_site'
-        elif provider_type == 'mozilla-persona':
-            self.cleaned_data['login_type'] = 'mozilla-persona'
+        else:
+            self.cleaned_data['login_type'] = provider_type
 
         self.cleaned_data['sreg_required'] = 'sreg_required' in provider_data
 
@@ -343,6 +334,12 @@ class ClassicRegisterForm(SetPasswordForm):
         self.fields['email'] = UserEmailField(required=email_required)
         if askbot_settings.TERMS_CONSENT_REQUIRED:
             self.fields['terms_accepted'] = ConsentField()
+
+    def clean(self):
+        if askbot_settings.NEW_REGISTRATIONS_DISABLED:
+            raise forms.ValidationError(askbot_settings.NEW_REGISTRATIONS_DISABLED_MESSAGE)
+        data = super(ClassicRegisterForm, self).clean()
+        return data
 
 
 class SafeClassicRegisterForm(ClassicRegisterForm):

@@ -33,3 +33,11 @@ def load_plugin(setting_name, default_path):
                         default_path
                     )
     return load_module(python_path)
+
+
+def module_exists(mod_path):
+    try:
+        load_module(mod_path)
+    except ImportError:
+        return False
+    return True

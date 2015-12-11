@@ -2442,7 +2442,7 @@ Comment.prototype.startEditing = function () {
 Comment.prototype.decorate = function (element) {
     this._element = $(element);
     var parent_type = this._element.closest('.comments').data('parentPostType');
-    var comment_id = this._element.data('commentId') || undefined;
+    var comment_id = this._element.data('postId') || undefined;
     this._data = {'id': comment_id};
 
     this._contentBox = this._element.find('.comment-content');
@@ -2545,8 +2545,8 @@ Comment.prototype.getParentId = function () {
 Comment.prototype.setContent = function (data) {
     this._data = $.extend(this._data, data);
     data = this._data;
-    this._element.data('commentId', data.id);
-    this._element.attr('data-comment-id', data.id);
+    this._element.data('postId', data.id);
+    this._element.attr('data-post-id', data.id);
 
     // 1) create the votes element if it is not there
     var vote = this._voteButton;

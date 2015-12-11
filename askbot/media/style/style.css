@@ -4029,6 +4029,9 @@ ul.post-retag input {
 #hideIgnoredTagsCb {
   margin: 0 2px 0 1px;
 }
+.g-recaptcha {
+  margin: 10px 0;
+}
 .g-recaptcha div {
   margin: 0;
 }

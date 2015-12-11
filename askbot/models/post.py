@@ -1113,9 +1113,9 @@ class Post(models.Model):
         """
         if max_length is None:
             if self.post_type == 'comment':
-                max_words = 150
+                max_words = askbot_settings.MIN_WORDS_TO_WRAP_COMMENTS
             else:
-                max_words = 500
+                max_words = askbot_settings.MIN_WORDS_TO_WRAP_POSTS
         else:
             max_words = int(max_length/5)
 

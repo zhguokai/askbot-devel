@@ -190,10 +190,10 @@ class Command(NoArgsCommand):
                     last_vote = ~last_vote
 
                 active_answer = user.post_answer(
-                        question = active_question,
-                        body_text = ANSWER_TEMPLATE,
-                        follow = True
-                    )
+                                        question=active_question,
+                                        body_text=ANSWER_TEMPLATE,
+                                        follow=True
+                                    )
                 self.print_if_verbose("%s posted an answer to the active question"%(
                                             user.username
                                         ))

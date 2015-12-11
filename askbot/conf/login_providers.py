@@ -8,6 +8,7 @@ from django.utils.translation import string_concat
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
+from askbot.utils.loading import module_exists
 
 LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
                     'LOGIN_PROVIDERS',
@@ -22,17 +23,6 @@ settings.register(
         default=False,
         description=_('Acceptance of terms required at registration'),
         help_text=settings.get_related_settings_info(('FLATPAGES', 'TERMS', True))
-    )
-)
-
-#todo: remove this - we don't want the local login button
-#but instead always show the login/password field when used
-settings.register(
-    livesettings.BooleanValue(
-        LOGIN_PROVIDERS,
-        'SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN',
-        default = True,
-        description=_('Always display local login form and hide "Askbot" button.'),
     )
 )
 
@@ -83,6 +73,69 @@ settings.register(
         description=_('Enable custom OpenID login')
     )
 )
+
+if module_exists('cas'):
+    settings.register(
+        livesettings.BooleanValue(
+            LOGIN_PROVIDERS,
+            'SIGNIN_CAS_ENABLED',
+            default=False,
+            description=_('Enable CAS authentication')
+        )
+    )
+    settings.register(
+        livesettings.StringValue(
+            LOGIN_PROVIDERS,
+            'CAS_SERVER_URL',
+            default='',
+            description=_('CAS server url')
+        )
+    )
+    settings.register(
+        livesettings.StringValue(
+            LOGIN_PROVIDERS,
+            'CAS_SERVER_NAME',
+            default='CAS Server',
+            description=_('CAS server name')
+        )
+    )
+    settings.register(
+        livesettings.StringValue(
+            LOGIN_PROVIDERS,
+            'CAS_PROTOCOL_VERSION',
+            default='3',
+            choices=(('1', '1'), ('2', '2'), ('3', '3')),
+            description=_('CAS protocol version'),
+        )
+    )
+    settings.register(
+        livesettings.ImageValue(
+            LOGIN_PROVIDERS,
+            'CAS_LOGIN_BUTTON',
+            default='/images/jquery-openid/cas.png',
+            description=_('Upload CAS login icon'),
+            url_resolver=skin_utils.get_media_url
+        )
+    )
+
+"""
+    settings.register(
+        livesettings.BooleanValue(
+            LOGIN_PROVIDERS,
+            'CAS_ONE_CLICK_REGISTRATION_ENABLED',
+            default=False,
+            description=_('CAS - enable one click registration'),
+            help_text=string_concat(
+                _('Allows skipping the registration page after the CAS authentication.'),
+                ' ',
+                settings.get_related_settings_info(
+                    ('EMAIL', 'BLANK_EMAIL_ALLOWED', True, _('Must be enabled')),
+                    ('ACCESS_CONTROL', 'REQUIRE_VALID_EMAIL_FOR', True, _('Must be not be required')),
+                )
+            ),
+        )
+    )
+"""
 
 settings.register(
     livesettings.StringValue(

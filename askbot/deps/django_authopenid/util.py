@@ -9,6 +9,7 @@ import urllib
 import urlparse
 from askbot.utils.html import site_url
 from askbot.utils.functions import format_setting_name
+from askbot.utils.loading import load_module, module_exists
 from openid.store.interface import OpenIDStore
 from openid.association import Association as OIDAssociation
 from openid.extensions import sreg
@@ -244,7 +245,6 @@ class LoginMethod(object):
     as plugins for the askbot's version of django_authopenid
     """
     def __init__(self, login_module_path):
-        from askbot.utils.loading import load_module
         self.mod = load_module(login_module_path)
         self.mod_path = login_module_path
         self.read_params()
@@ -503,6 +503,10 @@ def get_enabled_major_login_providers():
     if askbot_settings.MEDIAWIKI_KEY and askbot_settings.MEDIAWIKI_SECRET:
         data['mediawiki'] = providers.mediawiki.Provider()
 
+    if module_exists('cas') and askbot_settings.SIGNIN_CAS_ENABLED \
+        and askbot_settings.CAS_SERVER_URL:
+            data['cas'] = providers.cas_provider.CASLoginProvider()
+
     def get_identica_user_id(data):
         consumer = oauth.Consumer(data['consumer_key'], data['consumer_secret'])
         token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
@@ -754,7 +758,7 @@ def provider_requires_login_page(provider):
     """requires login page if password needs to be
     entered or username or openid url"""
     #todo: test with mozilla persona openid-username openid-generic
-    return provider['type'] not in ('openid-direct', 'oauth', 'oauth2')
+    return provider['type'] not in ('openid-direct', 'oauth', 'oauth2', 'cas')
 
 def set_login_provider_tooltips(provider_dict, active_provider_names = None):
     """adds appropriate tooltip_text field to each provider
