@@ -93,6 +93,11 @@ from askbot.utils.forms import get_next_url
 from askbot.utils.http import get_request_info
 from askbot.signals import user_logged_in, user_registered
 
+
+def get_next_url_from_session(session):
+    return session.pop('next_url', None) or reverse('index')
+
+
 def create_authenticated_user_account(
     username=None, email=None, password=None,
     user_identifier=None, login_provider_name=None
@@ -234,12 +239,9 @@ def not_authenticated(func):
         return func(request, *args, **kwargs)
     return decorated
 
+
 def complete_oauth2_signin(request):
-    if 'next_url' in request.session:
-        next_url = request.session['next_url']
-        del request.session['next_url']
-    else:
-        next_url = reverse('index')
+    next_url = get_next_url_from_session(request.session)
 
     if 'error' in request.GET:
         return HttpResponseRedirect(reverse('index'))
@@ -283,9 +285,9 @@ def complete_oauth2_signin(request):
     user_id = params['get_user_id_function'](client)
 
     user = authenticate(
-                oauth_user_id=user_id,
+                user_identifier=user_id,
                 provider_name=provider_name,
-                method='oauth'
+                method='identifier'
             )
 
     logging.debug('finalizing oauth signin')
@@ -305,16 +307,17 @@ def complete_oauth2_signin(request):
             msg_tpl = 'trying to migrate user from OpenID %s to g-plus %s'
             logging.critical(msg_tpl, str(openid_url), str(user_id))
             user = authenticate(
-                        openid_url=openid_url,
-                        method='openid'
+                        method='identifier',
+                        provider_name='google',
+                        user_identifier=openid_url
                    )
             if user:
                 util.google_migrate_from_openid_to_gplus(openid_url, user_id)
                 logging.critical('migrated login from OpenID to g-plus')
             elif email:
                 user = authenticate(
-                            email=email,
-                            method='any_email'
+                            method='email',
+                            email=email
                             #don't check whether email was validated
                         )
                 if user:
@@ -326,8 +329,6 @@ def complete_oauth2_signin(request):
                                     )
                     assoc.save()
 
-
-
     return finalize_generic_signin(
                         request=request,
                         user=user,
@@ -337,13 +338,66 @@ def complete_oauth2_signin(request):
                     )
 
 
+def complete_cas_signin(request):
+    from askbot.deps.django_authopenid.providers.cas_provider import CASLoginProvider
+    next_url = get_next_url_from_session(request.session)
+    provider = CASLoginProvider(success_redirect_url=next_url)
+    cas_login_url = provider.get_login_url()
+
+    ticket = request.GET.get('ticket')
+    if not ticket:
+        return HttpResponseRedirect(cas_login_url)
+
+    username, attributes, pgtiou = provider.verify_ticket(ticket)
+    if not username:
+        return HttpResponseRedirect(cas_login_url)
+
+    user_identifier = username + '@cas'
+
+    user = authenticate(
+                        method='identifier',
+                        user_identifier=user_identifier,
+                        provider_name='cas'
+                       )
+
+    #<----
+    #settings ASKBOT_CAS_USER_FILTER, ASKBOT_CAS_GET_USERNAME, ASKBOT_CAS_GET_EMAIL
+    #are temporary, to be replaced by ability to specify custom auth backend.
+    user_filter_path = getattr(django_settings, 'ASKBOT_CAS_USER_FILTER', None)
+    if user_filter_path:
+        user_filter_func = load_module(user_filter_path)
+        if user_filter_func(username) == False:
+            #de-authenticate the user
+            user = None
+            deny_msg = getattr(django_settings, 'ASKBOT_CAS_USER_FILTER_DENIED_MSG', None)
+            if deny_msg:
+                request.user.message_set.create(message=deny_msg)
+                return HttpResponseRedirect(next_url)
+
+    get_username_func_path = getattr(django_settings, 'ASKBOT_CAS_GET_USERNAME', None)
+    if get_username_func_path:
+        get_username_func = load_module(get_username_func_path)
+        request.session['username'] = get_username_func(username) or username
+    else:
+        request.session['username'] = username
+
+    get_email_func_path = getattr(django_settings, 'ASKBOT_CAS_GET_EMAIL', None)
+    if get_email_func_path:
+        get_email_func = load_module(get_email_func_path)
+        request.session['email'] = get_email_func(username)
+    #<----end of temp stuff
+
+    return finalize_generic_signin(
+                        request=request,
+                        user=user,
+                        user_identifier=user_identifier,
+                        login_provider_name='cas',
+                        redirect_url=next_url
+                    )
+
 
 def complete_oauth1_signin(request):
-    if 'next_url' in request.session:
-        next_url = request.session['next_url']
-        del request.session['next_url']
-    else:
-        next_url = reverse('index')
+    next_url = get_next_url_from_session(request.session)
 
     if 'denied' in request.GET:
         return HttpResponseRedirect(next_url)
@@ -383,10 +437,10 @@ def complete_oauth1_signin(request):
         return HttpResponseRedirect(next_url)
     else:
         user = authenticate(
-                    oauth_user_id=user_id,
-                    provider_name=oauth_provider_name,
-                    method='oauth'
-                )
+                            method='identifier',
+                            user_identifier=user_id,
+                            provider_name=oauth_provider_name,
+                           )
 
         logging.debug('finalizing oauth signin')
 
@@ -399,7 +453,6 @@ def complete_oauth1_signin(request):
                         )
 
 
-#@not_authenticated
 @csrf.csrf_protect
 def signin(request, template_name='authopenid/signin.html'):
     """
@@ -436,7 +489,6 @@ def signin(request, template_name='authopenid/signin.html'):
 
         login_form = forms.LoginForm(request.POST)
         if login_form.is_valid():
-
             provider_name = login_form.cleaned_data['login_provider_name']
             if login_form.cleaned_data['login_type'] == 'password':
 
@@ -447,9 +499,9 @@ def signin(request, template_name='authopenid/signin.html'):
                     password = login_form.cleaned_data['password']
 
                     user = authenticate(
+                                    method = 'ldap',
                                     username=username,
                                     password=password,
-                                    method = 'ldap'
                                 )
 
                     if user:
@@ -499,11 +551,11 @@ def signin(request, template_name='authopenid/signin.html'):
                 else:
                     if password_action == 'login':
                         user = authenticate(
-                                username = login_form.cleaned_data['username'],
-                                password = login_form.cleaned_data['password'],
-                                provider_name = provider_name,
-                                method = 'password'
-                            )
+                                            method='password',
+                                            username=login_form.cleaned_data['username'],
+                                            password=login_form.cleaned_data['password'],
+                                            provider_name=provider_name
+                                           )
                         if user is None:
                             login_form.set_password_login_error()
                         else:
@@ -515,11 +567,8 @@ def signin(request, template_name='authopenid/signin.html'):
                         if request.user.is_authenticated():
                             new_password = \
                                 login_form.cleaned_data['new_password']
-                            AuthBackend.set_password(
-                                            user=request.user,
-                                            password=new_password,
-                                            provider_name=provider_name
-                                        )
+                            request.user.set_password(new_password)
+                            request.user.save()
                             request.user.message_set.create(
                                         message = _('Your new password is saved')
                                     )
@@ -534,9 +583,15 @@ def signin(request, template_name='authopenid/signin.html'):
                 assertion = login_form.cleaned_data['persona_assertion']
                 email = util.mozilla_persona_get_email_from_assertion(assertion)
                 if email:
-                    user = authenticate(email=email, method='mozilla-persona')
+                    user = authenticate(
+                                method='identifier',
+                                user_identifier=email,
+                                provider_name='mozilla-persona'
+                            )
                     if user is None:
-                        user = authenticate(email=email, method='valid_email')
+                        user = authenticate(email=email, method='email')
+                        if user and user.email_isvalid == False:
+                            user = None
                         if user:
                             #create mozilla persona user association
                             #because we trust the given email address belongs
@@ -583,6 +638,12 @@ def signin(request, template_name='authopenid/signin.html'):
                             sreg_request=sreg_req
                         )
 
+            elif login_form.cleaned_data['login_type'] == 'cas':
+                from askbot.deps.django_authopenid.providers.cas_provider import CASLoginProvider
+                provider = CASLoginProvider(success_redirect_url=next_url)
+                request.session['next_url'] = next_url
+                return HttpResponseRedirect(provider.get_login_url())
+
             elif login_form.cleaned_data['login_type'] == 'oauth':
                 try:
                     #this url may need to have "next" piggibacked onto
@@ -625,22 +686,22 @@ def signin(request, template_name='authopenid/signin.html'):
             elif login_form.cleaned_data['login_type'] == 'wordpress_site':
                 #here wordpress_site means for a self hosted wordpress blog not a wordpress.com blog
                 wp = Client(
-                        askbot_settings.WORDPRESS_SITE_URL,
-                        login_form.cleaned_data['username'],
-                        login_form.cleaned_data['password']
-                    )
+                            askbot_settings.WORDPRESS_SITE_URL,
+                            login_form.cleaned_data['username'],
+                            login_form.cleaned_data['password']
+                        )
                 try:
                     wp_user = wp.call(GetUserInfo())
-                    custom_wp_openid_url = '%s?user_id=%s' % (wp.url, wp_user.user_id)
+                    wp_user_identifier = '%s?user_id=%s' % (wp.url, wp_user.user_id)
                     user = authenticate(
-                            method='wordpress_site',
-                            wordpress_url=wp.url,
-                            wp_user_id=wp_user.user_id
-                           )
+                                        method='identifier',
+                                        user_identifier=wp_user_identifier,
+                                        provider_name='wordpress_site'
+                                       )
                     return finalize_generic_signin(
                                     request=request,
                                     user=user,
-                                    user_identifier=custom_wp_openid_url,
+                                    user_identifier=wp_user_identifier,
                                     login_provider_name=provider_name,
                                     redirect_url=next_url
                                 )
@@ -662,11 +723,11 @@ def signin(request, template_name='authopenid/signin.html'):
         view_subtype = 'default'
 
     return show_signin_view(
-                        request,
-                        login_form = login_form,
-                        view_subtype = view_subtype,
-                        template_name=template_name
-                        )
+                            request,
+                            login_form=login_form,
+                            view_subtype=view_subtype,
+                            template_name=template_name
+                           )
 
 @csrf.csrf_protect
 def show_signin_view(
@@ -787,15 +848,12 @@ def show_signin_view(
 
     have_buttons = True
     if (len(active_provider_names) == 1 and active_provider_names[0] == 'local'):
-        if askbot_settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN == True:
-            #in this case the form is not using javascript, so set initial values
-            #here
-            have_buttons = False
-            login_form.initial['login_provider_name'] = 'local'
-            if request.user.is_authenticated():
-                login_form.initial['password_action'] = 'change_password'
-            else:
-                login_form.initial['password_action'] = 'login'
+        have_buttons = False
+        login_form.initial['login_provider_name'] = 'local'
+        if request.user.is_authenticated():
+            login_form.initial['password_action'] = 'change_password'
+        else:
+            login_form.initial['password_action'] = 'login'
 
     data['have_buttons'] = have_buttons
 
@@ -909,15 +967,17 @@ def signin_success(request, identity_url, openid_response):
     request.session['openid'] = openid_data
 
     openid_url = str(openid_data)
-    user = authenticate(
-                    openid_url = openid_url,
-                    method = 'openid'
-                )
-
-    next_url = get_next_url(request)
     provider_name = util.get_provider_name_by_endpoint(openid_url)
     if provider_name is None:
         provider_name = util.get_provider_name(openid_url)
+
+    user = authenticate(
+                    method='identifier',
+                    user_identifier=openid_url,
+                    provider_name=provider_name
+                )
+
+    next_url = get_next_url(request)
 
     request.session['email'] = openid_data.sreg.get('email', '')
     request.session['username'] = openid_data.sreg.get('nickname', '')
@@ -1030,6 +1090,8 @@ def register(request, login_provider_name=None,
     template : authopenid/complete.html
     """
 
+    registration_enabled = (not askbot_settings.NEW_REGISTRATIONS_DISABLED)
+
     logging.debug('')
 
     next_url = redirect_url or get_next_url(request)
@@ -1038,7 +1100,7 @@ def register(request, login_provider_name=None,
     email = request.session.get('email', '')
 
     #1) handle "one-click registration"
-    if login_provider_name:
+    if registration_enabled and login_provider_name:
         providers = util.get_enabled_login_providers()
         provider_data = providers[login_provider_name]
 
@@ -1086,7 +1148,7 @@ def register(request, login_provider_name=None,
                 }
             )
 
-    if request.method == 'GET':
+    if (not registration_enabled) or request.method == 'GET':
         try:
             assert(login_provider_name is not None)
             assert(user_identifier is not None)
@@ -1402,7 +1464,7 @@ def recover_account(request):
         if key is None:
             return HttpResponseRedirect(reverse('user_signin'))
 
-        user = authenticate(email_key = key, method = 'email')
+        user = authenticate(email_key=key, method='email_key')
         if user:
             if request.user.is_authenticated():
                 if user != request.user:

@@ -1,6 +1,11 @@
 Changes in Askbot
 =================
 
+Development version
+-------------------
+* Added option to close new account registrations
+* Added support of CAS protocol
+
 0.10.0 (Dec 7, 2015)
 --------------------
 * Added management command `askbot_rebuild_avatars`

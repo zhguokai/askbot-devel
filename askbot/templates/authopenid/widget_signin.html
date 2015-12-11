@@ -50,29 +50,13 @@
                 login_form = login_form,
                 major_login_providers = major_login_providers,
                 minor_login_providers = minor_login_providers,
-                hide_local_login = settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN,
                 settings = settings,
                 logged_in = user.is_authenticated(),
                 show_buttons = have_buttons
             )
         }}
           {% if use_password_login == True %}
-        <fieldset
-            id="password-fs"
-            {% if user.is_anonymous() %}
-                {% if not login_form.username.errors and not login_form.password_login_failed %}
-                    {% if not settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}
-                        style="display:none;"
-                    {%endif%}
-              {% endif %}
-            {% else %}
-                {% if not login_form.new_password.errors and not login_form.new_password_retyped.errors %}
-                    {% if not settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN %}
-                        style="display:none;"
-                    {% endif%}
-                {% endif %}
-            {% endif %}
-        >
+        <fieldset id="password-fs">
             {{login_form.password_action}}
             {% if user.is_anonymous() %}
                 {% if have_buttons %}

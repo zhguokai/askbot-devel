@@ -317,9 +317,9 @@ def moderate_post_edits(request):
             #to make sure to not block the admin and
             #in case REMOTE_ADDR is a proxy server - not
             #block access to the site
-            my_ip = request.META.get('REMOTE_ADDR')
-            if my_ip in ips:
-                ips.remove(my_ip)
+            good_ips = set(getattr(django_settings, 'ASKBOT_WHITELISTED_IPS', ()))
+            good_ips.add(request.META['REMOTE_ADDR'])
+            ips = ips - good_ips
 
             #block IPs
             from stopforumspam.models import Cache

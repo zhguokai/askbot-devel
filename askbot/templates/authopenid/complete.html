@@ -23,68 +23,73 @@ parameters:
 {% block content %}
 <div class="flip-tabs">
     <div class="login complete-registration flip-content flip-content-active">
-        <h1 class="section-title">{% trans %}Complete registration{% endtrans %}</h1>
-        {% if openid_register_form.errors %}
-            <ul class="errorlist">
-            {% for error in openid_register_form.non_field_errors() %}
-                <li>{{ error }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        <form 
-            id="register-form"
-            name="fregister" 
-            {% if login_type=='openid' %}
-                action="{% url user_register %}"
-            {% elif login_type=='facebook' %}
-                action=""
-            {% else %}
-                action="{{ default_form_action }}"
+        {% if settings.NEW_REGISTRATIONS_DISABLED %}
+            <h1 class="section-title">{% trans %}New user registrations are disabled{% endtrans %}</h1>
+            <div>{{ settings.NEW_REGISTRATIONS_DISABLED_MESSAGE }}</div>
+        {% else %}
+            <h1 class="section-title">{% trans %}Complete registration{% endtrans %}</h1>
+            {% if openid_register_form.errors %}
+                <ul class="errorlist">
+                {% for error in openid_register_form.non_field_errors() %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
             {% endif %}
-            method="POST"
-        >{% csrf_token %}
-            {{ openid_register_form.next }}
-            <div class="form-group">
-                {% if openid_register_form.username.errors %} 
-                    <p class="error">{{ openid_register_form.username.errors|join(", ") }}</p>
+            <form 
+                id="register-form"
+                name="fregister" 
+                {% if login_type=='openid' %}
+                    action="{% url user_register %}"
+                {% elif login_type=='facebook' %}
+                    action=""
+                {% else %}
+                    action="{{ default_form_action }}"
                 {% endif %}
-                <input class="required login" id="id_username" 
-                    maxlength="255" name="username" tabindex="0" type="text"
-                    {% if openid_register_form.username.value() %}
-                        value="{{ openid_register_form.username.value()|escape }}"
+                method="POST"
+            >{% csrf_token %}
+                {{ openid_register_form.next }}
+                <div class="form-group">
+                    {% if openid_register_form.username.errors %} 
+                        <p class="error">{{ openid_register_form.username.errors|join(", ") }}</p>
                     {% endif %}
-                    placeholder="{% trans %}Choose a screen name{% endtrans %}"
-                >
-            </div>
-            <div class="form-group">
-                {% if openid_register_form.email.errors %} 
-                    <p class="error">{{ openid_register_form.email.errors|join(", ") }}</p>
-                {% endif %}
-                <input class="required login" id="id_email" maxlength="200" 
-                    name="email" type="text"
-                    {% if openid_register_form.email.value() %}
-                        value="{{ openid_register_form.email.value()|escape }}"
+                    <input class="required login" id="id_username" 
+                        maxlength="255" name="username" tabindex="0" type="text"
+                        {% if openid_register_form.username.value() %}
+                            value="{{ openid_register_form.username.value()|escape }}"
+                        {% endif %}
+                        placeholder="{% trans %}Choose a screen name{% endtrans %}"
+                    >
+                </div>
+                <div class="form-group">
+                    {% if openid_register_form.email.errors %} 
+                        <p class="error">{{ openid_register_form.email.errors|join(", ") }}</p>
                     {% endif %}
-                    placeholder="{% trans %}Email address{% endtrans %}"
-                >
-            </div>
-            {% set tos_field = openid_register_form.terms_accepted %}
-            {% include "authopenid/tos_field.html" %}
+                    <input class="required login" id="id_email" maxlength="200" 
+                        name="email" type="text"
+                        {% if openid_register_form.email.value() %}
+                            value="{{ openid_register_form.email.value()|escape }}"
+                        {% endif %}
+                        placeholder="{% trans %}Email address{% endtrans %}"
+                    >
+                </div>
+                {% set tos_field = openid_register_form.terms_accepted %}
+                {% include "authopenid/tos_field.html" %}
 
-            {% if openid_register_form.recaptcha %}
-            <div class="form-row-vertical">
-                {{ macros.form_field_with_errors(openid_register_form.recaptcha ) }}
-            </div>
-            {% endif %}
-            <div class="submit-row">
-                <input 
-                    id="register-button"
-                    type="submit"
-                    name="bnewaccount"
-                    value="{% trans %}Signup{% endtrans %}"
-                />
-            </div>
-        </form>
+                {% if openid_register_form.recaptcha %}
+                <div class="form-row-vertical">
+                    {{ macros.form_field_with_errors(openid_register_form.recaptcha ) }}
+                </div>
+                {% endif %}
+                <div class="submit-row">
+                    <input 
+                        id="register-button"
+                        type="submit"
+                        name="bnewaccount"
+                        value="{% trans %}Signup{% endtrans %}"
+                    />
+                </div>
+            </form>
+        {% endif %}
     </div>
     <div class="recover-account flip-content">
         <h1 class="section-title">{% trans %}Recover account{% endtrans %}</h1>
