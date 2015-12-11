@@ -12,7 +12,7 @@
           name="{{ unique_login_provider.name }}"
           type="submit"
           class="{{ unique_login_provider.type }}"
-          value="{% trans login_name=unique_login_provider.name|capitalize %}Sign in via {{ login_name }}{% endtrans %}"
+          value="{% trans login_name=unique_login_provider.display_name %}Sign in via {{ login_name }}{% endtrans %}"
         />
     </form>
 {% else %}

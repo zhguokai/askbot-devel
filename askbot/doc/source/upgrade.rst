@@ -17,7 +17,7 @@ framework have major release numbers `0.6` and `0.7`.
 Upcoming release of Askbot supporting Django `1.7` will have
 major version `0.9`. 
 
-Releases of `0.8` series will be made to allow transition
+Releases of `0.8` series are made to allow transition
 to higher versions of Django, not for production use although
 they might just work too.
 

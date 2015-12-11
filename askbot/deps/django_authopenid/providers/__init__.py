@@ -10,4 +10,7 @@ base classes. Currently the only one available is
 
 `protocols.oauth1.OAuth1Provider`
 """
+from askbot.utils.loading import module_exists
 from . import mediawiki
+if module_exists('cas'):
+    from . import cas_provider

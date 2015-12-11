@@ -18,7 +18,6 @@ django-threaded-multihost
 django-tinymce==1.5.3
 django-transaction-signals'
 django<1.8
-django>=1.5.1,<1.7
 html5lib==0.90
 jsonfield
 markdown2
@@ -26,6 +25,7 @@ mock==1.0.1
 oauth2
 pyjwt
 pystache==0.3.1
+python-cas==1.1.0
 python-openid
 pytz
 requirements-parser

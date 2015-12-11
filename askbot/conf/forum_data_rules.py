@@ -419,6 +419,24 @@ settings.register(
 settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
+        'MIN_WORDS_TO_WRAP_COMMENTS',
+        default=150,
+        description=_('Minimum words to start wrapping comments')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
+        'MIN_WORDS_TO_WRAP_POSTS',
+        default=500,
+        description=_('Minimum words to start wrapping posts')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        FORUM_DATA_RULES,
         'MAX_COMMENT_LENGTH',
         default=300,
         description=_(

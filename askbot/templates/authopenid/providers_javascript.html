@@ -23,7 +23,6 @@
             askbot['auth']['extraTokenName']['{{ login_provider.name }}'] = '{{ login_provider.extra_token_name|escapejs }}';
         {% endif %}
     {% endfor %}
-    askbot['settings']['signinAlwaysShowLocalLogin'] = {{ settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN|as_js_bool }};
     askbot['settings']['useLdapForPasswordLogin'] = {{ settings.USE_LDAP_FOR_PASSWORD_LOGIN|as_js_bool}};
     $('body').authenticator();
     (function() {

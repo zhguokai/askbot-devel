@@ -1,8 +1,19 @@
 Changes in Askbot
 =================
 
-Development version (not released)
-----------------------------------
+Development version
+-------------------
+* Added option to close new account registrations
+* Added support of CAS protocol
+
+0.8.1 (Nov 30, 2015)
+--------------------
+* bugfix
+
+0.8.0 (Oct 18, 2015)
+--------------------
+* Made release 0.8.0 to transition from django 1.5 to 1.7,
+  not to use in production
 * Added management command `askbot_rebuild_avatars`
 * Added option to choose gravatar or default avatar for new users
 * Message on the feedback page is editable
