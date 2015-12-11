@@ -199,11 +199,15 @@ class SpacesInline(admin.TabularInline):
     model = models.Space.questions.through
     extra = 1
 
+class TagsInline(admin.TabularInline):
+    model = models.Thread.tags.through
+    extra = 1
+
 class ThreadAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'added_at_with_seconds', 'last_activity_at_with_seconds', 'last_activity_by', 'answer_count', 'deleted', 'closed', 'site', 'in_spaces', 'in_groups', 'is_private', 'language_code')
+    list_display = ('id', 'title', 'added_at_with_seconds', 'last_activity_at_with_seconds', 'last_activity_by', 'answer_count', 'deleted', 'closed', 'site', 'in_spaces', 'in_groups', 'has_tags', 'is_private', 'language_code')
     list_filter = ('deleted', 'closed', 'language_code', 'site')
-    search_fields = ('last_activity_by__username', 'title')
-    inlines = (ThreadToGroupInline, SpacesInline)
+    search_fields = ('last_activity_by__username', 'title', 'tags__name')
+    inlines = (ThreadToGroupInline, SpacesInline, TagsInline)
 
     def added_at_with_seconds(self, obj):
         return obj.added_at.strftime(TIME_FORMAT)
@@ -218,6 +222,9 @@ class ThreadAdmin(admin.ModelAdmin):
 
     def in_spaces(self, obj):
         return ', '.join(obj.spaces.all().values_list('name', flat=True))
+
+    def has_tags(self, obj):
+        return ', '.join(obj.tags.all().values_list('name', flat=True))
 admin.site.register(models.Thread, ThreadAdmin)
 
 class NonPersonalGroupFilter(SimpleListFilter):
