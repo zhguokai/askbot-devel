@@ -3,6 +3,7 @@ startup_procedures.run()
 
 from django.contrib.auth.models import User
 
+import askbot
 import collections
 import datetime
 import hashlib
@@ -2678,7 +2679,7 @@ def user_get_languages(self):
 
 
 def user_get_primary_language(self):
-    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+    if askbot.is_multilingual():
         return self.get_languages()[0]
     else:
         return django_settings.LANGUAGE_CODE

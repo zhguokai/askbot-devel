@@ -673,7 +673,7 @@ def test_haystack():
                     }"""
                 errors.append(message)
 
-            if getattr(django_settings, 'ASKBOT_MULTILINGUAL'):
+            if askbot.is_multilingual():
                 if not hasattr(django_settings, "HAYSTACK_ROUTERS"):
                     message = "Please add HAYSTACK_ROUTERS = ['askbot.search.haystack.routers.LanguageRouter',] to settings.py"
                     errors.append(message)
@@ -904,12 +904,11 @@ def test_secret_key():
         ])
 
 def test_locale_middlewares():
-    is_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
     django_locale_middleware = 'django.middleware.locale.LocaleMiddleware'
     askbot_locale_middleware = 'askbot.middleware.locale.LocaleMiddleware'
     errors = list()
 
-    if is_multilang:
+    if askbot.is_multilingual():
         if askbot_locale_middleware in django_settings.MIDDLEWARE_CLASSES:
             errors.append("Please remove '%s' from your MIDDLEWARE_CLASSES" % askbot_locale_middleware)
         if django_locale_middleware not in django_settings.MIDDLEWARE_CLASSES:
@@ -933,16 +932,26 @@ def test_recaptcha():
     print_errors(errors)
 
 
-def test_multilingual():
-    is_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
-
+def test_lang_mode():
+    legacy_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', None)
     errors = list()
+    if legacy_multilang == True:
+        errors.append("""replace ASKBOT_MULTILINGUAL = True with either:
+ASKBOT_LANGUAGE_MODE = 'url-lang' or 
+ASKBOT_LANGUAGE_MODE = 'user-lang'""")
+    if legacy_multilang == False:
+        errors.append("""replace ASKBOT_MULTILINGUAL = True with either:
+ASKBOT_LANGUAGE_MODE = 'single-lang' or just delete the setting""")
 
-    django_version = django.VERSION
-    if is_multilang and django_version[0] == 1 and django_version[1] < 4:
-        errors.append('ASKBOT_MULTILINGUAL=True works only with django >= 1.4')
+    if legacy_multilang in (True, False):
+        print_errors(errors)
 
-    if is_multilang:
+    mode = getattr(django_settings, 'ASKBOT_LANGUAGE_MODE', None)
+    if mode and mode not in ('single-lang', 'url-lang', 'user-lang'):
+        errors.append("""ASKBOT_LANGUAGE_MODE must be one of:
+'single-lang', 'url-lang', 'user-lang'""")
+
+    if mode == 'url-lang':
         middleware = 'django.middleware.locale.LocaleMiddleware'
         if middleware not in django_settings.MIDDLEWARE_CLASSES:
             errors.append(
@@ -951,7 +960,7 @@ def test_multilingual():
             )
 
     trans_url = getattr(django_settings, 'ASKBOT_TRANSLATE_URL', False)
-    if is_multilang and trans_url:
+    if mode in ('url-lang', 'user-lang') and trans_url == True:
         errors.append(
             'Please set ASKBOT_TRANSLATE_URL to False, the "True" option '
             'is currently not supported due to a bug in django'
@@ -1006,6 +1015,7 @@ def run_startup_tests():
 
     #todo: refactor this when another test arrives
     test_versions()
+    test_lang_mode()
     test_askbot_url()
     test_avatar()
     test_cache_backend()
@@ -1021,7 +1031,6 @@ def run_startup_tests():
     #test_postgres()
     test_messages_framework()
     test_middleware()
-    test_multilingual()
     test_locale_middlewares()
     #test_csrf_cookie_domain()
     test_recaptcha()

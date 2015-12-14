@@ -1,6 +1,7 @@
 """
 General skin settings
 """
+import askbot
 from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import values
@@ -59,7 +60,7 @@ settings.register(
 )
 
 #cannot use HAS_ASKBOT_LOCALE_MIDDLEWARE due to circular import error
-if not getattr(django_settings, 'ASKBOT_MULTILINGUAL', False) and \
+if not askbot.is_multilingual() and \
         'askbot.middleware.locale.LocaleMiddleware' in django_settings.MIDDLEWARE_CLASSES:
     settings.register(
         values.StringValue(

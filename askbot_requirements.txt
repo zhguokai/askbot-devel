@@ -15,7 +15,7 @@ django-recaptcha>=1.0.3
 django-robots==1.1
 django-threaded-multihost
 django-tinymce==1.5.3
-django>=1.7,<1.9
+django>=1.8,<1.9
 html5lib==0.90
 jsonfield
 markdown2

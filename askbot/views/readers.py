@@ -515,7 +515,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     thread = question_post.thread
 
-    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+    if askbot.get_lang_mode() == 'url-lang':
         request_lang = translation.get_language()
         if request_lang != thread.language_code:
             template = get_template('question/lang_switch_message.html')
