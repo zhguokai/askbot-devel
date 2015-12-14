@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import askbot
 from django.conf import settings
 from django.utils.translation import override
 
@@ -9,7 +10,7 @@ from .utils import language_from_alias
 
 class BaseIndex(indexes.SearchIndex):
 
-    i18n_enabled = getattr(settings, 'ASKBOT_MULTILINGUAL', True)
+    i18n_enabled = askbot.is_multilingual()
 
     text = indexes.CharField(document=True, use_template=True)
 

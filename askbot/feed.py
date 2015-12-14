@@ -21,7 +21,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.utils.translation import ugettext as _
-from django.utils.translation import get_language
+from askbot.utils.translation import get_language
 
 from askbot.conf import settings as askbot_settings
 from askbot.models import Post
@@ -159,8 +159,7 @@ class RssLastestQuestionsFeed(Feed):
 
         #initial filtering
         filters = {'deleted': False}
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
-            filters['language_code'] = get_language()
+        filters['language_code'] = get_language()
             
         qs = Post.objects.get_questions().filter(**filters)
 

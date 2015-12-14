@@ -440,19 +440,19 @@ TAG_DISPLAY_FILTER_STRATEGY_CHOICES = \
     ((INCLUDE_SUBSCRIBED, _('only subscribed tags')),)
 
 TAG_EMAIL_FILTER_SIMPLE_STRATEGY_CHOICES = (
-    (INCLUDE_ALL, _('email for all tags')),
+    (INCLUDE_ALL, _('subscribe to all tags')),
     (EXCLUDE_IGNORED, _('exclude ignored tags')),
     (INCLUDE_INTERESTING, _('only interesting tags')),
 )
 
 TAG_EMAIL_FILTER_ADVANCED_STRATEGY_CHOICES = (
-    (INCLUDE_ALL, _('email for all tags')),
+    (INCLUDE_ALL, _('subscribe to all tags')),
     (EXCLUDE_IGNORED, _('exclude ignored tags')),
     (INCLUDE_SUBSCRIBED, _('only subscribed tags')),
 )
 
 TAG_EMAIL_FILTER_FULL_STRATEGY_CHOICES = (
-    (INCLUDE_ALL, _('email for all tags')),
+    (INCLUDE_ALL, _('subscribe to all tags')),
     (EXCLUDE_IGNORED, _('exclude ignored tags')),
     (INCLUDE_INTERESTING, _('only interesting tags')),
     (INCLUDE_SUBSCRIBED, _('only subscribed tags')),

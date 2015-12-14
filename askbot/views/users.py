@@ -6,6 +6,7 @@ and other views showing profile-related information.
 
 Also this module includes the view listing all forum users.
 """
+import askbot
 import calendar
 import collections
 import functools
@@ -1008,24 +1009,46 @@ def user_set_primary_language(request):
 
 @csrf.csrf_protect
 def user_select_languages(request, id=None, slug=None):
-    if request.method != 'POST':
+    if request.user.is_anonymous():
         raise django_exceptions.PermissionDenied
 
     user = get_object_or_404(models.User, id=id)
-    if not(request.user.id == user.id or request.user.is_administrator()):
+
+
+    if not askbot.is_multilingual() or \
+        not(request.user.id == user.id or request.user.is_administrator()):
         raise django_exceptions.PermissionDenied
 
-    form = forms.LanguagePrefsForm(request.POST)
-    if form.is_valid():
-        user.set_languages(form.cleaned_data['languages'])
-        user.set_primary_language(form.cleaned_data['primary_language'])
-        user.save()
+    if request.method == 'POST':
+        #todo: add form to clean languages
+        form = forms.LanguagePrefsForm(request.POST)
+        if form.is_valid():
+            user.set_languages(form.cleaned_data['languages'])
+            user.set_primary_language(form.cleaned_data['primary_language'])
+            user.save()
 
-    redirect_url = reverse(
-        'user_subscriptions',
-        kwargs={'id': user.id, 'slug': slugify(user.username)}
-    )
-    return HttpResponseRedirect(redirect_url)
+            redirect_url = reverse(
+                'user_select_languages',
+                kwargs={
+                    'id': user.id,
+                    'slug': slugify(user.username)
+                }
+            )
+        return HttpResponseRedirect(redirect_url)
+    else:
+        languages = user.languages.split()
+        initial={
+            'languages': languages,
+            'primary_language': languages[0]
+        }
+        form = forms.LanguagePrefsForm(initial=initial)
+        data = {
+            'view_user': user,
+            'languages_form': form,
+            'tab_name': 'langs',
+            'page_class': 'user-profile-page',
+        }
+        return render(request, 'user_profile/user_languages.html', data)
 
 
 @owner_or_moderator_required
