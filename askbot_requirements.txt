@@ -6,7 +6,7 @@ akismet
 beautifulsoup4
 django-avatar>=2.0
 django-celery>=3.0.11
-django-compressor>=1.3,<=1.5',
+django-compressor>=1.3,<=1.5
 django-countries==3.3
 django-followit==0.1.0
 django-keyedcache
@@ -16,7 +16,7 @@ django-recaptcha>=1.0.3
 django-robots==1.0
 django-threaded-multihost
 django-tinymce==1.5.3
-django-transaction-signals'
+django-transaction-signals
 django<1.8
 html5lib==0.90
 jsonfield
