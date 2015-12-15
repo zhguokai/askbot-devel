@@ -3,31 +3,38 @@
 Setting up multilingual Askbot sites
 ====================================
 
-Askbot can support multiple languages on a single site, in which case
-urls are modified by a prefix made of a language code, e.g. 
-base url /questions/ becomes /de/questions/ for the German localization.
+Askbot can support multiple languages on a single site.
+Urls are modified by a language code prefix,
+e.g. url /questions/ becomes /de/questions/ for the German localization.
 
 .. note::
     If you want to learn about configuration of individual languages
     please look :ref:`here <localization>`
 
-In order to enable the multilingual setup add the following to the 
-`settings.py` file::
+The setting in the `settings.py` file controlling language mode is 
+`ASKBOT_LANGUAGE_MODE`.
 
-    ASKBOT_MULTILINGUAL=True
+For the single-language mode this setting may be removed or set to::
+    ASKBOT_LANGUAGE_MODE = 'single-lang' 
 
-Also, activate the django's locale middleware by adding to the 
-`MIDDLEWARE_CLASSES` the following entry::
+For the "url language" mode (there are two multilingual modes)::
+    ASKBOT_LANGUAGE_MODE = 'url-lang'
 
-    'django.middleware.locale.LocaleMiddleware',
+For the "user language" mode::
+    ASKBOT_LANGUAGE_MODE = 'user-lang'
 
-There is a standard Django setting `LANGUAGES`, which enables specific languages.
-By default this setting contains very many languages. 
-You will likely want to narrow in the `settings.py` file 
-the choice of the available languages::
+The "url language" mode displays questions on the main page only
+for the language corresponding to the url prefix 
+(e.g. /en/ for English or /de/ for German).
 
-    #it's important to use ugettext_lazy or ugettext_noop
-    #in the settings.py file
+The "user language" mode displays questions on the main page in 
+the languages section of their user profile (for the logged in users).
+
+Language of the user interface in both multilingual modes corresponds
+to the language prefix of the url.
+
+For either of multilingual modes, specify the list of
+the enabled languages::
     from django.utils.translation import ugettext_lazy as _
     LANGUAGES = (
         ('de', _('German')),
@@ -37,10 +44,28 @@ the choice of the available languages::
 More on the usage of this setting can be read in the
 `Django documentation <https://docs.djangoproject.com/en/dev/ref/settings/#languages>`_.
 
-The default language should be specified with the setting `LANGUAGE_CODE`.
-Users will be automatically redirected to the corresponding default language
-page from the non-prefixed urls.
+Once the language mode is specified, Askbot startup checks, if enabled
+will guide through the configuration of the remaining settings.
 
-There are a number of `settings.py` options that control the various 
-aspects of the site localization - the behaviour of the software depending on the
-currently active language.. Please read more about the :ref:`Localization of Askbot <localization>`.
+Upgrading from older versions
+=============================
+Older versions had setting `ASKBOT_MULTILINGUAL` used
+in the project-level `urls.py` file. When upgrading from such version,
+update the `urls.py` according to the template in 
+`askbot/setup_templates/urls.py`.
+
+Other settings required for the multilingual configuration
+==========================================================
+If the startup checks are enabled
+(setting `ASKBOT_SELF_TEST` does not equal `False`),
+Askbot will guide you through configuring of the remaining settings.
+
+This section will help users who disable the Askbot self-tests and
+when the mode is `'url-lang'` or `'user-lang'`.
+
+Activate the django's locale middleware by adding to the 
+`MIDDLEWARE_CLASSES` the following entry::
+    'django.middleware.locale.LocaleMiddleware',
+
+Add the following to the `settings.py`::
+    ASKBOT_TRANSLATE_URL = False
