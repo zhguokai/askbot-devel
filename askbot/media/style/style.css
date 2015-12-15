@@ -397,6 +397,19 @@ body.user-messages {
 .select-language {
   margin-top: 6px;
 }
+.user-lang-selector ul {
+  list-style: none;
+  margin: 0;
+}
+.user-lang-selector ul input {
+  display: inline-block;
+}
+.user-lang-selector label {
+  margin-right: 8px;
+}
+.user-profile-page .message:first-child {
+  margin-top: 12px;
+}
 #userToolsNav {
   /* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
 
@@ -3629,6 +3642,7 @@ table.form-as-table ul {
 }
 table.form-as-table li {
   display: inline;
+  margin-right: 12px;
 }
 table.form-as-table td {
   text-align: right;

@@ -20,6 +20,7 @@ at run time
 
 askbot.deps.livesettings is a module developed for satchmo project
 """
+import askbot
 from django.conf import settings as django_settings
 from django.core.cache import cache
 from django.utils.encoding import force_unicode
@@ -216,7 +217,7 @@ def update_cached_value(key, value, language_code=None):
 
 def cached_value_update_handler(setting=None, new_value=None, language_code=None, *args, **kwargs):
     key=setting.key
-    if setting.localized == False and django_settings.ASKBOT_MULTILINGUAL:
+    if setting.localized == False and askbot.is_multilingual():
         languages = dict(django_settings.LANGUAGES).keys()
         for lang in languages:
             update_cached_value(key, new_value, lang)
