@@ -3,13 +3,13 @@ Changes in Askbot
 
 Development version
 -------------------
-* Added option to close new account registrations
-* Added support of CAS protocol
 * Added ASKBOT_LANGUAGE_MODE setting, which can be one of
   'single-lang', 'url-lang', 'user-lang'. The 'user-lang'
   option allows users to see posts of several user-selected
   languages in the single listing of questions. The 'url-lang'
   option shows questions in one listing per language.
+* Added option to close new account registrations
+* Added support of CAS protocol
 
 0.10.0 (Dec 7, 2015)
 --------------------
