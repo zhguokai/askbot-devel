@@ -24,7 +24,7 @@ mock==1.0.1
 oauth2
 pyjwt
 pystache==0.3.1
-python-cas
+python-cas==1.1.0
 python-openid
 pytz
 sanction==0.3.1

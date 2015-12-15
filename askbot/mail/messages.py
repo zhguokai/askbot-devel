@@ -1,6 +1,7 @@
 """functions in this module return body text
 of email messages for various occasions
 """
+import askbot
 import functools
 import logging
 import urllib
@@ -369,7 +370,7 @@ class InstantEmailAlert(BaseEmail):
            'reply_address': reply_address,
            'alt_reply_address': alt_reply_address,
            'alt_reply_subject': alt_reply_subject,
-           'is_multilingual': getattr(django_settings, 'ASKBOT_MULTILINGUAL', False),
+           'is_multilingual': askbot.is_multilingual(),
            'reply_sep_tpl': const.SIMPLE_REPLY_SEPARATOR_TEMPLATE
         }
 

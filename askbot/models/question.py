@@ -113,7 +113,7 @@ class ThreadQuerySet(models.query.QuerySet):
             else:
                 filter_parameters['title__icontains'] = search_query
 
-            if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+            if askbot.is_multilingual():
                 filter_parameters['language_code'] = get_language()
 
             return self.filter(**filter_parameters)
@@ -312,8 +312,15 @@ class ThreadManager(BaseQuerySetManager):
             'posts__deleted': False
         }
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        lang_mode = askbot.get_lang_mode()
+        if lang_mode == 'url-lang':
             primary_filter['language_code'] = get_language()
+        elif lang_mode == 'user-lang':
+            if request_user.is_authenticated():
+                language_codes = request_user.get_languages()
+            else:
+                language_codes = dict(django_settings.LANGUAGES).keys()
+            primary_filter['language_code__in'] = language_codes
 
         # TODO: add a possibility to see deleted questions
         qs = self.filter(**primary_filter)
@@ -1238,7 +1245,7 @@ class Thread(models.Model):
             'deleted': False,
             'post_type__in': ('question', 'answer', 'comment'),
         }
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             kwargs['language_code'] = self.language_code or get_language()
         return self.posts.filter(**kwargs)
 

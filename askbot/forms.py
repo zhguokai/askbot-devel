@@ -2,6 +2,7 @@
 used in AskBot"""
 import re
 import datetime
+import askbot
 from django import forms
 from askbot import const
 from askbot.const import message_keys
@@ -12,7 +13,7 @@ from django.utils.html import strip_tags
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
-from django.utils.translation import get_language
+from askbot.utils.translation import get_language
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django_countries import countries
@@ -22,7 +23,7 @@ from askbot.utils.slug import slugify
 from askbot.mail import extract_first_email_address
 from captcha.fields import ReCaptchaField
 from askbot.conf import settings as askbot_settings
-from askbot.conf import get_tag_display_filter_strategy_choices
+from askbot.conf import get_tag_email_filter_strategy_choices
 from tinymce.widgets import TinyMCE
 import logging
 
@@ -1058,7 +1059,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         if user.is_anonymous() or not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             self.fields['language'] = LanguageField()
 
         if should_use_recaptcha(user):
@@ -1364,7 +1365,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
                                                     required=False,
                                                 )
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             self.fields['language'] = LanguageField()
 
         if should_use_recaptcha(self.user):
@@ -1386,7 +1387,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
             if was_private != self.cleaned_data['post_privately']:
                 return True
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             old_language = self.question.thread.language_code
             if old_language != self.cleaned_data['language']:
                 return True
@@ -1554,7 +1555,7 @@ class TagFilterSelectionForm(forms.ModelForm):
     )
     def __init__(self, *args, **kwargs):
         super(TagFilterSelectionForm, self).__init__(*args, **kwargs)
-        choices = get_tag_display_filter_strategy_choices()
+        choices = get_tag_email_filter_strategy_choices()
         self.fields['email_tag_filter_strategy'].choices = choices
 
     class Meta:

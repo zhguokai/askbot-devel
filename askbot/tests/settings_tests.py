@@ -1,3 +1,4 @@
+import askbot
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
@@ -6,17 +7,17 @@ from django.utils import translation
 class SettingsTests(AskbotTestCase):
     def setUp(self):
         self.conf = {
-            'multilingual': django_settings.ASKBOT_MULTILINGUAL,
+            'language_mode': askbot.get_lang_mode(),
             'language_code': django_settings.LANGUAGE_CODE,
             'languages': django_settings.LANGUAGES
         }
-        django_settings.ASKBOT_MULTILINGUAL = True
+        django_settings.ASKBOT_LANGUAGE_MODE = 'url-lang'
         django_settings.LANGUAGE_CODE = 'en'
         django_settings.LANGUAGES = (('en', 'English'), ('de', 'German'))
         translation.activate('en')
 
     def tearDown(self):
-        django_settings.ASKBOT_MULTILINGUAL = self.conf['multilingual']
+        django_settings.ASKBOT_LANGUAGE_MODE = self.conf['language_mode']
         django_settings.LANGUAGE_CODE = self.conf['language_code']
         django_settings.LANGUAGES = self.conf['languages']
         translation.activate(django_settings.LANGUAGE_CODE)

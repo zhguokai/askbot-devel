@@ -425,6 +425,25 @@ body.user-messages {
     margin-top: 6px;
 }
 
+.user-lang-selector {
+    ul {
+        list-style: none;
+        margin: 0;
+        input {
+            display: inline-block;
+        }
+    }
+    label {
+        margin-right: 8px;
+    }
+}
+
+.user-profile-page {
+    .message:first-child {
+        margin-top: 12px;
+    }
+}
+
 #userToolsNav {/* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
     height: 20px;
     padding-bottom:5px;
@@ -3923,24 +3942,24 @@ p.form-item {
 
 table.form-as-table {
     margin-top: 5px;
-}
+    ul {
+        list-style-type: none;
+        display: inline;
+    }
 
-table.form-as-table ul {
-    list-style-type: none;
-    display: inline;
-}
+    li {
+        display: inline;
+        margin-right: 12px;
+    }
 
-table.form-as-table li {
-    display: inline;
-}
+    td {
+        text-align: right;
+    }
 
-table.form-as-table td {
-    text-align: right;
-}
-
-table.form-as-table th {
-    text-align: left;
-    font-weight: normal;
+    th {
+        text-align: left;
+        font-weight: normal;
+    }
 }
 
 table.ab-subscr-form {

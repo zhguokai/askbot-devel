@@ -105,3 +105,12 @@ def get_database_engine_name():
             return django_settings.DATABASES['default']['ENGINE']
         else:
             return django_settings.DATABASE_ENGINE
+
+
+def get_lang_mode():
+    from django.conf import settings as django_settings
+    return getattr(django_settings, 'ASKBOT_LANGUAGE_MODE', 'single-lang')
+
+
+def is_multilingual():
+    return get_lang_mode() != 'single-lang'

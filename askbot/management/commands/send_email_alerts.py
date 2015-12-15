@@ -1,3 +1,4 @@
+import askbot
 import datetime
 import traceback
 
@@ -201,7 +202,7 @@ class Command(NoArgsCommand):
         Q_set_A = not_seen_qs
         Q_set_B = seen_before_last_mod_qs
 
-        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+        if askbot.is_multilingual():
             languages = user.languages.split()
         else:
             languages = None

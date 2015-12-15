@@ -68,6 +68,9 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 LANGUAGE_CODE = 'en'
+LANGUAGES = (('en', 'English'),)
+ASKBOT_LANGUAGE_MODE = 'single-lang' #'single-lang', 'url-lang' or 'user-lang'
+
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -316,8 +319,6 @@ GROUP_MESSAGING = {
     'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',
     'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'}
 }
-
-ASKBOT_MULTILINGUAL = False
 
 COMPRESS_JS_FILTERS = []
 COMPRESS_PARSER = 'compressor.parser.HtmlParser'

@@ -9,13 +9,14 @@ except ImportError:
     from django.conf.urls.defaults import handler404
     from django.conf.urls.defaults import include, patterns, url
 
+import askbot
 from askbot.views.error import internal_error as handler500
 from django.conf import settings
 from django.contrib import admin
 
 admin.autodiscover()
 
-if getattr(settings, 'ASKBOT_MULTILINGUAL', False) == True:
+if askbot.is_multilingual():
     from django.conf.urls.i18n import i18n_patterns
     urlpatterns = i18n_patterns('',
         (r'%s' % settings.ASKBOT_URL, include('askbot.urls'))
