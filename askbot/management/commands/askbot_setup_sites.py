@@ -48,12 +48,10 @@ that you must take as well. These are detailed below:
     * DEFAULT_ASK_GROUP_ID
     * ASKBOT_LANGUAGE_MODE ('single-lang' or 'user-lang')
     * LIVESETTINGS_OPTIONS
-* prepare an askbot livesettings module (you can base it on one you've extracted 
-    from your main Site at maindomain/settings/export/ - remember to change the key 
-    for the top-level dictionary to your new Site's id! Assign the entire dictionary 
-    to the variable name 'settings' and give the file a .py extension)
+* prepare an askbot livesettings YAML file (you can base it on one you've extracted 
+    from your main Site at maindomain/settings/export/). 
 * load the livesettings for your new site:
-    * python manage.py askbot_import_livesettings --settings=<site_name>_settings settings_import
+    * python manage.py askbot_import_livesettings --settings=<site_name>_settings <yaml_file_path> 
 * add the following new line to your cronjob shell script to ensure you'll be sending
     out daily/weekly digest emails about updates in the new sub-site:
     * python manage.py send_email_alerts --settings=<site_name>_settings
@@ -106,17 +104,3 @@ class Command(NoArgsCommand):
                 space = get_object_by_id(Space, space_id)
                 feed.add_space(space)
 
-        #get site with lowest id:
-        main_site = Site.objects.all().order_by('id')[0]
-        #naive way to get the main feed for the site
-        main_feed = Feed.objects.filter(
-                                site=main_site
-                            ).order_by('id')[0]
-
-        threads = Thread.objects.all()
-        count = threads.count()
-        message = 'Adding all threads to the %s space' % main_site.name
-
-        main_space = main_feed.default_space
-        for thread in ProgressBar(threads.iterator(), count, message):
-            main_space.questions.add(thread)
