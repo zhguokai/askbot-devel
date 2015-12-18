@@ -1851,18 +1851,14 @@ class MultiSiteRepostThreadForm(forms.Form):
         from askbot.models.spaces import get_site_ids
         all_site_ids = get_site_ids()
 
-        #1) collect site ids with which thread is shared
+        # Collect site ids with which thread is shared
         shared_site_ids = set()
         for site_id in all_site_ids:
             key = 'site_%d' % site_id
             if self.cleaned_data.get(key):
                 shared_site_ids.add(site_id)
 
-        #2) add aggregator site ids, which should be used always
-        for site_id in getattr(django_settings, 'ASKBOT_AGGREGATOR_SITE_IDS', list()):
-            shared_site_ids.add(site_id)
-
-        #3) for each site find default sharing space
+        # For each site find default sharing space
         from askbot.models.spaces import get_default_space
         shared_spaces = set()
         for site_id in shared_site_ids:
