@@ -740,7 +740,7 @@ class Autobiographer(Badge):
             context_object = None, timestamp = None):
         user = context_object
         if user.email and user.real_name and user.website \
-            and user.location and user.about:
+            and user.location and user.get_localized_profile().about:
             return self.award(user, user, timestamp)
         return False
 

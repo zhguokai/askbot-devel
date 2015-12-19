@@ -1517,7 +1517,7 @@ class EditUserForm(forms.Form):
         if user.date_of_birth is not None:
             self.fields['birthday'].initial = user.date_of_birth
 
-        self.fields['about'].initial = user.about
+        self.fields['about'].initial = user.get_localized_profile().about
         self.user = user
 
     def clean_email(self):

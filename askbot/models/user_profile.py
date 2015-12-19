@@ -41,7 +41,6 @@ def add_profile_property(cls, name):
 
 def add_profile_properties(cls):
     names = (
-        'about',
         'avatar_type',
         'avatar_urls',
         'bronze',

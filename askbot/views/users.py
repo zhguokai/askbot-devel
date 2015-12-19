@@ -400,16 +400,16 @@ def edit_user(request, id):
             user.website = sanitize_html(form.cleaned_data['website'])
             user.location = sanitize_html(form.cleaned_data['city'])
             user.date_of_birth = form.cleaned_data.get('birthday', None)
-            user.about = sanitize_html(form.cleaned_data['about'])
             user.country = form.cleaned_data['country']
             user.show_country = form.cleaned_data['show_country']
             user.show_marked_tags = form.cleaned_data['show_marked_tags']
             user.save()
+            user.update_localized_profile(about=sanitize_html(form.cleaned_data['about']))
             # send user updated signal if full fields have been updated
             award_badges_signal.send(None,
-                            event = 'update_user_profile',
-                            actor = user,
-                            context_object = user
+                            event='update_user_profile',
+                            actor=user,
+                            context_object=user
                         )
             return HttpResponseRedirect(user.get_profile_url())
     else:
@@ -576,7 +576,7 @@ def user_stats(request, user, context):
     show_moderation_warning = (request.user.is_authenticated()
                                 and request.user.pk == user.pk
                                 and (user.is_watched() or user.is_blocked())
-                                and (user.about or user.website)
+                                and (user.get_localized_profile().about or user.website)
                               )
     show_profile_info = ((not (user.is_watched() or user.is_blocked()))
                           or (request.user.is_authenticated()

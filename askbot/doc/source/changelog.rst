@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* User profile "about" section is per-language (localizable)
 * Added ASKBOT_LANGUAGE_MODE setting, which can be one of
   'single-lang', 'url-lang', 'user-lang'. The 'user-lang'
   option allows users to see posts of several user-selected

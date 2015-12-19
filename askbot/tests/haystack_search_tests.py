@@ -17,9 +17,11 @@ class HaystackSearchTests(AskbotTestCase):
         setattr(settings, "HAYSTACK_SEARCH_ENGINE", 'simple')
 
         self.user = self.create_user(username='gepeto')
-        self.other_user = self.create_user(username = 'pinocho')
+        self.other_user = self.create_user(username='pinocho')
         self.other_user.location = 'Managua'
-        self.other_user.about = "I'm made of wood, gepeto made me"
+        self.other_user.update_localized_profile(
+                                        about="I'm made of wood, gepeto made me"
+                                                )
         self.other_user.save()
         body_1 = '''Lorem turpis purus? Amet mattis eu et sociis phasellus
         montes elementum proin ut urna enim, velit, tincidunt quis ut,

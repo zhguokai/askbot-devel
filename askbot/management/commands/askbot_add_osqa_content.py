@@ -192,8 +192,8 @@ class Command(BaseImportXMLCommand):
             self.copy_string_parameter(profile, user, 'website')
             self.copy_string_parameter(profile, user, 'location')
             self.copy_numeric_parameter(profile, user, 'date_of_birth')
-            self.copy_string_parameter(profile, user, 'about')
             user.save()
+            user.update_localized_profile(about=profile.about)
 
     def import_user_logins(self):
         """import user's login methods from OSQA to Askbot"""
