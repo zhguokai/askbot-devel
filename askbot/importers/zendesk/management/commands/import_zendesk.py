@@ -104,14 +104,15 @@ try:
     PHANTOM_VOTER_USER = askbot_models.User.objects.get(username='phantom_voter')
 except askbot_models.User.DoesNotExist:
     PHANTOM_VOTER_USER = askbot_models.User(
-            username = 'phantom_voter',
-            first_name = 'Phantom',
-            last_name = 'Voter',
-            real_name = 'Phantom Voter',
-            date_joined = timezone.now(),
-            is_active = False,
-            about = 'Fake account for seeding vote counts during Zendesk import',
+            username='phantom_voter',
+            first_name='Phantom',
+            last_name='Voter',
+            real_name='Phantom Voter',
+            date_joined=timezone.now(),
+            is_active=False,
         ).save()
+    about = 'Fake account for seeding vote counts during Zendesk import'
+    PHANTOM_VOTE_USER.update_localized_profile(about=about)
 
 def ensure_unique_username(name_seed):
     """Returns unique user name, by modifying the name if the same name exists
@@ -163,7 +164,7 @@ def create_askbot_user(zd_user):
         last_seen = zd_user.created_at
 
     # lookup organization name (todo: cache this)
-    about = ""
+    about = ''
     if zd_user.organization_id:
         try:
             org = zendesk_models.Organization.objects.get(organization_id=zd_user.organization_id)
@@ -172,18 +173,18 @@ def create_askbot_user(zd_user):
             pass
 
     ab_user = askbot_models.User(
-        username = username,
-        first_name = zd_user.name.rpartition(' ')[0].strip()[:30],
-        last_name = zd_user.name.rpartition(' ')[2].strip()[:30],
-        real_name = zd_user.name[:100],
-        email = email,
-        email_isvalid = zd_user.is_verified,
-        date_joined = zd_user.created_at,
-        last_seen = last_seen,
-        is_active = zd_user.is_active,
-        about = about,
+        username=username,
+        first_name=zd_user.name.rpartition(' ')[0].strip()[:30],
+        last_name=zd_user.name.rpartition(' ')[2].strip()[:30],
+        real_name=zd_user.name[:100],
+        email=email,
+        email_isvalid=zd_user.is_verified,
+        date_joined=zd_user.created_at,
+        last_seen=last_seen,
+        is_active=zd_user.is_active,
     )
     ab_user.save()
+    ab_user.update_localized_profile(about=about)
     return ab_user
 
 def seed_post_with_votes(post, votes_count):

@@ -20,7 +20,6 @@ from django.db.models import signals as django_signals
 from django.template import Context
 from django.template.loader import get_template
 from django.utils import timezone
-from django.utils.translation import get_language
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext, override
@@ -54,19 +53,23 @@ from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostFlagReason, AnonymousAnswer
 from askbot.models.post import PostToGroup
 from askbot.models.post import DraftAnswer
-from askbot.models.user_profile import add_profile_properties, UserProfile
+from askbot.models.user_profile import (
+                                add_profile_properties,
+                                UserProfile,
+                                LocalizedUserProfile
+                            )
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models.badges import award_badges_signal, get_badge
 from askbot.models.repute import Award, Repute, Vote, BadgeData
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot.models.meta import ImportRun, ImportedObjectInfo
-from askbot.models.user_profile import UserProfile
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.decorators import reject_forbidden_phrases
 from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
 from askbot.utils.transaction import defer_celery_task
+from askbot.utils.translation import get_language
 from askbot.utils.html import replace_links_with_text
 from askbot.utils.html import site_url
 from askbot.utils.db import table_exists
@@ -130,13 +133,13 @@ def get_users_by_text_query(search_query, users_query_set = None):
         else:
             return users_query_set.filter(
                 models.Q(username__icontains=search_query) |
-                models.Q(about__icontains=search_query)
+                models.Q(localized_askbot_profiles__about__icontains=search_query)
             )
         #if askbot.get_database_engine_name().endswith('mysql') \
         #    and mysql.supports_full_text_search():
         #    return User.objects.filter(
         #        models.Q(username__search = search_query) |
-        #        models.Q(about__search = search_query)
+        #        models.Q(localized_user_profiles__about__search = search_query)
         #    )
 
 class RelatedObjectSimulator(object):
@@ -1332,6 +1335,21 @@ def user_assert_can_revoke_old_vote(self, vote):
         raise django_exceptions.PermissionDenied(
             _('sorry, but older votes cannot be revoked')
         )
+
+def user_get_localized_profile(self):
+    kwargs = {
+        'language_code': get_language(),
+        'auth_user': self
+    }
+    return LocalizedUserProfile.objects.get_or_create(**kwargs)[0]
+
+def user_update_localized_profile(self, **kwargs):
+    lang = get_language()
+    lp = LocalizedUserProfile.objects.filter(auth_user=self, language_code=lang)
+    count = lp.update(**kwargs)
+    if count == 0:
+        lp = LocalizedUserProfile(auth_user=self, language_code=lang, **kwargs)
+        lp.save()
 
 def user_get_unused_votes_today(self):
     """returns number of votes that are
@@ -3288,7 +3306,9 @@ User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
 User.add_to_class('get_social_sharing_mode', user_get_social_sharing_mode)
 User.add_to_class('get_social_sharing_status', user_get_social_sharing_status)
+User.add_to_class('get_localized_profile', user_get_localized_profile)
 User.add_to_class('update_avatar_type', user_update_avatar_type)
+User.add_to_class('update_localized_profile', user_update_localized_profile)
 User.add_to_class('post_question', user_post_question)
 User.add_to_class('edit_question', user_edit_question)
 User.add_to_class('recount_badges', user_recount_badges)

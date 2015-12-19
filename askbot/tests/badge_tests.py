@@ -428,8 +428,8 @@ class BadgeTests(AskbotTestCase):
         self.u1.real_name = 'blah'
         self.u1.website = 'cnn.com'
         self.u1.location = 'irvine'
-        self.u1.about = 'blah'
         self.u1.save()
+        self.u1.update_localized_profile(about='blabla bla')
         award_badges_signal.send(None,
             event = 'update_user_profile',
             actor = self.u1,

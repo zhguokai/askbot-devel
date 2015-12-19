@@ -956,7 +956,6 @@ it may be helpful to split this procedure in two:\n
             u.location = X.blankable(se_u.location)
             u.date_of_birth = se_u.birthday #dattime -> date
             u.website = X.blankable(se_u.website_url)
-            u.about = X.blankable(se_u.about_me)
             if se_u.last_login_date is None:
                 u.last_login = se_u.creation_date
             else:
@@ -998,7 +997,10 @@ it may be helpful to split this procedure in two:\n
                 sys.sdtout.flush()
             except askbot.User.DoesNotExist:
                 pass
+
             u.save()
+            u.update_localized_profile(about=X.blankable(se_u.about_me))
+
             form = EditUserEmailFeedsForm()
             form.reset()
             if se_u.opt_in_email == True:#set up daily subscription on "own" items

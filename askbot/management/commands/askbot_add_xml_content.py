@@ -209,8 +209,8 @@ class Command(BaseImportXMLCommand):
             self.copy_string_parameter(from_user, to_user, 'location')
 
             to_user.country = from_user.country
+            to_user.update_localized_profile(about=from_user.about)
 
-            self.copy_string_parameter(from_user, to_user, 'about')
             self.copy_string_parameter(from_user, to_user, 'email_signature')
             self.copy_string_parameter(from_user, to_user, 'twitter_access_token')
             self.copy_string_parameter(from_user, to_user, 'twitter_handle')
