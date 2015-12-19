@@ -6,8 +6,6 @@ from django.core.management import call_command
 
 def init_postgresql_fts(apps, schema_editor):
     conn = schema_editor.connection
-    import pdb
-    pdb.set_trace()
     if hasattr(conn, 'vendor') and conn.vendor == 'postgresql':
         call_command('init_postgresql_full_text_search')
 
