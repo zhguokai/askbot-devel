@@ -35,7 +35,8 @@ def user_profile_property(field_name):
 
 
 def add_profile_property(cls, name):
-    cls.add_to_class(name, user_profile_property(name))
+    prop = user_profile_property(name)
+    cls.add_to_class(name, prop)
 
 
 def add_profile_properties(cls):
@@ -147,6 +148,19 @@ class UserProfile(models.Model):
     social_sharing_mode = models.IntegerField(
                                 default=const.SHARE_NOTHING,
                                 choices=const.SOCIAL_SHARING_MODE_CHOICES
+                            )
+
+    class Meta:
+        app_label = 'askbot'
+
+
+class LocalizedUserProfile(models.Model):
+    auth_user = models.ForeignKey(User, related_name='localized_askbot_profiles')
+    about = models.TextField(blank=True)
+    language_code = models.CharField(
+                                choices=django_settings.LANGUAGES,
+                                default=django_settings.LANGUAGE_CODE,
+                                max_length=16,
                             )
 
     class Meta:
