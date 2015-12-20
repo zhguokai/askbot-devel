@@ -494,7 +494,7 @@ class Command(NoArgsCommand):
                         'title': q.thread.title
                     })
 
-            activate_language(user.get_primary_language())
+            activate_language(user.primary_language)
             email = BatchEmailAlert({
                 'questions': questions_data,
                 'question_count': question_count,
