@@ -21,7 +21,7 @@ def init_postgresql_fts(apps, schema_editor):
                             askbot.get_install_directory(),
                             'search',
                             'postgresql',
-                            'user_profile_search_12192015.plsql'
+                            'user_profile_search_12202015.plsql'
                         )
         setup_full_text_search(script_path)
 
@@ -29,9 +29,9 @@ def init_postgresql_fts(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('askbot', '0003_auto_20151218_0909'),
+        ('askbot', '0006_auto_20151220_0459'),
     ]
 
     operations = [
-        migrations.RunPython(init_postgresql_fts)
+            migrations.RunPython(init_postgresql_fts)
     ]

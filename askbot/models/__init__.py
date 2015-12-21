@@ -2679,28 +2679,46 @@ def user_get_absolute_url(self):
     return self.get_profile_url()
 
 
-def user_set_languages(self, langs):
+def user_set_languages(self, langs, primary=None):
     self.languages = ' '.join(langs)
+    if primary:
+        self.primary_language = primary
 
+    profile_objects = LocalizedUserProfile.objects
 
-def user_set_primary_language(self, lang):
-    """primary language is the first in the list of languages"""
-    langs = self.get_languages()
-    if lang in langs:
-        langs.remove(lang)
-    langs.insert(0, lang)
-    self.set_languages(langs)
+    profiles = profile_objects.filter(auth_user=self)
+    profile_langs = profiles.values_list('language_code', flat=True)
+
+    profile_langs_set = set(profile_langs)
+    langs_set = set(langs)
+
+    if len(langs):
+        profiles = profile_objects.filter(
+                                    auth_user=self,
+                                    language_code__in=langs,
+                                )
+        profiles.update(is_claimed=True)
+        langs = set(profiles.values_list('language_code', flat=True))
+        for lang in langs_set - profile_langs_set:
+            profile_objects.create(
+                            auth_user=self,
+                            language_code=lang,
+                            is_claimed=True
+                        )
+
+    #mark removed languages as not claimed
+    removed_langs = profile_langs_set - langs_set
+    if len(removed_langs):
+        profiles = profile_objects.filter(
+                                    auth_user=self,
+                                    language_code__in=removed_langs
+                                )
+        profiles.update(is_claimed=False)
 
 
 def user_get_languages(self):
     return self.languages.split()
 
-
-def user_get_primary_language(self):
-    if askbot.is_multilingual():
-        return self.get_languages()[0]
-    else:
-        return django_settings.LANGUAGE_CODE
 
 def get_profile_link(self, text=None):
     profile_link = u'<a href="%s">%s</a>' \
@@ -3382,8 +3400,6 @@ User.add_to_class('set_status', user_set_status)
 User.add_to_class('get_badge_summary', user_get_badge_summary)
 User.add_to_class('get_languages', user_get_languages)
 User.add_to_class('set_languages', user_set_languages)
-User.add_to_class('get_primary_language', user_get_primary_language)
-User.add_to_class('set_primary_language', user_set_primary_language)
 User.add_to_class('get_status_display', user_get_status_display)
 User.add_to_class('get_old_vote_for_post', user_get_old_vote_for_post)
 User.add_to_class('get_unused_votes_today', user_get_unused_votes_today)
@@ -3598,7 +3614,7 @@ def notify_award_message(instance, created, **kwargs):
     if created:
         user = instance.user
 
-        with override(user.get_primary_language()):
+        with override(user.primary_language):
             badge = get_badge(instance.badge.slug)
 
             msg = _(u"Congratulations, you have received a badge '%(badge_name)s'. "
@@ -3989,6 +4005,13 @@ def make_admin_if_first_user(user, **kwargs):
     if user_count == 1:
         user.set_status('d')
 
+
+def init_language_settings(user, **kwargs):
+    lang = get_language()
+    user.set_languages([lang,], primary=lang)
+    user.askbot_profile.save()
+
+
 def moderate_group_joining(sender, instance=None, created=False, **kwargs):
     if created and instance.level == GroupMembership.PENDING:
         user = instance.user
@@ -4209,6 +4232,10 @@ signals.user_registered.connect(
 signals.user_registered.connect(
     make_admin_if_first_user,
     dispatch_uid='make_amin_first_registrant'
+)
+signals.user_registered.connect(
+    init_language_settings,
+    dispatch_uid='update_language_settings_upon_registration'
 )
 
 signals.user_logged_in.connect(

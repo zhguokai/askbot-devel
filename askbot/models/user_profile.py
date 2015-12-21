@@ -62,6 +62,7 @@ def add_profile_properties(cls):
         'last_seen',
         'location',
         'new_response_count',
+        'primary_language',
         'real_name',
         'reputation',
         'seen_response_count',
@@ -119,7 +120,6 @@ class UserProfile(models.Model):
     country = CountryField(blank=True, null=True)
     show_country = models.BooleanField(default=False)
     date_of_birth = models.DateField(null=True, blank=True)
-    about = models.TextField(blank=True)
     #interesting tags and ignored tags are to store wildcard tag selections only
     interesting_tags = models.TextField(blank=True)
     ignored_tags = models.TextField(blank=True)
@@ -142,6 +142,11 @@ class UserProfile(models.Model):
                             max_length=128,
                             default=django_settings.LANGUAGE_CODE
                         )
+    primary_language = models.CharField(
+                            max_length=16,
+                            choices=django_settings.LANGUAGES,
+                            default=django_settings.LANGUAGE_CODE
+                        )
 
     twitter_access_token = models.CharField(max_length=256, default='')
     twitter_handle = models.CharField(max_length=32, default='')
@@ -162,6 +167,10 @@ class LocalizedUserProfile(models.Model):
                                 default=django_settings.LANGUAGE_CODE,
                                 max_length=16,
                             )
+    is_claimed = models.BooleanField(
+                            default=False,
+                            help_text='True, if user selects this language'
+                        )
 
     class Meta:
         app_label = 'askbot'

@@ -117,6 +117,13 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                                 ).exclude(
                                     is_active=False
                                 ).select_related('askbot_profile')
+
+    if askbot.is_multilingual():
+        users = users.filter(
+                    localized_askbot_profiles__language_code=get_language(),
+                    localized_askbot_profiles__is_claimed=True
+                )
+
     group = None
     group_email_moderation_enabled = False
     user_acceptance_level = 'closed'
@@ -1003,8 +1010,9 @@ def user_set_primary_language(request):
 
     form = forms.LanguageForm(request.POST)
     if form.is_valid():
-        request.user.set_primary_language(form.cleaned_data['language'])
-        request.user.save()
+        profile = request.user.askbot_profile
+        profile.primary_language = form.cleaned_data['language']
+        profile.save()
 
 
 @csrf.csrf_protect
@@ -1024,8 +1032,10 @@ def user_select_languages(request, id=None, slug=None):
         form = forms.LanguagePrefsForm(request.POST)
         if form.is_valid():
             user.set_languages(form.cleaned_data['languages'])
-            user.set_primary_language(form.cleaned_data['primary_language'])
             user.save()
+            profile = user.askbot_profile
+            profile.primary_language = form.cleaned_data['primary_language']
+            profile.save()
 
             redirect_url = reverse(
                 'user_select_languages',
