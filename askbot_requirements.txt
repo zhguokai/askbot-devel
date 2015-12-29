@@ -4,7 +4,7 @@ Lamson
 South>=0.7.1
 akismet
 beautifulsoup4
-django-avatar>=2.0
+django-avatar==2.0
 django-celery>=3.0.11
 django-compressor==1.2
 django-countries==3.3
