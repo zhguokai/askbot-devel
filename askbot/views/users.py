@@ -244,7 +244,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'search_query' : search_query,
         'tab_id' : sort_method,
         'user_acceptance_level': user_acceptance_level,
-        'user_count': users.count(),
+        'user_count': objects_list.count,
         'user_groups': user_groups,
         'user_membership_level': user_membership_level,
         'users' : users_page,
