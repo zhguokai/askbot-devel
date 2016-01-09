@@ -9,16 +9,28 @@ from django.utils import timezone
 from jsonfield import JSONField
 from django_countries.fields import CountryField
 
+def get_profile_cache_key(user):
+    if user.pk:
+        return 'askbot-profile-{}'.format(user.pk)
+    raise ValueError('auth.models.User is not saved, cant make cache key')
+
+
+def get_profile_from_db(user):
+    if user.pk:
+        profile, junk = UserProfile.objects.get_or_create(auth_user_ptr=user)
+        return profile
+    raise ValueError('auth.models.User is not saved, cant make UserProfile')
+
 
 def get_profile(user):
-    try:
-        return user.askbot_profile
-    except UserProfile.DoesNotExist:
-        if not user.pk:
-            raise ValueError('auth.models.User is not saved, cant make UserProfile')
-        profile = UserProfile.objects.create(auth_user_ptr=user)
-        setattr(user, 'askbot_profile', profile)
-        return profile
+    key = get_profile_cache_key(user)
+    profile = cache.get(key)
+    if not profile:
+        profile = get_profile_from_db(user)
+        cache.set(key, profile)
+
+    setattr(user, 'askbot_profile', profile)
+    return profile
 
 
 def user_profile_property(field_name):
@@ -31,6 +43,8 @@ def user_profile_property(field_name):
     def setter(user, value):
         profile = get_profile(user)
         setattr(profile, field_name, value)
+        key = get_profile_cache_key(user)
+        cache.set(key, profile)
 
     return property(getter, setter)
 
