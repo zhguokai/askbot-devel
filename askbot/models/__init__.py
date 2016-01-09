@@ -200,6 +200,11 @@ def user_get_gravatar_url(self, size):
                 'size': size,
             }
 
+def user_get_reputation(self):
+    if askbot.is_multilingual() and askbot_settings.REPUTATION_LOCALIZED:
+        return self.get_localized_profile().get_reputation()
+    return self.reputation
+
 def user_get_default_avatar_url(self, size):
     """returns default avatar url
     """
@@ -2525,12 +2530,7 @@ def user_moderate_user_reputation(
     if comment == None:
         raise ValueError('comment is required to moderate user reputation')
 
-    new_rep = user.reputation + reputation_change
-    if new_rep < 1:
-        new_rep = 1 #todo: magic number
-        reputation_change = 1 - user.reputation
-
-    user.reputation = new_rep
+    user.receive_reputation(reputation_change, get_language())
     user.save()
 
     #any question. This is necessary because reputes are read in the
@@ -2542,13 +2542,13 @@ def user_moderate_user_reputation(
     #question record is fake and is ignored
     #this bug is hidden in call Repute.get_explanation_snippet()
     repute = Repute(
-                        user = user,
-                        comment = comment,
-                        #question = fake_question,
-                        reputed_at = timestamp,
-                        reputation_type = 10, #todo: fix magic number
-                        reputation = user.reputation
-                    )
+                user=user,
+                comment=comment,
+                #question = fake_question,
+                reputed_at=timestamp,
+                reputation_type=10, #todo: fix magic number
+                reputation=user.reputation
+            )
     if reputation_change < 0:
         repute.negative = -1 * reputation_change
     else:
@@ -3165,13 +3165,26 @@ def user_update_response_counts(user):
     user.save()
 
 
-def user_receive_reputation(self, num_points):
+def user_receive_reputation(self, num_points, language_code=None):
+    language_code = language_code or get_language()
     old_points = self.reputation
     new_points = old_points + num_points
-    if new_points > 0:
-        self.reputation = new_points
-    else:
-        self.reputation = const.MIN_REPUTATION
+    self.reputation = max(const.MIN_REPUTATION, new_points)
+
+    #record localized user reputation - this starts with 0
+    try:
+        profile = LocalizedUserProfile.objects.get(
+                                            auth_user=self,
+                                            language_code=language_code
+                                        )
+    except LocalizedUserProfile.DoesNotExist:
+        profile = LocalizedUserProfile(
+                                    auth_user=self,
+                                    language_code=language_code
+                                )
+    profile.reputation = max(0, profile.reputation + num_points)
+    profile.save()
+
     signals.reputation_received.send(None, user=self, reputation_before=old_points)
 
 def user_update_wildcard_tag_selections(

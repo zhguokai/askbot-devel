@@ -7,6 +7,8 @@ from django.utils.translation import ugettext as _
 from django.utils.html import escape
 from django.utils import timezone
 from askbot import const
+from askbot.models.fields import LanguageCodeField
+from askbot.utils.translation import get_language
 from django.core.urlresolvers import reverse
 
 class VoteManager(models.Manager):
@@ -190,6 +192,7 @@ class Repute(models.Model):
     positive = models.SmallIntegerField(default=0)
     negative = models.SmallIntegerField(default=0)
     question = models.ForeignKey('Post', null=True, blank=True)
+    language_code = LanguageCodeField()
     reputed_at = models.DateTimeField(default=timezone.now)
     reputation_type = models.SmallIntegerField(choices=const.TYPE_REPUTATION)
     reputation = models.IntegerField(default=1)
@@ -207,6 +210,13 @@ class Repute(models.Model):
     class Meta:
         app_label = 'askbot'
         db_table = u'repute'
+
+    def save(self, *args, **kwargs):
+        if self.question:
+            self.language_code = self.question.language_code
+        else:
+            self.language_code = get_language()
+        super(Repute, self).save(*args, **kwargs)
 
     def get_explanation_snippet(self):
         """returns HTML snippet with a link to related question

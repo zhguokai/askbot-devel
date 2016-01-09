@@ -1,4 +1,5 @@
 from askbot import const
+from askbot.models.fields import LanguageCodeField
 from django.conf import settings as django_settings
 from django.core.cache import cache
 from django.db.models.signals import post_save
@@ -161,11 +162,8 @@ class UserProfile(models.Model):
 class LocalizedUserProfile(models.Model):
     auth_user = models.ForeignKey(User, related_name='localized_askbot_profiles')
     about = models.TextField(blank=True)
-    language_code = models.CharField(
-                                choices=django_settings.LANGUAGES,
-                                default=django_settings.LANGUAGE_CODE,
-                                max_length=16,
-                            )
+    language_code = LanguageCodeField()
+    reputation = models.PositiveIntegerField(default=0)
     is_claimed = models.BooleanField(
                             default=False,
                             help_text='True, if user selects this language'
@@ -173,6 +171,9 @@ class LocalizedUserProfile(models.Model):
 
     class Meta:
         app_label = 'askbot'
+
+    def get_reputation(self):
+        return self.reputation + const.MIN_REPUTATION
 
 
 def update_user_profile(instance, **kwargs):

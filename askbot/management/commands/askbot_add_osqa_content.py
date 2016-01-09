@@ -8,6 +8,7 @@ from askbot.models import Thread
 from askbot.models import Tag
 from askbot.models import User
 from askbot.utils.slug import slugify_camelcase
+from askbot import const
 from bs4 import BeautifulSoup
 from datetime import datetime
 from django.db.models import Q
@@ -183,7 +184,7 @@ class Command(BaseImportXMLCommand):
         for profile in self.get_objects_for_model('forum.user'):
             user = self.get_imported_object_by_old_id(User, profile.id)
             self.copy_bool_parameter(profile, user, 'email_isvalid')
-            user.reputation = max(user.reputation + profile.reputation - 1, 1)
+            user.receive_reputation(profile.reputation - const.MIN_REPUTATION)
             user.gold += profile.gold
             user.silver += profile.silver
             user.bronze += profile.bronze

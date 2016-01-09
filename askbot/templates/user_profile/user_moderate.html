@@ -25,10 +25,11 @@
     </form>
 {% endif %}
 <h3>
+{% set reputation = view_user.get_localized_profile().get_reputation() %}
 {% if request.user.pk == view_user.pk %}
-    {% trans reputation=view_user.reputation %}Your current reputation is {{reputation}} points{% endtrans %}
+    {% trans %}Your current reputation is {{ reputation }} points{% endtrans %}
 {% else %}
-    {% trans reputation=view_user.reputation %}User's current reputation is {{reputation}} points{% endtrans %}
+    {% trans %}User's current reputation is {{ reputation }} points{% endtrans %}
 {% endif %}
 </h3>
 {% if user_rep_changed %}

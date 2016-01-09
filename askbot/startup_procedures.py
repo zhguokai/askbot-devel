@@ -155,10 +155,10 @@ def test_middleware():
         'askbot.middleware.cancel.CancelActionMiddleware',
         'django.middleware.transaction.TransactionMiddleware',
     ]
-    if 'debug_toolbar' in django_settings.INSTALLED_APPS:
-        required_middleware.append(
-            'debug_toolbar.middleware.DebugToolbarMiddleware',
-        )
+    #if 'debug_toolbar' in django_settings.INSTALLED_APPS:
+    #    required_middleware.append(
+    #        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #    )
     required_middleware.extend([
         'askbot.middleware.view_log.ViewLogMiddleware',
         'askbot.middleware.spaceless.SpacelessMiddleware',
@@ -935,10 +935,10 @@ def test_group_messaging():
     """tests correctness of the "group_messaging" app configuration"""
     errors = list()
     if 'askbot.deps.group_messaging' not in django_settings.INSTALLED_APPS:
-        errors.append("add to the INSTALLED_APPS:\n'group_messaging'")
+        errors.append("add to the INSTALLED_APPS:\n'askbot.deps.group_messaging',")
 
     if 'group_messaging' in django_settings.INSTALLED_APPS:
-        errors.append("remove from the INSTALLED_APPS:\n'group_messaging'")
+        errors.append("remove from the INSTALLED_APPS:\n'group_messaging',")
 
     settings_sample = ("GROUP_MESSAGING = {\n"
     "    'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',\n"
