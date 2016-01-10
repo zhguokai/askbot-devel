@@ -112,13 +112,14 @@ class UserProfile(models.Model):
     status = models.CharField(
                             max_length=2,
                             default=const.DEFAULT_USER_STATUS,
-                            choices=const.USER_STATUS_CHOICES
+                            choices=const.USER_STATUS_CHOICES,
+                            db_index=True
                         )
     is_fake = models.BooleanField(default=False)
     email_isvalid = models.BooleanField(default=False)
     email_key = models.CharField(max_length=32, null=True)
     #hardcoded initial reputaion of 1, no setting for this one
-    reputation = models.PositiveIntegerField(default=const.MIN_REPUTATION)
+    reputation = models.PositiveIntegerField(default=const.MIN_REPUTATION, db_index=True)
     gravatar = models.CharField(max_length=32)
     #has_custom_avatar = models.BooleanField(default=False)
     avatar_type = models.CharField(
@@ -193,10 +194,11 @@ class UserProfile(models.Model):
 class LocalizedUserProfile(models.Model):
     auth_user = models.ForeignKey(User, related_name='localized_askbot_profiles')
     about = models.TextField(blank=True)
-    language_code = LanguageCodeField()
-    reputation = models.PositiveIntegerField(default=0)
+    language_code = LanguageCodeField(db_index=True)
+    reputation = models.PositiveIntegerField(default=0, db_index=True)
     is_claimed = models.BooleanField(
                             default=False,
+                            db_index=True,
                             help_text='True, if user selects this language'
                         )
 
