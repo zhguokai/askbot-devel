@@ -15,6 +15,13 @@ def get_profile_cache_key(user):
     raise ValueError('auth.models.User is not saved, cant make cache key')
 
 
+def get_localized_profile_cache_key(user, lang):
+    if user.pk:
+        data = {'pk': user.pk, 'lang': lang}
+        return 'localized-askbot-profile-{pk}-{lang}'.format(**data)
+    raise ValueError('auth.models.User is not saved, cant make cache key')
+
+
 def get_profile_from_db(user):
     if user.pk:
         profile, junk = UserProfile.objects.get_or_create(auth_user_ptr=user)
@@ -43,8 +50,7 @@ def user_profile_property(field_name):
     def setter(user, value):
         profile = get_profile(user)
         setattr(profile, field_name, value)
-        key = get_profile_cache_key(user)
-        cache.set(key, profile)
+        profile.update_cache()
 
     return property(getter, setter)
 
@@ -197,8 +203,19 @@ class LocalizedUserProfile(models.Model):
     class Meta:
         app_label = 'askbot'
 
+    def get_cache_key(self):
+        return get_localized_profile_cache_key(self.auth_user, self.language_code)
+
     def get_reputation(self):
         return self.reputation + const.MIN_REPUTATION
+
+    def update_cache(self):
+        key = self.get_cache_key()
+        cache.set(key, self)
+
+    def save(self, *args, **kwargs):
+        self.update_cache()
+        super(LocalizedUserProfile, self).save(*args, **kwargs)
 
 
 def update_user_profile(instance, **kwargs):

@@ -57,7 +57,8 @@ from askbot.models.post import DraftAnswer
 from askbot.models.user_profile import (
                                 add_profile_properties,
                                 UserProfile,
-                                LocalizedUserProfile
+                                LocalizedUserProfile,
+                                get_localized_profile_cache_key
                             )
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models.badges import award_badges_signal, get_badge
@@ -1343,20 +1344,29 @@ def user_assert_can_revoke_old_vote(self, vote):
             _('sorry, but older votes cannot be revoked')
         )
 
+
 def user_get_localized_profile(self):
-    kwargs = {
-        'language_code': get_language(),
-        'auth_user': self
-    }
-    return LocalizedUserProfile.objects.get_or_create(**kwargs)[0]
+    lang = get_language()
+    key = get_localized_profile_cache_key(self, lang)
+    profile = cache.get(key)
+    if not profile:
+        kwargs = {
+            'language_code': lang,
+            'auth_user': self
+        }
+        profile = LocalizedUserProfile.objects.get_or_create(**kwargs)[0]
+        profile.update_cache()
+    return profile
+
 
 def user_update_localized_profile(self, **kwargs):
-    lang = get_language()
-    lp = LocalizedUserProfile.objects.filter(auth_user=self, language_code=lang)
-    count = lp.update(**kwargs)
-    if count == 0:
-        lp = LocalizedUserProfile(auth_user=self, language_code=lang, **kwargs)
-        lp.save()
+    profile = self.get_localized_profile()
+    for key, val in kwargs.items():
+        setattr(profile, key, val)
+    profile.update_cache()
+    lp = LocalizedUserProfile.objects.filter(pk=profile.pk)
+    lp.update(**kwargs)
+
 
 def user_get_unused_votes_today(self):
     """returns number of votes that are
@@ -2716,6 +2726,10 @@ def user_set_languages(self, langs, primary=None):
                                     language_code__in=removed_langs
                                 )
         profiles.update(is_claimed=False)
+
+    profiles = profile_objects.filter(auth_user=self)
+    for profile in profiles:
+        profile.update_cache()
 
 
 def user_get_languages(self):
