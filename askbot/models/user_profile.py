@@ -172,6 +172,17 @@ class UserProfile(models.Model):
     class Meta:
         app_label = 'askbot'
 
+    def get_cache_key(self):
+        return get_profile_cache_key(self.auth_user_ptr)
+
+    def update_cache(self):
+        key = self.get_cache_key()
+        cache.set(key, self)
+
+    def save(self, *args, **kwargs):
+        self.update_cache()
+        super(UserProfile, self).save(*args, **kwargs)
+
 
 class LocalizedUserProfile(models.Model):
     auth_user = models.ForeignKey(User, related_name='localized_askbot_profiles')

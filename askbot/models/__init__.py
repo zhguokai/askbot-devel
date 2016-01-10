@@ -235,7 +235,7 @@ def user_get_avatar_url(self, size=48):
     JSONField .avatar_urls is used as "cache"
     to avoid multiple db hits to fetch avatar urls
     """
-    size = int(size)
+    size = str(size)
     url = self.avatar_urls.get(size)
     if not url:
         url = self.calculate_avatar_url(size)
@@ -282,7 +282,7 @@ def user_init_avatar_urls(self):
     from avatar.conf import settings as avatar_settings
     sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
     for size in sizes:
-        size = int(size)
+        size = str(size)
         if size not in self.avatar_urls:
             self.avatar_urls[size] = self.calculate_avatar_url(size)
 
@@ -3689,7 +3689,9 @@ def record_user_visit(user, timestamp, **kwargs):
         'last_seen': timestamp,
         'consecutive_days_visit_count': consecutive_days
     }
-    UserProfile.objects.filter(pk=user.id).update(**update_data)
+    UserProfile.objects.filter(pk=user.pk).update(**update_data)
+    profile = UserProfile.objects.get(pk=user.pk)
+    profile.update_cache()
 
 
 def record_question_visit(request, question, **kwargs):
