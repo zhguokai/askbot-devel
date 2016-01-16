@@ -482,7 +482,7 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'USE_TIME_LIMIT_TO_EDIT_ANSWER',
-        defualt=False,
+        default=False,
         description=_('Limit time to edit answers'),
         help_text=_('If unchecked, there will be no time limit')
     )
@@ -502,7 +502,7 @@ settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
         'USE_TIME_LIMIT_TO_EDIT_QUESTION',
-        defualt=False,
+        default=False,
         description=_('Limit time to edit questions'),
         help_text=_('If unchecked, there will be no time limit')
     )

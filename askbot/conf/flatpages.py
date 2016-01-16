@@ -18,6 +18,7 @@ settings.register(
         FLATPAGES,
         'FORUM_ABOUT',
         description=_('Text of the Q&amp;A forum About page (html format)'),
+        default='',
         localized=True,
         help_text=\
         _(
@@ -32,6 +33,7 @@ settings.register(
         FLATPAGES,
         'FORUM_HELP',
         description=_('Text of the Help page (html format)'),
+        default='',
         localized=True,
         help_text=\
         _(
@@ -46,6 +48,7 @@ settings.register(
         FLATPAGES,
         'FORUM_FAQ',
         description=_('Text of the Q&amp;A forum FAQ page (html format)'),
+        default='',
         localized=True,
         help_text=\
         _(

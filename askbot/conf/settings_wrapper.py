@@ -21,8 +21,10 @@ at run time
 askbot.deps.livesettings is a module developed for satchmo project
 """
 import askbot
+import logging
 from django.conf import settings as django_settings
 from django.core.cache import cache
+from django.contrib.sites.models import Site
 from django.utils.encoding import force_unicode
 from django.utils.functional import lazy
 from django.utils.translation import get_language
@@ -31,6 +33,7 @@ from django.utils.translation import ugettext_lazy as _
 from askbot.deps.livesettings import SortedDotDict, config_register
 from askbot.deps.livesettings.functions import config_get
 from askbot.deps.livesettings import signals
+from askbot.utils.functions import format_setting_name
 
 def assert_setting_info_correct(info):
     assert isinstance(info, tuple), u'must be tuple, %s found' % unicode(info)
@@ -188,18 +191,57 @@ class ConfigSettings(object):
         return cache.get(cache_key) or self.prime_cache(cache_key)
 
     @classmethod
+    def precache_all_values(cls):
+        from askbot.deps.livesettings.models import Setting, LongSetting
+        from django.contrib.sites.models import Site
+        settings = Setting.objects.filter(site=Site.objects.get_current())
+        settings = settings.select_related('site')
+        keys = set()
+        for setting in settings:
+            setting.cache_set()
+            keys.add(setting.key)
+
+        settings = LongSetting.objects.filter(site=Site.objects.get_current())
+        settings = settings.select_related('site')
+        for setting in settings:
+            setting.cache_set()
+            keys.add(setting.key)
+
+        return keys
+
+    @classmethod
     def prime_cache(cls, cache_key, **kwargs):
         """reload all settings into cache as dictionary
         """
+        db_keys = cls.precache_all_values()
+
         out = dict()
         for key in cls.__instance.keys():
-            #todo: this is odd that I could not use self.__instance.items() mapping here
             hardcoded_setting = getattr(django_settings, 'ASKBOT_' + key, None)
-            if hardcoded_setting is None:
-                out[key] = cls.__instance[key].value
+            if hardcoded_setting:
+                value = hardcoded_setting
             else:
-                out[key] = hardcoded_setting
+                setting_value = cls.__instance[key]
+                if setting_value.localized:
+                    db_key = '{}_{}'.format(key, format_setting_name(get_language()))
+                else:   
+                    db_key = key
+
+                if db_key in db_keys:
+                    value = setting_value.value
+                else:
+                    if hasattr(setting_value, 'default'):
+                        value = setting_value.default
+                    else:
+                        logging.critical('setting %s lacks default value', key)
+                        value = setting_value.value
+                    db_setting = setting_value.make_setting_with_value(value)
+                    db_setting.site = Site.objects.get_current()
+                    db_setting.cache_set()
+
+            out[key] = value
         cache.set(cache_key, out)
+
         return out
 
 
