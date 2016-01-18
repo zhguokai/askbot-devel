@@ -84,7 +84,7 @@ class DjangoOpenIDStore(OpenIDStore):
             handle = association.handle,
             secret = base64.encodestring(association.secret),
             issued = association.issued,
-            lifetime = association.issued,
+            lifetime = association.lifetime,
             assoc_type = association.assoc_type
         )
         assoc.save()
