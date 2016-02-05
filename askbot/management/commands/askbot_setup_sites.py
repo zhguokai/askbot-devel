@@ -55,7 +55,7 @@ that you must take as well. These are detailed below:
 * add the following new line to your cronjob shell script to ensure you'll be sending
     out daily/weekly digest emails about updates in the new sub-site:
     * python manage.py send_email_alerts --settings=<site_name>_settings
-* finally, reconfigure your webserver of choice as appropriate
+* finally, reconfigure your webserver of choice as appropriate, and remember to reload/restart the webserver processes for all existing sites so that they see the settings changes made above (eg. ASKBOT_PARTNER_SITE_IDS so that the new site will appear in "Post at partner sites" list on those existing sites)
 """
 
 SITES = getattr(django_settings, 'ASKBOT_SITES')
