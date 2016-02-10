@@ -13,7 +13,7 @@ VERSION = (0, 8, 1)
 #values - the package qualifier to use for pip
 REQUIREMENTS = {
     'akismet': 'akismet',
-    'avatar': 'django-avatar>=2.0',
+    'avatar': 'django-avatar==2.0',
     'bs4': 'beautifulsoup4',
     'coffin': 'Coffin>=0.3,<=0.3.8',
     'compressor': 'django-compressor>=1.3,<=1.5',
