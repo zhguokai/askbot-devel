@@ -88,18 +88,21 @@ class AuthBackend(object):
         assoc.openid_url = username + '@' + provider_name#has to be this way for external pw logins
         assoc.last_used_timestamp = datetime.datetime.now()
         assoc.save()
+        return user
 
     def auth_by_local_password(self, username, password):
         try:
             user = User.objects.get(username=username)
-            if not user.check_password(password):
-                return None
+            if user.check_password(password):
+                return user
+            return None
         except User.DoesNotExist:
             try:
                 email_address = username
                 user = User.objects.get(email=email_address)
-                if not user.check_password(password):
-                    return None
+                if user.check_password(password):
+                    return user
+                return None
             except User.DoesNotExist:
                 return None
             except User.MultipleObjectsReturned:
@@ -183,13 +186,13 @@ class AuthBackend(object):
             assoc.update_timestamp()
             return assoc.user
         except UserAssociation.DoesNotExist:
-            pass
+            return None
         except UserAssociation.MultipleObjectsReturned:
             LOG.critical(
                 'duplicate user identifier %s for login provider %s',
                 identifier, provider_name
             )
-        return None
+            return None
 
     def auth_by_ldap(self, username, password):
         user_info = ldap_authenticate(username, password)
