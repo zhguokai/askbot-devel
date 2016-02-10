@@ -91,27 +91,28 @@ class AuthBackend(object):
         return user
 
     def auth_by_local_password(self, username, password):
-        try:
-            user = User.objects.get(username=username)
+        users = User.objects.filter(username__iexact=username)
+        count = users.count()
+        if count >= 1:
+            user = users[0]
+            if count > 1:
+                LOG.critical('clashing users for username %s' % username)
             if user.check_password(password):
                 return user
             return None
-        except User.DoesNotExist:
-            try:
-                email_address = username
-                user = User.objects.get(email=email_address)
-                if user.check_password(password):
-                    return user
-                return None
-            except User.DoesNotExist:
-                return None
-            except User.MultipleObjectsReturned:
-                LOG.critical(
-                    ('have more than one user with email %s ' +
-                    'he/she will not be able to authenticate with ' +
-                    'the email address in the place of user name') % email_address
-                )
-                return None
+
+        #try logging in via email address
+        email_address = username
+        users = User.objects.filter(email__iexact=email_address)
+        count = users.count()
+        if count >= 1:
+            user = users[0]
+            if count > 1:
+                LOG.critical('clashing users for email %s' % username)
+            if user.check_password(password):
+                return user
+        return None
+
 
     def auth_by_external_password(self, provider_name, username, password):
         """authenticates by external password
@@ -165,7 +166,7 @@ class AuthBackend(object):
     @classmethod
     def auth_by_email(cls, email):
         try:
-            return User.objects.get(email=email)
+            return User.objects.get(email__iexact=email)
         except User.DoesNotExist:
             return None
         except User.MultipleObjectsReturned:
