@@ -1107,19 +1107,25 @@ def register(request, login_provider_name=None,
         def email_is_acceptable(email):
             email = email.strip()
 
-            blacklisting_on = askbot_settings.BLACKLISTED_EMAIL_PATTERNS_MODE != 'disabled'
-
-            is_blacklisted = email and blacklisting_on and util.email_is_blacklisted(email)
-            is_blank_and_ok = (email == '') \
+            is_blank = (email == '')
+            is_blank_and_ok = is_blank \
                                 and askbot_settings.BLANK_EMAIL_ALLOWED \
                                 and askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing'
+            if is_blank_and_ok:
+                return True
 
-            return bool((not is_blacklisted) or is_blank_and_ok)
+            blacklisting_on = askbot_settings.BLACKLISTED_EMAIL_PATTERNS_MODE != 'disabled'
+            is_blacklisted = blacklisting_on and util.email_is_blacklisted(email)
+            is_good = not is_blacklisted
+
+            is_available = User.objects.filter(email__iexact=email).count() == 0
+
+            return is_available and is_good
 
         def username_is_acceptable(username):
             if username.strip() == '':
                 return False
-            return User.objects.filter(username=username).count() == 0
+            return User.objects.filter(username__iexact=username).count() == 0
 
         #new style login providers support one click registration
         if hasattr(provider_data, 'one_click_registration') and provider_data.one_click_registration:

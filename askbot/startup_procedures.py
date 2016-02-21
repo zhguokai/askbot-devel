@@ -253,7 +253,7 @@ def test_specs(req):
         message = """Unsupported version of module {name},
 found version {mod_ver}, {need_spec} required.
 please run:
-> pip uninstall {name} && pip install {need_spec}""".format(**data)
+> pip uninstall '{name}' && pip install '{need_spec}'""".format(**data)
         raise AskbotConfigError(message)
 
 
