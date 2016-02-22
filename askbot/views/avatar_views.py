@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.encoding import force_str
+from django.utils.encoding import force_unicode
 from django.utils.translation import ugettext as _
 import functools
 
@@ -109,6 +109,12 @@ def show_list(request, user_id=None, extra_context=None, avatar_size=128):
     avatar_data, has_uploaded_avatar, can_upload = get_avatar_data(user, avatar_size)
     status_message = request.session.pop('askbot_avatar_status_message', None)
 
+    if not isinstance(status_message, unicode):
+        #work around bug where this was accidentally encoded into str
+        #and stored into session - we lose this message
+        #delete this branch some time in 2017
+        status_message = ''
+
     context = {
         #these are user profile context vars
         'can_show_karma': user_can_see_karma(request.user, user),
@@ -172,7 +178,7 @@ def upload(request, user_id=None):
                 message = _('Avatar uploaded and set as primary')
             else:
                 errors = get_error_list(form)
-                message = ', '.join(map(lambda v: force_str(v), errors))
+                message = u', '.join(map(lambda v: force_unicode(v), errors))
         else:
             message = _('Please choose file to upload')
 
