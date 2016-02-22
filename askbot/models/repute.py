@@ -39,7 +39,7 @@ class Vote(models.Model):
         (VOTE_UP,   u'Up'),
         (VOTE_DOWN, u'Down'),
     )
-    user = models.ForeignKey('auth.User', related_name='votes')
+    user = models.ForeignKey('auth.User', related_name='askbot_votes')
     voted_post = models.ForeignKey('Post', related_name='votes')
 
     vote           = models.SmallIntegerField(choices=VOTE_CHOICES)
