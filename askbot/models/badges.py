@@ -263,7 +263,7 @@ class CivicDuty(Badge):
         obj = context_object
         if not (obj.is_question() or obj.is_answer() or obj.is_comment()):
             return False
-        if actor.votes.count() >= askbot_settings.CIVIC_DUTY_BADGE_MIN_VOTES:
+        if actor.askbot_votes.count() >= askbot_settings.CIVIC_DUTY_BADGE_MIN_VOTES:
             return self.award(actor, obj, timestamp)
         return False
 
