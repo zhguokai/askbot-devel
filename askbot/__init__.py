@@ -21,7 +21,7 @@ REQUIREMENTS = {
     'compressor': 'django-compressor>=1.3,<=1.5',
     'django': 'django>=1.8,<1.9',
     'django_countries': 'django-countries==3.3',
-    'djcelery': 'django-celery>=3.0.11',
+    'djcelery': 'django-celery==3.1.17',
     'djkombu': 'django-kombu==0.9.4',
     'followit': 'django-followit==0.2.0',
     'html5lib': 'html5lib==0.90',
