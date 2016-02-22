@@ -14,7 +14,7 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
-from django.utils.translation import get_language
+from django.utils.translation import get_language as _get_language
 from django.utils.translation import activate as activate_language
 from django.core.files import storage
 from askbot.deps.livesettings.models import find_setting, LongSetting, Setting, SettingNotSet
@@ -38,6 +38,9 @@ _WARN = {}
 log = logging.getLogger('configuration')
 
 NOTSET = object()
+
+def get_language():
+    return _get_language() or django_settings.LANGUAGE_CODE
 
 class SortedDotDict(SortedDict):
 
