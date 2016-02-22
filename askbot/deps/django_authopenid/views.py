@@ -499,7 +499,7 @@ def signin(request, template_name='authopenid/signin.html'):
                     password = login_form.cleaned_data['password']
 
                     user = authenticate(
-                                    method = 'ldap',
+                                    method='ldap',
                                     username=username,
                                     password=password,
                                 )

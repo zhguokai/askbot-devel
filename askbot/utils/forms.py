@@ -129,7 +129,7 @@ class UserNameField(StrippedNonEmptyCharField):
                 **kw
             )
 
-    def clean(self,username):
+    def clean(self, username):
         """ validate username """
         if self.skip_clean == True:
             logging.debug('username accepted with no validation')
