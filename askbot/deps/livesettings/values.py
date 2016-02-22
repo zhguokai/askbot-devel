@@ -239,7 +239,7 @@ class Value(object):
     choice_values = property(fget=_choice_values)
 
     def copy(self):
-        new_value = self.__class__(self.key)
+        new_value = self.__class__(self.group, self.key)
         new_value.__dict__ = self.__dict__.copy()
         return new_value
 
@@ -316,11 +316,15 @@ class Value(object):
 
         return fields
 
+    def make_setting_with_value(self, value, language_code=None):
+        db_value = self.get_db_prep_save(value)
+        return self.make_setting(db_value, language_code=language_code)
+
     def make_setting(self, db_value, language_code=None):
         log.debug('new setting %s.%s', self.group.key, self.key)
         key = self.key
-        if self.localized and language_code:
-            key += '_' + format_setting_name(language_code)
+        if self.localized:
+            key += '_' + format_setting_name(language_code or get_language())
         return Setting(group=self.group.key, key=key, value=db_value)
 
     def _setting(self):
@@ -675,6 +679,10 @@ class StringValue(Value):
             self.language_code = kwargs.pop('language_code', django_settings.LANGUAGE_CODE)
             forms.CharField.__init__(self, *args, **kwargs)
 
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('default', '')
+        super(StringValue, self).__init__(*args, **kwargs)
+
     def to_python(self, value):
         if value == NOTSET:
             value = ""
@@ -699,6 +707,10 @@ class LongStringValue(Value):
             kwargs['widget'] = forms.Textarea()
             self.language_code = kwargs.pop('language_code', django_settings.LANGUAGE_CODE)
             forms.CharField.__init__(self, *args, **kwargs)
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('default', '')
+        super(LongStringValue, self).__init__(*args, **kwargs)
 
     def make_setting(self, db_value, language_code=None):
         log.debug('new long setting %s.%s', self.group.key, self.key)
@@ -754,7 +766,7 @@ class ImageValue(StringValue):
     def make_field(self, **kwargs):
         kwargs['url_resolver'] = self.url_resolver
         kwargs['allowed_file_extensions'] = self.allowed_file_extensions
-        return super(StringValue, self).make_field(**kwargs)
+        return super(ImageValue, self).make_field(**kwargs)
 
     def update(self, uploaded_file, language_code=None):
         """uploaded_file is an instance of
@@ -840,7 +852,7 @@ class ModuleValue(Value):
         """Load a child module"""
         value = self._value()
         if value == NOTSET:
-            raise SettingNotSet("%s.%s", self.group.key, self.key)
+            raise SettingNotSet("%s.%s" % (self.group.key, self.key))
         else:
             return load_module("%s.%s" % (value, module))
 

@@ -1,4 +1,5 @@
 from askbot import const
+from askbot.models.fields import LanguageCodeField
 from django.conf import settings as django_settings
 from django.core.cache import cache
 from django.db.models.signals import post_save
@@ -8,16 +9,35 @@ from django.utils import timezone
 from jsonfield import JSONField
 from django_countries.fields import CountryField
 
+def get_profile_cache_key(user):
+    if user.pk:
+        return 'askbot-profile-{}'.format(user.pk)
+    raise ValueError('auth.models.User is not saved, cant make cache key')
+
+
+def get_localized_profile_cache_key(user, lang):
+    if user.pk:
+        data = {'pk': user.pk, 'lang': lang}
+        return 'localized-askbot-profile-{pk}-{lang}'.format(**data)
+    raise ValueError('auth.models.User is not saved, cant make cache key')
+
+
+def get_profile_from_db(user):
+    if user.pk:
+        profile, junk = UserProfile.objects.get_or_create(auth_user_ptr=user)
+        return profile
+    raise ValueError('auth.models.User is not saved, cant make UserProfile')
+
 
 def get_profile(user):
-    try:
-        return user.askbot_profile
-    except UserProfile.DoesNotExist:
-        if not user.pk:
-            raise ValueError('auth.models.User is not saved, cant make UserProfile')
-        profile = UserProfile.objects.create(auth_user_ptr=user)
-        setattr(user, 'askbot_profile', profile)
-        return profile
+    key = get_profile_cache_key(user)
+    profile = cache.get(key)
+    if not profile:
+        profile = get_profile_from_db(user)
+        cache.set(key, profile)
+
+    setattr(user, 'askbot_profile', profile)
+    return profile
 
 
 def user_profile_property(field_name):
@@ -31,6 +51,7 @@ def user_profile_property(field_name):
         profile = get_profile(user)
         setattr(profile, field_name, value)
         UserProfile.objects.filter(pk=profile.pk).update(**{field_name: value})
+        profile.update_cache()
 
     return property(getter, setter)
 
@@ -92,13 +113,14 @@ class UserProfile(models.Model):
     status = models.CharField(
                             max_length=2,
                             default=const.DEFAULT_USER_STATUS,
-                            choices=const.USER_STATUS_CHOICES
+                            choices=const.USER_STATUS_CHOICES,
+                            db_index=True
                         )
     is_fake = models.BooleanField(default=False)
     email_isvalid = models.BooleanField(default=False)
     email_key = models.CharField(max_length=32, null=True)
     #hardcoded initial reputaion of 1, no setting for this one
-    reputation = models.PositiveIntegerField(default=const.MIN_REPUTATION)
+    reputation = models.PositiveIntegerField(default=const.MIN_REPUTATION, db_index=True)
     gravatar = models.CharField(max_length=32)
     #has_custom_avatar = models.BooleanField(default=False)
     avatar_type = models.CharField(
@@ -158,22 +180,45 @@ class UserProfile(models.Model):
     class Meta:
         app_label = 'askbot'
 
+    def get_cache_key(self):
+        return get_profile_cache_key(self.auth_user_ptr)
+
+    def update_cache(self):
+        key = self.get_cache_key()
+        cache.set(key, self)
+
+    def save(self, *args, **kwargs):
+        self.update_cache()
+        super(UserProfile, self).save(*args, **kwargs)
+
 
 class LocalizedUserProfile(models.Model):
     auth_user = models.ForeignKey(User, related_name='localized_askbot_profiles')
     about = models.TextField(blank=True)
-    language_code = models.CharField(
-                                choices=django_settings.LANGUAGES,
-                                default=django_settings.LANGUAGE_CODE,
-                                max_length=16,
-                            )
+    language_code = LanguageCodeField(db_index=True)
+    reputation = models.PositiveIntegerField(default=0, db_index=True)
     is_claimed = models.BooleanField(
                             default=False,
+                            db_index=True,
                             help_text='True, if user selects this language'
                         )
 
     class Meta:
         app_label = 'askbot'
+
+    def get_cache_key(self):
+        return get_localized_profile_cache_key(self.auth_user, self.language_code)
+
+    def get_reputation(self):
+        return self.reputation + const.MIN_REPUTATION
+
+    def update_cache(self):
+        key = self.get_cache_key()
+        cache.set(key, self)
+
+    def save(self, *args, **kwargs):
+        self.update_cache()
+        super(LocalizedUserProfile, self).save(*args, **kwargs)
 
 
 def update_user_profile(instance, **kwargs):

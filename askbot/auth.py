@@ -28,7 +28,8 @@ def onFlaggedItem(post, user, timestamp=None):
     flagged_user = post.author
 
     flagged_user.receive_reputation(
-        askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG
+        askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG,
+        post.language_code
     )
     flagged_user.save()
 
@@ -60,7 +61,8 @@ def onFlaggedItem(post, user, timestamp=None):
         #todo: strange - are we supposed to hide the post here or the name of
         #setting is incorrect?
         flagged_user.receive_reputation(
-            askbot_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION
+            askbot_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION,
+            post.language_code
         )
 
         flagged_user.save()
@@ -78,7 +80,8 @@ def onFlaggedItem(post, user, timestamp=None):
 
     elif post.offensive_flag_count == askbot_settings.MIN_FLAGS_TO_DELETE_POST:
         flagged_user.receive_reputation(
-            askbot_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION
+            askbot_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION,
+            post.language_code
         )
 
         flagged_user.save()
@@ -117,7 +120,8 @@ def onUnFlaggedItem(post, user, timestamp=None):
     flagged_user = post.author
 
     flagged_user.receive_reputation(
-        -askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG #negative of a negative
+        -askbot_settings.REP_LOSS_FOR_RECEIVING_FLAG, #negative of a negative
+        post.language_code
     )
     flagged_user.save()
 
@@ -150,7 +154,8 @@ def onUnFlaggedItem(post, user, timestamp=None):
         #todo: strange - are we supposed to hide the post here or the name of
         #setting is incorrect?
         flagged_user.receive_reputation(
-            -askbot_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION
+            -askbot_settings.REP_LOSS_FOR_RECEIVING_THREE_FLAGS_PER_REVISION,
+            post.language_code
         )
 
         flagged_user.save()
@@ -168,7 +173,8 @@ def onUnFlaggedItem(post, user, timestamp=None):
     # The post fell below DELETE treshold, undelete it
     elif post.offensive_flag_count == askbot_settings.MIN_FLAGS_TO_DELETE_POST-1 :
         flagged_user.receive_reputation(
-            -askbot_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION
+            -askbot_settings.REP_LOSS_FOR_RECEIVING_FIVE_FLAGS_PER_REVISION,
+            post.language_code
         )
 
         flagged_user.save()
@@ -205,7 +211,8 @@ def onAnswerAccept(answer, user, timestamp=None):
 
     if answer.author != user:
         answer.author.receive_reputation(
-            askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
+            askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
+            answer.language_code
         )
         answer.author.save()
         reputation = Repute(user=answer.author,
@@ -221,7 +228,10 @@ def onAnswerAccept(answer, user, timestamp=None):
         #then answering and accepting as best all by the same person
         return
 
-    user.receive_reputation(askbot_settings.REP_GAIN_FOR_ACCEPTING_ANSWER)
+    user.receive_reputation(
+        askbot_settings.REP_GAIN_FOR_ACCEPTING_ANSWER,
+        answer.language_code
+    )
     user.save()
     reputation = Repute(user=user,
                positive=askbot_settings.REP_GAIN_FOR_ACCEPTING_ANSWER,
@@ -248,7 +258,8 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
 
     if user != answer.author:
         answer.author.receive_reputation(
-            -askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE
+            -askbot_settings.REP_GAIN_FOR_RECEIVING_ANSWER_ACCEPTANCE,
+            answer.language_code
         )
         answer.author.save()
         reputation = Repute(
@@ -270,6 +281,7 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
 
     user.receive_reputation(
         -askbot_settings.REP_GAIN_FOR_ACCEPTING_ANSWER,
+        answer.language_code
     )
     user.save()
     reputation = Repute(user=user,
@@ -300,7 +312,8 @@ def onUpVoted(vote, post, user, timestamp=None):
         todays_rep_gain = Repute.objects.get_reputation_by_upvoted_today(author)
         if todays_rep_gain <  askbot_settings.MAX_REP_GAIN_PER_USER_PER_DAY:
             author.receive_reputation(
-                askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE
+                askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE,
+                post.language_code
             )
             author.save()
 
@@ -335,7 +348,8 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
     if not (post.wiki or post.is_anonymous):
         author = post.author
         author.receive_reputation(
-            -askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE
+            -askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE,
+            post.language_code
         )
         author.save()
 
@@ -364,7 +378,8 @@ def onDownVoted(vote, post, user, timestamp=None):
     if not (post.wiki or post.is_anonymous):
         author = post.author
         author.receive_reputation(
-            askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE
+            askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE,
+            post.language_code
         )
         author.save()
 
@@ -380,6 +395,7 @@ def onDownVoted(vote, post, user, timestamp=None):
 
         user.receive_reputation(
             askbot_settings.REP_LOSS_FOR_DOWNVOTING,
+            post.language_code
         )
         user.save()
 
@@ -406,7 +422,8 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
     if not (post.wiki or post.is_anonymous):
         author = post.author
         author.receive_reputation(
-            -askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE
+            -askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE,
+            post.language_code
         )
         author.save()
 
@@ -421,7 +438,10 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
             )
         reputation.save()
 
-        user.receive_reputation(-askbot_settings.REP_LOSS_FOR_DOWNVOTING)
+        user.receive_reputation(
+            -askbot_settings.REP_LOSS_FOR_DOWNVOTING,
+            post.language_code
+        )
         user.save()
 
         reputation = Repute(user=user,

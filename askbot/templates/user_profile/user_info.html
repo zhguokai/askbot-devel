@@ -20,7 +20,7 @@
             {% endif %}
         </div>
         {% if can_show_karma %}
-            <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
+            <div class="scoreNumber">{{ view_user.get_localized_profile().get_reputation()|intcomma }}</div>
             <p><b style="color:#777;">{% trans %}karma{% endtrans %}</b></p>
         {% endif %}
 

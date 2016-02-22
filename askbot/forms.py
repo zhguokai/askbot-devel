@@ -1030,7 +1030,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     in the cleaned data, and will evaluate to False if the
     settings forbids anonymous asking
     """
-    tags = TagNamesField()
     wiki = WikiField()
     group_id = forms.IntegerField(required = False, widget = forms.HiddenInput)
     openid = forms.CharField(
@@ -1043,6 +1042,7 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
         self.fields['title'] = TitleField()
+        self.fields['tags'] = TagNamesField()
 
         if askbot_settings.MIN_QUESTION_BODY_LENGTH == 0:
             label = _('Add details (optional)')
@@ -1307,11 +1307,11 @@ class CloseForm(forms.Form):
 
 
 class RetagQuestionForm(forms.Form):
-    tags = TagNamesField()
 
     def __init__(self, question, *args, **kwargs):
         """initialize the default values"""
         super(RetagQuestionForm, self).__init__(*args, **kwargs)
+        self.fields['tags'] = TagNamesField()
         self.fields['tags'].initial = question.thread.tagnames
 
 
@@ -1338,7 +1338,6 @@ class RevisionForm(forms.Form):
         self.fields['revision'].initial = latest_revision.revision
 
 class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
-    tags = TagNamesField()
     summary = SummaryField()
     wiki = WikiField()
     suppress_email = SuppressEmailField()
@@ -1356,6 +1355,7 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
         self.fields['title'].initial = revision.title
         self.fields['text'].initial = revision.text
         self.fields['text'].label = _('Details')
+        self.fields['tags'] = TagNamesField()
         self.fields['tags'].initial = revision.tagnames
         self.fields['wiki'].initial = self.question.wiki
         #hide the reveal identity field
@@ -1706,7 +1706,10 @@ class SubscribeForEmailUpdatesField(forms.ChoiceField):
 
 
 class SimpleEmailSubscribeForm(forms.Form):
-    subscribe = SubscribeForEmailUpdatesField()
+
+    def __init__(self, *args, **kwargs):
+        super(SimpleEmailSubscribeForm, self).__init__(*args, **kwargs)
+        self.fields['subscribe'] = SubscribeForEmailUpdatesField()
 
     def save(self, user=None):
         EFF = EditUserEmailFeedsForm
@@ -1768,12 +1771,12 @@ class ShareQuestionForm(forms.Form):
 
 class BulkTagSubscriptionForm(forms.Form):
     date_added = forms.DateField(required=False, widget=forms.HiddenInput())
-    tags = TagNamesField(label=_("Tags"), help_text=' ')
 
     def __init__(self, *args, **kwargs):
         from askbot.models import BulkTagSubscription, Tag, Group
         super(BulkTagSubscriptionForm, self).__init__(*args, **kwargs)
         self.fields['users'] = forms.ModelMultipleChoiceField(queryset=User.objects.all())
+        self.fields['tags'] = TagNamesField(label=_("Tags"), help_text=' ')
         if askbot_settings.GROUPS_ENABLED:
             self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.exclude_personal())
 

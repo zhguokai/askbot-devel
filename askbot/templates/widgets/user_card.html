@@ -12,7 +12,7 @@
         <br/>
 
         {% if settings.KARMA_MODE == 'public' %}
-        <span class="reputation-score">{{ user.reputation }}</span>
+        <span class="reputation-score">{{ user.get_localized_profile().get_reputation() }}</span>
         {% endif %}
 
         {% if settings.BADGES_MODE == 'public' %}

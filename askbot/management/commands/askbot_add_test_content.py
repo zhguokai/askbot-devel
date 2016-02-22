@@ -5,6 +5,7 @@ from askbot.utils.console import choice_dialog
 from django.core.management.base import NoArgsCommand
 from django.conf import settings as django_settings
 from django.utils import translation
+from askbot.utils.translation import get_language
 
 
 NUM_USERS = 40
@@ -109,7 +110,7 @@ class Command(NoArgsCommand):
             user = User.objects.create_user(username,
                                             EMAIL_TEMPLATE % s_idx)
             user.set_password(PASSWORD_TEMPLATE % s_idx)
-            user.reputation = INITIAL_REPUTATION
+            user.receive_reputation(INITIAL_REPUTATION, get_language())
             user.save()
             self.print_if_verbose("Created User '%s'" % user.username)
             users.append(user)

@@ -26,7 +26,6 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
-from django.utils.translation import get_language
 from django.utils.translation import string_concat
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -38,6 +37,7 @@ from django.views.decorators import csrf
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.mail import send_mail
+from askbot.utils.translation import get_language
 from askbot.utils.http import get_request_info
 from askbot.utils import decorators
 from askbot.utils import functions
@@ -187,7 +187,11 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
             order_by_parameter = 'username'
         else:
             # default
-            order_by_parameter = '-askbot_profile__reputation'
+            if askbot.is_multilingual():
+                order_by_parameter = '-localized_askbot_profiles__reputation'
+            else:
+                order_by_parameter = '-askbot_profile__reputation'
+
 
         objects_list = Paginator(
                             users.order_by(order_by_parameter),
@@ -240,7 +244,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'search_query' : search_query,
         'tab_id' : sort_method,
         'user_acceptance_level': user_acceptance_level,
-        'user_count': users.count(),
+        'user_count': objects_list.count,
         'user_groups': user_groups,
         'user_membership_level': user_membership_level,
         'users' : users_page,
@@ -316,10 +320,10 @@ def user_moderate(request, subject, context):
                     rep_delta = -1 * rep_delta
 
                 moderator.moderate_user_reputation(
-                                    user = subject,
-                                    reputation_change = rep_delta,
-                                    comment = comment,
-                                    timestamp = timezone.now(),
+                                    user=subject,
+                                    reputation_change=rep_delta,
+                                    comment=comment,
+                                    timestamp=timezone.now(),
                                 )
                 #reset form to preclude accidentally repeating submission
                 user_rep_form = forms.ChangeUserReputationForm()
@@ -941,12 +945,24 @@ def user_votes(request, user, context):
 
 
 def user_reputation(request, user, context):
-    reputes = models.Repute.objects.filter(user=user).select_related('question', 'question__thread', 'user').order_by('-reputed_at')
+    reputes = models.Repute.objects.filter(
+                                        user=user,
+                                        language_code=get_language()
+                                    ).select_related(
+                                        'question',
+                                        'question__thread',
+                                        'user'
+                                    )
+                                    
 
     # prepare data for the graph - last values go in first
-    rep_list = ['[%s,%s]' % (calendar.timegm(timezone.now().timetuple()) * 1000, user.reputation)]
-    for rep in reputes:
-        rep_list.append('[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation))
+    reputation = const.MIN_REPUTATION
+    rep_list = list()
+    rep_list.append('[%s, %s]' % (calendar.timegm(user.date_joined.timetuple()) * 1000, reputation))
+    for rep in reputes.order_by('reputed_at'):
+        reputation += (rep.positive + rep.negative)
+        rep_list.append('[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, reputation))
+
     reps = ','.join(rep_list)
     reps = '[%s]' % reps
 
@@ -955,7 +971,7 @@ def user_reputation(request, user, context):
         'page_class': 'user-profile-page',
         'tab_name': 'reputation',
         'page_title': _("Profile - User's Karma"),
-        'reputation': reputes,
+        'reputation': reputes.order_by('-reputed_at')[:100],
         'reps': reps
     }
     context.update(data)

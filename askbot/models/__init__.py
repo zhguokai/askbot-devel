@@ -56,7 +56,8 @@ from askbot.models.post import DraftAnswer
 from askbot.models.user_profile import (
                                 add_profile_properties,
                                 UserProfile,
-                                LocalizedUserProfile
+                                LocalizedUserProfile,
+                                get_localized_profile_cache_key
                             )
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models.badges import award_badges_signal, get_badge
@@ -199,6 +200,11 @@ def user_get_gravatar_url(self, size):
                 'size': size,
             }
 
+def user_get_reputation(self):
+    if askbot.is_multilingual() and askbot_settings.REPUTATION_LOCALIZED:
+        return self.get_localized_profile().get_reputation()
+    return self.reputation
+
 def user_get_default_avatar_url(self, size):
     """returns default avatar url
     """
@@ -229,7 +235,7 @@ def user_get_avatar_url(self, size=48):
     JSONField .avatar_urls is used as "cache"
     to avoid multiple db hits to fetch avatar urls
     """
-    size = int(size)
+    size = str(size)
     url = self.avatar_urls.get(size)
     if not url:
         url = self.calculate_avatar_url(size)
@@ -276,7 +282,7 @@ def user_init_avatar_urls(self):
     from avatar.conf import settings as avatar_settings
     sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
     for size in sizes:
-        size = int(size)
+        size = str(size)
         if size not in self.avatar_urls:
             self.avatar_urls[size] = self.calculate_avatar_url(size)
 
@@ -1336,20 +1342,29 @@ def user_assert_can_revoke_old_vote(self, vote):
             _('sorry, but older votes cannot be revoked')
         )
 
+
 def user_get_localized_profile(self):
-    kwargs = {
-        'language_code': get_language(),
-        'auth_user': self
-    }
-    return LocalizedUserProfile.objects.get_or_create(**kwargs)[0]
+    lang = get_language()
+    key = get_localized_profile_cache_key(self, lang)
+    profile = cache.get(key)
+    if not profile:
+        kwargs = {
+            'language_code': lang,
+            'auth_user': self
+        }
+        profile = LocalizedUserProfile.objects.get_or_create(**kwargs)[0]
+        profile.update_cache()
+    return profile
+
 
 def user_update_localized_profile(self, **kwargs):
-    lang = get_language()
-    lp = LocalizedUserProfile.objects.filter(auth_user=self, language_code=lang)
-    count = lp.update(**kwargs)
-    if count == 0:
-        lp = LocalizedUserProfile(auth_user=self, language_code=lang, **kwargs)
-        lp.save()
+    profile = self.get_localized_profile()
+    for key, val in kwargs.items():
+        setattr(profile, key, val)
+    profile.update_cache()
+    lp = LocalizedUserProfile.objects.filter(pk=profile.pk)
+    lp.update(**kwargs)
+
 
 def user_get_unused_votes_today(self):
     """returns number of votes that are
@@ -2523,12 +2538,7 @@ def user_moderate_user_reputation(
     if comment == None:
         raise ValueError('comment is required to moderate user reputation')
 
-    new_rep = user.reputation + reputation_change
-    if new_rep < 1:
-        new_rep = 1 #todo: magic number
-        reputation_change = 1 - user.reputation
-
-    user.reputation = new_rep
+    user.receive_reputation(reputation_change, get_language())
     user.save()
 
     #any question. This is necessary because reputes are read in the
@@ -2540,13 +2550,13 @@ def user_moderate_user_reputation(
     #question record is fake and is ignored
     #this bug is hidden in call Repute.get_explanation_snippet()
     repute = Repute(
-                        user = user,
-                        comment = comment,
-                        #question = fake_question,
-                        reputed_at = timestamp,
-                        reputation_type = 10, #todo: fix magic number
-                        reputation = user.reputation
-                    )
+                user=user,
+                comment=comment,
+                #question = fake_question,
+                reputed_at=timestamp,
+                reputation_type=10, #todo: fix magic number
+                reputation=user.reputation
+            )
     if reputation_change < 0:
         repute.negative = -1 * reputation_change
     else:
@@ -2714,6 +2724,10 @@ def user_set_languages(self, langs, primary=None):
                                     language_code__in=removed_langs
                                 )
         profiles.update(is_claimed=False)
+
+    profiles = profile_objects.filter(auth_user=self)
+    for profile in profiles:
+        profile.update_cache()
 
 
 def user_get_languages(self):
@@ -3163,13 +3177,26 @@ def user_update_response_counts(user):
     user.save()
 
 
-def user_receive_reputation(self, num_points):
+def user_receive_reputation(self, num_points, language_code=None):
+    language_code = language_code or get_language()
     old_points = self.reputation
     new_points = old_points + num_points
-    if new_points > 0:
-        self.reputation = new_points
-    else:
-        self.reputation = const.MIN_REPUTATION
+    self.reputation = max(const.MIN_REPUTATION, new_points)
+
+    #record localized user reputation - this starts with 0
+    try:
+        profile = LocalizedUserProfile.objects.get(
+                                            auth_user=self,
+                                            language_code=language_code
+                                        )
+    except LocalizedUserProfile.DoesNotExist:
+        profile = LocalizedUserProfile(
+                                    auth_user=self,
+                                    language_code=language_code
+                                )
+    profile.reputation = max(0, profile.reputation + num_points)
+    profile.save()
+
     signals.reputation_received.send(None, user=self, reputation_before=old_points)
 
 def user_update_wildcard_tag_selections(
@@ -3674,7 +3701,9 @@ def record_user_visit(user, timestamp, **kwargs):
         'last_seen': timestamp,
         'consecutive_days_visit_count': consecutive_days
     }
-    UserProfile.objects.filter(pk=user.id).update(**update_data)
+    UserProfile.objects.filter(pk=user.pk).update(**update_data)
+    profile = UserProfile.objects.get(pk=user.pk)
+    profile.update_cache()
 
 
 def record_question_visit(request, question, **kwargs):

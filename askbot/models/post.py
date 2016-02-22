@@ -30,6 +30,7 @@ from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import tags_match_some_wildcard
+from askbot.models.fields import LanguageCodeField
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
@@ -485,11 +486,7 @@ class Post(models.Model):
 
     html = models.TextField(null=True)#html rendition of the latest revision
     text = models.TextField(null=True)#denormalized copy of latest revision
-    language_code = models.CharField(
-                                choices=django_settings.LANGUAGES,
-                                default=django_settings.LANGUAGE_CODE,
-                                max_length=16,
-                            )
+    language_code = LanguageCodeField()
 
     # Denormalised data
     summary = models.TextField(null=True)
@@ -2338,6 +2335,13 @@ class PostRevisionManager(models.Manager):
         #approved revisions
 
         revision.post.cache_latest_revision(revision)
+
+        #maybe add language of the post to the user's languages
+        langs = set(author.get_languages())
+        if post.language_code not in langs:
+            langs.add(post.language_code)
+            author.set_languages(langs)
+            author.save()
 
         return revision
 

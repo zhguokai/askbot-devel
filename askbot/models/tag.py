@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.conf import settings as django_settings
 from askbot.models.base import BaseQuerySetManager
+from askbot.models.fields import LanguageCodeField
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import category_tree
@@ -258,11 +259,7 @@ class Tag(models.Model):
 
     name = models.CharField(max_length=255)
     created_by = models.ForeignKey(User, related_name='created_tags')
-    language_code = models.CharField(
-                                choices=django_settings.LANGUAGES,
-                                default=django_settings.LANGUAGE_CODE,
-                                max_length=16,
-                            )
+    language_code = LanguageCodeField()
     suggested_by = models.ManyToManyField(
         User, related_name='suggested_tags',
         help_text = 'Works only for suggested tags for tag moderation'
@@ -316,11 +313,7 @@ class TagSynonym(models.Model):
     owned_by = models.ForeignKey(User, related_name='tag_synonyms')
     auto_rename_count = models.IntegerField(default=0)
     last_auto_rename_at = models.DateTimeField(auto_now=True)
-    language_code = models.CharField(
-                                choices=django_settings.LANGUAGES,
-                                default=django_settings.LANGUAGE_CODE,
-                                max_length=16,
-                            )
+    language_code = LanguageCodeField()
 
     class Meta:
         app_label = 'askbot'
