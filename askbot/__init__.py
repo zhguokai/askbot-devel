@@ -15,7 +15,7 @@ default_app_config = 'askbot.apps.AskbotConfig'
 #values - the package qualifier to use for pip
 REQUIREMENTS = {
     'akismet': 'akismet',
-    'avatar': 'django-avatar>=2.0',
+    'avatar': 'django-avatar==2.2.1',
     'bs4': 'beautifulsoup4',
     'coffin': 'Coffin>=0.3,<=0.3.8',
     'compressor': 'django-compressor>=1.3,<=1.5',
