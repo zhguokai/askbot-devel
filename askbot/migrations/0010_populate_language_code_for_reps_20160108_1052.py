@@ -50,7 +50,8 @@ def calculate_localized_reps(apps, schema_editor):
                                     auth_user=user
                                 ).aggregate(reputation=Sum('reputation'))
 
-        new_rep = const.MIN_REPUTATION + aggregate['reputation']
+        aggregate_rep = aggregate['reputation'] or 0 #dict might have 'None' value
+        new_rep = const.MIN_REPUTATION + aggregate_rep
         old_rep = user.askbot_profile.reputation
 
         #compensate if new rep is less than old

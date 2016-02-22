@@ -23,12 +23,13 @@ def populate_primary_language(apps, schema_editor):
 
 def populate_claimed_localized_profiles(apps, schema_editor):
     User = apps.get_model('auth', 'User')
+    Profile = apps.get_model('askbot', 'UserProfile')
     users = User.objects.all()
     message = 'Marking claimed localized user profiles'
     for user in ProgressBar(users.iterator(), users.count(), message):
-        profile = user.askbot_profile
+        profile, junk = Profile.objects.get_or_create(pk=user.pk)
         langs = profile.languages.strip().split()
-        localized_profiles = user.localized_user_profiles
+        localized_profiles = user.localized_askbot_profiles.all()
         for localized in localized_profiles:
             if localized.language_code in langs:
                 localized.is_claimed = True
