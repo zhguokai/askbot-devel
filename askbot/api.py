@@ -60,7 +60,7 @@ def get_admin(seed_user_id = None):
             return user
     try:
         return models.User.objects.filter(
-                        Q(is_superuser=True) | Q(status='m')
+                        Q(is_superuser=True) | Q(askbot_profile__status='m')
                     ).order_by('id')[0]
     except IndexError:
         raise models.User.DoesNotExist(
