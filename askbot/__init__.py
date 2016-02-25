@@ -24,7 +24,7 @@ REQUIREMENTS = {
     'django_transaction_signals': 'django-transaction-signals',
     'djcelery': 'django-celery>=3.0.11',
     'djkombu': 'django-kombu==0.9.4',
-    'followit': 'django-followit==0.1.0',
+    'followit': 'django-followit==0.1.1',
     'html5lib': 'html5lib==0.90',
     'jinja2': 'Jinja2>=2.8',
     'jsonfield': 'jsonfield',
