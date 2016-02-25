@@ -31,19 +31,18 @@
             {% else %}
                 {% set is_following = False %}
             {% endif %}
-            {% set alias=view_user.username|escape %}
             <button class="js-follow-user button large"
                 data-is-on="{{ is_following|as_js_bool }}"
-                data-off-prompt-text="{% trans %}unfollow {{ alias }}{% endtrans %}"
-                data-on-prompt-text="{% trans %}follow {{ alias }}{% endtrans %}"
-                data-on-state-text="{% trans %}following {{ alias }}{% endtrans %}"
-                data-off-state-text="{% trans %}follow {{ alias }}{% endtrans %}"
+                data-off-prompt-text="{% trans %}unfollow{% endtrans %}"
+                data-on-prompt-text="{% trans %}follow{% endtrans %}"
+                data-on-state-text="{% trans %}following{% endtrans %}"
+                data-off-state-text="{% trans %}follow{% endtrans %}"
                 data-toggle-url="{% url 'toggle_follow_object' model_name='user', object_id=view_user.id %}"
             >
                 {% if is_following %}
-                    {% trans %}following {{ alias }}{% endtrans %}
+                    {% trans %}following{% endtrans %}
                 {% else %}
-                    {% trans %}follow {{ alias }}{% endtrans %}
+                    {% trans %}follow{% endtrans %}
                 {% endif %}
             </button>
         {% endif %}
