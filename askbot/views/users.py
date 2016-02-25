@@ -83,7 +83,7 @@ def clear_new_notifications(request):
     activity_types += (
         const.TYPE_ACTIVITY_MENTION,
     )
-    post_data = simplejson.loads(request.raw_post_data)
+    post_data = simplejson.loads(request.body)
     memo_set = models.ActivityAuditStatus.objects.filter(
         id__in=post_data['memo_ids'],
         activity__activity_type__in=activity_types,
@@ -94,7 +94,7 @@ def clear_new_notifications(request):
 
 @decorators.ajax_only
 def delete_notifications(request):
-    post_data = simplejson.loads(request.raw_post_data)
+    post_data = simplejson.loads(request.body)
     memo_set = models.ActivityAuditStatus.objects.filter(
         id__in=post_data['memo_ids'],
         user=request.user
