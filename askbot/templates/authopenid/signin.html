@@ -110,7 +110,7 @@
                         <input class="required login" id="id_new_password" 
                             maxlength="128" name="new_password" type="password"
                             {% if login_form.new_password.value() %}
-                                value="{{ login_form.new_method.value()|escape }}"
+                                value="{{ login_form.new_password.value()|escape }}"
                             {% endif %}
                             placeholder="{% trans %}New password{% endtrans %}"
                         >
@@ -120,7 +120,7 @@
                         <input class="required login" id="id_new_password_retyped" maxlength="128" 
                             name="new_password_retyped" type="password"
                             {% if login_form.new_password_retyped.value() %}
-                                value="{{ login_form.new_password_retype.value()|escape }}"
+                                value="{{ login_form.new_password_retyped.value()|escape }}"
                             {% endif %}
                             placeholder="{% trans %}Please, retype{% endtrans %}"
                         >
