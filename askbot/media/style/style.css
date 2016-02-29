@@ -71,12 +71,16 @@ select {
   width: 100%;
   -webkit-appearance: menulist-button;
 }
-input[type="text"].prompt, input[type="password"].prompt, input.tipped-input.blank {
+input[type="email"].prompt,
+input[type="text"].prompt,
+input[type="password"].prompt,
+input.tipped-input.blank {
   color: #707070;
 }
 textarea:focus, input:focus {
   outline: none;
 }
+input[type="email"],
 input[type="text"],
 input[type="password"],
 select,
@@ -2893,7 +2897,7 @@ ul.js-related-tags li {
   background-position: -52px 0px;
 }
 /* -----Content pages, Login, About, FAQ, Users----- */
-.openid-signin input[type="text"], .openid-signin input[type="password"] {
+.openid-signin input[type="email"], .openid-signin input[type="text"], .openid-signin input[type="password"] {
   color: #525252;
   font-size: 12px;
   line-height: 25px;
@@ -2908,7 +2912,7 @@ ul.js-related-tags li {
 .form-group .error {
   display: block;
 }
-.registration-page .login input[type="text"] {
+.registration-page .login input[type="email"], .registration-page .login input[type="password"], .registration-page .login input[type="text"] {
   height: 22px;
   font-size: 12px;
   line-height: 22px;
@@ -2943,6 +2947,10 @@ ul.js-related-tags li {
 .user-profile-page form {
   margin-bottom: 15px;
 }
+.meta input[type="email"],
+.users-page input[type="email"],
+.user-profile-edit-page input[type="email"],
+.user-profile-page input[type="email"],
 .meta input[type="text"],
 .users-page input[type="text"],
 .user-profile-edit-page input[type="text"],
@@ -3108,6 +3116,10 @@ ul.js-related-tags li {
 .openid-signin form {
   margin-bottom: 5px;
 }
+#local_login_buttons input[type="email"],
+#password-fs input[type="email"],
+#openid-fs input[type="email"],
+#signup-form input[type="email"],
 #local_login_buttons input[type="text"],
 #password-fs input[type="text"],
 #openid-fs input[type="text"],
