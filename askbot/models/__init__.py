@@ -113,7 +113,7 @@ def get_admin():
 
 def get_moderators():
     return User.objects.filter(
-            Q(status='m') | Q(is_superuser=True)
+            Q(askbot_profile__status='m') | Q(is_superuser=True)
         ).filter(
             is_active = True
         )
