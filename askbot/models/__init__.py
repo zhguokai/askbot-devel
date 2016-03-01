@@ -189,7 +189,7 @@ if DJANGO_VERSION > (1, 3):
 add_profile_properties(User)
 
 GRAVATAR_TEMPLATE = "%(gravatar_url)s/%(gravatar)s?" + \
-    "s=%(size)d&amp;d=%(type)s&amp;r=PG"
+    "s=%(size)s&amp;d=%(type)s&amp;r=PG"
 
 def user_get_gravatar_url(self, size):
     """returns gravatar url
