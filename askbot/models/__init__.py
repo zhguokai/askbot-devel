@@ -287,7 +287,7 @@ User.add_to_class(
 )
 
 GRAVATAR_TEMPLATE = "%(gravatar_url)s/%(gravatar)s?" + \
-    "s=%(size)d&amp;d=%(type)s&amp;r=PG"
+    "s=%(size)s&amp;d=%(type)s&amp;r=PG"
 
 def user_get_gravatar_url(self, size):
     """returns gravatar url
