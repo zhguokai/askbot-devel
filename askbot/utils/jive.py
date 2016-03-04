@@ -15,6 +15,7 @@ import sys
 #from pprint import pprint
 import re
 import logging
+from askbot.utils.html import sanitized
 try:
     from hashlib import md5
 except ImportError:
@@ -92,6 +93,7 @@ class JiveConverter(object):
         self.list_level = 0
 
     _ws_only_line_re = re.compile(r"^[ \t]+$", re.M)
+    @sanitized
     def convert(self, text):
         """main function that converts markup --> html.
         Strategy: go line by line then parse lines.
@@ -102,7 +104,8 @@ class JiveConverter(object):
         text = self._normalize(text)
         text = self._run_block_gamut(text)
         text = self._unhash_html_blocks(text)
-        return _regularize_eols(text)#maybe prettyfy
+        html = _regularize_eols(text)#maybe prettyfy
+        return html
 
     def _hashed(self, html):
         """hashes html block and returns the hash surrounded by eols"""
