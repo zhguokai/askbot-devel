@@ -15,6 +15,7 @@
 from django.contrib.syndication.views import Feed
 
 import itertools
+import askbot.utils.timezone
 
 from django.conf import settings as django_settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -59,7 +60,7 @@ class RssIndividualQuestionFeed(Feed):
     def item_pubdate(self, item):
         """get date of creation for the item
         """
-        return item.added_at
+        return askbot.utils.timezone.make_aware(item.added_at)
 
     def items(self, item):
         """get content items for the feed
@@ -135,7 +136,7 @@ class RssLastestQuestionsFeed(Feed):
     def item_pubdate(self, item):
         """get date of creation for the item
         """
-        return item.added_at
+        return askbot.utils.timezone.make_aware(item.added_at)
 
     def item_guid(self, item):
         """returns url without the slug
