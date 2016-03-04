@@ -45,8 +45,11 @@ class ReplaceLinksWithTextTests(TestCase):
         )
 
     def test_local_image_not_replaced(self):
-        text = '<img src="/some-image.gif"/>'
-        self.assertEqual(replace_links_with_text(text), text)
+        text = u'<img src="/some-image.gif"/>'
+        self.assertEqual(
+                replace_links_with_text(text), 
+                u'<img src="/some-image.gif">'
+            )
 
     def test_local_url_with_hotlinked_image_replaced(self):
         text = '<a href="/some-link"><img src="http://example.com/img.png" alt="picture""> some text</a>'

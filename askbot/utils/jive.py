@@ -102,7 +102,8 @@ class JiveConverter(object):
         text = self._normalize(text)
         text = self._run_block_gamut(text)
         text = self._unhash_html_blocks(text)
-        return _regularize_eols(text)#maybe prettyfy
+        html = _regularize_eols(text)#maybe prettyfy
+        return html
 
     def _hashed(self, html):
         """hashes html block and returns the hash surrounded by eols"""

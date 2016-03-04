@@ -17,7 +17,7 @@ class ManagementCommandTests(AskbotTestCase):
                         password = password
                      )
         #check that we have the user
-        users = models.User.objects.filter(username = username)
+        users = models.User.objects.filter(username=username)
         self.assertEquals(users.count(), 1)
         user = users[0]
         #check thath subscrptions are correct
@@ -26,7 +26,7 @@ class ManagementCommandTests(AskbotTestCase):
                                             )
         self.assertEquals(subs.count(), 5)
         #try to log in
-        user = auth.authenticate(username = username, password = password)
+        user = auth.authenticate(username=username, password=password)
         self.assertTrue(user is not None)
 
     def test_merge_users(self):
