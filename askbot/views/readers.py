@@ -627,6 +627,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
     else:
         group_read_only = False
 
+    #session variable added so that the session is
+    #not empty and is not autodeleted, otherwise anonymous
+    #answer posting is impossible
+    request.session['askbot_write_intent'] = True
+
     data = {
         'active_tab': 'questions',
         'answer' : answer_form,
