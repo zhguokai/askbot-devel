@@ -261,8 +261,10 @@ def ask(request):#view used to ask a new question
                     return HttpResponseRedirect(reverse('index'))
 
             else:
-                request.session.flush()
                 session_key=request.session.session_key
+                if session_key is None:
+                    return HttpResponseForbidden()
+
                 models.AnonymousQuestion.objects.create(
                     session_key=session_key,
                     title=title,
@@ -277,6 +279,9 @@ def ask(request):#view used to ask a new question
 
     if request.method == 'GET':
         form = forms.AskForm(user=request.user)
+        #session key used only to enable anonymous asking
+        #as django will autodelete empty sessions
+        request.session['askbot_write_intent'] = True
 
     draft_title = ''
     draft_text = ''
@@ -611,7 +616,11 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
     if askbot_settings.READ_ONLY_MODE_ENABLED:
         return HttpResponseRedirect(question.get_absolute_url())
 
-    if request.method == "POST":
+    if request.method == 'GET':
+        #session key used only to enable anonymous asking
+        #as django will autodelete empty sessions
+        request.session['askbot_write_intent'] = True
+    elif request.method == 'POST':
 
         #this check prevents backward compatilibility
         if form_class == forms.AnswerForm:
@@ -652,7 +661,9 @@ def answer(request, id, form_class=forms.AnswerForm):#process a new answer
                 except exceptions.PermissionDenied, e:
                     request.user.message_set.create(message = unicode(e))
             else:
-                request.session.flush()
+                if request.session.session_key is None:
+                    return HttpResponseForbidden()
+
                 models.AnonymousAnswer.objects.create(
                     question=question,
                     wiki=form.cleaned_data['wiki'],
