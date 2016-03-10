@@ -1101,8 +1101,6 @@ def register(request, login_provider_name=None,
 
     #1) handle "one-click registration"
     if registration_enabled and login_provider_name:
-        providers = util.get_enabled_login_providers()
-        provider_data = providers[login_provider_name]
 
         def email_is_acceptable(email):
             email = email.strip()
@@ -1128,7 +1126,9 @@ def register(request, login_provider_name=None,
             return User.objects.filter(username__iexact=username).count() == 0
 
         #new style login providers support one click registration
-        if hasattr(provider_data, 'one_click_registration') and provider_data.one_click_registration:
+        providers = util.get_enabled_login_providers()
+        provider_data = providers.get(login_provider_name)
+        if provider_data and hasattr(provider_data, 'one_click_registration') and provider_data.one_click_registration:
             if username_is_acceptable(username) and email_is_acceptable(email):
                 #try auto-registration and redirect to the next_url
                 user = create_authenticated_user_account(
