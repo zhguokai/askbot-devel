@@ -151,6 +151,7 @@ def ldap_authenticate_default(username, password):
                 email = user_information.get(email_field, [''])[0]
                 user_info['email'] = EmailField().clean(email)
             except ValidationError:
+                user_info['email'] = ''
                 pass
         else:
             user_info['success'] = False
