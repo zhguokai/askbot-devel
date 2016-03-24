@@ -16,9 +16,9 @@
         id="askButton"
         class="button"
         href="{{ search_state.full_ask_url(group_id=group_id) }}"
-        >{% if group_id %}
+        >{% if group_id -%}
             {{ settings.WORDS_ASK_THE_GROUP|escape }}
-        {% else %}
+        {%- else -%}
             {{ settings.WORDS_ASK_YOUR_QUESTION|escape }}
-        {% endif %}</a>
+        {%- endif %}</a>
 {% endif %}
