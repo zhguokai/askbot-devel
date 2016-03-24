@@ -369,7 +369,7 @@ finally:
 
     from django.contrib.auth.admin import UserAdmin as OrigUserAdmin
     class UserAdmin(OrigUserAdmin):
-        list_display = OrigUserAdmin.list_display + ('languages', 
+        list_display = OrigUserAdmin.list_display + ('languages', 'country', 
             'date_joined', 'reputation', 
             'is_administrator', 'status', 'is_moderator', 'is_fake', 'email_isvalid',
             'my_interesting_tags', 'interesting_tag_wildcards',
@@ -378,6 +378,7 @@ finally:
             'email_tag_filter_strategy', 'display_tag_filter_strategy', 
             'get_groups', 'get_primary_group', 'get_default_site')
         list_filter = OrigUserAdmin.list_filter + (IsAdministrator, 'status', IsModerator, 'is_fake', 'email_isvalid', 'email_tag_filter_strategy', 'display_tag_filter_strategy', SeesThreadsInLanguage, InGroup)
+        search_fields = OrigUserAdmin.search_fields + ('country',)
 
         def interesting_tag_wildcards(self, obj):
             return ', '.join(obj.interesting_tags.strip().split())
