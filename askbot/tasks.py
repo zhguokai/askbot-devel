@@ -59,7 +59,6 @@ logger = get_task_logger(__name__)
 #       (i.e. if Celery tasks are not deferred but executed straight away)
 @task(ignore_result=True)
 def tweet_new_post_task(post_id):
-
     try:
         twitter = Twitter()
     except:

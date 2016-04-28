@@ -23,13 +23,13 @@ def save_twitter_access_token(request):
     session_oauth_token = request.session['oauth_token']
     assert(oauth_token == session_oauth_token['oauth_token'])
     oauth = OAuthConnection('twitter')
-    access_token_data = oauth.get_access_token(
-                                oauth_token = session_oauth_token,
-                                oauth_verifier = request.GET['oauth_verifier']
-                            )
+    oauth.obtain_access_token(
+                        oauth_token = session_oauth_token,
+                        oauth_verifier = request.GET['oauth_verifier']
+                    )
     #save the access token
-    request.user.twitter_access_token = simplejson.dumps(access_token_data)
-    request.user.twitter_handle = access_token_data['screen_name']
+    request.user.twitter_access_token = simplejson.dumps(oauth.access_token)
+    request.user.twitter_handle = oauth.get_username()
     if request.user.social_sharing_mode == const.SHARE_NOTHING:
         request.user.social_sharing_mode = const.SHARE_MY_POSTS
     request.user.save()

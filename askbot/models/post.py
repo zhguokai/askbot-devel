@@ -1134,7 +1134,8 @@ class Post(models.Model):
                 snippet = truncated + expander
             #it is important to have div here, so that we can make
             #the expander work
-            return '<div class="snippet">' + snippet + '</div>'
+            from askbot.utils.html import sanitize_html
+            return sanitize_html('<div class="snippet">' + snippet + '</div>')
         else:
             return self.html
 
@@ -2502,10 +2503,10 @@ class PostRevision(models.Model):
         sanitized_html = sanitize_html(markdowner.convert(self.text))
 
         if self.post.is_question():
-            return self.QUESTION_REVISION_TEMPLATE_NO_TAGS % {
+            return sanitize_html(self.QUESTION_REVISION_TEMPLATE_NO_TAGS % {
                 'title': self.title,
                 'html': sanitized_html
-            }
+            })
         else:
             return sanitized_html
 

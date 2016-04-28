@@ -498,6 +498,7 @@ def get_enabled_major_login_providers():
             'get_user_id_url': 'https://twitter.com/account/verify_credentials.json',
             'icon_media_path': 'images/jquery-openid/twitter.gif',
             'get_user_id_function': lambda data: data['user_id'],
+            'get_username_function': lambda data: data['screen_name'],
         }
 
     if askbot_settings.MEDIAWIKI_KEY and askbot_settings.MEDIAWIKI_SECRET:
