@@ -204,7 +204,8 @@ def markdown_input_converter(text):
     """markdown to html converter"""
     text = get_parser().convert(text)
     text = sanitize_html(text)
-    return urlize_html(text)
+    text = urlize_html(text)
+    return sanitize_html(text)
 
 def tinymce_input_converter(text):
     """tinymce input to production html converter"""
