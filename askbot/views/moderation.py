@@ -1,4 +1,5 @@
 from askbot.utils import decorators
+from askbot.utils.html import sanitize_html
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot import models
@@ -194,7 +195,7 @@ def moderation_queue(request):
             'message_type': act_message,
             'memo_type': act_type,
             'question_id': act.question.id,
-            'content': obj.html or obj.text,
+            'content': sanitize_html(obj.html or obj.text),
         }
         queue.append(item)
 
