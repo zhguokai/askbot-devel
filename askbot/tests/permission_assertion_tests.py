@@ -1372,13 +1372,13 @@ class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
     def test_moderator_cannot_accept_own_answer(self):
         self.other_post_answer()
         self.other_user.set_status('m')
-        self.assert_user_cannot(user = self.other_user)
+        self.assert_user_can(user=self.other_user)
 
     def test_moderator_cannot_accept_others_answer_today(self):
         self.other_post_answer()
         self.create_user(username = 'third_user')
         self.third_user.set_status('m')
-        self.assert_user_cannot(user = self.third_user)
+        self.assert_user_can(user=self.third_user)
 
     def test_moderator_can_accept_others_old_answer(self):
         self.other_post_answer()
@@ -1395,14 +1395,14 @@ class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
         self.other_post_answer()
         self.other_user.set_admin_status()
         self.other_user.save()
-        self.assert_user_cannot(user = self.other_user)
+        self.assert_user_can(user=self.other_user)
 
     def test_admin_cannot_accept_others_answer_today(self):
         self.other_post_answer()
         self.create_user(username = 'third_user')
         self.third_user.set_admin_status()
         self.third_user.save()
-        self.assert_user_cannot(user = self.third_user)
+        self.assert_user_can(user=self.third_user)
 
     def test_admin_can_accept_others_old_answer(self):
         self.other_post_answer()
