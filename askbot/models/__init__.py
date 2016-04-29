@@ -729,8 +729,11 @@ def user_assert_can_unaccept_best_answer(self, answer=None):
                 )
         return # success
 
+    elif self.is_administrator() or self.is_moderator():
+        return # success
+
     elif self.reputation >= askbot_settings.MIN_REP_TO_ACCEPT_ANY_ANSWER or \
-        self.is_administrator() or self.is_moderator() or self.is_post_moderator(answer):
+        self.is_post_moderator(answer):
 
         will_be_able_at = (
             answer.added_at +
