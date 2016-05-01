@@ -1243,7 +1243,7 @@ def groups(request, id = None, slug = None):
                                     )
 
     groups = groups.exclude_personal()
-    groups = groups.annotate(users_count=Count('user'))
+    groups = groups.annotate(users_count=Count('user_membership'))
 
     user_can_add_groups = request.user.is_authenticated() and \
             request.user.is_administrator_or_moderator()
