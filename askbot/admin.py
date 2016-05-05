@@ -9,6 +9,7 @@ exactly match name of the model used in the project
 """
 from django.contrib import admin
 from askbot import models
+from django.contrib.admin import SimpleListFilter
 
 class AnonymousQuestionAdmin(admin.ModelAdmin):
     """AnonymousQuestion admin class"""
@@ -37,6 +38,27 @@ class ActivityAdmin(admin.ModelAdmin):
 class BadgeDataAdmin(admin.ModelAdmin):
     """admin class for BadgeData"""
 admin.site.register(models.BadgeData)
+
+class IsPersonal(SimpleListFilter):
+    title = 'is personal group'
+    parameter_name = 'is_personal'
+
+    def lookups(self, request, model_admin):
+        return (('1', 'Yes'), ('0', 'No'))
+    def queryset(self, request, queryset):
+        if self.value() == '1':
+            return queryset.filter(name__contains=models.user.PERSONAL_GROUP_NAME_PREFIX)
+        elif self.value() == '0':
+            return queryset.exclude(name__contains=models.user.PERSONAL_GROUP_NAME_PREFIX)
+        else: 
+            return queryset
+
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'logo_url', 'description', 'moderate_email', 'moderate_answers_to_enquirers', 'openness', 'is_vip', 'read_only')
+    list_display_links = ('id', 'name')
+    list_filter = (IsPersonal, 'moderate_email', 'moderate_answers_to_enquirers', 'openness', 'is_vip', 'read_only')
+    search_fields = ('name', 'logo_url')
+admin.site.register(models.Group, GroupAdmin)
 
 admin.site.register(models.Post)
 admin.site.register(models.Tag, TagAdmin)
