@@ -285,7 +285,7 @@ def ask(request):#view used to ask a new question
         if len(drafts) > 0:
             draft = drafts[0]
             draft_title = draft.title
-            draft_text = draft.text
+            draft_text = draft.get_text()
             draft_tagnames = draft.tagnames
 
     form.initial = {

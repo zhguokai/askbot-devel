@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from askbot.conf import settings as askbot_settings
 
 class BaseQuerySetManager(models.Manager):
     """a base class that allows chainable qustom filters
@@ -41,7 +42,7 @@ class BaseQuerySetManager(models.Manager):
             return getattr(self.get_query_set(), attr, *args)
 
 
-class DraftContent(models.Model):
+class AnonymousContent(models.Model):
     """Base class for AnonymousQuestion and AnonymousAnswer"""
     session_key = models.CharField(max_length=40)  #session id for anonymous questions
     wiki = models.BooleanField(default=False)
@@ -53,3 +54,17 @@ class DraftContent(models.Model):
     class Meta:
         abstract = True
         app_label = 'askbot'
+
+class DraftContent(models.Model):
+    """Base for autosaved DraftQuestion and DraftAnswer"""
+    text = models.TextField(null=True)
+
+    class Meta:
+        abstract = True
+        app_label = 'askbot'
+
+    def get_text(self):
+        if askbot_settings.EDITOR_TYPE == 'markdown':
+            if self.text.strip() == '<br data-mce-bogus="1">':
+                return ''
+        return self.text
