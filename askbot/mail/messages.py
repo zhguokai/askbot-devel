@@ -303,27 +303,27 @@ class InstantEmailAlert(BaseEmail):
         that emails appear as threaded conversations in gmail"""
         suffix_id = django_settings.SERVER_EMAIL
         if update == const.TYPE_ACTIVITY_ASK_QUESTION:
-            msg_id = "NQ-%s-%s" % (post.id, suffix_id)
+            msg_id = "<NQ-%s-%s>" % (post.id, suffix_id)
             headers = {'Message-ID': msg_id}
         elif update == const.TYPE_ACTIVITY_ANSWER:
-            msg_id = "NA-%s-%s" % (post.id, suffix_id)
-            orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+            msg_id = "<NA-%s-%s>" % (post.id, suffix_id)
+            orig_id = "<NQ-%s-%s>" % (orig_post.id, suffix_id)
             headers = {'Message-ID': msg_id, 'In-Reply-To': orig_id}
         elif update == const.TYPE_ACTIVITY_UPDATE_QUESTION:
-            msg_id = "UQ-%s-%s-%s" % (post.id, post.last_edited_at, suffix_id)
-            orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+            msg_id = "<UQ-%s-%s-%s>" % (post.id, post.last_edited_at, suffix_id)
+            orig_id = "<NQ-%s-%s>" % (orig_post.id, suffix_id)
             headers = {'Message-ID': msg_id, 'In-Reply-To': orig_id}
         elif update == const.TYPE_ACTIVITY_COMMENT_QUESTION:
-            msg_id = "CQ-%s-%s" % (post.id, suffix_id)
-            orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+            msg_id = "<CQ-%s-%s>" % (post.id, suffix_id)
+            orig_id = "<NQ-%s-%s>" % (orig_post.id, suffix_id)
             headers = {'Message-ID': msg_id, 'In-Reply-To': orig_id}
         elif update == const.TYPE_ACTIVITY_UPDATE_ANSWER:
-            msg_id = "UA-%s-%s-%s" % (post.id, post.last_edited_at, suffix_id)
-            orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+            msg_id = "<UA-%s-%s-%s>" % (post.id, post.last_edited_at, suffix_id)
+            orig_id = "<NQ-%s-%s>" % (orig_post.id, suffix_id)
             headers = {'Message-ID': msg_id, 'In-Reply-To': orig_id}
         elif update == const.TYPE_ACTIVITY_COMMENT_ANSWER:
-            msg_id = "CA-%s-%s" % (post.id, suffix_id)
-            orig_id = "NQ-%s-%s" % (orig_post.id, suffix_id)
+            msg_id = "<CA-%s-%s>" % (post.id, suffix_id)
+            orig_id = "<NQ-%s-%s>" % (orig_post.id, suffix_id)
             headers = {'Message-ID': msg_id, 'In-Reply-To': orig_id}
         else:
             # Unknown type -> Can't set headers
