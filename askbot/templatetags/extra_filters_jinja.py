@@ -184,13 +184,13 @@ def not_equal(one, other):
     return one != other
 
 @register.filter
-def media(url):
+def media(url, ignore_missing=False):
     """media filter - same as media tag, but
     to be used as a filter in jinja templates
     like so {{'/some/url.gif'|media}}
     """
     if url:
-        return skin_utils.get_media_url(url)
+        return skin_utils.get_media_url(url, ignore_missing)
     else:
         return ''
 
