@@ -49,13 +49,13 @@
     </div>
     <div class="col2">
         <table class="user-details">
-            {% if request.user == view_user or request.user.is_administrator_or_moderator %}
+            {% if request.user.pk == view_user.pk or request.user.is_administrator_or_moderator() %}
             <tr>
                 <td class="user-profile-tool-links" align="left" colspan="2">
                     <a href="{% url edit_user view_user.id %}">
                         {% trans %}update profile{% endtrans %}
                     </a>
-                    {% if settings.USE_ASKBOT_LOGIN_SYSTEM and request.user == view_user and settings.ALLOW_ADD_REMOVE_LOGIN_METHODS %}
+                    {% if settings.USE_ASKBOT_LOGIN_SYSTEM and request.user.pk == view_user.pk and settings.ALLOW_ADD_REMOVE_LOGIN_METHODS %}
                         | <a href="{{ settings.LOGIN_URL }}?next={{ settings.LOGIN_URL }}">
                             {% trans %}manage login methods{% endtrans %}
                         </a>
