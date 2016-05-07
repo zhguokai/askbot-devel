@@ -714,7 +714,6 @@ def signin(request, template_name='authopenid/signin.html'):
         else:
             logging.debug('login form is not valid')
             logging.debug(login_form.errors)
-            logging.debug(request.REQUEST)
 
     if request.method == 'GET' and request.user.is_authenticated():
         view_subtype = 'change_openid'
