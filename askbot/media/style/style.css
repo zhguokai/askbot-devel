@@ -517,9 +517,9 @@ body.user-messages {
   background: 3px -170px url(../images/sprites.png) no-repeat;
 }
 #metaNav a.group-name {
-  padding: 0px;
+  margin: 0px;
   float: none;
-  margin: 5px 10px;
+  padding: 5px 10px;
 }
 #metaNav input.group-name {
   border: 1px solid #c9c9b5;
@@ -553,6 +553,11 @@ body.user-messages {
 }
 #userToolsNav a:hover, #metaNav a:hover {
   color: #ebff88;
+}
+#userToolsNav .dropdown-menu a:hover, #metaNav .dropdown-menu a:hover {
+  color: white;
+  background: #aaa;
+  text-decoration: none;
 }
 #header.with-logo #userToolsNav {
   position: absolute;
