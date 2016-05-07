@@ -37,7 +37,7 @@ from askbot.utils import markup
 from askbot.utils.html import (get_word_count, has_moderated_tags,
                 moderate_tags, sanitize_html, strip_tags, site_url)
 from askbot.utils.transaction import defer_celery_task
-from askbot.models.base import BaseQuerySetManager, DraftContent
+from askbot.models.base import AnonymousContent, BaseQuerySetManager, DraftContent
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
 from askbot.utils.diff import textDiff as htmldiff
@@ -2528,20 +2528,19 @@ class PostFlagReason(models.Model):
         app_label = 'askbot'
 
 
-class DraftAnswer(models.Model):
+class DraftAnswer(DraftContent):
     """Provides space for draft answers,
     note that unlike ``AnonymousAnswer`` the foreign key
     is going to ``Thread`` as it should.
     """
     thread = models.ForeignKey('Thread', related_name='draft_answers')
     author = models.ForeignKey(User, related_name='draft_answers')
-    text = models.TextField(null=True)
 
     class Meta:
         app_label = 'askbot'
 
 
-class AnonymousAnswer(DraftContent):
+class AnonymousAnswer(AnonymousContent):
     """Todo: re-route the foreign key to ``Thread``"""
     question = models.ForeignKey(Post, related_name='anonymous_answers')
 
