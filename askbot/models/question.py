@@ -26,7 +26,7 @@ from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import separate_unused_tags
 from askbot.models.base import BaseQuerySetManager
-from askbot.models.base import DraftContent
+from askbot.models.base import DraftContent, AnonymousContent
 from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models.fields import LanguageCodeField
 from askbot import signals
@@ -1870,20 +1870,19 @@ class FavoriteQuestion(models.Model):
         return u'[%s] favorited at %s' %(self.user, self.added_at)
 
 
-class DraftQuestion(models.Model):
+class DraftQuestion(DraftContent):
     """Provides space to solve unpublished draft
     questions. Contents is used to populate the Ask form.
     """
     author = models.ForeignKey(User)
     title = models.CharField(max_length=300, null=True)
-    text = models.TextField(null=True)
     tagnames = models.CharField(max_length=125, null=True)
 
     class Meta:
         app_label = 'askbot'
 
 
-class AnonymousQuestion(DraftContent):
+class AnonymousQuestion(AnonymousContent):
     """question that was asked before logging in
     maybe the name is a little misleading, the user still
     may or may not want to stay anonymous after the question
