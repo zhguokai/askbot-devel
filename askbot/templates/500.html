@@ -3,11 +3,9 @@
 {% block title %}{% spaceless %}{% trans %}Internal server error{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
 <h1>{% trans %}Internal server error{% endtrans %}</h1>
-<div id="main-body">
-    <div style="padding:5px 0px 10px 0;line-height:25px">
-        {% trans %}system error log is recorded, error will be fixed as soon as possible{% endtrans %}<br/>
-        {% trans %}please report the error to the site administrators{% endtrans %}
-    </div>
-</div>
+<p>
+    {% trans %}system error log is recorded, error will be fixed as soon as possible{% endtrans %}<br/>
+    {% trans %}please report the error to the site administrators{% endtrans %}
+</p>
 {% endblock %}
 <!-- end template 500.html -->

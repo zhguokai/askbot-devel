@@ -311,8 +311,8 @@ body.user-messages {
   margin: 5px 0;
 }
 .hovercard .triangle {
-  border-left: 5px solid transparent;
-  border-right: 10px solid transparent;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
   border-bottom: 10px solid #ddd;
   height: 0;
   margin: -20px 0 10px 0;
@@ -760,7 +760,7 @@ input[type="submit"].searchBtn {
   text-align: center;
   margin: 0;
   width: 48px;
-  background: -98px -36px url(../images/sprites.png) no-repeat;
+  background: -98px -37px url(../images/sprites.png) no-repeat;
   border-radius: 0;
   -ms-border-radius: 0;
   -moz-border-radius: 0;
@@ -771,14 +771,6 @@ input[type="submit"].searchBtn {
   box-shadow: 0 0 0 #929292;
   cursor: pointer;
   z-index: 10001;
-}
-.groups-page input[type="submit"].searchBtn,
-.badges-pages input[type="submit"].searchBtn,
-.user-profile-page input[type="submit"].searchBtn,
-.meta input[type="submit"].searchBtn,
-.openid-signin input[type="submit"].searchBtn,
-.users-page input[type="submit"].searchBtn {
-  margin-top: 1px;
 }
 .badge-list .placeholder {
   background: #aaa;
@@ -836,7 +828,7 @@ input[type="submit"].searchBtn:hover {
   background-image: none;
   background-image: none;
   background-image: none;
-  background: url(../images/sprites.png) no-repeat -146px -36px !important;
+  background: #dddddd url(../images/sprites.png) no-repeat -146px -37px !important;
 }
 input[type="button"].cancelSearchBtn {
   font-size: 30px !important;
@@ -1190,12 +1182,6 @@ form.ajax-file-upload img.spinner {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -moz-border-radius: 5px;
-  -khtml-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -webkit-box-shadow: 1px 1px 3px #999999;
-  -moz-box-shadow: 1px 1px 3px #999999;
-  box-shadow: 1px 1px 3px #999999;
   padding: 7px 10px 9px 0;
   margin-bottom: 10px;
   width: 100%;
@@ -3017,6 +3003,21 @@ ul.js-related-tags li {
   float: left;
   width: 960px;
 }
+.user-profile-edit-page td {
+  padding: 3px 5px 3px 0;
+}
+.user-profile-edit-page select {
+  width: 100%;
+}
+.user-profile-edit-page .user-details input[type="text"], .user-profile-edit-page .user-details textarea {
+  width: 100%;
+}
+.user-profile-edit-page .user-details input[type="checkbox"], .user-profile-edit-page .user-details input[type="submit"], .user-profile-edit-page .user-details input[type="button"] {
+  margin: 10px 0;
+}
+.user-profile-edit-page label {
+  line-height: 31px;
+}
 .user-profile-page.inbox-group-join-requests form {
   margin-bottom: 0;
 }
@@ -3212,6 +3213,7 @@ a.medal {
   border-bottom: 1px solid #CCC;
   border-right: 1px solid #CCC;
   padding: 4px 12px 4px 6px;
+  white-space: nowrap;
 }
 a:hover.medal {
   color: #333;
@@ -3231,9 +3233,6 @@ a:hover.medal {
   width: 100%;
   margin-bottom: 5px;
   float: left;
-}
-.user-profile-page {
-  color: #525252;
 }
 .user-profile-page p {
   font-size: 13px;
@@ -3668,8 +3667,9 @@ table.form-as-table th {
   text-align: left;
   font-weight: normal;
 }
-table.ab-subscr-form {
-  width: 45em;
+table.form-as-table.ab-subscr-form td {
+  padding: 0 6px;
+  text-align: center;
 }
 .submit-row {
   line-height: 30px;
@@ -3764,7 +3764,7 @@ label.retag-error {
   vertical-align: top;
 }
 .user-activity .timestamp {
-  width: 80px;
+  width: 93px;
 }
 .user-activity .action-type {
   width: 150px;
@@ -4680,10 +4680,15 @@ td.setting-input textarea {
     -moz-box-sizing: border-box;
   }
   #ContentLeft, #ContentFull {
-    padding-left: 6px;
+    padding: 0 6px 20px 6px;
+    width: 100%;
   }
-  #ContentRight, #ContentFull {
-    padding-right: 6px;
+  #userToolsNav {
+    padding-left: 8px;
+    margin-right: 20px;
+  }
+  .answer-votes {
+    height: 24px;
   }
   .short-summary {
     width: 100%;
@@ -4703,6 +4708,25 @@ td.setting-input textarea {
   .question-page .comments div.controls {
     margin-left: 2px;
   }
+  .meta input[type="email"],
+  .users-page input[type="email"],
+  .user-profile-edit-page input[type="email"],
+  .user-profile-page input[type="email"],
+  .meta input[type="text"],
+  .users-page input[type="text"],
+  .user-profile-edit-page input[type="text"],
+  .user-profile-page input[type="text"],
+  .meta input[type="password"],
+  .users-page input[type="password"],
+  .user-profile-edit-page input[type="password"],
+  .user-profile-page input[type="password"],
+  .meta select,
+  .users-page select,
+  .user-profile-edit-page select,
+  .user-profile-page select {
+    height: 32px;
+    line-height: 32px;
+  }
 }
 @media screen and (max-width: 800px) {
   body {
@@ -4716,10 +4740,6 @@ td.setting-input textarea {
   }
   #ContentRight {
     display: none;
-  }
-  #ContentLeft {
-    width: 100%;
-    padding-right: 6px;
   }
   .edit-question-page #ContentLeft,
   .edit-answer-page #ContentLeft,
@@ -4811,25 +4831,20 @@ td.setting-input textarea {
   .question-page .post-update-info .badge-count {
     display: none;
   }
-  .user-profile-page td {
-    display: block;
-  }
   .footer-links, .powered-link {
     text-align: center;
     width: 100%;
   }
-  #userToolsNav {
-    margin-left: 10px;
-  }
   #metaNav {
     float: left;
+    margin-left: 8px;
   }
   #metaNav a#navUsers, #metaNav a#navTags, #metaNav a#navGroups {
     background: none;
     color: #d0e296;
     font-size: 16px;
     text-decoration: underline;
-    margin-left: 20px;
+    margin: 7px 28px 0 0;
     padding-left: 0;
   }
   .powered-link {
@@ -4839,10 +4854,28 @@ td.setting-input textarea {
     padding-top: 0;
   }
   .short-summary {
+    padding: 3px 0 8px;
     width: 100%;
+  }
+  .short-summary .tags {
+    margin-top: -8px;
+  }
+  .short-summary .tags li {
+    margin: 8px 8px 1px 0;
   }
   #secondaryHeader td.search-bar {
     padding: 0 6px;
+  }
+  table.form-as-table.ab-tag-filter-form td {
+    text-align: left;
+  }
+  table.form-as-table.ab-tag-filter-form th {
+    vertical-align: top;
+    padding-right: 20px;
+  }
+  table.form-as-table.ab-tag-filter-form li {
+    display: block;
+    line-height: 26px;
   }
 }
 @media screen and (max-width: 540px) {
@@ -4858,6 +4891,24 @@ td.setting-input textarea {
   }
   .question-page div.comments.empty {
     margin-top: 8px !important;
+  }
+  .meta input[type="email"],
+  .users-page input[type="email"],
+  .user-profile-edit-page input[type="email"],
+  .user-profile-page input[type="email"],
+  .meta input[type="text"],
+  .users-page input[type="text"],
+  .user-profile-edit-page input[type="text"],
+  .user-profile-page input[type="text"],
+  .meta input[type="password"],
+  .users-page input[type="password"],
+  .user-profile-edit-page input[type="password"],
+  .user-profile-page input[type="password"],
+  .meta select,
+  .users-page select,
+  .user-profile-edit-page select,
+  .user-profile-page select {
+    width: 100%;
   }
 }
 @media screen and (max-width: 480px) {

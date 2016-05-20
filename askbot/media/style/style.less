@@ -324,8 +324,8 @@ body.user-messages {
         }
     }
     .triangle {
-        border-left: 5px solid transparent;
-        border-right: 10px solid transparent;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
         border-bottom: 10px solid #ddd;
         height: 0;
         margin: -20px 0 10px 0;
@@ -448,9 +448,9 @@ body.user-messages {
 
 #userToolsNav {/* Navigation bar containing login link or user information, check widgets/user_navigation.html*/
     height: 20px;
-    padding-bottom:5px;
+    padding-bottom: 5px;
     white-space: nowrap;
-    font-size:16px;
+    font-size: 16px;
 
     a {
         height: 35px;
@@ -829,22 +829,11 @@ input[type="submit"].searchBtn {
     text-align: center;
     margin: 0;
     width: 48px;
-    .sprites(-98px,-36px);
+    .sprites(-98px,-37px);
     .rounded-corners(0);
     .box-shadow(0, 0, 0);
     cursor:pointer;
     z-index: 10001;
-}
-
-.groups-page, /* todo: clean up - should not need this */
-.badges-pages,
-.user-profile-page,
-.meta,
-.openid-signin,
-.users-page {
-    input[type="submit"].searchBtn {
-        margin-top: 1px;
-    }
 }
 
 .badge-list .placeholder {
@@ -907,7 +896,7 @@ input[type="submit"].searchBtn:hover {
     background-image: none;
     background-image: none;
     background-image: none;
-    background: url(../images/sprites.png) no-repeat -146px -36px !important;
+    background: #ddd url(../images/sprites.png) no-repeat -146px -37px !important;
 }
 
 input[type="button"].cancelSearchBtn {
@@ -1256,10 +1245,6 @@ body.anon.ask-page .search-drop-menu {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    -moz-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    .box-shadow(1px, 1px, 3px, #999);
     padding: 7px 10px 9px 0;
     margin-bottom: 10px;
     width: 100%;
@@ -3238,6 +3223,31 @@ ul.js-related-tags li {
     }
 }
 
+.user-profile-edit-page {
+    td {
+        padding: 3px 5px 3px 0;
+    }
+    select {
+        width: 100%;
+    }
+    .user-details {
+        input[type="text"],
+        textarea {
+            width: 100%;
+        }
+    }
+    .user-details {
+        input[type="checkbox"],
+        input[type="submit"],
+        input[type="button"] {
+            margin: 10px 0;
+        }
+    }
+    label {
+        line-height: 31px;
+    }
+}
+
 .user-profile-page.inbox-group-join-requests {
     form {
         margin-bottom: 0;
@@ -3464,6 +3474,7 @@ a.medal {
     border-bottom: 1px solid #CCC;
     border-right: 1px solid #CCC;
     padding: 4px 12px 4px 6px;
+    white-space: nowrap;
 }
 
 a:hover.medal {
@@ -3478,8 +3489,8 @@ a:hover.medal {
 
 #award-list{
     .user{
-        float:left;
-       margin:5px;
+        float: left;
+        margin: 5px;
     }
 }
 
@@ -3492,8 +3503,6 @@ a:hover.medal {
 }
 
 .user-profile-page {
-    color:@info-text-dark;
-
     p {
         font-size:13px;
         line-height:1.3;
@@ -3972,10 +3981,12 @@ table.form-as-table {
         text-align: left;
         font-weight: normal;
     }
-}
-
-table.ab-subscr-form {
-    width: 45em;
+    &.ab-subscr-form {
+        td {
+            padding: 0 6px;
+            text-align: center;
+        }
+    }
 }
 
 .submit-row {
@@ -4086,7 +4097,7 @@ label.retag-error {
         vertical-align: top;
     }
     .timestamp {
-        width: 80px;
+        width: 93px;
     }
     .action-type {
         width: 150px;
@@ -5061,11 +5072,15 @@ td.setting-input {
     }
     #ContentLeft,
     #ContentFull {
-        padding-left: 6px;
+        padding: 0 6px 20px 6px;
+        width: 100%;
     }
-    #ContentRight,
-    #ContentFull {
-        padding-right: 6px;
+    #userToolsNav {
+        padding-left: 8px;
+        margin-right: 20px;
+    }
+    .answer-votes {
+        height: 24px;
     }
     .short-summary {
         width: 100%;
@@ -5091,6 +5106,18 @@ td.setting-input {
             margin-left: 2px;
         }
     }
+    .meta,
+    .users-page,
+    .user-profile-edit-page,
+    .user-profile-page {
+        input[type="email"],
+        input[type="text"],
+        input[type="password"],
+        select {
+            height: 32px;
+            line-height: 32px;
+        }
+    }
 }
 @media screen and (max-width: 800px) {
     body {
@@ -5104,10 +5131,6 @@ td.setting-input {
     }
     #ContentRight {
         display: none;
-    }
-    #ContentLeft {
-        width: 100%;
-        padding-right: 6px;
     }
     .edit-question-page,
     .edit-answer-page,
@@ -5202,24 +5225,15 @@ td.setting-input {
         }
     }
 
-    .user-profile-page {
-        td {
-            display: block;
-        }
-    }
-
     .footer-links,
     .powered-link {
         text-align: center;
         width: 100%;
     }
 
-    #userToolsNav {
-        margin-left: 10px;
-    }
-
     #metaNav {
         float: left;
+        margin-left: 8px;
         a#navUsers,
         a#navTags,
         a#navGroups {
@@ -5227,7 +5241,7 @@ td.setting-input {
             color: #d0e296;
             font-size: 16px;
             text-decoration: underline;
-            margin-left: 20px;
+            margin: 7px 28px 0 0;
             padding-left: 0;
         }
     }
@@ -5238,10 +5252,30 @@ td.setting-input {
         padding-top: 0;
     }
     .short-summary {
+        padding: 3px 0 8px;
         width: 100%;
+        .tags {
+            margin-top: -8px;
+            li {
+                margin: 8px 8px 1px 0;
+            }
+        }
     }
     #secondaryHeader td.search-bar {
         padding: 0 6px;
+    }
+    table.form-as-table.ab-tag-filter-form {
+        td {
+            text-align: left;
+        }
+        th {
+            vertical-align: top;
+            padding-right: 20px;
+        }
+        li {
+            display: block;
+            line-height: 26px;
+        }
     }
 }
 
@@ -5261,6 +5295,18 @@ td.setting-input {
             margin-top: 8px !important;
         }
     }
+    .meta,
+    .users-page,
+    .user-profile-edit-page,
+    .user-profile-page {
+        input[type="email"],
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+        }
+    }
+
 }
 
 @media screen and (max-width: 480px) {
