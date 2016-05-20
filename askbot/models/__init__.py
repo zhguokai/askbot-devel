@@ -1860,7 +1860,7 @@ def user_delete_question(
             tag.deleted_by = self
             tag.deleted_at = timestamp
         else:
-            tag.used_count = tag.used_count - 1
+            tag.decrement_used_count()
         tag.save()
 
     signals.after_post_removed.send(

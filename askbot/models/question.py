@@ -927,7 +927,7 @@ class Thread(models.Model):
         for tag in wrong_lang_tags:
             wrong_lang_tag_names.append(tag.name)
             if tag.used_count > 0:
-                tag.used_count -= 1
+                tag.decrement_used_count()
                 tag.save()
 
         #load existing tags and figure out which tags don't exist
@@ -1575,7 +1575,7 @@ class Thread(models.Model):
         removed_tags = list()
         for tag in self.tags.all():
             if tag.name in tagnames:
-                tag.used_count -= 1
+                tag.decrement_used_count()
                 removed_tags.append(tag)
         self.tags.remove(*removed_tags)
         return removed_tags
