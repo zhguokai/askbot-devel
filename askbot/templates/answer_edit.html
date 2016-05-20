@@ -10,7 +10,7 @@
 {{ settings.WORDS_EDIT_ANSWER|escape }}
 [<a href="{{ answer.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]
 </div>
-<div id="main-body" class="ask-body">
+<div class="ask-body">
     <form id="fmedit" action="{% url edit_answer answer.id %}" method="post" >{% csrf_token %}
         {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
         {{ revision_form.revision }}
