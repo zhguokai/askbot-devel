@@ -122,7 +122,7 @@ class TagQuerySet(models.query.QuerySet):
     def update_use_counts(self, tags):
         """Updates the given Tags with their current use counts."""
         for tag in tags:
-            tag.used_count = tag.threads.count()
+            tag.used_count = tag.threads.filter(deleted=False).count()
             tag.save()
 
     def mark_undeleted(self):
@@ -293,6 +293,10 @@ class Tag(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def decrement_used_count(self, delta=1):
+        if self.used_count >= delta:
+            self.used_count = self.used_count - delta
 
 class MarkedTag(models.Model):
     TAG_MARK_REASONS = (
