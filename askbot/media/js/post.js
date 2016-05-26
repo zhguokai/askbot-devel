@@ -3630,7 +3630,7 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
     var change_logo_btn = element.find('.change-logo');
     this._change_logo_btn = change_logo_btn;
 
-    var moderate_email_toggle = new TwoStateToggle();
+    var moderate_email_toggle = new AjaxToggle();
     moderate_email_toggle.setPostData({
         group_id: this.getTagId(),
         property_name: 'moderate_email'
@@ -3639,7 +3639,7 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
     this._moderate_email_btn = moderate_email_btn;
     moderate_email_toggle.decorate(moderate_email_btn);
 
-    var moderate_publishing_replies_toggle = new TwoStateToggle();
+    var moderate_publishing_replies_toggle = new AjaxToggle();
     moderate_publishing_replies_toggle.setPostData({
         group_id: this.getTagId(),
         property_name: 'moderate_answers_to_enquirers'
@@ -3647,7 +3647,7 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
     var btn = element.find('#moderate-answers-to-enquirers');
     moderate_publishing_replies_toggle.decorate(btn);
 
-    var vip_toggle = new TwoStateToggle();
+    var vip_toggle = new AjaxToggle();
     vip_toggle.setPostData({
         group_id: this.getTagId(),
         property_name: 'is_vip'
@@ -3655,7 +3655,7 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
     btn = element.find('#vip-toggle');
     vip_toggle.decorate(btn);
 
-    var readOnlyToggle = new TwoStateToggle();
+    var readOnlyToggle = new AjaxToggle();
     readOnlyToggle.setPostData({
         group_id: this.getTagId(),
         property_name: 'read_only'
@@ -3694,9 +3694,9 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
 };
 
 var GroupJoinButton = function () {
-    TwoStateToggle.call(this);
+    AjaxToggle.call(this);
 };
-inherits(GroupJoinButton, TwoStateToggle);
+inherits(GroupJoinButton, AjaxToggle);
 
 GroupJoinButton.prototype.getPostData = function () {
     return { group_id: this._group_id };
@@ -4557,9 +4557,9 @@ CategorySelectBox.prototype.decorate = function (element) {
  * turns on/off the category editor
  */
 var CategoryEditorToggle = function () {
-    TwoStateToggle.call(this);
+    AjaxToggle.call(this);
 };
-inherits(CategoryEditorToggle, TwoStateToggle);
+inherits(CategoryEditorToggle, AjaxToggle);
 
 CategoryEditorToggle.prototype.setCategorySelector = function (sel) {
     this._category_selector = sel;

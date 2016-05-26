@@ -90,7 +90,7 @@
 
         var followBtn = $('.js-follow-question');
         if (followBtn.length) {
-            var toggle = new TwoStateToggle();
+            var toggle = new AjaxToggle();
             toggle.setPostData({'question_id': {{ question.id }} });
             toggle.decorate(followBtn);
             followBtn.bind('askbot.two-state-toggle.success', updateQuestionFollowerCount);

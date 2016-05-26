@@ -8,7 +8,7 @@
  * on-state - when user is part of group and mouse is not over the button
  * off-state - same as above, but when user is not part of the group
  */
-var TwoStateToggle = function () {
+var AjaxToggle = function () {
     SimpleControl.call(this);
     this._state = null;
     this._messages = {};
@@ -23,17 +23,17 @@ var TwoStateToggle = function () {
     this.toggleUrl = '';//public property
     this.setupDefaultDataValidators();
 };
-inherits(TwoStateToggle, SimpleControl);
+inherits(AjaxToggle, SimpleControl);
 
-TwoStateToggle.prototype.setPostData = function (data) {
+AjaxToggle.prototype.setPostData = function (data) {
     this._postData = data;
 };
 
-TwoStateToggle.prototype.getPostData = function () {
+AjaxToggle.prototype.getPostData = function () {
     return this._postData;
 };
 
-TwoStateToggle.prototype.resetStyles = function () {
+AjaxToggle.prototype.resetStyles = function () {
     var element = this._element;
     var states = this._states;
     $.each(states, function (idx, state) {
@@ -42,18 +42,18 @@ TwoStateToggle.prototype.resetStyles = function () {
     this.setText('');
 };
 
-TwoStateToggle.prototype.isOn = function () {
+AjaxToggle.prototype.isOn = function () {
     return this._element.data('isOn');
 };
 
-TwoStateToggle.prototype.setupDefaultDataValidators = function () {
+AjaxToggle.prototype.setupDefaultDataValidators = function () {
     this._validators = {
         'success': function (data) { return data.success; },
         'enabled': function (data) { return data.is_enabled; }
     }
 };
 
-TwoStateToggle.prototype.setDataValidator = function (name, func) {
+AjaxToggle.prototype.setDataValidator = function (name, func) {
     if (name === 'success' || name === 'enabled') {
         this._validators[name] = func;
     } else {
@@ -65,19 +65,19 @@ TwoStateToggle.prototype.setDataValidator = function (name, func) {
  * func must either return `true` or `false`
  * if `false` is returned, data submission will be canceled
  */
-TwoStateToggle.prototype.setBeforeSubmitHandler = function(func) {
+AjaxToggle.prototype.setBeforeSubmitHandler = function(func) {
     this._beforeSubmitHandler = func;
 };
 
-TwoStateToggle.prototype.getBeforeSubmitHandler = function () {
+AjaxToggle.prototype.getBeforeSubmitHandler = function () {
     return this._beforeSubmitHandler;
 };
 
-TwoStateToggle.prototype.datumIsValid = function (validatorName, data) {
+AjaxToggle.prototype.datumIsValid = function (validatorName, data) {
     return this._validators[validatorName](data);
 };
 
-TwoStateToggle.prototype.getDefaultHandler = function () {
+AjaxToggle.prototype.getDefaultHandler = function () {
     var me = this;
     return function () {
         var handler = me.getBeforeSubmitHandler();
@@ -117,12 +117,12 @@ TwoStateToggle.prototype.getDefaultHandler = function () {
     };
 };
 
-TwoStateToggle.prototype.isCheckBox = function () {
+AjaxToggle.prototype.isCheckBox = function () {
     var element = this._element;
     return element.attr('type') === 'checkbox';
 };
 
-TwoStateToggle.prototype.setState = function (state) {
+AjaxToggle.prototype.setState = function (state) {
     var element = this._element;
     this._state = state;
     if (element) {
@@ -145,13 +145,13 @@ TwoStateToggle.prototype.setState = function (state) {
     }
 };
 
-TwoStateToggle.prototype.setText = function (text) {
+AjaxToggle.prototype.setText = function (text) {
     var btnText = this._element.find('.js-btn-text');
     var where  = btnText.length ? btnText : this._element;
     where.html(text);
 };
 
-TwoStateToggle.prototype.decorate = function (element) {
+AjaxToggle.prototype.decorate = function (element) {
     this._element = element;
     //read messages for all states
     var messages = {};
