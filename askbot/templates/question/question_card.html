@@ -10,7 +10,7 @@
             data-save-text-url="{% url set_question_title %}?question_id={{ question.pk }}"
             data-save-text-param-name="title"
             data-validated-text-param-name="title"
-            data-min-rows="1"
+            data-min-lines="1"
             data-editor-type="plain"
             data-validator="askbot.validators.titleValidator"
         >
@@ -39,7 +39,7 @@
                 data-save-text-url="{% url set_post_body %}?post_id={{ question.pk }}"
                 data-save-text-param-name="body_text"
                 data-validated-text-param-name="body_html"
-                data-min-rows="10"
+                data-min-lines="10"
                 data-editor-type="{{ settings.EDITOR_TYPE }}"
                 data-validator="askbot.validators.questionDetailsValidator"
             >

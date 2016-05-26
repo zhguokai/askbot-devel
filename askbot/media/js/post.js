@@ -133,7 +133,7 @@ askbot.validators.titleValidator = function (text) {
     text = $.trim(text);
     if (text === '') {
         throw interpolate(
-                gettext('enter your %(question)'),
+                gettext('enter %(question)s title'),
                 {'question': askbot.messages.questionSingular},
                 true
             );
@@ -1743,7 +1743,7 @@ var SimpleEditor = function (attrs) {
     attrs = attrs || {};
     this._rows = attrs.rows || 10;
     this._cols = attrs.cols || 60;
-    this._minRows = attrs.minRows || 1;
+    this._minLines = attrs.minLines || 1;
     this._maxlength = attrs.maxlength || 1000;
 };
 inherits(SimpleEditor, WrappedElement);
@@ -1784,14 +1784,14 @@ SimpleEditor.prototype.setText = function (text) {
     this._text = text;
     if (this._textarea) {
         this._textarea.val(text);
+        this.getAutoResizeHandler()();
     }
-    this.getAutoResizeHandler()();
 };
 
 SimpleEditor.prototype.getAutoResizeHandler = function() {
     var textarea = this._textarea;
     var mirror = this._mirror;
-    var minRows = this._minRows;
+    var minLines = this._minLines;
     var me = this;
     return function(evt) {
         me.setMirrorStyle();
@@ -1806,7 +1806,7 @@ SimpleEditor.prototype.getAutoResizeHandler = function() {
         mirror.text(text);
         var height = mirror.height();
         var lineHeight = parseInt(textarea.css('line-height')) || 10;
-        height = lineHeight * Math.max(Math.ceil(height/lineHeight), minRows);
+        height = lineHeight * Math.max(Math.ceil(height/lineHeight), minLines);
         textarea.css('height', height + 8);
     }
 };
@@ -1920,9 +1920,7 @@ WMD.prototype.createDom = function () {
         editor.val(this._text);
     }
 
-    var toggle = new WMDPreviewerToggle();
-    toggle.setEditor(self);
-    wmd_container.append(toggle.getElement());
+    //todo: add previewer toggle here
 
     var previewer = this.makeElement('div')
                         .attr('id', this.makeId('previewer'))
@@ -2131,7 +2129,7 @@ EditCommentForm.prototype.startTinyMCEEditor = function () {
 };
 
 EditCommentForm.prototype.startWMDEditor = function () {
-    var editor = new WMD();
+    var editor = new WMD({minLines: 3});
     editor.setEnabledButtons('bold italic link code ol ul');
     editor.setPreviewerEnabled(false);
     editor.setText(this._text);
@@ -2141,7 +2139,7 @@ EditCommentForm.prototype.startWMDEditor = function () {
 };
 
 EditCommentForm.prototype.startSimpleEditor = function () {
-    this._editor = new SimpleEditor();
+    this._editor = new SimpleEditor({minLines: 3});
     this._editorBox.prepend(this._editor.getElement());
 };
 
@@ -3441,7 +3439,7 @@ TagWikiEditor.prototype.decorate = function (element) {
     var me = this;
     var editor;
     if (askbot.settings.editorType === 'markdown') {
-        editor = new WMD();
+        editor = new WMD({minLines: 3});
     } else {
         editor = new TinyMCE({//override defaults
             theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',

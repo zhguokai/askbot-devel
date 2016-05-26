@@ -122,6 +122,11 @@ Editable.prototype.clearError = function () {
     this._error.html('');
 };
 
+Editable.prototype.cancelEdit = function () {
+    this.setState('display');
+    this.clearError();
+};
+
 Editable.prototype.saveText = function () {
     var me = this;
     var editorText = this._editor.getText();
@@ -218,13 +223,13 @@ Editable.prototype.decorate = function(element){
     }
     this._editBtn = editBtn;
 
-    var error = element.find('.js-error');
-    if (error.length === 0) {
-        error = this.makeElement('div');
-        error.addClass('js-error');
-        this._element.prepend(error);
+    var err = element.find('.js-error');
+    if (err.length === 0) {
+        err = this.makeElement('div');
+        err.addClass('js-error');
+        this._element.prepend(err);
     }
-    this._error = error;
+    this._error = err;
 
     //parse these two urls and separate url and the params
     var getTextUrl = element.data('getTextUrl');
@@ -258,10 +263,10 @@ Editable.prototype.decorate = function(element){
 
     //create editor
     var editorType = element.data('editorType') || askbot['settings']['editorType'];
-    var minRows = element.data('minRows') || 1;
+    var minLines = element.data('minLines') || 1;
     this._editorType = editorType;
     if (editorType === 'markdown') {
-        var editor = new WMD({'minRows': minRows});
+        var editor = new WMD({'minLines': minLines});
         if (this._useCompactEditor) {
             editor.setEnabledButtons('bold italic link code ol ul');
         }
@@ -280,7 +285,7 @@ Editable.prototype.decorate = function(element){
         }
         editor.setId('tinyMCE-' + this._id);
     } else {
-        var editor = new SimpleEditor({'minRows': minRows});
+        var editor = new SimpleEditor({'minLines': minLines});
     }
     this._editor = editor;
     editorBox.append(editor.getElement());
@@ -312,7 +317,7 @@ Editable.prototype.decorate = function(element){
 
     var me = this;
     setupButtonEventHandlers(editBtn, function(evt){ me.startActivatingEditor(evt) });
-    setupButtonEventHandlers(cancelBtn, function(){ me.setState('display') });
+    setupButtonEventHandlers(cancelBtn, function(){ me.cancelEdit() });
     setupButtonEventHandlers(saveBtn, function(){ me.saveText() });
 };
 

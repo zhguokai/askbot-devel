@@ -35,7 +35,7 @@
                 data-is-on="{{ is_following|as_js_bool }}"
                 data-off-prompt-text="{% trans %}unfollow{% endtrans %}"
                 data-on-prompt-text="{% trans %}follow{% endtrans %}"
-                data-min-rows="10"
+                data-min-lines="10"
                 data-on-state-text="{% trans %}following{% endtrans %}"
                 data-off-state-text="{% trans %}follow{% endtrans %}"
                 data-toggle-url="{% url 'toggle_follow_object' model_name='user', object_id=view_user.id %}"
