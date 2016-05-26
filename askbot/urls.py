@@ -104,6 +104,16 @@ urlpatterns = patterns('',
         views.users.user_set_primary_language,
         name='user_set_primary_language'
     ),
+    service_url(
+        r'^users/get-description$',
+        views.users.get_user_description,
+        name='get_user_description'
+    ),
+    service_url(
+        r'^users/set-description$',
+        views.users.set_user_description,
+        name='set_user_description',
+    ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
             pgettext('urls', 'users/'),
@@ -228,6 +238,21 @@ urlpatterns = patterns('',
         r'^moderate-post-edits/',
         views.moderation.moderate_post_edits,
         name='moderate_post_edits'
+    ),
+    service_url(
+        r'^set-question-title/',
+        views.commands.set_question_title,
+        name='set_question_title'
+    ),
+    service_url(
+        r'^get-post-body/',
+        views.commands.get_post_body,
+        name='get_post_body'
+    ),
+    service_url(
+        r'^set-post-body/',
+        views.commands.set_post_body,
+        name='set_post_body'
     ),
     service_url(
         r'^save-draft-question/',

@@ -27,7 +27,7 @@ pystache==0.3.1
 pylint
 pytz
 sanction
-django-tinymce
+django-tinymce==1.5.2
 longerusername
 mock==1.0.1
 beautifulsoup4

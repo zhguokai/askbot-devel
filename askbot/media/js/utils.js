@@ -6,6 +6,39 @@ var mediaUrl = function (resource) {
     return askbot.settings.static_url + 'default' + '/' + resource;
 };
 
+/** todo: look up available alternatives
+ * this makes assumption that url is path?param1=value1&param2=value2...
+ * no other forms are parsed
+ * returns an array with two elements:
+ * (1) - path, (2) - dictionary of params
+ */
+var parseUrl = function (url) {
+    var urlParts = url.split('?');
+    if (urlParts.length == 1) {
+        return [url, undefined];
+    } else {
+        var paramsString = urlParts[1];
+        var paramsParts = paramsString.split('&');
+        var numParts = paramsParts.length;
+        var params = {};
+        for (var i=0; i<numParts; i++) {
+            var pair = paramsParts[i].split('=');
+            params[pair[0]] = pair[1];
+        }
+        return [urlParts[0], params];
+    }
+};
+
+var getObjectByPath = function (path) {
+    var bits = path.split('.');
+    var obj = window;
+    var numBits = bits.length;
+    for (var i=0; i<numBits; i++) {
+        obj = obj[bits[i]];
+    }
+    return obj;
+};
+
 var getCookie = function (name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {

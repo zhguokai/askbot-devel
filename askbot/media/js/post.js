@@ -127,6 +127,66 @@ var validateTagCount = function (value) {
 $.validator.addMethod('limit_tag_count', validateTagCount);
 $.validator.addMethod('limit_tag_length', validateTagLength);
 
+askbot.validators = askbot.validators || {};
+
+askbot.validators.titleValidator = function (text) {
+    text = $.trim(text);
+    if (text === '') {
+        throw interpolate(
+                gettext('enter your %(question)'),
+                {'question': askbot.messages.questionSingular},
+                true
+            );
+    } else if (text.length < askbot.settings.minTitleLength) {
+        throw interpolate(
+                        ngettext(
+                            '%(question)s must have > %(length)s character',
+                            '%(question)s must have > %(length)s characters',
+                            askbot.settings.minTitleLength
+                        ),
+                        {
+                            'question': askbot.messages.questionSingular,
+                            'length': askbot.settings.minTitleLength
+                        },
+                        true
+                    );
+    }
+};
+
+askbot.validators.questionDetailsValidator = function (text) {
+    text = $.trim(text);
+    var minLength = askbot.settings.minQuestionBodyLength;
+    if (minLength && (text.length < minLength)) {
+        throw interpolate(
+                    ngettext(
+                        'details must have > %s character',
+                        'details must have > %s characters',
+                        minLength
+                    ),
+                    [minLength]
+                );
+    }
+};
+
+askbot.validators.answerValidator = function (text) {
+    text = $.trim(text);
+    var minLength = askbot.settings.minAnswerBodyLength;
+    if (minLength && (text.length < minLength)) {
+        throw interpolate(
+                ngettext(
+                    '%(answer)s must be > %(length)s character',
+                    '%(answer)s must be > %(length)s characters',
+                    minLength
+                ),
+                {
+                    'answer': askbot.messages.answerSingular,
+                    'length': minLength
+                },
+                true
+            );
+    }
+};
+
 var CPValidator = (function () {
     return {
         getQuestionFormRules: function () {
@@ -1683,6 +1743,7 @@ var SimpleEditor = function (attrs) {
     attrs = attrs || {};
     this._rows = attrs.rows || 10;
     this._cols = attrs.cols || 60;
+    this._minRows = attrs.minRows || 1;
     this._maxlength = attrs.maxlength || 1000;
 };
 inherits(SimpleEditor, WrappedElement);
@@ -1724,6 +1785,48 @@ SimpleEditor.prototype.setText = function (text) {
     if (this._textarea) {
         this._textarea.val(text);
     }
+    this.getAutoResizeHandler()();
+};
+
+SimpleEditor.prototype.getAutoResizeHandler = function() {
+    var textarea = this._textarea;
+    var mirror = this._mirror;
+    var minRows = this._minRows;
+    var me = this;
+    return function(evt) {
+        me.setMirrorStyle();
+        var text = me.getText();
+        if (evt) {
+            if (evt.type == 'keydown' && getKeyCode(evt) == 13) {
+                text += '\nZ';//add one char after newline
+            } else if (/(\r|\n)$/.exec(evt.target.value)) {
+                text += '\nZ';//add one char after newline
+            }
+        }
+        mirror.text(text);
+        var height = mirror.height();
+        var lineHeight = parseInt(textarea.css('line-height')) || 10;
+        height = lineHeight * Math.max(Math.ceil(height/lineHeight), minRows);
+        textarea.css('height', height + 8);
+    }
+};
+
+SimpleEditor.prototype.setMirrorStyle = function() {
+    //copy styles into mirror from the textarea
+    var textarea = this._textarea;
+    var mirrorCss = {
+        'position': 'absolute',
+        'top': '-999em',
+        'line-height': textarea.css('line-height'),
+        'padding': textarea.css('padding'),
+        'margin': textarea.css('margin'),
+        'font': textarea.css('font'),
+        'width': textarea.css('width'),
+        'word-wrap': textarea.css('word-wrap'),
+        'word-break': textarea.css('word-break'),
+        'overflow': textarea.css('overflow')
+    };
+    this._mirror.css(mirrorCss);
 };
 
 /**
@@ -1734,8 +1837,16 @@ SimpleEditor.prototype.setText = function (text) {
 SimpleEditor.prototype.createDom = function () {
     this._element = getTemplate('.js-simple-editor');
     var textarea = this._element.find('textarea');
-    addExtraCssClasses(textarea, 'editorClasses');
+    var mirror = this._element.find('.mirror');
+
     this._textarea = textarea;
+    this._mirror = mirror;
+
+
+    if (askbot.settings.tinymceEditorDeselector) {
+        textarea.addClass(askbot.settings.tinymceEditorDeselector);//suppress tinyMCE
+    }
+    addExtraCssClasses(textarea, 'editorClasses');
     if (this._text) {
         textarea.val(this._text);
     }
@@ -1744,14 +1855,16 @@ SimpleEditor.prototype.createDom = function () {
         'rows': this._rows,
         'maxlength': this._maxlength
     });
+
+    textarea.on('change paste keyup keydown', this.getAutoResizeHandler());
 };
 
 /**
  * @constructor
  * a wrapper for the WMD editor
  */
-var WMD = function () {
-    SimpleEditor.call(this);
+var WMD = function (opts) {
+    SimpleEditor.call(this, opts);
     this._text = undefined;
     this._enabled_buttons = 'bold italic link blockquote code ' +
         'image attachment ol ul heading hr';
@@ -1770,6 +1883,10 @@ WMD.prototype.setPreviewerEnabled = function (state) {
     if (this._previewer) {
         this._previewer.hide();
     }
+};
+
+WMD.prototype.getPreviewerEnabled = function () {
+    return this._is_previewer_enabled;
 };
 
 WMD.prototype.createDom = function () {
@@ -1793,9 +1910,19 @@ WMD.prototype.createDom = function () {
     wmd_container.append(editor);
     this._textarea = editor;
 
+    var mirror = this.makeElement('pre').addClass('mirror');
+    wmd_container.append(mirror);
+    this._mirror = mirror;
+    $(editor).on('change paste keyup keydown', this.getAutoResizeHandler());
+
+
     if (this._text) {
         editor.val(this._text);
     }
+
+    var toggle = new WMDPreviewerToggle();
+    toggle.setEditor(self);
+    wmd_container.append(toggle.getElement());
 
     var previewer = this.makeElement('div')
                         .attr('id', this.makeId('previewer'))
@@ -1811,6 +1938,8 @@ WMD.prototype.decorate = function (element) {
     this._element = element;
     this._textarea = element.find('textarea');
     this._previewer = element.find('.wmd-preview');
+    this._mirror = element.find('.mirror');
+    this._textarea.on('change paste keyup keydown', this.getAutoResizeHandler());
 };
 
 WMD.prototype.start = function () {
@@ -1931,6 +2060,7 @@ TinyMCE.prototype.createDom = function () {
     var textarea = this.makeElement('textarea');
     textarea.attr('id', this._id);
     textarea.addClass('editor');
+    //textarea.addClass(askbot.settings.tinymceEditorDeselector);
     this._element.append(textarea);
 };
 

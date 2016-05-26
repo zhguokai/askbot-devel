@@ -77,8 +77,8 @@ Editable.prototype.getAttributeName = function() {
 };
 
 Editable.prototype.startEditingText = function (text) {
-    this._editor.setText(text);
     this.setState('edit');
+    this._editor.setText(text);
     if (this.isEditorLoaded() === false){
         this._editor.start();
         this.setEditorLoaded();
@@ -258,9 +258,10 @@ Editable.prototype.decorate = function(element){
 
     //create editor
     var editorType = element.data('editorType') || askbot['settings']['editorType'];
+    var minRows = element.data('minRows') || 1;
     this._editorType = editorType;
     if (editorType === 'markdown') {
-        var editor = new WMD();
+        var editor = new WMD({'minRows': minRows});
         if (this._useCompactEditor) {
             editor.setEnabledButtons('bold italic link code ol ul');
         }
@@ -279,7 +280,7 @@ Editable.prototype.decorate = function(element){
         }
         editor.setId('tinyMCE-' + this._id);
     } else {
-        var editor = new SimpleEditor();
+        var editor = new SimpleEditor({'minRows': minRows});
     }
     this._editor = editor;
     editorBox.append(editor.getElement());

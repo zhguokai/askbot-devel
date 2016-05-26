@@ -55,8 +55,10 @@ def application_settings(request):
     if my_settings['EDITOR_TYPE'] == 'tinymce':
         tinymce_plugins = settings.TINYMCE_DEFAULT_CONFIG.get('plugins', '').split(',')
         my_settings['TINYMCE_PLUGINS'] = map(lambda v: v.strip(), tinymce_plugins)
+        my_settings['TINYMCE_EDITOR_DESELECTOR'] = settings.TINYMCE_DEFAULT_CONFIG['editor_deselector']
     else:
-        my_settings['TINYMCE_PLUGINS'] = [];
+        my_settings['TINYMCE_PLUGINS'] = []
+        my_settings['TINYMCE_EDITOR_DESELECTOR'] = ''
 
     my_settings['LOGOUT_REDIRECT_URL'] = url_utils.get_logout_redirect_url()
 
@@ -123,5 +125,9 @@ def application_settings(request):
             link = _get_group_url(group)
             group_list.append({'name': group['name'], 'link': link})
         context['group_list'] = simplejson.dumps(group_list)
+
+    if askbot_settings.EDITOR_TYPE == 'tinymce':
+        from tinymce.widgets import TinyMCE
+        context['tinymce'] = TinyMCE()
 
     return context
