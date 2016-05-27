@@ -1859,6 +1859,48 @@ SimpleEditor.prototype.createDom = function () {
     textarea.on('change paste keyup keydown', this.getAutoResizeHandler());
 };
 
+var WMDExpanderToggle = function (editor) {
+    ExpanderToggle.call(this, editor.getPreviewerElement());
+    this._editor = editor.getEditorElement();
+    this._state = 'on-state';
+    this._messages = {
+        'on-state': gettext('Preview: (hide)'),
+        'off-state': gettext('Show preview')
+    }
+};
+inherits(WMDExpanderToggle, ExpanderToggle);
+
+WMDExpanderToggle.prototype.getEditor = function () {
+    return this._editor;
+};
+
+WMDExpanderToggle.prototype.setPreviewerCollapsedClass = function (collapsed) {
+    var ed = this.getEditor();
+    if (collapsed) {
+        ed.addClass('wmd-previewer-collapsed');
+    } else {
+        ed.removeClass('wmd-previewer-collapsed');
+    }
+};
+
+WMDExpanderToggle.prototype.createDom = function () {
+    getSuperClass(WMDExpanderToggle).createDom.call(this);
+    this._element.addClass('wmd-previewer-toggle');
+    var editor = this.getEditor();
+
+    var me = this;
+    this._element.on('askbot.Toggle.stateChange', function (evt, data) {
+        var newState = data['newState'];
+        var collapsed = (newState == 'off-state' || newState == 'on-prompt');
+        me.setPreviewerCollapsedClass(collapsed);
+        return false;
+    });
+    this._element.on('askbot.WrappedElement.show askbot.WrappedElement.hide', function () {
+        me.setPreviewerCollapsedClass(!me.isOn());
+        return false;
+    });
+}
+
 /**
  * @constructor
  * a wrapper for the WMD editor
@@ -1868,7 +1910,7 @@ var WMD = function (opts) {
     this._text = undefined;
     this._enabled_buttons = 'bold italic link blockquote code ' +
         'image attachment ol ul heading hr';
-    this._is_previewer_enabled = true;
+    this._previewerEnabled = true;
 };
 inherits(WMD, SimpleEditor);
 
@@ -1878,15 +1920,29 @@ WMD.prototype.setEnabledButtons = function (buttons) {
     this._enabled_buttons = buttons;
 };
 
-WMD.prototype.setPreviewerEnabled = function (state) {
-    this._is_previewer_enabled = state;
+WMD.prototype.setPreviewerEnabled = function (enabledStatus) {
+    this._previewerEnabled = enabledStatus;
     if (this._previewer) {
-        this._previewer.hide();
+        if (enabledStatus) {
+            this._previewer.show();
+            this._previewerToggle.show();
+        } else {
+            this._previewer.hide();
+            this._previewerToggle.hide();
+        }
     }
 };
 
 WMD.prototype.getPreviewerEnabled = function () {
-    return this._is_previewer_enabled;
+    return this._previewerEnabled;
+};
+
+WMD.prototype.getPreviewerElement = function () {
+    return this._previewer;
+};
+
+WMD.prototype.getEditorElement = function () {
+    return this._editor;
 };
 
 WMD.prototype.createDom = function () {
@@ -1896,6 +1952,8 @@ WMD.prototype.createDom = function () {
 
     var wmd_container = this.makeElement('div');
     wmd_container.addClass('wmd-container');
+    this._editor = wmd_container;
+
     this._element.append(wmd_container);
 
     var wmd_buttons = this.makeElement('div')
@@ -1920,15 +1978,20 @@ WMD.prototype.createDom = function () {
         editor.val(this._text);
     }
 
-    //todo: add previewer toggle here
-
     var previewer = this.makeElement('div')
                         .attr('id', this.makeId('previewer'))
                         .addClass('wmd-preview');
-    wmd_container.append(previewer);
     this._previewer = previewer;
-    if (this._is_previewer_enabled === false) {
+
+    var toggle = new WMDExpanderToggle(this);
+    this._previewerToggle = toggle;
+    wmd_container.append(toggle.getElement());
+
+    wmd_container.append(previewer);
+
+    if (this._previewerEnabled === false) {
         previewer.hide();
+        this._previewerToggle.hide();
     }
 };
 
@@ -3290,7 +3353,7 @@ var TagWikiEditor = function () {
     this._content_backup  = '';
     this._is_editor_loaded = false;
     this._enabled_editor_buttons = null;
-    this._is_previewer_enabled = false;
+    this._previewerEnabled = false;
 };
 inherits(TagWikiEditor, WrappedElement);
 
@@ -3303,9 +3366,9 @@ TagWikiEditor.prototype.setEnabledEditorButtons = function (buttons) {
 };
 
 TagWikiEditor.prototype.setPreviewerEnabled = function (state) {
-    this._is_previewer_enabled = state;
+    this._previewerEnabled = state;
     if (this.isEditorLoaded()) {
-        this._editor.setPreviewerEnabled(this._is_previewer_enabled);
+        this._editor.setPreviewerEnabled(this._previewerEnabled);
     }
 };
 
@@ -3451,7 +3514,7 @@ TagWikiEditor.prototype.decorate = function (element) {
     if (this._enabled_editor_buttons) {
         editor.setEnabledButtons(this._enabled_editor_buttons);
     }
-    editor.setPreviewerEnabled(this._is_previewer_enabled);
+    editor.setPreviewerEnabled(this._previewerEnabled);
     this._editor = editor;
     setupButtonEventHandlers(edit_btn, function () { me.startActivatingEditor(); });
     setupButtonEventHandlers(cancel_btn, function () {me.cancelEdit(); });
@@ -4538,7 +4601,7 @@ CategorySelectBox.prototype.appendCategoryAdder = function () {
 };
 
 CategorySelectBox.prototype.createDom = function () {
-    CategorySelectBox.superClass_.createDom();
+    CategorySelectBox.superClass_.createDom.call(this);
     if (askbot.data.userIsAdmin) {
         this.appendCategoryAdder();
     }
