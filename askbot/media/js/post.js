@@ -2040,7 +2040,6 @@ TinyMCE.prototype.setTextareaName = function (name) {
 TinyMCE.onInitHook = function () {
     //set initial content
     var ed = tinyMCE.activeEditor;
-    ed.setContent(askbot.data.editorContent || '');
     //if we have spellchecker - enable it by default
     if (inArray('spellchecker', askbot.settings.tinyMCEPlugins)) {
         setTimeout(function () {

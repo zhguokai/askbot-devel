@@ -35,11 +35,6 @@
             {{ post_form.media }}
             {{ post_form.text }}
         </div>
-        <script type="text/javascript">
-            {% if post_html %}
-                askbot['data']['editorContent'] = '{{ post_html|escapejs }}';
-            {% endif %}
-        </script>
         <div class="form-item">
             <p class="editor-status action-status"><span></span></p>
         </div>
