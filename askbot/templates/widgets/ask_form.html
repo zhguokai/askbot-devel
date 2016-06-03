@@ -12,7 +12,9 @@
     </div>
 
     {% if editor_is_folded %}
-        <a class="question-body-trigger">{% trans %}Add details (optional){% endtrans %}</a>
+        <a class="question-body-trigger"><label for="editor">{{ form.text.label }}</label></a>
+    {% else %}
+        <label for="editor">{{ form.text.label }}</label>
     {% endif %}
     <div class="folded-editor{% if editor_is_folded == False %} unfolded{% endif %}">
         <div class="editor-proper">

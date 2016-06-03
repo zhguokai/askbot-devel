@@ -2005,6 +2005,11 @@ ul.js-related-tags li {
 .folded-editor.unfolded .editor-proper {
   display: block;
 }
+a.question-body-trigger {
+  text-decoration: underline;
+  display: block;
+  color: #525252;
+}
 .wmd-container textarea, .js-simple-editor textarea {
   border: none;
   overflow: hidden;

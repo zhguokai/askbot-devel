@@ -2,6 +2,7 @@
 from the django settings, all parameters from the askbot livesettings
 and the application available for the templates
 """
+import json
 import sys
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -56,6 +57,7 @@ def application_settings(request):
         tinymce_plugins = settings.TINYMCE_DEFAULT_CONFIG.get('plugins', '').split(',')
         my_settings['TINYMCE_PLUGINS'] = map(lambda v: v.strip(), tinymce_plugins)
         my_settings['TINYMCE_EDITOR_DESELECTOR'] = settings.TINYMCE_DEFAULT_CONFIG['editor_deselector']
+        my_settings['TINYMCE_CONFIG_JSON'] = json.dumps(settings.TINYMCE_DEFAULT_CONFIG)
     else:
         my_settings['TINYMCE_PLUGINS'] = []
         my_settings['TINYMCE_EDITOR_DESELECTOR'] = ''

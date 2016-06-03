@@ -2023,7 +2023,9 @@ WMD.prototype.start = function () {
  */
 var TinyMCE = function (config) {
     WrappedElement.call(this);
-    this._config = config || {};
+    var defaultConfig = JSON.parse(askbot['settings']['tinyMCEConfigJson']);
+    this._config = $.extend(defaultConfig, config || {});
+
     this._id = 'editor';//desired id of the textarea
 };
 inherits(TinyMCE, WrappedElement);
@@ -2062,6 +2064,9 @@ TinyMCE.prototype.start = function () {
     opts = $.extend(opts, extraOpts);
     tinyMCE.init(opts);
     $('.mceStatusbar').remove();
+    if (this._text) {
+        this.setText(this._text);
+    }
 };
 TinyMCE.prototype.setPreviewerEnabled = function () {};
 TinyMCE.prototype.setHighlight = function () {};
@@ -2126,7 +2131,7 @@ TinyMCE.prototype.getText = function () {
 TinyMCE.prototype.getHtml = TinyMCE.prototype.getText;
 
 TinyMCE.prototype.isLoaded = function () {
-    return (tinymce.get(this._id) !== undefined);
+    return (typeof tinymce !== 'undefined' && tinymce.get(this._id) !== undefined);
 };
 
 TinyMCE.prototype.createDom = function () {
@@ -3357,6 +3362,7 @@ FoldedEditor.prototype.decorate = function (element) {
     editor.setTextareaName('text');
 
     var placeHolder = element.find('.editor-placeholder');
+    editor.setText(placeHolder.data('draftAnswer'));
     placeHolder.append(editor.getElement());
     //editor.start();
 

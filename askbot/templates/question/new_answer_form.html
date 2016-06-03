@@ -35,7 +35,8 @@
             <div class="folded-editor" tabindex="6">
               <p class="prompt"><a>{{ settings.WORDS_ADD_ANSWER|escape }}</a></p>
                 <div class="editor-proper">
-                    <div class="form-group editor-placeholder"></div>
+                    <div class="form-group editor-placeholder"
+                        data-draft-answer="{{ answer.text.value()|escape }}"></div>
                     <div class="answer-options">
                         {% if settings.WIKI_ON %}
                             {{ macros.checkbox_in_div(answer.wiki) }}
@@ -55,7 +56,6 @@
                     {% endif %}
                     <input id="add-answer-btn" type="submit" class="submit"/>
                     <script type="text/javascript">
-                        {% if answer.text.value
                         askbot['functions']['renderAddAnswerButton']();
                     </script>
                 </div>
