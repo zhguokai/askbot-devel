@@ -150,7 +150,10 @@ var addExtraCssClasses = function (element, setting) {
  * @returns {string} unique id that can be used in DOM
  */
 var askbotMakeId = function (id_token, unique_seed) {
-    return id_token + '-' + unique_seed;
+    if (unique_seed) {
+        return id_token + '-' + unique_seed;
+    }
+    return id_token;
 };
 
 var getNewUniqueInt = function () {

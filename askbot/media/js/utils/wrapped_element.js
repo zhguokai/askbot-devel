@@ -20,9 +20,18 @@ var WrappedElement = function () {
  * @return {string}
  */
 WrappedElement.prototype.getIdSeed = function () {
-    var seed = this._idSeed || parseInt(getNewUniqueInt());
+    var seed;
+    if (this._idSeed == undefined) {
+        seed = parseInt(getNewUniqueInt());
+    } else {
+        seed = this._idSeed;
+    }
     this._idSeed = seed;
     return seed;
+};
+
+WrappedElement.prototype.setIdSeed = function (seed) {
+    this._idSeed = seed;
 };
 
 /**

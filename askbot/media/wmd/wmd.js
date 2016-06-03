@@ -1198,6 +1198,12 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 
 		var setupEditor = function(){
 
+            //prevent double initialization of the same editor
+			var buttonBar = document.getElementById(util.makeId("wmd-button-bar"));
+            if (buttonBar.className == 'wmd-button-bar') {
+                return;
+            }
+
 			if (/\?noundo/.test(doc.location.href)) {
 				wmd.nativeUndo = true;
 			}

@@ -1759,10 +1759,9 @@ SimpleEditor.prototype.putCursorAtEnd = function () {
     putCursorAtEnd(this._textarea);
 };
 
-/**
- * a noop function
- */
-SimpleEditor.prototype.start = function () {};
+SimpleEditor.prototype.start = function () {
+    this.getAutoResizeHandler()();
+};
 
 SimpleEditor.prototype.setHighlight = function (isHighlighted) {
     if (isHighlighted === true) {
@@ -1771,6 +1770,11 @@ SimpleEditor.prototype.setHighlight = function (isHighlighted) {
         this._textarea.removeClass('highlight');
     }
 };
+
+SimpleEditor.prototype.setTextareaName = function (name) {
+    this._textareaName = name;
+};
+
 
 SimpleEditor.prototype.getText = function () {
     return $.trim(this._textarea.val());
@@ -1855,6 +1859,9 @@ SimpleEditor.prototype.createDom = function () {
         'rows': this._rows,
         'maxlength': this._maxlength
     });
+    if (this._textareaName) {
+        textarea.attr('name', this._textareaName);
+    }
 
     textarea.on('change paste keyup keydown', this.getAutoResizeHandler());
 };
@@ -1964,6 +1971,9 @@ WMD.prototype.createDom = function () {
     var editor = this.makeElement('textarea')
                         .attr('id', this.makeId('editor'));
     addExtraCssClasses(editor, 'editorClasses');
+    if (this._textareaName) {
+        editor.attr('name', this._textareaName);
+    }
 
     wmd_container.append(editor);
     this._textarea = editor;
@@ -2005,6 +2015,7 @@ WMD.prototype.decorate = function (element) {
 
 WMD.prototype.start = function () {
     Attacklab.Util.startEditor(true, this._enabled_buttons, this.getIdSeed());
+    getSuperClass(WMD).start.call(this);
 };
 
 /**
@@ -2016,6 +2027,10 @@ var TinyMCE = function (config) {
     this._id = 'editor';//desired id of the textarea
 };
 inherits(TinyMCE, WrappedElement);
+
+TinyMCE.prototype.setTextareaName = function (name) {
+    this._textareaName = name;
+};
 
 /*
  * not passed onto prototoype on purpose!!!
@@ -2121,6 +2136,9 @@ TinyMCE.prototype.createDom = function () {
     var textarea = this.makeElement('textarea');
     textarea.attr('id', this._id);
     textarea.addClass('editor');
+    if (this._textareaName) {
+        textarea.attr('name', this._textareaName);
+    }
     //textarea.addClass(askbot.settings.tinymceEditorDeselector);
     this._element.append(textarea);
 };
@@ -3268,7 +3286,10 @@ FoldedEditor.prototype.getEditorInputId = function () {
 FoldedEditor.prototype.onAfterOpenHandler = function () {
     var editor = this.getEditor();
     if (editor) {
-        setTimeout(function () { editor.focus(); }, 500);
+        editor.start();
+        setTimeout(function () { 
+            editor.focus(); 
+        }, 500);
     }
 };
 
@@ -3323,15 +3344,23 @@ FoldedEditor.prototype.decorate = function (element) {
 
     var editorType = askbot.settings.editorType;
     var editor;
+
     if (editorType === 'tinymce') {
         editor = new TinyMCE();
-        editor.decorate(element.find('textarea'));
-        this._editor = editor;
+        editor.setId('editor');
     } else if (editorType === 'markdown') {
-        editor = new WMD();
-        editor.decorate(element);
-        this._editor = editor;
+        editor = new WMD({'minLines': 10});
+        editor.setIdSeed('');
+    } else {
+        throw 'wrong editor type "' + editorType + '"'
     }
+    editor.setTextareaName('text');
+
+    var placeHolder = element.find('.editor-placeholder');
+    placeHolder.append(editor.getElement());
+    //editor.start();
+
+    this._editor = editor;
 
     var openHandler = this.getOpenHandler();
     element.click(openHandler);
