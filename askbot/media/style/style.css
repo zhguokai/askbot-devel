@@ -2006,9 +2006,10 @@ ul.js-related-tags li {
   display: block;
 }
 a.question-body-trigger {
-  text-decoration: underline;
-  display: block;
   color: #525252;
+  display: block;
+  margin-bottom: 8px;
+  text-decoration: underline;
 }
 .wmd-container textarea, .js-simple-editor textarea {
   border: none;

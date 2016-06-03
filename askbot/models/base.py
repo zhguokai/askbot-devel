@@ -64,7 +64,6 @@ class DraftContent(models.Model):
         app_label = 'askbot'
 
     def get_text(self):
-        if askbot_settings.EDITOR_TYPE == 'markdown':
-            if self.text.strip() == '<br data-mce-bogus="1">':
-                return ''
+        if self.text.strip() == '<br data-mce-bogus="1">':
+            return ''
         return self.text
