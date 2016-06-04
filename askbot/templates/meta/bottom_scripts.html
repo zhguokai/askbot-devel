@@ -180,12 +180,16 @@
 {# stuff below should not be compressed #}
 {% if settings.ENABLE_MATHJAX %}
     {# we don't want to load mathjax just in case, only if it is really enabled #}
-    <script type='text/javascript' src="{{settings.MATHJAX_BASE_URL}}/MathJax.js">
-        MathJax.Hub.Config({
-            extensions: ["tex2jax.js"],
-            jax: ["input/TeX","output/HTML-CSS"],
-            tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
-        });
+    <script type='text/javascript' src="{{settings.MATHJAX_BASE_URL}}/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        if (typeof MathJax != 'undefined') {
+            MathJax.Hub.Config({
+                extensions: ["tex2jax.js"],
+                jax: ["input/TeX","output/HTML-CSS"],
+                tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+            });
+        } else {
+            console.log('Could not load MathJax');
+        }
     </script>
 {% endif %}
 {% if settings.USE_CUSTOM_JS %}
