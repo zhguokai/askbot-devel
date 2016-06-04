@@ -31,6 +31,9 @@ Editable.prototype.setPreviewerEnabled = function(state){
 Editable.prototype.setContent = function(content){
     this._content.empty();
     this._content.append(content);
+    if (askbot.settings.mathjaxEnabled) {
+        runMathJax();
+    }
 };
 
 Editable.prototype.setState = function(state){
@@ -94,7 +97,7 @@ Editable.prototype.startActivatingEditor = function (evt) {
     evt.preventDefault();
     var editor = this._editor;
 
-    if (this._editorType != 'markdown') {//take shortcut
+    if (this._editorType == 'tinymce') {//take shortcut.
         this.startEditingText(this._content.html());
         return false;
     }
