@@ -2835,6 +2835,9 @@ Comment.prototype.setContent = function (data) {
         askbot['functions']['renderPostControls'](data.id.toString());
         askbot['functions']['renderPostVoteButtons']('comment', data.id.toString());
     }
+    if (askbot.settings.mathjaxEnabled === true) {
+        runMathJax();
+    }
     this._element.trigger('askbot.afterCommentSetData', [this, data]);
 };
 
@@ -2868,9 +2871,6 @@ Comment.prototype.getElement = function () {
     Comment.superClass_.getElement.call(this);
     if (this.isBlank() && this.hasContent()) {
         this.setContent();
-        if (askbot.settings.mathjaxEnabled === true) {
-            MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
-        }
     }
     return this._element;
 };
