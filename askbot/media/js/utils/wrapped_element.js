@@ -20,9 +20,18 @@ var WrappedElement = function () {
  * @return {string}
  */
 WrappedElement.prototype.getIdSeed = function () {
-    var seed = this._idSeed || parseInt(getNewUniqueInt());
+    var seed;
+    if (this._idSeed == undefined) {
+        seed = parseInt(getNewUniqueInt());
+    } else {
+        seed = this._idSeed;
+    }
     this._idSeed = seed;
     return seed;
+};
+
+WrappedElement.prototype.setIdSeed = function (seed) {
+    this._idSeed = seed;
 };
 
 /**
@@ -79,14 +88,14 @@ WrappedElement.prototype.decorate = function (element) {
  * @return {object} jQuery
  */
 WrappedElement.prototype.getElement = function () {
-    if (this._element === null) {
+    if (!this._element) {
         this.createDom();
     }
     return this._element;
 };
 
 WrappedElement.prototype.hasElement = function () {
-    return (this._element !== undefined);
+    return (this._element != null);
 };
 WrappedElement.prototype.inDocument = function () {
     return (this._element && this._element.is(':hidden') === false);
@@ -94,9 +103,6 @@ WrappedElement.prototype.inDocument = function () {
 WrappedElement.prototype.enterDocument = function () {
     this._in_document = true;
     return this._in_document;
-};
-WrappedElement.prototype.hasElement = function () {
-    return (this._element !== null);
 };
 /**
  * A utility method, returning a new jQuery object for
@@ -120,4 +126,18 @@ WrappedElement.prototype.dispose = function () {
         this._element.remove();
     }
     this._in_document = false;
+};
+
+WrappedElement.prototype.show = function () {
+    if (this._element) {
+        this._element.show();
+        this._element.trigger('askbot.WrappedElement.show');
+    }
+};
+
+WrappedElement.prototype.hide = function () {
+    if (this._element) {
+        this._element.hide();
+        this._element.trigger('askbot.WrappedElement.hide');
+    }
 };

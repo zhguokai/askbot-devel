@@ -41,6 +41,7 @@ from askbot.utils.translation import get_language
 from askbot.utils.http import get_request_info
 from askbot.utils import decorators
 from askbot.utils import functions
+from askbot.utils.markup import convert_text
 from askbot import forms
 from askbot import const
 from askbot.views import context as view_context
@@ -639,6 +640,48 @@ def user_stats(request, user, context):
     context.update(extra_context)
 
     return render(request, 'user_profile/user_stats.html', context)
+
+
+@decorators.ajax_only
+def get_user_description(request):
+    if request.user.is_anonymous():
+        if askbot_settings.CLOSED_FORUM_MODE:
+            raise django_exceptions.PermissionDenied
+
+    form = forms.UserForm(request.GET)
+    if not form.is_valid():
+        raise ValueError('bad data')
+
+    user_id = form.cleaned_data['user_id']
+    user = models.User.objects.get(pk=user_id)
+    return {'description': user.about}
+
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def set_user_description(request):
+    if request.user.is_anonymous():
+        raise django_exceptions.PermissionDenied
+
+    if askbot_settings.READ_ONLY_MODE_ENABLED:
+        message = askbot_settings.READ_ONLY_MESSAGE
+        raise django_exceptions.PermissionDenied(message)
+
+    form = forms.UserDescriptionForm(request.POST)
+    if not form.is_valid():
+        raise ValueError('bad data')
+
+    user_id = form.cleaned_data['user_id']
+    description = form.cleaned_data['description']
+        
+    if user_id == request.user.pk or request.user.is_admin_or_mod():
+        user = models.User.objects.filter(pk=user_id)
+        user.update(about=description)
+        return {'description_html': convert_text(description)}
+
+    raise django_exceptions.PermissionDenied
+
 
 def user_recent(request, user, context):
 

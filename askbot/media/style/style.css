@@ -95,6 +95,29 @@ textarea,
   font-size: 13px;
   padding: 0 5px;
 }
+textarea {
+  padding: 5px;
+}
+.js-editable .wmd-container {
+  height: auto;
+  background: white;
+  padding: 0;
+  margin-bottom: 8px;
+}
+.js-editable textarea {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+.js-editable img {
+  max-width: 100%;
+}
+.wmd-container textarea {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+.wmd-container img {
+  max-width: 100%;
+}
 .tos {
   margin: 20px 0 10px 0;
 }
@@ -1982,8 +2005,15 @@ ul.js-related-tags li {
 .folded-editor.unfolded .editor-proper {
   display: block;
 }
+a.question-body-trigger {
+  color: #525252;
+  display: block;
+  margin-bottom: 8px;
+  text-decoration: underline;
+}
 .wmd-container textarea, .js-simple-editor textarea {
   border: none;
+  overflow: hidden;
 }
 .users-page .wmd-container, .users-page .js-simple-editor {
   height: 120px;
@@ -2089,6 +2119,31 @@ ul.js-related-tags li {
   margin-bottom: 7px;
   font-size: 14px;
 }
+.folded-editor .wmd-container {
+  margin-bottom: 10px;
+}
+.wmd-container .wmd-preview {
+  margin: 0;
+  border-top: 3px solid #cecece;
+  padding-top: 28px;
+}
+.wmd-container.wmd-previewer-collapsed {
+  margin-bottom: 28px !important;
+}
+.wmd-previewer-toggle {
+  cursor: pointer;
+  background: #cce6ec;
+  display: inline-block;
+  float: left;
+  padding: 0 8px 0 5px;
+  margin: 0 0 -25px 0;
+  border-top: 3px solid #cecece;
+}
+.wmd-previewer-toggle.off-state, .wmd-previewer-toggle.on-prompt {
+  padding: 0 8px 0 8px;
+  margin: 0 0 -25px -3px;
+  border-top: 3px solid #cce6ec;
+}
 .defaultSkin table.mceLayout, .defaultSkin table.mceLayout tr.mceFirst td {
   border: none;
 }
@@ -2098,6 +2153,12 @@ ul.js-related-tags li {
 .mceStatusbar {
   height: 5px;
   background: #fff;
+}
+tr.mceLast {
+  height: 0;
+}
+.defaultSkin td.mceIframeContainer {
+  vertical-align: top;
 }
 .defaultSkin span.mce_askbot_imageuploader {
   background-position: -380px 0px;
@@ -2192,14 +2253,50 @@ ul.js-related-tags li {
   padding-left: 24px !important;
 }
 .question-page h1 {
+  display: inline-block;
   padding-top: 0px;
   font-family: 'Open Sans Condensed', Arial, sans-serif;
+  width: 100%;
 }
 .question-page h1 a {
   color: #464646;
   font-size: 26px;
   font-weight: normal;
   line-height: 1;
+}
+.question-page h1 .js-editable-controls, .question-page h1 .js-editable-content {
+  display: inline;
+}
+.question-page h1 .btn-link {
+  background-image: none;
+  background-color: transparent;
+  border: none !important;
+  box-shadow: none;
+  font-family: arial;
+  font-weight: normal;
+  height: 16px;
+  text-shadow: none;
+  line-height: 16px;
+  color: #888;
+  padding: 0;
+}
+.question-page h1 .btn-link:hover {
+  text-decoration: underline;
+}
+.question-page h1 .js-simple-editor {
+  margin-bottom: 8px;
+}
+.question-page h1 .js-simple-editor textarea {
+  color: #666;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  font-size: 30px;
+  line-height: 36px;
+  height: 66px;
+  width: 100% !important;
+}
+.question-page h1 .js-error {
+  font-size: 16px;
+  font-family: Arial;
 }
 .question-page p.rss {
   float: none;
@@ -2245,6 +2342,8 @@ ul.js-related-tags li {
   color: #4b4b4b;
   word-wrap: break-word;
   max-width: 683px;
+  margin: 8px 0 0 0;
+  padding-bottom: 5px;
 }
 .question-page .post-body a {
   color: #1b79bd;
@@ -2260,6 +2359,10 @@ ul.js-related-tags li {
   line-height: 1.4;
   font-size: 14px;
   padding: 0px 5px 5px 0px;
+}
+.question-page .post-body p:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 .question-page .js-question .post-body {
   margin-top: 8px;
@@ -2487,10 +2590,10 @@ ul.js-related-tags li {
   padding-left: 30px;
 }
 .question-page .comments .edit-comment-buttons {
-  margin-left: -4px;
+  margin-left: -2px;
 }
 .question-page .comments .edit-comment-buttons .checkbox {
-  margin: 3px;
+  margin: 8px 0 0 0;
 }
 .question-page .comments .controls a {
   border: none;
@@ -2547,9 +2650,6 @@ ul.js-related-tags li {
 }
 .question-page .comments .wmd-container textarea, .question-page .comments .js-simple-editor textarea {
   border: none;
-  box-shadow: inset 0 0 3px 1px #aaa;
-  -moz-box-shadow: inset 0 0 3px 1px #aaa;
-  -webkit-box-shadow: inset 0 0 3px 1px #aaaaaa;
 }
 .question-page .comments input {
   margin-left: 10px;
@@ -2973,7 +3073,6 @@ ul.js-related-tags li {
 .user-profile-page textarea {
   padding-left: 5px;
   padding-top: 5px;
-  width: 395px;
   font-size: 14px;
 }
 .meta input.submit,
@@ -3307,6 +3406,15 @@ a:hover.medal {
 .user-profile-page .vote-notification h3 {
   padding: 10px;
 }
+.user-profile-page .js-editable .wmd-container {
+  min-height: 162px;
+}
+.user-profile-page .js-editable .wmd-container textarea {
+  min-height: 125px;
+}
+.user-profile-page .js-editable .js-editable-content {
+  margin-bottom: 8px;
+}
 .user-details {
   font-size: 13px;
 }
@@ -3623,7 +3731,7 @@ ul.errorlist {
 ul.errorlist li {
   line-height: 16px;
 }
-.form-error {
+.js-error, .form-error {
   color: #900;
   font-weight: normal;
   vertical-align: bottom;

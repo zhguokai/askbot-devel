@@ -1791,6 +1791,16 @@ class GetUserItemsForm(forms.Form):
     page_number = forms.IntegerField(min_value=1)
     user_id = forms.IntegerField()
 
+
+class UserForm(forms.Form):
+    user_id = forms.IntegerField()
+
+
+class UserDescriptionForm(forms.Form):
+    user_id = forms.IntegerField()
+    description = forms.CharField()
+    
+
 class NewCommentForm(forms.Form):
     comment = forms.CharField()
     post_id = forms.IntegerField()

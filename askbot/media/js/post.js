@@ -127,6 +127,66 @@ var validateTagCount = function (value) {
 $.validator.addMethod('limit_tag_count', validateTagCount);
 $.validator.addMethod('limit_tag_length', validateTagLength);
 
+askbot.validators = askbot.validators || {};
+
+askbot.validators.titleValidator = function (text) {
+    text = $.trim(text);
+    if (text === '') {
+        throw interpolate(
+                gettext('enter %(question)s title'),
+                {'question': askbot.messages.questionSingular},
+                true
+            );
+    } else if (text.length < askbot.settings.minTitleLength) {
+        throw interpolate(
+                        ngettext(
+                            '%(question)s must have > %(length)s character',
+                            '%(question)s must have > %(length)s characters',
+                            askbot.settings.minTitleLength
+                        ),
+                        {
+                            'question': askbot.messages.questionSingular,
+                            'length': askbot.settings.minTitleLength
+                        },
+                        true
+                    );
+    }
+};
+
+askbot.validators.questionDetailsValidator = function (text) {
+    text = $.trim(text);
+    var minLength = askbot.settings.minQuestionBodyLength;
+    if (minLength && (text.length < minLength)) {
+        throw interpolate(
+                    ngettext(
+                        'details must have > %s character',
+                        'details must have > %s characters',
+                        minLength
+                    ),
+                    [minLength]
+                );
+    }
+};
+
+askbot.validators.answerValidator = function (text) {
+    text = $.trim(text);
+    var minLength = askbot.settings.minAnswerBodyLength;
+    if (minLength && (text.length < minLength)) {
+        throw interpolate(
+                ngettext(
+                    '%(answer)s must be > %(length)s character',
+                    '%(answer)s must be > %(length)s characters',
+                    minLength
+                ),
+                {
+                    'answer': askbot.messages.answerSingular,
+                    'length': minLength
+                },
+                true
+            );
+    }
+};
+
 var CPValidator = (function () {
     return {
         getQuestionFormRules: function () {
@@ -1683,6 +1743,7 @@ var SimpleEditor = function (attrs) {
     attrs = attrs || {};
     this._rows = attrs.rows || 10;
     this._cols = attrs.cols || 60;
+    this._minLines = attrs.minLines || 1;
     this._maxlength = attrs.maxlength || 1000;
 };
 inherits(SimpleEditor, WrappedElement);
@@ -1698,10 +1759,9 @@ SimpleEditor.prototype.putCursorAtEnd = function () {
     putCursorAtEnd(this._textarea);
 };
 
-/**
- * a noop function
- */
-SimpleEditor.prototype.start = function () {};
+SimpleEditor.prototype.start = function () {
+    this.getAutoResizeHandler()();
+};
 
 SimpleEditor.prototype.setHighlight = function (isHighlighted) {
     if (isHighlighted === true) {
@@ -1710,6 +1770,11 @@ SimpleEditor.prototype.setHighlight = function (isHighlighted) {
         this._textarea.removeClass('highlight');
     }
 };
+
+SimpleEditor.prototype.setTextareaName = function (name) {
+    this._textareaName = name;
+};
+
 
 SimpleEditor.prototype.getText = function () {
     return $.trim(this._textarea.val());
@@ -1723,7 +1788,50 @@ SimpleEditor.prototype.setText = function (text) {
     this._text = text;
     if (this._textarea) {
         this._textarea.val(text);
+        this.getAutoResizeHandler()();
     }
+};
+
+SimpleEditor.prototype.getAutoResizeHandler = function() {
+    var textarea = this._textarea;
+    var mirror = this._mirror;
+    var minLines = this._minLines;
+    var me = this;
+    return function(evt) {
+        me.setMirrorStyle();
+        var text = me.getText();
+        if (evt) {
+            if (evt.type == 'keydown' && getKeyCode(evt) == 13) {
+                text += '\nZ';//add one char after newline
+            } else if (/(\r|\n)$/.exec(evt.target.value)) {
+                text += '\nZ';//add one char after newline
+            }
+        }
+        mirror.text(text);
+        var height = mirror.height();
+        var lineHeight = parseInt(textarea.css('line-height')) || 10;
+        height = lineHeight * Math.max(Math.ceil(height/lineHeight), minLines);
+        textarea.css('height', height + 8);
+    }
+};
+
+SimpleEditor.prototype.setMirrorStyle = function() {
+    //copy styles into mirror from the textarea
+    var textarea = this._textarea;
+    var mirrorCss = {
+        'position': 'absolute',
+        'top': '-999em',
+        'padding': textarea.css('padding'),
+        'margin': textarea.css('margin'),
+        'width': textarea.css('width'),
+        'word-wrap': textarea.css('word-wrap'),
+        'word-break': textarea.css('word-break'),
+        'overflow': textarea.css('overflow')
+    };
+    //for IE, as .css('font') fails
+    var fontProps = getFontProps(textarea);
+    mirrorCss = $.extend(mirrorCss, fontProps);
+    this._mirror.css(mirrorCss);
 };
 
 /**
@@ -1734,8 +1842,16 @@ SimpleEditor.prototype.setText = function (text) {
 SimpleEditor.prototype.createDom = function () {
     this._element = getTemplate('.js-simple-editor');
     var textarea = this._element.find('textarea');
-    addExtraCssClasses(textarea, 'editorClasses');
+    var mirror = this._element.find('.mirror');
+
     this._textarea = textarea;
+    this._mirror = mirror;
+
+
+    if (askbot.settings.tinymceEditorDeselector) {
+        textarea.addClass(askbot.settings.tinymceEditorDeselector);//suppress tinyMCE
+    }
+    addExtraCssClasses(textarea, 'editorClasses');
     if (this._text) {
         textarea.val(this._text);
     }
@@ -1744,18 +1860,65 @@ SimpleEditor.prototype.createDom = function () {
         'rows': this._rows,
         'maxlength': this._maxlength
     });
+    if (this._textareaName) {
+        textarea.attr('name', this._textareaName);
+    }
+
+    textarea.on('change paste keyup keydown', this.getAutoResizeHandler());
 };
+
+var WMDExpanderToggle = function (editor) {
+    ExpanderToggle.call(this, editor.getPreviewerElement());
+    this._editor = editor.getEditorElement();
+    this._state = 'on-state';
+    this._messages = {
+        'on-state': gettext('Preview: (hide)'),
+        'off-state': gettext('Show preview')
+    }
+};
+inherits(WMDExpanderToggle, ExpanderToggle);
+
+WMDExpanderToggle.prototype.getEditor = function () {
+    return this._editor;
+};
+
+WMDExpanderToggle.prototype.setPreviewerCollapsedClass = function (collapsed) {
+    var ed = this.getEditor();
+    if (collapsed) {
+        ed.addClass('wmd-previewer-collapsed');
+    } else {
+        ed.removeClass('wmd-previewer-collapsed');
+    }
+};
+
+WMDExpanderToggle.prototype.createDom = function () {
+    getSuperClass(WMDExpanderToggle).createDom.call(this);
+    this._element.addClass('wmd-previewer-toggle');
+    var editor = this.getEditor();
+
+    var me = this;
+    this._element.on('askbot.Toggle.stateChange', function (evt, data) {
+        var newState = data['newState'];
+        var collapsed = (newState == 'off-state' || newState == 'on-prompt');
+        me.setPreviewerCollapsedClass(collapsed);
+        return false;
+    });
+    this._element.on('askbot.WrappedElement.show askbot.WrappedElement.hide', function () {
+        me.setPreviewerCollapsedClass(!me.isOn());
+        return false;
+    });
+}
 
 /**
  * @constructor
  * a wrapper for the WMD editor
  */
-var WMD = function () {
-    SimpleEditor.call(this);
+var WMD = function (opts) {
+    SimpleEditor.call(this, opts);
     this._text = undefined;
     this._enabled_buttons = 'bold italic link blockquote code ' +
         'image attachment ol ul heading hr';
-    this._is_previewer_enabled = true;
+    this._previewerEnabled = true;
 };
 inherits(WMD, SimpleEditor);
 
@@ -1765,11 +1928,29 @@ WMD.prototype.setEnabledButtons = function (buttons) {
     this._enabled_buttons = buttons;
 };
 
-WMD.prototype.setPreviewerEnabled = function (state) {
-    this._is_previewer_enabled = state;
+WMD.prototype.setPreviewerEnabled = function (enabledStatus) {
+    this._previewerEnabled = enabledStatus;
     if (this._previewer) {
-        this._previewer.hide();
+        if (enabledStatus) {
+            this._previewer.show();
+            this._previewerToggle.show();
+        } else {
+            this._previewer.hide();
+            this._previewerToggle.hide();
+        }
     }
+};
+
+WMD.prototype.getPreviewerEnabled = function () {
+    return this._previewerEnabled;
+};
+
+WMD.prototype.getPreviewerElement = function () {
+    return this._previewer;
+};
+
+WMD.prototype.getEditorElement = function () {
+    return this._editor;
 };
 
 WMD.prototype.createDom = function () {
@@ -1779,6 +1960,8 @@ WMD.prototype.createDom = function () {
 
     var wmd_container = this.makeElement('div');
     wmd_container.addClass('wmd-container');
+    this._editor = wmd_container;
+
     this._element.append(wmd_container);
 
     var wmd_buttons = this.makeElement('div')
@@ -1789,9 +1972,18 @@ WMD.prototype.createDom = function () {
     var editor = this.makeElement('textarea')
                         .attr('id', this.makeId('editor'));
     addExtraCssClasses(editor, 'editorClasses');
+    if (this._textareaName) {
+        editor.attr('name', this._textareaName);
+    }
 
     wmd_container.append(editor);
     this._textarea = editor;
+
+    var mirror = this.makeElement('pre').addClass('mirror');
+    wmd_container.append(mirror);
+    this._mirror = mirror;
+    $(editor).on('change paste keyup keydown', this.getAutoResizeHandler());
+
 
     if (this._text) {
         editor.val(this._text);
@@ -1800,10 +1992,17 @@ WMD.prototype.createDom = function () {
     var previewer = this.makeElement('div')
                         .attr('id', this.makeId('previewer'))
                         .addClass('wmd-preview');
-    wmd_container.append(previewer);
     this._previewer = previewer;
-    if (this._is_previewer_enabled === false) {
+
+    var toggle = new WMDExpanderToggle(this);
+    this._previewerToggle = toggle;
+    wmd_container.append(toggle.getElement());
+
+    wmd_container.append(previewer);
+
+    if (this._previewerEnabled === false) {
         previewer.hide();
+        this._previewerToggle.hide();
     }
 };
 
@@ -1811,10 +2010,13 @@ WMD.prototype.decorate = function (element) {
     this._element = element;
     this._textarea = element.find('textarea');
     this._previewer = element.find('.wmd-preview');
+    this._mirror = element.find('.mirror');
+    this._textarea.on('change paste keyup keydown', this.getAutoResizeHandler());
 };
 
 WMD.prototype.start = function () {
     Attacklab.Util.startEditor(true, this._enabled_buttons, this.getIdSeed());
+    getSuperClass(WMD).start.call(this);
 };
 
 /**
@@ -1822,10 +2024,16 @@ WMD.prototype.start = function () {
  */
 var TinyMCE = function (config) {
     WrappedElement.call(this);
-    this._config = config || {};
+    var defaultConfig = JSON.parse(askbot['settings']['tinyMCEConfigJson']);
+    this._config = $.extend(defaultConfig, config || {});
+
     this._id = 'editor';//desired id of the textarea
 };
 inherits(TinyMCE, WrappedElement);
+
+TinyMCE.prototype.setTextareaName = function (name) {
+    this._textareaName = name;
+};
 
 /*
  * not passed onto prototoype on purpose!!!
@@ -1833,7 +2041,6 @@ inherits(TinyMCE, WrappedElement);
 TinyMCE.onInitHook = function () {
     //set initial content
     var ed = tinyMCE.activeEditor;
-    ed.setContent(askbot.data.editorContent || '');
     //if we have spellchecker - enable it by default
     if (inArray('spellchecker', askbot.settings.tinyMCEPlugins)) {
         setTimeout(function () {
@@ -1857,6 +2064,9 @@ TinyMCE.prototype.start = function () {
     opts = $.extend(opts, extraOpts);
     tinyMCE.init(opts);
     $('.mceStatusbar').remove();
+    if (this._text) {
+        this.setText(this._text);
+    }
 };
 TinyMCE.prototype.setPreviewerEnabled = function () {};
 TinyMCE.prototype.setHighlight = function () {};
@@ -1921,7 +2131,7 @@ TinyMCE.prototype.getText = function () {
 TinyMCE.prototype.getHtml = TinyMCE.prototype.getText;
 
 TinyMCE.prototype.isLoaded = function () {
-    return (tinymce.get(this._id) !== undefined);
+    return (typeof tinymce !== 'undefined' && tinymce.get(this._id) !== undefined);
 };
 
 TinyMCE.prototype.createDom = function () {
@@ -1931,6 +2141,10 @@ TinyMCE.prototype.createDom = function () {
     var textarea = this.makeElement('textarea');
     textarea.attr('id', this._id);
     textarea.addClass('editor');
+    if (this._textareaName) {
+        textarea.attr('name', this._textareaName);
+    }
+    //textarea.addClass(askbot.settings.tinymceEditorDeselector);
     this._element.append(textarea);
 };
 
@@ -2001,7 +2215,7 @@ EditCommentForm.prototype.startTinyMCEEditor = function () {
 };
 
 EditCommentForm.prototype.startWMDEditor = function () {
-    var editor = new WMD();
+    var editor = new WMD({minLines: 3});
     editor.setEnabledButtons('bold italic link code ol ul');
     editor.setPreviewerEnabled(false);
     editor.setText(this._text);
@@ -2011,7 +2225,7 @@ EditCommentForm.prototype.startWMDEditor = function () {
 };
 
 EditCommentForm.prototype.startSimpleEditor = function () {
-    this._editor = new SimpleEditor();
+    this._editor = new SimpleEditor({minLines: 3});
     this._editorBox.prepend(this._editor.getElement());
 };
 
@@ -3077,7 +3291,10 @@ FoldedEditor.prototype.getEditorInputId = function () {
 FoldedEditor.prototype.onAfterOpenHandler = function () {
     var editor = this.getEditor();
     if (editor) {
-        setTimeout(function () { editor.focus(); }, 500);
+        editor.start();
+        setTimeout(function () { 
+            editor.focus(); 
+        }, 500);
     }
 };
 
@@ -3132,15 +3349,24 @@ FoldedEditor.prototype.decorate = function (element) {
 
     var editorType = askbot.settings.editorType;
     var editor;
+
     if (editorType === 'tinymce') {
         editor = new TinyMCE();
-        editor.decorate(element.find('textarea'));
-        this._editor = editor;
+        editor.setId('editor');
     } else if (editorType === 'markdown') {
-        editor = new WMD();
-        editor.decorate(element);
-        this._editor = editor;
+        editor = new WMD({'minLines': 10});
+        editor.setIdSeed('');
+    } else {
+        throw 'wrong editor type "' + editorType + '"'
     }
+    editor.setTextareaName('text');
+
+    var placeHolder = element.find('.editor-placeholder');
+    editor.setText(placeHolder.data('draftAnswer'));
+    placeHolder.append(editor.getElement());
+    //editor.start();
+
+    this._editor = editor;
 
     var openHandler = this.getOpenHandler();
     element.click(openHandler);
@@ -3162,7 +3388,7 @@ var TagWikiEditor = function () {
     this._content_backup  = '';
     this._is_editor_loaded = false;
     this._enabled_editor_buttons = null;
-    this._is_previewer_enabled = false;
+    this._previewerEnabled = false;
 };
 inherits(TagWikiEditor, WrappedElement);
 
@@ -3175,9 +3401,9 @@ TagWikiEditor.prototype.setEnabledEditorButtons = function (buttons) {
 };
 
 TagWikiEditor.prototype.setPreviewerEnabled = function (state) {
-    this._is_previewer_enabled = state;
+    this._previewerEnabled = state;
     if (this.isEditorLoaded()) {
-        this._editor.setPreviewerEnabled(this._is_previewer_enabled);
+        this._editor.setPreviewerEnabled(this._previewerEnabled);
     }
 };
 
@@ -3311,7 +3537,7 @@ TagWikiEditor.prototype.decorate = function (element) {
     var me = this;
     var editor;
     if (askbot.settings.editorType === 'markdown') {
-        editor = new WMD();
+        editor = new WMD({minLines: 3});
     } else {
         editor = new TinyMCE({//override defaults
             theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',
@@ -3323,7 +3549,7 @@ TagWikiEditor.prototype.decorate = function (element) {
     if (this._enabled_editor_buttons) {
         editor.setEnabledButtons(this._enabled_editor_buttons);
     }
-    editor.setPreviewerEnabled(this._is_previewer_enabled);
+    editor.setPreviewerEnabled(this._previewerEnabled);
     this._editor = editor;
     setupButtonEventHandlers(edit_btn, function () { me.startActivatingEditor(); });
     setupButtonEventHandlers(cancel_btn, function () {me.cancelEdit(); });
@@ -3502,7 +3728,7 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
     var change_logo_btn = element.find('.change-logo');
     this._change_logo_btn = change_logo_btn;
 
-    var moderate_email_toggle = new TwoStateToggle();
+    var moderate_email_toggle = new AjaxToggle();
     moderate_email_toggle.setPostData({
         group_id: this.getTagId(),
         property_name: 'moderate_email'
@@ -3511,7 +3737,7 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
     this._moderate_email_btn = moderate_email_btn;
     moderate_email_toggle.decorate(moderate_email_btn);
 
-    var moderate_publishing_replies_toggle = new TwoStateToggle();
+    var moderate_publishing_replies_toggle = new AjaxToggle();
     moderate_publishing_replies_toggle.setPostData({
         group_id: this.getTagId(),
         property_name: 'moderate_answers_to_enquirers'
@@ -3519,7 +3745,7 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
     var btn = element.find('#moderate-answers-to-enquirers');
     moderate_publishing_replies_toggle.decorate(btn);
 
-    var vip_toggle = new TwoStateToggle();
+    var vip_toggle = new AjaxToggle();
     vip_toggle.setPostData({
         group_id: this.getTagId(),
         property_name: 'is_vip'
@@ -3527,7 +3753,7 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
     btn = element.find('#vip-toggle');
     vip_toggle.decorate(btn);
 
-    var readOnlyToggle = new TwoStateToggle();
+    var readOnlyToggle = new AjaxToggle();
     readOnlyToggle.setPostData({
         group_id: this.getTagId(),
         property_name: 'read_only'
@@ -3566,9 +3792,9 @@ UserGroupProfileEditor.prototype.decorate = function (element) {
 };
 
 var GroupJoinButton = function () {
-    TwoStateToggle.call(this);
+    AjaxToggle.call(this);
 };
-inherits(GroupJoinButton, TwoStateToggle);
+inherits(GroupJoinButton, AjaxToggle);
 
 GroupJoinButton.prototype.getPostData = function () {
     return { group_id: this._group_id };
@@ -4410,7 +4636,7 @@ CategorySelectBox.prototype.appendCategoryAdder = function () {
 };
 
 CategorySelectBox.prototype.createDom = function () {
-    CategorySelectBox.superClass_.createDom();
+    CategorySelectBox.superClass_.createDom.call(this);
     if (askbot.data.userIsAdmin) {
         this.appendCategoryAdder();
     }
@@ -4429,9 +4655,9 @@ CategorySelectBox.prototype.decorate = function (element) {
  * turns on/off the category editor
  */
 var CategoryEditorToggle = function () {
-    TwoStateToggle.call(this);
+    AjaxToggle.call(this);
 };
-inherits(CategoryEditorToggle, TwoStateToggle);
+inherits(CategoryEditorToggle, AjaxToggle);
 
 CategoryEditorToggle.prototype.setCategorySelector = function (sel) {
     this._category_selector = sel;

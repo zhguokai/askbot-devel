@@ -36,6 +36,9 @@
     askbot['settings']['errorPlacement'] = 'after-label';
     askbot['data']['maxCommentLength'] = {{ settings.MAX_COMMENT_LENGTH }};
     askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
+    {% if settings.EDITOR_TYPE == 'tinymce' %}
+        askbot['settings']['tinyMCEConfigJson'] = '{{ settings.TINYMCE_CONFIG_JSON|escapejs }}';
+    {% endif %}
     askbot['settings']['commentsEditorType'] = '{{ settings.COMMENTS_EDITOR_TYPE }}';
     askbot['messages']['askYourQuestion'] = '{{ settings.WORDS_ASK_YOUR_QUESTION }}';
     askbot['messages']['questionSingular'] = '{{ settings.WORDS_QUESTION_SINGULAR|escapejs }}';
@@ -86,7 +89,8 @@
     <script type='text/javascript' src="{{ '/js/utils/modal_dialog.js'|media }}"></script>
     <script type='text/javascript' src="{{ '/js/utils/file_upload_dialog.js'|media }}"></script>
     <script type='text/javascript' src="{{ '/js/utils/text_property_editor.js'|media }}"></script>
-    <script type='text/javascript' src="{{ '/js/utils/two_state_toggle.js'|media }}"></script>
+    <script type='text/javascript' src="{{ '/js/utils/toggle.js'|media }}"></script>
+    <script type='text/javascript' src="{{ '/js/utils/ajax_toggle.js'|media }}"></script>
     <script type='text/javascript' src="{{ '/js/utils/dropdown_select.js'|media }}"></script>
     <script type='text/javascript' src="{{ '/js/utils/box_item_content.js'|media }}"></script>
     <script type='text/javascript' src="{{ '/js/utils/select_box_item.js'|media }}"></script>

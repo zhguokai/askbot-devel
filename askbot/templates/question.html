@@ -292,9 +292,10 @@
                 if (//maybe remove "edit" button
                     !enoughRep || data['userIsReadOnly']//only authors edit comments
                 ){
-                    var editBtns = findChildrenByClassName(controls, 'js-edit');
-                    if (editBtns.length) {
-                        removeNode(editBtns[0]);
+                    var editBtns = findChildrenByClassName(document, 'js-edit');
+                    var numBtns = editBtns.length;
+                    for (var i=0; i<numBtns; i++) {
+                        removeNode(editBtns[i]);
                     }
                 }
                 if (//maybe remove retag button
