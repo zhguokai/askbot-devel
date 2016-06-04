@@ -631,6 +631,14 @@ def set_question_title(request):
 
 
 @decorators.ajax_only
+def get_question_title(request):
+    question_id = request.GET['question_id']
+    question = get_object_or_404(models.Post, pk=question_id)
+    question.assert_is_visible_to(request.user)
+    return {'title': question.thread.title}
+
+
+@decorators.ajax_only
 @decorators.get_only
 def get_post_body(request):
     post_id = request.GET['post_id']
