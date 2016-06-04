@@ -1,17 +1,16 @@
 TINYMCE_COMPRESSOR = True
 TINYMCE_SPELLCHECKER = False
-TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'default/media/js/plugins/tinymce/')
-TINYMCE_URL = STATIC_URL + 'default/media/js/plugins/tinymce/'
+TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'default/media/tinymce/')
 TINYMCE_DEFAULT_CONFIG = {
-    'convert_urls': False,
     'plugins': 'askbot_imageuploader,askbot_attachment',
+    'convert_urls': False,
     'theme': 'advanced',
     'content_css': STATIC_URL + 'default/media/style/tinymce/content.css',
     'force_br_newlines': True,
     'force_p_newlines': False,
     'forced_root_block': '',
     'mode' : 'textareas',
-    'oninit': 'TinyMCE.onInitHook',
+    'oninit': "TinyMCE.onInitHook",
     'plugins': 'askbot_imageuploader,askbot_attachment',
     'theme_advanced_toolbar_location' : 'top',
     'theme_advanced_toolbar_align': 'left',
@@ -22,6 +21,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme_advanced_resizing': True,
     'theme_advanced_resize_horizontal': False,
     'theme_advanced_statusbar_location': 'bottom',
-    'width': '723',
+    'editor_deselector': 'mceNoEditor',
+    'width': '100%',
     'height': '250'
 }
