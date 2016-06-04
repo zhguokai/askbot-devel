@@ -35,8 +35,10 @@
             <div class="folded-editor" tabindex="6">
               <p class="prompt"><a>{{ settings.WORDS_ADD_ANSWER|escape }}</a></p>
                 <div class="editor-proper">
+                    {% set draft_answer=answer.text.value() %}
                     <div class="form-group editor-placeholder"
-                        data-draft-answer="{{ answer.text.value()|escape }}"></div>
+                        {% if draft_answer %}data-draft-answer="{{ draft_answer|escape }}"{% endif %}>
+                    </div>
                     <div class="answer-options">
                         {% if settings.WIKI_ON %}
                             {{ macros.checkbox_in_div(answer.wiki) }}
