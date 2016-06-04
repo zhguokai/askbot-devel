@@ -633,7 +633,6 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'answer_count': thread.get_answer_count(request.user),
         'blank_comment': MockPost(post_type='comment', author=request.user),#data for the js comment template
         'category_tree_data': askbot_settings.CATEGORY_TREE,
-        'editor_is_unfolded': answer_form.has_data(),
         'favorited' : favorited,
         'group_read_only': group_read_only,
         'is_cacheable': False,#is_cacheable, #temporary, until invalidation fix

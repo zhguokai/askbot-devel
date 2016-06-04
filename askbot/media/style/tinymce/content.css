@@ -12,7 +12,7 @@ h6 {font-size: .75em}
 a.mceItemAnchor {display:inline-block; -webkit-user-select:all; -webkit-user-modify:read-only; -moz-user-select:all; -moz-user-modify:read-only; width:11px !important; height:11px !important; background:url(img/items.gif) no-repeat center center}
 span.mceItemNbsp {background: #DDD}
 td.mceSelected, th.mceSelected {background-color:#3399ff !important}
-img {border:0;}
+img {border:0;max-width:100%;}
 table, img, hr, .mceItemAnchor {cursor:default}
 table td, table th {cursor:text}
 ins {border-bottom:1px solid green; text-decoration: none; color:green}
@@ -79,7 +79,7 @@ body.mceContentBody blockquote {
 }
 
 body.mceContentBody img {
-    max-width: 600px;
+    max-width: 100%;
 }
 
 body.mceContentBody a {

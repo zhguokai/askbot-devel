@@ -35,6 +35,7 @@
                 data-is-on="{{ is_following|as_js_bool }}"
                 data-off-prompt-text="{% trans %}unfollow{% endtrans %}"
                 data-on-prompt-text="{% trans %}follow{% endtrans %}"
+                data-min-lines="10"
                 data-on-state-text="{% trans %}following{% endtrans %}"
                 data-off-state-text="{% trans %}follow{% endtrans %}"
                 data-toggle-url="{% url 'toggle_follow_object' model_name='user', object_id=view_user.id %}"
@@ -136,7 +137,7 @@
             <tr>
             <!--todo  - redo this with whole sentence translation -->
                 <td>{% trans %}age{% endtrans %}</td>
-                <td>{% trans age=view_user.date_of_birth|get_age%}{{ age }} years old{% endtrans %}</td>
+                <td>{% trans age=view_user.date_of_birth|get_age %}{{ age }} years old{% endtrans %}</td>
             </tr>
             {% endif %}
             {% if votes_today_left %}
@@ -148,8 +149,31 @@
         </table>
     </div>
     <div class="col3 user-about">
-    {% if view_user.about and show_profile_info %}
-        {{view_user.about|linebreaks}}
+    {% if show_profile_info %}
+        {% set editable=(request.user.is_authenticated() 
+            and (
+                (request.user == view_user) or request.user.is_admin_or_mod()
+            )
+        ) %}
+        {% if editable %}
+            <div class="js-editable"
+                id="js-user-about-{{ view_user.pk}}"
+                {# urls below are parsed and parameters added as part of request #}
+                data-get-text-url="{% url get_user_description %}?user_id={{ view_user.pk }}"
+                data-save-text-url="{% url set_user_description %}?user_id={{ view_user.pk }}"
+                data-save-text-param-name="description"
+                data-validated-text-param-name="description_html"
+                data-editor-type="{{ settings.EDITOR_TYPE }}"
+                data-previewer-enabled="false"
+            >
+                <div class="js-editable-content">{{ view_user.about|convert_text }}</div>
+                <div class="js-editable-controls">
+                    <button id="js-edit-btn-user-about-{{ view_user.pk }}">{% trans %}edit{% endtrans %}</button>
+                </div>
+            </div>
+        {% else %}
+            {{ view_user.about|convert_text }}
+        {% endif %}
     {% endif %}
     </div>
 </div>

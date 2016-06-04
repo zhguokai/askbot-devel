@@ -3343,6 +3343,7 @@ User.add_to_class('can_post_comment', user_can_post_comment)
 User.add_to_class('can_make_group_private_posts', user_can_make_group_private_posts)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
+User.add_to_class('is_admin_or_mod', user_is_administrator_or_moderator) #shorter version
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
 User.add_to_class('join_group', user_join_group)

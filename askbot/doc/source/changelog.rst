@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version
 -------------------
+* Inline editing of questions and answer
+* Markdown editor expands automatically
 * Added ASKBOT_LANGUAGE_MODE setting, which can be one of
   'single-lang', 'url-lang', 'user-lang'. The 'user-lang'
   option allows users to see posts of several user-selected

@@ -1,5 +1,4 @@
 <div class="form-group">
-    <label for="editor">{{ post_form.text.label }}</label>
     {% if post_form.text.errors %}
         <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
     {% endif %}
@@ -30,14 +29,12 @@
                 var django = django || {};
                 django.jQuery = $;
             </script>
+            <script type="text/javascript">
+                askbot['settings']['tinyMCEPlugins'] = JSON.parse('{{ settings.TINYMCE_PLUGINS|as_json }}');
+            </script>
             {{ post_form.media }}
             {{ post_form.text }}
         </div>
-        <script type="text/javascript">
-            {% if post_html %}
-                askbot['data']['editorContent'] = '{{ post_html|escapejs }}';
-            {% endif %}
-        </script>
         <div class="form-item">
             <p class="editor-status action-status"><span></span></p>
         </div>
