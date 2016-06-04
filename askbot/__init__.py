@@ -25,7 +25,7 @@ REQUIREMENTS = {
     'djcelery': 'django-celery>=3.0.11',
     'djkombu': 'django-kombu==0.9.4',
     'followit': 'django-followit==0.1.1',
-    'html5lib': 'html5lib==0.90',
+    'html5lib': 'html5lib==0.9999999',
     'jinja2': 'Jinja2>=2.8',
     'jsonfield': 'jsonfield',
     'jwt': 'pyjwt',

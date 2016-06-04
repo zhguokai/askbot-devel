@@ -18,7 +18,7 @@ django-threaded-multihost
 django-tinymce==1.5.3
 django-transaction-signals
 django<1.8
-html5lib==0.90
+html5lib==0.9999999
 jsonfield
 markdown2
 mock==1.0.1
