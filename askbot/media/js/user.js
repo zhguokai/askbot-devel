@@ -30,7 +30,7 @@ var setup_badge_details_toggle = function () {
 (function () {
     var fbtn = $('.js-follow-user');
     if (fbtn.length === 1) {
-        var toggle = new TwoStateToggle();
+        var toggle = new AjaxToggle();
         toggle.setDataValidator(
             'success',
             function(data) { return data.status === 'success'; }

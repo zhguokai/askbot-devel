@@ -32,10 +32,13 @@
             {% endif %}
                 {{ settings.WORDS_INSTRUCTION_TO_GIVE_ANSWER }}
             </p>
-            <div class="folded-editor{% if editor_is_unfolded %}unfolded{% endif %}" tabindex="6">
+            <div class="folded-editor" tabindex="6">
               <p class="prompt"><a>{{ settings.WORDS_ADD_ANSWER|escape }}</a></p>
                 <div class="editor-proper">
-                    {{ macros.edit_post(answer) }}
+                    {% set draft_answer=answer.text.value() %}
+                    <div class="form-group editor-placeholder"
+                        {% if draft_answer %}data-draft-answer="{{ draft_answer|escape }}"{% endif %}>
+                    </div>
                     <div class="answer-options">
                         {% if settings.WIKI_ON %}
                             {{ macros.checkbox_in_div(answer.wiki) }}

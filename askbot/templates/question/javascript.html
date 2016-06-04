@@ -19,10 +19,17 @@
 {% compress js %}
 <script type="text/javascript" src="{{ '/jslib/editor.js'|media }}"></script>
 <script type="text/javascript" src="{{ '/bootstrap/js/bootstrap.js'|media }}"></script>
-{% include "meta/markdown_javascript.html" %}
+{% if settings.EDITOR_TYPE == 'markdown' %}
+    {% include "meta/markdown_javascript.html" %}
+{% elif settings.EDITOR_TYPE == 'tinymce' %}
+    {% include "editors/tinymce_scripts.html" %}
+{% endif %}
 <script type="text/javascript" src="{{ '/jslib/jquery.validate.min.js'|media }}"></script>
 <script type="text/javascript" src="{{ '/jslib/prettify.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/js/utils/toggle.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/js/utils/expander_toggle.js'|media }}"></script>
 <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
+<script type="text/javascript" src="{{ '/js/utils/editable.js'|media }}"></script>
 {% endcompress %}
 <script type="text/javascript">
     // define reputation needs for comments
@@ -89,7 +96,7 @@
 
         var followBtn = $('.js-follow-question');
         if (followBtn.length) {
-            var toggle = new TwoStateToggle();
+            var toggle = new AjaxToggle();
             toggle.setPostData({'question_id': {{ question.id }} });
             toggle.decorate(followBtn);
             followBtn.bind('askbot.two-state-toggle.success', updateQuestionFollowerCount);

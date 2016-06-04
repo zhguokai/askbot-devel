@@ -5,18 +5,47 @@
         {% include "question/share_buttons.html" %}
     </div>
     <div id="post-id-{{question.id}}" class="post-content{% if question.deleted %} deleted{% endif %}">
-        <h1><a href="{{ question.get_absolute_url() }}">{{ thread.get_title()|escape }}</a></h1>
+        <h1 class="js-editable"
+            id="js-question-title-{{ question.pk}}"
+            data-save-text-url="{% url set_question_title %}?question_id={{ question.pk }}"
+            data-save-text-param-name="title"
+            data-validated-text-param-name="title"
+            data-min-lines="1"
+            data-editor-type="plain"
+            data-validator="askbot.validators.titleValidator"
+        >
+            <div class="js-editable-content">{{ thread.get_title()|escape }}</div>
+            <div class="js-editable-controls">
+                <button id="js-edit-btn-question-title-{{ question.pk }}"
+                    class="btn-link js-edit"
+                >{% trans %}edit{% endtrans %}</button>
+            </div>
+        </h1>
         {% include "question/question_tags.html" %}
         <div class="clearfix"></div>
 
         <div class="post-body">
-            <div class="post-update-info-container">
-                {% include "question/question_author_info.html" %}
+            <div class="js-editable-hide-post-body-{{ question.pk }}">
+                <div class="post-update-info-container">
+                    {% include "question/question_author_info.html" %}
+                </div>
+                {% if question.needs_moderation() %}
+                    <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
+                {% endif %}
             </div>
-            {% if question.needs_moderation() %}
-                <p class="moderated">{% trans %}This post is awaiting moderation{% endtrans %}</p>
-            {% endif %}
-            {{ question.summary }}
+            <div class="js-editable"
+                id="js-post-body-{{ question.pk }}"
+                data-get-text-url="{% url get_post_body %}?post_id={{ question.pk }}"
+                data-save-text-url="{% url set_post_body %}?post_id={{ question.pk }}"
+                data-save-text-param-name="body_text"
+                data-validated-text-param-name="body_html"
+                data-min-lines="10"
+                data-editor-type="{{ settings.EDITOR_TYPE }}"
+                data-validator="askbot.validators.questionDetailsValidator"
+            >
+                <div class="js-editable-content">{{ question.summary }}</div>
+                <div class="js-editable-controls"></div>
+            </div>
         </div>
         <div id="question-controls" class="post-controls">
             {% include "question/question_controls.html" %}

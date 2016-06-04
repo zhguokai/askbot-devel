@@ -77,6 +77,34 @@ textarea,
     font-size: 13px;
     padding: 0 5px;
 }
+textarea {
+    padding: 5px;
+}
+
+.js-editable {
+    .wmd-container {
+        height: auto;
+        background: white;
+        padding: 0;
+        margin-bottom: 8px;
+    }
+    textarea {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    img {
+        max-width: 100%;
+    }
+}
+.wmd-container {
+    textarea {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    img {
+        max-width: 100%;
+    }
+}
 
 .tos {
     margin: 20px 0 10px 0;
@@ -2137,11 +2165,20 @@ ul.js-related-tags li {
     }
 }
 
+a.question-body-trigger {
+    color: #525252;
+    display: block;
+    margin-bottom: 8px;
+    text-decoration: underline;
+}
+
 .wmd-container,
 .js-simple-editor {
     textarea {
         border: none;
+        overflow: hidden;
     }
+    //.mirror absolute position is set in the post.js
 }
 .users-page {
     .wmd-container,
@@ -2251,6 +2288,37 @@ ul.js-related-tags li {
     }
 }
 
+.folded-editor .wmd-container {
+    margin-bottom: 10px;
+}
+
+.wmd-container .wmd-preview {
+    margin: 0;
+    border-top: 3px solid #cecece;
+    padding-top: 28px;
+}
+
+.wmd-container.wmd-previewer-collapsed {
+    margin-bottom: 28px !important;
+}
+
+.wmd-previewer-toggle {
+    cursor: pointer;
+    background: #cce6ec;
+    display: inline-block;
+    float: left; //need for IE
+    padding: 0 8px 0 5px;
+    margin: 0 0 -25px 0;
+    border-top: 3px solid #cecece;
+}
+
+.wmd-previewer-toggle.off-state,
+.wmd-previewer-toggle.on-prompt {
+    padding: 0 8px 0 8px;
+    margin: 0 0 -25px -3px;
+    border-top: 3px solid #cce6ec;
+}
+
 .defaultSkin table.mceLayout,
 .defaultSkin table.mceLayout tr.mceFirst td {
     border: none;
@@ -2261,6 +2329,12 @@ ul.js-related-tags li {
 .mceStatusbar {
     height: 5px;
     background: #fff;
+}
+tr.mceLast {
+    height: 0;
+}
+.defaultSkin td.mceIframeContainer {
+    vertical-align: top;
 }
 .defaultSkin span.mce_askbot_imageuploader {
     background-position: -380px 0px;
@@ -2367,14 +2441,51 @@ ul.js-related-tags li {
 .question-page {
 
     h1 {
+        display: inline-block;
         padding-top:0px;
         font-family:@main-font;
+        width: 100%;
 
         a {
             color:@question-link;
             font-size:26px;
             font-weight:normal;
             line-height:1;
+        }
+        .js-editable-controls,
+        .js-editable-content {
+            display: inline;
+        }
+        .btn-link {
+            background-image: none;
+            background-color: transparent;
+            border: none !important;
+            box-shadow: none;
+            font-family: arial;
+            font-weight: normal;
+            height: 16px;
+            text-shadow: none;
+            line-height: 16px;
+            color: #888;
+            padding: 0;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+        .js-simple-editor {
+            margin-bottom: 8px;
+            textarea {
+                color: #666;
+                font-family: @main-font;
+                font-size: 30px;
+                line-height: 36px;
+                height: 66px;
+                width: 100% !important;
+            }
+        }
+        .js-error {
+            font-size: 16px;
+            font-family: @body-font;
         }
     }
 
@@ -2428,6 +2539,8 @@ ul.js-related-tags li {
         color: #4b4b4b;
         word-wrap: break-word;
         max-width: 683px;
+        margin: 8px 0 0 0;
+        padding-bottom: 5px;
 
         a {
             color:@link;
@@ -2446,6 +2559,10 @@ ul.js-related-tags li {
             line-height:1.4;
             font-size:14px;
             padding:0px 5px 5px 0px;
+            &:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
         }
 
     }
@@ -2675,9 +2792,9 @@ ul.js-related-tags li {
         }
 
         .edit-comment-buttons {
-            margin-left: -4px;
+            margin-left: -2px;
             .checkbox {
-                margin: 3px;
+                margin: 8px 0 0 0;
             }
         }
         
@@ -2742,9 +2859,6 @@ ul.js-related-tags li {
         .js-simple-editor {
             textarea {
                 border: none;
-                box-shadow: inset 0 0 3px 1px #aaa;
-                -moz-box-shadow: inset 0 0 3px 1px #aaa;
-                -webkit-box-shadow: inset 0 0 3px 1px #aaa
             }
         } 
         input {
@@ -3203,7 +3317,6 @@ ul.js-related-tags li {
     textarea{
         padding-left:5px;
         padding-top:5px;
-        width:395px;
         font-size:14px;
     }
     input.submit{
@@ -3589,6 +3702,18 @@ a:hover.medal {
     .vote-notification h3 {
         padding: 10px;
     }
+
+    .js-editable {
+        .wmd-container {
+            min-height: 162px;
+            textarea {
+                min-height: 125px;
+            }
+        }
+        .js-editable-content {
+            margin-bottom: 8px;
+        }
+    }
 }
 
 .user-details {
@@ -3923,11 +4048,13 @@ ul.errorlist {
 }
 
 
+.js-error,
 .form-error {
     color: #900;
     font-weight: normal;
     vertical-align: bottom;
 }
+
 label + .form-error {
     padding-left: 8px;
 }

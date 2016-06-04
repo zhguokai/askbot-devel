@@ -5,6 +5,7 @@
 <style type="text/css">
     .history-table td { padding: 5px; }
 </style>
+<link rel="stylesheet" type="text/css" href="{{ '/wmd/wmd.css'|media }}" />
 {% endblock %}
 {% block content %}
     <h1 class="section-title">
@@ -25,10 +26,14 @@
         askbot['urls']['edit_group_membership'] = '{% url edit_group_membership %}';
         askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
         askbot['urls']['getTopAnswers'] = '{% url get_top_answers %}';
+        askbot['urls']['upload'] = '{% url "upload" %}';
         {% if page_size %}
             askbot['data']['userPostsPageSize'] = {{ page_size }};
         {% endif %}
     </script>
+    {% if settings.EDITOR_TYPE == 'tinymce' %}
+        {% include "editors/tinymce_scripts.html" %}
+    {% endif %}
     {% compress js %}
     <script type='text/javascript' src="{{ '/jslib/jquery.form.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/user/response_notifs.js'|media }}"></script>
@@ -45,7 +50,12 @@
     <script type="text/javascript" src="{{ '/js/user.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/jslib/jquery.validate.min.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/jslib/prettify.js'|media }}"></script>
+    {% include "meta/markdown_javascript.html" %}
+    <script type="text/javascript" src="{{ '/jslib/editor.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/utils/toggle.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/utils/expander_toggle.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/js/post.js'|media }}"></script>
+    <script type="text/javascript" src="{{ '/js/utils/editable.js'|media }}"></script>
     {% endcompress %}
     {% block userjs %}
     {% endblock %}

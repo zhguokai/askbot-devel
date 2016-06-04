@@ -26,6 +26,7 @@ from askbot.utils import html as html_utils
 from askbot.utils import functions
 from askbot.utils import url_utils
 from askbot.utils.markup import markdown_input_converter
+from askbot.utils.markup import convert_text as _convert_text
 from askbot.utils.slug import slugify
 from askbot.utils.pluralization import py_pluralize as _py_pluralize
 from askbot.shims.django_shims import ResolverMatch
@@ -417,3 +418,8 @@ def sub_vars(text, user=None):
 @register.filter
 def convert_markdown(text):
     return markdown_input_converter(text)
+
+@register.filter
+def convert_text(text):
+    """converts text with the currently selected editor"""
+    return _convert_text(text)
