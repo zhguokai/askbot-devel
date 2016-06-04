@@ -54,6 +54,17 @@ var getCookie = function (name) {
     return cookieValue;
 };
 
+var getFontProps =  function (elm) {
+    return {
+        'line-height': elm.css('lineHeight'),
+        'font-size': elm.css('fontSize'),
+        'font-style': elm.css('fontStyle'),
+        'font-variant': elm.css('fontVariant'),
+        'font-family': elm.css('fontFamily'),
+        'font-weight': elm.css('fontWeight')
+    }
+};
+
 var csrfSafeMethod = function(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 };

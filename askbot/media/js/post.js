@@ -1821,15 +1821,16 @@ SimpleEditor.prototype.setMirrorStyle = function() {
     var mirrorCss = {
         'position': 'absolute',
         'top': '-999em',
-        'line-height': textarea.css('line-height'),
         'padding': textarea.css('padding'),
         'margin': textarea.css('margin'),
-        'font': textarea.css('font'),
         'width': textarea.css('width'),
         'word-wrap': textarea.css('word-wrap'),
         'word-break': textarea.css('word-break'),
         'overflow': textarea.css('overflow')
     };
+    //for IE, as .css('font') fails
+    var fontProps = getFontProps(textarea);
+    mirrorCss = $.extend(mirrorCss, fontProps);
     this._mirror.css(mirrorCss);
 };
 
