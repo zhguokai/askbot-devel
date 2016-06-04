@@ -64,7 +64,8 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         )
         response2 = self.client.get(question.get_absolute_url())
         dom = BeautifulSoup(response2.content)
-        title = dom.find('h1').text
+        h1 = dom.find('h1')
+        title = h1.find('div', {'class': 'js-editable-content'}).text
         self.assertTrue(models.Group.objects.get_global_group() in set(question.groups.all()))
         self.assertEqual(title, self.qdata['title'])
 
