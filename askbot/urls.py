@@ -245,6 +245,11 @@ urlpatterns = patterns('',
         name='set_question_title'
     ),
     service_url(
+        r'^get-question-title/',
+        views.commands.get_question_title,
+        name='get_question_title'
+    ),
+    service_url(
         r'^get-post-body/',
         views.commands.get_post_body,
         name='get_post_body'

@@ -114,6 +114,14 @@ var copyAltToTitle = function (sel) {
     sel.attr('title', sel.attr('alt'));
 };
 
+var runMathJax = function () {
+    if (typeof MathJax != 'undefined') {
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+    } else {
+        console.log('Could not load mathjax');
+    }
+};
+
 /**
  * @returns jQuery with same content and classes,
  * but different tag name (DOM node name)
