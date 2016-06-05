@@ -62,11 +62,14 @@ class ConfigSettings(object):
         will be required in code to convert an app
         depending on django.conf.settings to askbot.deps.livesettings
         """
-        hardcoded_setting = getattr(django_settings, 'ASKBOT_' + key, None)
-        if hardcoded_setting is None:
-            return getattr(self.__instance, key).value
-        else:
-            return hardcoded_setting
+        return self.get_value(key)
+
+    @classmethod
+    def get_value(cls, key):
+        settings_key = 'ASKBOT_' + key
+        if hasattr(django_settings, settings_key):
+            return getattr(django_settings, settings_key)
+        return cls.__instance[key].value
 
     def get_default(self, key):
         """return the defalut value for the setting"""
@@ -193,12 +196,8 @@ class ConfigSettings(object):
         """
         out = dict()
         for key in cls.__instance.keys():
-            #todo: this is odd that I could not use self.__instance.items() mapping here
-            hardcoded_setting = getattr(django_settings, 'ASKBOT_' + key, None)
-            if hardcoded_setting is None:
-                out[key] = cls.__instance[key].value
-            else:
-                out[key] = hardcoded_setting
+            out[key] = cls.get_value(key)
+
         cache.set(cache_key, out)
         return out
 
