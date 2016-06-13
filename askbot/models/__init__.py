@@ -255,10 +255,10 @@ def user_calculate_avatar_url(self, size=48):
     elif avatar_type == 'a':
         from avatar.conf import settings as avatar_settings
         sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
-        if size not in sizes:
+        if int(size) not in sizes:
             logging.critical(
                 'add values %d to setting AVATAR_AUTO_GENERATE_SIZES',
-                size
+                int(size)
             )
 
         from avatar.util import get_primary_avatar
