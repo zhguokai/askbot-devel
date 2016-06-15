@@ -12,7 +12,7 @@ from askbot.utils.loading import module_exists
 
 LOGIN_PROVIDERS = livesettings.ConfigurationGroup(
                     'LOGIN_PROVIDERS',
-                    _('Login provider setings'),
+                    _('Login provider settings'),
                     super_group = LOGIN_USERS_COMMUNICATION
                 )
 
