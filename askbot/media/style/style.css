@@ -3406,11 +3406,8 @@ a:hover.medal {
 .user-profile-page .vote-notification h3 {
   padding: 10px;
 }
-.user-profile-page .js-editable .wmd-container {
-  min-height: 162px;
-}
 .user-profile-page .js-editable .wmd-container textarea {
-  min-height: 125px;
+  min-height: 135px;
 }
 .user-profile-page .js-editable .js-editable-content {
   margin-bottom: 8px;

@@ -676,8 +676,8 @@ def set_user_description(request):
     description = form.cleaned_data['description']
         
     if user_id == request.user.pk or request.user.is_admin_or_mod():
-        user = models.User.objects.filter(pk=user_id)
-        user.update(about=description)
+        user = models.User.objects.get(pk=user_id)
+        user.update_localized_profile(about=description)
         return {'description_html': convert_text(description)}
 
     raise django_exceptions.PermissionDenied

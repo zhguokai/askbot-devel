@@ -258,7 +258,7 @@ please run:
 
 
 def get_req_name_from_spec(spec):
-    spec = spec.replace('>', '=').replace('>', '=')
+    spec = spec.replace('>', '=').replace('<', '=')
     bits = spec.split('=')
     return bits[0]
 
