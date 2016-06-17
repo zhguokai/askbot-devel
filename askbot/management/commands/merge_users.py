@@ -52,13 +52,13 @@ class MergeUsersBaseCommand(BaseCommand):
 
     def process_relation(self, rel):
         try:
-            self.process_field(rel.model, rel.field.name)
+            self.process_field(rel.related_model, rel.field.name)
         except Exception, error:
             self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
 
     def process_m2m(self, rel):
         try:
-            self.process_m2m_field(rel.model, rel.field.name)
+            self.process_m2m_field(rel.related_model, rel.field.name)
         except Exception, error:
             self.stdout.write((u'Warning: %s\n' % error).encode('utf-8'))
 
