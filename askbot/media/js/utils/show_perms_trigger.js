@@ -1,20 +1,5 @@
 var ShowPermsTrigger = function () {
-    WrappedElement.call(this);
+    HoverCardTrigger.call(this);
+    this._hoverCardClass = PermsHoverCard;
 };
-inherits(ShowPermsTrigger, WrappedElement);
-
-ShowPermsTrigger.prototype.decorate = function (element) {
-    this._element = element;
-    var hoverCard = new PermsHoverCard();
-    this._hoverCard = hoverCard;
-    $('body').append(hoverCard.getElement());
-
-    hoverCard.setTrigger(this);
-    hoverCard.setUrl(element.data('url'));
-
-    var onEnter = hoverCard.getOpenHandler();
-    var onExit = hoverCard.getCloseHandler();
-    element.hover(onEnter, onExit);
-    var onClose = hoverCard.getImmediateCloseHandler();
-    $('body').click(onClose);
-};
+inherits(ShowPermsTrigger, HoverCardTrigger);
