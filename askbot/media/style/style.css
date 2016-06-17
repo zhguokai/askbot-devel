@@ -306,20 +306,14 @@ body.user-messages {
 }
 .hovercard {
   background: white;
-  border: 3px solid #ddd;
-  -webkit-box-shadow: 0 0 3px #929292;
-  -moz-box-shadow: 0 0 3px #929292;
-  box-shadow: 0 0 3px #929292;
+  -webkit-box-shadow: 0 0 5px #929292;
+  -moz-box-shadow: 0 0 5px #929292;
+  box-shadow: 0 0 5px #929292;
   font-size: 13px;
   display: block;
   max-width: 250px;
   padding: 10px;
   position: absolute;
-  border-radius: 5px;
-  -ms-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -khtml-border-radius: 5px;
   z-index: 1001;
 }
 .hovercard p:last-child {
@@ -336,7 +330,7 @@ body.user-messages {
 .hovercard .triangle {
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-bottom: 10px solid #ddd;
+  border-bottom: 10px solid white;
   height: 0;
   margin: -20px 0 10px 0;
   width: 0;
