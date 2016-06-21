@@ -4471,6 +4471,16 @@ input.tipped-input, textarea.tipped-input {
   border-spacing: 0;
   width: 100%;
 }
+.category-selector button {
+  margin: 0 0 0 7px;
+}
+.category-selector input.add-category {
+  height: 26px;
+  border: none;
+  -webkit-box-shadow: none 0px 5px #929292;
+  -moz-box-shadow: none 0px 5px #929292;
+  box-shadow: none 0px 5px #929292;
+}
 .category-selector ul.select-box {
   height: 150px;
   width: 100%;
