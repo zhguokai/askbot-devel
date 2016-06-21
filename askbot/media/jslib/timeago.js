@@ -117,7 +117,7 @@
   function refresh() {
     var data = prepareData(this);
     if (!isNaN(data.datetime)) {
-      $(this).text(inWords(data.datetime));
+      $(this).text(inWords(data.datetime)).fadeIn();
     }
     return this;
   }
@@ -201,3 +201,5 @@
   document.createElement("abbr");
   document.createElement("time");
 }(jQuery));
+//run timeago
+$('abbr.timeago').timeago();
