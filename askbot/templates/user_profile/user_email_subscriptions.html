@@ -44,6 +44,25 @@
                 </td>
             </tr> 
             <tr>
+                <th>{{ email_feeds_form.answered_by_me.label }}</th>
+                <td>
+                    <input {% if email_feeds_form.answered_by_me.value() == 'i' %}checked="checked"{% endif %}
+                        id="id_answered_by_me_0" name="answered_by_me" type="radio" value="i">
+                </td>
+                <td>
+                    <input {% if email_feeds_form.answered_by_me.value() == 'd' %}checked="checked"{% endif %}
+                        id="id_answered_by_me_1" name="answered_by_me" type="radio" value="d">
+                </td>
+                <td>
+                    <input {% if email_feeds_form.answered_by_me.value() == 'w' %}checked="checked"{% endif %}
+                        id="id_answered_by_me_2" name="answered_by_me" type="radio" value="w">
+                </td>
+                <td>
+                    <input {% if email_feeds_form.answered_by_me.value() == 'n' %}checked="checked"{% endif %}
+                        id="id_answered_by_me_3" name="answered_by_me" type="radio" value="n">
+                </td>
+            </tr> 
+            <tr>
                 <th>{{ email_feeds_form.individually_selected.label }}</th>
                 <td>
                     <input {% if email_feeds_form.individually_selected.value() == 'i' %}checked="checked"{% endif %}
