@@ -602,7 +602,7 @@ def get_enabled_major_login_providers():
         'type': 'openid-direct',
         'icon_media_path': 'images/jquery-openid/yahoo.gif',
         'tooltip_text': _('Sign in with Yahoo'),
-        'openid_endpoint': 'http://yahoo.com',
+        'openid_endpoint': 'https://me.yahoo.com',
     }
     data['aol'] = {
         'name': 'aol',
