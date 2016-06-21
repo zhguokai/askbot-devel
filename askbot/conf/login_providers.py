@@ -200,7 +200,7 @@ providers = (
     'Facebook',
     'Fedora',
     'Flickr',
-    #'Google',
+    'Google Plus',
     'Mozilla Persona',
     'Twitter',
     'MediaWiki',
@@ -221,12 +221,6 @@ providers = (
 DISABLED_BY_DEFAULT = ('LaunchPad', 'Mozilla Persona', 'OpenStackID')
 
 NEED_EXTRA_SETUP = ('Google Plus', 'Twitter', 'MediaWiki', 'Facebook', 'LinkedIn', 'identi.ca',)
-
-GOOGLE_METHOD_CHOICES = (
-    ('openid', 'OpenID (deprecated)'),
-    ('google-plus', 'Google Plus'),
-    ('disabled', _('disable')),
-)
 
 for provider in providers:
     if provider == 'local':
@@ -279,21 +273,5 @@ for provider in providers:
                         ('ACCESS_CONTROL', 'REQUIRE_VALID_EMAIL_FOR', True, _('Must be not be required')),
                     )
                 ),
-            )
-        )
-
-
-    if provider == 'local':
-        #add Google settings here as one-off
-        settings.register(
-            livesettings.StringValue(
-                LOGIN_PROVIDERS,
-                'SIGNIN_GOOGLE_METHOD',
-                default='disabled',
-                choices=GOOGLE_METHOD_CHOICES,
-                description=_('Google login'),
-                help_text=_(
-                    'To enable Google-Plus login, OAuth keys are required in the "External keys" section'
-                )
             )
         )
