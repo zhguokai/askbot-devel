@@ -654,7 +654,7 @@ def get_user_description(request):
 
     user_id = form.cleaned_data['user_id']
     user = models.User.objects.get(pk=user_id)
-    return {'description': user.about}
+    return {'description': user.get_localized_profile().about}
 
 
 @csrf.csrf_protect
