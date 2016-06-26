@@ -100,7 +100,7 @@
             var postIsQuestion = function(postId) {
                 var content = getPost(postId);
                 if (content) {
-                    if (hasClass(content, 'js-comment') {
+                    if (hasClass(content, 'js-comment')) {
                         return false;
                     }
                     if (findClosestParentByClassName(content, 'js-question')) {
