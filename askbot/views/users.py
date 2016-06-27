@@ -12,6 +12,7 @@ import collections
 import functools
 import datetime
 import logging
+import math
 import operator
 import urllib
 
@@ -979,20 +980,40 @@ def user_votes(request, user, context):
 def user_reputation(request, user, context):
     reputes = models.Repute.objects.filter(user=user).select_related('question', 'question__thread', 'user').order_by('-reputed_at')
 
-    # prepare data for the graph - last values go in first
-    rep_list = ['[%s,%s]' % (calendar.timegm(datetime.datetime.now().timetuple()) * 1000, user.reputation)]
-    for rep in reputes:
-        rep_list.append('[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation))
-    reps = ','.join(rep_list)
-    reps = '[%s]' % reps
+    def format_graph_data(raw_data, user):
+        # prepare data for the graph - last values go in first
+        rep_list = ['[%s,%s]' % (calendar.timegm(datetime.datetime.now().timetuple()) * 1000, user.reputation)]
+        for rep in raw_data:
+            rep_list.append('[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation))
+
+        #add initial rep point
+        rep_list.append('[%s,%s]' % (calendar.timegm(user.date_joined.timetuple()) * 1000, const.MIN_REPUTATION))
+        reps = ','.join(rep_list)
+        return '[%s]' % reps
+
+    sample_size = 300 #number of real data points to take for teh rep graph
+    #two extra points are added for beginning and end
+
+    rep_length = reputes.count()
+    if rep_length <= sample_size:
+        raw_graph_data = reputes
+    else:
+        #extract only a sampling of data to limit the number of data points
+        rep_qs = models.Repute.objects.filter(user=user).order_by('-id')
+        #extract 300 points
+        raw_graph_data = list()
+        step = rep_length / float(sample_size)
+        for idx in range(sample_size):
+            item_idx = int(math.ceil(idx * step))
+            raw_graph_data.append(rep_qs[item_idx])
 
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name': 'reputation',
         'page_title': _("Profile - User's Karma"),
-        'reputation': reputes,
-        'reps': reps
+        'latest_rep_changes': reputes[:100],
+        'rep_graph_data': format_graph_data(raw_graph_data, user)
     }
     context.update(data)
     return render(request, 'user_profile/user_reputation.html', context)
