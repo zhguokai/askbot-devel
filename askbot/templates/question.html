@@ -389,7 +389,7 @@
 {% block js_templates %}
     {{ comment_widget(blank_comment) }}
     {% include "editors/simple.html" %}
-    {{ tag_widget('none') }}
+    {{ tag_widget('none', deletable=True) }}
 {% endblock %}
 {% block endjs %}
     {% spaceless %}
