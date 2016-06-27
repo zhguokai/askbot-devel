@@ -991,7 +991,7 @@ def user_reputation(request, user, context):
         reps = ','.join(rep_list)
         return '[%s]' % reps
 
-    sample_size = 300 #number of real data points to take for teh rep graph
+    sample_size = 150 #number of real data points to take for teh rep graph
     #two extra points are added for beginning and end
 
     rep_length = reputes.count()
