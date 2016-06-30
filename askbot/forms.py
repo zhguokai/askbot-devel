@@ -27,6 +27,14 @@ from askbot.conf import get_tag_email_filter_strategy_choices
 from tinymce.widgets import TinyMCE
 import logging
 
+def split_tags(data):
+    split_re = re.compile(const.TAG_SPLIT_REGEX)
+    data = data.strip()
+    if data:
+        return split_re.split(data)
+    else:
+        return list()
+
 def should_use_recaptcha(user):
     """True if user must use recaptcha"""
     return askbot_settings.USE_RECAPTCHA and (user.is_anonymous() or user.is_watched())
@@ -481,8 +489,7 @@ class TagNamesField(forms.CharField):
             else:
                 #don't test for required characters when tags is ''
                 return ''
-        split_re = re.compile(const.TAG_SPLIT_REGEX)
-        tag_strings = split_re.split(data)
+        tag_strings = split_tags(data)
         entered_tags = []
         tag_count = len(tag_strings)
         if tag_count > askbot_settings.MAX_TAGS_PER_POST:
