@@ -322,7 +322,7 @@ def ask(request):#view used to ask a new question
         'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
         'category_tree_data': askbot_settings.CATEGORY_TREE,
-        'tag_names': list()#need to keep context in sync with edit_question for tag editor
+        'tag_names': forms.split_tags(form.initial['tags'])
     }
     data.update(context.get_for_tag_editor())
     return render(request, 'ask.html', data)
