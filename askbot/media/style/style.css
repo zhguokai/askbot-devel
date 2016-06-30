@@ -1736,7 +1736,7 @@ ul.js-related-tags li {
   margin-right: 5px;
 }
 .js-delete-icon {
-  height: 21px;
+  height: 22px;
   width: 18px;
   display: inline-block;
   line-height: 20px;
@@ -4449,7 +4449,7 @@ input.tipped-input, textarea.tipped-input {
   list-style-position: inside;
   padding-left: 7px;
   font-size: 14px;
-  line-height: 25px;
+  line-height: 30px;
 }
 .select-box li input {
   margin: 0 0 2px -5px;
@@ -4458,12 +4458,16 @@ input.tipped-input, textarea.tipped-input {
   vertical-align: middle;
   color: #707070;
 }
-.select-box li.selected, .select-box li.selected:hover {
-  background-color: #fcf8e3;
-  color: #c09853;
+.select-box li.selected, .select-box li.selected:hover, .select-box li:hover {
+  background-color: #999;
+  color: white;
+  -webkit-transition: background ease 0.2s;
+  -moz-transition: background ease 0.2s;
+  -ms-transition: background ease 0.2s;
+  -o-transition: background ease 0.2s;
+  transition: background ease 0.2s;
 }
-.select-box li:hover {
-  background-color: #cecece;
+.select-box li:hover a {
   color: white;
 }
 /* category selector */
@@ -4472,10 +4476,16 @@ input.tipped-input, textarea.tipped-input {
   width: 100%;
 }
 .category-selector button {
-  margin: 0 0 0 7px;
+  margin: 3px 0 0 7px;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 6px;
 }
-.category-selector input.add-category {
-  height: 26px;
+.category-selector input[type="text"] {
+  width: calc(30%);
+  padding: 0 5px;
+  margin: 3px 0 3px -3px;
+  height: 24px;
   border: none;
   -webkit-box-shadow: none 0px 5px #929292;
   -moz-box-shadow: none 0px 5px #929292;
