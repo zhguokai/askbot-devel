@@ -4309,6 +4309,7 @@ Category.prototype.getSaveHandler = function () {
 
 Category.prototype.addControls = function () {
     var input_box = this.makeElement('input');
+    input_box.attr('type', 'text');
     this._input_box = input_box;
     this._element.append(input_box);
 
@@ -4498,7 +4499,10 @@ CategoryAdder.prototype.createDom = function () {
     var input = this.makeElement('input');
     this._input = input;
     input.addClass('add-category');
-    input.attr('name', 'add_category');
+    input.attr({
+        'name': 'add_category',
+        'type': 'text'
+    });
     this._element.append(input);
     //add save category button
     var save_button = this.makeElement('button');
