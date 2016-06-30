@@ -2748,9 +2748,35 @@ def user_get_groups(self, private=False):
     #todo: maybe cache this query
     return Group.objects.get_for_user(self, private=private)
 
+def user_join_default_groups(self):
+    """adds user to "global" and "personal" groups"""
+    #needs to be run when Askbot is added to pre-existing site
+    #and Askbot groups are not populated
+    #In Askbot user by default must by a member of "global" group
+    #and of "personal" group - which is created for each user individually
+    self.edit_group_membership(
+        group=Group.objects.get_global_group(),
+        user=self,
+        action='add'
+    )
+    group_name = format_personal_group_name(self)
+    group = Group.objects.get_or_create(
+        name=group_name, user=self
+    )
+    self.edit_group_membership(
+        group=group, user=self, action='add'
+    )
+
+
 def user_get_personal_group(self):
     group_name = format_personal_group_name(self)
-    return Group.objects.get(name=group_name)
+    try:
+        #may be absent if askbot is added to pre-existing site
+        return Group.objects.get(name=group_name)
+    except Group.DoesNotExist:
+        self.join_default_groups()
+        return Group.objects.get(name=group_name)
+        
 
 def user_get_foreign_groups(self):
     """returns a query set of groups to which user does not belong"""
@@ -3410,6 +3436,7 @@ User.add_to_class('is_admin_or_mod', user_is_administrator_or_moderator) #shorte
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
 User.add_to_class('join_group', user_join_group)
+User.add_to_class('join_default_groups', user_join_default_groups)
 User.add_to_class('leave_group', user_leave_group)
 User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
@@ -3884,34 +3911,12 @@ def record_user_full_updated(instance, **kwargs):
     activity.save()
 
 
-def add_user_to_global_group(sender, instance, created, **kwargs):
-    """auto-joins user to the global group
-    ``instance`` is an instance of ``User`` class
-    """
-    if created:
-        instance.edit_group_membership(
-            group=Group.objects.get_global_group(),
-            user=instance,
-            action='add'
-        )
-
-
-def add_user_to_personal_group(sender, instance, created, **kwargs):
+def add_user_to_default_groups(sender, instance, created, **kwargs):
     """auto-joins user to his/her personal group
     ``instance`` is an instance of ``User`` class
     """
     if created:
-        #todo: groups will indeed need to be separated from tags
-        #so that we can use less complicated naming scheme
-        #in theore here we may have two users that will have
-        #identical group names!!!
-        group_name = format_personal_group_name(instance)
-        group = Group.objects.get_or_create(
-                    name=group_name, user=instance
-                )
-        instance.edit_group_membership(
-                    group=group, user=instance, action='add'
-                )
+        instance.join_default_groups()
 
 
 def greet_new_user(user, **kwargs):
@@ -4171,13 +4176,8 @@ user_signals = [
     ),
     signals.GenericSignal(
         django_signals.post_save,
-        callback=add_user_to_global_group,
-        dispatch_uid='add_user_to_global_group_on_user_save',
-    ),
-    signals.GenericSignal(
-        django_signals.post_save,
-        callback=add_user_to_personal_group,
-        dispatch_uid='add_user_to_personal_group_on_user_save',
+        callback=add_user_to_default_groups,
+        dispatch_uid='add_user_to_default_groups_on_user_save',
     ),
     signals.GenericSignal(
         django_signals.post_save,
