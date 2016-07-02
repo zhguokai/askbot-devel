@@ -226,7 +226,10 @@ def mark_tag(request, **kwargs):#tagging system
     reason = post_data['reason']
     assert reason in ('good', 'bad', 'subscribed')
     #separate plain tag names and wildcard tags
-    tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
+    if action == 'remove':
+        tagnames, wildcards = forms.classify_marked_tagnames(raw_tagnames)
+    else:
+        tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
 
     if request.user.is_administrator() and 'user' in post_data:
         user = get_object_or_404(models.User, pk=post_data['user'])

@@ -68,6 +68,18 @@ def format_form_errors(form):
     else:
         return ''
 
+def classify_marked_tagnames(tagnames):
+    """splits tagnames into two lists: those that have
+    a '*' in the end and those that don't"""
+    pure_tags = list()
+    wildcards = list()
+    for tagname in tagnames:
+        if tagname.endswith('*'):
+            wildcards.append(tagname)
+        else:
+            pure_tags.append(tagname)
+    return pure_tags, wildcards
+
 
 def clean_marked_tagnames(tagnames):
     """return two strings - one containing tagnames
@@ -76,21 +88,23 @@ def clean_marked_tagnames(tagnames):
     wildcard tags are those that have an asterisk at the end
     the function does not verify that the tag names are valid
     """
-    if askbot_settings.USE_WILDCARD_TAGS is False:
-        return tagnames, list()
-
     pure_tags = list()
     wildcards = list()
     for tagname in tagnames:
         if tagname == '':
             continue
-        if tagname.endswith('*'):
-            if tagname.count('*') > 1 or len(tagname) == 1:
-                continue
-            else:
+
+        if askbot_settings.USE_WILDCARD_TAGS and '*' in tagname:
+            if tagname.count('*') > 1:
+                raise forms.ValidationError(_("Wildcard tag must have only one '*' symbol"))
+            elif len(tagname) == 1:
+                raise forms.ValidationError(_('Wildcard tag must have at least one symbol'))
+            elif tagname[-1] == '*':
                 base_tag = tagname[:-1]
                 cleaned_base_tag = clean_tag(base_tag, look_in_db=False)
                 wildcards.append(cleaned_base_tag + '*')
+            else:
+                raise forms.ValidationError(_("Wildcard tag must end with an '*' symbol"))
         else:
             pure_tags.append(clean_tag(tagname))
 
