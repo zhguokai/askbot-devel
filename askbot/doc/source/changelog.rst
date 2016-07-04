@@ -4,6 +4,7 @@ Changes in Askbot
 Development version
 -------------------
 * User profile "about" section is per-language (localizable)
+* Tag names with diacritic characters are allowed
 * Inline editing of questions and answer
 * Markdown editor expands automatically
 * Added ASKBOT_LANGUAGE_MODE setting, which can be one of
