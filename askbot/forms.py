@@ -1,8 +1,9 @@
 """Forms, custom form fields and related utility functions
 used in AskBot"""
-import re
+import regex as re #todo: make explicit import
 import datetime
 import askbot
+import unicodedata
 from django import forms
 from askbot import const
 from askbot.const import message_keys
@@ -425,6 +426,7 @@ class AnswerEditorField(EditorField):
 
 def clean_tag(tag_name, look_in_db=True):
     """a function that cleans a single tag name"""
+    tag_name = unicodedata.normalize('NFC', tag_name)
     tag_length = len(tag_name)
     if tag_length > askbot_settings.MAX_TAG_LENGTH:
         #singular form is odd in english, but required for pluralization

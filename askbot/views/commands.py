@@ -262,6 +262,14 @@ def mark_tag(request, **kwargs):#tagging system
 
     return tag_usage_counts
 
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def clean_tag_name(request):
+    tag_name = forms.clean_tag(request.POST['tag_name'])
+    return {'cleaned_tag_name': tag_name}
+    
+
 #@decorators.ajax_only
 @decorators.get_only
 def get_tags_by_wildcard(request):
