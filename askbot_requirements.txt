@@ -30,5 +30,6 @@ python-cas==1.1.0
 python-openid<=2.2.5
 pytz<=2016.4
 requirements-parser==0.1.0
+regex
 sanction==0.3.1
 unidecode<=0.4.19
