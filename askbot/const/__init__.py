@@ -167,8 +167,8 @@ UNANSWERED_QUESTION_MEANING_CHOICES = (
 #correct regexes - plus this must be an anchored regex
 #to do full string match
 #IMPRTANT: tag related regexes must be portable between js and python
-TAG_CHARS = r'\w+.#-'
-TAG_FIRST_CHARS = r'\w'
+TAG_CHARS = r'\wp{M}+.#-'
+TAG_FIRST_CHARS = r'[\wp{M}]'
 TAG_FORBIDDEN_FIRST_CHARS = r'#'
 TAG_REGEX_BARE = r'%s[%s]+' % (TAG_FIRST_CHARS, TAG_CHARS)
 TAG_REGEX = r'^%s$' % TAG_REGEX_BARE

@@ -225,7 +225,10 @@ def mark_tag(request, **kwargs):#tagging system
     reason = post_data['reason']
     assert reason in ('good', 'bad', 'subscribed')
     #separate plain tag names and wildcard tags
-    tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
+    if action == 'remove':
+        tagnames, wildcards = forms.classify_marked_tagnames(raw_tagnames)
+    else:
+        tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
 
     if request.user.is_administrator() and 'user' in post_data:
         user = get_object_or_404(models.User, pk=post_data['user'])
@@ -257,6 +260,14 @@ def mark_tag(request, **kwargs):#tagging system
             tag_usage_counts[name] = 0
 
     return tag_usage_counts
+
+@csrf.csrf_protect
+@decorators.ajax_only
+@decorators.post_only
+def clean_tag_name(request):
+    tag_name = forms.clean_tag(request.POST['tag_name'])
+    return {'cleaned_tag_name': tag_name}
+    
 
 #@decorators.ajax_only
 @decorators.get_only

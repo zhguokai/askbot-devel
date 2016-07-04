@@ -41,6 +41,14 @@ TagDetailBox.prototype.clear = function () {
         item.dispose();
     });
     this._tags = [];
+    this._tag_list_element.empty();
+};
+
+TagDetailBox.prototype.addTag = function (tag) {
+    this._tags.push(tag);
+    var li = this.makeElement('li');
+    li.append(tag.getElement());
+    this._tag_list_element.append(li);
 };
 
 TagDetailBox.prototype.loadTags = function (wildcard, callback) {
@@ -74,8 +82,7 @@ TagDetailBox.prototype.renderFor = function (wildcard) {
                     tag.setName(name);
                     tag.setUrlParams(name);
                     //tag.setLinkable(false);
-                    me._tags.push(tag);
-                    me._tag_list_element.append(tag.getElement());
+                    me.addTag(tag);
                 });
                 me._is_blank = false;
                 me.wildcard = wildcard;
@@ -231,6 +238,7 @@ function pickedTags() {
                     if (detail_box.belongsTo(tag_name)) {
                         detail_box.clear();
                     }
+                    return false;
                 });
                 delete_handler = function () {
                     unpickTag(to_target, tag_name, reason, true);
@@ -355,6 +363,7 @@ function pickedTags() {
                 if (tag.isWildcard()) {
                     tag.setHandler(function () {
                         handleWildcardTagClick(tag.getName(), reason);
+                        return false;
                     });
                 }
                 tag_store[tag.getName()] = $(item);

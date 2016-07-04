@@ -187,14 +187,9 @@ var getNewUniqueInt = function () {
  * are from askbot live settings and askbot.const
  */
 var cleanTag = function (tag_name, settings) {
-    var tag_regex = new RegExp(settings.tag_regex);
-    if (tag_regex.test(tag_name) === false) {
-        var firstChar = tag_name.substring(0, 1);
-        if (settings.tag_forbidden_first_chars.indexOf(firstChar) > -1) {
-            throw settings.messages.wrong_first_char;
-        } else {
-            throw settings.messages.wrong_chars;
-        }
+    var firstChar = tag_name.substring(0, 1);
+    if (settings.tag_forbidden_first_chars.indexOf(firstChar) > -1) {
+        throw settings.messages.wrong_first_char;
     }
 
     var max_length = settings.max_tag_length;
