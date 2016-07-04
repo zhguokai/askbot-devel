@@ -460,6 +460,11 @@ urlpatterns = patterns('',
         name='unmark_tag'
     ),
     service_url(#ajax only
+        r'^clean-tag-name/',
+        views.commands.clean_tag_name,
+        name='clean_tag_name'
+    ),
+    service_url(#ajax only
         r'^set-tag-filter-strategy/',
         views.commands.set_tag_filter_strategy,
         name = 'set_tag_filter_strategy'

@@ -1,7 +1,7 @@
 import datetime
 import logging
 import operator
-import re
+import regex as re
 
 from copy import copy
 from django.conf import settings as django_settings

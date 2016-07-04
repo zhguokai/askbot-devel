@@ -1588,6 +1588,9 @@ ul.tags li {
 .wildcard-tags {
   clear: both;
 }
+.wildcard-tags ul {
+  margin-left: 1px;
+}
 ul.tags.marked-tags li, .wildcard-tags ul.tags li {
   margin-bottom: 5px;
 }

@@ -3870,7 +3870,9 @@ TagEditor.prototype.getTagDeleteHandler = function (tag) {
     return function () {
         me.removeSelectedTag(tag.getName());
         me.clearErrorMessage();
+        var li = tag.getElement().parent();
         tag.dispose();
+        li.remove();
         $('.acResults').hide();//a hack to hide the autocompleter
         me.fixHeight();
     };
@@ -4047,9 +4049,31 @@ TagEditor.prototype.getTagInputKeyHandler = function () {
         if (key === 32 || key === 13) {
             var tag_name = $.trim(text);
             if (tag_name.length > 0) {
-                me.completeTagInput(true);//true for reject dupes
+                try {
+                    tag_name = me.cleanTag(tag_name, true);
+                    $.ajax({
+                        type: 'POST',
+                        url: askbot['urls']['cleanTagName'],
+                        data: {'tag_name': tag_name},
+                        dataType: 'json',
+                        cache: false,
+                        success: function (data) {
+                            if (data['success']) {
+                                me.addTag(data['cleaned_tag_name']);
+                                me.clearNewTagInput();
+                                me.fixHeight();
+                            } else if (data['message']) {
+                                me.setErrorMessage(data['message']);
+                                setTimeout(function () {
+                                    me.clearErrorMessage(true);
+                                }, 1000);
+                            }
+                        }
+                    });
+                } catch (error) {
+                    me.setErrorMessage(error);
+                }
             }
-            me.fixHeight();
             return false;
         }
 

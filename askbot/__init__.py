@@ -40,6 +40,7 @@ REQUIREMENTS = {
     'cas': 'python-cas==1.1.0',
     'requirements': 'requirements-parser==0.1.0',
     'robots': 'django-robots==1.0',
+    'regex': 'regex',
     'sanction': 'sanction==0.3.1',
     'south': 'South>=0.7.1,<=1.0.2',
     'threaded_multihost': 'django-threaded-multihost<=1.4-1',

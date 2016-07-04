@@ -12,7 +12,6 @@ from askbot.utils.loading import load_module
 def get_for_tag_editor():
     #data for the tag editor
     data = {
-        'tag_regex': const.TAG_REGEX,
         'tag_forbidden_first_chars': const.TAG_FORBIDDEN_FIRST_CHARS,
         'tags_are_required': askbot_settings.TAGS_ARE_REQUIRED,
         'max_tags_per_post': askbot_settings.MAX_TAGS_PER_POST,
