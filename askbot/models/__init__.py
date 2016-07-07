@@ -1722,7 +1722,7 @@ def user_repost_comment_as_answer(self, comment):
     old_parent = comment.parent
 
     comment.parent = comment.thread._question_post()
-    comment.save()
+    comment.parse_and_save(author=self)
 
     comment.thread.update_answer_count()
 
