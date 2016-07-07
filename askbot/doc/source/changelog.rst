@@ -4,9 +4,6 @@ Changes in Askbot
 Development version
 -------------------
 * Tag names with diacritic characters are allowed
-
-0.7.56 (Nov 30, 2015)
----------------------
 * Inline editing of questions and answer
 * Markdown editor expands automatically
 * Added ASKBOT_LANGUAGE_MODE setting, which can be one of
