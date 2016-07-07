@@ -34,6 +34,7 @@ QUOTE_REGEXES = (
     #OUTLOOK_TEXT_QUOTE_RE =
     r'\n_+\Z',
     r'From:.*?\nSent:.*?\nTo:.*?\nSubject:.*?\Z',
+    r'\n-+ Original message -+\nFrom:'
 )
 
 
