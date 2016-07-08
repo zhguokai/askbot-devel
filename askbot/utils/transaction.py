@@ -16,8 +16,10 @@ class DummyTransaction(object):
 #a utility instance to use instead of the normal transaction object
 dummy_transaction = DummyTransaction()
 
-def defer_celery_task(task, **kwargs):
+def defer_celery_task(task, **task_kwargs):
     if django_settings.CELERY_ALWAYS_EAGER:
-        task.apply_async(**kwargs)
-    elif django_settings.ATOMIC_REQUESTS:
-        request_finished.connect(task.apply_async, **kwargs)
+        task.apply_async(**task_kwargs)
+    else:
+        def schedule_task(sender, **kwargs):
+            task.apply_async(**task_kwargs)
+        request_finished.connect(schedule_task)
