@@ -4,6 +4,7 @@ Changes in Askbot
 Development version
 -------------------
 * Tag names with diacritic characters are allowed
+* Unsubscribe link included with the email alerts
 
 0.7.56 (Nov 30, 2015)
 ---------------------
