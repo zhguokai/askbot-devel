@@ -22,6 +22,7 @@ REQUIREMENTS = {
     'django': 'django>=1.8,<1.9',
     'django_countries': 'django-countries==3.3',
     'djcelery': 'django-celery>=3.0.11,<=3.1.17',
+    'celery': 'celery==3.1.18',
     'djkombu': 'django-kombu==0.9.4',
     'followit': 'django-followit==0.2.1',
     'html5lib': 'html5lib==0.9999999',

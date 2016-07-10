@@ -39,6 +39,7 @@ from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.mail import send_mail
 from askbot.utils.translation import get_language
+from askbot.mail.messages import UnsubscribeLink
 from askbot.utils.http import get_request_info
 from askbot.utils import decorators
 from askbot.utils import functions
@@ -1135,6 +1136,56 @@ def user_select_languages(request, id=None, slug=None):
             'page_class': 'user-profile-page',
         }
         return render(request, 'user_profile/user_languages.html', data)
+
+
+@csrf.csrf_protect
+def user_unsubscribe(request):
+    form = forms.UnsubscribeForm(request.REQUEST)
+    verified_email = ''
+    if form.is_valid() == False:
+        result = 'bad_input'
+    else:
+        key = form.cleaned_data['key']
+        email = form.cleaned_data['email']
+        try:
+            #we use email too, in case the key changed
+            user = models.User.objects.get(email=email)
+        except models.User.DoesNotExist:
+            user = models.User.objects.get(key=key)
+        except models.User.DoesNotExist:
+            result = 'bad_input'
+        except models.User.MultipleObjectsReturned:
+            result = 'error'
+            logging.critical(u'unexpected error with data %s', unicode(form.cleaned_data))
+        else:
+            verified_email = user.email
+            if user.email_key == key:#all we need is key
+                #make sure that all subscriptions are created
+                if request.method == 'POST':
+                    user.add_missing_askbot_subscriptions()
+                    subs = models.EmailFeedSetting.objects.filter(subscriber=user)
+                    subs.update(frequency='n') #set frequency to "never"
+                    result = 'success'
+                else:
+                    result = 'ready'
+            else:
+                result = 'bad_key'
+                if request.method == 'POST' and 'resend_key' in request.POST:
+                    key = user.create_email_key()
+                    email = UnsubscribeLink({
+                        'key': key,
+                        'email': user.email,
+                        'site_name': askbot_settings.APP_SHORT_NAME
+                    })
+                    email.send([user.email,])
+                    result = 'key_resent'
+
+    context = {
+        'unsubscribe_form': form,
+        'result': result,
+        'verified_email': verified_email
+    }
+    return render(request, 'user_profile/unsubscribe.html', context)
 
 
 @owner_or_moderator_required

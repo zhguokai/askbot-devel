@@ -1748,6 +1748,11 @@ class SimpleEmailSubscribeForm(forms.Form):
         email_settings_form.save(user, save_unbound=True)
 
 
+class UnsubscribeForm(forms.Form):
+    key = forms.CharField(widget=forms.HiddenInput)
+    email = forms.CharField(widget=forms.HiddenInput)#allow invalid email
+
+
 class GroupLogoURLForm(forms.Form):
     """form for saving group logo url"""
     group_id = forms.IntegerField()
