@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Unsubscribe link feature
 * User profile "about" section is per-language (localizable)
 * Tag names with diacritic characters are allowed
 * Inline editing of questions and answer
