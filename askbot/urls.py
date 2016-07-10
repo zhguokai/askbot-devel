@@ -124,6 +124,14 @@ urlpatterns = patterns('',
         name = 'user_subscriptions'
     ),
     url(
+        r'^%s%s$' % (
+            pgettext('urls', 'users/'),
+            pgettext('urls', 'unsubscribe/'),
+        ),
+        views.users.user_unsubscribe,
+        name = 'user_unsubscribe'
+    ),
+    url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
             pgettext('urls', 'users/'),
             pgettext('urls', 'select_languages/'),

@@ -21,6 +21,7 @@ REQUIREMENTS = {
     'django_countries': 'django-countries==3.3',
     'django_transaction_signals': 'django-transaction-signals==1.0.0',
     'djcelery': 'django-celery>=3.0.11,<=3.1.17',
+    'celery': 'celery==3.1.18',
     'djkombu': 'django-kombu==0.9.4',
     'followit': 'django-followit==0.0.10',
     'html5lib': 'html5lib==0.9999999',

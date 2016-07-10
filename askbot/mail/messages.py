@@ -710,6 +710,19 @@ class EmailValidation(BaseEmail):
         return context
 
 
+class UnsubscribeLink(BaseEmail):
+    template_path = 'email/unsubscribe_link'
+    title = _('Unsubscribe link')
+    description = _('Sent when email key expired, but user is identified')
+
+    def get_mock_context(self):
+        return {
+            'key': 'au7153Eioeaia',
+            'email': 'user@example.com',
+            'site_name': 'example.com'
+        }
+
+
 class ApprovedPostNotification(BaseEmail):
     template_path = 'email/approved_post_notification'
     title = _('Approved post notification')
