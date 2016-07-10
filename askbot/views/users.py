@@ -1119,6 +1119,7 @@ def user_select_languages(request, id=None, slug=None):
 @csrf.csrf_protect
 def user_unsubscribe(request):
     form = forms.UnsubscribeForm(request.REQUEST)
+    verified_email = ''
     if form.is_valid() == False:
         result = 'bad_input'
     else:
@@ -1135,6 +1136,7 @@ def user_unsubscribe(request):
             result = 'error'
             logging.critical(u'unexpected error with data %s', unicode(form.cleaned_data))
         else:
+            verified_email = user.email
             if user.email_key == key:#all we need is key
                 #make sure that all subscriptions are created
                 if request.method == 'POST':
@@ -1159,6 +1161,7 @@ def user_unsubscribe(request):
     context = {
         'unsubscribe_form': form,
         'result': result,
+        'verified_email': verified_email
     }
     return render(request, 'user_profile/unsubscribe.html', context)
 
