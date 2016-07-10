@@ -66,6 +66,7 @@ from askbot.models.repute import Award, Repute, Vote, BadgeData
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot.models.meta import ImportRun, ImportedObjectInfo
 from askbot import auth
+from askbot.utils.functions import generate_random_key
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.decorators import reject_forbidden_phrases
 from askbot.utils.markup import URL_RE
@@ -81,9 +82,6 @@ from askbot import mail
 from askbot import signals
 from jsonfield import JSONField
 
-from django import VERSION
-
-#stores the 1.X version not the security release numbers
 register_user_signal = partial(signals.register_generic_signal, sender=User)
 
 
@@ -179,10 +177,8 @@ def user_get_and_delete_messages(self):
         message.delete()
     return messages
 
-DJANGO_VERSION = VERSION[:2]
-if DJANGO_VERSION > (1, 3):
-    User.add_to_class('message_set', user_message_set)
-    User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
+User.add_to_class('message_set', user_message_set)
+User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
 
 #monkeypatches the auth.models.User class with properties
 #that access properties of the askbot.models.UserProfile
@@ -242,6 +238,35 @@ def user_get_avatar_url(self, size=48):
         url = self.calculate_avatar_url(size)
         self.avatar_urls[size] = url
     return url
+
+
+#todo: find where this is used and replace with get_absolute_url
+def user_get_profile_url(self, profile_section=None):
+    """Returns the URL for this User's profile."""
+    url = reverse(
+            'user_profile',
+            kwargs={'id': self.id, 'slug': slugify(self.username)}
+        )
+    if profile_section:
+        url += "?sort=" + profile_section
+    return url
+
+
+def user_get_absolute_url(self):
+    return self.get_profile_url()
+
+
+def user_get_unsubscribe_url(self):
+    url = reverse('user_unsubscribe')
+    email_key = self.get_or_create_email_key()
+    return '{}?key={}&email={}'.format(url, self.email_key, self.email)
+
+
+def user_get_subscriptions_url(self):
+    return reverse(
+            'user_subscriptions',
+            kwargs={'id': self.id, 'slug': slugify(self.username)}
+        )
 
 
 def user_calculate_avatar_url(self, size=48):
@@ -2679,20 +2704,6 @@ def get_messages(self):
 def delete_messages(self):
     self.message_set.all().delete()
 
-#todo: find where this is used and replace with get_absolute_url
-def user_get_profile_url(self, profile_section=None):
-    """Returns the URL for this User's profile."""
-    url = reverse(
-            'user_profile',
-            kwargs={'id': self.id, 'slug': slugify(self.username)}
-        )
-    if profile_section:
-        url += "?sort=" + profile_section
-    return url
-
-def user_get_absolute_url(self):
-    return self.get_profile_url()
-
 
 def user_set_languages(self, langs, primary=None):
     self.languages = ' '.join(langs)
@@ -3189,6 +3200,16 @@ def user_get_flags_for_post(self, post):
     flags = self.get_flags()
     return flags.filter(content_type = post_content_type, object_id=post.id)
 
+def user_create_email_key(self):
+    email_key = generate_random_key()
+    User.objects.filter(id=self.pk).update(email_key=email_key)
+    return email_key
+
+def user_get_or_create_email_key(self):
+    if self.email_key:
+        return self.email_key
+    return self.create_email_key()
+
 def user_update_response_counts(user):
     """Recount number of responses to the user.
     """
@@ -3415,6 +3436,10 @@ User.add_to_class(
 )
 User.add_to_class('get_flags_for_post', user_get_flags_for_post)
 User.add_to_class('get_profile_url', user_get_profile_url)
+User.add_to_class('get_unsubscribe_url', user_get_unsubscribe_url)
+User.add_to_class('get_subscriptions_url', user_get_subscriptions_url)
+User.add_to_class('get_or_create_email_key', user_get_or_create_email_key)
+User.add_to_class('create_email_key', user_create_email_key)
 User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
