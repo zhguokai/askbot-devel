@@ -332,7 +332,7 @@ class Command(NoArgsCommand):
         except EmailFeedSetting.DoesNotExist:
             pass
 
-        if user.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
+        if user.email_tag_filter_strategy != const.EXCLUDE_IGNORED:
             extend_question_list(q_all_A, q_list, languages=languages)
             extend_question_list(q_all_B, q_list, languages=languages)
 
