@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Updated Facebook API to v2.2.
 * Tag names with diacritic characters are allowed
 * Inline editing of questions and answer
 * Markdown editor expands automatically
