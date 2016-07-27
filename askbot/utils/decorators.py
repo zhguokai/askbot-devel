@@ -190,18 +190,7 @@ def check_spam(field):
 
             if askbot_settings.USE_AKISMET and request.method == "POST":
                 comment = smart_str(request.POST[field])
-                spam_found = False
-                from akismet import AkismetError, APIKeyError
-                try:
-                    spam_found = akismet_check_spam(comment, request)
-                except APIKeyError:
-                    logging.critical('Akismet Key is missing')
-                except AkismetError:
-                    logging.critical('Akismet error: Invalid Akismet key or Akismet account issue!')
-                except Exception, e:
-                    logging.critical((u'Akismet error: %s' % unicode(e)).encode('utf-8'))
-
-                if spam_found:
+                if akismet_check_spam(comment, request):
                     logging.debug(
                         'Spam detected in %s post at: %s',
                         request.user.username,
