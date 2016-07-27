@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Applied Akismet check (if enabled) to editing of all content
 * Updated Facebook API to v2.2.
 * Unsubscribe link feature
 * User profile "about" section is per-language (localizable)
