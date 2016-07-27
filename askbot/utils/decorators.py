@@ -213,7 +213,7 @@ def check_spam(field):
                 try:
                     spam_found = api.comment_check(comment, data, build_data=False)
                 except AkismetError:
-                    logging.critical('Akismet error: Possibly invalid Akismet key!')
+                    logging.critical('Akismet error: Invalid Akismet key or Akismet account issue!')
 
                 if spam_found:
                     logging.debug(
