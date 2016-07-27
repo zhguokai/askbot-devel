@@ -43,6 +43,7 @@ from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot.utils.forms import get_db_object_or_404
 from askbot.utils.html import get_login_link
+from askbot.utils.akismet_utils import akismet_check_spam
 from django.template import RequestContext
 from askbot.skins.loaders import render_into_skin_as_string
 from askbot.skins.loaders import render_text_into_skin
@@ -635,6 +636,11 @@ def set_question_title(request):
 
     question_id = request.POST['question_id']
     title = request.POST['title']
+    if akismet_check_spam(title, request):
+        raise exceptions.PermissionDenied(_(
+            'Spam was detected on your post, sorry '
+            'for if this is a mistake'
+        ))
     question = get_object_or_404(models.Post, pk=question_id)
     user = request.user
     user.edit_question(question, title=title)
@@ -663,6 +669,13 @@ def get_post_body(request):
 def set_post_body(request):
     post_id = request.POST['post_id']
     body_text = request.POST['body_text']
+
+    if akismet_check_spam(body_text, request):
+        raise exceptions.PermissionDenied(_(
+            'Spam was detected on your post, sorry '
+            'for if this is a mistake'
+        ))
+
     post = get_object_or_404(models.Post, pk=post_id)
 
     if request.user.is_anonymous():

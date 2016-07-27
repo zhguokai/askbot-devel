@@ -47,6 +47,7 @@ from askbot.views import context
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
 from askbot.utils.slug import slugify
+from askbot.utils.akismet_utils import akismet_check_spam
 
 #todo: make this work with csrf
 @csrf.csrf_exempt
@@ -336,6 +337,11 @@ def retag_question(request, id):
 
             if form.is_valid():
                 if form.has_changed():
+                    if akismet_check_spam(form.cleaned_data['tags'], request):
+                        raise exceptions.PermissionDenied(_(
+                            'Spam was detected on your post, sorry '
+                            'for if this is a mistake'
+                        ))
                     request.user.retag_question(question=question, tags=form.cleaned_data['tags'])
                 if request.is_ajax():
                     response_data = {
@@ -784,7 +790,6 @@ def post_comments(request):#generic ajax handler to load comments to an object
 
 @csrf.csrf_protect
 @decorators.ajax_only
-#@decorators.check_spam('comment')
 def edit_comment(request):
     if request.user.is_anonymous():
         raise exceptions.PermissionDenied(_('Sorry, anonymous users cannot edit comments'))
@@ -795,6 +800,12 @@ def edit_comment(request):
     form = forms.EditCommentForm(request.POST)
     if form.is_valid() == False:
         raise exceptions.PermissionDenied('This content is forbidden')
+
+    if akismet_check_spam(form.cleaned_data['comment'], request):
+        raise exceptions.PermissionDenied(_(
+            'Spam was detected on your post, sorry '
+            'for if this is a mistake'
+        ))
 
     comment_post = models.Post.objects.get(
                     post_type='comment',
