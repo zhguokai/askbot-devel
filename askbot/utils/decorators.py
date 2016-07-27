@@ -202,14 +202,20 @@ def check_spam(field):
                 if request.user.is_authenticated():
                     data.update({'comment_author_email': request.user.email})
 
-                from akismet import Akismet
+                from akismet import Akismet, AkismetError
                 api = Akismet(
                     askbot_settings.AKISMET_API_KEY,
                     smart_str(site_url(reverse('questions'))),
                     "Askbot/%s" % get_version()
                 )
 
-                if api.comment_check(comment, data, build_data=False):
+                spam_found = False
+                try:
+                    spam_found = api.comment_check(comment, data, build_data=False)
+                except AkismetError:
+                    logging.critical('Akismet error: Invalid Akismet key or Akismet account issue!')
+
+                if spam_found:
                     logging.debug(
                         'Spam detected in %s post at: %s',
                         request.user.username,
