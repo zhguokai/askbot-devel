@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Applied Akismet check (if enabled) to editing of all content
 * Updated Facebook API to v2.2.
 * Tag names with diacritic characters are allowed
 * Unsubscribe link included with the email alerts
