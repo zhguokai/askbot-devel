@@ -55,6 +55,7 @@ from askbot.models.tag import format_personal_group_name
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
+from askbot.utils.akismet_utils import akismet_check_spam
 
 def owner_or_moderator_required(f):
     @functools.wraps(f)
@@ -676,7 +677,13 @@ def set_user_description(request):
 
     user_id = form.cleaned_data['user_id']
     description = form.cleaned_data['description']
-        
+
+    if akismet_check_spam(description, request):
+        raise django_exceptions.PermissionDenied(_(
+            'Spam was detected on your post, sorry '
+            'for if this is a mistake'
+        ))
+
     if user_id == request.user.pk or request.user.is_admin_or_mod():
         user = models.User.objects.get(pk=user_id)
         user.update_localized_profile(about=description)
