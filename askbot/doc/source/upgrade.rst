@@ -8,7 +8,7 @@ Always back up the database before the upgrade.
 
 Currently Askbot supports major versions of Django `1.5`, `1.6`, `1.7` and `1.8`,
 however - a corresponding version of Askbot must be selected for
-each version of the Django framework as shown below::
+each version of the Django framework as shown below:
 
 +---------------------------------+-----------------------+
 | Version of the Django framework | Version of Askbot (*) |
