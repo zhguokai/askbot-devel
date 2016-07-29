@@ -6,11 +6,11 @@ from askbot import (const, models)
 from django.contrib.auth.models import User
 
 class ManagementCommandTests(AskbotTestCase):
-    def test_add_askbot_user(self):
+    def test_askbot_add_user(self):
         username = 'test user'
         password = 'secretno1'
         management.call_command(
-                        'add_askbot_user',
+                        'askbot_add_user',
                         email = 'test@askbot.org',
                         username = username,
                         frequency = 'd',
