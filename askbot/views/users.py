@@ -9,6 +9,7 @@ Also this module includes the view listing all forum users.
 import askbot
 import calendar
 import collections
+import datetime
 import functools
 import logging
 import math
