@@ -15,7 +15,6 @@ import logging
 import math
 import operator
 import urllib
-import datetime
 
 from django.db.models import Count
 from django.db.models import Q
