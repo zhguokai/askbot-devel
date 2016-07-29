@@ -7,6 +7,9 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from askbot import models, forms
 
+STATUS_INFO =  "'a' - approved, 'w' - watched, 'd' - admin, 'm' - moderator, " \
+               "'b' and 's' - blocked and suspended, respectively"
+
 class Command(BaseCommand):
     "The command class itself"
 
@@ -36,14 +39,21 @@ class Command(BaseCommand):
             default = None,
             help = 'email address - **required**'
         ),
-        make_option('--email-frequency',
-            action = 'store',
-            type = 'str',
-            dest = 'frequency',
-            default = None,
-            help = 'email subscription frequency (n - never, i - '
-                    'instant, d - daily, w - weekly, default - w)'
-        ),
+        #make_option('--email-frequency',
+        #    action = 'store',
+        #    type = 'str',
+        #    dest = 'frequency',
+        #    default = None,
+        #    help = 'email subscription frequency (n - never, i - '
+        #            'instant, d - daily, w - weekly, default - w)'
+        #),
+        make_option('--status',
+            action='store',
+            type='str',
+            dest='status',
+            default='a',
+            help="Set user status. Options: %s" % STATUS_INFO
+        )
     )
 
     def handle(self, *args, **options):
@@ -60,15 +70,25 @@ class Command(BaseCommand):
         password = options['password']
         email = options['email']
         username = options['username']
-        frequency = options['frequency']
+        #frequency = options['frequency']
+        status = options['status']
+        if status not in 'wamdsb':
+            raise CommandError(
+                        'Illegal value of --status %s. Allowed user statuses are: %s' \
+                        % (status, STATUS_INFO)
+                    )
 
         user = models.User.objects.create_user(username, email)
+        user.set_status(options['status'])
+
         if password:
             user.set_password(password)
-            user.save()
+
         subscription = {'subscribe': 'y'}
         email_feeds_form = forms.SimpleEmailSubscribeForm(subscription)
         if email_feeds_form.is_valid():
             email_feeds_form.save(user)
         else:
             raise CommandError('\n'.join(email_feeds_form.errors))
+
+        user.save()
