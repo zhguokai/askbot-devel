@@ -21,7 +21,18 @@ class TagAdmin(admin.ModelAdmin):
 
 
 class VoteAdmin(admin.ModelAdmin):
-    """  admin class"""
+    date_hierarchy = 'voted_at'
+    list_display = ('user', 'vote', 'voted_post', 'voted_at')
+    list_filter = ('voted_at', 'vote')
+    ordering = ('-voted_at',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('user', 'voted_post'),
+                ('vote', 'voted_at'),
+            )
+        }),
+    )
 
 
 class FavoriteQuestionAdmin(admin.ModelAdmin):
@@ -33,11 +44,36 @@ class PostRevisionAdmin(admin.ModelAdmin):
 
 
 class AwardAdmin(admin.ModelAdmin):
-    """  admin class"""
+    date_hierarchy = 'awarded_at'
+    list_display = ('user', 'badge', 'awarded_at')
+    list_filter = ('awarded_at', 'notified')
+    ordering = ('-awarded_at',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('user', 'badge', 'awarded_at'),
+                ('content_type', 'object_id'),
+                'notified',
+            )
+        }),
+    )
 
 
 class ReputeAdmin(admin.ModelAdmin):
-    """  admin class"""
+    date_hierarchy = 'reputed_at'
+    list_display = ('user', 'reputation')
+    list_filter = ('reputed_at',)
+    ordering = ('-reputed_at',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('user', 'reputation', 'reputation_type', 'reputed_at'),
+                ('positive', 'negative'),
+                ('question', 'language_code'),
+                'comment',
+            )
+        }),
+    )
 
 
 class ActivityAdmin(admin.ModelAdmin):
@@ -58,7 +94,17 @@ class ActivityAdmin(admin.ModelAdmin):
 
 
 class BadgeDataAdmin(admin.ModelAdmin):
-    """admin class for BadgeData"""
+    list_display = ('slug', 'awarded_count')
+    ordering = ('-awarded_count',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                'slug',
+                'awarded_count',
+                'display_order',
+            )
+        }),
+    )
 
 
 class IsPersonal(SimpleListFilter):
@@ -84,7 +130,7 @@ class GroupAdmin(admin.ModelAdmin):
     search_fields = ('name', 'logo_url')
 
 
-admin.site.register(models.BadgeData)
+admin.site.register(models.BadgeData, BadgeDataAdmin)
 admin.site.register(models.Group, GroupAdmin)
 admin.site.register(models.Post)
 admin.site.register(models.Tag, TagAdmin)
