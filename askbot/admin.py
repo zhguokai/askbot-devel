@@ -57,6 +57,22 @@ class ActivityAdmin(admin.ModelAdmin):
     )
 
 
+class ReplyAddressAdmin(admin.ModelAdmin):
+    date_hierarchy = 'used_at'
+    list_display = ('user', 'reply_action',)
+    list_filter = ('used_at', 'reply_action',)
+    ordering = ('-used_at',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('address', 'allowed_from_email'),
+                ('user', 'post'),
+                ('reply_action', 'response_post'),
+            )
+        }),
+    )
+
+
 class BadgeDataAdmin(admin.ModelAdmin):
     """admin class for BadgeData"""
 
@@ -95,3 +111,4 @@ admin.site.register(models.Award, AwardAdmin)
 admin.site.register(models.Repute, ReputeAdmin)
 admin.site.register(models.Activity, ActivityAdmin)
 admin.site.register(models.BulkTagSubscription)
+admin.site.register(models.ReplyAddress, ReplyAddressAdmin)
