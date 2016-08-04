@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.template import RequestContext
@@ -20,6 +20,8 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
     mgr = ConfigurationSettings()
 
     settings = mgr[group]
+    if settings is None:
+        raise Http404()
     title = settings.name
     log.debug('title: %s', title)
 
