@@ -456,7 +456,7 @@ def user_stats(request, user, context):
                 ).filter(
                     **question_filter
                 ).order_by(
-                    '-points', '-thread__last_activity_at'
+                    '-points'#, '-thread__last_activity_at' to match sorting with ajax loads
                 ).select_related(
                     'thread', 'thread__last_activity_by'
                 )
