@@ -65,8 +65,78 @@ class VoteAdmin(admin.ModelAdmin):
     )
 
 
+class FavoriteQuestionInline(admin.TabularInline):
+    model = models.FavoriteQuestion
+
+
+class ThreadAdmin(admin.ModelAdmin):
+    date_hierarchy = 'added_at'
+    list_display = ('title', 'added_at', 'last_activity_at', 'closed',
+                    'deleted', 'approved')
+    list_filter = ('added_at', 'last_activity_at', 'closed', 'deleted',
+                   'approved')
+    ordering = ('-added_at',)
+    inlines = (FavoriteQuestionInline,)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('title', 'points'),
+                'tags',
+                ('followed_by'),
+                ('closed', 'closed_by', 'closed_at', 'close_reason'),
+                'deleted',
+                ('approved', 'accepted_answer'),
+            )
+        }),
+        (_("Question"), {
+            'fields': (
+                ('language_code', 'tagnames'),
+                ('view_count', 'favourite_count', 'answer_count'),
+                ('last_activity_by', 'last_activity_at'),
+            )
+        }),
+    )
+
+
+class ThreadToGroupAdmin(admin.ModelAdmin):
+    list_display = ('thread', 'group', 'visibility')
+    list_filter = ('visibility',)
+    ordering = ('-thread',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('thread', 'group', 'visibility'),
+            )
+        }),
+    )
+
+
+class QuestionViewAdmin(admin.ModelAdmin):
+    date_hierarchy = 'when'
+    list_display = ('who', 'question', 'when',)
+    list_filter = ('when',)
+    ordering = ('-when',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('who', 'question', 'when'),
+            )
+        }),
+    )
+
+
 class FavoriteQuestionAdmin(admin.ModelAdmin):
-    """  admin class"""
+    date_hierarchy = 'added_at'
+    list_display = ('user', 'thread', 'added_at')
+    list_filter = ('added_at',)
+    ordering = ('-added_at',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('user', 'thread', 'added_at'),
+            )
+        }),
+    )
 
 
 class PostRevisionAdmin(admin.ModelAdmin):
@@ -192,3 +262,6 @@ admin.site.register(models.Award, AwardAdmin)
 admin.site.register(models.Repute, ReputeAdmin)
 admin.site.register(models.Activity, ActivityAdmin)
 admin.site.register(models.BulkTagSubscription)
+admin.site.register(models.Thread, ThreadAdmin)
+admin.site.register(models.question.ThreadToGroup, ThreadToGroupAdmin)
+admin.site.register(models.QuestionView, QuestionViewAdmin)
