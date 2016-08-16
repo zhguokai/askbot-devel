@@ -9,20 +9,31 @@
 {% trans %}Below is the list of available badges and number of times each type of badge has been awarded.{% endtrans %}
 </p>
 <div class="badge-list">
-    {% for badge in badges %}
-    <div class="badge-ctnr" data-badge-id="{{ badge.id }}">
-        {% if badge.id in my_badge_ids %}
-            <div class="badge-awarded">&#10004;</div>
-        {% endif %}
-        <div class="badge-item">
-            <a href="{{badge.get_absolute_url()}}" 
-                title="{{ badge.get_type_display() }} : {{ badge.get_description() }}" 
-                class="medal"><span class="{{ badge.get_css_class() }}">&#9679;</span>&nbsp;{{ badge.get_name() }}</a><strong> 
-                &#215; {{ badge.awarded_count|intcomma }}</strong>
-        </div>
-        <p class="badge-description">{{ badge.get_description() }}</p>
+ <table>
+  <tbody>
+  {% for badge in badges %}
+   <tr class="badge-ctnr" data-badge-id="{{ badge.id }}">
+   <td>
+      {% if badge.id in my_badge_ids %}
+          <div class="badge-awarded">&#10004;</div>
+      {% endif %}
+   </td>
+   <td>
+    <div class="badge-item">
+     <a href="{{badge.get_absolute_url()}}" 
+         title="{{ badge.get_type_display() }} : {{ badge.get_description() }}" 
+         class="medal"><span class="{{ badge.get_css_class() }}">&#9679;</span>&nbsp;{{ badge.get_name() }}</a><strong> 
+         &#215; {{ badge.awarded_count|intcomma }}</strong>
     </div>
-    {% endfor %}
+   </td>
+   <td>
+      <p class="badge-description">{{ badge.get_description() }}</p>
+   </td>
+  </div>
+   </tr>
+  {% endfor %}
+  </tbody>
+ </table>
 </div>
 {% endblock %}
 {% block sidebar %}
