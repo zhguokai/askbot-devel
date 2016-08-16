@@ -214,6 +214,22 @@ class ActivityAdmin(admin.ModelAdmin):
     )
 
 
+class ReplyAddressAdmin(admin.ModelAdmin):
+    date_hierarchy = 'used_at'
+    list_display = ('user', 'reply_action',)
+    list_filter = ('used_at', 'reply_action',)
+    ordering = ('-used_at',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('address', 'allowed_from_email'),
+                ('user', 'post'),
+                ('reply_action', 'response_post'),
+            )
+        }),
+    )
+
+
 class BadgeDataAdmin(admin.ModelAdmin):
     list_display = ('slug', 'awarded_count')
     ordering = ('-awarded_count',)
@@ -265,3 +281,4 @@ admin.site.register(models.BulkTagSubscription)
 admin.site.register(models.Thread, ThreadAdmin)
 admin.site.register(models.question.ThreadToGroup, ThreadToGroupAdmin)
 admin.site.register(models.QuestionView, QuestionViewAdmin)
+admin.site.register(models.ReplyAddress, ReplyAddressAdmin)
