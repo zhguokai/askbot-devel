@@ -1,5 +1,6 @@
 import re
 import random
+import simplejson
 import time
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -11,6 +12,11 @@ from django.utils import timezone
 
 
 mark_safe_lazy = lazy(mark_safe, six.text_type)
+
+
+def decode_and_loads(input_str):
+    """utf-8 decodes the input, then runs json loads"""
+    return simplejson.loads(input_str.decode('utf-8'))
 
 
 def timedelta_total_seconds(td):
