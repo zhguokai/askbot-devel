@@ -1719,6 +1719,9 @@ ul.tags li {
 
 .wildcard-tags {
     clear: both;
+    ul {
+        margin-left: 1px;
+    }
 }
 
 ul.tags.marked-tags li,
@@ -1880,7 +1883,7 @@ ul.js-related-tags li {
 }
 
 .js-delete-icon {
-    height: 21px;
+    height: 22px;
     width:18px;
     display: inline-block;
     line-height:20px;
@@ -4207,6 +4210,7 @@ label.retag-error {
 .timeago {
     font-weight: bold;
     text-decoration: none;
+    display: none; //shown by js after rendering
 }
 
 .narrow .tags {
@@ -4818,7 +4822,7 @@ textarea.tipped-input {
         list-style-position: inside;
         padding-left: 7px;
         font-size: 14px;
-        line-height: 25px;
+        line-height: 30px;
         input {
             margin: 0 0 2px -5px;
             font-size: 14px;
@@ -4828,12 +4832,17 @@ textarea.tipped-input {
         }
     }
     li.selected,
-    li.selected:hover {
-        background-color: #fcf8e3;
-        color: #c09853;
-    }
+    li.selected:hover,
     li:hover {
-        background-color: #cecece;
+        background-color: #999;
+        color: white;
+        -webkit-transition: background ease 0.2s;
+        -moz-transition: background ease 0.2s;
+        -ms-transition: background ease 0.2s;
+        -o-transition: background ease 0.2s;
+        transition: background ease 0.2s;
+    }
+    li:hover a {
         color: white;
     }
 }
@@ -4842,6 +4851,22 @@ textarea.tipped-input {
 .category-selector {
     border-spacing: 0;
     width: 100%;
+
+    button {
+        margin: 3px 0 0 7px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 6px;
+    }
+
+    input[type="text"] {
+        width: calc(100% - 70px);
+        padding: 0 5px;
+        margin: 3px 0 3px -3px;
+        height: 24px;
+        border: none;
+        .box-shadow(none);
+    }
 
     ul.select-box {
         height: 150px;

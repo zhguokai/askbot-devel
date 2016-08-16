@@ -66,6 +66,7 @@ from askbot.models.repute import Award, Repute, Vote, BadgeData
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot.models.meta import ImportRun, ImportedObjectInfo
 from askbot import auth
+from askbot.utils.functions import generate_random_key
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.decorators import reject_forbidden_phrases
 from askbot.utils.markup import URL_RE
@@ -81,9 +82,6 @@ from askbot import mail
 from askbot import signals
 from jsonfield import JSONField
 
-from django import VERSION
-
-#stores the 1.X version not the security release numbers
 register_user_signal = partial(signals.register_generic_signal, sender=User)
 
 
@@ -179,10 +177,8 @@ def user_get_and_delete_messages(self):
         message.delete()
     return messages
 
-DJANGO_VERSION = VERSION[:2]
-if DJANGO_VERSION > (1, 3):
-    User.add_to_class('message_set', user_message_set)
-    User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
+User.add_to_class('message_set', user_message_set)
+User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
 
 #monkeypatches the auth.models.User class with properties
 #that access properties of the askbot.models.UserProfile
@@ -242,6 +238,35 @@ def user_get_avatar_url(self, size=48):
         url = self.calculate_avatar_url(size)
         self.avatar_urls[size] = url
     return url
+
+
+#todo: find where this is used and replace with get_absolute_url
+def user_get_profile_url(self, profile_section=None):
+    """Returns the URL for this User's profile."""
+    url = reverse(
+            'user_profile',
+            kwargs={'id': self.id, 'slug': slugify(self.username)}
+        )
+    if profile_section:
+        url += "?sort=" + profile_section
+    return url
+
+
+def user_get_absolute_url(self):
+    return self.get_profile_url()
+
+
+def user_get_unsubscribe_url(self):
+    url = reverse('user_unsubscribe')
+    email_key = self.get_or_create_email_key()
+    return '{}?key={}&email={}'.format(url, self.email_key, self.email)
+
+
+def user_get_subscriptions_url(self):
+    return reverse(
+            'user_subscriptions',
+            kwargs={'id': self.id, 'slug': slugify(self.username)}
+        )
 
 
 def user_calculate_avatar_url(self, size=48):
@@ -1653,7 +1678,7 @@ def user_repost_comment_as_answer(self, comment):
     old_parent = comment.parent
 
     comment.parent = comment.thread._question_post()
-    comment.save()
+    comment.parse_and_save(author=self)
 
     comment.thread.update_answer_count()
 
@@ -2679,20 +2704,6 @@ def get_messages(self):
 def delete_messages(self):
     self.message_set.all().delete()
 
-#todo: find where this is used and replace with get_absolute_url
-def user_get_profile_url(self, profile_section=None):
-    """Returns the URL for this User's profile."""
-    url = reverse(
-            'user_profile',
-            kwargs={'id': self.id, 'slug': slugify(self.username)}
-        )
-    if profile_section:
-        url += "?sort=" + profile_section
-    return url
-
-def user_get_absolute_url(self):
-    return self.get_profile_url()
-
 
 def user_set_languages(self, langs, primary=None):
     self.languages = ' '.join(langs)
@@ -2750,9 +2761,35 @@ def user_get_groups(self, private=False):
     #todo: maybe cache this query
     return Group.objects.get_for_user(self, private=private)
 
+def user_join_default_groups(self):
+    """adds user to "global" and "personal" groups"""
+    #needs to be run when Askbot is added to pre-existing site
+    #and Askbot groups are not populated
+    #In Askbot user by default must by a member of "global" group
+    #and of "personal" group - which is created for each user individually
+    self.edit_group_membership(
+        group=Group.objects.get_global_group(),
+        user=self,
+        action='add'
+    )
+    group_name = format_personal_group_name(self)
+    group = Group.objects.get_or_create(
+        name=group_name, user=self
+    )
+    self.edit_group_membership(
+        group=group, user=self, action='add'
+    )
+
+
 def user_get_personal_group(self):
     group_name = format_personal_group_name(self)
-    return Group.objects.get(name=group_name)
+    try:
+        #may be absent if askbot is added to pre-existing site
+        return Group.objects.get(name=group_name)
+    except Group.DoesNotExist:
+        self.join_default_groups()
+        return Group.objects.get(name=group_name)
+        
 
 def user_get_foreign_groups(self):
     """returns a query set of groups to which user does not belong"""
@@ -3163,6 +3200,16 @@ def user_get_flags_for_post(self, post):
     flags = self.get_flags()
     return flags.filter(content_type = post_content_type, object_id=post.id)
 
+def user_create_email_key(self):
+    email_key = generate_random_key()
+    UserProfile.objects.filter(auth_user_ptr=self).update(email_key=email_key)
+    return email_key
+
+def user_get_or_create_email_key(self):
+    if self.email_key:
+        return self.email_key
+    return self.create_email_key()
+
 def user_update_response_counts(user):
     """Recount number of responses to the user.
     """
@@ -3389,6 +3436,10 @@ User.add_to_class(
 )
 User.add_to_class('get_flags_for_post', user_get_flags_for_post)
 User.add_to_class('get_profile_url', user_get_profile_url)
+User.add_to_class('get_unsubscribe_url', user_get_unsubscribe_url)
+User.add_to_class('get_subscriptions_url', user_get_subscriptions_url)
+User.add_to_class('get_or_create_email_key', user_get_or_create_email_key)
+User.add_to_class('create_email_key', user_create_email_key)
 User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
@@ -3412,6 +3463,7 @@ User.add_to_class('is_admin_or_mod', user_is_administrator_or_moderator) #shorte
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
 User.add_to_class('join_group', user_join_group)
+User.add_to_class('join_default_groups', user_join_default_groups)
 User.add_to_class('leave_group', user_leave_group)
 User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
@@ -3886,34 +3938,12 @@ def record_user_full_updated(instance, **kwargs):
     activity.save()
 
 
-def add_user_to_global_group(sender, instance, created, **kwargs):
-    """auto-joins user to the global group
-    ``instance`` is an instance of ``User`` class
-    """
-    if created:
-        instance.edit_group_membership(
-            group=Group.objects.get_global_group(),
-            user=instance,
-            action='add'
-        )
-
-
-def add_user_to_personal_group(sender, instance, created, **kwargs):
+def add_user_to_default_groups(sender, instance, created, **kwargs):
     """auto-joins user to his/her personal group
     ``instance`` is an instance of ``User`` class
     """
     if created:
-        #todo: groups will indeed need to be separated from tags
-        #so that we can use less complicated naming scheme
-        #in theore here we may have two users that will have
-        #identical group names!!!
-        group_name = format_personal_group_name(instance)
-        group = Group.objects.get_or_create(
-                    name=group_name, user=instance
-                )
-        instance.edit_group_membership(
-                    group=group, user=instance, action='add'
-                )
+        instance.join_default_groups()
 
 
 def greet_new_user(user, **kwargs):
@@ -4192,13 +4222,8 @@ user_signals = [
     ),
     signals.GenericSignal(
         django_signals.post_save,
-        callback=add_user_to_global_group,
-        dispatch_uid='add_user_to_global_group_on_user_save',
-    ),
-    signals.GenericSignal(
-        django_signals.post_save,
-        callback=add_user_to_personal_group,
-        dispatch_uid='add_user_to_personal_group_on_user_save',
+        callback=add_user_to_default_groups,
+        dispatch_uid='add_user_to_default_groups_on_user_save',
     ),
     signals.GenericSignal(
         django_signals.post_save,

@@ -1,7 +1,9 @@
 """Forms, custom form fields and related utility functions
 used in AskBot"""
-import re
+import regex as re #todo: make explicit import
+import datetime
 import askbot
+import unicodedata
 from django import forms
 from askbot import const
 from askbot.const import message_keys
@@ -26,6 +28,14 @@ from askbot.conf import settings as askbot_settings
 from askbot.conf import get_tag_email_filter_strategy_choices
 from tinymce.widgets import TinyMCE
 import logging
+
+def split_tags(data):
+    split_re = re.compile(const.TAG_SPLIT_REGEX)
+    data = data.strip()
+    if data:
+        return split_re.split(data)
+    else:
+        return list()
 
 def should_use_recaptcha(user):
     """True if user must use recaptcha"""
@@ -60,6 +70,18 @@ def format_form_errors(form):
     else:
         return ''
 
+def classify_marked_tagnames(tagnames):
+    """splits tagnames into two lists: those that have
+    a '*' in the end and those that don't"""
+    pure_tags = list()
+    wildcards = list()
+    for tagname in tagnames:
+        if tagname.endswith('*'):
+            wildcards.append(tagname)
+        else:
+            pure_tags.append(tagname)
+    return pure_tags, wildcards
+
 
 def clean_marked_tagnames(tagnames):
     """return two strings - one containing tagnames
@@ -68,21 +90,23 @@ def clean_marked_tagnames(tagnames):
     wildcard tags are those that have an asterisk at the end
     the function does not verify that the tag names are valid
     """
-    if askbot_settings.USE_WILDCARD_TAGS is False:
-        return tagnames, list()
-
     pure_tags = list()
     wildcards = list()
     for tagname in tagnames:
         if tagname == '':
             continue
-        if tagname.endswith('*'):
-            if tagname.count('*') > 1 or len(tagname) == 1:
-                continue
-            else:
+
+        if askbot_settings.USE_WILDCARD_TAGS and '*' in tagname:
+            if tagname.count('*') > 1:
+                raise forms.ValidationError(_("Wildcard tag must have only one '*' symbol"))
+            elif len(tagname) == 1:
+                raise forms.ValidationError(_('Wildcard tag must have at least one symbol'))
+            elif tagname[-1] == '*':
                 base_tag = tagname[:-1]
                 cleaned_base_tag = clean_tag(base_tag, look_in_db=False)
                 wildcards.append(cleaned_base_tag + '*')
+            else:
+                raise forms.ValidationError(_("Wildcard tag must end with an '*' symbol"))
         else:
             pure_tags.append(clean_tag(tagname))
 
@@ -403,6 +427,7 @@ class AnswerEditorField(EditorField):
 
 def clean_tag(tag_name, look_in_db=True):
     """a function that cleans a single tag name"""
+    tag_name = unicodedata.normalize('NFC', tag_name)
     tag_length = len(tag_name)
     if tag_length > askbot_settings.MAX_TAG_LENGTH:
         #singular form is odd in english, but required for pluralization
@@ -481,8 +506,7 @@ class TagNamesField(forms.CharField):
             else:
                 #don't test for required characters when tags is ''
                 return ''
-        split_re = re.compile(const.TAG_SPLIT_REGEX)
-        tag_strings = split_re.split(data)
+        tag_strings = split_tags(data)
         entered_tags = []
         tag_count = len(tag_strings)
         if tag_count > askbot_settings.MAX_TAGS_PER_POST:
@@ -1722,6 +1746,11 @@ class SimpleEmailSubscribeForm(forms.Form):
         else:
             email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
         email_settings_form.save(user, save_unbound=True)
+
+
+class UnsubscribeForm(forms.Form):
+    key = forms.CharField(widget=forms.HiddenInput)
+    email = forms.CharField(widget=forms.HiddenInput)#allow invalid email
 
 
 class GroupLogoURLForm(forms.Form):

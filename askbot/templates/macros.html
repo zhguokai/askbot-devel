@@ -286,14 +286,14 @@
         <{% if is_link %}a{% else %}span{% endif %}
             class="js-tag-name{% if css_class %} {{ css_class }}{% endif %}"
             rel="tag"
-            {% if is_link %}
+            {% if is_link and not tag.endswith('*') %}
             href="{{ search_state.add_tag(tag).full_url() }}"
             {% endif %}
-            data-tag-name="{{ tag|replace('*', '&#10045;')|escape }}"
+            data-tag-name="{{ tag|escape }}"
         >{% if truncate_long_tag -%}
-                {{ tag|replace('*', '&#10045;')|truncate(17, True)|escape }}
+                {{ tag|truncate(17, True)|escape|replace('*', '&#10045;')}}
             {%- else -%}
-                {{ tag|replace('*', '&#10045;')|escape }}
+                {{ tag|escape|replace('*', '&#10045;') }}
             {%- endif -%}
         </{% if is_link %}a{% else %}span{% endif %}>
         {% if deletable %}

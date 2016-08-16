@@ -326,6 +326,8 @@ def process_parts(parts, reply_code=None, from_address=None):
     if DEBUG_EMAIL:
         sys.stderr.write('--- THE END\n')
 
+    body_text = body_text.replace('\r\n', '\n') #dos2unix
+
     #if the response separator is present -
     #split the body with it, and discard the "so and so wrote:" part
     if reply_code:
@@ -335,6 +337,7 @@ def process_parts(parts, reply_code=None, from_address=None):
     else:
         signature = None
 
+    attachments_markdown = attachments_markdown.replace('\r\n', '\n') #dos2unix
     body_text += attachments_markdown
 
     if from_address:
@@ -343,7 +346,8 @@ def process_parts(parts, reply_code=None, from_address=None):
                                                         from_address
                                                     )
 
-    return body_text.strip(), stored_files, signature
+    body_text = body_text.strip()
+    return body_text, stored_files, signature
 
 
 def process_emailed_question(

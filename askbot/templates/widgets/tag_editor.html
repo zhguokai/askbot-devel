@@ -21,7 +21,7 @@
         id="id_tags"
         name="tags"
         type="hidden"
-        value="{% if tag_names %}{{tag_names|join(' ')}}{% endif %}"
+        value="{% if tag_names %}{{ tag_names|join(' ')|escape }}{% endif %}"
     />
     {# 
         tag input is hidden because we want to edit the list visually 

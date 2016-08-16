@@ -2761,6 +2761,7 @@ Comment.prototype.setContent = function (data) {
     data = this._data;
     this._element.data('postId', data.id);
     this._element.attr('data-post-id', data.id);
+    this._element.attr('id', 'post-id-' + data.id);
 
     // 1) create the votes element if it is not there
     var vote = this._voteButton;
@@ -3833,53 +3834,8 @@ var TagEditor = function () {
     WrappedElement.call(this);
     this._has_hot_backspace = false;
     this._settings = JSON.parse(askbot.settings.tag_editor);
-    /*
-    tags: {
-        required: askbot.settings.tagsAreRequired,
-        maxlength: askbot.settings.maxTagsPerPost * askbot.settings.maxTagLength,
-        limit_tag_count: true,
-        limit_tag_length: true
-    },
-    tags: {
-        required: ' ' + gettext('tags cannot be empty'),
-        maxlength: askbot.messages.tagLimits,
-        limit_tag_count: askbot.messages.maxTagsPerPost,
-        limit_tag_length: askbot.messages.maxTagLength
-    },
-    */
 };
 inherits(TagEditor, WrappedElement);
-
-/* retagger function
-    var doRetag = function () {
-        $.ajax({
-            type: 'POST',
-            url: askbot.urls.retag,
-            dataType: 'json',
-            data: { tags: getUniqueWords(tagInput.val()).join(' ') },
-            success: function (json) {
-                if (json.success) {
-                    new_tags = getUniqueWords(json.new_tags);
-                    oldTagsHtml = '';
-                    cancelRetag();
-                    drawNewTags(new_tags.join(' '));
-                    if (json.message) {
-                        notify.show(json.message);
-                    }
-                } else {
-                    cancelRetag();
-                    showMessage(tagsDiv, json.message);
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                showMessage(tagsDiv, gettext('sorry, something is not right here'));
-                cancelRetag();
-            }
-        });
-        return false;
-    }
-*/
-
 
 TagEditor.prototype.getSelectedTags = function () {
     return $.trim(this._hidden_tags_input.val()).split(/\s+/);
@@ -3914,7 +3870,9 @@ TagEditor.prototype.getTagDeleteHandler = function (tag) {
     return function () {
         me.removeSelectedTag(tag.getName());
         me.clearErrorMessage();
+        var li = tag.getElement().parent();
         tag.dispose();
+        li.remove();
         $('.acResults').hide();//a hack to hide the autocompleter
         me.fixHeight();
     };
@@ -3958,7 +3916,9 @@ TagEditor.prototype.addTag = function (tag_name) {
     tag.setDeletable(true);
     tag.setLinkable(true);
     tag.setDeleteHandler(this.getTagDeleteHandler(tag));
-    this._tags_container.append(tag.getElement());
+    var li = this.makeElement('li');
+    this._tags_container.append(li);
+    li.append(tag.getElement());
     this.addSelectedTag(tag_name);
 };
 
@@ -4089,9 +4049,31 @@ TagEditor.prototype.getTagInputKeyHandler = function () {
         if (key === 32 || key === 13) {
             var tag_name = $.trim(text);
             if (tag_name.length > 0) {
-                me.completeTagInput(true);//true for reject dupes
+                try {
+                    tag_name = me.cleanTag(tag_name, true);
+                    $.ajax({
+                        type: 'POST',
+                        url: askbot['urls']['cleanTagName'],
+                        data: {'tag_name': tag_name},
+                        dataType: 'json',
+                        cache: false,
+                        success: function (data) {
+                            if (data['success']) {
+                                me.addTag(data['cleaned_tag_name']);
+                                me.clearNewTagInput();
+                                me.fixHeight();
+                            } else if (data['message']) {
+                                me.setErrorMessage(data['message']);
+                                setTimeout(function () {
+                                    me.clearErrorMessage(true);
+                                }, 1000);
+                            }
+                        }
+                    });
+                } catch (error) {
+                    me.setErrorMessage(error);
+                }
             }
-            me.fixHeight();
             return false;
         }
 
@@ -4351,6 +4333,7 @@ Category.prototype.getSaveHandler = function () {
 
 Category.prototype.addControls = function () {
     var input_box = this.makeElement('input');
+    input_box.attr('type', 'text');
     this._input_box = input_box;
     this._element.append(input_box);
 
@@ -4540,7 +4523,10 @@ CategoryAdder.prototype.createDom = function () {
     var input = this.makeElement('input');
     this._input = input;
     input.addClass('add-category');
-    input.attr('name', 'add_category');
+    input.attr({
+        'name': 'add_category',
+        'type': 'text'
+    });
     this._element.append(input);
     //add save category button
     var save_button = this.makeElement('button');
@@ -5023,18 +5009,21 @@ CategorySelectorLoader.prototype.getRetagHandler = function () {
 };
 
 CategorySelectorLoader.prototype.drawNewTags = function (new_tags) {
+    var container = this._display_tags_container;
+    container.html('');
     if (new_tags === '') {
-        this._display_tags_container.html('');
         return;
     }
+
     new_tags = new_tags.split(/\s+/);
-    var tags_html = '';
+    var me = this;
     $.each(new_tags, function (index, name) {
+        var li = me.makeElement('li');
+        container.append(li);
         var tag = new Tag();
         tag.setName(name);
-        tags_html += tag.getElement().outerHTML();
+        li.append(tag.getElement());
     });
-    this._display_tags_container.html(tags_html);
 };
 
 CategorySelectorLoader.prototype.getSaveHandler = function () {

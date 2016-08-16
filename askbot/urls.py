@@ -124,6 +124,14 @@ urlpatterns = patterns('',
         name = 'user_subscriptions'
     ),
     url(
+        r'^%s%s$' % (
+            pgettext('urls', 'users/'),
+            pgettext('urls', 'unsubscribe/'),
+        ),
+        views.users.user_unsubscribe,
+        name = 'user_unsubscribe'
+    ),
+    url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
             pgettext('urls', 'users/'),
             pgettext('urls', 'select_languages/'),
@@ -458,6 +466,11 @@ urlpatterns = patterns('',
         views.commands.mark_tag,
         kwargs={'action':'remove'},
         name='unmark_tag'
+    ),
+    service_url(#ajax only
+        r'^clean-tag-name/',
+        views.commands.clean_tag_name,
+        name='clean_tag_name'
     ),
     service_url(#ajax only
         r'^set-tag-filter-strategy/',

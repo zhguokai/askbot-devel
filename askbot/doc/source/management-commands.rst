@@ -19,82 +19,84 @@ Data and User administration commands
 
 The bulk of the management commands fall into this group and will probably be the most frequently used.
 
-+---------------------------------+-------------------------------------------------------------+
-| command                         | purpose                                                     |
-+=================================+=============================================================+
-| `add_admin <user_id>`           | Turn user into an administrator                             |
-|                                 | `<user_id>` is a numeric user id of the account             |
-+---------------------------------+-------------------------------------------------------------+
-| `apply_hinted_tags              | Apply tags to all questions in batch given the list of tags |
-| --tag-names <file>`             | provided with a file. The file must contain tags -          |
-|                                 | one per line. If many tags match - only the most frequent   |
-|                                 | will be selected.                                           |
-+---------------------------------+-------------------------------------------------------------+
-| `create_tag_synonyms --from     | Creates tag synonym record from one name to another,        |
-| <from_name> --to <to_name>      | creates the tag named as given with the value of `--to`     |
-| --user-id <user_id>`            | if not existing, and the tag creator will be user with id   |
-|                                 | equal to the value of `--user-id` parameter.                |
-+---------------------------------+-------------------------------------------------------------+
-| `remove_admin <user_id>`        | Remove admin status from a user account - the opposite of   |
-|                                 | the `add_admin` command                                     |
-+---------------------------------+-------------------------------------------------------------+
-| `add_askbot_user --user-name    | Create a user account. If password is not given, an         |
-| --email [--password]`           | unusable password will be set.                              |
-|                                 | The command does not create associations with               |
-|                                 | any of the external login providers.                        |
-+---------------------------------+-------------------------------------------------------------+
-| `askbot_clear_moderation_queue` | Clear all items from the moderation queue                   |
-+---------------------------------+-------------------------------------------------------------+
-| `askbot_award_badges`           | Awards badges to users (only some badges are supported)     |
-+---------------------------------+-------------------------------------------------------------+
-| `askbot_recount_badges`         | Fixes badge award counts, use when disabling/enabling badges|
-+---------------------------------+-------------------------------------------------------------+
-| `merge_users <from_id>          | Merges user accounts and all related data from one user     |
-| <to_id>`                        | to another, the "from user" account is deleted.             |
-+---------------------------------+-------------------------------------------------------------+
-| `get_tag_stats [-u|-t] [-e]`    | Print tag subscription statistics, per tag (option -t)      |
-|                                 | or per user (option -u), if option -e is given, empty       |
-|                                 | records will be shown too (longer versions of the options   |
-|                                 | are: --per-tag-subscription-counts for -t,                  |
-|                                 | --per-user-tag-subscription-counts for -u, and --print-empty|
-|                                 | for -e).                                                    |
-+---------------------------------+-------------------------------------------------------------+
-| `rename_tags --from <from_tags> | Rename, merge or split tags. User ID is the id of the user  |
-| --to <to_tags> --user-id        | who will be assigned as the performer of the retag action.  |
-| <user_id>`                      | If more than is in the `--from` or the `--to` parameters    |
-|                                 | then that parameter quoted, e.g. `--to "tag1 tag2".         |
-|                                 | If user id is not given, the administrator with the smallest|
-|                                 | id number will be automatically assigned.                   |
-+---------------------------------+-------------------------------------------------------------+
-| `rename_tags_id --from          | This command is the same as `rename_tags`, but takes the tag|
-| <from_tag_ids> --to             | id's as arguments.                                          |
-| <to_tag_ids> --user_id          |                                                             |
-| <user_id>`                      |                                                             |
-+---------------------------------+-------------------------------------------------------------+
-| `delete_unused_tags`            | Permanently deletes tags that do not appear in any questions|
-|                                 | , including the questions that are themselves               |
-|                                 | marked as deleted.                                          |
-+---------------------------------+-------------------------------------------------------------+
-| `update_avatar_data`            | Set values of avatar types for all users;                   |
-|                                 | this command may take up to 2s per user, because it makes   |
-|                                 | up to one http request per user to gravatar.com.            |
-|                                 | This data is used to display preferentially real faces      |
-|                                 | on the main page.                                           |
-+---------------------------------+-------------------------------------------------------------+
-| `askbot_rebuild_avatars`        | Rebuilds avatar urls and creates avatar thumbnails          |
-+---------------------------------+-------------------------------------------------------------+
-| `build_thread_summary_cache`    | Rebuilds cache for the question summary snippet.            |
-+---------------------------------+-------------------------------------------------------------+
-| `build_livesettings_cache`      | Rebuilds cache for the live settings.                       |
-+---------------------------------+-------------------------------------------------------------+
-| `delete_contextless_...`        | `delete_contextless_badge_award_activities`                 |
-|                                 | Deletes Activity objects of type badge award where the      |
-|                                 | related context object is lost.                             |
-+---------------------------------+-------------------------------------------------------------+
-| `delete_contextless_activities` | Same as above, but works in a broader sense - when the      |
-|                                 | related context object does not exist, but the generic      |
-|                                 | foreign key to that object is still present.                |
-+---------------------------------+-------------------------------------------------------------+
++--------------------------------------+-------------------------------------------------------------+
+| command                              | purpose                                                     |
++======================================+=============================================================+
+| `add_admin <user_id>`                | Turn user into an administrator                             |
+|                                      | `<user_id>` is a numeric user id of the account             |
++--------------------------------------+-------------------------------------------------------------+
+| `apply_hinted_tags                   | Apply tags to all questions in batch given the list of tags |
+| --tag-names <file>`                  | provided with a file. The file must contain tags -          |
+|                                      | one per line. If many tags match - only the most frequent   |
+|                                      | will be selected.                                           |
++--------------------------------------+-------------------------------------------------------------+
+| `create_tag_synonyms --from          | Creates tag synonym record from one name to another,        |
+| <from_name> --to <to_name>           | creates the tag named as given with the value of `--to`     |
+| --user-id <user_id>`                 | if not existing, and the tag creator will be user with id   |
+|                                      | equal to the value of `--user-id` parameter.                |
++--------------------------------------+-------------------------------------------------------------+
+| `remove_admin <user_id>`             | Remove admin status from a user account - the opposite of   |
+|                                      | the `add_admin` command                                     |
++--------------------------------------+-------------------------------------------------------------+
+| `askbot_add_user --user-name         | Create a user account. If password is not given, an         |
+| --email [--password]`                | unusable password will be set.                              |
+|                                      | The command does not create associations with               |
+|                                      | any of the external login providers.                        |
++--------------------------------------+-------------------------------------------------------------+
+| `askbot_add_users_to_default_groups` | Adds all users to groups "everyone" and personal            |
++--------------------------------------+-------------------------------------------------------------+
+| `askbot_clear_moderation_queue`      | Clear all items from the moderation queue                   |
++--------------------------------------+-------------------------------------------------------------+
+| `askbot_award_badges`                | Awards badges to users (only some badges are supported)     |
++--------------------------------------+-------------------------------------------------------------+
+| `askbot_recount_badges`              | Fixes badge award counts, use when disabling/enabling badges|
++--------------------------------------+-------------------------------------------------------------+
+| `merge_users <from_id>               | Merges user accounts and all related data from one user     |
+| <to_id>`                             | to another, the "from user" account is deleted.             |
++--------------------------------------+-------------------------------------------------------------+
+| `get_tag_stats [-u|-t] [-e]`         | Print tag subscription statistics, per tag (option -t)      |
+|                                      | or per user (option -u), if option -e is given, empty       |
+|                                      | records will be shown too (longer versions of the options   |
+|                                      | are: --per-tag-subscription-counts for -t,                  |
+|                                      | --per-user-tag-subscription-counts for -u, and --print-empty|
+|                                      | for -e).                                                    |
++--------------------------------------+-------------------------------------------------------------+
+| `rename_tags --from <from_tags>      | Rename, merge or split tags. User ID is the id of the user  |
+| --to <to_tags> --user-id             | who will be assigned as the performer of the retag action.  |
+| <user_id>`                           | If more than is in the `--from` or the `--to` parameters    |
+|                                      | then that parameter quoted, e.g. `--to "tag1 tag2".         |
+|                                      | If user id is not given, the administrator with the smallest|
+|                                      | id number will be automatically assigned.                   |
++--------------------------------------+-------------------------------------------------------------+
+| `rename_tags_id --from               | This command is the same as `rename_tags`, but takes the tag|
+| <from_tag_ids> --to                  | id's as arguments.                                          |
+| <to_tag_ids> --user_id               |                                                             |
+| <user_id>`                           |                                                             |
++--------------------------------------+-------------------------------------------------------------+
+| `delete_unused_tags`                 | Permanently deletes tags that do not appear in any questions|
+|                                      | , including the questions that are themselves               |
+|                                      | marked as deleted.                                          |
++--------------------------------------+-------------------------------------------------------------+
+| `update_avatar_data`                 | Set values of avatar types for all users;                   |
+|                                      | this command may take up to 2s per user, because it makes   |
+|                                      | up to one http request per user to gravatar.com.            |
+|                                      | This data is used to display preferentially real faces      |
+|                                      | on the main page.                                           |
++--------------------------------------+-------------------------------------------------------------+
+| `askbot_rebuild_avatars`             | Rebuilds avatar urls and creates avatar thumbnails          |
++--------------------------------------+-------------------------------------------------------------+
+| `build_thread_summary_cache`         | Rebuilds cache for the question summary snippet.            |
++--------------------------------------+-------------------------------------------------------------+
+| `build_livesettings_cache`           | Rebuilds cache for the live settings.                       |
++--------------------------------------+-------------------------------------------------------------+
+| `delete_contextless_...`             | `delete_contextless_badge_award_activities`                 |
+|                                      | Deletes Activity objects of type badge award where the      |
+|                                      | related context object is lost.                             |
++--------------------------------------+-------------------------------------------------------------+
+| `delete_contextless_activities`      | Same as above, but works in a broader sense - when the      |
+|                                      | related context object does not exist, but the generic      |
+|                                      | foreign key to that object is still present.                |
++--------------------------------------+-------------------------------------------------------------+
 
 .. _data-import-commands:
 

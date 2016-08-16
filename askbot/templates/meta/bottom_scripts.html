@@ -65,6 +65,7 @@
 {% compress js %}
     <script type="text/javascript" src="{{ '/jslib/jquery-1.7.2.min.js'|media }}"></script>
     <script type="text/javascript" src="{{ '/bootstrap/js/bootstrap.js'|media }}"></script>
+    <script type='text/javascript' src="{{ '/jslib/timeago.js'|media }}"></script>
     <!-- History.js -->
     <script type='text/javascript' src="{{ '/jslib/jquery.history.js'|media }}"></script>
     <!-- Utils.js -->
@@ -106,7 +107,6 @@
     <script type='text/javascript' src="{{ '/jslib/se_hilite.js'|media }}"></script>
     <script type='text/javascript' src="{{ '/jslib/json.js'|media }}"></script>
     <script type='text/javascript' src="{{ '/jslib/jquery-fieldselection.js'|media }}"></script>
-    <script type='text/javascript' src="{{ '/jslib/timeago.js'|media }}"></script>
     {% if settings.USE_ASKBOT_LOGIN_SYSTEM and use_login_page == False %}
         <script type="text/javascript" src="{{ '/js/jquery-openid/jquery.authenticator.js'|media }}"></script>
     {% endif %}
@@ -173,8 +173,6 @@
         var nav = new LangNav();
         nav.decorate(langNav);
     }
-
-    $('abbr.timeago').timeago();
     /*]]>*/
 </script>
 {% include "meta/custom_javascript.html" ignore missing %}

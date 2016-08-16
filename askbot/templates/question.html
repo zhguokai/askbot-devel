@@ -93,10 +93,17 @@
                 return false;
             };
 
+            var getPost = function(postId) {
+                return document.getElementById('post-id-' + postId);
+            }
+
             var postIsQuestion = function(postId) {
-                var content = document.getElementById('post-id-' + postId);
+                var content = getPost(postId);
                 if (content) {
-                    if (findClosestParentByClassName(content, 'question')) {
+                    if (hasClass(content, 'js-comment')) {
+                        return false;
+                    }
+                    if (findClosestParentByClassName(content, 'js-question')) {
                         return true;
                     }
                 }
@@ -167,8 +174,7 @@
                 var isMod = data['userIsAdminOrMod'];
                 if (isAuthenticated && (isMod || isAuthorOfPost(post_id))) {
                     //still may need to hide because answer may be too long
-                    var answer_id = 'post-id-' + post_id;
-                    var answer_container = document.getElementById(answer_id);
+                    var answer_container = getPost(post_id);
                     var answerBody = findChildrenByClassName(answer_container, 'post-body')[0];
                     //todo: this is not reliable
                     var answerBodyNodes = answerBody.childNodes;
@@ -251,7 +257,7 @@
                 }
                 {% endif %}
 
-                if (data['user_posts'] && post_id in data['user_posts']){
+                if (isAuthorOfPost(post_id)) {
                     if (postIsQuestion(post_id) && {{ answers|length }}) {
                         if (data['userReputation'] < {{ settings.MIN_REP_TO_DELETE_OWN_QUESTIONS }}) {
                             if (!data['userIsAdminOrMod']) {
@@ -292,20 +298,22 @@
                 if (//maybe remove "edit" button
                     !enoughRep || data['userIsReadOnly']//only authors edit comments
                 ){
-                    var editBtns = findChildrenByClassName(document, 'js-edit');
+                    var editBtns = findChildrenByClassName(getPost(post_id), 'js-edit');
                     var numBtns = editBtns.length;
                     for (var i=0; i<numBtns; i++) {
                         removeNode(editBtns[i]);
                     }
                 }
                 if (//maybe remove retag button
-                    (data['userReputation'] <
+                    (!isAuthorOfPost(post_id)) &&
+                    postIsQuestion(post_id) &&
+                    ((data['userReputation'] <
                     {{settings.MIN_REP_TO_RETAG_OTHERS_QUESTIONS}}) ||
-                    data['userIsReadOnly']
+                    data['userIsReadOnly'])
                 ){
                     var retagBtn = document.getElementById('retag');
                     if (retagBtn) {
-                        retagBtn.parentNode.removeChild(retagBtn);
+                        removeNode(retagBtn);
                     }
                 }
             }
@@ -381,7 +389,7 @@
 {% block js_templates %}
     {{ comment_widget(blank_comment) }}
     {% include "editors/simple.html" %}
-    {{ tag_widget('none') }}
+    {{ tag_widget('none', deletable=True) }}
 {% endblock %}
 {% block endjs %}
     {% spaceless %}

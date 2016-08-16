@@ -11,6 +11,7 @@ import calendar
 import collections
 import functools
 import logging
+import math
 import operator
 import urllib
 
@@ -38,6 +39,7 @@ from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
 from askbot.mail import send_mail
 from askbot.utils.translation import get_language
+from askbot.mail.messages import UnsubscribeLink
 from askbot.utils.http import get_request_info
 from askbot.utils import decorators
 from askbot.utils import functions
@@ -53,6 +55,7 @@ from askbot.models.tag import format_personal_group_name
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
+from askbot.utils.akismet_utils import akismet_check_spam
 
 def owner_or_moderator_required(f):
     @functools.wraps(f)
@@ -453,7 +456,7 @@ def user_stats(request, user, context):
                 ).filter(
                     **question_filter
                 ).order_by(
-                    '-points', '-thread__last_activity_at'
+                    '-points'#, '-thread__last_activity_at' to match sorting with ajax loads
                 ).select_related(
                     'thread', 'thread__last_activity_by'
                 )
@@ -654,7 +657,7 @@ def get_user_description(request):
 
     user_id = form.cleaned_data['user_id']
     user = models.User.objects.get(pk=user_id)
-    return {'description': user.about}
+    return {'description': user.get_localized_profile().about}
 
 
 @csrf.csrf_protect
@@ -674,7 +677,13 @@ def set_user_description(request):
 
     user_id = form.cleaned_data['user_id']
     description = form.cleaned_data['description']
-        
+
+    if akismet_check_spam(description, request):
+        raise django_exceptions.PermissionDenied(_(
+            'Spam was detected on your post, sorry '
+            'for if this is a mistake'
+        ))
+
     if user_id == request.user.pk or request.user.is_admin_or_mod():
         user = models.User.objects.get(pk=user_id)
         user.update_localized_profile(about=description)
@@ -998,24 +1007,40 @@ def user_reputation(request, user, context):
                                     )
                                     
 
-    # prepare data for the graph - last values go in first
-    reputation = const.MIN_REPUTATION
-    rep_list = list()
-    rep_list.append('[%s, %s]' % (calendar.timegm(user.date_joined.timetuple()) * 1000, reputation))
-    for rep in reputes.order_by('reputed_at'):
-        reputation += (rep.positive + rep.negative)
-        rep_list.append('[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, reputation))
+    def format_graph_data(raw_data, user):
+        # prepare data for the graph - last values go in first
+        rep_list = ['[%s,%s]' % (calendar.timegm(datetime.datetime.now().timetuple()) * 1000, user.reputation)]
+        for rep in raw_data:
+            rep_list.append('[%s,%s]' % (calendar.timegm(rep.reputed_at.timetuple()) * 1000, rep.reputation))
 
-    reps = ','.join(rep_list)
-    reps = '[%s]' % reps
+        #add initial rep point
+        rep_list.append('[%s,%s]' % (calendar.timegm(user.date_joined.timetuple()) * 1000, const.MIN_REPUTATION))
+        reps = ','.join(rep_list)
+        return '[%s]' % reps
+
+    sample_size = 150 #number of real data points to take for teh rep graph
+    #two extra points are added for beginning and end
+
+    rep_length = reputes.count()
+    if rep_length <= sample_size:
+        raw_graph_data = reputes
+    else:
+        #extract only a sampling of data to limit the number of data points
+        rep_qs = models.Repute.objects.filter(user=user).order_by('-id')
+        #extract 300 points
+        raw_graph_data = list()
+        step = rep_length / float(sample_size)
+        for idx in range(sample_size):
+            item_idx = int(math.ceil(idx * step))
+            raw_graph_data.append(rep_qs[item_idx])
 
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name': 'reputation',
         'page_title': _("Profile - User's Karma"),
-        'reputation': reputes.order_by('-reputed_at')[:100],
-        'reps': reps
+        'latest_rep_changes': reputes[:100],
+        'rep_graph_data': format_graph_data(raw_graph_data, user)
     }
     context.update(data)
     return render(request, 'user_profile/user_reputation.html', context)
@@ -1118,6 +1143,56 @@ def user_select_languages(request, id=None, slug=None):
             'page_class': 'user-profile-page',
         }
         return render(request, 'user_profile/user_languages.html', data)
+
+
+@csrf.csrf_protect
+def user_unsubscribe(request):
+    form = forms.UnsubscribeForm(request.REQUEST)
+    verified_email = ''
+    if form.is_valid() == False:
+        result = 'bad_input'
+    else:
+        key = form.cleaned_data['key']
+        email = form.cleaned_data['email']
+        try:
+            #we use email too, in case the key changed
+            user = models.User.objects.get(email=email)
+        except models.User.DoesNotExist:
+            user = models.User.objects.get(key=key)
+        except models.User.DoesNotExist:
+            result = 'bad_input'
+        except models.User.MultipleObjectsReturned:
+            result = 'error'
+            logging.critical(u'unexpected error with data %s', unicode(form.cleaned_data))
+        else:
+            verified_email = user.email
+            if user.email_key == key:#all we need is key
+                #make sure that all subscriptions are created
+                if request.method == 'POST':
+                    user.add_missing_askbot_subscriptions()
+                    subs = models.EmailFeedSetting.objects.filter(subscriber=user)
+                    subs.update(frequency='n') #set frequency to "never"
+                    result = 'success'
+                else:
+                    result = 'ready'
+            else:
+                result = 'bad_key'
+                if request.method == 'POST' and 'resend_key' in request.POST:
+                    key = user.create_email_key()
+                    email = UnsubscribeLink({
+                        'key': key,
+                        'email': user.email,
+                        'site_name': askbot_settings.APP_SHORT_NAME
+                    })
+                    email.send([user.email,])
+                    result = 'key_resent'
+
+    context = {
+        'unsubscribe_form': form,
+        'result': result,
+        'verified_email': verified_email
+    }
+    return render(request, 'user_profile/unsubscribe.html', context)
 
 
 @owner_or_moderator_required

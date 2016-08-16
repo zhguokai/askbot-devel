@@ -34,6 +34,7 @@ QUOTE_REGEXES = (
     #OUTLOOK_TEXT_QUOTE_RE =
     r'\n_+\Z',
     r'From:.*?\nSent:.*?\nTo:.*?\nSubject:.*?\Z',
+    r'\n-+ Original message -+\nFrom:'
 )
 
 
@@ -142,7 +143,7 @@ def strip_email_client_quote_separator(text):
     log_message = u'\nno matching quote separator: %s\n' % text
     sys.stderr.write(log_message.encode('utf-8'))
     text_lines = text.splitlines(False)
-    return ''.join(text_lines[:-3])#strip 3 lines as a guess
+    return '\n'.join(text_lines[:-3])#strip 3 lines as a guess
 
 def extract_reply_contents(text, reply_separator=None):
     """If reply_separator is given,
