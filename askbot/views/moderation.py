@@ -1,5 +1,6 @@
 from askbot.utils import decorators
 from askbot.utils.html import sanitize_html
+from askbot.utils.functions import decode_and_loads
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot import models
@@ -220,7 +221,7 @@ def moderate_post_edits(request):
     if not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied()
 
-    post_data = simplejson.loads(request.body)
+    post_data = decode_and_loads(request.body)
     #{'action': 'decline-with-reason', 'items': ['posts'], 'reason': 1, 'edit_ids': [827]}
 
     memo_set = models.ActivityAuditStatus.objects.filter(id__in=post_data['edit_ids'])
