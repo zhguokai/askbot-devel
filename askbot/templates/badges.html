@@ -8,9 +8,8 @@
 <br/>
 {% trans %}Below is the list of available badges and number of times each type of badge has been awarded.{% endtrans %}
 </p>
-<div class="badge-list">
- <table>
-  <tbody>
+<table>
+  <tbody class="badge-list">
   {% for badge in badges %}
    <tr class="badge-ctnr" data-badge-id="{{ badge.id }}">
    <td>
@@ -33,8 +32,7 @@
    </tr>
   {% endfor %}
   </tbody>
- </table>
-</div>
+</table>
 {% endblock %}
 {% block sidebar %}
 <div class="box">
