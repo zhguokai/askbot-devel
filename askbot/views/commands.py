@@ -41,6 +41,7 @@ from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot.utils.forms import get_db_object_or_404
+from askbot.utils.functions import decode_and_loads
 from askbot.utils.html import get_login_link
 from askbot.utils.akismet_utils import akismet_check_spam
 from django.template import RequestContext
@@ -221,7 +222,7 @@ def mark_tag(request, **kwargs):#tagging system
         raise exceptions.PermissionDenied(msg + ' ' + get_login_link())
 
     action = kwargs['action']
-    post_data = simplejson.loads(request.body)
+    post_data = decode_and_loads(request.body)
     raw_tagnames = post_data['tagnames']
     reason = post_data['reason']
     assert reason in ('good', 'bad', 'subscribed')
@@ -382,7 +383,7 @@ def rename_tag(request):
     if request.user.is_anonymous() \
         or not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied()
-    post_data = simplejson.loads(request.body)
+    post_data = decode_and_loads(request.body)
     to_name = forms.clean_tag(post_data['to_name'])
     from_name = forms.clean_tag(post_data['from_name'])
     path = post_data['path']
@@ -410,7 +411,7 @@ def delete_tag(request):
         raise exceptions.PermissionDenied()
 
     try:
-        post_data = simplejson.loads(request.body)
+        post_data = decode_and_loads(request.body)
         tag_name = post_data['tag_name']
         path = post_data['path']
         tree = category_tree.get_data()
@@ -443,7 +444,7 @@ def add_tag_category(request):
         or not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied()
 
-    post_data = simplejson.loads(request.body)
+    post_data = decode_and_loads(request.body)
     category_name = forms.clean_tag(post_data['new_category_name'])
     path = post_data['path']
 
@@ -1451,7 +1452,7 @@ def publish_answer(request):
 @decorators.ajax_only
 @decorators.post_only
 def merge_questions(request):
-    post_data = simplejson.loads(request.body)
+    post_data = decode_and_loads(request.body)
     if request.user.is_anonymous():
         denied_msg = _('Sorry, only thread moderators can use this function')
         raise exceptions.PermissionDenied(denied_msg)

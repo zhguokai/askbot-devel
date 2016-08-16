@@ -8,9 +8,15 @@ from django.utils import six
 from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils import timezone
+from django.utils import simplejson
 
 
 mark_safe_lazy = lazy(mark_safe, six.text_type)
+
+
+def decode_and_loads(input_str):
+    """utf-8 decodes the input, then runs json loads"""
+    return simplejson.loads(input_str.decode('utf-8'))
 
 
 def timedelta_total_seconds(td):
