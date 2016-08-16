@@ -1,5 +1,6 @@
 import re
 import random
+import simplejson
 import time
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -8,7 +9,6 @@ from django.utils import six
 from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils import timezone
-from django.utils import simplejson
 
 
 mark_safe_lazy = lazy(mark_safe, six.text_type)
