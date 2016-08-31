@@ -8,8 +8,38 @@ Names of the classes must be like `SomeModelAdmin`, where `SomeModel` must
 exactly match name of the model used in the project
 """
 from django.contrib import admin
-from askbot import models
 from django.contrib.admin import SimpleListFilter
+from django.utils.translation import ugettext as _
+from askbot import models
+
+
+class PostAdmin(admin.ModelAdmin):
+    date_hierarchy = 'added_at'
+    list_display = ('author', 'post_type', 'added_at')
+    list_filter = ('added_at', 'post_type')
+    ordering = ('-added_at',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('author', 'post_type', 'added_at'),
+                ('old_question_id', 'old_answer_id', 'old_comment_id'),
+                ('parent', 'thread', 'current_revision'),
+                ('endorsed', 'endorsed_by', 'endorsed_at'),
+                'approved',
+                ('deleted', 'deleted_at', 'deleted_by'),
+                ('wiki', 'wikified_at'),
+                ('locked', 'locked_by', 'locked_at'),
+                ('points', 'vote_up_count', 'vote_down_count'),
+                'comment_count',
+                'offensive_flag_count',
+                ('last_edited_at', 'last_edited_by'),
+                'language_code',
+                ('html', 'text'),
+                'summary',
+                'is_anonymous',
+            )
+        }),
+    )
 
 
 class AnonymousQuestionAdmin(admin.ModelAdmin):
@@ -40,7 +70,28 @@ class FavoriteQuestionAdmin(admin.ModelAdmin):
 
 
 class PostRevisionAdmin(admin.ModelAdmin):
-    """  admin class"""
+    date_hierarchy = 'revised_at'
+    list_display = ('post', 'author', 'revised_at')
+    list_filter = ('revised_at', 'approved', 'is_anonymous')
+    ordering = ('-revised_at',)
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('post', 'revision', 'author', 'revised_at'),
+                ('summary', 'text'),
+                ('approved', 'approved_by', 'approved_at'),
+                ('by_email', 'email_address'),
+            )
+        }),
+        (_("Specific to question"), {
+            'fields': (
+                'title',
+                'tagnames',
+                'is_anonymous',
+                'ip_addr',
+            )
+        }),
+    )
 
 
 class AwardAdmin(admin.ModelAdmin):
@@ -132,7 +183,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 admin.site.register(models.BadgeData, BadgeDataAdmin)
 admin.site.register(models.Group, GroupAdmin)
-admin.site.register(models.Post)
+admin.site.register(models.Post, PostAdmin)
 admin.site.register(models.Tag, TagAdmin)
 admin.site.register(models.Vote, VoteAdmin)
 admin.site.register(models.FavoriteQuestion, FavoriteQuestionAdmin)
