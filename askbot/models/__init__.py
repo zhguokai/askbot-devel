@@ -274,16 +274,17 @@ def user_calculate_avatar_url(self, size=48):
     it will use avatar provided through that app
     """
     avatar_type = self.get_avatar_type()
+    size = int(size)
 
     if avatar_type == 'n':
         return self.get_default_avatar_url(size)
     elif avatar_type == 'a':
         from avatar.conf import settings as avatar_settings
         sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
-        if int(size) not in sizes:
+        if size not in sizes:
             logging.critical(
                 'add values %d to setting AVATAR_AUTO_GENERATE_SIZES',
-                int(size)
+                size
             )
 
         from avatar.util import get_primary_avatar
@@ -307,7 +308,6 @@ def user_init_avatar_urls(self):
     from avatar.conf import settings as avatar_settings
     sizes = avatar_settings.AVATAR_AUTO_GENERATE_SIZES
     for size in sizes:
-        size = str(size)
         if size not in self.avatar_urls:
             self.avatar_urls[size] = self.calculate_avatar_url(size)
 
