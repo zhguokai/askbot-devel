@@ -1,21 +1,24 @@
+import logging
+
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.template import RequestContext
 from django.views.decorators.cache import never_cache
+from django.contrib import messages
+
 from askbot.deps.livesettings import ConfigurationSettings, forms
 from askbot.deps.livesettings import ImageValue
 from askbot.deps.livesettings.overrides import get_overrides
 from askbot.utils.decorators import admins_only
-from django.contrib import messages
-import logging
 
 log = logging.getLogger('configuration.views')
+
 
 def group_settings(request, group, template='livesettings/group_settings.html'):
     # Determine what set of settings this editor is used for
 
-    use_db, overrides = get_overrides();
+    use_db, overrides = get_overrides()
 
     mgr = ConfigurationSettings()
 
@@ -27,7 +30,7 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
 
     if use_db:
         # Create an editor customized for the current user
-        #editor = forms.customized_editor(settings)
+        # editor = forms.customized_editor(settings)
 
         if request.method == 'POST':
             # Populate the form with user-submitted data
@@ -46,16 +49,16 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
 
                     try:
                         cfg.update(value, lang)
-                        #message='Updated %s on %s' % (cfg.key, cfg.group.key)
-                        #messages.success(request, message)
-                        #the else if for the settings that are not updated.
-                    except Exception, e:
+                        # message='Updated %s on %s' % (cfg.key, cfg.group.key)
+                        # messages.success(request, message)
+                        # the else if for the settings that are not updated.
+                    except Exception as e:
                         request.user.message_set.create(message=e.message)
 
                 return HttpResponseRedirect(request.path)
         else:
             # Leave the form populated with current setting values
-            #form = editor()
+            # form = editor()
             form = forms.SettingsEditor(settings=settings)
     else:
         form = None
@@ -63,19 +66,21 @@ def group_settings(request, group, template='livesettings/group_settings.html'):
     return render(request, template, {
         'all_super_groups': mgr.get_super_groups(),
         'title': title,
-        'settings_group' : settings,
+        'settings_group': settings,
         'form': form,
-        'use_db' : use_db
+        'use_db': use_db
     })
 group_settings = never_cache(admins_only(group_settings))
+
 
 # Site-wide setting editor is identical, but without a group
 # staff_member_required is implied, since it calls group_settings
 def site_settings(request):
     mgr = ConfigurationSettings()
-    default_group= mgr.groups()[0].key
+    default_group = mgr.groups()[0].key
     return HttpResponseRedirect(reverse('group_settings', args=[default_group]))
-    #return group_settings(request, group=None, template='livesettings/site_settings.html')
+    # return group_settings(request, group=None, template='livesettings/site_settings.html')
+
 
 def export_as_python(request):
     """Export site settings as a dictionary of dictionaries"""
@@ -88,11 +93,11 @@ def export_as_python(request):
     both.extend(list(LongSetting.objects.all()))
 
     for s in both:
-        if not work.has_key(s.site.id):
+        if s.site.id not in work:
             work[s.site.id] = {}
         sitesettings = work[s.site.id]
 
-        if not sitesettings.has_key(s.group):
+        if s.group not in sitesettings:
             sitesettings[s.group] = {}
         sitegroup = sitesettings[s.group]
 
@@ -101,6 +106,8 @@ def export_as_python(request):
     pp = pprint.PrettyPrinter(indent=4)
     pretty = pp.pformat(work)
 
-    return render(request, 'livesettings/text.txt', { 'text' : pretty }, content_type='text/plain')
+    return render(request, 'livesettings/text.txt', {
+        'text': pretty
+    }, content_type='text/plain')
 
 export_as_python = never_cache(admins_only(export_as_python))
