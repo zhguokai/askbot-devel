@@ -18,17 +18,20 @@ corresponding event name, actor (user object), context_object and optionally
 - timestamp
 """
 import datetime
+
 from django.template.defaultfilters import slugify
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.dispatch import Signal
+
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.functions import format_setting_name
 from askbot.utils.loading import load_module
+
 
 class Badge(object):
     """base class for the badges
@@ -41,14 +44,10 @@ class Badge(object):
     upon correct event, i.e. it is the responsibility of
     the caller to try awarding badges at appropriate times
     """
-    key = 'base-badge' #override this
-    def __init__(self,
-                name='',
-                level=None,
-                description=None,
-                multiple=False):
+    key = 'base-badge'  # override this
 
-        #key - must be an ASCII only word
+    def __init__(self, name='', level=None, description=None, multiple=False):
+        # key - must be an ASCII only word
         self.name = name
         self.level = level
         self.description = description
@@ -89,13 +88,13 @@ class Badge(object):
         """display name for the level of the badge"""
         return dict(const.BADGE_TYPE_CHOICES).get(self.level)
 
-    def award(self, recipient = None, context_object = None, timestamp = None):
+    def award(self, recipient=None, context_object=None, timestamp=None):
         """do award, the recipient was proven to deserve,
         Returns True, if awarded, or False
         """
         from askbot.models.repute import Award
-        if self.multiple == False:
-            if recipient.badges.filter(slug = self.key).count() != 0:
+        if not self.multiple:
+            if recipient.badges.filter(slug=self.key).exists():
                 return False
         else:
             content_type = ContentType.objects.get_for_model(context_object)
@@ -105,22 +104,17 @@ class Badge(object):
                 'content_type': content_type,
                 'badge__slug': self.key,
             }
-            #multiple badge is not re-awarded for the same post
+            # multiple badge is not re-awarded for the same post
             if Award.objects.filter(**filters).count() != 0:
                 return False
 
         badge = self.get_stored_data()
-        award = Award(
-                    user = recipient,
-                    badge = badge,
-                    awarded_at = timestamp,
-                    content_object = context_object
-                )
-        award.save()#note: there are signals that listen to saving the Award
+        award = Award(user=recipient, badge=badge, awarded_at=timestamp,
+                      content_object=context_object)
+        award.save()  # note: there are signals that listen to saving the Award
         return True
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         """Normally this method should be reimplemented
         in subclass, but some badges are awarded without
         checks. Those do no need to override this method
@@ -130,6 +124,7 @@ class Badge(object):
         """
         return self.award(actor, context_object, timestamp)
 
+
 class Disciplined(Badge):
     key = 'disciplined'
 
@@ -138,20 +133,16 @@ class Disciplined(Badge):
             'Deleted own post with %(votes)s or more upvotes'
         ) % {'votes': askbot_settings.DISCIPLINED_BADGE_MIN_UPVOTES}
         super(Disciplined, self).__init__(
-            name = _('Disciplined'),
-            description = description,
-            level = const.BRONZE_BADGE,
-            multiple = True
-        )
+            name=_('Disciplined'), description=description,
+            level=const.BRONZE_BADGE, multiple=True)
 
-    def consider_award(self, actor = None,
-                    context_object = None, timestamp = None):
-
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.author != actor:
             return False
-        if context_object.points>= \
-            askbot_settings.DISCIPLINED_BADGE_MIN_UPVOTES:
+        if context_object.points >= \
+                askbot_settings.DISCIPLINED_BADGE_MIN_UPVOTES:
             return self.award(actor, context_object, timestamp)
+
 
 class PeerPressure(Badge):
     key = 'peer-pressure'
@@ -161,21 +152,17 @@ class PeerPressure(Badge):
             u'Deleted own post with %(votes)s or more downvotes'
         ) % {'votes': askbot_settings.PEER_PRESSURE_BADGE_MIN_DOWNVOTES}
         super(PeerPressure, self).__init__(
-            name = _('Peer Pressure'),
-            description = description,
-            level = const.BRONZE_BADGE,
-            multiple = True
-        )
+            name=_('Peer Pressure'), description=description,
+            level=const.BRONZE_BADGE, multiple=True)
 
-    def consider_award(self, actor = None,
-                    context_object = None, timestamp = None):
-
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.author != actor:
             return False
-        if context_object.points<= \
-            -1 * askbot_settings.PEER_PRESSURE_BADGE_MIN_DOWNVOTES:
+        if context_object.points <= \
+                -1 * askbot_settings.PEER_PRESSURE_BADGE_MIN_DOWNVOTES:
             return self.award(actor, context_object, timestamp)
         return False
+
 
 class Teacher(Badge):
     key = 'teacher'
@@ -188,20 +175,17 @@ class Teacher(Badge):
             'answer_voted_up': askbot_settings.WORDS_ANSWER_VOTED_UP
         }
         super(Teacher, self).__init__(
-            name = _('Teacher'),
-            description = description,
-            level = const.BRONZE_BADGE,
-            multiple = False
-        )
+            name=_('Teacher'), description=description,
+            level=const.BRONZE_BADGE, multiple=False)
 
-    def consider_award(self, actor = None,
-                context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.post_type != 'answer':
             return False
 
         if context_object.points >= askbot_settings.TEACHER_BADGE_MIN_UPVOTES:
             return self.award(context_object.author, context_object, timestamp)
         return False
+
 
 class FirstVote(Badge):
     """this badge is not awarded directly, but through
@@ -212,17 +196,14 @@ class FirstVote(Badge):
 
     def __init__(self):
         super(FirstVote, self).__init__(
-            name = self.name,
-            description = self.description,
-            level = const.BRONZE_BADGE,
-            multiple = False
-        )
+            name=self.name, description=self.description,
+            level=const.BRONZE_BADGE, multiple=False)
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.post_type not in ('question', 'answer'):
             return False
         return self.award(actor, context_object, timestamp)
+
 
 class Supporter(FirstVote):
     """first upvote"""
@@ -234,6 +215,7 @@ class Supporter(FirstVote):
         self.description = _('First upvote')
         return self
 
+
 class Critic(FirstVote):
     """like supporter, but for downvote"""
     key = 'critic'
@@ -244,6 +226,7 @@ class Critic(FirstVote):
         self.description = _('First downvote')
         return self
 
+
 class CivicDuty(Badge):
     """awarded once after a certain number of votes"""
     key = 'civic-duty'
@@ -251,15 +234,11 @@ class CivicDuty(Badge):
     def __init__(self):
         min_votes = askbot_settings.CIVIC_DUTY_BADGE_MIN_VOTES
         super(CivicDuty, self).__init__(
-            name = _('Civic Duty'),
-            description = _('Voted %(num)s times') % {'num': min_votes},
-            level = const.SILVER_BADGE,
-            multiple = False
-        )
+            name=_('Civic Duty'),
+            description=_('Voted %(num)s times') % {'num': min_votes},
+            level=const.SILVER_BADGE, multiple=False)
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
-
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         obj = context_object
         if not (obj.is_question() or obj.is_answer() or obj.is_comment()):
             return False
@@ -267,8 +246,9 @@ class CivicDuty(Badge):
             return self.award(actor, obj, timestamp)
         return False
 
+
 class SelfLearner(Badge):
-    key='self-learner'
+    key = 'self-learner'
 
     def __init__(self):
         description = _('%(answered_own_question)s with at least %(num)s up votes') % {
@@ -276,14 +256,10 @@ class SelfLearner(Badge):
             'answered_own_question': askbot_settings.WORDS_ANSWERED_OWN_QUESTION
         }
         super(SelfLearner, self).__init__(
-            name=_('Self-Learner'),
-            description=description,
-            level=const.BRONZE_BADGE,
-            multiple=True
-        )
+            name=_('Self-Learner'), description=description,
+            level=const.BRONZE_BADGE, multiple=True)
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.post_type != 'answer':
             return False
 
@@ -293,6 +269,7 @@ class SelfLearner(Badge):
 
         if question.author_id == answer.author_id and answer.points >= min_upvotes:
             self.award(context_object.author, context_object, timestamp)
+
 
 class QualityPost(Badge):
     """Generic Badge for Nice/Good/Great Question or Answer
@@ -308,19 +285,16 @@ class QualityPost(Badge):
 
     def __init__(self):
         super(QualityPost, self).__init__(
-            name = self.name,
-            description = self.description,
-            level = self.level,
-            multiple = self.multiple
-        )
+            name=self.name, description=self.description,
+            level=self.level, multiple=self.multiple)
 
-    def consider_award(self, actor = None,
-                context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.post_type not in ('answer', 'question'):
             return False
         if context_object.points >= self.min_votes:
             return self.award(context_object.author, context_object, timestamp)
         return False
+
 
 class NiceAnswer(QualityPost):
     key = 'nice-answer'
@@ -338,6 +312,7 @@ class NiceAnswer(QualityPost):
         self.post_type = 'answer'
         return self
 
+
 class GoodAnswer(QualityPost):
     key = 'good-answer'
 
@@ -353,6 +328,7 @@ class GoodAnswer(QualityPost):
         }
         self.post_type = 'answer'
         return self
+
 
 class GreatAnswer(QualityPost):
     key = 'great-answer'
@@ -370,6 +346,7 @@ class GreatAnswer(QualityPost):
         self.post_type = 'answer'
         return self
 
+
 class NiceQuestion(QualityPost):
     key = 'nice-question'
 
@@ -385,6 +362,7 @@ class NiceQuestion(QualityPost):
         }
         self.post_type = 'question'
         return self
+
 
 class GoodQuestion(QualityPost):
     key = 'good-question'
@@ -402,6 +380,7 @@ class GoodQuestion(QualityPost):
         self.post_type = 'question'
         return self
 
+
 class GreatQuestion(QualityPost):
     key = 'great-question'
 
@@ -418,20 +397,22 @@ class GreatQuestion(QualityPost):
         self.post_type = 'question'
         return self
 
+
 class Student(QualityPost):
     key = 'student'
 
     def __new__(cls):
-        self = super(Student , cls).__new__(cls)
+        self = super(Student, cls).__new__(cls)
         self.name = _('Student')
         self.level = const.BRONZE_BADGE
         self.multiple = False
         self.min_votes = 1
         self.description = _('%(asked_first_question)s with at least one up vote') % {
-                        'asked_first_question': askbot_settings.WORDS_ASKED_FIRST_QUESTION
-                    }
+            'asked_first_question': askbot_settings.WORDS_ASKED_FIRST_QUESTION
+        }
         self.post_type = 'question'
         return self
+
 
 class FrequentedQuestion(Badge):
     """this badge is not awarded directly
@@ -446,19 +427,16 @@ class FrequentedQuestion(Badge):
 
     def __init__(self):
         super(FrequentedQuestion, self).__init__(
-            name = self.name,
-            description = self.description,
-            level = self.level,
-            multiple = True
-        )
+            name=self.name, description=self.description,
+            level=self.level, multiple=True)
 
-    def consider_award(self, actor = None,
-                context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.post_type != 'question':
             return False
         if context_object.thread.view_count >= self.min_views:
             return self.award(context_object.author, context_object, timestamp)
         return False
+
 
 class PopularQuestion(FrequentedQuestion):
     key = 'popular-question'
@@ -469,10 +447,11 @@ class PopularQuestion(FrequentedQuestion):
         self.level = const.BRONZE_BADGE
         self.min_views = askbot_settings.POPULAR_QUESTION_BADGE_MIN_VIEWS
         self.description = _('%(asked_a_question)s with %(views)s views') % {
-                            'views' : self.min_views,
-                            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
-                        }
+            'views': self.min_views,
+            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
+        }
         return self
+
 
 class NotableQuestion(FrequentedQuestion):
     key = 'notable-question'
@@ -483,10 +462,11 @@ class NotableQuestion(FrequentedQuestion):
         self.level = const.SILVER_BADGE
         self.min_views = askbot_settings.NOTABLE_QUESTION_BADGE_MIN_VIEWS
         self.description = _('%(asked_a_question)s with %(views)s views') % {
-                            'views' : self.min_views,
-                            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
-                        }
+            'views': self.min_views,
+            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
+        }
         return self
+
 
 class FamousQuestion(FrequentedQuestion):
     key = 'famous-question'
@@ -498,10 +478,11 @@ class FamousQuestion(FrequentedQuestion):
         self.multiple = True
         self.min_views = askbot_settings.FAMOUS_QUESTION_BADGE_MIN_VIEWS
         self.description = _('%(asked_a_question)s with %(views)s views') % {
-                            'views' : self.min_views,
-                            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
-                        }
+            'views': self.min_views,
+            'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
+        }
         return self
+
 
 class Scholar(Badge):
     """scholar badge is awarded to the asker when
@@ -515,20 +496,17 @@ class Scholar(Badge):
                             'accepted_an_answer': askbot_settings.WORDS_ACCEPTED_AN_ANSWER
                         }
         super(Scholar, self).__init__(
-            name = _('Scholar'),
-            level = const.BRONZE_BADGE,
-            multiple = False,
-            description = description
-        )
+            name=_('Scholar'), level=const.BRONZE_BADGE,
+            multiple=False, description=description)
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.post_type != 'answer':
             return False
         answer = context_object
         if answer.thread._question_post().author != actor:
             return False
         return self.award(actor, context_object, timestamp)
+
 
 class VotedAcceptedAnswer(Badge):
     """superclass for Enlightened and Guru badges
@@ -540,19 +518,16 @@ class VotedAcceptedAnswer(Badge):
 
     def __init__(self):
         super(VotedAcceptedAnswer, self).__init__(
-            name = self.name,
-            level = self.level,
-            multiple = self.multiple,
-            description = self.description
-        )
+            name=self.name, level=self.level,
+            multiple=self.multiple, description=self.description)
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.post_type != 'answer':
             return None
         answer = context_object
         if answer.points >= self.min_votes and answer.endorsed:
             return self.award(answer.author, answer, timestamp)
+
 
 class Enlightened(VotedAcceptedAnswer):
     key = 'enlightened'
@@ -570,6 +545,7 @@ class Enlightened(VotedAcceptedAnswer):
         }
         return self
 
+
 class Guru(VotedAcceptedAnswer):
     key = 'guru'
 
@@ -586,6 +562,7 @@ class Guru(VotedAcceptedAnswer):
         }
         return self
 
+
 class Necromancer(Badge):
     key = 'necromancer'
 
@@ -596,41 +573,35 @@ class Necromancer(Badge):
             '%(answered_a_question)s more than %(days)s days '
             'later with at least %(votes)s votes'
         ) % {
-            'days':days,
-            'votes':votes,
+            'days': days,
+            'votes': votes,
             'answered_a_question': askbot_settings.WORDS_ANSWERED_A_QUESTION
         }
         super(Necromancer, self).__init__(
-            name = _('Necromancer'),
-            level = const.SILVER_BADGE,
-            description = description,
-            multiple = True
-        )
+            name=_('Necromancer'), level=const.SILVER_BADGE,
+            description=description, multiple=True)
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         if context_object.post_type != 'answer':
             return False
         answer = context_object
         question = answer.thread._question_post()
         delta = datetime.timedelta(askbot_settings.NECROMANCER_BADGE_MIN_DELAY)
         min_score = askbot_settings.NECROMANCER_BADGE_MIN_UPVOTES
-        print answer.added_at, question.added_at
         if answer.added_at - question.added_at >= delta \
-            and answer.points >= min_score:
+                and answer.points >= min_score:
             return self.award(answer.author, answer, timestamp)
         return False
+
 
 class CitizenPatrol(Badge):
     key = 'citizen-patrol'
 
     def __init__(self):
         super(CitizenPatrol, self).__init__(
-            name = _('Citizen Patrol'),
-            level = const.BRONZE_BADGE,
-            multiple = False,
-            description = _('First flagged post')
-        )
+            name=_('Citizen Patrol'), level=const.BRONZE_BADGE,
+            multiple=False, description=_('First flagged post'))
+
 
 class Cleanup(Badge):
     """This badge is inactive right now.
@@ -642,11 +613,9 @@ class Cleanup(Badge):
 
     def __init__(self):
         super(Cleanup, self).__init__(
-            name = _('Cleanup'),
-            level = const.BRONZE_BADGE,
-            multiple = False,
-            description = _('First rollback')
-        )
+            name=_('Cleanup'), level=const.BRONZE_BADGE,
+            multiple=False, description=_('First rollback'))
+
 
 class Pundit(Badge):
     """Inactive until it is possible to vote
@@ -657,11 +626,9 @@ class Pundit(Badge):
 
     def __init__(self):
         super(Pundit, self).__init__(
-            name = _('Pundit'),
-            level = const.SILVER_BADGE,
-            multiple = False,
-            description = _('Left 10 comments with score of 10 or more')
-        )
+            name=_('Pundit'), level=const.SILVER_BADGE, multiple=False,
+            description=_('Left 10 comments with score of 10 or more'))
+
 
 class EditorTypeBadge(Badge):
     """subclassing badges are types of editors
@@ -672,15 +639,11 @@ class EditorTypeBadge(Badge):
 
     def __init__(self):
         super(EditorTypeBadge, self).__init__(
-            name = self.name,
-            level = self.level,
-            multiple = False,
-            description = self.description
+            name=self.name, level=self.level,
+            multiple=False, description=self.description
         )
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
-
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         atypes = (
             const.TYPE_ACTIVITY_UPDATE_QUESTION,
             const.TYPE_ACTIVITY_UPDATE_ANSWER
@@ -689,6 +652,7 @@ class EditorTypeBadge(Badge):
         from askbot.models.user import Activity
         if Activity.objects.filter(**filters).count() == self.min_edits:
             return self.award(actor, context_object, timestamp)
+
 
 class Editor(EditorTypeBadge):
     key = 'editor'
@@ -702,8 +666,9 @@ class Editor(EditorTypeBadge):
         self.min_edits = 1
         return self
 
+
 class AssociateEditor(EditorTypeBadge):
-    key = 'associate-editor'#legacy copycat name from stackoverflow
+    key = 'associate-editor'  # legacy copycat name from stackoverflow
 
     def __new__(cls):
         self = super(AssociateEditor, cls).__new__(cls)
@@ -714,35 +679,31 @@ class AssociateEditor(EditorTypeBadge):
         self.description = _('Edited %(num)s entries') % {'num': self.min_edits}
         return self
 
+
 class Organizer(Badge):
     key = 'organizer'
 
     def __init__(self):
         super(Organizer, self).__init__(
-            name = _('Organizer'),
-            level = const.BRONZE_BADGE,
-            multiple = False,
-            description = _('First retag')
-        )
+            name=_('Organizer'), level=const.BRONZE_BADGE,
+            multiple=False, description=_('First retag'))
+
 
 class Autobiographer(Badge):
     key = 'autobiographer'
 
     def __init__(self):
         super(Autobiographer, self).__init__(
-            name = _('Autobiographer'),
-            level = const.BRONZE_BADGE,
-            multiple = False,
-            description = _('Completed all user profile fields')
-        )
+            name=_('Autobiographer'), level=const.BRONZE_BADGE,
+            multiple=False, description=_('Completed all user profile fields'))
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         user = context_object
         if user.email and user.real_name and user.website \
-            and user.location and user.get_localized_profile().about:
+                and user.location and user.get_localized_profile().about:
             return self.award(user, user, timestamp)
         return False
+
 
 class FavoriteTypeBadge(Badge):
     """subclass must use __new__ and in addition
@@ -758,25 +719,20 @@ class FavoriteTypeBadge(Badge):
             'asked_a_question': askbot_settings.WORDS_ASKED_A_QUESTION
         }
         super(FavoriteTypeBadge, self).__init__(
-            name=self.name,
-            level=self.level,
-            multiple=True,
-            description=description
-        )
+            name=self.name, level=self.level, multiple=True,
+            description=description)
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         question = context_object
-        #model FavoriteQuestion imported under alias of Fave
-        from askbot.models.question import FavoriteQuestion as Fave#name collision
-        count = Fave.objects.filter(
-                                        thread = question.thread
-                                    ).exclude(
-                                        user = question.author
-                                    ).count()
+        # model FavoriteQuestion imported under alias of Fave
+        from askbot.models.question import FavoriteQuestion as Fave  # name collision
+        count = Fave.objects.filter(thread=question.thread)\
+            .exclude(user=question.author)\
+            .count()
         if count == self.min_stars:
             return self.award(question.author, question, timestamp)
         return False
+
 
 class StellarQuestion(FavoriteTypeBadge):
     key = 'stellar-question'
@@ -788,6 +744,7 @@ class StellarQuestion(FavoriteTypeBadge):
         self.min_stars = askbot_settings.STELLAR_QUESTION_BADGE_MIN_STARS
         return self
 
+
 class FavoriteQuestion(FavoriteTypeBadge):
     key = 'favorite-question'
 
@@ -797,6 +754,7 @@ class FavoriteQuestion(FavoriteTypeBadge):
         self.level = const.SILVER_BADGE
         self.min_stars = askbot_settings.FAVORITE_QUESTION_BADGE_MIN_STARS
         return self
+
 
 class Enthusiast(Badge):
     """Awarded to a user who visits the site
@@ -814,12 +772,12 @@ class Enthusiast(Badge):
             ) % {'num': askbot_settings.ENTHUSIAST_BADGE_MIN_DAYS}
         )
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         min_days = askbot_settings.ENTHUSIAST_BADGE_MIN_DAYS
         if actor.consecutive_days_visit_count == min_days:
             return self.award(actor, context_object, timestamp)
         return False
+
 
 class Commentator(Badge):
     """Commentator is a bronze badge that is
@@ -829,45 +787,39 @@ class Commentator(Badge):
 
     def __init__(self):
         super(Commentator, self).__init__(
-            name = _('Commentator'),
-            level = const.BRONZE_BADGE,
-            multiple = False,
-            description = _(
+            name=_('Commentator'), level=const.BRONZE_BADGE,
+            multiple=False, description=_(
                 'Posted %(num_comments)s comments'
             ) % {'num_comments': askbot_settings.COMMENTATOR_BADGE_MIN_COMMENTS}
         )
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         from askbot.models import Post
         num_comments = Post.objects.get_comments().filter(author=actor).count()
         if num_comments >= askbot_settings.COMMENTATOR_BADGE_MIN_COMMENTS:
             return self.award(actor, context_object, timestamp)
         return False
 
+
 class Taxonomist(Badge):
     key = 'taxonomist'
 
     def __init__(self):
         super(Taxonomist, self).__init__(
-            name = _('Taxonomist'),
-            level = const.SILVER_BADGE,
-            multiple = False,
-            description = ungettext(
+            name=_('Taxonomist'), level=const.SILVER_BADGE,
+            multiple=False, description=ungettext(
                 'Created a tag used %(num)s time',
                 'Created a tag used %(num)s times',
                 askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT
-            ) % {'num': askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT}
-        )
+            ) % {'num': askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT})
 
-    def consider_award(self, actor = None,
-            context_object = None, timestamp = None):
-
+    def consider_award(self, actor=None, context_object=None, timestamp=None):
         tag = context_object
         taxonomist_threshold = askbot_settings.TAXONOMIST_BADGE_MIN_USE_COUNT
         if tag.used_count == taxonomist_threshold:
             return self.award(tag.created_by, tag, timestamp)
         return False
+
 
 class Expert(Badge):
     """Stub badge"""
@@ -875,11 +827,8 @@ class Expert(Badge):
 
     def __init__(self):
         super(Expert, self).__init__(
-            name = _('Expert'),
-            level = const.SILVER_BADGE,
-            multiple = False,
-            description = _('Very active in one tag')
-        )
+            name=_('Expert'), level=const.SILVER_BADGE,
+            multiple=False, description=_('Very active in one tag'))
 
 ORIGINAL_DATA = """
 
@@ -897,6 +846,8 @@ extra badges from stackexchange
     (_('Beta'), 2, _('beta'), _('Actively participated in the private beta'), False, 0),
     (_('Alpha'), 2, _('alpha'), _('Actively participated in the private alpha'), False, 0),
 """
+
+
 def get_badge_keys(badges):
     """returns list of badge keys for the list,
     tuple, or set of badges"""
@@ -938,13 +889,13 @@ def extend_badge_events(e_to_b):
     return e_to_b
 
 
-#events are sent as a parameter via signal award_badges_signal
-#from appropriate locations in the code of askbot application
-#most likely - from manipulator functions that are added to the User objects
+# events are sent as a parameter via signal award_badges_signal
+# from appropriate locations in the code of askbot application
+# most likely - from manipulator functions that are added to the User objects
 EVENTS_TO_BADGES = {
     'accept_best_answer': (Scholar, Guru, Enlightened),
     'delete_post': (Disciplined, PeerPressure,),
-    'downvote': (Critic, CivicDuty),#no regard for question or answer for now
+    'downvote': (Critic, CivicDuty),  # no regard for question or answer for now
     'edit_answer': (Editor, AssociateEditor),
     'edit_question': (Editor, AssociateEditor),
     'flag_post': (CitizenPatrol,),
@@ -965,7 +916,7 @@ EVENTS_TO_BADGES = {
                     NiceQuestion, GoodQuestion,
                     GreatQuestion, Student, Supporter, CivicDuty
                 ),
-    'upvote_comment':(),#todo - add some badges here
+    'upvote_comment': (),  # TODO - add some badges here
     'view_question': (PopularQuestion, NotableQuestion, FamousQuestion,),
     'manually_triggered': ()
 }
@@ -981,35 +932,32 @@ def get_badge(name=None):
     key = slugify(name)
     return BADGES[key]()
 
+
 def init_badges():
     """Calling this function will set up badge record
     int the database for each badge enumerated in the
     `BADGES` dictionary
     """
-    #todo: maybe better to redo individual badges
-    #so that get_stored_data() is called implicitly
-    #from the __init__ function?
+    # TODO: maybe better to redo individual badges
+    # so that get_stored_data() is called implicitly
+    # from the __init__ function?
     for key in BADGES.keys():
         get_badge(key).get_stored_data()
-    #remove any badges from the database
-    #that are no longer in the BADGES dictionary
+    # remove any badges from the database
+    # that are no longer in the BADGES dictionary
     from askbot.models.repute import BadgeData
-    BadgeData.objects.exclude(
-        slug__in = map(slugify, BADGES.keys())
-    ).delete()
+    BadgeData.objects.exclude(slug__in=map(slugify, BADGES.keys())).delete()
 
-award_badges_signal = Signal(
-                        providing_args=[
-                            'actor', 'event', 'context_object', 'timestamp'
-                        ]
-                    )
-#actor - user who triggers the event
-#event - string name of the event, e.g 'downvote'
-#context_object - database object related to the event, e.g. question
+award_badges_signal = Signal(providing_args=[
+    'actor', 'event', 'context_object', 'timestamp'])
+# actor - user who triggers the event
+# event - string name of the event, e.g 'downvote'
+# context_object - database object related to the event, e.g. question
+
 
 @auto_now_timestamp
 def award_badges(event=None, actor=None,
-                context_object=None, timestamp=None, **kwargs):
+                 context_object=None, timestamp=None, **kwargs):
     """function that is called when signal `award_badges_signal` is sent
     """
     try:
