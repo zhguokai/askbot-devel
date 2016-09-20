@@ -304,6 +304,8 @@ def tags(request):#view showing a listing of available tags - plain list
     #1) Get parameters. This normally belongs to form cleaning.
     post_data = request.GET
     sortby = post_data.get('sort', 'used')
+    if sortby not in ('name', 'used'):
+        sortby = 'used'
     page = get_integer_parameter(post_data, 'page')
 
     tag_isolation = getattr(django_settings, 'ASKBOT_TAG_ISOLATION', None)
