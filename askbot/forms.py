@@ -574,6 +574,10 @@ class ShowQuestionForm(forms.Form):
         else:
             out_data['show_page'] = in_data.get('page', 1)
             answer_sort_method = in_data.get('sort', default_answer_sort)
+
+            if answer_sort_method not in dict(const.ANSWER_SORT_METHODS).keys():
+                answer_sort_method = default_answer_sort
+
             out_data['answer_sort_method'] = answer_sort_method
             out_data['show_comment'] = None
             out_data['show_answer'] = None
