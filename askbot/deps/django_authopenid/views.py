@@ -1241,7 +1241,7 @@ def signout(request):
         pass
     logout(request)
     logging.debug('user logged out')
-    return HttpResponseRedirect(get_next_url(request))
+    return HttpResponseRedirect(reverse('index'))
 
 XRDF_TEMPLATE = """<?xml version='1.0' encoding='UTF-8'?>
 <xrds:XRDS
