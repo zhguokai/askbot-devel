@@ -819,7 +819,7 @@ class GroupMessagingEmailAlert(BaseEmail):
 class FeedbackEmail(BaseEmail):
     template_path = 'email/feedback'
     title = _('Feedback email')
-    description = _('Sent when users submits feedback form')
+    description = _('Sent when user submits feedback form')
 
     def process_context(self, context):
         context['site_name'] = askbot_settings.APP_SHORT_NAME
