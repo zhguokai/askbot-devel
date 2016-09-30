@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Robert Antoni Buj i Gelonch <rbuj@fedoraproject.org>, 2015
+# Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2016
+# Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-16 03:04-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2016-08-22 20:41+0000\n"
+"Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan (http://www.transifex.com/askbot/askbot/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,11 +21,11 @@ msgstr ""
 
 #: media/js/group_messaging.js:132
 msgid "Type a message"
-msgstr ""
+msgstr "Tecleja un missatge"
 
 #: media/js/group_messaging.js:141
 msgid "Add a recipient"
-msgstr ""
+msgstr "Afegeix un destinatari"
 
 #: media/js/group_messaging.js:171
 msgid "message sent"
@@ -34,7 +35,7 @@ msgstr "missatge enviat"
 msgid ""
 "Did you mean to send your message to muliple users? Use comma instead of "
 "whitespaces"
-msgstr ""
+msgstr "Vàreu voler dir per enviar el missatge a diversos usuaris? Utilitzeu comes en lloc d'espais en blanc"
 
 #: media/js/group_messaging.js:191
 msgid "user {{str}} does not exist"
@@ -70,7 +71,7 @@ msgstr "s'està carregant..."
 
 #: media/js/post.js:136
 msgid "enter %(question)s title"
-msgstr ""
+msgstr "intrudueix el titol per %(question)s"
 
 #: media/js/post.js:143 media/js/post.js.c:233
 msgid "%(question)s must have > %(length)s character"
@@ -197,11 +198,11 @@ msgstr "ho sentim, alguna cosa aquí no està bé"
 
 #: media/js/post.js:1875
 msgid "Preview: (hide)"
-msgstr ""
+msgstr "Previsualització: (oculta)"
 
 #: media/js/post.js:1876
 msgid "Show preview"
-msgstr ""
+msgstr "Mostra la previsualització"
 
 #: media/js/post.js:2288
 msgid "add comment"
@@ -381,15 +382,15 @@ msgstr "No teniu cap mètode per iniciar sessió, afegiu un o més fent clic a q
 
 #: media/js/jquery-openid/jquery.authenticator.js:146
 msgid "enter username"
-msgstr ""
+msgstr "introdueix el nom d'usuari"
 
 #: media/js/jquery-openid/jquery.authenticator.js:148
 msgid "enter username or email"
-msgstr ""
+msgstr "introdueix el nom d'usuari o l'adreça de correu electrònic"
 
 #: media/js/jquery-openid/jquery.authenticator.js:157
 msgid "enter password"
-msgstr ""
+msgstr "introdueix la contrasenya"
 
 #: media/js/jquery-openid/jquery.authenticator.js:179
 msgid "passwords do not match"
@@ -740,11 +741,11 @@ msgstr "Si us plau, seleccioneu i pugeu un fitxer:"
 
 #: media/wmd/wmd.js:1686
 msgid "strong text"
-msgstr ""
+msgstr "text amb èmfasi"
 
 #: media/wmd/wmd.js:1690
 msgid "emphasized text"
-msgstr ""
+msgstr "text amb èmfasi"
 
 #: media/wmd/wmd.js:1844
 msgid "image description"
@@ -760,15 +761,15 @@ msgstr "text de l'enllaç"
 
 #: media/wmd/wmd.js:2284 media/wmd/wmd.js.c:2304
 msgid "enter code here"
-msgstr ""
+msgstr "introdueix aquí el codi"
 
 #: media/wmd/wmd.js:2398
 msgid "List item"
-msgstr ""
+msgstr "Llista d'elements"
 
 #: media/wmd/wmd.js:2430
 msgid "Heading"
-msgstr ""
+msgstr "Encapçalament"
 
 #~ msgid "anonymous users cannot %(follow_questions)s"
 #~ msgstr "sorry, anonymous users cannot vote "

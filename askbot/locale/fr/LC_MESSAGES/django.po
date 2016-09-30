@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Alban Tiberghien <alban.tiberghien@gmail.com>, 2012
+# Anthony Monthe <anthony.monthe@gmail.com>, 2016
 # Axel Haustant, 2013
 # Benjamin Abel <bbig26@gmail.com>, 2014
 # Benjamin Abel <bbig26@gmail.com>, 2014
@@ -22,14 +23,15 @@
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
 # noirbizarre, 2013
+# Ogre Sympathique, 2016
 # R Kaupp <RemiKaupp@wateraid.org>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-16 03:00-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2016-09-19 23:23+0000\n"
+"Last-Translator: Anthony Monthe <anthony.monthe@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/askbot/askbot/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,12 +50,12 @@ msgstr " - "
 #: feed.py:37
 #, python-format
 msgid "Individual %(question)s feed"
-msgstr ""
+msgstr "Flux individuel de %(question)s"
 
 #: feed.py:110
 #, python-format
 msgid "Latest %(question)s feed"
-msgstr ""
+msgstr "Flux des dernières %(question)s"
 
 #: forms.py:167
 msgid "select country"
@@ -98,30 +100,30 @@ msgstr "titre"
 #, python-format
 msgid "must have > %d non-punctuation character"
 msgid_plural "must have > %d non-punctuation characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "doit avoir > %d de caractère non ponctué"
+msgstr[1] "doit avoir > %d de caractères non ponctués"
 
 #: forms.py:320
 #, python-format
 msgid ""
 "The %(question)s is too long, maximum allowed size is %(length)d characters"
-msgstr ""
+msgstr "La %(question)s est trop longue, la taille maximum autorisée est de %(length)d caractères"
 
 #: forms.py:327
 #, python-format
 msgid "The %(question)s is too long, maximum allowed size is %(length)d bytes"
-msgstr ""
+msgstr "La %(question)s est trop long, la taille maximale autorisée est de %(length)d  bytes"
 
 #: forms.py:357
 msgid "post"
-msgstr ""
+msgstr "publication"
 
 #: forms.py:364
 #, python-format
 msgid "%(post)s content must be > %(count)d character"
 msgid_plural "%(post)s content must be > %(count)d characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Le contenu de %(post)s doit comporter plus de %(count)d caractère"
+msgstr[1] "Le contenu de %(post)s doit comporter plus de %(count)d caractères"
 
 #: forms.py:412
 #, python-format
@@ -176,7 +178,7 @@ msgstr "Résumé des modifications:"
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style...), this field is optional"
-msgstr ""
+msgstr "Saisissez un bref résumé à propos de la révision (par exemple : correction orthographique, amélioration du style...), ce champ est optionnel"
 
 #: forms.py:696
 msgid "Enter number of points to add or subtract"
@@ -184,7 +186,7 @@ msgstr "Saisissez le nombre de points à ajouter ou retirer"
 
 #: forms.py:699
 msgid "Comment"
-msgstr ""
+msgstr "Commentaire"
 
 #: forms.py:711 const/__init__.py:497
 msgid "approved"
@@ -275,7 +277,7 @@ msgstr "Anonyme"
 
 #: forms.py:882
 msgid "Either provide email address or mark \"I dont want to give email below\""
-msgstr ""
+msgstr "Soit fournissez une adresse courriel soit cochez \"\""
 
 #: forms.py:915
 msgid "keep private within your groups"
@@ -329,7 +331,7 @@ msgstr "Détails"
 
 #: forms.py:1364
 msgid "remove anonymity"
-msgstr ""
+msgstr "enlever l'anonymat"
 
 #: forms.py:1449
 msgid "Real name"
@@ -419,102 +421,102 @@ msgstr "mots-clés"
 
 #: tasks.py:127
 msgid "make an edit by email"
-msgstr ""
+msgstr "éditer par courriel"
 
 #: urls.py:46
 msgctxt "urls"
 msgid "questions"
-msgstr ""
+msgstr "questions"
 
 #: urls.py:51
 msgctxt "urls"
 msgid "question"
-msgstr ""
+msgstr "question"
 
 #: urls.py:78 urls.py:396 urls.py:402 urls.py:411 urls.py:420
 msgctxt "urls"
 msgid "tags/"
-msgstr ""
+msgstr "mots-clés/"
 
 #: urls.py:83 urls.py:89 urls.py:98 urls.py:119 urls.py:128 urls.py:135
 msgctxt "urls"
 msgid "users/"
-msgstr ""
+msgstr "utilisateurs/"
 
 #: urls.py:90
 msgctxt "urls"
 msgid "by-group/"
-msgstr ""
+msgstr "par-groupe/"
 
 #: urls.py:98 urls.py:196 urls.py:303 urls.py:422 urls.py:642
 msgctxt "urls"
 msgid "edit/"
-msgstr ""
+msgstr "modifier/"
 
 #: urls.py:120 urls.py:396 urls.py:403 urls.py:412 urls.py:421
 msgctxt "urls"
 msgid "subscriptions/"
-msgstr ""
+msgstr "inscriptions/"
 
 #: urls.py:129
 msgctxt "urls"
 msgid "select_languages/"
-msgstr ""
+msgstr "selectionner_langues"
 
 #: urls.py:140
 msgctxt "urls"
 msgid "groups/"
-msgstr ""
+msgstr "groupes/"
 
 #: urls.py:145 urls.py:150
 msgctxt "urls"
 msgid "badges/"
-msgstr ""
+msgstr "medailles/"
 
 #: urls.py:163
 msgctxt "urls"
 msgid "feedback/"
-msgstr ""
+msgstr "remarques/"
 
 #: urls.py:185
 msgctxt "urls"
 msgid "about/"
-msgstr ""
+msgstr "apropos/"
 
 #: urls.py:186
 msgctxt "urls"
 msgid "faq/"
-msgstr ""
+msgstr "faq/"
 
 #: urls.py:187
 msgctxt "urls"
 msgid "privacy/"
-msgstr ""
+msgstr "confidentialite/"
 
 #: urls.py:189
 msgctxt "urls"
 msgid "terms/"
-msgstr ""
+msgstr "termes/"
 
 #: urls.py:194
 msgctxt "urls"
 msgid "help/"
-msgstr ""
+msgstr "aide/"
 
 #: urls.py:196 urls.py:201
 msgctxt "urls"
 msgid "answers/"
-msgstr ""
+msgstr "reponses/"
 
 #: urls.py:201 urls.py:338
 msgctxt "urls"
 msgid "revisions/"
-msgstr ""
+msgstr "revisions/"
 
 #: urls.py:233
 msgctxt "urls"
 msgid "moderation-queue/"
-msgstr ""
+msgstr "queue-moderation/"
 
 #: urls.py:298 urls.py:601 urls.py:609 urls.py:617 urls.py:625
 msgctxt "urls"
@@ -524,48 +526,48 @@ msgstr ""
 #: urls.py:308
 msgctxt "urls"
 msgid "retag/"
-msgstr ""
+msgstr "requalification/"
 
 #: urls.py:313
 msgctxt "urls"
 msgid "close/"
-msgstr ""
+msgstr "fermer/"
 
 #: urls.py:318
 msgctxt "urls"
 msgid "reopen/"
-msgstr ""
+msgstr "reouvrir/"
 
 #: urls.py:323
 msgctxt "urls"
 msgid "answer/"
-msgstr ""
+msgstr "reponse/"
 
 #: urls.py:404 urls.py:650
 msgctxt "urls"
 msgid "delete/"
-msgstr ""
+msgstr "supprimer/"
 
 #: urls.py:413 urls.py:634
 msgctxt "urls"
 msgid "create/"
-msgstr ""
+msgstr "creer/"
 
 #: urls.py:428
 msgctxt "urls"
 msgid "suggested-tags/"
-msgstr ""
+msgstr "mots-cles-suggeres/"
 
 #: urls.py:594 urls.py:600 urls.py:608 urls.py:616 urls.py:624 urls.py:633
 #: urls.py:641 urls.py:649 urls.py:656
 msgctxt "urls"
 msgid "widgets/"
-msgstr ""
+msgstr "composants/"
 
 #: urls.py:626 deps/django_authopenid/urls.py:27
 msgctxt "urls"
 msgid "complete/"
-msgstr ""
+msgstr "termine/"
 
 #: urls.py:687
 msgctxt "urls"
@@ -575,7 +577,7 @@ msgstr ""
 #: urls.py:718
 msgctxt "urls"
 msgid "account/"
-msgstr ""
+msgstr "compte/"
 
 #: conf/access_control.py:11
 msgid "Access control settings"
@@ -583,13 +585,13 @@ msgstr "Réglages de contrôle d'accès"
 
 #: conf/access_control.py:20
 msgid "Make site read-only"
-msgstr ""
+msgstr "Mettre le site en lecture seule"
 
 #: conf/access_control.py:29
 msgid ""
 "The site is temporarily read-only. Only viewing of the content is possible "
 "at the moment."
-msgstr ""
+msgstr "Le site est temporairement en mode lecture seule. Seule la visualisation du contenu est disponible pour le moment."
 
 #: conf/access_control.py:40
 msgid "Allow only registered user to access the forum"
@@ -597,22 +599,22 @@ msgstr "Autoriser seulement les utilisateurs enregistrés à accéder au forum"
 
 #: conf/access_control.py:49
 msgid "Disable registration of new users"
-msgstr ""
+msgstr "Désactiver l'enregistrement de nouveaux utilisateurs"
 
 #: conf/access_control.py:57
 msgid ""
 "<p>New users cannot be registered at this time. Please sign in if you "
 "already have an account.</p>"
-msgstr ""
+msgstr "<p>Les nouveaux utilisateurs ne peuvent s'enregistrer pour le moment. Veuillez vous connecter si vous disposez déjà d'un compte.</p>"
 
 #: conf/access_control.py:58
 msgid "Message explaining that user registrations are disabled"
-msgstr ""
+msgstr "Message expliquant que l'enregistrement des utilisateurs est désactivé"
 
 #: conf/access_control.py:59 conf/words.py:82 conf/words.py:96
 #: conf/words.py:111
 msgid "HTML is allowed"
-msgstr ""
+msgstr "L'HTML est autorisé."
 
 #: conf/access_control.py:64
 msgid "nothing - not required"
@@ -620,7 +622,7 @@ msgstr "aucune - non requis"
 
 #: conf/access_control.py:65
 msgid "account registration"
-msgstr ""
+msgstr "enregistrement de compte"
 
 #: conf/access_control.py:75
 msgid "Require valid email for"
@@ -648,35 +650,35 @@ msgstr "Veuillez utiliser des espaces pour séparer les entrées, ne pas utilise
 
 #: conf/access_control.py:124 conf/login_providers.py:228
 msgid "disable"
-msgstr ""
+msgstr "désactiver"
 
 #: conf/access_control.py:127
 msgid "block user registrations"
-msgstr ""
+msgstr "bloquer les enregistrements d'utilisateurs"
 
 #: conf/access_control.py:129
 msgid "allow existing users to post"
-msgstr ""
+msgstr "Autoriser les utilsateurs existant à poster"
 
 #: conf/access_control.py:132
 msgid "block completely"
-msgstr ""
+msgstr "bloquer complètement"
 
 #: conf/access_control.py:141
 msgid "Blacklisted email address patterns mode"
-msgstr ""
+msgstr "Mode de motif des adresse sur liste de noire"
 
 #: conf/access_control.py:150
 msgid "Blacklisted email address patterns"
-msgstr ""
+msgstr "Motif des adresse email sur la liste noire"
 
 #: conf/access_control.py:154
 msgid "regular expressions are allowed"
-msgstr ""
+msgstr "les expressions régulières sont autorisées"
 
 #: conf/access_control.py:165
 msgid "Allow moderators to access other's messages"
-msgstr ""
+msgstr "Autoriser les modérateurs à accéder aux messages des autres"
 
 #: conf/badges.py:16
 msgid "Badge settings"
@@ -685,7 +687,7 @@ msgstr "Réglages des médailles"
 #: conf/badges.py:27
 #, python-format
 msgid "Enable \"%s\" badge"
-msgstr ""
+msgstr "Autoriser le badge \"%s\""
 
 #: conf/badges.py:47 models/badges.py:709
 msgid "Associate Editor"
@@ -693,7 +695,7 @@ msgstr "Editeur associé"
 
 #: conf/badges.py:49
 msgid "minimum number of edits"
-msgstr ""
+msgstr "nombre minimal d'éditions"
 
 #: conf/badges.py:53 models/badges.py:732
 msgid "Autobiographer"
@@ -709,7 +711,7 @@ msgstr "Devoir civique"
 
 #: conf/badges.py:61
 msgid "minimum votes"
-msgstr ""
+msgstr "nombre minimal de votes"
 
 #: conf/badges.py:65 models/badges.py:644
 msgid "Cleanup"
@@ -721,7 +723,7 @@ msgstr "Commentateur"
 
 #: conf/badges.py:71
 msgid "minimum comments"
-msgstr ""
+msgstr "nombre minimal de commmentaires"
 
 #: conf/badges.py:75 models/badges.py:243
 msgid "Critic"
@@ -733,7 +735,7 @@ msgstr "Discipliné"
 
 #: conf/badges.py:81
 msgid "minimum upvotes for deleted post"
-msgstr ""
+msgstr "minimum de votes positifs pour supprimer les publications"
 
 #: conf/badges.py:85 models/badges.py:697
 msgid "Editor"
@@ -741,11 +743,11 @@ msgstr "Rédacteur"
 
 #: conf/badges.py:89
 msgid "Enlightened Duty"
-msgstr ""
+msgstr "Devoir éclairé"
 
 #: conf/badges.py:91 conf/badges.py:157 conf/badges.py:165
 msgid "minimum upvotes"
-msgstr ""
+msgstr "minimum de vote positifs"
 
 #: conf/badges.py:97 models/badges.py:808
 msgid "Enthusiast"
@@ -753,7 +755,7 @@ msgstr "Entousiaste"
 
 #: conf/badges.py:99
 msgid "minimum days"
-msgstr ""
+msgstr "jours minimums"
 
 #: conf/badges.py:103 models/badges.py:877
 msgid "Expert"
@@ -765,7 +767,7 @@ msgstr "Question célèbre"
 
 #: conf/badges.py:109 conf/badges.py:190 conf/badges.py:208
 msgid "minimum views"
-msgstr ""
+msgstr "vues minimum"
 
 #: conf/badges.py:115 conf/words.py:488 conf/words.py:489
 msgid "Favorite Question"
@@ -773,7 +775,7 @@ msgstr "Question favorite"
 
 #: conf/badges.py:117 conf/badges.py:228
 msgid "minimum followers"
-msgstr ""
+msgstr "minimum d'abonnés"
 
 #: conf/badges.py:123 conf/words.py:400 conf/words.py:401
 msgid "Good Answer"
@@ -781,7 +783,7 @@ msgstr "Bonné réponse"
 
 #: conf/badges.py:125 conf/badges.py:141 conf/badges.py:182 conf/badges.py:248
 msgid "minimum upvotes for the answer"
-msgstr ""
+msgstr "minium de votes positifs pour cette réponse"
 
 #: conf/badges.py:131 conf/words.py:411 conf/words.py:412
 msgid "Good Question"
@@ -789,7 +791,7 @@ msgstr "Bonne question"
 
 #: conf/badges.py:133 conf/badges.py:149 conf/badges.py:174
 msgid "minimum upvotes for the question"
-msgstr ""
+msgstr "minimum de votes positifs pour cette question"
 
 #: conf/badges.py:139 conf/words.py:422 conf/words.py:423
 msgid "Great Answer"
@@ -809,7 +811,7 @@ msgstr "Nécromancien"
 
 #: conf/badges.py:166
 msgid "minimum delay in days"
-msgstr ""
+msgstr "minimum de délai en jours"
 
 #: conf/badges.py:172 conf/words.py:389 conf/words.py:390
 msgid "Nice Question"
@@ -829,11 +831,11 @@ msgstr "Organisateur"
 
 #: conf/badges.py:198
 msgid "Peer pressure"
-msgstr ""
+msgstr "Pression des pairs"
 
 #: conf/badges.py:200
 msgid "minimum downvotes for deleted post"
-msgstr ""
+msgstr "minimum de votes négatifs pour supprimer la publication"
 
 #: conf/badges.py:206 conf/words.py:444 conf/words.py:445
 msgid "Popular Question"
@@ -853,7 +855,7 @@ msgstr "Autodidacte"
 
 #: conf/badges.py:220
 msgid "minimum answer upvotes"
-msgstr ""
+msgstr "minimum de réponse votées positivement"
 
 #: conf/badges.py:226 conf/words.py:477 conf/words.py:478
 msgid "Stellar Question"
@@ -873,7 +875,7 @@ msgstr "Taxonomiste"
 
 #: conf/badges.py:240
 msgid "minimum tag use count"
-msgstr ""
+msgstr "nombre minimum de mot-clés"
 
 #: conf/badges.py:246 models/badges.py:191
 msgid "Teacher"
@@ -903,43 +905,43 @@ msgstr "Activer les alertes courriels "
 
 #: conf/email.py:62
 msgid "Enable instant email alerts"
-msgstr ""
+msgstr "Activer les alertes par courriels instantanées"
 
 #: conf/email.py:71
 msgid "Enable welcome email"
-msgstr ""
+msgstr "Activer le courriel de bienvenu"
 
 #: conf/email.py:80
 msgid "Enable rejected post alert"
-msgstr ""
+msgstr "Activer l'alerte de rejet de publication"
 
 #: conf/email.py:81 conf/email.py:91
 msgid "Also, premoderation mode must be enabled"
-msgstr ""
+msgstr "Le mode pré-modération doit être aussi activé"
 
 #: conf/email.py:90
 msgid "Enable approved post alert"
-msgstr ""
+msgstr "Activer les alertes de publication approuvées"
 
 #: conf/email.py:100
 msgid "Enable batch email alert"
-msgstr ""
+msgstr "Activer les alertes de lot de courriel"
 
 #: conf/email.py:109
 msgid "Enable private messaging alerts"
-msgstr ""
+msgstr "Activer les alertes de message privé"
 
 #: conf/email.py:118
 msgid "Enable moderation queue alerts"
-msgstr ""
+msgstr "Activer les alertes de modération de queue"
 
 #: conf/email.py:128
 msgid "Enable HTML-formatted email"
-msgstr ""
+msgstr "Activer les courriels formatés en HTML"
 
 #: conf/email.py:129
 msgid "May not be supported by some email clients"
-msgstr ""
+msgstr "Peut ne pas être supporté par certains client de courriel"
 
 #: conf/email.py:138
 msgid "Maximum number of news entries in an email alert"
@@ -998,7 +1000,7 @@ msgstr "Option pour définir la fréquence d'envoi par email des notifications c
 
 #: conf/email.py:219
 msgid "Enable reminders about unanswered questions"
-msgstr ""
+msgstr "Activer les rappels à propos des questions en suspens"
 
 #: conf/email.py:221
 msgid ""
@@ -1035,7 +1037,7 @@ msgstr "Nombre maximal de rappels à envoyer concernant les questions en suspens
 
 #: conf/email.py:283
 msgid "Enable accept the best answer reminders"
-msgstr ""
+msgstr "Activer les rappels d'acception de la meilleur réponse"
 
 #: conf/email.py:285
 msgid ""
@@ -1060,15 +1062,15 @@ msgstr "Nombre maximum de rappels à envoyer pour accepter la meilleure réponse
 
 #: conf/email.py:332
 msgid "Allow blank email"
-msgstr ""
+msgstr "Autoriser l'email vide"
 
 #: conf/email.py:334
 msgid "DANGER: makes impossible account recovery by email."
-msgstr ""
+msgstr "DANGER: Rend impossible la récupération du compte par email."
 
 #: conf/email.py:337 conf/login_providers.py:279
 msgid "Must be not be required"
-msgstr ""
+msgstr "Ne doit pas être requis"
 
 #: conf/email.py:348
 msgid "Fake email for anonymous user"
@@ -1122,11 +1124,11 @@ msgstr "Les réponses par email ayant moins de mots que ce nombre seront affich�
 
 #: conf/email_text.py:8
 msgid "Email template phrases"
-msgstr ""
+msgstr "Phrases de template d'email"
 
 #: conf/email_text.py:16
 msgid "Short welcome message, for subject line"
-msgstr ""
+msgstr "Court message de bienvenue, pour la ligne du sujet"
 
 #: conf/email_text.py:17
 msgid "Welcome to {{ SITE_NAME }}!"
@@ -1136,35 +1138,35 @@ msgstr "Bienvenue sur {{ SITE_NAME }}"
 msgid ""
 "<b>NOTE: All email text settings allow placeholders: {{ USER_NAME }}, {{ "
 "SITE_NAME }} and {{ SITE_LINK }}.</b>"
-msgstr ""
+msgstr "<b>NOTE: Tout les paramètres de texte de courriels autorisent les marqueurs: {{ USER_NAME }}, {{ SITE_NAME }} et {{ SITE_LINK }}.</b>"
 
 #: conf/email_text.py:28
 msgid "Longer welcome message, for email body"
-msgstr ""
+msgstr "Message de bienvenu long, pour le corps du courriel"
 
 #: conf/email_text.py:29
 msgid ""
 "<p>Please visit {{ SITE_NAME }} at {{ SITE_LINK }}, we look forward to your "
 "posts.</p>"
-msgstr ""
+msgstr "<p>Visitez{{ SITE_NAME }} à {{ SITE_LINK }}, nous attendons avec impatience vos publications.</p>"
 
 #: conf/email_text.py:37
 msgid "Email footer"
-msgstr ""
+msgstr "Pied du courriel"
 
 #: conf/email_text.py:38
 msgid "<p>Sincerely,<br>{{ SITE_NAME }} Administrator</p>"
-msgstr ""
+msgstr "<p>Sincèrement,<br>Les administrateurs de {{ SITE_NAME }}</p>"
 
 #: conf/email_text.py:46
 msgid "Header for the batch email alerts"
-msgstr ""
+msgstr "En-tête pour les alertes courriels en lots"
 
 #: conf/email_text.py:47
 msgid ""
 "<p>Dear {{ USER_NAME }},</p>\n"
 "<p>{{ SITE_NAME }} has these updates, please have a look:</p>"
-msgstr ""
+msgstr "<p>Cher/Chère {{ USER_NAME }},</p>\n<p>{{ SITE_NAME }} a été mis à jour, jetez un coup d'oeil:</p>"
 
 #: conf/external_keys.py:11
 msgid "Keys for external services"
@@ -1214,11 +1216,11 @@ msgstr "Recaptcha est un outil qui vous aide a distinguer les vrai personnes de 
 
 #: conf/external_keys.py:82
 msgid "Google+ public API key"
-msgstr ""
+msgstr "Clé publique d'API Google+"
 
 #: conf/external_keys.py:91
 msgid "Google+ secret API key"
-msgstr ""
+msgstr "Clé secrète d'API Google+"
 
 #: conf/external_keys.py:100
 msgid "Facebook public API key"
@@ -1253,7 +1255,7 @@ msgstr "Clé secrète du consommateur Twitter"
 
 #: conf/external_keys.py:144
 msgid "MediaWiki consumer key"
-msgstr ""
+msgstr "Clé consommateur MediaWiki"
 
 #: conf/external_keys.py:146
 #, python-format
@@ -1261,11 +1263,11 @@ msgid ""
 "Please register your forum at %(mw_page)s page of your Wiki. Your wiki must "
 "have <a href=\"%(url)s\">OAuth extension</a> installed "
 "installationSpecial:OAuthConsumerRegistration/propose <a href=\"%(url)s\">"
-msgstr ""
+msgstr "Veuillez s'il vous plait enregistrer à la page %(mw_page)s de votre Wiki. Votre wiki doit avior <a href=\"%(url)s\">l'extension OAuth</a> installée installationSpecial:OAuthConsumerRegistration/propose <a href=\"%(url)s\">"
 
 #: conf/external_keys.py:164
 msgid "MediaWiki consumer secret"
-msgstr ""
+msgstr "Secret consommateur MediaWiki"
 
 #: conf/external_keys.py:173
 msgid "LinkedIn consumer key"
@@ -1299,23 +1301,23 @@ msgstr "Clé secrète du consommateur identi.ca"
 
 #: conf/feedback.py:11
 msgid "Feedback settings"
-msgstr ""
+msgstr "Paramètres de remarque"
 
 #: conf/feedback.py:16
 msgid "Anyone"
-msgstr ""
+msgstr "N'importe qui"
 
 #: conf/feedback.py:17
 msgid "Only authenticated users"
-msgstr ""
+msgstr "Seulement les utilisateurs authentifiés"
 
 #: conf/feedback.py:18
 msgid "Nobody, disable feedback form"
-msgstr ""
+msgstr "Personne, désactiver le formulaire de remarque"
 
 #: conf/feedback.py:27
 msgid "Who can send feedback"
-msgstr ""
+msgstr "Qui peut envoyer des remarques"
 
 #: conf/feedback.py:36
 msgid "Feedback site URL"
@@ -1327,13 +1329,13 @@ msgstr "si laissé vide, un formulaire de retour simple sera utilisé à la plac
 
 #: conf/feedback.py:49
 msgid "Message on the feedback page"
-msgstr ""
+msgstr "Message sur la page de remarque"
 
 #: conf/feedback.py:51
 msgid ""
 "**Dear {{ USER_NAME }}**, we look forward to hearing your feedback. Please "
 "type and send us your message below."
-msgstr ""
+msgstr "**Cher/Chère {{ USER_NAME }}**, Nous attendons avec impatience vos commentaires. Ecrivez et envoyer-nous votre message ci-dessous."
 
 #: conf/feedback.py:55 conf/flatpages.py:95
 msgid ""
@@ -1344,17 +1346,17 @@ msgstr ""
 #: conf/feedback.py:72
 #, python-format
 msgid "'%(value)s' is not a valid email"
-msgstr ""
+msgstr "'%(value)s' n'est pas un email valide"
 
 #: conf/feedback.py:79
 msgid "Internal feedback form email recipients"
-msgstr ""
+msgstr "Courriels destinataires du formulaire de remarque interne"
 
 #: conf/feedback.py:81
 msgid ""
 "Comma separated list of email addresses. If left empty, feedback mails are "
 "sent to admins and moderators."
-msgstr ""
+msgstr "Liste de courriels séparés par des virgules. Si laissé vide, les courriels de remarque sont envoyés au admins et modérateurs."
 
 #: conf/flatpages.py:12
 msgid "Messages and pages - about, privacy policy, etc."
@@ -1372,7 +1374,7 @@ msgstr "Enregistrez, puis utilisez <a href=\"http://validator.w3.org/\">un valid
 
 #: conf/flatpages.py:34
 msgid "Text of the Help page (html format)"
-msgstr ""
+msgstr "Texte de la page d'aide (format HTML)"
 
 #: conf/flatpages.py:38
 msgid ""
@@ -1412,7 +1414,7 @@ msgstr "Enregistrez, puis utilisez <a href=\"http://validator.w3.org/\">un valid
 
 #: conf/flatpages.py:91
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Termes et conditions"
 
 #: conf/flatpages.py:112
 msgid "Do not edit this field manually!!!"
@@ -1455,7 +1457,7 @@ msgstr "Cochez cette case pour activer la fonctionnalité \"wiki communautaire\"
 
 #: conf/forum_data_rules.py:87
 msgid "Allow logged in users ask anonymously"
-msgstr ""
+msgstr "Autoriser les utilisateurs connectés à poser des questions anonymenent"
 
 #: conf/forum_data_rules.py:89
 msgid ""
@@ -1465,11 +1467,11 @@ msgstr "Les utilisateurs n'augmentent pas leur réputation avec des questions an
 
 #: conf/forum_data_rules.py:101
 msgid "Allow asking without registration"
-msgstr ""
+msgstr "Autoriser la demande sans enregistrement"
 
 #: conf/forum_data_rules.py:102
 msgid "Enabling ReCaptcha is recommended with this feature"
-msgstr ""
+msgstr "Activer ReCaptcha est recommandé pour cette fonctionnalité"
 
 #: conf/forum_data_rules.py:111
 msgid "Allow posting before logging in"
@@ -1523,7 +1525,7 @@ msgstr "Longueur minimale du corps de la réponse (nombre de caractères)"
 
 #: conf/forum_data_rules.py:197
 msgid "Show comment updates on the main page"
-msgstr ""
+msgstr "Afficher les mis à jour de commentaires sur la page principale"
 
 #: conf/forum_data_rules.py:207
 msgid "Minimum length of comment (number of characters)"
@@ -1535,7 +1537,7 @@ msgstr "Limiter une réponse par question et par utilisateur"
 
 #: conf/forum_data_rules.py:228
 msgid "Allow commenting in closed questions"
-msgstr ""
+msgstr "Autoriser les commentaires sur les questions fermées"
 
 #: conf/forum_data_rules.py:237
 msgid "Enable accepting best answer"
@@ -1543,11 +1545,11 @@ msgstr "Activer l'acceptation de la meilleur réponse"
 
 #: conf/forum_data_rules.py:246
 msgid "Show accepted answer first"
-msgstr ""
+msgstr "Afficher la réponse acceptée en première"
 
 #: conf/forum_data_rules.py:256
 msgid "How to sort answers by default"
-msgstr ""
+msgstr "Comment ranger les réponses par défaut"
 
 #: conf/forum_data_rules.py:264
 msgid "Are tags required?"
@@ -1559,7 +1561,7 @@ msgstr "Arborescence de la catégorie"
 
 #: conf/forum_data_rules.py:271
 msgid "user input"
-msgstr "Identifiant utilisateur"
+msgstr "Entrée utilisateur"
 
 #: conf/forum_data_rules.py:278
 msgid "Source of tags"
@@ -1638,11 +1640,11 @@ msgstr "Activer boîte de recherche de tags séparée sur la page principale"
 
 #: conf/forum_data_rules.py:386
 msgid "Enable comments under questions"
-msgstr ""
+msgstr "Autoriser les commentaires sous les questions"
 
 #: conf/forum_data_rules.py:395
 msgid "Enable comments under answers"
-msgstr ""
+msgstr "Autoriser les commentaires sous les réponses"
 
 #: conf/forum_data_rules.py:405
 msgid "Default max number of comments to display under posts"
@@ -1650,20 +1652,20 @@ msgstr "Nombre de commentaires maximal par défaut à afficher en dessous du mes
 
 #: conf/forum_data_rules.py:415
 msgid "Reverse ordering of comments"
-msgstr ""
+msgstr "Inverser le sens des commentaires"
 
 #: conf/forum_data_rules.py:424
 msgid "Minimum words to start wrapping comments"
-msgstr ""
+msgstr "Nombre de mots minimum pour commencer à enrouler les commentaires"
 
 #: conf/forum_data_rules.py:433
 msgid "Minimum words to start wrapping posts"
-msgstr ""
+msgstr "Nombre de mots minimum pour commencer à enrouler les publications"
 
 #: conf/forum_data_rules.py:443
 #, python-format
 msgid "Maximum comment length, must be &lt; %(max_len)s"
-msgstr ""
+msgstr "La longueur maximale du commentaire , doit être < %(max_len)s"
 
 #: conf/forum_data_rules.py:453
 msgid "Limit time to edit comments"
@@ -1672,7 +1674,7 @@ msgstr "Temps limité pour éditer un commentaire"
 #: conf/forum_data_rules.py:454 conf/forum_data_rules.py:487
 #: conf/forum_data_rules.py:507
 msgid "If unchecked, there will be no time limit"
-msgstr ""
+msgstr "Si non coché, il n'y a pas de limite de temps"
 
 #: conf/forum_data_rules.py:463
 msgid "Minutes allowed to edit a comment"
@@ -1685,7 +1687,7 @@ msgstr "Pour activer ce paramètre, veuiller vérifier le précédent"
 
 #: conf/forum_data_rules.py:473
 msgid "Save comment by pressing &lt;Enter&gt; key"
-msgstr ""
+msgstr "Sauvegardez le commentaire en pressant la touche &lt;Entré&gt;"
 
 #: conf/forum_data_rules.py:475
 msgid ""
@@ -1695,19 +1697,19 @@ msgstr "Cela peut être utile lorsque seuls les commentaires d'une ligne sont so
 
 #: conf/forum_data_rules.py:486
 msgid "Limit time to edit answers"
-msgstr ""
+msgstr "Limiter le temps d'édition des réponses"
 
 #: conf/forum_data_rules.py:496
 msgid "Minutes allowed to edit answers"
-msgstr ""
+msgstr "Nombre de minutes autorisées pour éditer les réponses"
 
 #: conf/forum_data_rules.py:506
 msgid "Limit time to edit questions"
-msgstr ""
+msgstr "Limiter le temps d'édition des questions"
 
 #: conf/forum_data_rules.py:516
 msgid "Minutes allowed to edit questions"
-msgstr ""
+msgstr "Nombre de minutes autorisées pour éditer les questions"
 
 #: conf/forum_data_rules.py:526
 msgid "Minimum length of search term for Ajax search"
@@ -1738,7 +1740,7 @@ msgstr "Nombre de questions par défaut à afficher dans la liste "
 
 #: conf/forum_data_rules.py:572
 msgid "Maximum users per users page"
-msgstr ""
+msgstr "Maximum d'utilisateurs par page d'utilisateurs"
 
 #: conf/forum_data_rules.py:582
 msgid "What should \"unanswered question\" mean?"
@@ -1808,7 +1810,7 @@ msgstr "Utiliser une authentification LDAP pour le mot de passe de l'identifiant
 
 #: conf/ldap.py:26
 msgid "Automatically create user accounts when possible"
-msgstr "Créer automatiquement les comptes utilisateurs quand s'est possible"
+msgstr "Créer automatiquement les comptes utilisateurs quand cela est possible"
 
 #: conf/ldap.py:29
 msgid ""
@@ -1989,11 +1991,11 @@ msgstr "Image du logo de la licence"
 
 #: conf/login_providers.py:15
 msgid "Login provider settings"
-msgstr ""
+msgstr "Réglages des fournisseurs d'authentification"
 
 #: conf/login_providers.py:24
 msgid "Acceptance of terms required at registration"
-msgstr ""
+msgstr "L'acceptation des termes est requis à l'inscription"
 
 #: conf/login_providers.py:34
 msgid "Activate to allow login with self-hosted wordpress site"
@@ -2019,47 +2021,47 @@ msgstr "Pour activer, aller dans Réglages->Rédaction->Publication distante et 
 
 #: conf/login_providers.py:54
 msgid "WordPress login button image"
-msgstr ""
+msgstr "Image du bouton de  connection WordPress"
 
 #: conf/login_providers.py:64
 msgid "Enable Fedora OpenID login"
-msgstr ""
+msgstr "Activer l'authentification OpenID Fedora"
 
 #: conf/login_providers.py:73
 msgid "Enable custom OpenID login"
-msgstr ""
+msgstr "Activer l'authentification OpenID personnalisée"
 
 #: conf/login_providers.py:83
 msgid "Enable CAS authentication"
-msgstr ""
+msgstr "Activer l'authentification CAS"
 
 #: conf/login_providers.py:91
 msgid "CAS server url"
-msgstr ""
+msgstr "URL du serveur CAS"
 
 #: conf/login_providers.py:99
 msgid "CAS server name"
-msgstr ""
+msgstr "Nom du serveur CAS"
 
 #: conf/login_providers.py:108
 msgid "CAS protocol version"
-msgstr ""
+msgstr "Version du protocole CAS"
 
 #: conf/login_providers.py:116
 msgid "Upload CAS login icon"
-msgstr ""
+msgstr "Charger une icône de connection CAS"
 
 #: conf/login_providers.py:144
 msgid "Custom OpenID"
-msgstr ""
+msgstr "OpenID personnalisé"
 
 #: conf/login_providers.py:145
 msgid "Short name for the custom OpenID provider"
-msgstr ""
+msgstr "Nom court pour le fournisseur d'OpenID personnalisé"
 
 #: conf/login_providers.py:150
 msgid "Direct button login"
-msgstr ""
+msgstr "Bouton de connexion directe"
 
 #: conf/login_providers.py:151
 msgid "Requires username"
@@ -2067,15 +2069,15 @@ msgstr "Nom d'utilisateur requis"
 
 #: conf/login_providers.py:159
 msgid "Type of OpenID login"
-msgstr ""
+msgstr "Type de connection OpenID"
 
 #: conf/login_providers.py:169
 msgid "Upload custom OpenID icon"
-msgstr ""
+msgstr "Charger une icône OpenID personnalisée"
 
 #: conf/login_providers.py:179
 msgid "Custom OpenID endpoint"
-msgstr ""
+msgstr "Point d'entré OpenID personnalisé"
 
 #: conf/login_providers.py:180
 #, python-format
@@ -2086,7 +2088,7 @@ msgstr ""
 
 #: conf/login_providers.py:191
 msgid "OpenStackID service endpoint url"
-msgstr ""
+msgstr "URL de point d'entré du service OpenStackID"
 
 #: conf/login_providers.py:233
 msgid "local password"
@@ -2106,11 +2108,11 @@ msgstr "Note: pour réellement activer l'authentification %(provider)s quelques 
 
 #: conf/login_providers.py:263
 msgid "MediaWiki login button image"
-msgstr ""
+msgstr "Image du bouton de connection MediaWiki"
 
 #: conf/login_providers.py:273
 msgid "MediaWiki - enable one click registration"
-msgstr ""
+msgstr "MediaWiki - activer l'inscription en un clic"
 
 #: conf/login_providers.py:275
 msgid "Allows skipping the registration page after the wiki authentication."
@@ -2118,17 +2120,17 @@ msgstr ""
 
 #: conf/login_providers.py:278
 msgid "Must be enabled"
-msgstr ""
+msgstr "Doit être activé"
 
 #: conf/login_providers.py:294
 msgid "Google login"
-msgstr ""
+msgstr "Connexion Google"
 
 #: conf/login_providers.py:296
 msgid ""
 "To enable Google-Plus login, OAuth keys are required in the \"External "
 "keys\" section"
-msgstr ""
+msgstr "Pour activer la connection Google-Plus, des clés OAuth sont requises dans la section \"Clés externes\""
 
 #: conf/markup.py:15
 msgid "Markup in posts"
@@ -2211,11 +2213,11 @@ msgstr "Seuils d'aura"
 
 #: conf/minimum_reputation.py:22
 msgid "Become approved"
-msgstr ""
+msgstr "Devenir approuvé"
 
 #: conf/minimum_reputation.py:23
 msgid "Approved users bypass moderation and skip recaptcha"
-msgstr ""
+msgstr "Les utilisateurs approuvés évitent la modération et le recaptcha"
 
 #: conf/minimum_reputation.py:32
 msgid "Upvote"
@@ -2251,7 +2253,7 @@ msgstr "Supprimer les questions et réponses publiées par d'autres"
 
 #: conf/minimum_reputation.py:116
 msgid "Delete own questions"
-msgstr ""
+msgstr "Supprimer ses propres questions"
 
 #: conf/minimum_reputation.py:125
 msgid "Upload files"
@@ -2289,7 +2291,7 @@ msgstr "Voir les messages marqués comme offensants"
 
 #: conf/minimum_reputation.py:192
 msgid "Close and reopen questions"
-msgstr ""
+msgstr "Fermer et rouvrir les questions"
 
 #: conf/minimum_reputation.py:201
 msgid "Remove rel=nofollow from own homepage"
@@ -2323,11 +2325,11 @@ msgstr "Modération du contenu"
 
 #: conf/moderation.py:19
 msgid "audit flagged posts"
-msgstr ""
+msgstr "vérifier les publications marquées"
 
 #: conf/moderation.py:20
 msgid "audit flagged posts and watched users"
-msgstr ""
+msgstr "vérifier les publications marquées et les utilisateurs surveillés"
 
 #: conf/moderation.py:21
 msgid "pre-moderate watched users and audit flagged posts"
@@ -2335,7 +2337,7 @@ msgstr ""
 
 #: conf/moderation.py:30
 msgid "Content moderation method"
-msgstr ""
+msgstr "Méthode de modération du contenu"
 
 #: conf/moderation.py:31
 msgid ""
@@ -2345,21 +2347,21 @@ msgstr ""
 
 #: conf/moderation.py:40
 msgid "Reject all posts with these phrases"
-msgstr ""
+msgstr "Rejeter toutes les publications avec ces phrases"
 
 #: conf/moderation.py:41
 msgid ""
 "Enter one phrase per line (case-insensitive). Posts with these phrases will "
 "be rejected without moderation."
-msgstr ""
+msgstr "Entrez un phrase par ligne (insensible à la casse). Les publications avec ces phrases seront rejetées sans modération."
 
 #: conf/moderation.py:53
 msgid "Enable image moderation"
-msgstr ""
+msgstr "Activer la modération des images"
 
 #: conf/moderation.py:62
 msgid "Enable link moderation"
-msgstr ""
+msgstr "Activer la modération des liens"
 
 #: conf/moderation.py:71
 msgid "Enable tag moderation"
@@ -2457,17 +2459,17 @@ msgstr "Perte pour l'auteur d'un message marqué 5 fois pour une même révision
 msgid ""
 "There are required related settings: %(required)s and some optional: "
 "%(optional)s."
-msgstr ""
+msgstr "Il y a des réglages obligatoires liés: %(required)s et des optionnels: %(optional)s."
 
 #: conf/settings_wrapper.py:175
 #, python-format
 msgid "There are required related settings: %(required)s."
-msgstr ""
+msgstr "Il y a des réglages obligatoires liés: %(required)s."
 
 #: conf/settings_wrapper.py:181
 #, python-format
 msgid "There are optional related settings: %(optional)s."
-msgstr ""
+msgstr "Il y a des réglages optionnels liés: %(optional)s."
 
 #: conf/sidebar_main.py:12
 msgid "Main page sidebar"
@@ -2565,11 +2567,11 @@ msgid ""
 "This banner will show under the first answer. When using this option, please"
 " use the HTML validation service to make sure that your input is valid and "
 "works well in all browsers."
-msgstr ""
+msgstr "Cette bannière ci-dessus montre la première réponse. Lorsque vous utilisez cette option, s'il vous plaît utilisez le service de validation HTML pour vous assurer que votre entrée est valide et fonctionne bien dans tous les navigateurs."
 
 #: conf/sidebar_question.py:69
 msgid "Show answers banner even if there are no answers"
-msgstr ""
+msgstr "Afficher la bannières de réponse même si il n'y a pas de réponses"
 
 #: conf/sidebar_question.py:82
 msgid ""
@@ -2627,7 +2629,7 @@ msgstr "URL, mots-clés et accueil"
 
 #: conf/site_settings.py:25
 msgid "My site"
-msgstr ""
+msgstr "Mon site"
 
 #: conf/site_settings.py:26
 msgid "Site title for the Q&A forum"
@@ -2667,7 +2669,7 @@ msgstr "Cocher pour activer les salutations des utilisateurs anonymes"
 
 #: conf/site_settings.py:115
 msgid "First time here? Check out the FAQ!"
-msgstr ""
+msgstr "Première fois ici ? Jetez un oeil à notre FAQ!"
 
 #: conf/site_settings.py:119
 msgid "Text shown in the greeting message shown to the anonymous user"
@@ -2683,15 +2685,15 @@ msgstr "Skins, logos et <head> du document HTML."
 
 #: conf/skin_general_settings.py:35
 msgid "Please enter a valid url"
-msgstr ""
+msgstr "Entrez une URL valide s'il vous plait"
 
 #: conf/skin_general_settings.py:42
 msgid "Custom destination URL for the logo"
-msgstr ""
+msgstr "URL de destination personnalisée pour le logo"
 
 #: conf/skin_general_settings.py:52
 msgid "Q&amp;A site logo"
-msgstr ""
+msgstr "Logo de la FAQ"
 
 #: conf/skin_general_settings.py:54
 msgid "To change the logo, select new file, then submit this whole form."
@@ -2699,7 +2701,7 @@ msgstr "Pour changer le logo, sélectionnez un nouveau fichier, puis soumettez l
 
 #: conf/skin_general_settings.py:71
 msgid "Select Language"
-msgstr ""
+msgstr "Sélection la langue"
 
 #: conf/skin_general_settings.py:79
 msgid "Show logo"
@@ -2948,7 +2950,7 @@ msgstr "Réglages de l'utilisateur"
 
 #: conf/user_settings.py:23
 msgid "Welcome to our community!"
-msgstr ""
+msgstr "Bienvenu dans notre communauté!"
 
 #: conf/user_settings.py:24
 msgid "On-screen greeting shown to the new users"
@@ -2960,7 +2962,7 @@ msgstr "Autoriser la modification du pseudo (nom d'utilisateur affiché à l'éc
 
 #: conf/user_settings.py:42
 msgid "Show email addresses to moderators"
-msgstr ""
+msgstr "Afficher les adresses de courriel pour les modérateurs"
 
 #: conf/user_settings.py:51
 msgid "Auto-fill user name, email, etc on registration"
@@ -2992,7 +2994,7 @@ msgstr "Taille minimale du pseudo (nom d'utilisateur affiché à l'écran)"
 
 #: conf/user_settings.py:115
 msgid "Avatar type for new users"
-msgstr ""
+msgstr "Type d'avatar pour les nouveaux utilisateurs"
 
 #: conf/user_settings.py:126
 msgid "Default avatar for users"
@@ -3005,11 +3007,11 @@ msgstr "Pour changer l'image de l'avatar, selectionner un nouveau fichier et val
 
 #: conf/user_settings.py:146
 msgid "Base URL for the gravatar service"
-msgstr ""
+msgstr "URL de base du service gravatar"
 
 #: conf/user_settings.py:158
 msgid "Use automatic avatars from gravatar service"
-msgstr ""
+msgstr "Utiliser les avatars automatiques depuis le service gravatar"
 
 #: conf/user_settings.py:160
 msgid ""
@@ -3053,7 +3055,7 @@ msgstr "Seuil pour lancer un avertissement à propos des votes quotidiens restan
 
 #: conf/vote_rules.py:51
 msgid "Number of days to allow canceling votes (-1 for no limit)"
-msgstr ""
+msgstr "Nombre de jours pour autoriser l'annulation des votes (-1 pour pas de limite)"
 
 #: conf/vote_rules.py:61
 msgid "Number of days required before answering own question"
@@ -3084,7 +3086,7 @@ msgstr "Poser votre question"
 #: conf/words.py:24 conf/words.py:45 conf/words.py:56 conf/words.py:67
 #: conf/words.py:136
 msgid "Used on a button"
-msgstr ""
+msgstr "Utilisé sur un bouton"
 
 #: conf/words.py:33 conf/words.py:34 conf/words.py:542 conf/words.py:543
 msgid "Please enter your question"
@@ -3096,7 +3098,7 @@ msgstr "Demander au Groupe"
 
 #: conf/words.py:54 conf/words.py:55
 msgid "Post Your Answer"
-msgstr "Poser votre question"
+msgstr "Poster votre réponse"
 
 #: conf/words.py:65 conf/words.py:66
 msgid "Answer Your Own Question"
@@ -3107,21 +3109,21 @@ msgid ""
 "<span class=\"big strong\">You are welcome to answer your own "
 "question</span>, but please make sure to give an <strong>answer</strong>. "
 "Remember that you can always <strong>revise your original question</strong>."
-msgstr ""
+msgstr "<span class=\"big strong\">Vous pouvez répondre à votre propre question</span>, mais soyez sûr de donner une <strong>réponse</strong>. Rappelez-vous que vous pouvez toujours <strong>éditer votre question</strong>."
 
 #: conf/words.py:81
 msgid "Instruction to answer own questions"
-msgstr ""
+msgstr "Instruction pour répondre à sa propre question"
 
 #: conf/words.py:92
 msgid ""
 "<span class=\"strong big\">Please start posting anonymously</span> - your "
 "entry will be published after you log in or create a new account."
-msgstr ""
+msgstr "<span class=\"strong big\">Commencez à écrire votre réponse anonymement</span> - votre entrée sera publié après que vous vous soyez connecter ou que vous ayez créer un compte.."
 
 #: conf/words.py:95
 msgid "Instruction to post anonymously"
-msgstr ""
+msgstr "Instruction pour publier anonymement"
 
 #: conf/words.py:106
 msgid ""
@@ -3132,7 +3134,7 @@ msgstr ""
 
 #: conf/words.py:110
 msgid "Instruction to give answers"
-msgstr ""
+msgstr "Instruction pour donner une réponse"
 
 #: conf/words.py:121
 msgid ""
@@ -3142,11 +3144,11 @@ msgstr "Classer votre question en utilisant ce sélecteur de mot-clé ou la sais
 
 #: conf/words.py:124
 msgid "Instruction for the catogory selector"
-msgstr ""
+msgstr "Conseils pour la sélection de catégories"
 
 #: conf/words.py:125
 msgid "Plain text only"
-msgstr ""
+msgstr "Texte plein seulement"
 
 #: conf/words.py:134 conf/words.py:135
 msgid "Edit Your Previous Answer"
@@ -3154,19 +3156,19 @@ msgstr "Éditer votre précédente réponse"
 
 #: conf/words.py:145 conf/words.py:146
 msgid "ask questions"
-msgstr ""
+msgstr "poser des questions"
 
 #: conf/words.py:155 conf/words.py:156
 msgid "post answers"
-msgstr ""
+msgstr "Soumettre des réponses"
 
 #: conf/words.py:165 conf/words.py:166
 msgid "Merge duplicate questions"
-msgstr ""
+msgstr "Fusionner les questions en doublons"
 
 #: conf/words.py:175 conf/words.py:176
 msgid "Enter duplicate question ID"
-msgstr ""
+msgstr "Entrez l'ID de la question dupliquée"
 
 #: conf/words.py:185 conf/words.py:186
 msgid "asked"
@@ -3174,7 +3176,7 @@ msgstr "posée"
 
 #: conf/words.py:195 conf/words.py:196
 msgid "Asked first question"
-msgstr ""
+msgstr "A posé la première question"
 
 #: conf/words.py:205 conf/words.py:206
 msgid "Asked by me"
@@ -3198,7 +3200,7 @@ msgstr "a accepté une réponse"
 
 #: conf/words.py:256 conf/words.py:257
 msgid "Gave accepted answer"
-msgstr ""
+msgstr "Réponse accepté donnée"
 
 #: conf/words.py:266 conf/words.py:267
 msgid "answered"
@@ -3208,7 +3210,7 @@ msgstr "répondue"
 msgid ""
 "question\n"
 "questions"
-msgstr ""
+msgstr "question\nquestions"
 
 #: conf/words.py:277
 msgid "Countable plural forms for \"question\""
@@ -3222,7 +3224,7 @@ msgstr ""
 msgid ""
 "answer\n"
 "answers"
-msgstr ""
+msgstr "answer\nanswers"
 
 #: conf/words.py:288
 msgid "Countable plural forms for \"answer\""
@@ -3234,7 +3236,7 @@ msgstr "question"
 
 #: conf/words.py:299
 msgid "question (noun, singular)"
-msgstr ""
+msgstr "question (nom, singulier)"
 
 #: conf/words.py:308
 msgid "questions"
@@ -3242,53 +3244,53 @@ msgstr "questions"
 
 #: conf/words.py:309
 msgid "questions (noun, plural)"
-msgstr ""
+msgstr "questions (nom, pluriel)"
 
 #: conf/words.py:318
 msgid "unanswered question"
-msgstr ""
+msgstr "questions sans réponse"
 
 #: conf/words.py:319
 msgid "unanswered question (singular)"
-msgstr ""
+msgstr "question sans réponse (singulier)"
 
 #: conf/words.py:328
 msgid "unanswered questions"
-msgstr ""
+msgstr "questions sans réponse"
 
 #: conf/words.py:329
 msgid "unanswered questions (plural)"
-msgstr ""
+msgstr "questions sans réponse (pluriel)"
 
 #: conf/words.py:338
 msgid "answer"
-msgstr ""
+msgstr "réponse"
 
 #: conf/words.py:339
 msgid "answer (noun, sungular)"
-msgstr ""
+msgstr "réponse (nom, singulier)"
 
 #: conf/words.py:348 conf/words.py:349
 msgid "Question voted up"
-msgstr ""
+msgstr "Question ayant obtenu des votes positifs"
 
 #: conf/words.py:358 conf/words.py:359
 msgid "Answer voted up"
-msgstr ""
+msgstr "Réponse ayant obtenu des votes positifs"
 
 #: conf/words.py:368 conf/words.py:369
 msgid "upvoted answer"
-msgstr ""
+msgstr "réponse notée positivement"
 
 #: conf/words.py:380 conf/words.py:391 conf/words.py:402 conf/words.py:413
 #: conf/words.py:424 conf/words.py:435 conf/words.py:446 conf/words.py:457
 #: conf/words.py:468 conf/words.py:479 conf/words.py:490
 msgid "Badge name"
-msgstr ""
+msgstr "Nom de la médaille"
 
 #: conf/words.py:499 conf/words.py:500
 msgid "upvoted answers"
-msgstr ""
+msgstr "réponses notées positivement"
 
 #: conf/words.py:509 conf/words.py:510
 msgid "Show only questions from"
@@ -3316,7 +3318,7 @@ msgstr "Poser une question pouvant interesser cette communauté"
 
 #: conf/words.py:572 conf/words.py:573
 msgid "No questions here."
-msgstr ""
+msgstr "Pas de question ici."
 
 #: conf/words.py:582 conf/words.py:583
 msgid "Please follow some questions or follow some users."
@@ -3324,7 +3326,7 @@ msgstr "Veuillez suivre quelques questions ou quelques utilisateurs "
 
 #: conf/words.py:592 conf/words.py:593
 msgid "Please feel free to ask your question!"
-msgstr ""
+msgstr "Sentez-vous libre de poser votre question!"
 
 #: conf/words.py:602 conf/words.py:603
 msgid "swap with question"
@@ -3340,11 +3342,11 @@ msgstr "(une seule réponse par utilisateur)"
 
 #: conf/words.py:623
 msgid "Only one answer per user is allowed"
-msgstr ""
+msgstr "Seulement une réponse par utilisateur est autorisée"
 
 #: conf/words.py:632 conf/words.py:633
 msgid "Accept the best answers for your questions"
-msgstr ""
+msgstr "Acceptez les meilleures réponses de vos questions"
 
 #: conf/words.py:642 conf/words.py:643
 msgid "author of the question"
@@ -3352,35 +3354,35 @@ msgstr "auteur de la question"
 
 #: conf/words.py:652 conf/words.py:653
 msgid "accept or unaccept the best answer"
-msgstr ""
+msgstr "accepter ou non accepter la meilleur réponse"
 
 #: conf/words.py:662 conf/words.py:663
 msgid "accept or unaccept your own answer"
-msgstr ""
+msgstr "accepter ou non accepter votre propre réponse"
 
 #: conf/words.py:672 conf/words.py:673
 msgid "you already gave an answer"
-msgstr ""
+msgstr "vous avez déjà donné une réponse"
 
 #: conf/words.py:682 conf/words.py:683
 msgid "gave an answer"
-msgstr ""
+msgstr "Réponse donnée"
 
 #: conf/words.py:692 conf/words.py:693
 msgid "answer own questions"
-msgstr ""
+msgstr "répondre a ses propres questions"
 
 #: conf/words.py:702 conf/words.py:703
 msgid "Answered own question"
-msgstr ""
+msgstr "A répondu à sa propre question"
 
 #: conf/words.py:712 conf/words.py:713
 msgid "repost as a comment under older answer"
-msgstr ""
+msgstr "republier comme un commentaire de la réponse plus ancienne"
 
 #: conf/words.py:722 conf/words.py:723
 msgid "invite other to help answer this question"
-msgstr ""
+msgstr "inviter d'autres personnes à aider à répondre à cette question"
 
 #: conf/words.py:732 conf/words.py:733
 msgid "Related questions"
@@ -3388,7 +3390,7 @@ msgstr "Questions liées"
 
 #: conf/words.py:742 conf/words.py:743
 msgid "Question Tools"
-msgstr ""
+msgstr "Outils de question"
 
 #: conf/words.py:752 conf/words.py:753
 msgid "Phrase: this question is currently shared only with:"
@@ -3404,7 +3406,7 @@ msgstr "questions suivies"
 
 #: conf/words.py:782 conf/words.py:783
 msgid "follow questions"
-msgstr ""
+msgstr "suivre les questions"
 
 #: conf/words.py:784
 msgid "Indefinite form"
@@ -3416,7 +3418,7 @@ msgstr ""
 
 #: conf/words.py:803 conf/words.py:804
 msgid "You can post questions by emailing them at"
-msgstr ""
+msgstr "Vous pouvez poser des questions en envoyant un email à"
 
 #: conf/words.py:813 conf/words.py:814
 msgid "List of questions"
@@ -3424,7 +3426,7 @@ msgstr "Liste des questions"
 
 #: conf/words.py:823 conf/words.py:824
 msgid "Community gives you awards for your questions, answers and votes"
-msgstr ""
+msgstr "La communauté vous donne des prix pour vos questions, réponses et votes"
 
 #: conf/words.py:833 conf/words.py:834
 msgid "Close question"
@@ -3432,7 +3434,7 @@ msgstr "Question close"
 
 #: conf/words.py:843 conf/words.py:844
 msgid "close questions"
-msgstr ""
+msgstr "fermer les questions"
 
 #: conf/words.py:853 conf/words.py:854
 msgid "Edit question"
@@ -3448,7 +3450,7 @@ msgstr "Re-étiqueter la question"
 
 #: conf/words.py:883 conf/words.py:884
 msgid "retag questions"
-msgstr ""
+msgstr "modifier les mot-clés"
 
 #: conf/words.py:893 conf/words.py:894
 msgid "Reopen question"
@@ -3464,7 +3466,7 @@ msgstr "Cette réponse a été sélectionnée comme correcte"
 
 #: conf/words.py:923 conf/words.py:924
 msgid "mark this answer as correct"
-msgstr ""
+msgstr "marquer cette réponse comme correct"
 
 #: conf/words.py:933 conf/words.py:934
 msgid "Login/Signup to Answer"
@@ -3472,11 +3474,11 @@ msgstr "S'identifier/S'inscrire pour répondre"
 
 #: conf/words.py:943 conf/words.py:944
 msgid "Your Answer"
-msgstr ""
+msgstr "Votre réponse"
 
 #: conf/words.py:953 conf/words.py:954
 msgid "Add Answer"
-msgstr ""
+msgstr "Ajouter une réponse"
 
 #: conf/words.py:963 conf/words.py:964
 msgid "give an answer interesting to this community"
@@ -3484,7 +3486,7 @@ msgstr "donner une réponse intéressante à cette communauté"
 
 #: conf/words.py:973 conf/words.py:974
 msgid "give a substantial answer"
-msgstr ""
+msgstr "donner une réponse substantielle"
 
 #: conf/words.py:983 conf/words.py:984
 msgid "try to give an answer, rather than engage into a discussion"
@@ -3500,11 +3502,11 @@ msgstr "EN SUSPENS"
 
 #: conf/words.py:1013 conf/words.py:1014
 msgid "Edit Answer"
-msgstr ""
+msgstr "Modifier la réponse"
 
 #: conf/words.py:1023 conf/words.py:1024
 msgid "Answered"
-msgstr ""
+msgstr "Répondue"
 
 #: const/__init__.py:12
 msgid "duplicate question"
@@ -3532,7 +3534,7 @@ msgstr "La question n'est pas pertinente ou périmée"
 
 #: const/__init__.py:18
 msgid "question contains offensive or malicious remarks"
-msgstr "La question contient des termes offensants ou malveillants"
+msgstr "la question contient des termes offensants ou malveillants"
 
 #: const/__init__.py:19
 msgid "spam or advertising"
@@ -3609,15 +3611,15 @@ msgstr "Lorsqu'une publication est publiée ou révisée"
 
 #: const/__init__.py:111
 msgid "latest first"
-msgstr ""
+msgstr "dernières en premier"
 
 #: const/__init__.py:112
 msgid "oldest first"
-msgstr ""
+msgstr "plus vielles en premier"
 
 #: const/__init__.py:113
 msgid "most voted first"
-msgstr ""
+msgstr "Les plus voté en premier"
 
 #: const/__init__.py:118 templates/tags/header.html:25
 msgid "sorted by frequency of tag use"
@@ -3823,7 +3825,7 @@ msgstr "mots-clés souscrites seulement"
 
 #: const/__init__.py:443 const/__init__.py:449 const/__init__.py:455
 msgid "subscribe to all tags"
-msgstr ""
+msgstr "s'abonner pour tout les mots-clés"
 
 #: const/__init__.py:462
 #: templates/user_profile/user_email_subscriptions.html:22
@@ -3843,7 +3845,7 @@ msgstr "hebdomadaire"
 #: const/__init__.py:465
 #: templates/user_profile/user_email_subscriptions.html:25
 msgid "never"
-msgstr ""
+msgstr "jamais"
 
 #: const/__init__.py:471
 msgid "identicon"
@@ -3867,7 +3869,7 @@ msgstr "homme-mystère"
 
 #: const/__init__.py:479 templates/avatar/show_list.html:13
 msgid "Default avatar"
-msgstr ""
+msgstr "Avatar par défaut"
 
 #: const/__init__.py:480 templates/avatar/show_list.html:26
 msgid "Gravatar"
@@ -3899,7 +3901,7 @@ msgstr "date croissante"
 
 #: const/__init__.py:548
 msgid "most recently active"
-msgstr ""
+msgstr "Les plus récemment actif"
 
 #: const/__init__.py:549
 msgid "least recently active"
@@ -3907,19 +3909,19 @@ msgstr ""
 
 #: const/__init__.py:550
 msgid "more responses"
-msgstr ""
+msgstr "plus de réponses"
 
 #: const/__init__.py:551
 msgid "fewer responses"
-msgstr ""
+msgstr "moins de réponses"
 
 #: const/__init__.py:552
 msgid "more votes"
-msgstr ""
+msgstr "plus de votes"
 
 #: const/__init__.py:553
 msgid "less votes"
-msgstr ""
+msgstr "moins de votes"
 
 #: const/message_keys.py:15
 msgid "most relevant questions"
@@ -3927,7 +3929,7 @@ msgstr "questions les plus pertinentes"
 
 #: const/message_keys.py:16
 msgid "click to see most relevant questions"
-msgstr "cliquez ici pour voir les questions les plus pertinentes"
+msgstr "Cliquez ici pour voir les questions les plus pertinentes"
 
 #: const/message_keys.py:17
 msgid "by relevance"
@@ -4005,17 +4007,17 @@ msgstr "veuilez utiliser des lettres, nombres et caractères \"-+.#\""
 msgid ""
 "# is not a valid character at the beginning of tags, use only letters and "
 "numbers"
-msgstr ""
+msgstr "# n'est pas un caractère valide au début des mot-clés, utilisez seulement des chiffres et des lettres"
 
 #: const/message_keys.py:41
 #, python-format
 msgid "Sorry, you cannot %(perform_action)s because %(your_account_is)s"
-msgstr ""
+msgstr "Désolé, vous ne pouvez pas %(perform_action)s parce que %(your_account_is)s"
 
 #: const/message_keys.py:43
 #, python-format
 msgid ">%(min_rep)s points required to %(perform_action)s"
-msgstr ""
+msgstr ">%(min_rep)s points requis pour %(perform_action)s"
 
 #: const/message_keys.py:44
 #, python-format
@@ -4041,11 +4043,11 @@ msgstr "Bienvenue ! Veuillez remplir votre adresse email (important!) dans votr
 
 #: deps/django_authopenid/forms.py:62
 msgid "I have read and agree with the terms of service"
-msgstr ""
+msgstr "J'ai lu et accepte les termes et service"
 
 #: deps/django_authopenid/forms.py:65
 msgid "In order to register, you must accept the terms of service"
-msgstr ""
+msgstr "Avant de vous inscrire, vous devez accepter les termes d'utilisation du service"
 
 #: deps/django_authopenid/forms.py:102 deps/django_authopenid/views.py:211
 msgid "i-names are not supported"
@@ -4083,11 +4085,11 @@ msgstr "le mot de passe est obligatoire"
 
 #: deps/django_authopenid/forms.py:365
 msgid "retype your password"
-msgstr ""
+msgstr "Retapez votre mot de passe"
 
 #: deps/django_authopenid/forms.py:385 utils/forms.py:295
 msgid "entered passwords did not match, please try again"
-msgstr ""
+msgstr "les deux mots de passe sont différents, veuillez recommencer"
 
 #: deps/django_authopenid/forms.py:437
 msgid "Sorry, we don't have this email address in the database"
@@ -4095,7 +4097,7 @@ msgstr "Désolé, nous n'avons pas cet email dans notre base"
 
 #: deps/django_authopenid/forms.py:477
 msgid "Your user name"
-msgstr ""
+msgstr "Votre nom d'utilisateur"
 
 #: deps/django_authopenid/forms.py:493
 msgid "sorry, there is no such user name"
@@ -4105,47 +4107,47 @@ msgstr "désolé, il n'y a aucune correspondance avec ce nom d'utilisateur"
 #: deps/django_authopenid/urls.py:27 deps/django_authopenid/urls.py:31
 msgctxt "urls"
 msgid "signin/"
-msgstr ""
+msgstr "connexion/"
 
 #: deps/django_authopenid/urls.py:19
 msgctxt "urls"
 msgid "widget/"
-msgstr ""
+msgstr "composant/"
 
 #: deps/django_authopenid/urls.py:24
 msgctxt "urls"
 msgid "signout/"
-msgstr ""
+msgstr "deconnexion/"
 
 #: deps/django_authopenid/urls.py:31
 msgctxt "urls"
 msgid "complete-cas/"
-msgstr ""
+msgstr "complete-cas/"
 
 #: deps/django_authopenid/urls.py:44
 msgctxt "urls"
 msgid "register/"
-msgstr ""
+msgstr "enregistrement/"
 
 #: deps/django_authopenid/urls.py:46
 msgctxt "urls"
 msgid "signup/"
-msgstr ""
+msgstr "inscription/"
 
 #: deps/django_authopenid/urls.py:55
 msgctxt "urls"
 msgid "logout/"
-msgstr ""
+msgstr "deconnecter/"
 
 #: deps/django_authopenid/urls.py:57
 msgctxt "urls"
 msgid "recover/"
-msgstr ""
+msgstr "recuperer/"
 
 #: deps/django_authopenid/urls.py:62
 msgctxt "urls"
 msgid "verify-email/"
-msgstr ""
+msgstr "verifier-email/"
 
 #: deps/django_authopenid/util.py:437
 #, python-format
@@ -4165,12 +4167,12 @@ msgstr "Changer votre mot de passe"
 #: templates/widgets/login_link.html:15
 #, python-format
 msgid "Sign in via %(login_name)s"
-msgstr ""
+msgstr "Se connecter via %(login_name)s"
 
 #: deps/django_authopenid/util.py:458
 #, python-format
 msgid "%(login_name)s username"
-msgstr ""
+msgstr "Nom d'utilisateur de %(login_name)s"
 
 #: deps/django_authopenid/util.py:604
 msgid "Sign in with Yahoo"
@@ -4260,7 +4262,7 @@ msgstr "Malheureusement, il y a eu un problème lors de la connexion à %(provid
 
 #: deps/django_authopenid/views.py:572 deps/django_authopenid/views.py:887
 msgid "Your new password is saved"
-msgstr ""
+msgstr "Votre nouveau mot de passe est sauvegardé"
 
 #: deps/django_authopenid/views.py:709
 msgid "The login password combination was not correct"
@@ -4276,7 +4278,7 @@ msgstr "Email de récupération de compte envoyé"
 
 #: deps/django_authopenid/views.py:816 deps/django_authopenid/views.py:821
 msgid "Add at least one login method"
-msgstr ""
+msgstr "Ajoutez au moins une méthode de connexion"
 
 #: deps/django_authopenid/views.py:818
 msgid "If you wish, please add, remove or re-validate your login methods"
@@ -4356,7 +4358,7 @@ msgstr "Félicitations, vous êtes maintenant administrateur"
 
 #: mail/__init__.py:150
 msgid "<p>To post by email, please:</p>"
-msgstr ""
+msgstr "<p>Pour publier par email, s'il vous plait:</p>"
 
 #: mail/__init__.py:152
 msgid "<li>Type title in the subject line</li>"
@@ -4417,7 +4419,7 @@ msgstr "Veuillez répondre à l'email de bienvenu sans l'éditer"
 
 #: mail/messages.py:157
 msgid "Instant email notification"
-msgstr ""
+msgstr "Notification email instantanée"
 
 #: mail/messages.py:158
 msgid "Sent to relevant users when a post is made or edited"
@@ -4437,11 +4439,11 @@ msgstr ""
 
 #: mail/messages.py:394
 msgid "Welcome message"
-msgstr ""
+msgstr "Message de bienvenu"
 
 #: mail/messages.py:395
 msgid "Sent to newly registered user when replying by email is disabled"
-msgstr ""
+msgstr "Envoyé au utilisateurs nouvellement inscrits quand les réponses par courriels sont désactivées"
 
 #: mail/messages.py:397 mail/messages.py:417
 msgid "At least one user is required generate a preview"
@@ -4453,7 +4455,7 @@ msgstr ""
 
 #: mail/messages.py:415
 msgid "Sent to newly registered user when replying by email is enabled"
-msgstr ""
+msgstr "Envoyé au utilisateurs nouvellement inscrits quand les réponses par courriels sont activées"
 
 #: mail/messages.py:449
 msgid "Reply to the user response to the \"welcome\" message"
@@ -4479,7 +4481,7 @@ msgstr ""
 
 #: mail/messages.py:506
 msgid "Insufficient karma to post by email"
-msgstr ""
+msgstr "Aura insuffisant pour publier par email"
 
 #: mail/messages.py:508
 msgid "Sent when user does not have enough karma upon posting by email"
@@ -4487,7 +4489,7 @@ msgstr ""
 
 #: mail/messages.py:537
 msgid "Post was rejected"
-msgstr ""
+msgstr "La publication a été rejeté"
 
 #: mail/messages.py:539
 msgid "Sent when post was rejected by a moderator with a reason given"
@@ -4503,7 +4505,7 @@ msgstr ""
 
 #: mail/messages.py:583
 msgid "Batch email alert"
-msgstr ""
+msgstr "Alerte courriel par lot"
 
 #: mail/messages.py:584
 msgid "Contains daily of weekly batches of email updates"
@@ -4521,11 +4523,11 @@ msgstr "nouvelle question"
 
 #: mail/messages.py:643
 msgid "Accept answers reminder"
-msgstr ""
+msgstr "Accepter les rappels de réponses"
 
 #: mail/messages.py:644
 msgid "Sent to author of questions without accepted answers"
-msgstr ""
+msgstr "Envoyer à l'auteur des questions sans accepter les réponses"
 
 #: mail/messages.py:646 mail/messages.py:663 mail/messages.py:714
 #: mail/messages.py:739
@@ -4542,11 +4544,11 @@ msgstr ""
 
 #: mail/messages.py:691
 msgid "Email validation"
-msgstr ""
+msgstr "Validation d'email"
 
 #: mail/messages.py:692
 msgid "Sent when user validates email or recovers account"
-msgstr ""
+msgstr "Envoyé quand l'utilisateur valide son adresse de courriel ou récupère son compte"
 
 #: mail/messages.py:711
 msgid "Approved post notification"
@@ -4566,7 +4568,7 @@ msgstr "Pour ajouter à votre contribution SAISISSEZ AU DESSUS DE CETTE LIGNE"
 
 #: mail/messages.py:780
 msgid "Private message notification"
-msgstr ""
+msgstr "Notification de message privé"
 
 #: mail/messages.py:781
 msgid "Sent when a private message is sent to the user"
@@ -4580,11 +4582,11 @@ msgstr ""
 
 #: mail/messages.py:808
 msgid "Feedback email"
-msgstr ""
+msgstr "Remarque par courriel"
 
 #: mail/messages.py:809
 msgid "Sent when users submits feedback form"
-msgstr ""
+msgstr "Envoyer quand les utilisateurs soumettent le formulaire de remarque"
 
 #: middleware/forum_mode.py:64
 #, python-format
@@ -4593,14 +4595,14 @@ msgstr "Veuillez vous connecter pour utiliser %s"
 
 #: models/__init__.py:703
 msgid "perform this action"
-msgstr ""
+msgstr "faire cette action"
 
 #: models/__init__.py:709
 #, python-format
 msgid ""
 "Sorry, you cannot %(perform_action)s because the site is temporarily read "
 "only"
-msgstr ""
+msgstr "Désole, vous ne pouvez pas %(perform_action)s parce que le site est temporairement en lecture seule"
 
 #: models/__init__.py:716
 #, python-format
@@ -4620,7 +4622,7 @@ msgstr "Désolé, mais vous n'avez q'un accès en lecture seule"
 
 #: models/__init__.py:736
 msgid "your account is disabled"
-msgstr ""
+msgstr "votre compte est désactivé"
 
 #: models/__init__.py:743 models/__init__.py:814
 msgid "your account is blocked"
@@ -4662,15 +4664,15 @@ msgstr "télécharger des fichiers"
 
 #: models/__init__.py:914
 msgid "join or leave groups"
-msgstr ""
+msgstr "se joindre ou quitter des groupes"
 
 #: models/__init__.py:927 views/commands.py:220
 msgid "mark or unmark tags"
-msgstr ""
+msgstr "marquer ou démarquer des mots-clés"
 
 #: models/__init__.py:935
 msgid "merge duplicate questions"
-msgstr ""
+msgstr "Fusionner les questions en doublons"
 
 #: models/__init__.py:948
 msgid "Could not post, because your karma is insufficient to publish links"
@@ -4679,11 +4681,11 @@ msgstr "L'envoi a échoué, car votre aura est insuffisante pour publier des lie
 #: models/__init__.py:971
 #, python-format
 msgid "Sorry, %(you_already_gave_an_answer)s, please edit it instead."
-msgstr ""
+msgstr "Désolé %(you_already_gave_an_answer)s, éditez-la plutôt."
 
 #: models/__init__.py:996 models/__init__.py:1082
 msgid "Sorry, commenting closed entries is not allowed"
-msgstr ""
+msgstr "Désolé mais commenter les publications fermées n'est pas autorisé."
 
 #: models/__init__.py:1007
 #, python-format
@@ -4702,11 +4704,11 @@ msgstr "Désolé, seuls les propriétaires des questions ou les modérateurs peu
 
 #: models/__init__.py:1036
 msgid "repost items"
-msgstr ""
+msgstr "republier les items"
 
 #: models/__init__.py:1071
 msgid "post comments"
-msgstr ""
+msgstr "publier des commentaires"
 
 #: models/__init__.py:1100
 msgid ""
@@ -4722,11 +4724,11 @@ msgstr "Désolé, seuls les modérateurs, les administrateurs du site et les pro
 
 #: models/__init__.py:1128
 msgid "edit wiki posts"
-msgstr ""
+msgstr "éditer les publications wiki"
 
 #: models/__init__.py:1131
 msgid "edit posts"
-msgstr ""
+msgstr "éditer des publications"
 
 #: models/__init__.py:1171
 #, python-format
@@ -4752,16 +4754,16 @@ msgid ""
 msgid_plural ""
 "Sorry, cannot %(delete_your_question)s since it has some %(upvoted_answers)s"
 " posted by other users"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Désolé, impossible de supprimer %(delete_your_question)s car elle a obtenu %(upvoted_answers)s de la part de d'autres utilisateurs"
+msgstr[1] "Désolé, impossible de supprimer %(delete_your_question)s car elles ont obtenu %(upvoted_answers)s de la part de d'autres utilisateurs"
 
 #: models/__init__.py:1259
 msgid "delete posts"
-msgstr ""
+msgstr "supprimer des publications"
 
 #: models/__init__.py:1287
 msgid "reopen questions"
-msgstr ""
+msgstr "ré-ouvrir les questions"
 
 #: models/__init__.py:1301
 msgid "You have flagged this post before and cannot do it more than once"
@@ -4769,7 +4771,7 @@ msgstr ""
 
 #: models/__init__.py:1313
 msgid "flag posts as offensive"
-msgstr ""
+msgstr "marquer la publication comme offensante"
 
 #: models/__init__.py:1325
 #, python-format
@@ -4784,7 +4786,7 @@ msgstr "Impossible de supprimer un marqueur non existant"
 
 #: models/__init__.py:1356
 msgid "remove flags"
-msgstr ""
+msgstr "supprimer les marqueurs"
 
 #: models/__init__.py:1365
 msgid "you don't have the permission to remove all flags"
@@ -4796,7 +4798,7 @@ msgstr "pas de marqueur pour cette entrée"
 
 #: models/__init__.py:1405
 msgid "delete comments"
-msgstr ""
+msgstr "supprimer les commentaires"
 
 #: models/__init__.py:1422
 #, python-format
@@ -4973,7 +4975,7 @@ msgstr ""
 #: models/badges.py:334 models/badges.py:350 models/badges.py:366
 #, python-format
 msgid "%(answer_voted_up)s %(num)s times"
-msgstr ""
+msgstr "%(answer_voted_up)s %(num)s fois"
 
 #: models/badges.py:382 models/badges.py:398
 #, python-format
@@ -4988,17 +4990,17 @@ msgstr ""
 #: models/badges.py:430
 #, python-format
 msgid "%(asked_first_question)s with at least one up vote"
-msgstr ""
+msgstr "%(asked_first_question)s avec au moins un vote positif"
 
 #: models/badges.py:471 models/badges.py:485 models/badges.py:500
 #, python-format
 msgid "%(asked_a_question)s with %(views)s views"
-msgstr ""
+msgstr "%(asked_a_question)s avec %(views)s vues"
 
 #: models/badges.py:513
 #, python-format
 msgid "%(asked_a_question)s and %(accepted_an_answer)s"
-msgstr ""
+msgstr "%(asked_a_question)s et %(accepted_an_answer)s"
 
 #: models/badges.py:562
 msgid "Enlightened"
@@ -5048,7 +5050,7 @@ msgstr "A renseigné tous les champs de son profil utilisateur"
 #: models/badges.py:754
 #, python-format
 msgid "%(asked_a_question)s with %(num)s followers"
-msgstr ""
+msgstr "%(asked_a_question)s avec %(num)s suiveurs"
 
 #: models/badges.py:812
 #, python-format
@@ -5064,8 +5066,8 @@ msgstr "A posté %(num_comments)s commentaires"
 #, python-format
 msgid "Created a tag used %(num)s time"
 msgid_plural "Created a tag used %(num)s times"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "A crée un mot-clé utilisé %(num)s fois"
+msgstr[1] "A crée un mot-clé utilisé %(num)s fois"
 
 #: models/badges.py:880
 msgid "Very active in one tag"
@@ -5081,7 +5083,7 @@ msgstr "Le partage n'a pas fonctionné car le groupe est inconnu"
 
 #: models/post.py:925
 msgid "merged revision"
-msgstr ""
+msgstr "révision fusionnée"
 
 #: models/post.py:1125 templates/question/answer_controls.html:60
 #: templatetags/extra_filters_jinja.py:147
@@ -5106,7 +5108,7 @@ msgstr "Cette publication est temporairement indisponible"
 
 #: models/post.py:2295
 msgid "Suggested edit"
-msgstr ""
+msgstr "Edition suggéré"
 
 #: models/post.py:2422
 #, python-format
@@ -5151,7 +5153,7 @@ msgstr "ajouter du contenu par email"
 
 #: models/reply_by_email.py:124
 msgid "edited by email"
-msgstr "éditer par courriel"
+msgstr "édité par courriel"
 
 #: models/repute.py:220
 #, python-format
@@ -5274,7 +5276,7 @@ msgstr "L'erreur a été consigné dans les journaux d'erreurs système, et sera
 
 #: templates/500.html:8
 msgid "please report the error to the site administrators"
-msgstr ""
+msgstr "Signalez s'il vous plait cette erreur aux administrateurs du site."
 
 #: templates/answer_edit.html:11 templates/question_edit.html:9
 #: templates/question_retag.html:5 templates/revisions.html:7
@@ -5350,7 +5352,7 @@ msgstr "Ci-dessous figure la liste des médailles existantes et le nombre de foi
 
 #: templates/badges.html:30
 msgid "Community badges"
-msgstr ""
+msgstr "Badges communautaires"
 
 #: templates/badges.html:32
 msgid "gold badge: the highest honor and is very rare"
@@ -5459,7 +5461,7 @@ msgid ""
 "some points, which are called \"karma points\". These points serve as a "
 "rough measure of the community trust to him/her. Various moderation tasks "
 "are gradually assigned to the users based on those points."
-msgstr ""
+msgstr "Quand une question ou une réponse est jugée positivement, l'utilisateur l'ayant posté gagnera des points, nommés \"points d'aura\". Ces points servent comme une mesure approximative de la confiance de la communauté envers lui/elle. Diverses tâches de modération sont progressivement attribuées aux utilisateurs en fonction de ces points."
 
 #: templates/faq_static.html:22
 #, python-format
@@ -5780,7 +5782,7 @@ msgstr "Votre décision"
 
 #: templates/list_suggested_tags.html:14
 msgid "Where the tag was used"
-msgstr ""
+msgstr "Où le mot-clé est utilisé"
 
 #: templates/list_suggested_tags.html:34 templates/list_suggested_tags.html:45
 msgid "Accept"
@@ -5792,7 +5794,7 @@ msgstr "Rejeter"
 
 #: templates/list_suggested_tags.html:38
 msgid "This tag has not yet been used"
-msgstr ""
+msgstr "Ce mot-clé n'a pas encore été utilisé"
 
 #: templates/list_suggested_tags.html:61
 #, python-format
@@ -5811,7 +5813,7 @@ msgstr "Aucun résultat"
 #: templates/macros.html:5
 #, python-format
 msgid "Share this content on %(site)s"
-msgstr ""
+msgstr "Partager ce contenu sur %(site)s"
 
 #: templates/macros.html:48
 msgid "current number of votes"
@@ -5870,7 +5872,7 @@ msgstr "ajouter un commentaire"
 
 #: templates/macros.html:341
 msgid "load older comments"
-msgstr ""
+msgstr "charger les commentaires plus anciens"
 
 #: templates/macros.html:343
 msgid "see more comments"
@@ -5883,7 +5885,7 @@ msgstr "Supprimer ce commentaire"
 #: templates/macros.html:379 templates/question/answer_card.html:25
 #: templates/question/question_card.html:34
 msgid "This post is awaiting moderation"
-msgstr ""
+msgstr "Cette publication attend d'être modéré"
 
 #: templates/macros.html:395 templates/revisions.html:38
 #: templates/revisions.html.py:41 templates/question/answer_controls.html:5
@@ -5932,7 +5934,7 @@ msgstr "page suivante"
 
 #: templates/macros.html:662
 msgid "next"
-msgstr ""
+msgstr "suivant"
 
 #: templates/macros.html:713
 #, python-format
@@ -5998,7 +6000,7 @@ msgstr "jusqu'à 5 tags, faisant chacun moins de 20 caractères"
 msgid ""
 "Closed by: \n"
 "    <a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
-msgstr ""
+msgstr "Fermé par:\n<a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
 
 #: templates/reopen.html:17
 msgid "Close reason:"
@@ -6036,7 +6038,7 @@ msgstr "S'abonner"
 #: templates/users.html:8 templates/users.html.py:18
 #: templates/tags/list_bulk_tag_subscription.html:13
 msgid "Users"
-msgstr ""
+msgstr "Utilsateurs"
 
 #: templates/users.html:16
 #, python-format
@@ -6078,13 +6080,13 @@ msgstr "utilisateurs correspondant à %(search_query)s:"
 
 #: templates/users.html:69
 msgid "No users found."
-msgstr ""
+msgstr "Aucun utilisateur trouvé."
 
 #: templates/authopenid/account_recovery_form.html:2
 #: templates/authopenid/signin.html:181
 #: templates/authopenid/widget_signin.html:169
 msgid "Enter your email"
-msgstr ""
+msgstr "Entrez votre adresse de courriel"
 
 #: templates/authopenid/account_recovery_form.html:5
 msgid "Send a new recovery key"
@@ -6097,7 +6099,7 @@ msgstr "Envoyer une nouvelle clé de récupération"
 #: templates/authopenid/signin.html:182
 #: templates/authopenid/widget_signin.html:170
 msgid "Recover account"
-msgstr ""
+msgstr "Récupérer le compte"
 
 #: templates/authopenid/authopenid_macros.html:60
 msgid "Please enter your <span>user name</span>, then sign in"
@@ -6116,12 +6118,12 @@ msgstr "S'identifier"
 
 #: templates/authopenid/complete.html:21 templates/authopenid/complete.html:30
 msgid "Complete registration"
-msgstr ""
+msgstr "Enregistrement terminé"
 
 #: templates/authopenid/complete.html:27
 #: templates/authopenid/signup_with_password.html:16
 msgid "New user registrations are disabled"
-msgstr ""
+msgstr "L'enregistrement de nouveaux utilisateurs est désactivé"
 
 #: templates/authopenid/complete.html:60
 #: templates/authopenid/signup_with_password.html:30 utils/forms.py:95
@@ -6132,7 +6134,7 @@ msgstr "Choisir un pseudonyme"
 #: templates/authopenid/signup_with_password.html:40
 #: templates/widgets/proxy_author_fields.html:18
 msgid "Email address"
-msgstr ""
+msgstr "Adresse email"
 
 #: templates/authopenid/complete.html:88
 #: templates/authopenid/signup_with_password.html:5
@@ -6142,27 +6144,27 @@ msgstr "S'enregistrer"
 
 #: templates/authopenid/complete.html:100
 msgid "Already have an account?"
-msgstr ""
+msgstr "Vous avez déjà un compte?"
 
 #: templates/authopenid/complete.html:101
 msgid "Recover it by email."
-msgstr ""
+msgstr "Récupérer par courriel."
 
 #: templates/authopenid/complete.html:104
 msgid "Prefer to create a new account?"
-msgstr ""
+msgstr "Vous préférez créer un nouveau compte?"
 
 #: templates/authopenid/complete.html:105
 msgid "Return to registration."
-msgstr ""
+msgstr "Retourner à l'enregistrement."
 
 #: templates/authopenid/confirm_email.txt:1
 msgid "Thank you for registering at our Q&A forum!"
-msgstr ""
+msgstr "Merci de vous être inscrit à notre FAQ!"
 
 #: templates/authopenid/confirm_email.txt:3
 msgid "Your account details are:"
-msgstr ""
+msgstr "Les détails de votre compte sont:"
 
 #: templates/authopenid/confirm_email.txt:5
 msgid "Username:"
@@ -6174,18 +6176,18 @@ msgstr "Mot de passe"
 
 #: templates/authopenid/confirm_email.txt:8
 msgid "Please sign in here:"
-msgstr ""
+msgstr "Merci de vous identifier ici:"
 
 #: templates/authopenid/confirm_email.txt:11
 #: templates/authopenid/email_validation/body.txt:13
 msgid ""
 "Sincerely,\n"
 "Q&A Forum Administrator"
-msgstr ""
+msgstr "Sincèrement,\nLes administrateur du forum"
 
 #: templates/authopenid/logout.html:3
 msgid "Logout"
-msgstr ""
+msgstr "Déconnexion"
 
 #: templates/authopenid/logout.html:5
 msgid "You have successfully logged out"
@@ -6254,12 +6256,12 @@ msgstr "La connexion à échoué, veuillez reessayer"
 
 #: templates/authopenid/signin.html:82
 msgid "Username"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: templates/authopenid/signin.html:84
 #: templates/authopenid/widget_signin.html:79
 msgid "Username or email"
-msgstr ""
+msgstr "Identifiant ou adresse mail"
 
 #: templates/authopenid/signin.html:94
 #: templates/authopenid/signup_with_password.html:50
@@ -6319,7 +6321,7 @@ msgstr "Ne peut pas être supprimé."
 #: templates/authopenid/signin.html:177
 #: templates/authopenid/widget_signin.html:165
 msgid "Having trouble signing in?"
-msgstr ""
+msgstr "Vous avez des soucis pour vous connecter ?"
 
 #: templates/authopenid/signup_with_password.html:10
 msgid ""
@@ -6328,7 +6330,7 @@ msgid ""
 "<strong>OpenID</strong> login method. With <strong>OpenID</strong> you can\n"
 "simply reuse your external login (e.g. Gmail or AOL) without ever sharing\n"
 "your login details with anyone and having to remember yet another password."
-msgstr ""
+msgstr "<span class='strong big'>Si vous le préférez, créez un pseudonyme et votre \nmot de passe de forum ici. Toutefois</span>, gardez en tête que nous supportons aussi\nla méthode de connection <strong>OpenID</strong>. Avec <strong>OpenID</strong> vous  pouvez\nsimplement réutiliser vos identifiants externes (e.g. Gmail or AOL) sans jamais partager\nvos détails de connection avec qui que ce soit, ni de vous rappeler un autre mot de passe."
 
 #: templates/authopenid/signup_with_password.html:21
 msgid "Create login name and password"
@@ -6336,11 +6338,11 @@ msgstr "Créer un nom d'utilisateur et un mot de passe"
 
 #: templates/authopenid/signup_with_password.html:60 utils/forms.py:293
 msgid "Password retyped"
-msgstr ""
+msgstr "Mot de passe retapé"
 
 #: templates/authopenid/tos_field.html:4
 msgid "Terms of service:"
-msgstr ""
+msgstr "Conditions d'utilisations:"
 
 #: templates/authopenid/verify_email.html:2
 #: templates/authopenid/verify_email.html:4
@@ -6399,17 +6401,17 @@ msgstr ""
 #: templates/authopenid/email_validation/subject.txt:1
 #, python-format
 msgid "Validate your %(site_name)s email"
-msgstr ""
+msgstr "Validez votre email %(site_name)s"
 
 #: templates/avatar/avatar.html:3
 #, python-format
 msgid "%(username)s's primary avatar"
-msgstr ""
+msgstr "avatar principal de %(username)s"
 
 #: templates/avatar/avatar.html:5
 #, python-format
 msgid "%(username)s's avatar"
-msgstr ""
+msgstr "Avatar de %(username)s"
 
 #: templates/avatar/confirm_delete.html:2
 msgid "delete avatar"
@@ -6432,41 +6434,41 @@ msgstr "Effacer ceux-ci"
 
 #: templates/avatar/show_list.html:3
 msgid "manage avatars"
-msgstr ""
+msgstr "gérer les avatars"
 
 #: templates/avatar/show_list.html:13
 msgid ""
 "This is a default avatar image, shown at your account because you have not "
 "yet uploaded an avatar."
-msgstr ""
+msgstr "Ceci est l'avatar par défaut, elle affiché sur votre compte car vous n'avez pas encore chargé d'avatar."
 
 #: templates/avatar/show_list.html:21 templates/avatar/show_list.html.py:35
 #: templates/avatar/show_list.html:45
 msgid "Set as primary"
-msgstr ""
+msgstr "Définir comme principal"
 
 #: templates/avatar/show_list.html:26
 #, python-format
 msgid ""
 "This image, called 'gravatar', is linked to the email address %(email)s.  It"
 " can be changed at http://gravatar.com"
-msgstr ""
+msgstr "Cette image, appellé 'gravatar', est liée à l'adresse email %(email)s. Elle peut être changé sur http://gravatar.com"
 
 #: templates/avatar/show_list.html:52
 msgid "Remove"
-msgstr ""
+msgstr "Supprimer"
 
 #: templates/avatar/show_list.html:56
 msgid "Primary avatar"
-msgstr ""
+msgstr "Avatar principal"
 
 #: templates/avatar/show_list.html:63
 msgid "You haven't uploaded an avatar yet."
-msgstr ""
+msgstr "Vous n'avez pas encore téléchargé d'avatar."
 
 #: templates/avatar/show_list.html:68
 msgid "Upload an avatar"
-msgstr ""
+msgstr "Télécharger un avatar"
 
 #: templates/editors/rich_text.html:16
 msgid "Toggle the real time Markdown editor preview"
@@ -6484,7 +6486,7 @@ msgstr "Pour changer la fréquence, la langue et le contenu de ces alertes, veui
 msgid ""
 "To change frequency and content of these alerts, please visit <a "
 "href=\"%(url)s\">your user profile</a>."
-msgstr ""
+msgstr "Pour changer la fréquence et le contenu des ces alertes, consultez <a href=\"%(url)s\">votre page utilisateur</a>."
 
 #: templates/email/change_settings_info.html:9
 #, python-format
@@ -6496,16 +6498,16 @@ msgstr "Si vous croyez que ce message a été envoyé par erreur, s'il vous pla�
 
 #: templates/email/list_emails.html:2
 msgid "Preview of emails"
-msgstr ""
+msgstr "Afficher l'aperçu des courriels"
 
 #: templates/email/list_emails.html:4
 msgid "List of emails sent by Askbot"
-msgstr ""
+msgstr "Liste des emails envoyé par Askbot"
 
 #: templates/email/macros.html:34 templates/email/macros.html.py:65
 #, python-format
 msgid "In reply to %(author)s's <a href=\"%(post_url)s\">%(post_type)s</a>"
-msgstr ""
+msgstr "En réponse à la publication de %(author)s <a href=\"%(post_url)s\">%(post_type)s</a>"
 
 #: templates/email/macros.html:51
 msgid "Tags:"
@@ -6527,7 +6529,7 @@ msgstr[1] "\n%(count)s commentaires:"
 #: templates/email/preview_email.html:2 templates/email/preview_email.html:8
 #, python-format
 msgid "Preview of email \"%(title)s\""
-msgstr ""
+msgstr "Aperçu de l'email \"%(title)s\""
 
 #: templates/email/preview_email.html:5
 msgid "Askbot emails"
@@ -6540,7 +6542,7 @@ msgstr ""
 
 #: templates/email/preview_email.html:19
 msgid "Subject"
-msgstr ""
+msgstr "Sujet"
 
 #: templates/email/preview_email.html:20
 msgid "Body text (below, email styling preserved)"
@@ -6549,7 +6551,7 @@ msgstr ""
 #: templates/email/accept_answers_reminder/body.html:2
 #: templates/email/accept_answers_reminder/body.html:3
 msgid "Please select the best responses for"
-msgstr ""
+msgstr "Sélectionnez la meilleur réponse pour"
 
 #: templates/email/approved_post_notification/body.html:9
 #: templates/email/approved_post_notification_respondable/body.html:20
@@ -6617,22 +6619,22 @@ msgid_plural ""
 "\n"
 "        %(question_count)s updates\n"
 "    "
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "\n%(question_count)s mis-à-jour"
+msgstr[1] "\n%(question_count)s mis-à-jour"
 
 #: templates/email/feedback/body.html:6 templates/email/feedback/body.html:7
 #, python-format
 msgid "%(site_name)s feedback"
-msgstr ""
+msgstr "remarque sur %(site_name)s"
 
 #: templates/email/feedback/body.html:10 templates/email/feedback/body.html:12
 msgid "wrote:"
-msgstr ""
+msgstr "a écrit:"
 
 #: templates/email/feedback/subject.txt:1
 #, python-format
 msgid "%(site_name)s feedback message"
-msgstr ""
+msgstr "Message de remarque sur %(site_name)s"
 
 #: templates/email/instant_notification/body.html:10
 #, python-format
@@ -6640,7 +6642,7 @@ msgid ""
 "Note: to reply with a comment, please use \n"
 "                <a href=\"mailto:%(addr)ss?subject=%(subject)s\">this link</a>\n"
 "            "
-msgstr ""
+msgstr "Note: Pour répondre avec un commentaire, utilisez\n<a href=\"mailto:%(addr)ss?subject=%(subject)s\">ce lien</a>"
 
 #: templates/email/instant_notification/body.html:23
 #, python-format
@@ -6661,7 +6663,7 @@ msgstr "Pour faire des envois par e-mail, vous devez recevoir environ %(min_upvo
 #: templates/email/insufficient_reputation/body.html:15
 #, python-format
 msgid "At this time, please post your content at %(link)s"
-msgstr ""
+msgstr "Pour le moment, veuillez publier votre contenu à %(link)s"
 
 #: templates/email/moderation_queue_notification/body.html:3
 #, python-format
@@ -6674,7 +6676,7 @@ msgstr ""
 #: templates/email/moderation_queue_notification/subject.txt:1
 #, python-format
 msgid "%(site)s moderation alert"
-msgstr ""
+msgstr "Alerte de modération de %(site)s"
 
 #: templates/email/re_welcome/body.html:2
 #: templates/email/re_welcome/body.html:3
@@ -6710,7 +6712,7 @@ msgstr "Rep: Bienvenu à %(site_name)s"
 #: templates/email/rejected_post/body.html:2
 #: templates/email/rejected_post/body.html:3
 msgid "Your post was rejected."
-msgstr ""
+msgstr "Votre publication a été rejeté."
 
 #: templates/email/rejected_post/body.html:5
 msgid "Your post (copied in the end), was rejected for the following reason:"
@@ -6726,11 +6728,11 @@ msgstr "votre publication n'a pas été accepter"
 
 #: templates/email/reply_by_email_error/body.html:3
 msgid "The system was unable to process your message successfully"
-msgstr ""
+msgstr "Le système n'a pas été en mesure de traiter votre message"
 
 #: templates/email/reply_by_email_error/subject.txt:1
 msgid "Error posting your reply"
-msgstr ""
+msgstr "Erreur sur la publication de votre réponse"
 
 #: templates/email/unanswered_questions_reminder/subject.txt:2
 #, python-format
@@ -6762,24 +6764,24 @@ msgstr "Important : <em>Veuiilez répondre</em> à ce message, sans le modifier.
 msgid ""
 "Until we receive the response from you, you will not be able to post content"
 " on %(site_name)s by email."
-msgstr ""
+msgstr "Jusqu'à ce que nous recevions une réponse de votre part, vous ne serez pas en mesure de publier du contenu sur %(site_name)s par email"
 
 #: templates/embed/list_widgets.html:5
 #, python-format
 msgid "%(type)s widget list"
-msgstr ""
+msgstr "liste de component %(type)s"
 
 #: templates/embed/list_widgets.html:8
 msgid "Widget Title"
-msgstr ""
+msgstr "Nom du composant"
 
 #: templates/embed/list_widgets.html:9
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #: templates/embed/list_widgets.html:10
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
 #: templates/embed/list_widgets.html:23 templates/embed/list_widgets.html:34
 #: templates/tags/list_bulk_tag_subscription.html:49 views/commands.py:546
@@ -6789,7 +6791,7 @@ msgstr "Éditer"
 #: templates/embed/list_widgets.html:24 templates/embed/list_widgets.html:35
 #: templates/tags/list_bulk_tag_subscription.html:53
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #: templates/embed/list_widgets.html:48
 msgid "How to use?"
@@ -6839,19 +6841,19 @@ msgstr "compose"
 #: templates/group_messaging/home.html:25
 #: templates/group_messaging/home.html:43
 msgid "Send"
-msgstr ""
+msgstr "Envoyer"
 
 #: templates/group_messaging/home.html:26
 msgid "Reply"
-msgstr ""
+msgstr "Répondre"
 
 #: templates/group_messaging/home.html:33
 msgid "Recipient"
-msgstr ""
+msgstr "Destinataire"
 
 #: templates/group_messaging/home.html:39
 msgid "Write your message"
-msgstr ""
+msgstr "Ecrivez votre message"
 
 #: templates/group_messaging/macros.html:5
 #, python-format
@@ -7014,7 +7016,7 @@ msgstr "Vous n'avez pas trouvé ce que vous cherchiez ?"
 
 #: templates/main_page/tab_bar.html:6
 msgid "subscribe to the feed"
-msgstr ""
+msgstr "s'abonner au flux"
 
 #: templates/main_page/tab_bar.html:7
 msgid "RSS"
@@ -7070,7 +7072,7 @@ msgstr "2) Veuillez saisir ici les détails. Ce texte sera envoyé à l'utilisat
 
 #: templates/moderation/manage_reject_reasons_dialog.html:18
 msgid "Save reason"
-msgstr ""
+msgstr "Sauvegarder la raison"
 
 #: templates/moderation/manage_reject_reasons_dialog.html:37
 msgid "Edit this reason"
@@ -7086,11 +7088,11 @@ msgstr "Ajouter une nouvelle raison"
 
 #: templates/moderation/queue.html:4 templates/moderation/queue.html.py:7
 msgid "Moderation queue"
-msgstr ""
+msgstr "Queue de modération"
 
 #: templates/moderation/queue.html:10
 msgid "Select:"
-msgstr ""
+msgstr "Sélectionner:"
 
 #: templates/moderation/queue.html:12 templates/user_inbox/responses.html:13
 msgid "none"
@@ -7098,15 +7100,15 @@ msgstr "aucune"
 
 #: templates/moderation/queue.html:14
 msgid "approve posts"
-msgstr ""
+msgstr "Approuver les publications"
 
 #: templates/moderation/queue.html:15
 msgid "approve posts and users"
-msgstr ""
+msgstr "Approuver les publications et les utilisateurs"
 
 #: templates/moderation/queue.html:18
 msgid "decline and explain why"
-msgstr ""
+msgstr "décliner et expliquer pourquoi"
 
 #: templates/moderation/queue.html:28
 msgid "add/manage reject reasons"
@@ -7114,11 +7116,11 @@ msgstr ""
 
 #: templates/moderation/queue.html:32
 msgid "block spammers"
-msgstr ""
+msgstr "bloquer les spammeurs"
 
 #: templates/moderation/queue.html:34
 msgid "block spammers and IPs"
-msgstr ""
+msgstr "bloquer les spammeurs et les IPS"
 
 #: templates/question/answer_card.html:22
 msgid "This response is published"
@@ -7177,11 +7179,11 @@ msgstr "Trier par »"
 
 #: templates/question/answer_vote_buttons.html:10
 msgid "(click again to undo)"
-msgstr ""
+msgstr "(cliquez à nouveau pour annuler)"
 
 #: templates/question/closed_question_info.html:2
 msgid "Closed for the following reason"
-msgstr ""
+msgstr "Fermé pour la raison suivante"
 
 #: templates/question/closed_question_info.html:3
 msgid "by"
@@ -7194,7 +7196,7 @@ msgstr "Date de cloture : %(closed_at)s"
 
 #: templates/question/content.html:19
 msgid "See the accepted answer"
-msgstr ""
+msgstr "Voir les réponses acceptées"
 
 #: templates/question/lang_switch_message.html:1
 #, python-format
@@ -7217,7 +7219,7 @@ msgstr "fermer"
 
 #: templates/question/question_controls.html:30
 msgid "merge"
-msgstr ""
+msgstr "fusionner"
 
 #: templates/question/sidebar.html:11
 msgid "Unfollow"
@@ -7241,7 +7243,7 @@ msgstr[1] "%(count)s suiveurs"
 
 #: templates/question/sidebar.html:35
 msgid "subscribe to the rss feed"
-msgstr ""
+msgstr "s'abonner au flux rss"
 
 #: templates/question/sidebar.html:36
 msgid "subscribe to rss feed"
@@ -7349,7 +7351,7 @@ msgstr "gérer les inscriptions aux mots-clés"
 
 #: templates/tags/list_bulk_tag_subscription.html:7
 msgid "Manage Tag subscription"
-msgstr ""
+msgstr "Gérer la souscription aux mot-clés"
 
 #: templates/tags/list_bulk_tag_subscription.html:8
 msgid "Create New"
@@ -7400,20 +7402,20 @@ msgstr "Refuser"
 #: templates/user_inbox/messages.html:9
 #: templates/user_profile/user_tabs.html:13
 msgid "private messages"
-msgstr ""
+msgstr "messages privés"
 
 #: templates/user_inbox/responses.html:4
 #: templates/user_profile/user_tabs.html:10
 msgid "notifications"
-msgstr ""
+msgstr "notifications"
 
 #: templates/user_inbox/responses.html:9
 msgid "mark seen"
-msgstr ""
+msgstr "marquer comme vu"
 
 #: templates/user_inbox/responses.html:11
 msgid "select:"
-msgstr ""
+msgstr "sélectionner:"
 
 #: templates/user_profile/twitter_sharing_controls.html:8
 #, python-format
@@ -7503,22 +7505,22 @@ msgstr "mots-clés souscrites"
 msgid ""
 "Note: the homepage link and the about section won't be shown to other users "
 "until your profile is approved by the moderators."
-msgstr ""
+msgstr "Note: les liens vers la page d'accueil et la section à propos ne seront pas affichés aux autres utilisateurs tant que votre profil n'est pas approuvé par les modérateurs."
 
 #: templates/user_profile/user_info.html:36
 msgid "unfollow"
-msgstr ""
+msgstr "se désabonner"
 
 #: templates/user_profile/user_info.html:37
 #: templates/user_profile/user_info.html:40
 #: templates/user_profile/user_info.html:46
 msgid "follow"
-msgstr ""
+msgstr "s'abonner"
 
 #: templates/user_profile/user_info.html:39
 #: templates/user_profile/user_info.html:44
 msgid "following"
-msgstr ""
+msgstr "abonné"
 
 #: templates/user_profile/user_info.html:57
 msgid "update profile"
@@ -7534,7 +7536,7 @@ msgstr "nom réel"
 
 #: templates/user_profile/user_info.html:80
 msgid "email"
-msgstr ""
+msgstr "email"
 
 #: templates/user_profile/user_info.html:86
 msgid "groups"
@@ -7580,11 +7582,11 @@ msgstr "votes restants"
 #: templates/user_profile/user_languages.html:3
 #: templates/user_profile/user_tabs.html:18
 msgid "languages"
-msgstr ""
+msgstr "langues"
 
 #: templates/user_profile/user_languages.html:12
 msgid "View and subscribe to posts in these languages"
-msgstr ""
+msgstr "Voir et souscrire aux publications dans ces langues"
 
 #: templates/user_profile/user_languages.html:14
 msgid "Subscribe to posts in these languages"
@@ -7592,7 +7594,7 @@ msgstr ""
 
 #: templates/user_profile/user_languages.html:17
 msgid "My primary language is"
-msgstr ""
+msgstr "Ma langue principale est"
 
 #: templates/user_profile/user_moderate.html:4
 #: templates/user_profile/user_tabs.html:48
@@ -7606,11 +7608,11 @@ msgstr "Le statut actuel de %(username)s est \"%(status)s\""
 
 #: templates/user_profile/user_moderate.html:20
 msgid "Change status"
-msgstr ""
+msgstr "Changer le status"
 
 #: templates/user_profile/user_moderate.html:22
 msgid "Block user and delete all content"
-msgstr ""
+msgstr "Bloquer l'utilisateur et supprimer tout le contenu"
 
 #: templates/user_profile/user_moderate.html:29
 #, python-format
@@ -7761,7 +7763,7 @@ msgstr "Répondre à:"
 
 #: templates/user_profile/user_tabs.html:22
 msgid "email alerts"
-msgstr ""
+msgstr "alerte par courriel"
 
 #: templates/user_profile/user_tabs.html:43
 #: templates/user_profile/user_votes.html:5
@@ -7805,7 +7807,7 @@ msgstr "Respect de la vie privée"
 
 #: templates/widgets/footer.html:43
 msgid "terms of service"
-msgstr ""
+msgstr "condition d'utilisation"
 
 #: templates/widgets/footer.html:55
 msgid "give feedback"
@@ -7833,7 +7835,7 @@ msgstr "ajouter un logo"
 
 #: templates/widgets/group_info.html:46
 msgid "moderate emailed content"
-msgstr ""
+msgstr "modérer les contenu envoyé par email"
 
 #: templates/widgets/group_info.html:63
 msgid "How users join this group?"
@@ -7918,11 +7920,11 @@ msgstr "liste numérotée:"
 
 #: templates/widgets/markdown_help.html:29
 msgid "One"
-msgstr ""
+msgstr "Un"
 
 #: templates/widgets/markdown_help.html:30
 msgid "Two"
-msgstr ""
+msgstr "Deux"
 
 #: templates/widgets/markdown_help.html:33
 msgid "basic HTML tags are also supported"
@@ -7938,7 +7940,7 @@ msgstr "personnes & groupes"
 
 #: templates/widgets/meta_nav.html:21
 msgid "users"
-msgstr ""
+msgstr "utilisateurs"
 
 #: templates/widgets/meta_nav.html:28
 msgid "badges"
@@ -7946,11 +7948,11 @@ msgstr "médailles"
 
 #: templates/widgets/moderated_image.html:1
 msgid "image awaiting moderation"
-msgstr ""
+msgstr "L'image attend d'être modéré"
 
 #: templates/widgets/moderated_link.html:1
 msgid "link awaiting moderation"
-msgstr ""
+msgstr "le lien attend d'être modéré"
 
 #: templates/widgets/proxy_author_fields.html:7
 msgid ""
@@ -7960,13 +7962,13 @@ msgstr "Pour poster sous le nom de quelqu'un d'autre, saisissez son nom d'utilis
 
 #: templates/widgets/proxy_author_fields.html:14
 msgid "User name"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: templates/widgets/question_edit_tips.html:7
 msgid ""
 "since you are not logged in right now, you will be asked to sign in or "
 "register after making your post"
-msgstr ""
+msgstr "puisque vous n'êtes pas connecté pour le moment, vous serez invité à vous connecter ou vous enregistrer après avoir posté votre question"
 
 #: templates/widgets/question_summary.html:12
 msgid "view"
@@ -7990,7 +7992,7 @@ msgstr "SUIVI"
 
 #: templates/widgets/search_bar.html:20
 msgid "search or ask your question"
-msgstr ""
+msgstr "rechercher ou poser votre question"
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
@@ -8081,7 +8083,7 @@ msgstr "Actuellement, vous pouvez :"
 
 #: templates/widgets/user_perms.html:21
 msgid "Make new posts"
-msgstr ""
+msgstr "Créer de nouvelles publications"
 
 #: templatetags/extra_filters_jinja.py:369
 msgid "no"
@@ -8089,7 +8091,7 @@ msgstr "0"
 
 #: templatetags/extra_filters_jinja.py:403
 msgid "Visitor"
-msgstr ""
+msgstr "Visiteur"
 
 #: utils/decorators.py:105
 msgid "Oops, apologies - there was some error"
@@ -8109,7 +8111,7 @@ msgstr "Cette fonction est réservée aux modérateurs et administrateurs"
 
 #: utils/decorators.py:256
 msgid "This function is limited to administrators"
-msgstr ""
+msgstr "Cette fonction est limitée aux administrateurs"
 
 #: utils/forms.py:68
 msgid "this field is required"
@@ -8195,15 +8197,15 @@ msgstr[1] "il y a %(min)d minutes"
 
 #: utils/html.py:303
 msgid "please login"
-msgstr ""
+msgstr "merci de vous identifier"
 
 #: views/avatar_views.py:178
 msgid "Avatar uploaded and set as primary"
-msgstr ""
+msgstr "L'avatar a été téléchargé et définit comme principal"
 
 #: views/avatar_views.py:183
 msgid "Please choose file to upload"
-msgstr ""
+msgstr "Choisissez un fichier à télécharger vers le serveur"
 
 #: views/commands.py:64
 msgid "Sorry, anonymous users cannot vote"
@@ -8224,7 +8226,7 @@ msgstr "Désolé, il semble y avoir un problème..."
 
 #: views/commands.py:159
 msgid "Sorry, but anonymous users cannot perform this action."
-msgstr ""
+msgstr "Désolé, mais les utilisateurs anonymes ne peuvent pas faire cette action."
 
 #: views/commands.py:166 views/commands.py:177
 msgid "Request mode is not supported. Please try again."
@@ -8234,7 +8236,7 @@ msgstr ""
 #: views/commands.py:658
 #, python-format
 msgid "anonymous users cannot %(perform_action)s"
-msgstr ""
+msgstr "Les utilisateurs anonymes ne peuvent %(perform_action)s"
 
 #: views/commands.py:413
 msgid "Sorry, could not delete tag"
@@ -8256,7 +8258,7 @@ msgstr "Créer"
 
 #: views/commands.py:622 views/commands.py:659
 msgid "make edits"
-msgstr ""
+msgstr "éditer"
 
 #: views/commands.py:822
 msgid "Please sign in to vote"
@@ -8309,7 +8311,7 @@ msgstr "Veuillez vous identifier ou vous enregistrer pour envoyer des remarques.
 
 #: views/meta.py:148
 msgid "unknown"
-msgstr ""
+msgstr "inconnu"
 
 #: views/meta.py:165
 msgid "Thanks for the feedback!"
@@ -8335,36 +8337,36 @@ msgstr ""
 #, python-format
 msgid "%d post approved"
 msgid_plural "%d posts approved"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d publication approuvée"
+msgstr[1] "%d publications approuvées"
 
 #: views/moderation.py:272
 #, python-format
 msgid "%d user approved"
 msgid_plural "%d users approved"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d utilisateur approuvé"
+msgstr[1] "%d utilisateurs approuvés"
 
 #: views/moderation.py:293 views/moderation.py:369 views/users.py:274
 #, python-format
 msgid "%d post deleted"
 msgid_plural "%d posts deleted"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d publication supprimée"
+msgstr[1] "%d publications supprimées"
 
 #: views/moderation.py:361
 #, python-format
 msgid "%d ip blocked"
 msgid_plural "%d ips blocked"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d IP bloquée"
+msgstr[1] "%d IPs bloquées"
 
 #: views/moderation.py:365
 #, python-format
 msgid "%d user blocked"
 msgid_plural "%d users blocked"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d utilisateur bloqué"
+msgstr[1] "%d utilisateurs bloqués"
 
 #: views/readers.py:150
 #, python-format
@@ -8378,7 +8380,7 @@ msgstr[1] "%(q_num)s questions"
 msgid ""
 "Please go to Settings -> %s and set the base url for your site to function "
 "properly"
-msgstr ""
+msgstr "Allez dans Réglages -> %s et paramètrez l'URL de base de votre site pour fonctionner correctement "
 
 #: views/readers.py:478
 msgid ""
@@ -8468,7 +8470,7 @@ msgstr "Une erreur est survenue lors du transfert du fichier sur notre serveur. 
 
 #: views/writers.py:198 views/writers.py:599
 msgid "Please log in to make posts"
-msgstr ""
+msgstr "Connectez-vous pour pouvoir publier"
 
 #: views/writers.py:742
 msgid "This content is forbidden"
