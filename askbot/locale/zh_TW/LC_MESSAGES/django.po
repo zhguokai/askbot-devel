@@ -5,9 +5,11 @@
 # Translators:
 # Carl XuYu Su, 2013
 # Carl XuYu Su, 2013
+# Carl XuYu Su, 2013
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # evgeny <evgeny.fadeev@gmail.com>, 2009
 # Floyd Huang <floydsoft@gmail.com>, 2013
+# Mark Hung <marklh9@gmail.com>, 2016
 # whisky <whisky@ystaiwan.org.tw>, 2013
 # whisky <whisky@ystaiwan.org.tw>, 2013
 # 陳貴鑫 <j26733514@gmail.com>, 2014
@@ -16,8 +18,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-16 03:00-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2016-09-26 14:00+0000\n"
+"Last-Translator: Mark Hung <marklh9@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/askbot/askbot/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,12 +38,12 @@ msgstr "-"
 #: feed.py:37
 #, python-format
 msgid "Individual %(question)s feed"
-msgstr ""
+msgstr "各別 %(question)s 消息饋流"
 
 #: feed.py:110
 #, python-format
 msgid "Latest %(question)s feed"
-msgstr ""
+msgstr "最新 %(question)s 消息饋流"
 
 #: forms.py:167
 msgid "select country"
@@ -59,21 +61,21 @@ msgstr "國家欄位必填"
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
-msgstr[0] ""
+msgstr[0] "必須 > %d 個字"
 
 #: forms.py:217
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
-msgstr[0] ""
+msgstr[0] "必須 < %d 個字"
 
 #: forms.py:240 templates/widgets/ask_form.html:46
 msgid "Select language"
-msgstr ""
+msgstr "選取語言"
 
 #: forms.py:268
 msgid "minor edit (don't send alerts)"
-msgstr ""
+msgstr "小編輯（不會寄發通知）"
 
 #: forms.py:295 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
@@ -117,7 +119,7 @@ msgstr[0] "每個標籤必須少於 %(max_chars)d 個字元"
 msgid ""
 "We ran out of space for recording the tags. Please shorten or delete some of"
 " them."
-msgstr ""
+msgstr "保存標籤的空間已耗盡，請縮短或刪除部分標籤。"
 
 #: forms.py:462 forms.py:1134 models/widgets.py:27
 #: templates/widgets/meta_nav.html:6 templates/widgets/tags_field.html:10
@@ -157,11 +159,11 @@ msgstr "更新概要："
 msgid ""
 "enter a brief summary of your revision (e.g. fixed spelling, grammar, "
 "improved style...), this field is optional"
-msgstr ""
+msgstr "輸入本次修改的簡單概述(例如：修改別字、修改語法、改進樣式等，非必填項)。"
 
 #: forms.py:696
 msgid "Enter number of points to add or subtract"
-msgstr ""
+msgstr "輸入增加或減少的積分。"
 
 #: forms.py:699
 msgid "Comment"
@@ -201,11 +203,11 @@ msgstr ""
 
 #: forms.py:794
 msgid "Cannot change own status"
-msgstr ""
+msgstr "無法改變自己的狀態"
 
 #: forms.py:800
 msgid "Cannot turn other user to moderator"
-msgstr ""
+msgstr "無法將其他使用者設定為審閱者"
 
 #: forms.py:807
 msgid "Cannot change status of another moderator"
@@ -1280,7 +1282,7 @@ msgstr ""
 
 #: conf/feedback.py:11
 msgid "Feedback settings"
-msgstr ""
+msgstr "意見回饋設定"
 
 #: conf/feedback.py:16
 msgid "Anyone"
@@ -5539,7 +5541,7 @@ msgstr "問題回饋"
 
 #: templates/feedback.html:6
 msgid "Give us your feedback!"
-msgstr "回饋"
+msgstr "給我們意見回饋！"
 
 #: templates/feedback.html:19
 msgid "(to hear from us please enter a valid email or check the box below)"
@@ -5551,7 +5553,7 @@ msgstr " (此欄不能為空白)"
 
 #: templates/feedback.html:48
 msgid "Send Feedback"
-msgstr "送出問題回饋"
+msgstr "送出意見回饋"
 
 #: templates/groups.html:3 templates/groups.html.py:6
 #: templates/question/sidebar.html:109
