@@ -11,7 +11,7 @@
 # Jeong-Ju Kim <haje01@gmail.com>, 2014
 # Jihui Choi <jihui.choi@gmail.com>, 2013
 # alisol <nocaca@daum.net>, 2012
-# seok woojing <ultra066@gmail.com>, 2012
+# seok woojing <woojing.seok@gmail.com>, 2012
 # Sungjin Kang <potopro@gmail.com>, 2013
 # Sungjin Kang <potopro@gmail.com>, 2014,2016
 # Whoami Jeong <>, 2012
@@ -21,8 +21,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-16 03:00-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2016-08-29 11:39+0000\n"
+"Last-Translator: Ian Y. Choi <ianyrchoi@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/askbot/askbot/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +89,7 @@ msgstr "제목"
 #, python-format
 msgid "must have > %d non-punctuation character"
 msgid_plural "must have > %d non-punctuation characters"
-msgstr[0] ""
+msgstr[0] "마침표가 없는 문자가 > %d 이어야 합니다"
 
 #: forms.py:320
 #, python-format
@@ -170,7 +170,7 @@ msgstr "더하거나 뺄 점수를 입력하세요"
 
 #: forms.py:699
 msgid "Comment"
-msgstr ""
+msgstr "댓글"
 
 #: forms.py:711 const/__init__.py:497
 msgid "approved"
@@ -583,17 +583,17 @@ msgstr "등록된 사용자만이 포럼에 접근할 수 있습니다"
 
 #: conf/access_control.py:49
 msgid "Disable registration of new users"
-msgstr ""
+msgstr "신규 사용자에 대한 등록 비활성화"
 
 #: conf/access_control.py:57
 msgid ""
 "<p>New users cannot be registered at this time. Please sign in if you "
 "already have an account.</p>"
-msgstr ""
+msgstr "<p>신규 사용자는 현재 등록할 수 없습니다. 계정이 이미 있는 경우에는 로그인해 주세요.</p>"
 
 #: conf/access_control.py:58
 msgid "Message explaining that user registrations are disabled"
-msgstr ""
+msgstr "사용자 등록에 대한 메시지 설명이 비활성화되어 있습니다"
 
 #: conf/access_control.py:59 conf/words.py:82 conf/words.py:96
 #: conf/words.py:111
@@ -606,7 +606,7 @@ msgstr "없음 - 필수 아님"
 
 #: conf/access_control.py:65
 msgid "account registration"
-msgstr ""
+msgstr "계정 등록"
 
 #: conf/access_control.py:75
 msgid "Require valid email for"
@@ -622,7 +622,7 @@ msgstr "목록 구분을 위해 공백을 사용해주세요"
 
 #: conf/access_control.py:102 conf/access_control.py:117
 msgid "Entry disables blacklisted email patterns"
-msgstr ""
+msgstr "항목은 블랙리스트 이메일 패턴을 비활성화합니다"
 
 #: conf/access_control.py:113
 msgid "Allowed email domain names"
@@ -638,31 +638,31 @@ msgstr "비활성화"
 
 #: conf/access_control.py:127
 msgid "block user registrations"
-msgstr ""
+msgstr "사용자 등록 차단"
 
 #: conf/access_control.py:129
 msgid "allow existing users to post"
-msgstr ""
+msgstr "기존 사용자 게시 허용"
 
 #: conf/access_control.py:132
 msgid "block completely"
-msgstr ""
+msgstr "완전히 차단"
 
 #: conf/access_control.py:141
 msgid "Blacklisted email address patterns mode"
-msgstr ""
+msgstr "블랙리스트 이메일 주소 패턴 모드"
 
 #: conf/access_control.py:150
 msgid "Blacklisted email address patterns"
-msgstr ""
+msgstr "블랙리스트 이메일 주소 패턴"
 
 #: conf/access_control.py:154
 msgid "regular expressions are allowed"
-msgstr ""
+msgstr "정규표현식을 허용합니다"
 
 #: conf/access_control.py:165
 msgid "Allow moderators to access other's messages"
-msgstr ""
+msgstr "조정자가 다른 사람의 메시지에 액세스할 수 있도록 허용"
 
 #: conf/badges.py:16
 msgid "Badge settings"
@@ -671,7 +671,7 @@ msgstr "배지 설정"
 #: conf/badges.py:27
 #, python-format
 msgid "Enable \"%s\" badge"
-msgstr ""
+msgstr "\"%s\" 배지 활성화"
 
 #: conf/badges.py:47 models/badges.py:709
 msgid "Associate Editor"
@@ -679,7 +679,7 @@ msgstr "준편집자"
 
 #: conf/badges.py:49
 msgid "minimum number of edits"
-msgstr ""
+msgstr "최소 편집 수"
 
 #: conf/badges.py:53 models/badges.py:732
 msgid "Autobiographer"
@@ -695,7 +695,7 @@ msgstr "시민의 의무"
 
 #: conf/badges.py:61
 msgid "minimum votes"
-msgstr ""
+msgstr "최소 투표 수"
 
 #: conf/badges.py:65 models/badges.py:644
 msgid "Cleanup"
@@ -707,7 +707,7 @@ msgstr "논객"
 
 #: conf/badges.py:71
 msgid "minimum comments"
-msgstr ""
+msgstr "최소 댓글 수"
 
 #: conf/badges.py:75 models/badges.py:243
 msgid "Critic"
@@ -719,7 +719,7 @@ msgstr "모범생"
 
 #: conf/badges.py:81
 msgid "minimum upvotes for deleted post"
-msgstr ""
+msgstr "게시물 삭제를 위한 최소 찬성표"
 
 #: conf/badges.py:85 models/badges.py:697
 msgid "Editor"
@@ -727,11 +727,11 @@ msgstr "편집자"
 
 #: conf/badges.py:89
 msgid "Enlightened Duty"
-msgstr ""
+msgstr "자각해야 할 의무"
 
 #: conf/badges.py:91 conf/badges.py:157 conf/badges.py:165
 msgid "minimum upvotes"
-msgstr ""
+msgstr "최소 찬성표 수"
 
 #: conf/badges.py:97 models/badges.py:808
 msgid "Enthusiast"
@@ -739,7 +739,7 @@ msgstr "개근상"
 
 #: conf/badges.py:99
 msgid "minimum days"
-msgstr ""
+msgstr "최소 일자"
 
 #: conf/badges.py:103 models/badges.py:877
 msgid "Expert"
@@ -751,7 +751,7 @@ msgstr "유명한 질문"
 
 #: conf/badges.py:109 conf/badges.py:190 conf/badges.py:208
 msgid "minimum views"
-msgstr ""
+msgstr "최소 읽기 수"
 
 #: conf/badges.py:115 conf/words.py:488 conf/words.py:489
 msgid "Favorite Question"
@@ -759,7 +759,7 @@ msgstr "인기 질문"
 
 #: conf/badges.py:117 conf/badges.py:228
 msgid "minimum followers"
-msgstr ""
+msgstr "최소 팔로워수"
 
 #: conf/badges.py:123 conf/words.py:400 conf/words.py:401
 msgid "Good Answer"
@@ -767,7 +767,7 @@ msgstr "좋은 답변"
 
 #: conf/badges.py:125 conf/badges.py:141 conf/badges.py:182 conf/badges.py:248
 msgid "minimum upvotes for the answer"
-msgstr ""
+msgstr "답변을 위한 최소 찬성표 수"
 
 #: conf/badges.py:131 conf/words.py:411 conf/words.py:412
 msgid "Good Question"
@@ -775,7 +775,7 @@ msgstr "좋은 질문"
 
 #: conf/badges.py:133 conf/badges.py:149 conf/badges.py:174
 msgid "minimum upvotes for the question"
-msgstr ""
+msgstr "질문을 위한 최소 찬성표 수"
 
 #: conf/badges.py:139 conf/words.py:422 conf/words.py:423
 msgid "Great Answer"
@@ -795,7 +795,7 @@ msgstr "족집게 도사"
 
 #: conf/badges.py:166
 msgid "minimum delay in days"
-msgstr ""
+msgstr "최소 지연 일자"
 
 #: conf/badges.py:172 conf/words.py:389 conf/words.py:390
 msgid "Nice Question"
@@ -815,11 +815,11 @@ msgstr "오거나이저"
 
 #: conf/badges.py:198
 msgid "Peer pressure"
-msgstr ""
+msgstr "동료의 압박"
 
 #: conf/badges.py:200
 msgid "minimum downvotes for deleted post"
-msgstr ""
+msgstr "게시물 삭제를 위한 최소 반대표 수"
 
 #: conf/badges.py:206 conf/words.py:444 conf/words.py:445
 msgid "Popular Question"
@@ -839,7 +839,7 @@ msgstr "자기 주도 학습자"
 
 #: conf/badges.py:220
 msgid "minimum answer upvotes"
-msgstr ""
+msgstr "최소 답변 찬성표"
 
 #: conf/badges.py:226 conf/words.py:477 conf/words.py:478
 msgid "Stellar Question"
@@ -859,7 +859,7 @@ msgstr "정리의 달인"
 
 #: conf/badges.py:240
 msgid "minimum tag use count"
-msgstr ""
+msgstr "최소 태그 사용 개수"
 
 #: conf/badges.py:246 models/badges.py:191
 msgid "Teacher"
@@ -889,35 +889,35 @@ msgstr "이메일 경고 사용"
 
 #: conf/email.py:62
 msgid "Enable instant email alerts"
-msgstr ""
+msgstr "인스턴트 이메일 경고 활성화"
 
 #: conf/email.py:71
 msgid "Enable welcome email"
-msgstr ""
+msgstr "웰컴 이메일 활성화"
 
 #: conf/email.py:80
 msgid "Enable rejected post alert"
-msgstr ""
+msgstr "게시물 경고 거절 활성화"
 
 #: conf/email.py:81 conf/email.py:91
 msgid "Also, premoderation mode must be enabled"
-msgstr ""
+msgstr "또한, 사전 조정자 모드가 활성화되어야 합니다"
 
 #: conf/email.py:90
 msgid "Enable approved post alert"
-msgstr ""
+msgstr "승인된 게시물 경고 활성화"
 
 #: conf/email.py:100
 msgid "Enable batch email alert"
-msgstr ""
+msgstr "배치 이메일 경고 활성화"
 
 #: conf/email.py:109
 msgid "Enable private messaging alerts"
-msgstr ""
+msgstr "개인 메시지 경고 활성화"
 
 #: conf/email.py:118
 msgid "Enable moderation queue alerts"
-msgstr ""
+msgstr "중재 큐 경고 활성화"
 
 #: conf/email.py:128
 msgid "Enable HTML-formatted email"
@@ -984,7 +984,7 @@ msgstr "다음 내용에 대해서 이메일 업데이트 주기를 선택합니
 
 #: conf/email.py:219
 msgid "Enable reminders about unanswered questions"
-msgstr ""
+msgstr "답변되지 않은 질문에 대한  알림 활성화"
 
 #: conf/email.py:221
 msgid ""
@@ -1021,7 +1021,7 @@ msgstr "답변되지 않은 질문 알림의 최대 개수"
 
 #: conf/email.py:283
 msgid "Enable accept the best answer reminders"
-msgstr ""
+msgstr "최우수 답변 수락 허용 활성화"
 
 #: conf/email.py:285
 msgid ""
@@ -1046,15 +1046,15 @@ msgstr "으뜸 답변 선택 알림을 보낼 최대 횟수"
 
 #: conf/email.py:332
 msgid "Allow blank email"
-msgstr ""
+msgstr "빈 이메일 허용"
 
 #: conf/email.py:334
 msgid "DANGER: makes impossible account recovery by email."
-msgstr ""
+msgstr "위험: 이메일 계정 복구를 불가능하게 만듭니다."
 
 #: conf/email.py:337 conf/login_providers.py:279
 msgid "Must be not be required"
-msgstr ""
+msgstr "필수가 아니도록 해야 합니다"
 
 #: conf/email.py:348
 msgid "Fake email for anonymous user"
@@ -1239,7 +1239,7 @@ msgstr "트위터 컨슈머 시크릿"
 
 #: conf/external_keys.py:144
 msgid "MediaWiki consumer key"
-msgstr ""
+msgstr "MediaWiki 컨슈머 키"
 
 #: conf/external_keys.py:146
 #, python-format
@@ -1251,7 +1251,7 @@ msgstr ""
 
 #: conf/external_keys.py:164
 msgid "MediaWiki consumer secret"
-msgstr ""
+msgstr "MediaWiki 컨슈머 비밀키"
 
 #: conf/external_keys.py:173
 msgid "LinkedIn consumer key"
@@ -1285,23 +1285,23 @@ msgstr "ident.ca 컨슈머 시크릿"
 
 #: conf/feedback.py:11
 msgid "Feedback settings"
-msgstr ""
+msgstr "피드백 설정"
 
 #: conf/feedback.py:16
 msgid "Anyone"
-msgstr ""
+msgstr "누구나"
 
 #: conf/feedback.py:17
 msgid "Only authenticated users"
-msgstr ""
+msgstr "인증된 사용자 전용"
 
 #: conf/feedback.py:18
 msgid "Nobody, disable feedback form"
-msgstr ""
+msgstr "아무도 불가능, 피드백 양식 비활성화"
 
 #: conf/feedback.py:27
 msgid "Who can send feedback"
-msgstr ""
+msgstr "피드백을 보낼 수 있는 사람"
 
 #: conf/feedback.py:36
 msgid "Feedback site URL"
@@ -1313,13 +1313,13 @@ msgstr "비어있는 경우, 간단한 내부 피드백 양식이 대신 사용�
 
 #: conf/feedback.py:49
 msgid "Message on the feedback page"
-msgstr ""
+msgstr "피드백 페이지 내 메시지"
 
 #: conf/feedback.py:51
 msgid ""
 "**Dear {{ USER_NAME }}**, we look forward to hearing your feedback. Please "
 "type and send us your message below."
-msgstr ""
+msgstr "**{{ USER_NAME }} 께**, 여러분의 피드백을 듣고 싶습니다. 여러분의 메시지를 아래에 입력한 후 전송해 주세요."
 
 #: conf/feedback.py:55 conf/flatpages.py:95
 msgid ""
@@ -1340,7 +1340,7 @@ msgstr "내부 피드백 양식 이메일 수신자"
 msgid ""
 "Comma separated list of email addresses. If left empty, feedback mails are "
 "sent to admins and moderators."
-msgstr ""
+msgstr "콤마로 구분된 리스트로 된 이메일 주소. 비어있는 상태로 둘 경우, 피드백 메일은 관리자 및 조정자에게 발송됩니다."
 
 #: conf/flatpages.py:12
 msgid "Messages and pages - about, privacy policy, etc."
@@ -1358,13 +1358,13 @@ msgstr "\"소개\" 페이지에서 <a href=\"http://validator.w3.org/\">HTML 유
 
 #: conf/flatpages.py:34
 msgid "Text of the Help page (html format)"
-msgstr ""
+msgstr "도움말 페이지 텍스트 (html 형식)"
 
 #: conf/flatpages.py:38
 msgid ""
 "Save, then <a href=\"http://validator.w3.org/\">use HTML validator</a> on "
 "the \"help\" page to check your input."
-msgstr ""
+msgstr "저장 후, 입력을 체크하기 위해 \"도움말\" 페이지의 <a href=\"http://validator.w3.org/\">HTML 유효성 검사기</a>를 사용합니다."
 
 #: conf/flatpages.py:48
 msgid "Text of the Q&amp;A forum FAQ page (html format)"
@@ -1509,7 +1509,7 @@ msgstr "답변 본문의 최소 길이(문자수)"
 
 #: conf/forum_data_rules.py:197
 msgid "Show comment updates on the main page"
-msgstr ""
+msgstr "댓글 업데이트를 메인 페이지에서 보기"
 
 #: conf/forum_data_rules.py:207
 msgid "Minimum length of comment (number of characters)"
@@ -1521,7 +1521,7 @@ msgstr "유저별로 질문 당 하나의 답변으로 제한"
 
 #: conf/forum_data_rules.py:228
 msgid "Allow commenting in closed questions"
-msgstr ""
+msgstr "닫힌 질문에 댓글 작성 허용"
 
 #: conf/forum_data_rules.py:237
 msgid "Enable accepting best answer"
@@ -1529,7 +1529,7 @@ msgstr "최우수 답변을 수락하는 것을 허용"
 
 #: conf/forum_data_rules.py:246
 msgid "Show accepted answer first"
-msgstr ""
+msgstr "채택된 답변을 먼저 보기"
 
 #: conf/forum_data_rules.py:256
 msgid "How to sort answers by default"
@@ -1624,11 +1624,11 @@ msgstr "별도 태그 검색 상자를 메인 페이지에 활성화"
 
 #: conf/forum_data_rules.py:386
 msgid "Enable comments under questions"
-msgstr ""
+msgstr "질문 아래 댓글 활성화"
 
 #: conf/forum_data_rules.py:395
 msgid "Enable comments under answers"
-msgstr ""
+msgstr "답변 아래 댓글 활성화"
 
 #: conf/forum_data_rules.py:405
 msgid "Default max number of comments to display under posts"
@@ -1640,11 +1640,11 @@ msgstr "댓글 역순으로 정렬"
 
 #: conf/forum_data_rules.py:424
 msgid "Minimum words to start wrapping comments"
-msgstr ""
+msgstr "댓글을 감싸기 시작하는 최소 단어 수"
 
 #: conf/forum_data_rules.py:433
 msgid "Minimum words to start wrapping posts"
-msgstr ""
+msgstr "게시물을 감싸기 시작하는 최소 단어 수"
 
 #: conf/forum_data_rules.py:443
 #, python-format
@@ -1658,7 +1658,7 @@ msgstr "댓글 수정 제한 시간"
 #: conf/forum_data_rules.py:454 conf/forum_data_rules.py:487
 #: conf/forum_data_rules.py:507
 msgid "If unchecked, there will be no time limit"
-msgstr ""
+msgstr "체크하지 않으면, 제한 시간을 두지 않습니다"
 
 #: conf/forum_data_rules.py:463
 msgid "Minutes allowed to edit a comment"
@@ -1681,19 +1681,19 @@ msgstr "1줄로 된 댓글을 작성하고자 할 경우 유용할 것입니다.
 
 #: conf/forum_data_rules.py:486
 msgid "Limit time to edit answers"
-msgstr ""
+msgstr "답변 수정 제한 시간"
 
 #: conf/forum_data_rules.py:496
 msgid "Minutes allowed to edit answers"
-msgstr ""
+msgstr "답변 수정 허용 시간"
 
 #: conf/forum_data_rules.py:506
 msgid "Limit time to edit questions"
-msgstr ""
+msgstr "질문 수정 제한 시간"
 
 #: conf/forum_data_rules.py:516
 msgid "Minutes allowed to edit questions"
-msgstr ""
+msgstr "질문 수정 허용 시간"
 
 #: conf/forum_data_rules.py:526
 msgid "Minimum length of search term for Ajax search"
@@ -1724,7 +1724,7 @@ msgstr "목록당 최대 질문 기본 개수"
 
 #: conf/forum_data_rules.py:572
 msgid "Maximum users per users page"
-msgstr ""
+msgstr "사용자 페이지당 최대 사용자 수"
 
 #: conf/forum_data_rules.py:582
 msgid "What should \"unanswered question\" mean?"
@@ -1975,7 +1975,7 @@ msgstr "라이선스 로고 이미지"
 
 #: conf/login_providers.py:15
 msgid "Login provider settings"
-msgstr ""
+msgstr "로그인 제공자 설정"
 
 #: conf/login_providers.py:24
 msgid "Acceptance of terms required at registration"
@@ -2005,11 +2005,11 @@ msgstr "활성화하기 위해서, 설정 -> 쓰기 -> 원격 전송으로 이�
 
 #: conf/login_providers.py:54
 msgid "WordPress login button image"
-msgstr ""
+msgstr "워드프레스 로그인 버튼 이미지"
 
 #: conf/login_providers.py:64
 msgid "Enable Fedora OpenID login"
-msgstr ""
+msgstr "Fedora OpenID 로그인 활성화"
 
 #: conf/login_providers.py:73
 msgid "Enable custom OpenID login"
@@ -2017,23 +2017,23 @@ msgstr "사용자정의 OpenID 로그인 활성화"
 
 #: conf/login_providers.py:83
 msgid "Enable CAS authentication"
-msgstr ""
+msgstr "CAS 인증 활성화"
 
 #: conf/login_providers.py:91
 msgid "CAS server url"
-msgstr ""
+msgstr "CAS 서버 url"
 
 #: conf/login_providers.py:99
 msgid "CAS server name"
-msgstr ""
+msgstr "CAS 서버 이름"
 
 #: conf/login_providers.py:108
 msgid "CAS protocol version"
-msgstr ""
+msgstr "CAS 프로토콜 버전"
 
 #: conf/login_providers.py:116
 msgid "Upload CAS login icon"
-msgstr ""
+msgstr "CAS 로그인 아이콘 업로드"
 
 #: conf/login_providers.py:144
 msgid "Custom OpenID"
@@ -2072,7 +2072,7 @@ msgstr "중요: \"사용자 이름\" 모드에서는 %%(username)s placeholder�
 
 #: conf/login_providers.py:191
 msgid "OpenStackID service endpoint url"
-msgstr ""
+msgstr "OpenStackID 서비스 엔드포인트 URL"
 
 #: conf/login_providers.py:233
 msgid "local password"
@@ -2092,19 +2092,19 @@ msgstr "주의: %(provider)s 로그인을 정말로 활성화하려면 \"외부 
 
 #: conf/login_providers.py:263
 msgid "MediaWiki login button image"
-msgstr ""
+msgstr "MediaWiki 로그인 버튼 이미지"
 
 #: conf/login_providers.py:273
 msgid "MediaWiki - enable one click registration"
-msgstr ""
+msgstr "MediaWiki - 원 클릭 등록 활성화"
 
 #: conf/login_providers.py:275
 msgid "Allows skipping the registration page after the wiki authentication."
-msgstr ""
+msgstr "wiki 인증 후 등록 페이지 건너뛰기 허용"
 
 #: conf/login_providers.py:278
 msgid "Must be enabled"
-msgstr ""
+msgstr "활성화되어야 합니다"
 
 #: conf/login_providers.py:294
 msgid "Google login"
@@ -2237,7 +2237,7 @@ msgstr "다른 사람이 게시한 질문과 답변을 삭제"
 
 #: conf/minimum_reputation.py:116
 msgid "Delete own questions"
-msgstr ""
+msgstr "자신의 질문 삭제"
 
 #: conf/minimum_reputation.py:125
 msgid "Upload files"
@@ -2331,21 +2331,21 @@ msgstr "Audit은 게시물이 발행된 후 이루어져, 조정자의 결정 �
 
 #: conf/moderation.py:40
 msgid "Reject all posts with these phrases"
-msgstr ""
+msgstr "해당 단어가 있는 모든 게시물 거절하기"
 
 #: conf/moderation.py:41
 msgid ""
 "Enter one phrase per line (case-insensitive). Posts with these phrases will "
 "be rejected without moderation."
-msgstr ""
+msgstr "줄 당 한 단어 (대소문자 구별)를 입력합니다. 해당 단어를 가진 게시물을 조정자 없이 거절할 것입니다."
 
 #: conf/moderation.py:53
 msgid "Enable image moderation"
-msgstr ""
+msgstr "이미지 조정 활성화"
 
 #: conf/moderation.py:62
 msgid "Enable link moderation"
-msgstr ""
+msgstr "링크 조정 활성화"
 
 #: conf/moderation.py:71
 msgid "Enable tag moderation"
@@ -2934,7 +2934,7 @@ msgstr "사용자 설정"
 
 #: conf/user_settings.py:23
 msgid "Welcome to our community!"
-msgstr ""
+msgstr "커뮤니티에 오신 것을 환영합니다!"
 
 #: conf/user_settings.py:24
 msgid "On-screen greeting shown to the new users"
@@ -2978,7 +2978,7 @@ msgstr "닉네임을 위한 허용된 최소 길이"
 
 #: conf/user_settings.py:115
 msgid "Avatar type for new users"
-msgstr ""
+msgstr "새로운 사용자를 위한 아바타 유형"
 
 #: conf/user_settings.py:126
 msgid "Default avatar for users"
@@ -2995,7 +2995,7 @@ msgstr "그라바타 서비스를 위한 Base URL"
 
 #: conf/user_settings.py:158
 msgid "Use automatic avatars from gravatar service"
-msgstr ""
+msgstr "gravatar 서비스에서 자동 아바타 사용"
 
 #: conf/user_settings.py:160
 msgid ""
@@ -3039,7 +3039,7 @@ msgstr "남은 일일 투표에 대한 경고 한계치"
 
 #: conf/vote_rules.py:51
 msgid "Number of days to allow canceling votes (-1 for no limit)"
-msgstr ""
+msgstr "투표 취소를 허용하는 일자 (-1은 제한 없음)"
 
 #: conf/vote_rules.py:61
 msgid "Number of days required before answering own question"
@@ -3144,7 +3144,7 @@ msgstr "질문하기"
 
 #: conf/words.py:155 conf/words.py:156
 msgid "post answers"
-msgstr ""
+msgstr "답변 게시"
 
 #: conf/words.py:165 conf/words.py:166
 msgid "Merge duplicate questions"
@@ -3194,7 +3194,7 @@ msgstr "답변"
 msgid ""
 "question\n"
 "questions"
-msgstr ""
+msgstr "질문\n질문들"
 
 #: conf/words.py:277
 msgid "Countable plural forms for \"question\""
@@ -3208,7 +3208,7 @@ msgstr "하나의 폼에 한줄씩, 주의하여 입력하십시오"
 msgid ""
 "answer\n"
 "answers"
-msgstr ""
+msgstr "답변\n답변들"
 
 #: conf/words.py:288
 msgid "Countable plural forms for \"answer\""
@@ -3270,7 +3270,7 @@ msgstr "추천받은 답변"
 #: conf/words.py:424 conf/words.py:435 conf/words.py:446 conf/words.py:457
 #: conf/words.py:468 conf/words.py:479 conf/words.py:490
 msgid "Badge name"
-msgstr ""
+msgstr "뱃지 이름"
 
 #: conf/words.py:499 conf/words.py:500
 msgid "upvoted answers"
@@ -3809,7 +3809,7 @@ msgstr "구독 태그만"
 
 #: const/__init__.py:443 const/__init__.py:449 const/__init__.py:455
 msgid "subscribe to all tags"
-msgstr ""
+msgstr "모든 태그 구독하기"
 
 #: const/__init__.py:462
 #: templates/user_profile/user_email_subscriptions.html:22
@@ -3829,7 +3829,7 @@ msgstr "매주"
 #: const/__init__.py:465
 #: templates/user_profile/user_email_subscriptions.html:25
 msgid "never"
-msgstr ""
+msgstr "전혀 하지 않음"
 
 #: const/__init__.py:471
 msgid "identicon"
@@ -3853,7 +3853,7 @@ msgstr "mystery-man"
 
 #: const/__init__.py:479 templates/avatar/show_list.html:13
 msgid "Default avatar"
-msgstr ""
+msgstr "디폴트 아바타"
 
 #: const/__init__.py:480 templates/avatar/show_list.html:26
 msgid "Gravatar"
@@ -4081,7 +4081,7 @@ msgstr "죄송합니다. 등록된 이메일 주소가 아닙니다."
 
 #: deps/django_authopenid/forms.py:477
 msgid "Your user name"
-msgstr ""
+msgstr "사용자명"
 
 #: deps/django_authopenid/forms.py:493
 msgid "sorry, there is no such user name"
@@ -4106,7 +4106,7 @@ msgstr "signout/"
 #: deps/django_authopenid/urls.py:31
 msgctxt "urls"
 msgid "complete-cas/"
-msgstr ""
+msgstr "complete-cas/"
 
 #: deps/django_authopenid/urls.py:44
 msgctxt "urls"
@@ -4151,7 +4151,7 @@ msgstr "비밀번호 변경"
 #: templates/widgets/login_link.html:15
 #, python-format
 msgid "Sign in via %(login_name)s"
-msgstr ""
+msgstr "%(login_name)s 로 로그인"
 
 #: deps/django_authopenid/util.py:458
 #, python-format

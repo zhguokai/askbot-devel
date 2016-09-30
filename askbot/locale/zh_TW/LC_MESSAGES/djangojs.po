@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Carl XuYu Su, 2013
+# Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-16 03:04-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2016-08-24 04:58+0000\n"
+"Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/askbot/askbot/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,34 +21,34 @@ msgstr ""
 
 #: media/js/group_messaging.js:132
 msgid "Type a message"
-msgstr ""
+msgstr "輸入訊息"
 
 #: media/js/group_messaging.js:141
 msgid "Add a recipient"
-msgstr ""
+msgstr "新增收件人"
 
 #: media/js/group_messaging.js:171
 msgid "message sent"
-msgstr ""
+msgstr "訊息已送出"
 
 #: media/js/group_messaging.js:187
 msgid ""
 "Did you mean to send your message to muliple users? Use comma instead of "
 "whitespaces"
-msgstr ""
+msgstr "您是想要將訊息傳送給多位使用者嗎？請使用逗點而非空白來分隔"
 
 #: media/js/group_messaging.js:191
 msgid "user {{str}} does not exist"
 msgid_plural "users {{str}} do not exist"
-msgstr[0] ""
+msgstr[0] "這些使用者不存在：{{str}}"
 
 #: media/js/group_messaging.js:198
 msgid "cannot send message to yourself"
-msgstr ""
+msgstr "您無法傳送訊息給自己"
 
 #: media/js/live_search.js:198
 msgid "To see search results, 2 or more characters may be required"
-msgstr ""
+msgstr "要看到搜尋結果，您必須輸入二或更多個字元"
 
 #: media/js/live_search.js:220
 msgid "Ask Your Question"

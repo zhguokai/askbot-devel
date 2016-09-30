@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Anthony Monthe <anthony.monthe@gmail.com>, 2016
 # Benjamin Abel <bbig26@gmail.com>, 2014
 # Benjamin Abel <bbig26@gmail.com>, 2014
 # Camille Baldock <mademoisellegeek42@gmail.com>, 2011
@@ -19,8 +20,8 @@ msgstr ""
 "Project-Id-Version: askbot\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-16 03:04-0500\n"
-"PO-Revision-Date: 2016-06-16 08:09+0000\n"
-"Last-Translator: evgeny <evgeny.fadeev@gmail.com>\n"
+"PO-Revision-Date: 2016-09-19 23:16+0000\n"
+"Last-Translator: Anthony Monthe <anthony.monthe@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/askbot/askbot/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,11 +31,11 @@ msgstr ""
 
 #: media/js/group_messaging.js:132
 msgid "Type a message"
-msgstr ""
+msgstr "Écrire un message"
 
 #: media/js/group_messaging.js:141
 msgid "Add a recipient"
-msgstr ""
+msgstr "Ajouter un destinataire"
 
 #: media/js/group_messaging.js:171
 msgid "message sent"
@@ -44,7 +45,7 @@ msgstr "message envoyé"
 msgid ""
 "Did you mean to send your message to muliple users? Use comma instead of "
 "whitespaces"
-msgstr ""
+msgstr "Voulez-vous envoyer votre message à plusieurs utilisateurs ? Utilisez des virgules plutôt que des espaces"
 
 #: media/js/group_messaging.js:191
 msgid "user {{str}} does not exist"
@@ -72,7 +73,7 @@ msgstr[1] "Désolé, ces mots-clés n'existent pas."
 
 #: media/js/live_search.js:315
 msgid "search or ask your question"
-msgstr "Rechercher ou poser votre question"
+msgstr "rechercher ou poser votre question"
 
 #: media/js/post.js:28
 msgid "loading..."
@@ -80,13 +81,13 @@ msgstr "chargement..."
 
 #: media/js/post.js:136
 msgid "enter %(question)s title"
-msgstr ""
+msgstr "entrez le titre de %(question)s"
 
 #: media/js/post.js:143 media/js/post.js.c:233
 msgid "%(question)s must have > %(length)s character"
 msgid_plural "%(question)s must have > %(length)s characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "La %(question)s doit inclure %(length)s caractère"
+msgstr[1] "La %(question)s doit inclure %(length)s caractères"
 
 #: media/js/post.js:162 media/js/post.js.c:222
 #, c-format
@@ -207,11 +208,11 @@ msgstr "désolé, quelque chose ne semble pas correct ici"
 
 #: media/js/post.js:1875
 msgid "Preview: (hide)"
-msgstr ""
+msgstr "Aperçu: (cacher)"
 
 #: media/js/post.js:1876
 msgid "Show preview"
-msgstr ""
+msgstr "Afficher l'aperçu"
 
 #: media/js/post.js:2288
 msgid "add comment"
@@ -391,15 +392,15 @@ msgstr "Vous n'avez pas encore de méthode d'identification, merci d'en ajouter 
 
 #: media/js/jquery-openid/jquery.authenticator.js:146
 msgid "enter username"
-msgstr ""
+msgstr "Saisir un nom d'utilisateur"
 
 #: media/js/jquery-openid/jquery.authenticator.js:148
 msgid "enter username or email"
-msgstr ""
+msgstr "Saisir un nom d'utilisateur ou une adresse courriel"
 
 #: media/js/jquery-openid/jquery.authenticator.js:157
 msgid "enter password"
-msgstr ""
+msgstr "Saisir un mot de passe"
 
 #: media/js/jquery-openid/jquery.authenticator.js:179
 msgid "passwords do not match"
@@ -471,7 +472,7 @@ msgstr "Merci de sélectionner au moins un élément"
 
 #: media/js/user/post_moderation_controls.js:113
 msgid "Load more items."
-msgstr ""
+msgstr "Charger plus d'éléments."
 
 #: media/js/utils/comment_convert_link.js:26
 msgid "convert to answer"
@@ -750,11 +751,11 @@ msgstr "Merci de choisir un fichier et de le télécharger vers le serveur:"
 
 #: media/wmd/wmd.js:1686
 msgid "strong text"
-msgstr ""
+msgstr "text fort"
 
 #: media/wmd/wmd.js:1690
 msgid "emphasized text"
-msgstr ""
+msgstr "texte souligné"
 
 #: media/wmd/wmd.js:1844
 msgid "image description"
@@ -770,15 +771,15 @@ msgstr "texte du lien"
 
 #: media/wmd/wmd.js:2284 media/wmd/wmd.js.c:2304
 msgid "enter code here"
-msgstr ""
+msgstr "Entrez le code ici"
 
 #: media/wmd/wmd.js:2398
 msgid "List item"
-msgstr ""
+msgstr "Lister les items"
 
 #: media/wmd/wmd.js:2430
 msgid "Heading"
-msgstr ""
+msgstr "Titre"
 
 #~ msgid "anonymous users cannot %(follow_questions)s"
 #~ msgstr "sorry, anonymous users cannot vote "
