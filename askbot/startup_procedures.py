@@ -930,15 +930,14 @@ def test_recaptcha():
 def test_lang_mode():
     legacy_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', None)
     errors = list()
-    if legacy_multilang:
-        errors.append("""replace ASKBOT_MULTILINGUAL = True with either:
-ASKBOT_LANGUAGE_MODE = 'url-lang' or 
+    if legacy_multilang is not None:
+        if legacy_multilang:
+            errors.append("""replace ASKBOT_MULTILINGUAL = True with either:
+ASKBOT_LANGUAGE_MODE = 'url-lang' or
 ASKBOT_LANGUAGE_MODE = 'user-lang'""")
-    if not legacy_multilang:
-        errors.append("""replace ASKBOT_MULTILINGUAL = True with either:
+        else:
+            errors.append("""replace ASKBOT_MULTILINGUAL = True with either:
 ASKBOT_LANGUAGE_MODE = 'single-lang' or just delete the setting""")
-
-    if legacy_multilang in (True, False):
         print_errors(errors)
 
     mode = getattr(django_settings, 'ASKBOT_LANGUAGE_MODE', None)
