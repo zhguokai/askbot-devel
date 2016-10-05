@@ -348,7 +348,7 @@ settings.register(
         description = _('Use separate set for subscribed tags'),
         help_text = _(
             'If enabled, users will have a third set of tag selections '
-            '- "subscribed" (by email) in additon to "interesting" '
+            '- "subscribed" (by email) in addition to "interesting" '
             'and "ignored"'
         )
     )
